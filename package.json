@@ -25,7 +25,8 @@
     "axios": "^0.21.1",
     "short-uuid": "^4.1.0",
     "vue": "^2.6.12",
-    "vue-loader": "^15.9.6"
+    "vue-loader": "^15.9.6",
+    "vue-router": "^3.4.9"
   },
   "devDependencies": {
     "css-loader": "^5.0.1",
