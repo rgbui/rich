@@ -1,14 +1,12 @@
 
 import { BlockType, BlockTypeToComponentName } from "./block.type";
-import { Editor } from "../editor";
+import { Editor } from "../editor/editor";
 import { Prop } from "./prop";
 import { Mode } from "./mode";
 import { ExpressList, VcExpress } from "../components/express";
-import { Events } from "../util/events";
 import { util } from "../util/util";
 
-
-export class Block extends Events {
+export class Block {
     id: string;
     private editor: Editor;
     express: VcExpress;
@@ -22,7 +20,6 @@ export class Block extends Events {
         return this.modes.find(x => x.id == this.modeId);
     }
     constructor(data: { blockInfo?: Record<string, any>, editor: Editor, parent?: Block }) {
-        super();
         this.editor = data.editor;
         this.parent = data.parent;
         this.willInit(data.blockInfo);
@@ -181,3 +178,4 @@ export class Block extends Events {
         return json;
     }
 }
+

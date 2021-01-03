@@ -1,5 +1,6 @@
 
-import { util } from "../../../util/util";
+
+import { util } from "../util/util";
 import { Block } from "./block";
 import { Mode } from "./mode";
 
