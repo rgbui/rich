@@ -1,7 +1,7 @@
 
 import { Block } from "../block/block";
 import { BlockType } from "../block/block.type";
-import { Editor } from "../editor";
+import { Editor } from "../editor/editor";
 import { Events } from "../util/events";
 import { Cursor } from "./cursor";
 import { SelectorState } from "./enum";
@@ -21,7 +21,7 @@ export class Selector extends Events {
     }
     private init() {
         this.editor.on('focus', () => {
-            if (this.state == SelectorState.analogInput || this.state == SelectorState.input) {
+            if (this.state == SelectorState.input) {
                 this.vm.openCursor();
             }
         });
@@ -87,7 +87,9 @@ export class Selector extends Events {
             this.endCursor.mousedown(event);
             this.selector(SelectorState.input);
         }
-        else this.selector(SelectorState.analogInput);
+        else {
+            /**创建一个空的占位符文本对象 */
+        }
     }
     selector(state: SelectorState) {
         var oldState = this.state;
@@ -140,25 +142,25 @@ export class Selector extends Events {
             //this.focus();
         }
         else {
-            if (this.state == SelectorState.analogInput) {
-                var newBlock = Block.createBlock(this.editor,
-                    {
-                        type: BlockType.rowText, props: [
-                            { name: 'text', val: this.textarea.value },
-                            { name: 'height', val: 20 }
-                        ]
-                    }
-                );
-                newBlock.once('mounted', () => {
-                    this.element = { block: newBlock, ele: newBlock.ele };
-                    this.endCursor = new Cursor(this);
-                    this.endCursor.input(this.textarea.value);
-                })
-                this.editor.render();
-            }
-            else {
-                this.endCursor.input(this.textarea.value);
-            }
+            // if (this.state == SelectorState.analogInput) {
+            //     var newBlock = Block.createBlock(this.editor,
+            //         {
+            //             type: BlockType.rowText, props: [
+            //                 { name: 'text', val: this.textarea.value },
+            //                 { name: 'height', val: 20 }
+            //             ]
+            //         }
+            //     );
+            //     newBlock.once('mounted', () => {
+            //         this.element = { block: newBlock, ele: newBlock.ele };
+            //         this.endCursor = new Cursor(this);
+            //         this.endCursor.input(this.textarea.value);
+            //     })
+            //     this.editor.render();
+            // }
+            // else {
+            this.endCursor.input(this.textarea.value);
+            //}
         }
     }
     paster(event: ClipboardEvent) {
