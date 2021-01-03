@@ -1,14 +1,15 @@
 
-import { Block } from "./block/block";
-
+import { Block } from "../block/block";
 import Vue from "vue";
-import EditorView from "./vue/view.vue";
-import { Selector } from "./selector/selector";
-import { Events } from "./util/events";
+import { Selector, SelectorView } from "../selector/selector";
+import { Events } from "../util/events";
+import ViewEditor from "./vue/view.vue";
+import { EditorView } from "./declare.view";
+
 export class Editor extends Events {
     private blocks: Block[] = [];
     selector: Selector;
-    vm;
+    vm: EditorView;
     constructor(el: HTMLElement, options: {
         width: number,
         height: number
@@ -18,7 +19,7 @@ export class Editor extends Events {
         new Vue({
             el: el.appendChild(document.createElement('div')),
             render: (h) => {
-                return h(EditorView, {
+                return h(ViewEditor, {
                     ref: 'editor-view',
                     props: { width: options.width, height: options.height }
                 })
@@ -31,9 +32,9 @@ export class Editor extends Events {
             mounted() {
                 self.vm = this.editorView;
                 self.selector = new Selector(self.vm.selector, self);
-                var ele = self.vm.$el as HTMLElement;
-                ele.addEventListener('mousedown', self.mousedown.bind(self));
-                ele.addEventListener('mouseup', self.mouseup.bind(self));
+                self.vm.$on('mousedown', self.mousedown.bind(this));
+                self.vm.$on('mouseup', self.mouseup.bind(this));
+                self.emit('mounted');
             }
         })
     }
@@ -67,7 +68,7 @@ export class Editor extends Events {
         this.blocks.insertAt(typeof at == 'number' ? at : this.blocks.length, block);
     }
     render() {
-        this.vm.updateBlocks(this.blocks.map(b => b.viewData));
+        this.vm.renderBlocks(this.blocks.map(b => b.viewData));
     }
     get ele(): HTMLElement {
         return this.vm.$el as HTMLElement;

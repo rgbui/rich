@@ -1,4 +1,4 @@
 
 import "./components/declare";
 
-import './editor';
+import './editor/editor';

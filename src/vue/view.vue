@@ -1,5 +1,10 @@
 <template>
-  <div class="editor-box" :style="style">
+  <div
+    class="editor-box"
+    :style="style"
+    @mousedown="mousedown"
+    @mouseup="mouseups"
+  >
     <editor-selector ref="selector"></editor-selector>
     <div class="editor-box-content">
       <div
@@ -51,8 +56,14 @@ export default Vue.extend({
     /**
      * 更新数据视图
      */
-    updateBlocks(blocks: any[]) {
+    renderBlocks(blocks: any[]) {
       this.$set(this, "blocks", blocks);
+    },
+    mousedown(event: MouseEvent) {
+      this.$emit("mousedown", event);
+    },
+    mouseup(event: MouseEvent) {
+      this.$emit("mouseup", event);
     },
     layout(data: { width: number; height: number }) {
       this.width = data.width;
