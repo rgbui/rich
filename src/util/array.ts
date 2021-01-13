@@ -44,13 +44,9 @@ interface Array<T> {
     split(fx: (item: T, i?: number, array?: T[]) => boolean): T[][];
     except<U>(s: U[], fx?: (t: T, u: U) => boolean): T[];
     intersect<U>(s: U[], fx?: (source: U, item: U) => boolean): T[];
-
     limit(s: number, e: number): T[];
     range(s: number, e: number): T[];
-
     lookup<U>(s: ((t: T) => U)): Map<U, T[]>;
-
-
     distinct<U>(a?: (t: T) => U): U[];
     count(a: any): number;
     findCount(a: any): number;
@@ -61,9 +57,7 @@ interface Array<T> {
     findMin(predict?: ((t: T) => number)): T;
     average(predict?: ((t: T) => number)): number;
     avg(predict?: ((t: T) => number) | string): number;
-    // keyValueArray(key: any, arr: any[]);
-    // keyValueJsonCombine(ar: any[])
-    // keyValueArrayCombine(arr: any[])
+
     arrayJsonEach(arrayJsonName: string, fn: (item: T, deep: number, index: number, sort: number, parent: T, thisArray: T[]) => (void | { break?: boolean, continue?: boolean })): void
     arrayJsonFind(arrayJsonName: string,
         fn: (item: T, index?: number, arr?: T[]) => boolean): T;
@@ -72,18 +66,16 @@ interface Array<T> {
     arrayJsonFindMax(arrayJsonName: string, predict: ((t: T) => number) | string): T;
     arrayJsonFindMin(arrayJsonName: string, predict: ((t: T) => number) | string): T;
     arrayJsonExists(arrayJsonName: string, predict: (item: T, index?: number, arr?: T[]) => boolean): boolean;
-    //arrayJsonFindParentArray(arrayJsonName: any, fn: any)
+
     arrayJsonFindAll(arrayJsonName: string, fn: (item: T, index?: number, arr?: T[]) => boolean): T[]
     arrayJsonRemove(arrayJsonName: string, fn: T | ((item: T, index?: number, arr?: T[]) => boolean)): void
     arrayJsonRemoveAll(arrayJsonName: string, fn: (item: T, index?: number, arr?: T[]) => boolean): void
     arrayJsonToArray(arrayJsonName: string,
         fn: (item: T, index?: number, arr?: T[]) => any,
         toArrayJsonName?: string): void
-    //arrayJsonFindPosition(arrayJsonName: string, fn: (item: T, index?: number, arr?: T[]) => boolean | string)
-    // arrayJsonStructClone(arrayJsonName: string, fn: any, defaultDeep: any, defaultIndex: any)
-    //arrayJsonParents(arrayJsonName: string, item: any, fn: any)
+
     arrayJsonClosest(arrayJsonName: string, item: any, fn: any): void
-    //arrayJsonAvailableNumber(arrayJsonName: string, fn: any, start: any)
+
 
 
 }
