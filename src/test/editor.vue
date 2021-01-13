@@ -5,10 +5,10 @@
 </style>
 <script lang="ts">
 import Vue from "vue";
-import { Editor } from "../editor";
-export default Vue.extend({
-  mounted() {
-    var editor = new Editor(this.$el, { width: 400, height: 300 });
-  },
-});
+// import { Editor } from "../editor";
+// export default Vue.extend({
+//   mounted() {
+//     var editor = new Editor(this.$el, { width: 400, height: 300 });
+//   },
+//});
 </script>

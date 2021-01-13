@@ -30,5 +30,5 @@ new Vue({
     el: document.body.appendChild(document.createElement('div')),
     router,  // 注入到根实例中
     render: h => h(App, { ref: 'app' })
-    
+
 });
