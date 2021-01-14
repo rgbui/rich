@@ -1,5 +1,6 @@
 
 import { Events } from "../../util/events";
+import { View } from "../block/view";
 import { PageLayout } from "../layout";
 export class Page extends Events {
     private el: HTMLElement;
@@ -15,5 +16,9 @@ export class Page extends Events {
         this.emit('loading');
         this.emit('loaded');
     }
+    async get() {
+
+    }
     pageLayout: PageLayout;
+    views: View[] = [];
 }
