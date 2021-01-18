@@ -18,7 +18,6 @@ export type FontStyle = {
     textShadow: { abled: boolean, x: number, y: number, color: string, blur: number }[];
     /**
      * 文字排版方向，这个主要是在做ppt，海报时，特别的有用
-     * 
      */
     writingMode: 'lr-tb' | 'tb-rl'
 }
@@ -68,3 +67,14 @@ export type FilterStyle = {
     name: string;
     value: any;
 }[]
+
+/***
+ * https://www.jianshu.com/p/8a33214a1b26
+ */
+export type TransformStyle = {
+    rotate: number;
+    scale: { x: number, y: number },
+    translate: { x: number, y: number },
+    skew: { x: number, y: number },
+    origin: { x: number | string, y: number | string }
+}

@@ -5,8 +5,8 @@
  * 海报与网页的区别在于海报可能会有多个(view block),而网页只有一个，且高度没有任何限制，长度过长可以产生滚动条呗
  */
 export enum PageLayoutType {
-    web,
-    ppt,
+    web=1,
+    ppt=2,
 }
 export class PageLayout {
     type: PageLayoutType;
