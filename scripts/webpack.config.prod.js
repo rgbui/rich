@@ -1,13 +1,8 @@
 const path = require("path");
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-
-
 /**
  * webpack url https://www.cnblogs.com/brandonhulala/p/6057378.html
  */
@@ -28,17 +23,6 @@ module.exports = {
         rules: [{
             test: /\.tsx?$/,
             loader: "ts-loader",
-            options: {
-                appendTsSuffixTo: [/\.vue$/],
-                onlyCompileBundledFiles: true,
-                // 加这句
-            }
-        },
-        //  使用vue-loader 加载 .vue 结尾的文件
-        {
-            test: /\.vue$/,
-            loader: 'vue-loader',
-            exclude: /node_modules/
         },
         {
             test: /\.css$/,
@@ -79,14 +63,14 @@ module.exports = {
                 ],
         },
         {
-            test: /svg\/[\w\-]+\.svg$/,
-            loader: 'raw-loader'
-        },
-        {
             test: /\.(jpe?g|png|gif|bmp|webp)$/,
             // 规则 limit给定的是图片的大小 如果我们给定图片的大小大于等于我们给定的limit 则不会被转为base64编码
             //反之会被转换name=[hash:8]-[name].[ext] 前面加hash值区分图片 名字原样输出
             loader: 'url-loader?limit=8192&name=assert/img/[hash:8].[name].[ext]'
+        },
+        {
+            test: /\.svg$/,
+            use: ['@svgr/webpack'],
         },
         {
             test: /\.(woff|eot|ttf)$/,
@@ -121,7 +105,6 @@ module.exports = {
             },
             canPrint: true
         }),
-        new VueLoaderPlugin(),
         new MiniCssExtractPlugin({ filename: "assert/css/style.css" })
     ]
 };
