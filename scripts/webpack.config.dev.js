@@ -14,10 +14,10 @@ const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 
 let port = 8080;
-let publicPath = `http://localhost:${port}/`;
+let publicPath = `http://127.0.0.1:${port}/`;
 module.exports = {
     mode: 'development',
-    entry: "./test/index.ts",
+    entry: "./test/index.tsx",
     output: {
         path: path.resolve(__dirname, "../dist"),
         filename: "assert/js/bundle.js",
@@ -25,7 +25,7 @@ module.exports = {
     },
     devServer: {
         contentBase: path.resolve(__dirname, '../dist'),
-        host: 'localhost',
+        host: '127.0.0.1',
         compress: true,
         hot: true,
         port: port,
@@ -37,12 +37,12 @@ module.exports = {
         }
     },
     resolve: {
-        extensions: ['.vue', ".ts", ".js", ".less", ".css"]
+        extensions: ['.tsx', ".ts", ".js", ".less", ".css"]
     },
     module: {
         rules: [{
             test: /\.tsx?$/,
-            loader: "ts-loader"
+            use: ["ts-loader"]
         },
         {
             test: /\.css$/,
@@ -86,7 +86,7 @@ module.exports = {
             test: /\.(jpe?g|png|gif|bmp|webp)$/,
             // 规则 limit给定的是图片的大小 如果我们给定图片的大小大于等于我们给定的limit 则不会被转为base64编码
             //反之会被转换name=[hash:8]-[name].[ext] 前面加hash值区分图片 名字原样输出
-            loader: 'url-loader?limit=8192&name=assert/img/[hash:8].[name].[ext]'
+            use: ['url-loader?limit=8192&name=assert/img/[hash:8].[name].[ext]']
         },
         {
             test: /\.svg$/,
@@ -96,7 +96,7 @@ module.exports = {
             test: /\.(woff|eot|ttf)$/,
             // 规则 limit给定的是图片的大小 如果我们给定图片的大小大于等于我们给定的limit 则不会被转为base64编码
             //反之会被转换name=[hash:8]-[name].[ext] 前面加hash值区分图片 名字原样输出
-            loader: 'url-loader?limit=8192&name=assert/fonts/[hash:8].[name].[ext]'
+            use: ['url-loader?limit=8192&name=assert/fonts/[hash:8].[name].[ext]']
         }]
     },
     externals: {
@@ -123,7 +123,7 @@ module.exports = {
         }),
         new MiniCssExtractPlugin({
             filename: "assert/css/style.css",
-            publicPath
+            //publicPath
         })
     ]
 };

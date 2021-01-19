@@ -3,21 +3,21 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 /**
  * webpack url https://www.cnblogs.com/brandonhulala/p/6057378.html
  */
 
 var outputDir = path.join(__dirname, "../dist");
-let publicPath = `http://test.viewparse.com/`;
 module.exports = {
     mode: 'production',
     entry: "./src/index.ts",
     output: {
         path: outputDir,
-        filename: "assert/js/bundle.js"
+        filename: "kanhai.js"
     },
     resolve: {
-        extensions: [".vue", ".ts", ".js", ".less", ".css"]
+        extensions: [".tsx", ".ts", ".js", ".less", ".css"]
     },
     module: {
         rules: [{
@@ -32,7 +32,7 @@ module.exports = {
                     options: {
                         // 杩欓噷鍙互鎸囧畾涓�涓� publicPath
                         // 榛樿浣跨敤 webpackOptions.output涓殑publicPath
-                        publicPath: '../../'
+                        //publicPath: '../../'
                     },
                 },
                 'css-loader',
@@ -47,7 +47,7 @@ module.exports = {
                         options: {
                             // 杩欓噷鍙互鎸囧畾涓�涓� publicPath
                             // 榛樿浣跨敤 webpackOptions.output涓殑publicPath
-                            publicPath: '../../'
+                            //publicPath: '../../'
                         }
                     },
                     'css-loader',
@@ -56,7 +56,7 @@ module.exports = {
                         loader: 'sass-resources-loader',
                         options: {
                             resources: [
-                                path.resolve(__dirname, "../app/assert/style/theme.less")
+                                path.resolve(__dirname, "../src/style/theme.less")
                             ]
                         }
                     }
@@ -83,17 +83,7 @@ module.exports = {
 
     },
     plugins: [
-        new HtmlWebpackPlugin({
-            template: path.join(__dirname, "../index.html"), // 婧愭ā鏉挎枃浠�
-            filename: './index.html', // 杈撳嚭鏂囦欢銆愭敞鎰忥細杩欓噷鐨勬牴璺緞鏄痬odule.exports.output.path銆�
-            showErrors: true,
-            hash: true,
-            inject: 'body',
-            templateParameters: {
-                mode: 'prod',
-                publicPath
-            }
-        }),
+        new CleanWebpackPlugin(),
         new webpack.DefinePlugin({
             MODE: JSON.stringify('production')
         }),
@@ -105,6 +95,6 @@ module.exports = {
             },
             canPrint: true
         }),
-        new MiniCssExtractPlugin({ filename: "assert/css/style.css" })
+        new MiniCssExtractPlugin({ filename: "kanhai.css" })
     ]
 };
