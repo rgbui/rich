@@ -1,8 +1,10 @@
+import { BaseBlock } from "../block/base";
 import { Page } from "../page";
+import { BlockSelection } from "./selection";
 
 
 export class Selector {
-    selections: Selection[] = [];
+    selections: BlockSelection[] = [];
     page: Page;
     el: HTMLElement;
     constructor(el: HTMLElement, page: Page) {
@@ -25,5 +27,14 @@ export class Selector {
         }
         document.addEventListener('mousemove', mousemove);
         document.addEventListener('mouseup', mouseup);
+    }
+    /**
+     * 获取选区中所包含的block
+     * 1. 选中中所涉及到的文字选区block
+     * 2. 一个选区构成一个矩形，与矩形有相交的block
+     */
+    get blocks(): BaseBlock[] {
+
+        return [];
     }
 }

@@ -1,5 +1,16 @@
 import { BaseBlock } from "./base";
 import { ContentAreaComposition } from "./composition/content";
+import React from 'react';
+import ReactDOM from 'react-dom';
+export function ViewComponent(props) {
+    console.log(props);
+    if (props.model && Array.isArray(props.model.childs))
+        return <div>{props.model.childs.map(x =>
+            <x.viewComponent key={x.id} model={x.model}></x.viewComponent>
+        )}</div>
+    else return <div>s</div>
+}
+
 
 /**
  * 在一个页面上，从视觉上有多个视图块，

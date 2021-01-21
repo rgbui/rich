@@ -33,7 +33,7 @@ interface Array<T> {
     insertAt(at: number, ...item: T[]): void;
     addRange(at: number | T[], arrs?: T[]): void;
     toArray<U>(predict?: (item: T, i?: number, array?: T[]) => U): U[];
-
+    asyncMap<U>(predict?: (item: T, i?: number, array?: T[]) => Promise<U>): Promise<U[]>;
     move(item: T | ((item: T, i?: number, thisArray?: T[]) => boolean), at?: T | number | ((item: T, i?: number, thisArray?: T[]) => boolean)): void;
 
     append(...item: T[]): void;
@@ -83,19 +83,18 @@ interface Array<T> {
 
 
 
-Array.prototype.each = function (fn) {
+Array.prototype.each = async function (fn) {
     for (let i = 0; i < this.length; i++) {
         let item = this[i];
-        if (fn.apply(this, [item, i, this]) == false) {
-            break;
-        }
+        var result = await fn.apply(this, [item, i, this]);
+        if (result == false) break;
     }
 };
-Array.prototype.eachReverse = function (fn) {
+Array.prototype.eachReverse = async function (fn) {
     var len = this.length;
     for (let i = len - 1; i >= 0; i--) {
         let item = this[i];
-        if (fn.apply(this, [item, i, this]) == false) { break; }
+        if ((await fn.apply(this, [item, i, this])) == false) { break; }
     }
 }
 Array.prototype.find = function (where: any) {
@@ -367,7 +366,15 @@ Array.prototype.toArray = function (fn) {
     });
     return arr;
 }
-
+Array.prototype.asyncMap = async function (fn) {
+    var list = [];
+    for (let i = 0; i < this.length; i++) {
+        var data = this[i];
+        var r = await fn(data, i, this);
+        if (typeof r != 'undefined') list.push(r)
+    }
+    return list;
+}
 
 Array.prototype.copy = function () {
     return this.map(x => x);

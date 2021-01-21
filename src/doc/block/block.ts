@@ -1,26 +1,31 @@
 import { BaseBlock } from "./base";
+import { Align } from "./common.enum";
 import { BlockComposition } from "./composition/block";
 /***
  * 类容型的block
  */
 export class Content extends BaseBlock {
     /***
-     * 是否是行block,会自动点满当前行
+     * 是否是行block,就是独占一行
      */
-    isRowBlock: boolean;
-    rowAlign: 'left' | 'center' | 'right';
-    blockComposition: BlockComposition;
+    isPerLine: boolean;
     /***
-     * 内容型的block一般都有高度的
+     * 指内容的摆放位置
      */
-    height: number;
+    align: Align;
+    blockComposition: BlockComposition;
+}
+export class TextSpan extends Content {
+    isPerLine = false;
+    content: string;
 }
 /***
  * 文字型的block，
  * 注意该文字block里面含有子文字或其它的如图像block等
  */
-export class Text extends BaseBlock {
+export class TextContent extends BaseBlock {
     blockComposition: BlockComposition;
+    content: string;
 }
 /**
  * 可以将相邻的block变成一个整体去操作，

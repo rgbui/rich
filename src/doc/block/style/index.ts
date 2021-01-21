@@ -1,80 +1,52 @@
+import { util } from "../../../util/util";
+import { BaseBlock } from "../base";
+import { BlockState } from "../common.enum";
+import { BorderStyle, FillStyle, FilterStyle, FontStyle, RadiusStyle, ShadowStyle, TransformStyle } from "./type";
 
-/****
- * 控件的样式
- * 里面的图片，和字体都会涉及到引用其它文件的可能性
- * 
- */
-export type FontStyle = {
-    fontFamily: string;
-    color: string;
-    fontSize: number,
-    lineHeight: number,
-    fontStyle: 'normail' | 'italic';
-    fontWeight: 'normal' | 'bold' | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
-    letterSpacing: 'normal' | number;
-    textDecoration: 'none' | 'lineThrough' | 'underline';
-    textDecorationStyle: 'solid' | 'dashed';
-    textDecorationColor: string;
-    textShadow: { abled: boolean, x: number, y: number, color: string, blur: number }[];
+export class Style {
+    block: BaseBlock;
+    id: string;
+    date: number;
     /**
-     * 文字排版方向，这个主要是在做ppt，海报时，特别的有用
+     * 表标当前的样式依赖于其它block，
+     * 比如鼠标移到一个block，
+     * 某个元素会发生变化
      */
-    writingMode: 'lr-tb' | 'tb-rl'
-}
-export type FillStyle = {
-    abled: boolean,
-    mode: 'color' | 'image' | 'linear-gradient' | 'radial-gradient';
+    dependBlockId: string;
+    dependStyleId: string;
     /***
-     * background-color:color
+     * 当前样式的状态
      */
-    color: string;
-    /***background-image */
-    src: string;
-    /***linear-gradient */
-    angle: number;
-    grads: { grad: number, color: string }[];
-    /****
-     * radial-gradient
-     * https://www.runoob.com/cssref/func-radial-gradient.html
-     * 径向用户使用频率不高，暂时保留
-     */
-    shape: "circle" | 'ellipse';
-    size: 'farthest-corner' | 'closest-side' | 'closest-corner' | 'farthest-side';
-    position: { x: number, y: number }
-}[]
-export type BorderStyle = {
-    top: { width: number, color: string, style: "sold" | 'none' | 'dashed', abled: boolean },
-    left: { width: number, color: string, style: "sold" | 'none' | 'dashed', abled: boolean },
-    right: { width: number, color: string, style: "sold" | 'none' | 'dashed', abled: boolean },
-    bottom: { width: number, color: string, style: "sold" | 'none' | 'dashed', abled: boolean }
-}
-export type RadiusStyle = {
-    topLeft: number;
-    topRight: number;
-    bottomLeft: number;
-    bottomRight: number
-}
-export type ShadowStyle = {
-    abled: boolean,
-    mode: 'inner' | 'outer';
-    x: number, y: number, spread?: number, blur: number, color: number
-}[]
-/***
- * https://www.runoob.com/cssref/css3-pr-filter.html
- */
-export type FilterStyle = {
-    abled: boolean;
-    name: string;
-    value: any;
-}[]
-
-/***
- * https://www.jianshu.com/p/8a33214a1b26
- */
-export type TransformStyle = {
-    rotate: number;
-    scale: { x: number, y: number },
-    translate: { x: number, y: number },
-    skew: { x: number, y: number },
-    origin: { x: number | string, y: number | string }
+    state: BlockState;
+    constructor(block: BaseBlock) {
+        this.block = block;
+    }
+    async load(options: Record<string, any>) {
+        for (var op in options) {
+            this[op] = options[op];
+        }
+        if (typeof this.id == 'undefined') {
+            this.id = util.guid();
+            this.date = new Date().getTime();
+        }
+    }
+    async get() {
+        var json: Record<string, any> = {
+            id: this.id, date: this.date,
+            dependBlockId: this.dependBlockId,
+            dependStyleId: this.dependStyleId,
+            state: this.state
+        };
+        ['font', 'border', 'shadows', 'radius', 'filters', 'fills', 'transform'].each(c => {
+            if (typeof this[c] != 'undefined') json[c] = util.clone(this[c]);
+        })
+        return json;
+    }
+    font: FontStyle;
+    border: BorderStyle;
+    shadows: ShadowStyle;
+    radius: RadiusStyle;
+    filters: FilterStyle;
+    fills: FillStyle;
+    transform: TransformStyle;
 }

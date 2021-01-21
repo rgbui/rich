@@ -1,3 +1,9 @@
 
+import { Page } from "./doc/page";
 import "./style/theme.less";
-import "./doc/page/index.ts";
+import './doc/block/declare';
+
+export var KanHai = {
+    Page
+}
+
