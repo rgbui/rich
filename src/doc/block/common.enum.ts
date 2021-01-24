@@ -4,7 +4,9 @@ export enum BlockClass {
     row = 3,
     group = 4,
     textSpan = 5,
-    text = 6
+    text = 6,
+    todo = 7,
+    image = 8
 }
 
 export enum Align {

@@ -1,11 +1,12 @@
 
 import { Component } from "react";
-import { Events } from "../../util/events";
-import { util } from "../../util/util";
-import { Page } from "../page";
-import { BlockFactory } from "./block.factory";
-import { BlockClass } from "./common.enum";
-import { Style } from "./style";
+import { Events } from "../../../util/events";
+import { util } from "../../../util/util";
+import { Page } from "../../page";
+import { BlockFactory } from "../block.factory";
+import { BlockClass } from "../common.enum";
+import { Style } from "../style";
+import { BaseComponent } from "./component";
 
 export class BaseBlock extends Events {
     childs: BaseBlock[] = [];
@@ -16,6 +17,9 @@ export class BaseBlock extends Events {
     date: number;
     styles: Style[] = [];
     styleId: string;
+    get style() {
+        return this.styles.find(x => x.id == this.styleId);
+    }
     constructor(page: Page) {
         super();
         this.id = util.guid();
@@ -66,6 +70,7 @@ export class BaseBlock extends Events {
         var at = this.at;
         if (this.parent && at < this.parent.childs.length - 1) return this.parent.childs[at + 1];
     }
+    isLoad = false;
     async load(data) {
         try {
             for (var n in data) {
@@ -83,12 +88,12 @@ export class BaseBlock extends Events {
             }
             if (Array.isArray(data.childs)) {
                 await data.childs.each(async (dc) => {
-
                     var block = BlockFactory.createBlock(dc.name, this.page);
                     await block.load(dc);
                     this.childs.push(block);
                 })
             }
+            this.isLoad = true;
         }
         catch (err) {
             this.page.onError(err);
@@ -100,6 +105,15 @@ export class BaseBlock extends Events {
         json.childs = await this.childs.asyncMap(async x => await x.get());
         return json;
     }
-    viewComponent: typeof Component | ((props: any) => JSX.Element)
-    view: any;
+    viewComponent: typeof BaseComponent | ((props: any) => JSX.Element)
+    view: BaseComponent<this>;
+    watch(key: string, newValue, oldValue) {
+        if (this.isLoad == true) {
+            // console.log(key, newValue, oldValue, this, this.view);
+            if (this.view && typeof this.view.forceUpdate == 'function') {
+                this.view.forceUpdate();
+            }
+        }
+    }
+    el:HTMLElement;
 }
