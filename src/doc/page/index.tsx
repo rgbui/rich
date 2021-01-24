@@ -4,11 +4,13 @@ import ReactDOM from 'react-dom';
 import { Events } from "../../util/events";
 import { util } from "../../util/util";
 import { BlockFactory } from "../block/block.factory";
-import { View } from "../block/view";
+import { View } from "../block/common/view";
+import { Selector } from '../selector';
 import { PageLayout } from "./layout/index";
 import { PageOperator } from "./operator";
+import { PageView } from './page.view';
 export class Page extends Events {
-    private el: HTMLElement;
+    el: HTMLElement;
     id: string;
     date: number;
     constructor(el: HTMLElement, options?: Record<string, any>) {
@@ -20,6 +22,7 @@ export class Page extends Events {
         this.init();
     }
     private async init() {
+        this.selector = new Selector(this);
         await this.emit('init');
     }
     async load(data: Record<string, any>) {
@@ -52,20 +55,15 @@ export class Page extends Events {
     }
     pageLayout: PageLayout;
     views: View[] = [];
+    selector: Selector;
+    viewRender: PageView;
+    keys: string[] = [];
+    isFocus: boolean = false;
     onError(error: Error) {
 
     }
     render() {
-        ReactDOM.render(
-            <div className='kanhai'>
-                <PageLayout.view pageLayout={this.pageLayout}>
-                    {this.views.map(x => {
-                        return <x.viewComponent key={x.id} model={x} />
-                    })}
-                </PageLayout.view>
-            </div>,
-            this.el
-        );
+        ReactDOM.render(<PageView page={this}></PageView>, this.el.appendChild(document.createElement('div')));
     }
 }
 export interface Page extends PageOperator { }
