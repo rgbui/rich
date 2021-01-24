@@ -1,14 +1,12 @@
-import { BaseBlock } from "../block/base";
+import { BaseBlock } from "../block/base/base";
 import { Page } from "../page";
+import { SelectorView } from "./render";
 import { BlockSelection } from "./selection";
-
 
 export class Selector {
     selections: BlockSelection[] = [];
     page: Page;
-    el: HTMLElement;
-    constructor(el: HTMLElement, page: Page) {
-        this.el = el;
+    constructor(page: Page) {
         this.page = page;
     }
     /***
@@ -17,6 +15,7 @@ export class Selector {
      * 也有可能是直接拖动block
      */
     mousedown(event: MouseEvent) {
+
         function mousemove(ev: MouseEvent) {
 
         }
@@ -28,13 +27,31 @@ export class Selector {
         document.addEventListener('mousemove', mousemove);
         document.addEventListener('mouseup', mouseup);
     }
+    onKeydown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
+
+    }
+    /**
+     * 捕获聚焦
+     * 光标中的textarea在鼠标点击在别处mousedown时，会失焦
+     * 所以在点击mouseup时，需要重新聚焦
+     */
+    onCaptureFocus() {
+        if (this.view) {
+            if (this.view.textarea) {
+                if (this.view.textarea !== document.activeElement) {
+                    this.view.textarea.focus()
+                }
+            }
+        }
+    }
     /**
      * 获取选区中所包含的block
      * 1. 选中中所涉及到的文字选区block
      * 2. 一个选区构成一个矩形，与矩形有相交的block
      */
     get blocks(): BaseBlock[] {
-
         return [];
     }
+    view: SelectorView;
 }
+
