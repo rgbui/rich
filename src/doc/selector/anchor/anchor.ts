@@ -1,11 +1,11 @@
-import { BaseBlock } from "../block/base/base";
+import { getEleFontStyle, MeaureWord } from "../../../util/measure";
+import { BaseBlock } from "../../block/base/base";
 
 /***
  * 鼠标点击后产生的锚点
  * 该锚点只是表示点在什么地方
  * 可以是点在图像
  * 也可以是点文本的某个位置上面
- * 
  */
 export class Anchor {
     /***
@@ -22,14 +22,20 @@ export class Anchor {
      */
     part?: string;
     /**
-     * 如果block是文字，则表示点在当前block文字中的某个位置上
-     * 位置从0开始，以文字的长度结束
-     */
-    at?: number;
-    /**
      * 当前编辑文字所处于的ele中
      */
     ele?: HTMLDivElement;
+    /**
+     * 判断当前的anchor是否为文本锚点
+     */
+    get isTextAnchor() {
+        return this.block.mousedownIsInTextArea(this.originMouseEvent);
+    }
+    getCursorPosition() {
+        var bound = this.ele.getBoundingClientRect();
+        var fontStyle = getEleFontStyle(this.ele);
+        var meaureWord = new MeaureWord(fontStyle, bound.width);
+    }
 }
 
 /**
@@ -39,13 +45,16 @@ export class Anchor {
 export function CreateAnchorByMouseEvent(event: MouseEvent) {
     var anchor = new Anchor();
     anchor.originMouseEvent = event;
-    var targetEle = anchor.originMouseEvent.target as HTMLElement;
+    var targetEle = anchor.originMouseEvent.target as HTMLDivElement;
     if (targetEle) {
         var blockEle = targetEle.closest('[data-block]');
         anchor.block = (blockEle as any).block as BaseBlock;
         var partEle = targetEle.closest('[data-part]');
         if (partEle) {
             anchor.part = partEle.getAttribute('data-part');
+        }
+        if (anchor.block.mousedownIsInTextArea(event)) {
+            anchor.ele = targetEle as HTMLDivElement;
         }
     }
     return anchor;

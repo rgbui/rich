@@ -1,4 +1,4 @@
-import { Anchor } from "./anchor";
+import { Anchor } from "./anchor/anchor";
 
 /***
  * 选区
