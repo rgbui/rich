@@ -1,6 +1,6 @@
 import { Page } from ".";
 
-import { CreateAnchorByMouseEvent } from "../selector/anchor";
+import { CreateAnchorByMouseEvent } from "../selector/anchor/anchor";
 import { BlockSelection } from "../selector/selection";
 
 export class PageOperator {
@@ -17,20 +17,36 @@ export class PageOperator {
     onMousedown(this: Page, event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
         self.onFocus(event.nativeEvent);
         var self: Page = this;
+        var selection: BlockSelection;
         if (this.isKeys('Shift')) {
             /**
              * 上次的选区结尾处，连取
              */
+            selection = this.selector.selections.last();
+            if (!selection) {
+                selection = new BlockSelection();
+                selection.start = CreateAnchorByMouseEvent(event.nativeEvent);
+            }
+            else selection.end = CreateAnchorByMouseEvent(event.nativeEvent);
+            this.selector.selections = [selection];
         }
         else if (this.isKeys('Command') || this.isKeys('Ctrl')) {
             /***
              * 创建多个选区
              */
+            selection = new BlockSelection();
+            selection.start = CreateAnchorByMouseEvent(event.nativeEvent);
+            this.selector.selections.push(selection)
         }
-        var selection = new BlockSelection();
-        selection.start = CreateAnchorByMouseEvent(event.nativeEvent);
+        else {
+            selection = new BlockSelection();
+            selection.start = CreateAnchorByMouseEvent(event.nativeEvent);
+            this.selector.selections = [selection];
+        }
+        this.selector.view.forceUpdate();
         function mousemove(ev: MouseEvent) {
             selection.end = CreateAnchorByMouseEvent(ev);
+            this.selector.view.forceUpdate();
         }
         function mouseup(ev: MouseEvent) {
             self.selector.onCaptureFocus();
