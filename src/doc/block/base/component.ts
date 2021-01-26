@@ -8,7 +8,7 @@ export class BaseComponent<T extends BaseBlock> extends Component<{ block: T }> 
         this.willMount();
     }
     componentDidMount() {
-        this.block.el = ReactDOM.findDOMNode(this) as HTMLElement;
+        this.block.el = ReactDOM.findDOMNode(this) as HTMLDivElement;
         if (this.block.el) {
             (this.block.el as any).block = this.block;
             this.block.el.setAttribute('data-block', 'true');
