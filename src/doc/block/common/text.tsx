@@ -8,6 +8,10 @@ import React from 'react';
  */
 export class TextContent extends BlockComposition {
     content: string;
+    display: 'inline';
+    mouseIsInTextArea(event: MouseEvent) {
+        return true;
+    }
 }
 
 export class TextContentView extends BaseComponent<TextContent>{
