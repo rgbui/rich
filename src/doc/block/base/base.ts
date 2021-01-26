@@ -115,11 +115,12 @@ export class BaseBlock extends Events {
             }
         }
     }
-    el: HTMLElement;
+    el: HTMLDivElement;
     /***
      * 判断鼠标点击是否处于文字区域
      */
-    mousedownIsInTextArea(event: MouseEvent): boolean {
+    mouseIsInTextArea(event: MouseEvent): boolean {
         return false;
     }
+    display: 'inline' | 'inline-block' | 'block'
 }
