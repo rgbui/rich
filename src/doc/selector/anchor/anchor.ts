@@ -1,5 +1,6 @@
-import { getEleFontStyle, MeaureWord } from "../../../util/measure";
+
 import { BaseBlock } from "../../block/base/base";
+import { TextArea } from "./textarea";
 
 /***
  * 鼠标点击后产生的锚点
@@ -29,12 +30,16 @@ export class Anchor {
      * 判断当前的anchor是否为文本锚点
      */
     get isTextAnchor() {
-        return this.block.mousedownIsInTextArea(this.originMouseEvent);
+        return this.block.mouseIsInTextArea(this.originMouseEvent);
     }
-    getCursorPosition() {
-        var bound = this.ele.getBoundingClientRect();
-        var fontStyle = getEleFontStyle(this.ele);
-        var meaureWord = new MeaureWord(fontStyle, bound.width);
+    locationByMouse() {
+        var ta: TextArea;
+        if (this.block.display == 'inline') {
+            ta = new TextArea(this.ele, this.block.closest(x => x.display == 'inline-block').el)
+        }
+        else ta = new TextArea(this.ele);
+        var location = ta.locationByMouse(this.originMouseEvent);
+        return location;
     }
 }
 
@@ -53,7 +58,7 @@ export function CreateAnchorByMouseEvent(event: MouseEvent) {
         if (partEle) {
             anchor.part = partEle.getAttribute('data-part');
         }
-        if (anchor.block.mousedownIsInTextArea(event)) {
+        if (anchor.block.mouseIsInTextArea(event)) {
             anchor.ele = targetEle as HTMLDivElement;
         }
     }

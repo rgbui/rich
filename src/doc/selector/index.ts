@@ -1,5 +1,6 @@
 import { BaseBlock } from "../block/base/base";
 import { Page } from "../page";
+import { Anchor } from "./anchor/anchor";
 import { SelectorView } from "./render";
 import { BlockSelection } from "./selection";
 
@@ -53,5 +54,13 @@ export class Selector {
         return [];
     }
     view: SelectorView;
+    get cursorAnchor(): Anchor {
+        var sel = this.selections.last();
+        if (sel) {
+            if (sel.end) return sel.end;
+            else if (sel.start) return sel.start;
+        }
+        return undefined;
+    }
 }
 

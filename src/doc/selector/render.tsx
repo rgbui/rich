@@ -11,7 +11,30 @@ export class SelectorView extends Component<{ selector: Selector }>{
     get selector() {
         return this.props.selector;
     }
+    el: HTMLDivElement;
+    componentDidMount() {
+        this.el = ReactDOM.findDOMNode(this) as HTMLDivElement;
+    }
     textarea: HTMLTextAreaElement;
+    cursorEle: HTMLDivElement;
+    cursorTimer;
+    openCursor() {
+        var self = this;
+        if (self.cursorEle) {
+            if (typeof this.cursorTimer != 'undefined')
+                this.cursorTimer = setInterval(function () {
+                    self.cursorEle.style.visibility = self.cursorEle.style.visibility == 'hidden' ? "visible" : "hidden"
+                }, 7e2);
+        }
+    }
+    closeCursor() {
+        if (this.cursorTimer) {
+            clearInterval(this.cursorTimer);
+            if (this.cursorEle)
+                this.cursorEle.style.visibility = 'hidden';
+            delete this.cursorTimer;
+        }
+    }
     /***
      * 选择器渲染
      * kanhai-selector-cursor 光标
@@ -29,14 +52,26 @@ export class SelectorView extends Component<{ selector: Selector }>{
             if (relatedTarget && !self.selector.page.el.contains(relatedTarget as HTMLDivElement))
                 self.selector.page.onBlur(event.nativeEvent);
         }
+        var cursorStyle: Record<string, any> = {};
+        if (this.selector.cursorAnchor && this.selector.cursorAnchor.isTextAnchor) {
+            var location = this.selector.cursorAnchor.locationByMouse();
+            var bound = this.el.getBoundingClientRect();
+            cursorStyle = {
+                top: (location.y - bound.top) + 'px',
+                left: (location.x - bound.left) + 'px'
+            }
+            this.openCursor();
+        }
+        else {
+            this.closeCursor();
+        }
         return <div className='kanhai-selector'>
-            <div className='kanhai-selector-cursor'></div>
+            <div className='kanhai-selector-cursor' style={cursorStyle} ref={e => this.cursorEle = e}></div>
             <div className='kanhai-selector-selections'></div>
             <div className='kanhai-selector-box'></div>
             <div className='kanhai-selector-rects'></div>
             <div className='kanhai-selector-operators'></div>
             <textarea ref={e => this.textarea = e} onBlur={blur} onKeyDown={this.selector.onKeydown.bind(this.selector)}></textarea>
         </div>
-
     }
 }
