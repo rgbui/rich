@@ -15,8 +15,8 @@ export class PageOperator {
      * @param event 
      */
     onMousedown(this: Page, event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-        self.onFocus(event.nativeEvent);
         var self: Page = this;
+        self.onFocus(event.nativeEvent);
         var selection: BlockSelection;
         if (this.isKeys('Shift')) {
             /**
