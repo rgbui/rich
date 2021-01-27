@@ -2,6 +2,7 @@ import { Component } from "react";
 import { Selector } from ".";
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { getEleFontStyle } from "./anchor/textarea";
 
 export class SelectorView extends Component<{ selector: Selector }>{
     constructor(props) {
@@ -21,9 +22,10 @@ export class SelectorView extends Component<{ selector: Selector }>{
     openCursor() {
         var self = this;
         if (self.cursorEle) {
-            if (typeof this.cursorTimer != 'undefined')
+            if (typeof this.cursorTimer == 'undefined')
                 this.cursorTimer = setInterval(function () {
-                    self.cursorEle.style.visibility = self.cursorEle.style.visibility == 'hidden' ? "visible" : "hidden"
+                    if (self.cursorEle)
+                        self.cursorEle.style.visibility = self.cursorEle.style.visibility == 'hidden' ? "visible" : "hidden"
                 }, 7e2);
         }
     }
@@ -49,18 +51,27 @@ export class SelectorView extends Component<{ selector: Selector }>{
         var self = this;
         function blur(event: React.FocusEvent<HTMLTextAreaElement>) {
             var relatedTarget = event.nativeEvent.relatedTarget;
-            if (relatedTarget && !self.selector.page.el.contains(relatedTarget as HTMLDivElement))
+            if (!relatedTarget || relatedTarget && !self.selector.page.el.contains(relatedTarget as HTMLDivElement))
                 self.selector.page.onBlur(event.nativeEvent);
         }
         var cursorStyle: Record<string, any> = {};
         if (this.selector.cursorAnchor && this.selector.cursorAnchor.isTextAnchor) {
-            var location = this.selector.cursorAnchor.locationByMouse();
-            var bound = this.el.getBoundingClientRect();
-            cursorStyle = {
-                top: (location.y - bound.top) + 'px',
-                left: (location.x - bound.left) + 'px'
+            try {
+                var location = this.selector.cursorAnchor.locationByMouse();
+                var bound = this.el.getBoundingClientRect();
+                var fontStyle = getEleFontStyle(this.selector.cursorAnchor.ele);
+                cursorStyle = {
+                    top: (location.y - bound.top) + 'px',
+                    left: (location.x - bound.left) + 'px',
+                    color: fontStyle.color,
+                    height: fontStyle.lineHeight + 4,
+                    visibility:'visible'
+                }
+                this.openCursor();
             }
-            this.openCursor();
+            catch (e) {
+
+            }
         }
         else {
             this.closeCursor();

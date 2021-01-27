@@ -44,7 +44,7 @@ export class TextArea {
             rowWidth = bound.width;
             rowX = bound.left;
             firstRowX = bound.left;
-            firstRowX = bound.width;
+            firstRowWidth = bound.width;
         }
         for (let i = 0; i < ts.length; i++) {
             var word = ts[i];
@@ -105,6 +105,8 @@ export class TextArea {
         }
         var rowCount = Math.ceil(dy / lineHeight) - 1;
         var rows = this.getTextAreaRows();
+        if (rowCount < 0) rowCount = 0;
+        else if (rowCount >= rows.length) rowCount = rows.length - 1;
         var row = rows[rowCount];
         var co = row.cacOffset(event.pageX);
         console.log(co, row, rows);
@@ -122,12 +124,16 @@ export class TextArea {
             canvas.style.display = 'none';
         }
         var fontStyle = this.fontStyle;
-        __g.font = `${fontStyle.fontStyle} ${fontStyle.fontVariant} ${fontStyle.fontWeight} ${fontStyle.fontSize}/${fontStyle.lineHeight} ${fontStyle.fontFamily}`;
+        var lineHeight: string = fontStyle.lineHeight as any;
+        if (typeof lineHeight == 'number') lineHeight = lineHeight + 'px';
+        __g.font = `${fontStyle.fontStyle} ${fontStyle.fontVariant} ${fontStyle.fontWeight} ${fontStyle.fontSize}/${lineHeight} ${fontStyle.fontFamily}`;
         var ls = 0;
         if (typeof fontStyle.letterSpacing != 'number') {
-            ls = parseFloat(fontStyle.letterSpacing.replace('px', ''));
+            ls = parseFloat((fontStyle.letterSpacing as any).replace('px', ''));
             if (isNaN(ls)) ls = 0;
         }
+        else ls = fontStyle.letterSpacing;
+        console.log(__g.font, ls)
         return __g.measureText(word).width + ls;
     }
 }
@@ -178,16 +184,16 @@ export type TextFontStyle = {
     fontVariant: string,
     fontWeight: string,
     fontSize: string,
-    lineHeight: string,
+    lineHeight: number,
     fontFamily: string,
-    letterSpacing?: string,
+    letterSpacing?: number,
     /**
      * 文字颜色，即光标颜色
      */
     color?: string
 }
 export function getEleFontStyle(ele: HTMLElement): TextFontStyle {
-    return {
+    var fontStyle = {
         fontStyle: util.getStyle(ele, 'fontStyle'),
         fontVariant: util.getStyle(ele, 'fontVariant'),
         fontWeight: util.getStyle(ele, 'fontWeight'),
@@ -196,5 +202,9 @@ export function getEleFontStyle(ele: HTMLElement): TextFontStyle {
         fontFamily: util.getStyle(ele, 'fontFamily'),
         letterSpacing: util.getStyle(ele, 'letterSpacing'),
         color: util.getStyle(ele, 'color')
-    }
+    };
+    fontStyle.lineHeight = parseInt(fontStyle.lineHeight.replace('px', ''));
+    fontStyle.letterSpacing = parseInt(fontStyle.letterSpacing.replace('px', ''));
+    if (isNaN(fontStyle.letterSpacing)) fontStyle.letterSpacing = 0;
+    return fontStyle;
 }
