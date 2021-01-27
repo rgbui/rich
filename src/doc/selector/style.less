@@ -2,10 +2,23 @@
     position: relative;
 
     &-cursor {
-        position: absolute;
+        position        : absolute;
+        width           : 2px;
+        margin-left     : -1px;
+        margin-top      : -2px;
+        min-height      : 12px;
+        background-color: #000;
+        pointer-events  : none;
+        visibility      : hidden;
     }
 
-    textarea {}
+    textarea {
+        opacity  : 0;
+        position : absolute;
+        height   : 1px;
+        width    : 1px;
+        transform: translate(-1px, -1px);
+    }
 
     &-selections {}
 }
