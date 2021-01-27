@@ -80,14 +80,14 @@ export class BaseBlock extends Events {
             }
             if (Array.isArray(data.styles)) {
                 this.styles = [];
-                await data.styles.each(async (style) => {
+                await data.styles.eachAsync(async (style) => {
                     var st = new Style(this);
                     await st.load(style);
                     this.styles.push(st)
                 })
             }
             if (Array.isArray(data.childs)) {
-                await data.childs.each(async (dc) => {
+                await data.childs.eachAsync(async (dc) => {
                     var block = BlockFactory.createBlock(dc.name, this.page);
                     await block.load(dc);
                     this.childs.push(block);

@@ -3,6 +3,7 @@
 interface Array<T> {
     /**数组反转 */
     each(predict: (item: T, i: number, array: T[]) => boolean | void): void;
+    eachAsync(predict: (item: T, i: number, array: T[]) => boolean): Promise<void>;
     eachReverse(predict: (item: T, i: number, array: T[]) => boolean | void): void;
     findLast(predict: T | ((item: T, i: number, array: any[]) => boolean)): T;
     find(predict: T | ((item: T, i: number, array: T[]) => boolean)): T;
@@ -81,20 +82,26 @@ interface Array<T> {
 }
 
 
-
-
-Array.prototype.each = async function (fn) {
+Array.prototype.eachAsync = async function (fn) {
     for (let i = 0; i < this.length; i++) {
         let item = this[i];
         var result = await fn.apply(this, [item, i, this]);
         if (result == false) break;
     }
+}
+
+Array.prototype.each = function (fn) {
+    for (let i = 0; i < this.length; i++) {
+        let item = this[i];
+        var result = fn.apply(this, [item, i, this]);
+        if (result == false) break;
+    }
 };
-Array.prototype.eachReverse = async function (fn) {
+Array.prototype.eachReverse = function (fn) {
     var len = this.length;
     for (let i = len - 1; i >= 0; i--) {
         let item = this[i];
-        if ((await fn.apply(this, [item, i, this])) == false) { break; }
+        if ((fn.apply(this, [item, i, this])) == false) { break; }
     }
 }
 Array.prototype.find = function (where: any) {
