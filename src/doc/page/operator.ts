@@ -46,7 +46,7 @@ export class PageOperator {
         this.selector.view.forceUpdate();
         function mousemove(ev: MouseEvent) {
             selection.end = CreateAnchorByMouseEvent(ev);
-            this.selector.view.forceUpdate();
+            self.selector.view.forceUpdate();
         }
         function mouseup(ev: MouseEvent) {
             self.selector.onCaptureFocus();
@@ -57,10 +57,13 @@ export class PageOperator {
         document.addEventListener('mouseup', mouseup);
     }
     onFocus(this: Page, event: MouseEvent) {
-        this.emit('focus', event);
+        if (this.isFocus == false) { this.isFocus = true; this.emit('focus', event); }
     }
     onBlur(this: Page, event: FocusEvent) {
-        this.emit('blur', event);
+        if (this.isFocus == true) {
+            this.isFocus = false;
+            this.emit('blur', event);
+        }
     }
     /**
      * 主要是捕获取当前页面用户的按键情况
