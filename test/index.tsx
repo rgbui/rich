@@ -14,7 +14,15 @@ ReactDOM.render(
     async () => {
         var ele = document.querySelector('.editor') as HTMLElement;
         var page = new KanHai.Page(ele);
+        console.log(page);
+        page.on('blur', function (ev) {
+            console.log('blur', ev)
+        });
+        page.on('focus', function (ev) {
+            console.log('focus', ev);
+        })
         await page.load(data);
         await page.render();
+        
     }
 );
