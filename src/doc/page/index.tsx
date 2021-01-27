@@ -5,10 +5,11 @@ import { Events } from "../../util/events";
 import { util } from "../../util/util";
 import { BlockFactory } from "../block/block.factory";
 import { View } from "../block/common/view";
+import { PageConfig } from '../config';
 import { Selector } from '../selector';
 import { PageLayout } from "./layout/index";
 import { PageOperator } from "./operator";
-import { PageView } from './page.view';
+import { PageView } from './view';
 export class Page extends Events {
     el: HTMLElement;
     id: string;
@@ -22,8 +23,13 @@ export class Page extends Events {
         this.init();
     }
     private async init() {
+        this.config=new PageConfig();
         this.selector = new Selector(this);
         await this.emit('init');
+    }
+    config: PageConfig;
+    async loadPageConfig(config: Partial<PageConfig>) {
+       
     }
     async load(data: Record<string, any>) {
         await this.emit('loading');
