@@ -56,24 +56,30 @@ module.exports = {
                         loader: 'sass-resources-loader',
                         options: {
                             resources: [
-                                path.resolve(__dirname, "../src/style/theme.less")
+                                path.resolve(__dirname, "../src/assert/theme.less")
                             ]
                         }
                     }
                 ],
         },
         {
-            test: /\.(jpe?g|png|gif|bmp|webp)$/,
+            test: /\.(jpe?g|png|gif|svg|bmp|webp)$/,
             // 规则 limit给定的是图片的大小 如果我们给定图片的大小大于等于我们给定的limit 则不会被转为base64编码
             //反之会被转换name=[hash:8]-[name].[ext] 前面加hash值区分图片 名字原样输出
             loader: 'url-loader?limit=8192&name=assert/img/[hash:8].[name].[ext]'
         },
         {
-            test: /\.svg$/,
+            test: /assert\/font[\w\-\/]+\.(svg)$/,
+            // 规则 limit给定的是图片的大小 如果我们给定图片的大小大于等于我们给定的limit 则不会被转为base64编码
+            //反之会被转换name=[hash:8]-[name].[ext] 前面加hash值区分图片 名字原样输出
+            loader: 'url-loader?limit=8192&name=assert/img/[hash:8].[name].[ext]'
+        },
+        {
+            test: /assert\/svg\/[\w]+\.svg$/,
             use: ['@svgr/webpack'],
         },
         {
-            test: /\.(woff|eot|ttf)$/,
+            test: /\.(woff2?|eot|ttf)$/,
             // 规则 limit给定的是图片的大小 如果我们给定图片的大小大于等于我们给定的limit 则不会被转为base64编码
             //反之会被转换name=[hash:8]-[name].[ext] 前面加hash值区分图片 名字原样输出
             loader: 'url-loader?limit=8192&name=assert/font/[hash:8].[name].[ext]'
