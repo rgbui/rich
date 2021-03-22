@@ -14,7 +14,6 @@ ReactDOM.render(
     async () => {
         var ele = document.querySelector('.editor') as HTMLElement;
         var page = new KanHai.Page(ele);
-        console.log(page);
         page.on('blur', function (ev) {
             console.log('blur', ev)
         });

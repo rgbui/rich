@@ -1,0 +1,24 @@
+<html>
+
+<head>
+    <title>kanhai富文本编辑器</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="unsafe-url">
+</head>
+
+<body>
+    <div style="width:120px"><span>ssssssxxx</span><span
+            style="padding:20px;border:1px solid red">kanhai富文本编辑器kanhai富&nbsp;文本编<br />辑器kanhai富文本编辑器</span><span>fjgggg</span></div>
+</body>
+<script>
+    var div = document.querySelector('div');
+    console.log(div.childNodes);
+    var span = document.querySelector('span');
+    console.log(span.childNodes);
+    console.log(span.getClientRects());
+    console.log(span.innerHTML);
+    console.log(span.innerText);
+</script>
+
+</html>

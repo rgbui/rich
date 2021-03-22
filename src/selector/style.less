@@ -1,0 +1,46 @@
+.kanhai-selector {
+    position: relative;
+
+    &-cursor {
+        position        : absolute;
+        width           : 2px;
+        margin-left     : -1px;
+        min-height      : 12px;
+        background-color: #000;
+        pointer-events  : none;
+        visibility      : hidden;
+    }
+
+    textarea {
+        opacity  : 0;
+        position : absolute;
+        height   : 1px;
+        width    : 1px;
+        transform: translate(-1px, -1px);
+    }
+
+    &-selections {}
+
+    &-rects {
+        &-rect {
+            outline       : 1px solid #000;
+            position      : absolute;
+            pointer-events: none;
+        }
+    }
+
+    &-operators {
+        position: absolute;
+        color   : @text-color;
+
+        .sy-icon {
+            display        : inline-flex;
+            justify-content: center;
+            align-items    : center;
+            width          : 24px;
+            height         : 24px;
+
+            .background();
+        }
+    }
+}

@@ -94,5 +94,16 @@ export var util = {
                 return (node as any).currentStyle.getAttribute(attr);
             }
         }
+    },
+    domClosest(el: HTMLElement, predict: (pa: HTMLElement) => boolean) {
+        if (predict(el)) return el;
+        var p = el.parentElement;
+        while (true) {
+            if (p) {
+                if (predict(p)) return p;
+                else p = p.parentElement;
+            }
+            else break;
+        }
     }
 }

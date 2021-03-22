@@ -1,0 +1,50 @@
+.sy-table-store {
+    &-head {
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : center;
+        flex-wrap      : nowrap;
+
+        &-cell {
+            border : 1px solid #ddd;
+            display: inline-block;
+            padding: 10px;
+        }
+
+        .sy-table-store-head-cell+.sy-table-store-head-cell {
+            border-left: 1px solid transparent;
+        }
+    }
+
+    &-body {
+        &-row {
+            display        : flex;
+            justify-content: flex-start;
+            align-items    : center;
+            flex-wrap      : nowrap;
+
+            &-cell {
+                border : 1px solid #ddd;
+                padding: 10px;
+            }
+
+            &:first-child {
+                .sy-table-store-body-row-cell {
+                    border-top: 1px solid transparent;
+                }
+            }
+
+            &+.sy-table-store-body-row {
+                .sy-table-store-body-row-cell {
+                    border-top: 1px solid transparent;
+                }
+            }
+
+            .sy-table-store-body-row-cell+.sy-table-store-body-row-cell {
+                border-left: 1px solid transparent;
+            }
+        }
+    }
+
+    &-footer {}
+}
