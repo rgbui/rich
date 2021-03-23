@@ -1,11 +1,8 @@
-import { BaseBlock } from "../base";
+import { Block } from "../base";
 import { BaseComponent } from "../base/component";
 import { BlockComposition } from "../base/common/composition/block";
 import React from 'react';
-
-
-
-import { BlockDisplay, BlockType } from "../base/enum";
+import { BlockAppear, BlockDisplay} from "../base/enum";
 import { url, view } from "../factory/observable";
 /***
  * 文字型的block，
@@ -15,7 +12,7 @@ import { url, view } from "../factory/observable";
 export class TextContent extends BlockComposition {
     content: string;
     display = BlockDisplay.inline;
-    type = BlockType.text;
+    type =BlockAppear.text
 }
 @view('/text')
 export class TextContentView extends BaseComponent<TextContent>{

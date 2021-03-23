@@ -1,17 +1,17 @@
-import { BaseBlock } from "..";
-import { BlockComposition } from "./composition/block";
+
 import React from 'react';
 import { BaseComponent } from "../component";
-import { BlockDisplay, BlockType } from "../enum";
+import { BlockAppear, BlockDisplay } from "../enum";
 import { url, view } from "../../factory/observable";
+import { Block } from "..";
 /**
  * 可以将相邻的block变成一个整体去操作，
  * 可以看成是contentBlock
  */
 @url('/group')
-export class Group extends BaseBlock {
+export class Group extends Block {
     display = BlockDisplay.block;
-    type = BlockType.layout;
+    appear = BlockAppear.layout;
 }
 @view('/group')
 export class GroupView extends BaseComponent<Group>{

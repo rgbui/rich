@@ -1,12 +1,13 @@
-import { BaseBlock } from "../../base";
-import { BaseComponent } from "../../componen
-t";
+import { Block } from "../../base";
+
 import React from 'react';
 import { TextSpan } from "../textspan";
-import { BlockType } from "../../base/enum";
+
 import { Icon } from "../../../component/icon";
 import { prop, url, view } from "../../factory/observable";
 import "./style.less";
+import { BaseComponent } from "../../base/component";
+import { BlockAppear } from "../../base/enum";
 export enum ListType {
     circle,
     number,
@@ -14,25 +15,26 @@ export enum ListType {
 }
 @url('/list')
 export class List extends TextSpan {
-    blocks: { childs: BaseBlock[], subChilds: BaseBlock[] } = { childs: [], subChilds: [] };
+    blocks: { childs: Block[], subChilds: Block[] } = { childs: [], subChilds: [] };
     @prop()
     listType: ListType = ListType.circle;
     @prop()
     expand: boolean = true;
-    get selectorNextBlock() {
-        if (this.expand == true && this.blocks.subChilds && this.blocks.subChilds.length > 0) {
-            var sub = this.blocks.subChilds.first();
-            if (!sub.isLayout) return sub;
-            else return sub.findContentBefore();
-        }
-        else return super.selectorNextBlock;
-    }
+    // get selectorNextBlock()
+    // {
+    //     if (this.expand == true && this.blocks.subChilds && this.blocks.subChilds.length > 0) {
+    //         var sub = this.blocks.subChilds.first();
+    //         if (!sub.isLayout) return sub;
+    //         else return sub.findContentBefore();
+    //     }
+    //     else return super.selectorNextBlock;
+    // }
 }
 @view('/list')
 export class ListView extends BaseComponent<List>{
     renderTextSpan() {
         if (this.block.childs.length > 0) return <span className='sy-block-list-textspan' >{this.block.childs.map(x => <x.viewComponent block={x} key={x.id}></x.viewComponent>)}</span>
-        else return <span dangerouslySetInnerHTML={this.block.htmlContent} ref={e => this.block.setPart('default', e, BlockType.text)}></span>
+        else return <span dangerouslySetInnerHTML={this.block.htmlContent} ref={e => this.block.setPart('default', e, BlockAppear.text)}></span>
     }
     renderListType() {
         if (this.block.listType == ListType.circle)

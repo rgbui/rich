@@ -1,7 +1,8 @@
-import { BaseBlock } from "../block/base";
+
+import { Block } from "../block/base";
 import { Page } from "../page";
-import { Anchor, CreateAnchorByBlock } from "./anchor/anchor";
-import { getContentHtml } from "./anchor/textarea";
+import { Anchor } from "./anchor";
+
 import { SelectorView } from "./render/render";
 import { BlockSelection } from "./selection";
 export class Selector {
@@ -70,91 +71,91 @@ export class Selector {
 
     }
     onKeydown(event: KeyboardEvent) {
-        console.log(event.key);
-        switch (event.key) {
-            case 'ArrowDown':
-            case 'ArrowUp':
-            case 'ArrowLeft':
-            case 'ArrowRight':
-                this.onEndInput();
-                this.onCursorMove(event.key);
-                break;
-            case "Enter":
-                if (this.inputAnchor && this.inputAnchor.anchor.isEnd) {
-                    //创建换行的空白block
-                }
-                else {
-                    if (!this.inputAnchor) this.onStartInput()
-                    this.onInput(event);
-                }
-                break;
-            case 'Delete':
-            case 'Backspace':
-                if (!this.inputAnchor || this.inputAnchor && this.inputAnchor.at == this.cursorAnchor.at) {
-                    this.onKeyDeleteOne(event);
-                }
-                else {
-                    this.onInput(event);
-                }
-            default:
-                if (!this.inputAnchor) this.onStartInput()
-                this.onInput(event);
-                break;
-        }
+        // console.log(event.key);
+        // switch (event.key) {
+        //     case 'ArrowDown':
+        //     case 'ArrowUp':
+        //     case 'ArrowLeft':
+        //     case 'ArrowRight':
+        //         this.onEndInput();
+        //         this.onCursorMove(event.key);
+        //         break;
+        //     case "Enter":
+        //         if (this.inputAnchor && this.inputAnchor.anchor.isEnd) {
+        //             //创建换行的空白block
+        //         }
+        //         else {
+        //             if (!this.inputAnchor) this.onStartInput()
+        //             this.onInput(event);
+        //         }
+        //         break;
+        //     case 'Delete':
+        //     case 'Backspace':
+        //         if (!this.inputAnchor || this.inputAnchor && this.inputAnchor.at == this.cursorAnchor.at) {
+        //             this.onKeyDeleteOne(event);
+        //         }
+        //         else {
+        //             this.onInput(event);
+        //         }
+        //     default:
+        //         if (!this.inputAnchor) this.onStartInput()
+        //         this.onInput(event);
+        //         break;
+        // }
     }
     /***
      * 光标移动
      */
     onCursorMove(arrow: 'ArrowDown' | 'ArrowUp' | 'ArrowLeft' | 'ArrowRight') {
-        var anchor = this.cursorAnchor;
-        switch (arrow) {
-            case 'ArrowDown':
-                var newBlock = this.cursorAnchor.block.selectorDownBlock(anchor.point.x);
-                if (newBlock) {
-                    var newAnchor = newBlock.createAnchorByHorizontal(anchor.point.x, 'before');
-                    anchor.copy(newAnchor);
-                }
-                else return;
-                break;
-            case 'ArrowUp':
-                var newBlock = this.cursorAnchor.block.selectorUpBlock(anchor.point.x);
-                if (newBlock) {
-                    var newAnchor = newBlock.createAnchorByHorizontal(anchor.point.x, 'after');
-                    anchor.copy(newAnchor);
-                }
-                else return;
-                break;
-            case 'ArrowLeft':
-                if (!anchor.isText || anchor.isText && anchor.isStart) {
-                    var prevBlock = anchor.block.selectorPrevBlock;
-                    if (prevBlock) {
-                        var at = -2;
-                        if (!anchor.block.isNeighborBlock(prevBlock, 'prev'))
-                            at = -1;
-                        var newAnchor = CreateAnchorByBlock(prevBlock, at, prevBlock.rightPart);
-                        anchor.copy(newAnchor);
-                    }
-                    else return;
-                }
-                else anchor.locationByAt(anchor.at - 1);
-                break;
-            case 'ArrowRight':
-                if (!anchor.isText || anchor.isText && anchor.isEnd) {
-                    console.log('ffgxxx');
-                    var nextBlock = this.cursorAnchor.block.selectorNextBlock;
-                    console.log(nextBlock, 'nb');
-                    if (nextBlock) {
-                        var at = 1;
-                        if (!anchor.block.isNeighborBlock(nextBlock, 'next')) at = 0;
-                        var newAnchor = CreateAnchorByBlock(nextBlock, at, nextBlock.leftPart);
-                        this.cursorAnchor.copy(newAnchor);
-                    }
-                    else return;
-                }
-                else anchor.locationByAt(anchor.at + 1);
-                break;
-        }
-        this.view.forceUpdate();
+        // var anchor = this.cursorAnchor;
+        // switch (arrow) {
+        //     case 'ArrowDown':
+        //         var newBlock = this.cursorAnchor.block.selectorDownBlock(anchor.point.x);
+        //         if (newBlock) {
+        //             var newAnchor = newBlock.createAnchorByHorizontal(anchor.point.x, 'before');
+        //             anchor.copy(newAnchor);
+        //         }
+        //         else return;
+        //         break;
+        //     case 'ArrowUp':
+        //         var newBlock = this.cursorAnchor.block.selectorUpBlock(anchor.point.x);
+        //         if (newBlock) {
+        //             var newAnchor = newBlock.createAnchorByHorizontal(anchor.point.x, 'after');
+        //             anchor.copy(newAnchor);
+        //         }
+        //         else return;
+        //         break;
+        //     case 'ArrowLeft':
+        //         if (!anchor.isText || anchor.isText && anchor.isStart) {
+        //             var prevBlock = anchor.block.selectorPrevBlock;
+        //             if (prevBlock) {
+        //                 var at = -2;
+        //                 if (!anchor.block.isNeighborBlock(prevBlock, 'prev'))
+        //                     at = -1;
+        //                 var newAnchor = CreateAnchorByBlock(prevBlock, at, prevBlock.rightPart);
+        //                 anchor.copy(newAnchor);
+        //             }
+        //             else return;
+        //         }
+        //         else anchor.locationByAt(anchor.at - 1);
+        //         break;
+        //     case 'ArrowRight':
+        //         if (!anchor.isText || anchor.isText && anchor.isEnd) {
+        //             console.log('ffgxxx');
+        //             var nextBlock = this.cursorAnchor.block.selectorNextBlock;
+        //             console.log(nextBlock, 'nb');
+        //             if (nextBlock) {
+        //                 var at = 1;
+        //                 if (!anchor.block.isNeighborBlock(nextBlock, 'next')) at = 0;
+        //                 var newAnchor = CreateAnchorByBlock(nextBlock, at, nextBlock.leftPart);
+        //                 this.cursorAnchor.copy(newAnchor);
+        //             }
+        //             else return;
+        //         }
+        //         else anchor.locationByAt(anchor.at + 1);
+        //         break;
+        // }
+        // this.view.forceUpdate();
     }
     onPaster(event: ClipboardEvent) {
         if (event.clipboardData.files && event.clipboardData.files.length > 0) {
@@ -165,8 +166,8 @@ export class Selector {
     }
     private inputAnchor: { anchor: Anchor, at: number, content: string };
     onEndInput() {
-        if (typeof this.inputAnchor != 'undefined') delete this.inputAnchor;
-        if (this.view.textarea.value) this.view.textarea.value = '';
+        // if (typeof this.inputAnchor != 'undefined') delete this.inputAnchor;
+        // if (this.view.textarea.value) this.view.textarea.value = '';
     }
     onStartInput() {
         if (typeof this.inputAnchor == 'undefined') {
@@ -178,62 +179,58 @@ export class Selector {
         }
     }
     onInput(event: KeyboardEvent) {
-        var self = this;
-        console.log('ggg');
-        function keyup(ev: KeyboardEvent) {
-            try {
-                var value = self.view.textarea.value;
-                var newContent = self.inputAnchor.content.slice(0, self.inputAnchor.at) + value + self.inputAnchor.content.slice(self.inputAnchor.at);
-                self.inputAnchor.anchor.block.updatePartContent(self.inputAnchor.anchor.part ? self.inputAnchor.anchor.part.name : undefined, newContent);
-                self.inputAnchor.anchor.el.innerHTML = getContentHtml(newContent);
-                self.inputAnchor.anchor.locationByAt(self.inputAnchor.at + value.length, true);
-                self.view.forceUpdate();
-            }
-            catch (e) {
-                console.log(e);
-            }
-            finally {
-                self.view.textarea.removeEventListener('keyup', keyup)
-            }
-        }
-        this.view.textarea.addEventListener('keyup', keyup);
+        // var self = this;
+        // console.log('ggg');
+        // function keyup(ev: KeyboardEvent) {
+        //     try {
+        //         var value = self.view.textarea.value;
+        //         var newContent = self.inputAnchor.content.slice(0, self.inputAnchor.at) + value + self.inputAnchor.content.slice(self.inputAnchor.at);
+        //         self.inputAnchor.anchor.block.updatePartContent(self.inputAnchor.anchor.part ? self.inputAnchor.anchor.part.name : undefined, newContent);
+        //         self.inputAnchor.anchor.el.innerHTML = getContentHtml(newContent);
+        //         self.inputAnchor.anchor.locationByAt(self.inputAnchor.at + value.length, true);
+        //         self.view.forceUpdate();
+        //     }
+        //     catch (e) {
+        //         console.log(e);
+        //     }
+        //     finally {
+        //         self.view.textarea.removeEventListener('keyup', keyup)
+        //     }
+        // }
+        // this.view.textarea.addEventListener('keyup', keyup);
     }
     onKeyDeleteOne(event: KeyboardEvent) {
-        console.log(this.cursorAnchor.at, this.cursorAnchor);
-        if (this.cursorAnchor.at == 0) {
-            //说明删了到最后一位了,这个会定位到当前block上面的一个block，
-            /**
-             * 需要注意，如果当前的blockcontent是空的，那么可能需要考虑删除block
-             */
-        }
-        else if (this.cursorAnchor.at > 0) {
-            var textContent = this.cursorAnchor.textContent;
-            textContent = textContent.slice(0, this.cursorAnchor.at - 1) + textContent.slice(this.cursorAnchor.at);
-            this.cursorAnchor.el.innerHTML = getContentHtml(textContent);
-            this.cursorAnchor.locationByAt(this.cursorAnchor.at - 1, true);
-            this.view.forceUpdate();
-        }
+        // console.log(this.cursorAnchor.at, this.cursorAnchor);
+        // if (this.cursorAnchor.at == 0) {
+        //     //说明删了到最后一位了,这个会定位到当前block上面的一个block，
+        //     /**
+        //      * 需要注意，如果当前的blockcontent是空的，那么可能需要考虑删除block
+        //      */
+        // }
+        // else if (this.cursorAnchor.at > 0) {
+        //     var textContent = this.cursorAnchor.textContent;
+        //     textContent = textContent.slice(0, this.cursorAnchor.at - 1) + textContent.slice(this.cursorAnchor.at);
+        //     this.cursorAnchor.el.innerHTML = getContentHtml(textContent);
+        //     this.cursorAnchor.locationByAt(this.cursorAnchor.at - 1, true);
+        //     this.view.forceUpdate();
+        // }
     }
     /**
      * 捕获聚焦
      * 光标中的textarea在鼠标点击在别处mousedown时，会失焦
      * 所以在点击mouseup时，需要重新聚焦
      */
-    onCaptureFocus() {
-        if (this.view) {
-            if (this.view.textarea) {
-                if (this.view.textarea !== document.activeElement) {
-                    this.view.textarea.focus()
-                }
-            }
+    onTextInputRestartCaptureFocus() {
+        if (this.view && this.view.textInput) {
+            this.view.textInput.onFocus();
         }
     }
-    isInOverBlockOperator(ele: HTMLElement) {
-        if (ele && this.view && this.view.operatorElement) {
-            return this.view.operatorElement.contains(ele);
-        }
-        return false;
-    }
+    // isInOverBlockOperator(ele: HTMLElement) {
+    //     if (ele && this.view && this.view.operatorElement) {
+    //         return this.view.operatorElement.contains(ele);
+    //     }
+    //     return false;
+    // }
     onOverBlock() {
         this.view.forceUpdate();
     }
@@ -242,7 +239,7 @@ export class Selector {
      * 1. 选中中所涉及到的文字选区block
      * 2. 一个选区构成一个矩形，与矩形有相交的block
      */
-    get blocks(): BaseBlock[] {
+    get blocks(): Block[] {
         return [];
     }
     view: SelectorView;

@@ -10,20 +10,21 @@ import { Selector } from '../selector';
 import { PageLayout } from "./layout/index";
 import { PageOperator } from "./operator";
 import { PageView } from './view';
-import { BaseBlock } from '../block/base';
 export class Page extends Events {
     el: HTMLElement;
     id: string;
-
     date: number;
     url: '/page';
-    key: Symbol;
+    /***
+     * 当前初始化后的实例对象Id,确保id的唯一性
+     */
+    private rid: string;
     constructor(el: HTMLElement, options?: Record<string, any>) {
         super();
-        this.key = Symbol('key');
         this.el = el;
         if (typeof options == 'object') Object.assign(this, util.clone(options));
         if (typeof this.id == 'undefined') this.id = util.guid();
+        this.rid = util.guid();
         if (typeof this.date == 'undefined') this.date = new Date().getTime();
         this.init();
     }
@@ -82,6 +83,15 @@ export class Page extends Events {
     }
     render() {
         ReactDOM.render(<PageView page={this}></PageView>, this.el.appendChild(document.createElement('div')));
+    }
+    get DOCUENT_KEYUP_KEY() {
+        return this.rid + ".keyup";
+    }
+    get DOCUENT_MOUSEMOVE_KEY() {
+        return this.rid + ".mousemove";
+    }
+    get DOCUENT_MOUSEUP_KEY() {
+        return this.rid + ".mouseup";
     }
 }
 export interface Page extends PageOperator { }

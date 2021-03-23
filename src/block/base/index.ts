@@ -4,7 +4,7 @@ import { Events } from "../../util/events";
 import { util } from "../../util/util";
 import { Point } from "../../common/point";
 import { Page } from "../../page";
-import { Anchor } from "../../selector/anchor/anchor";
+import { Anchor } from "../../selector/anchor";
 import { BlockFactory } from "../factory/block.factory";
 import { BlockAppear, BlockDisplay, Locate } from "./enum";
 import { BlockStyle } from "../style";
@@ -456,24 +456,24 @@ export abstract class Block extends Events {
         }
         return bs;
     }
-    abstract onMousedown(anchor: Anchor): void;
+    onMousedown(anchor: Anchor) { }
     /**
      * 鼠标移到元素内，不包含子元素
      * @param event 
      */
-    abstract onMouseover(): void;
+    onMouseover() { }
     /***
      * 鼠标移到元素外，不包含子元素
      */
-    abstract onMouseout(): void;
+    onMouseout() { }
     /**
      * 鼠标移到元素内，包括子元素
      * @param event 
      */
-    abstract onMouseenter(): void;
+    onMouseenter() { }
     /**
      * 鼠标移到元素外，包括子元素
      * @param event 
      */
-    abstract onMouselave(): void;
+    onMouseleave() { }
 }

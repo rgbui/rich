@@ -1,10 +1,10 @@
 import { util } from "../../util/util";
-import { BaseBlock } from "../base";
+import { Block } from "../base";
 import { BlockState } from "../base/enum";
 import { BorderStyle, FillStyle, FilterStyle, FontStyle, RadiusStyle, ShadowStyle, TransformStyle } from "./type";
 
 export class BlockStyle {
-    block: BaseBlock;
+    block: Block;
     id: string;
     date: number;
     /**
@@ -19,7 +19,7 @@ export class BlockStyle {
      */
     state: BlockState;
     styles: Record<string, Style> = {};
-    constructor(block: BaseBlock) {
+    constructor(block: Block) {
         this.block = block;
     }
     async load(options: Record<string, any>) {

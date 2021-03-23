@@ -1,10 +1,10 @@
-import { BaseBlock } from "../../base";
+import { Block } from "../../base";
 import { BaseComponent } from "../../base/component";
 import React from "react";
 import { url, view } from "../../factory/observable";
 import "./style.less";
 @url('/table')
-export class Table extends BaseBlock {
+export class Table extends Block {
 }
 @view('/table')
 export class TableView extends BaseComponent<Table>{

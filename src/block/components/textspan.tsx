@@ -1,12 +1,12 @@
 import { Content } from "../base/common/content";
 import React from 'react';
 import { BaseComponent } from "../base/component";
-import { BlockDisplay, BlockType } from "../base/enum";
+import { BlockAppear, BlockDisplay } from "../base/enum";
 import { url, view } from "../factory/observable";
 @url("/textspan")
 export class TextSpan extends Content {
     display = BlockDisplay.block;
-    type = BlockType.none;
+    appear = BlockAppear.none;
     content: string;
     get isText() {
         if (this.childs.length > 0) return false;

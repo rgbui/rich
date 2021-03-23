@@ -1,4 +1,4 @@
-import { BaseBlock } from "../../base";
+import { Block } from "../../base";
 import { BaseComponent } from "../../base/component";
 import React from 'react';
 import { TableMeta } from "./view.meta";
@@ -12,7 +12,7 @@ import { url, view } from "../../factory/observable";
  * 3. 表格的视图展示（具体到视图的展现,信息存在tableStore） 
  */
 @url('/table/store')
-export class TableStore extends BaseBlock {
+export class TableStore extends Block {
     meta: TableMeta;
     cols: {
         name: string,

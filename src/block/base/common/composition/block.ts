@@ -1,9 +1,10 @@
-import { BaseBlock } from "../..";
+import { Block } from "../..";
+
 
 /***
  * 块布局
  */
-export class BlockComposition extends BaseBlock{
+export class BlockComposition extends Block{
     /**
      * 是否可以自由拖动
      */

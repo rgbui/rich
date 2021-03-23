@@ -1,11 +1,11 @@
 import { Component } from "react";
 import { Page } from "../../page";
-import { BaseBlock } from "../base";
+import { Block } from "../base";
 import { BaseComponent } from "../base/component";
 
 export class BlockFactory {
-    private static blockMap: Map<string, { model: typeof BaseBlock, view: typeof BaseComponent }> = new Map();
-    public static registerComponent(url: string, blockClass: typeof BaseBlock) {
+    private static blockMap: Map<string, { model: typeof Block, view: typeof BaseComponent }> = new Map();
+    public static registerComponent(url: string, blockClass: typeof Block) {
         var b = this.blockMap.get(url);
         if (b) {
             b.model = blockClass;
@@ -22,7 +22,7 @@ export class BlockFactory {
     public static createBlock(url: string, page: Page) {
         var bc = this.blockMap.get(url);
         if (bc) {
-            var newBlock = new bc.model(page);
+            var newBlock = new (bc.model as any)(page);
             newBlock.viewComponent = bc.view;
             return newBlock;
         }

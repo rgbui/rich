@@ -1,10 +1,11 @@
-import { BaseBlock } from "../..";
+import { Block } from "../..";
+
 
 
 /***
  * 内容布局
  */
-export class ContentAreaComposition extends BaseBlock{
+export abstract class ContentAreaComposition extends Block {
     /**内容区域的空白间隔 */
     contentGap: {
         top: number,
