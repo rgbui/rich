@@ -7,6 +7,6 @@ export class PageLayoutView extends Component<{ pageLayout: PageLayout }>{
         super(props);
     }
     render() {
-        return <div className='kanhai-page-layout'>{this.props.children}</div>
+        return <div className='sy-page-layout'>{this.props.children}</div>
     }
 }

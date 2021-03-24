@@ -321,17 +321,10 @@ Array.prototype.insertAt = function (index, data) {
     this.splice.apply(this, arr as any);
     return this;
 }
-// Array.prototype.insertArray = function (index, arr) {
-//     if (arr == undefined && Array.isArray(index)) {
-//         arr = index;
-//         index = this.length;
-//     }
-//     arr = Array.toArray(arr);
-//     arr = arr.copy();
-//     arr.prepend(index);
-//     this.insertAt.apply(this, arr);
-//     return this;
-// }
+Array.prototype.addRange = function (index, arr) {
+    if (typeof index == 'number') return this.splice(index, 0, ...arr)
+    else this.splice(this.length, 0, ...index);
+}
 Array.prototype.move = function (item, index: number = 0) {
 
     if (typeof index == 'object') index = this.findIndex(index);

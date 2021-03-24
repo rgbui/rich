@@ -3,6 +3,7 @@ import React from 'react';
 import { BaseComponent } from "../base/component";
 import { BlockAppear, BlockDisplay } from "../base/enum";
 import { url, view } from "../factory/observable";
+import { TextArea } from "../base/appear";
 @url("/textspan")
 export class TextSpan extends Content {
     display = BlockDisplay.block;
@@ -27,11 +28,12 @@ export class TextSpanView extends BaseComponent<TextSpan>{
             width: (this.block.widthPercent || 100) + "%"
         };
         if (this.block.childs.length > 0)
-            return <span className='block-text-span' style={style}>{this.block.childs.map(x =>
+            return <span className='sy-block-text-span' style={style}>{this.block.childs.map(x =>
                 <x.viewComponent key={x.id} block={x}></x.viewComponent>
             )}</span>
         else
-            return <span className='block-text-span' style={style}
-                dangerouslySetInnerHTML={this.block.htmlContent}></span>
+            return <span className='sy-block-text-span' style={style}>
+                <TextArea html={this.block.htmlContent}></TextArea>
+            </span>
     }
 }

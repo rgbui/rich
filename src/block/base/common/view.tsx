@@ -21,9 +21,9 @@ export class View extends ContentAreaComposition {
 export class ViewComponent extends BaseComponent<View> {
     render() {
         if (this.block && Array.isArray(this.block.childs))
-            return <div className='block-view' >{this.block.childs.map(x =>
+            return <div className='sy-block-view' >{this.block.childs.map(x =>
                 <x.viewComponent key={x.id} block={x}></x.viewComponent>
             )}</div>
-        else return <div className='block-view' ></div>
+        else return <div className='sy-block-view' ></div>
     }
 }

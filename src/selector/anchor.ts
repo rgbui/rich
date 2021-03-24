@@ -30,9 +30,16 @@ export class Anchor {
     part?: BlockPart;
     get el() {
         if (this.part) return this.part.el;
-        else {
-            return this.block.el;
+        else return this.block.el;
+    }
+    get textEl() {
+        var el = this.el;
+        if (!el.classList.contains('sy-appear-text')) {
+            var c: HTMLElement = el.querySelector('.sy-appear-text');
+            if (!c) throw new Error('not found appear text')
+            else el = c;
         }
+        return el;
     }
     at?: number;
     /***
@@ -68,57 +75,85 @@ export class Anchor {
         }
     }
     get textContent() {
-        return TextEle.getContent(this.el);
+        return TextEle.getContent(this.textEl);
     }
     private _view: HTMLElement;
     get view(): HTMLElement {
         if (typeof this._view == 'undefined') {
             this._view = document.createElement('span');
-            this._view.innerHTML = `<em></em>`
+            this._view.innerHTML = `<span></span>`
         }
         return this._view;
     }
     get isActive() {
-        return this.block.page.activeAnchor === this;
+        return this.block.page.selector.activeAnchor === this;
     }
     /***
      * 光标显示
      */
     visible() {
         if (this.isText) {
-            var el = this.el;
+            if (typeof this.at != 'number') {
+                throw 'the text anchor at is not found';
+                return;
+            }
+            var el = this.textEl;
             var content = this.textContent;
-            var pre = content.slice(0, this.at);
-            var next = content.slice(this.at);
-            if (this.el.contains(this.view)) {
+            var pre = content.slice(0, this.at) || "";
+            var next = content.slice(this.at) || "";
+            if (el.contains(this.view)) {
                 var cs = el.children;
                 (cs[0] as HTMLSpanElement).innerHTML = TextEle.getHtml(pre);
                 (cs[2] as HTMLSpanElement).innerHTML = TextEle.getHtml(next);
             }
             else {
-                this.el.innerHTML = '';
+                el.innerHTML = '';
                 var sp1 = document.createElement('span');
                 sp1.innerHTML = TextEle.getHtml(pre);
-                this.el.appendChild(sp1);
-                this.el.appendChild(this.view);
+                el.appendChild(sp1);
+                el.appendChild(this.view);
                 var sp2 = document.createElement('span');
                 sp2.innerHTML = TextEle.getHtml(next);
-                this.el.appendChild(sp2)
+                el.appendChild(sp2)
             }
             if (this.isActive) {
                 this._view.style.visibility = 'visible';
                 var self = this;
+                if (this.textVisibleCursorTimer) clearInterval(this.textVisibleCursorTimer);
+                delete this.textVisibleCursorTimer;
                 this.textVisibleCursorTimer = setInterval(function () {
                     self._view.style.visibility = self._view.style.visibility == 'visible' ? "hidden" : 'visible';
                 }, 700)
             }
             else {
                 this._view.style.visibility = 'hidden';
-                if (this.textVisibleCursorTimer) clearTimeout(this.textVisibleCursorTimer);
+                if (this.textVisibleCursorTimer) clearInterval(this.textVisibleCursorTimer);
                 delete this.textVisibleCursorTimer;
             }
+            this.view.setAttribute('class', 'sy-anchor-text');
+        }
+        else {
+            var el = this.el;
+            if (!el.classList.contains('sy-appear-solid')) {
+                var c: HTMLElement = el.querySelector('.sy-appear-solid');
+                if (!c) throw new Error('not found appear solid')
+                else el = c;
+            }
+            if (!el.contains(this.view)) {
+                el.appendChild(this.view);
+            }
+            this.view.setAttribute('class', 'sy-anchor-solid');
         }
     }
     private textVisibleCursorTimer;
+    dispose() {
+        if (this._view) {
+            this._view.remove();
+        }
+        if (this.textVisibleCursorTimer) {
+            clearInterval(this.textVisibleCursorTimer);
+            delete this.textVisibleCursorTimer;
+        }
+    }
 }
 

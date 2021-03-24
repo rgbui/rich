@@ -25,6 +25,6 @@ import "./components/code/code";
  * import component style
  */
 import "./components/style.less";
-import "./common/style.less";
+import "./base/common/style.less";
 
 

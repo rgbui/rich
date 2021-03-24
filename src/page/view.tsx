@@ -19,10 +19,10 @@ export class PageView extends Component<{ page: Page }> {
             letterSpacing: this.page.config.letterSpaceing+'px',
             fontSize: this.page.config.fontSize+'px'
         }
-        return <div className='kanhai-page-view' style={pageStyle} tabIndex={1} onKeyDown={this.page.onKeydown.bind(this.page)}>
+        return <div className='sy-page-view' style={pageStyle} tabIndex={1} onKeyDown={this.page.onKeydown.bind(this.page)}>
             <PageLayoutView pageLayout={this.page.pageLayout}>
                 <SelectorView selector={this.page.selector}></SelectorView>
-                <div className='kanhai-page-views'
+                <div className='sy-page-view-content'
                     onMouseOver={e => this.page.onMouseover(e.nativeEvent)}
                     onMouseDown={e => this.page.onMousedown(e.nativeEvent)}
                     onMouseOut={e => this.page.onMouseout(e.nativeEvent)}

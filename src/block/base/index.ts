@@ -391,14 +391,14 @@ export abstract class Block extends Events {
         if (part instanceof Block) {
             anchor.block = part;
             if (part.isText) {
-                anchor.at = TextEle.getAt(part.el, point);
+                anchor.at = TextEle.getAt(anchor.textEl, point);
             }
         }
         else {
             anchor.part = part;
             anchor.block = part.block;
             if (anchor.part.isText) {
-                anchor.at = TextEle.getAt(part.el, point);
+                anchor.at = TextEle.getAt(anchor.textEl, point);
             }
         }
         return anchor;

@@ -1,13 +1,13 @@
 
 import { BaseComponent } from "../component";
 import { Content } from "./content";
-import { BlockDisplay, BlockType } from "../enum";
+import { BlockAppear, BlockDisplay } from "../enum";
 import { url, view } from "../../factory/observable";
 import React from 'react';
 @url('/col')
 export class Col extends Content {
     display = BlockDisplay.block;
-    type = BlockType.layout;
+    type =BlockAppear.layout;
 }
 @view('/col')
 export class ColView extends BaseComponent<Col>{

@@ -37,7 +37,7 @@ export class ViewArea extends ContentAreaComposition {
 @view('/view/area')
 export class ViewAreaComponent extends BaseComponent<ViewArea>{
     render() {
-        return <div className='block-view-area' >{this.block.childs.map(x =>
+        return <div className='sy-block-view-area' >{this.block.childs.map(x =>
             <x.viewComponent key={x.id} block={x}></x.viewComponent>
         )}</div>
     }

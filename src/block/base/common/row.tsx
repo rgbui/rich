@@ -17,7 +17,7 @@ export class Row extends Block {
 @view('/row')
 export class RowView extends BaseComponent<Row>{
     render() {
-        return <div className='block-row' >{this.block.childs.map(x =>
+        return <div className='sy-block-row' >{this.block.childs.map(x =>
             <x.viewComponent key={x.id} block={x}></x.viewComponent>
         )}</div>
     }

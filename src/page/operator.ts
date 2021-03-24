@@ -27,7 +27,8 @@ export class PageOperator {
             })
         }
         if (typeof document[this.DOCUENT_MOUSEUP_KEY] == 'undefined') {
-            document[this.DOCUENT_KEYUP_KEY] = this.onMouseup.bind(this);
+            document[this.DOCUENT_MOUSEUP_KEY] = this.onMouseup.bind(this);
+            document.addEventListener('mouseup', document[this.DOCUENT_MOUSEUP_KEY]);
             this.on('unmount', () => {
                 document.removeEventListener('mouseup', document[this.DOCUENT_MOUSEUP_KEY]);
                 delete document[this.DOCUENT_MOUSEUP_KEY];
@@ -41,10 +42,11 @@ export class PageOperator {
             var block = (blockEle as any).block as Block;
             var anchor = block.visibleAnchor(Point.from(event));
             if (anchor) {
-                var selection = new BlockSelection();
+                var selection = this.selector.createSelection();
                 selection.start = anchor;
-                this.activeAnchor = anchor;
+                this.selector.activeAnchor = anchor;
                 this.selector.selections = [selection];
+                this.selector.renderSelection();
             }
         }
     }
@@ -57,7 +59,7 @@ export class PageOperator {
                 var block = (blockEle as any).block as Block;
                 var anchor = block.visibleAnchor(Point.from(event));
                 if (anchor) {
-                    this.activeAnchor = anchor;
+                    this.selector.activeAnchor = anchor;
                     var sel = this.selector.selections.first();
                     if (sel) {
                         sel.end = anchor;
@@ -66,29 +68,27 @@ export class PageOperator {
             }
         }
     }
-    activeAnchor: Anchor;
     onMouseup(this: Page, event: MouseEvent) {
         if (this.mouseStatus == 'down' || this.mouseStatus == 'move') {
             this.mouseStatus = 'up';
             this.selector.onTextInputRestartCaptureFocus();
         }
     }
-    overBlock: Block;
     onMouseover(this: Page, event: MouseEvent) {
         var toEle = event.target as HTMLElement;
         var blockEle = toEle.closest('[data-block]');
         if (blockEle) {
             var block = (blockEle as any).block;
-            if (block == this.overBlock) {
+            if (block == this.selector.overBlock) {
                 return;
             }
             else {
-                if (this.overBlock) {
-                    this.emit('mouseleaveBlock', this.overBlock);
+                if (this.selector.overBlock) {
+                    this.emit('mouseleaveBlock', this.selector.overBlock);
                 }
-                this.overBlock = block;
-                this.emit('mouseenterBlock', this.overBlock);
-                this.selector.onOverBlock();
+                this.selector.overBlock = block;
+                this.emit('mouseenterBlock', this.selector.overBlock);
+                //this.selector.onOverBlock();
             }
         }
     }

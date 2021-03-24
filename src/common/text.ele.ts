@@ -62,7 +62,6 @@ export class TextEle {
              * https://zhidao.baidu.com/question/386412786.html
              */
             if (word == '\n' || word == '\r') {
-
                 row.x = rect.left;
                 rowCount += 1;
                 /**
@@ -74,27 +73,28 @@ export class TextEle {
             }
             else {
                 var w = this.wordWidth(word, fontStyle);
-                if (rowCount == 1 && row.x + w > firstRowWidth) {
+                if (rowCount == 1 && row.x + w > firstRowWidth + currentRect.left) {
                     row.x = rect.left;
                     rowCount += 1;
                 }
-                else if (rowCount > 1 && row.x + w > rowWidth) {
+                else if (rowCount > 1 && row.x + w > rowWidth + rect.left) {
                     row.x = rect.left;
                     rowCount += 1;
                 }
                 if (top >= (rowCount - 1) * lineHeight && top < rowCount * lineHeight) {
                     if (point.x >= row.x && point.x < row.x + w) {
                         if (row.x + w / 2.0 > point.x) {
-                            return i - 1;
+                            return i;
                         }
                         else {
-                            return i;
+                            return i + 1;
                         }
                     }
                 }
                 row.x += w;
             }
         }
+        console.warn('text.ele.tsx:not found ele point at...', point, top, lineHeight, currentRect.left)
     }
     static wordWidth(word: string, fontStyle: TextFontStyle): number {
         if (word == '') return 0;
@@ -116,12 +116,13 @@ export class TextEle {
         return __g.measureText(word).width + ls;
     }
     static getContent(ele: HTMLElement) {
-        var text = ele.innerHTML;
-        text = text.replace(/<br[\s]*\/>/g, "\n");
-        text = text.replace(/<i[^>]*>[\s]*<\/i>/g, '');
-        text = text.replace(/&nbsp;/g, " ");
-        text = text.replace(/&lt;/g, "<");
-        text = text.replace(/&gt;/g, ">");
+        var text = ele.innerText;
+        console.log(text,'gg',ele);
+        // text = text.replace(/<br[\s]*\/>/g, "\n");
+        // text = text.replace(/<i[^>]*>[\s]*<\/i>/g, '');
+        // text = text.replace(/&nbsp;/g, " ");
+        // text = text.replace(/&lt;/g, "<");
+        // text = text.replace(/&gt;/g, ">");
         return text;
     }
     static getHtml(content: string) {

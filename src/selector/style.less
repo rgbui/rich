@@ -1,15 +1,5 @@
-.kanhai-selector {
+.sy-selector {
     position: relative;
-
-    &-cursor {
-        position        : absolute;
-        width           : 2px;
-        margin-left     : -1px;
-        min-height      : 12px;
-        background-color: #000;
-        pointer-events  : none;
-        visibility      : hidden;
-    }
 
     textarea {
         opacity  : 0;
@@ -18,29 +8,21 @@
         width    : 1px;
         transform: translate(-1px, -1px);
     }
+}
 
-    &-selections {}
+.sy-anchor-text {
+    width      : 0px;
+    position   : relative;
+    line-height: inherit;
+    display    : inline;
 
-    &-rects {
-        &-rect {
-            outline       : 1px solid #000;
-            position      : absolute;
-            pointer-events: none;
-        }
-    }
-
-    &-operators {
-        position: absolute;
-        color   : @text-color;
-
-        .sy-icon {
-            display        : inline-flex;
-            justify-content: center;
-            align-items    : center;
-            width          : 24px;
-            height         : 24px;
-
-            .background();
-        }
+    >span {
+        position        : absolute;
+        top             : 0px;
+        left            : 0px;
+        width           : 2px;
+        margin-left     : -1px;
+        height          : 100%;
+        background-color: #000;
     }
 }
