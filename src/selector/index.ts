@@ -79,7 +79,7 @@ export class Selector {
      * 光标中的textarea在鼠标点击在别处mousedown时，会失焦
      * 所以在点击mouseup时，需要重新聚焦
      */
-    onTextInputRestartCaptureFocus() {
+    onTextInputCaptureFocus() {
         if (this.view && this.view.textInput) {
             this.view.textInput.onFocus();
         }
@@ -89,10 +89,29 @@ export class Selector {
         var sel = new BlockSelection(this);
         return sel;
     }
+    replaceSelection(anchor: Anchor) {
+        if (this.selections.length > 0) {
+            this.selections.each((sel, i) => {
+                if (i > 0) sel.dispose();
+            });
+            var sel = this.selections.first();
+            if (sel.end) sel.end.dispose();
+            if (sel.start) { anchor.acceptView(sel.start); sel.start = anchor; }
+            this.selections = [sel];
+        }
+        else {
+            var sel = this.createSelection();
+            sel.start = anchor;
+            this.selections = [sel];
+        }
+    }
     renderSelection() {
         if (this.isOnlyOneAnchor) {
             this.activeAnchor.visible()
         }
+    }
+    createAnchor() {
+        return new Anchor(this);
     }
 }
 

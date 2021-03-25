@@ -71,12 +71,6 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
             var value = this.textarea.value;
         }
     }
-    onBlur(event: FocusEvent) {
-        var self = this;
-        var relatedTarget = event.relatedTarget;
-        if (!relatedTarget || relatedTarget && !self.selector.page.el.contains(relatedTarget as HTMLDivElement))
-            self.selector.page.onBlur(event);
-    }
     onFocus() {
         if (document.activeElement !== this.textarea) {
             this.textarea.focus();
@@ -86,7 +80,6 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
         return <div className='sy-selector-textinput'><textarea
             ref={e => this.textarea = e}
             onPaste={e => this.onPaster(e.nativeEvent)}
-            onBlur={e => this.onBlur(e.nativeEvent)}
             onKeyDown={e => this.onKeydown(e.nativeEvent)}
             onKeyUp={e => this.onKeyup(e.nativeEvent)}
         ></textarea></div>

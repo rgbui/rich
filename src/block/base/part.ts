@@ -2,7 +2,6 @@ import { Block } from ".";
 import { TextEle } from "../../common/text.ele";
 import { BlockAppear, BlockDisplay } from "./enum";
 
-
 export class BlockPart {
     block: Block;
     name: string;
@@ -23,6 +22,27 @@ export class BlockPart {
     }
     get isText() {
         return this.appear == BlockAppear.text;
+    }
+    get isSolid() {
+        return this.appear == BlockAppear.solid;
+    }
+    get textEl() {
+        var el = this.el;
+        if (!el.classList.contains('sy-appear-text')) {
+            var c: HTMLElement = el.querySelector('.sy-appear-text');
+            if (!c) throw new Error('not found appear text')
+            else el = c;
+        }
+        return el;
+    }
+    get soldEl() {
+        var el = this.el;
+        if (!el.classList.contains('sy-appear-solid')) {
+            var c: HTMLElement = el.querySelector('.sy-appear-solid');
+            if (!c) throw new Error('not found appear solid')
+            else el = c;
+        }
+        return el;
     }
 }
 

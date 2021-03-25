@@ -32,4 +32,8 @@ export class BlockSelection {
     get hasRange() {
         return !this.isEmpty && !this.isOnlyAnchor;
     }
+    dispose() {
+        if (this.start) this.start.dispose()
+        if (this.end) this.end.dispose()
+    }
 }

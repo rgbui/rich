@@ -1,5 +1,6 @@
 
 
+import { Selector } from ".";
 import { Block } from "../block/base";
 import { BlockAppear } from "../block/base/enum";
 import { BlockPart } from "../block/base/part";
@@ -12,6 +13,10 @@ import { TextEle } from "../common/text.ele";
  * 也可以是点文本的某个位置上面
  */
 export class Anchor {
+    selector: Selector;
+    constructor(selector: Selector) {
+        this.selector = selector;
+    }
     /***
      * 光标位置,一般是指鼠标点击的位置，
      * 如果是文本，
@@ -32,15 +37,6 @@ export class Anchor {
         if (this.part) return this.part.el;
         else return this.block.el;
     }
-    get textEl() {
-        var el = this.el;
-        if (!el.classList.contains('sy-appear-text')) {
-            var c: HTMLElement = el.querySelector('.sy-appear-text');
-            if (!c) throw new Error('not found appear text')
-            else el = c;
-        }
-        return el;
-    }
     at?: number;
     /***
      * 光标是否为于文字开始位置
@@ -56,15 +52,13 @@ export class Anchor {
     }
     get isText() {
         if (this.part) {
-            return this.part.appear == BlockAppear.text;
+            return this.part.isText;
         }
         else return this.block.isText;
     }
-    copy(anchor: Anchor) {
-        ['point', 'textArea', 'block', 'part', 'at'].each(key => {
-            if (key == 'point') this[key] = anchor.point.clone();
-            else this[key] = anchor[key];
-        })
+    get isSolid() {
+        if (this.part) return this.part.isSolid;
+        else return this.block.isSolid;
     }
     get() {
         return {
@@ -75,12 +69,26 @@ export class Anchor {
         }
     }
     get textContent() {
-        return TextEle.getContent(this.textEl);
+        return TextEle.getTextContent(this.textEl)
+    }
+    get textEl() {
+        return this.part ? this.part.textEl : this.block.textEl;
+    }
+    get soldEl() {
+        if (this.part) return this.part.soldEl;
+        else return this.block.soldEl;
+    }
+    acceptView(anchor: Anchor) {
+        this._view = anchor._view;
+        if (anchor.textVisibleCursorTimer) { clearInterval(anchor.textVisibleCursorTimer); delete anchor.textVisibleCursorTimer; }
     }
     private _view: HTMLElement;
     get view(): HTMLElement {
         if (typeof this._view == 'undefined') {
             this._view = document.createElement('span');
+            this.selector.view.el.appendChild(this._view);
+            this._view.style.display = 'none';
+            this._view.classList.add('sy-anchor-appear');
             this._view.innerHTML = `<span></span>`
         }
         return this._view;
@@ -92,9 +100,12 @@ export class Anchor {
      * 光标显示
      */
     visible() {
+        var self = this;
+        if (this.textVisibleCursorTimer) clearInterval(this.textVisibleCursorTimer);
+        delete this.textVisibleCursorTimer;
         if (this.isText) {
             if (typeof this.at != 'number') {
-                throw 'the text anchor at is not found';
+                throw 'the text anchor at is not null';
                 return;
             }
             var el = this.textEl;
@@ -116,33 +127,31 @@ export class Anchor {
                 sp2.innerHTML = TextEle.getHtml(next);
                 el.appendChild(sp2)
             }
+            this.view.style.display = 'inline';
             if (this.isActive) {
-                this._view.style.visibility = 'visible';
-                var self = this;
-                if (this.textVisibleCursorTimer) clearInterval(this.textVisibleCursorTimer);
-                delete this.textVisibleCursorTimer;
+                this.view.style.visibility = 'visible';
                 this.textVisibleCursorTimer = setInterval(function () {
-                    self._view.style.visibility = self._view.style.visibility == 'visible' ? "hidden" : 'visible';
+                    self.view.style.visibility = self._view.style.visibility == 'visible' ? "hidden" : 'visible';
                 }, 700)
             }
             else {
-                this._view.style.visibility = 'hidden';
-                if (this.textVisibleCursorTimer) clearInterval(this.textVisibleCursorTimer);
-                delete this.textVisibleCursorTimer;
+                this.view.style.visibility = 'hidden';
             }
-            this.view.setAttribute('class', 'sy-anchor-text');
+            this.view.classList.remove('sy-anchor-solid');
+            this.view.classList.add('sy-anchor-text');
         }
-        else {
-            var el = this.el;
-            if (!el.classList.contains('sy-appear-solid')) {
-                var c: HTMLElement = el.querySelector('.sy-appear-solid');
-                if (!c) throw new Error('not found appear solid')
-                else el = c;
-            }
+        else if (this.isSolid) {
+            var el = this.soldEl;
             if (!el.contains(this.view)) {
                 el.appendChild(this.view);
             }
-            this.view.setAttribute('class', 'sy-anchor-solid');
+            this.view.style.display = 'inline';
+            this.view.classList.remove('sy-anchor-text');
+            this.view.classList.add('sy-anchor-solid');
+        }
+        else {
+            console.log(this.block);
+            throw new Error('anchor visible error...');
         }
     }
     private textVisibleCursorTimer;

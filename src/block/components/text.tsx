@@ -13,7 +13,7 @@ import { TextArea } from "../base/appear";
 export class TextContent extends BlockComposition {
     content: string;
     display = BlockDisplay.inline;
-    type = BlockAppear.text
+    appear = BlockAppear.text
 }
 @view('/text')
 export class TextContentView extends BaseComponent<TextContent>{

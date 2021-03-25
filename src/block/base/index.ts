@@ -268,7 +268,7 @@ export abstract class Block extends Events {
         else return null;
     }
     get visibleHeadAnchor() {
-        var anchor = new Anchor();
+        var anchor = this.page.selector.createAnchor();
         anchor.part = this.visibleHeadPart;
         if (anchor.isText) {
             anchor.at = 0;
@@ -276,7 +276,7 @@ export abstract class Block extends Events {
         return anchor;
     }
     get visibleBackAnchor() {
-        var anchor = new Anchor();
+        var anchor = this.page.selector.createAnchor();
         anchor.part = this.visibleBackPart;
         if (anchor.isText) {
             anchor.at = anchor.textContent.length;
@@ -359,7 +359,6 @@ export abstract class Block extends Events {
         var next = this.visibleNext;
         if (next) return next.visibleHeadAnchor;
     }
-
     visibleDownAnchor(x: number) {
         var rc = this.closest(x => x.isRow);
         if (rc && rc.next) {
@@ -387,18 +386,18 @@ export abstract class Block extends Events {
      */
     visibleAnchor(point: Point): Anchor {
         var part = this.visiblePointPart(point);
-        var anchor = new Anchor();
+        var anchor = this.page.selector.createAnchor();
         if (part instanceof Block) {
             anchor.block = part;
             if (part.isText) {
-                anchor.at = TextEle.getAt(anchor.textEl, point);
+                anchor.at = TextEle.getAt(part.textEl, point);
             }
         }
         else {
             anchor.part = part;
             anchor.block = part.block;
             if (anchor.part.isText) {
-                anchor.at = TextEle.getAt(anchor.textEl, point);
+                anchor.at = TextEle.getAt(part.textEl, point);
             }
         }
         return anchor;
@@ -476,4 +475,22 @@ export abstract class Block extends Events {
      * @param event 
      */
     onMouseleave() { }
+    get textEl() {
+        var el = this.el;
+        if (!el.classList.contains('sy-appear-text')) {
+            var c: HTMLElement = el.querySelector('.sy-appear-text');
+            if (!c) throw new Error('not found appear text')
+            else el = c;
+        }
+        return el;
+    }
+    get soldEl() {
+        var el = this.el;
+        if (!el.classList.contains('sy-appear-solid')) {
+            var c: HTMLElement = el.querySelector('.sy-appear-solid');
+            if (!c) throw new Error('not found appear solid')
+            else el = c;
+        }
+        return el;
+    }
 }

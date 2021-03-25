@@ -19,7 +19,10 @@ ReactDOM.render(
         });
         page.on('focus', function (ev) {
             console.log('focus', ev);
-        })
+        });
+        page.on('focusAnchor', function (anchor) {
+            console.log('focusAnchor', anchor);
+        });
         await page.load(data);
         await page.render();
     }

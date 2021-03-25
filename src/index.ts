@@ -4,6 +4,7 @@ import "./util/array";
 import { Page } from "./page";
 import "./assert/theme.less";
 import './block/declare';
+import "./block/style.less";
 import "./selector/style.less";
 import "./page/style.less";
 import "./assert/font-awesome/less/font-awesome.less";

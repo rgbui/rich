@@ -35,7 +35,7 @@ export class TextEle {
         return rs;
     }
     static getAt(ele: HTMLElement, point: Point) {
-        var content = this.getContent(ele);
+        var content = this.getTextContent(ele);
         var ts = content.split("");
         var rect = new Rect();
         var currentDisplay = util.getStyle(ele, 'display');
@@ -56,7 +56,8 @@ export class TextEle {
         var row = { x: currentRect.left };
         var lineHeight = fontStyle.lineHeight;
         var top = point.y - rect.top;
-        for (let i = 0; i < ts.length; i++) {
+        let i = 0;
+        for (; i < ts.length; i++) {
             var word = ts[i];
             /**
              * https://zhidao.baidu.com/question/386412786.html
@@ -94,7 +95,7 @@ export class TextEle {
                 row.x += w;
             }
         }
-        console.warn('text.ele.tsx:not found ele point at...', point, top, lineHeight, currentRect.left)
+        return i;
     }
     static wordWidth(word: string, fontStyle: TextFontStyle): number {
         if (word == '') return 0;
@@ -115,15 +116,29 @@ export class TextEle {
         else ls = fontStyle.letterSpacing;
         return __g.measureText(word).width + ls;
     }
-    static getContent(ele: HTMLElement) {
-        var text = ele.innerText;
-        console.log(text,'gg',ele);
+    static getTextContent(ele: HTMLElement) {
+        var cs = ele.childNodes;
+        var text = '';
+        for (var i = 0; i < cs.length; i++) {
+            var el = cs[i];
+            if (el instanceof Text) {
+                text += el.textContent;
+            }
+            else if (el instanceof HTMLElement && el.tagName == 'SPAN') {
+                if (!el.classList.contains('sy-anchor-appear')) {
+                    text += el.innerText;
+                }
+            }
+        }
+        return text;
+        //var text = ele.innerText;
+        //console.log(text, 'gg', ele);
         // text = text.replace(/<br[\s]*\/>/g, "\n");
         // text = text.replace(/<i[^>]*>[\s]*<\/i>/g, '');
         // text = text.replace(/&nbsp;/g, " ");
         // text = text.replace(/&lt;/g, "<");
         // text = text.replace(/&gt;/g, ">");
-        return text;
+        //return text;
     }
     static getHtml(content: string) {
         var c = content;
@@ -141,7 +156,7 @@ export class TextEle {
      * @param bounds 
      */
     static cacDistance(point: Point, bounds: Rect[]) {
-        var disPoint = new Point(0, 0);
+        var disPoint = new Point(1e8,1e8);
         bounds.each(bound => {
             if (point.x >= bound.left && point.x <= bound.left + bound.width) disPoint.x = 0;
             else disPoint.x = Math.min(disPoint.x, Math.abs(point.x - bound.left), Math.abs(point.x - bound.left - bound.width))

@@ -4,7 +4,7 @@ import { Block } from "../block/base";
 import { Point } from "../common/point";
 import { Anchor } from "../selector/anchor";
 import { BlockSelection } from "../selector/selection";
-export class PageOperator {
+export class PageEvent {
     private mouseStatus: 'down' | 'move' | 'up' | 'none'
     /**
      * 鼠标点击页面,
@@ -35,18 +35,19 @@ export class PageOperator {
             })
         }
         this.mouseStatus = 'down';
-        this.onFocus(event);
         var toEle = event.target as HTMLElement;
         var blockEle = toEle.closest('[data-block]');
         if (blockEle) {
             var block = (blockEle as any).block as Block;
             var anchor = block.visibleAnchor(Point.from(event));
             if (anchor) {
-                var selection = this.selector.createSelection();
-                selection.start = anchor;
+                if (anchor.block.isLayout) {
+                    throw 'not anchor layout block'
+                }
+                this.selector.replaceSelection(anchor);
                 this.selector.activeAnchor = anchor;
-                this.selector.selections = [selection];
                 this.selector.renderSelection();
+                this.emit('focusAnchor', this.selector.activeAnchor);
             }
         }
     }
@@ -59,11 +60,11 @@ export class PageOperator {
                 var block = (blockEle as any).block as Block;
                 var anchor = block.visibleAnchor(Point.from(event));
                 if (anchor) {
-                    this.selector.activeAnchor = anchor;
-                    var sel = this.selector.selections.first();
-                    if (sel) {
-                        sel.end = anchor;
-                    }
+                    // this.selector.activeAnchor = anchor;
+                    // var sel = this.selector.selections.first();
+                    // if (sel) {
+                    //     sel.end = anchor;
+                    // }
                 }
             }
         }
@@ -71,7 +72,7 @@ export class PageOperator {
     onMouseup(this: Page, event: MouseEvent) {
         if (this.mouseStatus == 'down' || this.mouseStatus == 'move') {
             this.mouseStatus = 'up';
-            this.selector.onTextInputRestartCaptureFocus();
+            this.selector.onTextInputCaptureFocus();
         }
     }
     onMouseover(this: Page, event: MouseEvent) {
@@ -117,7 +118,25 @@ export class PageOperator {
         //     }
         // }
     }
-    onFocus(this: Page, event: MouseEvent) {
+    onFocusCapture(this: Page, event: FocusEvent) {
+        this.onFocus(event);
+        this.selector.onTextInputCaptureFocus();
+    }
+    onBlurCapture(this: Page, event: FocusEvent) {
+        if (this.mouseStatus == 'down') {
+            /**
+             * 说明鼠标是处于down下，这个不可能失焦
+             * 如果当前的元素中有一些节点发生了改变，那么此时event.relatedTarget是空的，这很蛋疼
+             * 这里通过鼠标状态的来纠正一下
+             */
+            return
+        }
+        var el = event.relatedTarget as Node;
+        if (!el || el && (!this.el.contains(el) || el === this.el)) {
+            this.onBlur(event);
+        }
+    }
+    onFocus(this: Page, event: FocusEvent) {
         if (this.isFocus == false) {
             this.isFocus = true;
             this.emit('focus', event);
@@ -134,7 +153,7 @@ export class PageOperator {
      * @param this 
      * @param event 
      */
-    onKeydown(this: Page, event: React.KeyboardEvent<HTMLTextAreaElement>) {
+    onKeydown(this: Page, event: KeyboardEvent) {
         this.keys.push(event.key);
         if (typeof document[this.DOCUENT_KEYUP_KEY] != 'function') {
             document[this.DOCUENT_KEYUP_KEY] = this.onKeyup.bind(this);

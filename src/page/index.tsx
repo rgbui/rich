@@ -8,7 +8,7 @@ import { View } from "../block/base/common/view";
 import { PageConfig } from '../config';
 import { Selector } from '../selector';
 import { PageLayout } from "./layout/index";
-import { PageOperator } from "./operator";
+import { PageEvent } from "./event";
 import { PageView } from './view';
 export class Page extends Events {
     el: HTMLElement;
@@ -76,7 +76,6 @@ export class Page extends Events {
     selector: Selector;
     viewRender: PageView;
     keys: string[] = [];
-
     isFocus: boolean = false;
     onError(error: Error) {
 
@@ -94,5 +93,5 @@ export class Page extends Events {
         return this.rid + ".mouseup";
     }
 }
-export interface Page extends PageOperator { }
-util.inherit(Page, PageOperator)
+export interface Page extends PageEvent { }
+util.inherit(Page, PageEvent)

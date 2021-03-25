@@ -1,24 +1,20 @@
-
-.block-text-span {
+.sy-block-text-span {
     display: flex;
 }
 
-.block-image {
-    display : inline-block;
-    position: relative;
-
-    img {
-        width: 100%;
-    }
-}
-
-.block-image-wrapper {
+.sy-block-image {
     display        : flex;
     justify-content: center;
     align-items    : center;
+
+    &-content {
+        img {
+            width: 100%;
+        }
+    }
 }
 
-.block-todo {
+.sy-block-todo {
     display        : flex;
     justify-content: flex-start;
     align-items    : center;
