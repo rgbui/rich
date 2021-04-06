@@ -15,16 +15,11 @@ export class Page extends Events {
     id: string;
     date: number;
     url: '/page';
-    /***
-     * 当前初始化后的实例对象Id,确保id的唯一性
-     */
-    private rid: string;
     constructor(el: HTMLElement, options?: Record<string, any>) {
         super();
         this.el = el;
         if (typeof options == 'object') Object.assign(this, util.clone(options));
         if (typeof this.id == 'undefined') this.id = util.guid();
-        this.rid = util.guid();
         if (typeof this.date == 'undefined') this.date = new Date().getTime();
         this.init();
     }
@@ -51,8 +46,7 @@ export class Page extends Events {
         if (Array.isArray(data.views)) {
             for (var i = 0; i < data.views.length; i++) {
                 var dv = data.views[i];
-                var dc = BlockFactory.createBlock(dv.url, this);
-                await dc.load(dv);
+                var dc = await BlockFactory.createBlock(dv.url, this, dv, null);
                 this.views.push(dc as View);
             }
         }
@@ -82,15 +76,6 @@ export class Page extends Events {
     }
     render() {
         ReactDOM.render(<PageView page={this}></PageView>, this.el.appendChild(document.createElement('div')));
-    }
-    get DOCUENT_KEYUP_KEY() {
-        return this.rid + ".keyup";
-    }
-    get DOCUENT_MOUSEMOVE_KEY() {
-        return this.rid + ".mousemove";
-    }
-    get DOCUENT_MOUSEUP_KEY() {
-        return this.rid + ".mouseup";
     }
 }
 export interface Page extends PageEvent { }

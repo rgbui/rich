@@ -3,7 +3,7 @@
 interface Array<T> {
     /**数组反转 */
     each(predict: (item: T, i: number, array: T[]) => boolean | void): void;
-    eachAsync(predict: (item: T, i: number, array: T[]) => boolean): Promise<void>;
+    eachAsync(predict: (item: T, i: number, array: T[]) => Promise<void|boolean>): Promise<void>;
     eachReverse(predict: (item: T, i: number, array: T[]) => boolean | void): void;
     findLast(predict: T | ((item: T, i: number, array: any[]) => boolean)): T;
     find(predict: T | ((item: T, i: number, array: T[]) => boolean)): T;

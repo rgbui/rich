@@ -19,11 +19,13 @@ export class BlockFactory {
         }
         else this.blockMap.set(url, { view: blockView, model: null });
     }
-    public static createBlock(url: string, page: Page) {
+    public static async createBlock(url: string, page: Page, data: Record<string, any>, parent: Block) {
         var bc = this.blockMap.get(url);
         if (bc) {
-            var newBlock = new (bc.model as any)(page);
+            var newBlock: Block = new (bc.model as any)(page);
             newBlock.viewComponent = bc.view;
+            if (parent) newBlock.parent = parent;
+            if (data) await newBlock.load(data);
             return newBlock;
         }
         else throw new Error('not found block class:' + url)

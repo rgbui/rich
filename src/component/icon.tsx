@@ -4,7 +4,8 @@ export function Icon(props: {
     icon: string,
     click?: (e: MouseEvent) => void,
     mousedown?: (e: MouseEvent) => void,
-    rotate?: number
+    rotate?: number,
+    size?: number
 }) {
     var classList: string[] = ['sy-icon'];
     if (props.icon.indexOf(':')) {
@@ -13,9 +14,9 @@ export function Icon(props: {
         classList.push(prefix + '-' + name);
     }
     var style: Record<string, any> = {
-        fontSize: 'inherit',
-        color: 'inherit',
-        fontStyle: 'normal'
+        fontSize: props.size || 20,
+        width: 20 || props.size,
+        height: 20 || props.size
     };
     return <i className={classList.join(" ")}
         onClick={e => { props.click ? props.click(e.nativeEvent) : undefined; }}

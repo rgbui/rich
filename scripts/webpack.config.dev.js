@@ -14,7 +14,7 @@ const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 
 let port = 8080;
-let publicPath = `http://127.0.0.1:${port}/`;
+let publicPath = `http://localhost:${port}/`;
 module.exports = {
     mode: 'development',
     entry: "./test/index.tsx",
@@ -25,7 +25,7 @@ module.exports = {
     },
     devServer: {
         contentBase: path.resolve(__dirname, '../dist'),
-        host: '127.0.0.1',
+        host: 'localhost',
         compress: true,
         hot: true,
         port: port,

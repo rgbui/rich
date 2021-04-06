@@ -15,13 +15,13 @@ ReactDOM.render(
         var ele = document.querySelector('.editor') as HTMLElement;
         var page = new SY.Page(ele);
         page.on('blur', function (ev) {
-            console.log('blur', ev)
+            // console.log('blur', ev)
         });
         page.on('focus', function (ev) {
-            console.log('focus', ev);
+            //console.log('focus', ev);
         });
         page.on('focusAnchor', function (anchor) {
-            console.log('focusAnchor', anchor);
+            // console.log('focusAnchor', anchor);
         });
         await page.load(data);
         await page.render();

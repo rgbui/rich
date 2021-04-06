@@ -1,17 +1,17 @@
-.sy-table-store {
+.sy-tablestore {
     &-head {
         display        : flex;
         justify-content: flex-start;
-        align-items    : center;
+        align-items    : stretch;
         flex-wrap      : nowrap;
 
-        &-cell {
+        &-th {
             border : 1px solid #ddd;
             display: inline-block;
             padding: 10px;
         }
 
-        .sy-table-store-head-cell+.sy-table-store-head-cell {
+        &-th+&-th {
             border-left: 1px solid transparent;
         }
     }
@@ -20,7 +20,7 @@
         &-row {
             display        : flex;
             justify-content: flex-start;
-            align-items    : center;
+            align-items    : stretch;
             flex-wrap      : nowrap;
 
             &-cell {
@@ -29,18 +29,18 @@
             }
 
             &:first-child {
-                .sy-table-store-body-row-cell {
+                .sy-tablestore-body-row-cell {
                     border-top: 1px solid transparent;
                 }
             }
 
-            &+.sy-table-store-body-row {
-                .sy-table-store-body-row-cell {
+            &+.sy-tablestore-body-row {
+                .sy-tablestore-body-row-cell {
                     border-top: 1px solid transparent;
                 }
             }
 
-            .sy-table-store-body-row-cell+.sy-table-store-body-row-cell {
+            &-cell+&-cell {
                 border-left: 1px solid transparent;
             }
         }

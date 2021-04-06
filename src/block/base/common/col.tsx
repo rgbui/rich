@@ -7,7 +7,10 @@ import React from 'react';
 @url('/col')
 export class Col extends Content {
     display = BlockDisplay.block;
-    type =BlockAppear.layout;
+    appear = BlockAppear.layout;
+    get isCol() {
+        return true;
+    }
 }
 @view('/col')
 export class ColView extends BaseComponent<Col>{

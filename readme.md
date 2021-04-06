@@ -1,1 +1,1 @@
-kanhai is rich text editor
+诗云富文本编辑器

@@ -1,23 +1,46 @@
 <html>
 
 <head>
-    <title>kanhai富文本编辑器</title>
+    <title>test</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="referrer" content="unsafe-url">
+    <style>
+        label {
+            display: inline;
+        }
+
+        em {
+            width: 0px;
+            height: 22px;
+            line-height: 22px;
+            vertical-align: middle;
+            display: inline-block;
+            position: relative;
+        }
+
+        em::after {
+            position: absolute;
+            width: 2px;
+            display: block;
+            content: '';
+            top: 0px;
+            left: -1px;
+            bottom: 0px;
+            height: inherit;
+            background-color: #000;
+        }
+    </style>
 </head>
 
 <body>
-    <div>你好吗<i></i>我还&gt;好啊<br/><span>fsss</span></div>
+    <div style="width:100px;">ffff<em></em>eeee</div>
+
 </body>
 <script>
-     var div = document.querySelector('div');
-     console.log(div.childNodes,div.innerText);
-    // var span = document.querySelector('span');
-    // console.log(span.childNodes);
-    // console.log(span.getClientRects());
-    // console.log(span.innerHTML);
-    // console.log(span.innerText);
+
+
+
 </script>
 
 </html>

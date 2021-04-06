@@ -1,17 +1,14 @@
-
-
 import { Events } from "../../util/events";
 import { util } from "../../util/util";
-import { Point } from "../../common/point";
+import { Point, Rect } from "../../common/point";
 import { Page } from "../../page";
 import { Anchor } from "../../selector/anchor";
 import { BlockFactory } from "../factory/block.factory";
 import { BlockAppear, BlockDisplay, Locate } from "./enum";
-import { BlockStyle } from "../style";
+import { BlockStyle } from "../style/index";
 import { BaseComponent } from "./component";
-
-import { BlockPart, PartPlace } from "./part";
 import { TextEle } from "../../common/text.ele";
+import { Dom } from "../../common/dom";
 export abstract class Block extends Events {
     parent: Block;
     url: string;
@@ -47,6 +44,15 @@ export abstract class Block extends Events {
             }
         }
     }
+    get parentKey() {
+        var pb = this.parentBlocks;
+        for (var n in this.parent.blocks) {
+            if (this.parent.blocks[n] == pb) return n;
+        }
+    }
+    get blockKeys() {
+        return Object.keys(this.blocks);
+    }
     get at() {
         return this.parentBlocks.findIndex(g => g === this);
     }
@@ -55,6 +61,14 @@ export abstract class Block extends Events {
             var at = this.at;
             if (at > 0) {
                 return this.parentBlocks[at - 1];
+            }
+            else if (at == 0) {
+                var keys = this.parent.blockKeys;
+                var parentKey = this.parentKey;
+                var i = keys.findIndex(g => g == parentKey);
+                if (i > 0) {
+                    return this.parent.blocks[keys[i - 1]].last()
+                }
             }
         }
     }
@@ -65,6 +79,14 @@ export abstract class Block extends Events {
             if (at < pbs.length - 1) {
                 return pbs[at + 1];
             }
+            else if (at == pbs.length - 1) {
+                var keys = this.parent.blockKeys;
+                var parentKey = this.parentKey;
+                var i = keys.findIndex(g => g == parentKey);
+                if (i < keys.length - 1) {
+                    return this.parent.blocks[keys[i + 1]].first();
+                }
+            }
         }
     }
     constructor(page: Page) {
@@ -73,25 +95,106 @@ export abstract class Block extends Events {
         this.date = new Date().getTime();
         this.page = page;
     }
-    find(predict: (block: Block) => boolean, considerSelf?: boolean): Block {
-        if (considerSelf == true && predict(this)) return this;
+    /***
+     * 这是从里面最开始的查询
+     */
+    find(predict: (block: Block) => boolean, consider: boolean = false): Block {
         var result: Block;
-        for (let n in this.blocks) {
-            this.blocks[n].each(block => {
+        var keys = this.blockKeys;
+        for (let i = 0; i < keys.length; i++) {
+            var bs = this.blocks[keys[i]];
+            bs.each(block => {
+                var r = block.find(predict, false);
+                if (r) { result = r; return false }
                 if (predict(block) == true) {
                     result = block;
                     return false;
                 }
-                var r = block.find(predict);
-                if (r) { result = r; return false }
-            });
-            if (result) break;
+            })
         }
+        if (consider == true && predict(this) == true) result = this;
         return result;
     }
-    findAll(predict: (block: Block) => boolean, considerSelf?: boolean): Block[] {
+    findReverse(predict: (block: Block) => boolean, consider: boolean = false) {
+        var result: Block;
+        var keys = this.blockKeys;
+        for (let i = keys.length - 1; i >= 0; i--) {
+            var bs = this.blocks[keys[i]];
+            bs.each(block => {
+                var r = block.find(predict, false);
+                if (r) { result = r; return false }
+                if (predict(block) == true) {
+                    result = block;
+                    return false;
+                }
+            })
+        }
+        if (consider == true && predict(this) == true) result = this;
+        return result;
+    }
+    /**
+     * 当前元素内部第一个坑位元素
+     */
+    get firstPitBlock() {
+        return this.find(g => true);
+    }
+    /**
+     * 当前元素内部最后一个坑位元素
+     */
+    get lastPitBlock() {
+        return this.findReverse(g => true);
+    }
+    prevFind(predict: (block: Block) => boolean, consider: boolean = false): Block {
+        if (consider == true) {
+            var r = this.findReverse(predict, true);
+            if (r) return r;
+        }
+        var prev = this.prev;
+        while (true) {
+            if (prev) {
+                var g = prev.findReverse(predict, true);
+                if (g) return g;
+                prev = prev.prev;
+            }
+            else break;
+        }
+        var pa = this.parent;
+        if (pa) {
+            if (predict(pa) == true) return pa;
+            var r = pa.prevFind(predict);
+            if (r) return r;
+        }
+    }
+    nextFind(predict: (block: Block) => boolean, consider: boolean = false): Block {
+        if (consider == true) {
+            var r = this.find(predict, true);
+            if (r) return r;
+        }
+        var next = this.next;
+        while (true) {
+            if (next) {
+                var g = next.find(predict, true);
+                if (g) return g;
+                next = next.next;
+            }
+            else break;
+        }
+        var pa = this.parent;
+        if (pa) {
+            if (predict(pa) == true) return pa;
+            var c = pa.nextFind(predict);
+            if (c) return c;
+        }
+    }
+    contains(block: Block, ignore: boolean = false) {
+        if (ignore == false && block === this) return true;
+        var r = this.find(g => g == block);
+        if (r) return true;
+        else return false;
+    }
+    findAll(predict: (block: Block) => boolean, consider?: boolean): Block[] {
         var blocks: Block[] = [];
-        if (considerSelf == true && predict(this)) { blocks.push(this) };
+        if (consider == true && predict(this)) { blocks.push(this) };
         for (let n in this.blocks) {
             this.blocks[n].each(block => {
                 if (predict(block) == true) {
@@ -107,8 +210,8 @@ export abstract class Block extends Events {
         }
         return blocks;
     }
-    closest(predict: (block: Block) => boolean, ignoreSelf?: boolean) {
-        if (ignoreSelf !== true && predict(this)) return this;
+    closest(predict: (block: Block) => boolean, ignore?: boolean) {
+        if (ignore !== true && predict(this)) return this;
         var pa = this.parent;
         while (true) {
             if (pa && predict(pa) == true) return pa;
@@ -118,9 +221,9 @@ export abstract class Block extends Events {
             }
         }
     }
-    parents(predict: (block: Block) => boolean, ignoreSelf?: boolean) {
+    parents(predict: (block: Block) => boolean, ignore?: boolean) {
         var blocks: Block[] = [];
-        if (ignoreSelf !== true && predict(this)) blocks.push(this);
+        if (ignore !== true && predict(this)) blocks.push(this);
         var pa = this.parent;
         while (true) {
             if (!pa) break;
@@ -129,49 +232,51 @@ export abstract class Block extends Events {
         }
         return blocks;
     }
+    remove() {
+        var pb = this.parentBlocks;
+        if (Array.isArray(pb))
+            this.parentBlocks.remove(this);
+    }
+    insertBefore(to: Block) {
+        this.remove();
+        var pb = to.parent;
+        var pbs = to.parentBlocks;
+        let at = pbs.findIndex(g => g === to);
+        this.parent = pb;
+        pbs.insertAt(at, this);
+        if (this.el) {
+            to.el.parentNode.insertBefore(this.el, to.el);
+        }
+    }
+    insertAfter(to: Block) {
+        this.remove();
+        var pb = to.parent;
+        var pbs = to.parentBlocks;
+        let at = pbs.findIndex(g => g === to);
+        this.parent = pb;
+        pbs.insertAt(at + 1, this);
+        if (this.el) {
+            new Dom(this.el).insertAfter(to.el)
+        }
+    }
+    append(block: Block, at?: number) {
+        block.remove();
+        if (typeof at == 'undefined') at = this.childs.length;
+        this.childs.insertAt(at, block);
+        block.parent = this;
+    }
     /***
     * 查找当前容器里面首位的内容元素，
     * 而且是视野上面的
     **/
-    get visibleInnerBefore() {
-        var c: Block = this;
-        while (true) {
-            if (c.isLayout) {
-                var keys = Object.keys(c.blocks);
-                var ps = this.parts.findAll(g => keys.exists(g.name) && g.place == PartPlace.childs);
-                keys = ps.map(p => p.name);
-                var key = keys.length > 0 ? keys.first() : 'childs';
-                var firstBlock = c.blocks[key].first();
-                if (firstBlock) {
-                    if (!firstBlock.isLayout) return firstBlock;
-                    else c = firstBlock;
-                }
-                else return null;
-            }
-            else return c;
-        }
+    get visiblePitFirstContent() {
+        return this.find(g => !g.isLayout);
     }
     /**
      * 查换当前容器里面末尾的内容元素
      */
-    get visibleInnerAfter() {
-        var c: Block = this;
-        while (true) {
-            if (c.isLayout) {
-                var keys = Object.keys(c.blocks);
-                var ps = this.parts.findAll(g => keys.exists(g.name) && g.place == PartPlace.childs);
-                keys = ps.map(p => p.name);
-                var key = 'childs';
-                if (keys.length > 0) key = keys.last();
-                var lastBlock = c.blocks[key].last();
-                if (lastBlock) {
-                    if (!lastBlock.isLayout) return lastBlock;
-                    else c = lastBlock;
-                }
-                else return null;
-            }
-            else return c;
-        }
+    get visiblePitLastContent() {
+        return this.findReverse(g => !g.isLayout);
     }
     isLoad = false;
     async load(data) {
@@ -194,9 +299,7 @@ export abstract class Block extends Events {
                     var childs = data.blocks[n];
                     this.blocks[n] = [];
                     await childs.eachAsync(async (dc) => {
-                        var block = BlockFactory.createBlock(dc.url, this.page);
-                        block.parent = this;
-                        await block.load(dc);
+                        var block = await BlockFactory.createBlock(dc.url, this.page, dc, this);
                         this.blocks[n].push(block);
                     })
                 }
@@ -223,53 +326,9 @@ export abstract class Block extends Events {
         Object.assign(this, state);
         this.view.forceUpdate();
     }
-    protected parts: BlockPart[] = [];
-    setPart(name: string, part: Partial<BlockPart>) {
-        var pa = this.parts.find(g => g.name == name);
-        if (pa) {
-            Object.assign(pa, part);
-        }
-        else {
-            pa = new BlockPart();
-            pa.block = this;
-            Object.assign(pa, { name }, part);
-        };
-        this.parts.sort((x, y) => {
-            if (typeof x.index == 'undefined' || typeof y.index == 'undefined') {
-                if (typeof x.index == 'number') {
-                    return 1;
-                }
-                else if (typeof y.index == 'number') {
-                    return -1;
-                }
-                return 0;
-            }
-            else x.index > y.index ? -1 : 1
-        })
-    }
-    removePart(name: string) {
-        this.parts.remove(g => g.name == name);
-    }
-    findPart(predict: (part: BlockPart) => boolean) {
-        if (this.havePart) {
-            return this.parts.find(predict);
-        }
-    }
-    get visibleHeadPart() {
-        if (this.havePart) {
-            return this.parts.first();
-        }
-        else return null;
-    }
-    get visibleBackPart() {
-        if (this.havePart) {
-            return this.parts.last();
-        }
-        else return null;
-    }
     get visibleHeadAnchor() {
         var anchor = this.page.selector.createAnchor();
-        anchor.part = this.visibleHeadPart;
+        anchor.block = this;
         if (anchor.isText) {
             anchor.at = 0;
         }
@@ -277,7 +336,7 @@ export abstract class Block extends Events {
     }
     get visibleBackAnchor() {
         var anchor = this.page.selector.createAnchor();
-        anchor.part = this.visibleBackPart;
+        anchor.block = this;
         if (anchor.isText) {
             anchor.at = anchor.textContent.length;
         }
@@ -288,9 +347,6 @@ export abstract class Block extends Events {
     }
     get isSolid(): boolean {
         return this.appear == BlockAppear.solid
-    }
-    get havePart() {
-        return this.parts.length > 0;
     }
     protected display: BlockDisplay;
     protected appear: BlockAppear;
@@ -306,11 +362,47 @@ export abstract class Block extends Events {
     get isBlock(): boolean {
         return this.display == BlockDisplay.block;
     }
+    /***
+     * 注意换行的元素不一定非得是/row，
+     * 如表格里面自定义的换行
+     */
     get isRow(): boolean {
-        return this.url == '/row';
+        return false;
     }
     get isCol(): boolean {
-        return this.url == '/col'
+        return false;
+    }
+    get isArea(): boolean {
+        return false;
+    }
+    partName: string;
+    get isPart(): boolean {
+        if (typeof this.partName == 'string') return true;
+        else return false;
+    }
+    get partParent(): Block {
+        return this.closest(x => !x.isPart);
+    }
+    get dragBlock(): Block {
+        if (this.isLine) {
+            var r = this.closest(g => !g.isLine);
+            if (r.isPart) return r.dragBlock;
+            else return r;
+        }
+        else if (this.isPart) {
+            return this.partParent
+        }
+        else if (this.isRow) return;
+        else if (this.isCol) return;
+        else if (this.isArea) return;
+        else return this;
+    }
+    get dropBlock(): Block {
+        if (this.isLine) return;
+        if (this.isPart) return;
+        else if (this.isRow) return;
+        else if (this.isCol) return;
+        return this;
     }
     get visiblePre() {
         var current: Block = this;
@@ -319,7 +411,7 @@ export abstract class Block extends Events {
             if (prev) {
                 if (!prev.isLayout) return prev;
                 else {
-                    return prev.visibleInnerAfter;
+                    return prev.visiblePitLastContent;
                 }
             }
             else {
@@ -339,7 +431,7 @@ export abstract class Block extends Events {
             if (next) {
                 if (!next.isLayout) return next;
                 else {
-                    return next.visibleInnerBefore;
+                    return next.visiblePitFirstContent;
                 }
             }
             else {
@@ -353,30 +445,101 @@ export abstract class Block extends Events {
     }
     get visiblePrevAnchor() {
         var pre = this.visiblePre;
-        if (pre) return pre.visiblePrevAnchor
+        if (pre) return pre.visibleBackAnchor;
     }
     get visibleNextAnchor() {
         var next = this.visibleNext;
         if (next) return next.visibleHeadAnchor;
     }
-    visibleDownAnchor(x: number) {
-        var rc = this.closest(x => x.isRow);
-        if (rc && rc.next) {
-            var nextRow = rc.next;
-            var bound = nextRow.getBounds().first();
-            var point = new Point(x, bound.top);
-            return this.visibleAnchor(point)
+    get row() {
+        return this.closest(x => x.isRow);
+    }
+    get nextRow() {
+        var row = this.row;
+        if (row) {
+            while (true) {
+                if (row.parent && row.parent.isCol) {
+                    if (row.parent.parent && row.parent.parent.isRow) {
+                        row = row.parent.parent;
+                    } else break;
+                }
+                else break;
+            }
+            return row.nextFind(g => g.isRow && !g.contains(row));
+        }
+
+    }
+    get prevRow() {
+        var row = this.row;
+        if (row) {
+            while (true) {
+                if (row.parent && row.parent.isCol) {
+                    if (row.parent.parent && row.parent.parent.isRow) {
+                        row = row.parent.parent;
+                    } else break;
+                }
+                else break;
+            }
+            return row.prevFind(g => g.isRow && !g.contains(row));
         }
     }
-    visibleUpAnchor(x: number): Anchor {
-        var rc = this.closest(x => x.isRow);
-        if (rc) {
-            var panel = rc.prev;
-            if (panel) {
-                var bound = panel.getBounds().first();
-                return this.visibleAnchor(new Point(x, bound.top + bound.height));
+    visibleDownAnchor(anchor: Anchor) {
+        var x: number;
+        if (anchor.isText) {
+            var line = TextEle.getLineByAt(anchor.textEl, anchor.at);
+            if (line) {
+                x = line.point.x;
             }
         }
+        else if (anchor.isSolid) x = anchor.soldEl.getBoundingClientRect().left;
+        var nextRow = this.nextRow;
+        if (nextRow) {
+            var bound = nextRow.getBounds().first();
+            return nextRow.visibleAnchor(new Point(x, bound.top + 1))
+        }
+    }
+    visibleUpAnchor(anchor: Anchor): Anchor {
+        var x: number;
+        if (anchor.isText) {
+            var line = TextEle.getLineByAt(anchor.textEl, anchor.at);
+            if (line) {
+                x = line.point.x;
+            }
+        }
+        else if (anchor.isSolid) x = anchor.soldEl.getBoundingClientRect().left;
+        var prevRow = this.prevRow;
+        if (prevRow) {
+            var bound = prevRow.getBounds().first();
+            return prevRow.visibleAnchor(new Point(x, bound.top + bound.height - 1));
+        }
+    }
+    visibleInnerDownAnchor(anchor: Anchor) {
+        if (anchor.isText) {
+            var line = TextEle.getLineByAt(anchor.textEl, anchor.at);
+            if (line.line == line.total) {
+                return anchor.block.visibleDownAnchor(anchor);
+            }
+            else {
+                var newPoint = line.point.clone();
+                newPoint.y += line.lineheight * 1.5;
+                return anchor.block.visibleAnchor(newPoint);
+            }
+        }
+        else return anchor.block.visibleDownAnchor(anchor);
+    }
+    visibleInnerUpAnchor(anchor: Anchor) {
+        if (anchor.isText) {
+            var line = TextEle.getLineByAt(anchor.textEl, anchor.at);
+            if (line.line == 1) {
+                return anchor.block.visibleUpAnchor(anchor);
+            }
+            else {
+                var newPoint = line.point.clone();
+                newPoint.y -= line.lineheight * 0.5;
+                return anchor.block.visibleAnchor(newPoint);
+            }
+        }
+        else return anchor.block.visibleUpAnchor(anchor);
     }
     /***
      * 通过坐标计算视野是处于block那个part中，或者block本身
@@ -385,7 +548,7 @@ export abstract class Block extends Events {
      * @param point 坐标（当前坐标明确是处于当前的block中）
      */
     visibleAnchor(point: Point): Anchor {
-        var part = this.visiblePointPart(point);
+        var part = this.visiblePoint(point);
         var anchor = this.page.selector.createAnchor();
         if (part instanceof Block) {
             anchor.block = part;
@@ -394,16 +557,12 @@ export abstract class Block extends Events {
             }
         }
         else {
-            anchor.part = part;
-            anchor.block = part.block;
-            if (anchor.part.isText) {
-                anchor.at = TextEle.getAt(part.textEl, point);
-            }
+            throw 'not found block'
         }
         return anchor;
     }
-    visiblePointPart(point: Point) {
-        var as = this.allVisibleBlockAndParts;
+    visiblePoint(point: Point) {
+        var as = this.allVisibleBlocks;
         var ps = as.map(e => {
             var bounds = e.getBounds();
             var newPoint = TextEle.cacDistance(point, bounds);
@@ -418,63 +577,40 @@ export abstract class Block extends Events {
             return ps.findAll(g => g.dis.y == 0).findMin(g => g.dis.x).part
         return ps.findMin(g => g.dis.y).part
     }
-    content: string;
+    content: string = '';
     get htmlContent() {
         return {
-            __html: TextEle.getHtml(this.content)
+            __html: TextEle.getTextHtml(this.content)
         }
     }
     updateContent(content: string, partName?: string) {
-        var pa: BlockPart;
-        if (partName) pa = this.findPart(g => g.name == partName);
-        if (pa && pa.propkey) {
-            this[pa.propkey] = content;
-        }
-        else this.content = content;
+        this.content = content;
     }
     getBounds() {
         return TextEle.getBounds(this.el);
     }
+    getVisibleBound() {
+        return Rect.from(this.el.getBoundingClientRect());
+    }
     /**
      * 获取视觉上的block和part
      */
-    get visibleBlockAndParts() {
+    get visibleBlock() {
         if (this.isLayout) return [];
-        if (this.havePart) return this.parts;
         else return [this];
     }
-    get allVisibleBlockAndParts() {
-        var bs: (Block | BlockPart)[] = [];
-        var gs = this.visibleBlockAndParts;
+    get allVisibleBlocks() {
+        var bs: (Block)[] = [];
+        var gs = this.visibleBlock;
         bs.addRange(gs);
         for (var n in this.blocks) {
             var blocks = this.blocks[n];
             blocks.each(b => {
-                bs.addRange(b.allVisibleBlockAndParts);
+                bs.addRange(b.allVisibleBlocks);
             })
         }
         return bs;
     }
-    onMousedown(anchor: Anchor) { }
-    /**
-     * 鼠标移到元素内，不包含子元素
-     * @param event 
-     */
-    onMouseover() { }
-    /***
-     * 鼠标移到元素外，不包含子元素
-     */
-    onMouseout() { }
-    /**
-     * 鼠标移到元素内，包括子元素
-     * @param event 
-     */
-    onMouseenter() { }
-    /**
-     * 鼠标移到元素外，包括子元素
-     * @param event 
-     */
-    onMouseleave() { }
     get textEl() {
         var el = this.el;
         if (!el.classList.contains('sy-appear-text')) {
@@ -492,5 +628,31 @@ export abstract class Block extends Events {
             else el = c;
         }
         return el;
+    }
+    private dragTime;
+    onDragOver(point: Point) {
+        var bound = this.getVisibleBound();
+        var el = this.el as HTMLElement;
+        this.onDragLeave();
+        if (point.x < bound.left + Math.min(30, bound.width / 2)) el.classList.add('sy-block-drag-over-left');
+        else if (point.x > bound.left + bound.width - Math.min(30, bound.width / 2)) el.classList.add('sy-block-drag-over-right')
+        else if (point.y > bound.top + bound.height / 2) el.classList.add('sy-block-drag-over-down');
+        else if (point.y < bound.top + bound.height / 2) el.classList.add('sy-block-drag-over-up');
+        // if (bound.conatin(point)) {
+        //     this.dragTime = setTimeout(() => {
+
+        //     }, 2e3);
+        // }
+    }
+    onDragLeave() {
+        var classList = (this.el as HTMLElement).classList;
+        var rs: string[] = [];
+        for (let i = 0; i < classList.length; i++) {
+            var cla = classList[i];
+            if (cla.startsWith('sy-block-drag-over')) rs.push(cla);
+        }
+        rs.each(r => {
+            classList.remove(r);
+        })
     }
 }

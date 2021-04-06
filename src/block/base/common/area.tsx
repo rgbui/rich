@@ -2,7 +2,7 @@
 import { ContentAreaComposition } from "./composition/content";
 import React from 'react';
 import { BaseComponent } from "../component";
-import { BlockDisplay} from "../enum";
+import { BlockDisplay } from "../enum";
 import { url, view } from "../../factory/observable";
 /**
  * 对视图进行分区，从空间上进行分割，尽可能的利用空间
@@ -13,7 +13,7 @@ export class ViewArea extends ContentAreaComposition {
      * 固定宽度
      */
     width: number;
-    
+
     /**带有百分比的宽度，或者填充余下空间 */
     widthPercent: number | 'fill';
     /***
@@ -31,8 +31,9 @@ export class ViewArea extends ContentAreaComposition {
      */
     rowGap: number;
     display = BlockDisplay.block;
-    
-
+    get isArea() {
+        return true;
+    }
 }
 @view('/view/area')
 export class ViewAreaComponent extends BaseComponent<ViewArea>{

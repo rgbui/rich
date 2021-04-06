@@ -14,7 +14,7 @@ module.exports = {
     entry: "./src/index.ts",
     output: {
         path: outputDir,
-        filename: "kanhai.js"
+        filename: "sy.rich.js"
     },
     resolve: {
         extensions: [".tsx", ".ts", ".js", ".less", ".css"]
@@ -101,6 +101,6 @@ module.exports = {
             },
             canPrint: true
         }),
-        new MiniCssExtractPlugin({ filename: "kanhai.css" })
+        new MiniCssExtractPlugin({ filename: "sy.rich.css" })
     ]
 };

@@ -13,8 +13,8 @@ export class TextSpan extends Content {
         if (this.childs.length > 0) return false;
         return true;
     }
-    get isContent() {
-        return false;
+    get isSolid() {
+        return this.childs.length > 0 ? true : false;
     }
     get isLayout() {
         if (this.childs.length > 0) return true;

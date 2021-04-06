@@ -17,6 +17,19 @@ export class PageView extends Component<{ page: Page }>{
     get page() {
         return this.props.page;
     }
+    private _mousemove;
+    private _mouseup;
+    private _keyup;
+    componentDidMount() {
+        document.addEventListener('mousemove', (this._mousemove = this.page.onMousemove.bind(this.page)));
+        document.addEventListener('mouseup', (this._mouseup = this.page.onMouseup.bind(this.page)));
+        document.addEventListener('keyup', (this._keyup = this.page.onKeyup.bind(this.page)));
+    }
+    componentWillUnmount() {
+        document.removeEventListener('mouseup', this._mouseup);
+        document.removeEventListener('mousemove', this._mousemove);
+        document.removeEventListener('keyup', this._keyup);
+    }
     render() {
         var pageStyle: Record<string, any> = {
             lineHeight: this.page.config.lineHeight + 'px',
@@ -27,17 +40,17 @@ export class PageView extends Component<{ page: Page }>{
             onKeyDown={e => this.page.onKeydown(e.nativeEvent)}
             onFocusCapture={e => this.page.onFocusCapture(e.nativeEvent)}
             onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}
-
         >
             <PageLayoutView pageLayout={this.page.pageLayout}>
                 <SelectorView selector={this.page.selector}></SelectorView>
                 <div className='sy-page-view-content'
-                    onMouseOver={e => this.page.onMouseover(e.nativeEvent)}
+
                     onMouseDown={e => this.page.onMousedown(e.nativeEvent)}
-                    onMouseOut={e => this.page.onMouseout(e.nativeEvent)}
+
                 >
                     {this.page.views.map(x => <x.viewComponent key={x.id} block={x} />)}
                 </div>
+
             </PageLayoutView>
         </div>
     }

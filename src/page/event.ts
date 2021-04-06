@@ -1,11 +1,13 @@
-import React from "react";
 import { Page } from ".";
 import { Block } from "../block/base";
+import { Dom } from "../common/dom";
 import { Point } from "../common/point";
-import { Anchor } from "../selector/anchor";
-import { BlockSelection } from "../selector/selection";
 export class PageEvent {
-    private mouseStatus: 'down' | 'move' | 'up' | 'none'
+    private mouseScope: {
+        isDown: boolean,
+        point?: Point,
+        isMove: boolean
+    }
     /**
      * 鼠标点击页面,
      * 点的过程中有可能有按下不松开选择一个较大的区域情况，
@@ -18,25 +20,11 @@ export class PageEvent {
      * 
      */
     onMousedown(this: Page, event: MouseEvent) {
-        if (typeof document[this.DOCUENT_MOUSEMOVE_KEY] == 'undefined') {
-            document[this.DOCUENT_MOUSEMOVE_KEY] = this.onMousemove.bind(this);
-            document.addEventListener('mousemove', document[this.DOCUENT_MOUSEMOVE_KEY]);
-            this.on('unmount', () => {
-                document.removeEventListener('mousemove', document[this.DOCUENT_MOUSEMOVE_KEY]);
-                delete document[this.DOCUENT_MOUSEMOVE_KEY];
-            })
-        }
-        if (typeof document[this.DOCUENT_MOUSEUP_KEY] == 'undefined') {
-            document[this.DOCUENT_MOUSEUP_KEY] = this.onMouseup.bind(this);
-            document.addEventListener('mouseup', document[this.DOCUENT_MOUSEUP_KEY]);
-            this.on('unmount', () => {
-                document.removeEventListener('mouseup', document[this.DOCUENT_MOUSEUP_KEY]);
-                delete document[this.DOCUENT_MOUSEUP_KEY];
-            })
-        }
-        this.mouseStatus = 'down';
+        if (!this.mouseScope) this.mouseScope = {} as any;
+        this.mouseScope.isDown = true;
+        this.mouseScope.point = Point.from(event);
         var toEle = event.target as HTMLElement;
-        var blockEle = toEle.closest('[data-block]');
+        var blockEle = new Dom(toEle).closest(x => (x as any).block ? true : false);
         if (blockEle) {
             var block = (blockEle as any).block as Block;
             var anchor = block.visibleAnchor(Point.from(event));
@@ -45,85 +33,72 @@ export class PageEvent {
                     throw 'not anchor layout block'
                 }
                 this.selector.replaceSelection(anchor);
-                this.selector.activeAnchor = anchor;
+                this.selector.setActiveAnchor(anchor);
                 this.selector.renderSelection();
-                this.emit('focusAnchor', this.selector.activeAnchor);
             }
         }
     }
     onMousemove(this: Page, event: MouseEvent) {
-        if (this.mouseStatus == 'down' || this.mouseStatus == 'move') {
-            this.mouseStatus = 'move';
-            var toEle = event.target as HTMLElement;
-            var blockEle = toEle.closest('[data-block]');
-            if (blockEle) {
-                var block = (blockEle as any).block as Block;
-                var anchor = block.visibleAnchor(Point.from(event));
-                if (anchor) {
-                    // this.selector.activeAnchor = anchor;
-                    // var sel = this.selector.selections.first();
-                    // if (sel) {
-                    //     sel.end = anchor;
-                    // }
+        if (this.mouseScope && this.mouseScope.isDown == true) {
+            if (this.mouseScope.isMove) {
+                var toEle = event.target as HTMLElement;
+                var blockEle = new Dom(toEle).closest(x => (x as any).block ? true : false);
+                if (blockEle) {
+                    var block = (blockEle as any).block as Block;
+                    var anchor = block.visibleAnchor(Point.from(event));
+                    if (anchor) {
+                        this.selector.joinSelection(anchor);
+                        this.selector.setActiveAnchor(anchor);
+                        this.selector.renderSelection();
+                    }
+                }
+            }
+            else if (Math.abs(event.x - this.mouseScope.point.x) > 10 || Math.abs(event.y - this.mouseScope.point.y) > 10) {
+                this.mouseScope.isMove = true;
+            }
+        }
+        var toEle = event.target as HTMLElement;
+        var blockEle = new Dom(toEle).closest(x => (x as any).block && (x as any).block.page === this ? true : false);
+        if (blockEle) {
+            var block = (blockEle as any).block as Block;
+            return this.selector.setOverBlock(block, event);
+        }
+        else {
+            if (this.selector.isDrag == true) {
+                var dis = 100;
+                var el = document.elementFromPoint(event.x - dis, event.y);
+                var blockEl: Node;
+                if (el) {
+                    blockEl = new Dom(el).closest(x => (x as any).block && (x as any).block.page === this ? true : false)
+                    if (!blockEl) el = null;
+                }
+                if (!el) {
+                    el = document.elementFromPoint(event.x + dis, event.y);
+                    if (el) blockEl = new Dom(el).closest(x => (x as any).block && (x as any).block.page === this ? true : false)
+                }
+                if (blockEl) {
+                    var bl: Block = (blockEl as any).block;
+                    if (bl.isCol || bl.isRow) bl = bl.visiblePitFirstContent;
+                    return this.selector.setOverBlock(bl, event);
                 }
             }
         }
+        this.selector.setOverBlock(null, event);
     }
     onMouseup(this: Page, event: MouseEvent) {
-        if (this.mouseStatus == 'down' || this.mouseStatus == 'move') {
-            this.mouseStatus = 'up';
-            this.selector.onTextInputCaptureFocus();
+        if (this.mouseScope && this.mouseScope.isDown) {
+            this.mouseScope.isMove = false;
+            this.mouseScope.isDown = false;
+            delete this.mouseScope.point;
+            this.selector.onTextInputCaptureFocus()
         }
-    }
-    onMouseover(this: Page, event: MouseEvent) {
-        var toEle = event.target as HTMLElement;
-        var blockEle = toEle.closest('[data-block]');
-        if (blockEle) {
-            var block = (blockEle as any).block;
-            if (block == this.selector.overBlock) {
-                return;
-            }
-            else {
-                if (this.selector.overBlock) {
-                    this.emit('mouseleaveBlock', this.selector.overBlock);
-                }
-                this.selector.overBlock = block;
-                this.emit('mouseenterBlock', this.selector.overBlock);
-                //this.selector.onOverBlock();
-            }
-        }
-    }
-    onMouseout(this: Page, event: MouseEvent) {
-        // var fromEle = event.target;
-        // var toEle = event.relatedTarget as HTMLElement;
-        // if (this.selector.isInOverBlockOperator(toEle)) return;
-        // var blockEle = toEle?.closest('[data-block]');
-        // if (blockEle) {
-        //     var block = (blockEle as any).block;
-        //     if (block == this.overBlock) return;
-        //     else {
-        //         if (this.overBlock) {
-        //             this.emit('mouseleaveBlock', this.overBlock);
-        //         }
-        //         this.overBlock = block;
-        //         this.emit('mouseenterBlock', this.overBlock);
-        //         this.selector.onOverBlock();
-        //     }
-        // }
-        // else {
-        //     if (this.overBlock) {
-        //         this.emit('mouseleaveBlock', this.overBlock);
-        //         delete this.overBlock;
-        //         this.selector.onOverBlock();
-        //     }
-        // }
     }
     onFocusCapture(this: Page, event: FocusEvent) {
         this.onFocus(event);
         this.selector.onTextInputCaptureFocus();
     }
     onBlurCapture(this: Page, event: FocusEvent) {
-        if (this.mouseStatus == 'down') {
+        if (this.mouseScope && this.mouseScope.isDown) {
             /**
              * 说明鼠标是处于down下，这个不可能失焦
              * 如果当前的元素中有一些节点发生了改变，那么此时event.relatedTarget是空的，这很蛋疼
@@ -155,14 +130,6 @@ export class PageEvent {
      */
     onKeydown(this: Page, event: KeyboardEvent) {
         this.keys.push(event.key);
-        if (typeof document[this.DOCUENT_KEYUP_KEY] != 'function') {
-            document[this.DOCUENT_KEYUP_KEY] = this.onKeyup.bind(this);
-            document.addEventListener('keyup', document[this.DOCUENT_KEYUP_KEY]);
-            this.on('unmount', () => {
-                if (typeof document[this.DOCUENT_KEYUP_KEY] == 'function')
-                    document.removeEventListener('keyup', document[this.DOCUENT_KEYUP_KEY])
-            })
-        }
     }
     onKeyup(this: Page, event: KeyboardEvent) {
         this.keys.remove(event.key);

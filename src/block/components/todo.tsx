@@ -23,7 +23,7 @@ export class ToDoView extends BaseComponent<ToDo>{
         }
         if (this.block.childs.length > 0) {
             return <span className='sy-block-todo' >
-                <input type='checkbox' checked={this.block.checked} onChange={e => this.block.onChange(e.nativeEvent)} />
+                <input onMouseDown={e => e.nativeEvent.stopPropagation()} type='checkbox' checked={this.block.checked} onChange={e => this.block.onChange(e.nativeEvent)} />
                 <span style={style} >{this.block.childs.map(x =>
                     <x.viewComponent key={x.id} block={x}></x.viewComponent>
                 )}</span>

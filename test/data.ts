@@ -9,10 +9,11 @@ export var data = {
                     url: '/row',
                     blocks: {
                         childs: [
-                            { url: '/textspan', content: '你还好吗' }
+                            { url: '/textspan', content: '你还好吗\n\n大师，换行' }
                         ]
                     }
-                }, {
+                },
+                {
                     url: '/row',
                     blocks: {
                         childs: [
@@ -45,255 +46,202 @@ export var data = {
                         }]
                     }
                 },
-                    // {
-                    //     url: '/row',
-                    //     blocks: {
-                    //         childs: [
-                    //             {
-                    //                 url: '/table/store',
-                    //                 cols: [{ name: 's1', width: 50 }, { name: 's2', width: 50 }],
-                    //                 meta: { cols: [{ name: 's1', text: '姓名' }, { name: 's2', text: "年龄" }] },
-                    //                 data: [{ s1: "阚海", s2: 32 }, { s1: '偌瞳', s2: 24 }]
-                    //             }
-                    //         ]
-                    //     }
-                    // },
-                    // {
-                    //     url: '/row',
-                    //     blocks: {
-                    //         childs: [{ url: '/katex', formula: "c = \\pm\\sqrt{a^2 + b^2}" }]
-                    //     }
-                    // },
-                    // {
-                    //     url: "/row",
-                    //     blocks: {
-                    //         childs: [{
-                    //             url: '/table',
-                    //             blocks: {
-                    //                 childs: [
-                    //                     {
-                    //                         url: '/table/row', blocks: {
-                    //                             childs: [
-                    //                                 {
-                    //                                     url: "/table/cell",
-                    //                                     blocks: {
-                    //                                         childs: [
-                    //                                             {
-                    //                                                 url: '/col',
-                    //                                                 blocks: {
-                    //                                                     childs: [
-                    //                                                         {
-                    //                                                             url: '/row',
-                    //                                                             blocks: {
-                    //                                                                 childs: [{ url: '/textspan', content: "子内容。。。。。" }]
-                    //                                                             }
-                    //                                                         }
-                    //                                                     ]
-                    //                                                 }
-                    //                                             }
-                    //                                         ]
-                    //                                     }
-
-
-                    //                                 },
-                    //                                 {
-                    //                                     url: "/table/cell",
-                    //                                     blocks: {
-                    //                                         childs: [
-                    //                                             {
-                    //                                                 url: '/col',
-                    //                                                 blocks: {
-                    //                                                     childs: [
-                    //                                                         {
-                    //                                                             url: '/row',
-                    //                                                             blocks: {
-                    //                                                                 childs: [{ url: '/textspan', content: "子内容。。。。。" }]
-                    //                                                             }
-                    //                                                         }
-                    //                                                     ]
-                    //                                                 }
-                    //                                             }
-                    //                                         ]
-                    //                                     }
-                    //                                 },
-                    //                                 {
-                    //                                     url: "/table/cell",
-                    //                                     blocks: {
-                    //                                         childs: [
-                    //                                             {
-                    //                                                 url: '/col',
-                    //                                                 blocks: {
-                    //                                                     childs: [
-                    //                                                         {
-                    //                                                             url: '/row',
-                    //                                                             blocks: {
-                    //                                                                 childs: [{ url: '/textspan', content: "子内容。。。。。" }]
-                    //                                                             }
-                    //                                                         }
-                    //                                                     ]
-                    //                                                 }
-                    //                                             }
-                    //                                         ]
-                    //                                     }
-                    //                                 }
-                    //                             ]
-                    //                         }
-                    //                     },
-                    //                     {
-                    //                         url: '/table/row', blocks: {
-                    //                             childs: [
-                    //                                 {
-                    //                                     url: "/table/cell",
-                    //                                     blocks: {
-                    //                                         childs: [
-                    //                                             {
-                    //                                                 url: '/col',
-                    //                                                 blocks: {
-                    //                                                     childs: [
-                    //                                                         {
-                    //                                                             url: '/row',
-                    //                                                             blocks: {
-                    //                                                                 childs: [{ url: '/textspan', content: "子内容。。。。。" }]
-                    //                                                             }
-                    //                                                         }
-                    //                                                     ]
-                    //                                                 }
-                    //                                             }
-                    //                                         ]
-                    //                                     }
-                    //                                 },
-                    //                                 {
-                    //                                     url: "/table/cell",
-                    //                                     blocks: {
-                    //                                         childs: [
-                    //                                             {
-                    //                                                 url: '/col',
-                    //                                                 blocks: {
-                    //                                                     childs: [
-                    //                                                         {
-                    //                                                             url: '/row',
-                    //                                                             blocks: {
-                    //                                                                 childs: [{ url: '/textspan', content: "子内容。。。。。" }]
-                    //                                                             }
-                    //                                                         }
-                    //                                                     ]
-                    //                                                 }
-                    //                                             }
-                    //                                         ]
-                    //                                     }, colspan: 2
-                    //                                 }
-                    //                             ]
-                    //                         }
-                    //                     },
-                    //                     {
-                    //                         url: '/table/row', blocks: {
-                    //                             childs: [
-                    //                                 {
-                    //                                     url: "/table/cell",
-                    //                                     blocks: {
-                    //                                         childs: [
-                    //                                             {
-                    //                                                 url: '/col',
-                    //                                                 blocks: {
-                    //                                                     childs: [
-                    //                                                         {
-                    //                                                             url: '/row',
-                    //                                                             blocks: {
-                    //                                                                 childs: [{ url: '/textspan', content: "子内容。。。。。" }]
-                    //                                                             }
-                    //                                                         }
-                    //                                                     ]
-                    //                                                 }
-                    //                                             }
-                    //                                         ]
-                    //                                     }
-                    //                                 },
-                    //                                 {
-                    //                                     url: "/table/cell",
-                    //                                     blocks: {
-                    //                                         childs: [
-                    //                                             {
-                    //                                                 url: '/col',
-                    //                                                 blocks: {
-                    //                                                     childs: [
-                    //                                                         {
-                    //                                                             url: '/row',
-                    //                                                             blocks: {
-                    //                                                                 childs: [{ url: '/textspan', content: "子内容。。。。。" }]
-                    //                                                             }
-                    //                                                         }
-                    //                                                     ]
-                    //                                                 }
-                    //                                             }
-                    //                                         ]
-                    //                                     }
-                    //                                 },
-                    //                                 {
-                    //                                     url: "/table/cell",
-                    //                                     blocks: {
-                    //                                         childs: [
-                    //                                             {
-                    //                                                 url: '/col',
-                    //                                                 blocks: {
-                    //                                                     childs: [
-                    //                                                         {
-                    //                                                             url: '/row',
-                    //                                                             blocks: {
-                    //                                                                 childs: [{ url: '/textspan', content: "子内容。。。。。" }]
-                    //                                                             }
-                    //                                                         }
-                    //                                                     ]
-                    //                                                 }
-                    //                                             }
-                    //                                         ]
-                    //                                     }
-                    //                                 }
-                    //                             ]
-                    //                         }
-                    //                     }
-                    //                 ]
-                    //             }
-                    //         }]
-                    //     }
-                    // },
-                    // {
-                    //     url: '/row',
-                    //     blocks: {
-                    //         childs: [
-                    //             {
-                    //                 url: '/code',
-                    //                 code: 'var d="ssss";'
-                    //             }
-                    //         ]
-                    //     }
-                    // },
-                    // {
-                    //     url: '/row',
-                    //     blocks: {
-                    //         childs: [
-                    //             {
-                    //                 url: '/list',
-                    //                 content: '选项1',
-                    //                 blocks: {
-                    //                     subChilds: [
-                    //                         {
-                    //                             url: '/col',
-                    //                             blocks: {
-                    //                                 childs: [
-                    //                                     {
-                    //                                         url: '/row',
-                    //                                         blocks: {
-                    //                                             childs: [{ url: '/textspan', content: "子内容。。。。。" }]
-                    //                                         }
-                    //                                     }
-                    //                                 ]
-                    //                             }
-                    //                         }
-                    //                     ]
-                    //                 }
-                    //             }]
-                    //     }
-                    // }
+                {
+                    url: '/row',
+                    blocks: {
+                        childs: [
+                            {
+                                url: '/table/store',
+                                cols: [{ name: 's1', width: 50 }, { name: 's2', width: 50 }],
+                                meta: {
+                                    cols: [
+                                        { name: 's1', text: '姓名', type: 'string' },
+                                        { name: 's2', text: "年龄", type: 'string' }]
+                                },
+                                data: [{ s1: "阚海", s2: 32 }, { s1: '', s2: 24 }]
+                            }
+                        ]
+                    }
+                },
+                {
+                    url: '/row',
+                    blocks: {
+                        childs: [{ url: '/katex', formula: "c = \\pm\\sqrt{a^2 + b^2}" }]
+                    }
+                },
+                {
+                    url: "/row",
+                    blocks: {
+                        childs: [{
+                            url: '/table',
+                            blocks: {
+                                childs: [
+                                    {
+                                        url: '/table/row', blocks: {
+                                            childs: [
+                                                {
+                                                    url: "/table/cell",
+                                                    blocks: {
+                                                        childs: [
+                                                            {
+                                                                url: '/row',
+                                                                blocks: {
+                                                                    childs: [{ url: '/textspan', content: "子内容。\n。。。。" }]
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    url: "/table/cell",
+                                                    blocks: {
+                                                        childs: [
+                                                            {
+                                                                url: '/row',
+                                                                blocks: {
+                                                                    childs: [{ url: '/textspan', content: "子内容。\n。。。。" }]
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    url: "/table/cell",
+                                                    blocks: {
+                                                        childs: [
+                                                            {
+                                                                url: '/row',
+                                                                blocks: {
+                                                                    childs: [{ url: '/textspan', content: "子内容。\n。。。。" }]
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        url: '/table/row', blocks: {
+                                            childs: [
+                                                {
+                                                    url: "/table/cell",
+                                                    blocks: {
+                                                        childs: [
+                                                            {
+                                                                url: '/row',
+                                                                blocks: {
+                                                                    childs: [{ url: '/textspan', content: "子内容。\n。。。。" }]
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    url: "/table/cell",
+                                                    blocks: {
+                                                        childs: [
+                                                            {
+                                                                url: '/row',
+                                                                blocks: {
+                                                                    childs: [{ url: '/textspan', content: "子内容。\n。。。。" }]
+                                                                }
+                                                            }
+                                                        ]
+                                                    },
+                                                    colspan: 2
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        url: '/table/row', blocks: {
+                                            childs: [
+                                                {
+                                                    url: "/table/cell",
+                                                    blocks: {
+                                                        childs: [
+                                                            {
+                                                                url: '/row',
+                                                                blocks: {
+                                                                    childs: [{ url: '/textspan', content: "子内容。\n。。。。" }]
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    url: "/table/cell",
+                                                    blocks: {
+                                                        childs: [
+                                                            {
+                                                                url: '/row',
+                                                                blocks: {
+                                                                    childs: [{ url: '/textspan', content: "子内容。\n。。。。" }]
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    url: "/table/cell",
+                                                    blocks: {
+                                                        childs: [
+                                                            {
+                                                                url: '/row',
+                                                                blocks: {
+                                                                    childs: [{ url: '/textspan', content: "子内容。\n。。。。" }]
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        }]
+                    }
+                },
+                {
+                    url: '/row',
+                    blocks: {
+                        childs: [
+                            {
+                                url: '/code',
+                                code: 'var d="ssss";'
+                            }
+                        ]
+                    }
+                },
+                {
+                    url: '/row',
+                    blocks: {
+                        childs: [
+                            {
+                                url: '/list',
+                                blocks: {
+                                    childs: [{ url: '/list/text', content: '选项1' }],
+                                    subChilds: [
+                                        {
+                                            url: '/col',
+                                            blocks: {
+                                                childs: [
+                                                    {
+                                                        url: '/row',
+                                                        blocks: {
+                                                            childs: [{ url: '/textspan', content: "子内容。。。。。" }]
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }]
+                    }
+                }
                 ]
             }
         }

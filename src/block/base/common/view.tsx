@@ -1,7 +1,7 @@
 import { ContentAreaComposition } from "./composition/content";
 import React from 'react';
 import { BaseComponent } from "../component";
-import { BlockAppear, BlockDisplay} from "../enum";
+import { BlockAppear, BlockDisplay } from "../enum";
 import { url, view } from "../../factory/observable";
 
 
@@ -11,7 +11,10 @@ export class View extends ContentAreaComposition {
      * 是否为内容视图
      */
     isRockView: boolean = true;
-     appear=BlockAppear.layout;
+    appear = BlockAppear.layout;
+    get isArea(){
+        return true;
+    }
 }
 /*** 在一个页面上，从视觉上有多个视图块，
  * 如每个页面都有一个初始的内容视图，不可拖动
