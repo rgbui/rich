@@ -5,7 +5,7 @@ import "../src/util/array";
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.less';
-import { SY } from "../src";
+import { SY } from "..";
 import { data } from "./data";
 
 ReactDOM.render(

@@ -5,7 +5,8 @@ export function Icon(props: {
     click?: (e: MouseEvent) => void,
     mousedown?: (e: MouseEvent) => void,
     rotate?: number,
-    size?: number
+    size?: number,
+    className?: string[]|string
 }) {
     var classList: string[] = ['sy-icon'];
     if (props.icon.indexOf(':')) {
@@ -13,6 +14,10 @@ export function Icon(props: {
         classList.push(prefix);
         classList.push(prefix + '-' + name);
     }
+    if (Array.isArray(props.className)) {
+        classList.addRange(props.className);
+    }
+    else if(typeof props.className=='string')classList.push(props.className)
     var style: Record<string, any> = {
         fontSize: props.size || 20,
         width: 20 || props.size,

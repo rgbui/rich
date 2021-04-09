@@ -1,7 +1,7 @@
 {
-  "name": "kanhai",
+  "name": "rich",
   "version": "1.0.0",
-  "description": "kanhai is rich text editor",
+  "description": "rich block editor",
   "main": "index.js",
   "scripts": {
     "webpack": "webpack --config scripts/webpack.config.prod.js",

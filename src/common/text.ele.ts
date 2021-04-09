@@ -1,19 +1,21 @@
 
 import { util } from "../util/util";
+import { Dom } from "./dom";
 import { Point, Rect } from "./point";
 let __g: CanvasRenderingContext2D;
 export class TextEle {
     static getFontStyle(ele: HTMLElement): TextFontStyle {
         try {
+            var dom = new Dom(ele);
             var fontStyle = {
-                fontStyle: util.getStyle(ele, 'fontStyle'),
-                fontVariant: util.getStyle(ele, 'fontVariant'),
-                fontWeight: util.getStyle(ele, 'fontWeight'),
-                fontSize: util.getStyle(ele, 'fontSize'),
-                lineHeight: util.getStyle(ele, 'lineHeight'),
-                fontFamily: util.getStyle(ele, 'fontFamily'),
-                letterSpacing: util.getStyle(ele, 'letterSpacing'),
-                color: util.getStyle(ele, 'color')
+                fontStyle: dom.style('fontStyle'),
+                fontVariant: dom.style('fontVariant'),
+                fontWeight: dom.style('fontWeight'),
+                fontSize: dom.style('fontSize'),
+                lineHeight: dom.style('lineHeight'),
+                fontFamily: dom.style('fontFamily'),
+                letterSpacing: dom.style('letterSpacing'),
+                color: dom.style('color')
             };
             fontStyle.lineHeight = parseInt(fontStyle.lineHeight.replace('px', ''));
             fontStyle.letterSpacing = parseInt(fontStyle.letterSpacing.replace('px', ''));
@@ -44,10 +46,11 @@ export class TextEle {
             }
             return g;
         }
-        var innerTop = toNumber(util.getStyle(ele, 'paddingTop')) + toNumber(util.getStyle(ele, 'borderTopWidth'));
-        var innerLeft = toNumber(util.getStyle(ele, 'paddingLeft')) + toNumber(util.getStyle(ele, 'borderLeftWidth'));
-        var innerRight = toNumber(util.getStyle(ele, 'paddingRight')) + toNumber(util.getStyle(ele, 'borderRightWidth'));
-        var innerBottom = toNumber(util.getStyle(ele, 'paddingBottom')) + toNumber(util.getStyle(ele, 'borderBottomWidth'));
+        var dom = new Dom(ele);
+        var innerTop = toNumber(dom.style('paddingTop')) + toNumber(dom.style('borderTopWidth'));
+        var innerLeft = toNumber(dom.style('paddingLeft')) + toNumber(dom.style('borderLeftWidth'));
+        var innerRight = toNumber(dom.style('paddingRight')) + toNumber(dom.style('borderRightWidth'));
+        var innerBottom = toNumber(dom.style('paddingBottom')) + toNumber(dom.style('borderBottomWidth'));
         var rect = Rect.from(bound);
         rect.left += innerLeft;
         rect.top += innerTop;
@@ -59,13 +62,15 @@ export class TextEle {
         var content = this.getTextContent(ele);
         var ts = content.split("");
         var rect = new Rect();
-        var currentDisplay = util.getStyle(ele, 'display');
+        var dom = new Dom(ele);
+        var currentDisplay = dom.style('display');
         var currentRect = Rect.from(ele.getBoundingClientRect());
         if (currentDisplay == 'inline') {
-            var closetELe = util.domClosest(ele, g => {
-                var display = util.getStyle(g, "display");
+            var closetELe = dom.closest(g => {
+
+                var display = new Dom(g).style("display");
                 if (display != 'inline') return true;
-            });
+            }) as HTMLElement;
             if (closetELe) {
                 rect = this.getContentBound(closetELe);
             }
@@ -129,13 +134,14 @@ export class TextEle {
         var content = this.getTextContent(ele);
         var ts = content.split("");
         var rect = new Rect();
-        var currentDisplay = util.getStyle(ele, 'display');
+        var dom = new Dom(ele);
+        var currentDisplay = dom.style('display');
         var currentRect = Rect.from(ele.getBoundingClientRect());
         if (currentDisplay == 'inline') {
-            var closetELe = util.domClosest(ele, g => {
-                var display = util.getStyle(g, "display");
+            var closetELe = dom.closest(g => {
+                var display = new Dom(g).style("display");
                 if (display != 'inline') return true;
-            });
+            }) as HTMLElement;
             if (closetELe) {
                 rect = this.getContentBound(closetELe);
             }

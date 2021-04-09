@@ -82,28 +82,5 @@ export var util = {
             return true;
         }
         return equal(a, b);
-    },
-    getStyle(node: HTMLElement, attr: string) {
-        if (typeof getComputedStyle != 'undefined') {
-            var value = getComputedStyle(node, null)[attr];
-            return value;
-        } else if (typeof (node as any).currentStyle != 'undefined') {
-            if (attr == 'opacity') { //兼容不透明度
-                return Number((node as any).currentStyle.getAttribute('filter').match(/(?:opacity[=:])(\d+)/)[1]);
-            } else {
-                return (node as any).currentStyle.getAttribute(attr);
-            }
-        }
-    },
-    domClosest(el: HTMLElement, predict: (pa: HTMLElement) => boolean) {
-        if (predict(el)) return el;
-        var p = el.parentElement;
-        while (true) {
-            if (p) {
-                if (predict(p)) return p;
-                else p = p.parentElement;
-            }
-            else break;
-        }
     }
 }
