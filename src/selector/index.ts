@@ -226,7 +226,7 @@ export class Selector {
         var pe = this.page.el.getBoundingClientRect();
         return new Point(point.x - pe.left, point.y - pe.top);
     }
-    openMenu() {
+    openMenu(event: MouseEvent) {
 
     }
 }

@@ -73,7 +73,7 @@ export class Bar extends React.Component<{ selectorView: SelectorView }>{
                 this.selector.isDrag = false;
             }
             else {
-                this.selector.openMenu();
+                this.selector.openMenu(event);
             }
             this.dragCopyEle.style.display = 'none';
             this.dragCopyEle.innerHTML = '';

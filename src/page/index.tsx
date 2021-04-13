@@ -14,7 +14,6 @@ export class Page extends Events {
     el: HTMLElement;
     id: string;
     date: number;
-    url: '/page';
     constructor(el: HTMLElement, options?: Record<string, any>) {
         super();
         this.el = el;
@@ -56,8 +55,7 @@ export class Page extends Events {
     async get() {
         var json: Record<string, any> = {
             id: this.id,
-            date: this.date,
-            url: this.url
+            date: this.date
         };
         json.pageLayout = this.pageLayout.get();
         json.views = await this.views.asyncMap(async x => {

@@ -44,13 +44,10 @@ export class PageView extends Component<{ page: Page }>{
             <PageLayoutView pageLayout={this.page.pageLayout}>
                 <SelectorView selector={this.page.selector}></SelectorView>
                 <div className='sy-page-view-content'
-
                     onMouseDown={e => this.page.onMousedown(e.nativeEvent)}
-
                 >
                     {this.page.views.map(x => <x.viewComponent key={x.id} block={x} />)}
                 </div>
-
             </PageLayoutView>
         </div>
     }

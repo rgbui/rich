@@ -29,44 +29,37 @@
     {
       "icon_id": "20881018",
       "name": "搜索",
-      "font_class": "sousuo",
+      "font_class": "search",
       "unicode": "e600",
       "unicode_decimal": 58880
     },
     {
       "icon_id": "19296137",
       "name": "01加粗",
-      "font_class": "01jiacu",
+      "font_class": "bold",
       "unicode": "e69b",
       "unicode_decimal": 59035
     },
     {
       "icon_id": "19296143",
       "name": "02斜体",
-      "font_class": "02xieti",
+      "font_class": "italic",
       "unicode": "e69c",
       "unicode_decimal": 59036
     },
     {
       "icon_id": "19296155",
       "name": "03下划线",
-      "font_class": "03xiahuaxian",
+      "font_class": "underline",
       "unicode": "e69d",
       "unicode_decimal": 59037
     },
     {
       "icon_id": "19296169",
       "name": "04删除线",
-      "font_class": "04shanchuxian",
+      "font_class": "delete-line",
       "unicode": "e69e",
       "unicode_decimal": 59038
-    },
-    {
-      "icon_id": "19296184",
-      "name": "07链接",
-      "font_class": "07lianjie",
-      "unicode": "e69f",
-      "unicode_decimal": 59039
     },
     {
       "icon_id": "19296202",
