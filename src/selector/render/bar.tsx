@@ -97,7 +97,9 @@ export class Bar extends React.Component<{ selectorView: SelectorView }>{
     render() {
         return <div>
             <div className='sy-selector-drag-copy' ref={e => this.dragCopyEle = e}></div>
-            <div className='sy-selector-bar' ref={e => this.barEle = e} onMouseDown={e => this.onMousedown(e.nativeEvent)}><Icon icon='th-large:fa'></Icon></div>
+            <div className='sy-selector-bar' ref={e => this.barEle = e} onMouseDown={e => this.onMousedown(e.nativeEvent)}>
+                <Icon icon='drag:sy'></Icon>
+            </div>
         </div>
     }
 }
