@@ -10,10 +10,18 @@ import { Selector } from '../selector';
 import { PageLayout } from "./layout/index";
 import { PageEvent } from "./event";
 import { PageView } from './view';
+import { User } from '../types/user';
+import { HistorySnapshoot } from '../history/snapshoot';
 export class Page extends Events {
     el: HTMLElement;
     id: string;
     date: number;
+    private user: User;
+    get creater() {
+        if (!this.user) throw 'the user is not null';
+        return this.user;
+    }
+    snapshoot: HistorySnapshoot = new HistorySnapshoot();
     constructor(el: HTMLElement, options?: Record<string, any>) {
         super();
         this.el = el;

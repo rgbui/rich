@@ -9,6 +9,7 @@ import { BlockStyle } from "../style/index";
 import { BaseComponent } from "./component";
 import { TextEle } from "../../common/text.ele";
 import { Dom } from "../../common/dom";
+import { ActionDirective, OperatorDirective } from "../../history/declare";
 export abstract class Block extends Events {
     parent: Block;
     url: string;
@@ -322,10 +323,6 @@ export abstract class Block extends Events {
     viewComponent: typeof BaseComponent | ((props: any) => JSX.Element)
     view: BaseComponent<this>;
     el: HTMLElement;
-    setState(state: Record<string, any>) {
-        Object.assign(this, state);
-        this.view.forceUpdate();
-    }
     get visibleHeadAnchor() {
         var anchor = this.page.selector.createAnchor();
         anchor.block = this;
@@ -654,5 +651,33 @@ export abstract class Block extends Events {
         rs.each(r => {
             classList.remove(r);
         })
+    }
+
+    private inputTimer;
+    /**
+     * 用户一直输入内容
+     */
+    onInputText(force = false) {
+        if (this.inputTimer) {
+            clearTimeout(this.inputTimer);
+            delete this.inputTimer;
+        }
+        var excute = () => {
+            this.page.snapshoot.declare(ActionDirective.onEditText);
+            var text = TextEle.getTextContent(this.textEl);
+            var oldText = this.content;
+            this.content = text;
+            this.page.snapshoot.record(OperatorDirective.updateContent, { blockId: this.id, old: oldText, new: text });
+            this.page.snapshoot.store();
+        }
+        if (force == true) excute()
+        else { /***
+             * 这里需要将当前的变化通知到外面，
+             * 当然用户在输的过程中，该方法会不断的执行，所以通知需要加一定的延迟，即用户停止几秒钟后默认为输入
+             */
+            this.inputTimer = setTimeout(() => {
+                excute()
+            }, 2e3);
+        }
     }
 }

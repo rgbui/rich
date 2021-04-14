@@ -1,6 +1,5 @@
 import { Component } from "react";
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { Page } from "./index";
 import { PageLayoutView } from "./layout/render";
 import { SelectorView } from "../selector/render/render";

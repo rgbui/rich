@@ -90,6 +90,7 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
                     //说明用户有插入某个元素的意图
                 }
                 this.followAnchor(anchor);
+                anchor.block.onInputText();
             }
         }
     }
@@ -120,6 +121,7 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
                         anchor.at -= 1;
                         textNode.remove()
                     }
+
                 }
                 if (anchor.at == 0) {
                     var prevAnchor = anchor.block.visiblePrevAnchor;
@@ -136,6 +138,9 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
             }
             if (anchor.textContent.length == 0) {
                 //说明当前的block文本全部删光了，那么这里需要触发删除相应的block
+            }
+            else {
+                anchor.block.onInputText();
             }
         }
     }
