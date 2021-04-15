@@ -8,8 +8,9 @@ import { BlockAppear, BlockDisplay, Locate } from "./enum";
 import { BlockStyle } from "../style/index";
 import { BaseComponent } from "./component";
 import { TextEle } from "../../common/text.ele";
-import { Dom } from "../../common/dom";
+import { dom, Dom } from "../../common/dom";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
+
 export abstract class Block extends Events {
     parent: Block;
     url: string;
@@ -626,41 +627,62 @@ export abstract class Block extends Events {
         }
         return el;
     }
-    private dragTime;
+    private dragOverTime;
+    private lastPoint: Point;
+    private overArrow: string;
     onDragOver(point: Point) {
+        var self = this;
         var bound = this.getVisibleBound();
         var el = this.el as HTMLElement;
-        this.onDragLeave();
-        if (point.x < bound.left + Math.min(30, bound.width / 2)) el.classList.add('sy-block-drag-over-left');
-        else if (point.x > bound.left + bound.width - Math.min(30, bound.width / 2)) el.classList.add('sy-block-drag-over-right')
-        else if (point.y > bound.top + bound.height / 2) el.classList.add('sy-block-drag-over-down');
-        else if (point.y < bound.top + bound.height / 2) el.classList.add('sy-block-drag-over-up');
-        // if (bound.conatin(point)) {
-        //     this.dragTime = setTimeout(() => {
-
-        //     }, 2e3);
-        // }
+        var arrow: string;
+        if (this.lastPoint && point.x == this.lastPoint.x && point.y == this.lastPoint.y
+            && bound.conatin(point)
+        ) {
+            if (!this.dragOverTime) {
+                self.overArrow = ''; this.dragOverTime = setTimeout(() => {
+                    self.overArrow = 'right';
+                    dom(el).removeClass(g => g.startsWith('sy-block-drag-over'))
+                    el.classList.add('sy-block-drag-over-' + self.overArrow);
+                }, 1e3);
+            }
+        }
+        else {
+            if (this.dragOverTime) {
+                clearTimeout(this.dragOverTime);
+                this.dragOverTime = null;
+            }
+            self.overArrow = '';
+        }
+        if (self.overArrow) return;
+        if (point.x <= bound.left) {
+            arrow = 'left';
+        }
+        else if (point.x >= bound.left + bound.width) {
+            arrow = 'right';
+        }
+        else if (point.y >= bound.top + bound.height / 2) {
+            arrow = 'down';
+        }
+        else if (point.y <= bound.top + bound.height / 2) {
+            arrow = 'up';
+        }
+        // console.log(arrow, point, bound);
+        dom(el).removeClass(g => g.startsWith('sy-block-drag-over'))
+        el.classList.add('sy-block-drag-over-' + arrow);
+        this.lastPoint = point.clone();
     }
     onDragLeave() {
-        var classList = (this.el as HTMLElement).classList;
-        var rs: string[] = [];
-        for (let i = 0; i < classList.length; i++) {
-            var cla = classList[i];
-            if (cla.startsWith('sy-block-drag-over')) rs.push(cla);
-        }
-        rs.each(r => {
-            classList.remove(r);
-        })
+        dom(this.el).removeClass(g => g.startsWith('sy-block-drag-over'))
     }
 
-    private inputTimer;
+    private inputTime;
     /**
      * 用户一直输入内容
      */
     onInputText(force = false) {
-        if (this.inputTimer) {
-            clearTimeout(this.inputTimer);
-            delete this.inputTimer;
+        if (this.inputTime) {
+            clearTimeout(this.inputTime);
+            delete this.inputTime;
         }
         var excute = () => {
             this.page.snapshoot.declare(ActionDirective.onEditText);
@@ -675,9 +697,9 @@ export abstract class Block extends Events {
              * 这里需要将当前的变化通知到外面，
              * 当然用户在输的过程中，该方法会不断的执行，所以通知需要加一定的延迟，即用户停止几秒钟后默认为输入
              */
-            this.inputTimer = setTimeout(() => {
+            this.inputTime = setTimeout(() => {
                 excute()
-            }, 2e3);
+            }, 8e2);
         }
     }
 }

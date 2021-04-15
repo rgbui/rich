@@ -11,20 +11,26 @@ import { Block } from '..';
 export class Row extends Block {
     display = BlockDisplay.block;
     appear = BlockAppear.layout;
-    get isRow(){
+    get isRow() {
         return true;
     }
 }
 @view('/row')
 export class RowView extends BaseComponent<Row>{
-    onMousemove(event: MouseEvent) {
-        if (this.block.childs.length > 0) {
+    mousedown(index: number, event: MouseEvent) {
+        console.log(index, event);
+        // if (this.block.childs.length > 1) {
 
-        }
+        // }
     }
     render() {
-        return <div className='sy-block-row' onMouseMove={e => this.onMousemove(e.nativeEvent)} >{this.block.childs.map(x =>
-            <x.viewComponent key={x.id} block={x}></x.viewComponent>
+        return <div className='sy-block-row'   >{this.block.childs.map((x, i) => {
+            console.log(i,'xx');
+            return <>
+                {i > 0 && <div key={x.id + "xx" + i.toString()} onMouseDown={e => this.mousedown(i, e.nativeEvent)} className='sy-block-row-resize-col'></div>}
+                <x.viewComponent key={x.id} block={x}></x.viewComponent>
+            </>
+        }
         )}</div>
     }
 }

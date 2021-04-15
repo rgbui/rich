@@ -33,7 +33,7 @@ export class Bar extends React.Component<{ selectorView: SelectorView }>{
     }
     private mousemove: (event: MouseEvent) => void;
     private mouseup: (event: MouseEvent) => void;
-    onMousemove(event: MouseEvent) {
+    async onMousemove(event: MouseEvent) {
         if (this.isDown) {
             if (Math.abs(event.x - this.x) > 5 || Math.abs(event.y - this.y) > 5) {
                 if (this.selector.isDrag != true) {
@@ -47,7 +47,6 @@ export class Bar extends React.Component<{ selectorView: SelectorView }>{
                     this.dragCopyEle.appendChild(cloneNode);
                 }
                 else if (this.selector.isDrag) {
-
                     this.dragCopyEle.style.top = event.y + 'px';
                     this.dragCopyEle.style.left = event.x + 'px';
                 }
@@ -66,6 +65,7 @@ export class Bar extends React.Component<{ selectorView: SelectorView }>{
                     var cl = cls.find(g => g.startsWith('sy-block-drag-over'));
                     if (cl) {
                         cl = cl.replace('sy-block-drag-over-', '');
+                        console.log(cl);
                         await this.selector.onMoveBlock(this.dragBlock, dropBlock, cl as any);
                     }
                     dropBlock.onDragLeave();

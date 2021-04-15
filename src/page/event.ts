@@ -61,6 +61,9 @@ export class PageEvent {
         var blockEle = new Dom(toEle).closest(x => (x as any).block && (x as any).block.page === this ? true : false);
         if (blockEle) {
             var block = (blockEle as any).block as Block;
+            // if (this.selector.isDrag == true) {
+            //     console.log('over ', blockEle);
+            // }
             return this.selector.setOverBlock(block, event);
         }
         else {
@@ -79,6 +82,7 @@ export class PageEvent {
                 if (blockEl) {
                     var bl: Block = (blockEl as any).block;
                     if (bl.isCol || bl.isRow) bl = bl.visiblePitFirstContent;
+                    // console.log('block...', blockEl);
                     return this.selector.setOverBlock(bl, event);
                 }
             }

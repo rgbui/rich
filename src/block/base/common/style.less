@@ -2,4 +2,15 @@
     display        : flex;
     justify-content: flex-start;
     align-items    : flex-start;
+
+    &-resize-col {
+        width           : 10px;
+        background-color: transparent;
+        align-self      : stretch;
+
+        &:hover {
+            background-color: rgba(255, 0, 0, 0.6);
+            cursor          : col-resize;
+        }
+    }
 }

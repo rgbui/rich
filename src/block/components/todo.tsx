@@ -12,7 +12,7 @@ export class ToDo extends TextSpan {
     @observable('onChange')
     onChange(event: Event) {
         var input = event.target as HTMLInputElement;
-        this.setState({ checked: input.checked });
+        //this.setState({ checked: input.checked });
     }
 }
 @view('/todo')

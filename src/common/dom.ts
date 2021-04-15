@@ -189,4 +189,15 @@ export class Dom {
         }
         combineText(el);
     }
+    removeClass(predict: (cla: string) => boolean) {
+        var cs = Array.from((this.el as HTMLElement).classList);
+        var c = cs.findAll(predict);
+        c.each(g => {
+            (this.el as HTMLElement).classList.remove(g);
+        })
+    }
+}
+
+export var dom = function (el: HTMLElement) {
+    return new Dom(el);
 }

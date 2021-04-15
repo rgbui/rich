@@ -1,4 +1,6 @@
+import { Page } from "../page";
 import { Events } from "../util/events";
+import { util } from "../util/util";
 import { UserAction, UserOperator } from "./action";
 import { ActionDirective, OperatorDirective } from "./declare";
 import { HistoryRecord } from "./record";
@@ -9,12 +11,19 @@ import { HistoryRecord } from "./record";
 export class HistorySnapshoot extends Events {
     historyRecord: HistoryRecord;
     action: UserAction;
+    page: Page;
+    constructor(page: Page) {
+        super();
+        this.page = page;
+        this.historyRecord = new HistoryRecord();
+    }
     declare(directive: ActionDirective) {
         if (this.action) {
             throw 'the last action is null,but not ,why happend?'
         }
         this._pause = false;
         this.action = new UserAction();
+        this.action.user = util.clone(this.page.creater)
         this.action.directive = directive;
         this.action.startDate = new Date().getTime();
     }
@@ -27,9 +36,13 @@ export class HistorySnapshoot extends Events {
     }
     record(directive: OperatorDirective, data: Record<string, any>) {
         if (this._pause == true) return;
-        this.action.operators.push({ directive, data });
+        var up = new UserOperator();
+        up.directive = directive;
+        up.data = data;
+        this.action.operators.push(up);
     }
     store() {
+        this.action.endDate = Date.now();
         this.emit('history', this.action);
         if (this.historyRecord) {
             if (this.action.directive == ActionDirective.onRedo || this.action.directive == ActionDirective.onUndo) return;

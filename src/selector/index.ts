@@ -107,15 +107,16 @@ export class Selector {
     }
     setOverBlock(overBlock: Block, event: MouseEvent) {
         var lastOverBlock = this.overBlock;
-        if (lastOverBlock === overBlock) return;
-        if (this.overBlock && this.overBlock != overBlock) {
+        if (lastOverBlock && lastOverBlock != overBlock) {
             this.page.emit('mouseleaveBlock', this.overBlock);
         }
-        if (overBlock) {
+        if (overBlock && lastOverBlock != overBlock) {
             this.overBlock = overBlock;
             this.page.emit('mouseenterBlock', this.overBlock);
         }
-        else delete this.overBlock;
+        else if (!overBlock)
+            delete this.overBlock;
+
         if (this.isDrag == true) {
             this.view.bar.hide();
             if (lastOverBlock && lastOverBlock.dropBlock) lastOverBlock.dropBlock.onDragLeave();

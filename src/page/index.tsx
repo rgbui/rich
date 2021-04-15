@@ -21,7 +21,7 @@ export class Page extends Events {
         if (!this.user) throw 'the user is not null';
         return this.user;
     }
-    snapshoot: HistorySnapshoot = new HistorySnapshoot();
+    snapshoot: HistorySnapshoot;
     constructor(el: HTMLElement, options?: Record<string, any>) {
         super();
         this.el = el;
@@ -33,6 +33,11 @@ export class Page extends Events {
     private async init() {
         this.config = new PageConfig();
         this.selector = new Selector(this);
+        this.snapshoot = new HistorySnapshoot(this);
+        this.snapshoot.on('history', (action) => {
+            this.emit('history', action);
+            this.emit('change');
+        });
         await this.emit('init');
     }
     config: PageConfig;
@@ -78,7 +83,7 @@ export class Page extends Events {
     keys: string[] = [];
     isFocus: boolean = false;
     onError(error: Error) {
-
+        this.emit('error', error);
     }
     render() {
         ReactDOM.render(<PageView page={this}></PageView>, this.el.appendChild(document.createElement('div')));
