@@ -53,5 +53,10 @@ export class HistorySnapshoot extends Events {
 }
 
 export interface HistorySnapshoot {
-    record(directive: OperatorDirective.updateContent, data: { blockId: string, old: string, new: string });
+    record(directive: OperatorDirective.updateText, data: { blockId: string, old: string, new: string });
+    record(directive: OperatorDirective.delete, data: { parentId: string, childKey?: string, at?: number, preBlockId?: string, data: Record<string, any> });
+    record(directive: OperatorDirective.remove, data: { parentId: string, childKey?: string, at?: number, preBlockId?: string });
+    record(directive: OperatorDirective.updateProp, data: { blockId: string, old: any, new: any });
+    record(directive: OperatorDirective.create, data: { parentId: string, childKey?: string, at?: number, preBlockId?: string, data: Record<string, any> });
+    record(directive: OperatorDirective.append, data: { parentId: string, childKey?: string, blockId: string, at?: number, preBlockId?: string })
 }

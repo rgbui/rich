@@ -23,7 +23,7 @@ export class TableStoreTh extends Block {
         return (this.parent as TableStoreHead).tableStore;
     }
     get htmlContent() {
-        return { __html: TextEle.getTextHtml(this.metaCol.text) };
+        return  TextEle.getTextHtml(this.metaCol.text) 
     }
     get isCol(){
         return true;

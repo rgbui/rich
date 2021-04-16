@@ -8,8 +8,23 @@ export enum ActionDirective {
 }
 
 export enum OperatorDirective {
-    updateContent,
-    createBlock,
-    deleteBlock
+    /**
+     * 更新文本
+     */
+    updateText,
+    create,
+    /**
+     * 删除，你可以认为是彻底的删除了
+     */
+    delete,
+    /**
+     * 移除，可以认为是脱离了当前节点树
+     */
+    remove,
+    /**
+     * 更新属性
+     */
+    updateProp,
+    append
 }
 

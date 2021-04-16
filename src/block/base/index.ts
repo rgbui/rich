@@ -236,10 +236,17 @@ export abstract class Block extends Events {
     }
     remove() {
         var pb = this.parentBlocks;
-        if (Array.isArray(pb))
+        if (Array.isArray(pb) && pb.exists(g => g === this)) {
+            this.page.snapshoot.record(OperatorDirective.remove, {
+                parentId: this.parent.id,
+                childKey: this.parentKey,
+                at: pb.findIndex(g => g === this),
+                preBlockId: this.prev ? this.prev.id : undefined
+            })
             this.parentBlocks.remove(this);
-        if (this.el) {
-            (this.el as HTMLElement).remove();
+            if (this.el) {
+                (this.el as HTMLElement).remove();
+            }
         }
     }
     insertBefore(to: Block) {
@@ -264,11 +271,20 @@ export abstract class Block extends Events {
             new Dom(this.el).insertAfter(to.el)
         }
     }
-    append(block: Block, at?: number) {
+    append(block: Block, at?: number, childKey?: string) {
         block.remove();
-        if (typeof at == 'undefined') at = this.childs.length;
-        this.childs.insertAt(at, block);
+        if (typeof childKey == 'undefined') childKey = 'childs';
+        var bs = this.blocks[childKey];
+        if (typeof at == 'undefined') at = bs.length;
+        bs.insertAt(at, block);
         block.parent = this;
+        this.page.snapshoot.record(OperatorDirective.append, {
+            parentId: this.id,
+            childKey,
+            at,
+            prevBlockId: block.prev ? block.prev.id : undefined,
+            blockId: block.id
+        })
         if (this.childsEl && block.el) {
             if (this.childs.length == 1) {
                 this.childsEl.appendChild(block.el)
@@ -594,9 +610,7 @@ export abstract class Block extends Events {
     }
     content: string = '';
     get htmlContent() {
-        return {
-            __html: TextEle.getTextHtml(this.content)
-        }
+        return TextEle.getTextHtml(this.content)
     }
     updateContent(content: string, partName?: string) {
         this.content = content;
@@ -706,7 +720,7 @@ export abstract class Block extends Events {
             var text = TextEle.getTextContent(this.textEl);
             var oldText = this.content;
             this.content = text;
-            this.page.snapshoot.record(OperatorDirective.updateContent, { blockId: this.id, old: oldText, new: text });
+            this.page.snapshoot.record(OperatorDirective.updateText, { blockId: this.id, old: oldText, new: text });
             this.page.snapshoot.store();
         }
         if (force == true) excute()

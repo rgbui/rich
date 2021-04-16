@@ -13,6 +13,7 @@ import { PageView } from './view';
 import { User } from '../types/user';
 import { HistorySnapshoot } from '../history/snapshoot';
 import { Block } from '../block/base';
+import { OperatorDirective } from '../history/declare';
 export class Page extends Events {
     el: HTMLElement;
     id: string;
@@ -96,8 +97,17 @@ export class Page extends Events {
      * @param parent 
      * @param at 
      */
-    async createBlock(url: string, data: Record<string, any>, parent?: Block, at?: number) {
-
+    async createBlock(url: string, data: Record<string, any>, parent: Block, at?: number, childKey?: string) {
+        var block = await BlockFactory.createBlock(url, this, data, parent);
+        if (typeof childKey == 'undefined') childKey = 'childs';
+        var bs = parent.blocks[childKey];
+        if (!Array.isArray(bs)) parent.blocks[childKey] = bs = [];
+        if (typeof at == 'undefined') at = bs.length;
+        bs.insertAt(at, block);
+        this.snapshoot.record(OperatorDirective.create, {
+            parentId: parent.id,childKey, at, preBlockId: block.prev ? block.prev.id : undefined, data: block.get()
+        })
+        return block;
     }
 }
 export interface Page extends PageEvent { }

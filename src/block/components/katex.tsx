@@ -13,14 +13,14 @@ export class Katex extends Content {
         let html = katex.renderToString(this.formula, {
             throwOnError: false
         });
-        return { __html: html }
+      return html;
     }
 }
 @view('/katex')
 export class KatexView extends BaseComponent<Katex>{
     render() {
         return <div className='sy-block-katex' >
-            <SolidArea content={<span dangerouslySetInnerHTML={this.block.htmlContent}></span>}></SolidArea>
+            <SolidArea content={<span dangerouslySetInnerHTML={{__html:this.block.htmlContent}}></span>}></SolidArea>
         </div>
     }
 }
