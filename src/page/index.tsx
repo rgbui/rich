@@ -12,6 +12,7 @@ import { PageEvent } from "./event";
 import { PageView } from './view';
 import { User } from '../types/user';
 import { HistorySnapshoot } from '../history/snapshoot';
+import { Block } from '../block/base';
 export class Page extends Events {
     el: HTMLElement;
     id: string;
@@ -87,6 +88,16 @@ export class Page extends Events {
     }
     render() {
         ReactDOM.render(<PageView page={this}></PageView>, this.el.appendChild(document.createElement('div')));
+    }
+    /**
+     * 创建一个block
+     * @param url 
+     * @param data 
+     * @param parent 
+     * @param at 
+     */
+    async createBlock(url: string, data: Record<string, any>, parent?: Block, at?: number) {
+
     }
 }
 export interface Page extends PageEvent { }

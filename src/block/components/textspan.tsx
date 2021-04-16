@@ -28,7 +28,7 @@ export class TextSpanView extends BaseComponent<TextSpan>{
             width: (this.block.widthPercent || 100) + "%"
         };
         if (this.block.childs.length > 0)
-            return <span className='sy-block-text-span' style={style}>{this.block.childs.map(x =>
+            return <span className='sy-block-text-span' style={style}  ref={e => this.block.childsEl = e}>{this.block.childs.map(x =>
                 <x.viewComponent key={x.id} block={x}></x.viewComponent>
             )}</span>
         else

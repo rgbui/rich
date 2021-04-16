@@ -23,14 +23,18 @@ export class RowView extends BaseComponent<Row>{
 
         // }
     }
-    render() {
-        return <div className='sy-block-row'   >{this.block.childs.map((x, i) => {
-            console.log(i,'xx');
-            return <>
-                {i > 0 && <div key={x.id + "xx" + i.toString()} onMouseDown={e => this.mousedown(i, e.nativeEvent)} className='sy-block-row-resize-col'></div>}
-                <x.viewComponent key={x.id} block={x}></x.viewComponent>
-            </>
+    renderChilds() {
+        var ps: JSX.Element[] = [];
+        for (let i = 0; i < this.block.childs.length; i++) {
+            var child = this.block.childs[i];
+            // if (i > 0) {
+            //     ps.push(<div key={child.id + "_child_" + i.toString()} onMouseDown={e => this.mousedown(i, e.nativeEvent)} className='sy-block-row-resize-col'></div>)
+            // }
+            ps.push(<child.viewComponent key={child.id} block={child}></child.viewComponent>)
         }
-        )}</div>
+        return ps;
+    }
+    render() {
+        return <div className='sy-block-row'  ref={e => this.block.childsEl = e}>{this.renderChilds()}</div>
     }
 }

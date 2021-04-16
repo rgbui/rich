@@ -238,6 +238,9 @@ export abstract class Block extends Events {
         var pb = this.parentBlocks;
         if (Array.isArray(pb))
             this.parentBlocks.remove(this);
+        if (this.el) {
+            (this.el as HTMLElement).remove();
+        }
     }
     insertBefore(to: Block) {
         this.remove();
@@ -246,7 +249,7 @@ export abstract class Block extends Events {
         let at = pbs.findIndex(g => g === to);
         this.parent = pb;
         pbs.insertAt(at, this);
-        if (this.el) {
+        if (this.el && to.el) {
             to.el.parentNode.insertBefore(this.el, to.el);
         }
     }
@@ -257,7 +260,7 @@ export abstract class Block extends Events {
         let at = pbs.findIndex(g => g === to);
         this.parent = pb;
         pbs.insertAt(at + 1, this);
-        if (this.el) {
+        if (this.el && to.el) {
             new Dom(this.el).insertAfter(to.el)
         }
     }
@@ -266,6 +269,19 @@ export abstract class Block extends Events {
         if (typeof at == 'undefined') at = this.childs.length;
         this.childs.insertAt(at, block);
         block.parent = this;
+        if (this.childsEl && block.el) {
+            if (this.childs.length == 1) {
+                this.childsEl.appendChild(block.el)
+            }
+            else {
+                var pre = block.prev;
+                var next = block.next;
+                if (next) next.el.parentNode.insertBefore(block.el, next.el);
+                else if (pre) {
+                    dom(block.el).insertAfter(pre.el);
+                }
+            }
+        }
     }
     /***
     * 查找当前容器里面首位的内容元素，
@@ -324,6 +340,7 @@ export abstract class Block extends Events {
     viewComponent: typeof BaseComponent | ((props: any) => JSX.Element)
     view: BaseComponent<this>;
     el: HTMLElement;
+    childsEl: HTMLElement;
     get visibleHeadAnchor() {
         var anchor = this.page.selector.createAnchor();
         anchor.block = this;
@@ -639,7 +656,8 @@ export abstract class Block extends Events {
             && bound.conatin(point)
         ) {
             if (!this.dragOverTime) {
-                self.overArrow = ''; this.dragOverTime = setTimeout(() => {
+                self.overArrow = '';
+                this.dragOverTime = setTimeout(() => {
                     self.overArrow = 'right';
                     dom(el).removeClass(g => g.startsWith('sy-block-drag-over'))
                     el.classList.add('sy-block-drag-over-' + self.overArrow);
@@ -666,7 +684,6 @@ export abstract class Block extends Events {
         else if (point.y <= bound.top + bound.height / 2) {
             arrow = 'up';
         }
-        // console.log(arrow, point, bound);
         dom(el).removeClass(g => g.startsWith('sy-block-drag-over'))
         el.classList.add('sy-block-drag-over-' + arrow);
         this.lastPoint = point.clone();

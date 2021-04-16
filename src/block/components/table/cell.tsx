@@ -32,7 +32,7 @@ export class TableCell extends Block {
 export class TableCellView extends BaseComponent<TableCell>{
     render() {
         if (this.block.childs.length > 0)
-            return <td rowSpan={this.block.rowspan} colSpan={this.block.colspan}
+            return <td rowSpan={this.block.rowspan}  ref={e => this.block.childsEl = e} colSpan={this.block.colspan}
             ><ChildsArea childs={this.block.childs}></ChildsArea></td>
         else return <td rowSpan={this.block.rowspan} colSpan={this.block.colspan}>
             <TextArea html={this.block.htmlContent}></TextArea>

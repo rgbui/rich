@@ -15,7 +15,7 @@ export class Col extends Content {
 @view('/col')
 export class ColView extends BaseComponent<Col>{
     render() {
-        return <div className='sy-block-col'>{this.block.childs.map(x =>
+        return <div className='sy-block-col' ref={e => this.block.childsEl = e}>{this.block.childs.map(x =>
             <x.viewComponent key={x.id} block={x}></x.viewComponent>
         )}</div>
     }

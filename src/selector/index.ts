@@ -134,46 +134,92 @@ export class Selector {
             this.view.bar.hide();
         }
     }
+    /**
+     * 将一个block元素移到另一个block某个方位时
+     * 移走时，会导致原来的元素（部分元素会自动删除）
+     * 移到这里，会有可能创建新的元素，以满足当前的布局
+     * @param block 
+     * @param to 
+     * @param arrow 
+     */
     async onMoveBlock(block: Block, to: Block, arrow: 'left' | 'right' | 'down' | 'up') {
-        var toRow = to.closest(x => x.isRow);
-        var parentRow = block.closest(x => x.isRow);
-        if (arrow == 'down') {
-            if (parentRow.childs.length > 1) {
-                parentRow = await BlockFactory.createBlock('/row', toRow.page, {}, toRow.parent);
-                parentRow.append(block);
-                parentRow.on('mounted', () => {
-                    parentRow.insertAfter(toRow);
-                })
-                parentRow.parent.view.forceUpdate();
-            }
-            else parentRow.insertAfter(toRow);
+        if (arrow == 'left' || arrow == 'up') {
+            if (to.visiblePre == block) return;
         }
-        else if (arrow == 'up') {
-            if (parentRow.childs.length > 1) {
-                parentRow = await BlockFactory.createBlock('/row', toRow.page, {}, toRow.parent);
-                parentRow.append(block);
-                parentRow.on('mounted', () => {
-                    parentRow.insertBefore(toRow);
-                })
-                parentRow.parent.view.forceUpdate();
-            }
-            else parentRow.insertBefore(toRow);
+        else if (arrow == 'right' || arrow == 'down') {
+            if (to.visibleNext == block) return;
         }
-        else if (arrow == 'left') {
-            console.log('to', to);
-            block.insertBefore(to);
-            if (parentRow.childs.length == 0) {
-                parentRow.remove();
-                parentRow.el.remove();
+        var fromParent = to.parent;
+        switch (arrow) {
+            case 'down':
+                if (to.parent.isRow && to.parent.childs.length > 1) {
+                    /***
+                     * row{block,block}
+                     * 需要创建一个新的col
+                     */
+                    var pre = to.prev;
+                    var next = to.next;
+                    var col = await BlockFactory.createBlock('/col', to.page, { blocks: { childs: [{ url: '/row' }, { url: '/row' }] } }, to.parent);
+                    col.childs.first().append(to);
+                    col.childs.last().append(block);
+                    if (pre) col.insertAfter(pre);
+                    else if (next) col.insertBefore(next);
+                    col.parent.view.forceUpdate();
+                }
+                else if (to.parent.isRow && to.parent.childs.length == 1) {
+                    /***
+                     * row
+                     * row
+                     * 
+                     */
+                    var pr = await BlockFactory.createBlock('/row', to.page, {}, to.parent);
+                    pr.append(block);
+                    pr.insertAfter(to.parent);
+                    pr.parent.view.forceUpdate();
+                }
+                break;
+            case 'up':
+                if (to.parent.isRow && to.parent.childs.length > 1) {
+                    /***
+                     * row{block,block}
+                     */
+                    var pre = to.prev;
+                    var next = to.next;
+                    var col = await BlockFactory.createBlock('/col', to.page, { blocks: { childs: [{ url: '/row' }, { url: '/row' }] } }, to.parent);
+                    col.childs.first().append(block);
+                    col.childs.last().append(to);
+                    if (pre) col.insertAfter(pre);
+                    else if (next) col.insertBefore(next);
+                    col.parent.view.forceUpdate();
+                }
+                else if (to.parent.isRow && to.parent.childs.length == 1) {
+                    var pr = await BlockFactory.createBlock('/row', to.page, {}, to.parent);
+                    pr.append(block);
+                    pr.insertBefore(to.parent);
+                    pr.parent.view.forceUpdate();
+                }
+                break;
+            case 'left':
+                if (to.parent.isRow) {
+                    block.insertBefore(to);
+                }
+                break;
+            case 'right':
+                if (to.parent.isRow) {
+                    block.insertAfter(to);
+                }
+                break;
+        }
+        function clearPanel(panel: Block) {
+            if (panel.childs.length == 0) {
+                if ((panel.isRow || panel.isCol) && !panel.isPart) {
+                    var pa = panel.parent;
+                    panel.remove();
+                    clearPanel(pa);
+                }
             }
         }
-        else if (arrow == 'right') {
-            block.insertAfter(to);
-            if (parentRow.childs.length == 0) {
-                parentRow.remove();
-                parentRow.el.remove();
-            }
-        }
+        clearPanel(fromParent);
     }
     /**
      * 捕获聚焦

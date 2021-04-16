@@ -9,7 +9,8 @@ export var data = {
                     url: '/row',
                     blocks: {
                         childs: [
-                            { url: '/textspan', content: '你还好吗\n\n大师，换行' }
+                            { url: '/textspan', content: '你还好吗\n\n大师，换行' },
+                            { url: '/textspan', content: '我是你邻居' }
                         ]
                     }
                 },

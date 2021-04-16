@@ -18,7 +18,7 @@ export class ListTextView extends BaseComponent<ListText>{
 
         };
         if (this.block.childs.length > 0)
-            return <span className='sy-block-list-text-span' style={style}><ChildsArea childs={this.block.childs} /></span>
+            return <span className='sy-block-list-text-span' style={style}  ref={e => this.block.childsEl = e}><ChildsArea childs={this.block.childs} /></span>
         else
             return <span className='sy-block-list-text-span' style={style}><TextArea html={this.block.htmlContent}></TextArea></span>
     }

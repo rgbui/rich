@@ -50,7 +50,7 @@ export class TableStoreCell extends Block {
 @view('/tablestore/cell')
 export class TableStoreCellView extends BaseComponent<TableStoreCell>{
     render() {
-        return <div className='sy-tablestore-body-row-cell' style={{ width: this.block.col.width + '%' }}>
+        return <div className='sy-tablestore-body-row-cell'  ref={e => this.block.childsEl = e} style={{ width: this.block.col.width + '%' }}>
             <ChildsArea childs={this.block.childs}></ChildsArea>
         </div>
     }
