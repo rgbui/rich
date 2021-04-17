@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dom } from '../../common/dom';
+import { dom } from '../../common/dom';
 import { Point } from '../../common/point';
 import { TextEle } from '../../common/text.ele';
 import { Anchor } from '../anchor';
@@ -90,27 +90,45 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
                     //说明用户有插入某个元素的意图
                 }
                 this.followAnchor(anchor);
-                anchor.block.onInputText();
+                anchor.block.onInputText(this.inputTextAt, value);
             }
         }
     }
+    private deleteInputText = '';
     onInputDeleteText() {
         var anchor = this.selector.activeAnchor;
         if (anchor.isText) {
             if (anchor.at == 0) {
+                var block = anchor.block;
+                var prevAnchor = anchor.block.visiblePrevAnchor;
+                if (prevAnchor && prevAnchor.isText) {
+                    var ob = anchor.textEl.getBoundingClientRect();
+                    var nb = prevAnchor.textEl.getBoundingClientRect();
+                    if (Math.abs(nb.left + nb.width - ob.left) < 10) {
+                        this.selector.replaceSelection(prevAnchor);
+                        this.selector.setActiveAnchor(prevAnchor);
+                        this.selector.renderSelection();
+                        if (block.isEmpty && !block.isPart) block.onDelete();
+                        this.onStartInput(this.selector.activeAnchor);
+                        return this.onInputDeleteText();
+                    }
+                }
                 //说明当前的block已经删完了，此时光标应该向前移,移到上面一行
                 this.selector.onKeyArrow('ArrowLeft');
+                if (block.isEmpty && !block.isPart) block.onDelete();
                 this.onStartInput(this.selector.activeAnchor);
                 return;
             }
             else if (anchor.at > 0) {
-                var dom = new Dom(anchor.view);
-                var textNode = dom.prevFind(g => {
-                    if (g instanceof Text || g instanceof HTMLBRElement) return true; else return false;
+                var dm = dom(anchor.view);
+                var textNode = dm.prevFind(g => {
+                    if (g instanceof Text || g instanceof HTMLBRElement) return true;
+                    else return false;
                 });
                 if (textNode) {
                     if (textNode instanceof Text) {
                         var value = textNode.textContent;
+                        this.deleteInputText = value.slice(value.length - 1) + this.deleteInputText;
                         textNode.textContent = value.slice(0, value.length - 1);
                         anchor.at -= 1;
                         if (textNode.textContent.length == 0) {
@@ -118,29 +136,14 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
                         }
                     }
                     else if (textNode instanceof HTMLBRElement) {
+                        this.deleteInputText = '\n' + this.deleteInputText;
                         anchor.at -= 1;
                         textNode.remove()
                     }
-
+                    anchor.block.onInputDeleteText(this.inputTextAt, this.deleteInputText, anchor.at == 0 ? true : false);
+                    this.followAnchor(anchor);
                 }
-                if (anchor.at == 0) {
-                    var prevAnchor = anchor.block.visiblePrevAnchor;
-                    if (prevAnchor && prevAnchor.isText) {
-                        var ob = anchor.textEl.getBoundingClientRect();
-                        var nb = prevAnchor.textEl.getBoundingClientRect();
-                        if (Math.abs(nb.left + nb.width - ob.left) < 10) {
-                            this.selector.replaceSelection(prevAnchor);
-                            this.selector.setActiveAnchor(prevAnchor);
-                            this.selector.renderSelection();
-                        }
-                    }
-                }
-            }
-            if (anchor.textContent.length == 0) {
-                //说明当前的block文本全部删光了，那么这里需要触发删除相应的block
-            }
-            else {
-                anchor.block.onInputText();
+                else throw new Error('not found text');
             }
         }
     }
@@ -154,7 +157,11 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
     onStartInput(anchor: Anchor) {
         this.textarea.value = '';
         delete this.inputTextNode;
-        if (anchor.isText) this.inputTextAt = anchor.at;
+        this.deleteInputText = '';
+        if (anchor.isText) {
+            this.inputTextAt = anchor.at;
+            anchor.block.onInputStart();
+        }
     }
     render() {
         return <div className='sy-selector-textinput'><textarea

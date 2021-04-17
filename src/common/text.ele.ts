@@ -1,21 +1,21 @@
 
 import { util } from "../util/util";
-import { Dom } from "./dom";
+import { dom } from "./dom";
 import { Point, Rect } from "./point";
 let __g: CanvasRenderingContext2D;
 export class TextEle {
     static getFontStyle(ele: HTMLElement): TextFontStyle {
         try {
-            var dom = new Dom(ele);
+            var dm = dom(ele);
             var fontStyle = {
-                fontStyle: dom.style('fontStyle'),
-                fontVariant: dom.style('fontVariant'),
-                fontWeight: dom.style('fontWeight'),
-                fontSize: dom.style('fontSize'),
-                lineHeight: dom.style('lineHeight'),
-                fontFamily: dom.style('fontFamily'),
-                letterSpacing: dom.style('letterSpacing'),
-                color: dom.style('color')
+                fontStyle: dm.style('fontStyle'),
+                fontVariant: dm.style('fontVariant'),
+                fontWeight: dm.style('fontWeight'),
+                fontSize: dm.style('fontSize'),
+                lineHeight: dm.style('lineHeight'),
+                fontFamily: dm.style('fontFamily'),
+                letterSpacing: dm.style('letterSpacing'),
+                color: dm.style('color')
             };
             fontStyle.lineHeight = parseInt(fontStyle.lineHeight.replace('px', ''));
             fontStyle.letterSpacing = parseInt(fontStyle.letterSpacing.replace('px', ''));
@@ -46,11 +46,11 @@ export class TextEle {
             }
             return g;
         }
-        var dom = new Dom(ele);
-        var innerTop = toNumber(dom.style('paddingTop')) + toNumber(dom.style('borderTopWidth'));
-        var innerLeft = toNumber(dom.style('paddingLeft')) + toNumber(dom.style('borderLeftWidth'));
-        var innerRight = toNumber(dom.style('paddingRight')) + toNumber(dom.style('borderRightWidth'));
-        var innerBottom = toNumber(dom.style('paddingBottom')) + toNumber(dom.style('borderBottomWidth'));
+        var dm = dom(ele);
+        var innerTop = toNumber(dm.style('paddingTop')) + toNumber(dm.style('borderTopWidth'));
+        var innerLeft = toNumber(dm.style('paddingLeft')) + toNumber(dm.style('borderLeftWidth'));
+        var innerRight = toNumber(dm.style('paddingRight')) + toNumber(dm.style('borderRightWidth'));
+        var innerBottom = toNumber(dm.style('paddingBottom')) + toNumber(dm.style('borderBottomWidth'));
         var rect = Rect.from(bound);
         rect.left += innerLeft;
         rect.top += innerTop;
@@ -62,13 +62,13 @@ export class TextEle {
         var content = this.getTextContent(ele);
         var ts = content.split("");
         var rect = new Rect();
-        var dom = new Dom(ele);
-        var currentDisplay = dom.style('display');
+        var dm = dom(ele);
+        var currentDisplay = dm.style('display');
         var currentRect = Rect.from(ele.getBoundingClientRect());
         if (currentDisplay == 'inline') {
-            var closetELe = dom.closest(g => {
+            var closetELe = dm.closest(g => {
 
-                var display = new Dom(g).style("display");
+                var display = dom(g as HTMLElement).style("display");
                 if (display != 'inline') return true;
             }) as HTMLElement;
             if (closetELe) {
@@ -134,12 +134,12 @@ export class TextEle {
         var content = this.getTextContent(ele);
         var ts = content.split("");
         var rect = new Rect();
-        var dom = new Dom(ele);
-        var currentDisplay = dom.style('display');
+        var dm = dom(ele);
+        var currentDisplay = dm.style('display');
         var currentRect = Rect.from(ele.getBoundingClientRect());
         if (currentDisplay == 'inline') {
-            var closetELe = dom.closest(g => {
-                var display = new Dom(g).style("display");
+            var closetELe = dm.closest(g => {
+                var display = dom(g as HTMLElement).style("display");
                 if (display != 'inline') return true;
             }) as HTMLElement;
             if (closetELe) {

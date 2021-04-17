@@ -1,8 +1,10 @@
 
 
 export enum ActionDirective {
-    onEditText,
-    onCreateBlock,
+    onInputText,
+    onInputDeleteText,
+    onMoveBlock,
+    onDelete,
     onUndo,
     onRedo
 }
@@ -12,6 +14,8 @@ export enum OperatorDirective {
      * 更新文本
      */
     updateText,
+    updateTextReplace,
+    updateTextDelete,
     create,
     /**
      * 删除，你可以认为是彻底的删除了

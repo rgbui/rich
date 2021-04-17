@@ -25,7 +25,7 @@ export class Bar extends React.Component<{ selectorView: SelectorView }>{
     private x: number;
     private y: number;
     private isDown: Boolean;
-    onMousedown(event: MouseEvent) {
+    private onMousedown(event: MouseEvent) {
         this.x = event.x;
         this.y = event.y;
         this.isDown = true;
@@ -33,7 +33,7 @@ export class Bar extends React.Component<{ selectorView: SelectorView }>{
     }
     private mousemove: (event: MouseEvent) => void;
     private mouseup: (event: MouseEvent) => void;
-    async onMousemove(event: MouseEvent) {
+    private async onMousemove(event: MouseEvent) {
         if (this.isDown) {
             if (Math.abs(event.x - this.x) > 5 || Math.abs(event.y - this.y) > 5) {
                 if (this.selector.isDrag != true) {
@@ -53,7 +53,7 @@ export class Bar extends React.Component<{ selectorView: SelectorView }>{
             }
         }
     }
-    async onMouseup(event: MouseEvent) {
+    private async onMouseup(event: MouseEvent) {
         if (this.isDown) {
             this.isDown = false;
             this.x = 0;
@@ -92,8 +92,8 @@ export class Bar extends React.Component<{ selectorView: SelectorView }>{
         this.barEle.style.left = pos.x + 'px';
         this.barEle.style.display = 'flex';
     }
-    dragCopyEle: HTMLElement;
-    barEle: HTMLElement;
+    private dragCopyEle: HTMLElement;
+    private barEle: HTMLElement;
     render() {
         return <div>
             <div className='sy-selector-drag-copy' ref={e => this.dragCopyEle = e}></div>

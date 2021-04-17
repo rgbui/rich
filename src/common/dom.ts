@@ -1,7 +1,7 @@
 import { Anchor } from "../selector/anchor";
 
 
-export class Dom {
+ class Dom {
     el: Node;
     constructor(el: Node) {
         this.el = el;

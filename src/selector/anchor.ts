@@ -2,7 +2,7 @@
 
 import { Selector } from ".";
 import { Block } from "../block/base";
-import { Dom } from "../common/dom";
+import { dom } from "../common/dom";
 import { TextEle } from "../common/text.ele";
 
 /***
@@ -81,7 +81,7 @@ export class Anchor {
                 throw 'the text anchor at is not null';
                 return;
             }
-            new Dom(this.textEl).insertAnchor(this.at, this);
+            dom(this.textEl).insertAnchor(this.at, this);
             var fontStyle = TextEle.getFontStyle(this.textEl);
             this.view.style.visibility = 'visible';
             this.view.style.backgroundColor = fontStyle.color;

@@ -2,6 +2,7 @@
 import { Block } from "../block/base";
 import { BlockFactory } from "../block/factory/block.factory";
 import { Point } from "../common/point";
+import { ActionDirective } from "../history/declare";
 import { Page } from "../page";
 import { Anchor } from "./anchor";
 import { SelectorView } from "./render/render";
@@ -149,7 +150,13 @@ export class Selector {
         else if (arrow == 'right' || arrow == 'down') {
             if (to.visibleNext == block) return;
         }
+        var self = this;
+        this.page.snapshoot.declare(ActionDirective.onMoveBlock);
         var fromParent = to.parent;
+        async function moveComplted() {
+            await fromParent.deleteLayout();
+            self.page.snapshoot.store();
+        }
         switch (arrow) {
             case 'down':
                 if (to.parent.isRow && to.parent.childs.length > 1) {
@@ -157,13 +164,14 @@ export class Selector {
                      * row{block,block}
                      * 需要创建一个新的col
                      */
-                    var pre = to.prev;
-                    var next = to.next;
-                    var col = await BlockFactory.createBlock('/col', to.page, { blocks: { childs: [{ url: '/row' }, { url: '/row' }] } }, to.parent);
-                    col.childs.first().append(to);
-                    col.childs.last().append(block);
-                    if (pre) col.insertAfter(pre);
-                    else if (next) col.insertBefore(next);
+                    var col = await this.page.createBlock('/col', {
+                        blocks: { childs: [{ url: '/row' }, { url: '/row' }] }
+                    }, to.parent, to.parent.at + 1);
+                    col.mounted(() => {
+                        col.childs.first().append(to);
+                        col.childs.last().append(block);
+                        moveComplted();
+                    });
                     col.parent.view.forceUpdate();
                 }
                 else if (to.parent.isRow && to.parent.childs.length == 1) {
@@ -172,54 +180,60 @@ export class Selector {
                      * row
                      * 
                      */
-                    var pr = await BlockFactory.createBlock('/row', to.page, {}, to.parent);
-                    pr.append(block);
-                    pr.insertAfter(to.parent);
-                    pr.parent.view.forceUpdate();
+                    var row = await this.page.createBlock('/row', {},
+                        to.parent,
+                        to.parent.at + 1);
+                    row.mounted(() => {
+                        row.append(block); moveComplted();
+                    });
+                    row.parent.view.forceUpdate();
                 }
                 break;
             case 'up':
                 if (to.parent.isRow && to.parent.childs.length > 1) {
                     /***
                      * row{block,block}
+                     * 需要创建一个新的col
                      */
-                    var pre = to.prev;
-                    var next = to.next;
-                    var col = await BlockFactory.createBlock('/col', to.page, { blocks: { childs: [{ url: '/row' }, { url: '/row' }] } }, to.parent);
-                    col.childs.first().append(block);
-                    col.childs.last().append(to);
-                    if (pre) col.insertAfter(pre);
-                    else if (next) col.insertBefore(next);
+                    var col = await this.page.createBlock('/col', {
+                        blocks: { childs: [{ url: '/row' }, { url: '/row' }] }
+                    }, to.parent, to.parent.at);
+                    col.mounted(() => {
+                        col.childs.first().append(to);
+                        col.childs.last().append(block);
+                        moveComplted();
+                    });
                     col.parent.view.forceUpdate();
                 }
                 else if (to.parent.isRow && to.parent.childs.length == 1) {
-                    var pr = await BlockFactory.createBlock('/row', to.page, {}, to.parent);
-                    pr.append(block);
-                    pr.insertBefore(to.parent);
-                    pr.parent.view.forceUpdate();
+                    /***
+                     * row
+                     * row
+                     * 
+                     */
+                    var row = await this.page.createBlock('/row', {},
+                        to.parent,
+                        to.parent.at);
+                    row.mounted(() => {
+                        row.append(block);
+                        moveComplted();
+                    });
+                    row.parent.view.forceUpdate();
                 }
                 break;
             case 'left':
                 if (to.parent.isRow) {
                     block.insertBefore(to);
+                    moveComplted();
                 }
                 break;
             case 'right':
                 if (to.parent.isRow) {
                     block.insertAfter(to);
+                    moveComplted();
                 }
                 break;
         }
-        function clearPanel(panel: Block) {
-            if (panel.childs.length == 0) {
-                if ((panel.isRow || panel.isCol) && !panel.isPart) {
-                    var pa = panel.parent;
-                    panel.remove();
-                    clearPanel(pa);
-                }
-            }
-        }
-        clearPanel(fromParent);
     }
     /**
      * 捕获聚焦

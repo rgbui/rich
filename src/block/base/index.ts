@@ -8,7 +8,7 @@ import { BlockAppear, BlockDisplay, Locate } from "./enum";
 import { BlockStyle } from "../style/index";
 import { BaseComponent } from "./component";
 import { TextEle } from "../../common/text.ele";
-import { dom, Dom } from "../../common/dom";
+import { dom } from "../../common/dom";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 
 export abstract class Block extends Events {
@@ -235,13 +235,32 @@ export abstract class Block extends Events {
         return blocks;
     }
     remove() {
-        var pb = this.parentBlocks;
-        if (Array.isArray(pb) && pb.exists(g => g === this)) {
+        var pbs = this.parentBlocks;
+        if (Array.isArray(pbs) && pbs.exists(g => g === this)) {
             this.page.snapshoot.record(OperatorDirective.remove, {
                 parentId: this.parent.id,
                 childKey: this.parentKey,
-                at: pb.findIndex(g => g === this),
+                at: this.at,
                 preBlockId: this.prev ? this.prev.id : undefined
+            })
+            pbs.remove(this);
+            if (this.el) {
+                (this.el as HTMLElement).remove();
+            }
+        }
+    }
+    /***
+     * 彻底的删除元素
+     */
+    async delete() {
+        var pb = this.parentBlocks;
+        if (Array.isArray(pb) && pb.exists(g => g === this)) {
+            this.page.snapshoot.record(OperatorDirective.delete, {
+                parentId: this.parent.id,
+                childKey: this.parentKey,
+                at: pb.findIndex(g => g === this),
+                preBlockId: this.prev ? this.prev.id : undefined,
+                data: await this.get()
             })
             this.parentBlocks.remove(this);
             if (this.el) {
@@ -249,33 +268,41 @@ export abstract class Block extends Events {
             }
         }
     }
-    insertBefore(to: Block) {
-        this.remove();
-        var pb = to.parent;
-        var pbs = to.parentBlocks;
-        let at = pbs.findIndex(g => g === to);
-        this.parent = pb;
-        pbs.insertAt(at, this);
-        if (this.el && to.el) {
-            to.el.parentNode.insertBefore(this.el, to.el);
+    /***
+     * 移出元素，如果元素本身是布局的元素，那么此时的布局元结构是空的，那么可能会从里到外依次删除
+     */
+    async deleteLayout() {
+        async function clearPanel(panel: Block) {
+            if (panel.childs.length == 0) {
+                if ((panel.isRow || panel.isCol) && !panel.isPart) {
+                    var pa = panel.parent;
+                    await panel.delete();
+                    clearPanel(pa);
+                }
+            }
         }
+        await clearPanel(this);
+    }
+    insertBefore(to: Block) {
+        to.parent.append(this,
+            to.at,
+            to.parentKey
+        );
     }
     insertAfter(to: Block) {
-        this.remove();
-        var pb = to.parent;
-        var pbs = to.parentBlocks;
-        let at = pbs.findIndex(g => g === to);
-        this.parent = pb;
-        pbs.insertAt(at + 1, this);
-        if (this.el && to.el) {
-            new Dom(this.el).insertAfter(to.el)
-        }
+        to.parent.append(this,
+            to.at + 1,
+            to.parentKey
+        );
     }
     append(block: Block, at?: number, childKey?: string) {
-        block.remove();
         if (typeof childKey == 'undefined') childKey = 'childs';
         var bs = this.blocks[childKey];
         if (typeof at == 'undefined') at = bs.length;
+        if (bs.exists(block) && block.at < at) {
+            at -= 1;
+        }
+        block.remove();
         bs.insertAt(at, block);
         block.parent = this;
         this.page.snapshoot.record(OperatorDirective.append, {
@@ -285,17 +312,17 @@ export abstract class Block extends Events {
             prevBlockId: block.prev ? block.prev.id : undefined,
             blockId: block.id
         })
-        if (this.childsEl && block.el) {
+        if (block.el) {
             if (this.childs.length == 1) {
-                this.childsEl.appendChild(block.el)
+                if (this.childsEl)
+                    this.childsEl.appendChild(block.el)
+                else throw new Error('not found block childs el');
             }
             else {
                 var pre = block.prev;
                 var next = block.next;
                 if (next) next.el.parentNode.insertBefore(block.el, next.el);
-                else if (pre) {
-                    dom(block.el).insertAfter(pre.el);
-                }
+                else if (pre) dom(block.el).insertAfter(pre.el);
             }
         }
     }
@@ -609,6 +636,9 @@ export abstract class Block extends Events {
         return ps.findMin(g => g.dis.y).part
     }
     content: string = '';
+    get isEmpty() {
+        return this.content ? false : true
+    }
     get htmlContent() {
         return TextEle.getTextHtml(this.content)
     }
@@ -705,32 +735,88 @@ export abstract class Block extends Events {
     onDragLeave() {
         dom(this.el).removeClass(g => g.startsWith('sy-block-drag-over'))
     }
-
     private inputTime;
+    private currentLastInputText: string;
     /**
-     * 用户一直输入内容
+     * 用户一直输入内容,如果用户停留超过0.7秒，就记录
      */
-    onInputText(force = false) {
+    onInputText(from: number, text: string, force: boolean = false) {
         if (this.inputTime) {
             clearTimeout(this.inputTime);
             delete this.inputTime;
         }
         var excute = () => {
-            this.page.snapshoot.declare(ActionDirective.onEditText);
-            var text = TextEle.getTextContent(this.textEl);
-            var oldText = this.content;
-            this.content = text;
-            this.page.snapshoot.record(OperatorDirective.updateText, { blockId: this.id, old: oldText, new: text });
+            this.page.snapshoot.declare(ActionDirective.onInputText);
+            this.content = TextEle.getTextContent(this.textEl);
+            this.page.snapshoot.record(OperatorDirective.updateTextReplace, {
+                blockId: this.id,
+                start: from,
+                end: this.currentLastInputText ? from + this.currentLastInputText.length : from,
+                text
+            });
+            this.currentLastInputText = text;
             this.page.snapshoot.store();
+            if (this.inputTime) {
+                clearTimeout(this.inputTime);
+                delete this.inputTime;
+            }
         }
-        if (force == true) excute()
-        else { /***
-             * 这里需要将当前的变化通知到外面，
-             * 当然用户在输的过程中，该方法会不断的执行，所以通知需要加一定的延迟，即用户停止几秒钟后默认为输入
-             */
-            this.inputTime = setTimeout(() => {
-                excute()
-            }, 8e2);
+        /***
+            * 这里需要将当前的变化通知到外面，
+            * 当然用户在输的过程中，该方法会不断的执行，所以通知需要加一定的延迟，即用户停止几秒钟后默认为输入
+            */
+        if (force == false) this.inputTime = setTimeout(() => { excute() }, 7e2);
+        else excute()
+    }
+    private deleteInputTime;
+    private currentLastDeleteText: string;
+    onInputDeleteText(from: number, text: string, force: boolean = false) {
+        if (this.deleteInputTime) {
+            clearTimeout(this.deleteInputTime);
+            delete this.deleteInputTime;
         }
+        var excute = () => {
+            this.page.snapshoot.declare(ActionDirective.onInputText);
+            this.content = TextEle.getTextContent(this.textEl);
+            var size = this.currentLastDeleteText ? this.currentLastDeleteText.length : 0;
+            this.page.snapshoot.record(OperatorDirective.updateTextDelete, {
+                blockId: this.id,
+                start: from - size,
+                end: from - text.length,
+                text: text.slice(0, text.length - size)
+            });
+            this.currentLastDeleteText = text;
+            this.page.snapshoot.store();
+            if (this.deleteInputTime) {
+                clearTimeout(this.deleteInputTime);
+                delete this.deleteInputTime;
+            }
+        }
+        /***
+            * 这里需要将当前的变化通知到外面，
+            * 当然用户在输的过程中，该方法会不断的执行，所以通知需要加一定的延迟，即用户停止几秒钟后默认为输入
+            */
+        if (force == false) this.deleteInputTime = setTimeout(() => { excute() }, 7e2);
+        else excute();
+    }
+    onInputStart() {
+        if (this.inputTime) {
+            clearTimeout(this.inputTime);
+            delete this.inputTime;
+        }
+        this.currentLastInputText = '';
+        if (this.deleteInputTime) {
+            clearTimeout(this.deleteInputTime);
+            delete this.deleteInputTime;
+        }
+        this.currentLastDeleteText = '';
+    }
+    mounted(fn: () => void) {
+        this.on('mounted', fn);
+    }
+    async onDelete() {
+        this.page.snapshoot.declare(ActionDirective.onDelete);
+        await this.delete();
+        this.page.snapshoot.store();
     }
 }

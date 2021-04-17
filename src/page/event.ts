@@ -1,6 +1,6 @@
 import { Page } from ".";
 import { Block } from "../block/base";
-import { Dom } from "../common/dom";
+import {dom } from "../common/dom";
 import { Point } from "../common/point";
 export class PageEvent {
     private mouseScope: {
@@ -24,7 +24,7 @@ export class PageEvent {
         this.mouseScope.isDown = true;
         this.mouseScope.point = Point.from(event);
         var toEle = event.target as HTMLElement;
-        var blockEle = new Dom(toEle).closest(x => (x as any).block ? true : false);
+        var blockEle = dom(toEle).closest(x => (x as any).block ? true : false);
         if (blockEle) {
             var block = (blockEle as any).block as Block;
             var anchor = block.visibleAnchor(Point.from(event));
@@ -42,7 +42,7 @@ export class PageEvent {
         if (this.mouseScope && this.mouseScope.isDown == true) {
             if (this.mouseScope.isMove) {
                 var toEle = event.target as HTMLElement;
-                var blockEle = new Dom(toEle).closest(x => (x as any).block ? true : false);
+                var blockEle =dom(toEle).closest(x => (x as any).block ? true : false);
                 if (blockEle) {
                     var block = (blockEle as any).block as Block;
                     var anchor = block.visibleAnchor(Point.from(event));
@@ -58,7 +58,7 @@ export class PageEvent {
             }
         }
         var toEle = event.target as HTMLElement;
-        var blockEle = new Dom(toEle).closest(x => (x as any).block && (x as any).block.page === this ? true : false);
+        var blockEle =dom(toEle).closest(x => (x as any).block && (x as any).block.page === this ? true : false);
         if (blockEle) {
             var block = (blockEle as any).block as Block;
             // if (this.selector.isDrag == true) {
@@ -72,12 +72,12 @@ export class PageEvent {
                 var el = document.elementFromPoint(event.x - dis, event.y);
                 var blockEl: Node;
                 if (el) {
-                    blockEl = new Dom(el).closest(x => (x as any).block && (x as any).block.page === this ? true : false)
+                    blockEl =dom(el as HTMLElement).closest(x => (x as any).block && (x as any).block.page === this ? true : false)
                     if (!blockEl) el = null;
                 }
                 if (!el) {
                     el = document.elementFromPoint(event.x + dis, event.y);
-                    if (el) blockEl = new Dom(el).closest(x => (x as any).block && (x as any).block.page === this ? true : false)
+                    if (el) blockEl = dom(el as HTMLElement).closest(x => (x as any).block && (x as any).block.page === this ? true : false)
                 }
                 if (blockEl) {
                     var bl: Block = (blockEl as any).block;
