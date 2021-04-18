@@ -3,6 +3,7 @@
 import { Selector } from ".";
 import { Block } from "../block";
 import { dom } from "../common/dom";
+import { Rect } from "../common/point";
 import { TextEle } from "../common/text.ele";
 
 /***
@@ -67,6 +68,10 @@ export class Anchor {
     }
     get isActive() {
         return this.block.page.selector.activeAnchor === this;
+    }
+    get bound() {
+        if (this.view)
+            return Rect.from(this.view.getBoundingClientRect())
     }
     /***
      * 光标显示

@@ -14,13 +14,39 @@ export class BlockSelector extends React.Component<{ page: Page }> {
     get page() {
         return this.props.page;
     }
+    filterSelectorData() {
+        var bs = BlockSelectorData.map(b => {
+            return {
+                ...b,
+                childs: b.childs.findAll(g => g.label.startsWith(this.command) || g.labels.exists(c => c.startsWith(this.command)))
+            }
+        });
+        bs.removeAll(g => g.childs.length == 0);
+        return bs;
+    }
+    filterBlocks() {
+        var cs = [];
+        this.filterSelectorData().each(c => {
+            cs.addRange(c.childs);
+        });
+        return cs;
+    }
     renderSelectors() {
+        let i = 0;
         return BlockSelectorData.map(group => {
             return <div className='sy-block-selector-group' key={group.text}>
-                <div className='sy-block-selector-group-head'>{group.text}</div>
+                <div className='sy-block-selector-group-head'><span>{group.text}</span></div>
                 <div className='sy-block-selector-group-blocks'>{
-                    group.childs.map(child => {
-                        return <div className='sy-block-selector-group-block' key={child.url}>
+                    group.childs.map((child, index) => {
+                        return <div
+                            className={'sy-block-selector-group-block ' + (i + index == this.selectIndex ? 'selected' : '')}
+                            key={child.url}
+                            onMouseEnter={e => {
+                                this.selectIndex = i + index;
+                                this.forceUpdate();
+                            }}
+                            onMouseDown={e => this.onSelect(child)}
+                        >
                             <div className='sy-block-selector-group-block-info'>
                                 <span>{child.text}</span>
                                 <em>{child.description}</em>
@@ -41,6 +67,19 @@ export class BlockSelector extends React.Component<{ page: Page }> {
             {this.visible && <div className='sy-block-selector' style={style}>{this.renderSelectors()}</div>}
         </div>, this.node);
     }
+    select: (block: Record<string, any>) => void;
+    onSelect(block?) {
+        if (!block) block = this.selectBlockData;
+        try {
+            if (typeof this.select == 'function') this.select(block);
+        }
+        catch (ex) {
+            this.page.onError(ex);
+        }
+        finally {
+            delete this.select;
+        }
+    }
     private visible: boolean = false;
     private pos: Point = new Point(0, 0);
     private command: string = '';
@@ -50,7 +89,9 @@ export class BlockSelector extends React.Component<{ page: Page }> {
     }
     open(point: Point) {
         this.pos = point;
+        this.selectIndex = 0;
         this.visible = true;
+        delete this.select;
         this.forceUpdate();
     }
     onInputFilter(text: string) {
@@ -66,7 +107,8 @@ export class BlockSelector extends React.Component<{ page: Page }> {
         }
     }
     get selectBlockData() {
-        return null;
+        var b = this.filterBlocks[this.selectIndex];
+        return b;
     }
     close() {
         this.visible = false;
@@ -77,14 +119,29 @@ export class BlockSelector extends React.Component<{ page: Page }> {
      */
     keydown() {
         this.selectIndex -= 1;
+        this.forceUpdate();
     }
     /**
      * 向下选择内容
      */
     keyup() {
         this.selectIndex += 1;
+        this.forceUpdate();
     }
-    componentWillUnmount(){
-        if(this.node)this.node.remove()
+    componentWillUnmount() {
+        if (this.node) this.node.remove()
+    }
+    interceptKey(event: KeyboardEvent) {
+        switch (event.key) {
+            case 'ArrowDown':
+                this.keydown();
+                return true;
+            case 'ArrowUp':
+                this.keyup();
+                return true;
+            case 'Enter':
+                this.onSelect();
+                return true;
+        }
     }
 }

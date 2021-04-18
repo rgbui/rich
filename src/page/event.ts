@@ -166,4 +166,11 @@ export class PageEvent {
             up.view.forceUpdate();
         });
     }
+    onObserveUpdate(fn: () => void) {
+        this.onRememberUpdate();
+        if (typeof fn == 'function') {
+            fn();
+        }
+        this.onExcuteUpdate();
+    }
 }

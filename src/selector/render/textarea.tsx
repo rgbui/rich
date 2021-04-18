@@ -14,6 +14,9 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
     get selector() {
         return this.selectorView.selector;
     }
+    get blockSelector() {
+        return this.selector.page.blockSelector;
+    }
     textarea: HTMLTextAreaElement;
     onPaster(event: ClipboardEvent) {
         if (event.clipboardData.files && event.clipboardData.files.length > 0) {
@@ -28,6 +31,11 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
     private isKeydown: boolean = false;
     onKeydown(event: KeyboardEvent) {
         this.isKeydown = false;
+        if (this.blockSelector.isVisible) {
+            if (this.blockSelector.interceptKey(event) == true) {
+                return;
+            }
+        }
         switch (event.key) {
             case 'ArrowDown':
             case 'ArrowUp':
@@ -87,7 +95,16 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
                     //说明用户有输入@符的意图，那么这里弹出一个下拉框供用户选择
                 }
                 else if (value.endsWith('/') || value.endsWith('、')) {
-                    //说明用户有插入某个元素的意图
+                    //说明用户有插入某个元素的意图 
+                    var bound = anchor.view.getBoundingClientRect();
+                    var point = new Point(bound.left, bound.top + bound.height);
+                    this.blockSelector.open(point);
+                    this.blockSelector.select = (blockData: Record<string, any>) => {
+
+                    }
+                }
+                else if (this.blockSelector.isVisible == true) {
+                    this.blockSelector.onInputFilter(value);
                 }
                 this.followAnchor(anchor);
                 anchor.block.onInputText(this.inputTextAt, value);
@@ -108,14 +125,28 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
                         this.selector.replaceSelection(prevAnchor);
                         this.selector.setActiveAnchor(prevAnchor);
                         this.selector.renderSelection();
-                        if (block.isEmpty && !block.isPart) block.onDelete();
+                        if (block.isEmpty && !block.isPart) {
+                            this.selector.page.onObserveUpdate(() => {
+                                var pa = block.parent;
+                                block.onDelete();
+                                pa.deleteLayout();
+                            });
+                            this.selector.page.onRememberUpdate();
+                            this.selector.page.onExcuteUpdate();
+                        }
                         this.onStartInput(this.selector.activeAnchor);
                         return this.onInputDeleteText();
                     }
                 }
                 //说明当前的block已经删完了，此时光标应该向前移,移到上面一行
                 this.selector.onKeyArrow('ArrowLeft');
-                if (block.isEmpty && !block.isPart) block.onDelete();
+                if (block.isEmpty && !block.isPart) {
+                    this.selector.page.onObserveUpdate(() => {
+                        var pa = block.parent;
+                        block.onDelete();
+                        pa.deleteLayout();
+                    });
+                }
                 this.onStartInput(this.selector.activeAnchor);
                 return;
             }
@@ -172,10 +203,13 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
         ></textarea></div>
     }
     followAnchor(anchor: Anchor) {
-        var bound = anchor.view.getBoundingClientRect();
+        var bound = anchor.bound;
         var point = this.selector.relativePageOffset(Point.from(bound));
         this.textarea.style.top = point.y + 'px';
         this.textarea.style.left = point.x + 'px';
         this.textarea.style.height = bound.height + 'px';
+    }
+    onBlockSelectorBlock(block: Record<string, any>) {
+
     }
 }

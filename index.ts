@@ -8,6 +8,7 @@ import "./src/selector/style.less";
 import "./src/component/style.less";
 import "./src/page/style.less";
 import './src/assert/font/iconfont.css';
+import "./src/plug/declare";
 /***
  * import components
  */
