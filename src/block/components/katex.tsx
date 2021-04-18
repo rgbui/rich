@@ -19,7 +19,7 @@ export class Katex extends Content {
 @view('/katex')
 export class KatexView extends BaseComponent<Katex>{
     render() {
-        return <div className='sy-block-katex' >
+        return <div className='sy-block-katex' style={this.block.visibleStyle}>
             <SolidArea content={<span dangerouslySetInnerHTML={{__html:this.block.htmlContent}}></span>}></SolidArea>
         </div>
     }

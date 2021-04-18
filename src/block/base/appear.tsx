@@ -1,5 +1,5 @@
 import React from 'react';
-import { Block } from '.';
+import { Block } from '..';
 export function TextArea(props: {
     html: string
 }) {

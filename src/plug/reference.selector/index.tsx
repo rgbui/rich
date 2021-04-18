@@ -1,13 +1,17 @@
 import React from "react";
 import { createPortal } from "react-dom";
 import { Point } from "../../common/point";
+import { Page } from "../../page";
 import { ReferenceSelectorData } from "./data";
 
-export class ReferenceSelector extends React.Component {
+export class ReferenceSelector extends React.Component<{ page: Page }> {
     private node: HTMLElement;
     constructor(props) {
         super(props);
         this.node = document.body.appendChild(document.createElement('div'));
+    }
+    get page() {
+        return this.props.page;
     }
     renderSelectors() {
         return ReferenceSelectorData.map(group => {
@@ -71,12 +75,16 @@ export class ReferenceSelector extends React.Component {
      * 向上选择内容
      */
     keydown() {
-        this.selectIndex -= 1;
+        if (this.selectIndex > 0)
+            this.selectIndex -= 1;
     }
     /**
      * 向下选择内容
      */
     keyup() {
         this.selectIndex += 1;
+    }
+    componentWillUnmount() {
+        if (this.node) this.node.remove()
     }
 }

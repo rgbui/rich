@@ -3,7 +3,8 @@ import React from 'react';
 import { BaseComponent } from "../component";
 import { BlockAppear, BlockDisplay } from "../enum";
 import { url, view } from "../../factory/observable";
-import { Block } from '..';
+import { Block } from '../..';
+import { ChildsArea } from '../appear';
 /**
  * 分区中会有很多行，每行存在于一个或多个block
  */
@@ -23,18 +24,9 @@ export class RowView extends BaseComponent<Row>{
 
         // }
     }
-    renderChilds() {
-        var ps: JSX.Element[] = [];
-        for (let i = 0; i < this.block.childs.length; i++) {
-            var child = this.block.childs[i];
-            // if (i > 0) {
-            //     ps.push(<div key={child.id + "_child_" + i.toString()} onMouseDown={e => this.mousedown(i, e.nativeEvent)} className='sy-block-row-resize-col'></div>)
-            // }
-            ps.push(<child.viewComponent key={child.id} block={child}></child.viewComponent>)
-        }
-        return ps;
-    }
     render() {
-        return <div className='sy-block-row'  ref={e => this.block.childsEl = e}>{this.renderChilds()}</div>
+        return <div className='sy-block-row' ref={e => this.block.childsEl = e}>
+            <ChildsArea childs={this.block.childs}></ChildsArea>
+        </div>
     }
 }

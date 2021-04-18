@@ -1,4 +1,4 @@
-import { Block } from "../../base";
+import { Block } from "../..";
 import { BaseComponent } from "../../base/component";
 import React from 'react';
 import { TableMeta } from "./meta";

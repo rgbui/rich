@@ -1,7 +1,7 @@
 
 
 import { Selector } from ".";
-import { Block } from "../block/base";
+import { Block } from "../block";
 import { dom } from "../common/dom";
 import { TextEle } from "../common/text.ele";
 
@@ -40,7 +40,6 @@ export class Anchor {
         return this.block.isText;
     }
     get isSolid() {
-
         return this.block.isSolid;
     }
     get textContent() {

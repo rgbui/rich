@@ -1,6 +1,6 @@
 import { Page } from ".";
-import { Block } from "../block/base";
-import {dom } from "../common/dom";
+import { Block } from "../block";
+import { dom } from "../common/dom";
 import { Point } from "../common/point";
 export class PageEvent {
     private mouseScope: {
@@ -42,7 +42,7 @@ export class PageEvent {
         if (this.mouseScope && this.mouseScope.isDown == true) {
             if (this.mouseScope.isMove) {
                 var toEle = event.target as HTMLElement;
-                var blockEle =dom(toEle).closest(x => (x as any).block ? true : false);
+                var blockEle = dom(toEle).closest(x => (x as any).block ? true : false);
                 if (blockEle) {
                     var block = (blockEle as any).block as Block;
                     var anchor = block.visibleAnchor(Point.from(event));
@@ -58,7 +58,7 @@ export class PageEvent {
             }
         }
         var toEle = event.target as HTMLElement;
-        var blockEle =dom(toEle).closest(x => (x as any).block && (x as any).block.page === this ? true : false);
+        var blockEle = dom(toEle).closest(x => (x as any).block && (x as any).block.page === this ? true : false);
         if (blockEle) {
             var block = (blockEle as any).block as Block;
             // if (this.selector.isDrag == true) {
@@ -72,7 +72,7 @@ export class PageEvent {
                 var el = document.elementFromPoint(event.x - dis, event.y);
                 var blockEl: Node;
                 if (el) {
-                    blockEl =dom(el as HTMLElement).closest(x => (x as any).block && (x as any).block.page === this ? true : false)
+                    blockEl = dom(el as HTMLElement).closest(x => (x as any).block && (x as any).block.page === this ? true : false)
                     if (!blockEl) el = null;
                 }
                 if (!el) {
@@ -150,5 +150,20 @@ export class PageEvent {
             return args.length == this.keys.length && args.trueForAll(z => this.keys.exists(z));
         }
         else return Array.from(arguments).trueForAll(z => this.keys.exists(z));
+    }
+    private updateBlocks: Block[];
+    onRememberUpdate() {
+        this.updateBlocks = [];
+    }
+    onAddUpdate(block: Block) {
+        var pa = this.updateBlocks.find(g => g.contains(block));
+        if (!pa) this.updateBlocks.push(block);
+    }
+    onExcuteUpdate() {
+        var ups = this.updateBlocks.map(c => c);
+        this.updateBlocks = [];
+        ups.each(up => {
+            up.view.forceUpdate();
+        });
     }
 }

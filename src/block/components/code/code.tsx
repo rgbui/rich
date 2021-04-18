@@ -4,7 +4,7 @@ import React from 'react';
 import Prism from 'prismjs';
 import "../../../../node_modules/prismjs/themes/prism.css";
 import { TextArea } from "../../base/appear";
-import { Block } from "../../base";
+import { Block } from "../..";
 import { BlockAppear, BlockDisplay } from "../../base/enum";
 /**
  * prism url : https://prismjs.com/#examples

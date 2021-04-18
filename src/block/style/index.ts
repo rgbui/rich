@@ -1,5 +1,5 @@
 import { util } from "../../util/util";
-import { Block } from "../base";
+import { Block } from "..";
 import { BlockState } from "../base/enum";
 import { BorderStyle, FillStyle, FilterStyle, FontStyle, RadiusStyle, ShadowStyle, TransformStyle } from "./type";
 

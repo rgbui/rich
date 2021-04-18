@@ -1,7 +1,7 @@
 
 import { BaseComponent } from "../../base/component";
 import React from 'react';
-import { Block } from "../../base";
+import { Block } from "../..";
 import { url, view } from "../../factory/observable";
 import { BlockAppear, BlockDisplay } from "../../base/enum";
 @url('/table/row')

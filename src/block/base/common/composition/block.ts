@@ -1,4 +1,4 @@
-import { Block } from "../..";
+import { Block } from "../../..";
 
 
 /***
@@ -22,4 +22,5 @@ export class BlockComposition extends Block{
      * 如果不是自由拖动的元素，则宽度则为百分比
      */
     widthPercent: number;
+    
 }

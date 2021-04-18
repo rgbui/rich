@@ -29,6 +29,30 @@ export class Point {
     clone() {
         return new Point(this);
     }
+    equal(point: Point) {
+        return point && this.x == point.x && this.y == point.y;
+    }
+    /**
+     * 
+     * @param point 
+     * @param distance  指小于水平及垂直方面的距离
+     */
+    nearBy(point: Point, distance: number) {
+        if (point) {
+            if (Math.abs(point.x - this.x) < distance && Math.abs(point.y - this.y) < distance) {
+                return true;
+            }
+        }
+        return false;
+    }
+    remoteBy(point: Point, dis: number) {
+        if (point) {
+            if (Math.abs(point.x - this.x) > dis && Math.abs(point.y - this.y) > dis) {
+                return true;
+            }
+        }
+        return false;
+    }
     static from(event: MouseEvent | DOMRect | Point | { x: number, y: number } | Rect | number, y?: number) {
         if (event instanceof MouseEvent) {
             return new Point({ x: event.x, y: event.y })
@@ -66,4 +90,5 @@ export class Rect {
         }
         return false;
     }
+
 }

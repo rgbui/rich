@@ -1,4 +1,4 @@
-import { Block } from "../../base";
+import { Block } from "../..";
 import { BaseComponent } from "../../base/component";
 import { BlockAppear, BlockDisplay } from "../../base/enum";
 import { prop, url, view } from "../../factory/observable";

@@ -1,4 +1,4 @@
-import { Block } from "../base";
+import { Block } from "..";
 import { BaseComponent } from "../base/component";
 import { BlockComposition } from "../base/common/composition/block";
 import React from 'react';

@@ -1,4 +1,4 @@
-import { Block } from "../../base";
+import { Block } from "../..";
 import React from 'react';
 import { Icon } from "../../../component/icon";
 import { prop, url, view } from "../../factory/observable";

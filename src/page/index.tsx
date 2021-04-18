@@ -12,8 +12,10 @@ import { PageEvent } from "./event";
 import { PageView } from './view';
 import { User } from '../types/user';
 import { HistorySnapshoot } from '../history/snapshoot';
-import { Block } from '../block/base';
+import { Block } from '../block';
 import { OperatorDirective } from '../history/declare';
+import { BlockSelector } from '../plug/block.selector';
+import { ReferenceSelector } from '../plug/reference.selector';
 export class Page extends Events {
     el: HTMLElement;
     id: string;
@@ -82,6 +84,8 @@ export class Page extends Events {
     views: View[] = [];
     selector: Selector;
     viewRender: PageView;
+    blockSelector: BlockSelector;
+    referenceSelector: ReferenceSelector;
     keys: string[] = [];
     isFocus: boolean = false;
     onError(error: Error) {
@@ -105,8 +109,9 @@ export class Page extends Events {
         if (typeof at == 'undefined') at = bs.length;
         bs.insertAt(at, block);
         this.snapshoot.record(OperatorDirective.create, {
-            parentId: parent.id,childKey, at, preBlockId: block.prev ? block.prev.id : undefined, data: block.get()
-        })
+            parentId: parent.id, childKey, at, preBlockId: block.prev ? block.prev.id : undefined, data: block.get()
+        });
+        this.onAddUpdate(parent);
         return block;
     }
 }

@@ -3,7 +3,7 @@ import React from 'react';
 import { BaseComponent } from "../component";
 import { BlockAppear, BlockDisplay } from "../enum";
 import { url, view } from "../../factory/observable";
-import { Block } from "..";
+import { Block } from "../..";
 /**
  * 可以将相邻的block变成一个整体去操作，
  * 可以看成是contentBlock

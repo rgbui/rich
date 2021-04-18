@@ -1,4 +1,4 @@
-import { Block } from "../../base";
+import { Block } from "../..";
 import { BaseComponent } from "../../base/component";
 import { url, view } from "../../factory/observable";
 import { TextSpan } from "../textspan";

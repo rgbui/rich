@@ -3,6 +3,9 @@ import React from 'react';
 import { Page } from "./index";
 import { PageLayoutView } from "./layout/render";
 import { SelectorView } from "../selector/render/render";
+import { ChildsArea } from "../block/base/appear";
+import { BlockSelector } from "../plug/block.selector";
+import { ReferenceSelector } from "../plug/reference.selector";
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
  * 对于同时支持这4个事件的浏览器，事件执行顺序为focusin > focus > focusout > blur
@@ -42,10 +45,13 @@ export class PageView extends Component<{ page: Page }>{
         >
             <PageLayoutView pageLayout={this.page.pageLayout}>
                 <SelectorView selector={this.page.selector}></SelectorView>
+                <div className='sy-page-plugs'>
+                    <BlockSelector ref={e => this.page.blockSelector = e} page={this.page}></BlockSelector>
+                    <ReferenceSelector ref={e => this.page.referenceSelector = e} page={this.page}></ReferenceSelector>
+                </div>
                 <div className='sy-page-view-content'
                     onMouseDown={e => this.page.onMousedown(e.nativeEvent)}
-                >
-                    {this.page.views.map(x => <x.viewComponent key={x.id} block={x} />)}
+                ><ChildsArea childs={this.page.views}></ChildsArea>
                 </div>
             </PageLayoutView>
         </div>

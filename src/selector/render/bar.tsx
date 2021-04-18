@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from 'react-dom';
-import { Block } from "../../block/base";
+import { Block } from "../../block";
 import { Point } from "../../common/point";
 import { Icon } from "../../component/icon";
 import { SelectorView } from "./render";
@@ -22,22 +22,22 @@ export class Bar extends React.Component<{ selectorView: SelectorView }>{
     get selector() {
         return this.props.selectorView.selector;
     }
-    private x: number;
-    private y: number;
-    private isDown: Boolean;
+    private point = new Point(0, 0);
+    isDown: Boolean;
+    isDrag: boolean = false;
     private onMousedown(event: MouseEvent) {
-        this.x = event.x;
-        this.y = event.y;
+        this.point = Point.from(event);
         this.isDown = true;
-        this.selector.isDrag = false;
+        this.isDrag = false;
     }
     private mousemove: (event: MouseEvent) => void;
     private mouseup: (event: MouseEvent) => void;
     private async onMousemove(event: MouseEvent) {
         if (this.isDown) {
-            if (Math.abs(event.x - this.x) > 5 || Math.abs(event.y - this.y) > 5) {
-                if (this.selector.isDrag != true) {
-                    this.selector.isDrag = true;
+            var curentPoint = Point.from(event);
+            if (this.point.remoteBy(curentPoint, 5)) {
+                if (this.isDrag != true) {
+                    this.isDrag = true;
                     var cloneNode = this.dragBlock.el.cloneNode(true);
                     this.dragCopyEle.innerHTML = '';
                     this.dragCopyEle.style.display = 'block';
@@ -46,7 +46,7 @@ export class Bar extends React.Component<{ selectorView: SelectorView }>{
                     this.dragCopyEle.style.height = bound.height + 'px';
                     this.dragCopyEle.appendChild(cloneNode);
                 }
-                else if (this.selector.isDrag) {
+                else if (this.isDrag) {
                     this.dragCopyEle.style.top = event.y + 'px';
                     this.dragCopyEle.style.left = event.x + 'px';
                 }
@@ -56,28 +56,29 @@ export class Bar extends React.Component<{ selectorView: SelectorView }>{
     private async onMouseup(event: MouseEvent) {
         if (this.isDown) {
             this.isDown = false;
-            this.x = 0;
-            this.y = 0;
+            this.point = new Point(0, 0);
             if (this.selector.isDrag == true) {
-                if (this.selector.overBlock && this.selector.overBlock.dropBlock) {
-                    var dropBlock = this.selector.overBlock.dropBlock;
-                    var cls = Array.from(dropBlock.el.classList);
-                    var cl = cls.find(g => g.startsWith('sy-block-drag-over'));
-                    if (cl) {
-                        cl = cl.replace('sy-block-drag-over-', '');
-                        console.log(cl);
-                        await this.selector.onMoveBlock(this.dragBlock, dropBlock, cl as any);
+                try {
+                    if (this.selector.dropBlock) this.selector.dropBlock.onDragLeave();
+                    if (this.selector.dropBlock && this.selector.dropArrow) {
+                        await this.selector.onMoveBlock(this.dragBlock, this.selector.dropBlock, this.selector.dropArrow as any);
                     }
-                    dropBlock.onDragLeave();
                 }
-                this.selector.isDrag = false;
+                catch (ex) {
+                    this.selector.page.onError(ex);
+                }
+                finally {
+                    this.dragCopyEle.style.display = 'none';
+                    this.dragCopyEle.innerHTML = '';
+                    this.isDrag = false;
+                    delete this.selector.dropBlock;
+                    delete this.selector.dropArrow;
+                    delete this.dragBlock;
+                }
             }
             else {
                 this.selector.openMenu(event);
             }
-            this.dragCopyEle.style.display = 'none';
-            this.dragCopyEle.innerHTML = '';
-            delete this.dragBlock;
         }
     }
     hide() {

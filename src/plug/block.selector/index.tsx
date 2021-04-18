@@ -2,13 +2,17 @@ import React from "react";
 import { createPortal } from "react-dom";
 import { Point } from "../../common/point";
 import { Icon } from "../../component/icon";
+import { Page } from "../../page";
 import { BlockSelectorData } from "./data";
 
-export class BlockSelector extends React.Component {
+export class BlockSelector extends React.Component<{ page: Page }> {
     private node: HTMLElement;
     constructor(props) {
         super(props);
         this.node = document.body.appendChild(document.createElement('div'));
+    }
+    get page() {
+        return this.props.page;
     }
     renderSelectors() {
         return BlockSelectorData.map(group => {
@@ -79,5 +83,8 @@ export class BlockSelector extends React.Component {
      */
     keyup() {
         this.selectIndex += 1;
+    }
+    componentWillUnmount(){
+        if(this.node)this.node.remove()
     }
 }

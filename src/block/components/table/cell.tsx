@@ -3,7 +3,7 @@ import React from 'react';
 import { prop, url, view } from "../../factory/observable";
 import { ChildsArea, TextArea } from "../../base/appear";
 import { BlockAppear, BlockDisplay } from "../../base/enum";
-import { Block } from "../../base";
+import { Block } from "../..";
 @url('/table/cell')
 export class TableCell extends Block {
     @prop()

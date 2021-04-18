@@ -1,5 +1,5 @@
 
-import { Block } from "../block/base";
+import { Block } from "../block";
 import { BlockFactory } from "../block/factory/block.factory";
 import { Point } from "../common/point";
 import { ActionDirective } from "../history/declare";
@@ -16,7 +16,11 @@ export class Selector {
     }
     activeAnchor: Anchor;
     overBlock: Block;
-    isDrag: boolean = false;
+    dropBlock: Block;
+    dropArrow: 'left' | 'right' | 'down' | 'up' | 'inner' | 'none';
+    get isDrag() {
+        return this.view.bar.isDrag;
+    }
     setActiveAnchor(anchor: Anchor) {
         this.activeAnchor = anchor;
         if (anchor.isText) {
@@ -117,17 +121,26 @@ export class Selector {
         }
         else if (!overBlock)
             delete this.overBlock;
-
         if (this.isDrag == true) {
             this.view.bar.hide();
-            if (lastOverBlock && lastOverBlock.dropBlock) lastOverBlock.dropBlock.onDragLeave();
-            if (this.overBlock && this.view.bar.dragBlock.contains(this.overBlock)) {
+            var currentDropBlock = this.overBlock?.dropBlock;
+            if (currentDropBlock != this.dropBlock && this.dropBlock) {
+                this.dropBlock.onDragLeave();
+            }
+            if (currentDropBlock && this.view.bar.dragBlock.contains(currentDropBlock)) {
+                this.dropBlock = null;
                 return;
             }
-            if (this.overBlock && this.overBlock.dropBlock)
-                this.overBlock.dropBlock.onDragOver(Point.from(event));
+            if (currentDropBlock) {
+                /**
+                 * 说明切换到新的dropBLock
+                 */
+                if (currentDropBlock != this.dropBlock) currentDropBlock.onDragOverStart();
+                currentDropBlock.onDragOver(Point.from(event));
+            }
+            else { delete this.dropBlock; this.dropArrow = 'none'; }
         }
-        else if (this.overBlock && this.overBlock.dragBlock) {
+        else if (this.overBlock && this.overBlock.dragBlock && this.view.bar.isDown != true) {
             this.view.bar.onStart(this.overBlock.dragBlock);
         } else {
             var target = event.target as HTMLElement;
@@ -144,18 +157,15 @@ export class Selector {
      * @param arrow 
      */
     async onMoveBlock(block: Block, to: Block, arrow: 'left' | 'right' | 'down' | 'up') {
-        if (arrow == 'left' || arrow == 'up') {
-            if (to.visiblePre == block) return;
-        }
-        else if (arrow == 'right' || arrow == 'down') {
-            if (to.visibleNext == block) return;
-        }
         var self = this;
         this.page.snapshoot.declare(ActionDirective.onMoveBlock);
-        var fromParent = to.parent;
+        this.page.onRememberUpdate();
+        var fromParent = block.parent;
+        block.remove();
         async function moveComplted() {
             await fromParent.deleteLayout();
             self.page.snapshoot.store();
+            self.page.onExcuteUpdate();
         }
         switch (arrow) {
             case 'down':
@@ -167,12 +177,13 @@ export class Selector {
                     var col = await this.page.createBlock('/col', {
                         blocks: { childs: [{ url: '/row' }, { url: '/row' }] }
                     }, to.parent, to.parent.at + 1);
-                    col.mounted(() => {
+                    col.mounted(async () => {
+                        self.page.onRememberUpdate();
                         col.childs.first().append(to);
                         col.childs.last().append(block);
-                        moveComplted();
+                        await moveComplted();
                     });
-                    col.parent.view.forceUpdate();
+                    self.page.onExcuteUpdate();
                 }
                 else if (to.parent.isRow && to.parent.childs.length == 1) {
                     /***
@@ -181,12 +192,14 @@ export class Selector {
                      * 
                      */
                     var row = await this.page.createBlock('/row', {},
-                        to.parent,
+                        to.parent.parent,
                         to.parent.at + 1);
-                    row.mounted(() => {
-                        row.append(block); moveComplted();
+                    row.mounted(async () => {
+                        self.page.onRememberUpdate();
+                        row.append(block);
+                        await moveComplted();
                     });
-                    row.parent.view.forceUpdate();
+                    self.page.onExcuteUpdate();
                 }
                 break;
             case 'up':
@@ -195,15 +208,17 @@ export class Selector {
                      * row{block,block}
                      * 需要创建一个新的col
                      */
+
                     var col = await this.page.createBlock('/col', {
                         blocks: { childs: [{ url: '/row' }, { url: '/row' }] }
-                    }, to.parent, to.parent.at);
-                    col.mounted(() => {
-                        col.childs.first().append(to);
-                        col.childs.last().append(block);
-                        moveComplted();
+                    }, to.parent, to.at);
+                    col.mounted(async () => {
+                        self.page.onRememberUpdate();
+                        col.childs.first().append(block);
+                        col.childs.last().append(to);
+                        await moveComplted();
                     });
-                    col.parent.view.forceUpdate();
+                    self.page.onExcuteUpdate();
                 }
                 else if (to.parent.isRow && to.parent.childs.length == 1) {
                     /***
@@ -212,25 +227,26 @@ export class Selector {
                      * 
                      */
                     var row = await this.page.createBlock('/row', {},
-                        to.parent,
+                        to.parent.parent,
                         to.parent.at);
-                    row.mounted(() => {
+                    row.mounted(async () => {
+                        self.page.onRememberUpdate();
                         row.append(block);
-                        moveComplted();
+                        await moveComplted();
                     });
-                    row.parent.view.forceUpdate();
+                    self.page.onExcuteUpdate();
                 }
                 break;
             case 'left':
                 if (to.parent.isRow) {
                     block.insertBefore(to);
-                    moveComplted();
+                    await moveComplted();
                 }
                 break;
             case 'right':
                 if (to.parent.isRow) {
                     block.insertAfter(to);
-                    moveComplted();
+                    await moveComplted();
                 }
                 break;
         }

@@ -1,6 +1,6 @@
 export type F = (...args: any[]) => any;
 export class Events {
-    private __events: { name: string, fn?: F }[] = [];
+    private __events: { name: string, fn?: F, once?: boolean }[] = [];
     on(name: string[] | string | Record<string, F>, fn?: F) {
         if (typeof name == 'string' && typeof fn == 'function')
             this.__events.push({ name, fn });
@@ -21,26 +21,44 @@ export class Events {
      * 2.绑定的事件不一定会触发（就是被消耗掉），这意味着如果多次绑定同名事件，会导致多次触发
      * 
      */
-    once(name: string | Record<string, F>, fn?: F) {
-        if (typeof name == 'object') { for (var n in name) this.once(n, name[n]) }
+    only(name: string | Record<string, F>, fn?: F) {
+        if (typeof name == 'object') { for (var n in name) this.only(n, name[n]) }
         else {
             this.__events.removeAll(x => x.name == name);
             this.__events.push({ name, fn });
         }
         return this;
     }
+    once(name: string | Record<string, F>, fn?: F) {
+        if (typeof name == 'object') { for (var n in name) this.only(n, name[n]) }
+        else {
+
+            this.__events.push({ name, fn, once: true });
+        }
+    }
     off(name: string | F, fn?: F) {
         if (typeof name == 'function') this.__events.removeAll(x => x.fn == name);
         else if (typeof fn == 'function' && typeof name == 'string') this.__events.removeAll(x => x.name == name && x.fn == fn);
+        else if (typeof name == 'string' && typeof fn == 'undefined') this.__events.removeAll(x => x.name == name);
     }
     emit(name: string, ...args: any[]) {
         var rs = this.__events.findAll(x => x.name == name);
         if (rs.length == 0) return undefined;
-        var gs = rs.toArray(r => {
-            if (typeof r.fn == 'function')
-                return r.fn.apply(this, args);
-            else return undefined;
-        });
+        var gs: any[] = [];
+        for (let i = 0; i < rs.length; i++) {
+            var r = rs[i];
+            if (typeof r.fn == 'function') {
+                try {
+                    var result = r.fn.apply(this, args);
+                    gs.push(result);
+                }
+                catch (ex) {
+                    console.error('happend error in emit', ex);
+                    gs.push(undefined);
+                }
+            }
+            else gs.push(undefined);
+        }
         if (gs.length == 1) return gs[0]
         else return gs;
     }

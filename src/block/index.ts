@@ -1,15 +1,16 @@
-import { Events } from "../../util/events";
-import { util } from "../../util/util";
-import { Point, Rect } from "../../common/point";
-import { Page } from "../../page";
-import { Anchor } from "../../selector/anchor";
-import { BlockFactory } from "../factory/block.factory";
-import { BlockAppear, BlockDisplay, Locate } from "./enum";
-import { BlockStyle } from "../style/index";
-import { BaseComponent } from "./component";
-import { TextEle } from "../../common/text.ele";
-import { dom } from "../../common/dom";
-import { ActionDirective, OperatorDirective } from "../../history/declare";
+import { Events } from "../util/events";
+import { util } from "../util/util";
+import { Point, Rect } from "../common/point";
+import { Page } from "../page";
+import { Anchor } from "../selector/anchor";
+import { BlockFactory } from "./factory/block.factory";
+import { BlockAppear, BlockDisplay, Locate } from "./base/enum";
+import { BlockStyle } from "./style/index";
+import { BaseComponent } from "./base/component";
+import { TextEle } from "../common/text.ele";
+import { dom } from "../common/dom";
+import { ActionDirective, OperatorDirective } from "../history/declare";
+import ReactDOM from "react-dom";
 
 export abstract class Block extends Events {
     parent: Block;
@@ -235,6 +236,7 @@ export abstract class Block extends Events {
         return blocks;
     }
     remove() {
+        if (!this.parent) return;
         var pbs = this.parentBlocks;
         if (Array.isArray(pbs) && pbs.exists(g => g === this)) {
             this.page.snapshoot.record(OperatorDirective.remove, {
@@ -244,9 +246,11 @@ export abstract class Block extends Events {
                 preBlockId: this.prev ? this.prev.id : undefined
             })
             pbs.remove(this);
-            if (this.el) {
-                (this.el as HTMLElement).remove();
-            }
+            this.page.onAddUpdate(this.parent);
+            delete this.parent;
+            // if (this.el) {
+            //     (this.el as HTMLElement).remove();
+            // }
         }
     }
     /***
@@ -263,9 +267,11 @@ export abstract class Block extends Events {
                 data: await this.get()
             })
             this.parentBlocks.remove(this);
-            if (this.el) {
-                (this.el as HTMLElement).remove();
-            }
+            this.page.onAddUpdate(this.parent);
+            delete this.parent;
+            // if (this.el) {
+            //     (this.el as HTMLElement).remove();
+            // }
         }
     }
     /***
@@ -299,7 +305,7 @@ export abstract class Block extends Events {
         if (typeof childKey == 'undefined') childKey = 'childs';
         var bs = this.blocks[childKey];
         if (typeof at == 'undefined') at = bs.length;
-        if (bs.exists(block) && block.at < at) {
+        if (block.parent && bs.exists(block) && block.at < at) {
             at -= 1;
         }
         block.remove();
@@ -311,20 +317,22 @@ export abstract class Block extends Events {
             at,
             prevBlockId: block.prev ? block.prev.id : undefined,
             blockId: block.id
-        })
-        if (block.el) {
-            if (this.childs.length == 1) {
-                if (this.childsEl)
-                    this.childsEl.appendChild(block.el)
-                else throw new Error('not found block childs el');
-            }
-            else {
-                var pre = block.prev;
-                var next = block.next;
-                if (next) next.el.parentNode.insertBefore(block.el, next.el);
-                else if (pre) dom(block.el).insertAfter(pre.el);
-            }
-        }
+        });
+
+        this.page.onAddUpdate(this);
+        // if (block.el) {
+        //     block.el.remove();
+        //     if (this.childs.length == 1) {
+        //         if (this.childsEl) this.childsEl.appendChild(block.el)
+        //         else throw new Error('not found block childs el');
+        //     }
+        //     else {
+        //         var pre = block.prev;
+        //         var next = block.next;
+        //         if (next) next.el.parentNode.insertBefore(block.el, next.el);
+        //         else if (pre) dom(block.el).insertAfter(pre.el);
+        //     }
+        // }
     }
     /***
     * 查找当前容器里面首位的内容元素，
@@ -383,6 +391,15 @@ export abstract class Block extends Events {
     viewComponent: typeof BaseComponent | ((props: any) => JSX.Element)
     view: BaseComponent<this>;
     el: HTMLElement;
+    get visibleStyle() {
+        if (this.isBlock) {
+            var style: Record<string, any> = {
+                width: ((this as any).widthPercent || 100) + '%'
+            };
+            return style;
+        }
+        return {};
+    }
     childsEl: HTMLElement;
     get visibleHeadAnchor() {
         var anchor = this.page.selector.createAnchor();
@@ -691,13 +708,21 @@ export abstract class Block extends Events {
     private dragOverTime;
     private lastPoint: Point;
     private overArrow: string;
+    onDragOverStart() {
+        dom(this.el).removeClass(g => g.startsWith('sy-block-drag-over'));
+        if (this.dragOverTime) {
+            clearTimeout(this.dragOverTime);
+            this.dragOverTime = null;
+        }
+        this.overArrow = '';
+        delete this.lastPoint;
+    }
     onDragOver(point: Point) {
         var self = this;
         var bound = this.getVisibleBound();
         var el = this.el as HTMLElement;
         var arrow: string;
-        if (this.lastPoint && point.x == this.lastPoint.x && point.y == this.lastPoint.y
-            && bound.conatin(point)
+        if (this.lastPoint && this.lastPoint.nearBy(point, 3) && bound.conatin(point)
         ) {
             if (!this.dragOverTime) {
                 self.overArrow = '';
@@ -705,7 +730,9 @@ export abstract class Block extends Events {
                     self.overArrow = 'right';
                     dom(el).removeClass(g => g.startsWith('sy-block-drag-over'))
                     el.classList.add('sy-block-drag-over-' + self.overArrow);
-                }, 1e3);
+                    self.page.selector.dropBlock = self;
+                    self.page.selector.dropArrow = self.overArrow as any;
+                }, 2e3);
             }
         }
         else {
@@ -722,19 +749,31 @@ export abstract class Block extends Events {
         else if (point.x >= bound.left + bound.width) {
             arrow = 'right';
         }
-        else if (point.y >= bound.top + bound.height / 2) {
-            arrow = 'down';
-        }
         else if (point.y <= bound.top + bound.height / 2) {
             arrow = 'up';
+        }
+        else if (point.y >= bound.top + bound.height / 2) {
+            arrow = 'down';
         }
         dom(el).removeClass(g => g.startsWith('sy-block-drag-over'))
         el.classList.add('sy-block-drag-over-' + arrow);
         this.lastPoint = point.clone();
+        this.page.selector.dropArrow = arrow as any;
+        this.page.selector.dropBlock = this;
     }
     onDragLeave() {
-        dom(this.el).removeClass(g => g.startsWith('sy-block-drag-over'))
+        dom(this.el).removeClass(g => g.startsWith('sy-block-drag-over'));
+        if (this.dragOverTime) {
+            clearTimeout(this.dragOverTime);
+            this.dragOverTime = null;
+        }
+        this.overArrow = '';
+        delete this.lastPoint;
     }
+
+    /***
+     *用户输入
+     */
     private inputTime;
     private currentLastInputText: string;
     /**
@@ -812,7 +851,7 @@ export abstract class Block extends Events {
         this.currentLastDeleteText = '';
     }
     mounted(fn: () => void) {
-        this.on('mounted', fn);
+        this.once('mounted', fn);
     }
     async onDelete() {
         this.page.snapshoot.declare(ActionDirective.onDelete);
