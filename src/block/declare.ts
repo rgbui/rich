@@ -8,6 +8,7 @@ import "./base/common/group";
 import "./base/common/row";
 import "./components/text";
 import "./components/textspan";
+import "./components/head";
 import "./base/common/view";
 
 import "./components/image";

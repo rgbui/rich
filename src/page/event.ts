@@ -50,6 +50,8 @@ export class PageEvent {
                         this.selector.joinSelection(anchor);
                         this.selector.setActiveAnchor(anchor);
                         this.selector.renderSelection();
+                        if (this.textTool.isVisible != true)
+                            this.selector.openToolText(event);
                     }
                 }
             }

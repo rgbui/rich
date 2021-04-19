@@ -23,3 +23,4 @@ export class TextContentView extends BaseComponent<TextContent>{
         </span>
     }
 }
+

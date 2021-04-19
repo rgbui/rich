@@ -1,0 +1,81 @@
+.sy-selector-menu {
+    position: fixed;
+    top     : 0px;
+    left    : 0px;
+    width   : 100vw;
+    height  : 100vh;
+
+    &-cove {
+        position: absolute;
+        top     : 0px;
+        left    : 0px;
+        width   : 100vw;
+        height  : 100vh;
+    }
+
+    &-box {
+        position     : absolute;
+        color        : rgb(55, 53, 47);
+        box-sizing   : border-box;
+        border-radius: 3px;
+        background   : white;
+        box-shadow   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+        overflow     : hidden;
+        width        : 324px;
+        min-width    : 180px;
+        max-width    : calc(100vw - 24px);
+        max-height   : 40vh;
+        z-index      : 10000;
+        padding      : 10px 0px;
+        overflow-y   : auto;
+        overflow-x   : hidden;
+    }
+
+    &-item-box {
+        .sy-selector-menu-item {
+            &-option {
+                padding        : 10px;
+                display        : flex;
+                justify-content: flex-start;
+                align-items    : center;
+                position       : relative;
+                color          : rgb(55, 53, 47);
+                display        : block;
+                font-size      : 14px;
+
+                label {
+                    padding        : 10px;
+                    position       : absolute;
+                    top            : 0px;
+                    bottom         : 0px;
+                    right          : 0px;
+                    display        : flex;
+                    justify-content: flex-start;
+                    align-items    : center;
+                }
+
+                .arrow {
+                    padding        : 10px;
+                    position       : absolute;
+                    top            : 0px;
+                    bottom         : 0px;
+                    right          : 0px;
+                    display        : flex;
+                    justify-content: flex-start;
+                    align-items    : center;
+                }
+            }
+
+            &-devide {
+                height: 1px;
+
+            }
+
+            &-text {
+                font-size : 12px;
+                color     : rgba(55, 53, 47, 0.6);
+                font-style: normal;
+            }
+        }
+    }
+}

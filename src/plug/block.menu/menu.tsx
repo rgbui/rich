@@ -1,7 +1,8 @@
 import React from "react";
 import { createPortal } from "react-dom";
+import { Point } from "../../common/point";
 import { Icon } from "../../component/icon";
-import { SelectorView } from "./render";
+import { Page } from "../../page";
 export type SelectorMenuItemType = {
     name?: string,
     type?: 'devide' | 'text' | 'option',
@@ -11,29 +12,57 @@ export type SelectorMenuItemType = {
     childs?: SelectorMenuItemType[]
 }
 
-export class SelectorMenu extends React.Component<{ selectorView: SelectorView }>{
+export class SelectorMenu extends React.Component<{ page: Page }>{
     private node: HTMLElement;
     constructor(props) {
         super(props);
         this.node = document.body.appendChild(document.createElement('div'));
     }
-    get selector() {
-        return this.props.selectorView;
-    }
     open(event: MouseEvent) {
-        this.x = event.x;
-        this.y = event.y;
+        this.point = Point.from(event);
         this.visible = true;
+        delete this.select;
+        console.log('xxx');
+        this.forceUpdate();
     }
-    mousedown(item: SelectorMenuItemType, event: MouseEvent) {
+    close() {
+        delete this.select;
+        this.visible = false;
+        this.forceUpdate();
+    }
+    select: (item: SelectorMenuItemType, event: MouseEvent) => void;
+    private mousedown(item: SelectorMenuItemType, event: MouseEvent) {
+        if (typeof this.select == 'function') {
+            try {
+                this.select(item, event);
+            }
+            catch (ex) {
+                this.props.page.onError(ex);
+            }
+            finally {
 
+                this.close();
+            }
+        }
+    }
+    get isVisible() {
+        return this.visible;
+    }
+    get items() {
+        var items: SelectorMenuItemType[] = [];
+        items.push({
+            name: 'delete',
+            icon: "remove:sy",
+            text: '删除',
+            label: "delete"
+        });
+        return items;
     }
     private visible: boolean = false;
-    private x: number;
-    private y: number;
-    private items: SelectorMenuItemType[] = [];
+    private point: Point = new Point(0, 0);
+
     renderItem(item: SelectorMenuItemType) {
-        return <div className='sy-selector-menu-item-box'>
+        return <div className='sy-selector-menu-item-box' key={(item.name || '') + (item.type || '')}>
             <div className='sy-selector-menu-item'>
                 {(item.type == 'option' || !item.type) && <a className='sy-selector-menu-item-option' onMouseDown={e => this.mousedown(item, e.nativeEvent)}>
                     <Icon icon={item.icon}></Icon><span>{item.text}</span>
@@ -50,12 +79,12 @@ export class SelectorMenu extends React.Component<{ selectorView: SelectorView }
     }
     render() {
         var style: Record<string, any> = {};
-        style.top = this.y;
-        style.left = this.x;
+        style.top = this.point.y;
+        style.left = this.point.x;
         return createPortal(
             <div>
                 {this.visible == true && <div className='sy-selector-menu'>
-                    <div className='sy-selector-menu-cove'></div>
+                    <div className='sy-selector-menu-cove' onMouseDown={e => this.close()}></div>
                     <div className='sy-selector-menu-box' style={style}>
                         {this.items.map(g => this.renderItem(g))}
                     </div>

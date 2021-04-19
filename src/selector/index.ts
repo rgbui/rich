@@ -304,7 +304,13 @@ export class Selector {
         return new Point(point.x - pe.left, point.y - pe.top);
     }
     openMenu(event: MouseEvent) {
+        this.page.selectorMenu.select = (item, ev) => {
 
+        }
+        this.page.selectorMenu.open(event);
+    }
+    openToolText(event: MouseEvent) {
+        this.page.textTool.open(event);
     }
 }
 

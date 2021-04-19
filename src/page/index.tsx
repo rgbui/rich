@@ -16,6 +16,8 @@ import { Block } from '../block';
 import { OperatorDirective } from '../history/declare';
 import { BlockSelector } from '../plug/block.selector';
 import { ReferenceSelector } from '../plug/reference.selector';
+import { SelectorMenu } from '../plug/block.menu/menu';
+import { TextTool } from '../plug/text.menu/text.tool';
 export class Page extends Events {
     el: HTMLElement;
     id: string;
@@ -86,6 +88,8 @@ export class Page extends Events {
     viewRender: PageView;
     blockSelector: BlockSelector;
     referenceSelector: ReferenceSelector;
+    selectorMenu: SelectorMenu;
+    textTool: TextTool;
     keys: string[] = [];
     isFocus: boolean = false;
     onError(error: Error) {

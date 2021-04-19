@@ -2,6 +2,7 @@ import { Component } from "react";
 import { Page } from "../../page";
 import { Block } from "..";
 import { BaseComponent } from "../base/component";
+import { parseBlockUrl } from "../../common/util";
 
 export class BlockFactory {
     private static blockMap: Map<string, { model: typeof Block, view: typeof BaseComponent }> = new Map();
@@ -20,12 +21,13 @@ export class BlockFactory {
         else this.blockMap.set(url, { view: blockView, model: null });
     }
     public static async createBlock(url: string, page: Page, data: Record<string, any>, parent: Block) {
-        var bc = this.blockMap.get(url);
+        var pb = parseBlockUrl(url);
+        var bc = this.blockMap.get(pb.url);
         if (bc) {
             var newBlock: Block = new (bc.model as any)(page);
             newBlock.viewComponent = bc.view;
             if (parent) newBlock.parent = parent;
-            if (data) await newBlock.load(data);
+            if (data) await newBlock.load(Object.assign(pb.data, data));
             return newBlock;
         }
         else throw new Error('not found block class:' + url)

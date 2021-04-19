@@ -57,7 +57,7 @@ export class Bar extends React.Component<{ selectorView: SelectorView }>{
         if (this.isDown) {
             this.isDown = false;
             this.point = new Point(0, 0);
-            if (this.selector.isDrag == true) {
+            if (this.isDrag == true) {
                 try {
                     if (this.selector.dropBlock) this.selector.dropBlock.onDragLeave();
                     if (this.selector.dropBlock && this.selector.dropArrow) {

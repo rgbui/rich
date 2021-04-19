@@ -6,6 +6,8 @@ import { SelectorView } from "../selector/render/render";
 import { ChildsArea } from "../block/base/appear";
 import { BlockSelector } from "../plug/block.selector";
 import { ReferenceSelector } from "../plug/reference.selector";
+import { SelectorMenu } from "../plug/block.menu/menu";
+import { TextTool } from "../plug/text.menu/text.tool";
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
  * 对于同时支持这4个事件的浏览器，事件执行顺序为focusin > focus > focusout > blur
@@ -48,6 +50,8 @@ export class PageView extends Component<{ page: Page }>{
                 <div className='sy-page-plugs'>
                     <BlockSelector ref={e => this.page.blockSelector = e} page={this.page}></BlockSelector>
                     <ReferenceSelector ref={e => this.page.referenceSelector = e} page={this.page}></ReferenceSelector>
+                    <SelectorMenu ref={e => this.page.selectorMenu = e} page={this.page}></SelectorMenu>
+                    <TextTool ref={e => this.page.textTool = e} page={this.page}></TextTool>
                 </div>
                 <div className='sy-page-view-content'
                     onMouseDown={e => this.page.onMousedown(e.nativeEvent)}
