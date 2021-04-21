@@ -9,6 +9,7 @@ import blockcolor from "../../assert/svg/blockcolor.svg";
 import link from "../../assert/svg/link.svg";
 import squareplus from "../../assert/svg/squareplus.svg";
 import moveTo from '../../assert/svg/moveTo.svg';
+import comment from "../../assert/svg/comment.svg";
 export type SelectorMenuItemType = {
     name?: string,
     type?: 'devide' | 'text' | 'option',
@@ -94,7 +95,7 @@ export class SelectorMenu extends React.Component<{ page: Page }>{
         items.push({
             name: 'comment',
             text: '评论',
-            icon: 'comment:sy'
+            icon: comment
         });
         items.push({
             type: 'devide'

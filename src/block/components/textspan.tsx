@@ -30,7 +30,7 @@ export class TextSpanView extends BaseComponent<TextSpan>{
             )}</span>
         else
             return <span className='sy-block-text-span' style={this.block.visibleStyle}>
-                <TextArea html={this.block.htmlContent}></TextArea>
+                <TextArea html={this.block.htmlContent} placeholder={'键入文字或"/"选择'}></TextArea>
             </span>
     }
 }

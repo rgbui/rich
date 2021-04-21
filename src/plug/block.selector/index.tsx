@@ -46,7 +46,7 @@ export class BlockSelector extends React.Component<{ page: Page }> {
                                 this.forceUpdate();
                             }}
                             onMouseDown={e => this.onSelect(child)}
-                        >
+                        > {child.pic}
                             <div className='sy-block-selector-group-block-info'>
                                 <span>{child.text}</span>
                                 <em>{child.description}</em>
@@ -64,20 +64,24 @@ export class BlockSelector extends React.Component<{ page: Page }> {
             left: this.pos.x
         }
         return createPortal(<div>
-            {this.visible && <div className='sy-block-selector' style={style}>{this.renderSelectors()}</div>}
+            {this.visible && <div className='sy-block-selector'
+                style={style}>{this.renderSelectors()}</div>}
         </div>, this.node);
     }
     select: (block: Record<string, any>) => void;
     onSelect(block?) {
         if (!block) block = this.selectBlockData;
         try {
-            if (typeof this.select == 'function') this.select(block);
+            if (typeof this.select == 'function')
+                this.select(block);
         }
         catch (ex) {
             this.page.onError(ex);
         }
         finally {
             delete this.select;
+            this.visible = false;
+            this.forceUpdate();
         }
     }
     private visible: boolean = false;

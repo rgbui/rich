@@ -34,17 +34,17 @@ export class TextTool extends React.Component<{ page: Page }>{
         return createPortal(
             <div>
                 {this.visible == true && <div className='sy-tool-text-menu' style={style}>
-                    <div><span>Text</span><Icon icon='arrow-down:sy'></Icon></div>
-                    <div><Icon icon='link:sy'></Icon><Icon icon='arrow-down:sy'></Icon></div>
-                    <div><Icon icon='comment:sy'></Icon></div>
-                    <div><Icon icon='bold:sy'></Icon></div>
-                    <div><Icon icon='italic:sy'></Icon></div>
-                    <div><Icon icon='underline:sy'></Icon></div>
-                    <div><Icon icon='delete-line:sy'></Icon></div>
-                    <div><Icon icon='code:sy'></Icon></div>
-                    <div><Equation></Equation></div>
-                    <div><span>A</span><Icon icon='arrow-down:sy'></Icon></div>
-                    <div><Mention></Mention></div>
+                    <div className='sy-tool-text-menu-item sy-tool-text-menu-devide'><span>Text</span><Icon icon='arrow-down:sy'></Icon></div>
+                    <div className='sy-tool-text-menu-item sy-tool-text-menu-devide'><Icon icon='link:sy'></Icon><Icon icon='arrow-down:sy'></Icon></div>
+                    <div className='sy-tool-text-menu-item sy-tool-text-menu-devide'><Icon icon='comment:sy'></Icon></div>
+                    <div className='sy-tool-text-menu-item'><Icon icon='bold:sy'></Icon></div>
+                    <div className='sy-tool-text-menu-item'><Icon icon='italic:sy'></Icon></div>
+                    <div className='sy-tool-text-menu-item'><Icon icon='underline:sy'></Icon></div>
+                    <div className='sy-tool-text-menu-item'><Icon icon='delete-line:sy'></Icon></div>
+                    <div className='sy-tool-text-menu-item'><Icon icon='code:sy'></Icon></div>
+                    <div className='sy-tool-text-menu-item'><Icon icon={Equation}></Icon></div>
+                    <div className='sy-tool-text-menu-item'><span>A</span><Icon icon='arrow-down:sy'></Icon></div>
+                    <div className='sy-tool-text-menu-item'><Icon icon={Mention}></Icon></div>
                 </div>}
             </div>,
             this.node);

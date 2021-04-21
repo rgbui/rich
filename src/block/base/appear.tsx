@@ -1,9 +1,10 @@
 import React from 'react';
 import { Block } from '..';
 export function TextArea(props: {
-    html: string
+    html: string,
+    placeholder?:string
 }) {
-    return <span className='sy-appear-text' dangerouslySetInnerHTML={{ __html: props.html }}></span>
+    return <span className='sy-appear-text' placeholder={props.placeholder} dangerouslySetInnerHTML={{ __html: props.html }}></span>
 }
 export function SolidArea(props: { content: JSX.Element | (JSX.Element[]) }) {
     return <div className='sy-appear-solid'>{props.content}</div>

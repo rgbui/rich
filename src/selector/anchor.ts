@@ -92,9 +92,11 @@ export class Anchor {
             this.view.style.height = typeof fontStyle.lineHeight == 'number' ? fontStyle.lineHeight + 'px' : '20px';
             this.view.style.display = 'inline';
             if (this.textContent.length == 0) {
+                this.textEl.classList.add('empty');
                 this.view.classList.add('sy-anchor-text-end-placeholder');
             }
             else {
+                this.textEl.classList.remove('empty');
                 this.view.classList.remove('sy-anchor-text-end-placeholder');
             }
             if (this.isActive) {

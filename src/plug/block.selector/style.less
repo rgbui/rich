@@ -35,7 +35,28 @@
             justify-content: flex-start;
             align-items    : center;
             cursor         : pointer;
+
+            img {
+                cursor       : pointer;
+                user-select  : none;
+                box-sizing   : border-box;
+                border       : 0;
+                display      : block;
+                object-fit   : cover;
+                border-radius: 3px;
+                background   : white;
+                width        : 46px;
+                height       : 46px;
+                flex-grow    : 0;
+                flex-shrink  : 0;
+                box-shadow   : rgba(15, 15, 15, 0.1) 0px 0px 0px 1px;
+            }
+
             &-info {
+                flex-grow   : 1;
+                margin-left : 8px;
+                margin-right: 14px;
+
                 span {
                     color    : rgb(55, 53, 47);
                     display  : block;

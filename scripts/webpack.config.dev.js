@@ -113,7 +113,7 @@ module.exports = {
             MODE: JSON.stringify('dev')
         }),
         new MiniCssExtractPlugin({
-            filename: "kanhai.css",
+            filename: "sy.css",
             //publicPath
         }),
         new OptimizeCssAssetsPlugin({

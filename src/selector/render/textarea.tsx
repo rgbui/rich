@@ -100,13 +100,14 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
                     var point = new Point(bound.left, bound.top + bound.height);
                     this.blockSelector.open(point);
                     this.blockSelector.select = (blockData: Record<string, any>) => {
-
+                        console.log(blockData, 'xxx');
                     }
                 }
                 else if (this.blockSelector.isVisible == true) {
                     this.blockSelector.onInputFilter(value);
                 }
                 this.followAnchor(anchor);
+                if (value) anchor.textEl.classList.remove('empty');
                 anchor.block.onInputText(this.inputTextAt, value);
             }
         }

@@ -25,7 +25,7 @@ export class HeadView extends BaseComponent<Head>{
                 ref={e => this.block.childsEl = e}><ChildsArea childs={this.block.childs}></ChildsArea></span>
         else
             return <span className='sy-block-text-span' style={style}>
-                <TextArea html={this.block.htmlContent}></TextArea>
+                <TextArea placeholder={'大标题'} html={this.block.htmlContent}></TextArea>
             </span>
     }
 }

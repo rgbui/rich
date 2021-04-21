@@ -25,7 +25,7 @@ export function Icon(props: {
     if (typeof props.icon == 'string') {
         Object.assign(style, {
             fontSize: 20,
-            lineHeight: 20,
+            lineHeight: '20px',
             width: 20 || props.size,
             height: 20 || props.size
         });
