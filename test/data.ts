@@ -42,6 +42,14 @@ export var data = {
                         }
                     },
                     {
+                        url: '/row',
+                        blocks: {
+                            childs: [
+                                { url: '/head', content: '大标题' }
+                            ]
+                        }
+                    },
+                    {
                         url: "/row",
                         blocks: {
                             childs: [

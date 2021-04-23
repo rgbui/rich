@@ -11,7 +11,7 @@ export abstract class BaseComponent<T extends Block> extends Component<{ block: 
         this.block.el = ReactDOM.findDOMNode(this) as HTMLDivElement;
         if (this.block.el) {
             (this.block.el as any).block = this.block;
-            this.block.el.style.lineHeight = 'inherit';
+            //this.block.el.style.lineHeight = 'inherit';
         }
         this.didMount();
         try {
