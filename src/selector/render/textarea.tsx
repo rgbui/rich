@@ -99,16 +99,36 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
                     var bound = anchor.view.getBoundingClientRect();
                     var point = new Point(bound.left, bound.top + bound.height);
                     this.blockSelector.open(point);
-                    this.blockSelector.select = (blockData: Record<string, any>) => {
-                        console.log(blockData, 'xxx');
+                    this.blockSelector.select = async (blockData: Record<string, any>) => {
+                        anchor.block.onInputText(this.inputTextAt,
+                            value.replace(/(\/、)[^/、]*$/, ""),
+                            true,
+                            async () => {
+                                this.selector.page.onRememberUpdate();
+                                var newBlock = await anchor.block.visibleDownCreateBlock(blockData.url);
+                                newBlock.mounted(() => {
+                                    var contentBlock = newBlock.find(g => !g.isLayout);
+                                    if (contentBlock) {
+                                        var newAnchor = contentBlock.visibleHeadAnchor;
+                                        this.selector.replaceSelection(newAnchor);
+                                        this.selector.setActiveAnchor(newAnchor);
+                                        this.selector.renderSelection();
+                                    }
+                                });
+                                this.selector.page.onExcuteUpdate();
+                            }
+                        )
+
                     }
                 }
                 else if (this.blockSelector.isVisible == true) {
                     this.blockSelector.onInputFilter(value);
                 }
+                else {
+                    anchor.block.onInputText(this.inputTextAt, value);
+                }
                 this.followAnchor(anchor);
                 if (value) anchor.textEl.classList.remove('empty');
-                anchor.block.onInputText(this.inputTextAt, value);
             }
         }
     }

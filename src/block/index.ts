@@ -625,14 +625,9 @@ export abstract class Block extends Events {
     visibleAnchor(point: Point): Anchor {
         var part = this.visiblePoint(point);
         var anchor = this.page.selector.createAnchor();
-        if (part instanceof Block) {
-            anchor.block = part;
-            if (part.isText) {
-                anchor.at = TextEle.getAt(part.textEl, point);
-            }
-        }
-        else {
-            throw 'not found block'
+        anchor.block = part;
+        if (part.isText) {
+            anchor.at = TextEle.getAt(part.textEl, point);
         }
         return anchor;
     }
@@ -651,6 +646,17 @@ export abstract class Block extends Events {
         if (ps.exists(g => g.dis.y == 0))
             return ps.findAll(g => g.dis.y == 0).findMin(g => g.dis.x).part
         return ps.findMin(g => g.dis.y).part
+    }
+    async visibleDownCreateBlock(url: string, data: Record<string, any> = {}) {
+        var row = this.closest(x => x.isRow);
+        var newBlock = await this.page.createBlock('/row', {
+            blocks: {
+                childs: [
+                    { url, ...data }
+                ]
+            }
+        }, row.parent, row.at + 1);
+        return newBlock;
     }
     content: string = '';
     get isEmpty() {
@@ -779,12 +785,12 @@ export abstract class Block extends Events {
     /**
      * 用户一直输入内容,如果用户停留超过0.7秒，就记录
      */
-    onInputText(from: number, text: string, force: boolean = false) {
+    onInputText(from: number, text: string, force: boolean = false, action?: () => Promise<void>) {
         if (this.inputTime) {
             clearTimeout(this.inputTime);
             delete this.inputTime;
         }
-        var excute = () => {
+        var excute = async () => {
             this.page.snapshoot.declare(ActionDirective.onInputText);
             this.content = TextEle.getTextContent(this.textEl);
             this.page.snapshoot.record(OperatorDirective.updateTextReplace, {
@@ -794,6 +800,7 @@ export abstract class Block extends Events {
                 text
             });
             this.currentLastInputText = text;
+            if (typeof action == 'function') await action();
             this.page.snapshoot.store();
             if (this.inputTime) {
                 clearTimeout(this.inputTime);
@@ -804,7 +811,7 @@ export abstract class Block extends Events {
             * 这里需要将当前的变化通知到外面，
             * 当然用户在输的过程中，该方法会不断的执行，所以通知需要加一定的延迟，即用户停止几秒钟后默认为输入
             */
-        if (force == false) this.inputTime = setTimeout(() => { excute() }, 7e2);
+        if (force == false) this.inputTime = setTimeout(async () => { await excute(); }, 7e2);
         else excute()
     }
     private deleteInputTime;
