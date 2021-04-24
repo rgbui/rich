@@ -1,5 +1,5 @@
 import React from "react";
-import { createPortal } from "react-dom";
+import ReactDOM, { createPortal } from "react-dom";
 import { Point } from "../../common/point";
 import { Icon } from "../../component/icon";
 import { Page } from "../../page";
@@ -14,7 +14,7 @@ export class BlockSelector extends React.Component<{ page: Page }> {
     get page() {
         return this.props.page;
     }
-    filterSelectorData() {
+    get filterSelectorData() {
         var bs = BlockSelectorData.map(b => {
             return {
                 ...b,
@@ -24,25 +24,34 @@ export class BlockSelector extends React.Component<{ page: Page }> {
         bs.removeAll(g => g.childs.length == 0);
         return bs;
     }
-    filterBlocks() {
+    get filterBlocks() {
         var cs = [];
-        this.filterSelectorData().each(c => {
+        this.filterSelectorData.each(c => {
             cs.addRange(c.childs);
         });
         return cs;
     }
+    get isSelectIndex() {
+        return this.selectIndex >= 0 && this.selectIndex < this.filterBlocks.length;
+    }
     renderSelectors() {
-        let i = 0;
-        return BlockSelectorData.map(group => {
+        var i = -1;
+        return this.filterSelectorData.map((group, g) => {
             return <div className='sy-block-selector-group' key={group.text}>
                 <div className='sy-block-selector-group-head'><span>{group.text}</span></div>
                 <div className='sy-block-selector-group-blocks'>{
                     group.childs.map((child, index) => {
+                        i += 1;
+                        let j = i;
                         return <div
-                            className={'sy-block-selector-group-block ' + (i + index == this.selectIndex ? 'selected' : '')}
+                            className={'sy-block-selector-group-block ' + (j == this.selectIndex ? 'selected' : '')}
                             key={child.url}
                             onMouseEnter={e => {
-                                this.selectIndex = i + index;
+                                this.selectIndex = j;
+                                this.forceUpdate();
+                            }}
+                            onMouseLeave={e => {
+                                this.selectIndex = -1;
                                 this.forceUpdate();
                             }}
                             onMouseDown={e => this.onSelect(child)}
@@ -122,18 +131,34 @@ export class BlockSelector extends React.Component<{ page: Page }> {
      * 向上选择内容
      */
     keydown() {
-        this.selectIndex -= 1;
-        this.forceUpdate();
+        if (!this.isSelectIndex) this.selectIndex = -1;
+        if (this.selectIndex < this.filterBlocks.length - 1) {
+            this.selectIndex += 1;
+            this.forceUpdate();
+        }
     }
     /**
      * 向下选择内容
      */
     keyup() {
-        this.selectIndex += 1;
-        this.forceUpdate();
+        if (!this.isSelectIndex) this.selectIndex = this.filterBlocks.length - 1;
+        if (this.selectIndex > 0) {
+            this.selectIndex -= 1;
+            this.forceUpdate();
+        }
     }
     componentWillUnmount() {
         if (this.node) this.node.remove()
+    }
+    el: HTMLElement;
+    componentDidMount() {
+        this.el = ReactDOM.findDOMNode(this) as HTMLElement;
+    }
+    componentDidUpdate() {
+        var el = this.el.querySelector('.selected') as HTMLElement;
+        if (el) {
+            el.scrollIntoView();
+        }
     }
     interceptKey(event: KeyboardEvent) {
         switch (event.key) {
