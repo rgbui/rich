@@ -10,20 +10,19 @@ export class Head extends TextSpan {
 @view("/head")
 export class HeadView extends BaseComponent<Head>{
     render() {
-        var style: Record<string, any> = { ...this.block.visibleStyle, fontWeight: 'bold' };
+        var style: Record<string, any> = { ...this.block.visibleStyle, fontWeight: 600 };
         if (this.block.level == 'h1') {
-            style.fontSize = 48
-            style.lineHeight = '48px';
+            style.fontSize = 30
+            style.lineHeight = '39px';
         }
         else if (this.block.level == 'h2') {
             style.fontSize = 24;
-            style.lineHeight = '24px';
+            style.lineHeight = '31.2px';
         }
         else if (this.block.level == 'h3') {
-            style.fontSize = 18;
-            style.lineHeight= '18px';
+            style.fontSize = 20;
+            style.lineHeight = '26px';
         }
-        console.log(style)
         if (this.block.childs.length > 0)
             return <div className='sy-block-text-head' style={style}
                 ref={e => this.block.childsEl = e}><ChildsArea childs={this.block.childs}></ChildsArea></div>
