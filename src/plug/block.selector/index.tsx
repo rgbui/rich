@@ -157,7 +157,10 @@ export class BlockSelector extends React.Component<{ page: Page }> {
     componentDidUpdate() {
         var el = this.el.querySelector('.selected') as HTMLElement;
         if (el) {
-            el.scrollIntoView();
+            el.scrollIntoView({
+                block: "nearest",
+                inline: "nearest"
+            });
         }
     }
     interceptKey(event: KeyboardEvent) {

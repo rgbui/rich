@@ -47,15 +47,15 @@ export class PageView extends Component<{ page: Page }>{
         >
             <PageLayoutView pageLayout={this.page.pageLayout}>
                 <SelectorView selector={this.page.selector}></SelectorView>
+                <div className='sy-page-view-content'
+                    onMouseDown={e => this.page.onMousedown(e.nativeEvent)}
+                ><ChildsArea childs={this.page.views}></ChildsArea>
+                </div>
                 <div className='sy-page-plugs'>
                     <BlockSelector ref={e => this.page.blockSelector = e} page={this.page}></BlockSelector>
                     <ReferenceSelector ref={e => this.page.referenceSelector = e} page={this.page}></ReferenceSelector>
                     <SelectorMenu ref={e => this.page.selectorMenu = e} page={this.page}></SelectorMenu>
                     <TextTool ref={e => this.page.textTool = e} page={this.page}></TextTool>
-                </div>
-                <div className='sy-page-view-content'
-                    onMouseDown={e => this.page.onMousedown(e.nativeEvent)}
-                ><ChildsArea childs={this.page.views}></ChildsArea>
                 </div>
             </PageLayoutView>
         </div>

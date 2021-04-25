@@ -1,22 +1,25 @@
 .sy-block-selector {
 
-    color              : rgb(55, 53, 47);
-    box-sizing         : border-box;
-    border-radius      : 3px;
-    background         : rgb(121, 111, 111);
-    box-shadow         : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
-    overflow           : hidden;
-    width              : 324px;
-    min-width          : 180px;
-    max-width          : calc(100vw - 24px);
-    max-height         : 40vh;
-    position           : fixed;
-    z-index            : 10000;
-    padding            : 10px 0px;
-    overflow-y         : auto;
-    overflow-x         : hidden;
+    color        : rgb(55, 53, 47);
+    box-sizing   : border-box;
+    border-radius: 3px;
+
+    box-shadow      : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+    overflow        : hidden;
+    width           : 324px;
+    min-width       : 180px;
+    max-width       : calc(100vw - 24px);
+    max-height      : 40vh;
+    position        : fixed;
+    z-index         : 100000;
+    padding         : 10px 0px;
+    overflow-y      : auto;
+    overflow-x      : hidden;
+    background-color: #fff;
+
     overscroll-behavior: none;
-    scroll-behavior: smooth; 
+    scroll-behavior    : smooth;
+
     &-group {
         &-head {
             padding: 0px 10px;
@@ -79,7 +82,6 @@
                 color     : rgba(55, 53, 47, 0.6);
                 font-style: normal;
             }
-
             &:hover,
             &.selected {
                 background-color: rgba(55, 53, 47, 0.08);

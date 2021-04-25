@@ -133,42 +133,23 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
         }
     }
     private deleteInputText = '';
-    onInputDeleteText() {
+    async onInputDeleteText() {
         var anchor = this.selector.activeAnchor;
         if (anchor.isText) {
             if (anchor.at == 0) {
-                var block = anchor.block;
-                var prevAnchor = anchor.block.visiblePrevAnchor;
-                if (prevAnchor && prevAnchor.isText) {
-                    var ob = anchor.textEl.getBoundingClientRect();
-                    var nb = prevAnchor.textEl.getBoundingClientRect();
-                    if (Math.abs(nb.left + nb.width - ob.left) < 10) {
-                        this.selector.replaceSelection(prevAnchor);
-                        this.selector.setActiveAnchor(prevAnchor);
-                        this.selector.renderSelection();
-                        if (block.isEmpty && !block.isPart) {
-                            this.selector.page.onObserveUpdate(() => {
-                                var pa = block.parent;
-                                block.onDelete();
-                                pa.deleteLayout();
-                            });
-                            this.selector.page.onRememberUpdate();
-                            this.selector.page.onExcuteUpdate();
-                        }
-                        this.onStartInput(this.selector.activeAnchor);
-                        return this.onInputDeleteText();
-                    }
-                }
                 //说明当前的block已经删完了，此时光标应该向前移,移到上面一行
                 this.selector.onKeyArrow('ArrowLeft');
+                console.log(this.selector.activeAnchor, 'activeAnchor');
+                var block = anchor.block;
                 if (block.isEmpty && !block.isPart) {
-                    this.selector.page.onObserveUpdate(() => {
+                    this.selector.page.onObserveUpdate(async () => {
                         var pa = block.parent;
-                        block.onDelete();
-                        pa.deleteLayout();
+                        await block.onDelete();
+                        await pa.deleteLayout();
                     });
                 }
                 this.onStartInput(this.selector.activeAnchor);
+                this.followAnchor(this.selector.activeAnchor);
                 return;
             }
             else if (anchor.at > 0) {
@@ -192,7 +173,32 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
                         anchor.at -= 1;
                         textNode.remove()
                     }
-                    anchor.block.onInputDeleteText(this.inputTextAt, this.deleteInputText, anchor.at == 0 ? true : false);
+                    if (anchor.at == 0) {
+                        var prevAnchor = anchor.block.visiblePrevAnchor;
+                        if (prevAnchor && prevAnchor.isText) {
+                            var ob = anchor.textEl.getBoundingClientRect();
+                            var nb = prevAnchor.textEl.getBoundingClientRect();
+                            if (Math.abs(nb.left + nb.width - ob.left) < 10) {
+                                this.selector.replaceSelection(prevAnchor);
+                                this.selector.setActiveAnchor(prevAnchor);
+                                this.selector.renderSelection();
+                                var block = anchor.block;
+                                await block.onInputDeleteText(this.inputTextAt, this.deleteInputText, true, async () => {
+                                    if (block.isEmpty && !block.isPart) {
+                                        await this.selector.page.onObserveUpdate(async () => {
+                                            var pa = block.parent;
+                                            await block.delete();
+                                            await pa.deleteLayout();
+                                        });
+                                    }
+                                });
+                                this.onStartInput(this.selector.activeAnchor);
+                                this.followAnchor(this.selector.activeAnchor);
+                                return;
+                            }
+                        }
+                    }
+                    await anchor.block.onInputDeleteText(this.inputTextAt, this.deleteInputText, anchor.at == 0 ? true : false);
                     this.followAnchor(anchor);
                 }
                 else throw new Error('not found text');

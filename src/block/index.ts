@@ -816,23 +816,25 @@ export abstract class Block extends Events {
     }
     private deleteInputTime;
     private currentLastDeleteText: string;
-    onInputDeleteText(from: number, text: string, force: boolean = false) {
+    async onInputDeleteText(from: number, text: string, force: boolean = false, action?: () => Promise<void>) {
         if (this.deleteInputTime) {
             clearTimeout(this.deleteInputTime);
             delete this.deleteInputTime;
         }
-        var excute = () => {
-            this.page.snapshoot.declare(ActionDirective.onInputText);
+        var excute = async () => {
+            var pa = this.page;
+            pa.snapshoot.declare(ActionDirective.onInputText);
             this.content = TextEle.getTextContent(this.textEl);
             var size = this.currentLastDeleteText ? this.currentLastDeleteText.length : 0;
-            this.page.snapshoot.record(OperatorDirective.updateTextDelete, {
+            pa.snapshoot.record(OperatorDirective.updateTextDelete, {
                 blockId: this.id,
                 start: from - size,
                 end: from - text.length,
                 text: text.slice(0, text.length - size)
             });
             this.currentLastDeleteText = text;
-            this.page.snapshoot.store();
+            if (typeof action == 'function') await action();
+            pa.snapshoot.store();
             if (this.deleteInputTime) {
                 clearTimeout(this.deleteInputTime);
                 delete this.deleteInputTime;
@@ -842,8 +844,8 @@ export abstract class Block extends Events {
             * 这里需要将当前的变化通知到外面，
             * 当然用户在输的过程中，该方法会不断的执行，所以通知需要加一定的延迟，即用户停止几秒钟后默认为输入
             */
-        if (force == false) this.deleteInputTime = setTimeout(() => { excute() }, 7e2);
-        else excute();
+        if (force == false) this.deleteInputTime = setTimeout(async () => { await excute() }, 7e2);
+        else await excute();
     }
     onInputStart() {
         if (this.inputTime) {

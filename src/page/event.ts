@@ -168,10 +168,10 @@ export class PageEvent {
             up.view.forceUpdate();
         });
     }
-    onObserveUpdate(fn: () => void) {
+    async onObserveUpdate(fn: () => Promise<void>) {
         this.onRememberUpdate();
         if (typeof fn == 'function') {
-            fn();
+            await fn();
         }
         this.onExcuteUpdate();
     }
