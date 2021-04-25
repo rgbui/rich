@@ -128,7 +128,7 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
                     anchor.block.onInputText(this.inputTextAt, value);
                 }
                 this.followAnchor(anchor);
-                if (value) anchor.textEl.classList.remove('empty');
+                if (value) anchor.removeEmpty();
             }
         }
     }
@@ -139,13 +139,11 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
             if (anchor.at == 0) {
                 //说明当前的block已经删完了，此时光标应该向前移,移到上面一行
                 this.selector.onKeyArrow('ArrowLeft');
-                console.log(this.selector.activeAnchor, 'activeAnchor');
+                console.log(this.selector.activeAnchor,'sa');
                 var block = anchor.block;
                 if (block.isEmpty && !block.isPart) {
                     this.selector.page.onObserveUpdate(async () => {
-                        var pa = block.parent;
                         await block.onDelete();
-                        await pa.deleteLayout();
                     });
                 }
                 this.onStartInput(this.selector.activeAnchor);
@@ -174,6 +172,7 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
                         textNode.remove()
                     }
                     if (anchor.at == 0) {
+                        var block = anchor.block;
                         var prevAnchor = anchor.block.visiblePrevAnchor;
                         if (prevAnchor && prevAnchor.isText) {
                             var ob = anchor.textEl.getBoundingClientRect();
@@ -182,7 +181,7 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
                                 this.selector.replaceSelection(prevAnchor);
                                 this.selector.setActiveAnchor(prevAnchor);
                                 this.selector.renderSelection();
-                                var block = anchor.block;
+
                                 await block.onInputDeleteText(this.inputTextAt, this.deleteInputText, true, async () => {
                                     if (block.isEmpty && !block.isPart) {
                                         await this.selector.page.onObserveUpdate(async () => {
@@ -199,6 +198,9 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
                         }
                     }
                     await anchor.block.onInputDeleteText(this.inputTextAt, this.deleteInputText, anchor.at == 0 ? true : false);
+                    if (anchor.at == 0 && block.isEmpty) {
+                        anchor.setEmpty();
+                    }
                     this.followAnchor(anchor);
                 }
                 else throw new Error('not found text');

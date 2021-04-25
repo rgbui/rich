@@ -141,5 +141,15 @@ export class Anchor {
             delete this.textVisibleCursorTimer;
         }
     }
+    setEmpty() {
+        if (this.textEl) {
+            this.textEl.classList.add('empty');
+        }
+    }
+    removeEmpty() {
+        if (this.textEl) {
+            this.textEl.classList.remove('empty');
+        }
+    }
 }
 

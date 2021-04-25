@@ -123,8 +123,8 @@ export abstract class Block extends Events {
         var keys = this.blockKeys;
         for (let i = keys.length - 1; i >= 0; i--) {
             var bs = this.blocks[keys[i]];
-            bs.each(block => {
-                var r = block.find(predict, false);
+            bs.eachReverse(block => {
+                var r = block.findReverse(predict, false);
                 if (r) { result = r; return false }
                 if (predict(block) == true) {
                     result = block;
@@ -519,7 +519,9 @@ export abstract class Block extends Events {
         }
     }
     get visiblePrevAnchor() {
+        console.log(this, 'this');
         var pre = this.visiblePre;
+        console.log(pre);
         if (pre) return pre.visibleBackAnchor;
     }
     get visibleNextAnchor() {
@@ -864,7 +866,9 @@ export abstract class Block extends Events {
     }
     async onDelete() {
         this.page.snapshoot.declare(ActionDirective.onDelete);
+        var pa = this.parent;
         await this.delete();
+        await pa.deleteLayout();
         this.page.snapshoot.store();
     }
 }
