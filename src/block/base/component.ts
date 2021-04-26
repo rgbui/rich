@@ -24,6 +24,14 @@ export abstract class BaseComponent<T extends Block> extends Component<{ block: 
     didMount() {
 
     }
+    componentWillUnmount() {
+        if (typeof this.willUnmount == 'function') {
+            this.willUnmount();
+        }
+    }
+    willUnmount() {
+
+    }
     get block(): T {
         return this.props.block;
     }
