@@ -2,6 +2,7 @@ import { Page } from ".";
 import { Block } from "../block";
 import { dom } from "../common/dom";
 import { Point } from "../common/point";
+import { ActionDirective } from "../history/declare";
 export class PageEvent {
     private mouseScope: {
         isDown: boolean,
@@ -21,6 +22,7 @@ export class PageEvent {
      */
     onMousedown(this: Page, event: MouseEvent) {
         if (!this.mouseScope) this.mouseScope = {} as any;
+        this.blockSelector.close();
         this.mouseScope.isDown = true;
         this.mouseScope.point = Point.from(event);
         var toEle = event.target as HTMLElement;
@@ -126,6 +128,7 @@ export class PageEvent {
     onBlur(this: Page, event: FocusEvent) {
         if (this.isFocus == true) {
             this.isFocus = false;
+            this.blockSelector.close();
             this.emit('blur', event);
         }
     }
@@ -174,5 +177,19 @@ export class PageEvent {
             await fn();
         }
         this.onExcuteUpdate();
+    }
+    async onAction(this: Page, directive: ActionDirective | string, fn: () => Promise<void>) {
+        await this.onObserveUpdate(async () => {
+            this.snapshoot.declare(directive);
+            if (typeof fn == 'function') {
+                try {
+                    await fn();
+                }
+                catch (ex) {
+                    this.onError(ex);
+                }
+            }
+            this.snapshoot.store();
+        })
     }
 }

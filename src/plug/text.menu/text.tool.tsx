@@ -15,7 +15,6 @@ export class TextTool extends React.Component<{ page: Page }>{
     open(event: MouseEvent) {
         this.point = Point.from(event);
         this.visible = true;
-        console.log('xxx');
         this.forceUpdate();
     }
     close() {

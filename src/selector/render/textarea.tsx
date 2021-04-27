@@ -98,7 +98,7 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
                     //说明用户有插入某个元素的意图 
                     var bound = anchor.view.getBoundingClientRect();
                     var point = new Point(bound.left, bound.top + bound.height);
-                    this.blockSelector.open(point);
+                    this.blockSelector.open(point, value);
                     this.blockSelector.select = async (blockData: Record<string, any>) => {
                         anchor.block.onInputText(this.inputTextAt,
                             value.replace(/(\/、)[^/、]*$/, ""),
@@ -139,7 +139,6 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
             if (anchor.at == 0) {
                 //说明当前的block已经删完了，此时光标应该向前移,移到上面一行
                 this.selector.onKeyArrow('ArrowLeft');
-                console.log(this.selector.activeAnchor,'sa');
                 var block = anchor.block;
                 if (block.isEmpty && !block.isPart) {
                     this.selector.page.onObserveUpdate(async () => {
@@ -237,8 +236,5 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
         this.textarea.style.top = point.y + 'px';
         this.textarea.style.left = point.x + 'px';
         this.textarea.style.height = bound.height + 'px';
-    }
-    onBlockSelectorBlock(block: Record<string, any>) {
-
     }
 }

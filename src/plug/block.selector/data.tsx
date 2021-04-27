@@ -13,7 +13,8 @@ export var BlockSelectorData = [
                 pic: <img src={text} />,
                 url: '/textspan',
                 description: '文本',
-                label: '/文本', labels: []
+                label: '/文本',
+                labels: []
             },
             { text: '大标题', pic: <img src={header} />, url: '/head', description: '文本', label: '/文本', labels: [] },
             { text: '二级标题', pic: <img src={subheader} />, url: '/head?{level:"h2"}', description: '文本', label: '/文本', labels: [] },

@@ -100,19 +100,23 @@ export class BlockSelector extends React.Component<{ page: Page }> {
     get isVisible() {
         return this.visible;
     }
-    open(point: Point) {
+    open(point: Point, text: string) {
         this.pos = point;
         this.selectIndex = 0;
         this.visible = true;
         delete this.select;
-        this.forceUpdate();
+        this.onInputFilter(text);
     }
     onInputFilter(text: string) {
-        var cs = text.match(/(\/|、)[^\s]+$/g);
+        var cs = text.match(/(\/|、)[^\s]*$/g);
         var command = cs[0];
         if (command) {
             this.command = command;
-            this.forceUpdate();
+            if (this.filterBlocks.length == 0) {
+                this.close()
+            }
+            else
+                this.forceUpdate();
         }
         else {
             this.command = '';
@@ -124,8 +128,10 @@ export class BlockSelector extends React.Component<{ page: Page }> {
         return b;
     }
     close() {
-        this.visible = false;
-        this.forceUpdate();
+        if (this.visible == true) {
+            this.visible = false;
+            this.forceUpdate();
+        }
     }
     /**
      * 向上选择内容

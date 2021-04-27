@@ -318,21 +318,26 @@ export abstract class Block extends Events {
             prevBlockId: block.prev ? block.prev.id : undefined,
             blockId: block.id
         });
-
         this.page.onAddUpdate(this);
-        // if (block.el) {
-        //     block.el.remove();
-        //     if (this.childs.length == 1) {
-        //         if (this.childsEl) this.childsEl.appendChild(block.el)
-        //         else throw new Error('not found block childs el');
-        //     }
-        //     else {
-        //         var pre = block.prev;
-        //         var next = block.next;
-        //         if (next) next.el.parentNode.insertBefore(block.el, next.el);
-        //         else if (pre) dom(block.el).insertAfter(pre.el);
-        //     }
-        // }
+    }
+    updateProps(props: Record<string, any>) {
+        var oldValue: Record<string, any> = {};
+        var newValue: Record<string, any> = {};
+        for (let prop in props) {
+            if (!util.valueIsEqual(this[prop], props[prop])) {
+                oldValue[prop] = util.clone(this[prop]);
+                newValue[prop] = util.clone(props[prop]);
+                this[prop] = util.clone(props[prop]);
+            }
+        }
+        if (Object.keys(oldValue).length > 0) {
+            this.page.onAddUpdate(this);
+            this.page.snapshoot.record(OperatorDirective.updateProp, {
+                blockId: this.id,
+                old: oldValue,
+                new: newValue
+            });
+        }
     }
     /***
     * 查找当前容器里面首位的内容元素，
@@ -869,6 +874,11 @@ export abstract class Block extends Events {
         var pa = this.parent;
         await this.delete();
         await pa.deleteLayout();
+        this.page.snapshoot.store();
+    }
+    onUpdateProps(props: Record<string, any>) {
+        this.page.snapshoot.declare(ActionDirective.onUpdateProps);
+        this.updateProps(props);
         this.page.snapshoot.store();
     }
 }
