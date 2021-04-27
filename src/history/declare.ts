@@ -6,7 +6,8 @@ export enum ActionDirective {
     onMoveBlock,
     onDelete,
     onUndo,
-    onRedo
+    onRedo,
+    onUpdateProps
 }
 
 export enum OperatorDirective {

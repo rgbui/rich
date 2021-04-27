@@ -17,7 +17,7 @@ export class HistorySnapshoot extends Events {
         this.page = page;
         this.historyRecord = new HistoryRecord();
     }
-    declare(directive: ActionDirective) {
+    declare(directive: ActionDirective | string) {
         if (this.action) {
             throw 'the last action is null,but not ,why happend?'
         }
