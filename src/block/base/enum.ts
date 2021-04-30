@@ -52,14 +52,14 @@ export enum Valign {
     middle
 }
 
-export enum BlockState {
-    none,
-    hover,
-    focus,
-    placeholder,
-    input,
-    click,
-    contextmenu,
-    longPress,
-    dblclick
-}
+// export enum BlockState {
+//     none,
+//     hover,
+//     focus,
+//     placeholder,
+//     input,
+//     click,
+//     contextmenu,
+//     longPress,
+//     dblclick
+// }

@@ -1,13 +1,15 @@
-/****
- * 控件的样式
- * 里面的图片，和字体都会涉及到引用其它文件的可能性
- * 
- */
-export type FontStyle = {
+
+
+export abstract class BlockCss {
+    abled: boolean;
+    cssName: string;
+}
+
+export class FontCss extends BlockCss {
     fontFamily: string;
     color: string;
-    fontSize: number,
-    lineHeight: number,
+    fontSize: number;
+    lineHeight: number;
     fontStyle: 'normail' | 'italic';
     fontWeight: 'normal' | 'bold' | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
     letterSpacing: 'normal' | number;
@@ -20,8 +22,9 @@ export type FontStyle = {
      */
     writingMode: 'lr-tb' | 'tb-rl'
 }
-export type FillStyle = {
-    abled: boolean,
+
+export class FillCss extends BlockCss {
+
     mode: 'color' | 'image' | 'linear-gradient' | 'radial-gradient';
     /***
      * background-color:color
@@ -40,40 +43,40 @@ export type FillStyle = {
     shape: "circle" | 'ellipse';
     size: 'farthest-corner' | 'closest-side' | 'closest-corner' | 'farthest-side';
     position: { x: number, y: number }
-}[]
-export type BorderStyle = {
-    top: { width: number, color: string, style: "sold" | 'none' | 'dashed', abled: boolean },
-    left: { width: number, color: string, style: "sold" | 'none' | 'dashed', abled: boolean },
-    right: { width: number, color: string, style: "sold" | 'none' | 'dashed', abled: boolean },
-    bottom: { width: number, color: string, style: "sold" | 'none' | 'dashed', abled: boolean }
 }
-export type RadiusStyle = {
+export class BorderCss extends BlockCss {
+    top: { width: number, color: string, style: "sold" | 'none' | 'dashed', abled: boolean };
+    left: { width: number, color: string, style: "sold" | 'none' | 'dashed', abled: boolean };
+    right: { width: number, color: string, style: "sold" | 'none' | 'dashed', abled: boolean };
+    bottom: { width: number, color: string, style: "sold" | 'none' | 'dashed', abled: boolean };
+}
+export class RadiusCss extends BlockCss {
     topLeft: number;
     topRight: number;
     bottomLeft: number;
-    bottomRight: number
+    bottomRight: number;
 }
-export type ShadowStyle = {
-    abled: boolean,
+
+export class ShadowCss extends BlockCss {
+    abled: boolean;
     mode: 'inner' | 'outer';
-    x: number, y: number, spread?: number, blur: number, color: number
-}[]
-/***
- * https://www.runoob.com/cssref/css3-pr-filter.html
- */
-export type FilterStyle = {
+    x: number;
+    y: number;
+    spread?: number;
+    blur: number;
+    color: number
+}
+
+export class FilterCss extends BlockCss {
     abled: boolean;
     name: string;
     value: any;
-}[]
+}
 
-/***
- * https://www.jianshu.com/p/8a33214a1b26
- */
-export type TransformStyle = {
+export class TransformCss extends BlockCss {
     rotate: number;
-    scale: { x: number, y: number },
-    translate: { x: number, y: number },
-    skew: { x: number, y: number },
+    scale: { x: number, y: number };
+    translate: { x: number, y: number };
+    skew: { x: number, y: number };
     origin: { x: number | string, y: number | string }
 }

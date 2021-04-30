@@ -5,7 +5,7 @@ import { Page } from "../page";
 import { Anchor } from "../selector/anchor";
 import { BlockFactory } from "./factory/block.factory";
 import { BlockAppear, BlockDisplay, Locate } from "./base/enum";
-import { BlockStyle } from "./style/index";
+import { Pattern } from "./pattern/index";
 import { BaseComponent } from "./base/component";
 import { TextEle } from "../common/text.ele";
 import { dom } from "../common/dom";
@@ -18,7 +18,7 @@ export abstract class Block extends Events {
     page: Page;
     id: string;
     date: number;
-    styles: BlockStyle[] = [];
+    pattern: Pattern;
     blocks: Record<string, Block[]> = { childs: [] };
     get childs() {
         return this.blocks.childs;
@@ -33,10 +33,6 @@ export abstract class Block extends Events {
             }
         }
         return false;
-    }
-    private styleId: string;
-    get style() {
-        return this.styles.find(x => x.id == this.styleId);
     }
     get parentBlocks() {
         if (this.parent) {
@@ -360,14 +356,14 @@ export abstract class Block extends Events {
                 else if (n == 'styles') continue;
                 this[n] = data[n];
             }
-            if (Array.isArray(data.styles)) {
-                this.styles = [];
-                await data.styles.eachAsync(async (style) => {
-                    var st = new BlockStyle(this);
-                    await st.load(style);
-                    this.styles.push(st)
-                })
-            }
+            // if (Array.isArray(data.styles)) {
+            //     this.patterns= [];
+            //     await data.styles.eachAsync(async (style) => {
+            //         var st = new Pattern(this);
+            //         await st.load(style);
+            //         this.patterns.push(st)
+            //     })
+            // }
             if (typeof data.blocks == 'object') {
                 for (var n in data.blocks) {
                     var childs = data.blocks[n];
@@ -386,7 +382,7 @@ export abstract class Block extends Events {
     }
     async get() {
         var json: Record<string, any> = { id: this.id, url: this.url };
-        json.styles = await this.styles.asyncMap(async x => await x.get());
+        // json.patterns = await this.patterns.asyncMap(async x => await x.get());
         json.blocks = {};
         for (let b in this.blocks) {
             json.blocks[b] = await this.blocks[b].asyncMap(async x => await x.get());
