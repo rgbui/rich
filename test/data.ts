@@ -95,6 +95,7 @@ export var data = {
                         blocks: {
                             childs: [{
                                 url: '/table',
+                                cols: [{ width: 100 }, { width: 100 }, { width: 200 }],
                                 blocks: {
                                     childs: [
                                         {

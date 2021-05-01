@@ -45,8 +45,13 @@ export class Page extends Events {
                 letterSpacing: 0,
                 fontSize: 14,
                 fontStyle: 'normail'
-            }
+            } as any
         });
+        this.cfm.loadWorkspaceConfig({
+            fontCss: {
+
+            } as any
+        })
         this.selector = new Selector(this);
         this.snapshoot = new HistorySnapshoot(this);
         this.snapshoot.on('history', (action) => {

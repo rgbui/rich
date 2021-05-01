@@ -1,11 +1,31 @@
 .sy-block-table {
-    border-collapse: collapse;
-    font-size: inherit;
-    >tbody {
-        >tr {
-            >td {
-                padding: 10px;
-                border : 1px solid #ddd;
+    display : block;
+    position: relative;
+    overflow: auto;
+
+    &-subline {
+        display   : none;
+        position  : absolute;
+        top       : 0px;
+        left      : 0px;
+        width     : 10px;
+        cursor    : col-resize;
+        background: rgba(55, 53, 47, 0.16);
+    }
+
+    table {
+        border-collapse: collapse;
+        font-size      : inherit;
+        border-color   : transparent;
+        border-spacing : 0px;
+        text-indent    : 0px;
+
+        >tbody {
+            >tr {
+                >td {
+                    padding: 10px;
+                    border : 1px solid #ddd;
+                }
             }
         }
     }

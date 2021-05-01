@@ -24,6 +24,7 @@ export class ConfigurationManager {
         }
     }
     loadWorkspaceConfig(config: Partial<WorkspaceConfig>) {
+        console.log('c',config);
         if (config) {
             this.workspaceConfig = { fontCss: new FontCss() } as any;
             for (var n in config) {
@@ -32,6 +33,7 @@ export class ConfigurationManager {
                 }
             }
         }
+        console.log(this.workspaceConfig);
     }
     get fontCss() {
         return this.workspaceConfig.fontCss.overlay(this.pageConfig.fontCss as FontCss);
