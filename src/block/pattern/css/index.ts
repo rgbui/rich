@@ -39,9 +39,9 @@ export abstract class BlockCss {
         return BlockCss.createBlockCss(json) as any;
     }
     static createBlockCss(css: Record<string, any>) {
-        if (typeof css.name == 'string') css.name = BlockCssName[css.name];
-        if (typeof css.name != 'number') throw new Error('not found block css name' + css.name);
-        switch (css.name) {
+        if (typeof css.cssName == 'string') css.cssName = BlockCssName[css.cssName];
+        if (typeof css.cssName != 'number') throw new Error('not found block css name' + css.cssName);
+        switch (css.cssName) {
             case BlockCssName.font:
                 return (new FontCss(css));
             case BlockCssName.fill:
