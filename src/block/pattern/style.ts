@@ -1,11 +1,17 @@
-import { BlockCss } from "./css";
+import { util } from "../../util/util";
+import { BlockCss, BlockCssName, BorderCss, FillCss, FontCss, RadiusCss, ShadowCss, TransformCss } from "./css";
 import { CssSelectorType } from "./type";
 
 export class BlockStyleCss {
+    constructor(options: Record<string, any>) {
+        if (typeof options == 'object') {
+            this.load(options);
+        }
+    }
     /**
      * 是否为某个部位的样式
      */
-    partName?: string;
+    part?: string;
     selector: CssSelectorType;
     id: string;
     date: number;
@@ -15,4 +21,30 @@ export class BlockStyleCss {
      */
     name: string;
     cssList: BlockCss[] = [];
+    depend: { blockId: string, styleId: string };
+    load(options) {
+        for (var n in options) {
+            if (n == 'cssList') {
+                this.cssList = [];
+                options[n].each(css => {
+                    this.cssList.push(BlockCss.createBlockCss(css));
+                })
+            }
+            else {
+                this[n] = util.clone(options[n]);
+            }
+        }
+    }
+    get() {
+        var json: Record<string, any> = {
+            cssList: this.cssList.map(x => x.get()),
+            name: this.name,
+            date: this.date,
+            id: this.id,
+            depend: util.clone(this.depend),
+            selector: this.selector,
+            part: this.part
+        };
+        return json;
+    }
 }
