@@ -36,9 +36,9 @@ export class PageView extends Component<{ page: Page }>{
     }
     render() {
         var pageStyle: Record<string, any> = {
-            lineHeight: this.page.config.lineHeight + 'px',
-            letterSpacing: this.page.config.letterSpaceing + 'px',
-            fontSize: this.page.config.fontSize + 'px'
+            lineHeight: this.page.cfm.fontCss.lineHeight + 'px',
+            letterSpacing: this.page.cfm.fontCss.letterSpacing+ 'px',
+            fontSize: this.page.cfm.fontCss.fontSize + 'px'
         }
         return <div className='sy-page-view' style={pageStyle} tabIndex={1}
             onKeyDown={e => this.page.onKeydown(e.nativeEvent)}

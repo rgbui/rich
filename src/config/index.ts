@@ -1,25 +1,39 @@
 
-/***
- * 页面的配置
- */
-
-import { util } from "../util/util";
 
 
-
-export class PageConfig {
-    fontSize: number = 14;
-    /**
-     * 文字默认的行高
-     */
-    lineHeight: number = 20;
-    /**
-     * 文字的字间距
-     */
-    letterSpaceing: number = 0;
-    load(props: Record<string, any>) {
-        for (var n in props) {
-            this[n] = util.clone(props[n]);
+import { FontCss } from "../block/pattern/css";
+import { Page } from "../page";
+import { PageConfig, WorkspaceConfig } from "./workspace";
+export class ConfigurationManager {
+    private page: Page;
+    constructor(page: Page) {
+        this.page = page;
+    }
+    pageConfig: PageConfig;
+    workspaceConfig: WorkspaceConfig;
+    loadPageConfig(config: Partial<PageConfig>) {
+        if (config) {
+            this.pageConfig = {
+                fontCss: new FontCss()
+            } as any;
+            for (var n in config) {
+                if (n == 'fontCss') {
+                    this.pageConfig.fontCss = new FontCss(config[n]);
+                }
+            }
         }
+    }
+    loadWorkspaceConfig(config: Partial<WorkspaceConfig>) {
+        if (config) {
+            this.workspaceConfig = { fontCss: new FontCss() } as any;
+            for (var n in config) {
+                if (n == 'fontCss') {
+                    this.workspaceConfig.fontCss = new FontCss(config[n]);
+                }
+            }
+        }
+    }
+    get fontCss() {
+        return this.workspaceConfig.fontCss.overlay(this.pageConfig.fontCss as FontCss);
     }
 }

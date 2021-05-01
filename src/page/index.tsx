@@ -5,7 +5,6 @@ import { Events } from "../util/events";
 import { util } from "../util/util";
 import { BlockFactory } from "../block/factory/block.factory";
 import { View } from "../block/base/common/view";
-import { PageConfig } from '../config';
 import { Selector } from '../selector';
 import { PageLayout } from "./layout/index";
 import { PageEvent } from "./event";
@@ -18,6 +17,8 @@ import { BlockSelector } from '../plug/block.selector';
 import { ReferenceSelector } from '../plug/reference.selector';
 import { SelectorMenu } from '../plug/block.menu/menu';
 import { TextTool } from '../plug/text.menu/text.tool';
+import { ConfigurationManager } from '../config';
+import { PageConfig, WorkspaceConfig } from '../config/workspace';
 export class Page extends Events {
     el: HTMLElement;
     id: string;
@@ -37,7 +38,15 @@ export class Page extends Events {
         this.init();
     }
     private async init() {
-        this.config = new PageConfig();
+        this.cfm = new ConfigurationManager(this);
+        this.cfm.loadPageConfig({
+            fontCss: {
+                lineHeight: 20,
+                letterSpacing: 0,
+                fontSize: 14,
+                fontStyle: 'normail'
+            }
+        });
         this.selector = new Selector(this);
         this.snapshoot = new HistorySnapshoot(this);
         this.snapshoot.on('history', (action) => {
@@ -46,12 +55,7 @@ export class Page extends Events {
         });
         await this.emit('init');
     }
-    config: PageConfig;
-    async loadPageConfig(config: Partial<PageConfig>) {
-        for (var n in config) {
-            this[n] = config[n];
-        }
-    }
+    cfm: ConfigurationManager;
     async load(data: Record<string, any>) {
         await this.emit('loading');
         for (var n in data) {
@@ -81,6 +85,10 @@ export class Page extends Events {
             return await x.get()
         })
         return json;
+    }
+    loadConfig(pageConfig: PageConfig, workspaceConfig: WorkspaceConfig) {
+        if (pageConfig) this.cfm.loadPageConfig(pageConfig);
+        if (workspaceConfig) this.cfm.loadPageConfig(workspaceConfig);
     }
     pageLayout: PageLayout;
     views: View[] = [];
