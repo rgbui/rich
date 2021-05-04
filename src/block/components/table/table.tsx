@@ -4,6 +4,8 @@ import React from "react";
 import { url, view } from "../../factory/observable";
 import "./style.less";
 import { BlockAppear, BlockDisplay } from "../../base/enum";
+import { Dragger } from "../../../common/dragger";
+import { util } from "../../../util/util";
 @url('/table')
 export class Table extends Block {
     appear = BlockAppear.layout;
@@ -33,23 +35,51 @@ export class TableView extends BaseComponent<Table>{
             this.subline.style.display = 'block';
             this.subline.style.left = (tableRange.left + w - eleRange.left + scrollLeft - gap) + 'px';
             this.subline.style.height = tableRange.height + 'px';
+            this.subline.setAttribute('data-index', (index - 1).toString());
         }
         else {
             this.subline.style.display = 'none';
         }
     }
-    mousedownSubLine(event: MouseEvent) {
-
+    didMount() {
+        this.sublineDragger = new Dragger(this.subline);
+        this.sublineDragger.bind();
+        var self = this;
+        this.sublineDragger.moveDown = (event) => {
+            event.stopPropagation();
+            self.sublineDragger.data.colIndex = parseInt(self.subline.getAttribute('data-index'));
+            self.sublineDragger.data.colEle = self.table.querySelector('colgroup').children[self.sublineDragger.data.colIndex];
+            self.sublineDragger.data.colWidth = self.sublineDragger.data.col.width;
+        };
+        this.sublineDragger.move = (fromEvent, currentEvent) => {
+            var dx = currentEvent.x - fromEvent.x;
+            var w = self.sublineDragger.data.colWidth + dx;
+            w = Math.max(w, 20);
+            self.sublineDragger.data.colEle.style.width = w + 'px';
+            self.sublineDragger.data.colEle.style.minWidth = w + 'px';
+        };
+        this.sublineDragger.moveEnd = (fromEvent, currentEvent) => {
+            var dx = currentEvent.x - fromEvent.x;
+            var w = self.sublineDragger.data.colWidth + dx;
+            w = Math.max(w, 20);
+            self.sublineDragger.data.colEle.style.width = w + 'px';
+            self.sublineDragger.data.colEle.style.minWidth = w + 'px';
+            var cols = util.clone(self.block.cols);
+            var col = cols[self.sublineDragger.data.colIndex];
+            col.width = w;
+            self.block.onUpdateProps({ cols });
+        }
     }
-    _mousemoveSubLine(event: MouseEvent) {
-
+    willUnmount() {
+        this.sublineDragger.off();
     }
+    sublineDragger: Dragger;
     table: HTMLTableElement;
     subline: HTMLElement;
     render() {
         return <div className='sy-block-table' style={this.block.visibleStyle}
             onMouseMove={e => this.mousemove(e.nativeEvent)}>
-            <div className='sy-block-table-subline' onMouseDown={e => this.mousedownSubLine(e.nativeEvent)} ref={e => this.subline = e}></div>
+            <div className='sy-block-table-subline' ref={e => this.subline = e}></div>
             <table ref={e => this.table = e} >
                 <colgroup>
                     {this.block.cols.map((col, index) => {

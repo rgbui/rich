@@ -47,7 +47,7 @@ export class Point {
     }
     remoteBy(point: Point, dis: number) {
         if (point) {
-            if (Math.abs(point.x - this.x) > dis && Math.abs(point.y - this.y) > dis) {
+            if (Math.abs(point.x - this.x) > dis || Math.abs(point.y - this.y) > dis) {
                 return true;
             }
         }
