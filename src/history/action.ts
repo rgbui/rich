@@ -19,12 +19,12 @@ export class UserAction {
      * 系统时间，用户调整用户的操作指令
      */
     systemClock: number;
-    directive: ActionDirective|string;
+    directive: ActionDirective | string;
     operators: UserOperator[] = [];
     constructor() {
         this.id = util.guid();
     }
     toString() {
-        return `[${this.endDate - this.startDate}ms]${this.user.name}:${ActionDirective[this.directive]}${this.operators.map(oper => oper.toString())}`
+        return `[${this.endDate - this.startDate}ms]${this.user.name}:${typeof this.directive == 'string' ? this.directive : ActionDirective[this.directive]}${this.operators.map(oper => oper.toString())}`
     }
 }

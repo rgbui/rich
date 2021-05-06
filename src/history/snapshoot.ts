@@ -73,4 +73,7 @@ export interface HistorySnapshoot {
      * @param data 
      */
     record(directive: OperatorDirective.updateTextDelete, data: { blockId: string, start: number, end: number, text: string });
+    record(directive: OperatorDirective.arrayPropInsert, data: { blockId: string, at: number, data: Record<string, any>, propKey: string });
+    record(directive: OperatorDirective.arrayPropRemove, data: { blockId: string, at: number, data: Record<string, any>, propKey: string });
+    record(directive: OperatorDirective.arrayPropUpdate, data: { blockId: string, at: number, old: Record<string, any>, new: Record<string, any>, propKey: string });
 }

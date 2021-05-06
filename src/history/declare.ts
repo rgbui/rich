@@ -30,6 +30,13 @@ export enum OperatorDirective {
      * 更新属性
      */
     updateProp,
-    append
+    append,
+    /**
+     * 数组属性发生变化
+     */
+    arrayPropInsert,
+    arrayPropUpdate,
+    arrayPropRemove,
+
 }
 
