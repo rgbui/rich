@@ -1,7 +1,7 @@
 import { Block } from "../..";
 import { BaseComponent } from "../../base/component";
 import React from 'react';
-import { TableMeta } from "./meta";
+import { TableMeta, TableMetaFieldType } from "./meta";
 import { util } from "../../../util/util";
 import "./style.less";
 import { url, view } from "../../factory/observable";
@@ -9,6 +9,7 @@ import { BlockAppear, BlockDisplay } from "../../base/enum";
 import { BlockFactory } from "../../factory/block.factory";
 import { TableStoreRow } from "./row";
 import { ChildsArea } from "../../base/appear";
+import { OperatorDirective } from "../../../history/declare";
 
 /***
  * 数据总共分三部分
@@ -66,6 +67,32 @@ export class TableStore extends Block {
     }
     appear = BlockAppear.layout;
     display = BlockDisplay.block;
+    onAddColumn(at?: number) {
+        this.page.snapshoot.declare('tablestore.addColumn');
+        var name = this.meta.createNewName();
+        var text = this.meta.createNewText();
+        var tf = TableMeta.createFieldMeta({
+            name,
+            type: TableMetaFieldType.string,
+            text
+        });
+        this.page.snapshoot.record(OperatorDirective.arrayPropInsert, {
+            blockId: this.id,
+            propKey: 'meta',
+            data: tf.get(),
+            at: this.meta.cols.length
+        });
+        this.meta.cols.push(tf);
+        this.page.snapshoot.record(OperatorDirective.arrayPropInsert, {
+            blockId: this.id,
+            propKey: 'cols',
+            data: { name, width: 100 },
+            at: this.cols.length
+        });
+        this.cols.push({ name, width: 100 });
+        this.page.snapshoot.store();
+        this.view.forceUpdate();
+    }
 }
 @view('/table/store')
 export class TableStoreView extends BaseComponent<TableStore>{

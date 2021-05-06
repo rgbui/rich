@@ -6,9 +6,22 @@
         flex-wrap      : nowrap;
 
         &-th {
-            border : 1px solid #ddd;
-            display: inline-block;
-            padding: 10px;
+            border         : 1px solid #ddd;
+            display        : inline-flex;
+            justify-content: flex-start;
+            align-items    : center;
+            padding        : 10px;
+
+            >svg {
+                width              : 14px;
+                height             : 14px;
+                display            : block;
+                fill               : rgba(55, 53, 47, 0.4);
+                flex-shrink        : 0;
+                backface-visibility: hidden;
+                margin-right: 10px;
+            }
+             
         }
 
         &-th+&-th {

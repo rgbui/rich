@@ -29,7 +29,6 @@ export class Dragger {
             self.isDown = true;
             self.isMove = false;
             self.mousedownEvent = event;
-            console.log(self);
             if (typeof self.mousedown == 'function') self.mousedown(event);
         }));
         document.addEventListener('mousemove', (this._mousemove = (event) => {

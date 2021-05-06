@@ -77,7 +77,7 @@ export var data = {
                                     meta: {
                                         cols: [
                                             { name: 's1', text: '姓名', type: 'string' },
-                                            { name: 's2', text: "年龄", type: 'string' }]
+                                            { name: 's2', text: "年龄", type: 'number' }]
                                     },
                                     data: [{ s1: "阚海", s2: 32 }, { s1: '', s2: 24 }]
                                 }

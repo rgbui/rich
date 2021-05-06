@@ -12,7 +12,7 @@ export class TableStoreRow extends Block {
     appear = BlockAppear.layout;
     display = BlockDisplay.block;
     get isRow() { return true }
-    partName='row';
+    partName = 'row';
     get tableStore(): TableStore {
         return this.parent as TableStore;
     }
@@ -33,6 +33,9 @@ export class TableRowView extends BaseComponent<TableStoreRow>{
     render() {
         return <div className='sy-tablestore-body-row'>
             <ChildsArea childs={this.block.childs}></ChildsArea>
+            <div className='sy-tablestore-body-row-cell' style={{ width: 100 }}>
+
+            </div>
         </div>
     }
 }

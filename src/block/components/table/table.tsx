@@ -49,7 +49,7 @@ export class TableView extends BaseComponent<Table>{
             event.stopPropagation();
             self.sublineDragger.data.colIndex = parseInt(self.subline.getAttribute('data-index'));
             self.sublineDragger.data.colEle = self.table.querySelector('colgroup').children[self.sublineDragger.data.colIndex];
-            self.sublineDragger.data.colWidth = self.sublineDragger.data.col.width;
+            self.sublineDragger.data.colWidth = self.block.cols[self.sublineDragger.data.colIndex].width;
         };
         this.sublineDragger.move = (fromEvent, currentEvent) => {
             var dx = currentEvent.x - fromEvent.x;

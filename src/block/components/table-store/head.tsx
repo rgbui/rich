@@ -6,6 +6,8 @@ import React from "react";
 import { ChildsArea, TextArea } from "../../base/appear";
 import { TableStore } from "./table";
 import { TextEle } from "../../../common/text.ele";
+import plus from "../../../assert/svg/plus.svg";
+import { Icon } from "../../../component/icon";
 @url('/tablestore/head')
 export class TableStoreHead extends Block {
     appear = BlockAppear.layout;
@@ -21,6 +23,10 @@ export class TableStoreHeadView extends BaseComponent<TableStoreHead>{
     render() {
         return <div className='sy-tablestore-head' >
             <ChildsArea childs={this.block.blocks.childs} />
+            <div className='sy-tablestore-head-th'
+                style={{ width: 100 }} onClick={e => this.block.tableStore.onAddColumn()}>
+                <Icon icon={plus}></Icon>
+            </div>
         </div>
     }
 }

@@ -6,6 +6,7 @@ export enum TableMetaFieldType {
     number,
     date,
     select,
+    multipleSelect,
     users,
     file,
     url,
@@ -35,6 +36,31 @@ export class TableMeta {
         var json: Record<string, any> = { id: this.id, date: this.date };
         json.cols = this.cols.map(g => g.get());
         return json;
+    }
+    createNewName() {
+        var i = 1;
+        var prefix = 's';
+        while (true) {
+            if (this.cols.exists(c => c.name == prefix + i)) {
+                i += 1;
+            }
+            else return prefix + i;
+        }
+    }
+    createNewText(){
+        var i = 1;
+        var prefix = '列';
+        while (true) {
+            if (this.cols.exists(c => c.text== prefix + i)) {
+                i += 1;
+            }
+            else return prefix + i;
+        }
+    }
+    static createFieldMeta(fieldMeta: Partial<TableFieldMeta>) {
+        var tf = new TableFieldMeta();
+        tf.load(fieldMeta);
+        return tf;
     }
 }
 export class TableFieldMeta {

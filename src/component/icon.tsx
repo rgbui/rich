@@ -5,7 +5,7 @@ export function Icon(props: {
     click?: (e: MouseEvent) => void,
     mousedown?: (e: MouseEvent) => void,
     rotate?: number,
-    size?: number,
+    size?: number | 'none',
     className?: string[] | string
 }) {
     if (typeof props.icon == 'undefined' || !props.icon) {
@@ -24,10 +24,10 @@ export function Icon(props: {
     var style: Record<string, any> = {};
     if (typeof props.icon == 'string') {
         Object.assign(style, {
-            fontSize: 20,
-            lineHeight: '20px',
-            width: 20 || props.size,
-            height: 20 || props.size
+            fontSize: props.size == 'none' ? undefined : 20,
+            lineHeight: props.size == 'none' ? undefined : '20px',
+            width: props.size == 'none' ? undefined : 20 || props.size,
+            height: props.size == 'none' ? undefined : 20 || props.size
         });
         return <i className={classList.join(" ")}
             onClick={e => { props.click ? props.click(e.nativeEvent) : undefined; }}
@@ -36,8 +36,8 @@ export function Icon(props: {
     }
     else {
         Object.assign(style, {
-            width: 20 || props.size,
-            height: 20 || props.size
+            width: props.size == 'none' ? undefined : 20 || props.size,
+            height: props.size == 'none' ? undefined : 20 || props.size
         })
         return <props.icon className={classList.join(" ")}
             onClick={e => { props.click ? props.click(e.nativeEvent) : undefined; }}

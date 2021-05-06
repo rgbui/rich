@@ -873,8 +873,10 @@ export abstract class Block extends Events {
         this.page.snapshoot.store();
     }
     onUpdateProps(props: Record<string, any>) {
+        this.page.onRememberUpdate();
         this.page.snapshoot.declare(ActionDirective.onUpdateProps);
         this.updateProps(props);
         this.page.snapshoot.store();
+        this.page.onExcuteUpdate();
     }
 }

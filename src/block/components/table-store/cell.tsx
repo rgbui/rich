@@ -13,7 +13,7 @@ export class TableStoreCell extends Block {
     display = BlockDisplay.block;
     appear = BlockAppear.layout;
     name: string;
-    partName='cell';
+    partName = 'cell';
     get tableRow(): TableStoreRow {
         return this.parent as TableStoreRow;
     }
@@ -43,14 +43,14 @@ export class TableStoreCell extends Block {
         if (cellContent)
             this.blocks.childs.push(cellContent);
     }
-    get isCol(){
+    get isCol() {
         return true;
     }
 }
 @view('/tablestore/cell')
 export class TableStoreCellView extends BaseComponent<TableStoreCell>{
     render() {
-        return <div className='sy-tablestore-body-row-cell'  ref={e => this.block.childsEl = e} style={{ width: this.block.col.width + '%' }}>
+        return <div className='sy-tablestore-body-row-cell' ref={e => this.block.childsEl = e} style={{ width: this.block.col.width }}>
             <ChildsArea childs={this.block.childs}></ChildsArea>
         </div>
     }
