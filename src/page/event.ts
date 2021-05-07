@@ -26,6 +26,7 @@ export class PageEvent {
         this.mouseScope.isDown = true;
         this.mouseScope.point = Point.from(event);
         var toEle = event.target as HTMLElement;
+        console.log(this.mouseScope);
         var blockEle = dom(toEle).closest(x => (x as any).block ? true : false);
         if (blockEle) {
             var block = (blockEle as any).block as Block;
@@ -57,7 +58,7 @@ export class PageEvent {
                     }
                 }
             }
-            else if (Math.abs(event.x - this.mouseScope.point.x) > 10 || Math.abs(event.y - this.mouseScope.point.y) > 10) {
+            else if (this.mouseScope.point.remoteBy(Point.from(event), 10)) {
                 this.mouseScope.isMove = true;
             }
         }

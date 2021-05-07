@@ -15,6 +15,7 @@ export class Table extends Block {
 @view('/table')
 export class TableView extends BaseComponent<Table>{
     mousemove(event: MouseEvent) {
+        if(this.sublineDragger.isMove==true)return;
         var tableRange = this.table.getBoundingClientRect();
         var eleRange = this.block.el.getBoundingClientRect();
         var scrollLeft = this.block.el.scrollLeft;
@@ -45,8 +46,10 @@ export class TableView extends BaseComponent<Table>{
         this.sublineDragger = new Dragger(this.subline);
         this.sublineDragger.bind();
         var self = this;
-        this.sublineDragger.moveDown = (event) => {
+        this.sublineDragger.mousedown = (event) => {
             event.stopPropagation();
+        }
+        this.sublineDragger.moveDown = (event) => {
             self.sublineDragger.data.colIndex = parseInt(self.subline.getAttribute('data-index'));
             self.sublineDragger.data.colEle = self.table.querySelector('colgroup').children[self.sublineDragger.data.colIndex];
             self.sublineDragger.data.colWidth = self.block.cols[self.sublineDragger.data.colIndex].width;

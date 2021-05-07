@@ -9,8 +9,8 @@ export class Dragger {
     }
     data: Record<string, any> = {};
     private el: HTMLElement;
-    private isDown: boolean;
-    private isMove: boolean;
+    public isDown: boolean;
+    public isMove: boolean;
     private moveMinDistance: number = 5;
     private mousedownEvent: MouseEvent;
     private _mousedown: (event: MouseEvent) => void;
