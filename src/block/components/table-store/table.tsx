@@ -10,6 +10,7 @@ import { BlockFactory } from "../../factory/block.factory";
 import { TableStoreRow } from "./row";
 import { ChildsArea } from "../../base/appear";
 import { OperatorDirective } from "../../../history/declare";
+import { TableStoreHead } from "./head";
 
 /***
  * 数据总共分三部分
@@ -67,7 +68,8 @@ export class TableStore extends Block {
     }
     appear = BlockAppear.layout;
     display = BlockDisplay.block;
-    onAddColumn(at?: number) {
+    async onAddColumn(at?: number) {
+        if (typeof at == 'undefined') at = this.cols.length;
         this.page.snapshoot.declare('tablestore.addColumn');
         var name = this.meta.createNewName();
         var text = this.meta.createNewText();
@@ -87,9 +89,13 @@ export class TableStore extends Block {
             blockId: this.id,
             propKey: 'cols',
             data: { name, width: 100 },
-            at: this.cols.length
+            at
         });
         this.cols.push({ name, width: 100 });
+        await (this.blocks.childs.first() as TableStoreHead).appendTh(at);
+        await this.blocks.rows.asyncMap(async (row: TableStoreRow) => {
+            row.appendCell(at);
+        })
         this.page.snapshoot.store();
         this.view.forceUpdate();
     }
@@ -108,9 +114,12 @@ export class TableStoreView extends BaseComponent<TableStore>{
     }
     render() {
         return <div className='sy-tablestore'>
-            {this.renderHead()}
-            {this.renderBody()}
-            {this.renderFooter()}
+            <div className='sy-tablestore-col-resize'></div>
+            <div className='sy-table-store-content'>
+                {this.renderHead()}
+                {this.renderBody()}
+                {this.renderFooter()}
+            </div>
         </div>
     }
 }

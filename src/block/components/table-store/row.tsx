@@ -27,6 +27,12 @@ export class TableStoreRow extends Block {
             await cell.createCellContent();
         }
     }
+    async appendCell(at: number) {
+        var col = this.tableStore.cols[at];
+        var cell = await BlockFactory.createBlock('/tablestore/cell', this.page, { name: col.name }, this) as TableStoreCell;
+        this.blocks.childs.push(cell);
+        await cell.createCellContent();
+    }
 }
 @view('/tablestore/row')
 export class TableRowView extends BaseComponent<TableStoreRow>{

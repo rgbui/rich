@@ -1,4 +1,7 @@
 .sy-tablestore {
+    overflow: auto;
+    position: relative;
+
     &-head {
         display        : flex;
         justify-content: flex-start;
@@ -19,16 +22,16 @@
                 fill               : rgba(55, 53, 47, 0.4);
                 flex-shrink        : 0;
                 backface-visibility: hidden;
-                margin-right: 10px;
+                margin-right       : 10px;
             }
-             
+
         }
 
         &-th+&-th {
             border-left: 1px solid transparent;
         }
     }
-
+    
     &-body {
         &-row {
             display        : flex;
@@ -60,4 +63,14 @@
     }
 
     &-footer {}
+
+    &-col-resize {
+        display   : none;
+        position  : absolute;
+        top       : 0px;
+        left      : 0px;
+        width     : 10px;
+        cursor    : col-resize;
+        background: rgba(55, 53, 47, 0.16);
+    }
 }

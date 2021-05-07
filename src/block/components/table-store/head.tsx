@@ -8,6 +8,7 @@ import { TableStore } from "./table";
 import { TextEle } from "../../../common/text.ele";
 import plus from "../../../assert/svg/plus.svg";
 import { Icon } from "../../../component/icon";
+import { BlockFactory } from "../../factory/block.factory";
 @url('/tablestore/head')
 export class TableStoreHead extends Block {
     appear = BlockAppear.layout;
@@ -16,6 +17,11 @@ export class TableStoreHead extends Block {
     partName = 'head';
     get tableStore(): TableStore {
         return this.parent as TableStore;
+    }
+    async appendTh(at: number) {
+        var col = this.tableStore.cols[at];
+        var block = await BlockFactory.createBlock('/tablestore/th', this.page, { name: col.name }, this);
+        this.blocks.childs.push(block);
     }
 }
 @view('/tablestore/head')
