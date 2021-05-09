@@ -1,5 +1,5 @@
 import { util } from "../../util/util";
-import { BlockCss, BlockCssName, BorderCss, FillCss, FontCss, RadiusCss, ShadowCss, TransformCss } from "./css";
+import { BlockCss } from "./css";
 import { CssSelectorType } from "./type";
 
 export class BlockStyleCss {
@@ -46,5 +46,19 @@ export class BlockStyleCss {
             part: this.part
         };
         return json;
+    }
+    merge(css: BlockCss) {
+        var cs = this.cssList.find(x => x.cssName == css.cssName);
+        if (cs) {
+            Object.assign(cs, css);
+        }
+        else this.cssList.push(css);
+    }
+    get style() {
+        var style: Record<string, any> = {};
+        this.cssList.each(css => {
+            Object.assign(style, css.style);
+        })
+        return style;
     }
 }

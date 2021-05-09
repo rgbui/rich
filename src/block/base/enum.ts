@@ -51,6 +51,11 @@ export enum Valign {
     bottom,
     middle
 }
+export enum BlockRenderRange {
+    none,
+    self,
+    parent,
+}
 
 // export enum BlockState {
 //     none,

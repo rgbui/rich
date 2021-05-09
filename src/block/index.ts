@@ -4,7 +4,7 @@ import { Point, Rect } from "../common/point";
 import { Page } from "../page";
 import { Anchor } from "../selector/anchor";
 import { BlockFactory } from "./factory/block.factory";
-import { BlockAppear, BlockDisplay, Locate } from "./base/enum";
+import { BlockAppear, BlockDisplay, BlockRenderRange, Locate } from "./base/enum";
 import { Pattern } from "./pattern/index";
 import { BaseComponent } from "./base/component";
 import { TextEle } from "../common/text.ele";
@@ -25,6 +25,9 @@ export abstract class Block extends Events {
     }
     blockChilds(name: string) {
         return this.blocks[name];
+    }
+    get patternState() {
+        return 'default';
     }
     get hasChilds() {
         if (Object.keys(this.blocks).length > 0) {
@@ -93,6 +96,11 @@ export abstract class Block extends Events {
         this.id = util.guid();
         this.date = new Date().getTime();
         this.page = page;
+        this.pattern = new Pattern(this);
+        if (typeof this.init == 'function') this.init();
+    }
+    init() {
+
     }
     /***
      * 这是从里面最开始的查询
@@ -244,9 +252,6 @@ export abstract class Block extends Events {
             pbs.remove(this);
             this.page.onAddUpdate(this.parent);
             delete this.parent;
-            // if (this.el) {
-            //     (this.el as HTMLElement).remove();
-            // }
         }
     }
     /***
@@ -265,9 +270,6 @@ export abstract class Block extends Events {
             this.parentBlocks.remove(this);
             this.page.onAddUpdate(this.parent);
             delete this.parent;
-            // if (this.el) {
-            //     (this.el as HTMLElement).remove();
-            // }
         }
     }
     /***
@@ -316,7 +318,7 @@ export abstract class Block extends Events {
         });
         this.page.onAddUpdate(this);
     }
-    updateProps(props: Record<string, any>) {
+    updateProps(props: Record<string, any>, range = BlockRenderRange.none) {
         var oldValue: Record<string, any> = {};
         var newValue: Record<string, any> = {};
         for (let prop in props) {
@@ -327,7 +329,10 @@ export abstract class Block extends Events {
             }
         }
         if (Object.keys(oldValue).length > 0) {
-            this.page.onAddUpdate(this);
+            if (range == BlockRenderRange.self)
+                this.page.onAddUpdate(this);
+            else if (range == BlockRenderRange.parent)
+                this.page.onAddUpdate(this.parent)
             this.page.snapshoot.record(OperatorDirective.updateProp, {
                 blockId: this.id,
                 old: oldValue,
@@ -354,16 +359,14 @@ export abstract class Block extends Events {
             for (var n in data) {
                 if (n == 'blocks') continue;
                 else if (n == 'styles') continue;
+                else if (n == 'pattern') {
+                    if (!this.pattern)
+                        this.pattern = new Pattern(this);
+                    await this.pattern.load(data[n]);
+                    continue;
+                }
                 this[n] = data[n];
             }
-            // if (Array.isArray(data.styles)) {
-            //     this.patterns= [];
-            //     await data.styles.eachAsync(async (style) => {
-            //         var st = new Pattern(this);
-            //         await st.load(style);
-            //         this.patterns.push(st)
-            //     })
-            // }
             if (typeof data.blocks == 'object') {
                 for (var n in data.blocks) {
                     var childs = data.blocks[n];
@@ -382,7 +385,7 @@ export abstract class Block extends Events {
     }
     async get() {
         var json: Record<string, any> = { id: this.id, url: this.url };
-        // json.patterns = await this.patterns.asyncMap(async x => await x.get());
+        json.pattern = await this.pattern.get();
         json.blocks = {};
         for (let b in this.blocks) {
             json.blocks[b] = await this.blocks[b].asyncMap(async x => await x.get());
@@ -393,13 +396,14 @@ export abstract class Block extends Events {
     view: BaseComponent<this>;
     el: HTMLElement;
     get visibleStyle() {
+        var style: Record<string, any> = {};
         if (this.isBlock) {
-            var style: Record<string, any> = {
+            Object.assign(style, {
                 width: ((this as any).widthPercent || 100) + '%'
-            };
-            return style;
+            });
         }
-        return {};
+        Object.assign(style, this.pattern.style);
+        return style;
     }
     childsEl: HTMLElement;
     get visibleHeadAnchor() {
@@ -872,10 +876,10 @@ export abstract class Block extends Events {
         await pa.deleteLayout();
         this.page.snapshoot.store();
     }
-    onUpdateProps(props: Record<string, any>) {
+    onUpdateProps(props: Record<string, any>, range = BlockRenderRange.none) {
         this.page.onRememberUpdate();
         this.page.snapshoot.declare(ActionDirective.onUpdateProps);
-        this.updateProps(props);
+        this.updateProps(props, range);
         this.page.snapshoot.store();
         this.page.onExcuteUpdate();
     }

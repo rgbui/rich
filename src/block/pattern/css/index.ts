@@ -10,7 +10,6 @@ export enum BlockCssName {
     transform
 }
 
-
 export abstract class BlockCss {
     constructor(data?: Record<string, any>) {
         if (data) this.load(data);
@@ -58,6 +57,9 @@ export abstract class BlockCss {
                 return (new TransformCss(css));
         }
     }
+    get style() {
+        return {}
+    }
 }
 
 export class FontCss extends BlockCss {
@@ -69,14 +71,26 @@ export class FontCss extends BlockCss {
     fontStyle: 'normail' | 'italic';
     fontWeight: 'normal' | 'bold' | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
     letterSpacing: 'normal' | number;
-    textDecoration: 'none' | 'lineThrough' | 'underline';
+    textDecoration: 'none' | 'line-through' | 'underline';
     textDecorationStyle: 'solid' | 'dashed';
     textDecorationColor: string;
     textShadow: { abled: boolean, x: number, y: number, color: string, blur: number }[];
     /**
      * 文字排版方向，这个主要是在做ppt，海报时，特别的有用
      */
-    writingMode: 'lr-tb' | 'tb-rl'
+    writingMode: 'lr-tb' | 'tb-rl';
+    get style() {
+        return {
+            color: this.color,
+            fontSize: this.fontSize,
+            lineHeight: this.lineHeight,
+            textDecoration: this.textDecoration,
+            fontStyle: this.fontStyle,
+            fontFamily: this.fontFamily,
+            fontWeight: this.fontWeight,
+            writingMode: this.writingMode
+        }
+    }
 }
 
 export class FillCss extends BlockCss {
