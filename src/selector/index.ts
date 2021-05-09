@@ -4,6 +4,7 @@ import { BlockFactory } from "../block/factory/block.factory";
 import { Point } from "../common/point";
 import { ActionDirective } from "../history/declare";
 import { Page } from "../page";
+import { TextCommand } from "../plug/text.menu/text.command";
 import { Anchor } from "./anchor";
 import { SelectorView } from "./render/render";
 import { BlockSelection } from "./selection";
@@ -309,8 +310,9 @@ export class Selector {
         }
         this.page.selectorMenu.open(event);
     }
-    openToolText(event: MouseEvent) {
-        this.page.textTool.open(event);
+    onSelectionExcuteCommand(command: TextCommand) {
+        this.selections.each(sel => {
+
+        })
     }
 }
-

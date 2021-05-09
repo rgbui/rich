@@ -23,10 +23,10 @@ export class PageEvent {
     onMousedown(this: Page, event: MouseEvent) {
         if (!this.mouseScope) this.mouseScope = {} as any;
         this.blockSelector.close();
+        this.textTool.close();
         this.mouseScope.isDown = true;
         this.mouseScope.point = Point.from(event);
         var toEle = event.target as HTMLElement;
-        console.log(this.mouseScope);
         var blockEle = dom(toEle).closest(x => (x as any).block ? true : false);
         if (blockEle) {
             var block = (blockEle as any).block as Block;
@@ -53,8 +53,6 @@ export class PageEvent {
                         this.selector.joinSelection(anchor);
                         this.selector.setActiveAnchor(anchor);
                         this.selector.renderSelection();
-                        if (this.textTool.isVisible != true)
-                            this.selector.openToolText(event);
                     }
                 }
             }
@@ -66,9 +64,6 @@ export class PageEvent {
         var blockEle = dom(toEle).closest(x => (x as any).block && (x as any).block.page === this ? true : false);
         if (blockEle) {
             var block = (blockEle as any).block as Block;
-            // if (this.selector.isDrag == true) {
-            //     console.log('over ', blockEle);
-            // }
             return this.selector.setOverBlock(block, event);
         }
         else {
@@ -96,6 +91,10 @@ export class PageEvent {
     }
     onMouseup(this: Page, event: MouseEvent) {
         if (this.mouseScope && this.mouseScope.isDown) {
+            if (this.mouseScope.isMove && this.selector.selections.exists(g => g.hasRange)) {
+                if (this.textTool.isVisible != true)
+                    this.textTool.open(event);
+            }
             this.mouseScope.isMove = false;
             this.mouseScope.isDown = false;
             delete this.mouseScope.point;
@@ -115,6 +114,10 @@ export class PageEvent {
              */
             return
         }
+        /**
+         * 如果当前的texttool打开且焦点在texttool，那么此时不是失焦
+         */
+        if (this.textTool.isVisible == true && this.textTool.isDown) { return; }
         var el = event.relatedTarget as Node;
         if (!el || el && (!this.el.contains(el) || el === this.el)) {
             this.onBlur(event);
@@ -130,6 +133,7 @@ export class PageEvent {
         if (this.isFocus == true) {
             this.isFocus = false;
             this.blockSelector.close();
+            this.textTool.close();
             this.emit('blur', event);
         }
     }
