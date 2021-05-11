@@ -1,5 +1,6 @@
 
 import { Selector } from ".";
+import { Block } from "../block";
 import { Anchor } from "./anchor";
 
 /***
@@ -56,5 +57,19 @@ export class BlockSelection {
             const selection = window.getSelection();
             if (selection.rangeCount > 0) selection.removeAllRanges();
         }
+    }
+    get referenceBlocks() {
+        var bs: Block[] = [];
+        var start, end;
+        var pos = this.start.el.compareDocumentPosition(this.end.el);
+        if (pos == 4 || pos == 20) {
+            start = this.start;
+            end = this.end;
+        }
+        else {
+            start = this.end;
+            end = this.start;
+        }
+        return bs;
     }
 }

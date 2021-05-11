@@ -2,7 +2,7 @@ import { util } from "../../util/util";
 import { Block } from "..";
 import { BlockStyleCss } from "./style";
 import { CssSelectorType } from "./type";
-import { BlockCss } from "./css";
+import { BlockCss, BlockCssName } from "./css";
 
 export class Pattern {
     block: Block;
@@ -56,5 +56,16 @@ export class Pattern {
             return st.style;
         }
         else return {}
+    }
+    setStyle(cssName: BlockCssName, style: Record<string, any>) {
+        var name = this.block.patternState;
+        var st = this.styles.find(x => x.name == name);
+        if (st) {
+            st.merge(BlockCss.createBlockCss(Object.assign({ cssName }, style)))
+        }
+        else {
+            var sty = new BlockStyleCss({ name: name, cssList: [Object.assign({ cssName }, style)] });
+            this.styles.push(sty);
+        }
     }
 }

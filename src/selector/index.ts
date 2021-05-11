@@ -311,6 +311,7 @@ export class Selector {
         this.page.selectorMenu.open(event);
     }
     onSelectionExcuteCommand(command: TextCommand) {
+        console.log(command, this.selections);
         this.selections.each(sel => {
 
         })

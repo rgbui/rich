@@ -11,6 +11,7 @@ import { TextEle } from "../common/text.ele";
 import { dom } from "../common/dom";
 import { ActionDirective, OperatorDirective } from "../history/declare";
 import ReactDOM from "react-dom";
+import { Block$Seek } from "./seek";
 
 export abstract class Block extends Events {
     parent: Block;
@@ -23,8 +24,13 @@ export abstract class Block extends Events {
     get childs() {
         return this.blocks.childs;
     }
-    blockChilds(name: string) {
-        return this.blocks[name];
+    get allChilds() {
+        var keys = this.blockKeys;
+        var rs: Block[] = [];
+        keys.each(key => {
+            rs.addRange(this.blocks[key]);
+        });
+        return rs;
     }
     get patternState() {
         return 'default';
@@ -102,43 +108,7 @@ export abstract class Block extends Events {
     init() {
 
     }
-    /***
-     * 这是从里面最开始的查询
-     */
-    find(predict: (block: Block) => boolean, consider: boolean = false): Block {
-        var result: Block;
-        var keys = this.blockKeys;
-        for (let i = 0; i < keys.length; i++) {
-            var bs = this.blocks[keys[i]];
-            bs.each(block => {
-                var r = block.find(predict, false);
-                if (r) { result = r; return false }
-                if (predict(block) == true) {
-                    result = block;
-                    return false;
-                }
-            })
-        }
-        if (consider == true && predict(this) == true) result = this;
-        return result;
-    }
-    findReverse(predict: (block: Block) => boolean, consider: boolean = false) {
-        var result: Block;
-        var keys = this.blockKeys;
-        for (let i = keys.length - 1; i >= 0; i--) {
-            var bs = this.blocks[keys[i]];
-            bs.eachReverse(block => {
-                var r = block.findReverse(predict, false);
-                if (r) { result = r; return false }
-                if (predict(block) == true) {
-                    result = block;
-                    return false;
-                }
-            })
-        }
-        if (consider == true && predict(this) == true) result = this;
-        return result;
-    }
+
     /**
      * 当前元素内部第一个坑位元素
      */
@@ -151,94 +121,7 @@ export abstract class Block extends Events {
     get lastPitBlock() {
         return this.findReverse(g => true);
     }
-    prevFind(predict: (block: Block) => boolean, consider: boolean = false): Block {
-        if (consider == true) {
-            var r = this.findReverse(predict, true);
-            if (r) return r;
-        }
-        var prev = this.prev;
-        while (true) {
-            if (prev) {
-                var g = prev.findReverse(predict, true);
-                if (g) return g;
-                prev = prev.prev;
-            }
-            else break;
-        }
-        var pa = this.parent;
-        if (pa) {
-            if (predict(pa) == true) return pa;
-            var r = pa.prevFind(predict);
-            if (r) return r;
-        }
-    }
-    nextFind(predict: (block: Block) => boolean, consider: boolean = false): Block {
-        if (consider == true) {
-            var r = this.find(predict, true);
-            if (r) return r;
-        }
-        var next = this.next;
-        while (true) {
-            if (next) {
-                var g = next.find(predict, true);
-                if (g) return g;
-                next = next.next;
-            }
-            else break;
-        }
-        var pa = this.parent;
-        if (pa) {
-            if (predict(pa) == true) return pa;
-            var c = pa.nextFind(predict);
-            if (c) return c;
-        }
-    }
-    contains(block: Block, ignore: boolean = false) {
-        if (ignore == false && block === this) return true;
-        var r = this.find(g => g == block);
-        if (r) return true;
-        else return false;
-    }
-    findAll(predict: (block: Block) => boolean, consider?: boolean): Block[] {
-        var blocks: Block[] = [];
-        if (consider == true && predict(this)) { blocks.push(this) };
-        for (let n in this.blocks) {
-            this.blocks[n].each(block => {
-                if (predict(block) == true) {
-                    blocks.push(block);
-                }
-                else {
-                    var rs = block.findAll(predict);
-                    if (rs.length > 0) {
-                        blocks.concat(rs);
-                    }
-                }
-            })
-        }
-        return blocks;
-    }
-    closest(predict: (block: Block) => boolean, ignore?: boolean) {
-        if (ignore !== true && predict(this)) return this;
-        var pa = this.parent;
-        while (true) {
-            if (pa && predict(pa) == true) return pa;
-            else {
-                if (!pa) break;
-                pa = pa.parent;
-            }
-        }
-    }
-    parents(predict: (block: Block) => boolean, ignore?: boolean) {
-        var blocks: Block[] = [];
-        if (ignore !== true && predict(this)) blocks.push(this);
-        var pa = this.parent;
-        while (true) {
-            if (!pa) break;
-            else if (predict(pa)) blocks.push(pa);
-            pa = pa.parent;
-        }
-        return blocks;
-    }
+
     remove() {
         if (!this.parent) return;
         var pbs = this.parentBlocks;
@@ -884,3 +767,5 @@ export abstract class Block extends Events {
         this.page.onExcuteUpdate();
     }
 }
+export interface Block extends Block$Seek { }
+util.inherit(Block, Block$Seek);
