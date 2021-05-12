@@ -1,9 +1,14 @@
+import { Pattern } from ".";
 import { util } from "../../util/util";
 import { BlockCss } from "./css";
 import { CssSelectorType } from "./type";
 
 export class BlockStyleCss {
-    constructor(options: Record<string, any>) {
+    pattern: Pattern;
+    constructor(options: Record<string, any>, pattern: Pattern) {
+        this.pattern = pattern;
+        this.id = util.guid();
+        this.date=Date.now();
         if (typeof options == 'object') {
             this.load(options);
         }

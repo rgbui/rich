@@ -18,7 +18,7 @@ export class TextContent extends BlockComposition {
 @view('/text')
 export class TextContentView extends BaseComponent<TextContent>{
     render() {
-        return <span className='sy-block-text-content' >
+        return <span className='sy-block-text-content'  style={this.block.visibleStyle} >
             <TextArea html={this.block.htmlContent}></TextArea>
         </span>
     }

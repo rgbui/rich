@@ -325,8 +325,14 @@ if (typeof Array.prototype.eachAsync == 'undefined') {
         return this;
     }
     Array.prototype.addRange = function (index, arr) {
-        if (typeof index == 'number') return this.splice(index, 0, ...arr)
-        else this.splice(this.length, 0, ...index);
+        if (typeof index == 'number') {
+            if (!Array.isArray(arr)) throw new Error('add range array is not array')
+            return this.splice(index, 0, ...arr)
+        }
+        else {
+            if (!Array.isArray(index)) throw new Error('add range array is not array')
+           return this.splice(this.length, 0, ...index);
+        }
     }
     Array.prototype.move = function (item, index: number = 0) {
 

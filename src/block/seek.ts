@@ -11,12 +11,12 @@ export class Block$Seek {
                 var bs = block.blocks[block.blockKeys[i]];
                 for (let j = 0; j < bs.length; j++) {
                     if (isDepth == true) {
-                        if (_each(bs[i]) == true) { isBreak = true; break; }
-                        if (predict(bs[i]) == false) { isBreak = true; break };
+                        if (_each(bs[j]) == true) { isBreak = true; break; }
+                        if (predict(bs[j]) == false) { isBreak = true; break };
                     }
                     else {
-                        if (predict(bs[i]) == false) { isBreak = true; break };
-                        if (_each(bs[i]) == true) { isBreak = true; break; }
+                        if (predict(bs[j]) == false) { isBreak = true; break };
+                        if (_each(bs[j]) == true) { isBreak = true; break; }
                     }
                 }
             }
@@ -39,12 +39,12 @@ export class Block$Seek {
                 var bs = block.blocks[block.blockKeys[i]];
                 for (let j = bs.length - 1; j > -1; j--) {
                     if (isDepth == true) {
-                        if (_each(bs[i]) == true) { isBreak = true; break; }
-                        if (predict(bs[i]) == false) { isBreak = true; break };
+                        if (_each(bs[j]) == true) { isBreak = true; break; }
+                        if (predict(bs[j]) == false) { isBreak = true; break };
                     }
                     else {
-                        if (predict(bs[i]) == false) { isBreak = true; break };
-                        if (_each(bs[i]) == true) { isBreak = true; break; }
+                        if (predict(bs[j]) == false) { isBreak = true; break };
+                        if (_each(bs[j]) == true) { isBreak = true; break; }
                     }
                 }
             }
@@ -199,7 +199,7 @@ export class Block$Seek {
         }
         return nextParentFind(this);
     }
-    nextFindAll(this: Block, predict: (block: Block) => boolean, tillPredict: (block: Block) => boolean, consider: boolean = false, finalPredict?: (block: Block) => boolean) {
+    nextFindAll(this: Block, predict: (block: Block) => boolean,  consider: boolean = false, finalPredict?: (block: Block) => boolean) {
         var bs: Block[] = [];
         var isFinal: boolean = false;
         function _find(block: Block, consider: boolean = false) {
@@ -219,7 +219,7 @@ export class Block$Seek {
             var r = _find(this, true);
             if (r) bs.addRange(r);
         }
-        if (isFinal) return;
+        if (isFinal) return bs;
         function nextParentFind(block: Block) {
             var pa = block.parent;
             if (pa) {
@@ -237,6 +237,7 @@ export class Block$Seek {
             }
         }
         nextParentFind(this);
+        console.log(bs);
         return bs;
     }
     contains(this: Block, block: Block, ignore: boolean = false) {

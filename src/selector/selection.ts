@@ -60,7 +60,7 @@ export class BlockSelection {
     }
     get referenceBlocks() {
         var bs: Block[] = [];
-        var start, end;
+        var start: Anchor, end: Anchor;
         var pos = this.start.el.compareDocumentPosition(this.end.el);
         if (pos == 4 || pos == 20) {
             start = this.start;
@@ -70,6 +70,9 @@ export class BlockSelection {
             start = this.end;
             end = this.start;
         }
+        var rs = start.block.nextFindAll(g => true, true, c => c == end.block);
+        bs.addRange(rs);
+        bs.push(end.block);
         return bs;
     }
 }

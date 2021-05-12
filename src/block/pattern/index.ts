@@ -19,7 +19,7 @@ export class Pattern {
         }
         if (options.styles) {
             for (var n in options.styles) {
-                var style = new BlockStyleCss(options.styles[n]);
+                var style = new BlockStyleCss(options.styles[n], this);
                 this.styles.remove(x => x.name == style.name && x.selector == style.selector);
                 this.styles.push(style);
             }
@@ -41,7 +41,7 @@ export class Pattern {
         css: Partial<T>) {
         var style = this.styles.find(x => x.selector == selector && name == x.name);
         if (!style) {
-            style = new BlockStyleCss({ name, selector, cssList: [css] });
+            style = new BlockStyleCss({ name, selector, cssList: [css] }, this);
             this.styles.push(style);
         }
         else {
@@ -64,8 +64,9 @@ export class Pattern {
             st.merge(BlockCss.createBlockCss(Object.assign({ cssName }, style)))
         }
         else {
-            var sty = new BlockStyleCss({ name: name, cssList: [Object.assign({ cssName }, style)] });
+            var sty = new BlockStyleCss({ name: name, cssList: [Object.assign({ cssName }, style)] }, this);
             this.styles.push(sty);
         }
+        this.block.page.onAddUpdate(this.block);
     }
 }

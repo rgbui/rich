@@ -1,6 +1,7 @@
 
 import { Block } from "../block";
 import { BlockFactory } from "../block/factory/block.factory";
+import { BlockCssName } from "../block/pattern/css";
 import { Point } from "../common/point";
 import { ActionDirective } from "../history/declare";
 import { Page } from "../page";
@@ -312,8 +313,22 @@ export class Selector {
     }
     onSelectionExcuteCommand(command: TextCommand) {
         console.log(command, this.selections);
+        this.page.onRememberUpdate();
+        var style: Record<string, any> = {};
+        switch (command) {
+            case TextCommand.bold:
+                style.fontWeight = 'bold';
+                break;
+        }
         this.selections.each(sel => {
-
-        })
+            var bs = sel.referenceBlocks;
+            console.log(bs);
+            bs.each(b => {
+                b.pattern.setStyle(BlockCssName.font, {
+                    ...style
+                });
+            })
+        });
+        this.page.onExcuteUpdate();
     }
 }
