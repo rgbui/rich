@@ -38,5 +38,8 @@ export enum OperatorDirective {
     arrayPropUpdate,
     arrayPropRemove,
 
+    insertStyle,
+    mergeStyle
+
 }
 

@@ -3,6 +3,7 @@ import { Block } from "..";
 import { BlockStyleCss } from "./style";
 import { CssSelectorType } from "./type";
 import { BlockCss, BlockCssName } from "./css";
+import { OperatorDirective } from "../../history/declare";
 
 export class Pattern {
     block: Block;
@@ -61,11 +62,23 @@ export class Pattern {
         var name = this.block.patternState;
         var st = this.styles.find(x => x.name == name);
         if (st) {
-            st.merge(BlockCss.createBlockCss(Object.assign({ cssName }, style)))
+            var old = st.get();
+            st.merge(BlockCss.createBlockCss(Object.assign({ cssName }, style)));
+            this.block.page.snapshoot.record(OperatorDirective.mergeStyle, {
+                blockId: this.block.id,
+                styleId: st.id,
+                old,
+                new: st.get()
+            })
         }
         else {
             var sty = new BlockStyleCss({ name: name, cssList: [Object.assign({ cssName }, style)] }, this);
             this.styles.push(sty);
+            this.block.page.snapshoot.record(OperatorDirective.insertStyle, {
+                blockId: this.block.id,
+                at: this.styles.length - 1,
+                data: sty.get()
+            })
         }
         this.block.page.onAddUpdate(this.block);
     }
