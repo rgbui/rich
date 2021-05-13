@@ -312,23 +312,41 @@ export class Selector {
         this.page.selectorMenu.open(event);
     }
     onSelectionExcuteCommand(command: TextCommand) {
-        console.log(command, this.selections);
-        this.page.onRememberUpdate();
-        var style: Record<string, any> = {};
-        switch (command) {
-            case TextCommand.bold:
-                style.fontWeight = 'bold';
-                break;
-        }
-        this.selections.each(sel => {
-            var bs = sel.referenceBlocks;
-            console.log(bs);
-            bs.each(b => {
-                b.pattern.setStyle(BlockCssName.font, {
-                    ...style
+        this.page.snapshoot.sync(ActionDirective.onUpdatePattern, async () => {
+            await this.page.onObserveUpdate(async () => {
+                var style: Record<string, any> = {};
+                switch (command) {
+                    case TextCommand.bold:
+                        style.fontWeight = 'bold';
+                        break;
+                    case TextCommand.cancelBold:
+                        style.fontWeight = 'normail';
+                        break;
+                    case TextCommand.italic:
+                        style.fontStyle = 'italic';
+                        break;
+                    case TextCommand.cancelItalic:
+                        style.fontStyle = 'normail';
+                        break;
+                    case TextCommand.deleteLine:
+                        style.textDecoration = 'line-through';
+                        break;
+                    case TextCommand.underline:
+                        style.textDecoration = 'underline';
+                        break;
+                    case TextCommand.cancelLine:
+                        style.textDecoration = 'none';
+                        break;
+                }
+                this.selections.each(sel => {
+                    var bs = sel.referenceBlocks;
+                    bs.each(b => {
+                        b.pattern.setStyle(BlockCssName.font, {
+                            ...style
+                        });
+                    })
                 });
             })
-        });
-        this.page.onExcuteUpdate();
+        })
     }
 }

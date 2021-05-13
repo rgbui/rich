@@ -50,6 +50,16 @@ export class HistorySnapshoot extends Events {
         };
         delete this.action;
     }
+    async sync(directive: ActionDirective | string, action: () => Promise<void>) {
+        this.declare(directive);
+        try {
+            await action();
+        }
+        catch (ex) {
+            this.page.onError(ex);
+        }
+        this.store()
+    }
 }
 
 export interface HistorySnapshoot {

@@ -7,7 +7,8 @@ export enum ActionDirective {
     onDelete,
     onUndo,
     onRedo,
-    onUpdateProps
+    onUpdateProps,
+    onUpdatePattern
 }
 
 export enum OperatorDirective {

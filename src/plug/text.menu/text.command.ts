@@ -5,6 +5,9 @@ export enum TextCommand {
     italic,
     underline,
     deleteLine,
+    cancelLine,
+    cancelBold,
+    cancelItalic,
     code,
     equation
 }
