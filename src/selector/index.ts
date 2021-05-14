@@ -311,8 +311,8 @@ export class Selector {
         }
         this.page.selectorMenu.open(event);
     }
-    onSelectionExcuteCommand(command: TextCommand) {
-        this.page.snapshoot.sync(ActionDirective.onUpdatePattern, async () => {
+    async onSelectionExcuteCommand(command: TextCommand) {
+        await this.page.snapshoot.sync(ActionDirective.onUpdatePattern, async () => {
             await this.page.onObserveUpdate(async () => {
                 var style: Record<string, any> = {};
                 switch (command) {
@@ -338,12 +338,20 @@ export class Selector {
                         style.textDecoration = 'none';
                         break;
                 }
-                this.selections.each(sel => {
+                this.selections.eachAsync(async sel => {
                     var bs = sel.referenceBlocks;
-                    bs.each(b => {
-                        b.pattern.setStyle(BlockCssName.font, {
-                            ...style
-                        });
+                    bs.eachAsync(async b => {
+                        if (b == sel.start.block || b == sel.end.block) {
+                            var selBlock = await b.onFissionCreateBlock(sel);
+                            selBlock.pattern.setStyle(BlockCssName.font, {
+                                ...style
+                            });
+                        }
+                        else {
+                            b.pattern.setStyle(BlockCssName.font, {
+                                ...style
+                            });
+                        }
                     })
                 });
             })

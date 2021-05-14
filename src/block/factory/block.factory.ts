@@ -20,7 +20,7 @@ export class BlockFactory {
         }
         else this.blockMap.set(url, { view: blockView, model: null });
     }
-    public static async createBlock(url: string, page: Page, data: Record<string, any>, parent: Block) {
+    public static async createBlock(url: string, page: Page, data: Record<string, any>, parent?: Block) {
         var pb = parseBlockUrl(url);
         var bc = this.blockMap.get(pb.url);
         if (bc) {

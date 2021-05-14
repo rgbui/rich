@@ -8,7 +8,7 @@ export class BlockStyleCss {
     constructor(options: Record<string, any>, pattern: Pattern) {
         this.pattern = pattern;
         this.id = util.guid();
-        this.date=Date.now();
+        this.date = Date.now();
         if (typeof options == 'object') {
             this.load(options);
         }
@@ -43,6 +43,18 @@ export class BlockStyleCss {
     get() {
         var json: Record<string, any> = {
             cssList: this.cssList.map(x => x.get()),
+            name: this.name,
+            date: this.date,
+            id: this.id,
+            depend: util.clone(this.depend),
+            selector: this.selector,
+            part: this.part
+        };
+        return json;
+    }
+    cloneData() {
+        var json: Record<string, any> = {
+            cssList: this.cssList.map(x => x.cloneData()),
             name: this.name,
             date: this.date,
             id: this.id,

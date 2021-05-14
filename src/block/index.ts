@@ -12,6 +12,8 @@ import { dom } from "../common/dom";
 import { ActionDirective, OperatorDirective } from "../history/declare";
 import ReactDOM from "react-dom";
 import { Block$Seek } from "./seek";
+import { BlockSelection } from "../selector/selection";
+import { TextContent } from "./components/text";
 
 export abstract class Block extends Events {
     parent: Block;
@@ -274,6 +276,19 @@ export abstract class Block extends Events {
             json.blocks[b] = await this.blocks[b].asyncMap(async x => await x.get());
         }
         return json;
+    }
+    async cloneData() {
+        var json: Record<string, any> = { url: this.url };
+        json.pattern = await this.pattern.cloneData();
+        json.blocks = {};
+        for (let b in this.blocks) {
+            json.blocks[b] = await this.blocks[b].asyncMap(async x => await x.cloneData());
+        }
+        return await BlockFactory.createBlock(this.url, this.page, json, null);
+    }
+    async clone() {
+        var data = await this.cloneData();
+        return await BlockFactory.createBlock(data.url, this.page, data, null);
     }
     viewComponent: typeof BaseComponent | ((props: any) => JSX.Element)
     view: BaseComponent<this>;
@@ -765,6 +780,84 @@ export abstract class Block extends Events {
         this.updateProps(props, range);
         this.page.snapshoot.store();
         this.page.onExcuteUpdate();
+    }
+    /**
+     * 文本依据选区裂变创建新的block
+     * 返回当前选区的block
+     */
+    async onFissionCreateBlock(selection: BlockSelection) {
+        var isText = this instanceof TextContent;
+        var pattern = await this.pattern.cloneData();
+        var selectionBeforeContent = '', selectionAfterContent = '', selectionContent = '';
+        var content = this.content;
+        var selBlock: Block;
+        if (this == selection.start.block && this == selection.end.block) {
+            //说明block包含选区
+            selectionBeforeContent = content.substring(0, selection.start.at);
+            selectionContent = content.substring(selection.start.at, selection.end.at);
+            selectionAfterContent = content.substring(selection.end.at);
+        }
+        else if (this == selection.start.block) {
+            //block后半部分是选区
+            selectionBeforeContent = content.substring(0, selection.start.at);
+            selectionContent = content.substring(selection.start.at);
+        }
+        else if (this == selection.end.block) {
+            //block前半部分是选区
+            selectionAfterContent = content.substring(selection.end.at);
+            selectionContent = content.substring(0, selection.end.at);
+        }
+        if (isText) {
+            if (selectionBeforeContent && selectionAfterContent) {
+                //包含选区
+                this.updateContent(selectionBeforeContent);
+                selBlock = await this.page.createBlock('/text',
+                    { content: selectionContent, pattern: pattern },
+                    this.parent,
+                    this.at + 1);
+                await this.page.createBlock('/text',
+                    { content: selectionAfterContent, pattern: pattern },
+                    this.parent,
+                    this.at + 2);
+            }
+            else if (selectionBeforeContent) {
+                //后半部分是选区
+                this.updateContent(selectionBeforeContent);
+                selBlock = await this.page.createBlock('/text',
+                    { content: selectionContent, pattern: pattern },
+                    this.parent,
+                    this.at + 1);
+            }
+            else if (selectionAfterContent) {
+                //前半部分是选区
+                this.updateContent(selectionAfterContent);
+                selBlock = await this.page.createBlock('/text',
+                    { content: selectionContent, pattern: pattern },
+                    this.parent,
+                    this.at);
+            }
+        }
+        else {
+            if (selectionBeforeContent) {
+                await this.page.createBlock('/text',
+                    { content: selectionBeforeContent, pattern: pattern },
+                    this.parent,
+                    this.childs.length);
+            }
+            if (selectionContent) {
+                selBlock = await this.page.createBlock('/text',
+                    { content: selectionContent, pattern: pattern },
+                    this.parent,
+                    this.childs.length);
+            }
+            if (selectionAfterContent) {
+                await this.page.createBlock('/text',
+                    { content: selectionAfterContent, pattern: pattern },
+                    this.parent,
+                    this.childs.length);
+            }
+        }
+        return selBlock;
     }
 }
 export interface Block extends Block$Seek { }

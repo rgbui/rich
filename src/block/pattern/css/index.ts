@@ -30,6 +30,15 @@ export abstract class BlockCss {
         }
         return json;
     }
+    cloneData(){
+        var json: Record<string, any> = {};
+        for (var n in this) {
+            if (typeof this[n] != 'function') {
+                json[n] = util.clone(this[n]);
+            }
+        }
+        return json;
+    }
     overlay<T extends BlockCss>(css: T): T {
         if (this.cssName != css.cssName) throw new Error('the overlay css name is not equal' + BlockCssName[this.cssName] + '!=' + BlockCssName[css.cssName])
         var json: Record<string, any> = { cssName: this.cssName };

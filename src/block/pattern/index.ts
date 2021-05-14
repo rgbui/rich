@@ -37,6 +37,11 @@ export class Pattern {
             styles: this.styles.map(s => s.get())
         }
     }
+    async cloneData(){
+        return {
+            styles: this.styles.map(s => s.cloneData())
+        }
+    }
     declare<T extends BlockCss>(name: string,
         selector: CssSelectorType,
         css: Partial<T>) {
