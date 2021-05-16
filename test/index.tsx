@@ -1,13 +1,12 @@
 
 
-import "../src/util/array";
+
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.less';
-import { SY } from "..";
 import { data } from "./data";
-
+import { SY } from "..";
 ReactDOM.render(
     <div className='editor-page'>
         <div className='editor' style={{ width: '500px', height: '200px' }}></div>
