@@ -338,22 +338,48 @@ export class Selector {
                         style.textDecoration = 'none';
                         break;
                 }
-                this.selections.eachAsync(async sel => {
+                await this.selections.eachAsync(async sel => {
                     var bs = sel.referenceBlocks;
-                    bs.eachAsync(async b => {
-                        if (b == sel.start.block || b == sel.end.block) {
-                            var selBlock = await b.onFissionCreateBlock(sel);
-                            selBlock.pattern.setStyle(BlockCssName.font, {
-                                ...style
-                            });
+                    var newStart: Block, newEnd: Block;
+                    await bs.eachAsync(async b => {
+                        if (b.isText) {
+                            if (b == sel.start.block || b == sel.end.block) {
+                                var selBlock = await b.onFissionCreateBlock(sel);
+                                selBlock.pattern.setStyle(BlockCssName.font, {
+                                    ...style
+                                });
+                                if (b == sel.start.block && b == sel.end.block) {
+                                    newStart = selBlock;
+                                    newEnd = selBlock;
+                                }
+                                else if (b == sel.start.block) {
+                                    newStart = selBlock;
+                                }
+                                else if (b == sel.end.block) {
+                                    newEnd = selBlock;
+                                }
+                            }
+                            else {
+                                b.pattern.setStyle(BlockCssName.font, {
+                                    ...style
+                                });
+                            }
                         }
-                        else {
-                            b.pattern.setStyle(BlockCssName.font, {
-                                ...style
-                            });
-                        }
-                    })
+                    });
+                    if (newStart && newEnd) {
+                        sel.dispose();
+                        var newStartAnchor = new Anchor(this);
+                        newStartAnchor.block = newStart;
+                        newStartAnchor.at = 0;
+                        var newEndAnchor = new Anchor(this);
+                        newEndAnchor.block = newEnd;
+                        newEndAnchor.at = newEnd.content.length;
+                        sel.start = newStartAnchor;
+                        sel.end = newEndAnchor;
+                    }
                 });
+            }, () => {
+                this.renderSelection();
             })
         })
     }

@@ -237,7 +237,6 @@ export class Block$Seek {
             }
         }
         nextParentFind(this);
-        console.log(bs);
         return bs;
     }
     contains(this: Block, block: Block, ignore: boolean = false) {

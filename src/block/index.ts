@@ -10,10 +10,8 @@ import { BaseComponent } from "./base/component";
 import { TextEle } from "../common/text.ele";
 import { dom } from "../common/dom";
 import { ActionDirective, OperatorDirective } from "../history/declare";
-import ReactDOM from "react-dom";
 import { Block$Seek } from "./seek";
 import { BlockSelection } from "../selector/selection";
-import { TextContent } from "./components/text";
 
 export abstract class Block extends Events {
     parent: Block;
@@ -781,12 +779,15 @@ export abstract class Block extends Events {
         this.page.snapshoot.store();
         this.page.onExcuteUpdate();
     }
+    get isTextContent() {
+        return false;
+    }
     /**
      * 文本依据选区裂变创建新的block
      * 返回当前选区的block
      */
     async onFissionCreateBlock(selection: BlockSelection) {
-        var isText = this instanceof TextContent;
+        var isText = this.isTextContent;
         var pattern = await this.pattern.cloneData();
         var selectionBeforeContent = '', selectionAfterContent = '', selectionContent = '';
         var content = this.content;
@@ -807,6 +808,7 @@ export abstract class Block extends Events {
             selectionAfterContent = content.substring(selection.end.at);
             selectionContent = content.substring(0, selection.end.at);
         }
+
         if (isText) {
             if (selectionBeforeContent && selectionAfterContent) {
                 //包含选区
@@ -836,25 +838,34 @@ export abstract class Block extends Events {
                     this.parent,
                     this.at);
             }
+            else {
+                selBlock = this;
+            }
         }
         else {
-            if (selectionBeforeContent) {
-                await this.page.createBlock('/text',
-                    { content: selectionBeforeContent, pattern: pattern },
-                    this.parent,
-                    this.childs.length);
+            if (!selectionBeforeContent && !selectionAfterContent) {
+                selBlock = this;
             }
-            if (selectionContent) {
-                selBlock = await this.page.createBlock('/text',
-                    { content: selectionContent, pattern: pattern },
-                    this.parent,
-                    this.childs.length);
-            }
-            if (selectionAfterContent) {
-                await this.page.createBlock('/text',
-                    { content: selectionAfterContent, pattern: pattern },
-                    this.parent,
-                    this.childs.length);
+            else {
+                if (selectionBeforeContent) {
+                    await this.page.createBlock('/text',
+                        { content: selectionBeforeContent, pattern: pattern },
+                        this,
+                        this.childs.length);
+                }
+                if (selectionContent) {
+                    selBlock = await this.page.createBlock('/text',
+                        { content: selectionContent, pattern: pattern },
+                        this,
+                        this.childs.length);
+                    console.log(selBlock, 'selblock...');
+                }
+                if (selectionAfterContent) {
+                    await this.page.createBlock('/text',
+                        { content: selectionAfterContent, pattern: pattern },
+                        this,
+                        this.childs.length);
+                }
             }
         }
         return selBlock;

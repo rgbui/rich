@@ -1,4 +1,4 @@
-import { Block } from "..";
+
 import { BaseComponent } from "../base/component";
 import { BlockComposition } from "../base/common/composition/block";
 import React from 'react';
@@ -13,7 +13,10 @@ import { TextArea } from "../base/appear";
 export class TextContent extends BlockComposition {
     content: string;
     display = BlockDisplay.inline;
-    appear = BlockAppear.text
+    appear = BlockAppear.text;
+    get isTextContent(){
+        return true;
+    }
 }
 @view('/text')
 export class TextContentView extends BaseComponent<TextContent>{

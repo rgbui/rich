@@ -1,13 +1,16 @@
 
 import "./src/util/array";
 
-import { Page } from "./src/page";
+
 import "./src/assert/theme.less";
-import './src/block/declare';
+
 import "./src/selector/style.less";
 import "./src/component/style.less";
 import "./src/page/style.less";
 import './src/assert/font/iconfont.css';
+
+import { Page } from "./src/page";
+import './src/block/declare';
 import "./src/plug/declare";
 /***
  * import components
