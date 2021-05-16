@@ -169,19 +169,26 @@ export class PageEvent {
         var pa = this.updateBlocks.find(g => g.contains(block));
         if (!pa) this.updateBlocks.push(block);
     }
-    onExcuteUpdate() {
+    onExcuteUpdate(finishCompleted?: () => void) {
         var ups = this.updateBlocks.map(c => c);
         this.updateBlocks = [];
+        var len = ups.length;
+        var count = 0;
         ups.each(up => {
-            up.view.forceUpdate();
+            up.view.forceUpdate(() => {
+                count += 1;
+                if (count === len && typeof finishCompleted == 'function') {
+                    finishCompleted()
+                }
+            });
         });
     }
-    async onObserveUpdate(fn: () => Promise<void>) {
+    async onObserveUpdate(fn: () => Promise<void>, finishedCompletedUpdate?: () => void) {
         this.onRememberUpdate();
         if (typeof fn == 'function') {
             await fn();
         }
-        this.onExcuteUpdate();
+        this.onExcuteUpdate(finishedCompletedUpdate);
     }
     async onAction(this: Page, directive: ActionDirective | string, fn: () => Promise<void>) {
         await this.onObserveUpdate(async () => {
