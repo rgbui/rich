@@ -29,7 +29,6 @@ export class SelectorMenu extends React.Component<{ page: Page }>{
         this.point = Point.from(event);
         this.visible = true;
         delete this.select;
-        console.log('xxx');
         this.forceUpdate();
     }
     close() {

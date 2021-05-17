@@ -4,15 +4,15 @@ import { Point } from "../../common/point";
 import { Page } from "../../page";
 import { ReferenceSelectorData } from "./data";
 
-export class ReferenceSelector extends React.Component<{ page: Page }> {
+export class ReferenceSelector extends React.Component {
     private node: HTMLElement;
     constructor(props) {
         super(props);
         this.node = document.body.appendChild(document.createElement('div'));
     }
-    get page() {
-        return this.props.page;
-    }
+    // get page() {
+    //     return this.props.page;
+    // }
     renderSelectors() {
         return ReferenceSelectorData.map(group => {
             return <div className='sy-reference-selector-group' key={group.text}>

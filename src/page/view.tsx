@@ -37,7 +37,7 @@ export class PageView extends Component<{ page: Page }>{
     render() {
         var pageStyle: Record<string, any> = {
             lineHeight: this.page.cfm.fontCss.lineHeight + 'px',
-            letterSpacing: this.page.cfm.fontCss.letterSpacing+ 'px',
+            letterSpacing: this.page.cfm.fontCss.letterSpacing + 'px',
             fontSize: this.page.cfm.fontCss.fontSize + 'px'
         }
         return <div className='sy-page-view' style={pageStyle} tabIndex={1}
@@ -53,7 +53,7 @@ export class PageView extends Component<{ page: Page }>{
                 </div>
                 <div className='sy-page-plugs'>
                     <BlockSelector ref={e => this.page.blockSelector = e} page={this.page}></BlockSelector>
-                    <ReferenceSelector ref={e => this.page.referenceSelector = e} page={this.page}></ReferenceSelector>
+                    <ReferenceSelector ref={e => this.page.referenceSelector = e} ></ReferenceSelector>
                     <SelectorMenu ref={e => this.page.selectorMenu = e} page={this.page}></SelectorMenu>
                     <TextTool ref={e => this.page.textTool = e} page={this.page}></TextTool>
                 </div>

@@ -81,5 +81,4 @@ export class TextTool extends React.Component<{ page: Page }>{
     onOpenBlockSelector() {
 
     }
-
 }

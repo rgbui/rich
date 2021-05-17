@@ -19,6 +19,8 @@ import { SelectorMenu } from '../plug/block.menu/menu';
 import { TextTool } from '../plug/text.menu/text.tool';
 import { ConfigurationManager } from '../config';
 import { PageConfig, WorkspaceConfig } from '../config/workspace';
+import { SyPlugComponent } from '../plug/sy.plug.component';
+
 export class Page extends Events {
     el: HTMLElement;
     id: string;
@@ -98,6 +100,7 @@ export class Page extends Events {
     pageLayout: PageLayout;
     views: View[] = [];
     selector: Selector;
+    private plugs: Map<string, SyPlugComponent> = new Map();
     viewRender: PageView;
     blockSelector: BlockSelector;
     referenceSelector: ReferenceSelector;
