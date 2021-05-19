@@ -19,7 +19,7 @@ import { SelectorMenu } from '../plug/block.menu/menu';
 import { TextTool } from '../plug/text.menu/text.tool';
 import { ConfigurationManager } from '../config';
 import { PageConfig, WorkspaceConfig } from '../config/workspace';
-import { SyPlugComponent } from '../plug/sy.plug.component';
+
 
 export class Page extends Events {
     el: HTMLElement;
@@ -68,7 +68,7 @@ export class Page extends Events {
         for (var n in data) {
             if (n == 'views') continue;
             else if (n == 'pageLayout') {
-                this.pageLayout = new PageLayout(this, data[n]);
+                this.pageLayout = new PageLayout(this, data[n]); continue;
             }
             this[n] = data[n];
         }
@@ -87,7 +87,7 @@ export class Page extends Events {
             id: this.id,
             date: this.date
         };
-        json.pageLayout = this.pageLayout.get();
+        json.pageLayout = await this.pageLayout.get();
         json.views = await this.views.asyncMap(async x => {
             return await x.get()
         })
@@ -100,7 +100,6 @@ export class Page extends Events {
     pageLayout: PageLayout;
     views: View[] = [];
     selector: Selector;
-    private plugs: Map<string, SyPlugComponent> = new Map();
     viewRender: PageView;
     blockSelector: BlockSelector;
     referenceSelector: ReferenceSelector;
