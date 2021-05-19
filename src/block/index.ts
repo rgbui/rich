@@ -241,7 +241,6 @@ export abstract class Block extends Events {
         try {
             for (var n in data) {
                 if (n == 'blocks') continue;
-                else if (n == 'styles') continue;
                 else if (n == 'pattern') {
                     if (!this.pattern)
                         this.pattern = new Pattern(this);
@@ -270,6 +269,9 @@ export abstract class Block extends Events {
         var json: Record<string, any> = { id: this.id, url: this.url };
         json.pattern = await this.pattern.get();
         json.blocks = {};
+        if (this.content) {
+            json.content = this.content;
+        }
         for (let b in this.blocks) {
             json.blocks[b] = await this.blocks[b].asyncMap(async x => await x.get());
         }
