@@ -12,18 +12,20 @@ export class Pattern {
     styles: BlockStyleCss[] = [];
     constructor(block: Block) {
         this.block = block;
+        this.id = util.guid();
+        this.date = Date.now();
     }
     async load(options: Record<string, any>) {
         for (var op in options) {
             if (op == 'styles') continue;
             this[op] = options[op];
         }
-        if (options.styles) {
-            for (var n in options.styles) {
-                var style = new BlockStyleCss(options.styles[n], this);
+        if (Array.isArray(options.styles)) {
+            options.styles.each(sty => {
+                var style = new BlockStyleCss(sty, this);
                 this.styles.remove(x => x.name == style.name && x.selector == style.selector);
                 this.styles.push(style);
-            }
+            })
         }
         if (typeof this.id == 'undefined') {
             this.id = util.guid();
@@ -31,13 +33,14 @@ export class Pattern {
         }
     }
     async get() {
+        if (this.styles.length == 0) return {};
         return {
             id: this.id,
             date: this.date,
             styles: this.styles.map(s => s.get())
         }
     }
-    async cloneData(){
+    async cloneData() {
         return {
             styles: this.styles.map(s => s.cloneData())
         }
