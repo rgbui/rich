@@ -12,6 +12,7 @@ import { dom } from "../common/dom";
 import { ActionDirective, OperatorDirective } from "../history/declare";
 import { Block$Seek } from "./seek";
 import { BlockSelection } from "../selector/selection";
+import { prop } from "./factory/observable";
 
 export abstract class Block extends Events {
     parent: Block;
@@ -21,6 +22,7 @@ export abstract class Block extends Events {
     date: number;
     pattern: Pattern;
     blocks: Record<string, Block[]> = { childs: [] };
+    private __props: string[];
     get childs() {
         return this.blocks.childs;
     }
@@ -269,11 +271,13 @@ export abstract class Block extends Events {
         var json: Record<string, any> = { id: this.id, url: this.url };
         json.pattern = await this.pattern.get();
         json.blocks = {};
-        if (this.content) {
-            json.content = this.content;
-        }
         for (let b in this.blocks) {
             json.blocks[b] = await this.blocks[b].asyncMap(async x => await x.get());
+        }
+        if (Array.isArray(this.__props)) {
+            this.__props.each(pro => {
+                json[pro] = util.clone(this[pro]);
+            })
         }
         return json;
     }
@@ -563,6 +567,7 @@ export abstract class Block extends Events {
         }, row.parent, row.at + 1);
         return newBlock;
     }
+    @prop()
     content: string = '';
     get isEmpty() {
         return this.content ? false : true
