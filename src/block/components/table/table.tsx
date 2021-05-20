@@ -1,7 +1,7 @@
 import { Block } from "../..";
 import { BaseComponent } from "../../base/component";
 import React from "react";
-import { url, view } from "../../factory/observable";
+import { prop, url, view } from "../../factory/observable";
 import "./style.less";
 import { BlockAppear, BlockDisplay } from "../../base/enum";
 import { Dragger } from "../../../common/dragger";
@@ -10,6 +10,7 @@ import { util } from "../../../util/util";
 export class Table extends Block {
     appear = BlockAppear.layout;
     display = BlockDisplay.block;
+    @prop()
     cols: { width: number }[] = [];
 }
 @view('/table')

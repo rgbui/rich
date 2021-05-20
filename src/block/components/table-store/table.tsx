@@ -4,7 +4,7 @@ import React from 'react';
 import { TableMeta, TableMetaFieldType } from "./meta";
 import { util } from "../../../util/util";
 import "./style.less";
-import { url, view } from "../../factory/observable";
+import { prop, url, view } from "../../factory/observable";
 import { BlockAppear, BlockDisplay } from "../../base/enum";
 import { BlockFactory } from "../../factory/block.factory";
 import { TableStoreRow } from "./row";
@@ -21,11 +21,13 @@ import { TableStoreHead } from "./head";
 @url('/table/store')
 export class TableStore extends Block {
     meta: TableMeta;
+    @prop()
     cols: {
         name: string,
         width: number
     }[] = [];
     data: any[] = [];
+    @prop()
     pagination: boolean;
     async load(data) {
         for (var n in data) {
@@ -58,12 +60,14 @@ export class TableStore extends Block {
         }
     }
     async get() {
-        var json: Record<string, any> = {
+        var json: Record<string, any> = { id: this.id, url: this.url };
+        if (this.pattern) json.pattern = await this.pattern.get();
+        Object.assign(json, {
             cols: util.clone(this.cols),
             meta: this.meta.get(),
             data: util.clone(this.data),
             pagination: this.pagination
-        };
+        });
         return json;
     }
     appear = BlockAppear.layout;

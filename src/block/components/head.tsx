@@ -1,11 +1,13 @@
 import { BaseComponent } from "../base/component";
-import { url, view } from "../factory/observable";
+import { prop, url, view } from "../factory/observable";
 import { TextSpan } from "./textspan";
 import React from 'react';
 import { ChildsArea, TextArea } from "../base/appear";
 @url('/head')
 export class Head extends TextSpan {
+    @prop()
     level: 'h1' | 'h2' | 'h3' = 'h1';
+   
 }
 @view("/head")
 export class HeadView extends BaseComponent<Head>{

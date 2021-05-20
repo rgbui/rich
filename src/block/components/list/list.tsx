@@ -20,6 +20,7 @@ export class List extends Block {
     expand: boolean = true;
     display = BlockDisplay.block
     appear = BlockAppear.layout;
+   
 }
 @view('/list')
 export class ListView extends BaseComponent<List>{

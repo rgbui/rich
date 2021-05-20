@@ -1,10 +1,11 @@
 import { Block } from "../../..";
+import { prop } from "../../../factory/observable";
 
 
 /***
  * 块布局
  */
-export class BlockComposition extends Block{
+export class BlockComposition extends Block {
     /**
      * 是否可以自由拖动
      */
@@ -21,6 +22,7 @@ export class BlockComposition extends Block{
     /**
      * 如果不是自由拖动的元素，则宽度则为百分比
      */
+    @prop()
     widthPercent: number;
     
 }
