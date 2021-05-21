@@ -11,6 +11,7 @@ import { TableStoreRow } from "./row";
 import { ChildsArea } from "../../base/appear";
 import { OperatorDirective } from "../../../history/declare";
 import { TableStoreHead } from "./head";
+import { Pattern } from "../../pattern";
 
 /***
  * 数据总共分三部分
@@ -30,9 +31,13 @@ export class TableStore extends Block {
     @prop()
     pagination: boolean;
     async load(data) {
+        if (!this.pattern) this.pattern = new Pattern(this);
         for (var n in data) {
             if (n == 'meta') {
                 this.meta = new TableMeta(data[n]);
+            }
+            else if (n == 'pattern') {
+                await this.pattern.load(data[n]);
             }
             else {
                 this[n] = data[n];

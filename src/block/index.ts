@@ -241,11 +241,11 @@ export abstract class Block extends Events {
     isLoad = false;
     async load(data) {
         try {
+            if (!this.pattern)
+                this.pattern = new Pattern(this);
             for (var n in data) {
                 if (n == 'blocks') continue;
                 else if (n == 'pattern') {
-                    if (!this.pattern)
-                        this.pattern = new Pattern(this);
                     await this.pattern.load(data[n]);
                     continue;
                 }
@@ -269,7 +269,11 @@ export abstract class Block extends Events {
     }
     async get() {
         var json: Record<string, any> = { id: this.id, url: this.url };
-        json.pattern = await this.pattern.get();
+        if (typeof this.pattern.get == 'function')
+            json.pattern = await this.pattern.get();
+        else {
+            console.log(this, this.pattern);
+        }
         json.blocks = {};
         for (let b in this.blocks) {
             json.blocks[b] = await this.blocks[b].asyncMap(async x => await x.get());
