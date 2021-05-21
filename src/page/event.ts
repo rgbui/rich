@@ -206,7 +206,6 @@ export class PageEvent {
         })
     }
     onUnmount(this: Page) {
-         console.log('xx');
         ReactDOM.unmountComponentAtNode(this.root);
         // this.viewRender.componentWillUnmount()
     }
