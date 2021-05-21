@@ -25,9 +25,9 @@ export class PageView extends Component<{ page: Page }>{
     private _mousemove;
     private _mouseup;
     private _keyup;
-    el:HTMLElement;
+    el: HTMLElement;
     componentDidMount() {
-        this.el=ReactDOM.findDOMNode(this) as HTMLElement;
+        this.el = ReactDOM.findDOMNode(this) as HTMLElement;
         document.addEventListener('mousemove', (this._mousemove = this.page.onMousemove.bind(this.page)));
         document.addEventListener('mouseup', (this._mouseup = this.page.onMouseup.bind(this.page)));
         document.addEventListener('keyup', (this._keyup = this.page.onKeyup.bind(this.page)));
@@ -47,20 +47,19 @@ export class PageView extends Component<{ page: Page }>{
             onKeyDown={e => this.page.onKeydown(e.nativeEvent)}
             onFocusCapture={e => this.page.onFocusCapture(e.nativeEvent)}
             onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}
-        >
+        ><SelectorView selector={this.page.selector}></SelectorView>
             <PageLayoutView pageLayout={this.page.pageLayout}>
-                <SelectorView selector={this.page.selector}></SelectorView>
                 <div className='sy-page-view-content'
                     onMouseDown={e => this.page.onMousedown(e.nativeEvent)}
                 ><ChildsArea childs={this.page.views}></ChildsArea>
                 </div>
-                <div className='sy-page-plugs'>
-                    <BlockSelector ref={e => this.page.blockSelector = e} page={this.page}></BlockSelector>
-                    <ReferenceSelector ref={e => this.page.referenceSelector = e} ></ReferenceSelector>
-                    <SelectorMenu ref={e => this.page.selectorMenu = e} page={this.page}></SelectorMenu>
-                    <TextTool ref={e => this.page.textTool = e} page={this.page}></TextTool>
-                </div>
             </PageLayoutView>
+            <div className='sy-page-plugs'>
+                <BlockSelector ref={e => this.page.blockSelector = e} page={this.page}></BlockSelector>
+                <ReferenceSelector ref={e => this.page.referenceSelector = e} ></ReferenceSelector>
+                <SelectorMenu ref={e => this.page.selectorMenu = e} page={this.page}></SelectorMenu>
+                <TextTool ref={e => this.page.textTool = e} page={this.page}></TextTool>
+            </div>
         </div>
     }
 }
