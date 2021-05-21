@@ -10,6 +10,7 @@ import link from "../../assert/svg/link.svg";
 import squareplus from "../../assert/svg/squareplus.svg";
 import moveTo from '../../assert/svg/moveTo.svg';
 import comment from "../../assert/svg/comment.svg";
+import trash from "../../assert/svg/trash.svg";
 export type SelectorMenuItemType = {
     name?: string,
     type?: 'devide' | 'text' | 'option',
@@ -58,7 +59,7 @@ export class SelectorMenu extends React.Component<{ page: Page }>{
         var items: SelectorMenuItemType[] = [];
         items.push({
             name: 'delete',
-            icon: "ashbin:sy",
+            icon: trash,
             text: '删除',
             label: "delete"
         });
