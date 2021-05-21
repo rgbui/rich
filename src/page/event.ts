@@ -1,3 +1,4 @@
+import ReactDOM from "react-dom";
 import { Page } from ".";
 import { Block } from "../block";
 import { dom } from "../common/dom";
@@ -203,5 +204,10 @@ export class PageEvent {
             }
             this.snapshoot.store();
         })
+    }
+    onUnmount(this: Page) {
+         console.log('xx');
+        ReactDOM.unmountComponentAtNode(this.root);
+        // this.viewRender.componentWillUnmount()
     }
 }

@@ -8,6 +8,7 @@ import { BlockSelector } from "../plug/block.selector";
 import { ReferenceSelector } from "../plug/reference.selector";
 import { SelectorMenu } from "../plug/block.menu/menu";
 import { TextTool } from "../plug/text.menu/text.tool";
+import ReactDOM from "react-dom";
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
  * 对于同时支持这4个事件的浏览器，事件执行顺序为focusin > focus > focusout > blur
@@ -24,7 +25,9 @@ export class PageView extends Component<{ page: Page }>{
     private _mousemove;
     private _mouseup;
     private _keyup;
+    el:HTMLElement;
     componentDidMount() {
+        this.el=ReactDOM.findDOMNode(this) as HTMLElement;
         document.addEventListener('mousemove', (this._mousemove = this.page.onMousemove.bind(this.page)));
         document.addEventListener('mouseup', (this._mouseup = this.page.onMouseup.bind(this.page)));
         document.addEventListener('keyup', (this._keyup = this.page.onKeyup.bind(this.page)));

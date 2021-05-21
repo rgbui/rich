@@ -23,6 +23,7 @@ import { PageConfig, WorkspaceConfig } from '../config/workspace';
 
 export class Page extends Events {
     el: HTMLElement;
+    root: HTMLElement;
     id: string;
     date: number;
     private user: User;
@@ -111,7 +112,7 @@ export class Page extends Events {
         this.emit('error', error);
     }
     render() {
-        ReactDOM.render(<PageView page={this}></PageView>, this.el.appendChild(document.createElement('div')));
+        ReactDOM.render(<PageView page={this}></PageView>, (this.root = this.el.appendChild(document.createElement('div'))));
     }
     /**
      * 创建一个block
