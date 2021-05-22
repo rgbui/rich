@@ -62,7 +62,7 @@ export class Events {
         if (gs.length == 1) return gs[0]
         else return gs;
     }
-    in(name: string | F): boolean {
+    has(name: string | F): boolean {
         if (typeof name == 'string') return this.__events.exists(x => x.name == name);
         else if (typeof name == 'function') return this.__events.exists(x => x.fn == name);
         else return false;
