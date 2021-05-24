@@ -1,14 +1,15 @@
 export type F = (...args: any[]) => any;
-export class Events {
-    private __events: { name: string, fn?: F, once?: boolean }[] = [];
-    on(name: string[] | string | Record<string, F>, fn?: F) {
-        if (typeof name == 'string' && typeof fn == 'function')
+export class Events<T = string> {
+    private __events: { name: T, fn?: F, once?: boolean }[];
+    on(name: T[] | T | Record<string, F>, fn?: F) {
+        if (!Array.isArray(this.__events)) this.__events = [];
+        if ((typeof name == 'string' || typeof name == 'number') && typeof fn == 'function')
             this.__events.push({ name, fn });
         else if (Array.isArray(name)) {
             name.forEach(n => this.on(n, fn));
         }
         else if (typeof name == 'object')
-            for (var n in name) this.on(n, name[n]);
+            for (var n in name as any) this.on(n as any, name[n]);
         return this;
     }
     /***
@@ -21,27 +22,31 @@ export class Events {
      * 2.绑定的事件不一定会触发（就是被消耗掉），这意味着如果多次绑定同名事件，会导致多次触发
      * 
      */
-    only(name: string | Record<string, F>, fn?: F) {
-        if (typeof name == 'object') { for (var n in name) this.only(n, name[n]) }
+    only(name: T | Record<string, F>, fn?: F) {
+        if (!Array.isArray(this.__events)) this.__events = [];
+        if (typeof name == 'object') { for (var n in name as any) this.only(n as any, name[n]) }
         else {
             this.__events.removeAll(x => x.name == name);
             this.__events.push({ name, fn });
         }
         return this;
     }
-    once(name: string | Record<string, F>, fn?: F) {
-        if (typeof name == 'object') { for (var n in name) this.only(n, name[n]) }
+    once(name: T | Record<string, F>, fn?: F) {
+        if (!Array.isArray(this.__events)) this.__events = [];
+        if (typeof name == 'object') { for (var n in name as any) this.only(n as any, name[n]) }
         else {
 
             this.__events.push({ name, fn, once: true });
         }
     }
-    off(name: string | F, fn?: F) {
+    off(name: T | F, fn?: F) {
+        if (!Array.isArray(this.__events)) this.__events = [];
         if (typeof name == 'function') this.__events.removeAll(x => x.fn == name);
-        else if (typeof fn == 'function' && typeof name == 'string') this.__events.removeAll(x => x.name == name && x.fn == fn);
-        else if (typeof name == 'string' && typeof fn == 'undefined') this.__events.removeAll(x => x.name == name);
+        else if (typeof fn == 'function' && (typeof name == 'string' || typeof name == 'number')) this.__events.removeAll(x => x.name == name && x.fn == fn);
+        else if ((typeof name == 'string' || typeof name == 'number') && typeof fn == 'undefined') this.__events.removeAll(x => x.name == name);
     }
-    emit(name: string, ...args: any[]) {
+    emit(name: T, ...args: any[]) {
+        if (!Array.isArray(this.__events)) this.__events = [];
         var rs = this.__events.findAll(x => x.name == name);
         if (rs.length == 0) return undefined;
         var gs: any[] = [];
@@ -62,20 +67,22 @@ export class Events {
         if (gs.length == 1) return gs[0]
         else return gs;
     }
-    has(name: string | F): boolean {
-        if (typeof name == 'string') return this.__events.exists(x => x.name == name);
+    has(name: T | F): boolean {
+        if (!Array.isArray(this.__events)) this.__events = [];
+        if ((typeof name == 'string' || typeof name == 'number')) return this.__events.exists(x => x.name == name);
         else if (typeof name == 'function') return this.__events.exists(x => x.fn == name);
         else return false;
     }
-    private __data: Record<string, any> = {};
+    private __data: Record<string, any>;
     /****
      * 
      * 如果value为null，表示清理key
      */
     store(key: string | Record<string, any>, value?: any) {
+        if (typeof this.__data == 'undefined') this.__data = {};
         if (typeof key == 'string' && value === null) delete this.__data[key];
         else if (typeof key == 'string' && typeof value != 'undefined') this.__data[key] = value;
         else if (typeof key == 'string' && typeof value == 'undefined') return this.__data[key];
-        else if (typeof key == 'object') for (var n in key) this.store(n, key[n]);
+        else if (typeof key == 'object') for (var n in key as any) this.store(n as any, key[n]);
     }
 }
