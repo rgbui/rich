@@ -26,8 +26,8 @@ export function Icon(props: {
         Object.assign(style, {
             fontSize: props.size == 'none' ? undefined : 20,
             lineHeight: props.size == 'none' ? undefined : '20px',
-            width: props.size == 'none' ? undefined : 20 || props.size,
-            height: props.size == 'none' ? undefined : 20 || props.size
+            width: props.size == 'none' ? undefined : (props.size) || 20,
+            height: props.size == 'none' ? undefined : (props.size) || 20
         });
         return <i className={classList.join(" ")}
             onClick={e => { props.click ? props.click(e.nativeEvent) : undefined; }}
@@ -36,8 +36,8 @@ export function Icon(props: {
     }
     else {
         Object.assign(style, {
-            width: props.size == 'none' ? undefined : 20 || props.size,
-            height: props.size == 'none' ? undefined : 20 || props.size
+            width: props.size == 'none' ? undefined : (props.size) || 20,
+            height: props.size == 'none' ? undefined : (props.size) || 20
         })
         return <props.icon className={classList.join(" ")}
             onClick={e => { props.click ? props.click(e.nativeEvent) : undefined; }}
