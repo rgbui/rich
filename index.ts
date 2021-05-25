@@ -11,7 +11,7 @@ import './src/assert/font/iconfont.css';
 
 import { Page } from "./src/page";
 import './src/block/declare';
-import "./src/plug/declare";
+import "./src/extensions/declare";
 /***
  * import components
  */

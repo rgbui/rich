@@ -13,10 +13,10 @@ import { User } from '../types/user';
 import { HistorySnapshoot } from '../history/snapshoot';
 import { Block } from '../block';
 import { OperatorDirective } from '../history/declare';
-import { BlockSelector } from '../plug/block.selector';
-import { ReferenceSelector } from '../plug/reference.selector';
-import { SelectorMenu } from '../plug/block.menu/menu';
-import { TextTool } from '../plug/text.menu/text.tool';
+import { BlockSelector } from '../extensions/block.selector';
+import { ReferenceSelector } from '../extensions/reference.selector';
+import { SelectorMenu } from '../extensions/block.menu/menu';
+import { TextTool } from '../extensions/text.menu/text.tool';
 import { ConfigurationManager } from '../config';
 import { PageConfig, WorkspaceConfig } from '../config/workspace';
 

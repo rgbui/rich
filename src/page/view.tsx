@@ -4,10 +4,10 @@ import { Page } from "./index";
 import { PageLayoutView } from "./layout/render";
 import { SelectorView } from "../selector/render/render";
 import { ChildsArea } from "../block/base/appear";
-import { BlockSelector } from "../plug/block.selector";
-import { ReferenceSelector } from "../plug/reference.selector";
-import { SelectorMenu } from "../plug/block.menu/menu";
-import { TextTool } from "../plug/text.menu/text.tool";
+import { BlockSelector } from "../extensions/block.selector";
+import { ReferenceSelector } from "../extensions/reference.selector";
+import { SelectorMenu } from "../extensions/block.menu/menu";
+import { TextTool } from "../extensions/text.menu/text.tool";
 import ReactDOM from "react-dom";
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick

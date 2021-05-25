@@ -5,7 +5,7 @@ import { BlockCssName } from "../block/pattern/css";
 import { Point } from "../common/point";
 import { ActionDirective } from "../history/declare";
 import { Page } from "../page";
-import { TextCommand } from "../plug/text.menu/text.command";
+import { TextCommand } from "../extensions/text.menu/text.command";
 import { Anchor } from "./anchor";
 import { SelectorView } from "./render/render";
 import { BlockSelection } from "./selection";
