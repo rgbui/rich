@@ -33,9 +33,8 @@ export class Events<T = string> {
     }
     once(name: T | Record<string, F>, fn?: F) {
         if (!Array.isArray(this.__events)) this.__events = [];
-        if (typeof name == 'object') { for (var n in name as any) this.only(n as any, name[n]) }
+        if (typeof name == 'object') { for (var n in name as any) this.once(n as any, name[n]) }
         else {
-
             this.__events.push({ name, fn, once: true });
         }
     }
