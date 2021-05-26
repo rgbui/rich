@@ -36,9 +36,9 @@ export class PageEvent {
                 if (anchor.block.isLayout) {
                     throw 'not anchor layout block'
                 }
-                this.selector.replaceSelection(anchor);
-                this.selector.setActiveAnchor(anchor);
-                this.selector.renderSelection();
+                this.selector.explorer.replaceSelection(anchor);
+                this.selector.explorer.setActiveAnchor(anchor);
+                this.selector.explorer.renderSelection();
             }
         }
     }
@@ -51,9 +51,9 @@ export class PageEvent {
                     var block = (blockEle as any).block as Block;
                     var anchor = block.visibleAnchor(Point.from(event));
                     if (anchor) {
-                        this.selector.joinSelection(anchor);
-                        this.selector.setActiveAnchor(anchor);
-                        this.selector.renderSelection();
+                        this.selector.explorer.joinSelection(anchor);
+                        this.selector.explorer.setActiveAnchor(anchor);
+                        this.selector.explorer.renderSelection();
                     }
                 }
             }
@@ -92,7 +92,7 @@ export class PageEvent {
     }
     onMouseup(this: Page, event: MouseEvent) {
         if (this.mouseScope && this.mouseScope.isDown) {
-            if (this.mouseScope.isMove && this.selector.selections.exists(g => g.hasRange)) {
+            if (this.mouseScope.isMove && this.selector.explorer.selections.exists(g => g.hasRange)) {
                 if (this.textTool.isVisible != true)
                     this.textTool.open(event);
             }
