@@ -2,9 +2,10 @@ import React from "react";
 import { createPortal } from "react-dom";
 import { Point } from "../../common/point";
 import { Page } from "../../page";
+import { SyExtensionsComponent } from "../sy.component";
 import { ReferenceSelectorData } from "./data";
 
-export class ReferenceSelector extends React.Component {
+export class ReferenceSelector extends SyExtensionsComponent {
     private node: HTMLElement;
     constructor(props) {
         super(props);
@@ -87,4 +88,8 @@ export class ReferenceSelector extends React.Component {
     componentWillUnmount() {
         if (this.node) this.node.remove()
     }
+}
+export interface ReferenceSelector {
+    on(name: 'error', fn: (error: Error) => void);
+    emit(name: 'error', error: Error);
 }

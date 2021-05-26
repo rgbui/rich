@@ -4,10 +4,10 @@ import { Page } from "./index";
 import { PageLayoutView } from "./layout/render";
 import { SelectorView } from "../selector/render/render";
 import { ChildsArea } from "../block/base/appear";
-import { BlockSelector } from "../extensions/block.selector";
-import { ReferenceSelector } from "../extensions/reference.selector";
-import { SelectorMenu } from "../extensions/block.menu/menu";
-import { TextTool } from "../extensions/text.menu/text.tool";
+import { BlockSelector } from "../extensions/block";
+import { ReferenceSelector } from "../extensions/reference";
+import { BlockMenu } from "../extensions/menu/menu";
+import { TextTool } from "../extensions/text.tool/text.tool";
 import ReactDOM from "react-dom";
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
@@ -55,10 +55,10 @@ export class PageView extends Component<{ page: Page }>{
                 </div>
             </PageLayoutView>
             <div className='sy-page-plugs'>
-                <BlockSelector ref={e => this.page.blockSelector = e} page={this.page}></BlockSelector>
-                <ReferenceSelector ref={e => this.page.referenceSelector = e} ></ReferenceSelector>
-                <SelectorMenu ref={e => this.page.selectorMenu = e} page={this.page}></SelectorMenu>
-                <TextTool ref={e => this.page.textTool = e} page={this.page}></TextTool>
+                <BlockSelector ref={e => this.page.registerExtension(e)} ></BlockSelector>
+                <ReferenceSelector ref={e => this.page.registerExtension(e)} ></ReferenceSelector>
+                <BlockMenu ref={e => this.page.registerExtension(e)} ></BlockMenu>
+                <TextTool ref={e => this.page.registerExtension(e)}></TextTool>
             </div>
         </div>
     }

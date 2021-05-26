@@ -1,6 +1,6 @@
 
 
-import "./block.selector/style.less";
-import './reference.selector/style.less';
-import "./block.menu/style.less";
-import "./text.menu/style.less";
+import "./block/style.less";
+import './reference/style.less';
+import "./menu/style.less";
+import "./text.tool/style.less";

@@ -2,20 +2,17 @@ import React from "react";
 import { createPortal } from "react-dom";
 import { Point } from "../../common/point";
 import { Icon } from "../../component/icon";
-import { Page } from "../../page";
 import Equation from "../../assert/svg/equation.svg";
 import Mention from "../../assert/svg/mention.svg";
 import { Dragger } from "../../common/dragger";
 import { TextCommand } from "./text.command";
+import { SyExtensionsComponent } from "../sy.component";
 
-export class TextTool extends React.Component<{ page: Page }>{
+export class TextTool extends SyExtensionsComponent {
     private node: HTMLElement;
     constructor(props) {
         super(props);
         this.node = document.body.appendChild(document.createElement('div'));
-    }
-    get page() {
-        return this.props.page;
     }
     open(event: MouseEvent) {
         this.point = Point.from(event);
@@ -66,7 +63,7 @@ export class TextTool extends React.Component<{ page: Page }>{
         return this.dragger.isDown;
     }
     onExcute(command: TextCommand) {
-        this.page.selector.onSelectionExcuteCommand(command);
+        this.emit('selectionExcuteCommand', command);
         this.close();
     }
     onOpenFontColor() {
@@ -81,4 +78,10 @@ export class TextTool extends React.Component<{ page: Page }>{
     onOpenBlockSelector() {
 
     }
+}
+export interface TextTool {
+    on(name: 'selectionExcuteCommand', fn: (command: TextCommand) => void);
+    emit(name: 'selectionExcuteCommand', command: TextCommand);
+    on(name: 'error', fn: (error: Error) => void);
+    emit(name: 'error', error: Error);
 }

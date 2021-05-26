@@ -5,7 +5,7 @@ import { BlockCssName } from "../block/pattern/css";
 import { Point } from "../common/point";
 import { ActionDirective } from "../history/declare";
 import { Page } from "../page";
-import { TextCommand } from "../extensions/text.menu/text.command";
+import { TextCommand } from "../extensions/text.tool/text.command";
 import { Anchor } from "./anchor";
 import { SelectorView } from "./render/render";
 import { BlockSelection } from "./selection";
@@ -306,10 +306,10 @@ export class Selector {
         return new Point(point.x - pe.left, point.y - pe.top);
     }
     openMenu(event: MouseEvent) {
-        this.page.selectorMenu.select = (item, ev) => {
+        this.page.blockMenu.only('select', (item, ev) => {
 
-        }
-        this.page.selectorMenu.open(event);
+        })
+        this.page.blockMenu.open(event);
     }
     async onSelectionExcuteCommand(command: TextCommand) {
         await this.page.snapshoot.sync(ActionDirective.onUpdatePattern, async () => {

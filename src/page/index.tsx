@@ -13,12 +13,13 @@ import { User } from '../types/user';
 import { HistorySnapshoot } from '../history/snapshoot';
 import { Block } from '../block';
 import { OperatorDirective } from '../history/declare';
-import { BlockSelector } from '../extensions/block.selector';
-import { ReferenceSelector } from '../extensions/reference.selector';
-import { SelectorMenu } from '../extensions/block.menu/menu';
-import { TextTool } from '../extensions/text.menu/text.tool';
+import { BlockSelector } from '../extensions/block';
+import { ReferenceSelector } from '../extensions/reference';
+import { BlockMenu} from '../extensions/menu/menu';
+import { TextTool } from '../extensions/text.tool/text.tool';
 import { ConfigurationManager } from '../config';
 import { PageConfig, WorkspaceConfig } from '../config/workspace';
+import { SyExtensionsComponent } from '../extensions/sy.component';
 
 
 export class Page extends Events {
@@ -104,7 +105,7 @@ export class Page extends Events {
     viewRender: PageView;
     blockSelector: BlockSelector;
     referenceSelector: ReferenceSelector;
-    selectorMenu: SelectorMenu;
+    blockMenu: BlockMenu;
     textTool: TextTool;
     keys: string[] = [];
     isFocus: boolean = false;
@@ -133,6 +134,25 @@ export class Page extends Events {
         });
         this.onAddUpdate(parent);
         return block;
+    }
+    registerExtension(extension: SyExtensionsComponent) {
+        if (extension instanceof BlockSelector) {
+            this.blockSelector = extension;
+            this.blockSelector.on('error', err => this.onError(err));
+        }
+        else if (extension instanceof BlockMenu) {
+            this.blockMenu = extension;
+            this.blockMenu.on('error', err => this.onError(err));
+        }
+        else if (extension instanceof TextTool) {
+            this.textTool = extension;
+            this.textTool.on('error', err => this.onError(err));
+            this.textTool.on('selectionExcuteCommand', command => this.selector.onSelectionExcuteCommand(command))
+        }
+        else if (extension instanceof ReferenceSelector) {
+            this.referenceSelector = extension;
+            this.referenceSelector.on('error', err => this.onError(err));
+        }
     }
 }
 export interface Page extends PageEvent { }
