@@ -24,9 +24,7 @@
             "es6"
         ],
         "typeRoots": [
-            "node",
-            "./types",
-            "./node_modules/vue/types",
+            "node"
         ],
     }
 }
