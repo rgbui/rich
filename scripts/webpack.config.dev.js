@@ -6,7 +6,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin");
-const CopyWebpackPlugin=require('copy-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 /**
  * webpack url https://www.cnblogs.com/brandonhulala/p/6057378.html
@@ -124,8 +124,12 @@ module.exports = {
             },
             canPrint: true
         }),
-        new CopyWebpackPlugin([
-            { from: "../src/extensions/emoji/emoji.json", to: "data/emoji.json" }
-        ]),
+        new CopyWebpackPlugin(
+            {
+                patterns: [
+                    { from: "../src/extensions/emoji/emoji.json", to: "data/emoji.json" }
+                ]
+            }
+        ),
     ]
 };

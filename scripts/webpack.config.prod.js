@@ -12,7 +12,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 var outputDir = path.join(__dirname, "../dist");
 module.exports = {
     mode: 'production',
-    entry: "./src/index.ts",
+    entry: "./index.ts",
     output: {
         path: outputDir,
         filename: "sy.rich.js"
@@ -103,8 +103,12 @@ module.exports = {
             canPrint: true
         }),
         new MiniCssExtractPlugin({ filename: "sy.rich.css" }),
-        new CopyWebpackPlugin([
-            { from: "../src/extensions/emoji/emoji.json", to: "data/emoji.json" }
-        ]),
+        new CopyWebpackPlugin(
+            {
+                patterns: [
+                    { from: path.join(__dirname, "../src/extensions/emoji/emoji.json"), to: "data/emoji.json" }
+                ]
+            }
+        ),
     ]
 };
