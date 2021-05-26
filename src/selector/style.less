@@ -68,9 +68,25 @@
     /**
     https          ://developer.mozilla.org/zh-CN/docs/Web/CSS/cursor
     ****/
-    cursor         : grab;
 
-    .sy-icon {}
+
+    span {
+        border-radius  : 3px;
+        cursor         : grab;
+        display        : inline-flex;
+        justify-content: center;
+        align-items    : center;
+        width          : 18px;
+        height         : 24px;
+
+        .sy-icon {
+            fill: rgba(55, 53, 47, 0.3);
+        }
+
+        &:hover {
+            background-color: rgba(55, 53, 47, 0.08);
+        }
+    }
 }
 
 .sy-selector-drag-copy {
@@ -85,6 +101,7 @@
 .sy-block-drag-over-right,
 .sy-block-drag-over-up {
     position: relative;
+
     &::after {
         content       : '\20';
         position      : absolute;
@@ -93,7 +110,7 @@
         right         : 0px;
         bottom        : 0px;
         pointer-events: none;
-        border        :4px solid transparent;
+        border        : 4px solid transparent;
     }
 }
 

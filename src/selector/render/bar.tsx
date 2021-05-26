@@ -4,6 +4,7 @@ import { Block } from "../../block";
 import { Point } from "../../common/point";
 import { Icon } from "../../component/icon";
 import { SelectorView } from "./render";
+import Tooltip from "rc-tooltip";
 
 export class Bar extends React.Component<{ selectorView: SelectorView }>{
     constructor(props) {
@@ -99,7 +100,13 @@ export class Bar extends React.Component<{ selectorView: SelectorView }>{
         return <div>
             <div className='sy-selector-drag-copy' ref={e => this.dragCopyEle = e}></div>
             <div className='sy-selector-bar' ref={e => this.barEle = e} onMouseDown={e => this.onMousedown(e.nativeEvent)}>
-                <Icon icon='drag:sy'></Icon>
+                <Tooltip placement="left" trigger={['hover']}
+                    overlay={<div className='sy-tooltip-content'>
+                        <span><b>Drag</b> to Move</span><br />
+                        <span><b>Click</b> to Open Menu</span></div>}><span>
+                        <Icon icon='drag:sy' size={14}></Icon>
+                    </span>
+                </Tooltip>
             </div>
         </div>
     }
