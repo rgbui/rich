@@ -1,6 +1,6 @@
 import React from "react";
 export type F = (...args: any[]) => any;
-export class SyPlugComponent<G = {}, T = string> extends React.Component<G>{
+export class SyExtensionsComponent<G = {}, T = string> extends React.Component<G>{
     constructor(props: G) {
         super(props);
     }

@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { Dragger } from "../../common/dragger";
 import { Point } from "../../common/point";
 import Axios from "axios";
-import { SyPlugComponent } from "../sy.plug.component";
+import { SyExtensionsComponent } from "../sy.component";
 
 export type EmojiType = {
     char: string,
@@ -13,7 +13,7 @@ export type EmojiType = {
 }
 
 
-export class EmojiPicker extends SyPlugComponent {
+export class EmojiPicker extends SyExtensionsComponent{
     constructor(props) {
         super(props);
         this.node = document.createElement('div');
