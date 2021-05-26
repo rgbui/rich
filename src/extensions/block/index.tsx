@@ -1,18 +1,14 @@
 import React from "react";
 import ReactDOM, { createPortal } from "react-dom";
 import { Point } from "../../common/point";
-import { Icon } from "../../component/icon";
-import { Page } from "../../page";
+import { SyExtensionsComponent } from "../sy.component";
 import { BlockSelectorData } from "./data";
 
-export class BlockSelector extends React.Component<{ page: Page }> {
+export class BlockSelector extends SyExtensionsComponent {
     private node: HTMLElement;
     constructor(props) {
         super(props);
         this.node = document.body.appendChild(document.createElement('div'));
-    }
-    get page() {
-        return this.props.page;
     }
     get filterSelectorData() {
         var bs = BlockSelectorData.map(b => {
@@ -77,18 +73,15 @@ export class BlockSelector extends React.Component<{ page: Page }> {
                 style={style}>{this.renderSelectors()}</div>}
         </div>, this.node);
     }
-    select: (block: Record<string, any>) => void;
     onSelect(block?) {
         if (!block) block = this.selectBlockData;
         try {
-            if (typeof this.select == 'function')
-                this.select(block);
+            this.emit('select',block);
         }
         catch (ex) {
-            this.page.onError(ex);
+            this.emit('error', ex);
         }
         finally {
-            delete this.select;
             this.visible = false;
             this.forceUpdate();
         }
@@ -104,7 +97,6 @@ export class BlockSelector extends React.Component<{ page: Page }> {
         this.pos = point;
         this.selectIndex = 0;
         this.visible = true;
-        delete this.select;
         this.onInputFilter(text);
     }
     onInputFilter(text: string) {
@@ -182,4 +174,10 @@ export class BlockSelector extends React.Component<{ page: Page }> {
                 return true;
         }
     }
+}
+export interface BlockSelector {
+    on(name: 'error', fn: (error: Error) => void);
+    emit(name: 'error', error: Error);
+    only(name: 'select', fn: (item: Record<string,any>) => void);
+    emit(name: 'select', item: Record<string,any>);
 }

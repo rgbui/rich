@@ -2,7 +2,6 @@ import React from "react";
 import { createPortal } from "react-dom";
 import { Point } from "../../common/point";
 import { Icon } from "../../component/icon";
-import { Page } from "../../page";
 import duplicate from "../../assert/svg/duplicate.svg";
 import loop from "../../assert/svg/loop.svg";
 import blockcolor from "../../assert/svg/blockcolor.svg";
@@ -11,16 +10,9 @@ import squareplus from "../../assert/svg/squareplus.svg";
 import moveTo from '../../assert/svg/moveTo.svg';
 import comment from "../../assert/svg/comment.svg";
 import trash from "../../assert/svg/trash.svg";
-export type SelectorMenuItemType = {
-    name?: string,
-    type?: 'devide' | 'text' | 'option',
-    text?: string,
-    icon?: string | SvgrComponent,
-    label?: string,
-    childs?: SelectorMenuItemType[]
-}
-
-export class SelectorMenu extends React.Component<{ page: Page }>{
+import { SyExtensionsComponent } from "../sy.component";
+import { BlockMenuAction, BlockMenuItem } from "./out.declare";
+export class BlockMenu extends SyExtensionsComponent {
     private node: HTMLElement;
     constructor(props) {
         super(props);
@@ -29,63 +21,58 @@ export class SelectorMenu extends React.Component<{ page: Page }>{
     open(event: MouseEvent) {
         this.point = Point.from(event);
         this.visible = true;
-        delete this.select;
         this.forceUpdate();
     }
     close() {
-        delete this.select;
         this.visible = false;
         this.forceUpdate();
     }
-    select: (item: SelectorMenuItemType, event: MouseEvent) => void;
-    private mousedown(item: SelectorMenuItemType, event: MouseEvent) {
-        if (typeof this.select == 'function') {
-            try {
-                this.select(item, event);
-            }
-            catch (ex) {
-                this.props.page.onError(ex);
-            }
-            finally {
-
-                this.close();
-            }
+    private mousedown(item: BlockMenuItem, event: MouseEvent) {
+        try {
+            this.emit('select', item, event);
         }
+        catch (ex) {
+            this.emit('error', ex);
+        }
+        finally {
+            this.close();
+        }
+
     }
     get isVisible() {
         return this.visible;
     }
     get items() {
-        var items: SelectorMenuItemType[] = [];
+        var items: BlockMenuItem[] = [];
         items.push({
-            name: 'delete',
+            name: BlockMenuAction.delete,
             icon: trash,
             text: '删除',
             label: "delete"
         });
         items.push({
-            name: 'copy',
+            name: BlockMenuAction.copy,
             text: '拷贝复本',
             label: "ctrl+D",
             icon: duplicate
         });
         items.push({
-            name: 'trun',
+            name: BlockMenuAction.trun,
             text: '转换为',
             icon: loop
         });
         items.push({
-            name: 'trunIntoPage',
+            name: BlockMenuAction.trunIntoPage,
             text: '转换为页面',
             icon: squareplus
         });
         items.push({
-            name: 'moveTo',
+            name: BlockMenuAction.moveTo,
             text: '移到',
             icon: moveTo
         });
         items.push({
-            name: 'link',
+            name: BlockMenuAction.link,
             text: '复制链接',
             icon: link
         });
@@ -93,7 +80,7 @@ export class SelectorMenu extends React.Component<{ page: Page }>{
             type: 'devide'
         });
         items.push({
-            name: 'comment',
+            name: BlockMenuAction.comment,
             text: '评论',
             icon: comment
         });
@@ -101,7 +88,7 @@ export class SelectorMenu extends React.Component<{ page: Page }>{
             type: 'devide'
         });
         items.push({
-            name: 'color',
+            name: BlockMenuAction.color,
             text: '颜色',
             icon: blockcolor
         });
@@ -109,11 +96,11 @@ export class SelectorMenu extends React.Component<{ page: Page }>{
     }
     private visible: boolean = false;
     private point: Point = new Point(0, 0);
-    renderItem(item: SelectorMenuItemType, index: number) {
+    renderItem(item: BlockMenuItem, index: number) {
         return <div className='sy-selector-menu-item-box' key={(item.name || '') + (item.type || '') + index.toString()}>
             <div className='sy-selector-menu-item'>
                 {(item.type == 'option' || !item.type) && <a className='sy-selector-menu-item-option' onMouseDown={e => this.mousedown(item, e.nativeEvent)}>
-                    <Icon icon={item.icon}></Icon>
+                    <Icon icon={item.icon} size={17}></Icon>
                     <span>{item.text}</span>
                     {item.label && <label>{item.label}</label>}
                     {item.childs && item.childs.length > 0 && <Icon icon='arrow-right:sy'></Icon>}
@@ -145,4 +132,10 @@ export class SelectorMenu extends React.Component<{ page: Page }>{
     componentWillUnmount() {
         this.node.remove();
     }
+}
+export interface BlockMenu {
+    on(name: 'error', fn: (error: Error) => void);
+    emit(name: 'error', error: Error);
+    only(name: 'select', fn: (item: BlockMenuItem, event: MouseEvent) => void);
+    emit(name: 'select', item: BlockMenuItem, event: MouseEvent);
 }
