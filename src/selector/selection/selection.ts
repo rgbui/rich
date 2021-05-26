@@ -1,6 +1,7 @@
 
-import { Selector } from ".";
-import { Block } from "../block";
+import { Selector } from "..";
+import { Block } from "../../block";
+import { SelectionExplorer } from "./explorer";
 import { Anchor } from "./anchor";
 
 /***
@@ -8,9 +9,12 @@ import { Anchor } from "./anchor";
  * start和end并没有表示一定是前后的情况
  */
 export class BlockSelection {
-    selector: Selector;
-    constructor(selector: Selector) {
-        this.selector = selector;
+    get selector() {
+        return this.explorer.selector;
+    }
+    explorer: SelectionExplorer;
+    constructor(explorer: SelectionExplorer) {
+        this.explorer = explorer;
     }
     private _start: Anchor;
     private _end: Anchor;

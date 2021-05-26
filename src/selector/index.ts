@@ -6,47 +6,50 @@ import { Point } from "../common/point";
 import { ActionDirective } from "../history/declare";
 import { Page } from "../page";
 import { TextCommand } from "../extensions/text.tool/text.command";
-import { Anchor } from "./anchor";
+import { Anchor } from "./selection/anchor";
 import { SelectorView } from "./render/render";
-import { BlockSelection } from "./selection";
+import { BlockMenuAction } from "../extensions/menu/out.declare";
+import { SelectionExplorer } from "./selection/explorer";
 
 export class Selector {
-    selections: BlockSelection[] = [];
+    // selections: BlockSelection[] = [];
     page: Page;
+    explorer: SelectionExplorer;
     constructor(page: Page) {
         this.page = page;
+        this.explorer = new SelectionExplorer(this);
     }
-    activeAnchor: Anchor;
+    // activeAnchor: Anchor;
     overBlock: Block;
     dropBlock: Block;
     dropArrow: 'left' | 'right' | 'down' | 'up' | 'inner' | 'none';
     get isDrag() {
         return this.view.bar.isDrag;
     }
-    setActiveAnchor(anchor: Anchor) {
-        this.activeAnchor = anchor;
-        if (anchor.isText) {
-            this.view.textInput.onStartInput(anchor);
-        }
-        this.page.emit('focusAnchor', this.activeAnchor);
-        if (anchor != this.activeAnchor) {
-            this.page.emit('changeAnchor', this.activeAnchor);
-        }
-    }
-    get hasSelectionRange() {
-        if (this.selections.length > 0) {
-            return this.selections.exists(g => g.hasRange)
-        }
-        return false;
-    }
-    get isOnlyOneAnchor() {
-        if (this.selections.length == 1) {
-            return this.selections.trueForAll(g => g.isOnlyAnchor)
-        }
-        return false;
-    }
+    // setActiveAnchor(anchor: Anchor) {
+    //     this.activeAnchor = anchor;
+    //     if (anchor.isText) {
+    //         this.view.textInput.onStartInput(anchor);
+    //     }
+    //     this.page.emit('focusAnchor', this.activeAnchor);
+    //     if (anchor != this.activeAnchor) {
+    //         this.page.emit('changeAnchor', this.activeAnchor);
+    //     }
+    // }
+    // get hasSelectionRange() {
+    //     if (this.selections.length > 0) {
+    //         return this.selections.exists(g => g.hasRange)
+    //     }
+    //     return false;
+    // }
+    // get isOnlyOneAnchor() {
+    //     if (this.selections.length == 1) {
+    //         return this.selections.trueForAll(g => g.isOnlyAnchor)
+    //     }
+    //     return false;
+    // }
     onKeyArrow(arrow: "ArrowLeft" | 'ArrowDown' | 'ArrowUp' | 'ArrowRight') {
-        var anchor = this.activeAnchor;
+        var anchor = this.explorer.activeAnchor;
         if (anchor) {
             var newAnchor: Anchor;
             if (anchor.isText) {
@@ -94,9 +97,9 @@ export class Selector {
                         }
                     }
                 }
-                this.replaceSelection(newAnchor);
-                this.setActiveAnchor(newAnchor);
-                this.renderSelection();
+                this.explorer.replaceSelection(newAnchor);
+                this.explorer.setActiveAnchor(newAnchor);
+                this.explorer.renderSelection();
             }
         }
     }
@@ -264,50 +267,58 @@ export class Selector {
         }
     }
     view: SelectorView;
-    createSelection() {
-        var sel = new BlockSelection(this);
-        return sel;
-    }
-    replaceSelection(anchor: Anchor) {
-        if (this.selections.length > 0) {
-            this.selections.each((sel, i) => {
-                if (i > 0) sel.dispose();
-            });
-            var sel = this.selections.first();
-            if (sel.end) sel.end.dispose();
-            if (sel.start) { anchor.acceptView(sel.start); sel.start = anchor; }
-            this.selections = [sel];
-        }
-        else {
-            var sel = this.createSelection();
-            sel.start = anchor;
-            this.selections = [sel];
-        }
-    }
-    joinSelection(anchor: Anchor) {
-        if (this.selections.length > 0) {
-            var sel = this.selections.find(g => g.start == this.activeAnchor || g.end == this.activeAnchor);
-            if (sel) {
-                if (sel.end) { anchor.acceptView(sel.end); sel.end = anchor }
-                else sel.end = anchor;
-            }
-        }
-    }
-    renderSelection() {
-        this.selections.each(sel => {
-            sel.visible();
-        });
-    }
-    createAnchor() {
-        return new Anchor(this);
-    }
+    // createSelection() {
+    //     var sel = new BlockSelection(this);
+    //     return sel;
+    // }
+    // replaceSelection(anchor: Anchor) {
+    //     if (this.selections.length > 0) {
+    //         this.selections.each((sel, i) => {
+    //             if (i > 0) sel.dispose();
+    //         });
+    //         var sel = this.selections.first();
+    //         if (sel.end) sel.end.dispose();
+    //         if (sel.start) { anchor.acceptView(sel.start); sel.start = anchor; }
+    //         this.selections = [sel];
+    //     }
+    //     else {
+    //         var sel = this.createSelection();
+    //         sel.start = anchor;
+    //         this.selections = [sel];
+    //     }
+    // }
+    // joinSelection(anchor: Anchor) {
+    //     if (this.selections.length > 0) {
+    //         var sel = this.selections.find(g => g.start == this.activeAnchor || g.end == this.activeAnchor);
+    //         if (sel) {
+    //             if (sel.end) { anchor.acceptView(sel.end); sel.end = anchor }
+    //             else sel.end = anchor;
+    //         }
+    //     }
+    // }
+    // renderSelection() {
+    //     this.selections.each(sel => {
+    //         sel.visible();
+    //     });
+    // }
+    // createAnchor() {
+    //     return new Anchor(this);
+    // }
     relativePageOffset(point: Point) {
         var pe = this.page.el.getBoundingClientRect();
         return new Point(point.x - pe.left, point.y - pe.top);
     }
     openMenu(event: MouseEvent) {
         this.page.blockMenu.only('select', (item, ev) => {
+            switch (item.name) {
+                case BlockMenuAction.delete:
 
+                    break;
+                case BlockMenuAction.copy:
+                    break;
+                case BlockMenuAction.link:
+                    break;
+            }
         })
         this.page.blockMenu.open(event);
     }
@@ -338,7 +349,7 @@ export class Selector {
                         style.textDecoration = 'none';
                         break;
                 }
-                await this.selections.eachAsync(async sel => {
+                await this.explorer.selections.eachAsync(async sel => {
                     var bs = sel.referenceBlocks;
                     var newStart: Block, newEnd: Block;
                     await bs.eachAsync(async b => {
@@ -368,10 +379,10 @@ export class Selector {
                     });
                     if (newStart && newEnd) {
                         sel.dispose();
-                        var newStartAnchor = new Anchor(this);
+                        var newStartAnchor = new Anchor(this.explorer);
                         newStartAnchor.block = newStart;
                         newStartAnchor.at = 0;
-                        var newEndAnchor = new Anchor(this);
+                        var newEndAnchor = new Anchor(this.explorer);
                         newEndAnchor.block = newEnd;
                         newEndAnchor.at = newEnd.content.length;
                         sel.start = newStartAnchor;
@@ -379,7 +390,7 @@ export class Selector {
                     }
                 });
             }, () => {
-                this.renderSelection();
+                this.explorer.renderSelection();
             })
         })
     }

@@ -1,10 +1,11 @@
 
 
-import { Selector } from ".";
-import { Block } from "../block";
-import { dom } from "../common/dom";
-import { Rect } from "../common/point";
-import { TextEle } from "../common/text.ele";
+import { Selector } from "..";
+import { Block } from "../../block";
+import { dom } from "../../common/dom";
+import { Rect } from "../../common/point";
+import { TextEle } from "../../common/text.ele";
+import { SelectionExplorer } from "./explorer";
 
 /***
  * 鼠标点击后产生的锚点
@@ -13,9 +14,12 @@ import { TextEle } from "../common/text.ele";
  * 也可以是点文本的某个位置上面
  */
 export class Anchor {
-    selector: Selector;
-    constructor(selector: Selector) {
-        this.selector = selector;
+    get selector() {
+        return this.explorer.selector;
+    }
+    explorer: SelectionExplorer;
+    constructor(explorer: SelectionExplorer) {
+        this.explorer = explorer;
     }
     /**
      * 点击在某个block上面
@@ -67,7 +71,7 @@ export class Anchor {
         return this._view;
     }
     get isActive() {
-        return this.block.page.selector.activeAnchor === this;
+        return this.block.page.selector.explorer.activeAnchor === this;
     }
     get bound() {
         if (this.view)

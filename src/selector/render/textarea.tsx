@@ -2,7 +2,7 @@ import React from 'react';
 import { dom } from '../../common/dom';
 import { Point } from '../../common/point';
 import { TextEle } from '../../common/text.ele';
-import { Anchor } from '../anchor';
+import { Anchor } from '../selection/anchor';
 import { SelectorView } from './render';
 export class TextInput extends React.Component<{ selectorView: SelectorView }> {
     constructor(props) {

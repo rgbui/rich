@@ -1,4 +1,4 @@
-import { Anchor } from "../selector/anchor";
+import { Anchor } from "../selector/selection/anchor";
 
 
  class Dom {

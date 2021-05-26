@@ -2,7 +2,7 @@ import { Events } from "../util/events";
 import { util } from "../util/util";
 import { Point, Rect } from "../common/point";
 import { Page } from "../page";
-import { Anchor } from "../selector/anchor";
+import { Anchor } from "../selector/selection/anchor";
 import { BlockFactory } from "./factory/block.factory";
 import { BlockAppear, BlockDisplay, BlockRenderRange, Locate } from "./base/enum";
 import { Pattern } from "./pattern/index";
@@ -11,7 +11,7 @@ import { TextEle } from "../common/text.ele";
 import { dom } from "../common/dom";
 import { ActionDirective, OperatorDirective } from "../history/declare";
 import { Block$Seek } from "./seek";
-import { BlockSelection } from "../selector/selection";
+import { BlockSelection } from "../selector/selection/selection";
 import { prop } from "./factory/observable";
 
 export abstract class Block extends Events {
@@ -313,7 +313,7 @@ export abstract class Block extends Events {
     }
     childsEl: HTMLElement;
     get visibleHeadAnchor() {
-        var anchor = this.page.selector.createAnchor();
+        var anchor = this.page.selector.explorer.createAnchor();
         anchor.block = this;
         if (anchor.isText) {
             anchor.at = 0;
@@ -321,7 +321,7 @@ export abstract class Block extends Events {
         return anchor;
     }
     get visibleBackAnchor() {
-        var anchor = this.page.selector.createAnchor();
+        var anchor = this.page.selector.explorer.createAnchor();
         anchor.block = this;
         if (anchor.isText) {
             anchor.at = anchor.textContent.length;
@@ -455,7 +455,6 @@ export abstract class Block extends Events {
             }
             return row.nextFind(g => g.isRow && !g.contains(row));
         }
-
     }
     get prevRow() {
         var row = this.row;
@@ -537,7 +536,7 @@ export abstract class Block extends Events {
      */
     visibleAnchor(point: Point): Anchor {
         var part = this.visiblePoint(point);
-        var anchor = this.page.selector.createAnchor();
+        var anchor = this.page.selector.explorer.createAnchor();
         anchor.block = part;
         if (part.isText) {
             anchor.at = TextEle.getAt(part.textEl, point);
