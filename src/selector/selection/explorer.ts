@@ -36,6 +36,9 @@ export class SelectionExplorer extends Events {
         }
         return false;
     }
+    get referenceBlocks() {
+        return this.selections.map(sel => sel.referenceBlocks).flat();
+    }
     createSelection() {
         var sel = new BlockSelection(this);
         return sel;

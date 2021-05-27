@@ -162,17 +162,17 @@ export class PageEvent {
         }
         else return Array.from(arguments).trueForAll(z => this.keys.exists(z));
     }
-    private updateBlocks: Block[];
+    private willUpdateBlocks: Block[];
     onRememberUpdate() {
-        this.updateBlocks = [];
+        this.willUpdateBlocks = [];
     }
     onAddUpdate(block: Block) {
-        var pa = this.updateBlocks.find(g => g.contains(block));
-        if (!pa) this.updateBlocks.push(block);
+        var pa = this.willUpdateBlocks.find(g => g.contains(block));
+        if (!pa) this.willUpdateBlocks.push(block);
     }
     onExcuteUpdate(finishCompleted?: () => void) {
-        var ups = this.updateBlocks.map(c => c);
-        this.updateBlocks = [];
+        var ups = this.willUpdateBlocks.map(c => c);
+        this.willUpdateBlocks = [];
         var len = ups.length;
         var count = 0;
         ups.each(up => {
@@ -208,5 +208,14 @@ export class PageEvent {
     onUnmount(this: Page) {
         ReactDOM.unmountComponentAtNode(this.root);
         // this.viewRender.componentWillUnmount()
+    }
+    onBatchDelete(this: Page, blocks: Block[]) {
+        this.snapshoot.declare(ActionDirective.onBatchDeleteBlocks);
+        this.onRememberUpdate();
+        blocks.each(bl => {
+            bl.remove()
+        });
+        this.onExcuteUpdate();
+        this.snapshoot.store();
     }
 }

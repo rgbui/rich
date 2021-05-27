@@ -8,7 +8,8 @@ export enum ActionDirective {
     onUndo,
     onRedo,
     onUpdateProps,
-    onUpdatePattern
+    onUpdatePattern,
+    onBatchDeleteBlocks
 }
 
 export enum OperatorDirective {

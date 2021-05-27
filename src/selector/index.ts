@@ -1,6 +1,5 @@
 
 import { Block } from "../block";
-import { BlockFactory } from "../block/factory/block.factory";
 import { BlockCssName } from "../block/pattern/css";
 import { Point } from "../common/point";
 import { ActionDirective } from "../history/declare";
@@ -12,42 +11,18 @@ import { BlockMenuAction } from "../extensions/menu/out.declare";
 import { SelectionExplorer } from "./selection/explorer";
 
 export class Selector {
-    // selections: BlockSelection[] = [];
     page: Page;
     explorer: SelectionExplorer;
     constructor(page: Page) {
         this.page = page;
         this.explorer = new SelectionExplorer(this);
     }
-    // activeAnchor: Anchor;
     overBlock: Block;
     dropBlock: Block;
     dropArrow: 'left' | 'right' | 'down' | 'up' | 'inner' | 'none';
     get isDrag() {
         return this.view.bar.isDrag;
     }
-    // setActiveAnchor(anchor: Anchor) {
-    //     this.activeAnchor = anchor;
-    //     if (anchor.isText) {
-    //         this.view.textInput.onStartInput(anchor);
-    //     }
-    //     this.page.emit('focusAnchor', this.activeAnchor);
-    //     if (anchor != this.activeAnchor) {
-    //         this.page.emit('changeAnchor', this.activeAnchor);
-    //     }
-    // }
-    // get hasSelectionRange() {
-    //     if (this.selections.length > 0) {
-    //         return this.selections.exists(g => g.hasRange)
-    //     }
-    //     return false;
-    // }
-    // get isOnlyOneAnchor() {
-    //     if (this.selections.length == 1) {
-    //         return this.selections.trueForAll(g => g.isOnlyAnchor)
-    //     }
-    //     return false;
-    // }
     onKeyArrow(arrow: "ArrowLeft" | 'ArrowDown' | 'ArrowUp' | 'ArrowRight') {
         var anchor = this.explorer.activeAnchor;
         if (anchor) {
@@ -132,7 +107,7 @@ export class Selector {
             if (currentDropBlock != this.dropBlock && this.dropBlock) {
                 this.dropBlock.onDragLeave();
             }
-            if (currentDropBlock && this.view.bar.dragBlock.contains(currentDropBlock)) {
+            if (currentDropBlock && this.view.bar.dragBlock.exists(g => g.contains(currentDropBlock))) {
                 this.dropBlock = null;
                 return;
             }
@@ -267,52 +242,18 @@ export class Selector {
         }
     }
     view: SelectorView;
-    // createSelection() {
-    //     var sel = new BlockSelection(this);
-    //     return sel;
-    // }
-    // replaceSelection(anchor: Anchor) {
-    //     if (this.selections.length > 0) {
-    //         this.selections.each((sel, i) => {
-    //             if (i > 0) sel.dispose();
-    //         });
-    //         var sel = this.selections.first();
-    //         if (sel.end) sel.end.dispose();
-    //         if (sel.start) { anchor.acceptView(sel.start); sel.start = anchor; }
-    //         this.selections = [sel];
-    //     }
-    //     else {
-    //         var sel = this.createSelection();
-    //         sel.start = anchor;
-    //         this.selections = [sel];
-    //     }
-    // }
-    // joinSelection(anchor: Anchor) {
-    //     if (this.selections.length > 0) {
-    //         var sel = this.selections.find(g => g.start == this.activeAnchor || g.end == this.activeAnchor);
-    //         if (sel) {
-    //             if (sel.end) { anchor.acceptView(sel.end); sel.end = anchor }
-    //             else sel.end = anchor;
-    //         }
-    //     }
-    // }
-    // renderSelection() {
-    //     this.selections.each(sel => {
-    //         sel.visible();
-    //     });
-    // }
-    // createAnchor() {
-    //     return new Anchor(this);
-    // }
     relativePageOffset(point: Point) {
         var pe = this.page.el.getBoundingClientRect();
         return new Point(point.x - pe.left, point.y - pe.top);
     }
     openMenu(event: MouseEvent) {
+        var dragBlock = this.view.bar.dragBlock.map(c=>c);
         this.page.blockMenu.only('select', (item, ev) => {
             switch (item.name) {
                 case BlockMenuAction.delete:
-
+                    if (dragBlock.length > 0) {
+                        this.page.onBatchDelete(dragBlock);
+                    }
                     break;
                 case BlockMenuAction.copy:
                     break;
@@ -379,10 +320,10 @@ export class Selector {
                     });
                     if (newStart && newEnd) {
                         sel.dispose();
-                        var newStartAnchor = new Anchor(this.explorer);
+                        var newStartAnchor = this.explorer.createAnchor();
                         newStartAnchor.block = newStart;
                         newStartAnchor.at = 0;
-                        var newEndAnchor = new Anchor(this.explorer);
+                        var newEndAnchor = this.explorer.createAnchor();
                         newEndAnchor.block = newEnd;
                         newEndAnchor.at = newEnd.content.length;
                         sel.start = newStartAnchor;
