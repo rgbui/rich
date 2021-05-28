@@ -87,8 +87,21 @@ export class Selector {
     onCancelSelection() {
 
     }
-    onCreateBlockByEnter() {
-
+    async onCreateBlockByEnter() {
+        this.page.snapshoot.declare(ActionDirective.onCreateBlockByEnter);
+        this.page.onRememberUpdate();
+        var newBlock = await this.explorer.activeAnchor.block.visibleDownCreateBlock('/textspan');
+        newBlock.mounted(() => {
+            var contentBlock = newBlock.find(g => !g.isLayout);
+            if (contentBlock) {
+                var newAnchor = contentBlock.visibleHeadAnchor;
+                this.explorer.replaceSelection(newAnchor);
+                this.explorer.setActiveAnchor(newAnchor);
+                this.explorer.renderSelection();
+            }
+        });
+        this.page.onExcuteUpdate();
+        this.page.snapshoot.store();
     }
     setOverBlock(overBlock: Block, event: MouseEvent) {
         var lastOverBlock = this.overBlock;
@@ -247,7 +260,7 @@ export class Selector {
         return new Point(point.x - pe.left, point.y - pe.top);
     }
     openMenu(event: MouseEvent) {
-        var dragBlock = this.view.bar.dragBlock.map(c=>c);
+        var dragBlock = this.view.bar.dragBlock.map(c => c);
         this.page.blockMenu.only('select', (item, ev) => {
             switch (item.name) {
                 case BlockMenuAction.delete:

@@ -9,7 +9,8 @@ export enum ActionDirective {
     onRedo,
     onUpdateProps,
     onUpdatePattern,
-    onBatchDeleteBlocks
+    onBatchDeleteBlocks,
+    onCreateBlockByEnter
 }
 
 export enum OperatorDirective {
