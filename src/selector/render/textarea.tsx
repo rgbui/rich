@@ -138,9 +138,7 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
                                     var contentBlock = newBlock.find(g => !g.isLayout);
                                     if (contentBlock) {
                                         var newAnchor = contentBlock.visibleHeadAnchor;
-                                        this.selector.explorer.replaceSelection(newAnchor);
-                                        this.selector.explorer.setActiveAnchor(newAnchor);
-                                        this.selector.explorer.renderSelection();
+                                        this.selector.explorer.onReplaceSelection(newAnchor);
                                     }
                                 });
                                 this.selector.page.onExcuteUpdate();
@@ -204,10 +202,7 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
                             var ob = anchor.textEl.getBoundingClientRect();
                             var nb = prevAnchor.textEl.getBoundingClientRect();
                             if (Math.abs(nb.left + nb.width - ob.left) < 10) {
-                                this.selector.explorer.replaceSelection(prevAnchor);
-                                this.selector.explorer.setActiveAnchor(prevAnchor);
-                                this.selector.explorer.renderSelection();
-
+                                this.selector.explorer.onReplaceSelection(prevAnchor);
                                 await block.onInputDeleteText(this.inputTextAt, this.deleteInputText, true, async () => {
                                     if (block.isEmpty && !block.isPart) {
                                         await this.selector.page.onObserveUpdate(async () => {

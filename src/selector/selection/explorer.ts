@@ -43,7 +43,7 @@ export class SelectionExplorer extends Events {
         var sel = new BlockSelection(this);
         return sel;
     }
-    replaceSelection(anchor: Anchor) {
+    private replaceSelection(anchor: Anchor) {
         if (this.selections.length > 0) {
             this.selections.each((sel, i) => {
                 if (i > 0) sel.dispose();
@@ -59,7 +59,7 @@ export class SelectionExplorer extends Events {
             this.selections = [sel];
         }
     }
-    joinSelection(anchor: Anchor) {
+    private joinSelection(anchor: Anchor) {
         if (this.selections.length > 0) {
             var sel = this.selections.find(g => g.start == this.activeAnchor || g.end == this.activeAnchor);
             if (sel) {
@@ -75,5 +75,23 @@ export class SelectionExplorer extends Events {
     }
     createAnchor() {
         return new Anchor(this);
+    }
+    /**
+     * 直接将光标移到@anchor 上
+     * @param anchor 
+     */
+    onReplaceSelection(anchor: Anchor) {
+        this.replaceSelection(anchor);
+        this.setActiveAnchor(anchor);
+        this.renderSelection();
+    }
+    /**
+     * 在现在的anchor上面形成一个选区
+     * @param anchor 
+     */
+    onJoinSelection(anchor:Anchor){
+        this.joinSelection(anchor);
+        this.setActiveAnchor(anchor);
+        this.renderSelection();
     }
 }

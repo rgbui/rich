@@ -72,9 +72,7 @@ export class Selector {
                         }
                     }
                 }
-                this.explorer.replaceSelection(newAnchor);
-                this.explorer.setActiveAnchor(newAnchor);
-                this.explorer.renderSelection();
+                this.explorer.onReplaceSelection(newAnchor);
             }
         }
     }
@@ -95,9 +93,7 @@ export class Selector {
             var contentBlock = newBlock.find(g => !g.isLayout);
             if (contentBlock) {
                 var newAnchor = contentBlock.visibleHeadAnchor;
-                this.explorer.replaceSelection(newAnchor);
-                this.explorer.setActiveAnchor(newAnchor);
-                this.explorer.renderSelection();
+                this.explorer.onReplaceSelection(newAnchor);
             }
         });
         this.page.onExcuteUpdate();

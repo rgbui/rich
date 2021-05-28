@@ -36,9 +36,7 @@ export class PageEvent {
                 if (anchor.block.isLayout) {
                     throw 'not anchor layout block'
                 }
-                this.selector.explorer.replaceSelection(anchor);
-                this.selector.explorer.setActiveAnchor(anchor);
-                this.selector.explorer.renderSelection();
+                this.selector.explorer.onReplaceSelection(anchor);
             }
         }
     }
@@ -51,9 +49,7 @@ export class PageEvent {
                     var block = (blockEle as any).block as Block;
                     var anchor = block.visibleAnchor(Point.from(event));
                     if (anchor) {
-                        this.selector.explorer.joinSelection(anchor);
-                        this.selector.explorer.setActiveAnchor(anchor);
-                        this.selector.explorer.renderSelection();
+                        this.selector.explorer.onJoinSelection(anchor);
                     }
                 }
             }
