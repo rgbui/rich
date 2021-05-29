@@ -36,13 +36,13 @@ export class ToDoView extends BaseComponent<ToDo>{
         if (this.block.childs.length > 0) {
             return <span className='sy-block-todo' style={this.block.visibleStyle}>
                 <input onMouseDown={e => e.nativeEvent.stopPropagation()} type='checkbox' checked={this.block.checked} onChange={e => this.block.onChange(e.nativeEvent)} />
-                <span ref={e => this.block.childsEl = e}><ChildsArea childs={this.block.childs}></ChildsArea></span>
+                <span ref={e => this.block.childsEl = e} className='sy-appear-text-line'><ChildsArea childs={this.block.childs}></ChildsArea></span>
             </span>
         }
         else {
             return <span className='sy-block-todo' style={this.block.visibleStyle}>
                 <input onMouseDown={e => e.nativeEvent.stopPropagation()} type='checkbox' checked={this.block.checked} onChange={e => this.block.onChange(e.nativeEvent)} />
-                <span > <TextArea html={this.block.htmlContent}></TextArea></span>
+                <span className='sy-appear-text-line'><TextArea html={this.block.htmlContent}></TextArea></span>
             </span>
         }
     }

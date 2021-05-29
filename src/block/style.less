@@ -1,11 +1,22 @@
 .sy-appear-text {
-    position: relative;
-    display : inline;
-    &:empty::after,
+    position   : relative;
+    display    : inline;
+    white-space: pre-wrap;
+    word-break : break-word;
+
     &.empty::after {
         content                : attr(placeholder);
-        display                : inline-block;
+        display                : inline;
         -webkit-text-fill-color: rgba(55, 53, 47, 0.4);
+    }
+}
+
+.sy-appear-text-line {
+    white-space: pre-wrap;
+    word-break : break-word;
+
+    &::after {
+        content: '\10';
     }
 }
 

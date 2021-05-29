@@ -2,7 +2,8 @@ import React from 'react';
 import { Block } from '..';
 export function TextArea(props: {
     html: string,
-    placeholder?:string
+    placeholder?: string
+    
 }) {
     return <span className='sy-appear-text' placeholder={props.placeholder} dangerouslySetInnerHTML={{ __html: props.html }}></span>
 }

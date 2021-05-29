@@ -1,5 +1,4 @@
 
-import { util } from "../util/util";
 import { dom } from "./dom";
 import { Point, Rect } from "./point";
 let __g: CanvasRenderingContext2D;
@@ -67,7 +66,6 @@ export class TextEle {
         var currentRect = Rect.from(ele.getBoundingClientRect());
         if (currentDisplay == 'inline') {
             var closetELe = dm.closest(g => {
-
                 var display = dom(g as HTMLElement).style("display");
                 if (display != 'inline') return true;
             }) as HTMLElement;
@@ -132,6 +130,7 @@ export class TextEle {
     }
     static getAt(ele: HTMLElement, point: Point) {
         var content = this.getTextContent(ele);
+        console.log(content, ele);
         var ts = content.split("");
         var rect = new Rect();
         var dm = dom(ele);
@@ -142,6 +141,7 @@ export class TextEle {
                 var display = dom(g as HTMLElement).style("display");
                 if (display != 'inline') return true;
             }) as HTMLElement;
+            console.log('closeEle', closetELe);
             if (closetELe) {
                 rect = this.getContentBound(closetELe);
             }
@@ -153,7 +153,7 @@ export class TextEle {
         var rowCount = 1;
         var row = { x: currentRect.left };
         var lineHeight = fontStyle.lineHeight;
-        var top = point.y - rect.top;
+        var top = point.y - currentRect.top;
         var left = point.x;
         var currentBouds = this.getBounds(ele);
 
@@ -167,7 +167,7 @@ export class TextEle {
         if (top <= 0) top = 1;
         if (left > currentBoundRight) left = currentBoundRight - 1;
         if (point.y >= currentBoundBottom && point.y <= currentBoundBottom + lineHeight)
-            top = currentBoundBottom - rect.top - 1;
+            top = currentBoundBottom - currentRect.top - 1;
         if (left < currentBoundLeft) left = currentBoundLeft + 1;
         let i = 0;
         for (; i < ts.length; i++) {
@@ -239,30 +239,26 @@ export class TextEle {
         return __g.measureText(word).width + ls;
     }
     static getTextContent(ele: HTMLElement) {
-        var cs = ele.childNodes;
-        var text = '';
-        for (var i = 0; i < cs.length; i++) {
-            var el = cs[i];
-            if (el instanceof Text) {
-                text += el.textContent || '';
-            }
-            else if (el instanceof HTMLElement && el.tagName == 'SPAN') {
-                if (!el.classList.contains('sy-anchor-appear')) {
-                    text += el.innerText || '';
+        function getText(el: HTMLElement) {
+            var cs = el.childNodes;
+            var text = '';
+            for (let i = 0; i < cs.length; i++) {
+                var c = cs[i];
+                if (c instanceof Text) {
+                    var r = c.textContent;
+                    if (r === null || typeof r === undefined) r = '';
+                    text += r;
+                }
+                else if (c instanceof HTMLElement) {
+                    if (c.classList.contains('sy-anchor-appear')) continue;
+                    else {
+                        text += getText(c);
+                    }
                 }
             }
-            else if (typeof (el as HTMLElement).innerText == 'function') text += (el as HTMLElement).innerText || '';
-            else if (el instanceof HTMLBRElement) text += '\n';
+            return text;
         }
-        return text;
-        //var text = ele.innerText;
-        //console.log(text, 'gg', ele);
-        // text = text.replace(/<br[\s]*\/>/g, "\n");
-        // text = text.replace(/<i[^>]*>[\s]*<\/i>/g, '');
-        // text = text.replace(/&nbsp;/g, " ");
-        // text = text.replace(/&lt;/g, "<");
-        // text = text.replace(/&gt;/g, ">");
-        //return text;
+        return getText(ele);
     }
     static getTextHtml(content: string) {
         var c = content;

@@ -25,11 +25,11 @@ export class TextSpan extends Content {
 export class TextSpanView extends BaseComponent<TextSpan>{
     render() {
         if (this.block.childs.length > 0)
-            return <span className='sy-block-text-span' style={this.block.visibleStyle} ref={e => this.block.childsEl = e}>{this.block.childs.map(x =>
+            return <span className='sy-block-text-span sy-appear-text-line' style={this.block.visibleStyle} ref={e => this.block.childsEl = e}>{this.block.childs.map(x =>
                 <x.viewComponent key={x.id} block={x}></x.viewComponent>
             )}</span>
         else
-            return <span className='sy-block-text-span' style={this.block.visibleStyle}>
+            return <span className='sy-block-text-span sy-appear-text-line' style={this.block.visibleStyle}>
                 <TextArea html={this.block.htmlContent} placeholder={'键入文字或"/"选择'}></TextArea>
             </span>
     }
