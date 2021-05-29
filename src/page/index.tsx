@@ -15,11 +15,12 @@ import { Block } from '../block';
 import { OperatorDirective } from '../history/declare';
 import { BlockSelector } from '../extensions/block';
 import { ReferenceSelector } from '../extensions/reference';
-import { BlockMenu} from '../extensions/menu/menu';
+import { BlockMenu } from '../extensions/menu/menu';
 import { TextTool } from '../extensions/text.tool/text.tool';
 import { ConfigurationManager } from '../config';
 import { PageConfig, WorkspaceConfig } from '../config/workspace';
 import { SyExtensionsComponent } from '../extensions/sy.component';
+import { KeyboardPlate } from '../common/keys';
 
 
 export class Page extends Events {
@@ -107,7 +108,7 @@ export class Page extends Events {
     referenceSelector: ReferenceSelector;
     blockMenu: BlockMenu;
     textTool: TextTool;
-    keys: string[] = [];
+    keyboardPlate: KeyboardPlate = new KeyboardPlate();
     isFocus: boolean = false;
     onError(error: Error) {
         this.emit('error', error);

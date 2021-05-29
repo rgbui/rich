@@ -2,6 +2,7 @@ import ReactDOM from "react-dom";
 import { Page } from ".";
 import { Block } from "../block";
 import { dom } from "../common/dom";
+import { KeyboardCode } from "../common/keys";
 import { Point } from "../common/point";
 import { ActionDirective } from "../history/declare";
 export class PageEvent {
@@ -140,23 +141,15 @@ export class PageEvent {
      * @param event 
      */
     onKeydown(this: Page, event: KeyboardEvent) {
-        this.keys.push(event.key);
+        this.keyboardPlate.keydown(event);
+        if (this.keyboardPlate.is(KeyboardCode.Backspace, KeyboardCode.Delete)) {
+            if (this.selector.explorer.hasSelectionRange) {
+                this.selector.onDeleteSelection();
+            }
+        }
     }
     onKeyup(this: Page, event: KeyboardEvent) {
-        this.keys.remove(event.key);
-    }
-    /**
-     * 判断用户是否按了什么之类的
-     * @param key 可以是函数，可以是key
-     * @param keys  如果存在布尔的值，默认是全匹配
-     */
-    isKeys(this: Page, key: string | ((key: string) => boolean), ...keys: (string | boolean)[]) {
-        if (typeof key == 'function') return this.keys.exists(key)
-        else if (keys.exists(z => typeof z == 'boolean')) {
-            var args = Array.from(arguments); args.remove(z => typeof z == 'boolean');
-            return args.length == this.keys.length && args.trueForAll(z => this.keys.exists(z));
-        }
-        else return Array.from(arguments).trueForAll(z => this.keys.exists(z));
+        this.keyboardPlate.keyup(event);
     }
     private willUpdateBlocks: Block[];
     onRememberUpdate() {

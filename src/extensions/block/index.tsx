@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM, { createPortal } from "react-dom";
+import { KeyboardCode } from "../../common/keys";
 import { Point } from "../../common/point";
 import { SyExtensionsComponent } from "../sy.component";
 import { BlockSelectorData } from "./data";
@@ -76,7 +77,7 @@ export class BlockSelector extends SyExtensionsComponent {
     onSelect(block?) {
         if (!block) block = this.selectBlockData;
         try {
-            this.emit('select',block);
+            this.emit('select', block);
         }
         catch (ex) {
             this.emit('error', ex);
@@ -163,13 +164,13 @@ export class BlockSelector extends SyExtensionsComponent {
     }
     interceptKey(event: KeyboardEvent) {
         switch (event.key) {
-            case 'ArrowDown':
+            case KeyboardCode.ArrowDown:
                 this.keydown();
                 return true;
-            case 'ArrowUp':
+            case KeyboardCode.ArrowUp:
                 this.keyup();
                 return true;
-            case 'Enter':
+            case KeyboardCode.Enter:
                 this.onSelect();
                 return true;
         }
@@ -178,6 +179,6 @@ export class BlockSelector extends SyExtensionsComponent {
 export interface BlockSelector {
     on(name: 'error', fn: (error: Error) => void);
     emit(name: 'error', error: Error);
-    only(name: 'select', fn: (item: Record<string,any>) => void);
-    emit(name: 'select', item: Record<string,any>);
+    only(name: 'select', fn: (item: Record<string, any>) => void);
+    emit(name: 'select', item: Record<string, any>);
 }
