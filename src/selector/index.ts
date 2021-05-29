@@ -6,7 +6,7 @@ import { ActionDirective } from "../history/declare";
 import { Page } from "../page";
 import { TextCommand } from "../extensions/text.tool/text.command";
 import { Anchor } from "./selection/anchor";
-import { SelectorView } from "./render/render";
+import { SelectorView } from "./view";
 import { BlockMenuAction } from "../extensions/menu/out.declare";
 import { SelectionExplorer } from "./selection/explorer";
 import { KeyboardCode } from "../common/keys";

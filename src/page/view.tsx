@@ -2,7 +2,7 @@ import { Component } from "react";
 import React from 'react';
 import { Page } from "./index";
 import { PageLayoutView } from "./layout/render";
-import { SelectorView } from "../selector/render/render";
+import { SelectorView } from "../selector/view";
 import { ChildsArea } from "../block/base/appear";
 import { BlockSelector } from "../extensions/block";
 import { ReferenceSelector } from "../extensions/reference";

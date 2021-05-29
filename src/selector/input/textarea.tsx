@@ -4,7 +4,7 @@ import { KeyboardCode } from '../../common/keys';
 import { Point } from '../../common/point';
 import { TextEle } from '../../common/text.ele';
 import { Anchor } from '../selection/anchor';
-import { SelectorView } from './render';
+import { SelectorView } from '../view';
 export class TextInput extends React.Component<{ selectorView: SelectorView }> {
     constructor(props) {
         super(props);
@@ -14,6 +14,9 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
     }
     get selector() {
         return this.selectorView.selector;
+    }
+    get explorer() {
+        return this.explorer;
     }
     get blockSelector() {
         return this.selector.page.blockSelector;
@@ -26,7 +29,6 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
         var html = event.clipboardData.getData('text/html');
         if (html) {
             var ma = html.match(/\<[a-zA-Z\d\-]+[\s\S]*?>/);
-            console.log(ma);
             if (ma) {
                 items.push({ mine: 'html', content: html });
             }
@@ -71,34 +73,34 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
             case KeyboardCode.ArrowLeft:
             case KeyboardCode.ArrowRight:
                 event.preventDefault();
-                if (this.selector.explorer.hasSelectionRange) {
+                if (this.explorer.hasSelectionRange) {
                     return this.selector.onCancelSelection();
                 }
-                else if (this.selector.explorer.isOnlyOneAnchor) {
+                else if (this.explorer.isOnlyOneAnchor) {
                     return this.selector.onKeyArrow(event.key);
                 }
                 break;
-            case 'Enter':
-                if (this.selector.explorer.hasSelectionRange) {
+            case KeyboardCode.Enter:
+                if (this.explorer.hasSelectionRange) {
 
                 }
-                else if (this.selector.explorer.isOnlyOneAnchor) {
-                    if (this.selector.explorer.activeAnchor.isText) {
-                        if (this.selector.explorer.activeAnchor.isEnd) {
+                else if (this.explorer.isOnlyOneAnchor) {
+                    if (this.explorer.activeAnchor.isText) {
+                        if (this.explorer.activeAnchor.isEnd) {
                             //换行接着创建一个新的block
                             return this.selector.onCreateBlockByEnter();
                         }
                     }
                 }
                 break;
-            case 'Delete':
-            case 'Backspace':
-                if (this.selector.explorer.hasSelectionRange) {
+            case KeyboardCode.Delete:
+            case KeyboardCode.Backspace:
+                if (this.explorer.hasSelectionRange) {
                     //删除选区
                     return this.selector.onKeyDelete()
                 }
-                else if (this.selector.explorer.isOnlyOneAnchor) {
-                    if (this.selector.explorer.activeAnchor.isText) {
+                else if (this.explorer.isOnlyOneAnchor) {
+                    if (this.explorer.activeAnchor.isText) {
                         if (!this.textarea.value)
                             return this.onInputDeleteText();
                     }
@@ -111,7 +113,7 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
     onKeyup(event: KeyboardEvent) {
         if (this.isKeydown == true) {
             var value = this.textarea.value;
-            var anchor = this.selector.explorer.activeAnchor;
+            var anchor = this.explorer.activeAnchor;
             if (anchor && anchor.isActive && value.length > 0) {
                 if (!this.inputTextNode) {
                     this.inputTextNode = document.createElement('span');
@@ -139,7 +141,7 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
                                     var contentBlock = newBlock.find(g => !g.isLayout);
                                     if (contentBlock) {
                                         var newAnchor = contentBlock.visibleHeadAnchor;
-                                        this.selector.explorer.onReplaceSelection(newAnchor);
+                                        this.explorer.onReplaceSelection(newAnchor);
                                     }
                                 });
                                 this.selector.page.onExcuteUpdate();
@@ -160,19 +162,19 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
     }
     private deleteInputText = '';
     async onInputDeleteText() {
-        var anchor = this.selector.explorer.activeAnchor;
+        var anchor = this.explorer.activeAnchor;
         if (anchor.isText) {
             if (anchor.at == 0) {
                 //说明当前的block已经删完了，此时光标应该向前移,移到上面一行
-                this.selector.onKeyArrow( KeyboardCode.ArrowLeft);
+                this.selector.onKeyArrow(KeyboardCode.ArrowLeft);
                 var block = anchor.block;
                 if (block.isEmpty && !block.isPart) {
                     this.selector.page.onObserveUpdate(async () => {
                         await block.onDelete();
                     });
                 }
-                this.onStartInput(this.selector.explorer.activeAnchor);
-                this.followAnchor(this.selector.explorer.activeAnchor);
+                this.onStartInput(this.explorer.activeAnchor);
+                this.followAnchor(this.explorer.activeAnchor);
                 return;
             }
             else if (anchor.at > 0) {
@@ -203,7 +205,7 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
                             var ob = anchor.textEl.getBoundingClientRect();
                             var nb = prevAnchor.textEl.getBoundingClientRect();
                             if (Math.abs(nb.left + nb.width - ob.left) < 10) {
-                                this.selector.explorer.onReplaceSelection(prevAnchor);
+                                this.explorer.onReplaceSelection(prevAnchor);
                                 await block.onInputDeleteText(this.inputTextAt, this.deleteInputText, true, async () => {
                                     if (block.isEmpty && !block.isPart) {
                                         await this.selector.page.onObserveUpdate(async () => {
@@ -213,8 +215,8 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
                                         });
                                     }
                                 });
-                                this.onStartInput(this.selector.explorer.activeAnchor);
-                                this.followAnchor(this.selector.explorer.activeAnchor);
+                                this.onStartInput(this.explorer.activeAnchor);
+                                this.followAnchor(this.explorer.activeAnchor);
                                 return;
                             }
                         }

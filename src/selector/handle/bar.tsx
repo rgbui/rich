@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Block } from "../../block";
 import { Point } from "../../common/point";
 import { Icon } from "../../component/icon";
-import { SelectorView } from "./render";
+import { SelectorView } from "../view";
 import Tooltip from "rc-tooltip";
 
 export class Bar extends React.Component<{ selectorView: SelectorView }>{
