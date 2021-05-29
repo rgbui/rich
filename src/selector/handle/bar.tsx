@@ -3,10 +3,11 @@ import ReactDOM from 'react-dom';
 import { Block } from "../../block";
 import { Point } from "../../common/point";
 import { Icon } from "../../component/icon";
-import { SelectorView } from "../view";
-import Tooltip from "rc-tooltip";
 
-export class Bar extends React.Component<{ selectorView: SelectorView }>{
+import Tooltip from "rc-tooltip";
+import { Selector } from "..";
+
+export class Bar extends React.Component<{ selector: Selector}>{
     constructor(props) {
         super(props);
     }
@@ -21,7 +22,7 @@ export class Bar extends React.Component<{ selectorView: SelectorView }>{
         document.removeEventListener('mouseup', this.mouseup);
     }
     get selector() {
-        return this.props.selectorView.selector;
+        return this.props.selector;
     }
     private point = new Point(0, 0);
     isDown: Boolean;
@@ -89,7 +90,7 @@ export class Bar extends React.Component<{ selectorView: SelectorView }>{
     onStart(dragBlock: Block) {
         this.dragBlock = [dragBlock];
         var bound = dragBlock.getVisibleBound();
-        var pos = this.selector.relativePageOffset(Point.from(bound));
+        var pos = Point.from(bound);
         this.barEle.style.top = pos.y + 'px';
         this.barEle.style.left = pos.x + 'px';
         this.barEle.style.display = 'flex';

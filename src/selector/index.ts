@@ -10,7 +10,6 @@ import { SelectorView } from "./view";
 import { BlockMenuAction } from "../extensions/menu/out.declare";
 import { SelectionExplorer } from "./selection/explorer";
 import { KeyboardCode } from "../common/keys";
-
 export class Selector {
     page: Page;
     explorer: SelectionExplorer;
@@ -252,10 +251,6 @@ export class Selector {
         }
     }
     view: SelectorView;
-    relativePageOffset(point: Point) {
-        var pe = this.page.el.getBoundingClientRect();
-        return new Point(point.x - pe.left, point.y - pe.top);
-    }
     openMenu(event: MouseEvent) {
         var dragBlock = this.view.bar.dragBlock.map(c => c);
         this.page.blockMenu.only('select', (item, ev) => {

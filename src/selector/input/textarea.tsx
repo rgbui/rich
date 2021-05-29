@@ -1,22 +1,18 @@
 import React from 'react';
+import { Selector } from '..';
 import { dom } from '../../common/dom';
 import { KeyboardCode } from '../../common/keys';
 import { Point } from '../../common/point';
-import { TextEle } from '../../common/text.ele';
 import { Anchor } from '../selection/anchor';
-import { SelectorView } from '../view';
-export class TextInput extends React.Component<{ selectorView: SelectorView }> {
+export class TextInput extends React.Component<{ selector: Selector }> {
     constructor(props) {
         super(props);
     }
-    get selectorView() {
-        return this.props.selectorView;
-    }
     get selector() {
-        return this.selectorView.selector;
+        return this.props.selector;
     }
     get explorer() {
-        return this.explorer;
+        return this.selector.explorer;
     }
     get blockSelector() {
         return this.selector.page.blockSelector;
@@ -59,9 +55,15 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
         }
         console.log(files, items);
     }
-    private isKeydown: boolean = false;
+    /***
+     * keydown会触发多次（如果手不松，会一直触发，所以整个过程前非是完整的keydown-keyup
+     * 可能会是keydown-keydown-keydown-keyup
+     * keydown-input keydown-input keydown-input-keyup
+     * 注意keydown是要输入，input是输入完成，keyup不一定会触发
+     */
     onKeydown(event: KeyboardEvent) {
-        this.isKeydown = false;
+        this.isWillInput = false;
+        /***blockSelector拉截 */
         if (this.blockSelector.isVisible) {
             if (this.blockSelector.interceptKey(event) == true) {
                 return;
@@ -81,15 +83,17 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
                 }
                 break;
             case KeyboardCode.Enter:
-                if (this.explorer.hasSelectionRange) {
+                if (!this.selector.page.keyboardPlate.isShift()) {
+                    if (this.explorer.hasSelectionRange) {
 
-                }
-                else if (this.explorer.isOnlyOneAnchor) {
-                    if (this.explorer.activeAnchor.isText) {
-                        if (this.explorer.activeAnchor.isEnd) {
-                            //换行接着创建一个新的block
-                            return this.selector.onCreateBlockByEnter();
-                        }
+                    }
+                    else if (this.explorer.isOnlyOneAnchor
+                        && this.explorer.activeAnchor.isText
+                        && this.explorer.activeAnchor.isEnd
+                    ) {
+                        event.preventDefault();
+                        //换行接着创建一个新的block
+                        return this.selector.onCreateBlockByEnter();
                     }
                 }
                 break;
@@ -108,18 +112,19 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
                 }
                 break;
         }
-        this.isKeydown = true;
+        this.isWillInput = true;
     }
-    onKeyup(event: KeyboardEvent) {
-        if (this.isKeydown == true) {
+    private isWillInput: boolean = false;
+    onInput(event: KeyboardEvent) {
+        if (this.isWillInput == true) {
             var value = this.textarea.value;
             var anchor = this.explorer.activeAnchor;
-            if (anchor && anchor.isActive && value.length > 0) {
+            if (anchor && anchor.isActive) {
                 if (!this.inputTextNode) {
                     this.inputTextNode = document.createElement('span');
                     anchor.view.parentNode.insertBefore(this.inputTextNode, anchor.view);
                 }
-                this.inputTextNode.innerHTML = TextEle.getTextHtml(value);
+                this.inputTextNode.innerHTML = value;
                 anchor.at = this.inputTextAt + value.length;
                 anchor.view.style.display = 'inline';
                 if (value.endsWith('@')) {
@@ -180,8 +185,7 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
             else if (anchor.at > 0) {
                 var dm = dom(anchor.view);
                 var textNode = dm.prevFind(g => {
-                    if (g instanceof Text || g instanceof HTMLBRElement) return true;
-                    else return false;
+                    if (g instanceof Text) return true; else return false;
                 });
                 if (textNode) {
                     if (textNode instanceof Text) {
@@ -192,11 +196,6 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
                         if (textNode.textContent.length == 0) {
                             textNode.remove();
                         }
-                    }
-                    else if (textNode instanceof HTMLBRElement) {
-                        this.deleteInputText = '\n' + this.deleteInputText;
-                        anchor.at -= 1;
-                        textNode.remove()
                     }
                     if (anchor.at == 0) {
                         var block = anchor.block;
@@ -236,9 +235,16 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
             this.textarea.focus();
         }
     }
+    onBlur() {
+        if (document.activeElement === this.textarea) {
+            this.textarea.blur();
+        }
+    }
     private inputTextNode: HTMLElement;
     private inputTextAt: number;
     onStartInput(anchor: Anchor) {
+        this.onBlur();
+        this.onFocus();
         this.textarea.value = '';
         delete this.inputTextNode;
         this.deleteInputText = '';
@@ -250,16 +256,26 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
     render() {
         return <div className='sy-selector-textinput'><textarea
             ref={e => this.textarea = e}
-            onPaste={e => this.onPaster(e.nativeEvent)}
-            onKeyDown={e => this.onKeydown(e.nativeEvent)}
-            onKeyUp={e => this.onKeyup(e.nativeEvent)}
         ></textarea></div>
     }
     followAnchor(anchor: Anchor) {
         var bound = anchor.bound;
-        var point = this.selector.relativePageOffset(Point.from(bound));
+        var point = Point.from(bound);
         this.textarea.style.top = point.y + 'px';
         this.textarea.style.left = point.x + 'px';
         this.textarea.style.height = bound.height + 'px';
+    }
+    private _paster;
+    private _keydown;
+    private _input;
+    componentDidMount() {
+        this.textarea.addEventListener('keydown', this._keydown = this.onKeydown.bind(this));
+        this.textarea.addEventListener('input', this._input = this.onInput.bind(this));
+        this.textarea.addEventListener('paste', this._paster = this.onPaster.bind(this));
+    }
+    componentWillUnmount() {
+        this.textarea.removeEventListener('keydown', this._keydown);
+        this.textarea.removeEventListener('input', this._input);
+        this.textarea.removeEventListener('paste', this._paster);
     }
 }

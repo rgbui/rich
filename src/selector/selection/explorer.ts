@@ -89,7 +89,7 @@ export class SelectionExplorer extends Events {
      * 在现在的anchor上面形成一个选区
      * @param anchor 
      */
-    onJoinSelection(anchor:Anchor){
+    onJoinSelection(anchor: Anchor) {
         this.joinSelection(anchor);
         this.setActiveAnchor(anchor);
         this.renderSelection();

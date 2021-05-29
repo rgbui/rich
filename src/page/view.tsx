@@ -30,12 +30,12 @@ export class PageView extends Component<{ page: Page }>{
         this.el = ReactDOM.findDOMNode(this) as HTMLElement;
         document.addEventListener('mousemove', (this._mousemove = this.page.onMousemove.bind(this.page)));
         document.addEventListener('mouseup', (this._mouseup = this.page.onMouseup.bind(this.page)));
-        document.addEventListener('keyup', (this._keyup = this.page.onKeyup.bind(this.page)));
+        document.addEventListener('keyup', (this._keyup = this.page.onKeyup.bind(this.page)), true);
     }
     componentWillUnmount() {
         document.removeEventListener('mouseup', this._mouseup);
         document.removeEventListener('mousemove', this._mousemove);
-        document.removeEventListener('keyup', this._keyup);
+        document.removeEventListener('keyup', this._keyup, true);
     }
     render() {
         var pageStyle: Record<string, any> = {
@@ -44,10 +44,10 @@ export class PageView extends Component<{ page: Page }>{
             fontSize: this.page.cfm.fontCss.fontSize + 'px'
         }
         return <div className='sy-page-view' style={pageStyle} tabIndex={1}
-            onKeyDown={e => this.page.onKeydown(e.nativeEvent)}
+            onKeyDownCapture={e => this.page.onKeydown(e.nativeEvent)}
             onFocusCapture={e => this.page.onFocusCapture(e.nativeEvent)}
             onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}
-        ><SelectorView selector={this.page.selector}></SelectorView>
+        >
             <PageLayoutView pageLayout={this.page.pageLayout}>
                 <div className='sy-page-view-content'
                     onMouseDown={e => this.page.onMousedown(e.nativeEvent)}
@@ -60,6 +60,7 @@ export class PageView extends Component<{ page: Page }>{
                 <BlockMenu ref={e => this.page.registerExtension(e)} ></BlockMenu>
                 <TextTool ref={e => this.page.registerExtension(e)}></TextTool>
             </div>
+            <SelectorView selector={this.page.selector}></SelectorView>
         </div>
     }
 }

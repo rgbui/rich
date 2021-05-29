@@ -21,8 +21,8 @@ export class SelectorView extends Component<{ selector: Selector }>{
     bar: Bar;
     render() {
         return <div className='sy-selector'>
-            <TextInput ref={e => this.textInput = e} selectorView={this}></TextInput>
-            <Bar ref={e => this.bar = e} selectorView={this}></Bar>
+            <TextInput ref={e => this.textInput = e} selector={this.selector}></TextInput>
+            <Bar ref={e => this.bar = e} selector={this.selector}></Bar>
         </div>
     }
 }

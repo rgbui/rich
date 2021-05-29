@@ -1,22 +1,20 @@
-.sy-selector {
-    position: relative;
-
+.sy-selector-textinput {
+    pointer-events: none;
     textarea {
-        pointer-events       : none;
-        opacity              : 0;
-        border               : 0px;
-        outline              : none;
-        background-color     : rgba(255, 0, 0, .4);
-        //color           : transparent;
-        position             : absolute;
-        top                  : 0px;
-        left                 : 0px;
-        // height            : 10px;
-        width                : 30px;
-        margin               : 0px;
-        padding              : 0px;
-        resize               : none;
-        cursor               : text;
+        opacity         : 0;
+        border          : 0px;
+        outline         : none;
+        background-color: rgba(255, 0, 0, 1.4);
+        color           : transparent;
+        position        : fixed;
+        top             : 0px;
+        left            : 0px;
+        height          : 10px;
+        width           : 30px;
+        margin          : 0px;
+        padding         : 0px;
+        resize          : none;
+        cursor          : text;
     }
 }
 
@@ -58,7 +56,7 @@
 }
 
 .sy-selector-bar {
-    position       : absolute;
+    position       : fixed;
     width          : 30px;
     height         : 30px;
     display        : none;
