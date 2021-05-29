@@ -34,15 +34,16 @@
 </head>
 
 <body>
-    <div style="width:100px;">ffff<em></em>eeee</div>
-    <span>kkkkklllkkkkkll
-        fjsfsssssfjieee
-        fjsifjeeff
-        fjsiee</span>
+    <textarea></textarea>
 </body>
 <script>
 
-
+    document.querySelector('textarea').addEventListener('keydown', function (event) {
+        console.log('keydown', event.target.value, event.target.value.length);
+    });
+    document.querySelector('textarea').addEventListener('input', function (event) {
+        console.log('input', event.target.value, event.target.value.length);
+    })
 
 </script>
 

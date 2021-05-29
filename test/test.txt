@@ -1,0 +1,3 @@
+<div contenteditable="true" spellcheck="true" placeholder="Type '/' for commands" data-root="true" class="notranslate" style="max-width: 100%; width: 100%; white-space: pre-wrap; word-break: break-word; caret-color: rgb(55, 53, 47); padding: 3px 2px;"><span>
+</span>
+</div>
