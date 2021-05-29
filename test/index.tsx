@@ -2,11 +2,13 @@
 
 
 
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.less';
 import { data } from "./data";
-import { Page } from '../src/page';
+import { SY } from '..';
+
 
 ReactDOM.render(
     <div className='editor-page'>
@@ -16,7 +18,7 @@ ReactDOM.render(
     document.body.appendChild(document.createElement('div')),
     async () => {
         var ele = document.querySelector('.editor') as HTMLElement;
-        var page = new Page(ele, {
+        var page = new SY.Page(ele, {
             user: {
                 id: 'kankan',
                 name: 'kankan',

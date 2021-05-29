@@ -430,9 +430,7 @@ export abstract class Block extends Events {
         }
     }
     get visiblePrevAnchor() {
-        console.log(this, 'this');
         var pre = this.visiblePre;
-        console.log(pre);
         if (pre) return pre.visibleBackAnchor;
     }
     get visibleNextAnchor() {
@@ -576,7 +574,8 @@ export abstract class Block extends Events {
         return this.content ? false : true
     }
     get htmlContent() {
-        return TextEle.getTextHtml(this.content)
+        return this.content;
+        // return TextEle.getTextHtml(this.content)
     }
     updateContent(content: string, partName?: string) {
         this.content = content;
@@ -779,7 +778,7 @@ export abstract class Block extends Events {
         this.page.snapshoot.declare(ActionDirective.onDelete);
         var pa = this.parent;
         await this.delete();
-        await pa.deleteLayout();
+        if (pa) await pa.deleteLayout();
         this.page.snapshoot.store();
     }
     onUpdateProps(props: Record<string, any>, range = BlockRenderRange.none) {
