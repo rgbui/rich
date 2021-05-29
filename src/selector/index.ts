@@ -9,6 +9,7 @@ import { Anchor } from "./selection/anchor";
 import { SelectorView } from "./render/render";
 import { BlockMenuAction } from "../extensions/menu/out.declare";
 import { SelectionExplorer } from "./selection/explorer";
+import { KeyboardCode } from "../common/keys";
 
 export class Selector {
     page: Page;
@@ -23,33 +24,33 @@ export class Selector {
     get isDrag() {
         return this.view.bar.isDrag;
     }
-    onKeyArrow(arrow: "ArrowLeft" | 'ArrowDown' | 'ArrowUp' | 'ArrowRight') {
+    onKeyArrow(arrow: KeyboardCode) {
         var anchor = this.explorer.activeAnchor;
         if (anchor) {
             var newAnchor: Anchor;
             if (anchor.isText) {
-                if (arrow == 'ArrowLeft' && !anchor.isStart) { anchor.at -= 1; anchor.visible(); return; }
-                else if (arrow == 'ArrowLeft' && anchor.isStart) newAnchor = anchor.block.visiblePrevAnchor;
-                else if (arrow == 'ArrowRight' && !anchor.isEnd) { anchor.at += 1; anchor.visible(); return; }
-                else if (arrow == 'ArrowRight' && anchor.isEnd)
+                if (arrow == KeyboardCode.ArrowLeft && !anchor.isStart) { anchor.at -= 1; anchor.visible(); return; }
+                else if (arrow == KeyboardCode.ArrowLeft && anchor.isStart) newAnchor = anchor.block.visiblePrevAnchor;
+                else if (arrow == KeyboardCode.ArrowRight && !anchor.isEnd) { anchor.at += 1; anchor.visible(); return; }
+                else if (arrow == KeyboardCode.ArrowRight && anchor.isEnd)
                     newAnchor = anchor.block.visibleNextAnchor;
-                else if (arrow == 'ArrowDown')
+                else if (arrow == KeyboardCode.ArrowDown)
                     newAnchor = anchor.block.visibleInnerDownAnchor(anchor);
-                else if (arrow == 'ArrowUp')
+                else if (arrow == KeyboardCode.ArrowUp)
                     newAnchor = anchor.block.visibleInnerUpAnchor(anchor);
             }
             else if (anchor.isSolid) {
-                if (arrow == 'ArrowLeft') {
+                if (arrow == KeyboardCode.ArrowLeft) {
                     newAnchor = anchor.block.visiblePrevAnchor;
                 }
-                else if (arrow == 'ArrowRight') {
+                else if (arrow == KeyboardCode.ArrowRight) {
                     newAnchor = anchor.block.visibleNextAnchor;
                     console.log(newAnchor);
                 }
-                else if (arrow == 'ArrowDown') {
+                else if (arrow == KeyboardCode.ArrowDown) {
                     newAnchor = anchor.block.visibleDownAnchor(anchor);
                 }
-                else if (arrow == 'ArrowUp') {
+                else if (arrow == KeyboardCode.ArrowUp) {
                     newAnchor = anchor.block.visibleUpAnchor(anchor);
                 }
             }
@@ -58,15 +59,15 @@ export class Selector {
                  * 挨的比较近的两个文标签，光标移动时，需要多向前或向后移一位，
                  * 这样就不会在视觉上发现光标在某个地方有停留了
                  */
-                if (anchor.isText && newAnchor.isText && (arrow == 'ArrowLeft' || arrow == 'ArrowRight')) {
+                if (anchor.isText && newAnchor.isText && (arrow == KeyboardCode.ArrowLeft || arrow == KeyboardCode.ArrowRight)) {
                     var ob = anchor.textEl.getBoundingClientRect();
                     var nb = newAnchor.textEl.getBoundingClientRect();
-                    if (arrow == 'ArrowRight') {
+                    if (arrow == KeyboardCode.ArrowRight) {
                         if (Math.abs(ob.left + ob.width - nb.left) < 10) {
                             newAnchor.at += 1;
                         }
                     }
-                    else if (arrow == 'ArrowLeft') {
+                    else if (arrow == KeyboardCode.ArrowLeft) {
                         if (Math.abs(nb.left + nb.width - ob.left) < 10) {
                             newAnchor.at -= 1;
                         }
@@ -343,5 +344,11 @@ export class Selector {
                 this.explorer.renderSelection();
             })
         })
+    }
+    /**
+     * 删除选区的内容
+     */
+    async onDeleteSelection() {
+
     }
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import { dom } from '../../common/dom';
+import { KeyboardCode } from '../../common/keys';
 import { Point } from '../../common/point';
 import { TextEle } from '../../common/text.ele';
 import { Anchor } from '../selection/anchor';
@@ -65,10 +66,10 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
             }
         }
         switch (event.key) {
-            case 'ArrowDown':
-            case 'ArrowUp':
-            case 'ArrowLeft':
-            case 'ArrowRight':
+            case KeyboardCode.ArrowDown:
+            case KeyboardCode.ArrowUp:
+            case KeyboardCode.ArrowLeft:
+            case KeyboardCode.ArrowRight:
                 event.preventDefault();
                 if (this.selector.explorer.hasSelectionRange) {
                     return this.selector.onCancelSelection();
@@ -163,7 +164,7 @@ export class TextInput extends React.Component<{ selectorView: SelectorView }> {
         if (anchor.isText) {
             if (anchor.at == 0) {
                 //说明当前的block已经删完了，此时光标应该向前移,移到上面一行
-                this.selector.onKeyArrow('ArrowLeft');
+                this.selector.onKeyArrow( KeyboardCode.ArrowLeft);
                 var block = anchor.block;
                 if (block.isEmpty && !block.isPart) {
                     this.selector.page.onObserveUpdate(async () => {
