@@ -130,18 +130,17 @@ export class TextEle {
     }
     static getAt(ele: HTMLElement, point: Point) {
         var content = this.getTextContent(ele);
-        console.log(content, ele);
         var ts = content.split("");
         var rect = new Rect();
         var dm = dom(ele);
         var currentDisplay = dm.style('display');
-        var currentRect = Rect.from(ele.getBoundingClientRect());
+        var currentBouds = this.getBounds(ele);
+        var currentRect = currentBouds.first();
         if (currentDisplay == 'inline') {
             var closetELe = dm.closest(g => {
                 var display = dom(g as HTMLElement).style("display");
                 if (display != 'inline') return true;
             }) as HTMLElement;
-            console.log('closeEle', closetELe);
             if (closetELe) {
                 rect = this.getContentBound(closetELe);
             }
@@ -155,7 +154,10 @@ export class TextEle {
         var lineHeight = fontStyle.lineHeight;
         var top = point.y - currentRect.top;
         var left = point.x;
-        var currentBouds = this.getBounds(ele);
+
+        // console.log('bounds', currentBouds);
+        // console.log('rect', rect);
+        // console.log('currentRect', currentRect);
 
         var currentBoundRight = currentBouds.max(g => g.left + g.width);
         var currentBoundBottom = currentBouds.max(g => g.top + g.height);
