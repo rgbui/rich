@@ -94,6 +94,7 @@ export class Selector {
             if (contentBlock) {
                 var newAnchor = contentBlock.visibleHeadAnchor;
                 this.explorer.onReplaceSelection(newAnchor);
+                this.view.textInput.onStartInput(newAnchor);
             }
         });
         this.page.onExcuteUpdate();

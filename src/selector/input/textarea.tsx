@@ -172,9 +172,9 @@ export class TextInput extends React.Component<{ selector: Selector }> {
         if (anchor.isText) {
             anchor.inputting();
             if (anchor.at == 0) {
+                var block = anchor.block;
                 //说明当前的block已经删完了，此时光标应该向前移,移到上面一行
                 this.selector.onKeyArrow(KeyboardCode.ArrowLeft);
-                var block = anchor.block;
                 if (block.isEmpty && !block.isPart) {
                     this.selector.page.onObserveUpdate(async () => {
                         await block.onDelete();
@@ -187,7 +187,8 @@ export class TextInput extends React.Component<{ selector: Selector }> {
             else if (anchor.at > 0) {
                 var dm = dom(anchor.view);
                 var textNode = dm.prevFind(g => {
-                    if (g instanceof Text) return true; else return false;
+                    if (g instanceof Text) return true;
+                    else return false;
                 });
                 if (textNode) {
                     if (textNode instanceof Text) {
@@ -244,6 +245,10 @@ export class TextInput extends React.Component<{ selector: Selector }> {
     }
     private inputTextNode: HTMLElement;
     private inputTextAt: number;
+    /***
+     * 表示在这个光标处可以输入了
+     * 如果不执行该方法，可能输入就没有任何文字
+     */
     onStartInput(anchor: Anchor) {
         this.onBlur();
         this.onFocus();
