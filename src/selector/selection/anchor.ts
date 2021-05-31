@@ -58,7 +58,10 @@ export class Anchor {
     }
     acceptView(anchor: Anchor) {
         this._view = anchor._view;
-        if (anchor.textVisibleCursorTimer) { clearInterval(anchor.textVisibleCursorTimer); delete anchor.textVisibleCursorTimer; }
+        if (anchor.textVisibleCursorTimer) {
+            clearInterval(anchor.textVisibleCursorTimer);
+            delete anchor.textVisibleCursorTimer;
+        }
     }
     private _view: HTMLElement;
     get view(): HTMLElement {
@@ -106,6 +109,10 @@ export class Anchor {
             if (this.isActive) {
                 this.view.style.visibility = 'visible';
                 this.textVisibleCursorTimer = setInterval(function () {
+                    if (self.isInputting == true) {
+                        self.view.style.visibility = 'visible';
+                        return;
+                    }
                     self.view.style.visibility = self._view.style.visibility == 'visible' ? "hidden" : 'visible';
                 }, 700)
             }
@@ -135,6 +142,22 @@ export class Anchor {
             this.selector.view.textInput.followAnchor(this);
         }
     }
+    /***
+     * 表示当前的光标正在输入中，此时光标不能一直在闪
+     */
+    inputting() {
+        this.isInputting = true;
+        if (this.inputtingTime) {
+            clearTimeout(this.inputtingTime);
+            this.inputtingTime = null;
+        }
+        this.inputtingTime = setTimeout(() => {
+            this.isInputting = false;
+            this.inputtingTime = null;
+        }, 1e3);
+    }
+    private isInputting: boolean = false;
+    private inputtingTime;
     private textVisibleCursorTimer;
     dispose() {
         if (this._view) {

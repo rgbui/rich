@@ -120,6 +120,7 @@ export class TextInput extends React.Component<{ selector: Selector }> {
             var value = this.textarea.value;
             var anchor = this.explorer.activeAnchor;
             if (anchor && anchor.isActive) {
+                anchor.inputting();
                 if (!this.inputTextNode) {
                     this.inputTextNode = document.createElement('span');
                     anchor.view.parentNode.insertBefore(this.inputTextNode, anchor.view);
@@ -169,6 +170,7 @@ export class TextInput extends React.Component<{ selector: Selector }> {
     async onInputDeleteText() {
         var anchor = this.explorer.activeAnchor;
         if (anchor.isText) {
+            anchor.inputting();
             if (anchor.at == 0) {
                 //说明当前的block已经删完了，此时光标应该向前移,移到上面一行
                 this.selector.onKeyArrow(KeyboardCode.ArrowLeft);
