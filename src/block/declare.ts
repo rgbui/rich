@@ -14,6 +14,9 @@ import "./base/common/view";
 import "./components/image";
 import "./components/katex";
 import "./components/todo";
+import "./components/callout";
+import "./components/emoji";
+import "./components/quote";
 import "./components/list/list";
 import "./components/list/list.text";
 
