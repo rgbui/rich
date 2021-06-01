@@ -12,6 +12,7 @@ import comment from "../../assert/svg/comment.svg";
 import trash from "../../assert/svg/trash.svg";
 import { SyExtensionsComponent } from "../sy.component";
 import { BlockMenuAction, BlockMenuItem } from "./out.declare";
+import { BlockSelectorData } from "../block/data";
 export class BlockMenu extends SyExtensionsComponent {
     private node: HTMLElement;
     constructor(props) {
@@ -37,7 +38,6 @@ export class BlockMenu extends SyExtensionsComponent {
         finally {
             this.close();
         }
-
     }
     get isVisible() {
         return this.visible;
@@ -52,14 +52,22 @@ export class BlockMenu extends SyExtensionsComponent {
         });
         items.push({
             name: BlockMenuAction.copy,
-            text: '拷贝复本',
+            text: '拷贝',
             label: "ctrl+D",
             icon: duplicate
         });
         items.push({
-            name: BlockMenuAction.trun,
             text: '转换为',
-            icon: loop
+            icon: loop,
+            childs: BlockSelectorData.first().childs.map(c => {
+                return {
+                    name: BlockMenuAction.trun,
+                    text: c.text,
+                    label: c.label,
+                    icon: c.pic,
+                    value: c.url
+                }
+            })
         });
         items.push({
             name: BlockMenuAction.trunIntoPage,
