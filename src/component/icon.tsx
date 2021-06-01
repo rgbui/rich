@@ -1,7 +1,7 @@
 
 import React from 'react';
 export function Icon(props: {
-    icon: string | SvgrComponent,
+    icon: string | SvgrComponent | JSX.Element,
     click?: (e: MouseEvent) => void,
     mousedown?: (e: MouseEvent) => void,
     rotate?: number,
@@ -34,7 +34,7 @@ export function Icon(props: {
             onMouseDown={e => { props.mousedown ? props.mousedown(e.nativeEvent) : undefined }}
             style={style}></i>
     }
-    else {
+    else if (typeof props.icon == 'function') {
         Object.assign(style, {
             width: props.size == 'none' ? undefined : (props.size) || 20,
             height: props.size == 'none' ? undefined : (props.size) || 20
@@ -43,5 +43,12 @@ export function Icon(props: {
             onClick={e => { props.click ? props.click(e.nativeEvent) : undefined; }}
             onMouseDown={e => { props.mousedown ? props.mousedown(e.nativeEvent) : undefined }}
             style={style}></props.icon>
+    }
+    else {
+        Object.assign(style, {
+            width: props.size == 'none' ? undefined : (props.size) || 20,
+            height: props.size == 'none' ? undefined : (props.size) || 20
+        })
+        return <span className={classList.join(" ")} style={style}>{props.icon}</span>
     }
 }
