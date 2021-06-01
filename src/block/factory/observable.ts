@@ -1,5 +1,5 @@
-import { BlockFactory } from "./block.factory"
 
+import { BlockFactory } from "./block.factory";
 export function observable(name?: string) {
     return (target, propetyKey, descriptor) => {
         let oldMethod = descriptor.value
@@ -19,14 +19,18 @@ export function observableAsync(name?: string) {
         }
     }
 }
+
 export function prop() {
     return function (target: any, attr: any) {
         if (!Array.isArray(target.__props)) {
             target.__props = [];
         }
-        target.__props.push(attr);
+        var rs = target.__props.map(pro => pro);
+        target.__props = rs;
+        rs.push(attr);
     }
 }
+
 
 export function url(url: string) {
     return (target) => {

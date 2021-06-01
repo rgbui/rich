@@ -13,7 +13,6 @@ import { ActionDirective, OperatorDirective } from "../history/declare";
 import { Block$Seek } from "./seek";
 import { BlockSelection } from "../selector/selection/selection";
 import { prop } from "./factory/observable";
-
 export abstract class Block extends Events {
     parent: Block;
     url: string;
@@ -280,7 +279,8 @@ export abstract class Block extends Events {
         }
         if (Array.isArray(this.__props)) {
             this.__props.each(pro => {
-                json[pro] = util.clone(this[pro]);
+                if (typeof this[pro] != 'undefined')
+                    json[pro] = util.clone(this[pro]);
             })
         }
         return json;
