@@ -1,6 +1,7 @@
 import ReactDOM from "react-dom";
 import { Page } from ".";
 import { Block } from "../block";
+import { BlockFactory } from "../block/factory/block.factory";
 import { dom } from "../common/dom";
 import { KeyboardCode } from "../common/keys";
 import { Point } from "../common/point";
@@ -206,5 +207,17 @@ export class PageEvent {
         });
         this.onExcuteUpdate();
         this.snapshoot.store();
+    }
+    async onBatchTurn(this: Page, blocks: Block[], url: string) {
+        await this.onObserveUpdate(async () => {
+            this.snapshoot.declare(ActionDirective.onBatchTurn)
+            for (let i = 0; i < blocks.length; i++) {
+                var bl = blocks[i];
+                var data = await bl.get();
+                await this.createBlock(url, data, bl.parent, bl.at);
+                bl.remove();
+            }
+            this.snapshoot.store();
+        })
     }
 }

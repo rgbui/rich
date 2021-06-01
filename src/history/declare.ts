@@ -10,7 +10,8 @@ export enum ActionDirective {
     onUpdateProps,
     onUpdatePattern,
     onBatchDeleteBlocks,
-    onCreateBlockByEnter
+    onCreateBlockByEnter,
+    onBatchTurn
 }
 
 export enum OperatorDirective {

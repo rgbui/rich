@@ -265,6 +265,11 @@ export class Selector {
                     break;
                 case BlockMenuAction.link:
                     break;
+                case BlockMenuAction.trun:
+                    if (dragBlock.length > 0) {
+                        this.page.onBatchTurn(dragBlock, item.value);
+                    }
+                    break;
             }
         })
         this.page.blockMenu.open(event);
