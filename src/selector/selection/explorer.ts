@@ -15,14 +15,14 @@ export class SelectionExplorer extends Events {
     }
     activeAnchor: Anchor;
     setActiveAnchor(anchor: Anchor) {
+        if (anchor.isText) this.selector.view.textInput.onStartInput(anchor);
+        if (this.activeAnchor !== anchor) {
+            if (this.activeAnchor) this.page.onBlurAnchor(this.activeAnchor);
+        }
+        else return
         this.activeAnchor = anchor;
-        if (anchor.isText) {
-            this.selector.view.textInput.onStartInput(anchor);
-        }
-        this.page.emit('focusAnchor', this.activeAnchor);
-        if (anchor != this.activeAnchor) {
-            this.page.emit('changeAnchor', this.activeAnchor);
-        }
+        if (this.activeAnchor)
+            this.page.onFocusAnchor(this.activeAnchor);
     }
     get hasSelectionRange() {
         if (this.selections.length > 0) {

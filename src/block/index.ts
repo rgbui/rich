@@ -879,6 +879,16 @@ export abstract class Block extends Events {
         }
         return selBlock;
     }
+    focusAnchor(anchor: Anchor) {
+        if (this.isText && this.isEmpty) {
+            this.textEl.classList.add('empty');
+        }
+    }
+    blurAnchor(anchor: Anchor) {
+        if (this.isText) {
+            this.textEl.classList.remove('empty');
+        }
+    }
 }
 export interface Block extends Block$Seek { }
 util.inherit(Block, Block$Seek);

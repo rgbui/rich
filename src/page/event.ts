@@ -6,6 +6,7 @@ import { dom } from "../common/dom";
 import { KeyboardCode } from "../common/keys";
 import { Point } from "../common/point";
 import { ActionDirective } from "../history/declare";
+import { Anchor } from "../selector/selection/anchor";
 export class PageEvent {
     private mouseScope: {
         isDown: boolean,
@@ -219,5 +220,17 @@ export class PageEvent {
             }
             this.snapshoot.store();
         })
+    }
+    onBlurAnchor(this: Page, anchor: Anchor) {
+        if (anchor.block) {
+            anchor.block.blurAnchor(anchor);
+        }
+        this.emit('blurAnchor', anchor);
+    }
+    onFocusAnchor(this: Page, anchor: Anchor) {
+        if (anchor.block) {
+            anchor.block.focusAnchor(anchor);
+        }
+        this.emit('focusAnchor', anchor);
     }
 }

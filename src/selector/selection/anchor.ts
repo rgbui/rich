@@ -100,11 +100,9 @@ export class Anchor {
             this.view.style.display = 'inline';
             if (this.textContent.length == 0) {
                 this.textEl.classList.add('empty');
-                this.view.classList.add('sy-anchor-text-end-placeholder');
             }
             else {
                 this.textEl.classList.remove('empty');
-                this.view.classList.remove('sy-anchor-text-end-placeholder');
             }
             if (this.isActive) {
                 this.view.style.visibility = 'visible';
@@ -132,7 +130,6 @@ export class Anchor {
             this.view.style.backgroundColor = 'transparent';
             this.view.style.height = 'auto';
             this.view.classList.remove('sy-anchor-text');
-            this.view.classList.remove('sy-anchor-text-end-placeholder');
             this.view.classList.add('sy-anchor-solid');
         }
         else {
