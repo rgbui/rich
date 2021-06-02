@@ -1,67 +1,18 @@
-import React from 'react';
-import { Selector } from '..';
-import { dom } from '../../common/dom';
-import { KeyboardCode } from '../../common/keys';
-import { Point } from '../../common/point';
-import { Anchor } from '../selection/anchor';
-export class TextInput extends React.Component<{ selector: Selector }> {
-    constructor(props) {
-        super(props);
-    }
-    get selector() {
-        return this.props.selector;
-    }
-    get explorer() {
-        return this.selector.explorer;
-    }
-    get blockSelector() {
-        return this.selector.page.blockSelector;
-    }
-    textarea: HTMLTextAreaElement;
-    async onPaster(event: ClipboardEvent) {
-        event.preventDefault();
-        var items: { mine: 'file' | 'html' | 'text', content: string | File }[] = [];
-        var files: File[] = Array.from(event.clipboardData.files);
-        var html = event.clipboardData.getData('text/html');
-        if (html) {
-            var ma = html.match(/\<[a-zA-Z\d\-]+[\s\S]*?>/);
-            if (ma) {
-                items.push({ mine: 'html', content: html });
-            }
-            else items.push({ mine: 'text', content: html });
-        }
-        else {
-            var text = event.clipboardData.getData('text/plain');
-            if (text) {
-                items.push({ mine: 'text', content: event.clipboardData.getData('text/plain') });
-            }
-        }
-        if (files.length == 0 && !items.exists(g => g.mine == 'html')) {
-            //在当前的位置处复制内容
-        }
-        else if (files.length == 1) {
-            //暂时只遇到只有一个文件的，此时复制的文件有两种来源
-            //1. 本地文件的复制（从剪贴版上面） 2. 复制网络上面的图片
-            if (items.exists(g => g.mine == 'html')) {
-                //这里可以提取上传的文件的网址
-            }
-            else {
-                //这个可能是本地的文件名（貌似在mac上，如果复制多张图片，会有多张图片的名称）
+import { TextInput } from ".";
+import { dom } from "../../common/dom";
+import { KeyboardCode } from "../../common/keys";
+import { Point } from "../../common/point";
+import { Anchor } from "../selection/anchor";
 
-            }
-        }
-        else {
-            // 这里是得复制的网页内容，但也有可能是word
-        }
-        console.log(files, items);
-    }
+
+export class TextInput$Write {
     /***
      * keydown会触发多次（如果手不松，会一直触发，所以整个过程前非是完整的keydown-keyup
      * 可能会是keydown-keydown-keydown-keyup
      * keydown-input keydown-input keydown-input-keyup
      * 注意keydown是要输入，input是输入完成，keyup不一定会触发
      */
-    onKeydown(event: KeyboardEvent) {
+    onKeydown(this: TextInput, event: KeyboardEvent) {
         this.isWillInput = false;
         /***blockSelector拉截 */
         if (this.blockSelector.isVisible) {
@@ -114,8 +65,8 @@ export class TextInput extends React.Component<{ selector: Selector }> {
         }
         this.isWillInput = true;
     }
-    private isWillInput: boolean = false;
-    onInput(event: KeyboardEvent) {
+    isWillInput: boolean;
+    onInput(this: TextInput, event: KeyboardEvent) {
         if (this.isWillInput == true) {
             var value = this.textarea.value;
             var anchor = this.explorer.activeAnchor;
@@ -128,7 +79,6 @@ export class TextInput extends React.Component<{ selector: Selector }> {
                 this.inputTextNode.innerHTML = value;
                 anchor.at = this.inputTextAt + value.length;
                 anchor.view.style.display = 'inline';
-                console.log(value, value.endsWith('、'));
                 if (value.endsWith('@')) {
                     //说明用户有输入@符的意图，那么这里弹出一个下拉框供用户选择
                 }
@@ -138,20 +88,20 @@ export class TextInput extends React.Component<{ selector: Selector }> {
                     var point = new Point(bound.left, bound.top + bound.height);
                     this.blockSelector.open(point, value);
                     this.blockSelector.only('select', async (blockData) => {
-                        anchor.block.onInputText(this.inputTextAt,
-                            value.replace(/(\/、)[^/、]*$/, ""),
+                        anchor.block.onStoreInputText(this.inputTextAt,
+                            value.replace(/[\/、][^/、]*$/, ""),
                             true,
                             async () => {
-                                this.selector.page.onRememberUpdate();
-                                var newBlock = await anchor.block.visibleDownCreateBlock(blockData.url);
-                                newBlock.mounted(() => {
-                                    var contentBlock = newBlock.find(g => !g.isLayout);
-                                    if (contentBlock) {
-                                        var newAnchor = contentBlock.visibleHeadAnchor;
-                                        this.explorer.onReplaceSelection(newAnchor);
-                                    }
-                                });
-                                this.selector.page.onExcuteUpdate();
+                                await this.selector.page.onObserveUpdate(async () => {
+                                    var newBlock = await anchor.block.visibleDownCreateBlock(blockData.url);
+                                    newBlock.mounted(() => {
+                                        var contentBlock = newBlock.find(g => !g.isLayout);
+                                        if (contentBlock) {
+                                            var newAnchor = contentBlock.visibleHeadAnchor;
+                                            this.explorer.onReplaceSelection(newAnchor);
+                                        }
+                                    });
+                                })
                             }
                         )
                     })
@@ -160,15 +110,15 @@ export class TextInput extends React.Component<{ selector: Selector }> {
                     this.blockSelector.onInputFilter(value);
                 }
                 else {
-                    anchor.block.onInputText(this.inputTextAt, value);
+                    anchor.block.onStoreInputText(this.inputTextAt, value);
                 }
                 this.followAnchor(anchor);
                 if (value) anchor.removeEmpty();
             }
         }
     }
-    private deleteInputText = '';
-    async onInputDeleteText() {
+    deleteInputText: string;
+    async onInputDeleteText(this: TextInput,) {
         var anchor = this.explorer.activeAnchor;
         if (anchor.isText) {
             anchor.inputting();
@@ -181,7 +131,7 @@ export class TextInput extends React.Component<{ selector: Selector }> {
                         await block.onDelete();
                     });
                 }
-                this.onStartInput(this.explorer.activeAnchor);
+                this.onWillInput(this.explorer.activeAnchor);
                 this.followAnchor(this.explorer.activeAnchor);
                 return;
             }
@@ -209,7 +159,7 @@ export class TextInput extends React.Component<{ selector: Selector }> {
                             var nb = prevAnchor.textEl.getBoundingClientRect();
                             if (Math.abs(nb.left + nb.width - ob.left) < 10) {
                                 this.explorer.onReplaceSelection(prevAnchor);
-                                await block.onInputDeleteText(this.inputTextAt, this.deleteInputText, true, async () => {
+                                await block.onStoreInputDeleteText(this.inputTextAt, this.deleteInputText, true, async () => {
                                     if (block.isEmpty && !block.isPart) {
                                         await this.selector.page.onObserveUpdate(async () => {
                                             var pa = block.parent;
@@ -218,13 +168,13 @@ export class TextInput extends React.Component<{ selector: Selector }> {
                                         });
                                     }
                                 });
-                                this.onStartInput(this.explorer.activeAnchor);
+                                this.onWillInput(this.explorer.activeAnchor);
                                 this.followAnchor(this.explorer.activeAnchor);
                                 return;
                             }
                         }
                     }
-                    await anchor.block.onInputDeleteText(this.inputTextAt, this.deleteInputText, anchor.at == 0 ? true : false);
+                    await anchor.block.onStoreInputDeleteText(this.inputTextAt, this.deleteInputText, anchor.at == 0 ? true : false);
                     if (anchor.at == 0 && block.isEmpty) {
                         anchor.setEmpty();
                     }
@@ -234,56 +184,21 @@ export class TextInput extends React.Component<{ selector: Selector }> {
             }
         }
     }
-    onFocus() {
-        if (document.activeElement !== this.textarea) {
-            this.textarea.focus();
-        }
-    }
-    onBlur() {
-        if (document.activeElement === this.textarea) {
-            this.textarea.blur();
-        }
-    }
-    private inputTextNode: HTMLElement;
-    private inputTextAt: number;
+    inputTextNode: HTMLElement;
+    inputTextAt: number;
     /***
      * 表示在这个光标处可以输入了
      * 如果不执行该方法，可能输入就没有任何文字
      */
-    onStartInput(anchor: Anchor) {
-        this.onBlur();
+    onWillInput(this: TextInput, anchor: Anchor) {
         this.onFocus();
+        anchor.block.onWillInput();
+        this.isWillInput = false;
         this.textarea.value = '';
         delete this.inputTextNode;
         this.deleteInputText = '';
         if (anchor.isText) {
             this.inputTextAt = anchor.at;
-            anchor.block.onInputStart();
         }
-    }
-    render() {
-        return <div className='sy-selector-textinput'><textarea
-            ref={e => this.textarea = e}
-        ></textarea></div>
-    }
-    followAnchor(anchor: Anchor) {
-        var bound = anchor.bound;
-        var point = Point.from(bound);
-        this.textarea.style.top = point.y + 'px';
-        this.textarea.style.left = point.x + 'px';
-        this.textarea.style.height = bound.height + 'px';
-    }
-    private _paster;
-    private _keydown;
-    private _input;
-    componentDidMount() {
-        this.textarea.addEventListener('keydown', this._keydown = this.onKeydown.bind(this));
-        this.textarea.addEventListener('input', this._input = this.onInput.bind(this));
-        this.textarea.addEventListener('paste', this._paster = this.onPaster.bind(this));
-    }
-    componentWillUnmount() {
-        this.textarea.removeEventListener('keydown', this._keydown);
-        this.textarea.removeEventListener('input', this._input);
-        this.textarea.removeEventListener('paste', this._paster);
     }
 }

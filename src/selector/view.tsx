@@ -3,7 +3,7 @@ import { Selector } from ".";
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { TextInput } from "./input/textarea";
+import { TextInput } from "./input";
 import { Bar } from "./handle/bar";
 export class SelectorView extends Component<{ selector: Selector }>{
     constructor(props) {

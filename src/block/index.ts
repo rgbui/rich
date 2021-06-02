@@ -697,7 +697,7 @@ export abstract class Block extends Events {
     /**
      * 用户一直输入内容,如果用户停留超过0.7秒，就记录
      */
-    onInputText(from: number, text: string, force: boolean = false, action?: () => Promise<void>) {
+    onStoreInputText(from: number, text: string, force: boolean = false, action?: () => Promise<void>) {
         if (this.inputTime) {
             clearTimeout(this.inputTime);
             delete this.inputTime;
@@ -728,7 +728,7 @@ export abstract class Block extends Events {
     }
     private deleteInputTime;
     private currentLastDeleteText: string;
-    async onInputDeleteText(from: number, text: string, force: boolean = false, action?: () => Promise<void>) {
+    async onStoreInputDeleteText(from: number, text: string, force: boolean = false, action?: () => Promise<void>) {
         if (this.deleteInputTime) {
             clearTimeout(this.deleteInputTime);
             delete this.deleteInputTime;
@@ -759,7 +759,7 @@ export abstract class Block extends Events {
         if (force == false) this.deleteInputTime = setTimeout(async () => { await excute() }, 7e2);
         else await excute();
     }
-    onInputStart() {
+    onWillInput() {
         if (this.inputTime) {
             clearTimeout(this.inputTime);
             delete this.inputTime;
