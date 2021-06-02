@@ -128,6 +128,7 @@ export class TextInput extends React.Component<{ selector: Selector }> {
                 this.inputTextNode.innerHTML = value;
                 anchor.at = this.inputTextAt + value.length;
                 anchor.view.style.display = 'inline';
+                console.log(value, value.endsWith('、'));
                 if (value.endsWith('@')) {
                     //说明用户有输入@符的意图，那么这里弹出一个下拉框供用户选择
                 }

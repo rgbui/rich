@@ -102,8 +102,9 @@ export class BlockSelector extends SyExtensionsComponent {
     }
     onInputFilter(text: string) {
         var cs = text.match(/(\/|、)[^\s]*$/g);
-        var command = cs[0];
+        var command = cs ? cs[0] : "";
         if (command) {
+            command = command.replace(/、/g, "/");
             this.command = command;
             if (this.filterBlocks.length == 0) {
                 this.close()
