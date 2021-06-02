@@ -1,10 +1,7 @@
 .sy-block-text-span {
-     display: block;
+    display: block;
 }
-
-.sy-block-text-head{
-    
-}
+.sy-block-text-head {}
 .sy-block-image {
     display        : flex;
     justify-content: center;
@@ -21,4 +18,31 @@
     display        : flex;
     justify-content: flex-start;
     align-items    : center;
+}
+
+.sy-block-quote {
+    border-left  : 3px solid rgb(55, 53, 47);
+    padding-left : 0.9em;
+    padding-right: 0.9em;
+    font-size    : 1.2em;
+}
+
+.sy-block-callout {
+    width          : 100%;
+    box-sizing     : border-box;
+    display        : flex;
+    justify-content: flex-start;
+    align-items    : center;
+    padding        : 16px 16px 16px 12px;
+    background     : rgba(235, 236, 237, 0.3);
+
+    &-icon {
+        width      : 24px;
+        flex-shrink: 0;
+    }
+
+    &-content {
+        flex-grow  : 1;
+        margin-left: 8px;
+    }
 }
