@@ -15,7 +15,7 @@ export class SelectionExplorer extends Events {
     }
     activeAnchor: Anchor;
     setActiveAnchor(anchor: Anchor) {
-        if (anchor.isText) this.selector.view.textInput.onStartInput(anchor);
+        if (anchor.isText) this.selector.view.textInput.onWillInput(anchor);
         if (this.activeAnchor !== anchor) {
             if (this.activeAnchor) this.page.onBlurAnchor(this.activeAnchor);
         }

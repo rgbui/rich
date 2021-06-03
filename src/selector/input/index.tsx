@@ -1,7 +1,6 @@
 import React from 'react';
 import { Selector } from '..';
-import { dom } from '../../common/dom';
-import { KeyboardCode } from '../../common/keys';
+
 import { Point } from '../../common/point';
 import { util } from '../../util/util';
 import { Anchor } from '../selection/anchor';
@@ -32,14 +31,12 @@ export class TextInput extends React.Component<{ selector: Selector }> {
             this.textarea.blur();
         }
     }
-    render()
-    {
+    render() {
         return <div className='sy-selector-textinput'><textarea
             ref={e => this.textarea = e}
         ></textarea></div>
     }
-    followAnchor(anchor: Anchor)
-    {
+    followAnchor(anchor: Anchor) {
         var bound = anchor.bound;
         var point = Point.from(bound);
         this.textarea.style.top = point.y + 'px';
