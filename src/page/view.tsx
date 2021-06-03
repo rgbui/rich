@@ -1,7 +1,7 @@
 import { Component } from "react";
 import React from 'react';
 import { Page } from "./index";
-import { PageLayoutView } from "./layout/render";
+import { PageLayoutView } from "../layout/view";
 import { SelectorView } from "../selector/view";
 import { ChildsArea } from "../block/base/appear";
 import { BlockSelector } from "../extensions/block";
@@ -48,12 +48,13 @@ export class PageView extends Component<{ page: Page }>{
             onFocusCapture={e => this.page.onFocusCapture(e.nativeEvent)}
             onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}
         >
-            <PageLayoutView pageLayout={this.page.pageLayout}>
-                <div className='sy-page-view-content'
-                    onMouseDown={e => this.page.onMousedown(e.nativeEvent)}
-                ><ChildsArea childs={this.page.views}></ChildsArea>
-                </div>
-            </PageLayoutView>
+            <div className='sy-page-view-box' onMouseDown={e => this.page.onMousedown(e.nativeEvent)}>
+                <PageLayoutView pageLayout={this.page.pageLayout}>
+                    <div className='sy-page-view-content' ref={e => this.page.contentEl = e}
+                    ><ChildsArea childs={this.page.views}></ChildsArea>
+                    </div>
+                </PageLayoutView>
+            </div>
             <div className='sy-page-plugs'>
                 <BlockSelector ref={e => this.page.registerExtension(e)} ></BlockSelector>
                 <ReferenceSelector ref={e => this.page.registerExtension(e)} ></ReferenceSelector>

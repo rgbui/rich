@@ -1,7 +1,7 @@
 
 
-import { Page } from "..";
-import { PageLayoutView } from './render';
+import { Page } from "../page";
+import { PageLayoutView } from './view';
 /**
  * 版面，尽量设计上要统一
  * 海报、ppt(是否支持像ppt那样，一页一页的可以演示,每一页都是view),主要是用来支持单页面营销的
@@ -18,7 +18,7 @@ export class PageLayout {
     screenWidth: number;
     screenHeight: number;
     page: Page;
-    render: PageLayoutView;
+    view: PageLayoutView;
     constructor(page: Page, options?: Record<string, any>) {
         this.page = page;
         if (typeof options != 'undefined') {
@@ -35,6 +35,12 @@ export class PageLayout {
             screenHeight: this.screenHeight
         };
         return json;
+    }
+    get el() {
+        return this.view.el;
+    }
+    contains(el: HTMLElement) {
+        return this.el.contains(el);
     }
 }
 
