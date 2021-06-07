@@ -5,8 +5,7 @@ import { Events } from "../util/events";
 import { util } from "../util/util";
 import { BlockFactory } from "../block/factory/block.factory";
 import { View } from "../block/base/common/view";
-import { Selector } from '../selector';
-import { PageLayout } from "./layout/index";
+import { PageLayout } from "../layout/index";
 import { PageEvent } from "./event";
 import { PageView } from './view';
 import { User } from '../types/user';
@@ -21,10 +20,12 @@ import { ConfigurationManager } from '../config';
 import { PageConfig, WorkspaceConfig } from '../config/workspace';
 import { SyExtensionsComponent } from '../extensions/sy.component';
 import { KeyboardPlate } from '../common/keys';
-
+import { Page$Seek } from './seek';
+import { Kit } from '../kit';
 
 export class Page extends Events {
     el: HTMLElement;
+    contentEl: HTMLElement;
     root: HTMLElement;
     id: string;
     date: number;
@@ -56,8 +57,8 @@ export class Page extends Events {
             fontCss: {
 
             } as any
-        })
-        this.selector = new Selector(this);
+        });
+        this.kit = new Kit(this);
         this.snapshoot = new HistorySnapshoot(this);
         this.snapshoot.on('history', (action) => {
             this.emit('history', action);
@@ -102,13 +103,13 @@ export class Page extends Events {
     }
     pageLayout: PageLayout;
     views: View[] = [];
-    selector: Selector;
     viewRender: PageView;
     blockSelector: BlockSelector;
     referenceSelector: ReferenceSelector;
     blockMenu: BlockMenu;
     textTool: TextTool;
     keyboardPlate: KeyboardPlate = new KeyboardPlate();
+    kit: Kit;
     isFocus: boolean = false;
     onError(error: Error) {
         this.emit('error', error);
@@ -148,7 +149,7 @@ export class Page extends Events {
         else if (extension instanceof TextTool) {
             this.textTool = extension;
             this.textTool.on('error', err => this.onError(err));
-            this.textTool.on('selectionExcuteCommand', command => this.selector.onSelectionExcuteCommand(command))
+            this.textTool.on('selectionExcuteCommand', command => this.kit.explorer.onSelectionExcuteCommand(command))
         }
         else if (extension instanceof ReferenceSelector) {
             this.referenceSelector = extension;
@@ -158,3 +159,6 @@ export class Page extends Events {
 }
 export interface Page extends PageEvent { }
 util.inherit(Page, PageEvent)
+
+export interface Page extends Page$Seek { }
+util.inherit(Page, Page$Seek);

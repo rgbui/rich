@@ -4,7 +4,7 @@ import "./src/util/array";
 
 import "./src/assert/theme.less";
 
-import "./src/selector/style.less";
+import "./src/kit/style.less";
 import "./src/component/style.less";
 import "./src/page/style.less";
 import './src/assert/font/iconfont.css';

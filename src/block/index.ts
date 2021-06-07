@@ -2,17 +2,16 @@ import { Events } from "../util/events";
 import { util } from "../util/util";
 import { Point, Rect } from "../common/point";
 import { Page } from "../page";
-import { Anchor } from "../selector/selection/anchor";
+import { Anchor } from "../kit/selection/anchor";
 import { BlockFactory } from "./factory/block.factory";
 import { BlockAppear, BlockDisplay, BlockRenderRange, Locate } from "./base/enum";
 import { Pattern } from "./pattern/index";
 import { BaseComponent } from "./base/component";
 import { TextEle } from "../common/text.ele";
-import { dom } from "../common/dom";
 import { ActionDirective, OperatorDirective } from "../history/declare";
 import { Block$Seek } from "./seek";
-import { BlockSelection } from "../selector/selection/selection";
 import { prop } from "./factory/observable";
+import { TemporaryPurpose } from "../page/declare";
 export abstract class Block extends Events {
     parent: Block;
     url: string;
@@ -313,7 +312,7 @@ export abstract class Block extends Events {
     }
     childsEl: HTMLElement;
     get visibleHeadAnchor() {
-        var anchor = this.page.selector.explorer.createAnchor();
+        var anchor = this.page.kit.explorer.createAnchor();
         anchor.block = this;
         if (anchor.isText) {
             anchor.at = 0;
@@ -321,7 +320,7 @@ export abstract class Block extends Events {
         return anchor;
     }
     get visibleBackAnchor() {
-        var anchor = this.page.selector.explorer.createAnchor();
+        var anchor = this.page.kit.explorer.createAnchor();
         anchor.block = this;
         if (anchor.isText) {
             anchor.at = anchor.textContent.length;
@@ -534,7 +533,7 @@ export abstract class Block extends Events {
      */
     visibleAnchor(point: Point): Anchor {
         var part = this.visiblePoint(point);
-        var anchor = this.page.selector.explorer.createAnchor();
+        var anchor = this.page.kit.explorer.createAnchor();
         anchor.block = part;
         if (part.isText) {
             anchor.at = TextEle.getAt(part.textEl, point);
@@ -584,7 +583,7 @@ export abstract class Block extends Events {
         return TextEle.getBounds(this.el);
     }
     getVisibleBound() {
-        return Rect.from(this.el.getBoundingClientRect());
+        return this.cacheComputed(TemporaryPurpose.blockBound,()=>Rect.from(this.el.getBoundingClientRect()));
     }
     /**
      * 获取视觉上的block和part
@@ -623,71 +622,71 @@ export abstract class Block extends Events {
         }
         return el;
     }
-    private dragOverTime;
-    private lastPoint: Point;
-    private overArrow: string;
-    onDragOverStart() {
-        dom(this.el).removeClass(g => g.startsWith('sy-block-drag-over'));
-        if (this.dragOverTime) {
-            clearTimeout(this.dragOverTime);
-            this.dragOverTime = null;
-        }
-        this.overArrow = '';
-        delete this.lastPoint;
-    }
-    onDragOver(point: Point) {
-        var self = this;
-        var bound = this.getVisibleBound();
-        var el = this.el as HTMLElement;
-        var arrow: string;
-        if (this.lastPoint && this.lastPoint.nearBy(point, 3) && bound.conatin(point)
-        ) {
-            if (!this.dragOverTime) {
-                self.overArrow = '';
-                this.dragOverTime = setTimeout(() => {
-                    self.overArrow = 'right';
-                    dom(el).removeClass(g => g.startsWith('sy-block-drag-over'))
-                    el.classList.add('sy-block-drag-over-' + self.overArrow);
-                    self.page.selector.dropBlock = self;
-                    self.page.selector.dropArrow = self.overArrow as any;
-                }, 2e3);
-            }
-        }
-        else {
-            if (this.dragOverTime) {
-                clearTimeout(this.dragOverTime);
-                this.dragOverTime = null;
-            }
-            self.overArrow = '';
-        }
-        if (self.overArrow) return;
-        if (point.x <= bound.left) {
-            arrow = 'left';
-        }
-        else if (point.x >= bound.left + bound.width) {
-            arrow = 'right';
-        }
-        else if (point.y <= bound.top + bound.height / 2) {
-            arrow = 'up';
-        }
-        else if (point.y >= bound.top + bound.height / 2) {
-            arrow = 'down';
-        }
-        dom(el).removeClass(g => g.startsWith('sy-block-drag-over'))
-        el.classList.add('sy-block-drag-over-' + arrow);
-        this.lastPoint = point.clone();
-        this.page.selector.dropArrow = arrow as any;
-        this.page.selector.dropBlock = this;
-    }
-    onDragLeave() {
-        dom(this.el).removeClass(g => g.startsWith('sy-block-drag-over'));
-        if (this.dragOverTime) {
-            clearTimeout(this.dragOverTime);
-            this.dragOverTime = null;
-        }
-        this.overArrow = '';
-        delete this.lastPoint;
-    }
+    // private dragOverTime;
+    // private lastPoint: Point;
+    // private overArrow: string;
+    // onDragOverStart() {
+    //     dom(this.el).removeClass(g => g.startsWith('sy-block-drag-over'));
+    //     if (this.dragOverTime) {
+    //         clearTimeout(this.dragOverTime);
+    //         this.dragOverTime = null;
+    //     }
+    //     this.overArrow = '';
+    //     delete this.lastPoint;
+    // }
+    // onDragOver(point: Point) {
+    //     var self = this;
+    //     var bound = this.getVisibleBound();
+    //     var el = this.el as HTMLElement;
+    //     var arrow: string;
+    //     if (this.lastPoint && this.lastPoint.nearBy(point, 3) && bound.conatin(point)
+    //     ) {
+    //         if (!this.dragOverTime) {
+    //             self.overArrow = '';
+    //             this.dragOverTime = setTimeout(() => {
+    //                 self.overArrow = 'right';
+    //                 dom(el).removeClass(g => g.startsWith('sy-block-drag-over'))
+    //                 el.classList.add('sy-block-drag-over-' + self.overArrow);
+    //                 self.page.selector.dropBlock = self;
+    //                 self.page.selector.dropArrow = self.overArrow as any;
+    //             }, 2e3);
+    //         }
+    //     }
+    //     else {
+    //         if (this.dragOverTime) {
+    //             clearTimeout(this.dragOverTime);
+    //             this.dragOverTime = null;
+    //         }
+    //         self.overArrow = '';
+    //     }
+    //     if (self.overArrow) return;
+    //     if (point.x <= bound.left) {
+    //         arrow = 'left';
+    //     }
+    //     else if (point.x >= bound.left + bound.width) {
+    //         arrow = 'right';
+    //     }
+    //     else if (point.y <= bound.top + bound.height / 2) {
+    //         arrow = 'up';
+    //     }
+    //     else if (point.y >= bound.top + bound.height / 2) {
+    //         arrow = 'down';
+    //     }
+    //     dom(el).removeClass(g => g.startsWith('sy-block-drag-over'))
+    //     el.classList.add('sy-block-drag-over-' + arrow);
+    //     this.lastPoint = point.clone();
+    //     this.page.selector.dropArrow = arrow as any;
+    //     this.page.selector.dropBlock = this;
+    // }
+    // onDragLeave() {
+    //     dom(this.el).removeClass(g => g.startsWith('sy-block-drag-over'));
+    //     if (this.dragOverTime) {
+    //         clearTimeout(this.dragOverTime);
+    //         this.dragOverTime = null;
+    //     }
+    //     this.overArrow = '';
+    //     delete this.lastPoint;
+    // }
 
     /***
      *用户输入
@@ -795,90 +794,90 @@ export abstract class Block extends Events {
      * 文本依据选区裂变创建新的block
      * 返回当前选区的block
      */
-    async onFissionCreateBlock(selection: BlockSelection) {
-        var isText = this.isTextContent;
-        var pattern = await this.pattern.cloneData();
-        var selectionBeforeContent = '', selectionAfterContent = '', selectionContent = '';
-        var content = this.content;
-        var selBlock: Block;
-        if (this == selection.start.block && this == selection.end.block) {
-            //说明block包含选区
-            selectionBeforeContent = content.substring(0, selection.start.at);
-            selectionContent = content.substring(selection.start.at, selection.end.at);
-            selectionAfterContent = content.substring(selection.end.at);
-        }
-        else if (this == selection.start.block) {
-            //block后半部分是选区
-            selectionBeforeContent = content.substring(0, selection.start.at);
-            selectionContent = content.substring(selection.start.at);
-        }
-        else if (this == selection.end.block) {
-            //block前半部分是选区
-            selectionAfterContent = content.substring(selection.end.at);
-            selectionContent = content.substring(0, selection.end.at);
-        }
+    // async onFissionCreateBlock(selection: BlockSelection) {
+    //     var isText = this.isTextContent;
+    //     var pattern = await this.pattern.cloneData();
+    //     var selectionBeforeContent = '', selectionAfterContent = '', selectionContent = '';
+    //     var content = this.content;
+    //     var selBlock: Block;
+    //     if (this == selection.start.block && this == selection.end.block) {
+    //         //说明block包含选区
+    //         selectionBeforeContent = content.substring(0, selection.start.at);
+    //         selectionContent = content.substring(selection.start.at, selection.end.at);
+    //         selectionAfterContent = content.substring(selection.end.at);
+    //     }
+    //     else if (this == selection.start.block) {
+    //         //block后半部分是选区
+    //         selectionBeforeContent = content.substring(0, selection.start.at);
+    //         selectionContent = content.substring(selection.start.at);
+    //     }
+    //     else if (this == selection.end.block) {
+    //         //block前半部分是选区
+    //         selectionAfterContent = content.substring(selection.end.at);
+    //         selectionContent = content.substring(0, selection.end.at);
+    //     }
 
-        if (isText) {
-            if (selectionBeforeContent && selectionAfterContent) {
-                //包含选区
-                this.updateContent(selectionBeforeContent);
-                selBlock = await this.page.createBlock('/text',
-                    { content: selectionContent, pattern: pattern },
-                    this.parent,
-                    this.at + 1);
-                await this.page.createBlock('/text',
-                    { content: selectionAfterContent, pattern: pattern },
-                    this.parent,
-                    this.at + 2);
-            }
-            else if (selectionBeforeContent) {
-                //后半部分是选区
-                this.updateContent(selectionBeforeContent);
-                selBlock = await this.page.createBlock('/text',
-                    { content: selectionContent, pattern: pattern },
-                    this.parent,
-                    this.at + 1);
-            }
-            else if (selectionAfterContent) {
-                //前半部分是选区
-                this.updateContent(selectionAfterContent);
-                selBlock = await this.page.createBlock('/text',
-                    { content: selectionContent, pattern: pattern },
-                    this.parent,
-                    this.at);
-            }
-            else {
-                selBlock = this;
-            }
-        }
-        else {
-            if (!selectionBeforeContent && !selectionAfterContent) {
-                selBlock = this;
-            }
-            else {
-                if (selectionBeforeContent) {
-                    await this.page.createBlock('/text',
-                        { content: selectionBeforeContent, pattern: pattern },
-                        this,
-                        this.childs.length);
-                }
-                if (selectionContent) {
-                    selBlock = await this.page.createBlock('/text',
-                        { content: selectionContent, pattern: pattern },
-                        this,
-                        this.childs.length);
-                    console.log(selBlock, 'selblock...');
-                }
-                if (selectionAfterContent) {
-                    await this.page.createBlock('/text',
-                        { content: selectionAfterContent, pattern: pattern },
-                        this,
-                        this.childs.length);
-                }
-            }
-        }
-        return selBlock;
-    }
+    //     if (isText) {
+    //         if (selectionBeforeContent && selectionAfterContent) {
+    //             //包含选区
+    //             this.updateContent(selectionBeforeContent);
+    //             selBlock = await this.page.createBlock('/text',
+    //                 { content: selectionContent, pattern: pattern },
+    //                 this.parent,
+    //                 this.at + 1);
+    //             await this.page.createBlock('/text',
+    //                 { content: selectionAfterContent, pattern: pattern },
+    //                 this.parent,
+    //                 this.at + 2);
+    //         }
+    //         else if (selectionBeforeContent) {
+    //             //后半部分是选区
+    //             this.updateContent(selectionBeforeContent);
+    //             selBlock = await this.page.createBlock('/text',
+    //                 { content: selectionContent, pattern: pattern },
+    //                 this.parent,
+    //                 this.at + 1);
+    //         }
+    //         else if (selectionAfterContent) {
+    //             //前半部分是选区
+    //             this.updateContent(selectionAfterContent);
+    //             selBlock = await this.page.createBlock('/text',
+    //                 { content: selectionContent, pattern: pattern },
+    //                 this.parent,
+    //                 this.at);
+    //         }
+    //         else {
+    //             selBlock = this;
+    //         }
+    //     }
+    //     else {
+    //         if (!selectionBeforeContent && !selectionAfterContent) {
+    //             selBlock = this;
+    //         }
+    //         else {
+    //             if (selectionBeforeContent) {
+    //                 await this.page.createBlock('/text',
+    //                     { content: selectionBeforeContent, pattern: pattern },
+    //                     this,
+    //                     this.childs.length);
+    //             }
+    //             if (selectionContent) {
+    //                 selBlock = await this.page.createBlock('/text',
+    //                     { content: selectionContent, pattern: pattern },
+    //                     this,
+    //                     this.childs.length);
+    //                 console.log(selBlock, 'selblock...');
+    //             }
+    //             if (selectionAfterContent) {
+    //                 await this.page.createBlock('/text',
+    //                     { content: selectionAfterContent, pattern: pattern },
+    //                     this,
+    //                     this.childs.length);
+    //             }
+    //         }
+    //     }
+    //     return selBlock;
+    // }
     focusAnchor(anchor: Anchor) {
         if (this.isText && this.isEmpty) {
             this.textEl.classList.add('empty');
@@ -887,6 +886,21 @@ export abstract class Block extends Events {
     blurAnchor(anchor: Anchor) {
         if (this.isText) {
             this.textEl.classList.remove('empty');
+        }
+    }
+    private temporarys: { flag: string, purpose: TemporaryPurpose, data: any }[] = [];
+    cacheComputed<T>(purpose: TemporaryPurpose, computed: () => T): T {
+        var tp = this.temporarys.find(g => g.purpose == purpose);
+        var flag = this.page.getTemporaryFlag(purpose);
+        if (tp && tp.flag == flag) return tp.data;
+        else {
+            if (!tp) {
+                tp = { flag, purpose, data: undefined };
+                this.temporarys.push(tp);
+            }
+            tp.flag = flag;
+            tp.data = computed();
+            return tp.data;
         }
     }
 }
