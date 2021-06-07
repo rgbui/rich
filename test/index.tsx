@@ -12,7 +12,7 @@ import { SY } from '..';
 
 ReactDOM.render(
     <div className='editor-page'>
-        <div className='editor' style={{ width: '500px', height: '200px' }}></div>
+        <div className='editor' ></div>
         <div className='editor-console'></div>
     </div>,
     document.body.appendChild(document.createElement('div')),

@@ -2,13 +2,14 @@ import { Component } from "react";
 import React from 'react';
 import { Page } from "./index";
 import { PageLayoutView } from "../layout/view";
-import { SelectorView } from "../selector/view";
+
 import { ChildsArea } from "../block/base/appear";
 import { BlockSelector } from "../extensions/block";
 import { ReferenceSelector } from "../extensions/reference";
 import { BlockMenu } from "../extensions/menu/menu";
 import { TextTool } from "../extensions/text.tool/text.tool";
 import ReactDOM from "react-dom";
+import { KitView } from "../kit/view";
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
  * 对于同时支持这4个事件的浏览器，事件执行顺序为focusin > focus > focusout > blur
@@ -61,7 +62,7 @@ export class PageView extends Component<{ page: Page }>{
                 <BlockMenu ref={e => this.page.registerExtension(e)} ></BlockMenu>
                 <TextTool ref={e => this.page.registerExtension(e)}></TextTool>
             </div>
-            <SelectorView selector={this.page.selector}></SelectorView>
+           <KitView kit={this.page.kit}></KitView>
         </div>
     }
 }

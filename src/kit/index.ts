@@ -27,8 +27,7 @@ export class Kit extends Events {
     private downAnchor: Anchor;
     view: KitView;
     acceptMousedown(event: MouseEvent) {
-        var target = event.target as HTMLElement;
-        var block = this.page.getEleBlock(target);
+        var block = this.page.getVisibleBlockByMouse(event);
         this.downEvent = event;
         this.isDown = true;
         if (block && !block.isLayout) {
@@ -53,9 +52,9 @@ export class Kit extends Events {
                     this.selector.setMove(Point.from(event));
                 }
                 else {
-                    var block = this.page.getEleBlock(ele);
+                    var block = this.page.getVisibleBlockByMouse(event);
                     if (block && !block.isLayout) {
-                        var anchor = block.visibleAnchor(downPoint);
+                        var anchor = block.visibleAnchor(Point.from(event));
                         if (anchor) {
                             this.explorer.onShiftFocusAnchor(anchor);
                         }

@@ -291,8 +291,9 @@ export class PageEvent {
      * TemporaryPurpose 表示当前的缓存标记的用途是什么
      * 有一些操作频率是很高的，相关的计算结果，可以暂时性的缓存下来
      */
-    private temporarys: { flag: string, purpose: TemporaryPurpose }[] = [];
+    private temporarys: { flag: string, purpose: TemporaryPurpose }[];
     onDeclareTemporary(purpose: TemporaryPurpose) {
+        if (!Array.isArray(this.temporarys)) this.temporarys = [];
         var tp = this.temporarys.find(g => g.purpose == purpose);
         if (!tp) {
             tp = { purpose, flag: undefined };
@@ -301,6 +302,7 @@ export class PageEvent {
         tp.flag = util.guid();
     }
     getTemporaryFlag(purpose: TemporaryPurpose) {
+        if (!Array.isArray(this.temporarys)) this.temporarys = [];
         var tp = this.temporarys.find(g => g.purpose == purpose);
         if (tp) { return tp.flag }
         else null;

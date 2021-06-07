@@ -4,6 +4,10 @@ import { BarView } from "./handle/view";
 import { TextInputView } from "./input/view";
 import { SelectorView } from "./selector";
 export class KitView extends React.Component<{ kit: Kit }>{
+    constructor(props) {
+        super(props);
+        this.kit.view = this;
+    }
     get kit() {
         return this.props.kit;
     }

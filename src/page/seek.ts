@@ -58,6 +58,13 @@ export class Page$Seek {
         }
         return null;
     }
+    getVisibleBlockByMouse(this: Page, event: MouseEvent): Block {
+        var block = this.getEleBlock(event.target as HTMLElement);
+        if (block && block.isLayout) {
+            block = block.visiblePoint(Point.from(event))
+        }
+        return block;
+    }
     getBlockFromPoint(this: Page, point: Point) {
         var els = document.elementsFromPoint(point.x, point.y);
         if (els && els.length > 0) {

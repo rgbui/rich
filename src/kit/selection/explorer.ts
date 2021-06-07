@@ -57,7 +57,8 @@ export class SelectionExplorer extends Events {
     }
     onFocusAnchor(anchor: Anchor) {
         if (this.end) this.end.dispose();
-        anchor.acceptView(this.start);
+        if (this.start)
+            anchor.acceptView(this.start);
         this.start = anchor;
         this.setActiveAnchor(this.start);
         this.selectedBlocks = [];
@@ -252,7 +253,7 @@ export class SelectionExplorer extends Events {
     get hasSelectionRange() {
         return this.start && this.end || this.selectedBlocks.length > 0
     }
-    get isOnlyAnchor(){
-        return this.start&&!this.end;
+    get isOnlyAnchor() {
+        return this.start && !this.end;
     }
 }

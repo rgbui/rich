@@ -12,6 +12,7 @@ import { DropDirection } from "./direction";
 export class BarView extends React.Component<{ bar: Bar }>{
     constructor(props) {
         super(props);
+        this.bar.view = this;
     }
     get bar() {
         return this.props.bar;
@@ -106,7 +107,7 @@ export class BarView extends React.Component<{ bar: Bar }>{
         return <div>
             <div className='sy-selector-drag-copy' ref={e => this.dragCopyEle = e}></div>
             <div className='sy-selector-bar' ref={e => this.barEle = e} onMouseDown={e => this.onMousedown(e.nativeEvent)}>
-                <Tooltip placement="left" trigger={['hover']}
+                <Tooltip mouseEnterDelay={0.8} placement="left" trigger={['hover']}
                     overlay={<div className='sy-tooltip-content'>
                         <span><b>Drag</b> to Move</span><br />
                         <span><b>Click</b> to Open Menu</span></div>}><span>

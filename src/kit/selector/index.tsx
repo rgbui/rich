@@ -3,7 +3,6 @@ import ReactDOM, { createPortal } from "react-dom";
 import { Kit } from "..";
 import { Point } from "../../common/point";
 
-
 export class Selector {
     kit: Kit;
     view: SelectorView;
@@ -26,13 +25,14 @@ export class Selector {
     }
 }
 export class SelectorView extends React.Component<{ selector: Selector }> {
-    private node: HTMLElement;
-    get selector() {
-        return this.props.selector;
-    }
     constructor(props) {
         super(props);
         this.node = document.body.appendChild(document.createElement('div'));
+        this.selector.view=this;
+    }
+    private node: HTMLElement;
+    get selector() {
+        return this.props.selector;
     }
     componentWillUnmount() {
         if (this.node) this.node.remove()
