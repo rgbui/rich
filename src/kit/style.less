@@ -100,6 +100,7 @@
 .sy-block-drag-over-right,
 .sy-block-drag-over-top {
     position: relative;
+
     &::after {
         content       : '\20';
         position      : absolute;
@@ -133,5 +134,14 @@
 .sy-block-drag-over-top {
     &::after {
         border-top-color: rgba(255, 0, 0, .6);
+    }
+}
+
+.sy-kit-selector {
+    pointer-events: none;
+    user-select   : none;
+    &-region {
+        position        : fixed;
+        background-color: rgba(45, 170, 219, 0.3);
     }
 }

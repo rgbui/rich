@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM, { createPortal } from "react-dom";
 import { Kit } from "..";
-import { Point } from "../../common/point";
+import { Point, Rect } from "../../common/point";
 
 export class Selector {
     kit: Kit;
@@ -9,7 +9,7 @@ export class Selector {
     constructor(kit: Kit) {
         this.kit = kit;
     }
-    private visible: boolean = false;
+    public visible: boolean = false;
     private start: Point;
     private current: Point;
     setStart(point: Point) {
@@ -17,18 +17,22 @@ export class Selector {
     }
     setMove(point: Point) {
         this.current = point;
-        this.visible = true; this.view.forceUpdate();
+        this.visible = true;
+        this.view.forceUpdate();
     }
     close() {
         this.visible = false;
         this.view.forceUpdate();
+    }
+    get rect() {
+        return new Rect(this.start, this.current)
     }
 }
 export class SelectorView extends React.Component<{ selector: Selector }> {
     constructor(props) {
         super(props);
         this.node = document.body.appendChild(document.createElement('div'));
-        this.selector.view=this;
+        this.selector.view = this;
     }
     private node: HTMLElement;
     get selector() {
@@ -42,6 +46,16 @@ export class SelectorView extends React.Component<{ selector: Selector }> {
         this.el = ReactDOM.findDOMNode(this) as HTMLElement;
     }
     render() {
-        return createPortal(<div className='sy-kit-selector'></div>, this.node)
+        var style: Record<string, any> = {};
+        if (this.selector.visible == true) {
+            var rect = this.selector.rect;
+            style.width = rect.width;
+            style.height = rect.height;
+            style.top = rect.top;
+            style.left = rect.left;
+        }
+        return createPortal(<div className='sy-kit-selector'>
+            {this.selector.visible && <div className='sy-kit-selector-region' style={style}></div>}
+        </div>, this.node)
     }
 }

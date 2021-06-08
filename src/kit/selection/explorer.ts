@@ -56,7 +56,7 @@ export class SelectionExplorer extends Events {
         return new Anchor(this);
     }
     onFocusAnchor(anchor: Anchor) {
-        if (this.end) this.end.dispose();
+        if (this.end) { this.end.dispose(); delete this.end; }
         if (this.start)
             anchor.acceptView(this.start);
         this.start = anchor;
@@ -71,12 +71,15 @@ export class SelectionExplorer extends Events {
         this.selectedBlocks = [];
         this.renderSelection();
     }
-    onSelectBlocks(blocks: Block[]) {
+    onSelectBlocks(blocks: Block[])
+    {
         this.selectedBlocks = blocks;
         if (this.start)
             this.start.dispose()
         if (this.end)
             this.end.dispose()
+        delete this.start;
+        delete this.end;
         this.renderSelection()
     }
     /**

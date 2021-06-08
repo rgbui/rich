@@ -27,6 +27,7 @@ export class Kit extends Events {
     private downAnchor: Anchor;
     view: KitView;
     acceptMousedown(event: MouseEvent) {
+        event.preventDefault();
         var block = this.page.getVisibleBlockByMouse(event);
         this.downEvent = event;
         this.isDown = true;
@@ -41,6 +42,7 @@ export class Kit extends Events {
     acceptMousemove(event: MouseEvent) {
         var ele = event.target as HTMLElement;
         if (this.isDown == true) {
+            event.preventDefault();
             var downPoint = Point.from(this.downEvent);
             if (downPoint.remoteBy(Point.from(event), 5)) {
                 this.isMove = true;
@@ -50,6 +52,10 @@ export class Kit extends Events {
             if (this.isMove == true) {
                 if (!this.downAnchor) {
                     this.selector.setMove(Point.from(event));
+                    var blocks = this.page.searchBlocksBetweenMouseRect(this.downEvent, event);
+                    if (Array.isArray(blocks) && blocks.length > 0) {
+                        this.explorer.onSelectBlocks(blocks);
+                    }
                 }
                 else {
                     var block = this.page.getVisibleBlockByMouse(event);
@@ -74,11 +80,14 @@ export class Kit extends Events {
     }
     acceptMouseup(event: MouseEvent) {
         if (this.isDown) {
+            event.preventDefault();
             if (this.isMove) {
                 if (!this.downAnchor)
                     this.selector.close();
                 this.isMove = false;
             }
+            delete this.downAnchor;
+            delete this.downEvent;
             this.isDown = false;
         }
     }
