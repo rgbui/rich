@@ -38,5 +38,7 @@ export class TextInput$Paster {
             // 这里是得复制的网页内容，但也有可能是word
         }
         console.log(files, items);
+        //let parser = new DOMParser();
+        // doc = parser.parseFromString(stringContainingHTMLSource, "text/html")
     }
 }
