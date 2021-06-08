@@ -3,7 +3,15 @@ export class Block$Seek {
     blockChilds(this: Block, name: string) {
         return this.blocks[name];
     }
-    each(this: Block, predict: (block: Block) => boolean, consider: boolean = false, isDepth = false) {
+    /**
+     * 
+     * @param this 
+     * @param predict  返回false 表示不在循环了 返回-1 表示不在进入子元素了
+     * @param consider 
+     * @param isDepth 
+     * @returns 
+     */
+    each(this: Block, predict: (block: Block) => false | -1 | void, consider: boolean = false, isDepth = false) {
         function _each(block: Block) {
             var isBreak: boolean = false;
             for (let i = 0; i < block.blockKeys.length; i++) {
@@ -12,10 +20,13 @@ export class Block$Seek {
                 for (let j = 0; j < bs.length; j++) {
                     if (isDepth == true) {
                         if (_each(bs[j]) == true) { isBreak = true; break; }
-                        if (predict(bs[j]) == false) { isBreak = true; break };
+                        var r = predict(bs[j]);
+                        if (r == false) { isBreak = true; break };
                     }
                     else {
-                        if (predict(bs[j]) == false) { isBreak = true; break };
+                        var r = predict(bs[j]);
+                        if (r == false) { isBreak = true; break }
+                        else if (r == -1) continue;
                         if (_each(bs[j]) == true) { isBreak = true; break; }
                     }
                 }
@@ -31,7 +42,15 @@ export class Block$Seek {
             _each(this);
         }
     }
-    eachReverse(this: Block, predict: (Block: Block) => boolean, consider: boolean = false, isDepth = false) {
+    /**
+     * 
+     * @param this 
+     * @param predict  返回false 表示不在循环了 返回-1 表示不在进入子元素了 
+     * @param consider 
+     * @param isDepth 
+     * @returns 
+     */
+    eachReverse(this: Block, predict: (Block: Block) => false | -1 | void, consider: boolean = false, isDepth = false) {
         function _each(block: Block) {
             var isBreak: boolean = false;
             for (let i = block.blockKeys.length - 1; i > -1; i--) {
@@ -43,7 +62,9 @@ export class Block$Seek {
                         if (predict(bs[j]) == false) { isBreak = true; break };
                     }
                     else {
-                        if (predict(bs[j]) == false) { isBreak = true; break };
+                        var r = predict(bs[j]);
+                        if (r == false) { isBreak = true; break }
+                        else if (r == -1) continue;
                         if (_each(bs[j]) == true) { isBreak = true; break; }
                     }
                 }
@@ -199,7 +220,7 @@ export class Block$Seek {
         }
         return nextParentFind(this);
     }
-    nextFindAll(this: Block, predict: (block: Block) => boolean,  consider: boolean = false, finalPredict?: (block: Block) => boolean) {
+    nextFindAll(this: Block, predict: (block: Block) => boolean, consider: boolean = false, finalPredict?: (block: Block) => boolean) {
         var bs: Block[] = [];
         var isFinal: boolean = false;
         function _find(block: Block, consider: boolean = false) {
