@@ -76,6 +76,38 @@ export class Rect {
     left: number;
     width: number;
     height: number;
+    get x() {
+        return this.left;
+    }
+    get y() {
+        return this.top
+    }
+    get x1() {
+        return this.left;
+    }
+    get x2() {
+        return this.left + this.width
+    }
+    get y1() {
+        return this.top;
+    }
+    get y2() {
+        return this.top + this.height;
+    }
+    constructor(start?: Point, end?: Point | number, height?: number) {
+        if (start instanceof Point && end instanceof Point) {
+            this.top = Math.min(end.y, start.y);
+            this.left = Math.min(start.x, end.x);
+            this.width = Math.abs(end.x - start.x);
+            this.height = Math.abs(end.y - start.y);
+        }
+        else if (start instanceof Point && typeof end == 'number' && typeof height == 'number') {
+            this.top = start.y;
+            this.left = start.x;
+            this.width = end;
+            this.height = height;
+        }
+    }
     static from(rect: DOMRect) {
         var re = new Rect();
         re.top = rect.top;
@@ -90,5 +122,15 @@ export class Rect {
         }
         return false;
     }
-
+    /**
+     * 判断是否与矩形r2相交
+     * @param r2 
+     * @returns 
+     */
+    isCross(r2: Rect) {
+        var r1 = this;
+        if (Math.abs((r1.x1 + r1.x2) / 2 - (r2.x1 + r2.x2) / 2) < ((r1.x2 + r2.x2 - r1.x1 - r2.x1) / 2) && Math.abs((r1.y1 + r1.y2) / 2 - (r2.y1 + r2.y2) / 2) < ((r1.y2 + r2.y2 - r1.y1 - r2.y1) / 2))
+            return true;
+        return false;
+    }
 }
