@@ -18,7 +18,7 @@ import { KitView } from "../kit/view";
 export class PageView extends Component<{ page: Page }>{
     constructor(props) {
         super(props);
-        this.page.viewRender = this;
+        this.page.view = this;
     }
     get page() {
         return this.props.page;

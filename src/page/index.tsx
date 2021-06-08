@@ -103,7 +103,7 @@ export class Page extends Events {
     }
     pageLayout: PageLayout;
     views: View[] = [];
-    viewRender: PageView;
+    view: PageView;
     blockSelector: BlockSelector;
     referenceSelector: ReferenceSelector;
     blockMenu: BlockMenu;
