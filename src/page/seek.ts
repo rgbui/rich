@@ -138,12 +138,39 @@ export class Page$Seek {
      * @param to 
      */
     searchBlocksBetweenMouseRect(this: Page, from: MouseEvent, to: MouseEvent) {
+        var bs: Block[] = [];
         var fromBlock = this.searchBlockByMouse(from);
         var toBlock = this.searchBlockByMouse(to);
-        var rect = new Rect();
-        rect.top = from.y;
-        rect.left = from.x;
-        rect.width = to.x - from.x;
-        rect.height = to.y - from.y;
+        var rect = new Rect(Point.from(from), Point.from(to));
+        var topFromRow = fromBlock.closest(g => g.isRow && !g.closest(x => x.isRow));
+        var topToRow = toBlock.closest(g => g.isRow && !g.closest(x => x.isRow));
+        var fromRowAt = topFromRow.at;
+        var toRowAt = topFromRow.at;
+        if (fromRowAt > toRowAt) {
+            [fromRowAt, toRowAt] = [toRowAt, fromRowAt];
+            [fromBlock, toBlock] = [toBlock, fromBlock];
+            [topFromRow, topToRow] = [topToRow, topFromRow];
+        }
+        while (topFromRow.getVisibleBound().isCross(rect)) {
+            if (topFromRow.prev) topFromRow = topFromRow.prev;
+            else break;
+        }
+        while (topToRow.getVisibleBound().isCross(rect)) {
+            if (topToRow.next) topToRow = topToRow.next;
+            else break;
+        }
+        while (true) {
+            topFromRow.each(b => {
+                if (!b.isRow && !b.isCol && b.getVisibleBound().isCross(rect)) {
+                    bs.push(b);
+                    return -1;
+                }
+            });
+            if (topFromRow.next)
+                topFromRow = topFromRow.next;
+            else break;
+            if (topFromRow == topFromRow) { break }
+        }
+        return bs;
     }
 }
