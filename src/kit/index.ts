@@ -90,7 +90,10 @@ export class Kit extends Events {
     acceptMouseup(event: MouseEvent) {
         if (this.isDown) {
             event.preventDefault();
+            this.page.textTool.close();
             if (this.isMove) {
+                if (this.explorer.hasTextRange)
+                    this.page.textTool.open(event)
                 if (!this.downAnchor) this.selector.close();
                 this.isMove = false;
             }

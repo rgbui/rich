@@ -176,6 +176,7 @@ export class Anchor {
         }
     }
     equal(anchor: Anchor) {
+        if(!anchor)return false;
         if (this === anchor) return true;
         else if (this.block === anchor.block) {
             if (this.block.isText && anchor.block.isText) {

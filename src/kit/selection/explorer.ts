@@ -28,9 +28,10 @@ export class SelectionExplorer extends Events {
             if (this.activeAnchor) this.page.onBlurAnchor(this.activeAnchor);
         }
         else return
-        this.activeAnchor = anchor;
-        if (this.activeAnchor)
+        if (!this.activeAnchor.equal(anchor)) {
+            this.activeAnchor = anchor;
             this.page.onFocusAnchor(this.activeAnchor);
+        }
     }
     renderSelection() {
         if (this.start) this.start.visible()
@@ -262,6 +263,9 @@ export class SelectionExplorer extends Events {
     }
     get hasSelectionRange() {
         return this.start && this.end || this.selectedBlocks.length > 0
+    }
+    get hasTextRange() {
+        return this.start && this.end && this.selectedBlocks.length == 0 && this.start.block.isText && this.end.block.isText
     }
     get isOnlyAnchor() {
         return this.start && !this.end;
