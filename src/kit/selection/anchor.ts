@@ -175,5 +175,17 @@ export class Anchor {
             this.textEl.classList.remove('empty');
         }
     }
+    equal(anchor: Anchor) {
+        if (this === anchor) return true;
+        else if (this.block === anchor.block) {
+            if (this.block.isText && anchor.block.isText) {
+                if (this.at == anchor.at) return true;
+            }
+            else if (this.block.isSolid && anchor.block.isSolid) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
