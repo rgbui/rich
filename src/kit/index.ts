@@ -64,8 +64,14 @@ export class Kit extends Events {
                     var block = this.page.getVisibleBlockByMouse(event);
                     if (block && !block.isLayout) {
                         var anchor = block.visibleAnchor(Point.from(event));
-                        if (anchor) {
+                        if (anchor && anchor.block.closest(x => !x.isLine) == this.downAnchor.block.closest(x => !x.isLine)) {
                             this.explorer.onShiftFocusAnchor(anchor);
+                        }
+                        else if (anchor) {
+                            var blocks = this.page.searchBlocksBetweenMouseRect(this.downEvent, event);
+                            if (Array.isArray(blocks) && blocks.length > 0) {
+                                this.explorer.onSelectBlocks(blocks);
+                            }
                         }
                     }
                 }
