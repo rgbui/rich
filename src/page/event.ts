@@ -122,14 +122,13 @@ export class PageEvent {
         // this.selector.onTextInputCaptureFocus();
     }
     onBlurCapture(this: Page, event: FocusEvent) {
-        // if (this.mouseScope && this.mouseScope.isDown) {
-        //     /**
-        //      * 说明鼠标是处于down下，这个不可能失焦
-        //      * 如果当前的元素中有一些节点发生了改变，那么此时event.relatedTarget是空的，这很蛋疼
-        //      * 这里通过鼠标状态的来纠正一下
-        //      */
-        //     return
-        // }
+        if (this.kit && this.kit.isMousedown) {
+            /*** 说明鼠标是处于down下，这个不可能失焦
+            * 如果当前的元素中有一些节点发生了改变，那么此时event.relatedTarget是空的，这很蛋疼
+             * 这里通过鼠标状态的来纠正一下
+             */
+            return
+        }
         /**
          * 如果当前的texttool打开且焦点在texttool，那么此时不是失焦
          */
@@ -150,6 +149,7 @@ export class PageEvent {
             this.isFocus = false;
             this.blockSelector.close();
             this.textTool.close();
+            this.kit.explorer.blur();
             this.emit('blur', event);
         }
     }

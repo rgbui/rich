@@ -26,13 +26,13 @@ ReactDOM.render(
             }
         });
         page.on('blur', function (ev) {
-            // console.log('blur', ev)
+            console.log('blur', ev)
         });
         page.on('focus', function (ev) {
-            //console.log('focus', ev);
+            console.log('focus', ev);
         });
         page.on('focusAnchor', function (anchor) {
-            // console.log('focusAnchor', anchor);
+            console.log('focusAnchor', anchor);
         });
         page.on('history', (action) => {
             var conEle: HTMLElement = document.querySelector('.editor-console');

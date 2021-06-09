@@ -26,7 +26,8 @@ export class TextInput extends Events {
     view: TextInputView;
     get textarea() {
         return this.view.textarea;
-    } onFocus() {
+    }
+    onFocus() {
         if (document.activeElement !== this.textarea) {
             this.textarea.focus();
         }

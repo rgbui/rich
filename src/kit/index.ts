@@ -25,6 +25,9 @@ export class Kit extends Events {
     private isMove: boolean = false;
     private downEvent: MouseEvent;
     private downAnchor: Anchor;
+    get isMousedown() {
+        return this.isDown;
+    }
     view: KitView;
     acceptMousedown(event: MouseEvent) {
         event.preventDefault();
@@ -82,13 +85,13 @@ export class Kit extends Events {
         if (this.isDown) {
             event.preventDefault();
             if (this.isMove) {
-                if (!this.downAnchor)
-                    this.selector.close();
+                if (!this.downAnchor) this.selector.close();
                 this.isMove = false;
             }
             delete this.downAnchor;
             delete this.downEvent;
             this.isDown = false;
+            this.textInput.onFocus();
         }
     }
 }
