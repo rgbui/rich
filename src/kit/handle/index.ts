@@ -46,6 +46,7 @@ export class Bar extends Events {
         this.hoverBlock = block;
         if (this.hoverBlock) {
             var bound = this.visibleHoverBlock.getVisibleBound();
+            // console.log(bound,'xx');
             var pos = Point.from(bound);
             this.barEle.style.top = pos.y + 'px';
             this.barEle.style.left = pos.x + 'px';

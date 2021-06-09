@@ -583,7 +583,7 @@ export abstract class Block extends Events {
         return TextEle.getBounds(this.el);
     }
     getVisibleBound() {
-        return this.cacheComputed(TemporaryPurpose.blockBound,()=>Rect.from(this.el.getBoundingClientRect()));
+        return this.cacheComputed(TemporaryPurpose.blockBound, () => Rect.from(this.el.getBoundingClientRect()));
     }
     /**
      * 获取视觉上的block和part
@@ -892,7 +892,7 @@ export abstract class Block extends Events {
     cacheComputed<T>(purpose: TemporaryPurpose, computed: () => T): T {
         var tp = this.temporarys.find(g => g.purpose == purpose);
         var flag = this.page.getTemporaryFlag(purpose);
-        if (tp && tp.flag == flag) return tp.data;
+        if (tp && tp.flag == flag && typeof flag != 'undefined' && typeof tp.data != 'undefined') return tp.data;
         else {
             if (!tp) {
                 tp = { flag, purpose, data: undefined };

@@ -9,11 +9,6 @@ import { Anchor } from "../kit/selection/anchor";
 import { util } from "../util/util";
 import { TemporaryPurpose } from "./declare";
 export class PageEvent {
-    // private mouseScope: {
-    //     isDown: boolean,
-    //     point?: Point,
-    //     isMove: boolean
-    // }
     /**
      * 鼠标点击页面,
      * 点的过程中有可能有按下不松开选择一个较大的区域情况，
