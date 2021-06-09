@@ -142,8 +142,8 @@ export class Page$Seek {
         var fromBlock = this.searchBlockByMouse(from);
         var toBlock = this.searchBlockByMouse(to);
         var rect = new Rect(Point.from(from), Point.from(to));
-        var topFromRow = fromBlock.closest(g => g.isRow && !g.closest(x => x.isRow));
-        var topToRow = toBlock.closest(g => g.isRow && !g.closest(x => x.isRow));
+        var topFromRow = fromBlock.closest(g => g.isRow && !g.closest(x => x.isRow, true));
+        var topToRow = toBlock.closest(g => g.isRow && !g.closest(x => x.isRow, true));
         var fromRowAt = topFromRow.at;
         var toRowAt = topFromRow.at;
         if (fromRowAt > toRowAt) {
@@ -161,15 +161,16 @@ export class Page$Seek {
         }
         while (true) {
             topFromRow.each(b => {
-                if (!b.isRow && !b.isCol && b.getVisibleBound().isCross(rect)) {
-                    bs.push(b);
-                    return -1;
+                if (!b.isRow && !b.isCol) {
+                    if (b.getVisibleBound().isCross(rect)) {
+                        bs.push(b);
+                        return -1;
+                    }
                 }
             });
-            if (topFromRow.next)
-                topFromRow = topFromRow.next;
+            if (topFromRow.next) topFromRow = topFromRow.next;
             else break;
-            if (topFromRow == topFromRow) { break }
+            if (topFromRow == topToRow) break;
         }
         return bs;
     }

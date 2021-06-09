@@ -88,6 +88,20 @@
     }
 }
 
+.sy-block-selected {
+    position: relative;
+
+    &::before {
+        content       : '\20';
+        position      : absolute;
+        pointer-events: none;
+        inset         : 0px;
+        background    : rgba(46, 170, 220, 0.2);
+        z-index       : 81;
+        opacity       : 1;
+    }
+}
+
 .sy-selector-drag-copy {
     display       : none;
     position      : fixed;
@@ -140,8 +154,9 @@
 .sy-kit-selector {
     pointer-events: none;
     user-select   : none;
+
     &-region {
         position        : fixed;
-        background-color: rgba(45, 170, 219, 0.3);
+        background-color: rgba(46, 170, 220, 0.2);
     }
 }

@@ -21,12 +21,12 @@ export class Block$Seek {
                     if (isDepth == true) {
                         if (_each(bs[j]) == true) { isBreak = true; break; }
                         var r = predict(bs[j]);
-                        if (r == false) { isBreak = true; break };
+                        if (r === false) { isBreak = true; break };
                     }
                     else {
                         var r = predict(bs[j]);
-                        if (r == false) { isBreak = true; break }
-                        else if (r == -1) continue;
+                        if (r === false) { isBreak = true; break }
+                        else if (r === -1) continue;
                         if (_each(bs[j]) == true) { isBreak = true; break; }
                     }
                 }

@@ -50,6 +50,14 @@ export class SelectionExplorer extends Events {
         else {
             const selection = window.getSelection();
             if (selection.rangeCount > 0) selection.removeAllRanges();
+            var currentEls = Array.from(this.kit.page.el.querySelectorAll(".sy-block-selected"));
+            this.selectedBlocks.each(sel => {
+                currentEls.remove(sel.el);
+                sel.el.classList.add('sy-block-selected');
+            });
+            currentEls.each(el => {
+                el.classList.remove('sy-block-selected');
+            })
         }
     }
     createAnchor() {
@@ -71,8 +79,7 @@ export class SelectionExplorer extends Events {
         this.selectedBlocks = [];
         this.renderSelection();
     }
-    onSelectBlocks(blocks: Block[])
-    {
+    onSelectBlocks(blocks: Block[]) {
         this.selectedBlocks = blocks;
         if (this.start)
             this.start.dispose()
@@ -258,5 +265,14 @@ export class SelectionExplorer extends Events {
     }
     get isOnlyAnchor() {
         return this.start && !this.end;
+    }
+    /**
+     * 选区失焦时做什么
+     */
+    blur() {
+        var currentEls = Array.from(this.kit.page.el.querySelectorAll(".sy-block-selected"));
+        currentEls.each(el => {
+            el.classList.remove('sy-block-selected');
+        });
     }
 }
