@@ -174,4 +174,17 @@ export class Page$Seek {
         }
         return bs;
     }
+    /**
+     * 这里判断两个anchor是否相邻,是否紧挨着
+     * @param from 
+     * @param to 
+     */
+    textAnchorIsAdjoin(from: Anchor, to: Anchor) {
+        var ob = from.el.getBoundingClientRect();
+        var nb = to.el.getBoundingClientRect();
+        if (Math.abs(nb.left + nb.width - ob.left) < 10) {
+            return true;
+        }
+        else return false;
+    }
 }
