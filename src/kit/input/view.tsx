@@ -39,9 +39,9 @@ export class TextInputView extends React.Component<{ textInput: TextInput }>{
     private _keydown;
     private _input;
     componentDidMount() {
-        this.textarea.addEventListener('keydown', this._keydown = this.textInput.onKeydown.bind(this));
-        this.textarea.addEventListener('input', this._input = this.textInput.onInput.bind(this));
-        this.textarea.addEventListener('paste', this._paster = this.textInput.onPaste.bind(this));
+        this.textarea.addEventListener('keydown', this._keydown = this.textInput.onKeydown.bind(this.textInput));
+        this.textarea.addEventListener('input', this._input = this.textInput.onInput.bind(this.textInput));
+        this.textarea.addEventListener('paste', this._paster = this.textInput.onPaste.bind(this.textInput));
     }
     componentWillUnmount() {
         this.textarea.removeEventListener('keydown', this._keydown);
