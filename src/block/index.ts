@@ -687,89 +687,100 @@ export abstract class Block extends Events {
     //     this.overArrow = '';
     //     delete this.lastPoint;
     // }
-
+    async onInputText(value: string, at: number, end: number, action?: () => Promise<void>) {
+        var self = this;
+        self.page.snapshoot.declare(ActionDirective.onInputText);
+        self.page.snapshoot.record(OperatorDirective.updateTextReplace, {
+            blockId: this.id,
+            start: at,
+            end: end,
+            value
+        });
+        if (typeof action == 'function') await action();
+        self.page.snapshoot.store();
+    }
     /***
      *用户输入
      */
-    private inputTime;
-    private currentLastInputText: string;
-    /**
-     * 用户一直输入内容,如果用户停留超过0.7秒，就记录
-     */
-    onStoreInputText(from: number, text: string, force: boolean = false, action?: () => Promise<void>) {
-        if (this.inputTime) {
-            clearTimeout(this.inputTime);
-            delete this.inputTime;
-        }
-        var excute = async () => {
-            this.page.snapshoot.declare(ActionDirective.onInputText);
-            this.content = TextEle.getTextContent(this.textEl);
-            this.page.snapshoot.record(OperatorDirective.updateTextReplace, {
-                blockId: this.id,
-                start: from,
-                end: this.currentLastInputText ? from + this.currentLastInputText.length : from,
-                text
-            });
-            this.currentLastInputText = text;
-            if (typeof action == 'function') await action();
-            this.page.snapshoot.store();
-            if (this.inputTime) {
-                clearTimeout(this.inputTime);
-                delete this.inputTime;
-            }
-        }
-        /***
-            * 这里需要将当前的变化通知到外面，
-            * 当然用户在输的过程中，该方法会不断的执行，所以通知需要加一定的延迟，即用户停止几秒钟后默认为输入
-            */
-        if (force == false) this.inputTime = setTimeout(async () => { await excute(); }, 7e2);
-        else excute()
-    }
-    private deleteInputTime;
-    private currentLastDeleteText: string;
-    async onStoreInputDeleteText(from: number, text: string, force: boolean = false, action?: () => Promise<void>) {
-        if (this.deleteInputTime) {
-            clearTimeout(this.deleteInputTime);
-            delete this.deleteInputTime;
-        }
-        var excute = async () => {
-            var pa = this.page;
-            pa.snapshoot.declare(ActionDirective.onInputText);
-            this.content = TextEle.getTextContent(this.textEl);
-            var size = this.currentLastDeleteText ? this.currentLastDeleteText.length : 0;
-            pa.snapshoot.record(OperatorDirective.updateTextDelete, {
-                blockId: this.id,
-                start: from - size,
-                end: from - text.length,
-                text: text.slice(0, text.length - size)
-            });
-            this.currentLastDeleteText = text;
-            if (typeof action == 'function') await action();
-            pa.snapshoot.store();
-            if (this.deleteInputTime) {
-                clearTimeout(this.deleteInputTime);
-                delete this.deleteInputTime;
-            }
-        }
-        /***
-            * 这里需要将当前的变化通知到外面，
-            * 当然用户在输的过程中，该方法会不断的执行，所以通知需要加一定的延迟，即用户停止几秒钟后默认为输入
-            */
-        if (force == false) this.deleteInputTime = setTimeout(async () => { await excute() }, 7e2);
-        else await excute();
-    }
-    onWillInput() {
-        if (this.inputTime) {
-            clearTimeout(this.inputTime);
-            delete this.inputTime;
-        }
-        this.currentLastInputText = '';
-        if (this.deleteInputTime) {
-            clearTimeout(this.deleteInputTime);
-            delete this.deleteInputTime;
-        }
-        this.currentLastDeleteText = '';
-    }
+    // private inputTime;
+    // private currentLastInputText: string;
+    // /**
+    //  * 用户一直输入内容,如果用户停留超过0.7秒，就记录
+    //  */
+    // onStoreInputText(from: number, text: string, force: boolean = false, action?: () => Promise<void>) {
+    //     if (this.inputTime) {
+    //         clearTimeout(this.inputTime);
+    //         delete this.inputTime;
+    //     }
+    //     var excute = async () => {
+    //         this.page.snapshoot.declare(ActionDirective.onInputText);
+    //         this.content = TextEle.getTextContent(this.textEl);
+    //         this.page.snapshoot.record(OperatorDirective.updateTextReplace, {
+    //             blockId: this.id,
+    //             start: from,
+    //             end: this.currentLastInputText ? from + this.currentLastInputText.length : from,
+    //             text
+    //         });
+    //         this.currentLastInputText = text;
+    //         if (typeof action == 'function') await action();
+    //         this.page.snapshoot.store();
+    //         if (this.inputTime) {
+    //             clearTimeout(this.inputTime);
+    //             delete this.inputTime;
+    //         }
+    //     }
+    //     /***
+    //         * 这里需要将当前的变化通知到外面，
+    //         * 当然用户在输的过程中，该方法会不断的执行，所以通知需要加一定的延迟，即用户停止几秒钟后默认为输入
+    //         */
+    //     if (force == false) this.inputTime = setTimeout(async () => { await excute(); }, 7e2);
+    //     else excute()
+    // }
+    // private deleteInputTime;
+    // private currentLastDeleteText: string;
+    // async onStoreInputDeleteText(from: number, text: string, force: boolean = false, action?: () => Promise<void>) {
+    //     if (this.deleteInputTime) {
+    //         clearTimeout(this.deleteInputTime);
+    //         delete this.deleteInputTime;
+    //     }
+    //     var excute = async () => {
+    //         var pa = this.page;
+    //         pa.snapshoot.declare(ActionDirective.onInputText);
+    //         this.content = TextEle.getTextContent(this.textEl);
+    //         var size = this.currentLastDeleteText ? this.currentLastDeleteText.length : 0;
+    //         pa.snapshoot.record(OperatorDirective.updateTextDelete, {
+    //             blockId: this.id,
+    //             start: from - size,
+    //             end: from - text.length,
+    //             text: text.slice(0, text.length - size)
+    //         });
+    //         this.currentLastDeleteText = text;
+    //         if (typeof action == 'function') await action();
+    //         pa.snapshoot.store();
+    //         if (this.deleteInputTime) {
+    //             clearTimeout(this.deleteInputTime);
+    //             delete this.deleteInputTime;
+    //         }
+    //     }
+    //     /***
+    //         * 这里需要将当前的变化通知到外面，
+    //         * 当然用户在输的过程中，该方法会不断的执行，所以通知需要加一定的延迟，即用户停止几秒钟后默认为输入
+    //         */
+    //     if (force == false) this.deleteInputTime = setTimeout(async () => { await excute() }, 7e2);
+    //     else await excute();
+    // }
+    // onWillInput() {
+    //     if (this.inputTime) {
+    //         clearTimeout(this.inputTime);
+    //         delete this.inputTime;
+    //     }
+    //     this.currentLastInputText = '';
+    //     if (this.deleteInputTime) {
+    //         clearTimeout(this.deleteInputTime);
+    //         delete this.deleteInputTime;
+    //     }
+    //     this.currentLastDeleteText = '';
+    // }
     mounted(fn: () => void) {
         this.once('mounted', fn);
     }

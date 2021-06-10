@@ -138,11 +138,9 @@ export class Page extends Events {
         return block;
     }
     registerExtension(extension: SyExtensionsComponent) {
-        console.log(extension)
         if (extension instanceof BlockSelector) {
             this.blockSelector = extension;
             this.blockSelector.on('error', err => this.onError(err));
-            console.log(this.blockSelector);
         }
         else if (extension instanceof BlockMenu) {
             this.blockMenu = extension;

@@ -1,6 +1,9 @@
 import { TextInput } from ".";
+import { Block } from "../../block";
 import { dom } from "../../common/dom";
 import { KeyboardCode } from "../../common/keys";
+import { TextEle } from "../../common/text.ele";
+import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { Anchor } from "../selection/anchor";
 
 export class TextInput$Write {
@@ -24,16 +27,13 @@ export class TextInput$Write {
                 case KeyboardCode.ArrowUp:
                 case KeyboardCode.ArrowLeft:
                 case KeyboardCode.ArrowRight:
-                    event.preventDefault();
                     return this.kit.explorer.onCancelSelection();
                     break;
                 case KeyboardCode.Enter:
-                    event.preventDefault();
                     return this.kit.explorer.onCancelSelection();
                     break;
                 case KeyboardCode.Delete:
                 case KeyboardCode.Backspace:
-                    event.preventDefault();
                     return this.kit.explorer.onDeleteSelection();
                     break;
             }
@@ -79,14 +79,17 @@ export class TextInput$Write {
                 catch (ex) {
                     this.kit.page.onError(ex);
                 }
-                anchor.block.onStoreInputText(this.textAt, value);
+                /**
+                 * 将要保存，但不会立码保存，一般是停止输入700ms，会触发保存，
+                 * 实际上一直输，会一直不保存的
+                 */
+                this.willInputStore(anchor.block, value, this.textAt);
+                // anchor.block.onStoreInputText(this.textAt, value);
                 this.followAnchor(anchor);
-
                 // anchor.view.style.display = 'inline';
                 /**
                  * 表示正在输入，后面是正在输入的内容
                  */
-
                 // if (value.endsWith('@')) {
                 //     //说明用户有输入@符的意图，那么这里弹出一个下拉框供用户选择
                 // }
@@ -126,71 +129,71 @@ export class TextInput$Write {
         }
     }
     deleteInputText: string;
-    async onInputDeleteText(this: TextInput,) {
-        var anchor = this.explorer.activeAnchor;
-        if (anchor.isText) {
-            anchor.inputting();
-            if (anchor.at == 0) {
-                var block = anchor.block;
-                //说明当前的block已经删完了，此时光标应该向前移,移到上面一行
-                this.kit.explorer.onCursorMove(KeyboardCode.ArrowLeft);
-                if (block.isEmpty && !block.isPart) {
-                    this.page.onObserveUpdate(async () => {
-                        await block.onDelete();
-                    });
-                }
-                this.onWillInput(this.explorer.activeAnchor);
-                this.followAnchor(this.explorer.activeAnchor);
-                return;
-            }
-            else if (anchor.at > 0) {
-                var dm = dom(anchor.view);
-                var textNode = dm.prevFind(g => {
-                    if (g instanceof Text) return true;
-                    else return false;
-                });
-                if (textNode) {
-                    if (textNode instanceof Text) {
-                        var value = textNode.textContent;
-                        this.deleteInputText = value.slice(value.length - 1) + this.deleteInputText;
-                        textNode.textContent = value.slice(0, value.length - 1);
-                        anchor.at -= 1;
-                        if (textNode.textContent.length == 0) {
-                            textNode.remove();
-                        }
-                    }
-                    if (anchor.at == 0) {
-                        var block = anchor.block;
-                        var prevAnchor = anchor.block.visiblePrevAnchor;
-                        if (prevAnchor && prevAnchor.isText) {
-                            var ob = anchor.textEl.getBoundingClientRect();
-                            var nb = prevAnchor.textEl.getBoundingClientRect();
-                            if (Math.abs(nb.left + nb.width - ob.left) < 10) {
-                                this.explorer.onFocusAnchor(prevAnchor);
-                                await block.onStoreInputDeleteText(this.textAt, this.deleteInputText, true, async () => {
-                                    if (block.isEmpty && !block.isPart) {
-                                        await this.page.onObserveUpdate(async () => {
-                                            var pa = block.parent;
-                                            await block.delete();
-                                            await pa.deleteLayout();
-                                        });
-                                    }
-                                });
-                                this.onWillInput(this.explorer.activeAnchor);
-                                this.followAnchor(this.explorer.activeAnchor);
-                                return;
-                            }
-                        }
-                    }
-                    await anchor.block.onStoreInputDeleteText(this.textAt, this.deleteInputText, anchor.at == 0 ? true : false);
-                    if (anchor.at == 0 && block.isEmpty) {
-                        anchor.setEmpty();
-                    }
-                    this.followAnchor(anchor);
-                }
-                else throw new Error('not found text');
-            }
-        }
+    async onInputDeleteText(this: TextInput) {
+        // var anchor = this.explorer.activeAnchor;
+        // if (anchor.isText) {
+        //     anchor.inputting();
+        //     if (anchor.at == 0) {
+        //         var block = anchor.block;
+        //         //说明当前的block已经删完了，此时光标应该向前移,移到上面一行
+        //         this.kit.explorer.onCursorMove(KeyboardCode.ArrowLeft);
+        //         if (block.isEmpty && !block.isPart) {
+        //             this.page.onObserveUpdate(async () => {
+        //                 await block.onDelete();
+        //             });
+        //         }
+        //         this.onWillInput(this.explorer.activeAnchor);
+        //         this.followAnchor(this.explorer.activeAnchor);
+        //         return;
+        //     }
+        //     else if (anchor.at > 0) {
+        //         var dm = dom(anchor.view);
+        //         var textNode = dm.prevFind(g => {
+        //             if (g instanceof Text) return true;
+        //             else return false;
+        //         });
+        //         if (textNode) {
+        //             if (textNode instanceof Text) {
+        //                 var value = textNode.textContent;
+        //                 this.deleteInputText = value.slice(value.length - 1) + this.deleteInputText;
+        //                 textNode.textContent = value.slice(0, value.length - 1);
+        //                 anchor.at -= 1;
+        //                 if (textNode.textContent.length == 0) {
+        //                     textNode.remove();
+        //                 }
+        //             }
+        //             if (anchor.at == 0) {
+        //                 var block = anchor.block;
+        //                 var prevAnchor = anchor.block.visiblePrevAnchor;
+        //                 if (prevAnchor && prevAnchor.isText) {
+        //                     var ob = anchor.textEl.getBoundingClientRect();
+        //                     var nb = prevAnchor.textEl.getBoundingClientRect();
+        //                     if (Math.abs(nb.left + nb.width - ob.left) < 10) {
+        //                         this.explorer.onFocusAnchor(prevAnchor);
+        //                         await block.onStoreInputDeleteText(this.textAt, this.deleteInputText, true, async () => {
+        //                             if (block.isEmpty && !block.isPart) {
+        //                                 await this.page.onObserveUpdate(async () => {
+        //                                     var pa = block.parent;
+        //                                     await block.delete();
+        //                                     await pa.deleteLayout();
+        //                                 });
+        //                             }
+        //                         });
+        //                         this.onWillInput(this.explorer.activeAnchor);
+        //                         this.followAnchor(this.explorer.activeAnchor);
+        //                         return;
+        //                     }
+        //                 }
+        //             }
+        //             await anchor.block.onStoreInputDeleteText(this.textAt, this.deleteInputText, anchor.at == 0 ? true : false);
+        //             if (anchor.at == 0 && block.isEmpty) {
+        //                 anchor.setEmpty();
+        //             }
+        //             this.followAnchor(anchor);
+        //         }
+        //         else throw new Error('not found text');
+        //     }
+        // }
     }
     private textNode: HTMLElement;
     private textAt: number;
@@ -200,14 +203,35 @@ export class TextInput$Write {
      */
     onWillInput(this: TextInput, anchor: Anchor) {
         this.onFocus();
-        if (anchor)
-            anchor.block.onWillInput();
         this.isWillInput = false;
         this.textarea.value = '';
         delete this.textNode;
         this.deleteInputText = '';
+        this.clearInputTime();
         if (anchor && anchor.isText) {
             this.textAt = anchor.at;
         }
+    }
+    private delayInputTime;
+    private clearInputTime() {
+        if (this.delayInputTime) {
+            clearTimeout(this.delayInputTime);
+            this.delayInputTime = null;
+        }
+    }
+    private lastInputText: string;
+    willInputStore(this: TextInput, block: Block, value: string, at: number, force: boolean = false, action?: () => Promise<void>) {
+        this.clearInputTime();
+        var self = this;
+        function store() {
+            block.content = TextEle.getTextContent(block.textEl);
+            self.lastInputText = value;
+            block.onInputText(value, at, self.lastInputText ? at + self.lastInputText.length : at)
+        }
+        if (force == true) store()
+        else
+            this.delayInputTime = setTimeout(() => {
+                store()
+            }, 7e2);
     }
 }
