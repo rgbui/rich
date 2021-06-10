@@ -119,6 +119,7 @@ export class PageEvent {
     }
     onFocusCapture(this: Page, event: FocusEvent) {
         this.onFocus(event);
+
         // this.selector.onTextInputCaptureFocus();
     }
     onBlurCapture(this: Page, event: FocusEvent) {
@@ -139,6 +140,7 @@ export class PageEvent {
         }
     }
     onFocus(this: Page, event: FocusEvent) {
+        this.kit.textInput.onFocus();
         if (this.isFocus == false) {
             this.isFocus = true;
             this.emit('focus', event);

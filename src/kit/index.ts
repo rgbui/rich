@@ -36,7 +36,6 @@ export class Kit extends Events {
     }
     view: KitView;
     acceptMousedown(event: MouseEvent) {
-        event.preventDefault();
         var block = this.page.getVisibleBlockByMouse(event);
         this.downEvent = event;
         this.isDown = true;
@@ -51,7 +50,6 @@ export class Kit extends Events {
     acceptMousemove(event: MouseEvent) {
         var ele = event.target as HTMLElement;
         if (this.isDown == true) {
-            event.preventDefault();
             var downPoint = Point.from(this.downEvent);
             if (downPoint.remoteBy(Point.from(event), 5)) {
                 this.isMove = true;
@@ -95,7 +93,6 @@ export class Kit extends Events {
     }
     acceptMouseup(event: MouseEvent) {
         if (this.isDown) {
-            event.preventDefault();
             this.page.textTool.close();
             if (this.isMove) {
                 if (this.explorer.hasTextRange)
@@ -106,7 +103,8 @@ export class Kit extends Events {
             delete this.downAnchor;
             delete this.downEvent;
             this.isDown = false;
-            this.textInput.onFocus();
+            if (this.explorer.isOnlyAnchor)
+                this.textInput.onFocus();
         }
     }
 }
