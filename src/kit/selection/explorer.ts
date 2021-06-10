@@ -23,12 +23,12 @@ export class SelectionExplorer extends Events {
     }
     activeAnchor: Anchor;
     setActiveAnchor(anchor: Anchor) {
-        if (anchor.isText) this.kit.textInput.onWillInput(anchor);
+         this.kit.textInput.onWillInput(anchor);
         if (this.activeAnchor !== anchor) {
             if (this.activeAnchor) this.page.onBlurAnchor(this.activeAnchor);
         }
         else return
-        if (!this.activeAnchor.equal(anchor)) {
+        if (!(this.activeAnchor && this.activeAnchor.equal(anchor))) {
             this.activeAnchor = anchor;
             this.page.onFocusAnchor(this.activeAnchor);
         }

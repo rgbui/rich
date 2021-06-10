@@ -1,9 +1,7 @@
 import { TextInput } from ".";
 import { dom } from "../../common/dom";
 import { KeyboardCode } from "../../common/keys";
-import { Point } from "../../common/point";
 import { Anchor } from "../selection/anchor";
-
 
 export class TextInput$Write {
     /***
@@ -20,48 +18,45 @@ export class TextInput$Write {
                 return;
             }
         }
-        switch (event.key) {
-            case KeyboardCode.ArrowDown:
-            case KeyboardCode.ArrowUp:
-            case KeyboardCode.ArrowLeft:
-            case KeyboardCode.ArrowRight:
-                event.preventDefault();
-                if (this.explorer.hasSelectionRange) {
+        if (this.explorer.hasSelectionRange) {
+            switch (event.key) {
+                case KeyboardCode.ArrowDown:
+                case KeyboardCode.ArrowUp:
+                case KeyboardCode.ArrowLeft:
+                case KeyboardCode.ArrowRight:
+                    event.preventDefault();
                     return this.kit.explorer.onCancelSelection();
-                }
-                else if (this.explorer.isOnlyAnchor) {
-                    return this.kit.explorer.onCursorMove(event.key);
-                }
-                break;
-            case KeyboardCode.Enter:
-                if (!this.page.keyboardPlate.isShift()) {
-                    if (this.explorer.hasSelectionRange) {
-
-                    }
-                    else if (this.explorer.isOnlyAnchor
-                        && this.explorer.activeAnchor.isText
-                        && this.explorer.activeAnchor.isEnd
-                    ) {
-                        event.preventDefault();
-                        //换行接着创建一个新的block
-                        return this.explorer.onEnter()
-                    }
-                }
-                break;
-            case KeyboardCode.Delete:
-            case KeyboardCode.Backspace:
-                if (this.explorer.hasSelectionRange) {
-                    //删除选区
+                    break;
+                case KeyboardCode.Enter:
+                    event.preventDefault();
+                    return this.kit.explorer.onCancelSelection();
+                    break;
+                case KeyboardCode.Delete:
+                case KeyboardCode.Backspace:
+                    event.preventDefault();
                     return this.kit.explorer.onDeleteSelection();
-                }
-                else if (this.explorer.isOnlyAnchor) {
+                    break;
+            }
+        }
+        else if (this.explorer.isOnlyAnchor) {
+            switch (event.key) {
+                case KeyboardCode.ArrowDown:
+                case KeyboardCode.ArrowUp:
+                case KeyboardCode.ArrowLeft:
+                case KeyboardCode.ArrowRight:
+                    return this.kit.explorer.onCursorMove(event.key);
+                case KeyboardCode.Enter:
+                    if (!this.page.keyboardPlate.isShift() && this.explorer.activeAnchor.isText && this.explorer.activeAnchor.isEnd)
+                        return this.explorer.onEnter()
+                    break;
+                case KeyboardCode.Delete:
+                case KeyboardCode.Backspace:
                     if (this.explorer.activeAnchor.isText) {
-                        if (!this.textarea.value)
-                            return this.onInputDeleteText();
+                        if (!this.textarea.value) return this.onInputDeleteText();
                     }
                     else return this.kit.explorer.onDeleteAnchor()
-                }
-                break;
+                    break;
+            }
         }
         this.isWillInput = true;
     }
@@ -72,48 +67,61 @@ export class TextInput$Write {
             var anchor = this.explorer.activeAnchor;
             if (anchor && anchor.isActive) {
                 anchor.inputting();
-                if (!this.inputTextNode) {
-                    this.inputTextNode = document.createElement('span');
-                    anchor.view.parentNode.insertBefore(this.inputTextNode, anchor.view);
+                if (!this.textNode) {
+                    this.textNode = document.createElement('span');
+                    anchor.view.parentNode.insertBefore(this.textNode, anchor.view);
                 }
-                this.inputTextNode.innerHTML = value;
-                anchor.at = this.inputTextAt + value.length;
-                anchor.view.style.display = 'inline';
-                if (value.endsWith('@')) {
-                    //说明用户有输入@符的意图，那么这里弹出一个下拉框供用户选择
+                this.textNode.innerHTML = value;
+                anchor.at = this.textAt + value.length;
+                try {
+                    this.emit('inputting', value, anchor);
                 }
-                else if (value.endsWith('/') || value.endsWith('、')) {
-                    //说明用户有插入某个元素的意图 
-                    var bound = anchor.view.getBoundingClientRect();
-                    var point = new Point(bound.left, bound.top + bound.height);
-                    this.blockSelector.open(point, value);
-                    this.blockSelector.only('select', async (blockData) => {
-                        anchor.block.onStoreInputText(this.inputTextAt,
-                            value.replace(/[\/、][^/、]*$/, ""),
-                            true,
-                            async () => {
-                                await this.page.onObserveUpdate(async () => {
-                                    var newBlock = await anchor.block.visibleDownCreateBlock(blockData.url);
-                                    newBlock.mounted(() => {
-                                        var contentBlock = newBlock.find(g => !g.isLayout);
-                                        if (contentBlock) {
-                                            var newAnchor = contentBlock.visibleHeadAnchor;
-                                            this.explorer.onFocusAnchor(newAnchor);
-                                        }
-                                    });
-                                })
-                            }
-                        )
-                    })
+                catch (ex) {
+                    this.kit.page.onError(ex);
                 }
-                else if (this.blockSelector.isVisible == true) {
-                    this.blockSelector.onInputFilter(value);
-                }
-                else {
-                    anchor.block.onStoreInputText(this.inputTextAt, value);
-                }
+                anchor.block.onStoreInputText(this.textAt, value);
                 this.followAnchor(anchor);
-                if (value) anchor.removeEmpty();
+
+                // anchor.view.style.display = 'inline';
+                /**
+                 * 表示正在输入，后面是正在输入的内容
+                 */
+
+                // if (value.endsWith('@')) {
+                //     //说明用户有输入@符的意图，那么这里弹出一个下拉框供用户选择
+                // }
+                // else if (value.endsWith('/') || value.endsWith('、')) {
+                //     //说明用户有插入某个元素的意图 
+                //     var bound = anchor.view.getBoundingClientRect();
+                //     var point = new Point(bound.left, bound.top + bound.height);
+                //     this.blockSelector.open(point, value);
+                //     this.blockSelector.only('select', async (blockData) => {
+                //         anchor.block.onStoreInputText(this.textAt,
+                //             value.replace(/[\/、][^/、]*$/, ""),
+                //             true,
+                //             async () => {
+                //                 await this.page.onObserveUpdate(async () => {
+                //                     var newBlock = await anchor.block.visibleDownCreateBlock(blockData.url);
+                //                     newBlock.mounted(() => {
+                //                         var contentBlock = newBlock.find(g => !g.isLayout);
+                //                         if (contentBlock) {
+                //                             var newAnchor = contentBlock.visibleHeadAnchor;
+                //                             this.explorer.onFocusAnchor(newAnchor);
+                //                         }
+                //                     });
+                //                 })
+                //             }
+                //         )
+                //     })
+                // }
+                // else if (this.blockSelector.isVisible == true) {
+                //     this.blockSelector.onInputFilter(value);
+                // }
+                // else {
+
+                // }
+
+                // if (value) anchor.removeEmpty();
             }
         }
     }
@@ -159,7 +167,7 @@ export class TextInput$Write {
                             var nb = prevAnchor.textEl.getBoundingClientRect();
                             if (Math.abs(nb.left + nb.width - ob.left) < 10) {
                                 this.explorer.onFocusAnchor(prevAnchor);
-                                await block.onStoreInputDeleteText(this.inputTextAt, this.deleteInputText, true, async () => {
+                                await block.onStoreInputDeleteText(this.textAt, this.deleteInputText, true, async () => {
                                     if (block.isEmpty && !block.isPart) {
                                         await this.page.onObserveUpdate(async () => {
                                             var pa = block.parent;
@@ -174,7 +182,7 @@ export class TextInput$Write {
                             }
                         }
                     }
-                    await anchor.block.onStoreInputDeleteText(this.inputTextAt, this.deleteInputText, anchor.at == 0 ? true : false);
+                    await anchor.block.onStoreInputDeleteText(this.textAt, this.deleteInputText, anchor.at == 0 ? true : false);
                     if (anchor.at == 0 && block.isEmpty) {
                         anchor.setEmpty();
                     }
@@ -184,21 +192,22 @@ export class TextInput$Write {
             }
         }
     }
-    private inputTextNode: HTMLElement;
-    private inputTextAt: number;
+    private textNode: HTMLElement;
+    private textAt: number;
     /***
      * 表示在这个光标处可以输入了
      * 如果不执行该方法，可能输入就没有任何文字
      */
     onWillInput(this: TextInput, anchor: Anchor) {
         this.onFocus();
-        anchor.block.onWillInput();
+        if (anchor)
+            anchor.block.onWillInput();
         this.isWillInput = false;
         this.textarea.value = '';
-        delete this.inputTextNode;
+        delete this.textNode;
         this.deleteInputText = '';
-        if (anchor.isText) {
-            this.inputTextAt = anchor.at;
+        if (anchor && anchor.isText) {
+            this.textAt = anchor.at;
         }
     }
 }

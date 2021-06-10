@@ -20,7 +20,7 @@ export class TextInput extends Events {
     get blockSelector() {
         return this.kit.page.blockSelector;
     }
-    get page(){
+    get page() {
         return this.kit.page;
     }
     view: TextInputView;
@@ -46,6 +46,10 @@ export class TextInput extends Events {
     }
 }
 
+export interface TextInput {
+    on(name: 'inputting', fn: (value, anchor) => void);
+    emit(name: 'inputting', value: string, anchor: Anchor);
+}
 // export class TextInput extends React.Component<{ selector: Selector }> {
 //     constructor(props) {
 //         super(props);

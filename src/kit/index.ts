@@ -12,10 +12,16 @@ export class Kit extends Events {
     constructor(page: Page) {
         super();
         this.page = page;
+        this.init();
+    }
+    init() {
         this.selector = new Selector(this);
         this.explorer = new SelectionExplorer(this);
         this.textInput = new TextInput(this);
         this.bar = new Bar(this);
+        this.textInput.on('inputting', (value, anchor) => {
+            console.log(value, anchor);
+        });
     }
     textInput: TextInput;
     selector: Selector;
