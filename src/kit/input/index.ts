@@ -47,10 +47,7 @@ export class TextInput extends Events {
     }
 }
 
-export interface TextInput {
-    on(name: 'inputting', fn: (value, anchor) => void);
-    emit(name: 'inputting', value: string, anchor: Anchor);
-}
+
 export interface TextInput extends TextInput$Write { }
 util.inherit(TextInput, TextInput$Write);
 export interface TextInput extends TextInput$Paster { }

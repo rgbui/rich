@@ -187,4 +187,14 @@ export class Page$Seek {
         }
         else return false;
     }
+    /**
+     * 判断current与prev是否为相邻换行的block
+     * 注意current是当前行视觉上第一个,
+     * prev是否当前行视觉上最后一个
+     * @param current 
+     * @param prev 
+     */
+    blockIsAdjoinRow(current: Block, prev: Block) {
+
+    }
 }

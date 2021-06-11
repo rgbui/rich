@@ -74,7 +74,7 @@ export class TextInput$Write {
                 this.textNode.innerHTML = value;
                 anchor.at = this.textAt + value.length;
                 try {
-                    this.emit('inputting', value, anchor);
+                    this.kit.emit('inputting', value, anchor);
                 }
                 catch (ex) {
                     this.kit.page.onError(ex);
@@ -130,20 +130,72 @@ export class TextInput$Write {
     }
     deleteInputText: string;
     async onInputDeleteText(this: TextInput) {
-        // var anchor = this.explorer.activeAnchor;
+        var anchor = this.explorer.activeAnchor;
+        if (anchor.isText) {
+            var block = anchor.block;
+            anchor.inputting();
+            if (anchor.at == 0) {
+                var prevAnchor = block.visiblePrevAnchor;
+                if (this.kit.page.textAnchorIsAdjoin(anchor, prevAnchor)) {
+                    this.explorer.onFocusAnchor(prevAnchor);
+                    this.onWillInput(this.explorer.activeAnchor);
+                    await this.onInputDeleteText();
+                }
+                else {
+                    //没有挨近
+                    /**
+                     * 这里主要是判断前面的一个block与当前的block是否处于换行的，
+                     * 如果处于换行的，可能要合并内容
+                     * 
+                     */
+                    this.kit.explorer.onCursorMove(KeyboardCode.ArrowLeft);
+                    if (block.isEmpty && !block.isPart) {
+                        this.page.onObserveUpdate(async () => {
+                            await block.onDelete();
+                        });
+                    }
+                    this.onWillInput(this.explorer.activeAnchor);
+                }
+            }
+            else if (anchor.at > 0) {
+                var dm = dom(anchor.view);
+                var textNode = dm.prevFind(g => {
+                    if (g instanceof Text) return true;
+                    else return false;
+                }) as Text;
+                if (textNode) {
+                    var value = textNode.textContent;
+                    this.deleteInputText = value.slice(value.length - 1) + this.deleteInputText;
+                    textNode.textContent = value.slice(0, value.length - 1);
+                    anchor.at -= 1;
+                    if (textNode.textContent.length == 0) {
+                        textNode.remove();
+                    }
+                    var action: () => Promise<void>;
+                    if (anchor.at == 0) {
+                        var prevAnchor = block.visiblePrevAnchor;
+                        if (this.kit.page.textAnchorIsAdjoin(prevAnchor, anchor)) {
+                            this.explorer.onFocusAnchor(prevAnchor);
+                            this.onWillInput(this.explorer.activeAnchor);
+                            if (block.isEmpty && !block.isPart) {
+                                action = async () => {
+                                    await block.delete();
+                                }
+                            }
+                        }
+                    }
+                    this.willDeleteStore(block, this.textAt, value, anchor.at == 0 ? true : false, action);
+                    this.followAnchor(this.explorer.activeAnchor);
+                }
+            }
+        }
         // if (anchor.isText) {
         //     anchor.inputting();
         //     if (anchor.at == 0) {
         //         var block = anchor.block;
         //         //说明当前的block已经删完了，此时光标应该向前移,移到上面一行
-        //         this.kit.explorer.onCursorMove(KeyboardCode.ArrowLeft);
-        //         if (block.isEmpty && !block.isPart) {
-        //             this.page.onObserveUpdate(async () => {
-        //                 await block.onDelete();
-        //             });
-        //         }
-        //         this.onWillInput(this.explorer.activeAnchor);
-        //         this.followAnchor(this.explorer.activeAnchor);
+        //       
+
         //         return;
         //     }
         //     else if (anchor.at > 0) {
@@ -211,6 +263,7 @@ export class TextInput$Write {
         if (anchor && anchor.isText) {
             this.textAt = anchor.at;
         }
+        this.followAnchor(anchor);
     }
     private delayInputTime;
     private clearInputTime() {
@@ -233,5 +286,29 @@ export class TextInput$Write {
             this.delayInputTime = setTimeout(() => {
                 store()
             }, 7e2);
+    }
+    private delayDeleteTime;
+    private lastDeleteText: string;
+    private clearDeleteTime() {
+        if (this.delayDeleteTime) {
+            clearTimeout(this.delayDeleteTime);
+            delete this.delayDeleteTime;
+        }
+    }
+    willDeleteStore(this: TextInput, block: Block, from: number, text: string, force: boolean = false, action?: () => Promise<void>) {
+        this.clearDeleteTime();
+        var excute = () => {
+            block.content = TextEle.getTextContent(block.textEl);
+            var size = this.lastDeleteText ? this.lastDeleteText.length : 0;
+            this.lastDeleteText = text;
+            this.clearDeleteTime();
+            block.onDeleteText(text.slice(0, text.length - size), from - size, from - text.length, action)
+        }
+        /***
+            * 这里需要将当前的变化通知到外面，
+            * 当然用户在输的过程中，该方法会不断的执行，所以通知需要加一定的延迟，即用户停止几秒钟后默认为输入
+            */
+        if (force == false) this.delayDeleteTime = setTimeout(async () => { await excute() }, 7e2);
+        else excute();
     }
 }

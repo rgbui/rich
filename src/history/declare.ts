@@ -2,7 +2,7 @@
 
 export enum ActionDirective {
     onInputText,
-    onInputDeleteText,
+    onDeleteText,
     onMoveBlock,
     onDelete,
     onUndo,

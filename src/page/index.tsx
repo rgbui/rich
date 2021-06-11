@@ -58,7 +58,10 @@ export class Page extends Events {
 
             } as any
         });
-        this.kit = new Kit(this);
+        this.kit = new Kit(this)
+        this.kit.on('inputting', (value, anchor) => {
+            console.log('inputing', value, anchor);
+        });
         this.snapshoot = new HistorySnapshoot(this);
         this.snapshoot.on('history', (action) => {
             this.emit('history', action);

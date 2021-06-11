@@ -19,9 +19,6 @@ export class Kit extends Events {
         this.explorer = new SelectionExplorer(this);
         this.textInput = new TextInput(this);
         this.bar = new Bar(this);
-        this.textInput.on('inputting', (value, anchor) => {
-            console.log(value, anchor);
-        });
     }
     textInput: TextInput;
     selector: Selector;
@@ -107,4 +104,9 @@ export class Kit extends Events {
                 this.textInput.onFocus();
         }
     }
+}
+
+export interface Kit{
+    on(name: 'inputting', fn: (value, anchor) => void);
+    emit(name: 'inputting', value: string, anchor: Anchor);
 }

@@ -699,6 +699,21 @@ export abstract class Block extends Events {
         if (typeof action == 'function') await action();
         self.page.snapshoot.store();
     }
+    async onDeleteText(value: string, start: number, end: number, action?: () => Promise<void>) {
+        await this.page.onObserveUpdate(async () => {
+            var block = this;
+            var pa = this.page;
+            pa.snapshoot.declare(ActionDirective.onDeleteText);
+            pa.snapshoot.record(OperatorDirective.updateTextDelete, {
+                blockId: block.id,
+                start,
+                end,
+                text: value
+            });
+            if (typeof action == 'function') await action();
+            pa.snapshoot.store();
+        })
+    }
     /***
      *用户输入
      */
