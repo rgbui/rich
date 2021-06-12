@@ -16,17 +16,30 @@ export enum ExceptionType {
      */
     notFoundTextEle,
     /**
-     * 一个小的操作没有申明动作
+     * 没有保存上次的申明操作
      * 发生于对某个block的操作，需要先申明一个动作，然后记录一系列小的操作
      * 该错误会
      */
-    notDeclareAction
+    notStoreLastAction
 }
-
 /**
  * 自定义异常
  */
 export class Exception extends Error {
+    constructor(type: ExceptionType, message?: string) {
+        super();
+        this.name = ExceptionType[type];
+        this.message = message;
+    }
+}
+
+/**
+ * 只是一个警告，
+ * 注意该警告只是为了提示，仍然执行后续动作，
+ * 但这并不是说当前就没有错误
+ * 一些无关紧要的警告，则调用 console.warn 即可
+ */
+export class Warn extends Error {
     constructor(type: ExceptionType, message?: string) {
         super();
         this.name = ExceptionType[type];
