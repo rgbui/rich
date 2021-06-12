@@ -94,6 +94,18 @@ export class Rect {
     get y2() {
         return this.top + this.height;
     }
+    get leftTop() {
+        return Point.from(this.left, this.top);
+    }
+    get leftBottom() {
+        return Point.from(this.left, this.top + this.height)
+    }
+    get rightTop() {
+        return Point.from(this.left + this.width, this.top)
+    }
+    get rightBottom() {
+        return Point.from(this.left + this.width, this.top + this.height)
+    }
     constructor(start?: Point, end?: Point | number, height?: number) {
         if (start instanceof Point && end instanceof Point) {
             this.top = Math.min(end.y, start.y);
