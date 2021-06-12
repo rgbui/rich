@@ -6,22 +6,20 @@ import { util } from "../util/util";
 import { BlockFactory } from "../block/factory/block.factory";
 import { View } from "../block/base/common/view";
 import { PageLayout } from "../layout/index";
-import { PageEvent } from "./event";
-import { PageView } from './view';
+import { PageEvent } from "./partial/event";
+
 import { User } from '../types/user';
 import { HistorySnapshoot } from '../history/snapshoot';
 import { Block } from '../block';
 import { OperatorDirective } from '../history/declare';
-import { BlockSelector } from '../extensions/block';
-import { ReferenceSelector } from '../extensions/reference';
-import { BlockMenu } from '../extensions/menu/menu';
-import { TextTool } from '../extensions/text.tool/text.tool';
 import { ConfigurationManager } from '../config';
 import { PageConfig, WorkspaceConfig } from '../config/workspace';
-import { SyExtensionsComponent } from '../extensions/sy.component';
 import { KeyboardPlate } from '../common/keys';
-import { Page$Seek } from './seek';
+import { Page$Seek } from './partial/seek';
 import { Kit } from '../kit';
+import { Page$Extensions } from './partial/extensions';
+import { PageView } from './view';
+import { PageKit } from './interaction/kit';
 
 export class Page extends Events {
     el: HTMLElement;
@@ -58,10 +56,8 @@ export class Page extends Events {
 
             } as any
         });
-        this.kit = new Kit(this)
-        this.kit.on('inputting', (value, anchor) => {
-            console.log('inputing', value, anchor);
-        });
+        this.kit = new Kit(this);
+        PageKit(this.kit);
         this.snapshoot = new HistorySnapshoot(this);
         this.snapshoot.on('history', (action) => {
             this.emit('history', action);
@@ -107,12 +103,7 @@ export class Page extends Events {
     pageLayout: PageLayout;
     views: View[] = [];
     view: PageView;
-    blockSelector: BlockSelector;
-    referenceSelector: ReferenceSelector;
-    blockMenu: BlockMenu;
-    textTool: TextTool;
     keyboardPlate: KeyboardPlate = new KeyboardPlate();
-    kit: Kit;
     isFocus: boolean = false;
     onError(error: Error) {
         this.emit('error', error);
@@ -140,28 +131,13 @@ export class Page extends Events {
         this.onAddUpdate(parent);
         return block;
     }
-    registerExtension(extension: SyExtensionsComponent) {
-        if (extension instanceof BlockSelector) {
-            this.blockSelector = extension;
-            this.blockSelector.on('error', err => this.onError(err));
-        }
-        else if (extension instanceof BlockMenu) {
-            this.blockMenu = extension;
-            this.blockMenu.on('error', err => this.onError(err));
-        }
-        else if (extension instanceof TextTool) {
-            this.textTool = extension;
-            this.textTool.on('error', err => this.onError(err));
-            this.textTool.on('selectionExcuteCommand', command => this.kit.explorer.onSelectionExcuteCommand(command))
-        }
-        else if (extension instanceof ReferenceSelector) {
-            this.referenceSelector = extension;
-            this.referenceSelector.on('error', err => this.onError(err));
-        }
-    }
+
 }
 export interface Page extends PageEvent { }
 util.inherit(Page, PageEvent)
 
 export interface Page extends Page$Seek { }
 util.inherit(Page, Page$Seek);
+
+export interface Page extends Page$Extensions { }
+util.inherit(Page, Page$Extensions);

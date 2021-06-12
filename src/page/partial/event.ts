@@ -1,12 +1,12 @@
 import ReactDOM from "react-dom";
-import { Page } from ".";
-import { Block } from "../block";
-import { KeyboardCode } from "../common/keys";
-import { BlockMenuAction } from "../extensions/menu/out.declare";
-import { ActionDirective } from "../history/declare";
-import { DropDirection } from "../kit/handle/direction";
-import { Anchor } from "../kit/selection/anchor";
-import { util } from "../util/util";
+import { Page } from "..";
+import { Block } from "../../block";
+import { KeyboardCode } from "../../common/keys";
+import { BlockMenuAction } from "../../extensions/menu/out.declare";
+import { ActionDirective } from "../../history/declare";
+import { DropDirection } from "../../kit/handle/direction";
+import { Anchor } from "../../kit/selection/anchor";
+import { util } from "../../util/util";
 import { TemporaryPurpose } from "./declare";
 export class PageEvent {
     /**

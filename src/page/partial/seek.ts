@@ -1,10 +1,10 @@
 
-import { Page } from ".";
-import { Block } from "../block";
-import { dom } from "../common/dom";
-import { Point, Rect } from "../common/point";
-import { DropDirection } from "../kit/handle/direction";
-import { Anchor } from "../kit/selection/anchor";
+import { Page } from "..";
+import { Block } from "../../block";
+import { dom } from "../../common/dom";
+import { Point, Rect } from "../../common/point";
+import { DropDirection } from "../../kit/handle/direction";
+import { Anchor } from "../../kit/selection/anchor";
 
 export class Page$Seek {
     /**
