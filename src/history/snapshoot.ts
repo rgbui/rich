@@ -1,3 +1,4 @@
+import { Exception, ExceptionType, Warn } from "../error/exception";
 import { Page } from "../page";
 import { Events } from "../util/events";
 import { util } from "../util/util";
@@ -19,8 +20,9 @@ export class HistorySnapshoot extends Events {
     }
     declare(directive: ActionDirective | string) {
         if (this.action) {
-            throw 'the last action is null,but not ,why happend?'
+            this.page.onError(new Warn(ExceptionType.notStoreLastAction))
         }
+        this.disabledSync = false;
         this._pause = false;
         this.action = new UserAction();
         this.action.user = util.clone(this.page.creater)
@@ -58,8 +60,20 @@ export class HistorySnapshoot extends Events {
         catch (ex) {
             this.page.onError(ex);
         }
-        this.store()
+        if (this.disabledSync != true)
+            this.store()
     }
+    /**
+     * 取消异步操作
+     * 注意如果取消了，
+     * 需要手动执行store方法，
+     * 否则该操作将不记录
+     * 每次申明时，该disabledSync则为false
+     */
+    cancelSync() {
+        this.disabledSync = true;
+    }
+    private disabledSync: boolean = false;
 }
 
 export interface HistorySnapshoot {
