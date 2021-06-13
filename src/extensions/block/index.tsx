@@ -5,6 +5,12 @@ import { Point } from "../../common/point";
 import { SyExtensionsComponent } from "../sy.component";
 import { BlockSelectorData } from "./data";
 
+export type BlockSelectorItem = {
+    url: string,
+    text: string
+}
+
+
 export class BlockSelector extends SyExtensionsComponent {
     private node: HTMLElement;
     constructor(props) {
@@ -77,14 +83,13 @@ export class BlockSelector extends SyExtensionsComponent {
     onSelect(block?) {
         if (!block) block = this.selectBlockData;
         try {
-            this.emit('select', block);
+            this.emit('select', block,this.getFilterText(this.inputValue));
         }
         catch (ex) {
             this.emit('error', ex);
         }
         finally {
-            this.visible = false;
-            this.forceUpdate();
+            this.close();
         }
     }
     private visible: boolean = false;
@@ -94,13 +99,24 @@ export class BlockSelector extends SyExtensionsComponent {
     get isVisible() {
         return this.visible;
     }
+    isTriggerOpen(value: string) {
+        return value.endsWith('/') || value.endsWith('、')
+    }
+    isTriggerFilter(value: string) {
+        if (this.visible) {
+            if (/(\/|、)[\w \-\u4e00-\u9fa5]+$/g.test(value)) return true;
+        }
+        return false;
+    }
     open(point: Point, text: string) {
         this.pos = point;
         this.selectIndex = 0;
         this.visible = true;
         this.onInputFilter(text);
     }
+    private inputValue: string;
     onInputFilter(text: string) {
+        this.inputValue = text;
         var cs = text.match(/(\/|、)[^\s]*$/g);
         var command = cs ? cs[0] : "";
         if (command) {
@@ -116,6 +132,9 @@ export class BlockSelector extends SyExtensionsComponent {
             this.command = '';
             this.close();
         }
+    }
+    getFilterText(text) {
+        return text.replace(/(\/|、)[\w \-\u4e00-\u9fa5]+$/g, '');
     }
     get selectBlockData() {
         var b = this.filterBlocks[this.selectIndex];
@@ -180,6 +199,6 @@ export class BlockSelector extends SyExtensionsComponent {
 export interface BlockSelector {
     on(name: 'error', fn: (error: Error) => void);
     emit(name: 'error', error: Error);
-    only(name: 'select', fn: (item: Record<string, any>) => void);
-    emit(name: 'select', item: Record<string, any>);
+    on(name: 'select', fn: (item: BlockSelectorItem,value:string) => void);
+    emit(name: 'select', item: BlockSelectorItem,value:string);
 }

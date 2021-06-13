@@ -13,24 +13,29 @@ import trash from "../../assert/svg/trash.svg";
 import { SyExtensionsComponent } from "../sy.component";
 import { BlockMenuAction, BlockMenuItem } from "./out.declare";
 import { BlockSelectorData } from "../block/data";
+import { Block } from "../../block";
 export class BlockMenu extends SyExtensionsComponent {
     private node: HTMLElement;
     constructor(props) {
         super(props);
         this.node = document.body.appendChild(document.createElement('div'));
     }
-    open(event: MouseEvent) {
+    private blocks: Block[];
+    open(blocks: Block[], event: MouseEvent) {
         this.point = Point.from(event);
         this.visible = true;
+        this.blocks = blocks;
         this.forceUpdate();
     }
     close() {
-        this.visible = false;
-        this.forceUpdate();
+        if (this.visible == true) {
+            this.visible = false;
+            this.forceUpdate();
+        }
     }
     private mousedown(item: BlockMenuItem, event: MouseEvent) {
         try {
-            this.emit('select', item, event);
+            this.emit('select', this.blocks, item, event);
         }
         catch (ex) {
             this.emit('error', ex);
@@ -144,6 +149,6 @@ export class BlockMenu extends SyExtensionsComponent {
 export interface BlockMenu {
     on(name: 'error', fn: (error: Error) => void);
     emit(name: 'error', error: Error);
-    only(name: 'select', fn: (item: BlockMenuItem, event: MouseEvent) => void);
-    emit(name: 'select', item: BlockMenuItem, event: MouseEvent);
+    on(name: 'select', fn: (blocks: Block[], item: BlockMenuItem, event: MouseEvent) => void);
+    emit(name: 'select', blocks: Block[], item: BlockMenuItem, event: MouseEvent);
 }

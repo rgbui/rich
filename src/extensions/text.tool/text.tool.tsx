@@ -20,8 +20,10 @@ export class TextTool extends SyExtensionsComponent {
         this.forceUpdate();
     }
     close() {
-        this.visible = false;
-        this.forceUpdate();
+        if (this.visible == true) {
+            this.visible = false;
+            this.forceUpdate();
+        }
     }
     get isVisible() {
         return this.visible;

@@ -1,5 +1,6 @@
 import React from "react";
 import { createPortal } from "react-dom";
+import { KeyboardCode } from "../../common/keys";
 import { Point } from "../../common/point";
 import { Page } from "../../page";
 import { SyExtensionsComponent } from "../sy.component";
@@ -11,9 +12,6 @@ export class ReferenceSelector extends SyExtensionsComponent {
         super(props);
         this.node = document.body.appendChild(document.createElement('div'));
     }
-    // get page() {
-    //     return this.props.page;
-    // }
     renderSelectors() {
         return ReferenceSelectorData.map(group => {
             return <div className='sy-reference-selector-group' key={group.text}>
@@ -53,6 +51,15 @@ export class ReferenceSelector extends SyExtensionsComponent {
         this.visible = true;
         this.forceUpdate();
     }
+    isTriggerOpen(value: string) {
+        return value.endsWith('@')
+    }
+    isTriggerFilter(value: string) {
+        if (this.visible) {
+            if (/@[\w \-\u4e00-\u9fa5]+$/g.test(value)) return true;
+        }
+        return false;
+    }
     onInputFilter(text: string) {
         var cs = text.match(/@[^\s]+$/g);
         var command = cs[0];
@@ -87,6 +94,19 @@ export class ReferenceSelector extends SyExtensionsComponent {
     }
     componentWillUnmount() {
         if (this.node) this.node.remove()
+    }
+    interceptKey(event: KeyboardEvent) {
+        switch (event.key) {
+            case KeyboardCode.ArrowDown:
+                this.keydown();
+                return true;
+            case KeyboardCode.ArrowUp:
+                this.keyup();
+                return true;
+            case KeyboardCode.Enter:
+                //this.onSelect();
+                return true;
+        }
     }
 }
 export interface ReferenceSelector {
