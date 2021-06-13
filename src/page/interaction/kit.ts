@@ -25,4 +25,7 @@ export function PageKit(kit: Kit) {
         page.blockSelector.close();
         page.referenceSelector.close();
     });
+    kit.on('error', error => page.onError(error));
+    kit.on('openMenu', (blocks, event) => page.onOpenMenu(blocks, event));
+    kit.on('dragMoveBlocks', (blocks, dropBlock, direction) => page.onBatchDragBlocks(blocks, dropBlock, direction))
 }
