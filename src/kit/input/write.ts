@@ -3,7 +3,7 @@ import { Block } from "../../block";
 import { dom } from "../../common/dom";
 import { KeyboardCode } from "../../common/keys";
 import { TextEle } from "../../common/text.ele";
-import { ActionDirective, OperatorDirective } from "../../history/declare";
+import { ExceptionType, Exception } from "../../error/exception";
 import { Anchor } from "../selection/anchor";
 
 export class TextInput$Write {
@@ -15,12 +15,8 @@ export class TextInput$Write {
      */
     onKeydown(this: TextInput, event: KeyboardEvent) {
         this.isWillInput = false;
-        /***blockSelector拉截 */
-        if (this.blockSelector.isVisible) {
-            if (this.blockSelector.interceptKey(event) == true) {
-                return;
-            }
-        }
+        var isIntercept = this.kit.emit('keydown', event);
+        if (isIntercept) return;
         if (this.explorer.hasSelectionRange) {
             switch (event.key) {
                 case KeyboardCode.ArrowDown:
@@ -84,51 +80,12 @@ export class TextInput$Write {
                  * 实际上一直输，会一直不保存的
                  */
                 this.willInputStore(anchor.block, value, this.textAt);
-                // anchor.block.onStoreInputText(this.textAt, value);
+                if (value) anchor.removeEmpty();
                 this.followAnchor(anchor);
-                // anchor.view.style.display = 'inline';
-                /**
-                 * 表示正在输入，后面是正在输入的内容
-                 */
-                // if (value.endsWith('@')) {
-                //     //说明用户有输入@符的意图，那么这里弹出一个下拉框供用户选择
-                // }
-                // else if (value.endsWith('/') || value.endsWith('、')) {
-                //     //说明用户有插入某个元素的意图 
-                //     var bound = anchor.view.getBoundingClientRect();
-                //     var point = new Point(bound.left, bound.top + bound.height);
-                //     this.blockSelector.open(point, value);
-                //     this.blockSelector.only('select', async (blockData) => {
-                //         anchor.block.onStoreInputText(this.textAt,
-                //             value.replace(/[\/、][^/、]*$/, ""),
-                //             true,
-                //             async () => {
-                //                 await this.page.onObserveUpdate(async () => {
-                //                     var newBlock = await anchor.block.visibleDownCreateBlock(blockData.url);
-                //                     newBlock.mounted(() => {
-                //                         var contentBlock = newBlock.find(g => !g.isLayout);
-                //                         if (contentBlock) {
-                //                             var newAnchor = contentBlock.visibleHeadAnchor;
-                //                             this.explorer.onFocusAnchor(newAnchor);
-                //                         }
-                //                     });
-                //                 })
-                //             }
-                //         )
-                //     })
-                // }
-                // else if (this.blockSelector.isVisible == true) {
-                //     this.blockSelector.onInputFilter(value);
-                // }
-                // else {
-
-                // }
-
-                // if (value) anchor.removeEmpty();
             }
         }
     }
-    deleteInputText: string;
+    private deleteInputText: string;
     async onInputDeleteText(this: TextInput) {
         var anchor = this.explorer.activeAnchor;
         if (anchor.isText) {
@@ -138,6 +95,7 @@ export class TextInput$Write {
                 var prevAnchor = block.visiblePrevAnchor;
                 if (this.kit.page.textAnchorIsAdjoin(anchor, prevAnchor)) {
                     this.explorer.onFocusAnchor(prevAnchor);
+                    if (block.isCanAutomaticallyDeleted) await block.onDelete()
                     this.onWillInput(this.explorer.activeAnchor);
                     await this.onInputDeleteText();
                 }
@@ -145,15 +103,11 @@ export class TextInput$Write {
                     //没有挨近
                     /**
                      * 这里主要是判断前面的一个block与当前的block是否处于换行的，
-                     * 如果处于换行的，可能要合并内容
+                     * 如果处于换行的，可能要合并内容(可以暂时先不做)
                      * 
                      */
                     this.kit.explorer.onCursorMove(KeyboardCode.ArrowLeft);
-                    if (block.isEmpty && !block.isPart) {
-                        this.page.onObserveUpdate(async () => {
-                            await block.onDelete();
-                        });
-                    }
+                    if (block.isCanAutomaticallyDeleted) await block.onDelete()
                     this.onWillInput(this.explorer.activeAnchor);
                 }
             }
@@ -177,16 +131,17 @@ export class TextInput$Write {
                         if (this.kit.page.textAnchorIsAdjoin(prevAnchor, anchor)) {
                             this.explorer.onFocusAnchor(prevAnchor);
                             this.onWillInput(this.explorer.activeAnchor);
-                            if (block.isEmpty && !block.isPart) {
+                            if (block.isCanAutomaticallyDeleted)
                                 action = async () => {
                                     await block.delete();
                                 }
-                            }
                         }
                     }
                     this.willDeleteStore(block, this.textAt, value, anchor.at == 0 ? true : false, action);
+                    if (anchor.at == 0 && block.isEmpty) anchor.setEmpty();
+                    else anchor.removeEmpty();
                     this.followAnchor(this.explorer.activeAnchor);
-                }
+                } else throw new Exception(ExceptionType.notFoundTextEle);
             }
         }
         // if (anchor.isText) {
@@ -260,10 +215,35 @@ export class TextInput$Write {
         delete this.textNode;
         this.deleteInputText = '';
         this.clearInputTime();
+        this.kit.emit('willInput');
         if (anchor && anchor.isText) {
             this.textAt = anchor.at;
         }
         this.followAnchor(anchor);
+    }
+    /**
+     * 通过输入命令选择block，在选择后，
+     * 返回blockData及当前应该输入的文本（会过滤掉当前命令的文本）
+     * @param this 
+     * @param blockData 插入的block
+     * @param value 当前输入的值（过滤掉命令的值），当前的文本值是在emit('inputting')是传出去的
+     */
+    onBlockSelectorInsert(this: TextInput, blockData: { url: string }, value: string) {
+        var anchor = this.explorer.activeAnchor;
+        var at = this.textAt;
+        var block = anchor.block;
+        this.textNode.innerHTML = value;
+        anchor.at = this.textAt + value.length;
+        this.willInputStore(block, value, at, true, async () => {
+            var newBlock = await block.visibleDownCreateBlock(blockData.url);
+            newBlock.mounted(() => {
+                var contentBlock = newBlock.find(g => !g.isLayout);
+                if (contentBlock) {
+                    var newAnchor = contentBlock.visibleHeadAnchor;
+                    this.explorer.onFocusAnchor(newAnchor);
+                }
+            });
+        });
     }
     private delayInputTime;
     private clearInputTime() {
@@ -279,7 +259,7 @@ export class TextInput$Write {
         function store() {
             block.content = TextEle.getTextContent(block.textEl);
             self.lastInputText = value;
-            block.onInputText(value, at, self.lastInputText ? at + self.lastInputText.length : at)
+            block.onInputText(value, at, self.lastInputText ? at + self.lastInputText.length : at, action)
         }
         if (force == true) store()
         else

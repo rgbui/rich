@@ -1,9 +1,7 @@
 import React from "react";
 import ReactDOM from 'react-dom';
-import { Block } from "../../block";
 import { Point } from "../../common/point";
 import { Icon } from "../../component/icon";
-
 import Tooltip from "rc-tooltip";
 import { Bar } from ".";
 import { DropDirection } from "./direction";
@@ -16,9 +14,6 @@ export class BarView extends React.Component<{ bar: Bar }>{
     }
     get bar() {
         return this.props.bar;
-    }
-    get page() {
-        return this.bar.kit.page;
     }
     el: HTMLElement;
     componentDidMount() {
@@ -55,19 +50,18 @@ export class BarView extends React.Component<{ bar: Bar }>{
         if (this.isDown == true) {
             try {
                 if (this.isDrag == true) {
-                    if (this.bar.dropBlock) {
-                        this.page.onBatchDragBlocks(this.bar.dragBlocks,
+                    if (this.bar.dropBlock)
+                        this.bar.kit.emit('dragMoveBlocks',
+                            this.bar.dragBlocks,
                             this.bar.dropBlock,
-                            this.bar.dropDirection
-                        );
-                    }
+                            this.bar.dropDirection)
                 }
                 else {
-                    this.page.onOpenMenu(this.bar.dragBlocks, event);
+                    this.bar.kit.emit('openMenu', this.bar.dragBlocks, event)
                 }
             }
             catch (ex) {
-                this.page.onError(ex);
+                this.bar.kit.emit('error', ex);
             }
             finally {
                 this.landBlock();

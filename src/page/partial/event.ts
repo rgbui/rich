@@ -2,7 +2,6 @@ import ReactDOM from "react-dom";
 import { Page } from "..";
 import { Block } from "../../block";
 import { KeyboardCode } from "../../common/keys";
-import { BlockMenuAction } from "../../extensions/menu/out.declare";
 import { ActionDirective } from "../../history/declare";
 import { DropDirection } from "../../kit/handle/direction";
 import { Anchor } from "../../kit/selection/anchor";
@@ -22,100 +21,12 @@ export class PageEvent {
      */
     onMousedown(this: Page, event: MouseEvent) {
         this.kit.acceptMousedown(event);
-        // if (!this.mouseScope) this.mouseScope = {} as any;
-        // this.blockSelector.close();
-        // this.textTool.close();
-        // this.mouseScope.isDown = true;
-        // this.mouseScope.point = Point.from(event);
-        // var toEle = event.target as HTMLElement;
-        // var blockEle = dom(toEle).closest(x => (x as any).block ? true : false);
-        // if (blockEle) {
-        //     var block = (blockEle as any).block as Block;
-        //     var anchor = block.visibleAnchor(Point.from(event));
-        //     if (anchor) {
-        //         if (anchor.block.isLayout) {
-        //             throw 'not anchor layout block'
-        //         }
-        //         this.selector.explorer.onReplaceSelection(anchor);
-        //     }
-        // }
-        // var block = this.getEleBlock(event.target as HTMLElement);
-        // if (block && !block.isLayout) {
-        //     var anchor = block.visibleAnchor(Point.from(event));
-        //     if (anchor) {
-        //         this.selector.explorer.onReplaceSelection(anchor);
-        //     }
-        // }
     }
     onMousemove(this: Page, event: MouseEvent) {
         this.kit.acceptMousemove(event);
-        // if (this.mouseScope && this.mouseScope.isDown == true) {
-        //     if (this.mouseScope.isMove) {
-        //         var toEle = event.target as HTMLElement;
-        //         var blockEle = dom(toEle).closest(x => (x as any).block ? true : false);
-        //         if (blockEle) {
-        //             var block = (blockEle as any).block as Block;
-        //             var anchor = block.visibleAnchor(Point.from(event));
-        //             if (anchor) {
-        //                 this.selector.explorer.onJoinSelection(anchor);
-        //             }
-        //         }
-        //     }
-        //     else if (this.mouseScope.point.remoteBy(Point.from(event), 10)) {
-        //         this.mouseScope.isMove = true;
-        //     }
-        // }
-        // var target = event.target as HTMLElement;
-        // if (this.pageLayout.contains(target)) {
-        //     var block = this.findBlockByMouse(event);
-        //     if (block) {
-        //         /***一般肯定会有block的 */
-        //     }
-        // }
-        // else {
-
-        // }
-        // var toEle = event.target as HTMLElement;
-        // var blockEle = dom(toEle).closest(x => (x as any).block && (x as any).block.page === this ? true : false);
-        // if (blockEle) {
-        //     var block = (blockEle as any).block as Block;
-        //     return this.selector.setOverBlock(block, event);
-        // }
-        // else {
-        //     if (this.selector.isDrag == true) {
-        //         var dis = 100;
-        //         var el = document.elementFromPoint(event.x - dis, event.y);
-        //         var blockEl: Node;
-        //         if (el) {
-        //             blockEl = dom(el as HTMLElement).closest(x => (x as any).block && (x as any).block.page === this ? true : false)
-        //             if (!blockEl) el = null;
-        //         }
-        //         if (!el) {
-        //             el = document.elementFromPoint(event.x + dis, event.y);
-        //             if (el) blockEl = dom(el as HTMLElement).closest(x => (x as any).block && (x as any).block.page === this ? true : false)
-        //         }
-        //         if (blockEl) {
-        //             var bl: Block = (blockEl as any).block;
-        //             if (bl.isCol || bl.isRow) bl = bl.visiblePitFirstContent;
-        //             // console.log('block...', blockEl);
-        //             return this.selector.setOverBlock(bl, event);
-        //         }
-        //     }
-        // }
-        // this.selector.setOverBlock(null, event);
     }
     onMouseup(this: Page, event: MouseEvent) {
         this.kit.acceptMouseup(event);
-        // if (this.mouseScope && this.mouseScope.isDown) {
-        //     if (this.mouseScope.isMove && this.selector.explorer.selections.exists(g => g.hasRange)) {
-        //         if (this.textTool.isVisible != true)
-        //             this.textTool.open(event);
-        //     }
-        //     this.mouseScope.isMove = false;
-        //     this.mouseScope.isDown = false;
-        //     delete this.mouseScope.point;
-        //     this.selector.onTextInputCaptureFocus()
-        // }
     }
     onFocusCapture(this: Page, event: FocusEvent) {
         this.onFocus(event);
@@ -151,6 +62,7 @@ export class PageEvent {
             this.isFocus = false;
             this.blockSelector.close();
             this.textTool.close();
+            this.blockMenu.close();
             this.kit.explorer.blur();
             this.emit('blur', event);
         }
@@ -177,6 +89,11 @@ export class PageEvent {
         var pa = this.willUpdateBlocks.find(g => g.contains(block));
         if (!pa) this.willUpdateBlocks.push(block);
     }
+    /**
+     * 触发需要更新的view,
+     * 这个可以手动触发多次
+     * @param finishCompleted 
+     */
     onExcuteUpdate(finishCompleted?: () => void) {
         var ups = this.willUpdateBlocks.map(c => c);
         this.willUpdateBlocks = [];
@@ -199,42 +116,37 @@ export class PageEvent {
         this.onExcuteUpdate(finishedCompletedUpdate);
     }
     async onAction(this: Page, directive: ActionDirective | string, fn: () => Promise<void>) {
-        await this.onObserveUpdate(async () => {
-            this.snapshoot.declare(directive);
-            if (typeof fn == 'function') {
-                try {
-                    await fn();
+        this.snapshoot.sync(directive, async () => {
+            await this.onObserveUpdate(async () => {
+                if (typeof fn == 'function') {
+                    try {
+                        await fn();
+                    }
+                    catch (ex) {
+                        this.onError(ex);
+                    }
                 }
-                catch (ex) {
-                    this.onError(ex);
-                }
-            }
-            this.snapshoot.store();
+            })
         })
     }
     onUnmount(this: Page) {
         ReactDOM.unmountComponentAtNode(this.root);
         // this.viewRender.componentWillUnmount()
     }
-    onBatchDelete(this: Page, blocks: Block[]) {
-        this.snapshoot.declare(ActionDirective.onBatchDeleteBlocks);
-        this.onRememberUpdate();
-        blocks.each(bl => {
-            bl.remove()
-        });
-        this.onExcuteUpdate();
-        this.snapshoot.store();
+    async onBatchDelete(this: Page, blocks: Block[]) {
+        await this.onAction(ActionDirective.onBatchDeleteBlocks, async () => {
+            await blocks.eachAsync(async bl => {
+                await bl.delete()
+            });
+        })
     }
     async onBatchTurn(this: Page, blocks: Block[], url: string) {
-        await this.onObserveUpdate(async () => {
-            this.snapshoot.declare(ActionDirective.onBatchTurn)
-            for (let i = 0; i < blocks.length; i++) {
-                var bl = blocks[i];
+        await this.onAction(ActionDirective.onBatchTurn, async () => {
+            await blocks.eachAsync(async bl => {
                 var data = await bl.get();
                 await this.createBlock(url, data, bl.parent, bl.at);
-                bl.remove();
-            }
-            this.snapshoot.store();
+                await bl.delete();
+            })
         })
     }
     onBlurAnchor(this: Page, anchor: Anchor) {
@@ -256,8 +168,15 @@ export class PageEvent {
      * @param to 
      * @param arrow 
      */
-    onBatchDragBlocks(this: Page, blocks: Block[], to: Block, arrow: DropDirection) {
-
+    async onBatchDragBlocks(this: Page, blocks: Block[], to: Block, direction: DropDirection) {
+        /**
+         * 就是将blocks append 到to 下面
+         */
+        await this.onAction(ActionDirective.onBatchDragBlocks, async () => {
+            await blocks.eachAsync(async block => {
+                await block.move(to, direction);
+            })
+        })
     }
     /**
      * 对block打开右键菜单
@@ -266,21 +185,7 @@ export class PageEvent {
      * @param event 
      */
     onOpenMenu(this: Page, blocks: Block[], event: MouseEvent) {
-        this.blockMenu.only('select', (item, ev) => {
-            switch (item.name) {
-                case BlockMenuAction.delete:
-                    this.onBatchDelete(blocks);
-                    break;
-                case BlockMenuAction.copy:
-                    break;
-                case BlockMenuAction.link:
-                    break;
-                case BlockMenuAction.trun:
-                    this.onBatchTurn(blocks, item.value);
-                    break;
-            }
-        })
-        this.blockMenu.open(event);
+        this.blockMenu.open(blocks, event);
     }
     /**
      * 申明一个临时的缓存标记，当前的数据均以这个标记做为标记，

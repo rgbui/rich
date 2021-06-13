@@ -1,7 +1,9 @@
+import { Block } from "../block";
 import { Point } from "../common/point";
 import { Page } from "../page";
 import { Events } from "../util/events";
 import { Bar } from "./handle";
+import { DropDirection } from "./handle/direction";
 import { TextInput } from "./input";
 import { Anchor } from "./selection/anchor";
 import { SelectionExplorer } from "./selection/explorer";
@@ -90,10 +92,8 @@ export class Kit extends Events {
     }
     acceptMouseup(event: MouseEvent) {
         if (this.isDown) {
-            this.page.textTool.close();
+            this.emit('mouseup', event);
             if (this.isMove) {
-                if (this.explorer.hasTextRange)
-                    this.page.textTool.open(event)
                 if (!this.downAnchor) this.selector.close();
                 this.isMove = false;
             }
@@ -106,7 +106,19 @@ export class Kit extends Events {
     }
 }
 
-export interface Kit{
-    on(name: 'inputting', fn: (value, anchor) => void);
+export interface Kit {
+    on(name: 'error', fn: (error: Error) => void);
+    emit(name: 'error', error: Error);
+    on(name: 'inputting', fn: (value: string, anchor: Anchor) => void);
     emit(name: 'inputting', value: string, anchor: Anchor);
+    on(name: 'keydown', fn: (event: KeyboardEvent) => boolean | void);
+    emit(name: "keydown", event: KeyboardEvent): boolean | void;
+    on(name: 'willInput', fn: () => void);
+    emit(name: 'willInput');
+    on(name: "mouseup", fn: (event: MouseEvent) => void);
+    emit(name: 'mouseup', event: MouseEvent);
+    on(name: "openMenu", fn: (blocks: Block[], event: MouseEvent) => void);
+    emit(name: 'openMenu', blocks: Block[], event: MouseEvent)
+    on(name: 'dragMoveBlocks', fn: (blocks: Block[], drop: Block, direction: DropDirection) => void);
+    emit(name: "dragMoveBlocks", blocks: Block[], drop: Block, direction: DropDirection)
 }

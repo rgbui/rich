@@ -11,7 +11,8 @@ import { TextEle } from "../common/text.ele";
 import { ActionDirective, OperatorDirective } from "../history/declare";
 import { Block$Seek } from "./seek";
 import { prop } from "./factory/observable";
-import { TemporaryPurpose } from "../page/declare";
+import { TemporaryPurpose } from "../page/partial/declare";
+import { DropDirection } from "../kit/handle/direction";
 export abstract class Block extends Events {
     parent: Block;
     url: string;
@@ -108,7 +109,6 @@ export abstract class Block extends Events {
     init() {
 
     }
-
     /**
      * 当前元素内部第一个坑位元素
      */
@@ -121,8 +121,12 @@ export abstract class Block extends Events {
     get lastPitBlock() {
         return this.findReverse(g => true);
     }
-
-    remove() {
+    /**
+     * 移走元素，这个不是删除，
+     * 元素更多的是从当前位置移到别一个位置
+     * @returns 
+     */
+    async remove() {
         if (!this.parent) return;
         var pbs = this.parentBlocks;
         if (Array.isArray(pbs) && pbs.exists(g => g === this)) {
@@ -131,9 +135,10 @@ export abstract class Block extends Events {
                 childKey: this.parentKey,
                 at: this.at,
                 preBlockId: this.prev ? this.prev.id : undefined
-            })
+            });
             pbs.remove(this);
             this.page.onAddUpdate(this.parent);
+            this.parent.layoutCollapse();
             delete this.parent;
         }
     }
@@ -156,9 +161,12 @@ export abstract class Block extends Events {
         }
     }
     /***
-     * 移出元素，如果元素本身是布局的元素，那么此时的布局元结构是空的，那么可能会从里到外依次删除
+     * 移出元素或是彻底的删除元素，这里需要一个向上查换，一个向下查找的过程
+     * 1. 如果元素本身是布局的元素，那么此时的布局元结构是空的，那么可能会从里到外依次删除
+     * 2. 如果layout里面的元素是这样的 row-col-row-ele（行内仅仅只有一个col时）
+     * 需要调成row-ele,其中col-row需要删除
      */
-    async deleteLayout() {
+    async layoutCollapse() {
         async function clearPanel(panel: Block) {
             if (panel.childs.length == 0) {
                 if ((panel.isRow || panel.isCol) && !panel.isPart) {
@@ -167,29 +175,38 @@ export abstract class Block extends Events {
                     clearPanel(pa);
                 }
             }
+            else if (panel.isRow && panel.childs.length == 1 && panel.childs.first().isCol) {
+                var col = panel.childs.first();
+                if (col.childs.length == 0) {
+                    await col.delete()
+                }
+                else if (col.childs.length > 0) {
+
+                }
+            }
         }
         await clearPanel(this);
     }
-    insertBefore(to: Block) {
-        to.parent.append(this,
+    async insertBefore(to: Block) {
+        await to.parent.append(this,
             to.at,
             to.parentKey
         );
     }
-    insertAfter(to: Block) {
-        to.parent.append(this,
+    async insertAfter(to: Block) {
+        await to.parent.append(this,
             to.at + 1,
             to.parentKey
         );
     }
-    append(block: Block, at?: number, childKey?: string) {
+    async append(block: Block, at?: number, childKey?: string) {
         if (typeof childKey == 'undefined') childKey = 'childs';
         var bs = this.blocks[childKey];
         if (typeof at == 'undefined') at = bs.length;
         if (block.parent && bs.exists(block) && block.at < at) {
             at -= 1;
         }
-        block.remove();
+        await block.remove();
         bs.insertAt(at, block);
         block.parent = this;
         this.page.snapshoot.record(OperatorDirective.append, {
@@ -200,6 +217,63 @@ export abstract class Block extends Events {
             blockId: block.id
         });
         this.page.onAddUpdate(this);
+    }
+    /**
+     * 注意元素移到to元素下面，并非简单的append，
+     * 例如 将一个元素移到一个并排的元素下面时，需要主动的创建一个col，如果当前元素没有col容器时
+     * @param to 
+     * @param direction 
+     */
+    async move(to: Block, direction: DropDirection) {
+        var self = this;
+        switch (direction) {
+            case DropDirection.bottom:
+            case DropDirection.top:
+                var increse: number = 0;
+                if (direction == DropDirection.bottom) increse = 1;
+                if (to.parent && to.parent.isRow && to.parent.parent && to.parent.parent.isCol) {
+                    var row = await this.page.createBlock('/row', {},
+                        to.parent.parent,
+                        to.parent.at + increse);
+                    row.mounted(async () => {
+                        await row.append(to);
+                        this.page.onExcuteUpdate();
+                        this.page.snapshoot.store();
+                    });
+                    this.page.snapshoot.cancelSync();
+                    this.page.onExcuteUpdate();
+                }
+                else {
+                    var col = await this.page.createBlock('/col', {
+                        blocks: { childs: [{ url: '/row' }, { url: '/row' }] }
+                    }, to.parent, to.parent.at + increse);
+                    col.mounted(async () => {
+                        await col.childs.first().append(to);
+                        await col.childs.last().append(self);
+                        this.page.onExcuteUpdate();
+                        this.page.snapshoot.store();
+                    });
+                    this.page.snapshoot.cancelSync();
+                    this.page.onExcuteUpdate();
+                }
+                break;
+            case DropDirection.left:
+                await this.insertBefore(to);
+                /**
+                 * 这里新增一个元素，需要调整当前行内的所有元素比例
+                 */
+                break;
+            case DropDirection.right:
+                await this.insertAfter(to);
+                /**
+                * 这里新增一个元素，需要调整当前行内的所有元素比例
+                */
+                break;
+            case DropDirection.inner:
+                break;
+            case DropDirection.sub:
+                break;
+        }
     }
     updateProps(props: Record<string, any>, range = BlockRenderRange.none) {
         var oldValue: Record<string, any> = {};
@@ -368,27 +442,27 @@ export abstract class Block extends Events {
     get partParent(): Block {
         return this.closest(x => !x.isPart);
     }
-    get dragBlock(): Block {
-        if (this.isLine) {
-            var r = this.closest(g => !g.isLine);
-            if (r.isPart) return r.dragBlock;
-            else return r;
-        }
-        else if (this.isPart) {
-            return this.partParent
-        }
-        else if (this.isRow) return;
-        else if (this.isCol) return;
-        else if (this.isArea) return;
-        else return this;
-    }
-    get dropBlock(): Block {
-        if (this.isLine) return;
-        if (this.isPart) return;
-        else if (this.isRow) return;
-        else if (this.isCol) return;
-        return this;
-    }
+    // get dragBlock(): Block {
+    //     if (this.isLine) {
+    //         var r = this.closest(g => !g.isLine);
+    //         if (r.isPart) return r.dragBlock;
+    //         else return r;
+    //     }
+    //     else if (this.isPart) {
+    //         return this.partParent
+    //     }
+    //     else if (this.isRow) return;
+    //     else if (this.isCol) return;
+    //     else if (this.isArea) return;
+    //     else return this;
+    // }
+    // get dropBlock(): Block {
+    //     if (this.isLine) return;
+    //     if (this.isPart) return;
+    //     else if (this.isRow) return;
+    //     else if (this.isCol) return;
+    //     return this;
+    // }
     get visiblePre() {
         var current: Block = this;
         var prev = current.prev;
@@ -572,6 +646,12 @@ export abstract class Block extends Events {
     get isEmpty() {
         return this.content ? false : true
     }
+    /**
+     * 是否可以自动删除
+     */
+    get isCanAutomaticallyDeleted() {
+        return this.isEmpty && !this.isPart;
+    }
     get htmlContent() {
         return this.content;
         // return TextEle.getTextHtml(this.content)
@@ -622,71 +702,6 @@ export abstract class Block extends Events {
         }
         return el;
     }
-    // private dragOverTime;
-    // private lastPoint: Point;
-    // private overArrow: string;
-    // onDragOverStart() {
-    //     dom(this.el).removeClass(g => g.startsWith('sy-block-drag-over'));
-    //     if (this.dragOverTime) {
-    //         clearTimeout(this.dragOverTime);
-    //         this.dragOverTime = null;
-    //     }
-    //     this.overArrow = '';
-    //     delete this.lastPoint;
-    // }
-    // onDragOver(point: Point) {
-    //     var self = this;
-    //     var bound = this.getVisibleBound();
-    //     var el = this.el as HTMLElement;
-    //     var arrow: string;
-    //     if (this.lastPoint && this.lastPoint.nearBy(point, 3) && bound.conatin(point)
-    //     ) {
-    //         if (!this.dragOverTime) {
-    //             self.overArrow = '';
-    //             this.dragOverTime = setTimeout(() => {
-    //                 self.overArrow = 'right';
-    //                 dom(el).removeClass(g => g.startsWith('sy-block-drag-over'))
-    //                 el.classList.add('sy-block-drag-over-' + self.overArrow);
-    //                 self.page.selector.dropBlock = self;
-    //                 self.page.selector.dropArrow = self.overArrow as any;
-    //             }, 2e3);
-    //         }
-    //     }
-    //     else {
-    //         if (this.dragOverTime) {
-    //             clearTimeout(this.dragOverTime);
-    //             this.dragOverTime = null;
-    //         }
-    //         self.overArrow = '';
-    //     }
-    //     if (self.overArrow) return;
-    //     if (point.x <= bound.left) {
-    //         arrow = 'left';
-    //     }
-    //     else if (point.x >= bound.left + bound.width) {
-    //         arrow = 'right';
-    //     }
-    //     else if (point.y <= bound.top + bound.height / 2) {
-    //         arrow = 'up';
-    //     }
-    //     else if (point.y >= bound.top + bound.height / 2) {
-    //         arrow = 'down';
-    //     }
-    //     dom(el).removeClass(g => g.startsWith('sy-block-drag-over'))
-    //     el.classList.add('sy-block-drag-over-' + arrow);
-    //     this.lastPoint = point.clone();
-    //     this.page.selector.dropArrow = arrow as any;
-    //     this.page.selector.dropBlock = this;
-    // }
-    // onDragLeave() {
-    //     dom(this.el).removeClass(g => g.startsWith('sy-block-drag-over'));
-    //     if (this.dragOverTime) {
-    //         clearTimeout(this.dragOverTime);
-    //         this.dragOverTime = null;
-    //     }
-    //     this.overArrow = '';
-    //     delete this.lastPoint;
-    // }
     async onInputText(value: string, at: number, end: number, action?: () => Promise<void>) {
         var self = this;
         self.page.snapshoot.declare(ActionDirective.onInputText);
@@ -714,97 +729,20 @@ export abstract class Block extends Events {
             pa.snapshoot.store();
         })
     }
-    /***
-     *用户输入
-     */
-    // private inputTime;
-    // private currentLastInputText: string;
-    // /**
-    //  * 用户一直输入内容,如果用户停留超过0.7秒，就记录
-    //  */
-    // onStoreInputText(from: number, text: string, force: boolean = false, action?: () => Promise<void>) {
-    //     if (this.inputTime) {
-    //         clearTimeout(this.inputTime);
-    //         delete this.inputTime;
-    //     }
-    //     var excute = async () => {
-    //         this.page.snapshoot.declare(ActionDirective.onInputText);
-    //         this.content = TextEle.getTextContent(this.textEl);
-    //         this.page.snapshoot.record(OperatorDirective.updateTextReplace, {
-    //             blockId: this.id,
-    //             start: from,
-    //             end: this.currentLastInputText ? from + this.currentLastInputText.length : from,
-    //             text
-    //         });
-    //         this.currentLastInputText = text;
-    //         if (typeof action == 'function') await action();
-    //         this.page.snapshoot.store();
-    //         if (this.inputTime) {
-    //             clearTimeout(this.inputTime);
-    //             delete this.inputTime;
-    //         }
-    //     }
-    //     /***
-    //         * 这里需要将当前的变化通知到外面，
-    //         * 当然用户在输的过程中，该方法会不断的执行，所以通知需要加一定的延迟，即用户停止几秒钟后默认为输入
-    //         */
-    //     if (force == false) this.inputTime = setTimeout(async () => { await excute(); }, 7e2);
-    //     else excute()
-    // }
-    // private deleteInputTime;
-    // private currentLastDeleteText: string;
-    // async onStoreInputDeleteText(from: number, text: string, force: boolean = false, action?: () => Promise<void>) {
-    //     if (this.deleteInputTime) {
-    //         clearTimeout(this.deleteInputTime);
-    //         delete this.deleteInputTime;
-    //     }
-    //     var excute = async () => {
-    //         var pa = this.page;
-    //         pa.snapshoot.declare(ActionDirective.onInputText);
-    //         this.content = TextEle.getTextContent(this.textEl);
-    //         var size = this.currentLastDeleteText ? this.currentLastDeleteText.length : 0;
-    //         pa.snapshoot.record(OperatorDirective.updateTextDelete, {
-    //             blockId: this.id,
-    //             start: from - size,
-    //             end: from - text.length,
-    //             text: text.slice(0, text.length - size)
-    //         });
-    //         this.currentLastDeleteText = text;
-    //         if (typeof action == 'function') await action();
-    //         pa.snapshoot.store();
-    //         if (this.deleteInputTime) {
-    //             clearTimeout(this.deleteInputTime);
-    //             delete this.deleteInputTime;
-    //         }
-    //     }
-    //     /***
-    //         * 这里需要将当前的变化通知到外面，
-    //         * 当然用户在输的过程中，该方法会不断的执行，所以通知需要加一定的延迟，即用户停止几秒钟后默认为输入
-    //         */
-    //     if (force == false) this.deleteInputTime = setTimeout(async () => { await excute() }, 7e2);
-    //     else await excute();
-    // }
-    // onWillInput() {
-    //     if (this.inputTime) {
-    //         clearTimeout(this.inputTime);
-    //         delete this.inputTime;
-    //     }
-    //     this.currentLastInputText = '';
-    //     if (this.deleteInputTime) {
-    //         clearTimeout(this.deleteInputTime);
-    //         delete this.deleteInputTime;
-    //     }
-    //     this.currentLastDeleteText = '';
-    // }
     mounted(fn: () => void) {
         this.once('mounted', fn);
     }
+    onMounted() {
+        this.emit('mounted');
+    }
     async onDelete() {
-        this.page.snapshoot.declare(ActionDirective.onDelete);
-        var pa = this.parent;
-        await this.delete();
-        if (pa) await pa.deleteLayout();
-        this.page.snapshoot.store();
+        await this.page.onObserveUpdate(async () => {
+            this.page.snapshoot.declare(ActionDirective.onDelete);
+            var pa = this.parent;
+            await this.delete();
+            if (pa) await pa.layoutCollapse();
+            this.page.snapshoot.store();
+        })
     }
     onUpdateProps(props: Record<string, any>, range = BlockRenderRange.none) {
         this.page.onRememberUpdate();

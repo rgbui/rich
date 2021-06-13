@@ -77,8 +77,7 @@ export class Anchor {
         return this.explorer.activeAnchor === this;
     }
     get bound() {
-        if (this.view)
-            return Rect.from(this.view.getBoundingClientRect())
+        return Rect.from(this.view.getBoundingClientRect())
     }
     /***
      * 光标显示
@@ -176,7 +175,7 @@ export class Anchor {
         }
     }
     equal(anchor: Anchor) {
-        if(!anchor)return false;
+        if (!anchor) return false;
         if (this === anchor) return true;
         else if (this.block === anchor.block) {
             if (this.block.isText && anchor.block.isText) {

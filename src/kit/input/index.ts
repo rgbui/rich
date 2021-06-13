@@ -14,12 +14,9 @@ export class TextInput extends Events {
         super();
         this.kit = kit;
     }
-   
+
     get explorer() {
         return this.kit.explorer;
-    }
-    get blockSelector() {
-        return this.kit.page.blockSelector;
     }
     get page() {
         return this.kit.page;
