@@ -1,13 +1,15 @@
-import { Exception, ExceptionType, Warn } from "../error/exception";
+import { ExceptionType, Warn } from "../error/exception";
 import { Page } from "../page";
 import { Events } from "../util/events";
 import { util } from "../util/util";
 import { UserAction, UserOperator } from "./action";
 import { ActionDirective, OperatorDirective } from "./declare";
 import { HistoryRecord } from "./record";
-/***
+/**
+ * 
  * 用户的所有操作快照，
  * 只要操作，则记录，该记录的所有历史则成为一个版本
+ * 
  */
 export class HistorySnapshoot extends Events {
     historyRecord: HistoryRecord;
@@ -17,6 +19,9 @@ export class HistorySnapshoot extends Events {
         super();
         this.page = page;
         this.historyRecord = new HistoryRecord();
+        this.historyRecord.on('error', err => this.emit('error', err));
+        this.historyRecord.on('undo', action => this.undo(action));
+        this.historyRecord.on('redo', action => this.redo(action));
     }
     declare(directive: ActionDirective | string) {
         if (this.action) {
@@ -52,6 +57,7 @@ export class HistorySnapshoot extends Events {
         };
         delete this.action;
     }
+    private disabledSync: boolean = false;
     async sync(directive: ActionDirective | string, action: () => Promise<void>) {
         this.declare(directive);
         try {
@@ -73,10 +79,55 @@ export class HistorySnapshoot extends Events {
     cancelSync() {
         this.disabledSync = true;
     }
-    private disabledSync: boolean = false;
+    private ops = new Map<OperatorDirective, { redo: (userOperator: UserOperator) => Promise<void>, undo: (userOperator: UserOperator) => Promise<void> }>();
+    registerOperator(directive: OperatorDirective, redo: (userOperator: UserOperator) => Promise<void>, undo: (userOperator: UserOperator) => Promise<void>) {
+        this.ops.set(directive, { redo, undo });
+    }
+    private async redo(action: UserAction) {
+        await this.sync(ActionDirective.onRedo, async () => {
+            for (let i = 0; i < action.operators.length; i++) {
+                let op = action.operators[i];
+                var command = this.ops.get(op.directive);
+                if (command) {
+                    await command.redo(op);
+                }
+                else this.emit("warn", new Warn(ExceptionType.notRegisterActionDirectiveInHistorySnapshoot))
+            }
+        });
+        this.emit('redo', action)
+    }
+    private async undo(action: UserAction) {
+        await this.sync(ActionDirective.onUndo, async () => {
+            for (let i = action.operators.length - 1; i >= 0; i--) {
+                let op = action.operators[i];
+                var command = this.ops.get(op.directive);
+                if (command) {
+                    await command.redo(op);
+                }
+                else this.emit("warn", new Warn(ExceptionType.notRegisterActionDirectiveInHistorySnapshoot))
+            }
+        });
+        this.emit('undo', action)
+    }
+    async onRedo() {
+        this.historyRecord.redo();
+    }
+    async onUndo() {
+        this.historyRecord.undo()
+    }
 }
 
 export interface HistorySnapshoot {
+    on(name: "warn", fn: (err: Error | string) => void);
+    on(name: 'error', fn: (err: Error) => void);
+    on(name: 'undo', fn: (action: UserAction) => void);
+    on(name: 'redo', fn: (action: UserAction) => void);
+    on(name: "history", fn: (action: UserAction) => void);
+    emit(name: 'warn', err: Error);
+    emit(name: 'error', err: Error);
+    emit(name: 'undo', action: UserAction);
+    emit(name: 'redo', action: UserAction);
+    emit(name: "history", action: UserAction);
     record(directive: OperatorDirective.updateText, data: { blockId: string, old: string, new: string });
     record(directive: OperatorDirective.delete, data: { parentId: string, childKey?: string, at?: number, preBlockId?: string, data: Record<string, any> });
     record(directive: OperatorDirective.remove, data: { parentId: string, childKey?: string, at?: number, preBlockId?: string });

@@ -1,3 +1,4 @@
+
 import { Events } from "../util/events";
 import { UserAction } from "./action";
 
@@ -18,23 +19,27 @@ export class HistoryRecord extends Events {
     undo() {
         if (this.isCanUndo) {
             try {
-                this.emit('excuteUndo', this.action);
+                this.emit('undo', this.action);
             }
             catch (ex) {
-                console.error(ex);
+                this.emit('error', ex);
             }
-            this.index -= 1;
+            finally {
+                this.index -= 1;
+            }
         }
     }
     redo() {
         if (this.isCanRedo) {
             try {
-                this.emit('excuteRedo', this.action)
+                this.emit('redo', this.action)
             }
             catch (ex) {
-                console.error(ex);
+                this.emit('error', ex);
             }
-            this.index += 1;
+            finally {
+                this.index += 1;
+            }
         }
     }
     push(action: UserAction) {
