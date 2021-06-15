@@ -7,9 +7,24 @@ import Mention from "../../assert/svg/mention.svg";
 import { Dragger } from "../../common/dragger";
 import { TextCommand } from "./text.command";
 import { SyExtensionsComponent } from "../sy.component";
+import { FillCss } from "../../block/pattern/css";
 
+export type TextToolStyle = {
+    link: string,
+    blockUrl: string,
+    bold: number,
+    italic: boolean,
+    textDecoration: string,
+    code: boolean,
+    equation: boolean,
+    color: string,
+    fill: FillCss
+}
 export class TextTool extends SyExtensionsComponent {
     private node: HTMLElement;
+    private textStyle: TextToolStyle = {
+
+    } as any;
     constructor(props) {
         super(props);
         this.node = document.body.appendChild(document.createElement('div'));
@@ -17,6 +32,7 @@ export class TextTool extends SyExtensionsComponent {
     open(event: MouseEvent) {
         this.point = Point.from(event);
         this.visible = true;
+        this.textStyle = this.emit('getTextStyle');
         this.forceUpdate();
     }
     close() {
@@ -86,4 +102,6 @@ export interface TextTool {
     emit(name: 'selectionExcuteCommand', command: TextCommand);
     on(name: 'error', fn: (error: Error) => void);
     emit(name: 'error', error: Error);
+    emit(name: 'getTextStyle'): TextToolStyle;
+    on(name: 'getTextStyle', fn: () => TextToolStyle)
 }

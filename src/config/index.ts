@@ -24,7 +24,6 @@ export class ConfigurationManager {
         }
     }
     loadWorkspaceConfig(config: Partial<WorkspaceConfig>) {
-
         if (config) {
             this.workspaceConfig = { fontCss: new FontCss() } as any;
             for (var n in config) {

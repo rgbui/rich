@@ -30,8 +30,6 @@ export class PageEvent {
     }
     onFocusCapture(this: Page, event: FocusEvent) {
         this.onFocus(event);
-
-        // this.selector.onTextInputCaptureFocus();
     }
     onBlurCapture(this: Page, event: FocusEvent) {
         if (this.kit && this.kit.isMousedown) {
