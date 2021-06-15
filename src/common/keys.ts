@@ -19,13 +19,17 @@ export class KeyboardPlate {
      * 建议当前的keydown绑定按键捕获事件
      * @param event 
      */
-    keydown(event: KeyboardEvent) {
+    async keydown(event: KeyboardEvent) {
         this.metaKey = event.metaKey;
         this.altKey = event.altKey;
         this.shiftKey = event.shiftKey;
         this.ctrlKey = event.ctrlKey;
         if (!this.keys.exists(event.key as KeyboardCode))
             this.keys.push(event.key as KeyboardCode);
+        for (let i = 0; i < this.listeners.length; i++) {
+            let listener = this.listeners[i];
+            if (listener.predict(this) == true) await listener.action(this);
+        }
     }
     keyup(event: KeyboardEvent) {
         this.metaKey = event.metaKey;
@@ -76,6 +80,10 @@ export class KeyboardPlate {
             else return true;
         }
         return false;
+    }
+    private listeners: { predict: (kbp: KeyboardPlate) => boolean, action: (kbp: KeyboardPlate) => Promise<void> }[] = [];
+    listener(predict: (kbp: KeyboardPlate) => boolean, action: (kbp: KeyboardPlate) => Promise<void>) {
+        this.listeners.push({ predict, action });
     }
 }
 
