@@ -7,7 +7,12 @@ export enum KeyboardCode {
     ArrowUp = 'ArrowUp',
     Backspace = 'Backspace',
     Delete = 'Delete',
-    Enter = 'Enter'
+    Enter = 'Enter',
+    A = 'A',
+    B = 'B',
+    Z = 'Z',
+    Y = 'Y',
+    S = 'S'
 }
 export class KeyboardPlate {
     private altKey: boolean = false;

@@ -2,7 +2,6 @@ import React from "react";
 import { createPortal } from "react-dom";
 import { KeyboardCode } from "../../common/keys";
 import { Point } from "../../common/point";
-import { Page } from "../../page";
 import { SyExtensionsComponent } from "../sy.component";
 import { ReferenceSelectorData } from "./data";
 

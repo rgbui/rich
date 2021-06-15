@@ -74,9 +74,6 @@ export class PageEvent {
      */
     onKeydown(this: Page, event: KeyboardEvent) {
         this.keyboardPlate.keydown(event);
-        if (this.keyboardPlate.is(KeyboardCode.Backspace, KeyboardCode.Delete)) {
-            this.kit.explorer.onDeleteSelection();
-        }
     }
     onKeyup(this: Page, event: KeyboardEvent) {
         this.keyboardPlate.keyup(event);
