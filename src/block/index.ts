@@ -167,25 +167,35 @@ export abstract class Block extends Events {
      * 需要调成row-ele,其中col-row需要删除
      */
     async layoutCollapse() {
-        async function clearPanel(panel: Block) {
+        async function clearOneCol(panel: Block) {
+            if (panel.isRow && !panel.isPart && panel.childs.length == 1 && !panel.childs.first().isPart && panel.childs.first().isCol) {
+                var childs = panel.childs.first().childs;
+                if (childs.length > 0) {
+                    var c = panel;
+                    await childs.eachAsync(async child => {
+                        await child.insertAfter(c);
+                        await clearOneCol(child);
+                        c = child;
+                    });
+                    await panel.delete();
+                }
+            }
+        }
+        await clearOneCol(this);
+        /**
+         * 
+         * @param panel 自动删除空row,空col
+         */
+        async function clearEmptyPanel(panel: Block) {
             if (panel.childs.length == 0) {
                 if ((panel.isRow || panel.isCol) && !panel.isPart) {
                     var pa = panel.parent;
                     await panel.delete();
-                    clearPanel(pa);
-                }
-            }
-            else if (panel.isRow && panel.childs.length == 1 && panel.childs.first().isCol) {
-                var col = panel.childs.first();
-                if (col.childs.length == 0) {
-                    await col.delete()
-                }
-                else if (col.childs.length > 0) {
-
+                    await clearEmptyPanel(pa);
                 }
             }
         }
-        await clearPanel(this);
+        await clearEmptyPanel(this);
     }
     async insertBefore(to: Block) {
         await to.parent.append(this,
