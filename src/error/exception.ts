@@ -20,7 +20,11 @@ export enum ExceptionType {
      * 发生于对某个block的操作，需要先申明一个动作，然后记录一系列小的操作
      * 该错误会
      */
-    notStoreLastAction
+    notStoreLastAction,
+    /**
+     * 没在注册动作指令在历史记快照中
+     */
+    notRegisterActionDirectiveInHistorySnapshoot
 }
 /**
  * 自定义异常
