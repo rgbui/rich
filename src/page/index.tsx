@@ -20,6 +20,8 @@ import { Kit } from '../kit';
 import { Page$Extensions } from './partial/extensions';
 import { PageView } from './view';
 import { PageKit } from './interaction/kit';
+import { PageHistory } from './interaction/history';
+import { PageKeys } from './interaction/keys';
 
 export class Page extends Events {
     el: HTMLElement;
@@ -59,10 +61,8 @@ export class Page extends Events {
         this.kit = new Kit(this);
         PageKit(this.kit);
         this.snapshoot = new HistorySnapshoot(this);
-        this.snapshoot.on('history', (action) => {
-            this.emit('history', action);
-            this.emit('change');
-        });
+        PageHistory(this, this.snapshoot);
+        PageKeys(this, this.keyboardPlate);
         await this.emit('init');
     }
     cfm: ConfigurationManager;
@@ -107,6 +107,9 @@ export class Page extends Events {
     isFocus: boolean = false;
     onError(error: Error) {
         this.emit('error', error);
+    }
+    onWarn(error: string | Error) {
+        this.emit('warn', error);
     }
     render() {
         ReactDOM.render(<PageView page={this}></PageView>, (this.root = this.el.appendChild(document.createElement('div'))));
