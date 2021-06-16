@@ -187,5 +187,18 @@ export class Anchor {
         }
         return false;
     }
+    /**
+     * 判断当前的anchor是否处在@param anchor 前面
+     * @param anchor 
+     */
+    isBefore(anchor: Anchor) {
+        var pos = this.el.compareDocumentPosition(anchor.el);
+        if (pos == 4 || pos == 20) {
+            return true
+        }
+        else {
+            return false
+        }
+    }
 }
 
