@@ -90,4 +90,10 @@ export class Pattern {
         }
         this.block.page.onAddUpdate(this.block);
     }
+    setStyles(styles: Record<BlockCssName, Record<string, any>>) {
+        for (var n in styles) {
+            var name = typeof BlockCssName[n] == 'number' ? BlockCssName[n] : n;
+            this.setStyle(name, styles[n]);
+        }
+    }
 }
