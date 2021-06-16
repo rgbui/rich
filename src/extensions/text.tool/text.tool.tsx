@@ -7,7 +7,7 @@ import Mention from "../../assert/svg/mention.svg";
 import { Dragger } from "../../common/dragger";
 import { TextCommand } from "./text.command";
 import { SyExtensionsComponent } from "../sy.component";
-import { FillCss } from "../../block/pattern/css";
+import { BlockCssName, FillCss } from "../../block/pattern/css";
 
 export type TextToolStyle = {
     link: string,
@@ -81,7 +81,31 @@ export class TextTool extends SyExtensionsComponent {
         return this.dragger.isDown;
     }
     onExcute(command: TextCommand) {
-        this.emit('selectionExcuteCommand', command);
+        var font: Record<string, any> = {};
+        switch (command) {
+            case TextCommand.bold:
+                font.fontWeight = 'bold';
+                break;
+            case TextCommand.cancelBold:
+                font.fontWeight = 'normail';
+                break;
+            case TextCommand.italic:
+                font.fontStyle = 'italic';
+                break;
+            case TextCommand.cancelItalic:
+                font.fontStyle = 'normail';
+                break;
+            case TextCommand.deleteLine:
+                font.textDecoration = 'line-through';
+                break;
+            case TextCommand.underline:
+                font.textDecoration = 'underline';
+                break;
+            case TextCommand.cancelLine:
+                font.textDecoration = 'none';
+                break;
+        }
+        this.emit('setStyle', { [BlockCssName.font]: font } as any);
         this.close();
     }
     onOpenFontColor() {
@@ -98,8 +122,8 @@ export class TextTool extends SyExtensionsComponent {
     }
 }
 export interface TextTool {
-    on(name: 'selectionExcuteCommand', fn: (command: TextCommand) => void);
-    emit(name: 'selectionExcuteCommand', command: TextCommand);
+    on(name: 'setStyle', fn: (styles: Record<BlockCssName, Record<string, any>>) => void);
+    emit(name: 'setStyle', styles: Record<BlockCssName, Record<string, any>>);
     on(name: 'error', fn: (error: Error) => void);
     emit(name: 'error', error: Error);
     emit(name: 'getTextStyle'): TextToolStyle;

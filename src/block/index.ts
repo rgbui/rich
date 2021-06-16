@@ -13,6 +13,7 @@ import { Block$Seek } from "./seek";
 import { prop } from "./factory/observable";
 import { TemporaryPurpose } from "../page/partial/declare";
 import { DropDirection } from "../kit/handle/direction";
+import { Exception, ExceptionType } from "../error/exception";
 export abstract class Block extends Events {
     parent: Block;
     url: string;
@@ -396,20 +397,10 @@ export abstract class Block extends Events {
     }
     childsEl: HTMLElement;
     get visibleHeadAnchor() {
-        var anchor = this.page.kit.explorer.createAnchor();
-        anchor.block = this;
-        if (anchor.isText) {
-            anchor.at = 0;
-        }
-        return anchor;
+        return this.page.kit.explorer.createAnchor(this);
     }
     get visibleBackAnchor() {
-        var anchor = this.page.kit.explorer.createAnchor();
-        anchor.block = this;
-        if (anchor.isText) {
-            anchor.at = anchor.textContent.length;
-        }
-        return anchor;
+        return this.page.kit.explorer.createAnchor(this, -1);
     }
     get isText(): boolean {
         return this.appear == BlockAppear.text
@@ -616,13 +607,8 @@ export abstract class Block extends Events {
      * @param point 坐标（当前坐标明确是处于当前的block中）
      */
     visibleAnchor(point: Point): Anchor {
-        var part = this.visiblePoint(point);
-        var anchor = this.page.kit.explorer.createAnchor();
-        anchor.block = part;
-        if (part.isText) {
-            anchor.at = TextEle.getAt(part.textEl, point);
-        }
-        return anchor;
+        var block = this.visiblePoint(point);
+        return this.page.kit.explorer.createAnchor(block, block.isText ? TextEle.getAt(block.textEl, point) : undefined);
     }
     visiblePoint(point: Point) {
         var as = this.allVisibleBlocks;
@@ -666,7 +652,7 @@ export abstract class Block extends Events {
         return this.content;
         // return TextEle.getTextHtml(this.content)
     }
-    updateContent(content: string, partName?: string) {
+    updateContent(content: string) {
         this.content = content;
     }
     getBounds() {
@@ -698,7 +684,7 @@ export abstract class Block extends Events {
         var el = this.el;
         if (!el.classList.contains('sy-appear-text')) {
             var c: HTMLElement = el.querySelector('.sy-appear-text');
-            if (!c) throw new Error('not found appear text')
+            if (!c) throw new Exception(ExceptionType.notFoundTextEle)
             else el = c;
         }
         return el;
@@ -707,28 +693,26 @@ export abstract class Block extends Events {
         var el = this.el;
         if (!el.classList.contains('sy-appear-solid')) {
             var c: HTMLElement = el.querySelector('.sy-appear-solid');
-            if (!c) throw new Error('not found appear solid')
+            if (!c) throw new Exception(ExceptionType.notFoundSolidEle)
             else el = c;
         }
         return el;
     }
     async onInputText(value: string, at: number, end: number, action?: () => Promise<void>) {
-        var self = this;
-        self.page.snapshoot.declare(ActionDirective.onInputText);
-        self.page.snapshoot.record(OperatorDirective.updateTextReplace, {
-            blockId: this.id,
-            start: at,
-            end: end,
-            value
-        });
-        if (typeof action == 'function') await action();
-        self.page.snapshoot.store();
+        await this.page.onAction(ActionDirective.onInputText, async () => {
+            this.page.snapshoot.record(OperatorDirective.updateTextReplace, {
+                blockId: this.id,
+                start: at,
+                end: end,
+                value
+            });
+            if (typeof action == 'function') await action();
+        })
     }
     async onDeleteText(value: string, start: number, end: number, action?: () => Promise<void>) {
-        await this.page.onObserveUpdate(async () => {
+        await this.page.onAction(ActionDirective.onDeleteText, async () => {
             var block = this;
             var pa = this.page;
-            pa.snapshoot.declare(ActionDirective.onDeleteText);
             pa.snapshoot.record(OperatorDirective.updateTextDelete, {
                 blockId: block.id,
                 start,
@@ -736,8 +720,8 @@ export abstract class Block extends Events {
                 text: value
             });
             if (typeof action == 'function') await action();
-            pa.snapshoot.store();
         })
+
     }
     mounted(fn: () => void) {
         this.once('mounted', fn);
@@ -746,112 +730,20 @@ export abstract class Block extends Events {
         this.emit('mounted');
     }
     async onDelete() {
-        await this.page.onObserveUpdate(async () => {
-            this.page.snapshoot.declare(ActionDirective.onDelete);
+        await this.page.onAction(ActionDirective.onDelete, async () => {
             var pa = this.parent;
             await this.delete();
             if (pa) await pa.layoutCollapse();
-            this.page.snapshoot.store();
         })
     }
-    onUpdateProps(props: Record<string, any>, range = BlockRenderRange.none) {
-        this.page.onRememberUpdate();
-        this.page.snapshoot.declare(ActionDirective.onUpdateProps);
-        this.updateProps(props, range);
-        this.page.snapshoot.store();
-        this.page.onExcuteUpdate();
+    async onUpdateProps(props: Record<string, any>, range = BlockRenderRange.none) {
+        await this.page.onAction(ActionDirective.onUpdateProps, async () => {
+            this.updateProps(props, range);
+        })
     }
     get isTextContent() {
         return false;
     }
-    /**
-     * 文本依据选区裂变创建新的block
-     * 返回当前选区的block
-     */
-    // async onFissionCreateBlock(selection: BlockSelection) {
-    //     var isText = this.isTextContent;
-    //     var pattern = await this.pattern.cloneData();
-    //     var selectionBeforeContent = '', selectionAfterContent = '', selectionContent = '';
-    //     var content = this.content;
-    //     var selBlock: Block;
-    //     if (this == selection.start.block && this == selection.end.block) {
-    //         //说明block包含选区
-    //         selectionBeforeContent = content.substring(0, selection.start.at);
-    //         selectionContent = content.substring(selection.start.at, selection.end.at);
-    //         selectionAfterContent = content.substring(selection.end.at);
-    //     }
-    //     else if (this == selection.start.block) {
-    //         //block后半部分是选区
-    //         selectionBeforeContent = content.substring(0, selection.start.at);
-    //         selectionContent = content.substring(selection.start.at);
-    //     }
-    //     else if (this == selection.end.block) {
-    //         //block前半部分是选区
-    //         selectionAfterContent = content.substring(selection.end.at);
-    //         selectionContent = content.substring(0, selection.end.at);
-    //     }
-
-    //     if (isText) {
-    //         if (selectionBeforeContent && selectionAfterContent) {
-    //             //包含选区
-    //             this.updateContent(selectionBeforeContent);
-    //             selBlock = await this.page.createBlock('/text',
-    //                 { content: selectionContent, pattern: pattern },
-    //                 this.parent,
-    //                 this.at + 1);
-    //             await this.page.createBlock('/text',
-    //                 { content: selectionAfterContent, pattern: pattern },
-    //                 this.parent,
-    //                 this.at + 2);
-    //         }
-    //         else if (selectionBeforeContent) {
-    //             //后半部分是选区
-    //             this.updateContent(selectionBeforeContent);
-    //             selBlock = await this.page.createBlock('/text',
-    //                 { content: selectionContent, pattern: pattern },
-    //                 this.parent,
-    //                 this.at + 1);
-    //         }
-    //         else if (selectionAfterContent) {
-    //             //前半部分是选区
-    //             this.updateContent(selectionAfterContent);
-    //             selBlock = await this.page.createBlock('/text',
-    //                 { content: selectionContent, pattern: pattern },
-    //                 this.parent,
-    //                 this.at);
-    //         }
-    //         else {
-    //             selBlock = this;
-    //         }
-    //     }
-    //     else {
-    //         if (!selectionBeforeContent && !selectionAfterContent) {
-    //             selBlock = this;
-    //         }
-    //         else {
-    //             if (selectionBeforeContent) {
-    //                 await this.page.createBlock('/text',
-    //                     { content: selectionBeforeContent, pattern: pattern },
-    //                     this,
-    //                     this.childs.length);
-    //             }
-    //             if (selectionContent) {
-    //                 selBlock = await this.page.createBlock('/text',
-    //                     { content: selectionContent, pattern: pattern },
-    //                     this,
-    //                     this.childs.length);
-    //                 console.log(selBlock, 'selblock...');
-    //             }
-    //             if (selectionAfterContent) {
-    //                 await this.page.createBlock('/text',
-    //                     { content: selectionAfterContent, pattern: pattern },
-    //                     this,
-    //                     this.childs.length);
-    //             }
-    //         }
-    //     }
-    //     return selBlock;
-    // }
     focusAnchor(anchor: Anchor) {
         if (this.isText && this.isEmpty) {
             this.textEl.classList.add('empty');

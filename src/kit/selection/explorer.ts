@@ -1,7 +1,8 @@
 import { Kit } from "..";
 import { Block } from "../../block";
+import { BlockCssName } from "../../block/pattern/css";
 import { KeyboardCode } from "../../common/keys";
-import { TextCommand } from "../../extensions/text.tool/text.command";
+import { Exception, ExceptionType } from "../../error/exception";
 import { ActionDirective } from "../../history/declare";
 import { Events } from "../../util/events";
 import { Anchor } from "./anchor";
@@ -10,7 +11,7 @@ export class SelectionExplorer extends Events {
      * 这个和选区有区别，选区只是争对单行的block进行文字进行操作
      * 这个是当前选择的block，最起码一个以上的
      */
-    private selectedBlocks: Block[] = [];
+    private currentSelectedBlocks: Block[] = [];
     private start: Anchor;
     private end: Anchor;
     public kit: Kit;
@@ -23,7 +24,7 @@ export class SelectionExplorer extends Events {
     }
     activeAnchor: Anchor;
     setActiveAnchor(anchor: Anchor) {
-         this.kit.textInput.onWillInput(anchor);
+        this.kit.textInput.onWillInput(anchor);
         if (this.activeAnchor !== anchor) {
             if (this.activeAnchor) this.page.onBlurAnchor(this.activeAnchor);
         }
@@ -52,7 +53,7 @@ export class SelectionExplorer extends Events {
             const selection = window.getSelection();
             if (selection.rangeCount > 0) selection.removeAllRanges();
             var currentEls = Array.from(this.kit.page.el.querySelectorAll(".sy-block-selected"));
-            this.selectedBlocks.each(sel => {
+            this.currentSelectedBlocks.each(sel => {
                 currentEls.remove(sel.el);
                 sel.el.classList.add('sy-block-selected');
             });
@@ -61,8 +62,15 @@ export class SelectionExplorer extends Events {
             })
         }
     }
-    createAnchor() {
-        return new Anchor(this);
+    createAnchor(block: Block, at?: number) {
+        var anchor = new Anchor(this);
+        if (typeof at == 'number') {
+            if (at == -1) anchor.at = block.content.length;
+            else anchor.at = at;
+        }
+        else if (block.isText) anchor.at = 0;
+
+        return anchor;
     }
     onFocusAnchor(anchor: Anchor) {
         if (this.end) { this.end.dispose(); delete this.end; }
@@ -70,18 +78,18 @@ export class SelectionExplorer extends Events {
             anchor.acceptView(this.start);
         this.start = anchor;
         this.setActiveAnchor(this.start);
-        this.selectedBlocks = [];
+        this.currentSelectedBlocks = [];
         this.renderSelection();
     }
     onShiftFocusAnchor(anchor: Anchor) {
         if (this.end) anchor.acceptView(this.end);
         this.end = anchor;
         this.setActiveAnchor(this.end);
-        this.selectedBlocks = [];
+        this.currentSelectedBlocks = [];
         this.renderSelection();
     }
     onSelectBlocks(blocks: Block[]) {
-        this.selectedBlocks = blocks;
+        this.currentSelectedBlocks = blocks;
         if (this.start)
             this.start.dispose()
         if (this.end)
@@ -173,87 +181,54 @@ export class SelectionExplorer extends Events {
 
     }
     /**
-     * 对选区执行一些文本上的命令
-     * @param command 
+     * 对选区执行一些样式
      */
-    async onSelectionExcuteCommand(command: TextCommand) {
-        await this.page.snapshoot.sync(ActionDirective.onUpdatePattern, async () => {
-            await this.page.onObserveUpdate(async () => {
-                var style: Record<string, any> = {};
-                switch (command) {
-                    case TextCommand.bold:
-                        style.fontWeight = 'bold';
-                        break;
-                    case TextCommand.cancelBold:
-                        style.fontWeight = 'normail';
-                        break;
-                    case TextCommand.italic:
-                        style.fontStyle = 'italic';
-                        break;
-                    case TextCommand.cancelItalic:
-                        style.fontStyle = 'normail';
-                        break;
-                    case TextCommand.deleteLine:
-                        style.textDecoration = 'line-through';
-                        break;
-                    case TextCommand.underline:
-                        style.textDecoration = 'underline';
-                        break;
-                    case TextCommand.cancelLine:
-                        style.textDecoration = 'none';
-                        break;
+    async onSelectionSetPattern(styles: Record<BlockCssName, Record<string, any>>) {
+        if (!this.hasTextRange) throw new Exception(ExceptionType.notTextSelection)
+        await this.page.onAction(ActionDirective.onUpdatePattern, async () => {
+            var bs = this.selectedBlocks;
+            var newStart: Block, newEnd: Block;
+            await bs.eachAsync(async block => {
+                var fissContent = this.page.fissionBlockBySelection(block, this.start, this.end);
+                var pattern = await block.pattern.cloneData();
+                var at = block.at;
+                var pa = block.parent;
+                var url = block.url;
+                if (!block.isTextContent) {
+                    at = -1;
+                    pa = block;
+                    url = '/text';
                 }
-                // await this.selections.eachAsync(async sel => {
-                //     var bs = sel.referenceBlocks;
-                //     var newStart: Block, newEnd: Block;
-                //     await bs.eachAsync(async b => {
-                //         if (b.isText) {
-                //             if (b == sel.start.block || b == sel.end.block) {
-                //                 var selBlock = await b.onFissionCreateBlock(sel);
-                //                 selBlock.pattern.setStyle(BlockCssName.font, {
-                //                     ...style
-                //                 });
-                //                 if (b == sel.start.block && b == sel.end.block) {
-                //                     newStart = selBlock;
-                //                     newEnd = selBlock;
-                //                 }
-                //                 else if (b == sel.start.block) {
-                //                     newStart = selBlock;
-                //                 }
-                //                 else if (b == sel.end.block) {
-                //                     newEnd = selBlock;
-                //                 }
-                //             }
-                //             else {
-                //                 b.pattern.setStyle(BlockCssName.font, {
-                //                     ...style
-                //                 });
-                //             }
-                //         }
-                //     });
-                //     if (newStart && newEnd) {
-                //         sel.dispose();
-                //         var newStartAnchor = this.createAnchor();
-                //         newStartAnchor.block = newStart;
-                //         newStartAnchor.at = 0;
-                //         var newEndAnchor = this.createAnchor();
-                //         newEndAnchor.block = newEnd;
-                //         newEndAnchor.at = newEnd.content.length;
-                //         sel.start = newStartAnchor;
-                //         sel.end = newEndAnchor;
-                //     }
-                // });
-            }, () => {
-                this.renderSelection();
-            })
-        })
+                if (fissContent.before)
+                    await (this.page.createBlock(url, { content: fissContent.before, pattern }, pa, (at += 1)))
+                if (fissContent.current) {
+                    var current = await (this.page.createBlock(url, { content: fissContent.current, pattern }, pa, (at += 1)));
+                    current.pattern.setStyles(styles);
+                    if (block == this.start.block) newStart = current;
+                    else if (block == this.end.block) newEnd = current;
+                }
+                if (fissContent.after)
+                    await (this.page.createBlock(url, { content: fissContent.after, pattern }, pa, (at += 1)))
+            });
+            if (newStart && newEnd) {
+                var newStartAnchor = this.createAnchor(newStart);
+                newStartAnchor.acceptView(this.start);
+                this.start = newStartAnchor;
+                var newEndAnchor = this.createAnchor(newEnd, -1);
+                newEndAnchor.acceptView(this.end);
+                this.end = newEndAnchor;
+                this.page.onUpdated(async () => {
+                    this.renderSelection();
+                });
+            }
+        });
     }
     /**
      * 获取选区选择的block
      * @returns 
      */
-    getDragBlocks() {
-        if (this.selectedBlocks.length > 0) return this.selectedBlocks.map(s => s);
+    get selectedBlocks() {
+        if (this.currentSelectedBlocks.length > 0) return this.currentSelectedBlocks.map(s => s);
         else {
             if (this.start && !this.end) return [this.start.block.closest(x => !x.isLine)]
             else if (this.start && this.end) {
@@ -262,10 +237,10 @@ export class SelectionExplorer extends Events {
         }
     }
     get hasSelectionRange() {
-        return this.start && this.end || this.selectedBlocks.length > 0
+        return this.start && this.end || this.currentSelectedBlocks.length > 0
     }
     get hasTextRange() {
-        return this.start && this.end && this.selectedBlocks.length == 0 && this.start.block.isText && this.end.block.isText
+        return this.start && this.end && this.currentSelectedBlocks.length == 0 && this.start.block.isText && this.end.block.isText
     }
     get isOnlyAnchor() {
         return this.start && !this.end;
