@@ -15,6 +15,7 @@ export enum ExceptionType {
      * 2. 在编辑中由于某种原因，当前的text没有找到
      */
     notFoundTextEle,
+    notFoundSolidEle,
     /**
      * 没有保存上次的申明操作
      * 发生于对某个block的操作，需要先申明一个动作，然后记录一系列小的操作
@@ -24,7 +25,8 @@ export enum ExceptionType {
     /**
      * 没在注册动作指令在历史记快照中
      */
-    notRegisterActionDirectiveInHistorySnapshoot
+    notRegisterActionDirectiveInHistorySnapshoot,
+    notTextSelection
 }
 /**
  * 自定义异常
