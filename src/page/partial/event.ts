@@ -1,7 +1,6 @@
 import ReactDOM from "react-dom";
 import { Page } from "..";
 import { Block } from "../../block";
-import { KeyboardCode } from "../../common/keys";
 import { ActionDirective } from "../../history/declare";
 import { DropDirection } from "../../kit/handle/direction";
 import { Anchor } from "../../kit/selection/anchor";
@@ -77,38 +76,49 @@ export class PageEvent {
         this.keyboardPlate.keyup(event);
     }
     private willUpdateBlocks: Block[];
-    onRememberUpdate() {
+    private updatedFns: (() => Promise<void>)[] = [];
+    onReadyUpdate() {
         this.willUpdateBlocks = [];
+        this.updatedFns = [];
     }
     onAddUpdate(block: Block) {
         var pa = this.willUpdateBlocks.find(g => g.contains(block));
         if (!pa) this.willUpdateBlocks.push(block);
     }
     /**
+     * 绑定更新后触发的事件
+     * @param fn 
+     */
+    onUpdated(fn: () => Promise<void>) {
+        this.updatedFns.push(fn);
+    }
+    /**
      * 触发需要更新的view,
      * 这个可以手动触发多次
-     * @param finishCompleted 
      */
-    onExcuteUpdate(finishCompleted?: () => void) {
+    onExcuteUpdate() {
         var ups = this.willUpdateBlocks.map(c => c);
         this.willUpdateBlocks = [];
         var len = ups.length;
         var count = 0;
+        var self = this;
+        var updated = async () => {
+            await self.updatedFns.eachAsync(async g => await g());
+            self.updatedFns = [];
+        }
         ups.each(up => {
             up.view.forceUpdate(() => {
                 count += 1;
-                if (count === len && typeof finishCompleted == 'function') {
-                    finishCompleted()
-                }
+                if (count === len) updated()
             });
         });
     }
-    async onObserveUpdate(fn: () => Promise<void>, finishedCompletedUpdate?: () => void) {
-        this.onRememberUpdate();
+    async onObserveUpdate(fn: () => Promise<void>) {
+        this.onReadyUpdate();
         if (typeof fn == 'function') {
             await fn();
         }
-        this.onExcuteUpdate(finishedCompletedUpdate);
+        this.onExcuteUpdate();
     }
     async onAction(this: Page, directive: ActionDirective | string, fn: () => Promise<void>) {
         this.snapshoot.sync(directive, async () => {
