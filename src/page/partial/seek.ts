@@ -103,8 +103,8 @@ export class Page$Seek {
             end = to;
         }
         else {
-            start = from;
-            end = to;
+            start = to;
+            end = from;
         }
         var rs = start.block.nextFindAll(g => true, true, c => c == end.block);
         bs.addRange(rs);
@@ -182,9 +182,8 @@ export class Page$Seek {
     textAnchorIsAdjoin(from: Anchor, to: Anchor) {
         var ob = from.el.getBoundingClientRect();
         var nb = to.el.getBoundingClientRect();
-        if (Math.abs(nb.left + nb.width - ob.left) < 10) {
+        if (Math.abs(nb.left + nb.width - ob.left) < 10)
             return true;
-        }
         else return false;
     }
     /**
@@ -196,5 +195,43 @@ export class Page$Seek {
      */
     blockIsAdjoinRow(current: Block, prev: Block) {
 
+    }
+    /**
+     * 文本依据选区裂变返回三块内容块
+     * 返回三块内容块
+     * @param from 
+     * @param to 
+     * @param styles 
+     * @returns {
+          before: string;
+          current: string;
+          after: string;
+        }
+    */
+    fissionBlockBySelection(block: Block, from: Anchor, to: Anchor) {
+        if (!from.isBefore(to)) [to, from] = [from, to];
+        var selectionBeforeContent = '', selectionAfterContent = '', selectionContent = '';
+        var content = block.content;
+        if (block == from.block && block == to.block) {
+            //说明block包含选区
+            selectionBeforeContent = content.substring(0, from.at);
+            selectionContent = content.substring(from.at, to.at);
+            selectionAfterContent = content.substring(to.at);
+        }
+        else if (block == from.block) {
+            //block后半部分是选区
+            selectionBeforeContent = content.substring(0, from.at);
+            selectionContent = content.substring(from.at);
+        }
+        else if (block == to.block) {
+            //block前半部分是选区
+            selectionAfterContent = content.substring(to.at);
+            selectionContent = content.substring(0, to.at);
+        }
+        return {
+            before: selectionBeforeContent,
+            current: selectionContent,
+            after: selectionAfterContent
+        }
     }
 }
