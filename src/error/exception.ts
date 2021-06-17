@@ -26,7 +26,9 @@ export enum ExceptionType {
      * 没在注册动作指令在历史记快照中
      */
     notRegisterActionDirectiveInHistorySnapshoot,
-    notTextSelection
+    notTextSelection,
+    notFoundBlockCssName,
+    overlayCssNameNotEqual
 }
 /**
  * 自定义异常
@@ -40,9 +42,9 @@ export class Exception extends Error {
 }
 
 /**
- * 只是一个警告，
+ * 一个警告，
  * 注意该警告只是为了提示，仍然执行后续动作，
- * 但这并不是说当前就没有错误
+ * 但这并不是说当前就没有错误,只是该错误不影响后续的代码执行
  * 一些无关紧要的警告，则调用 console.warn 即可
  */
 export class Warn extends Error {
