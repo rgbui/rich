@@ -4,7 +4,7 @@ import { Point, Rect } from "../common/point";
 import { Page } from "../page";
 import { Anchor } from "../kit/selection/anchor";
 import { BlockFactory } from "./factory/block.factory";
-import { BlockAppear, BlockDisplay, BlockRenderRange, Locate } from "./base/enum";
+import { BlockAppear, BlockDisplay, BlockRenderRange } from "./base/enum";
 import { Pattern } from "./pattern/index";
 import { BaseComponent } from "./base/component";
 import { TextEle } from "../common/text.ele";
@@ -14,6 +14,7 @@ import { prop } from "./factory/observable";
 import { TemporaryPurpose } from "../page/partial/declare";
 import { DropDirection } from "../kit/handle/direction";
 import { Exception, ExceptionType } from "../error/exception";
+import { BlockUrlConstant } from "./constant";
 export abstract class Block extends Events {
     parent: Block;
     url: string;
@@ -243,7 +244,7 @@ export abstract class Block extends Events {
                 var increse: number = 0;
                 if (direction == DropDirection.bottom) increse = 1;
                 if (to.parent && to.parent.isRow && to.parent.parent && to.parent.parent.isCol) {
-                    var row = await this.page.createBlock('/row', {},
+                    var row = await this.page.createBlock(BlockUrlConstant.Row, {},
                         to.parent.parent,
                         to.parent.at + increse);
                     row.mounted(async () => {
@@ -255,8 +256,8 @@ export abstract class Block extends Events {
                     this.page.onExcuteUpdate();
                 }
                 else {
-                    var col = await this.page.createBlock('/col', {
-                        blocks: { childs: [{ url: '/row' }, { url: '/row' }] }
+                    var col = await this.page.createBlock(BlockUrlConstant.Col, {
+                        blocks: { childs: [{ url: BlockUrlConstant.Row }, { url: BlockUrlConstant.Row }] }
                     }, to.parent, to.parent.at + increse);
                     col.mounted(async () => {
                         await col.childs.first().append(to);
@@ -286,7 +287,7 @@ export abstract class Block extends Events {
                 break;
         }
     }
-    updateProps(props: Record<string, any>, range = BlockRenderRange.none) {
+    updateProps(props: Record<string, any>, range = BlockRenderRange.self) {
         var oldValue: Record<string, any> = {};
         var newValue: Record<string, any> = {};
         for (let prop in props) {
@@ -297,10 +298,16 @@ export abstract class Block extends Events {
             }
         }
         if (Object.keys(oldValue).length > 0) {
-            if (range == BlockRenderRange.self)
-                this.page.onAddUpdate(this);
-            else if (range == BlockRenderRange.parent)
-                this.page.onAddUpdate(this.parent)
+            switch (range) {
+                case BlockRenderRange.self:
+                    this.page.onAddUpdate(this);
+                    break;
+                case BlockRenderRange.parent:
+                    this.page.onAddUpdate(this.parent)
+                    break;
+                case BlockRenderRange.none:
+                    break;
+            }
             this.page.snapshoot.record(OperatorDirective.updateProp, {
                 blockId: this.id,
                 old: oldValue,
@@ -605,16 +612,35 @@ export abstract class Block extends Events {
             return ps.findAll(g => g.dis.y == 0).findMin(g => g.dis.x).part
         return ps.findMin(g => g.dis.y).part
     }
+    /**
+     * 创建block，有两种方式
+     * 1. 是在当前的row下面添加新的row-block
+     * 2. 如果当前的block有相邻的元素，那么可能是 row->[block,col{block...}]
+     * @param url 
+     * @param data 
+     * @returns 
+     */
     async visibleDownCreateBlock(url: string, data: Record<string, any> = {}) {
         var row = this.closest(x => x.isRow);
-        var newBlock = await this.page.createBlock('/row', {
-            blocks: {
-                childs: [
-                    { url, ...data }
-                ]
-            }
-        }, row.parent, row.at + 1);
-        return newBlock;
+        if (row.childs.length > 1 && this.parent === row) {
+            var col = await this.page.createBlock(BlockUrlConstant.Col, {
+                blocks: {
+                    childs: [{ url: BlockUrlConstant.Row }, { url: BlockUrlConstant.Row }]
+                }
+            }, this.parent, this.at + 1);
+            col.childs.first().append(this);
+            return await this.page.createBlock(url, data, col.childs.last());
+        }
+        else {
+            var newRow = await this.page.createBlock(BlockUrlConstant.Row, {
+                blocks: {
+                    childs: [
+                        { url, ...data }
+                    ]
+                }
+            }, row.parent, row.at + 1);
+            return newRow.childs.first();
+        }
     }
     @prop()
     content: string = '';
@@ -630,9 +656,6 @@ export abstract class Block extends Events {
     get htmlContent() {
         return this.content;
         // return TextEle.getTextHtml(this.content)
-    }
-    updateContent(content: string) {
-        this.content = content;
     }
     getBounds() {
         return TextEle.getBounds(this.el);
