@@ -28,13 +28,15 @@ export enum ExceptionType {
     notRegisterActionDirectiveInHistorySnapshoot,
     notTextSelection,
     notFoundBlockCssName,
-    overlayCssNameNotEqual
+    overlayCssNameNotEqual,
+    notUser
 }
 /**
  * 自定义异常
  */
 export class Exception extends Error {
-    constructor(type: ExceptionType, message?: string) {
+    constructor(type: ExceptionType, message?: string)
+    {
         super();
         this.name = ExceptionType[type];
         this.message = message;
