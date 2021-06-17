@@ -1,5 +1,6 @@
 import { Kit } from "..";
 import { Block } from "../../block";
+import { BlockUrlConstant } from "../../block/constant";
 import { BlockCssName } from "../../block/pattern/css";
 import { KeyboardCode } from "../../common/keys";
 import { Exception, ExceptionType } from "../../error/exception";
@@ -74,8 +75,7 @@ export class SelectionExplorer extends Events {
     }
     onFocusAnchor(anchor: Anchor) {
         if (this.end) { this.end.dispose(); delete this.end; }
-        if (this.start)
-            anchor.acceptView(this.start);
+        if (this.start) anchor.acceptView(this.start);
         this.start = anchor;
         this.setActiveAnchor(this.start);
         this.currentSelectedBlocks = [];
@@ -102,19 +102,57 @@ export class SelectionExplorer extends Events {
      * 取消选区
      */
     onCancelSelection() {
-
+        if (this.currentSelectedBlocks.length > 0) {
+            this.currentSelectedBlocks = [];
+        }
+        else {
+            if (this.start && this.start != this.activeAnchor)
+                this.start.dispose()
+            if (this.end && this.end != this.activeAnchor)
+                this.end.dispose()
+        }
+        this.renderSelection();
     }
     /**
      * 删除选区
      */
-    onDeleteSelection() {
-
+    async onDeleteSelection() {
+        await this.page.onAction(ActionDirective.onDeleteSelection, async () => {
+            if (this.currentSelectedBlocks.length > 0) {
+                await this.currentSelectedBlocks.eachAsync(async block => {
+                    await block.delete();
+                });
+            }
+            else {
+                var blocks = this.page.searchBlocksBetweenAnchor(this.start, this.end);
+                await blocks.eachAsync(async block => {
+                    if (block == this.start.block) {
+                        var content = this.start.isBefore(this.end) ? block.content.slice(0, this.start.at) : block.content.slice(this.start.at);
+                        block.updateProps({ content });
+                    }
+                    else if (block == this.end.block) {
+                        var content = this.end.isBefore(this.start) ? block.content.slice(0, this.end.at) : block.content.slice(this.end.at);
+                        block.updateProps({ content });
+                    }
+                    else {
+                        await block.delete();
+                    }
+                })
+            }
+        })
     }
     /**
-     * 删除光标
+     * 回退光标，删除一些类似于图片这样的block
      */
-    onDeleteAnchor() {
-
+    async onBackspaceSolidAnchor() {
+        if (!this.activeAnchor.isText) {
+            await this.page.onAction(ActionDirective.onDelete, async () => {
+                var block = this.activeAnchor.block;
+                var newAnchor = this.activeAnchor.block.visiblePrevAnchor;
+                this.onFocusAnchor(newAnchor);
+                await block.delete();
+            });
+        }
     }
     /**
      * 光标移动
@@ -126,9 +164,17 @@ export class SelectionExplorer extends Events {
         if (anchor) {
             var newAnchor: Anchor;
             if (anchor.isText) {
-                if (arrow == KeyboardCode.ArrowLeft && !anchor.isStart) { anchor.at -= 1; anchor.visible(); return; }
+                if (arrow == KeyboardCode.ArrowLeft && !anchor.isStart) {
+                    anchor.at -= 1;
+                    anchor.visible();
+                    return;
+                }
                 else if (arrow == KeyboardCode.ArrowLeft && anchor.isStart) newAnchor = anchor.block.visiblePrevAnchor;
-                else if (arrow == KeyboardCode.ArrowRight && !anchor.isEnd) { anchor.at += 1; anchor.visible(); return; }
+                else if (arrow == KeyboardCode.ArrowRight && !anchor.isEnd) {
+                    anchor.at += 1;
+                    anchor.visible();
+                    return;
+                }
                 else if (arrow == KeyboardCode.ArrowRight && anchor.isEnd)
                     newAnchor = anchor.block.visibleNextAnchor;
                 else if (arrow == KeyboardCode.ArrowDown)
@@ -142,7 +188,6 @@ export class SelectionExplorer extends Events {
                 }
                 else if (arrow == KeyboardCode.ArrowRight) {
                     newAnchor = anchor.block.visibleNextAnchor;
-                    console.log(newAnchor);
                 }
                 else if (arrow == KeyboardCode.ArrowDown) {
                     newAnchor = anchor.block.visibleDownAnchor(anchor);
@@ -157,15 +202,11 @@ export class SelectionExplorer extends Events {
                  * 这样就不会在视觉上发现光标在某个地方有停留了
                  */
                 if (anchor.isText && newAnchor.isText && (arrow == KeyboardCode.ArrowLeft || arrow == KeyboardCode.ArrowRight)) {
-                    var ob = anchor.textEl.getBoundingClientRect();
-                    var nb = newAnchor.textEl.getBoundingClientRect();
-                    if (arrow == KeyboardCode.ArrowRight) {
-                        if (Math.abs(ob.left + ob.width - nb.left) < 10) {
+                    if (this.page.textAnchorIsAdjoin(anchor, newAnchor)) {
+                        if (arrow == KeyboardCode.ArrowRight) {
                             newAnchor.at += 1;
                         }
-                    }
-                    else if (arrow == KeyboardCode.ArrowLeft) {
-                        if (Math.abs(nb.left + nb.width - ob.left) < 10) {
+                        else if (arrow == KeyboardCode.ArrowLeft) {
                             newAnchor.at -= 1;
                         }
                     }
@@ -177,8 +218,13 @@ export class SelectionExplorer extends Events {
     /**
      * 换行，有的创建block
      */
-    onEnter() {
-
+    async onEnter() {
+        await this.page.onAction(ActionDirective.onCreateBlockByEnter, async () => {
+            var newBlock = await this.activeAnchor.block.visibleDownCreateBlock(BlockUrlConstant.TextSpan);
+            newBlock.mounted(() => {
+                this.onFocusAnchor(newBlock.visibleHeadAnchor);
+            });
+        })
     }
     /**
      * 对选区执行一些样式
@@ -197,7 +243,7 @@ export class SelectionExplorer extends Events {
                 if (!block.isTextContent) {
                     at = -1;
                     pa = block;
-                    url = '/text';
+                    url = BlockUrlConstant.Text;
                 }
                 if (fissContent.before)
                     await (this.page.createBlock(url, { content: fissContent.before, pattern }, pa, (at += 1)))
