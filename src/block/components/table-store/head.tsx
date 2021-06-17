@@ -1,11 +1,10 @@
 import { Block } from "../..";
 import { BaseComponent } from "../../base/component";
 import { BlockAppear, BlockDisplay } from "../../base/enum";
-import { prop, url, view } from "../../factory/observable";
+import { url, view } from "../../factory/observable";
 import React from "react";
-import { ChildsArea, TextArea } from "../../base/appear";
+import { ChildsArea } from "../../base/appear";
 import { TableStore } from "./table";
-import { TextEle } from "../../../common/text.ele";
 import plus from "../../../assert/svg/plus.svg";
 import { Icon } from "../../../component/icon";
 import { BlockFactory } from "../../factory/block.factory";

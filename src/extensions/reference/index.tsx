@@ -75,8 +75,10 @@ export class ReferenceSelector extends SyExtensionsComponent {
         return null;
     }
     close() {
-        this.visible = false;
-        this.forceUpdate();
+        if (this.visible == true) {
+            this.visible = false;
+            this.forceUpdate();
+        }
     }
     /**
      * 向上选择内容

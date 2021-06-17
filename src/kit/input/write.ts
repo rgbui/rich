@@ -50,7 +50,7 @@ export class TextInput$Write {
                     if (this.explorer.activeAnchor.isText) {
                         if (!this.textarea.value) return this.onInputDeleteText();
                     }
-                    else return this.kit.explorer.onDeleteAnchor()
+                    else return this.kit.explorer.onBackspaceSolidAnchor()
                     break;
             }
         }
@@ -180,11 +180,7 @@ export class TextInput$Write {
         this.willInputStore(block, value, at, true, async () => {
             var newBlock = await block.visibleDownCreateBlock(blockData.url);
             newBlock.mounted(() => {
-                var contentBlock = newBlock.find(g => !g.isLayout);
-                if (contentBlock) {
-                    var newAnchor = contentBlock.visibleHeadAnchor;
-                    this.explorer.onFocusAnchor(newAnchor);
-                }
+                this.explorer.onFocusAnchor(newBlock.visibleHeadAnchor);
             });
         });
     }

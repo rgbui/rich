@@ -1,6 +1,6 @@
 import { BaseComponent } from "../base/component";
 import { Content } from "../base/common/content";
-import { observable, prop, url, view } from "../factory/observable";
+import {  prop, url, view } from "../factory/observable";
 import React from 'react';
 import { BlockAppear } from "../base/enum";
 import { SolidArea } from "../base/appear";

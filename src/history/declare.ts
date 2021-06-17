@@ -11,7 +11,8 @@ export enum ActionDirective {
     onUpdatePattern,
     onBatchDeleteBlocks,
     onCreateBlockByEnter,
-    onBatchTurn
+    onBatchTurn,
+    onDeleteSelection
 }
 
 export enum OperatorDirective {

@@ -3,7 +3,7 @@ import { BaseComponent } from "../base/component";
 import React, { ChangeEvent } from 'react';
 import { TextSpan } from "./textspan";
 
-import { observable, prop, url, view } from "../factory/observable";
+import { prop, url, view } from "../factory/observable";
 import { ChildsArea, TextArea } from "../base/appear";
 import { BlockCssName, FontCss } from "../pattern/css";
 import { CssSelectorType } from "../pattern/type";
@@ -19,7 +19,6 @@ export class ToDo extends TextSpan {
     }
     @prop()
     checked: boolean = false;
-    @observable('onChange')
     onChange(event: Event) {
         var input = event.target as HTMLInputElement;
         this.onUpdateProps({ checked: input.checked }, BlockRenderRange.self);

@@ -121,7 +121,7 @@ export class PageEvent {
         this.onExcuteUpdate();
     }
     async onAction(this: Page, directive: ActionDirective | string, fn: () => Promise<void>) {
-        this.snapshoot.sync(directive, async () => {
+        await this.snapshoot.sync(directive, async () => {
             await this.onObserveUpdate(async () => {
                 if (typeof fn == 'function') {
                     try {
