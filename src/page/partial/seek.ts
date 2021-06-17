@@ -1,8 +1,10 @@
 
 import { Page } from "..";
 import { Block } from "../../block";
+import { BlockCssName } from "../../block/pattern/css";
 import { dom } from "../../common/dom";
 import { Point, Rect } from "../../common/point";
+import { TextToolStyle } from "../../extensions/text.tool/text.tool";
 import { DropDirection } from "../../kit/handle/direction";
 import { Anchor } from "../../kit/selection/anchor";
 
@@ -233,5 +235,27 @@ export class Page$Seek {
             current: selectionContent,
             after: selectionAfterContent
         }
+    }
+    pickBlocksTextStyle(blocks: Block[]) {
+        var textStyle: TextToolStyle = {} as any;
+        textStyle.italic = true;
+        textStyle.bold = true;
+        textStyle.underline = true;
+        textStyle.deleteLine = true;
+        textStyle.code = true;
+        textStyle.equation = true;
+        var rowBlock = blocks.first().closest(x => !x.isLine);
+        textStyle.blockUrl = rowBlock.url;
+        blocks.each(bl => {
+            let font = bl.pattern.css(BlockCssName.font);
+            if (font.fontStyle != 'italic') textStyle.italic = false;
+            if (font.fontWeight != 500 && font.fontWeight != 'bold') textStyle.bold = false;
+            if (font.textDecoration != 'underline') textStyle.underline = false;
+            if (font.textDecoration != 'line-through') textStyle.deleteLine = false;
+            if (!textStyle.color) textStyle.color = font.color;
+            if (bl.url != '/code') textStyle.code = false;
+            if (bl.url != '/equation') textStyle.equation = false;
+        });
+        return textStyle;
     }
 }

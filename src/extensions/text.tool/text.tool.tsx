@@ -12,9 +12,10 @@ import { BlockCssName, FillCss } from "../../block/pattern/css";
 export type TextToolStyle = {
     link: string,
     blockUrl: string,
-    bold: number,
+    bold: boolean,
     italic: boolean,
-    textDecoration: string,
+    underline: boolean,
+    deleteLine: boolean,
     code: boolean,
     equation: boolean,
     color: string,
@@ -56,12 +57,12 @@ export class TextTool extends SyExtensionsComponent {
                     <div className='sy-tool-text-menu-item sy-tool-text-menu-devide' onMouseDown={e => this.onOpenBlockSelector()}><span>Text</span><Icon icon='arrow-down:sy'></Icon></div>
                     <div className='sy-tool-text-menu-item sy-tool-text-menu-devide' onMouseDown={e => this.onOpenLink()}><Icon icon='link:sy'></Icon><Icon icon='arrow-down:sy'></Icon></div>
                     <div className='sy-tool-text-menu-item sy-tool-text-menu-devide' onMouseDown={e => this.onOpenComment()}><Icon icon='comment:sy'></Icon></div>
-                    <div className='sy-tool-text-menu-item' onMouseDown={e => this.onExcute(TextCommand.bold)}><Icon icon='bold:sy'></Icon></div>
-                    <div className='sy-tool-text-menu-item' onMouseDown={e => this.onExcute(TextCommand.italic)}><Icon icon='italic:sy'></Icon></div>
-                    <div className='sy-tool-text-menu-item' onMouseDown={e => this.onExcute(TextCommand.underline)}><Icon icon='underline:sy'></Icon></div>
-                    <div className='sy-tool-text-menu-item' onMouseDown={e => this.onExcute(TextCommand.deleteLine)}><Icon icon='delete-line:sy'></Icon></div>
-                    <div className='sy-tool-text-menu-item' onMouseDown={e => this.onExcute(TextCommand.code)}><Icon icon='code:sy'></Icon></div>
-                    <div className='sy-tool-text-menu-item' onMouseDown={e => this.onExcute(TextCommand.equation)}><Icon icon={Equation}></Icon></div>
+                    <div className={'sy-tool-text-menu-item' + (this.textStyle.bold == true ? " hover" : "")} onMouseDown={e => this.onExcute(TextCommand.bold)}><Icon icon='bold:sy'></Icon></div>
+                    <div className={'sy-tool-text-menu-item' + (this.textStyle.italic == true ? " hover" : "")} onMouseDown={e => this.onExcute(TextCommand.italic)}><Icon icon='italic:sy'></Icon></div>
+                    <div className={'sy-tool-text-menu-item' + (this.textStyle.underline == true ? " hover" : "")} onMouseDown={e => this.onExcute(TextCommand.underline)}><Icon icon='underline:sy'></Icon></div>
+                    <div className={'sy-tool-text-menu-item' + (this.textStyle.deleteLine == true ? " hover" : "")} onMouseDown={e => this.onExcute(TextCommand.deleteLine)}><Icon icon='delete-line:sy'></Icon></div>
+                    <div className={'sy-tool-text-menu-item' + (this.textStyle.code == true ? " hover" : "")} onMouseDown={e => this.onExcute(TextCommand.code)}><Icon icon='code:sy'></Icon></div>
+                    <div className={'sy-tool-text-menu-item' + (this.textStyle.equation == true ? " hover" : "")} onMouseDown={e => this.onExcute(TextCommand.equation)}><Icon icon={Equation}></Icon></div>
                     <div className='sy-tool-text-menu-item' onMouseDown={e => this.onOpenFontColor()}><span>A</span><Icon icon='arrow-down:sy'></Icon></div>
                     <div className='sy-tool-text-menu-item'><Icon icon={Mention}></Icon></div>
                 </div>}

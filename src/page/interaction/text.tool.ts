@@ -7,8 +7,7 @@ export function PageTextTool(page: Page, textTool: TextTool) {
         page.kit.explorer.onSelectionSetPattern(styles);
     });
     textTool.on('getTextStyle', () => {
-        var textStyle: TextToolStyle = {} as any;
         var bs = page.kit.explorer.selectedBlocks;
-        return textStyle;
+        return page.pickBlocksTextStyle(bs);
     })
 }
