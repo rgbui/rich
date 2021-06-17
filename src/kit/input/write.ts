@@ -144,63 +144,6 @@ export class TextInput$Write {
                 } else throw new Exception(ExceptionType.notFoundTextEle);
             }
         }
-        // if (anchor.isText) {
-        //     anchor.inputting();
-        //     if (anchor.at == 0) {
-        //         var block = anchor.block;
-        //         //说明当前的block已经删完了，此时光标应该向前移,移到上面一行
-        //       
-
-        //         return;
-        //     }
-        //     else if (anchor.at > 0) {
-        //         var dm = dom(anchor.view);
-        //         var textNode = dm.prevFind(g => {
-        //             if (g instanceof Text) return true;
-        //             else return false;
-        //         });
-        //         if (textNode) {
-        //             if (textNode instanceof Text) {
-        //                 var value = textNode.textContent;
-        //                 this.deleteInputText = value.slice(value.length - 1) + this.deleteInputText;
-        //                 textNode.textContent = value.slice(0, value.length - 1);
-        //                 anchor.at -= 1;
-        //                 if (textNode.textContent.length == 0) {
-        //                     textNode.remove();
-        //                 }
-        //             }
-        //             if (anchor.at == 0) {
-        //                 var block = anchor.block;
-        //                 var prevAnchor = anchor.block.visiblePrevAnchor;
-        //                 if (prevAnchor && prevAnchor.isText) {
-        //                     var ob = anchor.textEl.getBoundingClientRect();
-        //                     var nb = prevAnchor.textEl.getBoundingClientRect();
-        //                     if (Math.abs(nb.left + nb.width - ob.left) < 10) {
-        //                         this.explorer.onFocusAnchor(prevAnchor);
-        //                         await block.onStoreInputDeleteText(this.textAt, this.deleteInputText, true, async () => {
-        //                             if (block.isEmpty && !block.isPart) {
-        //                                 await this.page.onObserveUpdate(async () => {
-        //                                     var pa = block.parent;
-        //                                     await block.delete();
-        //                                     await pa.deleteLayout();
-        //                                 });
-        //                             }
-        //                         });
-        //                         this.onWillInput(this.explorer.activeAnchor);
-        //                         this.followAnchor(this.explorer.activeAnchor);
-        //                         return;
-        //                     }
-        //                 }
-        //             }
-        //             await anchor.block.onStoreInputDeleteText(this.textAt, this.deleteInputText, anchor.at == 0 ? true : false);
-        //             if (anchor.at == 0 && block.isEmpty) {
-        //                 anchor.setEmpty();
-        //             }
-        //             this.followAnchor(anchor);
-        //         }
-        //         else throw new Error('not found text');
-        //     }
-        // }
     }
     private textNode: HTMLElement;
     private textAt: number;

@@ -443,27 +443,6 @@ export abstract class Block extends Events {
     get partParent(): Block {
         return this.closest(x => !x.isPart);
     }
-    // get dragBlock(): Block {
-    //     if (this.isLine) {
-    //         var r = this.closest(g => !g.isLine);
-    //         if (r.isPart) return r.dragBlock;
-    //         else return r;
-    //     }
-    //     else if (this.isPart) {
-    //         return this.partParent
-    //     }
-    //     else if (this.isRow) return;
-    //     else if (this.isCol) return;
-    //     else if (this.isArea) return;
-    //     else return this;
-    // }
-    // get dropBlock(): Block {
-    //     if (this.isLine) return;
-    //     if (this.isPart) return;
-    //     else if (this.isRow) return;
-    //     else if (this.isCol) return;
-    //     return this;
-    // }
     get visiblePre() {
         var current: Block = this;
         var prev = current.prev;
