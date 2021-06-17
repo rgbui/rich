@@ -1,3 +1,4 @@
+import { Exception, ExceptionType } from "../../../error/exception";
 import { util } from "../../../util/util";
 
 export enum BlockCssName {
@@ -30,7 +31,7 @@ export abstract class BlockCss {
         }
         return json;
     }
-    cloneData(){
+    cloneData() {
         var json: Record<string, any> = {};
         for (var n in this) {
             if (typeof this[n] != 'function') {
@@ -40,7 +41,7 @@ export abstract class BlockCss {
         return json;
     }
     overlay<T extends BlockCss>(css: T): T {
-        if (this.cssName != css.cssName) throw new Error('the overlay css name is not equal' + BlockCssName[this.cssName] + '!=' + BlockCssName[css.cssName])
+        if (this.cssName != css.cssName) throw new Exception(ExceptionType.overlayCssNameNotEqual, 'the overlay css name is not equal' + BlockCssName[this.cssName] + '!=' + BlockCssName[css.cssName])
         var json: Record<string, any> = { cssName: this.cssName };
         if (this.abled == true) json = this.get();
         if (css.abled == true) json = Object.assign(json, css.get());
@@ -48,7 +49,7 @@ export abstract class BlockCss {
     }
     static createBlockCss(css: Record<string, any>) {
         if (typeof css.cssName == 'string') css.cssName = BlockCssName[css.cssName];
-        if (typeof css.cssName != 'number') throw new Error('not found block css name' + css.cssName);
+        if (typeof css.cssName != 'number') throw new Exception(ExceptionType.notFoundBlockCssName, 'not found block css name' + css.cssName);
         switch (css.cssName) {
             case BlockCssName.font:
                 return (new FontCss(css));

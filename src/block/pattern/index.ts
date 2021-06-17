@@ -2,7 +2,7 @@ import { util } from "../../util/util";
 import { Block } from "..";
 import { BlockStyleCss } from "./style";
 import { CssSelectorType } from "./type";
-import { BlockCss, BlockCssName } from "./css";
+import { BlockCss, BlockCssName, BorderCss, FillCss, FilterCss, FontCss, RadiusCss, ShadowCss, TransformCss } from "./css";
 import { OperatorDirective } from "../../history/declare";
 
 export class Pattern {
@@ -59,12 +59,14 @@ export class Pattern {
         }
     }
     get style() {
+        var st = this.blockStyle;
+        if (st) return st.style;
+        else return {}
+    }
+    get blockStyle() {
         var name = this.block.patternState;
         var st = this.styles.find(x => x.name == name);
-        if (st) {
-            return st.style;
-        }
-        else return {}
+        return st;
     }
     setStyle(cssName: BlockCssName, style: Record<string, any>) {
         var name = this.block.patternState;
@@ -96,4 +98,18 @@ export class Pattern {
             this.setStyle(name, styles[n]);
         }
     }
+    css(cssName: BlockCssName) {
+        var style = this.blockStyle;
+        if (style)
+            return style.css(cssName)
+    }
+}
+export interface Pattern {
+    css(name: BlockCssName.font): FontCss;
+    css(name: BlockCssName.fill): FillCss;
+    css(name: BlockCssName.border): BorderCss;
+    css(name: BlockCssName.radius): RadiusCss;
+    css(name: BlockCssName.shadow): ShadowCss;
+    css(name: BlockCssName.filter): FilterCss;
+    css(name: BlockCssName.transform): TransformCss;
 }
