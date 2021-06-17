@@ -22,6 +22,7 @@ import { PageView } from './view';
 import { PageKit } from './interaction/kit';
 import { PageHistory } from './interaction/history';
 import { PageKeys } from './interaction/keys';
+import { Exception, ExceptionType } from '../error/exception';
 
 export class Page extends Events {
     el: HTMLElement;
@@ -31,7 +32,7 @@ export class Page extends Events {
     date: number;
     private user: User;
     get creater() {
-        if (!this.user) throw 'the user is not null';
+        if (!this.user) throw new Exception(ExceptionType.notUser, 'the user is not null');
         return this.user;
     }
     snapshoot: HistorySnapshoot;
@@ -63,7 +64,7 @@ export class Page extends Events {
         this.snapshoot = new HistorySnapshoot(this);
         PageHistory(this, this.snapshoot);
         PageKeys(this, this.keyboardPlate);
-        await this.emit('init');
+        this.emit('init');
     }
     cfm: ConfigurationManager;
     async load(data: Record<string, any>) {

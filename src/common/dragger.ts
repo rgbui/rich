@@ -39,7 +39,6 @@ export class Dragger {
                     if (typeof self.move == 'function') self.move(self.mousedownEvent, event);
                 }
                 if (!self.isMove && Point.from(event).remoteBy(Point.from(self.mousedownEvent), self.moveMinDistance)) {
-                    //console.log('xxx');
                     self.isMove = true;
                     if (this.cursor)
                         MouseCursor.show(this.cursor);

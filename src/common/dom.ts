@@ -1,7 +1,7 @@
 import { Anchor } from "../kit/selection/anchor";
 
 
- class Dom {
+class Dom {
     el: Node;
     constructor(el: Node) {
         this.el = el;
