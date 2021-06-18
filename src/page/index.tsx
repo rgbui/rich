@@ -23,6 +23,8 @@ import { PageKit } from './interaction/kit';
 import { PageHistory } from './interaction/history';
 import { PageKeys } from './interaction/keys';
 import { Exception, ExceptionType } from '../error/exception';
+import { InputDetector } from '../extensions/input.detector/detector';
+import { PageInputDetector } from './interaction/detector';
 
 export class Page extends Events {
     el: HTMLElement;
@@ -64,6 +66,8 @@ export class Page extends Events {
         this.snapshoot = new HistorySnapshoot(this);
         PageHistory(this, this.snapshoot);
         PageKeys(this, this.keyboardPlate);
+        this.inputDetector = new InputDetector();
+        PageInputDetector(this, this.inputDetector);
         this.emit('init');
     }
     cfm: ConfigurationManager;

@@ -1,3 +1,5 @@
+import { BlockCssName } from "../../block/pattern/css";
+import { Anchor } from "../../kit/selection/anchor";
 import { Events } from "../../util/events";
 /**
  * 输入检测器
@@ -9,17 +11,88 @@ import { Events } from "../../util/events";
  * 输入[]则转成一个待办block
  * 
  * 相关的触发可参考https://www.notion.so/Writing-editing-basics-68c7c67047494fdb87d50185429df93e
+ * 
  */
 export class InputDetector extends Events {
-
+    private rules: DetectorRule[] = [
+        {
+            operator: DetectorOperator.firstLetterCreateBlock,
+            match: ['---'],
+            url: '/divider'
+        },
+        {
+            operator: DetectorOperator.firstLetterTurnBlock,
+            match: ['# '],
+            url: '/head'
+        },
+        {
+            operator: DetectorOperator.firstLetterTurnBlock,
+            match: ['## '],
+            url: '/head?{level:"h2"}'
+        },
+        {
+            operator: DetectorOperator.firstLetterTurnBlock,
+            match: ['### '],
+            url: '/head?{level:"h3"}'
+        },
+        {
+            operator: DetectorOperator.firstLetterTurnBlock,
+            match: ['#### '],
+            url: '/head?{level:"h4"}'
+        },
+        {
+            operator: DetectorOperator.firstLetterTurnBlock,
+            match: ['[]', '【】'],
+            url: '/todo'
+        },
+        {
+            operator: DetectorOperator.letterReplaceCreateBlock,
+            match: [/\*\*([^*]+)\*\*$/],
+            url: '/text',
+            style: { [BlockCssName.font]: { fontWeight: 500 } }
+        },
+        {
+            operator: DetectorOperator.letterReplaceCreateBlock,
+            match: [/`([^]+)`$/],
+            url: '/code'
+        }
+    ];
+    match(value: string, anchor: Anchor) {
+        var rs = this.rules;
+        if (anchor.at > 0) rs = rs.findAll(x => x.operator != DetectorOperator.firstLetterCreateBlock && x.operator != DetectorOperator.firstLetterTurnBlock);
+        var ru: DetectorRule;
+        for (let i = 0; i < rs.length; i++) {
+            var rule = rs[i];
+            var ms = Array.isArray(rule.match) ? rule.match : [rule.match];
+            for (let m of ms) {
+                if (typeof m == 'string' && value == m) {
+                    ru = rule;
+                    break;
+                }
+                else if (m instanceof RegExp && m.test(value)) {
+                    ru = rule;
+                    break;
+                }
+            }
+        }
+        if (ru) {
+            this.emit('input', ru, value);
+        };
+    }
 }
-
+export interface InputDetector {
+    on(name: 'input', fn: (rule: DetectorRule, value: string) => void);
+    emit(name: 'input', rule: DetectorRule, value: string);
+}
 export enum DetectorOperator {
     firstLetterCreateBlock,
-    firstLetterTurnBlock
+    letterReplaceCreateBlock,
+    firstLetterTurnBlock,
+    inputCharReplace
 }
-
-
 export type DetectorRule = {
-
+    operator: DetectorOperator,
+    match: string | RegExp | (string | RegExp)[],
+    url: string,
+    style?: Record<string, Record<string, any>>
 }

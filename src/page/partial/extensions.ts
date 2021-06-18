@@ -1,5 +1,6 @@
 import { Page } from "..";
 import { BlockSelector } from "../../extensions/block";
+import { InputDetector } from "../../extensions/input.detector/detector";
 import { BlockMenu } from "../../extensions/menu/menu";
 import { ReferenceSelector } from "../../extensions/reference";
 import { SyExtensionsComponent } from "../../extensions/sy.component";
@@ -16,6 +17,7 @@ export class Page$Extensions {
     blockMenu: BlockMenu;
     textTool: TextTool;
     kit: Kit;
+    inputDetector: InputDetector;
     registerExtension(this: Page, extension: SyExtensionsComponent) {
         if (extension instanceof BlockSelector) {
             this.blockSelector = extension;
