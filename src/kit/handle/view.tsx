@@ -72,10 +72,9 @@ export class BarView extends React.Component<{ bar: Bar }>{
             }
         }
     }
-
     private dragCopyEle: HTMLElement;
     private shipBlock() {
-        this.bar.dragBlocks = this.bar.kit.explorer.getDragBlocks();
+        this.bar.dragBlocks = this.bar.kit.explorer.selectedBlocks;
         if (this.bar.dragBlocks.length > 0) {
             var dragBlocks = this.bar.dragBlocks;
             var cloneNode = dragBlocks.first().el.cloneNode(true);

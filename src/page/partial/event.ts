@@ -136,7 +136,6 @@ export class PageEvent {
     }
     onUnmount(this: Page) {
         ReactDOM.unmountComponentAtNode(this.root);
-        // this.viewRender.componentWillUnmount()
     }
     async onBatchDelete(this: Page, blocks: Block[]) {
         await this.onAction(ActionDirective.onBatchDeleteBlocks, async () => {
@@ -148,9 +147,7 @@ export class PageEvent {
     async onBatchTurn(this: Page, blocks: Block[], url: string) {
         await this.onAction(ActionDirective.onBatchTurn, async () => {
             await blocks.eachAsync(async bl => {
-                var data = await bl.get();
-                await this.createBlock(url, data, bl.parent, bl.at);
-                await bl.delete();
+                await bl.turn(url);
             })
         })
     }
