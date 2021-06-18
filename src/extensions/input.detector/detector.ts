@@ -76,13 +76,35 @@ export class InputDetector extends Events {
             }
         }
         if (ru) {
-            this.emit('input', ru, value);
+            var lastValue: string;
+            switch (ru.operator) {
+                case DetectorOperator.firstLetterCreateBlock:
+                    value = '';
+                    break;
+                case DetectorOperator.firstLetterTurnBlock:
+                    value = '';
+                    break;
+                case DetectorOperator.inputCharReplace:
+                    if (typeof ru.handle == 'function')
+                        value = ru.handle(value);
+                    break;
+                case DetectorOperator.letterReplaceCreateBlock:
+                    var match = Array.isArray(ru.match) ? ru.match[0] : ru.match;
+                    if (match instanceof RegExp) {
+                        value = value.replace(match, ($, $1) => {
+                            lastValue = $1;
+                            return '';
+                        });
+                    }
+                    break;
+            }
+            this.emit('input', ru, value, lastValue);
         };
     }
 }
 export interface InputDetector {
-    on(name: 'input', fn: (rule: DetectorRule, value: string) => void);
-    emit(name: 'input', rule: DetectorRule, value: string);
+    on(name: 'input', fn: (rule: DetectorRule, value: string, lastValue?: string) => void);
+    emit(name: 'input', rule: DetectorRule, value: string, lastValue?: string);
 }
 export enum DetectorOperator {
     firstLetterCreateBlock,
@@ -94,5 +116,6 @@ export type DetectorRule = {
     operator: DetectorOperator,
     match: string | RegExp | (string | RegExp)[],
     url: string,
-    style?: Record<string, Record<string, any>>
+    style?: Record<string, Record<string, any>>,
+    handle?: (value: string) => string;
 }

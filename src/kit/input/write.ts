@@ -1,9 +1,12 @@
 import { TextInput } from ".";
 import { Block } from "../../block";
+import { BlockUrlConstant } from "../../block/constant";
 import { dom } from "../../common/dom";
 import { KeyboardCode } from "../../common/keys";
 import { TextEle } from "../../common/text.ele";
 import { ExceptionType, Exception } from "../../error/exception";
+import { DetectorOperator, DetectorRule } from "../../extensions/input.detector/detector";
+import { ActionDirective } from "../../history/declare";
 import { Anchor } from "../selection/anchor";
 
 export class TextInput$Write {
@@ -183,6 +186,44 @@ export class TextInput$Write {
                 this.explorer.onFocusAnchor(newBlock.visibleHeadAnchor);
             });
         });
+    }
+    onInputDetector(this: TextInput, rule: DetectorRule, value: string, lastValue?: string) {
+        var anchor = this.explorer.activeAnchor;
+        var block = anchor.block;
+        this.page.onAction(ActionDirective.onInputDetector, async () => {
+            switch (rule.operator) {
+                case DetectorOperator.firstLetterCreateBlock:
+                    var newBlock = await block.turn(rule.url);
+                    var newRowBlock = await newBlock.visibleDownCreateBlock(BlockUrlConstant.TextSpan);
+                    newRowBlock.mounted(() => {
+                        this.explorer.onFocusAnchor(newRowBlock.visibleHeadAnchor);
+                    });
+                    break;
+                case DetectorOperator.firstLetterTurnBlock:
+                    var newBlock = await block.turn(rule.url);
+                    newBlock.mounted(() => {
+                        this.explorer.onFocusAnchor(newBlock.visibleHeadAnchor);
+                    });
+                    break;
+                case DetectorOperator.inputCharReplace:
+                    this.textNode.innerHTML = value;
+                    anchor.at = this.textAt + value.length;
+                    this.textarea.value = value;
+                    this.willInputStore(block, value, this.textAt, true);
+                    break;
+                case DetectorOperator.letterReplaceCreateBlock:
+                    this.textNode.innerHTML = value;
+                    anchor.at = this.textAt + value.length;
+                    this.textarea.value = value;
+                    this.willInputStore(block, value, this.textAt, true);
+                    var newBlock = await this.page.createBlock(rule.url, { content: lastValue }, block.parent, block.at + 1);
+                    newBlock.mounted(() => {
+                        this.explorer.onFocusAnchor(newBlock.visibleBackAnchor);
+                    });
+                    break;
+            }
+        })
+
     }
     private delayInputTime;
     private clearInputTime() {
