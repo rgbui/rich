@@ -162,6 +162,12 @@ export abstract class Block extends Events {
             delete this.parent;
         }
     }
+    async turn(url: string) {
+        var data = await this.get();
+        var newBlock = await this.page.createBlock(url, data, this.parent, this.at);
+        await this.delete();
+        return newBlock;
+    }
     /***
      * 移出元素或是彻底的删除元素，这里需要一个向上查换，一个向下查找的过程
      * 1. 如果元素本身是布局的元素，那么此时的布局元结构是空的，那么可能会从里到外依次删除
