@@ -1,7 +1,7 @@
-import { Component } from "react";
+
 import { Page } from "../../page";
 import { Block } from "..";
-import { BaseComponent } from "../base/component";
+import { BaseComponent } from "../component";
 import { parseBlockUrl } from "../../common/util";
 
 export class BlockFactory {
