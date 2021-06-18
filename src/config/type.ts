@@ -1,7 +1,7 @@
 import { FontCss } from "../block/pattern/css"
 
 export type WorkspaceConfig = {
-    fontCss:FontCss;
+    fontCss: FontCss;
 }
 export type PageConfig = {
     fontCss: FontCss;

@@ -3,7 +3,7 @@
 
 import { FontCss } from "../block/pattern/css";
 import { Page } from "../page";
-import { PageConfig, WorkspaceConfig } from "./workspace";
+import { PageConfig, WorkspaceConfig } from "./type";
 export class ConfigurationManager {
     private page: Page;
     constructor(page: Page) {

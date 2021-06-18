@@ -13,7 +13,7 @@ import { HistorySnapshoot } from '../history/snapshoot';
 import { Block } from '../block';
 import { OperatorDirective } from '../history/declare';
 import { ConfigurationManager } from '../config';
-import { PageConfig, WorkspaceConfig } from '../config/workspace';
+import { PageConfig, WorkspaceConfig } from '../config/type';
 import { KeyboardPlate } from '../common/keys';
 import { Page$Seek } from './partial/seek';
 import { Kit } from '../kit';
