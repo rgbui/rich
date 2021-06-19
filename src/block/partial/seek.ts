@@ -1,4 +1,4 @@
-import { Block } from ".";
+import { Block } from "..";
 export class Block$Seek {
     blockChilds(this: Block, name: string) {
         return this.blocks[name];
