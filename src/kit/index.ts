@@ -9,6 +9,7 @@ import { Anchor } from "./selection/anchor";
 import { SelectionExplorer } from "./selection/explorer";
 import { Selector } from "./selector";
 import { KitView } from "./view";
+import "./style.less";
 export class Kit extends Events {
     page: Page;
     constructor(page: Page) {
