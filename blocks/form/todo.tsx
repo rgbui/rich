@@ -1,13 +1,13 @@
 
-import { BlockView } from "../../src/block/component";
+import { BlockView } from "../../src/block/view";
 import React, { ChangeEvent } from 'react';
 import { TextSpan } from "../general/textspan";
 
 import { prop, url, view } from "../../src/block/factory/observable";
-import { ChildsArea, TextArea } from "../../src/block/base/appear";
+import { ChildsArea, TextArea } from "../../src/block/partial/appear";
 import { BlockCssName, FontCss } from "../../src/block/pattern/css";
 import { CssSelectorType } from "../../src/block/pattern/type";
-import { BlockRenderRange } from "../../src/block/base/enum";
+import { BlockRenderRange } from "../../src/block/partial/enum";
 
 @url('/todo')
 export class ToDo extends TextSpan {

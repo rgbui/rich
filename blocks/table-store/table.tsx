@@ -1,14 +1,14 @@
 import { Block } from "../../src/block";
-import { BlockView } from "../../src/block/component";
+import { BlockView } from "../../src/block/view";
 import React from 'react';
 import { TableMeta, TableMetaFieldType } from "./meta";
 import { util } from "../../src/util/util";
 import "./style.less";
 import { prop, url, view } from "../../src/block/factory/observable";
-import { BlockAppear, BlockDisplay } from "../../src/block/base/enum";
+import { BlockAppear, BlockDisplay } from "../../src/block/partial/enum";
 import { BlockFactory } from "../../src/block/factory/block.factory";
 import { TableStoreRow } from "./row";
-import { ChildsArea } from "../../src/block/base/appear";
+import { ChildsArea } from "../../src/block/partial/appear";
 import { OperatorDirective } from "../../src/history/declare";
 import { TableStoreHead } from "./head";
 import { Pattern } from "../../src/block/pattern";

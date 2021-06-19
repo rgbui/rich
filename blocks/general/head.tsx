@@ -1,8 +1,8 @@
-import { BlockView } from "../../src/block/component";
+import { BlockView } from "../../src/block/view";
 import { prop, url, view } from "../../src/block/factory/observable";
 import { TextSpan } from "./textspan";
 import React from 'react';
-import { ChildsArea, TextArea } from "../../src/block/base/appear";
+import { ChildsArea, TextArea } from "../../src/block/partial/appear";
 @url('/head')
 export class Head extends TextSpan {
     @prop()

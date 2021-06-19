@@ -1,9 +1,9 @@
 import { Block } from "../../src/block";
-import { BlockView } from "../../src/block/component";
-import { BlockAppear, BlockDisplay } from "../../src/block/base/enum";
+import { BlockView } from "../../src/block/view";
+import { BlockAppear, BlockDisplay } from "../../src/block/partial/enum";
 import { url, view } from "../../src/block/factory/observable";
 import React from 'react';
-import { ChildsArea } from "../../src/block/base/appear";
+import { ChildsArea } from "../../src/block/partial/appear";
 import { TableStore } from "./table";
 import { TableStoreCell } from "./cell";
 import { BlockFactory } from "../../src/block/factory/block.factory";

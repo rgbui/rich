@@ -1,16 +1,11 @@
 /***
  * import component
  */
-import "../src/block/layout/area";
 
-import "./base/common/col";
-import "./base/common/group";
-import "./base/common/row";
+
 import "./general/text";
 import "./general/textspan";
 import "./general/head";
-import "../src/block/layout/view";
-
 import "./media/image";
 import "./present/katex";
 import "./form/todo";
@@ -34,8 +29,6 @@ import "./present/code/code";
 /***
  * import component style
  */
-import "./components/style.less";
-import "./base/common/style.less";
-import "./style.less";
+import "./general/style.less";
 
 

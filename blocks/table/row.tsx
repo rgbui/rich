@@ -1,9 +1,9 @@
 
-import { BlockView } from "../../src/block/component";
+import { BlockView } from "../../src/block/view";
 import React from 'react';
 import { Block } from "../../src/block";
 import { url, view } from "../../src/block/factory/observable";
-import { BlockAppear, BlockDisplay } from "../../src/block/base/enum";
+import { BlockAppear, BlockDisplay } from "../../src/block/partial/enum";
 @url('/table/row')
 export class TableRow extends Block {
     appear = BlockAppear.layout;

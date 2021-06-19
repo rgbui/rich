@@ -1,8 +1,8 @@
-import { BlockView } from "../../src/block/component";
+import { BlockView } from "../../src/block/view";
 import React from 'react';
 import { prop, url, view } from "../../src/block/factory/observable";
 import { Block } from "../../src/block";
-import { BlockAppear, BlockDisplay } from "../../src/block/base/enum";
+import { BlockAppear, BlockDisplay } from "../../src/block/partial/enum";
 @url('/emoji')
 export class Emoji extends Block {
     @prop()

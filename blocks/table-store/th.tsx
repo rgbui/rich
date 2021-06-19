@@ -1,25 +1,25 @@
 import { Block } from "../../src/block";
-import { BlockView } from "../../src/block/component";
-import { BlockAppear, BlockDisplay } from "../../src/block/base/enum";
+import { BlockView } from "../../src/block/view";
+import { BlockAppear, BlockDisplay } from "../../src/block/partial/enum";
 import { prop, url, view } from "../../src/block/factory/observable";
 import React from "react";
-import { TextArea } from "../../src/block/base/appear";
+import { TextArea } from "../../src/block/partial/appear";
 import { TableStore } from "./table";
 import { TextEle } from "../../src/common/text.ele";
 import { TableStoreHead } from "./head";
 import { TableMetaFieldType } from "./meta";
 import { Icon } from "../../src/component/icon";
-import checkbox from "../../../assert/svg/types.checkbox.svg";
-import select from "../../../assert/svg/types.select.svg";
-import string from "../../../assert/svg/types.string.svg";
-import multipleSelect from "../../../assert/svg/types.multiple.select.svg";
-import file from "../../../assert/svg/types.file.svg";
-import link from "../../../assert/svg/types.link.svg";
-import number from "../../../assert/svg/types.number.svg";
-import date from "../../../assert/svg/types.date.svg";
-import email from "../../../assert/svg/types.email.svg";
-import phone from "../../../assert/svg/types.phone.svg";
-import person from "../../../assert/svg/types.person.svg";
+import checkbox from "../../src/assert/svg/types.checkbox.svg";
+import select from "../../src/assert/svg/types.select.svg";
+import string from "../../src/assert/svg/types.string.svg";
+import multipleSelect from "../../src/assert/svg/types.multiple.select.svg";
+import file from "../../src/assert/svg/types.file.svg";
+import link from "../../src/assert/svg/types.link.svg";
+import number from "../../src/assert/svg/types.number.svg";
+import date from "../../src/assert/svg/types.date.svg";
+import email from "../../src/assert/svg/types.email.svg";
+import phone from "../../src/assert/svg/types.phone.svg";
+import person from "../../src/assert/svg/types.person.svg";
 
 @url('/tablestore/th')
 export class TableStoreTh extends Block {

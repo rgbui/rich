@@ -3,9 +3,9 @@ import React from 'react';
 import { Icon } from "../../../src/component/icon";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import "./style.less";
-import { BlockView } from "../../../src/block/component";
-import { BlockAppear, BlockDisplay } from "../../../src/block/base/enum";
-import { ChildsArea, TextArea } from "../../../src/block/base/appear";
+import { BlockView } from "../../../src/block/view";
+import { BlockAppear, BlockDisplay } from "../../../src/block/partial/enum";
+import { ChildsArea, TextArea } from "../../../src/block/partial/appear";
 export enum ListType {
     circle,
     number,

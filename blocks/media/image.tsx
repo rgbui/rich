@@ -1,8 +1,8 @@
-import { BlockView } from "../../src/block/component";
+import { BlockView } from "../../src/block/view";
 import {  prop, url, view } from "../../src/block/factory/observable";
 import React from 'react';
-import { BlockAppear } from "../../src/block/base/enum";
-import { SolidArea } from "../../src/block/base/appear";
+import { BlockAppear } from "../../src/block/partial/enum";
+import { SolidArea } from "../../src/block/partial/appear";
 import { Content } from "../../src/block/layout/content";
 @url('/image')
 export class Image extends Content {

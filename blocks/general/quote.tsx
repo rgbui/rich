@@ -1,8 +1,8 @@
-import { BlockView } from "../../src/block/component";
+import { BlockView } from "../../src/block/view";
 import React from 'react';
 import { url, view } from "../../src/block/factory/observable";
 import { TextSpan } from "./textspan";
-import { TextArea } from "../../src/block/base/appear";
+import { TextArea } from "../../src/block/partial/appear";
 @url('/quote')
 export class Quote extends TextSpan {
 

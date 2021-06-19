@@ -1,9 +1,9 @@
 
-import { BlockView } from "../../../src/block/component";
+import { BlockView } from "../../../src/block/view";
 import { url, view } from "../../../src/block/factory/observable";
 import { TextSpan } from "../../general/textspan";
 import React from 'react';
-import { ChildsArea, TextArea } from "../../../src/block/base/appear";
+import { ChildsArea, TextArea } from "../../../src/block/partial/appear";
 @url('/list/text')
 export class ListText extends TextSpan {
     partName = 'text';

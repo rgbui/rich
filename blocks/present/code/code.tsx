@@ -1,11 +1,11 @@
-import { BlockView } from "../../../src/block/component";
+import { BlockView } from "../../../src/block/view";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import React from 'react';
 import Prism from 'prismjs';
-import "../../../../node_modules/prismjs/themes/prism.css";
-import { TextArea } from "../../../src/block/base/appear";
+import "../../../node_modules/prismjs/themes/prism.css";
+import { TextArea } from "../../../src/block/partial/appear";
 import { Block } from "../../../src/block";
-import { BlockAppear, BlockDisplay } from "../../../src/block/base/enum";
+import { BlockAppear, BlockDisplay } from "../../../src/block/partial/enum";
 /**
  * prism url : https://prismjs.com/#examples
  * prism babel plug :https://www.npmjs.com/package/babel-plugin-prismjs
