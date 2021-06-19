@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { Block } from '..';
-import { BlockView } from '../component';
-import { BlockAppear, BlockDisplay } from '../base/enum';
+import { BlockView } from '../view';
+import { BlockAppear, BlockDisplay } from '../partial/enum';
 import { url, view } from '../factory/observable';
 
 /**

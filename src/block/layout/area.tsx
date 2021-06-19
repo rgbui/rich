@@ -1,8 +1,8 @@
 
 import { ContentAreaComposition } from "./composition/content";
 import React from 'react';
-import { BlockView } from "../component";
-import { BlockDisplay } from "../base/enum";
+import { BlockView } from "../view";
+import { BlockDisplay } from "../partial/enum";
 import { url, view } from "../factory/observable";
 /**
  * 对视图进行分区，从空间上进行分割，尽可能的利用空间

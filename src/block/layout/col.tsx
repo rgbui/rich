@@ -3,10 +3,10 @@
 import { Content } from "./content";
 
 import React from 'react';
-import { BlockAppear, BlockDisplay } from "../base/enum";
+import { BlockAppear, BlockDisplay } from "../partial/enum";
 import { url, view } from "../factory/observable";
-import { BlockView } from "../component";
-import { ChildsArea } from "../base/appear";
+import { BlockView } from "../view";
+import { ChildsArea } from "../partial/appear";
 
 @url('/col')
 export class Col extends Content {

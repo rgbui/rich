@@ -3,8 +3,8 @@ import React from 'react';
 import { Block } from '..';
 import { Point } from '../../common/point';
 import { ActionDirective } from '../../history/declare';
-import { BlockView } from '../component';
-import { BlockDisplay, BlockAppear } from '../base/enum';
+import { BlockView } from '../view';
+import { BlockDisplay, BlockAppear } from '../partial/enum';
 import { url, view } from '../factory/observable';
 /**
  * 分区中会有很多行，每行存在于一个或多个block
