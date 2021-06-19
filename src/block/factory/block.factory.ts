@@ -1,7 +1,7 @@
 
 import { Page } from "../../page";
 import { Block } from "..";
-import { BlockView } from "../component";
+import { BlockView } from "../view";
 import { parseBlockUrl } from "../../common/util";
 
 export class BlockFactory {
