@@ -6,7 +6,7 @@ import { Anchor } from "../kit/selection/anchor";
 import { BlockFactory } from "./factory/block.factory";
 import { BlockAppear, BlockDisplay, BlockRenderRange } from "./base/enum";
 import { Pattern } from "./pattern/index";
-import { BaseComponent } from "./base/component";
+import { BlockView } from "./component";
 import { TextEle } from "../common/text.ele";
 import { ActionDirective, OperatorDirective } from "../history/declare";
 import { Block$Seek } from "./seek";
@@ -395,8 +395,8 @@ export abstract class Block extends Events {
         var data = await this.cloneData();
         return await BlockFactory.createBlock(data.url, this.page, data, null);
     }
-    viewComponent: typeof BaseComponent | ((props: any) => JSX.Element)
-    view: BaseComponent<this>;
+    viewComponent: typeof BlockView | ((props: any) => JSX.Element)
+    view: BlockView<this>;
     el: HTMLElement;
     get visibleStyle() {
         var style: Record<string, any> = {};

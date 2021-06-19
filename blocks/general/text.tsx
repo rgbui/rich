@@ -1,5 +1,5 @@
 
-import { BaseComponent } from "../../src/block/component";
+import { BlockView } from "../../src/block/component";
 import { BlockComposition } from "../../src/block/layout/composition/block";
 import React from 'react';
 import { BlockAppear, BlockDisplay } from "../../src/block/base/enum";
@@ -19,7 +19,7 @@ export class TextContent extends BlockComposition {
     }
 }
 @view('/text')
-export class TextContentView extends BaseComponent<TextContent>{
+export class TextContentView extends BlockView<TextContent>{
     render() {
         return <span className='sy-block-text-content'  style={this.block.visibleStyle} >
             <TextArea html={this.block.htmlContent}></TextArea>

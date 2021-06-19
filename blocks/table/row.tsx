@@ -1,5 +1,5 @@
 
-import { BaseComponent } from "../../src/block/component";
+import { BlockView } from "../../src/block/component";
 import React from 'react';
 import { Block } from "../../src/block";
 import { url, view } from "../../src/block/factory/observable";
@@ -12,7 +12,7 @@ export class TableRow extends Block {
     get isRow() { return true }
 }
 @view('/table/row')
-export class TableRowView extends BaseComponent<TableRow>{
+export class TableRowView extends BlockView<TableRow>{
     render() {
         return <tr>{this.block.childs.map(x =>
             <x.viewComponent key={x.id} block={x}></x.viewComponent>)}</tr>

@@ -1,5 +1,5 @@
 
-import { BaseComponent } from "../../../src/block/component";
+import { BlockView } from "../../../src/block/component";
 import { url, view } from "../../../src/block/factory/observable";
 import { TextSpan } from "../../general/textspan";
 import React from 'react';
@@ -12,7 +12,7 @@ export class ListText extends TextSpan {
     }
 }
 @view('/list/text')
-export class ListTextView extends BaseComponent<ListText>{
+export class ListTextView extends BlockView<ListText>{
     render() {
         var style: Record<string, any> = {
 

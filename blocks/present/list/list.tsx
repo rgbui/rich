@@ -3,7 +3,7 @@ import React from 'react';
 import { Icon } from "../../../src/component/icon";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import "./style.less";
-import { BaseComponent } from "../../../src/block/component";
+import { BlockView } from "../../../src/block/component";
 import { BlockAppear, BlockDisplay } from "../../../src/block/base/enum";
 import { ChildsArea, TextArea } from "../../../src/block/base/appear";
 export enum ListType {
@@ -23,7 +23,7 @@ export class List extends Block {
    
 }
 @view('/list')
-export class ListView extends BaseComponent<List>{
+export class ListView extends BlockView<List>{
     renderListType() {
         if (this.block.listType == ListType.circle)
             return <span className='sy-block-list-type'>.</span>

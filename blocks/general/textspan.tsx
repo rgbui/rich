@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { BaseComponent } from "../../src/block/component";
+import { BlockView } from "../../src/block/component";
 import { BlockAppear, BlockDisplay } from "../../src/block/base/enum";
 import { url, view } from "../../src/block/factory/observable";
 import { TextArea } from "../../src/block/base/appear";
@@ -23,7 +23,7 @@ export class TextSpan extends Content {
     }
 }
 @view("/textspan")
-export class TextSpanView extends BaseComponent<TextSpan>{
+export class TextSpanView extends BlockView<TextSpan>{
     render() {
         if (this.block.childs.length > 0)
             return <span className='sy-block-text-span sy-appear-text-line' style={this.block.visibleStyle} ref={e => this.block.childsEl = e}>{this.block.childs.map(x =>

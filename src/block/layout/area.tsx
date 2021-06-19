@@ -1,7 +1,7 @@
 
 import { ContentAreaComposition } from "./composition/content";
 import React from 'react';
-import { BaseComponent } from "../component";
+import { BlockView } from "../component";
 import { BlockDisplay } from "../base/enum";
 import { url, view } from "../factory/observable";
 /**
@@ -36,7 +36,7 @@ export class ViewArea extends ContentAreaComposition {
     }
 }
 @view('/view/area')
-export class ViewAreaComponent extends BaseComponent<ViewArea>{
+export class ViewAreaComponent extends BlockView<ViewArea>{
     render() {
         return <div className='sy-block-view-area' >{this.block.childs.map(x =>
             <x.viewComponent key={x.id} block={x}></x.viewComponent>

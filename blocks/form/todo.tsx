@@ -1,5 +1,5 @@
 
-import { BaseComponent } from "../../src/block/component";
+import { BlockView } from "../../src/block/component";
 import React, { ChangeEvent } from 'react';
 import { TextSpan } from "../general/textspan";
 
@@ -29,7 +29,7 @@ export class ToDo extends TextSpan {
     }
 }
 @view('/todo')
-export class ToDoView extends BaseComponent<ToDo>{
+export class ToDoView extends BlockView<ToDo>{
     render() {
 
         if (this.block.childs.length > 0) {

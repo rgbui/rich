@@ -1,5 +1,5 @@
 import { Block } from "../../src/block";
-import { BaseComponent } from "../../src/block/component";
+import { BlockView } from "../../src/block/component";
 import { BlockAppear, BlockDisplay } from "../../src/block/base/enum";
 import { url, view } from "../../src/block/factory/observable";
 import React from "react";
@@ -24,7 +24,7 @@ export class TableStoreHead extends Block {
     }
 }
 @view('/tablestore/head')
-export class TableStoreHeadView extends BaseComponent<TableStoreHead>{
+export class TableStoreHeadView extends BlockView<TableStoreHead>{
     render() {
         return <div className='sy-tablestore-head' >
             <ChildsArea childs={this.block.blocks.childs} />

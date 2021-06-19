@@ -3,7 +3,7 @@ import React from 'react';
 import { Block } from '..';
 import { Point } from '../../common/point';
 import { ActionDirective } from '../../history/declare';
-import { BaseComponent } from '../component';
+import { BlockView } from '../component';
 import { BlockDisplay, BlockAppear } from '../base/enum';
 import { url, view } from '../factory/observable';
 /**
@@ -18,7 +18,7 @@ export class Row extends Block {
     }
 }
 @view('/row')
-export class RowView extends BaseComponent<Row>{
+export class RowView extends BlockView<Row>{
     didMount() {
         var self = this;
         document.addEventListener('mousemove', (this._mousemove = (event) => {

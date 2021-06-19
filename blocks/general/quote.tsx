@@ -1,4 +1,4 @@
-import { BaseComponent } from "../../src/block/component";
+import { BlockView } from "../../src/block/component";
 import React from 'react';
 import { url, view } from "../../src/block/factory/observable";
 import { TextSpan } from "./textspan";
@@ -8,7 +8,7 @@ export class Quote extends TextSpan {
 
 }
 @view('/quote')
-export class QuoteView extends BaseComponent<Quote>{
+export class QuoteView extends BlockView<Quote>{
     render() {
         return <div className='sy-block-quote'>
             {this.block.childs.length > 0 && <span className='sy-appear-text-line' style={this.block.visibleStyle} ref={e => this.block.childsEl = e}>{this.block.childs.map(x =>

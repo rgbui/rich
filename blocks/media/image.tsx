@@ -1,4 +1,4 @@
-import { BaseComponent } from "../../src/block/component";
+import { BlockView } from "../../src/block/component";
 import {  prop, url, view } from "../../src/block/factory/observable";
 import React from 'react';
 import { BlockAppear } from "../../src/block/base/enum";
@@ -11,7 +11,7 @@ export class Image extends Content {
     appear = BlockAppear.solid;
 }
 @view('/image')
-export class ImageView extends BaseComponent<Image>{
+export class ImageView extends BlockView<Image>{
     render() {
         var align = this.block.align || 'center';
         var contentStyle: Record<string, any> = {

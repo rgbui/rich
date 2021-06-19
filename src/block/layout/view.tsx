@@ -1,6 +1,6 @@
 import { ContentAreaComposition } from "./composition/content";
 import React from 'react';
-import { BaseComponent } from "../component";
+import { BlockView } from "../component";
 import { BlockAppear, BlockDisplay } from "../base/enum";
 import { url, view } from "../factory/observable";
 
@@ -21,7 +21,7 @@ export class View extends ContentAreaComposition {
  *  但页面可以会有弹层等一些其它的视图
  */
 @view('/view')
-export class ViewComponent extends BaseComponent<View> {
+export class ViewComponent extends BlockView<View> {
     render() {
         if (this.block && Array.isArray(this.block.childs))
             return <div className='sy-block-view' >{this.block.childs.map(x =>

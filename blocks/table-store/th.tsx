@@ -1,5 +1,5 @@
 import { Block } from "../../src/block";
-import { BaseComponent } from "../../src/block/component";
+import { BlockView } from "../../src/block/component";
 import { BlockAppear, BlockDisplay } from "../../src/block/base/enum";
 import { prop, url, view } from "../../src/block/factory/observable";
 import React from "react";
@@ -44,7 +44,7 @@ export class TableStoreTh extends Block {
     }
 }
 @view('/tablestore/th')
-export class TableStoreThView extends BaseComponent<TableStoreTh>{
+export class TableStoreThView extends BlockView<TableStoreTh>{
     renderIcon() {
         switch (this.block.metaCol.type) {
             case TableMetaFieldType.checkbox:

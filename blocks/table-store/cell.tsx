@@ -1,4 +1,4 @@
-import { BaseComponent } from "../../src/block/component";
+import { BlockView } from "../../src/block/component";
 import React from 'react';
 import { prop, url, view } from "../../src/block/factory/observable";
 import { ChildsArea, TextArea } from "../../src/block/base/appear";
@@ -48,7 +48,7 @@ export class TableStoreCell extends Block {
     }
 }
 @view('/tablestore/cell')
-export class TableStoreCellView extends BaseComponent<TableStoreCell>{
+export class TableStoreCellView extends BlockView<TableStoreCell>{
     render() {
         return <div className='sy-tablestore-body-row-cell' ref={e => this.block.childsEl = e} style={{ width: this.block.col.width }}>
             <ChildsArea childs={this.block.childs}></ChildsArea>

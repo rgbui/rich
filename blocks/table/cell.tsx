@@ -1,4 +1,4 @@
-import { BaseComponent } from "../../src/block/component";
+import { BlockView } from "../../src/block/component";
 import React from 'react';
 import { prop, url, view } from "../../src/block/factory/observable";
 import { ChildsArea, TextArea } from "../../src/block/base/appear";
@@ -29,7 +29,7 @@ export class TableCell extends Block {
     }
 }
 @view('/table/cell')
-export class TableCellView extends BaseComponent<TableCell>{
+export class TableCellView extends BlockView<TableCell>{
     render() {
         var style: Record<string, any> = {
 

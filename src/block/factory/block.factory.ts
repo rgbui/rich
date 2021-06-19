@@ -1,11 +1,11 @@
 
 import { Page } from "../../page";
 import { Block } from "..";
-import { BaseComponent } from "../component";
+import { BlockView } from "../component";
 import { parseBlockUrl } from "../../common/util";
 
 export class BlockFactory {
-    private static blockMap: Map<string, { model: typeof Block, view: typeof BaseComponent }> = new Map();
+    private static blockMap: Map<string, { model: typeof Block, view: typeof BlockView }> = new Map();
     public static registerComponent(url: string, blockClass: typeof Block) {
         var b = this.blockMap.get(url);
         if (b) {
@@ -13,7 +13,7 @@ export class BlockFactory {
         }
         else this.blockMap.set(url, { model: blockClass, view: null });
     }
-    public static registerComponentView(url: string, blockView: typeof BaseComponent) {
+    public static registerComponentView(url: string, blockView: typeof BlockView) {
         var b = this.blockMap.get(url);
         if (b) {
             b.view = blockView;

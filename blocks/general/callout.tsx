@@ -1,4 +1,4 @@
-import { BaseComponent } from "../../src/block/component";
+import { BlockView } from "../../src/block/component";
 import React from 'react';
 import { url, view } from "../../src/block/factory/observable";
 import { TextSpan } from "./textspan";
@@ -8,7 +8,7 @@ export class Callout extends TextSpan {
 
 }
 @view('/callout')
-export class CalloutView extends BaseComponent<Callout>{
+export class CalloutView extends BlockView<Callout>{
     render() {
         return <div className='sy-block-callout'>
             <span className='sy-block-callout-icon'>💡</span>

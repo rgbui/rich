@@ -1,4 +1,4 @@
-import { BaseComponent } from "../../src/block/component";
+import { BlockView } from "../../src/block/component";
 import { prop, url, view } from "../../src/block/factory/observable";
 import { TextSpan } from "./textspan";
 import React from 'react';
@@ -10,7 +10,7 @@ export class Head extends TextSpan {
 
 }
 @view("/head")
-export class HeadView extends BaseComponent<Head>{
+export class HeadView extends BlockView<Head>{
     render() {
         var style: Record<string, any> = { ...this.block.visibleStyle, fontWeight: 600 };
         if (this.block.level == 'h1') {

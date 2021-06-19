@@ -1,7 +1,7 @@
 import { Component } from "react";
 import ReactDOM from 'react-dom';
-import { Block } from "..";
-export abstract class BaseComponent<T extends Block> extends Component<{ block: T }> {
+import { Block } from ".";
+export abstract class BlockView<T extends Block> extends Component<{ block: T }> {
     constructor(props) {
         super(props);
         this.block.view = this;

@@ -1,4 +1,4 @@
-import { BaseComponent } from "../../src/block/component";
+import { BlockView } from "../../src/block/component";
 import katex from 'katex';
 import React from 'react';
 import { prop, url, view } from "../../src/block/factory/observable";
@@ -18,7 +18,7 @@ export class Katex extends Content {
   
 }
 @view('/katex')
-export class KatexView extends BaseComponent<Katex>{
+export class KatexView extends BlockView<Katex>{
     render() {
         return <div className='sy-block-katex' style={this.block.visibleStyle}>
             <SolidArea content={<span dangerouslySetInnerHTML={{ __html: this.block.htmlContent }}></span>}></SolidArea>

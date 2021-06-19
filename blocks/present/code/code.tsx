@@ -1,4 +1,4 @@
-import { BaseComponent } from "../../../src/block/component";
+import { BlockView } from "../../../src/block/component";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import React from 'react';
 import Prism from 'prismjs';
@@ -25,7 +25,7 @@ export class TextCode extends Block {
     }
 }
 @view('/code')
-export class TextCodeView extends BaseComponent<TextCode>{
+export class TextCodeView extends BlockView<TextCode>{
     render() {
         return <div className='sy-block-code' >
             <TextArea html={this.block.htmlContent}></TextArea>

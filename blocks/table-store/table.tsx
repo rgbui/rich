@@ -1,5 +1,5 @@
 import { Block } from "../../src/block";
-import { BaseComponent } from "../../src/block/component";
+import { BlockView } from "../../src/block/component";
 import React from 'react';
 import { TableMeta, TableMetaFieldType } from "./meta";
 import { util } from "../../src/util/util";
@@ -110,7 +110,7 @@ export class TableStore extends Block {
     }
 }
 @view('/table/store')
-export class TableStoreView extends BaseComponent<TableStore>{
+export class TableStoreView extends BlockView<TableStore>{
     renderHead() {
         return <ChildsArea childs={this.block.blocks.childs}></ChildsArea>
     }

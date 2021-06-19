@@ -1,4 +1,4 @@
-import { BaseComponent } from "../../src/block/component";
+import { BlockView } from "../../src/block/component";
 import React from 'react';
 import { prop, url, view } from "../../src/block/factory/observable";
 import { Block } from "../../src/block";
@@ -13,7 +13,7 @@ export class Emoji extends Block {
     display = BlockDisplay.inline;
 }
 @view('/emoji')
-export class EmojiView extends BaseComponent<Emoji>{
+export class EmojiView extends BlockView<Emoji>{
     render() {
         return <div className='sy-block-emoji'>
             {this.block.mine == 'emoji' && <span>{this.block.code}</span>}

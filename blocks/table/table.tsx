@@ -1,5 +1,5 @@
 import { Block } from "../../src/block";
-import { BaseComponent } from "../../src/block/component";
+import { BlockView } from "../../src/block/component";
 import React from "react";
 import { prop, url, view } from "../../src/block/factory/observable";
 import "./style.less";
@@ -14,7 +14,7 @@ export class Table extends Block {
     cols: { width: number }[] = [];
 }
 @view('/table')
-export class TableView extends BaseComponent<Table>{
+export class TableView extends BlockView<Table>{
     mousemove(event: MouseEvent) {
         if(this.sublineDragger.isMove==true)return;
         var tableRange = this.table.getBoundingClientRect();
