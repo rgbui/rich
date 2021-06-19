@@ -3,7 +3,7 @@ import React from 'react';
 import { Page } from "./index";
 import { PageLayoutView } from "../layout/view";
 
-import { ChildsArea } from "../block/base/appear";
+import { ChildsArea } from "../block/partial/appear";
 import { BlockSelector } from "../extensions/block";
 import { ReferenceSelector } from "../extensions/reference";
 import { BlockMenu } from "../extensions/menu/menu";

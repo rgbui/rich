@@ -1,6 +1,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import "./style.less";
 import { Events } from "../util/events";
 import { util } from "../util/util";
 import { BlockFactory } from "../block/factory/block.factory";
