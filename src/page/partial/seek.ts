@@ -129,7 +129,7 @@ export class Page$Seek {
         else if (point.y >= bound.top + bound.height / 2) {
             direction = DropDirection.bottom;
         }
-        return DropDirection.bottom;
+        return direction;
     }
     /**
      * 通过鼠标勾选的区域来查找在这个范围内的block,
@@ -248,13 +248,23 @@ export class Page$Seek {
         textStyle.blockUrl = rowBlock.url;
         blocks.each(bl => {
             let font = bl.pattern.css(BlockCssName.font);
-            if (font.fontStyle != 'italic') textStyle.italic = false;
-            if (font.fontWeight != 500 && font.fontWeight != 'bold') textStyle.bold = false;
-            if (font.textDecoration != 'underline') textStyle.underline = false;
-            if (font.textDecoration != 'line-through') textStyle.deleteLine = false;
-            if (!textStyle.color) textStyle.color = font.color;
-            if (bl.url != '/code') textStyle.code = false;
-            if (bl.url != '/equation') textStyle.equation = false;
+            if (font) {
+                if (font.fontStyle != 'italic') textStyle.italic = false;
+                if (font.fontWeight != 500 && font.fontWeight != 'bold') textStyle.bold = false;
+                if (font.textDecoration != 'underline') textStyle.underline = false;
+                if (font.textDecoration != 'line-through') textStyle.deleteLine = false;
+                if (!textStyle.color && font.color) textStyle.color = font.color;
+                if (bl.url != '/code') textStyle.code = false;
+                if (bl.url != '/equation') textStyle.equation = false;
+            }
+            else {
+                textStyle.italic = false;
+                textStyle.bold = false;
+                textStyle.underline = false;
+                textStyle.deleteLine = false;
+                textStyle.code = false;
+                textStyle.equation = false;
+            }
         });
         return textStyle;
     }
