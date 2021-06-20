@@ -65,15 +65,16 @@ export class SelectionExplorer extends Events {
     }
     createAnchor(block: Block, at?: number) {
         var anchor = new Anchor(this);
+        anchor.block = block;
         if (typeof at == 'number') {
             if (at == -1) anchor.at = block.content.length;
             else anchor.at = at;
         }
         else if (block.isText) anchor.at = 0;
-
         return anchor;
     }
     onFocusAnchor(anchor: Anchor) {
+        console.log(anchor);
         if (this.end) { this.end.dispose(); delete this.end; }
         if (this.start) anchor.acceptView(this.start);
         this.start = anchor;
