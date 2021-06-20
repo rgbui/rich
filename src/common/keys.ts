@@ -2,7 +2,7 @@
 
 export enum KeyboardCode {
     ArrowDown = 'ArrowDown',
-    ArrowLeft = 'ArrorLeft',
+    ArrowLeft = 'ArrowLeft',
     ArrowRight = 'ArrowRight',
     ArrowUp = 'ArrowUp',
     Backspace = 'Backspace',
