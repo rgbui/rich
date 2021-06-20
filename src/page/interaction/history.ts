@@ -3,8 +3,8 @@ import { OperatorDirective } from "../../history/declare";
 import { HistorySnapshoot } from "../../history/snapshoot";
 export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     snapshoot.on('history', (action) => {
-        this.emit('history', action);
-        this.emit('change');
+        page.emit('history', action);
+        page.emit('change');
     });
     snapshoot.on('error', err => page.onError(err));
     snapshoot.on('warn', (error) => page.onWarn(error));
