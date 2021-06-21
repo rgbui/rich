@@ -35,6 +35,8 @@ export class Kit extends Events {
         return this.isDown;
     }
     view: KitView;
+    private lastMouseupDate: number;
+    private lastMouseupEvent: MouseEvent;
     acceptMousedown(event: MouseEvent) {
         var block = this.page.getVisibleBlockByMouse(event);
         this.downEvent = event;
@@ -43,12 +45,7 @@ export class Kit extends Events {
             var anchor = block.visibleAnchor(Point.from(this.downEvent));
             if (anchor) {
                 this.downAnchor = anchor;
-                if (this.explorer.activeAnchor && this.explorer.activeAnchor.equal(anchor) && !this.explorer.hasSelectionRange) {
-                    var contentRowBlock = block.closest(x => !x.isLine);
-                    this.explorer.onSelectBlocks([contentRowBlock]);
-                }
-                else
-                    this.explorer.onFocusAnchor(this.downAnchor);
+                this.explorer.onFocusAnchor(this.downAnchor);
             }
         }
     }
@@ -106,6 +103,15 @@ export class Kit extends Events {
             delete this.downAnchor;
             delete this.downEvent;
             this.isDown = false;
+            if (this.explorer.isOnlyAnchor && this.explorer.activeAnchor.isText && this.lastMouseupDate && Date.now() - this.lastMouseupDate < 700) {
+                if (this.lastMouseupEvent && Point.from(this.lastMouseupEvent).nearBy(Point.from(event), 0)) {
+                    var block = this.explorer.activeAnchor.block;
+                    var contentRowBlock = block.closest(x => !x.isLine);
+                    this.explorer.onSelectBlocks([contentRowBlock]);
+                }
+            }
+            this.lastMouseupEvent = event;
+            this.lastMouseupDate = Date.now();
             if (this.explorer.isOnlyAnchor)
                 this.textInput.onFocus();
         }
