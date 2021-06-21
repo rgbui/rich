@@ -30,8 +30,8 @@ export class SelectionExplorer extends Events {
             if (this.activeAnchor) this.page.onBlurAnchor(this.activeAnchor);
         }
         else return
+        this.activeAnchor = anchor;
         if (!(this.activeAnchor && this.activeAnchor.equal(anchor))) {
-            this.activeAnchor = anchor;
             this.page.onFocusAnchor(this.activeAnchor);
         }
     }
@@ -74,7 +74,6 @@ export class SelectionExplorer extends Events {
         return anchor;
     }
     onFocusAnchor(anchor: Anchor) {
-        console.log(anchor);
         if (this.end) { this.end.dispose(); delete this.end; }
         if (this.start) anchor.acceptView(this.start);
         this.start = anchor;
@@ -82,6 +81,28 @@ export class SelectionExplorer extends Events {
         this.currentSelectedBlocks = [];
         this.renderSelection();
     }
+    // onSelectBlock(block: Block) {
+    //     var from: Anchor = block.visibleHeadAnchor;
+    //     var to: Anchor = block.visibleBackAnchor;
+    //     if (block.hasChilds) {
+    //         from = block.visiblePitFirstContent?.visibleHeadAnchor;
+    //         to = block.visiblePitLastContent?.visibleBackAnchor;
+    //     }
+    //     else {
+    //         from = block.visibleHeadAnchor;
+    //         to = block.visibleBackAnchor;
+    //     }
+    //     if (from.equal(to)) to = undefined;
+    //     if (this.start && from) from.acceptView(this.start);
+    //     else if (this.start && !from) this.start.dispose();
+    //     this.start = from;
+    //     if (this.end && to) to.acceptView(this.end);
+    //     else if (this.end && !to) to.dispose()
+    //     this.end = to;
+    //     this.setActiveAnchor(this.end);
+    //     this.currentSelectedBlocks = [];
+    //     this.renderSelection();
+    // }
     onShiftFocusAnchor(anchor: Anchor) {
         if (this.end) anchor.acceptView(this.end);
         this.end = anchor;
