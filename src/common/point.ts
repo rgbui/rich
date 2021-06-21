@@ -39,7 +39,7 @@ export class Point {
      */
     nearBy(point: Point, distance: number) {
         if (point) {
-            if (Math.abs(point.x - this.x) < distance && Math.abs(point.y - this.y) < distance) {
+            if (Math.abs(point.x - this.x) <= distance && Math.abs(point.y - this.y) <=distance) {
                 return true;
             }
         }
