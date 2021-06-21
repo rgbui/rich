@@ -10,7 +10,7 @@
         "moduleResolution": "node", // 允许从没有设置默认导出的模块中默认导入
         "allowSyntheticDefaultImports": true,
         "declaration": false, //Generates corresponding d.ts files.
-        "declarationDir": "./types",
+        // "declarationDir": "./types",
         // 启用装饰器
         "experimentalDecorators": true,
         "jsx": "react",
