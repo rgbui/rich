@@ -232,7 +232,7 @@ export var data = {
                             childs: [
                                 {
                                     url: '/code',
-                                    code: 'var d="ssss";'
+                                    content: 'var d="ssss";'
                                 }
                             ]
                         }

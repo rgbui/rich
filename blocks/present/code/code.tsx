@@ -16,11 +16,9 @@ export class TextCode extends Block {
     appear = BlockAppear.text;
     display = BlockDisplay.block;
     @prop()
-    code: string = '';
-    @prop()
     language: string = 'javascript';
     get htmlContent() {
-        const html = Prism.highlight(this.code, Prism.languages[this.language], this.language);
+        const html = Prism.highlight(this.content, Prism.languages[this.language], this.language);
         return html;
     }
 }
