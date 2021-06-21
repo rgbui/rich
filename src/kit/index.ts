@@ -43,7 +43,12 @@ export class Kit extends Events {
             var anchor = block.visibleAnchor(Point.from(this.downEvent));
             if (anchor) {
                 this.downAnchor = anchor;
-                this.explorer.onFocusAnchor(this.downAnchor);
+                if (this.explorer.activeAnchor && this.explorer.activeAnchor.equal(anchor) && !this.explorer.hasSelectionRange) {
+                    var contentRowBlock = block.closest(x => !x.isLine);
+                    this.explorer.onSelectBlocks([contentRowBlock]);
+                }
+                else
+                    this.explorer.onFocusAnchor(this.downAnchor);
             }
         }
     }
