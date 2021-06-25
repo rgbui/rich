@@ -34,14 +34,10 @@ export class TableCellView extends BlockView<TableCell>{
         var style: Record<string, any> = {
 
         };
-        if (this.block.childs.length > 0)
-            return <td style={style}
-                rowSpan={this.block.rowspan == 1 ? undefined : this.block.rowspan}
-                colSpan={this.block.colspan == 1 ? undefined : this.block.colspan}
-                ref={e => this.block.childsEl = e}
-            ><ChildsArea childs={this.block.childs}></ChildsArea></td>
-        else return <td style={style} rowSpan={this.block.rowspan} colSpan={this.block.colspan}>
-            <TextArea html={this.block.htmlContent}></TextArea>
-        </td>
+        return <td style={style}
+            rowSpan={this.block.rowspan == 1 ? undefined : this.block.rowspan}
+            colSpan={this.block.colspan == 1 ? undefined : this.block.colspan}
+            ref={e => this.block.childsEl = e}
+        ><ChildsArea childs={this.block.childs}></ChildsArea></td>
     }
 }
