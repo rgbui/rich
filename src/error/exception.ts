@@ -29,7 +29,8 @@ export enum ExceptionType {
     notTextSelection,
     notFoundBlockCssName,
     overlayCssNameNotEqual,
-    notUser
+    notUser,
+    fontStyleLineHeightIsNumber
 }
 /**
  * 自定义异常
