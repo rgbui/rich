@@ -18,7 +18,7 @@ export class TextCode extends Block {
     @prop()
     language: string = 'javascript';
     get htmlContent() {
-        const html = Prism.highlight(this.content, Prism.languages[this.language], this.language);
+        const html = Prism.highlight(this.textContent, Prism.languages[this.language], this.language);
         return html;
     }
 }

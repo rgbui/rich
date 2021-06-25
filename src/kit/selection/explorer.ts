@@ -67,7 +67,9 @@ export class SelectionExplorer extends Events {
         var anchor = new Anchor(this);
         anchor.block = block;
         if (typeof at == 'number') {
-            if (at == -1) anchor.at = block.content.length;
+            if (at == -1) {
+                anchor.at = block.textContent.length;
+            }
             else anchor.at = at;
         }
         else if (block.isText) anchor.at = 0;
@@ -127,11 +129,11 @@ export class SelectionExplorer extends Events {
                 var blocks = this.page.searchBlocksBetweenAnchor(this.start, this.end);
                 await blocks.eachAsync(async block => {
                     if (block == this.start.block) {
-                        var content = this.start.isBefore(this.end) ? block.content.slice(0, this.start.at) : block.content.slice(this.start.at);
+                        var content = this.start.isBefore(this.end) ? block.textContent.slice(0, this.start.at) : block.textContent.slice(this.start.at);
                         block.updateProps({ content });
                     }
                     else if (block == this.end.block) {
-                        var content = this.end.isBefore(this.start) ? block.content.slice(0, this.end.at) : block.content.slice(this.end.at);
+                        var content = this.end.isBefore(this.start) ? block.textContent.slice(0, this.end.at) : block.textContent.slice(this.end.at);
                         block.updateProps({ content });
                     }
                     else {
@@ -185,6 +187,7 @@ export class SelectionExplorer extends Events {
             else if (anchor.isSolid) {
                 if (arrow == KeyboardCode.ArrowLeft) {
                     newAnchor = anchor.block.visiblePrevAnchor;
+                    console.log(newAnchor, newAnchor.at);
                 }
                 else if (arrow == KeyboardCode.ArrowRight) {
                     newAnchor = anchor.block.visibleNextAnchor;

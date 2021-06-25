@@ -9,7 +9,6 @@ import { Content } from '../../src/block/layout/content';
 export class TextSpan extends Content {
     display = BlockDisplay.block;
     appear = BlockAppear.none;
-    content: string;
     get isText() {
         if (this.childs.length > 0) return false;
         return true;

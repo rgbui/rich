@@ -652,7 +652,14 @@ export abstract class Block extends Events {
     @prop()
     content: string = '';
     get isEmpty() {
-        return this.content ? false : true
+        return this.textContent ? false : true
+    }
+    get textContent():string {
+        var c = this.content;
+        if (typeof c == 'string') return c;
+        else if (c === null || c === undefined) return '';
+        else if (c && typeof (c as any).toString == 'function') return (c as any).toString();
+        return '';
     }
     /**
      * 是否可以自动删除
@@ -662,7 +669,6 @@ export abstract class Block extends Events {
     }
     get htmlContent() {
         return this.content;
-        // return TextEle.getTextHtml(this.content)
     }
     getBounds() {
         return TextEle.getBounds(this.el);

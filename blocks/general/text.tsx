@@ -11,7 +11,6 @@ import { TextArea } from "../../src/block/partial/appear";
  */
 @url('/text')
 export class TextContent extends BlockComposition {
-    content: string;
     display = BlockDisplay.inline;
     appear = BlockAppear.text;
     get isTextContent(){

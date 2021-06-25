@@ -219,7 +219,7 @@ export class Page$Seek {
     fissionBlockBySelection(block: Block, from: Anchor, to: Anchor) {
         if (!from.isBefore(to)) [to, from] = [from, to];
         var selectionBeforeContent = '', selectionAfterContent = '', selectionContent = '';
-        var content = block.content;
+        var content = block.textContent;
         if (block == from.block && block == to.block) {
             //说明block包含选区
             selectionBeforeContent = content.substring(0, from.at);
