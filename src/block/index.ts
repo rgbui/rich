@@ -330,7 +330,7 @@ export abstract class Block extends Events {
         return this.find(g => !g.isLayout);
     }
     /**
-     * 查换当前容器里面末尾的内容元素
+     * 查找当前容器里面末尾的内容元素
      */
     get visiblePitLastContent() {
         return this.findReverse(g => !g.isLayout);

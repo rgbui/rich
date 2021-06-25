@@ -81,28 +81,6 @@ export class SelectionExplorer extends Events {
         this.currentSelectedBlocks = [];
         this.renderSelection();
     }
-    // onSelectBlock(block: Block) {
-    //     var from: Anchor = block.visibleHeadAnchor;
-    //     var to: Anchor = block.visibleBackAnchor;
-    //     if (block.hasChilds) {
-    //         from = block.visiblePitFirstContent?.visibleHeadAnchor;
-    //         to = block.visiblePitLastContent?.visibleBackAnchor;
-    //     }
-    //     else {
-    //         from = block.visibleHeadAnchor;
-    //         to = block.visibleBackAnchor;
-    //     }
-    //     if (from.equal(to)) to = undefined;
-    //     if (this.start && from) from.acceptView(this.start);
-    //     else if (this.start && !from) this.start.dispose();
-    //     this.start = from;
-    //     if (this.end && to) to.acceptView(this.end);
-    //     else if (this.end && !to) to.dispose()
-    //     this.end = to;
-    //     this.setActiveAnchor(this.end);
-    //     this.currentSelectedBlocks = [];
-    //     this.renderSelection();
-    // }
     onShiftFocusAnchor(anchor: Anchor) {
         if (this.end) anchor.acceptView(this.end);
         this.end = anchor;
@@ -224,13 +202,11 @@ export class SelectionExplorer extends Events {
                  * 这样就不会在视觉上发现光标在某个地方有停留了
                  */
                 if (anchor.isText && newAnchor.isText && (arrow == KeyboardCode.ArrowLeft || arrow == KeyboardCode.ArrowRight)) {
-                    if (this.page.textAnchorIsAdjoin(anchor, newAnchor)) {
-                        if (arrow == KeyboardCode.ArrowRight) {
-                            newAnchor.at += 1;
-                        }
-                        else if (arrow == KeyboardCode.ArrowLeft) {
-                            newAnchor.at -= 1;
-                        }
+                    if (arrow == KeyboardCode.ArrowRight) {
+                        if (this.page.textAnchorIsAdjoin(anchor, newAnchor)) newAnchor.at += 1;
+                    }
+                    else {
+                        if (this.page.textAnchorIsAdjoin(newAnchor, anchor)) newAnchor.at -= 1;
                     }
                 }
                 this.onFocusAnchor(newAnchor);

@@ -187,11 +187,10 @@ export class Page$Seek {
             var tb = to.block.textEl;
             var ob = fb.getBoundingClientRect();
             var nb = tb.getBoundingClientRect();
-            if (Math.abs(nb.left + nb.width - ob.left) < 10)
-                return true;
-            else if (Math.abs(ob.left + ob.width - nb.left) < 10)
-                return true;
-            else return false;
+            if (Math.abs(ob.left + ob.width - nb.left) < 10) {
+                var y = ob.top + ob.height - 10;
+                if (y >= nb.top && y <= nb.top + 20) { return true; }
+            }
         }
         return false;
     }
