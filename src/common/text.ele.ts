@@ -1,4 +1,5 @@
 
+import { Exception, ExceptionType } from "../error/exception";
 import { dom } from "./dom";
 import { Point, Rect } from "./point";
 let __g: CanvasRenderingContext2D;
@@ -16,6 +17,14 @@ export class TextEle {
                 letterSpacing: dm.style('letterSpacing'),
                 color: dm.style('color')
             };
+            if (fontStyle.lineHeight == 'normal' || fontStyle.lineHeight == 'inherit') {
+                var e = dm.closest(g => dom(g as HTMLElement).style('lineHeight') != 'normal' && dom(g as HTMLElement).style('lineHeight') != 'inherit')
+                if (e)
+                    fontStyle.lineHeight = dom(e as HTMLElement).style('lineHeight');
+            }
+            if (!/^[\d]+px$/.test(fontStyle.lineHeight)) {
+                throw new Exception(ExceptionType.fontStyleLineHeightIsNumber, 'the font lineHeight is not number')
+            }
             fontStyle.lineHeight = parseInt(fontStyle.lineHeight.replace('px', ''));
             fontStyle.letterSpacing = parseInt(fontStyle.letterSpacing.replace('px', ''));
             if (isNaN(fontStyle.letterSpacing)) fontStyle.letterSpacing = 0;
