@@ -135,6 +135,20 @@ export class Anchor {
             throw new Error('anchor visible error...');
         }
         if (this.isActive) {
+            /**
+             * 向上感觉还可以，向下则挡住了，
+             * 是不是考虑在光标内加个元素，比较长的
+             */
+
+            if (typeof (this.view as any).scrollIntoViewIfNeeded == 'function')
+                (this.view as any).scrollIntoViewIfNeeded(true);
+            else {
+                this.view.scrollIntoView({
+                    behavior: "smooth",
+                    block: 'center',
+                    inline: 'center'
+                });
+            }
             this.kit.textInput.followAnchor(this);
         }
     }

@@ -43,6 +43,7 @@ export class TextInput$Write {
                 case KeyboardCode.ArrowUp:
                 case KeyboardCode.ArrowLeft:
                 case KeyboardCode.ArrowRight:
+                    event.preventDefault();
                     return this.kit.explorer.onCursorMove(event.key);
                 case KeyboardCode.Enter:
                     if (!this.page.keyboardPlate.isShift() && this.explorer.activeAnchor.isText && this.explorer.activeAnchor.isEnd)
