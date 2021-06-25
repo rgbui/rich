@@ -182,11 +182,18 @@ export class Page$Seek {
      * @param to 
      */
     textAnchorIsAdjoin(from: Anchor, to: Anchor) {
-        var ob = from.el.getBoundingClientRect();
-        var nb = to.el.getBoundingClientRect();
-        if (Math.abs(nb.left + nb.width - ob.left) < 10)
-            return true;
-        else return false;
+        if (from.block.isText && to.block.isText) {
+            var fb = from.block.textEl;
+            var tb = to.block.textEl;
+            var ob = fb.getBoundingClientRect();
+            var nb = tb.getBoundingClientRect();
+            if (Math.abs(nb.left + nb.width - ob.left) < 10)
+                return true;
+            else if (Math.abs(ob.left + ob.width - nb.left) < 10)
+                return true;
+            else return false;
+        }
+        return false;
     }
     /**
      * 判断current与prev是否为相邻换行的block
