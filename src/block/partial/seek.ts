@@ -276,7 +276,7 @@ export class Block$Seek {
         }, consider, true);
         return blocks;
     }
-    closest(this: Block, predict: (block: Block) => boolean, ignore: boolean = false, finalPredict?: (block: Block) => boolean) {
+    closest(this: Block, predict: (block: Block) => boolean, ignore: boolean = false, finalPredict?: (block: Block) => boolean):Block {
         if (ignore !== true && predict(this)) return this;
         var pa = this.parent;
         while (true) {

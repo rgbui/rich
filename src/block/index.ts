@@ -56,6 +56,11 @@ export abstract class Block extends Events {
             }
         }
     }
+    get hasBrother() {
+        var pb = this.parentBlocks;
+        if (pb.length > 1) return true;
+        else return false;
+    }
     get parentKey() {
         var pb = this.parentBlocks;
         for (var n in this.parent.blocks) {
@@ -654,7 +659,7 @@ export abstract class Block extends Events {
     get isEmpty() {
         return this.textContent ? false : true
     }
-    get textContent():string {
+    get textContent(): string {
         var c = this.content;
         if (typeof c == 'string') return c;
         else if (c === null || c === undefined) return '';

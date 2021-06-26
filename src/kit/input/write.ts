@@ -51,10 +51,7 @@ export class TextInput$Write {
                     break;
                 case KeyboardCode.Delete:
                 case KeyboardCode.Backspace:
-                    if (this.explorer.activeAnchor.isText) {
-                        if (!this.textarea.value) return this.onInputDeleteText();
-                    }
-                    else return this.kit.explorer.onBackspaceSolidAnchor()
+                    if (!this.textarea.value) return this.onInputDeleteText();
                     break;
             }
         }
@@ -90,29 +87,43 @@ export class TextInput$Write {
         }
     }
     private deleteInputText: string;
+    /**
+     * 
+     * 设计处进过程 https://github.com/rgbui/rich/issues/3#issuecomment-868976326
+     * @param this 
+     * 
+     */
     async onInputDeleteText(this: TextInput) {
         var anchor = this.explorer.activeAnchor;
+        var block = anchor.block;
+        anchor.inputting();
         if (anchor.isText) {
-            var block = anchor.block;
-            anchor.inputting();
             if (anchor.at == 0) {
                 var prevAnchor = block.visiblePrevAnchor;
-                if (this.kit.page.textAnchorIsAdjoin(anchor, prevAnchor)) {
-                    this.explorer.onFocusAnchor(prevAnchor);
-                    if (block.isCanAutomaticallyDeleted) await block.onDelete()
-                    this.onWillInput(this.explorer.activeAnchor);
-                    await this.onInputDeleteText();
+                if (prevAnchor) {
+                    if (this.kit.page.textAnchorIsAdjoin(anchor, prevAnchor)) {
+                        this.explorer.onFocusAnchor(prevAnchor);
+                        this.onWillInput(this.explorer.activeAnchor);
+                        await this.onInputDeleteText();
+                    }
+                    else {
+                        this.kit.explorer.onCursorMove(KeyboardCode.ArrowLeft);
+                        this.onWillInput(this.explorer.activeAnchor);
+                        if (block.isCanAutomaticallyDeleted) await block.onDelete()
+                        else {
+                            /**
+                             * 这里判断是否为跨行
+                             * 如果跨行，那么此时block所在的行的内容是否合并到新行中
+                             ***/
+                        }
+                    }
                 }
                 else {
-                    //没有挨近
                     /**
-                     * 这里主要是判断前面的一个block与当前的block是否处于换行的，
-                     * 如果处于换行的，可能要合并内容(可以暂时先不做)
-                     * 
+                     * 此时光标无法再回退了
+                     * 这应该是文档的第一行首位元素
                      */
-                    this.kit.explorer.onCursorMove(KeyboardCode.ArrowLeft);
-                    if (block.isCanAutomaticallyDeleted) await block.onDelete()
-                    this.onWillInput(this.explorer.activeAnchor);
+
                 }
             }
             else if (anchor.at > 0) {
@@ -131,22 +142,44 @@ export class TextInput$Write {
                     }
                     var action: () => Promise<void>;
                     if (anchor.at == 0) {
-                        var prevAnchor = block.visiblePrevAnchor;
-                        if (this.kit.page.textAnchorIsAdjoin(prevAnchor, anchor)) {
-                            this.explorer.onFocusAnchor(prevAnchor);
-                            this.onWillInput(this.explorer.activeAnchor);
-                            if (block.isCanAutomaticallyDeleted)
-                                action = async () => {
-                                    await block.delete();
-                                }
+                        action = async () => {
+                            var existsDelete: boolean = false;
+                            if (anchor.block.isLine) {
+                                var newAnchor: Anchor;
+                                if (block.prev) newAnchor = block.prev.visibleBackAnchor;
+                                else if (block.next) newAnchor = block.next.visibleHeadAnchor;
+                                var pa = block.parent;
+                                if (block.isCanAutomaticallyDeleted) { await block.delete(); existsDelete = true; }
+                                if (!newAnchor) newAnchor = pa.visibleHeadAnchor;
+                                this.explorer.onFocusAnchor(newAnchor);
+                                this.onWillInput(this.explorer.activeAnchor);
+                            }
+                            var checkEmpty = () => {
+                                var currentAnchor = this.explorer.activeAnchor;
+                                this.explorer.onFocusAnchor(currentAnchor);
+                                if (currentAnchor.at == 0 && currentAnchor.block.isEmpty) currentAnchor.setEmpty();
+                                else currentAnchor.removeEmpty();
+                            }
+                            if (existsDelete == true) {
+                                this.page.onUpdated(async () => {
+                                    checkEmpty();
+                                })
+                            }
+                            else {
+                                checkEmpty();
+                            }
                         }
                     }
-                    this.willDeleteStore(block, this.textAt, value, anchor.at == 0 ? true : false, action);
-                    if (anchor.at == 0 && block.isEmpty) anchor.setEmpty();
-                    else anchor.removeEmpty();
+                    await this.willDeleteStore(block, this.textAt, this.deleteInputText, anchor.at == 0 ? true : false, action);
                     this.followAnchor(this.explorer.activeAnchor);
                 } else throw new Exception(ExceptionType.notFoundTextEle);
             }
+        }
+        else {
+            console.log(anchor);
+            this.kit.explorer.onCursorMove(KeyboardCode.ArrowLeft);
+            this.onWillInput(this.explorer.activeAnchor);
+            await block.onDelete()
         }
     }
     private textNode: HTMLElement;
@@ -161,6 +194,7 @@ export class TextInput$Write {
         this.textarea.value = '';
         delete this.textNode;
         this.deleteInputText = '';
+        delete this.lastDeleteText
         this.clearInputTime();
         this.kit.emit('willInput');
         if (anchor && anchor.isText) {
@@ -256,20 +290,20 @@ export class TextInput$Write {
             delete this.delayDeleteTime;
         }
     }
-    willDeleteStore(this: TextInput, block: Block, from: number, text: string, force: boolean = false, action?: () => Promise<void>) {
+    async willDeleteStore(this: TextInput, block: Block, from: number, text: string, force: boolean = false, action?: () => Promise<void>) {
         this.clearDeleteTime();
-        var excute = () => {
+        var excute = async () => {
             block.content = TextEle.getTextContent(block.textEl);
             var size = this.lastDeleteText ? this.lastDeleteText.length : 0;
             this.lastDeleteText = text;
             this.clearDeleteTime();
-            block.onDeleteText(text.slice(0, text.length - size), from - size, from - text.length, action)
+            await block.onDeleteText(text.slice(0, text.length - size), from - size, from - text.length, action)
         }
         /***
             * 这里需要将当前的变化通知到外面，
             * 当然用户在输的过程中，该方法会不断的执行，所以通知需要加一定的延迟，即用户停止几秒钟后默认为输入
             */
         if (force == false) this.delayDeleteTime = setTimeout(async () => { await excute() }, 7e2);
-        else excute();
+        else await excute();
     }
 }

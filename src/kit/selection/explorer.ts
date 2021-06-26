@@ -144,19 +144,6 @@ export class SelectionExplorer extends Events {
         })
     }
     /**
-     * 回退光标，删除一些类似于图片这样的block
-     */
-    async onBackspaceSolidAnchor() {
-        if (!this.activeAnchor.isText) {
-            await this.page.onAction(ActionDirective.onDelete, async () => {
-                var block = this.activeAnchor.block;
-                var newAnchor = this.activeAnchor.block.visiblePrevAnchor;
-                this.onFocusAnchor(newAnchor);
-                await block.delete();
-            });
-        }
-    }
-    /**
      * 光标移动
      * @param arrow 
      * @returns 
