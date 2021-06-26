@@ -243,6 +243,7 @@ export var data = {
                             childs: [
                                 {
                                     url: '/list',
+                                    listType: 2,
                                     blocks: {
                                         childs: [{ url: '/list/text', content: '选项1' }],
                                         subChilds: [
@@ -250,6 +251,12 @@ export var data = {
                                                 url: '/col',
                                                 blocks: {
                                                     childs: [
+                                                        {
+                                                            url: '/row',
+                                                            blocks: {
+                                                                childs: [{ url: '/textspan', content: "子内容。。。。。" }]
+                                                            }
+                                                        },
                                                         {
                                                             url: '/row',
                                                             blocks: {
@@ -263,7 +270,21 @@ export var data = {
                                     }
                                 }]
                         }
-                    }
+                    }, {
+                        url: '/row',
+                        blocks: {
+                            childs: [
+                                { url: '/head', content: '大标题' }
+                            ]
+                        }
+                    }, {
+                        url: '/row',
+                        blocks: {
+                            childs: [
+                                { url: '/head', content: '大标题' }
+                            ]
+                        }
+                    },
                 ]
             }
         }

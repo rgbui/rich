@@ -11,7 +11,7 @@ import { SY } from '..';
 
 
 ReactDOM.render(
-    <div className='editor-page'>
+    <div className='editor-page' style={{marginBottom:100}}>
         <div className='editor' ></div>
         <div className='editor-console'></div>
     </div>,

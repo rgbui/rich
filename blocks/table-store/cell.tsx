@@ -8,6 +8,7 @@ import { TableStoreRow } from "./row";
 import { TableStore } from "./table";
 import { TableMetaFieldType } from "./meta";
 import { BlockFactory } from "../../src/block/factory/block.factory";
+import { BlockUrlConstant } from "../../src/block/constant";
 @url('/tablestore/cell')
 export class TableStoreCell extends Block {
     display = BlockDisplay.block;
@@ -34,7 +35,7 @@ export class TableStoreCell extends Block {
         var cellContent: Block;
         switch (this.metaCol.type) {
             case TableMetaFieldType.string:
-                cellContent = await BlockFactory.createBlock('/text', this.page, { content: this.value }, this);
+                cellContent = await BlockFactory.createBlock(BlockUrlConstant.Text, this.page, { content: this.value }, this);
                 break;
             case TableMetaFieldType.number:
                 cellContent = await BlockFactory.createBlock('/text', this.page, { content: this.value }, this);
