@@ -3,7 +3,8 @@ import { KeyboardCode, KeyboardPlate } from "../../common/keys";
 
 export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
     keyboardPlate.listener((kt) => kt.is(KeyboardCode.Backspace, KeyboardCode.Delete), async kt => {
-        page.kit.explorer.onDeleteSelection();
+        if (page.kit.explorer.hasSelectionRange)
+            page.kit.explorer.onDeleteSelection();
     });
     keyboardPlate.listener(kt => kt.isCtrl(KeyboardCode.Z), async kt => {
         page.snapshoot.onUndo();
