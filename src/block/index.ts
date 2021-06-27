@@ -106,6 +106,13 @@ export abstract class Block extends Events {
             }
         }
     }
+    /**
+     * 文本内容是否可以支持多行，
+     * 仅对文本block有用
+     */
+    get multiLines() {
+        return true;
+    }
     constructor(page: Page) {
         super();
         this.id = util.guid();
@@ -146,7 +153,7 @@ export abstract class Block extends Events {
             });
             pbs.remove(this);
             this.page.onAddUpdate(this.parent);
-            this.parent.layoutCollapse();
+            await this.parent.layoutCollapse();
             delete this.parent;
         }
     }
@@ -154,17 +161,18 @@ export abstract class Block extends Events {
      * 彻底的删除元素
      */
     async delete() {
-        var pb = this.parentBlocks;
-        if (Array.isArray(pb) && pb.exists(g => g === this)) {
+        var pbs = this.parentBlocks;
+        if (Array.isArray(pbs) && pbs.exists(g => g === this)) {
             this.page.snapshoot.record(OperatorDirective.delete, {
                 parentId: this.parent.id,
                 childKey: this.parentKey,
-                at: pb.findIndex(g => g === this),
+                at: this.at,
                 preBlockId: this.prev ? this.prev.id : undefined,
                 data: await this.get()
             })
-            this.parentBlocks.remove(this);
+            pbs.remove(this);
             this.page.onAddUpdate(this.parent);
+            await this.parent.layoutCollapse();
             delete this.parent;
         }
     }
@@ -181,21 +189,21 @@ export abstract class Block extends Events {
      * 需要调成row-ele,其中col-row需要删除
      */
     async layoutCollapse() {
-        async function clearOneCol(panel: Block) {
-            if (panel.isRow && !panel.isPart && panel.childs.length == 1 && !panel.childs.first().isPart && panel.childs.first().isCol) {
-                var childs = panel.childs.first().childs;
-                if (childs.length > 0) {
+        async function clearOneColOrRow(panel: Block) {
+            if (!panel.isPart && (panel.isRow || panel.isCol) && panel.childs.length == 1) {
+                var firstChild = panel.childs.first();
+                if (firstChild.isCol || firstChild.isRow) {
                     var c = panel;
-                    await childs.eachAsync(async child => {
+                    await firstChild.childs.eachAsync(async child => {
                         await child.insertAfter(c);
-                        await clearOneCol(child);
+                        await clearOneColOrRow(child);
                         c = child;
-                    });
+                    })
                     await panel.delete();
                 }
             }
         }
-        await clearOneCol(this);
+        await clearOneColOrRow(this);
         /**
          * 
          * @param panel 自动删除空row,空col
