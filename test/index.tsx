@@ -38,6 +38,9 @@ ReactDOM.render(
             var conEle: HTMLElement = document.querySelector('.editor-console');
             conEle.innerHTML = conEle.innerHTML + '</br>' + action.toString();
         });
+        page.on('loaded',()=>{
+            console.log(page);
+        })
         await page.load(data);
         await page.render();
     }

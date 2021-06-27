@@ -41,9 +41,8 @@ export abstract class Block extends Events {
     }
     get hasChilds() {
         if (Object.keys(this.blocks).length > 0) {
-            for (var n in this.blocks) {
-                if (Array.isArray(this.blocks[n]) && this.blocks[n].length > 0) return true;
-            }
+            var keys = this.blockKeys;
+            if (keys.exists(key => this.blocks[key].length > 0)) return true;
         }
         return false;
     }
@@ -346,7 +345,7 @@ export abstract class Block extends Events {
      * 查找当前容器里面末尾的内容元素
      */
     get visiblePitLastContent() {
-        return this.findReverse(g => !g.isLayout);
+        return this.findReverse(g => !g.isLayout && !g.hasChilds);
     }
     isLoad = false;
     async load(data) {
@@ -475,7 +474,17 @@ export abstract class Block extends Events {
         var prev = current.prev;
         while (true) {
             if (prev) {
-                if (!prev.isLayout) return prev;
+                /**
+                 * 非layout容器，也是有可能有子block的
+                 * 例如list块,本身是个文本块，但包含子模块
+                 */
+                if (!prev.isLayout) {
+                    if (prev.hasChilds) {
+                        var vp = prev.visiblePitLastContent;
+                        if (vp) return vp;
+                    }
+                    return prev;
+                }
                 else {
                     return prev.visiblePitLastContent;
                 }
@@ -486,12 +495,18 @@ export abstract class Block extends Events {
                 if (current) {
                     prev = current.prev;
                 }
-                else break;
+                else {
+                    break;
+                }
             }
         }
     }
     get visibleNext() {
         var current: Block = this;
+        if (!current.isLayout && current.hasChilds) {
+            var t = current.visiblePitFirstContent;
+            if (t) return t;
+        }
         var next = current.next;
         while (true) {
             if (next) {
@@ -678,7 +693,7 @@ export abstract class Block extends Events {
      * 是否可以自动删除
      */
     get isCanAutomaticallyDeleted() {
-        return this.isEmpty && !this.isPart;
+        return this.isEmpty && !this.isPart && !this.hasChilds;
     }
     get htmlContent() {
         return this.content;

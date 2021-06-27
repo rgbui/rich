@@ -160,14 +160,11 @@ export class TextInput$Write {
                                 if (currentAnchor.at == 0 && currentAnchor.block.isEmpty) currentAnchor.setEmpty();
                                 else currentAnchor.removeEmpty();
                             }
-                            if (existsDelete == true) {
-                                this.page.onUpdated(async () => {
-                                    checkEmpty();
-                                })
-                            }
-                            else {
+                            if (existsDelete == true) this.page.onUpdated(async () => {
                                 checkEmpty();
-                            }
+                            })
+                            else checkEmpty();
+
                         }
                     }
                     await this.willDeleteStore(block, this.textAt, this.deleteInputText, anchor.at == 0 ? true : false, action);
@@ -176,7 +173,6 @@ export class TextInput$Write {
             }
         }
         else {
-            console.log(anchor);
             this.kit.explorer.onCursorMove(KeyboardCode.ArrowLeft);
             this.onWillInput(this.explorer.activeAnchor);
             await block.onDelete()
