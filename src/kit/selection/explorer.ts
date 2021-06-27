@@ -37,7 +37,8 @@ export class SelectionExplorer extends Events {
     }
     renderSelection() {
         if (this.start) this.start.visible()
-        if (this.end) this.end.visible()
+        if (this.end) this.end.visible();
+
         if (this.start && this.end) {
             var range = document.createRange();
             range.setStartBefore(this.start.view);
@@ -51,8 +52,6 @@ export class SelectionExplorer extends Events {
             selection.addRange(range); // 将要复制的区域的range对象添加到selection对象中
         }
         else {
-            const selection = window.getSelection();
-            if (selection.rangeCount > 0) selection.removeAllRanges();
             var currentEls = Array.from(this.kit.page.el.querySelectorAll(".sy-block-selected"));
             this.currentSelectedBlocks.each(sel => {
                 currentEls.remove(sel.el);
@@ -210,7 +209,8 @@ export class SelectionExplorer extends Events {
         await this.page.onAction(ActionDirective.onCreateBlockByEnter, async () => {
             var newBlock = await this.activeAnchor.block.visibleDownCreateBlock(BlockUrlConstant.TextSpan);
             newBlock.mounted(() => {
-                this.onFocusAnchor(newBlock.visibleHeadAnchor);
+                var anchor = newBlock.visibleHeadAnchor;
+                this.onFocusAnchor(anchor);
             });
         })
     }

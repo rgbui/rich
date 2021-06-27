@@ -16,7 +16,7 @@ export class TextInput$Write {
      * keydown-input keydown-input keydown-input-keyup
      * 注意keydown是要输入，input是输入完成，keyup不一定会触发
      */
-    onKeydown(this: TextInput, event: KeyboardEvent) {
+    async onKeydown(this: TextInput, event: KeyboardEvent) {
         this.isWillInput = false;
         var isIntercept = this.kit.emit('keydown', event);
         if (isIntercept) return;
@@ -27,14 +27,11 @@ export class TextInput$Write {
                 case KeyboardCode.ArrowLeft:
                 case KeyboardCode.ArrowRight:
                     return this.kit.explorer.onCancelSelection();
-                    break;
                 case KeyboardCode.Enter:
                     return this.kit.explorer.onCancelSelection();
-                    break;
                 case KeyboardCode.Delete:
                 case KeyboardCode.Backspace:
                     return this.kit.explorer.onDeleteSelection();
-                    break;
             }
         }
         else if (this.explorer.isOnlyAnchor) {
@@ -46,8 +43,15 @@ export class TextInput$Write {
                     event.preventDefault();
                     return this.kit.explorer.onCursorMove(event.key);
                 case KeyboardCode.Enter:
-                    if (!this.page.keyboardPlate.isShift() && this.explorer.activeAnchor.isText && this.explorer.activeAnchor.isEnd)
-                        return this.explorer.onEnter()
+                    if (!this.page.keyboardPlate.isShift() && this.explorer.activeAnchor.isText && this.explorer.activeAnchor.isEnd) {
+                        await this.explorer.onEnter();
+                        return
+                    }
+                    else if (this.explorer.activeAnchor.isText && this.explorer.activeAnchor.block.multiLines == false) {
+                        /**
+                         * 对于支持行的block，将会被截断
+                         */
+                    }
                     break;
                 case KeyboardCode.Delete:
                 case KeyboardCode.Backspace:
@@ -189,13 +193,16 @@ export class TextInput$Write {
         this.textarea.value = '';
         delete this.textNode;
         this.deleteInputText = '';
-        delete this.lastDeleteText
+        delete this.lastDeleteText;
+        delete this.lastInputText;
         this.clearInputTime();
-        this.kit.emit('willInput');
+        this.clearDeleteTime();
         if (anchor && anchor.isText) {
             this.textAt = anchor.at;
         }
+        else delete this.textAt;
         this.followAnchor(anchor);
+        this.kit.emit('willInput');
     }
     /**
      * 通过输入命令选择block，在选择后，

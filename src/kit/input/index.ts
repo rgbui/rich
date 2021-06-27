@@ -36,11 +36,13 @@ export class TextInput extends Events {
         }
     }
     followAnchor(anchor: Anchor) {
-        var bound = anchor.bound;
-        var point = Point.from(bound);
-        this.textarea.style.top = point.y + 'px';
-        this.textarea.style.left = (point.x + 0) + 'px';
-        this.textarea.style.height = bound.height + 'px';
+        if (anchor) {
+            var bound = anchor.bound;
+            var point = Point.from(bound);
+            this.textarea.style.top = point.y + 'px';
+            this.textarea.style.left = (point.x + 0) + 'px';
+            this.textarea.style.height = bound.height + 'px';
+        }
     }
 }
 
