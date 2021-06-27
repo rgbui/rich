@@ -106,11 +106,31 @@ export abstract class Block extends Events {
         }
     }
     /**
+     * 当前元素下面的元素，注意在同一个ChildKey中
+     */
+    get nexts() {
+        var pbs = this.parentBlocks;
+        var at = this.at;
+        return pbs.findAll((g, i) => i > at);
+    }
+    /**
      * 文本内容是否可以支持多行，
      * 仅对文本block有用
      */
     get multiLines() {
         return true;
+    }
+    /**
+     * 是否换行时，支持连续创建
+     */
+    get isContinuouslyCreated() {
+        return false;
+    }
+    /**
+     * 连续输入时，克隆的一些属性
+     */
+    get continuouslyProps(){
+        return{}
     }
     constructor(page: Page) {
         super();

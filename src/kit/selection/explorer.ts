@@ -1,4 +1,5 @@
 import { Kit } from "..";
+import { TextContent } from "../../../blocks/general/text";
 import { Block } from "../../block";
 import { BlockUrlConstant } from "../../block/constant";
 import { BlockCssName } from "../../block/pattern/css";
@@ -206,7 +207,11 @@ export class SelectionExplorer extends Events {
      */
     async onEnter() {
         await this.page.onAction(ActionDirective.onCreateBlockByEnter, async () => {
-            var newBlock = await this.activeAnchor.block.visibleDownCreateBlock(BlockUrlConstant.TextSpan);
+            var block = this.activeAnchor.block;
+            if (block.isLine) block = block.closest(g => !g.isLine);
+            var url = block.isContinuouslyCreated ? block.url : BlockUrlConstant.TextSpan;
+            var continuouslyProps = block.continuouslyProps;
+            var newBlock = await block.visibleDownCreateBlock(url, { ...continuouslyProps });
             newBlock.mounted(() => {
                 var anchor = newBlock.visibleHeadAnchor;
                 this.onFocusAnchor(anchor);
@@ -218,22 +223,29 @@ export class SelectionExplorer extends Events {
             var anchor = this.activeAnchor;
             var pos = anchor.at;
             var block = anchor.block;
-            var at = block.at;
-            var gs = block.parentBlocks.findAll((i, c) => c > at);
+            var gs = block.nexts;
             var rest = block.textContent.slice(0, pos);
             var text = block.textContent.slice(pos);
             block.updateProps({ content: rest });
-            var newBlock = await this.activeAnchor.block.visibleDownCreateBlock(BlockUrlConstant.TextSpan, { content: text });
+            if (block.isLine) block = block.closest(g => !g.isLine);
+            var url = block.isContinuouslyCreated ? block.url : BlockUrlConstant.TextSpan;
+            var continuouslyProps = block.continuouslyProps;
+            var newBlock: Block;
+            if (gs.length > 0) {
+                newBlock = await block.visibleDownCreateBlock(url, { ...continuouslyProps, childs: [{ url: BlockUrlConstant.Text, content: text }] });
+                var tc = newBlock.find(g => g instanceof TextContent, true);
+                for (let i = gs.length - 1; i >= 0; i--) {
+                    let g = gs[i];
+                    await g.insertAfter(tc);
+                }
+            }
+            else {
+                newBlock = await block.visibleDownCreateBlock(url, { ...continuouslyProps, content: text });
+            }
             newBlock.mounted(() => {
                 var anchor = newBlock.visibleHeadAnchor;
                 this.onFocusAnchor(anchor);
             });
-            if (gs.length > 0) {
-                for (let i = gs.length - 1; i >= 0; i--) {
-                    let g = gs[i];
-                    g.insertAfter(newBlock);
-                }
-            }
         })
     }
     /**

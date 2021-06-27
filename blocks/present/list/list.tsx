@@ -51,6 +51,15 @@ export class List extends Block {
     get multiLines() {
         return false;
     }
+    get isContinuouslyCreated() {
+        return true;
+    }
+    get continuouslyProps() {
+        return {
+            expand: false,
+            listType: this.listType
+        }
+    }
 }
 @view('/list')
 export class ListView extends BlockView<List>{

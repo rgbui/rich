@@ -27,6 +27,9 @@ export class ToDo extends TextSpan {
         if (this.checked == true) return 'checked';
         return 'default';
     }
+    get isContinuouslyCreated() {
+        return true
+    }
 }
 @view('/todo')
 export class ToDoView extends BlockView<ToDo>{
