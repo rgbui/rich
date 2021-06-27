@@ -13,7 +13,7 @@ import "./general/callout";
 import "./general/emoji";
 import "./general/quote";
 import "./present/list/list";
-import "./present/list/list.text";
+import "./present/list/list.sub.panel";
 
 import './table/cell';
 import './table/row';

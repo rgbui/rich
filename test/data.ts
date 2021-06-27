@@ -95,7 +95,7 @@ export var data = {
                         blocks: {
                             childs: [{
                                 url: '/table',
-                                cols: [{ width: 100 }, { width: 100 }, { width: 200 }],
+                                cols: [{ width: 100 },{ width: 100 }, { width: 200 }],
                                 blocks: {
                                     childs: [
                                         {
@@ -105,12 +105,7 @@ export var data = {
                                                         url: "/table/cell",
                                                         blocks: {
                                                             childs: [
-                                                                {
-                                                                    url: '/row',
-                                                                    blocks: {
-                                                                        childs: [{ url: '/textspan', content: "子内容。\n。。。。" }]
-                                                                    }
-                                                                }
+                                                                { url: '/textspan', content: "子内容。\n。。。。" }
                                                             ]
                                                         }
                                                     },
@@ -118,12 +113,7 @@ export var data = {
                                                         url: "/table/cell",
                                                         blocks: {
                                                             childs: [
-                                                                {
-                                                                    url: '/row',
-                                                                    blocks: {
-                                                                        childs: [{ url: '/textspan', content: "子内容。\n。。。。" }]
-                                                                    }
-                                                                }
+                                                                { url: '/textspan', content: "子内容。\n。。。。" }
                                                             ]
                                                         }
                                                     },
@@ -131,12 +121,7 @@ export var data = {
                                                         url: "/table/cell",
                                                         blocks: {
                                                             childs: [
-                                                                {
-                                                                    url: '/row',
-                                                                    blocks: {
-                                                                        childs: [{ url: '/textspan', content: "子内容。\n。。。。" }]
-                                                                    }
-                                                                }
+                                                                { url: '/textspan', content: "子内容。\n。。。。" }
                                                             ]
                                                         }
                                                     }
@@ -150,12 +135,7 @@ export var data = {
                                                         url: "/table/cell",
                                                         blocks: {
                                                             childs: [
-                                                                {
-                                                                    url: '/row',
-                                                                    blocks: {
-                                                                        childs: [{ url: '/textspan', content: "子内容。\n。。。。" }]
-                                                                    }
-                                                                }
+                                                                { url: '/textspan', content: "子内容。\n。。。。" }
                                                             ]
                                                         }
                                                     },
@@ -163,12 +143,7 @@ export var data = {
                                                         url: "/table/cell",
                                                         blocks: {
                                                             childs: [
-                                                                {
-                                                                    url: '/row',
-                                                                    blocks: {
-                                                                        childs: [{ url: '/textspan', content: "子内容。\n。。。。" }]
-                                                                    }
-                                                                }
+                                                                { url: '/textspan', content: "子内容。\n。。。。" }
                                                             ]
                                                         },
                                                         colspan: 2
@@ -177,18 +152,14 @@ export var data = {
                                             }
                                         },
                                         {
-                                            url: '/table/row', blocks: {
+                                            url: '/table/row',
+                                            blocks: {
                                                 childs: [
                                                     {
                                                         url: "/table/cell",
                                                         blocks: {
                                                             childs: [
-                                                                {
-                                                                    url: '/row',
-                                                                    blocks: {
-                                                                        childs: [{ url: '/textspan', content: "子内容。\n。。。。" }]
-                                                                    }
-                                                                }
+                                                                { url: '/textspan', content: "子内容。\n。。。。" }
                                                             ]
                                                         }
                                                     },
@@ -196,12 +167,7 @@ export var data = {
                                                         url: "/table/cell",
                                                         blocks: {
                                                             childs: [
-                                                                {
-                                                                    url: '/row',
-                                                                    blocks: {
-                                                                        childs: [{ url: '/textspan', content: "子内容。\n。。。。" }]
-                                                                    }
-                                                                }
+                                                                { url: '/textspan', content: "子内容。\n。。。。" }
                                                             ]
                                                         }
                                                     },
@@ -209,12 +175,7 @@ export var data = {
                                                         url: "/table/cell",
                                                         blocks: {
                                                             childs: [
-                                                                {
-                                                                    url: '/row',
-                                                                    blocks: {
-                                                                        childs: [{ url: '/textspan', content: "子内容。\n。。。。" }]
-                                                                    }
-                                                                }
+                                                                { url: '/textspan', content: "子内容。\n。。。。" }
                                                             ]
                                                         }
                                                     }
@@ -244,11 +205,11 @@ export var data = {
                                 {
                                     url: '/list',
                                     listType: 2,
+                                    content: '选项1',
                                     blocks: {
-                                        childs: [{ url: '/list/text', content: '选项1' }],
                                         subChilds: [
                                             {
-                                                url: '/col',
+                                                url: "/list/sub/panel",
                                                 blocks: {
                                                     childs: [
                                                         {
@@ -268,25 +229,26 @@ export var data = {
                                             }
                                         ]
                                     }
-                                }]
-                        }
-                    }, {
-                        url: '/row',
-                        blocks: {
-                            childs: [
-                                { url: '/head', content: '大标题' }
+                                }
                             ]
                         }
-                    }, {
-                        url: '/row',
-                        blocks: {
-                            childs: [
-                                { url: '/head', content: '大标题' }
-                            ]
-                        }
-                    },
+                    }]
+            }
+        }, {
+            url: '/row',
+            blocks: {
+                childs: [
+                    { url: '/head', content: '大标题' }
                 ]
             }
-        }
+        },
+        {
+            url: '/row',
+            blocks: {
+                childs: [
+                    { url: '/head', content: '大标题' }
+                ]
+            }
+        },
     ]
 }

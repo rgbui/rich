@@ -4,8 +4,8 @@ import { Icon } from "../../../src/component/icon";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import "./style.less";
 import { BlockView } from "../../../src/block/view";
-import { BlockAppear, BlockDisplay, BlockRenderRange } from "../../../src/block/partial/enum";
-import { ChildsArea } from "../../../src/block/partial/appear";
+import { BlockDisplay, BlockRenderRange } from "../../../src/block/partial/enum";
+import { ChildsArea, TextArea } from "../../../src/block/partial/appear";
 export enum ListType {
     circle = 0,
     number = 1,
@@ -18,10 +18,8 @@ export class List extends Block {
     listType: ListType = ListType.circle;
     @prop()
     expand: boolean = true;
-    display = BlockDisplay.block
-    appear = BlockAppear.layout;
+    display = BlockDisplay.block;
     onExpand() {
-        console.log(this.expand, 'ex');
         /**
          * 当前元素会折叠
          */
@@ -38,6 +36,20 @@ export class List extends Block {
         var keys = Object.keys(this.blocks);
         if (this.isExpand == false) keys.remove('subChilds');
         return keys;
+    }
+    get isText() {
+        if (this.childs.length > 0) return false;
+        return true;
+    }
+    get isSolid() {
+        return this.childs.length > 0 ? true : false;
+    }
+    get isLayout() {
+        if (this.childs.length > 0) return true;
+        else return false;
+    }
+    get multiLines() {
+        return false;
     }
 }
 @view('/list')
@@ -64,11 +76,21 @@ export class ListView extends BlockView<List>{
             return <span className='sy-block-list-text-type'>{num}.</span>
         }
     }
+    renderText() {
+        if (this.block.childs.length > 0)
+            return <span className='sy-block-list sy-appear-text-line' >{this.block.childs.map(x =>
+                <x.viewComponent key={x.id} block={x}></x.viewComponent>
+            )}</span>
+        else
+            return <span className='sy-block-list sy-appear-text-line'>
+                <TextArea html={this.block.htmlContent} placeholder={'键入文字或"/"选择'}></TextArea>
+            </span>
+    }
     render() {
-        return <div className='sy-block-list'>
+        return <div className='sy-block-list' style={this.block.visibleStyle} >
             <div className='sy-block-list-text'>
                 {this.renderListType()}
-                <div className='sy-block-list-text-content'><ChildsArea childs={this.block.childs}></ChildsArea></div>
+                <div className='sy-block-list-text-content'>{this.renderText()}</div>
             </div>
             {this.block.isExpand && <div className='sy-block-list-subs'>
                 <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>
