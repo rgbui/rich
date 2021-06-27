@@ -7,7 +7,9 @@ import { ChildsArea, TextArea } from "../../src/block/partial/appear";
 export class Head extends TextSpan {
     @prop()
     level: 'h1' | 'h2' | 'h3' = 'h1';
-
+    get multiLines(){
+        return false;
+    }
 }
 @view("/head")
 export class HeadView extends BlockView<Head>{
