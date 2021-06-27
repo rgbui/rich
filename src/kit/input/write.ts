@@ -19,18 +19,21 @@ export class TextInput$Write {
     async onKeydown(this: TextInput, event: KeyboardEvent) {
         this.isWillInput = false;
         var isIntercept = this.kit.emit('keydown', event);
-        if (isIntercept) return;
+        if (isIntercept) { await this.willForceStore(); return; }
         if (this.explorer.hasSelectionRange) {
             switch (event.key) {
                 case KeyboardCode.ArrowDown:
                 case KeyboardCode.ArrowUp:
                 case KeyboardCode.ArrowLeft:
                 case KeyboardCode.ArrowRight:
+                    await this.willForceStore();
                     return this.kit.explorer.onCancelSelection();
                 case KeyboardCode.Enter:
+                    await this.willForceStore();
                     return this.kit.explorer.onCancelSelection();
                 case KeyboardCode.Delete:
                 case KeyboardCode.Backspace:
+                    await this.willForceStore();
                     return this.kit.explorer.onDeleteSelection();
             }
         }
@@ -40,15 +43,18 @@ export class TextInput$Write {
                 case KeyboardCode.ArrowUp:
                 case KeyboardCode.ArrowLeft:
                 case KeyboardCode.ArrowRight:
+                    await this.willForceStore();
                     event.preventDefault();
                     return this.kit.explorer.onCursorMove(event.key);
                 case KeyboardCode.Enter:
                     if (!this.page.keyboardPlate.isShift() && this.explorer.activeAnchor.isText && this.explorer.activeAnchor.isEnd) {
+                        await this.willForceStore();
                         await this.explorer.onEnter();
                         event.preventDefault();
                         return
                     }
                     else if (this.explorer.activeAnchor.isText && this.explorer.activeAnchor.block.multiLines == false) {
+                        await this.willForceStore();
                         /**
                          * 对于支持行的block，将会被截断
                          */
@@ -59,14 +65,17 @@ export class TextInput$Write {
                     break;
                 case KeyboardCode.Delete:
                 case KeyboardCode.Backspace:
-                    if (!this.textarea.value) return this.onInputDeleteText();
+                    if (!this.textarea.value) {
+                        await this.willForceInputStore();
+                        return await this.onInputDeleteText();
+                    }
                     break;
             }
         }
         this.isWillInput = true;
     }
     isWillInput: boolean;
-    onInput(this: TextInput, event: KeyboardEvent) {
+    async onInput(this: TextInput, event: KeyboardEvent) {
         if (this.isWillInput == true) {
             var value = this.textarea.value;
             var anchor = this.explorer.activeAnchor;
@@ -88,7 +97,7 @@ export class TextInput$Write {
                  * 将要保存，但不会立码保存，一般是停止输入700ms，会触发保存，
                  * 实际上一直输，会一直不保存的
                  */
-                this.willInputStore(anchor.block, value, this.textAt);
+                await this.willInputStore(anchor.block, value, this.textAt);
                 if (value) anchor.removeEmpty();
                 this.followAnchor(anchor);
             }
@@ -195,7 +204,6 @@ export class TextInput$Write {
         this.onFocus();
         this.isWillInput = false;
         this.textarea.value = '';
-        console.log('sss', this.textarea.value);
         delete this.textNode;
         this.deleteInputText = '';
         delete this.lastDeleteText;
@@ -274,22 +282,28 @@ export class TextInput$Write {
         }
     }
     private lastInputText: string;
-    willInputStore(this: TextInput, block: Block, value: string, at: number, force: boolean = false, action?: () => Promise<void>) {
+    private inputStore: Function;
+    async willInputStore(this: TextInput, block: Block, value: string, at: number, force: boolean = false, action?: () => Promise<void>) {
         this.clearInputTime();
         var self = this;
-        function store() {
+        this.inputStore = async function () {
+            delete self.inputStore;
             block.content = TextEle.getTextContent(block.textEl);
             self.lastInputText = value;
-            block.onInputText(value, at, self.lastInputText ? at + self.lastInputText.length : at, action)
+            await block.onInputText(value, at, self.lastInputText ? at + self.lastInputText.length : at, action)
         }
-        if (force == true) store()
+        if (force == true) await this.inputStore()
         else
-            this.delayInputTime = setTimeout(() => {
-                store()
+            this.delayInputTime = setTimeout(async () => {
+                if (self.inputStore) await self.inputStore()
             }, 7e2);
+    }
+    async willForceInputStore() {
+        if (this.inputStore) { this.clearInputTime(); await this.inputStore(); }
     }
     private delayDeleteTime;
     private lastDeleteText: string;
+    private deleteStore: Function;
     private clearDeleteTime() {
         if (this.delayDeleteTime) {
             clearTimeout(this.delayDeleteTime);
@@ -298,7 +312,9 @@ export class TextInput$Write {
     }
     async willDeleteStore(this: TextInput, block: Block, from: number, text: string, force: boolean = false, action?: () => Promise<void>) {
         this.clearDeleteTime();
-        var excute = async () => {
+        var self = this;
+        self.deleteStore = async () => {
+            delete self.deleteStore;
             block.content = TextEle.getTextContent(block.textEl);
             var size = this.lastDeleteText ? this.lastDeleteText.length : 0;
             this.lastDeleteText = text;
@@ -309,7 +325,16 @@ export class TextInput$Write {
             * 这里需要将当前的变化通知到外面，
             * 当然用户在输的过程中，该方法会不断的执行，所以通知需要加一定的延迟，即用户停止几秒钟后默认为输入
             */
-        if (force == false) this.delayDeleteTime = setTimeout(async () => { await excute() }, 7e2);
-        else await excute();
+        if (force == false) this.delayDeleteTime = setTimeout(async () => { await self.deleteStore() }, 7e2);
+        else await self.deleteStore()
+    }
+    /**
+     * 强迫保存,用户输入时候，会有700ms的延迟
+     * 如果确定不在输入，那么可以立即保存，否则到700ms会自动保存
+     * 
+     */
+    async willForceStore() {
+        if (this.inputStore) { this.clearInputTime(); await this.inputStore(); }
+        if (this.deleteStore) { this.clearDeleteTime(); await this.deleteStore(); }
     }
 }
