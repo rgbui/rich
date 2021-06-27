@@ -38,7 +38,6 @@ export class SelectionExplorer extends Events {
     renderSelection() {
         if (this.start) this.start.visible()
         if (this.end) this.end.visible();
-
         if (this.start && this.end) {
             var range = document.createRange();
             range.setStartBefore(this.start.view);
@@ -212,6 +211,29 @@ export class SelectionExplorer extends Events {
                 var anchor = newBlock.visibleHeadAnchor;
                 this.onFocusAnchor(anchor);
             });
+        })
+    }
+    async onEnterCutOff() {
+        await this.page.onAction(ActionDirective.onCreateBlockByEnter, async () => {
+            var anchor = this.activeAnchor;
+            var pos = anchor.at;
+            var block = anchor.block;
+            var at = block.at;
+            var gs = block.parentBlocks.findAll((i, c) => c > at);
+            var rest = block.textContent.slice(0, pos);
+            var text = block.textContent.slice(pos);
+            block.updateProps({ content: rest });
+            var newBlock = await this.activeAnchor.block.visibleDownCreateBlock(BlockUrlConstant.TextSpan, { content: text });
+            newBlock.mounted(() => {
+                var anchor = newBlock.visibleHeadAnchor;
+                this.onFocusAnchor(anchor);
+            });
+            if (gs.length > 0) {
+                for (let i = gs.length - 1; i >= 0; i--) {
+                    let g = gs[i];
+                    g.insertAfter(newBlock);
+                }
+            }
         })
     }
     /**

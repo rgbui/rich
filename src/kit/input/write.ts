@@ -45,12 +45,16 @@ export class TextInput$Write {
                 case KeyboardCode.Enter:
                     if (!this.page.keyboardPlate.isShift() && this.explorer.activeAnchor.isText && this.explorer.activeAnchor.isEnd) {
                         await this.explorer.onEnter();
+                        event.preventDefault();
                         return
                     }
                     else if (this.explorer.activeAnchor.isText && this.explorer.activeAnchor.block.multiLines == false) {
                         /**
                          * 对于支持行的block，将会被截断
                          */
+                        await this.explorer.onEnterCutOff();
+                        event.preventDefault();
+                        return
                     }
                     break;
                 case KeyboardCode.Delete:
@@ -191,6 +195,7 @@ export class TextInput$Write {
         this.onFocus();
         this.isWillInput = false;
         this.textarea.value = '';
+        console.log('sss', this.textarea.value);
         delete this.textNode;
         this.deleteInputText = '';
         delete this.lastDeleteText;
@@ -260,7 +265,6 @@ export class TextInput$Write {
                     break;
             }
         })
-
     }
     private delayInputTime;
     private clearInputTime() {

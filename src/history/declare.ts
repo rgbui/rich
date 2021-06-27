@@ -11,6 +11,7 @@ export enum ActionDirective {
     onUpdatePattern,
     onBatchDeleteBlocks,
     onCreateBlockByEnter,
+    onEnterCutOff,
     onBatchTurn,
     onDeleteSelection,
     onInputDetector
