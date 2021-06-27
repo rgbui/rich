@@ -55,43 +55,41 @@ class Dom {
             else break;
         }
     }
-    prevFind(predict: (node: Node) => boolean, consider: boolean = false) {
-        if (consider == true && predict(this.el) != true) return this.el;
-        var p = this.el.previousSibling;
-        var pa = this.el.parentNode;
-        var rs: Node[] = [];
-        while (true) {
-            if (p) {
-                if (predict(p) == true) return p;
-                else {
-                    pa = p.parentNode;
-                    p = p.previousSibling;
+    prevFind(predict: (block: Node) => boolean, consider: boolean = false, finalPredict?: (block: Node) => boolean) {
+        var isFinal: boolean = false;
+        function _find(block: Node, consider: boolean = false) {
+            var block: Node;
+            dom(block as HTMLElement).eachReverse(r => {
+                if (typeof finalPredict == 'function' && finalPredict(r) == true) { isFinal = true; return false; }
+                if (predict(r) == true) {
+                    block = r;
+                    return false;
                 }
-            }
-            else if (pa) {
-                if (pa.childNodes.length > 0 && !rs.exists(g => g == pa)) {
-                    rs.push(pa);
-                    var innerAfter = new Dom(pa).findInnerAfter();
-                    if (innerAfter) {
-                        if (predict(innerAfter)) return innerAfter;
-                        else {
-                            p = innerAfter.previousSibling;
-                            pa = innerAfter.parentNode;
-                        }
-                    }
-                }
-                else {
-                    if (pa.childNodes.length == 0 && predict(pa) == true) {
-                        return pa;
-                    }
-                    else {
-                        p = pa.previousSibling;
-                        pa = pa.parentNode;
-                    }
-                }
-            }
-            else break;
+            }, consider);
+            return block;
         }
+        if (consider == true) {
+            var r = _find(this.el, true);
+            if (r) return r;
+        }
+        if (isFinal) return;
+        function prevParentFind(block: Node) {
+            var pa = block.parentNode;
+            if (pa) {
+                var rs = Array.from(pa.childNodes);
+                var at = rs.findIndex(g => g == block);
+                for (let i = at - 1; i > -1; i--) {
+                    var r = _find(rs[i], true);
+                    if (r) return r;
+                    if (isFinal) return;
+                }
+                if (typeof finalPredict == 'function' && finalPredict(pa) == true) return;
+                if (predict(pa) == true) return pa;
+                var g = prevParentFind(pa);
+                if (g) return g;
+            }
+        }
+        return prevParentFind(this.el);
     }
     nextFind(predict: (node: HTMLElement) => boolean) {
 
@@ -196,8 +194,115 @@ class Dom {
             (this.el as HTMLElement).classList.remove(g);
         })
     }
+    each(predict: (block: Node) => false | -1 | void, conside: boolean = false, isDepth = false) {
+        function _each(block: Node) {
+            var isBreak: boolean = false;
+            for (let i = 0; i < block.childNodes.length; i++) {
+                if (isBreak) break;
+                var node = block.childNodes[i];
+                if (isDepth == true) {
+                    if (_each(node) == true) { isBreak = true; break; }
+                    var r = predict(node);
+                    if (r === false) { isBreak = true; break };
+                }
+                else {
+                    var r = predict(node);
+                    if (r === false) { isBreak = true; break }
+                    else if (r === -1) continue;
+                    if (_each(node) == true) { isBreak = true; break; }
+                }
+            }
+            return isBreak;
+        }
+        if (isDepth == true) {
+            if (_each(this.el) == true) return;
+            if (conside == true && predict(this.el) == false) return;
+        }
+        else {
+            if (conside == true && predict(this.el) == false) return;
+            _each(this.el);
+        }
+    }
+    /**
+   * 
+   * @param this 
+   * @param predict  返回false 表示不在循环了 返回-1 表示不在进入子元素了 
+   * @param consider 
+   * @param isDepth 
+   * @returns 
+   */
+    eachReverse(predict: (Block: Node) => false | -1 | void, conside: boolean = false, isDepth = false) {
+        function _each(block: Node) {
+            var isBreak: boolean = false;
+            for (let i = block.childNodes.length - 1; i > -1; i--) {
+                if (isBreak) break;
+                var node = block.childNodes[i];
+                if (isDepth == true) {
+                    if (_each(node) == true) { isBreak = true; break; }
+                    var r = predict(node);
+                    if (r === false) { isBreak = true; break };
+                }
+                else {
+                    var r = predict(node);
+                    if (r === false) { isBreak = true; break }
+                    else if (r === -1) continue;
+                    if (_each(node) == true) { isBreak = true; break; }
+                }
+            }
+            return isBreak;
+        }
+        if (isDepth == true) {
+            if (_each(this.el) == true) return;
+            if (conside == true && predict(this.el) == false) return;
+        }
+        else {
+            if (conside == true && predict(this.el) == false) return;
+            _each(this.el);
+        }
+    }
+    /***
+    * 这是从里面最开始的查询
+    */
+    find(predict: (block: Node) => boolean,
+        consider: boolean = false,
+        finalPredict?: (block: Node) => boolean, isDepth = false): Node {
+        var block: Node;
+        this.each(r => {
+            if (typeof finalPredict == 'function' && finalPredict(r) == true) return false;
+            if (predict(r) == true) {
+                block = r;
+                return false;
+            }
+        }, consider, isDepth);
+        return block;
+    }
+    findReverse(predict: (block: Node) => boolean, consider: boolean = false,
+        finalPredict?: (block: Node) => boolean, isDepth = false) {
+        var block: Node;
+        this.eachReverse(r => {
+            if (typeof finalPredict == 'function' && finalPredict(r) == true) return false;
+            if (predict(r) == true) {
+                block = r;
+                return false;
+            }
+        }, consider, isDepth);
+        return block;
+    }
+    removeEmptyNode() {
+        var pa = this.el.parentNode;
+        (this.el as HTMLElement).remove()
+        while (true) {
+            if (pa.childNodes.length == 0) {
+                var pn = pa.parentNode;
+                (pa as HTMLElement).remove();
+                if (pn) pa = pn;
+                else break;
+            }
+            else break;
+        }
+    }
 }
 
-export var dom = function (el: HTMLElement) {
+export var dom = function (el: Node) {
     return new Dom(el);
 }

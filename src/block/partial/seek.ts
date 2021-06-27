@@ -7,11 +7,11 @@ export class Block$Seek {
      * 
      * @param this 
      * @param predict  返回false 表示不在循环了 返回-1 表示不在进入子元素了
-     * @param consider 
-     * @param isDepth 
+     * @param conside 是否考虑自身
+     * @param isDepth 深度优先，还是广度优先
      * @returns 
      */
-    each(this: Block, predict: (block: Block) => false | -1 | void, consider: boolean = false, isDepth = false) {
+    each(this: Block, predict: (block: Block) => false | -1 | void, conside: boolean = false, isDepth = false) {
         function _each(block: Block) {
             var isBreak: boolean = false;
             for (let i = 0; i < block.blockKeys.length; i++) {
@@ -35,10 +35,10 @@ export class Block$Seek {
         }
         if (isDepth == true) {
             if (_each(this) == true) return;
-            if (consider == true && predict(this) == false) return;
+            if (conside == true && predict(this) == false) return;
         }
         else {
-            if (consider == true && predict(this) == false) return;
+            if (conside == true && predict(this) == false) return;
             _each(this);
         }
     }
@@ -276,7 +276,7 @@ export class Block$Seek {
         }, consider, true);
         return blocks;
     }
-    closest(this: Block, predict: (block: Block) => boolean, ignore: boolean = false, finalPredict?: (block: Block) => boolean):Block {
+    closest(this: Block, predict: (block: Block) => boolean, ignore: boolean = false, finalPredict?: (block: Block) => boolean): Block {
         if (ignore !== true && predict(this)) return this;
         var pa = this.parent;
         while (true) {

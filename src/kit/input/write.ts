@@ -138,7 +138,7 @@ export class TextInput$Write {
                     textNode.textContent = value.slice(0, value.length - 1);
                     anchor.at -= 1;
                     if (textNode.textContent.length == 0) {
-                        textNode.remove();
+                        dom(textNode).removeEmptyNode();
                     }
                     var action: () => Promise<void>;
                     if (anchor.at == 0) {
@@ -164,7 +164,6 @@ export class TextInput$Write {
                                 checkEmpty();
                             })
                             else checkEmpty();
-
                         }
                     }
                     await this.willDeleteStore(block, this.textAt, this.deleteInputText, anchor.at == 0 ? true : false, action);
