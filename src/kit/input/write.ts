@@ -237,43 +237,48 @@ export class TextInput$Write {
             });
         });
     }
-    onInputDetector(this: TextInput, rule: DetectorRule, value: string, lastValue?: string) {
+    async onInputDetector(this: TextInput,rule: DetectorRule,value: string,lastValue?: string) {
         var anchor = this.explorer.activeAnchor;
         var block = anchor.block;
-        this.page.onAction(ActionDirective.onInputDetector, async () => {
-            switch (rule.operator) {
-                case DetectorOperator.firstLetterCreateBlock:
+        switch (rule.operator)
+        {
+            case DetectorOperator.firstLetterCreateBlock:
+                this.page.onAction(ActionDirective.onInputDetector, async () => {
                     var newBlock = await block.turn(rule.url);
                     var newRowBlock = await newBlock.visibleDownCreateBlock(BlockUrlConstant.TextSpan);
                     newRowBlock.mounted(() => {
                         this.explorer.onFocusAnchor(newRowBlock.visibleHeadAnchor);
                     });
-                    break;
-                case DetectorOperator.firstLetterTurnBlock:
+                });
+                break;
+            case DetectorOperator.firstLetterTurnBlock:
+                this.page.onAction(ActionDirective.onInputDetector, async () => {
                     block.updateProps({ content: value });
                     var newBlock = await block.turn(rule.url);
                     newBlock.mounted(() => {
                         this.explorer.onFocusAnchor(newBlock.visibleHeadAnchor);
                     });
-                    break;
-                case DetectorOperator.inputCharReplace:
-                    this.textNode.innerHTML = value;
-                    anchor.at = this.textAt + value.length;
-                    this.textarea.value = value;
-                    this.willInputStore(block, value, this.textAt, true);
-                    break;
-                case DetectorOperator.letterReplaceCreateBlock:
-                    this.textNode.innerHTML = value;
-                    anchor.at = this.textAt + value.length;
-                    this.textarea.value = value;
-                    this.willInputStore(block, value, this.textAt, true);
+                });
+                break;
+            case DetectorOperator.inputCharReplace:
+                this.textNode.innerHTML = value;
+                anchor.at = this.textAt + value.length;
+                this.textarea.value = value;
+                await this.willInputStore(block, value, this.textAt, true);
+                break;
+            case DetectorOperator.letterReplaceCreateBlock:
+                this.textNode.innerHTML = value;
+                anchor.at = this.textAt + value.length;
+                this.textarea.value = value;
+                var action = async () => {
                     var newBlock = await this.page.createBlock(rule.url, { content: lastValue }, block.parent, block.at + 1);
                     newBlock.mounted(() => {
                         this.explorer.onFocusAnchor(newBlock.visibleBackAnchor);
                     });
-                    break;
-            }
-        })
+                }
+                this.willInputStore(block, value, this.textAt, true, action);
+                break;
+        }
     }
     private delayInputTime;
     private clearInputTime() {

@@ -55,6 +55,14 @@ export class InputDetector extends Events {
             operator: DetectorOperator.letterReplaceCreateBlock,
             match: [/`([^]+)`$/],
             url: '/code'
+        },
+        {
+            operator: DetectorOperator.inputCharReplace,
+            match: ['！='],
+            handle(value) {
+                if (value == '！=') return '≠'
+                return value;
+            }
         }
     ];
     match(value: string, anchor: Anchor, options: { start?: number }) {
@@ -115,7 +123,7 @@ export enum DetectorOperator {
 export type DetectorRule = {
     operator: DetectorOperator,
     match: string | RegExp | (string | RegExp)[],
-    url: string,
+    url?: string,
     style?: Record<string, Record<string, any>>,
     handle?: (value: string) => string;
 }
