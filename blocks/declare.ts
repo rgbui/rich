@@ -14,6 +14,8 @@ import "./general/emoji";
 import "./general/quote";
 import "./present/list/list";
 import "./present/list/list.sub.panel";
+import "./present/code/code";
+import "./present/divider";
 
 import './table/cell';
 import './table/row';
@@ -24,11 +26,12 @@ import "./table-store/head";
 import "./table-store/th";
 import "./table-store/row";
 import "./table-store/cell";
-import "./present/code/code";
+
 
 /***
  * import component style
  */
 import "./general/style.less";
+import "./present/style.less";
 
 

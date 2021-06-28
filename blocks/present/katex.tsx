@@ -15,7 +15,6 @@ export class Katex extends Content {
         });
         return html;
     }
-  
 }
 @view('/katex')
 export class KatexView extends BlockView<Katex>{
