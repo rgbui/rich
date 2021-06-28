@@ -22,8 +22,8 @@ export class TextEle {
                 if (e)
                     fontStyle.lineHeight = dom(e as HTMLElement).style('lineHeight');
             }
-            if (!/^[\d]+px$/.test(fontStyle.lineHeight)) {
-                throw new Exception(ExceptionType.fontStyleLineHeightIsNumber, 'the font lineHeight is not number')
+            if (!/^[\d\.]+px$/.test(fontStyle.lineHeight)) {
+                throw new Exception(ExceptionType.fontStyleLineHeightIsNumber, 'the font lineHeight is not number' + fontStyle.lineHeight)
             }
             fontStyle.lineHeight = parseInt(fontStyle.lineHeight.replace('px', ''));
             fontStyle.letterSpacing = parseInt(fontStyle.letterSpacing.replace('px', ''));

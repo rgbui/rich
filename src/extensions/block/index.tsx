@@ -134,7 +134,7 @@ export class BlockSelector extends SyExtensionsComponent {
         }
     }
     getFilterText(text) {
-        return text.replace(/(\/|、)[\w \-\u4e00-\u9fa5]+$/g, '');
+        return text.replace(/(\/|、)[\w \-\u4e00-\u9fa5]*$/g, '');
     }
     get selectBlockData() {
         var b = this.filterBlocks[this.selectIndex];

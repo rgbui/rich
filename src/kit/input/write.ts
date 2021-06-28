@@ -19,7 +19,7 @@ export class TextInput$Write {
     async onKeydown(this: TextInput, event: KeyboardEvent) {
         this.isWillInput = false;
         var isIntercept = this.kit.emit('keydown', event);
-        if (isIntercept) { await this.willForceStore(); return; }
+        if (isIntercept) { await this.willForceStore(); event.preventDefault(); return; }
         if (this.explorer.hasSelectionRange) {
             switch (event.key) {
                 case KeyboardCode.ArrowDown:
@@ -74,7 +74,7 @@ export class TextInput$Write {
         }
         this.isWillInput = true;
     }
-    isWillInput: boolean;
+    private isWillInput: boolean;
     async onInput(this: TextInput, event: KeyboardEvent) {
         if (this.isWillInput == true) {
             var value = this.textarea.value;
