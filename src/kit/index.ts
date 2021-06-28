@@ -45,9 +45,21 @@ export class Kit extends Events {
             var anchor = block.visibleAnchor(Point.from(this.downEvent));
             if (anchor) {
                 this.downAnchor = anchor;
-                this.explorer.onFocusAnchor(this.downAnchor);
+                if (this.page.keyboardPlate.isShift() && this.explorer.isOnlyAnchor) {
+                    if (this.page.isInLineBlock(this.downAnchor.block, this.explorer.activeAnchor.block))
+                        this.explorer.onShiftFocusAnchor(this.downAnchor);
+                    else {
+                        var blocks = this.page.searchBlocksBetweenAnchor(this.explorer.activeAnchor, this.downAnchor, { rowOrCol: true, lineBlock: true });
+                        if (Array.isArray(blocks) && blocks.length > 0) {
+                            this.explorer.onSelectBlocks(blocks);
+                        }
+                    }
+                }
+                else
+                    this.explorer.onFocusAnchor(this.downAnchor);
             }
         }
+        if (!this.downAnchor) this.explorer.onCancelSelection();
     }
     acceptMousemove(event: MouseEvent) {
         var ele = event.target as HTMLElement;
@@ -61,7 +73,7 @@ export class Kit extends Events {
             if (this.isMove == true) {
                 if (!this.downAnchor) {
                     this.selector.setMove(Point.from(event));
-                    var blocks = this.page.searchBlocksBetweenMouseRect(this.downEvent, event);
+                    var blocks = this.page.searchBlocksBetweenMouseRect(this.downEvent, event, { lineBlock: true });
                     if (Array.isArray(blocks) && blocks.length > 0) {
                         this.explorer.onSelectBlocks(blocks);
                     }
@@ -70,13 +82,15 @@ export class Kit extends Events {
                     var block = this.page.getVisibleBlockByMouse(event);
                     if (block && !block.isLayout) {
                         var anchor = block.visibleAnchor(Point.from(event));
-                        if (anchor && anchor.block.closest(x => !x.isLine) == this.downAnchor.block.closest(x => !x.isLine)) {
-                            this.explorer.onShiftFocusAnchor(anchor);
-                        }
-                        else if (anchor) {
-                            var blocks = this.page.searchBlocksBetweenMouseRect(this.downEvent, event);
-                            if (Array.isArray(blocks) && blocks.length > 0) {
-                                this.explorer.onSelectBlocks(blocks);
+                        if (anchor) {
+                            if (this.page.isInLineBlock(this.downAnchor.block, anchor.block)) {
+                                this.explorer.onShiftFocusAnchor(anchor);
+                            }
+                            else {
+                                var blocks = this.page.searchBlocksBetweenMouseRect(this.downEvent, event, { lineBlock: true });
+                                if (Array.isArray(blocks) && blocks.length > 0) {
+                                    this.explorer.onSelectBlocks(blocks);
+                                }
                             }
                         }
                     }
