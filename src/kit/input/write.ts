@@ -88,7 +88,7 @@ export class TextInput$Write {
                 this.textNode.innerHTML = value;
                 anchor.at = this.textAt + value.length;
                 try {
-                    this.kit.emit('inputting', value, anchor);
+                    this.kit.emit('inputting', value, anchor, { start: this.textAt });
                 }
                 catch (ex) {
                     this.kit.page.onError(ex);
@@ -250,6 +250,7 @@ export class TextInput$Write {
                     });
                     break;
                 case DetectorOperator.firstLetterTurnBlock:
+                    block.updateProps({ content: value });
                     var newBlock = await block.turn(rule.url);
                     newBlock.mounted(() => {
                         this.explorer.onFocusAnchor(newBlock.visibleHeadAnchor);

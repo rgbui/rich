@@ -121,8 +121,8 @@ export class Kit extends Events {
 export interface Kit {
     on(name: 'error', fn: (error: Error) => void);
     emit(name: 'error', error: Error);
-    on(name: 'inputting', fn: (value: string, anchor: Anchor) => void);
-    emit(name: 'inputting', value: string, anchor: Anchor);
+    on(name: 'inputting', fn: (value: string, anchor: Anchor, options: { start?: number }) => void);
+    emit(name: 'inputting', value: string, anchor: Anchor, options: { start?: number });
     on(name: 'keydown', fn: (event: KeyboardEvent) => boolean | void);
     emit(name: "keydown", event: KeyboardEvent): boolean | void;
     on(name: 'willInput', fn: () => void);

@@ -57,9 +57,9 @@ export class InputDetector extends Events {
             url: '/code'
         }
     ];
-    match(value: string, anchor: Anchor) {
+    match(value: string, anchor: Anchor, options: { start?: number }) {
         var rs = this.rules;
-        if (anchor.at > 0) rs = rs.findAll(x => x.operator != DetectorOperator.firstLetterCreateBlock && x.operator != DetectorOperator.firstLetterTurnBlock);
+        if (options.start > 0) rs = rs.findAll(x => x.operator != DetectorOperator.firstLetterCreateBlock && x.operator != DetectorOperator.firstLetterTurnBlock);
         var ru: DetectorRule;
         for (let i = 0; i < rs.length; i++) {
             var rule = rs[i];
