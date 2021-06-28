@@ -96,7 +96,10 @@ export class Page$Seek {
      * @param to 
      * @returns 
      */
-    searchBlocksBetweenAnchor(this: Page, from: Anchor, to: Anchor) {
+    searchBlocksBetweenAnchor(this: Page, from: Anchor, to: Anchor, filter?: {
+        rowOrCol?: boolean,
+        lineBlock?: boolean
+    }) {
         var bs: Block[] = [];
         var start: Anchor, end: Anchor;
         var pos = from.el.compareDocumentPosition(to.el);
@@ -108,7 +111,10 @@ export class Page$Seek {
             start = to;
             end = from;
         }
-        var rs = start.block.nextFindAll(g => true, true, c => c == end.block);
+        var predict = (g) => true;
+        if (filter && filter.rowOrCol == true && !filter.lineBlock) predict = (g: Block) => !g.isRow && !g.isCol;
+        else if (filter && filter.lineBlock == true && filter.rowOrCol == true) predict = (g: Block) => !g.isLine && !g.isRow && !g.isCol;
+        var rs = start.block.nextFindAll(predict, true, c => c == end.block);
         bs.addRange(rs);
         bs.push(end.block);
         return bs;
@@ -139,7 +145,9 @@ export class Page$Seek {
      * @param from 
      * @param to 
      */
-    searchBlocksBetweenMouseRect(this: Page, from: MouseEvent, to: MouseEvent) {
+    searchBlocksBetweenMouseRect(this: Page, from: MouseEvent, to: MouseEvent, filter?: {
+        lineBlock?: boolean
+    }) {
         var bs: Block[] = [];
         var fromBlock = this.searchBlockByMouse(from);
         var toBlock = this.searchBlockByMouse(to);
@@ -163,7 +171,7 @@ export class Page$Seek {
         }
         while (true) {
             topFromRow.each(b => {
-                if (!b.isRow && !b.isCol) {
+                if (!b.isRow && !b.isCol && (filter && filter.lineBlock == true && !b.isLine || !filter)) {
                     if (b.getVisibleBound().isCross(rect)) {
                         bs.push(b);
                         return -1;
@@ -193,16 +201,6 @@ export class Page$Seek {
             }
         }
         return false;
-    }
-    /**
-     * 判断current与prev是否为相邻换行的block
-     * 注意current是当前行视觉上第一个,
-     * prev是否当前行视觉上最后一个
-     * @param current 
-     * @param prev 
-     */
-    blockIsAdjoinRow(current: Block, prev: Block) {
-
     }
     /**
      * 文本依据选区裂变返回三块内容块
@@ -273,5 +271,17 @@ export class Page$Seek {
             }
         });
         return textStyle;
+    }
+    /**
+     * 判断两个block，是否在同一行中，
+     * 能够形成一个选区
+     * @param from 
+     * @param to 
+     * @returns 
+     */
+    isInLineBlock(from: Block, to: Block) {
+        if (from === to) return true;
+        if (from.isLine && to.isLine && from.parent == to.parent) return true;
+        else return false;
     }
 }
