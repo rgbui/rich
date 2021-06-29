@@ -203,16 +203,19 @@ export class Anchor {
     }
     /**
      * 判断当前的anchor是否处在@param anchor 前面
+     * 这里只能通过判断block的el，而不是anchor的view,
+     * 因为anchor的view有可能不会显示，或者处于不在document中
      * @param anchor 
      */
     isBefore(anchor: Anchor) {
+        if (this.el === anchor.el) {
+            if (this.at <= anchor.at) return true;
+        }
         var pos = this.el.compareDocumentPosition(anchor.el);
         if (pos == 4 || pos == 20) {
             return true
         }
-        else {
-            return false
-        }
+        return false
     }
 }
 

@@ -67,8 +67,7 @@ export class Kit extends Events {
             var downPoint = Point.from(this.downEvent);
             if (downPoint.remoteBy(Point.from(event), 5)) {
                 this.isMove = true;
-                if (!this.downAnchor)
-                    this.selector.setStart(downPoint)
+                if (!this.downAnchor) this.selector.setStart(downPoint)
             }
             if (this.isMove == true) {
                 if (!this.downAnchor) {
@@ -83,7 +82,8 @@ export class Kit extends Events {
                     if (block && !block.isLayout) {
                         var anchor = block.visibleAnchor(Point.from(event));
                         if (anchor) {
-                            if (this.page.isInLineBlock(this.downAnchor.block, anchor.block)) {
+                            if (this.page.isInLineBlock(this.downAnchor.block, anchor.block))
+                            {
                                 this.explorer.onShiftFocusAnchor(anchor);
                             }
                             else {
