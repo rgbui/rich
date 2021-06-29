@@ -1,6 +1,6 @@
 import React from "react";
 import { createPortal } from "react-dom";
-import { Point } from "../../common/point";
+import { Point, Rect, RectUtility } from "../../common/point";
 import { Icon } from "../../component/icon";
 import Equation from "../../assert/svg/equation.svg";
 import Mention from "../../assert/svg/mention.svg";
@@ -30,11 +30,21 @@ export class TextTool extends SyExtensionsComponent {
         super(props);
         this.node = document.body.appendChild(document.createElement('div'));
     }
-    open(event: MouseEvent) {
-        this.point = Point.from(event);
+    open(point) {
+        console.log(point);
+        this.point = this.point;
         this.visible = true;
         this.textStyle = this.emit('getTextStyle');
-        this.forceUpdate();
+        this.forceUpdate(() => {
+            var menu: HTMLElement = this.node.querySelector('.sy-tool-text-menu');
+            this.point = RectUtility.cacRoundElementPoint({
+                roundArea: new Rect(point.x, point.y, 20, 30),
+                elementArea: Rect.from(menu.getBoundingClientRect()),
+                direction: "top",
+                dist: 10
+            });
+            this.forceUpdate();
+        });
     }
     close() {
         if (this.visible == true) {

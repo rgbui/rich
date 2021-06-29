@@ -2,7 +2,7 @@ import { Kit } from "../../kit";
 export function PageKit(kit: Kit) {
     var page = kit.page;
     kit.on('mouseup', event => {
-        if (kit.explorer.hasTextRange) page.textTool.open(event)
+        if (kit.explorer.hasTextRange) page.textTool.open(kit.explorer.getSelectionPoint())
         else page.textTool.close()
     })
     kit.on("keydown", (event) => {
@@ -11,7 +11,7 @@ export function PageKit(kit: Kit) {
         else if (page.referenceSelector.isVisible)
             return page.referenceSelector.interceptKey(event);
     });
-    kit.on('inputting', (value, anchor,options) => {
+    kit.on('inputting', (value, anchor, options) => {
         if (page.blockSelector.isTriggerOpen(value))
             page.blockSelector.open(anchor.bound.leftBottom, value);
         else if (page.blockSelector.isTriggerFilter(value))
@@ -20,7 +20,7 @@ export function PageKit(kit: Kit) {
             page.referenceSelector.open(anchor.bound.leftBottom);
         else if (page.referenceSelector.isTriggerFilter(value))
             page.referenceSelector.onInputFilter(value);
-        else page.inputDetector.match(value, anchor,options);
+        else page.inputDetector.match(value, anchor, options);
     });
     kit.on('willInput', () => {
         page.blockSelector.close();

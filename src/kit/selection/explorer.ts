@@ -5,6 +5,7 @@ import { BlockUrlConstant } from "../../block/constant";
 import { BlockRenderRange } from "../../block/partial/enum";
 import { BlockCssName } from "../../block/pattern/css";
 import { KeyboardCode } from "../../common/keys";
+import { Point } from "../../common/point";
 import { Exception, ExceptionType } from "../../error/exception";
 import { ActionDirective } from "../../history/declare";
 import { Events } from "../../util/events";
@@ -45,9 +46,10 @@ export class SelectionExplorer extends Events {
             if (selection.rangeCount > 0) selection.removeAllRanges(); // 将已经包含的已选择的对象清除掉
             if (this.start && this.end) {
                 var range = document.createRange();
-                range.setStartBefore(this.start.view);
-                range.setEndAfter(this.end.view);
-                if (range.collapsed) {
+                if (this.start.isBefore(this.end)) {
+                    range.setStartBefore(this.start.view);
+                    range.setEndAfter(this.end.view);
+                } else {
                     range.setEndAfter(this.start.view);
                     range.setStartBefore(this.end.view);
                 }
@@ -360,5 +362,14 @@ export class SelectionExplorer extends Events {
         currentEls.each(el => {
             el.classList.remove('sy-block-selected');
         });
+    }
+    /**
+     * 获取选区的起始位置
+     */
+    getSelectionPoint() {
+        if (this.start.isBefore(this.end)) {
+            return Point.from(this.start.view.getBoundingClientRect())
+        }
+        else return Point.from(this.end.view.getBoundingClientRect())
     }
 }
