@@ -19,7 +19,11 @@ export class TextInput$Write {
     async onKeydown(this: TextInput, event: KeyboardEvent) {
         this.isWillInput = false;
         var isIntercept = this.kit.emit('keydown', event);
-        if (isIntercept) { await this.willForceStore(); event.preventDefault(); return; }
+        if (isIntercept) {
+            await this.willForceStore();
+            event.preventDefault();
+            return;
+        }
         if (this.explorer.hasSelectionRange) {
             switch (event.key) {
                 case KeyboardCode.ArrowDown:
@@ -27,14 +31,13 @@ export class TextInput$Write {
                 case KeyboardCode.ArrowLeft:
                 case KeyboardCode.ArrowRight:
                     await this.willForceStore();
-                    return this.kit.explorer.onCancelSelection();
+                    return await this.kit.explorer.onCancelSelection();
                 case KeyboardCode.Enter:
-                    await this.willForceStore();
-                    return this.kit.explorer.onCancelSelection();
                 case KeyboardCode.Delete:
                 case KeyboardCode.Backspace:
                     await this.willForceStore();
-                    return this.kit.explorer.onDeleteSelection();
+                    event.preventDefault();
+                    return await this.kit.explorer.onDeleteSelection();
             }
         }
         else if (this.explorer.isOnlyAnchor) {
@@ -237,11 +240,10 @@ export class TextInput$Write {
             });
         });
     }
-    async onInputDetector(this: TextInput,rule: DetectorRule,value: string,lastValue?: string) {
+    async onInputDetector(this: TextInput, rule: DetectorRule, value: string, lastValue?: string) {
         var anchor = this.explorer.activeAnchor;
         var block = anchor.block;
-        switch (rule.operator)
-        {
+        switch (rule.operator) {
             case DetectorOperator.firstLetterCreateBlock:
                 this.page.onAction(ActionDirective.onInputDetector, async () => {
                     var newBlock = await block.turn(rule.url);

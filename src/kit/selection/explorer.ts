@@ -2,6 +2,7 @@ import { Kit } from "..";
 import { TextContent } from "../../../blocks/general/text";
 import { Block } from "../../block";
 import { BlockUrlConstant } from "../../block/constant";
+import { BlockRenderRange } from "../../block/partial/enum";
 import { BlockCssName } from "../../block/pattern/css";
 import { KeyboardCode } from "../../common/keys";
 import { Exception, ExceptionType } from "../../error/exception";
@@ -67,7 +68,15 @@ export class SelectionExplorer extends Events {
             var currentEls = Array.from(this.kit.page.el.querySelectorAll(".sy-block-selected"));
             currentEls.each(el => {
                 el.classList.remove('sy-block-selected');
-            })
+            });
+            const selection = window.getSelection();
+            if (selection.rangeCount > 1) selection.removeAllRanges(); // 将已经包含的已选择的对象清除掉
+            else if (selection.rangeCount == 1) {
+                var sel = selection.getRangeAt(0);
+                if (!sel.collapsed) {
+                    selection.removeAllRanges();
+                }
+            }
         }
     }
     createAnchor(block: Block, at?: number) {
@@ -99,10 +108,8 @@ export class SelectionExplorer extends Events {
     }
     onSelectBlocks(blocks: Block[]) {
         this.currentSelectedBlocks = blocks;
-        if (this.start)
-            this.start.dispose()
-        if (this.end)
-            this.end.dispose()
+        if (this.start) this.start.dispose()
+        if (this.end) this.end.dispose()
         delete this.start;
         delete this.end;
         this.renderSelection()
@@ -131,17 +138,41 @@ export class SelectionExplorer extends Events {
                 await this.currentSelectedBlocks.eachAsync(async block => {
                     await block.delete();
                 });
+                this.onCancelSelection();
             }
             else {
                 var blocks = this.page.searchBlocksBetweenAnchor(this.start, this.end);
                 await blocks.eachAsync(async block => {
-                    if (block == this.start.block) {
+                    if (!block.isText) await block.delete();
+                    else if (block == this.start.block && block != this.end.block) {
+                        if (this.start.isBefore(this.end)) {
+                            this.page.onUpdated(async () => {
+                                var newAnchor = this.createAnchor(this.start.block, this.start.at);
+                                this.onFocusAnchor(newAnchor);
+                            });
+                        }
                         var content = this.start.isBefore(this.end) ? block.textContent.slice(0, this.start.at) : block.textContent.slice(this.start.at);
-                        block.updateProps({ content });
+                        block.updateProps({ content }, BlockRenderRange.self);
                     }
-                    else if (block == this.end.block) {
+                    else if (block == this.end.block && block != this.start.block) {
+                        if (this.end.isBefore(this.start)) {
+                            this.page.onUpdated(async () => {
+                                var newAnchor = this.createAnchor(this.end.block, this.end.at);
+                                this.onFocusAnchor(newAnchor);
+                            });
+                        }
                         var content = this.end.isBefore(this.start) ? block.textContent.slice(0, this.end.at) : block.textContent.slice(this.end.at);
-                        block.updateProps({ content });
+                        block.updateProps({ content }, BlockRenderRange.self);
+                    }
+                    else if (block == this.end.block && block == this.start.block) {
+                        var min = Math.min(this.start.at, this.end.at);
+                        var max = Math.max(this.start.at, this.end.at);
+                        var content = block.textContent.slice(0, min) + block.textContent.slice(max);
+                        block.updateProps({ content }, BlockRenderRange.self);
+                        this.page.onUpdated(async () => {
+                            var newAnchor = this.createAnchor(block, min);
+                            this.onFocusAnchor(newAnchor);
+                        });
                     }
                     else {
                         await block.delete();
