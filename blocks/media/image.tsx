@@ -1,14 +1,19 @@
 import { BlockView } from "../../src/block/view";
-import {  prop, url, view } from "../../src/block/factory/observable";
+import { prop, url, view } from "../../src/block/factory/observable";
 import React from 'react';
 import { BlockAppear } from "../../src/block/partial/enum";
 import { SolidArea } from "../../src/block/partial/appear";
 import { Content } from "../../src/block/layout/content";
+import { Rect } from "../../src/common/point";
 @url('/image')
 export class Image extends Content {
     @prop()
     src: string;
     appear = BlockAppear.solid;
+    getVisibleContentBound() {
+        var img = this.el.querySelector('.sy-block-image-content img');
+        return Rect.from(img.getBoundingClientRect())
+    }
 }
 @view('/image')
 export class ImageView extends BlockView<Image>{

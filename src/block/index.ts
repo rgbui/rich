@@ -129,8 +129,8 @@ export abstract class Block extends Events {
     /**
      * 连续输入时，克隆的一些属性
      */
-    get continuouslyProps(){
-        return{}
+    get continuouslyProps() {
+        return {}
     }
     constructor(page: Page) {
         super();
@@ -723,6 +723,9 @@ export abstract class Block extends Events {
     }
     getVisibleBound() {
         return this.cacheComputed(TemporaryPurpose.blockBound, () => Rect.from(this.el.getBoundingClientRect()));
+    }
+    getVisibleContentBound() {
+        return this.getVisibleBound();
     }
     /**
      * 获取视觉上的block和part

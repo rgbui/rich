@@ -82,8 +82,7 @@ export class Kit extends Events {
                     if (block && !block.isLayout) {
                         var anchor = block.visibleAnchor(Point.from(event));
                         if (anchor) {
-                            if (this.page.isInLineBlock(this.downAnchor.block, anchor.block))
-                            {
+                            if (this.page.isInLineBlock(this.downAnchor.block, anchor.block)) {
                                 this.explorer.onShiftFocusAnchor(anchor);
                             }
                             else {
@@ -103,7 +102,7 @@ export class Kit extends Events {
         var hoverBlock;
         if (this.page.el.contains(ele)) {
             var block = this.page.searchBlockByMouse(event);
-            if (block && !block.isLayout) hoverBlock = block;
+            if (block && !block.isRow && !block.isCol) hoverBlock = block;
         }
         this.bar.onHoverBlock(hoverBlock, event);
     }
