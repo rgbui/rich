@@ -29,6 +29,7 @@ export class BarView extends React.Component<{ bar: Bar }>{
     isDown: Boolean;
     isDrag: boolean = false;
     private onMousedown(event: MouseEvent) {
+        if (this.toolTip) this.toolTip.close();
         this.point = Point.from(event);
         this.isDown = true;
         this.isDrag = false;
@@ -50,7 +51,7 @@ export class BarView extends React.Component<{ bar: Bar }>{
         if (this.isDown == true) {
             try {
                 if (this.isDrag == true) {
-                    if (this.bar.dropBlock)
+                    if (this.bar.dropBlock && this.bar.dragBlocks.length > 0)
                         this.bar.kit.emit('dragMoveBlocks',
                             this.bar.dragBlocks,
                             this.bar.dropBlock,
@@ -74,7 +75,10 @@ export class BarView extends React.Component<{ bar: Bar }>{
     }
     private dragCopyEle: HTMLElement;
     private shipBlock() {
-        this.bar.dragBlocks = this.bar.kit.explorer.selectedBlocks;
+        this.bar.dragBlocks = this.bar.hoverBlock ? [this.bar.hoverBlock] : [];
+        if (this.bar.kit.explorer.hasSelectionRange) {
+            this.bar.dragBlocks = this.bar.kit.explorer.selectedBlocks;
+        }
         if (this.bar.dragBlocks.length > 0) {
             var dragBlocks = this.bar.dragBlocks;
             var cloneNode = dragBlocks.first().el.cloneNode(true);
@@ -96,11 +100,12 @@ export class BarView extends React.Component<{ bar: Bar }>{
         this.dragCopyEle.innerHTML = '';
     }
     barEle: HTMLElement;
+    toolTip: any;
     render() {
         return <div>
             <div className='sy-selector-drag-copy' ref={e => this.dragCopyEle = e}></div>
             <div className='sy-selector-bar' ref={e => this.barEle = e} onMouseDown={e => this.onMousedown(e.nativeEvent)}>
-                <Tooltip mouseEnterDelay={0.8} placement="left" trigger={['hover']}
+                <Tooltip ref={e => { this.toolTip = e; }} mouseEnterDelay={0.8} placement="left" trigger={['hover']}
                     overlay={<div className='sy-tooltip-content'>
                         <span><b>Drag</b> to Move</span><br />
                         <span><b>Click</b> to Open Menu</span></div>}><span>
