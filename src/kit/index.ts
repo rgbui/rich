@@ -96,9 +96,8 @@ export class Kit extends Events {
                 }
             }
         }
-        /**
-         * 注意这个是鼠标移动，鼠标不一定是在当前的内容页上按下mosuedown的
-         */
+        //判断当前的ele是否在bar自已本身内
+        if (this.bar.barEle.contains(ele)) return;
         var hoverBlock;
         if (this.page.el.contains(ele)) {
             var block = this.page.searchBlockByMouse(event);
