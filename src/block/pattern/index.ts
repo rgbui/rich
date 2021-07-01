@@ -94,7 +94,7 @@ export class Pattern {
     }
     setStyles(styles: Record<BlockCssName, Record<string, any>>) {
         for (var n in styles) {
-            var name = typeof BlockCssName[n] == 'number' ? BlockCssName[n] : n;
+            var name = typeof n == 'string' ? BlockCssName[n] : n;
             this.setStyle(name, styles[n]);
         }
     }
