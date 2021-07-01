@@ -23,7 +23,7 @@ export class Bar extends Events {
      * 具体的操作block取决于选区
      * 
      */
-    private hoverBlock: Block;
+    hoverBlock: Block;
     /**
      * 当前悬停的block，
      * 该block与hoverBlock并非是一对一
@@ -36,7 +36,7 @@ export class Bar extends Events {
     }
     onHoverBlock(block: Block, event: MouseEvent) {
         if (this.view.isDrag) {
-            this.onSetDropBlock(block, event);
+            this.onDropOverBlock(block, event);
         }
         if (this.hoverBlock != block) {
             if (this.hoverBlock) {
@@ -59,7 +59,7 @@ export class Bar extends Events {
     dragBlocks: Block[] = [];
     dropBlock: Block;
     dropDirection: DropDirection;
-    onSetDropBlock(block: Block, event: MouseEvent) {
+    onDropOverBlock(block: Block, event: MouseEvent) {
         var willDropBlock: Block;
         if (block)
             willDropBlock = block.closest(x => !x.isLine);
@@ -83,5 +83,10 @@ export class Bar extends Events {
             this.dropDirection = DropDirection.none;
         }
         this.kit.page.emit('dropOverBlock', this.dropBlock, this.dropDirection);
+    }
+    onDropEnd() {
+        if (this.dropBlock) {
+            dom(this.dropBlock.el).removeClass(g => g.startsWith('sy-block-drag-over'));
+        }
     }
 }

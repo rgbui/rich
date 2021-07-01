@@ -38,7 +38,7 @@ export class BarView extends React.Component<{ bar: Bar }>{
     private mouseup: (event: MouseEvent) => void;
     private async onMousemove(event: MouseEvent) {
         if (this.isDown == true) {
-            if (this.point.remoteBy(Point.from(event), 5)) {
+            if (!this.isDrag && this.point.remoteBy(Point.from(event), 5)) {
                 this.isDrag = true;
                 this.shipBlock();
             }
@@ -66,6 +66,7 @@ export class BarView extends React.Component<{ bar: Bar }>{
             }
             finally {
                 this.landBlock();
+                this.bar.onDropEnd();
                 this.isDrag = false;
                 this.isDown = false;
                 this.bar.dropDirection = DropDirection.none;
@@ -79,6 +80,7 @@ export class BarView extends React.Component<{ bar: Bar }>{
         if (this.bar.kit.explorer.hasSelectionRange) {
             this.bar.dragBlocks = this.bar.kit.explorer.selectedBlocks;
         }
+        this.bar.dragBlocks = this.bar.dragBlocks.map(d => d);
         if (this.bar.dragBlocks.length > 0) {
             var dragBlocks = this.bar.dragBlocks;
             var cloneNode = dragBlocks.first().el.cloneNode(true);

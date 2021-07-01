@@ -232,7 +232,8 @@ export abstract class Block extends Events {
                 if ((panel.isRow || panel.isCol) && !panel.isPart) {
                     var pa = panel.parent;
                     await panel.delete();
-                    await clearEmptyPanel(pa);
+                    if (pa)
+                        await clearEmptyPanel(pa);
                 }
             }
         }
@@ -280,32 +281,32 @@ export abstract class Block extends Events {
         switch (direction) {
             case DropDirection.bottom:
             case DropDirection.top:
-                var increse: number = 0;
-                if (direction == DropDirection.bottom) increse = 1;
-                if (to.parent && to.parent.isRow && to.parent.parent && to.parent.parent.isCol) {
-                    var row = await this.page.createBlock(BlockUrlConstant.Row, {},
-                        to.parent.parent,
-                        to.parent.at + increse);
-                    row.mounted(async () => {
-                        await row.append(to);
-                        this.page.onExcuteUpdate();
-                        this.page.snapshoot.store();
-                    });
-                    this.page.snapshoot.cancelSync();
-                    this.page.onExcuteUpdate();
-                }
-                else {
+                var row = to.closest(x => x.isRow);
+                if (row.childs.length > 1) {
                     var col = await this.page.createBlock(BlockUrlConstant.Col, {
-                        blocks: { childs: [{ url: BlockUrlConstant.Row }, { url: BlockUrlConstant.Row }] }
-                    }, to.parent, to.parent.at + increse);
-                    col.mounted(async () => {
+                        blocks: {
+                            childs: [
+                                { url: BlockUrlConstant.Row },
+                                { url: BlockUrlConstant.Row }
+                            ]
+                        }
+                    }, to.parent, to.at);
+                    if (direction == DropDirection.bottom) {
                         await col.childs.first().append(to);
                         await col.childs.last().append(self);
-                        this.page.onExcuteUpdate();
-                        this.page.snapshoot.store();
-                    });
-                    this.page.snapshoot.cancelSync();
-                    this.page.onExcuteUpdate();
+                    }
+                    else {
+                        await col.childs.first().append(self);
+                        await col.childs.last().append(to);
+                    }
+                }
+                else {
+                    var increse: number = 0;
+                    if (direction == DropDirection.bottom) increse = 1;
+                    var newRow = await this.page.createBlock(BlockUrlConstant.Row, {},
+                        row.parent,
+                        row.at + increse);
+                    await newRow.append(self);
                 }
                 break;
             case DropDirection.left:

@@ -46,7 +46,6 @@ export class SelectionExplorer extends Events {
             if (selection.rangeCount > 0) selection.removeAllRanges(); // 将已经包含的已选择的对象清除掉
             if (this.start && this.end) {
                 var range = document.createRange();
-
                 if (this.start.isBefore(this.end)) {
                     range.setStartBefore(this.start.view);
                     range.setEndAfter(this.end.view);
@@ -346,6 +345,7 @@ export class SelectionExplorer extends Events {
                 return this.page.searchBlocksBetweenAnchor(this.start, this.end);
             }
         }
+        return [];
     }
     get hasSelectionRange() {
         return this.start && this.end || this.currentSelectedBlocks.length > 0
