@@ -108,12 +108,8 @@ export class BarView extends React.Component<{ bar: Bar }>{
         return <div>
             <div className='sy-selector-drag-copy' ref={e => this.dragCopyEle = e}></div>
             <div className='sy-selector-bar' ref={e => this.barEle = e} onMouseDown={e => this.onMousedown(e.nativeEvent)}>
-                <Tip ref={e => { this.toolTip = e; }} overlay={<div className='sy-tooltip-content'>
-                    <Sp id='bar_tip'></Sp>
-                </div>
-                }><span>
-                        <Icon icon='drag:sy' size={14}></Icon>
-                    </span>
+                <Tip ref={e => { this.toolTip = e; }} id='bar' >
+                    <span><Icon icon='drag:sy' size={14}></Icon></span>
                 </Tip>
             </div>
         </div>
