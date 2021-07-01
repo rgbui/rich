@@ -466,6 +466,9 @@ export abstract class Block extends Events {
     get isLine(): boolean {
         return this.display == BlockDisplay.inline;
     }
+    get isLineSolid(): boolean {
+        return false;
+    }
     get isBlock(): boolean {
         return this.display == BlockDisplay.block;
     }
