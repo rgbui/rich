@@ -2,8 +2,9 @@
 import Tooltip from "rc-tooltip";
 import React from "react";
 import { Sp } from "../i18n";
+import { LangID } from "../i18n/declare";
 
-export class Tip extends React.Component<{ children: React.ReactElement, id?: string, overlay?: React.ReactNode }>{
+export class Tip extends React.Component<{ children: React.ReactElement, id?: LangID, overlay?: React.ReactNode }>{
     constructor(props) {
         super(props);
     }
@@ -12,7 +13,7 @@ export class Tip extends React.Component<{ children: React.ReactElement, id?: st
     }
     private tip: any;
     render() {
-        var ov = this.props.id ? <Sp id={this.props.id}></Sp> : this.props.overlay;
+        var ov = typeof this.props.id != 'undefined' ? <Sp id={this.props.id}></Sp> : this.props.overlay;
         return <Tooltip ref={e => this.tip = e} mouseEnterDelay={0.8}
             mouseLeaveDelay={0.1}
             placement="left"

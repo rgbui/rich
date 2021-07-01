@@ -1,6 +1,7 @@
 import React from "react";
+import { LangID } from "./declare";
 import { langProvider } from "./provider";
-export class Sp extends React.Component<{ id?: string, children?: React.ReactText }>{
+export class Sp extends React.Component<{ id: LangID }>{
     id: number;
     constructor(props) {
         super(props);
@@ -13,7 +14,7 @@ export class Sp extends React.Component<{ id?: string, children?: React.ReactTex
         langProvider.remove(this)
     }
     render() {
-        if (langProvider.isLoaded) return langProvider.get(this.props.id || this.props.children)
+        if (langProvider.isLoaded) return langProvider.get(this.props.id)
         else return <></>;
     }
 }

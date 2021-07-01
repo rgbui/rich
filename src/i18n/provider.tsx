@@ -1,5 +1,6 @@
 import React, { ReactElement } from "react";
 import { Sp } from ".";
+import { LangID } from "./declare";
 
 class LangProvider {
     public isLoaded: boolean = false;
@@ -37,7 +38,7 @@ class LangProvider {
     remove(sp: Sp) {
         this.sps.delete(sp.id);
     }
-    get(id: string | number): React.ReactElement {
+    get(id: LangID): React.ReactElement {
         if (typeof this.dict[id] != 'undefined') {
             var value = this.dict[id];
             if (typeof value == 'string') return <>{value}</>;
@@ -45,7 +46,7 @@ class LangProvider {
         }
         return <>no declare lang id</>;
     }
-    private dict: Record<string, React.ReactElement> = {};
+    private dict: Record<LangID, React.ReactElement> = {} as any;
     private async load() {
         this.isLoaded = false;
         var data: any = {};
