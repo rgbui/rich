@@ -2,9 +2,10 @@ import React from "react";
 import ReactDOM from 'react-dom';
 import { Point } from "../../common/point";
 import { Icon } from "../../component/icon";
-import Tooltip from "rc-tooltip";
 import { Bar } from ".";
 import { DropDirection } from "./direction";
+import { Tip } from "../../component/tip";
+import { Sp } from "../../i18n";
 
 
 export class BarView extends React.Component<{ bar: Bar }>{
@@ -102,18 +103,18 @@ export class BarView extends React.Component<{ bar: Bar }>{
         this.dragCopyEle.innerHTML = '';
     }
     barEle: HTMLElement;
-    toolTip: any;
+    toolTip: Tip;
     render() {
         return <div>
             <div className='sy-selector-drag-copy' ref={e => this.dragCopyEle = e}></div>
             <div className='sy-selector-bar' ref={e => this.barEle = e} onMouseDown={e => this.onMousedown(e.nativeEvent)}>
-                <Tooltip ref={e => { this.toolTip = e; }} mouseEnterDelay={0.8} placement="left" trigger={['hover']}
-                    overlay={<div className='sy-tooltip-content'>
-                        <span><b>Drag</b> to Move</span><br />
-                        <span><b>Click</b> to Open Menu</span></div>}><span>
+                <Tip ref={e => { this.toolTip = e; }} overlay={<div className='sy-tooltip-content'>
+                    <Sp id='bar_tip'></Sp>
+                </div>
+                }><span>
                         <Icon icon='drag:sy' size={14}></Icon>
                     </span>
-                </Tooltip>
+                </Tip>
             </div>
         </div>
     }
