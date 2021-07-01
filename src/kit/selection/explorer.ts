@@ -85,7 +85,7 @@ export class SelectionExplorer extends Events {
     createAnchor(block: Block, at?: number) {
         var anchor = new Anchor(this);
         anchor.block = block;
-        if (typeof at == 'number') {
+        if (typeof at == 'number' && block.isText) {
             if (at == -1) {
                 anchor.at = block.textContent.length;
             }
@@ -294,31 +294,68 @@ export class SelectionExplorer extends Events {
      * 对选区执行一些样式
      */
     async onSelectionSetPattern(styles: Record<BlockCssName, Record<string, any>>) {
-        if (!this.hasTextRange) throw new Exception(ExceptionType.notTextSelection)
+        if (!this.hasTextRange) throw new Exception(ExceptionType.notTextSelection);
         await this.page.onAction(ActionDirective.onUpdatePattern, async () => {
             var bs = this.selectedBlocks;
             var newStart: Block, newEnd: Block;
             await bs.eachAsync(async block => {
                 var fissContent = this.page.fissionBlockBySelection(block, this.start, this.end);
+                if (!fissContent.after && !fissContent.before) {
+                    /**
+                     * 全选的操作
+                     */
+                    block.pattern.setStyles(styles);
+                    return;
+                }
                 var pattern = await block.pattern.cloneData();
-                var at = block.at;
-                var pa = block.parent;
-                var url = block.url;
-                if (!block.isTextContent) {
-                    at = -1;
-                    pa = block;
-                    url = BlockUrlConstant.Text;
+                var url = BlockUrlConstant.Text;
+                if (block.isTextContent) {
+                    var at = block.at;
+                    var pa = block.parent;
+                    /**
+                     * 说明当前的block是textContent
+                     */
+                    if (fissContent.before) {
+                        block.updateProps({ content: fissContent.before });
+                        var current = await (this.page.createBlock(url, { content: fissContent.current, pattern }, pa, (at += 1)));
+                        current.pattern.setStyles(styles);
+                        if (block == this.start.block) newStart = current;
+                        if (block == this.end.block) newEnd = current;
+                        if (fissContent.after)
+                            await (this.page.createBlock(url, { content: fissContent.after, pattern }, pa, (at += 1)))
+                    }
+                    else {
+                        block.updateProps({ content: fissContent.current });
+                        block.pattern.setStyles(styles);
+                        if (block == this.start.block) newStart = block;
+                        if (block == this.end.block) newEnd = block;
+                        await (this.page.createBlock(url, { content: fissContent.after, pattern }, pa, (at += 1)))
+                    }
                 }
-                if (fissContent.before)
-                    await (this.page.createBlock(url, { content: fissContent.before, pattern }, pa, (at += 1)))
-                if (fissContent.current) {
-                    var current = await (this.page.createBlock(url, { content: fissContent.current, pattern }, pa, (at += 1)));
-                    current.pattern.setStyles(styles);
-                    if (block == this.start.block) newStart = current;
-                    else if (block == this.end.block) newEnd = current;
+                else if (block.isLineSolid) {
+                    /***
+                     * 例如表情块
+                     */
+                    if (block == this.start.block) newStart = block;
+                    if (block == this.end.block) newEnd = block;
                 }
-                if (fissContent.after)
-                    await (this.page.createBlock(url, { content: fissContent.after, pattern }, pa, (at += 1)))
+                else {
+                    /**
+                     * 说明当前的block是textspan
+                     */
+                    var at = -1;
+                    var pa = block;
+                    if (fissContent.before)
+                        await (this.page.createBlock(url, { content: fissContent.before, pattern }, pa, (at += 1)))
+                    if (fissContent.current) {
+                        var current = await (this.page.createBlock(url, { content: fissContent.current, pattern }, pa, (at += 1)));
+                        current.pattern.setStyles(styles);
+                        if (block == this.start.block) newStart = current;
+                        if (block == this.end.block) newEnd = current;
+                    }
+                    if (fissContent.after)
+                        await (this.page.createBlock(url, { content: fissContent.after, pattern }, pa, (at += 1)))
+                }
             });
             if (newStart && newEnd) {
                 var newStartAnchor = this.createAnchor(newStart);
