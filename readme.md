@@ -4,6 +4,7 @@
 
 * [rc-tooltip](https://github.com/react-component/tooltip)
 * [katex](https://github.com/KaTeX/KaTeX)
+* [react-svgr](https://react-svgr.com/docs/options/)
 
 ## 关注的github issues
 * [光标定位](https://github.com/rgbui/rich/issues/2)
