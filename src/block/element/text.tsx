@@ -2,8 +2,8 @@
 import { BlockView } from "../view";
 import { BlockComposition } from "./composition/block";
 import React from 'react';
-import { BlockAppear, BlockDisplay } from "../partial/enum";
-import { url, view } from "../factory/observable";
+import { BlockAppear, BlockDisplay, BlockLink } from "../partial/enum";
+import { prop, url, view } from "../factory/observable";
 import { TextArea } from "../partial/appear";
 /***
  * 文字型的block，
@@ -13,14 +13,20 @@ import { TextArea } from "../partial/appear";
 export class TextContent extends BlockComposition {
     display = BlockDisplay.inline;
     appear = BlockAppear.text;
-    get isTextContent(){
+    @prop()
+    link: BlockLink = null;
+    @prop()
+    comment: { id: string } = null;
+    @prop()
+    mention: { userid: string } = null;
+    get isTextContent() {
         return true;
     }
 }
 @view('/text')
 export class TextContentView extends BlockView<TextContent>{
     render() {
-        return <span className='sy-block-text-content'  style={this.block.visibleStyle} >
+        return <span className='sy-block-text-content' style={this.block.visibleStyle} >
             <TextArea html={this.block.htmlContent}></TextArea>
         </span>
     }

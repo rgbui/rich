@@ -56,3 +56,8 @@ export enum BlockRenderRange {
     self,
     parent,
 }
+
+
+export type BlockLink = {
+    href?: string;
+}
