@@ -1,22 +1,17 @@
 /***
  * import component
  */
-
-
-import "../src/block/element/text";
-import "./general/textspan";
 import "./general/head";
-import "./media/image";
-import "./present/katex";
-import "./form/todo";
 import "./general/callout";
 import "./general/emoji";
 import "./general/quote";
+import "./media/image";
+import "./present/katex";
+import "./form/todo";
 import "./present/list/list";
 import "./present/list/list.sub.panel";
 import "./present/code/code";
 import "./present/divider";
-
 import './table/cell';
 import './table/row';
 import './table/table';

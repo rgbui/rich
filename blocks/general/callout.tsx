@@ -1,8 +1,8 @@
 import { BlockView } from "../../src/block/view";
 import React from 'react';
 import { url, view } from "../../src/block/factory/observable";
-import { TextSpan } from "./textspan";
 import { TextArea } from "../../src/block/partial/appear";
+import { TextSpan } from "../../src/block/element/textspan";
 @url('/callout')
 export class Callout extends TextSpan {
 
