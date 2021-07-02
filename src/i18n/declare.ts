@@ -1,6 +1,7 @@
 
 
 export enum LangID {
+    none,
     bar,
     textToolTurn,
     textToolComment,
