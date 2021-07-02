@@ -9,7 +9,7 @@ export function Icon(props: {
     className?: string[] | string
 }) {
     if (typeof props.icon == 'undefined' || !props.icon) {
-        return <i>图标不能为空</i>
+        return <i>the icon is empty</i>
     }
     var classList: string[] = ['sy-icon'];
     if (typeof props.icon == 'string' && props.icon.indexOf(':')) {

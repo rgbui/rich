@@ -3,10 +3,7 @@ import Tooltip from "rc-tooltip";
 import React from "react";
 import { Sp } from "../i18n";
 import { LangID } from "../i18n/declare";
-/***
- * import components
- */
-import "./node_modules/rc-tooltip/assets/bootstrap_white.css"
+import "../../node_modules/rc-tooltip/assets/bootstrap_white.css";
 export class Tip extends React.Component<{
     children: React.ReactElement | React.ReactElement[],
     id?: LangID,
@@ -27,7 +24,6 @@ export class Tip extends React.Component<{
             mouseLeaveDelay={0.1}
             placement={this.props.placement || 'top'}
             trigger={['hover']}
-            arrowContent={null}
             overlayInnerStyle={{ minHeight: 'auto' }}
             overlay={<div className='sy-tooltip-content'>{ov}</div>}
         >{Array.isArray(this.props.children) ? <>{this.props.children}</> : this.props.children}
