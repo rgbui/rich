@@ -1,7 +1,7 @@
 import { BlockView } from "../../src/block/view";
 import React from 'react';
 import { url, view } from "../../src/block/factory/observable";
-import { Content } from "../../src/block/layout/content";
+import { Content } from "../../src/block/element/content";
 @url('/divider')
 export class Divider extends Content {
 

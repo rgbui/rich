@@ -1,5 +1,5 @@
 import { Kit } from "..";
-import { TextContent } from "../../../blocks/general/text";
+import { TextContent } from "../../block/element/text";
 import { Block } from "../../block";
 import { BlockUrlConstant } from "../../block/constant";
 import { BlockRenderRange } from "../../block/partial/enum";

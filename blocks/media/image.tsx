@@ -3,7 +3,7 @@ import { prop, url, view } from "../../src/block/factory/observable";
 import React from 'react';
 import { BlockAppear } from "../../src/block/partial/enum";
 import { SolidArea } from "../../src/block/partial/appear";
-import { Content } from "../../src/block/layout/content";
+import { Content } from "../../src/block/element/content";
 import { Rect } from "../../src/common/point";
 @url('/image')
 export class Image extends Content {

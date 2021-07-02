@@ -5,7 +5,7 @@ import "./style.less";
 import { Events } from "../util/events";
 import { util } from "../util/util";
 import { BlockFactory } from "../block/factory/block.factory";
-import { View } from "../block/layout/view";
+import { View } from "../block/element/view";
 import { PageLayout } from "../layout/index";
 import { PageEvent } from "./partial/event";
 

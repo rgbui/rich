@@ -4,7 +4,7 @@ import React from 'react';
 import { prop, url, view } from "../../src/block/factory/observable";
 import "../../node_modules/katex/dist/katex.min.css";
 import { SolidArea } from "../../src/block/partial/appear";
-import { Content } from "../../src/block/layout/content";
+import { Content } from "../../src/block/element/content";
 @url('/katex')
 export class Katex extends Content {
     @prop()

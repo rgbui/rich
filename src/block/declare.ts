@@ -1,10 +1,12 @@
 
 
-import "./layout/area";
+import "./element/area";
 
-import "./layout/col";
-import "./layout/group";
-import "./layout/row";
-import "./layout/view";
+import "./element/col";
+import "./element/group";
+import "./element/row";
+import "./element/view";
+import "./element/text";
+import "./element/textspan";
 
-import "./layout/style.less";
+import "./element/style.less";

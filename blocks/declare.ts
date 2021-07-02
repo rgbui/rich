@@ -3,7 +3,7 @@
  */
 
 
-import "./general/text";
+import "../src/block/element/text";
 import "./general/textspan";
 import "./general/head";
 import "./media/image";

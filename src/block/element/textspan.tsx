@@ -1,10 +1,11 @@
 
 import React from 'react';
-import { BlockView } from "../../src/block/view";
-import { BlockAppear, BlockDisplay } from "../../src/block/partial/enum";
-import { url, view } from "../../src/block/factory/observable";
-import { TextArea } from "../../src/block/partial/appear";
-import { Content } from '../../src/block/layout/content';
+import { url, view } from '../factory/observable';
+import { TextArea } from '../partial/appear';
+import { BlockDisplay, BlockAppear } from '../partial/enum';
+import { BlockView } from '../view';
+import { Content } from './content';
+
 @url("/textspan")
 export class TextSpan extends Content {
     display = BlockDisplay.block;
