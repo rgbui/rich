@@ -1,25 +1,27 @@
 .sy-block-row {
-    display        : flex;
+    display: flex;
     justify-content: flex-start;
-    align-items    : flex-start;
+    align-items: flex-start;
 
     &-gap {
-        width           : 46px;
+        width: 46px;
         background-color: transparent;
-        align-self      : stretch;
-        transition      : opacity 200ms ease-out 0s;
-        opacity         : 0;
-        position        : relative;
-        z-index         : 100;
-        display         : inline-flex;
-        justify-content : center;
-        align-items     : stretch;
+        align-self: stretch;
+        transition: opacity 200ms ease-out 0s;
+        opacity: 0;
+        position: relative;
+        z-index: 100;
+        display: inline-flex;
+        justify-content: center;
+        align-items: stretch;
+        flex-grow: 0;
+        flex-shrink: 0;
         &::after {
-            height    : 100%;
-            width     : 4px;
-            content   : '\20';
+            height: 100%;
+            width: 4px;
+            // content   : '';
             background: rgba(61, 57, 44, 0.16);
-            cursor    : col-resize;
+            cursor: col-resize;
         }
 
         &:hover {
