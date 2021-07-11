@@ -63,6 +63,7 @@ export class Events<T = string> {
             }
             else gs.push(undefined);
         }
+        this.__events.removeAll(x => rs.exists(g => g === x && g.once == true));
         if (gs.length == 1) return gs[0]
         else return gs;
     }
