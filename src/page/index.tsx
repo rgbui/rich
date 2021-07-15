@@ -73,6 +73,10 @@ export class Page extends Events {
     }
     cfm: ConfigurationManager;
     async load(data: Record<string, any>) {
+        if (!data) {
+            //这里加载默认的页面数据
+            data = await this.getDefaultData();
+        }
         await this.emit('loading');
         for (var n in data) {
             if (n == 'views') continue;
@@ -140,7 +144,10 @@ export class Page extends Events {
         this.onAddUpdate(parent);
         return block;
     }
-
+    async getDefaultData() {
+        var r = await import("./default.page");
+        return r.data;
+    }
 }
 export interface Page extends PageEvent { }
 util.inherit(Page, PageEvent)
