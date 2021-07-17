@@ -38,6 +38,7 @@ export var BlockSelectorData = [
             { text: "代码片段", pic: <img src={code} />, url: "/code", description: "", label: "/代码片段", labels: [] },
             { text: "数学公式", pic: <img src={equation} />, url: "/katex", description: "", label: "/数学公式", labels: [] },
             { text: "表情", pic: <img src={emoji} />, url: "/emoji", description: "", label: "/表情", labels: [] },
+            { text: '数据表格', pic: <img src={emoji} />, url: "/table/store", label: '/数据表格' }
         ]
     }
 ]
