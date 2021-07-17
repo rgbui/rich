@@ -67,6 +67,29 @@ export class Events<T = string> {
         if (gs.length == 1) return gs[0]
         else return gs;
     }
+    async emitAsync(name: T, ...args: any[]) {
+        if (!Array.isArray(this.__events)) this.__events = [];
+        var rs = this.__events.findAll(x => x.name == name);
+        if (rs.length == 0) return undefined;
+        var gs: any[] = [];
+        for (let i = 0; i < rs.length; i++) {
+            var r = rs[i];
+            if (typeof r.fn == 'function') {
+                try {
+                    var result = await r.fn.apply(this, args);
+                    gs.push(result);
+                }
+                catch (ex) {
+                    console.error('happend error in emit', ex);
+                    gs.push(undefined);
+                }
+            }
+            else gs.push(undefined);
+        }
+        this.__events.removeAll(x => rs.exists(g => g === x && g.once == true));
+        if (gs.length == 1 && rs.length == 1) return gs[0]
+        else return gs;
+    }
     has(name: T | F): boolean {
         if (!Array.isArray(this.__events)) this.__events = [];
         if ((typeof name == 'string' || typeof name == 'number')) return this.__events.exists(x => x.name == name);
