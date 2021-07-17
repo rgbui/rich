@@ -16,17 +16,16 @@ import './table/cell';
 import './table/row';
 import './table/table';
 
-import './table-store/table';
-import "./table-store/head";
-import "./table-store/th";
-import "./table-store/row";
-import "./table-store/cell";
-
-
+import './data-present/table-store/table';
+import "./data-present/table-store/head";
+import "./data-present/table-store/th";
+import "./data-present/table-store/row";
+import "./data-present/table-store/cell";
 /***
  * import component style
  */
 import "./general/style.less";
 import "./present/style.less";
+import "./data-present/style.less";
 
 
