@@ -27,6 +27,7 @@ export class BlockFactory {
             var newBlock: Block = new (bc.model as any)(page);
             newBlock.viewComponent = bc.view;
             if (parent) newBlock.parent = parent;
+            if (typeof newBlock.initialLoad == 'function') await newBlock.initialLoad();
             if (data) await newBlock.load(Object.assign(pb.data, data));
             return newBlock;
         }

@@ -369,6 +369,13 @@ export abstract class Block extends Events {
         return this.findReverse(g => !g.isLayout && !g.hasChilds);
     }
     isLoad = false;
+    /**
+     * 实始加载，就是初始block时触发
+     * 主要是加载初始的数据和模板
+     */
+    async initialLoad() {
+
+    }
     async load(data) {
         try {
             if (!this.pattern)
@@ -838,6 +845,9 @@ export abstract class Block extends Events {
             tp.data = computed();
             return tp.data;
         }
+    }
+    async onCreated() {
+
     }
 }
 export interface Block extends Block$Seek { }
