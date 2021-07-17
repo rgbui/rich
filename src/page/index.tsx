@@ -141,6 +141,7 @@ export class Page extends Events {
         this.snapshoot.record(OperatorDirective.create, {
             parentId: parent.id, childKey, at, preBlockId: block.prev ? block.prev.id : undefined, data: block.get()
         });
+    await    block.onCreated()
         this.onAddUpdate(parent);
         return block;
     }
