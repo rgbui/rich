@@ -1,6 +1,4 @@
 import { FieldType } from "./field.type";
-
-
 export class ViewField {
     name?: string;
     display?: string;
@@ -20,5 +18,9 @@ export class ViewField {
             type: this.type,
             width: this.width
         }
+    }
+    getValue(row) {
+        if (typeof this.name == 'string')
+            return row[this.name];
     }
 }
