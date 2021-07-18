@@ -6,6 +6,9 @@ import { BlockAppear, BlockDisplay } from "../../../src/block/partial/enum";
 import { Block } from "../../../src/block";
 import { TableStoreRow } from "./row";
 import { TableStore } from "./table";
+import { FieldType } from "../schema/field.type";
+import { BlockFactory } from "../../../src/block/factory/block.factory";
+import { BlockUrlConstant } from "../../../src/block/constant";
 
 @url('/tablestore/cell')
 export class TableStoreCell extends Block {
@@ -20,21 +23,26 @@ export class TableStoreCell extends Block {
         return this.tableRow.tableStore;
     }
     get field() {
-        return this.tableStore.fields.find(g => g.name == this.name);
+        return this.tableStore.fields[this.at];
     }
     async createCellContent() {
-        // this.blocks.childs = [];
-        // var cellContent: Block;
-        // switch (this.metaCol.type) {
-        //     case TableMetaFieldType.string:
-        //         cellContent = await BlockFactory.createBlock(BlockUrlConstant.Text, this.page, { content: this.value }, this);
-        //         break;
-        //     case TableMetaFieldType.number:
-        //         cellContent = await BlockFactory.createBlock('/text', this.page, { content: this.value }, this);
-        //         break;
-        // }
-        // if (cellContent)
-        //     this.blocks.childs.push(cellContent);
+        this.blocks.childs = [];
+        var cellContent: Block;
+        var row = this.tableRow.dataRow;
+        switch (this.field.type) {
+            case FieldType.text:
+                cellContent = await BlockFactory.createBlock(BlockUrlConstant.Text, this.page, {
+                    content: this.field.getValue(row)
+                }, this);
+                break;
+            case FieldType.number:
+                cellContent = await BlockFactory.createBlock(BlockUrlConstant.Text, this.page, {
+                    content: this.field.getValue(row)
+                }, this);
+                break;
+        }
+        if (cellContent)
+            this.blocks.childs.push(cellContent);
     }
     get isCol() {
         return true;

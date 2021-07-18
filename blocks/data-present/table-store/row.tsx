@@ -21,17 +21,10 @@ export class TableStoreRow extends Block {
         this.blocks.childs = [];
         var cols = this.tableStore.fields;
         for (let i = 0; i < cols.length; i++) {
-            let col = cols[i];
-            var cell = await BlockFactory.createBlock('/tablestore/cell', this.page, { name: col.name }, this) as TableStoreCell;
+            var cell = await BlockFactory.createBlock('/tablestore/cell', this.page, {}, this) as TableStoreCell;
             this.blocks.childs.push(cell);
             await cell.createCellContent();
         }
-    }
-    async appendCell(at: number) {
-        var col = this.tableStore.fields[at];
-        var cell = await BlockFactory.createBlock('/tablestore/cell', this.page, { name: col.name }, this) as TableStoreCell;
-        this.blocks.childs.push(cell);
-        await cell.createCellContent();
     }
 }
 @view('/tablestore/row')

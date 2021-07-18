@@ -44,6 +44,10 @@ export class TableStore extends Block {
         if (this.metaId) {
             this.meta = await this.page.emitAsync('searchDataPresentMeta', this.metaId);
         }
+        else {
+            this.meta = await this.page.emitAsync('createDefaultPresentData');
+            this.metaId = this.meta.id;
+        }
     }
     isLoadData: boolean = false;
     async loadData() {
@@ -101,16 +105,6 @@ export class TableStore extends Block {
         // })
         // this.page.snapshoot.store();
         // this.view.forceUpdate();
-    }
-    async initialLoad() {
-        /***
-         * 这里导入创建后的初始模板
-         */
-    }
-    async onCreated() {
-        /**
-         * 这个是创建成功后触发
-         */
     }
 }
 @view('/table/store')
