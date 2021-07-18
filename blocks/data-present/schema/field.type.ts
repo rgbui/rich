@@ -6,6 +6,9 @@
  */
 export enum FieldType {
     none = 0,
+    any = 1,
+    object = 2,
+    array = 3,
     /**
      * 主键id
      */
