@@ -24,6 +24,9 @@ export class TableStore extends Block {
     metaId: string;
     meta: TableMeta;
     data: any[];
+    index: number;
+    size: number;
+    total: number;
     async load(data) {
         if (!this.pattern) this.pattern = new Pattern(this);
         for (var n in data) {
@@ -52,7 +55,12 @@ export class TableStore extends Block {
     isLoadData: boolean = false;
     async loadData() {
         if (this.meta) {
-            this.data = await this.page.emitAsync('loadDataPresentData')
+            var r = await this.page.emitAsync('loadDataPresentData', {
+                index: this.index,
+                size: this.size
+            });
+            this.data = r.list;
+            this.total = r.total;
         }
     }
     async createHeads() {
