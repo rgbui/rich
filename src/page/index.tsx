@@ -26,6 +26,9 @@ import { PageKeys } from './interaction/keys';
 import { Exception, ExceptionType } from '../error/exception';
 import { InputDetector } from '../extensions/input.detector/detector';
 import { PageInputDetector } from './interaction/detector';
+import { Anchor } from '../kit/selection/anchor';
+import { UserAction } from '../history/action';
+import { TableMeta } from '../../blocks/data-present/schema/meta';
 
 export class Page extends Events {
     el: HTMLElement;
@@ -141,7 +144,7 @@ export class Page extends Events {
         this.snapshoot.record(OperatorDirective.create, {
             parentId: parent.id, childKey, at, preBlockId: block.prev ? block.prev.id : undefined, data: block.get()
         });
-    await    block.onCreated()
+        await block.onCreated()
         this.onAddUpdate(parent);
         return block;
     }
@@ -150,6 +153,37 @@ export class Page extends Events {
         return r.data;
     }
 }
+
+export interface Page {
+
+    on(name: "init", fn: () => void);
+    emit(name: 'init');
+    on(name: 'blur', fn: (ev: FocusEvent) => void);
+    emit(name: 'blur', ev: FocusEvent): void;
+    on(name: 'focus', fn: (ev: FocusEvent) => void);
+    emit(name: 'focus', ev: FocusEvent): void;
+    on(name: 'focusAnchor', fn: (anchor: Anchor) => void);
+    emit(name: 'focusAnchor', anchor: Anchor): void;
+    on(name: 'history', fn: (ev: UserAction) => void);
+    emit(name: 'history', ev: UserAction): void;
+
+    on(name: 'loading', fn: () => void);
+    emit(name: 'loading');
+    on(name: 'loaded', fn: () => void);
+    emit(name: 'loaded'): void;
+    on(name: "error", fn: (error: Error | string) => void);
+    emit(name: 'error', error: Error | string);
+    on(name: 'warn', fn: (error: Error | string) => void);
+    emit(name: "warn", error: Error | string);
+
+    on(name: 'searchDataPresentMeta', fn: (metaId: string) => Promise<TableMeta>);
+    emitAsync(name: "searchDataPresentMeta", metaId: string): Promise<TableMeta>;
+    on(name: 'createDefaultPresentData', fn: () => Promise<TableMeta>);
+    emitAsync(name: "createDefaultPresentData"): Promise<TableMeta>;
+    on(name: "loadDataPresentData", fn: (options: { size?: number, index?: number, filter?: Record<string, any> }) => Promise<{ list: any[], total: number }>)
+    emitAsync(name: 'loadDataPresentData', options: { size?: number, index?: number, filter?: Record<string, any> }): Promise<{ list: any[], total: number }>
+}
+
 export interface Page extends PageEvent { }
 util.inherit(Page, PageEvent)
 
