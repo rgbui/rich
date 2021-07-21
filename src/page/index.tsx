@@ -29,6 +29,7 @@ import { PageInputDetector } from './interaction/detector';
 import { Anchor } from '../kit/selection/anchor';
 import { UserAction } from '../history/action';
 import { TableMeta } from '../../blocks/data-present/schema/meta';
+import { DropDirection } from '../kit/handle/direction';
 
 export class Page extends Events {
     el: HTMLElement;
@@ -153,7 +154,6 @@ export class Page extends Events {
         return r.data;
     }
 }
-
 export interface Page {
 
     on(name: "init", fn: () => void);
@@ -164,13 +164,24 @@ export interface Page {
     emit(name: 'focus', ev: FocusEvent): void;
     on(name: 'focusAnchor', fn: (anchor: Anchor) => void);
     emit(name: 'focusAnchor', anchor: Anchor): void;
+    on(name: "blurAnchor", fn: (anchor: Anchor) => void);
+    emit(name: 'blurAnchor', anchor: Anchor): void;
     on(name: 'history', fn: (ev: UserAction) => void);
     emit(name: 'history', ev: UserAction): void;
-
+    on(name: "hoverOutBlock", fn: (block: Block) => void): void;
+    emit(name: 'hoverOutBlock', block: Block)
+    on(name: "hoverBlock", fn: (block: Block) => void): void;
+    emit(name: 'hoverBlock', block: Block)
+    on(name: "dropOutBlock", fn: (block: Block) => void): void;
+    emit(name: 'dropOutBlock', block: Block)
+    on(name: "dropOverBlock", fn: (block: Block, direction: DropDirection) => void): void;
+    emit(name: 'dropOverBlock', block: Block, direction: DropDirection)
     on(name: 'loading', fn: () => void);
     emit(name: 'loading');
     on(name: 'loaded', fn: () => void);
     emit(name: 'loaded'): void;
+    on(name: 'change', fn: () => void);
+    emit(name: 'change');
     on(name: "error", fn: (error: Error | string) => void);
     emit(name: 'error', error: Error | string);
     on(name: 'warn', fn: (error: Error | string) => void);
