@@ -33,7 +33,6 @@ export class TextTool extends SyExtensionsComponent {
         this.node = document.body.appendChild(document.createElement('div'));
     }
     open(point) {
-        console.log(point);
         this.point = this.point;
         this.visible = true;
         this.textStyle = this.emit('getTextStyle');

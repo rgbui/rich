@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM, { createPortal } from "react-dom";
+import ReactDOM,{ createPortal } from "react-dom";
 import { Point } from "../../common/point";
 import { SyExtensionsComponent } from "../sy.component";
 import { BackgroundColorList, FontColorList } from "./data";

@@ -13,7 +13,7 @@ export type EmojiType = {
 }
 
 
-export class EmojiPicker extends SyExtensionsComponent{
+export class EmojiPicker extends SyExtensionsComponent {
     constructor(props) {
         super(props);
         this.node = document.createElement('div');

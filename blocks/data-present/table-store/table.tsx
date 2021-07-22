@@ -15,6 +15,7 @@ import { ViewField } from "../schema/view.field";
  * 1. 数据源（调用第三方接口获取数据），编辑的数据源需要触发保存
  * 2. 表格的元数据信息（来源于全局的表格元数据信息)
  * 3. 表格的视图展示（具体到视图的展现,信息存在tableStore） 
+ * 
  */
 @url('/table/store')
 export class TableStore extends Block {
@@ -23,10 +24,11 @@ export class TableStore extends Block {
     @prop()
     metaId: string;
     meta: TableMeta;
-    data: any[];
+    data: any[] = [];
     index: number;
     size: number;
     total: number;
+    blocks = { childs: [], rows: [] };
     async load(data) {
         if (!this.pattern) this.pattern = new Pattern(this);
         for (var n in data) {
@@ -59,8 +61,8 @@ export class TableStore extends Block {
                 index: this.index,
                 size: this.size
             });
-            this.data = r.list;
-            this.total = r.total;
+            this.data = Array.isArray(r.list) ? r.list : [];
+            this.total = r?.total || 0;
         }
     }
     async createHeads() {
