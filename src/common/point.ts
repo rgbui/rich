@@ -125,18 +125,17 @@ export class Rect {
             this.width = Math.abs(end.x - start.x);
             this.height = Math.abs(end.y - start.y);
         }
-        else if (start instanceof Point && typeof end == 'number' && typeof height == 'number') {
+        else if (start instanceof Point && typeof end == 'number' && typeof width == 'number') {
             this.top = start.y;
             this.left = start.x;
             this.width = end;
-            this.height = height;
+            this.height = width;
         }
         else if (typeof start == 'number' && typeof end == 'number' && typeof width == 'number' && typeof height == 'number') {
             this.top = end;
             this.left = start;
             this.width = height;
             this.height = width;
-
         }
     }
     static from(rect: DOMRect) {
@@ -236,7 +235,7 @@ export class RectUtility {
                 if (y < 0 || y + options.elementArea.height > window.innerHeight) y = roundMiddle;
                 break;
         }
-        return new Point(x,y);
+        return new Point(x, y);
     }
     /**
      * 在该点弹一个对话框，该对话框的适合的坐标位置
@@ -247,7 +246,6 @@ export class RectUtility {
      * @returns 
      */
     static getChildRectPositionInRect(point: Point, size: Rect, parentRect?: Rect, dist: number = 0): Point {
-        if (dist == undefined) { dist = 0; }
         if (typeof parentRect == 'undefined') {
             parentRect = new Rect(new Point(0, 0), window.innerWidth, window.innerHeight);
         }
