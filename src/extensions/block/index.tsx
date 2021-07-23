@@ -3,8 +3,8 @@ import ReactDOM, { createPortal } from "react-dom";
 import { KeyboardCode } from "../../common/keys";
 import { Point } from "../../common/point";
 import { SyExtensionsComponent } from "../sy.component";
-import { BlockSelectorData } from "./data";
-
+import { BlockInfo } from "./delcare";
+import { blockStore } from "./store";
 export type BlockSelectorItem = {
     url: string,
     text: string
@@ -12,27 +12,15 @@ export type BlockSelectorItem = {
 
 export class BlockSelector extends SyExtensionsComponent {
     private node: HTMLElement;
-    constructor(props)
-    {
+    constructor(props) {
         super(props);
         this.node = document.body.appendChild(document.createElement('div'));
     }
     get filterSelectorData() {
-        var bs = BlockSelectorData.map(b => {
-            return {
-                ...b,
-                childs: b.childs.findAll(g => g.label.startsWith(this.command) || g.labels.exists(c => c.startsWith(this.command)))
-            }
-        });
-        bs.removeAll(g => g.childs.length == 0);
-        return bs;
+        return blockStore.findAll(this.command);
     }
     get filterBlocks() {
-        var cs = [];
-        this.filterSelectorData.each(c => {
-            cs.addRange(c.childs);
-        });
-        return cs;
+        return blockStore.findAllBlocks(this.command);
     }
     get isSelectIndex() {
         return this.selectIndex >= 0 && this.selectIndex < this.filterBlocks.length;
@@ -80,10 +68,10 @@ export class BlockSelector extends SyExtensionsComponent {
                 style={style}>{this.renderSelectors()}</div>}
         </div>, this.node);
     }
-    onSelect(block?) {
+    onSelect(block?: BlockInfo) {
         if (!block) block = this.selectBlockData;
         try {
-            this.emit('select', block,this.getFilterText(this.inputValue));
+            this.emit('select', block, this.getFilterText(this.inputValue));
         }
         catch (ex) {
             this.emit('error', ex);
@@ -108,10 +96,11 @@ export class BlockSelector extends SyExtensionsComponent {
         }
         return false;
     }
-    open(point: Point, text: string) {
+    async open(point: Point, text: string) {
         this.pos = point;
         this.selectIndex = 0;
         this.visible = true;
+        await blockStore.import();
         this.onInputFilter(text);
     }
     private inputValue: string;
@@ -199,6 +188,6 @@ export class BlockSelector extends SyExtensionsComponent {
 export interface BlockSelector {
     on(name: 'error', fn: (error: Error) => void);
     emit(name: 'error', error: Error);
-    on(name: 'select', fn: (item: BlockSelectorItem,value:string) => void);
-    emit(name: 'select', item: BlockSelectorItem,value:string);
+    on(name: 'select', fn: (item: BlockSelectorItem, value: string) => void);
+    emit(name: 'select', item: BlockSelectorItem, value: string);
 }

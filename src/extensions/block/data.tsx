@@ -13,18 +13,12 @@ import callout from "../../assert/img/callout.png";
 import code from "../../assert/img/code.png";
 import emoji from "../../assert/img/inline-emoji.png";
 import equation from "../../assert/img/inline-equation.png";
-export var BlockSelectorData = [
+import { BlockGroup } from './delcare';
+export var BlockSelectorData: BlockGroup[] = [
     {
         text: '基本',
         childs: [
-            {
-                text: '文本',
-                pic: <img src={text} />,
-                url: '/textspan',
-                description: '文本',
-                label: '/文本',
-                labels: []
-            },
+            { text: '文本', pic: <img src={text} />, url: '/textspan', description: '文本', label: '/文本', labels: [] },
             { text: '大标题', pic: <img src={header} />, url: '/head', description: '文本', label: '/文本', labels: [] },
             { text: '二级标题', pic: <img src={subheader} />, url: '/head?{level:"h2"}', description: '文本', label: '/文本', labels: [] },
             { text: '三级标题', pic: <img src={subsubheader} />, url: '/head?{level:"h3"}', description: '文本', label: '/文本', labels: [] },
