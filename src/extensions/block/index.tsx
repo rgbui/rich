@@ -10,10 +10,10 @@ export type BlockSelectorItem = {
     text: string
 }
 
-
 export class BlockSelector extends SyExtensionsComponent {
     private node: HTMLElement;
-    constructor(props) {
+    constructor(props)
+    {
         super(props);
         this.node = document.body.appendChild(document.createElement('div'));
     }

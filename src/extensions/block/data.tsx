@@ -13,7 +13,6 @@ import callout from "../../assert/img/callout.png";
 import code from "../../assert/img/code.png";
 import emoji from "../../assert/img/inline-emoji.png";
 import equation from "../../assert/img/inline-equation.png";
-
 export var BlockSelectorData = [
     {
         text: '基本',
