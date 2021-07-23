@@ -9,5 +9,7 @@ export enum TextCommand {
     cancelBold,
     cancelItalic,
     code,
-    equation
+    cancelCode,
+    equation,
+    cancelEquation
 }

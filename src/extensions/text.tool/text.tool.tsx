@@ -23,6 +23,7 @@ export type TextToolStyle = {
     color: string,
     fill: FillCss
 }
+
 export class TextTool extends SyExtensionsComponent {
     private node: HTMLElement;
     private textStyle: TextToolStyle = {
@@ -81,32 +82,32 @@ export class TextTool extends SyExtensionsComponent {
                         </div>
                     </Tip>
                     <Tip id={LangID.textToolBold}>
-                        <div className={'sy-tool-text-menu-item' + (this.textStyle.bold == true ? " hover" : "")} onMouseDown={e => this.onExcute(TextCommand.bold)}>
+                        <div className={'sy-tool-text-menu-item' + (this.textStyle.bold == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.bold == true ? TextCommand.cancelBold : TextCommand.bold)}>
                             <Icon icon='bold:sy'></Icon>
                         </div>
                     </Tip>
                     <Tip id={LangID.textToolItailc}>
-                        <div className={'sy-tool-text-menu-item' + (this.textStyle.italic == true ? " hover" : "")} onMouseDown={e => this.onExcute(TextCommand.italic)}>
+                        <div className={'sy-tool-text-menu-item' + (this.textStyle.italic == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.italic == true ? TextCommand.cancelItalic : TextCommand.italic)}>
                             <Icon icon='italic:sy'></Icon>
                         </div>
                     </Tip>
                     <Tip id={LangID.textToolUnderline}>
-                        <div className={'sy-tool-text-menu-item' + (this.textStyle.underline == true ? " hover" : "")} onMouseDown={e => this.onExcute(TextCommand.underline)}>
+                        <div className={'sy-tool-text-menu-item' + (this.textStyle.underline == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.underline == true ? TextCommand.cancelLine : TextCommand.underline)}>
                             <Icon icon='underline:sy'></Icon>
                         </div>
                     </Tip>
                     <Tip id={LangID.textToolDeleteLine}>
-                        <div className={'sy-tool-text-menu-item' + (this.textStyle.deleteLine == true ? " hover" : "")} onMouseDown={e => this.onExcute(TextCommand.deleteLine)}>
+                        <div className={'sy-tool-text-menu-item' + (this.textStyle.deleteLine == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.deleteLine == true ? TextCommand.underline : TextCommand.deleteLine)}>
                             <Icon icon='delete-line:sy'></Icon>
                         </div>
                     </Tip>
                     <Tip id={LangID.textToolCode}>
-                        <div className={'sy-tool-text-menu-item' + (this.textStyle.code == true ? " hover" : "")} onMouseDown={e => this.onExcute(TextCommand.code)}>
+                        <div className={'sy-tool-text-menu-item' + (this.textStyle.code == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.code == true ? TextCommand.cancelCode : TextCommand.code)}>
                             <Icon icon='code:sy'></Icon>
                         </div>
                     </Tip>
                     <Tip id={LangID.textToolEquation}>
-                        <div className={'sy-tool-text-menu-item' + (this.textStyle.equation == true ? " hover" : "")} onMouseDown={e => this.onExcute(TextCommand.equation)}>
+                        <div className={'sy-tool-text-menu-item' + (this.textStyle.equation == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.equation == true ? TextCommand.cancelEquation : TextCommand.equation)}>
                             <Icon icon={Equation}></Icon>
                         </div>
                     </Tip>
@@ -142,28 +143,36 @@ export class TextTool extends SyExtensionsComponent {
         switch (command) {
             case TextCommand.bold:
                 font.fontWeight = 'bold';
+                this.textStyle.bold = true;
                 break;
             case TextCommand.cancelBold:
-                font.fontWeight = 'normail';
+                font.fontWeight = 'normal';
+                this.textStyle.bold = false;
                 break;
             case TextCommand.italic:
                 font.fontStyle = 'italic';
+                this.textStyle.italic = true;
                 break;
             case TextCommand.cancelItalic:
-                font.fontStyle = 'normail';
+                font.fontStyle = 'normal';
+                this.textStyle.italic = false;
                 break;
             case TextCommand.deleteLine:
                 font.textDecoration = 'line-through';
+                this.textStyle.deleteLine = true;
                 break;
             case TextCommand.underline:
                 font.textDecoration = 'underline';
+                this.textStyle.underline = true;
                 break;
             case TextCommand.cancelLine:
                 font.textDecoration = 'none';
+                this.textStyle.deleteLine = false;
+                this.textStyle.underline = false;
                 break;
         }
         this.emit('setStyle', { [BlockCssName.font]: font } as any);
-        this.close();
+        this.forceUpdate();
     }
     onOpenFontColor() {
 
