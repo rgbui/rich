@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM,{ createPortal } from "react-dom";
-import { Point } from "../../common/point";
+import { Point } from "../../src/common/point";
 import { SyExtensionsComponent } from "../sy.component";
 import { BackgroundColorList, FontColorList } from "./data";
 export class ColorSelector extends SyExtensionsComponent {

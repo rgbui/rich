@@ -1,10 +1,10 @@
 import { Page } from "..";
-import { BlockSelector } from "../../extensions/block";
-import { InputDetector } from "../../extensions/input.detector/detector";
-import { BlockMenu } from "../../extensions/menu/menu";
-import { ReferenceSelector } from "../../extensions/reference";
-import { SyExtensionsComponent } from "../../extensions/sy.component";
-import { TextTool } from "../../extensions/text.tool/text.tool";
+import { BlockSelector } from "../../../extensions/block";
+import { InputDetector } from "../../../extensions/input.detector/detector";
+import { BlockMenu } from "../../../extensions/menu/menu";
+import { ReferenceSelector } from "../../../extensions/reference";
+import { SyExtensionsComponent } from "../../../extensions/sy.component";
+import { TextTool } from "../../../extensions/text.tool/text.tool";
 import { Kit } from "../../kit";
 import { PageBlockSelector } from "../interaction/block.selector";
 import { PageBlockMenu } from "../interaction/menu";

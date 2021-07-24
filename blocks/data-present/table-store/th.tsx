@@ -7,7 +7,7 @@ import { TextArea } from "../../../src/block/partial/appear";
 import { TableStore } from "./table";
 import { TextEle } from "../../../src/common/text.ele";
 import { TableStoreHead } from "./head";
-import { Icon } from "../../../src/component/icon";
+import { Icon } from "../../../component/icon";
 import checkbox from "../../../src/assert/svg/types.checkbox.svg";
 import select from "../../../src/assert/svg/types.select.svg";
 import string from "../../../src/assert/svg/types.string.svg";

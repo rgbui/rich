@@ -6,7 +6,7 @@ import React from "react";
 import { ChildsArea } from "../../../src/block/partial/appear";
 import { TableStore } from "./table";
 import plus from "../../../src/assert/svg/plus.svg";
-import { Icon } from "../../../src/component/icon";
+import { Icon } from "../../../component/icon";
 
 @url('/tablestore/head')
 export class TableStoreHead extends Block {

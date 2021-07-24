@@ -24,7 +24,7 @@ import { PageKit } from './interaction/kit';
 import { PageHistory } from './interaction/history';
 import { PageKeys } from './interaction/keys';
 import { Exception, ExceptionType } from '../error/exception';
-import { InputDetector } from '../extensions/input.detector/detector';
+import { InputDetector } from '../../extensions/input.detector/detector';
 import { PageInputDetector } from './interaction/detector';
 import { Anchor } from '../kit/selection/anchor';
 import { UserAction } from '../history/action';

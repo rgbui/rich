@@ -1,13 +1,13 @@
 import React from "react";
 import { createPortal } from "react-dom";
-import { Point, Rect, RectUtility } from "../../common/point";
+import { Point, Rect, RectUtility } from "../../src/common/point";
 import { Icon } from "../../component/icon";
 import Equation from "../../assert/svg/equation.svg";
 import Mention from "../../assert/svg/mention.svg";
-import { Dragger } from "../../common/dragger";
+import { Dragger } from "../../src/common/dragger";
 import { TextCommand } from "./text.command";
 import { SyExtensionsComponent } from "../sy.component";
-import { BlockCssName, FillCss } from "../../block/pattern/css";
+import { BlockCssName, FillCss } from "../../src/block/pattern/css";
 import { LangID } from "../../i18n/declare";
 import { Tip } from "../../component/tip";
 

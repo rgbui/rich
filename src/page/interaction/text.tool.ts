@@ -1,5 +1,5 @@
 import { Page } from "..";
-import { TextTool, TextToolStyle } from "../../extensions/text.tool/text.tool";
+import { TextTool, TextToolStyle } from "../../../extensions/text.tool/text.tool";
 
 export function PageTextTool(page: Page, textTool: TextTool) {
     textTool.on('error', err => page.onError(err));

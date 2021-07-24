@@ -13,7 +13,7 @@ import callout from "../../assert/img/callout.png";
 import code from "../../assert/img/code.png";
 import emoji from "../../assert/img/inline-emoji.png";
 import equation from "../../assert/img/inline-equation.png";
-import { BlockGroup } from './delcare';
+import { BlockGroup, BlockSelectorOperator } from './delcare';
 export var BlockSelectorData: BlockGroup[] = [
     {
         text: '基本',
@@ -30,8 +30,8 @@ export var BlockSelectorData: BlockGroup[] = [
             { text: "首重文字", pic: <img src={callout} />, url: "/callout", description: "", label: "/首重文字", labels: [] },
             { text: "代码片段", pic: <img src={code} />, url: "/code", description: "", label: "/代码片段", labels: [] },
             { text: "数学公式", pic: <img src={equation} />, url: "/katex", description: "", label: "/数学公式", labels: [] },
-            { text: "表情", pic: <img src={emoji} />, url: "/emoji", description: "", label: "/表情", labels: [] },
-            { text: '数据表格', pic: <img src={emoji} />, url: "/table/store", label: '/数据表格' }
+            { text: "表情", isLine: true, operator: BlockSelectorOperator.selectEmoji, pic: <img src={emoji} />, url: "/emoji", description: "", label: "/表情", labels: [] },
+            { text: '数据表格', operator: BlockSelectorOperator.createTable, pic: <img src={emoji} />, url: "/table/store", label: '/数据表格' }
         ]
     }
 ]

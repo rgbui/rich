@@ -708,6 +708,23 @@ export abstract class Block extends Events {
             return newRow.childs.first();
         }
     }
+    /**
+     * 在当前的block的右侧创建一个新的block
+     * 通常创建的都是行内元素，如果是块元素，实际上在拖动布局中处理了
+     * @param url 
+     * @param data 
+     */
+    async visibleRightCreateBlock(url: string, data: Record<string, any>) {
+        if (this.isTextContent) {
+            return await this.page.createBlock(url, data, this.parent, this.at + 1);
+        }
+        else {
+            var content = this.content;
+            this.updateProps({ content: '' });
+            await this.page.createBlock(BlockUrlConstant.Text, { content }, this, 0);
+            return await this.page.createBlock(url, data, this, 1);
+        }
+    }
     @prop()
     content: string = '';
     get isEmpty() {

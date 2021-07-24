@@ -4,7 +4,7 @@ import { Block } from "../../block";
 import { BlockCssName } from "../../block/pattern/css";
 import { dom } from "../../common/dom";
 import { Point, Rect } from "../../common/point";
-import { TextToolStyle } from "../../extensions/text.tool/text.tool";
+import { TextToolStyle } from "../../../extensions/text.tool/text.tool";
 import { DropDirection } from "../../kit/handle/direction";
 import { Anchor } from "../../kit/selection/anchor";
 

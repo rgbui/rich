@@ -5,7 +5,9 @@ import { dom } from "../../common/dom";
 import { KeyboardCode } from "../../common/keys";
 import { TextEle } from "../../common/text.ele";
 import { ExceptionType, Exception } from "../../error/exception";
-import { DetectorOperator, DetectorRule } from "../../extensions/input.detector/detector";
+import { BlockSelectorItem } from "../../../extensions/block/delcare";
+import { blockStore } from "../../../extensions/block/store";
+import { DetectorOperator, DetectorRule } from "../../../extensions/input.detector/detector";
 import { ActionDirective } from "../../history/declare";
 import { Anchor } from "../selection/anchor";
 
@@ -227,14 +229,24 @@ export class TextInput$Write {
      * @param blockData 插入的block
      * @param value 当前输入的值（过滤掉命令的值），当前的文本值是在emit('inputting')是传出去的
      */
-    onBlockSelectorInsert(this: TextInput, blockData: { url: string }, value: string) {
+    onBlockSelectorInsert(this: TextInput, blockData: BlockSelectorItem, value: string) {
         var anchor = this.explorer.activeAnchor;
         var at = this.textAt;
         var block = anchor.block;
         this.textNode.innerHTML = value;
         anchor.at = this.textAt + value.length;
         this.willInputStore(block, value, at, true, async () => {
-            var newBlock = await block.visibleDownCreateBlock(blockData.url);
+            let extra: Record<string, any> = {};
+            if (typeof blockData.operator != 'undefined') {
+                extra = await blockStore.open(blockData.operator);
+            }
+            var newBlock: Block;
+            if (blockData.isLine) {
+                newBlock = await block.visibleRightCreateBlock(blockData.url, extra);
+            }
+            else {
+                newBlock = await block.visibleDownCreateBlock(blockData.url, extra);
+            }
             newBlock.mounted(() => {
                 this.explorer.onFocusAnchor(newBlock.visibleHeadAnchor);
             });

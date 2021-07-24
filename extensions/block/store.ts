@@ -1,6 +1,5 @@
-import { Events } from "../../util/events";
-import { BlockGroup } from "./delcare";
-
+import { Events } from "../../src/util/events";
+import { BlockGroup, BlockSelectorOperator } from "./delcare";
 class BlockStore extends Events {
     private _blockGroups: BlockGroup[];
     async import() {
@@ -26,6 +25,16 @@ class BlockStore extends Events {
             cs.addRange(c.childs);
         });
         return cs;
+    }
+    async open(operator: BlockSelectorOperator) {
+        var extra:Record<string,any>={ };
+        switch (operator) {
+            case BlockSelectorOperator.createTable:
+                break;
+            case BlockSelectorOperator.selectEmoji:
+                break;
+        }
+        return extra;
     }
 }
 export var blockStore = new BlockStore();

@@ -1,6 +1,6 @@
 import React from "react";
 import { createPortal } from "react-dom";
-import { Point } from "../../common/point";
+import { Point } from "../../src/common/point";
 import { Icon } from "../../component/icon";
 import duplicate from "../../assert/svg/duplicate.svg";
 import loop from "../../assert/svg/loop.svg";
@@ -13,7 +13,7 @@ import trash from "../../assert/svg/trash.svg";
 import { SyExtensionsComponent } from "../sy.component";
 import { BlockMenuAction, BlockMenuItem } from "./out.declare";
 import { BlockSelectorData } from "../block/data";
-import { Block } from "../../block";
+import { Block } from "../../src/block";
 export class BlockMenu extends SyExtensionsComponent {
     private node: HTMLElement;
     constructor(props) {

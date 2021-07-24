@@ -1,7 +1,7 @@
 import { Page } from "..";
 import { Block } from "../../block";
-import { BlockMenu } from "../../extensions/menu/menu";
-import { BlockMenuAction } from "../../extensions/menu/out.declare";
+import { BlockMenu } from "../../../extensions/menu/menu";
+import { BlockMenuAction } from "../../../extensions/menu/out.declare";
 
 export function PageBlockMenu(page: Page, menu: BlockMenu) {
     menu.on('error', err => page.onError(err));

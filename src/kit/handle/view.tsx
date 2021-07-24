@@ -1,12 +1,12 @@
 import React from "react";
 import ReactDOM from 'react-dom';
 import { Point } from "../../common/point";
-import { Icon } from "../../component/icon";
+import { Icon } from "../../../component/icon";
 import { Bar } from ".";
 import { DropDirection } from "./direction";
-import { Tip } from "../../component/tip";
-import { Sp } from "../../i18n";
-import { LangID } from "../../i18n/declare";
+import { Tip } from "../../../component/tip";
+import { Sp } from "../../../i18n";
+import { LangID } from "../../../i18n/declare";
 
 
 export class BarView extends React.Component<{ bar: Bar }>{

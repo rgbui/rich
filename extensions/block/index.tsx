@@ -1,14 +1,10 @@
 import React from "react";
 import ReactDOM, { createPortal } from "react-dom";
-import { KeyboardCode } from "../../common/keys";
-import { Point } from "../../common/point";
+import { KeyboardCode } from "../../src/common/keys";
+import { Point } from "../../src/common/point";
 import { SyExtensionsComponent } from "../sy.component";
-import { BlockInfo } from "./delcare";
+import { BlockSelectorItem } from "./delcare";
 import { blockStore } from "./store";
-export type BlockSelectorItem = {
-    url: string,
-    text: string
-}
 
 export class BlockSelector extends SyExtensionsComponent {
     private node: HTMLElement;
@@ -68,7 +64,7 @@ export class BlockSelector extends SyExtensionsComponent {
                 style={style}>{this.renderSelectors()}</div>}
         </div>, this.node);
     }
-    onSelect(block?: BlockInfo) {
+    onSelect(block?: BlockSelectorItem) {
         if (!block) block = this.selectBlockData;
         try {
             this.emit('select', block, this.getFilterText(this.inputValue));
