@@ -4,6 +4,7 @@ import { Point, Rect, RectUtility } from "../../src/common/point";
 import Axios from "axios";
 import { SyExtensionsComponent } from "../sy.component";
 import { Singleton } from "../Singleton";
+import './style.less';
 export type EmojiType = {
     char: string,
     name: string,
@@ -34,9 +35,9 @@ export class EmojiPicker extends SyExtensionsComponent {
         if (this.isLoaded == false) {
             this.forceUpdate();
             await this.import();
-            this.forceUpdate(() => adjustPostion())
+            this.forceUpdate(() => { adjustPostion() })
         }
-        else this.forceUpdate(() => adjustPostion())
+        else this.forceUpdate(() => { adjustPostion() })
     }
     close() {
         this.visible = false;
@@ -50,22 +51,22 @@ export class EmojiPicker extends SyExtensionsComponent {
         var style: Record<string, any> = {};
         style.top = this.point.y;
         style.left = this.point.x;
-        return <div ref={e => this.el = e}>
+        return <div className='sy-emoji-box' ref={e => this.el = e}>
             {this.visible && <div className='sy-emoji-picker' style={style}>{this.renderEmoji()}</div>}
         </div>
     }
     renderEmoji() {
         if (this.loading == true) return <div className='sy-emoji-picker-loading'></div>
-        var cs = this.emojis.lookup(x => x.category);
+        var cs = this.emojis.lookup(x =>x.category);
         var els: JSX.Element[] = [];
-        for (var category in cs) {
+        cs.forEach((value, category) => {
             els.push(<div className='sy-emoji-picker-category' key={category}>
-                <div className='sy-emoji-picker-category-head'></div>
-                <div className='sy-emoji-picker-category-emojis'>{cs.get(category).map(emoji => {
-                    return <div className='sy-emoji-picker-category-emoji' onMouseDown={e => this.onPick(emoji)} key={emoji.char}>{emoji.char}</div>
+                <div className='sy-emoji-picker-category-head'><span>{category}</span></div>
+                <div className='sy-emoji-picker-category-emojis'>{value.map(emoji => {
+                    return <span onMouseDown={e => this.onPick(emoji)} key={emoji.char}>{emoji.char}</span>
                 })}</div>
             </div>)
-        }
+        })
         return els;
     }
     private dragger: Dragger;
@@ -107,7 +108,7 @@ export class EmojiPicker extends SyExtensionsComponent {
         var target = event.target as HTMLElement;
         if (this.el.contains(target)) return;
         if (this.visible == true) {
-            this.onClose()
+            //this.onClose()
         }
     }
 }
@@ -119,6 +120,7 @@ export interface EmojiPicker {
 }
 export async function OpenEmoji(rect: Rect) {
     var emojiPicker = await Singleton<EmojiPicker>(EmojiPicker);
+    console.log('emss.', rect);
     await emojiPicker.open(rect);
     return new Promise((resolve: (emoji: EmojiType) => void, reject) => {
         emojiPicker.only('pick', (data) => {
