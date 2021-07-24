@@ -1,12 +1,12 @@
 
 import { Point } from '../../common/point';
-import { util } from '../../util/util';
+import { util } from '../../../util/util';
 import { Anchor } from '../selection/anchor';
 import { TextInput$Paster } from './paste';
 import { TextInput$Write } from './write';
 import { Kit } from '..';
 import { TextInputView } from './view';
-import { Events } from '../../util/events';
+import { Events } from '../../../util/events';
 
 export class TextInput extends Events {
     kit: Kit;

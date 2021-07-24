@@ -1,7 +1,7 @@
 import { Block } from "../block";
 import { Point } from "../common/point";
 import { Page } from "../page";
-import { Events } from "../util/events";
+import { Events } from "../../util/events";
 import { Bar } from "./handle";
 import { DropDirection } from "./handle/direction";
 import { TextInput } from "./input";

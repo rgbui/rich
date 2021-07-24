@@ -1,7 +1,7 @@
 import { ExceptionType, Warn } from "../error/exception";
 import { Page } from "../page";
-import { Events } from "../util/events";
-import { util } from "../util/util";
+import { Events } from "../../util/events";
+import { util } from "../../util/util";
 import { UserAction, UserOperator } from "./action";
 import { ActionDirective, OperatorDirective } from "./declare";
 import { HistoryRecord } from "./record";

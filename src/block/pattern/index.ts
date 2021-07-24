@@ -1,4 +1,4 @@
-import { util } from "../../util/util";
+import { util } from "../../../util/util";
 import { Block } from "..";
 import { BlockStyleCss } from "./style";
 import { CssSelectorType } from "./type";

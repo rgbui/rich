@@ -1,5 +1,5 @@
 import { Pattern } from ".";
-import { util } from "../../util/util";
+import { util } from "../../../util/util";
 import { BlockCss, BlockCssName } from "./css";
 import { CssSelectorType } from "./type";
 

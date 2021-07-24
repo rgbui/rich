@@ -4,7 +4,7 @@ import { Block } from "../../block";
 import { ActionDirective } from "../../history/declare";
 import { DropDirection } from "../../kit/handle/direction";
 import { Anchor } from "../../kit/selection/anchor";
-import { util } from "../../util/util";
+import { util } from "../../../util/util";
 import { TemporaryPurpose } from "./declare";
 export class PageEvent {
     /**

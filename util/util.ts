@@ -20,10 +20,6 @@ export var util = {
     },
     guid() {
         return short.generate();
-        function S4() {
-            return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-        }
-        return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
     },
     clone<T>(json: T): T {
         try {

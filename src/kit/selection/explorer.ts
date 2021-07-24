@@ -8,7 +8,7 @@ import { KeyboardCode } from "../../common/keys";
 import { Point } from "../../common/point";
 import { Exception, ExceptionType } from "../../error/exception";
 import { ActionDirective } from "../../history/declare";
-import { Events } from "../../util/events";
+import { Events } from "../../../util/events";
 import { Anchor } from "./anchor";
 export class SelectionExplorer extends Events {
     /**

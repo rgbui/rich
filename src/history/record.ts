@@ -1,5 +1,5 @@
 
-import { Events } from "../util/events";
+import { Events } from "../../util/events";
 import { UserAction } from "./action";
 
 export class HistoryRecord extends Events {

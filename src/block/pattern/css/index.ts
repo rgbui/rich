@@ -1,5 +1,5 @@
 import { Exception, ExceptionType } from "../../../error/exception";
-import { util } from "../../../util/util";
+import { util } from "../../../../util/util";
 
 export enum BlockCssName {
     font,

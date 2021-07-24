@@ -1,6 +1,6 @@
 import { BlockCssName } from "../../src/block/pattern/css";
 import { Anchor } from "../../src/kit/selection/anchor";
-import { Events } from "../../src/util/events";
+import { Events } from "../../util/events";
 /**
  * 输入检测器
  * 当输入的时候，检测到特定的字符时，触发一些动作

@@ -1,5 +1,5 @@
 import { User } from "../types/user";
-import { util } from "../util/util";
+import { util } from "../../util/util";
 import { ActionDirective, OperatorDirective } from "./declare";
 
 export class UserOperator {

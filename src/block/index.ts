@@ -1,5 +1,5 @@
-import { Events } from "../util/events";
-import { util } from "../util/util";
+import { Events } from "../../util/events";
+import { util } from "../../util/util";
 import { Point, Rect } from "../common/point";
 import { Page } from "../page";
 import { Anchor } from "../kit/selection/anchor";

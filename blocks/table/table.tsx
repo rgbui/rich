@@ -5,7 +5,7 @@ import { prop, url, view } from "../../src/block/factory/observable";
 import "./style.less";
 import { BlockAppear, BlockDisplay } from "../../src/block/partial/enum";
 import { Dragger } from "../../src/common/dragger";
-import { util } from "../../src/util/util";
+import { util } from "../../util/util";
 @url('/table')
 export class Table extends Block {
     appear = BlockAppear.layout;

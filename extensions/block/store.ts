@@ -1,4 +1,4 @@
-import { Events } from "../../src/util/events";
+import { Events } from "../../util/events";
 import { BlockGroup, BlockSelectorOperator } from "./delcare";
 class BlockStore extends Events {
     private _blockGroups: BlockGroup[];
