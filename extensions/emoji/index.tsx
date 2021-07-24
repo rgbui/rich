@@ -5,6 +5,7 @@ import Axios from "axios";
 import { SyExtensionsComponent } from "../sy.component";
 import { Singleton } from "../Singleton";
 import './style.less';
+import { Tip } from "../../component/tip";
 export type EmojiType = {
     char: string,
     name: string,
@@ -57,13 +58,13 @@ export class EmojiPicker extends SyExtensionsComponent {
     }
     renderEmoji() {
         if (this.loading == true) return <div className='sy-emoji-picker-loading'></div>
-        var cs = this.emojis.lookup(x =>x.category);
+        var cs = this.emojis.lookup(x => x.category);
         var els: JSX.Element[] = [];
         cs.forEach((value, category) => {
             els.push(<div className='sy-emoji-picker-category' key={category}>
                 <div className='sy-emoji-picker-category-head'><span>{category}</span></div>
-                <div className='sy-emoji-picker-category-emojis'>{value.map(emoji => {
-                    return <span onMouseDown={e => this.onPick(emoji)} key={emoji.char}>{emoji.char}</span>
+                <div className='sy-emoji-picker-category-emojis'>{value.map(emoji =>{
+                    return <Tip overlay={<>{emoji.name}</>} key={emoji.char}><span onMouseDown={e => this.onPick(emoji)} >{emoji.char}</span></Tip>
                 })}</div>
             </div>)
         })
@@ -74,11 +75,11 @@ export class EmojiPicker extends SyExtensionsComponent {
     componentDidMount() {
         this.dragger = new Dragger(this.el);
         this.dragger.bind();
-        document.addEventListener('mousedown', this._mousedown = this.globalMousedown.bind(this));
+        document.addEventListener('mousedown', this._mousedown = this.globalMousedown.bind(this), true);
     }
     componentWillUnmount() {
         if (this.dragger) this.dragger.off();
-        if (this._mousedown) document.removeEventListener('mousedown', this._mousedown);
+        if (this._mousedown) document.removeEventListener('mousedown', this._mousedown, true);
     }
     private isLoaded: boolean = false;
     private loading: boolean = false;
@@ -108,7 +109,7 @@ export class EmojiPicker extends SyExtensionsComponent {
         var target = event.target as HTMLElement;
         if (this.el.contains(target)) return;
         if (this.visible == true) {
-            //this.onClose()
+            this.onClose()
         }
     }
 }

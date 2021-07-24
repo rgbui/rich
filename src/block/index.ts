@@ -721,8 +721,10 @@ export abstract class Block extends Events {
         else {
             var content = this.content;
             this.updateProps({ content: '' });
-            await this.page.createBlock(BlockUrlConstant.Text, { content }, this, 0);
-            return await this.page.createBlock(url, data, this, 1);
+            var at = 0;
+            if (content)
+                await this.page.createBlock(BlockUrlConstant.Text, { content }, this, at++);
+            return await this.page.createBlock(url, data, this, at);
         }
     }
     @prop()

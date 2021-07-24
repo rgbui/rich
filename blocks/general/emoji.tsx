@@ -3,6 +3,7 @@ import React from 'react';
 import { prop, url, view } from "../../src/block/factory/observable";
 import { Block } from "../../src/block";
 import { BlockAppear, BlockDisplay } from "../../src/block/partial/enum";
+import { SolidArea } from "../../src/block/partial/appear";
 /**
  * 表情
  */
@@ -22,8 +23,10 @@ export class Emoji extends Block {
 export class EmojiView extends BlockView<Emoji>{
     render() {
         return <div className='sy-block-emoji'>
-            {this.block.src.mime == 'emoji' && <span>{this.block.src.code}</span>}
-            {this.block.src.mime == 'image' && <span><img src={this.block.src.url} /></span>}
+            <SolidArea content={<>
+                {this.block.src.mime == 'emoji' && <span>{this.block.src.code}</span>}
+                {this.block.src.mime == 'image' && <span><img src={this.block.src.url} /></span>}
+            </>}></SolidArea>
         </div>
     }
 }
