@@ -238,7 +238,14 @@ export class TextInput$Write {
         this.willInputStore(block, value, at, true, async () => {
             let extra: Record<string, any> = {};
             if (typeof blockData.operator != 'undefined') {
-                extra = await blockStore.open(blockData.operator);
+                extra = await blockStore.open(blockData.operator, anchor.bound);
+                if (Object.keys(extra).length == 0) {
+                    /**
+                     * 说明什么也没拿到，那么怎么办呢，
+                     * 不怎么办，终止后续的动作
+                     */
+                    return;
+                }
             }
             var newBlock: Block;
             if (blockData.isLine) {

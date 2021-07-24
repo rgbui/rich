@@ -17,8 +17,8 @@ export class EmojiPicker extends SyExtensionsComponent {
     get isVisible() {
         return this.visible;
     }
-    async open(point: Point) {
-        this.point = point;
+    async open(rect: Rect) {
+        this.point = rect.leftBottom;
         this.visible = true;
         let adjustPostion = () => {
             var el = this.el.querySelector(".sy-emoji-picker");
@@ -69,12 +69,15 @@ export class EmojiPicker extends SyExtensionsComponent {
         return els;
     }
     private dragger: Dragger;
+    private _mousedown: (event: MouseEvent) => void;
     componentDidMount() {
         this.dragger = new Dragger(this.el);
         this.dragger.bind();
+        document.addEventListener('mousedown', this._mousedown = this.globalMousedown.bind(this));
     }
     componentWillUnmount() {
-        if (this.dragger) this.dragger.off()
+        if (this.dragger) this.dragger.off();
+        if (this._mousedown) document.removeEventListener('mousedown', this._mousedown);
     }
     private isLoaded: boolean = false;
     private loading: boolean = false;
@@ -96,16 +99,33 @@ export class EmojiPicker extends SyExtensionsComponent {
         this.close();
         this.emit('pick', emoji);
     }
+    private onClose() {
+        this.close();
+        this.emit('close');
+    }
+    private globalMousedown(event: MouseEvent) {
+        var target = event.target as HTMLElement;
+        if (this.el.contains(target)) return;
+        if (this.visible == true) {
+            this.onClose()
+        }
+    }
 }
 export interface EmojiPicker {
     only(name: 'pick', fn: (data: EmojiType) => void);
     emit(name: 'pick', data: EmojiType);
+    only(name: 'close', fn: () => void);
+    emit(name: 'close');
 }
-export async function OpenEmoji(point: Point) {
+export async function OpenEmoji(rect: Rect) {
     var emojiPicker = await Singleton<EmojiPicker>(EmojiPicker);
-    return new Promise((resolve, reject) => {
+    await emojiPicker.open(rect);
+    return new Promise((resolve: (emoji: EmojiType) => void, reject) => {
         emojiPicker.only('pick', (data) => {
             resolve(data);
+        });
+        emojiPicker.only('close', () => {
+            resolve(null);
         })
     })
 }

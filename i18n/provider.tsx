@@ -1,7 +1,6 @@
 import React, { ReactElement } from "react";
 import { Sp } from ".";
 import { LangID } from "./declare";
-
 class LangProvider {
     public isLoaded: boolean = false;
     private lang: string = 'zh';

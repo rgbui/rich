@@ -1,18 +1,18 @@
 
 import React from 'react';
-import text from "../../assert/img/text.png";
-import header from "../../assert/img/header.png";
-import subheader from "../../assert/img/subheader.png";
-import subsubheader from "../../assert/img/subsubheader.png";
-import todo from "../../assert/img/to-do.png";
-import numberList from "../../assert/img/numbered-list.png";
-import bulletedList from "../../assert/img/bulleted-list.png";
-import quote from "../../assert/img/quote.png";
-import toggle from "../../assert/img/toggle.png";
-import callout from "../../assert/img/callout.png";
-import code from "../../assert/img/code.png";
-import emoji from "../../assert/img/inline-emoji.png";
-import equation from "../../assert/img/inline-equation.png";
+import text from "../../src/assert/img/text.png";
+import header from "../../src/assert/img/header.png";
+import subheader from "../../src/assert/img/subheader.png";
+import subsubheader from "../../src/assert/img/subsubheader.png";
+import todo from "../../src/assert/img/to-do.png";
+import numberList from "../../src/assert/img/numbered-list.png";
+import bulletedList from "../../src/assert/img/bulleted-list.png";
+import quote from "../../src/assert/img/quote.png";
+import toggle from "../../src/assert/img/toggle.png";
+import callout from "../../src/assert/img/callout.png";
+import code from "../../src/assert/img/code.png";
+import emoji from "../../src/assert/img/inline-emoji.png";
+import equation from "../../src/assert/img/inline-equation.png";
 import { BlockGroup, BlockSelectorOperator } from './delcare';
 export var BlockSelectorData: BlockGroup[] = [
     {

@@ -1,4 +1,7 @@
+import { EmojiSrcType } from "../../blocks/general/emoji";
+import { Point, Rect } from "../../src/common/point";
 import { Events } from "../../util/events";
+import { OpenEmoji } from "../emoji";
 import { BlockGroup, BlockSelectorOperator } from "./delcare";
 class BlockStore extends Events {
     private _blockGroups: BlockGroup[];
@@ -26,12 +29,16 @@ class BlockStore extends Events {
         });
         return cs;
     }
-    async open(operator: BlockSelectorOperator) {
-        var extra:Record<string,any>={ };
+    async open(operator: BlockSelectorOperator, rect:Rect) {
+        var extra: Record<string, any> = {};
         switch (operator) {
             case BlockSelectorOperator.createTable:
                 break;
             case BlockSelectorOperator.selectEmoji:
+                var result = await OpenEmoji(rect);
+                if (result) {
+                    extra.src = { mime: 'emoji', code: result.char } as EmojiSrcType;
+                }
                 break;
         }
         return extra;
