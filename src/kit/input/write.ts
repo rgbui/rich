@@ -255,7 +255,9 @@ export class TextInput$Write {
                 newBlock = await block.visibleDownCreateBlock(blockData.url, extra);
             }
             newBlock.mounted(() => {
-                this.explorer.onFocusAnchor(newBlock.visibleHeadAnchor);
+                var anchor = newBlock.visibleHeadAnchor;
+                if (anchor)
+                    this.explorer.onFocusAnchor(anchor);
             });
         });
     }
