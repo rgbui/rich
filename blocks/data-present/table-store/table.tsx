@@ -1,7 +1,7 @@
 import { Block } from "../../../src/block";
 import { BlockView } from "../../../src/block/view";
 import React from 'react';
-import { TableMeta } from "../schema/meta";
+import { TableSchema } from "../schema/meta";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { BlockAppear, BlockDisplay } from "../../../src/block/partial/enum";
 import { BlockFactory } from "../../../src/block/factory/block.factory";
@@ -22,8 +22,8 @@ export class TableStore extends Block {
     @prop()
     fields: ViewField[] = [];
     @prop()
-    metaId: string;
-    meta: TableMeta;
+    schemaId: string;
+    schema: TableSchema;
     data: any[] = [];
     index: number;
     size: number;
@@ -45,19 +45,22 @@ export class TableStore extends Block {
             }
         }
     }
+    initialInformation: { text: string, templateId?: string }
     async loadMeta() {
-        if (this.metaId) {
-            this.meta = await this.page.emitAsync('searchDataPresentMeta', this.metaId);
+        if (this.schemaId) {
+            var schemaData = await this.page.emitAsync('loadTableSchema', this.schemaId);
+            this.schema = new TableSchema(schemaData);
         }
         else {
-            this.meta = await this.page.emitAsync('createDefaultPresentData');
-            this.metaId = this.meta.id;
+            var schemaData = await this.page.emitAsync('createDefaultTableSchema', this.initialInformation);
+            this.schema = new TableSchema(schemaData);
+            this.schemaId = this.schema.id;
         }
     }
     isLoadData: boolean = false;
     async loadData() {
-        if (this.meta) {
-            var r = await this.page.emitAsync('loadDataPresentData', {
+        if (this.schema) {
+            var r = await this.page.emitAsync('loadTableSchemaData', this.schema.id, {
                 index: this.index,
                 size: this.size
             });
@@ -120,7 +123,7 @@ export class TableStore extends Block {
 @view('/table/store')
 export class TableStoreView extends BlockView<TableStore>{
     renderHead() {
-        if (this.block.meta) return <ChildsArea childs={this.block.blocks.childs}></ChildsArea>
+        if (this.block.schema) return <ChildsArea childs={this.block.blocks.childs}></ChildsArea>
         else return <div></div>
     }
     renderBody() {

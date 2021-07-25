@@ -1,5 +1,5 @@
 import { Field } from "./field";
-export class TableMeta {
+export class TableSchema {
     constructor(data) {
         for (var n in data) {
             if (n == 'fields') continue;

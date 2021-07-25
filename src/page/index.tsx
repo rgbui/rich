@@ -28,7 +28,7 @@ import { InputDetector } from '../../extensions/input.detector/detector';
 import { PageInputDetector } from './interaction/detector';
 import { Anchor } from '../kit/selection/anchor';
 import { UserAction } from '../history/action';
-import { TableMeta } from '../../blocks/data-present/schema/meta';
+import { TableSchema } from '../../blocks/data-present/schema/meta';
 import { DropDirection } from '../kit/handle/direction';
 
 export class Page extends Events {
@@ -186,13 +186,12 @@ export interface Page {
     emit(name: 'error', error: Error | string);
     on(name: 'warn', fn: (error: Error | string) => void);
     emit(name: "warn", error: Error | string);
-
-    on(name: 'searchDataPresentMeta', fn: (metaId: string) => Promise<TableMeta>);
-    emitAsync(name: "searchDataPresentMeta", metaId: string): Promise<TableMeta>;
-    on(name: 'createDefaultPresentData', fn: () => Promise<TableMeta>);
-    emitAsync(name: "createDefaultPresentData"): Promise<TableMeta>;
-    on(name: "loadDataPresentData", fn: (options: { size?: number, index?: number, filter?: Record<string, any> }) => Promise<{ list: any[], total: number }>)
-    emitAsync(name: 'loadDataPresentData', options: { size?: number, index?: number, filter?: Record<string, any> }): Promise<{ list: any[], total: number }>
+    on(name: 'loadTableSchema', fn: (schemaId: string) => Promise<Partial<TableSchema>>);
+    emitAsync(name: "loadTableSchema", schemaId: string): Promise<Partial<TableSchema>>;
+    on(name: 'createDefaultTableSchema', fn: (data?: { text?: string, templateId?: string }) => Promise<Partial<TableSchema>>);
+    emitAsync(name: "createDefaultTableSchema", data?: { text?: string, templateId?: string }): Promise<Partial<TableSchema>>;
+    on(name: "loadTableSchemaData", fn: (schemaId: string, options: { size?: number, index?: number, filter?: Record<string, any> }) => Promise<{ index?: number, size?: number, list: any[], total: number }>)
+    emitAsync(name: 'loadTableSchemaData', schemaId: string, options: { size?: number, index?: number, filter?: Record<string, any> }): Promise<{ index?: number, size?: number, list: any[], total: number }>
 }
 
 export interface Page extends PageEvent { }
