@@ -7,13 +7,26 @@ import subsubheader from "../../src/assert/img/subsubheader.png";
 import todo from "../../src/assert/img/to-do.png";
 import numberList from "../../src/assert/img/numbered-list.png";
 import bulletedList from "../../src/assert/img/bulleted-list.png";
-import quote from "../../src/assert/img/quote.png";
+import quote from "../../src/assert/img/quote.png"; 
 import toggle from "../../src/assert/img/toggle.png";
 import callout from "../../src/assert/img/callout.png";
 import code from "../../src/assert/img/code.png";
 import emoji from "../../src/assert/img/inline-emoji.png";
 import equation from "../../src/assert/img/inline-equation.png";
+import tablestore from "../../src/assert/img/table-store.png";
+import divider from "../../src/assert/img/divider.png";
+import image from "../../src/assert/img/image.png";
+import bookmark from "../../src/assert/img/web-bookmark.png";
+import file from "../../src/assert/img/file.png";
+import embed from "../../src/assert/img/embed.png";
+import audio from "../../src/assert/img/audio.png";
+import video from "../../src/assert/img/video.png";
+import mentionDate from "../../src/assert/img/mention-date.png";
+import mentionPage from "../../src/assert/img/mention-page.png";
+import mentionPerson from "../../src/assert/img/mention-person.png";
+import link from "../../src/assert/img/link.png";
 import { BlockGroup, BlockSelectorOperator } from './delcare';
+
 export var BlockSelectorData: BlockGroup[] = [
     {
         text: '基本',
@@ -26,12 +39,44 @@ export var BlockSelectorData: BlockGroup[] = [
             { text: "数字列表", pic: <img src={numberList} />, url: '/list?{listType:1}', description: "", label: '/数字列表', labels: [] },
             { text: "列表", pic: <img src={bulletedList} />, url: '/list?{listType:0}', description: "", label: '/列表', labels: [] },
             { text: "引述文字", pic: <img src={quote} />, url: '/quote', description: "", label: '/引述文字', labels: [] },
+            { text: "分割线", pic: <img src={divider} />, url: '/divider', description: '', label: '/分割线' },
             { text: "折叠列表", pic: <img src={toggle} />, url: '/list?{listType:2}', description: "折叠列表", label: '/折叠列表', labels: [] },
             { text: "首重文字", pic: <img src={callout} />, url: "/callout", description: "", label: "/首重文字", labels: [] },
-            { text: "代码片段", pic: <img src={code} />, url: "/code", description: "", label: "/代码片段", labels: [] },
             { text: "数学公式", pic: <img src={equation} />, url: "/katex", description: "", label: "/数学公式", labels: [] },
+            { text: '链接', pic: <img src={link} />, url: '/link', description: "", label: "/链接" }
+        ]
+    },
+    {
+        text: '行内块',
+        childs: [
             { text: "表情", isLine: true, operator: BlockSelectorOperator.selectEmoji, pic: <img src={emoji} />, url: "/emoji", description: "", label: "/表情", labels: [] },
-            { text: '数据表格', operator: BlockSelectorOperator.createTable, pic: <img src={emoji} />, url: "/table/store", label: '/数据表格' }
+            { text: "日期", isLine: true, pic: <img src={mentionDate} />, url: '/mention/date', description: '', label: '/引用日期' },
+            { text: "页面", isLine: true, pic: <img src={mentionPage} />, url: '/mention/page', description: '', label: '/引用页面' },
+            { text: "@ta人", isLine: true, pic: <img src={mentionPerson} />, url: '/mention/person', description: '', label: '/ta人' },
+        ]
+    },
+    {
+        text: '媒体与附件',
+        childs: [
+            { text: "图片", pic: <img src={image} />, url: '/image', description: '', label: '/图片' },
+            { text: "音频", pic: <img src={audio} />, url: '/audio', description: "", label: '/音频' },
+            { text: "视频", pic: <img src={video} />, url: '/video', description: "", label: '/视频' },
+            { text: "附件", pic: <img src={file} />, url: '/file', description: "", label: '/附件' },
+            { text: "代码片段", pic: <img src={code} />, url: "/code", description: "", label: "/代码片段", labels: [] },
+            { text: "书签", pic: <img src={bookmark} />, url: '/bookmark', description: '', label: '/书签' },
+            { text: '表格', pic: <img src={tablestore} />, url: '/table', description: '', label: '/表格' }
+        ]
+    },
+    {
+        text: '数据',
+        childs: [
+            { text: '数据表格', operator: BlockSelectorOperator.createTable, pic: <img src={tablestore} />, url: "/table/store", label: '/数据表格' }
+        ]
+    },
+    {
+        text: '嵌入',
+        childs: [
+            { text: '嵌入', pic: <img src={embed} />, url: "/mbed", label: '/嵌入' }
         ]
     }
 ]
