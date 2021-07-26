@@ -14,7 +14,8 @@ export enum ActionDirective {
     onEnterCutOff,
     onBatchTurn,
     onDeleteSelection,
-    onInputDetector
+    onInputDetector,
+    onSchemaCreateField,
 }
 
 export enum OperatorDirective {
