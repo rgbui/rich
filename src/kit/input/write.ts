@@ -325,7 +325,7 @@ export class TextInput$Write {
         else
             this.delayInputTime = setTimeout(async () => {
                 if (self.inputStore) await self.inputStore()
-            }, 7e2);
+            },7e2);
     }
     async willForceInputStore() {
         if (this.inputStore) { this.clearInputTime(); await this.inputStore(); }
