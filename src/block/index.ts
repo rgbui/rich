@@ -355,6 +355,16 @@ export abstract class Block extends Events {
             });
         }
     }
+    updateArrayInsert(key: string, at: number, data: any) {
+        if (!Array.isArray(this[key])) this[key] = [];
+        this[key].insertAt(at, data);
+        this.page.snapshoot.record(OperatorDirective.arrayPropInsert, {
+            blockId: this.id,
+            propKey: key,
+            data: typeof data.get == 'function' ? data.get() : util.clone(data),
+            at: at
+        });
+    }
     /***
     * 查找当前容器里面首位的内容元素，
     * 而且是视野上面的
@@ -417,8 +427,17 @@ export abstract class Block extends Events {
         }
         if (Array.isArray(this.__props)) {
             this.__props.each(pro => {
-                if (typeof this[pro] != 'undefined')
-                    json[pro] = util.clone(this[pro]);
+                if (Array.isArray(this[pro])) {
+                    json[pro] = this[pro].map(pr => {
+                        if (typeof pr.get == 'function') return pr.get();
+                        else return util.clone(pr);
+                    })
+                }
+                else if (typeof this[pro] != 'undefined') {
+                    if (typeof this[pro].get == 'function')
+                        json[pro] = this[pro].get();
+                    else json[pro] = util.clone(this[pro]);
+                }
             })
         }
         return json;
