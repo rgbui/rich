@@ -7,6 +7,7 @@ import { ChildsArea } from "../../../src/block/partial/appear";
 import { TableStore } from "./table";
 import plus from "../../../src/assert/svg/plus.svg";
 import { Icon } from "../../../component/icon";
+import { BlockFactory } from "../../../src/block/factory/block.factory";
 
 @url('/tablestore/head')
 export class TableStoreHead extends Block {
@@ -16,6 +17,10 @@ export class TableStoreHead extends Block {
     partName = 'head';
     get tableStore(): TableStore {
         return this.parent as TableStore;
+    }
+    async createTh(at: number) {
+        var block = await BlockFactory.createBlock('/tablestore/th', this.page, {}, this);
+        this.childs.insertAt(at, block);
     }
 }
 @view('/tablestore/head')

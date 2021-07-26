@@ -9,6 +9,12 @@ import { TableStoreRow } from "./row";
 import { ChildsArea } from "../../../src/block/partial/appear";
 import { Pattern } from "../../../src/block/pattern";
 import { ViewField } from "../schema/view.field";
+import { util } from "../../../util/util";
+import { Exception, ExceptionType } from "../../../src/error/exception";
+import { FieldType } from "../schema/field.type";
+import { ActionDirective } from "../../../src/history/declare";
+import { Field } from "../schema/field";
+import { TableStoreHead } from "./head";
 
 /***
  * 数据总共分三部分
@@ -29,6 +35,9 @@ export class TableStore extends Block {
     size: number;
     total: number;
     blocks = { childs: [], rows: [] };
+    get blockKeys() {
+        return ['childs', 'rows'];
+    }
     async load(data) {
         if (!this.pattern) this.pattern = new Pattern(this);
         for (var n in data) {
@@ -40,21 +49,22 @@ export class TableStore extends Block {
                     this.fields.push(new ViewField(n));
                 })
             }
+            else if (n == 'blocks') {
+                this.blocks = { childs: [], rows: [] };
+            }
             else {
                 this[n] = data[n];
             }
         }
     }
     initialInformation: { text: string, templateId?: string }
-    async loadMeta() {
+    async loadSchema() {
         if (this.schemaId) {
             var schemaData = await this.page.emitAsync('loadTableSchema', this.schemaId);
             this.schema = new TableSchema(schemaData);
         }
         else {
-            var schemaData = await this.page.emitAsync('createDefaultTableSchema', this.initialInformation);
-            this.schema = new TableSchema(schemaData);
-            this.schemaId = this.schema.id;
+            this.page.onError(new Exception(ExceptionType.tableSchemaNotEmpty, '表格schema不为空'))
         }
     }
     isLoadData: boolean = false;
@@ -89,35 +99,69 @@ export class TableStore extends Block {
     appear = BlockAppear.layout;
     display = BlockDisplay.block;
     async onAddColumn(at?: number) {
-        //if (typeof at == 'undefined') at = this.cols.length;
-        // this.page.snapshoot.declare('tablestore.addColumn');
-        // var name = this.meta.createNewName();
-        // var text = this.meta.createNewText();
-        // var tf = TableMeta.createFieldMeta({
-        //     name,
-        //     type: TableMetaFieldType.string,
-        //     text
-        // });
-        // this.page.snapshoot.record(OperatorDirective.arrayPropInsert, {
-        //     blockId: this.id,
-        //     propKey: 'meta',
-        //     data: tf.get(),
-        //     at: this.meta.cols.length
-        // });
-        // this.meta.cols.push(tf);
-        // this.page.snapshoot.record(OperatorDirective.arrayPropInsert, {
-        //     blockId: this.id,
-        //     propKey: 'cols',
-        //     data: { name, width: 100 },
-        //     at
-        // });
-        // this.cols.push({ name, width: 100 });
-        // await (this.blocks.childs.first() as TableStoreHead).appendTh(at);
-        // await this.blocks.rows.asyncMap(async (row: TableStoreRow) => {
-        //     row.appendCell(at);
-        // })
-        // this.page.snapshoot.store();
-        // this.view.forceUpdate();
+        if (typeof at == 'undefined') at = this.fields.length;
+        this.page.onAction(ActionDirective.onSchemaCreateField, async () => {
+            var fieldData = this.page.emitAsync('createTableSchemaField', { text: '列', type: FieldType.text })
+            var field = new Field();
+            field.load(fieldData);
+            this.schema.fields.push(field);
+            var vf = new ViewField({
+                width: 60,
+                type: field.type,
+                name: field.name,
+                text: field.text
+            });
+            this.updateArrayInsert('fields', at, vf);
+            await (this.blocks.childs.first() as TableStoreHead).createTh(at);
+            await this.blocks.rows.asyncMap(async (row: TableStoreRow) => {
+                await row.createCell(at);
+            });
+        });
+    }
+    async get() {
+        var json: Record<string, any> = { id: this.id, url: this.url };
+        if (typeof this.pattern.get == 'function')
+            json.pattern = await this.pattern.get();
+        else {
+            console.log(this, this.pattern);
+        }
+        json.blocks = { childs: [], rows: [] };
+        if (Array.isArray((this as any).__props)) {
+            (this as any).__props.each(pro => {
+                if (Array.isArray(this[pro])) {
+                    json[pro] = this[pro].map(pr => {
+                        if (typeof pr.get == 'function') return pr.get();
+                        else return util.clone(pr);
+                    })
+                }
+                else if (typeof this[pro] != 'undefined') {
+                    if (typeof this[pro].get == 'function')
+                        json[pro] = this[pro].get();
+                    else json[pro] = util.clone(this[pro]);
+                }
+            })
+        }
+        return json;
+    }
+    async onCreated() {
+        if (!this.schemaId) {
+            var schemaData = await this.page.emitAsync('createDefaultTableSchema', this.initialInformation);
+            this.schema = new TableSchema(schemaData);
+            this.schemaId = this.schema.id;
+            if (this.fields.length == 0) {
+                this.fields = this.schema.fields.toArray(f => {
+                    var vf = {
+                        name: f.name,
+                        type: f.type,
+                        text: f.text || f.name,
+                        width: 60,
+                    };
+                    if ([FieldType.id, FieldType.sort].exists(f.type)) return undefined;
+                    var v = new ViewField(vf);
+                    return v;
+                });
+            }
+        }
     }
 }
 @view('/table/store')
@@ -136,7 +180,7 @@ export class TableStoreView extends BlockView<TableStore>{
         else return <div></div>
     }
     async didMount() {
-        await this.block.loadMeta();
+        await this.block.loadSchema();
         await this.block.createHeads();
         this.forceUpdate()
         await this.block.loadData();

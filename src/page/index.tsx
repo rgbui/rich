@@ -30,6 +30,8 @@ import { Anchor } from '../kit/selection/anchor';
 import { UserAction } from '../history/action';
 import { TableSchema } from '../../blocks/data-present/schema/meta';
 import { DropDirection } from '../kit/handle/direction';
+import { FieldType } from '../../blocks/data-present/schema/field.type';
+import { Field } from '../../blocks/data-present/schema/field';
 
 export class Page extends Events {
     el: HTMLElement;
@@ -192,6 +194,8 @@ export interface Page {
     emitAsync(name: "createDefaultTableSchema", data?: { text?: string, templateId?: string }): Promise<Partial<TableSchema>>;
     on(name: "loadTableSchemaData", fn: (schemaId: string, options: { size?: number, index?: number, filter?: Record<string, any> }) => Promise<{ index?: number, size?: number, list: any[], total: number }>)
     emitAsync(name: 'loadTableSchemaData', schemaId: string, options: { size?: number, index?: number, filter?: Record<string, any> }): Promise<{ index?: number, size?: number, list: any[], total: number }>
+    on(name: 'createTableSchemaField', fn: (options: { type: FieldType, text: string }) => Promise<Partial<Field>>);
+    emitAsync(name: 'createTableSchemaField', options: { type: FieldType, text: string }): Promise<Partial<Field>>
 }
 
 export interface Page extends PageEvent { }

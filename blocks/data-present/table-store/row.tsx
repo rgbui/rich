@@ -7,6 +7,7 @@ import { ChildsArea } from "../../../src/block/partial/appear";
 import { TableStore } from "./table";
 import { TableStoreCell } from "./cell";
 import { BlockFactory } from "../../../src/block/factory/block.factory";
+import { ViewField } from "../schema/view.field";
 @url('/tablestore/row')
 export class TableStoreRow extends Block {
     appear = BlockAppear.layout;
@@ -25,6 +26,11 @@ export class TableStoreRow extends Block {
             this.blocks.childs.push(cell);
             await cell.createCellContent();
         }
+    }
+    async createCell(at: number) {
+        var cell = await BlockFactory.createBlock('/tablestore/cell', this.page, {}, this) as TableStoreCell;
+        this.blocks.childs.insertAt(at, cell);
+        await cell.createCellContent();
     }
 }
 @view('/tablestore/row')
