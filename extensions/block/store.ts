@@ -1,6 +1,7 @@
 import { EmojiSrcType } from "../../blocks/general/emoji";
 import { Point, Rect } from "../../src/common/point";
 import { Events } from "../../util/events";
+import { util } from "../../util/util";
 import { OpenEmoji } from "../emoji";
 import { OpenTableStoreSelector } from "../tablestore";
 import { BlockGroup, BlockSelectorOperator } from "./delcare";
@@ -36,7 +37,7 @@ class BlockStore extends Events {
             case BlockSelectorOperator.createTable:
                 var re = await OpenTableStoreSelector(rect);
                 if (re) {
-                    Object.assign(extra, re);
+                    extra.initialInformation = util.clone(re);
                 }
                 break;
             case BlockSelectorOperator.selectEmoji:
