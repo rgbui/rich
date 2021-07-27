@@ -355,7 +355,7 @@ export abstract class Block extends Events {
             });
         }
     }
-    updateArrayInsert(key: string, at: number, data: any) {
+    updateArrayInsert(key: string, at: number, data: any, range = BlockRenderRange.self) {
         if (!Array.isArray(this[key])) this[key] = [];
         this[key].insertAt(at, data);
         this.page.snapshoot.record(OperatorDirective.arrayPropInsert, {
@@ -364,6 +364,16 @@ export abstract class Block extends Events {
             data: typeof data.get == 'function' ? data.get() : util.clone(data),
             at: at
         });
+        switch (range) {
+            case BlockRenderRange.self:
+                this.page.onAddUpdate(this);
+                break;
+            case BlockRenderRange.parent:
+                this.page.onAddUpdate(this.parent)
+                break;
+            case BlockRenderRange.none:
+                break;
+        }
     }
     /***
     * 查找当前容器里面首位的内容元素，
@@ -674,7 +684,7 @@ export abstract class Block extends Events {
     /***
      * 通过坐标计算视野是处于block那个part中，或者block本身
      * 注意，当前的block有可能是layout block，那么需要通过坐标找到子视野的block，如果没有子block，这实际是个不可能出现的错误
-     * 如果是一个isPanel的block，那么需要确认当前的坐标是否处于子的block中，别外注意，如果坐标是点在当前的空白block中，可能归宿到视野子内容
+     * 如果是一个isPanel的block，那么需要确认当前的坐标是否处于子的block中，另外注意，如果坐标是点在当前的空白block中，可能归宿到视野子内容
      * @param point 坐标（当前坐标明确是处于当前的block中）
      */
     visibleAnchor(point: Point): Anchor {
