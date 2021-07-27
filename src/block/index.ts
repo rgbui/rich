@@ -439,12 +439,12 @@ export abstract class Block extends Events {
             this.__props.each(pro => {
                 if (Array.isArray(this[pro])) {
                     json[pro] = this[pro].map(pr => {
-                        if (typeof pr.get == 'function') return pr.get();
+                        if (typeof pr?.get == 'function') return pr.get();
                         else return util.clone(pr);
                     })
                 }
                 else if (typeof this[pro] != 'undefined') {
-                    if (typeof this[pro].get == 'function')
+                    if (typeof this[pro]?.get == 'function')
                         json[pro] = this[pro].get();
                     else json[pro] = util.clone(this[pro]);
                 }
