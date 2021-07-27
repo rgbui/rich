@@ -3,6 +3,7 @@ import { Page } from "../../page";
 import { Block } from "..";
 import { BlockView } from "../view";
 import { parseBlockUrl } from "../../common/util";
+import { Exception, ExceptionType } from "../../error/exception";
 
 export class BlockFactory {
     private static blockMap: Map<string, { model: typeof Block, view: typeof BlockView }> = new Map();
@@ -31,6 +32,6 @@ export class BlockFactory {
             if (data) await newBlock.load(Object.assign(pb.data, data));
             return newBlock;
         }
-        else throw new Error('not found block class:' + url)
+        else throw new Exception(ExceptionType.notFoundBlockUrl, 'not found block class:' + url)
     }
 }

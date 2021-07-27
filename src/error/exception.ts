@@ -35,7 +35,8 @@ export enum ExceptionType {
      * 表格tableschema只有在创建中才能使用，
      * 正常加载不会为空
      */
-    tableSchemaNotEmpty
+    tableSchemaNotEmpty,
+    notFoundBlockUrl
 }
 /**
  * 自定义异常
