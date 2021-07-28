@@ -10,7 +10,6 @@ import { blockStore } from "../../../extensions/block/store";
 import { DetectorOperator, DetectorRule } from "../../../extensions/input.detector/detector";
 import { ActionDirective } from "../../history/declare";
 import { Anchor } from "../selection/anchor";
-
 export class TextInput$Write {
     /***
      * keydown会触发多次（如果手不松，会一直触发，所以整个过程前非是完整的keydown-keyup
@@ -256,7 +255,7 @@ export class TextInput$Write {
             }
             newBlock.mounted(() => {
                 var anchor = newBlock.visibleHeadAnchor;
-                if (anchor)
+                if (anchor && (anchor.block.isSolid || anchor.block.isText))
                     this.explorer.onFocusAnchor(anchor);
             });
         });
@@ -325,7 +324,7 @@ export class TextInput$Write {
         else
             this.delayInputTime = setTimeout(async () => {
                 if (self.inputStore) await self.inputStore()
-            },7e2);
+            }, 7e2);
     }
     async willForceInputStore() {
         if (this.inputStore) { this.clearInputTime(); await this.inputStore(); }
