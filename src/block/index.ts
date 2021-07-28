@@ -895,7 +895,12 @@ export abstract class Block extends Events {
         }
     }
     async onCreated() {
-
+        var keys = this.blockKeys;
+        for (let key of keys) {
+            await this.blocks[key].eachAsync(async (block) => {
+                await block.onCreated();
+            })
+        }
     }
 }
 export interface Block extends Block$Seek { }
