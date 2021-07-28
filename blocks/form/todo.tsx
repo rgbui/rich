@@ -7,7 +7,7 @@ import { prop, url, view } from "../../src/block/factory/observable";
 import { ChildsArea, TextArea } from "../../src/block/partial/appear";
 import { BlockCssName, FontCss } from "../../src/block/pattern/css";
 import { CssSelectorType } from "../../src/block/pattern/type";
-import { BlockRenderRange } from "../../src/block/partial/enum";
+import { BlockRenderRange } from "../../src/block/enum";
 import { TextSpan } from "../../src/block/element/textspan";
 
 @url('/todo')

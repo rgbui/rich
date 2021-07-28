@@ -2,7 +2,7 @@ import { BlockView } from "../../src/block/view";
 import React from 'react';
 import { prop, url, view } from "../../src/block/factory/observable";
 import { Block } from "../../src/block";
-import { BlockAppear, BlockDisplay } from "../../src/block/partial/enum";
+import { BlockAppear, BlockDisplay } from "../../src/block/enum";
 import { SolidArea } from "../../src/block/partial/appear";
 /**
  * 表情

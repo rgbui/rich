@@ -1,6 +1,6 @@
 import { Block } from "../../../src/block";
 import { BlockView } from "../../../src/block/view";
-import { BlockAppear, BlockDisplay } from "../../../src/block/partial/enum";
+import { BlockAppear, BlockDisplay } from "../../../src/block/enum";
 import { url, view } from "../../../src/block/factory/observable";
 import React from "react";
 import { ChildsArea } from "../../../src/block/partial/appear";

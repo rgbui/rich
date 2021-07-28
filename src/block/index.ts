@@ -4,7 +4,7 @@ import { Point, Rect } from "../common/point";
 import { Page } from "../page";
 import { Anchor } from "../kit/selection/anchor";
 import { BlockFactory } from "./factory/block.factory";
-import { BlockAppear, BlockDisplay, BlockRenderRange } from "./partial/enum";
+import { BlockAppear, BlockDirective, BlockDisplay, BlockRenderRange } from "./enum";
 import { Pattern } from "./pattern/index";
 import { BlockView } from "./view";
 import { TextEle } from "../common/text.ele";
@@ -16,6 +16,8 @@ import { DropDirection } from "../kit/handle/direction";
 import { Exception, ExceptionType } from "../error/exception";
 import { BlockUrlConstant } from "./constant";
 import "./style.less";
+import { MenuItemType } from "../../component/menu/declare";
+import { Block$Method } from "./partial/method";
 export abstract class Block extends Events {
     parent: Block;
     url: string;
@@ -905,3 +907,6 @@ export abstract class Block extends Events {
 }
 export interface Block extends Block$Seek { }
 util.inherit(Block, Block$Seek);
+
+export interface Block extends Block$Method{ }
+util.inherit(Block,Block$Method);

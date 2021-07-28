@@ -3,7 +3,7 @@ import { BlockView } from "../../../src/block/view";
 import React from 'react';
 import { TableSchema } from "../schema/meta";
 import { prop, url, view } from "../../../src/block/factory/observable";
-import { BlockAppear, BlockDisplay } from "../../../src/block/partial/enum";
+import { BlockAppear, BlockDisplay } from "../../../src/block/enum";
 import { BlockFactory } from "../../../src/block/factory/block.factory";
 import { TableStoreRow } from "./row";
 import { ChildsArea } from "../../../src/block/partial/appear";
@@ -144,6 +144,7 @@ export class TableStore extends Block {
         return json;
     }
     async onCreated() {
+        console.log('onCreated....');
         if (!this.schemaId) {
             var schemaData = await this.page.emitAsync('createDefaultTableSchema', this.initialInformation);
             this.schema = new TableSchema(schemaData);

@@ -61,3 +61,16 @@ export enum BlockRenderRange {
 export type BlockLink = {
     href?: string;
 }
+
+
+
+export enum BlockDirective {
+    delete,
+    copy,
+    trun,
+    trunIntoPage,
+    moveTo,
+    link,
+    comment,
+    color
+}

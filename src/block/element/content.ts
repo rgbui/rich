@@ -1,4 +1,4 @@
-import { Align, BlockAppear, BlockDisplay } from "../partial/enum";
+import { Align, BlockAppear, BlockDisplay } from "../enum";
 import { BlockComposition } from "./composition/block";
 
 

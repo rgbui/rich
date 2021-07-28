@@ -2,7 +2,7 @@
 import React from 'react';
 import { url, view } from '../factory/observable';
 import { TextArea } from '../partial/appear';
-import { BlockDisplay, BlockAppear } from '../partial/enum';
+import { BlockDisplay, BlockAppear } from '../enum';
 import { BlockView } from '../view';
 import { Content } from './content';
 

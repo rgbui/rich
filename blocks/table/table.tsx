@@ -3,7 +3,7 @@ import { BlockView } from "../../src/block/view";
 import React from "react";
 import { prop, url, view } from "../../src/block/factory/observable";
 import "./style.less";
-import { BlockAppear, BlockDisplay } from "../../src/block/partial/enum";
+import { BlockAppear, BlockDisplay } from "../../src/block/enum";
 import { Dragger } from "../../src/common/dragger";
 import { util } from "../../util/util";
 @url('/table')

@@ -4,7 +4,7 @@ import { Block } from '..';
 import { Point } from '../../common/point';
 import { ActionDirective } from '../../history/declare';
 import { BlockView } from '../view';
-import { BlockDisplay, BlockAppear } from '../partial/enum';
+import { BlockDisplay, BlockAppear } from '../enum';
 import { url, view } from '../factory/observable';
 /**
  * 分区中会有很多行，每行存在于一个或多个block

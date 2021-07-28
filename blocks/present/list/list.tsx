@@ -4,7 +4,7 @@ import { Icon } from "../../../component/icon";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import "./style.less";
 import { BlockView } from "../../../src/block/view";
-import { BlockDisplay, BlockRenderRange } from "../../../src/block/partial/enum";
+import { BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
 import { ChildsArea, TextArea } from "../../../src/block/partial/appear";
 export enum ListType {
     circle = 0,

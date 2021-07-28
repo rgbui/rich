@@ -2,7 +2,7 @@
 import React from 'react';
 import { Block } from '..';
 import { BlockView } from '../view';
-import { BlockAppear, BlockDisplay } from '../partial/enum';
+import { BlockAppear, BlockDisplay } from '../enum';
 import { url, view } from '../factory/observable';
 
 /**

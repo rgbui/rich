@@ -35,8 +35,12 @@ export class MenuItem extends React.Component<{ item: MenuItemType, deep: number
     menubox: MenuBox;
     render() {
         var item = this.props.item;
-        return <div className={'sy-menu-box-item' + (this.hover ? " hover" : "")} ref={e => this.el = e}>
-            {(item.type == 'item' || !item.type) && <a className='sy-menu-box-item-option' onMouseLeave={e => this.mouseleave(item, e.nativeEvent)} onMouseEnter={e => this.mouseenter(item, e.nativeEvent)} onMouseDown={e => this.mousedown(item, e.nativeEvent)}>
+        return <div
+            onMouseLeave={e => this.mouseleave(item, e.nativeEvent)}
+            onMouseEnter={e => this.mouseenter(item, e.nativeEvent)} className={'sy-menu-box-item' + (this.hover ? " hover" : "")} ref={e => this.el = e}>
+            {(item.type == 'item' || !item.type) && <a className='sy-menu-box-item-option'
+
+                onMouseDown={e => this.mousedown(item, e.nativeEvent)}>
                 <Icon icon={item.icon} size={17}></Icon>
                 <span>{item.text}</span>
                 {item.label && <label>{item.label}</label>}

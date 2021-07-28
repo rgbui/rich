@@ -2,7 +2,7 @@ import { Kit } from "..";
 import { TextContent } from "../../block/element/text";
 import { Block } from "../../block";
 import { BlockUrlConstant } from "../../block/constant";
-import { BlockRenderRange } from "../../block/partial/enum";
+import { BlockRenderRange } from "../../block/enum";
 import { BlockCssName } from "../../block/pattern/css";
 import { KeyboardCode } from "../../common/keys";
 import { Point } from "../../common/point";

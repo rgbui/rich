@@ -3,7 +3,7 @@
 import { Content } from "./content";
 
 import React from 'react';
-import { BlockAppear, BlockDisplay } from "../partial/enum";
+import { BlockAppear, BlockDisplay } from "../enum";
 import { url, view } from "../factory/observable";
 import { BlockView } from "../view";
 import { ChildsArea } from "../partial/appear";

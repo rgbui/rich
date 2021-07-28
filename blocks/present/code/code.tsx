@@ -5,7 +5,7 @@ import Prism from 'prismjs';
 import "../../../node_modules/prismjs/themes/prism.css";
 import { TextArea } from "../../../src/block/partial/appear";
 import { Block } from "../../../src/block";
-import { BlockAppear, BlockDisplay } from "../../../src/block/partial/enum";
+import { BlockAppear, BlockDisplay } from "../../../src/block/enum";
 /**
  * prism url : https://prismjs.com/#examples
  * prism babel plug :https://www.npmjs.com/package/babel-plugin-prismjs

@@ -2,7 +2,7 @@
 import { BlockView } from "../view";
 import { BlockComposition } from "./composition/block";
 import React from 'react';
-import { BlockAppear, BlockDisplay, BlockLink } from "../partial/enum";
+import { BlockAppear, BlockDisplay, BlockLink } from "../enum";
 import { prop, url, view } from "../factory/observable";
 import { TextArea } from "../partial/appear";
 /***
