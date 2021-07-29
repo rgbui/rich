@@ -4,7 +4,7 @@ import { Point, Rect } from "../common/point";
 import { Page } from "../page";
 import { Anchor } from "../kit/selection/anchor";
 import { BlockFactory } from "./factory/block.factory";
-import { BlockAppear, BlockDirective, BlockDisplay, BlockRenderRange } from "./enum";
+import { BlockAppear, BlockDisplay, BlockRenderRange } from "./enum";
 import { Pattern } from "./pattern/index";
 import { BlockView } from "./view";
 import { TextEle } from "../common/text.ele";
@@ -16,7 +16,6 @@ import { DropDirection } from "../kit/handle/direction";
 import { Exception, ExceptionType } from "../error/exception";
 import { BlockUrlConstant } from "./constant";
 import "./style.less";
-import { MenuItemType } from "../../component/menu/declare";
 import { Block$Method } from "./partial/method";
 export abstract class Block extends Events {
     parent: Block;
@@ -366,6 +365,9 @@ export abstract class Block extends Events {
             data: typeof data.get == 'function' ? data.get() : util.clone(data),
             at: at
         });
+        this.syncUpdate(range);
+    }
+    syncUpdate(range = BlockRenderRange.none) {
         switch (range) {
             case BlockRenderRange.self:
                 this.page.onAddUpdate(this);
@@ -375,6 +377,22 @@ export abstract class Block extends Events {
                 break;
             case BlockRenderRange.none:
                 break;
+        }
+    }
+    updateArrayUpdate(key: string, at: number, data: any, range = BlockRenderRange.self) {
+        var old = this[key][at];
+        var oldData = typeof old?.get == 'function' ? old.get() : old;
+        var newData = typeof data?.get == 'function' ? data.get() : data;
+        if (!util.valueIsEqual(oldData, newData)) {
+            this.page.snapshoot.record(OperatorDirective.arrayPropUpdate, {
+                blockId: this.id,
+                propKey: key,
+                old: util.clone(oldData) as Record<string, any>,
+                new: util.clone(newData) as Record<string, any>,
+                at: at
+            });
+            this[key][at] = data;
+            this.syncUpdate(range);
         }
     }
     /***
@@ -848,7 +866,9 @@ export abstract class Block extends Events {
             });
             if (typeof action == 'function') await action();
         })
-
+    }
+    async onAction(directive: ActionDirective, action: () => Promise<void>) {
+        await this.page.onAction(directive, action);
     }
     mounted(fn: () => void) {
         this.once('mounted', fn);
@@ -908,5 +928,5 @@ export abstract class Block extends Events {
 export interface Block extends Block$Seek { }
 util.inherit(Block, Block$Seek);
 
-export interface Block extends Block$Method{ }
-util.inherit(Block,Block$Method);
+export interface Block extends Block$Method { }
+util.inherit(Block, Block$Method);
