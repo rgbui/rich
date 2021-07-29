@@ -5,7 +5,7 @@ export function Input(props: { style?: CSSProperties, disabled?: boolean, value?
             props.onEnter((e.target as HTMLInputElement).value);
         }
     }
-    return <div className='sy-input' style={props.style || {}}>
+    return <div className='shy-input' style={props.style || {}}>
         <input type='text' defaultValue={props.value || ''}
             disabled={props.disabled ? true : false}
             placeholder={props.placeholder}

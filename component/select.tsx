@@ -1,20 +1,47 @@
 import React from "react";
-export function Select(props: {
-    disabled: boolean,
-    value: any,
+export class Select extends React.Component<{
+    disabled?: boolean,
+    value?: any,
     options: { text: string, value: any }[],
-    onChange: (value: any) => void
-}) {
-    let [toggle, setToggle] = React.useState(false);
-    function click(item) {
-        props.onChange(item.value)
+    onChange?: (value: any) => void
+}>{
+    private toggle: boolean = false;
+    mousedown(event: MouseEvent) {
+        if (this.toggle == false) return;
+        var ele = event.target as HTMLElement;
+        if (this.el && this.el.contains(ele)) return;
+        this.toggle = false;
+        this.forceUpdate();
     }
-    return <div className='sy-select'>
-        <div className='sy-select-selection' onClick={e => props.disabled ? undefined : (setToggle(!toggle))}><input defaultValue={props.options.find(g => g.value == props.value)?.text} /></div>
-        <div className='sy-select-drop'>
-            {props.options.map((op, index) => {
-                return <a key={index} className={props.value == op.value ? "hover" : ""} onClick={e => click(op)}><span>{op.text}</span></a>
-            })}
+    private _mousedown: (event: MouseEvent) => void;
+    componentDidMount() {
+        document.addEventListener('mousedown', this._mousedown = this.mousedown.bind(this))
+    }
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this._mousedown)
+    }
+    el: HTMLElement;
+    render() {
+        var props = this.props;
+        var self = this;
+        function click(item) {
+            self.toggle = false;
+            self.forceUpdate();
+            props.onChange(item.value);
+        }
+        function setToggle() {
+            self.toggle = !self.toggle;
+            self.forceUpdate()
+        }
+        return <div className='shy-select' ref={e => this.el = e}>
+            <div className='shy-select-selection' onClick={e => props.disabled ? undefined : (setToggle())}><input defaultValue={props.options.find(g => g.value == props.value)?.text} /></div>
+            {this.toggle && <div className='shy-select-drop'>
+                {props.options.map((op, index) => {
+                    return <a key={index} className={props.value == op.value ? "hover" : ""} onClick={e => click(op)}><span>{op.text}</span></a>
+                })}
+            </div>}
         </div>
-    </div>
+    }
 }
+
+
