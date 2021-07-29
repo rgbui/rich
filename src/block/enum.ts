@@ -72,5 +72,12 @@ export enum BlockDirective {
     moveTo,
     link,
     comment,
-    color
+    color,
+    arrowDown,
+    arrowUp,
+    arrowLeft,
+    arrowRight,
+    filter,
+    hide,
+    fieldSettings
 }

@@ -1,6 +1,6 @@
 import { Block } from "../../../src/block";
 import { BlockView } from "../../../src/block/view";
-import { BlockAppear, BlockDisplay } from "../../../src/block/enum";
+import { BlockAppear, BlockDirective, BlockDisplay } from "../../../src/block/enum";
 import { url, view } from "../../../src/block/factory/observable";
 import React from "react";
 import { TextArea } from "../../../src/block/partial/appear";
@@ -24,6 +24,17 @@ import { useSelectMenuItem } from "../../../component/menu";
 import { Rect } from "../../../src/common/point";
 import { Dragger } from "../../../src/common/dragger";
 import { ActionDirective } from "../../../src/history/declare";
+import { MenuItemType, MenuItemTypeValue } from "../../../component/menu/declare";
+import loop from "../../../src/assert/svg/loop.svg";
+import trash from "../../../src/assert/svg/trash.svg";
+import duplicate from "../../../src/assert/svg/duplicate.svg";
+import settings from "../../../src/assert/svg/settings.svg";
+import filter from "../../../src/assert/svg/filter.svg";
+import arrowDown from "../../../src/assert/svg/arrowDown.svg";
+import arrowUp from "../../../src/assert/svg/arrowUp.svg";
+import arrowLeft from "../../../src/assert/svg/arrowLeft.svg";
+import arrowRight from "../../../src/assert/svg/arrowRight.svg";
+import hide from "../../../src/assert/svg/hide.svg";
 @url('/tablestore/th')
 export class TableStoreTh extends Block {
     appear = BlockAppear.text;
@@ -41,6 +52,63 @@ export class TableStoreTh extends Block {
     }
     get isCol() {
         return true;
+    }
+    async onGetContextMenus() {
+        var items: MenuItemType<BlockDirective>[] = [];
+        items.push({
+            name: BlockDirective.trun,
+            icon: loop,
+            text: '切换'
+        });
+        items.push({
+            name: BlockDirective.fieldSettings,
+            text: '配置',
+            icon: settings
+        });
+        items.push({ type: MenuItemTypeValue.divide });
+        items.push({
+            name: BlockDirective.arrowDown,
+            text: '降序',
+            icon: arrowDown
+        });
+        items.push({
+            name: BlockDirective.arrowUp,
+            text: '升序',
+            icon: arrowUp
+        });
+        items.push({
+            name: BlockDirective.arrowLeft,
+            text: '左边插入列',
+            icon: arrowLeft
+        });
+        items.push({
+            name: BlockDirective.arrowRight,
+            text: '右边插入列',
+            icon: arrowRight
+        });
+        items.push({ type: MenuItemTypeValue.divide });
+        items.push({
+            name: BlockDirective.filter,
+            text: '筛选',
+            icon: filter
+        });
+        items.push({
+            name: BlockDirective.hide,
+            text: '隐藏',
+            icon: hide
+        })
+        items.push({ type: MenuItemTypeValue.divide });
+        items.push({
+            name: BlockDirective.delete,
+            icon: trash,
+            text: '删除'
+        });
+        items.push({
+            name: BlockDirective.copy,
+            text: '拷贝',
+            icon: duplicate
+        });
+        return items;
     }
 }
 @view('/tablestore/th')
