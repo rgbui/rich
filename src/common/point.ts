@@ -69,6 +69,9 @@ export class Point {
         else if (typeof event == 'object') return new Point(event)
         else return new Point(event, y);
     }
+    toRect(width: number = 0, height: number = 0) {
+        return new Rect(this, width, height);
+    }
 }
 
 export class Rect {
@@ -169,70 +172,63 @@ export class RectUtility {
     /**
      * 围绕一个小的矩形，弹一个窗，
      * 尽可能的展示自，尽可以的不要挡住这个小的矩形
-     * @param options 
+     * @param pos 
      */
-    static cacRoundElementPoint(options: {
-        roundArea: Rect;
-        elementArea: Rect,
-        dist?: number,
-        offset?: number,
-        align?: 'start' | 'center' | 'end',
-        direction: 'top' | 'left' | 'bottom' | 'right'
-    }) {
-        if (typeof options.dist == 'undefined') options.dist = 10;
-        if (typeof options.offset == 'undefined') options.offset = 0;
-        if (typeof options.align == 'undefined') options.align = 'start';
+    static cacPopoverPosition(pos: PopoverPosition) {
+        if (typeof pos.dist == 'undefined') pos.dist = 10;
+        if (typeof pos.offset == 'undefined') pos.offset = 0;
+        if (typeof pos.align == 'undefined') pos.align = 'start';
         var x: number, y: number;
-        var roundTop = options.roundArea.top - options.dist - options.elementArea.height;
-        var rountBottom = options.roundArea.top + options.roundArea.height + options.dist;
-        var roundMiddle = options.roundArea.middle - options.elementArea.height * ((options.roundArea.middle) / window.innerHeight);
-        var roundLeft = options.roundArea.left - options.dist - options.elementArea.width;
-        var roundRight = options.roundArea.left + options.roundArea.width + options.dist;
-        var roundCenter = options.roundArea.center - options.elementArea.width * ((options.roundArea.center) / window.innerWidth);
-        switch (options.direction) {
+        var roundTop = pos.roundArea.top - pos.dist - pos.elementArea.height;
+        var rountBottom = pos.roundArea.top + pos.roundArea.height + pos.dist;
+        var roundMiddle = pos.roundArea.middle - pos.elementArea.height * ((pos.roundArea.middle) / window.innerHeight);
+        var roundLeft = pos.roundArea.left - pos.dist - pos.elementArea.width;
+        var roundRight = pos.roundArea.left + pos.roundArea.width + pos.dist;
+        var roundCenter = pos.roundArea.center - pos.elementArea.width * ((pos.roundArea.center) / window.innerWidth);
+        switch (pos.direction) {
             case 'top':
                 y = roundTop;
                 if (y < 0) {
                     y = rountBottom;
-                    if (y + options.elementArea.height > window.innerHeight) y = roundMiddle;
+                    if (y + pos.elementArea.height > window.innerHeight) y = roundMiddle;
                 }
-                x = options.roundArea.left + options.offset;
-                if (options.align == 'center') x = options.roundArea.center - options.elementArea.width / 2 + options.offset;
-                else if (options.align == 'end') x = options.roundArea.right - options.elementArea.width + options.offset;
-                if (x < 0 || x + options.elementArea.width > window.innerWidth) x = roundCenter;
+                x = pos.roundArea.left + pos.offset;
+                if (pos.align == 'center') x = pos.roundArea.center - pos.elementArea.width / 2 + pos.offset;
+                else if (pos.align == 'end') x = pos.roundArea.right - pos.elementArea.width + pos.offset;
+                if (x < 0 || x + pos.elementArea.width > window.innerWidth) x = roundCenter;
                 break;
             case 'bottom':
                 y = rountBottom;
-                if (y + options.elementArea.height > window.innerHeight) {
+                if (y + pos.elementArea.height > window.innerHeight) {
                     y = roundTop;
                     if (y < 0) y = roundMiddle;
                 }
-                x = options.roundArea.left + options.offset;
-                if (options.align == 'center') x = options.roundArea.center - options.elementArea.width / 2 + options.offset;
-                else if (options.align == 'end') x = options.roundArea.right - options.elementArea.width + options.offset;
-                if (x < 0 || x + options.elementArea.width > window.innerWidth) x = roundCenter;
+                x = pos.roundArea.left + pos.offset;
+                if (pos.align == 'center') x = pos.roundArea.center - pos.elementArea.width / 2 + pos.offset;
+                else if (pos.align == 'end') x = pos.roundArea.right - pos.elementArea.width + pos.offset;
+                if (x < 0 || x + pos.elementArea.width > window.innerWidth) x = roundCenter;
                 break;
             case 'left':
                 x = roundLeft;
                 if (x < 0) {
                     x = roundRight;
-                    if (x + options.elementArea.width > window.innerWidth) x = roundCenter;
+                    if (x + pos.elementArea.width > window.innerWidth) x = roundCenter;
                 }
-                y = options.roundArea.top + options.offset;
-                if (options.align == 'center') y = options.roundArea.middle - options.elementArea.height / 2 + options.offset;
-                else if (options.align == 'end') y = options.roundArea.bottom - options.elementArea.height + options.offset;
-                if (y < 0 || y + options.elementArea.height > window.innerHeight) y = roundMiddle;
+                y = pos.roundArea.top + pos.offset;
+                if (pos.align == 'center') y = pos.roundArea.middle - pos.elementArea.height / 2 + pos.offset;
+                else if (pos.align == 'end') y = pos.roundArea.bottom - pos.elementArea.height + pos.offset;
+                if (y < 0 || y + pos.elementArea.height > window.innerHeight) y = roundMiddle;
                 break;
             case 'right':
                 x = roundRight;
-                if (x + options.elementArea.width > window.innerWidth) {
+                if (x + pos.elementArea.width > window.innerWidth) {
                     x = roundLeft;
                     if (x < 0) x = roundCenter;
                 }
-                y = options.roundArea.top + options.offset;
-                if (options.align == 'center') y = options.roundArea.middle - options.elementArea.height / 2 + options.offset;
-                else if (options.align == 'end') y = options.roundArea.bottom - options.elementArea.height + options.offset;
-                if (y < 0 || y + options.elementArea.height > window.innerHeight) y = roundMiddle;
+                y = pos.roundArea.top + pos.offset;
+                if (pos.align == 'center') y = pos.roundArea.middle - pos.elementArea.height / 2 + pos.offset;
+                else if (pos.align == 'end') y = pos.roundArea.bottom - pos.elementArea.height + pos.offset;
+                if (y < 0 || y + pos.elementArea.height > window.innerHeight) y = roundMiddle;
                 break;
         }
         return new Point(x, y);
@@ -270,4 +266,13 @@ export class RectUtility {
         }
         return new Point(json);
     }
+}
+
+export type PopoverPosition = {
+    roundArea: Rect;
+    elementArea: Rect,
+    dist?: number,
+    offset?: number,
+    align?: 'start' | 'center' | 'end',
+    direction: 'top' | 'left' | 'bottom' | 'right'
 }

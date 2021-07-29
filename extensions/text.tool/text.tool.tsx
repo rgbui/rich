@@ -39,7 +39,7 @@ export class TextTool extends SyExtensionsComponent {
         this.textStyle = this.emit('getTextStyle');
         this.forceUpdate(() => {
             var menu: HTMLElement = this.node.querySelector('.sy-tool-text-menu');
-            this.point = RectUtility.cacRoundElementPoint({
+            this.point = RectUtility.cacPopoverPosition({
                 roundArea: new Rect(point.x, point.y, 20, 30),
                 elementArea: Rect.from(menu.getBoundingClientRect()),
                 direction: "top",
