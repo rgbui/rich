@@ -270,9 +270,9 @@ export class RectUtility {
 
 export type PopoverPosition = {
     roundArea: Rect;
-    elementArea: Rect,
+    elementArea?: Rect,
     dist?: number,
     offset?: number,
     align?: 'start' | 'center' | 'end',
-    direction: 'top' | 'left' | 'bottom' | 'right'
+    direction?: 'top' | 'left' | 'bottom' | 'right'
 }
