@@ -84,6 +84,7 @@ export class TableStoreThView extends BlockView<TableStoreTh>{
     didMount() {
         this.dragger = new Dragger(this.resizeEl, 'col-resize');
         this.dragger.mousedown = (event) => {
+            event.stopPropagation();
             this.dragger.data.width = this.block.field.width;
             this.dragger.data.blocks = this.block.tableStore.getBlocksByField(this.block.field)
         };

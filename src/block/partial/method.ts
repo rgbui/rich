@@ -1,5 +1,5 @@
 import { Block } from "..";
-import { MenuItemType } from "../../../component/menu/declare";
+import { MenuItemType, MenuItemTypeValue } from "../../../component/menu/declare";
 import { BlockDirective } from "../enum";
 import duplicate from "../../assert/svg/duplicate.svg";
 import loop from "../../assert/svg/loop.svg";
@@ -53,7 +53,7 @@ export class Block$Method {
             icon: link
         });
         items.push({
-            type: 'divide'
+            type: MenuItemTypeValue.divide
         });
         items.push({
             name: BlockDirective.comment,
@@ -61,7 +61,7 @@ export class Block$Method {
             icon: comment
         });
         items.push({
-            type: 'divide'
+            type: MenuItemTypeValue.divide
         });
         items.push({
             name: BlockDirective.color,
@@ -70,7 +70,7 @@ export class Block$Method {
         });
         return items;
     }
-    async onClickContextMenu(this: Block,item: MenuItemType<BlockDirective>, event: MouseEvent) {
+    async onClickContextMenu(this: Block, item: MenuItemType<BlockDirective>, event: MouseEvent) {
 
     }
 }

@@ -21,3 +21,247 @@
         }
     }
 }
+
+.shy-button-block {
+    display: block;
+
+    .shy-button {
+        width: 100%
+    }
+}
+
+.shy-button {
+
+    user-select    : none;
+    transition     : background 20ms ease-in 0s;
+    cursor         : pointer;
+    display        : inline-flex;
+    align-items    : center;
+    justify-content: center;
+    white-space    : nowrap;
+    height         : 36px;
+    border-radius  : 3px;
+    color          : white;
+    font-size      : 14px;
+    line-height    : 1;
+    padding-left   : 12px;
+    padding-right  : 12px;
+    font-weight    : 500;
+    background     : rgb(225, 98, 89);
+    border         : 1px solid rgb(190, 86, 67);
+    box-shadow     : rgba(15, 15, 15, 0.1) 0px 1px 2px 0px;
+    margin-bottom  : 4px;
+}
+
+.shy-input {
+    display: block;
+
+    input {
+        width        : 100%;
+        font-size    : 15px;
+        line-height  : 26px;
+        padding      : 4px 10px;
+        border-radius: 3px;
+        box-shadow   : rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
+        background   : rgba(242, 241, 238, 0.6);
+        cursor       : text;
+        outline      : none;
+        border       : 0px;
+        box-sizing   : border-box;
+
+        &:focus {
+            box-shadow: rgba(46 170 220, 0.7) 0px 0px 0px 1px inset, rgba(46 170 220, 0.4) 0px 0px 0px 2px !important;
+        }
+    }
+}
+
+.shy-select {
+    position: relative;
+    width   : 100%;
+
+    &-selection {
+        width: 100%;
+
+        input {
+            width        : 100%;
+            font-size    : 15px;
+            line-height  : 26px;
+            padding      : 4px 10px;
+            border-radius: 3px;
+            box-shadow   : rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
+            background   : rgba(242, 241, 238, 0.6);
+            cursor       : text;
+            outline      : none;
+            border       : 0px;
+            box-sizing   : border-box;
+
+            &:focus {
+                box-shadow: rgba(46 170 220, 0.7) 0px 0px 0px 1px inset, rgba(46 170 220, 0.4) 0px 0px 0px 2px !important;
+            }
+        }
+    }
+
+    &-drop {
+        position     : absolute;
+        border-radius: 3px;
+        background   : white;
+        z-index      : 2;
+        box-shadow   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+        top          : 34px;
+        left         : 0px;
+        right        : 0px;
+        max-height   : 200px;
+        overflow-y   : auto;
+        overflow-x   : hidden;
+
+        a {
+            display        : block;
+            position       : relative;
+            display        : flex;
+            justify-content: flex-start;
+            align-items    : center;
+            user-select    : none;
+            min-height     : 28px;
+            line-height    : 28px;
+            font-size      : 14px;
+            color          : rgba(55, 53, 47);
+            padding        : 0px 14px;
+            cursor         : pointer;
+
+            &:hover {
+                background-color: rgba(55, 53, 47, 0.08);
+            }
+        }
+    }
+}
+
+.shy-switch {
+    display      : flex;
+    flex-shrink  : 0;
+    height       : 14px;
+    width        : 26px;
+    border-radius: 44px;
+    padding      : 2px;
+    box-sizing   : content-box;
+    background   : rgba(135, 131, 120, 0.3);
+    transition   : background 200ms ease 0s, box-shadow 200ms ease 0s;
+
+    em {
+        display      : inline-block;
+        width        : 14px;
+        height       : 14px;
+        border-radius: 44px;
+        background   : white;
+        transition   : transform 200ms ease-out 0s, background 200ms ease-out 0s;
+        transform    : translateX(0px) translateY(0px);
+    }
+
+    &.checked {
+        background: rgb(46, 170, 220);
+
+        em {
+            transform: translateX(12px) translateY(0px);
+        }
+    }
+}
+
+.shy-menu-panel {
+    .shy-menu-mask {
+        position      : absolute;
+        top           : 0px;
+        left          : 0px;
+        width         : 100vw;
+        height        : 100vh;
+        z-index       : 1;
+        pointer-events: visible;
+    }
+
+    .sy-menu-box {
+        width         : 220px;
+        pointer-events: visible;
+        position      : absolute;
+        border-radius : 3px;
+        background    : white;
+        z-index       : 2;
+        box-shadow    : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+        overflow      : hidden auto;
+        padding       : 10px 0px;
+    }
+
+    >.sy-menu-box {
+        max-height: 70vh;
+        min-width : 180px;
+        overflow  : hidden auto;
+    }
+
+    .shy-menu-box-item {
+        &-option {
+            position       : relative;
+            display        : flex;
+            justify-content: flex-start;
+            align-items    : center;
+            user-select    : none;
+            min-height     : 28px;
+            line-height    : 28px;
+            font-size      : 14px;
+            color          : rgba(55, 53, 47);
+            padding        : 0px 14px;
+            cursor         : pointer;
+
+            .sy-icon {
+                width              : 17px;
+                height             : 17px;
+                display            : block;
+                fill               : inherit;
+                flex-shrink        : 0;
+                backface-visibility: hidden;
+            }
+
+            .sy-ws-item-page-spread {
+                flex-shrink: 0;
+            }
+
+            span {
+                display     : inline-flex;
+                margin-left : 8px;
+                margin-right: 14px;
+                flex-grow   : 1.0;
+            }
+
+            &:hover {
+                background-color: rgba(55, 53, 47, 0.08);
+            }
+
+            label {
+                position    : absolute;
+                top         : 0px;
+                right       : 0px;
+                bottom      : 0px;
+                color       : rgba(55, 53, 47, 0.4);
+                font-size   : 12px;
+                white-space : nowrap;
+                margin-right: 14px;
+                min-height  : 28px;
+                line-height : 28px;
+            }
+        }
+
+        &-divide {
+            height       : 1px;
+            display      : block;
+            margin-top   : 6px;
+            margin-bottom: 6px;
+            box-shadow   : rgba(55, 53, 47, 0.09) 0px -1px 0px;
+        }
+
+        &-text {
+            display    : block;
+            padding    : 0px 14px;
+            font-size  : 12px;
+            line-height: 16px;
+            color      : rgba(55, 53, 47, 0.4);
+        }
+
+        &-switch {}
+    }
+}

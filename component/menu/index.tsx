@@ -3,13 +3,16 @@ import { Singleton } from "../../extensions/Singleton";
 import { SyExtensionsComponent } from "../../extensions/sy.component";
 import { PopoverPosition, Rect } from "../../src/common/point";
 import { MenuBox } from "./box";
-import { MenuItemType } from "./declare";
+import { MenuItemType, MenuItemTypeValue } from "./declare";
 
 class MenuPanel<T> extends SyExtensionsComponent {
     open(pos: PopoverPosition, menus: MenuItemType<T>[]) {
         this.menus = menus;
         this.visible = true;
-        this.forceUpdate()
+        this.forceUpdate(() => {
+            if (this.mb)
+                this.mb.open(pos);
+        })
     }
     visible: boolean = false;
     onClose() {
@@ -17,21 +20,24 @@ class MenuPanel<T> extends SyExtensionsComponent {
         this.emit('close');
     }
     close() {
-        this.visible = true;
+        this.visible = false;
         this.forceUpdate();
     }
     onSelect(item: MenuItemType<T>, event: MouseEvent) {
+        if (item.type == MenuItemTypeValue.item) {
+            this.close();
+        }
         this.emit('select', item, event);
     }
     menus: MenuItemType<T>[] = [];
+    mb: MenuBox;
     render() {
-        return this.visible && <div className='sy-menu-panel'>
-            <div className='sy-menu-cover' onMouseDown={e => this.onClose()}></div>
-            <MenuBox select={(item, event) => this.onSelect(item as any, event)} items={this.menus as any} deep={0}></MenuBox>
+        return this.visible && <div className='shy-menu-panel'>
+            <div className='shy-menu-mask' onMouseDown={e => this.onClose()}></div>
+            <MenuBox ref={e => this.mb = e} select={(item, event) => this.onSelect(item as any, event)} items={this.menus as any} deep={0}></MenuBox>
         </div>
     }
 }
-
 interface MenuPanel<T> {
     on(name: 'error', fn: (error: Error) => void);
     only(name: 'error', fn: (error: Error) => void);
