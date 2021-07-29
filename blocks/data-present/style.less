@@ -14,6 +14,7 @@
             justify-content: flex-start;
             align-items    : center;
             padding        : 10px;
+            position       : relative;
 
             >svg {
                 width              : 14px;
@@ -23,6 +24,31 @@
                 flex-shrink        : 0;
                 backface-visibility: hidden;
                 margin-right       : 10px;
+            }
+
+            &-operator {
+                visibility: hidden;
+                cursor    : pointer;
+            }
+
+            &:hover .sy-tablestore-head-th-operator {
+                visibility: visible;
+            }
+
+            &-resize {
+                position  : absolute;
+                top       : 0px;
+                right     : 0px;
+                bottom    : 0px;
+                width     : 2px;
+                visibility: hidden;
+                background: rgba(61, 57, 44, 0.16);
+                cursor    : col-resize;
+            }
+
+            &:hover .sy-tablestore-head-th-resize,
+            &.hover .sy-tablestore-head-th-resize {
+                visibility: visible;
             }
         }
 

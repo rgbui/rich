@@ -144,7 +144,6 @@ export class TableStore extends Block {
         return json;
     }
     async onCreated() {
-        console.log('onCreated....');
         if (!this.schemaId) {
             var schemaData = await this.page.emitAsync('createDefaultTableSchema', this.initialInformation);
             this.schema = new TableSchema(schemaData);
@@ -163,6 +162,17 @@ export class TableStore extends Block {
                 });
             }
         }
+    }
+    getBlocksByField(field: ViewField) {
+        var keys = this.blockKeys;
+        var at = this.fields.findIndex(g => g === field);
+        var cs: Block[] = [];
+        for (let key of keys) {
+            this.blocks[key].each(c => {
+                cs.push(c.childs[at]);
+            })
+        }
+        return cs;
     }
 }
 @view('/table/store')
