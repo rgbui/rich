@@ -19,6 +19,9 @@ export class ViewField {
             width: this.width
         }
     }
+    clone() {
+        return new ViewField(this.get());
+    }
     getValue(row) {
         if (typeof this.name == 'string')
             return row[this.name];
