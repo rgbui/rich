@@ -70,4 +70,7 @@ export class Block$Method {
         });
         return items;
     }
+    async onClickContextMenu(this: Block,item: MenuItemType<BlockDirective>, event: MouseEvent) {
+
+    }
 }
