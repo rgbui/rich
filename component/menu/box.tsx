@@ -1,23 +1,23 @@
 import React from "react";
-import { Rect } from "../../src/common/point";
+import { PopoverPosition, Rect } from "../../src/common/point";
 import { Icon } from "../icon";
 import { MenuItemType } from "./declare";
-export class MenuBox extends React.Component<{ items: MenuItemType[], deep: number }>{
+export class MenuBox extends React.Component<{ items: MenuItemType[], deep: number, select: (item: MenuItemType, event: MouseEvent) => void }>{
     render() {
         return <div className='sy-menu-box'>
             {this.props.items.map((item, index) => {
-                return <MenuItem key={index} item={item} deep={this.props.deep + 1}></MenuItem>
+                return <MenuItem key={index} item={item} deep={this.props.deep + 1} select={this.props.select} ></MenuItem>
             })}
         </div>
     }
-    open(rect: Rect) {
+    open(pos: PopoverPosition) {
 
     }
 }
-export class MenuItem extends React.Component<{ item: MenuItemType, deep: number }>{
+export class MenuItem extends React.Component<{ item: MenuItemType, deep: number, select: (item: MenuItemType, event: MouseEvent) => void }>{
     el: HTMLElement;
     mousedown(item: MenuItemType, event: MouseEvent) {
-
+        this.props.select(item, event);
     }
     hover: boolean = false;
     mouseenter(item: MenuItemType, event: MouseEvent) {
@@ -25,7 +25,7 @@ export class MenuItem extends React.Component<{ item: MenuItemType, deep: number
         this.forceUpdate();
         if (this.el && this.props.item?.childs?.length > 0 && this.menubox) {
             var rect = Rect.from(this.el.getBoundingClientRect());
-            this.menubox.open(rect);
+            this.menubox.open({ roundArea: rect });
         }
     }
     mouseleave(item: MenuItemType, event: MouseEvent) {
@@ -48,7 +48,7 @@ export class MenuItem extends React.Component<{ item: MenuItemType, deep: number
             </a>}
             {item.type == 'divide' && <a className='sy-menu-box-item-divide'></a>}
             {item.type == 'text' && <a className='sy-menu-box-item-text'>{item.text}</a>}
-            {item?.childs.length > 0 && this.hover && <MenuBox items={item.childs} ref={e => this.menubox = e} deep={this.props.deep}></MenuBox>}
+            {item?.childs.length > 0 && this.hover && <MenuBox select={this.props.select} items={item.childs} ref={e => this.menubox = e} deep={this.props.deep}></MenuBox>}
         </div>
     }
 }
