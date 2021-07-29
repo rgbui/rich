@@ -178,6 +178,7 @@ export class RectUtility {
         if (typeof pos.dist == 'undefined') pos.dist = 10;
         if (typeof pos.offset == 'undefined') pos.offset = 0;
         if (typeof pos.align == 'undefined') pos.align = 'start';
+        if (typeof pos.direction == 'undefined') pos.direction = 'bottom';
         var x: number, y: number;
         var roundTop = pos.roundArea.top - pos.dist - pos.elementArea.height;
         var rountBottom = pos.roundArea.top + pos.roundArea.height + pos.dist;
