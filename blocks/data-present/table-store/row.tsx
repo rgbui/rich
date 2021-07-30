@@ -7,7 +7,6 @@ import { ChildsArea } from "../../../src/block/partial/appear";
 import { TableStore } from "./table";
 import { TableStoreCell } from "./cell";
 import { BlockFactory } from "../../../src/block/factory/block.factory";
-import { ViewField } from "../schema/view.field";
 @url('/tablestore/row')
 export class TableStoreRow extends Block {
     appear = BlockAppear.layout;

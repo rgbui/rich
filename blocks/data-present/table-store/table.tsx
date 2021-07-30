@@ -133,14 +133,64 @@ export class TableStore extends Block {
         });
     }
     async onHideField(at?: number) {
-
+        if (typeof at == 'undefined') at = this.fields.length - 1;
+        this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
+            await (this.blocks.childs.first() as TableStoreHead).deleteTh(at);
+            await this.blocks.rows.asyncMap(async (row: TableStoreRow) => {
+                await row.deleteCell(at);
+            });
+            this.updateArrayRemove('fields', at);
+        });
     }
     async onCopyField(at?: number) {
-
+        if (typeof at == 'undefined') at = this.fields.length - 1;
+        var viewField = this.fields[at];
+        var field = this.schema.fields.find(g => g.name == viewField.name);
+        var fieldData = field.get()
+        this.page.onAction(ActionDirective.onSchemaCreateField, async () => {
+            var fd = this.page.emitAsync('createTableSchemaField', { ...fieldData })
+            var newField = new Field();
+            newField.load(fd);
+            this.schema.fields.push(newField);
+            var vf = new ViewField({
+                width: 60,
+                type: newField.type,
+                name: newField.name,
+                text: newField.text
+            });
+            this.updateArrayInsert('fields', at + 1, vf);
+            await (this.blocks.childs.first() as TableStoreHead).createTh(at + 1);
+            await this.blocks.rows.asyncMap(async (row: TableStoreRow) => {
+                await row.createCell(at + 1);
+            });
+        });
     }
     async onSetSortField(at?: number, sort?: FieldSort) {
         if (typeof at == 'undefined') at = this.fields.length - 1;
         if (typeof sort == 'undefined') sort = FieldSort.none;
+        var vf = this.fields[at];
+        await this.page.onAction(ActionDirective.onTablestoreUpdateViewField, async () => {
+            var newViewField = vf.clone();
+            newViewField.sort = sort;
+            this.updateArrayUpdate('fields', at, newViewField);
+        });
+        await this.loadData()
+    }
+    async onTurnField(at: number, type: FieldType) {
+        if (typeof at == 'undefined') at = this.fields.length - 1;
+        var viewField = this.fields[at];
+        var field = this.schema.fields.find(g => g.name == viewField.name);
+        await this.page.onAction(ActionDirective.onSchemaTurnField, async () => {
+            field.type = type;
+            var newViewField = viewField.clone();
+            newViewField.type = type;
+            this.updateArrayUpdate('fields', at, newViewField);
+            await this.page.emitAsync('turnTypeTableSchemaField', this.schema.id, field.name, type)
+        });
+        await this.loadData()
+    }
+    async onAddRow(id?: string) {
+
     }
     async get() {
         var json: Record<string, any> = { id: this.id, url: this.url };

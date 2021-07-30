@@ -35,6 +35,7 @@ import arrowUp from "../../../src/assert/svg/arrowUp.svg";
 import arrowLeft from "../../../src/assert/svg/arrowLeft.svg";
 import arrowRight from "../../../src/assert/svg/arrowRight.svg";
 import hide from "../../../src/assert/svg/hide.svg";
+import { FieldSort } from "../schema/view.field";
 @url('/tablestore/th')
 export class TableStoreTh extends Block {
     appear = BlockAppear.text;
@@ -62,25 +63,30 @@ export class TableStoreTh extends Block {
             case BlockDirective.fieldSettings:
                 break;
             case BlockDirective.arrowDown:
+                await this.tableStore.onSetSortField(index, FieldSort.asc)
                 break;
             case BlockDirective.arrowUp:
+                await this.tableStore.onSetSortField(index, FieldSort.desc)
                 break;
             case BlockDirective.arrowLeft:
-                this.tableStore.onAddField(index)
+                await this.tableStore.onAddField(index)
                 break;
             case BlockDirective.arrowRight:
-                this.tableStore.onAddField(index + 1)
+                await this.tableStore.onAddField(index + 1)
                 break;
             case BlockDirective.filter:
                 break;
             case BlockDirective.delete:
-                this.tableStore.onDeleteField(index);
+                await this.tableStore.onDeleteField(index);
                 break;
             case BlockDirective.hide:
-                this.tableStore.onHideField(index);
+                await this.tableStore.onHideField(index);
                 break;
             case BlockDirective.copy:
-                this.tableStore.onCopyField(index);
+                await this.tableStore.onCopyField(index);
+                break;
+            case BlockDirective.trun:
+                await this.tableStore.onTurnField(index, item.param as FieldType)
                 break;
         }
     }
