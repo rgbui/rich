@@ -1,7 +1,7 @@
 import React from "react";
 import { Icon } from "./icon";
 export class Button extends React.Component<{
-    children: JSX.Element | string,
+    children?: JSX.Element | string,
     icon?: string | SvgrComponent | JSX.Element,
     disabled?: boolean,
     onClick?: (event: React.MouseEvent) => void,

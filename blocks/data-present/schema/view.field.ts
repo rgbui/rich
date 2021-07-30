@@ -5,6 +5,7 @@ export class ViewField {
     text?: string;
     type: FieldType;
     width: number;
+    sort?: FieldSort
     constructor(options: Partial<ViewField>) {
         if (typeof options == 'object') {
             Object.assign(this, options);
