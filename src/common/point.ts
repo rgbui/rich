@@ -232,7 +232,10 @@ export class RectUtility {
                 if (y < 0 || y + pos.elementArea.height > window.innerHeight) y = roundMiddle;
                 break;
         }
-        return new Point(x, y);
+        if (pos.relativePoint) {
+            return new Point(x - pos.relativePoint.x, y - pos.relativePoint.y);
+        }
+        else return new Point(x, y);
     }
     /**
      * 在该点弹一个对话框，该对话框的适合的坐标位置
@@ -275,5 +278,6 @@ export type PopoverPosition = {
     dist?: number,
     offset?: number,
     align?: 'start' | 'center' | 'end',
-    direction?: 'top' | 'left' | 'bottom' | 'right'
+    direction?: 'top' | 'left' | 'bottom' | 'right',
+    relativePoint?: Point
 }
