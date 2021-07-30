@@ -196,6 +196,12 @@ export interface Page {
     emitAsync(name: 'loadTableSchemaData', schemaId: string, options: { size?: number, index?: number, filter?: Record<string, any> }): Promise<{ index?: number, size?: number, list: any[], total: number }>
     on(name: 'createTableSchemaField', fn: (options: { type: FieldType, text: string }) => Promise<Partial<Field>>);
     emitAsync(name: 'createTableSchemaField', options: { type: FieldType, text: string }): Promise<Partial<Field>>
+    on(name: 'removeTableSchemaField', fn: (schemaId: string, name: string) => Promise<{ ok: boolean, warn?: string }>)
+    emitAsync(name: 'removeTableSchemaField', schemaId: string, na: string): Promise<{ ok: boolean, warn?: string }>;
+    on(name: 'turnTypeTableSchemaField', fn: (schemaId: string, fieldName: string, type: FieldType) => Promise<{ ok: boolean, warn?: string }>);
+    emitAsync(name: 'turnTypeTableSchemaField', schemaId: string, fieldName: string, type: FieldType): Promise<{ ok: boolean, warn?: string }>
+    on(name: "updateTableSchemaField", fn: (schemaId: string, fieldName: string, type: FieldType) => Promise<{ ok: boolean, warn?: string }>);
+    emitAsync(name: 'updateTableSchemaField', schemaId: string, fieldName: string, type: FieldType): Promise<{ ok: boolean, warn?: string }>
 }
 
 export interface Page extends PageEvent { }
