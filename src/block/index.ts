@@ -367,6 +367,16 @@ export abstract class Block extends Events {
         });
         this.syncUpdate(range);
     }
+    updateArrayRemove(key: string, at: number, range = BlockRenderRange.self) {
+        var data = this[key][at];
+        this.page.snapshoot.record(OperatorDirective.arrayPropRemove, {
+            blockId: this.id,
+            propKey: key,
+            data: typeof data.get == 'function' ? data.get() : util.clone(data),
+            at: at
+        });
+        this.syncUpdate(range);
+    }
     syncUpdate(range = BlockRenderRange.none) {
         switch (range) {
             case BlockRenderRange.self:
