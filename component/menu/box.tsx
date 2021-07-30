@@ -21,6 +21,7 @@ export class MenuBox extends React.Component<{ items: MenuItemType[], deep: numb
                 var newPoint = RectUtility.cacPopoverPosition(pos);
                 if (!this.point.equal(newPoint)) {
                     this.point = newPoint;
+                    console.log('newPoint', this.point);
                     this.forceUpdate();
                 }
             }

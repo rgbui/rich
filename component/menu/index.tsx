@@ -10,8 +10,7 @@ class MenuPanel<T> extends SyExtensionsComponent {
         this.menus = menus;
         this.visible = true;
         this.forceUpdate(() => {
-            if (this.mb)
-                this.mb.open(pos);
+            if (this.mb) this.mb.open(pos);
         })
     }
     visible: boolean = false;
@@ -24,7 +23,7 @@ class MenuPanel<T> extends SyExtensionsComponent {
         this.forceUpdate();
     }
     onSelect(item: MenuItemType<T>, event: MouseEvent) {
-        if (item.type == MenuItemTypeValue.item) {
+        if (item.type == MenuItemTypeValue.item || typeof item.type == 'undefined') {
             this.close();
         }
         this.emit('select', item, event);

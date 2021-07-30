@@ -16,11 +16,17 @@ export class MenuItem extends React.Component<{ item: MenuItemType, deep: number
     hover: boolean = false;
     mouseenter(item: MenuItemType, event: MouseEvent) {
         this.hover = true;
-        this.forceUpdate();
-        if (this.el && this.props.item?.childs?.length > 0 && this.menubox) {
-            var rect = Rect.from(this.el.getBoundingClientRect());
-            this.menubox.open({ roundArea: rect });
-        }
+        this.forceUpdate(() => {
+            if (this.el && this.props.item?.childs?.length > 0 && this.menubox) {
+                var rect = Rect.from(this.el.getBoundingClientRect());
+                this.menubox.open({
+                    roundArea: rect,
+                    direction: 'right',
+                    relativePoint: rect.leftTop,
+                    dist:-10
+                });
+            }
+        });
     }
     mouseleave(item: MenuItemType, event: MouseEvent) {
         this.hover = false;

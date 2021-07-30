@@ -4,14 +4,15 @@ export type MenuItemType<T = string> = {
     text?: string,
     icon?: string | SvgrComponent | JSX.Element,
     label?: string,
-    childs?: MenuItemType[],
+    childs?: MenuItemType<T>[],
     value?: string,
     checked?: boolean,
     disabled?: boolean,
     /**
      * 备注
      */
-    remark?: string
+    remark?: string,
+    param?:any
 }
 export enum MenuItemTypeValue {
     divide = 1,
