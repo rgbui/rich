@@ -19,6 +19,7 @@ export enum ActionDirective {
     onTablestoreUpdateViewField,
     onTablestoreHideField,
     onSchemaDeleteField,
+    onSchemaTurnField
 }
 
 export enum OperatorDirective {
