@@ -16,7 +16,9 @@ export enum ActionDirective {
     onDeleteSelection,
     onInputDetector,
     onSchemaCreateField,
-    onTablestoreUpdateViewField
+    onTablestoreUpdateViewField,
+    onTablestoreHideField,
+    onSchemaDeleteField,
 }
 
 export enum OperatorDirective {
