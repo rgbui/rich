@@ -8,7 +8,7 @@ import { BlockFactory } from "../../../src/block/factory/block.factory";
 import { TableStoreRow } from "./row";
 import { ChildsArea } from "../../../src/block/partial/appear";
 import { Pattern } from "../../../src/block/pattern";
-import { ViewField } from "../schema/view.field";
+import { FieldSort, ViewField } from "../schema/view.field";
 import { util } from "../../../util/util";
 import { Exception, ExceptionType } from "../../../src/error/exception";
 import { FieldType } from "../schema/field.type";
@@ -98,7 +98,7 @@ export class TableStore extends Block {
     }
     appear = BlockAppear.layout;
     display = BlockDisplay.block;
-    async onAddColumn(at?: number) {
+    async onAddField(at?: number) {
         if (typeof at == 'undefined') at = this.fields.length;
         this.page.onAction(ActionDirective.onSchemaCreateField, async () => {
             var fieldData = this.page.emitAsync('createTableSchemaField', { text: '列', type: FieldType.text })
@@ -117,6 +117,30 @@ export class TableStore extends Block {
                 await row.createCell(at);
             });
         });
+    }
+    async onDeleteField(at?: number) {
+        if (typeof at == 'undefined') at = this.fields.length - 1;
+        var field = this.fields[at];
+        this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
+            var result = await this.page.emitAsync('removeTableSchemaField', this.schema.id, field.name)
+            if (result.ok) {
+                await (this.blocks.childs.first() as TableStoreHead).deleteTh(at);
+                await this.blocks.rows.asyncMap(async (row: TableStoreRow) => {
+                    await row.deleteCell(at);
+                });
+                this.updateArrayRemove('fields', at);
+            }
+        });
+    }
+    async onHideField(at?: number) {
+
+    }
+    async onCopyField(at?: number) {
+
+    }
+    async onSetSortField(at?: number, sort?: FieldSort) {
+        if (typeof at == 'undefined') at = this.fields.length - 1;
+        if (typeof sort == 'undefined') sort = FieldSort.none;
     }
     async get() {
         var json: Record<string, any> = { id: this.id, url: this.url };

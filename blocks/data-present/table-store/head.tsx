@@ -22,6 +22,9 @@ export class TableStoreHead extends Block {
         var block = await BlockFactory.createBlock('/tablestore/th', this.page, {}, this);
         this.childs.insertAt(at, block);
     }
+    async deleteTh(at:number){
+        this.childs.removeAt(at);
+    }
 }
 @view('/tablestore/head')
 export class TableStoreHeadView extends BlockView<TableStoreHead>{
@@ -29,7 +32,7 @@ export class TableStoreHeadView extends BlockView<TableStoreHead>{
         return <div className='sy-tablestore-head' >
             <ChildsArea childs={this.block.blocks.childs} />
             <div className='sy-tablestore-head-th'
-                style={{ width: 100 }} onClick={e => this.block.tableStore.onAddColumn()}>
+                style={{ width: 100 }} onClick={e => this.block.tableStore.onAddField()}>
                 <Icon icon={plus}></Icon>
             </div>
         </div>

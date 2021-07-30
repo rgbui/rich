@@ -32,6 +32,9 @@ export class TableStoreRow extends Block {
         this.blocks.childs.insertAt(at, cell);
         await cell.createCellContent();
     }
+    async deleteCell(at: number) {
+        this.blocks.childs.removeAt(at);
+    }
 }
 @view('/tablestore/row')
 export class TableRowView extends BlockView<TableStoreRow>{

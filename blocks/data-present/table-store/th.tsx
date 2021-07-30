@@ -44,6 +44,9 @@ export class TableStoreTh extends Block {
     get field() {
         return this.tableStore.fields[this.at];
     }
+    get fieldIndex() {
+        return this.tableStore.fields.findIndex(g => g === this.field)
+    }
     get tableStore(): TableStore {
         return (this.parent as TableStoreHead).tableStore;
     }
@@ -53,12 +56,52 @@ export class TableStoreTh extends Block {
     get isCol() {
         return true;
     }
+    async onClickContextMenu(item: MenuItemType<BlockDirective>, event: MouseEvent) {
+        var index = this.fieldIndex;
+        switch (item.name) {
+            case BlockDirective.fieldSettings:
+                break;
+            case BlockDirective.arrowDown:
+                break;
+            case BlockDirective.arrowUp:
+                break;
+            case BlockDirective.arrowLeft:
+                this.tableStore.onAddField(index)
+                break;
+            case BlockDirective.arrowRight:
+                this.tableStore.onAddField(index + 1)
+                break;
+            case BlockDirective.filter:
+                break;
+            case BlockDirective.delete:
+                this.tableStore.onDeleteField(index);
+                break;
+            case BlockDirective.hide:
+                this.tableStore.onHideField(index);
+                break;
+            case BlockDirective.copy:
+                this.tableStore.onCopyField(index);
+                break;
+        }
+    }
     async onGetContextMenus() {
         var items: MenuItemType<BlockDirective>[] = [];
         items.push({
-            name: BlockDirective.trun,
             icon: loop,
-            text: '切换'
+            text: '切换',
+            childs: [
+                { type: MenuItemTypeValue.text, text: '基本' },
+                { name: BlockDirective.trun, icon: string, text: '文本', param: FieldType.text },
+                { name: BlockDirective.trun, icon: checkbox, text: '待办', param: FieldType.bool },
+                { name: BlockDirective.trun, icon: number, text: '数字', param: FieldType.number },
+                { name: BlockDirective.trun, icon: date, text: '日期', param: FieldType.date },
+                { name: BlockDirective.trun, icon: email, text: '邮箱', param: FieldType.email },
+                { name: BlockDirective.trun, icon: phone, text: '手机号', param: FieldType.phone },
+                { name: BlockDirective.trun, icon: select, text: '选项', param: FieldType.option },
+                { name: BlockDirective.trun, icon: multipleSelect, text: '多选', param: FieldType.options },
+                { name: BlockDirective.trun, icon: file, text: '文件', param: FieldType.file },
+                { name: BlockDirective.trun, icon: link, text: '链接', param: FieldType.link },
+            ]
         });
         items.push({
             name: BlockDirective.fieldSettings,
@@ -96,7 +139,7 @@ export class TableStoreTh extends Block {
             name: BlockDirective.hide,
             text: '隐藏',
             icon: hide
-        })
+        });
         items.push({ type: MenuItemTypeValue.divide });
         items.push({
             name: BlockDirective.delete,

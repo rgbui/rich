@@ -27,3 +27,9 @@ export class ViewField {
             return row[this.name];
     }
 }
+
+export enum FieldSort {
+    none,
+    desc,
+    asc
+}
