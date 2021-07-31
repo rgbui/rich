@@ -5,8 +5,8 @@ import { url, view } from "../../../src/block/factory/observable";
 import { TextArea } from "../../../src/block/partial/appear";
 import { BlockView } from "../../../src/block/view";
 import { FieldType } from "../schema/field.type";
-@url('/field/text')
-export class FieldText extends Block {
+@url('/field/option')
+export class FieldOption extends Block {
     fieldType: FieldType;
     display = BlockDisplay.inline;
     appear = BlockAppear.text;
@@ -14,8 +14,8 @@ export class FieldText extends Block {
         return false;
     }
 }
-@view('/field/text')
-export class FieldTextView extends BlockView<FieldText>{
+@view('/field/option')
+export class FieldTextView extends BlockView<FieldOption>{
     render() {
         return <div className='sy-field-text'><TextArea html={this.block.htmlContent}></TextArea></div>
     }
