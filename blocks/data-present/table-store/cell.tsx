@@ -8,8 +8,6 @@ import { TableStoreRow } from "./row";
 import { TableStore } from "./table";
 import { FieldType } from "../schema/field.type";
 import { BlockFactory } from "../../../src/block/factory/block.factory";
-
-
 @url('/tablestore/cell')
 export class TableStoreCell extends Block {
     display = BlockDisplay.block;
@@ -69,7 +67,8 @@ export class TableStoreCell extends Block {
             this.blocks.childs.push(cellContent);
     }
     async onUpdateCellValue(value: any) {
-
+        var id = this.tableRow.dataRow.id;
+        await this.tableStore.onRowUpdateField(id, this.field, value)
     }
     get isCol() {
         return true;
