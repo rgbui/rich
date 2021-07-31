@@ -190,7 +190,7 @@ export class TableStoreThView extends BlockView<TableStoreTh>{
                 return <Icon icon={string} size='none'></Icon>;
         }
     }
-    async mousedown(e: MouseEvent) {
+    async mousedown(e: React.MouseEvent) {
         e.stopPropagation();
         var rect = Rect.from((e.target as HTMLElement).getBoundingClientRect())
         var sr = await useSelectMenuItem({ roundArea: rect }, await this.block.onGetContextMenus());

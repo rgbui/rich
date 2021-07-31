@@ -1,5 +1,4 @@
 import { FieldType } from "./field.type";
-import { ViewField } from "./view.field";
 export class Field {
     name: string
     text: string

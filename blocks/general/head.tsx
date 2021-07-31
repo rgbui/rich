@@ -7,7 +7,7 @@ import { TextSpan } from "../../src/block/element/textspan";
 export class Head extends TextSpan {
     @prop()
     level: 'h1' | 'h2' | 'h3' = 'h1';
-    get multiLines(){
+    get multiLines() {
         return false;
     }
 }

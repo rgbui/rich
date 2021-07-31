@@ -1,7 +1,6 @@
 
 import { BlockView } from "../../src/block/view";
-import React, { ChangeEvent } from 'react';
-
+import React from 'react';
 
 import { prop, url, view } from "../../src/block/factory/observable";
 import { ChildsArea, TextArea } from "../../src/block/partial/appear";

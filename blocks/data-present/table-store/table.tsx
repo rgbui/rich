@@ -15,6 +15,7 @@ import { FieldType } from "../schema/field.type";
 import { ActionDirective } from "../../../src/history/declare";
 import { Field } from "../schema/field";
 import { TableStoreHead } from "./head";
+import { Confirm } from "../../../component/confirm";
 
 /***
  * 数据总共分三部分
@@ -119,18 +120,20 @@ export class TableStore extends Block {
         });
     }
     async onDeleteField(at?: number) {
-        if (typeof at == 'undefined') at = this.fields.length - 1;
-        var field = this.fields[at];
-        this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
-            var result = await this.page.emitAsync('removeTableSchemaField', this.schema.id, field.name)
-            if (result.ok) {
-                await (this.blocks.childs.first() as TableStoreHead).deleteTh(at);
-                await this.blocks.rows.asyncMap(async (row: TableStoreRow) => {
-                    await row.deleteCell(at);
-                });
-                this.updateArrayRemove('fields', at);
-            }
-        });
+        if (await Confirm('确定要删除该列吗')) {
+            if (typeof at == 'undefined') at = this.fields.length - 1;
+            var field = this.fields[at];
+            this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
+                var result = await this.page.emitAsync('removeTableSchemaField', this.schema.id, field.name)
+                if (result.ok) {
+                    await (this.blocks.childs.first() as TableStoreHead).deleteTh(at);
+                    await this.blocks.rows.asyncMap(async (row: TableStoreRow) => {
+                        await row.deleteCell(at);
+                    });
+                    this.updateArrayRemove('fields', at);
+                }
+            });
+        }
     }
     async onHideField(at?: number) {
         if (typeof at == 'undefined') at = this.fields.length - 1;
