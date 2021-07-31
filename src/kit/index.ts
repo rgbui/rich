@@ -41,7 +41,8 @@ export class Kit extends Events {
         var block = this.page.getVisibleBlockByMouse(event);
         this.downEvent = event;
         this.isDown = true;
-        if (block && !block.isLayout) {
+        if (block && block.isSupportAnchor)
+        {
             var anchor = block.visibleAnchor(Point.from(this.downEvent));
             if (anchor) {
                 this.downAnchor = anchor;

@@ -934,6 +934,15 @@ export abstract class Block extends Events {
             })
         }
     }
+    get isSupportAnchor() {
+        if (this.isLayout) return false;
+        if (this.isText && !this.textEl) return false;
+        if (this.isSolid && !this.soldEl) return false;
+        return true;
+    }
+    get isSupportTextStyle(){
+        return true;
+    }
 }
 export interface Block extends Block$Seek { }
 util.inherit(Block, Block$Seek);
