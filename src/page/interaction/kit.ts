@@ -2,7 +2,11 @@ import { Kit } from "../../kit";
 export function PageKit(kit: Kit) {
     var page = kit.page;
     kit.on('mouseup', event => {
-        if (kit.explorer.hasTextRange) page.textTool.open(kit.explorer.getSelectionPoint())
+        if (kit.explorer.hasTextRange) {
+            if (kit.explorer.selectedBlocks.length == 1 && !kit.explorer.selectedBlocks[0].isSupportTextStyle)
+                page.textTool.close()
+            else page.textTool.open(kit.explorer.getSelectionPoint())
+        }
         else page.textTool.close()
     })
     kit.on("keydown", (event) => {
