@@ -39,8 +39,9 @@ class SyConfirm extends SyExtensionsComponent {
     }
 }
 var syConfirm: SyConfirm;
-export async function Confirm(msg: string) {
+export async function Confirm(msg: string, description?: string) {
     syConfirm = await Singleton<SyConfirm>(SyConfirm);
+    syConfirm.open(msg, description);
     return new Promise((resolve, reject) => {
         syConfirm.only('confirm', () => resolve(true))
         syConfirm.only('cancel', () => resolve(false))
