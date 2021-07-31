@@ -1,25 +1,31 @@
-
-
+/**
+ * 该指令的值不能随便变更(指令的值会存储下来，变更将导致混乱)
+ * 
+ */
 export enum ActionDirective {
-    onInputText,
-    onDeleteText,
-    onBatchDragBlocks,
-    onDelete,
-    onUndo,
-    onRedo,
-    onUpdateProps,
-    onUpdatePattern,
-    onBatchDeleteBlocks,
-    onCreateBlockByEnter,
-    onEnterCutOff,
-    onBatchTurn,
-    onDeleteSelection,
-    onInputDetector,
-    onSchemaCreateField,
-    onTablestoreUpdateViewField,
-    onTablestoreHideField,
-    onSchemaDeleteField,
-    onSchemaTurnField
+    onInputText = 100,
+    onDeleteText = 101,
+    onBatchDragBlocks = 102,
+    onDelete = 103,
+    onUndo = 104,
+    onRedo = 105,
+    onUpdateProps = 106,
+    onUpdatePattern = 107,
+    onBatchDeleteBlocks = 108,
+    onCreateBlockByEnter = 109,
+    onEnterCutOff = 110,
+    onBatchTurn = 111,
+    onDeleteSelection = 112,
+    onInputDetector = 113,
+
+
+    onSchemaCreateField = 200,
+    onSchemaDeleteField = 201,
+    onSchemaTurnField = 202,
+    onSchemaCreateDefaultRow = 203,
+    onSchemaRowUpdate = 204,
+    onTablestoreUpdateViewField = 205,
+    onTablestoreHideViewField = 206,
 }
 
 export enum OperatorDirective {
