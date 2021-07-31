@@ -4,15 +4,10 @@ import { BlockAppear, BlockDisplay } from "../../../src/block/enum";
 import { url, view } from "../../../src/block/factory/observable";
 import { TextArea } from "../../../src/block/partial/appear";
 import { BlockView } from "../../../src/block/view";
-import { FieldType } from "../schema/field.type";
+import { OriginField } from "./origin.field";
 @url('/field/option')
-export class FieldOption extends Block {
-    fieldType: FieldType;
-    display = BlockDisplay.inline;
-    appear = BlockAppear.text;
-    get isSupportTextStyle() {
-        return false;
-    }
+export class FieldOption extends OriginField {
+
 }
 @view('/field/option')
 export class FieldTextView extends BlockView<FieldOption>{

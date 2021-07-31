@@ -1,20 +1,13 @@
 import React from "react";
 import { useDatePicker } from "../../../extensions/date";
-import { Block } from "../../../src/block";
-import { BlockAppear, BlockDisplay } from "../../../src/block/enum";
 import { url, view } from "../../../src/block/factory/observable";
 import { TextArea } from "../../../src/block/partial/appear";
 import { BlockView } from "../../../src/block/view";
 import { Rect } from "../../../src/common/point";
-import { FieldType } from "../schema/field.type";
+import { OriginField } from "./origin.field";
 @url('/field/date')
-export class FieldDate extends Block {
-    fieldType: FieldType;
-    display = BlockDisplay.inline;
-    appear = BlockAppear.text;
-    get isSupportTextStyle() {
-        return false;
-    }
+export class FieldDate extends OriginField {
+
 }
 @view('/field/date')
 export class FieldTextView extends BlockView<FieldDate>{

@@ -1,18 +1,11 @@
 import React from "react";
-import { Block } from "../../../src/block";
-import { BlockAppear, BlockDisplay } from "../../../src/block/enum";
 import { url, view } from "../../../src/block/factory/observable";
 import { TextArea } from "../../../src/block/partial/appear";
 import { BlockView } from "../../../src/block/view";
-import { FieldType } from "../schema/field.type";
+import { OriginField } from "./origin.field";
 @url('/field/user')
-export class FieldUser extends Block {
-    fieldType: FieldType;
-    display = BlockDisplay.inline;
-    appear = BlockAppear.text;
-    get isSupportTextStyle() {
-        return false;
-    }
+export class FieldUser extends OriginField {
+
 }
 @view('/field/user')
 export class FieldTextView extends BlockView<FieldUser>{
