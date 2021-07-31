@@ -2,8 +2,8 @@
 import React from 'react';
 export function Icon(props: {
     icon: string | SvgrComponent | JSX.Element,
-    click?: (e: MouseEvent) => void,
-    mousedown?: (e: MouseEvent) => void,
+    click?: (e: React.MouseEvent) => void,
+    mousedown?: (e: React.MouseEvent) => void,
     rotate?: number,
     size?: number | 'none',
     className?: string[] | string
@@ -30,8 +30,8 @@ export function Icon(props: {
             height: props.size == 'none' ? undefined : (props.size) || 20
         });
         return <i className={classList.join(" ")}
-            onClick={e => { props.click ? props.click(e.nativeEvent) : undefined; }}
-            onMouseDown={e => { props.mousedown ? props.mousedown(e.nativeEvent) : undefined }}
+            onClick={e => { props.click ? props.click(e) : undefined; }}
+            onMouseDown={e => { props.mousedown ? props.mousedown(e) : undefined }}
             style={style}></i>
     }
     else if (typeof props.icon == 'function') {
@@ -40,8 +40,8 @@ export function Icon(props: {
             height: props.size == 'none' ? undefined : (props.size) || 20
         })
         return <props.icon className={classList.join(" ")}
-            onClick={e => { props.click ? props.click(e.nativeEvent) : undefined; }}
-            onMouseDown={e => { props.mousedown ? props.mousedown(e.nativeEvent) : undefined }}
+            onClick={e => { props.click ? props.click(e) : undefined; }}
+            onMouseDown={e => { props.mousedown ? props.mousedown(e) : undefined }}
             style={style}></props.icon>
     }
     else {
