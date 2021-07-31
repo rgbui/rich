@@ -6,6 +6,7 @@ import { DropDirection } from "../../kit/handle/direction";
 import { Anchor } from "../../kit/selection/anchor";
 import { util } from "../../../util/util";
 import { TemporaryPurpose } from "./declare";
+import { PageDirective } from "../directive";
 export class PageEvent {
     /**
      * 鼠标点击页面,
@@ -51,7 +52,7 @@ export class PageEvent {
         this.kit.textInput.onFocus();
         if (this.isFocus == false) {
             this.isFocus = true;
-            this.emit('focus', event);
+            this.emit(PageDirective.focus, event);
         }
     }
     onBlur(this: Page, event: FocusEvent) {
@@ -61,7 +62,7 @@ export class PageEvent {
             this.textTool.close();
             this.blockMenu.close();
             this.kit.explorer.blur();
-            this.emit('blur', event);
+            this.emit(PageDirective.blur, event);
         }
     }
     /**
@@ -155,13 +156,13 @@ export class PageEvent {
         if (anchor.block) {
             anchor.block.blurAnchor(anchor);
         }
-        this.emit('blurAnchor', anchor);
+        this.emit(PageDirective.blurAnchor, anchor);
     }
     onFocusAnchor(this: Page, anchor: Anchor) {
         if (anchor.block) {
             anchor.block.focusAnchor(anchor);
         }
-        this.emit('focusAnchor', anchor);
+        this.emit(PageDirective.focusAnchor, anchor);
     }
     /**
      * 批量将block拖到另一个block

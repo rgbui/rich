@@ -16,6 +16,7 @@ import { ActionDirective } from "../../../src/history/declare";
 import { Field } from "../schema/field";
 import { TableStoreHead } from "./head";
 import { Confirm } from "../../../component/confirm";
+import { PageDirective } from "../../../src/page/directive";
 
 /***
  * 数据总共分三部分
@@ -61,7 +62,7 @@ export class TableStore extends Block {
     initialInformation: { text: string, templateId?: string }
     async loadSchema() {
         if (this.schemaId) {
-            var schemaData = await this.page.emitAsync('loadTableSchema', this.schemaId);
+            var schemaData = await this.page.emitAsync(PageDirective.loadTableSchema, this.schemaId);
             this.schema = new TableSchema(schemaData);
         }
         else {
@@ -71,7 +72,7 @@ export class TableStore extends Block {
     isLoadData: boolean = false;
     async loadData() {
         if (this.schema) {
-            var r = await this.page.emitAsync('loadTableSchemaData', this.schema.id, {
+            var r = await this.page.emitAsync(PageDirective.loadTableSchemaData, this.schema.id, {
                 index: this.index,
                 size: this.size
             });
@@ -102,7 +103,7 @@ export class TableStore extends Block {
     async onAddField(at?: number) {
         if (typeof at == 'undefined') at = this.fields.length;
         this.page.onAction(ActionDirective.onSchemaCreateField, async () => {
-            var fieldData = this.page.emitAsync('createTableSchemaField', { text: '列', type: FieldType.text })
+            var fieldData = this.page.emitAsync(PageDirective.createTableSchemaField, { text: '列', type: FieldType.text })
             var field = new Field();
             field.load(fieldData);
             this.schema.fields.push(field);
@@ -124,7 +125,7 @@ export class TableStore extends Block {
             if (typeof at == 'undefined') at = this.fields.length - 1;
             var field = this.fields[at];
             this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
-                var result = await this.page.emitAsync('removeTableSchemaField', this.schema.id, field.name)
+                var result = await this.page.emitAsync(PageDirective.removeTableSchemaField, this.schema.id, field.name)
                 if (result.ok) {
                     await (this.blocks.childs.first() as TableStoreHead).deleteTh(at);
                     await this.blocks.rows.asyncMap(async (row: TableStoreRow) => {
@@ -151,7 +152,7 @@ export class TableStore extends Block {
         var field = this.schema.fields.find(g => g.name == viewField.name);
         var fieldData = field.get()
         this.page.onAction(ActionDirective.onSchemaCreateField, async () => {
-            var fd = this.page.emitAsync('createTableSchemaField', { ...fieldData })
+            var fd = this.page.emitAsync(PageDirective.createTableSchemaField, { ...fieldData })
             var newField = new Field();
             newField.load(fd);
             this.schema.fields.push(newField);
@@ -188,12 +189,19 @@ export class TableStore extends Block {
             var newViewField = viewField.clone();
             newViewField.type = type;
             this.updateArrayUpdate('fields', at, newViewField);
-            await this.page.emitAsync('turnTypeTableSchemaField', this.schema.id, field.name, type)
+            await this.page.emitAsync(PageDirective.turnTypeTableSchemaField, this.schema.id, field.name, type)
         });
         await this.loadData()
     }
     async onAddRow(id?: string) {
 
+    }
+    async onRowUpdateField(id: string, viewField: ViewField, value: any) {
+        var oldValue = this.data.find(g => g.id == id)[viewField.name];
+        var newValue = value;
+        if (!util.valueIsEqual(oldValue, newValue)) {
+
+        }
     }
     async get() {
         var json: Record<string, any> = { id: this.id, url: this.url };
@@ -222,7 +230,7 @@ export class TableStore extends Block {
     }
     async onCreated() {
         if (!this.schemaId) {
-            var schemaData = await this.page.emitAsync('createDefaultTableSchema', this.initialInformation);
+            var schemaData = await this.page.emitAsync(PageDirective.createDefaultTableSchema, this.initialInformation);
             this.schema = new TableSchema(schemaData);
             this.schemaId = this.schema.id;
             if (this.fields.length == 0) {

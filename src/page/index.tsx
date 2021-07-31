@@ -32,8 +32,9 @@ import { TableSchema } from '../../blocks/data-present/schema/meta';
 import { DropDirection } from '../kit/handle/direction';
 import { FieldType } from '../../blocks/data-present/schema/field.type';
 import { Field } from '../../blocks/data-present/schema/field';
+import { PageDirective } from './directive';
 
-export class Page extends Events {
+export class Page extends Events<PageDirective> {
     el: HTMLElement;
     contentEl: HTMLElement;
     root: HTMLElement;
@@ -75,7 +76,7 @@ export class Page extends Events {
         PageKeys(this, this.keyboardPlate);
         this.inputDetector = new InputDetector();
         PageInputDetector(this, this.inputDetector);
-        this.emit('init');
+        this.emit(PageDirective.init);
     }
     cfm: ConfigurationManager;
     async load(data: Record<string, any>) {
@@ -83,7 +84,7 @@ export class Page extends Events {
             //这里加载默认的页面数据
             data = await this.getDefaultData();
         }
-        await this.emit('loading');
+        await this.emit(PageDirective.loading);
         for (var n in data) {
             if (n == 'views') continue;
             else if (n == 'pageLayout') {
@@ -99,7 +100,7 @@ export class Page extends Events {
             }
         }
         if (typeof this.pageLayout == 'undefined') this.pageLayout = new PageLayout(this);
-        await this.emit('loaded');
+        await this.emit(PageDirective.loaded);
     }
     async get() {
         var json: Record<string, any> = {
@@ -122,10 +123,10 @@ export class Page extends Events {
     keyboardPlate: KeyboardPlate = new KeyboardPlate();
     isFocus: boolean = false;
     onError(error: Error) {
-        this.emit('error', error);
+        this.emit(PageDirective.error, error);
     }
     onWarn(error: string | Error) {
-        this.emit('warn', error);
+        this.emit(PageDirective.warn, error);
     }
     render() {
         ReactDOM.render(<PageView page={this}></PageView>, (this.root = this.el.appendChild(document.createElement('div'))));
@@ -157,51 +158,54 @@ export class Page extends Events {
     }
 }
 export interface Page {
-
-    on(name: "init", fn: () => void);
-    emit(name: 'init');
-    on(name: 'blur', fn: (ev: FocusEvent) => void);
-    emit(name: 'blur', ev: FocusEvent): void;
-    on(name: 'focus', fn: (ev: FocusEvent) => void);
-    emit(name: 'focus', ev: FocusEvent): void;
-    on(name: 'focusAnchor', fn: (anchor: Anchor) => void);
-    emit(name: 'focusAnchor', anchor: Anchor): void;
-    on(name: "blurAnchor", fn: (anchor: Anchor) => void);
-    emit(name: 'blurAnchor', anchor: Anchor): void;
-    on(name: 'history', fn: (ev: UserAction) => void);
-    emit(name: 'history', ev: UserAction): void;
-    on(name: "hoverOutBlock", fn: (block: Block) => void): void;
-    emit(name: 'hoverOutBlock', block: Block)
-    on(name: "hoverBlock", fn: (block: Block) => void): void;
-    emit(name: 'hoverBlock', block: Block)
-    on(name: "dropOutBlock", fn: (block: Block) => void): void;
-    emit(name: 'dropOutBlock', block: Block)
-    on(name: "dropOverBlock", fn: (block: Block, direction: DropDirection) => void): void;
-    emit(name: 'dropOverBlock', block: Block, direction: DropDirection)
-    on(name: 'loading', fn: () => void);
-    emit(name: 'loading');
-    on(name: 'loaded', fn: () => void);
-    emit(name: 'loaded'): void;
-    on(name: 'change', fn: () => void);
-    emit(name: 'change');
-    on(name: "error", fn: (error: Error | string) => void);
-    emit(name: 'error', error: Error | string);
-    on(name: 'warn', fn: (error: Error | string) => void);
-    emit(name: "warn", error: Error | string);
-    on(name: 'loadTableSchema', fn: (schemaId: string) => Promise<Partial<TableSchema>>);
-    emitAsync(name: "loadTableSchema", schemaId: string): Promise<Partial<TableSchema>>;
-    on(name: 'createDefaultTableSchema', fn: (data?: { text?: string, templateId?: string }) => Promise<Partial<TableSchema>>);
-    emitAsync(name: "createDefaultTableSchema", data?: { text?: string, templateId?: string }): Promise<Partial<TableSchema>>;
-    on(name: "loadTableSchemaData", fn: (schemaId: string, options: { size?: number, index?: number, filter?: Record<string, any> }) => Promise<{ index?: number, size?: number, list: any[], total: number }>)
-    emitAsync(name: 'loadTableSchemaData', schemaId: string, options: { size?: number, index?: number, filter?: Record<string, any> }): Promise<{ index?: number, size?: number, list: any[], total: number }>
-    on(name: 'createTableSchemaField', fn: (options: { type: FieldType, text: string }) => Promise<Partial<Field>>);
-    emitAsync(name: 'createTableSchemaField', options: { type: FieldType, text: string }): Promise<Partial<Field>>
-    on(name: 'removeTableSchemaField', fn: (schemaId: string, name: string) => Promise<{ ok: boolean, warn?: string }>)
-    emitAsync(name: 'removeTableSchemaField', schemaId: string, na: string): Promise<{ ok: boolean, warn?: string }>;
-    on(name: 'turnTypeTableSchemaField', fn: (schemaId: string, fieldName: string, type: FieldType) => Promise<{ ok: boolean, warn?: string }>);
-    emitAsync(name: 'turnTypeTableSchemaField', schemaId: string, fieldName: string, type: FieldType): Promise<{ ok: boolean, warn?: string }>
-    on(name: "updateTableSchemaField", fn: (schemaId: string, fieldName: string, type: FieldType) => Promise<{ ok: boolean, warn?: string }>);
-    emitAsync(name: 'updateTableSchemaField', schemaId: string, fieldName: string, type: FieldType): Promise<{ ok: boolean, warn?: string }>
+    on(name: PageDirective.init, fn: () => void);
+    emit(name: PageDirective.init);
+    on(name: PageDirective.blur, fn: (ev: FocusEvent) => void);
+    emit(name: PageDirective.blur, ev: FocusEvent): void;
+    on(name: PageDirective.focus, fn: (ev: FocusEvent) => void);
+    emit(name: PageDirective.focus, ev: FocusEvent): void;
+    on(name: PageDirective.focusAnchor, fn: (anchor: Anchor) => void);
+    emit(name: PageDirective.focusAnchor, anchor: Anchor): void;
+    on(name: PageDirective.blurAnchor, fn: (anchor: Anchor) => void);
+    emit(name: PageDirective.blurAnchor, anchor: Anchor): void;
+    on(name: PageDirective.history, fn: (ev: UserAction) => void);
+    emit(name: PageDirective.history, ev: UserAction): void;
+    on(name: PageDirective.hoverOutBlock, fn: (block: Block) => void): void;
+    emit(name: PageDirective.hoverOutBlock, block: Block)
+    on(name: PageDirective.hoverBlock, fn: (block: Block) => void): void;
+    emit(name: PageDirective.hoverBlock, block: Block)
+    on(name: PageDirective.dropOutBlock, fn: (block: Block) => void): void;
+    emit(name: PageDirective.dropOutBlock, block: Block)
+    on(name: PageDirective.dropOverBlock, fn: (block: Block, direction: DropDirection) => void): void;
+    emit(name: PageDirective.dropOverBlock, block: Block, direction: DropDirection)
+    on(name: PageDirective.loading, fn: () => void);
+    emit(name: PageDirective.loading);
+    on(name: PageDirective.loaded, fn: () => void);
+    emit(name: PageDirective.loaded): void;
+    on(name: PageDirective.change, fn: () => void);
+    emit(name: PageDirective.change);
+    on(name: PageDirective.error, fn: (error: Error | string) => void);
+    emit(name: PageDirective.error, error: Error | string);
+    on(name: PageDirective.warn, fn: (error: Error | string) => void);
+    emit(name: PageDirective.warn, error: Error | string);
+    on(name: PageDirective.loadTableSchema, fn: (schemaId: string) => Promise<Partial<TableSchema>>);
+    emitAsync(name: PageDirective.loadTableSchema, schemaId: string): Promise<Partial<TableSchema>>;
+    on(name: PageDirective.createDefaultTableSchema, fn: (data?: { text?: string, templateId?: string }) => Promise<Partial<TableSchema>>);
+    emitAsync(name: PageDirective.createDefaultTableSchema, data?: { text?: string, templateId?: string }): Promise<Partial<TableSchema>>;
+    on(name: PageDirective.loadTableSchemaData, fn: (schemaId: string, options: { size?: number, index?: number, filter?: Record<string, any> }) => Promise<{ index?: number, size?: number, list: any[], total: number }>)
+    emitAsync(name: PageDirective.loadTableSchemaData, schemaId: string, options: { size?: number, index?: number, filter?: Record<string, any> }): Promise<{ index?: number, size?: number, list: any[], total: number }>
+    on(name: PageDirective.createTableSchemaField, fn: (options: { type: FieldType, text: string }) => Promise<Partial<Field>>);
+    emitAsync(name: PageDirective.createTableSchemaField, options: { type: FieldType, text: string }): Promise<Partial<Field>>
+    on(name: PageDirective.removeTableSchemaField, fn: (schemaId: string, name: string) => Promise<{ ok: boolean, warn?: string }>)
+    emitAsync(name: PageDirective.removeTableSchemaField, schemaId: string, na: string): Promise<{ ok: boolean, warn?: string }>;
+    on(name: PageDirective.turnTypeTableSchemaField, fn: (schemaId: string, fieldName: string, type: FieldType) => Promise<{ ok: boolean, warn?: string }>);
+    emitAsync(name: PageDirective.turnTypeTableSchemaField, schemaId: string, fieldName: string, type: FieldType): Promise<{ ok: boolean, warn?: string }>
+    on(name: PageDirective.updateTableSchemaField, fn: (schemaId: string, fieldName: string, type: FieldType) => Promise<{ ok: boolean, warn?: string }>);
+    emitAsync(name: PageDirective.updateTableSchemaField, schemaId: string, fieldName: string, type: FieldType): Promise<{ ok: boolean, warn?: string }>
+    on(name: PageDirective.createRowDefault, fn: (schemaId: string, rowId: string) => Promise<Record<string, any>>);
+    emitAsync(name: PageDirective.createRowDefault, schemaId: string, rowId: string): Promise<Record<string, any>>
+    on(name: PageDirective.updateRowField, fn: (schemaId: string, rowId: string, data: Record<string, any>) => Promise<{ ok: boolean, warn?: string }>);
+    emitAsync(name: PageDirective.updateRowField, schemaId, rowId: string, data: Record<string, any>): Promise<{ ok: boolean, warn?: string }>
 }
 
 export interface Page extends PageEvent { }

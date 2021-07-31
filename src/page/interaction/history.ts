@@ -1,10 +1,11 @@
 import { Page } from "..";
 import { OperatorDirective } from "../../history/declare";
 import { HistorySnapshoot } from "../../history/snapshoot";
+import { PageDirective } from "../directive";
 export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     snapshoot.on('history', (action) => {
-        page.emit('history', action);
-        page.emit('change');
+        page.emit(PageDirective.history, action);
+        page.emit(PageDirective.change);
     });
     snapshoot.on('error', err => page.onError(err));
     snapshoot.on('warn', (error) => page.onWarn(error));

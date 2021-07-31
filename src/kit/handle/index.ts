@@ -5,6 +5,7 @@ import { Point } from "../../common/point";
 import { Events } from "../../../util/events";
 import { DropDirection } from "./direction";
 import { BarView } from "./view";
+import { PageDirective } from "../../page/directive";
 
 
 export class Bar extends Events {
@@ -40,7 +41,7 @@ export class Bar extends Events {
         }
         if (this.hoverBlock != block) {
             if (this.hoverBlock) {
-                this.kit.page.emit('hoverOutBlock', this.hoverBlock);
+                this.kit.page.emit(PageDirective.hoverOutBlock, this.hoverBlock);
             }
         }
         this.hoverBlock = block;
@@ -53,7 +54,7 @@ export class Bar extends Events {
         }
         else this.barEle.style.display = 'none';
         if (this.hoverBlock) {
-            this.kit.page.emit('hoverBlock', this.hoverBlock);
+            this.kit.page.emit(PageDirective.hoverBlock, this.hoverBlock);
         }
     }
     dragBlocks: Block[] = [];
@@ -66,7 +67,7 @@ export class Bar extends Events {
         if (willDropBlock !== this.dropBlock) {
             if (this.dropBlock) {
                 dom(this.dropBlock.el).removeClass(g => g.startsWith('sy-block-drag-over'));
-                this.kit.page.emit('dropOutBlock', this.dropBlock);
+                this.kit.page.emit(PageDirective.dropOutBlock, this.dropBlock);
             }
         }
         this.dropBlock = willDropBlock;
@@ -82,7 +83,7 @@ export class Bar extends Events {
         else {
             this.dropDirection = DropDirection.none;
         }
-        this.kit.page.emit('dropOverBlock', this.dropBlock, this.dropDirection);
+        this.kit.page.emit(PageDirective.dropOverBlock, this.dropBlock, this.dropDirection);
     }
     onDropEnd() {
         if (this.dropBlock) {
