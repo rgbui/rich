@@ -5,9 +5,7 @@ import { Icon } from "../../../component/icon";
 import { Bar } from ".";
 import { DropDirection } from "./direction";
 import { Tip } from "../../../component/tip";
-import { Sp } from "../../../i18n";
 import { LangID } from "../../../i18n/declare";
-
 
 export class BarView extends React.Component<{ bar: Bar }>{
     constructor(props) {
@@ -35,6 +33,7 @@ export class BarView extends React.Component<{ bar: Bar }>{
         this.point = Point.from(event);
         this.isDown = true;
         this.isDrag = false;
+        this.shipBlock();
     }
     private mousemove: (event: MouseEvent) => void;
     private mouseup: (event: MouseEvent) => void;
@@ -42,7 +41,7 @@ export class BarView extends React.Component<{ bar: Bar }>{
         if (this.isDown == true) {
             if (!this.isDrag && this.point.remoteBy(Point.from(event), 5)) {
                 this.isDrag = true;
-                this.shipBlock();
+                this.shipMoveBlock();
             }
             if (this.isDrag == true) {
                 this.moveDrag(event);
@@ -83,6 +82,8 @@ export class BarView extends React.Component<{ bar: Bar }>{
             this.bar.dragBlocks = this.bar.kit.explorer.selectedBlocks;
         }
         this.bar.dragBlocks = this.bar.dragBlocks.map(d => d);
+    }
+    private shipMoveBlock() {
         if (this.bar.dragBlocks.length > 0) {
             var dragBlocks = this.bar.dragBlocks;
             var cloneNode = dragBlocks.first().el.cloneNode(true);
