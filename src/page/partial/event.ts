@@ -7,6 +7,10 @@ import { Anchor } from "../../kit/selection/anchor";
 import { util } from "../../../util/util";
 import { TemporaryPurpose } from "./declare";
 import { PageDirective } from "../directive";
+import { useSelectMenuItem } from "../../../component/menu";
+import { Rect } from "../../common/point";
+import { MenuItemType } from "../../../component/menu/declare";
+import { BlockDirective } from "../../block/enum";
 export class PageEvent {
     /**
      * 鼠标点击页面,
@@ -60,7 +64,6 @@ export class PageEvent {
             this.isFocus = false;
             this.blockSelector.close();
             this.textTool.close();
-            this.blockMenu.close();
             this.kit.explorer.blur();
             this.emit(PageDirective.blur, event);
         }
@@ -187,8 +190,39 @@ export class PageEvent {
      * @param blocks 
      * @param event 
      */
-    onOpenMenu(this: Page, blocks: Block[], event: MouseEvent) {
-        this.blockMenu.open(blocks, event);
+    async onOpenMenu(this: Page, blocks: Block[], event: MouseEvent) {
+        console.log(blocks,event);
+        var re = await useSelectMenuItem(
+            {
+                roundArea: Rect.from((event.target as HTMLElement).getBoundingClientRect()),
+                direction: 'left'
+            },
+            await blocks[0].onGetContextMenus()
+        );
+        if (re) {
+            if (blocks.length == 1) await blocks[0].onClickContextMenu(re.item, re.event);
+            else await this.onClickContextMenu(blocks, re.item, re.event)
+        }
+    }
+    async onClickContextMenu(this: Page, blocks: Block[], item: MenuItemType<BlockDirective>, event: MouseEvent) {
+        switch (item.name) {
+            case BlockDirective.delete:
+                this.onBatchDelete(blocks);
+                break;
+            case BlockDirective.copy:
+                /**
+                 * 将元素复制到服务器，
+                 * 然后可以跨平台粘贴
+                 */
+                break;
+            case BlockDirective.link:
+                break;
+            case BlockDirective.trun:
+                this.onBatchTurn(blocks, item.value);
+                break;
+            case BlockDirective.trunIntoPage:
+                break;
+        }
     }
     /**
      * 申明一个临时的缓存标记，当前的数据均以这个标记做为标记，

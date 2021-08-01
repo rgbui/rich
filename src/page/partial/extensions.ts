@@ -1,20 +1,18 @@
 import { Page } from "..";
 import { BlockSelector } from "../../../extensions/block";
 import { InputDetector } from "../../../extensions/input.detector/detector";
-import { BlockMenu } from "../../../extensions/menu/menu";
 import { ReferenceSelector } from "../../../extensions/reference";
 import { SyExtensionsComponent } from "../../../extensions/sy.component";
 import { TextTool } from "../../../extensions/text.tool/text.tool";
 import { Kit } from "../../kit";
 import { PageBlockSelector } from "../interaction/block.selector";
-import { PageBlockMenu } from "../interaction/menu";
+
 import { PageReferenceSelector } from "../interaction/refrence.selector";
 import { PageTextTool } from "../interaction/text.tool";
 
 export class Page$Extensions {
     blockSelector: BlockSelector;
     referenceSelector: ReferenceSelector;
-    blockMenu: BlockMenu;
     textTool: TextTool;
     kit: Kit;
     inputDetector: InputDetector;
@@ -22,10 +20,6 @@ export class Page$Extensions {
         if (extension instanceof BlockSelector) {
             this.blockSelector = extension;
             PageBlockSelector(this, this.blockSelector);
-        }
-        else if (extension instanceof BlockMenu) {
-            this.blockMenu = extension;
-            PageBlockMenu(this, this.blockMenu);
         }
         else if (extension instanceof TextTool) {
             this.textTool = extension;
