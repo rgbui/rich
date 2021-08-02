@@ -10,6 +10,10 @@ import moveTo from '../../assert/svg/moveTo.svg';
 import comment from "../../assert/svg/comment.svg";
 import trash from "../../assert/svg/trash.svg";
 export class Block$Method {
+    async onGetTurnMenus(this: Block) {
+        var items: MenuItemType<BlockDirective>[] = [];
+        return items;
+    }
     async onGetContextMenus(this: Block) {
         var items: MenuItemType<BlockDirective>[] = [];
         items.push({
@@ -24,19 +28,11 @@ export class Block$Method {
             label: "ctrl+D",
             icon: duplicate
         });
-        // items.push({
-        //     text: '转换为',
-        //     icon: loop,
-        //     childs: BlockSelectorData.first().childs.map(c => {
-        //         return {
-        //             name: BlockMenuAction.trun,
-        //             text: c.text,
-        //             label: c.label,
-        //             icon: c.pic,
-        //             value: c.url
-        //         }
-        //     })
-        // });
+        items.push({
+            text: '转换为',
+            icon: loop,
+            childs: await this.onGetTurnMenus()
+        });
         items.push({
             name: BlockDirective.trunIntoPage,
             text: '转换为页面',
@@ -71,6 +67,23 @@ export class Block$Method {
         return items;
     }
     async onClickContextMenu(this: Block, item: MenuItemType<BlockDirective>, event: MouseEvent) {
-
+        switch (item.name) {
+            case BlockDirective.delete:
+                this.page.onBatchDelete([this]);
+                break;
+            case BlockDirective.copy:
+                /**
+                 * 将元素复制到服务器，
+                 * 然后可以跨平台粘贴
+                 */
+                break;
+            case BlockDirective.link:
+                break;
+            case BlockDirective.trun:
+                this.page.onBatchTurn([this], item.value);
+                break;
+            case BlockDirective.trunIntoPage:
+                break;
+        }
     }
 }

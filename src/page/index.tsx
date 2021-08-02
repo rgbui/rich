@@ -202,10 +202,13 @@ export interface Page {
     emitAsync(name: PageDirective.turnTypeTableSchemaField, schemaId: string, fieldName: string, type: FieldType): Promise<{ ok: boolean, warn?: string }>
     on(name: PageDirective.updateTableSchemaField, fn: (schemaId: string, fieldName: string, type: FieldType) => Promise<{ ok: boolean, warn?: string }>);
     emitAsync(name: PageDirective.updateTableSchemaField, schemaId: string, fieldName: string, type: FieldType): Promise<{ ok: boolean, warn?: string }>
-    on(name: PageDirective.createRowDefault, fn: (schemaId: string, rowId: string) => Promise<Record<string, any>>);
-    emitAsync(name: PageDirective.createRowDefault, schemaId: string, rowId: string): Promise<Record<string, any>>
-    on(name: PageDirective.updateRowField, fn: (schemaId: string, rowId: string, data: Record<string, any>) => Promise<{ ok: boolean, warn?: string }>);
-    emitAsync(name: PageDirective.updateRowField, schemaId, rowId: string, data: Record<string, any>): Promise<{ ok: boolean, warn?: string }>
+    on(name: PageDirective.insertRow, fn: (schemaId: string, rowId: string, arrow: 'append' | 'prev') => Promise<Record<string, any>>);
+    emitAsync(name: PageDirective.insertRow, schemaId: string, rowId: string, arrow: 'append' | 'prev'): Promise<Record<string, any>>
+    on(name: PageDirective.updateRow, fn: (schemaId: string, rowId: string, data: Record<string, any>) => Promise<{ ok: boolean, warn?: string }>);
+    emitAsync(name: PageDirective.updateRow, schemaId, rowId: string, data: Record<string, any>): Promise<{ ok: boolean, warn?: string }>
+    on(name: PageDirective.deleteRow, fn: (schemaId: string, rowId: string) => Promise<{ ok: boolean, warn?: string }>);
+    emitAsync(name: PageDirective.deleteRow, schemaId, rowId: string): Promise<{ ok: boolean, warn?: string }>
+
 }
 
 export interface Page extends PageEvent { }

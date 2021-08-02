@@ -26,6 +26,8 @@ export enum PageDirective {
     removeTableSchemaField,
     turnTypeTableSchemaField,
     updateTableSchemaField,
-    createRowDefault,
-    updateRowField
+    insertRow,
+    updateRow,
+    deleteRow,
+    
 }

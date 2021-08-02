@@ -12,7 +12,7 @@ import { FieldSort, ViewField } from "../schema/view.field";
 import { util } from "../../../util/util";
 import { Exception, ExceptionType } from "../../../src/error/exception";
 import { FieldType } from "../schema/field.type";
-import { ActionDirective } from "../../../src/history/declare";
+import { ActionDirective, OperatorDirective } from "../../../src/history/declare";
 import { Field } from "../schema/field";
 import { TableStoreHead } from "./head";
 import { Confirm } from "../../../component/confirm";
@@ -193,15 +193,47 @@ export class TableStore extends Block {
         });
         await this.loadData()
     }
-    async onAddRow(id?: string) {
-
+    async onAddRow(id: string, arrow: 'append' | 'prev' = 'append') {
+        await this.page.onAction(ActionDirective.onSchemaCreateDefaultRow, async () => {
+            var r = await this.page.emitAsync(PageDirective.insertRow, this.schema.id, id, arrow);
+            // field.type = type;
+            // var newViewField = viewField.clone();
+            // newViewField.type = type;
+            // this.updateArrayUpdate('fields', at, newViewField);
+            // await this.page.emitAsync(PageDirective.turnTypeTableSchemaField, this.schema.id, field.name, type)
+        });
     }
-    async onRowUpdateField(id: string, viewField: ViewField, value: any) {
+    async onRowUpdate(id: string, viewField: ViewField, value: any) {
         var oldValue = this.data.find(g => g.id == id)[viewField.name];
         var newValue = value;
         if (!util.valueIsEqual(oldValue, newValue)) {
-
+            await this.page.onAction(ActionDirective.onSchemaRowUpdate, async () => {
+                this.page.snapshoot.record(OperatorDirective.schemaRowUpdate, {
+                    schemaId: this.schema.id,
+                    id,
+                    new: { [viewField.name]: newValue },
+                    old: { [viewField.name]: oldValue }
+                });
+                await this.page.emitAsync(PageDirective.updateRow,
+                    this.schema.id,
+                    id,
+                    { [viewField.name]: newValue }
+                )
+            })
         }
+    }
+    async onRowDelete(id: string) {
+        var data = this.data.find(g => g.id == id);
+        await this.page.onAction(ActionDirective.onSchemaRowDelete, async () => {
+            this.page.snapshoot.record(OperatorDirective.schemaRowRemove, {
+                schemaId: this.schema.id,
+                data: util.clone(data)
+            });
+            await this.page.emitAsync(PageDirective.deleteRow,
+                this.schema.id,
+                id
+            );
+        })
     }
     async get() {
         var json: Record<string, any> = { id: this.id, url: this.url };

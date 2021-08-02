@@ -153,4 +153,7 @@ export interface HistorySnapshoot {
     record(directive: OperatorDirective.arrayPropUpdate, data: { blockId: string, at: number, old: Record<string, any>, new: Record<string, any>, propKey: string });
     record(directive: OperatorDirective.insertStyle, data: { blockId: string, at: number, data: Record<string, any> });
     record(directive: OperatorDirective.mergeStyle, data: { blockId: string, styleId: string, old: Record<string, any>, new: Record<string, any> });
+    record(directive: OperatorDirective.schemaRowUpdate, data: { schemaId: string, id: string, old: Record<string, any>, new: Record<string, any> });
+    record(directive: OperatorDirective.schemaCreateRow, data: { schemaId: string, data: Record<string, any> });
+    record(directive: OperatorDirective.schemaRowRemove, data: { schemaId: string, data: Record<string, any> })
 }

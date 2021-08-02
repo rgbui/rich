@@ -24,40 +24,44 @@ export enum ActionDirective {
     onSchemaTurnField = 202,
     onSchemaCreateDefaultRow = 203,
     onSchemaRowUpdate = 204,
-    onTablestoreUpdateViewField = 205,
-    onTablestoreHideViewField = 206,
+    onSchemaRowDelete = 205,
+    onTablestoreUpdateViewField = 210,
+    onTablestoreHideViewField = 211,
 }
 
 export enum OperatorDirective {
     /**
      * 更新文本
      */
-    updateText,
-    updateTextReplace,
-    updateTextDelete,
-    create,
+    updateText = 100,
+    updateTextReplace = 101,
+    updateTextDelete = 102,
+    create = 103,
     /**
      * 删除，你可以认为是彻底的删除了
      */
-    delete,
+    delete = 104,
     /**
      * 移除，可以认为是脱离了当前节点树
      */
-    remove,
+    remove = 105,
     /**
      * 更新属性
      */
-    updateProp,
-    append,
+    updateProp = 106,
+    append = 107,
     /**
      * 数组属性发生变化
      */
-    arrayPropInsert,
-    arrayPropUpdate,
-    arrayPropRemove,
+    arrayPropInsert = 108,
+    arrayPropUpdate = 109,
+    arrayPropRemove = 110,
 
-    insertStyle,
-    mergeStyle
+    insertStyle = 200,
+    mergeStyle = 201,
 
+    schemaRowUpdate = 300,
+    schemaCreateRow = 301,
+    schemaRowRemove = 302
 }
 
