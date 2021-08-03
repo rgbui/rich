@@ -13,5 +13,12 @@ export enum LangID {
     textToolEquation,
     textToolMention,
     textToolColor,
-    textToolLink
+    textToolLink,
+    IconEmoji,
+    IconFontAwesome,
+    IconUpload,
+    IconLink,
+    UploadImage,
+    UploadRemark,
+    UploadFile
 }

@@ -15,8 +15,13 @@ export default {
     [LangID.textToolDeleteLine]: <span>删除线</span>,
     [LangID.textToolUnderline]: <span>下划线</span>,
     [LangID.textToolMention]: <span>提及</span>,
-    [LangID.none]: <span></span>,
-    [LangID.none]: <span></span>,
-    [LangID.none]: <span></span>,
-    [LangID.none]: <span></span>,
+    [LangID.IconEmoji]: <span>表情</span>,
+    [LangID.IconFontAwesome]: <span>FontAwesome</span>,
+    [LangID.IconLink]: <span>网址</span>,
+    [LangID.IconUpload]: <span>上传图片</span>,
+    [LangID.UploadImage]: <span>上传图片</span>,
+    [LangID.UploadFile]:<span>上传文件</span>,
+    [LangID.UploadRemark]: <span>请勿上传色情、涉政涉恐涉暴、侵权内容或
+        <a>服务条款</a>
+        中禁止上传的其它内容</span>,
 }
