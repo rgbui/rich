@@ -1,17 +1,11 @@
 import React from "react";
-import { Dragger } from "../../src/common/dragger";
 import { Point, Rect, RectUtility } from "../../src/common/point";
-import Axios from "axios";
 import { SyExtensionsComponent } from "../sy.component";
 import { Singleton } from "../Singleton";
 import './style.less';
-import { Tip } from "../../component/tip";
-export type EmojiType = {
-    char: string,
-    name: string,
-    category: string,
-    keywords: string[]
-}
+import { EmojiType } from "./store";
+import { EmojiView } from "./view";
+
 export class EmojiPicker extends SyExtensionsComponent {
     constructor(props) {
         super(props);
@@ -22,23 +16,18 @@ export class EmojiPicker extends SyExtensionsComponent {
     async open(rect: Rect) {
         this.point = rect.leftBottom;
         this.visible = true;
-        let adjustPostion = () => {
-            var el = this.el.querySelector(".sy-emoji-picker");
-            if (el) {
-                var bound = el.getBoundingClientRect();
-                var newPoint = RectUtility.getChildRectPositionInRect(this.point, Rect.from(bound))
-                if (!this.point.equal(newPoint)) {
-                    this.point = newPoint;
-                    this.forceUpdate()
-                }
+        this.forceUpdate(() => { this.adjustPosition() })
+    }
+    adjustPosition() {
+        var el = this.el.querySelector(".shy-emoji-picker");
+        if (el) {
+            var bound = el.getBoundingClientRect();
+            var newPoint = RectUtility.getChildRectPositionInRect(this.point, Rect.from(bound))
+            if (!this.point.equal(newPoint)) {
+                this.point = newPoint;
+                this.forceUpdate()
             }
         }
-        if (this.isLoaded == false) {
-            this.forceUpdate();
-            await this.import();
-            this.forceUpdate(() => { adjustPostion() })
-        }
-        else this.forceUpdate(() => { adjustPostion() })
     }
     close() {
         this.visible = false;
@@ -46,56 +35,22 @@ export class EmojiPicker extends SyExtensionsComponent {
     }
     private visible: boolean = false;
     private point: Point = new Point(0, 0);
-    private emojis: EmojiType[] = [];
     private el: HTMLElement;
     render() {
         var style: Record<string, any> = {};
         style.top = this.point.y;
         style.left = this.point.x;
         return <div className='sy-emoji-box' ref={e => this.el = e}>
-            {this.visible && <div className='sy-emoji-picker' style={style}>{this.renderEmoji()}</div>}
+            {this.visible && <div className='sy-emoji-picker' style={style}><EmojiView loaded={() => this.adjustPosition()} change={e => this.onPick(e)}></EmojiView></div>}
         </div>
     }
-    renderEmoji() {
-        if (this.loading == true) return <div className='sy-emoji-picker-loading'></div>
-        var cs = this.emojis.lookup(x => x.category);
-        var els: JSX.Element[] = [];
-        cs.forEach((value, category) => {
-            els.push(<div className='sy-emoji-picker-category' key={category}>
-                <div className='sy-emoji-picker-category-head'><span>{category}</span></div>
-                <div className='sy-emoji-picker-category-emojis'>{value.map(emoji =>{
-                    return <Tip overlay={<>{emoji.name}</>} key={emoji.char}><span onMouseDown={e => this.onPick(emoji)} >{emoji.char}</span></Tip>
-                })}</div>
-            </div>)
-        })
-        return els;
-    }
-    private dragger: Dragger;
     private _mousedown: (event: MouseEvent) => void;
     componentDidMount() {
-        this.dragger = new Dragger(this.el);
-        this.dragger.bind();
         document.addEventListener('mousedown', this._mousedown = this.globalMousedown.bind(this), true);
     }
     componentWillUnmount() {
-        if (this.dragger) this.dragger.off();
-        if (this._mousedown) document.removeEventListener('mousedown', this._mousedown, true);
-    }
-    private isLoaded: boolean = false;
-    private loading: boolean = false;
-    async import() {
-        //加载数据
-        this.loading = true;
-        var data = await Axios.get('/data/emoji.json');
-        this.emojis = data.data.map(g => {
-            return {
-                char: g.char,
-                name: g.name,
-                category: g.group,
-                keywords: g.keywords,
-            }
-        });
-        this.loading = false;
+        if (this._mousedown)
+            document.removeEventListener('mousedown', this._mousedown, true);
     }
     private onPick(emoji: EmojiType) {
         this.close();
@@ -121,7 +76,6 @@ export interface EmojiPicker {
 }
 export async function OpenEmoji(rect: Rect) {
     var emojiPicker = await Singleton<EmojiPicker>(EmojiPicker);
-    console.log('emss.', rect);
     await emojiPicker.open(rect);
     return new Promise((resolve: (emoji: EmojiType) => void, reject) => {
         emojiPicker.only('pick', (data) => {
