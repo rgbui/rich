@@ -33,6 +33,7 @@ import { DropDirection } from '../kit/handle/direction';
 import { FieldType } from '../../blocks/data-present/schema/field.type';
 import { Field } from '../../blocks/data-present/schema/field';
 import { PageDirective } from './directive';
+import { IconArguments } from '../../extensions/icon/declare';
 
 export class Page extends Events<PageDirective> {
     el: HTMLElement;
@@ -209,6 +210,8 @@ export interface Page {
     on(name: PageDirective.deleteRow, fn: (schemaId: string, rowId: string) => Promise<{ ok: boolean, warn?: string }>);
     emitAsync(name: PageDirective.deleteRow, schemaId, rowId: string): Promise<{ ok: boolean, warn?: string }>
 
+    on(name: PageDirective.loadPageInfo, fn: () => Promise<{ title: string, icon: IconArguments, description?: string }>);
+    emitAsync(name: PageDirective.loadPageInfo): Promise<{ title: string, icon: IconArguments, description?: string }>;
 }
 
 export interface Page extends PageEvent { }
