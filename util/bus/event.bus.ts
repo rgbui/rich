@@ -1,3 +1,4 @@
+import { GalleryType, OuterPic } from "../../extensions/image/declare";
 import { Directive } from "./directive";
 /***
  * 内部消息订阅通知触发器
@@ -36,7 +37,9 @@ class EventBus {
  * 订阅通知活动事件申明
  */
 interface EventBus {
-    on(directive: Directive.uploadFile, handler: (file: File, uploadProgress?: (event: ProgressEvent) => void) => Promise<{ ok: boolean, data: { url: string } }>): void;
-    fireAsync(directive: Directive.uploadFile, file: File, uploadProgress?: (event: ProgressEvent) => void): Promise<{ ok: boolean, data: { url: string } }>;
+    on(directive: Directive.UploadFile, handler: (file: File, uploadProgress?: (event: ProgressEvent) => void) => Promise<{ ok: boolean, data: { url: string } }>): void;
+    fireAsync(directive: Directive.UploadFile, file: File, uploadProgress?: (event: ProgressEvent) => void): Promise<{ ok: boolean, data: { url: string } }>;
+    on(directive: Directive.GalleryQuery, fn: (type: GalleryType, word: string) => Promise<OuterPic[]>): void;
+    fireAsync(directive: Directive.GalleryQuery, type: GalleryType, word: string): Promise<OuterPic[]>
 }
-export let bus = new EventBus()
+export let richBus = new EventBus()
