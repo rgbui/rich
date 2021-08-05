@@ -6,7 +6,12 @@ import "./general/callout";
 import "./general/emoji";
 import "./general/quote";
 import "./media/image";
+import "./media/embed";
+import "./media/file";
+import "./media/video";
+import './media/audio';
 import "./present/katex";
+import "./present/bookmark";
 import "./form/todo";
 import "./present/list/list";
 import "./present/list/list.sub.panel";
@@ -26,6 +31,13 @@ import "./data-present/field/number";
 import "./data-present/field/date";
 import "./data-present/field/option";
 import "./data-present/field/user";
+
+import "./context/date";
+import './context/link';
+import './context/mention';
+import './context/title';
+
+import "./map/amap";
 
 /***
  * import component style
