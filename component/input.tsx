@@ -1,5 +1,14 @@
 import React, { CSSProperties } from "react";
-export function Input(props: { style?: CSSProperties, disabled?: boolean, value?: string, placeholder?: string, onChange?: (value: string) => void, onEnter?: (value) => void }) {
+export function Input(props: {
+    style?: CSSProperties,
+    disabled?: boolean,
+    value?: string,
+    placeholder?: string,
+    onChange?: (value: string) => void,
+    onEnter?: (value) => void,
+    clear?: boolean
+}
+) {
     function keydown(e: React.KeyboardEvent) {
         if (e.key == 'Enter' && props.onEnter) {
             props.onEnter((e.target as HTMLInputElement).value);
