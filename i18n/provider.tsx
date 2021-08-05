@@ -45,6 +45,13 @@ class LangProvider {
         }
         return <>no declare lang id</>;
     }
+    getText(id: LangID): string {
+        if (typeof this.dict[id] != 'undefined') {
+            var value = this.dict[id]
+            return value as any;
+        }
+        return 'no declare lang id';
+    }
     private dict: Record<LangID, React.ReactElement> = {} as any;
     private async load() {
         this.isLoaded = false;
