@@ -940,7 +940,7 @@ export abstract class Block extends Events {
         if (this.isSolid && !this.soldEl) return false;
         return true;
     }
-    get isSupportTextStyle(){
+    get isSupportTextStyle() {
         return true;
     }
 }
