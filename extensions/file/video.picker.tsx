@@ -1,7 +1,7 @@
 import React, { CSSProperties } from "react";
 import { Tip } from "../../component/tip";
 import { LangID } from "../../i18n/declare";
-import { Point, PopoverPosition, Rect, RectUtility } from "../../src/common/point";
+import { Point,Rect, RectUtility } from "../../src/common/point";
 import { UrlView } from "../link/url";
 import { SyExtensionsComponent } from "../sy.component";
 import { UploadView } from "./upload";
@@ -9,6 +9,7 @@ import Link from "../../src/assert/svg/link.svg";
 import Upload from "../../src/assert/svg/uplaod.svg";
 import { ResourceArguments } from "../icon/declare";
 import { Singleton } from "../Singleton";
+import { PopoverPosition } from "../popover/position";
 class VideoPicker extends SyExtensionsComponent {
     point: Point = new Point(0, 0);
     visible: boolean = false;

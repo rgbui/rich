@@ -1,3 +1,4 @@
+import { PopoverPosition } from "../../extensions/popover/position";
 
 export class Point {
     x: number;
@@ -272,12 +273,3 @@ export class RectUtility {
     }
 }
 
-export type PopoverPosition = {
-    roundArea: Rect;
-    elementArea?: Rect,
-    dist?: number,
-    offset?: number,
-    align?: 'start' | 'center' | 'end',
-    direction?: 'top' | 'left' | 'bottom' | 'right',
-    relativePoint?: Point
-}
