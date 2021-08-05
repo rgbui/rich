@@ -24,5 +24,7 @@ export default {
         <a>服务条款</a>
         中禁止上传的其它内容</span>,
     [LangID.AddAudioTip]: <span>添加音频</span>,
-    [LangID.AddVideoTip]: <span>添加视频</span>
+    [LangID.AddVideoTip]: <span>添加视频</span>,
+    [LangID.ImageOrigin]: <span>图片来源于&nbsp;</span>,
+    [LangID.SearchImage]: '搜索图片...'
 }
