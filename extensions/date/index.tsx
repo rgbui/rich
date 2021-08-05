@@ -5,13 +5,14 @@ import React, { CSSProperties } from "react";
  */
 import dayjs, { Dayjs } from "dayjs";
 import { SyExtensionsComponent } from "../sy.component";
-import { Point, PopoverPosition, Rect, RectUtility } from "../../src/common/point";
+import { Point, Rect, RectUtility } from "../../src/common/point";
 
 import chevronLeft from "../../src/assert/svg/chevronLeft.svg";
 import chevronRight from "../../src/assert/svg/chevronRight.svg";
 import { Icon } from "../../component/icon";
 import { Singleton } from "../Singleton";
 import "./style.less";
+import { PopoverPosition } from "../popover/position";
 
 export class DatePicker extends SyExtensionsComponent {
     private date: Date = new Date();
@@ -104,7 +105,7 @@ export class DatePicker extends SyExtensionsComponent {
         this.isInEditing = true;
         this.forceUpdate()
     }
-    onReduce(event:React.MouseEvent) {
+    onReduce(event: React.MouseEvent) {
         if (event) event.preventDefault()
         this.isInEditing = true;
         if (this.mode == 'month') {
