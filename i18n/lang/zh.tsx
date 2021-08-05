@@ -1,7 +1,6 @@
 import React from "react";
 import { LangID } from "../declare";
 
-
 export default {
     [LangID.bar]: <><span><b>点击</b>打开菜单</span><span><b>拖拽</b>可移动位置</span></>,
     [LangID.textToolTurn]: <span>变换</span>,
@@ -20,8 +19,10 @@ export default {
     [LangID.IconLink]: <span>网址</span>,
     [LangID.IconUpload]: <span>上传图片</span>,
     [LangID.UploadImage]: <span>上传图片</span>,
-    [LangID.UploadFile]:<span>上传文件</span>,
+    [LangID.UploadFile]: <span>上传文件</span>,
     [LangID.UploadRemark]: <span>请勿上传色情、涉政涉恐涉暴、侵权内容或
         <a>服务条款</a>
         中禁止上传的其它内容</span>,
+    [LangID.AddAudioTip]: <span>添加音频</span>,
+    [LangID.AddVideoTip]: <span>添加视频</span>
 }

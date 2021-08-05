@@ -20,5 +20,7 @@ export enum LangID {
     IconLink,
     UploadImage,
     UploadRemark,
-    UploadFile
+    UploadFile,
+    AddAudioTip,
+    AddVideoTip
 }
