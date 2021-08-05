@@ -8,7 +8,8 @@
 * [dayjs](https://dayjs.gitee.io/docs/zh-CN/installation/installation)
 ## block 引用的库
 * [代码高亮prismjs](https://prismjs.com/#examples)
-
+## 资源
+[font-awesome](https://github.com/FortAwesome/Font-Awesome)
 ## 关注的github issues
 * [光标定位](https://github.com/rgbui/rich/issues/2)
 * [文字输入](https://github.com/rgbui/rich/issues/3)
