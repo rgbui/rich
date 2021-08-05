@@ -4,12 +4,12 @@ import { OpenFileDialoug } from "../../component/file";
 import { Sp } from "../../i18n";
 import { LangID } from "../../i18n/declare";
 import { Directive } from "../../util/bus/directive";
-import { bus } from "../../util/bus/event.bus";
+import { richBus } from "../../util/bus/event.bus";
 export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audio' | 'video', change: (url: string) => void }> {
     async uploadFile() {
         var file = await OpenFileDialoug();
         if (file) {
-            var r = await bus.fireAsync(Directive.uploadFile, file, (event) => {
+            var r = await richBus.fireAsync(Directive.UploadFile, file, (event) => {
 
             });
             if (r.ok) {
