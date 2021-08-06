@@ -1,7 +1,8 @@
-import React, { CSSProperties } from "react";
+import React from "react";
+import { PopoverPosition } from "../../extensions/popover/position";
 import { Singleton } from "../../extensions/Singleton";
 import { SyExtensionsComponent } from "../../extensions/sy.component";
-import { PopoverPosition, Rect } from "../../src/common/point";
+
 import { MenuBox } from "./box";
 import { MenuItemType, MenuItemTypeValue } from "./declare";
 
