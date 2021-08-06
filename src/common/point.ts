@@ -1,3 +1,4 @@
+import React from "react";
 import { PopoverPosition } from "../../extensions/popover/position";
 
 export class Point {
@@ -149,6 +150,10 @@ export class Rect {
         re.width = rect.width;
         re.height = rect.height;
         return re;
+    }
+    static fromEvent(event: MouseEvent | React.MouseEvent) {
+        var ele = event.target as HTMLElement;
+        return this.from(ele.getBoundingClientRect())
     }
     conatin(point: Point) {
         if (point.x >= this.left && point.x <= this.left + this.width) {
