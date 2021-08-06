@@ -6,7 +6,7 @@ import { OutsideUrl } from "../link/outside";
 import { SyExtensionsComponent } from "../sy.component";
 import { UploadView } from "./upload";
 import Link from "../../src/assert/svg/link.svg";
-import Upload from "../../src/assert/svg/uplaod.svg";
+import Upload from "../../src/assert/svg/upload.svg";
 import { ResourceArguments } from "../icon/declare";
 import { Singleton } from "../Singleton";
 import { PopoverPosition } from "../popover/position";
