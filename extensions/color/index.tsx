@@ -19,9 +19,9 @@ export class ColorSelector extends SyExtensionsComponent {
     private visible: boolean = false;
     private pos: Point = new Point(0, 0);
     private renderFontColor() {
-        return <div className='sy-color-selector-box'>
-            <div className='sy-color-selector-box-head'><span>文字颜色</span></div>
-            <div className='sy-color-selector-box-content'>
+        return <div className='shy-color-selector-box'>
+            <div className='shy-color-selector-box-head'><span>文字颜色</span></div>
+            <div className='shy-color-selector-box-content'>
                 {FontColorList.map(x => {
                     return <a style={{ color: x.color }}>A</a>
                 })}
@@ -29,9 +29,9 @@ export class ColorSelector extends SyExtensionsComponent {
         </div>;
     }
     private renderBackgroundColor() {
-        return <div className='sy-color-selector-box'>
-            <div className='sy-color-selector-box-head'><span>背景色</span></div>
-            <div className='sy-color-selector-box-content'>
+        return <div className='shy-color-selector-box'>
+            <div className='shy-color-selector-box-head'><span>背景色</span></div>
+            <div className='shy-color-selector-box-content'>
                 {BackgroundColorList.map(x => {
                     return <a style={{ backgroundColor: x.color }}>A</a>
                 })}
@@ -44,7 +44,7 @@ export class ColorSelector extends SyExtensionsComponent {
             left: this.pos.x
         }
         return createPortal(<div>
-            {this.visible && <div className='sy-color-selector'
+            {this.visible && <div className='shy-color-selector'
                 style={style}>{this.renderFontColor()}{this.renderBackgroundColor()}</div>}
         </div>, this.node);
     }
