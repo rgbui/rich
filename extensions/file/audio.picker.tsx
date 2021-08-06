@@ -2,7 +2,7 @@ import React, { CSSProperties } from "react";
 import { Tip } from "../../component/tip";
 import { LangID } from "../../i18n/declare";
 import { Point,  Rect, RectUtility } from "../../src/common/point";
-import { UrlView } from "../link/url";
+import { OutsideUrl } from "../link/outside";
 import { SyExtensionsComponent } from "../sy.component";
 import { UploadView } from "./upload";
 import Link from "../../src/assert/svg/link.svg";
@@ -72,7 +72,7 @@ class AudioPicker extends SyExtensionsComponent {
             </div>
             <div className='shy-audio-picker-content'>
                 {this.mode == 'upload' && <UploadView mine='audio' change={e => this.onChange(this.mode, { url: e })}></UploadView>}
-                {this.mode == 'link' && <UrlView change={e => this.onChange(this.mode, { url: e })}></UrlView>}
+                {this.mode == 'link' && <OutsideUrl change={e => this.onChange(this.mode, { url: e })}></OutsideUrl>}
             </div>
         </div>}
         </div>

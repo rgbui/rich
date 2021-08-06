@@ -3,7 +3,7 @@ import { Button } from "../../component/button";
 import { Input } from "../../component/input";
 
 
-export class UrlView extends React.Component<{ change: (url: string) => void }>{
+export class OutsideUrl extends React.Component<{ change: (url: string) => void }>{
     private url: string = '';
     save() {
         this.props.change(this.url);

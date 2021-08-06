@@ -5,7 +5,7 @@ import { Tip } from "../../component/tip";
 import { LangID } from "../../i18n/declare";
 import Link from "../../src/assert/svg/link.svg";
 import Upload from "../../src/assert/svg/uplaod.svg";
-import { UrlView } from "../link/url";
+import { OutsideUrl } from "../link/outside";
 import { UploadView } from "./upload";
 import { ResourceArguments } from "../icon/declare";
 import { PopoverSingleton } from "../popover/popover";
@@ -28,7 +28,7 @@ class FilePicker extends SyExtensionsComponent {
             </div>
             <div className='shy-audio-picker-content'>
                 {this.mode == 'upload' && <UploadView mine='audio' change={e => this.onChange(this.mode, { url: e })}></UploadView>}
-                {this.mode == 'link' && <UrlView change={e => this.onChange(this.mode, { url: e })}></UrlView>}
+                {this.mode == 'link' && <OutsideUrl change={e => this.onChange(this.mode, { url: e })}></OutsideUrl>}
             </div>
         </div>
     }
