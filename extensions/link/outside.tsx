@@ -9,7 +9,7 @@ export class OutsideUrl extends React.Component<{ change: (url: string) => void 
         this.props.change(this.url);
     }
     render() {
-        return <div className='shy-url-view'>
+        return <div className='shy-outside-url'>
             <Input value={this.url} onChange={e => this.url = e} onEnter={e => { this.url = e; this.save() }}></Input>
             <Button onClick={() => this.save()}>提交</Button>
         </div>
