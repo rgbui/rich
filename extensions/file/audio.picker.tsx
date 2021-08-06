@@ -3,14 +3,14 @@ import { Tip } from "../../component/tip";
 import { LangID } from "../../i18n/declare";
 import { Point,  Rect, RectUtility } from "../../src/common/point";
 import { OutsideUrl } from "../link/outside";
-import { SyExtensionsComponent } from "../sy.component";
+import { EventsComponent } from "../events.component";
 import { UploadView } from "./upload";
 import Link from "../../src/assert/svg/link.svg";
 import Upload from "../../src/assert/svg/upload.svg";
 import { ResourceArguments } from "../icon/declare";
 import { Singleton } from "../Singleton";
 import { PopoverPosition } from "../popover/position";
-class AudioPicker extends SyExtensionsComponent {
+class AudioPicker extends EventsComponent {
     point: Point = new Point(0, 0);
     visible: boolean = false;
     mode: 'upload' | 'link' = 'upload';

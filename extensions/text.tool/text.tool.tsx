@@ -6,7 +6,7 @@ import Equation from "../../src/assert/svg/equation.svg";
 import Mention from "../../src/assert/svg/mention.svg";
 import { Dragger } from "../../src/common/dragger";
 import { TextCommand } from "./text.command";
-import { SyExtensionsComponent } from "../sy.component";
+import { EventsComponent } from "../events.component";
 import { BlockCssName, FillCss } from "../../src/block/pattern/css";
 import { LangID } from "../../i18n/declare";
 import { Tip } from "../../component/tip";
@@ -24,7 +24,7 @@ export type TextToolStyle = {
     fill: FillCss
 }
 
-export class TextTool extends SyExtensionsComponent {
+export class TextTool extends EventsComponent {
     private node: HTMLElement;
     private textStyle: TextToolStyle = {
 

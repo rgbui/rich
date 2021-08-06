@@ -4,7 +4,7 @@ import React, { CSSProperties } from "react";
  * 
  */
 import dayjs, { Dayjs } from "dayjs";
-import { SyExtensionsComponent } from "../sy.component";
+import { EventsComponent } from "../events.component";
 import { Point, Rect, RectUtility } from "../../src/common/point";
 
 import chevronLeft from "../../src/assert/svg/chevronLeft.svg";
@@ -14,7 +14,7 @@ import { Singleton } from "../Singleton";
 import "./style.less";
 import { PopoverPosition } from "../popover/position";
 
-export class DatePicker extends SyExtensionsComponent {
+export class DatePicker extends EventsComponent {
     private date: Date = new Date();
     private visible: boolean;
     private el: HTMLElement;

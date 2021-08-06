@@ -1,12 +1,12 @@
 import React from "react";
 import { PopoverPosition } from "../../extensions/popover/position";
 import { Singleton } from "../../extensions/Singleton";
-import { SyExtensionsComponent } from "../../extensions/sy.component";
+import { EventsComponent } from "../../extensions/events.component";
 
 import { MenuBox } from "./box";
 import { MenuItemType, MenuItemTypeValue } from "./declare";
 
-class MenuPanel<T> extends SyExtensionsComponent {
+class MenuPanel<T> extends EventsComponent {
     open(pos: PopoverPosition, menus: MenuItemType<T>[]) {
         this.menus = menus;
         this.visible = true;

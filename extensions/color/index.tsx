@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM,{ createPortal } from "react-dom";
 import { Point } from "../../src/common/point";
-import { SyExtensionsComponent } from "../sy.component";
+import { EventsComponent } from "../events.component";
 import { BackgroundColorList, FontColorList } from "./data";
-export class ColorSelector extends SyExtensionsComponent {
+export class ColorSelector extends EventsComponent {
     private node: HTMLElement;
     constructor(props) {
         super(props);

@@ -1,6 +1,6 @@
 import React from "react";
 export type F = (...args: any[]) => any;
-export class SyExtensionsComponent<G = {}, T = string> extends React.Component<G>{
+export class EventsComponent<G = {}, T = string> extends React.Component<G>{
     constructor(props: G) {
         super(props);
     }

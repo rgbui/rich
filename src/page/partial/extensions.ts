@@ -2,7 +2,7 @@ import { Page } from "..";
 import { BlockSelector } from "../../../extensions/block";
 import { InputDetector } from "../../../extensions/input.detector/detector";
 import { AtSelector } from "../../../extensions/at";
-import { SyExtensionsComponent } from "../../../extensions/sy.component";
+import { EventsComponent } from "../../../extensions/events.component";
 import { TextTool } from "../../../extensions/text.tool/text.tool";
 import { Kit } from "../../kit";
 import { PageBlockSelector } from "../interaction/block.selector";
@@ -16,7 +16,7 @@ export class Page$Extensions {
     textTool: TextTool;
     kit: Kit;
     inputDetector: InputDetector;
-    registerExtension(this: Page, extension: SyExtensionsComponent) {
+    registerExtension(this: Page, extension: EventsComponent) {
         if (extension instanceof BlockSelector) {
             this.blockSelector = extension;
             PageBlockSelector(this, this.blockSelector);

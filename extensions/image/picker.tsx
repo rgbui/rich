@@ -2,7 +2,7 @@ import React from "react";
 import { Tip } from "../../component/tip";
 import { LangID } from "../../i18n/declare";
 import { PopoverSingleton } from "../popover/popover";
-import { SyExtensionsComponent } from "../sy.component";
+import { EventsComponent } from "../events.component";
 import Link from "../../src/assert/svg/link.svg";
 import Upload from "../../src/assert/svg/uplaod.svg";
 import Unsplash from "../../src/assert/svg/unsplash.svg";
@@ -14,7 +14,7 @@ import { ResourceArguments } from "../icon/declare";
 import { GalleryType } from "./declare";
 import { ThirdGallery } from "./third.gallery";
 
-class ImagePicker extends SyExtensionsComponent {
+class ImagePicker extends EventsComponent {
     mode: 'upload' | 'link' | 'pexels' | 'unsplash' = 'upload';
     onChangeMode(mode: ImagePicker['mode']) {
         this.mode = mode;

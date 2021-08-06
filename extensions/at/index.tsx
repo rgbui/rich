@@ -2,10 +2,10 @@ import React from "react";
 import { createPortal } from "react-dom";
 import { KeyboardCode } from "../../src/common/keys";
 import { Point } from "../../src/common/point";
-import { SyExtensionsComponent } from "../sy.component";
+import { EventsComponent } from "../events.component";
 import { ReferenceSelectorData } from "./data";
 
-export class AtSelector extends SyExtensionsComponent {
+export class AtSelector extends EventsComponent {
     private node: HTMLElement;
     constructor(props) {
         super(props);

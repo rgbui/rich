@@ -2,11 +2,11 @@ import React from "react";
 import ReactDOM, { createPortal } from "react-dom";
 import { KeyboardCode } from "../../src/common/keys";
 import { Point } from "../../src/common/point";
-import { SyExtensionsComponent } from "../sy.component";
+import { EventsComponent } from "../events.component";
 import { BlockSelectorItem } from "./delcare";
 import { blockStore } from "./store";
 
-export class BlockSelector extends SyExtensionsComponent {
+export class BlockSelector extends EventsComponent {
     private node: HTMLElement;
     constructor(props) {
         super(props);

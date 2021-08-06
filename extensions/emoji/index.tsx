@@ -1,12 +1,12 @@
 import React from "react";
 import { Point, Rect, RectUtility } from "../../src/common/point";
-import { SyExtensionsComponent } from "../sy.component";
+import { EventsComponent } from "../events.component";
 import { Singleton } from "../Singleton";
 import './style.less';
 import { EmojiType } from "./store";
 import { EmojiView } from "./view";
 
-export class EmojiPicker extends SyExtensionsComponent {
+export class EmojiPicker extends EventsComponent {
     constructor(props) {
         super(props);
     }

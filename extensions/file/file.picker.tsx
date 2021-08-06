@@ -1,5 +1,5 @@
 
-import { SyExtensionsComponent } from "../sy.component";
+import { EventsComponent } from "../events.component";
 import React from "react";
 import { Tip } from "../../component/tip";
 import { LangID } from "../../i18n/declare";
@@ -11,7 +11,7 @@ import { ResourceArguments } from "../icon/declare";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
 
-class FilePicker extends SyExtensionsComponent {
+class FilePicker extends EventsComponent {
     mode: 'upload' | 'link' = 'upload';
     onChangeMode(mode: FilePicker['mode']) {
         this.mode = mode;

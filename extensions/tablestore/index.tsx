@@ -1,7 +1,7 @@
 import React from "react";
 import { Dragger } from "../../src/common/dragger";
 import { Point, Rect, RectUtility } from "../../src/common/point";
-import { SyExtensionsComponent } from "../sy.component";
+import { EventsComponent } from "../events.component";
 import { Singleton } from "../Singleton";
 import './style.less';
 
@@ -10,7 +10,7 @@ import './style.less';
  * 选择相对应的表模块
  * 
  */
-export class TableStoreSelector extends SyExtensionsComponent {
+export class TableStoreSelector extends EventsComponent {
     constructor(props) {
         super(props);
     }
