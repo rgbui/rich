@@ -6,7 +6,7 @@ import { langProvider } from "../../i18n/provider";
 import { Directive } from "../../util/bus/directive";
 import { richBus } from "../../util/bus/event.bus";
 import { GalleryType, OuterPic } from "./declare";
-export class Gallery extends React.Component<{ type: GalleryType, onChange: (image: OuterPic) => void }>{
+export class ThirdGallery extends React.Component<{ type: GalleryType, onChange: (image: OuterPic) => void }>{
     word: string = 'cat';
     loading: boolean = false;
     pics: OuterPic[] = [];
