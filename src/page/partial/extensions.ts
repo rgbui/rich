@@ -1,7 +1,7 @@
 import { Page } from "..";
 import { BlockSelector } from "../../../extensions/block";
 import { InputDetector } from "../../../extensions/input.detector/detector";
-import { ReferenceSelector } from "../../../extensions/reference";
+import { ReferenceSelector } from "../../../extensions/tweet";
 import { SyExtensionsComponent } from "../../../extensions/sy.component";
 import { TextTool } from "../../../extensions/text.tool/text.tool";
 import { Kit } from "../../kit";

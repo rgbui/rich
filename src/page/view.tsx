@@ -5,7 +5,7 @@ import { PageLayoutView } from "../layout/view";
 
 import { ChildsArea } from "../block/partial/appear";
 import { BlockSelector } from "../../extensions/block";
-import { ReferenceSelector } from "../../extensions/reference";
+import { ReferenceSelector } from "../../extensions/tweet";
 import { TextTool } from "../../extensions/text.tool/text.tool";
 import ReactDOM from "react-dom";
 import { KitView } from "../kit/view";
