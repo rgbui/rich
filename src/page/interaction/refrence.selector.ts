@@ -1,5 +1,5 @@
 import { Page } from "..";
-import { ReferenceSelector } from "../../../extensions/tweet";
-export function PageReferenceSelector(page: Page, selector: ReferenceSelector) {
+import { AtSelector } from "../../../extensions/at";
+export function PageReferenceSelector(page: Page, selector: AtSelector) {
     selector.on('error', err => page.onError(err));
 }

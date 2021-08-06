@@ -5,7 +5,7 @@ import { PageLayoutView } from "../layout/view";
 
 import { ChildsArea } from "../block/partial/appear";
 import { BlockSelector } from "../../extensions/block";
-import { ReferenceSelector } from "../../extensions/tweet";
+import { AtSelector } from "../../extensions/at";
 import { TextTool } from "../../extensions/text.tool/text.tool";
 import ReactDOM from "react-dom";
 import { KitView } from "../kit/view";
@@ -57,7 +57,7 @@ export class PageView extends Component<{ page: Page }>{
             </div>
             <div className='sy-page-plugs'>
                 <BlockSelector ref={e => this.page.registerExtension(e)} ></BlockSelector>
-                <ReferenceSelector ref={e => this.page.registerExtension(e)} ></ReferenceSelector>
+                <AtSelector ref={e => this.page.registerExtension(e)} ></AtSelector>
                 <TextTool ref={e => this.page.registerExtension(e)}></TextTool>
             </div>
             <KitView kit={this.page.kit}></KitView>
