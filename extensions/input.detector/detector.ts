@@ -10,7 +10,7 @@ import { Events } from "../../util/events";
  * 输入`字符`时，则直接将当前的字符转成一个code模式
  * 输入[]则转成一个待办block
  * 
- * 相关的触发可参考https://www.notion.so/Writing-editing-basics-68c7c67047494fdb87d50185429df93e
+ * 相关的触发可参考
  * 
  */
 export class InputDetector extends Events {
