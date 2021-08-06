@@ -1,4 +1,6 @@
+import { LinkPage } from "../../extensions/at/declare";
 import { GalleryType, OuterPic } from "../../extensions/image/declare";
+import { User } from "../../src/types/user";
 import { Directive } from "./directive";
 /***
  * 内部消息订阅通知触发器
@@ -40,6 +42,10 @@ interface EventBus {
     on(directive: Directive.UploadFile, handler: (file: File, uploadProgress?: (event: ProgressEvent) => void) => Promise<{ ok: boolean, data: { url: string } }>): void;
     fireAsync(directive: Directive.UploadFile, file: File, uploadProgress?: (event: ProgressEvent) => void): Promise<{ ok: boolean, data: { url: string } }>;
     on(directive: Directive.GalleryQuery, fn: (type: GalleryType, word: string) => Promise<OuterPic[]>): void;
-    fireAsync(directive: Directive.GalleryQuery, type: GalleryType, word: string): Promise<OuterPic[]>
+    fireAsync(directive: Directive.GalleryQuery, type: GalleryType, word: string): Promise<OuterPic[]>;
+    on(directive: Directive.UsersQuery, fn: () => Promise<User[]>): void;
+    fireAsync(directive: Directive.UsersQuery): Promise<User[]>;
+    on(directive: Directive.PagesQuery, fn: (word: string) => Promise<LinkPage[]>): void;
+    fireAsync(directive: Directive.PagesQuery, word: string): Promise<LinkPage[]>;
 }
 export let richBus = new EventBus()

@@ -1,6 +1,8 @@
 export enum Directive {
 
      UploadFile,
-     GalleryQuery
+     GalleryQuery,
+     UsersQuery,
+     PagesQuery
     
 }
