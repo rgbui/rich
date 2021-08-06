@@ -1,5 +1,5 @@
 
 
 import "./block/style.less";
-import './reference/style.less';
+import './tweet/style.less';
 import "./text.tool/style.less";

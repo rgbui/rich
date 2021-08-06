@@ -7,11 +7,12 @@ import Emoji from "../../src/assert/svg/emoji.svg";
 import FontAwesome from "../../src/assert/svg/fontawesome.svg";
 import Link from "../../src/assert/svg/link.svg";
 import Upload from "../../src/assert/svg/uplaod.svg";
-import { Point, PopoverPosition, Rect, RectUtility } from "../../src/common/point";
+import { Point, Rect, RectUtility } from "../../src/common/point";
 import { UploadView } from "../file/upload";
 import { EmojiView } from "../emoji/view";
 import { FontaweSomeView } from "../fontawesome";
-import { UrlView } from "../link/url";
+import { OutsideUrl } from "../link/outside";
+import { PopoverPosition } from "../popover/position";
 
 class IconPicker extends SyExtensionsComponent {
     point: Point = new Point(0, 0);
@@ -45,14 +46,14 @@ class IconPicker extends SyExtensionsComponent {
             <div className='shy-icon-picker-head'>
                 <Tip id={LangID.IconEmoji}><a><Emoji></Emoji></a></Tip>
                 <Tip id={LangID.IconFontAwesome}><a><FontAwesome></FontAwesome></a></Tip>
-                <Tip id={LangID.IconUpload}><a><Upload></Upload></a></Tip>
+                <Tip overlay id={LangID.IconUpload}><a><Upload></Upload></a></Tip>
                 <Tip id={LangID.IconLink}><a><Link></Link></a></Tip>
             </div>
             <div className='shy-icon-picker-content'>
                 {this.mode == 'emoji' && <EmojiView change={e => this.onChange(this.mode, { code: e.char })}></EmojiView>}
                 {this.mode == 'FontAwesome' && <FontaweSomeView change={e => this.onChange(this.mode, { ...e })}></FontaweSomeView>}
                 {this.mode == 'upload' && <UploadView mine='image' change={e => this.onChange(this.mode, { url: e })}></UploadView>}
-                {this.mode == 'link' && <UrlView change={e => this.onChange(this.mode, { url: e })}></UrlView>}
+                {this.mode == 'link' && <OutsideUrl change={e => this.onChange(this.mode, { url: e })}></OutsideUrl>}
             </div>
         </div>}
         </div>
