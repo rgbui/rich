@@ -3,14 +3,14 @@ import { Sp } from ".";
 import { LangID } from "./declare";
 class LangProvider {
     public isLoaded: boolean = false;
-    private lang: string = 'zh';
+    private _lang: string = 'zh';
     /**
      * 切换语言
      * @param lang 
      */
     async switch(lang: string) {
-        if (this.lang == lang) return;
-        this.lang = lang;
+        if (this._lang == lang) return;
+        this._lang = lang;
         await this.load();
         this.forceAllUpdate();
     }
@@ -56,7 +56,7 @@ class LangProvider {
     private async load() {
         this.isLoaded = false;
         var data: any = {};
-        switch (this.lang) {
+        switch (this._lang) {
             case 'en':
                 data = await import('./lang/en');
                 break;
@@ -74,6 +74,12 @@ class LangProvider {
     }
     constructor() {
         this.init();
+    }
+    get lang() {
+        return this._lang;
+    }
+    get isCn(){
+        return this._lang=='zh';
     }
 }
 export var langProvider = new LangProvider();
