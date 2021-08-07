@@ -7,6 +7,5 @@ export type PopoverPosition = {
     offset?: number,
     align?: 'start' | 'center' | 'end',
     direction?: 'top' | 'left' | 'bottom' | 'right',
-    relativePoint?: Point,
-    mask?: boolean
+    relativePoint?: Point
 }
