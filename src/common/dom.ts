@@ -301,6 +301,13 @@ class Dom {
             else break;
         }
     }
+    isScrollBottom(dis: number) {
+        var element = this.el as HTMLElement;
+        var d = element.scrollHeight - element.scrollTop;
+        if (element.scrollTop + element.clientHeight + dis > element.scrollHeight)
+            return true;
+        else return false;
+    }
 }
 
 export var dom = function (el: Node) {
