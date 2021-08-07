@@ -24,5 +24,7 @@ export enum LangID {
     AddAudioTip,
     AddVideoTip,
     ImageOrigin,
-    SearchImage
+    SearchImage,
+    PleaseInputLink,
+    SubmitButton
 }
