@@ -7,10 +7,14 @@ import { Directive } from "../../util/bus/directive";
 import { richBus } from "../../util/bus/event.bus";
 export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audio' | 'video', change: (url: string) => void }> {
     async uploadFile() {
-        var file = await OpenFileDialoug();
+        var exts = ['*'];
+        if (this.props.mine == 'image') exts = ['image/*'];
+        else if (this.props.mine == 'audio') exts = ['audio/*'];
+        else if (this.props.mine == 'video') exts = ['video/*'];
+        var file = await OpenFileDialoug({ exts });
         if (file) {
             var r = await richBus.fireAsync(Directive.UploadFile, file, (event) => {
-
+                console.log(event, 'ev');
             });
             if (r.ok) {
                 if (r.data.url) {
