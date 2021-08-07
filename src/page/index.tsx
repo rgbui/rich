@@ -210,8 +210,11 @@ export interface Page {
     on(name: PageDirective.deleteRow, fn: (schemaId: string, rowId: string) => Promise<{ ok: boolean, warn?: string }>);
     emitAsync(name: PageDirective.deleteRow, schemaId, rowId: string): Promise<{ ok: boolean, warn?: string }>
 
-    on(name: PageDirective.loadPageInfo, fn: () => Promise<{ title: string, icon: IconArguments, description?: string }>);
-    emitAsync(name: PageDirective.loadPageInfo): Promise<{ title: string, icon: IconArguments, description?: string }>;
+    on(name: PageDirective.loadPageInfo, fn: () => Promise<{ id: string, text: string, icon?: IconArguments, description?: string }>);
+    emitAsync(name: PageDirective.loadPageInfo): Promise<{ id: string, text: string, icon?: IconArguments, description?: string }>;
+
+    on(name: PageDirective.updatePageInfo, fn: (id: string, data: { text?: string, icon?: IconArguments, description?: string }) => Promise<void>);
+    emitAsync(name: PageDirective.updatePageInfo, id: string, data: { text?: string, icon?: IconArguments, description?: string }): Promise<void>;
 }
 
 export interface Page extends PageEvent { }
