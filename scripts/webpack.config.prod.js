@@ -106,7 +106,8 @@ module.exports = {
         new CopyWebpackPlugin(
             {
                 patterns: [
-                    { from: path.join(__dirname, "../extensions/emoji/emoji.json"), to: "data/emoji.json" }
+                    { from: path.join(__dirname, "../extensions/emoji/emoji.json"), to: "data/emoji.json" },
+                    { from: path.join(__dirname, "../extensions/font-awesome/font-awesome.json"), to: "data/font-awesome.json" }
                 ]
             }
         ),
