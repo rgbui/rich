@@ -18,20 +18,25 @@
     overscroll-behavior: none;
     scroll-behavior    : smooth;
 
-  
+
 }
-.shy-emoji-view{
-     &-category {
-        padding-left  : 14px;
-        padding-right : 14px;
-        padding-top   : 6px;
-        padding-bottom: 6px;
+
+.shy-emoji-view {
+    height    : 320px;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    &-category {
+        padding: 10px;
 
         &-head {
-            height: 30px;
-
             span {
-                color: rgba(55, 53, 47, 0.6);
+                color      : rgba(55, 53, 47, 0.6);
+                font-size  : 12px;
+                line-height: 14px;
+                font-weight: 600;
+                padding    : 5px 6px;
+                display    : inline-block;
             }
         }
 
@@ -58,5 +63,5 @@
                 }
             }
         }
-    } 
+    }
 }

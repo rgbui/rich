@@ -41,7 +41,7 @@ export class EmojiPicker extends EventsComponent {
         style.top = this.point.y;
         style.left = this.point.x;
         return <div className='sy-emoji-box' ref={e => this.el = e}>
-            {this.visible && <div className='sy-emoji-picker' style={style}><EmojiView loaded={() => this.adjustPosition()} change={e => this.onPick(e)}></EmojiView></div>}
+            {this.visible && <div className='sy-emoji-picker' style={style}><EmojiView loaded={() => this.adjustPosition()} onChange={e => this.onPick(e)}></EmojiView></div>}
         </div>
     }
     private _mousedown: (event: MouseEvent) => void;
