@@ -7,7 +7,7 @@ import subsubheader from "../../src/assert/img/subsubheader.png";
 import todo from "../../src/assert/img/to-do.png";
 import numberList from "../../src/assert/img/numbered-list.png";
 import bulletedList from "../../src/assert/img/bulleted-list.png";
-import quote from "../../src/assert/img/quote.png"; 
+import quote from "../../src/assert/img/quote.png";
 import toggle from "../../src/assert/img/toggle.png";
 import callout from "../../src/assert/img/callout.png";
 import code from "../../src/assert/img/code.png";
@@ -32,7 +32,8 @@ export var BlockSelectorData: BlockGroup[] = [
         text: '基本',
         childs: [
             { text: '文本', pic: <img src={text} />, url: '/textspan', description: '文本', label: '/文本', labels: [] },
-            { text: '大标题', pic: <img src={header} />, url: '/head', description: '文本', label: '/文本', labels: [] },
+            { text: '文章标题', pic: <img src={header} />, url: '/title', description: '标题', label: '/文本', labels: [] },
+            { text: '大标题', pic: <img src={header} />, url: '/head', description: '大标题', label: '/大标题', labels: [] },
             { text: '二级标题', pic: <img src={subheader} />, url: '/head?{level:"h2"}', description: '文本', label: '/文本', labels: [] },
             { text: '三级标题', pic: <img src={subsubheader} />, url: '/head?{level:"h3"}', description: '文本', label: '/文本', labels: [] },
             { text: "待办列表", pic: <img src={todo} />, url: '/todo', description: "/todo", label: '/待办列表', labels: [] },
@@ -76,7 +77,7 @@ export var BlockSelectorData: BlockGroup[] = [
     {
         text: '嵌入',
         childs: [
-            { text: '嵌入', pic: <img src={embed} />, url: "/mbed", label: '/嵌入' }
+            { text: '嵌入', pic: <img src={embed} />, url: "/embed", label: '/嵌入' }
         ]
     }
 ]

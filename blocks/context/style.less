@@ -1,0 +1,30 @@
+.sy-block-page-info {
+    &-head {
+        display        : flex;
+        justify-content: center;
+        align-items    : flex-start;
+
+        &-icon {
+            display        : inline-flex;
+            width          : 36px;
+            height         : 36px;
+            justify-content: center;
+            align-items    : center;
+            flex-shrink    : 0;
+            margin-right   : 10px;
+            border-radius  : 3px;
+            cursor         : pointer;
+
+            &:hover {
+                background-color: rgba(55, 53, 47, 0.08);
+            }
+        }
+
+        &-title {
+            font-size  : 40px;
+            line-height: 40px;
+            font-weight: 700;
+            flex-grow  : 1;
+        }
+    }
+}
