@@ -1,14 +1,15 @@
 import React, { CSSProperties } from "react";
 
-function TabPage(props: { item?: React.ReactNode, children?: React.ReactNode }) {
-    return <div className='shy-tab-page'>{props.children}</div>
+function TabPage(props: { item?: React.ReactNode, style?: CSSProperties, children?: React.ReactNode }) {
+    return <div className='shy-tab-page' style={props.style || {}}>{props.children}</div>
 }
 export class Tab extends React.Component<{
     index?: number,
     children?: React.ReactNode,
     rightBtns?: React.ReactNode,
     style?: CSSProperties,
-    align?: 'left' | 'right' | 'center'
+    align?: 'left' | 'right' | 'center',
+    keeplive?: boolean
 }>{
     static get Page(): typeof TabPage {
         return TabPage;
@@ -33,10 +34,15 @@ export class Tab extends React.Component<{
                 }
             </div>
             {this.props.rightBtns && <div className='shy-tab-btns'>{this.props.rightBtns}</div>}
-            <div className='shy-tab-pages'>  {
+            <div className='shy-tab-pages'>{
                 React.Children.map(this.props.children, (element, index) => {
-                    if (index != this.focusIndex) return <></>
-                    else return <TabPage>{(element as any).props.children}</TabPage>
+                    if (this.props.keeplive == true) {
+                        return <TabPage style={{ display: index == this.focusIndex ? "block" : "none" }}>{(element as any).props.children}</TabPage>
+                    }
+                    else {
+                        if (index != this.focusIndex) return <></>
+                        else return <TabPage>{(element as any).props.children}</TabPage>
+                    }
                 })
             }</div>
         </div>
