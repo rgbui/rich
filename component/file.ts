@@ -9,7 +9,7 @@ var upload_file: HTMLInputElement;
 export async function OpenMultipleFileDialoug(options?: {
     exts?: string[],
     maxSize?: number,
-    accept?:string[]
+    accept?: string[]
 }) {
     return new Promise((resolve: (files: File[]) => void, reject: () => void) => {
         if (typeof upload_file == 'undefined') {
@@ -23,6 +23,10 @@ export async function OpenMultipleFileDialoug(options?: {
             else resolve([]);
             upload_file.addEventListener('change', selectFile);
         }
+        if (options && Array.isArray(options.exts) && options.exts.length > 0) {
+            upload_file.setAttribute('accept', options.exts.join(','));
+        }
+        else upload_file.removeAttribute('accept');
         upload_file.addEventListener('change', selectFile);
         upload_file.click();
     })
