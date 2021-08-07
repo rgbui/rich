@@ -1,7 +1,8 @@
 
 import React from 'react';
+import { IconArguments } from '../extensions/icon/declare';
 export function Icon(props: {
-    icon: string | SvgrComponent | JSX.Element,
+    icon: string | SvgrComponent | JSX.Element | IconArguments,
     click?: (e: React.MouseEvent) => void,
     mousedown?: (e: React.MouseEvent) => void,
     rotate?: number,
@@ -43,6 +44,43 @@ export function Icon(props: {
             onClick={e => { props.click ? props.click(e) : undefined; }}
             onMouseDown={e => { props.mousedown ? props.mousedown(e) : undefined }}
             style={style}></props.icon>
+    }
+    else if (typeof props.icon == 'object' && (props.icon as IconArguments).name) {
+        var pc = props.icon as IconArguments;
+        switch (pc.name) {
+            case 'font-awesome':
+                Object.assign(style, {
+                    color: pc.color || '#000',
+                    fontSize: props.size == 'none' ? undefined : props.size,
+                    lineHeight: props.size == 'none' ? undefined : props.size + 'px',
+                    width: props.size == 'none' ? undefined : (props.size) || 20,
+                    height: props.size == 'none' ? undefined : (props.size) || 20
+                });
+                return <span className={classList.join(" ")} style={style}>
+                    <i className={'fa fa-' + pc.code}></i>
+                </span>
+                break;
+            case 'emoji':
+                Object.assign(style, {
+                    color: '#000',
+                    fill: '#000',
+                    fontSize: props.size == 'none' ? undefined : props.size,
+                    lineHeight: props.size == 'none' ? undefined : props.size + 'px',
+                    width: props.size == 'none' ? undefined : (props.size) || 20,
+                    height: props.size == 'none' ? undefined : (props.size) || 20
+                });
+                return <span className={classList.join(" ")} style={style}>
+                    {pc.code}
+                </span>
+                break;
+            case 'image':
+            case 'link':
+                Object.assign(style, {
+                    width: props.size == 'none' ? undefined : (props.size) || 20,
+                    height: props.size == 'none' ? undefined : (props.size) || 20
+                });
+                return <img src={pc.url} className={classList.join(" ")} style={style} />
+        }
     }
     else {
         Object.assign(style, {

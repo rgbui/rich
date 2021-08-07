@@ -1,61 +1,58 @@
 
-import React, { CSSProperties } from "react";
+import React from "react";
 import { Tip } from "../../component/tip";
 import { LangID } from "../../i18n/declare";
-import { SyExtensionsComponent } from "../sy.component";
+import { EventsComponent } from "../events.component";
 import Emoji from "../../src/assert/svg/emoji.svg";
 import FontAwesome from "../../src/assert/svg/fontawesome.svg";
 import Link from "../../src/assert/svg/link.svg";
-import Upload from "../../src/assert/svg/uplaod.svg";
-import { Point, Rect, RectUtility } from "../../src/common/point";
+import Upload from "../../src/assert/svg/upload.svg";
 import { UploadView } from "../file/upload";
 import { EmojiView } from "../emoji/view";
-import { FontaweSomeView } from "../fontawesome";
+import { FontAwesomeView } from "../font-awesome";
 import { OutsideUrl } from "../link/outside";
+import { Tab } from "../../component/tab";
+import { IconArguments } from "./declare";
+import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
-
-class IconPicker extends SyExtensionsComponent {
-    point: Point = new Point(0, 0);
-    visible: boolean = false;
-    mode: 'emoji' | 'FontAwesome' | 'upload' | 'link' = 'emoji';
-    private el: HTMLElement;
-    open(pos: PopoverPosition) {
-        this.visible = true;
-        this.point = pos.roundArea.leftTop;
-        this.forceUpdate(() => {
-            if (this.el) {
-                var b = Rect.from(this.el.getBoundingClientRect());
-                pos.elementArea = b;
-                var newPoint = RectUtility.cacPopoverPosition(pos);
-                if (!this.point.equal(newPoint)) {
-                    this.point = newPoint;
-                    this.forceUpdate();
-                }
-            }
-        })
-    }
-    onChange(mode: IconPicker['mode'], data: any) {
-
+import './style.less';
+class IconPicker extends EventsComponent {
+    onChange(data: IconArguments) {
+        this.emit('change', data);
     }
     render() {
-        var style: CSSProperties = {
-            top: this.point.y,
-            left: this.point.x
-        }
-        return <div>{this.visible && <div className='shy-icon-picker' style={style}>
-            <div className='shy-icon-picker-head'>
-                <Tip id={LangID.IconEmoji}><a><Emoji></Emoji></a></Tip>
-                <Tip id={LangID.IconFontAwesome}><a><FontAwesome></FontAwesome></a></Tip>
-                <Tip overlay id={LangID.IconUpload}><a><Upload></Upload></a></Tip>
-                <Tip id={LangID.IconLink}><a><Link></Link></a></Tip>
-            </div>
-            <div className='shy-icon-picker-content'>
-                {this.mode == 'emoji' && <EmojiView change={e => this.onChange(this.mode, { code: e.char })}></EmojiView>}
-                {this.mode == 'FontAwesome' && <FontaweSomeView change={e => this.onChange(this.mode, { ...e })}></FontaweSomeView>}
-                {this.mode == 'upload' && <UploadView mine='image' change={e => this.onChange(this.mode, { url: e })}></UploadView>}
-                {this.mode == 'link' && <OutsideUrl change={e => this.onChange(this.mode, { url: e })}></OutsideUrl>}
-            </div>
-        </div>}
+        return <div className='shy-icon-picker' >
+            <Tab keeplive>
+                <Tab.Page item={<Tip id={LangID.IconEmoji}><Emoji ></Emoji></Tip>}>
+                    <EmojiView onChange={e => this.onChange({ name: "emoji", code: e.char })}></EmojiView>
+                </Tab.Page>
+                <Tab.Page item={<Tip id={LangID.IconFontAwesome}><FontAwesome ></FontAwesome></Tip>}>
+                    <FontAwesomeView onChange={e => this.onChange({ name: "font-awesome", ...e })}></FontAwesomeView>
+                </Tab.Page>
+                <Tab.Page item={<Tip overlay id={LangID.IconUpload}><Upload ></Upload></Tip>}>
+                    <UploadView mine='image' change={e => this.onChange({ name: 'image', url: e })}></UploadView>
+                </Tab.Page>
+                <Tab.Page item={<Tip id={LangID.IconLink}><Link ></Link></Tip>}>
+                    <OutsideUrl change={e => this.onChange({ name: 'link', url: e })}></OutsideUrl>
+                </Tab.Page>
+            </Tab>
         </div>
     }
+}
+interface IconPicker {
+    emit(name: 'change', data: IconArguments);
+    only(name: 'change', fn: (data: IconArguments) => void);
+}
+export async function useIconPicker(pos: PopoverPosition) {
+    let popover = await PopoverSingleton(IconPicker, { mask: true, visible: 'hidden' });
+    let filePicker = await popover.open<IconPicker>(pos);
+    return new Promise((resolve: (data: IconArguments) => void, reject) => {
+        filePicker.only('change', (data) => {
+            popover.close();
+            resolve(data);
+        })
+        popover.only('close', () => {
+            resolve(null)
+        })
+    })
 }

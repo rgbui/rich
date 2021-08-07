@@ -2,6 +2,11 @@
     display        : inline-flex !important;
     justify-content: center;
     align-items    : center;
+
+    &img {
+        object-fit     : cover;
+        object-position: center center;
+    }
 }
 
 .sy-tooltip {
@@ -39,7 +44,7 @@
     align-items    : center;
     justify-content: center;
     white-space    : nowrap;
-    height         : 36px;
+    height         : 28px;
     border-radius  : 3px;
     color          : white;
     font-size      : 14px;
@@ -51,14 +56,19 @@
     border         : 1px solid rgb(190, 86, 67);
     box-shadow     : rgba(15, 15, 15, 0.1) 0px 1px 2px 0px;
     margin-bottom  : 4px;
+
+    &:hover {
+        background-color: #B84C4E;
+    }
 }
 
 .shy-input {
     display: block;
+    width  : 100%;
 
     input {
         width        : 100%;
-        font-size    : 15px;
+        font-size    : 14px;
         line-height  : 26px;
         padding      : 4px 10px;
         border-radius: 3px;
@@ -273,9 +283,9 @@
         justify-content: flex-start;
         align-items    : center;
         font-size      : 14px;
-        width          : 100%;
-        padding-left   : 8px;
-        padding-right  : 8px;
+        padding-left   : 10px;
+        padding-right  : 10px;
+        height         : 50px;
         box-shadow     : rgba(55, 53, 47, 0.09) 0px 1px 0px 0px;
 
         &-right {
@@ -286,38 +296,34 @@
             justify-content: center;
         }
 
-        >a {
-            user-select  : none;
-            transition   : background 20ms ease-in 0s;
-            cursor       : pointer;
-            display      : inline-flex;
-            align-items  : center;
-            flex-shrink  : 0;
-            white-space  : nowrap;
-            height       : 28px;
-            border-radius: 3px;
-            font-size    : 14px;
-            line-height  : 1.2;
-            min-width    : 0px;
-            padding-left : 8px;
-            padding-right: 8px;
-            color        : rgb(55, 53, 47);
-            margin-top   : 6px;
-            margin-bottom: 6px;
-            position     : relative;
-
-            // &.hover::after {
-            //     content      : '\20';
-            //     border-bottom: 2px solid rgb(55, 53, 47);
-            //     position     : absolute;
-            //     bottom       : -7px;
-            //     left         : 8px;
-            //     right        : 8px;
-            // }
+        >label {
+            user-select    : none;
+            transition     : background 20ms ease-in 0s;
+            cursor         : pointer;
+            display        : inline-flex;
+            align-items    : center;
+            justify-content: center;
+            flex-shrink    : 0;
+            white-space    : nowrap;
+            height         : 32px;
+            border-radius  : 3px;
+            font-size      : 14px;
+            line-height    : 1.2;
+            min-width      : 0px;
+            padding-left   : 8px;
+            padding-right  : 8px;
+            color          : rgb(55, 53, 47);
+            margin-right   : 10px;
+            position       : relative;
 
             &:hover,
             &.hover {
                 background-color: rgba(55, 53, 47, 0.08);
+            }
+
+            &.hover {
+                color: #cf5659;
+                fill : #cf5659;
             }
         }
     }

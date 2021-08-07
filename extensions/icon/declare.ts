@@ -1,7 +1,7 @@
 
 
 export type IconArguments = {
-    name: 'FontAwesome' | 'emoji' | 'image' | 'link',
+    name: 'none' | 'font-awesome' | 'emoji' | 'image' | 'link',
     code?: string,
     color?: string,
     url?: string
