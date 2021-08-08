@@ -28,5 +28,6 @@ export default {
     [LangID.ImageOrigin]: <span>图片来源于&nbsp;</span>,
     [LangID.SearchImage]: '搜索图片...',
     [LangID.PleaseInputLink]: '请输入链接....',
-    [LangID.SubmitButton]: '提交'
+    [LangID.SubmitButton]: '提交',
+    [LangID.PleashInputLinkAndSearchPages]: '请输入链接或搜索页面'
 }

@@ -26,5 +26,6 @@ export enum LangID {
     ImageOrigin,
     SearchImage,
     PleaseInputLink,
-    SubmitButton
+    SubmitButton,
+    PleashInputLinkAndSearchPages
 }
