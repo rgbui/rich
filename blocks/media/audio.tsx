@@ -5,7 +5,7 @@ import { BlockAppear } from "../../src/block/enum";
 import { prop, url, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
 import AudioSvg from "../../src/assert/svg/audio.svg";
-import { Sp } from "../../i18n";
+import { Sp } from "../../i18n/view";
 import { LangID } from "../../i18n/declare";
 import { useAudioPicker } from "../../extensions/file/audio.picker";
 import { Rect } from "../../src/common/point";

@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "../../component/button";
 import { OpenFileDialoug } from "../../component/file";
-import { Sp } from "../../i18n";
+import { Sp } from "../../i18n/view";
 import { LangID } from "../../i18n/declare";
 import { Directive } from "../../util/bus/directive";
 import { richBus } from "../../util/bus/event.bus";

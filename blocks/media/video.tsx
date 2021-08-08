@@ -1,6 +1,6 @@
 import React from "react";
 import { ResourceArguments } from "../../extensions/icon/declare";
-import { Sp } from "../../i18n";
+import { Sp } from "../../i18n/view";
 import { LangID } from "../../i18n/declare";
 import { Content } from "../../src/block/element/content";
 import { BlockAppear } from "../../src/block/enum";

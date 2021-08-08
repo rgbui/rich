@@ -1,6 +1,6 @@
 import React from "react";
 import { Input } from "../../component/input";
-import { Sp } from "../../i18n";
+import { Sp } from "../../i18n/view";
 import { LangID } from "../../i18n/declare";
 import { langProvider } from "../../i18n/provider";
 import { Directive } from "../../util/bus/directive";

@@ -1,85 +1,17 @@
-import React, { ReactElement } from "react";
-import { Sp } from ".";
+
 import { LangID } from "./declare";
-class LangProvider {
-    public isLoaded: boolean = false;
-    private _lang: string = 'zh';
-    /**
-     * 切换语言
-     * @param lang 
-     */
-    async switch(lang: string) {
-        if (this._lang == lang) return;
-        this._lang = lang;
-        await this.load();
-        this.forceAllUpdate();
+import { LangProvider } from "./lib/provider";
+export var langProvider = new LangProvider<LangID>('id');
+langProvider.register(async (lang) => {
+    var data: any = {};
+    switch (lang) {
+        case 'en':
+            data = await import('./lang/en');
+            break;
+        case 'zh':
+            data = await import('./lang/zh');
+            break;
     }
-    private forceAllUpdate() {
-        this.sps.forEach((s) => {
-            try {
-                s.forceUpdate();
-            }
-            catch (ex) {
-                console.error(ex);
-            }
-        })
-    }
-    private count = 0;
-    private sps: Map<number, Sp> = new Map();
-    get id() {
-        return (this.count += 1);
-    }
-    push(sp: Sp) {
-        if (!this.sps.has(sp.id)) {
-            this.sps.set(sp.id, sp);
-        }
-    }
-    remove(sp: Sp) {
-        this.sps.delete(sp.id);
-    }
-    get(id: LangID): React.ReactElement {
-        if (typeof this.dict[id] != 'undefined') {
-            var value = this.dict[id];
-            if (typeof value == 'string') return <>{value}</>;
-            else return value;
-        }
-        return <>no declare lang id</>;
-    }
-    getText(id: LangID): string {
-        if (typeof this.dict[id] != 'undefined') {
-            var value = this.dict[id]
-            return value as any;
-        }
-        return 'no declare lang id';
-    }
-    private dict: Record<LangID, React.ReactElement> = {} as any;
-    private async load() {
-        this.isLoaded = false;
-        var data: any = {};
-        switch (this._lang) {
-            case 'en':
-                data = await import('./lang/en');
-                break;
-            case 'zh':
-                data = await import('./lang/zh');
-                break;
-        }
-        if (typeof data.default != 'undefined')
-            this.dict = data.default;
-        this.isLoaded = true;
-    }
-    private async init() {
-        await this.load();
-        this.forceAllUpdate();
-    }
-    constructor() {
-        this.init();
-    }
-    get lang() {
-        return this._lang;
-    }
-    get isCn(){
-        return this._lang=='zh';
-    }
-}
-export var langProvider = new LangProvider();
+    if (typeof data.default != 'undefined')
+        return data.default;
+})

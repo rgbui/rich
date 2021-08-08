@@ -19,6 +19,8 @@ export class TextContent extends BlockComposition {
     comment: { id: string } = null;
     @prop()
     mention: { userid: string } = null;
+    @prop()
+    isInlineCode: boolean = false;
     get isTextContent() {
         return true;
     }
