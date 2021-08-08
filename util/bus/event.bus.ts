@@ -1,4 +1,5 @@
 import { LinkPage } from "../../extensions/at/declare";
+import { IconArguments } from "../../extensions/icon/declare";
 import { GalleryType, OuterPic } from "../../extensions/image/declare";
 import { User } from "../../src/types/user";
 import { Directive } from "./directive";
@@ -58,5 +59,10 @@ interface EventBus {
     on(directive: Directive.PagesQuery, fn: (word: string) => Promise<LinkPage[]>): void;
     only(directive: Directive.PagesQuery, fn: (word: string) => Promise<LinkPage[]>): void;
     fireAsync(directive: Directive.PagesQuery, word: string): Promise<LinkPage[]>;
+
+    on(directive: Directive.CreatePage, fn: (pageInfo: { text: string, icon?: IconArguments }) => Promise<LinkPage>): void;
+    only(directive: Directive.CreatePage, fn: (pageInfo: { text: string, icon?: IconArguments }) => Promise<LinkPage>): void;
+    fireAsync(directive: Directive.CreatePage, pageInfo: { text: string, icon?: IconArguments }): Promise<LinkPage>;
+
 }
 export let richBus = new EventBus()
