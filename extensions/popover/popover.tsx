@@ -4,7 +4,7 @@ import { Point, Rect, RectUtility } from "../../src/common/point";
 import { EventsComponent } from "../events.component";
 import { PopoverPosition } from "./position";
 import './style.less';
-class Popover extends EventsComponent<{ component: typeof React.Component, mask?: boolean, visible?: "hidden" | "none" }> {
+class Popover extends EventsComponent<{ component: typeof React.Component, args?: Record<string, any>, mask?: boolean, visible?: "hidden" | "none" }> {
     visible: boolean;
     point: Point = new Point(0, 0);
     private el: HTMLElement;
@@ -40,13 +40,13 @@ class Popover extends EventsComponent<{ component: typeof React.Component, mask?
         if (this.props.visible == 'hidden') {
             return <div ref={e => this.box = e} style={{ display: this.visible == true ? "block" : "none" }}>
                 {this.props.mask == true && <div className='shy-popover-mask' onMouseDown={e => this.onClose()}></div>}
-                <div style={style} className='shy-popover' ref={e => this.el = e}><CP ref={e => this.cp = e}></CP></div>
+                <div style={style} className='shy-popover' ref={e => this.el = e}><CP {...this.props.args} ref={e => this.cp = e}></CP></div>
             </div>
         }
         else {
             return <div ref={e => this.box = e} >{this.visible && <>
                 {this.props.mask == true && <div className='shy-popover-mask' onMouseDown={e => this.onClose()}></div>}
-                <div style={style} className='shy-popover' ref={e => this.el = e}><CP ref={e => this.cp = e}></CP></div>
+                <div style={style} className='shy-popover' ref={e => this.el = e}><CP {...this.props.args} ref={e => this.cp = e}></CP></div>
             </>}</div>
         }
     }
@@ -83,12 +83,12 @@ let maps = new Map<typeof React.Component, Popover>();
  * @param props visible:hidden 表示当前的popover是否隐藏内容，还是让内容消失重绘(visible:none)
  * @returns 
  */
-export async function PopoverSingleton(CP: typeof React.Component, props?: { mask?: boolean, visible: 'hidden' | "none" }) {
+export async function PopoverSingleton(CP: typeof React.Component, props?: { mask?: boolean, visible?: 'hidden' | "none" }, args?: Record<string, any>) {
     return new Promise((resolve: (data: Popover) => void, reject) => {
         if (maps.has(CP)) return resolve(maps.get(CP))
         var ele = document.createElement('div');
         document.body.appendChild(ele);
-        ReactDOM.render(<Popover {...(props || {})} component={CP} ref={e => {
+        ReactDOM.render(<Popover {...(props || {})} args={args || {}} component={CP} ref={e => {
             maps.set(CP, e);
             resolve(e as Popover);
         }} />, ele);
