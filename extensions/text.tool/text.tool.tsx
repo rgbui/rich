@@ -10,6 +10,7 @@ import { EventsComponent } from "../events.component";
 import { BlockCssName, FillCss } from "../../src/block/pattern/css";
 import { LangID } from "../../i18n/declare";
 import { Tip } from "../../component/tip";
+import { useLinkPicker } from "../link/picker";
 
 export type TextToolStyle = {
     link: string,
@@ -67,17 +68,17 @@ export class TextTool extends EventsComponent {
             <div >
                 {this.visible == true && <div className='sy-tool-text-menu' style={style}>
                     <Tip id={LangID.textToolTurn}>
-                        <div className='sy-tool-text-menu-item sy-tool-text-menu-devide' onMouseDown={e => this.onOpenBlockSelector()}>
+                        <div className='sy-tool-text-menu-item sy-tool-text-menu-devide' onMouseDown={e => this.onOpenBlockSelector(e)}>
                             <span>Text</span><Icon icon='arrow-down:sy'></Icon>
                         </div>
                     </Tip>
                     <Tip id={LangID.textToolLink}>
-                        <div className='sy-tool-text-menu-item sy-tool-text-menu-devide' onMouseDown={e => this.onOpenLink()}>
+                        <div className='sy-tool-text-menu-item sy-tool-text-menu-devide' onMouseDown={e => this.onOpenLink(e)}>
                             <Icon icon='link:sy'></Icon><Icon icon='arrow-down:sy'></Icon>
                         </div>
                     </Tip>
                     <Tip id={LangID.textToolComment}>
-                        <div className='sy-tool-text-menu-item sy-tool-text-menu-devide' onMouseDown={e => this.onOpenComment()}>
+                        <div className='sy-tool-text-menu-item sy-tool-text-menu-devide' onMouseDown={e => this.onOpenComment(e)}>
                             <Icon icon='comment:sy'></Icon>
                         </div>
                     </Tip>
@@ -112,7 +113,7 @@ export class TextTool extends EventsComponent {
                         </div>
                     </Tip>
                     <Tip id={LangID.textToolColor}>
-                        <div className='sy-tool-text-menu-item' onMouseDown={e => this.onOpenFontColor()}>
+                        <div className='sy-tool-text-menu-item' onMouseDown={e => this.onOpenFontColor(e)}>
                             <span>A</span>
                             <Icon icon='arrow-down:sy'></Icon>
                         </div>
@@ -174,16 +175,19 @@ export class TextTool extends EventsComponent {
         this.emit('setStyle', { [BlockCssName.font]: font } as any);
         this.forceUpdate();
     }
-    onOpenFontColor() {
+    onOpenFontColor(event: React.MouseEvent) {
 
     }
-    onOpenLink() {
+    async onOpenLink(event: React.MouseEvent) {
+        var pageLink = await useLinkPicker({ roundArea: Rect.fromEvent(event) });
+        if (pageLink) {
+
+        }
+    }
+    onOpenComment(event: React.MouseEvent) {
 
     }
-    onOpenComment() {
-
-    }
-    onOpenBlockSelector() {
+    onOpenBlockSelector(event: React.MouseEvent) {
 
     }
 }
