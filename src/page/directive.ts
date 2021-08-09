@@ -33,5 +33,5 @@ export enum PageDirective {
      * 加载当前页面的信息
      */
     loadPageInfo,
-    updatePageInfo,
+    updatePageInfo
 }
