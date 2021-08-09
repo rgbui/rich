@@ -5,7 +5,11 @@ import { MenuItemType } from "./declare";
 import { MenuItem } from "./item";
 export class MenuBox extends React.Component<{ items: MenuItemType[], deep: number, select: (item: MenuItemType, event?: MouseEvent) => void }>{
     render() {
-        return <div className='sy-menu-box' ref={e => this.el = e} style={{ top: this.point.y, left: this.point.x }}>
+        return <div className='sy-menu-box' ref={e => this.el = e} style={{
+            top: this.point.y,
+            left: this.point.x,
+            overflowY: this.props.items.exists(g => g.childs && g.childs.length > 0) ? "visible" : "auto"
+        }}>
             {this.props.items.map((item, index) => {
                 return <MenuItem key={index} item={item} deep={this.props.deep + 1} select={this.props.select} ></MenuItem>
             })}

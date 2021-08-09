@@ -187,14 +187,16 @@
     }
 
     .sy-menu-box {
-        width         : 220px;
-        pointer-events: visible;
-        position      : absolute;
-        border-radius : 3px;
-        background    : white;
-        z-index       : 2;
-        box-shadow    : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
-        padding       : 10px 0px;
+        width                 : 220px;
+        pointer-events        : visible;
+        position              : absolute;
+        border-radius         : 3px;
+        background            : white;
+        z-index               : 2;
+        box-shadow            : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+        padding               : 10px 0px;
+        max-height            : 70vh;
+        overscroll-behavior   : contain;
     }
 
     >.sy-menu-box {
@@ -223,15 +225,20 @@
                 height             : 17px;
                 display            : block;
                 fill               : inherit;
+                overflow           : hidden;
                 flex-shrink        : 0;
                 backface-visibility: hidden;
+
+                img {
+                    width: 17px
+                }
             }
 
             .sy-ws-item-page-spread {
                 flex-shrink: 0;
             }
 
-            span {
+            .sy-ws-item-page-text {
                 display     : inline-flex;
                 margin-left : 8px;
                 margin-right: 14px;

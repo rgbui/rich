@@ -23,7 +23,7 @@ export class MenuItem extends React.Component<{ item: MenuItemType, deep: number
                     roundArea: rect,
                     direction: 'right',
                     relativePoint: rect.leftTop,
-                    dist:-10
+                    dist: -10
                 });
             }
         });
@@ -42,8 +42,8 @@ export class MenuItem extends React.Component<{ item: MenuItemType, deep: number
             ref={e => this.el = e}>
             {(item.type == MenuItemTypeValue.item || !item.type) && <a className='shy-menu-box-item-option'
                 onMouseDown={e => this.mousedown(item, e.nativeEvent)}>
-                <Icon icon={item.icon} size={17}></Icon>
-                <span>{item.text}</span>
+                <Icon icon={item.icon} size={22}></Icon>
+                <span className='sy-ws-item-page-text'>{item.text}</span>
                 {item.label && <label>{item.label}</label>}
                 {item.childs && item.childs.length > 0 && <Icon icon='arrow-right:sy'></Icon>}
             </a>}
