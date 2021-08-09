@@ -1,29 +1,28 @@
 import React from "react";
-import ReactDOM,{ createPortal } from "react-dom";
-import { Point } from "../../src/common/point";
 import { EventsComponent } from "../events.component";
+import { PopoverSingleton } from "../popover/popover";
+import { PopoverPosition } from "../popover/position";
 import { BackgroundColorList, FontColorList } from "./data";
-export class ColorSelector extends EventsComponent {
-    private node: HTMLElement;
+import "./style.less";
+
+export type ColorValue = {
+    color?: string,
+    backgroundColor?: string
+}
+class ColorSelector extends EventsComponent {
     constructor(props) {
         super(props);
-        this.node = document.body.appendChild(document.createElement('div'));
     }
-    componentWillUnmount() {
-        if (this.node) this.node.remove()
-    }
-    el: HTMLElement;
-    componentDidMount() {
-        this.el = ReactDOM.findDOMNode(this) as HTMLElement;
-    }
-    private visible: boolean = false;
-    private pos: Point = new Point(0, 0);
     private renderFontColor() {
         return <div className='shy-color-selector-box'>
             <div className='shy-color-selector-box-head'><span>文字颜色</span></div>
             <div className='shy-color-selector-box-content'>
-                {FontColorList.map(x => {
-                    return <a style={{ color: x.color }}>A</a>
+                {FontColorList.map((x, i) => {
+                    return <div key={x.color + i} className='shy-color-selector-item'>
+                        <a onMouseDown={e => this.onChange({ color: x.color })}
+                            style={{ color: x.color }}>A</a>
+                        <span>{x.text}</span>
+                    </div>
                 })}
             </div>
         </div>;
@@ -33,19 +32,40 @@ export class ColorSelector extends EventsComponent {
             <div className='shy-color-selector-box-head'><span>背景色</span></div>
             <div className='shy-color-selector-box-content'>
                 {BackgroundColorList.map(x => {
-                    return <a style={{ backgroundColor: x.color }}>A</a>
+                    return <div key={x.color + 'bg'} className='shy-color-selector-item'>
+                        <a onMouseDown={e => this.onChange({ backgroundColor: x.color })}
+                            style={{ backgroundColor: x.color }}>A</a>
+                        <span>{x.text}</span>
+                    </div>
                 })}
             </div>
         </div>;
     }
     render() {
-        var style: Record<string, any> = {
-            top: this.pos.y,
-            left: this.pos.x
-        }
-        return createPortal(<div>
-            {this.visible && <div className='shy-color-selector'
-                style={style}>{this.renderFontColor()}{this.renderBackgroundColor()}</div>}
-        </div>, this.node);
+        return <div className='shy-color-selector'>
+            {this.renderFontColor()}
+            <div className='shy-color-selector-devider'></div>
+            {this.renderBackgroundColor()}</div>
     }
+    onChange(value: ColorValue) {
+        this.emit('change', value);
+    }
+}
+
+interface ColorSelector {
+    emit(name: 'change', data: ColorValue);
+    only(name: 'change', fn: (data: ColorValue) => void);
+}
+export async function useColorSelector(pos: PopoverPosition) {
+    let popover = await PopoverSingleton(ColorSelector, {});
+    let colorSelector = await popover.open<ColorSelector>(pos);
+    return new Promise((resolve: (data: ColorValue) => void, reject) => {
+        colorSelector.only('change', (data) => {
+            popover.close();
+            resolve(data);
+        })
+        popover.only('close', () => {
+            resolve(null)
+        })
+    })
 }

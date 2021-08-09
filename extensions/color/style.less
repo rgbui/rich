@@ -1,0 +1,68 @@
+.shy-color-selector {
+    width: 200px;
+
+    .shy-color-selector-box {
+        padding:10px;
+        &-head {
+            span {
+                color    : rgba(55, 53, 47, 0.6);
+                font-size: 12px;
+            }
+        }
+
+        &-content {
+            display        : flex;
+            align-items    : flex-start;
+            justify-content: flex-start;
+            flex-wrap      : wrap;
+
+            .shy-color-selector-item {
+                display        : inline-flex;
+                align-items    : flex-start;
+                justify-content: flex-start;
+                flex-direction : column;
+                cursor         : pointer;
+                width          : 36px;
+                padding        : 6px;
+                box-sizing: border-box;
+                flex-direction : column;
+                height         : 54px;
+                border-radius  : 4px;
+
+                a {
+                    width          : 24px;
+                    display        : inline-flex;
+                    height         : 24px;
+                    border-radius  : 3px;
+                    align-items    : center;
+                    justify-content: center;
+
+
+                }
+
+
+
+                span {
+                    display        : inline-flex;
+                    align-items    : center;
+                    justify-content: center;
+                    font-size      : 12px;
+                    line-height    : 20px;
+                    color          : rgb(55, 53, 47);
+                }
+
+                &:hover {
+                    background-color: rgba(55, 53, 47, 0.08);
+                }
+            }
+        }
+    }
+
+    &-devider {
+        height       : 1px;
+        display      : block;
+        // margin-top   : 6px;
+        // margin-bottom: 6px;
+        box-shadow   : rgba(55, 53, 47, 0.09) 0px -1px 0px;
+    }
+}
