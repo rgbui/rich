@@ -9,10 +9,17 @@ import squareplus from "../../assert/svg/squareplus.svg";
 import moveTo from '../../assert/svg/moveTo.svg';
 import comment from "../../assert/svg/comment.svg";
 import trash from "../../assert/svg/trash.svg";
+import { blockStore } from "../../../extensions/block/store";
 export class Block$Method {
     async onGetTurnMenus(this: Block) {
-        var items: MenuItemType<BlockDirective>[] = [];
-        return items;
+        var its = blockStore.findFitTurnBlocks(this);
+        return its.map(it => {
+            return {
+                name: BlockDirective.trun,
+                text: it.text,
+                icon: it.pic
+            }
+        })
     }
     async onGetContextMenus(this: Block) {
         var items: MenuItemType<BlockDirective>[] = [];

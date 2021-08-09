@@ -1,11 +1,16 @@
 import { EmojiSrcType } from "../../blocks/general/emoji";
-import { Point, Rect } from "../../src/common/point";
+import { Block } from "../../src/block";
+import { Rect } from "../../src/common/point";
 import { Events } from "../../util/events";
 import { util } from "../../util/util";
 import { OpenEmoji } from "../emoji";
 import { OpenTableStoreSelector } from "../tablestore";
-import { BlockGroup, BlockSelectorOperator } from "./delcare";
+import { BlockGroup, BlockSelectorItem, BlockSelectorOperator } from "./delcare";
 class BlockStore extends Events {
+    constructor() {
+        super();
+        this.import();
+    }
     private _blockGroups: BlockGroup[];
     async import() {
         if (!Array.isArray(this._blockGroups)) {
@@ -23,11 +28,20 @@ class BlockStore extends Events {
         bs.removeAll(g => g.childs.length == 0);
         return bs;
     }
-    findAllBlocks(label: string) {
-        var cs = [];
+    findAllBlocks(label: string): BlockSelectorItem[] {
+        var cs: BlockSelectorItem[] = [];
         var fs = this.findAll(label);
         fs.each(c => {
             cs.addRange(c.childs);
+        });
+        return cs;
+    }
+    findFitTurnBlocks(block: Block): BlockSelectorItem[] {
+        var cs: BlockSelectorItem[] = [];
+        this._blockGroups.each(bg => {
+            bg.childs.each(c => {
+                cs.push(c);
+            })
         });
         return cs;
     }
