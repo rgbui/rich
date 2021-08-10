@@ -44,3 +44,24 @@ export async function OpenFileDialoug(options?: {
     if (files.length > 0) return files[0]
     else return null;
 }
+
+/**
+ * 通过图片的url来获取图片的大小
+ * @param url 
+ * @returns 
+ */
+export async function getImageSize(url: string) {
+    var img = new Image();
+    img.src = url;
+    if (img.width > 0) {
+        return { width: img.width, height: img.height }
+    }
+    return new Promise((resolve, reject) => {
+        img.onload = (ev) => {
+            resolve({ width: img.width, height: img.height })
+        };
+        img.onerror = (e) => {
+            resolve(e);
+        }
+    })
+}
