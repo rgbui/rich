@@ -41,7 +41,7 @@ export class MenuItem extends React.Component<{ item: MenuItemType, deep: number
             className={'shy-menu-box-item' + (this.hover ? " hover" : "")}
             ref={e => this.el = e}>
             {(item.type == MenuItemTypeValue.item || !item.type) && <a className='shy-menu-box-item-option'
-                onMouseDown={e => this.mousedown(item, e.nativeEvent)}>
+                onMouseUp={e => this.mousedown(item, e.nativeEvent)}>
                 <Icon icon={item.icon} size={item.iconSize ? item.iconSize : 17}></Icon>
                 <span className='sy-ws-item-page-text'>{item.text}</span>
                 {item.label && <label>{item.label}</label>}
