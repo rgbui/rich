@@ -69,7 +69,7 @@ export class Point {
             return new Point(event.left, event.top);
         }
         else if (typeof ((event as React.MouseEvent).clientX) != 'undefined') {
-            return new Point({ x: (event as React.MouseEvent).clientX, y:(event as React.MouseEvent).clientY })
+            return new Point({ x: (event as React.MouseEvent).clientX, y: (event as React.MouseEvent).clientY })
         }
         else if (typeof event == 'object') return new Point(event as any)
         else return new Point(event, y);
@@ -188,6 +188,8 @@ export class RectUtility {
         if (typeof pos.offset == 'undefined') pos.offset = 0;
         if (typeof pos.align == 'undefined') pos.align = 'start';
         if (typeof pos.direction == 'undefined') pos.direction = 'bottom';
+        if (typeof pos.roundArea == 'undefined' && typeof pos.roundPoint != 'undefined')
+            pos.roundArea = new Rect(pos.roundPoint.x, pos.roundPoint.y, 0, 0)
         var x: number, y: number;
         var roundTop = pos.roundArea.top - pos.dist - pos.elementArea.height;
         var rountBottom = pos.roundArea.top + pos.roundArea.height + pos.dist;
