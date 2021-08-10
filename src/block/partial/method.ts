@@ -10,6 +10,8 @@ import moveTo from '../../assert/svg/moveTo.svg';
 import comment from "../../assert/svg/comment.svg";
 import trash from "../../assert/svg/trash.svg";
 import { blockStore } from "../../../extensions/block/store";
+import { langProvider } from "../../../i18n/provider";
+import { LangID } from "../../../i18n/declare";
 export class Block$Method {
     async onGetTurnMenus(this: Block) {
         var its = blockStore.findFitTurnBlocks(this);
@@ -26,33 +28,33 @@ export class Block$Method {
         items.push({
             name: BlockDirective.delete,
             icon: trash,
-            text: '删除',
+            text: langProvider.getText(LangID.menuDelete),
             label: "delete"
         });
         items.push({
             name: BlockDirective.copy,
-            text: '拷贝',
+            text: langProvider.getText(LangID.menuCopy),
             label: "ctrl+D",
             icon: duplicate
         });
         items.push({
-            text: '转换为',
+            text: langProvider.getText(LangID.menuTurn),
             icon: loop,
             childs: await this.onGetTurnMenus()
         });
         items.push({
             name: BlockDirective.trunIntoPage,
-            text: '转换为页面',
+            text: langProvider.getText(LangID.menuTurnInPage),
             icon: squareplus
         });
         items.push({
             name: BlockDirective.moveTo,
-            text: '移到',
+            text: langProvider.getText(LangID.menuMoveTo),
             icon: moveTo
         });
         items.push({
             name: BlockDirective.link,
-            text: '复制链接',
+            text: langProvider.getText(LangID.menuCopyLink),
             icon: link
         });
         items.push({
@@ -60,7 +62,7 @@ export class Block$Method {
         });
         items.push({
             name: BlockDirective.comment,
-            text: '评论',
+            text: langProvider.getText(LangID.menuComment),
             icon: comment
         });
         items.push({
@@ -68,7 +70,7 @@ export class Block$Method {
         });
         items.push({
             name: BlockDirective.color,
-            text: '颜色',
+            text: langProvider.getText(LangID.menuColor),
             icon: blockcolor
         });
         return items;
