@@ -55,7 +55,7 @@ export class Point {
         }
         return false;
     }
-    static from(event: MouseEvent | DOMRect | Point | { x: number, y: number } | Rect | number, y?: number) {
+    static from(event: MouseEvent | React.MouseEvent | DOMRect | Point | { x: number, y: number } | Rect | number, y?: number) {
         if (event instanceof MouseEvent) {
             return new Point({ x: event.x, y: event.y })
         }
@@ -68,7 +68,10 @@ export class Point {
         else if (event instanceof DOMRect) {
             return new Point(event.left, event.top);
         }
-        else if (typeof event == 'object') return new Point(event)
+        else if (typeof ((event as React.MouseEvent).clientX) != 'undefined') {
+            return new Point({ x: (event as React.MouseEvent).clientX, y:(event as React.MouseEvent).clientY })
+        }
+        else if (typeof event == 'object') return new Point(event as any)
         else return new Point(event, y);
     }
     toRect(width: number = 0, height: number = 0) {
