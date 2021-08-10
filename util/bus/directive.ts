@@ -4,6 +4,10 @@ export enum Directive {
      GalleryQuery,
      UsersQuery,
      PagesQuery,
-     CreatePage
-    
+     CreatePage,
+
+     UpdatePageItem
+
 }
+
+
