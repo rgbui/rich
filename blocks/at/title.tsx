@@ -29,7 +29,7 @@ export class Title extends Block {
     async onChangeIcon(event: React.MouseEvent) {
         var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) });
         if (icon) {
-            messageChannel.fire(Directive.UpdatePageItem, this.page.id, { icon });
+            messageChannel.fire(Directive.UpdatePageItem, this.pageInfo.id, { icon });
         }
     }
     get isSupportTextStyle() {
