@@ -58,9 +58,7 @@ export enum BlockRenderRange {
 }
 
 
-export type BlockLink = {
-    href?: string;
-}
+
 
 
 
