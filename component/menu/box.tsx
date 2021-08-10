@@ -18,7 +18,7 @@ export class MenuBox extends React.Component<{ items: MenuItemType[], deep: numb
     el: HTMLElement;
     point = new Point(0, 0);
     open(pos: PopoverPosition) {
-        this.point = pos.roundArea.leftTop;
+        this.point = pos.roundArea ? pos.roundArea.leftTop : pos.roundPoint;
         this.forceUpdate(() => {
             if (this.el) {
                 var b = Rect.from(this.el.getBoundingClientRect());

@@ -19,7 +19,8 @@ export class Block$Method {
             return {
                 name: BlockDirective.trun,
                 text: it.text,
-                icon: it.pic
+                icon: it.pic,
+                iconSize: 22
             }
         })
     }
