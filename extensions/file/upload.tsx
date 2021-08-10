@@ -4,7 +4,7 @@ import { OpenFileDialoug } from "../../component/file";
 import { Sp } from "../../i18n/view";
 import { LangID } from "../../i18n/declare";
 import { Directive } from "../../util/bus/directive";
-import { richBus } from "../../util/bus/event.bus";
+import { messageChannel } from "../../util/bus/event.bus";
 export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audio' | 'video', change: (url: string) => void }> {
     async uploadFile() {
         var exts = ['*'];
@@ -13,7 +13,7 @@ export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audi
         else if (this.props.mine == 'video') exts = ['video/*'];
         var file = await OpenFileDialoug({ exts });
         if (file) {
-            var r = await richBus.fireAsync(Directive.UploadFile, file, (event) => {
+            var r = await messageChannel.fireAsync(Directive.UploadFile, file, (event) => {
                 console.log(event, 'ev');
             });
             if (r.ok) {

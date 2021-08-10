@@ -42,6 +42,9 @@ class EventBus {
     has(directive: Directive) {
         return this._events.exists(g => g.directive == directive)
     }
+    off(directive: Directive, fn: (...ars: any) => any) {
+        this._events.removeAll(g => g.directive == directive && g.action == fn);
+    }
 }
 /**
  * 订阅通知活动事件申明
@@ -64,5 +67,10 @@ interface EventBus {
     only(directive: Directive.CreatePage, fn: (pageInfo: { text: string, icon?: IconArguments }) => Promise<LinkPage>): void;
     fireAsync(directive: Directive.CreatePage, pageInfo: { text: string, icon?: IconArguments }): Promise<LinkPage>;
 
+    on(directive: Directive.UpdatePageItem, fn: (id:string,pageInfo: { text: string, icon?: IconArguments }) => Promise<LinkPage>): void;
+    fireAsync(directive: Directive.UpdatePageItem,id:string, pageInfo: { text: string, icon?: IconArguments }): Promise<LinkPage>;
+
+
+
 }
-export let richBus = new EventBus()
+export let messageChannel = new EventBus()

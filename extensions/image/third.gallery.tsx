@@ -4,7 +4,7 @@ import { Sp } from "../../i18n/view";
 import { LangID } from "../../i18n/declare";
 import { langProvider } from "../../i18n/provider";
 import { Directive } from "../../util/bus/directive";
-import { richBus } from "../../util/bus/event.bus";
+import { messageChannel } from "../../util/bus/event.bus";
 import { GalleryType, OuterPic } from "./declare";
 export class ThirdGallery extends React.Component<{ type: GalleryType, onChange: (image: OuterPic) => void }>{
     word: string = 'cat';
@@ -14,7 +14,7 @@ export class ThirdGallery extends React.Component<{ type: GalleryType, onChange:
         this.word = word;
         this.loading = true;
         this.forceUpdate();
-        var list = await richBus.fireAsync(Directive.GalleryQuery, this.props.type, this.word);
+        var list = await messageChannel.fireAsync(Directive.GalleryQuery, this.props.type, this.word);
         if (Array.isArray(list)) this.pics = list;
         else this.pics = [];
         this.forceUpdate()
