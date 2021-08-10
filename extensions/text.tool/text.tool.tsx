@@ -11,6 +11,9 @@ import { BlockCssName, FillCss } from "../../src/block/pattern/css";
 import { LangID } from "../../i18n/declare";
 import { Tip } from "../../component/tip";
 import { useLinkPicker } from "../link/picker";
+import { useColorSelector } from "../color";
+import { Block } from "../../src/block";
+import { useSelectMenuItem } from "../../component/menu";
 
 export type TextToolStyle = {
     link: string,
@@ -22,22 +25,22 @@ export type TextToolStyle = {
     code: boolean,
     equation: boolean,
     color: string,
-    fill: FillCss
+    fill: Partial<FillCss>
 }
 
 export class TextTool extends EventsComponent {
     private node: HTMLElement;
-    private textStyle: TextToolStyle = {
-
-    } as any;
+    private textStyle: TextToolStyle = {} as any;
     constructor(props) {
         super(props);
         this.node = document.body.appendChild(document.createElement('div'));
     }
-    open(point) {
+    private block: Block = null;
+    open(point, block: Block) {
         this.point = this.point;
         this.visible = true;
         this.textStyle = this.emit('getTextStyle');
+        this.block = block;
         this.forceUpdate(() => {
             var menu: HTMLElement = this.node.querySelector('.sy-tool-text-menu');
             this.point = RectUtility.cacPopoverPosition({
@@ -175,8 +178,22 @@ export class TextTool extends EventsComponent {
         this.emit('setStyle', { [BlockCssName.font]: font } as any);
         this.forceUpdate();
     }
-    onOpenFontColor(event: React.MouseEvent) {
-
+    async onOpenFontColor(event: React.MouseEvent) {
+        var fontColor = await useColorSelector({ roundArea: Rect.fromEvent(event) });
+        if (fontColor) {
+            var font: Record<string, any> = {};
+            if (fontColor.color) {
+                this.textStyle.color = fontColor.color;
+                font.color = fontColor.color;
+                this.emit('setStyle', { [BlockCssName.font]: font } as any);
+            }
+            if (fontColor.backgroundColor) {
+                font.color = fontColor.backgroundColor;
+                font.mode = 'color';
+                this.textStyle.fill = { mode: 'color', color: fontColor.backgroundColor }
+                this.emit('setStyle', { [BlockCssName.fill]: this.textStyle.fill } as any);
+            }
+        }
     }
     async onOpenLink(event: React.MouseEvent) {
         var pageLink = await useLinkPicker({ roundArea: Rect.fromEvent(event) });
@@ -187,8 +204,20 @@ export class TextTool extends EventsComponent {
     onOpenComment(event: React.MouseEvent) {
 
     }
-    onOpenBlockSelector(event: React.MouseEvent) {
-
+    async onOpenBlockSelector(event: React.MouseEvent) {
+        var block = this.block;
+        console.log(block, 'block');
+        if (block.isLine) block = block.closest(x => !x.isLine);
+        var re = await useSelectMenuItem(
+            {
+                roundArea: Rect.fromEvent(event),
+                direction: 'left'
+            },
+            await block.onGetTurnMenus()
+        );
+        if (re) {
+            await block.onClickContextMenu(re.item, re.event);
+        }
     }
 }
 export interface TextTool {

@@ -191,10 +191,10 @@ export class PageEvent {
      * @param event 
      */
     async onOpenMenu(this: Page, blocks: Block[], event: MouseEvent) {
-        console.log(blocks,event);
+
         var re = await useSelectMenuItem(
             {
-                roundArea: Rect.from((event.target as HTMLElement).getBoundingClientRect()),
+                roundArea: Rect.fromEvent(event),
                 direction: 'left'
             },
             await blocks[0].onGetContextMenus()

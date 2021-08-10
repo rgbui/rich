@@ -5,7 +5,9 @@ export function PageKit(kit: Kit) {
         if (kit.explorer.hasTextRange) {
             if (kit.explorer.selectedBlocks.length == 1 && !kit.explorer.selectedBlocks[0].isSupportTextStyle)
                 page.textTool.close()
-            else page.textTool.open(kit.explorer.getSelectionPoint())
+            else page.textTool.open(kit.explorer.getSelectionPoint(),
+                kit.explorer.selectedBlocks[0]
+            )
         }
         else page.textTool.close()
     })
