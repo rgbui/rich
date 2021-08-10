@@ -1,0 +1,9 @@
+dist/report.html
+scripts/
+.*
+
+src/
+docs/
+example/
+karma.conf.js
+yarn.lock
