@@ -8,7 +8,8 @@ export enum BlockCssName {
     shadow,
     filter,
     radius,
-    transform
+    transform,
+    gap
 }
 
 export abstract class BlockCss {
@@ -164,4 +165,10 @@ export class TransformCss extends BlockCss {
     translate: { x: number, y: number };
     skew: { x: number, y: number };
     origin: { x: number | string, y: number | string }
+}
+
+export class GapCss extends BlockCss {
+    cssName = BlockCssName.gap;
+    margin: { top: number, left: number, right: number, bottom: number }
+    padding: { top: number, left: number, right: number, bottom: number }
 }
