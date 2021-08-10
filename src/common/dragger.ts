@@ -1,6 +1,7 @@
 
+import React from "react";
 import { CursorName, MouseCursor } from "./cursor";
-import { Point } from "./point";
+import { Point, Rect } from "./point";
 export class Dragger {
     constructor(el: HTMLElement, cursor?: CursorName, dis?: number) {
         this.el = el;
@@ -68,4 +69,49 @@ export class Dragger {
         document.removeEventListener('mousemove', this._mousemove);
         document.removeEventListener('mouseup', this._mouseup);
     }
+}
+
+export function MouseDragger<T = Record<string, any>>(options: {
+    event: MouseEvent | React.MouseEvent,
+    dis?: number,
+    cursor?: CursorName
+    moveStart?: (event: MouseEvent | React.MouseEvent, data: T) => void,
+    move?: (event: MouseEvent, data: T) => void,
+    moveEnd?: (event: MouseEvent, isMove: boolean, data: T) => void
+}) {
+    if (typeof options.dis == 'number') options.dis = 5;
+    var data: T = {} as any;
+    var move: (event: MouseEvent) => void;
+    var up: (event: MouseEvent) => void;
+    var scope = {
+        isDown: true,
+        isMove: false,
+        event: options.event
+    };
+    move = (event: MouseEvent) => {
+        if (scope.isMove == true) {
+            if (options.cursor)
+                MouseCursor.show(options.cursor);
+            if (typeof options.move == 'function') options.move(event, data)
+        }
+        else {
+            if (Point.from(scope.event).remoteBy(Point.from(event), options.dis)) {
+                if (typeof options.moveStart == 'function') options.moveStart(options.event, data);
+                scope.isMove = true;
+            }
+        }
+    }
+    up = (event: MouseEvent) => {
+        if (scope.isDown == true) {
+            if (options.cursor)
+                MouseCursor.hide();
+            if (typeof options.moveEnd == 'function') options.moveEnd(event, scope.isMove, data)
+            scope.isMove = false;
+            scope.isDown = false;
+        }
+        document.addEventListener('mousemove', move);
+        document.addEventListener('mouseup', up)
+    }
+    document.addEventListener('mousemove', move);
+    document.addEventListener('mouseup', up)
 }
