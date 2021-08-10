@@ -83,5 +83,11 @@ export var util = {
         }
         return equal(a, b);
     },
-
+    pickJson(obj,keys:string[]){
+        var json:Record<string,any>={ };
+        keys.each(key=>{
+            json[key]=obj[key]
+        });
+        return json;
+    }
 }
