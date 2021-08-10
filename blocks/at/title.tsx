@@ -9,6 +9,8 @@ import { PageDirective } from "../../src/page/directive";
 import { Icon } from "../../component/icon";
 import { useIconPicker } from "../../extensions/icon";
 import { Rect } from "../../src/common/point";
+import { messageChannel } from "../../util/bus/event.bus";
+import { Directive } from "../../util/bus/directive";
 @url('/title')
 export class Title extends Block {
     @prop()
@@ -27,9 +29,7 @@ export class Title extends Block {
     async onChangeIcon(event: React.MouseEvent) {
         var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) });
         if (icon) {
-            this.pageInfo.icon = icon;
-            await this.page.emitAsync(PageDirective.updatePageInfo, this.pageInfo.id, { icon });
-            this.view.forceUpdate()
+            messageChannel.fire(Directive.UpdatePageItem, this.page.id, { icon });
         }
     }
     get isSupportTextStyle() {
@@ -39,8 +39,18 @@ export class Title extends Block {
 @view('/title')
 export class TitleView extends BlockView<Title>{
     async didMount() {
+        messageChannel.on(Directive.UpdatePageItem, this.updatePageInfo)
         await this.block.loadPageInfo();
         this.forceUpdate();
+    }
+    updatePageInfo = (id: string, pageInfo: { text: string, icon?: IconArguments }) => {
+        if (this.block.pageInfo.id == id) {
+            Object.assign(this.block.pageInfo, pageInfo);
+            this.forceUpdate();
+        }
+    }
+    willUnmount() {
+        messageChannel.off(Directive.UpdatePageItem, this.updatePageInfo);
     }
     render() {
         return <div className='sy-block-page-info' style={this.block.visibleStyle}>
