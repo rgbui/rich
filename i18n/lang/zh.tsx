@@ -29,5 +29,15 @@ export default {
     [LangID.SearchImage]: '搜索图片...',
     [LangID.PleaseInputLink]: '请输入链接....',
     [LangID.SubmitButton]: '提交',
-    [LangID.PleashInputLinkAndSearchPages]: '请输入链接或搜索页面'
+    [LangID.PleashInputLinkAndSearchPages]: '请输入链接或搜索页面',
+    [LangID.menuDelete]: '删除',
+    [LangID.menuCopy]: '拷贝',
+    [LangID.menuTurn]: '转换为',
+    [LangID.menuTurnInPage]: '转换为页面',
+    [LangID.menuMoveTo]: '移到',
+    [LangID.menuCopyLink]: '复制链接',
+    [LangID.menuComment]: '评论',
+    [LangID.menuColor]: '颜色',
+    [LangID.imageErrorLoadTip]: '图片加载失败',
+    [LangID.learnMore]: '了解更多'
 }

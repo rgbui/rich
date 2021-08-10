@@ -27,5 +27,15 @@ export enum LangID {
     SearchImage,
     PleaseInputLink,
     SubmitButton,
-    PleashInputLinkAndSearchPages
+    PleashInputLinkAndSearchPages,
+    menuDelete,
+    menuCopy,
+    menuTurn,
+    menuTurnInPage,
+    menuMoveTo,
+    menuCopyLink,
+    menuComment,
+    menuColor,
+    imageErrorLoadTip,
+    learnMore
 }
