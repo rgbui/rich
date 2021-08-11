@@ -2,9 +2,9 @@ import React from "react";
 import { Tip } from "../../component/tip";
 import { dom } from "../../src/common/dom";
 
-import { emojiStore, EmojiType } from "./store";
+import { EmojiCode, emojiStore, EmojiType } from "./store";
 
-export class EmojiView extends React.Component<{ loaded?: () => void, onChange: (emoji: EmojiType) => void }>{
+export class EmojiView extends React.Component<{ loaded?: () => void, onChange: (emoji: EmojiCode) => void }>{
     loading: boolean = true;
     private scrollIndex = 0;
     private scrollOver: boolean = false;
@@ -21,19 +21,22 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
             });
         })
     }
+    onChange(code: EmojiCode) {
+       this.props.onChange(code); 
+    }
     emojis: EmojiType[] = [];
     renderEmoji() {
         if (this.loading == true) return <div className='shy-emoji-view-loading'></div>
-        var cs = this.emojis.lookup(x => x.category);
+        // var cs = this.emojis.lookup(x => x.category);
         var els: JSX.Element[] = [];
         var i = 0;
-        cs.forEach((value, category) => {
-            if (i > this.scrollIndex) return <div key={category}></div>;
+        this.emojis.forEach(category => {
+            if (i > this.scrollIndex) return <div key={category.id}></div>;
             i += 1;
-            els.push(<div className='shy-emoji-view-category' key={category}>
-                <div className='shy-emoji-view-category-head'><span>{category}</span></div>
-                <div className='shy-emoji-view-category-emojis'>{value.map(emoji => {
-                    return <Tip overlay={<>{emoji.name}</>} key={emoji.char}><span onMouseDown={e => this.props.onChange(emoji)} >{emoji.char}</span></Tip>
+            els.push(<div className='shy-emoji-view-category' key={category.id}>
+                <div className='shy-emoji-view-category-head'><span>{category.name}</span></div>
+                <div className='shy-emoji-view-category-emojis'>{category.childs.map(emoji => {
+                    return <Tip overlay={<>{emoji.name}</>} key={emoji.code}><span onMouseDown={e => this.onChange(emoji)} >{emoji.code}</span></Tip>
                 })}</div>
             </div>)
         });

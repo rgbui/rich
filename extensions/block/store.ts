@@ -57,7 +57,7 @@ class BlockStore extends Events {
             case BlockSelectorOperator.selectEmoji:
                 var result = await OpenEmoji(rect);
                 if (result) {
-                    extra.src = { mime: 'emoji', code: result.char } as EmojiSrcType;
+                    extra.src = { mime: 'emoji', code: result.code } as EmojiSrcType;
                 }
                 break;
         }

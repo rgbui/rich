@@ -3,7 +3,7 @@ import { Point, Rect, RectUtility } from "../../src/common/point";
 import { EventsComponent } from "../events.component";
 import { Singleton } from "../Singleton";
 import './style.less';
-import { EmojiType } from "./store";
+import { EmojiCode, EmojiType } from "./store";
 import { EmojiView } from "./view";
 
 export class EmojiPicker extends EventsComponent {
@@ -52,7 +52,7 @@ export class EmojiPicker extends EventsComponent {
         if (this._mousedown)
             document.removeEventListener('mousedown', this._mousedown, true);
     }
-    private onPick(emoji: EmojiType) {
+    private onPick(emoji: EmojiCode) {
         this.close();
         this.emit('pick', emoji);
     }
@@ -69,15 +69,15 @@ export class EmojiPicker extends EventsComponent {
     }
 }
 export interface EmojiPicker {
-    only(name: 'pick', fn: (data: EmojiType) => void);
-    emit(name: 'pick', data: EmojiType);
+    only(name: 'pick', fn: (data: EmojiCode) => void);
+    emit(name: 'pick', data: EmojiCode);
     only(name: 'close', fn: () => void);
     emit(name: 'close');
 }
 export async function OpenEmoji(rect: Rect) {
     var emojiPicker = await Singleton<EmojiPicker>(EmojiPicker);
     await emojiPicker.open(rect);
-    return new Promise((resolve: (emoji: EmojiType) => void, reject) => {
+    return new Promise((resolve: (emoji: EmojiCode) => void, reject) => {
         emojiPicker.only('pick', (data) => {
             resolve(data);
         });

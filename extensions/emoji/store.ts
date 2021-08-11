@@ -1,8 +1,13 @@
 import Axios from "axios";
 export type EmojiType = {
-    char: string,
+    id: string,
     name: string,
-    category: string,
+    text?: string,
+    childs: EmojiCode[]
+}
+export type EmojiCode = {
+    code: string,
+    name: string,
     keywords: string[]
 }
 class EmojiStore {
@@ -14,15 +19,8 @@ class EmojiStore {
     }
     async import() {
         //加载数据
-        var data = await Axios.get('/data/emoji.json');
-        this.emojis = data.data.map(g => {
-            return {
-                char: g.char,
-                name: g.name,
-                category: g.group,
-                keywords: g.keywords,
-            }
-        });
+        var r = await Axios.get('/data/emoji.json');
+        this.emojis = r.data;
         this.isLoad = true;
     }
 }
