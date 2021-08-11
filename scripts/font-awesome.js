@@ -8,6 +8,7 @@ var icons = YAML.load(filePath);
 var dj = require(path.join(__dirname, '../extensions/font-awesome/icons.json'));
 var djFontKeys = Object.keys(dj.fonts);
 var ps = [];
+var filters = ["youtube","accessible-icon", "bluetooth", "bluetooth-b", "bitcoin", "btc", "ethereum", "gg", "gg-circle", "playstation", "steam", "steam-square", "steam-symbol", "twitch", "xbox", "acquisitions-incorporated", "critical-role", "d-and-d", "d-and-d-beyond", "fantasy-flight-games", "penny-arcade", "wizards-of-the-coast", "accessible-icon", "accessible-icon", "unsplash", "soundcloud", "spotify", "napster", "alipay", "amazon-pay", "apple-pay", "bitcoin", "btc", "cc-amazon-pay", "cc-amex", "cc-apple-pay", "cc-diners-club", "cc-discover", "cc-jcb", "cc-mastercard", "cc-paypal", "cc-stripe", "cc-visa", "ethereum", "google-pay", "google-wallet", "paypal", "stripe", "stripe-s", "galactic-republic", "galactic-senate", "jedi-order", "old-republic", "accessible-icon", "accessible-icon"]
 for (let n in icons) {
     var group = icons[n];
     var da = dj.categories.filter(g => g.name == group.label)[0]
@@ -30,7 +31,7 @@ for (let n in icons) {
             else if (icon == 'vest-patches') {
                 e = {
                     label: '背心补丁',
-                    keywords: ['背心补丁', '汗衫补丁','背心', '汗衫', 'vest', 'vest-patches']
+                    keywords: ['背心补丁', '汗衫补丁', '背心', '汗衫', 'vest', 'vest-patches']
                 }
             }
         }
@@ -39,8 +40,12 @@ for (let n in icons) {
             ...e
         }
     });
+    for (let i = ics.length - 1; i >= 0; i--) {
+        if (filters.includes(ics[i].name)) {
+            ics.splice(i, 1);
+        }
+    }
     ps.push({ name: group.label, text: da ? da.cnName : group.label, icons: ics });
 }
-
 var fs = require('fs');
-fs.writeFileSync(path.join(__dirname, "../extensions/font-awesome/data.json"), JSON.stringify(ps, null, 2))
+fs.writeFileSync(path.join(__dirname, "../extensions/font-awesome/font-awesome.json"), JSON.stringify(ps, null, 2))

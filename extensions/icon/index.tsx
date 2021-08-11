@@ -24,7 +24,7 @@ class IconPicker extends EventsComponent {
         return <div className='shy-icon-picker' >
             <Tab keeplive>
                 <Tab.Page item={<Tip id={LangID.IconEmoji}><Emoji ></Emoji></Tip>}>
-                    <EmojiView onChange={e => this.onChange({ name: "emoji", code: e.char })}></EmojiView>
+                    <EmojiView onChange={e => this.onChange({ name: "emoji", code: e.code })}></EmojiView>
                 </Tab.Page>
                 <Tab.Page item={<Tip id={LangID.IconFontAwesome}><FontAwesome ></FontAwesome></Tip>}>
                     <FontAwesomeView onChange={e => this.onChange({ name: "font-awesome", ...e })}></FontAwesomeView>

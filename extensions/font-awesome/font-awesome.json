@@ -4,23 +4,6 @@
     "text": "无障碍",
     "icons": [
       {
-        "name": "accessible-icon",
-        "label": "无障碍图标",
-        "keywords": [
-          "accessibility",
-          "handicap",
-          "person",
-          "wheelchair",
-          "wheelchair-alt",
-          "无障碍",
-          "残障",
-          "残疾",
-          "人",
-          "轮椅",
-          "Accessible Icon"
-        ]
-      },
-      {
         "name": "american-sign-language-interpreting",
         "label": "美国手语翻译",
         "keywords": [
@@ -3196,23 +3179,6 @@
           "扬声器",
           "喇叭",
           "Volume Up"
-        ]
-      },
-      {
-        "name": "youtube",
-        "label": "YouTube",
-        "keywords": [
-          "film",
-          "video",
-          "youtube-play",
-          "youtube-square",
-          "电影",
-          "视频",
-          "产品",
-          "product",
-          "logo",
-          "互联网",
-          "YouTube"
         ]
       }
     ]
@@ -8675,20 +8641,6 @@
         ]
       },
       {
-        "name": "bluetooth",
-        "label": "蓝牙",
-        "keywords": [
-          "Bluetooth"
-        ]
-      },
-      {
-        "name": "bluetooth-b",
-        "label": "蓝牙",
-        "keywords": [
-          "Bluetooth"
-        ]
-      },
-      {
         "name": "broadcast-tower",
         "label": "广播塔",
         "keywords": [
@@ -10240,20 +10192,6 @@
     "text": "货币",
     "icons": [
       {
-        "name": "bitcoin",
-        "label": "比特币",
-        "keywords": [
-          "Bitcoin"
-        ]
-      },
-      {
-        "name": "btc",
-        "label": "比特币",
-        "keywords": [
-          "BTC"
-        ]
-      },
-      {
         "name": "dollar-sign",
         "label": "美元符号",
         "keywords": [
@@ -10276,13 +10214,6 @@
         ]
       },
       {
-        "name": "ethereum",
-        "label": "Ethereum",
-        "keywords": [
-          "Ethereum"
-        ]
-      },
-      {
         "name": "euro-sign",
         "label": "欧元符号",
         "keywords": [
@@ -10298,20 +10229,6 @@
           "现金",
           "符号",
           "Euro Sign"
-        ]
-      },
-      {
-        "name": "gg",
-        "label": "GG Currency",
-        "keywords": [
-          "GG Currency"
-        ]
-      },
-      {
-        "name": "gg-circle",
-        "label": "GG Currency",
-        "keywords": [
-          "GG Currency Circle"
         ]
       },
       {
@@ -16664,13 +16581,6 @@
         ]
       },
       {
-        "name": "playstation",
-        "label": "PlayStation",
-        "keywords": [
-          "PlayStation"
-        ]
-      },
-      {
         "name": "puzzle-piece",
         "label": "拼图碎片",
         "keywords": [
@@ -16683,41 +16593,6 @@
           "解谜",
           "Puzzle Piece"
         ]
-      },
-      {
-        "name": "steam",
-        "label": "Steam",
-        "keywords": [
-          "Steam"
-        ]
-      },
-      {
-        "name": "steam-square",
-        "label": "Steam",
-        "keywords": [
-          "Steam Square"
-        ]
-      },
-      {
-        "name": "steam-symbol",
-        "label": "Steam",
-        "keywords": [
-          "Steam Symbol"
-        ]
-      },
-      {
-        "name": "twitch",
-        "label": "Twitch",
-        "keywords": [
-          "Twitch"
-        ]
-      },
-      {
-        "name": "xbox",
-        "label": "Xbox",
-        "keywords": [
-          "Xbox"
-        ]
       }
     ]
   },
@@ -16725,24 +16600,6 @@
     "name": "Tabletop Gaming",
     "text": "桌游",
     "icons": [
-      {
-        "name": "acquisitions-incorporated",
-        "label": "Acquisitions Incorporated",
-        "keywords": [
-          "Dungeons & Dragons",
-          "d&d",
-          "dnd",
-          "fantasy",
-          "game",
-          "gaming",
-          "tabletop",
-          "龙与地下城",
-          "幻想",
-          "游戏",
-          "桌面",
-          "Acquisitions Incorporated"
-        ]
-      },
       {
         "name": "book-dead",
         "label": "死者之书",
@@ -16779,48 +16636,6 @@
           "骷髅",
           "咒语",
           "Book of the Dead"
-        ]
-      },
-      {
-        "name": "critical-role",
-        "label": "Critical Role",
-        "keywords": [
-          "Dungeons & Dragons",
-          "d&d",
-          "dnd",
-          "fantasy",
-          "game",
-          "gaming",
-          "tabletop",
-          "龙与地下城",
-          "幻想",
-          "游戏",
-          "桌面",
-          "Critical Role"
-        ]
-      },
-      {
-        "name": "d-and-d",
-        "label": "龙与地下城",
-        "keywords": [
-          "Dungeons & Dragons"
-        ]
-      },
-      {
-        "name": "d-and-d-beyond",
-        "label": "D&D Beyond",
-        "keywords": [
-          "Dungeons & Dragons",
-          "d&d",
-          "dnd",
-          "fantasy",
-          "gaming",
-          "tabletop",
-          "龙与地下城",
-          "幻想",
-          "游戏",
-          "桌面",
-          "D&D Beyond"
         ]
       },
       {
@@ -16906,24 +16721,6 @@
         ]
       },
       {
-        "name": "fantasy-flight-games",
-        "label": "Fantasy Flight Games",
-        "keywords": [
-          "Dungeons & Dragons",
-          "d&d",
-          "dnd",
-          "fantasy",
-          "game",
-          "gaming",
-          "tabletop",
-          "龙与地下城",
-          "幻想",
-          "游戏",
-          "桌面",
-          "Fantasy Flight-games"
-        ]
-      },
-      {
         "name": "fist-raised",
         "label": "举起拳头",
         "keywords": [
@@ -16981,26 +16778,6 @@
           "尖尖",
           "巫师",
           "Wizard's Hat"
-        ]
-      },
-      {
-        "name": "penny-arcade",
-        "label": "Penny Arcade",
-        "keywords": [
-          "Dungeons & Dragons",
-          "d&d",
-          "dnd",
-          "fantasy",
-          "game",
-          "gaming",
-          "pax",
-          "tabletop",
-          "龙与地下城",
-          "幻想",
-          "游戏",
-          "和解",
-          "桌面",
-          "Penny Arcade"
         ]
       },
       {
@@ -17088,26 +16865,6 @@
           "毒药",
           "骨架",
           "Skull & Crossbones"
-        ]
-      },
-      {
-        "name": "wizards-of-the-coast",
-        "label": "Wizards of the Coast",
-        "keywords": [
-          "Dungeons & Dragons",
-          "d&d",
-          "dnd",
-          "fantasy",
-          "game",
-          "gaming",
-          "tabletop",
-          "龙与地下城",
-          "幻想",
-          "游戏",
-          "桌面",
-          "产品",
-          "logo",
-          "Wizards of the Coast"
         ]
       }
     ]
@@ -17999,23 +17756,6 @@
     "name": "Health",
     "text": "健康",
     "icons": [
-      {
-        "name": "accessible-icon",
-        "label": "无障碍图标",
-        "keywords": [
-          "accessibility",
-          "handicap",
-          "person",
-          "wheelchair",
-          "wheelchair-alt",
-          "无障碍",
-          "残障",
-          "残疾",
-          "人",
-          "轮椅",
-          "Accessible Icon"
-        ]
-      },
       {
         "name": "ambulance",
         "label": "救护车",
@@ -19977,13 +19717,6 @@
           "雨滴",
           "液滴",
           "tint"
-        ]
-      },
-      {
-        "name": "unsplash",
-        "label": "Unsplash",
-        "keywords": [
-          "Unsplash"
         ]
       }
     ]
@@ -28597,13 +28330,6 @@
         ]
       },
       {
-        "name": "napster",
-        "label": "Napster",
-        "keywords": [
-          "Napster"
-        ]
-      },
-      {
         "name": "play",
         "label": "PlayStation",
         "keywords": [
@@ -28643,20 +28369,6 @@
           "滑块",
           "切换",
           "Horizontal Sliders"
-        ]
-      },
-      {
-        "name": "soundcloud",
-        "label": "SoundCloud",
-        "keywords": [
-          "SoundCloud"
-        ]
-      },
-      {
-        "name": "spotify",
-        "label": "Spotify",
-        "keywords": [
-          "Spotify"
         ]
       },
       {
@@ -33229,34 +32941,6 @@
     "text": "支付和购物",
     "icons": [
       {
-        "name": "alipay",
-        "label": "支付宝",
-        "keywords": [
-          "蚂蚁金服",
-          "余额宝",
-          "花呗",
-          "产品",
-          "product",
-          "logo",
-          "互联网",
-          "Alipay"
-        ]
-      },
-      {
-        "name": "amazon-pay",
-        "label": "亚马逊支付",
-        "keywords": [
-          "Amazon Pay"
-        ]
-      },
-      {
-        "name": "apple-pay",
-        "label": "Apple Pay",
-        "keywords": [
-          "Apple Pay"
-        ]
-      },
-      {
         "name": "bell",
         "label": "铃铛",
         "keywords": [
@@ -33275,13 +32959,6 @@
         ]
       },
       {
-        "name": "bitcoin",
-        "label": "比特币",
-        "keywords": [
-          "Bitcoin"
-        ]
-      },
-      {
         "name": "bookmark",
         "label": "书签",
         "keywords": [
@@ -33296,13 +32973,6 @@
           "记住",
           "保存",
           "bookmark"
-        ]
-      },
-      {
-        "name": "btc",
-        "label": "比特币",
-        "keywords": [
-          "BTC"
         ]
       },
       {
@@ -33393,81 +33063,6 @@
         ]
       },
       {
-        "name": "cc-amazon-pay",
-        "label": "亚马逊支付信用卡",
-        "keywords": [
-          "Amazon Pay Credit Card"
-        ]
-      },
-      {
-        "name": "cc-amex",
-        "label": "美国运通信用卡",
-        "keywords": [
-          "amex",
-          "美国运通",
-          "产品",
-          "product",
-          "logo",
-          "American Express Credit Card"
-        ]
-      },
-      {
-        "name": "cc-apple-pay",
-        "label": "Apple Pay信用卡",
-        "keywords": [
-          "Apple Pay Credit Card"
-        ]
-      },
-      {
-        "name": "cc-diners-club",
-        "label": "大莱信用卡",
-        "keywords": [
-          "Diner's Club Credit Card"
-        ]
-      },
-      {
-        "name": "cc-discover",
-        "label": "Discover信用卡",
-        "keywords": [
-          "Discover Credit Card"
-        ]
-      },
-      {
-        "name": "cc-jcb",
-        "label": "JCB信用卡",
-        "keywords": [
-          "JCB Credit Card"
-        ]
-      },
-      {
-        "name": "cc-mastercard",
-        "label": "万事达信用卡",
-        "keywords": [
-          "MasterCard Credit Card"
-        ]
-      },
-      {
-        "name": "cc-paypal",
-        "label": "Paypal信用卡",
-        "keywords": [
-          "Paypal Credit Card"
-        ]
-      },
-      {
-        "name": "cc-stripe",
-        "label": "Stripe信用卡",
-        "keywords": [
-          "Stripe Credit Card"
-        ]
-      },
-      {
-        "name": "cc-visa",
-        "label": "Visa信用卡",
-        "keywords": [
-          "Visa Credit Card"
-        ]
-      },
-      {
         "name": "certificate",
         "label": "证书",
         "keywords": [
@@ -33501,13 +33096,6 @@
           "支付",
           "购置",
           "Credit Card"
-        ]
-      },
-      {
-        "name": "ethereum",
-        "label": "Ethereum",
-        "keywords": [
-          "Ethereum"
         ]
       },
       {
@@ -33552,20 +33140,6 @@
           "礼物",
           "包装",
           "gift"
-        ]
-      },
-      {
-        "name": "google-pay",
-        "label": "谷歌支付",
-        "keywords": [
-          "Google Pay"
-        ]
-      },
-      {
-        "name": "google-wallet",
-        "label": "谷歌钱包",
-        "keywords": [
-          "Google Wallet"
         ]
       },
       {
@@ -33671,13 +33245,6 @@
         ]
       },
       {
-        "name": "paypal",
-        "label": "Paypal",
-        "keywords": [
-          "Paypal"
-        ]
-      },
-      {
         "name": "receipt",
         "label": "收据",
         "keywords": [
@@ -33766,20 +33333,6 @@
           "信仰",
           "符号",
           "Star and Crescent"
-        ]
-      },
-      {
-        "name": "stripe",
-        "label": "Stripe",
-        "keywords": [
-          "Stripe"
-        ]
-      },
-      {
-        "name": "stripe-s",
-        "label": "Stripe",
-        "keywords": [
-          "Stripe S"
         ]
       },
       {
@@ -35900,28 +35453,6 @@
         ]
       },
       {
-        "name": "galactic-republic",
-        "label": "银河共和国（星球大战）",
-        "keywords": [
-          "politics",
-          "star wars",
-          "政治",
-          "星球大战",
-          "符号",
-          "Galactic Republic"
-        ]
-      },
-      {
-        "name": "galactic-senate",
-        "label": "银河议会（星球大战）",
-        "keywords": [
-          "star wars",
-          "星球大战",
-          "符号",
-          "Galactic Senate"
-        ]
-      },
-      {
         "name": "globe",
         "label": "地球",
         "keywords": [
@@ -36002,16 +35533,6 @@
         ]
       },
       {
-        "name": "jedi-order",
-        "label": "绝地武士团（星球大战）",
-        "keywords": [
-          "star wars",
-          "星球大战",
-          "符号",
-          "Jedi Order"
-        ]
-      },
-      {
         "name": "journal-whills",
         "label": "威尔人日志（星球大战）",
         "keywords": [
@@ -36066,17 +35587,6 @@
           "月亮",
           "夜晚",
           "Moon"
-        ]
-      },
-      {
-        "name": "old-republic",
-        "label": "旧共和国（星球大战）",
-        "keywords": [
-          "politics",
-          "star wars",
-          "政治",
-          "星球大战",
-          "Old Republic"
         ]
       },
       {
@@ -42053,23 +41563,6 @@
     "text": "用户和人群",
     "icons": [
       {
-        "name": "accessible-icon",
-        "label": "无障碍图标",
-        "keywords": [
-          "accessibility",
-          "handicap",
-          "person",
-          "wheelchair",
-          "wheelchair-alt",
-          "无障碍",
-          "残障",
-          "残疾",
-          "人",
-          "轮椅",
-          "Accessible Icon"
-        ]
-      },
-      {
         "name": "address-book",
         "label": "地址簿",
         "keywords": [
@@ -43238,23 +42731,6 @@
     "name": "Vehicles",
     "text": "交通工具",
     "icons": [
-      {
-        "name": "accessible-icon",
-        "label": "无障碍图标",
-        "keywords": [
-          "accessibility",
-          "handicap",
-          "person",
-          "wheelchair",
-          "wheelchair-alt",
-          "无障碍",
-          "残障",
-          "残疾",
-          "人",
-          "轮椅",
-          "Accessible Icon"
-        ]
-      },
       {
         "name": "ambulance",
         "label": "救护车",
