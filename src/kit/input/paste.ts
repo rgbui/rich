@@ -1,11 +1,12 @@
 import { TextInput } from ".";
-
-
+import { DomParse } from "../../import/dom.parse";
 export class TextInput$Paster {
     async onPaste(this: TextInput, event: ClipboardEvent) {
         event.preventDefault();
         var items: { mine: 'file' | 'html' | 'text', content: string | File }[] = [];
         var files: File[] = Array.from(event.clipboardData.files);
+        console.log(event.clipboardData.getData('text/html'), 'html');
+        console.log(event.clipboardData.getData('text/plain'), 'plain');
         var html = event.clipboardData.getData('text/html');
         if (html) {
             var ma = html.match(/\<[a-zA-Z\d\-]+[\s\S]*?>/);
@@ -38,6 +39,13 @@ export class TextInput$Paster {
             // 这里是得复制的网页内容，但也有可能是word
         }
         console.log(files, items);
+        if (files.length > 0) {
+
+        }
+        else {
+            DomParse(items[0].content as string)
+            // DomBlock(items[0].content as string);
+        }
         //let parser = new DOMParser();
         // doc = parser.parseFromString(stringContainingHTMLSource, "text/html")
     }
