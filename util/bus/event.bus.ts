@@ -67,8 +67,12 @@ interface EventBus {
     only(directive: Directive.CreatePage, fn: (pageInfo: { text: string, icon?: IconArguments }) => Promise<LinkPage>): void;
     fireAsync(directive: Directive.CreatePage, pageInfo: { text: string, icon?: IconArguments }): Promise<LinkPage>;
 
-    on(directive: Directive.UpdatePageItem, fn: (id:string,pageInfo: { text: string, icon?: IconArguments }) => Promise<LinkPage>): void;
-    fireAsync(directive: Directive.UpdatePageItem,id:string, pageInfo: { text: string, icon?: IconArguments }): Promise<LinkPage>;
+    on(directive: Directive.UpdatePageItem, fn: (id: string, pageInfo: { text: string, icon?: IconArguments }) => Promise<LinkPage>): void;
+    fireAsync(directive: Directive.UpdatePageItem, id: string, pageInfo: { text: string, icon?: IconArguments }): Promise<LinkPage>;
+
+
+    on(directive: Directive.OpenPageItem, fn: (item: any) => void): void;
+    fire(directive: Directive.OpenPageItem, item: any): void;
 
 
 

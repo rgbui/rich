@@ -6,7 +6,8 @@ export enum Directive {
      PagesQuery,
      CreatePage,
 
-     UpdatePageItem
+     UpdatePageItem,
+     OpenPageItem
 
 }
 
