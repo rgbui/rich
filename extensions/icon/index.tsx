@@ -23,16 +23,16 @@ class IconPicker extends EventsComponent {
     render() {
         return <div className='shy-icon-picker' >
             <Tab keeplive>
-                <Tab.Page item={<Tip id={LangID.IconEmoji}><Emoji ></Emoji></Tip>}>
+                <Tab.Page item={<Tip placement='bottom' id={LangID.IconEmoji}><Emoji ></Emoji></Tip>}>
                     <EmojiView onChange={e => this.onChange({ name: "emoji", code: e.code })}></EmojiView>
                 </Tab.Page>
-                <Tab.Page item={<Tip id={LangID.IconFontAwesome}><FontAwesome ></FontAwesome></Tip>}>
+                <Tab.Page item={<Tip placement='bottom' id={LangID.IconFontAwesome}><FontAwesome ></FontAwesome></Tip>}>
                     <FontAwesomeView onChange={e => this.onChange({ name: "font-awesome", ...e })}></FontAwesomeView>
                 </Tab.Page>
-                <Tab.Page item={<Tip overlay id={LangID.IconUpload}><Upload ></Upload></Tip>}>
+                <Tab.Page item={<Tip placement='bottom' id={LangID.IconUpload}><Upload ></Upload></Tip>}>
                     <UploadView mine='image' change={e => this.onChange({ name: 'image', url: e })}></UploadView>
                 </Tab.Page>
-                <Tab.Page item={<Tip id={LangID.IconLink}><Link ></Link></Tip>}>
+                <Tab.Page item={<Tip placement='bottom' id={LangID.IconLink}><Link ></Link></Tip>}>
                     <OutsideUrl change={e => this.onChange({ name: 'link', url: e })}></OutsideUrl>
                 </Tab.Page>
             </Tab>
