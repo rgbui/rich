@@ -1,6 +1,6 @@
 /**
  * 该指令的值不能随便变更(指令的值会存储下来，变更将导致混乱)
- * 
+ * 只能新增
  */
 export enum ActionDirective {
     onInputText = 100,

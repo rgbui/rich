@@ -47,6 +47,12 @@ export class Point {
         }
         return false;
     }
+    /**
+     * 大于水平或垂直的距离
+     * @param point 
+     * @param dis 
+     * @returns 
+     */
     remoteBy(point: Point, dis: number) {
         if (point) {
             if (Math.abs(point.x - this.x) > dis || Math.abs(point.y - this.y) > dis) {

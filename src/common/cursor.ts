@@ -6,8 +6,7 @@ class Cursor {
     private _el: HTMLElement;
     private get el() {
         if (typeof this._el == 'undefined') {
-            this._el = document.createElement('div');
-            document.body.appendChild(this._el);
+            this._el = document.body.appendChild(document.createElement('div'));
             this._el.style.position = 'fixed';
             this._el.style.width = '100vw';
             this._el.style.height = '100vh';
@@ -17,7 +16,7 @@ class Cursor {
         }
         return this._el;
     }
-    private time;
+    private time: number;
     show(cursor: CursorName) {
         if (this.time) {
             clearTimeout(this.time);
