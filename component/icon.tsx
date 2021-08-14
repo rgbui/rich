@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { IconArguments } from '../extensions/icon/declare';
 export function Icon(props: {
     icon: string | SvgrComponent | JSX.Element | IconArguments,
@@ -7,7 +7,8 @@ export function Icon(props: {
     mousedown?: (e: React.MouseEvent) => void,
     rotate?: number,
     size?: number | 'none',
-    className?: string[] | string
+    className?: string[] | string,
+    style?: CSSProperties
 }) {
     if (typeof props.icon == 'undefined' || !props.icon) {
         return <i>the icon is empty</i>
@@ -28,7 +29,8 @@ export function Icon(props: {
             fontSize: props.size == 'none' ? undefined : 20,
             lineHeight: props.size == 'none' ? undefined : '20px',
             width: props.size == 'none' ? undefined : (props.size) || 20,
-            height: props.size == 'none' ? undefined : (props.size) || 20
+            height: props.size == 'none' ? undefined : (props.size) || 20,
+            ...(props.style || {})
         });
         return <i className={classList.join(" ")}
             onClick={e => { props.click ? props.click(e) : undefined; }}
@@ -39,6 +41,7 @@ export function Icon(props: {
         Object.assign(style, {
             width: props.size == 'none' ? undefined : (props.size) || 20,
             height: props.size == 'none' ? undefined : (props.size) || 20
+            , ...(props.style || {})
         })
         return <props.icon className={classList.join(" ")}
             onClick={e => { props.click ? props.click(e) : undefined; }}
@@ -55,6 +58,7 @@ export function Icon(props: {
                     lineHeight: props.size == 'none' ? undefined : props.size + 'px',
                     width: props.size == 'none' ? undefined : (props.size) || 20,
                     height: props.size == 'none' ? undefined : (props.size) || 20
+                    , ...(props.style || {})
                 });
                 return <span className={classList.join(" ")} style={style}>
                     <i className={'fa fa-' + pc.code}></i>
@@ -68,6 +72,7 @@ export function Icon(props: {
                     lineHeight: props.size == 'none' ? undefined : props.size + 'px',
                     width: props.size == 'none' ? undefined : (props.size) || 20,
                     height: props.size == 'none' ? undefined : (props.size) || 20
+                    , ...(props.style || {})
                 });
                 return <span className={classList.join(" ")} style={style}>
                     {pc.code}
@@ -78,6 +83,7 @@ export function Icon(props: {
                 Object.assign(style, {
                     width: props.size == 'none' ? undefined : (props.size) || 20,
                     height: props.size == 'none' ? undefined : (props.size) || 20
+                    , ...(props.style || {})
                 });
                 return <img src={pc.url} className={classList.join(" ")} style={style} />
         }
@@ -86,6 +92,7 @@ export function Icon(props: {
         Object.assign(style, {
             width: props.size == 'none' ? undefined : (props.size) || 20,
             height: props.size == 'none' ? undefined : (props.size) || 20
+            , ...(props.style || {})
         })
         return <span className={classList.join(" ")} style={style}>{props.icon}</span>
     }
