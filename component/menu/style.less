@@ -1,0 +1,108 @@
+.shy-menu-panel {
+    .shy-menu-mask {
+        position      : absolute;
+        top           : 0px;
+        left          : 0px;
+        width         : 100vw;
+        height        : 100vh;
+        z-index       : 10000;
+        pointer-events: visible;
+    }
+
+    .sy-menu-box {
+        width              : 220px;
+        pointer-events     : visible;
+        position           : absolute;
+        border-radius      : 3px;
+        background         : white;
+        z-index            : 2;
+        box-shadow         : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+        padding            : 6px 0px;
+        max-height         : 70vh;
+        overscroll-behavior: contain;
+    }
+
+    >.sy-menu-box {
+        max-height: 70vh;
+        min-width : 180px;
+    }
+
+    .shy-menu-box-item {
+        position: relative;
+
+        &-option {
+            position       : relative;
+            display        : flex;
+            justify-content: flex-start;
+            align-items    : center;
+            user-select    : none;
+            min-height     : 28px;
+            line-height    : 28px;
+            font-size      : 14px;
+            color          : rgba(55, 53, 47);
+            padding        : 0px 14px;
+            cursor         : pointer;
+
+            .sy-icon {
+                width              : 17px;
+                height             : 17px;
+                display            : block;
+                fill               : rgba(55, 53, 47);
+                color              : rgba(55, 53, 47);
+                overflow           : hidden;
+                flex-shrink        : 0;
+                backface-visibility: hidden;
+
+                img {
+                    width: 17px
+                }
+            }
+
+            .sy-ws-item-page-spread {
+                flex-shrink: 0;
+            }
+
+            .sy-ws-item-page-text {
+                display     : inline-flex;
+                margin-left : 8px;
+                margin-right: 14px;
+                flex-grow   : 1.0;
+            }
+
+            &:hover {
+                background-color: rgba(55, 53, 47, 0.08);
+            }
+
+            label {
+                position    : absolute;
+                top         : 0px;
+                right       : 0px;
+                bottom      : 0px;
+                color       : rgba(55, 53, 47, 0.4);
+                font-size   : 12px;
+                white-space : nowrap;
+                margin-right: 14px;
+                min-height  : 28px;
+                line-height : 28px;
+            }
+        }
+
+        &-divide {
+            height       : 1px;
+            display      : block;
+            margin-top   : 6px;
+            margin-bottom: 6px;
+            box-shadow   : rgba(55, 53, 47, 0.09) 0px -1px 0px;
+        }
+
+        &-text {
+            display    : block;
+            padding    : 0px 14px;
+            font-size  : 12px;
+            line-height: 16px;
+            color      : rgba(55, 53, 47, 0.4);
+        }
+
+        &-switch {}
+    }
+}
