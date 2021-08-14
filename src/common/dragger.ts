@@ -1,7 +1,7 @@
 
 import React from "react";
 import { CursorName, MouseCursor } from "./cursor";
-import { Point, Rect } from "./point";
+import { Point } from "./point";
 export class Dragger {
     constructor(el: HTMLElement, cursor?: CursorName, dis?: number) {
         this.el = el;
@@ -77,9 +77,10 @@ export function MouseDragger<T = Record<string, any>>(options: {
     cursor?: CursorName
     moveStart?: (event: MouseEvent | React.MouseEvent, data: T) => void,
     move?: (event: MouseEvent, data: T) => void,
+    moving?: (event: MouseEvent, data: T, isEnd?: boolean) => void,
     moveEnd?: (event: MouseEvent, isMove: boolean, data: T) => void
 }) {
-    if (typeof options.dis == 'number') options.dis = 5;
+    if (typeof options.dis == 'undefined') options.dis = 5;
     var data: T = {} as any;
     var move: (event: MouseEvent) => void;
     var up: (event: MouseEvent) => void;
@@ -89,15 +90,18 @@ export function MouseDragger<T = Record<string, any>>(options: {
         event: options.event
     };
     move = (event: MouseEvent) => {
-        if (scope.isMove == true) {
-            if (options.cursor)
-                MouseCursor.show(options.cursor);
-            if (typeof options.move == 'function') options.move(event, data)
-        }
-        else {
-            if (Point.from(scope.event).remoteBy(Point.from(event), options.dis)) {
-                if (typeof options.moveStart == 'function') options.moveStart(options.event, data);
-                scope.isMove = true;
+        if (scope.isDown == true) {
+            if (scope.isMove == true) {
+                if (options.cursor)
+                    MouseCursor.show(options.cursor);
+                if (typeof options.move == 'function') options.move(event, data)
+                if (typeof options.moving == 'function') options.moving(event, data, false);
+            }
+            else {
+                if (Point.from(options.event).remoteBy(Point.from(event), options.dis)) {
+                    if (typeof options.moveStart == 'function') options.moveStart(scope.event, data);
+                    scope.isMove = true;
+                }
             }
         }
     }
@@ -105,12 +109,13 @@ export function MouseDragger<T = Record<string, any>>(options: {
         if (scope.isDown == true) {
             if (options.cursor)
                 MouseCursor.hide();
+            if (scope.isMove && typeof options.moving == 'function') options.moving(event, data, true);
             if (typeof options.moveEnd == 'function') options.moveEnd(event, scope.isMove, data)
             scope.isMove = false;
             scope.isDown = false;
         }
-        document.addEventListener('mousemove', move);
-        document.addEventListener('mouseup', up)
+        document.removeEventListener('mousemove', move);
+        document.removeEventListener('mouseup', up)
     }
     document.addEventListener('mousemove', move);
     document.addEventListener('mouseup', up)
