@@ -88,7 +88,7 @@ module.exports = {
             loader: 'url-loader?limit=8192&name=assert/img/[hash:8].[name].[ext]'
         },
         {
-            test: /\.svg$/,
+            test: /assert\/svg\/[\w\.]+\.svg$/,
             use: ['@svgr/webpack']
             // loader: 'url-loader?limit=8192&name=assert/img/[hash:8].[name].[ext]'
         },
