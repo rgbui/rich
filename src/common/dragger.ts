@@ -35,6 +35,7 @@ export class Dragger {
         }));
         document.addEventListener('mousemove', (this._mousemove = (event) => {
             if (self.isDown == true) {
+                window.getSelection ? window.getSelection().removeAllRanges() : (document as any).selection.empty();
                 if (typeof self.mousemove == 'function') self.mousemove(event);
                 if (self.isMove) {
                     if (typeof self.move == 'function') self.move(self.mousedownEvent, event);
@@ -91,6 +92,7 @@ export function MouseDragger<T = Record<string, any>>(options: {
     };
     move = (event: MouseEvent) => {
         if (scope.isDown == true) {
+            window.getSelection ? window.getSelection().removeAllRanges() : (document as any).selection.empty();
             if (scope.isMove == true) {
                 if (options.cursor)
                     MouseCursor.show(options.cursor);
