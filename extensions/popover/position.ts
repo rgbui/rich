@@ -1,7 +1,8 @@
 import { Point, Rect } from "../../src/common/point";
 
 export type PopoverPosition = {
-    roundPoint?:Point;
+    center?: boolean;
+    roundPoint?: Point;
     roundArea?: Rect;
     elementArea?: Rect,
     dist?: number,
