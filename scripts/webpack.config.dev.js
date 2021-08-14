@@ -82,13 +82,13 @@ module.exports = {
             use: ['url-loader?limit=8192&name=assert/img/[hash:8].[name].[ext]']
         },
         {
-            test: /iconfont\.svg$/,
+            test: /assert\/font[\w\-\/]+\.(svg)$/,
             // 规则 limit给定的是图片的大小 如果我们给定图片的大小大于等于我们给定的limit 则不会被转为base64编码
             //反之会被转换name=[hash:8]-[name].[ext] 前面加hash值区分图片 名字原样输出
             loader: 'url-loader?limit=8192&name=assert/img/[hash:8].[name].[ext]'
         },
         {
-            test: /assert\/svg\/[\w\.]+\.svg$/,
+            test: /assert\/svg\/[\w\.\-]+\.svg$/,
             use: ['@svgr/webpack']
             // loader: 'url-loader?limit=8192&name=assert/img/[hash:8].[name].[ext]'
         },
