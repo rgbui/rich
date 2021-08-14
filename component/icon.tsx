@@ -13,7 +13,7 @@ export function Icon(props: {
     if (typeof props.icon == 'undefined' || !props.icon) {
         return <i>the icon is empty</i>
     }
-    var classList: string[] = ['sy-icon'];
+    var classList: string[] = ['shy-icon'];
     if (typeof props.icon == 'string' && props.icon.indexOf(':')) {
         var [name, prefix] = props.icon.split(':');
         classList.push(prefix);
