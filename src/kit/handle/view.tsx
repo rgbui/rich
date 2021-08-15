@@ -6,6 +6,7 @@ import { Bar } from ".";
 import { DropDirection } from "./direction";
 import { Tip } from "../../../component/tip";
 import { LangID } from "../../../i18n/declare";
+import DragHandle from "../../assert/svg/DragHandle.svg";
 
 export class BarView extends React.Component<{ bar: Bar }>{
     constructor(props) {
@@ -111,7 +112,9 @@ export class BarView extends React.Component<{ bar: Bar }>{
             <div className='sy-selector-drag-copy' ref={e => this.dragCopyEle = e}></div>
             <div className='sy-selector-bar' ref={e => this.barEle = e} onMouseDown={e => this.onMousedown(e.nativeEvent)}>
                 <Tip placement='left' ref={e => { this.toolTip = e; }} id={LangID.bar} >
-                    <span><Icon icon='drag:sy' size={14}></Icon></span>
+                    <span>
+                        <Icon icon={DragHandle} size={14}></Icon>
+                    </span>
                 </Tip>
             </div>
         </div>
