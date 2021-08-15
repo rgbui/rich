@@ -22,10 +22,10 @@ export class Point {
     get() {
         return { x: this.x, y: this.y };
     }
-    add(dx: number, dy: number) {
+    add(dx: number = 0, dy: number = 0) {
         return new Point(this.x + dx, this.y + dy);
     }
-    sub(x: number, y: number) {
+    sub(x: number = 0, y: number = 0) {
         return this.add(0 - x, 0 - y);
     }
     clone() {
