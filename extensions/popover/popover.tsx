@@ -13,8 +13,19 @@ class Popover extends EventsComponent<{ component: typeof React.Component, shado
         if (this.props.visible == 'hidden') {
             if (this.box) this.box.style.display = 'block';
         }
+        if (!pos.roundArea && pos.roundPoint) {
+            pos.roundArea = new Rect(pos.roundPoint.x, pos.roundPoint.y, 0, 0);
+        }
         if (pos.center == true) {
             this.point = new Point(window.innerWidth / 2, window.innerHeight / 2);
+        }
+        else if (pos.fixPoint) {
+            this.point = pos.fixPoint;
+            return new Promise((resolve: (ins: T) => void, reject) => {
+                this.forceUpdate(() => {
+                    resolve(this.cp as T);
+                })
+            })
         }
         else this.point = pos.roundArea.leftTop;
         return new Promise((resolve: (ins: T) => void, reject) => {
@@ -25,7 +36,7 @@ class Popover extends EventsComponent<{ component: typeof React.Component, shado
                         this.point = new Point((window.innerWidth - b.width) / 2, (window.innerHeight - b.height) / 2);
                         this.forceUpdate();
                     }
-                    else {
+                    else if (pos.roundArea) {
                         pos.elementArea = b;
                         var newPoint = RectUtility.cacPopoverPosition(pos);
                         if (!this.point.equal(newPoint)) {
