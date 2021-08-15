@@ -4,7 +4,7 @@ import { LangID } from "../../i18n/declare";
 import { PopoverSingleton } from "../popover/popover";
 import { EventsComponent } from "../events.component";
 import Link from "../../src/assert/svg/link.svg";
-import Upload from "../../src/assert/svg/uplaod.svg";
+import Upload from "../../src/assert/svg/upload.svg";
 import Unsplash from "../../src/assert/svg/unsplash.svg";
 import Pexels from "../../src/assert/svg/pexels.svg";
 import { OutsideUrl } from "../link/outside";
@@ -13,7 +13,9 @@ import { PopoverPosition } from "../popover/position";
 import { ResourceArguments } from "../icon/declare";
 import { GalleryType } from "./declare";
 import { ThirdGallery } from "./third.gallery";
-
+import { Icon } from "../../component/icon";
+import { Tab } from "../../component/tab";
+import "./style.less";
 class ImagePicker extends EventsComponent {
     mode: 'upload' | 'link' | 'pexels' | 'unsplash' = 'upload';
     onChangeMode(mode: ImagePicker['mode']) {
@@ -24,19 +26,21 @@ class ImagePicker extends EventsComponent {
         this.emit('select', { name: mode, ...data });
     }
     render() {
-        return <div className='shy-audio-picker' >
-            <div className='shy-audio-picker-head'>
-                <Tip id={LangID.IconUpload}><a onMouseDown={e => this.onChangeMode('upload')}><Upload></Upload></a></Tip>
-                <Tip id={LangID.IconLink}><a onMouseDown={e => this.onChangeMode('link')}><Link></Link></a></Tip>
-                <Tip overlay={'Pexels'}><a onMouseDown={e => this.onChangeMode('pexels')}><Pexels></Pexels></a></Tip>
-                <Tip overlay={'Unsplash'}><a onMouseDown={e => this.onChangeMode('unsplash')}><Unsplash></Unsplash></a></Tip>
-            </div>
-            <div className='shy-audio-picker-content'>
-                {this.mode == 'upload' && <UploadView mine='audio' change={e => this.onChange(this.mode, { url: e })}></UploadView>}
-                {this.mode == 'link' && <OutsideUrl change={e => this.onChange(this.mode, { url: e })}></OutsideUrl>}
-                {this.mode == 'pexels' && <ThirdGallery type={GalleryType.pexels} onChange={e => this.onChange(this.mode, { ...e })}></ThirdGallery>}
-                {this.mode == 'unsplash' && <ThirdGallery type={GalleryType.unsplash} onChange={e => this.onChange(this.mode, { ...e })}></ThirdGallery>}
-            </div>
+        return <div className='shy-image-picker' >
+            <Tab keeplive>
+                <Tab.Page item={<Tip placement='bottom' id={LangID.UploadImage}><Icon size={30} icon={Upload}></Icon></Tip>}>
+                    <UploadView mine='image' change={e => this.onChange(this.mode, { url: e })}></UploadView>
+                </Tab.Page>
+                <Tab.Page item={<Tip placement='bottom' id={LangID.IconLink}><Icon size={30} icon={Link}></Icon></Tip>}>
+                    <OutsideUrl change={e => this.onChange(this.mode, { url: e })}></OutsideUrl>
+                </Tab.Page>
+                <Tab.Page item={<Tip placement='bottom' overlay={'Pexels'}><Icon size={18} icon={Pexels}></Icon></Tip>}>
+                    <ThirdGallery type={GalleryType.pexels} onChange={e => this.onChange(this.mode, { ...e })}></ThirdGallery>
+                </Tab.Page>
+                <Tab.Page item={<Tip placement='bottom' overlay={'Unsplash'}><Icon size={16} icon={Unsplash}></Icon></Tip>}>
+                    <ThirdGallery type={GalleryType.unsplash} onChange={e => this.onChange(this.mode, { ...e })}></ThirdGallery>
+                </Tab.Page>
+            </Tab>
         </div>
     }
 }

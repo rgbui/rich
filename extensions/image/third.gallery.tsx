@@ -20,10 +20,10 @@ export class ThirdGallery extends React.Component<{ type: GalleryType, onChange:
         this.forceUpdate()
     }
     renderImages() {
-        return <div className='shy-gallery-pics'>{this.pics.map((pic, i) => {
-            <div className='shy-gallery-pic' onMouseDown={e => this.props.onChange(pic)}>
+        return <div className='shy-third-gallery-pics'>{this.pics.map((pic, i) => {
+            <div className='shy-third-gallery-pic' onMouseDown={e => this.props.onChange(pic)}>
                 <img src={pic.thumb} />
-                <div className='shy-gallery-author'>
+                <div className='shy-third-gallery-author'>
                     <span>by<a href={pic.link}>{pic.name}</a></span>
                 </div>
             </div>
@@ -33,14 +33,14 @@ export class ThirdGallery extends React.Component<{ type: GalleryType, onChange:
         var origin = <a href="https://www.pexels.com/" target="_blank">Pexels</a>;
         if (this.props.type == GalleryType.unsplash)
             origin = <a href="https://www.unsplash.com/" target="_blank">Unsplash</a>;
-        return <div className='shy-gallery'>
+        return <div className='shy-third-gallery'>
             <Input value={this.word} onChange={e => this.word = e} onEnter={e => this.onSearch(e)} clear placeholder={langProvider.getText(LangID.SearchImage)}></Input>
-            <div className='shy-gallery-origin'>
+            <div className='shy-third-gallery-origin'>
                 <Sp id={LangID.ImageOrigin}></Sp>
                 {origin}
             </div>
-            <div className='shy-gallery-content'>
-                {this.loading == true && <div className='shy-gallery-loading'></div>}
+            <div className='shy-third-gallery-content'>
+                {this.loading == true && <div className='shy-third-gallery-loading'></div>}
                 {this.loading == false && this.renderImages()}
             </div>
         </div>
