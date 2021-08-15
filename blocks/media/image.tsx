@@ -1,6 +1,6 @@
 import { BlockView } from "../../src/block/view";
 import { prop, url, view } from "../../src/block/factory/observable";
-import React from 'react';
+import React, { ReactText } from 'react';
 import { BlockAppear, BlockDisplay } from "../../src/block/enum";
 import { SolidArea } from "../../src/block/partial/appear";
 import { Rect } from "../../src/common/point";
@@ -11,17 +11,24 @@ import { LangID } from "../../i18n/declare";
 import { Sp } from "../../i18n/view";
 import { MouseDragger } from "../../src/common/dragger";
 
+import Picture from "../../src/assert/svg/picture.svg";
+import { Icon } from "../../component/icon";
+import { useImagePicker } from "../../extensions/image/picker";
+
 @url('/image')
 export class Image extends Block {
     @prop()
     src: ResourceArguments;
     @prop()
-    widthPercent: number = 100;
+    imageWidthPercent: number = 100;
     appear = BlockAppear.solid;
     display = BlockDisplay.block;
-    getVisibleContentBound() {
-        var img = this.el.querySelector('.sy-block-image-content img');
-        return Rect.from(img.getBoundingClientRect())
+    async onOpenUploadImage(event: React.MouseEvent) {
+        event.stopPropagation();
+        var r = await useImagePicker({ roundArea: Rect.fromEvent(event) });
+        if (r) {
+            await this.onUpdateProps({ src: r });
+        }
     }
 }
 @view('/image')
@@ -43,46 +50,52 @@ export class ImageView extends BlockView<Image>{
                 data.realWidth = self.img.getBoundingClientRect().width;
                 data.event = ev as any;
             },
-            move: (ev, data) => {
+            moving: (ev, data, isEnd) => {
                 var dx = ev.clientX - data.event.clientX;
                 var width: number;
                 if (operator == 'right') width = data.realWidth + dx * 2;
                 else width = data.realWidth - dx * 2;
                 width = Math.max(100, width);
                 width = Math.min(bound.width, width);
-                self.img.style.width = width + "%";
-            },
-            moveEnd: (ev, isMove, data) => {
-                var dx = ev.clientX - data.event.clientX;
-                var width: number;
-                if (operator == 'right') width = data.realWidth + dx * 2;
-                else width = data.realWidth - dx * 2;
-                width = Math.max(100, width);
-                width = Math.min(bound.width, width);
-                self.img.style.width = width + "%";
-                var rw = width * 100 / bound.width;
-                rw = Math.ceil(rw);
-                self.block.onUpdateProps({ widthPercent: rw });
+                self.img.style.width = width + "px";
+                if (isEnd) {
+                    var rw = width * 100 / bound.width;
+                    rw = Math.ceil(rw);
+                    self.block.onUpdateProps({ imageWidthPercent: rw });
+                }
             }
         })
     }
     img: HTMLImageElement;
-    render() {
-        return <div className='sy-block-image' style={this.block.visibleStyle} >
-            <div className='sy-block-image-content' >
-                {this.isLoadError && <div className='sy-block-image-error'>
-                    <ImageError></ImageError>
-                    <p className='sy-block-image-error-tip' ><Sp id={LangID.imageErrorLoadTip}></Sp></p>
-                    <p className='sy-block-image-error-learn-more'><a><Sp id={LangID.learnMore}></Sp></a></p>
-                    <p className='sy-block-image-error-url' >{this.errorUrl}</p>
-                </div>}
-                {!this.isLoadError && <div className='sy-block-image-content-view'>
+    renderEmptyImage() {
+        return <div className='sy-block-image-empty' onMouseDown={e => this.block.onOpenUploadImage(e)}>
+            <Icon icon={Picture} size={24}></Icon>
+            <Sp id={LangID.AddImageTip}></Sp>
+        </div>
+    }
+    renderImage() {
+        return <>{this.isLoadError && <div className='sy-block-image-error'>
+            <ImageError></ImageError>
+            <p className='sy-block-image-error-tip' ><Sp id={LangID.imageErrorLoadTip}></Sp></p>
+            <p className='sy-block-image-error-learn-more'><a><Sp id={LangID.learnMore}></Sp></a></p>
+            <p className='sy-block-image-error-url' >{this.errorUrl}</p>
+        </div>}
+            {!this.isLoadError && <div className='sy-block-image-content-view'>
+                <div className='sy-block-image-content-view-wrapper'>
                     <SolidArea content={
-                        this.block.src && <img style={{ width: this.block.widthPercent + "%" }} ref={e => this.img = e} onError={e => this.onError(e)} src={this.block?.src?.url} />
+                        this.block.src && <img style={{ width: this.block.imageWidthPercent + "%" }} ref={e => this.img = e} onError={e => this.onError(e)} src={this.block?.src?.url} />
                     }></SolidArea>
                     <div className='sy-block-image-left-resize' onMouseDown={e => this.onMousedown(e, 'left')}></div>
                     <div className='sy-block-image-right-resize' onMouseDown={e => this.onMousedown(e, 'right')}></div>
-                </div>}
+                </div>
+            </div>}
+        </>
+    }
+    render() {
+        return <div className='sy-block-image' style={this.block.visibleStyle} >
+            <div className='sy-block-image-content' >
+                {!this.block.src && this.renderEmptyImage()}
+                {this.block.src && this.renderImage()}
             </div>
         </div>
     }

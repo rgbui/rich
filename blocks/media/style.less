@@ -3,16 +3,119 @@
         background: rgb(242, 241, 238);
 
         &-tip {
-            font-size: 14px;
+            font-size  : 14px;
             line-height: 20px;
-            color: rgba(55, 53, 47, 0.6);
-            margin: 0px 0px 14px;
+            color      : rgba(55, 53, 47, 0.6);
+            margin     : 0px 0px 14px;
         }
+
         &-learn-more {}
+
         &-url {
-            font-size: 12px;
+            font-size  : 12px;
             line-height: 16px;
-            color: rgba(55, 53, 47, 0.4);
+            color      : rgba(55, 53, 47, 0.4);
         }
+    }
+
+    &-content {
+        width: 100%;
+    }
+
+    &-empty {
+        cursor         : pointer;
+        background     : rgb(242, 241, 238);
+        padding        : 12px 36px 12px 12px;
+        border-radius  : 3px;
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : center;
+        color          : rgba(55, 53, 47, 0.6);
+
+        .shy-icon {
+            fill        : rgba(55, 53, 47, 0.4);
+            margin-right: 12px;
+        }
+    }
+
+    &-content-view {
+        display        : flex;
+        justify-content: center;
+        align-items    : center;
+
+        &-wrapper {
+            position: relative;
+            max-width: 100%;
+
+            .sy-block-image-left-resize {
+                position: absolute;
+                top     : 0px;
+                left    : 0px;
+                bottom  : 0px;
+                height  : 100%;
+                width   : 15px;
+                cursor  : col-resize;
+
+                &::after {
+                    content      : '\20';
+                    display      : block;
+                    opacity      : 0;
+                    transition   : opacity 300ms ease-in 0s;
+                    border-radius: 20px;
+                    background   : rgba(15, 15, 15, 0.6);
+                    border       : 1px solid rgba(255, 255, 255, 0.9);
+                    width        : 6px;
+                    height       : 48px;
+                    max-height   : 50%;
+                    position     : absolute;
+                    top          : 50%;
+                    left         : 50%;
+                    transform    : translate(-50%, -50%);
+                }
+            }
+
+            .sy-block-image-right-resize {
+                position: absolute;
+                top     : 0px;
+                right   : 0px;
+                bottom  : 0px;
+                height  : 100%;
+                width   : 15px;
+                cursor  : col-resize;
+
+                &::after {
+                    content      : '\20';
+                    position     : absolute;
+                    top          : 50%;
+                    left         : 50%;
+                    transform    : translate(-50%, -50%);
+                    display      : block;
+                    opacity      : 0;
+                    transition   : opacity 300ms ease-in 0s;
+                    border-radius: 20px;
+                    background   : rgba(15, 15, 15, 0.6);
+                    border       : 1px solid rgba(255, 255, 255, 0.9);
+                    width        : 6px;
+                    height       : 48px;
+                    max-height   : 50%;
+                }
+            }
+
+            &:hover {
+                .sy-block-image-left-resize {
+                    &::after {
+                        opacity: 1;
+                    }
+                }
+
+                .sy-block-image-right-resize {
+                    &::after {
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+
+
     }
 }
