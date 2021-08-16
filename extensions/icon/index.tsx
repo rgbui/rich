@@ -32,7 +32,7 @@ class IconPicker extends EventsComponent {
                 <Tab.Page item={<Tip placement='bottom' id={LangID.IconUpload}><Upload ></Upload></Tip>}>
                     <UploadView mine='image' change={e => this.onChange({ name: 'image', url: e })}></UploadView>
                 </Tab.Page>
-                <Tab.Page item={<Tip placement='bottom' id={LangID.IconLink}><Link ></Link></Tip>}>
+                <Tab.Page item={<Tip placement='bottom' id={LangID.ImageLink}><Link ></Link></Tip>}>
                     <OutsideUrl change={e => this.onChange({ name: 'link', url: e })}></OutsideUrl>
                 </Tab.Page>
             </Tab>

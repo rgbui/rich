@@ -31,7 +31,7 @@ class ImagePicker extends EventsComponent {
                 <Tab.Page item={<Tip placement='bottom' id={LangID.UploadImage}><Icon size={30} icon={Upload}></Icon></Tip>}>
                     <UploadView mine='image' change={e => this.onChange(this.mode, { url: e })}></UploadView>
                 </Tab.Page>
-                <Tab.Page item={<Tip placement='bottom' id={LangID.IconLink}><Icon size={30} icon={Link}></Icon></Tip>}>
+                <Tab.Page item={<Tip placement='bottom' id={LangID.ImageLink}><Icon size={30} icon={Link}></Icon></Tip>}>
                     <OutsideUrl change={e => this.onChange(this.mode, { url: e })}></OutsideUrl>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' overlay={'Pexels'}><Icon size={18} icon={Pexels}></Icon></Tip>}>

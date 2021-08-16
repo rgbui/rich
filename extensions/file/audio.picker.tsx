@@ -23,7 +23,7 @@ class AudioPicker extends EventsComponent {
                 <Tab.Page item={<Tip placement='bottom' id={LangID.UploadAudio}><Icon size={30} icon={Upload}></Icon></Tip>}>
                     <UploadView mine='file' change={e => this.onChange({ name: 'upload', url: e })}></UploadView>
                 </Tab.Page>
-                <Tab.Page item={<Tip placement='bottom' id={LangID.IconLink}><Icon size={30} icon={Link}></Icon></Tip>}>
+                <Tab.Page item={<Tip placement='bottom' id={LangID.ImageLink}><Icon size={30} icon={Link}></Icon></Tip>}>
                     <OutsideUrl change={e => this.onChange({ name: 'link', url: e })}></OutsideUrl>
                 </Tab.Page>
             </Tab>
