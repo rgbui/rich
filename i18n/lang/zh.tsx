@@ -16,10 +16,15 @@ export default {
     [LangID.textToolMention]: <span>提及</span>,
     [LangID.IconEmoji]: <span>表情</span>,
     [LangID.IconFontAwesome]: <span>FontAwesome</span>,
-    [LangID.IconLink]: <span>添加网址</span>,
+    [LangID.ImageLink]: <span>添加图片网址</span>,
+    [LangID.FileLink]: <span>添加文件网址</span>,
+    [LangID.VideoLink]: <span>添加视频网址</span>,
+    [LangID.AudioLink]: <span>添加音频网址</span>,
     [LangID.IconUpload]: <span>上传图片</span>,
     [LangID.UploadImage]: <span>上传图片</span>,
     [LangID.UploadFile]: <span>上传文件</span>,
+    [LangID.UploadAudio]: <span>上传音频文件</span>,
+    [LangID.UploadVideo]: <span>上传视频文件</span>,
     [LangID.UploadRemark]: <span>请勿上传色情、涉政涉恐涉暴、侵权内容或
         <a>服务条款</a>
         中禁止上传的其它内容</span>,
