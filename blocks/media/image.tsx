@@ -1,6 +1,6 @@
 import { BlockView } from "../../src/block/view";
 import { prop, url, view } from "../../src/block/factory/observable";
-import React, { ReactText } from 'react';
+import React from 'react';
 import { BlockAppear, BlockDisplay } from "../../src/block/enum";
 import { SolidArea } from "../../src/block/partial/appear";
 import { Rect } from "../../src/common/point";
