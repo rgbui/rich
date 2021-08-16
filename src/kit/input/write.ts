@@ -228,37 +228,46 @@ export class TextInput$Write {
      * @param blockData 插入的block
      * @param value 当前输入的值（过滤掉命令的值），当前的文本值是在emit('inputting')是传出去的
      */
-    onBlockSelectorInsert(this: TextInput, blockData: BlockSelectorItem, value: string) {
+    onBlockSelectorInsert(this: TextInput, blockData: BlockSelectorItem, value: string): Promise<Block> {
         var anchor = this.explorer.activeAnchor;
         var at = this.textAt;
         var block = anchor.block;
-        this.textNode.innerHTML = value;
-        anchor.at = this.textAt + value.length;
-        this.willInputStore(block, value, at, true, async () => {
-            let extra: Record<string, any> = {};
-            if (typeof blockData.operator != 'undefined') {
-                extra = await blockStore.open(blockData.operator, anchor.bound);
-                if (Object.keys(extra).length == 0) {
-                    /**
-                     * 说明什么也没拿到，那么怎么办呢，
-                     * 不怎么办，终止后续的动作
-                     */
-                    return;
+        if (this.textNode) {
+            if (typeof value == 'undefined') {
+                value = this.textNode.innerHTML;
+            }
+            this.textNode.innerHTML = value;
+        }
+        anchor.at = this.textAt + (value ? value.length : 0);
+        return new Promise((resolve, reject) => {
+            this.willInputStore(block, value, at, true, async () => {
+                let extra: Record<string, any> = {};
+                if (typeof blockData.operator != 'undefined') {
+                    extra = await blockStore.open(blockData.operator, anchor.bound);
+                    if (Object.keys(extra).length == 0) {
+                        /**
+                         * 说明什么也没拿到，那么怎么办呢，
+                         * 不怎么办，终止后续的动作
+                         */
+                        return;
+                    }
                 }
-            }
-            var newBlock: Block;
-            if (blockData.isLine) {
-                newBlock = await block.visibleRightCreateBlock(blockData.url, extra);
-            }
-            else {
-                newBlock = await block.visibleDownCreateBlock(blockData.url, extra);
-            }
-            newBlock.mounted(() => {
-                var anchor = newBlock.visibleHeadAnchor;
-                if (anchor && (anchor.block.isSolid || anchor.block.isText))
-                    this.explorer.onFocusAnchor(anchor);
+                var newBlock: Block;
+                if (blockData.isLine) {
+                    newBlock = await block.visibleRightCreateBlock(blockData.url, extra);
+                }
+                else {
+                    newBlock = await block.visibleDownCreateBlock(blockData.url, extra);
+                }
+                newBlock.mounted(() => {
+                    resolve(newBlock);
+                    var anchor = newBlock.visibleHeadAnchor;
+                    if (anchor && (anchor.block.isSolid || anchor.block.isText))
+                        this.explorer.onFocusAnchor(anchor);
+                });
             });
-        });
+        })
+
     }
     async onInputDetector(this: TextInput, rule: DetectorRule, value: string, lastValue?: string) {
         var anchor = this.explorer.activeAnchor;
