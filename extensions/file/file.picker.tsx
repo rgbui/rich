@@ -4,32 +4,29 @@ import React from "react";
 import { Tip } from "../../component/tip";
 import { LangID } from "../../i18n/declare";
 import Link from "../../src/assert/svg/link.svg";
-import Upload from "../../src/assert/svg/uplaod.svg";
+import Upload from "../../src/assert/svg/upload.svg";
 import { OutsideUrl } from "../link/outside";
 import { UploadView } from "./upload";
 import { ResourceArguments } from "../icon/declare";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
+import { Tab } from "../../component/tab";
+import { Icon } from "../../component/icon";
 
 class FilePicker extends EventsComponent {
-    mode: 'upload' | 'link' = 'upload';
-    onChangeMode(mode: FilePicker['mode']) {
-        this.mode = mode;
-        this.forceUpdate()
-    }
-    onChange(mode: FilePicker['mode'], data: any) {
-        this.emit('select', { name: mode, ...data });
+    onChange(data: any) {
+        this.emit('select', { ...data });
     }
     render() {
-        return <div className='shy-audio-picker' >
-            <div className='shy-audio-picker-head'>
-                <Tip id={LangID.IconUpload}><a onMouseDown={e => this.onChangeMode('upload')}><Upload></Upload></a></Tip>
-                <Tip id={LangID.IconLink}><a onMouseDown={e => this.onChangeMode('link')}><Link></Link></a></Tip>
-            </div>
-            <div className='shy-audio-picker-content'>
-                {this.mode == 'upload' && <UploadView mine='audio' change={e => this.onChange(this.mode, { url: e })}></UploadView>}
-                {this.mode == 'link' && <OutsideUrl change={e => this.onChange(this.mode, { url: e })}></OutsideUrl>}
-            </div>
+        return <div className='shy-file-picker' >
+            <Tab keeplive>
+                <Tab.Page item={<Tip placement='bottom' id={LangID.UploadFile}><Icon size={30} icon={Upload}></Icon></Tip>}>
+                    <UploadView mine='file' change={e => this.onChange({ name: 'upload', url: e })}></UploadView>
+                </Tab.Page>
+                <Tab.Page item={<Tip placement='bottom' id={LangID.IconLink}><Icon size={30} icon={Link}></Icon></Tip>}>
+                    <OutsideUrl change={e => this.onChange({ name: 'link', url: e })}></OutsideUrl>
+                </Tab.Page>
+            </Tab>
         </div>
     }
 }
