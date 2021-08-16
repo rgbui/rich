@@ -3,7 +3,9 @@ import { Block } from "../../src/block";
 import { Rect } from "../../src/common/point";
 import { Events } from "../../util/events";
 import { util } from "../../util/util";
-import { OpenEmoji } from "../emoji";
+import { useOpenEmoji } from "../emoji";
+import { useFilePicker } from "../file/file.picker";
+import { useImagePicker } from "../image/picker";
 import { OpenTableStoreSelector } from "../tablestore";
 import { BlockGroup, BlockSelectorItem, BlockSelectorOperator } from "./delcare";
 class BlockStore extends Events {
@@ -51,15 +53,26 @@ class BlockStore extends Events {
             case BlockSelectorOperator.createTable:
                 var re = await OpenTableStoreSelector(rect);
                 if (re) {
-                    extra.initialInformation = util.clone(re);
+                    extra.initialData = util.clone(re);
                 }
                 break;
             case BlockSelectorOperator.selectEmoji:
-                var result = await OpenEmoji(rect);
+                var result = await useOpenEmoji({ roundArea: rect });
                 if (result) {
                     extra.src = { mime: 'emoji', code: result.code } as EmojiSrcType;
                 }
                 break;
+            case BlockSelectorOperator.selectImage:
+                var r = await useImagePicker({ roundArea: rect });
+                if (r) {
+                    extra.src = r;
+                }
+                break;
+            case BlockSelectorOperator.selectFile:
+                var r = await useFilePicker({ roundArea: rect });
+                if (r) {
+                    extra.src = r;
+                }
         }
         return extra;
     }
