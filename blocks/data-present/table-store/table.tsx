@@ -59,7 +59,7 @@ export class TableStore extends Block {
             }
         }
     }
-    initialInformation: { text: string, templateId?: string }
+    initialData: { text: string, templateId?: string }
     async loadSchema() {
         if (this.schemaId) {
             var schemaData = await this.page.emitAsync(PageDirective.loadTableSchema, this.schemaId);
@@ -262,7 +262,7 @@ export class TableStore extends Block {
     }
     async onCreated() {
         if (!this.schemaId) {
-            var schemaData = await this.page.emitAsync(PageDirective.createDefaultTableSchema, this.initialInformation);
+            var schemaData = await this.page.emitAsync(PageDirective.createDefaultTableSchema, this.initialData);
             this.schema = new TableSchema(schemaData);
             this.schemaId = this.schema.id;
             if (this.fields.length == 0) {

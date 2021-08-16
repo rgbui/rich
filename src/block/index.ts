@@ -25,6 +25,15 @@ export abstract class Block extends Events {
     date: number;
     pattern: Pattern;
     blocks: Record<string, Block[]> = { childs: [] };
+    /**
+     * 初始化的一些数据，该数据只是初始化的参数
+     * 最终的block不会存储它，
+     * 比如创建一个表格块（该表格块需要提供一个模板ID,
+     * 当创建表格时发现没有当前表格是空表格，
+     * 那么如果此时有initialData，则会自动加载
+     * ）
+     */
+    initialData: Record<string, any>;
     private __props: string[];
     get childs() {
         return this.blocks.childs;
