@@ -9,6 +9,11 @@ export class Button extends React.Component<{
     ghost?: boolean,
     style?: CSSProperties
 }>{
+    private _loading: boolean;
+    set loading(loading: boolean) {
+        this._loading = loading;
+        this.forceUpdate()
+    }
     render() {
         var props = this.props;
         var btn = <button style={this.props.style || {}}
