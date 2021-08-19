@@ -1,5 +1,15 @@
 import React from "react";
 export type F = (...args: any[]) => any;
+/**
+ * 最大相同事件绑定提示数，
+ * 如果相同name发现绑定次数据超过一定数量，可以认为出现了bug，
+ * 在某些事件的绑定上，有重复绑定的行为，so这里加个提示
+ */
+const maxSameEventBinds = 5;
+/**
+ * 事件组件，支持自定义react组件，同时提供事件订阅机制，
+ * 这在单例组件中非常有用。
+ */
 export class EventsComponent<G = {}, T = string> extends React.Component<G>{
     constructor(props: G) {
         super(props);
@@ -7,8 +17,12 @@ export class EventsComponent<G = {}, T = string> extends React.Component<G>{
     private __events: { name: T, fn?: F, once?: boolean }[];
     on(name: T[] | T | Record<string, F>, fn?: F) {
         if (!Array.isArray(this.__events)) this.__events = [];
-        if ((typeof name == 'string' || typeof name == 'number') && typeof fn == 'function')
+        if ((typeof name == 'string' || typeof name == 'number') && typeof fn == 'function') {
             this.__events.push({ name, fn });
+            if (this.__events.sum(g => g.name == name ? 1 : 0) > maxSameEventBinds) {
+                console.warn('shy eventscomponent overflow the same event name:' + name);
+            }
+        }
         else if (Array.isArray(name)) {
             name.forEach(n => this.on(n, fn));
         }
