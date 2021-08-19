@@ -7,19 +7,24 @@ export function Input(props: {
     onChange?: (value: string) => void,
     onEnter?: (value) => void,
     clear?: boolean,
-    maxLength?: number
+    maxLength?: number,
+    ignoreFilterWhitespace?: boolean
 }
 ) {
+    function filterValue(value: string) {
+        if (props.ignoreFilterWhitespace == true) return value;
+        return value.trim()
+    }
     function keydown(e: React.KeyboardEvent) {
         if (e.key == 'Enter' && props.onEnter) {
-            props.onEnter((e.target as HTMLInputElement).value);
+            props.onEnter(filterValue((e.target as HTMLInputElement).value));
         }
     }
     return <div className='shy-input' style={props.style || {}}>
         <input type='text' defaultValue={props.value || ''}
             disabled={props.disabled ? true : false}
             placeholder={props.placeholder}
-            onInput={e => props.onChange && props.onChange((e.target as HTMLInputElement).value)}
+            onInput={e => props.onChange && props.onChange(filterValue((e.target as HTMLInputElement).value))}
             onKeyDown={e => keydown(e)}
             maxLength={props.maxLength || undefined}
         ></input>
@@ -34,17 +39,22 @@ export function Textarea(props: {
     onChange?: (value: string) => void,
     onEnter?: (value) => void,
     clear?: boolean,
-    maxLength?: number
+    maxLength?: number,
+    ignoreFilterWhitespace?: boolean
 }) {
+    function filterValue(value: string) {
+        if (props.ignoreFilterWhitespace == true) return value;
+        return value.trim()
+    }
     function keydown(e: React.KeyboardEvent) {
         if (e.key == 'Enter' && props.onEnter) {
-            props.onEnter((e.target as HTMLInputElement).value);
+            props.onEnter(filterValue((e.target as HTMLInputElement).value));
         }
     }
-    return <div className='shy-textarea'  style={props.style || {}}>
+    return <div className='shy-textarea' style={props.style || {}}>
         <textarea maxLength={props.maxLength || undefined} defaultValue={props.value || ''}
             disabled={props.disabled ? true : false}
-            placeholder={props.placeholder} onInput={e => props.onChange && props.onChange((e.target as HTMLInputElement).value)}
+            placeholder={props.placeholder} onInput={e => props.onChange && props.onChange(filterValue((e.target as HTMLInputElement).value))}
             onKeyDown={e => keydown(e)}></textarea>
     </div>
 }
