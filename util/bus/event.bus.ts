@@ -3,6 +3,14 @@ import { IconArguments } from "../../extensions/icon/declare";
 import { GalleryType, OuterPic } from "../../extensions/image/declare";
 import { User } from "../../src/types/user";
 import { Directive } from "./directive";
+
+/**
+ * 最大相同事件绑定提示数，
+ * 如果相同name发现绑定次数据超过一定数量，可以认为出现了bug，
+ * 在某些事件的绑定上，有重复绑定的行为，so这里加个提示
+ */
+const maxSameEventBinds = 10;
+
 /***
  * 内部消息订阅通知触发器
  * 
@@ -11,6 +19,11 @@ class EventBus {
     private _events: { directive: Directive, action: (...args: any[]) => any }[] = [];
     on(directive: Directive, action: (...args: any[]) => any) {
         this._events.push({ directive, action });
+        var sum = this._events.sum(g => g.directive == directive ? 1 : 0);
+        if (sum>maxSameEventBinds)
+        {
+            console.warn(`event bus the same name ${Directive[directive]} events total overflow maxSameEventBinds`)
+        }
     }
     only(directive: Directive, action: (...args: any[]) => any) {
         this._events.removeAll(g => g.directive == directive);
@@ -74,6 +87,8 @@ interface EventBus {
     on(directive: Directive.OpenPageItem, fn: (item: any) => void): void;
     fire(directive: Directive.OpenPageItem, item: any): void;
 
+    on(directive: Directive.UpdateUser, fn: (user: Record<string, any>) => Promise<void>): void;
+    fireAsync(directive: Directive.UpdateUser, user: Record<string, any>): Promise<void>;
 
 
 }
