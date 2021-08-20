@@ -1,4 +1,4 @@
-export const copyText = (text, fn?: any) => {
+export const CopyText = (text, fn?: any) => {
   if (navigator.clipboard) {
     navigator.clipboard
       .writeText(text)
@@ -17,7 +17,7 @@ export const copyText = (text, fn?: any) => {
       })
   } else if ((window as any).clipboardData && (window as any).clipboardData.setData) {
     // Internet Explorer-specific code path to prevent textarea being shown while dialog is visible.
-    ;(window as any).clipboardData.setData('Text', text)
+    ; (window as any).clipboardData.setData('Text', text)
     if (fn) {
       fn()
     }
