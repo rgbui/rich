@@ -1,9 +1,10 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 export class Select extends React.Component<{
     disabled?: boolean,
     value?: any,
     options: { text: string, value: any }[],
-    onChange?: (value: any) => void
+    onChange?: (value: any) => void,
+    style?:CSSProperties
 }>{
     private toggle: boolean = false;
     mousedown(event: MouseEvent) {
@@ -33,7 +34,7 @@ export class Select extends React.Component<{
             self.toggle = !self.toggle;
             self.forceUpdate()
         }
-        return <div className='shy-select' ref={e => this.el = e}>
+        return <div className='shy-select' style={this.props.style||{}} ref={e => this.el = e}>
             <div className='shy-select-selection' onClick={e => props.disabled ? undefined : (setToggle())}><input defaultValue={props.options.find(g => g.value == props.value)?.text} /></div>
             {this.toggle && <div className='shy-select-drop'>
                 {props.options.map((op, index) => {
