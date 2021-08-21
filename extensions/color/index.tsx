@@ -1,5 +1,5 @@
 import React from "react";
-import { EventsComponent } from "../events.component";
+import { EventsComponent } from "../../component/events.component";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
 import { BackgroundColorList, FontColorList } from "./data";

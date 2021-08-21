@@ -2,7 +2,7 @@ import { Page } from "..";
 import { BlockSelector } from "../../../extensions/block";
 import { InputDetector } from "../../../extensions/input.detector/detector";
 import { AtSelector } from "../../../extensions/at";
-import { EventsComponent } from "../../../extensions/events.component";
+import { EventsComponent } from "../../../component/events.component";
 import { TextTool } from "../../../extensions/text.tool/text.tool";
 import { Kit } from "../../kit";
 import { PageBlockSelector } from "../interaction/block.selector";

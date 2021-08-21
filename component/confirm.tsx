@@ -1,6 +1,6 @@
 import React from "react";
 import { Singleton } from "../extensions/Singleton";
-import { EventsComponent } from "../extensions/events.component";
+import { EventsComponent } from "./events.component";
 import { Button } from "./button";
 class SyConfirm extends EventsComponent {
     private msg: string;

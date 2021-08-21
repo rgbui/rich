@@ -6,7 +6,7 @@ import Equation from "../../src/assert/svg/equation.svg";
 import Mention from "../../src/assert/svg/mention.svg";
 import { Dragger } from "../../src/common/dragger";
 import { TextCommand } from "./text.command";
-import { EventsComponent } from "../events.component";
+import { EventsComponent } from "../../component/events.component";
 import { BlockCssName, FillCss } from "../../src/block/pattern/css";
 import { LangID } from "../../i18n/declare";
 import { Tip } from "../../component/tip";

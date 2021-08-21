@@ -2,7 +2,7 @@
 import React from "react";
 import { Tip } from "../../component/tip";
 import { LangID } from "../../i18n/declare";
-import { EventsComponent } from "../events.component";
+import { EventsComponent } from "../../component/events.component";
 import Emoji from "../../src/assert/svg/emoji.svg";
 import FontAwesome from "../../src/assert/svg/fontawesome.svg";
 import Link from "../../src/assert/svg/link.svg";

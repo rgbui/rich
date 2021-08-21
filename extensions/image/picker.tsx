@@ -2,7 +2,7 @@ import React from "react";
 import { Tip } from "../../component/tip";
 import { LangID } from "../../i18n/declare";
 import { PopoverSingleton } from "../popover/popover";
-import { EventsComponent } from "../events.component";
+import { EventsComponent } from "../../component/events.component";
 import Link from "../../src/assert/svg/link.svg";
 import Upload from "../../src/assert/svg/upload.svg";
 import Unsplash from "../../src/assert/svg/unsplash.svg";

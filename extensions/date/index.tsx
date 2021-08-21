@@ -4,7 +4,7 @@ import React, { CSSProperties } from "react";
  * 
  */
 import dayjs, { Dayjs } from "dayjs";
-import { EventsComponent } from "../events.component";
+import { EventsComponent } from "../../component/events.component";
 import { Point, Rect, RectUtility } from "../../src/common/point";
 
 import chevronLeft from "../../src/assert/svg/chevronLeft.svg";

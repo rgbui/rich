@@ -3,7 +3,7 @@ import { Input } from "../../component/input";
 import { LangID } from "../../i18n/declare";
 
 import { langProvider } from "../../i18n/provider";
-import { EventsComponent } from "../events.component";
+import { EventsComponent } from "../../component/events.component";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
 import { PageLink } from "./declare";

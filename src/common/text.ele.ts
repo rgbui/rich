@@ -138,7 +138,6 @@ export class TextEle {
         }
     }
     static getAt(ele: HTMLElement, point: Point) {
-        console.log(ele);
         var content = this.getTextContent(ele);
         var ts = content.split("");
         var rect = new Rect();

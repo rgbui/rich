@@ -4,7 +4,11 @@ import { Icon } from "../icon";
 import { Switch } from "../switch";
 import { MenuBox } from "./box";
 import { MenuItemType, MenuItemTypeValue } from "./declare";
-export class MenuItem extends React.Component<{ item: MenuItemType, deep: number, select: (item: MenuItemType, event?: MouseEvent) => void }>{
+export class MenuItem extends React.Component<{
+    item: MenuItemType,
+    deep: number,
+    select: (item: MenuItemType, event?: MouseEvent) => void
+}>{
     el: HTMLElement;
     mousedown(item: MenuItemType, event: MouseEvent) {
         this.props?.select(item, event);

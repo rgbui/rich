@@ -1,5 +1,5 @@
 import React from "react";
-import { EventsComponent } from "../events.component";
+import { EventsComponent } from "../../component/events.component";
 import './style.less';
 import { EmojiCode } from "./store";
 import { EmojiView } from "./view";

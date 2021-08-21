@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM, { createPortal } from "react-dom";
 import { KeyboardCode } from "../../src/common/keys";
 import { Point } from "../../src/common/point";
-import { EventsComponent } from "../events.component";
+import { EventsComponent } from "../../component/events.component";
 import { BlockSelectorItem } from "./delcare";
 import { blockStore } from "./store";
 
