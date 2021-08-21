@@ -138,6 +138,7 @@ export class TextEle {
         }
     }
     static getAt(ele: HTMLElement, point: Point) {
+        console.log(ele);
         var content = this.getTextContent(ele);
         var ts = content.split("");
         var rect = new Rect();
@@ -155,6 +156,14 @@ export class TextEle {
             }
         }
         else rect = currentRect;
+        /**
+         * 外面的容器rect是当前第一行最在的宽度，
+         * 第一行前面有可能还有其它元素，
+         * 第一行元素准确的宽度不是自身的宽，是最外层的父宽度减于当前的偏移left
+         */
+        if (rect !== currentRect) {
+            currentRect.width = rect.width - (currentRect.left - rect.left);
+        }
         var fontStyle = this.getFontStyle(ele);
         var rowWidth = rect.width;
         var firstRowWidth = currentRect.width;
@@ -163,11 +172,6 @@ export class TextEle {
         var lineHeight = fontStyle.lineHeight;
         var top = point.y - currentRect.top;
         var left = point.x;
-
-        // console.log('bounds', currentBouds);
-        // console.log('rect', rect);
-        // console.log('currentRect', currentRect);
-
         var currentBoundRight = currentBouds.max(g => g.left + g.width);
         var currentBoundBottom = currentBouds.max(g => g.top + g.height);
         var currentBoundLeft = currentBouds.min(g => g.left);
@@ -181,6 +185,8 @@ export class TextEle {
             top = currentBoundBottom - currentRect.top - 1;
         if (left < currentBoundLeft) left = currentBoundLeft + 1;
         let i = 0;
+        //console.log({ top, left, currentRect, rect, lineHeight, firstRowWidth, rowWidth })
+        // debugger
         for (; i < ts.length; i++) {
             var word = ts[i];
             /**

@@ -2,24 +2,21 @@
     position   : relative;
     display    : inline;
     white-space: pre-wrap;
-    word-break : break-word;
+    word-break : break-all;
     &.empty::after {
         content                : attr(placeholder);
         display                : inline;
         -webkit-text-fill-color: rgba(55, 53, 47, 0.4);
     }
 }
-
 .sy-appear-text-line {
     white-space: pre-wrap;
-    word-break : break-word;
-
+    word-break : break-all;
     &::after {
-        content: '\D\A';
+        content    : '\D\A';
         white-space: pre;
     }
 }
-
 .sy-appear-solid {
     position: relative;
 }
