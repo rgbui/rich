@@ -42,12 +42,12 @@ export class ImageView extends BlockView<Image>{
     }
     onMousedown(event: React.MouseEvent, operator: 'left' | "right") {
         var el = this.block.el;
-        var bound = el.getBoundingClientRect()
+        var bound = el.getBoundingClientRect();
         var self = this;
         MouseDragger<{ event: React.MouseEvent, realWidth: number }>({
             event,
             moveStart(ev, data) {
-                data.realWidth = self.img.getBoundingClientRect().width;
+                data.realWidth = self.imageWrapper.getBoundingClientRect().width;
                 data.event = ev as any;
             },
             moving: (ev, data, isEnd) => {
@@ -57,7 +57,7 @@ export class ImageView extends BlockView<Image>{
                 else width = data.realWidth - dx * 2;
                 width = Math.max(100, width);
                 width = Math.min(bound.width, width);
-                self.img.style.width = width + "px";
+                self.imageWrapper.style.width = width + "px";
                 if (isEnd) {
                     var rw = width * 100 / bound.width;
                     rw = Math.ceil(rw);
@@ -66,7 +66,7 @@ export class ImageView extends BlockView<Image>{
             }
         })
     }
-    img: HTMLImageElement;
+    imageWrapper: HTMLDivElement;
     renderEmptyImage() {
         return <div className='sy-block-image-empty' onMouseDown={e => this.block.onOpenUploadImage(e)}>
             <Icon icon={Picture} size={24}></Icon>
@@ -81,9 +81,9 @@ export class ImageView extends BlockView<Image>{
             <p className='sy-block-image-error-url' >{this.errorUrl}</p>
         </div>}
             {!this.isLoadError && <div className='sy-block-image-content-view'>
-                <div className='sy-block-image-content-view-wrapper'>
+                <div className='sy-block-image-content-view-wrapper' ref={e => this.imageWrapper = e} style={{ width: this.block.imageWidthPercent ? this.block.imageWidthPercent + "%" : undefined }}>
                     <SolidArea content={
-                        this.block.src && <img style={{ width: this.block.imageWidthPercent + "%" }} ref={e => this.img = e} onError={e => this.onError(e)} src={this.block?.src?.url} />
+                        this.block.src && <img onError={e => this.onError(e)} src={this.block?.src?.url} />
                     }></SolidArea>
                     <div className='sy-block-image-left-resize' onMouseDown={e => this.onMousedown(e, 'left')}></div>
                     <div className='sy-block-image-right-resize' onMouseDown={e => this.onMousedown(e, 'right')}></div>
