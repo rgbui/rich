@@ -1,6 +1,6 @@
 import React from "react";
 import { PopoverPosition } from "../../extensions/popover/position";
-import { Singleton } from "../../extensions/Singleton";
+import { Singleton } from "../Singleton";
 import { EventsComponent } from "../events.component";
 import "./style.less";
 import { MenuBox } from "./box";

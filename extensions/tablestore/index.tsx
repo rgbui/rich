@@ -2,7 +2,7 @@ import React from "react";
 import { Dragger } from "../../src/common/dragger";
 import { Point, Rect, RectUtility } from "../../src/common/point";
 import { EventsComponent } from "../../component/events.component";
-import { Singleton } from "../Singleton";
+import { Singleton } from "../../component/Singleton";
 import './style.less';
 
 /**

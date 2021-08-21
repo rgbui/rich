@@ -10,7 +10,7 @@ import { Point, Rect, RectUtility } from "../../src/common/point";
 import chevronLeft from "../../src/assert/svg/chevronLeft.svg";
 import chevronRight from "../../src/assert/svg/chevronRight.svg";
 import { Icon } from "../../component/icon";
-import { Singleton } from "../Singleton";
+import { Singleton } from "../../component/Singleton";
 import "./style.less";
 import { PopoverPosition } from "../popover/position";
 
