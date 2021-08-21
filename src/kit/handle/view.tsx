@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from 'react-dom';
 import { Point } from "../../common/point";
-import { Icon } from "../../../component/icon";
+import { Icon } from "../../../component/view/icon";
 import { Bar } from ".";
 import { DropDirection } from "./direction";
-import { Tip } from "../../../component/tip";
+import { Tip } from "../../../component/view/tip";
 import { LangID } from "../../../i18n/declare";
 import DragHandle from "../../assert/svg/DragHandle.svg";
 

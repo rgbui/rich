@@ -9,7 +9,7 @@ import '../index';
 import './index.less';
 import { data } from "./data";
 import { Page } from '../src/page';
-import { Loading } from '../component/loading';
+import { Loading } from '../component/view/loading';
 
 
 ReactDOM.render(

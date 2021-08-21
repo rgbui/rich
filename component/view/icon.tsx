@@ -1,6 +1,6 @@
 
 import React, { CSSProperties } from 'react';
-import { IconArguments } from '../extensions/icon/declare';
+import { IconArguments } from '../../extensions/icon/declare';
 export function Icon(props: {
     icon: string | SvgrComponent | JSX.Element | IconArguments,
     click?: (e: React.MouseEvent) => void,

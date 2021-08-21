@@ -1,7 +1,7 @@
 import React from "react";
 import { createPortal } from "react-dom";
 import { Point, Rect, RectUtility } from "../../src/common/point";
-import { Icon } from "../../component/icon";
+import { Icon } from "../../component/view/icon";
 import Equation from "../../src/assert/svg/equation.svg";
 import Mention from "../../src/assert/svg/mention.svg";
 import { Dragger } from "../../src/common/dragger";
@@ -9,11 +9,11 @@ import { TextCommand } from "./text.command";
 import { EventsComponent } from "../../component/events.component";
 import { BlockCssName, FillCss } from "../../src/block/pattern/css";
 import { LangID } from "../../i18n/declare";
-import { Tip } from "../../component/tip";
+import { Tip } from "../../component/view/tip";
 import { useLinkPicker } from "../link/picker";
 import { useColorSelector } from "../color";
 import { Block } from "../../src/block";
-import { useSelectMenuItem } from "../../component/menu";
+import { useSelectMenuItem } from "../../component/view/menu";
 
 export type TextToolStyle = {
     link: string,

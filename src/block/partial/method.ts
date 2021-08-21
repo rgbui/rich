@@ -1,5 +1,5 @@
 import { Block } from "..";
-import { MenuItemType, MenuItemTypeValue } from "../../../component/menu/declare";
+import { MenuItemType, MenuItemTypeValue } from "../../../component/view/menu/declare";
 import { BlockDirective } from "../enum";
 import duplicate from "../../assert/svg/duplicate.svg";
 import loop from "../../assert/svg/loop.svg";

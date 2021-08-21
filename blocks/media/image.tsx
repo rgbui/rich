@@ -12,7 +12,7 @@ import { Sp } from "../../i18n/view";
 import { MouseDragger } from "../../src/common/dragger";
 
 import Picture from "../../src/assert/svg/picture.svg";
-import { Icon } from "../../component/icon";
+import { Icon } from "../../component/view/icon";
 import { useImagePicker } from "../../extensions/image/picker";
 
 @url('/image')

@@ -1,5 +1,5 @@
 import React from "react";
-import { Tip } from "../../component/tip";
+import { Tip } from "../../component/view/tip";
 import { LangID } from "../../i18n/declare";
 import { OutsideUrl } from "../link/outside";
 import { EventsComponent } from "../../component/events.component";
@@ -10,8 +10,8 @@ import { ResourceArguments } from "../icon/declare";
 
 import { PopoverPosition } from "../popover/position";
 import { PopoverSingleton } from "../popover/popover";
-import { Tab } from "../../component/tab";
-import { Icon } from "../../component/icon";
+import { Tab } from "../../component/view/tab";
+import { Icon } from "../../component/view/icon";
 class AudioPicker extends EventsComponent {
     onChange(data: any)
     {

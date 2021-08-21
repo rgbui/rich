@@ -1,6 +1,6 @@
 import React from "react";
-import { Button } from "../../component/button";
-import { Input } from "../../component/input";
+import { Button } from "../../component/view/button";
+import { Input } from "../../component/view/input";
 import { Sp } from "../../i18n/view";
 import { LangID } from "../../i18n/declare";
 import { langProvider } from "../../i18n/provider";

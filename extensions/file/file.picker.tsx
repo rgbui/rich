@@ -1,7 +1,7 @@
 
 import { EventsComponent } from "../../component/events.component";
 import React from "react";
-import { Tip } from "../../component/tip";
+import { Tip } from "../../component/view/tip";
 import { LangID } from "../../i18n/declare";
 import Link from "../../src/assert/svg/link.svg";
 import Upload from "../../src/assert/svg/upload.svg";
@@ -10,8 +10,8 @@ import { UploadView } from "./upload";
 import { ResourceArguments } from "../icon/declare";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
-import { Tab } from "../../component/tab";
-import { Icon } from "../../component/icon";
+import { Tab } from "../../component/view/tab";
+import { Icon } from "../../component/view/icon";
 
 class FilePicker extends EventsComponent {
     onChange(data: any) {

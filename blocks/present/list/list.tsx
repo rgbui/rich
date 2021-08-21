@@ -1,6 +1,6 @@
 import { Block } from "../../../src/block";
 import React from 'react';
-import { Icon } from "../../../component/icon";
+import { Icon } from "../../../component/view/icon";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import "./style.less";
 import { BlockView } from "../../../src/block/view";

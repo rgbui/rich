@@ -7,9 +7,9 @@ import { Anchor } from "../../kit/selection/anchor";
 import { util } from "../../../util/util";
 import { TemporaryPurpose } from "./declare";
 import { PageDirective } from "../directive";
-import { useSelectMenuItem } from "../../../component/menu";
+import { useSelectMenuItem } from "../../../component/view/menu";
 import { Rect } from "../../common/point";
-import { MenuItemType } from "../../../component/menu/declare";
+import { MenuItemType } from "../../../component/view/menu/declare";
 import { BlockDirective } from "../../block/enum";
 export class PageEvent {
     /**

@@ -1,5 +1,5 @@
 import React from "react";
-import { Input } from "../../component/input";
+import { Input } from "../../component/view/input";
 import { LangID } from "../../i18n/declare";
 
 import { langProvider } from "../../i18n/provider";

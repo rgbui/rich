@@ -1,5 +1,5 @@
 import React from "react";
-import { Tip } from "../../component/tip";
+import { Tip } from "../../component/view/tip";
 import { langProvider } from "../../i18n/provider";
 
 import "../../src/assert/font-awesome/less/solid.less";

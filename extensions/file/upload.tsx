@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "../../component/button";
+import { Button } from "../../component/view/button";
 import { OpenFileDialoug } from "../../component/file";
 import { Sp } from "../../i18n/view";
 import { LangID } from "../../i18n/declare";

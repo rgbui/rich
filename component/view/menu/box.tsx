@@ -1,6 +1,6 @@
 import React from "react";
-import { PopoverPosition } from "../../extensions/popover/position";
-import { Point, Rect, RectUtility } from "../../src/common/point";
+import { PopoverPosition } from "../../../extensions/popover/position";
+import { Point, Rect, RectUtility } from "../../../src/common/point";
 import { MenuItemType } from "./declare";
 import { MenuItem } from "./item";
 export class MenuBox extends React.Component<{ items: MenuItemType[], deep: number, select: (item: MenuItemType, event?: MouseEvent) => void }>{

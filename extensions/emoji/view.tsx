@@ -1,5 +1,5 @@
 import React from "react";
-import { Tip } from "../../component/tip";
+import { Tip } from "../../component/view/tip";
 import { dom } from "../../src/common/dom";
 import { EmojiCode, emojiStore, EmojiType } from "./store";
 export class EmojiView extends React.Component<{ loaded?: () => void, onChange: (emoji: EmojiCode) => void }>{

@@ -1,5 +1,5 @@
 import React from "react";
-import { Rect } from "../../src/common/point";
+import { Rect } from "../../../src/common/point";
 import { Icon } from "../icon";
 import { Switch } from "../switch";
 import { MenuBox } from "./box";

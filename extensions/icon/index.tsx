@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Tip } from "../../component/tip";
+import { Tip } from "../../component/view/tip";
 import { LangID } from "../../i18n/declare";
 import { EventsComponent } from "../../component/events.component";
 import Emoji from "../../src/assert/svg/emoji.svg";
@@ -11,7 +11,7 @@ import { UploadView } from "../file/upload";
 import { EmojiView } from "../emoji/view";
 import { FontAwesomeView } from "../font-awesome";
 import { OutsideUrl } from "../link/outside";
-import { Tab } from "../../component/tab";
+import { Tab } from "../../component/view/tab";
 import { IconArguments } from "./declare";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";

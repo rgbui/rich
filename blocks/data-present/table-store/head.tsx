@@ -6,7 +6,7 @@ import React from "react";
 import { ChildsArea } from "../../../src/block/partial/appear";
 import { TableStore } from "./table";
 import plus from "../../../src/assert/svg/plus.svg";
-import { Icon } from "../../../component/icon";
+import { Icon } from "../../../component/view/icon";
 import { BlockFactory } from "../../../src/block/factory/block.factory";
 
 @url('/tablestore/head')

@@ -1,9 +1,9 @@
 
 import Tooltip from "rc-tooltip";
 import React from "react";
-import { Sp } from "../i18n/view";
-import { LangID } from "../i18n/declare";
-import "../node_modules/rc-tooltip/assets/bootstrap_white.css";
+import { Sp } from "../../i18n/view";
+import { LangID } from "../../i18n/declare";
+import "../../node_modules/rc-tooltip/assets/bootstrap_white.css";
 export class Tip extends React.Component<{
     children: React.ReactElement | React.ReactElement[],
     id?: LangID,

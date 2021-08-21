@@ -1,5 +1,5 @@
 import React from "react";
-import { Tip } from "../../component/tip";
+import { Tip } from "../../component/view/tip";
 import { LangID } from "../../i18n/declare";
 import { PopoverSingleton } from "../popover/popover";
 import { EventsComponent } from "../../component/events.component";
@@ -13,8 +13,8 @@ import { PopoverPosition } from "../popover/position";
 import { ResourceArguments } from "../icon/declare";
 import { GalleryType } from "./declare";
 import { ThirdGallery } from "./third.gallery";
-import { Icon } from "../../component/icon";
-import { Tab } from "../../component/tab";
+import { Icon } from "../../component/view/icon";
+import { Tab } from "../../component/view/tab";
 import "./style.less";
 class ImagePicker extends EventsComponent {
     mode: 'upload' | 'link' | 'pexels' | 'unsplash' = 'upload';

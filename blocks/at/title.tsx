@@ -6,7 +6,7 @@ import { TextArea } from "../../src/block/partial/appear";
 import { IconArguments } from "../../extensions/icon/declare";
 import { BlockView } from "../../src/block/view";
 import { PageDirective } from "../../src/page/directive";
-import { Icon } from "../../component/icon";
+import { Icon } from "../../component/view/icon";
 import { useIconPicker } from "../../extensions/icon";
 import { Rect } from "../../src/common/point";
 import { messageChannel } from "../../util/bus/event.bus";
