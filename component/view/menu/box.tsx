@@ -1,6 +1,7 @@
 import React from "react";
 import { PopoverPosition } from "../../../extensions/popover/position";
 import { Point, Rect, RectUtility } from "../../../src/common/point";
+import { LayerWield, popoverLayer } from "../../zindex";
 import { MenuItemType } from "./declare";
 import { MenuItem } from "./item";
 export class MenuBox extends React.Component<{ items: MenuItemType[], deep: number, select: (item: MenuItemType, event?: MouseEvent) => void }>{
@@ -8,6 +9,7 @@ export class MenuBox extends React.Component<{ items: MenuItemType[], deep: numb
         return <div className='sy-menu-box' ref={e => this.el = e} style={{
             top: this.point.y,
             left: this.point.x,
+            zIndex: popoverLayer.zoom(LayerWield.menuBox),
             overflowY: this.props.items.exists(g => g.childs && g.childs.length > 0) ? "visible" : "auto"
         }}>
             {this.props.items.map((item, index) => {
@@ -26,7 +28,6 @@ export class MenuBox extends React.Component<{ items: MenuItemType[], deep: numb
                 var newPoint = RectUtility.cacPopoverPosition(pos);
                 if (!this.point.equal(newPoint)) {
                     this.point = newPoint;
-                    console.log('newPoint', this.point);
                     this.forceUpdate();
                 }
             }

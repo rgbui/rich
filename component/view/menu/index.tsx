@@ -5,7 +5,7 @@ import { EventsComponent } from "../../events.component";
 import "./style.less";
 import { MenuBox } from "./box";
 import { MenuItemType, MenuItemTypeValue } from "./declare";
-
+import { LayerWield, popoverLayer } from "../../zindex";
 class MenuPanel<T> extends EventsComponent {
     open(pos: PopoverPosition, menus: MenuItemType<T>[]) {
         this.menus = menus;
@@ -21,6 +21,7 @@ class MenuPanel<T> extends EventsComponent {
     }
     close() {
         this.visible = false;
+        popoverLayer.clear(LayerWield.menuBox, LayerWield.menuMask)
         this.forceUpdate();
     }
     onSelect(item: MenuItemType<T>, event: MouseEvent) {
@@ -33,7 +34,7 @@ class MenuPanel<T> extends EventsComponent {
     mb: MenuBox;
     render() {
         return this.visible && <div className='shy-menu-panel'>
-            <div className='shy-menu-mask' onMouseDown={e => this.onClose()}></div>
+            <div className='shy-menu-mask' style={{ zIndex: popoverLayer.zoom(LayerWield.menuMask) }} onMouseDown={e => this.onClose()}></div>
             <MenuBox ref={e => this.mb = e} select={(item, event) => this.onSelect(item as any, event)} items={this.menus as any} deep={0}></MenuBox>
         </div>
     }
