@@ -2,7 +2,7 @@ import { BlockView } from "../../../src/block/view";
 import React from 'react';
 import { url, view } from "../../../src/block/factory/observable";
 import { ChildsArea } from "../../../src/block/partial/appear";
-import { BlockAppear, BlockDisplay } from "../../../src/block/enum";
+import { BlockDisplay } from "../../../src/block/enum";
 import { Block } from "../../../src/block";
 import { TableStoreRow } from "./row";
 import { TableStore } from "./table";
@@ -11,7 +11,9 @@ import { BlockFactory } from "../../../src/block/factory/block.factory";
 @url('/tablestore/cell')
 export class TableStoreCell extends Block {
     display = BlockDisplay.block;
-    appear = BlockAppear.layout;
+    get isLayout() {
+        return true;
+    }
     name: string;
     partName = 'cell';
     get tableRow(): TableStoreRow {

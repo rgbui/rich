@@ -1,6 +1,6 @@
 import { Block } from "../../../src/block";
 import { BlockView } from "../../../src/block/view";
-import { BlockAppear, BlockDisplay } from "../../../src/block/enum";
+import { BlockDisplay } from "../../../src/block/enum";
 import { url, view } from "../../../src/block/factory/observable";
 import React from 'react';
 import { ChildsArea } from "../../../src/block/partial/appear";
@@ -9,7 +9,9 @@ import { TableStoreCell } from "./cell";
 import { BlockFactory } from "../../../src/block/factory/block.factory";
 @url('/tablestore/row')
 export class TableStoreRow extends Block {
-    appear = BlockAppear.layout;
+    get isLayout() {
+        return true;
+    }
     display = BlockDisplay.block;
     get isRow() { return true }
     partName = 'row';

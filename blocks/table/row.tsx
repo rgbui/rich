@@ -3,10 +3,12 @@ import { BlockView } from "../../src/block/view";
 import React from 'react';
 import { Block } from "../../src/block";
 import { url, view } from "../../src/block/factory/observable";
-import { BlockAppear, BlockDisplay } from "../../src/block/enum";
+import {  BlockDisplay } from "../../src/block/enum";
 @url('/table/row')
 export class TableRow extends Block {
-    appear = BlockAppear.layout;
+    get isLayout(){
+        return true;
+    }
     display = BlockDisplay.block;
     partName = 'row';
     get isRow() { return true }

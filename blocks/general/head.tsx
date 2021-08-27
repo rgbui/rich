@@ -1,8 +1,9 @@
 import { BlockView } from "../../src/block/view";
 import { prop, url, view } from "../../src/block/factory/observable";
 import React from 'react';
-import { ChildsArea, TextArea } from "../../src/block/partial/appear";
+import { TextArea, TextLineChilds } from "../../src/block/partial/appear";
 import { TextSpan } from "../../src/block/element/textspan";
+import { BlockDisplay } from "../../src/block/enum";
 @url('/head')
 export class Head extends TextSpan {
     @prop()
@@ -10,6 +11,14 @@ export class Head extends TextSpan {
     get multiLines() {
         return false;
     }
+    get isLayout() {
+        return this.childs.length > 0;
+    }
+    get appearElements() {
+        if (this.childs.length > 0) return []
+        return this.__appearElements;
+    }
+    display = BlockDisplay.block;
 }
 @view("/head")
 export class HeadView extends BlockView<Head>{
@@ -34,11 +43,13 @@ export class HeadView extends BlockView<Head>{
             style.marginBottom = '1px';
         }
         if (this.block.childs.length > 0)
-            return <div className='sy-block-text-head sy-appear-text-line' style={style}
-                ref={e => this.block.childsEl = e}><ChildsArea childs={this.block.childs}></ChildsArea></div>
+            return <div className='sy-block-text-head'><TextLineChilds
+                style={style}
+                ref={e => this.block.childsEl = e}
+                childs={this.block.childs}></TextLineChilds></div>
         else
-            return <div className='sy-block-text-head sy-appear-text-line' style={style}>
-                <TextArea placeholder={'大标题'} html={this.block.htmlContent}></TextArea>
+            return <div className='sy-block-text-head' style={style}>
+                <TextArea ref={e => this.block.elementAppear({ el: e })} placeholder={'大标题'} html={this.block.htmlContent}></TextArea>
             </div>
     }
 }

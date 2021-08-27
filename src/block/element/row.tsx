@@ -4,7 +4,7 @@ import { Block } from '..';
 import { Point } from '../../common/point';
 import { ActionDirective } from '../../history/declare';
 import { BlockView } from '../view';
-import { BlockDisplay, BlockAppear } from '../enum';
+import { BlockDisplay } from '../enum';
 import { url, view } from '../factory/observable';
 /**
  * 分区中会有很多行，每行存在于一个或多个block
@@ -12,7 +12,9 @@ import { url, view } from '../factory/observable';
 @url('/row')
 export class Row extends Block {
     display = BlockDisplay.block;
-    appear = BlockAppear.layout;
+    get isLayout() {
+        return true;
+    }
     get isRow() {
         return true;
     }

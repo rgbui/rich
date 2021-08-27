@@ -1,17 +1,18 @@
 import React from "react";
 import { ResourceArguments } from "../../extensions/icon/declare";
-import { Content } from "../../src/block/element/content";
-import { BlockAppear } from "../../src/block/enum";
+import { Block } from "../../src/block";
+import { BlockAppear } from "../../src/block/appear";
+import { BlockDisplay } from "../../src/block/enum";
 import { url, prop, view } from "../../src/block/factory/observable";
+import { SolidArea } from "../../src/block/partial/appear";
 import { BlockView } from "../../src/block/view";
 
 @url('/date')
-export class ShyDate extends Content {
+export class ShyDate extends Block {
     @prop()
     src: ResourceArguments = { name: 'none' };
     @prop()
     date: number;
-    appear = BlockAppear.solid;
     @prop()
     endDate: boolean = false;
     @prop()
@@ -22,6 +23,7 @@ export class ShyDate extends Content {
     timeFormate: string;
     @prop()
     remind: number;
+    display=BlockDisplay.inline;
     async openDate(event: React.MouseEvent) {
 
     }
@@ -30,7 +32,7 @@ export class ShyDate extends Content {
 export class ShyDateView extends BlockView<ShyDate>{
     render() {
         return <div className='sy-block-date' onMouseDown={e => this.block.openDate(e)} >
-
+            <SolidArea ref={e => this.block.elementAppear({ el: e, appear: BlockAppear.solid })}> </SolidArea>
         </div>
     }
 }

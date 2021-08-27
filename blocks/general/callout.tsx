@@ -1,11 +1,19 @@
 import { BlockView } from "../../src/block/view";
 import React from 'react';
 import { url, view } from "../../src/block/factory/observable";
-import { TextArea } from "../../src/block/partial/appear";
+import { TextArea, TextLineChilds } from "../../src/block/partial/appear";
 import { TextSpan } from "../../src/block/element/textspan";
+import { BlockDisplay } from "../../src/block/enum";
 @url('/callout')
 export class Callout extends TextSpan {
-
+    get isLayout() {
+        return this.childs.length > 0;
+    }
+    display=BlockDisplay.block;
+    get appearElements() {
+        if (this.childs.length > 0) return []
+        return this.__appearElements;
+    }
 }
 @view('/callout')
 export class CalloutView extends BlockView<Callout>{
@@ -13,11 +21,11 @@ export class CalloutView extends BlockView<Callout>{
         return <div className='sy-block-callout'>
             <span className='sy-block-callout-icon'>💡</span>
             <div className='sy-block-callout-content'>
-                {this.block.childs.length > 0 && <span className='sy-appear-text-line' style={this.block.visibleStyle} ref={e => this.block.childsEl = e}>{this.block.childs.map(x =>
-                    <x.viewComponent key={x.id} block={x}></x.viewComponent>
-                )}</span>}
+                {this.block.childs.length > 0 &&
+                    <TextLineChilds style={this.block.visibleStyle} ref={e => this.block.childsEl = e} childs={this.block.childs}></TextLineChilds>
+                }
                 {this.block.childs.length == 0 && <span className='sy-appear-text-line' style={this.block.visibleStyle}>
-                    <TextArea html={this.block.htmlContent} placeholder={'键入文字或"/"选择'}></TextArea>
+                    <TextArea ref={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent} placeholder={'键入文字或"/"选择'}></TextArea>
                 </span>
                 }</div>
         </div>

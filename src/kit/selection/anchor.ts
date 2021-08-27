@@ -1,7 +1,5 @@
 
-
-
-import { Block } from "../../block";
+import { ElementAppear } from "../../block/appear";
 import { dom } from "../../common/dom";
 import { Rect } from "../../common/point";
 import { TextEle } from "../../common/text.ele";
@@ -18,15 +16,15 @@ export class Anchor {
         return this.explorer.kit;
     }
     explorer: SelectionExplorer;
-    constructor(explorer: SelectionExplorer) {
+    constructor(explorer: SelectionExplorer, elementAppear: ElementAppear) {
         this.explorer = explorer;
+        this.elementAppear = elementAppear;
     }
     /**
      * 点击在某个block上面
      */
-    block: Block;
-    get el() {
-        return this.block.el;
+    get block() {
+        return this.elementAppear.block;
     }
     at?: number;
     /***
@@ -41,20 +39,18 @@ export class Anchor {
     get isEnd() {
         return this.at === this.textContent.length;
     }
+    elementAppear: ElementAppear;
     get isText() {
-        return this.block.isText;
+        return this.elementAppear.isText;
     }
     get isSolid() {
-        return this.block.isSolid;
+        return this.elementAppear.isSolid
     }
     get textContent() {
-        return TextEle.getTextContent(this.textEl)
+        return this.elementAppear.textContent
     }
-    get textEl() {
-        return this.block.textEl;
-    }
-    get soldEl() {
-        return this.block.soldEl;
+    get el() {
+        return this.elementAppear.el;
     }
     acceptView(anchor: Anchor) {
         this._view = anchor._view;
@@ -91,17 +87,17 @@ export class Anchor {
                 throw 'the text anchor at is not null';
                 return;
             }
-            dom(this.textEl).insertAnchor(this.at, this);
-            var fontStyle = TextEle.getFontStyle(this.textEl);
+            dom(this.el).insertAnchor(this.at, this);
+            var fontStyle = TextEle.getFontStyle(this.el);
             this.view.style.visibility = 'visible';
             this.view.style.backgroundColor = fontStyle.color;
             this.view.style.height = typeof fontStyle.lineHeight == 'number' ? fontStyle.lineHeight + 'px' : '20px';
             this.view.style.display = 'inline';
             if (this.textContent.length == 0) {
-                this.textEl.classList.add('empty');
+                this.el.classList.add('empty');
             }
             else {
-                this.textEl.classList.remove('empty');
+                this.el.classList.remove('empty');
             }
             if (this.isActive) {
                 this.view.style.visibility = 'visible';
@@ -120,7 +116,7 @@ export class Anchor {
             this.view.classList.add('sy-anchor-text');
         }
         else if (this.isSolid) {
-            var el = this.soldEl;
+            var el = this.el;
             if (!el.contains(this.view)) {
                 el.appendChild(this.view);
             }
@@ -179,26 +175,20 @@ export class Anchor {
         }
     }
     setEmpty() {
-        if (this.textEl) {
-            this.textEl.classList.add('empty');
+        if (this.isText) {
+            this.el.classList.add('empty');
         }
     }
     removeEmpty() {
-        if (this.textEl) {
-            this.textEl.classList.remove('empty');
+        if (this.isText) {
+            this.el.classList.remove('empty');
         }
     }
     equal(anchor: Anchor) {
         if (!anchor) return false;
         if (this === anchor) return true;
-        else if (this.block === anchor.block) {
-            if (this.block.isText && anchor.block.isText) {
-                if (this.at == anchor.at) return true;
-            }
-            else if (this.block.isSolid && anchor.block.isSolid) {
-                return true;
-            }
-        }
+        else if (this.elementAppear == anchor.elementAppear)
+            return true;
         return false;
     }
     /**

@@ -1,22 +1,21 @@
 
 import { BlockView } from "../view";
-import { BlockComposition } from "./composition/block";
 import React from 'react';
-import { BlockAppear, BlockDisplay } from "../enum";
+import { BlockDisplay } from "../enum";
 import { prop, url, view } from "../factory/observable";
 import { TextArea } from "../partial/appear";
 import { PageLink } from "../../../extensions/link/declare";
 import Tooltip from "rc-tooltip";
 import GlobalLink from "../../assert/svg/GlobalLink.svg";
 import LinkTo from "../../assert/svg/LinkTo.svg";
+import { Block } from "..";
 /***
  * 文字型的block，
  * 注意该文字block里面含有子文字或其它的如图像block等
  */
 @url('/text')
-export class TextContent extends BlockComposition {
+export class TextContent extends Block {
     display = BlockDisplay.inline;
-    appear = BlockAppear.text;
     @prop()
     link: PageLink = null;
     @prop()
@@ -32,7 +31,7 @@ export class TextContent extends BlockComposition {
 @view('/text')
 export class TextContentView extends BlockView<TextContent>{
     render() {
-        var ta = <TextArea html={this.block.htmlContent}></TextArea>
+        var ta = <TextArea ref={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent}></TextArea>
         if (this.block.link) {
             if (this.block.link.name == 'outside')
                 ta = <Tooltip overlay={<><GlobalLink></GlobalLink><span>{this.block.url}</span></>} ><a target="_blank" href={this.block.url}>{ta}</a></Tooltip>

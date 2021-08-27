@@ -1,6 +1,7 @@
+
 import { Block } from "../../../src/block";
 import { BlockView } from "../../../src/block/view";
-import { BlockAppear, BlockDirective, BlockDisplay } from "../../../src/block/enum";
+import { BlockDirective, BlockDisplay } from "../../../src/block/enum";
 import { url, view } from "../../../src/block/factory/observable";
 import React from "react";
 import { TextArea } from "../../../src/block/partial/appear";
@@ -36,9 +37,9 @@ import arrowLeft from "../../../src/assert/svg/arrowLeft.svg";
 import arrowRight from "../../../src/assert/svg/arrowRight.svg";
 import hide from "../../../src/assert/svg/hide.svg";
 import { FieldSort } from "../schema/view.field";
+
 @url('/tablestore/th')
 export class TableStoreTh extends Block {
-    appear = BlockAppear.text;
     display = BlockDisplay.block;
     name: string;
     partName = 'th';
@@ -242,7 +243,7 @@ export class TableStoreThView extends BlockView<TableStoreTh>{
         return <div className='sy-tablestore-head-th'
             style={{ width: this.block.field.width + 'px' }}>
             {this.renderIcon()}
-            <TextArea html={this.block.htmlContent}></TextArea>
+            <TextArea ref={e => this.block.elementAppear({ el: e, prop: 'field.text' })} html={this.block.htmlContent}></TextArea>
             <Icon mousedown={e => this.mousedown(e)} className='sy-tablestore-head-th-operator' icon='elipsis:sy'></Icon>
             <div ref={e => this.resizeEl = e} className='sy-tablestore-head-th-resize' ></div>
         </div>

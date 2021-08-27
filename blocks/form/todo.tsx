@@ -1,12 +1,11 @@
 
 import { BlockView } from "../../src/block/view";
 import React from 'react';
-
 import { prop, url, view } from "../../src/block/factory/observable";
-import { ChildsArea, TextArea } from "../../src/block/partial/appear";
+import { TextArea, TextLineChilds } from "../../src/block/partial/appear";
 import { BlockCssName, FontCss } from "../../src/block/pattern/css";
 import { CssSelectorType } from "../../src/block/pattern/type";
-import { BlockRenderRange } from "../../src/block/enum";
+import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import { TextSpan } from "../../src/block/element/textspan";
 
 @url('/todo')
@@ -30,21 +29,25 @@ export class ToDo extends TextSpan {
     get isContinuouslyCreated() {
         return true
     }
+    get appearElements() {
+        if (this.childs.length > 0) return []
+        return this.__appearElements;
+    }
+    display = BlockDisplay.block;
 }
 @view('/todo')
 export class ToDoView extends BlockView<ToDo>{
     render() {
-
         if (this.block.childs.length > 0) {
             return <span className='sy-block-todo' style={this.block.visibleStyle}>
-                <input onMouseDown={e => e.nativeEvent.stopPropagation()} type='checkbox' checked={this.block.checked} onChange={e => this.block.onChange(e.nativeEvent)} />
-                <span ref={e => this.block.childsEl = e} className='sy-appear-text-line'><ChildsArea childs={this.block.childs}></ChildsArea></span>
+                <input onMouseDown={e => e.stopPropagation()} type='checkbox' checked={this.block.checked} onChange={e => this.block.onChange(e.nativeEvent)} />
+                <TextLineChilds ref={e => this.block.childsEl = e} childs={this.block.childs}></TextLineChilds>
             </span>
         }
         else {
             return <span className='sy-block-todo' style={this.block.visibleStyle}>
-                <input onMouseDown={e => e.nativeEvent.stopPropagation()} type='checkbox' checked={this.block.checked} onChange={e => this.block.onChange(e.nativeEvent)} />
-                <span className='sy-appear-text-line'><TextArea html={this.block.htmlContent}></TextArea></span>
+                <input onMouseDown={e => e.stopPropagation()} type='checkbox' checked={this.block.checked} onChange={e => this.block.onChange(e.nativeEvent)} />
+                <span className='sy-block-todo-text'><TextArea ref={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent}></TextArea></span>
             </span>
         }
     }

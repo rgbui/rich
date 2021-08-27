@@ -2,7 +2,7 @@
 import React from 'react';
 import { Block } from '..';
 import { BlockView } from '../view';
-import { BlockAppear, BlockDisplay } from '../enum';
+import { BlockDisplay } from '../enum';
 import { url, view } from '../factory/observable';
 
 /**
@@ -12,7 +12,9 @@ import { url, view } from '../factory/observable';
 @url('/group')
 export class Group extends Block {
     display = BlockDisplay.block;
-    appear = BlockAppear.layout;
+    get isLayout() {
+        return true;
+    }
 }
 @view('/group')
 export class GroupView extends BlockView<Group>{

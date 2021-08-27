@@ -1,17 +1,19 @@
 
 
-import { Content } from "./content";
 
 import React from 'react';
-import { BlockAppear, BlockDisplay } from "../enum";
+import { BlockDisplay } from "../enum";
 import { url, view } from "../factory/observable";
 import { BlockView } from "../view";
 import { ChildsArea } from "../partial/appear";
+import { Block } from "..";
 
 @url('/col')
-export class Col extends Content {
+export class Col extends Block {
     display = BlockDisplay.block;
-    appear = BlockAppear.layout;
+    get isLayout() {
+        return true;
+    }
     get isCol() {
         return true;
     }

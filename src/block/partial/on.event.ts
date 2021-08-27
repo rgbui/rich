@@ -1,6 +1,6 @@
 import { Block } from "..";
 import { MenuItemType, MenuItemTypeValue } from "../../../component/view/menu/declare";
-import { BlockDirective } from "../enum";
+import { BlockDirective, BlockRenderRange } from "../enum";
 import duplicate from "../../assert/svg/duplicate.svg";
 import loop from "../../assert/svg/loop.svg";
 import blockcolor from "../../assert/svg/blockcolor.svg";
@@ -12,7 +12,8 @@ import trash from "../../assert/svg/trash.svg";
 import { blockStore } from "../../../extensions/block/store";
 import { langProvider } from "../../../i18n/provider";
 import { LangID } from "../../../i18n/declare";
-export class Block$Method {
+import { ActionDirective, OperatorDirective } from "../../history/declare";
+export class Block$Event {
     async onGetTurnMenus(this: Block) {
         var its = blockStore.findFitTurnBlocks(this);
         return its.map(it => {
@@ -95,5 +96,41 @@ export class Block$Method {
             case BlockDirective.trunIntoPage:
                 break;
         }
+    }
+    async onInputText(this: Block, value: string, at: number, end: number, action?: () => Promise<void>) {
+        await this.page.onAction(ActionDirective.onInputText, async () => {
+            this.page.snapshoot.record(OperatorDirective.updateTextReplace, {
+                blockId: this.id,
+                start: at,
+                end: end,
+                value
+            });
+            if (typeof action == 'function') await action();
+        })
+    }
+    async onDeleteText(this: Block, value: string, start: number, end: number, action?: () => Promise<void>) {
+        await this.page.onAction(ActionDirective.onDeleteText, async () => {
+            var block = this;
+            var pa = this.page;
+            pa.snapshoot.record(OperatorDirective.updateTextDelete, {
+                blockId: block.id,
+                start,
+                end,
+                text: value
+            });
+            if (typeof action == 'function') await action();
+        })
+    }
+    async onDelete(this: Block) {
+        await this.page.onAction(ActionDirective.onDelete, async () => {
+            var pa = this.parent;
+            await this.delete();
+            if (pa) await pa.layoutCollapse();
+        })
+    }
+    async onUpdateProps(this: Block, props: Record<string, any>, range = BlockRenderRange.none) {
+        await this.page.onAction(ActionDirective.onUpdateProps, async () => {
+            this.updateProps(props, range);
+        })
     }
 }

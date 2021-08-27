@@ -303,6 +303,13 @@ export class TextEle {
         });
         return disPoint;
     }
+    static getValueTextContent(value: any) {
+        var c = value;
+        if (typeof c == 'string') return c;
+        else if (c === null || c === undefined) return '';
+        else if (c && typeof (c as any).toString == 'function') return (c as any).toString();
+        return '';
+    }
 }
 export type TextFontStyle = {
     fontStyle: string,

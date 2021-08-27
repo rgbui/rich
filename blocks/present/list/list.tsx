@@ -5,7 +5,7 @@ import { prop, url, view } from "../../../src/block/factory/observable";
 import "./style.less";
 import { BlockView } from "../../../src/block/view";
 import { BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
-import { ChildsArea, TextArea } from "../../../src/block/partial/appear";
+import { ChildsArea, TextArea, TextLineChilds } from "../../../src/block/partial/appear";
 export enum ListType {
     circle = 0,
     number = 1,
@@ -37,13 +37,6 @@ export class List extends Block {
         if (this.isExpand == false) keys.remove('subChilds');
         return keys;
     }
-    get isText() {
-        if (this.childs.length > 0) return false;
-        return true;
-    }
-    get isSolid() {
-        return this.childs.length > 0 ? true : false;
-    }
     get isLayout() {
         if (this.childs.length > 0) return true;
         else return false;
@@ -59,6 +52,10 @@ export class List extends Block {
             expand: false,
             listType: this.listType
         }
+    }
+    get appearElements() {
+        if (this.childs.length > 0) return []
+        return this.__appearElements;
     }
 }
 @view('/list')
@@ -87,12 +84,12 @@ export class ListView extends BlockView<List>{
     }
     renderText() {
         if (this.block.childs.length > 0)
-            return <span className='sy-block-list sy-appear-text-line' >{this.block.childs.map(x =>
-                <x.viewComponent key={x.id} block={x}></x.viewComponent>
-            )}</span>
+            return <span className='sy-block-list' >
+                <TextLineChilds childs={this.block.childs}></TextLineChilds>
+            </span>
         else
-            return <span className='sy-block-list sy-appear-text-line'>
-                <TextArea html={this.block.htmlContent} placeholder={'键入文字或"/"选择'}></TextArea>
+            return <span className='sy-block-list'>
+                <TextArea ref={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent} placeholder={'键入文字或"/"选择'}></TextArea>
             </span>
     }
     render() {

@@ -1,6 +1,6 @@
 import React from "react";
 import { Block } from "../../src/block";
-import { BlockAppear, BlockDisplay } from "../../src/block/enum";
+import { BlockDisplay } from "../../src/block/enum";
 import { prop, url, view } from "../../src/block/factory/observable";
 import { TextArea } from "../../src/block/partial/appear";
 import { IconArguments } from "../../extensions/icon/declare";
@@ -11,13 +11,14 @@ import { useIconPicker } from "../../extensions/icon";
 import { Rect } from "../../src/common/point";
 import { messageChannel } from "../../util/bus/event.bus";
 import { Directive } from "../../util/bus/directive";
+import { BlockAppear } from "../../src/block/appear";
+
 @url('/title')
 export class Title extends Block {
     @prop()
     isShowIcon: boolean = true;
     @prop()
     isShowDescription: boolean = false;
-    appear = BlockAppear.text;
     display = BlockDisplay.block;
     pageInfo: { id: string, text: string, icon?: IconArguments, description?: string } = null;
     async loadPageInfo() {
@@ -60,9 +61,15 @@ export class TitleView extends BlockView<Title>{
                     {this.block.isShowIcon && this.block.pageInfo.icon && <span onMouseDown={e => this.block.onChangeIcon(e)} className='sy-block-page-info-head-icon'>
                         <Icon size={36} icon={this.block.pageInfo.icon}></Icon>
                     </span>}
-                    <span className='sy-block-page-info-head-title'><TextArea html={this.block.pageInfo.text}></TextArea></span>
+                    <span className='sy-block-page-info-head-title'><TextArea
+                        ref={e => this.block.elementAppear({ el: e, appear: BlockAppear.text, prop: 'pageInfo.text' })}
+                        html={this.block.pageInfo.text}></TextArea></span>
                 </div>
                     {this.block.isShowDescription && <div className='sy-block-page-info-description'>
+                        <TextArea
+                            ref={e => this.block.elementAppear({ el: e, appear: BlockAppear.text, prop: 'pageInfo.description' })}
+                            html={this.block.pageInfo.description}
+                        ></TextArea>
                     </div>}
                 </>}
         </div>

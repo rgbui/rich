@@ -2,18 +2,19 @@ import React from "react";
 import { ResourceArguments } from "../../extensions/icon/declare";
 import { Sp } from "../../i18n/view";
 import { LangID } from "../../i18n/declare";
-import { Content } from "../../src/block/element/content";
-import { BlockAppear } from "../../src/block/enum";
+import { BlockDisplay } from "../../src/block/enum";
 import { prop, url, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
 import { Rect } from "../../src/common/point";
 import VideoSvg from "../../src/assert/svg/video.svg";
 import { useVideoPicker } from "../../extensions/file/video.picker";
+import { Block } from "../../src/block";
+import { SolidArea } from "../../src/block/partial/appear";
 @url('/video')
-export class Video extends Content {
+export class Video extends Block {
     @prop()
     src: ResourceArguments = { name: 'none' }
-    appear = BlockAppear.solid;
+    display = BlockDisplay.block;
     async addVideo(event: React.MouseEvent) {
         var target = event.target as HTMLElement;
         var bound = Rect.from(target.getBoundingClientRect());
@@ -31,9 +32,9 @@ export class VideoView extends BlockView<Video>{
                 <VideoSvg></VideoSvg>
                 <Sp id={LangID.AddVideoTip}></Sp>
             </div>}
-            {this.block.src.name != 'none' && <div className='sy-block-video-content'>
+            {this.block.src.name != 'none' && <SolidArea ref={e => this.block.elementAppear({ el: e, prop: 'src' })}>
                 <video src={this.block.src.url}></video>
-            </div>}
+            </SolidArea>}
         </div>
     }
 }

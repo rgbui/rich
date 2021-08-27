@@ -2,7 +2,7 @@ import { BlockView } from "../../src/block/view";
 import React from 'react';
 import { prop, url, view } from "../../src/block/factory/observable";
 import { ChildsArea, TextArea } from "../../src/block/partial/appear";
-import { BlockAppear, BlockDisplay } from "../../src/block/enum";
+import { BlockDisplay } from "../../src/block/enum";
 import { Block } from "../../src/block";
 @url('/table/cell')
 export class TableCell extends Block {
@@ -11,18 +11,10 @@ export class TableCell extends Block {
     @prop()
     colspan: number = 1;
     display = BlockDisplay.block;
-    appear = BlockAppear.none;
     partName = 'cell';
     get isLayout() {
         if (this.childs.length > 0) return true;
         else return false;
-    }
-    get isText() {
-        if (this.childs.length > 0) return false;
-        else return true;
-    }
-    get isSolid() {
-        return false;
     }
     get isCol() {
         return true;

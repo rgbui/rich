@@ -1,18 +1,14 @@
-import { ContentAreaComposition } from "./composition/content";
+
 import React from 'react';
 import { BlockView } from "../view";
-import { BlockAppear, BlockDisplay } from "../enum";
 import { url, view } from "../factory/observable";
-
-
+import { Block } from '..';
 @url('/view')
-export class View extends ContentAreaComposition {
-    /**
-     * 是否为内容视图
-     */
-    isRockView: boolean = true;
-    appear = BlockAppear.layout;
-    get isArea(){
+export class View extends Block {
+    get isLayout() {
+        return true;
+    }
+    get isArea() {
         return true;
     }
 }
@@ -21,11 +17,10 @@ export class View extends ContentAreaComposition {
  *  但页面可以会有弹层等一些其它的视图
  */
 @view('/view')
-export class ViewComponent extends BlockView<View> {
+export class ViewComponent extends BlockView<View>{
     render() {
         if (this.block && Array.isArray(this.block.childs))
-            return <div className='sy-block-view' >{this.block.childs.map(x =>
-                <x.viewComponent key={x.id} block={x}></x.viewComponent>
+            return <div className='sy-block-view' >{this.block.childs.map(x => <x.viewComponent key={x.id} block={x}></x.viewComponent>
             )}</div>
         else return <div className='sy-block-view' ></div>
     }

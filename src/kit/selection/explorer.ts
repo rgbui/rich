@@ -83,15 +83,11 @@ export class SelectionExplorer extends Events {
         }
     }
     createAnchor(block: Block, at?: number) {
-        var anchor = new Anchor(this);
-        anchor.block = block;
-        if (typeof at == 'number' && block.isText) {
-            if (at == -1) {
-                anchor.at = block.textContent.length;
-            }
+        var anchor = new Anchor(this, block.firstElementAppear);
+        if (typeof at == 'number' && anchor.isText) {
+            if (at == -1) anchor.at = anchor.elementAppear.textContent.length;
             else anchor.at = at;
         }
-        else if (block.isText) anchor.at = 0;
         return anchor;
     }
     onFocusAnchor(anchor: Anchor) {
@@ -136,53 +132,53 @@ export class SelectionExplorer extends Events {
      * 删除选区
      */
     async onDeleteSelection() {
-        await this.page.onAction(ActionDirective.onDeleteSelection, async () => {
-            if (this.currentSelectedBlocks.length > 0) {
-                await this.currentSelectedBlocks.eachAsync(async block => {
-                    await block.delete();
-                });
-                this.onCancelSelection();
-            }
-            else {
-                var blocks = this.page.searchBlocksBetweenAnchor(this.start, this.end);
-                await blocks.eachAsync(async block => {
-                    if (!block.isText) await block.delete();
-                    else if (block == this.start.block && block != this.end.block) {
-                        if (this.start.isBefore(this.end)) {
-                            this.page.onUpdated(async () => {
-                                var newAnchor = this.createAnchor(this.start.block, this.start.at);
-                                this.onFocusAnchor(newAnchor);
-                            });
-                        }
-                        var content = this.start.isBefore(this.end) ? block.textContent.slice(0, this.start.at) : block.textContent.slice(this.start.at);
-                        block.updateProps({ content }, BlockRenderRange.self);
-                    }
-                    else if (block == this.end.block && block != this.start.block) {
-                        if (this.end.isBefore(this.start)) {
-                            this.page.onUpdated(async () => {
-                                var newAnchor = this.createAnchor(this.end.block, this.end.at);
-                                this.onFocusAnchor(newAnchor);
-                            });
-                        }
-                        var content = this.end.isBefore(this.start) ? block.textContent.slice(0, this.end.at) : block.textContent.slice(this.end.at);
-                        block.updateProps({ content }, BlockRenderRange.self);
-                    }
-                    else if (block == this.end.block && block == this.start.block) {
-                        var min = Math.min(this.start.at, this.end.at);
-                        var max = Math.max(this.start.at, this.end.at);
-                        var content = block.textContent.slice(0, min) + block.textContent.slice(max);
-                        block.updateProps({ content }, BlockRenderRange.self);
-                        this.page.onUpdated(async () => {
-                            var newAnchor = this.createAnchor(block, min);
-                            this.onFocusAnchor(newAnchor);
-                        });
-                    }
-                    else {
-                        await block.delete();
-                    }
-                })
-            }
-        })
+        //await this.page.onAction(ActionDirective.onDeleteSelection, async () => {
+        //     if (this.currentSelectedBlocks.length > 0) {
+        //         await this.currentSelectedBlocks.eachAsync(async block => {
+        //             await block.delete();
+        //         });
+        //         this.onCancelSelection();
+        //     }
+        //     else {
+        //         var blocks = this.page.searchBlocksBetweenAnchor(this.start, this.end);
+        //         await blocks.eachAsync(async block => {
+        //             if (!block.isText) await block.delete();
+        //             else if (block == this.start.block && block != this.end.block) {
+        //                 if (this.start.isBefore(this.end)) {
+        //                     this.page.onUpdated(async () => {
+        //                         var newAnchor = this.createAnchor(this.start.block, this.start.at);
+        //                         this.onFocusAnchor(newAnchor);
+        //                     });
+        //                 }
+        //                 var content = this.start.isBefore(this.end) ? block.textContent.slice(0, this.start.at) : block.textContent.slice(this.start.at);
+        //                 block.updateProps({ content }, BlockRenderRange.self);
+        //             }
+        //             else if (block == this.end.block && block != this.start.block) {
+        //                 if (this.end.isBefore(this.start)) {
+        //                     this.page.onUpdated(async () => {
+        //                         var newAnchor = this.createAnchor(this.end.block, this.end.at);
+        //                         this.onFocusAnchor(newAnchor);
+        //                     });
+        //                 }
+        //                 var content = this.end.isBefore(this.start) ? block.textContent.slice(0, this.end.at) : block.textContent.slice(this.end.at);
+        //                 block.updateProps({ content }, BlockRenderRange.self);
+        //             }
+        //             else if (block == this.end.block && block == this.start.block) {
+        //                 var min = Math.min(this.start.at, this.end.at);
+        //                 var max = Math.max(this.start.at, this.end.at);
+        //                 var content = block.textContent.slice(0, min) + block.textContent.slice(max);
+        //                 block.updateProps({ content }, BlockRenderRange.self);
+        //                 this.page.onUpdated(async () => {
+        //                     var newAnchor = this.createAnchor(block, min);
+        //                     this.onFocusAnchor(newAnchor);
+        //                 });
+        //             }
+        //             else {
+        //                 await block.delete();
+        //             }
+        //         })
+        //     }
+        // })
     }
     /**
      * 光标移动
@@ -266,9 +262,9 @@ export class SelectionExplorer extends Events {
             var pos = anchor.at;
             var block = anchor.block;
             var gs = block.nexts;
-            var rest = block.textContent.slice(0, pos);
-            var text = block.textContent.slice(pos);
-            block.updateProps({ content: rest });
+            var rest = anchor.elementAppear.textContent.slice(0, pos);
+            var text = anchor.elementAppear.textContent.slice(pos);
+            block.updateProps({ [anchor.elementAppear.prop]: rest });
             if (block.isLine) block = block.closest(g => !g.isLine);
             var url = block.isContinuouslyCreated ? block.url : BlockUrlConstant.TextSpan;
             var continuouslyProps = block.continuouslyProps;
@@ -388,7 +384,7 @@ export class SelectionExplorer extends Events {
         return this.start && this.end || this.currentSelectedBlocks.length > 0
     }
     get hasTextRange() {
-        return this.start && this.end && this.currentSelectedBlocks.length == 0 && this.start.block.isText && this.end.block.isText
+        return this.start && this.end && this.currentSelectedBlocks.length == 0 && this.start.elementAppear == this.end.elementAppear && this.start.elementAppear.isText
     }
     get isOnlyAnchor() {
         return this.start && !this.end;

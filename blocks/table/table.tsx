@@ -3,12 +3,15 @@ import { BlockView } from "../../src/block/view";
 import React from "react";
 import { prop, url, view } from "../../src/block/factory/observable";
 import "./style.less";
-import { BlockAppear, BlockDisplay } from "../../src/block/enum";
+import { BlockDisplay } from "../../src/block/enum";
 import { Dragger } from "../../src/common/dragger";
 import { util } from "../../util/util";
+import { ChildsArea } from "../../src/block/partial/appear";
 @url('/table')
 export class Table extends Block {
-    appear = BlockAppear.layout;
+    get isLayout() {
+        return true;
+    }
     display = BlockDisplay.block;
     @prop()
     cols: { width: number }[] = [];
@@ -16,7 +19,7 @@ export class Table extends Block {
 @view('/table')
 export class TableView extends BlockView<Table>{
     mousemove(event: MouseEvent) {
-        if(this.sublineDragger.isMove==true)return;
+        if (this.sublineDragger.isMove == true) return;
         var tableRange = this.table.getBoundingClientRect();
         var eleRange = this.block.el.getBoundingClientRect();
         var scrollLeft = this.block.el.scrollLeft;
@@ -90,8 +93,9 @@ export class TableView extends BlockView<Table>{
                         return <col key={index} style={{ minWidth: col.width, width: col.width }}></col>
                     })}
                 </colgroup>
-                <tbody>{this.block.childs.map(x =>
-                    <x.viewComponent key={x.id} block={x}></x.viewComponent>)}</tbody>
+                <tbody>
+                    <ChildsArea childs={this.block.childs}></ChildsArea>
+                </tbody>
             </table></div>
     }
 }

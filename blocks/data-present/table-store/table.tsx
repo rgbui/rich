@@ -3,7 +3,7 @@ import { BlockView } from "../../../src/block/view";
 import React from 'react';
 import { TableSchema } from "../schema/meta";
 import { prop, url, view } from "../../../src/block/factory/observable";
-import { BlockAppear, BlockDisplay } from "../../../src/block/enum";
+import { BlockDisplay } from "../../../src/block/enum";
 import { BlockFactory } from "../../../src/block/factory/block.factory";
 import { TableStoreRow } from "./row";
 import { ChildsArea } from "../../../src/block/partial/appear";
@@ -98,7 +98,9 @@ export class TableStore extends Block {
             await rowBlock.createCells();
         }
     }
-    appear = BlockAppear.layout;
+    get isLayout() {
+        return true;
+    }
     display = BlockDisplay.block;
     async onAddField(at?: number) {
         if (typeof at == 'undefined') at = this.fields.length;

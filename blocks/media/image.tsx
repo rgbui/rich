@@ -1,7 +1,7 @@
 import { BlockView } from "../../src/block/view";
 import { prop, url, view } from "../../src/block/factory/observable";
 import React from 'react';
-import { BlockAppear, BlockDisplay } from "../../src/block/enum";
+import { BlockDisplay } from "../../src/block/enum";
 import { SolidArea } from "../../src/block/partial/appear";
 import { Rect } from "../../src/common/point";
 import { ResourceArguments } from "../../extensions/icon/declare";
@@ -21,7 +21,6 @@ export class Image extends Block {
     src: ResourceArguments;
     @prop()
     imageWidthPercent: number = 100;
-    appear = BlockAppear.solid;
     display = BlockDisplay.block;
     async onOpenUploadImage(event: React.MouseEvent) {
         event.stopPropagation();
@@ -29,6 +28,11 @@ export class Image extends Block {
         if (r) {
             await this.onUpdateProps({ src: r });
         }
+    }
+
+    get appearElements() {
+        if (this.src.name == 'none') return [];
+        return this.__appearElements;
     }
 }
 @view('/image')
@@ -82,9 +86,7 @@ export class ImageView extends BlockView<Image>{
         </div>}
             {!this.isLoadError && <div className='sy-block-image-content-view'>
                 <div className='sy-block-image-content-view-wrapper' ref={e => this.imageWrapper = e} style={{ width: this.block.imageWidthPercent ? this.block.imageWidthPercent + "%" : undefined }}>
-                    <SolidArea content={
-                        this.block.src && <img onError={e => this.onError(e)} src={this.block?.src?.url} />
-                    }></SolidArea>
+                    {this.block.src.name != 'none' && <SolidArea ref={e => this.block.elementAppear({ el: e })} ><img onError={e => this.onError(e)} src={this.block?.src?.url} /></SolidArea>}
                     <div className='sy-block-image-left-resize' onMouseDown={e => this.onMousedown(e, 'left')}></div>
                     <div className='sy-block-image-right-resize' onMouseDown={e => this.onMousedown(e, 'right')}></div>
                 </div>
