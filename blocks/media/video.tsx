@@ -32,7 +32,7 @@ export class VideoView extends BlockView<Video>{
                 <VideoSvg></VideoSvg>
                 <Sp id={LangID.AddVideoTip}></Sp>
             </div>}
-            {this.block.src.name != 'none' && <SolidArea ref={e => this.block.elementAppear({ el: e, prop: 'src' })}>
+            {this.block.src.name != 'none' && <SolidArea rf={e => this.block.elementAppear({ el: e, prop: 'src' })}>
                 <video src={this.block.src.url}></video>
             </SolidArea>}
         </div>

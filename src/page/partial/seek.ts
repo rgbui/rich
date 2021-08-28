@@ -190,9 +190,9 @@ export class Page$Seek {
      * @param to 
      */
     textAnchorIsAdjoin(from: Anchor, to: Anchor) {
-        if (from.block.isText && to.block.isText) {
-            var fb = from.block.textEl;
-            var tb = to.block.textEl;
+        if (from.isText && to.isText) {
+            var fb = from.el;
+            var tb = to.el;
             var ob = fb.getBoundingClientRect();
             var nb = tb.getBoundingClientRect();
             if (Math.abs(ob.left + ob.width - nb.left) < 10) {
@@ -217,7 +217,7 @@ export class Page$Seek {
     fissionBlockBySelection(block: Block, from: Anchor, to: Anchor) {
         if (!from.isBefore(to)) [to, from] = [from, to];
         var selectionBeforeContent = '', selectionAfterContent = '', selectionContent = '';
-        var content = block.textContent;
+        var content = from.textContent;
         if (block == from.block && block == to.block) {
             //说明block包含选区
             selectionBeforeContent = content.substring(0, from.at);

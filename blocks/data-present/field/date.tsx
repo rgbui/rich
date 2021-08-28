@@ -26,6 +26,6 @@ export class FieldTextView extends BlockView<FieldDate>{
         }
     }
     render() {
-        return <div className='sy-field-text' onMouseDown={e => this.mousedown(e)}><TextArea html={this.block.htmlContent}></TextArea></div>
+        return <div className='sy-field-text' onMouseDown={e => this.mousedown(e)}><TextArea rf={e=>this.block.elementAppear({el:e})} html={this.block.htmlContent}></TextArea></div>
     }
 }

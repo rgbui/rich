@@ -32,7 +32,7 @@ export class ShyDate extends Block {
 export class ShyDateView extends BlockView<ShyDate>{
     render() {
         return <div className='sy-block-date' onMouseDown={e => this.block.openDate(e)} >
-            <SolidArea ref={e => this.block.elementAppear({ el: e, appear: BlockAppear.solid })}> </SolidArea>
+            <SolidArea rf={e => this.block.elementAppear({ el: e, appear: BlockAppear.solid })}> </SolidArea>
         </div>
     }
 }

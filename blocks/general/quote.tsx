@@ -20,8 +20,8 @@ export class Quote extends TextSpan {
 export class QuoteView extends BlockView<Quote>{
     render() {
         return <div className='sy-block-quote'>
-            {this.block.childs.length > 0 && <TextLineChilds childs={this.block.childs} style={this.block.visibleStyle} ref={e => this.block.childsEl = e}></TextLineChilds>}
-            {this.block.childs.length == 0 && <TextArea ref={e => this.block.elementAppear({ el: e })} style={this.block.visibleStyle} html={this.block.htmlContent} placeholder={'键入文字或"/"选择'}></TextArea>}
+            {this.block.childs.length > 0 && <TextLineChilds childs={this.block.childs} style={this.block.visibleStyle} rf={e => this.block.childsEl = e}></TextLineChilds>}
+            {this.block.childs.length == 0 && <TextArea rf={e => this.block.elementAppear({ el: e })} style={this.block.visibleStyle} html={this.block.htmlContent} placeholder={'键入文字或"/"选择'}></TextArea>}
         </div>
     }
 }

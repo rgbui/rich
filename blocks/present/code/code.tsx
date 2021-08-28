@@ -25,7 +25,7 @@ export class TextCode extends Block {
 export class TextCodeView extends BlockView<TextCode>{
     render() {
         return <div className='sy-block-code' >
-            <TextArea ref={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent}></TextArea>
+            <TextArea rf={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent}></TextArea>
         </div>
     }
 }

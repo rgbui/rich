@@ -41,13 +41,13 @@ export class ToDoView extends BlockView<ToDo>{
         if (this.block.childs.length > 0) {
             return <span className='sy-block-todo' style={this.block.visibleStyle}>
                 <input onMouseDown={e => e.stopPropagation()} type='checkbox' checked={this.block.checked} onChange={e => this.block.onChange(e.nativeEvent)} />
-                <TextLineChilds ref={e => this.block.childsEl = e} childs={this.block.childs}></TextLineChilds>
+                <TextLineChilds rf={e => this.block.childsEl = e} childs={this.block.childs}></TextLineChilds>
             </span>
         }
         else {
             return <span className='sy-block-todo' style={this.block.visibleStyle}>
                 <input onMouseDown={e => e.stopPropagation()} type='checkbox' checked={this.block.checked} onChange={e => this.block.onChange(e.nativeEvent)} />
-                <span className='sy-block-todo-text'><TextArea ref={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent}></TextArea></span>
+                <span className='sy-block-todo-text'><TextArea rf={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent}></TextArea></span>
             </span>
         }
     }

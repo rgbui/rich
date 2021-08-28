@@ -45,11 +45,11 @@ export class HeadView extends BlockView<Head>{
         if (this.block.childs.length > 0)
             return <div className='sy-block-text-head'><TextLineChilds
                 style={style}
-                ref={e => this.block.childsEl = e}
+                rf={e => this.block.childsEl = e}
                 childs={this.block.childs}></TextLineChilds></div>
         else
             return <div className='sy-block-text-head' style={style}>
-                <TextArea ref={e => this.block.elementAppear({ el: e })} placeholder={'大标题'} html={this.block.htmlContent}></TextArea>
+                <TextArea rf={e => this.block.elementAppear({ el: e })} placeholder={'大标题'} html={this.block.htmlContent}></TextArea>
             </div>
     }
 }

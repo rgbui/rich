@@ -178,7 +178,7 @@ export class TextInput$Write {
                             var checkEmpty = () => {
                                 var currentAnchor = this.explorer.activeAnchor;
                                 this.explorer.onFocusAnchor(currentAnchor);
-                                if (currentAnchor.at == 0 && currentAnchor.block.isEmpty) currentAnchor.setEmpty();
+                                if (currentAnchor.at == 0 && currentAnchor.elementAppear.isEmpty) currentAnchor.setEmpty();
                                 else currentAnchor.removeEmpty();
                             }
                             if (existsDelete == true) this.page.onUpdated(async () => {
@@ -262,7 +262,7 @@ export class TextInput$Write {
                 newBlock.mounted(() => {
                     resolve(newBlock);
                     var anchor = newBlock.visibleHeadAnchor;
-                    if (anchor && (anchor.block.isSolid || anchor.block.isText))
+                    if (anchor && (anchor.isSolid || anchor.isText))
                         this.explorer.onFocusAnchor(anchor);
                 });
             });
@@ -325,7 +325,7 @@ export class TextInput$Write {
         var self = this;
         this.inputStore = async function () {
             delete self.inputStore;
-            block.content = TextEle.getTextContent(block.textEl);
+            // block.content = TextEle.getTextContent(block.textEl);
             self.lastInputText = value;
             await block.onInputText(value, at, self.lastInputText ? at + self.lastInputText.length : at, action)
         }
@@ -352,7 +352,7 @@ export class TextInput$Write {
         var self = this;
         self.deleteStore = async () => {
             delete self.deleteStore;
-            block.content = TextEle.getTextContent(block.textEl);
+            // block.content = TextEle.getTextContent(block.textEl);
             var size = this.lastDeleteText ? this.lastDeleteText.length : 0;
             this.lastDeleteText = text;
             this.clearDeleteTime();

@@ -39,7 +39,7 @@ export class AudioView extends BlockView<Audio>{
                 <Sp id={LangID.AddAudioTip}></Sp>
             </div>}
             {this.block.src.name != 'none' && <div className='sy-block-audio-content'>
-                <SolidArea ref={e => this.block.elementAppear({ el: e, prop: "src" })}><audio src={this.block.src.url}></audio></SolidArea>
+                <SolidArea rf={e => this.block.elementAppear({ el: e, prop: "src" })}><audio src={this.block.src.url}></audio></SolidArea>
             </div>}
         </div>
     }

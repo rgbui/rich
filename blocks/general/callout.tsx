@@ -22,10 +22,10 @@ export class CalloutView extends BlockView<Callout>{
             <span className='sy-block-callout-icon'>💡</span>
             <div className='sy-block-callout-content'>
                 {this.block.childs.length > 0 &&
-                    <TextLineChilds style={this.block.visibleStyle} ref={e => this.block.childsEl = e} childs={this.block.childs}></TextLineChilds>
+                    <TextLineChilds style={this.block.visibleStyle} rf={e => this.block.childsEl = e} childs={this.block.childs}></TextLineChilds>
                 }
                 {this.block.childs.length == 0 && <span className='sy-appear-text-line' style={this.block.visibleStyle}>
-                    <TextArea ref={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent} placeholder={'键入文字或"/"选择'}></TextArea>
+                    <TextArea rf={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent} placeholder={'键入文字或"/"选择'}></TextArea>
                 </span>
                 }</div>
         </div>

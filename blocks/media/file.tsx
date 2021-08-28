@@ -21,7 +21,7 @@ export class File extends Block {
 export class FileView extends BlockView<File>{
     render() {
         return <div className='sy-block-file' style={this.block.visibleStyle}>
-            {this.block.src.name != 'none' && <SolidArea ref={e => this.block.elementAppear({ el: e, prop: 'src' })}>
+            {this.block.src.name != 'none' && <SolidArea rf={e => this.block.elementAppear({ el: e, prop: 'src' })}>
             </SolidArea>}
         </div>
     }

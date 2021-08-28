@@ -31,7 +31,7 @@ export class TextContent extends Block {
 @view('/text')
 export class TextContentView extends BlockView<TextContent>{
     render() {
-        var ta = <TextArea ref={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent}></TextArea>
+        var ta = <TextArea rf={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent}></TextArea>
         if (this.block.link) {
             if (this.block.link.name == 'outside')
                 ta = <Tooltip overlay={<><GlobalLink></GlobalLink><span>{this.block.url}</span></>} ><a target="_blank" href={this.block.url}>{ta}</a></Tooltip>

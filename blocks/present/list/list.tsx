@@ -89,7 +89,7 @@ export class ListView extends BlockView<List>{
             </span>
         else
             return <span className='sy-block-list'>
-                <TextArea ref={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent} placeholder={'键入文字或"/"选择'}></TextArea>
+                <TextArea rf={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent} placeholder={'键入文字或"/"选择'}></TextArea>
             </span>
     }
     render() {

@@ -10,6 +10,10 @@ export class FieldNumber extends OriginField {
         if (this.fieldType == FieldType.autoIncrement) return false;
         return super.isSupportAnchor;
     }
+    get appearElements() {
+        if (this.fieldType == FieldType.autoIncrement) return [];
+        else return this.__appearElements;
+    }
 }
 @view('/field/number')
 export class FieldTextView extends BlockView<FieldNumber>{
@@ -17,6 +21,6 @@ export class FieldTextView extends BlockView<FieldNumber>{
         if (this.block.fieldType == FieldType.autoIncrement)
             return <div className='sy-field-text'>{this.block.htmlContent}</div>
         else
-            return <div className='sy-field-text'><TextArea html={this.block.htmlContent}></TextArea></div>
+            return <div className='sy-field-text'><TextArea rf={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent}></TextArea></div>
     }
 }

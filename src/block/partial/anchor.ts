@@ -152,15 +152,18 @@ export class Block$Anchor {
         // }
     }
     elementAppear(this: Block, elementAppear: Partial<ElementAppear>) {
-        if (typeof elementAppear.el) throw new Error('el is not null');
+        if (!elementAppear.el) return;
         var el = elementAppear.el;
         if (!el.classList.contains('sy-appear-text') && !el.classList.contains('sy-appear-solid')) {
+            var fe: HTMLElement;
             var childEl = el.querySelector('.sy-appear-text');
-            if (childEl) el = childEl as HTMLElement;
+            if (childEl) fe = childEl as HTMLElement;
             else {
                 var c = el.querySelector('.sy-appear-solid');
-                if (c) el = c as HTMLElement;
+                if (c) fe = c as HTMLElement;
             }
+            if (fe) el = fe;
+            else throw 'not found element appear text or solid ';
         }
         elementAppear.el = el;
         if (typeof elementAppear.appear == 'undefined') {
@@ -171,6 +174,7 @@ export class Block$Anchor {
             &&
             typeof elementAppear.prop == 'undefined'
         ) elementAppear.prop = 'content';
-        this.__appearElements.push(new ElementAppear(this, elementAppear.el, elementAppear.appear, elementAppear.prop))
+        if (!this.__appearElements.exists(x => x.prop == elementAppear.prop))
+            this.__appearElements.push(new ElementAppear(this, elementAppear.el, elementAppear.appear, elementAppear.prop))
     }
 }

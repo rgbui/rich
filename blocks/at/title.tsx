@@ -62,12 +62,12 @@ export class TitleView extends BlockView<Title>{
                         <Icon size={36} icon={this.block.pageInfo.icon}></Icon>
                     </span>}
                     <span className='sy-block-page-info-head-title'><TextArea
-                        ref={e => this.block.elementAppear({ el: e, appear: BlockAppear.text, prop: 'pageInfo.text' })}
+                        rf={e => this.block.elementAppear({ el: e, appear: BlockAppear.text, prop: 'pageInfo.text' })}
                         html={this.block.pageInfo.text}></TextArea></span>
                 </div>
                     {this.block.isShowDescription && <div className='sy-block-page-info-description'>
                         <TextArea
-                            ref={e => this.block.elementAppear({ el: e, appear: BlockAppear.text, prop: 'pageInfo.description' })}
+                            rf={e => this.block.elementAppear({ el: e, appear: BlockAppear.text, prop: 'pageInfo.description' })}
                             html={this.block.pageInfo.description}
                         ></TextArea>
                     </div>}

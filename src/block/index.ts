@@ -177,8 +177,6 @@ export abstract class Block extends Events {
         return this.findReverse(g => !g.isLayout && !g.hasChilds);
     }
     isLoad = false;
-
-
     viewComponent: typeof BlockView | ((props: any) => JSX.Element)
     view: BlockView<this>;
     el: HTMLElement;

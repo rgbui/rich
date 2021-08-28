@@ -23,7 +23,7 @@ export class Katex extends Block {
 export class KatexView extends BlockView<Katex>{
     render() {
         return <div className='sy-block-katex' style={this.block.visibleStyle}>
-            <SolidArea ref={e => this.block.elementAppear({ el: e })}><span dangerouslySetInnerHTML={{ __html: this.block.htmlContent }}></span> </SolidArea>
+            <SolidArea rf={e => this.block.elementAppear({ el: e })}><span dangerouslySetInnerHTML={{ __html: this.block.htmlContent }}></span> </SolidArea>
         </div>
     }
 }
