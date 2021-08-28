@@ -5,7 +5,7 @@ import React from 'react';
 import { BlockDisplay } from "../enum";
 import { url, view } from "../factory/observable";
 import { BlockView } from "../view";
-import { ChildsArea } from "../partial/appear";
+import { ChildsArea } from "../view/appear";
 import { Block } from "..";
 
 @url('/col')

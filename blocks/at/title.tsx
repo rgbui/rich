@@ -2,7 +2,7 @@ import React from "react";
 import { Block } from "../../src/block";
 import { BlockDisplay } from "../../src/block/enum";
 import { prop, url, view } from "../../src/block/factory/observable";
-import { TextArea } from "../../src/block/partial/appear";
+import { TextArea } from "../../src/block/view/appear";
 import { IconArguments } from "../../extensions/icon/declare";
 import { BlockView } from "../../src/block/view";
 import { PageDirective } from "../../src/page/directive";

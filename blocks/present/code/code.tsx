@@ -3,7 +3,7 @@ import { prop, url, view } from "../../../src/block/factory/observable";
 import React from 'react';
 import Prism from 'prismjs';
 import "../../../node_modules/prismjs/themes/prism.css";
-import { TextArea } from "../../../src/block/partial/appear";
+import { TextArea } from "../../../src/block/view/appear";
 import { Block } from "../../../src/block";
 import { BlockDisplay } from "../../../src/block/enum";
 /**

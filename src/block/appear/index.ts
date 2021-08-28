@@ -1,5 +1,5 @@
-import { Block } from ".";
-import { TextEle } from "../common/text.ele";
+import { Block } from "..";
+import { TextEle } from "../../common/text.ele";
 
 export enum BlockAppear {
     /**

@@ -6,7 +6,7 @@ import "./style.less";
 import { BlockDisplay } from "../../src/block/enum";
 import { Dragger } from "../../src/common/dragger";
 import { util } from "../../util/util";
-import { ChildsArea } from "../../src/block/partial/appear";
+import { ChildsArea } from "../../src/block/view/appear";
 @url('/table')
 export class Table extends Block {
     get isLayout() {

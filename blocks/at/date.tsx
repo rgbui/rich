@@ -1,10 +1,11 @@
 import React from "react";
 import { ResourceArguments } from "../../extensions/icon/declare";
 import { Block } from "../../src/block";
+import { SolidArea } from "../../src/block/view/appear";
 import { BlockAppear } from "../../src/block/appear";
 import { BlockDisplay } from "../../src/block/enum";
 import { url, prop, view } from "../../src/block/factory/observable";
-import { SolidArea } from "../../src/block/partial/appear";
+
 import { BlockView } from "../../src/block/view";
 
 @url('/date')

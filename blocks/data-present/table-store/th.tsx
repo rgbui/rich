@@ -4,7 +4,7 @@ import { BlockView } from "../../../src/block/view";
 import { BlockDirective, BlockDisplay } from "../../../src/block/enum";
 import { url, view } from "../../../src/block/factory/observable";
 import React from "react";
-import { TextArea } from "../../../src/block/partial/appear";
+import { TextArea } from "../../../src/block/view/appear";
 import { TableStore } from "./table";
 import { TextEle } from "../../../src/common/text.ele";
 import { TableStoreHead } from "./head";

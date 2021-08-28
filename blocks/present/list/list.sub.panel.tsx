@@ -1,7 +1,7 @@
 import React from "react";
 import { Block } from "../../../src/block";
 import { url, view } from "../../../src/block/factory/observable";
-import { ChildsArea } from "../../../src/block/partial/appear";
+import { ChildsArea } from "../../../src/block/view/appear";
 import { BlockView } from "../../../src/block/view";
 @url('/list/sub/panel')
 export class ListSubPanel extends Block {

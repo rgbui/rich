@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { url, view } from '../factory/observable';
-import { TextArea, TextLineChilds } from '../partial/appear';
+import { TextArea, TextLineChilds } from '../view/appear';
 import { BlockDisplay } from '../enum';
 import { BlockView } from '../view';
 import { Block } from '..';

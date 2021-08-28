@@ -4,7 +4,7 @@ import { Block } from "../../src/block";
 
 import { BlockDisplay } from "../../src/block/enum";
 import { url, prop, view } from "../../src/block/factory/observable";
-import { SolidArea } from "../../src/block/partial/appear";
+import { SolidArea } from "../../src/block/view/appear";
 import { BlockView } from "../../src/block/view";
 
 @url('/file')

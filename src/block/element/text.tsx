@@ -3,7 +3,7 @@ import { BlockView } from "../view";
 import React from 'react';
 import { BlockDisplay } from "../enum";
 import { prop, url, view } from "../factory/observable";
-import { TextArea } from "../partial/appear";
+import { TextArea } from "../view/appear";
 import { PageLink } from "../../../extensions/link/declare";
 import Tooltip from "rc-tooltip";
 import GlobalLink from "../../assert/svg/GlobalLink.svg";

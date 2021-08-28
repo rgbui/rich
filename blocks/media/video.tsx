@@ -9,7 +9,7 @@ import { Rect } from "../../src/common/point";
 import VideoSvg from "../../src/assert/svg/video.svg";
 import { useVideoPicker } from "../../extensions/file/video.picker";
 import { Block } from "../../src/block";
-import { SolidArea } from "../../src/block/partial/appear";
+import { SolidArea } from "../../src/block/view/appear";
 @url('/video')
 export class Video extends Block {
     @prop()

@@ -3,7 +3,7 @@ import { BlockView } from "../../../src/block/view";
 import { BlockDisplay } from "../../../src/block/enum";
 import { url, view } from "../../../src/block/factory/observable";
 import React from "react";
-import { ChildsArea } from "../../../src/block/partial/appear";
+import { ChildsArea } from "../../../src/block/view/appear";
 import { TableStore } from "./table";
 import plus from "../../../src/assert/svg/plus.svg";
 import { Icon } from "../../../component/view/icon";

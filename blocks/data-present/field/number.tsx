@@ -1,6 +1,6 @@
 import React from "react";
 import { url, view } from "../../../src/block/factory/observable";
-import { TextArea } from "../../../src/block/partial/appear";
+import { TextArea } from "../../../src/block/view/appear";
 import { BlockView } from "../../../src/block/view";
 import { FieldType } from "../schema/field.type";
 import { OriginField } from "./origin.field";

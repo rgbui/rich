@@ -2,7 +2,7 @@
 import { BlockView } from "../../src/block/view";
 import React from 'react';
 import { prop, url, view } from "../../src/block/factory/observable";
-import { TextArea, TextLineChilds } from "../../src/block/partial/appear";
+import { TextArea, TextLineChilds } from "../../src/block/view/appear";
 import { BlockCssName, FontCss } from "../../src/block/pattern/css";
 import { CssSelectorType } from "../../src/block/pattern/type";
 import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";

@@ -6,7 +6,7 @@ import { prop, url, view } from "../../../src/block/factory/observable";
 import { BlockDisplay } from "../../../src/block/enum";
 import { BlockFactory } from "../../../src/block/factory/block.factory";
 import { TableStoreRow } from "./row";
-import { ChildsArea } from "../../../src/block/partial/appear";
+import { ChildsArea } from "../../../src/block/view/appear";
 import { Pattern } from "../../../src/block/pattern";
 import { FieldSort, ViewField } from "../schema/view.field";
 import { util } from "../../../util/util";

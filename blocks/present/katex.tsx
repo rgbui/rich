@@ -3,7 +3,7 @@ import katex from 'katex';
 import React from 'react';
 import { prop, url, view } from "../../src/block/factory/observable";
 import "../../node_modules/katex/dist/katex.min.css";
-import { SolidArea } from "../../src/block/partial/appear";
+import { SolidArea } from "../../src/block/view/appear";
 import { Block } from "../../src/block";
 import { BlockDisplay } from "../../src/block/enum";
 

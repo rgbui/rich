@@ -1,7 +1,7 @@
 import React from "react";
 import { useDatePicker } from "../../../extensions/date";
 import { url, view } from "../../../src/block/factory/observable";
-import { TextArea } from "../../../src/block/partial/appear";
+import { TextArea } from "../../../src/block/view/appear";
 import { BlockView } from "../../../src/block/view";
 import { Rect } from "../../../src/common/point";
 import { OriginField } from "./origin.field";

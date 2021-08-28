@@ -1,7 +1,7 @@
 import { BlockView } from "../../src/block/view";
 import { prop, url, view } from "../../src/block/factory/observable";
 import React from 'react';
-import { TextArea, TextLineChilds } from "../../src/block/partial/appear";
+import { TextArea, TextLineChilds } from "../../src/block/view/appear";
 import { TextSpan } from "../../src/block/element/textspan";
 import { BlockDisplay } from "../../src/block/enum";
 @url('/head')
