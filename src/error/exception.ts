@@ -36,14 +36,17 @@ export enum ExceptionType {
      * 正常加载不会为空
      */
     tableSchemaNotEmpty,
-    notFoundBlockUrl
+    notFoundBlockUrl,
+    /**
+     * 布局的block下面没有内容block
+     */
+     layoutBlockNotFoundContentBlock
 }
 /**
  * 自定义异常
  */
 export class Exception extends Error {
-    constructor(type: ExceptionType, message?: string)
-    {
+    constructor(type: ExceptionType, message?: string) {
         super();
         this.name = ExceptionType[type];
         this.message = message;
