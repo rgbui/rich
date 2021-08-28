@@ -1,6 +1,7 @@
 import { Block } from "..";
-import { Point } from "../../common/point";
+import { Point, Rect } from "../../common/point";
 import { TextEle } from "../../common/text.ele";
+import { Exception, ExceptionType } from "../../error/exception";
 import { Anchor } from "../../kit/selection/anchor";
 import { BlockAppear, ElementAppear } from "../appear";
 import { BlockUrlConstant } from "../constant";
@@ -65,32 +66,58 @@ export class Block$Anchor {
         else return anchor.block.visibleUpAnchor(anchor);
     }
     /***
-     * 通过坐标计算视野是处于block那个part中，或者block本身
-     * 注意，当前的block有可能是layout block，那么需要通过坐标找到子视野的block，如果没有子block，这实际是个不可能出现的错误
-     * 如果是一个isPanel的block，那么需要确认当前的坐标是否处于子的block中，另外注意，如果坐标是点在当前的空白block中，可能归宿到视野子内容
+     * 
+     * 
      * @param point 坐标（当前坐标明确是处于当前的block中）
      */
     visibleAnchor(this: Block, point: Point): Anchor {
-        var block = this.visiblePoint(point);
-        var fa = this.firstElementAppear;
-        if (fa)
-            return this.page.kit.explorer.createAnchor(block, fa.appear == BlockAppear.text ? TextEle.getAt(fa.el, point) : undefined);
+        var block = this;
+        if (this.isLayout) {
+            var contentBlock = this.findAnchorBlockByPointFromBlockRange(point);
+            if (contentBlock) {
+                block = contentBlock;
+            }
+            else {
+                /**
+                 * 一般layout
+                 */
+                return null;
+            }
+        }
+        var fa: ElementAppear;
+        if (block.appearElements.length > 1) {
+            var ps = block.appearElements.map(ae => {
+                var bound = Rect.fromEle(ae.el);
+                return {
+                    dis: TextEle.cacDistance(point, [bound]),
+                    appear: ae
+                }
+            });
+            if (ps.exists(g => g.dis.x == 0 && g.dis.y == 0))
+                fa = ps.find(g => g.dis.x == 0 && g.dis.y == 0).appear;
+            if (!fa && ps.exists(g => g.dis.y == 0))
+                fa = ps.findAll(g => g.dis.y == 0).findMin(g => g.dis.x).appear
+            if (!fa)
+                fa = ps.findMin(g => g.dis.y).appear
+        }
+        else fa = this.firstElementAppear;
+        return this.page.kit.explorer.createAnchor(block, fa.appear == BlockAppear.text ? TextEle.getAt(fa.el, point) : undefined);
     }
-    visiblePoint(this: Block, point: Point) {
-        var as = this.allVisibleBlocks;
+    findAnchorBlockByPointFromBlockRange(this: Block, point: Point) {
+        var as = this.findAll(x => !x.isLayout && x.isSupportAnchor);
         var ps = as.map(e => {
             var bounds = e.getBounds();
             var newPoint = TextEle.cacDistance(point, bounds);
             return {
                 dis: newPoint,
-                part: e
+                block: e
             }
         });
         if (ps.exists(g => g.dis.x == 0 && g.dis.y == 0))
-            return ps.find(g => g.dis.x == 0 && g.dis.y == 0).part;
+            return ps.find(g => g.dis.x == 0 && g.dis.y == 0).block;
         if (ps.exists(g => g.dis.y == 0))
-            return ps.findAll(g => g.dis.y == 0).findMin(g => g.dis.x).part
-        return ps.findMin(g => g.dis.y).part
+            return ps.findAll(g => g.dis.y == 0).findMin(g => g.dis.x).block
+        return ps.findMin(g => g.dis.y).block
     }
     /**
    * 创建block，有两种方式
