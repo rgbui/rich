@@ -351,24 +351,24 @@ export abstract class Block extends Events {
         return this.getVisibleBound();
     }
     /**
-     * 获取视觉上的block和part
+     * 获取视觉上的block
      */
-    get visibleBlock() {
-        if (this.isLayout) return [];
-        else return [this];
-    }
-    get allVisibleBlocks() {
-        var bs: (Block)[] = [];
-        var gs = this.visibleBlock;
-        bs.addRange(gs);
-        for (var n in this.blocks) {
-            var blocks = this.blocks[n];
-            blocks.each(b => {
-                bs.addRange(b.allVisibleBlocks);
-            })
-        }
-        return bs;
-    }
+    // get visibleBlock() {
+    //     if (this.isLayout) return [];
+    //     else return [this];
+    // }
+    // get allVisibleBlocks() {
+    //     var bs: (Block)[] = [];
+    //     var gs = this.visibleBlock;
+    //     bs.addRange(gs);
+    //     for (var n in this.blocks) {
+    //         var blocks = this.blocks[n];
+    //         blocks.each(b => {
+    //             bs.addRange(b.allVisibleBlocks);
+    //         })
+    //     }
+    //     return bs;
+    // }
     get isTextContent() {
         return false;
     }
@@ -406,6 +406,15 @@ export abstract class Block extends Events {
     get isSupportAnchor() {
         if (this.isLayout) return false;
         if (this.appearElements.length == 0) return false;
+        return true;
+    }
+    /**
+     * 是否允许通过鼠标点击来创建anchor
+     * 比如todo中的checkbox，点击的时候就没有必要创建anchor
+     * @param event 
+     * @returns 
+     */
+    isAllowMouseAnchor(event: MouseEvent) {
         return true;
     }
     get isSupportTextStyle() {
