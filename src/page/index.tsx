@@ -34,6 +34,7 @@ import { FieldType } from '../../blocks/data-present/schema/field.type';
 import { Field } from '../../blocks/data-present/schema/field';
 import { PageDirective } from './directive';
 import { IconArguments } from '../../extensions/icon/declare';
+import { Mix } from '../../util/mix';
 
 export class Page extends Events<PageDirective> {
     el: HTMLElement;
@@ -42,19 +43,21 @@ export class Page extends Events<PageDirective> {
     id: string;
     date: number;
     private user: User;
-    get creater() {
-        if (!this.user) throw new Exception(ExceptionType.notUser, 'the user is not null');
-        return this.user;
-    }
-    snapshoot: HistorySnapshoot;
     constructor(el: HTMLElement, options?: Record<string, any>) {
         super();
+        this.__init_mixs();
         this.el = el;
         if (typeof options == 'object') Object.assign(this, util.clone(options));
         if (typeof this.id == 'undefined') this.id = util.guid();
         if (typeof this.date == 'undefined') this.date = new Date().getTime();
         this.init();
     }
+    get creater() {
+        if (!this.user) throw new Exception(ExceptionType.notUser, 'the user is not null');
+        return this.user;
+    }
+    snapshoot: HistorySnapshoot;
+
     private async init() {
         this.cfm = new ConfigurationManager(this);
         this.cfm.loadPageConfig({
@@ -213,15 +216,11 @@ export interface Page {
     on(name: PageDirective.loadPageInfo, fn: () => Promise<{ id: string, text: string, icon?: IconArguments, description?: string }>);
     emitAsync(name: PageDirective.loadPageInfo): Promise<{ id: string, text: string, icon?: IconArguments, description?: string }>;
 
-
-
 }
 
 export interface Page extends PageEvent { }
-util.inherit(Page, PageEvent)
-
 export interface Page extends Page$Seek { }
-util.inherit(Page, Page$Seek);
-
 export interface Page extends Page$Extensions { }
-util.inherit(Page, Page$Extensions);
+export interface Page extends Mix { }
+
+Mix(Page, PageEvent, Page$Seek, Page$Extensions);

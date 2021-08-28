@@ -5,7 +5,7 @@ export interface Mix {
      * 实始化分布类对象
      * new all class inherits
      */
-    __mixs();
+    __init_mixs(): void;
 }
 
 
@@ -13,7 +13,7 @@ export interface Mix {
 export function Mix(Mix, ...mixins) {
     if (!Array.isArray(Mix.prototype.__inherits)) {
         Mix.prototype.__inherits = [];
-        Mix.prototype.__mixs = function () {
+        Mix.prototype.__init_mixs = function () {
             Mix.prototype.__inherits.each(cla => {
                 var ins = new cla();
                 Object.assign(this, ins);

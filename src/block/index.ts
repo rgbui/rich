@@ -15,9 +15,11 @@ import { Block$Anchor } from "./partial/anchor";
 import { Block$LifeCycle } from "./partial/left.cycle";
 import { Block$Operator } from "./partial/operate";
 import { ElementAppear } from "./appear";
+import { Mix } from "../../util/mix";
 export abstract class Block extends Events {
     constructor(page: Page) {
         super();
+        this.__init_mixs();
         this.id = util.guid();
         this.date = new Date().getTime();
         this.page = page;
@@ -411,16 +413,10 @@ export abstract class Block extends Events {
     }
 }
 export interface Block extends Block$Seek { }
-util.inherit(Block, Block$Seek);
-
 export interface Block extends Block$Event { }
-util.inherit(Block, Block$Event);
-
 export interface Block extends Block$Anchor { }
-util.inherit(Block, Block$Anchor);
-
 export interface Block extends Block$LifeCycle { }
-util.inherit(Block, Block$LifeCycle);
-
 export interface Block extends Block$Operator { }
-util.inherit(Block, Block$Operator);
+export interface Block extends Mix { }
+Mix(Block, Block$Seek, Block$Event, Block$Anchor, Block$LifeCycle, Block$Operator)
+

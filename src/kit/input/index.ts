@@ -7,11 +7,13 @@ import { TextInput$Write } from './write';
 import { Kit } from '..';
 import { TextInputView } from './view';
 import { Events } from '../../../util/events';
+import { Mix } from '../../../util/mix';
 
 export class TextInput extends Events {
     kit: Kit;
     constructor(kit: Kit) {
         super();
+        this.__init_mixs();
         this.kit = kit;
     }
 
@@ -45,9 +47,7 @@ export class TextInput extends Events {
         }
     }
 }
-
-
 export interface TextInput extends TextInput$Write { }
-util.inherit(TextInput, TextInput$Write);
 export interface TextInput extends TextInput$Paster { }
-util.inherit(TextInput, TextInput$Paster);
+export interface TextInput extends Mix { }
+Mix(TextInput, TextInput$Write, TextInput$Paster)
