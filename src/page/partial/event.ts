@@ -1,16 +1,5 @@
-import ReactDOM from "react-dom";
+
 import { Page } from "..";
-import { Block } from "../../block";
-import { ActionDirective } from "../../history/declare";
-import { DropDirection } from "../../kit/handle/direction";
-import { Anchor } from "../../kit/selection/anchor";
-import { util } from "../../../util/util";
-import { TemporaryPurpose } from "./declare";
-import { PageDirective } from "../directive";
-import { useSelectMenuItem } from "../../../component/view/menu";
-import { Rect } from "../../common/point";
-import { MenuItemType } from "../../../component/view/menu/declare";
-import { BlockDirective } from "../../block/enum";
 export class PageEvent {
     /**
      * 鼠标点击页面,
@@ -24,19 +13,19 @@ export class PageEvent {
      * 
      */
     onMousedown(this: Page, event: MouseEvent) {
-        this.kit.acceptMousedown(event);
+        this.kit.mouse.onMousedown(event);
     }
     onMousemove(this: Page, event: MouseEvent) {
-        this.kit.acceptMousemove(event);
+        this.kit.mouse.onMousemove(event);
     }
     onMouseup(this: Page, event: MouseEvent) {
-        this.kit.acceptMouseup(event);
+        this.kit.mouse.onMouseup(event);
     }
     onFocusCapture(this: Page, event: FocusEvent) {
         this.onFocus(event);
     }
     onBlurCapture(this: Page, event: FocusEvent) {
-        if (this.kit && this.kit.isMousedown) {
+        if (this.kit && this.kit.mouse.isMousedown) {
             /*** 说明鼠标是处于down下，这个不可能失焦
             * 如果当前的元素中有一些节点发生了改变，那么此时event.relatedTarget是空的，这很蛋疼
              * 这里通过鼠标状态的来纠正一下
@@ -52,22 +41,6 @@ export class PageEvent {
             this.onBlur(event);
         }
     }
-    onFocus(this: Page, event: FocusEvent) {
-        this.kit.textInput.onFocus();
-        if (this.isFocus == false) {
-            this.isFocus = true;
-            this.emit(PageDirective.focus, event);
-        }
-    }
-    onBlur(this: Page, event: FocusEvent) {
-        if (this.isFocus == true) {
-            this.isFocus = false;
-            this.blockSelector.close();
-            this.textTool.close();
-            this.kit.explorer.blur();
-            this.emit(PageDirective.blur, event);
-        }
-    }
     /**
      * 主要是捕获取当前页面用户的按键情况
      * @param this 
@@ -78,173 +51,6 @@ export class PageEvent {
     }
     onKeyup(this: Page, event: KeyboardEvent) {
         this.keyboardPlate.keyup(event);
-    }
-    private willUpdateBlocks: Block[];
-    private updatedFns: (() => Promise<void>)[] = [];
-    onReadyUpdate() {
-        this.willUpdateBlocks = [];
-        this.updatedFns = [];
-    }
-    onAddUpdate(block: Block) {
-        var pa = this.willUpdateBlocks.find(g => g.contains(block));
-        if (!pa) this.willUpdateBlocks.push(block);
-    }
-    /**
-     * 绑定更新后触发的事件
-     * @param fn 
-     */
-    onUpdated(fn: () => Promise<void>) {
-        this.updatedFns.push(fn);
-    }
-    /**
-     * 触发需要更新的view,
-     * 这个可以手动触发多次
-     */
-    onExcuteUpdate() {
-        var ups = this.willUpdateBlocks.map(c => c);
-        this.willUpdateBlocks = [];
-        var len = ups.length;
-        var count = 0;
-        var self = this;
-        var updated = async () => {
-            await self.updatedFns.eachAsync(async g => await g());
-            self.updatedFns = [];
-        }
-        ups.each(up => {
-            up.view.forceUpdate(() => {
-                count += 1;
-                if (count === len) updated()
-            });
-        });
-    }
-    async onObserveUpdate(fn: () => Promise<void>) {
-        this.onReadyUpdate();
-        if (typeof fn == 'function') {
-            await fn();
-        }
-        this.onExcuteUpdate();
-    }
-    async onAction(this: Page, directive: ActionDirective | string, fn: () => Promise<void>) {
-        await this.snapshoot.sync(directive, async () => {
-            await this.onObserveUpdate(async () => {
-                if (typeof fn == 'function') {
-                    try {
-                        await fn();
-                    }
-                    catch (ex) {
-                        this.onError(ex);
-                    }
-                }
-            })
-        })
-    }
-    onUnmount(this: Page) {
-        ReactDOM.unmountComponentAtNode(this.root);
-    }
-    async onBatchDelete(this: Page, blocks: Block[]) {
-        await this.onAction(ActionDirective.onBatchDeleteBlocks, async () => {
-            await blocks.eachAsync(async bl => {
-                await bl.delete()
-            });
-        })
-    }
-    async onBatchTurn(this: Page, blocks: Block[], url: string) {
-        await this.onAction(ActionDirective.onBatchTurn, async () => {
-            await blocks.eachAsync(async bl => {
-                await bl.turn(url);
-            })
-        })
-    }
-    onBlurAnchor(this: Page, anchor: Anchor) {
-        if (anchor.block) {
-            anchor.block.blurAnchor(anchor);
-        }
-        this.emit(PageDirective.blurAnchor, anchor);
-    }
-    onFocusAnchor(this: Page, anchor: Anchor) {
-        if (anchor.block) {
-            anchor.block.focusAnchor(anchor);
-        }
-        this.emit(PageDirective.focusAnchor, anchor);
-    }
-    /**
-     * 批量将block拖到另一个block
-     * @param this 
-     * @param blocks 
-     * @param to 
-     * @param arrow 
-     */
-    async onBatchDragBlocks(this: Page, blocks: Block[], to: Block, direction: DropDirection) {
-        /**
-         * 就是将blocks append 到to 下面
-         */
-        await this.onAction(ActionDirective.onBatchDragBlocks, async () => {
-            await blocks.eachAsync(async block => {
-                await block.move(to, direction);
-            })
-        })
-    }
-    /**
-     * 对block打开右键菜单
-     * @param this 
-     * @param blocks 
-     * @param event 
-     */
-    async onOpenMenu(this: Page, blocks: Block[], event: MouseEvent) {
-
-        var re = await useSelectMenuItem(
-            {
-                roundArea: Rect.fromEvent(event),
-                direction: 'left'
-            },
-            await blocks[0].onGetContextMenus()
-        );
-        if (re) {
-            if (blocks.length == 1) await blocks[0].onClickContextMenu(re.item, re.event);
-            else await this.onClickContextMenu(blocks, re.item, re.event)
-        }
-    }
-    async onClickContextMenu(this: Page, blocks: Block[], item: MenuItemType<BlockDirective>, event: MouseEvent) {
-        switch (item.name) {
-            case BlockDirective.delete:
-                this.onBatchDelete(blocks);
-                break;
-            case BlockDirective.copy:
-                /**
-                 * 将元素复制到服务器，
-                 * 然后可以跨平台粘贴
-                 */
-                break;
-            case BlockDirective.link:
-                break;
-            case BlockDirective.trun:
-                this.onBatchTurn(blocks, item.value);
-                break;
-            case BlockDirective.trunIntoPage:
-                break;
-        }
-    }
-    /**
-     * 申明一个临时的缓存标记，当前的数据均以这个标记做为标记，
-     * 如果该标记发生变化，那么数据会重新获取
-     * TemporaryPurpose 表示当前的缓存标记的用途是什么
-     * 有一些操作频率是很高的，相关的计算结果，可以暂时性的缓存下来
-     */
-    private temporarys: { flag: string, purpose: TemporaryPurpose }[];
-    onDeclareTemporary(purpose: TemporaryPurpose) {
-        if (!Array.isArray(this.temporarys)) this.temporarys = [];
-        var tp = this.temporarys.find(g => g.purpose == purpose);
-        if (!tp) {
-            tp = { purpose, flag: undefined };
-            this.temporarys.push(tp);
-        }
-        tp.flag = util.guid();
-    }
-    getTemporaryFlag(purpose: TemporaryPurpose) {
-        if (!Array.isArray(this.temporarys)) this.temporarys = [];
-        var tp = this.temporarys.find(g => g.purpose == purpose);
-        if (tp) { return tp.flag }
-        else null;
     }
 }
 

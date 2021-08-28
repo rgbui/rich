@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom';
 import "./style.less";
 import { Events } from "../../util/events";
 import { util } from "../../util/util";
-import { BlockFactory } from "../block/factory/block.factory";
 import { View } from "../block/element/view";
 import { PageLayout } from "../layout/index";
 import { PageEvent } from "./partial/event";
@@ -12,20 +11,13 @@ import { PageEvent } from "./partial/event";
 import { User } from '../types/user';
 import { HistorySnapshoot } from '../history/snapshoot';
 import { Block } from '../block';
-import { OperatorDirective } from '../history/declare';
 import { ConfigurationManager } from '../config';
 import { PageConfig, WorkspaceConfig } from '../config/type';
 import { KeyboardPlate } from '../common/keys';
 import { Page$Seek } from './partial/seek';
-import { Kit } from '../kit';
 import { Page$Extensions } from './partial/extensions';
 import { PageView } from './view';
-import { PageKit } from './interaction/kit';
-import { PageHistory } from './interaction/history';
-import { PageKeys } from './interaction/keys';
 import { Exception, ExceptionType } from '../error/exception';
-import { InputDetector } from '../../extensions/input.detector/detector';
-import { PageInputDetector } from './interaction/detector';
 import { Anchor } from '../kit/selection/anchor';
 import { UserAction } from '../history/action';
 import { TableSchema } from '../../blocks/data-present/schema/meta';
@@ -35,6 +27,8 @@ import { Field } from '../../blocks/data-present/schema/field';
 import { PageDirective } from './directive';
 import { IconArguments } from '../../extensions/icon/declare';
 import { Mix } from '../../util/mix';
+import { Page$Cycle } from './partial/left.cycle';
+import { Page$Operator } from './partial/operator';
 
 export class Page extends Events<PageDirective> {
     el: HTMLElement;
@@ -57,66 +51,7 @@ export class Page extends Events<PageDirective> {
         return this.user;
     }
     snapshoot: HistorySnapshoot;
-
-    private async init() {
-        this.cfm = new ConfigurationManager(this);
-        this.cfm.loadPageConfig({
-            fontCss: {
-                lineHeight: 20,
-                letterSpacing: 0,
-                fontSize: 14,
-                fontStyle: 'normail'
-            } as any
-        });
-        this.cfm.loadWorkspaceConfig({
-            fontCss: {
-
-            } as any
-        });
-        this.kit = new Kit(this);
-        PageKit(this.kit);
-        this.snapshoot = new HistorySnapshoot(this);
-        PageHistory(this, this.snapshoot);
-        PageKeys(this, this.keyboardPlate);
-        this.inputDetector = new InputDetector();
-        PageInputDetector(this, this.inputDetector);
-        this.emit(PageDirective.init);
-    }
     cfm: ConfigurationManager;
-    async load(data: Record<string, any>) {
-        if (!data) {
-            //这里加载默认的页面数据
-            data = await this.getDefaultData();
-        }
-        await this.emit(PageDirective.loading);
-        for (var n in data) {
-            if (n == 'views') continue;
-            else if (n == 'pageLayout') {
-                this.pageLayout = new PageLayout(this, data[n]); continue;
-            }
-            this[n] = data[n];
-        }
-        if (Array.isArray(data.views)) {
-            for (var i = 0; i < data.views.length; i++) {
-                var dv = data.views[i];
-                var dc = await BlockFactory.createBlock(dv.url, this, dv, null);
-                this.views.push(dc as View);
-            }
-        }
-        if (typeof this.pageLayout == 'undefined') this.pageLayout = new PageLayout(this);
-        await this.emit(PageDirective.loaded);
-    }
-    async get() {
-        var json: Record<string, any> = {
-            id: this.id,
-            date: this.date
-        };
-        json.pageLayout = await this.pageLayout.get();
-        json.views = await this.views.asyncMap(async x => {
-            return await x.get()
-        })
-        return json;
-    }
     loadConfig(pageConfig: PageConfig, workspaceConfig: WorkspaceConfig) {
         if (pageConfig) this.cfm.loadPageConfig(pageConfig);
         if (workspaceConfig) this.cfm.loadPageConfig(workspaceConfig);
@@ -126,39 +61,8 @@ export class Page extends Events<PageDirective> {
     view: PageView;
     keyboardPlate: KeyboardPlate = new KeyboardPlate();
     isFocus: boolean = false;
-    onError(error: Error) {
-        this.emit(PageDirective.error, error);
-    }
-    onWarn(error: string | Error) {
-        this.emit(PageDirective.warn, error);
-    }
     render() {
         ReactDOM.render(<PageView page={this}></PageView>, (this.root = this.el.appendChild(document.createElement('div'))));
-    }
-    /**
-     * 创建一个block
-     * @param url 
-     * @param data 
-     * @param parent 
-     * @param at 
-     */
-    async createBlock(url: string, data: Record<string, any>, parent: Block, at?: number, childKey?: string) {
-        var block = await BlockFactory.createBlock(url, this, data, parent);
-        if (typeof childKey == 'undefined') childKey = 'childs';
-        var bs = parent.blocks[childKey];
-        if (!Array.isArray(bs)) parent.blocks[childKey] = bs = [];
-        if (typeof at == 'undefined') at = bs.length;
-        bs.insertAt(at, block);
-        this.snapshoot.record(OperatorDirective.create, {
-            parentId: parent.id, childKey, at, preBlockId: block.prev ? block.prev.id : undefined, data: block.get()
-        });
-        await block.onCreated()
-        this.onAddUpdate(parent);
-        return block;
-    }
-    async getDefaultData() {
-        var r = await import("./default.page");
-        return r.data;
     }
 }
 export interface Page {
@@ -212,15 +116,13 @@ export interface Page {
     emitAsync(name: PageDirective.updateRow, schemaId, rowId: string, data: Record<string, any>): Promise<{ ok: boolean, warn?: string }>
     on(name: PageDirective.deleteRow, fn: (schemaId: string, rowId: string) => Promise<{ ok: boolean, warn?: string }>);
     emitAsync(name: PageDirective.deleteRow, schemaId, rowId: string): Promise<{ ok: boolean, warn?: string }>
-
     on(name: PageDirective.loadPageInfo, fn: () => Promise<{ id: string, text: string, icon?: IconArguments, description?: string }>);
     emitAsync(name: PageDirective.loadPageInfo): Promise<{ id: string, text: string, icon?: IconArguments, description?: string }>;
-
 }
-
 export interface Page extends PageEvent { }
 export interface Page extends Page$Seek { }
 export interface Page extends Page$Extensions { }
+export interface Page extends Page$Cycle { }
+export interface Page extends Page$Operator { }
 export interface Page extends Mix { }
-
-Mix(Page, PageEvent, Page$Seek, Page$Extensions);
+Mix(Page, PageEvent, Page$Seek, Page$Extensions, Page$Cycle, Page$Operator);
