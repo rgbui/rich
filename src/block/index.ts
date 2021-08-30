@@ -14,7 +14,7 @@ import { Block$Event } from "./partial/on.event";
 import { Block$Anchor } from "./partial/anchor";
 import { Block$LifeCycle } from "./partial/left.cycle";
 import { Block$Operator } from "./partial/operate";
-import { ElementAppear } from "./appear";
+import { BlockAppear, ElementAppear } from "./appear";
 import { Mix } from "../../util/mix";
 export abstract class Block extends Events {
     constructor(page: Page) {
@@ -210,10 +210,29 @@ export abstract class Block extends Events {
         return this.display == BlockDisplay.inline;
     }
     get isLineSolid(): boolean {
+        if (this.isLine) {
+            if (this.appearElements.exists(g => g.appear == BlockAppear.solid)) return true;
+        }
         return false;
     }
     get isBlock(): boolean {
         return this.display == BlockDisplay.block;
+    }
+    get isBlockLine() {
+        return this.display == BlockDisplay.blockInline;
+    }
+    /**
+     * 是否为内容block
+     * 
+     */
+    get isVisibleContent() {
+        if (this.isRow || this.isView || this.isCol || this.isLine) return false;
+        else return true;
+    }
+    get visibleCotnent() {
+        if (this.isLine) return this.closest(x => x.isVisibleContent);
+        else if (this.isVisibleContent) return this;
+        else if (this.isRow || this.isView || this.isCol) return null;
     }
     /***
      * 注意换行的元素不一定非得是/row，
@@ -225,7 +244,7 @@ export abstract class Block extends Events {
     get isCol(): boolean {
         return false;
     }
-    get isArea(): boolean {
+    get isView(): boolean {
         return false;
     }
     partName: string;
