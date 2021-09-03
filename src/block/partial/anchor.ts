@@ -151,10 +151,20 @@ export class Block$Anchor {
             }
         }
         else if (anchor.isSolid) x = anchor.bound.right;
-        var nextRow = this.nextRow;
-        if (nextRow) {
-            var bound = nextRow.getBounds().first();
-            return nextRow.visibleAnchor(new Point(x, bound.top + 1))
+        /**
+         * 如果下一行没找到，则继续找下一行，直到没有了为止
+         */
+        var row = this.nextRow;
+        while (true) {
+            if (row) {
+                var bound = row.getBounds().first();
+                var anchor = row.visibleAnchor(new Point(x, bound.top + bound.height - 1));
+                if (anchor) return anchor;
+                else {
+                    row = row.nextRow;
+                }
+            }
+            else break;
         }
     }
     visibleUpAnchor(this: Block, anchor: Anchor): Anchor {
@@ -166,11 +176,17 @@ export class Block$Anchor {
             }
         }
         else if (anchor.isSolid) x = anchor.bound.left;
-        var prevRow = this.prevRow;
-        if (prevRow) {
-            var bound = prevRow.getBounds().first();
-            console.log(prevRow);
-            return prevRow.visibleAnchor(new Point(x, bound.top + bound.height - 1));
+        var row = this.prevRow;
+        while (true) {
+            if (row) {
+                var bound = row.getBounds().first();
+                var anchor = row.visibleAnchor(new Point(x, bound.top + bound.height - 1));
+                if (anchor) return anchor;
+                else {
+                    row = row.prevRow;
+                }
+            }
+            else break;
         }
     }
     visibleInnerDownAnchor(this: Block, anchor: Anchor) {
@@ -236,7 +252,8 @@ export class Block$Anchor {
             if (!fa) fa = ps.findMin(g => g.dis.y).appear
         }
         else fa = block.firstElementAppear;
-        return this.page.kit.explorer.createAnchor(block, fa.appear == BlockAppear.text ? TextEle.getAt(fa.el, point) : undefined);
+        if (fa)
+            return this.page.kit.explorer.createAnchor(block, fa.appear == BlockAppear.text ? TextEle.getAt(fa.el, point) : undefined);
     }
     findAnchorBlockByPointFromBlockRange(this: Block, point: Point) {
         var as = this.findAll(x => x.isSupportAnchor);
@@ -252,7 +269,8 @@ export class Block$Anchor {
             return ps.find(g => g.dis.x == 0 && g.dis.y == 0).block;
         if (ps.exists(g => g.dis.y == 0))
             return ps.findAll(g => g.dis.y == 0).findMin(g => g.dis.x).block
-        return ps.findMin(g => g.dis.y).block
+        if (ps.length > 0)
+            return ps.findMin(g => g.dis.y).block
     }
     /**
    * 创建block，有两种方式
