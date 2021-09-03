@@ -232,7 +232,6 @@ export abstract class Block extends Events {
             return this.page.find(x => x.id == this.partParentId)
         else return this.closest(x => !x.isPart);
     }
-
     @prop()
     content: string = '';
     /**

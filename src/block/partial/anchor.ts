@@ -157,8 +157,8 @@ export class Block$Anchor {
         var row = this.nextRow;
         while (true) {
             if (row) {
-                var bound = row.getBounds().first();
-                var anchor = row.visibleAnchor(new Point(x, bound.top + bound.height - 1));
+                var bound = row.getVisibleBound();
+                var anchor = row.visibleAnchor(new Point(x, bound.top + 1));
                 if (anchor) return anchor;
                 else {
                     row = row.nextRow;
@@ -179,7 +179,7 @@ export class Block$Anchor {
         var row = this.prevRow;
         while (true) {
             if (row) {
-                var bound = row.getBounds().first();
+                var bound = row.getVisibleBound();
                 var anchor = row.visibleAnchor(new Point(x, bound.top + bound.height - 1));
                 if (anchor) return anchor;
                 else {
