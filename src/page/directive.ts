@@ -12,8 +12,8 @@ export enum PageDirective {
     history,
     hoverOutBlock,
     hoverBlock,
-    dropOutBlock,
-    dropOverBlock,
+    dropLeaveBlock,
+    dropEnterBlock,
     loading,
     loaded,
     change,
@@ -33,5 +33,5 @@ export enum PageDirective {
      * 加载当前页面的信息
      */
     loadPageInfo
-  
+
 }

@@ -10,7 +10,6 @@ import { DropDirection } from "../../kit/handle/direction";
 import { Anchor } from "../../kit/selection/anchor";
 import { PageDirective } from "../directive";
 
-
 export class Page$Operator {
     /**
     * 创建一个block
@@ -58,6 +57,12 @@ export class Page$Operator {
             anchor.block.focusAnchor(anchor);
         }
         this.emit(PageDirective.focusAnchor, anchor);
+    }
+    onDropLeaveBlock(this: Page, dragBlocks: Block[], dropBlock: Block, direction: DropDirection) {
+        this.kit.page.emit(PageDirective.dropLeaveBlock, dragBlocks, dropBlock, direction);
+    }
+    onDropEnterBlock(this: Page, dragBlocks: Block[], dropBlock: Block, direction: DropDirection) {
+        this.kit.page.emit(PageDirective.dropLeaveBlock, dragBlocks, dropBlock, direction);
     }
     /**
      * 批量将block拖到另一个block

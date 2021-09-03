@@ -17,8 +17,6 @@ import { PageKeys } from "../interaction/keys";
 import { PageKit } from "../interaction/kit";
 import { TemporaryPurpose } from "./declare";
 
-
-
 export class Page$Cycle {
     async init(this: Page) {
         this.cfm = new ConfigurationManager(this);
@@ -44,7 +42,6 @@ export class Page$Cycle {
         PageInputDetector(this, this.inputDetector);
         this.emit(PageDirective.init);
     }
-
     async load(this: Page, data: Record<string, any>) {
         if (!data) {
             //这里加载默认的页面数据
@@ -79,7 +76,7 @@ export class Page$Cycle {
         })
         return json;
     }
- 
+
     async getDefaultData() {
         var r = await import("../default.page");
         return r.data;
@@ -168,27 +165,42 @@ export class Page$Cycle {
             this.emit(PageDirective.blur, event);
         }
     }
-
-      /**
-     * 申明一个临时的缓存标记，当前的数据均以这个标记做为标记，
-     * 如果该标记发生变化，那么数据会重新获取
-     * TemporaryPurpose 表示当前的缓存标记的用途是什么
-     * 有一些操作频率是很高的，相关的计算结果，可以暂时性的缓存下来
-     */
-       private temporarys: { flag: string, purpose: TemporaryPurpose }[];
-       onDeclareTemporary(purpose: TemporaryPurpose) {
-           if (!Array.isArray(this.temporarys)) this.temporarys = [];
-           var tp = this.temporarys.find(g => g.purpose == purpose);
-           if (!tp) {
-               tp = { purpose, flag: undefined };
-               this.temporarys.push(tp);
-           }
-           tp.flag = util.guid();
-       }
-       getTemporaryFlag(purpose: TemporaryPurpose) {
-           if (!Array.isArray(this.temporarys)) this.temporarys = [];
-           var tp = this.temporarys.find(g => g.purpose == purpose);
-           if (tp) { return tp.flag }
-           else null;
-       }
+    public hoverBlock: Block;
+    onHoverBlock(this: Page, block: Block) {
+        if (this.hoverBlock == block) return;
+        if (this.hoverBlock) {
+            this.onOutHoverBlock(this.hoverBlock);
+        }
+        this.hoverBlock = block;
+        this.emit(PageDirective.hoverBlock, this.hoverBlock);
+        if (this.hoverBlock)
+            this.kit.handle.onShowBlockHandle(this.hoverBlock);
+        else this.kit.handle.onCloseBlockHanlde();
+    }
+    onOutHoverBlock(this: Page, block: Block) {
+        this.emit(PageDirective.hoverOutBlock, block);
+        this.kit.handle.onCloseBlockHanlde();
+    }
+    /**
+   * 申明一个临时的缓存标记，当前的数据均以这个标记做为标记，
+   * 如果该标记发生变化，那么数据会重新获取
+   * TemporaryPurpose 表示当前的缓存标记的用途是什么
+   * 有一些操作频率是很高的，相关的计算结果，可以暂时性的缓存下来
+   */
+    private temporarys: { flag: string, purpose: TemporaryPurpose }[];
+    onDeclareTemporary(purpose: TemporaryPurpose) {
+        if (!Array.isArray(this.temporarys)) this.temporarys = [];
+        var tp = this.temporarys.find(g => g.purpose == purpose);
+        if (!tp) {
+            tp = { purpose, flag: undefined };
+            this.temporarys.push(tp);
+        }
+        tp.flag = util.guid();
+    }
+    getTemporaryFlag(purpose: TemporaryPurpose) {
+        if (!Array.isArray(this.temporarys)) this.temporarys = [];
+        var tp = this.temporarys.find(g => g.purpose == purpose);
+        if (tp) { return tp.flag }
+        else null;
+    }
 }

@@ -25,7 +25,7 @@ export class PageEvent {
         this.onFocus(event);
     }
     onBlurCapture(this: Page, event: FocusEvent) {
-        if (this.kit && this.kit.mouse.isMousedown) {
+        if (this.kit && this.kit.mouse.isDown) {
             /*** 说明鼠标是处于down下，这个不可能失焦
             * 如果当前的元素中有一些节点发生了改变，那么此时event.relatedTarget是空的，这很蛋疼
              * 这里通过鼠标状态的来纠正一下

@@ -82,10 +82,10 @@ export interface Page {
     emit(name: PageDirective.hoverOutBlock, block: Block)
     on(name: PageDirective.hoverBlock, fn: (block: Block) => void): void;
     emit(name: PageDirective.hoverBlock, block: Block)
-    on(name: PageDirective.dropOutBlock, fn: (block: Block) => void): void;
-    emit(name: PageDirective.dropOutBlock, block: Block)
-    on(name: PageDirective.dropOverBlock, fn: (block: Block, direction: DropDirection) => void): void;
-    emit(name: PageDirective.dropOverBlock, block: Block, direction: DropDirection)
+    on(name: PageDirective.dropLeaveBlock, fn: (dragBlocks: Block[], dropBlock: Block, direction: DropDirection) => void): void;
+    emit(name: PageDirective.dropLeaveBlock, dragBlocks: Block[], dropBlock: Block, direction: DropDirection)
+    on(name: PageDirective.dropEnterBlock, fn: (dragBlocks: Block[], dropBlock: Block, direction: DropDirection) => void): void;
+    emit(name: PageDirective.dropEnterBlock, dragBlocks: Block[], dropBlock: Block, direction: DropDirection)
     on(name: PageDirective.loading, fn: () => void);
     emit(name: PageDirective.loading);
     on(name: PageDirective.loaded, fn: () => void);

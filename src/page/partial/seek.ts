@@ -11,9 +11,12 @@ import { Anchor } from "../../kit/selection/anchor";
 export class Page$Seek {
     /**
      * 这里需要在当前的PageLout内进行查找
+     * 获取鼠标所在的block（鼠标不一定在block上面，在block左边的空白处）
+     * 先从当前点击的元素来查找block，
+     * 如果没有找到block，则在水平方向上延伸一定的宽度去查找邻近的block
      * @param event 
      */
-    searchBlockByMouse(this: Page, event: MouseEvent) {
+    getBlockInMouseRegion(this: Page, event: MouseEvent) {
         var target = event.target as HTMLElement;
         var block = this.getEleBlock(target);
         if (block) return block;
@@ -60,11 +63,14 @@ export class Page$Seek {
         }
         return null;
     }
-    getVisibleBlockByMouse(this: Page, event: MouseEvent): Block {
+    /**
+     * 获取当前鼠标所在的block
+     * @param this 
+     * @param event 
+     * @returns 
+     */
+    getMouseTargetBlock(this: Page, event: MouseEvent): Block {
         var block = this.getEleBlock(event.target as HTMLElement);
-        if (block && block.isLayout) {
-            block = block.visiblePoint(Point.from(event))
-        }
         return block;
     }
     getBlockFromPoint(this: Page, point: Point) {
@@ -90,10 +96,12 @@ export class Page$Seek {
         return bs;
     }
     /**
-     * 通过起始光标，结束光标
+     * 通过起始光标，结束光标来查找之间的block
      * @param this 
      * @param from 
      * @param to 
+     * @param filter  rowOrCol 表示查找时过滤isRow,isCol的块
+     * @param filter  lineBlock 表示查找的时候过滤isLine的块
      * @returns 
      */
     searchBlocksBetweenAnchor(this: Page, from: Anchor, to: Anchor, filter?: {
@@ -144,13 +152,15 @@ export class Page$Seek {
      * @param this 
      * @param from 
      * @param to 
+     * @param filter  lineBlock=ture 表示过滤掉isLine的block
+     * @returns 
      */
     searchBlocksBetweenMouseRect(this: Page, from: MouseEvent, to: MouseEvent, filter?: {
         lineBlock?: boolean
     }) {
         var bs: Block[] = [];
-        var fromBlock = this.searchBlockByMouse(from);
-        var toBlock = this.searchBlockByMouse(to);
+        var fromBlock = this.getBlockInMouseRegion(from);
+        var toBlock = this.getBlockInMouseRegion(to);
         var rect = new Rect(Point.from(from), Point.from(to));
         var topFromRow = fromBlock.closest(g => g.isRow && !g.closest(x => x.isRow, true));
         var topToRow = toBlock.closest(g => g.isRow && !g.closest(x => x.isRow, true));
@@ -283,5 +293,12 @@ export class Page$Seek {
         if (from === to) return true;
         if (from.isLine && to.isLine && from.parent == to.parent) return true;
         else return false;
+    }
+    find(this: Page, predict: (block: Block) => boolean) {
+        for (let i = 0; i < this.views.length; i++) {
+            var view = this.views[i];
+            var r = view.find(predict, true);
+            if (r) return r;
+        }
     }
 }
