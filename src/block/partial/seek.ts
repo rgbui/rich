@@ -96,6 +96,13 @@ export class Block$Seek {
         }, consider, isDepth);
         return block;
     }
+    exists(this: Block, predict: (block: Block) => boolean,
+        consider: boolean = false,
+        finalPredict?: (block: Block) => boolean, isDepth = false) {
+        var r = this.find(predict, consider, finalPredict, isDepth);
+        if (r) return true;
+        else return false;
+    }
     findReverse(this: Block, predict: (block: Block) => boolean, consider: boolean = false,
         finalPredict?: (block: Block) => boolean, isDepth = false) {
         var block: Block;
@@ -300,4 +307,5 @@ export class Block$Seek {
         }
         return blocks;
     }
+
 }
