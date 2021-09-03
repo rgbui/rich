@@ -45,6 +45,7 @@ export class Block$LifeCycle {
     async initialLoad(this: Block) {
 
     }
+    isLoad = false;
     async load(this: Block, data) {
         try {
             if (!this.pattern)

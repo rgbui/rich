@@ -150,7 +150,7 @@ export abstract class Block extends Events {
     get continuouslyProps() {
         return {}
     }
-    isLoad = false;
+   
     viewComponent: typeof BlockView | ((props: any) => JSX.Element)
     view: BlockView<this>;
     el: HTMLElement;
@@ -232,132 +232,7 @@ export abstract class Block extends Events {
             return this.page.find(x => x.id == this.partParentId)
         else return this.closest(x => !x.isPart);
     }
-    /***
-     * 
-     * row-col-block
-     * row-block
-     * row-block-childs(block是一个list有子节点)
-     * row-block-row(row里面是一个table，而table包含row)
-     * 
-     */
-    get visiblePre() {
-        var current: Block = this;
-        var prev = current.prev;
-        while (true) {
-            if (prev) {
-                if (prev.isLayout) {
-                    var r = prev.findReverse(g => g.isSupportAnchor);
-                    if (r) return r;
-                }
-                else if (prev.isSupportAnchor) {
-                    if (prev.hasChilds) {
-                        var r = prev.findReverse(g => g.isSupportAnchor);
-                        if (r) return r;
-                    }
-                    return prev;
-                }
-                else if (prev.hasChilds) {
-                    var r = prev.findReverse(g => g.isSupportAnchor);
-                    if (r) return r;
-                }
-                if (prev.prev) {
-                    prev = prev.prev;
-                }
-                else if (prev.parent) {
-                    current = prev;
-                    prev = null;
-                }
-            }
-            else {
-                current = current.parent;
-                if (current) {
-                    if (current.prev) prev = current.prev;
-                    else if (current.parent) continue;
-                    else break;
-                }
-                else break;
-            }
-        }
-    }
-    get visibleNext() {
-        if (this.hasChilds) {
-            var r = this.find(g => g.isSupportAnchor);
-            if (r) return r;
-        }
-        var current: Block = this;
-        var next = this.next;
-        while (true) {
-            if (next) {
-                if (next.isLayout) {
-                    var r = next.find(g => g.isSupportAnchor);
-                    if (r) return r;
-                }
-                else if (next.isSupportAnchor) {
-                    if (next.hasChilds) {
-                        var r = next.find(g => g.isSupportAnchor);
-                        if (r) return r;
-                    }
-                    return next;
-                }
-                else if (next.hasChilds) {
-                    var r = next.find(g => g.isSupportAnchor);
-                    if (r) return r;
-                }
-                if (next.next) {
-                    next = next.next;
-                }
-                else if (next.parent) {
-                    current = next;
-                    next = null;
-                }
-            } else {
-                current = current.parent;
-                if (current) {
-                    if (current.next) next = current.next;
-                    else if (current.parent) continue;
-                    else break;
-                }
-                else break;
-            }
-        }
-    }
-    get visiblePrevAnchor() {
-        var pre = this.visiblePre;
-        if (pre) return this.page.kit.explorer.createBackAnchor(pre, -1);
-    }
-    get visibleNextAnchor() {
-        var next = this.visibleNext;
-        if (next) return this.page.kit.explorer.createAnchor(next);
-    }
-    get row() {
-        return this.closest(x => x.isRow);
-    }
-    get nextRow() {
-        var row = this.row;
-        if (row) {
-            if (row.at == row.childs.length - 1) {
-                var col = row.closest(x => x.isCol && !x.closest(g => g.isCol, true));
-                if (col) {
-                    var rw = col.closest(g => g.isRow);
-                    if (rw) row = rw;
-                }
-            }
-            return row.nextFind(g => g.isRow);
-        }
-    }
-    get prevRow() {
-        var row = this.row;
-        if (row) {
-            if (row.at == 0) {
-                var col = row.closest(x => x.isCol && !x.closest(g => g.isCol, true));
-                if (col) {
-                    var rw = col.closest(g => g.isRow);
-                    if (rw) row = rw;
-                }
-            }
-            return row.prevFind(g => g.isRow);
-        }
-    }
+
     @prop()
     content: string = '';
     /**
