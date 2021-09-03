@@ -152,6 +152,15 @@ export class TextEle {
             }) as HTMLElement;
             if (closetELe) {
                 rect = this.getContentBound(closetELe);
+                /**
+                 * 有部分的元素很蛋疼，外边的ele反而比里面的文字内容范围还小了
+                 */
+                if (rect.top > currentRect.top) {
+                    rect.top = currentRect.top;
+                }
+                if (rect.height < currentRect.height) {
+                    rect.height = currentRect.height;
+                }
             }
         }
         else rect = currentRect;
@@ -180,12 +189,15 @@ export class TextEle {
          */
         if (top <= 0) top = 1;
         if (left > currentBoundRight) left = currentBoundRight - 1;
-        if (point.y >= currentBoundBottom && point.y <= currentBoundBottom + lineHeight)
-            top = currentBoundBottom - currentRect.top - 1;
+        if (point.y >= currentBoundBottom) {
+            /**
+             * 文本内容的高度并不一定是按lineHeight成陪显示的，这里取最后一行-1
+             */
+            var totalRows = Math.floor((currentBoundBottom - currentRect.top) / lineHeight);
+            top = totalRows * lineHeight - 1;
+        }
         if (left < currentBoundLeft) left = currentBoundLeft + 1;
         let i = 0;
-        //console.log({ top, left, currentRect, rect, lineHeight, firstRowWidth, rowWidth })
-        // debugger
         for (; i < ts.length; i++) {
             var word = ts[i];
             /**
@@ -242,7 +254,6 @@ export class TextEle {
             __g = canvas.getContext("2d");//把canvas的画笔给调出来
             canvas.style.display = 'none';
         }
-
         var lineHeight: string = fontStyle.lineHeight as any;
         if (typeof lineHeight == 'number') lineHeight = lineHeight + 'px';
         __g.font = `${fontStyle.fontStyle} ${fontStyle.fontVariant} ${fontStyle.fontWeight} ${fontStyle.fontSize}/${lineHeight} ${fontStyle.fontFamily}`;
