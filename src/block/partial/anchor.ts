@@ -202,7 +202,7 @@ export class Block$Anchor {
                     var cb = this.getVisibleBound();
                     top = bound.top + (cb.top - bound.top - 1);
                 }
-                var anchor = row.visibleAnchor(new Point(x,top));
+                var anchor = row.visibleAnchor(new Point(x, top));
                 if (anchor) return anchor;
                 else {
                     row = row.prevRow;
@@ -291,8 +291,18 @@ export class Block$Anchor {
             return ps.find(g => g.dis.x == 0 && g.dis.y == 0).block;
         if (ps.exists(g => g.dis.y == 0))
             return ps.findAll(g => g.dis.y == 0).findMin(g => g.dis.x).block
-        if (ps.length > 0)
-            return ps.findMin(g => g.dis.y).block
+        if (ps.length > 0) {
+            /**
+             * 这里表示水平方向等距的block，
+             * 那么在从最小的等距的block找水平方向最近的点
+             */
+            var minY = ps.min(g => g.dis.y);
+            var ds = ps.findAll(g => g.dis.y == minY);
+            if (ds.length == 1) return ds.first().block;
+            else {
+                return ds.findMin(g => g.dis.x).block;
+            }
+        }
     }
     /**
    * 创建block，有两种方式
