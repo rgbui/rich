@@ -1,12 +1,147 @@
 import { Block } from "..";
 import { Point, Rect } from "../../common/point";
 import { TextEle } from "../../common/text.ele";
-import { Exception, ExceptionType } from "../../error/exception";
 import { Anchor } from "../../kit/selection/anchor";
 import { BlockAppear, ElementAppear } from "../appear";
 import { BlockUrlConstant } from "../constant";
 
+/**
+ * 主要是用来确定光标的上下左右移动
+ */
 export class Block$Anchor {
+    /***
+ * 
+ * row-col-block
+ * row-block
+ * row-block-childs(block是一个list有子节点)
+ * row-block-row(row里面是一个table，而table包含row)
+ * 
+ */
+    get visiblePre() {
+        var current: Block = this as any;
+        var prev = current.prev;
+        while (true) {
+            if (prev) {
+                if (prev.isLayout) {
+                    var r = prev.findReverse(g => g.isSupportAnchor);
+                    if (r) return r;
+                }
+                else if (prev.isSupportAnchor) {
+                    if (prev.hasChilds) {
+                        var r = prev.findReverse(g => g.isSupportAnchor);
+                        if (r) return r;
+                    }
+                    return prev;
+                }
+                else if (prev.hasChilds) {
+                    var r = prev.findReverse(g => g.isSupportAnchor);
+                    if (r) return r;
+                }
+                if (prev.prev) {
+                    prev = prev.prev;
+                }
+                else if (prev.parent) {
+                    current = prev;
+                    prev = null;
+                }
+            }
+            else {
+                current = current.parent;
+                if (current) {
+                    if (current.prev) prev = current.prev;
+                    else if (current.parent) continue;
+                    else break;
+                }
+                else break;
+            }
+        }
+    }
+    get visibleNext() {
+        var self: Block = this as any;
+        if (self.hasChilds) {
+            var r = self.find(g => g.isSupportAnchor);
+            if (r) return r;
+        }
+        var current: Block = self;
+        var next = self.next;
+        while (true) {
+            if (next) {
+                if (next.isLayout) {
+                    var r = next.find(g => g.isSupportAnchor);
+                    if (r) return r;
+                }
+                else if (next.isSupportAnchor) {
+                    if (next.hasChilds) {
+                        var r = next.find(g => g.isSupportAnchor);
+                        if (r) return r;
+                    }
+                    return next;
+                }
+                else if (next.hasChilds) {
+                    var r = next.find(g => g.isSupportAnchor);
+                    if (r) return r;
+                }
+                if (next.next) {
+                    next = next.next;
+                }
+                else if (next.parent) {
+                    current = next;
+                    next = null;
+                }
+            } else {
+                current = current.parent;
+                if (current) {
+                    if (current.next) next = current.next;
+                    else if (current.parent) continue;
+                    else break;
+                }
+                else break;
+            }
+        }
+    }
+    get visiblePrevAnchor() {
+        var self: Block = this as any;
+        var pre = self.visiblePre;
+        if (pre) return self.page.kit.explorer.createBackAnchor(pre, -1);
+    }
+    get visibleNextAnchor() {
+        var self: Block = this as any;
+        var next = self.visibleNext;
+        if (next) return self.page.kit.explorer.createAnchor(next);
+    }
+    get row() {
+        var self: Block = this as any;
+        return self.closest(x => x.isRow);
+    }
+    get nextRow() {
+        var self: Block = this as any;
+        var row = self.row;
+        if (row) {
+            while (true) {
+                if (row.parent && row.at == row.parentBlocks.length - 1) {
+                    var newRow = row.closest(x => x.isRow, true);
+                    if (newRow) row = newRow;
+                    else break;
+                }
+                else break;
+            }
+            return row.nextFind(g => g.isRow);
+        }
+    }
+    get prevRow() {
+        var self: Block = this as any;
+        var row = self.row;
+        if (row) {
+            while (true) {
+                if (row.at == 0) {
+                    var newRow = row.closest(x => x.isRow, true);
+                    if (newRow) row = newRow;
+                    else break;
+                } else break;
+            }
+            return row.prevFind(g => g.isRow);
+        }
+    }
     visibleDownAnchor(this: Block, anchor: Anchor) {
         var x: number;
         if (anchor.isText) {
@@ -15,7 +150,7 @@ export class Block$Anchor {
                 x = line.point.x;
             }
         }
-        else if (anchor.isSolid) x = anchor.el.getBoundingClientRect().left;
+        else if (anchor.isSolid) x = anchor.bound.right;
         var nextRow = this.nextRow;
         if (nextRow) {
             var bound = nextRow.getBounds().first();
@@ -30,10 +165,11 @@ export class Block$Anchor {
                 x = line.point.x;
             }
         }
-        else if (anchor.isSolid) x = anchor.el.getBoundingClientRect().left;
+        else if (anchor.isSolid) x = anchor.bound.left;
         var prevRow = this.prevRow;
         if (prevRow) {
             var bound = prevRow.getBounds().first();
+            console.log(prevRow);
             return prevRow.visibleAnchor(new Point(x, bound.top + bound.height - 1));
         }
     }
@@ -97,14 +233,13 @@ export class Block$Anchor {
                 fa = ps.find(g => g.dis.x == 0 && g.dis.y == 0).appear;
             if (!fa && ps.exists(g => g.dis.y == 0))
                 fa = ps.findAll(g => g.dis.y == 0).findMin(g => g.dis.x).appear
-            if (!fa)
-                fa = ps.findMin(g => g.dis.y).appear
+            if (!fa) fa = ps.findMin(g => g.dis.y).appear
         }
-        else fa = this.firstElementAppear;
+        else fa = block.firstElementAppear;
         return this.page.kit.explorer.createAnchor(block, fa.appear == BlockAppear.text ? TextEle.getAt(fa.el, point) : undefined);
     }
     findAnchorBlockByPointFromBlockRange(this: Block, point: Point) {
-        var as = this.findAll(x => !x.isLayout && x.isSupportAnchor);
+        var as = this.findAll(x => x.isSupportAnchor);
         var ps = as.map(e => {
             var bounds = e.getBounds();
             var newPoint = TextEle.cacDistance(point, bounds);
@@ -169,14 +304,9 @@ export class Block$Anchor {
     }
     focusAnchor(this: Block, anchor: Anchor) {
 
-        // if (this.isText && this.isEmpty) {
-        //     this.textEl.classList.add('empty');
-        // }
     }
     blurAnchor(this: Block, anchor: Anchor) {
-        // if (this.isText) {
-        //     this.textEl.classList.remove('empty');
-        // }
+
     }
     elementAppear(this: Block, elementAppear: Partial<ElementAppear>) {
         if (!elementAppear.el) return;
