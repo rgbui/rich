@@ -22,10 +22,10 @@
 }
 
 .sy-anchor-text {
-    width   : 0px;
-    position: relative;
-    display : inline;
-
+    width         : 0;
+    position      : relative;
+    display       : inline;
+    letter-spacing: 0;
     &::before {
         content         : '';
         position        : absolute;
@@ -35,6 +35,7 @@
         margin-left     : -1px;
         height          : 100%;
         background-color: inherit;
+        letter-spacing  : 0;
     }
 }
 
@@ -149,7 +150,7 @@
 
 .sy-block-drag-over-top {
     &::after {
-        border-top-color:  rgba(46, 170, 220, 0.6);
+        border-top-color: rgba(46, 170, 220, 0.6);
     }
 }
 

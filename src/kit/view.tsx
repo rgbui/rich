@@ -1,6 +1,6 @@
 import React from "react";
 import { Kit } from ".";
-import { BarView } from "./handle/view";
+import { HandleView } from "./handle/view";
 import { TextInputView } from "./input/view";
 import { SelectorView } from "./selector";
 export class KitView extends React.Component<{ kit: Kit }>{
@@ -16,7 +16,7 @@ export class KitView extends React.Component<{ kit: Kit }>{
         return <div className='sy-kit' ref={e => this.el = e}>
             <SelectorView selector={this.kit.selector}></SelectorView>
             <TextInputView textInput={this.kit.textInput}></TextInputView>
-            <BarView bar={this.kit.bar}></BarView>
+            <HandleView handle={this.kit.handle}></HandleView>
         </div>
     }
 }

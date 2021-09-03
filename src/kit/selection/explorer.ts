@@ -88,6 +88,17 @@ export class SelectionExplorer extends Events {
             if (at == -1) anchor.at = anchor.elementAppear.textContent.length;
             else anchor.at = at;
         }
+        else if (anchor.isText && typeof at == 'undefined') {
+            anchor.at = 0;
+        }
+        return anchor;
+    }
+    createBackAnchor(block: Block, at?: number) {
+        var anchor = new Anchor(this, block.appearElements.last());
+        if (typeof at == 'number' && anchor.isText) {
+            if (at == -1) anchor.at = anchor.elementAppear.textContent.length;
+            else anchor.at = at;
+        }
         return anchor;
     }
     onFocusAnchor(anchor: Anchor) {
@@ -201,8 +212,9 @@ export class SelectionExplorer extends Events {
                     anchor.visible();
                     return;
                 }
-                else if (arrow == KeyboardCode.ArrowRight && anchor.isEnd)
+                else if (arrow == KeyboardCode.ArrowRight && anchor.isEnd) {
                     newAnchor = anchor.block.visibleNextAnchor;
+                }
                 else if (arrow == KeyboardCode.ArrowDown)
                     newAnchor = anchor.block.visibleInnerDownAnchor(anchor);
                 else if (arrow == KeyboardCode.ArrowUp)
@@ -388,6 +400,9 @@ export class SelectionExplorer extends Events {
     }
     get isOnlyAnchor() {
         return this.start && !this.end;
+    }
+    get hasAnchor() {
+        return this.start ? true : false;
     }
     /**
      * 选区失焦时做什么

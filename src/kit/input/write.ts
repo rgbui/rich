@@ -3,7 +3,6 @@ import { Block } from "../../block";
 import { BlockUrlConstant } from "../../block/constant";
 import { dom } from "../../common/dom";
 import { KeyboardCode } from "../../common/keys";
-import { TextEle } from "../../common/text.ele";
 import { ExceptionType, Exception } from "../../error/exception";
 import { BlockSelectorItem } from "../../../extensions/block/delcare";
 import { blockStore } from "../../../extensions/block/store";
@@ -267,7 +266,6 @@ export class TextInput$Write {
                 });
             });
         })
-
     }
     async onInputDetector(this: TextInput, rule: DetectorRule, value: string, lastValue?: string) {
         var anchor = this.explorer.activeAnchor;

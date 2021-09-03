@@ -4,71 +4,59 @@ import { dom } from "../../common/dom";
 import { Point } from "../../common/point";
 import { Events } from "../../../util/events";
 import { DropDirection } from "./direction";
-import { BarView } from "./view";
-import { PageDirective } from "../../page/directive";
+import { HandleView } from "./view";
 
-
-export class Bar extends Events {
+export class Handle extends Events {
     kit: Kit;
-    view: BarView;
+    view: HandleView;
     constructor(kit: Kit) {
         super();
         this.kit = kit;
     }
-    get barEle() {
-        return this.view.barEle;
-    }
-    /**
-     * 这个block是鼠标悬停时，所在的block
-     * 只是为了更好的呈现bar的位置，并不代表将要操作的就是这个block，
-     * 具体的操作block取决于选区
-     * 
-     */
-    hoverBlock: Block;
-    /**
-     * 当前悬停的block，
-     * 该block与hoverBlock并非是一对一
-     */
-    get visibleHoverBlock() {
-        if (this.hoverBlock.isLine) {
-            return this.hoverBlock.closest(x => !x.isLine);
+    handleBlock: Block;
+    onShowBlockHandle(block: Block) {
+        var visbileBlock = block.visibleContentBlock;
+        if (!visbileBlock) {
+            console.log('not found visibleContentBlock', block);
         }
-        return this.hoverBlock;
-    }
-    onHoverBlock(block: Block, event: MouseEvent) {
-        if (this.view.isDrag) {
-            this.onDropOverBlock(block, event);
+        this.handleBlock = visbileBlock;
+        if (this.view.isDown) {
+            var handleEl = this.view.handleEle;
+            handleEl.style.display = 'none';
         }
-        if (this.hoverBlock != block) {
-            if (this.hoverBlock) {
-                this.kit.page.emit(PageDirective.hoverOutBlock, this.hoverBlock);
-            }
-        }
-        this.hoverBlock = block;
-        if (this.hoverBlock) {
-            var bound = this.visibleHoverBlock.getVisibleContentBound();
+        else if (visbileBlock) {
+            var bound = visbileBlock.getVisibleContentBound();
             var pos = Point.from(bound);
-            this.barEle.style.top = pos.y + 'px';
-            this.barEle.style.left = pos.x + 'px';
-            this.barEle.style.display = 'flex';
+            var handleEl = this.view.handleEle;
+            handleEl.style.top = pos.y + 'px';
+            handleEl.style.left = pos.x + 'px';
+            handleEl.style.display = 'flex';
         }
-        else this.barEle.style.display = 'none';
-        if (this.hoverBlock) {
-            this.kit.page.emit(PageDirective.hoverBlock, this.hoverBlock);
+        else {
+            var handleEl = this.view.handleEle;
+            handleEl.style.display = 'none';
         }
+        if (this.view.isDown) {
+            this.onDropOverBlock(this.handleBlock, this.kit.mouse.moveEvent);
+        }
+    }
+    onCloseBlockHanlde() {
+        var handleEl = this.view.handleEle;
+        handleEl.style.display = 'none';
+        if (!this.view.isDown)
+            delete this.handleBlock;
+    }
+    containsEl(el: HTMLElement) {
+        return this.view.handleEle.contains(el);
     }
     dragBlocks: Block[] = [];
     dropBlock: Block;
     dropDirection: DropDirection;
     onDropOverBlock(block: Block, event: MouseEvent) {
-        var willDropBlock: Block;
-        if (block)
-            willDropBlock = block.closest(x => !x.isLine);
-        if (willDropBlock !== this.dropBlock) {
-            if (this.dropBlock) {
-                dom(this.dropBlock.el).removeClass(g => g.startsWith('sy-block-drag-over'));
-                this.kit.page.emit(PageDirective.dropOutBlock, this.dropBlock);
-            }
+        var willDropBlock: Block = block;
+        if (willDropBlock !== this.dropBlock && this.dropBlock) {
+            dom(this.dropBlock.el).removeClass(g => g.startsWith('sy-block-drag-over'));
+            this.kit.page.onDropLeaveBlock(this.dragBlocks, this.dropBlock, this.dropDirection);
         }
         this.dropBlock = willDropBlock;
         if (willDropBlock) {
@@ -82,12 +70,25 @@ export class Bar extends Events {
         }
         else {
             this.dropDirection = DropDirection.none;
+            delete this.dropBlock;
         }
-        this.kit.page.emit(PageDirective.dropOverBlock, this.dropBlock, this.dropDirection);
+        if (this.dropBlock)
+            this.kit.page.onDropEnterBlock(this.dragBlocks, this.dropBlock, this.dropDirection);
     }
     onDropEnd() {
         if (this.dropBlock) {
             dom(this.dropBlock.el).removeClass(g => g.startsWith('sy-block-drag-over'));
         }
+        delete this.dragBlocks;
+        delete this.dropBlock;
+        delete this.dropDirection;
+    }
+    onDropBlock() {
+        if (this.dragBlocks.length > 0 && this.dropBlock) {
+            this.kit.page.onBatchDragBlocks(this.dragBlocks, this.dropBlock, this.dropDirection);
+        }
+    }
+    onClickBlock(event: MouseEvent) {
+        this.kit.page.onOpenMenu(this.dragBlocks, event);
     }
 }

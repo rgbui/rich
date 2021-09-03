@@ -1,9 +1,7 @@
-import { Block } from "../block";
-import { Point } from "../common/point";
+
 import { Page } from "../page";
 import { Events } from "../../util/events";
-import { Bar } from "./handle";
-import { DropDirection } from "./handle/direction";
+import { Handle } from "./handle";
 import { TextInput } from "./input";
 import { Anchor } from "./selection/anchor";
 import { SelectionExplorer } from "./selection/explorer";
@@ -23,13 +21,13 @@ export class Kit extends Events {
         this.explorer = new SelectionExplorer(this);
         this.textInput = new TextInput(this);
         this.mouse = new PageMouse(this);
-        this.bar = new Bar(this);
+        this.handle = new Handle(this);
     }
     mouse: PageMouse;
     textInput: TextInput;
     selector: Selector;
     explorer: SelectionExplorer;
-    bar: Bar;
+    handle: Handle;
     view: KitView;
 }
 
@@ -44,8 +42,4 @@ export interface Kit {
     emit(name: 'willInput');
     on(name: "mouseup", fn: (event: MouseEvent) => void);
     emit(name: 'mouseup', event: MouseEvent);
-    on(name: "openMenu", fn: (blocks: Block[], event: MouseEvent) => void);
-    emit(name: 'openMenu', blocks: Block[], event: MouseEvent)
-    on(name: 'dragMoveBlocks', fn: (blocks: Block[], drop: Block, direction: DropDirection) => void);
-    emit(name: "dragMoveBlocks", blocks: Block[], drop: Block, direction: DropDirection)
 }
