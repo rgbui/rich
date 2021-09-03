@@ -115,6 +115,13 @@ export class Block$Anchor {
     }
     get nextRow() {
         var self: Block = this as any;
+        /**
+         * 如果元素本身有子元素，那么当前行则以当前元素的子row做为下一行
+         */
+        if (self.hasChilds && self.exists(x => x.isRow)) {
+            var r = self.nextFind(g => g.isRow, true);
+            if (r) return r;
+        }
         var row = self.row;
         if (row) {
             while (true) {
@@ -151,10 +158,10 @@ export class Block$Anchor {
             }
         }
         else if (anchor.isSolid) x = anchor.bound.right;
+        var row = this.nextRow;
         /**
          * 如果下一行没找到，则继续找下一行，直到没有了为止
          */
-        var row = this.nextRow;
         while (true) {
             if (row) {
                 var bound = row.getVisibleBound();
