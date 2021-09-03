@@ -142,7 +142,13 @@ export class Block$Anchor {
             while (true) {
                 if (row.at == 0) {
                     var newRow = row.closest(x => x.isRow, true);
-                    if (newRow) row = newRow;
+                    if (newRow) {
+                        var nb = row.prevFind(x => x.isSupportAnchor);
+                        if (nb && newRow.exists(x => x == nb)) {
+                            return newRow;
+                        }
+                        row = newRow;
+                    }
                     else break;
                 } else break;
             }
@@ -187,7 +193,16 @@ export class Block$Anchor {
         while (true) {
             if (row) {
                 var bound = row.getVisibleBound();
-                var anchor = row.visibleAnchor(new Point(x, bound.top + bound.height - 1));
+                var top = bound.top + bound.height - 1;
+                /**
+                 * 这里说明是从子节点所在的row跃迁到父row，且父row还包含子row,
+                 * 这发生在list从子节点光标移到list本身上。
+                 */
+                if (row.exists(g => g == this)) {
+                    var cb = this.getVisibleBound();
+                    top = bound.top + (cb.top - bound.top - 1);
+                }
+                var anchor = row.visibleAnchor(new Point(x,top));
                 if (anchor) return anchor;
                 else {
                     row = row.prevRow;
