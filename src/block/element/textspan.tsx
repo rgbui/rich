@@ -8,10 +8,6 @@ import { Block } from '..';
 @url("/textspan")
 export class TextSpan extends Block {
     display = BlockDisplay.block;
-    get isLayout() {
-        if (this.childs.length > 0) return true;
-        else return false;
-    }
     get appearElements() {
         if (this.childs.length > 0) return []
         else return this.__appearElements;

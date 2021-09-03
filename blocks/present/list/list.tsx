@@ -37,10 +37,6 @@ export class List extends Block {
         if (this.isExpand == false) keys.remove('subChilds');
         return keys;
     }
-    get isLayout() {
-        if (this.childs.length > 0) return true;
-        else return false;
-    }
     get multiLines() {
         return false;
     }

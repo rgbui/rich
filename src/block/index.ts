@@ -150,34 +150,6 @@ export abstract class Block extends Events {
     get continuouslyProps() {
         return {}
     }
-
-
-    /**
-     * 当前元素内部第一个坑位元素
-     */
-    get firstPitBlock() {
-        return this.find(g => true);
-    }
-    /**
-     * 当前元素内部最后一个坑位元素
-     */
-    get lastPitBlock() {
-        return this.findReverse(g => true);
-    }
-
-    /***
-    * 查找当前容器里面首位的内容元素，
-    * 而且是视野上面的
-    **/
-    get visiblePitFirstContent() {
-        return this.find(g => !g.isLayout);
-    }
-    /**
-     * 查找当前容器里面末尾的内容元素
-     */
-    get visiblePitLastContent() {
-        return this.findReverse(g => !g.isLayout && !g.hasChilds);
-    }
     isLoad = false;
     viewComponent: typeof BlockView | ((props: any) => JSX.Element)
     view: BlockView<this>;
@@ -197,14 +169,15 @@ export abstract class Block extends Events {
         return this.page.kit.explorer.createAnchor(this);
     }
     get visibleBackAnchor() {
-        return this.page.kit.explorer.createAnchor(this, -1);
+        return this.page.kit.explorer.createBackAnchor(this, -1);
     }
     protected display: BlockDisplay;
     /**
      * 布局用的block，该block只具有特定的调节布局效果，本身没有任何内容可以设置
      */
     get isLayout(): boolean {
-        return false;
+        if (this.isRow || this.isCol || this.isView) return true;
+        else return false;
     }
     get isLine(): boolean {
         return this.display == BlockDisplay.inline;
@@ -218,21 +191,22 @@ export abstract class Block extends Events {
     get isBlock(): boolean {
         return this.display == BlockDisplay.block;
     }
-    get isBlockLine() {
-        return this.display == BlockDisplay.blockInline;
-    }
     /**
      * 是否为内容block
      * 
      */
-    get isVisibleContent() {
+    get isVisibleContentBlock() {
         if (this.isRow || this.isView || this.isCol || this.isLine) return false;
         else return true;
     }
-    get visibleCotnent() {
-        if (this.isLine) return this.closest(x => x.isVisibleContent);
-        else if (this.isVisibleContent) return this;
-        else if (this.isRow || this.isView || this.isCol) return null;
+    get visibleContentBlock() {
+        if (this.isLine) return this.closest(x => x.isVisibleContentBlock);
+        else if (this.isVisibleContentBlock) return this;
+        else if (this.isRow || this.isView || this.isCol) {
+            var r = this.find(x => x.isVisibleContentBlock);
+            if (r) return r;
+        }
+        return null;
     }
     /***
      * 注意换行的元素不一定非得是/row，
@@ -248,63 +222,100 @@ export abstract class Block extends Events {
         return false;
     }
     partName: string;
+    partParentId: string;
     get isPart(): boolean {
         if (typeof this.partName == 'string') return true;
         else return false;
     }
     get partParent(): Block {
-        return this.closest(x => !x.isPart);
+        if (this.partParentId)
+            return this.page.find(x => x.id == this.partParentId)
+        else return this.closest(x => !x.isPart);
     }
+    /***
+     * 
+     * row-col-block
+     * row-block
+     * row-block-childs(block是一个list有子节点)
+     * row-block-row(row里面是一个table，而table包含row)
+     * 
+     */
     get visiblePre() {
         var current: Block = this;
         var prev = current.prev;
         while (true) {
             if (prev) {
-                /**
-                 * 非layout容器，也是有可能有子block的
-                 * 例如list块,本身是个文本块，但包含子模块
-                 */
-                if (!prev.isLayout) {
+                if (prev.isLayout) {
+                    var r = prev.findReverse(g => g.isSupportAnchor);
+                    if (r) return r;
+                }
+                else if (prev.isSupportAnchor) {
                     if (prev.hasChilds) {
-                        var vp = prev.visiblePitLastContent;
-                        if (vp) return vp;
+                        var r = prev.findReverse(g => g.isSupportAnchor);
+                        if (r) return r;
                     }
                     return prev;
                 }
-                else {
-                    return prev.visiblePitLastContent;
+                else if (prev.hasChilds) {
+                    var r = prev.findReverse(g => g.isSupportAnchor);
+                    if (r) return r;
+                }
+                if (prev.prev) {
+                    prev = prev.prev;
+                }
+                else if (prev.parent) {
+                    current = prev;
+                    prev = null;
                 }
             }
             else {
                 current = current.parent;
-                if (current && !current.isLayout) return current;
                 if (current) {
-                    prev = current.prev;
+                    if (current.prev) prev = current.prev;
+                    else if (current.parent) continue;
+                    else break;
                 }
-                else {
-                    break;
-                }
+                else break;
             }
         }
     }
     get visibleNext() {
-        var current: Block = this;
-        if (!current.isLayout && current.hasChilds) {
-            var t = current.visiblePitFirstContent;
-            if (t) return t;
+        if (this.hasChilds) {
+            var r = this.find(g => g.isSupportAnchor);
+            if (r) return r;
         }
-        var next = current.next;
+        var current: Block = this;
+        var next = this.next;
         while (true) {
             if (next) {
-                if (!next.isLayout) return next;
-                else {
-                    return next.visiblePitFirstContent;
+                if (next.isLayout) {
+                    var r = next.find(g => g.isSupportAnchor);
+                    if (r) return r;
                 }
-            }
-            else {
+                else if (next.isSupportAnchor) {
+                    if (next.hasChilds) {
+                        var r = next.find(g => g.isSupportAnchor);
+                        if (r) return r;
+                    }
+                    return next;
+                }
+                else if (next.hasChilds) {
+                    var r = next.find(g => g.isSupportAnchor);
+                    if (r) return r;
+                }
+                if (next.next) {
+                    next = next.next;
+                }
+                else if (next.parent) {
+                    current = next;
+                    next = null;
+                }
+            } else {
                 current = current.parent;
                 if (current) {
-                    next = current.next;
+                    if (current.next) next = current.next;
+                    else if (current.parent) continue;
+                    else break;
                 }
                 else break;
             }
@@ -312,11 +323,11 @@ export abstract class Block extends Events {
     }
     get visiblePrevAnchor() {
         var pre = this.visiblePre;
-        if (pre) return pre.visibleBackAnchor;
+        if (pre) return this.page.kit.explorer.createBackAnchor(pre, -1);
     }
     get visibleNextAnchor() {
         var next = this.visibleNext;
-        if (next) return next.visibleHeadAnchor;
+        if (next) return this.page.kit.explorer.createAnchor(next);
     }
     get row() {
         return this.closest(x => x.isRow);
@@ -324,29 +335,27 @@ export abstract class Block extends Events {
     get nextRow() {
         var row = this.row;
         if (row) {
-            while (true) {
-                if (row.parent && row.parent.isCol) {
-                    if (row.parent.parent && row.parent.parent.isRow) {
-                        row = row.parent.parent;
-                    } else break;
+            if (row.at == row.childs.length - 1) {
+                var col = row.closest(x => x.isCol && !x.closest(g => g.isCol, true));
+                if (col) {
+                    var rw = col.closest(g => g.isRow);
+                    if (rw) row = rw;
                 }
-                else break;
             }
-            return row.nextFind(g => g.isRow && !g.contains(row));
+            return row.nextFind(g => g.isRow);
         }
     }
     get prevRow() {
         var row = this.row;
         if (row) {
-            while (true) {
-                if (row.parent && row.parent.isCol) {
-                    if (row.parent.parent && row.parent.parent.isRow) {
-                        row = row.parent.parent;
-                    } else break;
+            if (row.at == 0) {
+                var col = row.closest(x => x.isCol && !x.closest(g => g.isCol, true));
+                if (col) {
+                    var rw = col.closest(g => g.isRow);
+                    if (rw) row = rw;
                 }
-                else break;
             }
-            return row.prevFind(g => g.isRow && !g.contains(row));
+            return row.prevFind(g => g.isRow);
         }
     }
     @prop()
@@ -369,25 +378,6 @@ export abstract class Block extends Events {
     getVisibleContentBound() {
         return this.getVisibleBound();
     }
-    /**
-     * 获取视觉上的block
-     */
-    // get visibleBlock() {
-    //     if (this.isLayout) return [];
-    //     else return [this];
-    // }
-    // get allVisibleBlocks() {
-    //     var bs: (Block)[] = [];
-    //     var gs = this.visibleBlock;
-    //     bs.addRange(gs);
-    //     for (var n in this.blocks) {
-    //         var blocks = this.blocks[n];
-    //         blocks.each(b => {
-    //             bs.addRange(b.allVisibleBlocks);
-    //         })
-    //     }
-    //     return bs;
-    // }
     get isTextContent() {
         return false;
     }
@@ -424,8 +414,8 @@ export abstract class Block extends Events {
     }
     get isSupportAnchor() {
         if (this.isLayout) return false;
-        if (this.appearElements.length == 0) return false;
-        return true;
+        if (this.appearElements.length > 0)
+            return true;
     }
     /**
      * 是否允许通过鼠标点击来创建anchor

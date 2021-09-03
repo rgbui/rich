@@ -11,9 +11,6 @@ import { BlockFactory } from "../../../src/block/factory/block.factory";
 
 @url('/tablestore/head')
 export class TableStoreHead extends Block {
-    get isLayout() {
-        return true;
-    }
     display = BlockDisplay.block;
     get isRow() { return true }
     partName = 'head';

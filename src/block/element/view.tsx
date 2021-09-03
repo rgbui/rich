@@ -5,10 +5,7 @@ import { url, view } from "../factory/observable";
 import { Block } from '..';
 @url('/view')
 export class View extends Block {
-    get isLayout() {
-        return true;
-    }
-    get isArea() {
+    get isView() {
         return true;
     }
 }

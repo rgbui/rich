@@ -9,9 +9,6 @@ import { util } from "../../util/util";
 import { ChildsArea } from "../../src/block/view/appear";
 @url('/table')
 export class Table extends Block {
-    get isLayout() {
-        return true;
-    }
     display = BlockDisplay.block;
     @prop()
     cols: { width: number }[] = [];

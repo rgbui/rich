@@ -6,9 +6,6 @@ import { url, view } from "../../src/block/factory/observable";
 import {  BlockDisplay } from "../../src/block/enum";
 @url('/table/row')
 export class TableRow extends Block {
-    get isLayout(){
-        return true;
-    }
     display = BlockDisplay.block;
     partName = 'row';
     get isRow() { return true }

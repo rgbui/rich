@@ -9,9 +9,6 @@ export class ListSubPanel extends Block {
     get isCol() {
         return true;
     }
-    get isLayout() {
-        return true;
-    }
 }
 @view('/list/sub/panel')
 export class ListTextView extends BlockView<ListSubPanel>{

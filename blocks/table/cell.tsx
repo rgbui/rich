@@ -12,10 +12,6 @@ export class TableCell extends Block {
     colspan: number = 1;
     display = BlockDisplay.block;
     partName = 'cell';
-    get isLayout() {
-        if (this.childs.length > 0) return true;
-        else return false;
-    }
     get isCol() {
         return true;
     }

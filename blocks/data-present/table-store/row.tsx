@@ -9,9 +9,6 @@ import { TableStoreCell } from "./cell";
 import { BlockFactory } from "../../../src/block/factory/block.factory";
 @url('/tablestore/row')
 export class TableStoreRow extends Block {
-    get isLayout() {
-        return true;
-    }
     display = BlockDisplay.block;
     get isRow() { return true }
     partName = 'row';

@@ -12,9 +12,6 @@ import { url, view } from '../factory/observable';
 @url('/group')
 export class Group extends Block {
     display = BlockDisplay.block;
-    get isLayout() {
-        return true;
-    }
 }
 @view('/group')
 export class GroupView extends BlockView<Group>{

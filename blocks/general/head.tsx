@@ -11,9 +11,6 @@ export class Head extends TextSpan {
     get multiLines() {
         return false;
     }
-    get isLayout() {
-        return this.childs.length > 0;
-    }
     get appearElements() {
         if (this.childs.length > 0) return []
         return this.__appearElements;

@@ -98,9 +98,6 @@ export class TableStore extends Block {
             await rowBlock.createCells();
         }
     }
-    get isLayout() {
-        return true;
-    }
     display = BlockDisplay.block;
     async onAddField(at?: number) {
         if (typeof at == 'undefined') at = this.fields.length;

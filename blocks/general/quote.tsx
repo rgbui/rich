@@ -6,9 +6,6 @@ import { TextSpan } from "../../src/block/element/textspan";
 import { BlockDisplay } from "../../src/block/enum";
 @url('/quote')
 export class Quote extends TextSpan {
-    get isLayout() {
-        return this.childs.length > 0;
-    }
     display=BlockDisplay.block;
     get appearElements()
     {

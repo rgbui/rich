@@ -12,9 +12,6 @@ import { url, view } from '../factory/observable';
 @url('/row')
 export class Row extends Block {
     display = BlockDisplay.block;
-    get isLayout() {
-        return true;
-    }
     get isRow() {
         return true;
     }

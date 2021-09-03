@@ -11,9 +11,6 @@ import { Block } from "..";
 @url('/col')
 export class Col extends Block {
     display = BlockDisplay.block;
-    get isLayout() {
-        return true;
-    }
     get isCol() {
         return true;
     }
