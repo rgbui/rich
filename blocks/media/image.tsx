@@ -96,8 +96,8 @@ export class ImageView extends BlockView<Image>{
     render() {
         return <div className='sy-block-image' style={this.block.visibleStyle} >
             <div className='sy-block-image-content' >
-                {!this.block.src && this.renderEmptyImage()}
-                {this.block.src && this.renderImage()}
+                {!(this.block.src&&this.block.src.url) && this.renderEmptyImage()}
+                {this.block.src&&this.block.src.url && this.renderImage()}
             </div>
         </div>
     }
