@@ -1,13 +1,26 @@
 
-var deps: Dep[] = [];
-class Observable {
-    constructor(obj) {
+class DepBox {
+    deps: DepProxy[] = [];
+    useDeps: UseDep[] = [];
+    currentUseDep: UseDep;
+    actions: ActionDep[] = [];
+    currentAction: ActionDep;
+}
+class UseDep {
+    uses: { dep: DepProxy, obj: Object, key: string }[] = [];
+}
+class ActionDep {
+    updates: { dep: DepProxy, obj: Object, key: string, value: any }[] = [];
+}
+var depBox = new DepBox();
+
+class Observable<T> {
+    constructor(obj: T) {
         return this._createProxy(obj);
     }
-    _createProxy(obj) {
-        const dep = new Dep();
+    private _createProxy(obj) {
+        const dep = new DepProxy();
         dep.source = obj;
-        deps.push(dep);
         /**
           * 深层处理
           *
@@ -19,8 +32,8 @@ class Observable {
                     return Reflect.get(target, key, receiver)
                 },
                 set(target, key, value, receiver) {
+                    dep.set(target, key, value);
                     const result = Reflect.set(target, key, value, receiver);
-                    dep.notify(target, key);
                     return result
                 }
             });
@@ -42,65 +55,82 @@ class Observable {
         }
         var pxy = DeepProxy(obj);
         dep.proxy = pxy;
+        pxy.__source = obj;
+        pxy.__dep = dep;
         return pxy;
     };
+    __source: T;
+    __dep: DepProxy<T>;
 }
-class Dep {
-    source: any;
-    proxy: any;
-    deps: { obj, key: string }[] = [];
+
+class DepProxy<T = Object> {
+    constructor() {
+        depBox.deps.push(this);
+    }
+    source: T;
+    proxy: Observable<T>;
+    deps: { obj: Object, key: string }[] = [];
     depend(obj, key) {
-        this.deps.push(obj, key);
+        if (depBox.currentUseDep) {
+            depBox.currentUseDep.uses.push({ dep: this, obj, key });
+        }
     }
-    events: { obj, key: string }[] = [];
-    notify(obj, key) {
-        this.events.push({ obj, key });
+    set(obj, key, value) {
+        if (depBox.currentAction) {
+            depBox.currentAction.updates.push({ dep: this, obj, key, value });
+        }
     }
 }
-// var data = {
-//     a: 1,
-//     b: { c: 2, d: 5 },
-//     g: [1, { a: 3 }]
-// }
-// var newData = new Observable(data) as any;
+function observer(fn: () => void) {
+    var ud = new UseDep();
+    depBox.useDeps.push(ud);
+    depBox.currentUseDep = ud;
+    fn();
+    delete depBox.currentUseDep;
+}
+function action(fn: () => void) {
+    var action = new ActionDep();
+    depBox.actions.push(action);
+    depBox.currentAction = action;
+    fn();
+    delete depBox.currentAction;
+}
+var data = {
+    a: 1,
+    b: { c: 2, d: 5 },
+    g: [1, { a: 3 }]
+}
+var newData = new Observable(data) as any;
+observer(function () {
+    console.log(newData.a);
+    console.log(depBox);
+});
+action(function () {
+    newData.a = 3;
+    console.log(depBox);
+})
+
+// console.log(newData, newData.__dep, newData.__source, 'nd');
 // console.log(data.g[1]);
 // console.log(deps);
 
-
-// class Watcher {
-//     obj: Object;
-//     key: string;
-//     callback: Function;
-//     onComputedUpdate: Function;
-//     constructor(obj, key, callback, onComputedUpdate) {
-//         this.obj = obj;
-//         this.key = key;
-//         this.callback = callback;
-//         this.onComputedUpdate = onComputedUpdate;
-//         return this._defineComputed();
-//     }
-//     _defineComputed() {
-//         const self = this
-//         const onDepUpdated = () => {
-//             const val = self.callback();
-//             this.onComputedUpdate(val);
-//         }
-//         const handler = {
-//             get(target, key, receiver) {
-//                 // console.log(`我的${key}属性被读取了！`);
-//                 // Dep.target = onDepUpdated;
-//                 // const val = self.callback();
-//                 // Dep.target = null;
-//                 return val
-//             },
-//             set() {
-//                 // console.error('计算属性无法被赋值！')
-//             }
-//         }
-//         return new Proxy(this.obj, handler);
-//     }
-// }
-
-
-
-//   Dep.target = null;
+function enumerable() {
+    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+        const origin = target[propertyKey];
+        // aop
+        target[propertyKey] = function (...args: any[]) {
+            console.log('before method run')
+            let result = origin.apply(this, args)
+            console.log('after method run')
+            return result;
+        }
+        return target[propertyKey];
+    };
+}
+class ClassA {
+    @enumerable()
+    greet() {
+        console.log('gre');
+    }
+}
+// console.log((new ClassA()).greet())
