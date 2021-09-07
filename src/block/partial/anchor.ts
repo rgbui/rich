@@ -10,13 +10,13 @@ import { BlockUrlConstant } from "../constant";
  */
 export class Block$Anchor {
     /***
- * 
- * row-col-block
- * row-block
- * row-block-childs(block是一个list有子节点)
- * row-block-row(row里面是一个table，而table包含row)
- * 
- */
+     * 
+     * row-col-block
+     * row-block
+     * row-block-childs(block是一个list有子节点)
+     * row-block-row(row里面是一个table，而table包含row)
+     * 
+    */
     get visiblePre() {
         var current: Block = this as any;
         var prev = current.prev;
@@ -48,6 +48,7 @@ export class Block$Anchor {
             else {
                 current = current.parent;
                 if (current) {
+                    if (current.isSupportAnchor) return current;
                     if (current.prev) prev = current.prev;
                     else if (current.parent) continue;
                     else break;
@@ -119,7 +120,7 @@ export class Block$Anchor {
          * 如果元素本身有子元素，那么当前行则以当前元素的子row做为下一行
          */
         if (self.hasChilds && self.exists(x => x.isRow)) {
-            var r = self.nextFind(g => g.isRow, true);
+            var r = self.find(g => g.isRow);
             if (r) return r;
         }
         var row = self.row;
@@ -174,7 +175,9 @@ export class Block$Anchor {
                 var anchor = row.visibleAnchor(new Point(x, bound.top + 1));
                 if (anchor) return anchor;
                 else {
-                    row = row.nextRow;
+                    var r = row.nextRow;
+                    if (r === row) break;
+                    else row = r;
                 }
             }
             else break;
@@ -271,7 +274,13 @@ export class Block$Anchor {
                 fa = ps.find(g => g.dis.x == 0 && g.dis.y == 0).appear;
             if (!fa && ps.exists(g => g.dis.y == 0))
                 fa = ps.findAll(g => g.dis.y == 0).findMin(g => g.dis.x).appear
-            if (!fa) fa = ps.findMin(g => g.dis.y).appear
+            if (!fa) {
+                var min = ps.min(g => g.dis.y);
+                var fas = ps.findAll(g => g.dis.y == min);
+                if (fas.length > 0) {
+                    fa = fas.findMin(g => g.dis.x).appear;
+                }
+            }
         }
         else fa = block.firstElementAppear;
         if (fa)
@@ -383,5 +392,11 @@ export class Block$Anchor {
         ) elementAppear.prop = 'content';
         if (!this.__appearElements.exists(x => x.prop == elementAppear.prop))
             this.__appearElements.push(new ElementAppear(this, elementAppear.el, elementAppear.appear, elementAppear.prop))
+        else {
+            var ep = this.__appearElements.find(g => g.prop == elementAppear.prop);
+            if (ep) {
+                ep.el = elementAppear.el;
+            }
+        }
     }
 }
