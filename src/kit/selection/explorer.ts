@@ -29,12 +29,19 @@ export class SelectionExplorer extends Events {
     activeAnchor: Anchor;
     setActiveAnchor(anchor: Anchor) {
         this.kit.textInput.onWillInput(anchor);
+        var emptyEles = Array.from(this.page.view.el.querySelectorAll('.shy-text-empty'));
+        emptyEles.each(el => {
+            el.classList.remove('shy-text-empty');
+        })
         if (this.activeAnchor !== anchor) {
-            if (this.activeAnchor) this.page.onBlurAnchor(this.activeAnchor);
+            if (this.activeAnchor) {
+                this.page.onBlurAnchor(this.activeAnchor);
+            }
         }
         else return
+        var oldActive = this.activeAnchor;
         this.activeAnchor = anchor;
-        if (!(this.activeAnchor && this.activeAnchor.equal(anchor))) {
+        if (!(this.activeAnchor && this.activeAnchor.equal(oldActive))) {
             this.page.onFocusAnchor(this.activeAnchor);
         }
     }
@@ -57,20 +64,20 @@ export class SelectionExplorer extends Events {
                 selection.addRange(range); // 将要复制的区域的range对象添加到selection对象中
             }
             else {
-                var currentEls = Array.from(this.kit.page.el.querySelectorAll(".sy-block-selected"));
+                var currentEls = Array.from(this.kit.page.el.querySelectorAll(".shy-block-selected"));
                 this.currentSelectedBlocks.each(sel => {
                     currentEls.remove(sel.el);
-                    sel.el.classList.add('sy-block-selected');
+                    sel.el.classList.add('shy-block-selected');
                 });
                 currentEls.each(el => {
-                    el.classList.remove('sy-block-selected');
+                    el.classList.remove('shy-block-selected');
                 })
             }
         }
         else {
-            var currentEls = Array.from(this.kit.page.el.querySelectorAll(".sy-block-selected"));
+            var currentEls = Array.from(this.kit.page.el.querySelectorAll(".shy-block-selected"));
             currentEls.each(el => {
-                el.classList.remove('sy-block-selected');
+                el.classList.remove('shy-block-selected');
             });
             const selection = window.getSelection();
             if (selection.rangeCount > 1) selection.removeAllRanges(); // 将已经包含的已选择的对象清除掉
@@ -408,9 +415,9 @@ export class SelectionExplorer extends Events {
      * 选区失焦时做什么
      */
     blur() {
-        var currentEls = Array.from(this.kit.page.el.querySelectorAll(".sy-block-selected"));
+        var currentEls = Array.from(this.kit.page.el.querySelectorAll(".shy-block-selected"));
         currentEls.each(el => {
-            el.classList.remove('sy-block-selected');
+            el.classList.remove('shy-block-selected');
         });
     }
     /**
