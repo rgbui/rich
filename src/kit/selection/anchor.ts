@@ -64,7 +64,7 @@ export class Anchor {
         if (typeof this._view == 'undefined') {
             this._view = document.createElement('span');
             this._view.style.visibility = 'hidden';
-            this._view.classList.add('sy-anchor-appear');
+            this._view.classList.add('shy-anchor-appear');
             this.kit.view.el.appendChild(this._view);
         }
         return this._view;
@@ -94,10 +94,10 @@ export class Anchor {
             this.view.style.height = typeof fontStyle.lineHeight == 'number' ? fontStyle.lineHeight + 'px' : '20px';
             this.view.style.display = 'inline';
             if (this.textContent.length == 0) {
-                this.el.classList.add('empty');
+                this.el.classList.add('shy-text-empty');
             }
             else {
-                this.el.classList.remove('empty');
+                this.el.classList.remove('shy-text-empty');
             }
             if (this.isActive) {
                 this.view.style.visibility = 'visible';
@@ -112,8 +112,8 @@ export class Anchor {
             else {
                 this.view.style.visibility = 'hidden';
             }
-            this.view.classList.remove('sy-anchor-solid');
-            this.view.classList.add('sy-anchor-text');
+            this.view.classList.remove('shy-anchor-solid');
+            this.view.classList.add('shy-anchor-text');
         }
         else if (this.isSolid) {
             var el = this.el;
@@ -122,10 +122,17 @@ export class Anchor {
             }
             this.view.style.visibility = 'visible';
             this.view.style.display = 'block';
-            this.view.style.backgroundColor = 'transparent';
+            this.view.style.backgroundColor = 'rgba(46, 170, 220, 0.2)';
             this.view.style.height = 'auto';
-            this.view.classList.remove('sy-anchor-text');
-            this.view.classList.add('sy-anchor-solid');
+            this.view.classList.remove('shy-anchor-text');
+            this.view.classList.add('shy-anchor-solid');
+            if (this.isActive) {
+                this.textVisibleCursorTimer = setInterval(function () {
+                    if (self.view.classList.contains('shy-anchor-active-hidden'))
+                        self.view.classList.remove('shy-anchor-active-hidden');
+                    else self.view.classList.add('shy-anchor-active-hidden');
+                }, 700)
+            }
         }
         else {
             throw new Error('anchor visible error...');
