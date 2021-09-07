@@ -115,6 +115,13 @@ export class Block$Anchor {
     }
     get nextRow() {
         var self: Block = this as any;
+        /**
+         * 如果元素本身有子元素，那么当前行则以当前元素的子row做为下一行
+         */
+        if (self.hasChilds && self.exists(x => x.isRow)) {
+            var r = self.nextFind(g => g.isRow, true);
+            if (r) return r;
+        }
         var row = self.row;
         if (row) {
             while (true) {
@@ -135,7 +142,13 @@ export class Block$Anchor {
             while (true) {
                 if (row.at == 0) {
                     var newRow = row.closest(x => x.isRow, true);
-                    if (newRow) row = newRow;
+                    if (newRow) {
+                        var nb = row.prevFind(x => x.isSupportAnchor);
+                        if (nb && newRow.exists(x => x == nb)) {
+                            return newRow;
+                        }
+                        row = newRow;
+                    }
                     else break;
                 } else break;
             }
@@ -151,10 +164,20 @@ export class Block$Anchor {
             }
         }
         else if (anchor.isSolid) x = anchor.bound.right;
-        var nextRow = this.nextRow;
-        if (nextRow) {
-            var bound = nextRow.getBounds().first();
-            return nextRow.visibleAnchor(new Point(x, bound.top + 1))
+        var row = this.nextRow;
+        /**
+         * 如果下一行没找到，则继续找下一行，直到没有了为止
+         */
+        while (true) {
+            if (row) {
+                var bound = row.getVisibleBound();
+                var anchor = row.visibleAnchor(new Point(x, bound.top + 1));
+                if (anchor) return anchor;
+                else {
+                    row = row.nextRow;
+                }
+            }
+            else break;
         }
     }
     visibleUpAnchor(this: Block, anchor: Anchor): Anchor {
@@ -166,11 +189,26 @@ export class Block$Anchor {
             }
         }
         else if (anchor.isSolid) x = anchor.bound.left;
-        var prevRow = this.prevRow;
-        if (prevRow) {
-            var bound = prevRow.getBounds().first();
-            console.log(prevRow);
-            return prevRow.visibleAnchor(new Point(x, bound.top + bound.height - 1));
+        var row = this.prevRow;
+        while (true) {
+            if (row) {
+                var bound = row.getVisibleBound();
+                var top = bound.top + bound.height - 1;
+                /**
+                 * 这里说明是从子节点所在的row跃迁到父row，且父row还包含子row,
+                 * 这发生在list从子节点光标移到list本身上。
+                 */
+                if (row.exists(g => g == this)) {
+                    var cb = this.getVisibleBound();
+                    top = bound.top + (cb.top - bound.top - 1);
+                }
+                var anchor = row.visibleAnchor(new Point(x, top));
+                if (anchor) return anchor;
+                else {
+                    row = row.prevRow;
+                }
+            }
+            else break;
         }
     }
     visibleInnerDownAnchor(this: Block, anchor: Anchor) {
@@ -236,7 +274,8 @@ export class Block$Anchor {
             if (!fa) fa = ps.findMin(g => g.dis.y).appear
         }
         else fa = block.firstElementAppear;
-        return this.page.kit.explorer.createAnchor(block, fa.appear == BlockAppear.text ? TextEle.getAt(fa.el, point) : undefined);
+        if (fa)
+            return this.page.kit.explorer.createAnchor(block, fa.appear == BlockAppear.text ? TextEle.getAt(fa.el, point) : undefined);
     }
     findAnchorBlockByPointFromBlockRange(this: Block, point: Point) {
         var as = this.findAll(x => x.isSupportAnchor);
@@ -252,7 +291,18 @@ export class Block$Anchor {
             return ps.find(g => g.dis.x == 0 && g.dis.y == 0).block;
         if (ps.exists(g => g.dis.y == 0))
             return ps.findAll(g => g.dis.y == 0).findMin(g => g.dis.x).block
-        return ps.findMin(g => g.dis.y).block
+        if (ps.length > 0) {
+            /**
+             * 这里表示水平方向等距的block，
+             * 那么在从最小的等距的block找水平方向最近的点
+             */
+            var minY = ps.min(g => g.dis.y);
+            var ds = ps.findAll(g => g.dis.y == minY);
+            if (ds.length == 1) return ds.first().block;
+            else {
+                return ds.findMin(g => g.dis.x).block;
+            }
+        }
     }
     /**
    * 创建block，有两种方式

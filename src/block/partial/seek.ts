@@ -85,7 +85,7 @@ export class Block$Seek {
     */
     find(this: Block, predict: (block: Block) => boolean,
         consider: boolean = false,
-        finalPredict?: (block: Block) => boolean, isDepth = false): Block {
+        finalPredict?: (block: Block) => boolean, isDepth = true): Block {
         var block: Block;
         this.each(r => {
             if (typeof finalPredict == 'function' && finalPredict(r) == true) return false;
@@ -104,7 +104,7 @@ export class Block$Seek {
         else return false;
     }
     findReverse(this: Block, predict: (block: Block) => boolean, consider: boolean = false,
-        finalPredict?: (block: Block) => boolean, isDepth = false) {
+        finalPredict?: (block: Block) => boolean, isDepth = true) {
         var block: Block;
         this.eachReverse(r => {
             if (typeof finalPredict == 'function' && finalPredict(r) == true) return false;
