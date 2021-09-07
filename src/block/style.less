@@ -1,28 +1,33 @@
-.sy-appear-text {
+.shy-appear-text {
     position   : relative;
     display    : inline;
     white-space: pre-wrap;
     word-break : break-all;
     word-wrap  : break-word;
-
-    &.empty::after {
+    &.shy-text-empty::after {
         content                : attr(placeholder);
         display                : inline;
         -webkit-text-fill-color: rgba(55, 53, 47, 0.4);
     }
-}
-
-.sy-appear-text-line {
-    white-space: pre-wrap;
-    word-break : break-all;
-    word-wrap  : break-word;
-
-    &::after {
-        content    : '\D\A';
-        white-space: pre;
+    &:empty {
+        &::after {
+            content    : '\D\A';
+            white-space: pre;
+        }
     }
 }
 
-.sy-appear-solid {
+// .shy-appear-text-line {
+//     white-space: pre-wrap;
+//     word-break : break-all;
+//     word-wrap  : break-word;
+
+//     &::after {
+//         content    : '\D\A';
+//         white-space: pre;
+//     }
+// }
+
+.shy-appear-solid {
     position: relative;
 }

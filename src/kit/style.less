@@ -1,4 +1,4 @@
-.sy-selector-textinput {
+.shy-selector-textinput {
     pointer-events: none;
 
     textarea {
@@ -21,11 +21,12 @@
     }
 }
 
-.sy-anchor-text {
+.shy-anchor-text {
     width         : 0;
     position      : relative;
     display       : inline;
     letter-spacing: 0;
+
     &::before {
         content         : '';
         position        : absolute;
@@ -39,11 +40,11 @@
     }
 }
 
-.sy-anchor-text-end-placeholder {
+.shy-anchor-text-end-placeholder {
     content: '\20';
 }
 
-.sy-anchor-solid {
+.shy-anchor-solid {
     position      : absolute;
     top           : 0px;
     left          : 0px;
@@ -51,15 +52,15 @@
     bottom        : 0px;
     pointer-events: none;
     z-index       : 1;
-    outline       : 1px solid #000;
+    background    : rgba(46, 170, 220, 0.2);
+    border-right  : 1px solid #000;
 
-    svg {
-        width : 100%;
-        height: 100%;
+    &.shy-anchor-active-hidden {
+        border-right: 1px solid transparent;
     }
 }
 
-.sy-selector-bar {
+.shy-selector-bar {
     position       : fixed;
     z-index        : 10000;
     width          : 30px;
@@ -91,7 +92,7 @@
     }
 }
 
-.sy-block-selected {
+.shy-block-selected {
     position: relative;
 
     &::before {
@@ -105,17 +106,17 @@
     }
 }
 
-.sy-selector-drag-copy {
+.shy-selector-drag-copy {
     display       : none;
     position      : fixed;
     pointer-events: none;
     opacity       : 0.6;
 }
 
-.sy-block-drag-over-bottom,
-.sy-block-drag-over-left,
-.sy-block-drag-over-right,
-.sy-block-drag-over-top {
+.shy-block-drag-over-bottom,
+.shy-block-drag-over-left,
+.shy-block-drag-over-right,
+.shy-block-drag-over-top {
     position: relative;
 
     &::after {
@@ -130,31 +131,31 @@
     }
 }
 
-.sy-block-drag-over-bottom {
+.shy-block-drag-over-bottom {
     &::after {
         border-bottom-color: rgba(46, 170, 220, 0.6);
     }
 }
 
-.sy-block-drag-over-left {
+.shy-block-drag-over-left {
     &::after {
         border-left-color: rgba(36, 118, 151, 0.6);
     }
 }
 
-.sy-block-drag-over-right {
+.shy-block-drag-over-right {
     &::after {
         border-right-color: rgba(46, 170, 220, 0.6);
     }
 }
 
-.sy-block-drag-over-top {
+.shy-block-drag-over-top {
     &::after {
         border-top-color: rgba(46, 170, 220, 0.6);
     }
 }
 
-.sy-kit-selector {
+.shy-kit-selector {
     pointer-events: none;
     user-select   : none;
 

@@ -1,3 +1,4 @@
+
 import { Events } from "../../util/events";
 import { util } from "../../util/util";
 import { Rect } from "../common/point";
@@ -63,6 +64,9 @@ export abstract class Block extends Events {
             if (keys.exists(key => this.blocks[key].length > 0)) return true;
         }
         return false;
+    }
+    get hasVisibleChilds() {
+        return this.hasChilds;
     }
     get parentBlocks() {
         if (this.parent) {
@@ -150,7 +154,6 @@ export abstract class Block extends Events {
     get continuouslyProps() {
         return {}
     }
-   
     viewComponent: typeof BlockView | ((props: any) => JSX.Element)
     view: BlockView<this>;
     el: HTMLElement;

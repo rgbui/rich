@@ -24,7 +24,7 @@ export class TextInputView extends React.Component<{ textInput: TextInput }>{
         }
     }
     render() {
-        return <div className='sy-selector-textinput'><textarea
+        return <div className='shy-selector-textinput'><textarea
             ref={e => this.textarea = e}
         ></textarea></div>
     }

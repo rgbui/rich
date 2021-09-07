@@ -370,12 +370,12 @@ export class Block$Anchor {
     elementAppear(this: Block, elementAppear: Partial<ElementAppear>) {
         if (!elementAppear.el) return;
         var el = elementAppear.el;
-        if (!el.classList.contains('sy-appear-text') && !el.classList.contains('sy-appear-solid')) {
+        if (!el.classList.contains('shy-appear-text') && !el.classList.contains('shy-appear-solid')) {
             var fe: HTMLElement;
-            var childEl = el.querySelector('.sy-appear-text');
+            var childEl = el.querySelector('.shy-appear-text');
             if (childEl) fe = childEl as HTMLElement;
             else {
-                var c = el.querySelector('.sy-appear-solid');
+                var c = el.querySelector('.shy-appear-solid');
                 if (c) fe = c as HTMLElement;
             }
             if (fe) el = fe;
@@ -383,8 +383,8 @@ export class Block$Anchor {
         }
         elementAppear.el = el;
         if (typeof elementAppear.appear == 'undefined') {
-            if (elementAppear.el.classList.contains('sy-appear-text')) elementAppear.appear = BlockAppear.text;
-            else if (elementAppear.el.classList.contains('sy-appear-solid')) elementAppear.appear = BlockAppear.solid;
+            if (elementAppear.el.classList.contains('shy-appear-text')) elementAppear.appear = BlockAppear.text;
+            else if (elementAppear.el.classList.contains('shy-appear-solid')) elementAppear.appear = BlockAppear.solid;
         }
         if (elementAppear.appear == BlockAppear.text
             &&

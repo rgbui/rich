@@ -1,6 +1,6 @@
 ## block 光标
 ### 概述说明
-  * 光标主要是用来编辑文本
+  * 光标主要是用来编辑的
   * 点在图片上的光标为solidCursor，点在文本上的则为textCursor
   * textCursor主要是用来键入文字、回退删除文字
   * solidCursor主要是用来选中solid元素，然后对solid元素进行一定的操作

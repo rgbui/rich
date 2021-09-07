@@ -43,19 +43,19 @@ export class PageView extends Component<{ page: Page }>{
             letterSpacing: this.page.cfm.fontCss.letterSpacing + 'px',
             fontSize: this.page.cfm.fontCss.fontSize + 'px'
         }
-        return <div className='sy-page-view' style={pageStyle} tabIndex={1}
+        return <div className='shy-page-view' style={pageStyle} tabIndex={1}
             onKeyDownCapture={e => this.page.onKeydown(e.nativeEvent)}
             onFocusCapture={e => this.page.onFocusCapture(e.nativeEvent)}
             onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}
         >
-            <div className='sy-page-view-box' onMouseDown={e => this.page.onMousedown(e.nativeEvent)}>
+            <div className='shy-page-view-box' onMouseDown={e => this.page.onMousedown(e.nativeEvent)}>
                 <PageLayoutView pageLayout={this.page.pageLayout}>
-                    <div className='sy-page-view-content' ref={e => this.page.contentEl = e}
+                    <div className='shy-page-view-content' ref={e => this.page.contentEl = e}
                     ><ChildsArea childs={this.page.views}></ChildsArea>
                     </div>
                 </PageLayoutView>
             </div>
-            <div className='sy-page-plugs'>
+            <div className='shy-page-plugs'>
                 <BlockSelector ref={e => this.page.registerExtension(e)} ></BlockSelector>
                 <AtSelector ref={e => this.page.registerExtension(e)} ></AtSelector>
                 <TextTool ref={e => this.page.registerExtension(e)}></TextTool>

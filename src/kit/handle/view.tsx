@@ -98,8 +98,8 @@ export class HandleView extends React.Component<{ handle: Handle }>{
     toolTip: Tip;
     render() {
         return <div>
-            <div className='sy-selector-drag-copy' ref={e => this.dragCopyEle = e}></div>
-            <div className='sy-selector-bar'
+            <div className='shy-selector-drag-copy' ref={e => this.dragCopyEle = e}></div>
+            <div className='shy-selector-bar'
                 ref={e => this.handleEle = e}
                 onMouseDown={e => this.onMousedown(e.nativeEvent)}>
                 <Tip placement='left' ref={e => { this.toolTip = e; }} id={LangID.bar} >

@@ -54,8 +54,8 @@ export class SelectorView extends React.Component<{ selector: Selector }> {
             style.top = rect.top;
             style.left = rect.left;
         }
-        return createPortal(<div className='sy-kit-selector'>
-            {this.selector.visible && <div className='sy-kit-selector-region' style={style}></div>}
+        return createPortal(<div className='shy-kit-selector'>
+            {this.selector.visible && <div className='shy-kit-selector-region' style={style}></div>}
         </div>, this.node)
     }
 }

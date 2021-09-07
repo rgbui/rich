@@ -55,16 +55,16 @@ export class Handle extends Events {
     onDropOverBlock(block: Block, event: MouseEvent) {
         var willDropBlock: Block = block;
         if (willDropBlock !== this.dropBlock && this.dropBlock) {
-            dom(this.dropBlock.el).removeClass(g => g.startsWith('sy-block-drag-over'));
+            dom(this.dropBlock.el).removeClass(g => g.startsWith('shy-block-drag-over'));
             this.kit.page.onDropLeaveBlock(this.dragBlocks, this.dropBlock, this.dropDirection);
         }
         this.dropBlock = willDropBlock;
         if (willDropBlock) {
             this.dropDirection = this.kit.page.cacBlockDirectionByMouse(willDropBlock, event);
             var direction = DropDirection[this.dropDirection];
-            var className = 'sy-block-drag-over-' + direction;
+            var className = 'shy-block-drag-over-' + direction;
             if (!this.dropBlock.el.classList.contains(className)) {
-                dom(this.dropBlock.el).removeClass(g => g.startsWith('sy-block-drag-over'));
+                dom(this.dropBlock.el).removeClass(g => g.startsWith('shy-block-drag-over'));
                 this.dropBlock.el.classList.add(className);
             }
         }
@@ -77,7 +77,7 @@ export class Handle extends Events {
     }
     onDropEnd() {
         if (this.dropBlock) {
-            dom(this.dropBlock.el).removeClass(g => g.startsWith('sy-block-drag-over'));
+            dom(this.dropBlock.el).removeClass(g => g.startsWith('shy-block-drag-over'));
         }
         delete this.dragBlocks;
         delete this.dropBlock;

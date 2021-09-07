@@ -13,7 +13,7 @@ export class KitView extends React.Component<{ kit: Kit }>{
     }
     el: HTMLElement;
     render() {
-        return <div className='sy-kit' ref={e => this.el = e}>
+        return <div className='shy-kit' ref={e => this.el = e}>
             <SelectorView selector={this.kit.selector}></SelectorView>
             <TextInputView textInput={this.kit.textInput}></TextInputView>
             <HandleView handle={this.kit.handle}></HandleView>

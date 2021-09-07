@@ -14,6 +14,6 @@ export class PageLayoutView extends Component<{ pageLayout: PageLayout }>{
         return this.props.pageLayout;
     }
     render() {
-        return <div className='sy-page-layout' style={{ width: 900, paddingLeft: 100, paddingRight: 100, margin: '0 auto' }}>{this.props.children}</div>
+        return <div className='shy-page-layout' style={{ width: 900, paddingLeft: 100, paddingRight: 100, margin: '0 auto' }}>{this.props.children}</div>
     }
 }

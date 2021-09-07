@@ -115,7 +115,7 @@ class Dom {
         function traverseNodes(el: HTMLElement) {
             var cs: Node[] = Array.from(el.childNodes);
             cs.remove(g => {
-                if (g instanceof HTMLElement && g.classList.contains('sy-anchor-appear')) return true;
+                if (g instanceof HTMLElement && g.classList.contains('shy-anchor-appear')) return true;
                 else return false;
             })
             for (let i = 0; i < cs.length; i++) {

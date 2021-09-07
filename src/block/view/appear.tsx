@@ -7,7 +7,7 @@ export function TextArea(props: {
     style?: CSSProperties
 }) {
     var ps = { ref: props.rf, style: props.style, placeholder: props.placeholder }
-    return <span className='sy-appear-text'
+    return <span className='shy-appear-text'
         {...ps}
         dangerouslySetInnerHTML={{ __html: props.html }}></span>
 }
@@ -17,7 +17,7 @@ export function SolidArea(props: {
     style?: CSSProperties
 }) {
     var ps = { ref: props.rf, style: props.style }
-    return <div className='sy-appear-solid'  {...ps} >{props.children}</div>
+    return <div className='shy-appear-solid'  {...ps} >{props.children}</div>
 }
 export function ChildsArea(props: { childs: Block[] }) {
     return <>{props.childs.map(x => {
@@ -31,7 +31,7 @@ export function TextLineChilds(props: {
     style?: CSSProperties
 }) {
     var ps = { ref: props.rf, style: props.style }
-    return <span className='sy-appear-texts'  {...ps} >{props.childs.map(x => {
+    return <span className='shy-appear-texts'  {...ps} >{props.childs.map(x => {
         if (!x) console.trace(x);
         if (!x.viewComponent) console.error(x);
         return <x.viewComponent key={x.id} block={x}></x.viewComponent>
