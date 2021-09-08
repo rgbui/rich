@@ -289,10 +289,12 @@ export class Page$Seek {
      * @param to 
      * @returns 
      */
-    isInLineBlock(from: Block, to: Block) {
-        if (from === to) return true;
-        if (from.isLine && to.isLine && from.parent == to.parent) return true;
-        else return false;
+    isInlineAnchor(from: Anchor, to: Anchor) {
+        if (from.isText && from.block.isLine && to.block.isLine && to.isText) {
+            if (from.block == to.block) return true;
+            if (from.block.parent === to.block.parent) return true;
+        }
+        return false;
     }
     find(this: Page, predict: (block: Block) => boolean) {
         for (let i = 0; i < this.views.length; i++) {
