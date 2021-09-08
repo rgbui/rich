@@ -24,10 +24,10 @@ export class PageMouse {
         var block = this.page.getMouseTargetBlock(event);
         this.downEvent = event;
         this.isDown = true;
-        if (block && block.isSupportAnchor && block.isAllowMouseAnchor(event)) {
+        if (block && block.exists(g => g.isSupportAnchor, true)) {
             var point = Point.from(event);
             var anchor = block.visibleAnchor(point);
-            if (anchor) {
+            if (anchor && anchor.block.isAllowMouseAnchor(event)) {
                 this.downAnchor = anchor;
                 /**
                  * 如果用户按住shift键，那么选区从之前的anchor扩到现在的anchor
@@ -75,9 +75,15 @@ export class PageMouse {
                     var hastTextRange: boolean = false;
                     if (block) {
                         var anchor = block.visibleAnchor(Point.from(event));
-                        if (anchor && anchor.isText && anchor.elementAppear == this.downAnchor.elementAppear) {
+                        if (anchor && this.page.isInlineAnchor(anchor, this.downAnchor)) {
                             this.explorer.onShiftFocusAnchor(anchor);
                             hastTextRange = true;
+                        }
+                        else if (anchor) {
+                            console.log(this.downAnchor, anchor);
+                        }
+                        else {
+                            console.log('xx');
                         }
                     }
                     if (!hastTextRange) {
