@@ -249,7 +249,7 @@ export class Block$Anchor {
      */
     visibleAnchor(this: Block, point: Point): Anchor {
         var block = this;
-        if (this.isLayout) {
+        if (this.isLayout || this.hasChilds) {
             var contentBlock = this.findAnchorBlockByPointFromBlockRange(point);
             if (contentBlock) {
                 block = contentBlock;
@@ -287,7 +287,7 @@ export class Block$Anchor {
             return this.page.kit.explorer.createAnchor(block, fa.appear == BlockAppear.text ? TextEle.getAt(fa.el, point) : undefined);
     }
     findAnchorBlockByPointFromBlockRange(this: Block, point: Point) {
-        var as = this.findAll(x => x.isSupportAnchor);
+        var as = this.findAll(x => x.isSupportAnchor, true);
         var ps = as.map(e => {
             var bounds = e.getBounds();
             var newPoint = TextEle.cacDistance(point, bounds);
