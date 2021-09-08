@@ -79,12 +79,6 @@ export class PageMouse {
                             this.explorer.onShiftFocusAnchor(anchor);
                             hastTextRange = true;
                         }
-                        else if (anchor) {
-                            console.log(this.downAnchor, anchor);
-                        }
-                        else {
-                            console.log('xx');
-                        }
                     }
                     if (!hastTextRange) {
                         var blocks = this.page.searchBlocksBetweenMouseRect(this.downEvent, event, { lineBlock: true });

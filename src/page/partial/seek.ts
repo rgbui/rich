@@ -290,8 +290,10 @@ export class Page$Seek {
      * @returns 
      */
     isInlineAnchor(from: Anchor, to: Anchor) {
+        if (from.block == to.block) {
+            return true
+        }
         if (from.isText && from.block.isLine && to.block.isLine && to.isText) {
-            if (from.block == to.block) return true;
             if (from.block.parent === to.block.parent) return true;
         }
         return false;
