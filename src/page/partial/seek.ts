@@ -181,9 +181,13 @@ export class Page$Seek {
         }
         while (true) {
             topFromRow.each(b => {
-                if (!b.isRow && !b.isCol && (filter && filter.lineBlock == true && !b.isLine || !filter)) {
-                    if (b.getVisibleBound().isCross(rect)) {
-                        bs.push(b);
+                if (!b.isRow && !b.isCol) {
+                    if (b.isCrossElementAppear(rect)) {
+                        if (filter && filter.lineBlock == true && b.isLine) {
+                            var pa = b.parent;
+                            if (!bs.exists(pa)) bs.push(pa);
+                        }
+                        else bs.push(b);
                         return -1;
                     }
                 }
