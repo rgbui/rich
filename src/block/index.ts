@@ -1,7 +1,7 @@
 
 import { Events } from "../../util/events";
 import { util } from "../../util/util";
-import { Rect } from "../common/point";
+import { Point, Rect } from "../common/point";
 import { Page } from "../page";
 import { BlockDisplay } from "./enum";
 import { Pattern } from "./pattern/index";
@@ -305,6 +305,21 @@ export abstract class Block extends Events {
     }
     get isSupportTextStyle() {
         return true;
+    }
+    isCrossElementAppear(rect: Rect | Point) {
+        var es = this.appearElements;
+        for (var i = 0; i < es.length; i++) {
+            var e = es[i];
+            var bound = Rect.fromEle(e.el);
+            if (rect instanceof Rect)
+                if (bound.isCross(rect)) {
+                    return true;
+                }
+                else if (rect instanceof Point) {
+                    if (bound.conatin(rect)) return true;
+                }
+        }
+        return false;
     }
 }
 export interface Block extends Block$Seek { }
