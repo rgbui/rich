@@ -13,7 +13,7 @@ export enum BlockAppear {
     none
 }
 
-export class ElementAppear {
+export class AppearAnchor {
     get isText() {
         return this.appear == BlockAppear.text;
     }

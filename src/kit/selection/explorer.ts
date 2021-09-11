@@ -101,7 +101,7 @@ export class SelectionExplorer extends Events {
         return anchor;
     }
     createBackAnchor(block: Block, at?: number) {
-        var anchor = new Anchor(this, block.appearElements.last());
+        var anchor = new Anchor(this, block.appearAnchors.last());
         if (typeof at == 'number' && anchor.isText) {
             if (at == -1) anchor.at = anchor.elementAppear.textContent.length;
             else anchor.at = at;

@@ -1,5 +1,5 @@
 
-import { ElementAppear } from "../../block/appear";
+import { AppearAnchor } from "../../block/appear";
 import { dom } from "../../common/dom";
 import { Rect } from "../../common/point";
 import { TextEle } from "../../common/text.ele";
@@ -16,7 +16,7 @@ export class Anchor {
         return this.explorer.kit;
     }
     explorer: SelectionExplorer;
-    constructor(explorer: SelectionExplorer, elementAppear: ElementAppear) {
+    constructor(explorer: SelectionExplorer, elementAppear: AppearAnchor) {
         this.explorer = explorer;
         this.elementAppear = elementAppear;
     }
@@ -39,7 +39,7 @@ export class Anchor {
     get isEnd() {
         return this.at === this.textContent.length;
     }
-    elementAppear: ElementAppear;
+    elementAppear: AppearAnchor;
     get isText() {
         return this.elementAppear.isText;
     }

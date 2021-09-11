@@ -12,9 +12,9 @@ export class File extends Block {
     @prop()
     src: ResourceArguments = { name: 'none' }
     display = BlockDisplay.block;
-    get appearElements() {
+    get appearAnchors() {
         if (this.src.name == 'none') return [];
-        return this.__appearElements;
+        return this.__appearAnchors;
     }
 }
 @view('/file')

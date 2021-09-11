@@ -7,9 +7,9 @@ import { BlockDisplay } from "../../src/block/enum";
 @url('/callout')
 export class Callout extends TextSpan {
     display=BlockDisplay.block;
-    get appearElements() {
+    get appearAnchors() {
         if (this.childs.length > 0) return []
-        return this.__appearElements;
+        return this.__appearAnchors;
     }
 }
 @view('/callout')

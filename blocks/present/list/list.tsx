@@ -49,9 +49,9 @@ export class List extends Block {
             listType: this.listType
         }
     }
-    get appearElements() {
+    get appearAnchors() {
         if (this.childs.length > 0) return []
-        return this.__appearElements;
+        return this.__appearAnchors;
     }
 }
 @view('/list')

@@ -1,6 +1,3 @@
-
-
-
 import React from 'react';
 import { BlockDisplay } from "../enum";
 import { url, view } from "../factory/observable";

@@ -11,9 +11,9 @@ export class Head extends TextSpan {
     get multiLines() {
         return false;
     }
-    get appearElements() {
+    get appearAnchors() {
         if (this.childs.length > 0) return []
-        return this.__appearElements;
+        return this.__appearAnchors;
     }
     display = BlockDisplay.block;
 }

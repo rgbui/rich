@@ -15,7 +15,7 @@ import { Block$Event } from "./partial/on.event";
 import { Block$Anchor } from "./partial/anchor";
 import { Block$LifeCycle } from "./partial/left.cycle";
 import { Block$Operator } from "./partial/operate";
-import { BlockAppear, ElementAppear } from "./appear";
+import { BlockAppear, AppearAnchor } from "./appear";
 import { Mix } from "../../util/mix";
 export abstract class Block extends Events {
     constructor(page: Page) {
@@ -187,7 +187,7 @@ export abstract class Block extends Events {
     }
     get isLineSolid(): boolean {
         if (this.isLine) {
-            if (this.appearElements.exists(g => g.appear == BlockAppear.solid)) return true;
+            if (this.appearAnchors.exists(g => g.appear == BlockAppear.solid)) return true;
         }
         return false;
     }
@@ -273,15 +273,15 @@ export abstract class Block extends Events {
             return tp.data;
         }
     }
-    __appearElements: ElementAppear[] = [];
-    get appearElements() {
-        return this.__appearElements;
+    __appearAnchors: AppearAnchor[] = [];
+    get appearAnchors() {
+        return this.__appearAnchors;
     }
     get firstElementAppear() {
-        return this.appearElements.first();
+        return this.appearAnchors.first();
     }
     get isOnlyElementAppear() {
-        return this.appearElements.length == 1;
+        return this.appearAnchors.length == 1;
     }
     get isOnlyElementText() {
         return this.isOnlyElementAppear && this.firstElementAppear.isText;
@@ -291,7 +291,7 @@ export abstract class Block extends Events {
     }
     get isSupportAnchor() {
         if (this.isLayout) return false;
-        if (this.appearElements.length > 0)
+        if (this.appearAnchors.length > 0)
             return true;
     }
     /**
@@ -307,7 +307,7 @@ export abstract class Block extends Events {
         return true;
     }
     isCrossElementAppear(rect: Rect | Point) {
-        var es = this.appearElements;
+        var es = this.appearAnchors;
         for (var i = 0; i < es.length; i++) {
             var e = es[i];
             var bound = Rect.fromEle(e.el);

@@ -25,9 +25,9 @@ export class Audio extends Block {
         }
     }
 
-    get appearElements() {
+    get appearAnchors() {
         if (this.src.name == 'none') return [];
-        return this.__appearElements;
+        return this.__appearAnchors;
     }
 }
 @view('/audio')

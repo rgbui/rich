@@ -2,7 +2,7 @@ import { Block } from "..";
 import { Point, Rect } from "../../common/point";
 import { TextEle } from "../../common/text.ele";
 import { Anchor } from "../../kit/selection/anchor";
-import { BlockAppear, ElementAppear } from "../appear";
+import { BlockAppear, AppearAnchor } from "../appear";
 import { BlockUrlConstant } from "../constant";
 
 /**
@@ -261,9 +261,9 @@ export class Block$Anchor {
                 return null;
             }
         }
-        var fa: ElementAppear;
-        if (block.appearElements.length > 1) {
-            var ps = block.appearElements.map(ae => {
+        var fa: AppearAnchor;
+        if (block.appearAnchors.length > 1) {
+            var ps = block.appearAnchors.map(ae => {
                 var bound = Rect.fromEle(ae.el);
                 return {
                     dis: TextEle.cacDistance(point, [bound]),
@@ -367,7 +367,7 @@ export class Block$Anchor {
     blurAnchor(this: Block, anchor: Anchor) {
 
     }
-    elementAppear(this: Block, elementAppear: Partial<ElementAppear>) {
+    elementAppear(this: Block, elementAppear: Partial<AppearAnchor>) {
         if (!elementAppear.el) return;
         var el = elementAppear.el;
         if (!el.classList.contains('shy-appear-text') && !el.classList.contains('shy-appear-solid')) {
@@ -390,10 +390,10 @@ export class Block$Anchor {
             &&
             typeof elementAppear.prop == 'undefined'
         ) elementAppear.prop = 'content';
-        if (!this.__appearElements.exists(x => x.prop == elementAppear.prop))
-            this.__appearElements.push(new ElementAppear(this, elementAppear.el, elementAppear.appear, elementAppear.prop))
+        if (!this.__appearAnchors.exists(x => x.prop == elementAppear.prop))
+            this.__appearAnchors.push(new AppearAnchor(this, elementAppear.el, elementAppear.appear, elementAppear.prop))
         else {
-            var ep = this.__appearElements.find(g => g.prop == elementAppear.prop);
+            var ep = this.__appearAnchors.find(g => g.prop == elementAppear.prop);
             if (ep) {
                 ep.el = elementAppear.el;
             }

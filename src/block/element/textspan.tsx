@@ -8,9 +8,9 @@ import { Block } from '..';
 @url("/textspan")
 export class TextSpan extends Block {
     display = BlockDisplay.block;
-    get appearElements() {
+    get appearAnchors() {
         if (this.childs.length > 0) return []
-        else return this.__appearElements;
+        else return this.__appearAnchors;
     }
 }
 @view("/textspan")

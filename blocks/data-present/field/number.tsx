@@ -10,9 +10,9 @@ export class FieldNumber extends OriginField {
         if (this.fieldType == FieldType.autoIncrement) return false;
         return super.isSupportAnchor;
     }
-    get appearElements() {
+    get appearAnchors() {
         if (this.fieldType == FieldType.autoIncrement) return [];
-        else return this.__appearElements;
+        else return this.__appearAnchors;
     }
 }
 @view('/field/number')

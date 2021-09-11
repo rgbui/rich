@@ -29,9 +29,9 @@ export class ToDo extends TextSpan {
     get isContinuouslyCreated() {
         return true
     }
-    get appearElements() {
+    get appearAnchors() {
         if (this.childs.length > 0) return []
-        return this.__appearElements;
+        return this.__appearAnchors;
     }
     display = BlockDisplay.block;
 }
