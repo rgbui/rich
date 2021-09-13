@@ -14,7 +14,7 @@ export class TextInput$Write {
      */
     async onKeydown(this: TextInput, event: KeyboardEvent) {
         this.isWillInput = false;
-        var r = await onPreKeydown.apply(this, [event]);
+        var r = await onPreKeydown(this, event);
         if (r == true) {
             event.preventDefault();
             return;
@@ -82,8 +82,7 @@ export class TextInput$Write {
                     this.cursorTextElement = document.createElement('span');
                     anchor.view.parentNode.insertBefore(this.cursorTextElement, anchor.view);
                 }
-                await InputHandle.apply(this, [this.cursorStartAt, this.cursorTextElement]);
-                this.followAnchor(anchor);
+                await InputHandle(this);
             }
         }
     }

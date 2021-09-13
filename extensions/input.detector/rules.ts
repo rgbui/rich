@@ -57,10 +57,37 @@ export var rules: DetectorRule[] = [
     },
     {
         operator: DetectorOperator.inputCharReplace,
-        match: ['！='],
+        match: [/[\!！]\=$/],
         handle(value) {
-            if (value == '！=') return '≠'
-            return value;
+            return value.replace(/[\!！]\=$/, '≠');
+        }
+    },
+    {
+        operator: DetectorOperator.inputCharReplace,
+        match: [/[\<《]\=$/],
+        handle(value) {
+            return value.replace(/[\<《]\=$/, '≤');
+        }
+    },
+    {
+        operator: DetectorOperator.inputCharReplace,
+        match: [/[\>》]\=$/],
+        handle(value) {
+            return value.replace(/[\>》]\=$/, '≥');
+        }
+    },
+    {
+        operator: DetectorOperator.inputCharReplace,
+        match: [/[\<《]\-$/],
+        handle(value) {
+            return value.replace(/[\<《]\-$/, '←');
+        }
+    },
+    {
+        operator: DetectorOperator.inputCharReplace,
+        match: [/\-[\>》]$/],
+        handle(value) {
+            return value.replace(/\-[\>》]$/, '→');
         }
     }
 ];

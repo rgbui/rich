@@ -15,11 +15,11 @@ import { InputStore } from "./store";
  * @param event 
  * @returns  如果返回true，说明被处理占用了
  */
-export async function onPreKeydown(this: TextInput, event: KeyboardEvent) {
+export async function onPreKeydown(tp: TextInput, event: KeyboardEvent) {
     var blockSelectorResult = (await useBlockSelector()).onKeydown(event);
     if (blockSelectorResult) {
         if (!(typeof blockSelectorResult == 'boolean')) {
-            await InputBlockSelectorAfter(this, blockSelectorResult.block, blockSelectorResult.matchValue);
+            await InputBlockSelectorAfter(tp, blockSelectorResult.block, blockSelectorResult.matchValue);
             return true;
         }
     }
@@ -32,18 +32,20 @@ export async function onPreKeydown(this: TextInput, event: KeyboardEvent) {
  * @param cursorTextElement 
  * 
  */
-export async function InputHandle(this: TextInput)
-{
+export async function InputHandle(tp: TextInput,) {
     /**
      * 对当前的value进行处理，处理后保存且写入到element中
      */
-    var anchor = this.explorer.activeAnchor;
-    var value = this.textarea.value;
+    var anchor = tp.explorer.activeAnchor;
+    var value = tp.textarea.value;
     (await useBlockSelector()).open(anchor.bound.leftBottom, value, async (block, matchValue) => {
-        await InputBlockSelectorAfter(this, block, matchValue);
+        await InputBlockSelectorAfter(tp, block, matchValue);
     });
-    if (await InputDetectorHandle(this)) return true;
-    await InputStore(anchor.block, anchor.elementAppear.prop, value, this.cursorStartAt);
+    if (await InputDetectorHandle(tp)) return true;
+    tp.cursorTextElement.innerHTML = value;
+    anchor.at = tp.cursorStartAt + value.length;
+    await InputStore(anchor.block, anchor.elementAppear.prop, value, tp.cursorStartAt);
+    tp.followAnchor(anchor);
 }
 export async function InputDetectorHandle(tp: TextInput) {
     var anchor = tp.explorer.activeAnchor;
@@ -80,6 +82,7 @@ export async function InputDetectorHandle(tp: TextInput) {
                 anchor.at = tp.cursorStartAt + mr.value.length;
                 tp.textarea.value = mr.value;
                 await InputStore(block, anchor.elementAppear.prop, mr.value, tp.cursorStartAt);
+                tp.followAnchor(anchor);
                 break;
             case DetectorOperator.letterReplaceCreateBlock:
                 tp.cursorTextElement.innerHTML = value;
@@ -92,6 +95,7 @@ export async function InputDetectorHandle(tp: TextInput) {
                     });
                 }
                 await InputStore(block, anchor.elementAppear.prop, mr.value, tp.cursorStartAt, true, action);
+                tp.followAnchor(anchor);
                 break;
         }
         return true;
