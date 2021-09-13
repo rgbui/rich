@@ -28,7 +28,7 @@ export class SelectionExplorer extends Events {
     }
     activeAnchor: Anchor;
     setActiveAnchor(anchor: Anchor) {
-        this.kit.textInput.onWillInput(anchor);
+        this.kit.textInput.onStartInput(anchor);
         var emptyEles = Array.from(this.page.view.el.querySelectorAll('.shy-text-empty'));
         emptyEles.each(el => {
             el.classList.remove('shy-text-empty');
@@ -150,7 +150,7 @@ export class SelectionExplorer extends Events {
      * 删除选区
      */
     async onDeleteSelection() {
-        //await this.page.onAction(ActionDirective.onDeleteSelection, async () => {
+        // await this.page.onAction(ActionDirective.onDeleteSelection, async () => {
         //     if (this.currentSelectedBlocks.length > 0) {
         //         await this.currentSelectedBlocks.eachAsync(async block => {
         //             await block.delete();
@@ -230,7 +230,6 @@ export class SelectionExplorer extends Events {
             else if (anchor.isSolid) {
                 if (arrow == KeyboardCode.ArrowLeft) {
                     newAnchor = anchor.block.visiblePrevAnchor;
-                    console.log(newAnchor, newAnchor.at);
                 }
                 else if (arrow == KeyboardCode.ArrowRight) {
                     newAnchor = anchor.block.visibleNextAnchor;

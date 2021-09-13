@@ -7,7 +7,6 @@ import { Kit } from '..';
 import { TextInputView } from './view';
 import { Events } from '../../../util/events';
 import { Mix } from '../../../util/mix';
-
 export class TextInput extends Events {
     kit: Kit;
     constructor(kit: Kit) {
@@ -15,7 +14,6 @@ export class TextInput extends Events {
         this.__init_mixs();
         this.kit = kit;
     }
-
     get explorer() {
         return this.kit.explorer;
     }
@@ -43,6 +41,10 @@ export class TextInput extends Events {
             this.textarea.style.top = point.y + 'px';
             this.textarea.style.left = (point.x + 0) + 'px';
             this.textarea.style.height = bound.height + 'px';
+            if (anchor.textContent) {
+                anchor.removeEmpty();
+            }
+            else anchor.setEmpty();
         }
     }
 }
