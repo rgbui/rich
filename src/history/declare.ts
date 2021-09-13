@@ -34,8 +34,8 @@ export enum OperatorDirective {
      * 更新文本
      */
     updateText = 100,
-    updateTextReplace = 101,
-    updateTextDelete = 102,
+    inputStore = 101,
+    inputDeleteStore = 102,
     create = 103,
     /**
      * 删除，你可以认为是彻底的删除了
