@@ -11,28 +11,26 @@ import { InputStore } from "./store";
 
 /**
  * 
- * @param this
+ * @param tp 
  * @param event 
- * @returns  如果返回true，说明被处理占用了
+ * @returns 如果返回true，说明被处理占用了
  */
 export async function onPreKeydown(tp: TextInput, event: KeyboardEvent) {
     var blockSelectorResult = (await useBlockSelector()).onKeydown(event);
     if (blockSelectorResult) {
         if (!(typeof blockSelectorResult == 'boolean')) {
             await InputBlockSelectorAfter(tp, blockSelectorResult.block, blockSelectorResult.matchValue);
-            return true;
         }
+        return true;
     }
     return false;
 }
 /**
  * 
- * @param this 
- * @param cursorStartAt 
- * @param cursorTextElement 
- * 
+ * @param tp 
+ * @returns 
  */
-export async function InputHandle(tp: TextInput,) {
+export async function InputHandle(tp: TextInput) {
     /**
      * 对当前的value进行处理，处理后保存且写入到element中
      */
@@ -89,7 +87,7 @@ export async function InputDetectorHandle(tp: TextInput) {
                 anchor.at = tp.cursorStartAt + value.length;
                 tp.textarea.value = value;
                 var action = async () => {
-                    var newBlock = await this.page.createBlock(rule.url, { content: mr.matchValue }, block.parent, block.at + 1);
+                    var newBlock = await tp.page.createBlock(rule.url, { content: mr.matchValue }, block.parent, block.at + 1);
                     newBlock.mounted(() => {
                         tp.explorer.onFocusAnchor(newBlock.visibleBackAnchor);
                     });
@@ -106,9 +104,9 @@ export async function InputDetectorHandle(tp: TextInput) {
 export async function InputBlockSelectorAfter(tp: TextInput, blockData: BlockSelectorItem, matchValue: string) {
     var anchor = tp.explorer.activeAnchor;
     var block = anchor.block;
-    this.cursorTextElement.innerHTML = matchValue;
-    this.textarea.value = matchValue;
-    await InputStore(anchor.block, anchor.elementAppear.prop, matchValue, this.cursorStartAt, true, async () => {
+    tp.cursorTextElement.innerHTML = matchValue;
+    tp.textarea.value = matchValue;
+    await InputStore(anchor.block, anchor.elementAppear.prop, matchValue, tp.cursorStartAt, true, async () => {
         let extra: Record<string, any> = {};
         if (typeof blockData.operator != 'undefined') {
             extra = await blockStore.open(blockData.operator, anchor.bound);
@@ -130,13 +128,13 @@ export async function InputBlockSelectorAfter(tp: TextInput, blockData: BlockSel
         newBlock.mounted(() => {
             var anchor = newBlock.visibleHeadAnchor;
             if (anchor && (anchor.isSolid || anchor.isText))
-                this.explorer.onFocusAnchor(anchor);
+                tp.explorer.onFocusAnchor(anchor);
         });
     });
 }
-export async function InputAtSelector(this: TextInput) {
-    var anchor = this.explorer.activeAnchor;
-    var value = this.textarea.value;
+export async function InputAtSelector(tp: TextInput) {
+    var anchor = tp.explorer.activeAnchor;
+    var value = tp.textarea.value;
     var r = (await useBlockSelector()).open(anchor.bound.leftBottom, value, (block, matchValue) => {
 
     });
