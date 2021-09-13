@@ -277,7 +277,7 @@ export class TextEle {
                     text += r;
                 }
                 else if (c instanceof HTMLElement) {
-                    if (c.classList.contains('sy-anchor-appear')) continue;
+                    if (c.classList.contains('shy-anchor-appear')) continue;
                     else {
                         text += getText(c);
                     }
