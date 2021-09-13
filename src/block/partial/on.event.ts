@@ -97,26 +97,28 @@ export class Block$Event {
                 break;
         }
     }
-    async onInputText(this: Block, value: string, at: number, end: number, action?: () => Promise<void>) {
+    async onInputStore(this: Block, prop: string, value: string, at: number, end: number, action?: () => Promise<void>) {
         await this.page.onAction(ActionDirective.onInputText, async () => {
-            this.page.snapshoot.record(OperatorDirective.updateTextReplace, {
+            this.page.snapshoot.record(OperatorDirective.inputStore, {
                 blockId: this.id,
                 start: at,
                 end: end,
-                value
+                text: value,
+                prop
             });
             if (typeof action == 'function') await action();
         })
     }
-    async onDeleteText(this: Block, value: string, start: number, end: number, action?: () => Promise<void>) {
+    async onInputDeleteStore(this: Block, prop: string, value: string, start: number, end: number, action?: () => Promise<void>) {
         await this.page.onAction(ActionDirective.onDeleteText, async () => {
             var block = this;
             var pa = this.page;
-            pa.snapshoot.record(OperatorDirective.updateTextDelete, {
+            pa.snapshoot.record(OperatorDirective.inputDeleteStore, {
                 blockId: block.id,
                 start,
                 end,
-                text: value
+                text: value,
+                prop
             });
             if (typeof action == 'function') await action();
         })

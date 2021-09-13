@@ -10,8 +10,8 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     snapshoot.on('error', err => page.onError(err));
     snapshoot.on('warn', (error) => page.onWarn(error));
     snapshoot.registerOperator(OperatorDirective.updateText, async (operator) => { }, async (operator) => { });
-    snapshoot.registerOperator(OperatorDirective.updateTextReplace, async (operator) => { }, async (operator) => { });
-    snapshoot.registerOperator(OperatorDirective.updateTextDelete, async (operator) => { }, async (operator) => { });
+    snapshoot.registerOperator(OperatorDirective.inputStore, async (operator) => { }, async (operator) => { });
+    snapshoot.registerOperator(OperatorDirective.inputDeleteStore, async (operator) => { }, async (operator) => { });
     snapshoot.registerOperator(OperatorDirective.create, async (operator) => { }, async (operator) => { });
     snapshoot.registerOperator(OperatorDirective.delete, async (operator) => { }, async (operator) => { });
     snapshoot.registerOperator(OperatorDirective.remove, async (operator) => { }, async (operator) => { });

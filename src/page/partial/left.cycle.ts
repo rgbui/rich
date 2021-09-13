@@ -1,17 +1,15 @@
 import ReactDOM from "react-dom";
 import { Page } from "..";
-import { InputDetector } from "../../../extensions/input.detector/detector";
 import { util } from "../../../util/util";
 import { Block } from "../../block";
 import { View } from "../../block/element/view";
 import { BlockFactory } from "../../block/factory/block.factory";
 import { ConfigurationManager } from "../../config";
-import { ActionDirective, OperatorDirective } from "../../history/declare";
+import { ActionDirective } from "../../history/declare";
 import { HistorySnapshoot } from "../../history/snapshoot";
 import { Kit } from "../../kit";
 import { PageLayout } from "../../layout";
 import { PageDirective } from "../directive";
-import { PageInputDetector } from "../interaction/detector";
 import { PageHistory } from "../interaction/history";
 import { PageKeys } from "../interaction/keys";
 import { PageKit } from "../interaction/kit";
@@ -38,8 +36,6 @@ export class Page$Cycle {
         this.snapshoot = new HistorySnapshoot(this);
         PageHistory(this, this.snapshoot);
         PageKeys(this, this.keyboardPlate);
-        this.inputDetector = new InputDetector();
-        PageInputDetector(this, this.inputDetector);
         this.emit(PageDirective.init);
     }
     async load(this: Page, data: Record<string, any>) {
@@ -157,9 +153,9 @@ export class Page$Cycle {
         }
     }
     onBlur(this: Page, event: FocusEvent) {
-        if (this.isFocus == true) {
+        if (this.isFocus == true)
+        {
             this.isFocus = false;
-            this.blockSelector.close();
             this.textTool.close();
             this.kit.explorer.blur();
             this.emit(PageDirective.blur, event);

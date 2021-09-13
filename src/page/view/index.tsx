@@ -2,10 +2,7 @@ import { Component } from "react";
 import React from 'react';
 import { Page } from "../index";
 import { PageLayoutView } from "../../layout/view";
-
 import { ChildsArea } from "../../block/view/appear";
-import { BlockSelector } from "../../../extensions/block";
-import { AtSelector } from "../../../extensions/at";
 import { TextTool } from "../../../extensions/text.tool/text.tool";
 import ReactDOM from "react-dom";
 import { KitView } from "../../kit/view";
@@ -56,8 +53,6 @@ export class PageView extends Component<{ page: Page }>{
                 </PageLayoutView>
             </div>
             <div className='shy-page-plugs'>
-                <BlockSelector ref={e => this.page.registerExtension(e)} ></BlockSelector>
-                <AtSelector ref={e => this.page.registerExtension(e)} ></AtSelector>
                 <TextTool ref={e => this.page.registerExtension(e)}></TextTool>
             </div>
             <KitView kit={this.page.kit}></KitView>
