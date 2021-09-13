@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Singleton } from "../../component/Singleton";
+import { LangID } from "../../i18n/declare";
+import { Sp } from "../../i18n/view";
 import { KeyboardCode } from "../../src/common/keys";
 import { Point } from "../../src/common/point";
 import { BlockSelectorItem } from "./delcare";
@@ -18,15 +20,21 @@ class BlockSelector extends React.Component {
     }
     private renderSelectors() {
         var i = -1;
-        return this.filterSelectorData.map((group, g) => {
-            return <div className='sy-block-selector-group' key={group.text}>
-                <div className='sy-block-selector-group-head'><span>{group.text}</span></div>
-                <div className='sy-block-selector-group-blocks'>{
+        var fsd = this.filterSelectorData;
+        if (fsd.length == 0) {
+            return <div className='shy-block-selector-no-data'>
+                <Sp id={LangID.blockSelectorNoData}></Sp>
+            </div>
+        }
+        return fsd.map((group, g) => {
+            return <div className='shy-block-selector-group' key={group.text}>
+                <div className='shy-block-selector-group-head'><span>{group.text}</span></div>
+                <div className='shy-block-selector-group-blocks'>{
                     group.childs.map((child, index) => {
                         i += 1;
                         let j = i;
                         return <div
-                            className={'sy-block-selector-group-block ' + (j == this.selectIndex ? 'selected' : '')}
+                            className={'shy-block-selector-group-block ' + (j == this.selectIndex ? 'selected' : '')}
                             key={child.url}
                             onMouseEnter={e => {
                                 this.selectIndex = j;
@@ -38,7 +46,7 @@ class BlockSelector extends React.Component {
                             }}
                             onMouseDown={e => this.onSelect(child)}
                         > {child.pic}
-                            <div className='sy-block-selector-group-block-info'>
+                            <div className='shy-block-selector-group-block-info'>
                                 <span>{child.text}</span>
                                 <em>{child.description}</em>
                             </div>
@@ -55,7 +63,7 @@ class BlockSelector extends React.Component {
             left: this.pos.x
         }
         return <div>
-            {this.visible && <div className='sy-block-selector'
+            {this.visible && <div className='shy-block-selector'
                 style={style}>{this.renderSelectors()}</div>}
         </div>
     }
@@ -88,6 +96,7 @@ class BlockSelector extends React.Component {
         return this.visible;
     }
     private inputValue: string;
+    private previsible: boolean = false;
     private inputFilter(text: string) {
         this.inputValue = text;
         var cs = text.match(/(\/|、)[^\s]*$/g);
@@ -96,13 +105,15 @@ class BlockSelector extends React.Component {
             command = command.replace(/、/g, "/");
             this.command = command;
             if (this.filterBlocks.length == 0) {
-                this.close()
+                if (this.previsible == true) {
+                    this.previsible = false;
+                    this.forceUpdate();
+                }
+                else this.close()
             }
-            else
-                this.forceUpdate();
+            else { this.previsible = true; this.forceUpdate(); }
         }
         else {
-            this.command = '';
             this.close();
         }
     }
@@ -114,6 +125,7 @@ class BlockSelector extends React.Component {
         return b;
     }
     private close() {
+        this.command = '';
         if (this.visible == true) {
             this.visible = false;
             this.forceUpdate();
