@@ -142,6 +142,10 @@ class BlockSelector extends React.Component {
     private el: HTMLElement;
     componentDidMount() {
         this.el = ReactDOM.findDOMNode(this) as HTMLElement;
+        document.addEventListener('mousedown', this.onGlobalMousedown);
+    }
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.onGlobalMousedown);
     }
     componentDidUpdate() {
         var el = this.el.querySelector('.selected') as HTMLElement;
@@ -150,6 +154,13 @@ class BlockSelector extends React.Component {
                 block: "nearest",
                 inline: "nearest"
             });
+        }
+    }
+    onGlobalMousedown = (event: MouseEvent) => {
+        if (this.visible == true && this.el) {
+            var target = event.target as HTMLElement;
+            if (this.el.contains(target)) return;
+            this.close();
         }
     }
     onKeydown(event: KeyboardEvent) {
