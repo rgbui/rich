@@ -19,17 +19,20 @@ export class PageView extends Component<{ page: Page }>{
     get page() {
         return this.props.page;
     }
+    private _mousedown;
     private _mousemove;
     private _mouseup;
     private _keyup;
     el: HTMLElement;
     componentDidMount() {
         this.el = ReactDOM.findDOMNode(this) as HTMLElement;
+        document.addEventListener('mousedown', this._mousedown = this.page.onGlobalMousedown.bind(this));
         document.addEventListener('mousemove', (this._mousemove = this.page.onMousemove.bind(this.page)));
         document.addEventListener('mouseup', (this._mouseup = this.page.onMouseup.bind(this.page)));
         document.addEventListener('keyup', (this._keyup = this.page.onKeyup.bind(this.page)), true);
     }
     componentWillUnmount() {
+        document.removeEventListener('mousedown', this._mousedown);
         document.removeEventListener('mouseup', this._mouseup);
         document.removeEventListener('mousemove', this._mousemove);
         document.removeEventListener('keyup', this._keyup, true);

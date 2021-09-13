@@ -52,5 +52,8 @@ export class PageEvent {
     onKeyup(this: Page, event: KeyboardEvent) {
         this.keyboardPlate.keyup(event);
     }
+    onGlobalMousedown(this: Page, event: MouseEvent) {
+
+    }
 }
 
