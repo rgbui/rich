@@ -45,5 +45,6 @@ export default {
     [LangID.menuComment]: '评论',
     [LangID.menuColor]: '颜色',
     [LangID.imageErrorLoadTip]: '图片加载失败',
-    [LangID.learnMore]: '了解更多'
+    [LangID.learnMore]: '了解更多',
+    [LangID.blockSelectorNoData]: "没有可用的指令"
 }
