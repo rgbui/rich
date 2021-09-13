@@ -1,27 +1,22 @@
 import React from "react";
-import ReactDOM, { createPortal } from "react-dom";
+import ReactDOM from "react-dom";
+import { Singleton } from "../../component/Singleton";
 import { KeyboardCode } from "../../src/common/keys";
 import { Point } from "../../src/common/point";
-import { EventsComponent } from "../../component/events.component";
 import { BlockSelectorItem } from "./delcare";
 import { blockStore } from "./store";
 
-export class BlockSelector extends EventsComponent {
-    private node: HTMLElement;
-    constructor(props) {
-        super(props);
-        this.node = document.body.appendChild(document.createElement('div'));
-    }
-    get filterSelectorData() {
+class BlockSelector extends React.Component {
+    private get filterSelectorData() {
         return blockStore.findAll(this.command);
     }
-    get filterBlocks() {
+    private get filterBlocks() {
         return blockStore.findAllBlocks(this.command);
     }
-    get isSelectIndex() {
+    private get isSelectIndex() {
         return this.selectIndex >= 0 && this.selectIndex < this.filterBlocks.length;
     }
-    renderSelectors() {
+    private renderSelectors() {
         var i = -1;
         return this.filterSelectorData.map((group, g) => {
             return <div className='sy-block-selector-group' key={group.text}>
@@ -59,22 +54,14 @@ export class BlockSelector extends EventsComponent {
             top: this.pos.y,
             left: this.pos.x
         }
-        return createPortal(<div>
+        return <div>
             {this.visible && <div className='sy-block-selector'
                 style={style}>{this.renderSelectors()}</div>}
-        </div>, this.node);
+        </div>
     }
-    onSelect(block?: BlockSelectorItem) {
-        if (!block) block = this.selectBlockData;
-        try {
-            this.emit('select', block, this.getFilterText(this.inputValue));
-        }
-        catch (ex) {
-            this.emit('error', ex);
-        }
-        finally {
-            this.close();
-        }
+    private onSelect(block?: BlockSelectorItem) {
+        if (typeof this._select == 'function') this._select(block, this.getFilterText(this.inputValue))
+        this.close();
     }
     private visible: boolean = false;
     private pos: Point = new Point(0, 0);
@@ -83,24 +70,25 @@ export class BlockSelector extends EventsComponent {
     get isVisible() {
         return this.visible;
     }
-    isTriggerOpen(value: string) {
-        return value.endsWith('/') || value.endsWith('、')
-    }
-    isTriggerFilter(value: string) {
-        if (this.visible) {
-            if (/(\/|、)[\w \-\u4e00-\u9fa5]+$/g.test(value)) return true;
+    private _select: (block: BlockSelectorItem, matchValue: string) => void;
+    async open(point: Point, text: string, callback: BlockSelector['_select']) {
+        var cs = text.match(/(\/|、)[^\s]*$/g);
+        if (!(cs && cs[0])) {
+            this.close();
+            return false;
         }
-        return false;
-    }
-    async open(point: Point, text: string) {
         this.pos = point;
         this.selectIndex = 0;
         this.visible = true;
         await blockStore.import();
-        this.onInputFilter(text);
+        this.inputFilter(text);
+        if (this.visible) {
+            this._select = callback;
+        }
+        return this.visible;
     }
     private inputValue: string;
-    onInputFilter(text: string) {
+    private inputFilter(text: string) {
         this.inputValue = text;
         var cs = text.match(/(\/|、)[^\s]*$/g);
         var command = cs ? cs[0] : "";
@@ -118,14 +106,14 @@ export class BlockSelector extends EventsComponent {
             this.close();
         }
     }
-    getFilterText(text) {
+    private getFilterText(text): string {
         return text.replace(/(\/|、)[\w \-\u4e00-\u9fa5]*$/g, '');
     }
-    get selectBlockData() {
+    private get selectBlockData() {
         var b = this.filterBlocks[this.selectIndex];
         return b;
     }
-    close() {
+    private close() {
         if (this.visible == true) {
             this.visible = false;
             this.forceUpdate();
@@ -134,7 +122,7 @@ export class BlockSelector extends EventsComponent {
     /**
      * 向上选择内容
      */
-    keydown() {
+    private keydown() {
         if (!this.isSelectIndex) this.selectIndex = -1;
         if (this.selectIndex < this.filterBlocks.length - 1) {
             this.selectIndex += 1;
@@ -144,17 +132,14 @@ export class BlockSelector extends EventsComponent {
     /**
      * 向下选择内容
      */
-    keyup() {
+    private keyup() {
         if (!this.isSelectIndex) this.selectIndex = this.filterBlocks.length - 1;
         if (this.selectIndex > 0) {
             this.selectIndex -= 1;
             this.forceUpdate();
         }
     }
-    componentWillUnmount() {
-        if (this.node) this.node.remove()
-    }
-    el: HTMLElement;
+    private el: HTMLElement;
     componentDidMount() {
         this.el = ReactDOM.findDOMNode(this) as HTMLElement;
     }
@@ -167,23 +152,26 @@ export class BlockSelector extends EventsComponent {
             });
         }
     }
-    interceptKey(event: KeyboardEvent) {
-        switch (event.key) {
-            case KeyboardCode.ArrowDown:
-                this.keydown();
-                return true;
-            case KeyboardCode.ArrowUp:
-                this.keyup();
-                return true;
-            case KeyboardCode.Enter:
-                this.onSelect();
-                return true;
+    onKeydown(event: KeyboardEvent) {
+        if (this.visible == true) {
+            switch (event.key) {
+                case KeyboardCode.ArrowDown:
+                    this.keydown();
+                    return true;
+                case KeyboardCode.ArrowUp:
+                    this.keyup();
+                    return true;
+                case KeyboardCode.Enter:
+                    var block = this.selectBlockData;
+                    this.close();
+                    if (block)
+                        return { block, matchValue: this.getFilterText(this.inputValue) };
+                    else return false;
+            }
         }
+        return false;
     }
 }
-export interface BlockSelector {
-    on(name: 'error', fn: (error: Error) => void);
-    emit(name: 'error', error: Error);
-    on(name: 'select', fn: (item: BlockSelectorItem, value: string) => void);
-    emit(name: 'select', item: BlockSelectorItem, value: string);
+export async function useBlockSelector() {
+    return await Singleton<BlockSelector>(BlockSelector);
 }
