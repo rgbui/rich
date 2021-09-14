@@ -52,7 +52,7 @@ interface ImagePicker {
 
 export async function useImagePicker(pos: PopoverPosition) {
     let popover = await PopoverSingleton(ImagePicker);
-    let filePicker = await popover.open<ImagePicker>(pos);
+    let filePicker = await popover.open(pos);
     return new Promise((resolve: (data: ResourceArguments) => void, reject) => {
         filePicker.only('select', (data) => {
             popover.close();

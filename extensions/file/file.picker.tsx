@@ -38,7 +38,7 @@ interface FilePicker {
 
 export async function useFilePicker(pos: PopoverPosition) {
     let popover = await PopoverSingleton(FilePicker);
-    let filePicker = await popover.open<FilePicker>(pos);
+    let filePicker = await popover.open(pos);
     return new Promise((resolve: (data: ResourceArguments) => void, reject) => {
         filePicker.only('select', (data) => {
             popover.close();
