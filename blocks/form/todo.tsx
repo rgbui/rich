@@ -7,6 +7,8 @@ import { BlockCssName, FontCss } from "../../src/block/pattern/css";
 import { CssSelectorType } from "../../src/block/pattern/type";
 import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import { TextSpan } from "../../src/block/element/textspan";
+import { langProvider } from "../../i18n/provider";
+import { LangID } from "../../i18n/declare";
 
 @url('/todo')
 export class ToDo extends TextSpan {
@@ -47,7 +49,7 @@ export class ToDoView extends BlockView<ToDo>{
         else {
             return <span className='sy-block-todo' style={this.block.visibleStyle}>
                 <input onMouseDown={e => e.stopPropagation()} type='checkbox' checked={this.block.checked} onChange={e => this.block.onChange(e.nativeEvent)} />
-                <span className='sy-block-todo-text'><TextArea rf={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent}></TextArea></span>
+                <span className='sy-block-todo-text'><TextArea placeholder={langProvider.getText(LangID.todoPlaceholder)} rf={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent}></TextArea></span>
             </span>
         }
     }

@@ -44,5 +44,6 @@ export enum LangID {
     menuColor,
     imageErrorLoadTip,
     learnMore,
-    blockSelectorNoData
+    blockSelectorNoData,
+    todoPlaceholder
 }
