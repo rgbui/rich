@@ -50,9 +50,10 @@ export async function InputDetectorHandle(tp: TextInput) {
     var value = tp.textarea.value;
     var mr = InputDetector(value, anchor, {
         at: tp.cursorStartAt,
-        rowStart: anchor.block.isLine && anchor.block.at == 0 ? true : false
+        rowStart: (!anchor.block.prev) && anchor.block.at == 0 ? true : false
     });
     if (mr) {
+        console.log('mr', mr);
         var rule = mr.rule;
         var block = anchor.block;
         switch (rule.operator) {
