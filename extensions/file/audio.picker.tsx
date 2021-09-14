@@ -38,7 +38,7 @@ interface AudioPicker {
 
 export async function useAudioPicker(pos: PopoverPosition) {
     let popover = await PopoverSingleton(AudioPicker);
-    let audioPicker = await popover.open<AudioPicker>(pos);
+    let audioPicker = await popover.open(pos);
     return new Promise((resolve: (data: ResourceArguments) => void, reject) => {
         audioPicker.only('select', (data) => {
             popover.close();

@@ -60,7 +60,7 @@ class LinkPicker extends EventsComponent<{ link: PageLink }> {
 
 export async function useLinkPicker(pos: PopoverPosition, link?: PageLink) {
     var popover = await PopoverSingleton(LinkPicker, {}, { link: link });
-    var picker = await popover.open<LinkPicker>(pos);
+    var picker = await popover.open(pos);
     return new Promise((resolve: (link: PageLink) => void, reject) => {
         picker.on('change', (link: PageLink) => {
             resolve(link);

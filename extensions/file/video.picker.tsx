@@ -38,7 +38,7 @@ interface VideoPicker {
 
 export async function useVideoPicker(pos: PopoverPosition) {
     let popover = await PopoverSingleton(VideoPicker);
-    let videoPicker = await popover.open<VideoPicker>(pos);
+    let videoPicker = await popover.open(pos);
     return new Promise((resolve: (data: ResourceArguments) => void, reject) => {
         videoPicker.only('select', (data) => {
             popover.close();
