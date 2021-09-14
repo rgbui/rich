@@ -41,7 +41,7 @@ export var rules: DetectorRule[] = [
     },
     {
         operator: DetectorOperator.firstLetterTurnBlock,
-        match: ['[]', '【】'],
+        match: [/^\[\]/, /^【】/],
         url: '/todo'
     },
     {
