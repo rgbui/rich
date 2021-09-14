@@ -183,12 +183,12 @@ export class Anchor {
     }
     setEmpty() {
         if (this.isText) {
-            this.el.classList.add('empty');
+            this.el.classList.add('shy-text-empty');
         }
     }
     removeEmpty() {
         if (this.isText) {
-            this.el.classList.remove('empty');
+            this.el.classList.remove('shy-text-empty');
         }
     }
     equal(anchor: Anchor) {
