@@ -92,7 +92,7 @@ export class TableStoreSelector extends EventsComponent {
 }
 
 export async function OpenTableStoreSelector(rect: Rect) {
-    var selector = await Singleton<TableStoreSelector>(TableStoreSelector);
+    var selector = await Singleton(TableStoreSelector);
     await selector.open(rect);
     return new Promise((resolve: (data: any) => void, reject) => {
         selector.only('create', (data) => {

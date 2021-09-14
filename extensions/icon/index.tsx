@@ -45,7 +45,7 @@ interface IconPicker {
 }
 export async function useIconPicker(pos: PopoverPosition) {
     let popover = await PopoverSingleton(IconPicker, { mask: true, visible: 'hidden' });
-    let filePicker = await popover.open<IconPicker>(pos);
+    let filePicker = await popover.open(pos);
     return new Promise((resolve: (data: IconArguments) => void, reject) => {
         filePicker.only('change', (data) => {
             popover.close();

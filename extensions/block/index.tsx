@@ -196,5 +196,5 @@ class BlockSelector extends React.Component {
     }
 }
 export async function useBlockSelector() {
-    return await Singleton<BlockSelector>(BlockSelector);
+    return await Singleton(BlockSelector);
 }

@@ -58,7 +58,7 @@ interface ColorSelector {
 }
 export async function useColorSelector(pos: PopoverPosition) {
     let popover = await PopoverSingleton(ColorSelector, {});
-    let colorSelector = await popover.open<ColorSelector>(pos);
+    let colorSelector = await popover.open(pos);
     return new Promise((resolve: (data: ColorValue) => void, reject) => {
         colorSelector.only('change', (data) => {
             popover.close();

@@ -4,11 +4,11 @@ import { Point, Rect, RectUtility } from "../../src/common/point";
 import { EventsComponent } from "../../component/events.component";
 import { PopoverPosition } from "./position";
 import './style.less';
-class Popover extends EventsComponent<{ component: typeof React.Component, shadow?: boolean, args?: Record<string, any>, mask?: boolean, visible?: "hidden" | "none" }> {
+class Popover<T extends React.Component> extends EventsComponent<{ component: { new(...args: any[]): T }, shadow?: boolean, args?: Record<string, any>, mask?: boolean, visible?: "hidden" | "none" }> {
     visible: boolean;
     point: Point = new Point(0, 0);
     private el: HTMLElement;
-    async open<T extends React.Component>(pos: PopoverPosition) {
+    async open(pos: PopoverPosition): Promise<T> {
         this.visible = true;
         if (this.props.visible == 'hidden') {
             if (this.box) this.box.style.display = 'block';
@@ -23,7 +23,7 @@ class Popover extends EventsComponent<{ component: typeof React.Component, shado
             this.point = pos.fixPoint;
             return new Promise((resolve: (ins: T) => void, reject) => {
                 this.forceUpdate(() => {
-                    resolve(this.cp as T);
+                    resolve(this.cp);
                 })
             })
         }
@@ -45,11 +45,11 @@ class Popover extends EventsComponent<{ component: typeof React.Component, shado
                         }
                     }
                 }
-                resolve(this.cp as T);
+                resolve(this.cp);
             })
         })
     }
-    cp: React.Component;
+    cp: T;
     private box: HTMLElement;
     render() {
         var CP = this.props.component;
@@ -96,22 +96,25 @@ class Popover extends EventsComponent<{ component: typeof React.Component, shado
         }
     }
 }
-let maps = new Map<typeof React.Component, Popover>();
+
+type MapC<T extends React.Component> = Map<{ new(...args: any[]): T }, Popover<T>>
+
+let maps: MapC<React.Component> = new Map();
 /**
  * 
  * @param CP 
  * @param props visible:hidden 表示当前的popover是否隐藏内容，还是让内容消失重绘(visible:none)
  * @returns 
  */
-export async function PopoverSingleton(CP: typeof React.Component,
+export async function PopoverSingleton<T extends React.Component>(CP: { new(...args: any[]): T },
     props?: { mask?: boolean, visible?: 'hidden' | "none", shadow?: boolean }, args?: Record<string, any>) {
-    return new Promise((resolve: (data: Popover) => void, reject) => {
-        if (maps.has(CP)) return resolve(maps.get(CP))
+    return new Promise((resolve: (data: Popover<T>) => void, reject) => {
+        if (maps.has(CP)) return resolve(maps.get(CP) as any)
         var ele = document.createElement('div');
         document.body.appendChild(ele);
-        ReactDOM.render(<Popover {...(props || {})} args={args || {}} component={CP} ref={e => {
+        ReactDOM.render(<Popover<T> {...(props || {})} args={args || {}} component={CP} ref={e => {
             maps.set(CP, e);
-            resolve(e as Popover);
+            resolve(e);
         }} />, ele);
     })
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 let maps = new Map<typeof React.Component, React.Component>();
-export async function Singleton<T extends React.Component>(CP: typeof React.Component) {
+export async function Singleton<T extends React.Component>(CP: { new(...args:any[]): T }) {
     return new Promise((resolve: (ins: T) => void, reject) => {
         if (maps.has(CP)) return resolve(maps.get(CP) as T)
         var ele = document.createElement('div');
