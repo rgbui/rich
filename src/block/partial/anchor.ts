@@ -349,16 +349,42 @@ export class Block$Anchor {
      * @param url 
      * @param data 
      */
-    async visibleRightCreateBlock(this: Block, url: string, data: Record<string, any>) {
+    async visibleRightCreateBlock(this: Block, at: number, url: string, data: Record<string, any>) {
         if (this.isTextContent) {
+            var frontConent = this.content.slice(0, at);
+            var latterContent = this.content.slice(at);
+            var index = this.at;
+            var newBlock: Block;
+            if (frontConent) {
+                this.updateProps({ content: frontConent });
+                newBlock = await this.page.createBlock(url, data, this.parent, index + 1);
+                if (latterContent) {
+                    var cd = await this.cloneData(); cd.content = latterContent;
+                    await this.page.createBlock(this.url, cd, this.parent, index + 2);
+                }
+            }
+            else if (latterContent) {
+                newBlock = await this.page.createBlock(url, data, this.parent, index);
+                this.updateProps({ content: latterContent });
+            }
+            else {
+                newBlock = await this.page.createBlock(url, data, this.parent, index);
+                await this.delete()
+            }
+            return newBlock;
+        }
+        else if (this.isLineSolid) {
             return await this.page.createBlock(url, data, this.parent, this.at + 1);
         }
         else {
-            var content = this.content;
+            var frontConent = this.content.slice(0, at);
+            var latterContent = this.content.slice(at);
             this.updateProps({ content: '' });
-            var at = 0;
-            if (content) await this.page.createBlock(BlockUrlConstant.Text, { content }, this, at++);
-            return await this.page.createBlock(url, data, this, at);
+            var index = 0;
+            if (frontConent) await this.page.createBlock(BlockUrlConstant.Text, { content: frontConent }, this, index++);
+            var newBlock = await this.page.createBlock(url, data, this, index++);
+            if (latterContent) await this.page.createBlock(BlockUrlConstant.Text, { content: latterContent }, this, index++);
+            return newBlock;
         }
     }
     focusAnchor(this: Block, anchor: Anchor) {
