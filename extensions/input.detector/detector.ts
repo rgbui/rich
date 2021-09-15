@@ -21,6 +21,7 @@ export function InputDetector(value: string, anchor: Anchor, options: { rowStart
     var ru: DetectorRule;
     for (let i = 0; i < rs.length; i++) {
         var rule = rs[i];
+        if (typeof rule.matchFn == 'function' && rule.matchFn(value) != true) continue;
         var ms = Array.isArray(rule.match) ? rule.match : [rule.match];
         for (let m of ms) {
             if (typeof m == 'string' && value == m) {

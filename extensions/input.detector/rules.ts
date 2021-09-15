@@ -9,6 +9,7 @@ export enum DetectorOperator {
 export type DetectorRule = {
     operator: DetectorOperator,
     match: string | RegExp | (string | RegExp)[],
+    matchFn?: (value: string) => boolean,
     url?: string,
     style?: Record<any, Record<string, any>>,
     handle?: (value: string) => string;
@@ -74,6 +75,10 @@ export var rules: DetectorRule[] = [
         operator: DetectorOperator.letterReplaceCreateBlock,
         match: [/\*([^*]+)\*$/],
         url: '/text',
+        matchFn: (value) => {
+            if (/\*\*([^*]+)\*$/.test(value)) return false;
+            return true;
+        },
         style: { [BlockCssName.font]: { fontStyle: 'italic' } }
     },
     {
