@@ -59,6 +59,7 @@ export class Page$Cycle {
             }
         }
         if (typeof this.pageLayout == 'undefined') this.pageLayout = new PageLayout(this);
+        await this.onRepair();
         await this.emit(PageDirective.loaded);
     }
     async get(this: Page) {
@@ -72,7 +73,6 @@ export class Page$Cycle {
         })
         return json;
     }
-
     async getDefaultData() {
         var r = await import("../default.page");
         return r.data;
@@ -153,8 +153,7 @@ export class Page$Cycle {
         }
     }
     onBlur(this: Page, event: FocusEvent) {
-        if (this.isFocus == true)
-        {
+        if (this.isFocus == true) {
             this.isFocus = false;
             this.textTool.close();
             this.kit.explorer.blur();
@@ -198,5 +197,21 @@ export class Page$Cycle {
         var tp = this.temporarys.find(g => g.purpose == purpose);
         if (tp) { return tp.flag }
         else null;
+    }
+    /**
+     * 修复一些不正常的block
+     */
+    async onRepair(this: Page) {
+        this.views.eachAsync(async (view)=>{
+            view.eachReverse(b=>{
+                /**
+                 * 如果是空文本块，则删除掉空文本块
+                 */
+                if (b.isTextContent && !b.content) {
+                    b.parentBlocks.remove(b);
+                }
+            })
+            return
+        })
     }
 }
