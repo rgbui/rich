@@ -32,7 +32,7 @@ export class Block$LifeCycle {
         for (let b in this.blocks) {
             json.blocks[b] = await this.blocks[b].asyncMap(async x => await x.cloneData());
         }
-        return await BlockFactory.createBlock(this.url, this.page, json, null);
+        return json;
     }
     async clone(this: Block) {
         var data = await this.cloneData();

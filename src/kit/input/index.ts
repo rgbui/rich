@@ -41,9 +41,7 @@ export class TextInput extends Events {
             this.textarea.style.top = point.y + 'px';
             this.textarea.style.left = (point.x + 0) + 'px';
             this.textarea.style.height = bound.height + 'px';
-            if (anchor.textContent) {
-                anchor.removeEmpty();
-            }
+            if (anchor.textContent) anchor.removeEmpty();
             else anchor.setEmpty();
         }
     }
