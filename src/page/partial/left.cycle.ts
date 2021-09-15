@@ -202,12 +202,19 @@ export class Page$Cycle {
      * 修复一些不正常的block
      */
     async onRepair(this: Page) {
-        this.views.eachAsync(async (view)=>{
-            view.eachReverse(b=>{
+        this.views.eachAsync(async (view) => {
+            view.eachReverse(b => {
                 /**
                  * 如果是空文本块，则删除掉空文本块
                  */
                 if (b.isTextContent && !b.content) {
+                    b.parentBlocks.remove(b);
+                }
+                /**
+                 * 如果当前的block是row,col，但没有子元素块,
+                 * 那么block应该需要删除
+                 */
+                else if ((b.isRow || b.isCol) && !b.isPart && !b.hasChilds) {
                     b.parentBlocks.remove(b);
                 }
             })
