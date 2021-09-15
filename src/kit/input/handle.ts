@@ -29,6 +29,7 @@ export async function onPreKeydown(tp: TextInput, event: KeyboardEvent) {
  * 
  * @param tp 
  * @returns 
+ * 
  */
 export async function InputHandle(tp: TextInput) {
     /**
@@ -40,6 +41,7 @@ export async function InputHandle(tp: TextInput) {
         await InputBlockSelectorAfter(tp, block, matchValue);
     });
     if (await InputDetectorHandle(tp)) return true;
+    if (await InputTextCode(tp)) return true;
     tp.cursorTextElement.innerHTML = value;
     anchor.at = tp.cursorStartAt + value.length;
     await InputStore(anchor.block, anchor.elementAppear, value, tp.cursorStartAt);
@@ -101,7 +103,6 @@ export async function InputDetectorHandle(tp: TextInput) {
     }
     else return false;
 }
-
 export async function InputBlockSelectorAfter(tp: TextInput, blockData: BlockSelectorItem, matchValue: string) {
     var anchor = tp.explorer.activeAnchor;
     var block = anchor.block;
@@ -143,3 +144,24 @@ export async function InputAtSelector(tp: TextInput) {
     });
     return r;
 }
+/**
+ * 在代码行内文本输入文字，如果处于一行的末尾，那么需要主动创建一个新的block
+ * @param tp 
+ * @returns 
+ */
+export async function InputTextCode(tp: TextInput) {
+    var anchor = tp.explorer.activeAnchor;
+    var value = tp.textarea.value;
+    if (anchor.block.asTextContent && anchor.block.asTextContent.isCode && anchor.at == anchor.block.content.length && !anchor.block.next) {
+        tp.page.onAction(ActionDirective.onInputText, async () => {
+            var newBlock = await anchor.block.visibleRightCreateBlock(anchor.at, BlockUrlConstant.Text, { content: value })
+            newBlock.mounted(() => {
+                tp.explorer.onFocusAnchor(newBlock.visibleBackAnchor);
+            });
+        })
+        return true;
+    }
+    return false;
+}
+
+

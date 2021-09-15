@@ -17,6 +17,7 @@ import { Block$LifeCycle } from "./partial/left.cycle";
 import { Block$Operator } from "./partial/operate";
 import { BlockAppear, AppearAnchor } from "./appear";
 import { Mix } from "../../util/mix";
+import { TextContent } from "./element/text";
 export abstract class Block extends Events {
     constructor(page: Page) {
         super();
@@ -257,6 +258,11 @@ export abstract class Block extends Events {
     }
     get isTextContent() {
         return false;
+    }
+    get asTextContent() {
+        if (this.isTextContent)
+            return (this as any) as TextContent
+        else return null;
     }
     private temporarys: { flag: string, purpose: TemporaryPurpose, data: any }[] = [];
     cacheComputed<T>(purpose: TemporaryPurpose, computed: () => T): T {
