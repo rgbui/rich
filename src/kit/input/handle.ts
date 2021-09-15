@@ -42,7 +42,7 @@ export async function InputHandle(tp: TextInput) {
     if (await InputDetectorHandle(tp)) return true;
     tp.cursorTextElement.innerHTML = value;
     anchor.at = tp.cursorStartAt + value.length;
-    await InputStore(anchor.block, anchor.elementAppear.prop, value, tp.cursorStartAt);
+    await InputStore(anchor.block, anchor.elementAppear, value, tp.cursorStartAt);
     tp.followAnchor(anchor);
 }
 export async function InputDetectorHandle(tp: TextInput) {
@@ -79,21 +79,22 @@ export async function InputDetectorHandle(tp: TextInput) {
                 tp.cursorTextElement.innerHTML = mr.value;
                 anchor.at = tp.cursorStartAt + mr.value.length;
                 tp.textarea.value = mr.value;
-                await InputStore(block, anchor.elementAppear.prop, mr.value, tp.cursorStartAt);
+                await InputStore(block, anchor.elementAppear, mr.value, tp.cursorStartAt);
                 tp.followAnchor(anchor);
                 break;
             case DetectorOperator.letterReplaceCreateBlock:
-                tp.cursorTextElement.innerHTML = value;
-                anchor.at = tp.cursorStartAt + value.length;
-                tp.textarea.value = value;
+                tp.cursorTextElement.innerHTML = mr.value;
+                anchor.at = tp.cursorStartAt + mr.value.length;
+                tp.textarea.value = mr.value;
                 var action = async () => {
-                    var newBlock = await tp.page.createBlock(rule.url, { content: mr.matchValue }, block.parent, block.at + 1);
+                    var newBlock = await anchor.block.visibleRightCreateBlock(anchor.at, rule.url, { content: mr.matchValue })
+                    if (rule.style) newBlock.pattern.setStyles(rule.style)
                     newBlock.mounted(() => {
                         tp.explorer.onFocusAnchor(newBlock.visibleBackAnchor);
                     });
                 }
-                await InputStore(block, anchor.elementAppear.prop, mr.value, tp.cursorStartAt, true, action);
-                tp.followAnchor(anchor);
+                await InputStore(block, anchor.elementAppear, mr.value, tp.cursorStartAt, true, action);
+                tp.followAnchor(tp.explorer.activeAnchor);
                 break;
         }
         return true;
@@ -106,7 +107,8 @@ export async function InputBlockSelectorAfter(tp: TextInput, blockData: BlockSel
     var block = anchor.block;
     tp.cursorTextElement.innerHTML = matchValue;
     tp.textarea.value = matchValue;
-    await InputStore(anchor.block, anchor.elementAppear.prop, matchValue, tp.cursorStartAt, true, async () => {
+    anchor.at = tp.cursorStartAt + matchValue.length;
+    await InputStore(anchor.block, anchor.elementAppear, matchValue, tp.cursorStartAt, true, async () => {
         let extra: Record<string, any> = {};
         if (typeof blockData.operator != 'undefined') {
             extra = await blockStore.open(blockData.operator, anchor.bound);
@@ -120,7 +122,7 @@ export async function InputBlockSelectorAfter(tp: TextInput, blockData: BlockSel
         }
         var newBlock: Block;
         if (blockData.isLine) {
-            newBlock = await block.visibleRightCreateBlock(blockData.url, extra);
+            newBlock = await block.visibleRightCreateBlock(anchor.at, blockData.url, extra);
         }
         else {
             newBlock = await block.visibleDownCreateBlock(blockData.url, extra);
@@ -131,6 +133,7 @@ export async function InputBlockSelectorAfter(tp: TextInput, blockData: BlockSel
                 tp.explorer.onFocusAnchor(anchor);
         });
     });
+    tp.followAnchor(tp.explorer.activeAnchor);
 }
 export async function InputAtSelector(tp: TextInput) {
     var anchor = tp.explorer.activeAnchor;

@@ -13,6 +13,7 @@ import { blockStore } from "../../../extensions/block/store";
 import { langProvider } from "../../../i18n/provider";
 import { LangID } from "../../../i18n/declare";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
+import { AppearAnchor } from "../appear";
 export class Block$Event {
     async onGetTurnMenus(this: Block) {
         var its = blockStore.findFitTurnBlocks(this);
@@ -97,28 +98,30 @@ export class Block$Event {
                 break;
         }
     }
-    async onInputStore(this: Block, prop: string, value: string, at: number, end: number, action?: () => Promise<void>) {
+    async onInputStore(this: Block, appear: AppearAnchor, value: string, at: number, end: number, action?: () => Promise<void>) {
         await this.page.onAction(ActionDirective.onInputText, async () => {
+            this[appear.prop] = appear.textContent;
             this.page.snapshoot.record(OperatorDirective.inputStore, {
                 blockId: this.id,
                 start: at,
                 end: end,
                 text: value,
-                prop
+                prop: appear.prop
             });
             if (typeof action == 'function') await action();
         })
     }
-    async onInputDeleteStore(this: Block, prop: string, value: string, start: number, end: number, action?: () => Promise<void>) {
+    async onInputDeleteStore(this: Block, appear: AppearAnchor, value: string, start: number, end: number, action?: () => Promise<void>) {
         await this.page.onAction(ActionDirective.onDeleteText, async () => {
             var block = this;
             var pa = this.page;
+            this[appear.prop] = appear.textContent;
             pa.snapshoot.record(OperatorDirective.inputDeleteStore, {
                 blockId: block.id,
                 start,
                 end,
                 text: value,
-                prop
+                prop: appear.prop
             });
             if (typeof action == 'function') await action();
         })
