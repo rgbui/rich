@@ -10,7 +10,7 @@ export type DetectorRule = {
     operator: DetectorOperator,
     match: string | RegExp | (string | RegExp)[],
     url?: string,
-    style?: Record<string, Record<string, any>>,
+    style?: Record<any, Record<string, any>>,
     handle?: (value: string) => string;
 }
 export var rules: DetectorRule[] = [
@@ -85,7 +85,7 @@ export var rules: DetectorRule[] = [
     {
         operator: DetectorOperator.letterReplaceCreateBlock,
         match: [/`([^]+)`$/],
-        url: '/code'
+        url: '/text?{isCode:true}'
     },
     {
         operator: DetectorOperator.inputCharReplace,
