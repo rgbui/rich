@@ -80,11 +80,11 @@ export class TextTool extends EventsComponent {
                             <Icon icon='link:sy'></Icon><Icon icon='arrow-down:sy'></Icon>
                         </div>
                     </Tip>
-                    <Tip id={LangID.textToolComment}>
+                    {/* <Tip id={LangID.textToolComment}>
                         <div className='sy-tool-text-menu-item sy-tool-text-menu-devide' onMouseDown={e => this.onOpenComment(e)}>
                             <Icon icon='comment:sy'></Icon>
                         </div>
-                    </Tip>
+                    </Tip> */}
                     <Tip id={LangID.textToolBold}>
                         <div className={'sy-tool-text-menu-item' + (this.textStyle.bold == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.bold == true ? TextCommand.cancelBold : TextCommand.bold)}>
                             <Icon icon='bold:sy'></Icon>
@@ -110,22 +110,22 @@ export class TextTool extends EventsComponent {
                             <Icon icon='code:sy'></Icon>
                         </div>
                     </Tip>
-                    <Tip id={LangID.textToolEquation}>
+                    {/* <Tip id={LangID.textToolEquation}>
                         <div className={'sy-tool-text-menu-item' + (this.textStyle.equation == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.equation == true ? TextCommand.cancelEquation : TextCommand.equation)}>
                             <Icon icon={Equation}></Icon>
                         </div>
-                    </Tip>
+                    </Tip> */}
                     <Tip id={LangID.textToolColor}>
                         <div className='sy-tool-text-menu-item' onMouseDown={e => this.onOpenFontColor(e)}>
                             <span>A</span>
                             <Icon icon='arrow-down:sy'></Icon>
                         </div>
                     </Tip>
-                    <Tip id={LangID.textToolMention}>
+                    {/* <Tip id={LangID.textToolMention}>
                         <div className='sy-tool-text-menu-item'>
                             <Icon icon={Mention}></Icon>
                         </div>
-                    </Tip>
+                    </Tip> */}
                 </div>}
             </div>,
             this.node);
