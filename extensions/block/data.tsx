@@ -43,41 +43,41 @@ export var BlockSelectorData: BlockGroup[] = [
             { text: "分割线", pic: <img src={divider} />, url: '/divider', description: '', label: '/分割线' },
             { text: "折叠列表", pic: <img src={toggle} />, url: '/list?{listType:2}', description: "折叠列表", label: '/折叠列表', labels: [] },
             { text: "首重文字", pic: <img src={callout} />, url: "/callout", description: "", label: "/首重文字", labels: [] },
-            { text: "数学公式", pic: <img src={equation} />, url: "/katex", description: "", label: "/数学公式", labels: [] },
-            { text: '链接', pic: <img src={link} />, url: '/link', description: "", label: "/链接" }
+            // { text: "数学公式", pic: <img src={equation} />, url: "/katex", description: "", label: "/数学公式", labels: [] },
+            // { text: '链接', pic: <img src={link} />, url: '/link', description: "", label: "/链接" }
         ]
     },
     {
         text: '行内块',
         childs: [
             { text: "表情", isLine: true, operator: BlockSelectorOperator.selectEmoji, pic: <img src={emoji} />, url: "/emoji", description: "", label: "/表情", labels: [] },
-            { text: "日期", isLine: true, pic: <img src={mentionDate} />, url: '/mention/date', description: '', label: '/引用日期' },
-            { text: "页面", isLine: true, pic: <img src={mentionPage} />, url: '/mention/page', description: '', label: '/引用页面' },
-            { text: "@ta人", isLine: true, pic: <img src={mentionPerson} />, url: '/mention/person', description: '', label: '/ta人' },
+            // { text: "日期", isLine: true, pic: <img src={mentionDate} />, url: '/mention/date', description: '', label: '/引用日期' },
+            // { text: "页面", isLine: true, pic: <img src={mentionPage} />, url: '/mention/page', description: '', label: '/引用页面' },
+            //{ text: "@ta人", isLine: true, pic: <img src={mentionPerson} />, url: '/mention/person', description: '', label: '/ta人' },
         ]
     },
     {
         text: '媒体与附件',
         childs: [
             { text: "图片", pic: <img src={image} />, url: '/image', description: '', label: '/图片' },
-            { text: "音频", pic: <img src={audio} />, url: '/audio', description: "", label: '/音频' },
-            { text: "视频", pic: <img src={video} />, url: '/video', description: "", label: '/视频' },
+            // { text: "音频", pic: <img src={audio} />, url: '/audio', description: "", label: '/音频' },
+            // { text: "视频", pic: <img src={video} />, url: '/video', description: "", label: '/视频' },
             { text: "附件", pic: <img src={file} />, url: '/file', description: "", label: '/附件' },
-            { text: "代码片段", pic: <img src={code} />, url: "/code", description: "", label: "/代码片段", labels: [] },
-            { text: "书签", pic: <img src={bookmark} />, url: '/bookmark', description: '', label: '/书签' },
+            // { text: "代码片段", pic: <img src={code} />, url: "/code", description: "", label: "/代码片段", labels: [] },
+            // { text: "书签", pic: <img src={bookmark} />, url: '/bookmark', description: '', label: '/书签' },
             { text: '表格', pic: <img src={tablestore} />, url: '/table', description: '', label: '/表格' }
         ]
     },
-    {
-        text: '数据',
-        childs: [
-            { text: '数据表格', operator: BlockSelectorOperator.createTable, pic: <img src={tablestore} />, url: "/table/store", label: '/数据表格' }
-        ]
-    },
-    {
-        text: '嵌入',
-        childs: [
-            { text: '嵌入', pic: <img src={embed} />, url: "/embed", label: '/嵌入' }
-        ]
-    }
+    // {
+    //     text: '数据',
+    //     childs: [
+    //         { text: '数据表格', operator: BlockSelectorOperator.createTable, pic: <img src={tablestore} />, url: "/table/store", label: '/数据表格' }
+    //     ]
+    // },
+    // {
+    //     text: '嵌入',
+    //     childs: [
+    //         { text: '嵌入', pic: <img src={embed} />, url: "/embed", label: '/嵌入' }
+    //     ]
+    // }
 ]
