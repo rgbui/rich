@@ -75,11 +75,11 @@ export class TextTool extends EventsComponent {
                             <span>Text</span><Icon icon='arrow-down:sy'></Icon>
                         </div>
                     </Tip>
-                    <Tip id={LangID.textToolLink}>
+                    {/* <Tip id={LangID.textToolLink}>
                         <div className='sy-tool-text-menu-item sy-tool-text-menu-devide' onMouseDown={e => this.onOpenLink(e)}>
                             <Icon icon='link:sy'></Icon><Icon icon='arrow-down:sy'></Icon>
                         </div>
-                    </Tip>
+                    </Tip> */}
                     {/* <Tip id={LangID.textToolComment}>
                         <div className='sy-tool-text-menu-item sy-tool-text-menu-devide' onMouseDown={e => this.onOpenComment(e)}>
                             <Icon icon='comment:sy'></Icon>
