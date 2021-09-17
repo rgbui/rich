@@ -79,13 +79,14 @@ export async function backspaceBlock(tp: TextInput) {
                     var existsDelete: boolean = false;
                     if (anchor.block.isLine) {
                         var newAnchor: Anchor;
-                        if (block.prev) newAnchor = block.prev.visibleBackAnchor;
-                        else if (block.next) newAnchor = block.next.visibleHeadAnchor;
+                        if (block.visiblePre) newAnchor = block.visiblePre.visibleBackAnchor;
                         var pa = block.parent;
                         if (block.isCanAutomaticallyDeleted) { await block.delete(); existsDelete = true; }
-                        if (!newAnchor) newAnchor = pa.visibleHeadAnchor;
-                        tp.explorer.onFocusAnchor(newAnchor);
-                        tp.onStartInput(tp.explorer.activeAnchor);
+                        if (!newAnchor && !pa.isRow) newAnchor = pa.visibleHeadAnchor;
+                        if (newAnchor) {
+                            tp.explorer.onFocusAnchor(newAnchor);
+                            tp.onStartInput(tp.explorer.activeAnchor);
+                        }
                     }
                     var checkEmpty = () => {
                         var currentAnchor = tp.explorer.activeAnchor;
