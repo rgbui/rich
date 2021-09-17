@@ -1,7 +1,9 @@
 .sy-block-text-span {
     display: block;
 }
+
 .sy-block-text-head {}
+
 .sy-block-image {
     display        : flex;
     justify-content: center;
@@ -18,6 +20,12 @@
     display        : flex;
     justify-content: flex-start;
     align-items    : center;
+    >*:first-child {
+        flex-shrink: 0;
+    }
+    >*:last-child {
+        flex-grow: 1;
+    }
 }
 
 .sy-block-quote {
