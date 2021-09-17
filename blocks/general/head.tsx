@@ -2,10 +2,10 @@ import { BlockView } from "../../src/block/view";
 import { prop, url, view } from "../../src/block/factory/observable";
 import React from 'react';
 import { TextArea, TextLineChilds } from "../../src/block/view/appear";
-import { TextSpan } from "../../src/block/element/textspan";
 import { BlockDisplay } from "../../src/block/enum";
+import { Block } from "../../src/block";
 @url('/head')
-export class Head extends TextSpan {
+export class Head extends Block {
     @prop()
     level: 'h1' | 'h2' | 'h3' = 'h1';
     get multiLines() {
@@ -40,8 +40,7 @@ export class HeadView extends BlockView<Head>{
             style.marginBottom = '1px';
         }
         if (this.block.childs.length > 0)
-            return <div className='sy-block-text-head'><TextLineChilds
-                style={style}
+            return <div className='sy-block-text-head' style={style}><TextLineChilds
                 rf={e => this.block.childsEl = e}
                 childs={this.block.childs}></TextLineChilds></div>
         else
