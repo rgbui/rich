@@ -5,4 +5,5 @@ export type WorkspaceConfig = {
 }
 export type PageConfig = {
     fontCss: FontCss;
+    smallFont: boolean;
 }

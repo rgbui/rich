@@ -20,9 +20,9 @@ export class Page$Cycle {
         this.cfm = new ConfigurationManager(this);
         this.cfm.loadPageConfig({
             fontCss: {
-                lineHeight: 20,
+                lineHeight: 24,
                 letterSpacing: 0,
-                fontSize: 14,
+                fontSize: 16,
                 fontStyle: 'normail'
             } as any
         });

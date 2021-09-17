@@ -165,6 +165,9 @@ export abstract class Block extends Events {
             Object.assign(style, {
                 width: ((this as any).widthPercent || 100) + '%'
             });
+            Object.assign(style, {
+                padding: '3px 2px'
+            })
         }
         Object.assign(style, this.pattern.style);
         return style;
