@@ -6,13 +6,10 @@ import { View } from "../../block/element/view";
 import { BlockFactory } from "../../block/factory/block.factory";
 import { ConfigurationManager } from "../../config";
 import { ActionDirective } from "../../history/declare";
-import { HistorySnapshoot } from "../../history/snapshoot";
-import { Kit } from "../../kit";
 import { PageLayout } from "../../layout";
 import { PageDirective } from "../directive";
 import { PageHistory } from "../interaction/history";
 import { PageKeys } from "../interaction/keys";
-import { PageKit } from "../interaction/kit";
 import { TemporaryPurpose } from "./declare";
 
 export class Page$Cycle {
@@ -31,9 +28,6 @@ export class Page$Cycle {
 
             } as any
         });
-        this.kit = new Kit(this);
-        PageKit(this.kit);
-        this.snapshoot = new HistorySnapshoot(this);
         PageHistory(this, this.snapshoot);
         PageKeys(this, this.keyboardPlate);
         this.emit(PageDirective.init);
@@ -155,7 +149,6 @@ export class Page$Cycle {
     onBlur(this: Page, event: FocusEvent) {
         if (this.isFocus == true) {
             this.isFocus = false;
-            this.textTool.close();
             this.kit.explorer.blur();
             this.emit(PageDirective.blur, event);
         }

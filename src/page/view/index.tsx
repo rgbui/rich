@@ -3,7 +3,6 @@ import React from 'react';
 import { Page } from "../index";
 import { PageLayoutView } from "../../layout/view";
 import { ChildsArea } from "../../block/view/appear";
-import { TextTool } from "../../../extensions/text.tool/text.tool";
 import ReactDOM from "react-dom";
 import { KitView } from "../../kit/view";
 /**
@@ -47,16 +46,12 @@ export class PageView extends Component<{ page: Page }>{
             onKeyDownCapture={e => this.page.onKeydown(e.nativeEvent)}
             onFocusCapture={e => this.page.onFocusCapture(e.nativeEvent)}
             onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}
-        >
-            <div className='shy-page-view-box' onMouseDown={e => this.page.onMousedown(e.nativeEvent)}>
+        ><div className='shy-page-view-box' onMouseDown={e => this.page.onMousedown(e.nativeEvent)}>
                 <PageLayoutView pageLayout={this.page.pageLayout}>
                     <div className='shy-page-view-content' ref={e => this.page.contentEl = e}
                     ><ChildsArea childs={this.page.views}></ChildsArea>
                     </div>
                 </PageLayoutView>
-            </div>
-            <div className='shy-page-plugs'>
-                <TextTool ref={e => this.page.registerExtension(e)}></TextTool>
             </div>
             <KitView kit={this.page.kit}></KitView>
         </div>
