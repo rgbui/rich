@@ -4,7 +4,7 @@ import { Block } from "../../block";
 import { BlockCssName } from "../../block/pattern/css";
 import { dom } from "../../common/dom";
 import { Point, Rect } from "../../common/point";
-import { TextToolStyle } from "../../../extensions/text.tool/text.tool";
+import { TextToolStyle } from "../../../extensions/text.tool";
 import { DropDirection } from "../../kit/handle/direction";
 import { Anchor } from "../../kit/selection/anchor";
 
@@ -248,6 +248,9 @@ export class Page$Seek {
             selectionAfterContent = content.substring(to.at);
             selectionContent = content.substring(0, to.at);
         }
+        else {
+            selectionContent = content;
+        }
         return {
             before: selectionBeforeContent,
             current: selectionContent,
@@ -261,7 +264,7 @@ export class Page$Seek {
         textStyle.underline = true;
         textStyle.deleteLine = true;
         textStyle.code = true;
-        textStyle.equation = true;
+        textStyle.equation = false;
         var rowBlock = blocks.first().closest(x => !x.isLine);
         textStyle.blockUrl = rowBlock.url;
         blocks.each(bl => {
@@ -272,16 +275,19 @@ export class Page$Seek {
                 if (font.textDecoration != 'underline') textStyle.underline = false;
                 if (font.textDecoration != 'line-through') textStyle.deleteLine = false;
                 if (!textStyle.color && font.color) textStyle.color = font.color;
-                if (bl.url != '/code') textStyle.code = false;
-                if (bl.url != '/equation') textStyle.equation = false;
+                // if (bl.url != '/code') textStyle.code = false;
+                // if (bl.url != '/equation') textStyle.equation = false;
             }
             else {
                 textStyle.italic = false;
                 textStyle.bold = false;
                 textStyle.underline = false;
                 textStyle.deleteLine = false;
+                // textStyle.code = false;
+                // textStyle.equation = false;
+            }
+            if (!(bl.asTextContent && bl.asTextContent.isCode)) {
                 textStyle.code = false;
-                textStyle.equation = false;
             }
         });
         return textStyle;
