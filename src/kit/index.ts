@@ -30,16 +30,3 @@ export class Kit extends Events {
     handle: Handle;
     view: KitView;
 }
-
-export interface Kit {
-    on(name: 'error', fn: (error: Error) => void);
-    emit(name: 'error', error: Error);
-    on(name: 'inputting', fn: (value: string, anchor: Anchor, options: { start?: number }) => void);
-    emit(name: 'inputting', value: string, anchor: Anchor, options: { start?: number });
-    on(name: 'keydown', fn: (event: KeyboardEvent) => boolean | void);
-    emit(name: "keydown", event: KeyboardEvent): boolean | void;
-    on(name: 'willInput', fn: () => void);
-    emit(name: 'willInput');
-    on(name: "mouseup", fn: (event: MouseEvent) => void);
-    emit(name: 'mouseup', event: MouseEvent);
-}

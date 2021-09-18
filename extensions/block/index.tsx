@@ -75,9 +75,6 @@ class BlockSelector extends React.Component {
     private pos: Point = new Point(0, 0);
     private command: string = '';
     private selectIndex: number = 0;
-    get isVisible() {
-        return this.visible;
-    }
     private _select: (block: BlockSelectorItem, matchValue: string) => void;
     async open(point: Point, text: string, callback: BlockSelector['_select']) {
         var cs = text.match(/(\/|、)[^\s]*$/g);
