@@ -106,7 +106,12 @@ export class Page$Seek {
      */
     searchBlocksBetweenAnchor(this: Page, from: Anchor, to: Anchor, filter?: {
         rowOrCol?: boolean,
-        lineBlock?: boolean
+        lineBlock?: boolean,
+        /**
+         * 这里是否默认考虑边界，比如 from:anchor 是一个block的结尾处 ，
+         * 那么此时通过from-to实际没有选中from所涉及到的block
+         */
+        consideBoundary?: boolean
     }) {
         var bs: Block[] = [];
         var start: Anchor, end: Anchor;
@@ -125,6 +130,14 @@ export class Page$Seek {
         var rs = start.block.nextFindAll(predict, true, c => c == end.block);
         bs.addRange(rs);
         bs.push(end.block);
+        if (filter?.consideBoundary != true) {
+            if (start.isEnd) {
+                bs.remove(s => start.block === s);
+            }
+            if (end.isStart) {
+                bs.remove(s => end.block == s)
+            }
+        }
         return bs;
     }
     cacBlockDirectionByMouse(this: Page, block: Block, event: MouseEvent) {
@@ -231,7 +244,7 @@ export class Page$Seek {
     fissionBlockBySelection(block: Block, from: Anchor, to: Anchor) {
         if (!from.isBefore(to)) [to, from] = [from, to];
         var selectionBeforeContent = '', selectionAfterContent = '', selectionContent = '';
-        var content = from.textContent;
+        var content = block.firstElementAppear.textContent;
         if (block == from.block && block == to.block) {
             //说明block包含选区
             selectionBeforeContent = content.substring(0, from.at);
