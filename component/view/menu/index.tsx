@@ -15,7 +15,8 @@ class MenuPanel<T> extends EventsComponent {
         })
     }
     visible: boolean = false;
-    onClose() {
+    onClose(e: React.MouseEvent) {
+        if (e) e.stopPropagation();
         this.close();
         this.emit('close');
     }
@@ -34,7 +35,7 @@ class MenuPanel<T> extends EventsComponent {
     mb: MenuBox;
     render() {
         return this.visible && <div className='shy-menu-panel'>
-            <div className='shy-menu-mask' style={{ zIndex: popoverLayer.zoom(LayerWield.menuMask) }} onMouseDown={e => this.onClose()}></div>
+            <div className='shy-menu-mask' style={{ zIndex: popoverLayer.zoom(LayerWield.menuMask) }} onMouseDown={e => this.onClose(e)}></div>
             <MenuBox ref={e => this.mb = e} select={(item, event) => this.onSelect(item as any, event)} items={this.menus as any} deep={0}></MenuBox>
         </div>
     }
