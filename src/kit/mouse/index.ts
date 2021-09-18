@@ -1,4 +1,5 @@
 import { Kit } from "..";
+import { useTextTool } from "../../../extensions/text.tool";
 import { Block } from "../../block";
 import { Point } from "../../common/point";
 import { Anchor } from "../selection/anchor";
@@ -97,9 +98,8 @@ export class PageMouse {
         }
         this.page.onHoverBlock(block);
     }
-    onMouseup(event: MouseEvent) {
+    async onMouseup(event: MouseEvent) {
         if (this.isDown) {
-            this.kit.emit('mouseup', event);
             if (this.isMove) {
                 if (!this.downAnchor) this.selector.close();
                 this.isMove = false;
@@ -120,8 +120,9 @@ export class PageMouse {
             }
             this.lastMouseupEvent = event;
             this.lastMouseupDate = Date.now();
-            if (this.explorer.isOnlyAnchor)
-                this.kit.textInput.onFocus();
+            if (this.explorer.isOnlyAnchor) this.kit.textInput.onFocus();
+            if (this.explorer.hasTextRange) await this.explorer.onOpenTextTool(event);
         }
     }
+
 }
