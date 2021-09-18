@@ -59,18 +59,19 @@ class Popover<T extends React.Component> extends EventsComponent<{ component: { 
         }
         if (this.props.visible == 'hidden') {
             return <div ref={e => this.box = e} style={{ display: this.visible == true ? "block" : "none" }}>
-                {this.props.mask == true && <div className={'shy-popover-mask' + (this.props.shadow ? " shy-popover-mask-shadow" : "")} onMouseDown={e => this.onClose()}></div>}
+                {this.props.mask == true && <div className={'shy-popover-mask' + (this.props.shadow ? " shy-popover-mask-shadow" : "")} onMouseDown={e => this.onClose(e)}></div>}
                 <div style={style} className='shy-popover' ref={e => this.el = e}><CP {...this.props.args} ref={e => this.cp = e}></CP></div>
             </div>
         }
         else {
             return <div ref={e => this.box = e} >{this.visible && <>
-                {this.props.mask == true && <div className={'shy-popover-mask' + (this.props.shadow ? " shy-popover-mask-shadow" : "")} onMouseDown={e => this.onClose()}></div>}
+                {this.props.mask == true && <div className={'shy-popover-mask' + (this.props.shadow ? " shy-popover-mask-shadow" : "")} onMouseDown={e => this.onClose(e)}></div>}
                 <div style={style} className='shy-popover' ref={e => this.el = e}><CP {...this.props.args} ref={e => this.cp = e}></CP></div>
             </>}</div>
         }
     }
-    onClose() {
+    onClose(event?: React.MouseEvent) {
+        if (event) event.stopPropagation();
         this.close();
         this.emit('close');
     }
@@ -89,6 +90,8 @@ class Popover<T extends React.Component> extends EventsComponent<{ component: { 
         document.removeEventListener('mousedown', this.onGlobalMousedown, true);
     }
     onGlobalMousedown = (event: MouseEvent) => {
+        if (this.visible == true)
+            event.stopPropagation();
         if (this.el && this.props.mask != true) {
             var target = event.target as HTMLDivElement;
             if (this.el.contains(target)) return;
