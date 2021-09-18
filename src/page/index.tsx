@@ -15,7 +15,6 @@ import { ConfigurationManager } from '../config';
 import { PageConfig, WorkspaceConfig } from '../config/type';
 import { KeyboardPlate } from '../common/keys';
 import { Page$Seek } from './partial/seek';
-import { Page$Extensions } from './partial/extensions';
 import { PageView } from './view';
 import { Exception, ExceptionType } from '../error/exception';
 import { Anchor } from '../kit/selection/anchor';
@@ -29,6 +28,7 @@ import { IconArguments } from '../../extensions/icon/declare';
 import { Mix } from '../../util/mix';
 import { Page$Cycle } from './partial/left.cycle';
 import { Page$Operator } from './partial/operator';
+import { Kit } from '../kit';
 
 export class Page extends Events<PageDirective> {
     el: HTMLElement;
@@ -50,7 +50,8 @@ export class Page extends Events<PageDirective> {
         if (!this.user) throw new Exception(ExceptionType.notUser, 'the user is not null');
         return this.user;
     }
-    snapshoot: HistorySnapshoot;
+    kit: Kit = new Kit(this);
+    snapshoot = new HistorySnapshoot(this)
     cfm: ConfigurationManager;
     loadConfig(pageConfig: PageConfig, workspaceConfig: WorkspaceConfig) {
         if (pageConfig) this.cfm.loadPageConfig(pageConfig);
@@ -121,8 +122,8 @@ export interface Page {
 }
 export interface Page extends PageEvent { }
 export interface Page extends Page$Seek { }
-export interface Page extends Page$Extensions { }
+
 export interface Page extends Page$Cycle { }
 export interface Page extends Page$Operator { }
 export interface Page extends Mix { }
-Mix(Page, PageEvent, Page$Seek, Page$Extensions, Page$Cycle, Page$Operator);
+Mix(Page, PageEvent, Page$Seek, Page$Cycle, Page$Operator);
