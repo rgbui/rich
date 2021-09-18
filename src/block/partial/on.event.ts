@@ -22,6 +22,7 @@ export class Block$Event {
                 name: BlockDirective.trun,
                 text: it.text,
                 icon: it.pic,
+                url: it.url,
                 iconSize: 22
             }
         })

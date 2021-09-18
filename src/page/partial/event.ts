@@ -35,7 +35,7 @@ export class PageEvent {
         /**
          * 如果当前的texttool打开且焦点在texttool，那么此时不是失焦
          */
-        if (this.textTool.isVisible == true && this.textTool.isDown) { return; }
+        //if (this.textTool.isVisible == true && this.textTool.isDown) { return; }
         var el = event.relatedTarget as Node;
         if (!el || el && (!this.el.contains(el) || el === this.el)) {
             this.onBlur(event);

@@ -10,6 +10,7 @@ import { Exception, ExceptionType } from "../../error/exception";
 import { ActionDirective } from "../../history/declare";
 import { Events } from "../../../util/events";
 import { Anchor } from "./anchor";
+import { useTextTool } from "../../../extensions/text.tool";
 export class SelectionExplorer extends Events {
     /**
      * 这个和选区有区别，选区只是争对单行的block进行文字进行操作
@@ -372,17 +373,42 @@ export class SelectionExplorer extends Events {
                 }
             });
             if (newStart && newEnd) {
-                var newStartAnchor = this.createAnchor(newStart);
-                newStartAnchor.acceptView(this.start);
-                this.start = newStartAnchor;
-                var newEndAnchor = this.createAnchor(newEnd, -1);
-                newEndAnchor.acceptView(this.end);
-                this.end = newEndAnchor;
+                /**
+                 * 这时的newStart
+                 * newEnd是现创建的，
+                 * 所以对光标的操作可能得在渲染之后才可以触发
+                 */
                 this.page.onUpdated(async () => {
+                    var newStartAnchor = this.createAnchor(newStart);
+                    newStartAnchor.acceptView(this.start);
+                    this.start = newStartAnchor;
+                    var newEndAnchor = this.createAnchor(newEnd, -1);
+                    newEndAnchor.acceptView(this.end);
+                    this.end = newEndAnchor;
                     this.renderSelection();
                 });
             }
         });
+    }
+    async onOpenTextTool(event: MouseEvent) {
+        var lineBlock = this.selectedBlocks.first().closest(x => !x.isLine)
+        while (true) {
+            var result = await useTextTool(this.getSelectionPoint(), {
+                block: lineBlock,
+                style: this.page.pickBlocksTextStyle(this.selectedBlocks)
+            });
+            if (result) {
+                if (result.command == 'setStyle') {
+                    await this.onSelectionSetPattern(result.styles);
+                }
+                else if (result.command == 'turn') {
+                    await lineBlock.onClickContextMenu(result.item, result.event);
+                    break;
+                }
+            }
+            else break;
+        }
+
     }
     /**
      * 获取选区选择的block
@@ -402,7 +428,7 @@ export class SelectionExplorer extends Events {
         return this.start && this.end || this.currentSelectedBlocks.length > 0
     }
     get hasTextRange() {
-        return this.start && this.end && this.currentSelectedBlocks.length == 0 && this.start.elementAppear == this.end.elementAppear && this.start.elementAppear.isText
+        return this.start && this.end && this.currentSelectedBlocks.length == 0 && this.page.isInlineAnchor(this.start, this.end)
     }
     get isOnlyAnchor() {
         return this.start && !this.end;
