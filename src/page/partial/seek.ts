@@ -115,8 +115,7 @@ export class Page$Seek {
     }) {
         var bs: Block[] = [];
         var start: Anchor, end: Anchor;
-        var pos = from.el.compareDocumentPosition(to.el);
-        if (pos == 4 || pos == 20) {
+        if (from.isBefore(to)) {
             start = from;
             end = to;
         }
@@ -127,7 +126,7 @@ export class Page$Seek {
         var predict = (g) => true;
         if (filter && filter.rowOrCol == true && !filter.lineBlock) predict = (g: Block) => !g.isRow && !g.isCol;
         else if (filter && filter.lineBlock == true && filter.rowOrCol == true) predict = (g: Block) => !g.isLine && !g.isRow && !g.isCol;
-        var rs = start.block.nextFindAll(predict, true, c => c == end.block);
+        var rs = start.block.nextFindAll(predict, true, c => c === end.block);
         bs.addRange(rs);
         bs.push(end.block);
         if (filter?.consideBoundary != true) {
@@ -135,7 +134,7 @@ export class Page$Seek {
                 bs.remove(s => start.block === s);
             }
             if (end.isStart) {
-                bs.remove(s => end.block == s)
+                bs.remove(s => end.block === s)
             }
         }
         return bs;

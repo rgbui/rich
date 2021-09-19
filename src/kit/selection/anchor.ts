@@ -4,7 +4,6 @@ import { dom } from "../../common/dom";
 import { Rect } from "../../common/point";
 import { TextEle } from "../../common/text.ele";
 import { SelectionExplorer } from "./explorer";
-
 /***
  * 鼠标点击后产生的锚点
  * 该锚点只是表示点在什么地方
@@ -31,7 +30,7 @@ export class Anchor {
      * 光标是否为于文字开始位置
      */
     get isStart() {
-        return this.at == 0 ? true : false;
+        return this.at === 0 ? true : false;
     }
     /**
      * 光标是否为文字末尾
