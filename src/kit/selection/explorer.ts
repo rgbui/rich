@@ -2,7 +2,6 @@ import { Kit } from "..";
 import { TextContent } from "../../block/element/text";
 import { Block } from "../../block";
 import { BlockUrlConstant } from "../../block/constant";
-import { BlockRenderRange } from "../../block/enum";
 import { BlockCssName } from "../../block/pattern/css";
 import { KeyboardCode } from "../../common/keys";
 import { Point } from "../../common/point";
@@ -11,18 +10,21 @@ import { ActionDirective } from "../../history/declare";
 import { Events } from "../../../util/events";
 import { Anchor } from "./anchor";
 import { useTextTool } from "../../../extensions/text.tool";
+import { SelectionExplorer$Events } from "./event";
+import { Mix } from "../../../util/mix";
 export class SelectionExplorer extends Events {
     /**
      * 这个和选区有区别，选区只是争对单行的block进行文字进行操作
      * 这个是当前选择的block，最起码一个以上的
      */
     private currentSelectedBlocks: Block[] = [];
-    private start: Anchor;
-    private end: Anchor;
+    start: Anchor;
+    end: Anchor;
     public kit: Kit;
     constructor(kit: Kit) {
         super();
         this.kit = kit;
+        this.__init_mixs();
     }
     get page() {
         return this.kit.page;
@@ -419,7 +421,11 @@ export class SelectionExplorer extends Events {
         else {
             if (this.start && !this.end) return [this.start.block.closest(x => !x.isLine)]
             else if (this.start && this.end) {
-                return this.page.searchBlocksBetweenAnchor(this.start, this.end);
+                var rs = this.page.searchBlocksBetweenAnchor(this.start, this.end);
+                if (rs.length == 0) {
+                    console.error(rs, this.start, this.end);
+                }
+                return rs;
             }
         }
         return [];
@@ -455,3 +461,11 @@ export class SelectionExplorer extends Events {
         else return Point.from(this.end.view.getBoundingClientRect())
     }
 }
+
+export interface SelectionExplorer extends SelectionExplorer$Events {
+
+}
+export interface SelectionExplorer extends Mix {
+
+}
+Mix(SelectionExplorer, SelectionExplorer$Events)
