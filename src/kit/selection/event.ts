@@ -13,6 +13,51 @@ export class SelectionExplorer$Events {
      * 删除选区
      */
     async onDeleteSelection(this: SelectionExplorer) {
+        await this.page.onAction(ActionDirective.onDeleteSelection, async () => {
+            if (this.currentSelectedBlocks.length > 0) {
+                await this.currentSelectedBlocks.eachAsync(async block => {
+                    await block.delete();
+                });
+                this.onCancelSelection();
+            }
+            else {
+                var newAnchor: { block: Block, at?: number } = { block: null };
+                var bs = this.selectedBlocks;
+                var start = this.start;
+                var end = this.end;
+                if (end.isBefore(start)) {
+                    start = this.end;
+                    end = this.start;
+                }
+                await bs.eachAsync(async (block) => {
+                    if (!block.isOnlyElementText) await block.delete();
+                    if (block == start.block && block == end.block) {
+                        var ae = block.firstElementAppear;
+                        var text = block[ae.prop];
+                        text = text.slice(0, start.at) + text.slice(end.at);
+                        block.updateProps({ [ae.prop]: text });
+                        newAnchor = { block: start.block, at: start.at };
+                    }
+                    else if (block == start.block) {
+                        var ae = block.firstElementAppear;
+                        var text = block[ae.prop];
+                        text = text.slice(0, start.at);
+                        block.updateProps({ [ae.prop]: text });
+                        newAnchor = { block: start.block, at: start.at };
+                    }
+                    else if (block == end.block) {
+                        var ae = block.firstElementAppear;
+                        var text = block[ae.prop];
+                        text = text.slice(end.at);
+                        block.updateProps({ [ae.prop]: text });
+                        newAnchor = { block: end.block, at: 0 };
+                    }
+                    else {
+                        await block.delete();
+                    }
+                });
+            }
+        })
         // await this.page.onAction(ActionDirective.onDeleteSelection, async () => {
         //     if (this.currentSelectedBlocks.length > 0) {
         //         await this.currentSelectedBlocks.eachAsync(async block => {

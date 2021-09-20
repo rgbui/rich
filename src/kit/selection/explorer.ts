@@ -17,7 +17,7 @@ export class SelectionExplorer extends Events {
      * 这个和选区有区别，选区只是争对单行的block进行文字进行操作
      * 这个是当前选择的block，最起码一个以上的
      */
-    private currentSelectedBlocks: Block[] = [];
+    currentSelectedBlocks: Block[] = [];
     start: Anchor;
     end: Anchor;
     public kit: Kit;
