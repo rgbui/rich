@@ -46,6 +46,7 @@ export class PageView extends Component<{ page: Page }>{
             onKeyDownCapture={e => this.page.onKeydown(e.nativeEvent)}
             onFocusCapture={e => this.page.onFocusCapture(e.nativeEvent)}
             onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}
+            onWheel={e => this.page.onWheel(e)}
         ><div className='shy-page-view-box' onMouseDown={e => this.page.onMousedown(e.nativeEvent)}>
                 <PageLayoutView pageLayout={this.page.pageLayout}>
                     <div className='shy-page-view-content' ref={e => this.page.contentEl = e}

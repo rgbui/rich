@@ -41,6 +41,9 @@ export class PageEvent {
             this.onBlur(event);
         }
     }
+    onWheel(this: Page, event: React.WheelEvent) {
+        this.kit.handle.onCloseBlockHandle();
+    }
     /**
      * 主要是捕获取当前页面用户的按键情况
      * @param this 
