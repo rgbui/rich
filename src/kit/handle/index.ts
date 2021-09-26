@@ -40,7 +40,7 @@ export class Handle extends Events {
             this.onDropOverBlock(this.handleBlock, this.kit.mouse.moveEvent);
         }
     }
-    onCloseBlockHanlde() {
+    onCloseBlockHandle() {
         var handleEl = this.view.handleEle;
         handleEl.style.display = 'none';
         if (!this.view.isDown)
