@@ -33,7 +33,7 @@ export class KeyboardPlate {
             this.keys.push(event.key as KeyboardCode);
         for (let i = 0; i < this.listeners.length; i++) {
             let listener = this.listeners[i];
-            if (listener.predict(this) == true) await listener.action(this);
+            if (listener.predict(this) == true) await listener.action(event, this);
         }
     }
     keyup(event: KeyboardEvent) {
@@ -86,8 +86,8 @@ export class KeyboardPlate {
         }
         return false;
     }
-    private listeners: { predict: (kbp: KeyboardPlate) => boolean, action: (kbp: KeyboardPlate) => Promise<void> }[] = [];
-    listener(predict: (kbp: KeyboardPlate) => boolean, action: (kbp: KeyboardPlate) => Promise<void>) {
+    private listeners: { predict: (kbp: KeyboardPlate) => boolean, action: (event: KeyboardEvent, kbp: KeyboardPlate) => Promise<void> }[] = [];
+    listener(predict: (kbp: KeyboardPlate) => boolean, action: (event: KeyboardEvent, kbp: KeyboardPlate) => Promise<void>) {
         this.listeners.push({ predict, action });
     }
 }
