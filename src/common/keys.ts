@@ -24,7 +24,7 @@ export class KeyboardPlate {
      * 建议当前的keydown绑定按键捕获事件
      * @param event 
      */
-    async keydown(event: KeyboardEvent) {
+    keydown(event: KeyboardEvent) {
         this.metaKey = event.metaKey;
         this.altKey = event.altKey;
         this.shiftKey = event.shiftKey;
@@ -33,7 +33,7 @@ export class KeyboardPlate {
             this.keys.push(event.key as KeyboardCode);
         for (let i = 0; i < this.listeners.length; i++) {
             let listener = this.listeners[i];
-            if (listener.predict(this) == true) await listener.action(event, this);
+            if (listener.predict(this) == true && typeof listener.keydown == 'function') listener.keydown(event, this);
         }
     }
     keyup(event: KeyboardEvent) {
@@ -41,19 +41,23 @@ export class KeyboardPlate {
         this.altKey = event.altKey;
         this.shiftKey = event.shiftKey;
         this.ctrlKey = event.ctrlKey;
+        for (let i = 0; i < this.listeners.length; i++) {
+            let listener = this.listeners[i];
+            if (listener.predict(this) == true && typeof listener.keyup == 'function') listener.keyup(event, this);
+        }
         this.keys.removeAll(event.key as KeyboardCode);
     }
     is(...codes: KeyboardCode[]) {
-        return this.keys.exists(g => codes.exists(g));
+        return this.keys.exists(g => codes.exists(c => c.toLowerCase() == g.toLowerCase()));
     }
     isContains(...codes: KeyboardCode[]) {
-        return this.keys.length >= codes.length && codes.each(c => this.keys.exists(c))
+        return this.keys.length >= codes.length && codes.each(c => this.keys.exists(k => k.toLowerCase() == c.toLowerCase()))
     }
     isEqual(...codes: KeyboardCode[]) {
-        return this.keys.length == codes.length && codes.each(c => this.keys.exists(c))
+        return this.keys.length == codes.length && codes.each(c => this.keys.exists(k => k.toLowerCase() == c.toLowerCase()))
     }
     only(code: KeyboardCode) {
-        if (this.keys[0] === code && this.keys.length == 1) {
+        if (this.keys.length == 1 && this.keys[0].toLowerCase() === code.toLowerCase()) {
             if (this.altKey == false && this.ctrlKey == false && this.metaKey == false && this.shiftKey == false) return true;
         }
         return false;
@@ -86,9 +90,13 @@ export class KeyboardPlate {
         }
         return false;
     }
-    private listeners: { predict: (kbp: KeyboardPlate) => boolean, action: (event: KeyboardEvent, kbp: KeyboardPlate) => Promise<void> }[] = [];
-    listener(predict: (kbp: KeyboardPlate) => boolean, action: (event: KeyboardEvent, kbp: KeyboardPlate) => Promise<void>) {
-        this.listeners.push({ predict, action });
+    private listeners: {
+        predict: (kbp: KeyboardPlate) => boolean,
+        keydown: (event: KeyboardEvent, kbp: KeyboardPlate) => void,
+        keyup?: (event: KeyboardEvent, kbp: KeyboardPlate) => void,
+    }[] = [];
+    listener(predict: (kbp: KeyboardPlate) => boolean, keydown: (event: KeyboardEvent, kbp: KeyboardPlate) => void, keyup?: (event: KeyboardEvent, kbp: KeyboardPlate) => void) {
+        this.listeners.push({ predict, keydown: keydown, keyup });
     }
 }
 
