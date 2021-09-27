@@ -119,6 +119,9 @@ export class SelectionExplorer extends Events {
         this.currentSelectedBlocks = [];
         this.renderSelection();
     }
+    onFocusBlockAtAnchor(block: Block, at?: number) {
+        this.onFocusAnchor(this.createAnchor(block, at));
+    }
     onShiftFocusAnchor(anchor: Anchor) {
         if (this.end) anchor.acceptView(this.end);
         this.end = anchor;
