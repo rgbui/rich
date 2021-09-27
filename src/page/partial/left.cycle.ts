@@ -163,11 +163,11 @@ export class Page$Cycle {
         this.emit(PageDirective.hoverBlock, this.hoverBlock);
         if (this.hoverBlock)
             this.kit.handle.onShowBlockHandle(this.hoverBlock);
-        else this.kit.handle.onCloseBlockHanlde();
+        else this.kit.handle.onCloseBlockHandle();
     }
     onOutHoverBlock(this: Page, block: Block) {
         this.emit(PageDirective.hoverOutBlock, block);
-        this.kit.handle.onCloseBlockHanlde();
+        this.kit.handle.onCloseBlockHandle();
     }
     /**
    * 申明一个临时的缓存标记，当前的数据均以这个标记做为标记，

@@ -128,9 +128,8 @@ export interface HistorySnapshoot {
     emit(name: 'undo', action: UserAction);
     emit(name: 'redo', action: UserAction);
     emit(name: "history", action: UserAction);
-    record(directive: OperatorDirective.updateText, data: { blockId: string, old: string, new: string });
     record(directive: OperatorDirective.delete, data: { parentId: string, childKey?: string, at?: number, preBlockId?: string, data: Record<string, any> });
-    record(directive: OperatorDirective.remove, data: { parentId: string, childKey?: string, at?: number, preBlockId?: string });
+    record(directive: OperatorDirective.remove, data: { parentId: string, childKey?: string, at?: number, preBlockId?: string, blockId: string });
     record(directive: OperatorDirective.updateProp, data: { blockId: string, old: any, new: any });
     record(directive: OperatorDirective.create, data: { parentId: string, childKey?: string, at?: number, preBlockId?: string, data: Record<string, any> });
     record(directive: OperatorDirective.append, data: { parentId: string, childKey?: string, blockId: string, at?: number, preBlockId?: string });
@@ -139,7 +138,7 @@ export interface HistorySnapshoot {
      * @param directive 
      * @param data 
      */
-    record(directive: OperatorDirective.inputStore, data: { blockId: string, start: number, end: number, prop?: string, text: string });
+    record(directive: OperatorDirective.inputStore, data: { blockId: string, start: number, end: number, prop?: string, text: string, replaceText: string });
     /**
      * 删除的内容，区间表示[end,start],删除的内容为text
      * 这里的start一般会比end大，表示从start位置删除文字
