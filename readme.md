@@ -6,6 +6,7 @@
 * [katex](https://github.com/KaTeX/KaTeX)
 * [react-svgr](https://react-svgr.com/docs/options/)
 * [dayjs](https://dayjs.gitee.io/docs/zh-CN/installation/installation)
+* [ua-parser-js](https://github.com/faisalman/ua-parser-js) 判断当前环境的库
 ## block 引用的库
 * [代码高亮prismjs](https://prismjs.com/#examples)
 * [sheetjs](https://github.com/SheetJS/sheetjs)
