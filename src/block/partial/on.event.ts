@@ -101,13 +101,15 @@ export class Block$Event {
     }
     async onInputStore(this: Block, appear: AppearAnchor, value: string, at: number, end: number, action?: () => Promise<void>) {
         await this.page.onAction(ActionDirective.onInputText, async () => {
+            var replaceText = this[appear.prop].slice(at, end);
             this[appear.prop] = appear.textContent;
             this.page.snapshoot.record(OperatorDirective.inputStore, {
                 blockId: this.id,
                 start: at,
                 end: end,
                 text: value,
-                prop: appear.prop
+                prop: appear.prop,
+                replaceText
             });
             if (typeof action == 'function') await action();
         })
