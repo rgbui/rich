@@ -10,6 +10,21 @@ import { Anchor } from "./anchor";
 import { SelectionExplorer } from "./explorer";
 export class SelectionExplorer$Events {
     /**
+    * 取消选区
+    */
+    onCancelSelection(this: SelectionExplorer) {
+        if (this.currentSelectedBlocks.length > 0) {
+            this.currentSelectedBlocks = [];
+        }
+        else {
+            if (this.start && this.start != this.activeAnchor)
+                this.start.dispose()
+            if (this.end && this.end != this.activeAnchor)
+                this.end.dispose()
+        }
+        this.renderSelection();
+    }
+    /**
      * 删除选区
      */
     async onDeleteSelection(this: SelectionExplorer) {

@@ -128,11 +128,12 @@ export interface HistorySnapshoot {
     emit(name: 'undo', action: UserAction);
     emit(name: 'redo', action: UserAction);
     emit(name: "history", action: UserAction);
+
     record(directive: OperatorDirective.delete, data: { parentId: string, childKey?: string, at?: number, preBlockId?: string, data: Record<string, any> });
-    record(directive: OperatorDirective.remove, data: { parentId: string, childKey?: string, at?: number, preBlockId?: string, blockId: string });
-    record(directive: OperatorDirective.updateProp, data: { blockId: string, old: any, new: any });
     record(directive: OperatorDirective.create, data: { parentId: string, childKey?: string, at?: number, preBlockId?: string, data: Record<string, any> });
+    record(directive: OperatorDirective.remove, data: { parentId: string, childKey?: string, blockId: string, at?: number, preBlockId?: string });
     record(directive: OperatorDirective.append, data: { parentId: string, childKey?: string, blockId: string, at?: number, preBlockId?: string });
+    record(directive: OperatorDirective.updateProp, data: { blockId: string, old: any, new: any });
     /**
      * 替换文本内容，表示在[start,end]之间替成成text
      * @param directive 
@@ -146,6 +147,7 @@ export interface HistorySnapshoot {
      * @param data 
      */
     record(directive: OperatorDirective.inputDeleteStore, data: { blockId: string, start: number, end: number, prop?: string, text: string });
+
     record(directive: OperatorDirective.arrayPropInsert, data: { blockId: string, at: number, data: Record<string, any>, propKey: string });
     record(directive: OperatorDirective.arrayPropRemove, data: { blockId: string, at: number, data: Record<string, any>, propKey: string });
     record(directive: OperatorDirective.arrayPropUpdate, data: { blockId: string, at: number, old: Record<string, any>, new: Record<string, any>, propKey: string });
