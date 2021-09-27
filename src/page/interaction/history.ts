@@ -64,31 +64,44 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         }
     });
     snapshoot.registerOperator(OperatorDirective.create, async (operator) => {
-        await page.createBlock(operator.data.data.url,
+        var block = await page.createBlock(operator.data.data.url,
             operator.data.data,
             page.find(x => x.id == operator.data.parentId),
             operator.data.at,
             operator.data.childKey
-        )
+        );
+        page.onUpdated(async () => {
+            page.kit.explorer.onFocusBlockAtAnchor(block);
+        });
     }, async (operator) => {
         var block = page.find(x => x.id == operator.data.data.id);
         if (block) {
+            if (page.kit.explorer.selectedBlocks.exists(block)) page.kit.explorer.onClearAnchor();
             await block.delete()
         }
     });
     snapshoot.registerOperator(OperatorDirective.delete, async (operator) => {
         var block = page.find(x => x.id == operator.data.data.id);
         if (block) {
+            page.onUpdated(async () => {
+                page.kit.explorer.onFocusBlockAtAnchor(block,
+                    operator.data.end + operator.data.text.length
+                );
+            });
             await block.delete()
         }
     }, async (operator) => {
-        await page.createBlock(operator.data.data.url,
+        var block = await page.createBlock(operator.data.data.url,
             operator.data.data,
             page.find(x => x.id == operator.data.parentId),
             operator.data.at,
             operator.data.childKey
-        )
+        );
+        page.onUpdated(async () => {
+            page.kit.explorer.onFocusBlockAtAnchor(block);
+        });
     });
+
     snapshoot.registerOperator(OperatorDirective.remove, async (operator) => {
         var block = page.find(x => x.id == operator.data.blockId);
         if (block) {
@@ -102,9 +115,16 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         }
     });
     snapshoot.registerOperator(OperatorDirective.append, async (operator) => {
-
+        var block = page.find(x => x.id == operator.data.blockId);
+        var parent = page.find(x => x.id == operator.data.parentId);
+        if (parent) {
+            await parent.append(block, operator.data.at, operator.data.childKey);
+        }
     }, async (operator) => {
-
+        var block = page.find(x => x.id == operator.data.blockId);
+        if (block) {
+            await block.remove();
+        }
     });
     snapshoot.registerOperator(OperatorDirective.updateProp, async (operator) => {
         var block = page.find(x => x.id == operator.data.blockId);
