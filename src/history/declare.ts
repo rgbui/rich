@@ -17,8 +17,6 @@ export enum ActionDirective {
     onBatchTurn = 111,
     onDeleteSelection = 112,
     onInputDetector = 113,
-
-
     onSchemaCreateField = 200,
     onSchemaDeleteField = 201,
     onSchemaTurnField = 202,
@@ -33,7 +31,6 @@ export enum OperatorDirective {
     /**
      * 更新文本
      */
-    updateText = 100,
     inputStore = 101,
     inputDeleteStore = 102,
     create = 103,
@@ -45,11 +42,11 @@ export enum OperatorDirective {
      * 移除，可以认为是脱离了当前节点树
      */
     remove = 105,
+    append = 107,
     /**
      * 更新属性
      */
     updateProp = 106,
-    append = 107,
     /**
      * 数组属性发生变化
      */
@@ -59,6 +56,7 @@ export enum OperatorDirective {
 
     insertStyle = 200,
     mergeStyle = 201,
+    deleteStyle=202,
 
     schemaRowUpdate = 300,
     schemaCreateRow = 301,
