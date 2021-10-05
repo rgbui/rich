@@ -1,5 +1,6 @@
 import ReactDOM from "react-dom";
 import { Page } from "..";
+import { langProvider } from "../../../i18n/provider";
 import { util } from "../../../util/util";
 import { Block } from "../../block";
 import { View } from "../../block/element/view";
@@ -14,6 +15,7 @@ import { TemporaryPurpose } from "./declare";
 
 export class Page$Cycle {
     async init(this: Page) {
+        await langProvider.import();
         this.cfm = new ConfigurationManager(this);
         this.cfm.loadPageConfig({
             fontCss: {
