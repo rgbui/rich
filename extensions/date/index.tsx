@@ -4,13 +4,13 @@ import React, { CSSProperties } from "react";
  * 
  */
 import dayjs, { Dayjs } from "dayjs";
-import { EventsComponent } from "../../component/events.component";
+import { EventsComponent } from "../../component/lib/events.component";
 import { Point, Rect, RectUtility } from "../../src/common/point";
 
 import chevronLeft from "../../src/assert/svg/chevronLeft.svg";
 import chevronRight from "../../src/assert/svg/chevronRight.svg";
 import { Icon } from "../../component/view/icon";
-import { Singleton } from "../../component/Singleton";
+import { Singleton } from "../../component/lib/Singleton";
 import "./style.less";
 import { PopoverPosition } from "../popover/position";
 

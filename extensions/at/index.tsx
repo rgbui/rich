@@ -2,7 +2,7 @@ import React from "react";
 import { createPortal } from "react-dom";
 import { KeyboardCode } from "../../src/common/keys";
 import { Point } from "../../src/common/point";
-import { EventsComponent } from "../../component/events.component";
+import { EventsComponent } from "../../component/lib/events.component";
 import { ReferenceSelectorData } from "./data";
 
 export class AtSelector extends EventsComponent {

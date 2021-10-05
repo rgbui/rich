@@ -2,7 +2,7 @@ import React from "react";
 import { Tip } from "../../component/view/tip";
 import { LangID } from "../../i18n/declare";
 import { OutsideUrl } from "../link/outside";
-import { EventsComponent } from "../../component/events.component";
+import { EventsComponent } from "../../component/lib/events.component";
 import { UploadView } from "./upload";
 import Link from "../../src/assert/svg/link.svg";
 import Upload from "../../src/assert/svg/upload.svg";

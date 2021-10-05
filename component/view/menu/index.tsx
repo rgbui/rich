@@ -1,11 +1,11 @@
 import React from "react";
 import { PopoverPosition } from "../../../extensions/popover/position";
-import { Singleton } from "../../Singleton";
-import { EventsComponent } from "../../events.component";
+import { Singleton } from "../../lib/Singleton";
+import { EventsComponent } from "../../lib/events.component";
 import "./style.less";
 import { MenuBox } from "./box";
 import { MenuItemType, MenuItemTypeValue } from "./declare";
-import { LayerWield, popoverLayer } from "../../zindex";
+import { LayerWield, popoverLayer } from "../../lib/zindex";
 class MenuPanel<T> extends EventsComponent {
     open(pos: PopoverPosition, menus: MenuItemType<T>[]) {
         this.menus = menus;

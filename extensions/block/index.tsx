@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Singleton } from "../../component/Singleton";
+import { Singleton } from "../../component/lib/Singleton";
 import { LangID } from "../../i18n/declare";
 import { Sp } from "../../i18n/view";
 import { KeyboardCode } from "../../src/common/keys";

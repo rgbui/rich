@@ -1,6 +1,6 @@
 import React from "react";
 import { IconArguments } from "../extensions/icon/declare";
-import { EventsComponent } from "./events.component";
+import { EventsComponent } from "./lib/events.component";
 class Notify extends React.Component<NotityProps> {
 
 }

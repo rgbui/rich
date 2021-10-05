@@ -1,8 +1,8 @@
 import React from "react";
 import { Dragger } from "../../src/common/dragger";
 import { Point, Rect, RectUtility } from "../../src/common/point";
-import { EventsComponent } from "../../component/events.component";
-import { Singleton } from "../../component/Singleton";
+import { EventsComponent } from "../../component/lib/events.component";
+import { Singleton } from "../../component/lib/Singleton";
 import './style.less';
 
 /**

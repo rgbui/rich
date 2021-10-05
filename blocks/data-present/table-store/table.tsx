@@ -15,7 +15,7 @@ import { FieldType } from "../schema/field.type";
 import { ActionDirective, OperatorDirective } from "../../../src/history/declare";
 import { Field } from "../schema/field";
 import { TableStoreHead } from "./head";
-import { Confirm } from "../../../component/confirm";
+import { Confirm } from "../../../component/lib/confirm";
 import { PageDirective } from "../../../src/page/directive";
 
 /***

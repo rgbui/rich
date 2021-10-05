@@ -1,5 +1,5 @@
 
-import { EventsComponent } from "../../component/events.component";
+import { EventsComponent } from "../../component/lib/events.component";
 import React from "react";
 import { Tip } from "../../component/view/tip";
 import { LangID } from "../../i18n/declare";

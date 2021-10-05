@@ -5,7 +5,7 @@ import Equation from "../../src/assert/svg/equation.svg";
 import Mention from "../../src/assert/svg/mention.svg";
 import { Dragger } from "../../src/common/dragger";
 import { TextCommand } from "./text.command";
-import { EventsComponent } from "../../component/events.component";
+import { EventsComponent } from "../../component/lib/events.component";
 import { BlockCssName, FillCss } from "../../src/block/pattern/css";
 import { LangID } from "../../i18n/declare";
 import { Tip } from "../../component/view/tip";
@@ -13,7 +13,7 @@ import { useLinkPicker } from "../link/picker";
 import { useColorSelector } from "../color";
 import { Block } from "../../src/block";
 import { useSelectMenuItem } from "../../component/view/menu";
-import { Singleton } from "../../component/Singleton";
+import { Singleton } from "../../component/lib/Singleton";
 import { MenuItemType } from "../../component/view/menu/declare";
 import { BlockDirective } from "../../src/block/enum";
 
