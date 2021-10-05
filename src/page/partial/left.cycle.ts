@@ -15,7 +15,7 @@ import { TemporaryPurpose } from "./declare";
 
 export class Page$Cycle {
     async init(this: Page) {
-        await langProvider.import();
+      
         this.cfm = new ConfigurationManager(this);
         this.cfm.loadPageConfig({
             fontCss: {
@@ -33,6 +33,7 @@ export class Page$Cycle {
         PageHistory(this, this.snapshoot);
         PageKeys(this, this.keyboardPlate);
         this.emit(PageDirective.init);
+        await langProvider.import();
     }
     async load(this: Page, data: Record<string, any>) {
         if (!data) {
