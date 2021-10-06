@@ -18,7 +18,7 @@ export class UserAction {
     /**
      * 系统时间，用户调整用户的操作指令
      */
-    timingSequence: number;
+    sequence: number;
     directive: ActionDirective | string;
     operators: UserOperator[] = [];
     constructor() {
