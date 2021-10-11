@@ -6,6 +6,7 @@ import { Block } from "../../block";
 import { View } from "../../block/element/view";
 import { BlockFactory } from "../../block/factory/block.factory";
 import { ConfigurationManager } from "../../config";
+import { UserAction } from "../../history/action";
 import { ActionDirective } from "../../history/declare";
 import { PageLayout } from "../../layout";
 import { PageDirective } from "../directive";
@@ -15,7 +16,6 @@ import { TemporaryPurpose } from "./declare";
 
 export class Page$Cycle {
     async init(this: Page) {
-      
         this.cfm = new ConfigurationManager(this);
         this.cfm.loadPageConfig({
             fontCss: {
@@ -58,6 +58,12 @@ export class Page$Cycle {
         if (typeof this.pageLayout == 'undefined') this.pageLayout = new PageLayout(this);
         await this.onRepair();
         await this.emit(PageDirective.loaded);
+    }
+    async loadUserActions(this: Page, actions: UserAction[]) {
+        for (let i = 0; i < actions.length; i++) {
+            let action = actions[i];
+            await this.snapshoot.redoUserAction(action);
+        }
     }
     async get(this: Page) {
         var json: Record<string, any> = {

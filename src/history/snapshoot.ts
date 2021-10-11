@@ -85,14 +85,7 @@ export class HistorySnapshoot extends Events {
     }
     private async redo(action: UserAction) {
         await this.sync(ActionDirective.onRedo, async () => {
-            for (let i = 0; i < action.operators.length; i++) {
-                let op = action.operators[i];
-                var command = this.ops.get(op.directive);
-                if (command) {
-                    await command.redo(op);
-                }
-                else this.emit("warn", new Warn(ExceptionType.notRegisterActionDirectiveInHistorySnapshoot))
-            }
+            await this.redoUserAction(action);
         });
         this.emit('redo', action)
     }
@@ -114,6 +107,16 @@ export class HistorySnapshoot extends Events {
     }
     async onUndo() {
         this.historyRecord.undo()
+    }
+    async redoUserAction(action: UserAction) {
+        for (let i = 0; i < action.operators.length; i++) {
+            let op = action.operators[i];
+            var command = this.ops.get(op.directive);
+            if (command) {
+                await command.redo(op);
+            }
+            else this.emit("warn", new Warn(ExceptionType.notRegisterActionDirectiveInHistorySnapshoot))
+        }
     }
 }
 
