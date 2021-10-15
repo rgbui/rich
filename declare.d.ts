@@ -22,3 +22,8 @@ declare module '*.png';
 declare module '*.jpeg';
 declare module '*.webp';
 declare module '*.gif';
+
+declare module "*.json" {
+  const file: any;
+  export default file;
+}

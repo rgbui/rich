@@ -19,8 +19,8 @@ class EmojiStore {
     }
     async import() {
         //加载数据
-        var r = await Axios.get('/data/emoji.json');
-        this.emojis = r.data;
+        var r = await import('./emoji.json');
+        this.emojis = r.default;
         this.isLoad = true;
     }
 }
