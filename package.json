@@ -33,6 +33,7 @@
     "rc-tooltip": "^5.0.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-loadable": "^5.5.0",
     "react-router": "^5.2.0",
     "resize-observer-polyfill": "^1.5.1",
     "short-uuid": "^4.2.0",
