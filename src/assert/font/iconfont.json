@@ -6,6 +6,62 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "1467367",
+      "name": "linux",
+      "font_class": "linux",
+      "unicode": "e69f",
+      "unicode_decimal": 59039
+    },
+    {
+      "icon_id": "1041",
+      "name": "平板电脑",
+      "font_class": "ipad",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "77156",
+      "name": "微信",
+      "font_class": "wechat",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "217197",
+      "name": "mac",
+      "font_class": "mac",
+      "unicode": "e667",
+      "unicode_decimal": 58983
+    },
+    {
+      "icon_id": "217235",
+      "name": "android",
+      "font_class": "android",
+      "unicode": "e669",
+      "unicode_decimal": 58985
+    },
+    {
+      "icon_id": "475702",
+      "name": "mac-os",
+      "font_class": "ios",
+      "unicode": "e636",
+      "unicode_decimal": 58934
+    },
+    {
+      "icon_id": "1567694",
+      "name": "windows",
+      "font_class": "windows",
+      "unicode": "e6bc",
+      "unicode_decimal": 59068
+    },
+    {
+      "icon_id": "11983530",
+      "name": "chrome",
+      "font_class": "chrome",
+      "unicode": "ea09",
+      "unicode_decimal": 59913
+    },
+    {
       "icon_id": "20710437",
       "name": "编辑",
       "font_class": "bianji",
@@ -487,13 +543,6 @@
       "font_class": "close",
       "unicode": "e66f",
       "unicode_decimal": 58991
-    },
-    {
-      "icon_id": "15838447",
-      "name": "comment",
-      "font_class": "comment",
-      "unicode": "e671",
-      "unicode_decimal": 58993
     },
     {
       "icon_id": "15838451",
