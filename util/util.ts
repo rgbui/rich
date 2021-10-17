@@ -71,5 +71,12 @@ export var util = {
             json[key] = obj[key]
         });
         return json;
+    },
+    delay(time) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve(true);
+            }, time);
+        })
     }
 }
