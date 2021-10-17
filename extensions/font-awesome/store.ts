@@ -1,7 +1,5 @@
-import Axios from "axios";
+import axios from "axios";
 import { FontAwesomeType } from "./declare";
-
-// import FontAwesome from "./font-awesome.json";
 
 class FontAwesomeStore {
     private icons: FontAwesomeType[] = [];
@@ -10,11 +8,11 @@ class FontAwesomeStore {
         if (this.isLoad == false) await this.import()
         return this.icons;
     }
-    async import()
-    {
+    async import() {
         //加载数据
         var r = await import('./font-awesome.json');
-        this.icons = r.default;
+        var url = r.default as any;
+        this.icons =(await axios.get(url)).data;
         this.isLoad = true;
     }
 }
