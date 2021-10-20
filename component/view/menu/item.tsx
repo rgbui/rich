@@ -11,7 +11,8 @@ export class MenuItem extends React.Component<{
 }>{
     el: HTMLElement;
     mousedown(item: MenuItemType, event: MouseEvent) {
-        this.props?.select(item, event);
+        if (item.disabled != true)
+            this.props?.select(item, event);
     }
     change(checked: boolean, item: MenuItemType) {
         item.checked = checked;
@@ -44,7 +45,7 @@ export class MenuItem extends React.Component<{
             onMouseEnter={e => this.mouseenter(item, e.nativeEvent)}
             className={'shy-menu-box-item' + (this.hover ? " hover" : "")}
             ref={e => this.el = e}>
-            {(item.type == MenuItemTypeValue.item || !item.type) && <a className='shy-menu-box-item-option'
+            {(item.type == MenuItemTypeValue.item || !item.type) && <a className={'shy-menu-box-item-option' + (item.disabled == true ? " disabled" : "")}
                 onMouseUp={e => this.mousedown(item, e.nativeEvent)}>
                 <Icon icon={item.icon} size={item.iconSize ? item.iconSize : 17}></Icon>
                 <span className='shy-ws-item-page-text'>{item.text}</span>

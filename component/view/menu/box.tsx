@@ -6,7 +6,7 @@ import { MenuItemType } from "./declare";
 import { MenuItem } from "./item";
 export class MenuBox extends React.Component<{ items: MenuItemType[], deep: number, select: (item: MenuItemType, event?: MouseEvent) => void }>{
     render() {
-        return <div className='sy-menu-box' ref={e => this.el = e} style={{
+        return <div className='shy-menu-box' ref={e => this.el = e} style={{
             top: this.point.y,
             left: this.point.x,
             zIndex: popoverLayer.zoom(LayerWield.menuBox),
