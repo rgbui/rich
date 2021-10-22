@@ -58,7 +58,7 @@ export class Page$Operator {
         }
         this.emit(PageDirective.focusAnchor, anchor);
     }
-    onBackspaceToTopPage(this:Page){
+    onBackspaceToTopPage(this: Page) {
 
     }
     onDropLeaveBlock(this: Page, dragBlocks: Block[], dropBlock: Block, direction: DropDirection) {
@@ -91,7 +91,6 @@ export class Page$Operator {
      * @param event 
      */
     async onOpenMenu(this: Page, blocks: Block[], event: MouseEvent) {
-
         var re = await useSelectMenuItem(
             {
                 roundArea: Rect.fromEvent(event),

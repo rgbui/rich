@@ -13,6 +13,7 @@ import { PageDirective } from "../directive";
 import { PageHistory } from "../interaction/history";
 import { PageKeys } from "../interaction/keys";
 import { TemporaryPurpose } from "./declare";
+import JSZip from 'jszip';
 
 export class Page$Cycle {
     async init(this: Page) {
@@ -75,6 +76,24 @@ export class Page$Cycle {
             return await x.get()
         })
         return json;
+    }
+    async getFile(this: Page) {
+        var zip = new JSZip();
+        zip.file("page.shy", JSON.stringify(await this.get()));
+        var zipFile = await zip.generateAsync({
+            type: 'blob',
+            compression: "DEFLATE" // <-- here 
+        });
+        return zipFile;
+    }
+    async loadFile(this: Page, blob: Blob) {
+        if (blob) {
+            var zip = new JSZip();
+            var rj = await zip.loadAsync(blob);
+            var str = await rj.file('page.shy').async("string");
+            var content = JSON.parse(str);
+            await this.load(content);
+        }
     }
     async getDefaultData() {
         var r = await import("../default.page");
