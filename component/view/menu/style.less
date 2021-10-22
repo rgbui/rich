@@ -9,7 +9,7 @@
     }
 }
 
-.sy-menu-box {
+.shy-menu-box {
     width              : 220px;
     pointer-events     : visible;
     position           : absolute;
@@ -50,22 +50,18 @@
                     width: 17px
                 }
             }
-
             .shy-ws-item-page-spread {
                 flex-shrink: 0;
             }
-
             .shy-ws-item-page-text {
                 display     : inline-flex;
                 margin-left : 8px;
                 margin-right: 14px;
                 flex-grow   : 1.0;
             }
-
             &:hover {
                 background-color: rgba(55, 53, 47, 0.08);
             }
-
             label {
                 position    : absolute;
                 top         : 0px;
@@ -77,6 +73,22 @@
                 margin-right: 14px;
                 min-height  : 28px;
                 line-height : 28px;
+            }
+            &.disabled{
+                cursor: default;
+                .shy-icon{
+                    color: rgba(55, 53, 47, 0.6);
+                    fill: rgba(55, 53, 47, 0.6);
+                }
+                .shy-ws-item-page-text{
+                    color: rgba(55, 53, 47, 0.6);
+                }
+                label{
+                    color: rgba(55, 53, 47, 0.6);
+                }
+                &:hover{
+                    background-color: transparent;
+                }
             }
         }
 
