@@ -1,6 +1,6 @@
 {
   "name": "rich",
-  "version": "0.6.4-beta",
+  "version": "0.6.41-beta",
   "description": "rich block editor",
   "main": "index.js",
   "scripts": {
@@ -26,6 +26,7 @@
     "@types/ua-parser-js": "^0.7.36",
     "axios": "^0.21.1",
     "dayjs": "^1.10.6",
+    "jszip": "^3.7.1",
     "katex": "^0.12.0",
     "mobx": "^6.3.5",
     "mobx-react": "^7.2.0",
