@@ -21,10 +21,8 @@ class EmojiStore {
     async import() {
         //加载数据
         var r = await import('./emoji.json');
-        console.log(r);
         var url = r.default as any;
         var data = await axios.get(url);
-        console.log(data,url);
         this.emojis = data.data;
         this.isLoad = true;
     }
