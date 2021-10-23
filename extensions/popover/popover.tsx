@@ -4,7 +4,13 @@ import { Point, Rect, RectUtility } from "../../src/common/point";
 import { EventsComponent } from "../../component/lib/events.component";
 import { PopoverPosition } from "./position";
 import './style.less';
-class Popover<T extends React.Component> extends EventsComponent<{ component: { new(...args: any[]): T }, shadow?: boolean, args?: Record<string, any>, mask?: boolean, visible?: "hidden" | "none" }> {
+class Popover<T extends React.Component> extends EventsComponent<{
+    component: { new(...args: any[]): T },
+    shadow?: boolean,
+    args?: Record<string, any>,
+    mask?: boolean,
+    visible?: "hidden" | "none"
+}> {
     visible: boolean;
     point: Point = new Point(0, 0);
     private el: HTMLElement;
@@ -110,7 +116,7 @@ let maps: MapC<React.Component> = new Map();
  * @returns 
  */
 export async function PopoverSingleton<T extends React.Component>(CP: { new(...args: any[]): T },
-    props?: { mask?: boolean, visible?: 'hidden' | "none", shadow?: boolean }, args?: Record<string, any>) {
+    props?: { mask?: boolean, style?: CSSProperties, visible?: 'hidden' | "none", shadow?: boolean }, args?: Record<string, any>) {
     return new Promise((resolve: (data: Popover<T>) => void, reject) => {
         if (maps.has(CP)) return resolve(maps.get(CP) as any)
         var ele = document.createElement('div');
