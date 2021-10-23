@@ -10,6 +10,10 @@ export enum PageDirective {
     focusAnchor,
     blurAnchor,
     history,
+    /**
+     * 数据保存ctrl+s
+     */
+    save,
     hoverOutBlock,
     hoverBlock,
     dropLeaveBlock,

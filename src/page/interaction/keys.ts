@@ -1,4 +1,5 @@
 import { Page } from "..";
+import { ListTextView } from "../../../blocks/present/list/list.sub.panel";
 import { UA } from "../../../util/ua";
 import { KeyboardCode, KeyboardPlate } from "../../common/keys";
 
@@ -13,4 +14,12 @@ export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
     }, (event, kt) => {
         event.preventDefault();
     });
+    keyboardPlate.listener(kt => kt.isCtrl(KeyboardCode.S),
+        (event, kt) => {
+            event.preventDefault();
+            page.onSave();
+        }, (event, kt) => {
+            event.preventDefault();
+        }
+    );
 }
