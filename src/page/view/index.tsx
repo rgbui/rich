@@ -42,7 +42,7 @@ export class PageView extends Component<{ page: Page }>{
             letterSpacing: this.page.cfm.fontCss.letterSpacing + 'px',
             fontSize: this.page.cfm.fontCss.fontSize + 'px'
         }
-        return <div className='shy-page-view' style={pageStyle} tabIndex={1}
+        return <div className={'shy-page-view' + (this.page.readonly ? " shy-page-view-readonly" : "")} style={pageStyle} tabIndex={1}
             onKeyDownCapture={e => this.page.onKeydown(e.nativeEvent)}
             onFocusCapture={e => this.page.onFocusCapture(e.nativeEvent)}
             onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}

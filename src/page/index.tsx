@@ -36,8 +36,13 @@ export class Page extends Events<PageDirective> {
     root: HTMLElement;
     id: string;
     date: number;
+    readonly: boolean = false;
     private user: User;
-    constructor(el: HTMLElement, options?: Record<string, any>) {
+    constructor(el: HTMLElement, options?: {
+        id?: string,
+        readonly?: boolean,
+        user?: User
+    }) {
         super();
         this.__init_mixs();
         this.el = el;
@@ -119,6 +124,8 @@ export interface Page {
     emitAsync(name: PageDirective.deleteRow, schemaId, rowId: string): Promise<{ ok: boolean, warn?: string }>
     on(name: PageDirective.loadPageInfo, fn: () => Promise<{ id: string, text: string, icon?: IconArguments, description?: string }>);
     emitAsync(name: PageDirective.loadPageInfo): Promise<{ id: string, text: string, icon?: IconArguments, description?: string }>;
+    on(name: PageDirective.save, fn: () => void);
+    emit(name: PageDirective.save);
 }
 export interface Page extends PageEvent { }
 export interface Page extends Page$Seek { }

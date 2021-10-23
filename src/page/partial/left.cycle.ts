@@ -36,8 +36,8 @@ export class Page$Cycle {
         this.emit(PageDirective.init);
         await langProvider.import();
     }
-    async load(this: Page, data: Record<string, any>) {
-        if (!data) {
+    async load(this: Page, data?: Record<string, any>) {
+        if (!data || typeof data == 'object' && Object.keys(data).length == 0) {
             //这里加载默认的页面数据
             data = await this.getDefaultData();
         }
@@ -94,10 +94,14 @@ export class Page$Cycle {
             var content = JSON.parse(str);
             await this.load(content);
         }
+        else await this.load()
     }
     async getDefaultData() {
         var r = await import("../default.page");
         return r.data;
+    }
+    onSave(this: Page) {
+        this.emit(PageDirective.save);
     }
     private willUpdateBlocks: Block[];
     private updatedFns: (() => Promise<void>)[] = [];

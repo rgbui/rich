@@ -13,18 +13,23 @@ export class PageEvent {
      * 
      */
     onMousedown(this: Page, event: MouseEvent) {
-        this.kit.mouse.onMousedown(event);
+        if (this.readonly == false)
+            this.kit.mouse.onMousedown(event);
     }
     onMousemove(this: Page, event: MouseEvent) {
-        this.kit.mouse.onMousemove(event);
+        if (this.readonly == false)
+            this.kit.mouse.onMousemove(event);
     }
     onMouseup(this: Page, event: MouseEvent) {
-        this.kit.mouse.onMouseup(event);
+        if (this.readonly == false)
+            this.kit.mouse.onMouseup(event);
     }
     onFocusCapture(this: Page, event: FocusEvent) {
+        if (this.readonly) return;
         this.onFocus(event);
     }
     onBlurCapture(this: Page, event: FocusEvent) {
+        if (this.readonly) return;
         if (this.kit && this.kit.mouse.isDown) {
             /*** 说明鼠标是处于down下，这个不可能失焦
             * 如果当前的元素中有一些节点发生了改变，那么此时event.relatedTarget是空的，这很蛋疼
@@ -42,6 +47,7 @@ export class PageEvent {
         }
     }
     onWheel(this: Page, event: React.WheelEvent) {
+        if (this.readonly) return;
         this.kit.handle.onCloseBlockHandle();
     }
     /**
@@ -50,9 +56,11 @@ export class PageEvent {
      * @param event 
      */
     onKeydown(this: Page, event: KeyboardEvent) {
+        if (this.readonly) return;
         this.keyboardPlate.keydown(event);
     }
     onKeyup(this: Page, event: KeyboardEvent) {
+        if (this.readonly) return;
         this.keyboardPlate.keyup(event);
     }
     onGlobalMousedown(this: Page, event: MouseEvent) {
