@@ -68,7 +68,9 @@ export class Page extends Events<PageDirective> {
     keyboardPlate: KeyboardPlate = new KeyboardPlate();
     isFocus: boolean = false;
     render() {
-        ReactDOM.render(<PageView page={this}></PageView>, (this.root = this.el.appendChild(document.createElement('div'))));
+        // ReactDOM.render(<PageView page={this}></PageView>, (this.root = this.el.appendChild(document.createElement('div'))));
+        this.root = this.el;
+        ReactDOM.render(<PageView page={this}></PageView>, this.el);
     }
 }
 export interface Page {

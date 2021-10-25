@@ -2,6 +2,7 @@ import { Component } from "react";
 import { PageLayout } from "./index";
 import React from 'react';
 import ReactDOM from "react-dom";
+import "./style.less";
 export class PageLayoutView extends Component<{ pageLayout: PageLayout }>{
     constructor(props) {
         super(props);
@@ -14,10 +15,20 @@ export class PageLayoutView extends Component<{ pageLayout: PageLayout }>{
         return this.props.pageLayout;
     }
     render() {
+        var isFullWidth: boolean = true;
         return <div className='shy-page-layout' style={{
-            width: 900,
-            paddingLeft: 100,
-            paddingRight: 100, margin: '0 auto'
-        }}>{this.props.children}</div>
+            minHeight: '100%',
+            paddingLeft: isFullWidth ? 100 : undefined,
+            paddingRight: isFullWidth ? 100 : undefined,
+            width: isFullWidth ? undefined : 900
+            //width: 900,
+            // paddingLeft: 100,
+            // paddingRight: 100,
+            // margin: '100 auto'
+        }}>
+            <div className='shy-page-layout-wrapper'>
+                {this.props.children}
+            </div>
+        </div>
     }
 }
