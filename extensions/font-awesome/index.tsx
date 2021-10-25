@@ -30,8 +30,7 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
     private rs: string[] = [];
     onChange(ic: FontAwesomeIconType) {
         this.rs.push(ic.name);
-        console.log(JSON.stringify(this.rs));
-        // if (this.props.onChange) this.props.onChange({ code: ic.name, color: this.color });
+        if (this.props.onChange) this.props.onChange({ code: ic.name, color: this.color });
     }
     renderFontAwesomes() {
         if (this.scrollIndex > this.icons.length) this.scrollOver = true;
@@ -42,7 +41,7 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
                 <div className='shy-font-awesome-category-content'>
                     {icon.icons.map(ic => {
                         return <Tip overlay={langProvider.isCn ? ic.label : ic.name} key={ic.name}><a onMouseDown={e => this.onChange(ic)}>
-                            <i className={'fa' + ' fa-' + ic.name}></i>
+                            <i style={{ color: this.color }} className={'fa' + ' fa-' + ic.name}></i>
                         </a></Tip>
                     })}
                 </div>
