@@ -1,8 +1,8 @@
 @font-face {
   font-family: "sy"; /* Project id 2305566 */
-  src: url('iconfont.woff2?t=1634469221054') format('woff2'),
-       url('iconfont.woff?t=1634469221054') format('woff'),
-       url('iconfont.ttf?t=1634469221054') format('truetype');
+  src: url('iconfont.woff2?t=1635011087482') format('woff2'),
+       url('iconfont.woff?t=1635011087482') format('woff'),
+       url('iconfont.ttf?t=1635011087482') format('truetype');
 }
 
 .sy {
@@ -11,6 +11,10 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.sy-yingyong:before {
+  content: "\e61a";
 }
 
 .sy-linux:before {
