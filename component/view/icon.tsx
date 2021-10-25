@@ -7,6 +7,7 @@ export function Icon(props: {
     mousedown?: (e: React.MouseEvent) => void,
     rotate?: number,
     size?: number | 'none',
+    fontSize?: number,
     className?: string[] | string,
     style?: CSSProperties
 }) {
@@ -25,9 +26,11 @@ export function Icon(props: {
     else if (typeof props.className == 'string') classList.push(props.className)
     var style: Record<string, any> = {};
     if (typeof props.icon == 'string') {
+        var fs = props.fontSize || props.size;
+        if (fs == 'none') fs = undefined;
         Object.assign(style, {
-            fontSize: props.size == 'none' ? undefined : 20,
-            lineHeight: props.size == 'none' ? undefined : '20px',
+            fontSize: fs ? fs : undefined,
+            lineHeight: fs ? (fs + 'px') : undefined,
             width: props.size == 'none' ? undefined : (props.size) || 20,
             height: props.size == 'none' ? undefined : (props.size) || 20,
             ...(props.style || {})
