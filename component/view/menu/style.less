@@ -20,6 +20,7 @@
     padding            : 6px 0px;
     max-height         : 70vh;
     overscroll-behavior: contain;
+
     .shy-menu-box-item {
         position: relative;
 
@@ -50,18 +51,22 @@
                     width: 17px
                 }
             }
+
             .shy-ws-item-page-spread {
                 flex-shrink: 0;
             }
+
             .shy-ws-item-page-text {
                 display     : inline-flex;
                 margin-left : 8px;
                 margin-right: 14px;
                 flex-grow   : 1.0;
             }
+
             &:hover {
                 background-color: rgba(55, 53, 47, 0.08);
             }
+
             label {
                 position    : absolute;
                 top         : 0px;
@@ -74,19 +79,24 @@
                 min-height  : 28px;
                 line-height : 28px;
             }
-            &.disabled{
+
+            &.disabled {
                 cursor: default;
-                .shy-icon{
+
+                .shy-icon {
                     color: rgba(55, 53, 47, 0.6);
-                    fill: rgba(55, 53, 47, 0.6);
+                    fill : rgba(55, 53, 47, 0.6);
                 }
-                .shy-ws-item-page-text{
+
+                .shy-ws-item-page-text {
                     color: rgba(55, 53, 47, 0.6);
                 }
-                label{
+
+                label {
                     color: rgba(55, 53, 47, 0.6);
                 }
-                &:hover{
+
+                &:hover {
                     background-color: transparent;
                 }
             }
@@ -108,6 +118,24 @@
             color      : rgba(55, 53, 47, 0.4);
         }
 
-        &-switch {}
+        &-switch {
+            padding        : 0px 14px;
+            display        : flex;
+            justify-content: flex-start;
+            align-items    : center;
+            min-height     : 28px;
+
+            span {
+                flex-shrink: 1;
+                flex-grow  : 1;
+                color      : rgba(55, 53, 47, 0.4);
+            }
+
+            .shy-switch {
+                width      : 30px;
+                flex-shrink: 0;
+                flex-grow  : 0;
+            }
+        }
     }
 }
