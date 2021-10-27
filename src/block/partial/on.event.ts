@@ -14,6 +14,7 @@ import { langProvider } from "../../../i18n/provider";
 import { LangID } from "../../../i18n/declare";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { AppearAnchor } from "../appear";
+import loadsh from "loadsh"
 export class Block$Event {
     async onGetTurnMenus(this: Block) {
         var its = blockStore.findFitTurnBlocks(this);
@@ -101,8 +102,8 @@ export class Block$Event {
     }
     async onInputStore(this: Block, appear: AppearAnchor, value: string, at: number, end: number, action?: () => Promise<void>) {
         await this.page.onAction(ActionDirective.onInputText, async () => {
-            var replaceText = this[appear.prop].slice(at, end);
-            this[appear.prop] = appear.textContent;
+            var replaceText = loadsh.get(this, appear.prop).slice(at, end);
+            loadsh.set(this, appear.prop, appear.textContent);
             this.page.snapshoot.record(OperatorDirective.inputStore, {
                 blockId: this.id,
                 start: at,
@@ -112,13 +113,17 @@ export class Block$Event {
                 replaceText
             });
             if (typeof action == 'function') await action();
+            this.changeAppear(appear);
         })
+    }
+    changeAppear(this: Block, appear: AppearAnchor) {
+
     }
     async onInputDeleteStore(this: Block, appear: AppearAnchor, value: string, start: number, end: number, action?: () => Promise<void>) {
         await this.page.onAction(ActionDirective.onDeleteText, async () => {
             var block = this;
             var pa = this.page;
-            this[appear.prop] = appear.textContent;
+            loadsh.set(this, appear.prop, appear.textContent);
             pa.snapshoot.record(OperatorDirective.inputDeleteStore, {
                 blockId: block.id,
                 start,
@@ -127,6 +132,7 @@ export class Block$Event {
                 prop: appear.prop
             });
             if (typeof action == 'function') await action();
+            this.changeAppear(appear);
         })
     }
     async onDelete(this: Block) {
