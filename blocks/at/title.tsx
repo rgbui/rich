@@ -27,6 +27,14 @@ export class Title extends Block {
             this.pageInfo = r;
         }
     }
+    changeAppear(appear) {
+        if (appear.prop == 'pageInfo.text' || appear.prop == 'pageInfo.description') {
+            messageChannel.fire(Directive.UpdatePageItem, this.pageInfo.id, {
+                text: this.pageInfo?.text,
+                description: this.pageInfo?.description
+            });
+        }
+    }
     async onChangeIcon(event: React.MouseEvent) {
         var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) });
         if (icon) {
