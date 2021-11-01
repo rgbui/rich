@@ -13,7 +13,7 @@ export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audi
         else if (this.props.mine == 'video') exts = ['video/*'];
         var file = await OpenFileDialoug({ exts });
         if (file) {
-            var r = await messageChannel.fireAsync(Directive.UploadFile, file, (event) => {
+            var r = await messageChannel.fireAsync(Directive.UploadWorkspaceFile, file, (event) => {
                 console.log(event, 'ev');
             });
             if (r.ok) {
