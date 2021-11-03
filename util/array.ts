@@ -77,13 +77,16 @@ interface Array<T> {
 
     arrayJsonClosest(arrayJsonName: string, item: any, fn: any): void
 
-
+    randomOf(): T
 
 }
 
 if (typeof Array.prototype.eachAsync == 'undefined') {
 
-
+    Array.prototype.randomOf = function () {
+        var at = parseInt((this.length * Math.random()).toString());
+        return this[at];
+    }
 
     Array.prototype.eachAsync = async function (fn) {
         for (let i = 0; i < this.length; i++) {
