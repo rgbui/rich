@@ -16,7 +16,7 @@ class Cursor {
         }
         return this._el;
     }
-    private time: number;
+    private time: NodeJS.Timeout;
     show(cursor: CursorName) {
         if (this.time) {
             clearTimeout(this.time);
