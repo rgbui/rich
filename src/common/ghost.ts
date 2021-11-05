@@ -18,6 +18,8 @@ class GhostView {
     }
     load(el: HTMLElement, options: { point: Point, opacity: number, size: { width: number, height: number } }) {
         var cloneEl = el.cloneNode(true);
+        this.el.style.display = 'block';
+        this.el.appendChild(cloneEl);
         this.el.style.top = options.point.y + 'px';
         this.el.style.left = options.point.x + 'px';
         this.el.style.opacity = options.opacity.toString();
