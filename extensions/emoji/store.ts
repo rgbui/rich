@@ -1,5 +1,4 @@
 import axios from "axios";
-import Axios from "axios";
 export type EmojiType = {
     id: string,
     name: string,
