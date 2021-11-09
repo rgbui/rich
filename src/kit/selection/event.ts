@@ -335,7 +335,8 @@ export class SelectionExplorer$Events {
     }
     async onOpenTextTool(this: SelectionExplorer, event: MouseEvent) {
         if(!this.selectedBlocks.first())return ;
-        var lineBlock = this.selectedBlocks.first().closest(x => !x.isLine)
+        var lineBlock = this.selectedBlocks.first().closest(x => !x.isLine);
+        if(!lineBlock.isSupportTextStyle)return;
         while (true) {
             var result = await useTextTool(this.getSelectionPoint(), {
                 block: lineBlock,
