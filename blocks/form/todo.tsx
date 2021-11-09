@@ -9,7 +9,7 @@ import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import { TextSpan } from "../../src/block/element/textspan";
 import { langProvider } from "../../i18n/provider";
 import { LangID } from "../../i18n/declare";
-
+import { TextTurns } from "../../src/block/turn/text";
 @url('/todo')
 export class ToDo extends TextSpan {
     init() {
@@ -36,6 +36,12 @@ export class ToDo extends TextSpan {
         return this.__appearAnchors;
     }
     display = BlockDisplay.block;
+    async onGetTurnUrls() {
+        return TextTurns.urls
+    }
+    async getWillTurnData(url: string) {
+        return await TextTurns.turn(this, url);
+    }
 }
 @view('/todo')
 export class ToDoView extends BlockView<ToDo>{

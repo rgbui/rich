@@ -6,6 +6,7 @@ import "./style.less";
 import { BlockView } from "../../../src/block/view";
 import { BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
 import { ChildsArea, TextArea, TextLineChilds } from "../../../src/block/view/appear";
+import { TextTurns } from "../../../src/block/turn/text";
 export enum ListType {
     circle = 0,
     number = 1,
@@ -52,6 +53,16 @@ export class List extends Block {
     get appearAnchors() {
         if (this.childs.length > 0) return []
         return this.__appearAnchors;
+    }
+    async onGetTurnUrls() {
+        var urls = TextTurns.urls;
+        // if (this.listType == ListType.arrow) urls.remove('/list?{listType:2}')
+        // else if (this.listType == ListType.number) urls.remove('/list?{listType:1}')
+        // else if (this.listType == ListType.circle) urls.remove('/list?{listType:0}')
+        return urls;
+    }
+    async getWillTurnData(url: string) {
+        return await TextTurns.turn(this, url);
     }
 }
 @view('/list')

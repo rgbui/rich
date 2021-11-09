@@ -4,6 +4,7 @@ import React from 'react';
 import { TextArea, TextLineChilds } from "../../src/block/view/appear";
 import { BlockDisplay } from "../../src/block/enum";
 import { Block } from "../../src/block";
+import { TextTurns } from "../../src/block/turn/text";
 @url('/head')
 export class Head extends Block {
     @prop()
@@ -16,6 +17,15 @@ export class Head extends Block {
         return this.__appearAnchors;
     }
     display = BlockDisplay.block;
+    async onGetTurnUrls() {
+        var urls = TextTurns.urls;
+        //if (this.level == 'h2') urls.remove('/head?{level:"h2"}')
+        //else if (this.level == 'h3') urls.remove('/head?{level:"h3"}')
+        return urls;
+    }
+    async getWillTurnData(url: string) {
+        return await TextTurns.turn(this, url);
+    }
 }
 @view("/head")
 export class HeadView extends BlockView<Head>{

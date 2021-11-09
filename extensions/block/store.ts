@@ -38,11 +38,12 @@ class BlockStore extends Events {
         });
         return cs;
     }
-    findFitTurnBlocks(block: Block): BlockSelectorItem[] {
+    findFitTurnBlocks(urls: string[]): BlockSelectorItem[] {
         var cs: BlockSelectorItem[] = [];
         this._blockGroups.each(bg => {
             bg.childs.each(c => {
-                cs.push(c);
+                if (urls.some(s => s == c.url))
+                    cs.push(c);
             })
         });
         return cs;

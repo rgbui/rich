@@ -5,12 +5,19 @@ import { TextArea, TextLineChilds } from '../view/appear';
 import { BlockDisplay } from '../enum';
 import { BlockView } from '../view';
 import { Block } from '..';
+import { TextTurns } from '../turn/text';
 @url("/textspan")
 export class TextSpan extends Block {
     display = BlockDisplay.block;
     get appearAnchors() {
         if (this.childs.length > 0) return []
         else return this.__appearAnchors;
+    }
+    async onGetTurnUrls() {
+        return TextTurns.urls
+    }
+    async getWillTurnData(url: string) {
+        return await TextTurns.turn(this, url);
     }
 }
 @view("/textspan")

@@ -4,13 +4,19 @@ import { url, view } from "../../src/block/factory/observable";
 import { TextArea, TextLineChilds } from "../../src/block/view/appear";
 import { TextSpan } from "../../src/block/element/textspan";
 import { BlockDisplay } from "../../src/block/enum";
+import { TextTurns } from "../../src/block/turn/text";
 @url('/quote')
 export class Quote extends TextSpan {
-    display=BlockDisplay.block;
-    get appearAnchors()
-    {
+    display = BlockDisplay.block;
+    get appearAnchors() {
         if (this.childs.length > 0) return []
         return this.__appearAnchors;
+    }
+    async onGetTurnUrls() {
+        return TextTurns.urls
+    }
+    async getWillTurnData(url: string) {
+        return await TextTurns.turn(this, url);
     }
 }
 @view('/quote')

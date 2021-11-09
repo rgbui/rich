@@ -16,8 +16,16 @@ import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { AppearAnchor } from "../appear";
 import lodash from "lodash"
 export class Block$Event {
+    /**
+     * 需要继承指定可以切换的块
+     * @returns 
+     */
+    async onGetTurnUrls() {
+        return [];
+    }
     async onGetTurnMenus(this: Block) {
-        var its = blockStore.findFitTurnBlocks(this);
+        var urls = await this.onGetTurnUrls();
+        var its = blockStore.findFitTurnBlocks(urls);
         return its.map(it => {
             return {
                 name: BlockDirective.trun,
@@ -43,10 +51,12 @@ export class Block$Event {
             disabled: true,
             icon: duplicate
         });
+        var menus = await this.onGetTurnMenus();
         items.push({
             text: langProvider.getText(LangID.menuTurn),
             icon: loop,
-            childs: await this.onGetTurnMenus()
+            disabled: menus.length > 0 ? false : true,
+            childs: menus
         });
         items.push({
             name: BlockDirective.trunIntoPage,
@@ -100,7 +110,7 @@ export class Block$Event {
             case BlockDirective.link:
                 break;
             case BlockDirective.trun:
-                this.page.onBatchTurn([this], item.value);
+                this.page.onBatchTurn([this], (item as any).url);
                 break;
             case BlockDirective.trunIntoPage:
                 break;

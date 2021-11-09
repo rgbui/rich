@@ -46,8 +46,11 @@ export class Block$Operator {
             delete this.parent;
         }
     }
+    async getWillTurnData(this: Block, url: string) {
+        return await this.get();
+    }
     async turn(this: Block, url: string) {
-        var data = await this.get();
+        var data = await this.getWillTurnData(url);
         var newBlock = await this.page.createBlock(url, data, this.parent, this.at);
         await this.delete();
         return newBlock;
