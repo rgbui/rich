@@ -68,7 +68,7 @@ export class List extends Block {
 @view('/list')
 export class ListView extends BlockView<List>{
     renderListType() {
-        if (this.block.listType == ListType.circle) return <span className='sy-block-list-text-type'>.</span>
+        if (this.block.listType == ListType.circle) return <span className='sy-block-list-text-type'>•</span>
         else if (this.block.listType == ListType.arrow) {
             return <span className='sy-block-list-text-type' style={{ cursor: 'pointer' }} onMouseDown={e => {
                 e.stopPropagation();
@@ -76,15 +76,19 @@ export class ListView extends BlockView<List>{
             }}><Icon icon={this.block.expand == true ? 'arrow-down:sy' : 'arrow-right:sy'}></Icon></span>
         }
         else if (this.block.listType == ListType.number) {
-            var pas = this.block.parentBlocks;
-            var at = pas.findIndex(g => g === this.block);
-            var num = 0;
-            for (let i = at; i >= 0; i--) {
-                var prevBlock = pas[i];
-                if (prevBlock instanceof List && prevBlock.listType == this.block.listType) {
-                    num += 1;
-                }
-                else break;
+            var row = this.block.parent;
+            var pas = row.parentBlocks;
+            var at = pas.findIndex(g => g === row);
+            var num = 1;
+            for (let i = at - 1; i >= 0; i--) {
+                var prevRow = pas[i];
+                if (prevRow) {
+                    var firstChild = prevRow.childs[0];
+                    if (firstChild instanceof List && firstChild.listType == this.block.listType) {
+                        num += 1;
+                    }
+                    else break;
+                } else break;
             }
             return <span className='sy-block-list-text-type'>{num}.</span>
         }
