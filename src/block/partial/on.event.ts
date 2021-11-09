@@ -40,6 +40,7 @@ export class Block$Event {
             name: BlockDirective.copy,
             text: langProvider.getText(LangID.menuCopy),
             label: "ctrl+D",
+            disabled: true,
             icon: duplicate
         });
         items.push({
@@ -50,17 +51,20 @@ export class Block$Event {
         items.push({
             name: BlockDirective.trunIntoPage,
             text: langProvider.getText(LangID.menuTurnInPage),
-            icon: squareplus
+            icon: squareplus,
+            disabled: true
         });
         items.push({
             name: BlockDirective.moveTo,
             text: langProvider.getText(LangID.menuMoveTo),
-            icon: moveTo
+            icon: moveTo,
+            disabled: true
         });
         items.push({
             name: BlockDirective.link,
             text: langProvider.getText(LangID.menuCopyLink),
-            icon: link
+            icon: link,
+            disabled: true
         });
         items.push({
             type: MenuItemTypeValue.divide
@@ -68,7 +72,8 @@ export class Block$Event {
         items.push({
             name: BlockDirective.comment,
             text: langProvider.getText(LangID.menuComment),
-            icon: comment
+            icon: comment,
+            disabled: true
         });
         items.push({
             type: MenuItemTypeValue.divide
@@ -76,7 +81,8 @@ export class Block$Event {
         items.push({
             name: BlockDirective.color,
             text: langProvider.getText(LangID.menuColor),
-            icon: blockcolor
+            icon: blockcolor,
+            disabled: true
         });
         return items;
     }
