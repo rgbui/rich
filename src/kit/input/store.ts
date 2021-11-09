@@ -23,10 +23,9 @@ export async function InputDeleteStore(block: Block, appear: AppearAnchor, from:
         await block.onInputDeleteStore(appear, text.slice(0, text.length - size), from - size, from - text.length, action)
     }
     if (force == true) await await inputDeleteStore()
-    else
-        inputDeleteStoreTime = setTimeout(async () => {
-            if (inputDeleteStore) await inputDeleteStore()
-        }, 7e2);
+    else inputDeleteStoreTime = setTimeout(async () => {
+        if (inputDeleteStore) await inputDeleteStore()
+    }, 7e2);
 }
 /**
  * 立即执行存储,

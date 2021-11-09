@@ -92,7 +92,8 @@ export class TextInput$Write {
      * 表示在这个光标处可以输入了
      * 如果不执行该方法，可能输入就没有任何文字
      */
-    onStartInput(this: TextInput, anchor: Anchor) {
+    async onStartInput(this: TextInput, anchor: Anchor) {
+        await ForceStore()
         this.onFocus();
         this.isWillInput = false;
         this.textarea.value = '';
