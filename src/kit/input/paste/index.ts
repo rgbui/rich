@@ -1,7 +1,6 @@
 import { TextInput } from "..";
 
 export class TextInput$Paster {
-   
     async onPaste(this: TextInput, event: ClipboardEvent) {
         var files: File[] = Array.from(event.clipboardData.files);
         var text = event.clipboardData.getData('text/plain');
@@ -13,11 +12,14 @@ export class TextInput$Paster {
             for (let i = 0; i < files.length; i++) {
                 var file = files[i];
                 if (file.type == 'image/png') {
-                   // var newBlock = await this.onBlockSelectorInsert({ url: '/image', initialData: { file: file } }, undefined);
+                    // var newBlock = await this.onBlockSelectorInsert({ url: '/image', initialData: { file: file } }, undefined);
                 }
             }
         }
         else if (html) {
+
+        }
+        else if (text) {
 
         }
     }
