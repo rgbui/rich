@@ -320,13 +320,23 @@ export abstract class Block extends Events {
         for (var i = 0; i < es.length; i++) {
             var e = es[i];
             var bound = Rect.fromEle(e.el);
-            if (rect instanceof Rect)
-                if (bound.isCross(rect)) {
-                    return true;
-                }
-                else if (rect instanceof Point) {
-                    if (bound.conatin(rect)) return true;
-                }
+            if (rect instanceof Rect && bound.isCross(rect)) {
+                return true;
+            }
+            else if (rect instanceof Point && bound.conatin(rect)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    isCrossBlockArea(rect: Rect | Point) {
+        var el = this.el;
+        var bound = Rect.fromEle(el);
+        if (rect instanceof Rect && bound.isCross(rect)) {
+            return true;
+        }
+        else if (rect instanceof Point && bound.conatin(rect)) {
+            return true;
         }
         return false;
     }

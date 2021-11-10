@@ -83,6 +83,7 @@ export class PageMouse {
                     }
                     if (!hastTextRange) {
                         var blocks = this.page.searchBlocksBetweenMouseRect(this.downEvent, event, { lineBlock: true });
+                        console.log(blocks, 'blocks');
                         if (Array.isArray(blocks) && blocks.length > 0) {
                             this.explorer.onSelectBlocks(blocks);
                         }

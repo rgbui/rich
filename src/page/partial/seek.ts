@@ -194,7 +194,7 @@ export class Page$Seek {
         while (true) {
             topFromRow.each(b => {
                 if (!b.isRow && !b.isCol) {
-                    if (b.isCrossElementAppear(rect)) {
+                    if (b.isCrossBlockArea(rect)) {
                         if (filter && filter.lineBlock == true && b.isLine) {
                             var pa = b.parent;
                             if (!bs.exists(pa)) bs.push(pa);
