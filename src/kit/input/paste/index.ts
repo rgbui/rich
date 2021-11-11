@@ -1,6 +1,5 @@
 import { TextInput } from "..";
 import { parseDom } from "./dom";
-
 export class TextInput$Paster {
     async onPaste(this: TextInput, event: ClipboardEvent) {
         var files: File[] = Array.from(event.clipboardData.files);
@@ -20,8 +19,11 @@ export class TextInput$Paster {
         else if (html) {
             let parser = new DOMParser();
             var doc = parser.parseFromString(html, "text/html");
-            console.log(doc);
-            var blocks=await parseDom(doc);
+            var blocks = await parseDom(doc);
+            if (blocks.length > 0) {
+                var anchor = this.explorer.activeAnchor;
+                await this.page.onPasteCreateBlocks(anchor, blocks);
+            }
         }
     }
 }

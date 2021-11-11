@@ -7,7 +7,7 @@ import { BlockDisplay } from "../../src/block/enum";
 import { TextTurns } from "../../src/block/turn/text";
 @url('/callout')
 export class Callout extends TextSpan {
-    display=BlockDisplay.block;
+    display = BlockDisplay.block;
     get appearAnchors() {
         if (this.childs.length > 0) return []
         return this.__appearAnchors;

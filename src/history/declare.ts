@@ -17,6 +17,7 @@ export enum ActionDirective {
     onBatchTurn = 111,
     onDeleteSelection = 112,
     onInputDetector = 113,
+    onPasteCreateBlocks = 114,
     onSchemaCreateField = 200,
     onSchemaDeleteField = 201,
     onSchemaTurnField = 202,
@@ -56,7 +57,7 @@ export enum OperatorDirective {
 
     insertStyle = 200,
     mergeStyle = 201,
-    deleteStyle=202,
+    deleteStyle = 202,
 
     schemaRowUpdate = 300,
     schemaCreateRow = 301,

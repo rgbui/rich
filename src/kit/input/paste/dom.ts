@@ -1,4 +1,7 @@
 
+import lodash from "lodash";
+import { ListType } from "../../../../blocks/present/list/list";
+import { BlockCssName } from "../../../block/pattern/css";
 import { dom } from "../../../common/dom";
 async function parseTextBlock(element: HTMLElement[] | HTMLElement) {
     var blocks: Record<string, any>[] = [];
@@ -6,26 +9,32 @@ async function parseTextBlock(element: HTMLElement[] | HTMLElement) {
         var name = node?.tagName?.toLowerCase();
         if (node instanceof Text) {
             if (node.textContent)
-                blocks.push({ url: '/text', value: node.textContent })
+                blocks.push({ url: '/text', content: node.textContent, ...(style || {}) })
         }
         else if (name == 'a' && node.getAttribute('href')) {
             var href = node.getAttribute('href');
             var cs = node.childNodes;
             for (let i = 0; i < cs.length; i++) {
                 var ele = cs[i] as HTMLElement;
-                fr(ele, {});
+                fr(ele, lodash.assign(style || {}, { link: { url: href } }));
             }
         }
         else {
             var dm = dom(node);
-            var isItalic = dm.style('fontStyle');
-            var isBold = dm.style('fontWeight');
-            var bg = dm.style('backgroundColor');
-            var textDecoration = dm.style('textDecoration');
             var cs = node.childNodes;
+            var textDecoration = dm.style('textDecoration');
+            var bold = dm.style('fontWeight');
+            var fontStyle = dm.style('fontStyle');
+            var pattern = {
+                [BlockCssName.font]: {
+                    textDecoration: textDecoration ? textDecoration : undefined,
+                    bold: bold ? bold : undefined,
+                    fontStyle: fontStyle ? fontStyle : undefined
+                }
+            };
             for (let i = 0; i < cs.length; i++) {
                 var ele = cs[i] as HTMLElement;
-                fr(ele, {});
+                fr(ele, lodash.assign(style || {}, { pattern }));
             }
         }
     }
@@ -61,17 +70,27 @@ async function parseOl(element: HTMLElement) {
         var name = ele?.tagName?.toLowerCase();
         if (name == 'li') {
             var listType = ele.style.listStyle;
+            var lt = ListType.circle;
+            if (listType == 'decimal') { lt = ListType.number };
             var eleChilds: HTMLElement[] = Array.from(ele.childNodes) as any;
             if (eleChilds.some(s => s?.tagName?.toLowerCase() == 'ol' || s?.tagName?.toLowerCase() == 'ul')) {
                 var panel = eleChilds.find(s => s?.tagName?.toLowerCase() == 'ol' || s?.tagName?.toLowerCase() == 'ul');
                 var otherEles = eleChilds.remove(g => g === panel);
-                var otherBlocks = await parseTextBlock(otherEles as any);
-                blocks.push({ url: '' });
+                var childsBlock = await parseTextBlock(otherEles as any);
+                var otherBlocks = await parseBlock(panel);
+                blocks.push({
+                    url: '/list',
+                    listType: lt,
+                    blocks: {
+                        subChilds: Array.isArray(otherBlocks) ? otherBlocks : [otherBlocks],
+                        childs: childsBlock
+                    }
+                });
             }
             else {
                 var rs = await parseTextBlock(ele);
                 if (rs.length > 0) {
-                    blocks.push({ url: '', childs: rs })
+                    blocks.push({ url: '/list', childs: rs, listType: lt })
                 }
             }
         }
@@ -81,7 +100,7 @@ async function parseOl(element: HTMLElement) {
 async function parseMedia(element: HTMLElement) {
     var name = element?.tagName.toLowerCase();
     if (name == 'img') {
-
+        return { url: '/image', src: { url: element.getAttribute('src') } }
     }
     else if (name == 'video') {
 
@@ -90,16 +109,16 @@ async function parseMedia(element: HTMLElement) {
 
     }
 }
-
 function getTextBlock(element: HTMLElement) {
     var url = '';
-    if (element.style) {
-        var name = element?.tagName?.toLowerCase();
-        var display = element.style.display;
-        var isBlock = display == 'flex' || display == 'block' ? true : false;
-        if (/h[\d]/.test(name) || name == 'p') isBlock = true;
-        return isBlock;
-    }
+    var name = element?.tagName?.toLowerCase();
+    if (name == 'p') url = '/textspan';
+    else if (name == 'h1') url = '/head';
+    else if (name == 'h2') url = '/head?{level:"h2"}';
+    else if (name == 'h3') url = '/head?{level:"h3"}';
+    else if (name == 'h4' || name == 'h5' || name == 'h6') url = '/head?{level:"h4"}';
+    else if (name == 'blockquote') url = '/quote';
+    return url;
 }
 
 async function parseBlock(element: HTMLElement) {
@@ -107,17 +126,17 @@ async function parseBlock(element: HTMLElement) {
     var textBlockUrl = getTextBlock(element);
     if (textBlockUrl) {
         var texts = await parseTextBlock(element);
-        if (texts.length > 0) return { url: textBlockUrl, childs: texts }
+        if (texts.length > 0) return { url: textBlockUrl, blocks: { childs: texts } }
         else return null;
     }
-    else if (name == 'table') return parseTable(element)
-    else if (name == 'ol' || name == 'li') return parseOl(element)
-    else if (name == 'img' || name == 'video' || name == 'audio' || name == 'iframe') return parseMedia(element)
+    else if (name == 'table') return await parseTable(element)
+    else if (name == 'ol' || name == 'li') return await parseOl(element)
+    else if (name == 'img' || name == 'video' || name == 'audio' || name == 'iframe') return await parseMedia(element)
     else if (name == 'div') {
         var rs: any[] = [];
         for (let i = 0; i < element.childNodes.length; i++) {
             var ele = element.childNodes[i] as HTMLElement;
-            var pb = parseBlock(ele);
+            var pb = await parseBlock(ele);
             if (pb) {
                 if (Array.isArray(pb)) rs.addRange(pb)
                 else rs.push(pb);
@@ -129,13 +148,13 @@ async function parseBlock(element: HTMLElement) {
 export async function parseDom(dom: HTMLElement | Document) {
     var body = dom.querySelector('body');
     if (body) {
-        return parseDom(body);
+        return await parseDom(body);
     }
     else {
         var blocks: Record<string, any>[] = [];
         for (let i = 0; i < dom.childNodes.length; i++) {
             var dm = dom.childNodes[i];
-            var pb = parseBlock(dm as HTMLElement)
+            var pb = await parseBlock(dm as HTMLElement)
             if (pb) {
                 if (Array.isArray(pb) && pb.length > 0) blocks.addRange(pb)
                 else blocks.push(pb);

@@ -123,4 +123,13 @@ export class Page$Operator {
                 break;
         }
     }
+    async onPasteCreateBlocks(this: Page, anchor: Anchor, blocks: any[]) {
+        var block = anchor.block;
+        await this.onAction(ActionDirective.onBatchDeleteBlocks, async () => {
+            for (let i = 0; i < blocks.length; i++) {
+                var bd = blocks[i];
+                block = await block.visibleDownCreateBlock(bd.url, bd);
+            }
+        })
+    }
 }

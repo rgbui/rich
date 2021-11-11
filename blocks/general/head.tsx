@@ -8,7 +8,7 @@ import { TextTurns } from "../../src/block/turn/text";
 @url('/head')
 export class Head extends Block {
     @prop()
-    level: 'h1' | 'h2' | 'h3' = 'h1';
+    level: 'h1' | 'h2' | 'h3' | 'h4' = 'h1';
     get multiLines() {
         return false;
     }
