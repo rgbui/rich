@@ -1,5 +1,4 @@
 import { Page } from "..";
-import { ListTextView } from "../../../blocks/present/list/list.sub.panel";
 import { UA } from "../../../util/ua";
 import { KeyboardCode, KeyboardPlate } from "../../common/keys";
 
