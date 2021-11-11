@@ -1,4 +1,5 @@
 import { TextInput } from "..";
+import { parseDom } from "./dom";
 
 export class TextInput$Paster {
     async onPaste(this: TextInput, event: ClipboardEvent) {
@@ -17,10 +18,10 @@ export class TextInput$Paster {
             }
         }
         else if (html) {
-
-        }
-        else if (text) {
-
+            let parser = new DOMParser();
+            var doc = parser.parseFromString(html, "text/html");
+            console.log(doc);
+            var blocks=await parseDom(doc);
         }
     }
 }
