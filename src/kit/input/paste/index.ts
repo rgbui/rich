@@ -21,6 +21,7 @@ export class TextInput$Paster {
             var doc = parser.parseFromString(html, "text/html");
             var blocks = await parseDom(doc);
             if (blocks.length > 0) {
+                console.log(blocks,html);
                 var anchor = this.explorer.activeAnchor;
                 await this.page.onPasteCreateBlocks(anchor, blocks);
             }

@@ -33,10 +33,12 @@ export class TextContentView extends BlockView<TextContent>{
     render() {
         var ta = <TextArea rf={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent}></TextArea>
         if (this.block.link) {
-            if (this.block.link.name == 'outside') ta = <Tooltip overlay={<><GlobalLink></GlobalLink><span>{this.block.url}</span></>} ><a target="_blank" href={this.block.url}>{ta}</a></Tooltip>
-            else ta = <Tooltip overlay={<><LinkTo></LinkTo></>}>
-                <a href={this.block.link.pageId}>{ta}</a>
-            </Tooltip>
+            if (this.block.link.pageId) {
+                ta = <a href={'https://shy.live/page/' + this.block.link.pageId}>{ta}</a>
+            }
+            else if (this.block.link.url) {
+                ta = <a href={this.block.link.url}>{ta}</a>
+            }
         }
         else if (this.block.isCode) {
             ta = <span className='sy-block-text-content-code'>{ta}</span>;
