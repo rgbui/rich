@@ -16,6 +16,7 @@
         align-items     : stretch;
         flex-grow       : 0;
         flex-shrink     : 0;
+
         &::after {
             height       : 100%;
             width        : 4px;
@@ -33,6 +34,7 @@
 
 .sy-block-text-content {
     display: inline !important;
+
     &-code {
         line-height        : normal;
         background         : rgba(135, 131, 120, 0.15);
@@ -45,5 +47,10 @@
         border-left-width  : 0.4em;
         border-right-width : 0.4em;
         display            : inline;
+    }
+
+    a {
+        text-decoration: underline;
+        color:inherit;
     }
 }
