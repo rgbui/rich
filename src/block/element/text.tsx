@@ -34,10 +34,10 @@ export class TextContentView extends BlockView<TextContent>{
         var ta = <TextArea rf={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent}></TextArea>
         if (this.block.link) {
             if (this.block.link.pageId) {
-                ta = <a href={'https://shy.live/page/' + this.block.link.pageId}>{ta}</a>
+                ta = <a href={'/page/' + this.block.link.pageId}>{ta}</a>
             }
             else if (this.block.link.url) {
-                ta = <a href={this.block.link.url}>{ta}</a>
+                ta = <a target='_blank' href={this.block.link.url}>{ta}</a>
             }
         }
         else if (this.block.isCode) {

@@ -20,8 +20,7 @@ class EventBus {
     on(directive: Directive, action: (...args: any[]) => any) {
         this._events.push({ directive, action });
         var sum = this._events.sum(g => g.directive == directive ? 1 : 0);
-        if (sum>maxSameEventBinds)
-        {
+        if (sum > maxSameEventBinds) {
             console.warn(`event bus the same name ${Directive[directive]} events total overflow maxSameEventBinds`)
         }
     }
@@ -69,7 +68,7 @@ interface EventBus {
     on(directive: Directive.UploadWorkspaceFile, handler: (file: File, uploadProgress?: (event: ProgressEvent) => void) => Promise<{ ok: boolean, data: { url: string } }>): void;
     only(directive: Directive.UploadWorkspaceFile, handler: (file: File, uploadProgress?: (event: ProgressEvent) => void) => Promise<{ ok: boolean, data: { url: string } }>): void;
     fireAsync(directive: Directive.UploadWorkspaceFile, file: File, uploadProgress?: (event: ProgressEvent) => void): Promise<{ ok: boolean, data: { url: string } }>;
-  
+
     on(directive: Directive.GalleryQuery, fn: (type: GalleryType, word: string) => Promise<OuterPic[]>): void;
     only(directive: Directive.GalleryQuery, fn: (type: GalleryType, word: string) => Promise<OuterPic[]>): void;
     fireAsync(directive: Directive.GalleryQuery, type: GalleryType, word: string): Promise<OuterPic[]>;
@@ -87,6 +86,8 @@ interface EventBus {
     on(directive: Directive.UpdatePageItem, fn: (id: string, pageInfo: { text: string, icon?: IconArguments }) => Promise<LinkPage>): void;
     fireAsync(directive: Directive.UpdatePageItem, id: string, pageInfo: { text: string, icon?: IconArguments }): Promise<LinkPage>;
 
+    on(directive: Directive.getPageInfo, fn: (id: string) => Promise<LinkPage>): void;
+    fireAsync(directive: Directive.UpdatePageItem, id: string): Promise<LinkPage>;
 
     on(directive: Directive.OpenPageItem, fn: (item: any) => void): void;
     fire(directive: Directive.OpenPageItem, item: any): void;

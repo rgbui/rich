@@ -8,6 +8,7 @@ export enum Directive {
      CreatePage,
 
      UpdatePageItem,
+     getPageInfo,
      TogglePageItem,
      OpenPageItem,
      UpdateUser

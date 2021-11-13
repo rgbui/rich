@@ -126,6 +126,8 @@ export interface Page {
     emitAsync(name: PageDirective.deleteRow, schemaId, rowId: string): Promise<{ ok: boolean, warn?: string }>
     on(name: PageDirective.loadPageInfo, fn: () => Promise<{ id: string, text: string, icon?: IconArguments, description?: string }>);
     emitAsync(name: PageDirective.loadPageInfo): Promise<{ id: string, text: string, icon?: IconArguments, description?: string }>;
+    on(name: PageDirective.getPageInfo, fn: (pageId: string) => Promise<{ id: string, text: string, icon?: IconArguments, description?: string }>);
+    emitAsync(name: PageDirective.getPageInfo, pageId: string): Promise<{ id: string, text: string, icon?: IconArguments, description?: string }>;
     on(name: PageDirective.save, fn: () => void);
     emit(name: PageDirective.save);
 }
