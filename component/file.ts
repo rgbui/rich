@@ -15,13 +15,14 @@ export async function OpenMultipleFileDialoug(options?: {
         if (typeof upload_file == 'undefined') {
             upload_file = document.body.appendChild(document.createElement('input'));
             upload_file.setAttribute('type', 'file');
+            upload_file.style.display = 'none';
         }
         function selectFile(ev: Event) {
             if (upload_file.files.length > 0) {
                 resolve(Array.from(upload_file.files))
             }
             else resolve([]);
-            upload_file.addEventListener('change', selectFile);
+            upload_file.removeEventListener('change', selectFile);
         }
         if (options && Array.isArray(options.exts) && options.exts.length > 0) {
             upload_file.setAttribute('accept', options.exts.join(','));
