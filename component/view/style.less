@@ -2,6 +2,7 @@
     display        : inline-flex !important;
     justify-content: center;
     align-items    : center;
+
     img {
         object-fit     : cover;
         object-position: center center;
@@ -36,7 +37,7 @@
 
 .shy-button {
 
-    outline: none;
+    outline        : none;
     user-select    : none;
     transition     : background 20ms ease-in 0s;
     cursor         : pointer;
@@ -55,11 +56,24 @@
     background     : rgb(225, 98, 89);
     border         : 1px solid rgb(190, 86, 67);
     box-shadow     : rgba(15, 15, 15, 0.1) 0px 1px 2px 0px;
+
     &:hover {
         background-color: #B84C4E;
     }
-    &-medium{
-        height:34px;
+
+    &-medium {
+        height: 34px;
+    }
+
+    &-ghost {
+        background-color: transparent;
+        color      : rgb(225, 98, 89);
+        border     : 1px solid #ddd;
+        font-weight: normal;
+
+        &:hover {
+            background-color: #f5f5f5;
+        }
     }
 }
 
@@ -224,25 +238,25 @@
         }
 
         >label {
-            user-select    : none;
-            transition     : background 20ms ease-in 0s;
-            cursor         : pointer;
-            display        : inline-flex;
-            align-items    : center;
-            justify-content: center;
-            flex-shrink    : 0;
-            white-space    : nowrap;
-            height         : 32px;
-            width:32px;
-            border-radius  : 3px;
-            font-size      : 14px;
-            line-height    : 1.2;
-            min-width      : 0px;
+            user-select       : none;
+            transition        : background 20ms ease-in 0s;
+            cursor            : pointer;
+            display           : inline-flex;
+            align-items       : center;
+            justify-content   : center;
+            flex-shrink       : 0;
+            white-space       : nowrap;
+            height            : 32px;
+            width             : 32px;
+            border-radius     : 3px;
+            font-size         : 14px;
+            line-height       : 1.2;
+            min-width         : 0px;
             // padding-left   : 8px;
             // padding-right  : 8px;
-            color          : rgb(55, 53, 47);
-            margin-right   : 10px;
-            position       : relative;
+            color             : rgb(55, 53, 47);
+            margin-right      : 10px;
+            position          : relative;
 
             &:hover,
             &.hover {
