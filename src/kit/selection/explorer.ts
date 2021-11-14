@@ -60,7 +60,7 @@ export class SelectionExplorer extends Events {
                 selection.addRange(range); // 将要复制的区域的range对象添加到selection对象中
             }
             else {
-                var currentEls = Array.from(this.kit.page.el.querySelectorAll(".shy-block-selected"));
+                var currentEls = Array.from(this.kit.page.root.querySelectorAll(".shy-block-selected"));
                 this.currentSelectedBlocks.each(sel => {
                     currentEls.remove(sel.el);
                     sel.el.classList.add('shy-block-selected');
@@ -71,7 +71,7 @@ export class SelectionExplorer extends Events {
             }
         }
         else {
-            var currentEls = Array.from(this.kit.page.el.querySelectorAll(".shy-block-selected"));
+            var currentEls = Array.from(this.kit.page.root.querySelectorAll(".shy-block-selected"));
             currentEls.each(el => {
                 el.classList.remove('shy-block-selected');
             });
@@ -176,7 +176,7 @@ export class SelectionExplorer extends Events {
      * 选区失焦时做什么
      */
     blur() {
-        var currentEls = Array.from(this.kit.page.el.querySelectorAll(".shy-block-selected"));
+        var currentEls = Array.from(this.kit.page.root.querySelectorAll(".shy-block-selected"));
         currentEls.each(el => {
             el.classList.remove('shy-block-selected');
         });

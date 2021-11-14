@@ -92,7 +92,7 @@ export class PageMouse {
         //判断当前的ele是否在bar自已本身内
         if (this.kit.handle.containsEl(ele)) return;
         var block: Block;
-        if (this.page.el.contains(ele)) {
+        if (this.page.root.contains(ele)) {
             block = this.page.getBlockInMouseRegion(event);
         }
         this.page.onHoverBlock(block);

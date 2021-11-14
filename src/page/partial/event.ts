@@ -42,7 +42,7 @@ export class PageEvent {
          */
         //if (this.textTool.isVisible == true && this.textTool.isDown) { return; }
         var el = event.relatedTarget as Node;
-        if (!el || el && (!this.el.contains(el) || el === this.el)) {
+        if (!el || el && (!this.root.contains(el) || el === this.root)) {
             this.onBlur(event);
         }
     }

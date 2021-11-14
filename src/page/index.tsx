@@ -31,21 +31,19 @@ import { Page$Operator } from './partial/operator';
 import { Kit } from '../kit';
 
 export class Page extends Events<PageDirective> {
-    el: HTMLElement;
-    contentEl: HTMLElement;
     root: HTMLElement;
+    contentEl: HTMLElement;
     id: string;
     date: number;
     readonly: boolean = false;
     private user: User;
-    constructor(el: HTMLElement, options?: {
+    constructor(options?: {
         id?: string,
         readonly?: boolean,
         user?: User
     }) {
         super();
         this.__init_mixs();
-        this.el = el;
         if (typeof options == 'object') Object.assign(this, util.clone(options));
         if (typeof this.id == 'undefined') this.id = util.guid();
         if (typeof this.date == 'undefined') this.date = new Date().getTime();
@@ -67,10 +65,22 @@ export class Page extends Events<PageDirective> {
     view: PageView;
     keyboardPlate: KeyboardPlate = new KeyboardPlate();
     isFocus: boolean = false;
-    render() {
-        // ReactDOM.render(<PageView page={this}></PageView>, (this.root = this.el.appendChild(document.createElement('div'))));
-        this.root = this.el;
-        ReactDOM.render(<PageView page={this}></PageView>, this.el);
+    render(el: HTMLElement) {
+        this.root = el;
+        ReactDOM.render(<PageView page={this}></PageView>, this.root);
+    }
+    fragment: DocumentFragment;
+    isOff: boolean = false;
+    cacheFragment() {
+        if (!this.fragment) this.fragment = document.createDocumentFragment();
+        this.fragment.appendChild(this.root);
+        this.isOff = true;
+    }
+    renderFragment(panel: HTMLElement) {
+        if (this.fragment) {
+            panel.appendChild(this.root);
+            this.isOff = true;
+        }
     }
 }
 export interface Page {
