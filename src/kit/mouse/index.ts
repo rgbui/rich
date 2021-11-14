@@ -1,5 +1,4 @@
 import { Kit } from "..";
-import { useTextTool } from "../../../extensions/text.tool";
 import { Block } from "../../block";
 import { Point } from "../../common/point";
 import { Anchor } from "../selection/anchor";

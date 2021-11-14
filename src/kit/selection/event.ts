@@ -230,7 +230,7 @@ export class SelectionExplorer$Events {
     /**
      * 对选区执行一些样式
      */
-    async onSelectionSetPattern(this: SelectionExplorer, styles: Record<BlockCssName, Record<string, any>>) {
+    async onSelectionSetPatternOrProps(this: SelectionExplorer, styles: Record<BlockCssName, Record<string, any>>, props?: Record<string, any>) {
         if (!this.hasTextRange) throw new Exception(ExceptionType.notTextSelection);
         var bs = this.selectedBlocks;
         var start = this.start;
@@ -266,7 +266,10 @@ export class SelectionExplorer$Events {
                             /**
                              * 全选的操作
                              */
-                            block.pattern.setStyles(styles);
+                            if (styles)
+                                block.pattern.setStyles(styles);
+                            if (props)
+                                block.updateProps(props);
                             if (block == start.block) ns = { block: block, at: start.at }
                             if (block == end.block) ne = { block: block, at: end.at }
                             return;
@@ -282,7 +285,10 @@ export class SelectionExplorer$Events {
                             if (fissContent.before) {
                                 block.updateProps({ content: fissContent.before });
                                 var current = await (this.page.createBlock(url, { content: fissContent.current, pattern }, pa, (at += 1)));
-                                current.pattern.setStyles(styles);
+                                if (styles)
+                                    current.pattern.setStyles(styles);
+                                if (props)
+                                    current.updateProps(props);
                                 if (block == this.start.block) ns = { block: current, at: 0 }
                                 if (block == this.end.block) ne = { block: current, at: -1 }
                                 if (fissContent.after)
@@ -290,7 +296,10 @@ export class SelectionExplorer$Events {
                             }
                             else {
                                 block.updateProps({ content: fissContent.current });
-                                block.pattern.setStyles(styles);
+                                if (styles)
+                                    block.pattern.setStyles(styles);
+                                if (props)
+                                    block.updateProps(props);
                                 if (block == this.start.block) ns = { block: block, at: 0 }
                                 if (block == this.end.block) ne = { block: block, at: -1 }
                                 await (this.page.createBlock(url, { content: fissContent.after, pattern }, pa, (at += 1)))
@@ -305,7 +314,10 @@ export class SelectionExplorer$Events {
                                 await (this.page.createBlock(url, { content: fissContent.before, pattern }, pa, (at += 1)))
                             if (fissContent.current) {
                                 var current = await (this.page.createBlock(url, { content: fissContent.current, pattern }, pa, (at += 1)));
-                                current.pattern.setStyles(styles);
+                                if (styles)
+                                    current.pattern.setStyles(styles);
+                                if (props)
+                                    current.updateProps(props);
                                 if (block == this.start.block) ns = { block: current, at: 0 }
                                 if (block == this.end.block) ne = { block: current, at: -1 }
                             }
@@ -334,9 +346,9 @@ export class SelectionExplorer$Events {
         });
     }
     async onOpenTextTool(this: SelectionExplorer, event: MouseEvent) {
-        if(!this.selectedBlocks.first())return ;
+        if (!this.selectedBlocks.first()) return;
         var lineBlock = this.selectedBlocks.first().closest(x => !x.isLine);
-        if(!lineBlock.isSupportTextStyle)return;
+        if (!lineBlock.isSupportTextStyle) return;
         while (true) {
             var result = await useTextTool(this.getSelectionPoint(), {
                 block: lineBlock,
@@ -344,7 +356,10 @@ export class SelectionExplorer$Events {
             });
             if (result) {
                 if (result.command == 'setStyle') {
-                    await this.onSelectionSetPattern(result.styles);
+                    await this.onSelectionSetPatternOrProps(result.styles);
+                }
+                else if (result.command == 'setProp') {
+                    await this.onSelectionSetPatternOrProps(undefined, result.props);
                 }
                 else if (result.command == 'turn') {
                     await lineBlock.onClickContextMenu(result.item, result.event);

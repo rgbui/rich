@@ -23,7 +23,7 @@ export class TextContent extends Block {
     @prop()
     mention: { userid: string } = null;
     @prop()
-    isCode: boolean = false;
+    code: boolean = false;
     get isTextContent() {
         return true;
     }
@@ -40,7 +40,7 @@ export class TextContentView extends BlockView<TextContent>{
                 ta = <a target='_blank' href={this.block.link.url}>{ta}</a>
             }
         }
-        else if (this.block.isCode) {
+        else if (this.block.code) {
             ta = <span className='sy-block-text-content-code'>{ta}</span>;
         }
         return <span className='sy-block-text-content' style={this.block.visibleStyle} >

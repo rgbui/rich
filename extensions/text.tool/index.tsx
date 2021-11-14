@@ -158,6 +158,16 @@ class TextTool extends EventsComponent {
                 this.textStyle.deleteLine = false;
                 this.textStyle.underline = false;
                 break;
+            case TextCommand.code:
+                this.textStyle.code = true;
+                this.emit('setProp', { code: true });
+                return this.forceUpdate();
+                break;
+            case TextCommand.cancelCode:
+                this.textStyle.code = false;
+                this.emit('setProp', { code: false });
+                return this.forceUpdate();
+                break;
         }
         this.emit('setStyle', { [BlockCssName.font]: font } as any);
         this.forceUpdate();
@@ -222,14 +232,17 @@ class TextTool extends EventsComponent {
 }
 interface TextTool {
     emit(name: 'setStyle', styles: Record<BlockCssName, Record<string, any>>);
+    emit(name: 'setProp', props: Record<string, any>);
     emit(name: 'turn', item: MenuItemType<BlockDirective>, event: MouseEvent);
     emit(name: 'close');
+    only(name: 'setProp', props: Record<string, any>);
     only(name: 'setStyle', fn: (syles: Record<BlockCssName, Record<string, any>>) => void);
     only(name: 'turn', fn: (item: MenuItemType<BlockDirective>, event: MouseEvent) => void);
     only(name: 'close', fn: () => void);
 }
 export type textToolResult = { command: 'setStyle', styles: Record<BlockCssName, Record<string, any>> }
     | { command: 'turn', item: MenuItemType<BlockDirective>, event: MouseEvent }
+    | { command: "setProp", props: Record<string, any> }
     | false;
 export async function useTextTool(point: Point, options: { style: TextToolStyle, block: Block }) {
     var textTool = await Singleton(TextTool);
@@ -238,6 +251,9 @@ export async function useTextTool(point: Point, options: { style: TextToolStyle,
         textTool.only('setStyle', (styles) => {
             resolve({ command: 'setStyle', styles })
         });
+        textTool.only('setProp', (props) => {
+            resolve({ command: 'setProp', props })
+        })
         textTool.only("turn", (item, event) => {
             resolve({ command: 'turn', item, event })
         });

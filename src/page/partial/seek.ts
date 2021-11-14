@@ -7,6 +7,7 @@ import { Point, Rect } from "../../common/point";
 import { TextToolStyle } from "../../../extensions/text.tool";
 import { DropDirection } from "../../kit/handle/direction";
 import { Anchor } from "../../kit/selection/anchor";
+import { TextContent } from "../../block/element/text";
 
 export class Page$Seek {
     /**
@@ -287,18 +288,14 @@ export class Page$Seek {
                 if (font.textDecoration != 'underline') textStyle.underline = false;
                 if (font.textDecoration != 'line-through') textStyle.deleteLine = false;
                 if (!textStyle.color && font.color) textStyle.color = font.color;
-                // if (bl.url != '/code') textStyle.code = false;
-                // if (bl.url != '/equation') textStyle.equation = false;
             }
             else {
                 textStyle.italic = false;
                 textStyle.bold = false;
                 textStyle.underline = false;
                 textStyle.deleteLine = false;
-                // textStyle.code = false;
-                // textStyle.equation = false;
             }
-            if (!(bl.asTextContent && bl.asTextContent.isCode)) {
+            if (!(bl.asTextContent && bl.asTextContent.code)) {
                 textStyle.code = false;
             }
         });
