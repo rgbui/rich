@@ -21,7 +21,7 @@ ReactDOM.render(
     document.body.appendChild(document.createElement('div')),
     async () => {
         var ele = document.querySelector('.editor') as HTMLElement;
-        var page = new Page(ele, {
+        var page = new Page({
             user: {
                 id: 'kankan',
                 name: 'kankan',
@@ -45,6 +45,6 @@ ReactDOM.render(
         //     console.log(page);
         // })
         await page.load(data);
-        await page.render();
+        await page.render(ele);
     }
 );
