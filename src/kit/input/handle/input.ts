@@ -152,7 +152,7 @@ export async function InputAtSelector(tp: TextInput) {
 export async function InputTextCode(tp: TextInput) {
     var anchor = tp.explorer.activeAnchor;
     var value = tp.textarea.value;
-    if (anchor.block.asTextContent && anchor.block.asTextContent.isCode && anchor.at == anchor.block.content.length && !anchor.block.next) {
+    if (anchor.block.asTextContent && anchor.block.asTextContent.code && anchor.at == anchor.block.content.length && !anchor.block.next) {
         tp.page.onAction(ActionDirective.onInputText, async () => {
             var newBlock = await anchor.block.visibleRightCreateBlock(anchor.at, BlockUrlConstant.Text, { content: value })
             newBlock.mounted(() => {
