@@ -136,6 +136,8 @@ export class Block$Event {
 
     }
     async onInputDeleteStore(this: Block, appear: AppearAnchor, value: string, start: number, end: number, action?: () => Promise<void>) {
+
+
         await this.page.onAction(ActionDirective.onDeleteText, async () => {
             var block = this;
             var pa = this.page;

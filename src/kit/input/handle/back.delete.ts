@@ -90,7 +90,9 @@ export async function backspaceBlock(tp: TextInput) {
                     }
                     var checkEmpty = () => {
                         var currentAnchor = tp.explorer.activeAnchor;
-                        tp.explorer.onFocusAnchor(currentAnchor);
+                        if (anchor.block != currentAnchor.block) {
+                            tp.explorer.onFocusAnchor(currentAnchor);
+                        }
                         if (currentAnchor.at == 0 && currentAnchor.elementAppear.isEmpty) currentAnchor.setEmpty();
                         else currentAnchor.removeEmpty();
                     }
