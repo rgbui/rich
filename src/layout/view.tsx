@@ -17,7 +17,6 @@ export class PageLayoutView extends Component<{ pageLayout: PageLayout }>{
     render() {
         var isFullWidth: boolean = true;
         return <div className='shy-page-layout' style={{
-            minHeight: '100%',
             paddingLeft: isFullWidth ? 100 : undefined,
             paddingRight: isFullWidth ? 100 : undefined,
             width: isFullWidth ? undefined : 900
