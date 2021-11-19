@@ -25,8 +25,7 @@ export default {
     [LangID.UploadFile]: <span>上传文件</span>,
     [LangID.UploadAudio]: <span>上传音频文件</span>,
     [LangID.UploadVideo]: <span>上传视频文件</span>,
-    [LangID.UploadRemark]: <span>请勿上传色情、涉政涉恐涉暴、侵权内容或
-        <a>服务条款</a>
+    [LangID.UploadRemark]: <span>请勿上传色情、涉政涉恐涉暴、侵权内容或<a target='_blank' href='https://shy.live/service/protocol'>服务条款</a>
         中禁止上传的其它内容</span>,
     [LangID.AddAudioTip]: <span>添加音频</span>,
     [LangID.AddVideoTip]: <span>添加视频</span>,
@@ -47,5 +46,5 @@ export default {
     [LangID.imageErrorLoadTip]: '图片加载失败',
     [LangID.learnMore]: '了解更多',
     [LangID.blockSelectorNoData]: "没有可用的指令",
-    [LangID.todoPlaceholder]:'待办事项'
+    [LangID.todoPlaceholder]: '待办事项'
 }
