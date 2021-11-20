@@ -11,7 +11,6 @@ export async function backspaceDeleteHandle(tp: TextInput) {
     else if (await backspaceCrossBlock(tp)) return;
     else if (await backspaceBlock(tp)) return;
 }
-
 export async function backspaceSolidBlock(tp: TextInput) {
     var anchor = tp.explorer.activeAnchor;
     if (anchor.isSolid) {

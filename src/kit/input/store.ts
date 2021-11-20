@@ -18,7 +18,7 @@ export async function InputStore(block: Block, appear: AppearAnchor, value: stri
             inputStore = undefined;
         }
     }
-    if (force == true) await await inputStore()
+    if (force == true)  await inputStore()
     else inputStoreTime = setTimeout(async () => {
         if (inputStore) await inputStore()
     }, 7e2);
