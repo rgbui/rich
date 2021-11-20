@@ -19,6 +19,12 @@ export class TextSpan extends Block {
     async getWillTurnData(url: string) {
         return await TextTurns.turn(this, url);
     }
+    get isTextEmpty() {
+        if (this.childs.length == 0) {
+            return this.firstElementAppear.isEmpty
+        }
+        else return false;
+    }
 }
 @view("/textspan")
 export class TextSpanView extends BlockView<TextSpan>{
