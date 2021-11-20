@@ -14,8 +14,16 @@ export class Block$LifeCycle {
     init(this: Block) {
 
     }
-    onMounted(this: Block,) {
+    /**
+     * 不能被继承
+     * @param this 
+     */
+    onMounted(this: Block) {
+        if (typeof this.didMounted == 'function') this.didMounted();
         this.emit('mounted');
+    }
+    didMounted(this: Block) {
+
     }
     async onCreated(this: Block) {
         var keys = this.blockKeys;
