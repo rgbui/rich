@@ -30,13 +30,17 @@ export class Anchor {
      * 光标是否为于文字开始位置
      */
     get isStart() {
-        return this.at === 0 ? true : false;
+        if (this.isText)
+            return this.at === 0 ? true : false;
+        else return true;
     }
     /**
      * 光标是否为文字末尾
      */
     get isEnd() {
-        return this.at === this.textContent.length;
+        if (this.isText)
+            return this.at === this.textContent.length;
+        else return true;
     }
     elementAppear: AppearAnchor;
     get isText() {
