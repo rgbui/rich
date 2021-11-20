@@ -1,7 +1,7 @@
 import { BlockView } from "../../src/block/view";
 import { prop, url, view } from "../../src/block/factory/observable";
 import React from 'react';
-import { BlockDisplay } from "../../src/block/enum";
+import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import { SolidArea } from "../../src/block/view/appear";
 import { Rect } from "../../src/common/point";
 import { ResourceArguments } from "../../extensions/icon/declare";
@@ -23,16 +23,14 @@ export class Image extends Block {
     imageWidthPercent: number = 100;
     display = BlockDisplay.block;
     async onOpenUploadImage(event: React.MouseEvent) {
-        event.stopPropagation();
         var r = await useImagePicker({ roundArea: Rect.fromEvent(event) });
         if (r) {
-            await this.onUpdateProps({ src: r });
+            await this.onUpdateProps({ src: r }, BlockRenderRange.self);
         }
     }
-
     get appearAnchors() {
-        if (this.src.name == 'none') return [];
-        return this.__appearAnchors;
+        if (this.src?.name != 'none') return this.__appearAnchors;
+        return [];
     }
 }
 @view('/image')
@@ -45,6 +43,7 @@ export class ImageView extends BlockView<Image>{
         this.forceUpdate();
     }
     onMousedown(event: React.MouseEvent, operator: 'left' | "right") {
+        event.stopPropagation();
         var el = this.block.el;
         var bound = el.getBoundingClientRect();
         var self = this;
@@ -96,8 +95,8 @@ export class ImageView extends BlockView<Image>{
     render() {
         return <div className='sy-block-image' style={this.block.visibleStyle} >
             <div className='sy-block-image-content' >
-                {!(this.block.src&&this.block.src.url) && this.renderEmptyImage()}
-                {this.block.src&&this.block.src.url && this.renderImage()}
+                {!(this.block.src && this.block.src.url) && this.renderEmptyImage()}
+                {this.block.src && this.block.src.url && this.renderImage()}
             </div>
         </div>
     }
