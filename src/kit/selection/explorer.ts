@@ -86,23 +86,27 @@ export class SelectionExplorer extends Events {
         }
     }
     createAnchor(block: Block, at?: number) {
-        var anchor = new Anchor(this, block.firstElementAppear);
-        if (typeof at == 'number' && anchor.isText) {
-            if (at == -1) anchor.at = anchor.elementAppear.textContent.length;
-            else anchor.at = at;
+        if (block.isSupportAnchor) {
+            var anchor = new Anchor(this, block.firstElementAppear);
+            if (typeof at == 'number' && anchor.isText) {
+                if (at == -1) anchor.at = anchor.elementAppear.textContent.length;
+                else anchor.at = at;
+            }
+            else if (anchor.isText && typeof at == 'undefined') {
+                anchor.at = 0;
+            }
+            return anchor;
         }
-        else if (anchor.isText && typeof at == 'undefined') {
-            anchor.at = 0;
-        }
-        return anchor;
     }
     createBackAnchor(block: Block, at?: number) {
-        var anchor = new Anchor(this, block.appearAnchors.last());
-        if (typeof at == 'number' && anchor.isText) {
-            if (at == -1) anchor.at = anchor.elementAppear.textContent.length;
-            else anchor.at = at;
+        if (block.isSupportAnchor) {
+            var anchor = new Anchor(this, block.appearAnchors.last());
+            if (typeof at == 'number' && anchor.isText) {
+                if (at == -1) anchor.at = anchor.elementAppear.textContent.length;
+                else anchor.at = at;
+            }
+            return anchor;
         }
-        return anchor;
     }
     onFocusAnchor(anchor: Anchor) {
         if (this.end) { this.end.dispose(); delete this.end; }
