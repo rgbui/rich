@@ -59,6 +59,12 @@ export class TextInput$Write {
                         event.preventDefault();
                         return
                     }
+                    else if (this.explorer.activeAnchor.isSolid) {
+                        await ForceStore();
+                        await this.explorer.onEnter();
+                        event.preventDefault();
+                        return
+                    }
                     break;
                 case KeyboardCode.Delete:
                 case KeyboardCode.Backspace:
