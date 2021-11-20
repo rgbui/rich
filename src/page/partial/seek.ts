@@ -131,10 +131,10 @@ export class Page$Seek {
         bs.addRange(rs);
         bs.push(end.block);
         if (filter?.consideBoundary != true) {
-            if (start.isEnd) {
+            if (start.isEnd && !start.isSolid) {
                 bs.remove(s => start.block === s);
             }
-            if (end.isStart) {
+            if (end.isStart && !end.isSolid) {
                 bs.remove(s => end.block === s)
             }
         }
