@@ -25,7 +25,7 @@ import mentionDate from "../../src/assert/img/mention-date.png";
 import mentionPage from "../../src/assert/img/mention-page.png";
 import mentionPerson from "../../src/assert/img/mention-person.png";
 import link from "../../src/assert/img/link.png";
-import { BlockGroup, BlockSelectorOperator } from './delcare';
+import { BlockGroup } from './delcare';
 
 export var BlockSelectorData: BlockGroup[] = [
     {
@@ -50,7 +50,7 @@ export var BlockSelectorData: BlockGroup[] = [
     {
         text: '行内块',
         childs: [
-            { text: "表情", isLine: true, operator: BlockSelectorOperator.selectEmoji, pic: <img src={emoji} />, url: "/emoji", description: "", label: "/表情", labels: [] },
+            { text: "表情", isLine: true, pic: <img src={emoji} />, url: "/emoji", description: "", label: "/表情", labels: [] },
             // { text: "日期", isLine: true, pic: <img src={mentionDate} />, url: '/mention/date', description: '', label: '/引用日期' },
             // { text: "页面", isLine: true, pic: <img src={mentionPage} />, url: '/mention/page', description: '', label: '/引用页面' },
             //{ text: "@ta人", isLine: true, pic: <img src={mentionPerson} />, url: '/mention/person', description: '', label: '/ta人' },
