@@ -110,23 +110,19 @@ export async function InputBlockSelectorAfter(tp: TextInput, blockData: BlockSel
     tp.textarea.value = matchValue;
     anchor.at = tp.cursorStartAt + matchValue.length;
     await InputStore(anchor.block, anchor.elementAppear, matchValue, tp.cursorStartAt, true, async () => {
-        let extra: Record<string, any> = {};
-        if (typeof blockData.operator != 'undefined') {
-            extra = await blockStore.open(blockData.operator, anchor.bound);
-            if (Object.keys(extra).length == 0) {
-                /**
-                 * 说明什么也没拿到，那么怎么办呢，
-                 * 不怎么办，终止后续的动作
-                 */
-                return;
-            }
-        }
         var newBlock: Block;
         if (blockData.isLine) {
-            newBlock = await block.visibleRightCreateBlock(anchor.at, blockData.url, extra);
+            newBlock = await block.visibleRightCreateBlock(anchor.at, blockData.url, { createSource: 'InputBlockSelector' });
         }
         else {
-            newBlock = await block.visibleDownCreateBlock(blockData.url, extra);
+            if (block.isTextEmpty) {
+                newBlock = await block.visibleDownCreateBlock(blockData.url, { createSource: 'InputBlockSelector' });
+                //说明是空白的textBlock
+                await block.delete();
+            }
+            else {
+                newBlock = await block.visibleDownCreateBlock(blockData.url, { createSource: 'InputBlockSelector' });
+            }
         }
         newBlock.mounted(() => {
             var anchor = newBlock.visibleHeadAnchor;
