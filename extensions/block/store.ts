@@ -7,7 +7,7 @@ import { useOpenEmoji } from "../emoji";
 import { useFilePicker } from "../file/file.picker";
 import { useImagePicker } from "../image/picker";
 import { OpenTableStoreSelector } from "../tablestore";
-import { BlockGroup, BlockSelectorItem, BlockSelectorOperator } from "./delcare";
+import { BlockGroup, BlockSelectorItem } from "./delcare";
 class BlockStore extends Events {
     constructor() {
         super();
@@ -47,35 +47,6 @@ class BlockStore extends Events {
             })
         });
         return cs;
-    }
-    async open(operator: BlockSelectorOperator, rect: Rect) {
-        var extra: Record<string, any> = {};
-        switch (operator) {
-            case BlockSelectorOperator.createTable:
-                var re = await OpenTableStoreSelector(rect);
-                if (re) {
-                    extra.initialData = util.clone(re);
-                }
-                break;
-            case BlockSelectorOperator.selectEmoji:
-                var result = await useOpenEmoji({ roundArea: rect });
-                if (result) {
-                    extra.src = { mime: 'emoji', code: result.code } as EmojiSrcType;
-                }
-                break;
-            case BlockSelectorOperator.selectImage:
-                var r = await useImagePicker({ roundArea: rect });
-                if (r) {
-                    extra.src = r;
-                }
-                break;
-            case BlockSelectorOperator.selectFile:
-                var r = await useFilePicker({ roundArea: rect });
-                if (r) {
-                    extra.src = r;
-                }
-        }
-        return extra;
     }
 }
 export var blockStore = new BlockStore();
