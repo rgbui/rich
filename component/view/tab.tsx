@@ -29,7 +29,7 @@ export class Tab extends React.Component<{
             <div className={'shy-tab-items' + (' shy-tab-items-' + (this.props.align ?? 'left'))}>
                 {
                     React.Children.map(this.props.children, (element, index) => {
-                        return <label onMouseDown={e => this.onFocus(index)} key={index} className={index == this.focusIndex ? "hover" : ""}>{(element as any).props.item}</label>
+                        return <label onClick={e => { this.onFocus(index) }} key={index} className={index == this.focusIndex ? "hover" : ""}>{(element as any).props.item}</label>
                     })
                 }
             </div>
