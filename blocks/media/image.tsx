@@ -32,6 +32,14 @@ export class Image extends Block {
         if (this.src?.name != 'none') return this.__appearAnchors;
         return [];
     }
+    async didMounted() {
+        if (this.createSource == 'InputBlockSelector' && !this.src) {
+            var r = await useImagePicker({ roundArea: Rect.fromEle(this.el) });
+            if (r) {
+                await this.onUpdateProps({ src: r }, BlockRenderRange.self);
+            }
+        }
+    }
 }
 @view('/image')
 export class ImageView extends BlockView<Image>{
