@@ -44,6 +44,11 @@ export abstract class Block extends Events {
      * ）
      */
     initialData: Record<string, any>;
+    /**
+     * 创建block的方式,访方式在初始创建时，
+     * 可以触发一些操作
+     */
+    createSource: 'InputBlockSelector';
     __props: string[];
     get childs() {
         return this.blocks.childs;
@@ -286,6 +291,12 @@ export abstract class Block extends Events {
     get appearAnchors() {
         return this.__appearAnchors;
     }
+    get isTextEmpty() {
+        if (this.isTextContent) {
+            return this.firstElementAppear.isEmpty;
+        }
+        return false;
+    }
     get firstElementAppear() {
         return this.appearAnchors.first();
     }
@@ -302,6 +313,7 @@ export abstract class Block extends Events {
         if (this.isLayout) return false;
         if (this.appearAnchors.length > 0)
             return true;
+        return false;
     }
     /**
      * 是否允许通过鼠标点击来创建anchor
