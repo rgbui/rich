@@ -2,6 +2,7 @@ export enum Directive {
 
      UploadFile,
      UploadWorkspaceFile,
+     UploadWorkspaceFileUrl,
      GalleryQuery,
      UsersQuery,
      PagesQuery,

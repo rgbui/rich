@@ -123,13 +123,49 @@ export class Page$Operator {
                 break;
         }
     }
-    async onPasteCreateBlocks(this: Page, anchor: Anchor, blocks: any[]) {
+    async onPasterFiles(this: Page, files: File[]) {
+        if (!files || Array.isArray(files) && files.length == 0) return;
+        var anchor = this.kit.explorer.activeAnchor;
         var block = anchor.block;
-        await this.onAction(ActionDirective.onBatchDeleteBlocks, async () => {
+        await this.onAction(ActionDirective.onPasteCreateBlocks, async () => {
+            var firstBlock = block;
+            for (let i = 0; i < files.length; i++) {
+                var file = files[i];
+                if (file.type == 'image/png') {
+                    //图片
+                    block = await block.visibleDownCreateBlock('/image', { initialData: { file } });
+                }
+                else {
+                    block = await block.visibleDownCreateBlock('/file', { initialData: { file } });
+                }
+            }
+            if (firstBlock.isTextEmpty) {
+                await firstBlock.delete();
+            }
+            block.mounted(() => {
+                var anchor = block.visibleHeadAnchor;
+                if (anchor)
+                    anchor.explorer.onFocusAnchor(anchor);
+            });
+        })
+    }
+    async onPasteCreateBlocks(this: Page, blocks: any[]) {
+        var anchor = this.kit.explorer.activeAnchor;
+        var block = anchor.block;
+        await this.onAction(ActionDirective.onPasteCreateBlocks, async () => {
+            var firstBlock = block;
             for (let i = 0; i < blocks.length; i++) {
                 var bd = blocks[i];
                 block = await block.visibleDownCreateBlock(bd.url, bd);
             }
+            if (firstBlock.isTextEmpty) {
+                await firstBlock.delete();
+            }
+            block.mounted(() => {
+                var anchor = block.visibleHeadAnchor;
+                if (anchor)
+                    anchor.explorer.onFocusAnchor(anchor);
+            });
         })
     }
 }
