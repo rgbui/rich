@@ -6,6 +6,13 @@ export class TextInput$Paster {
         var text = event.clipboardData.getData('text/plain');
         var html = event.clipboardData.getData('text/html');
         if (!html && text) return;
+        var anchor = this.kit.explorer.activeAnchor;
+        /**
+         * 不支持文本样式，说明可以粘贴文本内容
+         */
+        if (!anchor.block.isSupportTextStyle && text) {
+            return;
+        }
         event.preventDefault();
         if (files.length > 0) {
             //说明复制的是文件
