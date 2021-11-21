@@ -8,6 +8,7 @@ export type IconArguments = {
 }
 
 export type ResourceArguments = {
-    name: 'none' | 'link' | 'upload'
-    url?: string
+    name: 'none' | 'link' | 'upload' | 'download'
+    url?: string,
+    source?: string
 }

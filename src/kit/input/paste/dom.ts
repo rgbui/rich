@@ -83,7 +83,6 @@ async function parseOl(element: HTMLElement) {
                 var panel = eleChilds.find(s => s?.tagName?.toLowerCase() == 'ol' || s?.tagName?.toLowerCase() == 'ul');
                 eleChilds.remove(g => g === panel);
                 var childsBlock = await parseTextBlock(eleChilds as any);
-                console.log('childs', childsBlock);
                 var otherBlocks = await parseBlock(panel);
                 blocks.push({
                     url: '/list',
@@ -107,7 +106,7 @@ async function parseOl(element: HTMLElement) {
 async function parseMedia(element: HTMLElement) {
     var name = element?.tagName.toLowerCase();
     if (name == 'img') {
-        return { url: '/image', src: { url: element.getAttribute('src') } }
+        return { url: '/image', initialData: { url: element.getAttribute('src') } }
     }
     else if (name == 'video') {
 
@@ -139,28 +138,30 @@ async function parseBlock(element: HTMLElement) {
     else if (name == 'table') return await parseTable(element)
     else if (name == 'ol' || name == 'li') return await parseOl(element)
     else if (name == 'img' || name == 'video' || name == 'audio' || name == 'iframe') return await parseMedia(element)
-    else if (name == 'div') {
+    else {
         var rs: any[] = [];
-        for (let i = 0; i < element.childNodes.length; i++) {
-            var ele = element.childNodes[i] as HTMLElement;
-            var name = ele?.tagName?.toLowerCase();
-            var pb = await parseBlock(ele);
-            if (pb) {
-                if (Array.isArray(pb)) {
-                    pb.each(p => {
-                        if (p) rs.push(p);
-                    })
+        if (element.children.length > 0) {
+            for (let i = 0; i < element.childNodes.length; i++) {
+                var ele = element.childNodes[i] as HTMLElement;
+                var name = ele?.tagName?.toLowerCase();
+                var pb = await parseBlock(ele);
+                if (pb) {
+                    if (Array.isArray(pb)) {
+                        pb.each(p => {
+                            if (p) rs.push(p);
+                        })
+                    }
+                    else rs.push(pb);
                 }
-                else rs.push(pb);
+            }
+        }
+        else {
+            var texts = await parseTextBlock(element);
+            if (texts.length > 0) {
+                return { url: '/textspan', blocks: { childs: texts } }
             }
         }
         return rs;
-    }
-    else {
-        var texts = await parseTextBlock(element);
-        if (texts.length > 0) {
-            return { url: '/textspan', blocks: { childs: texts } }
-        }
     }
 }
 export async function parseDom(dom: HTMLElement | Document) {
