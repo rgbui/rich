@@ -14,7 +14,8 @@ import { MouseDragger } from "../../src/common/dragger";
 import Picture from "../../src/assert/svg/picture.svg";
 import { Icon } from "../../component/view/icon";
 import { useImagePicker } from "../../extensions/image/picker";
-
+import { Directive } from "../../util/bus/directive";
+import { messageChannel } from "../../util/bus/event.bus";
 @url('/image')
 export class Image extends Block {
     @prop()
@@ -33,11 +34,30 @@ export class Image extends Block {
         return [];
     }
     async didMounted() {
-        if (this.createSource == 'InputBlockSelector' && !this.src) {
-            var r = await useImagePicker({ roundArea: Rect.fromEle(this.el) });
-            if (r) {
-                await this.onUpdateProps({ src: r }, BlockRenderRange.self);
+        try {
+            if (this.createSource == 'InputBlockSelector' && !this.src) {
+                var r = await useImagePicker({ roundArea: Rect.fromEle(this.el) });
+                if (r) {
+                    await this.onUpdateProps({ src: r }, BlockRenderRange.self);
+                }
             }
+            if (this.initialData && this.initialData.file) {
+                var d = await messageChannel.fireAsync(Directive.UploadWorkspaceFile, this.initialData.file, (event) => {
+                    console.log(event, 'ev');
+                });
+                if (d.ok && d.data.url) {
+                    await this.onUpdateProps({ src: { url: d.data.url, name: 'upload' } }, BlockRenderRange.self);
+                }
+            }
+            if (this.initialData && this.initialData.url) {
+                var d = await messageChannel.fireAsync(Directive.UploadWorkspaceFileUrl, this.initialData.url);
+                if (d.ok && d.data.url) {
+                    await this.onUpdateProps({ src: { url: d.data.url, name: 'download', source: this.initialData.url } }, BlockRenderRange.self);
+                }
+            }
+        }
+        catch (ex) {
+            console.error(ex);
         }
     }
 }
