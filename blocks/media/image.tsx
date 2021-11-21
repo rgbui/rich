@@ -60,6 +60,13 @@ export class Image extends Block {
             console.error(ex);
         }
     }
+    getVisibleContentBound() {
+        var img = this.el.querySelector('.sy-block-image-content-view-wrapper img') as HTMLElement;
+        if (img) {
+            return Rect.fromEle(img);
+        }
+        return super.getVisibleContentBound();
+    }
 }
 @view('/image')
 export class ImageView extends BlockView<Image>{
