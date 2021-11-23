@@ -9,8 +9,10 @@ import { LangID } from "../../i18n/declare";
 import { useAudioPicker } from "../../extensions/file/audio.picker";
 import { Rect } from "../../src/common/point";
 import { Block } from "../../src/block";
-import { BlockDisplay } from "../../src/block/enum";
+import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import { SolidArea } from "../../src/block/view/appear";
+import { Directive } from "../../util/bus/directive";
+import { messageChannel } from "../../util/bus/event.bus";
 @url('/audio')
 export class Audio extends Block {
     @prop()
@@ -21,13 +23,40 @@ export class Audio extends Block {
         var bound = Rect.from(target.getBoundingClientRect());
         var r = await useAudioPicker({ roundArea: bound });
         if (r) {
-            await this.onUpdateProps({ src: r });
+            await this.onUpdateProps({ src: r }, BlockRenderRange.self);
         }
     }
 
     get appearAnchors() {
         if (this.src.name == 'none') return [];
         return this.__appearAnchors;
+    }
+    async didMounted() {
+        try {
+            if (this.createSource == 'InputBlockSelector' && !this.src) {
+                var r = await useAudioPicker({ roundArea: Rect.fromEle(this.el) });
+                if (r) {
+                    await this.onUpdateProps({ src: r }, BlockRenderRange.self);
+                }
+            }
+            if (this.initialData && this.initialData.file) {
+                var d = await messageChannel.fireAsync(Directive.UploadWorkspaceFile, this.initialData.file, (event) => {
+                    console.log(event, 'ev');
+                });
+                if (d.ok && d.data.url) {
+                    await this.onUpdateProps({ src: { url: d.data.url, name: 'upload' } }, BlockRenderRange.self);
+                }
+            }
+            if (this.initialData && this.initialData.url) {
+                var d = await messageChannel.fireAsync(Directive.UploadWorkspaceFileUrl, this.initialData.url);
+                if (d.ok && d.data.url) {
+                    await this.onUpdateProps({ src: { url: d.data.url, name: 'download', source: this.initialData.url } }, BlockRenderRange.self);
+                }
+            }
+        }
+        catch (ex) {
+            console.error(ex);
+        }
     }
 }
 @view('/audio')
