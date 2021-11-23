@@ -20,6 +20,7 @@ export class Link extends Block {
     display = BlockDisplay.block;
     icon: IconArguments;
     text: string;
+    sn: number;
     get isSupportTextStyle() {
         return false;
     }
@@ -28,7 +29,12 @@ export class Link extends Block {
         if (r) {
             if (r.icon) this.icon = r.icon;
             if (r.text) this.text = r.text;
+            if (r.sn) this.sn = r.sn;
         }
+    }
+    async openPage(event: React.MouseEvent) {
+        event.preventDefault();
+        messageChannel.fire(Directive.openPageLink, { pageId: this.pageId, sn: this.sn });
     }
 }
 @view('/link')
@@ -38,7 +44,7 @@ export class LinkView extends BlockView<Link>{
         await this.block.loadPageInfo();
         this.forceUpdate();
     }
-    updatePageInfo = (id: string, pageInfo: { text: string, icon?: IconArguments }) => {
+    updatePageInfo = (id: string, pageInfo: { sn?: number, text: string, icon?: IconArguments }) => {
         if (this.block.pageId == id) {
             var isUpdate: boolean = false;
             if (typeof pageInfo.text != 'undefined' && pageInfo.text != this.block.text) {
@@ -49,6 +55,8 @@ export class LinkView extends BlockView<Link>{
                 this.block.icon = pageInfo.icon;
                 isUpdate = true;
             }
+            if (typeof pageInfo.sn != 'undefined')
+                this.block.sn = pageInfo.sn;
             if (isUpdate)
                 this.forceUpdate();
         }
@@ -58,8 +66,8 @@ export class LinkView extends BlockView<Link>{
     }
     render() {
         return <div className='sy-block-link'>
-            {this.block.icon && <a>
-                <Icon size={36} icon={this.block.icon}></Icon>
+            {this.block.icon && <a href={'https://shy.live/page/' + this.block.sn} onClick={e => this.block.openPage(e)}>
+                <Icon size={24} icon={this.block.icon}></Icon>
                 <span>{this.block.text}</span>
             </a>}
         </div>
