@@ -155,9 +155,7 @@ export class Block$Event {
     }
     async onDelete(this: Block) {
         await this.page.onAction(ActionDirective.onDelete, async () => {
-            var pa = this.parent;
             await this.delete();
-            if (pa) await pa.layoutCollapse();
         })
     }
     async onUpdateProps(this: Block, props: Record<string, any>, range = BlockRenderRange.none) {

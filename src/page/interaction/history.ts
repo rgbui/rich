@@ -16,7 +16,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             var value = block[key];
             var newValue = value.slice(0, operator.data.start) + operator.data.text + value.slice(operator.data.end);
             block.updateProps({ [key]: newValue });
-            page.onUpdated(async () => {
+            page.addUpdateEvent(async () => {
                 page.kit.explorer.onFocusBlockAtAnchor(block,
                     operator.data.start + operator.data.text.length
                 );
@@ -29,7 +29,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             var value = block[key];
             var newValue = value.slice(0, operator.data.start) + operator.data.replaceText + value.slice(operator.data.start + operator.data.text.length);
             block.updateProps({ [key]: newValue });
-            page.onUpdated(async () => {
+            page.addUpdateEvent(async () => {
                 page.kit.explorer.onFocusBlockAtAnchor(block,
                     operator.data.start + operator.data.replaceText.length
                 );
@@ -43,7 +43,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             var value = block[key];
             var newValue = value.slice(0, operator.data.end) + value.slice(operator.data.start);
             block.updateProps({ [key]: newValue });
-            page.onUpdated(async () => {
+            page.addUpdateEvent(async () => {
                 page.kit.explorer.onFocusBlockAtAnchor(block,
                     operator.data.end
                 );
@@ -56,7 +56,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             var value = block[key];
             var newValue = value.slice(0, operator.data.end) + operator.data.text + value.slice(operator.data.end);
             block.updateProps({ [key]: newValue });
-            page.onUpdated(async () => {
+            page.addUpdateEvent(async () => {
                 page.kit.explorer.onFocusBlockAtAnchor(block,
                     operator.data.end + operator.data.text.length
                 );
@@ -70,7 +70,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             operator.data.at,
             operator.data.childKey
         );
-        page.onUpdated(async () => {
+        page.addUpdateEvent(async () => {
             page.kit.explorer.onFocusBlockAtAnchor(block);
         });
     }, async (operator) => {
@@ -83,7 +83,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     snapshoot.registerOperator(OperatorDirective.delete, async (operator) => {
         var block = page.find(x => x.id == operator.data.data.id);
         if (block) {
-            page.onUpdated(async () => {
+            page.addUpdateEvent(async () => {
                 page.kit.explorer.onFocusBlockAtAnchor(block,
                     operator.data.end + operator.data.text.length
                 );
@@ -97,7 +97,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             operator.data.at,
             operator.data.childKey
         );
-        page.onUpdated(async () => {
+        page.addUpdateEvent(async () => {
             page.kit.explorer.onFocusBlockAtAnchor(block);
         });
     });

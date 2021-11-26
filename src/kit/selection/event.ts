@@ -333,7 +333,7 @@ export class SelectionExplorer$Events {
                 * newEnd是现创建的，
                 * 所以对光标的操作可能得在渲染之后才可以触发
                 */
-                this.page.onUpdated(async () => {
+                this.page.addUpdateEvent(async () => {
                     var newStartAnchor = this.createAnchor(ns.block, ns.at);
                     newStartAnchor.acceptView(this.start);
                     this.start = newStartAnchor;

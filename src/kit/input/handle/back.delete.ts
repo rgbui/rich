@@ -95,7 +95,7 @@ export async function backspaceBlock(tp: TextInput) {
                         if (currentAnchor.at == 0 && currentAnchor.elementAppear.isEmpty) currentAnchor.setEmpty();
                         else currentAnchor.removeEmpty();
                     }
-                    if (existsDelete == true) tp.page.onUpdated(async () => {
+                    if (existsDelete == true) tp.page.addUpdateEvent(async () => {
                         checkEmpty();
                     })
                     else checkEmpty();

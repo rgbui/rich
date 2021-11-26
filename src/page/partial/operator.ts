@@ -17,6 +17,7 @@ export class Page$Operator {
     * @param data 
     * @param parent 
     * @param at 
+    * 
     */
     async createBlock(this: Page, url: string, data: Record<string, any>, parent: Block, at?: number, childKey?: string) {
         var block = await BlockFactory.createBlock(url, this, data, parent);
@@ -29,7 +30,7 @@ export class Page$Operator {
             parentId: parent.id, childKey, at, preBlockId: block.prev ? block.prev.id : undefined, data: block.get()
         });
         await block.onCreated()
-        this.onAddUpdate(parent);
+        this.addBlockUpdate(parent);
         return block;
     }
     async onBatchDelete(this: Page, blocks: Block[]) {

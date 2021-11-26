@@ -352,6 +352,15 @@ export abstract class Block extends Events {
         }
         return false;
     }
+    async forceUpdate() {
+        return new Promise((resolve, reject) => {
+            if (this.view)
+                this.view.forceUpdate(() => {
+                    resolve(true);
+                })
+            else resolve(true);
+        })
+    }
 }
 export interface Block extends Block$Seek { }
 export interface Block extends Block$Event { }

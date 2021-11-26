@@ -64,6 +64,17 @@ export class List extends Block {
     async getWillTurnData(url: string) {
         return await TextTurns.turn(this, url);
     }
+    /**
+   * 表示当前元素如何接收该元素至sub,
+   * @param this 
+   * @param sub  子元素是要移动的
+   */
+    async acceptSubFromMove(sub: Block) {
+        await this.append(sub, 0, 'subChilds');
+        if (this.expand != true && this.listType == ListType.arrow) {
+            this.updateProps({ expand: true }, BlockRenderRange.self);
+        }
+    }
 }
 @view('/list')
 export class ListView extends BlockView<List>{

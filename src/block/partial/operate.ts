@@ -3,6 +3,7 @@ import { util } from "../../../util/util";
 import { OperatorDirective } from "../../history/declare";
 import { DropDirection } from "../../kit/handle/direction";
 import { BlockUrlConstant } from "../constant";
+import { Col } from "../element/col";
 import { BlockRenderRange } from "../enum";
 
 export class Block$Operator {
@@ -22,8 +23,16 @@ export class Block$Operator {
                 preBlockId: this.prev ? this.prev.id : undefined
             });
             pbs.remove(this);
-            this.page.onAddUpdate(this.parent);
-            await this.parent.layoutCollapse();
+            if (pbs.length > 0) {
+                if (this.parent.isRow && !this.parent.isPart) {
+                    var sum = pbs.sum(pb => (pb as any).widthPercent || 100);
+                    pbs.each(pb => {
+                        pb.updateProps({ widthPercent: ((pb as any).widthPercent || 100) * 100 / sum })
+                    })
+                }
+            }
+            this.page.addBlockUpdate(this.parent);
+            this.page.addBlockClearLayout(this.parent);
             delete this.parent;
         }
     }
@@ -41,8 +50,16 @@ export class Block$Operator {
                 data: await this.get()
             })
             pbs.remove(this);
-            this.page.onAddUpdate(this.parent);
-            await this.parent.layoutCollapse();
+            if (pbs.length > 0) {
+                if (this.parent.isRow && !this.parent.isPart) {
+                    var sum = pbs.sum(pb => (pb as any).widthPercent || 100);
+                    pbs.each(pb => {
+                        pb.updateProps({ widthPercent: ((pb as any).widthPercent || 100) * 100 / sum })
+                    })
+                }
+            }
+            this.page.addBlockUpdate(this.parent);
+            this.page.addBlockClearLayout(this.parent);
             delete this.parent;
         }
     }
@@ -63,15 +80,21 @@ export class Block$Operator {
      */
     async layoutCollapse(this: Block) {
         async function clearOneColOrRow(panel: Block) {
-            if (!panel.isPart && (panel.isRow || panel.isCol) && panel.childs.length == 1) {
-                var firstChild = panel.childs.first();
-                if (firstChild.isCol || firstChild.isRow) {
+            if (!panel.isPart) {
+                if (panel.isRow && panel.childs.length == 1 && panel.childs.first().isCol && !panel.childs.first().isPart) {
                     var c = panel;
-                    await firstChild.childs.eachAsync(async child => {
+                    var cs = panel.childs.first().childs.map(c => c);
+                    for (let i = 0; i < cs.length; i++) {
+                        var child = cs[i];
                         await child.insertAfter(c);
-                        await clearOneColOrRow(child);
                         c = child;
-                    })
+                    }
+                    await panel.delete();
+                }
+                else if (panel.isCol && panel.childs.length == 1) {
+                    var ele = panel.childs.first().childs[0];
+                    await ele.insertAfter(panel);
+                    ele.updateProps({ widthPercent: (panel as any).widthPercent })
                     await panel.delete();
                 }
             }
@@ -86,8 +109,7 @@ export class Block$Operator {
                 if ((panel.isRow || panel.isCol) && !panel.isPart) {
                     var pa = panel.parent;
                     await panel.delete();
-                    if (pa)
-                        await clearEmptyPanel(pa);
+                    if (pa) await clearEmptyPanel(pa);
                 }
             }
         }
@@ -111,8 +133,11 @@ export class Block$Operator {
         if (typeof at == 'undefined') at = bs.length;
         if (block.parent && bs.exists(block) && block.at < at) {
             at -= 1;
+            bs.remove(g => g == block);
         }
-        await block.remove();
+        else {
+            await block.remove();
+        }
         bs.insertAt(at, block);
         block.parent = this;
         this.page.snapshoot.record(OperatorDirective.append, {
@@ -122,7 +147,7 @@ export class Block$Operator {
             prevBlockId: block.prev ? block.prev.id : undefined,
             blockId: block.id
         });
-        this.page.onAddUpdate(this);
+        this.page.addBlockUpdate(this);
     }
     /**
      * 注意元素移到to元素下面，并非简单的append，
@@ -138,6 +163,7 @@ export class Block$Operator {
                 var row = to.closest(x => x.isRow);
                 if (row.childs.length > 1) {
                     var col = await this.page.createBlock(BlockUrlConstant.Col, {
+                        widthPercent: (to as any).widthPercent,
                         blocks: {
                             childs: [
                                 { url: BlockUrlConstant.Row },
@@ -146,21 +172,26 @@ export class Block$Operator {
                         }
                     }, to.parent, to.at);
                     if (direction == DropDirection.bottom) {
-                        await col.childs.first().append(to);
                         await col.childs.last().append(self);
+                        self.updateProps({ widthPercent: 100 });
+                        await col.childs.first().append(to);
+                        to.updateProps({ widthPercent: 100 });
                     }
                     else {
                         await col.childs.first().append(self);
+                        self.updateProps({ widthPercent: 100 });
                         await col.childs.last().append(to);
+                        to.updateProps({ widthPercent: 100 });
                     }
                 }
                 else {
                     var increse: number = 0;
                     if (direction == DropDirection.bottom) increse = 1;
-                    var newRow = await this.page.createBlock(BlockUrlConstant.Row, {},
-                        row.parent,
-                        row.at + increse);
+                    var newRow = await this.page.createBlock(BlockUrlConstant.Row, {
+                        widthPercent: (self as any).widthPercent
+                    }, row.parent, row.at + increse);
                     await newRow.append(self);
+                    self.updateProps({ widthPercent: 100 });
                 }
                 break;
             case DropDirection.left:
@@ -178,8 +209,17 @@ export class Block$Operator {
             case DropDirection.inner:
                 break;
             case DropDirection.sub:
+                await to.acceptSubFromMove(this);
                 break;
         }
+    }
+    /**
+     * 表示当前元素如何接收该元素至sub,
+     * @param this 
+     * @param sub  子元素是要移动的
+     */
+    async acceptSubFromMove(this: Block, sub: Block) {
+
     }
     updateProps(this: Block, props: Record<string, any>, range = BlockRenderRange.self) {
         var oldValue: Record<string, any> = {};
@@ -194,10 +234,10 @@ export class Block$Operator {
         if (Object.keys(oldValue).length > 0) {
             switch (range) {
                 case BlockRenderRange.self:
-                    this.page.onAddUpdate(this);
+                    this.page.addBlockUpdate(this);
                     break;
                 case BlockRenderRange.parent:
-                    this.page.onAddUpdate(this.parent)
+                    this.page.addBlockUpdate(this.parent)
                     break;
                 case BlockRenderRange.none:
                     break;
@@ -233,10 +273,10 @@ export class Block$Operator {
     syncUpdate(this: Block, range = BlockRenderRange.none) {
         switch (range) {
             case BlockRenderRange.self:
-                this.page.onAddUpdate(this);
+                this.page.addBlockUpdate(this);
                 break;
             case BlockRenderRange.parent:
-                this.page.onAddUpdate(this.parent)
+                this.page.addBlockUpdate(this.parent)
                 break;
             case BlockRenderRange.none:
                 break;

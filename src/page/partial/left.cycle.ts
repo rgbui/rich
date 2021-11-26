@@ -104,62 +104,69 @@ export class Page$Cycle {
         this.emit(PageDirective.save);
     }
     private willUpdateBlocks: Block[];
+    private willLayoutBlocks: Block[];
     private updatedFns: (() => Promise<void>)[] = [];
-    onReadyUpdate() {
-        this.willUpdateBlocks = [];
-        this.updatedFns = [];
-    }
-    onAddUpdate(block: Block) {
+    addBlockUpdate(block: Block) {
         var pa = this.willUpdateBlocks.find(g => g.contains(block));
         if (!pa) this.willUpdateBlocks.push(block);
+    }
+    addBlockClearLayout(block: Block) {
+        if (!this.willLayoutBlocks.exists(block))
+            this.willLayoutBlocks.push(block);
     }
     /**
      * 绑定更新后触发的事件
      * @param fn 
      */
-    onUpdated(fn: () => Promise<void>) {
+    addUpdateEvent(fn: () => Promise<void>) {
         this.updatedFns.push(fn);
     }
     /**
      * 触发需要更新的view,
      * 这个可以手动触发多次
      */
-    onExcuteUpdate() {
+    private onNotifyUpdateBlock(this: Page,) {
         var ups = this.willUpdateBlocks.map(c => c);
+        var fns = this.updatedFns.map(f => f);
         this.willUpdateBlocks = [];
-        var len = ups.length;
-        var count = 0;
-        var self = this;
-        var updated = async () => {
-            await self.updatedFns.eachAsync(async g => await g());
-            self.updatedFns = [];
-        }
-        ups.each(up => {
-            up.view.forceUpdate(() => {
-                count += 1;
-                if (count === len) updated()
-            });
-        });
-    }
-    async onObserveUpdate(fn: () => Promise<void>) {
-        this.onReadyUpdate();
-        if (typeof fn == 'function') {
-            await fn();
-        }
-        this.onExcuteUpdate();
+        this.updatedFns = [];
+        (async function () {
+            try {
+                await ups.eachAsync(async (up) => {
+                    await up.forceUpdate();
+                })
+            }
+            catch (ex) {
+                this.onError(ex);
+            }
+            await fns.eachAsync(async g => await g());
+        })()
     }
     async onAction(this: Page, directive: ActionDirective | string, fn: () => Promise<void>) {
         await this.snapshoot.sync(directive, async () => {
-            await this.onObserveUpdate(async () => {
-                if (typeof fn == 'function') {
-                    try {
-                        await fn();
-                    }
-                    catch (ex) {
-                        this.onError(ex);
+            this.willUpdateBlocks = [];
+            this.willLayoutBlocks = [];
+            this.updatedFns = [];
+            try {
+                if (typeof fn == 'function') await fn();
+            } catch (ex) {
+                this.onError(ex);
+            }
+            finally {
+                try {
+                    if (Array.isArray(this.willLayoutBlocks) && this.willLayoutBlocks.length > 0) {
+                        var bs = this.willLayoutBlocks;
+                        await bs.eachAsync(async (block) => {
+                            await block.layoutCollapse();
+                        });
+                        this.willLayoutBlocks = [];
                     }
                 }
-            })
+                catch (ex) {
+                    this.onError(ex);
+                }
+                this.onNotifyUpdateBlock();
+            }
         })
     }
     onUnmount(this: Page) {
@@ -187,17 +194,24 @@ export class Page$Cycle {
     }
     public hoverBlock: Block;
     onHoverBlock(this: Page, block: Block) {
-        if (this.hoverBlock == block) return;
-        if (this.hoverBlock) {
+        var isChange = this.hoverBlock != block;
+        if (isChange && this.hoverBlock) {
             this.onOutHoverBlock(this.hoverBlock);
         }
-        this.hoverBlock = block;
-        this.emit(PageDirective.hoverBlock, this.hoverBlock);
-        if (this.hoverBlock)
-            this.kit.handle.onShowBlockHandle(this.hoverBlock);
+        if (isChange) {
+            this.hoverBlock = block;
+            if (this.hoverBlock?.el) {
+                this.hoverBlock.el.classList.add('shy-block-hover');
+            }
+            this.emit(PageDirective.hoverBlock, this.hoverBlock);
+        }
+        if (this.hoverBlock) this.kit.handle.onShowBlockHandle(this.hoverBlock);
         else this.kit.handle.onCloseBlockHandle();
     }
     onOutHoverBlock(this: Page, block: Block) {
+        if (block?.el) {
+            block.el.classList.remove('shy-block-hover');
+        }
         this.emit(PageDirective.hoverOutBlock, block);
         this.kit.handle.onCloseBlockHandle();
     }
@@ -227,7 +241,7 @@ export class Page$Cycle {
      * 修复一些不正常的block
      */
     async onRepair(this: Page) {
-        this.views.eachAsync(async (view) => {
+        await this.views.eachAsync(async (view) => {
             view.eachReverse(b => {
                 /**
                  * 如果是空文本块，则删除掉空文本块

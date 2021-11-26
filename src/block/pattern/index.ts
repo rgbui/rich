@@ -90,7 +90,7 @@ export class Pattern {
                 data: sty.get()
             })
         }
-        this.block.page.onAddUpdate(this.block);
+        this.block.page.addBlockUpdate(this.block);
     }
     setStyles(styles: Record<BlockCssName, Record<string, any>>) {
         for (var n in styles) {

@@ -8,6 +8,7 @@ import { TextToolStyle } from "../../../extensions/text.tool";
 import { DropDirection } from "../../kit/handle/direction";
 import { Anchor } from "../../kit/selection/anchor";
 import { TextContent } from "../../block/element/text";
+import { BlockUrlConstant } from "../../block/constant";
 
 export class Page$Seek {
     /**
@@ -140,21 +141,55 @@ export class Page$Seek {
         }
         return bs;
     }
+    cacBlockDirection(this: Page, block: Block, event: MouseEvent) {
+        var direction = DropDirection.none;
+        var point = Point.from(event);
+        var bound = block.getVisibleContentBound();
+
+    }
     cacBlockDirectionByMouse(this: Page, block: Block, event: MouseEvent) {
         var direction = DropDirection.none;
         var point = Point.from(event);
-        var bound = block.getVisibleBound();
-        if (point.x <= bound.left) {
-            direction = DropDirection.left;
+        var bound = block.getVisibleContentBound();
+        if (block.url == BlockUrlConstant.List) {
+            if (point.x <= bound.left && point.y > bound.top && point.y < bound.top + bound.height) {
+                direction = DropDirection.left;
+            }
+            else if (point.x >= bound.left + bound.width && point.y > bound.top && point.y < bound.top + bound.height) {
+                direction = DropDirection.right;
+            }
+            else if (point.y <= bound.top + bound.height / 2) {
+                direction = DropDirection.top;
+            }
+            else if (point.y >= bound.top + bound.height / 2) {
+                if (block.url == BlockUrlConstant.List) {
+                    direction = DropDirection.sub;
+                    if (point.x - bound.left < 30) {
+                        direction = DropDirection.bottom;
+                    }
+                }
+                else direction = DropDirection.bottom;
+            }
         }
-        else if (point.x >= bound.left + bound.width) {
-            direction = DropDirection.right;
-        }
-        else if (point.y <= bound.top + bound.height / 2) {
-            direction = DropDirection.top;
-        }
-        else if (point.y >= bound.top + bound.height / 2) {
-            direction = DropDirection.bottom;
+        else {
+            if (point.x <= bound.left && point.y > bound.top && point.y < bound.top + bound.height) {
+                direction = DropDirection.left;
+            }
+            else if (point.x >= bound.left + bound.width && point.y > bound.top && point.y < bound.top + bound.height) {
+                direction = DropDirection.right;
+            }
+            else if (point.y <= bound.top + bound.height / 2) {
+                direction = DropDirection.top;
+            }
+            else if (point.y >= bound.top + bound.height / 2) {
+                if (block.url == BlockUrlConstant.List) {
+                    direction = DropDirection.sub;
+                    if (point.x - bound.left < 30) {
+                        direction = DropDirection.bottom;
+                    }
+                }
+                else direction = DropDirection.bottom;
+            }
         }
         return direction;
     }

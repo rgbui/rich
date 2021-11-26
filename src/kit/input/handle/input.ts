@@ -1,7 +1,6 @@
 import { TextInput } from "..";
 import { useBlockSelector } from "../../../../extensions/block";
 import { BlockSelectorItem } from "../../../../extensions/block/delcare";
-import { blockStore } from "../../../../extensions/block/store";
 import { InputDetector } from "../../../../extensions/input.detector/detector";
 import { DetectorOperator } from "../../../../extensions/input.detector/rules";
 import { Block } from "../../../block";
