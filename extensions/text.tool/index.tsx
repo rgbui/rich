@@ -59,14 +59,14 @@ class TextTool extends EventsComponent {
             this.emit('close');
         }
     }
-    private visible: boolean = false;
+    visible: boolean = false;
     private point: Point = new Point(0, 0);
     render() {
         var style: CSSProperties = {
             top: this.point.y,
             left: this.point.x
         };
-        return <div ref={el => this.el = el}>{this.visible == true && <div className='shy-tool-text-menu' style={style}>
+        return <div tabIndex={1} data-shy-page-unselect="true" onMouseUp={e => e.stopPropagation()} ref={el => this.el = el}>{this.visible == true && <div className='shy-tool-text-menu' style={style}>
             <Tip id={LangID.textToolTurn}>
                 <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenBlockSelector(e)}>
                     <span>Text</span><Icon icon='arrow-down:sy'></Icon>
@@ -244,6 +244,7 @@ export type textToolResult = { command: 'setStyle', styles: Record<BlockCssName,
     | { command: 'turn', item: MenuItemType<BlockDirective>, event: MouseEvent }
     | { command: "setProp", props: Record<string, any> }
     | false;
+
 export async function useTextTool(point: Point, options: { style: TextToolStyle, block: Block }) {
     var textTool = await Singleton(TextTool);
     textTool.open(point, options);
