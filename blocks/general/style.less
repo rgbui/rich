@@ -33,13 +33,21 @@
 .sy-block-quote {
     margin-top   : 4 px;
     margin-bottom: 4 px;
-    padding      : 3px 2px;
+    position     : relative;
+
+    &-bar {
+        width           : 4px;
+        background-color: #ddd;
+        position        : absolute;
+        top             : 0px;
+        left            : 0px;
+        bottom          : 0px;
+        border-radius   : 1px;
+    }
 
     &-content {
-        border-left  : 3px solid rgb(55, 53, 47);
         padding-left : 14px;
         padding-right: 14px;
-        font-size    : 1.2em;
         min-height   : 30px;
     }
 }
