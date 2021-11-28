@@ -37,11 +37,11 @@ export class PageEvent {
              */
             return
         }
-        /**
-         * 如果当前的texttool打开且焦点在texttool，那么此时不是失焦
-         */
-        //if (this.textTool.isVisible == true && this.textTool.isDown) { return; }
         var el = event.relatedTarget as Node;
+        /**
+         * 例如textTool操作时，页面是不能失焦的
+         */
+        if (el && (el as HTMLElement).getAttribute('data-shy-page-unselect')) return;
         if (!el || el && (!this.root.contains(el) || el === this.root)) {
             this.onBlur(event);
         }
