@@ -128,9 +128,8 @@ export class Page$Seek {
         var predict = (g) => true;
         if (filter && filter.rowOrCol == true && !filter.lineBlock) predict = (g: Block) => !g.isRow && !g.isCol;
         else if (filter && filter.lineBlock == true && filter.rowOrCol == true) predict = (g: Block) => !g.isLine && !g.isRow && !g.isCol;
-        var rs = start.block.nextFindAll(predict, true, c => c === end.block);
+        var rs = start.block.nextFindAll(predict, true, c => c === end.block, true);
         bs.addRange(rs);
-        bs.push(end.block);
         if (filter?.consideBoundary != true) {
             if (start.isEnd && !start.isSolid) {
                 bs.remove(s => start.block === s);
@@ -203,32 +202,22 @@ export class Page$Seek {
      * @param filter  lineBlock=ture 表示过滤掉isLine的block
      * @returns 
      */
-    searchBlocksBetweenMouseRect(this: Page, from: MouseEvent, to: MouseEvent, filter?: {
-        lineBlock?: boolean
-    }) {
+    searchBlocksBetweenMouseRect(this: Page,
+        from: MouseEvent,
+        to: MouseEvent,
+        filter?: {
+            lineBlock?: boolean
+        }) {
         var bs: Block[] = [];
         var fromBlock = this.getBlockInMouseRegion(from);
         var toBlock = this.getBlockInMouseRegion(to);
+        var topFromRow = fromBlock.closest(g => g.isBlock && !g.isView && !g.isRow && !g.isCol);
+        var topToRow = toBlock.closest(g => g.isBlock && !g.isView && !g.isRow && !g.isCol);
         var rect = new Rect(Point.from(from), Point.from(to));
-        var topFromRow = fromBlock.closest(g => g.isRow && !g.closest(x => x.isRow, true));
-        var topToRow = toBlock.closest(g => g.isRow && !g.closest(x => x.isRow, true));
-        var fromRowAt = topFromRow.at;
-        var toRowAt = topFromRow.at;
-        if (fromRowAt > toRowAt) {
-            [fromRowAt, toRowAt] = [toRowAt, fromRowAt];
-            [fromBlock, toBlock] = [toBlock, fromBlock];
-            [topFromRow, topToRow] = [topToRow, topFromRow];
-        }
-        while (topFromRow.getVisibleBound().isCross(rect)) {
-            if (topFromRow.prev) topFromRow = topFromRow.prev;
-            else break;
-        }
-        while (topToRow.getVisibleBound().isCross(rect)) {
-            if (topToRow.next) topToRow = topToRow.next;
-            else break;
-        }
-        while (true) {
-            topFromRow.each(b => {
+        if (!topFromRow && !topToRow) return bs;
+        if (topFromRow && !topToRow || !topFromRow && topToRow) {
+            var block = topFromRow ? topFromRow : topToRow;
+            block.each(b => {
                 if (!b.isRow && !b.isCol) {
                     if (b.isCrossBlockArea(rect)) {
                         if (filter && filter.lineBlock == true && b.isLine) {
@@ -239,12 +228,42 @@ export class Page$Seek {
                         return -1;
                     }
                 }
-            });
-            if (topFromRow.next) topFromRow = topFromRow.next;
-            else break;
-            if (topFromRow == topToRow) break;
+            }, true);
+            return bs;
         }
-        return bs;
+        else {
+            if (topToRow.isBefore(topFromRow)) {
+                [topFromRow, topToRow] = [topToRow, topFromRow];
+            }
+            if (topFromRow == topToRow) {
+                topFromRow.each(b => {
+                    if (!b.isRow && !b.isCol) {
+                        if (b.isCrossBlockContentArea(rect)) {
+                            if (filter && filter.lineBlock == true && b.isLine) {
+                                var pa = b.parent;
+                                if (!bs.exists(pa)) bs.push(pa);
+                            }
+                            else bs.push(b);
+                            return -1;
+                        }
+                    }
+                }, true);
+            }
+            else
+                topFromRow.nextFindAll(b => {
+                    if (!b.isRow && !b.isCol) {
+                        if (b.isCrossBlockContentArea(rect)) {
+                            if (filter && filter.lineBlock == true && b.isLine) {
+                                var pa = b.parent;
+                                if (!bs.exists(pa)) bs.push(pa);
+                            }
+                            else bs.push(b);
+                        }
+                    }
+                    return false;
+                }, true, g => g == topToRow, true);
+            return bs;
+        }
     }
     /**
      * 这里判断两个anchor是否相邻,是否紧挨着
