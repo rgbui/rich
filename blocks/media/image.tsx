@@ -16,6 +16,7 @@ import { Icon } from "../../component/view/icon";
 import { useImagePicker } from "../../extensions/image/picker";
 import { Directive } from "../../util/bus/directive";
 import { messageChannel } from "../../util/bus/event.bus";
+
 @url('/image')
 export class Image extends Block {
     @prop()
@@ -66,6 +67,14 @@ export class Image extends Block {
             return Rect.fromEle(img);
         }
         return super.getVisibleContentBound();
+    }
+    addBlockSelect() {
+        var el = this.el.querySelector('.sy-block-image-content-view-wrapper');
+        if (el) {
+            el.classList.add('shy-block-selected');
+            return el as HTMLElement;
+        }
+        return this.el;
     }
 }
 @view('/image')
