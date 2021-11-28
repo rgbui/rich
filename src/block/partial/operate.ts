@@ -100,10 +100,20 @@ export class Block$Operator {
         }
         if (this.isRow) {
             var cols = this.childs;
-            var sum = cols.sum(x => (x as Col).widthPercent);
-            cols.forEach(col => {
-                col.updateProps({ widthPercent: (col as Col).widthPercent * 100 / sum })
-            })
+            if (cols.length > 1) {
+                var sum = cols.sum(x => (x as Col).widthPercent);
+                cols.forEach(col => {
+                    col.updateProps({ widthPercent: (col as Col).widthPercent * 100 / sum })
+                })
+            }
+            else if (cols.length == 1) {
+                var cs = cols.first().childs.map(c => c);
+                var at = this.at;
+                for (let i = 0; i < cs.length; i++) {
+                    await this.parent.append(cs[i], at + i)
+                }
+                await this.delete();
+            }
         }
     }
     async insertBefore(this: Block, to: Block) {
@@ -151,7 +161,7 @@ export class Block$Operator {
         switch (direction) {
             case DropDirection.bottom:
             case DropDirection.top:
-                var row = to.closest(x =>x.isBlock);
+                var row = to.closest(x => x.isBlock);
                 var childsKey = 'childs';
                 if (row.parent.url == BlockUrlConstant.List) {
                     childsKey = 'subChilds';

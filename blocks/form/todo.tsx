@@ -48,16 +48,16 @@ export class ToDo extends TextSpan {
 export class ToDoView extends BlockView<ToDo>{
     render() {
         if (this.block.childs.length > 0) {
-            return <span className='sy-block-todo' style={this.block.visibleStyle}>
+            return <div className='sy-block-todo' style={this.block.visibleStyle}>
                 <div className='sy-block-todo-checkbox'>    <input onMouseDown={e => e.stopPropagation()} type='checkbox' checked={this.block.checked} onChange={e => this.block.onChange(e.nativeEvent)} /></div>
                 <TextLineChilds rf={e => this.block.childsEl = e} childs={this.block.childs}></TextLineChilds>
-            </span>
+            </div>
         }
         else {
-            return <span className='sy-block-todo' style={this.block.visibleStyle}>
+            return <div className='sy-block-todo' style={this.block.visibleStyle}>
                 <div className='sy-block-todo-checkbox'><input onMouseDown={e => e.stopPropagation()} type='checkbox' checked={this.block.checked} onChange={e => this.block.onChange(e.nativeEvent)} /></div>
                 <span className='sy-block-todo-text'><TextArea placeholder={langProvider.getText(LangID.todoPlaceholder)} rf={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent}></TextArea></span>
-            </span>
+            </div>
         }
     }
 }
