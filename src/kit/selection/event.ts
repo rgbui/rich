@@ -13,14 +13,11 @@ export class SelectionExplorer$Events {
     * 取消选区
     */
     onCancelSelection(this: SelectionExplorer) {
-        if (this.currentSelectedBlocks.length > 0) {
+        if (this.currentSelectedBlocks.length > 0)
             this.currentSelectedBlocks = [];
-        }
-        else {
-            if (this.start && this.start != this.activeAnchor)
-                this.start.dispose()
-            if (this.end && this.end != this.activeAnchor)
-                this.end.dispose()
+        if (this.start && this.end) {
+            this.end.dispose();
+            this.end = null;
         }
         this.renderSelection();
     }
@@ -240,7 +237,6 @@ export class SelectionExplorer$Events {
             end = this.start;
         }
         await this.page.onAction(ActionDirective.onUpdatePattern, async () => {
-            // var newStart: Block, newEnd: Block;
             var ns: { block: Block, at?: number } = {} as any;
             var ne: { block: Block, at?: number } = {} as any;
             await bs.eachAsync(async block => {
@@ -255,7 +251,7 @@ export class SelectionExplorer$Events {
                     var fissContent = this.page.fissionBlockBySelection(block, this.start, this.end);
                     /**
                      * 有可能anchor就是block的开头，而anchor是选区的结尾，
-                     * 实际上选区没有选区任何当前block的同容
+                     * 实际上选区没有选择任何当前block的内容
                      */
                     if (!fissContent.before && !fissContent.before && !fissContent.current) {
                         if (block == start.block) ns = { block: block, at: start.at }
@@ -328,6 +324,12 @@ export class SelectionExplorer$Events {
                 }
             });
             if (ns && ne) {
+                if (!ns.block) {
+                    ns = { block: start.block, at: start.at };
+                }
+                if (!ne.block) {
+                    ne = { block: end.block, at: end.at };
+                }
                 /**
                 * 这时的newStart
                 * newEnd是现创建的，
@@ -365,9 +367,9 @@ export class SelectionExplorer$Events {
                     await lineBlock.onClickContextMenu(result.item, result.event);
                     break;
                 }
+                else break;
             }
             else break;
         }
-
     }
 }
