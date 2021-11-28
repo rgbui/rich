@@ -46,15 +46,29 @@ export class Page$Seek {
          */
         x = Math.max(contentBound.left + dis, x);
         x = Math.min(contentBound.left + contentBound.width - dis, x);
-        el = document.elementFromPoint(x, contentBound.top + dis);
-        if (el) {
-            block = this.getEleBlock(el as HTMLElement);
-            if (block) return block;
+        if (Math.abs(y - contentBound.y) > Math.abs(y - contentBound.y - contentBound.height)) {
+            el = document.elementFromPoint(x, contentBound.top + contentBound.height - dis);
+            if (el) {
+                block = this.getEleBlock(el as HTMLElement);
+                if (block) return block;
+            }
+            el = document.elementFromPoint(x, contentBound.top + dis);
+            if (el) {
+                block = this.getEleBlock(el as HTMLElement);
+                if (block) return block;
+            }
         }
-        el = document.elementFromPoint(x, contentBound.top + contentBound.height - dis);
-        if (el) {
-            block = this.getEleBlock(el as HTMLElement);
-            if (block) return block;
+        else {
+            el = document.elementFromPoint(x, contentBound.top + dis);
+            if (el) {
+                block = this.getEleBlock(el as HTMLElement);
+                if (block) return block;
+            }
+            el = document.elementFromPoint(x, contentBound.top + contentBound.height - dis);
+            if (el) {
+                block = this.getEleBlock(el as HTMLElement);
+                if (block) return block;
+            }
         }
     }
     getEleBlock(this: Page, el: HTMLElement): Block {
@@ -195,7 +209,21 @@ export class Page$Seek {
         }) {
         var bs: Block[] = [];
         var fromBlock = this.getBlockInMouseRegion(from);
+        if (fromBlock.isView) {
+            var fb = fromBlock.getVisibleContentBound();
+            if (Math.abs(from.y - fb.y) > Math.abs(from.y - fb.y - fb.height)) {
+                fromBlock = fromBlock.childs.last();
+            }
+            else fromBlock = fromBlock.childs.first();
+        }
         var toBlock = this.getBlockInMouseRegion(to);
+        if (toBlock.isView) {
+            var fb = toBlock.getVisibleContentBound();
+            if (Math.abs(to.y - fb.y) > Math.abs(to.y - fb.y - fb.height)) {
+                toBlock = toBlock.childs.last();
+            }
+            else toBlock = toBlock.childs.first();
+        }
         var topFromRow = fromBlock.closest(g => g.isBlock && !g.isView && !g.isRow && !g.isCol);
         var topToRow = toBlock.closest(g => g.isBlock && !g.isView && !g.isRow && !g.isCol);
         var rect = new Rect(Point.from(from), Point.from(to));

@@ -97,7 +97,7 @@ export class PageMouse {
     async onMouseup(event: MouseEvent) {
         if (this.isDown) {
             if (this.isMove) {
-                if (!this.downAnchor) this.selector.close();
+                this.selector.close();
                 this.isMove = false;
             }
             delete this.downAnchor;
