@@ -227,18 +227,30 @@ export class Block$Seek {
         }
         return nextParentFind(this);
     }
-    nextFindAll(this: Block, predict: (block: Block) => boolean, consider: boolean = false, finalPredict?: (block: Block) => boolean) {
+    nextFindAll(this: Block, predict: (block: Block) => boolean, consider: boolean = false, finalPredict?: (block: Block) => boolean, isConsideFinal?: boolean
+    ) {
         var bs: Block[] = [];
         var isFinal: boolean = false;
         function _find(block: Block, consider: boolean = false) {
             var blocks: Block[] = [];
             block.each(r => {
-                if (typeof finalPredict == 'function' && finalPredict(r) == true) {
-                    isFinal = true;
-                    return false;
+                if (isConsideFinal == true) {
+                    if (predict(r) == true) {
+                        blocks.push(r);
+                    }
+                    if (typeof finalPredict == 'function' && finalPredict(r) == true) {
+                        isFinal = true;
+                        return false;
+                    }
                 }
-                if (predict(r) == true) {
-                    blocks.push(r);
+                else {
+                    if (typeof finalPredict == 'function' && finalPredict(r) == true) {
+                        isFinal = true;
+                        return false;
+                    }
+                    if (predict(r) == true) {
+                        blocks.push(r);
+                    }
                 }
             }, consider);
             return blocks;
@@ -258,8 +270,14 @@ export class Block$Seek {
                     if (r) { bs.addRange(r); }
                     if (isFinal) return;
                 }
-                if (typeof finalPredict == 'function' && finalPredict(pa) == true) return;
-                if (predict(pa) == true) bs.push(pa);
+                if (isConsideFinal == true) {
+                    if (typeof finalPredict == 'function' && finalPredict(pa) == true) return;
+                    if (predict(pa) == true) bs.push(pa);
+                }
+                else {
+                    if (predict(pa) == true) bs.push(pa);
+                    if (typeof finalPredict == 'function' && finalPredict(pa) == true) return;
+                }
                 var g = nextParentFind(pa);
                 if (g) return g;
             }
