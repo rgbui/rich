@@ -58,14 +58,21 @@ export class Handle extends Events {
             dom(this.dropBlock.el).removeClass(g => g.startsWith('shy-block-drag-over'));
             this.kit.page.onDropLeaveBlock(this.dragBlocks, this.dropBlock, this.dropDirection);
         }
-        this.dropBlock = willDropBlock;
         if (willDropBlock) {
-            this.dropDirection = this.kit.page.cacBlockDirectionByMouse(willDropBlock, event);
-            var direction = DropDirection[this.dropDirection];
-            var className = 'shy-block-drag-over-' + direction;
-            if (!this.dropBlock.el.classList.contains(className)) {
-                dom(this.dropBlock.el).removeClass(g => g.startsWith('shy-block-drag-over'));
-                this.dropBlock.el.classList.add(className);
+            var dr = this.kit.page.cacBlockDirection(willDropBlock, event);
+            if (dr.direction != DropDirection.none) {
+                this.dropDirection = dr.direction;
+                this.dropBlock = dr.block;
+                var direction = DropDirection[this.dropDirection];
+                var className = 'shy-block-drag-over-' + direction;
+                if (!this.dropBlock.el.classList.contains(className)) {
+                    dom(this.dropBlock.el).removeClass(g => g.startsWith('shy-block-drag-over'));
+                    this.dropBlock.el.classList.add(className);
+                }
+            }
+            else {
+                this.dropDirection = DropDirection.none;
+                delete this.dropBlock;
             }
         }
         else {
