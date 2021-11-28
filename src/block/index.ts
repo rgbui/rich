@@ -167,11 +167,12 @@ export abstract class Block extends Events {
     get visibleStyle() {
         var style: Record<string, any> = {};
         if (this.isBlock) {
+            if (this.isCol)
+                Object.assign(style, {
+                    width: ((this as any).widthPercent || 100) + '%'
+                });
             Object.assign(style, {
-                width: ((this as any).widthPercent || 100) + '%'
-            });
-            Object.assign(style, {
-                padding: '3px 2px'
+                padding: '3px 0px'
             })
         }
         Object.assign(style, this.pattern.style);
@@ -341,6 +342,16 @@ export abstract class Block extends Events {
         }
         return false;
     }
+    isCrossBlockContentArea(rect: Rect | Point) {
+        var bound = this.getVisibleContentBound();
+        if (rect instanceof Rect && bound.isCross(rect)) {
+            return true;
+        }
+        else if (rect instanceof Point && bound.conatin(rect)) {
+            return true;
+        }
+        return false;
+    }
     isCrossBlockArea(rect: Rect | Point) {
         var el = this.el;
         var bound = Rect.fromEle(el);
@@ -360,6 +371,17 @@ export abstract class Block extends Events {
                 })
             else resolve(true);
         })
+    }
+    isBefore(block: Block) {
+        var pos = this.el.compareDocumentPosition(block.el);
+        if (pos == 4 || pos == 20) {
+            return true
+        }
+        return false
+    }
+    addBlockSelect() {
+        this.el.classList.add('shy-block-selected');
+        return this.el;
     }
 }
 export interface Block extends Block$Seek { }
