@@ -1,6 +1,6 @@
 import React from 'react';
 import { BlockDisplay } from "../enum";
-import { url, view } from "../factory/observable";
+import { url, view, prop } from "../factory/observable";
 import { BlockView } from "../view";
 import { ChildsArea } from "../view/appear";
 import { Block } from "..";
@@ -11,6 +11,8 @@ export class Col extends Block {
     get isCol() {
         return true;
     }
+    @prop()
+    widthPercent: number = 100;
 }
 @view('/col')
 export class ColView extends BlockView<Col>{

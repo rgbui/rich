@@ -5,14 +5,7 @@ export var data = {
             url: '/view',
             blocks: {
                 childs: [
-                    {
-                        url: '/row',
-                        blocks: {
-                            childs: [
-                                { url: '/title', },
-                            ]
-                        }
-                    }
+                    { url: '/title' }
                 ]
             }
         }

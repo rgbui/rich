@@ -1,3 +1,4 @@
+
 import { Block } from "..";
 import { util } from "../../../util/util";
 import { OperatorDirective } from "../../history/declare";
@@ -79,41 +80,31 @@ export class Block$Operator {
      * 需要调成row-ele,其中col-row需要删除
      */
     async layoutCollapse(this: Block) {
-        async function clearOneColOrRow(panel: Block) {
-            if (!panel.isPart) {
-                if (panel.isRow && panel.childs.length == 1 && panel.childs.first().isCol && !panel.childs.first().isPart) {
-                    var c = panel;
-                    var cs = panel.childs.first().childs.map(c => c);
-                    for (let i = 0; i < cs.length; i++) {
-                        var child = cs[i];
-                        await child.insertAfter(c);
-                        c = child;
-                    }
-                    await panel.delete();
-                }
-                else if (panel.isCol && panel.childs.length == 1) {
-                    var ele = panel.childs.first().childs[0];
-                    await ele.insertAfter(panel);
-                    ele.updateProps({ widthPercent: (panel as any).widthPercent })
-                    await panel.delete();
-                }
-            }
-        }
-        await clearOneColOrRow(this);
         /**
          * 
          * @param panel 自动删除空row,空col
          */
-        async function clearEmptyPanel(panel: Block) {
-            if (panel.childs.length == 0) {
-                if ((panel.isRow || panel.isCol) && !panel.isPart) {
-                    var pa = panel.parent;
-                    await panel.delete();
-                    if (pa) await clearEmptyPanel(pa);
+        var sub = this.find(panel => panel.childs.length == 0 && (panel.isRow || panel.isCol) && !panel.isPart, true);
+        if (sub) {
+            while (true) {
+                if (sub) {
+                    var pa = sub.parent;
+                    if (sub.childs.length == 0) {
+                        await sub.delete();
+                        sub = pa;
+                    }
+                    else break;
                 }
+                else break;
             }
         }
-        await clearEmptyPanel(this);
+        if (this.isRow) {
+            var cols = this.childs;
+            var sum = cols.sum(x => (x as Col).widthPercent);
+            cols.forEach(col => {
+                col.updateProps({ widthPercent: (col as Col).widthPercent * 100 / sum })
+            })
+        }
     }
     async insertBefore(this: Block, to: Block) {
         await to.parent.append(this,
@@ -160,53 +151,77 @@ export class Block$Operator {
         switch (direction) {
             case DropDirection.bottom:
             case DropDirection.top:
-                var row = to.closest(x => x.isRow);
-                if (row.childs.length > 1) {
-                    var col = await this.page.createBlock(BlockUrlConstant.Col, {
-                        widthPercent: (to as any).widthPercent,
-                        blocks: {
-                            childs: [
-                                { url: BlockUrlConstant.Row },
-                                { url: BlockUrlConstant.Row }
-                            ]
-                        }
-                    }, to.parent, to.at);
-                    if (direction == DropDirection.bottom) {
-                        await col.childs.last().append(self);
-                        self.updateProps({ widthPercent: 100 });
-                        await col.childs.first().append(to);
-                        to.updateProps({ widthPercent: 100 });
-                    }
-                    else {
-                        await col.childs.first().append(self);
-                        self.updateProps({ widthPercent: 100 });
-                        await col.childs.last().append(to);
-                        to.updateProps({ widthPercent: 100 });
-                    }
+                var row = to.closest(x =>x.isBlock);
+                var childsKey = 'childs';
+                if (row.parent.url == BlockUrlConstant.List) {
+                    childsKey = 'subChilds';
+                }
+                if (direction == DropDirection.bottom) {
+                    await row.parent.append(this, row.at + 1, childsKey);
                 }
                 else {
-                    var increse: number = 0;
-                    if (direction == DropDirection.bottom) increse = 1;
-                    var newRow = await this.page.createBlock(BlockUrlConstant.Row, {
-                        widthPercent: (self as any).widthPercent
-                    }, row.parent, row.at + increse);
-                    await newRow.append(self);
-                    self.updateProps({ widthPercent: 100 });
+                    await row.parent.append(this, row.at, childsKey);
                 }
                 break;
             case DropDirection.left:
-                await this.insertBefore(to);
+                if (to.isCol || to.parent.isCol) {
+                    var col = to.isCol ? to : to.parent;
+                    var sum = col.childs.sum(x => (x as Col).widthPercent);
+                    var r = Math.round(100 / (col.childs.length + 1));
+                    col.childs.each(c => {
+                        c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) })
+                    })
+                    var newCol = await this.page.createBlock(BlockUrlConstant.Col, { widthPercent: r }, col.parent, col.at);
+                    await newCol.append(this);
+                }
+                else {
+                    var newRow = await this.page.createBlock(BlockUrlConstant.Row, {
+                        blocks: {
+                            childs: [
+                                { url: BlockUrlConstant.Col, widthPercent: 50 },
+                                { url: BlockUrlConstant.Col, widthPercent: 50 }
+                            ]
+                        }
+                    }, to.parent, to.at)
+                    await newRow.childs.first().append(this);
+                    await newRow.childs.last().append(to);
+                }
                 /**
                  * 这里新增一个元素，需要调整当前行内的所有元素比例
                  */
                 break;
             case DropDirection.right:
-                await this.insertAfter(to);
+                if (to.isCol || to.parent.isCol) {
+                    var col = to.isCol ? to : to.parent;
+                    var sum = col.childs.sum(x => (x as Col).widthPercent);
+                    var r = Math.round(100 / (col.childs.length + 1));
+                    col.childs.each(c => {
+                        c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) })
+                    })
+                    var newCol = await this.page.createBlock(BlockUrlConstant.Col, { widthPercent: r }, col.parent, col.at + 1);
+                    await newCol.append(this);
+                }
+                else {
+                    var newRow = await this.page.createBlock(BlockUrlConstant.Row, {
+                        blocks: {
+                            childs: [
+                                { url: BlockUrlConstant.Col, widthPercent: 50 },
+                                { url: BlockUrlConstant.Col, widthPercent: 50 }
+                            ]
+                        }
+                    }, to.parent, to.at)
+                    await newRow.childs.first().append(to);
+                    await newRow.childs.last().append(this);
+                }
                 /**
                 * 这里新增一个元素，需要调整当前行内的所有元素比例
                 */
                 break;
             case DropDirection.inner:
+                /**这时判断是否可以允许换行的block，还是替换 */
+                var old = to;
+                await to.parent.append(this, old.at);
+                await old.delete();
                 break;
             case DropDirection.sub:
                 await to.acceptSubFromMove(this);

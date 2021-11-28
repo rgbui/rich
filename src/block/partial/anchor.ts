@@ -110,39 +110,35 @@ export class Block$Anchor {
         var next = self.visibleNext;
         if (next) return self.page.kit.explorer.createAnchor(next);
     }
-    get row() {
-        var self: Block = this as any;
-        return self.closest(x => x.isRow);
-    }
-    get nextRow() {
+    get nextBlock() {
         var self: Block = this as any;
         /**
          * 如果元素本身有子元素，那么当前行则以当前元素的子row做为下一行
          */
-        if (self.hasChilds && self.exists(x => x.isRow)) {
-            var r = self.find(g => g.isRow);
+        if (self.hasChilds && self.exists(x => x.isBlock)) {
+            var r = self.find(g => g.isBlock);
             if (r) return r;
         }
-        var row = self.row;
+        var row = self.closest(x => x.isBlock);
         if (row) {
             while (true) {
                 if (row.parent && row.at == row.parentBlocks.length - 1) {
-                    var newRow = row.closest(x => x.isRow, true);
+                    var newRow = row.closest(x => x.isBlock, true);
                     if (newRow) row = newRow;
                     else break;
                 }
                 else break;
             }
-            return row.nextFind(g => g.isRow);
+            return row.nextFind(g => g.isBlock && !g.isPart);
         }
     }
-    get prevRow() {
+    get prevBlock() {
         var self: Block = this as any;
-        var row = self.row;
+        var row = self.closest(x => x.isBlock);
         if (row) {
             while (true) {
                 if (row.at == 0) {
-                    var newRow = row.closest(x => x.isRow, true);
+                    var newRow = row.closest(x => x.isBlock, true);
                     if (newRow) {
                         var nb = row.prevFind(x => x.isSupportAnchor);
                         if (nb && newRow.exists(x => x == nb)) {
@@ -153,7 +149,7 @@ export class Block$Anchor {
                     else break;
                 } else break;
             }
-            return row.prevFind(g => g.isRow);
+            return row.prevFind(g => g.isBlock);
         }
     }
     visibleDownAnchor(this: Block, anchor: Anchor) {
@@ -165,7 +161,7 @@ export class Block$Anchor {
             }
         }
         else if (anchor.isSolid) x = anchor.bound.right;
-        var row = this.nextRow;
+        var row = this.nextBlock;
         /**
          * 如果下一行没找到，则继续找下一行，直到没有了为止
          */
@@ -175,7 +171,7 @@ export class Block$Anchor {
                 var anchor = row.visibleAnchor(new Point(x, bound.top + 1));
                 if (anchor) return anchor;
                 else {
-                    var r = row.nextRow;
+                    var r = row.nextBlock;
                     if (r === row) break;
                     else row = r;
                 }
@@ -192,7 +188,7 @@ export class Block$Anchor {
             }
         }
         else if (anchor.isSolid) x = anchor.bound.left;
-        var row = this.prevRow;
+        var row = this.prevBlock;
         while (true) {
             if (row) {
                 var bound = row.getVisibleBound();
@@ -208,7 +204,7 @@ export class Block$Anchor {
                 var anchor = row.visibleAnchor(new Point(x, top));
                 if (anchor) return anchor;
                 else {
-                    row = row.prevRow;
+                    row = row.prevBlock;
                 }
             }
             else break;
@@ -322,26 +318,8 @@ export class Block$Anchor {
    * @returns 
    */
     async visibleDownCreateBlock(this: Block, url: string, data: Record<string, any> = {}) {
-        var row = this.closest(x => x.isRow);
-        if (row.childs.length > 1 && this.parent === row) {
-            var col = await this.page.createBlock(BlockUrlConstant.Col, {
-                blocks: {
-                    childs: [{ url: BlockUrlConstant.Row }, { url: BlockUrlConstant.Row }]
-                }
-            }, this.parent, this.at + 1);
-            col.childs.first().append(this);
-            return await this.page.createBlock(url, data, col.childs.last());
-        }
-        else {
-            var newRow = await this.page.createBlock(BlockUrlConstant.Row, {
-                blocks: {
-                    childs: [
-                        { url, ...data }
-                    ]
-                }
-            }, row.parent, row.at + 1);
-            return newRow.childs.first();
-        }
+        var row = this.closest(x => x.isBlock);
+        return await this.page.createBlock(url, { ...data }, row.parent, row.at + 1);
     }
     /**
      * 在当前的block的右侧创建一个新的block
