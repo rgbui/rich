@@ -126,7 +126,6 @@ function getTextBlock(element: HTMLElement) {
     else if (name == 'blockquote') url = '/quote';
     return url;
 }
-
 async function parseBlock(element: HTMLElement) {
     var name = element?.tagName?.toLowerCase();
     var textBlockUrl = getTextBlock(element);
@@ -140,7 +139,7 @@ async function parseBlock(element: HTMLElement) {
     else if (name == 'img' || name == 'video' || name == 'audio' || name == 'iframe') return await parseMedia(element)
     else {
         var rs: any[] = [];
-        if (element.children.length > 0) {
+        if (element?.children?.length > 0) {
             for (let i = 0; i < element.childNodes.length; i++) {
                 var ele = element.childNodes[i] as HTMLElement;
                 var name = ele?.tagName?.toLowerCase();
