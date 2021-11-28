@@ -27,7 +27,11 @@ export class BlockFactory {
             newBlock.viewComponent = bc.view;
             if (parent) newBlock.parent = parent;
             if (typeof newBlock.initialLoad == 'function') await newBlock.initialLoad();
-            if (data) await newBlock.load(Object.assign(pb.data, data));
+            if (data) {
+                if (data.url)
+                    data.url = pb.url;
+                await newBlock.load(Object.assign(pb.data, data));
+            }
             return newBlock;
         }
         else throw new Exception(ExceptionType.notFoundBlockUrl, 'not found block class:' + url)
