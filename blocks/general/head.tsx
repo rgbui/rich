@@ -34,17 +34,23 @@ export class HeadView extends BlockView<Head>{
         if (this.block.level == 'h1') {
             style.fontSize = 30
             style.lineHeight = '39px';
-            style.marginTop = '2em';
+            style.marginTop = 32;
             style.marginBottom = '4px';
         }
         else if (this.block.level == 'h2') {
             style.fontSize = 24;
             style.lineHeight = '31.2px';
-            style.marginTop = '1.4em';
+            style.marginTop = 22;
             style.marginBottom = '1px';
         }
         else if (this.block.level == 'h3') {
             style.fontSize = 20;
+            style.lineHeight = '26px';
+            style.marginTop = '1em';
+            style.marginBottom = '1px';
+        }
+        else if (this.block.level == 'h4') {
+            style.fontSize = 16;
             style.lineHeight = '26px';
             style.marginTop = '1em';
             style.marginBottom = '1px';
