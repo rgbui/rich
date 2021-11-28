@@ -42,6 +42,7 @@ export class PageMouse {
                         if (Array.isArray(blocks) && blocks.length > 0) {
                             this.explorer.onSelectBlocks(blocks);
                         }
+                        else this.explorer.onFocusAnchor(this.explorer.activeAnchor);
                     }
                 }
                 else
@@ -60,33 +61,29 @@ export class PageMouse {
             var downPoint = Point.from(this.downEvent);
             if (downPoint.remoteBy(Point.from(event), 5)) {
                 this.isMove = true;
-                if (!this.downAnchor) this.selector.setStart(downPoint)
+                this.selector.setStart(downPoint)
             }
             if (this.isMove == true) {
-                if (!this.downAnchor) {
+                var hasTextRange: boolean = false;
+                if (this.downAnchor) {
+                    var block = this.page.getMouseTargetBlock(event);
+                    if (block) {
+                        var anchor = block.visibleAnchor(Point.from(event));
+                        if (anchor && this.page.isInlineAnchor(anchor, this.downAnchor)) {
+                            this.explorer.onShiftFocusAnchor(anchor);
+                            hasTextRange = true;
+                        }
+                    }
+                }
+                if (!hasTextRange) {
                     this.selector.setMove(Point.from(event));
                     var blocks = this.page.searchBlocksBetweenMouseRect(this.downEvent, event, { lineBlock: true });
                     if (Array.isArray(blocks) && blocks.length > 0) {
                         this.explorer.onSelectBlocks(blocks);
                     }
+                    else this.explorer.onCancelSelection();
                 }
-                else {
-                    var block = this.page.getMouseTargetBlock(event);
-                    var hastTextRange: boolean = false;
-                    if (block) {
-                        var anchor = block.visibleAnchor(Point.from(event));
-                        if (anchor && this.page.isInlineAnchor(anchor, this.downAnchor)) {
-                            this.explorer.onShiftFocusAnchor(anchor);
-                            hastTextRange = true;
-                        }
-                    }
-                    if (!hastTextRange) {
-                        var blocks = this.page.searchBlocksBetweenMouseRect(this.downEvent, event, { lineBlock: true });
-                        if (Array.isArray(blocks) && blocks.length > 0) {
-                            this.explorer.onSelectBlocks(blocks);
-                        }
-                    }
-                }
+                else this.selector.close();
             }
         }
         //判断当前的ele是否在bar自已本身内
