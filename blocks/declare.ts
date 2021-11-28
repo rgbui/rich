@@ -14,7 +14,6 @@ import "./present/katex";
 import "./present/bookmark";
 import "./form/todo";
 import "./present/list/list";
-import "./present/list/list.sub.panel";
 import "./present/code/code";
 import "./present/divider";
 import './table/cell';
