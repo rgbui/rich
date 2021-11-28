@@ -87,15 +87,13 @@ export class ListView extends BlockView<List>{
             }}><Icon icon={this.block.expand == true ? 'arrow-down:sy' : 'arrow-right:sy'}></Icon></span>
         }
         else if (this.block.listType == ListType.number) {
-            var row = this.block.parent;
-            var pas = row.parentBlocks;
-            var at = pas.findIndex(g => g === row);
+            var pas = this.block.parentBlocks;
+            var at = pas.findIndex(g => g === this.block);
             var num = 1;
             for (let i = at - 1; i >= 0; i--) {
                 var prevRow = pas[i];
                 if (prevRow) {
-                    var firstChild = prevRow.childs[0];
-                    if (firstChild instanceof List && firstChild.listType == this.block.listType) {
+                    if (prevRow instanceof List && prevRow.listType == this.block.listType) {
                         num += 1;
                     }
                     else break;
