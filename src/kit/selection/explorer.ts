@@ -62,8 +62,8 @@ export class SelectionExplorer extends Events {
             else {
                 var currentEls = Array.from(this.kit.page.root.querySelectorAll(".shy-block-selected"));
                 this.currentSelectedBlocks.each(sel => {
-                    currentEls.remove(sel.el);
-                    sel.el.classList.add('shy-block-selected');
+                    var el = sel.addBlockSelect();
+                    currentEls.remove(el);
                 });
                 currentEls.each(el => {
                     el.classList.remove('shy-block-selected');
@@ -168,7 +168,7 @@ export class SelectionExplorer extends Events {
         return this.start && this.end || this.currentSelectedBlocks.length > 0
     }
     get hasTextRange() {
-        return this.start && this.end && this.currentSelectedBlocks.length == 0 && this.page.isInlineAnchor(this.start, this.end)
+        return this.start && this.end && this.start.isText && this.end.isText && this.currentSelectedBlocks.length == 0 && this.page.isInlineAnchor(this.start, this.end)
     }
     get isOnlyAnchor() {
         return this.start && !this.end;
@@ -184,6 +184,7 @@ export class SelectionExplorer extends Events {
         currentEls.each(el => {
             el.classList.remove('shy-block-selected');
         });
+        this.onCancelSelection();
     }
     /**
      * 获取选区的起始位置

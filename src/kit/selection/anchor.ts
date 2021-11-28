@@ -44,10 +44,10 @@ export class Anchor {
     }
     elementAppear: AppearAnchor;
     get isText() {
-        return this.elementAppear.isText;
+        return this.elementAppear?.isText ? true : false;
     }
     get isSolid() {
-        return this.elementAppear.isSolid
+        return this.elementAppear?.isSolid ? true : false;
     }
     get textContent() {
         return this.elementAppear.textContent
