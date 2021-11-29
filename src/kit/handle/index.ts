@@ -43,8 +43,7 @@ export class Handle extends Events {
     onCloseBlockHandle() {
         var handleEl = this.view.handleEle;
         handleEl.style.display = 'none';
-        if (!this.view.isDown)
-            delete this.handleBlock;
+        if (!this.view.isDown) delete this.handleBlock;
     }
     containsEl(el: HTMLElement) {
         return this.view.handleEle.contains(el);
@@ -52,8 +51,17 @@ export class Handle extends Events {
     dragBlocks: Block[] = [];
     dropBlock: Block;
     dropDirection: DropDirection;
-    onDropOverBlock(block: Block, event: MouseEvent) {
-        var willDropBlock: Block = block;
+    onDropOverBlock(willDropBlock: Block, event: MouseEvent) {
+        if (willDropBlock) {
+            var db = this.dragBlocks.find(g => {
+                var r = g.find(g => g == willDropBlock, true);
+                if (r) return true;
+                else return false;
+            });
+            if (db) {
+                willDropBlock = undefined;
+            }
+        }
         if (willDropBlock !== this.dropBlock && this.dropBlock) {
             dom(this.dropBlock.el).removeClass(g => g.startsWith('shy-block-drag-over'));
             this.kit.page.onDropLeaveBlock(this.dragBlocks, this.dropBlock, this.dropDirection);
