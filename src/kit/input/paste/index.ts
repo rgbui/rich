@@ -13,12 +13,16 @@ export class TextInput$Paster {
         if (!anchor.block.isSupportTextStyle && text) {
             return;
         }
-        event.preventDefault();
         if (files.length > 0) {
+            event.preventDefault();
             //说明复制的是文件
             await this.page.onPasterFiles(files);
         }
         else if (html) {
+            if (html.match(new RegExp('<[^>]+>' + text + '</[^>]+>'))) {
+                return;
+            }
+            event.preventDefault();
             let parser = new DOMParser();
             var doc = parser.parseFromString(html, "text/html");
             var blocks = await parseDom(doc);
