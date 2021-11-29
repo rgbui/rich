@@ -13,6 +13,7 @@ import { useFilePicker } from "../../extensions/file/file.picker";
 import { LangID } from "../../i18n/declare";
 import { Sp } from "../../i18n/view";
 
+
 @url('/file')
 export class File extends Block {
     @prop()

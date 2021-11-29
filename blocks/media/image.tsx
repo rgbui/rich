@@ -16,6 +16,7 @@ import { Icon } from "../../component/view/icon";
 import { useImagePicker } from "../../extensions/image/picker";
 import { Directive } from "../../util/bus/directive";
 import { messageChannel } from "../../util/bus/event.bus";
+import { getImageSize } from "../../component/file";
 
 @url('/image')
 export class Image extends Block {
@@ -47,13 +48,22 @@ export class Image extends Block {
                     console.log(event, 'ev');
                 });
                 if (d.ok && d.data.url) {
-                    await this.onUpdateProps({ src: { url: d.data.url, name: 'upload' } }, BlockRenderRange.self);
+                    var imgSize = await getImageSize(d.data.url);
+                    var width = this.el.getBoundingClientRect().width;
+                    var per = Math.min(100, parseInt((imgSize.width * 100 / width).toString()));
+                    await this.onUpdateProps({
+                        imageWidthPercent: per,
+                        src: { url: d.data.url, name: 'upload' }
+                    }, BlockRenderRange.self);
                 }
             }
             if (this.initialData && this.initialData.url) {
                 var d = await messageChannel.fireAsync(Directive.UploadWorkspaceFileUrl, this.initialData.url);
                 if (d.ok && d.data.url) {
-                    await this.onUpdateProps({ src: { url: d.data.url, name: 'download', source: this.initialData.url } }, BlockRenderRange.self);
+                    var imgSize = await getImageSize(d.data.url);
+                    var width = this.el.getBoundingClientRect().width;
+                    var per = Math.min(100, parseInt((imgSize.width * 100 / width).toString()));
+                    await this.onUpdateProps({ imageWidthPercent: per, src: { url: d.data.url, name: 'download', source: this.initialData.url } }, BlockRenderRange.self);
                 }
             }
         }
