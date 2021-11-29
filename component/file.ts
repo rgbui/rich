@@ -57,12 +57,12 @@ export async function getImageSize(url: string) {
     if (img.width > 0) {
         return { width: img.width, height: img.height }
     }
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve: (size: { width: number, height: number }) => void, reject) => {
         img.onload = (ev) => {
             resolve({ width: img.width, height: img.height })
         };
         img.onerror = (e) => {
-            resolve(e);
+            reject(e);
         }
     })
 }
