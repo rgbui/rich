@@ -65,8 +65,12 @@ export class Page extends Events<PageDirective> {
     view: PageView;
     keyboardPlate: KeyboardPlate = new KeyboardPlate();
     isFocus: boolean = false;
-    render(el: HTMLElement) {
+    pageVisibleWidth: number;
+    pageVisibleHeight: number;
+    render(el: HTMLElement, options?: { width?: number, height?: number }) {
         this.root = el;
+        if (options?.width) this.pageVisibleWidth = options?.width;
+        if (options?.height) this.pageVisibleHeight = options?.height;
         ReactDOM.render(<PageView page={this}></PageView>, this.root);
     }
     fragment: DocumentFragment;

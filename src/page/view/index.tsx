@@ -41,14 +41,14 @@ export class PageView extends Component<{ page: Page }>{
             lineHeight: this.page.cfm.fontCss.lineHeight + 'px',
             letterSpacing: this.page.cfm.fontCss.letterSpacing + 'px',
             fontSize: this.page.cfm.fontCss.fontSize + 'px',
-            height:'inherit'
+            minHeight: this.page.pageVisibleHeight || "100%"
         }
         return <div className={'shy-page-view' + (this.page.readonly ? " shy-page-view-readonly" : "")} style={pageStyle} tabIndex={1}
             onKeyDownCapture={e => this.page.onKeydown(e.nativeEvent)}
             onFocusCapture={e => this.page.onFocusCapture(e.nativeEvent)}
             onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}
             onWheel={e => this.page.onWheel(e)}
-        ><div className='shy-page-view-box' style={{ height: '100%' }} onMouseDown={e => this.page.onMousedown(e.nativeEvent)}>
+        ><div className='shy-page-view-box' style={{ minHeight: this.page.pageVisibleHeight || "100%" }} onMouseDown={e => this.page.onMousedown(e.nativeEvent)}>
                 <PageLayoutView pageLayout={this.page.pageLayout}>
                     <div className='shy-page-view-content' ref={e => this.page.contentEl = e}
                     ><ChildsArea childs={this.page.views}></ChildsArea>
