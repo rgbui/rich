@@ -59,8 +59,7 @@ export class Page$Operator {
         });
         return bs;
     }
-    async onCombineTextSpan(this: Page, block: Block, willCombineBlock: Block, after?:()=>Promise<void>)
-    {
+    async onCombineTextSpan(this: Page, block: Block, willCombineBlock: Block, after?: () => Promise<void>) {
         await this.onAction(ActionDirective.combineTextSpan, async () => {
             if (willCombineBlock.childs.length > 0) {
                 if (block.content && block.childs.length == 0) {
@@ -120,9 +119,7 @@ export class Page$Operator {
          * 就是将blocks append 到to 下面
          */
         await this.onAction(ActionDirective.onBatchDragBlocks, async () => {
-            await blocks.eachAsync(async block => {
-                await block.move(to, direction);
-            })
+            await to.drop(blocks, direction);
         })
     }
     /**

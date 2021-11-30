@@ -239,6 +239,110 @@ export class Block$Operator {
         }
     }
     /**
+     * 将一堆blocks拖到this block中
+     * @param this 
+     * @param blocks 
+     * @param direction 
+     */
+    async drop(this: Block, blocks: Block[], direction: DropDirection) {
+        switch (direction) {
+            case DropDirection.bottom:
+            case DropDirection.top:
+                var row = this.closest(x => x.isBlock);
+                var childsKey = 'childs';
+                if (row.parent.url == BlockUrlConstant.List) {
+                    childsKey = 'subChilds';
+                }
+                if (direction == DropDirection.bottom) {
+                    await blocks.eachAsync(async (block, i) => {
+                        await row.parent.append(block, row.at + i + 1, childsKey);
+                    })
+                }
+                else {
+                    await blocks.eachAsync(async (block, i) => {
+                        await row.parent.append(block, row.at + i, childsKey);
+                    })
+                }
+                break;
+            case DropDirection.left:
+                if (this.isCol || this.parent.isCol) {
+                    var col = this.isCol ? this : this.parent;
+                    var sum = col.childs.sum(x => (x as Col).widthPercent);
+                    var r = Math.round(100 / (col.childs.length + 1));
+                    col.childs.each(c => {
+                        c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) })
+                    })
+                    var newCol = await this.page.createBlock(BlockUrlConstant.Col, { widthPercent: r }, col.parent, col.at);
+                    await blocks.eachAsync(async (block) => {
+                        await newCol.append(block);
+                    })
+                }
+                else {
+                    var newRow = await this.page.createBlock(BlockUrlConstant.Row, {
+                        blocks: {
+                            childs: [
+                                { url: BlockUrlConstant.Col, widthPercent: 50 },
+                                { url: BlockUrlConstant.Col, widthPercent: 50 }
+                            ]
+                        }
+                    }, this.parent, this.at);
+                    await blocks.eachAsync(async (block) => {
+                        await newRow.childs.first().append(block);
+                    })
+                    await newRow.childs.last().append(this);
+                }
+                /**
+                 * 这里新增一个元素，需要调整当前行内的所有元素比例
+                 */
+                break;
+            case DropDirection.right:
+                if (this.isCol || this.parent.isCol) {
+                    var col = this.isCol ? this : this.parent;
+                    var sum = col.childs.sum(x => (x as Col).widthPercent);
+                    var r = Math.round(100 / (col.childs.length + 1));
+                    col.childs.each(c => {
+                        c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) })
+                    })
+                    var newCol = await this.page.createBlock(BlockUrlConstant.Col, { widthPercent: r }, col.parent, col.at + 1);
+                    await blocks.eachAsync(async (block) => {
+                        await newCol.append(block);
+                    })
+                }
+                else {
+                    var newRow = await this.page.createBlock(BlockUrlConstant.Row, {
+                        blocks: {
+                            childs: [
+                                { url: BlockUrlConstant.Col, widthPercent: 50 },
+                                { url: BlockUrlConstant.Col, widthPercent: 50 }
+                            ]
+                        }
+                    }, this.parent, this.at);
+                    await blocks.eachAsync(async (block) => {
+                        await newRow.childs.last().append(block);
+                    })
+                    await newRow.childs.first().append(this);
+                }
+                /**
+                * 这里新增一个元素，需要调整当前行内的所有元素比例
+                */
+                break;
+            case DropDirection.inner:
+                /**
+                 * 这时判断是否可以允许换行的block，还是替换 
+                 * */
+                for (let i = 0; i < blocks.length; i++) {
+                    await this.parent.append(blocks[i], this.at + i);
+                }
+                await this.delete();
+                break;
+            case DropDirection.sub:
+                for (let i = blocks.length - 1; i >= 0; i--) {
+                    await this.acceptSubFromMove(blocks[i]);
+                }
+                break;
+        }
+    }
+    /**
      * 表示当前元素如何接收该元素至sub,
      * @param this 
      * @param sub  子元素是要移动的
