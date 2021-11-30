@@ -43,6 +43,9 @@ export class ToDo extends TextSpan {
     async getWillTurnData(url: string) {
         return await TextTurns.turn(this, url);
     }
+    get isBackspaceAutomaticallyTurnText() {
+        return true;
+    }
 }
 @view('/todo')
 export class ToDoView extends BlockView<ToDo>{
