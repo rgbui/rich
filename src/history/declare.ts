@@ -18,6 +18,8 @@ export enum ActionDirective {
     onDeleteSelection = 112,
     onInputDetector = 113,
     onPasteCreateBlocks = 114,
+    onTurn = 115,
+    combineTextSpan = 116,
     onSchemaCreateField = 200,
     onSchemaDeleteField = 201,
     onSchemaTurnField = 202,
