@@ -30,12 +30,12 @@ export class TextSpan extends Block {
 export class TextSpanView extends BlockView<TextSpan>{
     render() {
         if (this.block.childs.length > 0)
-            return <span className='sy-block-text-span' style={this.block.visibleStyle} ref={e => this.block.childsEl = e}>
+            return <div className='sy-block-text-span' style={this.block.visibleStyle} ref={e => this.block.childsEl = e}>
                 <TextLineChilds childs={this.block.childs}></TextLineChilds>
-            </span>
+            </div>
         else
-            return <span className='sy-block-text-span' style={this.block.visibleStyle}>
+            return <div className='sy-block-text-span' style={this.block.visibleStyle}>
                 <TextArea rf={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent} placeholder={'键入文字或"/"选择'}></TextArea>
-            </span>
+            </div>
     }
 }

@@ -5,9 +5,6 @@ import { BlockDisplay } from "../enum";
 import { prop, url, view } from "../factory/observable";
 import { TextArea } from "../view/appear";
 import { PageLink } from "../../../extensions/link/declare";
-import Tooltip from "rc-tooltip";
-import GlobalLink from "../../assert/svg/GlobalLink.svg";
-import LinkTo from "../../assert/svg/LinkTo.svg";
 import { Block } from "..";
 /***
  * 文字型的block，
@@ -43,9 +40,7 @@ export class TextContentView extends BlockView<TextContent>{
         else if (this.block.code) {
             ta = <span className='sy-block-text-content-code'>{ta}</span>;
         }
-        return <span className='sy-block-text-content' style={this.block.visibleStyle} >
-            {ta}
-        </span>
+        return <span className='sy-block-text-content' style={this.block.visibleStyle}>{ta}</span>
     }
 }
 

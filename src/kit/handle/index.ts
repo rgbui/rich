@@ -52,6 +52,7 @@ export class Handle extends Events {
     dropBlock: Block;
     dropDirection: DropDirection;
     onDropOverBlock(willDropBlock: Block, event: MouseEvent) {
+        if (willDropBlock?.isLine) willDropBlock = willDropBlock.closest(x => x.isBlock);
         if (willDropBlock) {
             var db = this.dragBlocks.find(g => {
                 var r = g.find(g => g == willDropBlock, true);

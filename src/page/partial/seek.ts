@@ -209,20 +209,18 @@ export class Page$Seek {
         }) {
         var bs: Block[] = [];
         var fromBlock = this.getBlockInMouseRegion(from);
-        if (fromBlock.isView) {
+        if (fromBlock.isLayout) {
             var fb = fromBlock.getVisibleContentBound();
-            if (Math.abs(from.y - fb.y) > Math.abs(from.y - fb.y - fb.height)) {
-                fromBlock = fromBlock.childs.last();
-            }
-            else fromBlock = fromBlock.childs.first();
+            if (Math.abs(from.y - fb.y) > Math.abs(from.y - fb.y - fb.height))
+                fromBlock = fromBlock.findReverse(g => g.isBlock && !g.isLayout);
+            else fromBlock = fromBlock.find(g => g.isBlock && !g.isLayout);
         }
         var toBlock = this.getBlockInMouseRegion(to);
-        if (toBlock.isView) {
+        if (toBlock.isLayout) {
             var fb = toBlock.getVisibleContentBound();
-            if (Math.abs(to.y - fb.y) > Math.abs(to.y - fb.y - fb.height)) {
-                toBlock = toBlock.childs.last();
-            }
-            else toBlock = toBlock.childs.first();
+            if (Math.abs(to.y - fb.y) > Math.abs(to.y - fb.y - fb.height))
+                toBlock = toBlock.findReverse(g => g.isBlock && !g.isLayout);
+            else toBlock = toBlock.find(g => g.isBlock && !g.isLayout);
         }
         var topFromRow = fromBlock.closest(g => g.isBlock && !g.isView && !g.isRow && !g.isCol);
         var topToRow = toBlock.closest(g => g.isBlock && !g.isView && !g.isRow && !g.isCol);
@@ -231,10 +229,10 @@ export class Page$Seek {
         if (topFromRow && !topToRow || !topFromRow && topToRow) {
             var block = topFromRow ? topFromRow : topToRow;
             block.each(b => {
-                if (!b.isRow && !b.isCol) {
+                if (!b.isLayout) {
                     if (b.isCrossBlockArea(rect)) {
                         if (filter && filter.lineBlock == true && b.isLine) {
-                            var pa = b.parent;
+                            var pa = b.closest(x => !x.isLine);
                             if (!bs.exists(pa)) bs.push(pa);
                         }
                         else bs.push(b);
@@ -250,10 +248,10 @@ export class Page$Seek {
             }
             if (topFromRow == topToRow) {
                 topFromRow.each(b => {
-                    if (!b.isRow && !b.isCol) {
+                    if (!b.isLayout) {
                         if (b.isCrossBlockContentArea(rect)) {
-                            if (filter && filter.lineBlock == true && b.isLine) {
-                                var pa = b.parent;
+                            if (filter?.lineBlock == true) {
+                                var pa = b.closest(x => !x.isLine);
                                 if (!bs.exists(pa)) bs.push(pa);
                             }
                             else bs.push(b);
@@ -264,10 +262,10 @@ export class Page$Seek {
             }
             else
                 topFromRow.nextFindAll(b => {
-                    if (!b.isRow && !b.isCol) {
+                    if (!b.isLayout) {
                         if (b.isCrossBlockContentArea(rect)) {
-                            if (filter && filter.lineBlock == true && b.isLine) {
-                                var pa = b.parent;
+                            if (filter?.lineBlock == true) {
+                                var pa = b.closest(x => !x.isLine);
                                 if (!bs.exists(pa)) bs.push(pa);
                             }
                             else bs.push(b);
