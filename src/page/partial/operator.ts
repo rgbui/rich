@@ -155,7 +155,7 @@ export class Page$Operator {
             case BlockDirective.link:
                 break;
             case BlockDirective.trun:
-                this.onBatchTurn(blocks, item.value);
+                this.onBatchTurn(blocks, item.url);
                 break;
             case BlockDirective.trunIntoPage:
                 break;

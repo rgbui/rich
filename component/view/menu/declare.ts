@@ -13,7 +13,8 @@ export type MenuItemType<T = string> = {
      * 备注
      */
     remark?: string,
-    param?: any
+    param?: any,
+    url?:string
 }
 export enum MenuItemTypeValue {
     divide = 1,
