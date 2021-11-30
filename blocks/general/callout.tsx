@@ -18,6 +18,9 @@ export class Callout extends TextSpan {
     async getWillTurnData(url: string) {
         return await TextTurns.turn(this, url);
     }
+    get isBackspaceAutomaticallyTurnText() {
+        return true;
+    }
 }
 @view('/callout')
 export class CalloutView extends BlockView<Callout>{
