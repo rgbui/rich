@@ -2,6 +2,7 @@ import { useTextTool } from "../../../extensions/text.tool";
 import { Block } from "../../block";
 import { BlockUrlConstant } from "../../block/constant";
 import { TextContent } from "../../block/element/text";
+import { BlockRenderRange } from "../../block/enum";
 import { BlockCssName } from "../../block/pattern/css";
 import { KeyboardCode } from "../../common/keys";
 import { Exception, ExceptionType } from "../../error/exception";
@@ -202,26 +203,24 @@ export class SelectionExplorer$Events {
             var gs = block.nexts;
             var rest = anchor.elementAppear.textContent.slice(0, pos);
             var text = anchor.elementAppear.textContent.slice(pos);
-            block.updateProps({ [anchor.elementAppear.prop]: rest });
+            if (rest && !block.isTextContent) block.updateAppear(anchor.elementAppear, rest, BlockRenderRange.self);
+            else await block.delete();
             if (block.isLine) block = block.closest(g => !g.isLine);
             var url = block.isContinuouslyCreated ? block.url : BlockUrlConstant.TextSpan;
             var continuouslyProps = block.continuouslyProps;
-            var newBlock: Block;
+            var newBlock = await block.visibleDownCreateBlock(url, { ...continuouslyProps, blocks: { childs: [{ url: BlockUrlConstant.Text, content: text }] } });
             if (gs.length > 0) {
-                newBlock = await block.visibleDownCreateBlock(url, { ...continuouslyProps, childs: [{ url: BlockUrlConstant.Text, content: text }] });
-                var tc = newBlock.find(g => g instanceof TextContent, true);
-                for (let i = gs.length - 1; i >= 0; i--) {
-                    let g = gs[i];
-                    await g.insertAfter(tc);
+                for (let i = 0; i < gs.length; i++) {
+                    await newBlock.append(gs[i]);
                 }
             }
-            else {
-                newBlock = await block.visibleDownCreateBlock(url, { ...continuouslyProps, content: text });
-            }
-            newBlock.mounted(() => {
+            this.page.addUpdateEvent(async () => {
                 var anchor = newBlock.visibleHeadAnchor;
+                if (!anchor) {
+                    console.log(newBlock);
+                }
                 this.onFocusAnchor(anchor);
-            });
+            })
         })
     }
     /**
