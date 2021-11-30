@@ -2,6 +2,7 @@ import { Page } from "..";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItemType } from "../../../component/view/menu/declare";
 import { Block } from "../../block";
+import { BlockUrlConstant } from "../../block/constant";
 import { BlockDirective } from "../../block/enum";
 import { BlockFactory } from "../../block/factory/block.factory";
 import { Rect } from "../../common/point";
@@ -40,12 +41,51 @@ export class Page$Operator {
             });
         })
     }
+    async onTurn(this: Page, block, url: string) {
+        var bs: Block[] = [];
+        await this.onAction(ActionDirective.onTurn, async () => {
+            var newBlock = await block.turn(url);
+            bs.push(newBlock);
+        });
+        return bs.first();
+    }
     async onBatchTurn(this: Page, blocks: Block[], url: string) {
+        var bs: Block[] = [];
         await this.onAction(ActionDirective.onBatchTurn, async () => {
             await blocks.eachAsync(async bl => {
-                await bl.turn(url);
+                var newBlock = await bl.turn(url);
+                bs.push(newBlock);
             })
-        })
+        });
+        return bs;
+    }
+    async onCombineTextSpan(this: Page, block: Block, willCombineBlock: Block, after?:()=>Promise<void>)
+    {
+        await this.onAction(ActionDirective.combineTextSpan, async () => {
+            if (willCombineBlock.childs.length > 0) {
+                if (block.content && block.childs.length == 0) {
+                    await this.createBlock(BlockUrlConstant.Text, { content: block.content }, block, 0);
+                    block.updateProps({ content: '' });
+                }
+                var cs = willCombineBlock.childs.map(c => c);
+                await cs.eachAsync(async (c) => {
+                    await block.append(c)
+                })
+            }
+            else {
+                if (block.content && block.childs.length == 0) {
+                    await this.createBlock(BlockUrlConstant.Text, { content: block.content }, block, 0);
+                    block.updateProps({ content: '' });
+                }
+                if (willCombineBlock.content) {
+                    await this.createBlock(BlockUrlConstant.Text, { content: willCombineBlock.content }, block, block.childs.length);
+                }
+            }
+            await willCombineBlock.delete();
+            if (typeof after == 'function') {
+                await after();
+            }
+        });
     }
     onBlurAnchor(this: Page, anchor: Anchor) {
         if (anchor.block) {
