@@ -132,6 +132,10 @@ export class Block$Event {
             this.changeAppear(appear);
         })
     }
+    async updateAppear(this: Block, appear: AppearAnchor, newValue: string, range = BlockRenderRange.none) {
+        this.updateProps({ [appear.prop]: newValue });
+        this.changeAppear(appear);
+    }
     changeAppear(this: Block, appear: AppearAnchor) {
 
     }
