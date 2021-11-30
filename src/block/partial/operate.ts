@@ -6,7 +6,7 @@ import { DropDirection } from "../../kit/handle/direction";
 import { BlockUrlConstant } from "../constant";
 import { Col } from "../element/col";
 import { BlockRenderRange } from "../enum";
-
+import lodash from 'lodash';
 export class Block$Operator {
     /**
     * 移走元素，这个不是删除，
@@ -250,23 +250,14 @@ export class Block$Operator {
         var oldValue: Record<string, any> = {};
         var newValue: Record<string, any> = {};
         for (let prop in props) {
-            if (!util.valueIsEqual(this[prop], props[prop])) {
-                oldValue[prop] = util.clone(this[prop]);
-                newValue[prop] = util.clone(props[prop]);
-                this[prop] = util.clone(props[prop]);
+            if (!lodash.isEqual(lodash.get(this, prop), props[prop])) {
+                oldValue[prop] = lodash.cloneDeep(lodash.get(this, prop));
+                newValue[prop] = lodash.cloneDeep(props[prop]);
+                lodash.set(this, prop, lodash.cloneDeep(props[prop]))
             }
         }
         if (Object.keys(oldValue).length > 0) {
-            switch (range) {
-                case BlockRenderRange.self:
-                    this.page.addBlockUpdate(this);
-                    break;
-                case BlockRenderRange.parent:
-                    this.page.addBlockUpdate(this.parent)
-                    break;
-                case BlockRenderRange.none:
-                    break;
-            }
+            this.syncUpdate(range);
             this.page.snapshoot.record(OperatorDirective.updateProp, {
                 blockId: this.id,
                 old: oldValue,

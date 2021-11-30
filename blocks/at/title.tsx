@@ -54,8 +54,7 @@ export class TitleView extends BlockView<Title>{
         this.forceUpdate();
     }
     updatePageInfo = (id: string, pageInfo: { text: string, icon?: IconArguments }) => {
-        if (this.block.pageInfo.id == id)
-        {
+        if (this.block.pageInfo.id == id) {
             var isUpdate: boolean = false;
             if (typeof pageInfo.text != 'undefined' && pageInfo.text != this.block.pageInfo.text) {
                 this.block.pageInfo.text = pageInfo.text;
