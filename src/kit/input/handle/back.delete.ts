@@ -1,6 +1,8 @@
 import { TextInput } from "..";
+import { BlockUrlConstant } from "../../../block/constant";
 import { dom } from "../../../common/dom";
 import { KeyboardCode } from "../../../common/keys";
+import { Point } from "../../../common/point";
 import { Exception, ExceptionType } from "../../../error/exception";
 import { Anchor } from "../../selection/anchor";
 import { InputDeleteStore } from "../store";
@@ -34,14 +36,30 @@ export async function backspaceCrossBlock(tp: TextInput) {
                 await backspaceDeleteHandle(tp);
             }
             else {
-                tp.kit.explorer.onCursorMove(KeyboardCode.ArrowLeft);
-                tp.onStartInput(tp.explorer.activeAnchor);
-                if (block.isCanAutomaticallyDeleted) await block.onDelete()
+                if (block.isBackspaceAutomaticallyTurnText) {
+                    var newBlock = await tp.kit.page.onTurn(block, BlockUrlConstant.TextSpan);
+                    tp.explorer.onFocusAnchor(newBlock.visibleHeadAnchor)
+                }
                 else {
-                    /**
-                     * 这里判断是否为跨行
-                     * 如果跨行，那么此时block所在的行的内容是否合并到新行中
-                     ***/
+                    tp.kit.explorer.onCursorMove(KeyboardCode.ArrowLeft);
+                    if (block.isCanAutomaticallyDeleted) await block.onDelete()
+                    else {
+                        /**
+                         * 这里判断是否为跨行
+                         * 如果跨行，那么此时block所在的行的内容是否合并到新行中
+                         ***/
+                        var preBlock = prevAnchor.block.closest(x => x.isBlock);
+                        if (preBlock && block.isTextSpan && preBlock.isTextSpan) {
+                            //这里合并文本
+                            var oldAnchorPos = tp.kit.explorer.activeAnchor.bound;
+                            await tp.kit.page.onCombineTextSpan(preBlock, block, async () => {
+                                tp.kit.page.addUpdateEvent(async () => {
+                                    var newAnchor = preBlock.visibleAnchor(Point.from(oldAnchorPos));
+                                    tp.kit.explorer.onFocusAnchor(newAnchor);
+                                })
+                            });
+                        }
+                    }
                 }
             }
         }
