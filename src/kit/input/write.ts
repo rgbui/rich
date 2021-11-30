@@ -50,7 +50,8 @@ export class TextInput$Write {
                         event.preventDefault();
                         return
                     }
-                    else if (this.explorer.activeAnchor.isText && this.explorer.activeAnchor.block.multiLines == false) {
+                    else if (!this.page.keyboardPlate.isShift() && this.explorer.activeAnchor.isText) {
+
                         await ForceStore();
                         /**
                          * 对于支持行的block，将会被截断
