@@ -33,9 +33,8 @@ export class TextSpanView extends BlockView<TextSpan>{
             return <div className='sy-block-text-span' style={this.block.visibleStyle} ref={e => this.block.childsEl = e}>
                 <TextLineChilds childs={this.block.childs}></TextLineChilds>
             </div>
-        else
-            return <div className='sy-block-text-span' style={this.block.visibleStyle}>
-                <TextArea rf={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent} placeholder={'键入文字或"/"选择'}></TextArea>
-            </div>
+        else return <div className='sy-block-text-span' style={this.block.visibleStyle}>
+            <TextArea rf={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent} placeholder={'键入文字或"/"选择'}></TextArea>
+        </div>
     }
 }

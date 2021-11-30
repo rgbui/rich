@@ -272,7 +272,10 @@ export abstract class Block extends Events {
         return TextEle.getBounds(this.el);
     }
     getVisibleBound() {
-        return this.cacheComputed(TemporaryPurpose.blockBound, () => Rect.from(this.el.getBoundingClientRect()));
+        if (!this.el) {
+            console.log(this);
+        }
+        return Rect.from(this.el.getBoundingClientRect())
     }
     getVisibleContentBound() {
         return this.getVisibleBound();
@@ -301,21 +304,6 @@ export abstract class Block extends Events {
         if (this.appearAnchors.some(s => s.isText)) return true;
         if (this.childs.length > 0 && this.childs.some(s => s.isTextContent)) return true;
         return false;
-    }
-    private temporarys: { flag: string, purpose: TemporaryPurpose, data: any }[] = [];
-    cacheComputed<T>(purpose: TemporaryPurpose, computed: () => T): T {
-        var tp = this.temporarys.find(g => g.purpose == purpose);
-        var flag = this.page.getTemporaryFlag(purpose);
-        if (tp && tp.flag == flag && typeof flag != 'undefined' && typeof tp.data != 'undefined') return tp.data;
-        else {
-            if (!tp) {
-                tp = { flag, purpose, data: undefined };
-                this.temporarys.push(tp);
-            }
-            tp.flag = flag;
-            tp.data = computed();
-            return tp.data;
-        }
     }
     __appearAnchors: AppearAnchor[] = [];
     get appearAnchors() {
