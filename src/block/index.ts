@@ -18,6 +18,7 @@ import { Block$Operator } from "./partial/operate";
 import { BlockAppear, AppearAnchor } from "./appear";
 import { Mix } from "../../util/mix";
 import { TextContent } from "./element/text";
+import { BlockUrlConstant } from "./constant";
 export abstract class Block extends Events {
     constructor(page: Page) {
         super();
@@ -142,13 +143,6 @@ export abstract class Block extends Events {
         return pbs.findAll((g, i) => i > at);
     }
     /**
-     * 文本内容是否可以支持多行，
-     * 仅对文本block有用
-     */
-    get multiLines() {
-        return true;
-    }
-    /**
      * 是否换行时，支持连续创建
      */
     get isContinuouslyCreated() {
@@ -179,10 +173,22 @@ export abstract class Block extends Events {
         return style;
     }
     get visibleHeadAnchor() {
-        return this.page.kit.explorer.createAnchor(this);
+        if (this.isSupportAnchor) {
+            return this.page.kit.explorer.createAnchor(this);
+        }
+        else if (this.childs.length > 0) {
+            var sub = this.find(g => g.isSupportAnchor);
+            if (sub) return sub.visibleHeadAnchor;
+        }
     }
     get visibleBackAnchor() {
-        return this.page.kit.explorer.createBackAnchor(this, -1);
+        if (this.isSupportAnchor) {
+            return this.page.kit.explorer.createBackAnchor(this, -1);
+        }
+        else if (this.childs.length > 0) {
+            var sub = this.findReverse(g => g.isSupportAnchor);
+            if (sub) return sub.visibleBackAnchor;
+        }
     }
     protected display: BlockDisplay;
     /**
@@ -253,6 +259,12 @@ export abstract class Block extends Events {
     get isCanAutomaticallyDeleted() {
         return (this.isOnlyElementAppear && this.firstElementAppear.isEmpty && this.firstElementAppear.isText) && !this.isPart && !this.hasChilds;
     }
+    /**
+     * 回退时，最后一步是否转换成普通文本
+     */
+    get isBackspaceAutomaticallyTurnText() {
+        return false;
+    }
     get htmlContent() {
         return this.content;
     }
@@ -268,10 +280,27 @@ export abstract class Block extends Events {
     get isTextContent() {
         return false;
     }
+    get isTextSpan() {
+        return this.url == BlockUrlConstant.TextSpan
+    }
     get asTextContent() {
         if (this.isTextContent)
             return (this as any) as TextContent
         else return null;
+    }
+    get isTextEmpty() {
+        if (this.isTextContent) {
+            return this.firstElementAppear.isEmpty;
+        }
+        return false;
+    }
+    /**
+     * 判断当前块是否为文本块
+     */
+    get isTextBlock() {
+        if (this.appearAnchors.some(s => s.isText)) return true;
+        if (this.childs.length > 0 && this.childs.some(s => s.isTextContent)) return true;
+        return false;
     }
     private temporarys: { flag: string, purpose: TemporaryPurpose, data: any }[] = [];
     cacheComputed<T>(purpose: TemporaryPurpose, computed: () => T): T {
@@ -292,12 +321,6 @@ export abstract class Block extends Events {
     get appearAnchors() {
         return this.__appearAnchors;
     }
-    get isTextEmpty() {
-        if (this.isTextContent) {
-            return this.firstElementAppear.isEmpty;
-        }
-        return false;
-    }
     get firstElementAppear() {
         return this.appearAnchors.first();
     }
@@ -312,8 +335,7 @@ export abstract class Block extends Events {
     }
     get isSupportAnchor() {
         if (this.isLayout) return false;
-        if (this.appearAnchors.length > 0)
-            return true;
+        if (this.appearAnchors.length > 0) return true;
         return false;
     }
     /**
