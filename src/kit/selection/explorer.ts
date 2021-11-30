@@ -85,7 +85,8 @@ export class SelectionExplorer extends Events {
             }
         }
     }
-    createAnchor(block: Block, at?: number) {
+    createAnchor(block: Block, at?: number)
+    {
         if (block.isSupportAnchor) {
             var anchor = new Anchor(this, block.firstElementAppear);
             if (typeof at == 'number' && anchor.isText) {
