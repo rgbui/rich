@@ -134,11 +134,8 @@ export class Block$Operator {
         if (typeof at == 'undefined') at = bs.length;
         if (block.parent && bs.exists(block) && block.at < at) {
             at -= 1;
-            bs.remove(g => g == block);
         }
-        else {
-            await block.remove();
-        }
+        await block.remove();
         bs.insertAt(at, block);
         block.parent = this;
         this.page.snapshoot.record(OperatorDirective.append, {
@@ -149,6 +146,23 @@ export class Block$Operator {
             blockId: block.id
         });
         this.page.addBlockUpdate(this);
+    }
+    async appendArray(this: Block, blocks: Block[], at?: number, childKey?: string) {
+        if (typeof childKey == 'undefined') childKey = 'childs';
+        var bs = this.blocks[childKey];
+        if (typeof at == 'undefined') at = bs.length;
+        var b;
+        for (let i = 0; i < blocks.length; i++) {
+            var bb = blocks[i];
+            if (i == 0) {
+                await this.append(bb, at, childKey);
+                b = bb;
+            }
+            else {
+                await this.append(bb, b.at + 1, childKey);
+                b = bb;
+            }
+        }
     }
     /**
      * 注意元素移到to元素下面，并非简单的append，
@@ -254,14 +268,10 @@ export class Block$Operator {
                     childsKey = 'subChilds';
                 }
                 if (direction == DropDirection.bottom) {
-                    await blocks.eachAsync(async (block, i) => {
-                        await row.parent.append(block, row.at + i + 1, childsKey);
-                    })
+                    await row.parent.appendArray(blocks, row.at + 1, childsKey);
                 }
                 else {
-                    await blocks.eachAsync(async (block, i) => {
-                        await row.parent.append(block, row.at + i, childsKey);
-                    })
+                    await row.parent.appendArray(blocks, row.at, childsKey);
                 }
                 break;
             case DropDirection.left:
