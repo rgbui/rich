@@ -75,6 +75,9 @@ export class List extends Block {
             this.updateProps({ expand: true }, BlockRenderRange.self);
         }
     }
+    get isBackspaceAutomaticallyTurnText() {
+        return true;
+    }
 }
 @view('/list')
 export class ListView extends BlockView<List>{
