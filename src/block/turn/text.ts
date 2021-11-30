@@ -7,6 +7,7 @@ export var TextTurns = {
         '/head',
         '/head?{level:"h2"}',
         '/head?{level:"h3"}',
+        '/head?{level:"h4"}',
         '/list?{listType:1}',
         '/list?{listType:0}',
         '/list?{listType:2}',
@@ -20,6 +21,7 @@ export var TextTurns = {
             case '/head':
             case '/head?{level:"h2"}':
             case '/head?{level:"h3"}':
+            case '/head?{level:"h4"}':
             case '/list?{listType:1}':
             case '/list?{listType:0}':
             case '/list?{listType:2}':
