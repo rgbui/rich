@@ -83,6 +83,12 @@ export class Point {
     toRect(width: number = 0, height: number = 0) {
         return new Rect(this, width, height);
     }
+    move(x:number,y:number){
+        return new Point(this.x+x,this.y+y);
+    }
+    join(joinChar?:string){
+        return this.x+(joinChar||',')+this.y
+    }
 }
 
 export class Rect {
@@ -116,6 +122,12 @@ export class Rect {
     }
     get rightTop() {
         return Point.from(this.left + this.width, this.top)
+    }
+    get rightMiddle() {
+        return Point.from(this.left + this.width, this.top + this.height / 2)
+    }
+    get leftMiddle() {
+        return Point.from(this.left, this.top + this.height / 2)
     }
     get rightBottom() {
         return Point.from(this.left + this.width, this.top + this.height)
@@ -183,6 +195,17 @@ export class Rect {
         if (Math.abs((r1.x1 + r1.x2) / 2 - (r2.x1 + r2.x2) / 2) < ((r1.x2 + r2.x2 - r1.x1 - r2.x1) / 2) && Math.abs((r1.y1 + r1.y2) / 2 - (r2.y1 + r2.y2) / 2) < ((r1.y2 + r2.y2 - r1.y1 - r2.y1) / 2))
             return true;
         return false;
+    }
+    extend(dis: number) {
+        var rect = this.clone();
+        rect.top -= dis;
+        rect.left -= dis;
+        rect.width += dis * 2;
+        rect.height += dis * 2;
+        return rect;
+    }
+    clone() {
+        return new Rect(this.left, this.top, this.width, this.height);
     }
 }
 
@@ -289,6 +312,19 @@ export class RectUtility {
             }
         }
         return new Point(json);
+    }
+    static getPointsBound(points: Point[]) {
+        var minX = points[0].x;
+        var minY = points[0].y;
+        var maxX = points[0].x;
+        var maxY = points[0].y;
+        for (let i = 1; i < points.length; i++) {
+            minX = Math.min(minX, points[i].x);
+            minY = Math.min(minY, points[i].y);
+            maxX = Math.max(maxX, points[i].x);
+            maxY = Math.max(maxY, points[i].y);
+        }
+        return new Rect(new Point(minX, minY), new Point(maxX, maxY))
     }
 }
 
