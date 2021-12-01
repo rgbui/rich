@@ -116,40 +116,19 @@ export class Block$Anchor {
          * 如果元素本身有子元素，那么当前行则以当前元素的子row做为下一行
          */
         if (self.hasChilds && self.exists(x => x.isBlock)) {
-            var r = self.find(g => g.isBlock);
+            var r = self.find(g => g.isBlock, false, undefined, false);
             if (r) return r;
         }
         var row = self.closest(x => x.isBlock);
         if (row) {
-            while (true) {
-                if (row.parent && row.at == row.parentBlocks.length - 1) {
-                    var newRow = row.closest(x => x.isBlock, true);
-                    if (newRow) row = newRow;
-                    else break;
-                }
-                else break;
-            }
-            return row.nextFind(g => g.isBlock && !g.isPart);
+            return row.nextFind(g => g.isBlock && !g.isPart && !g.isLayout && g !== row);
         }
     }
     get prevBlock() {
         var self: Block = this as any;
         var row = self.closest(x => x.isBlock);
         if (row) {
-            while (true) {
-                if (row.at == 0) {
-                    var newRow = row.closest(x => x.isBlock, true);
-                    if (newRow) {
-                        var nb = row.prevFind(x => x.isSupportAnchor);
-                        if (nb && newRow.exists(x => x == nb)) {
-                            return newRow;
-                        }
-                        row = newRow;
-                    }
-                    else break;
-                } else break;
-            }
-            return row.prevFind(g => g.isBlock);
+            return row.prevFind(g => g.isBlock && !g.isPart && !g.isLayout && g !== row);
         }
     }
     visibleDownAnchor(this: Block, anchor: Anchor) {
