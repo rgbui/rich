@@ -107,13 +107,9 @@ export class ListView extends BlockView<List>{
     }
     renderText() {
         if (this.block.childs.length > 0)
-            return <span className='sy-block-list' >
-                <TextLineChilds childs={this.block.childs}></TextLineChilds>
-            </span>
+            return <TextLineChilds childs={this.block.childs}></TextLineChilds>
         else
-            return <span className='sy-block-list'>
-                <TextArea rf={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent} placeholder={'键入文字或"/"选择'}></TextArea>
-            </span>
+            return <TextArea rf={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent} placeholder={'键入文字或"/"选择'}></TextArea>
     }
     render() {
         return <div className='sy-block-list' style={this.block.visibleStyle} >
