@@ -69,7 +69,8 @@ export class Block$Operator {
     }
     async turn(this: Block, url: string) {
         var data = await this.getWillTurnData(url);
-        var newBlock = await this.page.createBlock(url, data, this.parent, this.at);
+        var childKey = this.parent.childKey;
+        var newBlock = await this.page.createBlock(url, data, this.parent, this.at, childKey);
         await this.delete();
         return newBlock;
     }
@@ -263,10 +264,7 @@ export class Block$Operator {
             case DropDirection.bottom:
             case DropDirection.top:
                 var row = this.closest(x => x.isBlock);
-                var childsKey = 'childs';
-                if (row.parent.url == BlockUrlConstant.List) {
-                    childsKey = 'subChilds';
-                }
+                var childsKey = row.parent.childKey;
                 if (direction == DropDirection.bottom) {
                     await row.parent.appendArray(blocks, row.at + 1, childsKey);
                 }

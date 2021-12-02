@@ -153,6 +153,9 @@ export abstract class Block extends Events {
     get continuouslyProps() {
         return {}
     }
+    get childKey(){
+        return 'childs';
+    }
     viewComponent: typeof BlockView | ((props: any) => JSX.Element)
     view: BlockView<this>;
     el: HTMLElement;

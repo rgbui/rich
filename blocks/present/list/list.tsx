@@ -78,6 +78,9 @@ export class List extends Block {
     get isBackspaceAutomaticallyTurnText() {
         return true;
     }
+    get childKey(){
+        return 'subChilds';
+    }
 }
 @view('/list')
 export class ListView extends BlockView<List>{
