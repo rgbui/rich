@@ -128,7 +128,7 @@ export class Block$Seek {
                 if (predict(r) == true) {
                     blocks.push(r);
                 }
-            }, consider);
+            }, consider, true);
             return blocks;
         }
         if (consider == true) {
@@ -146,8 +146,6 @@ export class Block$Seek {
                     if (r) { bs.addRange(r); }
                     if (isFinal) return;
                 }
-                if (typeof finalPredict == 'function' && finalPredict(pa) == true) return;
-                if (predict(pa) == true) bs.push(pa);
                 var g = prevParentFind(pa);
                 if (g) return g;
             }
@@ -165,7 +163,7 @@ export class Block$Seek {
                     block = r;
                     return false;
                 }
-            }, consider);
+            }, consider, true);
             return block;
         }
         if (consider == true) {
@@ -219,8 +217,8 @@ export class Block$Seek {
                     if (r) return r;
                     if (isFinal) return;
                 }
-                if (typeof finalPredict == 'function' && finalPredict(pa) == true) return;
-                if (predict(pa) == true) return pa;
+                // if (typeof finalPredict == 'function' && finalPredict(pa) == true) return;
+                // if (predict(pa) == true) return pa;
                 var g = nextParentFind(pa);
                 if (g) return g;
             }
@@ -269,14 +267,6 @@ export class Block$Seek {
                     var r = _find(rs[i], true);
                     if (r) { bs.addRange(r); }
                     if (isFinal) return;
-                }
-                if (isConsideFinal == true) {
-                    if (typeof finalPredict == 'function' && finalPredict(pa) == true) return;
-                    if (predict(pa) == true) bs.push(pa);
-                }
-                else {
-                    if (predict(pa) == true) bs.push(pa);
-                    if (typeof finalPredict == 'function' && finalPredict(pa) == true) return;
                 }
                 var g = nextParentFind(pa);
                 if (g) return g;

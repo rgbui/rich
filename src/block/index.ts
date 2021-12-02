@@ -215,13 +215,13 @@ export abstract class Block extends Events {
      * 
      */
     get isVisibleContentBlock() {
-        if (this.isRow || this.isView || this.isCol || this.isLine) return false;
+        if (this.isLayout || this.isLine) return false;
         else return true;
     }
     get visibleContentBlock() {
         if (this.isLine) return this.closest(x => x.isVisibleContentBlock);
         else if (this.isVisibleContentBlock) return this;
-        else if (this.isRow || this.isView || this.isCol) {
+        else if (this.isLayout) {
             var r = this.find(x => x.isVisibleContentBlock);
             if (r) return r;
         }
