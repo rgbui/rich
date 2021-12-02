@@ -170,15 +170,23 @@ export class Block$Anchor {
         var row = this.prevBlock;
         while (true) {
             if (row) {
-                var bound = row.getVisibleBound();
-                var top = bound.top + bound.height - 1;
-                /**
-                 * 这里说明是从子节点所在的row跃迁到父row，且父row还包含子row,
-                 * 这发生在list从子节点光标移到list本身上。
-                 */
-                if (row.exists(g => g == this)) {
-                    var cb = this.getVisibleBound();
-                    top = bound.top + (cb.top - bound.top - 1);
+                var top;
+                var appear = row.appearAnchors.last();
+                if (appear) {
+                    var rect = Rect.fromEle(appear.el);
+                    top = rect.top + rect.height - 10;
+                }
+                else {
+                    var bound = row.getVisibleBound();
+                    top = bound.top + bound.height - 10;
+                    /**
+                     * 这里说明是从子节点所在的row跃迁到父row，且父row还包含子row,
+                     * 这发生在list从子节点光标移到list本身上。
+                     */
+                    if (row.exists(g => g == this)) {
+                        var cb = this.getVisibleBound();
+                        top = bound.top + (cb.top - bound.top - 10);
+                    }
                 }
                 var anchor = row.visibleAnchor(new Point(x, top));
                 if (anchor) return anchor;

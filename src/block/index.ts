@@ -9,7 +9,6 @@ import { BlockView } from "./view";
 import { TextEle } from "../common/text.ele";
 import { Block$Seek } from "./partial/seek";
 import { prop } from "./factory/observable";
-import { TemporaryPurpose } from "../page/partial/declare";
 import "./style.less";
 import { Block$Event } from "./partial/on.event";
 import { Block$Anchor } from "./partial/anchor";
