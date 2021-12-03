@@ -36,6 +36,7 @@ export var BlockSelectorData: BlockGroup[] = [
             { text: '大标题', pic: <img src={header} />, url: '/head', description: '大标题', label: '/大标题', labels: [] },
             { text: '二级标题', pic: <img src={subheader} />, url: '/head?{level:"h2"}', description: '文本', label: '/文本', labels: [] },
             { text: '三级标题', pic: <img src={subsubheader} />, url: '/head?{level:"h3"}', description: '文本', label: '/文本', labels: [] },
+            { text: '四级标题', pic: <img src={subsubheader} />, url: '/head?{level:"h4"}', description: '文本', label: '/文本', labels: [] },
             { text: "待办列表", pic: <img src={todo} />, url: '/todo', description: "/todo", label: '/待办列表', labels: [] },
             { text: "数字列表", pic: <img src={numberList} />, url: '/list?{listType:1}', description: "", label: '/数字列表', labels: [] },
             { text: "列表", pic: <img src={bulletedList} />, url: '/list?{listType:0}', description: "", label: '/列表', labels: [] },
@@ -43,8 +44,8 @@ export var BlockSelectorData: BlockGroup[] = [
             { text: "分割线", pic: <img src={divider} />, url: '/divider', description: '', label: '/分割线' },
             { text: "折叠列表", pic: <img src={toggle} />, url: '/list?{listType:2}', description: "折叠列表", label: '/折叠列表', labels: [] },
             { text: "首重文字", pic: <img src={callout} />, url: "/callout", description: "", label: "/首重文字", labels: [] },
-            // { text: "数学公式", pic: <img src={equation} />, url: "/katex", description: "", label: "/数学公式", labels: [] },
-            // { text: '链接', pic: <img src={link} />, url: '/link', description: "", label: "/链接" }
+            { text: "数学公式", pic: <img src={equation} />, url: "/katex", description: "", label: "/数学公式", labels: [] },
+            { text: '链接页面', pic: <img src={link} />, url: '/link', description: "", label: "/链接" }
         ]
     },
     {
@@ -60,12 +61,12 @@ export var BlockSelectorData: BlockGroup[] = [
         text: '媒体与附件',
         childs: [
             { text: "图片", pic: <img src={image} />, url: '/image', description: '', label: '/图片' },
-            // { text: "音频", pic: <img src={audio} />, url: '/audio', description: "", label: '/音频' },
-            // { text: "视频", pic: <img src={video} />, url: '/video', description: "", label: '/视频' },
+            { text: "音频", pic: <img src={audio} />, url: '/audio', description: "", label: '/音频' },
+            { text: "视频", pic: <img src={video} />, url: '/video', description: "", label: '/视频' },
             { text: "附件", pic: <img src={file} />, url: '/file', description: "", label: '/附件' },
-            // { text: "代码片段", pic: <img src={code} />, url: "/code", description: "", label: "/代码片段", labels: [] },
-            // { text: "书签", pic: <img src={bookmark} />, url: '/bookmark', description: '', label: '/书签' },
-            { text: '表格', pic: <img src={tablestore} />, url: '/table', description: '', label: '/表格' }
+            { text: "代码片段", pic: <img src={code} />, url: "/code", description: "", label: "/代码片段", labels: [] },
+            { text: "书签", pic: <img src={bookmark} />, url: '/bookmark', description: '', label: '/书签' },
+            { text: '简单表格', pic: <img src={tablestore} />, url: '/table', description: '', label: '/表格' }
         ]
     },
     // {
