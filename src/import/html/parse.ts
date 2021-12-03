@@ -36,16 +36,36 @@ async function parseTextBlock(element: HTMLElement[] | HTMLElement) {
             var fontStyle = dm.style('fontStyle');
             var font = {
                 textDecoration: textDecoration ? textDecoration : undefined,
-                bold: bold ? bold : undefined,
+                fontWeight: bold ? bold : undefined,
                 fontStyle: fontStyle ? fontStyle : undefined
+            }
+            if (style && style.pattern) {
+                var pa = lodash.cloneDeep(style?.pattern?.styles[0]?.cssList[0] || {});
+                delete pa.abled;
+                delete pa.cssName;
+                font = lodash.assign(pa, font)
             }
             var isCode = undefined;
             if (name == 'code') isCode = true;
-            if (name == 'strong') font.bold = 'bold';
-            if (name == 'i') font.fontStyle = 'italic';
-            var pattern = Object.values(font).some(s => s) ? {
-                [BlockCssName.font]: font
-            } : undefined;
+            if (name == 'strong' || name == 'b') font.fontWeight = 'bold';
+            if (name == 'i' || name == 'em') font.fontStyle = 'italic';
+            if (name == 'del' || name == 's') font.textDecoration = 'line-through';
+            if (name == 'u') font.textDecoration = 'underline';
+            var pattern: any;
+            if (font) {
+                pattern = {
+                    styles: [{
+                        name: 'default',
+                        cssList: [
+                            {
+                                "abled": true,
+                                "cssName": BlockCssName.font,
+                                ...font
+                            }
+                        ]
+                    }]
+                }
+            }
             for (let i = 0; i < cs.length; i++) {
                 var ele = cs[i] as HTMLElement;
                 fr(ele, lodash.assign(style || { isCode }, pattern ? { pattern } : {}));
@@ -134,6 +154,13 @@ function getTextBlock(element: HTMLElement) {
     else if (name == 'blockquote') url = '/quote';
     return url;
 }
+function isLineElement(element: HTMLElement) {
+    var name = element?.tagName?.toLowerCase();
+    if (['span', 'a', 'label', 'i', 'u', 'del', 'b', 'em', 'font', 'strong'].includes(name)) {
+        return true;
+    }
+    else return false;
+}
 async function parseBlock(element: HTMLElement) {
     var name = element?.tagName?.toLowerCase();
     var textBlockUrl = getTextBlock(element);
@@ -148,18 +175,36 @@ async function parseBlock(element: HTMLElement) {
     else {
         var rs: any[] = [];
         if (element?.children?.length > 0) {
+            var lineElements: HTMLElement[] = [];
             for (let i = 0; i < element.childNodes.length; i++) {
                 var ele = element.childNodes[i] as HTMLElement;
-                var name = ele?.tagName?.toLowerCase();
-                var pb = await parseBlock(ele);
-                if (pb) {
-                    if (Array.isArray(pb)) {
-                        pb.each(p => {
-                            if (p) rs.push(p);
-                        })
+                console.log(ele, isLineElement(ele));
+                if (isLineElement(ele)) lineElements.push(ele);
+                else {
+                    if (lineElements.length > 0) {
+                        var texts = await parseTextBlock(lineElements);
+                        if (texts.length > 0) {
+                            rs.push({ url: '/textspan', blocks: { childs: texts } })
+                        }
+                        lineElements = [];
                     }
-                    else rs.push(pb);
+                    var pb = await parseBlock(ele);
+                    if (pb) {
+                        if (Array.isArray(pb)) {
+                            pb.each(p => {
+                                if (p) rs.push(p);
+                            })
+                        }
+                        else rs.push(pb);
+                    }
                 }
+            }
+            if (lineElements.length > 0) {
+                var texts = await parseTextBlock(lineElements);
+                if (texts.length > 0) {
+                    rs.push({ url: '/textspan', blocks: { childs: texts } })
+                }
+                lineElements = [];
             }
         }
         else {
@@ -173,24 +218,9 @@ async function parseBlock(element: HTMLElement) {
 }
 export async function parseDom(dom: HTMLElement | Document) {
     var body = dom.querySelector('body');
-    if (body) {
+    if (body)
         return await parseDom(body);
-    }
-    else {
-        var blocks: Record<string, any>[] = [];
-        for (let i = 0; i < dom.childNodes.length; i++) {
-            var dm = dom.childNodes[i];
-            var pb = await parseBlock(dm as HTMLElement)
-            if (pb) {
-                if (Array.isArray(pb)) {
-                    pb.each(p => {
-                        if (p) blocks.push(p);
-                    })
-                }
-                else blocks.push(pb);
-            }
-        }
-        return blocks;
-    }
+    else
+        return parseBlock(dom as HTMLElement);
 }
 

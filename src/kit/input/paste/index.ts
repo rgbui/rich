@@ -25,8 +25,10 @@ export class TextInput$Paster {
             event.preventDefault();
             let parser = new DOMParser();
             var doc = parser.parseFromString(html, "text/html");
+            // console.log(doc);
             var blocks = await parseDom(doc);
-            if (blocks.length > 0) {
+            // console.log(blocks);
+            if (blocks?.length > 0) {
                 await this.page.onPasteCreateBlocks(blocks);
             }
         }
