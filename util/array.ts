@@ -4,6 +4,7 @@ interface Array<T> {
     /**数组反转 */
     each(predict: (item: T, i: number, array: T[]) => boolean | void): void;
     eachAsync(predict: (item: T, i: number, array: T[]) => Promise<void | boolean>): Promise<void>;
+    eachReverseAsync(predict: (item: T, i: number, array: T[]) => Promise<void | boolean>): Promise<void>;
     eachReverse(predict: (item: T, i: number, array: T[]) => boolean | void): void;
     findLast(predict: T | ((item: T, i: number, array: any[]) => boolean)): T;
     find(predict: T | ((item: T, i: number, array: T[]) => boolean)): T;
@@ -90,6 +91,13 @@ if (typeof Array.prototype.eachAsync == 'undefined') {
 
     Array.prototype.eachAsync = async function (fn) {
         for (let i = 0; i < this.length; i++) {
+            let item = this[i];
+            var result = await fn.apply(this, [item, i, this]);
+            if (result == false) break;
+        }
+    }
+    Array.prototype.eachReverseAsync = async function (fn) {
+        for (let i = this.length - 1; i > -1; i--) {
             let item = this[i];
             var result = await fn.apply(this, [item, i, this]);
             if (result == false) break;
@@ -334,7 +342,7 @@ if (typeof Array.prototype.eachAsync == 'undefined') {
         }
         else {
             if (!Array.isArray(index)) throw new Error('add range array is not array')
-           return this.splice(this.length, 0, ...index);
+            return this.splice(this.length, 0, ...index);
         }
     }
     Array.prototype.move = function (item, index: number = 0) {
