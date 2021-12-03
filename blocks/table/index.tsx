@@ -7,11 +7,40 @@ import { BlockDisplay } from "../../src/block/enum";
 import { Dragger } from "../../src/common/dragger";
 import { util } from "../../util/util";
 import { ChildsArea } from "../../src/block/view/appear";
+import { ActionDirective } from "../../src/history/declare";
 @url('/table')
 export class Table extends Block {
     display = BlockDisplay.block;
     @prop()
     cols: { width: number }[] = [];
+    async created() {
+        this.updateProps({ cols: [{ width: 120 }, { width: 120 }] });
+        await this.page.createBlock('/table/row',
+            { blocks: { childs: [{ url: '/table/cell' }, { url: '/table/cell' }] } },
+            this);
+        await this.page.createBlock('/table/row',
+            { blocks: { childs: [{ url: '/table/cell' }, { url: '/table/cell' }] } },
+            this);
+        await this.page.createBlock('/table/row',
+            { blocks: { childs: [{ url: '/table/cell' }, { url: '/table/cell' }] } },
+            this);
+    }
+    async didMounted() {
+        if (this.childs.length == 0) {
+            this.page.onAction(ActionDirective.onErrorRepairDidMounte, async () => {
+                this.updateProps({ cols: [{ width: 120 }] });
+                await this.page.createBlock('/table/row',
+                    { blocks: { childs: [{ url: '/table/cell' }] } },
+                    this);
+                await this.page.createBlock('/table/row',
+                    { blocks: { childs: [{ url: '/table/cell' }] } },
+                    this);
+                await this.page.createBlock('/table/row',
+                    { blocks: { childs: [{ url: '/table/cell' }] } },
+                    this);
+            })
+        }
+    }
 }
 @view('/table')
 export class TableView extends BlockView<Table>{

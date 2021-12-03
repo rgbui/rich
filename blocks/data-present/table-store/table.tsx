@@ -259,7 +259,7 @@ export class TableStore extends Block {
         }
         return json;
     }
-    async onCreated() {
+    async created() {
         if (!this.schemaId) {
             var schemaData = await this.page.emitAsync(PageDirective.createDefaultTableSchema, this.initialData);
             this.schema = new TableSchema(schemaData);
