@@ -8,6 +8,7 @@ export enum KeyboardCode {
     Backspace = 'Backspace',
     Delete = 'Delete',
     Enter = 'Enter',
+    Tab = 'Tab',
     A = 'A',
     B = 'B',
     Z = 'Z',

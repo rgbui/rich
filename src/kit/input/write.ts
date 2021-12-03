@@ -4,6 +4,7 @@ import { Anchor } from "../selection/anchor";
 import { ClearInputStore, ForceInputStore, ForceStore } from "./store";
 import { InputHandle, onPreKeydown } from "./handle/input";
 import { backspaceDeleteHandle } from "./handle/back.delete";
+import { BlockUrlConstant } from "../../block/constant";
 export class TextInput$Write {
     /***
      * keydown会触发多次（如果手不松，会一直触发，所以整个过程前非是完整的keydown-keyup
@@ -72,6 +73,16 @@ export class TextInput$Write {
                     if (!this.textarea.value) {
                         await ForceInputStore();
                         return await backspaceDeleteHandle(this);
+                    }
+                    break;
+                case KeyboardCode.Tab:
+                    var anchor = this.page.kit.explorer.activeAnchor;
+                    if (anchor.block.closest(x => x.url == BlockUrlConstant.List)) {
+                        var r = await anchor.block.onKeyTab(this.page.keyboardPlate.isShift())
+                        if (r != false) {
+                            event.preventDefault();
+                            return
+                        }
                     }
                     break;
             }
