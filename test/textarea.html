@@ -39,6 +39,7 @@
 <script>
 
     document.querySelector('textarea').addEventListener('keydown', function (event) {
+        console.log(event.key);
         console.log('keydown', event.target.value, event.target.value.length);
     });
     document.querySelector('textarea').addEventListener('input', function (event) {
