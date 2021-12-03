@@ -93,6 +93,7 @@ export class TableView extends BlockView<Table>{
                 <tbody>
                     <ChildsArea childs={this.block.childs}></ChildsArea>
                 </tbody>
-            </table></div>
+            </table>
+        </div>
     }
 }

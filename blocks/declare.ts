@@ -18,7 +18,7 @@ import "./present/code/code";
 import "./present/divider";
 import './table/cell';
 import './table/row';
-import './table/table';
+import './table';
 
 import './data-present/table-store/table';
 import "./data-present/table-store/head";
