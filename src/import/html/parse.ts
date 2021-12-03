@@ -143,6 +143,13 @@ async function parseMedia(element: HTMLElement) {
 
     }
 }
+async function parsefigure(element: HTMLElement) {
+    var caption = element.innerText;
+    var img = element.querySelector('img');
+    if (img) {
+        return { url: '/image', allowCaption: caption ? true : false, caption, initialData: { url: img.getAttribute('src') } }
+    }
+}
 function getTextBlock(element: HTMLElement) {
     var url = '';
     var name = element?.tagName?.toLowerCase();
@@ -172,6 +179,9 @@ async function parseBlock(element: HTMLElement) {
     else if (name == 'table') return await parseTable(element)
     else if (name == 'ol' || name == 'li') return await parseOl(element)
     else if (name == 'img' || name == 'video' || name == 'audio' || name == 'iframe') return await parseMedia(element)
+    else if (name == 'figure') {
+        return await parsefigure(element);
+    }
     else {
         var rs: any[] = [];
         if (element?.children?.length > 0) {
