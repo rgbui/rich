@@ -1,8 +1,16 @@
 
 import lodash from "lodash";
-import { ListType } from "../../../../blocks/present/list/list";
-import { BlockCssName } from "../../../block/pattern/css";
-import { dom } from "../../../common/dom";
+import { ListType } from "../../../blocks/present/list/list";
+import { BlockCssName } from "../../block/pattern/css";
+import { dom } from "../../common/dom";
+/**
+   * 
+   * find img video autio 
+   * ignore input,select,textarea
+   * 
+   * key tags title hr  h1~h6  pre  ol-ul-li table b del
+   * https://zhuanlan.zhihu.com/p/81132589
+   */
 async function parseTextBlock(element: HTMLElement[] | HTMLElement) {
     var blocks: Record<string, any>[] = [];
     function fr(node: HTMLElement, style?: Record<string, any>) {
