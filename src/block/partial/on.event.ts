@@ -15,6 +15,7 @@ import { LangID } from "../../../i18n/declare";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { AppearAnchor } from "../appear";
 import lodash from "lodash"
+import { BlockUrlConstant } from "../constant";
 export class Block$Event {
     /**
      * 需要继承指定可以切换的块
@@ -163,6 +164,29 @@ export class Block$Event {
     async onUpdateProps(this: Block, props: Record<string, any>, range = BlockRenderRange.none) {
         await this.page.onAction(ActionDirective.onUpdateProps, async () => {
             this.updateProps(props, range);
+        })
+    }
+    async onKeyTab(this: Block, isBack?: boolean) {
+        var list = this.closest(x => x.url == BlockUrlConstant.List);
+        if (isBack) {
+            if (!(list.parent && list.parent.url == BlockUrlConstant.List)) return false
+        }
+        else {
+            var prev = list.prev;
+            if (!(prev && prev.url == BlockUrlConstant.List)) return false
+        }
+        await this.page.onAction(ActionDirective.onKeyTab, async () => {
+            if (isBack) {
+                var pa = list.parent;
+                var at = list.at;
+                var rest = pa.blocks[pa.childKey].findAll((item, i) => i > at);
+                await list.insertAfter(pa);
+                await list.appendArray(rest, undefined, list.childKey)
+            }
+            else {
+                var prev = list.prev;
+                await prev.append(this, undefined, prev.childKey);
+            }
         })
     }
 }
