@@ -29,6 +29,11 @@ export enum ActionDirective {
     onSchemaRowDelete = 205,
     onTablestoreUpdateViewField = 210,
     onTablestoreHideViewField = 211,
+
+    /**
+     * 错误修正的
+     */
+    onErrorRepairDidMounte=300
 }
 
 export enum OperatorDirective {
