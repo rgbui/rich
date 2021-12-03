@@ -30,7 +30,7 @@ export class Page$Operator {
         this.snapshoot.record(OperatorDirective.create, {
             parentId: parent.id, childKey, at, preBlockId: block.prev ? block.prev.id : undefined, data: block.get()
         });
-        await block.onCreated()
+        await block.created()
         this.addBlockUpdate(parent);
         return block;
     }

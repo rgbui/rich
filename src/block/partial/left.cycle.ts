@@ -25,11 +25,11 @@ export class Block$LifeCycle {
     didMounted(this: Block) {
 
     }
-    async onCreated(this: Block) {
+    async created(this: Block) {
         var keys = this.blockKeys;
         for (let key of keys) {
             await this.blocks[key].eachAsync(async (block) => {
-                await block.onCreated();
+                await block.created();
             })
         }
     }
