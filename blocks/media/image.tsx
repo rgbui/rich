@@ -2,7 +2,7 @@ import { BlockView } from "../../src/block/view";
 import { prop, url, view } from "../../src/block/factory/observable";
 import React from 'react';
 import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
-import { SolidArea } from "../../src/block/view/appear";
+import { SolidArea, TextArea } from "../../src/block/view/appear";
 import { Rect } from "../../src/common/point";
 import { ResourceArguments } from "../../extensions/icon/declare";
 import { Block } from "../../src/block";
@@ -24,6 +24,10 @@ export class Image extends Block {
     src: ResourceArguments;
     @prop()
     imageWidthPercent: number = 100;
+    @prop()
+    caption: string = '';
+    @prop()
+    allowCaption: boolean = false;
     display = BlockDisplay.block;
     async onOpenUploadImage(event: React.MouseEvent) {
         var r = await useImagePicker({ roundArea: Rect.fromEvent(event) });
@@ -149,9 +153,12 @@ export class ImageView extends BlockView<Image>{
     render() {
         return <div className='sy-block-image' style={this.block.visibleStyle} >
             <div className='sy-block-image-content' >
-                {!(this.block.src && this.block.src.url) && this.renderEmptyImage()}
-                {this.block.src && this.block.src.url && this.renderImage()}
+                {!this.block?.src && this.renderEmptyImage()}
+                {this.block?.src && this.renderImage()}
             </div>
+            {!this.isLoadError && this.block.src?.url && this.block.allowCaption && <div className='sy-block-image-caption'>
+                {<TextArea rf={e => this.block.elementAppear({ el: e, prop: 'caption' })} html={this.block.caption} placeholder={'键入图标描述'}></TextArea>}
+            </div>}
         </div>
     }
 }
