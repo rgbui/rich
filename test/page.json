@@ -1,0 +1,1389 @@
+{
+    "id": "gh2cFXv3xSqnkAqyMe6sqc",
+    "date": 1638032249300,
+    "pageLayout": {},
+    "views": [
+        {
+            "id": "2ioWDfMtgcnNoESdvhNdos",
+            "url": "/view",
+            "pattern": {},
+            "blocks": {
+                "childs": [
+                    {
+                        "id": "vjLvXPREq5DQ2WrnJ6Kice",
+                        "url": "/title",
+                        "pattern": {},
+                        "blocks": {
+                            "childs": []
+                        },
+                        "content": "",
+                        "isShowIcon": true,
+                        "isShowDescription": false
+                    },
+                    {
+                        "id": "fKF5D7FpYw8ZdLouWDqehq",
+                        "url": "/textspan",
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "eGCaFzbzERTCVFx3MQ7pds",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "面ee",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                }
+                            ]
+                        },
+                        "content": ""
+                    },
+                    {
+                        "id": "84dj6LYvd3FZsmyHb9cSwc",
+                        "url": "/textspan",
+                        "pattern": {},
+                        "blocks": {
+                            "childs": []
+                        },
+                        "content": "eeee"
+                    },
+                    {
+                        "id": "vS86hdm37v3NKEu73pRsru",
+                        "url": "/textspan",
+                        "pattern": {},
+                        "blocks": {
+                            "childs": []
+                        },
+                        "content": "eeee"
+                    },
+                    {
+                        "id": "wLjkKjgh62hmUpR5sm8Y6E",
+                        "url": "/textspan",
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "oDyK9tewjVpD6t8XLPjz4o",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "export",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                }
+                            ]
+                        },
+                        "content": ""
+                    },
+                    {
+                        "id": "wKeixhp93CJFVQjHexSUAv",
+                        "url": "/textspan",
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "3Pej3JWM6ycG2Tfxxcj6Ae",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "expo",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "wRq1DBT3eWbkraAVuC7XGF",
+                                    "url": "/text",
+                                    "pattern": {
+                                        "id": "q8Zv9xijtkyWHPoEvkNXsE",
+                                        "date": 1638552790476,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold"
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1638552790478,
+                                                "id": "8hJ1SdKotzeEbdiXXzwxQu"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "rt",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "eMnKUSsk5MXU9uVCjuruhi",
+                                    "url": "/text",
+                                    "pattern": {
+                                        "id": "qTCNzuCZ1id8Y28r2eTf3b",
+                                        "date": 1638552786367,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold"
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1638552790478,
+                                                "id": "imHRWZaoWdGQHFtdSdsNAA"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": " ",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "wU5kEZZD3KxcbxbXY66JWC",
+                                    "url": "/text",
+                                    "pattern": {
+                                        "id": "gN143g6kK2txfABiaWCjf1",
+                                        "date": 1638552786367,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold"
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1638552790478,
+                                                "id": "oaMuoZKu2KEkRPYzxpzcS7"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "async",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "anKWhCGnC83EbrPjPor3yR",
+                                    "url": "/text",
+                                    "pattern": {
+                                        "id": "afnBheTzV4eWJyw4hRZu15",
+                                        "date": 1638552786367,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold"
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1638552790478,
+                                                "id": "nwG5Hfkg69pdsmedVD8xjQ"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": " ",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "hNwjkbfjZSApCeDw5kB8wG",
+                                    "url": "/text",
+                                    "pattern": {
+                                        "id": "mZjwr2bWUhiujqhqUNLr82",
+                                        "date": 1638552786367,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold"
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1638552790478,
+                                                "id": "mqowVnKY2NnqQ78fcube4c"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "function",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "dYvzYXgHPxMKcNHXpJ7P7s",
+                                    "url": "/text",
+                                    "pattern": {
+                                        "id": "ppyrxPcpjjrX2KjmB48Ag3",
+                                        "date": 1638552786367,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold"
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1638552790478,
+                                                "id": "7MdCdRwt6KJsrjBBotoocE"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": " ",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "aoRY6AxGJtp9hZ7AQDCuUe",
+                                    "url": "/text",
+                                    "pattern": {
+                                        "id": "pmNPMokcr1exgDUMSWKA5M",
+                                        "date": 1638552786367,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontWeight": "bold"
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1638552790479,
+                                                "id": "duBKru5mA64W2uNBHR5RU9"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "p",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "4kvH5AAWfWr84CoZupM1E9",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "ars",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "2yrXWEfMizVLFL8y7uK32p",
+                                    "url": "/text",
+                                    "pattern": {
+                                        "id": "hgboZCKLaLEr9h6QLhtwgE",
+                                        "date": 1638552795216,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontStyle": "italic"
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1638552795255,
+                                                "id": "fSuucWZpLTEyjsXpdUfbL5"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "eDom",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "mbLnsiSMqv2q7TRqBXCioD",
+                                    "url": "/text",
+                                    "pattern": {
+                                        "id": "vQDHTbnD6bXf4tXw7e2NfH",
+                                        "date": 1638552786367,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontStyle": "italic"
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1638552795255,
+                                                "id": "5FcXH72bD6cnNoA6MsYS7X"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "(",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "kpirsXaM8Xea5EAjwiS217",
+                                    "url": "/text",
+                                    "pattern": {
+                                        "id": "ngkapUDoaVSgZrsdwUoi2U",
+                                        "date": 1638552786367,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontStyle": "italic"
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1638552795255,
+                                                "id": "dqkZ1FWpfqhHvVz6LTjcuV"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "dom",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "j1HmZUxpRWe7N9G4wDXSFN",
+                                    "url": "/text",
+                                    "pattern": {
+                                        "id": "fkBVN3sZh22dJER7p7Q6FQ",
+                                        "date": 1638552786368,
+                                        "styles": [
+                                            {
+                                                "cssList": [
+                                                    {
+                                                        "abled": true,
+                                                        "cssName": 0,
+                                                        "fontStyle": "italic"
+                                                    }
+                                                ],
+                                                "name": "default",
+                                                "date": 1638552795255,
+                                                "id": "2XrYLXwZuCFZiBkoDxgmJd"
+                                            }
+                                        ]
+                                    },
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": ": ",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "bb6DDuVAws9U3R355kNMu3",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "HTMLElement",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "4XDpsHwQC1rxcm4kCDFCT1",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": " | ",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "fLbQkZTob1RdgUjsXsbygJ",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "Document",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "7W8JgiVGAJFNwcDG1ekimC",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": ") {",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                }
+                            ]
+                        },
+                        "content": ""
+                    },
+                    {
+                        "id": "ubx7HGJLMPTRtkjgvJaRoz",
+                        "url": "/textspan",
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "kanJUT3mjXwR2pJxKkY5ob",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "    ",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "gZgUNs172XGXrbuQssxdgm",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "var",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "v3jNvYCUiNr52WmoU3uLJb",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": " ",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "rB2TJFjCpZUpPELkRkEi9j",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "body",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "8vRifFQBk8itusre4BkWhT",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": " = ",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "wnXcftLoYopJMANqTKjsDd",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "dom",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "4y54a3KcPrmAKU7fWkuzTM",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": ".",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "vLb8XVcqe6QVmjnjFX8QMS",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "querySelector",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "wsJakE6H9eJTeCWpd1TFoR",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "(",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "h4719Aa2ZcAz6bYAGh9rgw",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "'body'",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "1cjsXYaVhyQUnjEQwWgf3v",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": ");",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                }
+                            ]
+                        },
+                        "content": ""
+                    },
+                    {
+                        "id": "81NCX5veAvivdbvuP3AkrS",
+                        "url": "/textspan",
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "pUu3aF5V2fTe8bKCYjTBUv",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "    ",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "3bfbVvoYWMYGwUhN2y7tLr",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "if",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "wXX9Xax9swLyg4w82a3EKq",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": " (",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "utBEFZsAEnWJaC4MzrSDkz",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "body",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "4kbJ7XKUpBQzNKFXZ9eAMP",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": ")",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                }
+                            ]
+                        },
+                        "content": ""
+                    },
+                    {
+                        "id": "k57e4jiqPWQ8xmmMHZZCgd",
+                        "url": "/textspan",
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "v5QQApr1fgfrQP7Lc9TfF7",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "        ",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "ibH1BdZJvDSB1C3oZcytY9",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "return",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "uafAUxR7EHFNYRbvS2YzAB",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": " ",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "v37t2j5Bz3EcJfg4KFFeRf",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "await",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "v2XzrF9fLjg1mSFDWXwLsY",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": " ",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "7vnGRGVkB6S6b4wGTNP7KP",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "parseDom",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "qNWmWJQ9AwibPzxGPqkZcY",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "(",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "umU7BkEr4m7KbSLnANUbHM",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "body",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "hyBsFChAbH4LFUQVhCe4Tj",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": ");",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                }
+                            ]
+                        },
+                        "content": ""
+                    },
+                    {
+                        "id": "3TiUUSYZaikDe1jghdM47t",
+                        "url": "/textspan",
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "prQRdwRp2QqqZEWuA8TwSY",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "    ",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "w8TCfaLekG6eZWtcaVjgPQ",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "else",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                }
+                            ]
+                        },
+                        "content": ""
+                    },
+                    {
+                        "id": "2XaepHEEmmUaKqoxi9yQdX",
+                        "url": "/textspan",
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "kYaZ6WM3v8cvN9qpKv5Gfb",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "        ",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "uCEc8wgMYu7X8Pkd8UhYfU",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "return",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "rYwCUZP6cB3FPCo9ao6cEx",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": " ",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "mFnavqLh4zQ7AU3ZTZCEpH",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "parseBlock",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "wg6V7sDu7X7ioBa6HSP4sQ",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "(",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "6PCgsYNKqUZGDyoeqP3Fqe",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "dom",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "ukYSZoAetggy6zv5tkUfFP",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": " ",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "tX9NJVZGRnWnibTnk9aQiu",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "as",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "qWWBRvzZgJMSqUXFM2Sg8z",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": " ",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "9kHMn7X7CmKd87QYpkw3Vg",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "HTMLElement",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "5zcSqSfG9GenvstxUJ1Hw1",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": ");",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                }
+                            ]
+                        },
+                        "content": ""
+                    },
+                    {
+                        "id": "34Wa43NuWukobcPUQZeZMZ",
+                        "url": "/textspan",
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "bnng2k1ALCm8T7WK3Bi4Cx",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "}",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                }
+                            ]
+                        },
+                        "content": ""
+                    },
+                    {
+                        "id": "8pCrJUyD7impsgRf1qtNKk",
+                        "url": "/image",
+                        "pattern": {},
+                        "blocks": {
+                            "childs": []
+                        },
+                        "content": "",
+                        "src": {
+                            "url": "http://localhost:8889/file/4EtwRD1h-2/content",
+                            "name": "download",
+                            "source": "https://pic2.zhimg.com/v2-3ea74b8cda402fa48721deedd0e18881_b.jpg"
+                        },
+                        "imageWidthPercent": 16
+                    },
+                    {
+                        "id": "e9uqngdU6npLYcki1L638x",
+                        "url": "/textspan",
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "12KqvubFu7J15PUYVw5ffb",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "1933年的维尔纳·海森堡",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                }
+                            ]
+                        },
+                        "content": ""
+                    },
+                    {
+                        "id": "jZVaqzpib18y4LJBBuZVfs",
+                        "url": "/textspan",
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "mE3DrjjsPzNtaeXXA6c1rv",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "这表明，如果世界上真的存在自由，即你或粒子的行为都不是由宇宙过去的历史预先决定的，那么这种自由有两种形式。”一种是我有选择做哪个实验（测量位置或动量）的自由，另一种是大自然拥有展现它想展现的结果的自由——这就是大自然的随机性，”蔡林格解释说。“从某种意义上说，这两种自由是殊途同归的。这是大自然的一个迷人的特征。”",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                }
+                            ]
+                        },
+                        "content": ""
+                    },
+                    {
+                        "id": "7CMfsBfJm1kQn51tHRFgxM",
+                        "url": "/textspan",
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "jBZ5mFdHHtDPMaWVHwhsLY",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "然而，",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "3Bzyh37LacuSoaGSrtJsbp",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "我们完全不清楚测量过程是如何导致一个叠加态塌缩到特定的状态上的",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "4wLL55Pg3juAfx3rqZLnbw",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "——这就是著名的量子力学测量问题。一些物理学家，例如尤金·维格纳和约翰·冯·诺依曼，提出了塌缩是由物理世界外的意识引起的，这又回到了笛卡尔提出的心物二元论。但这种理解颇具争议。根据巴特菲尔德的说法，这些理论“具有令人愉悦的模糊感和神秘感，但完全是不可信的”。而它们对于自由意志的确切含义更是无能为力。",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                }
+                            ]
+                        },
+                        "content": ""
+                    },
+                    {
+                        "id": "cioR3wUUXQc4V9cxaTg4D9",
+                        "url": "/image",
+                        "pattern": {},
+                        "blocks": {
+                            "childs": []
+                        },
+                        "content": "",
+                        "src": {
+                            "url": "http://localhost:8889/file/4EtwRD1i-2/content",
+                            "name": "download",
+                            "source": "https://pic2.zhimg.com/v2-3ea74b8cda402fa48721deedd0e18881_b.jpg"
+                        },
+                        "imageWidthPercent": 16
+                    },
+                    {
+                        "id": "hQ4RywGE4keddLxf3vcjAU",
+                        "url": "/textspan",
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "qEfixmcYLCrSJr8kRfQs8T",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "1933年的维尔纳·海森堡",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                }
+                            ]
+                        },
+                        "content": ""
+                    },
+                    {
+                        "id": "ecpboHhjsxcpSrL36ZkVFX",
+                        "url": "/textspan",
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "2oxHZ935YBRh3GD94gqyaY",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "这表明，如果世界上真的存在自由，即你或粒子的行为都不是由宇宙过去的历史预先决定的，那么这种自由有两种形式。”一种是我有选择做哪个实验（测量位置或动量）的自由，另一种是大自然拥有展现它想展现的结果的自由——这就是大自然的随机性，”蔡林格解释说。“从某种意义上说，这两种自由是殊途同归的。这是大自然的一个迷人的特征。”",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                }
+                            ]
+                        },
+                        "content": ""
+                    },
+                    {
+                        "id": "c5ge3bgvLBcPSfc42oN2Kk",
+                        "url": "/textspan",
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "oWSgr1tcabEWexGh8ASXkG",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "然而，",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "uVeKGyrB4RmhZeEH7fdorH",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "我们完全不清楚测量过程是如何导致一个叠加态塌缩到特定的状态上的",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                },
+                                {
+                                    "id": "2dX4A1wbgARztDcxoFgJiD",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "——这就是著名的量子力学测量问题。一些物理学家，例如尤金·维格纳和约翰·冯·诺依曼，提出了塌缩是由物理世界外的意识引起的，这又回到了笛卡尔提出的心物二元论。但这种理解颇具争议。根据巴特菲尔德的说法，这些理论“具有令人愉悦的模糊感和神秘感，但完全是不可信的”。而它们对于自由意志的确切含义更是无能为力。",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                }
+                            ]
+                        },
+                        "content": ""
+                    },
+                    {
+                        "id": "cZr4E8FK1RPgxK4PYNgFNq",
+                        "url": "/textspan",
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "2dk5oHdttRSaq5P3eFeNM3",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "作者：中科院物理所",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                }
+                            ]
+                        },
+                        "content": ""
+                    },
+                    {
+                        "id": "apRASFGH2h9BboBqDZP6DC",
+                        "url": "/textspan",
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "9czfiaxA9EYjkrNt7yKpVh",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "链接：https://zhuanlan.zhihu.com/p/366780943",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                }
+                            ]
+                        },
+                        "content": ""
+                    },
+                    {
+                        "id": "hRMrqz349HJNcGYcXv5fpT",
+                        "url": "/textspan",
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "b9VeScevKadHSExq9U5xQo",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "来源：知乎",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                }
+                            ]
+                        },
+                        "content": ""
+                    },
+                    {
+                        "id": "36PAZ9mZieVi3kiNpD3yAC",
+                        "url": "/textspan",
+                        "pattern": {},
+                        "blocks": {
+                            "childs": [
+                                {
+                                    "id": "kuwdNrEARsw7qifx8ERycS",
+                                    "url": "/text",
+                                    "pattern": {},
+                                    "blocks": {
+                                        "childs": []
+                                    },
+                                    "content": "著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。",
+                                    "link": null,
+                                    "comment": null,
+                                    "mention": null,
+                                    "code": false
+                                }
+                            ]
+                        },
+                        "content": ""
+                    }
+                ]
+            },
+            "content": ""
+        }
+    ]
+}
