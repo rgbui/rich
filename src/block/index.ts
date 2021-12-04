@@ -153,7 +153,7 @@ export abstract class Block extends Events {
     get continuouslyProps() {
         return {}
     }
-    get childKey(){
+    get childKey() {
         return 'childs';
     }
     viewComponent: typeof BlockView | ((props: any) => JSX.Element)
@@ -173,24 +173,6 @@ export abstract class Block extends Events {
         }
         Object.assign(style, this.pattern.style);
         return style;
-    }
-    get visibleHeadAnchor() {
-        if (this.isSupportAnchor) {
-            return this.page.kit.explorer.createAnchor(this);
-        }
-        else if (this.childs.length > 0) {
-            var sub = this.find(g => g.isSupportAnchor);
-            if (sub) return sub.visibleHeadAnchor;
-        }
-    }
-    get visibleBackAnchor() {
-        if (this.isSupportAnchor) {
-            return this.page.kit.explorer.createBackAnchor(this, -1);
-        }
-        else if (this.childs.length > 0) {
-            var sub = this.findReverse(g => g.isSupportAnchor);
-            if (sub) return sub.visibleBackAnchor;
-        }
     }
     protected display: BlockDisplay;
     /**
@@ -216,19 +198,19 @@ export abstract class Block extends Events {
      * 是否为内容block
      * 
      */
-    get isVisibleContentBlock() {
-        if (this.isLayout || this.isLine) return false;
-        else return true;
-    }
-    get visibleContentBlock() {
-        if (this.isLine) return this.closest(x => x.isVisibleContentBlock);
-        else if (this.isVisibleContentBlock) return this;
-        else if (this.isLayout) {
-            var r = this.find(x => x.isVisibleContentBlock);
-            if (r) return r;
-        }
-        return null;
-    }
+    // get isVisibleContentBlock() {
+    //     if (this.isLayout || this.isLine) return false;
+    //     else return true;
+    // }
+    // get visibleContentBlock() {
+    //     if (this.isLine) return this.closest(x => x.isVisibleContentBlock);
+    //     else if (this.isVisibleContentBlock) return this;
+    //     else if (this.isLayout) {
+    //         var r = this.find(x => x.isVisibleContentBlock);
+    //         if (r) return r;
+    //     }
+    //     return null;
+    // }
     /***
      * 注意换行的元素不一定非得是/row，
      * 如表格里面自定义的换行
@@ -314,6 +296,9 @@ export abstract class Block extends Events {
     get firstElementAppear() {
         return this.appearAnchors.first();
     }
+    get lastElementAppear() {
+        return this.appearAnchors.last();
+    }
     get isOnlyElementAppear() {
         return this.appearAnchors.length == 1;
     }
@@ -394,6 +379,22 @@ export abstract class Block extends Events {
     addBlockSelect() {
         this.el.classList.add('shy-block-selected');
         return this.el;
+    }
+    /**
+     * 获取当前块的操作把手的块
+     * 例如line text块把手放在外面的textspan块
+     */
+    get handleBlock() {
+        if (this.isPart) {
+            return this.closest(x => !x.isPart && x.isBlock && !x.isLayout)
+        }
+        if (this.isLine) {
+            return this.closest(x => x.isBlock && !x.isLayout)
+        }
+        else if (this.isLayout) {
+            return this.find(g => g.isBlock && !g.isLayout)
+        }
+        return this;
     }
 }
 export interface Block extends Block$Seek { }

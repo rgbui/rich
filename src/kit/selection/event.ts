@@ -71,53 +71,6 @@ export class SelectionExplorer$Events {
                 });
             }
         })
-        // await this.page.onAction(ActionDirective.onDeleteSelection, async () => {
-        //     if (this.currentSelectedBlocks.length > 0) {
-        //         await this.currentSelectedBlocks.eachAsync(async block => {
-        //             await block.delete();
-        //         });
-        //         this.onCancelSelection();
-        //     }
-        //     else {
-        //         var blocks = this.page.searchBlocksBetweenAnchor(this.start, this.end);
-        //         await blocks.eachAsync(async block => {
-        //             if (!block.isText) await block.delete();
-        //             else if (block == this.start.block && block != this.end.block) {
-        //                 if (this.start.isBefore(this.end)) {
-        //                     this.page.onUpdated(async () => {
-        //                         var newAnchor = this.createAnchor(this.start.block, this.start.at);
-        //                         this.onFocusAnchor(newAnchor);
-        //                     });
-        //                 }
-        //                 var content = this.start.isBefore(this.end) ? block.textContent.slice(0, this.start.at) : block.textContent.slice(this.start.at);
-        //                 block.updateProps({ content }, BlockRenderRange.self);
-        //             }
-        //             else if (block == this.end.block && block != this.start.block) {
-        //                 if (this.end.isBefore(this.start)) {
-        //                     this.page.onUpdated(async () => {
-        //                         var newAnchor = this.createAnchor(this.end.block, this.end.at);
-        //                         this.onFocusAnchor(newAnchor);
-        //                     });
-        //                 }
-        //                 var content = this.end.isBefore(this.start) ? block.textContent.slice(0, this.end.at) : block.textContent.slice(this.end.at);
-        //                 block.updateProps({ content }, BlockRenderRange.self);
-        //             }
-        //             else if (block == this.end.block && block == this.start.block) {
-        //                 var min = Math.min(this.start.at, this.end.at);
-        //                 var max = Math.max(this.start.at, this.end.at);
-        //                 var content = block.textContent.slice(0, min) + block.textContent.slice(max);
-        //                 block.updateProps({ content }, BlockRenderRange.self);
-        //                 this.page.onUpdated(async () => {
-        //                     var newAnchor = this.createAnchor(block, min);
-        //                     this.onFocusAnchor(newAnchor);
-        //                 });
-        //             }
-        //             else {
-        //                 await block.delete();
-        //             }
-        //         })
-        //     }
-        // })
     }
     /**
      * 光标移动
@@ -134,14 +87,14 @@ export class SelectionExplorer$Events {
                     anchor.visible();
                     return;
                 }
-                else if (arrow == KeyboardCode.ArrowLeft && anchor.isStart) newAnchor = anchor.block.visiblePrevAnchor;
+                else if (arrow == KeyboardCode.ArrowLeft && anchor.isStart) newAnchor = anchor.prevAnchor;
                 else if (arrow == KeyboardCode.ArrowRight && !anchor.isEnd) {
                     anchor.at += 1;
                     anchor.visible();
                     return;
                 }
                 else if (arrow == KeyboardCode.ArrowRight && anchor.isEnd) {
-                    newAnchor = anchor.block.visibleNextAnchor;
+                    newAnchor = anchor.nextAnchor;
                 }
                 else if (arrow == KeyboardCode.ArrowDown)
                     newAnchor = anchor.block.visibleInnerDownAnchor(anchor);
@@ -150,10 +103,10 @@ export class SelectionExplorer$Events {
             }
             else if (anchor.isSolid) {
                 if (arrow == KeyboardCode.ArrowLeft) {
-                    newAnchor = anchor.block.visiblePrevAnchor;
+                    newAnchor = anchor.prevAnchor
                 }
                 else if (arrow == KeyboardCode.ArrowRight) {
-                    newAnchor = anchor.block.visibleNextAnchor;
+                    newAnchor = anchor.nextAnchor
                 }
                 else if (arrow == KeyboardCode.ArrowDown) {
                     newAnchor = anchor.block.visibleDownAnchor(anchor);
@@ -335,10 +288,10 @@ export class SelectionExplorer$Events {
                 * 所以对光标的操作可能得在渲染之后才可以触发
                 */
                 this.page.addUpdateEvent(async () => {
-                    var newStartAnchor = this.createAnchor(ns.block, ns.at);
+                    var newStartAnchor = ns.block.createAnchor(ns.at);
                     newStartAnchor.acceptView(this.start);
                     this.start = newStartAnchor;
-                    var newEndAnchor = this.createAnchor(ne.block, ne.at);
+                    var newEndAnchor = ne.block.createAnchor(ne.at);
                     newEndAnchor.acceptView(this.end);
                     this.end = newEndAnchor;
                     this.renderSelection();

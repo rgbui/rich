@@ -234,3 +234,4 @@ export async function parseDom(dom: HTMLElement | Document) {
         return parseBlock(dom as HTMLElement);
 }
 
+
