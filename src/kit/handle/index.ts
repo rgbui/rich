@@ -15,17 +15,13 @@ export class Handle extends Events {
     }
     handleBlock: Block;
     onShowBlockHandle(block: Block) {
-        var visbileBlock = block.visibleContentBlock;
-        if (!visbileBlock) {
-            console.log('not found visibleContentBlock', block);
-        }
-        this.handleBlock = visbileBlock;
+        this.handleBlock = block
         if (this.view.isDown) {
             var handleEl = this.view.handleEle;
             handleEl.style.display = 'none';
         }
-        else if (visbileBlock) {
-            var bound = visbileBlock.getVisibleContentBound();
+        else if (this.handleBlock) {
+            var bound = this.handleBlock.getVisibleContentBound();
             var pos = Point.from(bound);
             var handleEl = this.view.handleEle;
             handleEl.style.top = pos.y + 'px';
