@@ -85,30 +85,6 @@ export class SelectionExplorer extends Events {
             }
         }
     }
-    createAnchor(block: Block, at?: number)
-    {
-        if (block.isSupportAnchor) {
-            var anchor = new Anchor(this, block.firstElementAppear);
-            if (typeof at == 'number' && anchor.isText) {
-                if (at == -1) anchor.at = anchor.elementAppear.textContent.length;
-                else anchor.at = at;
-            }
-            else if (anchor.isText && typeof at == 'undefined') {
-                anchor.at = 0;
-            }
-            return anchor;
-        }
-    }
-    createBackAnchor(block: Block, at?: number) {
-        if (block.isSupportAnchor) {
-            var anchor = new Anchor(this, block.appearAnchors.last());
-            if (typeof at == 'number' && anchor.isText) {
-                if (at == -1) anchor.at = anchor.elementAppear.textContent.length;
-                else anchor.at = at;
-            }
-            return anchor;
-        }
-    }
     onFocusAnchor(anchor: Anchor) {
         if (this.end) { this.end.dispose(); delete this.end; }
         if (this.start) anchor.acceptView(this.start);
@@ -118,7 +94,7 @@ export class SelectionExplorer extends Events {
         this.renderSelection();
     }
     onFocusBlockAtAnchor(block: Block, at?: number) {
-        this.onFocusAnchor(this.createAnchor(block, at));
+        this.onFocusAnchor(block.createAnchor(at));
     }
     onClearAnchor() {
         delete this.start;

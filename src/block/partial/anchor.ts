@@ -1,4 +1,5 @@
 import { Block } from "..";
+import { dom } from "../../common/dom";
 import { Point, Rect } from "../../common/point";
 import { TextEle } from "../../common/text.ele";
 import { Anchor } from "../../kit/selection/anchor";
@@ -9,53 +10,9 @@ import { BlockUrlConstant } from "../constant";
  * 主要是用来确定光标的上下左右移动
  */
 export class Block$Anchor {
-    /***
-     * 
-     * row-col-block
-     * row-block
-     * row-block-childs(block是一个list有子节点)
-     * row-block-row(row里面是一个table，而table包含row)
-     * 
-    */
     get visiblePre() {
         var current: Block = this as any;
-        var prev = current.prev;
-        while (true) {
-            if (prev) {
-                if (prev.isLayout) {
-                    var r = prev.findReverse(g => g.isSupportAnchor);
-                    if (r) return r;
-                }
-                else if (prev.isSupportAnchor) {
-                    if (prev.hasChilds) {
-                        var r = prev.findReverse(g => g.isSupportAnchor);
-                        if (r) return r;
-                    }
-                    return prev;
-                }
-                else if (prev.hasChilds) {
-                    var r = prev.findReverse(g => g.isSupportAnchor);
-                    if (r) return r;
-                }
-                if (prev.prev) {
-                    prev = prev.prev;
-                }
-                else if (prev.parent) {
-                    current = prev;
-                    prev = null;
-                }
-            }
-            else {
-                current = current.parent;
-                if (current) {
-                    if (current.isSupportAnchor) return current;
-                    if (current.prev) prev = current.prev;
-                    else if (current.parent) continue;
-                    else break;
-                }
-                else break;
-            }
-        }
+        return current.prevFind(g => g.isSupportAnchor);
     }
     get visibleNext() {
         var self: Block = this as any;
@@ -63,52 +20,7 @@ export class Block$Anchor {
             var r = self.find(g => g.isSupportAnchor);
             if (r) return r;
         }
-        var current: Block = self;
-        var next = self.next;
-        while (true) {
-            if (next) {
-                if (next.isLayout) {
-                    var r = next.find(g => g.isSupportAnchor);
-                    if (r) return r;
-                }
-                else if (next.isSupportAnchor) {
-                    if (next.hasChilds) {
-                        var r = next.find(g => g.isSupportAnchor);
-                        if (r) return r;
-                    }
-                    return next;
-                }
-                else if (next.hasChilds) {
-                    var r = next.find(g => g.isSupportAnchor);
-                    if (r) return r;
-                }
-                if (next.next) {
-                    next = next.next;
-                }
-                else if (next.parent) {
-                    current = next;
-                    next = null;
-                }
-            } else {
-                current = current.parent;
-                if (current) {
-                    if (current.next) next = current.next;
-                    else if (current.parent) continue;
-                    else break;
-                }
-                else break;
-            }
-        }
-    }
-    get visiblePrevAnchor() {
-        var self: Block = this as any;
-        var pre = self.visiblePre;
-        if (pre) return self.page.kit.explorer.createBackAnchor(pre, -1);
-    }
-    get visibleNextAnchor() {
-        var self: Block = this as any;
-        var next = self.visibleNext;
-        if (next) return self.page.kit.explorer.createAnchor(next);
+        return self.nextFind(g => g.isSupportAnchor);
     }
     get nextBlock() {
         var self: Block = this as any;
@@ -131,15 +43,64 @@ export class Block$Anchor {
             return row.prevFind(g => g.isBlock && !g.isPart && !g.isLayout && g !== row);
         }
     }
-    visibleDownAnchor(this: Block, anchor: Anchor) {
-        var x: number;
-        if (anchor.isText) {
-            var line = TextEle.getLineByAt(anchor.el, anchor.at);
-            if (line) {
-                x = line.point.x;
+    get visiblePrevAnchor() {
+        var self: Block = this as any;
+        var pre = self.visiblePre;
+        if (pre) return pre.createBackAnchor(-1);
+    }
+    get visibleNextAnchor() {
+        var self: Block = this as any;
+        var next = self.visibleNext;
+        if (next) return next.createAnchor();
+    }
+    createAnchor(this: Block, at?: number) {
+        if (this.isSupportAnchor) {
+            var anchor = new Anchor(this.page.kit.explorer, this.firstElementAppear);
+            if (typeof at == 'number' && anchor.isText) {
+                if (at == -1) anchor.at = anchor.elementAppear.textContent.length;
+                else anchor.at = at;
             }
+            else if (anchor.isText && typeof at == 'undefined') {
+                anchor.at = 0;
+            }
+            return anchor;
         }
-        else if (anchor.isSolid) x = anchor.bound.right;
+    }
+    createBackAnchor(this: Block, at?: number) {
+        if (this.isSupportAnchor) {
+            var anchor = new Anchor(this.page.kit.explorer, this.appearAnchors.last());
+            if (typeof at == 'number' && anchor.isText) {
+                if (at == -1) anchor.at = anchor.elementAppear.textContent.length;
+                else anchor.at = at;
+            }
+            return anchor;
+        }
+    }
+    get visibleHeadAnchor() {
+        var self: Block = this as any;
+        if (self.isSupportAnchor) {
+            return self.createAnchor();
+        }
+        else if (self.childs.length > 0) {
+            var sub = self.find(g => g.isSupportAnchor);
+            if (sub) return sub.visibleHeadAnchor;
+        }
+    }
+    get visibleBackAnchor() {
+        var self: Block = this as any;
+        if (self.isSupportAnchor) {
+            return self.createBackAnchor(-1);
+        }
+        else if (self.childs.length > 0) {
+            var sub = self.findReverse(g => g.isSupportAnchor);
+            if (sub) return sub.visibleBackAnchor;
+        }
+    }
+    visibleDownAnchor(this: Block, anchor: Anchor) {
+        var x: number = anchor.bound.right;
+        if (anchor.elementAppear.next) {
+            return anchor.elementAppear.next.createAnchorByX(x);
+        }
         var row = this.nextBlock;
         /**
          * 如果下一行没找到，则继续找下一行，直到没有了为止
@@ -147,7 +108,7 @@ export class Block$Anchor {
         while (true) {
             if (row) {
                 var bound = row.getVisibleBound();
-                var anchor = row.visibleAnchor(new Point(x, bound.top + 1));
+                var anchor = row.visibleAnchor(new Point(x, bound.top + 10));
                 if (anchor) return anchor;
                 else {
                     var r = row.nextBlock;
@@ -159,19 +120,13 @@ export class Block$Anchor {
         }
     }
     visibleUpAnchor(this: Block, anchor: Anchor): Anchor {
-        var x: number;
-        if (anchor.isText) {
-            var line = TextEle.getLineByAt(anchor.el, anchor.at);
-            if (line) {
-                x = line.point.x;
-            }
-        }
-        else if (anchor.isSolid) x = anchor.bound.left;
+        var x: number = anchor.bound.right;
+        if (anchor.elementAppear.prev) return anchor.elementAppear.prev.createAnchorByX(x, true);
         var row = this.prevBlock;
         while (true) {
             if (row) {
                 var top;
-                var appear = row.appearAnchors.last();
+                var appear = row.lastElementAppear;
                 if (appear) {
                     var rect = Rect.fromEle(appear.el);
                     top = rect.top + rect.height - 10;
@@ -199,31 +154,31 @@ export class Block$Anchor {
     }
     visibleInnerDownAnchor(this: Block, anchor: Anchor) {
         if (anchor.isText) {
-            var line = TextEle.getLineByAt(anchor.el, anchor.at);
-            if (line.line == line.total) {
-                return anchor.block.visibleDownAnchor(anchor);
-            }
-            else {
-                var newPoint = line.point.clone();
-                newPoint.y += line.lineheight * 1.5;
-                return anchor.block.visibleAnchor(newPoint);
+            var point = anchor.bound.leftMiddle;
+            var isDownAnchor = TextEle.isWillOverBlockEle(anchor.el, anchor.bound.leftMiddle, true);
+            if (!isDownAnchor) {
+                var newPoint = point.clone();
+                newPoint.y += dom(anchor.el).fontStyle().lineHeight;
+                var block = anchor.block;
+                if (block.isLine) block = block.closest(x => x.isBlock);
+                return block.visibleAnchor(newPoint);
             }
         }
-        else return anchor.block.visibleDownAnchor(anchor);
+        return anchor.block.visibleDownAnchor(anchor);
     }
     visibleInnerUpAnchor(this: Block, anchor: Anchor) {
         if (anchor.isText) {
-            var line = TextEle.getLineByAt(anchor.el, anchor.at);
-            if (line.line == 1) {
-                return anchor.block.visibleUpAnchor(anchor);
-            }
-            else {
-                var newPoint = line.point.clone();
-                newPoint.y -= line.lineheight * 0.5;
-                return anchor.block.visibleAnchor(newPoint);
+            var point = anchor.bound.leftMiddle;
+            var isDownAnchor = TextEle.isWillOverBlockEle(anchor.el, anchor.bound.leftMiddle);
+            if (!isDownAnchor) {
+                var newPoint = point.clone();
+                newPoint.y -= dom(anchor.el).fontStyle().lineHeight;
+                var block = anchor.block;
+                if (block.isLine) block = block.closest(x => x.isBlock);
+                return block.visibleAnchor(newPoint);
             }
         }
-        else return anchor.block.visibleUpAnchor(anchor);
+        return anchor.block.visibleUpAnchor(anchor);
     }
     /***
      * 
@@ -266,8 +221,7 @@ export class Block$Anchor {
             }
         }
         else fa = block.firstElementAppear;
-        if (fa)
-            return this.page.kit.explorer.createAnchor(block, fa.appear == BlockAppear.text ? TextEle.getAt(fa.el, point) : undefined);
+        if (fa) return fa.createAnchorByPoint(point);
     }
     findAnchorBlockByPointFromBlockRange(this: Block, point: Point) {
         var as = this.findAll(x => x.isSupportAnchor, true);
