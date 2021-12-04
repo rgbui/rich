@@ -17,6 +17,7 @@ import { useImagePicker } from "../../extensions/image/picker";
 import { Directive } from "../../util/bus/directive";
 import { messageChannel } from "../../util/bus/event.bus";
 import { getImageSize } from "../../component/file";
+import { BlockAppear } from "../../src/block/appear";
 
 @url('/image')
 export class Image extends Block {
@@ -146,6 +147,14 @@ export class ImageView extends BlockView<Image>{
                     {this.block.src.name != 'none' && <SolidArea rf={e => this.block.elementAppear({ el: e })} ><img onError={e => this.onError(e)} src={this.block?.src?.url} /></SolidArea>}
                     <div className='sy-block-image-left-resize' onMouseDown={e => this.onMousedown(e, 'left')}></div>
                     <div className='sy-block-image-right-resize' onMouseDown={e => this.onMousedown(e, 'right')}></div>
+                    {this.block.allowCaption && <div className='sy-block-image-caption'>
+                        {<TextArea rf={e => this.block.elementAppear({
+                            el: e,
+                            appear: BlockAppear.text,
+                            prop: 'caption'
+                        })}
+                            html={this.block.caption} placeholder={'键入图片描述'}></TextArea>}
+                    </div>}
                 </div>
             </div>}
         </>
@@ -156,9 +165,7 @@ export class ImageView extends BlockView<Image>{
                 {!this.block?.src && this.renderEmptyImage()}
                 {this.block?.src && this.renderImage()}
             </div>
-            {!this.isLoadError && this.block.src?.url && this.block.allowCaption && <div className='sy-block-image-caption'>
-                {<TextArea rf={e => this.block.elementAppear({ el: e, prop: 'caption' })} html={this.block.caption} placeholder={'键入图标描述'}></TextArea>}
-            </div>}
+
         </div>
     }
 }

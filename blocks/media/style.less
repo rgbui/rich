@@ -21,10 +21,12 @@
     &-content {
         width: 100%;
     }
-    &-caption{
-        text-align: center;
-        color: #999999;
-        font-size: 12px;
+
+    &-caption {
+        text-align    : left;
+        color         : rgba(55, 53, 47, 0.6);
+        padding-top   : 6px;
+        padding-bottom: 6px;
     }
 
     &-empty {
@@ -49,7 +51,7 @@
         align-items    : center;
 
         &-wrapper {
-            position: relative;
+            position : relative;
             max-width: 100%;
 
             .sy-block-image-left-resize {
@@ -105,6 +107,12 @@
                     max-height   : 50%;
                 }
             }
+
+            img {
+                width: 100%
+            }
+
+            ;
 
             &:hover {
                 .sy-block-image-left-resize {
