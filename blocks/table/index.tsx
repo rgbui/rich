@@ -96,6 +96,8 @@ export class TableView extends BlockView<Table>{
                 data.colEle.style.minWidth = w + 'px';
                 var left = self.block.cols.findAll((g, i) => i < data.colIndex).sum(g => g.width) + w + 1;
                 self.subline.style.left = left + 'px';
+                var tableRect = Rect.fromEle(self.block.el.querySelector('table'));
+                self.subline.style.height = tableRect.height + 'px';
                 if (isend) {
                     var cols = lodash.cloneDeep(self.block.cols);
                     var col = cols[data.colIndex];
