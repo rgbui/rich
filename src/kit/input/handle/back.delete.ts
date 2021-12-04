@@ -28,7 +28,7 @@ export async function backspaceCrossBlock(tp: TextInput) {
     var anchor = tp.explorer.activeAnchor;
     if (anchor.isText && anchor.at == 0) {
         var block = anchor.block;
-        var prevAnchor = block.visiblePrevAnchor;
+        var prevAnchor = anchor.prevAnchor;
         if (prevAnchor) {
             if (tp.kit.page.textAnchorIsAdjoin(anchor, prevAnchor)) {
                 tp.explorer.onFocusAnchor(prevAnchor);
@@ -96,7 +96,7 @@ export async function backspaceBlock(tp: TextInput) {
                     var existsDelete: boolean = false;
                     if (anchor.block.isLine) {
                         var newAnchor: Anchor;
-                        if (block.visiblePre) newAnchor = block.visiblePre.visibleBackAnchor;
+                        if (anchor.prevAnchor) newAnchor = anchor.prevAnchor;
                         var pa = block.parent;
                         if (block.isCanAutomaticallyDeleted) { await block.delete(); existsDelete = true; }
                         if (!newAnchor && !pa.isRow) newAnchor = pa.visibleHeadAnchor;

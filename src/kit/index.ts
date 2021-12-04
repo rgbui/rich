@@ -3,7 +3,6 @@ import { Page } from "../page";
 import { Events } from "../../util/events";
 import { Handle } from "./handle";
 import { TextInput } from "./input";
-import { Anchor } from "./selection/anchor";
 import { SelectionExplorer } from "./selection/explorer";
 import { Selector } from "./selector";
 import { KitView } from "./view";
