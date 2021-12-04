@@ -3,7 +3,6 @@ import { Point, Rect, RectUtility } from "../../src/common/point";
 import { Icon } from "../../component/view/icon";
 import Equation from "../../src/assert/svg/equation.svg";
 import Mention from "../../src/assert/svg/mention.svg";
-import { Dragger } from "../../src/common/dragger";
 import { TextCommand } from "./text.command";
 import { EventsComponent } from "../../component/lib/events.component";
 import { BlockCssName, FillCss } from "../../src/block/pattern/css";

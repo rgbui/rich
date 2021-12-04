@@ -176,7 +176,8 @@ export abstract class Block extends Events {
     }
     protected display: BlockDisplay;
     /**
-     * 布局用的block，该block只具有特定的调节布局效果，本身没有任何内容可以设置
+     * 布局用的block，该block只具有特定的调节布局效果，本身没有任何内容及样式可以设置
+     * 它是不显现的
      */
     get isLayout(): boolean {
         if (this.isRow || this.isCol || this.isView) return true;
@@ -194,23 +195,7 @@ export abstract class Block extends Events {
     get isBlock(): boolean {
         return this.display == BlockDisplay.block;
     }
-    /**
-     * 是否为内容block
-     * 
-     */
-    // get isVisibleContentBlock() {
-    //     if (this.isLayout || this.isLine) return false;
-    //     else return true;
-    // }
-    // get visibleContentBlock() {
-    //     if (this.isLine) return this.closest(x => x.isVisibleContentBlock);
-    //     else if (this.isVisibleContentBlock) return this;
-    //     else if (this.isLayout) {
-    //         var r = this.find(x => x.isVisibleContentBlock);
-    //         if (r) return r;
-    //     }
-    //     return null;
-    // }
+
     /***
      * 注意换行的元素不一定非得是/row，
      * 如表格里面自定义的换行
@@ -222,6 +207,9 @@ export abstract class Block extends Events {
         return false;
     }
     get isView(): boolean {
+        return false;
+    }
+    get isCell(): boolean {
         return false;
     }
     partName: string;
@@ -396,6 +384,7 @@ export abstract class Block extends Events {
         }
         return this;
     }
+
 }
 export interface Block extends Block$Seek { }
 export interface Block extends Block$Event { }
