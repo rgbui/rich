@@ -205,7 +205,7 @@ export class Page$Cycle {
             }
             this.emit(PageDirective.hoverBlock, this.hoverBlock);
         }
-        if (this.hoverBlock) this.kit.handle.onShowBlockHandle(this.hoverBlock.handleBlock);
+        if (this.hoverBlock) this.kit.handle.onShowBlockHandle(this.hoverBlock);
         else this.kit.handle.onCloseBlockHandle();
     }
     onOutHoverBlock(this: Page, block: Block) {

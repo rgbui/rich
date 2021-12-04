@@ -14,8 +14,8 @@ export class Handle extends Events {
         this.kit = kit;
     }
     handleBlock: Block;
-    onShowBlockHandle(block: Block) {
-        this.handleBlock = block
+    onShowBlockHandle(hoverBlock: Block) {
+        this.handleBlock = hoverBlock.handleBlock;
         if (this.view.isDown) {
             var handleEl = this.view.handleEle;
             handleEl.style.display = 'none';
@@ -33,7 +33,7 @@ export class Handle extends Events {
             handleEl.style.display = 'none';
         }
         if (this.view.isDown) {
-            this.onDropOverBlock(this.handleBlock, this.kit.mouse.moveEvent);
+            this.onDropOverBlock(hoverBlock.dropOverBlock, this.kit.mouse.moveEvent);
         }
     }
     onCloseBlockHandle() {
@@ -48,7 +48,6 @@ export class Handle extends Events {
     dropBlock: Block;
     dropDirection: DropDirection;
     onDropOverBlock(willDropBlock: Block, event: MouseEvent) {
-        if (willDropBlock?.isLine) willDropBlock = willDropBlock.closest(x => x.isBlock);
         if (willDropBlock) {
             var db = this.dragBlocks.find(g => {
                 var r = g.find(g => g == willDropBlock, true);
@@ -59,30 +58,30 @@ export class Handle extends Events {
                 willDropBlock = undefined;
             }
         }
+        var dir: DropDirection;
+        if (willDropBlock) {
+            var dr = this.kit.page.cacBlockDirection(willDropBlock, event);
+            if (dr.direction != DropDirection.none) {
+                dir = dr.direction;
+                willDropBlock = dr.block;
+            }
+            else {
+                willDropBlock = undefined;
+            }
+        }
         if (willDropBlock !== this.dropBlock && this.dropBlock) {
             dom(this.dropBlock.el).removeClass(g => g.startsWith('shy-block-drag-over'));
             this.kit.page.onDropLeaveBlock(this.dragBlocks, this.dropBlock, this.dropDirection);
         }
         if (willDropBlock) {
-            var dr = this.kit.page.cacBlockDirection(willDropBlock, event);
-            if (dr.direction != DropDirection.none) {
-                this.dropDirection = dr.direction;
-                this.dropBlock = dr.block;
-                var direction = DropDirection[this.dropDirection];
-                var className = 'shy-block-drag-over-' + direction;
-                if (!this.dropBlock.el.classList.contains(className)) {
-                    dom(this.dropBlock.el).removeClass(g => g.startsWith('shy-block-drag-over'));
-                    this.dropBlock.el.classList.add(className);
-                }
+            this.dropDirection = dr.direction;
+            this.dropBlock = dr.block;
+            var direction = DropDirection[this.dropDirection];
+            var className = 'shy-block-drag-over-' + direction;
+            if (!this.dropBlock.el.classList.contains(className)) {
+                dom(this.dropBlock.el).removeClass(g => g.startsWith('shy-block-drag-over'));
+                this.dropBlock.el.classList.add(className);
             }
-            else {
-                this.dropDirection = DropDirection.none;
-                delete this.dropBlock;
-            }
-        }
-        else {
-            this.dropDirection = DropDirection.none;
-            delete this.dropBlock;
         }
         if (this.dropBlock)
             this.kit.page.onDropEnterBlock(this.dragBlocks, this.dropBlock, this.dropDirection);
