@@ -91,16 +91,6 @@ class Dom {
         }
         return prevParentFind(this.el);
     }
-    nextFind(predict: (node: HTMLElement) => boolean) {
-
-    }
-    findInnerAfter() {
-        var p: Node = this.el;
-        while (true) {
-            if (p.childNodes.length > 0) { p = p.childNodes[p.childNodes.length - 1] }
-            else return p;
-        }
-    }
     insertAfter(el: HTMLElement) {
         var p = el.parentNode;
         if (p.lastChild == el) {
