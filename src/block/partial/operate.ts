@@ -338,10 +338,11 @@ export class Block$Operator {
                 /**
                  * 这时判断是否可以允许换行的block，还是替换 
                  * */
-                for (let i = 0; i < blocks.length; i++) {
-                    await this.parent.append(blocks[i], this.at + i);
-                }
-                await this.delete();
+                var cs = this.childs.map(c => c);
+                await this.appendArray(blocks);
+                await cs.eachAsync(async (c) => {
+                    await c.delete()
+                })
                 break;
             case DropDirection.sub:
                 for (let i = blocks.length - 1; i >= 0; i--) {
