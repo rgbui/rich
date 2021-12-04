@@ -209,21 +209,21 @@ export class Page$Seek {
         }) {
         var bs: Block[] = [];
         var fromBlock = this.getBlockInMouseRegion(from);
-        if (fromBlock.isLayout) {
+        if (fromBlock?.isLayout) {
             var fb = fromBlock.getVisibleContentBound();
             if (Math.abs(from.y - fb.y) > Math.abs(from.y - fb.y - fb.height))
                 fromBlock = fromBlock.findReverse(g => g.isBlock && !g.isLayout);
             else fromBlock = fromBlock.find(g => g.isBlock && !g.isLayout);
         }
         var toBlock = this.getBlockInMouseRegion(to);
-        if (toBlock.isLayout) {
+        if (toBlock?.isLayout) {
             var fb = toBlock.getVisibleContentBound();
             if (Math.abs(to.y - fb.y) > Math.abs(to.y - fb.y - fb.height))
                 toBlock = toBlock.findReverse(g => g.isBlock && !g.isLayout);
             else toBlock = toBlock.find(g => g.isBlock && !g.isLayout);
         }
-        var topFromRow = fromBlock.closest(g => g.isBlock && !g.isView && !g.isRow && !g.isCol);
-        var topToRow = toBlock.closest(g => g.isBlock && !g.isView && !g.isRow && !g.isCol);
+        var topFromRow = fromBlock ? fromBlock.closest(g => g.isBlock && !g.isLayout) : undefined;
+        var topToRow = toBlock ? toBlock.closest(g => g.isBlock && !g.isLayout) : undefined;
         var rect = new Rect(Point.from(from), Point.from(to));
         if (!topFromRow && !topToRow) return bs;
         if (topFromRow && !topToRow || !topFromRow && topToRow) {
