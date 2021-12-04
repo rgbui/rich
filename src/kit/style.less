@@ -63,12 +63,12 @@
 .shy-selector-bar {
     position       : fixed;
     z-index        : 10000;
-    width          : 30px;
+    width          : 24px;
     height         : 30px;
     display        : none;
     justify-content: center;
     align-items    : center;
-    transform      : translate(-30px, 0px);
+    transform      : translate(-24px, 0px);
 
     /**
     https          ://developer.mozilla.org/zh-CN/docs/Web/CSS/cursor
@@ -94,6 +94,7 @@
 
 .shy-block-selected {
     position: relative;
+
     &::before {
         content       : '\20';
         position      : absolute;
@@ -107,6 +108,7 @@
 
 .shy-block-hover {
     position: relative;
+
     &::after {
         content         : '\20';
         position        : absolute;
@@ -130,7 +132,8 @@
 .shy-block-drag-over-left,
 .shy-block-drag-over-right,
 .shy-block-drag-over-top,
-.shy-block-drag-over-sub {
+.shy-block-drag-over-sub,
+.shy-block-drag-over-inner {
     position: relative;
 
     &::after {
@@ -185,6 +188,12 @@
 .shy-block-drag-over-top {
     &::after {
         border-top-color: rgba(46, 170, 220, 0.6);
+    }
+}
+
+.shy-block-drag-over-inner {
+    &::after {
+        border-color: rgba(46, 170, 220, 0.6);
     }
 }
 
