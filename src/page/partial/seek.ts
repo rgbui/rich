@@ -159,7 +159,13 @@ export class Page$Seek {
         var bound = block.getVisibleContentBound();
         block = block.closest(x => x.isBlock);
         if (block) {
-            if (block.isRow || block.isCol || block.isView) {
+            if (block.isLayout) {
+                return { direction: direction, block };
+            }
+            else if (block.isCell) {
+                if (block.isEmptyCell) {
+                    return { direction: DropDirection.inner, block };
+                }
                 return { direction: direction, block };
             }
             else {

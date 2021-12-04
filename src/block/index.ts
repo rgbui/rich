@@ -212,6 +212,16 @@ export abstract class Block extends Events {
     get isCell(): boolean {
         return false;
     }
+    get isEmptyCell(): boolean {
+        if (this.childs.length == 0) return true;
+        else if (this.childs.length == 1) {
+            var b = this.childs[0];
+            if (b.url == BlockUrlConstant.TextSpan && !b.content && b.childs.length == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
     partName: string;
     partParentId: string;
     get isPart(): boolean {
@@ -376,6 +386,18 @@ export abstract class Block extends Events {
         if (this.isPart) {
             return this.closest(x => !x.isPart && x.isBlock && !x.isLayout)
         }
+        if (this.isLine) {
+            return this.closest(x => x.isBlock && !x.isLayout)
+        }
+        else if (this.isLayout) {
+            return this.find(g => g.isBlock && !g.isLayout)
+        }
+        return this;
+    }
+    /**
+     * 可以拖放block的block
+     */
+    get dropOverBlock() {
         if (this.isLine) {
             return this.closest(x => x.isBlock && !x.isLayout)
         }
