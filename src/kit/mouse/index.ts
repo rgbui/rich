@@ -35,15 +35,16 @@ export class PageMouse {
                  * 那么 将按范围选择多个block
                  */
                 if (this.page.keyboardPlate.isShift() && this.explorer.hasAnchor) {
-                    if (this.downAnchor.isText && this.downAnchor.elementAppear === this.explorer.activeAnchor.elementAppear)
+                    if (this.downAnchor.isText && this.page.isInlineAnchor(this.downAnchor, this.explorer.activeAnchor))
                         this.explorer.onShiftFocusAnchor(this.downAnchor);
-                    else {
+                    else if (!this.downAnchor.equal(this.kit.explorer.activeAnchor)) {
                         var blocks = this.page.searchBlocksBetweenAnchor(this.explorer.activeAnchor, this.downAnchor, { rowOrCol: true, lineBlock: true });
                         if (Array.isArray(blocks) && blocks.length > 0) {
                             this.explorer.onSelectBlocks(blocks);
                         }
                         else this.explorer.onFocusAnchor(this.explorer.activeAnchor);
                     }
+                    else this.explorer.onFocusAnchor(this.explorer.activeAnchor);
                 }
                 else
                     this.explorer.onFocusAnchor(this.downAnchor);
@@ -109,9 +110,10 @@ export class PageMouse {
             if (this.explorer.isOnlyAnchor && this.explorer.activeAnchor.isText && this.lastMouseupDate && Date.now() - this.lastMouseupDate < 700) {
                 if (this.lastMouseupEvent && Point.from(this.lastMouseupEvent).nearBy(Point.from(event), 0)) {
                     var block = this.explorer.activeAnchor.block;
-                    var contentRowBlock = block.closest(x => !x.isLine);
-                    if (contentRowBlock)
-                        this.explorer.onSelectBlocks([contentRowBlock]);
+                    var contentBlock = block.closest(x => !x.isLine);
+                    if (contentBlock && contentBlock.exists(g => g.appearAnchors.some(s => s.isText)),true) {
+                        this.explorer.onBlockTextRange(contentBlock);
+                    }
                 }
             }
             this.lastMouseupEvent = event;

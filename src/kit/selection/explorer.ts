@@ -29,17 +29,14 @@ export class SelectionExplorer extends Events {
         emptyEles.each(el => {
             el.classList.remove('shy-text-empty');
         })
-        if (this.activeAnchor !== anchor) {
+        if (!(this.activeAnchor?.equal(anchor))) {
             if (this.activeAnchor) {
                 this.page.onBlurAnchor(this.activeAnchor);
             }
         }
         else return
-        var oldActive = this.activeAnchor;
         this.activeAnchor = anchor;
-        if (!(this.activeAnchor && this.activeAnchor.equal(oldActive))) {
-            this.page.onFocusAnchor(this.activeAnchor);
-        }
+        if (this.activeAnchor) this.page.onFocusAnchor(this.activeAnchor);
     }
     renderSelection() {
         if (this.start) this.start.visible()
@@ -99,12 +96,27 @@ export class SelectionExplorer extends Events {
     onClearAnchor() {
         delete this.start;
         delete this.end;
+        delete this.activeAnchor;
         this.currentSelectedBlocks = [];
         this.renderSelection();
     }
     onShiftFocusAnchor(anchor: Anchor) {
         if (this.end) anchor.acceptView(this.end);
         this.end = anchor;
+        this.setActiveAnchor(this.end);
+        this.currentSelectedBlocks = [];
+        this.renderSelection();
+    }
+    onBlockTextRange(block: Block) {
+        var start = block.createAnchor();
+        var end = block.createBackAnchor();
+        this.onSelectAnchors(start, end);
+    }
+    onSelectAnchors(start: Anchor, end: Anchor) {
+        if (this.start) start.acceptView(this.start);
+        if (this.end) end.acceptView(this.end);
+        this.start = start;
+        this.end = end;
         this.setActiveAnchor(this.end);
         this.currentSelectedBlocks = [];
         this.renderSelection();
@@ -118,12 +130,6 @@ export class SelectionExplorer extends Events {
         this.renderSelection()
     }
     /**
-     * 光标移动
-     * @param arrow 
-     * @returns 
-     */
-
-    /**
      * 获取选区选择的block
      * @returns 
      */
@@ -134,7 +140,7 @@ export class SelectionExplorer extends Events {
             else if (this.start && this.end) {
                 var rs = this.page.searchBlocksBetweenAnchor(this.start, this.end);
                 if (rs.length == 0) {
-                    console.error(rs, this.start, this.end);
+                    // console.error(rs, this.start, this.end);
                 }
                 return rs;
             }
@@ -173,11 +179,6 @@ export class SelectionExplorer extends Events {
         else return Point.from(this.end.view.getBoundingClientRect())
     }
 }
-
-export interface SelectionExplorer extends SelectionExplorer$Events {
-
-}
-export interface SelectionExplorer extends Mix {
-
-}
+export interface SelectionExplorer extends SelectionExplorer$Events { }
+export interface SelectionExplorer extends Mix { }
 Mix(SelectionExplorer, SelectionExplorer$Events)
