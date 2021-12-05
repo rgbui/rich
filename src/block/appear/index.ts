@@ -76,6 +76,7 @@ export class AppearAnchor {
     }
     createBackAnchor(at?: number) {
         var anchor = new Anchor(this.block.page.kit.explorer, this);
+        if (typeof at == 'undefined') at = -1;
         if (typeof at == 'number' && anchor.isText) {
             if (at == -1) anchor.at = anchor.elementAppear.textContent.length;
             else anchor.at = at;
