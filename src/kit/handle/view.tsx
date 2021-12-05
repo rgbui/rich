@@ -24,27 +24,28 @@ export class HandleView extends React.Component<{ handle: Handle }>{
         this.isDrag = false;
         var self = this;
         if (event) {
+            self.handle.dragBlocks = [];
+            if (self.handle.kit.explorer.hasSelectionRange && self.handle.handleBlock && self.handle.kit.explorer.selectedBlocks.exists(c => c.find(g => g == self.handle.handleBlock, true) ? true : false)) {
+                var cs = self.handle.kit.explorer.selectedBlocks.map(c => c.handleBlock);
+                cs.each(c => {
+                    if (!self.handle.dragBlocks.some(s => s == c)) self.handle.dragBlocks.push(c)
+                });
+            }
+            else self.handle.dragBlocks = [self.handle.handleBlock]
             MouseDragger<{ item: HTMLElement }>({
                 event,
                 dis: 5,
                 moveStart(ev, data) {
-                    if (self.handle.kit.explorer.hasSelectionRange && self.handle.handleBlock && self.handle.kit.explorer.selectedBlocks.exists(c => c.find(g => g == self.handle.handleBlock, true) ? true : false)) {
-                        var cs = self.handle.kit.explorer.selectedBlocks.map(c => c.handleBlock);
-                        cs.each(c => {
-                            if (!self.handle.dragBlocks.some(s => s == c)) self.handle.dragBlocks.push(c)
-                        });
-                    }
-                    else self.handle.dragBlocks = [self.handle.handleBlock]
                     self.isDrag = true;
-                    ghostView.load(self.handle.dragBlocks.map(b => b.el), { point: Point.from(ev) })
+                    ghostView.load(self.handle.dragBlocks.map(b => b.contentEl), { point: Point.from(ev) })
                 },
                 moving(ev, data, isend) {
                     ghostView.move(Point.from(ev));
                 },
-                moveEnd(ev, isMove, data) {
+                async moveEnd(ev, isMove, data) {
                     try {
-                        if (self.isDrag == true) self.handle.onDropBlock()
-                        else self.handle.onClickBlock(ev);
+                        if (self.isDrag == true) await self.handle.onDropBlock()
+                        else await self.handle.onClickBlock(ev);
                     }
                     catch (ex) {
                         self.handle.kit.emit('error', ex);

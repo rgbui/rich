@@ -160,6 +160,9 @@ export abstract class Block extends Events {
     view: BlockView<this>;
     el: HTMLElement;
     childsEl: HTMLElement;
+    get contentEl(): HTMLElement {
+        return this.el;
+    }
     get visibleStyle() {
         var style: Record<string, any> = {};
         if (this.isBlock) {

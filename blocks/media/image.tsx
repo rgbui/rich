@@ -91,6 +91,11 @@ export class Image extends Block {
         }
         return this.el;
     }
+    get contentEl() {
+        var el = this.el.querySelector('.sy-block-image-content-view-wrapper') as HTMLElement;
+        if (el) return el;
+        return this.el;
+    }
 }
 @view('/image')
 export class ImageView extends BlockView<Image>{
