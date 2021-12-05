@@ -12,6 +12,9 @@ export class Selector {
     public visible: boolean = false;
     private start: Point;
     private current: Point;
+    getStart() {
+        return this.start;
+    }
     setStart(point: Point) {
         this.start = point;
     }

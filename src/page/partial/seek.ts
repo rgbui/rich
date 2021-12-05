@@ -8,6 +8,7 @@ import { TextToolStyle } from "../../../extensions/text.tool";
 import { DropDirection } from "../../kit/handle/direction";
 import { Anchor } from "../../kit/selection/anchor";
 import { BlockUrlConstant } from "../../block/constant";
+import { TextEle } from "../../common/text.ele";
 
 export class Page$Seek {
     /**
@@ -17,17 +18,23 @@ export class Page$Seek {
      * 如果没有找到block，则在水平方向上延伸一定的宽度去查找邻近的block
      * @param event 
      */
-    getBlockInMouseRegion(this: Page, event: MouseEvent) {
-        var target = event.target as HTMLElement;
-        var block = this.getEleBlock(target);
-        if (block) return block;
+    getBlockInMouseRegion(this: Page, event: MouseEvent | Point) {
+        if (event instanceof Point) {
+            var block = this.getBlockFromPoint(event);
+            if (block) return block;
+        }
+        else {
+            var target = event.target as HTMLElement;
+            var block = this.getEleBlock(target);
+            if (block) return block;
+        }
         /**
          * 如果没有找到，说明在在pageLayout的空白处，
          * 那么先水平找找，如果水平找不到
          * 那么垂直找，
          * 这里需要计算内容域和pageLout中间的范围大小区域
          */
-        var contentBound = Rect.from(this.contentEl.getBoundingClientRect());
+        var contentBound = TextEle.getContentBound(this.contentEl);
         var x = event.x;
         var y = event.y;
         var dis = 15;
@@ -208,13 +215,14 @@ export class Page$Seek {
      * @returns 
      */
     searchBlocksBetweenMouseRect(this: Page,
-        from: MouseEvent,
-        to: MouseEvent,
+        from: MouseEvent | Point,
+        to: MouseEvent | Point,
         filter?: {
-            lineBlock?: boolean
+            lineBlock?: boolean,
+            fromBlock?: Block
         }) {
         var bs: Block[] = [];
-        var fromBlock = this.getBlockInMouseRegion(from);
+        var fromBlock = filter?.fromBlock ? filter.fromBlock : this.getBlockInMouseRegion(from);
         if (fromBlock?.isLayout) {
             var fb = fromBlock.getVisibleContentBound();
             if (Math.abs(from.y - fb.y) > Math.abs(from.y - fb.y - fb.height))

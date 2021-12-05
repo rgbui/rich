@@ -108,8 +108,8 @@ export class SelectionExplorer extends Events {
         this.renderSelection();
     }
     onBlockTextRange(block: Block) {
-        var start = block.createAnchor();
-        var end = block.createBackAnchor();
+        var start = block.visibleHeadAnchor;
+        var end = block.visibleBackAnchor;
         this.onSelectAnchors(start, end);
     }
     onSelectAnchors(start: Anchor, end: Anchor) {
