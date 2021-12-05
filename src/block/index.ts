@@ -219,7 +219,7 @@ export abstract class Block extends Events {
         if (this.childs.length == 0) return true;
         else if (this.childs.length == 1) {
             var b = this.childs[0];
-            if (b.url == BlockUrlConstant.TextSpan && !b.content && b.childs.length == 0) {
+            if (b.url == BlockUrlConstant.TextSpan && (!b.content && b.childs.length == 0)) {
                 return true;
             }
         }
@@ -270,6 +270,11 @@ export abstract class Block extends Events {
     }
     get isTextSpan() {
         return this.url == BlockUrlConstant.TextSpan
+    }
+    get isEmptyTextSpan() {
+        if (this.childs.length == 0 && !this.content) return true;
+        else if (this.childs.length == 1 && !this.childs.first().content) return true;
+        else return false;
     }
     get asTextContent() {
         if (this.isTextContent)
