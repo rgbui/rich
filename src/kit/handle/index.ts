@@ -90,16 +90,16 @@ export class Handle extends Events {
         if (this.dropBlock) {
             dom(this.dropBlock.el).removeClass(g => g.startsWith('shy-block-drag-over'));
         }
-        delete this.dragBlocks;
+        this.dragBlocks=[];
         delete this.dropBlock;
         delete this.dropDirection;
     }
-    onDropBlock() {
+    async onDropBlock() {
         if (this.dragBlocks.length > 0 && this.dropBlock) {
-            this.kit.page.onBatchDragBlocks(this.dragBlocks, this.dropBlock, this.dropDirection);
+            await this.kit.page.onBatchDragBlocks(this.dragBlocks, this.dropBlock, this.dropDirection);
         }
     }
-    onClickBlock(event: MouseEvent) {
-        this.kit.page.onOpenMenu(this.dragBlocks, event);
+    async onClickBlock(event: MouseEvent) {
+        await this.kit.page.onOpenMenu(this.dragBlocks, event);
     }
 }

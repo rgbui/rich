@@ -260,6 +260,7 @@ export class Block$Operator {
      * @param direction 
      */
     async drop(this: Block, blocks: Block[], direction: DropDirection) {
+        if (blocks.some(s => s.isLine)) throw 'line blokc is not drop';
         switch (direction) {
             case DropDirection.bottom:
             case DropDirection.top:
