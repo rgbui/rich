@@ -1,4 +1,4 @@
-import { Point } from "./point";
+import { Point, Rect } from "./point";
 
 class GhostView {
     private _el: HTMLElement;
@@ -16,15 +16,29 @@ class GhostView {
         }
         return this._el;
     }
-    load(el: HTMLElement, options: { point: Point, opacity: number, size: { width: number, height: number } }) {
-        var cloneEl = el.cloneNode(true);
+    load(el: HTMLElement | HTMLElement[], options: { point: Point, opacity?: number, size?: { width: number, height: number } }) {
+        if (typeof options.opacity == 'undefined') {
+            options.opacity = .6;
+        }
         this.el.style.display = 'block';
-        this.el.appendChild(cloneEl);
         this.el.style.top = options.point.y + 'px';
         this.el.style.left = options.point.x + 'px';
         this.el.style.opacity = options.opacity.toString();
-        this.el.style.width = options.size.width + 'px';
-        this.el.style.height = options.size.height + 'px';
+        var els = Array.isArray(el) ? el : [el];
+        for (let i = 0; i < els.length; i++) {
+            var e = els[i];
+            var cloneEl = e.cloneNode(true) as HTMLElement;
+            this.el.appendChild(cloneEl);
+            if (options.size) {
+                cloneEl.style.width = options.size.width + 'px';
+                cloneEl.style.height = options.size.height + 'px';
+            }
+            else {
+                var bound = Rect.fromEle(e);
+                cloneEl.style.width = bound.width + 'px';
+                cloneEl.style.height = bound.height + 'px';
+            }
+        }
     }
     move(point: { x: number, y: number }) {
         this.el.style.top = point.y + 'px';
