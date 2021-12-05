@@ -197,8 +197,12 @@ export class Anchor {
     equal(anchor: Anchor) {
         if (!anchor) return false;
         if (this === anchor) return true;
-        else if (this.elementAppear == anchor.elementAppear)
-            return true;
+        else if (this.elementAppear == anchor.elementAppear) {
+            if (this.isText) {
+                if (this.at == anchor.at) return true;
+            }
+            else return true;
+        }
         return false;
     }
     /**
