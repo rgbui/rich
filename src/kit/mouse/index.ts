@@ -68,7 +68,7 @@ export class PageMouse {
         if (this.isDown == true) {
             if (this.downPoint.remoteBy(Point.from(event), 5)) this.isMove = true;
             if (this.isMove == true) {
-                var movePoint = Point.from(event);
+                var movePoint = Point.from(event)
                 var cacSelector = (dis: number) => {
                     var hasTextRange: boolean = false;
                     if (this.downAnchor) {
@@ -95,7 +95,7 @@ export class PageMouse {
                 }
                 this.scrollSelector(event, (fir, dis) => {
                     if (fir) cacSelector(0)
-                    else if (fir == false && dis > 0) cacSelector(dis);
+                    else if (fir == false && dis != 0) cacSelector(dis);
                 })
             }
         }
@@ -129,6 +129,7 @@ export class PageMouse {
                 var dr = top - dis > 0 ? dis : top;
                 scrollDiv.scrollTop = top - dr;
                 sr += 0 - dr;
+                console.log(sr);
             }
             callbackScroll(fir, sr);
         }
