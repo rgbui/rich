@@ -21,6 +21,7 @@ export enum ActionDirective {
     onTurn = 115,
     combineTextSpan = 116,
     onKeyTab = 117,
+    onCreateTailTextSpan=118,
     onSchemaCreateField = 200,
     onSchemaDeleteField = 201,
     onSchemaTurnField = 202,

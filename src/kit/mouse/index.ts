@@ -2,6 +2,7 @@ import { Kit } from "..";
 import { Block } from "../../block";
 import { dom } from "../../common/dom";
 import { Point } from "../../common/point";
+import { TextEle } from "../../common/text.ele";
 import { Anchor } from "../selection/anchor";
 export class PageMouse {
     constructor(public kit: Kit) { }
@@ -162,8 +163,17 @@ export class PageMouse {
                     var block = this.explorer.activeAnchor.block;
                     var contentBlock = block.closest(x => !x.isLine);
                     if (contentBlock && contentBlock.exists(g => g.appearAnchors.some(s => s.isText)), true) {
-                        this.explorer.onBlockTextRange(contentBlock);
+                        var contentBlockRect = contentBlock.getVisibleContentBound();
+                        if (contentBlockRect.conatin(Point.from(event))) {
+                            this.explorer.onBlockTextRange(contentBlock);
+                        }
                     }
+                }
+            }
+            var pageContentBound = TextEle.getContentBound(this.page.contentEl);
+            if (event.clientY > pageContentBound.y + pageContentBound.height && !this.explorer.hasSelectionRange) {
+                if (!this.explorer.activeAnchor?.block?.isEmptyTextSpan) {
+                    await this.page.onCreateTailTextSpan();
                 }
             }
             this.lastMouseupEvent = event;

@@ -403,4 +403,11 @@ export class Page$Seek {
             if (r) return r;
         }
     }
+    findReverse(this: Page, predict: (block: Block) => boolean) {
+        for (let i = this.views.length - 1; i >= 0; i--) {
+            var view = this.views[i];
+            var r = view.findReverse(predict, true);
+            if (r) return r;
+        }
+    }
 }

@@ -34,6 +34,31 @@ export class Page$Operator {
         this.addBlockUpdate(parent);
         return block;
     }
+    async onCreateTailTextSpan(this: Page) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await this.onAction(ActionDirective.onCreateTailTextSpan, async () => {
+                    var lastBlock = this.findReverse(g => g.isBlock);
+                    var newBlock: Block;
+                    if (lastBlock) {
+                        newBlock = await this.createBlock(BlockUrlConstant.TextSpan, {}, lastBlock.parent, lastBlock.at + 1);
+                    }
+                    else {
+                        newBlock = await this.createBlock(BlockUrlConstant.TextSpan, {}, this.views.last());
+                    }
+                    newBlock.mounted(() => {
+                        this.kit.explorer.onFocusAnchor(newBlock.createAnchor());
+                        resolve(true);
+                    })
+                })
+
+            }
+            catch (ex) {
+                this.onError(ex);
+                reject(ex);
+            }
+        })
+    }
     async onBatchDelete(this: Page, blocks: Block[]) {
         await this.onAction(ActionDirective.onBatchDeleteBlocks, async () => {
             await blocks.eachAsync(async bl => {
