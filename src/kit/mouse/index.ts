@@ -172,7 +172,7 @@ export class PageMouse {
             }
             var pageContentBound = TextEle.getContentBound(this.page.contentEl);
             if (event.clientY > pageContentBound.y + pageContentBound.height && !this.explorer.hasSelectionRange) {
-                if (!this.explorer.activeAnchor?.block?.isEmptyTextSpan) {
+                if (!(this.explorer.activeAnchor?.block?.isPageLastBlock && this.explorer.activeAnchor?.block?.isEmptyTextSpan)) {
                     await this.page.onCreateTailTextSpan();
                 }
             }

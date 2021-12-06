@@ -272,9 +272,12 @@ export abstract class Block extends Events {
         return this.url == BlockUrlConstant.TextSpan
     }
     get isEmptyTextSpan() {
-        if (this.childs.length == 0 && !this.content) return true;
-        else if (this.childs.length == 1 && !this.childs.first().content) return true;
-        else return false;
+        if (this.isTextSpan) {
+            if (this.childs.length == 0 && !this.content) return true;
+            else if (this.childs.length == 1 && !this.childs.first().content) return true;
+            else return false;
+        }
+        return false;
     }
     get asTextContent() {
         if (this.isTextContent)
@@ -414,7 +417,12 @@ export abstract class Block extends Events {
         }
         return this;
     }
-
+    get isPageLastBlock() {
+        if (this.parent == this.page.views.last()) {
+            if (!this.next) return true;
+        }
+        return false;
+    }
 }
 export interface Block extends Block$Seek { }
 export interface Block extends Block$Event { }
