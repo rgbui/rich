@@ -36,23 +36,25 @@ export async function backspaceCrossBlock(tp: TextInput) {
                 await backspaceDeleteHandle(tp);
             }
             else {
-                if (block.isBackspaceAutomaticallyTurnText) {
-                    var newBlock = await tp.kit.page.onTurn(block, BlockUrlConstant.TextSpan);
-                    tp.explorer.onFocusAnchor(newBlock.visibleHeadAnchor)
+                var rowBlock = block.closest(x => x.isBlock);
+                if (rowBlock.isBackspaceAutomaticallyTurnText) {
+                    await tp.kit.page.onBackTurn(rowBlock, (newBlock) => {
+                        tp.explorer.onFocusAnchor(newBlock.visibleHeadAnchor)
+                    });
                 }
                 else {
-                    tp.kit.explorer.onCursorMove(KeyboardCode.ArrowLeft);
-                    if (block.isCanAutomaticallyDeleted) await block.onDelete()
+                    tp.kit.explorer.onCursorMove(KeyboardCode.ArrowLeft)
+                    if (rowBlock.isCanAutomaticallyDeleted) await rowBlock.onDelete()
                     else {
                         /**
                          * 这里判断是否为跨行
                          * 如果跨行，那么此时block所在的行的内容是否合并到新行中
                          ***/
                         var preBlock = prevAnchor.block.closest(x => x.isBlock);
-                        if (preBlock && block.isTextSpan && preBlock.isTextSpan) {
+                        if (preBlock && rowBlock.isLikeTextSpan && preBlock.isLikeTextSpan) {
                             //这里合并文本
                             var oldAnchorPos = tp.kit.explorer.activeAnchor.bound;
-                            await tp.kit.page.onCombineTextSpan(preBlock, block, async () => {
+                            await tp.kit.page.onCombineLikeTextSpan(preBlock, rowBlock, async () => {
                                 tp.kit.page.addUpdateEvent(async () => {
                                     var newAnchor = preBlock.visibleAnchor(Point.from(oldAnchorPos));
                                     tp.kit.explorer.onFocusAnchor(newAnchor);
@@ -95,13 +97,11 @@ export async function backspaceBlock(tp: TextInput) {
                 action = async () => {
                     var existsDelete: boolean = false;
                     if (anchor.block.isLine) {
-                        var newAnchor: Anchor;
-                        if (anchor.prevAnchor) newAnchor = anchor.prevAnchor;
-                        var pa = block.parent;
-                        if (block.isCanAutomaticallyDeleted) { await block.delete(); existsDelete = true; }
-                        if (!newAnchor && !pa.isRow) newAnchor = pa.visibleHeadAnchor;
-                        if (newAnchor) {
+                        var newAnchor: Anchor = anchor.prevAnchor;
+                        if (newAnchor && newAnchor.block.isLine && tp.page.isInlineAnchor(anchor.prevAnchor, anchor)) {
                             tp.explorer.onFocusAnchor(newAnchor);
+                            await block.delete();
+                            existsDelete = true;
                             tp.onStartInput(tp.explorer.activeAnchor);
                         }
                     }
