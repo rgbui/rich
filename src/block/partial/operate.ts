@@ -379,6 +379,25 @@ export class Block$Operator {
             });
         }
     }
+    manualUpdateProps(this: Block, oldProps: Record<string, any>, newProps: Record<string, any>, range = BlockRenderRange.self) {
+        var oldValue: Record<string, any> = {};
+        var newValue: Record<string, any> = {};
+        for (let prop in newProps) {
+            if (!lodash.isEqual(lodash.get(oldProps, prop), newProps[prop])) {
+                oldValue[prop] = lodash.cloneDeep(lodash.get(oldProps, prop));
+                newValue[prop] = lodash.cloneDeep(newProps[prop]);
+                lodash.set(this, prop, lodash.cloneDeep(newProps[prop]))
+            }
+        }
+        if (Object.keys(oldValue).length > 0) {
+            this.syncUpdate(range);
+            this.page.snapshoot.record(OperatorDirective.updateProp, {
+                blockId: this.id,
+                old: oldValue,
+                new: newValue
+            });
+        }
+    }
     updateArrayInsert(this: Block, key: string, at: number, data: any, range = BlockRenderRange.self) {
         if (!Array.isArray(this[key])) this[key] = [];
         this[key].insertAt(at, data);

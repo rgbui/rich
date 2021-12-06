@@ -166,6 +166,11 @@ export class Block$Event {
             this.updateProps(props, range);
         })
     }
+    async onManualUpdateProps(this: Block, oldProps: Record<string, any>, newProps: Record<string, any>, range = BlockRenderRange.none) {
+        await this.page.onAction(ActionDirective.onUpdateProps, async () => {
+            this.manualUpdateProps(oldProps, newProps, range);
+        })
+    }
     async onKeyTab(this: Block, isBack?: boolean) {
         var list = this.closest(x => x.url == BlockUrlConstant.List);
         if (isBack) {
