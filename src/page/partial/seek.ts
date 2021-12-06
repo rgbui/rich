@@ -204,6 +204,34 @@ export class Page$Seek {
         }
         return { direction: direction, block };
     }
+    private filterRepeat(this: Page, blocks: Block[]) {
+
+        var rs: Block[] = [];
+        while (true) {
+            if (blocks.length == 0) break;
+            else {
+                var bl = blocks[0];
+                var isPush: boolean = true;
+                for (let j = blocks.length - 1; j > 0; j--) {
+                    var current = blocks[j];
+                    if (bl.contains(current)) {
+                        blocks.remove(current);
+                    }
+                    else if (current.contains(bl)) {
+                        isPush = false;
+                        blocks.remove(bl);
+                        break;
+                    }
+                    else continue;
+                }
+                if (isPush) {
+                    rs.push(bl);
+                    blocks.remove(bl);
+                }
+            }
+        }
+        return rs;
+    }
     /**
      * 通过鼠标勾选的区域来查找在这个范围内的block,
      * 先通过from，to来锁定block，然后基于当前的两个block之间来实际的计算处于这个区域的block有多少
@@ -254,7 +282,7 @@ export class Page$Seek {
                     }
                 }
             }, true);
-            return bs;
+            return this.filterRepeat(bs);
         }
         else {
             if (topToRow.isBefore(topFromRow)) {
@@ -287,7 +315,7 @@ export class Page$Seek {
                     }
                     return false;
                 }, true, g => g == topToRow, true);
-            return bs;
+            return this.filterRepeat(bs);
         }
     }
     /**
