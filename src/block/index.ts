@@ -243,7 +243,15 @@ export abstract class Block extends Events {
      * 是否可以自动删除
      */
     get isCanAutomaticallyDeleted() {
-        return (this.isOnlyElementAppear && this.firstElementAppear.isEmpty && this.firstElementAppear.isText) && !this.isPart && !this.hasChilds;
+        if (this.childs.length == 1) {
+            if (this.childs.first().isTextContentBlockEmpty) return true;
+        }
+        else if (this.childs.length == 0) {
+            if (this.appearAnchors.length == 1) {
+                if (this.firstElementAppear.isEmpty) return true;
+            }
+        }
+        return false;
     }
     /**
      * 回退时，最后一步是否转换成普通文本
@@ -272,6 +280,10 @@ export abstract class Block extends Events {
     get isTextSpan() {
         return this.url == BlockUrlConstant.TextSpan
     }
+    get isLikeTextSpan() {
+        if (this.appearAnchors.length == 1 && this.firstElementAppear.isText) return true;
+        else if (this.childs.every(c => c.isTextContent)) return true;
+    }
     get isEmptyTextSpan() {
         if (this.isTextSpan) {
             if (this.childs.length == 0 && !this.content) return true;
@@ -291,7 +303,7 @@ export abstract class Block extends Events {
     get asListBlock() {
         return (this as any) as List;
     }
-    get isTextEmpty() {
+    get isTextContentBlockEmpty() {
         if (this.isTextContent) {
             return this.firstElementAppear.isEmpty;
         }
