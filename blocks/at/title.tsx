@@ -77,7 +77,7 @@ export class TitleView extends BlockView<Title>{
             {this.block.pageInfo != null &&
                 <><div className='sy-block-page-info-head'>
                     {this.block.isShowIcon && this.block.pageInfo.icon && <span onMouseDown={e => this.block.onChangeIcon(e)} className='sy-block-page-info-head-icon'>
-                        <Icon size={36} icon={this.block.pageInfo.icon}></Icon>
+                        <Icon size={42} icon={this.block.pageInfo.icon}></Icon>
                     </span>}
                     <span className='sy-block-page-info-head-title'><TextArea placeholder='输入标题'
                         rf={e => this.block.elementAppear({ el: e, appear: BlockAppear.text, prop: 'pageInfo.text' })}
