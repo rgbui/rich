@@ -99,10 +99,17 @@ export async function backspaceBlock(tp: TextInput) {
                     if (anchor.block.isLine) {
                         var newAnchor: Anchor = anchor.prevAnchor;
                         if (newAnchor && newAnchor.block.isLine && tp.page.isInlineAnchor(anchor.prevAnchor, anchor)) {
+                            if (block.isTextContentBlockEmpty) {
+                                await block.delete();
+                                existsDelete = true;
+                            }
                             tp.explorer.onFocusAnchor(newAnchor);
+                        }
+                        else if (block.isTextContentBlockEmpty) {
+                            var rowBlock = block.closest(x => x.isBlock);
                             await block.delete();
                             existsDelete = true;
-                            tp.onStartInput(tp.explorer.activeAnchor);
+                            tp.explorer.onFocusAnchor(rowBlock.visibleHeadAnchor);
                         }
                     }
                     var checkEmpty = () => {
