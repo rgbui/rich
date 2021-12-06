@@ -19,7 +19,7 @@ export class TextSpan extends Block {
     async getWillTurnData(url: string) {
         return await TextTurns.turn(this, url);
     }
-    get isTextEmpty() {
+    get isTextContentBlockEmpty() {
         if (this.childs.length == 0) {
             return this.firstElementAppear.isEmpty
         }
