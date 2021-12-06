@@ -37,28 +37,37 @@ export class Page$Cycle {
         await langProvider.import();
     }
     async load(this: Page, data?: Record<string, any>) {
-        if (!data || typeof data == 'object' && Object.keys(data).length == 0) {
-            //这里加载默认的页面数据
-            data = await this.getDefaultData();
-        }
-        await this.emit(PageDirective.loading);
-        for (var n in data) {
-            if (n == 'views') continue;
-            else if (n == 'pageLayout') {
-                this.pageLayout = new PageLayout(this, data[n]); continue;
+
+        try {
+            if (!data || typeof data == 'object' && Object.keys(data).length == 0) {
+                //这里加载默认的页面数据
+                data = await this.getDefaultData();
             }
-            this[n] = data[n];
-        }
-        if (Array.isArray(data.views)) {
-            for (var i = 0; i < data.views.length; i++) {
-                var dv = data.views[i];
-                var dc = await BlockFactory.createBlock(dv.url, this, dv, null);
-                this.views.push(dc as View);
+            await this.emit(PageDirective.loading);
+            for (var n in data) {
+                if (n == 'views') continue;
+                else if (n == 'pageLayout') {
+                    this.pageLayout = new PageLayout(this, data[n]); continue;
+                }
+                this[n] = data[n];
             }
+            if (Array.isArray(data.views)) {
+                for (var i = 0; i < data.views.length; i++) {
+                    var dv = data.views[i];
+                    var dc = await BlockFactory.createBlock(dv.url, this, dv, null);
+                    this.views.push(dc as View);
+                }
+            }
+            if (typeof this.pageLayout == 'undefined') this.pageLayout = new PageLayout(this);
+            await this.onRepair();
+            await this.emit(PageDirective.loaded);
         }
-        if (typeof this.pageLayout == 'undefined') this.pageLayout = new PageLayout(this);
-        await this.onRepair();
-        await this.emit(PageDirective.loaded);
+        catch (ex) {
+            this.onError(ex);
+            console.error(ex);
+            console.log(JSON.stringify(data));
+            console.log(this);
+        }
     }
     async loadUserActions(this: Page, actions: UserAction[]) {
         for (let i = 0; i < actions.length; i++) {
@@ -219,23 +228,29 @@ export class Page$Cycle {
      * 修复一些不正常的block
      */
     async onRepair(this: Page) {
+        var rs: Block[] = [];
         await this.views.eachAsync(async (view) => {
             view.eachReverse(b => {
                 /**
                  * 如果是空文本块，则删除掉空文本块
                  */
                 if (b.isTextContent && !b.content) {
-                    b.parentBlocks.remove(b);
+
+                    rs.push(b);
                 }
                 /**
                  * 如果当前的block是row,col，但没有子元素块,
                  * 那么block应该需要删除
                  */
                 else if ((b.isRow || b.isCol) && !b.isPart && !b.hasChilds) {
-                    b.parentBlocks.remove(b);
+                    rs.push(b);
                 }
             })
             return
+        });
+
+        await rs.eachAsync(async r => {
+            r.parentBlocks.remove(r);
         })
     }
 }
