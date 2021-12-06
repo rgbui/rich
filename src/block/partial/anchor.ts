@@ -77,7 +77,7 @@ export class Block$Anchor {
             return anchor;
         }
     }
-    get visibleHeadAnchor() {
+    get visibleHeadAnchor(): Anchor {
         var self: Block = this as any;
         if (self.isSupportAnchor) {
             return self.createAnchor();
@@ -87,7 +87,7 @@ export class Block$Anchor {
             if (sub) return sub.visibleHeadAnchor;
         }
     }
-    get visibleBackAnchor() {
+    get visibleBackAnchor(): Anchor {
         var self: Block = this as any;
         if (self.isSupportAnchor) {
             return self.createBackAnchor(-1);
@@ -261,7 +261,7 @@ export class Block$Anchor {
    */
     async visibleDownCreateBlock(this: Block, url: string, data: Record<string, any> = {}) {
         var row = this.closest(x => x.isBlock);
-        return await this.page.createBlock(url, { ...data }, row.parent, row.at + 1);
+        return await this.page.createBlock(url, { ...data }, row.parent, row.at + 1, row.childKey);
     }
     /**
      * 在当前的block的右侧创建一个新的block

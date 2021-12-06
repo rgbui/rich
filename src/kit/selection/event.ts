@@ -139,9 +139,18 @@ export class SelectionExplorer$Events {
         await this.page.onAction(ActionDirective.onCreateBlockByEnter, async () => {
             var block = this.activeAnchor.block;
             if (block.isLine) block = block.closest(g => !g.isLine);
-            var url = block.isContinuouslyCreated ? block.url : BlockUrlConstant.TextSpan;
-            var continuouslyProps = block.continuouslyProps;
-            var newBlock = await block.visibleDownCreateBlock(url, { ...continuouslyProps });
+            var newBlock: Block;
+            if (block.isListBlock && block.getChilds(block.childKey).length > 0) {
+                var fb = block.getChilds(block.childKey).first();
+                var url = fb.isContinuouslyCreated ? fb.url : BlockUrlConstant.TextSpan;
+                var continuouslyProps = fb.continuouslyProps;
+                newBlock = await this.page.createBlock(url, { ...continuouslyProps }, fb.parent, 0, fb.parent.childKey)
+            }
+            else {
+                var url = block.isContinuouslyCreated ? block.url : BlockUrlConstant.TextSpan;
+                var continuouslyProps = block.continuouslyProps;
+                newBlock = await block.visibleDownCreateBlock(url, { ...continuouslyProps });
+            }
             newBlock.mounted(() => {
                 var anchor = newBlock.visibleHeadAnchor;
                 this.onFocusAnchor(anchor);
@@ -153,15 +162,25 @@ export class SelectionExplorer$Events {
             var anchor = this.activeAnchor;
             var pos = anchor.at;
             var block = anchor.block;
-            var gs = block.nexts;
+            var rowBlock = block.closest(x => !x.isLine);
+            var gs = block.isLine ? block.nexts : [];
             var rest = anchor.elementAppear.textContent.slice(0, pos);
             var text = anchor.elementAppear.textContent.slice(pos);
-            if (rest && !block.isTextContent) block.updateAppear(anchor.elementAppear, rest, BlockRenderRange.self);
+            var childs = text ? [{ url: BlockUrlConstant.Text, content: text }] : [];
+            if (rest || !block.isTextContent) block.updateAppear(anchor.elementAppear, rest, BlockRenderRange.self);
             else await block.delete();
-            if (block.isLine) block = block.closest(g => !g.isLine);
-            var url = block.isContinuouslyCreated ? block.url : BlockUrlConstant.TextSpan;
-            var continuouslyProps = block.continuouslyProps;
-            var newBlock = await block.visibleDownCreateBlock(url, { ...continuouslyProps, blocks: { childs: [{ url: BlockUrlConstant.Text, content: text }] } });
+            var newBlock: Block;
+            if (rowBlock.isListBlock && rowBlock.getChilds(rowBlock.childKey).length > 0) {
+                var fb = rowBlock.getChilds(rowBlock.childKey).first();
+                var url = fb.isContinuouslyCreated ? fb.url : BlockUrlConstant.TextSpan;
+                var continuouslyProps = fb.continuouslyProps;
+                newBlock = await this.page.createBlock(url, { ...continuouslyProps, blocks: { childs } }, fb.parent, 0, fb.parent.childKey)
+            }
+            else {
+                var url = rowBlock.isContinuouslyCreated ? rowBlock.url : BlockUrlConstant.TextSpan;
+                var continuouslyProps = rowBlock.continuouslyProps;
+                newBlock = await rowBlock.visibleDownCreateBlock(url, { ...continuouslyProps, blocks: { childs } });
+            }
             if (gs.length > 0) {
                 for (let i = 0; i < gs.length; i++) {
                     await newBlock.append(gs[i]);
