@@ -18,6 +18,7 @@ import { BlockAppear, AppearAnchor } from "./appear";
 import { Mix } from "../../util/mix";
 import { TextContent } from "./element/text";
 import { BlockUrlConstant } from "./constant";
+import { List } from "../../blocks/present/list/list";
 export abstract class Block extends Events {
     constructor(page: Page) {
         super();
@@ -284,6 +285,12 @@ export abstract class Block extends Events {
             return (this as any) as TextContent
         else return null;
     }
+    get isListBlock() {
+        return this.url == BlockUrlConstant.List;
+    }
+    get asListBlock() {
+        return (this as any) as List;
+    }
     get isTextEmpty() {
         if (this.isTextContent) {
             return this.firstElementAppear.isEmpty;
@@ -422,6 +429,9 @@ export abstract class Block extends Events {
             if (!this.next) return true;
         }
         return false;
+    }
+    getChilds(key: string) {
+        return this.blocks[key];
     }
 }
 export interface Block extends Block$Seek { }

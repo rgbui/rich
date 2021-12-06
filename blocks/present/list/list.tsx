@@ -35,7 +35,7 @@ export class List extends Block {
      */
     get blockKeys() {
         var keys = Object.keys(this.blocks);
-        if (this.isExpand == false) keys.remove('subChilds');
+        if (this.isExpand == false && this.listType == ListType.arrow) keys.remove('subChilds');
         return keys;
     }
     get multiLines() {
@@ -78,8 +78,12 @@ export class List extends Block {
     get isBackspaceAutomaticallyTurnText() {
         return true;
     }
-    get childKey(){
+    get childKey() {
         return 'subChilds';
+    }
+    getChilds(key: string) {
+        if (this.isExpand == false && this.listType == ListType.arrow) return [];
+        return super.getChilds(key);
     }
 }
 @view('/list')
