@@ -13,6 +13,7 @@ import './media/audio';
 import "./present/katex";
 import "./present/bookmark";
 import "./form/todo";
+import "./form/measure";
 import "./present/list/list";
 import "./present/code/code";
 import "./present/divider";
