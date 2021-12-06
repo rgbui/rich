@@ -3,6 +3,7 @@ import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItemType } from "../../../component/view/menu/declare";
 import { Block } from "../../block";
 import { BlockUrlConstant } from "../../block/constant";
+import { TextSpan } from "../../block/element/textspan";
 import { BlockDirective } from "../../block/enum";
 import { BlockFactory } from "../../block/factory/block.factory";
 import { Rect } from "../../common/point";
@@ -66,13 +67,11 @@ export class Page$Operator {
             });
         })
     }
-    async onTurn(this: Page, block, url: string) {
-        var bs: Block[] = [];
+    async onTurn(this: Page, block: Block, url: string, callback: (newBlock: Block) => void) {
         await this.onAction(ActionDirective.onTurn, async () => {
             var newBlock = await block.turn(url);
-            bs.push(newBlock);
+            callback(newBlock);
         });
-        return bs.first();
     }
     async onBatchTurn(this: Page, blocks: Block[], url: string) {
         var bs: Block[] = [];
@@ -84,7 +83,17 @@ export class Page$Operator {
         });
         return bs;
     }
-    async onCombineTextSpan(this: Page, block: Block, willCombineBlock: Block, after?: () => Promise<void>) {
+    async onBackTurn(this: Page, block: Block, callback: (newBlock: Block) => void) {
+        await this.onAction(ActionDirective.onBackTurn, async () => {
+            if (block.isListBlock) {
+                var cs = block.getChilds(block.childKey);
+                if (cs.length > 0) await block.parent.appendArray(cs, block.at + 1, block.parent.childKey);
+            }
+            var newBlock = await block.turn(BlockUrlConstant.TextSpan);
+            callback(newBlock);
+        });
+    }
+    async onCombineLikeTextSpan(this: Page, block: Block, willCombineBlock: Block, after?: () => Promise<void>) {
         await this.onAction(ActionDirective.combineTextSpan, async () => {
             if (willCombineBlock.childs.length > 0) {
                 if (block.content && block.childs.length == 0) {
@@ -202,7 +211,7 @@ export class Page$Operator {
                     block = await block.visibleDownCreateBlock('/file', { initialData: { file } });
                 }
             }
-            if (firstBlock.isTextEmpty) {
+            if (firstBlock.isTextContentBlockEmpty) {
                 await firstBlock.delete();
             }
             block.mounted(() => {
@@ -221,7 +230,7 @@ export class Page$Operator {
                 var bd = blocks[i];
                 block = await block.visibleDownCreateBlock(bd.url, bd);
             }
-            if (firstBlock.isTextEmpty) {
+            if (firstBlock.isTextContentBlockEmpty) {
                 await firstBlock.delete();
             }
             block.mounted(() => {
