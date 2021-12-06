@@ -188,7 +188,6 @@ async function parseBlock(element: HTMLElement) {
             var lineElements: HTMLElement[] = [];
             for (let i = 0; i < element.childNodes.length; i++) {
                 var ele = element.childNodes[i] as HTMLElement;
-                console.log(ele, isLineElement(ele));
                 if (isLineElement(ele)) lineElements.push(ele);
                 else {
                     if (lineElements.length > 0) {
@@ -228,10 +227,8 @@ async function parseBlock(element: HTMLElement) {
 }
 export async function parseDom(dom: HTMLElement | Document) {
     var body = dom.querySelector('body');
-    if (body)
-        return await parseDom(body);
-    else
-        return parseBlock(dom as HTMLElement);
+    if (body) return await parseDom(body);
+    else return parseBlock(dom as HTMLElement);
 }
 
 

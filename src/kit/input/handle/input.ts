@@ -114,7 +114,7 @@ export async function InputBlockSelectorAfter(tp: TextInput, blockData: BlockSel
             newBlock = await block.visibleRightCreateBlock(anchor.at, blockData.url, { createSource: 'InputBlockSelector' });
         }
         else {
-            if (block.isTextEmpty) {
+            if (block.isTextContentBlockEmpty) {
                 newBlock = await block.visibleDownCreateBlock(blockData.url, { createSource: 'InputBlockSelector' });
                 //说明是空白的textBlock
                 await block.delete();

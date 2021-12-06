@@ -21,7 +21,8 @@ export enum ActionDirective {
     onTurn = 115,
     combineTextSpan = 116,
     onKeyTab = 117,
-    onCreateTailTextSpan=118,
+    onCreateTailTextSpan = 118,
+    onBackTurn = 119,
     onSchemaCreateField = 200,
     onSchemaDeleteField = 201,
     onSchemaTurnField = 202,
@@ -34,7 +35,7 @@ export enum ActionDirective {
     /**
      * 错误修正的
      */
-    onErrorRepairDidMounte=300
+    onErrorRepairDidMounte = 300
 }
 
 export enum OperatorDirective {
