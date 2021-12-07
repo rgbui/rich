@@ -97,7 +97,7 @@ class TextTool extends EventsComponent {
                 </div>
             </Tip>
             <Tip id={LangID.textToolDeleteLine}>
-                <div className={'shy-tool-text-menu-item' + (this.textStyle.deleteLine == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.deleteLine == true ? TextCommand.underline : TextCommand.deleteLine)}>
+                <div className={'shy-tool-text-menu-item' + (this.textStyle.deleteLine == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.deleteLine == true ? TextCommand.cancelLine : TextCommand.deleteLine)}>
                     <Icon icon='delete-line:sy'></Icon>
                 </div>
             </Tip>
