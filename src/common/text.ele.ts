@@ -317,14 +317,15 @@ export class TextEle {
      * @param bounds 
      */
     static cacDistance(point: Point, bounds: Rect[]) {
-        var disPoint = new Point(1e8, 1e8);
-        bounds.each(bound => {
-            if (point.x >= bound.left && point.x <= bound.left + bound.width) disPoint.x = 0;
-            else disPoint.x = Math.min(disPoint.x, Math.abs(point.x - bound.left), Math.abs(point.x - bound.left - bound.width))
-            if (point.y >= bound.top && point.y <= bound.top + bound.height) disPoint.y = 0;
-            else disPoint.y = Math.min(disPoint.y, Math.abs(point.y - bound.top), Math.abs(point.y - bound.top - bound.height))
-        });
-        return disPoint;
+        if (bounds.length > 0) {
+            var bs = bounds.map(b => {
+                return {
+                    x: point.x >= b.x && point.x <= b.x + b.width ? 0 : Math.min(Math.abs(point.x - b.x), Math.abs(point.x - b.x - b.width)),
+                    y: point.y >= b.y && point.y <= b.y + b.height ? 0 : Math.min(Math.abs(point.y - b.y), Math.abs(point.y - b.y - b.height)),
+                }
+            });
+            return bs.findMin(g => Math.sqrt(g.x * g.x + g.y * g.y))
+        }
     }
     static getValueTextContent(value: any) {
         var c = value;
