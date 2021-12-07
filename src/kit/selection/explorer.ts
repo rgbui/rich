@@ -36,7 +36,6 @@ export class SelectionExplorer extends Events {
         }
         else return
         this.activeAnchor = anchor;
-        if (this.activeAnchor) this.page.onFocusAnchor(this.activeAnchor);
     }
     renderSelection() {
         if (this.start) this.start.visible()

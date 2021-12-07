@@ -26,8 +26,9 @@ export class PageMouse {
     private lastMouseupEvent: MouseEvent;
     onMousedown(event: MouseEvent) {
         this.clearTime();
-        var block = this.downStartBlock = this.page.getBlockInMouseRegion(event);
-        if (this.downStartBlock?.isLine) this.downStartBlock = this.downStartBlock.closest(x => x.isBlock);
+        var block = this.page.getBlockInMouseRegion(event);
+        if (block?.isLine) block = block.closest(x => x.isBlock);
+        this.downStartBlock = block;
         this.downEvent = event;
         this.downPoint = Point.from(event);
         this.isDown = true;
@@ -54,8 +55,10 @@ export class PageMouse {
                     }
                     else this.explorer.onFocusAnchor(this.explorer.activeAnchor);
                 }
-                else
+                else {
+                    console.log(this.downAnchor);
                     this.explorer.onFocusAnchor(this.downAnchor);
+                }
             }
         }
         /**
