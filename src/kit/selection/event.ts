@@ -207,7 +207,7 @@ export class SelectionExplorer$Events {
             start = this.end;
             end = this.start;
         }
-        await this.page.onAction(ActionDirective.onUpdatePattern, async () => {
+        await this.page.onActionAsync(ActionDirective.onUpdatePattern, async () => {
             var ns: { block: Block, at?: number } = {} as any;
             var ne: { block: Block, at?: number } = {} as any;
             await bs.eachAsync(async block => {
@@ -319,12 +319,12 @@ export class SelectionExplorer$Events {
         });
     }
     async onOpenTextTool(this: SelectionExplorer, event: MouseEvent) {
-        if (!this.selectedBlocks.first()) return;
-        var lineBlock = this.selectedBlocks.first().closest(x => !x.isLine);
-        if (!lineBlock.isSupportTextStyle) return;
+        if (this.selectedBlocks.length == 0) return;
+        var rowBlock = this.selectedBlocks.first().closest(x => !x.isLine);
+        if (!rowBlock.isSupportTextStyle) return;
         while (true) {
             var result = await useTextTool(this.getSelectionPoint(), {
-                block: lineBlock,
+                block: rowBlock,
                 style: this.page.pickBlocksTextStyle(this.selectedBlocks)
             });
             if (result) {
@@ -335,7 +335,7 @@ export class SelectionExplorer$Events {
                     await this.onSelectionSetPatternOrProps(undefined, result.props);
                 }
                 else if (result.command == 'turn') {
-                    await lineBlock.onClickContextMenu(result.item, result.event);
+                    await rowBlock.onClickContextMenu(result.item, result.event);
                     break;
                 }
                 else break;

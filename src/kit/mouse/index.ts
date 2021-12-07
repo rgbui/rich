@@ -56,7 +56,6 @@ export class PageMouse {
                     else this.explorer.onFocusAnchor(this.explorer.activeAnchor);
                 }
                 else {
-                    console.log(this.downAnchor);
                     this.explorer.onFocusAnchor(this.downAnchor);
                 }
             }

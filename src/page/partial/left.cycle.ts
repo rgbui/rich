@@ -12,7 +12,6 @@ import { PageLayout } from "../../layout";
 import { PageDirective } from "../directive";
 import { PageHistory } from "../interaction/history";
 import { PageKeys } from "../interaction/keys";
-import { TemporaryPurpose } from "./declare";
 import JSZip from 'jszip';
 
 export class Page$Cycle {
@@ -134,12 +133,12 @@ export class Page$Cycle {
      * 触发需要更新的view,
      * 这个可以手动触发多次
      */
-    private onNotifyUpdateBlock(this: Page,) {
+    private notifyUpdateBlock(this: Page) {
         var ups = this.willUpdateBlocks.map(c => c);
         var fns = this.updatedFns.map(f => f);
         this.willUpdateBlocks = [];
         this.updatedFns = [];
-        (async function () {
+        var fn = async function () {
             try {
                 await ups.eachAsync(async (up) => {
                     await up.forceUpdate();
@@ -149,7 +148,26 @@ export class Page$Cycle {
                 this.onError(ex);
             }
             await fns.eachAsync(async g => await g());
-        })()
+        }
+        fn()
+    }
+    private async notifyUpdateBlockAsync(this: Page) {
+        var ups = this.willUpdateBlocks.map(c => c);
+        var fns = this.updatedFns.map(f => f);
+        this.willUpdateBlocks = [];
+        this.updatedFns = [];
+        var fn = async function () {
+            try {
+                await ups.eachAsync(async (up) => {
+                    await up.forceUpdate();
+                })
+            }
+            catch (ex) {
+                this.onError(ex);
+            }
+            await fns.eachAsync(async g => await g());
+        }
+        await fn()
     }
     async onAction(this: Page, directive: ActionDirective | string, fn: () => Promise<void>) {
         await this.snapshoot.sync(directive, async () => {
@@ -174,7 +192,34 @@ export class Page$Cycle {
                 catch (ex) {
                     this.onError(ex);
                 }
-                this.onNotifyUpdateBlock();
+                this.notifyUpdateBlock();
+            }
+        })
+    }
+    async onActionAsync(this: Page, directive: ActionDirective | string, fn: () => Promise<void>) {
+        await this.snapshoot.sync(directive, async () => {
+            this.willUpdateBlocks = [];
+            this.willLayoutBlocks = [];
+            this.updatedFns = [];
+            try {
+                if (typeof fn == 'function') await fn();
+            } catch (ex) {
+                this.onError(ex);
+            }
+            finally {
+                try {
+                    if (Array.isArray(this.willLayoutBlocks) && this.willLayoutBlocks.length > 0) {
+                        var bs = this.willLayoutBlocks;
+                        await bs.eachAsync(async (block) => {
+                            await block.layoutCollapse();
+                        });
+                        this.willLayoutBlocks = [];
+                    }
+                }
+                catch (ex) {
+                    this.onError(ex);
+                }
+                await this.notifyUpdateBlockAsync();
             }
         })
     }
@@ -195,6 +240,7 @@ export class Page$Cycle {
         }
     }
     onBlur(this: Page, event: FocusEvent) {
+        console.log('blur', event);
         if (this.isFocus == true) {
             this.isFocus = false;
             this.kit.explorer.blur();
