@@ -148,6 +148,12 @@ export class Block$Operator {
         });
         this.page.addBlockUpdate(this);
     }
+    async appendBlock(this: Block, blockData: Record<string, any>, at?: number, childKey?: string) {
+        if (typeof childKey == 'undefined') childKey = 'childs';
+        var bs = this.blocks[childKey];
+        if (typeof at == 'undefined') at = bs.length;
+        await this.page.createBlock(blockData.url, blockData, this, at, childKey);
+    }
     async appendArray(this: Block, blocks: Block[], at?: number, childKey?: string) {
         if (typeof childKey == 'undefined') childKey = 'childs';
         var bs = this.blocks[childKey];
@@ -161,6 +167,23 @@ export class Block$Operator {
             }
             else {
                 await this.append(bb, b.at + 1, childKey);
+                b = bb;
+            }
+        }
+    }
+    async appendArrayBlockData(this: Block, blocks: Record<string, any>[], at?: number, childKey?: string) {
+        if (typeof childKey == 'undefined') childKey = 'childs';
+        var bs = this.blocks[childKey];
+        if (typeof at == 'undefined') at = bs.length;
+        var b;
+        for (let i = 0; i < blocks.length; i++) {
+            var bb = blocks[i];
+            if (i == 0) {
+                await this.appendBlock(bb, at, childKey);
+                b = bb;
+            }
+            else {
+                await this.appendBlock(bb, b.at + 1, childKey);
                 b = bb;
             }
         }
@@ -349,6 +372,97 @@ export class Block$Operator {
                 for (let i = blocks.length - 1; i >= 0; i--) {
                     await this.acceptSubFromMove(blocks[i]);
                 }
+                break;
+        }
+    }
+    async dropBlockDatas(this: Block, blocks: Record<string, any>[], direction: DropDirection) {
+        if (blocks.some(s => s.isLine)) throw 'line blokc is not drop';
+        switch (direction) {
+            case DropDirection.bottom:
+            case DropDirection.top:
+                var row = this.closest(x => x.isBlock);
+                var childsKey = row.parent.childKey;
+                if (direction == DropDirection.bottom) {
+                    await row.parent.appendArrayBlockData(blocks, row.at + 1, childsKey);
+                }
+                else {
+                    await row.parent.appendArrayBlockData(blocks, row.at, childsKey);
+                }
+                break;
+            case DropDirection.left:
+                if (this.isCol || this.parent.isCol) {
+                    var col = this.isCol ? this : this.parent;
+                    var sum = col.childs.sum(x => (x as Col).widthPercent);
+                    var r = Math.round(100 / (col.childs.length + 1));
+                    col.childs.each(c => {
+                        c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) })
+                    })
+                    var newCol = await this.page.createBlock(BlockUrlConstant.Col, { widthPercent: r }, col.parent, col.at);
+                    await blocks.eachAsync(async (block) => {
+                        await newCol.appendBlock(block);
+                    })
+                }
+                else {
+                    var newRow = await this.page.createBlock(BlockUrlConstant.Row, {
+                        blocks: {
+                            childs: [
+                                { url: BlockUrlConstant.Col, widthPercent: 50 },
+                                { url: BlockUrlConstant.Col, widthPercent: 50 }
+                            ]
+                        }
+                    }, this.parent, this.at);
+                    await blocks.eachAsync(async (block) => {
+                        await newRow.childs.first().appendBlock(block);
+                    })
+                    await newRow.childs.last().appendBlock(this);
+                }
+                /**
+                 * 这里新增一个元素，需要调整当前行内的所有元素比例
+                 */
+                break;
+            case DropDirection.right:
+                if (this.isCol || this.parent.isCol) {
+                    var col = this.isCol ? this : this.parent;
+                    var sum = col.childs.sum(x => (x as Col).widthPercent);
+                    var r = Math.round(100 / (col.childs.length + 1));
+                    col.childs.each(c => {
+                        c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) })
+                    })
+                    var newCol = await this.page.createBlock(BlockUrlConstant.Col, { widthPercent: r }, col.parent, col.at + 1);
+                    await blocks.eachAsync(async (block) => {
+                        await newCol.appendBlock(block);
+                    })
+                }
+                else {
+                    var newRow = await this.page.createBlock(BlockUrlConstant.Row, {
+                        blocks: {
+                            childs: [
+                                { url: BlockUrlConstant.Col, widthPercent: 50 },
+                                { url: BlockUrlConstant.Col, widthPercent: 50 }
+                            ]
+                        }
+                    }, this.parent, this.at);
+                    await blocks.eachAsync(async (block) => {
+                        await newRow.childs.last().appendBlock(block);
+                    })
+                    await newRow.childs.first().append(this);
+                }
+                /**
+                * 这里新增一个元素，需要调整当前行内的所有元素比例
+                */
+                break;
+            case DropDirection.inner:
+                /**
+                 * 这时判断是否可以允许换行的block，还是替换 
+                 * */
+                var cs = this.childs.map(c => c);
+                await this.appendArrayBlockData(blocks);
+                await cs.eachAsync(async (c) => {
+                    await c.delete()
+                })
+                break;
+            case DropDirection.sub:
+                await this.appendArrayBlockData(blocks, 0, this.childKey);
                 break;
         }
     }
