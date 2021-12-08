@@ -2,6 +2,7 @@
 import React from "react";
 import { CursorName, MouseCursor } from "./cursor";
 import { Point } from "./point";
+import { dom } from "./dom";
 export class Dragger {
     constructor(el: HTMLElement, cursor?: CursorName, dis?: number) {
         this.el = el;
@@ -75,14 +76,19 @@ export class Dragger {
 export function MouseDragger<T = Record<string, any>>(options: {
     event: MouseEvent | React.MouseEvent,
     dis?: number,
-    cursor?: CursorName
-    moveStart?: (event: MouseEvent | React.MouseEvent, data: T) => void,
+    cursor?: CursorName,
+    /**
+     * 是否跨区域拖动
+     */
+    isCross?: boolean,
+    moveStart?: (event: MouseEvent | React.MouseEvent, data: T, crossData?: { type: string, data: any }) => void,
     move?: (event: MouseEvent, data: T) => void,
     moving?: (event: MouseEvent, data: T, isEnd?: boolean) => void,
     moveEnd?: (event: MouseEvent, isMove: boolean, data: T) => void
 }) {
     if (typeof options.dis == 'undefined') options.dis = 5;
     var data: T = {} as any;
+    var crossData: { type: string, data: any } = { type: 'none', data: null };
     var move: (event: MouseEvent) => void;
     var up: (event: MouseEvent) => void;
     var scope = {
@@ -90,18 +96,25 @@ export function MouseDragger<T = Record<string, any>>(options: {
         isMove: false,
         event: options.event
     };
+    var crossPanels: HTMLElement[] = [];
     move = (event: MouseEvent) => {
         if (scope.isDown == true) {
             window.getSelection ? window.getSelection().removeAllRanges() : (document as any).selection.empty();
             if (scope.isMove == true) {
-                if (options.cursor)
-                    MouseCursor.show(options.cursor);
+                if (options.cursor) MouseCursor.show(options.cursor);
                 if (typeof options.move == 'function') options.move(event, data)
                 if (typeof options.moving == 'function') options.moving(event, data, false);
+                if (options.isCross) {
+                    var cp = dom(event.target as HTMLElement).closest(x => typeof (x as HTMLElement).shy_drop_move == 'function') as HTMLElement;
+                    if (cp) {
+                        if (!crossPanels.some(s => s === cp)) crossPanels.push(cp);
+                        cp.shy_drop_move(crossData.type, crossData.data);
+                    }
+                }
             }
             else {
                 if (Point.from(options.event).remoteBy(Point.from(event), options.dis)) {
-                    if (typeof options.moveStart == 'function') options.moveStart(scope.event, data);
+                    if (typeof options.moveStart == 'function') options.moveStart(scope.event, data, crossData);
                     scope.isMove = true;
                 }
             }
@@ -109,8 +122,7 @@ export function MouseDragger<T = Record<string, any>>(options: {
     }
     up = (event: MouseEvent) => {
         if (scope.isDown == true) {
-            if (options.cursor)
-                MouseCursor.hide();
+            if (options.cursor) MouseCursor.hide();
             if (scope.isMove && typeof options.moving == 'function') options.moving(event, data, true);
             if (typeof options.moveEnd == 'function') options.moveEnd(event, scope.isMove, data)
             scope.isMove = false;

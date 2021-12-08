@@ -90,7 +90,7 @@ export class Handle extends Events {
         if (this.dropBlock) {
             dom(this.dropBlock.el).removeClass(g => g.startsWith('shy-block-drag-over'));
         }
-        this.dragBlocks=[];
+        this.dragBlocks = [];
         delete this.dropBlock;
         delete this.dropDirection;
     }
