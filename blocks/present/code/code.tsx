@@ -6,6 +6,7 @@ import "../../../node_modules/prismjs/themes/prism.css";
 import { TextArea } from "../../../src/block/view/appear";
 import { Block } from "../../../src/block";
 import { BlockDisplay } from "../../../src/block/enum";
+import "./style.less";
 /**
  * prism url : https://prismjs.com/#examples
  * prism babel plug :https://www.npmjs.com/package/babel-plugin-prismjs
@@ -25,7 +26,12 @@ export class TextCode extends Block {
 export class TextCodeView extends BlockView<TextCode>{
     render() {
         return <div className='sy-block-code' >
-            <TextArea rf={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent}></TextArea>
+            <div className='sy-block-code-head'>
+
+            </div>
+            <div className='sy-block-code-content'>
+                <TextArea rf={e => this.block.elementAppear({ el: e })} placeholder={'键入代码'} html={this.block.htmlContent}></TextArea>
+            </div>
         </div>
     }
 }
