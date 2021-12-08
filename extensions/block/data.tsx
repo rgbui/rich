@@ -45,7 +45,8 @@ export var BlockSelectorData: BlockGroup[] = [
             { text: "折叠列表", pic: <img src={toggle} />, url: '/list?{listType:2}', description: "折叠列表", label: '/折叠列表', labels: [] },
             { text: "首重文字", pic: <img src={callout} />, url: "/callout", description: "", label: "/首重文字", labels: [] },
             { text: "数学公式", pic: <img src={equation} />, url: "/katex", description: "", label: "/数学公式", labels: [] },
-            { text: '链接页面', pic: <img src={link} />, url: '/link', description: "", label: "/链接" }
+            { text: '链接页面', pic: <img src={link} />, url: '/link', description: "", label: "/链接" },
+            { text: '进度条', pic: <img src={link} />, url: '/measure', description: "", label: "/进度条" }
         ]
     },
     {

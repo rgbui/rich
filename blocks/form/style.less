@@ -16,3 +16,33 @@
         flex-grow: 1;
     }
 }
+
+.sy-block-measure {
+    display        : flex;
+    justify-content: flex-start;
+    align-items    : center;
+
+    &-progress {
+        cursor          : pointer;
+        height          : 10px;
+        background-color: fade(#e16259, 15%);
+        border-radius   : 10px;
+
+        &-bar {
+            background-color: #e16259;
+            opacity         : 1;
+            height          : 10px;
+            border-radius   : 10px;
+        }
+
+        flex-grow  : 1;
+        flex-shrink: 1;
+    }
+
+    &-value {
+        flex-grow  : 0;
+        flex-shrink: 0;
+        margin-left: 10px;
+        color      : rgba(55, 53, 47, 0.4);
+    }
+}
