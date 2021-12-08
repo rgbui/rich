@@ -34,9 +34,12 @@ declare module "*.json" {
   export default file;
 }
 
+
 /**
  * 自动在HTMLElement上面申明一个接收拖放元素的函数
  */
 interface HTMLElement {
-  receive_drop_elements?: (type: 'pageItem', elements: any[]) => void;
+  shy_drop_move?: (type: string, data: any) => void;
+  shy_drop_over?: (type: string, data: any) => void;
+  shy_end?: () => void;
 }
