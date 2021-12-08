@@ -3,7 +3,6 @@ import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItemType } from "../../../component/view/menu/declare";
 import { Block } from "../../block";
 import { BlockUrlConstant } from "../../block/constant";
-import { TextSpan } from "../../block/element/textspan";
 import { BlockDirective } from "../../block/enum";
 import { BlockFactory } from "../../block/factory/block.factory";
 import { Rect } from "../../common/point";
@@ -154,6 +153,14 @@ export class Page$Operator {
          */
         await this.onAction(ActionDirective.onBatchDragBlocks, async () => {
             await to.drop(blocks, direction);
+        })
+    }
+    async onBatchDargCreateBlocks(this: Page, blocks: any[], to: Block, direction: DropDirection) {
+        /**
+        * 就是将blocks append 到to 下面
+        */
+        await this.onAction(ActionDirective.onBatchDragBlockDatas, async () => {
+            await to.dropBlockDatas(blocks, direction);
         })
     }
     /**

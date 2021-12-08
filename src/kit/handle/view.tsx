@@ -16,12 +16,11 @@ export class HandleView extends React.Component<{ handle: Handle }>{
         return this.props.handle;
     }
     el: HTMLElement;
-    isDown: Boolean;
-    isDrag: boolean = false;
+   
     private onMousedown(event: MouseEvent) {
         if (this.toolTip) this.toolTip.close();
-        this.isDown = true;
-        this.isDrag = false;
+        this.handle.isDown = true;
+        this.handle.isDrag = false;
         var self = this;
         if (event) {
             self.handle.dragBlocks = [];
@@ -36,7 +35,7 @@ export class HandleView extends React.Component<{ handle: Handle }>{
                 event,
                 dis: 5,
                 moveStart(ev, data) {
-                    self.isDrag = true;
+                    self.handle.isDrag = true;
                     ghostView.load(self.handle.dragBlocks.map(b => b.contentEl), { point: Point.from(ev) })
                 },
                 moving(ev, data, isend) {
@@ -44,15 +43,14 @@ export class HandleView extends React.Component<{ handle: Handle }>{
                 },
                 async moveEnd(ev, isMove, data) {
                     try {
-                        if (self.isDrag == true) await self.handle.onDropBlock()
+                        if (self.handle.isDrag == true) await self.handle.onDropBlock()
                         else await self.handle.onClickBlock(ev);
                     }
                     catch (ex) {
                         self.handle.kit.emit('error', ex);
                     }
                     finally {
-                        self.isDrag = false;
-                        self.isDown = false;
+
                         self.handle.onDropEnd();
                         ghostView.unload();
                     }

@@ -16,7 +16,7 @@ export class Handle extends Events {
     handleBlock: Block;
     onShowBlockHandle(hoverBlock: Block) {
         this.handleBlock = hoverBlock.handleBlock;
-        if (this.view.isDown) {
+        if (this.isDown) {
             var handleEl = this.view.handleEle;
             handleEl.style.display = 'none';
         }
@@ -32,14 +32,14 @@ export class Handle extends Events {
             var handleEl = this.view.handleEle;
             handleEl.style.display = 'none';
         }
-        if (this.view.isDown) {
+        if (this.isDown) {
             this.onDropOverBlock(hoverBlock.dropOverBlock, this.kit.mouse.moveEvent);
         }
     }
     onCloseBlockHandle() {
         var handleEl = this.view.handleEle;
         handleEl.style.display = 'none';
-        if (!this.view.isDown) delete this.handleBlock;
+        if (!this.isDown) delete this.handleBlock;
     }
     containsEl(el: HTMLElement) {
         return this.view.handleEle.contains(el);
@@ -87,6 +87,8 @@ export class Handle extends Events {
             this.kit.page.onDropEnterBlock(this.dragBlocks, this.dropBlock, this.dropDirection);
     }
     onDropEnd() {
+        this.isDrag=false;
+        this.isDown=false;
         if (this.dropBlock) {
             dom(this.dropBlock.el).removeClass(g => g.startsWith('shy-block-drag-over'));
         }
@@ -99,7 +101,10 @@ export class Handle extends Events {
             await this.kit.page.onBatchDragBlocks(this.dragBlocks, this.dropBlock, this.dropDirection);
         }
     }
+    
     async onClickBlock(event: MouseEvent) {
         await this.kit.page.onOpenMenu(this.dragBlocks, event);
     }
+    isDown: Boolean;
+    isDrag: boolean = false;
 }
