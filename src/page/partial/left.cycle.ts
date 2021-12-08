@@ -243,7 +243,7 @@ export class Page$Cycle {
         console.log('blur', event);
         if (this.isFocus == true) {
             this.isFocus = false;
-            this.kit.explorer.blur();
+            this.kit.explorer.onClearAnchorAndSelection();
             this.emit(PageDirective.blur, event);
         }
     }

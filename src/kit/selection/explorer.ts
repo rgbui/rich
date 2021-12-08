@@ -92,13 +92,6 @@ export class SelectionExplorer extends Events {
     onFocusBlockAtAnchor(block: Block, at?: number) {
         this.onFocusAnchor(block.createAnchor(at));
     }
-    onClearAnchor() {
-        delete this.start;
-        delete this.end;
-        delete this.activeAnchor;
-        this.currentSelectedBlocks = [];
-        this.renderSelection();
-    }
     onShiftFocusAnchor(anchor: Anchor) {
         if (this.end) anchor.acceptView(this.end);
         this.end = anchor;
@@ -162,11 +155,7 @@ export class SelectionExplorer extends Events {
      * 选区失焦时做什么
      */
     blur() {
-        var currentEls = Array.from(this.kit.page.root.querySelectorAll(".shy-block-selected"));
-        currentEls.each(el => {
-            el.classList.remove('shy-block-selected');
-        });
-        this.onCancelSelection();
+        
     }
     /**
      * 获取选区的起始位置

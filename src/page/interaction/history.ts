@@ -76,7 +76,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     }, async (operator) => {
         var block = page.find(x => x.id == operator.data.data.id);
         if (block) {
-            if (page.kit.explorer.selectedBlocks.exists(block)) page.kit.explorer.onClearAnchor();
+            if (page.kit.explorer.selectedBlocks.exists(block)) page.kit.explorer.onClearAnchorAndSelection()
             await block.delete()
         }
     });

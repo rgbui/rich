@@ -1,7 +1,6 @@
 import { useTextTool } from "../../../extensions/text.tool";
 import { Block } from "../../block";
 import { BlockUrlConstant } from "../../block/constant";
-import { TextContent } from "../../block/element/text";
 import { BlockRenderRange } from "../../block/enum";
 import { BlockCssName } from "../../block/pattern/css";
 import { KeyboardCode } from "../../common/keys";
@@ -19,6 +18,16 @@ export class SelectionExplorer$Events {
         if (this.start && this.end) {
             this.end.dispose();
             this.end = null;
+        }
+        this.renderSelection();
+    }
+    onClearAnchorAndSelection(this: SelectionExplorer) {
+        if (this.currentSelectedBlocks.length > 0)
+            this.currentSelectedBlocks = [];
+        if (this.start) { this.start.dispose(); this.start = null }
+        if (this.end) { this.end.dispose(); this.end = null; }
+        if (this.activeAnchor) {
+            this.activeAnchor.dispose(); this.activeAnchor = null;
         }
         this.renderSelection();
     }
