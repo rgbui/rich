@@ -91,8 +91,8 @@ interface EventBus {
 
     on(directive: Directive.OpenPageItem, fn: (item: any) => void): void;
     fire(directive: Directive.OpenPageItem, item: any): void;
-    on(directive: Directive.openPageLink, fn: (pageId:string,sn:number) => void): void;
-    fire(directive: Directive.openPageLink, pageId:string,sn:number): void;
+    on(directive: Directive.openPageLink, fn: (item: any) => void): void;
+    fire(directive: Directive.openPageLink, item: any): void;
 
     on(directive: Directive.UpdateUser, fn: (user: Record<string, any>) => Promise<void>): void;
     fireAsync(directive: Directive.UpdateUser, user: Record<string, any>): Promise<void>;

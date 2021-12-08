@@ -34,7 +34,7 @@ export class Link extends Block {
     }
     async openPage(event: React.MouseEvent) {
         event.preventDefault();
-        messageChannel.fire(Directive.openPageLink, { pageId: this.pageId, sn: this.sn });
+        messageChannel.fire(Directive.openPageLink, { id: this.pageId, sn: this.sn });
     }
 }
 @view('/link')
@@ -67,7 +67,7 @@ export class LinkView extends BlockView<Link>{
     render() {
         return <div className='sy-block-link'>
             {this.block.icon && <a href={'https://shy.live/page/' + this.block.sn} onClick={e => this.block.openPage(e)}>
-                <Icon size={24} icon={this.block.icon}></Icon>
+                <i><Icon size={18} icon={this.block.icon}></Icon></i>
                 <span>{this.block.text}</span>
             </a>}
         </div>
