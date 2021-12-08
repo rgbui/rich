@@ -23,6 +23,8 @@ export enum ActionDirective {
     onKeyTab = 117,
     onCreateTailTextSpan = 118,
     onBackTurn = 119,
+    onBatchDragBlockDatas = 120,
+
     onSchemaCreateField = 200,
     onSchemaDeleteField = 201,
     onSchemaTurnField = 202,

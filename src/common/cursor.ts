@@ -16,7 +16,7 @@ class Cursor {
         }
         return this._el;
     }
-    private time:any;
+    private time: any;
     show(cursor: CursorName) {
         if (this.time) {
             clearTimeout(this.time);
@@ -26,7 +26,7 @@ class Cursor {
         this.el.style.cursor = cursor;
         this.time = setTimeout(() => {
             this.hide();
-        }, 2e3);
+        }, 1e4);
     }
     hide() {
         this.el.style.display = 'none';
