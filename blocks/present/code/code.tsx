@@ -6,6 +6,7 @@ import "../../../node_modules/prismjs/themes/prism.css";
 import { TextArea } from "../../../src/block/view/appear";
 import { Block } from "../../../src/block";
 import { BlockDisplay } from "../../../src/block/enum";
+import ChevronDown from "../../../src/assert/svg/chevronDown.svg";
 import "./style.less";
 /**
  * prism url : https://prismjs.com/#examples
@@ -21,13 +22,21 @@ export class TextCode extends Block {
         const html = Prism.highlight(this.content, Prism.languages[this.language], this.language);
         return html;
     }
+    get isSupportTextStyle() {
+        return false;
+    }
+    get isEnterInputNewLine() {
+        return false;
+    }
 }
 @view('/code')
 export class TextCodeView extends BlockView<TextCode>{
     render() {
         return <div className='sy-block-code' >
             <div className='sy-block-code-head'>
-
+                <div className='sy-block-code-head-lang'>
+                    <span>{this.block.language}</span><ChevronDown></ChevronDown>
+                </div>
             </div>
             <div className='sy-block-code-content'>
                 <TextArea rf={e => this.block.elementAppear({ el: e })} placeholder={'键入代码'} html={this.block.htmlContent}></TextArea>
