@@ -45,28 +45,32 @@ export class TextInput$Write {
                     event.preventDefault();
                     return this.kit.explorer.onCursorMove(event.key);
                 case KeyboardCode.Enter:
-                    if (!this.page.keyboardPlate.isShift() && this.explorer.activeAnchor.isText && this.explorer.activeAnchor.isEnd) {
-                        await ForceStore();
-                        await this.explorer.onEnter();
-                        event.preventDefault();
-                        return
-                    }
-                    else if (!this.page.keyboardPlate.isShift() && this.explorer.activeAnchor.isText) {
+                    var anchor = this.explorer.activeAnchor;
+                    if (anchor.block.isEnterInputNewLine) {
+                        if (!this.page.keyboardPlate.isShift() && this.explorer.activeAnchor.isText && this.explorer.activeAnchor.isEnd) {
+                            await ForceStore();
+                            await this.explorer.onEnter();
+                            event.preventDefault();
+                            return
+                        }
+                        else if (!this.page.keyboardPlate.isShift() && this.explorer.activeAnchor.isText) {
 
-                        await ForceStore();
-                        /**
-                         * 对于支持行的block，将会被截断
-                         */
-                        await this.explorer.onEnterCutOff();
-                        event.preventDefault();
-                        return
+                            await ForceStore();
+                            /**
+                             * 对于支持行的block，将会被截断
+                             */
+                            await this.explorer.onEnterCutOff();
+                            event.preventDefault();
+                            return
+                        }
+                        else if (this.explorer.activeAnchor.isSolid) {
+                            await ForceStore();
+                            await this.explorer.onEnter();
+                            event.preventDefault();
+                            return
+                        }
                     }
-                    else if (this.explorer.activeAnchor.isSolid) {
-                        await ForceStore();
-                        await this.explorer.onEnter();
-                        event.preventDefault();
-                        return
-                    }
+
                     break;
                 case KeyboardCode.Delete:
                 case KeyboardCode.Backspace:

@@ -253,6 +253,9 @@ export abstract class Block extends Events {
         }
         return false;
     }
+    get isEnterInputNewLine() {
+        return true;
+    }
     /**
      * 回退时，最后一步是否转换成普通文本
      */
