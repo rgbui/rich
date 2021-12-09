@@ -82,12 +82,17 @@ export class SelectionExplorer extends Events {
         }
     }
     onFocusAnchor(anchor: Anchor) {
-        if (this.end) { this.end.dispose(); delete this.end; }
-        if (this.start) anchor.acceptView(this.start);
-        this.start = anchor;
-        this.setActiveAnchor(this.start);
-        this.currentSelectedBlocks = [];
-        this.renderSelection();
+        if (!anchor) {
+            this.onClearAnchorAndSelection();
+        }
+        else {
+            if (this.end) { this.end.dispose(); delete this.end; }
+            if (this.start) anchor.acceptView(this.start);
+            this.start = anchor;
+            this.setActiveAnchor(this.start);
+            this.currentSelectedBlocks = [];
+            this.renderSelection();
+        }
     }
     onFocusBlockAtAnchor(block: Block, at?: number) {
         this.onFocusAnchor(block.createAnchor(at));
@@ -155,7 +160,7 @@ export class SelectionExplorer extends Events {
      * 选区失焦时做什么
      */
     blur() {
-        
+
     }
     /**
      * 获取选区的起始位置
