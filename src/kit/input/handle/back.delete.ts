@@ -1,5 +1,4 @@
 import { TextInput } from "..";
-import { BlockUrlConstant } from "../../../block/constant";
 import { dom } from "../../../common/dom";
 import { KeyboardCode } from "../../../common/keys";
 import { Point } from "../../../common/point";

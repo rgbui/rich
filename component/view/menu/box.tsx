@@ -11,10 +11,9 @@ export class MenuBox extends React.Component<{ items: MenuItemType[], deep: numb
             left: this.point.x,
             zIndex: popoverLayer.zoom(LayerWield.menuBox),
             overflowY: this.props.items.exists(g => g.childs && g.childs.length > 0) ? "visible" : "auto"
-        }}>
-            {this.props.items.map((item, index) => {
-                return <MenuItem key={index} item={item} deep={this.props.deep + 1} select={this.props.select} ></MenuItem>
-            })}
+        }}>{this.props.items.map((item, index) => {
+            return <MenuItem key={index} item={item} deep={this.props.deep + 1} select={this.props.select} ></MenuItem>
+        })}
         </div>
     }
     el: HTMLElement;
