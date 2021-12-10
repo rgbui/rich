@@ -24,7 +24,7 @@ export class ShyDate extends Block {
     timeFormate: string;
     @prop()
     remind: number;
-    display=BlockDisplay.inline;
+    display = BlockDisplay.inline;
     async openDate(event: React.MouseEvent) {
 
     }
