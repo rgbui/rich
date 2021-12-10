@@ -10,7 +10,7 @@ import "./media/embed";
 import "./media/file";
 import "./media/video";
 import './media/audio';
-import "./present/katex";
+import "./present/katex/katex";
 import "./present/bookmark";
 import "./form/todo";
 import "./form/measure";
