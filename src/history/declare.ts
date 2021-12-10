@@ -24,6 +24,7 @@ export enum ActionDirective {
     onCreateTailTextSpan = 118,
     onBackTurn = 119,
     onBatchDragBlockDatas = 120,
+    onButtonTemplateCreateInstance=121,
 
     onSchemaCreateField = 200,
     onSchemaDeleteField = 201,
