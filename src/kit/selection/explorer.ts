@@ -29,12 +29,8 @@ export class SelectionExplorer extends Events {
         emptyEles.each(el => {
             el.classList.remove('shy-text-empty');
         })
-        if (!(this.activeAnchor?.equal(anchor))) {
-            if (this.activeAnchor) {
-                this.page.onBlurAnchor(this.activeAnchor);
-            }
-        }
-        else return
+        if (!(this.activeAnchor?.equal(anchor)) && this.activeAnchor)
+            this.page.onBlurAnchor(this.activeAnchor);
         this.activeAnchor = anchor;
     }
     renderSelection() {
@@ -83,6 +79,7 @@ export class SelectionExplorer extends Events {
     }
     onFocusAnchor(anchor: Anchor) {
         if (!anchor) {
+            console.trace(anchor);
             this.onClearAnchorAndSelection();
         }
         else {
@@ -155,12 +152,6 @@ export class SelectionExplorer extends Events {
     }
     get hasAnchor() {
         return this.start ? true : false;
-    }
-    /**
-     * 选区失焦时做什么
-     */
-    blur() {
-
     }
     /**
      * 获取选区的起始位置
