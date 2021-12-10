@@ -1,4 +1,4 @@
-import { useTextTool } from "../../../extensions/text.tool";
+import { forceCloseTextTool, useTextTool } from "../../../extensions/text.tool";
 import { Block } from "../../block";
 import { BlockUrlConstant } from "../../block/constant";
 import { BlockRenderRange } from "../../block/enum";
@@ -35,6 +35,7 @@ export class SelectionExplorer$Events {
      * 删除选区
      */
     async onDeleteSelection(this: SelectionExplorer) {
+        forceCloseTextTool();
         await this.page.onAction(ActionDirective.onDeleteSelection, async () => {
             if (this.currentSelectedBlocks.length > 0) {
                 await this.currentSelectedBlocks.eachAsync(async block => {
@@ -43,7 +44,6 @@ export class SelectionExplorer$Events {
                 this.onCancelSelection();
             }
             else {
-                var newAnchor: { block: Block, at?: number } = { block: null };
                 var bs = this.selectedBlocks;
                 var start = this.start;
                 var end = this.end;
@@ -51,33 +51,40 @@ export class SelectionExplorer$Events {
                     start = this.end;
                     end = this.start;
                 }
+                var rowBlock = start.block.closest(x => x.isBlock);
+                var point = start.bound.leftMiddle;
                 await bs.eachAsync(async (block) => {
                     if (!block.isOnlyElementText) await block.delete();
                     if (block == start.block && block == end.block) {
                         var ae = block.firstElementAppear;
                         var text = block[ae.prop];
                         text = text.slice(0, start.at) + text.slice(end.at);
-                        block.updateProps({ [ae.prop]: text });
-                        newAnchor = { block: start.block, at: start.at };
+                        block.updateProps({ [ae.prop]: text }, BlockRenderRange.self);
+                        // newAnchor = { block: start.block, at: start.at };
                     }
                     else if (block == start.block) {
                         var ae = block.firstElementAppear;
                         var text = block[ae.prop];
                         text = text.slice(0, start.at);
-                        block.updateProps({ [ae.prop]: text });
-                        newAnchor = { block: start.block, at: start.at };
+                        block.updateProps({ [ae.prop]: text }, BlockRenderRange.self);
+                        // newAnchor = { block: start.block, at: start.at };
                     }
                     else if (block == end.block) {
                         var ae = block.firstElementAppear;
                         var text = block[ae.prop];
                         text = text.slice(end.at);
-                        block.updateProps({ [ae.prop]: text });
-                        newAnchor = { block: end.block, at: 0 };
+                        block.updateProps({ [ae.prop]: text }, BlockRenderRange.self);
+                        // newAnchor = { block: end.block, at: 0 };
                     }
                     else {
                         await block.delete();
                     }
                 });
+                this.onCancelSelection();
+                this.page.addUpdateEvent(async () => {
+                    var anchor = rowBlock.visibleAnchor(point);
+                    this.page.kit.explorer.onFocusAnchor(anchor);
+                })
             }
         })
     }
@@ -332,6 +339,7 @@ export class SelectionExplorer$Events {
         var rowBlock = this.selectedBlocks.first().closest(x => !x.isLine);
         if (!rowBlock.isSupportTextStyle) return;
         while (true) {
+            if (this.selectedBlocks.length == 0) break;
             var result = await useTextTool(this.getSelectionPoint(), {
                 block: rowBlock,
                 style: this.page.pickBlocksTextStyle(this.selectedBlocks)

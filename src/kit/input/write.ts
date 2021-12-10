@@ -70,7 +70,6 @@ export class TextInput$Write {
                             return
                         }
                     }
-
                     break;
                 case KeyboardCode.Delete:
                 case KeyboardCode.Backspace:
