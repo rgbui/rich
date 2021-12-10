@@ -1,228 +1,229 @@
+import lodash from 'lodash';
 import Prism from 'prismjs';
 export async function loadPrismLang(lang: string) {
-    if (Prism.languages[lang.toLowerCase()]) return;
+    if (Prism.languages[lang]) return 'exists';
     switch (lang) {
-        case 'ABAP':
-            await import('prismjs/components/prism-abap')
+        case 'ABAP'.toLowerCase():
+            return await import('prismjs/components/prism-abap')
             break;
-        case 'Arduino':
-            await import('prismjs/components/prism-arduino')
+        case 'Arduino'.toLowerCase():
+            return await import('prismjs/components/prism-arduino')
             break;
-        case 'Bash':
-            await import('prismjs/components/prism-bash')
+        case 'Bash'.toLowerCase():
+            return await import('prismjs/components/prism-bash')
             break;
-        case 'BASIC':
-            await import('prismjs/components/prism-basic')
+        case 'BASIC'.toLowerCase():
+            return await import('prismjs/components/prism-basic')
             break;
-        case 'C':
-            await import('prismjs/components/prism-c')
+        case 'C'.toLowerCase():
+            return await import('prismjs/components/prism-c')
             break;
-        case 'Clojure':
-            await import('prismjs/components/prism-clojure')
+        case 'Clojure'.toLowerCase():
+            return await import('prismjs/components/prism-clojure')
             break;
-        case 'CoffeeScript':
-            await import('prismjs/components/prism-coffeescript')
+        case 'CoffeeScript'.toLowerCase():
+            return await import('prismjs/components/prism-coffeescript')
             break;
-        case 'C++':
-            await import('prismjs/components/prism-cpp')
+        case 'clike'.toLowerCase():
+            return await import('prismjs/components/prism-cpp')
             break;
-        case 'C#':
-            await import('prismjs/components/prism-csharp')
+        case 'csharp'.toLowerCase():
+            return await import('prismjs/components/prism-csharp')
             break;
-        case 'CSS':
-            await import('prismjs/components/prism-css')
+        case 'CSS'.toLowerCase():
+            return await import('prismjs/components/prism-css')
             break;
-        case 'Dart':
-            await import('prismjs/components/prism-dart')
+        case 'Dart'.toLowerCase():
+            return await import('prismjs/components/prism-dart')
             break;
-        case 'Diff':
-            await import('prismjs/components/prism-diff')
+        case 'Diff'.toLowerCase():
+            return await import('prismjs/components/prism-diff')
             break;
-        case 'Docker':
-            await import('prismjs/components/prism-docker')
+        case 'Docker'.toLowerCase():
+            return await import('prismjs/components/prism-docker')
             break;
-        case 'Elixir':
-            await import('prismjs/components/prism-elixir')
+        case 'Elixir'.toLowerCase():
+            return await import('prismjs/components/prism-elixir')
             break;
-        case 'Elm':
-            await import('prismjs/components/prism-elm')
+        case 'Elm'.toLowerCase():
+            return await import('prismjs/components/prism-elm')
             break;
-        case 'Erlang':
-            await import('prismjs/components/prism-erlang')
+        case 'Erlang'.toLowerCase():
+            return await import('prismjs/components/prism-erlang')
             break;
-        case 'Flow':
-            await import('prismjs/components/prism-flow')
+        case 'Flow'.toLowerCase():
+            return await import('prismjs/components/prism-flow')
             break;
-        case 'Fortran':
-            await import('prismjs/components/prism-fortran')
+        case 'Fortran'.toLowerCase():
+            return await import('prismjs/components/prism-fortran')
             break;
-        case 'F#':
-            await import('prismjs/components/prism-fsharp')
+        case 'fsharp'.toLowerCase():
+            return await import('prismjs/components/prism-fsharp')
             break;
-        case 'Gherkin':
-            await import('prismjs/components/prism-gherkin')
+        case 'Gherkin'.toLowerCase():
+            return await import('prismjs/components/prism-gherkin')
             break;
-        case 'GLSL':
-            await import('prismjs/components/prism-glsl')
+        case 'GLSL'.toLowerCase():
+            return await import('prismjs/components/prism-glsl')
             break;
-        case 'Go':
-            await import('prismjs/components/prism-go')
+        case 'Go'.toLowerCase():
+            return await import('prismjs/components/prism-go')
             break;
-        case 'GraphQL':
-            await import('prismjs/components/prism-graphql')
+        case 'GraphQL'.toLowerCase():
+            return await import('prismjs/components/prism-graphql')
             break;
-        case 'Groovy':
-            await import('prismjs/components/prism-groovy')
+        case 'Groovy'.toLowerCase():
+            return await import('prismjs/components/prism-groovy')
             break;
-        case 'Haskell':
-            await import('prismjs/components/prism-haskell')
+        case 'Haskell'.toLowerCase():
+            return await import('prismjs/components/prism-haskell')
             break;
-        // case 'HTML':
+        // case 'HTML'.toLowerCase():
         //     await import('prismjs/components/prism-html')
         //     break;
-        case 'Java':
-            await import('prismjs/components/prism-java')
+        case 'Java'.toLowerCase():
+            return await import('prismjs/components/prism-java')
             break;
-        case 'JavaScript':
-            await import('prismjs/components/prism-javascript')
+        case 'JavaScript'.toLowerCase():
+            return await import('prismjs/components/prism-javascript')
             break;
-        case 'JSON':
-            await import('prismjs/components/prism-json')
+        case 'JSON'.toLowerCase():
+            return await import('prismjs/components/prism-json')
             break;
-        case 'Julia':
-            await import('prismjs/components/prism-julia')
+        case 'Julia'.toLowerCase():
+            return await import('prismjs/components/prism-julia')
             break;
-        case 'Kotlin':
-            await import('prismjs/components/prism-kotlin')
+        case 'Kotlin'.toLowerCase():
+            return await import('prismjs/components/prism-kotlin')
             break;
-        case 'LaTeX':
-            await import('prismjs/components/prism-latex')
+        case 'LaTeX'.toLowerCase():
+            return await import('prismjs/components/prism-latex')
             break;
-        case 'Less':
-            await import('prismjs/components/prism-less')
+        case 'Less'.toLowerCase():
+            return await import('prismjs/components/prism-less')
             break;
-        case 'Lisp':
-            await import('prismjs/components/prism-lisp')
+        case 'Lisp'.toLowerCase():
+            return await import('prismjs/components/prism-lisp')
             break;
-        case 'LiveScript':
-            await import('prismjs/components/prism-livescript')
+        case 'LiveScript'.toLowerCase():
+            return await import('prismjs/components/prism-livescript')
             break;
-        case 'Lua':
-            await import('prismjs/components/prism-lua')
+        case 'Lua'.toLowerCase():
+            return await import('prismjs/components/prism-lua')
             break;
-        case 'Makefile':
-            await import('prismjs/components/prism-makefile')
+        case 'Makefile'.toLowerCase():
+            return await import('prismjs/components/prism-makefile')
             break;
-        case 'Markdown':
-            await import('prismjs/components/prism-markdown')
+        case 'Markdown'.toLowerCase():
+            return await import('prismjs/components/prism-markdown')
             break;
-        case 'Markup':
-            await import('prismjs/components/prism-markup')
+        case 'Markup'.toLowerCase():
+            return await import('prismjs/components/prism-markup')
             break;
-        case 'MATLAB':
-            await import('prismjs/components/prism-matlab')
+        case 'MATLAB'.toLowerCase():
+            return await import('prismjs/components/prism-matlab')
             break;
-        // case 'Mermaid':
+        // case 'Mermaid'.toLowerCase():
         //     await import('prismjs/components/prism-mermaid')
         //     break;
-        case 'Nix':
-            await import('prismjs/components/prism-nix')
+        case 'Nix'.toLowerCase():
+            return await import('prismjs/components/prism-nix')
             break;
-        case 'Objective-C':
-            await import('prismjs/components/prism-objectivec')
+        case 'objc'.toLowerCase():
+            return await import('prismjs/components/prism-objectivec')
             break;
-        case 'OCaml':
-            await import('prismjs/components/prism-ocaml')
+        case 'OCaml'.toLowerCase():
+            return await import('prismjs/components/prism-ocaml')
             break;
-        case 'Pascal':
-            await import('prismjs/components/prism-pascal')
+        case 'Pascal'.toLowerCase():
+            return await import('prismjs/components/prism-pascal')
             break;
-        case 'Perl':
-            await import('prismjs/components/prism-perl')
+        case 'Perl'.toLowerCase():
+            return await import('prismjs/components/prism-perl')
             break;
-        case 'PHP':
-            await import('prismjs/components/prism-php')
+        case 'PHP'.toLowerCase():
+            return await import('prismjs/components/prism-php')
             break;
-        // case 'Plain':
+        // case 'Plain'.toLowerCase():
         //     await import('prismjs/components/prism-plain')
         //     break;
-        // case 'Text':
+        // case 'Text'.toLowerCase():
         //     await import('prismjs/components/prism-text')
         //     break;
-        case 'PowerShell':
-            await import('prismjs/components/prism-powershell')
+        case 'PowerShell'.toLowerCase():
+            return await import('prismjs/components/prism-powershell')
             break;
-        case 'Prolog':
-            await import('prismjs/components/prism-prolog')
+        case 'Prolog'.toLowerCase():
+            return await import('prismjs/components/prism-prolog')
             break;
-        case 'Protobuf':
-            await import('prismjs/components/prism-protobuf')
+        case 'Protobuf'.toLowerCase():
+            return await import('prismjs/components/prism-protobuf')
             break;
-        case 'Python':
-            await import('prismjs/components/prism-python')
+        case 'Python'.toLowerCase():
+            return await import('prismjs/components/prism-python')
             break;
-        case 'R':
-            await import('prismjs/components/prism-r')
+        case 'R'.toLowerCase():
+            return await import('prismjs/components/prism-r')
             break;
-        case 'Reason':
-            await import('prismjs/components/prism-reason')
+        case 'Reason'.toLowerCase():
+            return await import('prismjs/components/prism-reason')
             break;
-        case 'Ruby':
-            await import('prismjs/components/prism-ruby')
+        case 'Ruby'.toLowerCase():
+            return await import('prismjs/components/prism-ruby')
             break;
-        case 'Rust':
-            await import('prismjs/components/prism-rust')
+        case 'Rust'.toLowerCase():
+            return await import('prismjs/components/prism-rust')
             break;
-        case 'Sass':
-            await import('prismjs/components/prism-sass')
+        case 'Sass'.toLowerCase():
+            return await import('prismjs/components/prism-sass')
             break;
-        case 'Scala':
-            await import('prismjs/components/prism-scala')
+        case 'Scala'.toLowerCase():
+            return await import('prismjs/components/prism-scala')
             break;
-        case 'Scheme':
-            await import('prismjs/components/prism-scheme')
+        case 'Scheme'.toLowerCase():
+            return await import('prismjs/components/prism-scheme')
             break;
-        case 'Scss':
-            await import('prismjs/components/prism-scss')
+        case 'Scss'.toLowerCase():
+            return await import('prismjs/components/prism-scss')
             break;
-        // case 'Shell':
+        // case 'Shell'.toLowerCase():
         //     await import('prismjs/components/prism-shell')
         //     break;
-        case 'Solidity':
-            await import('prismjs/components/prism-solidity')
+        case 'Solidity'.toLowerCase():
+            return await import('prismjs/components/prism-solidity')
             break;
-        case 'SQL':
-            await import('prismjs/components/prism-sql')
+        case 'SQL'.toLowerCase():
+            return await import('prismjs/components/prism-sql')
             break;
-        case 'Swift':
-            await import('prismjs/components/prism-swift')
+        case 'Swift'.toLowerCase():
+            return await import('prismjs/components/prism-swift')
             break;
-        case 'TypeScript':
-            await import('prismjs/components/prism-typescript')
+        case 'TypeScript'.toLowerCase():
+            return await import('prismjs/components/prism-typescript')
             break;
-        case 'VB.Net':
-            await import('prismjs/components/prism-vbnet')
+        case 'vbnet'.toLowerCase():
+            return await import('prismjs/components/prism-vbnet')
             break;
-        case 'Verilog':
-            await import('prismjs/components/prism-verilog')
+        case 'Verilog'.toLowerCase():
+            return await import('prismjs/components/prism-verilog')
             break;
-        case 'VHDL':
-            await import('prismjs/components/prism-vhdl')
+        case 'VHDL'.toLowerCase():
+            return await import('prismjs/components/prism-vhdl')
             break;
-        case 'Visual':
-            await import('prismjs/components/prism-visual-basic')
+        case 'visual-basic'.toLowerCase():
+            return await import('prismjs/components/prism-visual-basic')
             break;
-        case 'Basic':
-            await import('prismjs/components/prism-basic')
+        case 'Basic'.toLowerCase():
+            return await import('prismjs/components/prism-basic')
             break;
-        case 'WebAssembly':
-            await import('prismjs/components/prism-wasm')
+        case 'wasm'.toLowerCase():
+            return await import('prismjs/components/prism-wasm')
             break;
-        // case 'XML':
+        // case 'XML'.toLowerCase():
         //     await import('prismjs/components/prism-xml')
         //     break;
-        case 'YAML':
-            await import('prismjs/components/prism-yaml')
+        case 'YAML'.toLowerCase():
+            return await import('prismjs/components/prism-yaml')
             break;
     }
 }
@@ -233,16 +234,81 @@ export function PrismLabelToLang(label: string) {
     else if (n == 'WebAssembly'.toLowerCase()) return 'wasm'
     else if (n == 'Visual'.toLowerCase()) return 'visual-basic'
     else if (n == 'Objective-C'.toLowerCase()) return 'object-c';
+    else if (n == 'c') return 'clike';
     else return n;
 }
-export var PrismLangLabels = ["ABAP",
-    "Arduino",
-    "Bash",
-    "BASIC", "C", "Clojure", "CoffeeScript", "C++", "C#", "CSS", "Dart", "Diff", "Docker", "Elixir", "Elm", "Erlang", "Flow", "Fortran", "F#", "Gherkin", "GLSL", "Go", "GraphQL", "Groovy", "Haskell", "HTML", "Java", "JavaScript", "JSON", "Julia", "Kotlin", "LaTeX", "Less", "Lisp", "LiveScript", "Lua", "Makefile", "Markdown", "Markup", "MATLAB", "Nix", "Objective-C", "OCaml", "Pascal", "Perl", "PHP",
-    //"Plain", "Text",
-    "PowerShell", "Prolog", "Protobuf",
-    "Python", "R",
-    "Reason", "Ruby",
-    "Rust", "Sass",
-    "Scala", "Scheme",
-    "Scss", "Shell", "Solidity", "SQL", "Swift", "TypeScript", "VB.Net", "Verilog", "VHDL", "Visual", "Basic", "WebAssembly", "XML", "YAML"]
+export var PrismLangLabels = [
+    { "label": "ABAP", "language": "abap" },
+    { "label": "Arduino", "language": "arduino" },
+    { "label": "Bash", "language": "bash" },
+    { "label": "BASIC", "language": "basic" },
+    { "label": "C", "language": "c", sort: 30 },
+    { "label": "Clojure", "language": "clojure" },
+    { "label": "CoffeeScript", "language": "coffeescript" },
+    { "label": "C++", "language": "clike", sort: 31 },
+    { "label": "C#", "language": "csharp", sort: 9 },
+    { "label": "CSS", "language": "css", sort: 18 },
+    { "label": "Dart", "language": "dart", sort: 15 },
+    { "label": "Diff", "language": "diff" },
+    { "label": "Docker", "language": "docker" },
+    { "label": "Elixir", "language": "elixir" },
+    { "label": "Elm", "language": "elm" },
+    { "label": "Erlang", "language": "erlang" },
+    { "label": "Flow", "language": "flow" },
+
+    { "label": "Fortran", "language": "fortran" },
+    { "label": "F#", "language": "fsharp" ,sort:32},
+    { "label": "Gherkin", "language": "gherkin" },
+    { "label": "GLSL", "language": "glsl" },
+    { "label": "Go", "language": "go", sort: 13 },
+    { "label": "GraphQL", "language": "graphql" },
+    { "label": "Groovy", "language": "groovy" },
+    { "label": "Haskell", "language": "haskell" },
+    { "label": "HTML", "language": "html", sort: 8 },
+    { "label": "Java", "language": "java", sort: 2 },
+    { "label": "JavaScript", "language": "javascript",sort:5 },
+    { "label": "JSON", "language": "json", sort: 19 },
+    { "label": "Julia", "language": "julia" ,sort:24},
+    { "label": "Kotlin", "language": "kotlin", sort: 15 },
+    { "label": "LaTeX", "language": "latex" },
+    { "label": "Less", "language": "less",sort:26 },
+    { "label": "Lisp", "language": "lisp" },
+    { "label": "LiveScript", "language": "livescript" },
+    { "label": "Lua", "language": "lua" },
+    { "label": "Makefile", "language": "makefile" },
+    { "label": "Markdown", "language": "markdown", sort: 12 },
+    { "label": "Markup", "language": "markup" },
+    { "label": "MATLAB", "language": "matlab" },
+    { "label": "Nix", "language": "nix" },
+    // { "label": "Objective-C", "language": "objc" },
+    { "label": "OCaml", "language": "ocaml" },
+    { "label": "Pascal", "language": "pascal" },
+    { "label": "Perl", "language": "perl" },
+    { "label": "PHP", "language": "php", sort: 22 },
+    { "label": "PowerShell", "language": "powershell", sort: 25 },
+    { "label": "Prolog", "language": "prolog" },
+    { "label": "Protobuf", "language": "protobuf", sort: 23 },
+    { "label": "Python", "language": "python", sort: 6 },
+    { "label": "R", "language": "r", sort: 27 },
+    { "label": "Reason", "language": "reason" },
+    { "label": "Ruby", "language": "ruby" },
+    { "label": "Rust", "language": "rust" },
+    { "label": "Sass", "language": "sass" },
+    { "label": "Scala", "language": "scala" },
+    { "label": "Scheme", "language": "scheme" },
+    { "label": "Scss", "language": "scss" },
+    { "label": "Shell", "language": "shell",sort:29 },
+    { "label": "Solidity", "language": "solidity" },
+    { "label": "SQL", "language": "sql" ,sort:23},
+    { "label": "Swift", "language": "swift" ,sort:16},
+    { "label": "TypeScript", "language": "typescript", sort: 1 },
+    { "label": "VB.Net", "language": "vbnet" },
+    { "label": "Verilog", "language": "verilog" },
+    { "label": "VHDL", "language": "vhdl" },
+    { "label": "Visual", "language": "visual-basic" },
+    { "label": "Basic", "language": "basic" },
+    { "label": "WebAssembly", "language": "wasm" },
+    { "label": "XML", "language": "xml", sort: 20 },
+    { "label": "YAML", "language": "yaml", sort: 21 }
+];
+PrismLangLabels = lodash.sortBy(PrismLangLabels, 'sort');

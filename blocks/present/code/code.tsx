@@ -10,7 +10,7 @@ import ChevronDown from "../../../src/assert/svg/chevronDown.svg";
 import "./style.less";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { Rect } from "../../../src/common/point";
-import { loadPrismLang, PrismLangLabels } from "./lang";
+import { loadPrismLang, PrismLabelToLang, PrismLangLabels } from "./lang";
 /**
  * prism url : https://prismjs.com/#examples
  * prism babel plug :https://www.npmjs.com/package/babel-plugin-prismjs
@@ -21,14 +21,6 @@ export class TextCode extends Block {
     display = BlockDisplay.block;
     @prop()
     language: string = 'javascript';
-    get htmlContent() {
-        console.log(Object.keys(Prism.languages));
-        const html = Prism.highlight(this.content,
-            Prism.languages[this.language],
-            this.language
-        );
-        return html;
-    }
     get isSupportTextStyle() {
         return false;
     }
@@ -40,11 +32,21 @@ export class TextCode extends Block {
         this.renderCode();
     }
     async renderCode() {
-        this.htmlCode = Prism.highlight(this.content,
-            Prism.languages[this.language],
-            this.language
-        );
-        this.view.forceUpdate();
+        var name = this.language.toLowerCase();
+        try {
+           var loadResult= await loadPrismLang(name);
+           console.log(loadResult);
+            var html = Prism.highlight(this.content,
+                Prism.languages[name],
+                name
+            );
+            this.htmlCode = html;
+            this.view.forceUpdate();
+        }
+        catch (ex) {
+            console.log(ex);
+            console.log(name, this.content, Prism.languages[name]);
+        }
     }
 }
 @view('/code')
@@ -53,29 +55,36 @@ export class TextCodeView extends BlockView<TextCode>{
         var menuItem = await useSelectMenuItem({ roundArea: Rect.fromEle(e.currentTarget as HTMLElement) },
             PrismLangLabels.map(l => {
                 return {
-                    text: l,
-                    name: l
+                    text: l.label,
+                    name: l.language
                 }
             }));
         if (menuItem) {
-            var name = menuItem.item.name;
-            await loadPrismLang(name);
-            await this.block.onUpdateProps({ language: name }, BlockRenderRange.self);
-            await this.block.renderCode();
+            try {
+                var name = menuItem.item.name;
+                await this.block.onUpdateProps({ language: name });
+                await this.block.renderCode();
+            }
+            catch (ex) {
+                console.log(ex);
+                this.block.page.onError(ex);
+            }
         }
     }
     render() {
-        return <div className='sy-block-code' >
-            <div className='sy-block-code-head'>
-                <div className='sy-block-code-head-lang' onMouseDown={e => e.stopPropagation()} onMouseUp={e => this.changeLang(e)}>
-                    <span>{this.block.language}</span><ChevronDown></ChevronDown>
+        var label = PrismLangLabels.find(g => g.language == this.block.language)?.label|| 'unknow';
+        return <div className='sy-block-code'>
+            <div className='sy-block-code-box' >
+                <div className='sy-block-code-head'>
+                    <div className='sy-block-code-head-lang' onMouseDown={e => e.stopPropagation()} onMouseUp={e => this.changeLang(e)}>
+                        <span>{label}</span><ChevronDown></ChevronDown>
+                    </div>
                 </div>
-            </div>
-            <div className='sy-block-code-content'>
-                <TextArea rf={e => this.block.elementAppear({ el: e, prop: 'content' })}
-                    placeholder={'键入代码'}
-                    html={this.block.htmlCode}></TextArea>
-            </div>
-        </div>
+                <div className='sy-block-code-content'>
+                    <TextArea rf={e => this.block.elementAppear({ el: e, prop: 'content' })}
+                        placeholder={'键入代码'}
+                        html={this.block.htmlCode}></TextArea>
+                </div>
+            </div></div>
     }
 }
