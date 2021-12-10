@@ -40,11 +40,22 @@ export class Block$LifeCycle {
         for (let b in this.blocks) {
             json.blocks[b] = await this.blocks[b].asyncMap(async x => await x.cloneData());
         }
+        if (Array.isArray(this.__props)) {
+            this.__props.each(pro => {
+                if (Array.isArray(this[pro])) {
+                    json[pro] = this[pro].map(pr => {
+                        if (typeof pr?.get == 'function') return pr.get();
+                        else return util.clone(pr);
+                    })
+                }
+                else if (typeof this[pro] != 'undefined') {
+                    if (typeof this[pro]?.get == 'function')
+                        json[pro] = this[pro].get();
+                    else json[pro] = util.clone(this[pro]);
+                }
+            })
+        }
         return json;
-    }
-    async clone(this: Block) {
-        var data = await this.cloneData();
-        return await BlockFactory.createBlock(data.url, this.page, data, null);
     }
     /**
    * 实始加载，就是初始block时触发
