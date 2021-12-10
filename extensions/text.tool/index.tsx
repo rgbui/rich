@@ -243,9 +243,9 @@ export type textToolResult = { command: 'setStyle', styles: Record<BlockCssName,
     | { command: 'turn', item: MenuItemType<BlockDirective>, event: MouseEvent }
     | { command: "setProp", props: Record<string, any> }
     | false;
-
+var textTool: TextTool;
 export async function useTextTool(point: Point, options: { style: TextToolStyle, block: Block }) {
-    var textTool = await Singleton(TextTool);
+    textTool = await Singleton(TextTool);
     textTool.open(point, options);
     return new Promise((resolve: (result: textToolResult) => void, reject) => {
         textTool.only('setStyle', (styles) => {
@@ -261,4 +261,7 @@ export async function useTextTool(point: Point, options: { style: TextToolStyle,
             resolve(false);
         })
     })
+}
+export function forceCloseTextTool() {
+    textTool.close();
 }
