@@ -24,6 +24,18 @@ export class TextContent extends Block {
     get isTextContent() {
         return true;
     }
+    /**
+     * text块中有一些属性
+     * 可能需要传递的
+     */
+    get textContentAttributes() {
+        return {
+            link: this.link,
+            comment: this.comment,
+            mention: this.mention,
+            code: this.code
+        }
+    }
 }
 @view('/text')
 export class TextContentView extends BlockView<TextContent>{
