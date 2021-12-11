@@ -4,7 +4,6 @@ import { Input } from "../../component/view/input";
 import { Sp } from "../../i18n/view";
 import { LangID } from "../../i18n/declare";
 import { langProvider } from "../../i18n/provider";
-
 import "./style.less";
 
 export class OutsideUrl extends React.Component<{ url?: string, remark?: React.ReactNode, change: (url: string) => void }>{
