@@ -261,7 +261,7 @@ export class Block$Anchor {
    */
     async visibleDownCreateBlock(this: Block, url: string, data: Record<string, any> = {}) {
         var row = this.closest(x => x.isBlock);
-        return await this.page.createBlock(url, { ...data }, row.parent, row.at + 1, row.childKey);
+        return await this.page.createBlock(url, { ...data }, row.parent, row.at + 1, row.parent.childKey);
     }
     /**
      * 在当前的block的右侧创建一个新的block
