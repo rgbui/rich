@@ -7,6 +7,7 @@ import { LangID } from "../../../i18n/declare";
 import DragHandle from "../../assert/svg/DragHandle.svg";
 import { MouseDragger } from "../../common/dragger";
 import { ghostView } from "../../common/ghost";
+import { onAutoScroll, onAutoScrollStop } from "../../common/scroll";
 export class HandleView extends React.Component<{ handle: Handle }>{
     constructor(props) {
         super(props);
@@ -16,7 +17,6 @@ export class HandleView extends React.Component<{ handle: Handle }>{
         return this.props.handle;
     }
     el: HTMLElement;
-   
     private onMousedown(event: MouseEvent) {
         if (this.toolTip) this.toolTip.close();
         this.handle.isDown = true;
@@ -35,13 +35,16 @@ export class HandleView extends React.Component<{ handle: Handle }>{
                 event,
                 dis: 5,
                 moveStart(ev, data) {
+                    onAutoScrollStop();
                     self.handle.isDrag = true;
                     ghostView.load(self.handle.dragBlocks.map(b => b.contentEl), { point: Point.from(ev) })
                 },
                 moving(ev, data, isend) {
                     ghostView.move(Point.from(ev));
+                    onAutoScroll({ el: self.handle.kit.page.root, dis: 100, point: Point.from(ev) })
                 },
                 async moveEnd(ev, isMove, data) {
+                    onAutoScrollStop();
                     try {
                         if (self.handle.isDrag == true) await self.handle.onDropBlock()
                         else await self.handle.onClickBlock(ev);

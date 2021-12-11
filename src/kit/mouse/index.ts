@@ -2,6 +2,7 @@ import { Kit } from "..";
 import { Block } from "../../block";
 import { dom } from "../../common/dom";
 import { Point } from "../../common/point";
+import { onAutoScroll, onAutoScrollStop } from "../../common/scroll";
 import { TextEle } from "../../common/text.ele";
 import { Anchor } from "../selection/anchor";
 export class PageMouse {
@@ -25,13 +26,13 @@ export class PageMouse {
     private lastMouseupDate: number;
     private lastMouseupEvent: MouseEvent;
     onMousedown(event: MouseEvent) {
-        this.clearTime();
         var block = this.page.getBlockInMouseRegion(event);
         if (block?.isLine) block = block.closest(x => x.isBlock);
         this.downStartBlock = block;
         this.downEvent = event;
         this.downPoint = Point.from(event);
         this.isDown = true;
+        onAutoScrollStop();
         this.selector.setStart(this.downPoint)
         if (block && block.exists(g => g.isSupportAnchor, true)) {
             var point = Point.from(event);
@@ -66,7 +67,6 @@ export class PageMouse {
         if (!this.downAnchor) this.explorer.onCancelSelection();
     }
     onMousemove(event: MouseEvent) {
-        this.clearTime();
         this.moveEvent = event;
         if (this.isDown == true) {
             if (this.downPoint.remoteBy(Point.from(event), 5)) this.isMove = true;
@@ -96,9 +96,13 @@ export class PageMouse {
                     }
                     else this.selector.close();
                 }
-                this.scrollSelector(event, (fir, dis) => {
-                    if (fir) cacSelector(0)
-                    else if (fir == false && dis != 0) cacSelector(dis);
+                onAutoScroll({
+                    el: this.page.root,
+                    point: Point.from(event),
+                    callback(fir, dis) {
+                        if (fir) cacSelector(0)
+                        else if (fir == false && dis != 0) cacSelector(dis);
+                    }
                 })
             }
         }
@@ -111,45 +115,9 @@ export class PageMouse {
         }
         this.page.onHoverBlock(block);
     }
-    private scrollTime;
-    private scrollSelector(event: MouseEvent, callbackScroll: (fir: boolean, dis: number) => void) {
-        var fn = (fir: boolean) => {
-            if (fir == true) return callbackScroll(fir, 0);
-            var sr: number = 0;
-            var dis = 30;
-            var feelDis = 150;
-            var minBottom = Math.abs(event.clientY - window.innerHeight);
-            var scrollDiv: HTMLElement = dom(this.page.root).closest(x => { return dom(x as HTMLElement).style('overflowY') == 'auto' }) as any;
-            if (scrollDiv && minBottom < feelDis) {
-                var top = scrollDiv.scrollTop;
-                var dr = top + dis > scrollDiv.scrollHeight - scrollDiv.clientHeight ? scrollDiv.scrollHeight - scrollDiv.clientHeight - top : dis
-                scrollDiv.scrollTop = top + dr;
-                sr += dr;
-            }
-            var minTop = Math.abs(event.clientY - scrollDiv.getBoundingClientRect().top);
-            if (scrollDiv && minTop < feelDis) {
-                var top = scrollDiv.scrollTop;
-                var dr = top - dis > 0 ? dis : top;
-                scrollDiv.scrollTop = top - dr;
-                sr += 0 - dr;
-                console.log(sr);
-            }
-            callbackScroll(fir, sr);
-        }
-        fn(true);
-        this.scrollTime = setInterval(function () {
-            fn(false);
-        }, 50);
-    }
-    private clearTime() {
-        if (this.scrollTime) {
-            clearInterval(this.scrollTime);
-            this.scrollTime = null;
-        }
-    }
     async onMouseup(event: MouseEvent) {
-        this.clearTime();
         if (this.isDown) {
+            onAutoScrollStop();
             if (this.isMove) {
                 this.selector.close();
                 this.isMove = false;
