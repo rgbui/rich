@@ -102,7 +102,8 @@ export class Block$LifeCycle {
         }
         json.blocks = {};
         for (let b in this.blocks) {
-            json.blocks[b] = await this.blocks[b].asyncMap(async x => await x.get());
+            if (this.allBlockKeys.some(s => s == b))
+                json.blocks[b] = await this.blocks[b].asyncMap(async x => await x.get());
         }
         if (Array.isArray(this.__props)) {
             this.__props.each(pro => {

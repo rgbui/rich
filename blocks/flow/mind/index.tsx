@@ -11,6 +11,9 @@ import './style.less';
 @url('/flow/mind')
 export class FlowMind extends Block {
     blocks: { childs: Block[], subChilds: Block[] } = { childs: [], subChilds: [] };
+    get allBlockKeys(): string[] {
+        return ['childs', 'subChilds'];
+    }
     get isContinuouslyCreated() {
         return true
     }

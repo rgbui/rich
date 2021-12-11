@@ -15,6 +15,9 @@ export enum ListType {
 @url('/list')
 export class List extends Block {
     blocks: { childs: Block[], subChilds: Block[] } = { childs: [], subChilds: [] };
+    get allBlockKeys(): string[] {
+        return ['childs', 'subChilds'];
+    }
     @prop()
     listType: ListType = ListType.circle;
     @prop()

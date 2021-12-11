@@ -23,6 +23,10 @@ export class Page$Operator {
     async createBlock(this: Page, url: string, data: Record<string, any>, parent: Block, at?: number, childKey?: string) {
         var block = await BlockFactory.createBlock(url, this, data, parent);
         if (typeof childKey == 'undefined') childKey = 'childs';
+        if (!parent.allBlockKeys.some(s => s == childKey)) {
+            console.error(`${parent.url} not support childKey:${childKey}`);
+            childKey=parent.allBlockKeys[0];
+        }
         var bs = parent.blocks[childKey];
         if (!Array.isArray(bs)) parent.blocks[childKey] = bs = [];
         if (typeof at == 'undefined') at = bs.length;
@@ -39,6 +43,7 @@ export class Page$Operator {
             try {
                 await this.onAction(ActionDirective.onCreateTailTextSpan, async () => {
                     var lastBlock = this.findReverse(g => g.isBlock);
+                    console.log(lastBlock, lastBlock.at);
                     var newBlock: Block;
                     if (lastBlock && lastBlock.parent == this.views.last()) {
                         newBlock = await this.createBlock(BlockUrlConstant.TextSpan, {}, lastBlock.parent, lastBlock.at + 1);

@@ -98,6 +98,9 @@ export abstract class Block extends Events {
     get blockKeys() {
         return Object.keys(this.blocks);
     }
+    get allBlockKeys() {
+        return ['childs'];
+    }
     get at() {
         return this.parentBlocks.findIndex(g => g === this);
     }

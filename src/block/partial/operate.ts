@@ -131,6 +131,9 @@ export class Block$Operator {
     }
     async append(this: Block, block: Block, at?: number, childKey?: string) {
         if (typeof childKey == 'undefined') childKey = 'childs';
+        if (!this.allBlockKeys.some(s => s == childKey)) {
+            throw 'not append the block support subkey';
+        }
         var bs = this.blocks[childKey];
         if (typeof at == 'undefined') at = bs.length;
         if (block.parent && bs.exists(block) && block.at < at) {
@@ -150,6 +153,9 @@ export class Block$Operator {
     }
     async appendBlock(this: Block, blockData: Record<string, any>, at?: number, childKey?: string) {
         if (typeof childKey == 'undefined') childKey = 'childs';
+        if (!this.allBlockKeys.some(s => s == childKey)) {
+            throw 'not append the block support subkey';
+        }
         var bs = this.blocks[childKey];
         if (typeof at == 'undefined') at = bs.length;
         await this.page.createBlock(blockData.url, blockData, this, at, childKey);
@@ -173,6 +179,9 @@ export class Block$Operator {
     }
     async appendArrayBlockData(this: Block, blocks: Record<string, any>[], at?: number, childKey?: string) {
         if (typeof childKey == 'undefined') childKey = 'childs';
+        if (!this.allBlockKeys.some(s => s == childKey)) {
+            throw 'not append the block support subkey';
+        }
         var bs = this.blocks[childKey];
         if (typeof at == 'undefined') at = bs.length;
         var b;
