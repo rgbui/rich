@@ -8,6 +8,7 @@ class KatexInput extends EventsComponent {
     content: string;
     open(content: string) {
         this.content = content;
+        this.forceUpdate();
     }
     render() {
         var self = this;

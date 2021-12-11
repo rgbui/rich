@@ -17,13 +17,18 @@ export class Katex extends Block {
         });
         return html;
     }
+    opened: boolean = false;
     async open(event: React.MouseEvent) {
         event.stopPropagation();
+        this.opened = true;
         var old = this.content;
-        var newValue = await listenKatexInput({ roundArea: Rect.fromEle(event.target as HTMLElement) }, this.content, (data) => {
+        this.forceUpdate();
+        var newValue = await listenKatexInput({ direction: "bottom", align: 'center', roundArea: Rect.fromEle(this.el) }, this.content, (data) => {
             this.content = data;
             this.forceUpdate()
         });
+        this.opened = false;
+        this.forceUpdate();
         if (newValue) {
             this.onManualUpdateProps({ cotnent: old }, { content: newValue });
         }
@@ -32,8 +37,8 @@ export class Katex extends Block {
 @view('/katex')
 export class KatexView extends BlockView<Katex>{
     render() {
-        return <div className='sy-block-katex' style={this.block.visibleStyle}>
-            <div onMouseDown={e => this.block.open(e)} className='sy-block-katex-content' dangerouslySetInnerHTML={{ __html: this.block.htmlContent }}>
+        return <div className={'sy-block-katex' + (this.block.opened ? " sy-block-katex-opened" : "")} onMouseDown={e => this.block.open(e)} style={this.block.visibleStyle}>
+            <div className='sy-block-katex-content' dangerouslySetInnerHTML={{ __html: this.block.htmlContent }}>
             </div>
         </div>
     }
