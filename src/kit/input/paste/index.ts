@@ -10,7 +10,7 @@ export class TextInput$Paster {
         /**
          * 不支持文本样式，说明可以粘贴文本内容
          */
-        if (!anchor.block.isSupportTextStyle && text) {
+        if (this.kit.explorer.isOnlyAnchor && !anchor.block.isSupportTextStyle && text) {
             return;
         }
         if (files.length > 0) {
@@ -19,7 +19,11 @@ export class TextInput$Paster {
             await this.page.onPasterFiles(files);
         }
         else if (html) {
-            if (html.match(new RegExp('<[^>]+>' + text + '</[^>]+>'))) {
+            var regexText = text.replace(/[\(\)\\\.\[\]\*\?]/g, ($, $1) => {
+                return '\\' + $1
+            })
+            if (html.match(new RegExp('<[^>]+>' + regexText + '</[^>]+>'))) {
+                console.log('ggg');
                 return;
             }
             event.preventDefault();
