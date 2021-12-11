@@ -5,5 +5,6 @@ export enum BlockUrlConstant {
     Row = '/row',
     Col = '/col',
     Divider='/divider',
-    List='/list'
+    List='/list',
+    Head='/head'
 }

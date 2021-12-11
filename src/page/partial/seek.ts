@@ -438,4 +438,13 @@ export class Page$Seek {
             if (r) return r;
         }
     }
+    findAll(this:Page, predict: (block: Block) => boolean){
+          var bs:Block[]=[];
+          for (let i = 0; i < this.views.length; i++) {
+            var view = this.views[i];
+            var rs = view.findAll(predict, true);
+             bs.push(...rs);
+        }
+        return bs;
+    }
 }

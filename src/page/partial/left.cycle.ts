@@ -13,6 +13,7 @@ import { PageDirective } from "../directive";
 import { PageHistory } from "../interaction/history";
 import { PageKeys } from "../interaction/keys";
 import JSZip from 'jszip';
+import { BlockUrlConstant } from "../../block/constant";
 
 export class Page$Cycle {
     async init(this: Page) {
@@ -298,5 +299,17 @@ export class Page$Cycle {
         await rs.eachAsync(async r => {
             r.parentBlocks.remove(r);
         })
+    }
+    async getOutLines(this: Page) {
+        var outlines: { id: string, head: string, text: string }[] = [];
+        var bs = this.findAll(x => x.url == BlockUrlConstant.Head);
+        outlines = bs.map(b => {
+            return {
+                id: b.id,
+                head: (b as any).level,
+                text: b.childs.length > 0 ? b.childs.map(c => c.content).join("") : b.content
+            }
+        })
+        return outlines;
     }
 }
