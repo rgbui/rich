@@ -94,15 +94,23 @@ export class TextInput$Write {
     }
     private isWillInput: boolean;
     async onInput(this: TextInput, event: KeyboardEvent) {
+       
         if (this.isWillInput) {
-            var anchor = this.explorer.activeAnchor;
-            if (anchor && anchor.isActive) {
-                anchor.inputting();
-                if (!this.cursorTextElement) {
-                    this.cursorTextElement = document.createElement('span');
-                    anchor.view.parentNode.insertBefore(this.cursorTextElement, anchor.view);
+            if (this.explorer.isOnlyAnchor) {
+                var anchor = this.explorer.activeAnchor;
+                if (anchor && anchor.isActive) {
+                    anchor.inputting();
+                    if (!this.cursorTextElement) {
+                        this.cursorTextElement = document.createElement('span');
+                        anchor.view.parentNode.insertBefore(this.cursorTextElement, anchor.view);
+                    }
+                    await InputHandle(this);
                 }
-                await InputHandle(this);
+            }
+            else if (this.explorer.hasTextRange) {
+                if (this.textarea.value) {
+                    this.explorer.onSelectionInputText(this.textarea.value);
+                }
             }
         }
     }

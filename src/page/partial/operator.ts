@@ -25,7 +25,7 @@ export class Page$Operator {
         if (typeof childKey == 'undefined') childKey = 'childs';
         if (!parent.allBlockKeys.some(s => s == childKey)) {
             console.error(`${parent.url} not support childKey:${childKey}`);
-            childKey=parent.allBlockKeys[0];
+            childKey = parent.allBlockKeys[0];
         }
         var bs = parent.blocks[childKey];
         if (!Array.isArray(bs)) parent.blocks[childKey] = bs = [];
@@ -209,47 +209,97 @@ export class Page$Operator {
     }
     async onPasterFiles(this: Page, files: File[]) {
         if (!files || Array.isArray(files) && files.length == 0) return;
-        var anchor = this.kit.explorer.activeAnchor;
-        var block = anchor.block;
-        await this.onAction(ActionDirective.onPasteCreateBlocks, async () => {
-            var firstBlock = block;
-            for (let i = 0; i < files.length; i++) {
-                var file = files[i];
-                if (file.type == 'image/png') {
-                    //图片
-                    block = await block.visibleDownCreateBlock('/image', { initialData: { file } });
+        if (this.kit.explorer.isOnlyAnchor) {
+            var anchor = this.kit.explorer.activeAnchor;
+            var block = anchor.block;
+            await this.onAction(ActionDirective.onPasteCreateBlocks, async () => {
+                var firstBlock = block;
+                for (let i = 0; i < files.length; i++) {
+                    var file = files[i];
+                    if (file.type == 'image/png') {
+                        //图片
+                        block = await block.visibleDownCreateBlock('/image', { initialData: { file } });
+                    }
+                    else {
+                        block = await block.visibleDownCreateBlock('/file', { initialData: { file } });
+                    }
                 }
-                else {
-                    block = await block.visibleDownCreateBlock('/file', { initialData: { file } });
+                if (firstBlock.isTextContentBlockEmpty) {
+                    await firstBlock.delete();
                 }
-            }
-            if (firstBlock.isTextContentBlockEmpty) {
-                await firstBlock.delete();
-            }
-            block.mounted(() => {
-                var anchor = block.visibleHeadAnchor;
-                if (anchor)
-                    anchor.explorer.onFocusAnchor(anchor);
-            });
-        })
+                block.mounted(() => {
+                    var anchor = block.visibleHeadAnchor;
+                    if (anchor)
+                        anchor.explorer.onFocusAnchor(anchor);
+                });
+            })
+        }
+        else if (this.kit.explorer.hasSelectionRange) {
+            var bs = this.kit.explorer.selectedBlocks;
+            var block = bs.last().closest(x => x.isBlock);
+            if (this.kit.explorer.hasTextRange) bs = [];
+            await this.onAction(ActionDirective.onPasteCreateBlocks, async () => {
+                for (let i = 0; i < files.length; i++) {
+                    var file = files[i];
+                    if (file.type == 'image/png') {
+                        //图片
+                        block = await block.visibleDownCreateBlock('/image', { initialData: { file } });
+                    }
+                    else {
+                        block = await block.visibleDownCreateBlock('/file', { initialData: { file } });
+                    }
+                }
+                await bs.eachAsync(async b => {
+                    await b.delete();
+                })
+                block.mounted(() => {
+                    var anchor = block.visibleHeadAnchor;
+                    if (anchor)
+                        anchor.explorer.onFocusAnchor(anchor);
+                });
+            })
+        }
+
     }
     async onPasteCreateBlocks(this: Page, blocks: any[]) {
-        var anchor = this.kit.explorer.activeAnchor;
-        var block = anchor.block;
-        await this.onAction(ActionDirective.onPasteCreateBlocks, async () => {
-            var firstBlock = block;
-            for (let i = 0; i < blocks.length; i++) {
-                var bd = blocks[i];
-                block = await block.visibleDownCreateBlock(bd.url, bd);
-            }
-            if (firstBlock.isTextContentBlockEmpty) {
-                await firstBlock.delete();
-            }
-            block.mounted(() => {
-                var anchor = block.visibleHeadAnchor;
-                if (anchor)
-                    anchor.explorer.onFocusAnchor(anchor);
-            });
-        })
+        if (blocks.length == 0) return;
+        if (this.kit.explorer.isOnlyAnchor) {
+            var anchor = this.kit.explorer.activeAnchor;
+            var block = anchor.block;
+            await this.onAction(ActionDirective.onPasteCreateBlocks, async () => {
+                var firstBlock = block;
+                for (let i = 0; i < blocks.length; i++) {
+                    var bd = blocks[i];
+                    block = await block.visibleDownCreateBlock(bd.url, bd);
+                }
+                if (firstBlock.isTextContentBlockEmpty) {
+                    await firstBlock.delete();
+                }
+                block.mounted(() => {
+                    var anchor = block.visibleHeadAnchor;
+                    if (anchor)
+                        anchor.explorer.onFocusAnchor(anchor);
+                });
+            })
+        }
+        else if (this.kit.explorer.hasSelectionRange) {
+            var bs = this.kit.explorer.selectedBlocks;
+            var block = bs.last().closest(x => x.isBlock);
+            if (this.kit.explorer.hasTextRange) bs = [];
+            await this.onAction(ActionDirective.onPasteCreateBlocks, async () => {
+                for (let i = 0; i < blocks.length; i++) {
+                    var bd = blocks[i];
+                    block = await block.visibleDownCreateBlock(bd.url, bd);
+                }
+                await bs.eachAsync(async b => {
+                    await b.delete();
+                })
+                block.mounted(() => {
+                    var anchor = block.visibleHeadAnchor;
+                    if (anchor)
+                        anchor.explorer.onFocusAnchor(anchor);
+                });
+            })
+        }
     }
 }

@@ -66,14 +66,16 @@ export class SelectionExplorer$Events {
                         var ae = block.firstElementAppear;
                         var text = block[ae.prop];
                         text = text.slice(0, start.at);
-                        block.updateProps({ [ae.prop]: text }, BlockRenderRange.self);
+                        if (text) block.updateProps({ [ae.prop]: text }, BlockRenderRange.self);
+                        else await block.delete();
                         // newAnchor = { block: start.block, at: start.at };
                     }
                     else if (block == end.block) {
                         var ae = block.firstElementAppear;
                         var text = block[ae.prop];
                         text = text.slice(end.at);
-                        block.updateProps({ [ae.prop]: text }, BlockRenderRange.self);
+                        if (text) block.updateProps({ [ae.prop]: text }, BlockRenderRange.self);
+                        else await block.delete()
                         // newAnchor = { block: end.block, at: 0 };
                     }
                     else {
@@ -260,6 +262,8 @@ export class SelectionExplorer$Events {
                         var pattern = await block.pattern.cloneData();
                         var url = BlockUrlConstant.Text;
                         if (block.isTextContent) {
+                            var textBlock = block.asTextContent;
+                            var textAttributes = textBlock.textContentAttributes;
                             var at = block.at;
                             var pa = block.parent;
                             /**
@@ -267,7 +271,7 @@ export class SelectionExplorer$Events {
                              */
                             if (fissContent.before) {
                                 block.updateProps({ content: fissContent.before });
-                                var current = await (this.page.createBlock(url, { content: fissContent.current, pattern }, pa, (at += 1)));
+                                var current = await (this.page.createBlock(url, { ...textAttributes, content: fissContent.current, pattern }, pa, (at += 1)));
                                 if (styles)
                                     current.pattern.setStyles(styles);
                                 if (props)
@@ -275,7 +279,7 @@ export class SelectionExplorer$Events {
                                 if (block == this.start.block) ns = { block: current, at: 0 }
                                 if (block == this.end.block) ne = { block: current, at: -1 }
                                 if (fissContent.after)
-                                    await (this.page.createBlock(url, { content: fissContent.after, pattern }, pa, (at += 1)))
+                                    await (this.page.createBlock(url, { ...textAttributes, content: fissContent.after, pattern }, pa, (at += 1)))
                             }
                             else {
                                 block.updateProps({ content: fissContent.current });
@@ -285,7 +289,7 @@ export class SelectionExplorer$Events {
                                     block.updateProps(props);
                                 if (block == this.start.block) ns = { block: block, at: 0 }
                                 if (block == this.end.block) ne = { block: block, at: -1 }
-                                await (this.page.createBlock(url, { content: fissContent.after, pattern }, pa, (at += 1)))
+                                await (this.page.createBlock(url, { ...textAttributes, content: fissContent.after, pattern }, pa, (at += 1)))
                             }
                         } else {
                             /**
@@ -359,5 +363,62 @@ export class SelectionExplorer$Events {
             }
             else break;
         }
+    }
+    async onSelectionInputText(this: SelectionExplorer, inputText: string) {
+        forceCloseTextTool();
+        await this.page.onAction(ActionDirective.onDeleteSelection, async () => {
+
+            var start = this.start;
+            var end = this.end;
+            if (end.isBefore(start)) {
+                start = this.end;
+                end = this.start;
+            }
+            var rowBlock = start.block.closest(x => x.isBlock);
+            var point = end.bound.leftMiddle;
+            var bs = this.selectedBlocks;
+            await bs.eachAsync(async (block) => {
+                if (!block.isOnlyElementText) await block.delete();
+                if (block == start.block && block == end.block) {
+                    var ae = block.firstElementAppear;
+                    var text = block[ae.prop];
+                    text = text.slice(0, start.at) + inputText + text.slice(end.at);
+                    block.updateProps({ [ae.prop]: text }, BlockRenderRange.self);
+                    this.page.addUpdateEvent(async () => {
+                        var anchor = block.createAnchor(start.at + inputText.length);
+                        this.page.kit.explorer.onFocusAnchor(anchor);
+                    })
+                }
+                else if (block == start.block) {
+                    var ae = block.firstElementAppear;
+                    var text = block[ae.prop];
+                    text = text.slice(0, start.at);
+                    if (text) block.updateProps({ [ae.prop]: text }, BlockRenderRange.self);
+                    else await block.delete();
+                    // newAnchor = { block: start.block, at: start.at };
+                }
+                else if (block == end.block) {
+                    var ae = block.firstElementAppear;
+                    var text = block[ae.prop];
+                    text = text.slice(end.at);
+                    var newBlock = await this.kit.page.createBlock(BlockUrlConstant.Text, { content: inputText }, block.parent, block.at + 1);
+                    if (text) block.updateProps({ [ae.prop]: text }, BlockRenderRange.self);
+                    else await block.delete();
+                    this.page.addUpdateEvent(async () => {
+                        var anchor = newBlock.createBackAnchor();
+                        this.page.kit.explorer.onFocusAnchor(anchor);
+                    })
+                }
+                else {
+                    await block.delete();
+                }
+            });
+            this.onCancelSelection();
+            this.page.addUpdateEvent(async () => {
+                var anchor = rowBlock.visibleAnchor(point);
+                this.page.kit.explorer.onFocusAnchor(anchor);
+            })
+
+        })
     }
 }
