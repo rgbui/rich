@@ -36,7 +36,7 @@ export async function InputHandle(tp: TextInput) {
      */
     var anchor = tp.explorer.activeAnchor;
     var value = tp.textarea.value;
-    (await useBlockSelector()).open(anchor.bound.leftBottom, value, async (block, matchValue) => {
+    (await useBlockSelector()).open(anchor.bound, value, async (block, matchValue) => {
         await InputBlockSelectorAfter(tp, block, matchValue);
     });
     if (await InputDetectorHandle(tp)) return true;
@@ -134,7 +134,7 @@ export async function InputBlockSelectorAfter(tp: TextInput, blockData: BlockSel
 export async function InputAtSelector(tp: TextInput) {
     var anchor = tp.explorer.activeAnchor;
     var value = tp.textarea.value;
-    var r = (await useBlockSelector()).open(anchor.bound.leftBottom, value, (block, matchValue) => {
+    var r = (await useBlockSelector()).open(anchor.bound, value, (block, matchValue) => {
 
     });
     return r;

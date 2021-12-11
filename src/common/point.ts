@@ -83,11 +83,11 @@ export class Point {
     toRect(width: number = 0, height: number = 0) {
         return new Rect(this, width, height);
     }
-    move(x:number,y:number){
-        return new Point(this.x+x,this.y+y);
+    move(x: number, y: number) {
+        return new Point(this.x + x, this.y + y);
     }
-    join(joinChar?:string){
-        return this.x+(joinChar||',')+this.y
+    join(joinChar?: string) {
+        return this.x + (joinChar || ',') + this.y
     }
 }
 
@@ -212,7 +212,7 @@ export class Rect {
 export class RectUtility {
     /**
      * 围绕一个小的矩形，弹一个窗，
-     * 尽可能的展示自，尽可以的不要挡住这个小的矩形
+     * 尽可能的展示自已，尽可以的不要挡住这个小的矩形
      * @param pos 
      */
     static cacPopoverPosition(pos: PopoverPosition) {

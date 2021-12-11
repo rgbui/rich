@@ -14,6 +14,9 @@ export type PopoverPosition = {
      * 围绕一个元素
      */
     roundArea?: Rect;
+    /**
+     * 元素本身的大小
+     */
     elementArea?: Rect,
     dist?: number,
     offset?: number,
