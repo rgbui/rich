@@ -4,7 +4,8 @@ import { Singleton } from "../../component/lib/Singleton";
 import { LangID } from "../../i18n/declare";
 import { Sp } from "../../i18n/view";
 import { KeyboardCode } from "../../src/common/keys";
-import { Point } from "../../src/common/point";
+import { Point, Rect, RectUtility } from "../../src/common/point";
+import { PopoverPosition } from "../popover/position";
 import { BlockSelectorItem } from "./delcare";
 import { blockStore } from "./store";
 
@@ -73,16 +74,18 @@ class BlockSelector extends React.Component {
     }
     private visible: boolean = false;
     private pos: Point = new Point(0, 0);
+    private round: Rect;
     private command: string = '';
     private selectIndex: number = 0;
     private _select: (block: BlockSelectorItem, matchValue: string) => void;
-    async open(point: Point, text: string, callback: BlockSelector['_select']) {
+    async open(round: Rect, text: string, callback: BlockSelector['_select']) {
         var cs = text.match(/(\/|、)[^\s]*$/g);
         if (!(cs && cs[0])) {
             this.close();
             return false;
         }
-        this.pos = point;
+        this.round = round;
+        this.pos = round.leftBottom;
         this.selectIndex = 0;
         this.visible = true;
         await blockStore.import();
@@ -104,15 +107,32 @@ class BlockSelector extends React.Component {
             if (this.filterBlocks.length == 0) {
                 if (this.previsible == true) {
                     this.previsible = false;
-                    this.forceUpdate();
+                    this.adjuctPosition();
                 }
                 else this.close()
             }
-            else { this.previsible = true; this.forceUpdate(); }
+            else { this.previsible = true; this.adjuctPosition(); }
         }
         else {
             this.close();
         }
+    }
+    private adjuctPosition() {
+        this.forceUpdate(() => {
+            var selectorEl = this.el.querySelector('.shy-block-selector') as HTMLElement;
+            if (selectorEl) {
+                var b = Rect.fromEle(selectorEl);
+                var pos: PopoverPosition = {
+                    roundArea: this.round,
+                    elementArea: b
+                }
+                var newPoint = RectUtility.cacPopoverPosition(pos);
+                if (!this.pos.equal(newPoint)) {
+                    this.pos = newPoint;
+                    this.forceUpdate();
+                }
+            }
+        })
     }
     private getFilterText(text): string {
         return text.replace(/(\/|、)[\w \-\u4e00-\u9fa5]*$/g, '');
