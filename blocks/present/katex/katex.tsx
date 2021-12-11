@@ -1,20 +1,18 @@
 import { BlockView } from "../../../src/block/view";
 import katex from 'katex';
 import React from 'react';
-import { prop, url, view } from "../../../src/block/factory/observable";
+import { url, view } from "../../../src/block/factory/observable";
 import "../../../node_modules/katex/dist/katex.min.css";
 import { Block } from "../../../src/block";
-import { BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
+import { BlockDisplay } from "../../../src/block/enum";
 import { listenKatexInput } from "../../../extensions/katex";
 import { Rect } from "../../../src/common/point";
 
 @url('/katex')
 export class Katex extends Block {
-    @prop()
-    formula: string = '';
     display = BlockDisplay.block;
     get htmlContent() {
-        let html = katex.renderToString(this.formula, {
+        let html = katex.renderToString(this.content, {
             throwOnError: false
         });
         return html;
