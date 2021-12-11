@@ -10,7 +10,7 @@ import ChevronDown from "../../../src/assert/svg/chevronDown.svg";
 import "./style.less";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { Rect } from "../../../src/common/point";
-import { loadPrismLang, PrismLabelToLang, PrismLangLabels } from "./lang";
+import { loadPrismLang, PrismLangLabels } from "./lang";
 /**
  * prism url : https://prismjs.com/#examples
  * prism babel plug :https://www.npmjs.com/package/babel-plugin-prismjs
@@ -34,8 +34,7 @@ export class TextCode extends Block {
     async renderCode() {
         var name = this.language.toLowerCase();
         try {
-           var loadResult= await loadPrismLang(name);
-           console.log(loadResult);
+            await loadPrismLang(name);
             var html = Prism.highlight(this.content,
                 Prism.languages[name],
                 name
@@ -72,7 +71,7 @@ export class TextCodeView extends BlockView<TextCode>{
         }
     }
     render() {
-        var label = PrismLangLabels.find(g => g.language == this.block.language)?.label|| 'unknow';
+        var label = PrismLangLabels.find(g => g.language == this.block.language)?.label || 'unknow';
         return <div className='sy-block-code'>
             <div className='sy-block-code-box' >
                 <div className='sy-block-code-head'>

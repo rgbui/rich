@@ -227,16 +227,6 @@ export async function loadPrismLang(lang: string) {
             break;
     }
 }
-export function PrismLabelToLang(label: string) {
-    var n = label.toLowerCase();
-    if (n == 'c++') return 'cpp'
-    else if (n == 'f#') return 'fsharp'
-    else if (n == 'WebAssembly'.toLowerCase()) return 'wasm'
-    else if (n == 'Visual'.toLowerCase()) return 'visual-basic'
-    else if (n == 'Objective-C'.toLowerCase()) return 'object-c';
-    else if (n == 'c') return 'clike';
-    else return n;
-}
 export var PrismLangLabels = [
     { "label": "ABAP", "language": "abap" },
     { "label": "Arduino", "language": "arduino" },
