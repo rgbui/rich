@@ -1,7 +1,6 @@
 import ReactDOM from "react-dom";
 import { Page } from "..";
 import { langProvider } from "../../../i18n/provider";
-import { util } from "../../../util/util";
 import { Block } from "../../block";
 import { View } from "../../block/element/view";
 import { BlockFactory } from "../../block/factory/block.factory";
@@ -292,7 +291,7 @@ export class Page$Cycle {
                 else if ((b.isRow || b.isCol) && !b.isPart && !b.hasChilds) {
                     rs.push(b);
                 }
-            })
+            });
             return
         });
 

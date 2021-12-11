@@ -41,7 +41,7 @@ export class HandleView extends React.Component<{ handle: Handle }>{
                 },
                 moving(ev, data, isend) {
                     ghostView.move(Point.from(ev));
-                    onAutoScroll({ el: self.handle.kit.page.root, dis: 100, point: Point.from(ev) })
+                    onAutoScroll({ el: self.handle.kit.page.root, feelDis: 100, dis: 100, point: Point.from(ev) })
                 },
                 async moveEnd(ev, isMove, data) {
                     onAutoScrollStop();
