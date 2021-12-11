@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "../../blocks/at/link";
+import Link from "../../src/assert/svg/link.svg";
 import { EventsComponent } from "../../component/lib/events.component";
 import { Icon } from "../../component/view/icon";
 import { Tab } from "../../component/view/tab";
