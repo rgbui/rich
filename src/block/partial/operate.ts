@@ -486,14 +486,14 @@ export class Block$Operator {
     }
     async updateAppear(this: Block, appear: AppearAnchor, newValue: string, range = BlockRenderRange.none) {
         this.updateProps({ [appear.prop]: newValue });
-        this.changeAppear(appear);
+        await this.changeAppear(appear);
     }
     /**
     * 子类继承实现
     * @param oldProps 
     * @param newProps 
     */
-    changeAppear(this: Block, appear: AppearAnchor) {
+    async changeAppear(this: Block, appear: AppearAnchor) {
 
     }
     updateProps(this: Block, props: Record<string, any>, range = BlockRenderRange.self) {
