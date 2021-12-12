@@ -43,6 +43,7 @@ export class Table extends Block {
             })
         }
     }
+    
 }
 @view('/table')
 export class TableView extends BlockView<Table>{
