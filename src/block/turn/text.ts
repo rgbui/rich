@@ -32,7 +32,17 @@ export var TextTurns = {
                 delete data.id;
                 delete data.date;
                 if (block.url.startsWith('/head')) delete data.level;
-                if (block.url.startsWith('/list')) delete data.listType;
+                /**
+                 * list 块转成其它块，期subChilds需要移到最外面，否则转换的不正常
+                 */
+                if (block.url.startsWith('/list')) {
+                    if (!turnToUrl.startsWith('/list') && block.getChilds(block.childKey).length > 0) {
+                        var cs = block.getChilds(block.childKey).map(c => c);
+                        await block.parent.appendArray(cs, block.at + 1, block.parent.childKey);
+                        delete data.blocks[block.childKey];
+                    }
+                    delete data.listType;
+                }
                 if (block.url == '/todo') delete data.checked;
                 return { url: turnToUrl, ...data }
                 break;
