@@ -1,16 +1,17 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import { PopoverPosition } from "../../../extensions/popover/position";
 import { Point, Rect, RectUtility } from "../../../src/common/point";
 import { LayerWield, popoverLayer } from "../../lib/zindex";
 import { MenuItemType } from "./declare";
 import { MenuItem } from "./item";
-export class MenuBox extends React.Component<{ items: MenuItemType[], deep: number, select: (item: MenuItemType, event?: MouseEvent) => void }>{
+export class MenuBox extends React.Component<{ items: MenuItemType[], style?: CSSProperties, deep: number, select: (item: MenuItemType, event?: MouseEvent) => void }>{
     render() {
         return <div className='shy-menu-box' ref={e => this.el = e} style={{
             top: this.point.y,
             left: this.point.x,
             zIndex: popoverLayer.zoom(LayerWield.menuBox),
-            overflowY: this.props.items.exists(g => g.childs && g.childs.length > 0) ? "visible" : "auto"
+            overflowY: this.props.items.exists(g => g.childs && g.childs.length > 0) ? "visible" : "auto",
+            ...(this.props.style || {})
         }}>{this.props.items.map((item, index) => {
             return <MenuItem key={index} item={item} deep={this.props.deep + 1} select={this.props.select} ></MenuItem>
         })}

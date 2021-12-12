@@ -7,14 +7,19 @@ import { MenuBox } from "./box";
 import { MenuItemType, MenuItemTypeValue } from "./declare";
 import { LayerWield, popoverLayer } from "../../lib/zindex";
 class MenuPanel<T> extends EventsComponent {
-    open(pos: PopoverPosition, menus: MenuItemType<T>[]) {
+    open(pos: PopoverPosition, menus: MenuItemType<T>[], options?: { height?: number }) {
         this.menus = menus;
         this.visible = true;
+        this.options = {};
+        if (options) {
+            Object.assign(this.options, options);
+        }
         this.forceUpdate(() => {
             if (this.mb) this.mb.open(pos);
         })
     }
     visible: boolean = false;
+    private options: { height?: number } = {};
     onClose(e: React.MouseEvent) {
         if (e) e.stopPropagation();
         this.close();
@@ -36,7 +41,7 @@ class MenuPanel<T> extends EventsComponent {
     render() {
         return this.visible && <div className='shy-menu-panel'>
             <div className='shy-menu-mask' style={{ zIndex: popoverLayer.zoom(LayerWield.menuMask) }} onMouseDown={e => this.onClose(e)}></div>
-            <MenuBox ref={e => this.mb = e} select={(item, event) => this.onSelect(item as any, event)} items={this.menus as any} deep={0}></MenuBox>
+            <MenuBox style={{ height: this.options.height, maxHeight: this.options.height }} ref={e => this.mb = e} select={(item, event) => this.onSelect(item as any, event)} items={this.menus as any} deep={0}></MenuBox>
         </div>
     }
 }
@@ -50,10 +55,10 @@ interface MenuPanel<T> {
     only(name: 'close', fn: () => void);
     emit(name: 'close');
 }
-export async function useSelectMenuItem<T = string>(pos: PopoverPosition, menus: MenuItemType<T>[]) {
+export async function useSelectMenuItem<T = string>(pos: PopoverPosition, menus: MenuItemType<T>[], options?: { height?: number }) {
     var menuPanel = await Singleton<MenuPanel<T>>(MenuPanel);
     return new Promise((resolve: (data: { item: MenuItemType<T>, event: MouseEvent }) => void, reject) => {
-        menuPanel.open(pos, menus);
+        menuPanel.open(pos, menus, options);
         menuPanel.only('select', (item, event) => {
             resolve({ item, event });
         });
