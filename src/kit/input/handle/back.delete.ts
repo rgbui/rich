@@ -22,7 +22,6 @@ export async function backspaceSolidBlock(tp: TextInput) {
         return true;
     }
 }
-
 export async function backspaceCrossBlock(tp: TextInput) {
     var anchor = tp.explorer.activeAnchor;
     if (anchor.isText && anchor.at == 0) {
@@ -113,11 +112,13 @@ export async function backspaceBlock(tp: TextInput) {
                     }
                     var checkEmpty = () => {
                         var currentAnchor = tp.explorer.activeAnchor;
-                        if (anchor.block != currentAnchor.block) {
-                            tp.explorer.onFocusAnchor(currentAnchor);
+                        if (currentAnchor) {
+                            if (anchor.block != currentAnchor.block) {
+                                tp.explorer.onFocusAnchor(currentAnchor);
+                            }
+                            if (currentAnchor.at == 0 && currentAnchor.elementAppear.isEmpty) currentAnchor.setEmpty();
+                            else currentAnchor.removeEmpty();
                         }
-                        if (currentAnchor.at == 0 && currentAnchor.elementAppear.isEmpty) currentAnchor.setEmpty();
-                        else currentAnchor.removeEmpty();
                     }
                     if (existsDelete == true) tp.page.addUpdateEvent(async () => {
                         checkEmpty();
