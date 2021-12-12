@@ -53,19 +53,20 @@ export function onceAutoScroll(options: {
     var sr: number = 0;
     var dis = options.dis;
     var feelDis = options.feelDis;
-
     var scrollDiv: HTMLElement = dom(options.el).closest(x => { return dom(x as HTMLElement).style('overflowY') == 'auto' }) as any;
     var sb = Rect.fromEle(scrollDiv);
-    var minBottom = Math.abs(options.point.y - sb.top - sb.height);
+    var minBottom = sb.top + sb.height - options.point.y;
     if (scrollDiv && minBottom < feelDis) {
         var top = scrollDiv.scrollTop;
+        if (minBottom < 0) dis += 0 - minBottom;
         var dr = top + dis > scrollDiv.scrollHeight - scrollDiv.clientHeight ? scrollDiv.scrollHeight - scrollDiv.clientHeight - top : dis
         scrollDiv.scrollTop = top + dr;
         sr += dr;
     }
-    var minTop = Math.abs(options.point.y - sb.top);
+    var minTop = options.point.y - sb.top;
     if (scrollDiv && minTop < feelDis) {
         var top = scrollDiv.scrollTop;
+        if (minTop < 0) dis += 0 - minTop;
         var dr = top - dis > 0 ? dis : top;
         scrollDiv.scrollTop = top - dr;
         sr += 0 - dr;
