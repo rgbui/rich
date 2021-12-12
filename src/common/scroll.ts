@@ -1,5 +1,5 @@
 import { dom } from "./dom";
-import { Point } from "./point";
+import { Point, Rect } from "./point";
 
 var time;
 export function onAutoScroll(options: {
@@ -12,29 +12,19 @@ export function onAutoScroll(options: {
 }) {
     onAutoScrollStop();
     if (typeof options.interval == 'undefined') options.interval = 50;
-    if (typeof options.dis == 'undefined') options.dis = 30;
-    if (typeof options.feelDis == 'undefined') options.feelDis = 150;
+
     var fn = (fir: boolean) => {
         if (fir == true) { return options.callback ? options?.callback(fir, 0) : undefined; }
-        var sr: number = 0;
-        var dis = 30;
-        var feelDis = 150;
-        var minBottom = Math.abs(options.point.y - window.innerHeight);
-        var scrollDiv: HTMLElement = dom(options.el).closest(x => { return dom(x as HTMLElement).style('overflowY') == 'auto' }) as any;
-        if (scrollDiv && minBottom < feelDis) {
-            var top = scrollDiv.scrollTop;
-            var dr = top + dis > scrollDiv.scrollHeight - scrollDiv.clientHeight ? scrollDiv.scrollHeight - scrollDiv.clientHeight - top : dis
-            scrollDiv.scrollTop = top + dr;
-            sr += dr;
-        }
-        var minTop = Math.abs(options.point.y - scrollDiv.getBoundingClientRect().top);
-        if (scrollDiv && minTop < feelDis) {
-            var top = scrollDiv.scrollTop;
-            var dr = top - dis > 0 ? dis : top;
-            scrollDiv.scrollTop = top - dr;
-            sr += 0 - dr;
-        }
-        if (options.callback) options.callback(fir, sr);
+        onceAutoScroll({
+            el: options.el,
+            point: options.point,
+            feelDis: options.feelDis,
+            dis: options.dis,
+            callback: (dis) => {
+                if (options.callback)
+                    options.callback(fir, dis);
+            }
+        })
     }
     fn(true);
     var i = 0;
@@ -47,4 +37,38 @@ export function onAutoScrollStop() {
         clearInterval(time);
         time = null;
     }
+}
+
+export function onceAutoScroll(options: {
+    el: HTMLElement,
+    point?: Point,
+    feelDis?: number,
+    dis?: number,
+    callback?(scrollDis: number): void
+}) {
+    if (typeof options.point == 'undefined')
+        options.point = Rect.fromEle(options.el).leftMiddle;
+    if (typeof options.dis == 'undefined') options.dis = 30;
+    if (typeof options.feelDis == 'undefined') options.feelDis = 150;
+    var sr: number = 0;
+    var dis = options.dis;
+    var feelDis = options.feelDis;
+
+    var scrollDiv: HTMLElement = dom(options.el).closest(x => { return dom(x as HTMLElement).style('overflowY') == 'auto' }) as any;
+    var sb = Rect.fromEle(scrollDiv);
+    var minBottom = Math.abs(options.point.y - sb.top - sb.height);
+    if (scrollDiv && minBottom < feelDis) {
+        var top = scrollDiv.scrollTop;
+        var dr = top + dis > scrollDiv.scrollHeight - scrollDiv.clientHeight ? scrollDiv.scrollHeight - scrollDiv.clientHeight - top : dis
+        scrollDiv.scrollTop = top + dr;
+        sr += dr;
+    }
+    var minTop = Math.abs(options.point.y - sb.top);
+    if (scrollDiv && minTop < feelDis) {
+        var top = scrollDiv.scrollTop;
+        var dr = top - dis > 0 ? dis : top;
+        scrollDiv.scrollTop = top - dr;
+        sr += 0 - dr;
+    }
+    if (options.callback) options.callback(sr);
 }
