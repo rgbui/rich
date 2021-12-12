@@ -11,6 +11,7 @@ import "./style.less";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { Rect } from "../../../src/common/point";
 import { loadPrismLang, PrismLangLabels } from "./lang";
+import { AppearAnchor } from "../../../src/block/appear";
 /**
  * prism url : https://prismjs.com/#examples
  * prism babel plug :https://www.npmjs.com/package/babel-plugin-prismjs
@@ -40,12 +41,28 @@ export class TextCode extends Block {
                 name
             );
             this.htmlCode = html;
-            this.view.forceUpdate();
+            await this.forceUpdate();
         }
         catch (ex) {
             console.log(ex);
             console.log(name, this.content, Prism.languages[name]);
         }
+    }
+    private time;
+    async changeAppear(appear: AppearAnchor) {
+        if (this.time) {
+            clearTimeout(this.time);
+            this.time = null;
+        }
+        this.time = setTimeout(async () => {
+            var isActive = this.page.kit.explorer.activeAnchor?.block == this;
+            var pos = isActive ? this.page.kit.explorer.activeAnchor.bound.leftMiddle : undefined;
+            await this.renderCode();
+            if (pos) {
+                var anchor = this.visibleAnchor(pos);
+                this.page.kit.explorer.onFocusAnchor(anchor);
+            }
+        }, 2e3);
     }
 }
 @view('/code')
