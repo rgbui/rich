@@ -43,7 +43,6 @@ export class Page$Operator {
             try {
                 await this.onAction(ActionDirective.onCreateTailTextSpan, async () => {
                     var lastBlock = this.findReverse(g => g.isBlock);
-                    console.log(lastBlock, lastBlock.at);
                     var newBlock: Block;
                     if (lastBlock && lastBlock.parent == this.views.last()) {
                         newBlock = await this.createBlock(BlockUrlConstant.TextSpan, {}, lastBlock.parent, lastBlock.at + 1);

@@ -59,7 +59,7 @@ export async function InputDetectorHandle(tp: TextInput) {
         switch (rule.operator) {
             case DetectorOperator.firstLetterCreateBlock:
                 tp.page.onAction(ActionDirective.onInputDetector, async () => {
-                    block.updateProps({ [anchor.elementAppear.prop]: '' })
+                    block.updateAppear(anchor.elementAppear, '');
                     var newBlock = await block.turn(rule.url);
                     var newRowBlock = await newBlock.visibleDownCreateBlock(BlockUrlConstant.TextSpan);
                     newRowBlock.mounted(() => {
@@ -69,7 +69,7 @@ export async function InputDetectorHandle(tp: TextInput) {
                 break;
             case DetectorOperator.firstLetterTurnBlock:
                 tp.page.onAction(ActionDirective.onInputDetector, async () => {
-                    block.updateProps({ [anchor.elementAppear.prop]: '' });
+                    block.updateAppear(anchor.elementAppear, '');
                     var newBlock = await block.turn(rule.url);
                     newBlock.mounted(() => {
                         tp.explorer.onFocusAnchor(newBlock.visibleHeadAnchor);

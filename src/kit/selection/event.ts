@@ -59,14 +59,14 @@ export class SelectionExplorer$Events {
                         var ae = block.firstElementAppear;
                         var text = block[ae.prop];
                         text = text.slice(0, start.at) + text.slice(end.at);
-                        block.updateProps({ [ae.prop]: text }, BlockRenderRange.self);
+                        block.updateAppear(ae, text, BlockRenderRange.self);
                         // newAnchor = { block: start.block, at: start.at };
                     }
                     else if (block == start.block) {
                         var ae = block.firstElementAppear;
                         var text = block[ae.prop];
                         text = text.slice(0, start.at);
-                        if (text) block.updateProps({ [ae.prop]: text }, BlockRenderRange.self);
+                        if (text) block.updateAppear(ae, text, BlockRenderRange.self);
                         else await block.delete();
                         // newAnchor = { block: start.block, at: start.at };
                     }
@@ -74,7 +74,7 @@ export class SelectionExplorer$Events {
                         var ae = block.firstElementAppear;
                         var text = block[ae.prop];
                         text = text.slice(end.at);
-                        if (text) block.updateProps({ [ae.prop]: text }, BlockRenderRange.self);
+                        if (text) block.updateAppear(ae, text, BlockRenderRange.self);
                         else await block.delete()
                         // newAnchor = { block: end.block, at: 0 };
                     }
@@ -383,7 +383,7 @@ export class SelectionExplorer$Events {
                     var ae = block.firstElementAppear;
                     var text = block[ae.prop];
                     text = text.slice(0, start.at) + inputText + text.slice(end.at);
-                    block.updateProps({ [ae.prop]: text }, BlockRenderRange.self);
+                    block.updateAppear(ae, text, BlockRenderRange.self);
                     this.page.addUpdateEvent(async () => {
                         var anchor = block.createAnchor(start.at + inputText.length);
                         this.page.kit.explorer.onFocusAnchor(anchor);
@@ -393,7 +393,7 @@ export class SelectionExplorer$Events {
                     var ae = block.firstElementAppear;
                     var text = block[ae.prop];
                     text = text.slice(0, start.at);
-                    if (text) block.updateProps({ [ae.prop]: text }, BlockRenderRange.self);
+                    if (text) block.updateAppear(ae, text, BlockRenderRange.self);
                     else await block.delete();
                     // newAnchor = { block: start.block, at: start.at };
                 }
@@ -402,7 +402,7 @@ export class SelectionExplorer$Events {
                     var text = block[ae.prop];
                     text = text.slice(end.at);
                     var newBlock = await this.kit.page.createBlock(BlockUrlConstant.Text, { content: inputText }, block.parent, block.at + 1);
-                    if (text) block.updateProps({ [ae.prop]: text }, BlockRenderRange.self);
+                    if (text) block.updateAppear(ae, text, BlockRenderRange.self);
                     else await block.delete();
                     this.page.addUpdateEvent(async () => {
                         var anchor = newBlock.createBackAnchor();

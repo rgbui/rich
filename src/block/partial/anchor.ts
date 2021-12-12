@@ -226,13 +226,15 @@ export class Block$Anchor {
     }
     findAnchorBlockByPointFromBlockRange(this: Block, point: Point) {
         var as = this.findAll(x => x.isSupportAnchor, true);
-        var ps = as.map(e => {
+        var ps = as.toArray(e => {
             var bounds = e.getBounds();
+            if (bounds.length == 0) console.warn('the bounds is empty', e);
             var newPoint = TextEle.cacDistance(point, bounds);
-            return {
-                dis: newPoint,
-                block: e
-            }
+            if (newPoint)
+                return {
+                    dis: newPoint,
+                    block: e
+                }
         });
         if (ps.exists(g => g.dis.x == 0 && g.dis.y == 0))
             return ps.find(g => g.dis.x == 0 && g.dis.y == 0).block;

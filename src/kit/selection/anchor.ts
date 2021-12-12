@@ -146,7 +146,7 @@ export class Anchor {
              * 向上感觉还可以，向下则挡住了，
              * 是不是考虑在光标内加个元素，比较长的
              */
-            onceAutoScroll({ el: this.view, feelDis: 30, dis: 80 })
+            onceAutoScroll({ el: this.view, feelDis: 30, dis: 120 })
             this.kit.textInput.followAnchor(this);
         }
     }

@@ -7,6 +7,7 @@ import { BlockUrlConstant } from "../constant";
 import { Col } from "../element/col";
 import { BlockRenderRange } from "../enum";
 import lodash from 'lodash';
+import { AppearAnchor } from "../appear";
 export class Block$Operator {
     /**
     * 移走元素，这个不是删除，
@@ -483,6 +484,18 @@ export class Block$Operator {
     async acceptSubFromMove(this: Block, sub: Block) {
 
     }
+    async updateAppear(this: Block, appear: AppearAnchor, newValue: string, range = BlockRenderRange.none) {
+        this.updateProps({ [appear.prop]: newValue });
+        this.changeAppear(appear);
+    }
+    /**
+    * 子类继承实现
+    * @param oldProps 
+    * @param newProps 
+    */
+    changeAppear(this: Block, appear: AppearAnchor) {
+
+    }
     updateProps(this: Block, props: Record<string, any>, range = BlockRenderRange.self) {
         var oldValue: Record<string, any> = {};
         var newValue: Record<string, any> = {};
@@ -494,6 +507,7 @@ export class Block$Operator {
             }
         }
         if (Object.keys(oldValue).length > 0) {
+            this.changeProps(oldValue, newValue);
             this.syncUpdate(range);
             this.page.snapshoot.record(OperatorDirective.updateProp, {
                 blockId: this.id,
@@ -501,6 +515,14 @@ export class Block$Operator {
                 new: newValue
             });
         }
+    }
+    /**
+     * 子类继承实现
+     * @param oldProps 
+     * @param newProps 
+     */
+    changeProps(oldProps: Record<string, any>, newProps: Record<string, any>) {
+
     }
     manualUpdateProps(this: Block, oldProps: Record<string, any>, newProps: Record<string, any>, range = BlockRenderRange.self) {
         var oldValue: Record<string, any> = {};
