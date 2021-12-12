@@ -7,7 +7,7 @@ import { MenuBox } from "./box";
 import { MenuItemType, MenuItemTypeValue } from "./declare";
 import { LayerWield, popoverLayer } from "../../lib/zindex";
 class MenuPanel<T> extends EventsComponent {
-    open(pos: PopoverPosition, menus: MenuItemType<T>[], options?: { height?: number }) {
+    open(pos: PopoverPosition, menus: MenuItemType<T>[], options?: { height?: number, overflow?: 'auto' | 'visible' }) {
         this.menus = menus;
         this.visible = true;
         this.options = {};
@@ -19,7 +19,7 @@ class MenuPanel<T> extends EventsComponent {
         })
     }
     visible: boolean = false;
-    private options: { height?: number } = {};
+    private options: { height?: number, overflow?: 'auto' | 'visible' } = {};
     onClose(e: React.MouseEvent) {
         if (e) e.stopPropagation();
         this.close();
@@ -41,7 +41,7 @@ class MenuPanel<T> extends EventsComponent {
     render() {
         return this.visible && <div className='shy-menu-panel'>
             <div className='shy-menu-mask' style={{ zIndex: popoverLayer.zoom(LayerWield.menuMask) }} onMouseDown={e => this.onClose(e)}></div>
-            <MenuBox style={{ height: this.options.height, maxHeight: this.options.height }} ref={e => this.mb = e} select={(item, event) => this.onSelect(item as any, event)} items={this.menus as any} deep={0}></MenuBox>
+            <MenuBox style={{ height: this.options.height, maxHeight: this.options.height, overflow: this.options.overflow }} ref={e => this.mb = e} select={(item, event) => this.onSelect(item as any, event)} items={this.menus as any} deep={0}></MenuBox>
         </div>
     }
 }
@@ -55,7 +55,7 @@ interface MenuPanel<T> {
     only(name: 'close', fn: () => void);
     emit(name: 'close');
 }
-export async function useSelectMenuItem<T = string>(pos: PopoverPosition, menus: MenuItemType<T>[], options?: { height?: number }) {
+export async function useSelectMenuItem<T = string>(pos: PopoverPosition, menus: MenuItemType<T>[], options?: { height?: number, overflow?: 'auto' | 'visible' }) {
     var menuPanel = await Singleton<MenuPanel<T>>(MenuPanel);
     return new Promise((resolve: (data: { item: MenuItemType<T>, event: MouseEvent }) => void, reject) => {
         menuPanel.open(pos, menus, options);
