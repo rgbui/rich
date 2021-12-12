@@ -6,6 +6,9 @@ export abstract class BlockView<T extends Block> extends Component<{ block: T }>
         super(props);
         this.block.view = this;
     }
+    componentWillMount(): void {
+        this.block.isMounted = true;
+    }
     componentDidMount() {
         this.block.el = ReactDOM.findDOMNode(this) as HTMLDivElement;
         if (this.block.el) {
@@ -26,6 +29,7 @@ export abstract class BlockView<T extends Block> extends Component<{ block: T }>
         if (typeof this.willUnmount == 'function') {
             this.willUnmount();
         }
+        this.block.isMounted = false;
     }
     willUnmount() {
 

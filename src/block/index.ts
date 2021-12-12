@@ -359,6 +359,7 @@ export abstract class Block extends Events {
     get isSupportTextStyle() {
         return true;
     }
+    isMounted: boolean = false;
     isCrossElementAppear(rect: Rect | Point) {
         var es = this.appearAnchors;
         for (var i = 0; i < es.length; i++) {
@@ -396,10 +397,9 @@ export abstract class Block extends Events {
     }
     async forceUpdate() {
         return new Promise((resolve, reject) => {
-            if (this.view)
-                this.view.forceUpdate(() => {
-                    resolve(true);
-                })
+            if (this.view && this.isMounted) this.view.forceUpdate(() => {
+                resolve(true);
+            })
             else resolve(true);
         })
     }
