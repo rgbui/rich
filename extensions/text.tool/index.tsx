@@ -263,5 +263,6 @@ export async function useTextTool(point: Point, options: { style: TextToolStyle,
     })
 }
 export function forceCloseTextTool() {
-    textTool.close();
+    if (textTool)
+        textTool.close();
 }
