@@ -437,9 +437,6 @@ export abstract class Block extends Events {
         if (this.isLine) {
             return this.closest(x => x.isBlock && !x.isLayout)
         }
-        else if (this.isLayout) {
-            return this.find(g => g.isBlock && !g.isLayout)
-        }
         return this;
     }
     get isPageLastBlock() {

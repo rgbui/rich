@@ -167,6 +167,16 @@ export class Page$Seek {
         block = block.closest(x => x.isBlock);
         if (block) {
             if (block.isLayout) {
+                if (block.isRow) {
+                    if (point.y <= bound.top + bound.height / 2) {
+                        direction = DropDirection.top;
+                        return { direction: direction, block };
+                    }
+                    else if (point.y >= bound.top + bound.height / 2) {
+                        direction = DropDirection.bottom;
+                        return { direction: direction, block };
+                    }
+                }
                 return { direction: direction, block };
             }
             else if (block.isCell) {
@@ -438,12 +448,12 @@ export class Page$Seek {
             if (r) return r;
         }
     }
-    findAll(this:Page, predict: (block: Block) => boolean){
-          var bs:Block[]=[];
-          for (let i = 0; i < this.views.length; i++) {
+    findAll(this: Page, predict: (block: Block) => boolean) {
+        var bs: Block[] = [];
+        for (let i = 0; i < this.views.length; i++) {
             var view = this.views[i];
             var rs = view.findAll(predict, true);
-             bs.push(...rs);
+            bs.push(...rs);
         }
         return bs;
     }
