@@ -28,8 +28,8 @@ export class BlockFactory {
             if (parent) newBlock.parent = parent;
             if (typeof newBlock.initialLoad == 'function') await newBlock.initialLoad();
             if (data) {
-                if (data.url)
-                    data.url = pb.url;
+                if (data.url) data.url = pb.url;
+                else data.url = pb.url;
                 await newBlock.load(Object.assign(pb.data, data));
             }
             return newBlock;
