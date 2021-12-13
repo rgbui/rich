@@ -71,7 +71,8 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             operator.data.childKey
         );
         page.addUpdateEvent(async () => {
-            page.kit.explorer.onFocusBlockAtAnchor(block);
+            if (block.appearAnchors.length > 0)
+                page.kit.explorer.onFocusAnchor(block.visibleBackAnchor);
         });
     }, async (operator) => {
         var block = page.find(x => x.id == operator.data.data.id);
@@ -98,34 +99,21 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             operator.data.childKey
         );
         page.addUpdateEvent(async () => {
-            page.kit.explorer.onFocusBlockAtAnchor(block);
+            if (block.appearAnchors.length > 0)
+                page.kit.explorer.onFocusAnchor(block.visibleBackAnchor);
         });
     });
-
-    snapshoot.registerOperator(OperatorDirective.remove, async (operator) => {
-        var block = page.find(x => x.id == operator.data.blockId);
-        if (block) {
-            await block.remove();
-        }
-    }, async (operator) => {
-        var block = page.find(x => x.id == operator.data.blockId);
-        var parent = page.find(x => x.id == operator.data.parentId);
-        if (parent) {
-            await parent.append(block, operator.data.at, operator.data.childKey);
-        }
-    });
-    snapshoot.registerOperator(OperatorDirective.append, async (operator) => {
-        var block = page.find(x => x.id == operator.data.blockId);
-        var parent = page.find(x => x.id == operator.data.parentId);
-        if (parent) {
-            await parent.append(block, operator.data.at, operator.data.childKey);
-        }
-    }, async (operator) => {
-        var block = page.find(x => x.id == operator.data.blockId);
-        if (block) {
-            await block.remove();
-        }
-    });
+    snapshoot.registerOperator(OperatorDirective.append,
+        async (operator) => {
+            var block = page.find(x => x.id == operator.data.blockId);
+            var parent = page.find(x => x.id == operator.data.to.parentId);
+            await parent.append(block, operator.data.to.at, operator.data.to.childKey)
+        },
+        async (operator) => {
+            var block = page.find(x => x.id == operator.data.blockId);
+            var parent = page.find(x => x.id == operator.data.from.parentId);
+            await parent.append(block, operator.data.from.at, operator.data.from.childKey)
+        });
     snapshoot.registerOperator(OperatorDirective.updateProp, async (operator) => {
         var block = page.find(x => x.id == operator.data.blockId);
         if (block) {

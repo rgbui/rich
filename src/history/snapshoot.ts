@@ -20,8 +20,6 @@ export class HistorySnapshoot extends Events {
         this.page = page;
         this.historyRecord = new HistoryRecord();
         this.historyRecord.on('error', err => this.emit('error', err));
-        this.historyRecord.on('undo', action => this.undo(action));
-        this.historyRecord.on('redo', action => this.redo(action));
     }
     declare(directive: ActionDirective | string) {
         if (this.action) {
@@ -52,9 +50,11 @@ export class HistorySnapshoot extends Events {
         this.action.endDate = Date.now();
         this.emit('history', this.action);
         if (this.historyRecord) {
-            if (this.action.directive == ActionDirective.onRedo || this.action.directive == ActionDirective.onUndo) return;
-            this.historyRecord.push(this.action);
+            if (!(this.action.directive == ActionDirective.onRedo || this.action.directive == ActionDirective.onUndo))
+                this.historyRecord.push(this.action);
         };
+        console.log(JSON.stringify(this.action));
+        console.log(this.action.toString());
         delete this.action;
     }
     private disabledSync: boolean = false;
@@ -83,15 +83,9 @@ export class HistorySnapshoot extends Events {
     registerOperator(directive: OperatorDirective, redo: (userOperator: UserOperator) => Promise<void>, undo: (userOperator: UserOperator) => Promise<void>) {
         this.ops.set(directive, { redo, undo });
     }
-    private async redo(action: UserAction) {
-        await this.sync(ActionDirective.onRedo, async () => {
-            await this.redoUserAction(action);
-        });
-        this.emit('redo', action)
-    }
-    private async undo(action: UserAction) {
-        await this.sync(ActionDirective.onUndo, async () => {
-            for (let i = action.operators.length - 1; i >= 0; i--) {
+    async redo() {
+        await this.historyRecord.redo(async (action) => {
+            for (let i = 0; i < action.operators.length; i++) {
                 let op = action.operators[i];
                 var command = this.ops.get(op.directive);
                 if (command) {
@@ -99,14 +93,21 @@ export class HistorySnapshoot extends Events {
                 }
                 else this.emit("warn", new Warn(ExceptionType.notRegisterActionDirectiveInHistorySnapshoot))
             }
-        });
-        this.emit('undo', action)
+            this.emit('redo', action)
+        })
     }
-    async onRedo() {
-        this.historyRecord.redo();
-    }
-    async onUndo() {
-        this.historyRecord.undo()
+    async undo() {
+        await this.historyRecord.undo(async (action) => {
+            for (let i = action.operators.length - 1; i >= 0; i--) {
+                let op = action.operators[i];
+                var command = this.ops.get(op.directive);
+                if (command) {
+                    await command.undo(op);
+                }
+                else this.emit("warn", new Warn(ExceptionType.notRegisterActionDirectiveInHistorySnapshoot))
+            }
+            this.emit('undo', action)
+        })
     }
     async redoUserAction(action: UserAction) {
         for (let i = 0; i < action.operators.length; i++) {
@@ -132,10 +133,9 @@ export interface HistorySnapshoot {
     emit(name: 'redo', action: UserAction);
     emit(name: "history", action: UserAction);
 
-    record(directive: OperatorDirective.delete, data: { parentId: string, childKey?: string, at?: number, preBlockId?: string, data: Record<string, any> });
-    record(directive: OperatorDirective.create, data: { parentId: string, childKey?: string, at?: number, preBlockId?: string, data: Record<string, any> });
-    record(directive: OperatorDirective.remove, data: { parentId: string, childKey?: string, blockId: string, at?: number, preBlockId?: string });
-    record(directive: OperatorDirective.append, data: { parentId: string, childKey?: string, blockId: string, at?: number, preBlockId?: string });
+    record(directive: OperatorDirective.delete, data: { parentId: string, childKey?: string, at?: number, data: Record<string, any> });
+    record(directive: OperatorDirective.create, data: { parentId: string, childKey?: string, at?: number, data: Record<string, any> });
+    record(directive: OperatorDirective.append, data: { to: { parentId: string, childKey?: string, at?: number }, from: { parentId: string, childKey?: string, at?: number }, blockId: string });
     record(directive: OperatorDirective.updateProp, data: { blockId: string, old: any, new: any });
     /**
      * 替换文本内容，表示在[start,end]之间替成成text

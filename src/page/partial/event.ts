@@ -1,5 +1,6 @@
 
 import { Page } from "..";
+import { ActionDirective } from "../../history/declare";
 export class PageEvent {
     /**
      * 鼠标点击页面,
@@ -65,6 +66,16 @@ export class PageEvent {
     }
     onGlobalMousedown(this: Page, event: MouseEvent) {
 
+    }
+    async onUndo(this: Page) {
+        await this.onAction(ActionDirective.onUndo, async () => {
+            await this.snapshoot.undo();
+        })
+    }
+    async onRedo(this: Page) {
+        await this.onAction(ActionDirective.onRedo, async () => {
+            await this.snapshoot.redo();
+        })
     }
 }
 
