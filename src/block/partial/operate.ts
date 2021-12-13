@@ -9,35 +9,7 @@ import { BlockRenderRange } from "../enum";
 import lodash from 'lodash';
 import { AppearAnchor } from "../appear";
 export class Block$Operator {
-    /**
-    * 移走元素，这个不是删除，
-    * 元素更多的是从当前位置移到别一个位置
-    * @returns 
-    */
-    async remove(this: Block) {
-        if (!this.parent) return;
-        var pbs = this.parentBlocks;
-        if (Array.isArray(pbs) && pbs.exists(g => g === this)) {
-            this.page.snapshoot.record(OperatorDirective.remove, {
-                parentId: this.parent.id,
-                childKey: this.parentKey,
-                at: this.at,
-                preBlockId: this.prev ? this.prev.id : undefined
-            });
-            pbs.remove(this);
-            if (pbs.length > 0) {
-                if (this.parent.isRow && !this.parent.isPart) {
-                    var sum = pbs.sum(pb => (pb as any).widthPercent || 100);
-                    pbs.each(pb => {
-                        pb.updateProps({ widthPercent: ((pb as any).widthPercent || 100) * 100 / sum })
-                    })
-                }
-            }
-            this.page.addBlockUpdate(this.parent);
-            this.page.addBlockClearLayout(this.parent);
-            delete this.parent;
-        }
-    }
+
     /***
      * 彻底的删除元素
      */
@@ -48,7 +20,6 @@ export class Block$Operator {
                 parentId: this.parent.id,
                 childKey: this.parentKey,
                 at: this.at,
-                preBlockId: this.prev ? this.prev.id : undefined,
                 data: await this.get()
             })
             pbs.remove(this);
@@ -130,6 +101,29 @@ export class Block$Operator {
             to.parentKey
         );
     }
+    /**
+    * 移走元素，这个不是删除，
+    * 元素更多的是从当前位置移到别一个位置
+    * @returns 
+    */
+    private async remove(this: Block) {
+        if (!this.parent) return;
+        var pbs = this.parentBlocks;
+        if (Array.isArray(pbs) && pbs.exists(g => g === this)) {
+            pbs.remove(this);
+            if (pbs.length > 0) {
+                if (this.parent.isRow && !this.parent.isPart) {
+                    var sum = pbs.sum(pb => (pb as any).widthPercent || 100);
+                    pbs.each(pb => {
+                        pb.updateProps({ widthPercent: ((pb as any).widthPercent || 100) * 100 / sum })
+                    })
+                }
+            }
+            this.page.addBlockUpdate(this.parent);
+            this.page.addBlockClearLayout(this.parent);
+            delete this.parent;
+        }
+    }
     async append(this: Block, block: Block, at?: number, childKey?: string) {
         if (typeof childKey == 'undefined') childKey = 'childs';
         if (!this.allBlockKeys.some(s => s == childKey)) {
@@ -140,14 +134,21 @@ export class Block$Operator {
         if (block.parent && bs.exists(block) && block.at < at) {
             at -= 1;
         }
+        var from = {
+            parentId: block.parent.id,
+            childKey: block.parentKey,
+            at: block.at,
+        }
         await block.remove();
         bs.insertAt(at, block);
         block.parent = this;
         this.page.snapshoot.record(OperatorDirective.append, {
-            parentId: this.id,
-            childKey,
-            at,
-            prevBlockId: block.prev ? block.prev.id : undefined,
+            to: {
+                parentId: this.id,
+                childKey,
+                at,
+            },
+            from: from,
             blockId: block.id
         });
         this.page.addBlockUpdate(this);

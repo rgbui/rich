@@ -24,7 +24,7 @@ export enum ActionDirective {
     onCreateTailTextSpan = 118,
     onBackTurn = 119,
     onBatchDragBlockDatas = 120,
-    onButtonTemplateCreateInstance=121,
+    onButtonTemplateCreateInstance = 121,
 
     onSchemaCreateField = 200,
     onSchemaDeleteField = 201,
@@ -49,13 +49,13 @@ export enum OperatorDirective {
     inputDeleteStore = 102,
     create = 103,
     /**
-     * 删除，你可以认为是彻底的删除了
+     * 删除，你可以认为是彻底的删除了,与create正好相反
      */
     delete = 104,
     /**
      * 移除，可以认为是脱离了当前节点树
      */
-    remove = 105,
+    // remove = 105,
     append = 107,
     /**
      * 更新属性
