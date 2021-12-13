@@ -1,0 +1,68 @@
+{
+    "operators": [
+        {
+            "directive": 103,
+            "data": {
+                "parentId": "vVRxrzeM5ZbEuhviSrDp7B",
+                "childKey": "childs",
+                "at": 2,
+                "preBlockId": "9k8ugmPvBYHB9mZmeigFBZ",
+                "data": {}
+            }
+        },
+        {
+            "directive": 105,
+            "data": {
+                "parentId": "vVRxrzeM5ZbEuhviSrDp7B",
+                "childKey": "childs",
+                "at": 4,
+                "preBlockId": "inTRZwrGwGjcpqr9PKGPz3"
+            }
+        },
+        {
+            "directive": 107,
+            "data": {
+                "parentId": "6YvDEMEsR5QZCdhybJocy1",
+                "childKey": "childs",
+                "at": 0,
+                "blockId": "kbm57bUe6YrtRmgP6fGx1G"
+            }
+        },
+        {
+            "directive": 105,
+            "data": {
+                "parentId": "vVRxrzeM5ZbEuhviSrDp7B",
+                "childKey": "childs",
+                "at": 3,
+                "preBlockId": "iSZeiEKaSY6rAo1iqyR8MN"
+            }
+        },
+        {
+            "directive": 107,
+            "data": {
+                "parentId": "spESjrRYopmPcRSZPzXwRB",
+                "childKey": "childs",
+                "at": 0,
+                "blockId": "inTRZwrGwGjcpqr9PKGPz3"
+            }
+        }
+    ],
+    "id": "vz5owX8vP2mRMATCuafXvn",
+    "user": {
+        "id": "4E44XPBL-1",
+        "inc": null,
+        "createDate": null,
+        "phone": null,
+        "paw": null,
+        "name": "kan",
+        "avatar": {
+            "name": "image",
+            "url": "http://localhost:8889/file/4Ea9Vd3h-2/content"
+        },
+        "email": null,
+        "slogan": "sdddd"
+    },
+    "directive": 102,
+    "startDate": 1639412415479,
+    "endDate": 1639412415493
+}
