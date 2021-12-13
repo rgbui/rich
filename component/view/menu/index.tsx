@@ -39,7 +39,7 @@ class MenuPanel<T> extends EventsComponent {
     menus: MenuItemType<T>[] = [];
     mb: MenuBox;
     render() {
-        return this.visible && <div className='shy-menu-panel'>
+        return this.visible && <div data-shy-page-unselect="true" className='shy-menu-panel'>
             <div className='shy-menu-mask' style={{ zIndex: popoverLayer.zoom(LayerWield.menuMask) }} onMouseDown={e => this.onClose(e)}></div>
             <MenuBox style={{ height: this.options.height, maxHeight: this.options.height, overflow: this.options.overflow }} ref={e => this.mb = e} select={(item, event) => this.onSelect(item as any, event)} items={this.menus as any} deep={0}></MenuBox>
         </div>
