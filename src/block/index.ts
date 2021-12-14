@@ -327,6 +327,9 @@ export abstract class Block extends Events {
     get appearAnchors() {
         return this.__appearAnchors;
     }
+    getAppear(prop: string) {
+        return this.appearAnchors.find(g => g.prop == prop);
+    }
     get firstElementAppear() {
         return this.appearAnchors.first();
     }

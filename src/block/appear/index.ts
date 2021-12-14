@@ -83,4 +83,8 @@ export class AppearAnchor {
         }
         return anchor;
     }
+    updateElementHtml() {
+        var content = this.block[this.prop];
+        this.el.innerHTML = content;
+    }
 }
