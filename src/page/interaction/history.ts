@@ -1,4 +1,5 @@
 import { Page } from "..";
+import { BlockRenderRange } from "../../block/enum";
 import { OperatorDirective } from "../../history/declare";
 import { HistorySnapshoot } from "../../history/snapshoot";
 import { PageDirective } from "../directive";
@@ -16,6 +17,8 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             var value = block[key];
             var newValue = value.slice(0, operator.data.start) + operator.data.text + value.slice(operator.data.end);
             block.updateProps({ [key]: newValue });
+            var appear = block.getAppear(key);
+            if (appear) appear.updateElementHtml();
             page.addUpdateEvent(async () => {
                 page.kit.explorer.onFocusBlockAtAnchor(block,
                     operator.data.start + operator.data.text.length
@@ -29,6 +32,8 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             var value = block[key];
             var newValue = value.slice(0, operator.data.start) + operator.data.replaceText + value.slice(operator.data.start + operator.data.text.length);
             block.updateProps({ [key]: newValue });
+            var appear = block.getAppear(key);
+            if (appear) appear.updateElementHtml();
             page.addUpdateEvent(async () => {
                 page.kit.explorer.onFocusBlockAtAnchor(block,
                     operator.data.start + operator.data.replaceText.length

@@ -6,7 +6,7 @@ export function TextArea(props: {
     rf?: (e: HTMLElement) => void,
     style?: CSSProperties
 }) {
-    var ps = { ref: props.rf, style: props.style, placeholder: props.placeholder }
+    var ps = { ref: props.rf, style: props.style, placeholder: props.placeholder };
     return <span className='shy-appear-text'
         {...ps}
         dangerouslySetInnerHTML={{ __html: props.html }}></span>
