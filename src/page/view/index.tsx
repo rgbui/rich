@@ -22,10 +22,12 @@ export class PageView extends Component<{ page: Page }>{
     private _mousemove;
     private _mouseup;
     private _keyup;
+    private _keydown;
     el: HTMLElement;
     componentDidMount() {
         this.el = ReactDOM.findDOMNode(this) as HTMLElement;
         this.observeOutsideDrop();
+        this.el.addEventListener('keydown', (this._keydown = e => this.page.onKeydown(e)), true);
         document.addEventListener('mousedown', this._mousedown = this.page.onGlobalMousedown.bind(this));
         document.addEventListener('mousemove', (this._mousemove = this.page.onMousemove.bind(this.page)));
         document.addEventListener('mouseup', (this._mouseup = this.page.onMouseup.bind(this.page)));
@@ -73,6 +75,7 @@ export class PageView extends Component<{ page: Page }>{
         }
     }
     componentWillUnmount() {
+        this.el.removeEventListener('keydown', this._keydown, true);
         document.removeEventListener('mousedown', this._mousedown);
         document.removeEventListener('mouseup', this._mouseup);
         document.removeEventListener('mousemove', this._mousemove);
@@ -88,7 +91,7 @@ export class PageView extends Component<{ page: Page }>{
             fontSize: this.page.cfm.fontCss.fontSize + 'px'
         }
         return <div className={'shy-page-view' + (this.page.readonly ? " shy-page-view-readonly" : "")} style={pageStyle} tabIndex={1}
-            onKeyDownCapture={e => this.page.onKeydown(e.nativeEvent)}
+
             onFocusCapture={e => this.page.onFocusCapture(e.nativeEvent)}
             onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}
             onWheel={e => this.page.onWheel(e)}
