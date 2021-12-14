@@ -67,12 +67,30 @@
 
     &-ghost {
         background-color: transparent;
-        color      : rgb(225, 98, 89);
-        border     : 1px solid #ddd;
-        font-weight: normal;
+        color           : rgb(225, 98, 89);
+        border          : 1px solid #ddd;
+        font-weight     : normal;
 
         &:hover {
             background-color: #f5f5f5;
+        }
+    }
+
+    &-link {
+        background-color: transparent;
+        color           : rgb(46, 170, 220);
+        cursor          : pointer;
+        border-color    : transparent;
+        font-weight     : normal;
+        box-shadow      : none;
+
+        &:hover {
+            background-color: transparent;
+            color           : rgb(46, 170, 220);
+            cursor          : pointer;
+            border-color    : transparent;
+            font-weight     : normal;
+            box-shadow      : none;
         }
     }
 }
@@ -129,11 +147,12 @@
 
 .shy-select {
     position: relative;
-    width   : 100%;
-
     &-selection {
-        width: 100%;
-
+      
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : center;
+        cursor: pointer;
         input {
             width        : 100%;
             font-size    : 15px;
@@ -151,6 +170,16 @@
                 box-shadow: rgba(46 170 220, 0.7) 0px 0px 0px 1px inset, rgba(46 170 220, 0.4) 0px 0px 0px 2px !important;
             }
         }
+
+        span {
+            color    : rgb(55, 53, 47);
+            font-size: 12px;
+        }
+        svg {
+            fill       : rgba(55, 53, 47, 0.3);
+            width      : 10px;
+            margin-left: 4px;
+        }
     }
 
     &-drop {
@@ -159,16 +188,13 @@
         background   : white;
         z-index      : 2;
         box-shadow   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
-        top          : 34px;
-        left         : 0px;
-        right        : 0px;
+        top          : 28px;
         max-height   : 200px;
         overflow-y   : auto;
         overflow-x   : hidden;
+        min-width    : 80px;
 
         a {
-            display        : block;
-            position       : relative;
             display        : flex;
             justify-content: flex-start;
             align-items    : center;
