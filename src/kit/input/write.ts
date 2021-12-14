@@ -19,6 +19,7 @@ export class TextInput$Write {
             event.preventDefault();
             return;
         }
+        if (this.explorer.page.keyboardPlate.isPredict()) return;
         if (this.explorer.hasSelectionRange) {
             switch (event.key) {
                 case KeyboardCode.ArrowDown:
@@ -90,11 +91,13 @@ export class TextInput$Write {
                     break;
             }
         }
+      
+
         this.isWillInput = true;
     }
     private isWillInput: boolean;
     async onInput(this: TextInput, event: KeyboardEvent) {
-       
+
         if (this.isWillInput) {
             if (this.explorer.isOnlyAnchor) {
                 var anchor = this.explorer.activeAnchor;

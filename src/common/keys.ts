@@ -21,6 +21,8 @@ export class KeyboardPlate {
     private metaKey: boolean = false;
     private shiftKey: boolean = false;
     private keys: KeyboardCode[] = [];
+    private isKeyUped: boolean = true;
+    private lastKeydownDate: number;
     /**
      * 建议当前的keydown绑定按键捕获事件
      * @param event 
@@ -32,12 +34,28 @@ export class KeyboardPlate {
         this.ctrlKey = event.ctrlKey;
         if (!this.keys.exists(event.key as KeyboardCode))
             this.keys.push(event.key as KeyboardCode);
+        else {
+            /**
+             * 长按keydown，会不断的触发，这里减轻触发的情况
+             */
+            if (this.isKeyUped == false && typeof this.lastKeydownDate == 'number') {
+                var ts = (Date.now() - this.lastKeydownDate);
+                if (ts < 1000) return;
+            }
+            this.isKeyUped = false;
+            this.lastKeydownDate = Date.now();
+        }
         for (let i = 0; i < this.listeners.length; i++) {
             let listener = this.listeners[i];
             if (listener.predict(this) == true && typeof listener.keydown == 'function') listener.keydown(event, this);
         }
     }
+    isPredict() {
+        return this.listeners.some(s => s.predict(this) && typeof s.keydown == 'function')
+    }
     keyup(event: KeyboardEvent) {
+        this.isKeyUped = true;
+        delete this.lastKeydownDate;
         this.metaKey = event.metaKey;
         this.altKey = event.altKey;
         this.shiftKey = event.shiftKey;
