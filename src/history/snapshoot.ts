@@ -53,7 +53,6 @@ export class HistorySnapshoot extends Events {
             if (!(this.action.directive == ActionDirective.onRedo || this.action.directive == ActionDirective.onUndo))
                 this.historyRecord.push(this.action);
         };
-        console.log(JSON.stringify(this.action));
         console.log(this.action.toString());
         delete this.action;
     }
