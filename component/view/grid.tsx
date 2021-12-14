@@ -14,8 +14,10 @@ export class Row extends React.Component<{
             else cns.push(this.props.className)
         }
         var style: CSSProperties = {
+            display:'flex',
             justifyContent: 'flex-start',
-            alignItems: 'flex-start'
+            alignItems: 'flex-start',
+            flexWrap:'wrap'
         };
         if (this.props.align == 'center') style.justifyContent = 'center'
         else if (this.props.align == 'end') style.justifyContent = 'flex-end'
