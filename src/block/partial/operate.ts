@@ -507,7 +507,7 @@ export class Block$Operator {
                 lodash.set(this, prop, lodash.cloneDeep(props[prop]))
             }
         }
-        if (Object.keys(oldValue).length > 0) {
+        if (Object.keys(oldValue).length > 0 || Object.keys(newValue).length > 0) {
             this.changeProps(oldValue, newValue);
             this.syncUpdate(range);
             this.page.snapshoot.record(OperatorDirective.updateProp, {
@@ -536,6 +536,7 @@ export class Block$Operator {
             }
         }
         if (Object.keys(oldValue).length > 0) {
+
             this.syncUpdate(range);
             this.page.snapshoot.record(OperatorDirective.updateProp, {
                 blockId: this.id,
