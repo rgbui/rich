@@ -68,14 +68,16 @@ export class PageEvent {
 
     }
     async onUndo(this: Page) {
-        await this.onAction(ActionDirective.onUndo, async () => {
-            await this.snapshoot.undo();
-        })
+        if (this.snapshoot.historyRecord.isCanUndo)
+            await this.onAction(ActionDirective.onUndo, async () => {
+                await this.snapshoot.undo();
+            })
     }
     async onRedo(this: Page) {
-        await this.onAction(ActionDirective.onRedo, async () => {
-            await this.snapshoot.redo();
-        })
+        if (this.snapshoot.historyRecord.isCanRedo)
+            await this.onAction(ActionDirective.onRedo, async () => {
+                await this.snapshoot.redo();
+            })
     }
 }
 
