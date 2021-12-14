@@ -4,6 +4,7 @@ export function Input(props: {
     disabled?: boolean,
     value?: string,
     placeholder?: string,
+    readonly?:boolean,
     onChange?: (value: string) => void,
     onEnter?: (value) => void,
     clear?: boolean,
@@ -26,6 +27,7 @@ export function Input(props: {
             placeholder={props.placeholder}
             onInput={e => props.onChange && props.onChange(filterValue((e.target as HTMLInputElement).value))}
             onKeyDown={e => keydown(e)}
+            readOnly={props.readonly}
             maxLength={props.maxLength || undefined}
         ></input>
     </div>
