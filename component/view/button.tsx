@@ -7,6 +7,7 @@ export class Button extends React.Component<{
     onClick?: (event: React.MouseEvent) => void,
     block?: boolean,
     ghost?: boolean,
+    link?:boolean,
     style?: CSSProperties,
     size?: 'normal' | 'medium' | 'larger'
 }>{
@@ -23,7 +24,7 @@ export class Button extends React.Component<{
     render() {
         var props = this.props;
         var btn = <button style={this.props.style || {}}
-            className={'shy-button' + (props.ghost ? " shy-button-ghost" : "") + (this.props.size ? " shy-button-" + this.props.size : "")}
+            className={'shy-button'+(props.link?" shy-button-link":"") + (props.ghost ? " shy-button-ghost" : "") + (this.props.size ? " shy-button-" + this.props.size : "")}
             disabled={props.disabled || this._disabled ? props.disabled : false}
             onClick={e => props.onClick ? props.onClick(e) : undefined}
         >{props.icon && <Icon icon={props.icon}></Icon>}<span>{props.children}</span></button>;
