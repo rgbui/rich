@@ -9,7 +9,8 @@ export function Input(props: {
     onEnter?: (value) => void,
     clear?: boolean,
     maxLength?: number,
-    ignoreFilterWhitespace?: boolean
+    ignoreFilterWhitespace?: boolean,
+    name?:string
 }
 ) {
     function filterValue(value: string) {
@@ -29,6 +30,7 @@ export function Input(props: {
             onKeyDown={e => keydown(e)}
             readOnly={props.readonly}
             maxLength={props.maxLength || undefined}
+            name={props.name}
         ></input>
     </div>
 }
