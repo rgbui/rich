@@ -14,11 +14,11 @@ export class Row extends React.Component<{
             else cns.push(this.props.className)
         }
         var style: CSSProperties = {
-            display:'flex',
+            display: 'flex',
             justifyContent: 'flex-start',
             alignItems: 'flex-start',
-            flexWrap:'wrap',
-            ...(this.props.style||{})
+            flexWrap: 'wrap',
+            ...(this.props.style || {})
         };
         if (this.props.align == 'center') style.justifyContent = 'center'
         else if (this.props.align == 'end') style.justifyContent = 'flex-end'
@@ -59,7 +59,8 @@ export class Space extends React.Component<{
     direction?: 'x' | 'y'
     gap?: number,
     children?: React.ReactNode,
-    style?: CSSProperties
+    style?: CSSProperties,
+    onMousedown?: (event: React.MouseEvent) => void
 }>{
     render() {
         var style: CSSProperties = {
@@ -81,7 +82,7 @@ export class Space extends React.Component<{
             }
             else itemStyle.marginRight = this.props.gap || 10;
         }
-        return <div className='shy-space' style={style}>
+        return <div onMouseDown={e => this.props.onMousedown ? this.props.onMousedown(e) : undefined} className='shy-space' style={style}>
             {React.Children.map(this.props.children, (element, index) => {
                 return <div className='shy-space-item' style={itemStyle} key={index}>{element}</div>
             })}
