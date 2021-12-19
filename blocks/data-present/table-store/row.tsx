@@ -31,7 +31,7 @@ export class TableStoreRow extends Block {
         await cell.createCellContent();
     }
     async deleteCell(at: number) {
-        this.blocks.childs.removeAt(at);
+        await (this.blocks.childs[at] as Block).delete();
     }
 }
 @view('/tablestore/row')
