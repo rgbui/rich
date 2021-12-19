@@ -23,7 +23,7 @@ import person from "../../../src/assert/svg/types.person.svg";
 import { FieldType } from "../schema/field.type";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { Rect } from "../../../src/common/point";
-import { Dragger } from "../../../src/common/dragger";
+import { MouseDragger } from "../../../src/common/dragger";
 import { ActionDirective } from "../../../src/history/declare";
 import { MenuItemType, MenuItemTypeValue } from "../../../component/view/menu/declare";
 import loop from "../../../src/assert/svg/loop.svg";
@@ -51,9 +51,6 @@ export class TableStoreTh extends Block {
     }
     get tableStore(): TableStore {
         return (this.parent as TableStoreHead).tableStore;
-    }
-    get htmlContent() {
-        return TextEle.getTextHtml(this.field.text)
     }
     get isCol() {
         return true;
@@ -161,6 +158,7 @@ export class TableStoreTh extends Block {
         return items;
     }
 }
+
 @view('/tablestore/th')
 export class TableStoreThView extends BlockView<TableStoreTh>{
     renderIcon() {
@@ -199,53 +197,44 @@ export class TableStoreThView extends BlockView<TableStoreTh>{
             await this.block.onClickContextMenu(sr.item, sr.event);
         }
     }
-    didMount() {
-        this.dragger = new Dragger(this.resizeEl, 'col-resize');
-        this.dragger.mousedown = (event) => {
-            event.stopPropagation();
-            this.dragger.data.width = this.block.field.width;
-            this.dragger.data.blocks = this.block.tableStore.getBlocksByField(this.block.field)
-        };
-        this.dragger.move = (from, to) => {
-            var dx = to.x - from.x;
-            var newWidth = this.dragger.data.width + dx;
-            newWidth = Math.max(40, newWidth);
-            (this.dragger.data.blocks as Block[]).each(block => {
-                if (block.el) {
-                    block.el.style.width = newWidth + 'px';
+    async mousedownResize(e: React.MouseEvent) {
+        e.stopPropagation();
+        var self = this;
+        MouseDragger<{ width: number, blocks: Block[] }>({
+            event: e,
+            dis: 5,
+            moveStart(ev, data) {
+                data.width = self.block.field.width;
+                data.blocks = self.block.tableStore.getBlocksByField(self.block.field);
+            },
+            moving(ev, data, isEnd) {
+                var dx = ev.clientX - e.clientX;
+                var newWidth = data.width + dx;
+                newWidth = Math.max(40, newWidth);
+                (data.blocks as Block[]).each(block => {
+                    if (block.el) {
+                        block.el.style.width = newWidth + 'px';
+                    }
+                })
+                if (isEnd) {
+                    self.block.tableStore.onAction(ActionDirective.onTablestoreUpdateViewField, async () => {
+                        var at = self.block.tableStore.fields.findIndex(g => g === self.block.field);
+                        var field = self.block.field.clone();
+                        field.width = newWidth;
+                        self.block.tableStore.updateArrayUpdate('fields', at, field);
+                    })
                 }
-            })
-        }
-        this.dragger.moveEnd = (from, to) => {
-            var dx = to.x - from.x;
-            var newWidth = this.dragger.data.width + dx;
-            newWidth = Math.max(40, newWidth);
-            (this.dragger.data.blocks as Block[]).each(block => {
-                if (block.el) {
-                    block.el.style.width = newWidth + 'px';
-                }
-            })
-            this.block.tableStore.onAction(ActionDirective.onTablestoreUpdateViewField, async () => {
-                var at = this.block.tableStore.fields.findIndex(g => g === this.block.field);
-                var field = this.block.field.clone();
-                field.width = newWidth;
-                this.block.tableStore.updateArrayUpdate('fields', at, field);
-            })
-        }
-        this.dragger.bind();
+            }
+        });
     }
-    willUnmount() {
-        this.dragger.off();
-    }
-    dragger: Dragger
     resizeEl: HTMLElement;
     render() {
         return <div className='sy-tablestore-head-th'
             style={{ width: this.block.field.width + 'px' }}>
             {this.renderIcon()}
-            <TextArea rf={e => { this.block.elementAppear({ el: e, prop: 'field.text' }); }} html={this.block.htmlContent}></TextArea>
-            <Icon mousedown={e => this.mousedown(e)} className='sy-tablestore-head-th-operator' icon='elipsis:sy'></Icon>
-            <div ref={e => this.resizeEl = e} className='sy-tablestore-head-th-resize' ></div>
+            <span>{this.block.field.text}</span>
+            <Icon click={e => this.mousedown(e)} className='sy-tablestore-head-th-operator' icon='elipsis:sy'></Icon>
+            <div onMouseDown={e => this.mousedownResize(e)} ref={e => this.resizeEl = e} className='sy-tablestore-head-th-resize' ></div>
         </div>
     }
 }
