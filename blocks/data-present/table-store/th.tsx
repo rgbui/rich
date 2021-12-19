@@ -233,7 +233,7 @@ export class TableStoreThView extends BlockView<TableStoreTh>{
             style={{ width: this.block.field.width + 'px' }}>
             {this.renderIcon()}
             <span>{this.block.field.text}</span>
-            <Icon click={e => this.mousedown(e)} className='sy-tablestore-head-th-operator' icon='elipsis:sy'></Icon>
+            <Icon mousedown={e => e.stopPropagation()} click={e => this.mousedown(e)} className='sy-tablestore-head-th-operator' icon='elipsis:sy'></Icon>
             <div onMouseDown={e => this.mousedownResize(e)} ref={e => this.resizeEl = e} className='sy-tablestore-head-th-resize' ></div>
         </div>
     }
