@@ -124,21 +124,19 @@ export class TableStore extends Block {
             if (typeof at == 'undefined') at = this.fields.length - 1;
             var field = this.fields[at];
             this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
-                var result = await this.page.emitAsync(PageDirective.removeTableSchemaField, this.schema.id, field.name)
-                if (result.ok) {
-                    await (this.blocks.childs.first() as TableStoreHead).deleteTh(at);
-                    await this.blocks.rows.asyncMap(async (row: TableStoreRow) => {
-                        await row.deleteCell(at);
-                    });
-                    this.updateArrayRemove('fields', at);
-                }
+                // var result = await this.page.emitAsync(PageDirective.removeTableSchemaField, this.schema.id, field.name)
+                await (this.blocks.childs.first() as TableStoreHead).childs[at].delete()
+                await this.blocks.rows.asyncMap(async (row: TableStoreRow) => {
+                    await row.deleteCell(at);
+                });
+                this.updateArrayRemove('fields', at);
             });
         }
     }
     async onHideField(at?: number) {
         if (typeof at == 'undefined') at = this.fields.length - 1;
         this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
-            await (this.blocks.childs.first() as TableStoreHead).deleteTh(at);
+            await (this.blocks.childs.first() as TableStoreHead).childs[at].delete()
             await this.blocks.rows.asyncMap(async (row: TableStoreRow) => {
                 await row.deleteCell(at);
             });

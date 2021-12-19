@@ -7,22 +7,4 @@ export class OriginField extends Block {
     get isSupportTextStyle() {
         return false;
     }
-    // async onInputStore(value: string, at: number, end: number, action?: () => Promise<void>) {
-    //     if (this.parent) {
-    //         var pa = this.parent as any;
-    //         if (typeof pa.onUpdateCellValue == 'function') {
-    //             await pa.onUpdateCellValue(this.content);
-    //         }
-    //     }
-    //     if (typeof action == 'function') await action();
-    // }
-    // async onInputDeleteStore(value: string, start: number, end: number, action?: () => Promise<void>) {
-    //     if (this.parent) {
-    //         var pa = this.parent as any;
-    //         if (typeof pa.onUpdateCellValue == 'function') {
-    //             await pa.onUpdateCellValue(this.content);
-    //         }
-    //     }
-    //     if (typeof action == 'function') await action();
-    // }
 }
