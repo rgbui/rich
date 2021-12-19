@@ -72,6 +72,9 @@ export class TableStoreCell extends Block {
     get isCol() {
         return true;
     }
+    get handleBlock(): Block {
+        return this.parent;
+    }
 }
 @view('/tablestore/cell')
 export class TableStoreCellView extends BlockView<TableStoreCell>{

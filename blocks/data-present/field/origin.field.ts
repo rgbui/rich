@@ -7,4 +7,7 @@ export class OriginField extends Block {
     get isSupportTextStyle() {
         return false;
     }
+    get handleBlock(): Block {
+        return this.parent.parent;
+    }
 }

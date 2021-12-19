@@ -33,6 +33,9 @@ export class TableStoreRow extends Block {
     async deleteCell(at: number) {
         await (this.blocks.childs[at] as Block).delete();
     }
+    get handleBlock(): Block {
+        return this;
+    }
 }
 @view('/tablestore/row')
 export class TableRowView extends BlockView<TableStoreRow>{
