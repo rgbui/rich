@@ -2,6 +2,8 @@ import React from "react";
 import { Singleton } from "./Singleton";
 import { EventsComponent } from "./events.component";
 import { Button } from "../view/button";
+import "./style.less";
+import { Space } from "../view/grid";
 class SyConfirm extends EventsComponent {
     private msg: string;
     private description: string;
@@ -28,11 +30,13 @@ class SyConfirm extends EventsComponent {
         return this.visible && <div className='shy-confirm-box'>
             <div className='shy-confirm-mask' onMouseDown={e => this.onCancel()}></div>
             <div className='shy-confirm'>
-                <div className='syh-confirm-msg'>{this.msg}</div>
+                <div className='shy-confirm-msg'>{this.msg}</div>
                 {this.description && <div className='syh-confirm-description'>{this.description}</div>}
-                <div className='syh-confirm-buttons'>
-                    <Button onClick={e => this.onConfirm()}>保存</Button>
-                    <Button onClick={e => this.onCancel()} ghost>取消</Button>
+                <div className='syh-confirm-buttons' style={{ marginTop: 20 }}>
+                    <Space align="center">
+                        <Button onClick={e => this.onConfirm()}>确定</Button>
+                        <Button onClick={e => this.onCancel()} ghost>取消</Button>
+                    </Space>
                 </div>
             </div>
         </div>
