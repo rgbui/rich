@@ -70,12 +70,12 @@ export var BlockSelectorData: BlockGroup[] = [
             { text: '简单表格', pic: <img src={tablestore} />, url: '/table', description: '', label: '/表格' }
         ]
     },
-    // {
-    //     text: '数据',
-    //     childs: [
-    //         { text: '数据表格', operator: BlockSelectorOperator.createTable, pic: <img src={tablestore} />, url: "/table/store", label: '/数据表格' }
-    //     ]
-    // },
+    {
+        text: '数据',
+        childs: [
+            { text: '数据表格', pic: <img src={tablestore} />, url: "/table/store", label: '/数据表格' }
+        ]
+    },
     // {
     //     text: '嵌入',
     //     childs: [
