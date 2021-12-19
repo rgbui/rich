@@ -558,6 +558,7 @@ export class Block$Operator {
     }
     updateArrayRemove(this: Block, key: string, at: number, range = BlockRenderRange.self) {
         var data = this[key][at];
+        lodash.remove(this[key], (g, i) => i == at);
         this.page.snapshoot.record(OperatorDirective.arrayPropRemove, {
             blockId: this.id,
             propKey: key,
