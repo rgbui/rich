@@ -1,105 +1,93 @@
 import React from "react";
-import { Dragger } from "../../src/common/dragger";
-import { Point, Rect, RectUtility } from "../../src/common/point";
 import { EventsComponent } from "../../component/lib/events.component";
-import { Singleton } from "../../component/lib/Singleton";
-import './style.less';
-
-/**
- * 创建一个表格
- * 选择相对应的表模块
- * 
- */
-export class TableStoreSelector extends EventsComponent {
-    constructor(props) {
-        super(props);
-    }
-    get isVisible() {
-        return this.visible;
-    }
-    async open(rect: Rect) {
-        this.point = rect.leftBottom;
-        this.visible = true;
-        let adjustPostion = () => {
-            var el = this.el.querySelector(".sy-emoji-picker");
-            if (el) {
-                var bound = el.getBoundingClientRect();
-                var newPoint = RectUtility.getChildRectPositionInRect(this.point, Rect.from(bound))
-                if (!this.point.equal(newPoint)) {
-                    this.point = newPoint;
-                    this.forceUpdate()
+import { Col, Row, Space } from "../../component/view/grid";
+import { Button } from "../../component/view/button";
+import { Input } from "../../component/view/input";
+import { Select } from "../../component/view/select";
+import { PopoverPosition } from "../popover/position";
+import { PopoverSingleton } from "../popover/popover";
+import { FieldType } from "../../blocks/data-present/schema/field.type";
+import { ErrorText, Remark } from "../../component/view/text";
+export class TableFieldView extends EventsComponent {
+    render() {
+        var optionTypes: { text: string, value: any }[] = [
+            { text: '单行文本', value: FieldType.text },
+            { text: '多行文本', value: FieldType.textarea },
+            { text: '数字', value: FieldType.number },
+            { text: '单选', value: FieldType.option },
+            { text: '多选', value: FieldType.options },
+            { text: '勾选', value: FieldType.bool },
+            { text: '日期', value: FieldType.date },
+        ];
+        var self = this;
+        function save() {
+            self.error = '';
+            if (typeof self.check == 'function') {
+                var r = self.check(self.text);
+                if (r) {
+                    self.error = r;
+                    self.forceUpdate();
+                    return;
                 }
             }
+            self.forceUpdate();
+            self.emit('save', { text: self.text, type: self.type });
         }
-        // if (this.isLoaded == false) {
-        //     this.forceUpdate();
-        //     await this.import();
-        //     this.forceUpdate(() => { adjustPostion() })
-        // }
-        // else 
-        this.forceUpdate(() => { adjustPostion() })
-    }
-    close() {
-        this.visible = false;
-        this.forceUpdate();
-    }
-    private visible: boolean = false;
-    private point: Point = new Point(0, 0);
-    private el: HTMLElement;
-    private text: string = '';
-    render() {
-        var style: Record<string, any> = {};
-        style.top = this.point.y;
-        style.left = this.point.x;
-        return <div className='sy-table-store-box' ref={e => this.el = e}>
-            {this.visible && <div className='sy-table-store-selector' style={style}>
-                <input type='text' defaultValue={this.text} onChange={e => this.text = e.target.value} />
-                <button onClick={e => this.onCreate()}>创建</button>
-            </div>}
+        return <div style={{ padding: 10, width: 300 }}>
+            <Row>
+                <Col><Remark>表格列名:</Remark></Col>
+                <Col><Input onChange={e => this.text = e} value={this.text}></Input></Col>
+            </Row>
+            <Row>
+                <Col><Remark>表格列类型:</Remark></Col>
+                <Col><Select style={{ width: '100%' }} value={this.type} onChange={e => { this.type = e; self.forceUpdate(); }} options={optionTypes}>
+                </Select>
+                </Col>
+            </Row>
+            <Row style={{ marginTop: 10 }}>
+                <Col align="end">
+                    <Space>
+                        {this.error && <ErrorText>{this.error}</ErrorText>}
+                        <Button ghost onClick={e => this.emit('close')}>取消</Button>
+                        <Button onClick={save}>确定</Button>
+                    </Space>
+                </Col>
+            </Row>
         </div>
     }
-    private dragger: Dragger;
-    private _mousedown: (event: MouseEvent) => void;
-    componentDidMount() {
-        this.dragger = new Dragger(this.el);
-        this.dragger.bind();
-        document.addEventListener('mousedown', this._mousedown = this.globalMousedown.bind(this), true);
-    }
-    componentWillUnmount() {
-        if (this.dragger) this.dragger.off();
-        if (this._mousedown) document.removeEventListener('mousedown', this._mousedown, true);
-    }
-    private isLoaded: boolean = false;
-    private loading: boolean = false;
-    private onClose() {
-        this.close();
-        this.emit('close');
-    }
-    private globalMousedown(event: MouseEvent) {
-        var target = event.target as HTMLElement;
-        if (this.el.contains(target)) return;
-        if (this.visible == true) {
-            this.onClose()
-        }
-    }
-    onCreate() {
-        this.emit('create', { text: this.text });
-        this.close();
-    }
-    async import() {
-
+    private error: string = '';
+    private text: string = '';
+    private type: FieldType;
+    private check: (text: string) => string;
+    open(option: { text: string, type: FieldType }, check: (newText: string) => string) {
+        this.text = option.text;
+        this.type = option.type;
+        this.check = check;
+        this.forceUpdate();
     }
 }
 
-export async function OpenTableStoreSelector(rect: Rect) {
-    var selector = await Singleton(TableStoreSelector);
-    await selector.open(rect);
-    return new Promise((resolve: (data: any) => void, reject) => {
-        selector.only('create', (data) => {
+
+
+export async function OpenTableStoreAddField(pos: PopoverPosition,
+    option: {
+        text: string, type: FieldType,
+        check?: (newText: string) => string
+    }) {
+    let popover = await PopoverSingleton(TableFieldView);
+    let fv = await popover.open(pos);
+    fv.open(option, option.check);
+    return new Promise((resolve: (data: { text: string, type: FieldType }) => void, reject) => {
+        fv.only('save', (data: { text: string, type: FieldType }) => {
+            popover.close();
             resolve(data);
         });
-        selector.only('close', () => {
+        fv.only('close', () => {
+            popover.close();
             resolve(null);
+        })
+        popover.only('close', () => {
+            resolve(null)
         })
     })
 }
