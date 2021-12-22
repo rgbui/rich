@@ -1,6 +1,6 @@
 import React from "react";
-import { url, view } from "../../../src/block/factory/observable";
-import { BlockView } from "../../../src/block/view";
+import { url, view } from "../../../../src/block/factory/observable";
+import { BlockView } from "../../../../src/block/view";
 import { OriginField } from "./origin.field";
 @url('/field/check')
 export class FieldCheck extends OriginField {

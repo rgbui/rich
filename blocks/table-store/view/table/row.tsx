@@ -1,12 +1,12 @@
-import { Block } from "../../../src/block";
-import { BlockView } from "../../../src/block/view";
-import { BlockDisplay } from "../../../src/block/enum";
-import { url, view } from "../../../src/block/factory/observable";
+import { Block } from "../../../../src/block";
+import { BlockView } from "../../../../src/block/view";
+import { BlockDisplay } from "../../../../src/block/enum";
+import { url, view } from "../../../../src/block/factory/observable";
 import React from 'react';
-import { ChildsArea } from "../../../src/block/view/appear";
+import { ChildsArea } from "../../../../src/block/view/appear";
 import { TableStore } from "./table";
 import { TableStoreCell } from "./cell";
-import { BlockFactory } from "../../../src/block/factory/block.factory";
+import { BlockFactory } from "../../../../src/block/factory/block.factory";
 @url('/tablestore/row')
 export class TableStoreRow extends Block {
     display = BlockDisplay.block;

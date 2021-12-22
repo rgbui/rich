@@ -1,24 +1,24 @@
-import { Block } from "../../../src/block";
-import { BlockView } from "../../../src/block/view";
+import { Block } from "../../../../src/block";
+import { BlockView } from "../../../../src/block/view";
 import React from 'react';
-import { TableSchema } from "../schema/meta";
-import { prop, url, view } from "../../../src/block/factory/observable";
-import { BlockDisplay } from "../../../src/block/enum";
-import { BlockFactory } from "../../../src/block/factory/block.factory";
+import { TableSchema } from "../../schema/meta";
+import { prop, url, view } from "../../../../src/block/factory/observable";
+import { BlockDisplay } from "../../../../src/block/enum";
+import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { TableStoreRow } from "./row";
-import { ChildsArea } from "../../../src/block/view/appear";
-import { Pattern } from "../../../src/block/pattern";
-import { FieldSort, ViewField } from "../schema/view.field";
-import { util } from "../../../util/util";
-import { Exception, ExceptionType } from "../../../src/error/exception";
-import { FieldType } from "../schema/field.type";
-import { ActionDirective, OperatorDirective } from "../../../src/history/declare";
-import { Field } from "../schema/field";
+import { ChildsArea } from "../../../../src/block/view/appear";
+import { Pattern } from "../../../../src/block/pattern";
+import { FieldSort, ViewField } from "../../schema/view.field";
+import { util } from "../../../../util/util";
+import { Exception, ExceptionType } from "../../../../src/error/exception";
+import { FieldType } from "../../schema/field.type";
+import { ActionDirective, OperatorDirective } from "../../../../src/history/declare";
+import { Field } from "../../schema/field";
 import { TableStoreHead } from "./head";
-import { Confirm } from "../../../component/lib/confirm";
-import { PageDirective } from "../../../src/page/directive";
-import { OpenTableStoreAddField } from "../../../extensions/tablestore";
-import { Rect } from "../../../src/common/point";
+import { Confirm } from "../../../../component/lib/confirm";
+import { PageDirective } from "../../../../src/page/directive";
+import { OpenTableStoreAddField } from "../../../../extensions/tablestore";
+import { Rect } from "../../../../src/common/point";
 
 /***
  * 数据总共分三部分

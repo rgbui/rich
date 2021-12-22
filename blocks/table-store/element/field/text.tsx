@@ -1,7 +1,7 @@
 import React from "react";
-import { url, view } from "../../../src/block/factory/observable";
-import { TextArea } from "../../../src/block/view/appear";
-import { BlockView } from "../../../src/block/view";
+import { url, view } from "../../../../src/block/factory/observable";
+import { TextArea } from "../../../../src/block/view/appear";
+import { BlockView } from "../../../../src/block/view";
 import { OriginField } from "./origin.field";
 @url('/field/text')
 export class FieldText extends OriginField {

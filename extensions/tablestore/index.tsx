@@ -6,7 +6,7 @@ import { Input } from "../../component/view/input";
 import { Select } from "../../component/view/select";
 import { PopoverPosition } from "../popover/position";
 import { PopoverSingleton } from "../popover/popover";
-import { FieldType } from "../../blocks/data-present/schema/field.type";
+import { FieldType } from "../../blocks/table-store/schema/field.type";
 import { ErrorText, Remark } from "../../component/view/text";
 export class TableFieldView extends EventsComponent {
     render() {
