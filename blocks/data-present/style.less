@@ -11,25 +11,53 @@
         &-th {
             border         : 1px solid #ddd;
             display        : inline-flex;
+            flex-wrap      : nowrap;
             justify-content: flex-start;
             align-items    : center;
-            flex-shrink: 0;
-            padding        : 10px;
+            flex-shrink    : 0;
+            padding        : 5px;
             position       : relative;
 
-            >svg {
-                width              : 14px;
-                height             : 14px;
-                display            : block;
-                fill               : rgba(55, 53, 47, 0.4);
-                flex-shrink        : 0;
-                backface-visibility: hidden;
-                margin-right       : 10px;
+            &-icon {
+                flex-shrink    : 0;
+                flex-grow      : 0;
+                display        : inline-flex;
+                width          : 20px;
+                height         : 20px;
+                justify-content: center;
+                align-items    : center;
+
+                >svg {
+                    width              : 14px;
+                    height             : 14px;
+                    display            : block;
+                    fill               : rgba(55, 53, 47, 0.4);
+                    flex-shrink        : 0;
+                    backface-visibility: hidden;
+                    margin-right       : 10px;
+                }
+            }
+
+            &-field {
+                display      : flex;
+                flex-wrap    : nowrap;
+                height       : 20px;
+                line-height  : 20px;
+                flex-grow    : 1;
+                flex-shrink  : 1;
+                overflow     : hidden;
+                text-overflow: ellipsis;
             }
 
             &-operator {
-                visibility: hidden;
-                cursor    : pointer;
+                flex-shrink: 0;
+                flex-grow  : 0;
+                visibility : hidden;
+                cursor     : pointer;
+            }
+
+            &:hover {
+                z-index: 1000;
             }
 
             &:hover .sy-tablestore-head-th-operator {
@@ -39,7 +67,7 @@
             &-resize {
                 position  : absolute;
                 top       : 0px;
-                right     : 0px;
+                right     : -1px;
                 bottom    : 0px;
                 width     : 2px;
                 visibility: hidden;
@@ -66,8 +94,8 @@
             flex-wrap      : nowrap;
 
             &-cell {
-                border : 1px solid #ddd;
-                padding: 10px;
+                border     : 1px solid #ddd;
+                padding    : 5px;
                 flex-shrink: 0;
             }
 
