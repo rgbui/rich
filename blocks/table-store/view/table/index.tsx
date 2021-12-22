@@ -8,7 +8,7 @@ import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { TableStoreRow } from "./row";
 import { ChildsArea } from "../../../../src/block/view/appear";
 import { Pattern } from "../../../../src/block/pattern";
-import { FieldSort, ViewField } from "../../schema/view.field";
+import { FieldSort, TableStoreViewField } from "./view.field";
 import { util } from "../../../../util/util";
 import { Exception, ExceptionType } from "../../../../src/error/exception";
 import { FieldType } from "../../schema/field.type";
@@ -30,7 +30,7 @@ import { Rect } from "../../../../src/common/point";
 @url('/table/store')
 export class TableStore extends Block {
     @prop()
-    fields: ViewField[] = [];
+    fields: TableStoreViewField[] = [];
     @prop()
     schemaId: string;
     schema: TableSchema;
@@ -50,7 +50,7 @@ export class TableStore extends Block {
             }
             else if (n == 'fields') {
                 data.fields.each(n => {
-                    this.fields.push(new ViewField(n));
+                    this.fields.push(new TableStoreViewField(n));
                 })
             }
             else if (n == 'blocks') {
@@ -123,7 +123,7 @@ export class TableStore extends Block {
             var field = new Field();
             field.load(fieldData);
             this.schema.fields.push(field);
-            var vf = new ViewField({
+            var vf = new TableStoreViewField({
                 width: 120,
                 type: result.type,
                 name: field.name,
@@ -171,7 +171,7 @@ export class TableStore extends Block {
             var newField = new Field();
             newField.load(fd);
             this.schema.fields.push(newField);
-            var vf = new ViewField({
+            var vf = new TableStoreViewField({
                 width: 60,
                 type: newField.type,
                 name: newField.name,
@@ -214,7 +214,7 @@ export class TableStore extends Block {
 
         });
     }
-    async onRowUpdate(id: string, viewField: ViewField, value: any) {
+    async onRowUpdate(id: string, viewField: TableStoreViewField, value: any) {
         var vfName = viewField.name || viewField.text;
         var oldValue = this.data.find(g => g.id == id)[vfName];
         var newValue = value;
@@ -287,13 +287,13 @@ export class TableStore extends Block {
                         width: 60,
                     };
                     if ([FieldType.id, FieldType.sort].exists(f.type)) return undefined;
-                    var v = new ViewField(vf);
+                    var v = new TableStoreViewField(vf);
                     return v;
                 });
             }
         }
     }
-    getBlocksByField(field: ViewField) {
+    getBlocksByField(field: TableStoreViewField) {
         var keys = this.blockKeys;
         var at = this.fields.findIndex(g => g === field);
         var cs: Block[] = [];

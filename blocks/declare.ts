@@ -21,7 +21,7 @@ import './table/cell';
 import './table/row';
 import './table';
 
-import './table-store/view/table/table';
+import './table-store/view/table';
 import "./table-store/view/table/head";
 import "./table-store/view/table/th";
 import "./table-store/view/table/row";

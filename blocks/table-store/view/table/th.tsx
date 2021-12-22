@@ -4,7 +4,7 @@ import { BlockView } from "../../../../src/block/view";
 import { BlockDirective, BlockDisplay } from "../../../../src/block/enum";
 import { url, view } from "../../../../src/block/factory/observable";
 import React from "react";
-import { TableStore } from "./table";
+import { TableStore } from ".";
 import { TableStoreHead } from "./head";
 import { Icon } from "../../../../component/view/icon";
 import checkbox from "../../../../src/assert/svg/types.checkbox.svg";
@@ -34,7 +34,7 @@ import arrowUp from "../../../../src/assert/svg/arrowUp.svg";
 import arrowLeft from "../../../../src/assert/svg/arrowLeft.svg";
 import arrowRight from "../../../../src/assert/svg/arrowRight.svg";
 import hide from "../../../../src/assert/svg/hide.svg";
-import { FieldSort } from "../../schema/view.field";
+import { FieldSort } from "./view.field";
 
 @url('/tablestore/th')
 export class TableStoreTh extends Block {

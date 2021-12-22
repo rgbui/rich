@@ -1,12 +1,12 @@
-import { FieldType } from "./field.type";
-export class ViewField {
+import { FieldType } from "../../schema/field.type";
+export class TableStoreViewField {
     name?: string;
     display?: string;
     text?: string;
     type: FieldType;
     width: number;
     sort?: FieldSort
-    constructor(options: Partial<ViewField>) {
+    constructor(options: Partial<TableStoreViewField>) {
         if (typeof options == 'object') {
             Object.assign(this, options);
         }
@@ -21,7 +21,7 @@ export class ViewField {
         }
     }
     clone() {
-        return new ViewField(this.get());
+        return new TableStoreViewField(this.get());
     }
     getValue(row) {
         if (typeof this.name == 'string')

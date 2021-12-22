@@ -5,7 +5,7 @@ import { ChildsArea } from "../../../../src/block/view/appear";
 import { BlockDisplay } from "../../../../src/block/enum";
 import { Block } from "../../../../src/block";
 import { TableStoreRow } from "./row";
-import { TableStore } from "./table";
+import { TableStore } from ".";
 import { FieldType } from "../../schema/field.type";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
 @url('/tablestore/cell')
