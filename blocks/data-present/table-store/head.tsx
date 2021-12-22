@@ -28,7 +28,7 @@ export class TableStoreHeadView extends BlockView<TableStoreHead>{
         return <div className='sy-tablestore-head' >
             <ChildsArea childs={this.block.blocks.childs} />
             <div className='sy-tablestore-head-th'
-                style={{ width: 100 }} onClick={e => this.block.tableStore.onAddField()}>
+                style={{ width: 100 }} onClick={e => this.block.tableStore.onAddField(e)}>
                 <Icon icon={plus}></Icon>
             </div>
         </div>

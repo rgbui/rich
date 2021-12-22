@@ -67,10 +67,10 @@ export class TableStoreTh extends Block {
                 await this.tableStore.onSetSortField(index, FieldSort.desc)
                 break;
             case BlockDirective.arrowLeft:
-                await this.tableStore.onAddField(index)
+                await this.tableStore.onAddField(event, index)
                 break;
             case BlockDirective.arrowRight:
-                await this.tableStore.onAddField(index + 1)
+                await this.tableStore.onAddField(event, index + 1)
                 break;
             case BlockDirective.filter:
                 break;
@@ -231,8 +231,8 @@ export class TableStoreThView extends BlockView<TableStoreTh>{
     render() {
         return <div className='sy-tablestore-head-th'
             style={{ width: this.block.field.width + 'px' }}>
-            {this.renderIcon()}
-            <span>{this.block.field.text}</span>
+            <span className='sy-tablestore-head-th-icon' >{this.renderIcon()}</span>
+            <span className="sy-tablestore-head-th-field">{this.block.field.text}</span>
             <Icon mousedown={e => e.stopPropagation()} click={e => this.mousedown(e)} className='sy-tablestore-head-th-operator' icon='elipsis:sy'></Icon>
             <div onMouseDown={e => this.mousedownResize(e)} ref={e => this.resizeEl = e} className='sy-tablestore-head-th-resize' ></div>
         </div>

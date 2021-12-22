@@ -29,14 +29,14 @@ export class TableStoreCell extends Block {
         switch (this.field.type) {
             case FieldType.text:
                 cellContent = await BlockFactory.createBlock('/field/text', this.page, {
-                    content: this.field.getValue(row),
+                    value: this.field.getValue(row),
                     fieldType: this.field.type
                 }, this);
                 break;
             case FieldType.autoIncrement:
             case FieldType.number:
                 cellContent = await BlockFactory.createBlock('/field/number', this.page, {
-                    content: this.field.getValue(row),
+                    value: this.field.getValue(row),
                     fieldType: this.field.type
                 }, this);
                 break;
@@ -45,22 +45,29 @@ export class TableStoreCell extends Block {
             case FieldType.date:
                 cellContent = await BlockFactory.createBlock('/field/date', this.page, {
                     fieldType: this.field.type,
-                    content: this.field.getValue(row)
+                    value: this.field.getValue(row)
                 }, this);
                 break;
             case FieldType.option:
                 cellContent = await BlockFactory.createBlock('/field/option', this.page, {
                     fieldType: this.field.type,
-                    content: this.field.getValue(row)
+                    value: this.field.getValue(row)
                 }, this);
                 break;
             case FieldType.creater:
             case FieldType.modifyer:
                 cellContent = await BlockFactory.createBlock('/field/user', this.page, {
                     fieldType: this.field.type,
-                    content: this.field.getValue(row)
+                    value: this.field.getValue(row)
                 }, this);
                 break;
+            case FieldType.bool:
+                cellContent = await BlockFactory.createBlock('/field/check', this.page, {
+                    fieldType: this.field.type,
+                    value: this.field.getValue(row)
+                }, this);
+                break;
+
         }
         if (cellContent)
             this.blocks.childs.push(cellContent);

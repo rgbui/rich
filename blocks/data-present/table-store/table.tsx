@@ -17,6 +17,8 @@ import { Field } from "../schema/field";
 import { TableStoreHead } from "./head";
 import { Confirm } from "../../../component/lib/confirm";
 import { PageDirective } from "../../../src/page/directive";
+import { OpenTableStoreAddField } from "../../../extensions/tablestore";
+import { Rect } from "../../../src/common/point";
 
 /***
  * 数据总共分三部分
@@ -62,8 +64,9 @@ export class TableStore extends Block {
     initialData: { text: string, templateId?: string }
     async loadSchema() {
         if (this.schemaId) {
-            var schemaData = await this.page.emitAsync(PageDirective.loadTableSchema, this.schemaId);
+            var schemaData = await this.page.emitAsync(PageDirective.schemaLoad, this.schemaId);
             this.schema = new TableSchema(schemaData);
+            console.log('schemaData', schemaData)
         }
         else {
             this.page.onError(new Exception(ExceptionType.tableSchemaNotEmpty, '表格schema不为空'))
@@ -72,7 +75,7 @@ export class TableStore extends Block {
     isLoadData: boolean = false;
     async loadData() {
         if (this.schema) {
-            var r = await this.page.emitAsync(PageDirective.loadTableSchemaData, this.schema.id, {
+            var r = await this.page.emitAsync(PageDirective.schemaTableLoad, this.schema.id, {
                 index: this.index,
                 size: this.size
             });
@@ -99,18 +102,32 @@ export class TableStore extends Block {
         }
     }
     display = BlockDisplay.block;
-    async onAddField(at?: number) {
+    async onAddField(event: React.MouseEvent | MouseEvent, at?: number) {
         if (typeof at == 'undefined') at = this.fields.length;
+        var self = this;
+        var result = await OpenTableStoreAddField(
+            { roundArea: Rect.fromEle(event.target as HTMLDivElement) },
+            {
+                text: '',
+                type: FieldType.text,
+                check(newText) {
+                    if (!newText) return '表格列名不能为空'
+                    return self.fields.some(s => s.text == newText) ? '表列名有重复' : ""
+                }
+            }
+        );
+        if (!result) return;
         this.page.onAction(ActionDirective.onSchemaCreateField, async () => {
-            var fieldData = this.page.emitAsync(PageDirective.createTableSchemaField, { text: '列', type: FieldType.text })
+            var fieldData = await this.page.emitAsync(PageDirective.schemaCreateField, this.schema.id, { text: result.text, type: result.type })
+            console.log(fieldData);
             var field = new Field();
             field.load(fieldData);
             this.schema.fields.push(field);
             var vf = new ViewField({
-                width: 60,
-                type: field.type,
+                width: 120,
+                type: result.type,
                 name: field.name,
-                text: field.text
+                text: result.text
             });
             this.updateArrayInsert('fields', at, vf);
             await (this.blocks.childs.first() as TableStoreHead).createTh(at);
@@ -123,8 +140,9 @@ export class TableStore extends Block {
         if (await Confirm('确定要删除该列吗')) {
             if (typeof at == 'undefined') at = this.fields.length - 1;
             var field = this.fields[at];
+            var tf = this.schema.fields.find(g => g.name == field.name);
             this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
-                // var result = await this.page.emitAsync(PageDirective.removeTableSchemaField, this.schema.id, field.name)
+                var result = await this.page.emitAsync(PageDirective.schemaRemoveField, this.schema.id, tf.id)
                 await (this.blocks.childs.first() as TableStoreHead).childs[at].delete()
                 await this.blocks.rows.asyncMap(async (row: TableStoreRow) => {
                     await row.deleteCell(at);
@@ -149,7 +167,7 @@ export class TableStore extends Block {
         var field = this.schema.fields.find(g => g.name == viewField.name);
         var fieldData = field.get()
         this.page.onAction(ActionDirective.onSchemaCreateField, async () => {
-            var fd = this.page.emitAsync(PageDirective.createTableSchemaField, { ...fieldData })
+            var fd = this.page.emitAsync(PageDirective.schemaCreateField, this.schema.id, { ...fieldData })
             var newField = new Field();
             newField.load(fd);
             this.schema.fields.push(newField);
@@ -186,35 +204,33 @@ export class TableStore extends Block {
             var newViewField = viewField.clone();
             newViewField.type = type;
             this.updateArrayUpdate('fields', at, newViewField);
-            await this.page.emitAsync(PageDirective.turnTypeTableSchemaField, this.schema.id, field.name, type)
+            await this.page.emitAsync(PageDirective.schemaTurnTypeField, this.schema.id, field.name, type)
         });
         await this.loadData()
     }
-    async onAddRow(id: string, arrow: 'append' | 'prev' = 'append') {
+    async onAddRow(id: string, arrow: 'down' | 'up' = 'down') {
         await this.page.onAction(ActionDirective.onSchemaCreateDefaultRow, async () => {
-            var r = await this.page.emitAsync(PageDirective.insertRow, this.schema.id, id, arrow);
-            // field.type = type;
-            // var newViewField = viewField.clone();
-            // newViewField.type = type;
-            // this.updateArrayUpdate('fields', at, newViewField);
-            // await this.page.emitAsync(PageDirective.turnTypeTableSchemaField, this.schema.id, field.name, type)
+            var newRow = await this.page.emitAsync(PageDirective.schemaInsertRow, this.schema.id, {}, { id, pos: arrow });
+
         });
     }
     async onRowUpdate(id: string, viewField: ViewField, value: any) {
-        var oldValue = this.data.find(g => g.id == id)[viewField.name];
+        var vfName = viewField.name || viewField.text;
+        var oldValue = this.data.find(g => g.id == id)[vfName];
         var newValue = value;
+        console.log('on', viewField, oldValue, newValue);
         if (!util.valueIsEqual(oldValue, newValue)) {
             await this.page.onAction(ActionDirective.onSchemaRowUpdate, async () => {
                 this.page.snapshoot.record(OperatorDirective.schemaRowUpdate, {
                     schemaId: this.schema.id,
                     id,
-                    new: { [viewField.name]: newValue },
-                    old: { [viewField.name]: oldValue }
+                    new: { [vfName]: newValue },
+                    old: { [vfName]: oldValue }
                 });
-                await this.page.emitAsync(PageDirective.updateRow,
+                await this.page.emitAsync(PageDirective.schemaUpdateRow,
                     this.schema.id,
                     id,
-                    { [viewField.name]: newValue }
+                    { [vfName]: newValue }
                 )
             })
         }
@@ -226,7 +242,7 @@ export class TableStore extends Block {
                 schemaId: this.schema.id,
                 data: util.clone(data)
             });
-            await this.page.emitAsync(PageDirective.deleteRow,
+            await this.page.emitAsync(PageDirective.schemaDeleteRow,
                 this.schema.id,
                 id
             );
@@ -259,7 +275,7 @@ export class TableStore extends Block {
     }
     async created() {
         if (!this.schemaId) {
-            var schemaData = await this.page.emitAsync(PageDirective.createDefaultTableSchema, this.initialData);
+            var schemaData = await this.page.emitAsync(PageDirective.schemaCreate, this.initialData);
             this.schema = new TableSchema(schemaData);
             this.schemaId = this.schema.id;
             if (this.fields.length == 0) {
