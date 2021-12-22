@@ -10,6 +10,6 @@ export class FieldText extends OriginField {
 @view('/field/text')
 export class FieldTextView extends BlockView<FieldText>{
     render() {
-        return <div className='sy-field-text'><TextArea rf={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent}></TextArea></div>
+        return <div className='sy-field-text'><TextArea rf={e => this.block.elementAppear({ el: e, prop: 'value' })} placeholder="输入文本" html={this.block.value}></TextArea></div>
     }
 }

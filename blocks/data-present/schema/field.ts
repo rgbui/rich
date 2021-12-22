@@ -1,5 +1,6 @@
 import { FieldType } from "./field.type";
 export class Field {
+    id:string;
     name: string
     text: string
     type: FieldType

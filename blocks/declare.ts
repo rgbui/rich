@@ -31,6 +31,7 @@ import "./data-present/field/number";
 import "./data-present/field/date";
 import "./data-present/field/option";
 import "./data-present/field/user";
+import "./data-present/field/check";
 
 import "./at/date";
 import './at/link';

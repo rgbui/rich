@@ -20,7 +20,6 @@ export class FieldTextView extends BlockView<FieldNumber>{
     render() {
         if (this.block.fieldType == FieldType.autoIncrement)
             return <div className='sy-field-text'>{this.block.htmlContent}</div>
-        else
-            return <div className='sy-field-text'><TextArea rf={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent}></TextArea></div>
+        else return <div className='sy-field-text'><TextArea placeholder="输入数字" rf={e => this.block.elementAppear({ el: e, prop: 'value' })} html={this.block.value}></TextArea></div>
     }
 }

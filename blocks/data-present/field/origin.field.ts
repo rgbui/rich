@@ -4,6 +4,7 @@ import { FieldType } from "../schema/field.type";
 export class OriginField extends Block {
     fieldType: FieldType;
     display = BlockDisplay.block;
+    value: any;
     get isSupportTextStyle() {
         return false;
     }
