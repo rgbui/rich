@@ -66,7 +66,7 @@ export class TableCellView extends BlockView<TableCell>{
                         var table = this.block.row.table;
                         var cs = lodash.cloneDeep(table.cols);
                         cs.splice(at, 0, { width: 250 });
-                        table.updateProps({ cols: cs }, BlockRenderRange.self);
+                        await table.updateProps({ cols: cs }, BlockRenderRange.self);
                         await table.childs.eachAsync(async (row) => {
                             await row.page.createBlock('/table/cell', {}, row, at);
                         })
@@ -78,7 +78,7 @@ export class TableCellView extends BlockView<TableCell>{
                         var table = this.block.row.table;
                         var cs = lodash.cloneDeep(table.cols);
                         cs.splice(at + 1, 0, { width: 250 });
-                        table.updateProps({ cols: cs }, BlockRenderRange.self);
+                        await table.updateProps({ cols: cs }, BlockRenderRange.self);
                         await table.childs.eachAsync(async (row) => {
                             await row.page.createBlock('/table/cell', {}, row, at + 1);
                         })

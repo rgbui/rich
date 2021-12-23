@@ -26,8 +26,8 @@ export class Block$Operator {
             if (pbs.length > 0) {
                 if (this.parent.isRow && !this.parent.isPart) {
                     var sum = pbs.sum(pb => (pb as any).widthPercent || 100);
-                    pbs.each(pb => {
-                        pb.updateProps({ widthPercent: ((pb as any).widthPercent || 100) * 100 / sum })
+                    await pbs.eachAsync(async (pb) => {
+                        await pb.updateProps({ widthPercent: ((pb as any).widthPercent || 100) * 100 / sum })
                     })
                 }
             }
@@ -75,8 +75,8 @@ export class Block$Operator {
             var cols = this.childs;
             if (cols.length > 1) {
                 var sum = cols.sum(x => (x as Col).widthPercent);
-                cols.forEach(col => {
-                    col.updateProps({ widthPercent: (col as Col).widthPercent * 100 / sum })
+                await cols.eachAsync(async (col) => {
+                    await col.updateProps({ widthPercent: (col as Col).widthPercent * 100 / sum })
                 })
             }
             else if (cols.length == 1) {
@@ -114,8 +114,8 @@ export class Block$Operator {
             if (pbs.length > 0) {
                 if (this.parent.isRow && !this.parent.isPart) {
                     var sum = pbs.sum(pb => (pb as any).widthPercent || 100);
-                    pbs.each(pb => {
-                        pb.updateProps({ widthPercent: ((pb as any).widthPercent || 100) * 100 / sum })
+                    await pbs.eachAsync(async (pb) => {
+                        await pb.updateProps({ widthPercent: ((pb as any).widthPercent || 100) * 100 / sum })
                     })
                 }
             }
@@ -227,8 +227,8 @@ export class Block$Operator {
                     var col = to.isCol ? to : to.parent;
                     var sum = col.childs.sum(x => (x as Col).widthPercent);
                     var r = Math.round(100 / (col.childs.length + 1));
-                    col.childs.each(c => {
-                        c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) })
+                    await col.childs.eachAsync(async (c) => {
+                        await c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) })
                     })
                     var newCol = await this.page.createBlock(BlockUrlConstant.Col, { widthPercent: r }, col.parent, col.at);
                     await newCol.append(this);
@@ -254,8 +254,8 @@ export class Block$Operator {
                     var col = to.isCol ? to : to.parent;
                     var sum = col.childs.sum(x => (x as Col).widthPercent);
                     var r = Math.round(100 / (col.childs.length + 1));
-                    col.childs.each(c => {
-                        c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) })
+                    await col.childs.eachAsync(async (c) => {
+                        await c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) })
                     })
                     var newCol = await this.page.createBlock(BlockUrlConstant.Col, { widthPercent: r }, col.parent, col.at + 1);
                     await newCol.append(this);
@@ -312,8 +312,8 @@ export class Block$Operator {
                     var col = this.isCol ? this : this.parent;
                     var sum = col.childs.sum(x => (x as Col).widthPercent);
                     var r = Math.round(100 / (col.childs.length + 1));
-                    col.childs.each(c => {
-                        c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) })
+                    await col.childs.eachAsync(async c => {
+                        await c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) })
                     })
                     var newCol = await this.page.createBlock(BlockUrlConstant.Col, { widthPercent: r }, col.parent, col.at);
                     await blocks.eachAsync(async (block) => {
@@ -343,8 +343,8 @@ export class Block$Operator {
                     var col = this.isCol ? this : this.parent;
                     var sum = col.childs.sum(x => (x as Col).widthPercent);
                     var r = Math.round(100 / (col.childs.length + 1));
-                    col.childs.each(c => {
-                        c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) })
+                    await col.childs.eachAsync(async c => {
+                        await c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) })
                     })
                     var newCol = await this.page.createBlock(BlockUrlConstant.Col, { widthPercent: r }, col.parent, col.at + 1);
                     await blocks.eachAsync(async (block) => {
@@ -405,8 +405,8 @@ export class Block$Operator {
                     var col = this.isCol ? this : this.parent;
                     var sum = col.childs.sum(x => (x as Col).widthPercent);
                     var r = Math.round(100 / (col.childs.length + 1));
-                    col.childs.each(c => {
-                        c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) })
+                    await col.childs.eachAsync(async c => {
+                        await c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) })
                     })
                     var newCol = await this.page.createBlock(BlockUrlConstant.Col, { widthPercent: r }, col.parent, col.at);
                     await blocks.eachAsync(async (block) => {
@@ -436,9 +436,9 @@ export class Block$Operator {
                     var col = this.isCol ? this : this.parent;
                     var sum = col.childs.sum(x => (x as Col).widthPercent);
                     var r = Math.round(100 / (col.childs.length + 1));
-                    col.childs.each(c => {
-                        c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) })
-                    })
+                    await col.childs.eachAsync(async c => {
+                        await c.updateProps({ widthPercent: ((c as Col).widthPercent / sum) * (100 - r) })
+                    });
                     var newCol = await this.page.createBlock(BlockUrlConstant.Col, { widthPercent: r }, col.parent, col.at + 1);
                     await blocks.eachAsync(async (block) => {
                         await newCol.appendBlock(block);
@@ -486,7 +486,7 @@ export class Block$Operator {
 
     }
     async updateAppear(this: Block, appear: AppearAnchor, newValue: string, range = BlockRenderRange.none) {
-        this.updateProps({ [appear.prop]: newValue });
+        await this.updateProps({ [appear.prop]: newValue });
         await this.changeAppear(appear);
     }
     /**
@@ -497,7 +497,7 @@ export class Block$Operator {
     async changeAppear(this: Block, appear: AppearAnchor) {
 
     }
-    updateProps(this: Block, props: Record<string, any>, range = BlockRenderRange.self) {
+    async updateProps(this: Block, props: Record<string, any>, range = BlockRenderRange.self) {
         var oldValue: Record<string, any> = {};
         var newValue: Record<string, any> = {};
         for (let prop in props) {
@@ -508,7 +508,7 @@ export class Block$Operator {
             }
         }
         if (Object.keys(oldValue).length > 0 || Object.keys(newValue).length > 0) {
-            this.changeProps(oldValue, newValue);
+            await this.changeProps(oldValue, newValue);
             this.syncUpdate(range);
             this.page.snapshoot.record(OperatorDirective.updateProp, {
                 blockId: this.id,
@@ -522,7 +522,7 @@ export class Block$Operator {
      * @param oldProps 
      * @param newProps 
      */
-    changeProps(oldProps: Record<string, any>, newProps: Record<string, any>) {
+    async changeProps(oldProps: Record<string, any>, newProps: Record<string, any>) {
 
     }
     manualUpdateProps(this: Block, oldProps: Record<string, any>, newProps: Record<string, any>, range = BlockRenderRange.self) {

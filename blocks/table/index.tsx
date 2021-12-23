@@ -16,7 +16,7 @@ export class Table extends Block {
     @prop()
     cols: { width: number }[] = [];
     async created() {
-        this.updateProps({ cols: [{ width: 250 }, { width: 250 }] });
+        await this.updateProps({ cols: [{ width: 250 }, { width: 250 }] });
         await this.page.createBlock('/table/row',
             { blocks: { childs: [{ url: '/table/cell' }, { url: '/table/cell' }] } },
             this);
@@ -30,7 +30,7 @@ export class Table extends Block {
     async didMounted() {
         if (this.childs.length == 0) {
             this.page.onAction(ActionDirective.onErrorRepairDidMounte, async () => {
-                this.updateProps({ cols: [{ width: 250 }] });
+                await this.updateProps({ cols: [{ width: 250 }] });
                 await this.page.createBlock('/table/row',
                     { blocks: { childs: [{ url: '/table/cell' }] } },
                     this);
@@ -43,7 +43,7 @@ export class Table extends Block {
             })
         }
     }
-    
+
 }
 @view('/table')
 export class TableView extends BlockView<Table>{

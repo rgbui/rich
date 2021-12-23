@@ -101,7 +101,7 @@ export class Page$Operator {
             if (willCombineBlock.childs.length > 0) {
                 if (block.content && block.childs.length == 0) {
                     await this.createBlock(BlockUrlConstant.Text, { content: block.content }, block, 0);
-                    block.updateProps({ content: '' });
+                    await block.updateProps({ content: '' });
                 }
                 var cs = willCombineBlock.childs.map(c => c);
                 await cs.eachAsync(async (c) => {
@@ -111,7 +111,7 @@ export class Page$Operator {
             else {
                 if (block.content && block.childs.length == 0) {
                     await this.createBlock(BlockUrlConstant.Text, { content: block.content }, block, 0);
-                    block.updateProps({ content: '' });
+                    await block.updateProps({ content: '' });
                 }
                 if (willCombineBlock.content) {
                     await this.createBlock(BlockUrlConstant.Text, { content: willCombineBlock.content }, block, block.childs.length);

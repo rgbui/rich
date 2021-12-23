@@ -12,16 +12,14 @@ export class OriginField extends Block {
     get handleBlock(): Block {
         return this.parent.parent;
     }
-    changeProps(oldProps: Record<string, any>, newProps: Record<string, any>) {
+    async changeProps(oldProps: Record<string, any>, newProps: Record<string, any>) {
         if (newProps && Object.keys(newProps).length > 0) {
-
-        }
-    }
-    async onUpdateValue(value: any) {
-        await this.onUpdateProps({ value });
-        var cell = this.closest(x => x instanceof TableStoreCell) as TableStoreCell;
-        if (cell) {
-            await cell.onUpdateCellValue(value);
+            if (typeof newProps['value'] != 'undefined') {
+                var cell = this.closest(x => x instanceof TableStoreCell) as TableStoreCell;
+                if (cell) {
+                    await cell.onUpdateCellValue(newProps['value']);
+                }
+            }
         }
     }
 }

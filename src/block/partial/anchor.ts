@@ -278,7 +278,7 @@ export class Block$Anchor {
             var index = this.at;
             var newBlock: Block;
             if (frontConent) {
-                this.updateProps({ content: frontConent });
+                await this.updateProps({ content: frontConent });
                 newBlock = await this.page.createBlock(url, data, this.parent, index + 1);
                 if (latterContent) {
                     var cd = await this.cloneData(); cd.content = latterContent;
@@ -287,7 +287,7 @@ export class Block$Anchor {
             }
             else if (latterContent) {
                 newBlock = await this.page.createBlock(url, data, this.parent, index);
-                this.updateProps({ content: latterContent });
+                await this.updateProps({ content: latterContent });
             }
             else {
                 newBlock = await this.page.createBlock(url, data, this.parent, index);
@@ -301,7 +301,7 @@ export class Block$Anchor {
         else {
             var frontConent = this.content.slice(0, at);
             var latterContent = this.content.slice(at);
-            this.updateProps({ content: '' });
+            await  this.updateProps({ content: '' });
             var index = 0;
             if (frontConent) await this.page.createBlock(BlockUrlConstant.Text, { content: frontConent }, this, index++);
             var newBlock = await this.page.createBlock(url, data, this, index++);

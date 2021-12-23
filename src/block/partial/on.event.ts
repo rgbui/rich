@@ -157,7 +157,7 @@ export class Block$Event {
     }
     async onUpdateProps(this: Block, props: Record<string, any>, range = BlockRenderRange.none) {
         await this.page.onAction(ActionDirective.onUpdateProps, async () => {
-            this.updateProps(props, range);
+            await this.updateProps(props, range);
         })
     }
     async onManualUpdateProps(this: Block, oldProps: Record<string, any>, newProps: Record<string, any>, range = BlockRenderRange.none) {

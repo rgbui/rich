@@ -75,7 +75,7 @@ export class List extends Block {
     async acceptSubFromMove(sub: Block) {
         await this.append(sub, 0, 'subChilds');
         if (this.expand != true && this.listType == ListType.arrow) {
-            this.updateProps({ expand: true }, BlockRenderRange.self);
+            await this.updateProps({ expand: true }, BlockRenderRange.self);
         }
     }
     get isBackspaceAutomaticallyTurnText() {

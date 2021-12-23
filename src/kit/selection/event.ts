@@ -254,7 +254,7 @@ export class SelectionExplorer$Events {
                             if (styles)
                                 block.pattern.setStyles(styles);
                             if (props)
-                                block.updateProps(props);
+                                await block.updateProps(props);
                             if (block == start.block) ns = { block: block, at: start.at }
                             if (block == end.block) ne = { block: block, at: end.at }
                             return;
@@ -270,23 +270,23 @@ export class SelectionExplorer$Events {
                              * 说明当前的block是textContent
                              */
                             if (fissContent.before) {
-                                block.updateProps({ content: fissContent.before });
+                                await block.updateProps({ content: fissContent.before });
                                 var current = await (this.page.createBlock(url, { ...textAttributes, content: fissContent.current, pattern }, pa, (at += 1)));
                                 if (styles)
                                     current.pattern.setStyles(styles);
                                 if (props)
-                                    current.updateProps(props);
+                                    await current.updateProps(props);
                                 if (block == this.start.block) ns = { block: current, at: 0 }
                                 if (block == this.end.block) ne = { block: current, at: -1 }
                                 if (fissContent.after)
                                     await (this.page.createBlock(url, { ...textAttributes, content: fissContent.after, pattern }, pa, (at += 1)))
                             }
                             else {
-                                block.updateProps({ content: fissContent.current });
+                                await block.updateProps({ content: fissContent.current });
                                 if (styles)
                                     block.pattern.setStyles(styles);
                                 if (props)
-                                    block.updateProps(props);
+                                    await block.updateProps(props);
                                 if (block == this.start.block) ns = { block: block, at: 0 }
                                 if (block == this.end.block) ne = { block: block, at: -1 }
                                 await (this.page.createBlock(url, { ...textAttributes, content: fissContent.after, pattern }, pa, (at += 1)))
@@ -304,7 +304,7 @@ export class SelectionExplorer$Events {
                                 if (styles)
                                     current.pattern.setStyles(styles);
                                 if (props)
-                                    current.updateProps(props);
+                                    await current.updateProps(props);
                                 if (block == this.start.block) ns = { block: current, at: 0 }
                                 if (block == this.end.block) ne = { block: current, at: -1 }
                             }

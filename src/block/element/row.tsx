@@ -46,9 +46,9 @@ export class RowView extends BlockView<Row>{
                     });
                     await self.block.page.onAction(ActionDirective.onUpdateProps, async () => {
                         var total = ws.sum(x => x.width);
-                        ws.each(w => {
-                            w.block.updateProps({ widthPercent: Math.round(w.width * 100 / total) })
-                        });
+                        await ws.eachAsync(async (w) => {
+                            await w.block.updateProps({ widthPercent: Math.round(w.width * 100 / total) })
+                        })
                     });
                 }
                 self.scope.isMove = null;

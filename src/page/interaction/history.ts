@@ -16,7 +16,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             var key = operator.data.prop || 'content';
             var value = block[key];
             var newValue = value.slice(0, operator.data.start) + operator.data.text + value.slice(operator.data.end);
-            block.updateProps({ [key]: newValue });
+            await block.updateProps({ [key]: newValue });
             var appear = block.getAppear(key);
             if (appear) appear.updateElementHtml();
             page.addUpdateEvent(async () => {
@@ -31,7 +31,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             var key = operator.data.prop || 'content';
             var value = block[key];
             var newValue = value.slice(0, operator.data.start) + operator.data.replaceText + value.slice(operator.data.start + operator.data.text.length);
-            block.updateProps({ [key]: newValue });
+            await block.updateProps({ [key]: newValue });
             var appear = block.getAppear(key);
             if (appear) appear.updateElementHtml();
             page.addUpdateEvent(async () => {
@@ -47,7 +47,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             var key = operator.data.prop || 'content';
             var value = block[key];
             var newValue = value.slice(0, operator.data.end) + value.slice(operator.data.start);
-            block.updateProps({ [key]: newValue });
+            await block.updateProps({ [key]: newValue });
             page.addUpdateEvent(async () => {
                 page.kit.explorer.onFocusBlockAtAnchor(block,
                     operator.data.end
@@ -60,7 +60,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             var key = operator.data.prop || 'content';
             var value = block[key];
             var newValue = value.slice(0, operator.data.end) + operator.data.text + value.slice(operator.data.end);
-            block.updateProps({ [key]: newValue });
+            await block.updateProps({ [key]: newValue });
             page.addUpdateEvent(async () => {
                 page.kit.explorer.onFocusBlockAtAnchor(block,
                     operator.data.end + operator.data.text.length
@@ -122,12 +122,12 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     snapshoot.registerOperator(OperatorDirective.updateProp, async (operator) => {
         var block = page.find(x => x.id == operator.data.blockId);
         if (block) {
-            block.updateProps(operator.data.new);
+            await  block.updateProps(operator.data.new);
         }
     }, async (operator) => {
         var block = page.find(x => x.id == operator.data.blockId);
         if (block) {
-            block.updateProps(operator.data.old);
+            await  block.updateProps(operator.data.old);
         }
     });
     snapshoot.registerOperator(OperatorDirective.arrayPropInsert, async (operator) => {
