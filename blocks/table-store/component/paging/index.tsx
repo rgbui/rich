@@ -1,8 +1,8 @@
 import React from "react";
-import { Block } from "../../../src/block";
-import {  BlockDisplay } from "../../../src/block/enum";
-import { url, view } from "../../../src/block/factory/observable";
-import { BlockView } from "../../../src/block/view";
+import { Block } from "../../../../src/block";
+import {  BlockDisplay } from "../../../../src/block/enum";
+import { url, view } from "../../../../src/block/factory/observable";
+import { BlockView } from "../../../../src/block/view";
 
 @url('/paging')
 export class Paging extends Block {

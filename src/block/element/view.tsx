@@ -3,6 +3,7 @@ import React from 'react';
 import { BlockView } from "../view";
 import { url, view } from "../factory/observable";
 import { Block } from '..';
+import { ChildsArea } from '../view/appear';
 @url('/view')
 export class View extends Block {
     get isView() {
@@ -16,9 +17,6 @@ export class View extends Block {
 @view('/view')
 export class ViewComponent extends BlockView<View>{
     render() {
-        if (this.block && Array.isArray(this.block.childs))
-            return <div className='sy-block-view' >{this.block.childs.map(x => <x.viewComponent key={x.id} block={x}></x.viewComponent>
-            )}</div>
-        else return <div className='sy-block-view' ></div>
+        return <div className='sy-block-view' ><ChildsArea childs={this.block.childs}></ChildsArea></div>
     }
 }

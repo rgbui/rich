@@ -5,38 +5,23 @@ import React, { CSSProperties } from "react";
  */
 import dayjs, { Dayjs } from "dayjs";
 import { EventsComponent } from "../../component/lib/events.component";
-import { Point, Rect, RectUtility } from "../../src/common/point";
 
 import chevronLeft from "../../src/assert/svg/chevronLeft.svg";
 import chevronRight from "../../src/assert/svg/chevronRight.svg";
 import { Icon } from "../../component/view/icon";
-import { Singleton } from "../../component/lib/Singleton";
 import "./style.less";
 import { PopoverPosition } from "../popover/position";
+import { PopoverSingleton } from "../popover/popover";
 
 export class DatePicker extends EventsComponent {
     private date: Date = new Date();
-    private visible: boolean;
-    private el: HTMLElement;
-    private point: Point = new Point(0, 0);
-    open(pos: PopoverPosition, date: Date, options?: {}) {
+    open(date: Date, options?: {}) {
         this.mode = 'month';
         this.isInEditing = false;
         if (typeof date == 'string') date = new Date(date);
         if (!date) date = new Date();
-        this.visible = true;
-        this.point = pos.roundArea.leftTop;
-        this.forceUpdate(() => {
-            if (this.el) {
-                var b = Rect.from(this.el.getBoundingClientRect());
-                pos.elementArea = b;
-                var newPoint = RectUtility.cacPopoverPosition(pos);
-                if (!this.point.equal(newPoint)) {
-                    this.point = newPoint;
-                    this.forceUpdate();
-                }
-            }
-        })
+        this.date = date;
+        this.forceUpdate()
     }
     private renderDays(): JSX.Element {
         var dj = dayjs(this.date);
@@ -82,10 +67,14 @@ export class DatePicker extends EventsComponent {
         this.isInEditing = true;
         this.date = date.toDate();
         this.onChange();
+        this.onSave();
+    }
+    onSave() {
+        this.emit('save', this.date);
     }
     onChange() {
         this.emit('change', this.date);
-        this.forceUpdate()
+        this.forceUpdate();
     }
     onAdd(event: React.MouseEvent) {
         if (event) event.preventDefault()
@@ -120,10 +109,7 @@ export class DatePicker extends EventsComponent {
     }
     render() {
         var dj = dayjs(this.date);
-        var style: CSSProperties = { top: this.point.y, left: this.point.x };
-        return <div>{this.visible && <div className='shy-date-picker'
-            style={style}
-            ref={e => this.el = e}>
+        return <div className='shy-date-picker'>
             <div className='shy-date-picker-head'>
                 <div className='shy-date-picker-head-title'>
                     <span style={{ cursor: 'pointer' }} onMouseDown={e => this.setMode('year')} className={this.mode == 'year' ? "hover" : ""}>{dj.year()}年</span>
@@ -136,47 +122,35 @@ export class DatePicker extends EventsComponent {
                 </div>
             </div>
             {this.renderDays()}
-        </div>}</div>
-    }
-    private _mousedown: (event: MouseEvent) => void;
-    componentDidMount() {
-        document.addEventListener('mousedown', this._mousedown = this.globalMousedown.bind(this), true);
-    }
-    componentWillUnmount() {
-        if (this._mousedown) document.removeEventListener('mousedown', this._mousedown, true);
-    }
-    close() {
-        this.visible = false;
-        this.forceUpdate();
+        </div>
     }
     private onClose() {
-        this.close();
         this.emit('close');
     }
-    private globalMousedown(event: MouseEvent) {
-        var target = event.target as HTMLElement;
-        if (this.el?.contains(target)) return;
-        if (this.visible == true) {
-            this.onClose()
-        }
-    }
 }
-
 export interface DatePicker {
     only(name: 'change', fn: (data: Date) => void);
     emit(name: 'change', data: Date);
+    only(name: 'save', fn: (data: Date) => void);
+    emit(name: 'save', data: Date);
     only(name: 'close', fn: () => void);
     emit(name: 'close');
 }
 export async function useDatePicker(pos: PopoverPosition, date: Date, options?: {}) {
-    var datePicker = await Singleton(DatePicker);
-    await datePicker.open(pos, date, options);
+    let popover = await PopoverSingleton(DatePicker);
+    let datePicker = await popover.open(pos);
+    datePicker.open(date, options);
     return new Promise((resolve: (date: Date) => void, reject) => {
-        datePicker.only('change', (data) => {
+        datePicker.only('save', (data) => {
+            popover.close();
             resolve(data);
         });
+        popover.only('close', () => {
+            resolve(undefined)
+        })
         datePicker.only('close', () => {
-            resolve(null);
+            popover.close();
+            resolve(undefined);
         });
     })
 }

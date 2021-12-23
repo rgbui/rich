@@ -17,7 +17,7 @@ import { Field } from "../../schema/field";
 import { TableStoreHead } from "./head";
 import { Confirm } from "../../../../component/lib/confirm";
 import { PageDirective } from "../../../../src/page/directive";
-import { OpenTableStoreAddField } from "../../../../extensions/tablestore";
+import { useTableStoreAddField } from "../../../../extensions/tablestore";
 import { Rect } from "../../../../src/common/point";
 
 /***
@@ -105,7 +105,7 @@ export class TableStore extends Block {
     async onAddField(event: React.MouseEvent | MouseEvent, at?: number) {
         if (typeof at == 'undefined') at = this.fields.length;
         var self = this;
-        var result = await OpenTableStoreAddField(
+        var result = await useTableStoreAddField(
             { roundArea: Rect.fromEle(event.target as HTMLDivElement) },
             {
                 text: '',

@@ -18,7 +18,7 @@ export class FieldTextView extends BlockView<FieldDate>{
     async mousedown(e: React.MouseEvent) {
         e.stopPropagation();
         var el = e.target as HTMLElement;
-        var pickDate = await useDatePicker({ roundArea: Rect.from(el.getBoundingClientRect()) }, new Date());
+        var pickDate = await useDatePicker({ roundArea: Rect.from(el.getBoundingClientRect()) }, this.block.value);
         if (pickDate) {
             this.block.value = pickDate;
             this.forceUpdate();

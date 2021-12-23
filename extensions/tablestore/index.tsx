@@ -69,7 +69,7 @@ export class TableFieldView extends EventsComponent {
 
 
 
-export async function OpenTableStoreAddField(pos: PopoverPosition,
+export async function useTableStoreAddField(pos: PopoverPosition,
     option: {
         text: string, type: FieldType,
         check?: (newText: string) => string
