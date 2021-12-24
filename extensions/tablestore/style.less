@@ -1,0 +1,192 @@
+.shy-tablestore-option-selector {
+    width                  : 100%;
+    min-height             : 34px;
+    background             : rgba(242, 241, 238, 0.6);
+    border-top-left-radius : 3px;
+    border-top-right-radius: 3px;
+    font-size              : 14px;
+    cursor                 : text;
+    overflow               : auto;
+    padding                : 10px 0px 0px 0px;
+
+    &-input {
+        padding        : 0px 10px;
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : center;
+        flex-wrap      : wrap;
+
+        a {
+            height         : 18px;
+            border-radius  : 3px;
+            padding-left   : 6px;
+            padding-right  : 0px;
+            font-size      : 14px;
+            line-height    : 120%;
+            color          : rgb(73, 41, 14);
+            margin         : 0px 6px 6px 0px;
+            display        : inline-flex;
+            justify-content: center;
+            align-items    : center;
+
+            span {}
+
+            em {
+                user-select    : none;
+                transition     : background 20ms ease-in 0s;
+                cursor         : pointer;
+                display        : flex;
+                align-items    : center;
+                justify-content: center;
+                flex-grow      : 0;
+                flex-shrink    : 0;
+                margin-left    : 2px;
+                margin-right   : 2px;
+                width          : 18px;
+                height         : 18px;
+
+                svg {
+                    width  : 8px;
+                    height : 8px;
+                    opacity: 0.5;
+                    fill   : currentColor;
+                }
+            }
+        }
+
+        &-wrapper {
+            input {
+                font-size  : inherit;
+                line-height: inherit;
+                border     : none;
+                background : none;
+                width      : 100%;
+                display    : block;
+                resize     : none;
+                padding    : 0px;
+                height     : 18px;
+                outline    : none;
+            }
+        }
+    }
+
+    &-drop {
+        background-color: #fff;
+    }
+
+    .shy-tablestore-option-item {
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : center;
+        line-height    : 120%;
+        width          : 100%;
+        user-select    : none;
+        min-height     : 28px;
+        font-size      : 14px;
+        padding        : 0px 10px;
+        cursor         : pointer;
+
+        &-icon {
+            display        : flex;
+            align-items    : center;
+            justify-content: center;
+            width          : 18px;
+            height         : 24px;
+            flex-shrink    : 0;
+            cursor         : -webkit-grab;
+            margin-left    : -4px;
+
+            // margin-right   : -8px;
+            svg {
+                width              : 12px;
+                height             : 12px;
+                display            : block;
+                fill               : rgba(55, 53, 47, 0.4);
+                flex-shrink        : 0;
+                backface-visibility: hidden;
+            }
+        }
+
+        &-text {
+            margin-left : 4px;
+            margin-right: 6px;
+            min-width   : 0px;
+            flex        : 1 1 auto;
+
+            em {
+                font-style   : normal;
+                display      : inline-flex;
+                align-items  : center;
+                flex-shrink  : 1;
+                min-width    : 0px;
+                height       : 18px;
+                border-radius: 3px;
+                padding-left : 6px;
+                padding-right: 6px;
+                font-size    : 14px;
+                line-height  : 120%;
+                color        : rgb(73, 41, 14);
+            }
+        }
+
+        &-property {
+            margin-left : auto;
+            margin-right: 14px;
+            min-width   : 0px;
+            flex-shrink : 0;
+            visibility  : hidden;
+            cursor      : pointer;
+
+            svg {
+                width      : 14px;
+                height     : 14px;
+                display    : block;
+                fill       : rgba(55, 53, 47, 0.4);
+                flex-shrink: 0;
+            }
+        }
+
+        &:hover {
+            background-color: rgba(55, 53, 47, 0.08);
+
+            .shy-tablestore-option-item-property {
+                visibility: visible;
+            }
+        }
+    }
+
+    .shy-tablestore-option-item-create {
+        display        : flex;
+        align-items    : center;
+        line-height    : 120%;
+        width          : 100%;
+        user-select    : none;
+        min-height     : 28px;
+        font-size      : 14px;
+        color          : rgb(55, 53, 47);
+        padding        : 0px 10px;
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : center;
+        cursor         : pointer;
+
+        em {
+            font-style : normal;
+            line-height: 120%;
+        }
+
+        span {
+            height         : 18px;
+            border-radius  : 3px;
+            padding-left   : 6px;
+            padding-right  : 0px;
+            font-size      : 14px;
+            line-height    : 120%;
+            color          : rgb(73, 41, 14);
+            margin         : 0px 6px 6px 0px;
+            display        : inline-flex;
+            justify-content: center;
+            align-items    : center;
+        }
+    }
+}

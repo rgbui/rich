@@ -7,6 +7,8 @@ import { PopoverPosition } from "../popover/position";
 import CloseTick from "../../src/assert/svg/CloseTick.svg";
 import './style.less';
 import { Remark } from "../../component/view/text";
+import DragHandle from "../../src/assert/svg/DragHandle.svg";
+import Dots from "../../src/assert/svg/dots.svg";
 /**
  * 背景色
  */
@@ -41,13 +43,17 @@ export class TableStoreOption extends EventsComponent {
         }
         return <div className="shy-tablestore-option-selector">
             <div className="shy-tablestore-option-selector-input">
-                {this.option && <a style={{ backgroundColor: this.option.color }}><span>{this.option.text}</span><em><CloseTick></CloseTick></em></a>}
-                <input value={this.value} onInput={e => changeInput(e)} onKeyDown={e => keydown(e.nativeEvent)} />
+                {this.option && <a style={{ backgroundColor: this.option.color }}><span>{this.option.text}</span><em><CloseTick onClick={e => self.clearOption()}></CloseTick></em></a>}
+                <div className="shy-tablestore-option-selector-input-wrapper"><input value={this.value} onInput={e => changeInput(e)} onKeyDown={e => keydown(e.nativeEvent)} /></div>
             </div>
-            <Remark size="middle" style={{ height: 20 }}>{this.filterOptions.length > 0 ? '选择或创建一个选项' : '暂无选项'}</Remark>
             <div className="shy-tablestore-option-selector-drop">
+                <Remark style={{ height: 20, padding: '0px 10px' }}>{this.filterOptions.length > 0 ? '选择或创建一个选项' : '暂无选项'}</Remark>
                 {this.filterOptions.map(op => {
-                    return <div className="shy-tablestore-option-item" key={op.text} onMouseDown={e => this.setOption(op)} ><span style={{ backgroundColor: op.color }}>{op.text}</span></div>
+                    return <div className="shy-tablestore-option-item" key={op.text} onClick={e => this.setOption(op)} >
+                        <span className="shy-tablestore-option-item-icon"><DragHandle></DragHandle></span>
+                        <span className="shy-tablestore-option-item-text"><em style={{ backgroundColor: op.color }}>{op.text}</em></span>
+                        <span className="shy-tablestore-option-item-property" ><Dots></Dots></span>
+                    </div>
                 })}
                 {this.isNeedCreated && <div className="shy-tablestore-option-item-create" onClick={e => this.onCreateOption()}><em>创建</em><span style={{ backgroundColor: this.optionColor }}>{this.value}</span></div>}
             </div>
@@ -60,19 +66,18 @@ export class TableStoreOption extends EventsComponent {
         return BackgroundColorList.find(g => !this.options.some(o => o.color == g.color))?.color;
     }
     get filterOptions() {
-        return this.options.filter(g => g.text == this.value);
+        return this.options.filter(g => g.text == this.value || !this.value);
     }
     onCreateOption() {
         var text = this.value.trim();
+        this.value = '';
         if (!this.options.some(s => s.text == text)) {
-            this.value = text;
             this.option = { text, color: this.optionColor };
             this.options.push(this.option);
             this.emit('changeOptions', lodash.cloneDeep(this.options))
             this.forceUpdate();
         }
         else if (this.value != text) {
-            this.value = text;
             this.forceUpdate();
         }
     }
@@ -81,12 +86,17 @@ export class TableStoreOption extends EventsComponent {
         this.forceUpdate();
         this.emit('save', this.option.text);
     }
+    clearOption() {
+        this.value = '';
+        this.option = null;
+        this.forceUpdate();
+        this.emit('save', '');
+    }
     private value: string = '';
     private options: TableStoreOptionType[] = [];
     private option: TableStoreOptionType = null;
     open(value, data: { multiple: boolean, options: TableStoreOptionType[] }) {
         this.option = data.options.find(g => g.text == value);
-        if (!this.option) this.option = data.options[0];
         this.options = data.options;
         this.value = '';
         this.forceUpdate();

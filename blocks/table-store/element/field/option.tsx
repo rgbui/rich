@@ -6,7 +6,7 @@ import { BlockView } from "../../../../src/block/view";
 import { Rect } from "../../../../src/common/point";
 import { FieldConfig } from "../../schema/field";
 import { OriginField } from "./origin.field";
-
+import "./style.less";
 @url('/field/option')
 export class FieldOption extends OriginField {
     async onCellMousedown(event: React.MouseEvent<Element, MouseEvent>) {
@@ -22,16 +22,19 @@ export class FieldOption extends OriginField {
                 }
             }
         );
-        if (op) {
-            this.onUpdateProps({ value: op },BlockRenderRange.self);
+        if (op != null && typeof op != 'undefined') {
+            this.onUpdateProps({ value: op }, BlockRenderRange.self);
         }
     }
 }
 @view('/field/option')
 export class FieldTextView extends BlockView<FieldOption>{
     render() {
+        var fc: FieldConfig = this.block.schemaField.config;
+        var op = fc?.options ? fc.options.find(g => g.text == this.block.value) : undefined;
+
         return <div className='sy-field-text' style={{ display: 'block' }} >
-            <span>{this.block.value}</span>
+            <span style={{ backgroundColor: op?.color }}>{this.block.value}</span>
         </div>
     }
 }
