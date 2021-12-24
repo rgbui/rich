@@ -32,6 +32,10 @@ import "./table-store/element/field/date";
 import "./table-store/element/field/option";
 import "./table-store/element/field/user";
 import "./table-store/element/field/check";
+import "./table-store/element/field/image";
+import "./table-store/element/field/origin.field";
+import "./table-store/element/field/video";
+
 
 import "./at/date";
 import './at/link';

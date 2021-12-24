@@ -1,3 +1,4 @@
+import React from "react";
 import { Block } from "../../../../src/block";
 import { BlockDisplay } from "../../../../src/block/enum";
 import { FieldType } from "../../schema/field.type";
@@ -21,5 +22,20 @@ export class OriginField extends Block {
                 }
             }
         }
+    }
+    async onUpdateCellFieldSchema(props: Record<string, any>) {
+        var cell = this.closest(x => x instanceof TableStoreCell) as TableStoreCell;
+        if (cell) {
+            await cell.onUpdateCellFieldSchema(props);
+        }
+    }
+    get schemaField() {
+        var cell = this.closest(x => x instanceof TableStoreCell) as TableStoreCell;
+        if (cell) {
+            return cell.schemaField;
+        }
+    }
+    onCellMousedown(event: React.MouseEvent) {
+
     }
 }

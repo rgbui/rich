@@ -1,6 +1,7 @@
+import lodash from "lodash";
 import { FieldType } from "./field.type";
 export class Field {
-    id:string;
+    id: string;
     name: string
     text: string
     type: FieldType
@@ -19,7 +20,13 @@ export class Field {
         return {
             name: this.name,
             text: this.text,
-            type: this.type
+            type: this.type,
+            config: lodash.cloneDeep(this.config)
         }
     }
+    config?: FieldConfig
 }
+export interface FieldConfig {
+    options?: { text: string, color: string }[];
+}
+

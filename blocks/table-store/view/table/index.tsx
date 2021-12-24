@@ -214,26 +214,25 @@ export class TableStore extends Block {
 
         });
     }
-    async onRowUpdate(id: string, viewField: TableStoreViewField, value: any) {
+    async onRowUpdate(id: string,viewField: TableStoreViewField, value: any) {
         var vfName = viewField.name || viewField.text;
         var oldValue = this.data.find(g => g.id == id)[vfName];
         var newValue = value;
-        console.log('on', viewField, oldValue, newValue);
         if (!util.valueIsEqual(oldValue, newValue)) {
-            await this.page.onAction(ActionDirective.onSchemaRowUpdate, async () => {
-                this.page.snapshoot.record(OperatorDirective.schemaRowUpdate, {
-                    schemaId: this.schema.id,
-                    id,
-                    new: { [vfName]: newValue },
-                    old: { [vfName]: oldValue }
-                });
-                await this.page.emitAsync(PageDirective.schemaUpdateRow,
-                    this.schema.id,
-                    id,
-                    { [vfName]: newValue }
-                )
-            })
+            await this.page.emitAsync(PageDirective.schemaUpdateRow,
+                this.schema.id,
+                id,
+                { [vfName]: newValue }
+            )
         }
+    }
+    async onUpdateCellFieldSchema(field: Field, fs: Record<string, any>) {
+        field.load(fs);
+        await this.page.emitAsync(PageDirective.schemaUpdateField,
+            this.schema.id,
+            field.id,
+            { ...field.get() }
+        )
     }
     async onRowDelete(id: string) {
         var data = this.data.find(g => g.id == id);

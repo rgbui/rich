@@ -8,6 +8,7 @@ import { TableStoreRow } from "./row";
 import { TableStore } from ".";
 import { FieldType } from "../../schema/field.type";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
+import { OriginField } from "../../element/field/origin.field";
 @url('/tablestore/cell')
 export class TableStoreCell extends Block {
     display = BlockDisplay.block;
@@ -21,6 +22,9 @@ export class TableStoreCell extends Block {
     }
     get field() {
         return this.tableStore.fields[this.at];
+    }
+    get schemaField() {
+        return this.tableStore.schema?.fields.find(g => g.name == this.field?.name);
     }
     async createCellContent() {
         this.blocks.childs = [];
@@ -76,6 +80,12 @@ export class TableStoreCell extends Block {
         var id = this.tableRow.dataRow.id;
         await this.tableStore.onRowUpdate(id, this.field, value)
     }
+    async onUpdateCellField(props: Record<string, any>) {
+
+    }
+    async onUpdateCellFieldSchema(props: Record<string, any>) {
+        await this.tableStore.onUpdateCellFieldSchema(this.schemaField, props)
+    }
     get isCol() {
         return true;
     }
@@ -85,8 +95,16 @@ export class TableStoreCell extends Block {
 }
 @view('/tablestore/cell')
 export class TableStoreCellView extends BlockView<TableStoreCell>{
+    mousedown(event: React.MouseEvent) {
+        if (this.block.childs.length == 1) {
+            var cellBlock = this.block.childs.first();
+            if (cellBlock instanceof OriginField) {
+                cellBlock.onCellMousedown(event);
+            }
+        }
+    }
     render() {
-        return <div className='sy-tablestore-body-row-cell' ref={e => this.block.childsEl = e}
+        return <div className='sy-tablestore-body-row-cell' onMouseDown={e => this.mousedown(e)} ref={e => this.block.childsEl = e}
             style={{ width: this.block.field.width }}>
             <ChildsArea childs={this.block.childs}></ChildsArea>
         </div>

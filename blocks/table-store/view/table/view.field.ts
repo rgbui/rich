@@ -5,7 +5,8 @@ export class TableStoreViewField {
     text?: string;
     type: FieldType;
     width: number;
-    sort?: FieldSort
+    sort?: FieldSort;
+    config?: Record<string, any>;
     constructor(options: Partial<TableStoreViewField>) {
         if (typeof options == 'object') {
             Object.assign(this, options);
