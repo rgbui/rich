@@ -1,24 +1,22 @@
 import { Block } from "../../../../src/block";
-import { BlockView } from "../../../../src/block/view";
 import React from 'react';
 import { TableSchema } from "../../schema/meta";
-import { prop, url, view } from "../../../../src/block/factory/observable";
-import { BlockDisplay } from "../../../../src/block/enum";
+import { prop, url } from "../../../../src/block/factory/observable";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
-import { TableStoreRow } from "./row";
-import { ChildsArea } from "../../../../src/block/view/appear";
+import { TableStoreRow } from "./part/row";
 import { Pattern } from "../../../../src/block/pattern";
-import { FieldSort, TableStoreViewField } from "./view.field";
+import { FieldSort, TableStoreViewField } from "./field";
 import { util } from "../../../../util/util";
 import { Exception, ExceptionType } from "../../../../src/error/exception";
 import { FieldType } from "../../schema/field.type";
 import { ActionDirective, OperatorDirective } from "../../../../src/history/declare";
 import { Field } from "../../schema/field";
-import { TableStoreHead } from "./head";
+import { TableStoreHead } from "./part/head";
 import { Confirm } from "../../../../component/lib/confirm";
 import { PageDirective } from "../../../../src/page/directive";
 import { useTableStoreAddField } from "../../../../extensions/tablestore";
 import { Rect } from "../../../../src/common/point";
+
 
 /***
  * 数据总共分三部分
@@ -39,6 +37,8 @@ export class TableStore extends Block {
     size: number;
     total: number;
     blocks = { childs: [], rows: [] };
+    openSubPageId: string;
+    subPages: { id: string, template: any }[] = [];
     get blockKeys() {
         return ['childs', 'rows'];
     }
@@ -101,7 +101,6 @@ export class TableStore extends Block {
             await rowBlock.createCells();
         }
     }
-    display = BlockDisplay.block;
     async onAddField(event: React.MouseEvent | MouseEvent, at?: number) {
         if (typeof at == 'undefined') at = this.fields.length;
         var self = this;
@@ -208,13 +207,16 @@ export class TableStore extends Block {
         });
         await this.loadData()
     }
-    async onAddRow(id: string, arrow: 'down' | 'up' = 'down') {
+    async onAddRow(id?: string, arrow: 'down' | 'up' = 'down') {
+        if (typeof id == 'undefined') {
+            id = this.data.last().id;
+        }
         await this.page.onAction(ActionDirective.onSchemaCreateDefaultRow, async () => {
             var newRow = await this.page.emitAsync(PageDirective.schemaInsertRow, this.schema.id, {}, { id, pos: arrow });
 
         });
     }
-    async onRowUpdate(id: string,viewField: TableStoreViewField, value: any) {
+    async onRowUpdate(id: string, viewField: TableStoreViewField, value: any) {
         var vfName = viewField.name || viewField.text;
         var oldValue = this.data.find(g => g.id == id)[vfName];
         var newValue = value;
@@ -254,7 +256,10 @@ export class TableStore extends Block {
         else {
             console.log(this, this.pattern);
         }
-        json.blocks = { childs: [], rows: [] };
+        json.blocks = {
+            childs: [],
+            rows: []
+        };
         if (Array.isArray((this as any).__props)) {
             (this as any).__props.each(pro => {
                 if (Array.isArray(this[pro])) {
@@ -292,6 +297,9 @@ export class TableStore extends Block {
             }
         }
     }
+    async onAddOpenForm(event: React.MouseEvent) {
+
+    }
     getBlocksByField(field: TableStoreViewField) {
         var keys = this.blockKeys;
         var at = this.fields.findIndex(g => g === field);
@@ -302,38 +310,5 @@ export class TableStore extends Block {
             })
         }
         return cs;
-    }
-}
-@view('/table/store')
-export class TableStoreView extends BlockView<TableStore>{
-    renderHead() {
-        if (this.block.schema) return <ChildsArea childs={this.block.blocks.childs}></ChildsArea>
-        else return <div></div>
-    }
-    renderBody() {
-        if (this.block.data && this.block.isLoadData)
-            return <div className='sy-tablestore-body'><ChildsArea childs={this.block.blocks.rows}></ChildsArea>
-            </div>
-        else if (this.block.data && !this.block.isLoadData)
-            return <div className='sy-tablestore-body'><ChildsArea childs={this.block.blocks.rows}></ChildsArea>
-            </div>
-        else return <div></div>
-    }
-    async didMount() {
-        await this.block.loadSchema();
-        await this.block.createHeads();
-        this.forceUpdate()
-        await this.block.loadData();
-        await this.block.createRows();
-        this.forceUpdate();
-    }
-    render() {
-        return <div className='sy-tablestore'>
-            <div className='sy-tablestore-col-resize'></div>
-            <div className='sy-table-store-content'>
-                {this.renderHead()}
-                {this.renderBody()}
-            </div>
-        </div>
     }
 }

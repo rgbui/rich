@@ -22,10 +22,11 @@ import './table/row';
 import './table';
 
 import './table-store/view/table';
-import "./table-store/view/table/head";
-import "./table-store/view/table/th";
-import "./table-store/view/table/row";
-import "./table-store/view/table/cell";
+import './table-store/view/table/view';
+import "./table-store/view/table/part/head";
+import "./table-store/view/table/part/th";
+import "./table-store/view/table/part/row";
+import "./table-store/view/table/part/cell";
 import "./table-store/element/field/text";
 import "./table-store/element/field/number";
 import "./table-store/element/field/date";

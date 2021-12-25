@@ -1,13 +1,13 @@
-import { Block } from "../../../../src/block";
-import { BlockView } from "../../../../src/block/view";
-import { BlockDisplay } from "../../../../src/block/enum";
-import { url, view } from "../../../../src/block/factory/observable";
+import { Block } from "../../../../../src/block";
+import { BlockView } from "../../../../../src/block/view";
+import { BlockDisplay } from "../../../../../src/block/enum";
+import { url, view } from "../../../../../src/block/factory/observable";
 import React from "react";
-import { ChildsArea } from "../../../../src/block/view/appear";
-import { TableStore } from ".";
-import plus from "../../../../src/assert/svg/plus.svg";
-import { Icon } from "../../../../component/view/icon";
-import { BlockFactory } from "../../../../src/block/factory/block.factory";
+import { ChildsArea } from "../../../../../src/block/view/appear";
+import { TableStore } from "..";
+import plus from "../../../../../src/assert/svg/plus.svg";
+import { Icon } from "../../../../../component/view/icon";
+import { BlockFactory } from "../../../../../src/block/factory/block.factory";
 
 @url('/tablestore/head')
 export class TableStoreHead extends Block {
@@ -27,7 +27,7 @@ export class TableStoreHeadView extends BlockView<TableStoreHead>{
     render() {
         return <div className='sy-tablestore-head' >
             <ChildsArea childs={this.block.blocks.childs} />
-            <div className='sy-tablestore-head-th'
+            <div className='sy-tablestore-head-th sy-tablestore-head-th-plus'
                 style={{ width: 100 }} onClick={e => this.block.tableStore.onAddField(e)}>
                 <Icon icon={plus}></Icon>
             </div>

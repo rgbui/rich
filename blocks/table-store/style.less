@@ -15,6 +15,7 @@
             justify-content: flex-start;
             align-items    : center;
             flex-shrink    : 0;
+            box-sizing     : border-box;
             padding        : 5px;
             position       : relative;
 
@@ -47,6 +48,7 @@
                 flex-shrink  : 1;
                 overflow     : hidden;
                 text-overflow: ellipsis;
+                color        : rgba(55, 53, 47, 0.6)
             }
 
             &-operator {
@@ -79,6 +81,10 @@
             &.hover .sy-tablestore-head-th-resize {
                 visibility: visible;
             }
+            &-plus{
+               color:rgba(55, 53, 47, 0.4);
+               fill:currentColor;
+            }
         }
 
         &-th+&-th {
@@ -96,7 +102,9 @@
             &-cell {
                 border     : 1px solid #ddd;
                 padding    : 5px;
+                box-sizing : border-box;
                 flex-shrink: 0;
+                overflow: hidden;
             }
 
             &:first-child {
@@ -114,6 +122,24 @@
             &-cell+&-cell {
                 border-left: 1px solid transparent;
             }
+        }
+    }
+
+    &-add {
+        border          : 1px solid #ddd;
+        padding         : 5px;
+        box-sizing      : border-box;
+        border-top-color: transparent;
+        cursor: pointer;
+
+        .shy-icon {
+            fill: rgba(55, 53, 47, 0.4);
+            display: inline-flex;
+            margin-right: 4px;
+        }
+
+        >span {
+            color: rgba(55, 53, 47, 0.4);
         }
     }
 
