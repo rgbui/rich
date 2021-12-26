@@ -78,7 +78,7 @@ export class TableStoreCell extends Block {
     }
     async onUpdateCellValue(value: any) {
         var id = this.tableRow.dataRow.id;
-        await this.tableStore.onRowUpdate(id, this.field, value)
+        await this.tableStore.onRowUpdateCell(id, this.field, value)
     }
     async onUpdateCellField(props: Record<string, any>) {
 

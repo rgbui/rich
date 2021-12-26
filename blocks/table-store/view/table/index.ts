@@ -1,5 +1,6 @@
-import { Block } from "../../../../src/block";
+
 import React from 'react';
+import { Block } from "../../../../src/block";
 import { TableSchema } from "../../schema/meta";
 import { prop, url } from "../../../../src/block/factory/observable";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
@@ -9,7 +10,7 @@ import { FieldSort, TableStoreViewField } from "./field";
 import { util } from "../../../../util/util";
 import { Exception, ExceptionType } from "../../../../src/error/exception";
 import { FieldType } from "../../schema/field.type";
-import { ActionDirective, OperatorDirective } from "../../../../src/history/declare";
+import { ActionDirective } from "../../../../src/history/declare";
 import { Field } from "../../schema/field";
 import { TableStoreHead } from "./part/head";
 import { Confirm } from "../../../../component/lib/confirm";
@@ -41,6 +42,9 @@ export class TableStore extends Block {
     openSubPageId: string;
     subPages: { id: string, template: any }[] = [];
     get blockKeys() {
+        return ['childs', 'rows'];
+    }
+    get allBlockKeys(): string[] {
         return ['childs', 'rows'];
     }
     async load(data) {
@@ -208,25 +212,46 @@ export class TableStore extends Block {
         });
         await this.loadData()
     }
-    async onAddRow(id?: string, arrow: 'down' | 'up' = 'down') {
+    async onAddRow(data, id?: string, arrow: 'down' | 'up' = 'down') {
         if (typeof id == 'undefined') {
             id = this.data.last().id;
         }
         await this.page.onAction(ActionDirective.onSchemaCreateDefaultRow, async () => {
-            var newRow = await this.page.emitAsync(PageDirective.schemaInsertRow, this.schema.id, {}, { id, pos: arrow });
-
+            var newData = await this.page.emitAsync(PageDirective.schemaInsertRow, this.schema.id, data, { id, pos: arrow });
+            var newRow = newData.data;
+            var at = this.blocks.rows.findIndex(g => (g as TableStoreRow).dataRow.id == id);
+            if (arrow == 'down') at += 1;
+            this.data.insertAt(at, newRow);
+            var rowBlock: TableStoreRow = await this.page.createBlock('/tablestore/row', { dataRow: newRow }, this, at, 'rows') as TableStoreRow;
+            await rowBlock.createCells();
         });
     }
-    async onRowUpdate(id: string, viewField: TableStoreViewField, value: any) {
+    async onRowUpdateCell(id: string, viewField: TableStoreViewField, value: any) {
         var vfName = viewField.name || viewField.text;
-        var oldValue = this.data.find(g => g.id == id)[vfName];
+        var row = this.data.find(g => g.id == id)
+        var oldValue = row[vfName];
         var newValue = value;
         if (!util.valueIsEqual(oldValue, newValue)) {
             await this.page.emitAsync(PageDirective.schemaUpdateRow,
                 this.schema.id,
                 id,
                 { [vfName]: newValue }
-            )
+            );
+            row[vfName] = newValue;
+        }
+    }
+    async onRowUpdate(id: string, data: Record<string, any>) {
+        var oldValue = this.data.find(g => g.id == id);
+        if (!util.valueIsEqual(oldValue, data)) {
+            await this.page.emitAsync(PageDirective.schemaUpdateRow,
+                this.schema.id,
+                id,
+                data
+            );
+            var rv: TableStoreRow = this.blocks.rows.find(g => g.dataRow.id == id);
+            if (rv) {
+                rv.updateData(data);
+            }
         }
     }
     async onUpdateCellFieldSchema(field: Field, fs: Record<string, any>) {
@@ -238,16 +263,13 @@ export class TableStore extends Block {
         )
     }
     async onRowDelete(id: string) {
-        var data = this.data.find(g => g.id == id);
         await this.page.onAction(ActionDirective.onSchemaRowDelete, async () => {
-            this.page.snapshoot.record(OperatorDirective.schemaRowRemove, {
-                schemaId: this.schema.id,
-                data: util.clone(data)
-            });
             await this.page.emitAsync(PageDirective.schemaDeleteRow,
                 this.schema.id,
                 id
             );
+            var row: Block = this.blocks.rows.find(g => (g as TableStoreRow).dataRow.id == id);
+            await row.delete()
         })
     }
     async get() {
@@ -298,9 +320,14 @@ export class TableStore extends Block {
             }
         }
     }
-    async onAddOpenForm(event: React.MouseEvent) {
+    async onAddOpenForm() {
         var row = await useFormPage(this.page, this.schema);
-        console.log(row);
+        await this.onAddRow(row, undefined, 'down');
+    }
+    async onEditOpenForm(id: string) {
+        var rowData = this.data.find(g => g.id == id);
+        var row = await useFormPage(this.page, this.schema, rowData);
+        await this.onRowUpdate(id, row);
     }
     getBlocksByField(field: TableStoreViewField) {
         var keys = this.blockKeys;

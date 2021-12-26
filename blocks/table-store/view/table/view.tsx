@@ -30,14 +30,18 @@ export class TableStoreView extends BlockView<TableStore>{
         this.forceUpdate();
     }
     render() {
+        var self = this;
+        async function addNewRow() {
+            await self.block.onAddRow({}, undefined, 'down');
+        }
         return <div className='sy-tablestore'>
             <div className='sy-tablestore-col-resize'></div>
             <div className='sy-tablestore-content'>
                 {this.renderHead()}
                 {this.renderBody()}
             </div>
-            <div onMouseDown={e => this.block.onAddOpenForm(e)} className="sy-tablestore-add" style={{ width: this.block.fields.sum(s => s.width) + 100 }}>
-                <Icon  size={12} icon={Plus}></Icon><span>新增</span>
+            <div onMouseDown={e => addNewRow()} className="sy-tablestore-add" style={{ width: this.block.fields.sum(s => s.width) + 100 }}>
+                <Icon size={12} icon={Plus}></Icon><span>新增</span>
             </div>
         </div>
     }
