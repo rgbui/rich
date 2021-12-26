@@ -4,7 +4,8 @@ export class Field {
     id: string;
     name: string
     text: string
-    type: FieldType
+    type: FieldType;
+    required:boolean;
     load(col: Record<string, any>) {
         for (var n in col) {
             if (n == 'type') {
