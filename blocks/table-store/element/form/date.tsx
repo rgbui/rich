@@ -1,15 +1,19 @@
 
+import dayjs from "dayjs";
 import React from "react";
 import { useDatePicker } from "../../../../extensions/date";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { Rect } from "../../../../src/common/point";
-import { OriginFormField } from "./origin.field";
-import { FieldView } from "./view";
+import { FieldView, OriginFormField } from "./origin.field";
 
 @url('/form/date')
 class FieldText extends OriginFormField {
-
+    get dateString() {
+        if(!this.value)this.value=new Date();
+        var r = dayjs(this.value);
+        return r.format('YYYY-MM-DD')
+    }
 }
 @view('/form/date')
 class FieldTextView extends BlockView<FieldText>{
@@ -22,8 +26,8 @@ class FieldTextView extends BlockView<FieldText>{
         }
     }
     render() {
-        return <FieldView text={this.block.field.text}>
-            <div className="sy-form-field-date-value" onMouseDown={e => this.mousedown(e)}>{this.block.value}</div>
+        return <FieldView    block={this.block}>
+            <div className="sy-form-field-date-value" onMouseDown={e => this.mousedown(e)}>{this.block.dateString}</div>
         </FieldView>
     }
 }

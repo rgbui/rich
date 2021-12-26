@@ -1,13 +1,12 @@
 import React from "react";
-import { useDatePicker } from "../../../../extensions/date";
 import { useTableStoreOption } from "../../../../extensions/tablestore/option";
-import { BlockRenderRange } from "../../../../src/block/enum";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { Rect } from "../../../../src/common/point";
 import { FieldConfig } from "../../schema/field";
-import { OriginFormField } from "./origin.field";
-import { FieldView } from "./view";
+import { getTypeSvg } from "../../schema/util";
+import { FieldView, OriginFormField } from "./origin.field";
+
 
 @url('/form/option')
 class FieldText extends OriginFormField {
@@ -33,7 +32,7 @@ class FieldTextView extends BlockView<FieldText>{
         }
     }
     render() {
-        return <FieldView text={this.block.field.text}>
+        return <FieldView block={this.block}>
             <div className="sy-form-field-option-value" onMouseDown={e => this.mousedown(e)}>{this.block.value}</div>
         </FieldView>
     }

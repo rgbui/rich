@@ -1,8 +1,8 @@
 import React from "react";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
-import { OriginFormField } from "./origin.field";
-import { FieldView } from "./view";
+import { FieldView, OriginFormField } from "./origin.field";
+
 
 @url('/form/check')
 class FieldText extends OriginFormField {
@@ -17,7 +17,7 @@ class FieldTextView extends BlockView<FieldText>{
                 self.block.onChange((event.target as HTMLInputElement).value);
             }
         }
-        return <FieldView text={this.block.field.text}><input
+        return <FieldView    block={this.block}><input
             type='checkbox'
             checked={this.block.value}
             onChange={e => this.block.onChange((e.target as HTMLInputElement).checked)}

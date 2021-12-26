@@ -1,0 +1,71 @@
+.sy-form-field {
+
+    margin: 10px 0px;
+
+    &-box {
+        // display        : flex;
+        // justify-content: flex-start;
+        // align-items    : flex-start;
+    }
+
+    &-label {
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : center;
+        height         : 26px;
+        line-height    : 26px;
+        padding        : 4px 0px;
+        overflow       : hidden;
+        text-overflow  : ellipsis;
+        color          : rgba(55, 53, 47, 0.6);
+        fill           : currentColor;
+
+        .shy-icon {
+            margin-right: 5px;
+        }
+
+        em {}
+
+        label {
+            color: rgba(55, 53, 47, 0.6);
+        }
+    }
+
+    &-control {
+        display: block;
+
+        input[type='text'] {
+            // box-sizing   : border-box;
+            width        : 100%;
+            font-size    : 14px;
+            line-height  : 26px;
+            padding      : 4px 10px;
+            border-radius: 3px;
+            box-shadow   : rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
+            background   : rgba(242, 241, 238, 0.6);
+            cursor       : text;
+            outline      : none;
+            border       : 0px;
+
+            &:focus {
+                box-shadow: rgba(46 170 220, 0.7) 0px 0px 0px 1px inset, rgba(46 170 220, 0.4) 0px 0px 0px 2px !important;
+            }
+        }
+
+        .sy-form-field-date-value,
+        .sy-form-field-option-value {
+            display         : block;
+            width           : 100%;
+            font-size       : 14px;
+            height          : 26px;
+            padding         : 4px 10px;
+            border-radius   : 3px;
+            box-shadow      : rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
+            background      : rgba(242, 241, 238, 0.6);
+            cursor          : text;
+            outline         : none;
+            border          : 0px;
+            // box-sizing   : border-box;
+        }
+    }
+}
