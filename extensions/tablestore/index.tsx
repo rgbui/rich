@@ -18,6 +18,8 @@ export class TableFieldView extends EventsComponent {
             { text: '多选', value: FieldType.options },
             { text: '勾选', value: FieldType.bool },
             { text: '日期', value: FieldType.date },
+            { text: '关联', value: FieldType.relation },
+            { text: '汇总统计', value: FieldType.rollup },
         ];
         var self = this;
         function save() {
