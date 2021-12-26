@@ -143,8 +143,8 @@ export interface Page {
     emitAsync(name: PageDirective.schemaTableLoad, schemaId: string, options: { size?: number, index?: number, filter?: Record<string, any> }): Promise<{ index?: number, size?: number, list: any[], total: number }>
     on(name: PageDirective.schemaTableLoadAll, fn: (schemaId: string, options: { filter?: Record<string, any> }) => Promise<{ list: any[], total: number }>)
     emitAsync(name: PageDirective.schemaTableLoadAll, schemaId: string, options: { filter?: Record<string, any> }): Promise<{ list: any[], total: number }>
-    on(name: PageDirective.schemaInsertRow, fn: (schemaId: string, data: Record<string, any>, pos: { id: string, pos: 'down' | 'up' }) => Promise<Record<string, any>>);
-    emitAsync(name: PageDirective.schemaInsertRow, schemaId: string, data: Record<string, any>, pos: { id: string, pos: 'down' | 'up' }): Promise<Record<string, any>>
+    on(name: PageDirective.schemaInsertRow, fn: (schemaId: string, data: Record<string, any>, pos: { id: string, pos: 'down' | 'up' }) => Promise<{ ok: boolean, warn?: string, data?: Record<string, any> }>);
+    emitAsync(name: PageDirective.schemaInsertRow, schemaId: string, data: Record<string, any>, pos: { id: string, pos: 'down' | 'up' }): Promise<{ ok: boolean, warn?: string, data?: Record<string, any> }>;
     on(name: PageDirective.schemaUpdateRow, fn: (schemaId: string, rowId: string, data: Record<string, any>) => Promise<{ ok: boolean, warn?: string }>);
     emitAsync(name: PageDirective.schemaUpdateRow, schemaId, rowId: string, data: Record<string, any>): Promise<{ ok: boolean, warn?: string }>
     on(name: PageDirective.schemaDeleteRow, fn: (schemaId: string, rowId: string) => Promise<{ ok: boolean, warn?: string }>);
