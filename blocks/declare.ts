@@ -27,6 +27,7 @@ import "./table-store/view/table/part/head";
 import "./table-store/view/table/part/th";
 import "./table-store/view/table/part/row";
 import "./table-store/view/table/part/cell";
+
 import "./table-store/element/field/text";
 import "./table-store/element/field/number";
 import "./table-store/element/field/date";
@@ -34,9 +35,18 @@ import "./table-store/element/field/option";
 import "./table-store/element/field/user";
 import "./table-store/element/field/check";
 import "./table-store/element/field/image";
-import "./table-store/element/field/origin.field";
 import "./table-store/element/field/video";
+import "./table-store/element/field/file";
 
+import "./table-store/element/form/text";
+import "./table-store/element/form/number";
+import "./table-store/element/form/date";
+import "./table-store/element/form/option";
+import "./table-store/element/form/user";
+import "./table-store/element/form/check";
+import "./table-store/element/form/image";
+import "./table-store/element/form/video";
+import "./table-store/element/form/file";
 
 import "./at/date";
 import './at/link';
