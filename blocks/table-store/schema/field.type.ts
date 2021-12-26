@@ -168,24 +168,11 @@ export enum FieldType {
      * 关联一对一
      * 例如课程  一般只有一位老师在教
      */
-    AssociativeOneToOne = 1200,
-    /**
-     * 该列显示关联一对一的某个子表的属性
-     */
-    AssociativeOneToOnePerspective = 1201,
-    /**
-     * 关联一对多
-     * 列如课程 有多位学生在听
-     */
-    AssociativeOneToMany = 1210,
-    /**
-     *  该列显示关联一对多的某个子表的相关属性
-     */
-    AssociativeOneToManyPerspective = 1211,
+    relation = 1200,
     /**
      * 对关联的子表进行聚合，比如求和，求平均数
      */
-    AssociativeOneToManyAggregate = 1212,
+    rollup = 1210,
     /**
      * 父数据ID,
      * 就是关联自身
