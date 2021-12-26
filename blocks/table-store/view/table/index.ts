@@ -16,6 +16,7 @@ import { Confirm } from "../../../../component/lib/confirm";
 import { PageDirective } from "../../../../src/page/directive";
 import { useTableStoreAddField } from "../../../../extensions/tablestore";
 import { Rect } from "../../../../src/common/point";
+import { useFormPage } from "../../../../extensions/tablestore/form";
 
 
 /***
@@ -298,7 +299,8 @@ export class TableStore extends Block {
         }
     }
     async onAddOpenForm(event: React.MouseEvent) {
-
+        var row = await useFormPage(this.page, this.schema);
+        console.log(row);
     }
     getBlocksByField(field: TableStoreViewField) {
         var keys = this.blockKeys;
@@ -312,3 +314,5 @@ export class TableStore extends Block {
         return cs;
     }
 }
+
+

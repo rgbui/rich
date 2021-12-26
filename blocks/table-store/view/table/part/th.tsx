@@ -7,17 +7,6 @@ import React from "react";
 import { TableStore } from "..";
 import { TableStoreHead } from "./head";
 import { Icon } from "../../../../../component/view/icon";
-import checkbox from "../../../../../src/assert/svg/types.checkbox.svg";
-import select from "../../../../../src/assert/svg/types.select.svg";
-import string from "../../../../../src/assert/svg/types.string.svg";
-import multipleSelect from "../../../../../src/assert/svg/types.multiple.select.svg";
-import file from "../../../../../src/assert/svg/types.file.svg";
-import link from "../../../../../src/assert/svg/types.link.svg";
-import number from "../../../../../src/assert/svg/types.number.svg";
-import date from "../../../../../src/assert/svg/types.date.svg";
-import email from "../../../../../src/assert/svg/types.email.svg";
-import phone from "../../../../../src/assert/svg/types.phone.svg";
-import person from "../../../../../src/assert/svg/types.person.svg";
 import { FieldType } from "../../../schema/field.type";
 import { useSelectMenuItem } from "../../../../../component/view/menu";
 import { Rect } from "../../../../../src/common/point";
@@ -35,6 +24,7 @@ import arrowLeft from "../../../../../src/assert/svg/arrowLeft.svg";
 import arrowRight from "../../../../../src/assert/svg/arrowRight.svg";
 import hide from "../../../../../src/assert/svg/hide.svg";
 import { FieldSort } from "../field";
+import { getTypeSvg } from "../../../schema/util";
 
 @url('/tablestore/th')
 export class TableStoreTh extends Block {
@@ -93,16 +83,16 @@ export class TableStoreTh extends Block {
             text: '切换',
             childs: [
                 { type: MenuItemTypeValue.text, text: '基本' },
-                { name: BlockDirective.trun, icon: string, text: '文本', param: FieldType.text },
-                { name: BlockDirective.trun, icon: checkbox, text: '待办', param: FieldType.bool },
-                { name: BlockDirective.trun, icon: number, text: '数字', param: FieldType.number },
-                { name: BlockDirective.trun, icon: date, text: '日期', param: FieldType.date },
-                { name: BlockDirective.trun, icon: email, text: '邮箱', param: FieldType.email },
-                { name: BlockDirective.trun, icon: phone, text: '手机号', param: FieldType.phone },
-                { name: BlockDirective.trun, icon: select, text: '选项', param: FieldType.option },
-                { name: BlockDirective.trun, icon: multipleSelect, text: '多选', param: FieldType.options },
-                { name: BlockDirective.trun, icon: file, text: '文件', param: FieldType.file },
-                { name: BlockDirective.trun, icon: link, text: '链接', param: FieldType.link },
+                { name: BlockDirective.trun, icon: getTypeSvg(FieldType.text), text: '文本', param: FieldType.text },
+                { name: BlockDirective.trun, icon: getTypeSvg(FieldType.bool), text: '待办', param: FieldType.bool },
+                { name: BlockDirective.trun, icon: getTypeSvg(FieldType.number), text: '数字', param: FieldType.number },
+                { name: BlockDirective.trun, icon: getTypeSvg(FieldType.date), text: '日期', param: FieldType.date },
+                { name: BlockDirective.trun, icon: getTypeSvg(FieldType.email), text: '邮箱', param: FieldType.email },
+                { name: BlockDirective.trun, icon: getTypeSvg(FieldType.phone), text: '手机号', param: FieldType.phone },
+                { name: BlockDirective.trun, icon: getTypeSvg(FieldType.option), text: '选项', param: FieldType.option },
+                { name: BlockDirective.trun, icon: getTypeSvg(FieldType.options), text: '多选', param: FieldType.options },
+                { name: BlockDirective.trun, icon: getTypeSvg(FieldType.file), text: '文件', param: FieldType.file },
+                { name: BlockDirective.trun, icon: getTypeSvg(FieldType.link), text: '链接', param: FieldType.link },
             ]
         });
         items.push({
@@ -160,32 +150,7 @@ export class TableStoreTh extends Block {
 @view('/tablestore/th')
 export class TableStoreThView extends BlockView<TableStoreTh>{
     renderIcon() {
-        switch (this.block.field.type) {
-            case FieldType.bool:
-                return <Icon icon={checkbox} size='none'></Icon>
-            case FieldType.option:
-                return <Icon icon={select} size='none'></Icon>
-            case FieldType.options:
-                return <Icon icon={multipleSelect} size='none'></Icon>
-            case FieldType.file:
-                return <Icon icon={file} size='none'></Icon>
-            case FieldType.link:
-                return <Icon icon={link} size='none'></Icon>
-            case FieldType.phone:
-                return <Icon icon={phone} size='none'></Icon>
-            case FieldType.email:
-                return <Icon icon={email} size='none'></Icon>;
-            case FieldType.date:
-                return <Icon icon={date} size='none'></Icon>;
-            case FieldType.users:
-                return <Icon icon={person} size='none'></Icon>;
-            case FieldType.text:
-                return <Icon icon={string} size='none'></Icon>;
-            case FieldType.number:
-                return <Icon icon={number} size='none'></Icon>;
-            default:
-                return <Icon icon={string} size='none'></Icon>;
-        }
+        return <Icon icon={getTypeSvg(this.block.field.type)} size='none'></Icon>
     }
     async mousedown(e: React.MouseEvent) {
         e.stopPropagation();

@@ -36,8 +36,8 @@ export class TableStoreView extends BlockView<TableStore>{
                 {this.renderHead()}
                 {this.renderBody()}
             </div>
-            <div onMouseDown={e => this.block.onAddRow()} className="sy-tablestore-add" style={{ width: this.block.fields.sum(s => s.width) + 100 }}>
-                <Icon size={12} icon={Plus}></Icon><span>新增</span>
+            <div onMouseDown={e => this.block.onAddOpenForm(e)} className="sy-tablestore-add" style={{ width: this.block.fields.sum(s => s.width) + 100 }}>
+                <Icon  size={12} icon={Plus}></Icon><span>新增</span>
             </div>
         </div>
     }
