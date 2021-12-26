@@ -1,14 +1,27 @@
-.shy-page-layout {
+.shy-page-layout-doc {
     box-sizing    : border-box;
     min-height    : 100%;
     padding-top   : 20px;
     padding-bottom: 20px;
 
-    &-wrapper {
+    .shy-page-layout-wrapper {
         box-sizing      : border-box;
         background-color: #fff;
         border          : 1px solid rgb(224, 224, 224);
         padding         : 30px;
         min-height      : calc(100% - 40px);
+    }
+}
+
+.shy-page-layout-db-form {
+    box-sizing    : border-box;
+    padding-top   : 20px;
+    padding-bottom: 20px;
+    min-height    : 100%;
+    padding-left:100px;
+    padding-right:100px;
+
+    .shy-page-layout-wrapper {
+        min-height: calc(100% - 40px);
     }
 }
