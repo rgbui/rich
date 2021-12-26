@@ -46,7 +46,8 @@ export class Page$Cycle {
             for (var n in data) {
                 if (n == 'views') continue;
                 else if (n == 'pageLayout') {
-                    this.pageLayout = new PageLayout(this, data[n]); continue;
+                    this.pageLayout = new PageLayout(this, data[n]);
+                    continue;
                 }
                 this[n] = data[n];
             }

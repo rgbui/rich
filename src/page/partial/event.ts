@@ -27,6 +27,9 @@ export class PageEvent {
     }
     onFocusCapture(this: Page, event: FocusEvent) {
         if (this.readonly) return;
+        var ele = event.target as HTMLElement;
+        var e = ele.closest('[data-shy-page-no-focus]');
+        if (e) return;
         this.onFocus(event);
     }
     onBlurCapture(this: Page, event: FocusEvent) {
