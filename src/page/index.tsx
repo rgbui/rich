@@ -127,8 +127,8 @@ export interface Page {
 
     on(name: PageDirective.schemaLoad, fn: (schemaId: string) => Promise<Partial<TableSchema>>);
     emitAsync(name: PageDirective.schemaLoad, schemaId: string): Promise<Partial<TableSchema>>;
-    on(name: PageDirective.schemaCreate, fn: (data: { text: string, templateId?: string }) => Promise<Partial<TableSchema>>);
-    emitAsync(name: PageDirective.schemaCreate, data: { text: string, templateId?: string }): Promise<Partial<TableSchema>>;
+    on(name: PageDirective.schemaCreate, fn: (data: { text: string,workspaceId?:string, templateId?: string }) => Promise<Partial<TableSchema>>);
+    emitAsync(name: PageDirective.schemaCreate, data: { text: string, workspaceId?:string,templateId?: string }): Promise<Partial<TableSchema>>;
 
     on(name: PageDirective.schemaCreateField, fn: (schemaId: string, options: { type: FieldType, text: string }) => Promise<Partial<Field>>);
     emitAsync(name: PageDirective.schemaCreateField, schemaId: string, options: { type: FieldType, text: string }): Promise<Partial<Field>>
