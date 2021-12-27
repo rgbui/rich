@@ -13,7 +13,8 @@ export enum Directive {
      openPageLink,
      TogglePageItem,
      OpenPageItem,
-     UpdateUser
+     UpdateUser,
+     QueryWorkspaceTableSchemas
 
 }
 

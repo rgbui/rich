@@ -97,6 +97,8 @@ interface EventBus {
     on(directive: Directive.UpdateUser, fn: (user: Record<string, any>) => Promise<void>): void;
     fireAsync(directive: Directive.UpdateUser, user: Record<string, any>): Promise<void>;
 
+    on(directive: Directive.QueryWorkspaceTableSchemas, fn: () => Promise<{ total: number, list: any[] }>): void;
+    fireAsync(directive: Directive.QueryWorkspaceTableSchemas): Promise<{ total: number, list: any[] }>;
 
 }
 export let messageChannel = new EventBus()
