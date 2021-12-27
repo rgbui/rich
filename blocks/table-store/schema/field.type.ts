@@ -181,7 +181,12 @@ export enum FieldType {
     /**
      * guid字段
      */
-    guid = 1400
+    guid = 1400,
+
+    /**
+     * 公式
+     */
+    formula=5000
 }
 
 
