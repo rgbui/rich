@@ -15,7 +15,7 @@ import { Field } from "../../schema/field";
 import { TableStoreHead } from "./part/head";
 import { Confirm } from "../../../../component/lib/confirm";
 import { PageDirective } from "../../../../src/page/directive";
-import { useTableStoreAddField } from "../../../../extensions/tablestore";
+import { useTableStoreAddField } from "../../../../extensions/tablestore/field";
 import { Rect } from "../../../../src/common/point";
 import { useFormPage } from "../../../../extensions/tablestore/form";
 
