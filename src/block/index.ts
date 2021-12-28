@@ -1,4 +1,3 @@
-
 import { Events } from "../../util/events";
 import { util } from "../../util/util";
 import { Point, Rect } from "../common/point";
@@ -20,6 +19,8 @@ import { TextContent } from "./element/text";
 import { BlockUrlConstant } from "./constant";
 import { List } from "../../blocks/present/list/list";
 import { CSSProperties } from "react";
+import { PageLayoutType } from "../layout/declare";
+
 export abstract class Block extends Events {
     constructor(page: Page) {
         super();
@@ -203,7 +204,6 @@ export abstract class Block extends Events {
     get isBlock(): boolean {
         return this.display == BlockDisplay.block;
     }
-
     /***
      * 注意换行的元素不一定非得是/row，
      * 如表格里面自定义的换行
@@ -451,6 +451,14 @@ export abstract class Block extends Events {
     }
     getChilds(key: string) {
         return this.blocks[key];
+    }
+    get isFrame() {
+        return this.url == BlockUrlConstant.Frame
+    }
+    get isFreeBlock() {
+        if (this.isPart) return false;
+        if (this.page.pageLayout.type == PageLayoutType.board) return true;
+        return this.closest(x => x.isFrame) ? true : false;
     }
 }
 export interface Block extends Block$Seek { }
