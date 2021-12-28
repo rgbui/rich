@@ -9,28 +9,31 @@ import Dots from "../../../src/assert/svg/dots.svg";
 import { Icon } from "../../../component/view/icon";
 import "./style.less";
 import { OriginFormField } from "../../../blocks/table-store/element/form/origin.field";
+import { messageChannel } from "../../../util/bus/event.bus";
+import { Directive } from "../../../util/bus/directive";
 class FormPage extends EventsComponent {
-    page: Page;
     schema: TableSchema;
     row?: Record<string, any>;
     width: number = 600;
     height: number = 400;
-    open(options: { width: number, height: number, page: Page, schema: TableSchema, row?: Record<string, any> }) {
-        this.page = options.page;
-        this.schema = options.schema;
+    async open(options: { width: number, height: number, schema: TableSchema | string, row?: Record<string, any> }) {
+        if (typeof this.schema == 'string') {
+            this.schema = await messageChannel.fireAsync(Directive.getSchemaFields, this.schema as string) as TableSchema;
+        }
+        else this.schema = options.schema as TableSchema;
         this.row = options.row;
         this.width = options.width;
         this.height = options.height;
         this.forceUpdate(() => {
-            if (this.el && this.page) this.renderPage();
+            if (this.el && this.schema) this.renderPage();
         });
     }
     componentDidMount(): void {
-        if (this.el && this.page) this.renderPage();
+        if (this.el && this.schema) this.renderPage();
     }
     pageView: Page;
     async renderPage() {
-        this.pageView = await createFormPage(this.el, { page: this.page, schema: this.schema, row: this.row });
+        this.pageView = await createFormPage(this.el,{schema: this.schema, row: this.row });
     }
     getData() {
         var row = {};
@@ -59,10 +62,10 @@ class FormPage extends EventsComponent {
     }
 }
 
-export async function useFormPage(parentPage: Page, schema: TableSchema, row?: Record<string, any>) {
+export async function useFormPage(schema: TableSchema | string, row?: Record<string, any>) {
     let popover = await PopoverSingleton(FormPage, { mask: true, shadow: true });
-    var width = Math.min(600, parentPage.pageVisibleWidth);
-    var height = parentPage.pageVisibleHeight || (window.innerHeight - 200);
+    var width = 600;
+    var height = 200;
     let formPage = await popover.open({
         roundArea: new Rect(
             (window.innerWidth - width) / 2,
@@ -71,7 +74,7 @@ export async function useFormPage(parentPage: Page, schema: TableSchema, row?: R
             height
         )
     });
-    formPage.open({ width, height, page: parentPage, schema, row });
+    await formPage.open({ width, height, schema, row });
     return new Promise((resolve: (data: Record<string, any>) => void, reject) => {
         formPage.only('save', (data: Record<string, any>) => {
             popover.close();
