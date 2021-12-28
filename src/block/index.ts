@@ -19,6 +19,7 @@ import { Mix } from "../../util/mix";
 import { TextContent } from "./element/text";
 import { BlockUrlConstant } from "./constant";
 import { List } from "../../blocks/present/list/list";
+import { CSSProperties } from "react";
 export abstract class Block extends Events {
     constructor(page: Page) {
         super();
@@ -168,7 +169,7 @@ export abstract class Block extends Events {
         return this.el;
     }
     get visibleStyle() {
-        var style: Record<string, any> = {};
+        var style: CSSProperties = {};
         if (this.isBlock) {
             if (this.isCol)
                 Object.assign(style, {
