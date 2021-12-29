@@ -89,6 +89,9 @@ export class Point {
     join(joinChar?: string) {
         return this.x + (joinChar || ',') + this.y
     }
+    negate() {
+        return new Point(0 - this.x, 0 - this.y);
+    }
 }
 
 export class Rect {
