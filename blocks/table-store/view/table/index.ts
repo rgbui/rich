@@ -321,12 +321,12 @@ export class TableStore extends Block {
         }
     }
     async onAddOpenForm() {
-        var row = await useFormPage(this.page, this.schema);
+        var row = await useFormPage(this.schema);
         await this.onAddRow(row, undefined, 'down');
     }
     async onEditOpenForm(id: string) {
         var rowData = this.data.find(g => g.id == id);
-        var row = await useFormPage(this.page, this.schema, rowData);
+        var row = await useFormPage(this.schema, rowData);
         await this.onRowUpdate(id, row);
     }
     getBlocksByField(field: TableStoreViewField) {
