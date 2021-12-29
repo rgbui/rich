@@ -1,5 +1,6 @@
 import { Block } from "..";
 import { util } from "../../../util/util";
+import { Matrix } from "../../common/matrix";
 import { ActionDirective } from "../../history/declare";
 import { BlockFactory } from "../factory/block.factory";
 import { Pattern } from "../pattern";
@@ -71,11 +72,9 @@ export class Block$LifeCycle {
                 this.pattern = new Pattern(this);
             for (var n in data) {
                 if (n == 'blocks') continue;
-                else if (n == 'pattern') {
-                    await this.pattern.load(data[n]);
-                    continue;
-                }
-                this[n] = data[n];
+                else if (n == 'matrix') this.matrix = new Matrix(data[n]);
+                else if (n == 'pattern') await this.pattern.load(data[n]);
+                else this[n] = data[n];
             }
             if (typeof data.blocks == 'object') {
                 for (var n in data.blocks) {
@@ -94,7 +93,11 @@ export class Block$LifeCycle {
         }
     }
     async get(this: Block) {
-        var json: Record<string, any> = { id: this.id, url: this.url };
+        var json: Record<string, any> = {
+            id: this.id,
+            url: this.url,
+            matrix: this.matrix.getValues()
+        };
         if (typeof this.pattern.get == 'function')
             json.pattern = await this.pattern.get();
         else {

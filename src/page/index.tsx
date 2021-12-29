@@ -7,8 +7,6 @@ import { util } from "../../util/util";
 import { View } from "../block/element/view";
 import { PageLayout } from "../layout/index";
 import { PageEvent } from "./partial/event";
-
-import { User } from '../types/user';
 import { HistorySnapshoot } from '../history/snapshoot';
 import { Block } from '../block';
 import { ConfigurationManager } from '../config';
@@ -16,7 +14,6 @@ import { PageConfig, WorkspaceConfig } from '../config/type';
 import { KeyboardPlate } from '../common/keys';
 import { Page$Seek } from './partial/seek';
 import { PageView } from './view';
-import { Exception, ExceptionType } from '../error/exception';
 import { Anchor } from '../kit/selection/anchor';
 import { UserAction } from '../history/action';
 import { TableSchema } from '../../blocks/table-store/schema/meta';
