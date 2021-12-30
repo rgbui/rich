@@ -2,7 +2,8 @@ import React from "react";
 import { Kit } from ".";
 import { HandleView } from "./handle/view";
 import { TextInputView } from "./input/view";
-import { SelectorView } from "./selector";
+import { SelectorView } from "./selector/view";
+
 export class KitView extends React.Component<{ kit: Kit }>{
     constructor(props) {
         super(props);

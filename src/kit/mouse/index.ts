@@ -1,6 +1,5 @@
 import { Kit } from "..";
 import { Block } from "../../block";
-import { dom } from "../../common/dom";
 import { Point } from "../../common/point";
 import { onAutoScroll, onAutoScrollStop } from "../../common/scroll";
 import { TextEle } from "../../common/text.ele";
@@ -27,44 +26,50 @@ export class PageMouse {
     private lastMouseupEvent: MouseEvent;
     onMousedown(event: MouseEvent) {
         var block = this.page.getBlockInMouseRegion(event);
-        if (block?.isLine) block = block.closest(x => x.isBlock);
-        this.downStartBlock = block;
-        this.downEvent = event;
-        this.downPoint = Point.from(event);
-        this.isDown = true;
-        onAutoScrollStop();
-        this.selector.setStart(this.downPoint)
-        if (block && block.exists(g => g.isSupportAnchor, true)) {
-            var point = Point.from(event);
-            var anchor = block.visibleAnchor(point);
-            if (anchor && anchor.block.isAllowMouseAnchor(event)) {
-                this.downAnchor = anchor;
-                /**
-                 * 如果用户按住shift键，那么选区从之前的anchor扩到现在的anchor
-                 * 如果之前的anchor到现在的anchor均在同一个文字区域内，
-                 * 那么 将按范围选择多个block
-                 */
-                if (this.page.keyboardPlate.isShift() && this.explorer.hasAnchor) {
-                    if (this.downAnchor.isText && this.page.isInlineAnchor(this.downAnchor, this.explorer.activeAnchor))
-                        this.explorer.onShiftFocusAnchor(this.downAnchor);
-                    else if (!this.downAnchor.equal(this.kit.explorer.activeAnchor)) {
-                        var blocks = this.page.searchBlocksBetweenAnchor(this.explorer.activeAnchor, this.downAnchor, { rowOrCol: true, lineBlock: true });
-                        if (Array.isArray(blocks) && blocks.length > 0) {
-                            this.explorer.onSelectBlocks(blocks);
+        if (block.isFreeBlock) {
+
+            return;
+        }
+        else {
+            if (block?.isLine) block = block.closest(x => x.isBlock);
+            this.downStartBlock = block;
+            this.downEvent = event;
+            this.downPoint = Point.from(event);
+            this.isDown = true;
+            onAutoScrollStop();
+            this.selector.setStart(this.downPoint)
+            if (block && block.exists(g => g.isSupportAnchor, true)) {
+                var point = Point.from(event);
+                var anchor = block.visibleAnchor(point);
+                if (anchor && anchor.block.isAllowMouseAnchor(event)) {
+                    this.downAnchor = anchor;
+                    /**
+                     * 如果用户按住shift键，那么选区从之前的anchor扩到现在的anchor
+                     * 如果之前的anchor到现在的anchor均在同一个文字区域内，
+                     * 那么 将按范围选择多个block
+                     */
+                    if (this.page.keyboardPlate.isShift() && this.explorer.hasAnchor) {
+                        if (this.downAnchor.isText && this.page.isInlineAnchor(this.downAnchor, this.explorer.activeAnchor))
+                            this.explorer.onShiftFocusAnchor(this.downAnchor);
+                        else if (!this.downAnchor.equal(this.kit.explorer.activeAnchor)) {
+                            var blocks = this.page.searchBlocksBetweenAnchor(this.explorer.activeAnchor, this.downAnchor, { rowOrCol: true, lineBlock: true });
+                            if (Array.isArray(blocks) && blocks.length > 0) {
+                                this.explorer.onSelectBlocks(blocks);
+                            }
+                            else this.explorer.onFocusAnchor(this.explorer.activeAnchor);
                         }
                         else this.explorer.onFocusAnchor(this.explorer.activeAnchor);
                     }
-                    else this.explorer.onFocusAnchor(this.explorer.activeAnchor);
-                }
-                else {
-                    this.explorer.onFocusAnchor(this.downAnchor);
+                    else {
+                        this.explorer.onFocusAnchor(this.downAnchor);
+                    }
                 }
             }
+            /**
+             * 如果没有downAnchor，那么有选区时，则取消选区
+             */
+            if (!this.downAnchor) this.explorer.onCancelSelection();
         }
-        /**
-         * 如果没有downAnchor，那么有选区时，则取消选区
-         */
-        if (!this.downAnchor) this.explorer.onCancelSelection();
     }
     onMousemove(event: MouseEvent) {
         this.moveEvent = event;
