@@ -13,9 +13,7 @@ export class CarouselView extends BlockView<Carousel>{
     render() {
         return <div className='sy-block-carousel'
             style={this.block.visibleStyle}>
-            <div className="sy-block-carousel-indicators">
-
-            </div>
+            <div className="sy-block-carousel-indicators"></div>
             <div className="sy-block-carousel-contents">
                 <ChildsArea childs={this.block.blocks.childs}></ChildsArea>
             </div>
