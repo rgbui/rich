@@ -5,6 +5,7 @@ import { PageLayoutView } from "../../layout/view";
 import { ChildsArea } from "../../block/view/appear";
 import ReactDOM from "react-dom";
 import { KitView } from "../../kit/view";
+import { PageLayoutType } from "../../layout/declare";
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
  * 对于同时支持这4个事件的浏览器，事件执行顺序为focusin > focus > focusout > blur
@@ -84,6 +85,13 @@ export class PageView extends Component<{ page: Page }>{
         delete this.el.shy_drop_over;
         delete this.el.shy_end;
     }
+    firstCreatedRender() {
+        return <div className="shy-page-view-first">
+            <div onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.doc)}><span>页面</span></div>
+            <div onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.db)}><span>表格</span></div>
+            <div onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.board)}><span>白板</span></div>
+        </div>
+    }
     render() {
         var pageStyle: Record<string, any> = {
             lineHeight: this.page.cfm.fontCss.lineHeight + 'px',
@@ -91,13 +99,14 @@ export class PageView extends Component<{ page: Page }>{
             fontSize: this.page.cfm.fontCss.fontSize + 'px'
         }
         return <div className={'shy-page-view' + (this.page.readonly ? " shy-page-view-readonly" : "")} style={pageStyle} tabIndex={1}
-
             onFocusCapture={e => this.page.onFocusCapture(e.nativeEvent)}
             onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}
             onWheel={e => this.page.onWheel(e)}
         ><div className='shy-page-view-box' onMouseDown={e => this.page.onMousedown(e.nativeEvent)}>
                 <PageLayoutView pageLayout={this.page.pageLayout}>
-                    <div className='shy-page-view-content' ref={e => this.page.contentEl = e}><ChildsArea childs={this.page.views}></ChildsArea>
+                    <div className='shy-page-view-content' ref={e => this.page.contentEl = e}>
+                        <ChildsArea childs={this.page.views}></ChildsArea>
+                        {this.page.firstCreated && this.firstCreatedRender()}
                     </div>
                 </PageLayoutView>
             </div>

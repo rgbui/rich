@@ -36,6 +36,13 @@ export class PageLayoutView extends Component<{ pageLayout: PageLayout }>{
                 </div>
             </div>
         }
+        else if (this.pageLayout.type == PageLayoutType.board) {
+            return <div className={"shy-page-layout shy-page-layout-board"}>
+                <div className='shy-page-layout-wrapper' >
+                    {this.props.children}
+                </div>
+            </div>
+        }
         else {
             return <div>没有定义版面</div>
         }

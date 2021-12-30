@@ -30,7 +30,8 @@ export class Title extends Block {
     }
     async changeAppear(appear) {
         if (appear.prop == 'pageInfo.text' || appear.prop == 'pageInfo.description') {
-            messageChannel.fire(Directive.UpdatePageItem, this.pageInfo.id, {
+            messageChannel.fire(Directive.UpdatePageItem,
+                this.pageInfo.id, {
                 text: this.pageInfo?.text,
                 description: this.pageInfo?.description
             });

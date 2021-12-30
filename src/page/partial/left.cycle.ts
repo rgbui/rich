@@ -13,6 +13,7 @@ import { PageHistory } from "../interaction/history";
 import { PageKeys } from "../interaction/keys";
 import JSZip from 'jszip';
 import { BlockUrlConstant } from "../../block/constant";
+import { PageLayoutType } from "../../layout/declare";
 
 export class Page$Cycle {
     async init(this: Page) {
@@ -36,11 +37,14 @@ export class Page$Cycle {
         await langProvider.import();
     }
     async load(this: Page, data?: Record<string, any>) {
-
         try {
             if (!data || typeof data == 'object' && Object.keys(data).length == 0) {
                 //这里加载默认的页面数据
                 data = await this.getDefaultData();
+                this.firstCreated = true;
+            }
+            else {
+                this.firstCreated = false;
             }
             await this.emit(PageDirective.loading);
             for (var n in data) {
@@ -59,6 +63,13 @@ export class Page$Cycle {
                 }
             }
             if (typeof this.pageLayout == 'undefined') this.pageLayout = new PageLayout(this);
+            if ([
+                PageLayoutType.dbForm,
+                PageLayoutType.dbPickRecord,
+                PageLayoutType.dbSubPage
+            ].some(s => s == this.pageLayout.type)) {
+                this.firstCreated = false;
+            }
             await this.onRepair();
             await this.emit(PageDirective.loaded);
         }
@@ -78,7 +89,8 @@ export class Page$Cycle {
     async get(this: Page) {
         var json: Record<string, any> = {
             id: this.id,
-            date: this.date
+            date: this.date,
+            firstCreated: false
         };
         json.pageLayout = await this.pageLayout.get();
         json.views = await this.views.asyncMap(async x => {

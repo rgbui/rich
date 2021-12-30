@@ -1,6 +1,8 @@
 
 import { Page } from "..";
 import { ActionDirective } from "../../history/declare";
+import { PageLayoutType } from "../../layout/declare";
+import { PageDirective } from "../directive";
 export class PageEvent {
     /**
      * 鼠标点击页面,
@@ -77,10 +79,26 @@ export class PageEvent {
             })
     }
     async onRedo(this: Page) {
-        if (this.snapshoot.historyRecord.isCanRedo)
-            await this.onAction(ActionDirective.onRedo, async () => {
-                await this.snapshoot.redo();
-            })
+        if (this.snapshoot.historyRecord.isCanRedo) await this.onAction(ActionDirective.onRedo, async () => {
+            await this.snapshoot.redo();
+        })
+    }
+    async onPageTurnLayout(this: Page, layoutType: PageLayoutType) {
+        this.firstCreated = true;
+        switch (layoutType) {
+            case PageLayoutType.doc:
+                this.view.forceUpdate();
+                break;
+            case PageLayoutType.db:
+                this.pageLayout.type = layoutType;
+                this.view.forceUpdate();
+                break;
+            case PageLayoutType.board:
+                this.pageLayout.type = layoutType;
+                this.view.forceUpdate();
+                break;
+        }
+        this.emit(PageDirective.save);
     }
 }
 

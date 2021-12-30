@@ -64,6 +64,7 @@ export class Page extends Events<PageDirective> {
     isFocus: boolean = false;
     pageVisibleWidth: number;
     pageVisibleHeight: number;
+    firstCreated: boolean = true;
     render(el: HTMLElement, options?: { width?: number, height?: number }) {
         this.root = el;
         if (options?.width) this.pageVisibleWidth = options?.width;

@@ -172,14 +172,21 @@ export abstract class Block extends Events {
     }
     get visibleStyle() {
         var style: CSSProperties = {};
-        if (this.isBlock) {
-            if (this.isCol)
+        if (this.isFreeBlock)
+        {
+            style.position='absolute';
+            Object.assign(style,this.transformStyle);
+        }
+        else {
+            if (this.isBlock) {
+                if (this.isCol)
+                    Object.assign(style, {
+                        width: ((this as any).widthPercent || 100) + '%'
+                    });
                 Object.assign(style, {
-                    width: ((this as any).widthPercent || 100) + '%'
-                });
-            Object.assign(style, {
-                padding: '3px 0px'
-            })
+                    padding: '3px 0px'
+                })
+            }
         }
         Object.assign(style, this.pattern.style);
         return style;
