@@ -138,6 +138,12 @@ export class Rect {
     get center() {
         return this.left + this.width / 2
     }
+    get topCenter() {
+        return Point.from(this.left + this.width / 2, this.top)
+    }
+    get bottomCenter() {
+        return Point.from(this.left + this.width / 2, this.top + this.height)
+    }
     get middle() {
         return this.top + this.height / 2
     }
@@ -161,10 +167,10 @@ export class Rect {
             this.height = width;
         }
         else if (typeof start == 'number' && typeof end == 'number' && typeof width == 'number' && typeof height == 'number') {
-            this.top = end;
             this.left = start;
-            this.width = height;
-            this.height = width;
+            this.top = end;
+            this.width = width;
+            this.height = height;
         }
     }
     static from(rect: DOMRect) {
@@ -209,6 +215,18 @@ export class Rect {
     }
     clone() {
         return new Rect(this.left, this.top, this.width, this.height);
+    }
+    get points() {
+        return [this.leftTop, this.rightTop, this.rightBottom, this.leftBottom]
+    }
+    get pathString() {
+        return this.points.map((p, i) => {
+            if (i == 0) return 'M' + p.x + " " + p.y;
+            else return 'L' + p.x + " " + p.y;
+        }).join(",")
+    }
+    get centerPoints() {
+        return [this.topCenter, this.rightMiddle, this.bottomCenter, this.leftMiddle]
     }
 }
 
@@ -328,6 +346,14 @@ export class RectUtility {
             maxY = Math.max(maxY, points[i].y);
         }
         return new Rect(new Point(minX, minY), new Point(maxX, maxY))
+    }
+    static getRectLineRects(rect: Rect, d: number) {
+        return [
+            new Rect(rect.leftTop.sub(d / 2), d + rect.width, d),
+            new Rect(rect.rightTop.sub(d / 2), d, d + rect.height),
+            new Rect(rect.leftBottom.sub(d / 2), d + rect.width, d),
+            new Rect(rect.leftTop.sub(d / 2), d, d + rect.height),
+        ]
     }
 }
 
