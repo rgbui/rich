@@ -14,7 +14,9 @@ export enum Directive {
      TogglePageItem,
      OpenPageItem,
      UpdateUser,
-     QueryWorkspaceTableSchemas
+     QueryWorkspaceTableSchemas,
+     getSchemaFields,
+     getCurrentUser
 
 }
 

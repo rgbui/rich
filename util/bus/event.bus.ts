@@ -1,3 +1,4 @@
+import { TableSchema } from "../../blocks/table-store/schema/meta";
 import { LinkPage } from "../../extensions/at/declare";
 import { IconArguments } from "../../extensions/icon/declare";
 import { GalleryType, OuterPic } from "../../extensions/image/declare";
@@ -99,6 +100,12 @@ interface EventBus {
 
     on(directive: Directive.QueryWorkspaceTableSchemas, fn: () => Promise<{ total: number, list: any[] }>): void;
     fireAsync(directive: Directive.QueryWorkspaceTableSchemas): Promise<{ total: number, list: any[] }>;
+
+    on(directive: Directive.getSchemaFields, fn: (schemaId: string) => Promise<Partial<TableSchema>>): void;
+    fireAsync(directive: Directive.getSchemaFields, schemaId: string): Promise<Partial<TableSchema>>;
+
+    on(directive: Directive.getCurrentUser, fn: () => User): void;
+    fire(directive: Directive.getCurrentUser): User;
 
 }
 export let messageChannel = new EventBus()

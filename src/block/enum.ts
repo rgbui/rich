@@ -1,5 +1,3 @@
-
-
 export enum BlockDisplay {
     /**
      * 行内元素，类似于文字的这种
@@ -12,32 +10,11 @@ export enum BlockDisplay {
     block
 }
 
-export enum Locate {
-    prev,
-    next
-}
-
-export enum Align {
-    left,
-    right,
-    center
-}
-
-export enum Valign {
-    top,
-    bottom,
-    middle
-}
 export enum BlockRenderRange {
     none,
     self,
     parent,
 }
-
-
-
-
-
 
 export enum BlockDirective {
     delete,

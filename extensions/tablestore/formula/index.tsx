@@ -1,14 +1,14 @@
 import React from "react";
 import { TableSchema } from "../../../blocks/table-store/schema/meta";
 import { EventsComponent } from "../../../component/lib/events.component";
-import { Input } from "../../../component/view/input";
+import { Textarea } from "../../../component/view/input";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
 class FormulaSelector extends EventsComponent {
     schema: TableSchema;
     render(): React.ReactNode {
         return <div className="shy-formula-selector">
-            <Input value={this.formula} onChange={e => this.formula = e} onEnter={e => this.onSave(e)}></Input>
+            <Textarea value={this.formula} onChange={e => this.formula = e} onEnter={e => this.onSave(e)}></Textarea>
         </div>
     }
     onSave(e) {

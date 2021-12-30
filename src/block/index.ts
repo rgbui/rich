@@ -1,4 +1,3 @@
-
 import { Events } from "../../util/events";
 import { util } from "../../util/util";
 import { Point, Rect } from "../common/point";
@@ -20,6 +19,9 @@ import { TextContent } from "./element/text";
 import { BlockUrlConstant } from "./constant";
 import { List } from "../../blocks/present/list/list";
 import { CSSProperties } from "react";
+import { PageLayoutType } from "../layout/declare";
+import { Matrix } from "../common/matrix";
+
 export abstract class Block extends Events {
     constructor(page: Page) {
         super();
@@ -203,7 +205,6 @@ export abstract class Block extends Events {
     get isBlock(): boolean {
         return this.display == BlockDisplay.block;
     }
-
     /***
      * 注意换行的元素不一定非得是/row，
      * 如表格里面自定义的换行
@@ -451,6 +452,35 @@ export abstract class Block extends Events {
     }
     getChilds(key: string) {
         return this.blocks[key];
+    }
+    get isFrame() {
+        return this.url == BlockUrlConstant.Frame
+    }
+    get isFreeBlock() {
+        if (this.isPart) return false;
+        if (this.page.pageLayout.type == PageLayoutType.board) return true;
+        return this.closest(x => x.isFrame) ? true : false;
+    }
+    matrix = new Matrix();
+    get transformStyle() {
+        var style: CSSProperties = {};
+        var decomposed = this.matrix.decompose();
+        var trans = this.matrix.getTranslation();
+        if (decomposed) {
+            var parts = [],
+                angle = decomposed.rotation,
+                scale = decomposed.scaling,
+                skew = decomposed.skewing;
+            if (trans) parts.push('translate(' + trans.x + "px," + trans.y + 'px)');
+            if (angle) parts.push('rotate(' + angle + 'deg)');
+            if (scale) parts.push('scale(' + scale.x + "," + scale.y + ')');
+            if (skew.x) parts.push('skewX(' + skew.x + ')');
+            if (skew.y) parts.push('skewY(' + skew.y + ')');
+            style.transform = parts.join(' ');
+        } else {
+            style.transform = 'matrix(' + this.matrix.getValues().join(',') + ')';
+        }
+        return style;
     }
 }
 export interface Block extends Block$Seek { }

@@ -3,7 +3,6 @@ import { TableSchema } from "../../../blocks/table-store/schema/meta";
 import { PageLayoutType } from "../../../src/layout/declare";
 import { Page } from "../../../src/page";
 import { PageDirective } from "../../../src/page/directive";
-
 export function schemaCreatePageFormData(schema: TableSchema, row?: Record<string, any>) {
     var cs: Record<string, any>[] = schema.fields.toArray(field => {
         switch (field.type) {
@@ -61,10 +60,9 @@ export function schemaCreatePageFormData(schema: TableSchema, row?: Record<strin
         ]
     }
 }
-export async function createFormPage(el: HTMLElement, options: { page: Page, schema: TableSchema, row?: Record<string, any> }) {
-    var page = new Page({
-        user: options.page.creater
-    });
+export async function createFormPage(el: HTMLElement,
+    options: { schema: TableSchema, row?: Record<string, any> }) {
+    var page = new Page();
     page.on(PageDirective.blur, function (ev) {
         // console.log('blur', ev)
     });

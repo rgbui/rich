@@ -5,7 +5,7 @@ export class Field {
     name: string
     text: string
     type: FieldType;
-    required:boolean;
+    required: boolean;
     load(col: Record<string, any>) {
         for (var n in col) {
             if (n == 'type') {
@@ -29,5 +29,10 @@ export class Field {
 }
 export interface FieldConfig {
     options?: { text: string, color: string }[];
+    relationTableId?: string,
+    rollupTableId?: string,
+    rollupFieldId?: string,
+    rollupStat?: string,
+    formula?: string
 }
 

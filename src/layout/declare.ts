@@ -1,20 +1,20 @@
-/*
- * 
- */
 export enum PageLayoutType {
     /**
      * 文档
      */
     doc = 1,
-    /**
-     * db
-     */
+    //#region db
     db = 20,
     dbForm = 21,
     dbSubPage = 22,
     /**
+     * 从表里选择一些数据的页面窗体
+     */
+    dbPickRecord = 23,
+    //#endregion
+
+    /**
      * 白板
      */
     board = 30
-
 }

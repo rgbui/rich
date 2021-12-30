@@ -7,8 +7,6 @@ import { util } from "../../util/util";
 import { View } from "../block/element/view";
 import { PageLayout } from "../layout/index";
 import { PageEvent } from "./partial/event";
-
-import { User } from '../types/user';
 import { HistorySnapshoot } from '../history/snapshoot';
 import { Block } from '../block';
 import { ConfigurationManager } from '../config';
@@ -16,7 +14,6 @@ import { PageConfig, WorkspaceConfig } from '../config/type';
 import { KeyboardPlate } from '../common/keys';
 import { Page$Seek } from './partial/seek';
 import { PageView } from './view';
-import { Exception, ExceptionType } from '../error/exception';
 import { Anchor } from '../kit/selection/anchor';
 import { UserAction } from '../history/action';
 import { TableSchema } from '../../blocks/table-store/schema/meta';
@@ -29,6 +26,8 @@ import { Mix } from '../../util/mix';
 import { Page$Cycle } from './partial/left.cycle';
 import { Page$Operator } from './partial/operator';
 import { Kit } from '../kit';
+import { messageChannel } from '../../util/bus/event.bus';
+import { Directive } from '../../util/bus/directive';
 
 export class Page extends Events<PageDirective> {
     root: HTMLElement;
@@ -36,11 +35,10 @@ export class Page extends Events<PageDirective> {
     id: string;
     date: number;
     readonly: boolean = false;
-    private user: User;
     constructor(options?: {
         id?: string,
-        readonly?: boolean,
-        user?: User
+        readonly?: boolean
+
     }) {
         super();
         this.__init_mixs();
@@ -50,8 +48,7 @@ export class Page extends Events<PageDirective> {
         this.init();
     }
     get creater() {
-        if (!this.user) throw new Exception(ExceptionType.notUser, 'the user is not null');
-        return this.user;
+        return messageChannel.fire(Directive.getCurrentUser)
     }
     kit: Kit = new Kit(this);
     snapshoot = new HistorySnapshoot(this)
@@ -127,8 +124,8 @@ export interface Page {
 
     on(name: PageDirective.schemaLoad, fn: (schemaId: string) => Promise<Partial<TableSchema>>);
     emitAsync(name: PageDirective.schemaLoad, schemaId: string): Promise<Partial<TableSchema>>;
-    on(name: PageDirective.schemaCreate, fn: (data: { text: string,workspaceId?:string, templateId?: string }) => Promise<Partial<TableSchema>>);
-    emitAsync(name: PageDirective.schemaCreate, data: { text: string, workspaceId?:string,templateId?: string }): Promise<Partial<TableSchema>>;
+    on(name: PageDirective.schemaCreate, fn: (data: { text: string, workspaceId?: string, templateId?: string }) => Promise<Partial<TableSchema>>);
+    emitAsync(name: PageDirective.schemaCreate, data: { text: string, workspaceId?: string, templateId?: string }): Promise<Partial<TableSchema>>;
 
     on(name: PageDirective.schemaCreateField, fn: (schemaId: string, options: { type: FieldType, text: string }) => Promise<Partial<Field>>);
     emitAsync(name: PageDirective.schemaCreateField, schemaId: string, options: { type: FieldType, text: string }): Promise<Partial<Field>>

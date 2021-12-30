@@ -315,5 +315,4 @@ export class Block$Seek {
         }
         return blocks;
     }
-
 }
