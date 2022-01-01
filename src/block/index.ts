@@ -172,10 +172,10 @@ export abstract class Block extends Events {
     }
     get visibleStyle() {
         var style: CSSProperties = {};
-        if (this.isFreeBlock)
-        {
-            style.position='absolute';
-            Object.assign(style,this.transformStyle);
+        if (this.isFreeBlock) {
+            style.position = 'absolute';
+            console.log(this.transformStyle);
+            Object.assign(style, this.transformStyle);
         }
         else {
             if (this.isBlock) {
@@ -471,8 +471,9 @@ export abstract class Block extends Events {
     matrix = new Matrix();
     get transformStyle() {
         var style: CSSProperties = {};
-        var decomposed = this.matrix.decompose();
-        var trans = this.matrix.getTranslation();
+        var ma = this.matrix.appended(this.moveMatrix);
+        var decomposed = ma.decompose();
+        var trans = ma.getTranslation();
         if (decomposed) {
             var parts = [],
                 angle = decomposed.rotation,
@@ -480,15 +481,28 @@ export abstract class Block extends Events {
                 skew = decomposed.skewing;
             if (trans) parts.push('translate(' + trans.x + "px," + trans.y + 'px)');
             if (angle) parts.push('rotate(' + angle + 'deg)');
-            if (scale) parts.push('scale(' + scale.x + "," + scale.y + ')');
+            if (scale && typeof scale.x != 'undefined') parts.push('scale(' + scale.x + "," + scale.y + ')');
             if (skew.x) parts.push('skewX(' + skew.x + ')');
             if (skew.y) parts.push('skewY(' + skew.y + ')');
             style.transform = parts.join(' ');
         } else {
-            style.transform = 'matrix(' + this.matrix.getValues().join(',') + ')';
+            style.transform = 'matrix(' + ma.getValues().join(',') + ')';
         }
         return style;
     }
+    /**
+     * 运行的move matrix
+     */
+    moveMatrix = new Matrix();
+    @prop()
+    fixedWidth: number = 100;
+    @prop()
+    fixedHeight: number = 100;
+    /**
+     * 是否同比例缩放
+     */
+    @prop()
+    isScale: boolean = false;
 }
 export interface Block extends Block$Seek { }
 export interface Block extends Block$Event { }
