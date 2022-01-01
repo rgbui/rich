@@ -1,0 +1,40 @@
+.shy-board-tool {
+    position        : fixed;
+    width           : 40px;
+    background-color: #fff;
+    padding         : 12px 0;
+    box-shadow      : 0px 2px 10px rgba(5, 0, 56, 0.08);
+
+    &-bar {
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : center;
+        flex-direction : column;
+        margin         :5px 0px;
+        span {
+            width  : 30px;
+            height : 30px;
+            display: flex;
+            justify-content: center;
+            align-items    : center;
+            cursor         : pointer;
+            svg {
+                width         : 24px;
+                height        : 24px;
+                stroke        : rgb(55, 53, 47);
+                stroke-width  : 2px;
+                stroke-opacity: .6;
+            }
+            &.hover {
+                svg {
+                    stroke: #e16259;
+                }
+            }
+            &:hover {
+                svg {
+                    stroke: #e16259;
+                }
+            }
+        }
+    }
+}
