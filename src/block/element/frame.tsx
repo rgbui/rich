@@ -9,14 +9,19 @@ import { ChildsArea } from '../view/appear';
  * 可以看成是contentBlock
  */
 @url('/frame')
-export class Group extends Block {
+export class Frame extends Block {
     @prop()
-    title: string = '';
+    frameTitle: string = '';
+    @prop()
+    fixedWidth: number = 800;
+    @prop()
+    fixedHeight: number = 300;
 }
 @view('/frame')
-export class GroupView extends BlockView<Group>{
+export class FrameView extends BlockView<Frame>{
     render() {
-        return <div className='sy-block-frame' >
+        var style = Object.assign({ width: this.block.fixedWidth, height: this.block.fixedHeight }, this.block.visibleStyle)
+        return <div className='sy-block-frame' style={style} >
             <ChildsArea childs={this.block.childs}></ChildsArea>
         </div>
     }
