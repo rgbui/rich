@@ -13,6 +13,7 @@ import { Point } from "../../src/common/point";
 import { Singleton } from "../../component/lib/Singleton";
 import "./style.less";
 import { BoardToolOperator } from "./declare";
+import { BlockUrlConstant } from "../../src/block/constant";
 
 class BoardTool extends EventsComponent {
     render(): ReactNode {
@@ -53,15 +54,38 @@ class BoardTool extends EventsComponent {
             </div>
         </div>
     }
-    currentSelector: { operator: BoardToolOperator, event: React.MouseEvent }
+    currentSelector: { url: string, data?: Record<string, any>, event: React.MouseEvent }
     get isSelector() {
         if (this.currentSelector) return true;
         else return false;
     }
     selector(operator: BoardToolOperator, event: React.MouseEvent) {
         if (operator == BoardToolOperator.arrow) this.currentSelector = null;
-        else this.currentSelector = { operator, event };
+        else {
+            var sel: Record<string, any> = { event };
+            switch (operator) {
+                case BoardToolOperator.text:
+                    sel.url = BlockUrlConstant.TextSpan;
+                    break;
+                case BoardToolOperator.shape:
+                    sel.url = '/shape';
+                    break;
+                case BoardToolOperator.note:
+                    sel.url = '/note';
+                    break;
+                case BoardToolOperator.connect:
+                    sel.url = '/line';
+                    break;
+                case BoardToolOperator.frame:
+                    sel.url = BlockUrlConstant.Frame;
+                    break;
+            }
+            this.currentSelector = sel as any;
+        }
         this.emit('selector', this.currentSelector);
+    }
+    clearSelector() {
+        delete this.currentSelector;
     }
     private point: Point;
     visible: boolean = false;
