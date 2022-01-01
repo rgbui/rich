@@ -27,18 +27,23 @@ export class PageView extends Component<{ page: Page }>{
     private _keyup;
     private _keydown;
     el: HTMLElement;
-    async componentDidMount() {
+    componentDidMount() {
         this.el = ReactDOM.findDOMNode(this) as HTMLElement;
-
         this.observeOutsideDrop();
         this.el.addEventListener('keydown', (this._keydown = e => this.page.onKeydown(e)), true);
         document.addEventListener('mousedown', this._mousedown = this.page.onGlobalMousedown.bind(this));
         document.addEventListener('mousemove', (this._mousemove = this.page.onMousemove.bind(this.page)));
         document.addEventListener('mouseup', (this._mouseup = this.page.onMouseup.bind(this.page)));
         document.addEventListener('keyup', (this._keyup = this.page.onKeyup.bind(this.page)), true);
+        this.observeToolBoard();
+    }
+    async observeToolBoard() {
         if (this.page.pageLayout.type == PageLayoutType.board) {
             var toolBoard = await getBoardTool();
             toolBoard.open(Point.from(this.el.getBoundingClientRect()));
+            // toolBoard.only('selector', function (data) {
+            //     console.log(data, event);
+            // })
         }
     }
     observeOutsideDrop() {
