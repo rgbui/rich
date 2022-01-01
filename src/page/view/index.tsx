@@ -6,6 +6,8 @@ import { ChildsArea } from "../../block/view/appear";
 import ReactDOM from "react-dom";
 import { KitView } from "../../kit/view";
 import { PageLayoutType } from "../../layout/declare";
+import { getBoardTool } from "../../../extensions/board.tool";
+import { Point } from "../../common/point";
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
  * 对于同时支持这4个事件的浏览器，事件执行顺序为focusin > focus > focusout > blur
@@ -25,14 +27,19 @@ export class PageView extends Component<{ page: Page }>{
     private _keyup;
     private _keydown;
     el: HTMLElement;
-    componentDidMount() {
+    async componentDidMount() {
         this.el = ReactDOM.findDOMNode(this) as HTMLElement;
+
         this.observeOutsideDrop();
         this.el.addEventListener('keydown', (this._keydown = e => this.page.onKeydown(e)), true);
         document.addEventListener('mousedown', this._mousedown = this.page.onGlobalMousedown.bind(this));
         document.addEventListener('mousemove', (this._mousemove = this.page.onMousemove.bind(this.page)));
         document.addEventListener('mouseup', (this._mouseup = this.page.onMouseup.bind(this.page)));
         document.addEventListener('keyup', (this._keyup = this.page.onKeyup.bind(this.page)), true);
+        if (this.page.pageLayout.type == PageLayoutType.board) {
+            var toolBoard = await getBoardTool();
+            toolBoard.open(Point.from(this.el.getBoundingClientRect()));
+        }
     }
     observeOutsideDrop() {
         var isMove: boolean = false;
