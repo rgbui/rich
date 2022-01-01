@@ -2,6 +2,7 @@ import React from "react";
 import { Kit } from ".";
 import { HandleView } from "./handle/view";
 import { TextInputView } from "./input/view";
+import { BlockPickerView } from "./picker/view";
 import { SelectorView } from "./selector/view";
 
 export class KitView extends React.Component<{ kit: Kit }>{
@@ -18,6 +19,7 @@ export class KitView extends React.Component<{ kit: Kit }>{
             <SelectorView selector={this.kit.selector}></SelectorView>
             <TextInputView textInput={this.kit.textInput}></TextInputView>
             <HandleView handle={this.kit.handle}></HandleView>
+            <BlockPickerView picker={this.kit.picker}></BlockPickerView>
         </div>
     }
 }
