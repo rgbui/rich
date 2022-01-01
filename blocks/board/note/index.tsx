@@ -28,7 +28,7 @@ export class NoteView extends BlockView<Note>{
                     <feGaussianBlur stdDeviation="1" in="SourceGraphic"></feGaussianBlur>
                 </filter>
             </defs>
-            <g fill="none" fill-rule="evenodd">
+            <g fill="none" fillRule="evenodd">
                 <path fill="#353535" opacity=".5" filter="url(#aeqa)" d="M8 39h32v5H8z"></path>
                 <path fill="#353535" opacity=".5" filter="url(#aeqb)" d="M8 39h32v5H8z"></path>
                 <path fill={this.block.color} d="M4 4h40v40H4z"></path>
