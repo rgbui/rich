@@ -84,6 +84,9 @@ export class Page extends Events<PageDirective> {
             this.isOff = true;
         }
     }
+    getPageFrame(){
+        return this.views[0];
+    }
 }
 export interface Page {
     on(name: PageDirective.init, fn: () => void);
