@@ -55,6 +55,11 @@ import './at/title';
 
 import "./map/amap";
 
+import './board/note/index';
+import "./board/line/line";
+import "./board/pen/index";
+import "./board/shape/index"
+
 /***
  * import component style
  */
