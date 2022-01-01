@@ -19,7 +19,7 @@ export class Note extends Block {
 @view('/note')
 export class NoteView extends BlockView<Note>{
     renderBg() {
-        return <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+        return <svg style={{ width: this.block.fixedWidth, height: this.block.fixedHeight }} viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <filter x="-18.8%" y="-120%" width="137.5%" height="340%" filterUnits="objectBoundingBox" id="aeqa">
                     <feGaussianBlur stdDeviation="2" in="SourceGraphic"></feGaussianBlur>
