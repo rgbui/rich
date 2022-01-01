@@ -3,6 +3,7 @@ import { Block } from "../../block";
 import { Point } from "../../common/point";
 import { onAutoScroll, onAutoScrollStop } from "../../common/scroll";
 import { TextEle } from "../../common/text.ele";
+import { PageLayoutType } from "../../layout/declare";
 import { Anchor } from "../selection/anchor";
 export class PageMouse {
     constructor(public kit: Kit) { }
@@ -26,8 +27,13 @@ export class PageMouse {
     private lastMouseupEvent: MouseEvent;
     onMousedown(event: MouseEvent) {
         var block = this.page.getBlockInMouseRegion(event);
+        console.log(block?.isFreeBlock,block,event);
         if (block?.isFreeBlock) {
             this.kit.board.mousedown(block, event);
+            return;
+        }
+        else if (this.page.pageLayout.type == PageLayoutType.board) {
+            this.kit.board.mousedown(undefined, event);
             return;
         }
         else {
@@ -111,9 +117,6 @@ export class PageMouse {
                 })
             }
         }
-        else if (this.kit.board.isDown == true) {
-            this.kit.board.mousemove(event);
-        }
         //判断当前的ele是否在bar自已本身内
         var ele = event.target as HTMLElement;
         if (this.kit.handle.containsEl(ele)) return;
@@ -158,9 +161,6 @@ export class PageMouse {
             this.lastMouseupDate = Date.now();
             if (this.explorer.isOnlyAnchor) this.kit.textInput.onFocus();
             if (this.explorer.hasTextRange) await this.explorer.onOpenTextTool(event);
-        }
-        else if(this.kit.board.isDown==true){
-            this.kit.board.mouseup(event);
         }
     }
 }
