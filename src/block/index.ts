@@ -174,7 +174,6 @@ export abstract class Block extends Events {
         var style: CSSProperties = {};
         if (this.isFreeBlock) {
             style.position = 'absolute';
-            console.log(this.transformStyle);
             Object.assign(style, this.transformStyle);
         }
         else {
@@ -462,6 +461,16 @@ export abstract class Block extends Events {
     }
     get isFrame() {
         return this.url == BlockUrlConstant.Frame
+    }
+    get frameBlock() {
+        var r = this.closest(x => x.isFrame);
+        if (r) return r;
+        else {
+            if (this.page.pageLayout.type == PageLayoutType.board) {
+                return this.page.getPageFrame();
+            }
+        }
+        return null;
     }
     get isFreeBlock() {
         if (this.isPart) return false;

@@ -5,5 +5,6 @@ import "./element/row";
 import "./element/view";
 import "./element/text";
 import "./element/textspan";
+import "./element/frame";
 import "./element/style.less";
 

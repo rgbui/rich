@@ -68,8 +68,7 @@ export class Block$LifeCycle {
     isLoad = false;
     async load(this: Block, data) {
         try {
-            if (!this.pattern)
-                this.pattern = new Pattern(this);
+            if (!this.pattern) this.pattern = new Pattern(this);
             for (var n in data) {
                 if (n == 'blocks') continue;
                 else if (n == 'matrix') this.matrix = new Matrix(data[n]);
