@@ -8,6 +8,7 @@ import { Col } from "../element/col";
 import { BlockRenderRange } from "../enum";
 import lodash from 'lodash';
 import { AppearAnchor } from "../appear";
+import { Matrix } from "../../common/matrix";
 export class Block$Operator {
 
     /***
@@ -516,6 +517,15 @@ export class Block$Operator {
                 new: newValue
             });
         }
+    }
+    async updateMatrix(this: Block, oldMatrix: Matrix, newMatrix: Matrix) {
+        this.syncUpdate(BlockRenderRange.self);
+        this.matrix = newMatrix;
+        this.page.snapshoot.record(OperatorDirective.updatePropMatrix, {
+            blockId: this.id,
+            old: oldMatrix.getValues(),
+            new: newMatrix.getValues()
+        });
     }
     /**
      * 子类继承实现

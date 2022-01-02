@@ -136,6 +136,7 @@ export interface HistorySnapshoot {
     record(directive: OperatorDirective.create, data: { parentId: string, childKey?: string, at?: number, data: Record<string, any> });
     record(directive: OperatorDirective.append, data: { to: { parentId: string, childKey?: string, at?: number }, from: { parentId: string, childKey?: string, at?: number }, blockId: string });
     record(directive: OperatorDirective.updateProp, data: { blockId: string, old: any, new: any });
+    record(directive: OperatorDirective.updatePropMatrix, data: { blockId: string, old: number[], new: number[] });
     /**
      * 替换文本内容，表示在[start,end]之间替成成text
      * @param directive 

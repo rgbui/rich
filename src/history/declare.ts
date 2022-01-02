@@ -26,7 +26,8 @@ export enum ActionDirective {
     onBatchDragBlockDatas = 120,
     onButtonTemplateCreateInstance = 121,
 
-    onBoardToolCreateBlock=130,
+    onBoardToolCreateBlock = 130,
+    onResizeBlock = 132,
 
     onSchemaCreateField = 200,
     onSchemaDeleteField = 201,
@@ -63,12 +64,14 @@ export enum OperatorDirective {
      * 更新属性
      */
     updateProp = 106,
+
     /**
      * 数组属性发生变化
      */
     arrayPropInsert = 108,
     arrayPropUpdate = 109,
     arrayPropRemove = 110,
+    updatePropMatrix = 111,
 
     insertStyle = 200,
     mergeStyle = 201,
