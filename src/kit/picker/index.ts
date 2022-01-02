@@ -1,7 +1,9 @@
 import { Kit } from "..";
 import { Block } from "../../block";
+import { MouseDragger } from "../../common/dragger";
 import { Matrix } from "../../common/matrix";
 import { Rect } from "../../common/point";
+import { ActionDirective } from "../../history/declare";
 import { BlockPickerView } from "./view";
 
 export class BlockPicker {
@@ -35,5 +37,98 @@ export class BlockPicker {
             bl.block.forceUpdate()
         });
         this.view.forceUpdate();
+    }
+    onResizeBlock(br: {
+        block: Block,
+        rect: Rect,
+        matrix: Matrix
+    },
+        arrow: string,
+        event: React.MouseEvent) {
+        var matrix = br.matrix.clone();
+        var blockMatrix = br.block.matrix;
+        var block = br.block;
+        var w = br.block.fixedWidth;
+        var h = br.block.fixedHeight;
+        var self = this;
+        var rect = br.rect.clone();
+        arrow = arrow.toLowerCase();
+        MouseDragger({
+            event,
+            moving(ev, data, isEnd) {
+                var r = rect.clone();
+                var ma = new Matrix();
+                var dx = ev.clientX - event.clientX;
+                var dy = ev.clientY - event.clientY;
+                var bw = w;
+                var bh = h;
+                if (arrow.indexOf('top') > -1) {
+                  
+                }
+                else if (arrow.indexOf("bottom") > -1) {
+                   
+                }
+                if (arrow.indexOf('left') > -1) {
+                   
+                }
+                else if (arrow.indexOf('right') > -1) {
+                  
+                }
+
+
+                
+                if (arrow.indexOf('top') > -1) {
+                    r.top += dy;
+                    ma.translate(0, dy);
+                    bh -= dy;
+                    r.height -= dy;
+                }
+                else if (arrow.indexOf("bottom") > -1) {
+                    bh += dy;
+                    r.height += dy;
+                }
+                if (arrow.indexOf('left') > -1) {
+                    r.left += dx;
+                    ma.translate(dx, 0);
+                    bw -= dx;
+                    r.width -= dx;
+                }
+                else if (arrow.indexOf('right') > -1) {
+                    bw += dx;
+                    r.width += dx;
+                }
+                br.rect = r;
+                br.matrix = matrix.appended(ma);
+                block.matrix = blockMatrix.appended(ma);
+                block.fixedHeight = bh;
+                block.fixedWidth = bw;
+                block.forceUpdate();
+                self.view.forceUpdate();
+                if (isEnd) {
+                    block.onAction(ActionDirective.onResizeBlock, async () => {
+                        if (!blockMatrix.equals(block.matrix)) block.updateMatrix(blockMatrix, block.matrix);
+                        block.manualUpdateProps(
+                            { fixedWidth: w, fixedHeight: h },
+                            { fixedWidth: block.fixedWidth, fixedHeight: block.fixedHeight }
+                        )
+                    })
+                }
+                else {
+                    block.fixedWidth = w;
+                    block.fixedHeight = h;
+                    block.matrix = blockMatrix;
+                    br.matrix = matrix;
+                    br.rect = r;
+                }
+            }
+        });
+    }
+    onCreateBlockConnect(br: { block: Block, rect: Rect, matrix: Matrix }, arrow: string, event: React.MouseEvent) {
+        MouseDragger({
+            event,
+            moveStart() { },
+            move() { },
+            moveEnd() { }
+        });
     }
 }

@@ -8,18 +8,30 @@
         bottom        : 0px;
         width         : 100vw;
         height        : 100vh;
+
         path {
-            fill        : #e16259;
-            stroke      : transparent;
-            stroke-width: 0;
-            fill-opacity: 0.8;
+            fill          : #e16259;
+            stroke        : transparent;
+            stroke-width  : 4;
+            fill-opacity  : 0.8;
+            pointer-events: visible;
         }
+
         circle {
             fill          : #fff;
             stroke        : rgb(0, 0, 0);
-            stroke-width  : 4;
-            stroke-opacity: 0.08;
+            stroke-width  : 2;
+            stroke-opacity: 0.3;
             pointer-events: visible;
+            &.connect {
+                stroke-width  : 0;
+                fill          : #e16259;
+                stroke        : #e16259;
+                stroke-opacity: 1;
+                &:hover {
+                    stroke-width:6px;
+                }
+            }
         }
     }
 }

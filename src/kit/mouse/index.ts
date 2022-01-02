@@ -27,7 +27,6 @@ export class PageMouse {
     private lastMouseupEvent: MouseEvent;
     onMousedown(event: MouseEvent) {
         var block = this.page.getBlockInMouseRegion(event);
-        console.log(block?.isFreeBlock,block,event);
         if (block?.isFreeBlock) {
             this.kit.board.mousedown(block, event);
             return;

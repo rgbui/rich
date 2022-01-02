@@ -101,8 +101,7 @@ export class PageBoard {
                         if (newBlock) {
                             newBlock.fixedWidth = Math.abs(ev.clientX - event.clientX);
                             newBlock.fixedHeight = Math.abs(ev.clientY - event.clientY);
-                            if (isMounted)
-                                newBlock.forceUpdate();
+                            if (isMounted) newBlock.forceUpdate();
                         }
                     }
                 })
@@ -117,7 +116,7 @@ export class PageBoard {
             if (this.kit.picker.blockRanges.length > 0)
                 MouseDragger({
                     event,
-                    move: (ev, data) => {
+                    move(ev, data) {
                         var matrix = new Matrix();
                         matrix.translate(ev.clientX - event.clientX, ev.clientY - event.clientY)
                         self.kit.picker.onMove(matrix);
