@@ -14,14 +14,12 @@ export class PageBoard {
     async mousedown(block: Block | undefined, event: MouseEvent) {
         var self = this;
         var toolBoard = await getBoardTool();
-        console.log(block, event);
         if (toolBoard.isSelector) {
             var fra: Block = block ? block.frameBlock : this.kit.page.getPageFrame();
             var re = fra.el.getBoundingClientRect();
             var url = toolBoard.currentSelector.url;
-            console.log(url);
-            if (url == '/note' || url == '/shape' || url == BlockUrlConstant.Frame) {
-                await fra.onAction(ActionDirective.onBatchDragBlockDatas, async () => {
+            if (url == '/note' || url == BlockUrlConstant.TextSpan || url == BlockUrlConstant.Frame) {
+                await fra.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
                     var data = toolBoard.currentSelector.data || {};
                     var ma = new Matrix();
                     ma.translate(event.clientX - re.left, event.clientY - re.top);
@@ -36,7 +34,7 @@ export class PageBoard {
             else if (url == '/line') {
                 var newBlock: Block;
                 var isMounted: boolean = false;
-                await fra.onAction(ActionDirective.onBatchDragBlockDatas, async () => {
+                await fra.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
                     var data = toolBoard.currentSelector.data || {};
                     var ma = new Matrix();
                     ma.translate(event.clientX - re.left, event.clientY - re.top);
@@ -53,6 +51,9 @@ export class PageBoard {
                     event,
                     move: (ev, data) => {
                         if (newBlock) {
+                            var ma = new Matrix();
+                            ma.translate(Math.min(ev.clientX, event.clientX) - re.left, Math.min(ev.clientY, event.clientY) - re.top);
+                            newBlock.matrix = ma;
                             (newBlock as any).to = { x: ev.clientX, y: ev.clientY };
                             if (isMounted)
                                 newBlock.forceUpdate();
@@ -60,6 +61,9 @@ export class PageBoard {
                     },
                     moveEnd(ev, isMove, data) {
                         if (newBlock) {
+                            var ma = new Matrix();
+                            ma.translate(Math.min(ev.clientX, event.clientX) - re.left, Math.min(ev.clientY, event.clientY) - re.top);
+                            newBlock.matrix = ma;
                             (newBlock as any).to = { x: ev.clientX, y: ev.clientY };
                             newBlock.fixedWidth = ev.clientX - event.clientX;
                             newBlock.fixedHeight = ev.clientY - event.clientY;
@@ -70,12 +74,40 @@ export class PageBoard {
                 })
             }
             else if (url == '/shape') {
-
+                var newBlock: Block;
+                var isMounted: boolean = false;
+                await fra.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
+                    var data = toolBoard.currentSelector.data || {};
+                    var ma = new Matrix();
+                    ma.translate(event.clientX - re.left, event.clientY - re.top);
+                    data.matrix = ma.getValues();
+                    newBlock = await this.kit.page.createBlock(toolBoard.currentSelector.url, data, fra);
+                    toolBoard.clearSelector();
+                    newBlock.mounted(() => {
+                        isMounted = true;
+                    })
+                });
+                MouseDragger({
+                    event,
+                    move: (ev, data) => {
+                        if (newBlock) {
+                            newBlock.fixedWidth = Math.abs(ev.clientX - event.clientX);
+                            newBlock.fixedHeight = Math.abs(ev.clientY - event.clientY);
+                            if (isMounted)
+                                newBlock.forceUpdate();
+                        }
+                    },
+                    moveEnd(ev, isMove, data) {
+                        if (newBlock) {
+                            newBlock.fixedWidth = Math.abs(ev.clientX - event.clientX);
+                            newBlock.fixedHeight = Math.abs(ev.clientY - event.clientY);
+                            if (isMounted)
+                                newBlock.forceUpdate();
+                        }
+                    }
+                })
             }
             else if (url == '/pen') {
-
-            }
-            else if (url == '/frame') {
 
             }
         }
