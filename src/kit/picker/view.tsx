@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM, { createPortal } from "react-dom";
 import { BlockPicker } from ".";
 import { Block } from "../../block";
+import { Matrix } from "../../common/matrix";
 import { Rect, RectUtility } from "../../common/point";
 import "./style.less";
 export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
@@ -21,19 +22,20 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
     componentDidMount() {
         this.el = ReactDOM.findDOMNode(this) as HTMLElement;
     }
-    renderBlockRange(b: { block: Block, rect: Rect }) {
+    renderBlockRange(b: { block: Block, rect: Rect, matrix: Matrix; }) {
         var r = 5;
-        var rs = RectUtility.getRectLineRects(b.rect, 1);
-        var extendRect = b.rect.extend(20);
+        var rect = b.rect.relative(b.rect.leftTop);
+        var rs = RectUtility.getRectLineRects(rect, 1);
+        var extendRect = rect.extend(20);
         var centerPoints = extendRect.centerPoints;
-        return <g key={b.block.id}>
+        return <g key={b.block.id} transform={`matrix(${b.matrix.getValues().join(",")})`}>
             {rs.map((r, i) => {
                 return <path d={r.pathString} key={i}></path>
             })}
-            <circle r={r} cx={b.rect.leftTop.x} cy={b.rect.leftTop.y}></circle>
-            <circle r={r} cx={b.rect.rightTop.x} cy={b.rect.rightTop.y}></circle>
-            <circle r={r} cx={b.rect.leftBottom.x} cy={b.rect.leftBottom.y}></circle>
-            <circle r={r} cx={b.rect.rightBottom.x} cy={b.rect.rightBottom.y}></circle>
+            <circle r={r} cx={rect.leftTop.x} cy={rect.leftTop.y}></circle>
+            <circle r={r} cx={rect.rightTop.x} cy={rect.rightTop.y}></circle>
+            <circle r={r} cx={rect.leftBottom.x} cy={rect.leftBottom.y}></circle>
+            <circle r={r} cx={rect.rightBottom.x} cy={rect.rightBottom.y}></circle>
             {centerPoints.map((rc, i) => {
                 return <circle key={i} cx={rc.x} cy={rc.y} r={r}  ></circle>
             })}
