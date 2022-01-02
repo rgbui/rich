@@ -228,6 +228,14 @@ export class Rect {
     get centerPoints() {
         return [this.topCenter, this.rightMiddle, this.bottomCenter, this.leftMiddle]
     }
+    relative(point: Point) {
+        var rect = new Rect();
+        rect.top = this.top - point.y;
+        rect.left = this.left - point.x;
+        rect.width = this.width;
+        rect.height = this.height;
+        return rect;
+    }
 }
 
 export class RectUtility {
