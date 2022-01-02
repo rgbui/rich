@@ -478,6 +478,19 @@ export abstract class Block extends Events {
         return this.closest(x => x.isFrame) ? true : false;
     }
     matrix = new Matrix();
+    /**
+     * 相对窗体的matrix
+     */
+    get globalWindowMatrix() {
+        var ma = this.globalMatrix;
+        var rect = Rect.fromEle(this.page.root);
+        var matrix = new Matrix();
+        matrix.translate(rect.left, rect.top);
+        return ma.appended(matrix);
+    }
+    get globalMatrix() {
+        return this.matrix;
+    }
     get transformStyle() {
         var style: CSSProperties = {};
         var ma = this.matrix.appended(this.moveMatrix);
