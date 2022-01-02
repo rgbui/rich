@@ -26,6 +26,8 @@ export enum ActionDirective {
     onBatchDragBlockDatas = 120,
     onButtonTemplateCreateInstance = 121,
 
+    onBoardToolCreateBlock=130,
+
     onSchemaCreateField = 200,
     onSchemaDeleteField = 201,
     onSchemaTurnField = 202,
