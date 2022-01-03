@@ -94,6 +94,11 @@ class BoardTool extends EventsComponent {
         this.visible = true;
         this.forceUpdate()
     }
+    close(): void {
+        this.visible = false;
+        this.clearSelector();
+        this.forceUpdate();
+    }
 }
 interface BoardTool {
     emit(name: 'selector', data: BoardTool['currentSelector']);
