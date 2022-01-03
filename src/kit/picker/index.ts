@@ -21,6 +21,10 @@ export class BlockPicker {
         this.visible = true;
         this.view.forceUpdate();
     }
+    onCancel() {
+        this.visible = false;
+        this.view.forceUpdate();
+    }
     onMove(matrix: Matrix) {
         this.blockRanges.forEach((bl) => {
             bl.block.moveMatrix = matrix;
@@ -62,21 +66,22 @@ export class BlockPicker {
                 var dy = ev.clientY - event.clientY;
                 var bw = w;
                 var bh = h;
+                var minW = 50;
+                var minH = 50;
                 if (arrow.indexOf('top') > -1) {
-                  
+                    if (bh - dy < minH) dy = bh - minH;
                 }
                 else if (arrow.indexOf("bottom") > -1) {
-                   
+                    if (bh + dy < minH) dy = minH - bh;
                 }
                 if (arrow.indexOf('left') > -1) {
-                   
+                    if (bw - dx < minW) dx = bw - minW;
                 }
                 else if (arrow.indexOf('right') > -1) {
-                  
+                    if (bw + dx < minW) dx = minW - bw;
                 }
 
 
-                
                 if (arrow.indexOf('top') > -1) {
                     r.top += dy;
                     ma.translate(0, dy);
@@ -97,6 +102,8 @@ export class BlockPicker {
                     bw += dx;
                     r.width += dx;
                 }
+
+
                 br.rect = r;
                 br.matrix = matrix.appended(ma);
                 block.matrix = blockMatrix.appended(ma);
