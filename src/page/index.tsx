@@ -28,6 +28,9 @@ import { Page$Operator } from './partial/operator';
 import { Kit } from '../kit';
 import { messageChannel } from '../../util/bus/event.bus';
 import { Directive } from '../../util/bus/directive';
+import { getBoardTool } from '../../extensions/board.tool';
+import { PageLayoutType } from '../layout/declare';
+import { Point } from '../common/point';
 
 export class Page extends Events<PageDirective> {
     root: HTMLElement;
@@ -74,6 +77,10 @@ export class Page extends Events<PageDirective> {
     fragment: DocumentFragment;
     isOff: boolean = false;
     cacheFragment() {
+        this.kit.picker.onCancel();
+        getBoardTool().then(r => {
+            r.close()
+        })
         if (!this.fragment) this.fragment = document.createDocumentFragment();
         this.fragment.appendChild(this.root);
         this.isOff = true;
@@ -82,9 +89,14 @@ export class Page extends Events<PageDirective> {
         if (this.fragment) {
             panel.appendChild(this.root);
             this.isOff = true;
+            if (this.pageLayout.type == PageLayoutType.board) {
+                getBoardTool().then(r => {
+                    r.open(Point.from(this.view.el.getBoundingClientRect()));
+                })
+            }
         }
     }
-    getPageFrame(){
+    getPageFrame() {
         return this.views[0];
     }
 }

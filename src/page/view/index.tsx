@@ -41,9 +41,10 @@ export class PageView extends Component<{ page: Page }>{
         if (this.page.pageLayout.type == PageLayoutType.board) {
             var toolBoard = await getBoardTool();
             toolBoard.open(Point.from(this.el.getBoundingClientRect()));
-            // toolBoard.only('selector', function (data) {
-            //     console.log(data, event);
-            // })
+        }
+        else {
+            var toolBoard = await getBoardTool();
+            toolBoard.close();
         }
     }
     observeOutsideDrop() {
