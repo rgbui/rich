@@ -37,3 +37,4 @@ export function TextLineChilds(props: {
         return <x.viewComponent key={x.id} block={x}></x.viewComponent>
     })}</span>
 }
+
