@@ -39,6 +39,7 @@ export abstract class Block extends Events {
     date: number;
     pattern: Pattern;
     blocks: Record<string, Block[]> = { childs: [] };
+    grid: { min: number[], max: number[], rect: Rect };
     /**
      * 初始化的一些数据，该数据只是初始化的参数
      * 最终的block不会存储它，
