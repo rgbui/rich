@@ -21,6 +21,15 @@ export class BlockPicker {
         this.visible = true;
         this.view.forceUpdate();
     }
+    onShiftPicker(blocks: Block[]) {
+        blocks.each(b => {
+            if (!this.blockRanges.some(s => s.block === b)) {
+                this.blockRanges.push({ block: b, rect: Rect.fromEle(b.el), matrix: b.globalWindowMatrix })
+            }
+        });
+        this.visible = true;
+        this.view.forceUpdate();
+    }
     onCancel() {
         this.visible = false;
         this.view.forceUpdate();
