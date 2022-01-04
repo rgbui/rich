@@ -189,7 +189,7 @@ export class Block$Anchor {
     visibleAnchor(this: Block, point: Point): Anchor {
         var block = this;
         if (this.isLayout || this.hasChilds) {
-            var contentBlock = this.findAnchorBlockByPointFromBlockRange(point);
+            var contentBlock = this.findNearestBlockByPoint(point);
             if (contentBlock) {
                 block = contentBlock;
             }
@@ -224,7 +224,7 @@ export class Block$Anchor {
         else fa = block.firstElementAppear;
         if (fa) return fa.createAnchorByPoint(point);
     }
-    findAnchorBlockByPointFromBlockRange(this: Block, point: Point) {
+    findNearestBlockByPoint(this: Block, point: Point) {
         var as = this.findAll(x => x.isSupportAnchor, true);
         var ps = as.toArray(e => {
             var bounds = e.getBounds();
@@ -301,7 +301,7 @@ export class Block$Anchor {
         else {
             var frontConent = this.content.slice(0, at);
             var latterContent = this.content.slice(at);
-            await  this.updateProps({ content: '' });
+            await this.updateProps({ content: '' });
             var index = 0;
             if (frontConent) await this.page.createBlock(BlockUrlConstant.Text, { content: frontConent }, this, index++);
             var newBlock = await this.page.createBlock(url, data, this, index++);
