@@ -9,7 +9,7 @@ import { KitView } from "./view";
 import "./style.less";
 import { PageMouse } from "./mouse";
 import { BlockPicker } from "./picker";
-import { PageBoard } from "./mouse/board";
+
 export class Kit extends Events {
     page: Page;
     constructor(page: Page) {
@@ -22,12 +22,10 @@ export class Kit extends Events {
         this.explorer = new SelectionExplorer(this);
         this.textInput = new TextInput(this);
         this.mouse = new PageMouse(this);
-        this.board=new PageBoard(this);
         this.handle = new Handle(this);
         this.picker=new BlockPicker(this);
     }
     mouse: PageMouse;
-    board:PageBoard;
     textInput: TextInput;
     selector: Selector;
     explorer: SelectionExplorer;
