@@ -92,6 +92,9 @@ export class Point {
     negate() {
         return new Point(0 - this.x, 0 - this.y);
     }
+    relative(point: Point) {
+        return new Point(this.x - point.x, this.y - point.y);
+    }
 }
 
 export class Rect {
