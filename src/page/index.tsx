@@ -30,7 +30,8 @@ import { messageChannel } from '../../util/bus/event.bus';
 import { Directive } from '../../util/bus/directive';
 import { getBoardTool } from '../../extensions/board.tool';
 import { PageLayoutType } from '../layout/declare';
-import { Point } from '../common/point';
+import { Point, Rect } from '../common/point';
+import { PageGrid } from './grid';
 
 export class Page extends Events<PageDirective> {
     root: HTMLElement;
@@ -68,6 +69,7 @@ export class Page extends Events<PageDirective> {
     pageVisibleWidth: number;
     pageVisibleHeight: number;
     firstCreated: boolean = true;
+    grid:PageGrid;
     render(el: HTMLElement, options?: { width?: number, height?: number }) {
         this.root = el;
         if (options?.width) this.pageVisibleWidth = options?.width;
@@ -98,6 +100,14 @@ export class Page extends Events<PageDirective> {
     }
     getPageFrame() {
         return this.views[0];
+    }
+    getRelativePoint(point:Point){
+        var eb = this.root.getBoundingClientRect();
+        return point.relative(Point.from(eb))
+    }
+    getRelativeRect(rect: Rect) {
+        var eb = this.root.getBoundingClientRect();
+        return rect.relative(Point.from(eb))
     }
 }
 export interface Page {

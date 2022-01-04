@@ -14,9 +14,11 @@ import { PageKeys } from "../interaction/keys";
 import JSZip from 'jszip';
 import { BlockUrlConstant } from "../../block/constant";
 import { PageLayoutType } from "../../layout/declare";
+import { PageGrid } from "../grid";
 
 export class Page$Cycle {
     async init(this: Page) {
+        this.grid = new PageGrid(this);
         this.cfm = new ConfigurationManager(this);
         this.cfm.loadPageConfig({
             fontCss: {
