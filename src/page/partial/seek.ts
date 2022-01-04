@@ -28,55 +28,56 @@ export class Page$Seek {
             var block = this.getEleBlock(target);
             if (block) return block;
         }
+
         /**
          * 如果没有找到，说明在在pageLayout的空白处，
          * 那么先水平找找，如果水平找不到
          * 那么垂直找，
          * 这里需要计算内容域和pageLout中间的范围大小区域
          */
-        var contentBound = TextEle.getContentBound(this.contentEl);
-        var x = event.x;
-        var y = event.y;
-        var dis = 15;
-        var el = document.elementFromPoint(contentBound.left + dis, event.y);
-        if (el) {
-            block = this.getEleBlock(el as HTMLElement);
-            if (block) return block;
-        }
-        el = document.elementFromPoint(contentBound.left + contentBound.width - dis, event.y);
-        if (el) {
-            block = this.getEleBlock(el as HTMLElement);
-            if (block) return block;
-        }
-        /**
-         * 将x 缩放到content范围内，这样便于查找
-         */
-        x = Math.max(contentBound.left + dis, x);
-        x = Math.min(contentBound.left + contentBound.width - dis, x);
-        if (Math.abs(y - contentBound.y) > Math.abs(y - contentBound.y - contentBound.height)) {
-            el = document.elementFromPoint(x, contentBound.top + contentBound.height - dis);
-            if (el) {
-                block = this.getEleBlock(el as HTMLElement);
-                if (block) return block;
-            }
-            el = document.elementFromPoint(x, contentBound.top + dis);
-            if (el) {
-                block = this.getEleBlock(el as HTMLElement);
-                if (block) return block;
-            }
-        }
-        else {
-            el = document.elementFromPoint(x, contentBound.top + dis);
-            if (el) {
-                block = this.getEleBlock(el as HTMLElement);
-                if (block) return block;
-            }
-            el = document.elementFromPoint(x, contentBound.top + contentBound.height - dis);
-            if (el) {
-                block = this.getEleBlock(el as HTMLElement);
-                if (block) return block;
-            }
-        }
+        // var contentBound = TextEle.getContentBound(this.contentEl);
+        // var x = event.x;
+        // var y = event.y;
+        // var dis = 15;
+        // var el = document.elementFromPoint(contentBound.left + dis, event.y);
+        // if (el) {
+        //     block = this.getEleBlock(el as HTMLElement);
+        //     if (block) return block;
+        // }
+        // el = document.elementFromPoint(contentBound.left + contentBound.width - dis, event.y);
+        // if (el) {
+        //     block = this.getEleBlock(el as HTMLElement);
+        //     if (block) return block;
+        // }
+        // /**
+        //  * 将x 缩放到content范围内，这样便于查找
+        //  */
+        // x = Math.max(contentBound.left + dis, x);
+        // x = Math.min(contentBound.left + contentBound.width - dis, x);
+        // if (Math.abs(y - contentBound.y) > Math.abs(y - contentBound.y - contentBound.height)) {
+        //     el = document.elementFromPoint(x, contentBound.top + contentBound.height - dis);
+        //     if (el) {
+        //         block = this.getEleBlock(el as HTMLElement);
+        //         if (block) return block;
+        //     }
+        //     el = document.elementFromPoint(x, contentBound.top + dis);
+        //     if (el) {
+        //         block = this.getEleBlock(el as HTMLElement);
+        //         if (block) return block;
+        //     }
+        // }
+        // else {
+        //     el = document.elementFromPoint(x, contentBound.top + dis);
+        //     if (el) {
+        //         block = this.getEleBlock(el as HTMLElement);
+        //         if (block) return block;
+        //     }
+        //     el = document.elementFromPoint(x, contentBound.top + contentBound.height - dis);
+        //     if (el) {
+        //         block = this.getEleBlock(el as HTMLElement);
+        //         if (block) return block;
+        //     }
+        // }
     }
     getEleBlock(this: Page, el: HTMLElement): Block {
         var blockEle = dom(el).closest(x => (x as any).block && (x as any).block.page === this ? true : false);
@@ -456,5 +457,33 @@ export class Page$Seek {
             bs.push(...rs);
         }
         return bs;
+    }
+    findNearestBlockByPoint(this: Page, blocks: Block[], point: Point) {
+        var ps = blocks.toArray(e => {
+            var bounds = e.getBounds();
+            if (bounds.length == 0) console.warn('the bounds is empty', e);
+            var newPoint = TextEle.cacDistance(point, bounds);
+            if (newPoint)
+                return {
+                    dis: newPoint,
+                    block: e
+                }
+        });
+        if (ps.exists(g => g.dis.x == 0 && g.dis.y == 0))
+            return ps.find(g => g.dis.x == 0 && g.dis.y == 0).block;
+        if (ps.exists(g => g.dis.y == 0))
+            return ps.findAll(g => g.dis.y == 0).findMin(g => g.dis.x).block
+        if (ps.length > 0) {
+            /**
+             * 这里表示水平方向等距的block，
+             * 那么在从最小的等距的block找水平方向最近的点
+             */
+            var minY = ps.min(g => g.dis.y);
+            var ds = ps.findAll(g => g.dis.y == minY);
+            if (ds.length == 1) return ds.first().block;
+            else {
+                return ds.findMin(g => g.dis.x).block;
+            }
+        }
     }
 }
