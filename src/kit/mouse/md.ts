@@ -6,10 +6,9 @@ import { onAutoScroll, onAutoScrollStop } from "../../common/scroll";
 import { TextEle } from "../../common/text.ele";
 import { PageLayoutType } from "../../layout/declare";
 import { CreateBoardBlock, IsBoardTextAnchorBlock, SelectorBoardBlock } from "./board";
-
 function triggerCreateAnchor(kit: Kit, block: Block, event: MouseEvent) {
     if (!block) return;
-    if (!block.exists(g => g.isSupportAnchor)) return;
+    if (!block.exists(g => g.isSupportAnchor, true)) return;
     var anchor = block.visibleAnchor(Point.from(event));
     if (!(anchor && anchor.block.isAllowMouseAnchor)) return;
     /**
@@ -32,7 +31,6 @@ function triggerCreateAnchor(kit: Kit, block: Block, event: MouseEvent) {
     }
     return anchor;
 }
-
 function dblClick(kit: Kit, event: MouseEvent) {
     if (kit.explorer.isOnlyAnchor && kit.explorer.activeAnchor.isText && kit.mouse.lastMouseupDate && Date.now() - kit.mouse.lastMouseupDate < 700) {
         if (kit.mouse.lastMouseupEvent && Point.from(kit.mouse.lastMouseupEvent).nearBy(Point.from(event), 0)) {
@@ -60,13 +58,12 @@ async function createTailBlock(kit: Kit, event: MouseEvent) {
         }
     }
 }
-
 export async function mousedown(kit: Kit, event: MouseEvent) {
     onAutoScrollStop();
     var block = kit.page.getBlockInMouseRegion(event);
     var isBloard = kit.page.pageLayout.type != PageLayoutType.board ? false : true;
     if (!block && !isBloard) {
-        block = kit.page.grid.findBlockNearestByPoint(Point.from(event), b => !b.isLine);
+        block = kit.page.getPageEmptyAreaBlock(event);
     }
     if (block?.isLine) block = block.closest(x => x.isBlock);
     if ((await CreateBoardBlock(kit, block, event))) return;
@@ -82,13 +79,13 @@ export async function mousedown(kit: Kit, event: MouseEvent) {
             kit.selector.setStart(Point.from(event));
         },
         move(ev, data) {
-            var movePoint = Point.from(event)
+            var movePoint = Point.from(ev)
             function cacSelector(dis: number) {
                 var hasTextRange: boolean = false;
                 if (anchor) {
-                    var block = kit.page.getBlockFromPoint(movePoint);
-                    if (block) {
-                        var moveAnchor = block.visibleAnchor(movePoint);
+                    var moveBlock = kit.page.getBlockFromPoint(movePoint);
+                    if (moveBlock) {
+                        var moveAnchor = moveBlock.visibleAnchor(movePoint);
                         if (moveAnchor && kit.page.isInlineAnchor(moveAnchor, anchor)) {
                             kit.explorer.onShiftFocusAnchor(moveAnchor);
                             hasTextRange = true;
@@ -109,7 +106,7 @@ export async function mousedown(kit: Kit, event: MouseEvent) {
             };
             onAutoScroll({
                 el: kit.page.root,
-                point: Point.from(event),
+                point: movePoint,
                 callback(fir, dis) {
                     if (fir) cacSelector(0)
                     else if (fir == false && dis != 0) cacSelector(dis);

@@ -28,56 +28,58 @@ export class Page$Seek {
             var block = this.getEleBlock(target);
             if (block) return block;
         }
-
+    }
+    getPageEmptyAreaBlock(this: Page, event: MouseEvent | Point) {
         /**
-         * 如果没有找到，说明在在pageLayout的空白处，
-         * 那么先水平找找，如果水平找不到
-         * 那么垂直找，
-         * 这里需要计算内容域和pageLout中间的范围大小区域
+              * 如果没有找到，说明在在pageLayout的空白处，
+              * 那么先水平找找，如果水平找不到
+              * 那么垂直找，
+              * 这里需要计算内容域和pageLout中间的范围大小区域
+              */
+        var block: Block;
+        var contentBound = TextEle.getContentBound(this.contentEl);
+        var x = event.x;
+        var y = event.y;
+        var dis = 15;
+        var el = document.elementFromPoint(contentBound.left + dis, event.y);
+        if (el) {
+            block = this.getEleBlock(el as HTMLElement);
+            if (block) return block;
+        }
+        el = document.elementFromPoint(contentBound.left + contentBound.width - dis, event.y);
+        if (el) {
+            block = this.getEleBlock(el as HTMLElement);
+            if (block) return block;
+        }
+        /**
+         * 将x 缩放到content范围内，这样便于查找
          */
-        // var contentBound = TextEle.getContentBound(this.contentEl);
-        // var x = event.x;
-        // var y = event.y;
-        // var dis = 15;
-        // var el = document.elementFromPoint(contentBound.left + dis, event.y);
-        // if (el) {
-        //     block = this.getEleBlock(el as HTMLElement);
-        //     if (block) return block;
-        // }
-        // el = document.elementFromPoint(contentBound.left + contentBound.width - dis, event.y);
-        // if (el) {
-        //     block = this.getEleBlock(el as HTMLElement);
-        //     if (block) return block;
-        // }
-        // /**
-        //  * 将x 缩放到content范围内，这样便于查找
-        //  */
-        // x = Math.max(contentBound.left + dis, x);
-        // x = Math.min(contentBound.left + contentBound.width - dis, x);
-        // if (Math.abs(y - contentBound.y) > Math.abs(y - contentBound.y - contentBound.height)) {
-        //     el = document.elementFromPoint(x, contentBound.top + contentBound.height - dis);
-        //     if (el) {
-        //         block = this.getEleBlock(el as HTMLElement);
-        //         if (block) return block;
-        //     }
-        //     el = document.elementFromPoint(x, contentBound.top + dis);
-        //     if (el) {
-        //         block = this.getEleBlock(el as HTMLElement);
-        //         if (block) return block;
-        //     }
-        // }
-        // else {
-        //     el = document.elementFromPoint(x, contentBound.top + dis);
-        //     if (el) {
-        //         block = this.getEleBlock(el as HTMLElement);
-        //         if (block) return block;
-        //     }
-        //     el = document.elementFromPoint(x, contentBound.top + contentBound.height - dis);
-        //     if (el) {
-        //         block = this.getEleBlock(el as HTMLElement);
-        //         if (block) return block;
-        //     }
-        // }
+        x = Math.max(contentBound.left + dis, x);
+        x = Math.min(contentBound.left + contentBound.width - dis, x);
+        if (Math.abs(y - contentBound.y) > Math.abs(y - contentBound.y - contentBound.height)) {
+            el = document.elementFromPoint(x, contentBound.top + contentBound.height - dis);
+            if (el) {
+                block = this.getEleBlock(el as HTMLElement);
+                if (block) return block;
+            }
+            el = document.elementFromPoint(x, contentBound.top + dis);
+            if (el) {
+                block = this.getEleBlock(el as HTMLElement);
+                if (block) return block;
+            }
+        }
+        else {
+            el = document.elementFromPoint(x, contentBound.top + dis);
+            if (el) {
+                block = this.getEleBlock(el as HTMLElement);
+                if (block) return block;
+            }
+            el = document.elementFromPoint(x, contentBound.top + contentBound.height - dis);
+            if (el) {
+                block = this.getEleBlock(el as HTMLElement);
+                if (block) return block;
+            }
+        }
     }
     getEleBlock(this: Page, el: HTMLElement): Block {
         var blockEle = dom(el).closest(x => (x as any).block && (x as any).block.page === this ? true : false);
@@ -243,17 +245,7 @@ export class Page$Seek {
         }
         return rs;
     }
-    /**
-     * 通过鼠标勾选的区域来查找在这个范围内的block,
-     * 先通过from，to来锁定block，然后基于当前的两个block之间来实际的计算处于这个区域的block有多少
-     * from,to没有前后区分，只代表鼠标开始点击的位置到结束的位置
-     * @param this 
-     * @param from 
-     * @param to 
-     * @param filter  lineBlock=ture 表示过滤掉isLine的block
-     * @returns 
-     */
-    searchBlocksBetweenMouseRect(this: Page,
+    searchBoardBetweenRect(this: Page,
         from: MouseEvent | Point,
         to: MouseEvent | Point,
         filter?: {
@@ -274,74 +266,93 @@ export class Page$Seek {
             else return b;
         })
         return this.filterRepeat(bs);
-        // var bs: Block[] = [];
-        // var fromBlock = filter?.fromBlock ? filter.fromBlock : this.getBlockInMouseRegion(from);
-        // if (fromBlock?.isLayout || fromBlock?.isPart) {
-        //     var fb = fromBlock.getVisibleContentBound();
-        //     if (Math.abs(from.y - fb.y) > Math.abs(from.y - fb.y - fb.height))
-        //         fromBlock = fromBlock.findReverse(g => g.isBlock && !g.isLayout && !g.isPart);
-        //     else fromBlock = fromBlock.find(g => g.isBlock && !g.isLayout && !g.isPart);
-        // }
-        // var toBlock = this.getBlockInMouseRegion(to);
-        // if (toBlock?.isLayout || toBlock?.isPart) {
-        //     var fb = toBlock.getVisibleContentBound();
-        //     if (Math.abs(to.y - fb.y) > Math.abs(to.y - fb.y - fb.height))
-        //         toBlock = toBlock.findReverse(g => g.isBlock && !g.isLayout && !g.isPart);
-        //     else toBlock = toBlock.find(g => g.isBlock && !g.isLayout && !g.isPart);
-        // }
-        // var topFromRow = fromBlock ? fromBlock.closest(g => g.isBlock && !g.isLayout && !g.isPart) : undefined;
-        // var topToRow = toBlock ? toBlock.closest(g => g.isBlock && !g.isLayout && !g.isPart) : undefined;
-        // var rect = new Rect(Point.from(from), Point.from(to));
-        // if (!topFromRow && !topToRow) return bs;
-        // if (topFromRow && !topToRow || !topFromRow && topToRow) {
-        //     var block = topFromRow ? topFromRow : topToRow;
-        //     block.each(b => {
-        //         if (!b.isLayout && !b.isPart) {
-        //             if (b.isCrossBlockArea(rect)) {
-        //                 if (filter && filter.lineBlock == true && b.isLine) {
-        //                     var pa = b.closest(x => !x.isLine);
-        //                     if (!bs.exists(pa)) bs.push(pa);
-        //                 }
-        //                 else bs.push(b);
-        //                 return -1;
-        //             }
-        //         }
-        //     }, true);
-        //     return this.filterRepeat(bs);
-        // }
-        // else {
-        //     if (topToRow.isBefore(topFromRow)) {
-        //         [topFromRow, topToRow] = [topToRow, topFromRow];
-        //     }
-        //     if (topFromRow == topToRow) {
-        //         topFromRow.each(b => {
-        //             if (!b.isLayout && !b.isPart) {
-        //                 if (b.isCrossBlockContentArea(rect)) {
-        //                     if (filter?.lineBlock == true) {
-        //                         var pa = b.closest(x => !x.isLine);
-        //                         if (!bs.exists(pa)) bs.push(pa);
-        //                     }
-        //                     else bs.push(b);
-        //                     return -1;
-        //                 }
-        //             }
-        //         }, true);
-        //     }
-        //     else
-        //         topFromRow.nextFindAll(b => {
-        //             if (!b.isLayout && !b.isPart) {
-        //                 if (b.isCrossBlockContentArea(rect)) {
-        //                     if (filter?.lineBlock == true) {
-        //                         var pa = b.closest(x => !x.isLine);
-        //                         if (!bs.exists(pa)) bs.push(pa);
-        //                     }
-        //                     else bs.push(b);
-        //                 }
-        //             }
-        //             return false;
-        //         }, true, g => g == topToRow, true);
-        //     return this.filterRepeat(bs);
-        // }
+    }
+    /**
+     * 通过鼠标勾选的区域来查找在这个范围内的block,
+     * 先通过from，to来锁定block，然后基于当前的两个block之间来实际的计算处于这个区域的block有多少
+     * from,to没有前后区分，只代表鼠标开始点击的位置到结束的位置
+     * @param this 
+     * @param from 
+     * @param to 
+     * @param filter  lineBlock=ture 表示过滤掉isLine的block
+     * @returns 
+     */
+    searchBlocksBetweenMouseRect(this: Page,
+        from: MouseEvent | Point,
+        to: MouseEvent | Point,
+        filter?: {
+            lineBlock?: boolean,
+            fromBlock?: Block
+        }) {
+
+        var bs: Block[] = [];
+        var fromBlock = filter?.fromBlock ? filter.fromBlock : this.getBlockInMouseRegion(from);
+        if (fromBlock?.isLayout || fromBlock?.isPart) {
+            var fb = fromBlock.getVisibleContentBound();
+            if (Math.abs(from.y - fb.y) > Math.abs(from.y - fb.y - fb.height))
+                fromBlock = fromBlock.findReverse(g => g.isBlock && !g.isLayout && !g.isPart);
+            else fromBlock = fromBlock.find(g => g.isBlock && !g.isLayout && !g.isPart);
+        }
+        var toBlock = this.getBlockInMouseRegion(to);
+        if (toBlock?.isLayout || toBlock?.isPart) {
+            var fb = toBlock.getVisibleContentBound();
+            if (Math.abs(to.y - fb.y) > Math.abs(to.y - fb.y - fb.height))
+                toBlock = toBlock.findReverse(g => g.isBlock && !g.isLayout && !g.isPart);
+            else toBlock = toBlock.find(g => g.isBlock && !g.isLayout && !g.isPart);
+        }
+        var topFromRow = fromBlock ? fromBlock.closest(g => g.isBlock && !g.isLayout && !g.isPart) : undefined;
+        var topToRow = toBlock ? toBlock.closest(g => g.isBlock && !g.isLayout && !g.isPart) : undefined;
+        var rect = new Rect(Point.from(from), Point.from(to));
+        if (!topFromRow && !topToRow) return bs;
+        if (topFromRow && !topToRow || !topFromRow && topToRow) {
+            var block = topFromRow ? topFromRow : topToRow;
+            block.each(b => {
+                if (!b.isLayout && !b.isPart) {
+                    if (b.isCrossBlockArea(rect)) {
+                        if (filter && filter.lineBlock == true && b.isLine) {
+                            var pa = b.closest(x => !x.isLine);
+                            if (!bs.exists(pa)) bs.push(pa);
+                        }
+                        else bs.push(b);
+                        return -1;
+                    }
+                }
+            }, true);
+            return this.filterRepeat(bs);
+        }
+        else {
+            if (topToRow.isBefore(topFromRow)) {
+                [topFromRow, topToRow] = [topToRow, topFromRow];
+            }
+            if (topFromRow == topToRow) {
+                topFromRow.each(b => {
+                    if (!b.isLayout && !b.isPart) {
+                        if (b.isCrossBlockContentArea(rect)) {
+                            if (filter?.lineBlock == true) {
+                                var pa = b.closest(x => !x.isLine);
+                                if (!bs.exists(pa)) bs.push(pa);
+                            }
+                            else bs.push(b);
+                            return -1;
+                        }
+                    }
+                }, true);
+            }
+            else
+                topFromRow.nextFindAll(b => {
+                    if (!b.isLayout && !b.isPart) {
+                        if (b.isCrossBlockContentArea(rect)) {
+                            if (filter?.lineBlock == true) {
+                                var pa = b.closest(x => !x.isLine);
+                                if (!bs.exists(pa)) bs.push(pa);
+                            }
+                            else bs.push(b);
+                        }
+                    }
+                    return false;
+                }, true, g => g == topToRow, true);
+            return this.filterRepeat(bs);
+        }
     }
     /**
      * 这里判断两个anchor是否相邻,是否紧挨着
