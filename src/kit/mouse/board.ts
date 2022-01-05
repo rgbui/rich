@@ -57,6 +57,7 @@ export async function SelectorBoardBlock(kit: Kit, block: Block | undefined, eve
         if (!kit.page.keyboardPlate.isShift())
             kit.picker.onPicker([]);
         isBoardSelector = true;
+        kit.explorer.onClearAnchorAndSelection();
         MouseDragger({
             event,
             moveStart() {
@@ -67,6 +68,9 @@ export async function SelectorBoardBlock(kit: Kit, block: Block | undefined, eve
                 /**
                  * 这里通过选区来计算之间的经过的块
                  */
+                var bs = kit.page.searchBoardBetweenRect(event, ev);
+                bs.removeAll(g => !g.isFreeBlock);
+                kit.picker.onPicker(bs);
             },
             moveEnd(ev, isMove, data) {
                 if (isMove) {
@@ -182,7 +186,7 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
 export function IsBoardTextAnchorBlock(kit: Kit, block: Block | undefined, event: MouseEvent) {
     if (kit.explorer.hasAnchor && kit.explorer.activeAnchor.isText && kit.picker.blockRanges.length > 0) {
         var fb = kit.picker.blockRanges[0].block;
-        if (fb && fb.exists(g => g == kit.explorer.activeAnchor.block, true)) {
+        if (block && fb && fb.exists(g => g == block, true) && block?.exists(g => g == kit.explorer.activeAnchor?.block, true)) {
             return true;
         }
     }
