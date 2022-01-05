@@ -3,7 +3,9 @@ import { ReactNode } from "react";
 import { Block } from "../../../src/block";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
-import { ChildsArea } from "../../../src/block/view/appear";
+import { TextSpanArea } from "../../../src/block/view/appear";
+
+import "./style.less";
 
 @url('/note')
 export class Note extends Block {
@@ -38,7 +40,9 @@ export class NoteView extends BlockView<Note>{
     render(): ReactNode {
         return <div className="sy-block-note" style={this.block.visibleStyle}>
             {this.renderBg()}
-            <ChildsArea childs={this.block.childs}></ChildsArea>
+            <div className="sy-block-note-content">
+                <TextSpanArea block={this.block}></TextSpanArea>
+            </div>
         </div>
     }
 }
