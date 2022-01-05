@@ -260,74 +260,88 @@ export class Page$Seek {
             lineBlock?: boolean,
             fromBlock?: Block
         }) {
-        var bs: Block[] = [];
-        var fromBlock = filter?.fromBlock ? filter.fromBlock : this.getBlockInMouseRegion(from);
-        if (fromBlock?.isLayout || fromBlock?.isPart) {
-            var fb = fromBlock.getVisibleContentBound();
-            if (Math.abs(from.y - fb.y) > Math.abs(from.y - fb.y - fb.height))
-                fromBlock = fromBlock.findReverse(g => g.isBlock && !g.isLayout && !g.isPart);
-            else fromBlock = fromBlock.find(g => g.isBlock && !g.isLayout && !g.isPart);
-        }
-        var toBlock = this.getBlockInMouseRegion(to);
-        if (toBlock?.isLayout || toBlock?.isPart) {
-            var fb = toBlock.getVisibleContentBound();
-            if (Math.abs(to.y - fb.y) > Math.abs(to.y - fb.y - fb.height))
-                toBlock = toBlock.findReverse(g => g.isBlock && !g.isLayout && !g.isPart);
-            else toBlock = toBlock.find(g => g.isBlock && !g.isLayout && !g.isPart);
-        }
-        var topFromRow = fromBlock ? fromBlock.closest(g => g.isBlock && !g.isLayout && !g.isPart) : undefined;
-        var topToRow = toBlock ? toBlock.closest(g => g.isBlock && !g.isLayout && !g.isPart) : undefined;
         var rect = new Rect(Point.from(from), Point.from(to));
-        if (!topFromRow && !topToRow) return bs;
-        if (topFromRow && !topToRow || !topFromRow && topToRow) {
-            var block = topFromRow ? topFromRow : topToRow;
-            block.each(b => {
-                if (!b.isLayout && !b.isPart) {
-                    if (b.isCrossBlockArea(rect)) {
-                        if (filter && filter.lineBlock == true && b.isLine) {
-                            var pa = b.closest(x => !x.isLine);
-                            if (!bs.exists(pa)) bs.push(pa);
-                        }
-                        else bs.push(b);
-                        return -1;
-                    }
-                }
-            }, true);
-            return this.filterRepeat(bs);
-        }
-        else {
-            if (topToRow.isBefore(topFromRow)) {
-                [topFromRow, topToRow] = [topToRow, topFromRow];
+        var bs = this.grid.findBlocksByRect(rect, b => {
+            if (!b.isLayout && !b.isPart) {
+                if (b.isCrossBlockArea(rect)) return true;
             }
-            if (topFromRow == topToRow) {
-                topFromRow.each(b => {
-                    if (!b.isLayout && !b.isPart) {
-                        if (b.isCrossBlockContentArea(rect)) {
-                            if (filter?.lineBlock == true) {
-                                var pa = b.closest(x => !x.isLine);
-                                if (!bs.exists(pa)) bs.push(pa);
-                            }
-                            else bs.push(b);
-                            return -1;
-                        }
-                    }
-                }, true);
+            return false;
+        });
+        bs = bs.map(b => {
+            if (b.isLine) {
+                return b.closest(g => !g.isLine);
             }
-            else
-                topFromRow.nextFindAll(b => {
-                    if (!b.isLayout && !b.isPart) {
-                        if (b.isCrossBlockContentArea(rect)) {
-                            if (filter?.lineBlock == true) {
-                                var pa = b.closest(x => !x.isLine);
-                                if (!bs.exists(pa)) bs.push(pa);
-                            }
-                            else bs.push(b);
-                        }
-                    }
-                    return false;
-                }, true, g => g == topToRow, true);
-            return this.filterRepeat(bs);
-        }
+            else return b;
+        })
+        return this.filterRepeat(bs);
+        // var bs: Block[] = [];
+        // var fromBlock = filter?.fromBlock ? filter.fromBlock : this.getBlockInMouseRegion(from);
+        // if (fromBlock?.isLayout || fromBlock?.isPart) {
+        //     var fb = fromBlock.getVisibleContentBound();
+        //     if (Math.abs(from.y - fb.y) > Math.abs(from.y - fb.y - fb.height))
+        //         fromBlock = fromBlock.findReverse(g => g.isBlock && !g.isLayout && !g.isPart);
+        //     else fromBlock = fromBlock.find(g => g.isBlock && !g.isLayout && !g.isPart);
+        // }
+        // var toBlock = this.getBlockInMouseRegion(to);
+        // if (toBlock?.isLayout || toBlock?.isPart) {
+        //     var fb = toBlock.getVisibleContentBound();
+        //     if (Math.abs(to.y - fb.y) > Math.abs(to.y - fb.y - fb.height))
+        //         toBlock = toBlock.findReverse(g => g.isBlock && !g.isLayout && !g.isPart);
+        //     else toBlock = toBlock.find(g => g.isBlock && !g.isLayout && !g.isPart);
+        // }
+        // var topFromRow = fromBlock ? fromBlock.closest(g => g.isBlock && !g.isLayout && !g.isPart) : undefined;
+        // var topToRow = toBlock ? toBlock.closest(g => g.isBlock && !g.isLayout && !g.isPart) : undefined;
+        // var rect = new Rect(Point.from(from), Point.from(to));
+        // if (!topFromRow && !topToRow) return bs;
+        // if (topFromRow && !topToRow || !topFromRow && topToRow) {
+        //     var block = topFromRow ? topFromRow : topToRow;
+        //     block.each(b => {
+        //         if (!b.isLayout && !b.isPart) {
+        //             if (b.isCrossBlockArea(rect)) {
+        //                 if (filter && filter.lineBlock == true && b.isLine) {
+        //                     var pa = b.closest(x => !x.isLine);
+        //                     if (!bs.exists(pa)) bs.push(pa);
+        //                 }
+        //                 else bs.push(b);
+        //                 return -1;
+        //             }
+        //         }
+        //     }, true);
+        //     return this.filterRepeat(bs);
+        // }
+        // else {
+        //     if (topToRow.isBefore(topFromRow)) {
+        //         [topFromRow, topToRow] = [topToRow, topFromRow];
+        //     }
+        //     if (topFromRow == topToRow) {
+        //         topFromRow.each(b => {
+        //             if (!b.isLayout && !b.isPart) {
+        //                 if (b.isCrossBlockContentArea(rect)) {
+        //                     if (filter?.lineBlock == true) {
+        //                         var pa = b.closest(x => !x.isLine);
+        //                         if (!bs.exists(pa)) bs.push(pa);
+        //                     }
+        //                     else bs.push(b);
+        //                     return -1;
+        //                 }
+        //             }
+        //         }, true);
+        //     }
+        //     else
+        //         topFromRow.nextFindAll(b => {
+        //             if (!b.isLayout && !b.isPart) {
+        //                 if (b.isCrossBlockContentArea(rect)) {
+        //                     if (filter?.lineBlock == true) {
+        //                         var pa = b.closest(x => !x.isLine);
+        //                         if (!bs.exists(pa)) bs.push(pa);
+        //                     }
+        //                     else bs.push(b);
+        //                 }
+        //             }
+        //             return false;
+        //         }, true, g => g == topToRow, true);
+        //     return this.filterRepeat(bs);
+        // }
     }
     /**
      * 这里判断两个anchor是否相邻,是否紧挨着
