@@ -37,4 +37,10 @@ export function TextLineChilds(props: {
         return <x.viewComponent key={x.id} block={x}></x.viewComponent>
     })}</span>
 }
+export function TextSpanArea(props: { block: Block }) {
+    if (props.block.childs.length > 0)
+        return <TextLineChilds childs={props.block.childs}></TextLineChilds>
+    else
+        return <TextArea rf={e => props.block.elementAppear({ el: e })} html={props.block.htmlContent} placeholder={'键入文字或"/"选择'}></TextArea>
+}
 
