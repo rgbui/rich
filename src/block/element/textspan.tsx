@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { url, view } from '../factory/observable';
-import { TextArea, TextLineChilds } from '../view/appear';
+import { TextArea, TextLineChilds, TextSpanArea } from '../view/appear';
 import { BlockDisplay } from '../enum';
 import { BlockView } from '../view';
 import { Block } from '..';
@@ -25,16 +25,19 @@ export class TextSpan extends Block {
         }
         else return false;
     }
+    get visibleStyle(): React.CSSProperties {
+        var style = super.visibleStyle;
+        if (this.isFreeBlock) {
+            style.minWidth = 80
+        }
+        return style;
+    }
 }
 @view("/textspan")
 export class TextSpanView extends BlockView<TextSpan>{
     render() {
-        if (this.block.childs.length > 0)
-            return <div className='sy-block-text-span' style={this.block.visibleStyle} ref={e => this.block.childsEl = e}>
-                <TextLineChilds childs={this.block.childs}></TextLineChilds>
-            </div>
-        else return <div className='sy-block-text-span' style={this.block.visibleStyle}>
-            <TextArea rf={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent} placeholder={'键入文字或"/"选择'}></TextArea>
+        return <div className='sy-block-text-span' style={this.block.visibleStyle}>
+            <TextSpanArea block={this.block}></TextSpanArea>
         </div>
     }
 }
