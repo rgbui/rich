@@ -9,6 +9,7 @@ import { BlockRenderRange } from "../enum";
 import lodash from 'lodash';
 import { AppearAnchor } from "../appear";
 import { Matrix } from "../../common/matrix";
+import { Point } from "../../common/point";
 export class Block$Operator {
 
     /***
@@ -604,5 +605,13 @@ export class Block$Operator {
             this[key][at] = data;
             this.syncUpdate(range);
         }
+    }
+    relativePagePoint(this: Block, point: Point) {
+        var rb = this.relativeBlock;
+        if (rb) {
+            var nb = rb.matrix.inverseTransform(point);
+            return rb.relativePagePoint(nb);
+        }
+        else return point;
     }
 }
