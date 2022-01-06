@@ -475,9 +475,7 @@ export abstract class Block extends Events {
     }
     get isFreeBlock() {
         if (this.isPart) return false;
-        if (this.parent?.isFreeBlock &&this.parent?.url!=BlockUrlConstant.Group &&this.parent.url != BlockUrlConstant.Frame) {
-            return false;
-        }
+        if (this.isLine) return false;
         if (this.page.pageLayout.type == PageLayoutType.board) return true;
         return this.closest(x => x.isFrame) ? true : false;
     }
