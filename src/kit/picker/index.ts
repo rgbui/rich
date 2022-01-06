@@ -89,8 +89,6 @@ export class BlockPicker {
                 else if (arrow.indexOf('right') > -1) {
                     if (bw + dx < minW) dx = minW - bw;
                 }
-
-
                 if (arrow.indexOf('top') > -1) {
                     r.top += dy;
                     ma.translate(0, dy);
