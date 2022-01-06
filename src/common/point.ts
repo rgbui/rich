@@ -4,8 +4,12 @@ import { PopoverPosition } from "../../extensions/popover/position";
 export class Point {
     x: number;
     y: number;
-    constructor(x: number | Point | { x: number, y: number }, y?: number) {
-        if (x instanceof Point) {
+    constructor(x?: number | Point | { x: number, y: number }, y?: number) {
+        if (arguments.length == 0) {
+            this.x = 0;
+            this.y = 0;
+        }
+        else if (x instanceof Point) {
             var p = x.get();
             this.x = p.x;
             this.y = p.y;
@@ -238,6 +242,10 @@ export class Rect {
         rect.width = this.width;
         rect.height = this.height;
         return rect;
+    }
+    moveTo(point: Point) {
+        this.left = point.x;
+        this.top = point.y;
     }
 }
 
