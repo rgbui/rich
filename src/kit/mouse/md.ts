@@ -65,7 +65,7 @@ export async function mousedown(kit: Kit, event: MouseEvent) {
     if (!block && !isBloard) {
         block = kit.page.getPageEmptyAreaBlock(event);
     }
-    if (block?.isLine) block = block.closest(x => x.isBlock);
+    if (block?.isLine) block = block.closest(x => !x.isLine);
     if ((await CreateBoardBlock(kit, block, event))) return;
     if (!IsBoardTextAnchorBlock(kit, block, event) && (await SelectorBoardBlock(kit, block, event))) return;
 
