@@ -479,6 +479,14 @@ export abstract class Block extends Events {
         if (this.page.pageLayout.type == PageLayoutType.board) return true;
         return this.closest(x => x.isFrame) ? true : false;
     }
+    /**
+     * 坐标系相对的块，
+     * 没有就是相对于页面
+     */
+    get relativeBlock() {
+        var rb = this.closest(x => x.isFrame || x.url == BlockUrlConstant.Group, true);
+        if (rb) return rb;
+    }
     matrix = new Matrix();
     /**
      * 相对窗体的matrix
@@ -490,7 +498,9 @@ export abstract class Block extends Events {
         matrix.translate(rect.left, rect.top);
         return ma.appended(matrix);
     }
-    get globalMatrix() {
+    get globalMatrix(): Matrix {
+        var rb = this.relativeBlock;
+        if (rb) return rb.globalMatrix.appended(this.matrix)
         return this.matrix;
     }
     get transformStyle() {
