@@ -16,9 +16,9 @@ export class PageLayoutView extends Component<{ pageLayout: PageLayout }>{
         return this.props.pageLayout;
     }
     render() {
+        var mh = this.pageLayout.page.pageVisibleHeight ? (this.pageLayout.page.pageVisibleHeight + 'px') : '100%';
         if (this.pageLayout.type == PageLayoutType.doc) {
             var isFullWidth: boolean = true;
-            var mh = this.pageLayout.page.pageVisibleHeight + 'px' || '100%';
             return <div className='shy-page-layout shy-page-layout-doc' style={{
                 paddingLeft: isFullWidth ? 100 : undefined,
                 paddingRight: isFullWidth ? 100 : undefined,
@@ -37,8 +37,8 @@ export class PageLayoutView extends Component<{ pageLayout: PageLayout }>{
             </div>
         }
         else if (this.pageLayout.type == PageLayoutType.board) {
-            return <div className={"shy-page-layout shy-page-layout-board"}>
-                <div className='shy-page-layout-wrapper' >
+            return <div className={"shy-page-layout shy-page-layout-board"} >
+                <div className='shy-page-layout-wrapper' style={{ minHeight: mh }}>
                     {this.props.children}
                 </div>
             </div>

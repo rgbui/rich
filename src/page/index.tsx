@@ -74,6 +74,7 @@ export class Page extends Events<PageDirective> {
         this.root = el;
         if (options?.width) this.pageVisibleWidth = options?.width;
         if (options?.height) this.pageVisibleHeight = options?.height;
+        console.log(options);
         ReactDOM.render(<PageView page={this}></PageView>, this.root);
     }
     fragment: DocumentFragment;
