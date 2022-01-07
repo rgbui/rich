@@ -1,4 +1,6 @@
+import { faXbox } from "../assert/font-awesome/js-packages/@fortawesome/free-brands-svg-icons/faXbox";
 import { dom } from "./dom";
+import { Matrix } from "./matrix";
 import { Point, Rect } from "./point";
 
 var time;
@@ -54,7 +56,9 @@ export function onceAutoScroll(options: {
     var sy: number = 0;
     var dis = options.dis;
     var feelDis = options.feelDis;
-    var scrollDiv: HTMLElement = dom(options.el).closest(x => { return dom(x as HTMLElement).style('overflowY') == 'auto' }) as any;
+    var predict = x => { return dom(x as HTMLElement).style('overflowY') == 'auto' }
+    if (options.feelScrollX) predict = x => { return dom(x as HTMLElement).style('overflowY') == 'auto' || dom(x as HTMLElement).style('overflowX') == 'auto' }
+    var scrollDiv: HTMLElement = dom(options.el).closest(predict) as any;
     if (!scrollDiv) { if (options.callback) options.callback(sx); return }
     var sb = Rect.fromEle(scrollDiv);
     var minBottom = sb.top + sb.height - options.point.y;
@@ -92,4 +96,55 @@ export function onceAutoScroll(options: {
         }
     }
     if (options.callback) options.callback(sy, sx);
+}
+
+var fixedScrolls: { fixedObject: any, fixedMatrix?: Matrix, autoFixed?: boolean, svs: any[], el: HTMLElement, point: Point, callback?: (dx: number, dy: number) => void }[] = [];
+export function onFixedScroll(options: {
+    fixedObject: any,
+    fixedMatrix?: Matrix,
+    el: HTMLElement,
+    point: Point,
+    autoFixed?: boolean,
+    callback?: (dx: number, dy: number) => void
+}) {
+    var svs = [];
+    var fs = { ...options, svs };
+    if (fs.autoFixed && options.fixedObject instanceof HTMLElement && !fs.fixedMatrix) {
+        options.fixedMatrix = dom(options.fixedObject).getMatrix();
+    }
+    var predict = x => { return dom(x as HTMLElement).style('overflowY') == 'auto' || dom(x as HTMLElement).style('overflowX') == 'auto' };
+    function changeAll() {
+        var dx = 0;
+        var dy = 0;
+        fs.svs.forEach(sv => {
+            dx += sv.ele.scrollTop - sv.top;
+            dy += sv.ele.scrollLeft - sv.left;
+        });
+        if (typeof options.callback == 'function') options.callback(dx, dy);
+        if (options.autoFixed && options.fixedObject instanceof HTMLElement) {
+            var ma = options.fixedMatrix.clone().translate(dx, dy);
+            options.fixedObject.style.transform = `matrix(${ma.getValues().join(",")})`
+        }
+    }
+    function findScroll(el: HTMLElement) {
+        var sv: Record<string, any> = {};
+        var scrollDiv: HTMLElement = dom(el).closest(predict) as any;
+        if (scrollDiv) {
+            sv.ele = scrollDiv;
+            sv.top = scrollDiv.scrollTop;
+            sv.left = scrollDiv.scrollLeft;
+            sv.scroll = function (event) {
+                changeAll();
+            }
+            scrollDiv.addEventListener('scroll', sv.scroll);
+            svs.push(sv);
+            var pa = scrollDiv.parentNode as HTMLElement;
+            if (pa) findScroll(pa);
+        }
+    }
+    findScroll(options.el);
+    fixedScrolls.push(fs);
+}
+export function offFixedScroll(fixedObject: any) {
+    fixedScrolls.removeAll(x => x.fixedObject === fixedObject);
 }
