@@ -1,4 +1,5 @@
 import { Anchor } from "../kit/selection/anchor";
+import { Matrix } from "./matrix";
 
 
 class Dom {
@@ -297,6 +298,20 @@ class Dom {
         if (element.scrollTop + element.clientHeight + dis > element.scrollHeight)
             return true;
         else return false;
+    }
+    /**
+ * 获取元素的css3 Translate偏移量
+ * 只做了对标准和webkit内核兼容
+ * 获取css属性摘自Zepto.js，做修改后只获得transform属性
+ * 只处理 translate，如果有旋转或者缩放等，结果会不准确
+ *
+ * @param  {Object} element dom元素
+ * @return {Array}          偏移量[x,y]
+ */
+    getMatrix() {
+        var matrixString = getComputedStyle(this.el as HTMLElement).transform;
+        var matrixPoints = Array.from(matrixString.match(/\-?[0-9]+\.?[0-9]*/g)).map(c => { return parseFloat(c) });
+        return new Matrix(...matrixPoints)
     }
 }
 
