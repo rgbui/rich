@@ -14,6 +14,8 @@ import { Singleton } from "../../component/lib/Singleton";
 import "./style.less";
 import { BoardToolOperator } from "./declare";
 import { BlockUrlConstant } from "../../src/block/constant";
+import { getNoteSelector } from "../note";
+import { getShapeSelector } from "../shapes";
 
 class BoardTool extends EventsComponent {
     render(): ReactNode {
@@ -59,7 +61,7 @@ class BoardTool extends EventsComponent {
         if (this.currentSelector) return true;
         else return false;
     }
-    selector(operator: BoardToolOperator, event: React.MouseEvent) {
+    async selector(operator: BoardToolOperator, event: React.MouseEvent) {
         if (operator == BoardToolOperator.arrow) this.currentSelector = null;
         else {
             var sel: Record<string, any> = { event };
@@ -69,9 +71,25 @@ class BoardTool extends EventsComponent {
                     break;
                 case BoardToolOperator.shape:
                     sel.url = '/shape';
+                    var shapeSelecctor = await getShapeSelector();
+                    shapeSelecctor.only('selector', (data) => {
+                        if (this.currentSelector && this.currentSelector.url == '/shape') {
+                            this.currentSelector.data = { svgContent: data.shape };
+                        }
+                        shapeSelecctor.close();
+                    });
+                    shapeSelecctor.open(this.point.move(150, 0));
                     break;
                 case BoardToolOperator.note:
                     sel.url = '/note';
+                    var noteSelector = await getNoteSelector();
+                    noteSelector.only('selector', (data) => {
+                        if (this.currentSelector && this.currentSelector.url == '/note') {
+                            this.currentSelector.data = { color: data.color };
+                        }
+                        noteSelector.close();
+                    });
+                    noteSelector.open(this.point.move(150, 0));
                     break;
                 case BoardToolOperator.connect:
                     sel.url = '/line';
