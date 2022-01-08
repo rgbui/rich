@@ -58,22 +58,33 @@ export async function SelectorBoardBlock(kit: Kit, block: Block | undefined, eve
             kit.picker.onPicker([]);
         isBoardSelector = true;
         kit.explorer.onClearAnchorAndSelection();
+        var isShift = kit.explorer.page.keyboardPlate.isShift();
+        var ma = kit.page.matrix.clone();
         MouseDragger({
             event,
             moveStart() {
-                kit.selector.setStart(Point.from(event));
+                if (isShift)
+                    kit.selector.setStart(Point.from(event));
             },
             move(ev, data) {
-                kit.selector.setMove(Point.from(ev));
-                /**
-                 * 这里通过选区来计算之间的经过的块
-                 */
-                var bs = kit.page.searchBoardBetweenRect(event, ev);
-                bs.removeAll(g => !g.isFreeBlock);
-                kit.picker.onPicker(bs);
+                if (isShift) {
+                    kit.selector.setMove(Point.from(ev));
+                    /**
+                     * 这里通过选区来计算之间的经过的块
+                     */
+                    var bs = kit.page.searchBoardBetweenRect(event, ev);
+                    bs.removeAll(g => !g.isFreeBlock);
+                    kit.picker.onPicker(bs);
+                }
+                else {
+                    var na = ma.clone();
+                    na.translate(ev.clientX - event.clientX, ev.clientY - event.clientY)
+                    kit.page.onSetMatrix(na);
+                }
             },
             moveEnd(ev, isMove, data) {
                 if (isMove) {
+
                     kit.selector.close()
                 }
             }
