@@ -1,3 +1,4 @@
+import { CSSProperties } from "react";
 import { Point } from "./point";
 
 export class Matrix {
@@ -283,7 +284,7 @@ export class Matrix {
         return {
             translation: this.getTranslation(),
             rotation: rotate * degrees,
-            scaling: new Point(scale),
+            scaling: new Point(scale[0],scale[1]),
             skewing: new Point(skew[0] * degrees, skew[1] * degrees)
         };
     }
@@ -304,5 +305,10 @@ export class Matrix {
             ctx.transform(this._a, this._b, this._c, this._d,
                 this._tx, this._ty);
         }
+    }
+    getCss() {
+        var style: CSSProperties = {};
+        style.transform = 'matrix(' + this.getValues().join(',') + ')';
+        return style;
     }
 }
