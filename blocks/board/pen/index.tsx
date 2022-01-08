@@ -3,7 +3,7 @@ import { Block } from "../../../src/block";
 import { url, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
 // https://github.com/szimek/signature_pad
-
+// https://www.cnblogs.com/fangsmile/p/13427794.html
 @url('/pen')
 export class Pen extends Block {
 
