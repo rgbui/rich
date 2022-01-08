@@ -183,10 +183,10 @@ export class Page$Operator {
         );
         if (re) {
             if (blocks.length == 1) await blocks[0].onClickContextMenu(re.item, re.event);
-            else await this.onClickContextMenu(blocks, re.item, re.event)
+            else await this.onClickBatchBlocksContextMenu(blocks, re.item, re.event)
         }
     }
-    async onClickContextMenu(this: Page, blocks: Block[], item: MenuItemType<BlockDirective>, event: MouseEvent) {
+    async onClickBatchBlocksContextMenu(this: Page, blocks: Block[], item: MenuItemType<BlockDirective>, event: MouseEvent) {
         switch (item.name) {
             case BlockDirective.delete:
                 this.onBatchDelete(blocks);
