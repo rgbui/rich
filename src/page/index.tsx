@@ -32,6 +32,8 @@ import { getBoardTool } from '../../extensions/board.tool';
 import { PageLayoutType } from '../layout/declare';
 import { Point, Rect } from '../common/point';
 import { PageGrid } from './grid';
+import { Matrix } from '../common/matrix';
+import { PageContextmenu } from './partial/contextmenu';
 
 export class Page extends Events<PageDirective> {
     root: HTMLElement;
@@ -69,7 +71,8 @@ export class Page extends Events<PageDirective> {
     pageVisibleWidth: number;
     pageVisibleHeight: number;
     firstCreated: boolean = true;
-    grid:PageGrid;
+    grid: PageGrid;
+    matrix: Matrix = new Matrix();
     render(el: HTMLElement, options?: { width?: number, height?: number }) {
         this.root = el;
         if (options?.width) this.pageVisibleWidth = options?.width;
@@ -102,13 +105,19 @@ export class Page extends Events<PageDirective> {
     getPageFrame() {
         return this.views[0];
     }
-    getRelativePoint(point:Point){
+    getRelativePoint(point: Point) {
         var eb = this.root.getBoundingClientRect();
         return point.relative(Point.from(eb))
     }
     getRelativeRect(rect: Rect) {
         var eb = this.root.getBoundingClientRect();
         return rect.relative(Point.from(eb))
+    }
+    get isBoard() {
+        return this.pageLayout.type == PageLayoutType.board;
+    }
+    get scale() {
+        return this.matrix.getScaling().x;
     }
 }
 export interface Page {
@@ -184,4 +193,5 @@ export interface Page extends Page$Seek { }
 export interface Page extends Page$Cycle { }
 export interface Page extends Page$Operator { }
 export interface Page extends Mix { }
-Mix(Page, PageEvent, Page$Seek, Page$Cycle, Page$Operator);
+export interface Page extends PageContextmenu { }
+Mix(Page, PageEvent, Page$Seek, Page$Cycle, Page$Operator, PageContextmenu);

@@ -15,6 +15,7 @@ import JSZip from 'jszip';
 import { BlockUrlConstant } from "../../block/constant";
 import { PageLayoutType } from "../../layout/declare";
 import { PageGrid } from "../grid";
+import { Matrix } from "../../common/matrix";
 
 export class Page$Cycle {
     async init(this: Page) {
@@ -51,6 +52,9 @@ export class Page$Cycle {
             await this.emit(PageDirective.loading);
             for (var n in data) {
                 if (n == 'views') continue;
+                else if (n == 'matrix') {
+                    this.matrix = new Matrix(...data[n]);
+                }
                 else if (n == 'pageLayout') {
                     this.pageLayout = new PageLayout(this, data[n]);
                     continue;
@@ -95,6 +99,7 @@ export class Page$Cycle {
             firstCreated: false
         };
         json.pageLayout = await this.pageLayout.get();
+        json.matrix = this.matrix.getValues();
         json.views = await this.views.asyncMap(async x => {
             return await x.get()
         })
