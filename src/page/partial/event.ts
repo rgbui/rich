@@ -1,5 +1,7 @@
 
 import { Page } from "..";
+import { Matrix } from "../../common/matrix";
+import { Point, Rect } from "../../common/point";
 import { ActionDirective } from "../../history/declare";
 import { PageLayoutType } from "../../layout/declare";
 import { PageDirective } from "../directive";
@@ -55,6 +57,13 @@ export class PageEvent {
     onWheel(this: Page, event: React.WheelEvent) {
         if (this.readonly) return;
         this.kit.handle.onCloseBlockHandle();
+        if (this.isBoard) {
+            var dx = (event.deltaX > 0 ? 1 : -1) * 20;
+            var dy = (event.deltaY > 0 ? 1 : -1) * 20;
+            var ma = this.matrix.clone();
+            ma.translate(dx, dy);
+            this.onSetMatrix(ma);
+        }
     }
     /**
      * 主要是捕获取当前页面用户的按键情况
@@ -99,6 +108,23 @@ export class PageEvent {
                 break;
         }
         this.emit(PageDirective.save);
+    }
+    onZoom(this: Page, zoom: number, point?: Point) {
+        if (!point) {
+            var rect = Rect.from(this.root.getBoundingClientRect());
+            point = rect.middleCenter;
+        }
+        var rp = this.getRelativePoint(point);
+        var ro = this.matrix.inverseTransform(rp);
+        var oldZoom = this.scale * 100;
+        var newZoom = oldZoom + zoom;
+        var r = newZoom / oldZoom;
+        this.matrix.scale(r, r, ro);
+        this.view.forceUpdate();
+    }
+    onSetMatrix(this: Page, matrix: Matrix) {
+        this.matrix = matrix;
+        this.view.forceUpdate()
     }
 }
 
