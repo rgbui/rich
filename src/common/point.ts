@@ -151,6 +151,9 @@ export class Rect {
     get bottomCenter() {
         return Point.from(this.left + this.width / 2, this.top + this.height)
     }
+    get middleCenter(){
+        return Point.from(this.left+this.width/2,this.top+this.height/2)
+    }
     get middle() {
         return this.top + this.height / 2
     }
