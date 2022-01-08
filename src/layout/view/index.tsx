@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { Component, CSSProperties } from "react";
 import { PageLayout } from "../index";
 import React from 'react';
 import ReactDOM from "react-dom";
@@ -37,8 +37,10 @@ export class PageLayoutView extends Component<{ pageLayout: PageLayout }>{
             </div>
         }
         else if (this.pageLayout.type == PageLayoutType.board) {
-            return <div className={"shy-page-layout shy-page-layout-board"} >
-                <div className='shy-page-layout-wrapper' style={{ minHeight: mh }}>
+            var style: CSSProperties = { minHeight: mh, width: '100%' };
+            Object.assign(style, this.pageLayout.page.matrix.getCss());
+            return <div className={"shy-page-layout shy-page-layout-board"} style={{ width: '100%', height: mh }}>
+                <div className='shy-page-layout-wrapper' style={style}>
                     {this.props.children}
                 </div>
             </div>
