@@ -4,7 +4,7 @@ import { Singleton } from "../../component/lib/Singleton";
 import { Point } from "../../src/common/point";
 import "./style.less";
 
-type ColorType = { color: string, text?: string };
+export type ColorType = { color: string, text?: string };
 var colors: ColorType[] = [
     { color: 'rgb(245,246,248)' },
     { color: 'rgb(255,249,177)' },
