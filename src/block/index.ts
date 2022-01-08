@@ -504,25 +504,26 @@ export abstract class Block extends Events {
         return this.matrix;
     }
     get transformStyle() {
-        var style: CSSProperties = {};
+        // var style: CSSProperties = {};
         var ma = this.matrix.appended(this.moveMatrix);
-        var decomposed = ma.decompose();
-        var trans = ma.getTranslation();
-        if (decomposed) {
-            var parts = [],
-                angle = decomposed.rotation,
-                scale = decomposed.scaling,
-                skew = decomposed.skewing;
-            if (trans) parts.push('translate(' + trans.x + "px," + trans.y + 'px)');
-            if (angle) parts.push('rotate(' + angle + 'deg)');
-            if (scale && typeof scale.x != 'undefined') parts.push('scale(' + scale.x + "," + scale.y + ')');
-            if (skew.x) parts.push('skewX(' + skew.x + ')');
-            if (skew.y) parts.push('skewY(' + skew.y + ')');
-            style.transform = parts.join(' ');
-        } else {
-            style.transform = 'matrix(' + ma.getValues().join(',') + ')';
-        }
-        return style;
+        return ma.getCss();
+        // var decomposed = ma.decompose();
+        // var trans = ma.getTranslation();
+        // if (decomposed) {
+        //     var parts = [],
+        //         angle = decomposed.rotation,
+        //         scale = decomposed.scaling,
+        //         skew = decomposed.skewing;
+        //     if (trans) parts.push('translate(' + trans.x + "px," + trans.y + 'px)');
+        //     if (angle) parts.push('rotate(' + angle + 'deg)');
+        //     if (scale && typeof scale.x != 'undefined') parts.push('scale(' + scale.x + "," + scale.y + ')');
+        //     if (skew.x) parts.push('skewX(' + skew.x + ')');
+        //     if (skew.y) parts.push('skewY(' + skew.y + ')');
+        //     style.transform = parts.join(' ');
+        // } else {
+        //     style.transform = 'matrix(' + ma.getValues().join(',') + ')';
+        // }
+        // return style;
     }
     /**
      * 运行的move matrix
