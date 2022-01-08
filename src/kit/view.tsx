@@ -1,8 +1,10 @@
 import React from "react";
 import { Kit } from ".";
+import { PageLayoutType } from "../layout/declare";
 import { HandleView } from "./handle/view";
 import { TextInputView } from "./input/view";
 import { BlockPickerView } from "./picker/view";
+import { BoardScale } from "./scale";
 import { SelectorView } from "./selector/view";
 
 export class KitView extends React.Component<{ kit: Kit }>{
@@ -20,6 +22,7 @@ export class KitView extends React.Component<{ kit: Kit }>{
             <TextInputView textInput={this.kit.textInput}></TextInputView>
             <HandleView handle={this.kit.handle}></HandleView>
             <BlockPickerView picker={this.kit.picker}></BlockPickerView>
+            {this.kit.page.isBoard && <BoardScale kit={this.props.kit}></BoardScale>}
         </div>
     }
 }
