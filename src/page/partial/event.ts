@@ -58,8 +58,14 @@ export class PageEvent {
         if (this.readonly) return;
         this.kit.handle.onCloseBlockHandle();
         if (this.isBoard) {
-            var dx = (event.deltaX > 0 ? 1 : -1) * 20;
-            var dy = (event.deltaY > 0 ? 1 : -1) * 20;
+            var g =(x)=>{
+                if (x > 0) return 0 - x;
+                else if (x < 0) return 0 - x;
+                else return 0;
+            }
+            var r = 1/this.scale;
+            var dx = g(event.deltaX) * r;
+            var dy = g(event.deltaY) * r;
             var ma = this.matrix.clone();
             ma.translate(dx, dy);
             this.onSetMatrix(ma);
