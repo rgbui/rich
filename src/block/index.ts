@@ -497,8 +497,8 @@ export abstract class Block extends Events {
     }
     get globalMatrix(): Matrix {
         var rb = this.relativeBlock;
-        if (rb) return rb.globalMatrix.appended(this.matrix)
-        else return this.page.matrix.appended(this.matrix);
+        if (rb) return rb.globalMatrix.appended(this.matrix.appended(this.moveMatrix))
+        else return this.page.matrix.appended(this.matrix.appended(this.moveMatrix));
     }
     get transformStyle() {
         var ma = this.matrix.appended(this.moveMatrix);
