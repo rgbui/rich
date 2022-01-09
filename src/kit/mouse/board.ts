@@ -96,13 +96,14 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
     var toolBoard = await getBoardTool();
     if (toolBoard.isSelector) {
         var fra: Block = block ? block.frameBlock : kit.page.getPageFrame();
-        var re = fra.el.getBoundingClientRect();
+        var gm = fra.globalWindowMatrix;
+        var re = gm.inverseTransform(Point.from(event));
         var url = toolBoard.currentSelector.url;
         if (url == '/note' || url == BlockUrlConstant.TextSpan || url == BlockUrlConstant.Frame) {
             await fra.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
                 var data = toolBoard.currentSelector.data || {};
                 var ma = new Matrix();
-                ma.translate(event.clientX - re.left, event.clientY - re.top);
+                ma.translate(re.x, re.y);
                 data.matrix = ma.getValues();
                 var newBlock = await kit.page.createBlock(toolBoard.currentSelector.url, data, fra);
                 toolBoard.clearSelector();
@@ -117,9 +118,9 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
             await fra.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
                 var data = toolBoard.currentSelector.data || {};
                 var ma = new Matrix();
-                ma.translate(event.clientX - re.left, event.clientY - re.top);
+                ma.translate(re.x, re.y);
                 data.matrix = ma.getValues();
-                data.from = { x: event.clientX, y: event.clientY };
+                data.from = { x: 0, y: 0 };
                 data.to = util.clone(data.from);
                 newBlock = await kit.page.createBlock(toolBoard.currentSelector.url, data, fra);
                 toolBoard.clearSelector();
@@ -132,23 +133,29 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
                 move: (ev, data) => {
                     if (newBlock) {
                         var ma = new Matrix();
-                        ma.translate(Math.min(ev.clientX, event.clientX) - re.left, Math.min(ev.clientY, event.clientY) - re.top);
+                        var tr = gm.inverseTransform(Point.from(ev));
+                        var ox = Math.min(re.x, tr.x);
+                        var oy = Math.min(re.y, tr.y);
+                        ma.translate(ox, oy);
                         newBlock.matrix = ma;
-                        (newBlock as any).to = { x: ev.clientX, y: ev.clientY };
-                        if (isMounted)
-                            newBlock.forceUpdate();
+                        (newBlock as any).from = { x: re.x - ox, y: re.y - oy };
+                        (newBlock as any).to = { x: tr.x - ox, y: tr.y - oy };
+                        if (isMounted) newBlock.forceUpdate();
                     }
                 },
                 moveEnd(ev, isMove, data) {
                     if (newBlock) {
                         var ma = new Matrix();
-                        ma.translate(Math.min(ev.clientX, event.clientX) - re.left, Math.min(ev.clientY, event.clientY) - re.top);
+                        var tr = gm.inverseTransform(Point.from(ev));
+                        var ox = Math.min(re.x, tr.x);
+                        var oy = Math.min(re.y, tr.y);
+                        ma.translate(ox, oy);
                         newBlock.matrix = ma;
-                        (newBlock as any).to = { x: ev.clientX, y: ev.clientY };
-                        newBlock.fixedWidth = ev.clientX - event.clientX;
-                        newBlock.fixedHeight = ev.clientY - event.clientY;
-                        if (isMounted)
-                            newBlock.forceUpdate();
+                        (newBlock as any).from = { x: re.x - ox, y: re.y - oy };
+                        (newBlock as any).to = { x: tr.x - ox, y: tr.y - oy };
+                        newBlock.fixedWidth = Math.abs(tr.x - re.x);
+                        newBlock.fixedHeight = Math.abs(tr.y - re.y);
+                        if (isMounted) newBlock.forceUpdate();
                     }
                 }
             })
@@ -159,9 +166,11 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
             await fra.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
                 var data = toolBoard.currentSelector.data || {};
                 var ma = new Matrix();
-                ma.translate(event.clientX - re.left, event.clientY - re.top);
+                ma.translate(re.x, re.y);
                 data.matrix = ma.getValues();
                 newBlock = await kit.page.createBlock(toolBoard.currentSelector.url, data, fra);
+                newBlock.fixedWidth = 0;
+                newBlock.fixedHeight = 0;
                 toolBoard.clearSelector();
                 newBlock.mounted(() => {
                     isMounted = true;
@@ -171,16 +180,23 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
                 event,
                 move: (ev, data) => {
                     if (newBlock) {
-                        newBlock.fixedWidth = Math.abs(ev.clientX - event.clientX);
-                        newBlock.fixedHeight = Math.abs(ev.clientY - event.clientY);
-                        if (isMounted)
-                            newBlock.forceUpdate();
+                        var tr = gm.inverseTransform(Point.from(ev));
+                        var ma = new Matrix();
+                        ma.translate(Math.min(re.x, tr.x), Math.min(re.y, tr.y));
+                        newBlock.matrix = ma;
+                        newBlock.fixedWidth = Math.abs(tr.x - re.x);
+                        newBlock.fixedHeight = Math.abs(tr.y - re.y);
+                        if (isMounted) newBlock.forceUpdate();
                     }
                 },
                 moveEnd(ev, isMove, data) {
                     if (newBlock) {
-                        newBlock.fixedWidth = Math.abs(ev.clientX - event.clientX);
-                        newBlock.fixedHeight = Math.abs(ev.clientY - event.clientY);
+                        var tr = gm.inverseTransform(Point.from(ev));
+                        var ma = new Matrix();
+                        ma.translate(Math.min(re.x, tr.x), Math.min(re.y, tr.y));
+                        newBlock.matrix = ma;
+                        newBlock.fixedWidth = Math.abs(tr.x - re.x) || 200;
+                        newBlock.fixedHeight = Math.abs(tr.y - re.y) || 200;
                         if (isMounted) newBlock.forceUpdate();
                     }
                 }
