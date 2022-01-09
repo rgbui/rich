@@ -1,3 +1,4 @@
+
 import { Kit } from "..";
 import { Block } from "../../block";
 import { MouseDragger } from "../../common/dragger";
@@ -16,7 +17,19 @@ export class BlockPicker {
     blockRanges: { block: Block, rect: Rect, matrix: Matrix }[] = [];
     onPicker(blocks: Block[]) {
         this.blockRanges = blocks.map(block => {
-            return { block, rect: Rect.fromEle(block.el), matrix: block.globalWindowMatrix }
+            var matrix = block.globalWindowMatrix;
+            var scale = matrix.getScaling().x;
+            var w, h;
+            if (typeof block.fixedWidth == 'undefined') {
+                var r = block.getVisibleBound();
+                w = r.width / scale;
+                h = r.height / scale;
+            }
+            else {
+                w = block.fixedWidth;
+                h = block.fixedHeight;
+            }
+            return { block, rect: new Rect(0, 0, w, h), matrix }
         });
         this.visible = true;
         this.view.forceUpdate();

@@ -22,8 +22,7 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
     componentDidMount() {
         this.el = ReactDOM.findDOMNode(this) as HTMLElement;
     }
-    renderBlockRange(b:{ block: Block,rect: Rect,matrix: Matrix; })
-    {
+    renderBlockRange(b: { block: Block, rect: Rect, matrix: Matrix; }) {
         var r = 5;
         var rect = b.rect.relative(b.rect.leftTop);
         var rs = RectUtility.getRectLineRects(rect, 1);
