@@ -2,7 +2,6 @@ import { Component, CSSProperties } from "react";
 import { PageLayout } from "../index";
 import React from 'react';
 import ReactDOM from "react-dom";
-
 import { PageLayoutType } from "../declare";
 export class PageLayoutView extends Component<{ pageLayout: PageLayout }>{
     constructor(props) {
@@ -48,6 +47,5 @@ export class PageLayoutView extends Component<{ pageLayout: PageLayout }>{
         else {
             return <div>没有定义版面</div>
         }
-
     }
 }

@@ -58,12 +58,12 @@ export class PageEvent {
         if (this.readonly) return;
         this.kit.handle.onCloseBlockHandle();
         if (this.isBoard) {
-            var g =(x)=>{
+            var g = (x) => {
                 if (x > 0) return 0 - x;
                 else if (x < 0) return 0 - x;
                 else return 0;
             }
-            var r = 1/this.scale;
+            var r = 1 / this.scale;
             var dx = g(event.deltaX) * r;
             var dy = g(event.deltaY) * r;
             var ma = this.matrix.clone();
@@ -122,13 +122,31 @@ export class PageEvent {
         }
         var rp = this.getRelativePoint(point);
         var ro = this.matrix.inverseTransform(rp);
-        var oldZoom = this.scale * 100;
-        var newZoom = oldZoom + zoom;
-        var r = newZoom / oldZoom;
+        var r = zoom > 0 ? 1.2 : 0.8;
         this.matrix.scale(r, r, ro);
         this.view.forceUpdate();
     }
     onSetMatrix(this: Page, matrix: Matrix) {
+        this.matrix = matrix;
+        this.view.forceUpdate()
+    }
+    onFitZoom(this: Page) {
+        var bound = this.grid.gridRange();
+        console.log(bound);
+        var matrix = new Matrix();
+        var center = bound.middleCenter;
+        var point = bound.leftTop;
+        var from = center;
+        var rect = Rect.fromEle(this.root);
+        rect = rect.relative(rect.leftTop);
+        var wr = Math.abs((point.x - from.x) * 2 / rect.width);
+        var hr = Math.abs((point.y - from.y) * 2 / rect.height);
+        var r = Math.max(wr, hr);
+        r = 1 / r;
+        var currentVisible = rect.middleCenter;
+        matrix.scale(r, r, { x: from.x, y: from.y });
+        var to = matrix.inverseTransform(currentVisible.x, currentVisible.y);
+        matrix.translate(to.x - from.x, to.y - from.y);
         this.matrix = matrix;
         this.view.forceUpdate()
     }
