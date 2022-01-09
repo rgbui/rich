@@ -8,6 +8,7 @@ import { KitView } from "../../kit/view";
 import { PageLayoutType } from "../../layout/declare";
 import { getBoardTool } from "../../../extensions/board.tool";
 import { Point } from "../../common/vector/point";
+import { BlockPickerView } from "../../kit/picker/view";
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
  * 对于同时支持这4个事件的浏览器，事件执行顺序为focusin > focus > focusout > blur
@@ -118,7 +119,9 @@ export class PageView extends Component<{ page: Page }>{
             onFocusCapture={e => this.page.onFocusCapture(e.nativeEvent)}
             onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}
         ><div className='shy-page-view-box' onMouseDown={e => this.page.onMousedown(e.nativeEvent)}>
-                <PageLayoutView pageLayout={this.page.pageLayout}>
+                <PageLayoutView
+                    pageLayout={this.page.pageLayout}
+                    boardSelector={<BlockPickerView picker={this.page.kit.picker}></BlockPickerView>}>
                     <div className='shy-page-view-content' ref={e => this.page.contentEl = e}>
                         <ChildsArea childs={this.page.views}></ChildsArea>
                         {this.page.firstCreated && this.firstCreatedRender()}

@@ -3,7 +3,7 @@ import { PageLayout } from "../index";
 import React from 'react';
 import ReactDOM from "react-dom";
 import { PageLayoutType } from "../declare";
-export class PageLayoutView extends Component<{ pageLayout: PageLayout }>{
+export class PageLayoutView extends Component<{ pageLayout: PageLayout, boardSelector?: React.ReactNode }>{
     constructor(props) {
         super(props);
     }
@@ -42,6 +42,7 @@ export class PageLayoutView extends Component<{ pageLayout: PageLayout }>{
                 <div className='shy-page-layout-wrapper' style={style}>
                     {this.props.children}
                 </div>
+                {this.props.boardSelector}
             </div>
         }
         else {
