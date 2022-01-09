@@ -1,5 +1,5 @@
 import React from "react";
-import { Point, RectUtility, Rect } from "../../../src/common/point";
+import { Point, RectUtility, Rect } from "../../../src/common/vector/point";
 export class FlowMindLine extends React.Component {
     private origin: Point;
     private points: Point[] = [];

@@ -2,7 +2,7 @@ import React from "react";
 import { ReactNode } from "react";
 import { EventsComponent } from "../../component/lib/events.component";
 import { Singleton } from "../../component/lib/Singleton";
-import { Point } from "../../src/common/point";
+import { Point } from "../../src/common/vector/point";
 import { ShapesList, ShapeType } from "./shapes";
 import "./style.less";
 

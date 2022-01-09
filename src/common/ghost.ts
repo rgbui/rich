@@ -1,4 +1,4 @@
-import { Point, Rect } from "./point";
+import { Point, Rect } from "./vector/point";
 
 class GhostView {
     private _el: HTMLElement;

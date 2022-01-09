@@ -30,7 +30,7 @@ import { messageChannel } from '../../util/bus/event.bus';
 import { Directive } from '../../util/bus/directive';
 import { getBoardTool } from '../../extensions/board.tool';
 import { PageLayoutType } from '../layout/declare';
-import { Point, Rect } from '../common/point';
+import { Point, Rect } from '../common/vector/point';
 import { PageGrid } from './grid';
 import { Matrix } from '../common/matrix';
 import { PageContextmenu } from './partial/contextmenu';

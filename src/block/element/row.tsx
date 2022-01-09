@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Block } from '..';
-import { Point } from '../../common/point';
+import { Point } from '../../common/vector/point';
 import { ActionDirective } from '../../history/declare';
 import { BlockView } from '../view';
 import { BlockDisplay } from '../enum';

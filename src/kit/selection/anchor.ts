@@ -1,7 +1,7 @@
 
 import { AppearAnchor } from "../../block/appear";
 import { dom } from "../../common/dom";
-import { Rect } from "../../common/point";
+import { Rect } from "../../common/vector/point";
 import { onceAutoScroll } from "../../common/scroll";
 import { TextEle } from "../../common/text.ele";
 import { SelectionExplorer } from "./explorer";

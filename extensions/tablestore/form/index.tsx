@@ -1,7 +1,7 @@
 import React from "react";
 import { TableSchema } from "../../../blocks/table-store/schema/meta";
 import { EventsComponent } from "../../../component/lib/events.component";
-import { Rect } from "../../../src/common/point";
+import { Rect } from "../../../src/common/vector/point";
 import { Page } from "../../../src/page";
 import { PopoverSingleton } from "../../popover/popover";
 import { createFormPage } from "./page";

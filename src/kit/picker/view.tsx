@@ -3,7 +3,7 @@ import ReactDOM, { createPortal } from "react-dom";
 import { BlockPicker } from ".";
 import { Block } from "../../block";
 import { Matrix } from "../../common/matrix";
-import { Rect, RectUtility } from "../../common/point";
+import { Rect, RectUtility } from "../../common/vector/point";
 import "./style.less";
 export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
     constructor(props) {
@@ -53,7 +53,7 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
     render() {
         return createPortal(<div className='shy-kit-picker'>
             {this.picker.visible && <svg className="shy-kit-picker-svg" style={{ zIndex: 10000 }}>
-                {this.picker.blockRanges.map(range => {
+                {this.picker.blocks.map(range => {
                     return this.renderBlockRange(range);
                 })}
             </svg>}

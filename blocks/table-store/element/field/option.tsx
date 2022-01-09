@@ -3,7 +3,7 @@ import { useTableStoreOption } from "../../../../extensions/tablestore/option";
 import { BlockRenderRange } from "../../../../src/block/enum";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
-import { Rect } from "../../../../src/common/point";
+import { Rect } from "../../../../src/common/vector/point";
 import { FieldConfig } from "../../schema/field";
 import { OriginField } from "./origin.field";
 import "./style.less";

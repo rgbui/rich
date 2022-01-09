@@ -7,7 +7,7 @@ import { Block } from "../../src/block";
 import { ActionDirective } from "../../src/history/declare";
 import { BlockUrlConstant } from "../../src/block/constant";
 import { useSelectMenuItem } from "../../component/view/menu";
-import { Point } from "../../src/common/point";
+import { Point } from "../../src/common/vector/point";
 import { TableRow } from "./row";
 import { MenuItemTypeValue } from "../../component/view/menu/declare";
 import lodash from "lodash";

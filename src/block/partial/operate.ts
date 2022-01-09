@@ -9,7 +9,7 @@ import { BlockRenderRange } from "../enum";
 import lodash from 'lodash';
 import { AppearAnchor } from "../appear";
 import { Matrix } from "../../common/matrix";
-import { Point } from "../../common/point";
+import { Point } from "../../common/vector/point";
 export class Block$Operator {
 
     /***

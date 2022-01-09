@@ -6,7 +6,7 @@ import { Block } from "../../block";
 import { BlockUrlConstant } from "../../block/constant";
 import { MouseDragger } from "../../common/dragger";
 import { Matrix } from "../../common/matrix";
-import { Point } from "../../common/point";
+import { Point } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
 import { PageLayoutType } from "../../layout/declare";
 
@@ -21,7 +21,7 @@ export async function SelectorBoardBlock(kit: Kit, block: Block | undefined, eve
         }
         else {
             //不连选
-            if (kit.picker.blockRanges.some(s => s.block == block)) {
+            if (kit.picker.blocks.some(s => s.block == block)) {
                 //说明包含
                 isPicker = true;
             }
@@ -42,9 +42,9 @@ export async function SelectorBoardBlock(kit: Kit, block: Block | undefined, eve
                 matrix.translate(ev.clientX - event.clientX, ev.clientY - event.clientY)
                 kit.picker.onMoveEnd(matrix);
                 if (!isMove) {
-                    if (isPicker && kit.picker.blockRanges.length == 1) {
+                    if (isPicker && kit.picker.blocks.length == 1) {
                         //这里对block进入聚焦编辑
-                        var block = kit.picker.blockRanges[0].block;
+                        var block = kit.picker.blocks[0].block;
                         var anchor = block.visibleAnchor(Point.from(event));
                         if (!(anchor && anchor.block.isAllowMouseAnchor)) return;
                         kit.explorer.onFocusAnchor(anchor);
@@ -195,8 +195,8 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
 }
 
 export function IsBoardTextAnchorBlock(kit: Kit, block: Block | undefined, event: MouseEvent) {
-    if (kit.explorer.hasAnchor && kit.explorer.activeAnchor.isText && kit.picker.blockRanges.length > 0) {
-        var fb = kit.picker.blockRanges[0].block;
+    if (kit.explorer.hasAnchor && kit.explorer.activeAnchor.isText && kit.picker.blocks.length > 0) {
+        var fb = kit.picker.blocks[0].block;
         if (block && fb && fb.exists(g => g == block, true) && block?.exists(g => g == kit.explorer.activeAnchor?.block, true)) {
             return true;
         }

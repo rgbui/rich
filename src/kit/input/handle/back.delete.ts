@@ -1,7 +1,7 @@
 import { TextInput } from "..";
 import { dom } from "../../../common/dom";
 import { KeyboardCode } from "../../../common/keys";
-import { Point } from "../../../common/point";
+import { Point } from "../../../common/vector/point";
 import { Exception, ExceptionType } from "../../../error/exception";
 import { Anchor } from "../../selection/anchor";
 import { InputDeleteStore } from "../store";

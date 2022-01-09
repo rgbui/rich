@@ -7,7 +7,7 @@ import AudioSvg from "../../src/assert/svg/audio.svg";
 import { Sp } from "../../i18n/view";
 import { LangID } from "../../i18n/declare";
 import { useAudioPicker } from "../../extensions/file/audio.picker";
-import { Rect } from "../../src/common/point";
+import { Rect } from "../../src/common/vector/point";
 import { Block } from "../../src/block";
 import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import { SolidArea } from "../../src/block/view/appear";

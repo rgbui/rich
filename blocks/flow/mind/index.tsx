@@ -5,7 +5,7 @@ import { url, view } from "../../../src/block/factory/observable";
 import { BlockDisplay } from "../../../src/block/enum";
 import { Block } from "../../../src/block";
 import { ChildsArea } from "../../../src/block/view/appear";
-import { Rect } from "../../../src/common/point";
+import { Rect } from "../../../src/common/vector/point";
 import { FlowMindLine } from "./line";
 import './style.less';
 @url('/flow/mind')

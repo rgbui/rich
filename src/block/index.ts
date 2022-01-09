@@ -1,6 +1,6 @@
 import { Events } from "../../util/events";
 import { util } from "../../util/util";
-import { Point, Rect } from "../common/point";
+import { Point, Rect } from "../common/vector/point";
 import { Page } from "../page";
 import { BlockDisplay } from "./enum";
 import { Pattern } from "./pattern/index";
@@ -21,6 +21,7 @@ import { List } from "../../blocks/present/list/list";
 import { CSSProperties } from "react";
 import { PageLayoutType } from "../layout/declare";
 import { Matrix } from "../common/matrix";
+import { Block$Board } from "./partial/board";
 
 export abstract class Block extends Events {
     constructor(page: Page) {
@@ -522,6 +523,7 @@ export interface Block extends Block$Event { }
 export interface Block extends Block$Anchor { }
 export interface Block extends Block$LifeCycle { }
 export interface Block extends Block$Operator { }
+export interface Block extends Block$Board { }
 export interface Block extends Mix { }
 Mix(Block, Block$Seek, Block$Event, Block$Anchor, Block$LifeCycle, Block$Operator)
 

@@ -2,7 +2,7 @@ import React from "react";
 import { useTableStoreOption } from "../../../../extensions/tablestore/option";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
-import { Rect } from "../../../../src/common/point";
+import { Rect } from "../../../../src/common/vector/point";
 import { FieldConfig } from "../../schema/field";
 import { getTypeSvg } from "../../schema/util";
 import { FieldView, OriginFormField } from "./origin.field";

@@ -1,5 +1,5 @@
 import React, { CSSProperties } from "react";
-import { Point, Rect, RectUtility } from "../../src/common/point";
+import { Point, Rect, RectUtility } from "../../src/common/vector/point";
 import { Icon } from "../../component/view/icon";
 import Equation from "../../src/assert/svg/equation.svg";
 import Mention from "../../src/assert/svg/mention.svg";

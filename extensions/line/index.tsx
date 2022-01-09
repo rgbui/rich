@@ -2,7 +2,7 @@ import React from "react";
 import { ReactNode } from "react";
 import { EventsComponent } from "../../component/lib/events.component";
 import { Singleton } from "../../component/lib/Singleton";
-import { Point } from "../../src/common/point";
+import { Point } from "../../src/common/vector/point";
 import { ShapeType } from "../shapes/shapes";
 import "./style.less";
 class ShapeSelector extends EventsComponent {

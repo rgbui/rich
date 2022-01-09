@@ -1,7 +1,7 @@
 
 import React from "react";
 import { CursorName, MouseCursor } from "./cursor";
-import { Point } from "./point";
+import { Point } from "./vector/point";
 import { dom } from "./dom";
 export function MouseDragger<T = Record<string, any>>(options: {
     event: MouseEvent | React.MouseEvent,

@@ -7,7 +7,7 @@ import ReactDOM from "react-dom";
 import { KitView } from "../../kit/view";
 import { PageLayoutType } from "../../layout/declare";
 import { getBoardTool } from "../../../extensions/board.tool";
-import { Point } from "../../common/point";
+import { Point } from "../../common/vector/point";
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
  * 对于同时支持这4个事件的浏览器，事件执行顺序为focusin > focus > focusout > blur

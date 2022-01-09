@@ -6,7 +6,7 @@ import "./style.less";
 import { BlockDisplay } from "../../src/block/enum";
 import { ChildsArea } from "../../src/block/view/appear";
 import { ActionDirective } from "../../src/history/declare";
-import { Rect } from "../../src/common/point";
+import { Rect } from "../../src/common/vector/point";
 import lodash from 'lodash';
 import { MouseDragger } from "../../src/common/dragger";
 

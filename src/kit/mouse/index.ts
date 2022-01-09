@@ -1,6 +1,6 @@
 import { Kit } from "..";
 import { Block } from "../../block";
-import { Point } from "../../common/point";
+import { Point } from "../../common/vector/point";
 import { onAutoScroll, onAutoScrollStop } from "../../common/scroll";
 import { TextEle } from "../../common/text.ele";
 import { PageLayoutType } from "../../layout/declare";

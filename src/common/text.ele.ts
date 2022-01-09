@@ -1,7 +1,7 @@
 
 import { Exception, ExceptionType } from "../error/exception";
 import { dom } from "./dom";
-import { Point, Rect } from "./point";
+import { Point, Rect } from "./vector/point";
 let __g: CanvasRenderingContext2D;
 export class TextEle {
     static getFontStyle(ele: HTMLElement): TextFontStyle {

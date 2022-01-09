@@ -6,7 +6,7 @@ import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import { url, prop, view } from "../../src/block/factory/observable";
 import { SolidArea } from "../../src/block/view/appear";
 import { BlockView } from "../../src/block/view";
-import { Rect } from "../../src/common/point";
+import { Rect } from "../../src/common/vector/point";
 import { Directive } from "../../util/bus/directive";
 import { messageChannel } from "../../util/bus/event.bus";
 import { useFilePicker } from "../../extensions/file/file.picker";

@@ -1,4 +1,4 @@
-import { Point, Rect } from "../../src/common/point";
+import { Point, Rect } from "../../src/common/vector/point";
 
 export type PopoverPosition = {
     center?: boolean;

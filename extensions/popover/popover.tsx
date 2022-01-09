@@ -1,6 +1,6 @@
 import React, { CSSProperties } from "react";
 import ReactDOM from "react-dom";
-import { Point, Rect, RectUtility } from "../../src/common/point";
+import { Point, Rect, RectUtility } from "../../src/common/vector/point";
 import { EventsComponent } from "../../component/lib/events.component";
 import { PopoverPosition } from "./position";
 import './style.less';

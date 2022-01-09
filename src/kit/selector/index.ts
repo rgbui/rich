@@ -1,6 +1,6 @@
 
 import { Kit } from "..";
-import { Point, Rect } from "../../common/point";
+import { Point, Rect } from "../../common/vector/point";
 import { SelectorView } from "./view";
 
 export class Selector {

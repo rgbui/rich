@@ -1,7 +1,7 @@
 import { Kit } from "..";
 import { Block } from "../../block";
 import { dom } from "../../common/dom";
-import { Point } from "../../common/point";
+import { Point } from "../../common/vector/point";
 import { Events } from "../../../util/events";
 import { DropDirection } from "./direction";
 import { HandleView } from "./view";

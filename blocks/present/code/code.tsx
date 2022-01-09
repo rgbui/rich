@@ -9,7 +9,7 @@ import { BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
 import ChevronDown from "../../../src/assert/svg/chevronDown.svg";
 import "./style.less";
 import { useSelectMenuItem } from "../../../component/view/menu";
-import { Rect } from "../../../src/common/point";
+import { Rect } from "../../../src/common/vector/point";
 import { loadPrismLang, PrismLangLabels } from "./lang";
 import { AppearAnchor } from "../../../src/block/appear";
 /**

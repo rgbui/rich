@@ -1,5 +1,5 @@
 import { CSSProperties } from "react";
-import { Point } from "./point";
+import { Point } from "./vector/point";
 
 export class Matrix {
     constructor(a?: number | Matrix, b?: number, c?: number, d?: number, tx?: number, ty?: number) {
@@ -284,7 +284,7 @@ export class Matrix {
         return {
             translation: this.getTranslation(),
             rotation: rotate * degrees,
-            scaling: new Point(scale[0],scale[1]),
+            scaling: new Point(scale[0], scale[1]),
             skewing: new Point(skew[0] * degrees, skew[1] * degrees)
         };
     }
@@ -310,5 +310,37 @@ export class Matrix {
         var style: CSSProperties = {};
         style.transform = 'matrix(' + this.getValues().join(',') + ')';
         return style;
+    }
+    /**
+     * 将当前的matrix分解成基本的动运matrix  
+     * 当前的matrix== translate.appended(rotation).appended(scale).appended(skew)
+     * @returns 
+     */
+    resolveMatrixs() {
+        var cp = this.decompose();
+        var t = new Matrix();
+        t.translate(cp.translation.x, cp.translation.y);
+        var r = new Matrix();
+        if (cp.rotation) {
+            r.rotate(cp.rotation, { x: 0, y: 0 });
+        }
+        var s = new Matrix();
+        if (cp.scaling) {
+            s.scale(cp.scaling.x, cp.scaling.y, { x: 0, y: 0 });
+        }
+        var k = new Matrix();
+        if (cp.skewing) {
+            k.skew(cp.skewing.x, cp.skewing.y, { x: 0, y: 0 });
+        }
+        /**
+         * 当前的matrix== translate.appended(rotation).appended(scale).appended(skew)
+         */
+        return {
+            translate: t,
+            rotation: r,
+            scale: s,
+            skew: k
+        }
+
     }
 }

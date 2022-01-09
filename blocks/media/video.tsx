@@ -5,7 +5,7 @@ import { LangID } from "../../i18n/declare";
 import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import { prop, url, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
-import { Rect } from "../../src/common/point";
+import { Rect } from "../../src/common/vector/point";
 import VideoSvg from "../../src/assert/svg/video.svg";
 import { useVideoPicker } from "../../extensions/file/video.picker";
 import { Block } from "../../src/block";

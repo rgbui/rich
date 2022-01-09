@@ -9,7 +9,7 @@ import { TableStoreHead } from "./head";
 import { Icon } from "../../../../../component/view/icon";
 import { FieldType } from "../../../schema/field.type";
 import { useSelectMenuItem } from "../../../../../component/view/menu";
-import { Rect } from "../../../../../src/common/point";
+import { Rect } from "../../../../../src/common/vector/point";
 import { MouseDragger } from "../../../../../src/common/dragger";
 import { ActionDirective } from "../../../../../src/history/declare";
 import { MenuItemType, MenuItemTypeValue } from "../../../../../component/view/menu/declare";

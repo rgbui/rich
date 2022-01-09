@@ -1,6 +1,6 @@
 import { Kit } from "..";
 import { Block } from "../../block";
-import { Point } from "../../common/point";
+import { Point } from "../../common/vector/point";
 import { Events } from "../../../util/events";
 import { Anchor } from "./anchor";
 import { SelectionExplorer$Events } from "./event";

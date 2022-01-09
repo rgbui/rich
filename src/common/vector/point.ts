@@ -1,5 +1,5 @@
 import React from "react";
-import { PopoverPosition } from "../../extensions/popover/position";
+import { PopoverPosition } from "../../../extensions/popover/position";
 
 export class Point {
     x: number;

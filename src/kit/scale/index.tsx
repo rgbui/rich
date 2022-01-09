@@ -5,7 +5,7 @@ import PlusSvg from "../../assert/svg/plus.2.svg";
 import MinusSvg from "../../assert/svg/minus.svg";
 import FitSvg from "../../assert/svg/fit.svg";
 import { Icon } from "../../../component/view/icon";
-import { Point } from "../../common/point";
+import { Point } from "../../common/vector/point";
 export class BoardScale extends React.Component<{ kit: Kit }>{
     render(): ReactNode {
         return <div className="shy-board-scale">

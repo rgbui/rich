@@ -3,7 +3,7 @@ import { Kit } from "..";
 import { Block } from "../../block";
 import { MouseDragger } from "../../common/dragger";
 import { Matrix } from "../../common/matrix";
-import { Rect } from "../../common/point";
+import { Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
 import { BlockPickerView } from "./view";
 
@@ -14,9 +14,9 @@ export class BlockPicker {
         this.kit = kit;
     }
     visible: boolean = false;
-    blockRanges: { block: Block, rect: Rect, matrix: Matrix }[] = [];
+    blocks: { block: Block, rect: Rect, matrix: Matrix }[] = [];
     onPicker(blocks: Block[]) {
-        this.blockRanges = blocks.map(block => {
+        this.blocks = blocks.map(block => {
             var matrix = block.globalWindowMatrix;
             var scale = matrix.getScaling().x;
             var w, h;
@@ -36,8 +36,8 @@ export class BlockPicker {
     }
     onShiftPicker(blocks: Block[]) {
         blocks.each(b => {
-            if (!this.blockRanges.some(s => s.block === b)) {
-                this.blockRanges.push({ block: b, rect: Rect.fromEle(b.el), matrix: b.globalWindowMatrix })
+            if (!this.blocks.some(s => s.block === b)) {
+                this.blocks.push({ block: b, rect: Rect.fromEle(b.el), matrix: b.globalWindowMatrix })
             }
         });
         this.visible = true;
@@ -48,7 +48,7 @@ export class BlockPicker {
         this.view.forceUpdate();
     }
     onMove(matrix: Matrix) {
-        this.blockRanges.forEach((bl) => {
+        this.blocks.forEach((bl) => {
             bl.block.moveMatrix = matrix;
             bl.matrix = bl.block.globalWindowMatrix.appended(matrix);
             bl.block.forceUpdate()
@@ -56,7 +56,7 @@ export class BlockPicker {
         this.view.forceUpdate();
     }
     onMoveEnd(matrix: Matrix) {
-        this.blockRanges.forEach((bl) => {
+        this.blocks.forEach((bl) => {
             bl.block.matrix.append(matrix);
             bl.block.moveMatrix = new Matrix();
             bl.matrix = bl.block.globalWindowMatrix;

@@ -9,7 +9,7 @@ import MeiSvg from "../../src/assert/svg/board.tool.mei.svg";
 import SharpSvg from "../../src/assert/svg/board.tool.sharp.svg";
 import FrameSvg from "../../src/assert/svg/board.tool.frame.svg";
 import ArrowSvg from "../../src/assert/svg/board.tool.arrow.svg";
-import { Point } from "../../src/common/point";
+import { Point } from "../../src/common/vector/point";
 import { Singleton } from "../../component/lib/Singleton";
 import "./style.less";
 import { BoardToolOperator } from "./declare";

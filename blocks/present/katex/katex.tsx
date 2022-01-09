@@ -6,7 +6,7 @@ import "../../../node_modules/katex/dist/katex.min.css";
 import { Block } from "../../../src/block";
 import { BlockDisplay } from "../../../src/block/enum";
 import { listenKatexInput } from "../../../extensions/katex";
-import { Rect } from "../../../src/common/point";
+import { Rect } from "../../../src/common/vector/point";
 
 @url('/katex')
 export class Katex extends Block {

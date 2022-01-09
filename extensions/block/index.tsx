@@ -4,7 +4,7 @@ import { Singleton } from "../../component/lib/Singleton";
 import { LangID } from "../../i18n/declare";
 import { Sp } from "../../i18n/view";
 import { KeyboardCode } from "../../src/common/keys";
-import { Point, Rect, RectUtility } from "../../src/common/point";
+import { Point, Rect, RectUtility } from "../../src/common/vector/point";
 import { PopoverPosition } from "../popover/position";
 import { BlockSelectorItem } from "./delcare";
 import { blockStore } from "./store";

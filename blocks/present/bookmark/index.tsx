@@ -5,7 +5,7 @@ import { Block } from "../../../src/block";
 import { BlockDisplay } from "../../../src/block/enum";
 import { ResourceArguments } from "../../../extensions/icon/declare";
 import { useOutSideUrlInput } from "../../../extensions/link/outsite.input";
-import { Rect } from "../../../src/common/point";
+import { Rect } from "../../../src/common/vector/point";
 import { Loading } from "../../../component/view/loading";
 
 @url('/bookmark')

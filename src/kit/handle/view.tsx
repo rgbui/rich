@@ -1,5 +1,5 @@
 import React from "react";
-import { Point } from "../../common/point";
+import { Point } from "../../common/vector/point";
 import { Icon } from "../../../component/view/icon";
 import { Handle } from ".";
 import { Tip } from "../../../component/view/tip";

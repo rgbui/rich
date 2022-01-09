@@ -1,7 +1,7 @@
 import React from "react";
 import { createPortal } from "react-dom";
 import { KeyboardCode } from "../../src/common/keys";
-import { Point } from "../../src/common/point";
+import { Point } from "../../src/common/vector/point";
 import { EventsComponent } from "../../component/lib/events.component";
 import { ReferenceSelectorData } from "./data";
 

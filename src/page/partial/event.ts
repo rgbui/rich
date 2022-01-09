@@ -1,7 +1,7 @@
 
 import { Page } from "..";
 import { Matrix } from "../../common/matrix";
-import { Point, Rect } from "../../common/point";
+import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
 import { PageLayoutType } from "../../layout/declare";
 import { PageDirective } from "../directive";

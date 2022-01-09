@@ -1,5 +1,5 @@
 
-import { Point } from '../../common/point';
+import { Point } from '../../common/vector/point';
 import { Anchor } from '../selection/anchor';
 import { TextInput$Paster } from './paste';
 import { TextInput$Write } from './write';

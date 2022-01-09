@@ -8,7 +8,7 @@ import { BlockView } from "../../src/block/view";
 import { PageDirective } from "../../src/page/directive";
 import { Icon } from "../../component/view/icon";
 import { useIconPicker } from "../../extensions/icon";
-import { Rect } from "../../src/common/point";
+import { Rect } from "../../src/common/vector/point";
 import { messageChannel } from "../../util/bus/event.bus";
 import { Directive } from "../../util/bus/directive";
 import { BlockAppear } from "../../src/block/appear";

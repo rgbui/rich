@@ -1,6 +1,6 @@
 import { Block } from "..";
 import { dom } from "../../common/dom";
-import { Point, Rect } from "../../common/point";
+import { Point, Rect } from "../../common/vector/point";
 import { TextEle } from "../../common/text.ele";
 import { Anchor } from "../../kit/selection/anchor";
 import { BlockAppear, AppearAnchor } from "../appear";

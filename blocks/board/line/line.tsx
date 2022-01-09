@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 import { Block } from "../../../src/block";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
-import { Point } from "../../../src/common/point";
+import { Point } from "../../../src/common/vector/point";
 import "./style.less";
 export type PortLocation = {
     x: number | 'left' | 'right' | 'center',

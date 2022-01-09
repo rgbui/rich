@@ -2,7 +2,7 @@ import React from "react";
 import { ReactNode } from "react";
 import { EventsComponent } from "../../component/lib/events.component";
 import { Block } from "../../src/block";
-import { Point } from "../../src/common/point";
+import { Point } from "../../src/common/vector/point";
 import "./style.less";
 
 export class BoardShapeTool extends EventsComponent {

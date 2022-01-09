@@ -1,6 +1,6 @@
 import { Page } from "..";
 import { Block } from "../../block";
-import { Point, Rect } from "../../common/point";
+import { Point, Rect } from "../../common/vector/point";
 const CellSize = 100;
 export class PageGrid {
     constructor(public page: Page) { }

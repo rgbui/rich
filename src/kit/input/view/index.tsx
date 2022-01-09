@@ -1,6 +1,6 @@
 import React from "react";
 import { TextInput } from "..";
-import { Point } from "../../../common/point";
+import { Point } from "../../../common/vector/point";
 import { Anchor } from "../../selection/anchor";
 
 export class TextInputView extends React.Component<{ textInput: TextInput }>{
