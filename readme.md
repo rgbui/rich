@@ -21,4 +21,5 @@
 ## 参考资料
 * [JavaScript标准Selection操作](https://www.cnblogs.com/rainman/archive/2011/02/27/1966482.html)
 * [平滑线](https://medium.com/square-corner-blog/smoother-signatures-be64515adb33)
-https://www.cnblogs.com/fangsmile/p/8296348.html
+* [平滑线案例]https://www.cnblogs.com/fangsmile/p/8296348.html
+* [react-pdf](https://github.com/wojtekmaj/react-pdf)
