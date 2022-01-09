@@ -100,7 +100,14 @@ export class Point {
         return new Point(this.x - point.x, this.y - point.y);
     }
 }
-
+export enum PointArrow {
+    top,
+    left,
+    right,
+    center,
+    middle,
+    bottom
+}
 export class Rect {
     top: number;
     left: number;
@@ -151,8 +158,8 @@ export class Rect {
     get bottomCenter() {
         return Point.from(this.left + this.width / 2, this.top + this.height)
     }
-    get middleCenter(){
-        return Point.from(this.left+this.width/2,this.top+this.height/2)
+    get middleCenter() {
+        return Point.from(this.left + this.width / 2, this.top + this.height / 2)
     }
     get middle() {
         return this.top + this.height / 2
