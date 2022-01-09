@@ -1,7 +1,6 @@
 import { Page } from "..";
 import { Block } from "../../block";
 import { Point, Rect } from "../../common/point";
-
 const CellSize = 100;
 export class PageGrid {
     constructor(public page: Page) { }
@@ -49,6 +48,27 @@ export class PageGrid {
             }
         }
         block.grid = undefined;
+    }
+    public gridRange() {
+        var minX, minY, maxX, maxY;
+        this.gridMap.forEach((value, key) => {
+            var ks = key.split(/\,/g);
+            var x = parseFloat(ks[0]);
+            var y = parseFloat(ks[1]);
+            if (typeof minX == 'undefined') {
+                minX = x;
+                minY = y;
+                maxX = x;
+                maxY = y;
+            }
+            else {
+                minX = Math.min(minX, x);
+                minY = Math.min(minY, y);
+                maxX = Math.max(maxX, x);
+                maxY = Math.max(maxY, y);
+            }
+        });
+        return new Rect(minX * CellSize, minY * CellSize, maxX * CellSize, maxY * CellSize);
     }
     /**
      * 
