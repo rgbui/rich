@@ -1,10 +1,5 @@
 import { Kit } from "..";
 import { Block } from "../../block";
-import { Point } from "../../common/vector/point";
-import { onAutoScroll, onAutoScrollStop } from "../../common/scroll";
-import { TextEle } from "../../common/text.ele";
-import { PageLayoutType } from "../../layout/declare";
-import { Anchor } from "../selection/anchor";
 import { mousedown } from "./md";
 export class PageMouse {
     constructor(public kit: Kit) { }

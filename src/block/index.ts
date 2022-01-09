@@ -525,5 +525,5 @@ export interface Block extends Block$LifeCycle { }
 export interface Block extends Block$Operator { }
 export interface Block extends Block$Board { }
 export interface Block extends Mix { }
-Mix(Block, Block$Seek, Block$Event, Block$Anchor, Block$LifeCycle, Block$Operator)
+Mix(Block, Block$Seek, Block$Event, Block$Anchor, Block$Board, Block$LifeCycle, Block$Operator)
 

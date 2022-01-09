@@ -21,7 +21,7 @@ export async function SelectorBoardBlock(kit: Kit, block: Block | undefined, eve
         }
         else {
             //不连选
-            if (kit.picker.blocks.some(s => s.block == block)) {
+            if (kit.picker.blocks.some(s => s === block)) {
                 //说明包含
                 isPicker = true;
             }
@@ -44,7 +44,7 @@ export async function SelectorBoardBlock(kit: Kit, block: Block | undefined, eve
                 if (!isMove) {
                     if (isPicker && kit.picker.blocks.length == 1) {
                         //这里对block进入聚焦编辑
-                        var block = kit.picker.blocks[0].block;
+                        var block = kit.picker.blocks[0];
                         var anchor = block.visibleAnchor(Point.from(event));
                         if (!(anchor && anchor.block.isAllowMouseAnchor)) return;
                         kit.explorer.onFocusAnchor(anchor);
@@ -54,8 +54,7 @@ export async function SelectorBoardBlock(kit: Kit, block: Block | undefined, eve
         })
     }
     else if (!block && kit.page.pageLayout.type == PageLayoutType.board) {
-        if (!kit.page.keyboardPlate.isShift())
-            kit.picker.onPicker([]);
+        if (!kit.page.keyboardPlate.isShift()) kit.picker.onPicker([]);
         isBoardSelector = true;
         kit.explorer.onClearAnchorAndSelection();
         var isShift = kit.explorer.page.keyboardPlate.isShift();
@@ -196,7 +195,7 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
 
 export function IsBoardTextAnchorBlock(kit: Kit, block: Block | undefined, event: MouseEvent) {
     if (kit.explorer.hasAnchor && kit.explorer.activeAnchor.isText && kit.picker.blocks.length > 0) {
-        var fb = kit.picker.blocks[0].block;
+        var fb = kit.picker.blocks[0];
         if (block && fb && fb.exists(g => g == block, true) && block?.exists(g => g == kit.explorer.activeAnchor?.block, true)) {
             return true;
         }
