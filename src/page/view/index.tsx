@@ -26,11 +26,13 @@ export class PageView extends Component<{ page: Page }>{
     private _mouseup;
     private _keyup;
     private _keydown;
+    private _wheel;
     el: HTMLElement;
     componentDidMount() {
         this.el = ReactDOM.findDOMNode(this) as HTMLElement;
         this.observeOutsideDrop();
         this.el.addEventListener('keydown', (this._keydown = e => this.page.onKeydown(e)), true);
+        this.el.addEventListener('wheel', this._wheel = e => this.page.onWheel(e), { passive: true });
         document.addEventListener('mousedown', this._mousedown = this.page.onGlobalMousedown.bind(this));
         document.addEventListener('mousemove', (this._mousemove = this.page.onMousemove.bind(this.page)));
         document.addEventListener('mouseup', (this._mouseup = this.page.onMouseup.bind(this.page)));
@@ -94,6 +96,7 @@ export class PageView extends Component<{ page: Page }>{
         document.removeEventListener('mouseup', this._mouseup);
         document.removeEventListener('mousemove', this._mousemove);
         document.removeEventListener('keyup', this._keyup, true);
+        document.removeEventListener('wheel', this._wheel)
         delete this.el.shy_drop_move;
         delete this.el.shy_drop_over;
         delete this.el.shy_end;
@@ -114,7 +117,6 @@ export class PageView extends Component<{ page: Page }>{
         return <div className={'shy-page-view' + (this.page.readonly ? " shy-page-view-readonly" : "")} style={pageStyle} tabIndex={1}
             onFocusCapture={e => this.page.onFocusCapture(e.nativeEvent)}
             onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}
-            onWheel={e => this.page.onWheel(e)}
         ><div className='shy-page-view-box' onMouseDown={e => this.page.onMousedown(e.nativeEvent)}>
                 <PageLayoutView pageLayout={this.page.pageLayout}>
                     <div className='shy-page-view-content' ref={e => this.page.contentEl = e}>
