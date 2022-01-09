@@ -1,4 +1,4 @@
-import { Point } from "./point";
+import { Point, Rect } from "./point";
 
 export class Polygon {
     points: Point[] = [];
@@ -12,5 +12,24 @@ export class Polygon {
             }
             else return `L${p.x} ${p.y}`
         }).join(",") + (isClosed ? "Z" : "")
+    }
+    get bound() {
+        var x, y, MaxX, MaxY;
+        for (let i = 0; i < this.points.length; i++) {
+            var po = this.points[i];
+            if (typeof x == 'undefined') {
+                x = po.x;
+                y = po.y;
+                MaxX = po.x;
+                MaxY = po.y;
+            }
+            else {
+                x = Math.min(x, po.x);
+                y = Math.min(y, po.y);
+                MaxX = Math.max(x, po.x);
+                MaxY = Math.max(y, po.y);
+            }
+        }
+        return new Rect(new Point(x, y), new Point(MaxX, MaxY));
     }
 }
