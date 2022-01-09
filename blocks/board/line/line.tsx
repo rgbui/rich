@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 import { Block } from "../../../src/block";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
-import { Point } from "../../../src/common/vector/point";
+import { Point, Rect } from "../../../src/common/vector/point";
 import "./style.less";
 export type PortLocation = {
     x: number | 'left' | 'right' | 'center',
@@ -48,12 +48,15 @@ export class LineView extends BlockView<Line>{
         if (from.equal(to)) {
             to = from.move(20, 20);
         }
-        var dx = to.x - from.x;
-        var dy = to.y - from.y;
+        var [dx, dy] = to.diff(from);
+        var rect = new Rect(from, to);
+        var re = rect.extend(30);
         return <div className="sy-block-line" style={this.block.visibleStyle}>
-            <svg style={{
-                width: Math.abs(from.x - to.x),
-                height: Math.abs(from.y - to.y)
+            <svg viewBox={`${re.x} ${re.y} ${re.width} ${re.height}`} style={{
+                width: re.width,
+                height: re.height,
+                marginLeft: -30,
+                marginRight: -30
             }}><path d={`M0 0,${dx} ${dy}`}></path>
             </svg>
         </div>
