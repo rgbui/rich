@@ -70,6 +70,11 @@ export class Matrix {
         this._ty += point.x * this._b + point.y * this._d;
         return this;
     }
+    translateMove(from:Point,to:Point){
+        var dx=to.x-from.x;
+        var dy=to.y-from.y;
+        this.translate(dx,dy);
+    }
     scale(hor: number, ver: number, cen: Point | { x: number, y: number }) {
         var scale;
         if (typeof hor == 'number' && typeof ver == 'object') scale = new Point(arguments[0], arguments[0]);
