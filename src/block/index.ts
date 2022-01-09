@@ -492,38 +492,16 @@ export abstract class Block extends Events {
      * 相对窗体的matrix
      */
     get globalWindowMatrix() {
-        var ma = this.globalMatrix;
-        var rect = Rect.fromEle(this.page.root);
-        var matrix = new Matrix();
-        matrix.translate(rect.left, rect.top);
-        return ma.appended(matrix);
+        return this.page.windowMatrix.appended(this.globalMatrix);
     }
     get globalMatrix(): Matrix {
         var rb = this.relativeBlock;
         if (rb) return rb.globalMatrix.appended(this.matrix)
-        return this.matrix;
+        else return this.page.matrix.appended(this.matrix);
     }
     get transformStyle() {
-        // var style: CSSProperties = {};
         var ma = this.matrix.appended(this.moveMatrix);
         return ma.getCss();
-        // var decomposed = ma.decompose();
-        // var trans = ma.getTranslation();
-        // if (decomposed) {
-        //     var parts = [],
-        //         angle = decomposed.rotation,
-        //         scale = decomposed.scaling,
-        //         skew = decomposed.skewing;
-        //     if (trans) parts.push('translate(' + trans.x + "px," + trans.y + 'px)');
-        //     if (angle) parts.push('rotate(' + angle + 'deg)');
-        //     if (scale && typeof scale.x != 'undefined') parts.push('scale(' + scale.x + "," + scale.y + ')');
-        //     if (skew.x) parts.push('skewX(' + skew.x + ')');
-        //     if (skew.y) parts.push('skewY(' + skew.y + ')');
-        //     style.transform = parts.join(' ');
-        // } else {
-        //     style.transform = 'matrix(' + ma.getValues().join(',') + ')';
-        // }
-        // return style;
     }
     /**
      * 运行的move matrix

@@ -73,6 +73,12 @@ export class Page extends Events<PageDirective> {
     firstCreated: boolean = true;
     grid: PageGrid;
     matrix: Matrix = new Matrix();
+    get windowMatrix() {
+        var rect = Rect.fromEle(this.root);
+        var matrix = new Matrix();
+        matrix.translate(rect.left, rect.top);
+        return matrix;
+    }
     render(el: HTMLElement, options?: { width?: number, height?: number }) {
         this.root = el;
         if (options?.width) this.pageVisibleWidth = options?.width;
