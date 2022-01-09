@@ -1,5 +1,6 @@
 
 import { Kit } from "..";
+import { util } from "../../../util/util";
 import { Block } from "../../block";
 import { MouseDragger } from "../../common/dragger";
 import { Matrix } from "../../common/matrix";
@@ -53,6 +54,7 @@ export class BlockPicker {
     onResizeBlock(block: Block,
         arrows: PointArrow[],
         event: React.MouseEvent) {
+        event.stopPropagation();
         var matrix = block.matrix.clone();
         var gm = block.globalWindowMatrix.clone();
         var w = block.fixedWidth;
@@ -114,12 +116,30 @@ export class BlockPicker {
             }
         });
     }
-    onCreateBlockConnect(block: Block, arrows: PointArrow[], event: React.MouseEvent) {
-        MouseDragger({
-            event,
-            moveStart() { },
-            move() { },
-            moveEnd() { }
-        });
+    async onCreateBlockConnect(block: Block, arrows: PointArrow[], event: React.MouseEvent) {
+        event.stopPropagation();
+        var fra: Block = block ? block.frameBlock : this.kit.page.getPageFrame();
+        var newBlock: Block;
+        var isMounted: boolean = false;
+        var gm = fra.globalWindowMatrix;
+
+        // await fra.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
+        //     var data = { url: '/line' } as Record<string, any>;
+        //     var ma = new Matrix();
+        //     ma.translate(ev.clientX - re.left, ev.clientY - re.top);
+        //     data.matrix = ma.getValues();
+        //     data.from = { x: event.clientX, y: event.clientY, blockId: block.id };
+        //     data.to = util.clone(data.from);
+        //     newBlock = await this.kit.page.createBlock(data.url, data, fra);
+        //     newBlock.mounted(() => {
+        //         isMounted = true;
+        //     })
+        // });
+        // MouseDragger({
+        //     event,
+        //     moveStart() { },
+        //     move() { },
+        //     moveEnd() { }
+        // });
     }
 }
