@@ -33,14 +33,12 @@ export async function SelectorBoardBlock(kit: Kit, block: Block | undefined, eve
         MouseDragger({
             event,
             move(ev, data) {
-                var matrix = new Matrix();
-                matrix.translate(ev.clientX - event.clientX, ev.clientY - event.clientY)
-                kit.picker.onMove(matrix);
+                kit.picker.onMove(Point.from(event), Point.from(ev));
             },
             moveEnd(ev, isMove, data) {
                 var matrix = new Matrix();
                 matrix.translate(ev.clientX - event.clientX, ev.clientY - event.clientY)
-                kit.picker.onMoveEnd(matrix);
+                kit.picker.onMoveEnd(Point.from(event), Point.from(ev));
                 if (!isMove) {
                     if (isPicker && kit.picker.blocks.length == 1) {
                         //这里对block进入聚焦编辑
@@ -59,6 +57,8 @@ export async function SelectorBoardBlock(kit: Kit, block: Block | undefined, eve
         kit.explorer.onClearAnchorAndSelection();
         var isShift = kit.explorer.page.keyboardPlate.isShift();
         var ma = kit.page.matrix.clone();
+        var gm = kit.page.globalMatrix.clone();
+        var fromP = gm.inverseTransform(Point.from(event));
         MouseDragger({
             event,
             moveStart() {
@@ -77,13 +77,13 @@ export async function SelectorBoardBlock(kit: Kit, block: Block | undefined, eve
                 }
                 else {
                     var na = ma.clone();
-                    na.translate(ev.clientX - event.clientX, ev.clientY - event.clientY)
+                    var toP = gm.inverseTransform(Point.from(ev));
+                    na.translateMove(fromP, toP);
                     kit.page.onSetMatrix(na);
                 }
             },
             moveEnd(ev, isMove, data) {
                 if (isMove) {
-
                     kit.selector.close()
                 }
             }

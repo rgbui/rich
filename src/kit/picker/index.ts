@@ -3,7 +3,7 @@ import { Kit } from "..";
 import { Block } from "../../block";
 import { MouseDragger } from "../../common/dragger";
 import { Matrix } from "../../common/matrix";
-import { PointArrow, Rect } from "../../common/vector/point";
+import { Point, PointArrow, Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
 import { BlockPickerView } from "./view";
 
@@ -31,101 +31,88 @@ export class BlockPicker {
         this.visible = false;
         this.view.forceUpdate();
     }
-    onMove(matrix: Matrix) {
+    onMove(from: Point, to: Point) {
         this.blocks.forEach((bl) => {
-            // bl.block.moveMatrix = matrix;
-            // bl.matrix = bl.block.globalWindowMatrix.appended(matrix);
-            // bl.block.forceUpdate()
+            var matrix = new Matrix();
+            matrix.translateMove(bl.globalWindowMatrix.inverseTransform(from), bl.globalWindowMatrix.inverseTransform(to))
+            bl.moveMatrix = matrix;
+            bl.forceUpdate()
         });
         this.view.forceUpdate();
     }
-    onMoveEnd(matrix: Matrix) {
+    onMoveEnd(from: Point, to: Point) {
         this.blocks.forEach((bl) => {
-            // bl.block.matrix.append(matrix);
-            // bl.block.moveMatrix = new Matrix();
-            // bl.matrix = bl.block.globalWindowMatrix;
-            // bl.block.forceUpdate()
+            var matrix = new Matrix();
+            matrix.translateMove(bl.globalWindowMatrix.inverseTransform(from), bl.globalWindowMatrix.inverseTransform(to))
+            bl.matrix.append(matrix);
+            bl.moveMatrix = new Matrix();
+            bl.forceUpdate()
         });
         this.view.forceUpdate();
     }
     onResizeBlock(block: Block,
         arrows: PointArrow[],
         event: React.MouseEvent) {
-        // var matrix = br.matrix.clone();
-        // var blockMatrix = br.block.matrix;
-        // var block = br.block;
-        // var w = block.fixedWidth;
-        // var h = block.fixedHeight;
-        // var self = this;
-        // var rect = br.rect.clone();
-        // MouseDragger({
-        //     event,
-        //     moving(ev, data, isEnd) {
-        //         var r = rect.clone();
-        //         var ma = new Matrix();
-        //         var dx = ev.clientX - event.clientX;
-        //         var dy = ev.clientY - event.clientY;
-        //         var bw = w;
-        //         var bh = h;
-        //         var minW = 50;
-        //         var minH = 50;
-        //         if (arrows.includes(PointArrow.top)) {
-        //             if (bh - dy < minH) dy = bh - minH;
-        //         }
-        //         else if (arrows.includes(PointArrow.bottom)) {
-        //             if (bh + dy < minH) dy = minH - bh;
-        //         }
-        //         if (arrows.includes(PointArrow.left)) {
-        //             if (bw - dx < minW) dx = bw - minW;
-        //         }
-        //         else if (arrows.includes(PointArrow.right)) {
-        //             if (bw + dx < minW) dx = minW - bw;
-        //         }
-        //         if (arrows.includes(PointArrow.top)) {
-        //             r.top += dy;
-        //             ma.translate(0, dy);
-        //             bh -= dy;
-        //             r.height -= dy;
-        //         }
-        //         else if (arrows.includes(PointArrow.bottom)) {
-        //             bh += dy;
-        //             r.height += dy;
-        //         }
-        //         if (arrows.includes(PointArrow.left)) {
-        //             r.left += dx;
-        //             ma.translate(dx, 0);
-        //             bw -= dx;
-        //             r.width -= dx;
-        //         }
-        //         else if (arrows.includes(PointArrow.right)) {
-        //             bw += dx;
-        //             r.width += dx;
-        //         }
-        //         br.rect = r;
-        //         br.matrix = matrix.appended(ma);
-        //         block.matrix = blockMatrix.appended(ma);
-        //         block.fixedHeight = bh;
-        //         block.fixedWidth = bw;
-        //         block.forceUpdate();
-        //         self.view.forceUpdate();
-        //         if (isEnd) {
-        //             block.onAction(ActionDirective.onResizeBlock, async () => {
-        //                 if (!blockMatrix.equals(block.matrix)) block.updateMatrix(blockMatrix, block.matrix);
-        //                 block.manualUpdateProps(
-        //                     { fixedWidth: w, fixedHeight: h },
-        //                     { fixedWidth: block.fixedWidth, fixedHeight: block.fixedHeight }
-        //                 )
-        //             })
-        //         }
-        //         else {
-        //             block.fixedWidth = w;
-        //             block.fixedHeight = h;
-        //             block.matrix = blockMatrix;
-        //             br.matrix = matrix;
-        //             br.rect = r;
-        //         }
-        //     }
-        // });
+        var matrix = block.matrix.clone();
+        var gm = block.globalWindowMatrix.clone();
+        var w = block.fixedWidth;
+        var h = block.fixedHeight;
+        var self = this;
+        var fp = gm.inverseTransform(Point.from(event));
+        var s = gm.getScaling().x;
+        var minW = 50 / s;
+        var minH = 50 / s;
+        MouseDragger({
+            event,
+            moving(ev, data, isEnd) {
+                var tp = gm.inverseTransform(Point.from(ev));
+                var ma = new Matrix();
+                var [dx, dy] = tp.diff(fp);
+                var bw = w;
+                var bh = h;
+                if (arrows.includes(PointArrow.top)) {
+                    if (bh - dy < minH) dy = bh - minH;
+                }
+                else if (arrows.includes(PointArrow.bottom)) {
+                    if (bh + dy < minH) dy = minH - bh;
+                }
+                if (arrows.includes(PointArrow.left)) {
+                    if (bw - dx < minW) dx = bw - minW;
+                }
+                else if (arrows.includes(PointArrow.right)) {
+                    if (bw + dx < minW) dx = minW - bw;
+                }
+                if (arrows.includes(PointArrow.top)) {
+                    ma.translate(0, dy);
+                    bh -= dy;
+                }
+                else if (arrows.includes(PointArrow.bottom)) {
+                    bh += dy;
+                }
+                if (arrows.includes(PointArrow.left)) {
+
+                    ma.translate(dx, 0);
+                    bw -= dx;
+                }
+                else if (arrows.includes(PointArrow.right)) {
+                    bw += dx;
+                }
+                block.matrix = matrix.appended(ma);
+                block.fixedHeight = bh;
+                block.fixedWidth = bw;
+                block.forceUpdate();
+                self.view.forceUpdate();
+                if (isEnd) {
+                    block.onAction(ActionDirective.onResizeBlock, async () => {
+                        if (!matrix.equals(block.matrix)) block.updateMatrix(matrix, block.matrix);
+                        block.manualUpdateProps(
+                            { fixedWidth: w, fixedHeight: h },
+                            { fixedWidth: block.fixedWidth, fixedHeight: block.fixedHeight }
+                        )
+                    })
+                }
+            }
+        });
     }
     onCreateBlockConnect(block: Block, arrows: PointArrow[], event: React.MouseEvent) {
         MouseDragger({
