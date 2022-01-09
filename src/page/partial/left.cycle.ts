@@ -57,9 +57,8 @@ export class Page$Cycle {
                 }
                 else if (n == 'pageLayout') {
                     this.pageLayout = new PageLayout(this, data[n]);
-                    continue;
                 }
-                this[n] = data[n];
+                else this[n] = data[n];
             }
             if (Array.isArray(data.views)) {
                 for (var i = 0; i < data.views.length; i++) {
