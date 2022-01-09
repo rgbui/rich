@@ -79,6 +79,9 @@ export class Page extends Events<PageDirective> {
         matrix.translate(rect.left, rect.top);
         return matrix;
     }
+    get globalMatrix() {
+        return this.windowMatrix.appended(this.matrix);
+    }
     render(el: HTMLElement, options?: { width?: number, height?: number }) {
         this.root = el;
         if (options?.width) this.pageVisibleWidth = options?.width;
