@@ -1,5 +1,7 @@
 
 import { Kit } from "..";
+import { Line } from "../../../blocks/board/line/line";
+import { blockStore } from "../../../extensions/block/store";
 import { util } from "../../../util/util";
 import { Block } from "../../block";
 import { MouseDragger } from "../../common/dragger";
@@ -37,6 +39,9 @@ export class BlockPicker {
             var matrix = new Matrix();
             matrix.translateMove(bl.globalWindowMatrix.inverseTransform(from), bl.globalWindowMatrix.inverseTransform(to))
             bl.moveMatrix = matrix;
+            if (bl.lines.length > 0) {
+                bl.lines.each(line => { line.forceUpdate() })
+            }
             bl.forceUpdate()
         });
         this.view.forceUpdate();
@@ -47,7 +52,10 @@ export class BlockPicker {
             matrix.translateMove(bl.globalWindowMatrix.inverseTransform(from), bl.globalWindowMatrix.inverseTransform(to))
             bl.matrix.append(matrix);
             bl.moveMatrix = new Matrix();
-            bl.forceUpdate()
+            bl.forceUpdate();
+            if (bl.lines.length > 0) {
+                bl.lines.each(line => { line.forceUpdate() })
+            }
         });
         this.view.forceUpdate();
     }
@@ -92,7 +100,6 @@ export class BlockPicker {
                     bh += dy;
                 }
                 if (arrows.includes(PointArrow.left)) {
-
                     ma.translate(dx, 0);
                     bw -= dx;
                 }
@@ -122,24 +129,63 @@ export class BlockPicker {
         var newBlock: Block;
         var isMounted: boolean = false;
         var gm = fra.globalWindowMatrix;
-
-        // await fra.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
-        //     var data = { url: '/line' } as Record<string, any>;
-        //     var ma = new Matrix();
-        //     ma.translate(ev.clientX - re.left, ev.clientY - re.top);
-        //     data.matrix = ma.getValues();
-        //     data.from = { x: event.clientX, y: event.clientY, blockId: block.id };
-        //     data.to = util.clone(data.from);
-        //     newBlock = await this.kit.page.createBlock(data.url, data, fra);
-        //     newBlock.mounted(() => {
-        //         isMounted = true;
-        //     })
-        // });
-        // MouseDragger({
-        //     event,
-        //     moveStart() { },
-        //     move() { },
-        //     moveEnd() { }
-        // });
+        var re = gm.inverseTransform(Point.from(event));
+        var self = this;
+        async function createConnectLine() {
+            await fra.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
+                var data = { url: '/line' } as Record<string, any>;
+                data.from = { x: arrows[1], y: arrows[0], blockId: block.id };
+                data.to = { x: re.x, y: re.y };
+                newBlock = await self.kit.page.createBlock(data.url, data, fra);
+                block.conectLine(newBlock);
+                newBlock.mounted(() => {
+                    isMounted = true;
+                })
+            });
+        }
+        MouseDragger({
+            event,
+            moveStart() {
+                createConnectLine();
+            },
+            move: (ev, data) => {
+                if (newBlock) {
+                    var tr = gm.inverseTransform(Point.from(ev));
+                    (newBlock as any).to = { x: tr.x, y: tr.y };
+                    if (isMounted) newBlock.forceUpdate();
+                }
+            },
+            moveEnd(ev, isMove, data) {
+                if (newBlock) {
+                    console.log(ev);
+                    var tr = gm.inverseTransform(Point.from(ev));
+                    (newBlock as any).to = { x: tr.x, y: tr.y };
+                    if (isMounted) newBlock.forceUpdate();
+                }
+            }
+        });
+    }
+    async onMovePortBlock(block: Line, arrows: PointArrow[], event: React.MouseEvent) {
+        event.stopPropagation();
+        var gm = block.globalWindowMatrix;
+        var oldData = { from: util.clone(block.from), to: util.clone(block.to) };
+        var self = this;
+        MouseDragger({
+            event,
+            moving(ev, data, isEnd) {
+                var point = gm.inverseTransform(Point.from(ev));
+                if (arrows.includes(PointArrow.from)) {
+                    block.from = { x: point.x, y: point.y };
+                }
+                else if (arrows.includes(PointArrow.to)) {
+                    block.to = { x: point.x, y: point.y };
+                }
+                block.forceUpdate();
+                self.view.forceUpdate();
+                if (isEnd) {
+                    block.onManualUpdateProps(oldData, { from: block.from, to: block.to })
+                }
+            }
+        });
     }
 }
