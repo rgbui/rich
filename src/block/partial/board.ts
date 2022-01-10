@@ -2,13 +2,12 @@
 import { Block } from "..";
 import { Point, PointArrow, Rect, RectUtility } from "../../common/vector/point";
 import { Polygon } from "../../common/vector/polygon";
-
 export enum BoardPointType {
     path,
     resizePort,
     connectPort,
+    movePort,
 }
-
 export class Block$Board {
     getBlockPicker(this: Block) {
         var pickers: { type: BoardPointType, arrows: PointArrow[], point?: Point, poly?: Polygon }[] = [];
@@ -24,7 +23,6 @@ export class Block$Board {
         var s = gm.getScaling().x;
         var extendRect = rect.extend(20 / s);
         var pathRects = RectUtility.getRectLineRects(rect, 1 / s);
-        
         pickers.push(...pathRects.map((pr, i) => {
             var arrows: PointArrow[] = [];
             if (i == 0) arrows = [PointArrow.top, PointArrow.center];
@@ -64,5 +62,17 @@ export class Block$Board {
             }))
         }
         return pickers;
+    }
+    conectLine(this: Block, line: Block) {
+        if (!Array.isArray(this._lines)) this._lines = [];
+        if (!this.refLines.includes(line.id)) {
+            this.refLines.push(line.id);
+            this._lines.push(line)
+        }
+    }
+    disconnectLine(this: Block, line: Block) {
+        if (!Array.isArray(this._lines)) this._lines = [];
+        this.refLines.remove(g => g == line.id);
+        this._lines.remove(g => g.id == line.id);
     }
 }
