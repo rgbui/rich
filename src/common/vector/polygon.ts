@@ -26,8 +26,8 @@ export class Polygon {
             else {
                 x = Math.min(x, po.x);
                 y = Math.min(y, po.y);
-                MaxX = Math.max(x, po.x);
-                MaxY = Math.max(y, po.y);
+                MaxX = Math.max(MaxX, po.x);
+                MaxY = Math.max(MaxY, po.y);
             }
         }
         return new Rect(new Point(x, y), new Point(MaxX, MaxY));
