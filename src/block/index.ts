@@ -22,7 +22,6 @@ import { CSSProperties } from "react";
 import { PageLayoutType } from "../layout/declare";
 import { Matrix } from "../common/matrix";
 import { Block$Board } from "./partial/board";
-
 export abstract class Block extends Events {
     constructor(page: Page) {
         super();
@@ -517,6 +516,14 @@ export abstract class Block extends Events {
      */
     @prop()
     isScale: boolean = false;
+    @prop()
+    refLines: string[] = [];
+    _lines:  Block[];
+    get lines() {
+        if (Array.isArray(this._lines)) return this._lines;
+        this._lines = this.page.findAll(x => this.refLines.includes(x.id)) as  Block[];
+        return this._lines;
+    }
 }
 export interface Block extends Block$Seek { }
 export interface Block extends Block$Event { }
