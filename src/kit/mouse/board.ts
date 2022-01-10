@@ -117,10 +117,7 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
             var isMounted: boolean = false;
             await fra.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
                 var data = toolBoard.currentSelector.data || {};
-                var ma = new Matrix();
-                ma.translate(re.x, re.y);
-                data.matrix = ma.getValues();
-                data.from = { x: 0, y: 0 };
+                data.from = { x: re.x, y: re.y };
                 data.to = util.clone(data.from);
                 newBlock = await kit.page.createBlock(toolBoard.currentSelector.url, data, fra);
                 toolBoard.clearSelector();
@@ -130,16 +127,10 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
             });
             MouseDragger({
                 event,
-                move: (ev, data) => {
+                move(ev, data) {
                     if (newBlock) {
-                        var ma = new Matrix();
                         var tr = gm.inverseTransform(Point.from(ev));
-                        var ox = Math.min(re.x, tr.x);
-                        var oy = Math.min(re.y, tr.y);
-                        ma.translate(ox, oy);
-                        newBlock.matrix = ma;
-                        (newBlock as any).from = { x: re.x - ox, y: re.y - oy };
-                        (newBlock as any).to = { x: tr.x - ox, y: tr.y - oy };
+                        (newBlock as any).to = { x: tr.x, y: tr.y };
                         if (isMounted) newBlock.forceUpdate();
                     }
                 },
@@ -147,14 +138,7 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
                     if (newBlock) {
                         var ma = new Matrix();
                         var tr = gm.inverseTransform(Point.from(ev));
-                        var ox = Math.min(re.x, tr.x);
-                        var oy = Math.min(re.y, tr.y);
-                        ma.translate(ox, oy);
-                        newBlock.matrix = ma;
-                        (newBlock as any).from = { x: re.x - ox, y: re.y - oy };
-                        (newBlock as any).to = { x: tr.x - ox, y: tr.y - oy };
-                        newBlock.fixedWidth = Math.abs(tr.x - re.x);
-                        newBlock.fixedHeight = Math.abs(tr.y - re.y);
+                        (newBlock as any).to = { x: tr.x, y: tr.y };
                         if (isMounted) newBlock.forceUpdate();
                     }
                 }
