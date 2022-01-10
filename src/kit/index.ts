@@ -9,6 +9,8 @@ import { KitView } from "./view";
 import "./style.less";
 import { PageMouse } from "./mouse";
 import { BlockPicker } from "./picker";
+import { BoardLine } from "./connect/line";
+import { BoardBlockHover } from "./connect/block.hover";
 
 export class Kit extends Events {
     page: Page;
@@ -23,7 +25,8 @@ export class Kit extends Events {
         this.textInput = new TextInput(this);
         this.mouse = new PageMouse(this);
         this.handle = new Handle(this);
-        this.picker=new BlockPicker(this);
+        this.picker = new BlockPicker(this);
+        this.boardLine = new BoardLine(this);
     }
     mouse: PageMouse;
     textInput: TextInput;
@@ -31,5 +34,7 @@ export class Kit extends Events {
     explorer: SelectionExplorer;
     handle: Handle;
     view: KitView;
-    picker:BlockPicker;
+    picker: BlockPicker;
+    boardLine: BoardLine;
+    boardBlockHover: BoardBlockHover;
 }

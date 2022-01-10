@@ -1,8 +1,8 @@
 import React from "react";
 import { Kit } from ".";
+import { BoardBlockHover } from "./connect/block.hover";
 import { HandleView } from "./handle/view";
 import { TextInputView } from "./input/view";
-import { BlockPickerView } from "./picker/view";
 import { BoardScale } from "./scale";
 import { SelectorView } from "./selector/view";
 
@@ -21,6 +21,7 @@ export class KitView extends React.Component<{ kit: Kit }>{
             <TextInputView textInput={this.kit.textInput}></TextInputView>
             <HandleView handle={this.kit.handle}></HandleView>
             {this.kit.page.isBoard && <BoardScale kit={this.props.kit}></BoardScale>}
+            <BoardBlockHover ref={e => this.kit.boardBlockHover = e} kit={this.kit}></BoardBlockHover>
         </div>
     }
 }

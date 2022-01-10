@@ -127,8 +127,13 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
             });
             MouseDragger({
                 event,
+                moveStart() {
+                    kit.boardLine.onStartConnectOther();
+                    if (newBlock) kit.boardLine.line = newBlock;
+                },
                 move(ev, data) {
                     if (newBlock) {
+                        kit.boardLine.line = newBlock;
                         var tr = gm.inverseTransform(Point.from(ev));
                         (newBlock as any).to = { x: tr.x, y: tr.y };
                         if (isMounted) newBlock.forceUpdate();
@@ -141,6 +146,7 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
                         (newBlock as any).to = { x: tr.x, y: tr.y };
                         if (isMounted) newBlock.forceUpdate();
                     }
+                    kit.boardLine.onEndConnectOther()
                 }
             })
         }
