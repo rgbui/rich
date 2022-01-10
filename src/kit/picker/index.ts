@@ -1,7 +1,6 @@
 
 import { Kit } from "..";
 import { Line } from "../../../blocks/board/line/line";
-import { blockStore } from "../../../extensions/block/store";
 import { util } from "../../../util/util";
 import { Block } from "../../block";
 import { MouseDragger } from "../../common/dragger";
@@ -32,7 +31,8 @@ export class BlockPicker {
     }
     onCancel() {
         this.visible = false;
-        this.view.forceUpdate();
+        if (this.view)
+            this.view.forceUpdate();
     }
     onMove(from: Point, to: Point) {
         this.blocks.forEach((bl) => {

@@ -86,22 +86,26 @@ export class Page extends Events<PageDirective> {
         this.root = el;
         if (options?.width) this.pageVisibleWidth = options?.width;
         if (options?.height) this.pageVisibleHeight = options?.height;
-        console.log(options);
         ReactDOM.render(<PageView page={this}></PageView>, this.root);
     }
     fragment: DocumentFragment;
     isOff: boolean = false;
     cacheFragment() {
-        this.kit.picker.onCancel();
-        getBoardTool().then(r => {
-            r.close()
-        })
-        if (!this.fragment) this.fragment = document.createDocumentFragment();
-        this.fragment.appendChild(this.root);
-        this.isOff = true;
+        try {
+            if (!this.fragment) this.fragment = document.createDocumentFragment();
+            this.fragment.appendChild(this.root);
+            this.isOff = true;
+            this.kit.picker.onCancel();
+            getBoardTool().then(r => {
+                r.close()
+            })
+        }
+        catch (ex) {
+            console.error(ex);
+        }
     }
     renderFragment(panel: HTMLElement) {
-        if (this.fragment) {
+        try {
             panel.appendChild(this.root);
             this.isOff = true;
             if (this.pageLayout.type == PageLayoutType.board) {
@@ -109,6 +113,9 @@ export class Page extends Events<PageDirective> {
                     r.open(Point.from(this.view.el.getBoundingClientRect()));
                 })
             }
+        }
+        catch (ex) {
+            console.error(ex);
         }
     }
     getPageFrame() {
