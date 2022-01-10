@@ -30,35 +30,52 @@ export class HandleView extends React.Component<{ handle: Handle }>{
                     if (!self.handle.dragBlocks.some(s => s == c)) self.handle.dragBlocks.push(c)
                 });
             }
-            else self.handle.dragBlocks = [self.handle.handleBlock]
-            MouseDragger<{ item: HTMLElement }>({
-                event,
-                dis: 5,
-                moveStart(ev, data) {
-                    onAutoScrollStop();
-                    self.handle.isDrag = true;
-                    ghostView.load(self.handle.dragBlocks.map(b => b.contentEl), { point: Point.from(ev) })
-                },
-                moving(ev, data, isend) {
-                    ghostView.move(Point.from(ev));
-                    onAutoScroll({ el: self.handle.kit.page.root, feelDis: 100, dis: 100, point: Point.from(ev) })
-                },
-                async moveEnd(ev, isMove, data) {
-                    onAutoScrollStop();
-                    try {
-                        if (self.handle.isDrag == true) await self.handle.onDropBlock()
+            else self.handle.dragBlocks = [self.handle.handleBlock];
+            if (self.handle.dragBlocks.some(s => s.isFreeBlock)) {
+                self.handle.kit.picker.onPicker(self.handle.dragBlocks);
+                MouseDragger<{ item: HTMLElement }>({
+                    event,
+                    dis: 5,
+                    move(ev, data) {
+                        self.handle.kit.picker.onMove(Point.from(event), Point.from(ev))
+                    },
+                    async moveEnd(ev, isMove, data) {
+                        self.handle.isDown = false;
+                        if (isMove) self.handle.kit.picker.onMoveEnd(Point.from(event), Point.from(ev))
                         else await self.handle.onClickBlock(ev);
                     }
-                    catch (ex) {
-                        self.handle.kit.emit('error', ex);
-                    }
-                    finally {
+                })
+            }
+            else {
+                MouseDragger<{ item: HTMLElement }>({
+                    event,
+                    dis: 5,
+                    moveStart(ev, data) {
+                        onAutoScrollStop();
+                        self.handle.isDrag = true;
+                        ghostView.load(self.handle.dragBlocks.map(b => b.contentEl), { point: Point.from(ev) })
+                    },
+                    moving(ev, data, isend) {
+                        ghostView.move(Point.from(ev));
+                        onAutoScroll({ el: self.handle.kit.page.root, feelDis: 100, dis: 100, point: Point.from(ev) })
+                    },
+                    async moveEnd(ev, isMove, data) {
+                        onAutoScrollStop();
+                        try {
+                            if (self.handle.isDrag == true) await self.handle.onDropBlock()
+                            else await self.handle.onClickBlock(ev);
+                        }
+                        catch (ex) {
+                            self.handle.kit.emit('error', ex);
+                        }
+                        finally {
 
-                        self.handle.onDropEnd();
-                        ghostView.unload();
+                            self.handle.onDropEnd();
+                            ghostView.unload();
+                        }
                     }
-                }
-            })
+                })
+            }
         }
     }
     handleEle: HTMLElement;
