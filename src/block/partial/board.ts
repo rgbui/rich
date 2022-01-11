@@ -1,7 +1,9 @@
 
 import { Block } from "..";
+import { Matrix } from "../../common/matrix";
 import { Point, PointArrow, Rect, RectUtility } from "../../common/vector/point";
 import { Polygon } from "../../common/vector/polygon";
+import { ActionDirective } from "../../history/declare";
 export enum BoardPointType {
     path,
     pathConnectPort,
@@ -88,6 +90,68 @@ export class Block$Board {
         }
         return pickers;
     }
+    onResizeBoardSelector(this: Block,
+        arrows: PointArrow[],
+        event: React.MouseEvent) {
+        var block = this;
+        var matrix = block.matrix.clone();
+        var gm = block.globalWindowMatrix.clone();
+        var { width: w, height: h } = block.fixedSize;
+        var fp = gm.inverseTransform(Point.from(event));
+        var s = gm.getScaling().x;
+        var minW = 50 / s;
+        var minH = 20 / s;
+        MouseDragger({
+            event,
+            moving(ev, data, isEnd) {
+                var tp = gm.inverseTransform(Point.from(ev));
+                var ma = new Matrix();
+                var [dx, dy] = tp.diff(fp);
+                var bw = w;
+                var bh = h;
+                if (arrows.includes(PointArrow.top)) {
+                    if (bh - dy < minH) dy = bh - minH;
+                }
+                else if (arrows.includes(PointArrow.bottom)) {
+                    if (bh + dy < minH) dy = minH - bh;
+                }
+                if (arrows.includes(PointArrow.left)) {
+                    if (bw - dx < minW) dx = bw - minW;
+                }
+                else if (arrows.includes(PointArrow.right)) {
+                    if (bw + dx < minW) dx = minW - bw;
+                }
+                if (arrows.includes(PointArrow.top)) {
+                    ma.translate(0, dy);
+                    bh -= dy;
+                }
+                else if (arrows.includes(PointArrow.bottom)) {
+                    bh += dy;
+                }
+                if (arrows.includes(PointArrow.left)) {
+                    ma.translate(dx, 0);
+                    bw -= dx;
+                }
+                else if (arrows.includes(PointArrow.right)) {
+                    bw += dx;
+                }
+                block.matrix = matrix.appended(ma);
+                block.fixedHeight = bh;
+                block.fixedWidth = bw;
+                block.forceUpdate();
+                block.page.kit.picker.view.forceUpdate();
+                if (isEnd) {
+                    block.onAction(ActionDirective.onResizeBlock, async () => {
+                        if (!matrix.equals(block.matrix)) block.updateMatrix(matrix, block.matrix);
+                        block.manualUpdateProps(
+                            { fixedWidth: w, fixedHeight: h },
+                            { fixedWidth: block.fixedWidth, fixedHeight: block.fixedHeight }
+                        )
+                    })
+                }
+            }
+        });
+    }
     conectLine(this: Block, line: Block) {
         if (!Array.isArray(this._lines)) this._lines = [];
         if (!this.refLines.includes(line.id)) {
@@ -100,4 +164,8 @@ export class Block$Board {
         this.refLines.remove(g => g == line.id);
         this._lines.remove(g => g.id == line.id);
     }
+}
+
+function MouseDragger(arg0: { event: import("react").MouseEvent<Element, MouseEvent>; moving(ev: any, data: any, isEnd: any): void; }) {
+    throw new Error("Function not implemented.");
 }
