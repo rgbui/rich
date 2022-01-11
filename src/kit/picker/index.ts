@@ -140,7 +140,9 @@ export class BlockPicker {
                 block.conectLine(newBlock);
                 newBlock.mounted(() => {
                     isMounted = true;
-                })
+                });
+                self.kit.boardLine.onStartConnectOther();
+                if (newBlock) self.kit.boardLine.line = newBlock;
             });
         }
         MouseDragger({
@@ -148,7 +150,7 @@ export class BlockPicker {
             moveStart() {
                 createConnectLine();
             },
-            move: (ev, data) => {
+            move(ev, data) {
                 if (newBlock) {
                     var tr = gm.inverseTransform(Point.from(ev));
                     (newBlock as any).to = { x: tr.x, y: tr.y };
@@ -157,11 +159,21 @@ export class BlockPicker {
             },
             moveEnd(ev, isMove, data) {
                 if (newBlock) {
-                    console.log(ev);
-                    var tr = gm.inverseTransform(Point.from(ev));
-                    (newBlock as any).to = { x: tr.x, y: tr.y };
+                    if (self.kit.boardLine.over) {
+                        (newBlock as any).to = {
+                            blockId: self.kit.boardLine.over.block.id,
+                            x: self.kit.boardLine.over.selector.arrows[1],
+                            y: self.kit.boardLine.over.selector.arrows[0]
+                        };
+                        self.kit.boardLine.over.block.conectLine(newBlock);
+                    }
+                    else {
+                        var tr = gm.inverseTransform(Point.from(ev));
+                        (newBlock as any).to = { x: tr.x, y: tr.y };
+                    }
                     if (isMounted) newBlock.forceUpdate();
                 }
+                self.kit.boardLine.onEndConnectOther()
             }
         });
     }

@@ -2,6 +2,7 @@
 import { Kit } from "..";
 import { getBoardTool } from "../../../extensions/board.tool";
 import { util } from "../../../util/util";
+import { faKissBeam } from "../../assert/font-awesome/js-packages/@fortawesome/free-regular-svg-icons/faKissBeam";
 import { Block } from "../../block";
 import { BlockUrlConstant } from "../../block/constant";
 import { MouseDragger } from "../../common/dragger";
@@ -62,8 +63,7 @@ export async function SelectorBoardBlock(kit: Kit, block: Block | undefined, eve
         MouseDragger({
             event,
             moveStart() {
-                if (isShift)
-                    kit.selector.setStart(Point.from(event));
+                if (isShift) kit.selector.setStart(Point.from(event));
             },
             move(ev, data) {
                 if (isShift) {
@@ -141,9 +141,18 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
                 },
                 moveEnd(ev, isMove, data) {
                     if (newBlock) {
-                        var ma = new Matrix();
-                        var tr = gm.inverseTransform(Point.from(ev));
-                        (newBlock as any).to = { x: tr.x, y: tr.y };
+                        if (kit.boardLine.over) {
+                            (newBlock as any).to = {
+                                blockId: kit.boardLine.over.block.id,
+                                x: kit.boardLine.over.selector.arrows[1],
+                                y: kit.boardLine.over.selector.arrows[0]
+                            };
+                            kit.boardLine.over.block.conectLine(newBlock);
+                        }
+                        else {
+                            var tr = gm.inverseTransform(Point.from(ev));
+                            (newBlock as any).to = { x: tr.x, y: tr.y };
+                        }
                         if (isMounted) newBlock.forceUpdate();
                     }
                     kit.boardLine.onEndConnectOther()

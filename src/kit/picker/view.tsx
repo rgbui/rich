@@ -15,7 +15,7 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
     renderBlockRange(block: Block) {
         var r = 5;
         var connectR = 3;
-        var pickers = block.getBlockPicker();
+        var pickers = block.getBlockBoardSelector([BoardPointType.path, BoardPointType.movePort, BoardPointType.connectPort, BoardPointType.resizePort]);
         return <g key={block.id}>
             {pickers.map((pi, i) => {
                 switch (pi.type) {
