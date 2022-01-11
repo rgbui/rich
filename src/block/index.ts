@@ -511,6 +511,12 @@ export abstract class Block extends Events {
     fixedWidth: number = 100;
     @prop()
     fixedHeight: number = 100;
+    get fixedSize() {
+        return {
+            width: this.fixedWidth,
+            height: this.fixedHeight
+        }
+    }
     /**
      * 是否同比例缩放
      */
@@ -518,10 +524,10 @@ export abstract class Block extends Events {
     isScale: boolean = false;
     @prop()
     refLines: string[] = [];
-    _lines:  Block[];
+    _lines: Block[];
     get lines() {
         if (Array.isArray(this._lines)) return this._lines;
-        this._lines = this.page.findAll(x => this.refLines.includes(x.id)) as  Block[];
+        this._lines = this.page.findAll(x => this.refLines.includes(x.id)) as Block[];
         return this._lines;
     }
 }

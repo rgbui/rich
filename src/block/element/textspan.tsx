@@ -28,9 +28,16 @@ export class TextSpan extends Block {
     get visibleStyle(): React.CSSProperties {
         var style = super.visibleStyle;
         if (this.isFreeBlock) {
-            style.minWidth = 80
+            style.minWidth = this.fixedWidth || 80
         }
         return style;
+    }
+    get fixedSize(): { width: number; height: number; } {
+        var r = this.el.getBoundingClientRect();
+        return {
+            width: r.width,
+            height: r.height
+        }
     }
 }
 @view("/textspan")
