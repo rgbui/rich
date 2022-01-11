@@ -89,7 +89,7 @@ class BoardTool extends EventsComponent {
                         }
                         noteSelector.close();
                     });
-                    noteSelector.open(this.point.move(150, 0));
+                    noteSelector.open(this.point.move(40 + 10 + 20, 0));
                     break;
                 case BoardToolOperator.connect:
                     sel.url = '/line';
@@ -102,8 +102,10 @@ class BoardTool extends EventsComponent {
         }
         this.emit('selector', this.currentSelector);
     }
-    clearSelector() {
+    async clearSelector() {
         delete this.currentSelector;
+        var noteSelector = await getNoteSelector();
+        noteSelector.close();
     }
     private point: Point;
     visible: boolean = false;
