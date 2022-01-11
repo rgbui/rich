@@ -71,14 +71,14 @@ class BoardTool extends EventsComponent {
                     break;
                 case BoardToolOperator.shape:
                     sel.url = '/shape';
-                    var shapeSelecctor = await getShapeSelector();
-                    shapeSelecctor.only('selector', (data) => {
+                    var shapeSelector = await getShapeSelector();
+                    shapeSelector.only('selector', (data) => {
                         if (this.currentSelector && this.currentSelector.url == '/shape') {
                             this.currentSelector.data = { svgContent: data.shape };
                         }
-                        shapeSelecctor.close();
+                        shapeSelector.close();
                     });
-                    shapeSelecctor.open(this.point.move(150, 0));
+                    shapeSelector.open(this.point.move(40 + 10 + 20, 0));
                     break;
                 case BoardToolOperator.note:
                     sel.url = '/note';
