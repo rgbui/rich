@@ -1,5 +1,7 @@
+import React from "react";
 import { Kit } from "..";
 import { Block } from "../../block";
+import { BoardBlockSelector } from "../../block/partial/board";
 
 export class BoardLine {
     constructor(public kit: Kit) { }
@@ -12,4 +14,5 @@ export class BoardLine {
         this.isConnectOther = false;
         delete this.line;
     }
+    over: { block: Block, selector: BoardBlockSelector,event:React.MouseEvent } = null;
 }
