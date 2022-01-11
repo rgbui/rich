@@ -2,6 +2,7 @@ import React, { ReactNode } from "react";
 import { Block } from "../../../src/block";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
+import { TextSpanArea } from "../../../src/block/view/appear";
 import "./style.less";
 @url('/shape')
 export class Shape extends Block {
@@ -21,7 +22,11 @@ export class ShapeView extends BlockView<Shape>{
         return <div className="sy-block-shape" style={this.block.visibleStyle}>
             <div
                 style={{ width: this.block.fixedWidth, height: this.block.fixedHeight }}
-                dangerouslySetInnerHTML={{ __html: this.block.svgContent }}></div>
+                dangerouslySetInnerHTML={{ __html: this.block.svgContent }}>
+            </div>
+            <div className="sy-block-shape-content">
+                <TextSpanArea block={this.block}></TextSpanArea>
+            </div>
         </div>
     }
 }
