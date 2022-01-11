@@ -134,11 +134,13 @@ export class Page$Cycle {
     private willLayoutBlocks: Block[];
     private updatedFns: (() => Promise<void>)[] = [];
     addBlockUpdate(block: Block) {
-        var pa = this.willUpdateBlocks.find(g => g.contains(block));
-        if (!pa) this.willUpdateBlocks.push(block);
+        if (this.willUpdateBlocks) {
+            var pa = this.willUpdateBlocks.find(g => g.contains(block));
+            if (!pa) this.willUpdateBlocks.push(block);
+        }
     }
     addBlockClearLayout(block: Block) {
-        if (!this.willLayoutBlocks.exists(block))
+        if (this.willLayoutBlocks && !this.willLayoutBlocks.exists(block))
             this.willLayoutBlocks.push(block);
     }
     /**
