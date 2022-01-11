@@ -2,7 +2,6 @@
 import { Block } from "..";
 import { Point, PointArrow, Rect, RectUtility } from "../../common/vector/point";
 import { Polygon } from "../../common/vector/polygon";
-
 export enum BoardPointType {
     path,
     pathConnectPort,
@@ -10,7 +9,6 @@ export enum BoardPointType {
     connectPort,
     movePort,
 }
-
 export type BoardBlockSelector = {
     type: BoardPointType;
     arrows: PointArrow[];
@@ -24,8 +22,7 @@ export class Block$Board {
         BoardPointType.connectPort
     ]): BoardBlockSelector[] {
         var pickers: BoardBlockSelector[] = [];
-        var width = this.fixedWidth;
-        var height = this.fixedHeight;
+        var { width, height } = this.fixedSize;
         var rect = new Rect(0, 0, width, height);
         var gm = this.globalWindowMatrix;
         // var gs = gm.resolveMatrixs();

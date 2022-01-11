@@ -2,7 +2,6 @@
 import { Kit } from "..";
 import { getBoardTool } from "../../../extensions/board.tool";
 import { util } from "../../../util/util";
-import { faKissBeam } from "../../assert/font-awesome/js-packages/@fortawesome/free-regular-svg-icons/faKissBeam";
 import { Block } from "../../block";
 import { BlockUrlConstant } from "../../block/constant";
 import { MouseDragger } from "../../common/dragger";
