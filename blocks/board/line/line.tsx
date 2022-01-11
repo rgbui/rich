@@ -13,7 +13,11 @@ export type PortLocation = {
 }
 @url('/line')
 export class Line extends Block {
-    getBlockPicker() {
+    getBlockBoardSelector(types: BoardPointType[] = [
+        BoardPointType.path,
+        BoardPointType.resizePort,
+        BoardPointType.connectPort
+    ]) {
         var pickers: { type: BoardPointType, arrows: PointArrow[], point?: Point, poly?: Polygon }[] = [];
         var gm = this.globalWindowMatrix;
         pickers.push({
@@ -36,7 +40,7 @@ export class Line extends Block {
         var point = new Point();
         if (pl.blockId) {
             var block = this.page.find(g => g.id == pl.blockId);
-            var pickers = block.getBlockPicker();
+            var pickers = block.getBlockBoardSelector();
             var ps = typeof pl.x == 'string' && typeof pl.y == 'string' ? pickers.findAll(x => x.type == BoardPointType.connectPort) : pickers.findAll(x => x.type == BoardPointType.path);
             if (typeof pl.x == 'string' && typeof pl.y == 'string') {
                 var pi = ps.find(g => g.arrows.every(s => [pl.x, pl.y].includes(s)));
