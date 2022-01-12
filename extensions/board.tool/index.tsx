@@ -16,7 +16,6 @@ import { BoardToolOperator } from "./declare";
 import { BlockUrlConstant } from "../../src/block/constant";
 import { getNoteSelector } from "../note";
 import { getShapeSelector } from "../shapes";
-
 class BoardTool extends EventsComponent {
     render(): ReactNode {
         if (this.visible == false) return <></>;
@@ -96,6 +95,9 @@ class BoardTool extends EventsComponent {
                     break;
                 case BoardToolOperator.frame:
                     sel.url = BlockUrlConstant.Frame;
+                    break;
+                case BoardToolOperator.pen:
+                    sel.url = '/pen';
                     break;
             }
             this.currentSelector = sel as any;
