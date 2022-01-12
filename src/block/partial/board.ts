@@ -1,5 +1,6 @@
 
 import { Block } from "..";
+import { MouseDragger } from "../../common/dragger";
 import { Matrix } from "../../common/matrix";
 import { Point, PointArrow, Rect, RectUtility } from "../../common/vector/point";
 import { Polygon } from "../../common/vector/polygon";
@@ -166,6 +167,4 @@ export class Block$Board {
     }
 }
 
-function MouseDragger(arg0: { event: import("react").MouseEvent<Element, MouseEvent>; moving(ev: any, data: any, isEnd: any): void; }) {
-    throw new Error("Function not implemented.");
-}
+
