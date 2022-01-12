@@ -31,6 +31,16 @@ export enum BlockDirective {
     arrowRight,
     filter,
     hide,
-    fieldSettings
+    fieldSettings,
+    /**
+     * board contextmenu
+     */
+    lock,
+    unlock,
+    group,
+    ungroup,
+    bringToFront,
+    sendToBack
+
 }
 
