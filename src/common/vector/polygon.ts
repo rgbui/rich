@@ -2,8 +2,11 @@ import { Point, Rect } from "./point";
 
 export class Polygon {
     points: Point[] = [];
-    constructor(...points: Point[]) {
-        this.points = points;
+    constructor(...points: (Point|{x:number,y:number})[]) {
+        this.points = points.map(x => {
+            if (x instanceof Point) return x.clone()
+            else return new Point((x as any).x, (x as any).y);
+        })
     }
     pathString(isClosed: boolean = true) {
         return this.points.map((p, i) => {
@@ -31,5 +34,10 @@ export class Polygon {
             }
         }
         return new Rect(new Point(x, y), new Point(MaxX, MaxY));
+    }
+    relative(point: Point) {
+        return new Polygon(...this.points.map(p => {
+            return p.relative(point);
+        }));
     }
 }
