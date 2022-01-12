@@ -532,6 +532,9 @@ export abstract class Block extends Events {
     }
     @prop()
     locker: { lock: boolean, date: number, userid?: string } = { lock: false, date: Date.now() };
+    get isGroup() {
+        return this.url == BlockUrlConstant.Group;
+    }
 }
 export interface Block extends Block$Seek { }
 export interface Block extends Block$Event { }
