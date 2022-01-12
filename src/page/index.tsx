@@ -53,7 +53,7 @@ export class Page extends Events<PageDirective> {
         if (typeof this.date == 'undefined') this.date = new Date().getTime();
         this.init();
     }
-    get creater() {
+    get user() {
         return messageChannel.fire(Directive.getCurrentUser)
     }
     kit: Kit = new Kit(this);
