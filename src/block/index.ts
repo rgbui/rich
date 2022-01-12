@@ -530,6 +530,8 @@ export abstract class Block extends Events {
         this._lines = this.page.findAll(x => this.refLines.includes(x.id)) as Block[];
         return this._lines;
     }
+    @prop()
+    locker: { lock: boolean, date: number, userid?: string } = { lock: false, date: Date.now() };
 }
 export interface Block extends Block$Seek { }
 export interface Block extends Block$Event { }
