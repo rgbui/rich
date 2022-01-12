@@ -16,7 +16,6 @@ import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { AppearAnchor } from "../appear";
 import lodash from "lodash";
 import { BlockUrlConstant } from "../constant";
-import { MouseEvent } from "react";
 
 export class Block$Event {
     /**
@@ -41,7 +40,7 @@ export class Block$Event {
     }
     async onGetContextMenus(this: Block) {
         if (this.isFreeBlock) {
-            return this.onGetBoardContextMenus()
+            return await this.onGetBoardContextMenus()
         }
         var items: MenuItemType<BlockDirective>[] = [];
         items.push({
@@ -132,7 +131,7 @@ export class Block$Event {
     }
     async onClickContextMenu(this: Block, item: MenuItemType<BlockDirective>, event: MouseEvent) {
         if (this.isFreeBlock) {
-            return this.onClockBoardContextMenu(item, event);
+            return await this.onClockBoardContextMenu(item, event);
         }
         switch (item.name) {
             case BlockDirective.delete:
