@@ -7,6 +7,7 @@ import { BlockUrlConstant } from "../../block/constant";
 import { MouseDragger } from "../../common/dragger";
 import { Matrix } from "../../common/matrix";
 import { Point } from "../../common/vector/point";
+import { Polygon } from "../../common/vector/polygon";
 import { ActionDirective } from "../../history/declare";
 import { PageLayoutType } from "../../layout/declare";
 
@@ -201,7 +202,53 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
             })
         }
         else if (url == '/pen') {
-
+            var newBlock: Block;
+            var isMounted: boolean = false;
+            var points: { x: number, y: number }[] = [];
+            await fra.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
+                var data = toolBoard.currentSelector.data || {};
+                var ma = new Matrix();
+                ma.translate(re.x, re.y);
+                data.matrix = ma.getValues();
+                newBlock = await kit.page.createBlock(toolBoard.currentSelector.url, data, fra);
+                points.push(re);
+                // (newBlock as any).points.push({ x: re.x, y: re.y });
+                newBlock.fixedWidth = 0;
+                newBlock.fixedHeight = 0;
+                toolBoard.clearSelector();
+                newBlock.mounted(() => {
+                    isMounted = true;
+                })
+            });
+            MouseDragger({
+                event,
+                move(ev, data) {
+                    if (newBlock) {
+                        var tr = gm.inverseTransform(Point.from(ev));
+                        var ma = new Matrix();
+                        points.push(tr);
+                        var poly = new Polygon(...points);
+                        var bound = poly.bound;
+                        ma.translate(bound.x, bound.y);
+                        newBlock.matrix = ma;
+                        newBlock.fixedWidth = Math.abs(bound.width);
+                        newBlock.fixedHeight = Math.abs(bound.height);
+                        console.log((newBlock as any).points);
+                        if (isMounted) newBlock.forceUpdate();
+                    }
+                },
+                moveEnd(ev, isMove, data) {
+                    if (newBlock) {
+                        // var tr = gm.inverseTransform(Point.from(ev));
+                        // var ma = new Matrix();
+                        // ma.translate(Math.min(re.x, tr.x), Math.min(re.y, tr.y));
+                        // newBlock.matrix = ma;
+                        // newBlock.fixedWidth = Math.abs(tr.x - re.x) || 200;
+                        // newBlock.fixedHeight = Math.abs(tr.y - re.y) || 200;
+                        if (isMounted) newBlock.forceUpdate();
+                    }
+                }
+            })
         }
         return true;
     }
