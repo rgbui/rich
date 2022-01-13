@@ -1,4 +1,5 @@
 
+import { xor } from "lodash";
 import { Kit } from "..";
 import { getBoardTool } from "../../../extensions/board.tool";
 import { util } from "../../../util/util";
@@ -10,6 +11,7 @@ import { Point } from "../../common/vector/point";
 import { Polygon } from "../../common/vector/polygon";
 import { ActionDirective } from "../../history/declare";
 import { PageLayoutType } from "../../layout/declare";
+import { loadPaper } from "../../paper";
 
 export async function SelectorBoardBlock(kit: Kit, block: Block | undefined, event: MouseEvent) {
     var isBoardSelector = false;
@@ -94,6 +96,7 @@ export async function SelectorBoardBlock(kit: Kit, block: Block | undefined, eve
 
 export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event: MouseEvent) {
     var toolBoard = await getBoardTool();
+    var paper = await loadPaper();
     if (toolBoard.isSelector) {
         var fra: Block = block ? block.frameBlock : kit.page.getPageFrame();
         var gm = fra.globalWindowMatrix;
@@ -204,15 +207,13 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
         else if (url == '/pen') {
             var newBlock: Block;
             var isMounted: boolean = false;
+            var path: paper.Path;
             var points: { x: number, y: number }[] = [];
             await fra.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
                 var data = toolBoard.currentSelector.data || {};
-                var ma = new Matrix();
-                ma.translate(re.x, re.y);
-                data.matrix = ma.getValues();
                 newBlock = await kit.page.createBlock(toolBoard.currentSelector.url, data, fra);
                 points.push(re);
-                // (newBlock as any).points.push({ x: re.x, y: re.y });
+                path = new paper.Path({ segments: [{ x: re.x, y: re.y }] });
                 newBlock.fixedWidth = 0;
                 newBlock.fixedHeight = 0;
                 toolBoard.clearSelector();
@@ -225,6 +226,7 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
                 move(ev, data) {
                     if (newBlock) {
                         var tr = gm.inverseTransform(Point.from(ev));
+                        path.add([tr.x, tr.y]);
                         var ma = new Matrix();
                         points.push(tr);
                         var poly = new Polygon(...points);
@@ -233,18 +235,22 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
                         newBlock.matrix = ma;
                         newBlock.fixedWidth = Math.abs(bound.width);
                         newBlock.fixedHeight = Math.abs(bound.height);
-                        console.log((newBlock as any).points);
+                        (newBlock as any).pathString = poly.relative(bound.leftTop).pathString(false);
                         if (isMounted) newBlock.forceUpdate();
                     }
                 },
                 moveEnd(ev, isMove, data) {
                     if (newBlock) {
-                        // var tr = gm.inverseTransform(Point.from(ev));
-                        // var ma = new Matrix();
-                        // ma.translate(Math.min(re.x, tr.x), Math.min(re.y, tr.y));
-                        // newBlock.matrix = ma;
-                        // newBlock.fixedWidth = Math.abs(tr.x - re.x) || 200;
-                        // newBlock.fixedHeight = Math.abs(tr.y - re.y) || 200;
+                        path.simplify(100);
+                        var bound = path.bounds;
+                        path.translate(new paper.Point(0 - bound.left, 0 - bound.top))
+                        var ma = new Matrix();
+                        ma.translate(bound.left, bound.top);
+                        newBlock.matrix = ma;
+                        newBlock.fixedWidth = bound.width;
+                        newBlock.fixedHeight = bound.height;
+                        (newBlock as any).pathString = path.pathData;
+                        path.remove();
                         if (isMounted) newBlock.forceUpdate();
                     }
                 }
