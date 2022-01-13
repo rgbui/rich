@@ -11,6 +11,7 @@ export enum BoardPointType {
     resizePort,
     connectPort,
     movePort,
+    rotatePort,
 }
 export type BoardBlockSelector = {
     type: BoardPointType;
