@@ -175,6 +175,7 @@ export abstract class Block extends Events {
         var style: CSSProperties = {};
         if (this.isFreeBlock) {
             style.position = 'absolute';
+            style.zIndex=this.zindex;
             Object.assign(style, this.transformStyle);
         }
         else {
@@ -511,6 +512,8 @@ export abstract class Block extends Events {
     fixedWidth: number = 100;
     @prop()
     fixedHeight: number = 100;
+    @prop()
+    zindex: number = 1;
     get fixedSize() {
         return {
             width: this.fixedWidth,
