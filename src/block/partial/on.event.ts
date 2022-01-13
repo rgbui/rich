@@ -155,14 +155,19 @@ export class Block$Event {
     async onClockBoardContextMenu(this: Block, item: MenuItemType<BlockDirective>, event: MouseEvent) {
         switch (item.name) {
             case BlockDirective.lock:
+                this.onLock(true);
                 break;
             case BlockDirective.unlock:
+                this.onLock(false);
                 break;
             case BlockDirective.bringToFront:
+                this.onZIndex('top');
                 break;
             case BlockDirective.sendToBack:
+                this.onZIndex('bottom');
                 break;
             case BlockDirective.delete:
+                this.page.onBatchDelete([this]);
                 break;
         }
     }
@@ -234,6 +239,26 @@ export class Block$Event {
                 var prev = list.prev;
                 await prev.append(this, undefined, prev.childKey);
             }
+        })
+    }
+    async onLock(this: Block, locked: boolean) {
+        this.onAction(ActionDirective.onLock, async () => {
+            this.updateProps({
+                locker: {
+                    lock: locked, date: Date.now(),
+                    userid: this.page.user.id
+                }
+            });
+        })
+    }
+    async onZIndex(this: Block, layer: 'top' | 'bottom') {
+        this.onAction(ActionDirective.onZIndex, async () => {
+            var zindex = this.zindex;
+            if (layer == 'top') zindex = this.parent.childs.max(g => g.zindex);
+            else zindex = this.parent.childs.min(g => g.zindex);
+            this.updateProps({
+                zindex
+            });
         })
     }
 }
