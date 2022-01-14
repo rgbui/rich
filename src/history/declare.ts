@@ -28,6 +28,8 @@ export enum ActionDirective {
 
     onBoardToolCreateBlock = 130,
     onResizeBlock = 132,
+    onLock=133,
+    onZIndex=134,
 
     onSchemaCreateField = 200,
     onSchemaDeleteField = 201,
@@ -41,7 +43,8 @@ export enum ActionDirective {
     /**
      * 错误修正的
      */
-    onErrorRepairDidMounte = 300
+    onErrorRepairDidMounte = 300,
+
 }
 
 export enum OperatorDirective {

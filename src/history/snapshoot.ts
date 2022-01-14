@@ -28,7 +28,7 @@ export class HistorySnapshoot extends Events {
         this.disabledSync = false;
         this._pause = false;
         this.action = new UserAction();
-        this.action.user = util.clone(this.page.creater);
+        this.action.user = util.clone(this.page.user);
         this.action.directive = directive;
         this.action.startDate = new Date().getTime();
     }

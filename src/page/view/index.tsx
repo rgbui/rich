@@ -43,7 +43,7 @@ export class PageView extends Component<{ page: Page }>{
     async observeToolBoard() {
         if (this.page.pageLayout.type == PageLayoutType.board) {
             var toolBoard = await getBoardTool();
-            toolBoard.open(Point.from(this.el.getBoundingClientRect()));
+            toolBoard.open(Point.from(this.el.getBoundingClientRect()).move(10,10));
         }
         else {
             var toolBoard = await getBoardTool();

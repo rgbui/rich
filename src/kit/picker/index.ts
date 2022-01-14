@@ -59,69 +59,9 @@ export class BlockPicker {
         });
         this.view.forceUpdate();
     }
-    onResizeBlock(block: Block,
-        arrows: PointArrow[],
-        event: React.MouseEvent) {
+    onResizeBlock(block: Block, arrows: PointArrow[], event: React.MouseEvent) {
         event.stopPropagation();
-        var matrix = block.matrix.clone();
-        var gm = block.globalWindowMatrix.clone();
-        var w = block.fixedWidth;
-        var h = block.fixedHeight;
-        var self = this;
-        var fp = gm.inverseTransform(Point.from(event));
-        var s = gm.getScaling().x;
-        var minW = 50 / s;
-        var minH = 50 / s;
-        MouseDragger({
-            event,
-            moving(ev, data, isEnd) {
-                var tp = gm.inverseTransform(Point.from(ev));
-                var ma = new Matrix();
-                var [dx, dy] = tp.diff(fp);
-                var bw = w;
-                var bh = h;
-                if (arrows.includes(PointArrow.top)) {
-                    if (bh - dy < minH) dy = bh - minH;
-                }
-                else if (arrows.includes(PointArrow.bottom)) {
-                    if (bh + dy < minH) dy = minH - bh;
-                }
-                if (arrows.includes(PointArrow.left)) {
-                    if (bw - dx < minW) dx = bw - minW;
-                }
-                else if (arrows.includes(PointArrow.right)) {
-                    if (bw + dx < minW) dx = minW - bw;
-                }
-                if (arrows.includes(PointArrow.top)) {
-                    ma.translate(0, dy);
-                    bh -= dy;
-                }
-                else if (arrows.includes(PointArrow.bottom)) {
-                    bh += dy;
-                }
-                if (arrows.includes(PointArrow.left)) {
-                    ma.translate(dx, 0);
-                    bw -= dx;
-                }
-                else if (arrows.includes(PointArrow.right)) {
-                    bw += dx;
-                }
-                block.matrix = matrix.appended(ma);
-                block.fixedHeight = bh;
-                block.fixedWidth = bw;
-                block.forceUpdate();
-                self.view.forceUpdate();
-                if (isEnd) {
-                    block.onAction(ActionDirective.onResizeBlock, async () => {
-                        if (!matrix.equals(block.matrix)) block.updateMatrix(matrix, block.matrix);
-                        block.manualUpdateProps(
-                            { fixedWidth: w, fixedHeight: h },
-                            { fixedWidth: block.fixedWidth, fixedHeight: block.fixedHeight }
-                        )
-                    })
-                }
-            }
-        });
+        block.onResizeBoardSelector(arrows, event);
     }
     async onCreateBlockConnect(block: Block, arrows: PointArrow[], event: React.MouseEvent) {
         event.stopPropagation();
@@ -140,7 +80,9 @@ export class BlockPicker {
                 block.conectLine(newBlock);
                 newBlock.mounted(() => {
                     isMounted = true;
-                })
+                });
+                self.kit.boardLine.onStartConnectOther();
+                if (newBlock) self.kit.boardLine.line = newBlock;
             });
         }
         MouseDragger({
@@ -148,7 +90,7 @@ export class BlockPicker {
             moveStart() {
                 createConnectLine();
             },
-            move: (ev, data) => {
+            move(ev, data) {
                 if (newBlock) {
                     var tr = gm.inverseTransform(Point.from(ev));
                     (newBlock as any).to = { x: tr.x, y: tr.y };
@@ -157,11 +99,21 @@ export class BlockPicker {
             },
             moveEnd(ev, isMove, data) {
                 if (newBlock) {
-                    console.log(ev);
-                    var tr = gm.inverseTransform(Point.from(ev));
-                    (newBlock as any).to = { x: tr.x, y: tr.y };
+                    if (self.kit.boardLine.over) {
+                        (newBlock as any).to = {
+                            blockId: self.kit.boardLine.over.block.id,
+                            x: self.kit.boardLine.over.selector.arrows[1],
+                            y: self.kit.boardLine.over.selector.arrows[0]
+                        };
+                        self.kit.boardLine.over.block.conectLine(newBlock);
+                    }
+                    else {
+                        var tr = gm.inverseTransform(Point.from(ev));
+                        (newBlock as any).to = { x: tr.x, y: tr.y };
+                    }
                     if (isMounted) newBlock.forceUpdate();
                 }
+                self.kit.boardLine.onEndConnectOther()
             }
         });
     }

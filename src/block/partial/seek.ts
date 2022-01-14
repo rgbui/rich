@@ -315,4 +315,12 @@ export class Block$Seek {
         }
         return blocks;
     }
+    /**
+     * 查找与当前块有相交的块
+     * 包括视频上的包含、相交
+     * @param this 
+     */
+    findAllIntersects(this: Block) {
+
+    }
 }

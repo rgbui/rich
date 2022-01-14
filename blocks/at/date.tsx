@@ -5,7 +5,6 @@ import { SolidArea } from "../../src/block/view/appear";
 import { BlockAppear } from "../../src/block/appear";
 import { BlockDisplay } from "../../src/block/enum";
 import { url, prop, view } from "../../src/block/factory/observable";
-
 import { BlockView } from "../../src/block/view";
 
 @url('/date')

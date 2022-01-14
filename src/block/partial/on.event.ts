@@ -14,8 +14,9 @@ import { langProvider } from "../../../i18n/provider";
 import { LangID } from "../../../i18n/declare";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { AppearAnchor } from "../appear";
-import lodash from "lodash"
+import lodash from "lodash";
 import { BlockUrlConstant } from "../constant";
+
 export class Block$Event {
     /**
      * 需要继承指定可以切换的块
@@ -38,6 +39,9 @@ export class Block$Event {
         })
     }
     async onGetContextMenus(this: Block) {
+        if (this.isFreeBlock) {
+            return await this.onGetBoardContextMenus()
+        }
         var items: MenuItemType<BlockDirective>[] = [];
         items.push({
             name: BlockDirective.delete,
@@ -97,7 +101,38 @@ export class Block$Event {
         });
         return items;
     }
+    async onGetBoardContextMenus(this: Block) {
+        var items: MenuItemType<BlockDirective>[] = [];
+        items.push({
+            name: BlockDirective.delete,
+            icon: trash,
+            text: langProvider.getText(LangID.menuDelete),
+            label: "delete"
+        });
+        items.push({
+            type: MenuItemTypeValue.divide
+        });
+        items.push({
+            name: BlockDirective.bringToFront,
+            icon: trash,
+            text: '最前面'
+        });
+        items.push({
+            name: BlockDirective.sendToBack,
+            icon: trash,
+            text: '最下层'
+        });
+        items.push({
+            name: this.locker?.lock == false ? BlockDirective.lock : BlockDirective.unlock,
+            icon: trash,
+            text: this.locker?.lock == false ? '解锁' : '锁住',
+        });
+        return items;
+    }
     async onClickContextMenu(this: Block, item: MenuItemType<BlockDirective>, event: MouseEvent) {
+        if (this.isFreeBlock) {
+            return await this.onClockBoardContextMenu(item, event);
+        }
         switch (item.name) {
             case BlockDirective.delete:
                 this.page.onBatchDelete([this]);
@@ -114,6 +149,25 @@ export class Block$Event {
                 this.page.onBatchTurn([this], (item as any).url);
                 break;
             case BlockDirective.trunIntoPage:
+                break;
+        }
+    }
+    async onClockBoardContextMenu(this: Block, item: MenuItemType<BlockDirective>, event: MouseEvent) {
+        switch (item.name) {
+            case BlockDirective.lock:
+                this.onLock(true);
+                break;
+            case BlockDirective.unlock:
+                this.onLock(false);
+                break;
+            case BlockDirective.bringToFront:
+                this.onZIndex('top');
+                break;
+            case BlockDirective.sendToBack:
+                this.onZIndex('bottom');
+                break;
+            case BlockDirective.delete:
+                this.page.onBatchDelete([this]);
                 break;
         }
     }
@@ -185,6 +239,26 @@ export class Block$Event {
                 var prev = list.prev;
                 await prev.append(this, undefined, prev.childKey);
             }
+        })
+    }
+    async onLock(this: Block, locked: boolean) {
+        this.onAction(ActionDirective.onLock, async () => {
+            this.updateProps({
+                locker: {
+                    lock: locked, date: Date.now(),
+                    userid: this.page.user.id
+                }
+            });
+        })
+    }
+    async onZIndex(this: Block, layer: 'top' | 'bottom') {
+        this.onAction(ActionDirective.onZIndex, async () => {
+            var zindex = this.zindex;
+            if (layer == 'top') zindex = this.parent.childs.max(g => g.zindex);
+            else zindex = this.parent.childs.min(g => g.zindex);
+            this.updateProps({
+                zindex
+            });
         })
     }
 }

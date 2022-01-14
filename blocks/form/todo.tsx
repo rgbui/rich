@@ -6,13 +6,13 @@ import { TextArea, TextLineChilds } from "../../src/block/view/appear";
 import { BlockCssName, FontCss } from "../../src/block/pattern/css";
 import { CssSelectorType } from "../../src/block/pattern/type";
 import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
-import { TextSpan } from "../../src/block/element/textspan";
 import { langProvider } from "../../i18n/provider";
 import { LangID } from "../../i18n/declare";
 import { TextTurns } from "../../src/block/turn/text";
 import "./style.less";
+import { Block } from "../../src/block";
 @url('/todo')
-export class ToDo extends TextSpan {
+export class ToDo extends Block {
     init() {
         this.pattern.declare<FontCss>('checked', CssSelectorType.pseudo, {
             cssName: BlockCssName.font,

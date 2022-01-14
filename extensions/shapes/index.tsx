@@ -1,4 +1,4 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import { ReactNode } from "react";
 import { EventsComponent } from "../../component/lib/events.component";
 import { Singleton } from "../../component/lib/Singleton";
@@ -13,10 +13,17 @@ class ShapeSelector extends EventsComponent {
         this.forceUpdate();
     }
     render(): ReactNode {
-        return <div className="shy-shapes-selector">
-            {ShapesList.map((s, index) => {
-                return <a onMouseDown={e => { this.onMousedown(s, e) }} key={index} dangerouslySetInnerHTML={{ __html: s.shape }}></a>
-            })}
+        if (this.visible != true) return <></>;
+        var style: CSSProperties = {
+            top: this.point?.y,
+            left: this.point?.x
+        };
+        return <div style={style} className="shy-shapes-selector">
+            <div className="shy-shapes-selector-list">
+                {ShapesList.map((s, index) => {
+                    return <span className="shy-shapes-selector-shape" onMouseDown={e => { this.onMousedown(s, e) }} key={index} dangerouslySetInnerHTML={{ __html: s.shape }}></span>
+                })}
+            </div>
         </div>
     }
     private point: Point;
@@ -27,7 +34,7 @@ class ShapeSelector extends EventsComponent {
         this.forceUpdate()
     }
     close(): void {
-        this.visible=false;
+        this.visible = false;
         this.forceUpdate();
     }
 }

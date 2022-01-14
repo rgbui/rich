@@ -13,18 +13,24 @@ export type PortLocation = {
 }
 @url('/line')
 export class Line extends Block {
-    getBlockPicker() {
+    getBlockBoardSelector(types: BoardPointType[] = [
+        BoardPointType.path,
+        BoardPointType.resizePort,
+        BoardPointType.connectPort
+    ]) {
         var pickers: { type: BoardPointType, arrows: PointArrow[], point?: Point, poly?: Polygon }[] = [];
         var gm = this.globalWindowMatrix;
-        pickers.push({
+        var fp = this.cacPortLocationPos(this.from);
+        if (fp) pickers.push({
             type: BoardPointType.movePort,
             arrows: [PointArrow.from],
-            point: gm.transform(this.cacPortLocationPos(this.from))
+            point: gm.transform(fp)
         });
-        pickers.push({
+        var to = this.cacPortLocationPos(this.to);
+        if (to) pickers.push({
             type: BoardPointType.movePort,
             arrows: [PointArrow.to],
-            point: gm.transform(this.cacPortLocationPos(this.to))
+            point: gm.transform(to)
         });
         return pickers;
     }
@@ -36,14 +42,16 @@ export class Line extends Block {
         var point = new Point();
         if (pl.blockId) {
             var block = this.page.find(g => g.id == pl.blockId);
-            var pickers = block.getBlockPicker();
-            var ps = typeof pl.x == 'string' && typeof pl.y == 'string' ? pickers.findAll(x => x.type == BoardPointType.connectPort) : pickers.findAll(x => x.type == BoardPointType.path);
-            if (typeof pl.x == 'string' && typeof pl.y == 'string') {
-                var pi = ps.find(g => g.arrows.every(s => [pl.x, pl.y].includes(s)));
-                return this.globalWindowMatrix.inverseTransform(pi.point)
-            }
-            else {
+            if (block) {
+                var pickers = block.getBlockBoardSelector();
+                var ps = typeof pl.x == 'string' && typeof pl.y == 'string' ? pickers.findAll(x => x.type == BoardPointType.connectPort) : pickers.findAll(x => x.type == BoardPointType.path);
+                if (typeof pl.x == 'string' && typeof pl.y == 'string') {
+                    var pi = ps.find(g => g.arrows.every(s => [pl.x, pl.y].includes(s)));
+                    return this.globalWindowMatrix.inverseTransform(pi.point)
+                }
+                else {
 
+                }
             }
         }
         else {
@@ -58,6 +66,7 @@ export class LineView extends BlockView<Line>{
     render(): ReactNode {
         var from = this.block.cacPortLocationPos(this.block.from);
         var to = this.block.cacPortLocationPos(this.block.to);
+        if (!from || !to) return <></>;
         if (from.equal(to)) {
             to = from.move(20, 20);
         }

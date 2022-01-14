@@ -1,4 +1,3 @@
-import React from "react";
 
 
 export type ShapeType = {
@@ -47,9 +46,13 @@ export var ShapesList: ShapeType[] = [
     },
     {
         shape: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+    <path fill="currentColor" fill-rule="nonzero"
+      d="M16.985 19.501l-.952-5.55 4.033-3.932-5.574-.81L12 4.16l-2.492 5.05-5.574.81 4.033 3.931-.952 5.551L12 16.881l4.985 2.62zM12 19.14l-5.704 2.999A1.08 1.08 0 0 1 4.729 21l1.09-6.351-4.616-4.499a1.08 1.08 0 0 1 .599-1.842l6.377-.927 2.853-5.779a1.08 1.08 0 0 1 1.936 0l2.853 5.78 6.377.926a1.08 1.08 0 0 1 .599 1.842l-4.615 4.499L19.272 21a1.08 1.08 0 0 1-1.568 1.139l-5.704-3z"/>
+</svg>`},
+    {
+        shape: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
             <path fill="currentColor" fill-rule="nonzero"
                 d="M13 4.828V8H4v8h9v3.172L21.172 12 13 4.828zM3 6h8V2.284a1 1 0 0 1 1.678-.735L24 12 12.678 22.45A1 1 0 0 1 11 21.717V18H3a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z" />
         </svg>`
-
     }
 ]

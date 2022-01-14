@@ -16,6 +16,7 @@ import { BlockUrlConstant } from "../../block/constant";
 import { PageLayoutType } from "../../layout/declare";
 import { PageGrid } from "../grid";
 import { Matrix } from "../../common/matrix";
+import { loadPaper } from "../../paper";
 
 export class Page$Cycle {
     async init(this: Page) {
@@ -40,6 +41,7 @@ export class Page$Cycle {
         await langProvider.import();
     }
     async load(this: Page, data?: Record<string, any>) {
+       
         try {
             if (!data || typeof data == 'object' && Object.keys(data).length == 0) {
                 //这里加载默认的页面数据
@@ -134,11 +136,13 @@ export class Page$Cycle {
     private willLayoutBlocks: Block[];
     private updatedFns: (() => Promise<void>)[] = [];
     addBlockUpdate(block: Block) {
-        var pa = this.willUpdateBlocks.find(g => g.contains(block));
-        if (!pa) this.willUpdateBlocks.push(block);
+        if (this.willUpdateBlocks) {
+            var pa = this.willUpdateBlocks.find(g => g.contains(block));
+            if (!pa) this.willUpdateBlocks.push(block);
+        }
     }
     addBlockClearLayout(block: Block) {
-        if (!this.willLayoutBlocks.exists(block))
+        if (this.willLayoutBlocks && !this.willLayoutBlocks.exists(block))
             this.willLayoutBlocks.push(block);
     }
     /**
