@@ -105,7 +105,6 @@ export class Point {
             this.y - point.y
         ]
     }
-
 }
 export enum PointArrow {
     top = 'top',

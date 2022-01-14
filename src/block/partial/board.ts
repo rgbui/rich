@@ -18,6 +18,7 @@ export type BoardBlockSelector = {
     arrows: PointArrow[];
     point?: Point;
     poly?: Polygon;
+    data?: Record<string, any>
 }
 export class Block$Board {
     getBlockBoardSelector(this: Block, types: BoardPointType[] = [
@@ -63,19 +64,18 @@ export class Block$Board {
                     point: gm.transform(pr)
                 }
             }))
-        if (types.includes(BoardPointType.resizePort))
-            pickers.push(...rect.points.map((p, i) => {
-                var arrows: PointArrow[] = [];
-                if (i == 0) arrows = [PointArrow.top, PointArrow.left];
-                else if (i == 1) arrows = [PointArrow.top, PointArrow.right];
-                else if (i == 2) arrows = [PointArrow.bottom, PointArrow.right]
-                else if (i == 3) arrows = [PointArrow.bottom, PointArrow.left]
-                return {
-                    type: BoardPointType.resizePort,
-                    arrows,
-                    point: gm.transform(p)
-                }
-            }))
+        if (types.includes(BoardPointType.resizePort)) pickers.push(...rect.points.map((p, i) => {
+            var arrows: PointArrow[] = [];
+            if (i == 0) arrows = [PointArrow.top, PointArrow.left];
+            else if (i == 1) arrows = [PointArrow.top, PointArrow.right];
+            else if (i == 2) arrows = [PointArrow.bottom, PointArrow.right]
+            else if (i == 3) arrows = [PointArrow.bottom, PointArrow.left]
+            return {
+                type: BoardPointType.resizePort,
+                arrows,
+                point: gm.transform(p)
+            }
+        }))
         if (!this.isFrame && types.includes(BoardPointType.connectPort)) {
             pickers.push(...extendRect.centerPoints.map((p, i) => {
                 var arrows: PointArrow[] = [];
@@ -90,6 +90,12 @@ export class Block$Board {
                 }
             }))
         }
+        pickers.push({
+            arrows: [],
+            type: BoardPointType.rotatePort,
+            point: gm.transform(extendRect.leftBottom),
+            data: { center: extendRect.middleCenter, size: { width, height } }
+        })
         return pickers;
     }
     onResizeBoardSelector(this: Block,

@@ -1,8 +1,10 @@
 
+import React from "react";
 import { Kit } from "..";
 import { Line } from "../../../blocks/board/line/line";
 import { util } from "../../../util/util";
 import { Block } from "../../block";
+import { BoardBlockSelector } from "../../block/partial/board";
 import { MouseDragger } from "../../common/dragger";
 import { Matrix } from "../../common/matrix";
 import { Point, PointArrow, Rect } from "../../common/vector/point";
@@ -136,6 +138,40 @@ export class BlockPicker {
                 self.view.forceUpdate();
                 if (isEnd) {
                     block.onManualUpdateProps(oldData, { from: block.from, to: block.to })
+                }
+            }
+        });
+    }
+    async onRotateBlock(block: Block, selector: BoardBlockSelector, event: React.MouseEvent) {
+        event.stopPropagation();
+        var center: Point = selector.data.center;
+        var gm = block.globalWindowMatrix.clone();
+        var re = gm.inverseTransform(Point.from(event));
+        var d = 180 / Math.PI;
+        var angle = Math.atan2(re.y - center.y, re.x - center.x) * d + 180;
+        var ma = block.moveMatrix;
+        var self = this;
+        MouseDragger({
+            event,
+            moving(ev, data, isEnd) {
+                var pos = gm.inverseTransform(Point.from(ev));
+                var toAngle = Math.atan2(pos.y - center.y, pos.x - center.x) * d + 180;
+                var r = toAngle - angle;
+                if (Math.abs(r) > 180) {
+                    if (toAngle < angle) r = toAngle + 360 - angle
+                    else r = toAngle - 360 - angle;
+                }
+                var mc = ma.clone();
+                mc.rotate(r, center);
+                block.moveMatrix = mc;
+                block.lines.each(line => { line.forceUpdate() })
+                block.view.forceUpdate();
+                self.view.forceUpdate();
+                if (isEnd) {
+                    block.onAction(ActionDirective.onRotate, async () => {
+                        block.updateMatrix(block.matrix, block.matrix.appended(block.moveMatrix));
+                        block.moveMatrix = new Matrix();
+                    })
                 }
             }
         });

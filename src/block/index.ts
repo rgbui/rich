@@ -175,7 +175,8 @@ export abstract class Block extends Events {
         var style: CSSProperties = {};
         if (this.isFreeBlock) {
             style.position = 'absolute';
-            style.zIndex=this.zindex;
+            style.zIndex = this.zindex;
+            style.transformOrigin = '0% 0%';
             Object.assign(style, this.transformStyle);
         }
         else {

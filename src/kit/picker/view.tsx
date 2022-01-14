@@ -12,23 +12,6 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
     get picker() {
         return this.props.picker;
     }
-    renderRotate(block: Block) {
-        return <g>
-            <path d="M40.1201 16C37.1747 10.0731 31.0586 6 23.9912 6C16.9237 6 10.9454 10.0731 8 16" stroke="#333" stroke-width="2"
-                stroke-linecap="round" /><path
-                d="M8 8V16"
-                stroke-width="2"
-                stroke-linecap="round" /><path
-                d="M14.7803 16L8.00013 16"
-                stroke-width="2"
-                stroke-linecap="round" /><path
-                d="M8 32C10.9454 37.9269 17.0615 42 24.129 42C31.1964 42 37.1747 37.9269 40.1201 32" stroke="#333" stroke-width="2"
-                stroke-linecap="round"
-            /><path d="M40.1201 40V32"
-                stroke-linecap="round"
-            /><path d="M33.3398 32L40.12 32"
-                stroke-linecap="round" /></g>
-    }
     renderBlockRange(block: Block) {
         var r = 5;
         var connectR = 3;
@@ -51,10 +34,13 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
                         ></circle>
                         break;
                     case BoardPointType.rotatePort:
-                        break;
+                        return <circle
+                            key={i}
+                            onMouseDown={e => this.picker.onRotateBlock(block, pi, e)}
+                            r={r} cx={pi.point.x} cy={pi.point.y}
+                        ></circle>
                 }
             })}
-            {this.renderRotate(block)}
         </g>
     }
     render() {

@@ -30,6 +30,7 @@ export enum ActionDirective {
     onResizeBlock = 132,
     onLock=133,
     onZIndex=134,
+    onRotate=135,
 
     onSchemaCreateField = 200,
     onSchemaDeleteField = 201,
