@@ -2,9 +2,10 @@ import React from "react";
 import { ReactNode } from "react";
 import { Block } from "../../../src/block";
 import { prop, url, view } from "../../../src/block/factory/observable";
+import { BoardPointType, BoardBlockSelector } from "../../../src/block/partial/board";
 import { BlockView } from "../../../src/block/view";
 import { TextSpanArea } from "../../../src/block/view/appear";
-
+import { Rect, PointArrow } from "../../../src/common/vector/point";
 import "./style.less";
 
 @url('/note')
@@ -17,11 +18,43 @@ export class Note extends Block {
     fixedWidth: number = 200;
     @prop()
     fixedHeight: number = 200;
+    get fixedSize(): { width: number; height: number; } {
+        var size = Math.max(this.fixedHeight, this.fixedWidth);
+        return {
+            width: size,
+            height: size
+        }
+    }
+    getBlockBoardSelector(this: Block, types?: BoardPointType[]): BoardBlockSelector[] {
+        var pickers = super.getBlockBoardSelector(...arguments);
+        if (types.some(s => s == BoardPointType.pathConnectPort)) {
+            var gm = this.globalWindowMatrix;
+            var { width, height } = this.fixedSize;
+            var d = (width / 48) * 4;
+            var rect = new Rect(0, 0, width, height);
+            rect = rect.extend(0 - d);
+            pickers.removeAll(x => x.type == BoardPointType.pathConnectPort);
+            pickers.push(...rect.centerPoints.map((pr, i) => {
+                var arrows: PointArrow[] = [];
+                if (i == 0) arrows = [PointArrow.top, PointArrow.center];
+                else if (i == 1) arrows = [PointArrow.middle, PointArrow.right];
+                else if (i == 2) arrows = [PointArrow.bottom, PointArrow.center]
+                else if (i == 3) arrows = [PointArrow.middle, PointArrow.left]
+                return {
+                    type: BoardPointType.pathConnectPort,
+                    arrows,
+                    point: gm.transform(pr)
+                }
+            }))
+        }
+        return pickers;
+    }
 }
 @view('/note')
 export class NoteView extends BlockView<Note>{
     renderBg() {
-        return <svg style={{ width: this.block.fixedWidth, height: this.block.fixedHeight }} viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+        var size = this.block.fixedSize.width;
+        return <svg style={{ width: size, height: size }} viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <filter x="-18.8%" y="-120%" width="137.5%" height="340%" filterUnits="objectBoundingBox" id="aeqa">
                     <feGaussianBlur stdDeviation="2" in="SourceGraphic"></feGaussianBlur>
