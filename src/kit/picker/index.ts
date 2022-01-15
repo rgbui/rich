@@ -124,21 +124,30 @@ export class BlockPicker {
         var gm = block.globalWindowMatrix;
         var oldData = { from: util.clone(block.from), to: util.clone(block.to) };
         var self = this;
+        this.kit.boardLine.onStartConnectOther();
+        this.kit.boardLine.line = block;
+        var key = arrows.includes(PointArrow.from) ? 'from' : 'to';
         MouseDragger({
             event,
             moving(ev, data, isEnd) {
                 var point = gm.inverseTransform(Point.from(ev));
-                if (arrows.includes(PointArrow.from)) {
-                    block.from = { x: point.x, y: point.y };
-                }
-                else if (arrows.includes(PointArrow.to)) {
-                    block.to = { x: point.x, y: point.y };
-                }
+                block[key] = { x: point.x, y: point.y };
                 block.forceUpdate();
                 self.view.forceUpdate();
                 if (isEnd) {
-                    block.onManualUpdateProps(oldData, { from: block.from, to: block.to })
+                    if (self.kit.boardLine.over) {
+                        block[key] = {
+                            blockId: self.kit.boardLine.over.block.id,
+                            x: self.kit.boardLine.over.selector.arrows[1],
+                            y: self.kit.boardLine.over.selector.arrows[0]
+                        };
+                    }
+                    console.log(block[key]);
+                    block.onUpdateLine(block.from, block.to, oldData);
                 }
+            },
+            moveEnd() {
+                self.kit.boardLine.onEndConnectOther()
             }
         });
     }

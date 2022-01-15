@@ -47,7 +47,6 @@ function dblClick(kit: Kit, event: MouseEvent) {
     kit.mouse.lastMouseupEvent = event;
     kit.mouse.lastMouseupDate = Date.now();
 }
-
 async function createTailBlock(kit: Kit, event: MouseEvent) {
     if (kit.page.pageLayout.type != PageLayoutType.board) {
         var pageContentBound = TextEle.getContentBound(kit.page.contentEl);
@@ -59,6 +58,7 @@ async function createTailBlock(kit: Kit, event: MouseEvent) {
     }
 }
 export async function mousedown(kit: Kit, event: MouseEvent) {
+    event.preventDefault();
     onAutoScrollStop();
     var block = kit.page.getBlockInMouseRegion(event);
     var isBloard = kit.page.pageLayout.type != PageLayoutType.board ? false : true;
