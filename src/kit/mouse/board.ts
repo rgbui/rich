@@ -1,5 +1,4 @@
 
-import { xor } from "lodash";
 import { Kit } from "..";
 import { getBoardTool } from "../../../extensions/board.tool";
 import { util } from "../../../util/util";
@@ -12,7 +11,6 @@ import { Polygon } from "../../common/vector/polygon";
 import { ActionDirective } from "../../history/declare";
 import { PageLayoutType } from "../../layout/declare";
 import { loadPaper } from "../../paper";
-
 export async function SelectorBoardBlock(kit: Kit, block: Block | undefined, event: MouseEvent) {
     var isBoardSelector = false;
     if (block?.isFreeBlock) {
@@ -43,12 +41,23 @@ export async function SelectorBoardBlock(kit: Kit, block: Block | undefined, eve
                 matrix.translate(ev.clientX - event.clientX, ev.clientY - event.clientY)
                 kit.picker.onMoveEnd(Point.from(event), Point.from(ev));
                 if (!isMove) {
-                    if (isPicker && kit.picker.blocks.length == 1) {
-                        //这里对block进入聚焦编辑
-                        var block = kit.picker.blocks[0];
-                        var anchor = block.visibleAnchor(Point.from(event));
-                        if (!(anchor && anchor.block.isAllowMouseAnchor)) return;
-                        kit.explorer.onFocusAnchor(anchor);
+                    if (ev.button == 2) {
+                        ev.preventDefault();
+                        if (kit.picker.blocks.length > 1) {
+                            kit.page.onOpenMenu(kit.picker.blocks, ev);
+                        }
+                        else {
+                            kit.picker.blocks[0].onContextmenu(ev);
+                        }
+                    }
+                    else {
+                        if (isPicker && kit.picker.blocks.length == 1) {
+                            //这里对block进入聚焦编辑
+                            var block = kit.picker.blocks[0];
+                            var anchor = block.visibleAnchor(Point.from(event));
+                            if (!(anchor && anchor.block.isAllowMouseAnchor)) return;
+                            kit.explorer.onFocusAnchor(anchor);
+                        }
                     }
                 }
             }
@@ -87,6 +96,12 @@ export async function SelectorBoardBlock(kit: Kit, block: Block | undefined, eve
             moveEnd(ev, isMove, data) {
                 if (isMove) {
                     kit.selector.close()
+                }
+                else {
+                    if (ev.button == 2) {
+                        ev.preventDefault();
+                        kit.page.onContextMenu(ev);
+                    }
                 }
             }
         })
