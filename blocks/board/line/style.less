@@ -1,11 +1,14 @@
 .sy-block-line {
     pointer-events: none;
+
     svg {
         path {
+            pointer-events: visible;
+        }
+        path.visible {
             stroke        : #000;
             stroke-width  : 2;
             stroke-opacity: .8;
-            pointer-events: visible;
         }
     }
 }

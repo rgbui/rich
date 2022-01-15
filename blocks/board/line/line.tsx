@@ -43,8 +43,8 @@ export class Line extends Block {
         if (pl.blockId) {
             var block = this.page.find(g => g.id == pl.blockId);
             if (block) {
-                var pickers = block.getBlockBoardSelector();
-                var ps = typeof pl.x == 'string' && typeof pl.y == 'string' ? pickers.findAll(x => x.type == BoardPointType.connectPort) : pickers.findAll(x => x.type == BoardPointType.path);
+                var pickers = block.getBlockBoardSelector([BoardPointType.pathConnectPort]);
+                var ps = typeof pl.x == 'string' && typeof pl.y == 'string' ? pickers.findAll(x => x.type == BoardPointType.pathConnectPort) : pickers.findAll(x => x.type == BoardPointType.path);
                 if (typeof pl.x == 'string' && typeof pl.y == 'string') {
                     var pi = ps.find(g => g.arrows.every(s => [pl.x, pl.y].includes(s)));
                     return this.globalWindowMatrix.inverseTransform(pi.point)
@@ -73,13 +73,19 @@ export class LineView extends BlockView<Line>{
         var poly = new Polygon(from, to);
         var rect = poly.bound;
         var re = rect.extend(30);
+        var feelLineDistance = 10;
+        var s = this.block.globalWindowMatrix.getScaling().x;
+        var strokeWidth = feelLineDistance / s;
         return <div className="sy-block-line" style={this.block.visibleStyle}>
             <svg viewBox={`${re.x} ${re.y} ${re.width} ${re.height}`} style={{
                 width: re.width,
                 height: re.height,
                 marginLeft: re.x,
-                marginTop: re.y
-            }}><path d={`M${from.x} ${from.y},${to.x} ${to.y}`}></path>
+                marginTop: re.y,
+                strokeWidth
+            }}>
+                <path className="visible" d={`M${from.x} ${from.y},${to.x} ${to.y}`}></path>
+                <path stroke="transparent" strokeWidth={strokeWidth} d={`M${from.x} ${from.y},${to.x} ${to.y}`}></path>
             </svg>
         </div>
     }
