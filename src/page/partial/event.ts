@@ -120,9 +120,25 @@ export class PageEvent {
             var rect = Rect.from(this.root.getBoundingClientRect());
             point = rect.middleCenter;
         }
-        var rp = this.getRelativePoint(point);
-        var ro = this.matrix.inverseTransform(rp);
-        var r = zoom > 0 ? 1.2 : 0.8;
+        var zs = [1, 2, 3, 5, 10, 15, 20, 33, 50, 75, 100, 125, 150, 200, 250, 300, 400];
+        var current = zs.findMin(x => Math.abs(x - this.scale * 100));
+        var at = zs.findIndex(g => g == current);
+        var ro = this.windowMatrix.inverseTransform(point);
+        var r = 1;
+        var current = this.scale * 100;
+        if (zoom > 0) {
+            if (at < zs.length - 1) {
+                var next = zs[at + 1];
+                r = next / current;
+            }
+        }
+        else {
+            if (at > 0) {
+                var next = zs[at - 1];
+                r = next / current;
+            }
+        }
+        r = Math.round(r * 100) / 100;
         this.matrix.scale(r, r, ro);
         this.view.forceUpdate();
     }
@@ -132,7 +148,6 @@ export class PageEvent {
     }
     onFitZoom(this: Page) {
         var bound = this.grid.gridRange();
-        console.log(bound);
         var matrix = new Matrix();
         var center = bound.middleCenter;
         var point = bound.leftTop;
