@@ -1,8 +1,9 @@
+import { intersectsPolygonAndPolygon, pointIsInPoly } from "./intersects";
 import { Point, Rect } from "./point";
 
 export class Polygon {
     points: Point[] = [];
-    constructor(...points: (Point|{x:number,y:number})[]) {
+    constructor(...points: (Point | { x: number, y: number })[]) {
         this.points = points.map(x => {
             if (x instanceof Point) return x.clone()
             else return new Point((x as any).x, (x as any).y);
@@ -40,4 +41,17 @@ export class Polygon {
             return p.relative(point);
         }));
     }
+    /**
+     * 判断两个多边形是否相交
+     * @param poly 
+     * @returns 
+     */
+    isIntersect(poly: Polygon) {
+        return intersectsPolygonAndPolygon(this.points, poly.points);
+    }
+    isContainPoint(point: Point) {
+        return pointIsInPoly(point, this);
+    }
 }
+
+
