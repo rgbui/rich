@@ -702,7 +702,55 @@
 </body>
 <script>
 
-
+    var d = {
+        "[]": [
+            {
+                "WindTaskDef": {
+                    "id": "402881e57db1d870017db1da7fa90009",
+                    "create_date": "2021-12-13T11:33:46",
+                    "detail": "{\"inputParams\":[{\"name\":\"message\",\"type\":\"String\",\"label\":\"消息\",\"required\":false,\"defaultValue\":\"DEFAULT MESSAGE\"}],\"outputParams\":[],\"rootBlock\":{\"id\":-1,\"name\":\"-1\",\"remark\":\"\",\"refTaskDefId\":\"\",\"inputParams\":{},\"children\":{\"default\":[{\"id\":1,\"name\":\"b1\",\"remark\":\"\",\"refTaskDefId\":\"\",\"inputParams\":{\"num\":{\"type\":\"Simple\",\"value\":\"3\"}},\"children\":{\"default\":[{\"id\":2,\"name\":\"b2\",\"remark\":\"\",\"refTaskDefId\":\"402881e57db1d870017db1e5c7f8006b\",\"inputParams\":{\"message\":{\"type\":\"Simple\",\"value\":\"123\"}},\"children\":{}}]}}]}}}",
+                    "label": "testParal",
+                    "project_id": "",
+                    "remark": "",
+                    "status": 0,
+                    "version": 8
+                }
+            }
+        ],
+        "ok": true,
+        "code": 200,
+        "msg": "success"
+    };
+    var r = (JSON.parse(d['[]'][0].WindTaskDef.detail));
+    console.log(JSON.stringify(r));
+    var c = {
+        "inputParams": [
+            { "name": "message", "type": "String", "label": "消息", "required": false, "defaultValue": "DEFAULT MESSAGE" }],
+        "outputParams": [], "rootBlock": {
+            "id": -1, "name": "-1", "remark": "", "refTaskDefId": "", "inputParams": {},
+            "children": {
+                "default": [{
+                    "id": 1, "name": "b1", "remark": "", "refTaskDefId": "", "inputParams": { "num": { "type": "Simple", "value": "3" } },
+                    "children": {
+                        "default": [
+                            {
+                                "id": 2, "name": "b2", "remark": "",
+                                "refTaskDefId": "402881e57db1d870017db1e5c7f8006b",
+                                "inputParams": { "message": { "type": "Simple", "value": "123" } },
+                                "children": {}
+                            }
+                        ]
+                    }
+                }]
+            }
+        }
+    }
+  //  {"inputParams":[{"name":"message","type":"String","label":"消息","required":false,"defaultValue":"DEFAULT MESSAGE"}],"outputParams":[],"rootBlock":{"id":-1,"name":"-1","remark":"","refTaskDefId":"","inputParams":{},"children":{"default":[{"id":1,"name":"b1","remark":"","refTaskDefId":"","inputParams":{"num":{"type":"Simple","value":"3"}},"children":{"default":[{"id":2,"name":"b2","remark":"","refTaskDefId":"402881e57db1d870017db1e5c7f8006b","inputParams":{"message":{"type":"Simple","value":"123"}},"children":{}}]}}]}}}
+   // {"inputParams":[{"name":"message","type":"String","label":"消息","required":false,"defaultValue":"DEFAULT MESSAGE"}],"outputParams":[],"rootBlock":{"id":-1,"name":"-1","blockType":"RootBp","children":{"default":[{"id":1,"name":"b1","blockType":"RandomSiteBp","children":{},"inputParams":{"prefix":{"type":"Simple","value":"WS-"},"start":{"type":"Simple","value":"1"},"length":{"type":"Simple","value":"50"},"width":{"type":"Simple","value":"2"}},"refTaskDefId":"","selected":true},{"id":3,"name":"b3","blockType":"CSelectAgvBp","children":{"default":[{"id":4,"name":"b4","blockType":"CAgvOperationBp","children":{},"inputParams":{"agvId":{"type":"Expression","value":"blocks.b3.selectedAgvId"},"targetSiteLabel":{"type":"Expression","value":"blocks.b1.randomName"},"scriptName":{"type":"Simple","value":"Wait"}},"refTaskDefId":"","selected":false},{"id":5,"name":"b5","blockType":"CAgvOperationBp","children":{},"inputParams":{"agvId":{"type":"Expression","value":"blocks.b3.selectedAgvId"},"targetSiteLabel":{"type":"Simple","value":"ABCD"},"scriptName":{"type":"Simple","value":"Wait"}},"refTaskDefId":"","selected":false},{"id":6,"name":"b6","blockType":"DelayBp","children":{},"inputParams":{"timeMillis":{"type":"Simple","value":"3000"}},"refTaskDefId":"","selected":false}]},"inputParams":{"keyRoute":{"type":"Expression","value":"blocks.b1.randomName"}},"refTaskDefId":"","selected":false}]},"selected":false,"refTaskDefId":"","inputParams":{}}}
+  var c=({"code":200,"msg":"success",
+  "data":{"TCPIP.js":
+  "const urlttp=\"127.0.0.1:8080/script-api/postOrder\"\r\nfunction boot() {\r\n    jj.registerHandler(\"POST\", \"/script-api/postOrder\", \"postOrder\", false);\r\n    //jj.defineInitDataFunctions(\"posthttp\")\r\n    jj.defineScheduledFunctions(true, 4000, 2000, \"httptest\", [])\r\n}\r\nfunction httptest(){\r\n    var strttp='{\"name\":\"wp\"}'\r\n    var httpstr=jj.requestPostJson(urlttp, strttp)\r\n    jj.scriptLog(\"info\", httpstr, \"Hello world\")\r\n}\r\nfunction postOrder(param) {\r\n    var paramObject = JSON.parse(param);\r\n    let inputParams = \r\n        {\r\n            destination: paramObject[\"destination\"]\r\n        };\r\n    let taskParam = {\r\n        taskLabel: \"DemoWindTask\",\r\n        inputParams: JSON.stringify(inputParams)\r\n    };\r\n    jj.newThreadToSetOrder(JSON.stringify(taskParam));\r\n    jj.scriptLog(\"info\", \"postOrder\", \"Hello world\")\r\n}\r\n","http.js":"const url=\"192.168.192.110\"\r\nvar str= jj.requestPostJson(url,\" param: string\")"},"contentType":"application/json;charset=utf-8"})
+ console.log(c.data['TCPIP.js']);
 
 </script>
 
