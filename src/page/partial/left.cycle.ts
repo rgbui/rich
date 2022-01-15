@@ -16,7 +16,6 @@ import { BlockUrlConstant } from "../../block/constant";
 import { PageLayoutType } from "../../layout/declare";
 import { PageGrid } from "../grid";
 import { Matrix } from "../../common/matrix";
-import { loadPaper } from "../../paper";
 
 export class Page$Cycle {
     async init(this: Page) {
