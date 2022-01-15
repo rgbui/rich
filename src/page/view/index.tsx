@@ -43,7 +43,7 @@ export class PageView extends Component<{ page: Page }>{
     async observeToolBoard() {
         if (this.page.pageLayout.type == PageLayoutType.board) {
             var toolBoard = await getBoardTool();
-            toolBoard.open(Point.from(this.el.getBoundingClientRect()).move(10,10));
+            toolBoard.open(Point.from(this.el.getBoundingClientRect()).move(10, 10));
         }
         else {
             var toolBoard = await getBoardTool();
@@ -118,7 +118,7 @@ export class PageView extends Component<{ page: Page }>{
         return <div className={'shy-page-view' + (this.page.readonly ? " shy-page-view-readonly" : "")} style={pageStyle} tabIndex={1}
             onFocusCapture={e => this.page.onFocusCapture(e.nativeEvent)}
             onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}
-        ><div className='shy-page-view-box' onMouseDown={e => this.page.onMousedown(e.nativeEvent)}>
+        ><div className='shy-page-view-box' onContextMenu={e => e.preventDefault()} onMouseDown={e => this.page.onMousedown(e.nativeEvent)}>
                 <PageLayoutView
                     pageLayout={this.page.pageLayout}
                     boardSelector={<BlockPickerView picker={this.page.kit.picker}></BlockPickerView>}>
