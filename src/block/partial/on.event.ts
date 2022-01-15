@@ -16,6 +16,10 @@ import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { AppearAnchor } from "../appear";
 import lodash from "lodash";
 import { BlockUrlConstant } from "../constant";
+import { Rect } from "../../common/vector/point";
+import { useSelectMenuItem } from "../../../component/view/menu";
+import { PortLocation } from "../../../blocks/board/line/line";
+
 
 export class Block$Event {
     /**
@@ -128,6 +132,15 @@ export class Block$Event {
             text: this.locker?.lock == false ? '解锁' : '锁住',
         });
         return items;
+    }
+    async onContextmenu(this: Block, event: MouseEvent) {
+        var re = await useSelectMenuItem(
+            { roundArea: Rect.fromEvent(event), direction: 'left' },
+            await this.onGetContextMenus()
+        );
+        if (re) {
+            await this.onClickContextMenu(re.item, re.event);
+        }
     }
     async onClickContextMenu(this: Block, item: MenuItemType<BlockDirective>, event: MouseEvent) {
         if (this.isFreeBlock) {
@@ -256,9 +269,23 @@ export class Block$Event {
             var zindex = this.zindex;
             if (layer == 'top') zindex = this.parent.childs.max(g => g.zindex);
             else zindex = this.parent.childs.min(g => g.zindex);
-            this.updateProps({
-                zindex
-            });
+            this.updateProps({ zindex });
         })
     }
+    async onUpdateLine(this: Block, from: any, to: any, oldData?: {
+        from: PortLocation;
+        to: PortLocation;
+    }) {
+        await this.page.onAction(ActionDirective.onUpdateProps, async () => {
+            this.updateLine(from, to,oldData);
+        })
+    }
+    async updateLine(this: Block, from: any, to: any, oldData?: {
+        from: PortLocation;
+        to: PortLocation;
+    }) {
+
+    }
 }
+
+
