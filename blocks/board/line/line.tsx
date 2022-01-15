@@ -5,6 +5,7 @@ import { BoardPointType } from "../../../src/block/partial/board";
 import { BlockView } from "../../../src/block/view";
 import { Point, PointArrow } from "../../../src/common/vector/point";
 import { Polygon } from "../../../src/common/vector/polygon";
+import { util } from "../../../util/util";
 import "./style.less";
 export type PortLocation = {
     x: number | PointArrow,
@@ -59,6 +60,43 @@ export class Line extends Block {
             point.y = pl.y as number;
         }
         return point;
+    }
+    async updateLine(from: PortLocation, to: PortLocation, oldData?: {
+        from: PortLocation;
+        to: PortLocation;
+    }) {
+        oldData = oldData || { from: util.clone(this.from), to: util.clone(this.to) };
+        console.log(oldData,from,to);
+        if (oldData.from.blockId !== from.blockId) {
+            if (oldData.from.blockId) {
+                var fb = this.page.find(g => g.id == oldData.from.blockId);
+                if (fb) {
+                    fb.disconnectLine(this);
+                }
+            }
+            if (from.blockId) {
+                var fb = this.page.find(g => g.id == from.blockId);
+                if (fb) {
+                    fb.conectLine(this);
+                }
+            }
+        }
+        if (oldData.to.blockId !== to.blockId) {
+            if (oldData.to.blockId) {
+                var fb = this.page.find(g => g.id == oldData.to.blockId);
+                if (fb) {
+                    fb.disconnectLine(this);
+                }
+            }
+            if (to.blockId) {
+                var fb = this.page.find(g => g.id == to.blockId);
+                console.log(fb,'to');
+                if (fb) {
+                    fb.conectLine(this);
+                }
+            }
+        }
+        this.manualUpdateProps(oldData, { from, to });
     }
 }
 @view('/line')

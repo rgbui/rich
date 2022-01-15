@@ -13,6 +13,7 @@ export class BoardLine {
     onEndConnectOther() {
         this.isConnectOther = false;
         delete this.line;
+        this.over=null;
     }
     over: { block: Block, selector: BoardBlockSelector,event:React.MouseEvent } = null;
 }

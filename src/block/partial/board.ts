@@ -162,15 +162,15 @@ export class Block$Board {
     }
     conectLine(this: Block, line: Block) {
         if (!Array.isArray(this._lines)) this._lines = [];
-        if (!this.refLines.includes(line.id)) {
+        if (!this.refLines.includes(line.id))
             this.refLines.push(line.id);
+        if (!this._lines.some(s => s.id === line.id))
             this._lines.push(line)
-        }
     }
     disconnectLine(this: Block, line: Block) {
         if (!Array.isArray(this._lines)) this._lines = [];
-        this.refLines.remove(g => g == line.id);
-        this._lines.remove(g => g.id == line.id);
+        this.refLines.removeAll(g => g == line.id);
+        this._lines.removeAll(g => g.id == line.id);
     }
 }
 
