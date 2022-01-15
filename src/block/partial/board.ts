@@ -1,5 +1,6 @@
 
 import { Block } from "..";
+import { PortLocation } from "../../../blocks/board/line/line";
 import { MouseDragger } from "../../common/dragger";
 import { Matrix } from "../../common/matrix";
 import { Point, PointArrow, Rect, RectUtility } from "../../common/vector/point";
@@ -171,6 +172,20 @@ export class Block$Board {
         if (!Array.isArray(this._lines)) this._lines = [];
         this.refLines.removeAll(g => g == line.id);
         this._lines.removeAll(g => g.id == line.id);
+    }
+    async onUpdateLine(this: Block, from: any, to: any, oldData?: {
+        from: PortLocation;
+        to: PortLocation;
+    }) {
+        await this.page.onAction(ActionDirective.onUpdateProps, async () => {
+            this.updateLine(from, to, oldData);
+        })
+    }
+    async updateLine(this: Block, from: any, to: any, oldData?: {
+        from: PortLocation;
+        to: PortLocation;
+    }) {
+
     }
 }
 

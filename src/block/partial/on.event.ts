@@ -16,10 +16,8 @@ import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { AppearAnchor } from "../appear";
 import lodash from "lodash";
 import { BlockUrlConstant } from "../constant";
-import { Rect } from "../../common/vector/point";
+import { Point, Rect } from "../../common/vector/point";
 import { useSelectMenuItem } from "../../../component/view/menu";
-import { PortLocation } from "../../../blocks/board/line/line";
-
 
 export class Block$Event {
     /**
@@ -106,43 +104,54 @@ export class Block$Event {
         return items;
     }
     async onGetBoardContextMenus(this: Block) {
-        var items: MenuItemType<BlockDirective>[] = [];
+        var items: MenuItemType<BlockDirective | string>[] = [];
+        items.push({
+            name: BlockDirective.bringToFront,
+            text: '移到前面'
+        });
+        items.push({
+            name: BlockDirective.sendToBack,
+            text: '移到最下面'
+        });
+        items.push({
+            type: MenuItemTypeValue.divide
+        });
+        items.push({
+            name: this.locker?.lock == false ? BlockDirective.lock : BlockDirective.unlock,
+            text: this.locker?.lock == false ? '解锁' : '锁住',
+        });
+        items.push({
+            type: MenuItemTypeValue.divide
+        });
+        items.push({
+            name: 'copy',
+            text: '复制'
+        });
+        items.push({
+            name: 'paste',
+            text: '粘贴'
+        });
+        items.push({
+            type: MenuItemTypeValue.divide
+        });
         items.push({
             name: BlockDirective.delete,
             icon: trash,
             text: langProvider.getText(LangID.menuDelete),
             label: "delete"
         });
-        items.push({
-            type: MenuItemTypeValue.divide
-        });
-        items.push({
-            name: BlockDirective.bringToFront,
-            icon: trash,
-            text: '最前面'
-        });
-        items.push({
-            name: BlockDirective.sendToBack,
-            icon: trash,
-            text: '最下层'
-        });
-        items.push({
-            name: this.locker?.lock == false ? BlockDirective.lock : BlockDirective.unlock,
-            icon: trash,
-            text: this.locker?.lock == false ? '解锁' : '锁住',
-        });
         return items;
     }
     async onContextmenu(this: Block, event: MouseEvent) {
         var re = await useSelectMenuItem(
-            { roundArea: Rect.fromEvent(event), direction: 'left' },
+            this.isFreeBlock ? { roundPoint: Point.from(event) } : { roundArea: Rect.fromEvent(event), direction: 'left' },
             await this.onGetContextMenus()
         );
         if (re) {
             await this.onClickContextMenu(re.item, re.event);
         }
     }
-    async onClickContextMenu(this: Block, item: MenuItemType<BlockDirective>, event: MouseEvent) {
+    async onClickContextMenu(this: Block, item: MenuItemType<BlockDirective | string>, event: MouseEvent) {
         if (this.isFreeBlock) {
             return await this.onClockBoardContextMenu(item, event);
         }
@@ -165,7 +174,7 @@ export class Block$Event {
                 break;
         }
     }
-    async onClockBoardContextMenu(this: Block, item: MenuItemType<BlockDirective>, event: MouseEvent) {
+    async onClockBoardContextMenu(this: Block, item: MenuItemType<BlockDirective | string>, event: MouseEvent) {
         switch (item.name) {
             case BlockDirective.lock:
                 this.onLock(true);
@@ -267,24 +276,10 @@ export class Block$Event {
     async onZIndex(this: Block, layer: 'top' | 'bottom') {
         this.onAction(ActionDirective.onZIndex, async () => {
             var zindex = this.zindex;
-            if (layer == 'top') zindex = this.parent.childs.max(g => g.zindex);
-            else zindex = this.parent.childs.min(g => g.zindex);
-            this.updateProps({ zindex });
+            if (layer == 'top') zindex = this.parent.childs.max(g => g.zindex) + 1;
+            else zindex = this.parent.childs.min(g => g.zindex) - 1;
+            this.updateProps({ zindex }, BlockRenderRange.self);
         })
-    }
-    async onUpdateLine(this: Block, from: any, to: any, oldData?: {
-        from: PortLocation;
-        to: PortLocation;
-    }) {
-        await this.page.onAction(ActionDirective.onUpdateProps, async () => {
-            this.updateLine(from, to,oldData);
-        })
-    }
-    async updateLine(this: Block, from: any, to: any, oldData?: {
-        from: PortLocation;
-        to: PortLocation;
-    }) {
-
     }
 }
 
