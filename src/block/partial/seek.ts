@@ -1,4 +1,5 @@
 import { Block } from "..";
+import { Rect } from "../../common/vector/point";
 export class Block$Seek {
     blockChilds(this: Block, name: string) {
         return this.blocks[name];
@@ -320,7 +321,10 @@ export class Block$Seek {
      * 包括视频上的包含、相交
      * @param this 
      */
-    findAllIntersects(this: Block) {
+    findBoardAllIntersects(this: Block) {
+        var rect = Rect.from(this.el.getBoundingClientRect());
+        // var blocks = this.page.grid.findBlocksByRect(rect, block => {
 
+        // });
     }
 }

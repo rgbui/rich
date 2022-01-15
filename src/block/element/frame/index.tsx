@@ -22,11 +22,7 @@ export class Frame extends Block {
 @view('/frame')
 export class FrameView extends BlockView<Frame>{
     render() {
-        var style = Object.assign(
-            {
-                width: this.block.fixedWidth,
-                height: this.block.fixedHeight
-            }, this.block.visibleStyle);
+        var style = Object.assign({ width: this.block.fixedWidth, height: this.block.fixedHeight }, this.block.visibleStyle);
         return <div className='sy-block-frame' style={style} >
             <div className='sy-block-frame-head'>
                 <TextArea placeholder='框' rf={e => this.block.elementAppear({ el: e, appear: BlockAppear.text })} html={this.block.content}></TextArea>
