@@ -94,7 +94,7 @@ export class PageGrid {
         }
         return blocks;
     }
-    public findBlocksByRect(rect: Rect, predict: (block: Block) => boolean) {
+    public findBlocksByRect(rect: Rect, predict?: (block: Block) => boolean) {
         var relativeRect = this.page.getRelativeRect(rect);
         var gxMin = Math.floor(relativeRect.x / CellSize);
         var gxMax = Math.ceil((relativeRect.x + relativeRect.width) / CellSize);
@@ -106,8 +106,15 @@ export class PageGrid {
                 var key = this.getKey(i, j);
                 var gm = this.gridMap.get(key);
                 if (gm && Array.isArray(gm)) {
-                    var r = gm.find(predict);
-                    if (r) { blocks.push(r); }
+                    if (typeof predict == 'function') {
+                        var r = gm.find(predict);
+                        if (r && !blocks.exists(r)) { blocks.push(r); }
+                    }
+                    else {
+                        gm.each(g => {
+                            if (!blocks.exists(g)) blocks.push(g);
+                        })
+                    }
                 }
             }
         }

@@ -321,10 +321,12 @@ export class Block$Seek {
      * 包括视频上的包含、相交
      * @param this 
      */
-    findBoardAllIntersects(this: Block) {
-        var rect = Rect.from(this.el.getBoundingClientRect());
-        // var blocks = this.page.grid.findBlocksByRect(rect, block => {
-
-        // });
+    findFramesByIntersect(this: Block) {
+        var blocks = this.page.grid.findBlocksByRect(Rect.from(this.el.getBoundingClientRect()), g => g.isFrame);
+        var poly = this.getVisiblePolygon();
+        return blocks.findAll(g => {
+            var vp = g.getVisiblePolygon();
+            return poly.points.some(s => vp.bound.conatin(s)) || poly.isIntersect(vp);
+        })
     }
 }

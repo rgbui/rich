@@ -22,6 +22,7 @@ import { CSSProperties } from "react";
 import { PageLayoutType } from "../layout/declare";
 import { Matrix } from "../common/matrix";
 import { Block$Board } from "./partial/board";
+import { Polygon } from "../common/vector/polygon";
 export abstract class Block extends Events {
     constructor(page: Page) {
         super();
@@ -290,6 +291,22 @@ export abstract class Block extends Events {
     }
     getVisibleContentBound() {
         return this.getVisibleBound();
+    }
+    getVisiblePolygon() {
+        var { width, height } = this.fixedSize;
+        var rect = new Rect(0, 0, width, height);
+        var gm = this.globalWindowMatrix;
+        var poly = new Polygon(...rect.points.map(p => {
+            return gm.transform(p);
+        }));
+        return poly;
+    }
+    getGlobalPosition() {
+        var gm = this.globalWindowMatrix;
+        return gm.transform(new Point(0, 0));
+    }
+    getTranslation() {
+        return this.matrix.getTranslation();
     }
     get isTextContent() {
         return false;

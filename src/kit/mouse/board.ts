@@ -11,6 +11,7 @@ import { Polygon } from "../../common/vector/polygon";
 import { ActionDirective } from "../../history/declare";
 import { PageLayoutType } from "../../layout/declare";
 import { loadPaper } from "../../paper";
+
 export function SelectorBoardBlock(kit: Kit, block: Block | undefined, event: MouseEvent) {
     var isBoardSelector = false;
     if (block?.isFreeBlock) {
@@ -36,12 +37,11 @@ export function SelectorBoardBlock(kit: Kit, block: Block | undefined, event: Mo
             move(ev, data) {
                 kit.picker.onMove(Point.from(event), Point.from(ev));
             },
-            moveEnd(ev, isMove, data)
-            {
-                kit.picker.onMoveEnd(Point.from(event), Point.from(ev));
+            moveEnd(ev, isMove, data) {
+                if (isMove)
+                    kit.picker.onMoveEnd(Point.from(event), Point.from(ev));
                 if (!isMove) {
                     if (ev.button == 2) {
-
                         if (kit.picker.blocks.length > 1) {
                             kit.page.onOpenMenu(kit.picker.blocks, ev);
                         }

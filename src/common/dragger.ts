@@ -99,8 +99,6 @@ export function MouseDragger<T = Record<string, any>>(options: {
         document.removeEventListener('mousemove', move);
         document.removeEventListener('mouseup', up)
     }
-
     document.addEventListener('mouseup', up);
     document.addEventListener('mousemove', move);
-    console.log('bind up...');
 }

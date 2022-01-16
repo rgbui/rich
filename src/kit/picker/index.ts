@@ -48,18 +48,39 @@ export class BlockPicker {
         });
         this.view.forceUpdate();
     }
-    onMoveEnd(from: Point, to: Point) {
-        this.blocks.forEach((bl) => {
-            var matrix = new Matrix();
-            matrix.translateMove(bl.globalWindowMatrix.inverseTransform(from), bl.globalWindowMatrix.inverseTransform(to))
-            bl.matrix.append(matrix);
-            bl.moveMatrix = new Matrix();
-            bl.forceUpdate();
-            if (bl.lines.length > 0) {
-                bl.lines.each(line => { line.forceUpdate() })
-            }
-        });
-        this.view.forceUpdate();
+    async onMoveEnd(from: Point, to: Point) {
+        this.kit.page.onAction(ActionDirective.onMove, async () => {
+            await this.blocks.eachAsync(async (bl) => {
+                var matrix = new Matrix();
+                matrix.translateMove(bl.globalWindowMatrix.inverseTransform(from), bl.globalWindowMatrix.inverseTransform(to))
+                var newMatrix = bl.matrix.clone();
+                newMatrix.append(matrix);
+                bl.updateMatrix(bl.matrix, newMatrix);
+                bl.moveMatrix = new Matrix();
+                if (!bl.isFrame) {
+                    var rs = bl.findFramesByIntersect();
+                    if (rs.length> 0 && !rs.some(s => s === bl.parent)) {
+                        var fra = rs[0];
+                        await fra.append(bl);
+                        var r = bl.getTranslation().relative(fra.getTranslation());
+                        var nm = new Matrix();
+                        nm.translate(r);
+                        nm.rotate(bl.matrix.getRotation(), { x: 0, y: 0 });
+                        bl.updateMatrix(bl.matrix, nm);
+                    }
+                    else if (rs.length == 0 && bl.parent?.isFrame) {
+                        var fra = bl.parent;
+                        await fra.parent.append(bl);
+                        var r = bl.getTranslation().base(fra.parent.getTranslation());
+                        var nm = new Matrix();
+                        nm.translate(r);
+                        nm.rotate(bl.matrix.getRotation(), { x: 0, y: 0 });
+                        bl.updateMatrix(bl.matrix, nm);
+                    }
+                }
+            });
+        })
+
     }
     onResizeBlock(block: Block, arrows: PointArrow[], event: React.MouseEvent) {
         event.stopPropagation();
