@@ -57,8 +57,8 @@ async function createTailBlock(kit: Kit, event: MouseEvent) {
         }
     }
 }
-export async function mousedown(kit: Kit, event: MouseEvent) {
-    event.preventDefault();
+export async function mousedown(kit: Kit, event: MouseEvent)
+{
     onAutoScrollStop();
     var block = kit.page.getBlockInMouseRegion(event);
     var isBloard = kit.page.pageLayout.type != PageLayoutType.board ? false : true;
@@ -67,7 +67,7 @@ export async function mousedown(kit: Kit, event: MouseEvent) {
     }
     if (block?.isLine) block = block.closest(x => !x.isLine);
     if ((await CreateBoardBlock(kit, block, event))) return;
-    if (!IsBoardTextAnchorBlock(kit, block, event) && (await SelectorBoardBlock(kit, block, event))) return;
+    if (!IsBoardTextAnchorBlock(kit, block, event) && (SelectorBoardBlock(kit, block, event))) return;
 
     var anchor = triggerCreateAnchor(kit, block, event);
     var downPoint = Point.from(event);

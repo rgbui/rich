@@ -50,7 +50,8 @@ export function MouseDragger<T = Record<string, any>>(options: {
             else {
                 if (Point.from(options.event).remoteBy(Point.from(event), options.dis)) {
                     try {
-                        if (typeof options.moveStart == 'function') options.moveStart(scope.event, data, crossData); scope.isMove = true;
+                        if (typeof options.moveStart == 'function') options.moveStart(scope.event, data, crossData);
+                        scope.isMove = true;
                     }
                     catch (ex) {
                         console.error(ex);
@@ -98,6 +99,8 @@ export function MouseDragger<T = Record<string, any>>(options: {
         document.removeEventListener('mousemove', move);
         document.removeEventListener('mouseup', up)
     }
+
+    document.addEventListener('mouseup', up);
     document.addEventListener('mousemove', move);
-    document.addEventListener('mouseup', up)
+    console.log('bind up...');
 }

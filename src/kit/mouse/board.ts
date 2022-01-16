@@ -11,7 +11,7 @@ import { Polygon } from "../../common/vector/polygon";
 import { ActionDirective } from "../../history/declare";
 import { PageLayoutType } from "../../layout/declare";
 import { loadPaper } from "../../paper";
-export async function SelectorBoardBlock(kit: Kit, block: Block | undefined, event: MouseEvent) {
+export function SelectorBoardBlock(kit: Kit, block: Block | undefined, event: MouseEvent) {
     var isBoardSelector = false;
     if (block?.isFreeBlock) {
         isBoardSelector = true;
@@ -36,13 +36,12 @@ export async function SelectorBoardBlock(kit: Kit, block: Block | undefined, eve
             move(ev, data) {
                 kit.picker.onMove(Point.from(event), Point.from(ev));
             },
-            moveEnd(ev, isMove, data) {
-                var matrix = new Matrix();
-                matrix.translate(ev.clientX - event.clientX, ev.clientY - event.clientY)
+            moveEnd(ev, isMove, data)
+            {
                 kit.picker.onMoveEnd(Point.from(event), Point.from(ev));
                 if (!isMove) {
                     if (ev.button == 2) {
-                        ev.preventDefault();
+
                         if (kit.picker.blocks.length > 1) {
                             kit.page.onOpenMenu(kit.picker.blocks, ev);
                         }
@@ -99,7 +98,6 @@ export async function SelectorBoardBlock(kit: Kit, block: Block | undefined, eve
                 }
                 else {
                     if (ev.button == 2) {
-                        ev.preventDefault();
                         kit.page.onContextMenu(ev);
                     }
                 }
@@ -109,10 +107,11 @@ export async function SelectorBoardBlock(kit: Kit, block: Block | undefined, eve
     return isBoardSelector;
 }
 
+
 export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event: MouseEvent) {
     var toolBoard = await getBoardTool();
-    var paper = await loadPaper();
     if (toolBoard.isSelector) {
+        var paper = await loadPaper();
         var fra: Block = block ? block.frameBlock : kit.page.getPageFrame();
         var gm = fra.globalWindowMatrix;
         var re = gm.inverseTransform(Point.from(event));
@@ -273,8 +272,8 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
         }
         return true;
     }
+    return false;
 }
-
 export function IsBoardTextAnchorBlock(kit: Kit, block: Block | undefined, event: MouseEvent) {
     if (kit.explorer.hasAnchor && kit.explorer.activeAnchor.isText && kit.picker.blocks.length > 0) {
         var fb = kit.picker.blocks[0];
