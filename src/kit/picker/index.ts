@@ -41,8 +41,15 @@ export class BlockPicker {
             var matrix = new Matrix();
             matrix.translateMove(bl.globalWindowMatrix.inverseTransform(from), bl.globalWindowMatrix.inverseTransform(to))
             bl.moveMatrix = matrix;
-            if (bl.lines.length > 0) {
-                bl.lines.each(line => { line.forceUpdate() })
+            if (bl.isFrame) {
+                bl.childs.each(b => {
+                    b.lines.each(line => { line.forceUpdate() })
+                })
+            }
+            else {
+                if (bl.lines.length > 0) {
+                    bl.lines.each(line => { line.forceUpdate() })
+                }
             }
             bl.forceUpdate()
         });
@@ -59,7 +66,7 @@ export class BlockPicker {
                 bl.moveMatrix = new Matrix();
                 if (!bl.isFrame) {
                     var rs = bl.findFramesByIntersect();
-                    if (rs.length> 0 && !rs.some(s => s === bl.parent)) {
+                    if (rs.length > 0 && !rs.some(s => s === bl.parent)) {
                         var fra = rs[0];
                         await fra.append(bl);
                         var r = bl.getTranslation().relative(fra.getTranslation());
@@ -71,7 +78,7 @@ export class BlockPicker {
                     else if (rs.length == 0 && bl.parent?.isFrame) {
                         var fra = bl.parent;
                         await fra.parent.append(bl);
-                        var r = bl.getTranslation().base(fra.parent.getTranslation());
+                        var r = bl.getTranslation().base(fra.getTranslation());
                         var nm = new Matrix();
                         nm.translate(r);
                         nm.rotate(bl.matrix.getRotation(), { x: 0, y: 0 });
