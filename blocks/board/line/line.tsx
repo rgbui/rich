@@ -56,6 +56,7 @@ export class Line extends Block {
             }
         }
         else {
+            //var po=this.globalWindowMatrix.transform(pl  as Point);
             point.x = pl.x as number;
             point.y = pl.y as number;
         }
@@ -66,7 +67,6 @@ export class Line extends Block {
         to: PortLocation;
     }) {
         oldData = oldData || { from: util.clone(this.from), to: util.clone(this.to) };
-        console.log(oldData,from,to);
         if (oldData.from.blockId !== from.blockId) {
             if (oldData.from.blockId) {
                 var fb = this.page.find(g => g.id == oldData.from.blockId);
@@ -90,7 +90,6 @@ export class Line extends Block {
             }
             if (to.blockId) {
                 var fb = this.page.find(g => g.id == to.blockId);
-                console.log(fb,'to');
                 if (fb) {
                     fb.conectLine(this);
                 }
@@ -106,7 +105,7 @@ export class LineView extends BlockView<Line>{
         var to = this.block.cacPortLocationPos(this.block.to);
         if (!from || !to) return <></>;
         if (from.equal(to)) {
-            to = from.move(20, 20);
+            //to = from.move(20, 20);
         }
         var poly = new Polygon(from, to);
         var rect = poly.bound;
@@ -118,9 +117,9 @@ export class LineView extends BlockView<Line>{
             <svg viewBox={`${re.x} ${re.y} ${re.width} ${re.height}`} style={{
                 width: re.width,
                 height: re.height,
-                marginLeft: re.x,
-                marginTop: re.y,
-                strokeWidth
+                transform: `translate(${re.x}px,${re.y}px)`,
+                // marginLeft: re.x,
+                // marginTop: re.y
             }}>
                 <path className="visible" d={`M${from.x} ${from.y},${to.x} ${to.y}`}></path>
                 <path stroke="transparent" strokeWidth={strokeWidth} d={`M${from.x} ${from.y},${to.x} ${to.y}`}></path>

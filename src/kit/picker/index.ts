@@ -170,7 +170,6 @@ export class BlockPicker {
                             y: self.kit.boardLine.over.selector.arrows[0]
                         };
                     }
-                    console.log(block[key]);
                     block.onUpdateLine(block.from, block.to, oldData);
                 }
             },
