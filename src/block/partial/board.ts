@@ -187,6 +187,10 @@ export class Block$Board {
     }) {
 
     }
+    async getBoardEditCommand(this: Block): Promise<{ name: string, value?: any }[]> {
+        var cs = [];
+        return []
+    }
 }
 
 
