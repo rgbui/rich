@@ -10,6 +10,12 @@ export class Pen extends Block {
     isScale: boolean = true;
     @prop()
     pathString: string = '';
+    async getBoardEditCommand(this: Block): Promise<{ name: string; value?: any; }[]> {
+        var cs: { name: string; value?: any; }[] = [];
+        cs.push({ name: 'tickness' });
+        cs.push({ name: 'backgroundColor' });
+        return cs;
+    }
 }
 @view('/pen')
 export class PenView extends BlockView<Pen>{
