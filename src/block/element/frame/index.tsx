@@ -24,6 +24,12 @@ export class Frame extends Block {
         pickers.removeAll(p => p.type == BoardPointType.rotatePort);
         return pickers;
     }
+    async getBoardEditCommand(this: Block): Promise<{ name: string; value?: any; }[]> {
+        var cs: { name: string; value?: any; }[] = [];
+        cs.push({ name: 'frameRadio' });
+        cs.push({ name: 'backgroundColor' });
+        return cs;
+    }
 }
 @view('/frame')
 export class FrameView extends BlockView<Frame>{
