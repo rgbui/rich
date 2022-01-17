@@ -1,5 +1,6 @@
 
 import { Kit } from "..";
+import { forceCloseBoardEditTool, useBoardEditTool } from "../../../extensions/board.edit.tool";
 import { getBoardTool } from "../../../extensions/board.tool";
 import { util } from "../../../util/util";
 import { Block } from "../../block";
@@ -37,9 +38,8 @@ export function SelectorBoardBlock(kit: Kit, block: Block | undefined, event: Mo
             move(ev, data) {
                 kit.picker.onMove(Point.from(event), Point.from(ev));
             },
-            moveEnd(ev, isMove, data) {
-                if (isMove)
-                    kit.picker.onMoveEnd(Point.from(event), Point.from(ev));
+            async moveEnd(ev, isMove, data) {
+                if (isMove) kit.picker.onMoveEnd(Point.from(event), Point.from(ev));
                 if (!isMove) {
                     if (ev.button == 2) {
                         if (kit.picker.blocks.length > 1) {
@@ -59,6 +59,7 @@ export function SelectorBoardBlock(kit: Kit, block: Block | undefined, event: Mo
                         }
                     }
                 }
+                await useBoardEditTool(kit.picker.blocks);
             }
         })
     }
@@ -101,6 +102,7 @@ export function SelectorBoardBlock(kit: Kit, block: Block | undefined, event: Mo
                         kit.page.onContextMenu(ev);
                     }
                 }
+                forceCloseBoardEditTool()
             }
         })
     }
