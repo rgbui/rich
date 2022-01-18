@@ -4,6 +4,7 @@ import { EventsComponent } from "../../component/lib/events.component";
 import { Singleton } from "../../component/lib/Singleton";
 import { Icon } from "../../component/view/icon";
 import { MenuItemType } from "../../component/view/menu/declare";
+import { MeasureView } from "../../component/view/progress";
 import { Select } from "../../component/view/select";
 import { Tip } from "../../component/view/tip";
 import { LangID } from "../../i18n/declare";
@@ -28,7 +29,12 @@ class BoardEditTool extends EventsComponent {
             top: this.point.y,
             left: this.point.x
         };
+        var self = this;
         console.log(this.commands);
+        function getValue(name: string) {
+            var command = self.commands.find(g => g.name == name);
+            if (command) return command.value;
+        }
         return <div style={style} className="shy-board-edit-tool">
             {this.commands.some(s => s.name == 'frameScale') && <Tip id={LangID.textToolBold}>
                 <div className={'shy-board-edit-tool-item'} >
@@ -40,21 +46,38 @@ class BoardEditTool extends EventsComponent {
                     <TurnShapes></TurnShapes>
                 </div>
             </Tip>}
-            {this.commands.some(s => s.name == 'fontSize') && <Tip id={LangID.textToolBold}>
+            {this.commands.some(s => s.name == 'fontSize') && <><Tip id={LangID.textToolBold}>
                 <div className={'shy-board-edit-tool-item'} >
-                    <Select style={{ width: 50 }} options={[{ text: '12', value: '12' }, { text: '14', value: '14' }]}></Select>
+                    <Select value={getValue('fontSize')}
+                        onChange={e => this.onChange('fontSize', e)}
+                        style={{ width: 40 }}
+                        options={[
+                            { text: '12', value: 12 },
+                            { text: '14', value: 14 },
+                            { text: '18', value: 18 },
+                            { text: '24', value: 24 },
+                            { text: '36', value: 36 },
+                            { text: '48', value: 48 },
+                            { text: '64', value: 64 },
+                            { text: '80', value: 80 },
+                            { text: '144', value: 144 },
+                            { text: '288', value: 288 }
+                        ]}></Select>
                 </div>
-            </Tip>}
-            {this.commands.some(s => s.name == 'stickerSize') && <Tip id={LangID.textToolBold}>
+            </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
+            {this.commands.some(s => s.name == 'stickerSize') && <><Tip id={LangID.textToolBold}>
                 <div className={'shy-board-edit-tool-item'} >
-                    <Select style={{ width: 50 }} options={[{ text: '小', value: '12' }, { text: '中', value: '14' }, { text: '大', value: '14' }]}></Select>
+                    <Select style={{ width: 50 }} value={'大小'} options={[{ text: '小', value: 'small' }, { text: '中', value: 'medium' }, { text: '大', value: 'big' }]}></Select>
                 </div>
-            </Tip>}
-            {this.commands.some(s => s.name == 'bold') && <Tip id={LangID.textToolBold}>
+            </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
+            {this.commands.some(s => s.name == 'fontWeight') && <Tip id={LangID.textToolBold}>
                 <div className={'shy-board-edit-tool-item'} >
                     <Icon icon='bold:sy'></Icon>
                 </div>
             </Tip>}
+            {this.commands.some(s => s.name == 'tickness') && <><div style={{width:90}} className={'shy-board-edit-tool-item'}>
+                <MeasureView showValue={false} value={10} onChange={e => { }}></MeasureView>
+            </div></>}
             {this.commands.some(s => s.name == 'itailc') && <Tip id={LangID.textToolItailc}>
                 <div className={'shy-board-edit-tool-item'} >
                     <Icon icon='italic:sy'></Icon>
@@ -65,16 +88,17 @@ class BoardEditTool extends EventsComponent {
                     <Icon icon='underline:sy'></Icon>
                 </div>
             </Tip>}
-            {this.commands.some(s => s.name == 'textDecoration') && <Tip id={LangID.textToolDeleteLine}>
+            {this.commands.some(s => s.name == 'textDecoration') && <><Tip id={LangID.textToolDeleteLine}>
                 <div className={'shy-board-edit-tool-item'}>
                     <Icon icon='delete-line:sy'></Icon>
                 </div>
-            </Tip>}
+            </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
             {this.commands.some(s => s.name == 'backgroundColor') && <Tip id={LangID.textToolDeleteLine}>
                 <div className={'shy-board-edit-tool-item'}>
                     <BackgroundColor value={'#000'} change={e => { }}></BackgroundColor>
                 </div>
             </Tip>}
+
             {this.commands.some(s => s.name == 'stoke') && <Tip id={LangID.textToolDeleteLine}>
                 <div className={'shy-board-edit-tool-item'}>
                     <ShapeStroke ></ShapeStroke>
@@ -123,6 +147,9 @@ class BoardEditTool extends EventsComponent {
             this.visible = true;
             this.close();
         }
+    }
+    async onChange(name: string, value: any) {
+        console.log(name, value);
     }
     close() {
         if (this.visible == true) {

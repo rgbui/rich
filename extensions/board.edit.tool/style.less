@@ -44,11 +44,14 @@
 
     &-devide {
         box-shadow: rgba(55, 53, 47, 0.09) 1px 0px 0px 0px;
+        width     : 1px;
     }
 }
 
 .shy-board-edit-background-color {
     position: relative;
+    width   : 20px;
+    height  : 20px;
 
     &-current {
         a {
@@ -60,6 +63,57 @@
     }
 
     &-drops {
+        left           : 50%;
+        margin-left    : -75px;
+        position       : absolute;
+        border-radius  : 3px;
+        background     : white;
+        z-index        : 2;
+        box-shadow     : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+        top            : 28px;
+        max-height     : 200px;
+        overflow-y     : auto;
+        overflow-x     : hidden;
+        width          : 150px;
+        min-height     : 100px;
+        display        : flex;
+        justify-content: center;
+        align-items    : flex-start;
+        flex-wrap      : wrap;
+
+
+        a {
+            display      : inline-block;
+            box-sizing   : border-box;
+            width        : 30px;
+            height       : 30px;
+            margin       : 5px;
+            border-radius: 15px;
+            transition   : opacity 0.2s;
+            border       : 1px solid rgba(0, 0, 0, 0.1);
+
+            &.selected {}
+        }
+    }
+}
+
+.shy-shape-stroke {
+    position: relative;
+    width   : 20px;
+    height  : 20px;
+
+    &-current {
+        display      : inline-block;
+        width        : 20px;
+        height       : 20px;
+        border       : 4px solid #000;
+        box-sizing   : border-box;
+        border-radius: 50%;
+    }
+
+    &-drops {
+        left         : 50%;
+        margin-left  : -75px;
         position     : absolute;
         border-radius: 3px;
         background   : white;
@@ -69,5 +123,202 @@
         max-height   : 200px;
         overflow-y   : auto;
         overflow-x   : hidden;
+        width        : 150px;
+        min-height   : 100px;
+
+        .shy-shape-stroke-types {
+            display        : flex;
+            justify-content: center;
+            align-items    : flex-start;
+
+            a {
+                cursor: pointer;
+
+                svg {
+                    width : 30px;
+                    height: 30px;
+                }
+            }
+        }
+
+        .shy-shape-stroke-colors {
+            display        : flex;
+            justify-content: center;
+            align-items    : flex-start;
+            flex-wrap      : wrap;
+
+            a {
+                display      : inline-block;
+                box-sizing   : border-box;
+                width        : 30px;
+                height       : 30px;
+                margin       : 5px;
+                border-radius: 15px;
+                transition   : opacity 0.2s;
+                border       : 1px solid rgba(0, 0, 0, 0.1);
+
+                &.selected {}
+            }
+        }
+    }
+}
+
+.shy-shape-fill {
+    position: relative;
+    width   : 20px;
+    height  : 20px;
+
+    &-current {
+        display: inline-block;
+        width  : 20px;
+        height : 20px;
+
+    }
+
+    &-drops {
+        left         : 50%;
+        margin-left  : -75px;
+        position     : absolute;
+        border-radius: 3px;
+        background   : white;
+        z-index      : 2;
+        box-shadow   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+        top          : 28px;
+        max-height   : 200px;
+        overflow-y   : auto;
+        overflow-x   : hidden;
+        width        : 150px;
+        min-height   : 100px;
+
+        .shy-shape-fill-opacity {}
+
+        .shy-shape-fill-colors {
+            display        : flex;
+            justify-content: center;
+            align-items    : flex-start;
+            flex-wrap      : wrap;
+
+            a {
+                display      : inline-block;
+                box-sizing   : border-box;
+                width        : 30px;
+                height       : 30px;
+                margin       : 5px;
+                border-radius: 15px;
+                transition   : opacity 0.2s;
+                border       : 1px solid rgba(0, 0, 0, 0.1);
+
+                &.selected {}
+            }
+        }
+    }
+}
+
+.shy-line-arrow {
+    position: relative;
+    width   : 50px;
+    height  : 20px;
+
+    &-current {
+        span {
+            display: inline-block;
+            width  : 20px;
+            height : 20px;
+
+            &:first-child {
+                margin-right: 10px;
+            }
+
+            &:last-child {}
+        }
+    }
+
+    &-left-drops {
+        position     : absolute;
+        border-radius: 3px;
+        background   : white;
+        z-index      : 2;
+        box-shadow   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+        top          : 28px;
+        width        : 50px;
+        min-height   : 100px;
+        a {
+            display        : flex;
+            justify-content: center;
+            align-items    : center;
+            transform      : scale(-1,1);
+            svg {
+                width : 30px;
+                height: 30px;
+            }
+        }
+    }
+
+    &-right-drops {
+        position     : absolute;
+        border-radius: 3px;
+        background   : white;
+        z-index      : 2;
+        box-shadow   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+        top          : 28px;
+        width        : 50px;
+        min-height   : 100px;
+        a {
+            display        : flex;
+            justify-content: center;
+            align-items    : center;
+            svg {
+                width : 30px;
+                height: 30px;
+            }
+        }
+    }
+}
+
+.shy-line-types {
+    position: relative;
+    width   : 20px;
+    height  : 20px;
+
+    &-current {
+        display: inline-block;
+        width  : 20px;
+        height : 20px;
+    }
+
+    &-drops {
+        left         : 50%;
+        margin-left  : -75px;
+        position     : absolute;
+        border-radius: 3px;
+        background   : white;
+        z-index      : 2;
+        box-shadow   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+        top          : 28px;
+        max-height   : 200px;
+        overflow-y   : auto;
+        overflow-x   : hidden;
+        width        : 150px;
+        min-height   : 100px;
+
+        .shy-line-types-opacity {}
+
+        .shy-line-types-all {
+            a {
+                svg {
+                    width : 24px;
+                    height: 24px;
+                }
+            }
+        }
+
+        .shy-line-types-stash {
+            a {
+                svg {
+                    width : 24px;
+                    height: 24px;
+                }
+            }
+        }
     }
 }
