@@ -92,6 +92,12 @@ export class Pattern {
         }
         this.block.page.addBlockUpdate(this.block);
     }
+    setFontStyle(style: Record<string, any>) {
+        this.setStyle(BlockCssName.font, style);
+    }
+    setFillStyle(style: Record<string, any>) {
+        this.setStyle(BlockCssName.fill, style);
+    }
     setStyles(styles: Record<BlockCssName, Record<string, any>>) {
         for (var n in styles) {
             var name = typeof n == 'string' ? BlockCssName[n] : n;
@@ -103,7 +109,14 @@ export class Pattern {
         if (style)
             return style.css(cssName)
     }
+    getFontStyle() {
+        return this.css(BlockCssName.font)
+    }
+    getFillStyle() {
+        return this.css(BlockCssName.fill);
+    }
 }
+
 export interface Pattern {
     css(name: BlockCssName.font): FontCss;
     css(name: BlockCssName.fill): FillCss;
