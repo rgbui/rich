@@ -1,6 +1,4 @@
 import React, { ReactNode } from "react"
-
-import { EventsComponent } from "../../component/lib/events.component"
 import { MeasureView } from "../../component/view/progress"
 import { ColorType } from "../note"
 var colors: ColorType[] = [
@@ -23,10 +21,11 @@ var colors: ColorType[] = [
     { color: 'rgb(101, 44, 179)' },
     { color: 'rgb(255, 249, 177)' }
 ]
-export class ShapeStroke extends EventsComponent {
-    render(): ReactNode {
-        return <div className="shy-shape-stroke">
-            <div className="shy-shape-stroke-current"></div>
+export function ShapeStroke(props) {
+    var [visible, setDropVisible] = React.useState(false);
+    return <div className="shy-shape-stroke">
+        <div className="shy-shape-stroke-current" onMouseDown={e => setDropVisible(e => e ? false : true)}></div>
+        {visible && <div className="shy-shape-stroke-drops">
             <div className="shy-shape-stroke-types">
                 <a>
                     <svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
@@ -55,14 +54,14 @@ export class ShapeStroke extends EventsComponent {
                 </a>
             </div>
             <div className="shy-shape-stroke-opacity">
-                <MeasureView value={10} onChange={e => { }}></MeasureView>
+                <MeasureView showValue={false} value={10} onChange={e => { }}></MeasureView>
             </div>
             <div className="shy-shape-stroke-width">
-                <MeasureView value={10} onChange={e => { }}></MeasureView>
+                <MeasureView showValue={false} value={10} onChange={e => { }}></MeasureView>
             </div>
             <div className="shy-shape-stroke-colors">{colors.map(c => {
-                return <a key={c.color}><span style={{ backgroundColor: c.color }}></span></a>
+                return <a key={c.color} style={{ backgroundColor: c.color }}></a>
             })}</div>
-        </div>
-    }
+        </div>}
+    </div>
 }
