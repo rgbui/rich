@@ -7,7 +7,7 @@ import { BlockView } from "../../../../src/block/view";
 export class TableStoreBoardColumn extends Block {
 
 }
-@view('/tablestore/board')
+@view('/tablestore/board/column')
 export class TableStoreBoardColumnView extends BlockView<TableStoreBoardColumn>{
     render() {
         return <div className='sy-tablestore-board-column'>
