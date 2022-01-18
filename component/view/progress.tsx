@@ -7,6 +7,7 @@ export class MeasureView extends React.Component<{
     max?: number,
     ratio?: number,
     value: number,
+    showValue?: boolean,
     onChange: (value: number) => void
 }>{
     setProgress(e: React.MouseEvent) {
@@ -50,10 +51,13 @@ export class MeasureView extends React.Component<{
         let max = props.max || 10;
         let pa = (value - min) / (max - min);
         return <div className='shy-measure' ref={e => this.el = e} onMouseDown={e => e.stopPropagation()} >
-            <div className='shy-measure-progress' onMouseDown={e => this.setProgress(e)}>
-                <div className='shy-measure-progress-bar' style={{ width: pa + '%' }}></div>
+            <div className="shy-measure-wrapper" onMouseDown={e => this.setProgress(e)}>
+                <div className='shy-measure-progress'>
+                    <div className='shy-measure-progress-bar' style={{ width: pa + '%' }}></div>
+                    <div className="shy-measure-progress-circle" style={{ left: pa + '%' }}></div>
+                </div>
             </div>
-            <div className='shy-measure-value'>{this.props.value}%</div>
+            {props.showValue !== false && <div className='shy-measure-value'>{this.props.value}%</div>}
         </div>
     }
 }
