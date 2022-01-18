@@ -6,7 +6,7 @@ export class Select extends React.Component<{
     options: { text: string, value: any }[],
     onChange?: (value: any) => void,
     style?: CSSProperties,
-    dropAlign?:'left'|'right'
+    dropAlign?: 'left' | 'right'
 }>{
     private toggle: boolean = false;
     mousedown(event: MouseEvent) {
@@ -36,13 +36,14 @@ export class Select extends React.Component<{
             self.toggle = !self.toggle;
             self.forceUpdate()
         }
-        var dropStyle:CSSProperties={left:0};
-        if(this.props.dropAlign=='right'){
-            dropStyle={right:0};
+        var dropStyle: CSSProperties = { left: 0 };
+        if (this.props.dropAlign == 'right') {
+            dropStyle = { right: 0 };
         }
+        var op = props.options.find(g => g.value == props.value);
         return <div className='shy-select' style={this.props.style || {}} ref={e => this.el = e}>
             <div className='shy-select-selection' onClick={e => props.disabled ? undefined : (setToggle())}>
-                <span>{props.options.find(g => g.value == props.value)?.text}</span><SvgDown></SvgDown>
+                <span>{op?.text || props.value}</span><SvgDown></SvgDown>
                 {/*<input defaultValue={props.options.find(g => g.value == props.value)?.text} /> */}
             </div>
             {this.toggle && <div className='shy-select-drop' style={dropStyle} >
