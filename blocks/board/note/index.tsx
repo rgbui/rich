@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 import { Block } from "../../../src/block";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { BoardPointType, BoardBlockSelector } from "../../../src/block/partial/board";
+import { BlockCssName } from "../../../src/block/pattern/css";
 import { BlockView } from "../../../src/block/view";
 import { TextSpanArea } from "../../../src/block/view/appear";
 import { Rect, PointArrow } from "../../../src/common/vector/point";
@@ -50,14 +51,16 @@ export class Note extends Block {
         return pickers;
     }
     async getBoardEditCommand(this: Block): Promise<{ name: string; value?: any; }[]> {
+        var bold = this.pattern.css(BlockCssName.font)?.fontWeight;
         var cs: { name: string; value?: any; }[] = [];
-        cs.push({ name: 'fontSize' });
-        cs.push({ name: 'fontWeight' });
-        cs.push({ name: 'fontStyle' });
-        cs.push({ name: 'textDecoration' });
+        cs.push({ name: 'fontSize', value: Math.round(this.pattern.css(BlockCssName.font)?.fontSize || 14) });
+        cs.push({ name: 'fontWeight', value: bold == 'bold' || bold == 500 ? true : false });
+        cs.push({ name: 'fontStyle', value: this.pattern.css(BlockCssName.font)?.fontStyle == 'italic' ? true : false });
+        cs.push({ name: 'textDecoration', value: this.pattern.css(BlockCssName.font)?.textDecoration });
+        cs.push({ name: 'fontColor', value: this.pattern.css(BlockCssName.font)?.color });
         cs.push({ name: 'link' });
         cs.push({ name: 'stickerSize' });
-        cs.push({ name: 'backgroundColor' });
+        cs.push({ name: 'backgroundColor', value: this.pattern.css(BlockCssName.fill)?.color || 'transparent' });
         return cs;
     }
 }

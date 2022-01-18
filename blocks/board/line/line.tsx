@@ -99,11 +99,18 @@ export class Line extends Block {
     }
     async getBoardEditCommand(this: Block): Promise<{ name: string; value?: any; }[]> {
         var cs: { name: string; value?: any; }[] = [];
+        cs.push({ name: 'lineInsertSharp' });
         cs.push({ name: 'lineArrow' });
         cs.push({ name: 'lineType' });
-        cs.push({ name: 'lineColor' });
-        cs.push({ name: 'lineInsertSharp' });
+        cs.push({ name: 'backgroundColor' });
         return cs;
+    }
+    getVisiblePolygon() {
+        var from = this.cacPortLocationPos(this.from);
+        var to = this.cacPortLocationPos(this.to);
+        var gm = this.globalWindowMatrix;
+        var poly = new Polygon(gm.transform(from), gm.transform(to));
+        return poly;
     }
 }
 @view('/line')

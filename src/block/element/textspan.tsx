@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { url, view } from '../factory/observable';
-import { TextArea, TextLineChilds, TextSpanArea } from '../view/appear';
+import { TextSpanArea } from '../view/appear';
 import { BlockDisplay } from '../enum';
 import { BlockView } from '../view';
 import { Block } from '..';
@@ -12,6 +12,7 @@ import { ActionDirective } from '../../history/declare';
 import { FontCss, BlockCssName } from '../pattern/css';
 import { CssSelectorType } from '../pattern/type';
 import { MouseDragger } from '../../common/dragger';
+
 @url("/textspan")
 export class TextSpan extends Block {
     display = BlockDisplay.block;
@@ -129,7 +130,7 @@ export class TextSpan extends Block {
                         bh += dy;
                     }
                     block.matrix = matrix.appended(ma);
-                    var currentFontSize = Math.max(12, fontSize + (bh - h));
+                    var currentFontSize = Math.max(12, Math.round(fontSize + (bh - h)));
                     block.page.snapshoot.pause();
                     block.pattern.setStyle(BlockCssName.font, { lineHeight: (currentFontSize * 1.2) + 'px', fontSize: currentFontSize });
                     await block.forceUpdate();
@@ -147,14 +148,15 @@ export class TextSpan extends Block {
         });
     }
     async getBoardEditCommand(this: Block): Promise<{ name: string; value?: any; }[]> {
+        var bold = this.pattern.css(BlockCssName.font).fontWeight;
         var cs: { name: string; value?: any; }[] = [];
-        cs.push({ name: 'fontSize' });
-        cs.push({ name: 'fontWeight' });
-        cs.push({ name: 'fontStyle' });
-        cs.push({ name: 'textDecoration' });
-        cs.push({ name: 'fontColor' });
+        cs.push({ name: 'fontSize', value: Math.round(this.pattern.css(BlockCssName.font).fontSize||14) });
+        cs.push({ name: 'fontWeight', value: bold == 'bold' || bold == 500 ? true : false });
+        cs.push({ name: 'fontStyle', value: this.pattern.css(BlockCssName.font).fontStyle == 'italic' ? true : false });
+        cs.push({ name: 'textDecoration', value: this.pattern.css(BlockCssName.font).textDecoration });
+        cs.push({ name: 'fontColor', value: this.pattern.css(BlockCssName.font).color });
         cs.push({ name: 'link' });
-        cs.push({ name: 'backgroundColor' });
+        cs.push({ name: 'backgroundColor', value: this.pattern.css(BlockCssName.fill)?.color || 'transparent' });
         return cs;
     }
 }
