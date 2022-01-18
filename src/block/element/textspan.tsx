@@ -40,10 +40,9 @@ export class TextSpan extends Block {
     }
     get fixedSize(): { width: number; height: number; } {
         if (this.el) {
-            var r = this.el.getBoundingClientRect();
             return {
-                width: r.width,
-                height: r.height
+                width: this.el.offsetWidth,
+                height: this.el.offsetHeight
             }
         }
         else {
@@ -146,6 +145,17 @@ export class TextSpan extends Block {
                 }
             }
         });
+    }
+    async getBoardEditCommand(this: Block): Promise<{ name: string; value?: any; }[]> {
+        var cs: { name: string; value?: any; }[] = [];
+        cs.push({ name: 'fontSize' });
+        cs.push({ name: 'fontWeight' });
+        cs.push({ name: 'fontStyle' });
+        cs.push({ name: 'textDecoration' });
+        cs.push({ name: 'fontColor' });
+        cs.push({ name: 'link' });
+        cs.push({ name: 'backgroundColor' });
+        return cs;
     }
 }
 @view("/textspan")

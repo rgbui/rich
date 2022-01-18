@@ -97,6 +97,14 @@ export class Line extends Block {
         }
         this.manualUpdateProps(oldData, { from, to });
     }
+    async getBoardEditCommand(this: Block): Promise<{ name: string; value?: any; }[]> {
+        var cs: { name: string; value?: any; }[] = [];
+        cs.push({ name: 'lineArrow' });
+        cs.push({ name: 'lineType' });
+        cs.push({ name: 'lineColor' });
+        cs.push({ name: 'lineInsertSharp' });
+        return cs;
+    }
 }
 @view('/line')
 export class LineView extends BlockView<Line>{

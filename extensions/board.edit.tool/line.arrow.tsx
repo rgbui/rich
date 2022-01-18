@@ -1,4 +1,6 @@
-import { ShapeType } from "../shapes/shapes";
+import React from "react"
+import { MeasureView } from "../../component/view/progress"
+import { ShapeType } from "../shapes/shapes"
 export var rightArrows: ShapeType[] = [
     {
         shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
@@ -104,3 +106,77 @@ export var leftArrows: ShapeType[] = [
 </svg>` },
 
 ]
+
+export function LineArrow(props) {
+    return <div className="shy-line-arrow">
+        <div className="shy-line-arrow-current">
+            <span></span>
+            <span></span>
+        </div>
+        <div className="shy-line-arrow-drop-lefts">
+            {leftArrows.map((arrow, index) => {
+                return <a key={index} dangerouslySetInnerHTML={{ __html: arrow.shape }}></a>
+            })}
+        </div>
+        <div className="shy-line-arrow-drop-rights">
+            {rightArrows.map((arrow, index) => {
+                return <a key={index} dangerouslySetInnerHTML={{ __html: arrow.shape }}></a>
+            })}
+        </div>
+    </div>
+}
+
+export function LineTypes(props) {
+    return <div className="shy-line-types">
+        <div className="shy-line-types-current"></div>
+        <div className="shy-line-types-opacity">
+            <MeasureView value={10} onChange={e => { }}></MeasureView>
+        </div>
+        <div className="shy-line-types-all">
+            <a><svg fill="none" viewBox="0 0 24 24" id="83f05e7ae5a28026ff2fde3258c59174" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clipRule="evenodd"
+                    d="M22.958 8.713a1 1 0 01-.67 1.245l-20 6a1 1 0 01-.575-1.916l20-6a1 1 0 011.245.67z" fill="currentColor">
+                </path>
+            </svg></a><a>
+                <svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clipRule="evenodd" d="M11 7h11a1 1 0 110 2h-9v8H2a1 1 0 110-2h9V7z"
+                        fill="currentColor"></path>
+                </svg>
+            </a>
+            <a>
+                <svg fill="none" viewBox="0 0 24 24" id="ea846567fe526e232ee2c8e4d6312fd6" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clipRule="evenodd"
+                        d="M2.948 12.317a1.102 1.102 0 010 .003 2.753 2.753 0 01.145-.303c.12-.217.317-.513.614-.81C4.282 10.632 5.283 10 7 10c.732 0 1.41.27 2.118.76.725.501 1.41 1.183 2.175 1.947l.032.032c.728.728 1.531 1.532 2.418 2.146C14.661 15.52 15.733 16 17 16c2.283 0 3.782-.868 4.707-1.793a5.69 5.69 0 00.948-1.253 4.738 4.738 0 00.284-.611l.006-.016.002-.006v-.002l.001-.002L22 12l.949.316a1 1 0 00-1.897-.636 2.76 2.76 0 01-.145.303c-.12.217-.317.513-.614.81C19.718 13.368 18.718 14 17 14c-.732 0-1.41-.27-2.118-.76-.725-.501-1.41-1.183-2.175-1.947l-.032-.032c-.728-.728-1.531-1.532-2.418-2.146C9.339 8.48 8.267 8 7 8c-2.283 0-3.782.868-4.707 1.793a5.693 5.693 0 00-.948 1.253 4.736 4.736 0 00-.284.611l-.006.016-.002.006v.002l-.001.002L2 12l-.949-.316a1 1 0 001.895.64m18.106-.641L22 12a85.381 85.381 0 01-.948-.317z"
+                        fill="currentColor"></path>
+                </svg>
+            </a>
+        </div>
+        <div className="shy-line-types-stash">
+            <a>
+                <svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
+                    <g fill="none" fillRule="evenodd">
+                        <path d="M-18-5h60v40h-60z"></path>
+                        <path fill="currentColor" d="M0 14h24v2H0z"></path>
+                    </g>
+                </svg>
+            </a>
+            <a>
+                <svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 14h6v2H0zm9 0h6v2H9zm9 0h6v2h-6z" fill="currentColor" fillRule="evenodd"></path>
+                </svg>
+            </a>
+            <a>
+                <svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
+                    <g fill="currentColor" transform="translate(0 14)" fillRule="evenodd">
+                        <rect width="2" height="2" rx="1"></rect>
+                        <rect width="2" height="2" x="4" rx="1"></rect>
+                        <rect width="2" height="2" x="8" rx="1"></rect>
+                        <rect width="2" height="2" x="12" rx="1"></rect>
+                        <rect width="2" height="2" x="16" rx="1"></rect>
+                        <rect width="2" height="2" x="20" rx="1"></rect>
+                    </g>
+                </svg>
+            </a>
+        </div>
+    </div>
+}

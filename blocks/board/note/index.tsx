@@ -49,6 +49,17 @@ export class Note extends Block {
         }
         return pickers;
     }
+    async getBoardEditCommand(this: Block): Promise<{ name: string; value?: any; }[]> {
+        var cs: { name: string; value?: any; }[] = [];
+        cs.push({ name: 'fontSize' });
+        cs.push({ name: 'fontWeight' });
+        cs.push({ name: 'fontStyle' });
+        cs.push({ name: 'textDecoration' });
+        cs.push({ name: 'link' });
+        cs.push({ name: 'stickerSize' });
+        cs.push({ name: 'backgroundColor' });
+        return cs;
+    }
 }
 @view('/note')
 export class NoteView extends BlockView<Note>{

@@ -6,6 +6,7 @@ import { prop, url, view } from '../../factory/observable';
 import { ChildsArea, TextArea } from '../../view/appear';
 import { BlockAppear } from '../../appear';
 import "./style.less";
+import { BoardPointType, BoardBlockSelector } from '../../partial/board';
 /**
  * 可以将相邻的block变成一个整体去操作，
  * 可以看成是contentBlock
@@ -18,6 +19,17 @@ export class Frame extends Block {
     fixedWidth: number = 800;
     @prop()
     fixedHeight: number = 300;
+    getBlockBoardSelector(this: Block, types?: BoardPointType[]): BoardBlockSelector[] {
+        var pickers = super.getBlockBoardSelector();
+        pickers.removeAll(p => p.type == BoardPointType.rotatePort);
+        return pickers;
+    }
+    async getBoardEditCommand(this: Block): Promise<{ name: string; value?: any; }[]> {
+        var cs: { name: string; value?: any; }[] = [];
+        cs.push({ name: 'frameRadio' });
+        cs.push({ name: 'backgroundColor' });
+        return cs;
+    }
 }
 @view('/frame')
 export class FrameView extends BlockView<Frame>{
