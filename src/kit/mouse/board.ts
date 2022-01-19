@@ -13,6 +13,20 @@ import { ActionDirective } from "../../history/declare";
 import { PageLayoutType } from "../../layout/declare";
 import { loadPaper } from "../../paper";
 
+
+export async function useBoardTool(kit: Kit) {
+    while (true) {
+        var r = await useBoardEditTool(kit.picker.blocks);
+        if (r) {
+            await kit.page.onAction(ActionDirective.onBoardEditProp, async () => {
+                await kit.picker.blocks.eachAsync(async (block) => {
+                    await block.setBoardEditCommand(r.name, r.value);
+                })
+            })
+        } else break;
+    }
+
+}
 export function SelectorBoardBlock(kit: Kit, block: Block | undefined, event: MouseEvent) {
     var isBoardSelector = false;
     if (block?.isFreeBlock) {
@@ -33,6 +47,7 @@ export function SelectorBoardBlock(kit: Kit, block: Block | undefined, event: Mo
                 kit.picker.onPicker([block]);
             }
         }
+        forceCloseBoardEditTool();
         MouseDragger({
             event,
             move(ev, data) {
@@ -48,6 +63,7 @@ export function SelectorBoardBlock(kit: Kit, block: Block | undefined, event: Mo
                         else {
                             kit.picker.blocks[0].onContextmenu(ev);
                         }
+                        return;
                     }
                     else {
                         if (isPicker && kit.picker.blocks.length == 1) {
@@ -56,10 +72,11 @@ export function SelectorBoardBlock(kit: Kit, block: Block | undefined, event: Mo
                             var anchor = block.visibleAnchor(Point.from(event));
                             if (!(anchor && anchor.block.isAllowMouseAnchor)) return;
                             kit.explorer.onFocusAnchor(anchor);
+                            return;
                         }
                     }
                 }
-                await useBoardEditTool(kit.picker.blocks);
+                await useBoardTool(kit);
             }
         })
     }
@@ -71,6 +88,7 @@ export function SelectorBoardBlock(kit: Kit, block: Block | undefined, event: Mo
         var ma = kit.page.matrix.clone();
         var gm = kit.page.globalMatrix.clone();
         var fromP = gm.inverseTransform(Point.from(event));
+        forceCloseBoardEditTool()
         MouseDragger({
             event,
             moveStart() {
@@ -102,7 +120,7 @@ export function SelectorBoardBlock(kit: Kit, block: Block | undefined, event: Mo
                         kit.page.onContextMenu(ev);
                     }
                 }
-                forceCloseBoardEditTool()
+
             }
         })
     }
