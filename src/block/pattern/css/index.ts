@@ -124,6 +124,12 @@ export class FillCss extends BlockCss {
     shape: "circle" | 'ellipse';
     size: 'farthest-corner' | 'closest-side' | 'closest-corner' | 'farthest-side';
     position: { x: number, y: number }
+    get style() {
+        if (this.mode == 'color') {
+            return { backgroundColor: this.color };
+        }
+        else return {}
+    }
 }
 export class BorderCss extends BlockCss {
     cssName = BlockCssName.border;
