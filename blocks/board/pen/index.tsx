@@ -12,9 +12,18 @@ export class Pen extends Block {
     pathString: string = '';
     async getBoardEditCommand(this: Block): Promise<{ name: string; value?: any; }[]> {
         var cs: { name: string; value?: any; }[] = [];
-        cs.push({ name: 'tickness' });
-        cs.push({ name: 'backgroundColor' });
+        console.log(this.pattern);
+        cs.push({ name: 'tickness', value: this.pattern.getSvgStyle()?.strokeWidth || 2 });
+        cs.push({ name: 'backgroundColor', value: this.pattern.getSvgStyle()?.stroke || '#000' });
         return cs;
+    }
+    async setBoardEditCommand(name: string, value: any) {
+        if (name == 'tickness') {
+            this.pattern.setSvgStyle({ strokeWidth: value })
+        }
+        else if (name == 'backgroundColor') {
+            this.pattern.setSvgStyle({ stroke: value })
+        }
     }
 }
 @view('/pen')
