@@ -7,12 +7,16 @@ import { ChildsArea, TextArea } from '../../view/appear';
 import { BlockAppear } from '../../appear';
 import "./style.less";
 import { BoardPointType, BoardBlockSelector } from '../../partial/board';
+import { BlockCssName } from '../../pattern/css';
 /**
  * 可以将相邻的block变成一个整体去操作，
  * 可以看成是contentBlock
  */
 @url('/frame')
 export class Frame extends Block {
+    async created(this: Block): Promise<void>{
+        this.pattern.setFillStyle({ color: '#fff' });
+    }
     @prop()
     frameTitle: string = '';
     @prop()
@@ -27,8 +31,13 @@ export class Frame extends Block {
     async getBoardEditCommand(this: Block): Promise<{ name: string; value?: any; }[]> {
         var cs: { name: string; value?: any; }[] = [];
         cs.push({ name: 'frameRadio' });
-        cs.push({ name: 'backgroundColor' });
+        cs.push({ name: 'backgroundColor', value: this.pattern.css(BlockCssName.fill)?.color || 'transparent' });
         return cs;
+    }
+    async setBoardEditCommand(this: Block, name: string, value: any) {
+        if (name == 'backgroundColor')
+            this.pattern.setFillStyle({ color: value, mode: 'color' });
+       
     }
 }
 @view('/frame')
