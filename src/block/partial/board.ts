@@ -191,8 +191,24 @@ export class Block$Board {
         var cs = [];
         return []
     }
-    async setBoardEditCommand(this: Block, name: string, value: any) {
-
+    async setBoardEditCommand(this: Block, name: string, value: any):Promise<boolean|void> {
+        if (name == 'fontSize') {
+            this.pattern.setFontStyle({ fontSize: value });
+        }
+        else if (name == 'fontWeight') {
+            this.pattern.setFontStyle({ fontWeight: value });
+        }
+        else if (name == 'fontStyle') {
+            this.pattern.setFontStyle({ fontStyle: value ? 'italic' : 'normal' });
+        }
+        else if (name == 'textDecoration') {
+            this.pattern.setFontStyle({ textDecoration: value });
+        }
+        else if (name == 'fontColor') {
+            this.pattern.setFontStyle({ color: value });
+        }
+        else return false;
+        return undefined;
     }
 }
 
