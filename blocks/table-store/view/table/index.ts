@@ -300,6 +300,7 @@ export class TableStore extends Block {
         }
         return json;
     }
+    
     async created() {
         if (!this.schemaId) {
             var schemaData = await this.page.emitAsync(PageDirective.schemaCreate, this.initialData);
