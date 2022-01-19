@@ -50,11 +50,12 @@ export class MeasureView extends React.Component<{
         let min = props.min || 0;
         let max = props.max || 10;
         let pa = (value - min) / (max - min);
+        console.log(pa, value);
         return <div className='shy-measure' ref={e => this.el = e} onMouseDown={e => e.stopPropagation()} >
             <div className="shy-measure-wrapper" onMouseDown={e => this.setProgress(e)}>
                 <div className='shy-measure-progress'>
-                    <div className='shy-measure-progress-bar' style={{ width: pa + '%' }}></div>
-                    <div className="shy-measure-progress-circle" style={{ left: pa + '%' }}></div>
+                    <div className='shy-measure-progress-bar' style={{ width: pa * 100 + '%' }}></div>
+                    <div className="shy-measure-progress-circle" style={{ left: pa * 100 + '%' }}></div>
                 </div>
             </div>
             {props.showValue !== false && <div className='shy-measure-value'>{this.props.value}%</div>}
