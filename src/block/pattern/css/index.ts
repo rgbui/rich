@@ -9,7 +9,8 @@ export enum BlockCssName {
     filter,
     radius,
     transform,
-    gap
+    gap,
+    svg
 }
 
 export abstract class BlockCss {
@@ -66,6 +67,8 @@ export abstract class BlockCss {
                 return (new FillCss(css));
             case BlockCssName.transform:
                 return (new TransformCss(css));
+            case BlockCssName.svg:
+                return (new SvgCss(css));
         }
     }
     get style() {
@@ -79,7 +82,7 @@ export class FontCss extends BlockCss {
     color: string;
     fontSize: number;
     lineHeight: number;
-    fontStyle: 'normail' | 'italic';
+    fontStyle: 'normal' | 'italic';
     fontWeight: 'normal' | 'bold' | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
     letterSpacing: 'normal' | number;
     textDecoration: 'none' | 'line-through' | 'underline';
@@ -177,4 +180,24 @@ export class GapCss extends BlockCss {
     cssName = BlockCssName.gap;
     margin: { top: number, left: number, right: number, bottom: number }
     padding: { top: number, left: number, right: number, bottom: number }
+}
+
+export class SvgCss extends BlockCss {
+    cssName = BlockCssName.svg;
+    stroke: string;
+    strokeWidth: number;
+    strokeOpacity: number;
+    strokeDasharray: 'none' | 'dash' | 'dash-circle';
+    fill: string;
+    fillOpacity: number;
+    get style() {
+        return {
+            stroke: this.stroke,
+            strokeDasharray: this.strokeDasharray == 'none' ? undefined : (this.strokeDasharray == 'dash' ? "10,10" : "2,2"),
+            strokeWidth: this.strokeWidth,
+            strokeOpacity: this.strokeOpacity,
+            fill: this.fill,
+            fillOpacity: this.fillOpacity
+        }
+    }
 }
