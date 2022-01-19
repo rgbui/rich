@@ -66,6 +66,10 @@ export class Note extends Block {
     async setBoardEditCommand(name: string, value: any) {
         if (name == 'backgroundColor')
             this.updateProps({ color: value })
+        else (await super.setBoardEditCommand(name, value) == false)
+        {
+
+        }
     }
 }
 @view('/note')
