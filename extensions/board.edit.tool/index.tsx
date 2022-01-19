@@ -45,7 +45,7 @@ class BoardEditTool extends EventsComponent {
                     <TurnShapes></TurnShapes>
                 </div>
             </Tip>}
-            {this.commands.some(s => s.name == 'fontSize') && <><Tip id={LangID.textToolBold}>
+            {is('fontSize') && <><Tip id={LangID.textToolBold}>
                 <div className={'shy-board-edit-tool-item'} >
                     <Select value={getValue('fontSize')}
                         onChange={e => this.onChange('fontSize', e)}
@@ -64,56 +64,70 @@ class BoardEditTool extends EventsComponent {
                         ]}></Select>
                 </div>
             </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
-            {this.commands.some(s => s.name == 'stickerSize') && <><Tip id={LangID.textToolBold}>
+            {is('stickerSize') && <><Tip id={LangID.textToolBold}>
                 <div className={'shy-board-edit-tool-item'} >
                     <Select style={{ width: 50 }} value={'大小'} options={[{ text: '小', value: 'small' }, { text: '中', value: 'medium' }, { text: '大', value: 'big' }]}></Select>
                 </div>
             </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
-            {this.commands.some(s => s.name == 'fontWeight') && <Tip id={LangID.textToolBold}>
-                <div className={'shy-board-edit-tool-item'} >
-                    <Icon icon='bold:sy'></Icon>
+            {is('fontWeight') && <Tip id={LangID.textToolBold}>
+                <div className={'shy-board-edit-tool-item' + (getValue('fontWeight') == 'bold' || getValue('fontWeight') > 500 ? " hover" : "")}
+                    onMouseDown={e => this.onChange('fontWeight', getValue('fontWeight') == 'bold' || getValue('fontWeight') > 500 ? "normal" : 'bold')}
+                ><Icon icon='bold:sy'></Icon>
                 </div>
             </Tip>}
-            {this.commands.some(s => s.name == 'tickness') && <><div style={{ width: 90 }} className={'shy-board-edit-tool-item'}>
-                <MeasureView showValue={false} value={10} onChange={e => { }}></MeasureView>
+            {is('tickness') && <><div style={{ width: 90 }} className={'shy-board-edit-tool-item'}>
+                <MeasureView min={1} max={40} showValue={false} value={getValue('tickness')} onChange={e => { this.onChange('tickness', e) }}></MeasureView>
             </div></>}
-            {this.commands.some(s => s.name == 'itailc') && <Tip id={LangID.textToolItailc}>
-                <div className={'shy-board-edit-tool-item'} >
-                    <Icon icon='italic:sy'></Icon>
+            {is('itailc') && <Tip id={LangID.textToolItailc}>
+                <div className={'shy-board-edit-tool-item' + (getValue('itailc') == 'itailc' ? " hover" : "")}
+                    onMouseDown={e => this.onChange('itailc', getValue('itailc') == 'itailc' ? false : true)}
+                ><Icon icon='italic:sy'></Icon>
                 </div>
             </Tip>}
-            {this.commands.some(s => s.name == 'textDecoration') && <Tip id={LangID.textToolUnderline}>
-                <div className={'shy-board-edit-tool-item'}>
-                    <Icon icon='underline:sy'></Icon>
+            {is('textDecoration') && <Tip id={LangID.textToolDeleteLine}>
+                <div className={'shy-board-edit-tool-item' + (getValue('textDecoration') == 'line-through' ? " hover" : "")}
+                    onMouseDown={e => this.onChange('textDecoration', getValue('textDecoration') == 'line-through' ? "none" : "line-through")}
+                ><Icon icon='delete-line:sy'></Icon>
                 </div>
             </Tip>}
-            {this.commands.some(s => s.name == 'textDecoration') && <><Tip id={LangID.textToolDeleteLine}>
-                <div className={'shy-board-edit-tool-item'}>
-                    <Icon icon='delete-line:sy'></Icon>
+            {is('textDecoration') && <><Tip id={LangID.textToolUnderline}>
+                <div
+                    className={'shy-board-edit-tool-item' + (getValue('textDecoration') == 'underline' ? " hover" : "")}
+                    onMouseDown={e => this.onChange('textDecoration', getValue('textDecoration') == 'underline' ? "none" : "underline")}
+                > <Icon icon='underline:sy'></Icon>
                 </div>
             </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
-            {this.commands.some(s => s.name == 'backgroundColor') && <Tip overlay={'背景'}>
+            {is('backgroundColor') && <Tip overlay={'背景'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <BackgroundColor value={getValue('backgroundColor')} change={e => { this.onChange('backgroundColor', e) }}></BackgroundColor>
                 </div>
             </Tip>}
 
-            {this.commands.some(s => s.name == 'stoke') && <Tip id={LangID.textToolDeleteLine}>
+            {is('stoke') && <Tip overlay={'边框'}>
                 <div className={'shy-board-edit-tool-item'}>
-                    <ShapeStroke ></ShapeStroke>
+                    <ShapeStroke
+                        stroke={getValue('stroke')}
+                        strokeWidth={getValue('strokeWidth')}
+                        strokeDasharray={getValue('strokeDasharray')}
+                        strokeOpacity={getValue('strokeOpacity')}
+                        change={(name, e) => this.onChange(name, e)}></ShapeStroke>
                 </div>
             </Tip>}
-            {this.commands.some(s => s.name == 'fillColor') && <Tip id={LangID.textToolDeleteLine}>
+            {is('fillColor') && is('fillOpacity') && <Tip id={LangID.textToolDeleteLine}>
                 <div className={'shy-board-edit-tool-item'}>
-                    <ShapeFill ></ShapeFill>
+                    <ShapeFill
+                        fillColor={getValue('fillColor')}
+                        fillOpacity={getValue('fillOpacity')}
+                        change={(name, e) => this.onChange(name, e)}
+                    ></ShapeFill>
                 </div>
             </Tip>}
-            {this.commands.some(s => s.name == 'lineArrow') && <Tip id={LangID.textToolDeleteLine}>
+            {is('lineArrow') && <Tip id={LangID.textToolDeleteLine}>
                 <div className={'shy-board-edit-tool-item'}>
                     <LineArrow ></LineArrow>
                 </div>
             </Tip>}
-            {this.commands.some(s => s.name == 'lineType') && <Tip id={LangID.textToolDeleteLine}>
+            {is('lineType') && <Tip id={LangID.textToolDeleteLine}>
                 <div className={'shy-board-edit-tool-item'}>
                     <LineTypes ></LineTypes>
                 </div>
