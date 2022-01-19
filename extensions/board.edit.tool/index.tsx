@@ -3,17 +3,13 @@ import { ReactNode } from "react";
 import { EventsComponent } from "../../component/lib/events.component";
 import { Singleton } from "../../component/lib/Singleton";
 import { Icon } from "../../component/view/icon";
-import { MenuItemType } from "../../component/view/menu/declare";
 import { MeasureView } from "../../component/view/progress";
 import { Select } from "../../component/view/select";
 import { Tip } from "../../component/view/tip";
 import { LangID } from "../../i18n/declare";
 import { Block } from "../../src/block";
-import { BlockDirective } from "../../src/block/enum";
-import { BlockCssName } from "../../src/block/pattern/css";
 import { Point } from "../../src/common/vector/point";
 import { Polygon } from "../../src/common/vector/polygon";
-import { textToolResult } from "../text.tool";
 import { BackgroundColor } from "./background";
 import { ShapeFill } from "./fill";
 import { FrameScale } from "./frame.scale";
@@ -35,13 +31,16 @@ class BoardEditTool extends EventsComponent {
             var command = self.commands.find(g => g.name == name);
             if (command) return command.value;
         }
+        function is(name: string) {
+            return self.commands.some(s => s.name == name);
+        }
         return <div style={style} className="shy-board-edit-tool">
-            {this.commands.some(s => s.name == 'frameScale') && <Tip id={LangID.textToolBold}>
+            {is('frameScale') && <Tip id={LangID.textToolBold}>
                 <div className={'shy-board-edit-tool-item'} >
                     <FrameScale></FrameScale>
                 </div>
             </Tip>}
-            {this.commands.some(s => s.name == 'turnShapes') && <Tip id={LangID.textToolBold}>
+            {is('turnShapes') && <Tip id={LangID.textToolBold}>
                 <div className={'shy-board-edit-tool-item'} >
                     <TurnShapes></TurnShapes>
                 </div>
@@ -75,7 +74,7 @@ class BoardEditTool extends EventsComponent {
                     <Icon icon='bold:sy'></Icon>
                 </div>
             </Tip>}
-            {this.commands.some(s => s.name == 'tickness') && <><div style={{width:90}} className={'shy-board-edit-tool-item'}>
+            {this.commands.some(s => s.name == 'tickness') && <><div style={{ width: 90 }} className={'shy-board-edit-tool-item'}>
                 <MeasureView showValue={false} value={10} onChange={e => { }}></MeasureView>
             </div></>}
             {this.commands.some(s => s.name == 'itailc') && <Tip id={LangID.textToolItailc}>
@@ -93,9 +92,9 @@ class BoardEditTool extends EventsComponent {
                     <Icon icon='delete-line:sy'></Icon>
                 </div>
             </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
-            {this.commands.some(s => s.name == 'backgroundColor') && <Tip id={LangID.textToolDeleteLine}>
+            {this.commands.some(s => s.name == 'backgroundColor') && <Tip overlay={'背景'}>
                 <div className={'shy-board-edit-tool-item'}>
-                    <BackgroundColor value={'#000'} change={e => { }}></BackgroundColor>
+                    <BackgroundColor value={getValue('backgroundColor')} change={e => { this.onChange('backgroundColor', e) }}></BackgroundColor>
                 </div>
             </Tip>}
 
@@ -150,6 +149,7 @@ class BoardEditTool extends EventsComponent {
     }
     async onChange(name: string, value: any) {
         console.log(name, value);
+        this.emit('save', { name, value });
     }
     close() {
         if (this.visible == true) {
@@ -160,31 +160,21 @@ class BoardEditTool extends EventsComponent {
     }
 }
 interface BoardEditTool {
-    emit(name: 'setStyle', styles: Record<BlockCssName, Record<string, any>>);
-    emit(name: 'setProp', props: Record<string, any>);
-    emit(name: 'turn', item: MenuItemType<BlockDirective>, event: MouseEvent);
+    emit(name: 'save', data: { name: string, value: any });
     emit(name: 'close');
-    only(name: 'setProp', props: Record<string, any>);
-    only(name: 'setStyle', fn: (syles: Record<BlockCssName, Record<string, any>>) => void);
-    only(name: 'turn', fn: (item: MenuItemType<BlockDirective>, event: MouseEvent) => void);
+    only(name: 'save', fn: (data: { name: string, value: any }) => void);
     only(name: 'close', fn: () => void);
 }
 var editTool: BoardEditTool;
 export async function useBoardEditTool(blocks: Block[]) {
     editTool = await Singleton(BoardEditTool);
     editTool.open(blocks);
-    return new Promise((resolve: (result: textToolResult) => void, reject) => {
-        editTool.only('setStyle', (styles) => {
-            resolve({ command: 'setStyle', styles })
-        });
-        editTool.only('setProp', (props) => {
-            resolve({ command: 'setProp', props })
-        })
-        editTool.only("turn", (item, event) => {
-            resolve({ command: 'turn', item, event })
+    return new Promise((resolve: (result: { name: string, value: any }) => void, reject) => {
+        editTool.only('save', (data: { name: string, value: any }) => {
+            resolve(data)
         });
         editTool.only("close", () => {
-            resolve(false);
+            resolve(undefined);
         })
     })
 }
