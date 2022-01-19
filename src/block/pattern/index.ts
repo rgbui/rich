@@ -2,7 +2,7 @@ import { util } from "../../../util/util";
 import { Block } from "..";
 import { BlockStyleCss } from "./style";
 import { CssSelectorType } from "./type";
-import { BlockCss, BlockCssName, BorderCss, FillCss, FilterCss, FontCss, RadiusCss, ShadowCss, TransformCss } from "./css";
+import { BlockCss, BlockCssName, BorderCss, FillCss, FilterCss, FontCss, RadiusCss, ShadowCss, SvgCss, TransformCss } from "./css";
 import { OperatorDirective } from "../../history/declare";
 
 export class Pattern {
@@ -92,11 +92,14 @@ export class Pattern {
         }
         this.block.page.addBlockUpdate(this.block);
     }
-    setFontStyle(style: Record<string, any>) {
+    setFontStyle(style: Partial<FontCss>) {
         this.setStyle(BlockCssName.font, style);
     }
-    setFillStyle(style: Record<string, any>) {
+    setFillStyle(style: Partial<FillCss>) {
         this.setStyle(BlockCssName.fill, style);
+    }
+    setSvgStyle(style: Partial<SvgCss>) {
+        this.setStyle(BlockCssName.svg, style);
     }
     setStyles(styles: Record<BlockCssName, Record<string, any>>) {
         for (var n in styles) {
@@ -115,6 +118,9 @@ export class Pattern {
     getFillStyle() {
         return this.css(BlockCssName.fill);
     }
+    getSvgStyle() {
+        return this.css(BlockCssName.svg);
+    }
 }
 
 export interface Pattern {
@@ -125,4 +131,5 @@ export interface Pattern {
     css(name: BlockCssName.shadow): ShadowCss;
     css(name: BlockCssName.filter): FilterCss;
     css(name: BlockCssName.transform): TransformCss;
+    css(name: BlockCssName.svg): SvgCss;
 }
