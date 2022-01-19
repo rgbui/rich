@@ -17,9 +17,19 @@ export class Shape extends Block {
 </svg>`;
     async getBoardEditCommand(this: Block): Promise<{ name: string; value?: any; }[]> {
         var cs: { name: string; value?: any; }[] = [];
-        cs.push({ name: 'stoke' });
-        cs.push({ name: 'fillColor' });
+        cs.push({ name: 'stroke', value: this.pattern.getSvgStyle()?.stroke || '#000' });
+        cs.push({ name: 'strokeOpacity', value: this.pattern.getSvgStyle()?.strokeOpacity || 1 });
+        cs.push({ name: 'strokeWidth', value: this.pattern.getSvgStyle()?.strokeWidth || 1 });
+        cs.push({ name: 'strokeDasharray', value: this.pattern.getSvgStyle()?.strokeDasharray || 'none' })
+
+        cs.push({ name: 'fillColor', value: this.pattern.getSvgStyle()?.fill || '#000' });
+        cs.push({ name: 'fillOpacity', value: this.pattern.getSvgStyle()?.fillOpacity || 1 });
         return cs;
+    }
+    async setBoardEditCommand(this: Block, name: string, value: any): Promise<boolean | void> {
+        if (['stroke', 'strokeOpacity', 'strokeWidth', 'fillColor', 'fillOpacity',].includes(name)) {
+            this.pattern.setSvgStyle({ [name]: value })
+        }
     }
 }
 @view('/shape')
