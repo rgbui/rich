@@ -21,10 +21,10 @@ var colors: ColorType[] = [
     { color: 'rgb(101, 44, 179)' },
     { color: 'rgb(255, 249, 177)' }
 ];
-export function ShapeFill(props) {
+export function ShapeFill(props: { fillColor: string, fillOpacity: number, change:(name:string,value:any)=>void }) {
     var [visible, setDropVisible] = React.useState(false);
     function renderSvg() {
-        return <svg viewBox="0 0 24 24"  xmlns="http://www.w3.org/2000/svg">
+        return <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <g fillRule="evenodd" transform="translate(1 1)">
                 <circle cx="11" cy="11" r="11" fillOpacity=".04"></circle>
                 <path fillOpacity=".12"
@@ -37,10 +37,10 @@ export function ShapeFill(props) {
         <div className="shy-shape-fill-current" onMouseDown={e => setDropVisible(e => e ? false : true)}>{renderSvg()}</div>
         {visible && <div className="shy-shape-fill-drops">
             <div className="shy-shape-fill-opacity">
-                <MeasureView  showValue={false} value={10} onChange={e => { }}></MeasureView>
+                <MeasureView min={0} max={10} showValue={false} value={props.fillOpacity} onChange={e => { props.change('fillOpacity', e) }}></MeasureView>
             </div>
             <div className="shy-shape-fill-colors">{colors.map(c => {
-                return <a key={c.color} style={{ backgroundColor: c.color }}></a>
+                return <a key={c.color} onMouseDown={e => this.props.change('fillColor', c.color)} className={c.color == props.fillColor ? "selected" : ""} style={{ backgroundColor: c.color }}></a>
             })}</div>
         </div>}
     </div>
