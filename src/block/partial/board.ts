@@ -191,6 +191,9 @@ export class Block$Board {
         var cs = [];
         return []
     }
+    async setBoardEditCommand(this: Block, name: string, value: any) {
+
+    }
 }
 
 
