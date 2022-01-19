@@ -50,7 +50,7 @@ export class Note extends Block {
         }
         return pickers;
     }
-    async getBoardEditCommand(this: Block): Promise<{ name: string; value?: any; }[]> {
+    async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
         var bold = this.pattern.css(BlockCssName.font)?.fontWeight;
         var cs: { name: string; value?: any; }[] = [];
         cs.push({ name: 'fontSize', value: Math.round(this.pattern.css(BlockCssName.font)?.fontSize || 14) });
@@ -60,8 +60,12 @@ export class Note extends Block {
         cs.push({ name: 'fontColor', value: this.pattern.css(BlockCssName.font)?.color });
         cs.push({ name: 'link' });
         cs.push({ name: 'stickerSize' });
-        cs.push({ name: 'backgroundColor', value: this.pattern.css(BlockCssName.fill)?.color || 'transparent' });
+        cs.push({ name: 'backgroundColor', value: this.color });
         return cs;
+    }
+    async setBoardEditCommand(name: string, value: any) {
+        if (name == 'backgroundColor')
+            this.updateProps({ color: value })
     }
 }
 @view('/note')
