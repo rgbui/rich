@@ -94,7 +94,7 @@ class BoardEditTool extends EventsComponent {
                 <div
                     className={'shy-board-edit-tool-item' + (getValue('textDecoration') == 'underline' ? " hover" : "")}
                     onMouseDown={e => this.onChange('textDecoration', getValue('textDecoration') == 'underline' ? "none" : "underline")}
-                > <Icon icon='underline:sy'></Icon>
+                ><Icon icon='underline:sy'></Icon>
                 </div>
             </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
             {is('backgroundColor') && <Tip overlay={'背景'}>
@@ -102,7 +102,6 @@ class BoardEditTool extends EventsComponent {
                     <BackgroundColor value={getValue('backgroundColor')} change={e => { this.onChange('backgroundColor', e) }}></BackgroundColor>
                 </div>
             </Tip>}
-
             {is('stoke') && <Tip overlay={'边框'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <ShapeStroke
@@ -122,14 +121,21 @@ class BoardEditTool extends EventsComponent {
                     ></ShapeFill>
                 </div>
             </Tip>}
-            {is('lineArrow') && <Tip id={LangID.textToolDeleteLine}>
+            {is('lineStart') && <Tip id={LangID.textToolDeleteLine}>
                 <div className={'shy-board-edit-tool-item'}>
-                    <LineArrow ></LineArrow>
+                    <LineArrow
+                        lineStart={getValue('lineStart')}
+                        lineEnd={getValue('lineEnd')}
+                        change={(name, e) => this.onChange(name, e)}></LineArrow>
                 </div>
             </Tip>}
             {is('lineType') && <Tip id={LangID.textToolDeleteLine}>
                 <div className={'shy-board-edit-tool-item'}>
-                    <LineTypes ></LineTypes>
+                    <LineTypes
+                        lineType={getValue('lineType')}
+                        strokeWidth={getValue('strokeWidth')}
+                        strokeDasharray={getValue('strokeDasharray')}
+                        change={(name, e) => this.onChange(name, e)}></LineTypes>
                 </div>
             </Tip>}
         </div>

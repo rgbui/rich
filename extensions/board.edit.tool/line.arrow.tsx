@@ -1,6 +1,7 @@
-import React from "react"
-import { MeasureView } from "../../component/view/progress"
-import { ShapeType } from "../shapes/shapes"
+import React from "react";
+import { MeasureView } from "../../component/view/progress";
+import { ShapeType } from "../shapes/shapes";
+
 export var rightArrows: ShapeType[] = [
     {
         shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
@@ -104,58 +105,91 @@ export var leftArrows: ShapeType[] = [
         <path d="M24 19.3a3.3 3.3 0 100-6.6 3.3 3.3 0 000 6.6zm0 1.7a5 5 0 110-10 5 5 0 010 10z"></path>
     </g>
 </svg>` },
-
 ]
 
-export function LineArrow(props) {
+export var Lines: ShapeType[] = [
+    {
+        shape: `<svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path fillRule="evenodd" clipRule="evenodd"
+        d="M22.958 8.713a1 1 0 01-.67 1.245l-20 6a1 1 0 01-.575-1.916l20-6a1 1 0 011.245.67z" fill="currentColor">
+    </path>
+</svg>`
+    },
+    {
+        shape: `<svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path fillRule="evenodd" clipRule="evenodd" d="M11 7h11a1 1 0 110 2h-9v8H2a1 1 0 110-2h9V7z"
+        fill="currentColor"></path>
+</svg>`
+    },
+    {
+        shape: `<svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path fillRule="evenodd" clipRule="evenodd"
+        d="M2.948 12.317a1.102 1.102 0 010 .003 2.753 2.753 0 01.145-.303c.12-.217.317-.513.614-.81C4.282 10.632 5.283 10 7 10c.732 0 1.41.27 2.118.76.725.501 1.41 1.183 2.175 1.947l.032.032c.728.728 1.531 1.532 2.418 2.146C14.661 15.52 15.733 16 17 16c2.283 0 3.782-.868 4.707-1.793a5.69 5.69 0 00.948-1.253 4.738 4.738 0 00.284-.611l.006-.016.002-.006v-.002l.001-.002L22 12l.949.316a1 1 0 00-1.897-.636 2.76 2.76 0 01-.145.303c-.12.217-.317.513-.614.81C19.718 13.368 18.718 14 17 14c-.732 0-1.41-.27-2.118-.76-.725-.501-1.41-1.183-2.175-1.947l-.032-.032c-.728-.728-1.531-1.532-2.418-2.146C9.339 8.48 8.267 8 7 8c-2.283 0-3.782.868-4.707 1.793a5.693 5.693 0 00-.948 1.253 4.736 4.736 0 00-.284.611l-.006.016-.002.006v.002l-.001.002L2 12l-.949-.316a1 1 0 001.895.64m18.106-.641L22 12a85.381 85.381 0 01-.948-.317z"
+        fill="currentColor"></path>
+</svg>` }
+]
+
+export function LineArrow(props: { lineStart: string, lineEnd: string, change: (name: string, value: any) => void }) {
     var [visible, setDropVisible] = React.useState(0);
     return <div className="shy-line-arrow">
         <div className="shy-line-arrow-current">
-            <span onMouseDown={e => setDropVisible(e => e == 1 ? 0 : 1)}></span>
-            <span onMouseDown={e => setDropVisible(e => e == 2 ? 0 : 2)}></span>
+            <span style={{ transform: `scale(-1,1)` }} onMouseDown={e => setDropVisible(e => e == 1 ? 0 : 1)}
+                dangerouslySetInnerHTML={{ __html: leftArrows[parseInt(props.lineStart) || 0].shape }}
+            ></span>
+            <span onMouseDown={e => setDropVisible(e => e == 2 ? 0 : 2)}
+                dangerouslySetInnerHTML={{ __html: leftArrows[parseInt(props.lineEnd) || 0].shape }}
+            ></span>
         </div>
         {visible == 1 && <div className="shy-line-arrow-left-drops">
-            {leftArrows.map((arrow, index) => {
-                return <a key={index} dangerouslySetInnerHTML={{ __html: arrow.shape }}></a>
-            })}
+            {leftArrows.map((arrow, index) => { return <a key={index} onMouseDown={e => props.change('lineStart', index.toString())} dangerouslySetInnerHTML={{ __html: arrow.shape }}></a> })}
         </div>}
         {visible == 2 && <div className="shy-line-arrow-right-drops">
-            {rightArrows.map((arrow, index) => {
-                return <a key={index} dangerouslySetInnerHTML={{ __html: arrow.shape }}></a>
-            })}
+            {rightArrows.map((arrow, index) => { return <a key={index} onMouseDown={e => props.change('lineEnd', index.toString())} dangerouslySetInnerHTML={{ __html: arrow.shape }}></a> })}
         </div>}
     </div>
 }
 
-export function LineTypes(props) {
+export function LineTypes(props: {
+    lineType: string,
+    strokeWidth: number,
+    strokeDasharray: string,
+    change: (name: string, value: any) => void
+}) {
     var [visible, setDropVisible] = React.useState(false);
     return <div className="shy-line-types">
-        <div className="shy-line-types-current" onMouseDown={e => setDropVisible(e => e ? false : true)}></div>
+        <div className="shy-line-types-current"
+            onMouseDown={e => setDropVisible(e => e ? false : true)}
+            dangerouslySetInnerHTML={{ __html: Lines[props.lineType == 'straight' ? 0 : (props.lineType == 'line' ? 1 : 2)].shape }}
+        ></div>
         {visible && <div className="shy-line-types-drops">
             <div className="shy-line-types-opacity">
-                <MeasureView    showValue={false} value={10} onChange={e => { }}></MeasureView>
+                <MeasureView
+                    showValue={false}
+                    min={1}
+                    max={30}
+                    value={props.strokeWidth}
+                    onChange={e => {
+                        props.change('strokeWidth', e);
+                    }}></MeasureView>
             </div>
             <div className="shy-line-types-all">
-                <a><svg fill="none" viewBox="0 0 24 24" id="83f05e7ae5a28026ff2fde3258c59174" xmlns="http://www.w3.org/2000/svg">
-                    <path fillRule="evenodd" clipRule="evenodd"
-                        d="M22.958 8.713a1 1 0 01-.67 1.245l-20 6a1 1 0 01-.575-1.916l20-6a1 1 0 011.245.67z" fill="currentColor">
-                    </path>
-                </svg></a><a>
-                    <svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path fillRule="evenodd" clipRule="evenodd" d="M11 7h11a1 1 0 110 2h-9v8H2a1 1 0 110-2h9V7z"
-                            fill="currentColor"></path>
-                    </svg>
-                </a>
-                <a>
-                    <svg fill="none" viewBox="0 0 24 24" id="ea846567fe526e232ee2c8e4d6312fd6" xmlns="http://www.w3.org/2000/svg">
-                        <path fillRule="evenodd" clipRule="evenodd"
-                            d="M2.948 12.317a1.102 1.102 0 010 .003 2.753 2.753 0 01.145-.303c.12-.217.317-.513.614-.81C4.282 10.632 5.283 10 7 10c.732 0 1.41.27 2.118.76.725.501 1.41 1.183 2.175 1.947l.032.032c.728.728 1.531 1.532 2.418 2.146C14.661 15.52 15.733 16 17 16c2.283 0 3.782-.868 4.707-1.793a5.69 5.69 0 00.948-1.253 4.738 4.738 0 00.284-.611l.006-.016.002-.006v-.002l.001-.002L22 12l.949.316a1 1 0 00-1.897-.636 2.76 2.76 0 01-.145.303c-.12.217-.317.513-.614.81C19.718 13.368 18.718 14 17 14c-.732 0-1.41-.27-2.118-.76-.725-.501-1.41-1.183-2.175-1.947l-.032-.032c-.728-.728-1.531-1.532-2.418-2.146C9.339 8.48 8.267 8 7 8c-2.283 0-3.782.868-4.707 1.793a5.693 5.693 0 00-.948 1.253 4.736 4.736 0 00-.284.611l-.006.016-.002.006v.002l-.001.002L2 12l-.949-.316a1 1 0 001.895.64m18.106-.641L22 12a85.381 85.381 0 01-.948-.317z"
-                            fill="currentColor"></path>
-                    </svg>
-                </a>
+                <a className={props.lineType == 'straight' ? "hover" : ""}
+                    onMouseDown={e => props.change('lineType', 'straight')}
+                    dangerouslySetInnerHTML={{ __html: Lines[0].shape }}
+                ></a>
+                <a className={props.lineType == 'line' ? "hover" : ""}
+                    onMouseDown={e => props.change('lineType', 'line')}
+                    dangerouslySetInnerHTML={{ __html: Lines[1].shape }}
+                ></a>
+                <a className={props.lineType == 'cure' ? "hover" : ""}
+                    onMouseDown={e => props.change('lineType', 'cure')}
+                    dangerouslySetInnerHTML={{ __html: Lines[2].shape }}
+                ></a>
             </div>
             <div className="shy-line-types-stash">
-                <a>
+                <a className={props.strokeDasharray == 'none' ? "hover" : ""}
+                    onMouseDown={e => props.change('strokeDasharray', 'none')}
+                >
                     <svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
                         <g fill="none" fillRule="evenodd">
                             <path d="M-18-5h60v40h-60z"></path>
@@ -163,12 +197,16 @@ export function LineTypes(props) {
                         </g>
                     </svg>
                 </a>
-                <a>
+                <a className={props.strokeDasharray == 'dash' ? "hover" : ""}
+                    onMouseDown={e => props.change('strokeDasharray', 'dash')}
+                >
                     <svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
                         <path d="M0 14h6v2H0zm9 0h6v2H9zm9 0h6v2h-6z" fill="currentColor" fillRule="evenodd"></path>
                     </svg>
                 </a>
-                <a>
+                <a className={props.strokeDasharray == 'dash-circle' ? "hover" : ""}
+                    onMouseDown={e => props.change('strokeDasharray', 'dash-circle')}
+                >
                     <svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
                         <g fill="currentColor" transform="translate(0 14)" fillRule="evenodd">
                             <rect width="2" height="2" rx="1"></rect>
