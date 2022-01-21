@@ -97,13 +97,26 @@ export class Line extends Block {
         }
         this.manualUpdateProps(oldData, { from, to });
     }
-    async getBoardEditCommand(this: Block): Promise<{ name: string; value?: any; }[]> {
+    @prop()
+    lineStart: string = 'none';
+    @prop()
+    lineEnd: string = 'none';
+    @prop()
+    lineType: string = 'cure';
+    async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
         var cs: { name: string; value?: any; }[] = [];
-        cs.push({ name: 'lineInsertSharp' });
-        cs.push({ name: 'lineArrow' });
-        cs.push({ name: 'lineType' });
-        cs.push({ name: 'backgroundColor' });
+        cs.push({ name: 'lineStart', value: this.lineStart });
+        cs.push({ name: 'lineEnd', value: this.lineEnd });
+        cs.push({ name: 'lineType', value: this.lineType });
+        cs.push({ name: 'strokeWidth', value: this.pattern.getSvgStyle()?.strokeWidth || 1 });
+        cs.push({ name: 'strokeDasharray', value: this.pattern.getSvgStyle()?.strokeDasharray || 'none' })
+        cs.push({ name: 'backgroundColor', value: this.pattern.getSvgStyle()?.stroke || '#000' });
         return cs;
+    }
+    async setBoardEditCommand(name: string, value: any) {
+        if (name == 'backgroundColor') {
+            this.pattern.setSvgStyle({ stroke: value })
+        }
     }
     getVisiblePolygon() {
         var from = this.cacPortLocationPos(this.from);

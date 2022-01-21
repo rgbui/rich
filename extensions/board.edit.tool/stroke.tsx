@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react"
+import React from "react";
 import { MeasureView } from "../../component/view/progress"
 import { ColorType } from "../note"
 var colors: ColorType[] = [
@@ -44,7 +44,8 @@ export function ShapeStroke(props: {
                     </svg>
                 </a>
                 <a className={props.strokeDasharray == 'dash' ? "hover" : ""}
-                    onMouseDown={e => props.change('strokeDasharray', 'dash')}>
+                    onMouseDown={e => props.change('strokeDasharray', 'dash')}
+                    >
                     <svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
                         <path d="M0 14h6v2H0zm9 0h6v2H9zm9 0h6v2h-6z" fill="currentColor" fillRule="evenodd"></path>
                     </svg>
