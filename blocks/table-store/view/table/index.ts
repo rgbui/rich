@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Block } from "../../../../src/block";
 import { TableSchema } from "../../schema/meta";
 import { prop, url } from "../../../../src/block/factory/observable";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
@@ -8,7 +7,6 @@ import { TableStoreRow } from "./part/row";
 import { Pattern } from "../../../../src/block/pattern";
 import { FieldSort, TableStoreViewField } from "./field";
 import { util } from "../../../../util/util";
-import { Exception, ExceptionType } from "../../../../src/error/exception";
 import { FieldType } from "../../schema/field.type";
 import { ActionDirective } from "../../../../src/history/declare";
 import { Field } from "../../schema/field";
@@ -18,6 +16,8 @@ import { PageDirective } from "../../../../src/page/directive";
 import { useTableStoreAddField } from "../../../../extensions/tablestore/field";
 import { Rect } from "../../../../src/common/vector/point";
 import { useFormPage } from "../../../../extensions/tablestore/form";
+import { TableStoreBase } from '../base/table';
+import { Block } from '../../../../src/block';
 
 
 /***
@@ -28,19 +28,14 @@ import { useFormPage } from "../../../../extensions/tablestore/form";
  * 
  */
 @url('/table/store')
-export class TableStore extends Block {
+export class TableStore extends TableStoreBase {
     @prop()
     fields: TableStoreViewField[] = [];
-    @prop()
-    schemaId: string;
-    schema: TableSchema;
-    data: any[] = [];
     index: number;
     size: number;
     total: number;
+    data: any[] = [];
     blocks = { childs: [], rows: [] };
-    openSubPageId: string;
-    subPages: { id: string, template: any }[] = [];
     get blockKeys() {
         return ['childs', 'rows'];
     }
@@ -64,17 +59,6 @@ export class TableStore extends Block {
             else {
                 this[n] = data[n];
             }
-        }
-    }
-    initialData: { text: string, templateId?: string }
-    async loadSchema() {
-        if (this.schemaId) {
-            var schemaData = await this.page.emitAsync(PageDirective.schemaLoad, this.schemaId);
-            this.schema = new TableSchema(schemaData);
-            console.log('schemaData', schemaData)
-        }
-        else {
-            this.page.onError(new Exception(ExceptionType.tableSchemaNotEmpty, '表格schema不为空'))
         }
     }
     isLoadData: boolean = false;
@@ -300,7 +284,7 @@ export class TableStore extends Block {
         }
         return json;
     }
-    
+    initialData: { text: string, templateId?: string }
     async created() {
         if (!this.schemaId) {
             var schemaData = await this.page.emitAsync(PageDirective.schemaCreate, this.initialData);

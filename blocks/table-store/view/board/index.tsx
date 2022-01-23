@@ -1,15 +1,11 @@
-import { Block } from "../../../../src/block";
 import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import React from 'react';
-import { TableSchema } from "../../schema/meta";
+import { TableStoreBase } from "../base/table";
 @url('/tablestore/board')
-export class TableStoreBoard extends Block {
+export class TableStoreBoard extends TableStoreBase {
     @prop()
     columnId: string;
-    @prop()
-    schemaId: string;
-    schema: TableSchema;
     blocks = { childs: [], columns: [] };
     get blockKeys() {
         return ['childs', 'columns'];
