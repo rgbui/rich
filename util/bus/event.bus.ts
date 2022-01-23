@@ -20,10 +20,6 @@ class EventBus {
     private _events: { directive: Directive, action: (...args: any[]) => any }[] = [];
     on(directive: Directive, action: (...args: any[]) => any) {
         this._events.push({ directive, action });
-        // var sum = this._events.sum(g => g.directive == directive ? 1 : 0);
-        // if (sum > maxSameEventBinds) {
-        //     console.warn(`event bus the same name ${Directive[directive]} events total overflow maxSameEventBinds`)
-        // }
     }
     only(directive: Directive, action: (...args: any[]) => any) {
         this._events.removeAll(g => g.directive == directive);

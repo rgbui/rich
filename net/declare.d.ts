@@ -1,0 +1,50 @@
+
+import { Field } from "../blocks/table-store/schema/field";
+import { FieldType } from "../blocks/table-store/schema/field.type";
+import { TableSchema } from "../blocks/table-store/schema/meta";
+import { LinkPage } from "../extensions/at/declare";
+import { IconArguments } from "../extensions/icon/declare";
+import { GalleryType, OuterPic } from "../extensions/image/declare";
+import { User } from "../src/types/user";
+export interface Channel {
+    post(url:'/workspace/upload/file',parameter:{file:File,uploadProgress: (event: ProgressEvent) => void}):Promise<{ ok: boolean, data: { url: string },warn:string }>;
+	post(url:'/workspace/upload/file/url',parameter:{url:string}):Promise<{ ok: boolean, data: { url: string },warn:string }>;
+	get(url:'/gallery/query',parameter:{type: GalleryType, word: string}):Promise<{ok:boolean,data:OuterPic[],warn:string}>;
+	get(url:'/page/query/links',parameter:{word:string}):Promise<{ok:boolean,data:LinkPage[],warn:string}>;
+	act(url:'/page/create/by_text',parameter:{word:string}):{ok:boolean,data:LinkPage,warn:string};
+	sync(url:'/page/update/info',handle:(parameter:{id: string, pageInfo: { text: string, icon?: IconArguments }})=>void);
+	only(url:'/page/update/info',handle:(parameter:{id: string, pageInfo: { text: string, icon?: IconArguments }})=>void);
+	once(url:'/page/update/info',handle:(parameter:{id: string, pageInfo: { text: string, icon?: IconArguments }})=>void);
+	off(url:'/page/update/info',handle?:(parameter:{id: string, pageInfo: { text: string, icon?: IconArguments }})=>void);
+	fire(url:'/page/update/info',parameter:{id: string, pageInfo: { text: string, icon?: IconArguments }}):void;
+	air(url:'/page/update/info',parameter:{id: string, pageInfo: { text: string, icon?: IconArguments }}):void;
+	get(url:'/page/query/info',parameter:{id: string}):Promise<{ok:boolean,data:LinkPage,warn:string}>;
+	act(url:'/page/open',parameter:{item:string|{id:string}}):void;
+	query(url:'/workspace/query/users'):User[];
+	sync(url:'/update/user',handle:(parameter:{user: Record<string, any>})=>void);
+	only(url:'/update/user',handle:(parameter:{user: Record<string, any>})=>void);
+	once(url:'/update/user',handle:(parameter:{user: Record<string, any>})=>void);
+	off(url:'/update/user',handle?:(parameter:{user: Record<string, any>})=>void);
+	fire(url:'/update/user',parameter:{user: Record<string, any>}):void;
+	air(url:'/update/user',parameter:{user: Record<string, any>}):void;
+	query(url:'/query/current/user'):User;
+	get(url:'/workspace/query/schemas',parameter:{page?:number,size?:number}):Promise<{ok:boolean,data:{total:number,list:Partial<TableSchema>[],page:number,size:number},warn:string}>;
+	put(url:'/schema/create',parameter:{text:string,templateId?:string}):Promise<{ ok: boolean, data: { schema:Partial<TableSchema> },warn:string }>;
+	get(url:'/schema/query',parameter:{id:string}):Promise<{ok:boolean,data:Partial<TableSchema>,warn:string}>;
+	put(url:'/schema/field/add',parameter:{schemaId:string,text:string,type:FieldType}):Promise<{ok:boolean,data:{field:Partial<Field>},warn:string}>;
+	del(url:'/schema/field/remove',parameter:{schemaId:string,fieldId:string}):Promise<{ok:boolean,warn:string}>;
+	post(url:'/schema/field/update',parameter:{schemaId:string,fieldId:string,data:Partial<Field>}):Promise<{ok:boolean,data:{field:Partial<Field>},warn:string}>;
+	post(url:'/schema/field/turn',parameter:{schemaId:string,fieldId:string,type:FieldType}):Promise<{ok:boolean,data:{field:Partial<Field>},warn:string}>;
+	put(url:'/datastore/add',parameter:{schemaId:string,data:Record<string, any>,pos:{dataId:string,pos:"before"|"after"}}):Promise<{ok:boolean,data:{data:Record<string, any>},warn:string}>;
+	put(url:'/datastore/batch/add',parameter:{schemaId:string,list:any[]}):Promise<{ok:boolean,data:{list:any[]},warn:string}>;
+	del(url:'/datastore/remove',parameter:{schemaId:string,dataId:string}):Promise<{ok:boolean,warn:string}>;
+	post(url:'/datastore/update',parameter:{schemaId:string,dataId:string,data:Record<string, any>}):Promise<{ok:boolean,warn:string}>;
+	get(url:'/datastore/query',parameter:{schemaId:string,id:string}):Promise<{ok:boolean,data:{data:Record<string, any>},warn:string}>;
+	get(url:'/datastore/query/list',parameter:{schemaId:string,page?:number,size?:number,filter?:Record<string, any>,sorts?:Record<string, 1|-1>}):Promise<{ok:boolean,data:{list:any[],total:number,page:number,size:number},warn:string}>;
+	put(url:'/datastore/query/ids',parameter:{schemaId:string,ids:string[]}):Promise<{ok:boolean,data:{list:any[]},warn:string}>;
+	get(url:'/datastore/query/all',parameter:{schemaId:string,page?:number,size?:number,filter?:Record<string, any>,sorts?:Record<string, 1|-1>}):Promise<{ok:boolean,data:{list:any[],total:number,page:number,size:number},warn:string}>;
+	get(url:'/datastore/group',parameter:{schemaId:string,page?:number,size?:number,filter?:Record<string, any>,sorts?:Record<string, 1|-1>,group:string}):Promise<{ok:boolean,data:{list:any[],total:number,page:number,size:number},warn:string}>;
+	get(url:'/datastore/statistics',parameter:{schemaId:string,page?:number,size?:number,filter?:Record<string, any>,having?:Record<string, any>,sorts?:Record<string, 1|-1>,groups:string[],aggregate:string[]}):Promise<{ok:boolean,data:{list:any[],total:number,page:number,size:number},warn:string}>;
+	get(url:'/datastore/statistics/value',parameter:{schemaId:string,filter:Record<string, any>,indicator:string[]}):Promise<{ok:boolean,data:{value:number},warn:string}>;
+}
+    
