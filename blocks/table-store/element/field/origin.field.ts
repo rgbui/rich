@@ -1,7 +1,7 @@
 import React from "react";
 import { Block } from "../../../../src/block";
 import { BlockDisplay } from "../../../../src/block/enum";
-import { FieldType } from "../../schema/field.type";
+import { FieldType } from "../../schema/type";
 import { TableStoreCell } from "../../view/table/part/cell";
 export class OriginField extends Block {
     fieldType: FieldType;

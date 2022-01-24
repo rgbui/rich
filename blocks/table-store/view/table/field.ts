@@ -1,4 +1,4 @@
-import { FieldType } from "../../schema/field.type";
+import { FieldType } from "../../schema/type";
 export class TableStoreViewField {
     name?: string;
     display?: string;

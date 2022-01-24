@@ -1,4 +1,4 @@
-import { FieldType } from "../../../blocks/table-store/schema/field.type";
+import { FieldType } from "../../../blocks/table-store/schema/type";
 import { TableSchema } from "../../../blocks/table-store/schema/meta";
 import { PageLayoutType } from "../../../src/layout/declare";
 import { Page } from "../../../src/page";

@@ -1,7 +1,7 @@
 
 import { PopoverPosition } from "../../popover/position";
 import { PopoverSingleton } from "../../popover/popover";
-import { FieldType } from "../../../blocks/table-store/schema/field.type";
+import { FieldType } from "../../../blocks/table-store/schema/type";
 import { TableFieldView } from "./view";
 import { FieldConfig } from "../../../blocks/table-store/schema/field";
 export async function useTableStoreAddField(pos: PopoverPosition,

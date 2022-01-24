@@ -1,5 +1,5 @@
 import lodash from "lodash";
-import { FieldType } from "./field.type";
+import { FieldType } from "./type";
 export class Field {
     id: string;
     name: string

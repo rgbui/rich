@@ -6,7 +6,7 @@ import { BlockDisplay } from "../../../../../src/block/enum";
 import { Block } from "../../../../../src/block";
 import { TableStoreRow } from "./row";
 import { TableStore } from "..";
-import { FieldType } from "../../../schema/field.type";
+import { FieldType } from "../../../schema/type";
 import { BlockFactory } from "../../../../../src/block/factory/block.factory";
 import { OriginField } from "../../../element/field/origin.field";
 @url('/tablestore/cell')

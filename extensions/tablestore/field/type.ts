@@ -1,4 +1,4 @@
-import { FieldType } from "../../../blocks/table-store/schema/field.type";
+import { FieldType } from "../../../blocks/table-store/schema/type";
 
 export var TableFieldTypes: { text: string, value: any }[] = [
     { text: '单行文本', value: FieldType.text },

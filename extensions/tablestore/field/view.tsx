@@ -1,6 +1,6 @@
 import React from "react";
 import { Field, FieldConfig } from "../../../blocks/table-store/schema/field";
-import { FieldType } from "../../../blocks/table-store/schema/field.type";
+import { FieldType } from "../../../blocks/table-store/schema/type";
 import { TableSchema } from "../../../blocks/table-store/schema/meta";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { Button } from "../../../component/view/button";

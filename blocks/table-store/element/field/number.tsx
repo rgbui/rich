@@ -2,7 +2,7 @@ import React from "react";
 import { url, view } from "../../../../src/block/factory/observable";
 import { TextArea } from "../../../../src/block/view/appear";
 import { BlockView } from "../../../../src/block/view";
-import { FieldType } from "../../schema/field.type";
+import { FieldType } from "../../schema/type";
 import { OriginField } from "./origin.field";
 @url('/field/number')
 export class FieldNumber extends OriginField {

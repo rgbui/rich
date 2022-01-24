@@ -7,7 +7,7 @@ import { TableStoreRow } from "./part/row";
 import { Pattern } from "../../../../src/block/pattern";
 import { FieldSort, TableStoreViewField } from "./field";
 import { util } from "../../../../util/util";
-import { FieldType } from "../../schema/field.type";
+import { FieldType } from "../../schema/type";
 import { ActionDirective } from "../../../../src/history/declare";
 import { Field } from "../../schema/field";
 import { TableStoreHead } from "./part/head";

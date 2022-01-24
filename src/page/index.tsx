@@ -18,7 +18,7 @@ import { Anchor } from '../kit/selection/anchor';
 import { UserAction } from '../history/action';
 import { TableSchema } from '../../blocks/table-store/schema/meta';
 import { DropDirection } from '../kit/handle/direction';
-import { FieldType } from '../../blocks/table-store/schema/field.type';
+import { FieldType } from '../../blocks/table-store/schema/type';
 import { Field } from '../../blocks/table-store/schema/field';
 import { PageDirective } from './directive';
 import { IconArguments } from '../../extensions/icon/declare';

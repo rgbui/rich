@@ -1,6 +1,6 @@
 
 import { Field } from "../blocks/table-store/schema/field";
-import { FieldType } from "../blocks/table-store/schema/field.type";
+import { FieldType } from "../blocks/table-store/schema/type";
 import { TableSchema } from "../blocks/table-store/schema/meta";
 import { LinkPage } from "../extensions/at/declare";
 import { IconArguments } from "../extensions/icon/declare";

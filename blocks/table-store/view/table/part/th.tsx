@@ -7,7 +7,7 @@ import React from "react";
 import { TableStore } from "..";
 import { TableStoreHead } from "./head";
 import { Icon } from "../../../../../component/view/icon";
-import { FieldType } from "../../../schema/field.type";
+import { FieldType } from "../../../schema/type";
 import { useSelectMenuItem } from "../../../../../component/view/menu";
 import { Rect } from "../../../../../src/common/vector/point";
 import { MouseDragger } from "../../../../../src/common/dragger";
