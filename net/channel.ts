@@ -1,4 +1,6 @@
+import { ChannelActMapUrls, ChannelAirMapUrls, ChannelDelMapUrls, ChannelFireMapUrls, ChannelGetMapUrls, ChannelOffMapUrls, ChannelOnceMapUrls, ChannelOnlyMapUrls, ChannelPostMapUrls, ChannelPutMapUrls, ChannelQueryMapUrls, ChannelSyncMapUrls } from "./declare";
 import { channelService, MethodType } from "./service";
+
 
 
 /***
@@ -15,54 +17,64 @@ import { channelService, MethodType } from "./service";
  * 然后服务可以直接返回相关的消息，也可以广播出去。
  * 
  */
-export class Channel {
+class Channel {
+
     private constructor() { }
     private static _ch: Channel;
     static get channel() {
         if (typeof this._ch == 'undefined') this._ch = new Channel();
         return this._ch;
     }
-    async put(url: string, args: Record<string, any>) {
+    put<K extends keyof ChannelPutMapUrls>(url: K, args: ChannelPutMapUrls[K]['args']): ChannelPutMapUrls[K]['returnType'] {
         return channelService.push(MethodType.put, url, args);
     }
-    async act(url: string, args: Record<string, any>) {
+    act<K extends keyof ChannelActMapUrls>(url: K, args?: ChannelActMapUrls[K]['args']): ChannelActMapUrls[K]['returnType'] {
         return channelService.push(MethodType.act, url, args);
     }
-    async get(url: string, args: Record<string, any>) {
+    get<K extends keyof ChannelGetMapUrls>(url: K, args?: ChannelGetMapUrls[K]['args']): ChannelGetMapUrls[K]['returnType'] {
         return channelService.push(MethodType.get, url, args);
     }
-    async query(url: string, args: Record<string, any>) {
-        return channelService.push(MethodType.query, url, args);
+    query<K extends keyof ChannelQueryMapUrls>(url: K, args?: ChannelQueryMapUrls[K]['args']): ChannelQueryMapUrls[K]['returnType'] {
+        return channelService.push(MethodType.query, url, args) as any;
     }
-    async post(url: string, args: Record<string, any>) {
+    post<K extends keyof ChannelPostMapUrls>(url: K, args: ChannelPostMapUrls[K]['args']): ChannelPostMapUrls[K]['returnType'] {
         return channelService.push(MethodType.post, url, args);
     }
-    async del(url: string, args: Record<string, any>) {
+    del<K extends keyof ChannelDelMapUrls>(url: K, args: ChannelDelMapUrls[K]['args']): ChannelDelMapUrls[K]['returnType'] {
         return channelService.push(MethodType.del, url, args);
     }
-    async air(url: string, args: Record<string, any>) {
-        return channelService.push(MethodType.air, url, args);
+    air<K extends keyof ChannelAirMapUrls>(url: K, args: ChannelAirMapUrls[K]['args']): ChannelAirMapUrls[K]['returnType'] {
+        return channelService.push(MethodType.air, url, args) as any;
     }
-    async fire(url: string, args: Record<string, any>) {
-        return channelService.fire(url, args);
+    fire<K extends keyof ChannelFireMapUrls>(url: K, args?: ChannelFireMapUrls[K]['args']): ChannelFireMapUrls[K]['returnType'] {
+        return channelService.fire(url, args) as any;
     }
-    off(url: string, handle?: (...args: any) => any) {
+    off<K extends keyof ChannelOffMapUrls>(url: K, handle?: ChannelOffMapUrls[K]['args']) {
         if (handle) channelService.consumes.removeAll(g => g.url == url && g.handle == handle);
         else channelService.consumes.removeAll(g => g.url == url);
     }
-    sync(url: string, handle: (args: Record<string, any>) => any) {
+    sync<K extends keyof ChannelSyncMapUrls>(url: K, handle: ChannelSyncMapUrls[K]['args']) {
         channelService.consumes.push({ url, handle });
     }
-    only(url: string, handle: (args: Record<string, any>) => any) {
+    only<K extends keyof ChannelOnlyMapUrls>(url: string, handle: ChannelOnlyMapUrls[K]['args']) {
         channelService.consumes.removeAll(g => g.url == url);
         channelService.consumes.push({ url, handle });
     }
-    once(url: string, handle: (args: Record<string, any>) => any) {
+    once<K extends keyof ChannelOnceMapUrls>(url: string, handle: ChannelOnceMapUrls[K]['args']) {
         channelService.consumes.push({ url, once: true, handle });
     }
 }
 
 
+
+
+
 export var channel = Channel.channel;
+
+
+
+
+
+
 
 

@@ -2,6 +2,7 @@ import { channel } from "./channel";
 
 
 
+
 export enum MethodType {
     get,
     post,
@@ -54,18 +55,18 @@ class ChannelService {
                 /**
                  * 这里一般只会有一个service，如果有多个是有错误的
                  */
-                channel.fire('log', { type: 'warn', message: new Error('有多个service') });
+               channel.fire('/log',{type:'error',message:new Error('有多个service')})
             }
             try {
                 return await sm.instance[sm.method].apply(sm.instance, [args]);
             }
             catch (ex) {
-                channel.fire('log', { type: 'error', message: ex });
+                channel.fire('/log', { type: 'error', message: ex });
             }
         }
         else {
             //没有找到service ,默认触发fire
-            return channel.fire(url, args);
+            return channel.fire(url as any, args);
         }
     }
     consumes: { url: string, date?: Date, once?: boolean, handle: (args: Record<string, any>) => any }[] = [];
@@ -85,7 +86,7 @@ class ChannelService {
                 else rs.push(r);
             }
             catch (ex) {
-                this.fire('log', { type: "error", message: ex })
+                this.fire('/log', { type: "error", message: ex })
             }
         }
         this.consumes.removeAll(e => removeE.some(r => r === e));
@@ -109,18 +110,18 @@ class ChannelService {
                  * 这里一般只会有一个service，如果有多个是有错误的
                  */
 
-                channel.fire('log', { type: 'warn', message: new Error('有多个service') });
+                channel.fire('/log', { type: 'warn', message: new Error('有多个service') });
             }
             try {
                 return await sm.instance[sm.method].apply(sm.instance, [args]);
             }
             catch (ex) {
-                channel.fire('log', { type: 'error', message: ex });
+                channel.fire('/log', { type: 'error', message: ex });
             }
         }
         else {
             //没有找到service ,默认触发fire
-            return channel.fire(url, args);
+            return channel.fire(url  as any, args);
         }
     }
 }
