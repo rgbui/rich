@@ -13,6 +13,7 @@ import { messageChannel } from "../../util/bus/event.bus";
 import { Directive } from "../../util/bus/directive";
 import { BlockAppear } from "../../src/block/appear";
 import lodash from "lodash";
+import { channel } from "../../net/channel";
 
 @url('/title')
 export class Title extends Block {
@@ -23,9 +24,9 @@ export class Title extends Block {
     display = BlockDisplay.block;
     pageInfo: { id: string, text: string, icon?: IconArguments, description?: string } = null;
     async loadPageInfo() {
-        var r = await this.page.emitAsync(PageDirective.loadPageInfo);
-        if (r) {
-            this.pageInfo = r;
+        var r=await channel.get('/page/query/info');
+        if (r.ok) {
+            this.pageInfo = r.data;
         }
     }
     async changeAppear(appear) {
