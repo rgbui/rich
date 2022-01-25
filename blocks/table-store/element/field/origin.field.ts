@@ -29,10 +29,10 @@ export class OriginField extends Block {
             await cell.onUpdateCellFieldSchema(props);
         }
     }
-    get schemaField() {
+    get field() {
         var cell = this.closest(x => x instanceof TableStoreCell) as TableStoreCell;
         if (cell) {
-            return cell.schemaField;
+            return cell.field;
         }
     }
     onCellMousedown(event: React.MouseEvent) {

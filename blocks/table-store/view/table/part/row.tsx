@@ -53,10 +53,10 @@ export class TableStoreRow extends Block {
             case BlockDirective.fieldSettings:
                 break;
             case BlockDirective.arrowDown:
-                await this.tableStore.onAddRow({}, id, 'down');
+                await this.tableStore.onAddRow({}, id, 'after');
                 break;
             case BlockDirective.arrowUp:
-                await this.tableStore.onAddRow({}, id, 'up');
+                await this.tableStore.onAddRow({}, id, 'before');
                 break;
             case BlockDirective.filter:
                 await this.tableStore.onEditOpenForm(id);
@@ -95,8 +95,8 @@ export class TableStoreRow extends Block {
     async updateData(data) {
         this.blocks.childs.each(cell => {
             var fieldCell: OriginField = cell.childs.first() as OriginField;
-            if (typeof data[fieldCell.schemaField.name] != 'undefined')
-                fieldCell.value = data[fieldCell.schemaField.name];
+            if (typeof data[fieldCell.field.name] != 'undefined')
+                fieldCell.value = data[fieldCell.field.name];
         });
         this.view.forceUpdate();
     }

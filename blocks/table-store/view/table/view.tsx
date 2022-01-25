@@ -23,6 +23,8 @@ export class TableStoreView extends BlockView<TableStore>{
     }
     async didMount() {
         await this.block.loadSchema();
+        await this.block.loadViewFields();
+        console.log(this.block.fields);
         await this.block.createHeads();
         this.forceUpdate()
         await this.block.loadData();
@@ -32,7 +34,7 @@ export class TableStoreView extends BlockView<TableStore>{
     render() {
         var self = this;
         async function addNewRow() {
-            await self.block.onAddRow({}, undefined, 'down');
+            await self.block.onAddRow({}, undefined, 'after');
         }
         return <div className='sy-tablestore'>
             <div className='sy-tablestore-col-resize'></div>
@@ -40,7 +42,7 @@ export class TableStoreView extends BlockView<TableStore>{
                 {this.renderHead()}
                 {this.renderBody()}
             </div>
-            <div onMouseDown={e => addNewRow()} className="sy-tablestore-add" style={{ width: this.block.fields.sum(s => s.width) + 100 }}>
+            <div onMouseDown={e => addNewRow()} className="sy-tablestore-add" style={{ width: this.block.fields.sum(s => s.colWidth) + 100 }}>
                 <Icon size={12} icon={Plus}></Icon><span>新增</span>
             </div>
         </div>

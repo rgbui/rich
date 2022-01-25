@@ -20,11 +20,11 @@ export class TableStoreCell extends Block {
     get tableStore(): TableStore {
         return this.tableRow.tableStore;
     }
-    get field() {
+    get viewField() {
         return this.tableStore.fields[this.at];
     }
-    get schemaField() {
-        return this.tableStore.schema?.fields.find(g => g.name == this.field?.name);
+    get field() {
+        return this.viewField.field;
     }
     async createCellContent() {
         this.blocks.childs = [];
@@ -33,14 +33,14 @@ export class TableStoreCell extends Block {
         switch (this.field.type) {
             case FieldType.text:
                 cellContent = await BlockFactory.createBlock('/field/text', this.page, {
-                    value: this.field.getValue(row),
+                    value: this.viewField.getValue(row),
                     fieldType: this.field.type
                 }, this);
                 break;
             case FieldType.autoIncrement:
             case FieldType.number:
                 cellContent = await BlockFactory.createBlock('/field/number', this.page, {
-                    value: this.field.getValue(row),
+                    value: this.viewField.getValue(row),
                     fieldType: this.field.type
                 }, this);
                 break;
@@ -49,27 +49,27 @@ export class TableStoreCell extends Block {
             case FieldType.date:
                 cellContent = await BlockFactory.createBlock('/field/date', this.page, {
                     fieldType: this.field.type,
-                    value: this.field.getValue(row)
+                    value: this.viewField.getValue(row),
                 }, this);
                 break;
             case FieldType.option:
                 cellContent = await BlockFactory.createBlock('/field/option', this.page, {
                     fieldType: this.field.type,
-                    value: this.field.getValue(row)
+                    value: this.viewField.getValue(row),
                 }, this);
                 break;
             case FieldType.creater:
             case FieldType.modifyer:
                 cellContent = await BlockFactory.createBlock('/field/user', this.page, {
                     fieldType: this.field.type,
-                    value: this.field.getValue(row)
+                    value: this.viewField.getValue(row),
                 }, this);
                 break;
             case FieldType.bool:
                 cellContent = await BlockFactory.createBlock('/field/check', this.page, {
                     fieldType: this.field.type,
-                    value: this.field.getValue(row)
-                }, this);
+                    value: this.viewField.getValue(row),
+                },this);
                 break;
 
         }
@@ -78,13 +78,13 @@ export class TableStoreCell extends Block {
     }
     async onUpdateCellValue(value: any) {
         var id = this.tableRow.dataRow.id;
-        await this.tableStore.onRowUpdateCell(id, this.field, value)
+        await this.tableStore.onRowUpdateCell(id, this.viewField, value)
     }
     async onUpdateCellField(props: Record<string, any>) {
 
     }
     async onUpdateCellFieldSchema(props: Record<string, any>) {
-        await this.tableStore.onUpdateCellFieldSchema(this.schemaField, props)
+        await this.tableStore.onUpdateCellFieldSchema(this.field, props)
     }
     get isCol() {
         return true;
@@ -105,7 +105,7 @@ export class TableStoreCellView extends BlockView<TableStoreCell>{
     }
     render() {
         return <div className='sy-tablestore-body-row-cell' onMouseDown={e => this.mousedown(e)} ref={e => this.block.childsEl = e}
-            style={{ width: this.block.field.width }}>
+            style={{ width: this.block.viewField.colWidth }}>
             <ChildsArea childs={this.block.childs}></ChildsArea>
         </div>
     }

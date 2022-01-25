@@ -23,7 +23,6 @@ import arrowUp from "../../../../../src/assert/svg/arrowUp.svg";
 import arrowLeft from "../../../../../src/assert/svg/arrowLeft.svg";
 import arrowRight from "../../../../../src/assert/svg/arrowRight.svg";
 import hide from "../../../../../src/assert/svg/hide.svg";
-import { FieldSort } from "../field";
 import { getTypeSvg } from "../../../schema/util";
 
 @url('/tablestore/th')
@@ -49,10 +48,10 @@ export class TableStoreTh extends Block {
             case BlockDirective.fieldSettings:
                 break;
             case BlockDirective.arrowDown:
-                await this.tableStore.onSetSortField(index, FieldSort.asc)
+                await this.tableStore.onSetSortField(index, -1)
                 break;
             case BlockDirective.arrowUp:
-                await this.tableStore.onSetSortField(index, FieldSort.desc)
+                await this.tableStore.onSetSortField(index, 1)
                 break;
             case BlockDirective.arrowLeft:
                 await this.tableStore.onAddField(event, index)
@@ -150,7 +149,7 @@ export class TableStoreTh extends Block {
 @view('/tablestore/th')
 export class TableStoreThView extends BlockView<TableStoreTh>{
     renderIcon() {
-        return <Icon icon={getTypeSvg(this.block.field.type)} size='none'></Icon>
+        return <Icon icon={getTypeSvg(this.block.field.field.type)} size='none'></Icon>
     }
     async mousedown(e: React.MouseEvent) {
         e.stopPropagation();
@@ -167,7 +166,7 @@ export class TableStoreThView extends BlockView<TableStoreTh>{
             event: e,
             dis: 5,
             moveStart(ev, data) {
-                data.width = self.block.field.width;
+                data.width = self.block.field.colWidth;
                 data.blocks = self.block.tableStore.getBlocksByField(self.block.field);
             },
             moving(ev, data, isEnd) {
@@ -183,7 +182,7 @@ export class TableStoreThView extends BlockView<TableStoreTh>{
                     self.block.tableStore.onAction(ActionDirective.onTablestoreUpdateViewField, async () => {
                         var at = self.block.tableStore.fields.findIndex(g => g === self.block.field);
                         var field = self.block.field.clone();
-                        field.width = newWidth;
+                        field.colWidth = newWidth;
                         self.block.tableStore.updateArrayUpdate('fields', at, field);
                     })
                 }
@@ -193,7 +192,7 @@ export class TableStoreThView extends BlockView<TableStoreTh>{
     resizeEl: HTMLElement;
     render() {
         return <div className='sy-tablestore-head-th'
-            style={{ width: this.block.field.width + 'px' }}>
+            style={{ width: this.block.field.colWidth + 'px' }}>
             <span className='sy-tablestore-head-th-icon' >{this.renderIcon()}</span>
             <span className="sy-tablestore-head-th-field">{this.block.field.text}</span>
             <Icon mousedown={e => e.stopPropagation()} click={e => this.mousedown(e)} className='sy-tablestore-head-th-operator' icon='elipsis:sy'></Icon>

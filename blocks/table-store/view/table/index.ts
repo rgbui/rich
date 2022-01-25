@@ -1,23 +1,24 @@
 
 import React from 'react';
 import { TableSchema } from "../../schema/meta";
-import { prop, url } from "../../../../src/block/factory/observable";
+import { url } from "../../../../src/block/factory/observable";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { TableStoreRow } from "./part/row";
 import { Pattern } from "../../../../src/block/pattern";
-import { FieldSort, TableStoreViewField } from "./field";
+
 import { util } from "../../../../util/util";
 import { FieldType } from "../../schema/type";
 import { ActionDirective } from "../../../../src/history/declare";
 import { Field } from "../../schema/field";
 import { TableStoreHead } from "./part/head";
 import { Confirm } from "../../../../component/lib/confirm";
-import { PageDirective } from "../../../../src/page/directive";
 import { useTableStoreAddField } from "../../../../extensions/tablestore/field";
 import { Rect } from "../../../../src/common/vector/point";
 import { useFormPage } from "../../../../extensions/tablestore/form";
 import { TableStoreBase } from '../base/table';
 import { Block } from '../../../../src/block';
+import { channel } from '../../../../net/channel';
+import { ViewField } from '../../schema/view';
 
 
 /***
@@ -29,10 +30,8 @@ import { Block } from '../../../../src/block';
  */
 @url('/table/store')
 export class TableStore extends TableStoreBase {
-    @prop()
-    fields: TableStoreViewField[] = [];
     index: number;
-    size: number;
+    size: number = 50;
     total: number;
     data: any[] = [];
     blocks = { childs: [], rows: [] };
@@ -50,7 +49,7 @@ export class TableStore extends TableStoreBase {
             }
             else if (n == 'fields') {
                 data.fields.each(n => {
-                    this.fields.push(new TableStoreViewField(n));
+                    this.fields.push(new ViewField(n));
                 })
             }
             else if (n == 'blocks') {
@@ -64,12 +63,11 @@ export class TableStore extends TableStoreBase {
     isLoadData: boolean = false;
     async loadData() {
         if (this.schema) {
-            var r = await this.page.emitAsync(PageDirective.schemaTableLoad, this.schema.id, {
-                index: this.index,
-                size: this.size
-            });
-            this.data = Array.isArray(r.list) ? r.list : [];
-            this.total = r?.total || 0;
+            var r = await this.schema.list({ page: this.index, size: this.size });
+            if (r.data) {
+                this.data = Array.isArray(r.data.list) ? r.data.list : [];
+                this.total = r.data?.total || 0;
+            }
         }
     }
     async createHeads() {
@@ -106,36 +104,38 @@ export class TableStore extends TableStoreBase {
         );
         if (!result) return;
         this.page.onAction(ActionDirective.onSchemaCreateField, async () => {
-            var fieldData = await this.page.emitAsync(PageDirective.schemaCreateField, this.schema.id, { text: result.text, type: result.type })
-            console.log(fieldData);
-            var field = new Field();
-            field.load(fieldData);
-            this.schema.fields.push(field);
-            var vf = new TableStoreViewField({
-                width: 120,
-                type: result.type,
-                name: field.name,
-                text: result.text
-            });
-            this.updateArrayInsert('fields', at, vf);
-            await (this.blocks.childs.first() as TableStoreHead).createTh(at);
-            await this.blocks.rows.asyncMap(async (row: TableStoreRow) => {
-                await row.createCell(at);
-            });
+            var fieldData = await this.schema.fieldAdd({ text: result.text, type: result.type });
+            if (fieldData.ok) {
+                var field = new Field();
+                field.load(fieldData.data);
+                this.schema.fields.push(field);
+                var vf = new ViewField(this.schema, {
+                    colWidth: 120,
+                    fieldId: field.id,
+                    text: result.text
+                });
+                this.updateArrayInsert('fields', at, vf);
+                await (this.blocks.childs.first() as TableStoreHead).createTh(at);
+                await this.blocks.rows.asyncMap(async (row: TableStoreRow) => {
+                    await row.createCell(at);
+                });
+            }
         });
     }
     async onDeleteField(at?: number) {
         if (await Confirm('确定要删除该列吗')) {
             if (typeof at == 'undefined') at = this.fields.length - 1;
-            var field = this.fields[at];
-            var tf = this.schema.fields.find(g => g.name == field.name);
+            var viewField = this.fields[at];
+            var field = viewField.field;
             this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
-                var result = await this.page.emitAsync(PageDirective.schemaRemoveField, this.schema.id, tf.id)
-                await (this.blocks.childs.first() as TableStoreHead).childs[at].delete()
-                await this.blocks.rows.asyncMap(async (row: TableStoreRow) => {
-                    await row.deleteCell(at);
-                });
-                this.updateArrayRemove('fields', at);
+                var r = await this.schema.fieldRemove(field.id);
+                if (r.ok) {
+                    await (this.blocks.childs.first() as TableStoreHead).childs[at].delete()
+                    await this.blocks.rows.asyncMap(async (row: TableStoreRow) => {
+                        await row.deleteCell(at);
+                    });
+                    this.updateArrayRemove('fields', at);
+                }
             });
         }
     }
@@ -152,32 +152,34 @@ export class TableStore extends TableStoreBase {
     async onCopyField(at?: number) {
         if (typeof at == 'undefined') at = this.fields.length - 1;
         var viewField = this.fields[at];
-        var field = this.schema.fields.find(g => g.name == viewField.name);
+        var field = viewField.field;
         var fieldData = field.get()
         this.page.onAction(ActionDirective.onSchemaCreateField, async () => {
-            var fd = this.page.emitAsync(PageDirective.schemaCreateField, this.schema.id, { ...fieldData })
-            var newField = new Field();
-            newField.load(fd);
-            this.schema.fields.push(newField);
-            var vf = new TableStoreViewField({
-                width: 60,
-                type: newField.type,
-                name: newField.name,
-                text: newField.text
-            });
-            this.updateArrayInsert('fields', at + 1, vf);
-            await (this.blocks.childs.first() as TableStoreHead).createTh(at + 1);
-            await this.blocks.rows.asyncMap(async (row: TableStoreRow) => {
-                await row.createCell(at + 1);
-            });
+            var r = await this.schema.fieldAdd(fieldData);
+            if (r.ok) {
+                var fd = r.data;
+                var newField = new Field();
+                newField.load(fd);
+                this.schema.fields.push(newField);
+                var vf = new ViewField(this.schema, {
+                    colWidth: 60,
+                    fieldId: newField.id,
+                    text: newField.text
+                });
+                this.updateArrayInsert('fields', at + 1, vf);
+                await (this.blocks.childs.first() as TableStoreHead).createTh(at + 1);
+                await this.blocks.rows.asyncMap(async (row: TableStoreRow) => {
+                    await row.createCell(at + 1);
+                });
+            }
         });
     }
-    async onSetSortField(at?: number, sort?: FieldSort) {
+    async onSetSortField(at?: number, sort?: 0 | 1 | -1) {
         if (typeof at == 'undefined') at = this.fields.length - 1;
-        if (typeof sort == 'undefined') sort = FieldSort.none;
-        var vf = this.fields[at];
+        if (typeof sort == 'undefined') sort = 0;
+        var viewField = this.fields[at];
         await this.page.onAction(ActionDirective.onTablestoreUpdateViewField, async () => {
-            var newViewField = vf.clone();
+            var newViewField = viewField.clone();
             newViewField.sort = sort;
             this.updateArrayUpdate('fields', at, newViewField);
         });
@@ -186,72 +188,60 @@ export class TableStore extends TableStoreBase {
     async onTurnField(at: number, type: FieldType) {
         if (typeof at == 'undefined') at = this.fields.length - 1;
         var viewField = this.fields[at];
-        var field = this.schema.fields.find(g => g.name == viewField.name);
+        var field = viewField.field;
         await this.page.onAction(ActionDirective.onSchemaTurnField, async () => {
-            field.type = type;
-            var newViewField = viewField.clone();
-            newViewField.type = type;
-            this.updateArrayUpdate('fields', at, newViewField);
-            await this.page.emitAsync(PageDirective.schemaTurnTypeField, this.schema.id, field.name, type)
+            var r = await this.schema.turnField({ fieldId: field.id, type: type });
+            if (r.ok) {
+                field.type = type;
+            }
         });
         await this.loadData()
     }
-    async onAddRow(data, id?: string, arrow: 'down' | 'up' = 'down') {
+    async onAddRow(data, id?: string, arrow: 'before' | 'after' = 'after') {
         if (typeof id == 'undefined') {
             id = this.data.last().id;
         }
         await this.page.onAction(ActionDirective.onSchemaCreateDefaultRow, async () => {
-            var newData = await this.page.emitAsync(PageDirective.schemaInsertRow, this.schema.id, data, { id, pos: arrow });
-            var newRow = newData.data;
-            var at = this.blocks.rows.findIndex(g => (g as TableStoreRow).dataRow.id == id);
-            if (arrow == 'down') at += 1;
-            this.data.insertAt(at, newRow);
-            var rowBlock: TableStoreRow = await this.page.createBlock('/tablestore/row', { dataRow: newRow }, this, at, 'rows') as TableStoreRow;
-            await rowBlock.createCells();
+            var r = await this.schema.rowAdd({ data, pos: { dataId: id, pos: arrow } });
+            if (r.ok) {
+                var newRow = r.data;
+                var at = this.blocks.rows.findIndex(g => (g as TableStoreRow).dataRow.id == id);
+                if (arrow == 'after') at += 1;
+                this.data.insertAt(at, newRow);
+                var rowBlock: TableStoreRow = await this.page.createBlock('/tablestore/row', { dataRow: newRow }, this, at, 'rows') as TableStoreRow;
+                await rowBlock.createCells();
+            }
         });
     }
-    async onRowUpdateCell(id: string, viewField: TableStoreViewField, value: any) {
-        var vfName = viewField.name || viewField.text;
+    async onRowUpdateCell(id: string, viewField: ViewField, value: any) {
+        var vfName = viewField.field.name || viewField.field.text;
         var row = this.data.find(g => g.id == id)
         var oldValue = row[vfName];
         var newValue = value;
         if (!util.valueIsEqual(oldValue, newValue)) {
-            await this.page.emitAsync(PageDirective.schemaUpdateRow,
-                this.schema.id,
-                id,
-                { [vfName]: newValue }
-            );
+            this.schema.rowUpdate({ dataId: id, data: { [vfName]: newValue } })
             row[vfName] = newValue;
         }
     }
     async onRowUpdate(id: string, data: Record<string, any>) {
         var oldValue = this.data.find(g => g.id == id);
         if (!util.valueIsEqual(oldValue, data)) {
-            await this.page.emitAsync(PageDirective.schemaUpdateRow,
-                this.schema.id,
-                id,
-                data
-            );
-            var rv: TableStoreRow = this.blocks.rows.find(g => g.dataRow.id == id);
-            if (rv) {
-                rv.updateData(data);
+            var r = await this.schema.rowUpdate({ dataId: id, data });
+            if (r.ok) {
+                var rv: TableStoreRow = this.blocks.rows.find(g => g.dataRow.id == id);
+                if (rv) {
+                    rv.updateData(data);
+                }
             }
         }
     }
     async onUpdateCellFieldSchema(field: Field, fs: Record<string, any>) {
         field.load(fs);
-        await this.page.emitAsync(PageDirective.schemaUpdateField,
-            this.schema.id,
-            field.id,
-            { ...field.get() }
-        )
+        await this.schema.fieldUpdate({ fieldId: field.id, data: field.get() })
     }
     async onRowDelete(id: string) {
         await this.page.onAction(ActionDirective.onSchemaRowDelete, async () => {
-            await this.page.emitAsync(PageDirective.schemaDeleteRow,
-                this.schema.id,
-                id
-            );
+            await this.schema.rowRemove(id);
             var row: Block = this.blocks.rows.find(g => (g as TableStoreRow).dataRow.id == id);
             await row.delete()
         })
@@ -287,34 +277,37 @@ export class TableStore extends TableStoreBase {
     initialData: { text: string, templateId?: string }
     async created() {
         if (!this.schemaId) {
-            var schemaData = await this.page.emitAsync(PageDirective.schemaCreate, this.initialData);
-            this.schema = new TableSchema(schemaData);
-            this.schemaId = this.schema.id;
-            if (this.fields.length == 0) {
-                this.fields = this.schema.fields.toArray(f => {
-                    var vf = {
-                        name: f.name,
-                        type: f.type,
-                        text: f.text || f.name,
-                        width: 60,
-                    };
-                    if ([FieldType.id, FieldType.sort].exists(f.type)) return undefined;
-                    var v = new TableStoreViewField(vf);
-                    return v;
-                });
+            var r = await channel.put('/schema/create', this.initialData);
+            if (r.ok) {
+                var schemaData = r.data;
+                this.schema = new TableSchema(schemaData);
+                this.schemaId = this.schema.id;
+                if (this.fields.length == 0) {
+                    this.fields = this.schema.fields.toArray(f => {
+                        var vf = {
+                            name: f.name,
+                            type: f.type,
+                            text: f.text || f.name,
+                            width: 60,
+                        };
+                        if ([FieldType.id, FieldType.sort].exists(f.type)) return undefined;
+                        var v = new ViewField(this.schema, vf);
+                        return v;
+                    });
+                }
             }
         }
     }
     async onAddOpenForm() {
         var row = await useFormPage(this.schema);
-        await this.onAddRow(row, undefined, 'down');
+        await this.onAddRow(row, undefined, 'after');
     }
     async onEditOpenForm(id: string) {
         var rowData = this.data.find(g => g.id == id);
         var row = await useFormPage(this.schema, rowData);
         await this.onRowUpdate(id, row);
     }
-    getBlocksByField(field: TableStoreViewField) {
+    getBlocksByField(field: ViewField) {
         var keys = this.blockKeys;
         var at = this.fields.findIndex(g => g === field);
         var cs: Block[] = [];

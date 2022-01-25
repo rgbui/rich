@@ -10,7 +10,7 @@ import "./style.less";
 @url('/field/option')
 export class FieldOption extends OriginField {
     async onCellMousedown(event: React.MouseEvent<Element, MouseEvent>) {
-        var fc: FieldConfig = this.schemaField.config;
+        var fc: FieldConfig = this.field.config;
         var op = await useTableStoreOption({
             roundArea: Rect.fromEle(event.target as HTMLElement)
         }, this.value,
@@ -30,7 +30,7 @@ export class FieldOption extends OriginField {
 @view('/field/option')
 export class FieldTextView extends BlockView<FieldOption>{
     render() {
-        var fc: FieldConfig = this.block.schemaField.config;
+        var fc: FieldConfig = this.block.field.config;
         var op = fc?.options ? fc.options.find(g => g.text == this.block.value) : undefined;
 
         return <div className='sy-field-text' style={{ display: 'block' }} >
