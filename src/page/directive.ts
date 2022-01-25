@@ -23,21 +23,4 @@ export enum PageDirective {
     change,
     error,
     warn,
-    schemaLoad,
-    schemaCreate,
-    schemaCreateField,
-    schemaRemoveField,
-    schemaTurnTypeField,
-    schemaUpdateField,
-    schemaTableLoad,
-    schemaTableLoadAll,
-    schemaInsertRow,
-    schemaUpdateRow,
-    schemaDeleteRow,
-    /**
-     * 加载当前页面的信息
-     */
-    loadPageInfo,
-    getPageInfo
-
 }

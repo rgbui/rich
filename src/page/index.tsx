@@ -167,37 +167,38 @@ export interface Page {
     emit(name: PageDirective.error, error: Error | string);
     on(name: PageDirective.warn, fn: (error: Error | string) => void);
     emit(name: PageDirective.warn, error: Error | string);
-    on(name: PageDirective.loadPageInfo, fn: () => Promise<{ id: string, text: string, icon?: IconArguments, description?: string }>);
-    emitAsync(name: PageDirective.loadPageInfo): Promise<{ id: string, text: string, icon?: IconArguments, description?: string }>;
-    on(name: PageDirective.getPageInfo, fn: (pageId: string) => Promise<{ id: string, text: string, icon?: IconArguments, description?: string }>);
-    emitAsync(name: PageDirective.getPageInfo, pageId: string): Promise<{ id: string, text: string, icon?: IconArguments, description?: string }>;
+
     on(name: PageDirective.save, fn: () => void);
     emit(name: PageDirective.save);
 
-    on(name: PageDirective.schemaLoad, fn: (schemaId: string) => Promise<Partial<TableSchema>>);
-    emitAsync(name: PageDirective.schemaLoad, schemaId: string): Promise<Partial<TableSchema>>;
-    on(name: PageDirective.schemaCreate, fn: (data: { text: string, workspaceId?: string, templateId?: string }) => Promise<Partial<TableSchema>>);
-    emitAsync(name: PageDirective.schemaCreate, data: { text: string, workspaceId?: string, templateId?: string }): Promise<Partial<TableSchema>>;
+    // on(name: PageDirective.loadPageInfo, fn: () => Promise<{ id: string, text: string, icon?: IconArguments, description?: string }>);
+    // emitAsync(name: PageDirective.loadPageInfo): Promise<{ id: string, text: string, icon?: IconArguments, description?: string }>;
+    // on(name: PageDirective.getPageInfo, fn: (pageId: string) => Promise<{ id: string, text: string, icon?: IconArguments, description?: string }>);
+    // emitAsync(name: PageDirective.getPageInfo, pageId: string): Promise<{ id: string, text: string, icon?: IconArguments, description?: string }>;
+    // on(name: PageDirective.schemaLoad, fn: (schemaId: string) => Promise<Partial<TableSchema>>);
+    // emitAsync(name: PageDirective.schemaLoad, schemaId: string): Promise<Partial<TableSchema>>;
+    // on(name: PageDirective.schemaCreate, fn: (data: { text: string, workspaceId?: string, templateId?: string }) => Promise<Partial<TableSchema>>);
+    // emitAsync(name: PageDirective.schemaCreate, data: { text: string, workspaceId?: string, templateId?: string }): Promise<Partial<TableSchema>>;
 
-    on(name: PageDirective.schemaCreateField, fn: (schemaId: string, options: { type: FieldType, text: string }) => Promise<Partial<Field>>);
-    emitAsync(name: PageDirective.schemaCreateField, schemaId: string, options: { type: FieldType, text: string }): Promise<Partial<Field>>
-    on(name: PageDirective.schemaRemoveField, fn: (schemaId: string, fieldId: string) => Promise<{ ok: boolean, warn?: string }>)
-    emitAsync(name: PageDirective.schemaRemoveField, schemaId: string, fieldId: string): Promise<{ ok: boolean, warn?: string }>;
-    on(name: PageDirective.schemaTurnTypeField, fn: (schemaId: string, fieldId: string, type: FieldType) => Promise<{ ok: boolean, warn?: string }>);
-    emitAsync(name: PageDirective.schemaTurnTypeField, schemaId: string, fieldId: string, type: FieldType): Promise<{ ok: boolean, warn?: string }>
-    on(name: PageDirective.schemaUpdateField, fn: (schemaId: string, fieldId: string, data: Record<string, any>) => Promise<{ ok: boolean, warn?: string }>);
-    emitAsync(name: PageDirective.schemaUpdateField, schemaId: string, fieldId: string, data: Record<string, any>): Promise<{ ok: boolean, warn?: string }>
+    // on(name: PageDirective.schemaCreateField, fn: (schemaId: string, options: { type: FieldType, text: string }) => Promise<Partial<Field>>);
+    // emitAsync(name: PageDirective.schemaCreateField, schemaId: string, options: { type: FieldType, text: string }): Promise<Partial<Field>>
+    // on(name: PageDirective.schemaRemoveField, fn: (schemaId: string, fieldId: string) => Promise<{ ok: boolean, warn?: string }>)
+    // emitAsync(name: PageDirective.schemaRemoveField, schemaId: string, fieldId: string): Promise<{ ok: boolean, warn?: string }>;
+    // on(name: PageDirective.schemaTurnTypeField, fn: (schemaId: string, fieldId: string, type: FieldType) => Promise<{ ok: boolean, warn?: string }>);
+    // emitAsync(name: PageDirective.schemaTurnTypeField, schemaId: string, fieldId: string, type: FieldType): Promise<{ ok: boolean, warn?: string }>
+    // on(name: PageDirective.schemaUpdateField, fn: (schemaId: string, fieldId: string, data: Record<string, any>) => Promise<{ ok: boolean, warn?: string }>);
+    // emitAsync(name: PageDirective.schemaUpdateField, schemaId: string, fieldId: string, data: Record<string, any>): Promise<{ ok: boolean, warn?: string }>
 
-    on(name: PageDirective.schemaTableLoad, fn: (schemaId: string, options: { size?: number, index?: number, filter?: Record<string, any> }) => Promise<{ index?: number, size?: number, list: any[], total: number }>)
-    emitAsync(name: PageDirective.schemaTableLoad, schemaId: string, options: { size?: number, index?: number, filter?: Record<string, any> }): Promise<{ index?: number, size?: number, list: any[], total: number }>
-    on(name: PageDirective.schemaTableLoadAll, fn: (schemaId: string, options: { filter?: Record<string, any> }) => Promise<{ list: any[], total: number }>)
-    emitAsync(name: PageDirective.schemaTableLoadAll, schemaId: string, options: { filter?: Record<string, any> }): Promise<{ list: any[], total: number }>
-    on(name: PageDirective.schemaInsertRow, fn: (schemaId: string, data: Record<string, any>, pos: { id: string, pos: 'down' | 'up' }) => Promise<{ ok: boolean, warn?: string, data?: Record<string, any> }>);
-    emitAsync(name: PageDirective.schemaInsertRow, schemaId: string, data: Record<string, any>, pos: { id: string, pos: 'down' | 'up' }): Promise<{ ok: boolean, warn?: string, data?: Record<string, any> }>;
-    on(name: PageDirective.schemaUpdateRow, fn: (schemaId: string, rowId: string, data: Record<string, any>) => Promise<{ ok: boolean, warn?: string }>);
-    emitAsync(name: PageDirective.schemaUpdateRow, schemaId, rowId: string, data: Record<string, any>): Promise<{ ok: boolean, warn?: string }>
-    on(name: PageDirective.schemaDeleteRow, fn: (schemaId: string, rowId: string) => Promise<{ ok: boolean, warn?: string }>);
-    emitAsync(name: PageDirective.schemaDeleteRow, schemaId: string, rowId: string): Promise<{ ok: boolean, warn?: string }>
+    // on(name: PageDirective.schemaTableLoad, fn: (schemaId: string, options: { size?: number, index?: number, filter?: Record<string, any> }) => Promise<{ index?: number, size?: number, list: any[], total: number }>)
+    // emitAsync(name: PageDirective.schemaTableLoad, schemaId: string, options: { size?: number, index?: number, filter?: Record<string, any> }): Promise<{ index?: number, size?: number, list: any[], total: number }>
+    // on(name: PageDirective.schemaTableLoadAll, fn: (schemaId: string, options: { filter?: Record<string, any> }) => Promise<{ list: any[], total: number }>)
+    // emitAsync(name: PageDirective.schemaTableLoadAll, schemaId: string, options: { filter?: Record<string, any> }): Promise<{ list: any[], total: number }>
+    // on(name: PageDirective.schemaInsertRow, fn: (schemaId: string, data: Record<string, any>, pos: { id: string, pos: 'down' | 'up' }) => Promise<{ ok: boolean, warn?: string, data?: Record<string, any> }>);
+    // emitAsync(name: PageDirective.schemaInsertRow, schemaId: string, data: Record<string, any>, pos: { id: string, pos: 'down' | 'up' }): Promise<{ ok: boolean, warn?: string, data?: Record<string, any> }>;
+    // on(name: PageDirective.schemaUpdateRow, fn: (schemaId: string, rowId: string, data: Record<string, any>) => Promise<{ ok: boolean, warn?: string }>);
+    // emitAsync(name: PageDirective.schemaUpdateRow, schemaId, rowId: string, data: Record<string, any>): Promise<{ ok: boolean, warn?: string }>
+    // on(name: PageDirective.schemaDeleteRow, fn: (schemaId: string, rowId: string) => Promise<{ ok: boolean, warn?: string }>);
+    // emitAsync(name: PageDirective.schemaDeleteRow, schemaId: string, rowId: string): Promise<{ ok: boolean, warn?: string }>
 
 
 
