@@ -556,6 +556,10 @@ export abstract class Block extends Events {
     get isGroup() {
         return this.url == BlockUrlConstant.Group;
     }
+    /**
+     * 标记，主要是标记block用，没有其它什么作用
+     */
+    mark:string;
 }
 export interface Block extends Block$Seek { }
 export interface Block extends Block$Event { }
