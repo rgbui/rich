@@ -2,19 +2,14 @@ import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import React from 'react';
 import { TableStoreBase } from "../base/table";
-@url('/datagrid/board')
+@url('/data-grid/board')
 export class TableStoreBoard extends TableStoreBase {
-    @prop()
-    columnId: string;
-    blocks = { childs: [], columns: [] };
-    get blockKeys() {
-        return ['childs', 'columns'];
-    }
+    blocks = { childs: [] };
 }
-@view('/datagrid/board')
+@view('/data-grid/board')
 export class TableStoreBoardView extends BlockView<TableStoreBoard>{
     render() {
-        return <div className='sy-tablestore-board'>
+        return <div className='sy-data-grid-board'>
 
         </div>
     }

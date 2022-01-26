@@ -6,7 +6,7 @@ import { Exception, ExceptionType } from "../../../../src/error/exception";
 import { PageDirective } from "../../../../src/page/directive";
 import { TableSchema } from "../../schema/meta";
 
-@url('/datagrid/list')
+@url('/data-grid/list')
 export class TableStoreBoard extends Block {
     // @prop()
     // schemaId: string;
@@ -44,16 +44,16 @@ export class TableStoreBoard extends Block {
     //     this.blocks.childs = [];
     //     for (let i = 0; i < this.data.length; i++) {
     //         var row = this.data[i];
-    //         // var rowBlock: TableStoreRow = await BlockFactory.createBlock('/datagrid/row', this.page, { dataRow: row }, this) as TableStoreRow;
+    //         // var rowBlock: TableStoreRow = await BlockFactory.createBlock('/data-grid/row', this.page, { dataRow: row }, this) as TableStoreRow;
     //         // this.blocks.rows.push(rowBlock);
 
     //     }
     // }
 }
-@view('/datagrid/list')
+@view('/data-grid/list')
 export class TableStoreBoardView extends BlockView<TableStoreBoard>{
     render() {
-        return <div className='sy-datagrid-board'>
+        return <div className='sy-data-grid-board'>
 
         </div>
     }

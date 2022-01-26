@@ -4,6 +4,7 @@ import { prop } from "../../../../src/block/factory/observable";
 import { Exception, ExceptionType } from "../../../../src/error/exception";
 import { TableSchema } from "../../schema/meta";
 import { ViewField } from "../../schema/view";
+import { TableStoreTurns } from "../../turn";
 
 export class TableStoreBase extends Block {
     @prop()
@@ -27,5 +28,11 @@ export class TableStoreBase extends Block {
         this.fields = vfs.map(vf => {
             return new ViewField(this.schema, vf);
         })
+    }
+    async onGetTurnUrls() {
+        return TableStoreTurns.urls
+    }
+    async getWillTurnData(url: string) {
+        return await TableStoreTurns.turn(this, url);
     }
 }

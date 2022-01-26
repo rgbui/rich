@@ -74,13 +74,13 @@ export var BlockSelectorData: BlockGroup[] = [
         text: '数据',
         childs: [
             { text: '数据表格', pic: <img src={tablestore} />, url: "/table/store", label: '/数据表格' },
-            { text: '看板', pic: <img src={tablestore} />, url: "/datagrid/board", label: '/数据表格' },
-            { text: '画廊', pic: <img src={tablestore} />, url: "/datagrid/gallery", label: '/数据表格' },
-            { text: '日历', pic: <img src={tablestore} />, url: "/datagrid/calendar", label: '/数据表格' },
-            { text: '甘特图', pic: <img src={tablestore} />, url: "/datagrid/gantt", label: '/数据表格' },
-            { text: '列表', pic: <img src={tablestore} />, url: "/datagrid/list", label: '/数据表格' },
-            { text: '时间线', pic: <img src={tablestore} />, url: "/datagrid/timeline", label: '/数据表格' },
-            { text: '地图标记', pic: <img src={tablestore} />, url: "/datagrid/map", label: '/数据表格' },
+            { text: '看板', pic: <img src={tablestore} />, url: "/data-grid/board", label: '/数据表格' },
+            { text: '画廊', pic: <img src={tablestore} />, url: "/data-grid/gallery", label: '/画廊' },
+            { text: '日历', pic: <img src={tablestore} />, url: "/data-grid/calendar", label: '/日历' },
+            { text: '甘特图', pic: <img src={tablestore} />, url: "/data-grid/gantt", label: '/甘特图' },
+            { text: '列表', pic: <img src={tablestore} />, url: "/data-grid/list", label: '/列表' },
+            { text: '时间线', pic: <img src={tablestore} />, url: "/data-grid/timeline", label: '/时间线' },
+            { text: '地图标记', pic: <img src={tablestore} />, url: "/data-grid/map", label: '/地图标记' },
         ]
     },
     {

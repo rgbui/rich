@@ -3,7 +3,7 @@ import { Block } from "../../../../src/block";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 
-@url('/datagrid/map')
+@url('/data-grid/map')
 export class TableStoreBoard extends Block {
     // @prop()
     // schemaId: string;
@@ -41,16 +41,16 @@ export class TableStoreBoard extends Block {
     //     this.blocks.childs = [];
     //     for (let i = 0; i < this.data.length; i++) {
     //         var row = this.data[i];
-    //         // var rowBlock: TableStoreRow = await BlockFactory.createBlock('/datagrid/row', this.page, { dataRow: row }, this) as TableStoreRow;
+    //         // var rowBlock: TableStoreRow = await BlockFactory.createBlock('/data-grid/row', this.page, { dataRow: row }, this) as TableStoreRow;
     //         // this.blocks.rows.push(rowBlock);
 
     //     }
     // }
 }
-@view('/datagrid/map')
+@view('/data-grid/map')
 export class TableStoreBoardView extends BlockView<TableStoreBoard>{
     render() {
-        return <div className='sy-datagrid-board'>
+        return <div className='sy-data-grid-board'>
 
         </div>
     }

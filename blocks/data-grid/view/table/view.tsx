@@ -21,15 +21,6 @@ export class TableStoreView extends BlockView<TableStore>{
             </div>
         else return <div></div>
     }
-    async didMount() {
-        await this.block.loadSchema();
-        await this.block.loadViewFields();
-        await this.block.createHeads();
-        this.forceUpdate()
-        await this.block.loadData();
-        await this.block.createRows();
-        this.forceUpdate();
-    }
     render() {
         var self = this;
         async function addNewRow() {
@@ -46,5 +37,4 @@ export class TableStoreView extends BlockView<TableStore>{
             </div>
         </div>
     }
- 
 }

@@ -319,11 +319,15 @@ export class TableStore extends TableStoreBase {
         }
         return cs;
     }
-    async onGetTurnUrls() {
-        return TableStoreTurns.urls
-    }
-    async getWillTurnData(url: string) {
-        return await TableStoreTurns.turn(this, url);
+   
+    async didMounted() {
+        await this.loadSchema();
+        await this.loadViewFields();
+        await this.createHeads();
+        this.view.forceUpdate()
+        await this.loadData();
+        await this.createRows();
+        this.view.forceUpdate();
     }
 }
 
