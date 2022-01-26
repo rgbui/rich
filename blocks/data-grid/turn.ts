@@ -22,6 +22,7 @@ export var TableStoreTurns = {
             case '/data-grid/gantt':
             case '/data-grid/timeline':
             case '/data-grid/map':
+                data.schemaId = (block as any).schemaId;
                 return { url: turnToUrl, ...data }
                 break;
         }
