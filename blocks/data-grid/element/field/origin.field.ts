@@ -1,10 +1,9 @@
 import React from "react";
 import { Block } from "../../../../src/block";
 import { BlockDisplay } from "../../../../src/block/enum";
-import { FieldType } from "../../schema/type";
+import { ViewField } from "../../schema/view";
 import { TableStoreCell } from "../../view/table/part/cell";
 export class OriginField extends Block {
-    fieldType: FieldType;
     display = BlockDisplay.block;
     value: any;
     get isSupportTextStyle() {
@@ -29,7 +28,9 @@ export class OriginField extends Block {
             await cell.onUpdateCellFieldSchema(props);
         }
     }
+    viewField: ViewField;
     get field() {
+        if (this.viewField) return this.viewField.field;
         var cell = this.closest(x => x instanceof TableStoreCell) as TableStoreCell;
         if (cell) {
             return cell.field;

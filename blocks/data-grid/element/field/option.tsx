@@ -32,7 +32,6 @@ export class FieldTextView extends BlockView<FieldOption>{
     render() {
         var fc: FieldConfig = this.block.field.config;
         var op = fc?.options ? fc.options.find(g => g.text == this.block.value) : undefined;
-
         return <div className='sy-field-text' style={{ display: 'block' }} >
             <span style={{ backgroundColor: op?.color }}>{this.block.value}</span>
         </div>
