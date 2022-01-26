@@ -74,6 +74,16 @@ export class TableSchema {
     }) {
         return channel.get('/datastore/query/all', Object.assign({ schemaId: this.id }, options));
     }
+
+    async group(
+        options: {
+            filter?: Record<string, any>,
+            size?: number,
+            sorts?: Record<string, 1|-1>,
+            group: string
+        }) {
+        return channel.get('/datastore/group', Object.assign({ schemaId: this.id }, options));
+    }
     statistics(options: { page?: number, size?: number, filter?: Record<string, any>, having?: Record<string, any>, sorts?: Record<string, 1 | -1>, groups: string[], aggregate: string[] }) {
         return channel.get('/datastore/statistics', Object.assign({ schemaId: this.id }, options));
     }
