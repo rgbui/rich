@@ -2,7 +2,7 @@ import { Block } from "../../src/block";
 
 export var TableStoreTurns = {
     urls: [
-        '/table/store',
+        '/data-grid/table',
         '/data-grid/board',
         '/data-grid/calendar',
         '/data-grid/list',
@@ -14,7 +14,7 @@ export var TableStoreTurns = {
     async turn(block: Block, turnToUrl) {
         var data: Record<string, any> = {};
         switch (turnToUrl) {
-            case '/table/store':
+            case '/data-grid/table':
             case '/data-grid/board':
             case '/data-grid/calendar':
             case '/data-grid/list':

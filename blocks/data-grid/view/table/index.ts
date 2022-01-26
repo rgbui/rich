@@ -29,7 +29,7 @@ import { TableStoreTurns } from '../../turn';
  * 3. 表格的视图展示（具体到视图的展现,信息存在tableStore） 
  * 
  */
-@url('/table/store')
+@url('/data-grid/table')
 export class TableStore extends TableStoreBase {
     index: number;
     size: number = 50;

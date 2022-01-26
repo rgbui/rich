@@ -73,7 +73,7 @@ export var BlockSelectorData: BlockGroup[] = [
     {
         text: '数据',
         childs: [
-            { text: '数据表格', pic: <img src={tablestore} />, url: "/table/store", label: '/数据表格' },
+            { text: '数据表格', pic: <img src={tablestore} />, url: "/data-grid/table", label: '/数据表格' },
             { text: '看板', pic: <img src={tablestore} />, url: "/data-grid/board", label: '/数据表格' },
             { text: '画廊', pic: <img src={tablestore} />, url: "/data-grid/gallery", label: '/画廊' },
             { text: '日历', pic: <img src={tablestore} />, url: "/data-grid/calendar", label: '/日历' },

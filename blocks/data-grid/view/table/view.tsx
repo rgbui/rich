@@ -6,7 +6,7 @@ import { BlockView } from "../../../../src/block/view"
 import { ChildsArea } from "../../../../src/block/view/appear"
 import Plus from "../../../../src/assert/svg/plus.svg";
 
-@view('/table/store')
+@view('/data-grid/table')
 export class TableStoreView extends BlockView<TableStore>{
     renderHead() {
         if (this.block.schema) return <ChildsArea childs={this.block.blocks.childs}></ChildsArea>
