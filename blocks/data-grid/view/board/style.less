@@ -1,0 +1,31 @@
+.sy-data-grid-board {
+    display        : flex;
+    justify-content: flex-start;
+    align-items    : flex-start;
+    overflow: auto;
+    padding:0px 10px;
+    &-group {
+        font-size: 14px;
+        width: 260px;
+        flex-shrink: 0;
+        &-head {
+            height:30px;
+            font-size: 14px;
+            margin-right:10px;
+            padding-right:10px;
+            display        : flex;
+            justify-content: flex-start;
+            align-items    : center;
+            span {
+                color: rgb(55, 53, 47);
+                fill : currentcolor;
+            }
+            label {
+                color: rgba(55, 53, 47, 0.4);
+                display: inline-block;
+                margin-left: 10px;
+            }
+        }
+        &-childs {}
+    }
+}
