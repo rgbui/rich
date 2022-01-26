@@ -1,5 +1,5 @@
 import React from "react";
-import { TableSchema } from "../../../blocks/table-store/schema/meta";
+import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { Rect } from "../../../src/common/vector/point";
 import { Page } from "../../../src/page";
@@ -8,7 +8,7 @@ import { createFormPage } from "./page";
 import Dots from "../../../src/assert/svg/dots.svg";
 import { Icon } from "../../../component/view/icon";
 import "./style.less";
-import { OriginFormField } from "../../../blocks/table-store/element/form/origin.field";
+import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.field";
 import { messageChannel } from "../../../util/bus/event.bus";
 import { Directive } from "../../../util/bus/directive";
 class FormPage extends EventsComponent {

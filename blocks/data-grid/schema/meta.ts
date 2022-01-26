@@ -20,7 +20,7 @@ export class TableSchema {
     fields: Field[] = [];
     text: string;
     getViewFields() {
-        var fs = this.fields.filter(g => [
+        var fs = this.fields.filter(g => ![
             FieldType.id,
             FieldType.createDate,
             FieldType.sort,
@@ -28,7 +28,8 @@ export class TableSchema {
         ].includes(g.type));
         return fs.map(f => {
             return {
-                fieldId: f.id
+                fieldId: f.id,
+                text: f.text
             }
         })
     }

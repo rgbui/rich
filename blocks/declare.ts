@@ -21,32 +21,41 @@ import './table/cell';
 import './table/row';
 import './table';
 
-import './table-store/view/table';
-import './table-store/view/table/view';
-import "./table-store/view/table/part/head";
-import "./table-store/view/table/part/th";
-import "./table-store/view/table/part/row";
-import "./table-store/view/table/part/cell";
+import './data-grid/view/table';
+import './data-grid/view/table/view';
+import "./data-grid/view/table/part/head";
+import "./data-grid/view/table/part/th";
+import "./data-grid/view/table/part/row";
+import "./data-grid/view/table/part/cell";
+import './data-grid/view/board';
+import './data-grid/view/calendar';
+import './data-grid/view/gallery';
+import './data-grid/view/gantt';
+import './data-grid/view/list';
+import './data-grid/view/timeline';
+import './data-grid/view/item';
+import './data-grid/view/map';
 
-import "./table-store/element/field/text";
-import "./table-store/element/field/number";
-import "./table-store/element/field/date";
-import "./table-store/element/field/option";
-import "./table-store/element/field/user";
-import "./table-store/element/field/check";
-import "./table-store/element/field/image";
-import "./table-store/element/field/video";
-import "./table-store/element/field/file";
 
-import "./table-store/element/form/text";
-import "./table-store/element/form/number";
-import "./table-store/element/form/date";
-import "./table-store/element/form/option";
-import "./table-store/element/form/user";
-import "./table-store/element/form/check";
-import "./table-store/element/form/image";
-import "./table-store/element/form/video";
-import "./table-store/element/form/file";
+import "./data-grid/element/field/text";
+import "./data-grid/element/field/number";
+import "./data-grid/element/field/date";
+import "./data-grid/element/field/option";
+import "./data-grid/element/field/user";
+import "./data-grid/element/field/check";
+import "./data-grid/element/field/image";
+import "./data-grid/element/field/video";
+import "./data-grid/element/field/file";
+
+import "./data-grid/element/form/text";
+import "./data-grid/element/form/number";
+import "./data-grid/element/form/date";
+import "./data-grid/element/form/option";
+import "./data-grid/element/form/user";
+import "./data-grid/element/form/check";
+import "./data-grid/element/form/image";
+import "./data-grid/element/form/video";
+import "./data-grid/element/form/file";
 
 import "./at/date";
 import './at/link';
@@ -65,7 +74,7 @@ import "./board/shape/index"
  */
 import "./general/style.less";
 import "./present/style.less";
-import "./table-store/style.less";
+import "./data-grid/style.less";
 import "./at/style.less";
 import "./media/style.less";
 

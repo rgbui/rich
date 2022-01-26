@@ -1,12 +1,9 @@
 import React from "react";
 import { Block } from "../../../../src/block";
-import { url, prop, view } from "../../../../src/block/factory/observable";
+import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
-import { Exception, ExceptionType } from "../../../../src/error/exception";
-import { PageDirective } from "../../../../src/page/directive";
-import { TableSchema } from "../../schema/meta";
 
-@url('/tablestore/list')
+@url('/datagrid/map')
 export class TableStoreBoard extends Block {
     // @prop()
     // schemaId: string;
@@ -44,16 +41,16 @@ export class TableStoreBoard extends Block {
     //     this.blocks.childs = [];
     //     for (let i = 0; i < this.data.length; i++) {
     //         var row = this.data[i];
-    //         // var rowBlock: TableStoreRow = await BlockFactory.createBlock('/tablestore/row', this.page, { dataRow: row }, this) as TableStoreRow;
+    //         // var rowBlock: TableStoreRow = await BlockFactory.createBlock('/datagrid/row', this.page, { dataRow: row }, this) as TableStoreRow;
     //         // this.blocks.rows.push(rowBlock);
 
     //     }
     // }
 }
-@view('/tablestore/list')
+@view('/datagrid/map')
 export class TableStoreBoardView extends BlockView<TableStoreBoard>{
     render() {
-        return <div className='sy-tablestore-board'>
+        return <div className='sy-datagrid-board'>
 
         </div>
     }

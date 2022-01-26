@@ -1,6 +1,6 @@
 
 import React from "react";
-import { TableSchema } from "../../blocks/table-store/schema/meta";
+import { TableSchema } from "../../blocks/data-grid/schema/meta";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
 import "./style.less";

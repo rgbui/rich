@@ -1,4 +1,4 @@
-import { FieldType } from "../../../blocks/table-store/schema/type";
+import { FieldType } from "../../../blocks/data-grid/schema/type";
 
 export var TableFieldTypes: { text: string, value: any }[] = [
     { text: '单行文本', value: FieldType.text },

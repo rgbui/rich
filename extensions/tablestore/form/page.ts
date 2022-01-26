@@ -1,5 +1,5 @@
-import { FieldType } from "../../../blocks/table-store/schema/type";
-import { TableSchema } from "../../../blocks/table-store/schema/meta";
+import { FieldType } from "../../../blocks/data-grid/schema/type";
+import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { PageLayoutType } from "../../../src/layout/declare";
 import { Page } from "../../../src/page";
 import { PageDirective } from "../../../src/page/directive";

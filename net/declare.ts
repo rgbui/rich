@@ -1,7 +1,7 @@
 
-import { Field } from "../blocks/table-store/schema/field";
-import { TableSchema } from "../blocks/table-store/schema/meta";
-import { FieldType } from "../blocks/table-store/schema/type";
+import { Field } from "../blocks/data-grid/schema/field";
+import { TableSchema } from "../blocks/data-grid/schema/meta";
+import { FieldType } from "../blocks/data-grid/schema/type";
 import { LinkPage } from "../extensions/at/declare";
 import { IconArguments } from "../extensions/icon/declare";
 import { GalleryType, OuterPic } from "../extensions/image/declare";

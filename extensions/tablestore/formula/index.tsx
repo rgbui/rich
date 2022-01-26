@@ -1,5 +1,5 @@
 import React from "react";
-import { TableSchema } from "../../../blocks/table-store/schema/meta";
+import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { Textarea } from "../../../component/view/input";
 import { PopoverSingleton } from "../../popover/popover";

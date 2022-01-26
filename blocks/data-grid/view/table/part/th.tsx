@@ -144,6 +144,9 @@ export class TableStoreTh extends Block {
         });
         return items;
     }
+    get handleBlock(): Block {
+        return this.parent.parent;
+    }
 }
 
 @view('/tablestore/th')

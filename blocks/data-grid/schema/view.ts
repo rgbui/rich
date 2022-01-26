@@ -5,7 +5,7 @@ export class ViewField {
     fieldId?: string;
     text?: string;
     value?: any;
-    colWidth?: number;
+    colWidth?: number = 120;
     remark?: string;
     error?: string;
     sort?: 0 | 1 | -1 = 0;
@@ -32,6 +32,6 @@ export class ViewField {
         return new ViewField(this.schema, this.get())
     }
     getValue(row) {
-        if(this?.field?.name)return row[this.field.name];
+        if (this?.field?.name) return row[this.field.name];
     }
 }

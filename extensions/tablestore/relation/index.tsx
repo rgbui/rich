@@ -1,5 +1,5 @@
 import React from "react";
-import { Field } from "../../../blocks/table-store/schema/field";
+import { Field } from "../../../blocks/data-grid/schema/field";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";

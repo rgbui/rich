@@ -21,6 +21,9 @@ export class TableStoreHead extends Block {
         var block = await BlockFactory.createBlock('/tablestore/th', this.page, {}, this);
         this.childs.insertAt(at, block);
     }
+    get handleBlock(): Block {
+        return this.parent;
+    }
 }
 @view('/tablestore/head')
 export class TableStoreHeadView extends BlockView<TableStoreHead>{

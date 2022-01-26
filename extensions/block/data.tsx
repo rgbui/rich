@@ -53,9 +53,9 @@ export var BlockSelectorData: BlockGroup[] = [
         text: '行内块',
         childs: [
             { text: "表情", isLine: true, pic: <img src={emoji} />, url: "/emoji", description: "", label: "/表情", labels: [] },
-            // { text: "日期", isLine: true, pic: <img src={mentionDate} />, url: '/mention/date', description: '', label: '/引用日期' },
-            // { text: "页面", isLine: true, pic: <img src={mentionPage} />, url: '/mention/page', description: '', label: '/引用页面' },
-            //{ text: "@ta人", isLine: true, pic: <img src={mentionPerson} />, url: '/mention/person', description: '', label: '/ta人' },
+            { text: "日期", isLine: true, pic: <img src={mentionDate} />, url: '/mention/date', description: '', label: '/引用日期' },
+            { text: "页面", isLine: true, pic: <img src={mentionPage} />, url: '/mention/page', description: '', label: '/引用页面' },
+            { text: "@ta人", isLine: true, pic: <img src={mentionPerson} />, url: '/mention/person', description: '', label: '/ta人' },
         ]
     },
     {
@@ -73,13 +73,20 @@ export var BlockSelectorData: BlockGroup[] = [
     {
         text: '数据',
         childs: [
-            { text: '数据表格', pic: <img src={tablestore} />, url: "/table/store", label: '/数据表格' }
+            { text: '数据表格', pic: <img src={tablestore} />, url: "/table/store", label: '/数据表格' },
+            { text: '看板', pic: <img src={tablestore} />, url: "/datagrid/board", label: '/数据表格' },
+            { text: '画廊', pic: <img src={tablestore} />, url: "/datagrid/gallery", label: '/数据表格' },
+            { text: '日历', pic: <img src={tablestore} />, url: "/datagrid/calendar", label: '/数据表格' },
+            { text: '甘特图', pic: <img src={tablestore} />, url: "/datagrid/gantt", label: '/数据表格' },
+            { text: '列表', pic: <img src={tablestore} />, url: "/datagrid/list", label: '/数据表格' },
+            { text: '时间线', pic: <img src={tablestore} />, url: "/datagrid/timeline", label: '/数据表格' },
+            { text: '地图标记', pic: <img src={tablestore} />, url: "/datagrid/map", label: '/数据表格' },
         ]
     },
-    // {
-    //     text: '嵌入',
-    //     childs: [
-    //         { text: '嵌入', pic: <img src={embed} />, url: "/embed", label: '/嵌入' }
-    //     ]
-    // }
+    {
+        text: '嵌入',
+        childs: [
+            { text: '嵌入', pic: <img src={embed} />, url: "/embed", label: '/嵌入' }
+        ]
+    }
 ]

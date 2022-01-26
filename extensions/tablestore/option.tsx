@@ -1,6 +1,6 @@
 import lodash from "lodash";
 import React from "react";
-import { FieldType } from "../../blocks/table-store/schema/type";
+import { FieldType } from "../../blocks/data-grid/schema/type";
 import { EventsComponent } from "../../component/lib/events.component";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";

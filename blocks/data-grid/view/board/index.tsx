@@ -2,7 +2,7 @@ import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import React from 'react';
 import { TableStoreBase } from "../base/table";
-@url('/tablestore/board')
+@url('/datagrid/board')
 export class TableStoreBoard extends TableStoreBase {
     @prop()
     columnId: string;
@@ -11,7 +11,7 @@ export class TableStoreBoard extends TableStoreBase {
         return ['childs', 'columns'];
     }
 }
-@view('/tablestore/board')
+@view('/datagrid/board')
 export class TableStoreBoardView extends BlockView<TableStoreBoard>{
     render() {
         return <div className='sy-tablestore-board'>

@@ -1,7 +1,7 @@
 import React from "react";
-import { Field, FieldConfig } from "../../../blocks/table-store/schema/field";
-import { FieldType } from "../../../blocks/table-store/schema/type";
-import { TableSchema } from "../../../blocks/table-store/schema/meta";
+import { Field, FieldConfig } from "../../../blocks/data-grid/schema/field";
+import { FieldType } from "../../../blocks/data-grid/schema/type";
+import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { Button } from "../../../component/view/button";
 import { Col, Row, Space } from "../../../component/view/grid";

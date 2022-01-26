@@ -19,6 +19,7 @@ import { TableStoreBase } from '../base/table';
 import { Block } from '../../../../src/block';
 import { channel } from '../../../../net/channel';
 import { ViewField } from '../../schema/view';
+import { TableStoreTurns } from '../../turn';
 
 
 /***
@@ -317,6 +318,12 @@ export class TableStore extends TableStoreBase {
             })
         }
         return cs;
+    }
+    async onGetTurnUrls() {
+        return TableStoreTurns.urls
+    }
+    async getWillTurnData(url: string) {
+        return await TableStoreTurns.turn(this, url);
     }
 }
 
