@@ -69,7 +69,7 @@ export class TableSchema {
     all(options: {
         page: number,
         size?: number,
-        fitler?: Record<string, any>,
+        filter?: Record<string, any>,
         sorts?: Record<string, -1 | 1>
     }) {
         return channel.get('/datastore/query/all', Object.assign({ schemaId: this.id }, options));
