@@ -1,14 +1,14 @@
 import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import React from 'react';
-import { TableStoreBase } from "../base/table";
+import { DataGridBase } from "../base/table";
 import { FieldType } from "../../schema/type";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { TableStoreItem } from "../item";
 import { ChildsArea } from "../../../../src/block/view/appear";
 import './style.less';
 @url('/data-grid/board')
-export class TableStoreBoard extends TableStoreBase {
+export class TableStoreBoard extends DataGridBase {
     @prop()
     groupFieldId: string;
     get groupField() {
@@ -26,7 +26,7 @@ export class TableStoreBoard extends TableStoreBase {
                 var r = await this.schema.group({ group: name });
                 if (r.data) {
                     var keys = r.data.list.map(l => l[name]);
-                    var rl = await this.schema.all({ page: 1, fitler: { [name]: { $in: keys } } });
+                    var rl = await this.schema.all({ page: 1, filter: { [name]: { $in: keys } } });
                     if (this.groupField.type == FieldType.options || this.groupField.type == FieldType.option) {
                         var ops = this.groupField.config.options || [];
                         this.data = ops.map(op => {
