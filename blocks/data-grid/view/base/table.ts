@@ -5,10 +5,10 @@ import { prop } from "../../../../src/block/factory/observable";
 import { Exception, ExceptionType } from "../../../../src/error/exception";
 import { TableSchema } from "../../schema/meta";
 import { ViewField } from "../../schema/view";
-import { TableStoreTurns } from "../../turn";
+import { DataGridTurns } from "../../turn";
 import { TableStoreItem } from "../item";
 
-export class TableStoreBase extends Block {
+export class DataGridBase extends Block {
     @prop()
     fields: ViewField[] = [];
     @prop()
@@ -32,10 +32,10 @@ export class TableStoreBase extends Block {
         })
     }
     async onGetTurnUrls() {
-        return TableStoreTurns.urls
+        return DataGridTurns.urls
     }
     async getWillTurnData(url: string) {
-        return await TableStoreTurns.turn(this, url);
+        return await DataGridTurns.turn(this, url);
     }
     data: any;
     isLoadData: boolean = false;
