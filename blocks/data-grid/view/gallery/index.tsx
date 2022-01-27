@@ -3,11 +3,11 @@ import React from "react";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { ChildsArea } from "../../../../src/block/view/appear";
-import { TableStoreBase } from "../base/table";
+import { DataGridBase } from "../base/table";
 import "./style.less";
 
 @url('/data-grid/gallery')
-export class TableStoreGallery extends TableStoreBase {
+export class TableStoreGallery extends DataGridBase {
 
 }
 @view('/data-grid/gallery')
