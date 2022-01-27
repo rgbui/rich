@@ -1,4 +1,5 @@
 
+
 import { Field } from "../blocks/data-grid/schema/field";
 import { TableSchema } from "../blocks/data-grid/schema/meta";
 import { FieldType } from "../blocks/data-grid/schema/type";
@@ -67,7 +68,8 @@ export interface ChannelGetMapUrls {
 export interface ChannelQueryMapUrls {
     "/workspace/query/users":{args:any,returnType:User[]},
 	"/query/current/user":{args:any,returnType:User},
-	"/device/query":{args:any,returnType:Promise<string>}
+	"/device/query":{args:any,returnType:Promise<string>},
+	"/amap/key_pair":{args:any,returnType:{key:string,pair:string}}
 }
 export interface ChannelActMapUrls {
     "/page/create/by_text":{args:{word:string},returnType:{ok:boolean,data:LinkPage,warn:string}},

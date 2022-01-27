@@ -1,13 +1,12 @@
 import { Block } from "../../src/block";
 
-export var TableStoreTurns = {
+export var DataGridTurns = {
     urls: [
         '/data-grid/table',
         '/data-grid/board',
         '/data-grid/calendar',
         '/data-grid/list',
         '/data-grid/gallery',
-        '/data-grid/gantt',
         '/data-grid/timeline',
         '/data-grid/map',
     ],
@@ -19,7 +18,6 @@ export var TableStoreTurns = {
             case '/data-grid/calendar':
             case '/data-grid/list':
             case '/data-grid/gallery':
-            case '/data-grid/gantt':
             case '/data-grid/timeline':
             case '/data-grid/map':
                 data.schemaId = (block as any).schemaId;
