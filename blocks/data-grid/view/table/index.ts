@@ -15,11 +15,11 @@ import { Confirm } from "../../../../component/lib/confirm";
 import { useTableStoreAddField } from "../../../../extensions/tablestore/field";
 import { Rect } from "../../../../src/common/vector/point";
 import { useFormPage } from "../../../../extensions/tablestore/form";
-import { TableStoreBase } from '../base/table';
+import { DataGridBase } from '../base/table';
 import { Block } from '../../../../src/block';
 import { channel } from '../../../../net/channel';
 import { ViewField } from '../../schema/view';
-import { TableStoreTurns } from '../../turn';
+import { DataGridTurns } from '../../turn';
 
 
 /***
@@ -30,7 +30,7 @@ import { TableStoreTurns } from '../../turn';
  * 
  */
 @url('/data-grid/table')
-export class TableStore extends TableStoreBase {
+export class TableStore extends DataGridBase {
     data: any[] = [];
     blocks = { childs: [], rows: [] };
     get blockKeys() {
