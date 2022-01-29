@@ -2,9 +2,9 @@ import React from "react";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { ChildsArea } from "../../../../src/block/view/appear";
-import { DataGridBase } from "../base/table";
+import { DataGridView } from "../base/table";
 @url('/data-grid/list')
-export class TableStoreList extends DataGridBase {
+export class TableStoreList extends DataGridView {
 
 }
 @view('/data-grid/list')

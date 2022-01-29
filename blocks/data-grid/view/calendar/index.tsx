@@ -5,12 +5,12 @@ import ArrowRight from "../../../../src/assert/svg/chevronRight.svg";
 import Plus from "../../../../src/assert/svg/plus.svg";
 import React from 'react';
 import dayjs, { Dayjs } from "dayjs";
-import { DataGridBase } from "../base/table";
+import { DataGridView } from "../base/table";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { TableStoreItem } from "../item";
 import { ChildsArea } from "../../../../src/block/view/appear";
 @url('/data-grid/calendar')
-export class TableStoreCalendar extends DataGridBase {
+export class TableStoreCalendar extends DataGridView {
     @prop()
     date: number = Date.now();
     @prop()

@@ -1,11 +1,8 @@
 
 import React from 'react';
-import { TableSchema } from "../../schema/meta";
 import { url } from "../../../../src/block/factory/observable";
-import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { TableStoreRow } from "./part/row";
 import { Pattern } from "../../../../src/block/pattern";
-
 import { util } from "../../../../util/util";
 import { FieldType } from "../../schema/type";
 import { ActionDirective } from "../../../../src/history/declare";
@@ -15,12 +12,9 @@ import { Confirm } from "../../../../component/lib/confirm";
 import { useTableStoreAddField } from "../../../../extensions/tablestore/field";
 import { Rect } from "../../../../src/common/vector/point";
 import { useFormPage } from "../../../../extensions/tablestore/form";
-import { DataGridBase } from '../base/table';
+import { DataGridView } from '../base/table';
 import { Block } from '../../../../src/block';
-import { channel } from '../../../../net/channel';
 import { ViewField } from '../../schema/view';
-import { DataGridTurns } from '../../turn';
-
 
 /***
  * 数据总共分三部分
@@ -30,15 +24,7 @@ import { DataGridTurns } from '../../turn';
  * 
  */
 @url('/data-grid/table')
-export class TableStore extends DataGridBase {
-    data: any[] = [];
-    blocks = { childs: [], rows: [] };
-    get blockKeys() {
-        return ['childs', 'rows'];
-    }
-    get allBlockKeys(): string[] {
-        return ['childs', 'rows'];
-    }
+export class TableStore extends DataGridView {
     async load(data) {
         if (!this.pattern) this.pattern = new Pattern(this);
         for (var n in data) {
@@ -56,24 +42,6 @@ export class TableStore extends DataGridBase {
             else {
                 this[n] = data[n];
             }
-        }
-    }
-    async createHeads() {
-        this.blocks.childs = [];
-        var head = await BlockFactory.createBlock('/tablestore/head', this.page, {}, this);
-        this.blocks.childs.push(head);
-        await this.fields.eachAsync(async () => {
-            var block = await BlockFactory.createBlock('/tablestore/th', this.page, {}, head);
-            head.blocks.childs.push(block);
-        });
-    }
-    async createRows() {
-        this.blocks.rows = [];
-        for (let i = 0; i < this.data.length; i++) {
-            var row = this.data[i];
-            var rowBlock: TableStoreRow = await BlockFactory.createBlock('/tablestore/row', this.page, { dataRow: row }, this) as TableStoreRow;
-            this.blocks.rows.push(rowBlock);
-            await rowBlock.createCells();
         }
     }
     async onAddField(event: React.MouseEvent | MouseEvent, at?: number) {
@@ -212,16 +180,16 @@ export class TableStore extends DataGridBase {
         }
     }
     async onRowUpdate(id: string, data: Record<string, any>) {
-        var oldValue = this.data.find(g => g.id == id);
-        if (!util.valueIsEqual(oldValue, data)) {
-            var r = await this.schema.rowUpdate({ dataId: id, data });
-            if (r.ok) {
-                var rv: TableStoreRow = this.blocks.rows.find(g => g.dataRow.id == id);
-                if (rv) {
-                    rv.updateData(data);
-                }
-            }
-        }
+        // var oldValue = this.data.find(g => g.id == id);
+        // if (!util.valueIsEqual(oldValue, data)) {
+        //     var r = await this.schema.rowUpdate({ dataId: id, data });
+        //     if (r.ok) {
+        //         var rv: TableStoreRow = this.blocks.rows.find(g => g.dataRow.id == id);
+        //         if (rv) {
+        //             rv.updateData(data);
+        //         }
+        //     }
+        // }
     }
     async onUpdateCellFieldSchema(field: Field, fs: Record<string, any>) {
         field.load(fs);
@@ -262,30 +230,6 @@ export class TableStore extends DataGridBase {
         }
         return json;
     }
-    initialData: { text: string, templateId?: string }
-    async created() {
-        if (!this.schemaId) {
-            var r = await channel.put('/schema/create', this.initialData);
-            if (r.ok) {
-                var schemaData = r.data;
-                this.schema = new TableSchema(schemaData);
-                this.schemaId = this.schema.id;
-                if (this.fields.length == 0) {
-                    this.fields = this.schema.fields.toArray(f => {
-                        var vf = {
-                            name: f.name,
-                            type: f.type,
-                            text: f.text || f.name,
-                            width: 60,
-                        };
-                        if ([FieldType.id, FieldType.sort].exists(f.type)) return undefined;
-                        var v = new ViewField(this.schema, vf);
-                        return v;
-                    });
-                }
-            }
-        }
-    }
     async onAddOpenForm() {
         var row = await useFormPage(this.schema);
         await this.onAddRow(row, undefined, 'after');
@@ -305,15 +249,6 @@ export class TableStore extends DataGridBase {
             })
         }
         return cs;
-    }
-    async didMounted() {
-        await this.loadSchema();
-        await this.loadViewFields();
-        await this.createHeads();
-        this.view.forceUpdate()
-        await this.loadData();
-        await this.createRows();
-        this.view.forceUpdate();
     }
 }
 

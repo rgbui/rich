@@ -1,14 +1,14 @@
 import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import React from 'react';
-import { DataGridBase } from "../base/table";
+import { DataGridView } from "../base/table";
 import { FieldType } from "../../schema/type";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { TableStoreItem } from "../item";
 import { ChildsArea } from "../../../../src/block/view/appear";
 import './style.less';
 @url('/data-grid/board')
-export class TableStoreBoard extends DataGridBase {
+export class TableStoreBoard extends DataGridView {
     @prop()
     groupFieldId: string;
     get groupField() {

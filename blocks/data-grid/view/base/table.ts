@@ -8,7 +8,7 @@ import { ViewField } from "../../schema/view";
 import { DataGridTurns } from "../../turn";
 import { TableStoreItem } from "../item";
 
-export class DataGridBase extends Block {
+export class DataGridView extends Block {
     @prop()
     fields: ViewField[] = [];
     @prop()
@@ -66,5 +66,16 @@ export class DataGridBase extends Block {
         await this.loadData();
         await this.createItem();
         this.view.forceUpdate();
+    }
+    initialData: { text: string, templateId?: string }
+    async created() {
+        if (!this.schemaId) {
+            var r = await channel.put('/schema/create', this.initialData);
+            if (r.ok) {
+                var schemaData = r.data;
+                this.schema = new TableSchema(schemaData);
+                this.schemaId = this.schema.id;
+            }
+        }
     }
 }

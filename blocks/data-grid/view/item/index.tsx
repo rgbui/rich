@@ -3,7 +3,7 @@ import { Block } from "../../../../src/block";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { ChildsArea } from "../../../../src/block/view/appear";
-import { DataGridBase } from "../base/table";
+import { DataGridView } from "../base/table";
 import { createFieldBlock } from "./service";
 
 import "./style.less";
@@ -12,10 +12,10 @@ import "./style.less";
 export class TableStoreItem extends Block {
     dataRow: Record<string, any> = {};
     get schema() {
-        return (this.parent as DataGridBase).schema;
+        return (this.parent as DataGridView).schema;
     }
     get fields() {
-        return (this.parent as DataGridBase).fields;
+        return (this.parent as DataGridView).fields;
     }
     async createElements() {
         for (let i = 0; i < this.fields.length; i++) {

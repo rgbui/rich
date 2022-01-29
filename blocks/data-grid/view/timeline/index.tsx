@@ -4,12 +4,12 @@ import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { ChildsArea } from "../../../../src/block/view/appear";
 import { FieldType } from "../../schema/type";
-import { DataGridBase } from "../base/table";
+import { DataGridView } from "../base/table";
 import { TableStoreBoard } from "../board";
 import { TableStoreItem } from "../item";
 
 @url('/data-grid/timeline')
-export class TableStoreCalendar extends DataGridBase {
+export class TableStoreCalendar extends DataGridView {
     @prop()
     startDate: number = Date.now();
     @prop()
