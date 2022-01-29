@@ -1,5 +1,5 @@
 import React from "react";
-import { useTableStoreOption } from "../../../../extensions/tablestore/option";
+import { useTableStoreOption } from "../../../../extensions/tablestore/option/option";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { Rect } from "../../../../src/common/vector/point";
