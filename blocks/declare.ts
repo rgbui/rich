@@ -23,10 +23,8 @@ import './table';
 
 import './data-grid/view/table';
 import './data-grid/view/table/view';
-import "./data-grid/view/table/part/head";
-import "./data-grid/view/table/part/th";
-import "./data-grid/view/table/part/row";
-import "./data-grid/view/table/part/cell";
+import "./data-grid/view/table/row";
+
 import './data-grid/view/board';
 import './data-grid/view/calendar';
 import './data-grid/view/gallery';
