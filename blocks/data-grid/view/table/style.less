@@ -1,0 +1,119 @@
+.sy-dg-table {
+    margin:10px 0px;
+    overflow: auto;
+    position: relative;
+
+    &-head {
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : stretch;
+        flex-wrap      : nowrap;
+
+        &-th {
+            border         : 1px solid #ddd;
+            display        : inline-flex;
+            flex-wrap      : nowrap;
+            justify-content: flex-start;
+            align-items    : center;
+            flex-shrink    : 0;
+            box-sizing     : border-box;
+            padding        : 5px;
+            position       : relative;
+
+            &-icon {
+                flex-shrink    : 0;
+                flex-grow      : 0;
+                display        : inline-flex;
+                width          : 20px;
+                height         : 20px;
+                justify-content: center;
+                align-items    : center;
+
+                >svg {
+                    width              : 14px;
+                    height             : 14px;
+                    display            : block;
+                    fill               : rgba(55, 53, 47, 0.4);
+                    flex-shrink        : 0;
+                    backface-visibility: hidden;
+                    margin-right       : 10px;
+                }
+            }
+
+            >label {
+                flex-grow    : 1;
+                flex-shrink  : 1;
+                overflow     : hidden;
+                text-overflow: ellipsis;
+            }
+
+            &-property {
+                flex-shrink: 0;
+                flex-grow  : 0;
+                display    : none;
+                cursor     : pointer;
+            }
+
+            &:hover {
+                .sy-dg-table-head-th-property {
+                    display: flex;
+                }
+            }
+        }
+
+        &-th+&-th {
+            border-left: 1px solid transparent;
+        }
+
+        &-th-plus {
+            display        : flex;
+            align-items    : center;
+            justify-content: center;
+            .shy-icon {
+                fill: rgba(55, 53, 47, 0.4);
+                display: inline-flex;
+                margin-right: 4px;
+            }
+        }
+    }
+    &-body{
+
+    }
+    &-row {
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : stretch;
+        flex-wrap      : nowrap;
+        &-cell {
+            border     : 1px solid #ddd;
+            padding    : 5px;
+            box-sizing : border-box;
+            flex-shrink: 0;
+            overflow   : hidden;
+            border-top:1px solid transparent;
+        }
+        &:first-child {
+            .sy-dg-table-row-cell {
+                border-top: 1px solid transparent;
+            }
+        }
+        &-cell+&-cell {
+            border-left: 1px solid transparent;
+        }
+    }
+    &-add {
+        border          : 1px solid #ddd;
+        padding         : 5px;
+        box-sizing      : border-box;
+        border-top-color: transparent;
+        cursor: pointer;
+        .shy-icon {
+            fill: rgba(55, 53, 47, 0.4);
+            display: inline-flex;
+            margin-right: 4px;
+        }
+        >span {
+            color: rgba(55, 53, 47, 0.4);
+        }
+    }
+}

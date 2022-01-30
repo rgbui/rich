@@ -11,36 +11,46 @@ import { Loading } from "../../../../component/view/loading"
 @view('/data-grid/table')
 export class TableStoreView extends BlockView<TableStore>{
     renderHead() {
-        return <div className="sy-data-grid-table">
+        return <div className="sy-dg-table-head">
             {this.block.fields.map(f => {
-                return <div key={f.field.name}>
-                    <Icon icon={getTypeSvg(f.field.type)} size='none'></Icon>
+                return <div className="sy-dg-table-head-th"
+                    style={{ width: f.colWidth || 120 }}
+                    key={f.field.name}>
+                    <div className={'sy-dg-table-head-th-icon'} ><Icon icon={getTypeSvg(f.field.type)} size='none'></Icon></div>
                     <label>{f.text || f.field.text}</label>
-                    <Icon icon='elipsis:sy'></Icon>
+                    <div className={'sy-dg-table-head-th-property'} ><Icon icon='elipsis:sy'></Icon></div>
                 </div>
             })}
-            <div className='sy-data-grid-head-th sy-data-grid-head-th-plus'
-                style={{ width: 100 }} onClick={e => this.block.onAddField(e)}>
+            <div className='sy-dg-table-head-th sy-dg-table-head-th-plus'
+                style={{ width: 40 }} onClick={e => this.block.onAddField(e)}>
                 <Icon icon={Plus}></Icon>
             </div>
         </div>
     }
     renderBody() {
         if (this.block.data && this.block.isLoadData) {
-            return <div className='sy-data-grid-body'>
+            return <div className='sy-dg-table-body'>
                 <ChildsArea childs={this.block.childs}></ChildsArea>
             </div>
         }
         else return <div><Loading></Loading></div>
     }
+    renderCreateTable() {
+        return !this.block.schema && <div>
+            <a onClick={e => this.block.didMounted()}>创建表格</a>
+        </div>
+    }
     render() {
         var self = this;
-        return <div className="sy-data-grid">
-            {this.renderHead()}
-            {this.renderBody()}
-            <div onMouseDown={e => self.block.onAddRow({}, undefined, 'after')} className="sy-data-grid-add" style={{ width: this.block.fields.sum(s => s.colWidth) + 100 }}>
-                <Icon size={12} icon={Plus}></Icon><span>新增</span>
-            </div>
+        return <div className="sy-dg-table">
+            {this.block.schema && <>
+                {this.renderHead()}
+                {this.renderBody()}
+                <div onMouseDown={e => self.block.onAddRow({}, undefined, 'after')} className="sy-dg-table-add" style={{ width: this.block.fields.sum(s => s.colWidth) + 40 }}>
+                    <Icon size={12} icon={Plus}></Icon><span>新增</span>
+                </div>
+            </>}
+            {this.renderCreateTable()}
         </div>
     }
 }
