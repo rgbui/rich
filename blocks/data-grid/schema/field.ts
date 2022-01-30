@@ -25,7 +25,15 @@ export class Field {
             config: lodash.cloneDeep(this.config)
         }
     }
-    config?: FieldConfig
+    config?: FieldConfig;
+    update(data) {
+        for (let n in data) {
+            this[n] = data[n];
+        }
+    }
+    getDefaultValue() {
+        return undefined;
+    }
 }
 export interface FieldConfig {
     options?: { text: string, color: string }[];

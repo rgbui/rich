@@ -1,6 +1,7 @@
 import { channel } from "../../../net/channel";
 import { Field } from "./field";
 import { FieldType } from "./type";
+import { ViewField } from "./view";
 export class TableSchema {
     constructor(data) {
         for (var n in data) {
@@ -22,16 +23,18 @@ export class TableSchema {
     getViewFields() {
         var fs = this.fields.filter(g => ![
             FieldType.id,
-            FieldType.createDate,
             FieldType.sort,
             FieldType.autoIncrement
         ].includes(g.type));
         return fs.map(f => {
-            return {
-                fieldId: f.id,
-                text: f.text
-            }
+            return this.createViewField(f);
         })
+    }
+    createViewField(field: Field) {
+        return new ViewField(this, {
+            fieldId: field.id,
+            text: field.text
+        });
     }
     fieldAdd(field: { text: string, type: FieldType }) {
         return channel.put('/schema/field/add', Object.assign({ schemaId: this.id }, field));
@@ -74,20 +77,27 @@ export class TableSchema {
     }) {
         return channel.get('/datastore/query/all', Object.assign({ schemaId: this.id }, options));
     }
-
     async group(
         options: {
             filter?: Record<string, any>,
             size?: number,
-            sorts?: Record<string, 1|-1>,
+            sorts?: Record<string, 1 | -1>,
             group: string
         }) {
         return channel.get('/datastore/group', Object.assign({ schemaId: this.id }, options));
     }
-    statistics(options: { page?: number, size?: number, filter?: Record<string, any>, having?: Record<string, any>, sorts?: Record<string, 1 | -1>, groups: string[], aggregate: string[] }) {
+    statistics(options: {
+        page?: number,
+        size?: number,
+        filter?: Record<string, any>,
+        having?: Record<string, any>,
+        sorts?: Record<string, 1 | -1>,
+        groups: string[],
+        aggregate: string[]
+    }) {
         return channel.get('/datastore/statistics', Object.assign({ schemaId: this.id }, options));
     }
-    statisticValue(options: { filter?: Record<string, any>, indicator: string[]; }) {
+    statisticValue(options: { filter?: Record<string, any>, indicator: string; }) {
         return channel.get('/datastore/statistics/value', Object.assign({ schemaId: this.id }, options));
     }
 }
