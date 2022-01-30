@@ -1,10 +1,9 @@
 
-
 import { Field } from "../blocks/data-grid/schema/field";
 import { TableSchema } from "../blocks/data-grid/schema/meta";
 import { FieldType } from "../blocks/data-grid/schema/type";
 import { LinkPage } from "../extensions/at/declare";
-import { IconArguments } from "../extensions/icon/declare";
+import { IconArguments, ResourceArguments } from "../extensions/icon/declare";
 import { GalleryType, OuterPic } from "../extensions/image/declare";
 import { User } from "../src/types/user";
 export interface ChannelSyncMapUrls {
@@ -62,8 +61,9 @@ export interface ChannelGetMapUrls {
 	"/datastore/query/all":{args:{schemaId:string,page?:number,size?:number,filter?:Record<string, any>,sorts?:Record<string, 1|-1>},returnType:Promise<{ok:boolean,data:{list:any[],total:number,page:number,size:number},warn:string}>},
 	"/datastore/group":{args:{schemaId:string,page?:number,size?:number,filter?:Record<string, any>,sorts?:Record<string, 1|-1>,group:string},returnType:Promise<{ok:boolean,data:{list:any[],total:number,page:number,size:number},warn:string}>},
 	"/datastore/statistics":{args:{schemaId:string,page?:number,size?:number,filter?:Record<string, any>,having?:Record<string, any>,sorts?:Record<string, 1|-1>,groups:string[],aggregate:string[]},returnType:Promise<{ok:boolean,data:{list:any[],total:number,page:number,size:number},warn:string}>},
-	"/datastore/statistics/value":{args:{schemaId:string,filter?:Record<string, any>,indicator:string[]},returnType:Promise<{ok:boolean,data:{value:number},warn:string}>},
-	"/user/ping":{args:any,returnType:Promise<{ok:boolean,warn:string}>}
+	"/datastore/statistics/value":{args:{schemaId:string,filter?:Record<string, any>,indicator:string},returnType:Promise<{ok:boolean,data:{value:number},warn:string}>},
+	"/user/ping":{args:any,returnType:Promise<{ok:boolean,warn:string}>},
+	"/user/basic":{args:{userid:string},returnType:Promise<{ok:boolean,warn:string,data:{sn: number, avatar: ResourceArguments, name: string}}>}
 }
 export interface ChannelQueryMapUrls {
     "/workspace/query/users":{args:any,returnType:User[]},
