@@ -4,15 +4,12 @@ import { Block } from "../../../../src/block";
 import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { TableSchema } from "../../schema/meta";
-@url('/data-grid/statistic/value')
-export class TableStatisticValue extends Block {
+
+@url('/data-grid/charts')
+export class DataGridChart extends Block {
     @prop()
     schemaId: string;
     schema: TableSchema;
-    @prop()
-    filter: Record<string, any> = {};
-    @prop()
-    indicator: string;
     async loadSchema() {
         if (this.schemaId && !this.schema) {
             var r = await channel.get('/schema/query', { id: this.schemaId });
@@ -21,24 +18,24 @@ export class TableStatisticValue extends Block {
             }
         }
     }
-    statisticValue: number;
     async loadData() {
         if (this.schema) {
-            var r = await this.schema.statisticValue({
-                filter: this.filter,
-                indicator: this.indicator
-            });
-            if (r.ok) {
-                this.statisticValue = r.data.value;
-            }
+            // var r = await this.schema.statisticValue({
+            //     filter: this.filter,
+            //     indicator: this.indicator
+            // });
+            // if (r.ok) {
+            //     this.statisticValue = r.data.value;
+            // }
         }
     }
 }
-@view('/data-grid/statistic/value')
-export class TableStatisticValueView extends BlockView<TableStatisticValue>{
+
+@view('/data-grid/charts')
+export class DataGridChartView extends BlockView<DataGridChart>{
     render() {
-        return <span className="sy-dg-statistic-value">
-            {this.block.statisticValue}
-        </span>
+        return <div className='sy-dg-charts'>
+
+        </div>
     }
 }
