@@ -29,19 +29,19 @@ export class TableStoreBoard extends DataGridView {
                     this.data = rl.data.list;
                     if (this.groupField.type == FieldType.options || this.groupField.type == FieldType.option) {
                         var ops = this.groupField.config.options || [];
-                        this.data = ops.map(op => {
+                        this.dataGroups = ops.map(op => {
                             return {
                                 group: op.text,
                                 count: r.data.list.find(g => g[name] == op.text)?.count || 0
                             }
                         });
                         if (keys.exists(g => g === null)) {
-                            this.data.push({
+                            this.dataGroups.push({
                                 group: null,
                                 count: r.data.list.find(g => g[name] === null)?.count || 0
                             })
                         };
-                        console.log(this.data);
+                        console.log(this.dataGroups);
                     }
                 }
             }
@@ -53,10 +53,10 @@ export class TableStoreBoard extends DataGridView {
         for (let i = 0; i < this.dataGroups.length; i++) {
             var dg = this.dataGroups[i];
             var list = this.data.findAll(x => {
-                if (dg.group === null && typeof this.data[name] == 'undefined') return true;
-                else if (this.data[name] == dg.group) return true;
+                if (dg.group === null && typeof x[name] == 'undefined') return true;
+                else if (x[name] == dg.group) return true;
                 else return false;
-            })
+            });
             await list.eachAsync(async row => {
                 var rowBlock: TableStoreItem = await BlockFactory.createBlock('/data-grid/item', this.page, { mark: dg.group, dataRow: row }, this) as TableStoreItem;
                 this.blocks.childs.push(rowBlock);
@@ -70,7 +70,7 @@ export class TableStoreBoardView extends BlockView<TableStoreBoard>{
     renderGroup(dg: ArrayOf<TableStoreBoard['dataGroups']>, index: number) {
         var cs = this.block.childs.findAll(g => g.mark == dg.group);
         return <div className="sy-data-grid-board-group" key={index}>
-            <div className="sy-data-grid-board-group-head"><span>{dg.group}</span><label>{dg.count}</label></div>
+            <div className="sy-data-grid-board-group-head"><span>{dg.group || '未定义'}</span><label>{dg.count}</label></div>
             <div className="sy-data-grid-board-group-childs">
                 <ChildsArea childs={cs}></ChildsArea>
             </div>
@@ -78,9 +78,11 @@ export class TableStoreBoardView extends BlockView<TableStoreBoard>{
     }
     render() {
         return <div className='sy-data-grid-board'>
-            {this.block.dataGroups.map((dg, i) => {
-                return this.renderGroup(dg, i)
-            })}
+            <div className="sy-data-grid-board-list">
+                {this.block.dataGroups.map((dg, i) => {
+                    return this.renderGroup(dg, i)
+                })}
+            </div>
         </div>
     }
 }

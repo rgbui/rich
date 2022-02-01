@@ -21,7 +21,9 @@ export var DataGridTurns = {
             case '/data-grid/timeline':
             case '/data-grid/map':
                 data.schemaId = (block as any).schemaId;
-                return { url: turnToUrl, ...data }
+                var re = { url: turnToUrl, ...data };
+               
+                return re;
                 break;
         }
     }
