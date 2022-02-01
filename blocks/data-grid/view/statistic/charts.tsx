@@ -10,6 +10,10 @@ export class DataGridChart extends Block {
     @prop()
     schemaId: string;
     schema: TableSchema;
+    @prop()
+    groups: string[];
+    @prop()
+    aggregate: string[];
     async loadSchema() {
         if (this.schemaId && !this.schema) {
             var r = await channel.get('/schema/query', { id: this.schemaId });
@@ -20,6 +24,11 @@ export class DataGridChart extends Block {
     }
     async loadData() {
         if (this.schema) {
+            var r = await this.schema.statistics({
+                page: 1,
+                groups: [''],
+                aggregate: ['']
+            })
             // var r = await this.schema.statisticValue({
             //     filter: this.filter,
             //     indicator: this.indicator
@@ -29,8 +38,14 @@ export class DataGridChart extends Block {
             // }
         }
     }
+    async didMounted() {
+        await this.loadSchema();
+        await this.loadData();
+    }
+    async renderEcharts(){
+        
+    }
 }
-
 @view('/data-grid/charts')
 export class DataGridChartView extends BlockView<DataGridChart>{
     render() {
