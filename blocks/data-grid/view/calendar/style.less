@@ -1,0 +1,105 @@
+.sy-data-grid-calendar {
+    &-head {
+        display        : flex;
+        justify-content: center;
+        align-items    : flex-start;
+
+        &-date {
+            flex-shrink: 0;
+            flex-grow  : 0;
+            width      : 120px;
+        }
+
+        &-operator {
+            flex-shrink    : 1;
+            flex-grow      : 1;
+            display        : flex;
+            justify-content: flex-end;
+            align-items    : center;
+
+            svg {
+                fill: rgba(55, 53, 47, 0.4);
+            }
+
+            .shy-icon {
+                border-radius: 4px;
+
+                :hover {
+                    background-color: rgba(55, 53, 47, 0.08);
+                }
+
+            }
+        }
+    }
+
+    &-cells {
+        &-head {
+            display        : flex;
+            justify-content: flex-start;
+            align-items    : flex-start;
+            flex-wrap      : nowrap;
+
+            >* {
+                width     : calc(100% / 7);
+                color     : rgba(55, 53, 47, 0.4);
+                text-align: center;
+            }
+        }
+
+        &-days {
+            display        : flex;
+            justify-content: flex-start;
+            align-items    : flex-start;
+            flex-wrap      : wrap;
+            border-left    : 1px solid rgb(233, 233, 231);
+            border-top     : 1px solid rgb(233, 233, 231);
+
+            .sy-data-grid-calendar-cell {
+                box-sizing   : border-box;
+                border-right : 1px solid rgb(233, 233, 231);
+                border-bottom: 1px solid rgb(233, 233, 231);
+                cursor       : default;
+                background   : white;
+                height       : 124px;
+                width        : calc(100%/7);
+                &-head {
+                    height: 30px;
+                    .shy-icon {
+                        visibility   : hidden;
+                        float        : left;
+                        border-radius: 3px;
+                        height       : 20px;
+                        margin-top  : 4px;
+                        margin-left: 4px;
+                        cursor: pointer;
+                        width        : 20px;
+                        padding      : 0px;
+                        background   : white;
+                        fill      : rgba(55, 53, 47, 0.4);
+                        box-shadow   : rgba(15, 15, 15, 0.1) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 2px 4px;
+                    }
+
+                    label {
+                        float       : right;
+                        font-size   : 14px;
+                        margin-top  : 4px;
+                        margin-right: 10px;
+                        height      : 24px;
+                        line-height : 24px;
+                        text-align  : right;
+                        transition  : color 100ms ease-out 0s;
+                        color       : rgba(55, 53, 47, 0.4);
+                    }
+                }
+
+                &:hover {
+                    .sy-data-grid-calendar-cell-head {
+                        .shy-icon {
+                            visibility: visible;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

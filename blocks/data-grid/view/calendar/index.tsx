@@ -9,6 +9,10 @@ import { DataGridView } from "../base/table";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { TableStoreItem } from "../item";
 import { ChildsArea } from "../../../../src/block/view/appear";
+import { FieldType } from "../../schema/type";
+import './style.less';
+import { Icon } from "../../../../component/view/icon";
+
 @url('/data-grid/calendar')
 export class TableStoreCalendar extends DataGridView {
     @prop()
@@ -19,6 +23,9 @@ export class TableStoreCalendar extends DataGridView {
         return this.schema.fields.find(g => g.id == this.dateFieldId);
     }
     async loadData() {
+        if (!this.dateFieldId) {
+            this.dateFieldId = this.fields.find(g => g.field.type == FieldType.date)?.field?.id;
+        }
         if (this.schema) {
             var r = await this.schema.all({ page: 1, filter: { [this.dateField.name]: { $regex: dayjs(this.date).format('yyyy-MM') } } });
             if (r.data) {
@@ -75,8 +82,13 @@ export class TableStoreCalendarView extends BlockView<TableStoreCalendar>{
                     }
                     var cs = this.block.childs.findAll(g => dayjs(g.mark).isSame(dayjs(day), 'day'))
                     return <div key={i} className={classList.join(" ")}
-                    ><div className="sy-data-grid-calendar-cell-head"><label>{day.get('date')}</label><Plus></Plus></div>
-                        <ChildsArea childs={cs}></ChildsArea>
+                    ><div className="sy-data-grid-calendar-cell-head">
+                            <Icon icon={Plus} size={14}></Icon>
+                            <label>{day.get('date')}</label>
+                        </div>
+                        <div className="sy-data-grid-calendar-cell-content">
+                            <ChildsArea childs={cs}></ChildsArea>
+                        </div>
                     </div>
                 })}
             </div>
@@ -89,9 +101,9 @@ export class TableStoreCalendarView extends BlockView<TableStoreCalendar>{
                     <label>{dayjs(this.block.date).format('yyyy年MM月')}</label>
                 </div>
                 <div className="sy-data-grid-calendar-head-operator">
-                    <ArrowLeft></ArrowLeft>
+                    <Icon icon={ArrowLeft}></Icon>
                     <label>今天</label>
-                    <ArrowRight></ArrowRight>
+                    <Icon icon={ArrowRight}></Icon>
                 </div>
             </div>
             <div className="sy-data-grid-calendar-cells">
