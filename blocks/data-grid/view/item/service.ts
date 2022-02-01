@@ -23,11 +23,10 @@ export async function createFieldBlock(viewField: ViewField, row: Record<string,
         case FieldType.modifyDate:
         case FieldType.createDate:
         case FieldType.date:
-            console.log(row,viewField?.field?.name);
             cellContent = await BlockFactory.createBlock('/field/date', page, {
                 value: viewField.getValue(row),
                 viewField
-            }, block);
+            },block);
             break;
         case FieldType.option:
             cellContent = await BlockFactory.createBlock('/field/option', page, {

@@ -16,11 +16,9 @@ export class DataGridTableItem extends TableStoreItem {
         return (this.parent as DataGridView).fields;
     }
     async createElements() {
-        console.log(this.fields,'fs');
         for (let i = 0; i < this.fields.length; i++) {
             var field = this.fields[i];
             if (field.field) {
-                console.log(field.field?.name);
                 var block = await createFieldBlock(field, this.dataRow, this);
                 this.blocks.childs.push(block);
             }

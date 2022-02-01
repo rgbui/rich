@@ -17,13 +17,13 @@ export class FieldDate extends OriginField {
         var el = event.target as HTMLElement;
         var pickDate = await useDatePicker({ roundArea: Rect.from(el.getBoundingClientRect()) }, this.value);
         if (pickDate) {
-            this.onUpdateProps({ value: pickDate },BlockRenderRange.self);
+            this.onUpdateProps({ value: pickDate }, BlockRenderRange.self);
         }
     }
 }
 @view('/field/date')
 export class FieldTextView extends BlockView<FieldDate>{
     render() {
-        return <div className='sy-field-text'>{this.block.dateString}</div>
+        return <div className='sy-field-text' onMouseDown={e => this.block.onCellMousedown(e)}>{this.block.dateString}</div>
     }
 }
