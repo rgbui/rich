@@ -1,18 +1,6 @@
 
-import React from 'react';
 import { url } from "../../../../src/block/factory/observable";
-import { Pattern } from "../../../../src/block/pattern";
-import { util } from "../../../../util/util";
-import { FieldType } from "../../schema/type";
-import { ActionDirective } from "../../../../src/history/declare";
-import { Field } from "../../schema/field";
-import { Confirm } from "../../../../component/lib/confirm";
-import { useTableStoreAddField } from "../../../../extensions/tablestore/field";
-import { Rect } from "../../../../src/common/vector/point";
-import { useFormPage } from "../../../../extensions/tablestore/form";
 import { DataGridView } from '../base/table';
-import { Block } from '../../../../src/block';
-import { ViewField } from '../../schema/view';
 import "./style.less";
 import { BlockFactory } from '../../../../src/block/factory/block.factory';
 import { DataGridTableItem } from './row';
@@ -25,35 +13,6 @@ import { DataGridTableItem } from './row';
  */
 @url('/data-grid/table')
 export class TableStore extends DataGridView {
-  
-    async get() {
-        var json: Record<string, any> = { id: this.id, url: this.url };
-        if (typeof this.pattern.get == 'function')
-            json.pattern = await this.pattern.get();
-        else {
-            console.log(this, this.pattern);
-        }
-        json.blocks = {
-            childs: [],
-            rows: []
-        };
-        if (Array.isArray((this as any).__props)) {
-            (this as any).__props.each(pro => {
-                if (Array.isArray(this[pro])) {
-                    json[pro] = this[pro].map(pr => {
-                        if (typeof pr?.get == 'function') return pr.get();
-                        else return util.clone(pr);
-                    })
-                }
-                else if (typeof this[pro] != 'undefined') {
-                    if (typeof this[pro]?.get == 'function')
-                        json[pro] = this[pro].get();
-                    else json[pro] = util.clone(this[pro]);
-                }
-            })
-        }
-        return json;
-    }
     async createItem() {
         this.blocks.childs = [];
         for (let i = 0; i < this.data.length; i++) {
