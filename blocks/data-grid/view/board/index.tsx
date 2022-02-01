@@ -14,8 +14,7 @@ export class TableStoreBoard extends DataGridView {
     get groupField() {
         return this.schema.fields.find(g => g.id == this.groupFieldId);
     }
-    blocks = { childs: [] };
-    data: { group: string, list: any[], count: number }[] = [];
+    dataGroups: { group: string, count: number }[] = [];
     async loadData() {
         if (!this.groupFieldId) {
             this.groupFieldId = this.fields.find(g => g.field.type == FieldType.option || g.field.type == FieldType.options)?.field?.id;
@@ -27,20 +26,19 @@ export class TableStoreBoard extends DataGridView {
                 if (r.data) {
                     var keys = r.data.list.map(l => l[name]);
                     var rl = await this.schema.all({ page: 1, filter: { [name]: { $in: keys } } });
+                    this.data = rl.data.list;
                     if (this.groupField.type == FieldType.options || this.groupField.type == FieldType.option) {
                         var ops = this.groupField.config.options || [];
                         this.data = ops.map(op => {
                             return {
                                 group: op.text,
-                                count: r.data.list.find(g => g[name] == op.text)?.count || 0,
-                                list: rl.data.list.findAll(g => g[name] == op.text)
+                                count: r.data.list.find(g => g[name] == op.text)?.count || 0
                             }
                         });
                         if (keys.exists(g => g === null)) {
                             this.data.push({
                                 group: null,
-                                count: r.data.list.find(g => g[name] === null)?.count || 0,
-                                list: rl.data.list.findAll(g => typeof g[name] == 'undefined')
+                                count: r.data.list.find(g => g[name] === null)?.count || 0
                             })
                         };
                         console.log(this.data);
@@ -51,26 +49,25 @@ export class TableStoreBoard extends DataGridView {
     }
     async createItem() {
         this.blocks.childs = [];
-        for (let i = 0; i < this.data.length; i++) {
-            var dg = this.data[i];
-            await dg.list.eachAsync(async row => {
+        var name = this.groupField.name;
+        for (let i = 0; i < this.dataGroups.length; i++) {
+            var dg = this.dataGroups[i];
+            var list = this.data.findAll(x => {
+                if (dg.group === null && typeof this.data[name] == 'undefined') return true;
+                else if (this.data[name] == dg.group) return true;
+                else return false;
+            })
+            await list.eachAsync(async row => {
                 var rowBlock: TableStoreItem = await BlockFactory.createBlock('/data-grid/item', this.page, { mark: dg.group, dataRow: row }, this) as TableStoreItem;
                 this.blocks.childs.push(rowBlock);
                 await rowBlock.createElements();
             })
         }
     }
-    async didMounted() {
-        await this.loadSchema();
-        await this.loadViewFields();
-        await this.loadData();
-        await this.createItem();
-        this.view.forceUpdate();
-    }
 }
 @view('/data-grid/board')
 export class TableStoreBoardView extends BlockView<TableStoreBoard>{
-    renderGroup(dg: ArrayOf<TableStoreBoard['data']>, index: number) {
+    renderGroup(dg: ArrayOf<TableStoreBoard['dataGroups']>, index: number) {
         var cs = this.block.childs.findAll(g => g.mark == dg.group);
         return <div className="sy-data-grid-board-group" key={index}>
             <div className="sy-data-grid-board-group-head"><span>{dg.group}</span><label>{dg.count}</label></div>
@@ -81,7 +78,7 @@ export class TableStoreBoardView extends BlockView<TableStoreBoard>{
     }
     render() {
         return <div className='sy-data-grid-board'>
-            {this.block.data.map((dg, i) => {
+            {this.block.dataGroups.map((dg, i) => {
                 return this.renderGroup(dg, i)
             })}
         </div>
