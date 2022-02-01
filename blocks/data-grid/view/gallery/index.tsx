@@ -26,6 +26,7 @@ export class TableStoreGalleryView extends BlockView<TableStoreGallery>{
     }
     render() {
         return <div className='sy-data-grid-gallery'>
+            <div className="sy-data-grid-gallery-head" style={{ minHeight: 24 }}></div>
             {this.renderRows()}
         </div>
     }
