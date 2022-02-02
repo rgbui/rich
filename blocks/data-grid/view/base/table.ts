@@ -5,8 +5,6 @@ import { MenuItemType } from "../../../../component/view/menu/declare";
 import { useDataGridCreate } from "../../../../extensions/tablestore/create";
 import { useTableStoreAddField } from "../../../../extensions/tablestore/field";
 import { useFormPage } from "../../../../extensions/tablestore/form";
-import { LangID } from "../../../../i18n/declare";
-import { langProvider } from "../../../../i18n/provider";
 import { channel } from "../../../../net/channel";
 import { Block } from "../../../../src/block";
 import { BlockDirective } from "../../../../src/block/enum";
