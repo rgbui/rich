@@ -93,7 +93,7 @@ export class TableSchema {
         having?: Record<string, any>,
         sorts?: Record<string, 1 | -1>,
         groups: string[],
-        aggregate: string[]
+        aggregate?: Record<string,any>
     }) {
         return channel.get('/datastore/statistics', Object.assign({ schemaId: this.id }, options));
     }
