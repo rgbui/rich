@@ -80,6 +80,8 @@ export var BlockSelectorData: BlockGroup[] = [
             { text: '列表', pic: <img src={tablestore} />, url: "/data-grid/list", label: '/列表' },
             { text: '时间线', pic: <img src={tablestore} />, url: "/data-grid/timeline", label: '/时间线' },
             { text: '地图标记', pic: <img src={tablestore} />, url: "/data-grid/map", label: '/地图标记' },
+            { text: '统计图表', pic: <img src={tablestore} />, url: '/data-grid/charts', label: '/统计图表' },
+            { text: '统计值', pic: <img src={tablestore} />, url: '/data-grid/statistic/value', label: '/统计值' }
         ]
     },
     {
