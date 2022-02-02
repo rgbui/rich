@@ -9,6 +9,7 @@ import { getTypeSvg } from "../../schema/util"
 import { Loading } from "../../../../component/view/loading"
 import { Rect } from "../../../../src/common/vector/point"
 import { MouseDragger } from "../../../../src/common/dragger"
+import { DataGridTool } from "../components/tool"
 
 @view('/data-grid/table')
 export class TableStoreView extends BlockView<TableStore>{
@@ -123,6 +124,7 @@ export class TableStoreView extends BlockView<TableStore>{
     render() {
         var self = this;
         return <div className="sy-dg-table" onMouseMove={e => this.mousemove(e.nativeEvent)}>
+            <DataGridTool block={this.block}></DataGridTool>
             <div className='sy-block-table-subline' onMouseDown={e => this.onMousedownLine(e)} ref={e => this.subline = e}></div>
             {this.block.schema && <div className="sy-dg-table-content" >
                 {this.renderHead()}
