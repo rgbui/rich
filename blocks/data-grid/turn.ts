@@ -9,6 +9,8 @@ export var DataGridTurns = {
         '/data-grid/gallery',
         '/data-grid/timeline',
         '/data-grid/map',
+        '/data-grid/charts',
+        '/data-grid/statistic/value'
     ],
     async turn(block: Block, turnToUrl) {
         var data: Record<string, any> = {};
@@ -20,9 +22,10 @@ export var DataGridTurns = {
             case '/data-grid/gallery':
             case '/data-grid/timeline':
             case '/data-grid/map':
+            case '/data-grid/charts':
+            case '/data-grid/statistic/value':
                 data.schemaId = (block as any).schemaId;
                 var re = { url: turnToUrl, ...data };
-               
                 return re;
                 break;
         }
