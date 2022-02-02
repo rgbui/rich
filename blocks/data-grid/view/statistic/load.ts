@@ -1,7 +1,6 @@
 
 
-export async function loadEchart()
-{
+export async function loadEchart() {
     var r = await import(
         /* webpackChunkName: 'echarts' */
         /* webpackPrefetch: true */
