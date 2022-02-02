@@ -1,0 +1,69 @@
+.sy-dg-tool {
+    display        : flex;
+    height         : 30px;
+    justify-content: flex-start;
+    align-items    : center;
+
+    &-templates {
+        width      : 140px;
+        flex-shrink: 0;
+        flex-grow  : 0;
+
+        >label {
+            display        : inline-flex;
+            justify-content: center;
+            height         : 24px;
+            align-items    : center;
+            color          : rgb(55, 53, 47);
+
+            >span {
+                display      : inline-flex;
+                line-height  : 20px;
+                white-space  : nowrap;
+                overflow     : hidden;
+                text-overflow: ellipsis;
+                margin-left  : 6px;
+                margin-right : 4px;
+                font-weight  : 600;
+            }
+
+            border-radius: 3px;
+            padding      :0px 6px;
+
+            &:hover {
+                background-color: rgba(55, 53, 47, .08);
+            }
+        }
+    }
+
+    &-operators {
+        flex-shrink    : 1;
+        flex-grow      : 1;
+        display        : flex;
+        justify-content: flex-end;
+        align-items    : center;
+
+        >label {
+            display        : inline-flex;
+            height         : 24px;
+            justify-content: center;
+            align-items    : center;
+            margin         : 0px 5px;
+            border-radius  : 3px;
+            padding        : 0px 6px;color: rgba(55, 53, 47, 0.6);
+            color          : rgb(55, 53, 47);    font-size: 14px;
+            .shy-icon{
+
+            }
+            >span{
+                display: inline-flex; 
+                 margin-left: 6px;
+            }
+            &:hover {
+                background-color: rgba(55, 53, 47, .08);
+            }
+        }
+
+        >.shy-button {}
+    }
+}
