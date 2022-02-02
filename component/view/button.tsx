@@ -27,7 +27,7 @@ export class Button extends React.Component<{
             className={'shy-button'+(props.link?" shy-button-link":"") + (props.ghost ? " shy-button-ghost" : "") + (this.props.size ? " shy-button-" + this.props.size : "")}
             disabled={props.disabled || this._disabled ? props.disabled : false}
             onClick={e => props.onClick ? props.onClick(e) : undefined}
-        >{props.icon && <Icon icon={props.icon}></Icon>}<span>{props.children}</span></button>;
+        >{props.icon && <Icon icon={props.icon}></Icon>}{props.children}</button>;
         if (props.block) return <div style={this.props.style || {}} className='shy-button-block'>{btn}</div>
         else return btn
     }
