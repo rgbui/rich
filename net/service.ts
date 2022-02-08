@@ -6,6 +6,7 @@ import { channel } from "./channel";
 export enum MethodType {
     get,
     post,
+    patch,
     query,
     act,
     del,

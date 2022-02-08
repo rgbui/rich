@@ -5,6 +5,11 @@ export function post(url: string) {
         channelService.registerMeta(target, propKey, { type:MethodType.post, url });
     }
 }
+export function patch(url: string) {
+    return (target, propKey, descriptor: PropertyDescriptor) => {
+        channelService.registerMeta(target, propKey, { type:MethodType.post, url });
+    }
+}
 export function act(url: string) {
     return (target, propKey, descriptor: PropertyDescriptor) => {
         channelService.registerMeta(target, propKey, { type: MethodType.act, url });

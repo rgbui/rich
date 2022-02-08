@@ -1,4 +1,4 @@
-import { ChannelActMapUrls, ChannelAirMapUrls, ChannelDelMapUrls, ChannelFireMapUrls, ChannelGetMapUrls, ChannelOffMapUrls, ChannelOnceMapUrls, ChannelOnlyMapUrls, ChannelPostMapUrls, ChannelPutMapUrls, ChannelQueryMapUrls, ChannelSyncMapUrls } from "./declare";
+import { ChannelActMapUrls, ChannelAirMapUrls, ChannelDelMapUrls, ChannelFireMapUrls, ChannelGetMapUrls, ChannelOffMapUrls, ChannelOnceMapUrls, ChannelOnlyMapUrls, ChannelPatchMapUrls, ChannelPostMapUrls, ChannelPutMapUrls, ChannelQueryMapUrls, ChannelSyncMapUrls } from "./declare";
 import { channelService, MethodType } from "./service";
 
 
@@ -25,11 +25,11 @@ class Channel {
         if (typeof this._ch == 'undefined') this._ch = new Channel();
         return this._ch;
     }
-    put<K extends keyof ChannelPutMapUrls>(url: K, args: ChannelPutMapUrls[K]['args']): ChannelPutMapUrls[K]['returnType'] {
+    put<K extends keyof ChannelPutMapUrls>(url: K, args?: ChannelPutMapUrls[K]['args']): ChannelPutMapUrls[K]['returnType'] {
         return channelService.push(MethodType.put, url, args);
     }
     act<K extends keyof ChannelActMapUrls>(url: K, args?: ChannelActMapUrls[K]['args']): ChannelActMapUrls[K]['returnType'] {
-        return channelService.push(MethodType.act, url, args);
+        return channelService.push(MethodType.act, url, args) as any;
     }
     get<K extends keyof ChannelGetMapUrls>(url: K, args?: ChannelGetMapUrls[K]['args']): ChannelGetMapUrls[K]['returnType'] {
         return channelService.push(MethodType.get, url, args);
@@ -39,6 +39,9 @@ class Channel {
     }
     post<K extends keyof ChannelPostMapUrls>(url: K, args: ChannelPostMapUrls[K]['args']): ChannelPostMapUrls[K]['returnType'] {
         return channelService.push(MethodType.post, url, args);
+    }
+    patch<K extends keyof ChannelPatchMapUrls>(url: K, args: ChannelPatchMapUrls[K]['args']): ChannelPatchMapUrls[K]['returnType'] {
+        return channelService.push(MethodType.patch, url, args);
     }
     del<K extends keyof ChannelDelMapUrls>(url: K, args: ChannelDelMapUrls[K]['args']): ChannelDelMapUrls[K]['returnType'] {
         return channelService.push(MethodType.del, url, args);
