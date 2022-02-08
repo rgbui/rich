@@ -58,7 +58,7 @@ export class TableSchema {
         return channel.get('/datastore/query', Object.assign({ schemaId: this.id }, { id }));
     }
     rowUpdate(args: { dataId: string, data: Record<string, any> }) {
-        return channel.post('/datastore/update', Object.assign({ schemaId: this.id }, args));
+        return channel.patch('/datastore/update', Object.assign({ schemaId: this.id }, args));
     }
     list(options: {
         page: number,

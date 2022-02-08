@@ -15,12 +15,12 @@ export class Avatar extends React.Component<{
     async componentDidMount() {
         if (!this.userFaceUrl && this.props.userid) {
             var r = await channel.get('/user/basic', { userid: this.props.userid });
-            if (r?.data?.avatar) {
-                this.userFaceUrl = r.data.avatar.url;
+            if (r?.data?.user?.avatar) {
+                this.userFaceUrl = r?.data?.user?.avatar.url;
                 this.forceUpdate();
             }
-            else if (r.data.name) {
-                this.userName = r.data.name;
+            else if (r.data?.user?.name) {
+                this.userName = r.data?.user?.name;
                 this.forceUpdate();
             }
         }
