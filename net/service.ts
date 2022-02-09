@@ -56,12 +56,13 @@ class ChannelService {
                 /**
                  * 这里一般只会有一个service，如果有多个是有错误的
                  */
-               channel.fire('/log',{type:'error',message:new Error('有多个service')})
+                channel.fire('/log', { type: 'error', message: new Error('有多个service') })
             }
             try {
                 return await sm.instance[sm.method].apply(sm.instance, [args]);
             }
             catch (ex) {
+                console.error('push', ex);
                 channel.fire('/log', { type: 'error', message: ex });
             }
         }
@@ -87,6 +88,7 @@ class ChannelService {
                 else rs.push(r);
             }
             catch (ex) {
+                console.error('fire', ex);
                 this.fire('/log', { type: "error", message: ex })
             }
         }
@@ -117,12 +119,13 @@ class ChannelService {
                 return await sm.instance[sm.method].apply(sm.instance, [args]);
             }
             catch (ex) {
+                console.error('passive', ex);
                 channel.fire('/log', { type: 'error', message: ex });
             }
         }
         else {
             //没有找到service ,默认触发fire
-            return channel.fire(url  as any, args);
+            return channel.fire(url as any, args);
         }
     }
 }

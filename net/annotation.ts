@@ -7,7 +7,7 @@ export function post(url: string) {
 }
 export function patch(url: string) {
     return (target, propKey, descriptor: PropertyDescriptor) => {
-        channelService.registerMeta(target, propKey, { type:MethodType.post, url });
+        channelService.registerMeta(target, propKey, { type:MethodType.patch, url });
     }
 }
 export function act(url: string) {
