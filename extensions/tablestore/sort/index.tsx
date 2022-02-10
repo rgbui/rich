@@ -8,6 +8,7 @@ import { PopoverPosition } from "../../popover/position";
 import closeTick from "../../../src/assert/svg/closeTick.svg";
 import { Icon } from "../../../component/view/icon";
 import { Remark } from "../../../component/view/text";
+import { FieldType } from "../../../blocks/data-grid/schema/type";
 
 class TableSortView extends EventsComponent {
     schema: TableSchema;
@@ -37,7 +38,7 @@ class TableSortView extends EventsComponent {
     render(): ReactNode {
         var self = this;
         function addSort() {
-            var f = self.schema.fields.find(g => !self.sorts.some(s => s.field == g.id));
+            var f = self.schema.fields.find(g => g.type == FieldType.title);
             if (!f) f = self.schema.fields.first();
             self.sorts.push({ field: f.id, sort: 1 });
             self.forceUpdate()
