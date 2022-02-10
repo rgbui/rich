@@ -3,4 +3,4 @@
 /Schema/id
 /Schema/id/Record/id
 /Schema/id/View/id
-/schema/id/RecordView/id
+/Schema/id/RecordView/id
