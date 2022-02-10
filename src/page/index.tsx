@@ -16,17 +16,12 @@ import { Page$Seek } from './partial/seek';
 import { PageView } from './view';
 import { Anchor } from '../kit/selection/anchor';
 import { UserAction } from '../history/action';
-import { TableSchema } from '../../blocks/data-grid/schema/meta';
 import { DropDirection } from '../kit/handle/direction';
-import { FieldType } from '../../blocks/data-grid/schema/type';
-import { Field } from '../../blocks/data-grid/schema/field';
 import { PageDirective } from './directive';
-import { IconArguments } from '../../extensions/icon/declare';
 import { Mix } from '../../util/mix';
 import { Page$Cycle } from './partial/left.cycle';
 import { Page$Operator } from './partial/operator';
-import { Kit } from '../kit';
-import { messageChannel } from '../../util/bus/event.bus';
+
 import { Directive } from '../../util/bus/directive';
 import { getBoardTool } from '../../extensions/board.tool';
 import { PageLayoutType } from '../layout/declare';
@@ -34,6 +29,8 @@ import { Point, Rect } from '../common/vector/point';
 import { PageGrid } from './grid';
 import { Matrix } from '../common/matrix';
 import { PageContextmenu } from './partial/contextmenu';
+import { Kit } from '../kit';
+import { channel } from '../../net/channel';
 
 export class Page extends Events<PageDirective> {
     root: HTMLElement;
@@ -54,7 +51,7 @@ export class Page extends Events<PageDirective> {
         this.init();
     }
     get user() {
-        return messageChannel.fire(Directive.getCurrentUser)
+        return channel.query('/query/current/user');
     }
     kit: Kit = new Kit(this);
     snapshoot = new HistorySnapshoot(this)

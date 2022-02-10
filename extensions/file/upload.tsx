@@ -3,8 +3,7 @@ import { Button } from "../../component/view/button";
 import { OpenFileDialoug } from "../../component/file";
 import { Sp } from "../../i18n/view";
 import { LangID } from "../../i18n/declare";
-import { Directive } from "../../util/bus/directive";
-import { messageChannel } from "../../util/bus/event.bus";
+import { channel } from "../../net/channel";
 export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audio' | 'video', change: (url: string) => void }> {
     async uploadFile() {
         var exts = ['*'];
@@ -13,9 +12,11 @@ export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audi
         else if (this.props.mine == 'video') exts = ['video/*'];
         var file = await OpenFileDialoug({ exts });
         if (file) {
-            var r = await messageChannel.fireAsync(Directive.UploadWorkspaceFile, file, (event) => {
-                console.log(event, 'ev');
-            });
+            var r = await channel.post('/ws/upload/file', {
+                file, uploadProgress: (event) => {
+                    console.log(event, 'ev');
+                }
+            })
             if (r.ok) {
                 if (r.data.url) {
                     this.props.change(r.data.url);

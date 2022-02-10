@@ -11,8 +11,8 @@ import { Rect } from "../../src/common/vector/point";
 import { Block } from "../../src/block";
 import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import { SolidArea } from "../../src/block/view/appear";
-import { Directive } from "../../util/bus/directive";
-import { messageChannel } from "../../util/bus/event.bus";
+import { channel } from "../../net/channel";
+
 @url('/audio')
 export class Audio extends Block {
     @prop()
@@ -40,15 +40,17 @@ export class Audio extends Block {
                 }
             }
             if (this.initialData && this.initialData.file) {
-                var d = await messageChannel.fireAsync(Directive.UploadWorkspaceFile, this.initialData.file, (event) => {
-                    console.log(event, 'ev');
+                var d = await channel.post('/ws/upload/file', {
+                    file: this.initialData.file, uploadProgress: (event) => {
+                        console.log(event, 'ev');
+                    }
                 });
                 if (d.ok && d.data.url) {
                     await this.onUpdateProps({ src: { url: d.data.url, name: 'upload' } }, BlockRenderRange.self);
                 }
             }
             if (this.initialData && this.initialData.url) {
-                var d = await messageChannel.fireAsync(Directive.UploadWorkspaceFileUrl, this.initialData.url);
+                var d = await channel.post('/ws/download/url', { url: this.initialData.url });
                 if (d.ok && d.data.url) {
                     await this.onUpdateProps({ src: { url: d.data.url, name: 'download', source: this.initialData.url } }, BlockRenderRange.self);
                 }

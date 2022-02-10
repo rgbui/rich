@@ -9,8 +9,8 @@ import Dots from "../../../src/assert/svg/dots.svg";
 import { Icon } from "../../../component/view/icon";
 import "./style.less";
 import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.field";
-import { messageChannel } from "../../../util/bus/event.bus";
 import { Directive } from "../../../util/bus/directive";
+import { channel } from "../../../net/channel";
 class FormPage extends EventsComponent {
     schema: TableSchema;
     row?: Record<string, any>;
@@ -18,7 +18,8 @@ class FormPage extends EventsComponent {
     height: number = 400;
     async open(options: { width: number, height: number, schema: TableSchema | string, row?: Record<string, any> }) {
         if (typeof this.schema == 'string') {
-            this.schema = await messageChannel.fireAsync(Directive.getSchemaFields, this.schema as string) as TableSchema;
+            var r = await (channel.get('/schema/query', { id: this.schema }));
+            this.schema = new TableSchema(r.data.schema);
         }
         else this.schema = options.schema as TableSchema;
         this.row = options.row;
@@ -33,7 +34,7 @@ class FormPage extends EventsComponent {
     }
     pageView: Page;
     async renderPage() {
-        this.pageView = await createFormPage(this.el,{schema: this.schema, row: this.row });
+        this.pageView = await createFormPage(this.el, { schema: this.schema, row: this.row });
     }
     getData() {
         var row = {};

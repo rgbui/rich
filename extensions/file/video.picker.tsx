@@ -12,8 +12,6 @@ import { PopoverSingleton } from "../popover/popover";
 import { Tab } from "../../component/view/tab";
 import { Icon } from "../../component/view/icon";
 class VideoPicker extends EventsComponent {
-
-
     onChange(data: any) {
         this.emit('select', { ...data });
     }

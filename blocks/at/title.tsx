@@ -9,11 +9,12 @@ import { PageDirective } from "../../src/page/directive";
 import { Icon } from "../../component/view/icon";
 import { useIconPicker } from "../../extensions/icon";
 import { Rect } from "../../src/common/vector/point";
-import { messageChannel } from "../../util/bus/event.bus";
+
 import { Directive } from "../../util/bus/directive";
 import { BlockAppear } from "../../src/block/appear";
 import lodash from "lodash";
 import { channel } from "../../net/channel";
+import { LinkPageItem } from "../../extensions/at/declare";
 
 @url('/title')
 export class Title extends Block {
@@ -22,26 +23,28 @@ export class Title extends Block {
     @prop()
     isShowDescription: boolean = false;
     display = BlockDisplay.block;
-    pageInfo: { id: string, text: string, icon?: IconArguments, description?: string } = null;
+    pageInfo: LinkPageItem = null;
     async loadPageInfo() {
-        var r=await channel.get('/page/query/info');
+        var r = await channel.get('/page/query/info');
         if (r.ok) {
             this.pageInfo = r.data;
         }
     }
     async changeAppear(appear) {
         if (appear.prop == 'pageInfo.text' || appear.prop == 'pageInfo.description') {
-            messageChannel.fire(Directive.UpdatePageItem,
-                this.pageInfo.id, {
-                text: this.pageInfo?.text,
-                description: this.pageInfo?.description
-            });
+            channel.air('/page/update/info', {
+                id: this.pageInfo.id, pageInfo: {
+                    id: this.pageInfo.id,
+                    text: this.pageInfo?.text,
+                    description: this.pageInfo?.description
+                }
+            })
         }
     }
     async onChangeIcon(event: React.MouseEvent) {
         var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) });
         if (icon) {
-            messageChannel.fire(Directive.UpdatePageItem, this.pageInfo.id, { icon });
+            channel.air('/page/update/info', { id: this.pageInfo.id, pageInfo: { icon } })
         }
     }
     get isSupportTextStyle() {
@@ -51,11 +54,12 @@ export class Title extends Block {
 @view('/title')
 export class TitleView extends BlockView<Title>{
     async didMount() {
-        messageChannel.on(Directive.UpdatePageItem, this.updatePageInfo)
+        channel.sync('/page/update/info', this.updatePageInfo);
         await this.block.loadPageInfo();
         this.forceUpdate();
     }
-    updatePageInfo = (id: string, pageInfo: { text: string, icon?: IconArguments }) => {
+    updatePageInfo = (r: { id: string, pageInfo: LinkPageItem }) => {
+        var { id, pageInfo } = r;
         if (this.block.pageInfo.id == id) {
             var isUpdate: boolean = false;
             if (typeof pageInfo.text != 'undefined' && pageInfo.text != this.block.pageInfo.text) {
@@ -71,7 +75,7 @@ export class TitleView extends BlockView<Title>{
         }
     }
     willUnmount() {
-        messageChannel.off(Directive.UpdatePageItem, this.updatePageInfo);
+        channel.off('/page/update/info', this.updatePageInfo);
     }
     render() {
         return <div className='sy-block-page-info' style={this.block.visibleStyle}>

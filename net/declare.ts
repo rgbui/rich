@@ -2,7 +2,7 @@
 import { Field } from "../blocks/data-grid/schema/field";
 import { TableSchema } from "../blocks/data-grid/schema/meta";
 import { FieldType } from "../blocks/data-grid/schema/type";
-import { LinkPage } from "../extensions/at/declare";
+import { LinkPageItem } from "../extensions/at/declare";
 import { IconArguments, ResourceArguments } from "../extensions/icon/declare";
 import { GalleryType, OuterPic } from "../extensions/image/declare";
 import { User } from "../src/types/user";
@@ -25,27 +25,37 @@ export type SockResponse<T, U = string> = {
     }
 export interface ChannelSyncMapUrls {
     "/log":{args:(r:{type:"error"|"warn"|"info",message:string|Error})=>void,returnType:void},
-	"/page/update/info":{args:(r:{id: string, pageInfo: { text: string, icon?: IconArguments }})=>void,returnType:void},
+	"/page/update/info":{args:(r:{id: string, pageInfo:LinkPageItem})=>void,returnType:void},
+	"/page/open":{args:(r:{item:string|{id:string}})=>void,returnType:void},
+	"/page/notify/toggle":{args:(r:{id: string,visible:boolean})=>void,returnType:void},
 	"/update/user":{args:(r:{user: Record<string, any>})=>void,returnType:void}
 }
 export interface ChannelOnlyMapUrls {
     "/log":{args:(r:{type:"error"|"warn"|"info",message:string|Error})=>void,returnType:void},
-	"/page/update/info":{args:(r:{id: string, pageInfo: { text: string, icon?: IconArguments }})=>void,returnType:void},
+	"/page/update/info":{args:(r:{id: string, pageInfo:LinkPageItem})=>void,returnType:void},
+	"/page/open":{args:(r:{item:string|{id:string}})=>void,returnType:void},
+	"/page/notify/toggle":{args:(r:{id: string,visible:boolean})=>void,returnType:void},
 	"/update/user":{args:(r:{user: Record<string, any>})=>void,returnType:void}
 }
 export interface ChannelOnceMapUrls {
     "/log":{args:(r:{type:"error"|"warn"|"info",message:string|Error})=>void,returnType:void},
-	"/page/update/info":{args:(r:{id: string, pageInfo: { text: string, icon?: IconArguments }})=>void,returnType:void},
+	"/page/update/info":{args:(r:{id: string, pageInfo:LinkPageItem})=>void,returnType:void},
+	"/page/open":{args:(r:{item:string|{id:string}})=>void,returnType:void},
+	"/page/notify/toggle":{args:(r:{id: string,visible:boolean})=>void,returnType:void},
 	"/update/user":{args:(r:{user: Record<string, any>})=>void,returnType:void}
 }
 export interface ChannelOffMapUrls {
     "/log":{args:(r:{type:"error"|"warn"|"info",message:string|Error})=>void,returnType:void},
-	"/page/update/info":{args:(r:{id: string, pageInfo: { text: string, icon?: IconArguments }})=>void,returnType:void},
+	"/page/update/info":{args:(r:{id: string, pageInfo:LinkPageItem})=>void,returnType:void},
+	"/page/open":{args:(r:{item:string|{id:string}})=>void,returnType:void},
+	"/page/notify/toggle":{args:(r:{id: string,visible:boolean})=>void,returnType:void},
 	"/update/user":{args:(r:{user: Record<string, any>})=>void,returnType:void}
 }
 export interface ChannelFireMapUrls {
     "/log":{args:{type:"error"|"warn"|"info",message:string|Error},returnType:void},
-	"/page/update/info":{args:{id: string, pageInfo: { text: string, icon?: IconArguments }},returnType:void},
+	"/page/update/info":{args:{id: string, pageInfo:LinkPageItem},returnType:void},
+	"/page/open":{args:{item:string|{id:string}},returnType:void},
+	"/page/notify/toggle":{args:{id: string,visible:boolean},returnType:void},
 	"/update/user":{args:{user: Record<string, any>},returnType:void}
 }
 export interface ChannelDelMapUrls {
@@ -57,7 +67,9 @@ export interface ChannelPostMapUrls {
 	"/schema/field/turn":{args:{schemaId:string,fieldId:string,type:FieldType},returnType:Promise<{ok:boolean,data:{field:Partial<Field>},warn:string}>},
 	"/phone/sms/code":{args:{phone:string},returnType:Promise<{ok:boolean,warn:string,data:{success:boolean,code?:string}}>},
 	"/user/upload/file":{args:{file:File,uploadProgress: (event: ProgressEvent) => void},returnType:Promise<SockResponse<{url:string}>>},
-	"/ws/invite/join":{args:{wsId:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>}
+	"/ws/invite/join":{args:{wsId:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
+	"/ws/upload/file":{args:{file:File,uploadProgress: (event: ProgressEvent) => void},returnType:Promise<SockResponse<{ url: string }>>},
+	"/ws/download/url":{args:{url:string},returnType:Promise<SockResponse<{ url: string }>>}
 }
 export interface ChannelPatchMapUrls {
     "/datastore/update":{args:{schemaId:string,dataId:string,data:Record<string, any>},returnType:Promise<SockResponse<void>>},
@@ -74,14 +86,11 @@ export interface ChannelPutMapUrls {
 	"/device/sign":{args:any,returnType:Promise<void>},
 	"/phone/sign":{args:{phone:string,code:string,inviteCode:string},returnType:Promise<{ok:boolean,warn:string,data:{user:Record<string,any>,guid:string,token:string}}>},
 	"/ws/create":{args:{text:string,templateId?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
-	"/ws/invite/create":{args:any,returnType:Promise<SockResponse<{code:string}>>},
-	"/ws/upload/file":{args:{file:File,uploadProgress: (event: ProgressEvent) => void},returnType:Promise<SockResponse<{ url: string }>>},
-	"/ws/download/url":{args:{url:string},returnType:Promise<SockResponse<{ url: string }>>}
+	"/ws/invite/create":{args:any,returnType:Promise<SockResponse<{code:string}>>}
 }
 export interface ChannelGetMapUrls {
     "/gallery/query":{args:{type: GalleryType, word: string},returnType:Promise<{ok:boolean,data:OuterPic[],warn:string}>},
-	"/page/query/links":{args:{word:string},returnType:Promise<{ok:boolean,data:LinkPage[],warn:string}>},
-	"/page/query/info":{args:{id: string},returnType:Promise<{ok:boolean,data:LinkPage,warn:string}>},
+	"/page/query/info":{args:{id: string},returnType:Promise<SockResponse<LinkPageItem>>},
 	"/workspace/query/schemas":{args:{page?:number,size?:number},returnType:Promise<{ok:boolean,data:{total:number,list:Partial<TableSchema>[],page:number,size:number},warn:string}>},
 	"/schema/query":{args:{id:string},returnType:Promise<{ok:boolean,data:{schema:Partial<TableSchema>},warn:string}>},
 	"/datastore/query":{args:{schemaId:string,id:string},returnType:Promise<{ok:boolean,data:{data:Record<string, any>},warn:string}>},
@@ -102,21 +111,22 @@ export interface ChannelGetMapUrls {
 	"/ws/invite/check":{args:{invite:string},returnType:Promise<SockResponse<{member:boolean,workspace:Record<string,any>}>>},
 	"/page/items":{args:{ids:string[]},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/item/subs":{args:{id:string},returnType:Promise<SockResponse<{ list:any[] }>>},
-	"/page/item":{args:{id:string},returnType:Promise<SockResponse<{ item:Record<string,any> }>>}
+	"/page/item":{args:{id:string},returnType:Promise<SockResponse<{ item:Record<string,any> }>>},
+	"/page/word/query":{args:{word:string},returnType:Promise<SockResponse<LinkPageItem[]>>}
 }
 export interface ChannelQueryMapUrls {
-    "/workspace/query/users":{args:any,returnType:User[]},
+    "/current/workspace":{args:any,returnType:{id:string,sn:number,text:string}},
 	"/query/current/user":{args:any,returnType:User},
 	"/device/query":{args:any,returnType:Promise<string>},
 	"/amap/key_pair":{args:any,returnType:{key:string,pair:string}}
 }
 export interface ChannelActMapUrls {
-    "/page/create/by_text":{args:{word:string},returnType:{ok:boolean,data:LinkPage,warn:string}},
-	"/page/open":{args:{item:string|{id:string}},returnType:void},
-	"/page/notify/toggle":{args:{id: string,visible:boolean},returnType:void}
+    "/page/create/by_text":{args:{word:string},returnType:SockResponse<LinkPageItem>}
 }
 export interface ChannelAirMapUrls {
-    "/page/update/info":{args:{id: string, pageInfo: { text: string, icon?: IconArguments }},returnType:void},
+    "/page/update/info":{args:{id: string, pageInfo:LinkPageItem},returnType:void},
+	"/page/open":{args:{item:string|{id:string}},returnType:void},
+	"/page/notify/toggle":{args:{id: string,visible:boolean},returnType:void},
 	"/update/user":{args:{user: Record<string, any>},returnType:void}
 }
     

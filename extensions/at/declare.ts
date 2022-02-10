@@ -8,8 +8,10 @@ export type AtSelectorItem = {
 }
 
 
-export type LinkPage = {
-    id: string;
-    text: string;
-    icon?: IconArguments
+export type LinkPageItem = {
+    id?: string;
+    text?: string;
+    icon?: IconArguments,
+    sn?:number,
+    description?:string
 }

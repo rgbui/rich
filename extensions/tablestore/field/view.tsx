@@ -9,8 +9,9 @@ import { Input, Textarea } from "../../../component/view/input";
 import { Select } from "../../../component/view/select";
 import { Remark, ErrorText } from "../../../component/view/text";
 import { Directive } from "../../../util/bus/directive";
-import { messageChannel } from "../../../util/bus/event.bus";
+
 import { TableFieldTypes } from "./type";
+import { channel } from "../../../net/channel";
 
 export class TableFieldView extends EventsComponent {
     onSave() {
@@ -120,24 +121,29 @@ export class TableFieldView extends EventsComponent {
         var isUpdate: boolean = false;
         if (this.type == FieldType.relation) {
             if (!Array.isArray(this.relationDatas)) {
-                var data = await messageChannel.fireAsync(Directive.QueryWorkspaceTableSchemas);
-                this.relationDatas = data.list;
-                isUpdate = true;
-
+                var r = await channel.get('/workspace/query/schemas');
+                if (r.ok) {
+                    this.relationDatas = r.data.list as TableSchema[];
+                    isUpdate = true;
+                }
             }
         }
         else if (this.type == FieldType.rollup) {
             if (!Array.isArray(this.relationDatas)) {
-                var data = await messageChannel.fireAsync(Directive.QueryWorkspaceTableSchemas);
-                this.relationDatas = data.list;
-                isUpdate = true;
+                var r = await channel.get('/workspace/query/schemas');
+                if (r.ok) {
+                    this.relationDatas = r.data.list as TableSchema[];
+                    isUpdate = true;
+                }
             }
             if (!(this.rollFields && this.rollFields[this.config.rollupTableId])) {
                 if (!this.rollFields) { this.rollFields = {} }
                 if (!this.rollFields[this.config.rollupTableId]) {
-                    var rd = await messageChannel.fireAsync(Directive.getSchemaFields, this.config.rollupTableId as string);
-                    this.rollFields[this.config.rollupTableId] = rd.fields;
-                    isUpdate = true;
+                    var rr = await channel.get('/schema/query', { id: this.config.rollupTableId as string });
+                    if (rr.ok) {
+                        this.rollFields[this.config.rollupTableId] = rr.data.schema.fields
+                        isUpdate = true;
+                    }
                 }
             }
         }

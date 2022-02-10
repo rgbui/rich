@@ -14,10 +14,9 @@ import { MouseDragger } from "../../src/common/dragger";
 import Picture from "../../src/assert/svg/picture.svg";
 import { Icon } from "../../component/view/icon";
 import { useImagePicker } from "../../extensions/image/picker";
-import { Directive } from "../../util/bus/directive";
-import { messageChannel } from "../../util/bus/event.bus";
 import { getImageSize } from "../../component/file";
 import { BlockAppear } from "../../src/block/appear";
+import { channel } from "../../net/channel";
 
 @url('/image')
 export class Image extends Block {
@@ -49,8 +48,10 @@ export class Image extends Block {
                 }
             }
             if (this.initialData && this.initialData.file) {
-                var d = await messageChannel.fireAsync(Directive.UploadWorkspaceFile, this.initialData.file, (event) => {
-                    console.log(event, 'ev');
+                var d = await channel.post('/ws/upload/file', {
+                    file: this.initialData.file, uploadProgress: (event) => {
+                        console.log(event, 'ev');
+                    }
                 });
                 if (d.ok && d.data.url) {
                     var imgSize = await getImageSize(d.data.url);
@@ -63,7 +64,7 @@ export class Image extends Block {
                 }
             }
             if (this.initialData && this.initialData.url) {
-                var d = await messageChannel.fireAsync(Directive.UploadWorkspaceFileUrl, this.initialData.url);
+                var d = await channel.post('/ws/download/url', { url: this.initialData.url });
                 if (d.ok && d.data.url) {
                     var imgSize = await getImageSize(d.data.url);
                     var width = this.el.getBoundingClientRect().width;
