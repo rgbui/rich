@@ -27,7 +27,7 @@
 
 ## work task
 datastore view template,form template ,card record template
-tab,轮播,card
+tab,轮播,card,syncBlock
 button
 user,link,timer
 flow mind,sharp
