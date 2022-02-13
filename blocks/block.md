@@ -37,3 +37,10 @@
 
 * input {label,input,error}
   输入框默认有label，input,错误信息区域，input上面有清除文字的小图标，如果是密码，则是eye
+
+  ## 表格相关的操作
+  1. 视图都是对表格的引用
+   * 增加字段 
+     changeSchema - directive - actions
+     changeView  -directive -actions
+                 -directive syncBlock -actions
