@@ -2,9 +2,8 @@
 import { Page } from "..";
 import { Matrix } from "../../common/matrix";
 import { Point, Rect } from "../../common/vector/point";
-import { ActionDirective } from "../../history/declare";
+import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { PageLayoutType } from "../../layout/declare";
-import { PageDirective } from "../directive";
 export class PageEvent {
     /**
      * 鼠标点击页面,
@@ -99,21 +98,25 @@ export class PageEvent {
         })
     }
     async onPageTurnLayout(this: Page, layoutType: PageLayoutType) {
-        this.firstCreated = true;
-        switch (layoutType) {
-            case PageLayoutType.doc:
-                this.view.forceUpdate();
-                break;
-            case PageLayoutType.db:
-                this.pageLayout.type = layoutType;
-                this.view.forceUpdate();
-                break;
-            case PageLayoutType.board:
-                this.pageLayout.type = layoutType;
-                this.view.forceUpdate();
-                break;
-        }
-        this.emit(PageDirective.save);
+        this.requireSelectLayout = false;
+        await this.onAction(ActionDirective.onPageTurnLayout, async () => {
+            this.snapshoot.record(OperatorDirective.pageTurnLayout, {
+                old: PageLayoutType.doc,
+                new: layoutType
+            },this);
+            switch (layoutType) {
+                case PageLayoutType.doc:
+                    this.pageLayout.type = layoutType;
+                    break;
+                case PageLayoutType.db:
+                    this.pageLayout.type = layoutType;
+                    break;
+                case PageLayoutType.board:
+                    this.pageLayout.type = layoutType;
+                    break;
+            }
+        });
+        this.view.forceUpdate();
     }
     onZoom(this: Page, zoom: number, point?: Point) {
         if (!point) {

@@ -31,10 +31,14 @@ export class Page$Operator {
         if (!Array.isArray(bs)) parent.blocks[childKey] = bs = [];
         if (typeof at == 'undefined') at = bs.length;
         bs.insertAt(at, block);
+        await block.created();
         this.snapshoot.record(OperatorDirective.create, {
-            parentId: parent.id, childKey, at, preBlockId: block.prev ? block.prev.id : undefined, data: await block.get()
-        });
-        await block.created()
+            parentId: parent.id,
+            childKey,
+            at,
+            preBlockId: block.prev ? block.prev.id : undefined,
+            data: await block.get()
+        },block);
         this.addBlockUpdate(parent);
         return block;
     }

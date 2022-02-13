@@ -40,15 +40,14 @@ export class Page$Cycle {
         await langProvider.import();
     }
     async load(this: Page, data?: Record<string, any>) {
-       
         try {
             if (!data || typeof data == 'object' && Object.keys(data).length == 0) {
                 //这里加载默认的页面数据
                 data = await this.getDefaultData();
-                this.firstCreated = true;
+                this.requireSelectLayout = true;
             }
             else {
-                this.firstCreated = false;
+                this.requireSelectLayout = false;
             }
             await this.emit(PageDirective.loading);
             for (var n in data) {
@@ -74,7 +73,7 @@ export class Page$Cycle {
                 PageLayoutType.dbPickRecord,
                 PageLayoutType.dbSubPage
             ].some(s => s == this.pageLayout.type)) {
-                this.firstCreated = false;
+                this.requireSelectLayout = false;
             }
             await this.onRepair();
             await this.emit(PageDirective.loaded);
@@ -95,8 +94,7 @@ export class Page$Cycle {
     async get(this: Page) {
         var json: Record<string, any> = {
             id: this.id,
-            date: this.date,
-            firstCreated: false
+            date: this.date
         };
         json.pageLayout = await this.pageLayout.get();
         json.matrix = this.matrix.getValues();
@@ -104,6 +102,9 @@ export class Page$Cycle {
             return await x.get()
         })
         return json;
+    }
+    async getString(this: Page){
+        return JSON.stringify(await this.get());
     }
     async getFile(this: Page) {
         var zip = new JSZip();
@@ -262,7 +263,6 @@ export class Page$Cycle {
         }
     }
     onBlur(this: Page, event: FocusEvent) {
-        console.log('blur', event);
         if (this.isFocus == true) {
             this.isFocus = false;
             this.kit.explorer.onClearAnchorAndSelection();
