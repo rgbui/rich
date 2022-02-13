@@ -48,7 +48,7 @@ class ChannelService {
             this.serviceMetas.push(sm);
         }
     }
-    async push(type: MethodType, url: string, args: Record<string, any>) {
+    push(type: MethodType, url: string, args: Record<string, any>) {
         var sms = this.serviceMetas.filter(g => g.url == url && type == g.type);
         if (sms.length > 0) {
             var sm = sms.first();
@@ -59,7 +59,7 @@ class ChannelService {
                 channel.fire('/log', { type: 'error', message: new Error('有多个service') })
             }
             try {
-                return await sm.instance[sm.method].apply(sm.instance, [args]);
+                return sm.instance[sm.method].apply(sm.instance, [args]);
             }
             catch (ex) {
                 console.error('push', ex);

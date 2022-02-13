@@ -59,13 +59,10 @@ export interface ChannelFireMapUrls {
 	"/update/user":{args:{user: Record<string, any>},returnType:void}
 }
 export interface ChannelDelMapUrls {
-    "/schema/field/remove":{args:{schemaId:string,fieldId:string},returnType:Promise<{ok:boolean,warn:string}>},
-	"/datastore/remove":{args:{schemaId:string,dataId:string},returnType:Promise<{ok:boolean,warn:string}>}
+    "/datastore/remove":{args:{schemaId:string,dataId:string},returnType:Promise<{ok:boolean,warn:string}>}
 }
 export interface ChannelPostMapUrls {
-    "/schema/field/update":{args:{schemaId:string,fieldId:string,data:Partial<Field>},returnType:Promise<{ok:boolean,data:{field:Partial<Field>},warn:string}>},
-	"/schema/field/turn":{args:{schemaId:string,fieldId:string,type:FieldType},returnType:Promise<{ok:boolean,data:{field:Partial<Field>},warn:string}>},
-	"/phone/sms/code":{args:{phone:string},returnType:Promise<{ok:boolean,warn:string,data:{success:boolean,code?:string}}>},
+    "/phone/sms/code":{args:{phone:string},returnType:Promise<{ok:boolean,warn:string,data:{success:boolean,code?:string}}>},
 	"/user/upload/file":{args:{file:File,uploadProgress: (event: ProgressEvent) => void},returnType:Promise<SockResponse<{url:string}>>},
 	"/ws/invite/join":{args:{wsId:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
 	"/ws/upload/file":{args:{file:File,uploadProgress: (event: ProgressEvent) => void},returnType:Promise<SockResponse<{ url: string }>>},
@@ -78,8 +75,8 @@ export interface ChannelPatchMapUrls {
 	"/ws/patch":{args:{wsId?:string,sockId?:string,data:Record<string,any>},returnType:Promise<SockResponse<void>>}
 }
 export interface ChannelPutMapUrls {
-    "/schema/create":{args:{text:string,templateId?:string},returnType:Promise<{ ok: boolean, data: { schema:Partial<TableSchema> },warn:string }>},
-	"/schema/field/add":{args:{schemaId:string,text:string,type:FieldType},returnType:Promise<{ok:boolean,data:{field:Partial<Field>},warn:string}>},
+    "/schema/create":{args:{text:string,url:string,templateId?:string},returnType:Promise<{ ok: boolean, data: { schema:Partial<TableSchema> },warn:string }>},
+	"/schema/operate":{args:{operate:{operate?:string,schemaId:string,date?:Date,actions:any[]}},returnType:Promise<SockResponse<{actions:any[]}>>},
 	"/datastore/add":{args:{schemaId:string,data:Record<string, any>,pos:{dataId:string,pos:"before"|"after"}},returnType:Promise<{ok:boolean,data:{data:Record<string, any>},warn:string}>},
 	"/datastore/batch/add":{args:{schemaId:string,list:any[]},returnType:Promise<{ok:boolean,data:{list:any[]},warn:string}>},
 	"/datastore/query/ids":{args:{schemaId:string,ids:string[]},returnType:Promise<{ok:boolean,data:{list:any[]},warn:string}>},
@@ -112,13 +109,15 @@ export interface ChannelGetMapUrls {
 	"/page/items":{args:{ids:string[]},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/item/subs":{args:{id:string},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/item":{args:{id:string},returnType:Promise<SockResponse<{ item:Record<string,any> }>>},
-	"/page/word/query":{args:{word:string},returnType:Promise<SockResponse<LinkPageItem[]>>}
+	"/page/word/query":{args:{word:string},returnType:Promise<SockResponse<LinkPageItem[]>>},
+	"/page/sync/block":{args:{syncBlockId:string},returnType:Promise<SockResponse<{content:string,operates:any[]}>>}
 }
 export interface ChannelQueryMapUrls {
     "/current/workspace":{args:any,returnType:{id:string,sn:number,text:string}},
 	"/query/current/user":{args:any,returnType:User},
 	"/device/query":{args:any,returnType:Promise<string>},
-	"/amap/key_pair":{args:any,returnType:{key:string,pair:string}}
+	"/amap/key_pair":{args:any,returnType:{key:string,pair:string}},
+	"/guid":{args:any,returnType:string}
 }
 export interface ChannelActMapUrls {
     "/page/create/by_text":{args:{word:string},returnType:SockResponse<LinkPageItem>}
