@@ -102,7 +102,7 @@ export class PageView extends Component<{ page: Page }>{
         delete this.el.shy_drop_over;
         delete this.el.shy_end;
     }
-    firstCreatedRender() {
+    selectPageLayout() {
         return <div className="shy-page-view-first">
             <div onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.doc)}><span>页面</span></div>
             <div onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.db)}><span>表格</span></div>
@@ -124,7 +124,7 @@ export class PageView extends Component<{ page: Page }>{
                     boardSelector={<BlockPickerView picker={this.page.kit.picker}></BlockPickerView>}>
                     <div className='shy-page-view-content' ref={e => this.page.contentEl = e}>
                         <ChildsArea childs={this.page.views}></ChildsArea>
-                        {this.page.firstCreated && this.firstCreatedRender()}
+                        {this.page.requireSelectLayout && this.selectPageLayout()}
                     </div>
                 </PageLayoutView>
             </div>
