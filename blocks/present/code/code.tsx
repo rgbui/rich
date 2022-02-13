@@ -29,8 +29,8 @@ export class TextCode extends Block {
         return false;
     }
     htmlCode = '';
-    didMounted() {
-        this.renderCode();
+    async didMounted() {
+        await this.renderCode();
     }
     async renderCode() {
         var name = this.language.toLowerCase();
