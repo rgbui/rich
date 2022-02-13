@@ -79,7 +79,7 @@ export class Pattern {
                 styleId: st.id,
                 old,
                 new: st.get()
-            })
+            },this.block)
         }
         else {
             var sty = new BlockStyleCss({ name: name, cssList: [Object.assign({ cssName }, style)] }, this);
@@ -88,7 +88,7 @@ export class Pattern {
                 blockId: this.block.id,
                 at: this.styles.length - 1,
                 data: sty.get()
-            })
+            },this.block)
         }
         this.block.page.addBlockUpdate(this.block);
     }

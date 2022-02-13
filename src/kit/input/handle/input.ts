@@ -125,8 +125,7 @@ export async function InputBlockSelectorAfter(tp: TextInput, blockData: BlockSel
         }
         newBlock.mounted(() => {
             var anchor = newBlock.visibleHeadAnchor;
-            if (anchor)
-                tp.explorer.onFocusAnchor(anchor);
+            if (anchor) tp.explorer.onFocusAnchor(anchor);
         });
     });
     tp.followAnchor(tp.explorer.activeAnchor);

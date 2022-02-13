@@ -23,7 +23,7 @@ export class Block$Operator {
                 childKey: this.parentKey,
                 at: this.at,
                 data: await this.get()
-            })
+            }, this)
             pbs.remove(this);
             if (pbs.length > 0) {
                 if (this.parent.isRow && !this.parent.isPart) {
@@ -152,7 +152,7 @@ export class Block$Operator {
             },
             from: from,
             blockId: block.id
-        });
+        }, this);
         this.page.addBlockUpdate(this);
     }
     async appendBlock(this: Block, blockData: Record<string, any>, at?: number, childKey?: string) {
@@ -516,7 +516,7 @@ export class Block$Operator {
                 blockId: this.id,
                 old: oldValue,
                 new: newValue
-            });
+            }, this);
         }
     }
     async updateMatrix(this: Block, oldMatrix: Matrix, newMatrix: Matrix) {
@@ -526,7 +526,7 @@ export class Block$Operator {
             blockId: this.id,
             old: oldMatrix.getValues(),
             new: newMatrix.getValues()
-        });
+        }, this);
     }
     /**
      * 子类继承实现
@@ -536,24 +536,34 @@ export class Block$Operator {
     async changeProps(oldProps: Record<string, any>, newProps: Record<string, any>) {
 
     }
-    manualUpdateProps(this: Block, oldProps: Record<string, any>, newProps: Record<string, any>, range = BlockRenderRange.self) {
+    manualUpdateProps(this: Block,
+        oldProps: Record<string, any>,
+        newProps: Record<string, any>,
+        range = BlockRenderRange.self, isOnlyRecord: boolean = false) {
         var oldValue: Record<string, any> = {};
         var newValue: Record<string, any> = {};
-        for (let prop in newProps) {
-            if (!lodash.isEqual(lodash.get(oldProps, prop), newProps[prop])) {
+        if (isOnlyRecord == true) {
+            for (let prop in newProps) {
                 oldValue[prop] = lodash.cloneDeep(lodash.get(oldProps, prop));
                 newValue[prop] = lodash.cloneDeep(newProps[prop]);
-                lodash.set(this, prop, lodash.cloneDeep(newProps[prop]))
+            }
+        }
+        else {
+            for (let prop in newProps) {
+                if (!lodash.isEqual(lodash.get(oldProps, prop), newProps[prop])) {
+                    oldValue[prop] = lodash.cloneDeep(lodash.get(oldProps, prop));
+                    newValue[prop] = lodash.cloneDeep(newProps[prop]);
+                    lodash.set(this, prop, lodash.cloneDeep(newProps[prop]))
+                }
             }
         }
         if (Object.keys(oldValue).length > 0) {
-
             this.syncUpdate(range);
             this.page.snapshoot.record(OperatorDirective.updateProp, {
                 blockId: this.id,
                 old: oldValue,
                 new: newValue
-            });
+            }, this);
         }
     }
     updateArrayInsert(this: Block, key: string, at: number, data: any, range = BlockRenderRange.self) {
@@ -564,7 +574,7 @@ export class Block$Operator {
             propKey: key,
             data: typeof data.get == 'function' ? data.get() : util.clone(data),
             at: at
-        });
+        }, this);
         this.syncUpdate(range);
     }
     updateArrayRemove(this: Block, key: string, at: number, range = BlockRenderRange.self) {
@@ -575,7 +585,7 @@ export class Block$Operator {
             propKey: key,
             data: typeof data.get == 'function' ? data.get() : util.clone(data),
             at: at
-        });
+        }, this);
         this.syncUpdate(range);
     }
     syncUpdate(this: Block, range = BlockRenderRange.none) {
@@ -601,7 +611,7 @@ export class Block$Operator {
                 old: util.clone(oldData) as Record<string, any>,
                 new: util.clone(newData) as Record<string, any>,
                 at: at
-            });
+            }, this);
             this[key][at] = data;
             this.syncUpdate(range);
         }

@@ -204,7 +204,7 @@ export class Block$Event {
                 text: value,
                 prop: appear.prop,
                 replaceText
-            });
+            }, this);
             if (typeof action == 'function') await action();
             this.changeAppear(appear);
         })
@@ -220,7 +220,7 @@ export class Block$Event {
                 end,
                 text: value,
                 prop: appear.prop
-            });
+            },this);
             if (typeof action == 'function') await action();
             this.changeAppear(appear);
         })
@@ -235,9 +235,9 @@ export class Block$Event {
             await this.updateProps(props, range);
         })
     }
-    async onManualUpdateProps(this: Block, oldProps: Record<string, any>, newProps: Record<string, any>, range = BlockRenderRange.none) {
+    async onManualUpdateProps(this: Block, oldProps: Record<string, any>, newProps: Record<string, any>, range = BlockRenderRange.none, isOnlyRecord: boolean = false) {
         await this.page.onAction(ActionDirective.onUpdateProps, async () => {
-            this.manualUpdateProps(oldProps, newProps, range);
+            this.manualUpdateProps(oldProps, newProps, range,isOnlyRecord);
         })
     }
     async onKeyTab(this: Block, isBack?: boolean) {

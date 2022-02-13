@@ -1,4 +1,5 @@
 import { Block } from "..";
+import { channel } from "../../../net/channel";
 import { util } from "../../../util/util";
 import { Matrix } from "../../common/matrix";
 import { ActionDirective } from "../../history/declare";
@@ -19,11 +20,17 @@ export class Block$LifeCycle {
      * 不能被继承
      * @param this 
      */
-    onMounted(this: Block) {
-        if (typeof this.didMounted == 'function') this.didMounted();
+    async onMounted(this: Block) {
+        if (this.createSource) {
+            await this.createdDidMounted()
+        }
+        if (typeof this.didMounted == 'function') await this.didMounted();
         this.emit('mounted');
     }
-    didMounted(this: Block) {
+    async didMounted(this: Block) {
+
+    }
+    async createdDidMounted() {
 
     }
     async created(this: Block) {
@@ -75,14 +82,19 @@ export class Block$LifeCycle {
                 else if (n == 'pattern') await this.pattern.load(data[n]);
                 else this[n] = data[n];
             }
-            if (typeof data.blocks == 'object') {
-                for (var n in data.blocks) {
-                    var childs = data.blocks[n];
-                    this.blocks[n] = [];
-                    await childs.eachAsync(async (dc) => {
-                        var block = await BlockFactory.createBlock(dc.url, this.page, dc, this);
-                        this.blocks[n].push(block);
-                    })
+            if (this.syncBlockId) {
+                await this.loadSyncBlock();
+            }
+            else {
+                if (typeof data.blocks == 'object') {
+                    for (var n in data.blocks) {
+                        var childs = data.blocks[n];
+                        this.blocks[n] = [];
+                        await childs.eachAsync(async (dc) => {
+                            var block = await BlockFactory.createBlock(dc.url, this.page, dc, this);
+                            this.blocks[n].push(block);
+                        })
+                    }
                 }
             }
             this.isLoad = true;
@@ -91,10 +103,45 @@ export class Block$LifeCycle {
             this.page.onError(err);
         }
     }
-    async get(this: Block) {
+    async loadSyncBlock(this: Block) {
+        var r = await channel.get('/page/sync/block', { syncBlockId: this.syncBlockId });
+      
+        if (r.ok) {
+            var data;
+            try {
+                data = r.data.content as any;
+                if (typeof data == 'string') data = JSON.parse(data);
+                delete data.id;
+            }
+            catch (ex) {
+                console.error(ex);
+                this.page.onError(ex);
+            }
+            if (typeof data == 'object') {
+                for (var n in data) {
+                    if (n == 'blocks') continue;
+                    else if (n == 'matrix') this.matrix = new Matrix(data[n]);
+                    else if (n == 'pattern') await this.pattern.load(data[n]);
+                    else this[n] = data[n];
+                }
+                if (typeof data.blocks == 'object') {
+                    for (var n in data.blocks) {
+                        var childs = data.blocks[n];
+                        this.blocks[n] = [];
+                        await childs.eachAsync(async (dc) => {
+                            var block = await BlockFactory.createBlock(dc.url, this.page, dc, this);
+                            this.blocks[n].push(block);
+                        })
+                    }
+                }
+            }
+        }
+    }
+    async get(this: Block, args?: { syncBlock: boolean }) {
         var json: Record<string, any> = {
-            id: this.id,
+            id: this._id,
             url: this.url,
+            syncBlockId: this.syncBlockId,
             matrix: this.matrix.getValues()
         };
         if (typeof this.pattern.get == 'function')
@@ -105,7 +152,7 @@ export class Block$LifeCycle {
         json.blocks = {};
         for (let b in this.blocks) {
             if (this.allBlockKeys.some(s => s == b))
-                json.blocks[b] = await this.blocks[b].asyncMap(async x => await x.get());
+                json.blocks[b] = await this.blocks[b].asyncMap(async x => await x.get(args));
         }
         if (Array.isArray(this.__props)) {
             this.__props.each(pro => {
@@ -123,5 +170,8 @@ export class Block$LifeCycle {
             })
         }
         return json;
+    }
+    async getString(this: Block) {
+        return JSON.stringify(await this.get());
     }
 }

@@ -1,10 +1,10 @@
 import { ExceptionType, Warn } from "../error/exception";
 import { Page } from "../page";
 import { Events } from "../../util/events";
-import { util } from "../../util/util";
 import { UserAction, UserOperator } from "./action";
 import { ActionDirective, OperatorDirective } from "./declare";
 import { HistoryRecord } from "./record";
+import { Block } from "../block";
 /**
  * 
  * 用户的所有操作快照，
@@ -27,10 +27,15 @@ export class HistorySnapshoot extends Events {
         }
         this.disabledSync = false;
         this._pause = false;
+        delete this.isSyncBlock;
         this.action = new UserAction();
-        this.action.user = util.clone(this.page.user);
+        this.action.userid = this.page?.user.id;
         this.action.directive = directive;
         this.action.startDate = new Date().getTime();
+    }
+    isSyncBlock: boolean
+    setSyncBlock(isSyncBlock: boolean) {
+        this.isSyncBlock = isSyncBlock;
     }
     private _pause: boolean = false;
     pause() {
@@ -39,11 +44,15 @@ export class HistorySnapshoot extends Events {
     start() {
         this._pause = false;
     }
-    record(directive: OperatorDirective, data: Record<string, any>) {
+    record(directive: OperatorDirective, data: Record<string, any>, obj: Block | Page) {
         if (this._pause == true) return;
         var up = new UserOperator();
         up.directive = directive;
+        up.obj = obj;
         up.data = data;
+        if (typeof this.isSyncBlock != 'undefined') {
+            up.isSyncBlock = this.isSyncBlock;
+        }
         this.action.operators.push(up);
     }
     store() {
@@ -63,6 +72,7 @@ export class HistorySnapshoot extends Events {
             await action();
         }
         catch (ex) {
+            console.error(ex);
             this.page.onError(ex);
         }
         if (this.disabledSync != true)
@@ -132,31 +142,31 @@ export interface HistorySnapshoot {
     emit(name: 'redo', action: UserAction);
     emit(name: "history", action: UserAction);
 
-    record(directive: OperatorDirective.delete, data: { parentId: string, childKey?: string, at?: number, data: Record<string, any> });
-    record(directive: OperatorDirective.create, data: { parentId: string, childKey?: string, at?: number, data: Record<string, any> });
-    record(directive: OperatorDirective.append, data: { to: { parentId: string, childKey?: string, at?: number }, from: { parentId: string, childKey?: string, at?: number }, blockId: string });
-    record(directive: OperatorDirective.updateProp, data: { blockId: string, old: any, new: any });
-    record(directive: OperatorDirective.updatePropMatrix, data: { blockId: string, old: number[], new: number[] });
+    record(directive: OperatorDirective.delete, data: { parentId: string, childKey?: string, at?: number, data: Record<string, any> }, obj: Block | Page);
+    record(directive: OperatorDirective.create, data: { parentId: string, childKey?: string, at?: number, data: Record<string, any> }, obj: Block | Page);
+    record(directive: OperatorDirective.append, data: { to: { parentId: string, childKey?: string, at?: number }, from: { parentId: string, childKey?: string, at?: number }, blockId: string }, obj: Block | Page);
+    record(directive: OperatorDirective.updateProp, data: { blockId: string, old: any, new: any }, obj: Block | Page);
+    record(directive: OperatorDirective.updatePropMatrix, data: { blockId: string, old: number[], new: number[] }, obj: Block | Page);
     /**
      * 替换文本内容，表示在[start,end]之间替成成text
      * @param directive 
      * @param data 
      */
-    record(directive: OperatorDirective.inputStore, data: { blockId: string, start: number, end: number, prop?: string, text: string, replaceText: string });
+    record(directive: OperatorDirective.inputStore, data: { blockId: string, start: number, end: number, prop?: string, text: string, replaceText: string }, obj: Block | Page);
     /**
      * 删除的内容，区间表示[end,start],删除的内容为text
      * 这里的start一般会比end大，表示从start位置删除文字
      * @param directive 
      * @param data 
      */
-    record(directive: OperatorDirective.inputDeleteStore, data: { blockId: string, start: number, end: number, prop?: string, text: string });
+    record(directive: OperatorDirective.inputDeleteStore, data: { blockId: string, start: number, end: number, prop?: string, text: string }, obj: Block | Page);
 
-    record(directive: OperatorDirective.arrayPropInsert, data: { blockId: string, at: number, data: Record<string, any>, propKey: string });
-    record(directive: OperatorDirective.arrayPropRemove, data: { blockId: string, at: number, data: Record<string, any>, propKey: string });
-    record(directive: OperatorDirective.arrayPropUpdate, data: { blockId: string, at: number, old: Record<string, any>, new: Record<string, any>, propKey: string });
-    record(directive: OperatorDirective.insertStyle, data: { blockId: string, at: number, data: Record<string, any> });
-    record(directive: OperatorDirective.mergeStyle, data: { blockId: string, styleId: string, old: Record<string, any>, new: Record<string, any> });
-    record(directive: OperatorDirective.schemaRowUpdate, data: { schemaId: string, id: string, old: Record<string, any>, new: Record<string, any> });
-    record(directive: OperatorDirective.schemaCreateRow, data: { schemaId: string, data: Record<string, any> });
-    record(directive: OperatorDirective.schemaRowRemove, data: { schemaId: string, data: Record<string, any> })
+    record(directive: OperatorDirective.arrayPropInsert, data: { blockId: string, at: number, data: Record<string, any>, propKey: string }, obj: Block | Page);
+    record(directive: OperatorDirective.arrayPropRemove, data: { blockId: string, at: number, data: Record<string, any>, propKey: string }, obj: Block | Page);
+    record(directive: OperatorDirective.arrayPropUpdate, data: { blockId: string, at: number, old: Record<string, any>, new: Record<string, any>, propKey: string }, obj: Block | Page);
+    record(directive: OperatorDirective.insertStyle, data: { blockId: string, at: number, data: Record<string, any> }, obj: Block | Page);
+    record(directive: OperatorDirective.mergeStyle, data: { blockId: string, styleId: string, old: Record<string, any>, new: Record<string, any> }, obj: Block | Page);
+    record(directive: OperatorDirective.schemaRowUpdate, data: { schemaId: string, id: string, old: Record<string, any>, new: Record<string, any> }, obj: Block | Page);
+    record(directive: OperatorDirective.schemaCreateRow, data: { schemaId: string, data: Record<string, any> }, obj: Block | Page);
+    record(directive: OperatorDirective.schemaRowRemove, data: { schemaId: string, data: Record<string, any> }, obj: Block | Page)
 }

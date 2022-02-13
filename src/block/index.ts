@@ -23,11 +23,12 @@ import { PageLayoutType } from "../layout/declare";
 import { Matrix } from "../common/matrix";
 import { Block$Board } from "./partial/board";
 import { Polygon } from "../common/vector/polygon";
+import { channel } from "../../net/channel";
 export abstract class Block extends Events {
     constructor(page: Page) {
         super();
         this.__init_mixs();
-        this.id = util.guid();
+        this.id = channel.query('/guid');
         this.date = new Date().getTime();
         this.page = page;
         this.pattern = new Pattern(this);
@@ -36,9 +37,29 @@ export abstract class Block extends Events {
     parent: Block;
     url: string;
     page: Page;
-    id: string;
+    _id: string;
+    get id() {
+        var rb = this.parentSyncBlock;
+        if (rb) return rb.id + '/' + this._id;
+        return this._id;
+    }
+    set id(value) {
+        if (typeof value != 'string') {
+            value = channel.query('/guid');
+        }
+        this._id = value;
+    }
     date: number;
     pattern: Pattern;
+    syncBlockId: string;
+    get syncBlock() {
+        if (this.syncBlockId) return this;
+        var rb = this.closest(x => x.syncBlockId ? true : false);
+        return rb;
+    }
+    get parentSyncBlock() {
+        return this.closest(x => x.syncBlockId ? true : false, true);
+    }
     blocks: Record<string, Block[]> = { childs: [] };
     grid: { min: number[], max: number[], rect: Rect };
     /**
@@ -559,7 +580,7 @@ export abstract class Block extends Events {
     /**
      * 标记，主要是标记block用，没有其它什么作用
      */
-    mark:string;
+    mark: string;
 }
 export interface Block extends Block$Seek { }
 export interface Block extends Block$Event { }

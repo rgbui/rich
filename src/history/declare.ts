@@ -42,11 +42,14 @@ export enum ActionDirective {
     onSchemaRowDelete = 205,
     onTablestoreUpdateViewField = 210,
     onTablestoreHideViewField = 211,
+    onCreateTableSchema=220,
 
     /**
      * 错误修正的
      */
     onErrorRepairDidMounte = 300,
+
+    onPageTurnLayout=400
 
 }
 
@@ -85,6 +88,8 @@ export enum OperatorDirective {
 
     schemaRowUpdate = 300,
     schemaCreateRow = 301,
-    schemaRowRemove = 302
+    schemaRowRemove = 302,
+
+    pageTurnLayout=400,
 }
 
