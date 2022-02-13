@@ -3,14 +3,10 @@ import { Block } from "../../src/block";
 import { BlockDisplay } from "../../src/block/enum";
 import { prop, url, view } from "../../src/block/factory/observable";
 import { TextArea } from "../../src/block/view/appear";
-import { IconArguments } from "../../extensions/icon/declare";
 import { BlockView } from "../../src/block/view";
-import { PageDirective } from "../../src/page/directive";
 import { Icon } from "../../component/view/icon";
 import { useIconPicker } from "../../extensions/icon";
 import { Rect } from "../../src/common/vector/point";
-
-import { Directive } from "../../util/bus/directive";
 import { BlockAppear } from "../../src/block/appear";
 import lodash from "lodash";
 import { channel } from "../../net/channel";
@@ -25,7 +21,7 @@ export class Title extends Block {
     display = BlockDisplay.block;
     pageInfo: LinkPageItem = null;
     async loadPageInfo() {
-        var r = await channel.get('/page/query/info');
+        var r = await channel.get('/page/query/info', { id: this.page.pageItemId });
         if (r.ok) {
             this.pageInfo = r.data;
         }
