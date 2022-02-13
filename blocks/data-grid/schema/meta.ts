@@ -20,33 +20,55 @@ export class TableSchema {
     createDate: Date;
     fields: Field[] = [];
     text: string;
+    views: { id: string, text: string, url: string }[] = [];
+    recordViews: { id: string, text: string, type: 'form' | 'card' }[] = [];
     getViewFields() {
-        var fs = this.fields.filter(g => ![
-            FieldType.id,
-            FieldType.sort,
-            FieldType.autoIncrement
-        ].includes(g.type));
+        var fs = this.fields.findAll(g => g.text ? true : false);
         return fs.map(f => {
             return this.createViewField(f);
         })
     }
     createViewField(field: Field) {
-        return new ViewField(this, {
+        return new ViewField({
             fieldId: field.id,
             text: field.text
-        });
+        }, this);
     }
     fieldAdd(field: { text: string, type: FieldType }) {
-        return channel.put('/schema/field/add', Object.assign({ schemaId: this.id }, field));
+        return channel.put('/schema/operate', {
+            operate: {
+                schemaId: this.id,
+                date: new Date(),
+                actions: [{ name: 'addField', field }]
+            }
+        })
     }
     fieldRemove(fieldId: string) {
-        return channel.del('/schema/field/remove', Object.assign({ schemaId: this.id }, { fieldId }));
+        return channel.put('/schema/operate', {
+            operate: {
+                schemaId: this.id,
+                date: new Date(),
+                actions: [{ name: 'removeField', fieldId }]
+            }
+        })
     }
     fieldUpdate(args: { fieldId: string, data: Record<string, any> }) {
-        return channel.post('/schema/field/update', Object.assign({ schemaId: this.id }, args));
+        return channel.put('/schema/operate', {
+            operate: {
+                schemaId: this.id,
+                date: new Date(),
+                actions: [{ name: 'updateField', ...args }]
+            }
+        })
     }
     turnField(args: { fieldId: string, type: FieldType }) {
-        return channel.post('/schema/field/turn', Object.assign({ schemaId: this.id }, args));
+        return channel.put('/schema/operate', {
+            operate: {
+                schemaId: this.id,
+                date: new Date(),
+                actions: [{ name: 'turnField', ...args }]
+            }
+        })
     }
     rowAdd(args: { data: Record<string, any>, pos: { dataId: string, pos: 'before' | 'after' } }) {
         return channel.put('/datastore/add', Object.assign({ schemaId: this.id }, args));
@@ -66,7 +88,6 @@ export class TableSchema {
         filter?: Record<string, any>,
         sorts?: Record<string, -1 | 1>
     }) {
-        console.log(this);
         return channel.get('/datastore/query/list', Object.assign({ schemaId: this.id }, options));
     }
     all(options: {
@@ -77,7 +98,7 @@ export class TableSchema {
     }) {
         return channel.get('/datastore/query/all', Object.assign({ schemaId: this.id }, options));
     }
-    async group(
+    group(
         options: {
             filter?: Record<string, any>,
             size?: number,
@@ -93,7 +114,7 @@ export class TableSchema {
         having?: Record<string, any>,
         sorts?: Record<string, 1 | -1>,
         groups: string[],
-        aggregate?: Record<string,any>
+        aggregate?: Record<string, any>
     }) {
         return channel.get('/datastore/statistics', Object.assign({ schemaId: this.id }, options));
     }

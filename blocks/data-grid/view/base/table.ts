@@ -21,7 +21,6 @@ import { FieldType } from "../../schema/type";
 import { ViewField } from "../../schema/view";
 import { DataGridTurns } from "../../turn";
 import { TableStoreItem } from "../item";
-
 export class DataGridView extends Block {
     @prop()
     fields: ViewField[] = [];
@@ -47,10 +46,48 @@ export class DataGridView extends Block {
                 this[n] = data[n];
             }
         }
+        if (this.syncBlockId) {
+            await this.loadSyncBlock();
+        }
+    }
+    async loadSyncBlock(): Promise<void> {
+        var r = await channel.get('/page/sync/block', { syncBlockId: this.syncBlockId });
+        if (r.ok) {
+            var data;
+            try {
+                data = r.data.content as any;
+                if (typeof data == 'string') data = JSON.parse(data);
+                delete data.id;
+            }
+            catch (ex) {
+                console.error(ex);
+                this.page.onError(ex);
+            }
+            console.log(data, this.fields);
+            this.fields = [];
+            for (var n in data) {
+                if (n == 'pattern') {
+                    await this.pattern.load(data[n]);
+                }
+                else if (n == 'matrix') this.matrix = new Matrix(data[n]);
+                else if (n == 'fields') {
+                    data.fields.each(n => {
+                        this.fields.push(new ViewField(n));
+                    })
+                }
+                else if (n == 'blocks') {
+                    this.blocks = { childs: [] };
+                }
+                else {
+                    this[n] = data[n];
+                }
+            }
+        }
     }
     async get() {
         var json: Record<string, any> = {
-            id: this.id,
+            id: this._id,
+            syncBlockId: this.syncBlockId,
             url: this.url,
             matrix: this.matrix ? this.matrix.getValues() : undefined
         };
@@ -75,20 +112,10 @@ export class DataGridView extends Block {
                 }
             })
         }
+        console.log(json);
         return json;
     }
     async loadSchema() {
-        if (!this.schemaId) {
-            var dg = await useDataGridCreate({ roundArea: Rect.fromEle(this.el) });
-            if (dg) {
-                var r = await channel.put('/schema/create', { text: dg.text });
-                if (r.ok) {
-                    var schemaData = r.data.schema;
-                    this.schema = new TableSchema(schemaData);
-                    this.schemaId = this.schema.id;
-                }
-            }
-        }
         if (this.schemaId && !this.schema) {
             var r = await channel.get('/schema/query', { id: this.schemaId });
             if (r.ok) {
@@ -99,11 +126,15 @@ export class DataGridView extends Block {
     async loadViewFields() {
         if (this.fields.length == 0) {
             this.fields = this.schema.getViewFields()
+        } else {
+            console.log(this.fields);
+            if (this.fields.some(s => s.fieldId ? false : true)) {
+                this.fields = this.schema.getViewFields()
+            }
+            this.fields.each(f => {
+                f.schema = this.schema;
+            })
         }
-        else {
-            this.fields = this.schema.getViewFields()
-        }
-
     }
     async onGetTurnUrls() {
         return DataGridTurns.urls
@@ -135,6 +166,27 @@ export class DataGridView extends Block {
             await rowBlock.createElements();
         }
     }
+    async createdDidMounted(): Promise<void> {
+        if (this.createSource == 'InputBlockSelector') {
+            if (!this.schemaId) {
+                var dg = await useDataGridCreate({ roundArea: Rect.fromEle(this.el) });
+                if (dg) {
+                    var r = await channel.put('/schema/create', { text: dg.text, url: this.url });
+                    if (r.ok) {
+                        var schemaData = r.data.schema;
+                        this.schema = new TableSchema(schemaData);
+                        await this.onAction(ActionDirective.onCreateTableSchema, async () => {
+                            this.page.snapshoot.setSyncBlock(false);
+                            this.updateProps({
+                                schemaId: this.schema.id,
+                                syncBlockId: this.schema.views.first().id
+                            })
+                        });
+                    }
+                }
+            }
+        }
+    }
     async didMounted() {
         await this.loadSchema();
         if (this.schema) {
@@ -142,6 +194,28 @@ export class DataGridView extends Block {
             await this.loadData();
             await this.createItem();
             this.view.forceUpdate();
+        }
+    }
+    async createTableSchema() {
+        if (!this.schemaId) {
+            var dg = await useDataGridCreate({ roundArea: Rect.fromEle(this.el) });
+            if (dg) {
+                var r = await channel.put('/schema/create', { text: dg.text, url: this.url });
+                if (r.ok) {
+                    var schemaData = r.data.schema;
+                    this.schema = new TableSchema(schemaData);
+                    await this.onAction(ActionDirective.onCreateTableSchema, async () => {
+                        this.page.snapshoot.setSyncBlock(false);
+                        this.updateProps({
+                            schemaId: this.schema.id,
+                            syncBlockId: this.schema.views.first().id
+                        })
+                    });
+                    await this.didMounted();
+                }
+            }
+
+
         }
     }
     async onRemoveItem(id: string) {
