@@ -42,16 +42,95 @@ export class GridSearch {
         }
         this.blockMap.delete(block.id);
     }
-    private range:Rect=new Rect();
-    public join(event: MouseEvent) {
+    private range: Rect = new Rect();
+    public start(event: MouseEvent) {
         var block = this.findPointBlock(event);
-        if (block?.isLine) block = block.closest(x => !x.isLine);
+        var rs: Rect[] = [];
         if (block) {
-            var newRange=this.sync(block);
-
+            var newRange = this.sync(block);
+            rs.push(newRange);
+        }
+        var center = this.page.getRelativePoint(Point.from(event));
+        var step = 0;
+        var size = 10;
+        var arrowIsOvers = [false, false, false, false];
+        function searchOver(arrow: number) {
+            if (arrow == 0 || arrow == 2) {
+                var minY = center.y - (step - 1) * size;
+                if (arrow == 2) minY = center.y + (step - 1) * size;
+                var minX = center.x - step * size;
+                for (let i = 0; i < step * 2; i++) {
+                    var x = minX + i * size;
+                    var y = minY + (arrow == 0 ? 0 - size : size);
+                    var rg = rs.find(r => r.conatin(new Point(x, y)))
+                    if (rg) {
+                        var dx = rg.x + rg.width - x;
+                        var skipStep = Math.floor(dx / size);
+                        i += skipStep;
+                    }
+                    else {
+                        var newBlock = this.findPointBlock(new Point(x, y));
+                        if (newBlock) {
+                            var newRange = this.sync(block);
+                            rs.push(newRange);
+                            var dx = newRange.x + newRange.width - x;
+                            var skipStep = Math.floor(dx / size);
+                            i += skipStep;
+                        }
+                    }
+                }
+            }
+            else if (arrow == 1 || arrow == 3) {
+                var minX = center.x - (step - 1) * size;
+                if (arrow == 1) minX = center.x + (step - 1) * size;
+                var minY = center.y - step * size;
+                for (let i = 0; i < step * 2; i++) {
+                    var x = minX + (arrow == 3 ? 0 - size : size);
+                    var y = minY + i * size;
+                    var rg = rs.find(r => r.conatin(new Point(x, y)))
+                    if (rg) {
+                        var dy = rg.y + rg.height - y;
+                        var skipStep = Math.floor(dy / size);
+                        i += skipStep;
+                    }
+                    else {
+                        var newBlock = this.findPointBlock(new Point(x, y));
+                        if (newBlock) {
+                            var newRange = this.sync(block);
+                            rs.push(newRange);
+                            var dy = newRange.y + newRange.height - y;
+                            var skipStep = Math.floor(dy / size);
+                            i += skipStep;
+                        }
+                    }
+                }
+            }
+        }
+        function removeRects() {
+            var newRect = new Rect(center.x, center.y, 0, 0);
+            newRect = newRect.extend(size * step);
+            rs.removeAll(r => r.isContainRect(newRect))
+        }
+        while (!arrowIsOvers.every(o => o)) {
+            step += 1;
+            searchOver(0);
+            searchOver(1);
+            searchOver(2);
+            searchOver(3);
+            removeRects()
         }
     }
+    public join(event: MouseEvent) {
+        // var block = this.findPointBlock(event);
+        // if (block?.isLine) block = block.closest(x => !x.isLine);
+        // if (block) {
+        //     var newRange = this.sync(block);
+
+        // }
+    }
     private findPointBlock(point: Point | MouseEvent) {
-        return this.page.getBlockInMouseRegion(point);
+        var block = this.page.getBlockInMouseRegion(point);
+        if (block?.isLine) block = block.closest(x => !x.isLine);
+        return block;
     }
 }
