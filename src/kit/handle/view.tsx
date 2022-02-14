@@ -4,7 +4,7 @@ import { Icon } from "../../../component/view/icon";
 import { Handle } from ".";
 import { Tip } from "../../../component/view/tip";
 import { LangID } from "../../../i18n/declare";
-import DragHandle from "../../assert/svg/DragHandle.svg";
+import DragHandle from "../../assert/svg/dragHandle.svg";
 import { MouseDragger } from "../../common/dragger";
 import { ghostView } from "../../common/ghost";
 import { onAutoScroll, onAutoScrollStop } from "../../common/scroll";
