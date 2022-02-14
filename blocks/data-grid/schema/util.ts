@@ -10,7 +10,11 @@ import date from "../../../src/assert/svg/types.date.svg";
 import email from "../../../src/assert/svg/types.email.svg";
 import phone from "../../../src/assert/svg/types.phone.svg";
 import person from "../../../src/assert/svg/types.person.svg";
-
+import CollectTable from "../../../src/assert/svg/collectTable.svg";
+import CollectionBoard from "../../../src/assert/svg/collectionBoard.svg";
+import CollectionGallery from "../../../src/assert/svg/collectionGallery.svg";
+import CollectionList from "../../../src/assert/svg/collectionList.svg";
+import CollectionCalendar from "../../../src/assert/svg/collectionCalendar.svg";
 export function getTypeSvg(type: FieldType) {
     switch (type) {
         case FieldType.bool:
@@ -37,5 +41,25 @@ export function getTypeSvg(type: FieldType) {
             return number;
         default:
             return string;
+    }
+}
+
+export function getSchemaViewIcon(url: string) {
+    switch (url) {
+        case '/data-grid/table':
+            return CollectTable;
+            break;
+        case '/data-grid/board':
+            return CollectionBoard
+            break;
+        case '/data-grid/gallery':
+            return CollectionGallery
+            break;
+        case '/data-grid/list':
+            return CollectionList
+            break;
+        case '/data-grid/calendar':
+            return CollectionCalendar
+            break;
     }
 }
