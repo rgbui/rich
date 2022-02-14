@@ -7,7 +7,7 @@ import { PopoverPosition } from "../../popover/position";
 import CloseTick from "../../../src/assert/svg/CloseTick.svg";
 import './style.less';
 import { Remark } from "../../../component/view/text";
-import DragHandle from "../../../src/assert/svg/DragHandle.svg";
+import DragHandle from "../../../src/assert/svg/dragHandle.svg";
 import Dots from "../../../src/assert/svg/dots.svg" ;
 /**
  * 背景色
