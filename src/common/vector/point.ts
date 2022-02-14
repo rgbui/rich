@@ -99,8 +99,8 @@ export class Point {
     relative(point: Point) {
         return new Point(this.x - point.x, this.y - point.y);
     }
-    base(point:Point){
-        return new Point(this.x +point.x, this.y + point.y);
+    base(point: Point) {
+        return new Point(this.x + point.x, this.y + point.y);
     }
     diff(point: Point) {
         return [
@@ -218,9 +218,12 @@ export class Rect {
     }
     conatin(point: Point) {
         if (point.x >= this.left && point.x <= this.left + this.width) {
-            if (point.y > this.top && point.y < this.top + this.height) return true;
+            if (point.y >= this.top && point.y <= this.top + this.height) return true;
         }
         return false;
+    }
+    isContainRect(rect: Rect) {
+        return rect.points.every(e => this.conatin(e));
     }
     /**
      * 判断是否与矩形r2相交
