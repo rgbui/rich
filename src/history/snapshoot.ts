@@ -33,7 +33,11 @@ export class HistorySnapshoot extends Events {
         this.action.directive = directive;
         this.action.startDate = new Date().getTime();
     }
-    isSyncBlock: boolean
+    isSyncBlock: boolean;
+    /**
+     * 
+     * @param isSyncBlock 如果false表示禁用syncBlock记录
+     */
     setSyncBlock(isSyncBlock: boolean) {
         this.isSyncBlock = isSyncBlock;
     }
