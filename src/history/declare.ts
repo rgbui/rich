@@ -43,6 +43,7 @@ export enum ActionDirective {
     onTablestoreUpdateViewField = 210,
     onTablestoreHideViewField = 211,
     onCreateTableSchema=220,
+    onDataGridTurnView=221,
 
     /**
      * 错误修正的

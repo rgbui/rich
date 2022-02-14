@@ -379,4 +379,14 @@ export class DataGridView extends Block {
             }
         }
     }
+    async onDataGridTurnView(viewId: string) {
+        if (this.syncBlockId != viewId) {
+            this.onAction(ActionDirective.onDataGridTurnView, async () => {
+                this.page.snapshoot.setSyncBlock(false);
+                await this.page.createBlock(this.schema.views.find(g => g.id == viewId).url,
+                    { syncBlockId: viewId }, this.parent, this.index);
+                await this.delete();
+            })
+        }
+    }
 }

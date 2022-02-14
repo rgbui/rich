@@ -8,13 +8,34 @@ import Sort from "../../../../src/assert/svg/sort.svg";
 import chevronDown from "../../../../src/assert/svg/chevronDown.svg";
 import collectTable from "../../../../src/assert/svg/collectTable.svg";
 import "./style.less";
-
+import { useTableSortView } from "../../../../extensions/tablestore/sort";
+import { Rect } from "../../../../src/common/vector/point";
+import { useTabelSchemaViewDrop } from "../../../../extensions/tablestore/switch.views/view";
+import { getSchemaViewIcon } from "../../schema/util";
 export function DataGridTool(props: { block: DataGridView }) {
+    async function changeDataGridView(event: React.MouseEvent) {
+        var result = await useTabelSchemaViewDrop({ roundArea: Rect.fromEvent(event) }, {
+            schema: props.block.schema
+        });
+        if (result) {
+            props.block.onDataGridTurnView(result.id);
+        }
+    }
+    async function openSortView(event: React.MouseEvent) {
+
+    }
+    async function openFilterView(event: React.MouseEvent) {
+
+    }
+    async function openConfigView(event: React.MouseEvent) {
+
+    }
+    var view = props.block.schema?.views?.find(g => g.id == props.block.syncBlockId)
     return <div className="sy-dg-tool">
         <div className="sy-dg-tool-templates">
-            <label>
-                <Icon size={14} icon={collectTable}></Icon>
-                <span>模板</span>
+            <label onMouseDown={e => changeDataGridView(e)}>
+                <Icon size={14} icon={view ? getSchemaViewIcon(view.url) : collectTable}></Icon>
+                <span>{view?.text}</span>
                 <Icon size={10} icon={chevronDown}></Icon>
             </label>
         </div>
