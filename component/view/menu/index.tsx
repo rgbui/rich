@@ -31,17 +31,22 @@ class MenuPanel<T> extends EventsComponent {
         this.forceUpdate();
     }
     onSelect(item: MenuItemType<T>, event: MouseEvent) {
-        if (item.type == MenuItemTypeValue.item || typeof item.type == 'undefined') {
-            this.close();
-        }
+        this.close();
         this.emit('select', item, event);
+    }
+    onUpdate(item: MenuItemType<T>) {
+        this.emit('update', item);
     }
     menus: MenuItemType<T>[] = [];
     mb: MenuBox;
     render() {
         return this.visible && <div data-shy-page-unselect="true" className='shy-menu-panel'>
             <div className='shy-menu-mask' style={{ zIndex: popoverLayer.zoom(LayerWield.menuMask) }} onMouseDown={e => this.onClose(e)}></div>
-            <MenuBox style={{ height: this.options.height, maxHeight: this.options.height, overflow: this.options.overflow }} ref={e => this.mb = e} select={(item, event) => this.onSelect(item as any, event)} items={this.menus as any} deep={0}></MenuBox>
+            <MenuBox
+                style={{ height: this.options.height, maxHeight: this.options.height, overflow: this.options.overflow }}
+                ref={e => this.mb = e}
+                update={(item) => this.onUpdate(item as any)}
+                select={(item, event) => this.onSelect(item as any, event)} items={this.menus as any} deep={0}></MenuBox>
         </div>
     }
 }
@@ -52,16 +57,25 @@ interface MenuPanel<T> {
     on(name: 'select', fn: (item: MenuItemType<T>, event: MouseEvent) => void);
     only(name: 'select', fn: (item: MenuItemType<T>, event: MouseEvent) => void);
     emit(name: 'select', item: MenuItemType<T>, event: MouseEvent);
+    only(name: 'update', fn: (item: MenuItemType<T>) => void);
+    emit(name: 'update', item: MenuItemType<T>);
     only(name: 'close', fn: () => void);
     emit(name: 'close');
 }
-export async function useSelectMenuItem<T = string>(pos: PopoverPosition, menus: MenuItemType<T>[], options?: { height?: number, overflow?: 'auto' | 'visible' }) {
+export async function useSelectMenuItem<T = string>(pos: PopoverPosition, menus: MenuItemType<T>[], options?: {
+    height?: number,
+    overflow?: 'auto' | 'visible',
+    update?: (item: MenuItemType<T>) => void
+}) {
     var menuPanel = await Singleton<MenuPanel<T>>(MenuPanel);
     return new Promise((resolve: (data: { item: MenuItemType<T>, event: MouseEvent }) => void, reject) => {
         menuPanel.open(pos, menus, options);
         menuPanel.only('select', (item, event) => {
             resolve({ item, event });
         });
+        menuPanel.only('update', item => {
+            if (options?.update) options?.update(item);
+        })
         menuPanel.only('error', (error: Error) => {
             reject(error);
         });
