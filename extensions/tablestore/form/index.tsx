@@ -9,7 +9,6 @@ import Dots from "../../../src/assert/svg/dots.svg";
 import { Icon } from "../../../component/view/icon";
 import "./style.less";
 import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.field";
-import { Directive } from "../../../util/bus/directive";
 import { channel } from "../../../net/channel";
 class FormPage extends EventsComponent {
     schema: TableSchema;

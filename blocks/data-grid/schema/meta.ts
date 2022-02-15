@@ -21,7 +21,7 @@ export class TableSchema {
     fields: Field[] = [];
     text: string;
     views: { id: string, text: string, url: string }[] = [];
-    recordViews: { id: string, text: string, type: 'form' | 'card' }[] = [];
+    recordViews: { id: string, text: string, type?: 'form' | 'card' }[] = [];
     getViewFields() {
         var fs = this.fields.findAll(g => g.text ? true : false);
         return fs.map(f => {
