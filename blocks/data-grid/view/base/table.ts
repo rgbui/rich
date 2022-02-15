@@ -22,6 +22,7 @@ import { FieldType } from "../../schema/type";
 import { ViewField } from "../../schema/view";
 import { DataGridTurns } from "../../turn";
 import { TableStoreItem } from "../item";
+
 export class DataGridView extends Block {
     @prop()
     fields: ViewField[] = [];
@@ -68,7 +69,6 @@ export class DataGridView extends Block {
                 console.error(ex);
                 this.page.onError(ex);
             }
-            console.log(data, this.fields);
             this.fields = [];
             for (var n in data) {
                 if (n == 'pattern') {
@@ -117,7 +117,6 @@ export class DataGridView extends Block {
                 }
             })
         }
-        console.log(json);
         return json;
     }
     async loadSchema() {
@@ -132,7 +131,6 @@ export class DataGridView extends Block {
         if (this.fields.length == 0) {
             this.fields = this.schema.getViewFields()
         } else {
-            console.log(this.fields);
             if (this.fields.some(s => s.fieldId ? false : true)) {
                 this.fields = this.schema.getViewFields()
             }
@@ -146,6 +144,9 @@ export class DataGridView extends Block {
     }
     async getWillTurnData(url: string) {
         return await DataGridTurns.turn(this, url);
+    }
+    get schemaView() {
+        return this.schema.views.find(g => g.id == this.syncBlockId);
     }
     data: Record<string, any>[] = [];
     isLoadData: boolean = false;
@@ -245,8 +246,6 @@ export class DataGridView extends Block {
                     await this.didMounted();
                 }
             }
-
-
         }
     }
     async onRemoveItem(id: string) {
@@ -414,8 +413,15 @@ export class DataGridView extends Block {
         if (this.syncBlockId != viewId) {
             this.onAction(ActionDirective.onDataGridTurnView, async () => {
                 this.page.snapshoot.setSyncBlock(false);
-                await this.page.createBlock(this.schema.views.find(g => g.id == viewId).url,
-                    { syncBlockId: viewId }, this.parent, this.index);
+                var view = this.schema.views.find(g => g.id == viewId);
+                await this.page.createBlock(view.url,
+                    {
+                        syncBlockId: viewId,
+                        schemaId: this.schema.id
+                    },
+                    this.parent,
+                    this.at
+                );
                 await this.delete();
             })
         }
