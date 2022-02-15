@@ -4,6 +4,7 @@ import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { ChildsArea } from "../../../../src/block/view/appear";
 import { DataGridView } from "../base/table";
+import { DataGridTool } from "../components/tool";
 import "./style.less";
 
 @url('/data-grid/gallery')
@@ -26,7 +27,7 @@ export class TableStoreGalleryView extends BlockView<TableStoreGallery>{
     }
     render() {
         return <div className='sy-data-grid-gallery'>
-            <div className="sy-data-grid-gallery-head" style={{ minHeight: 24 }}></div>
+            <DataGridTool block={this.block}></DataGridTool>
             {this.renderRows()}
         </div>
     }

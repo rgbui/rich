@@ -7,6 +7,7 @@ import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { TableStoreItem } from "../item";
 import { ChildsArea } from "../../../../src/block/view/appear";
 import './style.less';
+import { DataGridTool } from "../components/tool";
 @url('/data-grid/board')
 export class TableStoreBoard extends DataGridView {
     @prop()
@@ -19,6 +20,7 @@ export class TableStoreBoard extends DataGridView {
         if (!this.groupFieldId) {
             this.groupFieldId = this.fields.find(g => g.field.type == FieldType.option || g.field.type == FieldType.options)?.field?.id;
         }
+        console.log(this.groupFieldId,'gf');
         if (this.groupField) {
             if (this.schema) {
                 var name = this.groupField.name;
@@ -78,6 +80,7 @@ export class TableStoreBoardView extends BlockView<TableStoreBoard>{
     }
     render() {
         return <div className='sy-data-grid-board'>
+            <DataGridTool block={this.block}></DataGridTool>
             <div className="sy-data-grid-board-list">
                 {this.block.dataGroups.map((dg, i) => {
                     return this.renderGroup(dg, i)

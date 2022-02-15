@@ -12,6 +12,7 @@ import { ChildsArea } from "../../../../src/block/view/appear";
 import { FieldType } from "../../schema/type";
 import './style.less';
 import { Icon } from "../../../../component/view/icon";
+import { DataGridTool } from "../components/tool";
 
 @url('/data-grid/calendar')
 export class TableStoreCalendar extends DataGridView {
@@ -96,6 +97,7 @@ export class TableStoreCalendarView extends BlockView<TableStoreCalendar>{
     }
     render() {
         return <div className='sy-data-grid-calendar'>
+            <DataGridTool block={this.block}></DataGridTool>
             <div className="sy-data-grid-calendar-head">
                 <div className="sy-data-grid-calendar-head-date">
                     <label>{dayjs(this.block.date).format('yyyy年MM月')}</label>
