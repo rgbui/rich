@@ -6,7 +6,7 @@ import { PopoverPosition } from "../../popover/position";
 
 class RelationPicker extends EventsComponent {
     render(): React.ReactNode {
-        return <div className="shy-formula-selector"></div>
+        return <div className="shy-relation-picker"></div>
     }
     onSave(e) { }
     field: Field;
