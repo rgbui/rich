@@ -3,78 +3,151 @@ import { ReactNode } from "react";
 import { SchemaFilter } from "../../../blocks/data-grid/schema/declare";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { FieldType } from "../../../blocks/data-grid/schema/type";
+import { getSchemaViewIcon } from "../../../blocks/data-grid/schema/util";
+import { DataGridView } from "../../../blocks/data-grid/view/base/table";
 import { EventsComponent } from "../../../component/lib/events.component";
+import { Divider } from "../../../component/view/grid";
 import { Icon } from "../../../component/view/icon";
 import { Select } from "../../../component/view/select";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
-
+import PlusSvg from "../../../src/assert/svg/plus.svg";
+import Dots from "../../../src/assert/svg/dots.svg";
+import TrashSvg from "../../../src/assert/svg/trash.svg";
+import "./style.less";
+import { Input } from "../../../component/view/input";
+import { useSelectMenuItem } from "../../../component/view/menu";
+import { Point } from "../../../src/common/vector/point";
+import { util } from "../../../util/util";
 class TableFilterView extends EventsComponent {
     schema: TableSchema;
     filter: SchemaFilter;
+    block: DataGridView;
     open(options: {
         schema: TableSchema,
+        block: DataGridView,
         filter?: SchemaFilter;
     }) {
         this.schema = options.schema;
         this.filter = options.filter;
+        if (!this.filter) {
+            this.filter = {
+                logic: 'and',
+                items: []
+            }
+        }
+        this.block = options.block;
         this.forceUpdate()
     }
     getFields() {
-        return this.schema.fields.map(fe => {
+        var fs = this.schema.fields.findAll(g => g.text ? true : false).map(fe => {
             return {
                 text: fe.text,
                 value: fe.id
             }
-        })
+        });
+        return fs;
     }
     getFieldType(field: string) {
-        return [{ text: '', value: '' }]
+        return [
+            { text: '等于', value: '$eq' },
+            { text: '不等于', value: '$ne' },
+            { text: '包含', value: '$contain' },
+            { text: '不包含', value: '$notContain' },
+            { text: '开头为', value: '$startWidth' },
+            { text: '结尾为', value: '$endWidth' },
+            { text: '为空', value: '$isNull' },
+            { text: '不为空', value: '$isNotNull' },
+        ]
     }
     renderFilter(filter, deep?: number) {
-        var items = filter?.items || [];
+        var items = filter?.items;
         var self = this;
         var nameField = this.schema.fields.find(g => g.type == FieldType.title);
+        if (!nameField) nameField = this.schema.fields.find(g => g.text ? true : false);
         function renderFilterItem(item, index) {
             if (item.logic) return self.renderFilter(item, deep + 1);
-            else return <div>
-                <Select options={self.getFields()} value={item.field} onChange={e => item.field = e}></Select>
-                <Select options={self.getFieldType(item.field)} value={item.operator} onChange={e => item.operator = e} ></Select>
-                <div></div>
+            else return <div className="shy-table-filter-view-item-content">
+                <Select border style={{ width: 100 }} options={self.getFields()} value={item.field} onChange={e => { item.field = e; self.forceUpdate() }}></Select>
+                <Select border style={{ width: 100 }} options={self.getFieldType(item.field)} value={item.operator} onChange={e => { item.operator = e; self.forceUpdate() }} ></Select>
+                <Input style={{ width: 150 }} value={item.value} onChange={e => item.value = e}></Input>
             </div>
         }
         function addFilter(value: 'item' | 'group') {
-            if (!Array.isArray(self.filter)) self.filter = { logic: 'and', items: [] };
+            // if (!Array.isArray(filter)) filter = { logic: 'and', items: [] };
             if (value == 'item') {
-                self.filter.items.push({ field: nameField.id, operator: 'equal', value: '' })
+                filter.items.push({
+                    field: nameField.id,
+                    operator: '$eq',
+                    value: ''
+                })
             }
             else {
-                self.filter.items.push({ logic: 'and', items: [{ field: nameField.id, operator: 'equal', value: '' }] })
+                filter.items.push({
+                    logic: 'and',
+                    items: [{ field: nameField.id, operator: '$eq', value: '' }]
+                })
             }
             self.forceUpdate();
+        }
+        async function clickProperty(event: React.MouseEvent, filter) {
+            var menus = [
+                { text: '复制', name: 'copy', icon: TrashSvg },
+                { text: '删除', name: 'delete', icon: TrashSvg }
+            ]
+            var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus);
+            if (um) {
+                if (um.item.name == 'delete') {
+                    items.remove(g => g == filter);
+                    self.forceUpdate();
+                }
+                else if (um.item.name == 'copy') {
+                    var at = items.findIndex(g => g == filter);
+                    if (at > -1) {
+                        var newItem = util.clone(filter);
+                        if (newItem) {
+                            items.splice(at + 1, 0, newItem);
+                            self.forceUpdate()
+                        }
+                    }
+                }
+            }
         }
         return <div className="shy-table-filter-view-group">
             {items.map((it, index) => {
                 if (index == 0) return <div className="shy-table-filter-view-item" key={index}>
-                    <span>条件</span>
+                    <span style={{ display: 'inline-block', height: 32, lineHeight: '32px' }}>条件</span>
                     {renderFilterItem(it, index)}
-                    <Icon icon=''></Icon>
+                    <Icon style={{ padding: 5 }} mousedown={e => clickProperty(e, it)} icon={Dots} wrapper></Icon>
                 </div>
                 else if (index == 1) return <div className="shy-table-filter-view-item" key={index}>
                     <span><Select value={filter.logic}
-                        options={[{ text: 'and', value: 'and' }, { text: 'or', value: 'or' }]}
-                        onChange={e => { filter.logic = e; }}></Select>
+                        options={[
+                            { text: 'and', value: 'and' },
+                            { text: 'or', value: 'or' }
+                        ]}
+                        onChange={e => {
+                            filter.logic = e;
+                            self.forceUpdate();
+                        }}></Select>
                     </span>
                     {renderFilterItem(it, index)}
-                    <Icon icon=''></Icon>
+                    <Icon style={{ padding: 5 }} mousedown={e => clickProperty(e, it)} icon={Dots} wrapper></Icon>
                 </div>
                 else if (index > 1) return <div className="shy-table-filter-view-item" key={index}>
                     <span>{filter.logic}</span>
                     {renderFilterItem(it, index)}
-                    <Icon icon=''></Icon>
+                    <Icon style={{ padding: 5 }} mousedown={e => clickProperty(e, it)} icon={Dots} wrapper></Icon>
                 </div>
             })}
-            <Select options={this.getFilters()} onChange={e => { addFilter(e) }}>添加筛选条件</Select>
+            {deep == 0 && <Divider></Divider>}
+            <Select options={this.getFilters()} onChange={e => { addFilter(e) }}><a
+                style={{
+                    fontSize: 14,
+                    display: 'inline-flex',
+                    justifyContent: 'flex-start',
+                    alignItems: 'center'
+                }}><Icon size={14} icon={PlusSvg}></Icon>添加筛选条件</a></Select>
         </div>
     }
     private getFilters() {
@@ -85,9 +158,13 @@ class TableFilterView extends EventsComponent {
     }
     render(): ReactNode {
         return <div className="shy-table-filter-view">
-            <div className="shy-table-filter-view-head"></div>
+            {this.schema && <div className="shy-table-filter-view-head">
+                <span>设置过滤条件</span>
+                <Icon icon={getSchemaViewIcon(this.block.url)}></Icon>
+                <span>{this.block.schemaView?.text}</span>
+            </div>}
             <div className="shy-table-filter-view-content">
-                {this.renderFilter(this.filter, 0)}
+                {this.schema && this.renderFilter(this.filter, 0)}
             </div>
         </div>
     }
@@ -95,9 +172,10 @@ class TableFilterView extends EventsComponent {
 
 export async function useTableFilterView(pos: PopoverPosition, options: {
     schema: TableSchema,
+    block: DataGridView,
     filter?: SchemaFilter
 }) {
-    let popover = await PopoverSingleton(TableFilterView);
+    let popover = await PopoverSingleton(TableFilterView, { mask: true });
     let fv = await popover.open(pos);
     fv.open(options);
     return new Promise((resolve: (data: SchemaFilter) => void, reject) => {
