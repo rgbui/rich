@@ -102,7 +102,7 @@ class TabelSchemaFormDrop extends EventsComponent {
     render(): ReactNode {
         var self = this;
         if (!this.schema) return <div></div>
-        var views = this.schema.views;
+        var views = this.schema.recordViews;
         if (!Array.isArray(views)) views = [];
         return <div className="shy-schema-view-selectors">
             {views.map(v => {

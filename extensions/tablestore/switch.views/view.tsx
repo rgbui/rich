@@ -16,6 +16,8 @@ import { MenuItemTypeValue } from "../../../component/view/menu/declare";
 import "./style.less";
 import { getSchemaViewIcon } from "../../../blocks/data-grid/schema/util";
 import { Divider } from "../../../component/view/grid";
+import { FieldType } from "../../../blocks/data-grid/schema/type";
+import { Field } from "../../../blocks/data-grid/schema/field";
 
 class TabelSchemaViewDrop extends EventsComponent {
     schema: TableSchema;
@@ -34,14 +36,29 @@ class TabelSchemaViewDrop extends EventsComponent {
     async onAdd(event: React.MouseEvent) {
         var r = await useDataGridCreate({ roundPoint: Point.from(event) }, { selectView: true });
         if (r) {
+            var actions: any[] = [{ name: 'createSchemaView', text: r.text, url: r.url }];
+            if (r.url == '/data-grid/board' && !this.schema.fields.some(f => f.type == FieldType.option || f.type == FieldType.options)) {
+                actions.push({ name: 'addField', field: { text: '状态', type: FieldType.option } })
+            }
             var result = await channel.put('/schema/operate', {
                 operate: {
                     schemaId: this.schema.id,
                     date: new Date(),
-                    actions: [{ name: 'createSchemaView', text: r.text, url: r.url }]
+                    actions
                 }
             });
             var oneAction = result.data.actions.first();
+            if (result.data.actions.length > 1) {
+                var action = result.data.actions[1];
+                var f = new Field();
+                f.load({
+                    id: action.id,
+                    name: action.name,
+                    text: '状态',
+                    type: FieldType.option
+                });
+                this.schema.fields.push(f);
+            }
             this.schema.views.push({ id: oneAction.id, text: r.text, url: r.url });
             this.onChange(this.schema.views.find(g => g.id == oneAction.id));
         }
@@ -64,7 +81,6 @@ class TabelSchemaViewDrop extends EventsComponent {
         ]
         var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus);
         if (um) {
-            console.log('um,', um);
             if (um.item.name == 'delete') {
                 var result = await channel.put('/schema/operate', {
                     operate: {
