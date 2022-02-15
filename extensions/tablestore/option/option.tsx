@@ -4,7 +4,7 @@ import { FieldType } from "../../../blocks/data-grid/schema/type";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
-import CloseTick from "../../../src/assert/svg/CloseTick.svg";
+import CloseTick from "../../../src/assert/svg/closeTick.svg";
 import './style.less';
 import { Remark } from "../../../component/view/text";
 import DragHandle from "../../../src/assert/svg/dragHandle.svg";
