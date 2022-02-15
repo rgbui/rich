@@ -162,6 +162,32 @@ export class DataGridView extends Block {
             }
         }
     }
+    private getSearchFilter() {
+        if (this.filter) {
+            function buildFilter(filter: SchemaFilter) {
+                if (filter.logic) {
+                    return { ['$' + filter.logic]: filter.items.map(i => buildFilter(i)) }
+                }
+                else if (filter.operator) {
+                    var field = this.schema.fields.find(g => g.id == filter.field)
+                    if (field) return {
+                        [field.name]: { ['$' + field.operator]: field.value }
+                    }
+                }
+            }
+            return buildFilter(this.filter);
+        }
+    }
+    private getSearchSorts() {
+        if (Array.isArray(this.sorts) && this.sorts.length > 0) {
+            var sorts = {};
+            this.sorts.forEach(so => {
+                var field = this.schema.fields.find(g => g.id == so.field)
+                if (field) sorts[field.name] = so.sort;
+            });
+            return sorts;
+        }
+    }
     async createItem() {
         this.blocks.childs = [];
         for (let i = 0; i < this.data.length; i++) {
