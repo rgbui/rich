@@ -65,7 +65,6 @@ class TabelSchemaFormDrop extends EventsComponent {
         ]
         var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus);
         if (um) {
-            console.log('um,', um);
             if (um.item.name == 'delete') {
                 var result = await channel.put('/schema/operate', {
                     operate: {
