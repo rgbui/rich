@@ -1,5 +1,6 @@
 import React from "react";
 import { ReactNode } from "react";
+import { SchemaFilter } from "../../../blocks/data-grid/schema/declare";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { FieldType } from "../../../blocks/data-grid/schema/type";
 import { EventsComponent } from "../../../component/lib/events.component";
@@ -10,18 +11,12 @@ import { PopoverPosition } from "../../popover/position";
 
 class TableFilterView extends EventsComponent {
     schema: TableSchema;
-    text: string;
-    url: string;
-    filter: any;
+    filter: SchemaFilter;
     open(options: {
         schema: TableSchema,
-        text: string,
-        url: string,
-        filter?: any;
+        filter?: SchemaFilter;
     }) {
         this.schema = options.schema;
-        this.text = options.text;
-        this.url = options.url;
         this.filter = options.filter;
         this.forceUpdate()
     }
@@ -100,14 +95,12 @@ class TableFilterView extends EventsComponent {
 
 export async function useTableFilterView(pos: PopoverPosition, options: {
     schema: TableSchema,
-    text: string,
-    url: string,
-    filter?: any[]
+    filter?: SchemaFilter
 }) {
     let popover = await PopoverSingleton(TableFilterView);
     let fv = await popover.open(pos);
     fv.open(options);
-    return new Promise((resolve: (data: Record<string, any>) => void, reject) => {
+    return new Promise((resolve: (data: SchemaFilter) => void, reject) => {
         popover.only('close', () => {
             resolve(fv.filter)
         })
