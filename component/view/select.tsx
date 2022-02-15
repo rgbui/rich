@@ -1,12 +1,14 @@
 import React, { CSSProperties } from "react";
 import SvgDown from "../../src/assert/svg/chevronDown.svg";
 export class Select extends React.Component<{
+    children?: JSX.Element | string | React.ReactNode,
     disabled?: boolean,
     value?: any,
     options: { text: string, value: any }[],
     onChange?: (value: any) => void,
     style?: CSSProperties,
-    dropAlign?: 'left' | 'right'
+    dropAlign?: 'left' | 'right',
+    border?: boolean
 }>{
     private toggle: boolean = false;
     mousedown(event: MouseEvent) {
@@ -41,9 +43,10 @@ export class Select extends React.Component<{
             dropStyle = { right: 0 };
         }
         var op = props.options.find(g => g.value == props.value);
-        return <div className='shy-select' style={this.props.style || {}} ref={e => this.el = e}>
+        return <div className={'shy-select' + (props.border ? " shy-select-border" : "")} style={this.props.style || {}} ref={e => this.el = e}>
             <div className='shy-select-selection' onClick={e => props.disabled ? undefined : (setToggle())}>
-                <span>{op?.text || props.value}</span><SvgDown></SvgDown>
+                {props.children && <>{props.children}<SvgDown></SvgDown></>}
+                {!props.children && <><span>{op?.text || props.value}</span><SvgDown></SvgDown></>}
                 {/*<input defaultValue={props.options.find(g => g.value == props.value)?.text} /> */}
             </div>
             {this.toggle && <div className='shy-select-drop' style={dropStyle} >
