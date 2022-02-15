@@ -8,7 +8,7 @@ import { PopoverPosition } from "../../popover/position";
 import "./style.less";
 import { getSchemaViewIcon } from "../../../blocks/data-grid/schema/util";
 import { Divider } from "../../../component/view/grid";
-
+import CheckSvg from "../../../src/assert/svg/check.svg";
 export class DataGridCreate extends EventsComponent {
     render() {
         var views = [
@@ -28,6 +28,7 @@ export class DataGridCreate extends EventsComponent {
                         className={this.url == v.url ? "hover" : ""}>
                         <Icon size={14} icon={getSchemaViewIcon(v.url)}></Icon>
                         <span>{v.text}</span>
+                        {this.url == v.url && <Icon size={14} icon={CheckSvg}></Icon>}
                     </div>
                 })}
             </div></>}
