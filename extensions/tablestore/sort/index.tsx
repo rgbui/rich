@@ -12,18 +12,12 @@ import { FieldType } from "../../../blocks/data-grid/schema/type";
 
 class TableSortView extends EventsComponent {
     schema: TableSchema;
-    text: string;
-    url: string;
-    sorts: any;
+    sorts: { field: string, sort: number }[];
     open(options: {
         schema: TableSchema,
-        text: string,
-        url: string,
         sorts?: any;
     }) {
         this.schema = options.schema;
-        this.text = options.text;
-        this.url = options.url;
         this.sorts = options.sorts;
         this.forceUpdate()
     }
@@ -75,14 +69,12 @@ class TableSortView extends EventsComponent {
 
 export async function useTableSortView(pos: PopoverPosition, options: {
     schema: TableSchema,
-    text: string,
-    url: string,
     sorts?: { field: string, sort: number }[]
 }) {
     let popover = await PopoverSingleton(TableSortView);
     let fv = await popover.open(pos);
     fv.open(options);
-    return new Promise((resolve:(sorts: { field: string, sort: number }[]) => void, reject) =>{
+    return new Promise((resolve: (sorts: { field: string, sort: number }[]) => void, reject) => {
         popover.only('close', () => {
             resolve(fv.sorts)
         })

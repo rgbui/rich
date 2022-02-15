@@ -28,11 +28,11 @@ export enum ActionDirective {
 
     onBoardToolCreateBlock = 130,
     onResizeBlock = 132,
-    onLock=133,
-    onZIndex=134,
-    onRotate=135,
-    onMove=136,
-    onBoardEditProp=137,
+    onLock = 133,
+    onZIndex = 134,
+    onRotate = 135,
+    onMove = 136,
+    onBoardEditProp = 137,
 
     onSchemaCreateField = 200,
     onSchemaDeleteField = 201,
@@ -42,15 +42,16 @@ export enum ActionDirective {
     onSchemaRowDelete = 205,
     onTablestoreUpdateViewField = 210,
     onTablestoreHideViewField = 211,
-    onCreateTableSchema=220,
-    onDataGridTurnView=221,
-
+    onCreateTableSchema = 220,
+    onDataGridTurnView = 221,
+    onDataGridUpdateSorts = 222,
+    onDataGridUpdateFilter = 223,
     /**
      * 错误修正的
      */
     onErrorRepairDidMounte = 300,
 
-    onPageTurnLayout=400
+    onPageTurnLayout = 400
 
 }
 
@@ -91,6 +92,6 @@ export enum OperatorDirective {
     schemaCreateRow = 301,
     schemaRowRemove = 302,
 
-    pageTurnLayout=400,
+    pageTurnLayout = 400,
 }
 
