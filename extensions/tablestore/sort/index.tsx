@@ -9,6 +9,7 @@ import closeTick from "../../../src/assert/svg/closeTick.svg";
 import { Icon } from "../../../component/view/icon";
 import { Remark } from "../../../component/view/text";
 import { FieldType } from "../../../blocks/data-grid/schema/type";
+import "./style.less";
 
 class TableSortView extends EventsComponent {
     schema: TableSchema;
