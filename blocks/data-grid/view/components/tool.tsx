@@ -12,6 +12,9 @@ import { useTableSortView } from "../../../../extensions/tablestore/sort";
 import { Rect } from "../../../../src/common/vector/point";
 import { useTabelSchemaViewDrop } from "../../../../extensions/tablestore/switch.views/view";
 import { getSchemaViewIcon } from "../../schema/util";
+import { useFormPage } from "../../../../extensions/tablestore/form";
+import { useTabelSchemaFormDrop } from "../../../../extensions/tablestore/switch.forms/view";
+import { useTableFilterView } from "../../../../extensions/tablestore/filter";
 export function DataGridTool(props: { block: DataGridView }) {
     async function changeDataGridView(event: React.MouseEvent) {
         var result = await useTabelSchemaViewDrop({ roundArea: Rect.fromEvent(event) }, {
@@ -22,13 +25,31 @@ export function DataGridTool(props: { block: DataGridView }) {
         }
     }
     async function openSortView(event: React.MouseEvent) {
-
+        var r = await useTableSortView({ roundArea: Rect.fromEvent(event) }, { schema: props.block.schema, sorts: props.block.sorts });
+        if (r) {
+            await props.block.onUpdateSorts(r);
+        }
     }
     async function openFilterView(event: React.MouseEvent) {
-
+        var r = await useTableFilterView({ roundArea: Rect.fromEvent(event) }, { schema: props.block.schema });
+        if (r) {
+            await props.block.onUpdateFilter(r);
+        }
     }
     async function openConfigView(event: React.MouseEvent) {
-
+        // var r = await useTableSortView({ roundArea: Rect.fromEvent(event) }, { schema: props.block.schema, text: '', url: '' })
+    }
+    async function openForm(event: React.MouseEvent) {
+        var newRow = await useFormPage(props.block.schema);
+        if (newRow) {
+            await props.block.onAddRow(newRow, undefined, 'after')
+        }
+    }
+    async function openFormDrop(event: React.MouseEvent) {
+        event.stopPropagation();
+        useTabelSchemaFormDrop({ roundArea: Rect.fromEvent(event) }, {
+            schema: props.block.schema
+        })
     }
     var view = props.block.schema?.views?.find(g => g.id == props.block.syncBlockId)
     return <div className="sy-dg-tool">
@@ -41,10 +62,10 @@ export function DataGridTool(props: { block: DataGridView }) {
         </div>
         <div className="sy-dg-tool-operators">
             <label><Icon size={14} icon={Settings}></Icon><span>配置</span></label>
-            <label><Icon size={14} icon={Filter}></Icon><span>过滤</span></label>
-            <label><Icon size={14} icon={Sort}></Icon><span>排序</span></label>
-            <label><Icon size={14} icon='elipsis:sy'></Icon></label>
-            <Button size='normal'><span>新增</span><Icon size={10} icon={chevronDown}></Icon></Button>
+            <label onMouseDown={e => openFilterView(e)}><Icon size={14} icon={Filter}></Icon><span>过滤</span></label>
+            <label onMouseDown={e => openSortView(e)}><Icon size={14} icon={Sort}></Icon><span>排序</span></label>
+            <label onMouseDown={e => openConfigView(e)}><Icon size={14} icon='elipsis:sy'></Icon></label>
+            <Button size='normal' onClick={e => openForm(e)}><span>新增</span><Icon size={10} click={e => openFormDrop(e)} icon={chevronDown}></Icon></Button>
         </div>
     </div>
 }

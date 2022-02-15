@@ -15,6 +15,7 @@ import { Matrix } from "../../../../src/common/matrix";
 import { Rect } from "../../../../src/common/vector/point";
 import { ActionDirective } from "../../../../src/history/declare";
 import { util } from "../../../../util/util";
+import { SchemaFilter } from "../../schema/declare";
 import { Field } from "../../schema/field";
 import { TableSchema } from "../../schema/meta";
 import { FieldType } from "../../schema/type";
@@ -24,6 +25,10 @@ import { TableStoreItem } from "../item";
 export class DataGridView extends Block {
     @prop()
     fields: ViewField[] = [];
+    @prop()
+    sorts: { field: string, sort: number }[] = [];
+    @prop()
+    filter: SchemaFilter = {};
     @prop()
     schemaId: string;
     schema: TableSchema;
@@ -388,5 +393,15 @@ export class DataGridView extends Block {
                 await this.delete();
             })
         }
+    }
+    async onUpdateSorts(sorts: { field: string, sort: number }[]) {
+        this.onAction(ActionDirective.onDataGridUpdateSorts, async () => {
+            this.updateProps({ sorts })
+        })
+    }
+    async onUpdateFilter(filter: SchemaFilter) {
+        this.onAction(ActionDirective.onDataGridUpdateFilter, async () => {
+            this.updateProps({ filter })
+        })
     }
 }
