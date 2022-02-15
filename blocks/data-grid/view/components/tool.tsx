@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "../../../../component/view/button";
 import { Icon } from "../../../../component/view/icon";
 import { DataGridView } from "../base/table";
 import Settings from "../../../../src/assert/svg/settings.svg";
@@ -15,6 +14,7 @@ import { getSchemaViewIcon } from "../../schema/util";
 import { useFormPage } from "../../../../extensions/tablestore/form";
 import { useTabelSchemaFormDrop } from "../../../../extensions/tablestore/switch.forms/view";
 import { useTableFilterView } from "../../../../extensions/tablestore/filter";
+
 export function DataGridTool(props: { block: DataGridView }) {
     async function changeDataGridView(event: React.MouseEvent) {
         var result = await useTabelSchemaViewDrop({ roundArea: Rect.fromEvent(event) }, {
@@ -31,10 +31,13 @@ export function DataGridTool(props: { block: DataGridView }) {
         }
     }
     async function openFilterView(event: React.MouseEvent) {
-        var r = await useTableFilterView({ roundArea: Rect.fromEvent(event) }, { schema: props.block.schema });
+        var r = await useTableFilterView({ roundArea: Rect.fromEvent(event) }, { schema: props.block.schema,filter:props.block.filter, block: props.block });
         if (r) {
             await props.block.onUpdateFilter(r);
         }
+    }
+    async function openConfigProperty(event: React.MouseEvent) {
+
     }
     async function openConfigView(event: React.MouseEvent) {
         // var r = await useTableSortView({ roundArea: Rect.fromEvent(event) }, { schema: props.block.schema, text: '', url: '' })
@@ -61,11 +64,14 @@ export function DataGridTool(props: { block: DataGridView }) {
             </label>
         </div>
         <div className="sy-dg-tool-operators">
-            <label><Icon size={14} icon={Settings}></Icon><span>配置</span></label>
+            <label onMouseDown={e => openConfigProperty(e)}><Icon size={14} icon={Settings}></Icon><span>字段配置</span></label>
             <label onMouseDown={e => openFilterView(e)}><Icon size={14} icon={Filter}></Icon><span>过滤</span></label>
             <label onMouseDown={e => openSortView(e)}><Icon size={14} icon={Sort}></Icon><span>排序</span></label>
             <label onMouseDown={e => openConfigView(e)}><Icon size={14} icon='elipsis:sy'></Icon></label>
-            <Button size='normal' onClick={e => openForm(e)}><span>新增</span><Icon size={10} click={e => openFormDrop(e)} icon={chevronDown}></Icon></Button>
+            <div className="sy-dg-tool-operators-add">
+                <span className="text" onClick={e => openForm(e)}>新增</span>
+                <span className="icon" onClick={e => openFormDrop(e)}><Icon size={10} icon={chevronDown}></Icon></span>
+            </div>
         </div>
     </div>
 }
