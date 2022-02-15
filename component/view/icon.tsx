@@ -9,7 +9,8 @@ export function Icon(props: {
     size?: number | 'none',
     fontSize?: number,
     className?: string[] | string,
-    style?: CSSProperties
+    style?: CSSProperties,
+    wrapper?: boolean
 }) {
     if (typeof props.icon == 'undefined' || !props.icon) {
         return <i>the icon is empty</i>
@@ -46,10 +47,20 @@ export function Icon(props: {
             height: props.size == 'none' ? undefined : (props.size) || 20
             , ...(props.style || {})
         })
-        return <props.icon className={classList.join(" ")}
-            onClick={e => { props.click ? props.click(e) : undefined; }}
-            onMouseDown={e => { props.mousedown ? props.mousedown(e) : undefined }}
-            style={style}></props.icon>
+        if (props.wrapper) {
+            return <div className={classList.join(" ")}
+                onClick={e => { props.click ? props.click(e) : undefined; }}
+                onMouseDown={e => { props.mousedown ? props.mousedown(e) : undefined }}
+                style={style}>
+                <props.icon style={{ width: '100%', height: '100%' }}></props.icon>
+            </div>
+        }
+        else {
+            return <props.icon className={classList.join(" ")}
+                onClick={e => { props.click ? props.click(e) : undefined; }}
+                onMouseDown={e => { props.mousedown ? props.mousedown(e) : undefined }}
+                style={style}></props.icon>
+        }
     }
     else if (typeof props.icon == 'object' && (props.icon as IconArguments).name) {
         var pc = props.icon as IconArguments;
