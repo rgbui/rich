@@ -20,10 +20,10 @@ export class Select extends React.Component<{
     }
     private _mousedown: (event: MouseEvent) => void;
     componentDidMount() {
-        document.addEventListener('mousedown', this._mousedown = this.mousedown.bind(this))
+        document.addEventListener('mousedown', this._mousedown = this.mousedown.bind(this), true)
     }
     componentWillUnmount() {
-        document.removeEventListener('mousedown', this._mousedown)
+        document.removeEventListener('mousedown', this._mousedown, true)
     }
     el: HTMLElement;
     render() {
