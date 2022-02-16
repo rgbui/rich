@@ -37,6 +37,7 @@ class TableFilterView extends EventsComponent {
                 items: []
             }
         }
+        if (!this.filter.items) this.filter.items = [];
         this.block = options.block;
         this.forceUpdate()
     }
