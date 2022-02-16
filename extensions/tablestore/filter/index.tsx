@@ -19,6 +19,7 @@ import { Input } from "../../../component/view/input";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { Point } from "../../../src/common/vector/point";
 import { util } from "../../../util/util";
+
 class TableFilterView extends EventsComponent {
     schema: TableSchema;
     filter: SchemaFilter;

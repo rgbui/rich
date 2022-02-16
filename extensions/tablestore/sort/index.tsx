@@ -1,7 +1,6 @@
 import React, { ReactNode } from "react";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { EventsComponent } from "../../../component/lib/events.component";
-import { Button } from "../../../component/view/button";
 import { Select } from "../../../component/view/select";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
@@ -10,6 +9,9 @@ import { Icon } from "../../../component/view/icon";
 import { Remark } from "../../../component/view/text";
 import { FieldType } from "../../../blocks/data-grid/schema/type";
 import "./style.less";
+import PlusSvg from "../../../src/assert/svg/plus.svg";
+import { Divider } from "../../../component/view/grid";
+import DragSvg from "../../../src/assert/svg/dragHandle.svg";
 
 class TableSortView extends EventsComponent {
     schema: TableSchema;
@@ -23,7 +25,7 @@ class TableSortView extends EventsComponent {
         this.forceUpdate()
     }
     getFields() {
-        return this.schema.fields.map(fe => {
+        return this.schema.fields.findAll(x => x.text ? true : false).map(fe => {
             return {
                 text: fe.text,
                 value: fe.id
@@ -34,7 +36,7 @@ class TableSortView extends EventsComponent {
         var self = this;
         function addSort() {
             var f = self.schema.fields.find(g => g.type == FieldType.title);
-            if (!f) f = self.schema.fields.first();
+            if (!f) f = self.schema.fields.findAll(g => g.text ? true : false).first();
             self.sorts.push({ field: f.id, sort: 1 });
             self.forceUpdate()
         }
@@ -44,26 +46,33 @@ class TableSortView extends EventsComponent {
         }
         var hasSorts = Array.isArray(this.sorts) && this.sorts.length > 0;
         return <div className="shy-table-sorts-view">
-            <div className="shy-table-sorts-view-head"></div>
+            <div className="shy-table-sorts-view-head"><span>设置排序</span></div>
             <div className="shy-table-sorts-view-content">
                 {hasSorts && this.sorts.map((so, i) => {
-                    return <div key={i}>
-                        <Select options={this.getFields()} onChange={e => { so.field = e; self.forceUpdate() }}></Select>
-                        <Select options={[
+                    return <div className="shy-table-sorts-view-item" key={i}>
+                        <Icon size={14}  style={{padding:10}} wrapper className={'drag'} icon={DragSvg}></Icon>
+                        <Select border style={{ minWidth: 80 }} value={so.field} options={this.getFields()} onChange={e => { so.field = e; self.forceUpdate() }}></Select>
+                        <Select border style={{ minWidth: 80 }} value={so.sort} options={[
                             { text: '降序', value: -1 },
                             { text: '升序', value: 1 }
                         ]} onChange={e => { so.sort = e; self.forceUpdate() }}>
                         </Select>
-                        <Icon icon={closeTick} click={e => removeSort(i)}></Icon>
+                        <div style={{ flexGrow: 1, flexShrink: 1 }}></div>
+                        <Icon size={12} style={{padding:6}} wrapper className={'close'} icon={closeTick} click={e => removeSort(i)}></Icon>
                     </div>
                 })}
-                {hasSorts && <Button onClick={e => addSort()}>添加排序</Button>}
-                {!hasSorts && <Remark>
-                </Remark>}
+                {!hasSorts && <Remark> </Remark>}
             </div>
-            {!hasSorts && <div className="shy-table-sorts-view-footer">
-                <Button onClick={e => addSort()}>添加排序</Button>
-            </div>}
+            <Divider></Divider>
+            <div className="shy-table-sorts-view-footer">
+                <a style={{
+                    fontSize: 14,
+                    display: 'inline-flex',
+                    justifyContent: 'flex-start',
+                    alignItems: 'center',
+                    cursor:'pointer'
+                }} onClick={e => addSort()}><Icon size={14} style={{marginRight:5}} icon={PlusSvg}></Icon>添加排序</a>
+            </div>
         </div>
     }
 }
