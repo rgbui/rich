@@ -8,12 +8,15 @@ import chevronDown from "../../../../src/assert/svg/chevronDown.svg";
 import collectTable from "../../../../src/assert/svg/collectTable.svg";
 import "./style.less";
 import { useTableSortView } from "../../../../extensions/tablestore/sort";
-import { Rect } from "../../../../src/common/vector/point";
+import { Point, Rect } from "../../../../src/common/vector/point";
 import { useTabelSchemaViewDrop } from "../../../../extensions/tablestore/switch.views/view";
 import { getSchemaViewIcon } from "../../schema/util";
 import { useFormPage } from "../../../../extensions/tablestore/form";
 import { useTabelSchemaFormDrop } from "../../../../extensions/tablestore/switch.forms/view";
 import { useTableFilterView } from "../../../../extensions/tablestore/filter";
+import { useSelectMenuItem } from "../../../../component/view/menu";
+import { MenuItemTypeValue } from "../../../../component/view/menu/declare";
+import { useTablePropertyView } from "../../../../extensions/tablestore/property";
 
 export function DataGridTool(props: { block: DataGridView }) {
     async function changeDataGridView(event: React.MouseEvent) {
@@ -31,16 +34,47 @@ export function DataGridTool(props: { block: DataGridView }) {
         }
     }
     async function openFilterView(event: React.MouseEvent) {
-        var r = await useTableFilterView({ roundArea: Rect.fromEvent(event) }, { schema: props.block.schema,filter:props.block.filter, block: props.block });
+        var r = await useTableFilterView({ roundArea: Rect.fromEvent(event) }, { schema: props.block.schema, filter: props.block.filter, block: props.block });
         if (r) {
             await props.block.onUpdateFilter(r);
         }
     }
     async function openConfigProperty(event: React.MouseEvent) {
+        var r = await useTablePropertyView({ roundArea: Rect.fromEvent(event) }, {
+            schema: props.block.schema,
+            gridView: props.block
+        });
+        if (r) {
 
+        }
     }
     async function openConfigView(event: React.MouseEvent) {
-        // var r = await useTableSortView({ roundArea: Rect.fromEvent(event) }, { schema: props.block.schema, text: '', url: '' })
+        var menus = [
+            { text: '复制链接', name: 'copylink' },
+            { text: '属性', name: 'propertys' },
+            { text: '表单模板', name: 'form' },
+            { text: '过滤', name: 'filter' },
+            { text: '排序', name: 'sort' },
+        ]
+        var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus);
+        if (um) {
+            switch (um.item.name) {
+                case 'copylink':
+                    break;
+                case 'propertys':
+                    await openConfigProperty(event);
+                    break;
+                case 'form':
+                    await openFormDrop(event);
+                    break;
+                case 'filter':
+                    await openFilterView(event);
+                    break;
+                case 'sort':
+                    await openSortView(event);
+                    break;
+            }
+        }
     }
     async function openForm(event: React.MouseEvent) {
         var newRow = await useFormPage(props.block.schema);
