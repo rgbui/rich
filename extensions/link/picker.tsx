@@ -7,7 +7,9 @@ import { EventsComponent } from "../../component/lib/events.component";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
 import { PageLink } from "./declare";
-import GlobalLink from "../../src/assert/svg/GlobalLink.svg";
+import { GlobalLinkSvg } from "../../component/svgs";
+import { Icon } from "../../component/view/icon";
+
 
 /**
  * 
@@ -48,7 +50,7 @@ class LinkPicker extends EventsComponent<{ link: PageLink }> {
                 onEnter={e => this.onEnter(e)}
                 value={this.url}></Input>
             <div className='shy-link-picker-current-page'>
-                {this.name == 'outside' && <a ><GlobalLink></GlobalLink><span>{this.url}</span></a>}
+                {this.name == 'outside' && <a ><Icon icon={GlobalLinkSvg}></Icon><span>{this.url}</span></a>}
             </div>
             <div className='shy-link-picker-operators'></div>
             <div className='shy-link-picker-search-pages'>

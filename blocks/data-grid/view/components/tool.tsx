@@ -17,7 +17,13 @@ import { useTableFilterView } from "../../../../extensions/tablestore/filter";
 import { useSelectMenuItem } from "../../../../component/view/menu";
 import { MenuItemTypeValue } from "../../../../component/view/menu/declare";
 import { useTablePropertyView } from "../../../../extensions/tablestore/property";
-
+import LinkSvg from "../../../../src/assert/svg/link.svg";
+import PropertySvg from "../../../../src/assert/svg/propertys.svg";
+import FilterSvg from "../../../../src/assert/svg/filter.svg";
+import SortSvg from "../../../../src/assert/svg/sort.svg";
+import TemplatesSvg from "../../../../src/assert/svg/templates.svg";
+import ImportSvg from "../../../../src/assert/svg/import.svg";
+import FileSvg from "../../../../src/assert/svg/file.svg";
 export function DataGridTool(props: { block: DataGridView }) {
     async function changeDataGridView(event: React.MouseEvent) {
         var result = await useTabelSchemaViewDrop({ roundArea: Rect.fromEvent(event) }, {
@@ -50,11 +56,14 @@ export function DataGridTool(props: { block: DataGridView }) {
     }
     async function openConfigView(event: React.MouseEvent) {
         var menus = [
-            { text: '复制链接', name: 'copylink' },
-            { text: '属性', name: 'propertys' },
-            { text: '表单模板', name: 'form' },
-            { text: '过滤', name: 'filter' },
-            { text: '排序', name: 'sort' },
+            { text: '复制链接', icon: LinkSvg, name: 'copylink' },
+            { text: '属性', icon: PropertySvg, name: 'propertys' },
+            { text: '表单模板', icon: TemplatesSvg, name: 'form' },
+            { text: '过滤', icon: FilterSvg, name: 'filter' },
+            { text: '排序', icon: SortSvg, name: 'sort' },
+            { type: MenuItemTypeValue.divide },
+            { text: '导入', icon: ImportSvg, name: 'import' },
+            { text: '导出', icon: FileSvg, name: 'export' },
         ]
         var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus);
         if (um) {
@@ -77,7 +86,10 @@ export function DataGridTool(props: { block: DataGridView }) {
         }
     }
     async function openForm(event: React.MouseEvent) {
-        var newRow = await useFormPage(props.block.schema);
+        var newRow = await useFormPage({
+            schema: props.block.schema,
+            recordViewId: props.block.schema.recordViews.first().id
+        });
         if (newRow) {
             await props.block.onAddRow(newRow, undefined, 'after')
         }

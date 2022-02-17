@@ -1,7 +1,7 @@
 import React, { MouseEvent } from "react";
 import { Confirm } from "../../../../component/lib/confirm";
 import { useSelectMenuItem } from "../../../../component/view/menu";
-import { MenuItemType } from "../../../../component/view/menu/declare";
+import { MenuItemType, MenuItemTypeValue } from "../../../../component/view/menu/declare";
 import { useDataGridCreate } from "../../../../extensions/tablestore/create";
 import { useTableStoreAddField } from "../../../../extensions/tablestore/field";
 import { useFormPage } from "../../../../extensions/tablestore/form";
@@ -22,7 +22,7 @@ import { FieldType } from "../../schema/type";
 import { ViewField } from "../../schema/view";
 import { DataGridTurns } from "../../turn";
 import { TableStoreItem } from "../item";
-
+import { ArrowDownSvg, ArrowUpSvg, FilterSvg, HideSvg, RenameSvg, TrashSvg } from "../../../../component/svgs";
 export class DataGridView extends Block {
     @prop()
     fields: ViewField[] = [];
@@ -258,12 +258,19 @@ export class DataGridView extends Block {
         })
     }
     async onAddOpenForm() {
-        var row = await useFormPage(this.schema);
+        var row = await useFormPage({
+            schema: this.schema,
+            recordViewId: this.schema.recordViews[0].id
+        });
         await this.onAddRow(row, undefined, 'after');
     }
     async onEditOpenForm(id: string) {
         var rowData = this.data.find(g => g.id == id);
-        var row = await useFormPage(this.schema, rowData);
+        var row = await useFormPage({
+            schema: this.schema,
+            recordViewId: this.schema.recordViews[0].id,
+            row: rowData
+        });
         await this.onRowUpdate(id, row);
     }
     async onAddRow(data, id?: string, arrow: 'before' | 'after' = 'after') {
@@ -379,14 +386,22 @@ export class DataGridView extends Block {
         items.push(...[
             {
                 name: 'edit',
+                icon: RenameSvg,
                 text: '编辑列',
             },
+            { type: MenuItemTypeValue.divide },
+            { name: 'filter', icon: FilterSvg, text: '过滤' },
+            { name: 'sortDesc', icon: ArrowDownSvg, text: '降序' },
+            { name: 'sortAsc', icon: ArrowUpSvg, text: '升序' },
+            { type: MenuItemTypeValue.divide },
             {
                 name: 'delete',
+                icon: TrashSvg,
                 text: '删除列'
             },
             {
                 name: 'hide',
+                icon: HideSvg,
                 text: '隐藏列'
             }
         ]);

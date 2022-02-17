@@ -1,10 +1,10 @@
 
-import { Field } from "../blocks/data-grid/schema/field";
+
 import { TableSchema } from "../blocks/data-grid/schema/meta";
-import { FieldType } from "../blocks/data-grid/schema/type";
 import { LinkPageItem } from "../extensions/at/declare";
-import { IconArguments, ResourceArguments } from "../extensions/icon/declare";
+import { ResourceArguments } from "../extensions/icon/declare";
 import { GalleryType, OuterPic } from "../extensions/image/declare";
+import { UserAction } from "../src/history/action";
 import { User } from "../src/types/user";
 import { StatusCode } from "./status.code";
 export type SockResponse<T, U = string> = {
@@ -120,7 +120,9 @@ export interface ChannelQueryMapUrls {
 	"/guid":{args:any,returnType:string}
 }
 export interface ChannelActMapUrls {
-    "/page/create/by_text":{args:{word:string},returnType:SockResponse<LinkPageItem>}
+    "/page/create/by_text":{args:{word:string},returnType:SockResponse<LinkPageItem>},
+	"/page/view/operator":{args:{syncBlockId: string, operate: Partial<UserAction> },returnType:Promise<{seq: number,id: string;}>},
+	"/page/view/snap":{args:{ syncBlockId: string, seq: number, content: any },returnType:Promise<void>}
 }
 export interface ChannelAirMapUrls {
     "/page/update/info":{args:{id: string, pageInfo:LinkPageItem},returnType:void},
