@@ -3,13 +3,17 @@ import { Icon } from "../../../../component/view/icon";
 import { Block } from "../../../../src/block";
 import { BlockDisplay } from "../../../../src/block/enum";
 import { prop } from "../../../../src/block/factory/observable";
-import { Field } from "../../schema/field";
+import { PageLayoutType } from "../../../../src/layout/declare";
 import { getTypeSvg } from "../../schema/util";
 import "./style.less";
 export class OriginFormField extends Block {
     display = BlockDisplay.block;
     value: any;
-    field: Field;
+    get field() {
+        if (this.page.pageLayout.type == PageLayoutType.dbForm&&this.page.schema) {
+            return this.page.schema.fields.find(g => g.id == this.fieldId);
+        }
+    }
     @prop()
     fieldId: string;
     get isSupportTextStyle() {
