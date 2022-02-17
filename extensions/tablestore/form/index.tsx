@@ -1,7 +1,7 @@
 import React from "react";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { EventsComponent } from "../../../component/lib/events.component";
-import { Rect } from "../../../src/common/vector/point";
+import { Point } from "../../../src/common/vector/point";
 import { Page } from "../../../src/page";
 import { PopoverSingleton } from "../../popover/popover";
 import { createFormPage } from "./page";
@@ -13,9 +13,15 @@ import { channel } from "../../../net/channel";
 class FormPage extends EventsComponent {
     schema: TableSchema;
     row?: Record<string, any>;
-    width: number = 600;
-    height: number = 400;
-    async open(options: { width: number, height: number, schema: TableSchema | string, row?: Record<string, any> }) {
+    width: number = 800;
+    height: number = 500;
+    recordViewId: string;
+    async open(options: {
+        width: number, height: number,
+        schema: TableSchema | string,
+        recordViewId: string,
+        row?: Record<string, any>
+    }) {
         if (typeof this.schema == 'string') {
             var r = await (channel.get('/schema/query', { id: this.schema }));
             this.schema = new TableSchema(r.data.schema);
@@ -24,6 +30,7 @@ class FormPage extends EventsComponent {
         this.row = options.row;
         this.width = options.width;
         this.height = options.height;
+        this.recordViewId = options.recordViewId;
         this.forceUpdate(() => {
             if (this.el && this.schema) this.renderPage();
         });
@@ -33,14 +40,18 @@ class FormPage extends EventsComponent {
     }
     pageView: Page;
     async renderPage() {
-        this.pageView = await createFormPage(this.el, { schema: this.schema, row: this.row });
+        this.pageView = await createFormPage(this.el, {
+            schema: this.schema,
+            recordViewId: this.recordViewId,
+            row: this.row
+        });
     }
     getData() {
         var row = {};
         var rs: OriginFormField[] = this.pageView.findAll(g => typeof (g as any).field != 'undefined') as any;
         rs.each(r => {
             row[r.field.name] = r.value;
-        })
+        });
         return row
     }
     el: HTMLDivElement;
@@ -49,11 +60,11 @@ class FormPage extends EventsComponent {
             <div className="shy-form-head">
                 <div className="shy-form-head-left">
                     <span>{this.schema?.text}</span>
-                    <Icon size={16} icon={Dots}></Icon>
+                    <Icon wrapper size={16} icon={Dots}></Icon>
                 </div>
-                <div className="shy-form-head-right">
+                {/* <div className="shy-form-head-right">
                     <a><Icon size={16} icon={Dots}></Icon><span>动态</span></a>
-                </div>
+                </div> */}
             </div>
             <div className="shy-form-content" style={{ height: this.height - 40 }}>
                 <div className="shy-form-box" ref={e => this.el = e} ></div>
@@ -62,19 +73,27 @@ class FormPage extends EventsComponent {
     }
 }
 
-export async function useFormPage(schema: TableSchema | string, row?: Record<string, any>) {
+export async function useFormPage(options: {
+    schema: TableSchema | string,
+    recordViewId: string,
+    row?: Record<string, any>
+}) {
     let popover = await PopoverSingleton(FormPage, { mask: true, shadow: true });
     var width = 600;
-    var height = 200;
+    var height = 400;
     let formPage = await popover.open({
-        roundArea: new Rect(
-            (window.innerWidth - width) / 2,
-            (window.innerHeight - height) / 2,
-            width,
-            height
-        )
+        fixPoint: Point.from({
+            x: (window.innerWidth - width) / 2,
+            y: (window.innerHeight - height) / 2
+        })
     });
-    await formPage.open({ width, height, schema, row });
+    await formPage.open({
+        width,
+        height,
+        schema: options.schema,
+        row: options.row,
+        recordViewId: options.recordViewId
+    });
     return new Promise((resolve: (data: Record<string, any>) => void, reject) => {
         formPage.only('save', (data: Record<string, any>) => {
             popover.close();

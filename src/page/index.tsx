@@ -30,6 +30,7 @@ import { Matrix } from '../common/matrix';
 import { PageContextmenu } from './partial/contextmenu';
 import { Kit } from '../kit';
 import { channel } from '../../net/channel';
+import { TableSchema } from '../../blocks/data-grid/schema/meta';
 
 export class Page extends Events<PageDirective> {
     root: HTMLElement;
@@ -132,6 +133,7 @@ export class Page extends Events<PageDirective> {
     get scale() {
         return this.matrix.getScaling().x;
     }
+    schema:TableSchema;
 }
 export interface Page {
     on(name: PageDirective.init, fn: () => void);

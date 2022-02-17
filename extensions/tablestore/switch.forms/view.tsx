@@ -78,7 +78,10 @@ class TabelSchemaFormDrop extends EventsComponent {
                 return;
             }
             else if (um.item.name == 'edit') {
-                var fp = await useFormPage(this.schema);
+                var fp = await useFormPage({
+                    schema: this.schema,
+                    recordViewId: view.id
+                });
                 /**
                  * 这里打开表单，进行编辑
                  */
