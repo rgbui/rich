@@ -21,5 +21,6 @@ export enum MenuItemTypeValue {
     text = 2,
     item = 3,
     switch = 4,
-    input=5
+    input=5,
+    button=6
 }

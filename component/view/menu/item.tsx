@@ -1,5 +1,6 @@
 import React from "react";
 import { Rect } from "../../../src/common/vector/point";
+import { Button } from "../button";
 import { Icon } from "../icon";
 import { Input } from "../input";
 import { Switch } from "../switch";
@@ -60,7 +61,8 @@ export class MenuItem extends React.Component<{
             {item.type == MenuItemTypeValue.divide && <a className='shy-menu-box-item-divide'></a>}
             {item.type == MenuItemTypeValue.text && <a className='shy-menu-box-item-text'>{item.text}</a>}
             {item.type == MenuItemTypeValue.switch && <a className='shy-menu-box-item-switch'><span>{item.text}</span><Switch onChange={e => this.checked(e, item)} checked={item.checked ? item.checked : false}></Switch></a>}
-            {item.type == MenuItemTypeValue.input && <div style={{ margin: '0px 10px' }}><Input value={item.value} onEnter={e => this.input(e, item)} onChange={e => item.value = e} placeholder={item.text}></Input></div>}
+            {item.type == MenuItemTypeValue.input && <div className="shy-menu-box-item-input"><Input value={item.value} onEnter={e => this.input(e, item)} onChange={e => item.value = e} placeholder={item.text}></Input></div>}
+            {item.type == MenuItemTypeValue.button && <div className="shy-menu-box-item-button"><Button block onClick={e => this.mousedown(item, e.nativeEvent)}>{item.text}</Button></div>}
             {item?.childs?.length > 0 && this.hover && <MenuBox select={this.props.select} update={this.props.update} items={item.childs} ref={e => this.menubox = e} deep={this.props.deep}></MenuBox>}
         </div>
     }
