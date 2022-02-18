@@ -103,7 +103,7 @@ export async function createFormPage(el: HTMLElement,
     });
     var pageData: Record<string, any>;
     var r = await channel.get('/page/sync/block', { syncBlockId: options.recordViewId });
-    if (r.ok && r.data.content) {
+    if (r.ok && r.data.content && Object.keys(r.data.content).length > 0) {
         pageData = r.data.content as any;
         if (typeof pageData == 'string') pageData = JSON.parse(pageData);
     }

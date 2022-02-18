@@ -8,7 +8,6 @@ import { channel } from "../../../net/channel";
 import { Point } from "../../../src/common/vector/point";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
-import { useDataGridCreate } from "../create";
 import "./style.less";
 import Plus from "../../../src/assert/svg/plus.svg";
 import Dots from "../../../src/assert/svg/dots.svg";
@@ -19,9 +18,9 @@ import { useFormPage } from "../form";
 
 class TabelSchemaFormDrop extends EventsComponent {
     schema: TableSchema;
-    open(options: { schema: TableSchema }) {
+    async open(options: { schema: TableSchema }) {
         this.schema = options.schema;
-        this.forceUpdate()
+        await this.syncForceUpdate();
     }
     getFields() {
         return this.schema.fields.map(fe => {
@@ -32,22 +31,36 @@ class TabelSchemaFormDrop extends EventsComponent {
         })
     }
     async onAdd(event: React.MouseEvent) {
-        var r = await useDataGridCreate({ roundPoint: Point.from(event) }, { selectView: true });
-        if (r) {
-            var result = await channel.put('/schema/operate', {
-                operate: {
-                    schemaId: this.schema.id,
-                    date: new Date(),
-                    actions: [{ name: 'createSchemaRecordView', text: r.text }]
-                }
-            });
-            var oneAction = result.data.actions.first();
-            this.schema.recordViews.push({ id: oneAction.id, text: r.text });
-            this.onChange(this.schema.views.find(g => g.id == oneAction.id));
+        var menus = [
+            { text: '表单名', name: 'name', value: '', type: MenuItemTypeValue.input },
+            { type: MenuItemTypeValue.divide },
+            {
+                type: MenuItemTypeValue.button,
+                text: '创建表单',
+                name: 'create'
+            }
+        ]
+        var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus);
+        if (um) {
+            var name = menus[0].value;
+            if (name) {
+                var result = await channel.put('/schema/operate', {
+                    operate: {
+                        schemaId: this.schema.id,
+                        date: new Date(),
+                        actions: [{ name: 'createSchemaRecordView', text: name }]
+                    }
+                });
+                var oneAction = result.data.actions.first();
+                this.schema.recordViews.push({ id: oneAction.id, text: name });
+                this.forceUpdate();
+                this.onChange(this.schema.recordViews.find(g => g.id == oneAction.id));
+            }
         }
     }
-    onChange(view) {
+    async onChange(view) {
         this.emit('save', view);
+        await useFormPage({ schema: this.schema, recordViewId: view.id })
     }
     async onProperty(view, event: React.MouseEvent) {
         event.stopPropagation();
@@ -78,10 +91,7 @@ class TabelSchemaFormDrop extends EventsComponent {
                 return;
             }
             else if (um.item.name == 'edit') {
-                var fp = await useFormPage({
-                    schema: this.schema,
-                    recordViewId: view.id
-                });
+                this.onChange(view);
                 /**
                  * 这里打开表单，进行编辑
                  */
@@ -107,16 +117,16 @@ class TabelSchemaFormDrop extends EventsComponent {
         if (!this.schema) return <div></div>
         var views = this.schema.recordViews;
         if (!Array.isArray(views)) views = [];
-        return <div className="shy-schema-view-selectors">
+        return <div className="shy-schema-view-form-selectors">
             {views.map(v => {
-                return <div className="shy-schema-view-selector-item" key={v.id} onClick={e => this.onChange(v)}>
+                return <div className="shy-schema-view-form-item" key={v.id} onClick={e => this.onChange(v)}>
                     <Icon size={12} className={'drag'} icon={DragSvg}></Icon>
                     <span>{v.text}</span>
                     <Icon size={14} className={'property'} icon={Dots} click={e => this.onProperty(v, e)}></Icon>
                 </div>
             })}
             <Divider></Divider>
-            <div className="shy-schema-view-selectors-add" onClick={e => this.onAdd(e)}>
+            <div className="shy-schema-view-form-selectors-add" onClick={e => this.onAdd(e)}>
                 <Icon size={16} icon={Plus}></Icon><span>新增表单</span>
             </div>
         </div>
@@ -129,7 +139,8 @@ export async function useTabelSchemaFormDrop(pos: PopoverPosition,
     }) {
     let popover = await PopoverSingleton(TabelSchemaFormDrop, { mask: true });
     let fv = await popover.open(pos);
-    fv.open(options);
+    await fv.open(options);
+    popover.updateLayout()
     return new Promise((resolve: (view: { id: string, text: string, url: string }) => void, reject) => {
         popover.only('close', () => {
             // resolve()
