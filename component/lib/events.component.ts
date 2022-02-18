@@ -91,6 +91,13 @@ export class EventsComponent<G = {}, T = string> extends React.Component<G>{
         else if (typeof name == 'function') return this.__events.exists(x => x.fn == name);
         else return false;
     }
+    syncForceUpdate() {
+        return new Promise((resolve, reject) => {
+            this.forceUpdate(() => {
+                resolve(true);
+            })
+        })
+    }
 }
 
 
