@@ -8,7 +8,6 @@ export class ViewField {
     colWidth?: number = 120;
     remark?: string;
     error?: string;
-    sort?: 0 | 1 | -1 = 0;
     schema: TableSchema;
     get field() {
         if (this.fieldId) return this.schema.fields.find(g => g.id == this.fieldId);
