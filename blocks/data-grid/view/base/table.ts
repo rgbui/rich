@@ -333,6 +333,13 @@ export class DataGridView extends Block {
             }
         });
     }
+    async onUpdateField(viewField: ViewField, data: Record<string, any>) {
+        this.page.onAction(ActionDirective.onSchemaUpdateField, async () => {
+            await this.schema.fieldUpdate({ fieldId: viewField.field.id, data });
+            viewField.field.load(data);
+            await this.createItem();
+        });
+    }
     async onDeleteField(viewField: ViewField) {
         if (await Confirm('确定要删除该列吗')) {
             var field = viewField.field;
@@ -355,13 +362,14 @@ export class DataGridView extends Block {
             await this.createItem();
         });
     }
-    async onSetSortField(at?: number, sort?: 0 | 1 | -1) {
-        if (typeof at == 'undefined') at = this.fields.length - 1;
-        if (typeof sort == 'undefined') sort = 0;
-        var viewField = this.fields[at];
+    async onSetSortField(viewField: ViewField, sort?: 0 | 1 | -1) {
+        if (this.sorts.some(s => s.field == viewField.field.id && s.sort == sort)) {
+            return;
+        }
         await this.page.onAction(ActionDirective.onTablestoreUpdateViewField, async () => {
-            var newViewField = viewField.clone();
-            newViewField.sort = sort;
+            var so = this.sorts.find(g => g.field == viewField.field.id);
+            if (so) so.sort = sort;
+            else this.sorts.push({ field: viewField.field.id, sort });
             await this.loadData();
             await this.createItem();
         });
@@ -385,9 +393,10 @@ export class DataGridView extends Block {
         var items: MenuItemType<BlockDirective | string>[] = [];
         items.push(...[
             {
-                name: 'edit',
-                icon: RenameSvg,
-                text: '编辑列',
+                name: 'name',
+                type: MenuItemTypeValue.input,
+                value: viewField.field?.text,
+                text: '编辑列名',
             },
             { type: MenuItemTypeValue.divide },
             { name: 'filter', icon: FilterSvg, text: '过滤' },
@@ -397,7 +406,8 @@ export class DataGridView extends Block {
             {
                 name: 'delete',
                 icon: TrashSvg,
-                text: '删除列'
+                text: '删除列',
+                disabled: viewField.field?.type == FieldType.title ? true : false
             },
             {
                 name: 'hide',
@@ -413,14 +423,25 @@ export class DataGridView extends Block {
             items
         );
         if (re) {
+            var ReItem = items.find(g => g.name == 'name');
             if (re.item.name == 'hide') {
                 this.onHideField(viewField);
             }
             else if (re.item.name == 'delete') {
                 this.onDeleteField(viewField);
             }
-            else if (re.item.name == 'edit') {
-
+            else if (re.item.name == 'filter') {
+                this.onAddFilter(viewField);
+            }
+            else if (re.item.name == 'sortDesc') {
+                this.onSetSortField(viewField, -1);
+            }
+            else if (re.item.name == 'sortAsc') {
+                this.onSetSortField(viewField, 1);
+            }
+            if (ReItem.value != viewField.field?.text) {
+                //编辑列名了
+                this.onUpdateField(viewField, { text: ReItem.value })
             }
         }
     }
@@ -449,6 +470,18 @@ export class DataGridView extends Block {
     async onUpdateFilter(filter: SchemaFilter) {
         this.onAction(ActionDirective.onDataGridUpdateFilter, async () => {
             this.updateProps({ filter })
+        })
+    }
+    async onAddFilter(viewField: ViewField) {
+        this.onAction(ActionDirective.onDataGridUpdateFilter, async () => {
+            if (!Array.isArray(this.filter.items)) {
+                this.filter = { logic: 'and', items: [] }
+            }
+            this.filter.items.push({
+                operator: '$contain',
+                field: viewField.field.id
+            })
+            this.updateProps({ filter: this.filter })
         })
     }
 }
