@@ -14,8 +14,10 @@ class Popover<T extends React.Component> extends EventsComponent<{
     visible: boolean;
     point: Point = new Point(0, 0);
     private el: HTMLElement;
+    private pos: PopoverPosition;
     async open(pos: PopoverPosition): Promise<T> {
         this.visible = true;
+        this.pos = pos;
         if (this.props.visible == 'hidden') {
             if (this.box) this.box.style.display = 'block';
         }
@@ -36,21 +38,7 @@ class Popover<T extends React.Component> extends EventsComponent<{
         else this.point = pos.roundArea.leftTop;
         return new Promise((resolve: (ins: T) => void, reject) => {
             this.forceUpdate(() => {
-                if (this.el) {
-                    var b = Rect.from(this.el.getBoundingClientRect());
-                    if (pos.center == true) {
-                        this.point = new Point((window.innerWidth - b.width) / 2, (window.innerHeight - b.height) / 2);
-                        this.forceUpdate();
-                    }
-                    else if (pos.roundArea) {
-                        pos.elementArea = b;
-                        var newPoint = RectUtility.cacPopoverPosition(pos);
-                        if (!this.point.equal(newPoint)) {
-                            this.point = newPoint;
-                            this.forceUpdate();
-                        }
-                    }
-                }
+                this.updateLayout();
                 resolve(this.cp);
             })
         })
@@ -102,6 +90,27 @@ class Popover<T extends React.Component> extends EventsComponent<{
             var target = event.target as HTMLDivElement;
             if (this.el.contains(target)) return;
             this.onClose();
+        }
+    }
+    updateLayout() {
+        if (this.pos.fixPoint) return;
+        var pos = this.pos;
+        if (this.el) {
+            var b = Rect.from(this.el.getBoundingClientRect());
+            if (pos.center == true) {
+                this.point = new Point(
+                    (window.innerWidth - b.width) / 2,
+                    (window.innerHeight - b.height) / 2);
+                this.forceUpdate();
+            }
+            else if (pos.roundArea) {
+                pos.elementArea = b;
+                var newPoint = RectUtility.cacPopoverPosition(pos);
+                if (!this.point.equal(newPoint)) {
+                    this.point = newPoint;
+                    this.forceUpdate();
+                }
+            }
         }
     }
 }
