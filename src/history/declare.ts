@@ -37,6 +37,7 @@ export enum ActionDirective {
     onSchemaCreateField = 200,
     onSchemaDeleteField = 201,
     onSchemaTurnField = 202,
+    onSchemaUpdateField = 206,
     onSchemaCreateDefaultRow = 203,
     onSchemaRowUpdate = 204,
     onSchemaRowDelete = 205,
