@@ -16,6 +16,7 @@ import { LangID } from "../../../../i18n/declare";
 @url('/data-grid/item')
 export class TableStoreItem extends Block {
     dataRow: Record<string, any> = {};
+    dataIndex: number;
     get schema() {
         return (this.parent as DataGridView).schema;
     }
@@ -30,7 +31,7 @@ export class TableStoreItem extends Block {
     async createElements() {
         for (let i = 0; i < this.fields.length; i++) {
             var field = this.fields[i];
-            var block = await createFieldBlock(field, this.dataRow, this);
+            var block = await createFieldBlock(field, { row: this.dataRow, index: this.dataIndex }, this);
             this.blocks.childs.push(block);
         }
     }

@@ -47,6 +47,8 @@ export enum ActionDirective {
     onDataGridTurnView = 221,
     onDataGridUpdateSorts = 222,
     onDataGridUpdateFilter = 223,
+    onDataGridShowRowNum=224,
+    onDataGridShowCheck=225,
     /**
      * 错误修正的
      */

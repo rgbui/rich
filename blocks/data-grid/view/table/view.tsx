@@ -11,6 +11,7 @@ import { Rect } from "../../../../src/common/vector/point"
 import { MouseDragger } from "../../../../src/common/dragger"
 import { DataGridTool } from "../components/tool"
 import { BlockRenderRange } from "../../../../src/block/enum"
+import { CheckSvg, TypesNumberSvg } from "../../../../component/svgs"
 
 @view('/data-grid/table')
 export class TableStoreView extends BlockView<TableStore>{
@@ -101,10 +102,14 @@ export class TableStoreView extends BlockView<TableStore>{
     renderHead() {
         return <div className="sy-dg-table-head">
             {this.block.fields.map((f, i) => {
+                var icon: SvgrComponent;
+                if (f.type == 'check') icon = CheckSvg;
+                else if (f.type == 'rowNum') icon = TypesNumberSvg;
+                else icon = getTypeSvg(f.field.type);
                 return <div className="sy-dg-table-head-th"
                     style={{ width: f.colWidth || 120 }}
-                    key={f.field.name || i}>
-                    <div className={'sy-dg-table-head-th-icon'} ><Icon icon={getTypeSvg(f.field.type)} size='none'></Icon></div>
+                    key={f?.field?.name || i}>
+                    <div className={'sy-dg-table-head-th-icon'} ><Icon icon={icon} size='none'></Icon></div>
                     <label>{f.text || f.field.text}</label>
                     <div className={'sy-dg-table-head-th-property'} onMouseDown={e => this.block.openConfigField(e, f)}><Icon icon='elipsis:sy'></Icon></div>
                 </div>
@@ -117,6 +122,7 @@ export class TableStoreView extends BlockView<TableStore>{
     }
     renderBody() {
         if (this.block.data && this.block.isLoadData) {
+            var ids=this.block.childs.map(c=>c.id)
             return <div className='sy-dg-table-body'>
                 <ChildsArea childs={this.block.childs}></ChildsArea>
             </div>

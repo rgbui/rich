@@ -17,7 +17,7 @@ export class TableStore extends DataGridView {
         this.blocks.childs = [];
         for (let i = 0; i < this.data.length; i++) {
             var row = this.data[i];
-            var rowBlock: DataGridTableItem = await BlockFactory.createBlock('/data-grid/table/row', this.page, { mark: i, dataRow: row }, this) as DataGridTableItem;
+            var rowBlock: DataGridTableItem = await BlockFactory.createBlock('/data-grid/table/row', this.page, { mark: i,dataIndex:i, dataRow: row }, this) as DataGridTableItem;
             this.blocks.childs.push(rowBlock);
             await rowBlock.createElements();
         }

@@ -7,7 +7,7 @@ import { useTableStoreAddField } from "../../../../extensions/tablestore/field";
 import { useFormPage } from "../../../../extensions/tablestore/form";
 import { channel } from "../../../../net/channel";
 import { Block } from "../../../../src/block";
-import { BlockDirective } from "../../../../src/block/enum";
+import { BlockDirective, BlockRenderRange } from "../../../../src/block/enum";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { prop } from "../../../../src/block/factory/observable";
 import { Pattern } from "../../../../src/block/pattern";
@@ -22,8 +22,9 @@ import { FieldType } from "../../schema/type";
 import { ViewField } from "../../schema/view";
 import { DataGridTurns } from "../../turn";
 import { TableStoreItem } from "../item";
-import { ArrowDownSvg, ArrowUpSvg, FilterSvg, HideSvg, RenameSvg, TrashSvg } from "../../../../component/svgs";
+import { ArrowDownSvg, ArrowUpSvg, FilterSvg, HideSvg, TrashSvg } from "../../../../component/svgs";
 export class DataGridView extends Block {
+    checkItems: Record<string, any>[] = [];
     @prop()
     fields: ViewField[] = [];
     @prop()
@@ -32,7 +33,14 @@ export class DataGridView extends Block {
     filter: SchemaFilter = {};
     @prop()
     schemaId: string;
+    @prop()
+    showRowNum: boolean = false;
+    @prop()
+    showCheckRow: boolean = false;
     schema: TableSchema;
+    init(): void {
+        this.registerPropMeta('fields', ViewField, true);
+    }
     async load(data) {
         if (!this.pattern) this.pattern = new Pattern(this);
         for (var n in data) {
@@ -131,7 +139,7 @@ export class DataGridView extends Block {
         if (this.fields.length == 0) {
             this.fields = this.schema.getViewFields()
         } else {
-            if (this.fields.some(s => s.fieldId ? false : true)) {
+            if (!this.fields.some(s => s.fieldId || s.type)) {
                 this.fields = this.schema.getViewFields()
             }
             this.fields.each(f => {
@@ -160,6 +168,7 @@ export class DataGridView extends Block {
                 this.data = Array.isArray(r.data.list) ? r.data.list : [];
                 this.total = r.data?.total || 0;
                 this.isLoadData = true;
+                console.log(this.data, 'data');
             }
         }
     }
@@ -193,7 +202,7 @@ export class DataGridView extends Block {
         this.blocks.childs = [];
         for (let i = 0; i < this.data.length; i++) {
             var row = this.data[i];
-            var rowBlock: TableStoreItem = await BlockFactory.createBlock('/data-grid/item', this.page, { mark: i, dataRow: row }, this) as TableStoreItem;
+            var rowBlock: TableStoreItem = await BlockFactory.createBlock('/data-grid/item', this.page, { mark: i, dataIndex: i, dataRow: row }, this) as TableStoreItem;
             this.blocks.childs.push(rowBlock);
             await rowBlock.createElements();
         }
@@ -323,7 +332,9 @@ export class DataGridView extends Block {
                 this.schema.fields.push(field);
                 if (typeof at == 'undefined') at = this.fields.length;
                 var vf = this.schema.createViewField(field);
-                this.fields.push(vf);
+                var newFields = this.fields.map(f => f.clone());
+                newFields.push(vf);
+                this.changeFields(this.fields, newFields);
                 this.data.forEach(row => {
                     var defaultValue = field.getDefaultValue();
                     if (typeof defaultValue != 'undefined')
@@ -347,7 +358,9 @@ export class DataGridView extends Block {
                 var r = await this.schema.fieldRemove(field.id);
                 if (r.ok) {
                     var name = field.name;
-                    this.fields.remove(g => g.fieldId == field.id);
+                    var fields = this.fields.map(c => c.clone());
+                    fields.remove(g => g.fieldId == field.id);
+                    this.changeFields(this.fields, fields);
                     this.data.forEach(row => {
                         delete row[name];
                     });
@@ -358,7 +371,9 @@ export class DataGridView extends Block {
     }
     async onHideField(viewField: ViewField) {
         this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
-            this.fields.remove(g => g == viewField);
+            var fields = this.fields.map(f => f.clone());
+            fields.remove(g => g == viewField);
+            this.changeFields(this.fields, fields);
             await this.createItem();
         });
     }
@@ -483,5 +498,76 @@ export class DataGridView extends Block {
             })
             this.updateProps({ filter: this.filter })
         })
+    }
+    async onShowNum(visible: boolean) {
+        var newFields = this.fields.map(f => f.clone());
+        if (visible == true && newFields.some(s => s.type == 'rowNum')) {
+            return
+        }
+        else if (visible == false && !newFields.some(s => s.type == 'rowNum')) {
+            return
+        }
+        this.onAction(ActionDirective.onDataGridShowRowNum, async () => {
+            if (visible == true) {
+                newFields.insertAt(0, new ViewField({ type: 'rowNum', text: '序号' }, this.schema))
+            }
+            else newFields.remove(g => g.type == 'rowNum');
+            this.updateProps({ showRowNum: visible });
+            this.changeFields(this.fields, newFields);
+            await this.createItem();
+            this.forceUpdate();
+        })
+    }
+    async onShowAutoIncrement(visible: boolean) {
+        var newFields = this.fields.map(f => f.clone());
+        if (visible == true && newFields.some(s => s.field?.type == FieldType.autoIncrement)) {
+            return
+        }
+        else if (visible == false && !newFields.some(s => s.field?.type == FieldType.autoIncrement)) {
+            return
+        }
+        this.page.onAction(ActionDirective.onSchemaCreateField, async () => {
+            var sf = this.schema.fields.find(g => g.type == FieldType.autoIncrement);
+            if (visible == true) {
+                newFields.insertAt(0, new ViewField({ text: '编号', fieldId: sf.id }, this.schema))
+            }
+            else newFields.remove(g => g.field?.type == FieldType.autoIncrement);
+            this.changeFields(this.fields, newFields);
+            await this.createItem();
+            this.forceUpdate();
+        });
+    }
+    async onShowCheck(visible: boolean) {
+        var newFields = this.fields.map(f => f.clone());
+        if (visible == true && newFields.some(s => s.type == 'check')) return
+        else if (visible == false && !newFields.some(s => s.type == 'check')) return
+        this.onAction(ActionDirective.onDataGridShowCheck, async () => {
+            if (visible == true) {
+                newFields.insertAt(0, new ViewField({ type: 'check', text: '选择' }, this.schema))
+            }
+            else newFields.remove(g => g.type == 'check');
+            this.updateProps({ showCheckRow: visible });
+            this.changeFields(this.fields, newFields);
+            await this.createItem();
+            this.forceUpdate();
+        })
+    }
+    changeFields(oldFields: ViewField[], newFields: ViewField[]) {
+        this.manualUpdateProps({
+            fields: oldFields.map(o => o.get())
+        }, {
+            fields: newFields.map(f => f.get())
+        }, BlockRenderRange.none, true);
+        this.fields = newFields;
+    }
+    async onCheckRow(row: Record<string, any>, checked: boolean) {
+        if (checked) {
+            if (!this.checkItems.some(s => s.id == row.id)) {
+                this.checkItems.push(row);
+            }
+        }
+        else {
+            this.checkItems.remove(r => r.id == row.id);
+        }
     }
 }

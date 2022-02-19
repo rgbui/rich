@@ -2,28 +2,10 @@ import React from "react";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { OriginField } from "../../element/field/origin.field";
-import { DataGridView } from "../base/table";
 import { TableStoreItem } from "../item";
-import { createFieldBlock } from "../item/service";
-
 @url('/data-grid/table/row')
 export class DataGridTableItem extends TableStoreItem {
-    dataRow: Record<string, any> = {};
-    get schema() {
-        return (this.parent as DataGridView).schema;
-    }
-    get fields() {
-        return (this.parent as DataGridView).fields;
-    }
-    async createElements() {
-        for (let i = 0; i < this.fields.length; i++) {
-            var field = this.fields[i];
-            if (field.field) {
-                var block = await createFieldBlock(field, this.dataRow, this);
-                this.blocks.childs.push(block);
-            }
-        }
-    }
+
 }
 @view('/data-grid/table/row')
 export class DataGridTableItemView extends BlockView<DataGridTableItem>{
