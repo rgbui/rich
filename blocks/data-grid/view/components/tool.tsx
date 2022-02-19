@@ -24,6 +24,7 @@ import SortSvg from "../../../../src/assert/svg/sort.svg";
 import TemplatesSvg from "../../../../src/assert/svg/templates.svg";
 import ImportSvg from "../../../../src/assert/svg/import.svg";
 import FileSvg from "../../../../src/assert/svg/file.svg";
+import { FieldType } from "../../schema/type";
 export function DataGridTool(props: { block: DataGridView }) {
     async function changeDataGridView(event: React.MouseEvent) {
         var result = await useTabelSchemaViewDrop({ roundArea: Rect.fromEvent(event) }, {
@@ -62,10 +63,26 @@ export function DataGridTool(props: { block: DataGridView }) {
             { text: '过滤', icon: FilterSvg, name: 'filter' },
             { text: '排序', icon: SortSvg, name: 'sort' },
             { type: MenuItemTypeValue.divide },
+            { text: '显示行号', checked: props.block.showRowNum as any, type: MenuItemTypeValue.switch, name: 'showRowNum' },
+            { text: '显示选中', checked: props.block.showCheckRow as any, type: MenuItemTypeValue.switch, name: 'check' },
+            { text: '显示编号(自增)', checked: props.block.fields.some(s => s.field?.type == FieldType.autoIncrement), type: MenuItemTypeValue.switch, name: 'autoIncrement' },
+            { type: MenuItemTypeValue.divide },
             { text: '导入', icon: ImportSvg, name: 'import' },
             { text: '导出', icon: FileSvg, name: 'export' },
         ]
-        var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus);
+        var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus, {
+            async update(item) {
+                if (item.name == 'showRowNum') {
+                    await props.block.onShowNum(item.checked)
+                }
+                else if (item.name == 'check') {
+                    await props.block.onShowCheck(item.checked)
+                }
+                else if (item.name == 'autoIncrement') {
+                    await props.block.onShowAutoIncrement(item.checked)
+                }
+            }
+        });
         if (um) {
             switch (um.item.name) {
                 case 'copylink':
