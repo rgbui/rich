@@ -45,6 +45,9 @@ import "./data-grid/element/field/check";
 import "./data-grid/element/field/image";
 import "./data-grid/element/field/video";
 import "./data-grid/element/field/file";
+import "./data-grid/element/field/row.check";
+import "./data-grid/element/field/row.num";
+import "./data-grid/element/field/title";
 
 import "./data-grid/element/form/text";
 import "./data-grid/element/form/number";
