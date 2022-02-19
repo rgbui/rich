@@ -4,11 +4,9 @@ import { TableSchema } from "./meta";
 export class ViewField {
     fieldId?: string;
     text?: string;
-    value?: any;
-    colWidth?: number = 120;
-    remark?: string;
-    error?: string;
+    colWidth: number = 120;
     schema: TableSchema;
+    type?: 'rowNum' | 'check' | undefined;
     get field() {
         if (this.fieldId) return this.schema.fields.find(g => g.id == this.fieldId);
     }
@@ -23,14 +21,19 @@ export class ViewField {
     }
     get() {
         var json: Record<string, any> = {};
-        var keys = ['fieldId', 'text', 'value', 'colWidth', 'remark', 'error', 'sort'];
+        var keys = [
+            'fieldId',
+            'text',
+            'colWidth',
+            'type'
+        ];
         keys.forEach(n => {
             json[n] = util.clone(this[n]);
         })
         return json;
     }
     clone() {
-        return new ViewField(this.get(),this.schema)
+        return new ViewField(this.get(), this.schema)
     }
     getValue(row) {
         if (this?.field?.name) return row[this.field.name];
