@@ -18,6 +18,7 @@ export class MenuItem extends React.Component<{
     }
     checked(checked: boolean, item: MenuItemType) {
         item.checked = checked;
+        this.forceUpdate();
         this.props?.update(item);
     }
     input(value: any, item: MenuItemType) {
