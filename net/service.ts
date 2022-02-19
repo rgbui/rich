@@ -67,6 +67,9 @@ class ChannelService {
             }
         }
         else {
+            if(type){
+                console.warn('not found url:'+url);
+            }
             //没有找到service ,默认触发fire
             return channel.fire(url as any, args);
         }
