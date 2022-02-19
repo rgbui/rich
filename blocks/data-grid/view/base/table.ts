@@ -406,30 +406,48 @@ export class DataGridView extends Block {
     async openConfigField(event: React.MouseEvent | MouseEvent, viewField: ViewField) {
         event.stopPropagation();
         var items: MenuItemType<BlockDirective | string>[] = [];
-        items.push(...[
-            {
-                name: 'name',
-                type: MenuItemTypeValue.input,
-                value: viewField.field?.text,
-                text: '编辑列名',
-            },
-            { type: MenuItemTypeValue.divide },
-            { name: 'filter', icon: FilterSvg, text: '过滤' },
-            { name: 'sortDesc', icon: ArrowDownSvg, text: '降序' },
-            { name: 'sortAsc', icon: ArrowUpSvg, text: '升序' },
-            { type: MenuItemTypeValue.divide },
-            {
-                name: 'delete',
-                icon: TrashSvg,
-                text: '删除列',
-                disabled: viewField.field?.type == FieldType.title ? true : false
-            },
-            {
-                name: 'hide',
-                icon: HideSvg,
-                text: '隐藏列'
-            }
-        ]);
+        if (viewField.type) {
+            items.push(...[
+                {
+                    name: 'name',
+                    type: MenuItemTypeValue.input,
+                    value: viewField.field?.text,
+                    text: '编辑列名',
+                },
+                { type: MenuItemTypeValue.divide },
+                {
+                    name: 'hide',
+                    icon: HideSvg,
+                    text: '隐藏列'
+                }
+            ]);
+        }
+        else {
+            items.push(...[
+                {
+                    name: 'name',
+                    type: MenuItemTypeValue.input,
+                    value: viewField.field?.text,
+                    text: '编辑列名',
+                },
+                { type: MenuItemTypeValue.divide },
+                { name: 'filter', icon: FilterSvg, text: '过滤' },
+                { name: 'sortDesc', icon: ArrowDownSvg, text: '降序' },
+                { name: 'sortAsc', icon: ArrowUpSvg, text: '升序' },
+                { type: MenuItemTypeValue.divide },
+                {
+                    name: 'delete',
+                    icon: TrashSvg,
+                    text: '删除列',
+                    disabled: viewField.field?.type == FieldType.title ? true : false
+                },
+                {
+                    name: 'hide',
+                    icon: HideSvg,
+                    text: '隐藏列'
+                }
+            ]);
+        }
         var re = await useSelectMenuItem(
             {
                 roundArea: Rect.fromEvent(event),
