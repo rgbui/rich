@@ -13,6 +13,10 @@ export class Block$LifeCycle {
     mounted(this: Block, fn: () => void) {
         this.once('mounted', fn);
     }
+    /**
+     * 继承使用的
+     * @param this 
+     */
     init(this: Block) {
 
     }
@@ -72,6 +76,10 @@ export class Block$LifeCycle {
     async initialLoad(this: Block) {
 
     }
+    private propMetas: { key: string, meta: Function, isArray: boolean }[] = [];
+    registerPropMeta(key: string, meta: Function, isArray: boolean = false) {
+        this.propMetas.push({ key, meta, isArray });
+    }
     isLoad = false;
     async load(this: Block, data) {
         try {
@@ -80,7 +88,23 @@ export class Block$LifeCycle {
                 if (n == 'blocks') continue;
                 else if (n == 'matrix') this.matrix = new Matrix(data[n]);
                 else if (n == 'pattern') await this.pattern.load(data[n]);
-                else this[n] = data[n];
+                else {
+                    var pm = this.propMetas.find(g => g.key == n);
+                    if (pm) {
+                        if (pm.isArray) {
+                            this[n] = [];
+                            if (Array.isArray(data[n])) {
+                                data[n].forEach(d => {
+                                    this[n].push(new (pm.meta as any)(d));
+                                })
+                            }
+                        }
+                        else {
+                            this[n] = new (pm.meta as any)(data[n]);
+                        }
+                    }
+                    else this[n] = data[n];
+                }
             }
             if (this.syncBlockId) {
                 await this.loadSyncBlock();
@@ -105,7 +129,7 @@ export class Block$LifeCycle {
     }
     async loadSyncBlock(this: Block) {
         var r = await channel.get('/page/sync/block', { syncBlockId: this.syncBlockId });
-      
+
         if (r.ok) {
             var data;
             try {
