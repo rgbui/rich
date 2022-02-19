@@ -1,5 +1,7 @@
+import lodash from "lodash";
 import React from "react";
 import { Block } from "../../../../src/block";
+import { AppearAnchor } from "../../../../src/block/appear";
 import { BlockDisplay } from "../../../../src/block/enum";
 import { ViewField } from "../../schema/view";
 import { TableStoreItem } from "../../view/item";
@@ -12,6 +14,12 @@ export class OriginField extends Block {
     }
     get handleBlock(): Block {
         return this.parent;
+    }
+    async changeAppear(appear: AppearAnchor): Promise<void> {
+        // console.log(appear);
+        var text = lodash.get(this, appear.prop);
+        console.log(text);
+        await this.item.onUpdateCellValue(this.viewField, text);
     }
     async changeProps(oldProps: Record<string, any>, newProps: Record<string, any>) {
         if (newProps && Object.keys(newProps).length > 0) {
