@@ -20,7 +20,6 @@ export class TableStoreBoard extends DataGridView {
         if (!this.groupFieldId) {
             this.groupFieldId = this.fields.find(g => g.field.type == FieldType.option || g.field.type == FieldType.options)?.field?.id;
         }
-        console.log(this.groupFieldId,'gf');
         if (this.groupField) {
             if (this.schema) {
                 var name = this.groupField.name;
@@ -43,7 +42,6 @@ export class TableStoreBoard extends DataGridView {
                                 count: r.data.list.find(g => g[name] === null)?.count || 0
                             })
                         };
-                        console.log(this.dataGroups);
                     }
                 }
             }

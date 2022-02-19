@@ -26,6 +26,9 @@ export class OriginField extends Block {
     get item() {
         return this.parent as TableStoreItem
     }
+    get dataGrid() {
+        return this.item.dataGrid;
+    }
     viewField: ViewField;
     get field() {
         if (this.viewField) return this.viewField.field;
