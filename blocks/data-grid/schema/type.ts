@@ -186,7 +186,11 @@ export enum FieldType {
     /**
      * 公式
      */
-    formula=5000
+    formula=5000,
+    /**
+     * 按钮
+     */
+    button=6000
 }
 
 

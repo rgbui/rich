@@ -8,8 +8,6 @@ import { Col, Row, Space } from "../../../component/view/grid";
 import { Input, Textarea } from "../../../component/view/input";
 import { Select } from "../../../component/view/select";
 import { Remark, ErrorText } from "../../../component/view/text";
-import { Directive } from "../../../util/bus/directive";
-
 import { TableFieldTypes } from "./type";
 import { channel } from "../../../net/channel";
 
