@@ -3,6 +3,7 @@ export type MenuItemType<T = string> = {
     type?: MenuItemTypeValue,
     text?: string,
     icon?: string | SvgrComponent | JSX.Element,
+    render?: (item: MenuItemType<T>) => JSX.Element,
     iconSize?: number,
     label?: string,
     childs?: MenuItemType<T>[],
@@ -14,13 +15,13 @@ export type MenuItemType<T = string> = {
      */
     remark?: string,
     param?: any,
-    url?:string
+    url?: string
 }
 export enum MenuItemTypeValue {
     divide = 1,
     text = 2,
     item = 3,
     switch = 4,
-    input=5,
-    button=6
+    input = 5,
+    button = 6
 }

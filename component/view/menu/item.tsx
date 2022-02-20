@@ -54,10 +54,12 @@ export class MenuItem extends React.Component<{
             ref={e => this.el = e}>
             {(item.type == MenuItemTypeValue.item || !item.type) && <a className={'shy-menu-box-item-option' + (item.disabled == true ? " disabled" : "")}
                 onMouseUp={e => this.mousedown(item, e.nativeEvent)}>
-                {item.icon && <Icon icon={item.icon} size={item.iconSize ? item.iconSize : 17}></Icon>}
-                <span className='shy-ws-item-page-text'>{item.text}</span>
-                {item.label && <label>{item.label}</label>}
-                {item.childs && item.childs.length > 0 && <Icon icon='arrow-right:sy'></Icon>}
+                {item.render && item.render(item)}
+                {!item.render && <>{item.icon && <Icon icon={item.icon} size={item.iconSize ? item.iconSize : 17}></Icon>}
+                    <span className='shy-ws-item-page-text'>{item.text}</span>
+                    {item.label && <label>{item.label}</label>}
+                    {item.childs && item.childs.length > 0 && <Icon icon='arrow-right:sy'></Icon>}
+                </>}
             </a>}
             {item.type == MenuItemTypeValue.divide && <a className='shy-menu-box-item-divide'></a>}
             {item.type == MenuItemTypeValue.text && <a className='shy-menu-box-item-text'>{item.text}</a>}
