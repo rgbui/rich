@@ -36,7 +36,7 @@ export class Field {
     }
 }
 export interface FieldConfig {
-    options?: { text: string, color: string }[];
+    options?: { text: string,value:string, color: string }[];
     relationTableId?: string,
     rollupTableId?: string,
     rollupFieldId?: string,
