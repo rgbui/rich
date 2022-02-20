@@ -18,8 +18,9 @@ export class FieldOption extends OriginField {
             {
                 multiple: false,
                 options: fc?.options || [],
-                changeOptions: (ops) => {
-                    this.onUpdateCellFieldSchema({ config: { options: ops } })
+                changeOptions: async (ops) => {
+                    await this.onUpdateCellFieldSchema({ config: { options: ops } })
+                    this.dataGrid.forceUpdate()
                 }
             }
         );
@@ -32,9 +33,9 @@ export class FieldOption extends OriginField {
 export class FieldTextView extends BlockView<FieldOption>{
     render() {
         var fc: FieldConfig = this.block.field.config;
-        var op = fc?.options ? fc.options.find(g => g.text == this.block.value) : undefined;
-        return <div className='sy-field-text' onMouseDown={e => this.block.onCellMousedown(e)} style={{ display: 'block' }} >
-            <span style={{ backgroundColor: op?.color }}>{this.block.value||<i>&nbsp;</i>}</span>
+        var op = fc?.options ? fc.options.find(g => g.value == this.block.value) : undefined;
+        return <div className='sy-field-option' onMouseDown={e => this.block.onCellMousedown(e)} style={{ display: 'block' }} >
+            <span style={{ backgroundColor: op?.color }}>{op?.text || <i>&nbsp;</i>}</span>
         </div>
     }
 }
