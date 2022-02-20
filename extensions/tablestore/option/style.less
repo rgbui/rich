@@ -1,20 +1,22 @@
 .shy-tablestore-option-selector {
-    width                  : 100%;
-    min-height             : 34px;
-    background             : rgba(242, 241, 238, 0.6);
+    width         : 250px;
+    min-height    : 34px;
+    padding-bottom: 10px;
+
     border-top-left-radius : 3px;
     border-top-right-radius: 3px;
     font-size              : 14px;
     cursor                 : text;
     overflow               : auto;
-    padding                : 10px 0px 0px 0px;
 
     &-input {
-        padding        : 0px 10px;
+        background     : rgba(242, 241, 238, 0.6);
+        padding        : 6px 10px;
         display        : flex;
         justify-content: flex-start;
         align-items    : center;
         flex-wrap      : wrap;
+        box-shadow     : rgba(55, 53, 47, 0.16) 0px -1px inset;
 
         a {
             height         : 18px;
@@ -79,7 +81,6 @@
         justify-content: flex-start;
         align-items    : center;
         line-height    : 120%;
-        width          : 100%;
         user-select    : none;
         min-height     : 28px;
         font-size      : 14px;
@@ -96,7 +97,6 @@
             cursor         : -webkit-grab;
             margin-left    : -4px;
 
-            // margin-right   : -8px;
             svg {
                 width              : 12px;
                 height             : 12px;
@@ -130,12 +130,15 @@
         }
 
         &-property {
-            margin-left : auto;
-            margin-right: 14px;
-            min-width   : 0px;
-            flex-shrink : 0;
-            visibility  : hidden;
-            cursor      : pointer;
+            display        : inline-flex;
+            justify-content: center;
+            align-items    : center;
+            flex-shrink    : 0;
+            visibility     : hidden;
+            cursor         : pointer;
+            width          : 24px;
+            height         : 24px;
+            border-radius  : 4px;
 
             svg {
                 width      : 14px;
@@ -143,6 +146,10 @@
                 display    : block;
                 fill       : rgba(55, 53, 47, 0.4);
                 flex-shrink: 0;
+            }
+
+            &:hover {
+                background-color: rgba(55, 53, 47, 0.08);
             }
         }
 
@@ -156,8 +163,6 @@
     }
 
     .shy-tablestore-option-item-create {
-        display        : flex;
-        align-items    : center;
         line-height    : 120%;
         width          : 100%;
         user-select    : none;
@@ -176,17 +181,47 @@
         }
 
         span {
-            height         : 18px;
-            border-radius  : 3px;
-            padding-left   : 6px;
-            padding-right  : 0px;
-            font-size      : 14px;
-            line-height    : 120%;
-            color          : rgb(73, 41, 14);
-            margin         : 0px 6px 6px 0px;
-            display        : inline-flex;
-            justify-content: center;
-            align-items    : center;
+            height       : 18px;
+            line-height  : 18px;
+            border-radius: 3px;
+            padding-left : 6px;
+            padding-right: 6px;
+            font-size    : 14px;
+            color        : rgb(73, 41, 14);
         }
+
+        &:hover {
+            background-color: rgba(55, 53, 47, 0.08);
+        }
+    }
+}
+
+.shy-tablestore-option-selector-property {
+    display        : flex;
+    justify-content: flex-start;
+    align-items    : center;
+    width          : 100%;
+
+    span {
+        &:first-child {
+            flex-shrink  : 0;
+            flex-grow    : 0;
+            width        : 18px;
+            height       : 18px;
+            border-radius: 4px;
+            display      : inline-block;
+            margin-right : 5px;
+        }
+
+        &:nth-child(2) {
+            flex-shrink: 1;
+            flex-grow  : 1;
+        }
+    }
+
+    .shy-icon {
+        flex-shrink: 0;
+        flex-grow  : 0;
+        fill       : rgb(55, 53, 47)
     }
 }
