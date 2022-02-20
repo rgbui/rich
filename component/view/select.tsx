@@ -1,5 +1,6 @@
 import React, { CSSProperties } from "react";
-import SvgDown from "../../src/assert/svg/chevronDown.svg";
+import { ChevronDownSvg } from "../svgs";
+
 export class Select extends React.Component<{
     children?: JSX.Element | string | React.ReactNode,
     disabled?: boolean,
@@ -45,8 +46,8 @@ export class Select extends React.Component<{
         var op = props.options.find(g => g.value == props.value);
         return <div className={'shy-select' + (props.border ? " shy-select-border" : "")} style={this.props.style || {}} ref={e => this.el = e}>
             <div className='shy-select-selection' onClick={e => props.disabled ? undefined : (setToggle())}>
-                {props.children && <>{props.children}<SvgDown></SvgDown></>}
-                {!props.children && <><span>{op?.text || props.value}</span><SvgDown></SvgDown></>}
+                {props.children && <>{props.children}<ChevronDownSvg></ChevronDownSvg></>}
+                {!props.children && <><span>{op?.text || props.value}</span><ChevronDownSvg></ChevronDownSvg></>}
                 {/*<input defaultValue={props.options.find(g => g.value == props.value)?.text} /> */}
             </div>
             {this.toggle && <div className='shy-select-drop' style={dropStyle} >

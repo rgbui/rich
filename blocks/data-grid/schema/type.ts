@@ -41,31 +41,10 @@ export enum FieldType {
      */
     date = 300,
     /**
-     * 日期范围
-     */
-    dateRange = 310,
-    /**
-     * 时长,还剩下多长时间了
-     */
-    timespan = 320,
-    /**
      * 数字类型
      */
     number = 400,
-    /**
-     * 数字范围
-     * 例如价格 800~900
-     */
-    numberRange = 410,
-    /**
-     * 整数
-     */
-    int = 430,
-    /**
-     * 整数范围
-     * 及格 60~70
-     */
-    intRange = 440,
+    price = 401,
     /**
      * 文本
      */
@@ -75,29 +54,13 @@ export enum FieldType {
      */
     textarea = 501,
     /**
-     * 加密的密码
-     */
-    paw = 502,
-    /**
-     * 长文本
-     */
-    longText = 510,
-    /**
      * 邮件
      */
     email = 520,
     /**
-     * 批量邮件
-     */
-    emails = 530,
-    /**
      * 手机号（这里仅支持手机，主要来用来短信通知）
      */
     phone = 540,
-    /**
-     * 批量手机号
-     */
-    phones = 550,
     /**
      * 选项
      */
@@ -113,27 +76,13 @@ export enum FieldType {
     /**
      * 批量文件
      */
-    files = 610,
-    /**
-     * 批量文件
-     */
     image = 620,
-    /**
-     * 图标（和图片有些区别，可以添加表情的这种）
-     */
-    icon = 621,
-    /**
-     * 批量图像
-     */
-    images = 630,
+    audio = 630,
+    video = 640,
     /**
      * 用户
      */
     user = 700,
-    /**
-     * 用户群
-     */
-    users = 710,
     /**
      * 创建人
      */
@@ -150,11 +99,11 @@ export enum FieldType {
      * 修改时间
      */
     modifyDate = 830,
+    modifyDynamic = 840,
     /**
-     * 链接，收藏的
+     * 链接
      */
     link = 900,
-    links = 910,
     /**
      * 地理坐标（经纬度）
      * 一般存高德地图的坐标
@@ -182,15 +131,25 @@ export enum FieldType {
      * guid字段
      */
     guid = 1400,
-
     /**
      * 公式
      */
-    formula=5000,
+    formula = 5000,
     /**
      * 按钮
      */
-    button=6000
+    button = 6000,
+    top = 6010,
+    /**
+     * 交互
+     */
+    emoji = 7000,
+    comment = 7010,
+    favourite = 7020,
+    share = 7030,
+    donate = 7040,
+    buy = 7050,
+    browse = 7060,
 }
 
 

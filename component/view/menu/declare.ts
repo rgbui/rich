@@ -7,7 +7,7 @@ export type MenuItemType<T = string> = {
     iconSize?: number,
     label?: string,
     childs?: MenuItemType<T>[],
-    value?: string,
+    value?: any,
     checked?: boolean,
     disabled?: boolean,
     /**
