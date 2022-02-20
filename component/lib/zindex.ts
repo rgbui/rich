@@ -18,7 +18,10 @@ export enum LayerType {
 
 export enum LayerWield {
     menuMask,
-    menuBox
+    menuBox,
+
+    alert,
+    confirm
 }
 
 class Layer {
