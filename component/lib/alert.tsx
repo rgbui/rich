@@ -4,6 +4,7 @@ import { EventsComponent } from "./events.component";
 import { Button } from "../view/button";
 import "./style.less";
 import { Space } from "../view/grid";
+import { LayerWield, tipLayer } from "./zindex";
 class SyAlert extends EventsComponent {
     private msg: string;
     private description: string;
@@ -16,6 +17,7 @@ class SyAlert extends EventsComponent {
     }
     close() {
         this.visible = false;
+        tipLayer.clear(LayerWield.alert)
         this.forceUpdate()
     }
     onConfirm() {
@@ -27,7 +29,7 @@ class SyAlert extends EventsComponent {
         this.close()
     }
     render() {
-        return this.visible && <div className='shy-alert-box'>
+        return this.visible && <div className='shy-alert-box' style={{ zIndex: tipLayer.zoom(LayerWield.alert) }}>
             <div className='shy-alert-mask' onMouseDown={e => this.onCancel()}></div>
             <div className='shy-alert'>
                 <div className='shy-alert-msg'>{this.msg}</div>
