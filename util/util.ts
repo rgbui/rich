@@ -1,10 +1,9 @@
-import * as short from 'short-uuid';
+
 import lodash from 'lodash';
 import { channel } from '../net/channel';
 export var util = {
     guid() {
         return channel.query('/guid');
-        // return short.generate();
     },
     clone<T>(json: T): T {
         return lodash.cloneDeep(json);
