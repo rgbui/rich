@@ -51,6 +51,8 @@ import "./data-grid/element/field/title";
 import "./data-grid/element/field/url";
 import "./data-grid/element/field/phone";
 import "./data-grid/element/field/email";
+import "./data-grid/element/field/emoji";
+import "./data-grid/element/field/relation";
 
 import "./data-grid/element/form/text";
 import "./data-grid/element/form/number";
