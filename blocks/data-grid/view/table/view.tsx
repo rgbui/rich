@@ -102,7 +102,7 @@ export class TableStoreView extends BlockView<TableStore>{
     renderHead() {
         return <div className="sy-dg-table-head">
             {this.block.fields.map((f, i) => {
-                var icon: SvgrComponent;
+                var icon: SvgrComponent| JSX.Element;
                 if (f.type == 'check') icon = CheckSvg;
                 else if (f.type == 'rowNum') icon = TypesNumberSvg;
                 else icon = getTypeSvg(f.field.type);
