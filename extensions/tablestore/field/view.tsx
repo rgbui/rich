@@ -11,10 +11,71 @@ import { Remark, ErrorText } from "../../../component/view/text";
 import { channel } from "../../../net/channel";
 import { getTypeSvg } from "../../../blocks/data-grid/schema/util";
 import { Icon } from "../../../component/view/icon";
-import { ChevronDownSvg } from "../../../component/svgs";
+import { ChevronDownSvg, PlusSvg } from "../../../component/svgs";
 import { MenuItemTypeValue } from "../../../component/view/menu/declare";
-import { Point } from "../../../src/common/vector/point";
+import { Point, Rect } from "../../../src/common/vector/point";
 import { useSelectMenuItem } from "../../../component/view/menu";
+import { Switch } from "../../../component/view/switch";
+import { useOpenEmoji } from "../../emoji";
+
+function getMenus() {
+    function map(arr) {
+        return arr.map(a => {
+            return {
+                text: a.text,
+                value: a.value,
+                icon: getTypeSvg(a.value)
+            }
+        })
+    }
+    var menus = [
+        { type: MenuItemTypeValue.text, text: '基础' },
+        ...map([
+            { text: '单行文本', value: FieldType.text },
+            { text: '多行文本', value: FieldType.textarea },
+            { text: '数字', value: FieldType.number },
+            // { text: '价钱', value: FieldType.price },
+            { text: '单选', value: FieldType.option },
+            { text: '多选', value: FieldType.options },
+            { text: '勾选', value: FieldType.bool },
+            { text: '日期', value: FieldType.date },
+            { text: '图像', value: FieldType.image },
+            { text: '音频', value: FieldType.audio },
+            { text: '视频', value: FieldType.video },
+            { text: '文件', value: FieldType.file },
+            { text: '用户', value: FieldType.user },
+            { text: '邮箱', value: FieldType.email },
+            { text: '手机号', value: FieldType.phone },
+            { text: '网址', value: FieldType.link },
+            // { text: '位置', value: FieldType.geolocation },
+            { text: '关联', value: FieldType.relation },
+            { text: '统计', value: FieldType.rollup },
+            { text: '公式', value: FieldType.formula }
+        ]),
+        { type: MenuItemTypeValue.text, text: '互动' },
+        ...map([
+            { text: '反应', value: FieldType.emoji },
+            { text: '评论', value: FieldType.comment },
+            // { text: '收藏', value: FieldType.favourite },
+            // { text: '分享', value: FieldType.share },
+            // { text: '打赏', value: FieldType.donate },
+            // { text: '购买', value: FieldType.buy },
+            // { text: '浏览访问', value: FieldType.browse },
+        ]),
+        { type: MenuItemTypeValue.text, text: '高级' },
+        ...map([
+            { text: '自动编号', value: FieldType.autoIncrement },
+            { text: '操作按钮', value: FieldType.button },
+            //{ text: '置顶', value: FieldType.top },
+            { text: '创建人', value: FieldType.creater },
+            { text: '创建时间', value: FieldType.createDate },
+            { text: '修改人', value: FieldType.modifyer },
+            { text: '修改时间', value: FieldType.modifyDate },
+            // { text: '修改情况', value: FieldType.modifyDate },
+        ])
+    ];
+    return menus;
+}
 
 export class TableFieldView extends EventsComponent {
     onSave() {
@@ -31,17 +92,31 @@ export class TableFieldView extends EventsComponent {
         self.forceUpdate();
         self.emit('save', { text: self.text, type: self.type, config: self.config });
     }
+    renderMultiple() {
+        if ([FieldType.file, FieldType.user, FieldType.image].includes(this.type)) {
+            return <Row>
+                <Col><Remark>是否允许多个:</Remark><Switch onChange={e => this.onChangeConfig({ isMultiple: e })} checked={this.config?.isMultiple ? true : false}></Switch></Col>
+            </Row >
+        }
+        else return <></>
+    }
     renderRelation() {
         if (this.type != FieldType.relation) return <></>
         return <Row>
             <Col><Remark>关联表格:</Remark></Col>
             <Col><Select
-                onChange={e => this.config.relationTableId = e}
+                onChange={e => { this.config.relationTableId = e; this.forceUpdate() }}
                 value={this.config.relationTableId}
-                options={this.relationDatas.map(r => { return { text: r.text, value: r.id } })}
+                options={this.relationDatas.map(r => {
+                    return {
+                        text: r.text + (Array.isArray(r.views) && r.views.length > 0 ? r.views[0].text : ''),
+                        value: r.id
+                    }
+                })}
                 style={{ width: '100%' }}>
             </Select>
             </Col>
+            <Col><Remark>是否一对多:</Remark><Switch onChange={e => this.onChangeConfig({ isMultiple: e })} checked={this.config?.isMultiple ? true : false}></Switch></Col>
         </Row >
     }
     renderRollup() {
@@ -84,63 +159,17 @@ export class TableFieldView extends EventsComponent {
             </Col>
         </Row >
     }
+    renderEmoji() {
+        if ([FieldType.emoji].includes(this.type)) {
+            return <Row>
+                <Col><Remark>表情:</Remark><span onClick={e => this.onSetEmoji(e)}>{this.config?.emoji?.code || <Button ghost icon={PlusSvg}>添加表情</Button>}</span></Col>
+            </Row >
+        }
+        else return <></>
+    }
     async openSelectType(event: React.MouseEvent) {
         event.stopPropagation();
-        function map(arr) {
-            return arr.map(a => {
-                return {
-                    text: a.text,
-                    value: a.value,
-                    icon: getTypeSvg(a.value)
-                }
-            })
-        }
-        var menus = [
-            { type: MenuItemTypeValue.text, text: '基础' },
-            ...map([
-                { text: '单行文本', value: FieldType.text },
-                { text: '多行文本', value: FieldType.textarea },
-                { text: '数字', value: FieldType.number },
-                // { text: '价钱', value: FieldType.price },
-                { text: '单选', value: FieldType.option },
-                { text: '多选', value: FieldType.options },
-                { text: '勾选', value: FieldType.bool },
-                { text: '日期', value: FieldType.date },
-                { text: '图像', value: FieldType.image },
-                { text: '音频', value: FieldType.audio },
-                { text: '视频', value: FieldType.video },
-                { text: '文件', value: FieldType.file },
-                { text: '用户', value: FieldType.user },
-                { text: '邮箱', value: FieldType.email },
-                { text: '手机号', value: FieldType.phone },
-                { text: '网址', value: FieldType.link },
-                // { text: '位置', value: FieldType.geolocation },
-                { text: '关联', value: FieldType.relation },
-                { text: '统计', value: FieldType.rollup },
-                { text: '公式', value: FieldType.formula }
-            ]),
-            { type: MenuItemTypeValue.text, text: '互动' },
-            ...map([
-                { text: '反应', value: FieldType.emoji },
-                { text: '评论', value: FieldType.comment },
-                // { text: '收藏', value: FieldType.favourite },
-                // { text: '分享', value: FieldType.share },
-                // { text: '打赏', value: FieldType.donate },
-                // { text: '购买', value: FieldType.buy },
-                // { text: '浏览访问', value: FieldType.browse },
-            ]),
-            { type: MenuItemTypeValue.text, text: '高级' },
-            ...map([
-                { text: '自动编号', value: FieldType.autoIncrement },
-                { text: '操作按钮', value: FieldType.button },
-                //{ text: '置顶', value: FieldType.top },
-                { text: '创建人', value: FieldType.creater },
-                { text: '创建时间', value: FieldType.createDate },
-                { text: '修改人', value: FieldType.modifyer },
-                { text: '修改时间', value: FieldType.modifyDate },
-                // { text: '修改情况', value: FieldType.modifyDate },
-            ])
-        ];
+        var menus = getMenus();
         var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus);
         if (um?.item) {
             await this.changeType(um.item.value);
@@ -148,6 +177,8 @@ export class TableFieldView extends EventsComponent {
     }
     render() {
         var self = this;
+        var ms = getMenus();
+        var tm = ms.find(g => g.value == this.type);
         return <div className="shy-data-grid-field-selector" style={{ padding: 10, width: 300 }}>
             <Row>
                 <Col><Remark>表格列名:</Remark></Col>
@@ -158,7 +189,7 @@ export class TableFieldView extends EventsComponent {
                 <Col>
                     <div className="shy-data-grid-field-selector-field-type" onClick={e => this.openSelectType(e)}>
                         <Icon size={12} icon={getTypeSvg(this.type)}></Icon>
-                        <span>{this.type}</span>
+                        <span>{tm?.text}</span>
                         <Icon size={12} icon={ChevronDownSvg}></Icon>
                     </div>
                 </Col>
@@ -166,6 +197,8 @@ export class TableFieldView extends EventsComponent {
             {this.renderRelation()}
             {this.renderRollup()}
             {this.renderFormula()}
+            {this.renderMultiple()}
+            {this.renderEmoji()}
             <Row style={{ marginTop: 10 }}>
                 <Col align="end">
                     <Space>
@@ -189,7 +222,6 @@ export class TableFieldView extends EventsComponent {
         if (this.type == FieldType.relation) {
             if (!Array.isArray(this.relationDatas)) {
                 var r = await channel.get('/schema/list');
-                console.log(r, 'ss');
                 if (r.ok) {
                     this.relationDatas = r.data.list as TableSchema[];
                     isUpdate = true;
@@ -219,6 +251,12 @@ export class TableFieldView extends EventsComponent {
             this.forceUpdate()
         }
     }
+    async onSetEmoji(e: React.MouseEvent) {
+        var r = await useOpenEmoji({ roundArea: Rect.fromEvent(e) });
+        if (r) {
+            await this.onChangeConfig({ emoji: r })
+        }
+    }
     private error: string = '';
     private text: string = '';
     private type: FieldType;
@@ -232,6 +270,10 @@ export class TableFieldView extends EventsComponent {
         this.relationDatas = null;
         this.rollFields = null;
         await this.loadTypeDatas();
+        this.forceUpdate();
+    }
+    async onChangeConfig(config: Partial<FieldConfig>) {
+        Object.assign(this.config, config);
         this.forceUpdate();
     }
 }
