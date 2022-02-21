@@ -1,4 +1,5 @@
 import lodash from "lodash";
+import { EmojiCode } from "../../../extensions/emoji/store";
 import { FieldType } from "./type";
 export class Field {
     id: string;
@@ -37,10 +38,12 @@ export class Field {
 }
 export interface FieldConfig {
     options?: { text: string,value:string, color: string }[];
+    isMultiple?:boolean
     relationTableId?: string,
     rollupTableId?: string,
     rollupFieldId?: string,
     rollupStat?: string,
-    formula?: string
+    formula?: string,
+    emoji?:EmojiCode
 }
 
