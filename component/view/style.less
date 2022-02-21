@@ -1,10 +1,10 @@
 .shy-icon {
-    display        : inline-flex !important;
+    display: inline-flex !important;
     justify-content: center;
-    align-items    : center;
+    align-items: center;
 
     img {
-        object-fit     : cover;
+        object-fit: cover;
         object-position: center center;
     }
 }
@@ -16,9 +16,9 @@
 
     .shy-tooltip-content {
         span {
-            display        : flex;
+            display: flex;
             justify-content: center;
-            align-items    : center;
+            align-items: center;
 
             b {
                 font-weight: bold;
@@ -37,26 +37,26 @@
 
 .shy-button {
 
-    outline        : none;
-    user-select    : none;
-    transition     : background 20ms ease-in 0s;
-    cursor         : pointer;
-    display        : inline-flex;
-    align-items    : center;
+    outline: none;
+    user-select: none;
+    transition: background 20ms ease-in 0s;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
-    white-space    : nowrap;
-    height         : 28px;
-    border-radius  : 3px;
-    color          : white;
-    fill           : currentColor;
-    font-size      : 14px;
-    line-height    : 1;
-    padding-left   : 12px;
-    padding-right  : 12px;
-    font-weight    : 500;
-    background     : rgb(225, 98, 89);
-    border         : 1px solid rgb(190, 86, 67);
-    box-shadow     : rgba(15, 15, 15, 0.1) 0px 1px 2px 0px;
+    white-space: nowrap;
+    height: 28px;
+    border-radius: 3px;
+    color: white;
+    fill: currentColor;
+    font-size: 14px;
+    line-height: 1;
+    padding-left: 12px;
+    padding-right: 12px;
+    font-weight: 500;
+    background: rgb(225, 98, 89);
+    border: 1px solid rgb(190, 86, 67);
+    box-shadow: rgba(15, 15, 15, 0.1) 0px 1px 2px 0px;
 
     >.shy-icon {
         margin: 0px 3px;
@@ -72,9 +72,9 @@
 
     &-ghost {
         background-color: transparent;
-        color           : rgb(225, 98, 89);
-        border          : 1px solid #ddd;
-        font-weight     : normal;
+        color: rgb(225, 98, 89);
+        border: 1px solid #ddd;
+        font-weight: normal;
 
         &:hover {
             background-color: #f5f5f5;
@@ -83,39 +83,45 @@
 
     &-link {
         background-color: transparent;
-        color           : rgb(46, 170, 220);
-        cursor          : pointer;
-        border-color    : transparent;
-        font-weight     : normal;
-        box-shadow      : none;
+        color: rgb(46, 170, 220);
+        cursor: pointer;
+        border-color: transparent;
+        font-weight: normal;
+        box-shadow: none;
 
         &:hover {
             background-color: transparent;
-            color           : rgb(46, 170, 220);
-            cursor          : pointer;
-            border-color    : transparent;
-            font-weight     : normal;
-            box-shadow      : none;
+            color: rgb(46, 170, 220);
+            cursor: pointer;
+            border-color: transparent;
+            font-weight: normal;
+            box-shadow: none;
         }
+    }
+
+    .shy-button-loading {
+        width: 14px;
+        height: 14px;
+        animation: turn 1s linear infinite;
     }
 }
 
 .shy-input {
     display: block;
-    width  : 100%;
+    width: 100%;
 
     input {
-        width        : 100%;
-        font-size    : 14px;
-        line-height  : 26px;
-        padding      : 4px 10px;
+        width: 100%;
+        font-size: 14px;
+        line-height: 26px;
+        padding: 4px 10px;
         border-radius: 3px;
-        box-shadow   : rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
-        background   : rgba(242, 241, 238, 0.6);
-        cursor       : text;
-        outline      : none;
-        border       : 0px;
-        box-sizing   : border-box;
+        box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
+        background: rgba(242, 241, 238, 0.6);
+        cursor: text;
+        outline: none;
+        border: 0px;
+        box-sizing: border-box;
 
         &:focus {
             box-shadow: rgba(46 170 220, 0.7) 0px 0px 0px 1px inset, rgba(46 170 220, 0.4) 0px 0px 0px 2px !important;
@@ -125,24 +131,24 @@
 
 .shy-textarea {
     display: block;
-    width  : 100%;
-    height : 80px;
+    width: 100%;
+    height: 80px;
 
     textarea {
-        width        : 100%;
-        height       : 100%;
-        font-size    : 14px;
-        line-height  : 26px;
-        padding      : 4px 10px;
+        width: 100%;
+        height: 100%;
+        font-size: 14px;
+        line-height: 26px;
+        padding: 4px 10px;
         border-radius: 3px;
-        box-shadow   : rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
-        background   : rgba(242, 241, 238, 0.6);
-        cursor       : text;
-        outline      : none;
-        border       : 0px;
-        box-sizing   : border-box;
-        resize       : none;
-        overflow     : hidden;
+        box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
+        background: rgba(242, 241, 238, 0.6);
+        cursor: text;
+        outline: none;
+        border: 0px;
+        box-sizing: border-box;
+        resize: none;
+        overflow: hidden;
 
         &:focus {
             box-shadow: rgba(46 170 220, 0.7) 0px 0px 0px 1px inset, rgba(46 170 220, 0.4) 0px 0px 0px 2px !important;
@@ -155,23 +161,23 @@
 
     &-selection {
 
-        display        : flex;
+        display: flex;
         justify-content: flex-start;
-        align-items    : center;
-        cursor         : pointer;
+        align-items: center;
+        cursor: pointer;
 
         input {
-            width        : 100%;
-            font-size    : 15px;
-            line-height  : 26px;
-            padding      : 4px 10px;
+            width: 100%;
+            font-size: 15px;
+            line-height: 26px;
+            padding: 4px 10px;
             border-radius: 3px;
-            box-shadow   : rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
-            background   : rgba(242, 241, 238, 0.6);
-            cursor       : text;
-            outline      : none;
-            border       : 0px;
-            box-sizing   : border-box;
+            box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
+            background: rgba(242, 241, 238, 0.6);
+            cursor: text;
+            outline: none;
+            border: 0px;
+            box-sizing: border-box;
 
             &:focus {
                 box-shadow: rgba(46 170 220, 0.7) 0px 0px 0px 1px inset, rgba(46 170 220, 0.4) 0px 0px 0px 2px !important;
@@ -183,35 +189,35 @@
         }
 
         svg {
-            fill       : rgba(55, 53, 47, 0.3);
-            width      : 10px;
+            fill: rgba(55, 53, 47, 0.3);
+            width: 10px;
             margin-left: 4px;
         }
     }
 
     &-drop {
-        position     : absolute;
+        position: absolute;
         border-radius: 3px;
-        background   : white;
-        z-index      : 2;
-        box-shadow   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
-        top          : 28px;
-        max-height   : 200px;
-        overflow-y   : auto;
-        overflow-x   : hidden;
-        min-width    : 80px;
+        background: white;
+        z-index: 2;
+        box-shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+        top: 28px;
+        max-height: 200px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        min-width: 80px;
 
         a {
-            display        : flex;
+            display: flex;
             justify-content: flex-start;
-            align-items    : center;
-            user-select    : none;
-            min-height     : 28px;
-            line-height    : 28px;
-            font-size      : 14px;
-            color          : rgba(55, 53, 47);
-            padding        : 0px 14px;
-            cursor         : pointer;
+            align-items: center;
+            user-select: none;
+            min-height: 28px;
+            line-height: 28px;
+            font-size: 14px;
+            color: rgba(55, 53, 47);
+            padding: 0px 14px;
+            cursor: pointer;
 
             &:hover {
                 background-color: rgba(55, 53, 47, 0.08);
@@ -229,24 +235,24 @@
 }
 
 .shy-switch {
-    display      : flex;
-    flex-shrink  : 0;
-    height       : 14px;
-    width        : 26px;
+    display: flex;
+    flex-shrink: 0;
+    height: 14px;
+    width: 26px;
     border-radius: 44px;
-    padding      : 2px;
-    box-sizing   : content-box;
-    background   : rgba(135, 131, 120, 0.3);
-    transition   : background 200ms ease 0s, box-shadow 200ms ease 0s;
+    padding: 2px;
+    box-sizing: content-box;
+    background: rgba(135, 131, 120, 0.3);
+    transition: background 200ms ease 0s, box-shadow 200ms ease 0s;
 
     em {
-        display      : inline-block;
-        width        : 14px;
-        height       : 14px;
+        display: inline-block;
+        width: 14px;
+        height: 14px;
         border-radius: 44px;
-        background   : white;
-        transition   : transform 200ms ease-out 0s, background 200ms ease-out 0s;
-        transform    : translateX(0px) translateY(0px);
+        background: white;
+        transition: transform 200ms ease-out 0s, background 200ms ease-out 0s;
+        transform: translateX(0px) translateY(0px);
     }
 
     &.checked {
@@ -260,14 +266,14 @@
 
 .shy-tab {
     &-items {
-        display        : flex;
+        display: flex;
         justify-content: flex-start;
-        align-items    : center;
-        font-size      : 14px;
-        padding-left   : 10px;
-        padding-right  : 10px;
-        height         : 50px;
-        box-shadow     : rgba(55, 53, 47, 0.09) 0px 1px 0px 0px;
+        align-items: center;
+        font-size: 14px;
+        padding-left: 10px;
+        padding-right: 10px;
+        height: 50px;
+        box-shadow: rgba(55, 53, 47, 0.09) 0px 1px 0px 0px;
 
         &-right {
             justify-content: flex-end;
@@ -278,25 +284,25 @@
         }
 
         >label {
-            user-select       : none;
-            transition        : background 20ms ease-in 0s;
-            cursor            : pointer;
-            display           : inline-flex;
-            align-items       : center;
-            justify-content   : center;
-            flex-shrink       : 0;
-            white-space       : nowrap;
-            height            : 32px;
-            width             : 32px;
-            border-radius     : 3px;
-            font-size         : 14px;
-            line-height       : 1.2;
-            min-width         : 0px;
+            user-select: none;
+            transition: background 20ms ease-in 0s;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            white-space: nowrap;
+            height: 32px;
+            width: 32px;
+            border-radius: 3px;
+            font-size: 14px;
+            line-height: 1.2;
+            min-width: 0px;
             // padding-left   : 8px;
             // padding-right  : 8px;
-            color             : rgb(55, 53, 47);
-            margin-right      : 10px;
-            position          : relative;
+            color: rgb(55, 53, 47);
+            margin-right: 10px;
+            position: relative;
 
             &:hover,
             &.hover {
@@ -305,7 +311,7 @@
 
             &.hover {
                 color: #cf5659;
-                fill : #cf5659;
+                fill: #cf5659;
             }
         }
     }
@@ -316,44 +322,44 @@
 }
 
 .shy-loading {
-    display        : flex;
+    display: flex;
     justify-content: center;
-    align-items    : center;
+    align-items: center;
 
     &-content {
         color: rgba(46 170 220, 0.4);
-        fill : rgba(46 170 220, 0.4);
+        fill: rgba(46 170 220, 0.4);
     }
 }
 
 .shy-divider {
-    display        : flex;
-    align-items    : center;
+    display: flex;
+    align-items: center;
     justify-content: center;
-    pointer-events : none;
-    width          : 100%;
-    min-height     : 10px;
-    flex           : 0 0 auto;
+    pointer-events: none;
+    width: 100%;
+    min-height: 10px;
+    flex: 0 0 auto;
 
     &-line {
-        width        : 100%;
-        height       : 1px;
-        visibility   : visible;
+        width: 100%;
+        height: 1px;
+        visibility: visible;
         border-bottom: 1px solid rgba(55, 53, 47, 0.09);
     }
 }
 
 .shy-remark {
-    font-size  : 12px;
+    font-size: 12px;
     line-height: 16px;
-    color      : rgba(55, 53, 47, 0.6);
+    color: rgba(55, 53, 47, 0.6);
 
     a {
-        display        : inline;
+        display: inline;
         text-decoration: underline;
-        user-select    : none;
-        cursor         : pointer;
-        color          : inherit;
+        user-select: none;
+        cursor: pointer;
+        color: inherit;
     }
 
     &-middle {
@@ -367,50 +373,78 @@
 
 .shy-measure {
     display: block;
-    width  : 100%;
+    width: 100%;
 
     &-wrapper {
-        width          : 100%;
-        min-height     : 30px;
-        display        : flex;
+        width: 100%;
+        min-height: 30px;
+        display: flex;
         justify-content: flex-start;
-        align-items    : center;
+        align-items: center;
     }
 
     &-progress {
-        cursor          : pointer;
-        height          : 6px;
+        cursor: pointer;
+        height: 6px;
         background-color: fade(#e16259, 15%);
-        border-radius   : 10px;
+        border-radius: 10px;
 
         &-bar {
             background-color: #e16259;
-            opacity         : 1;
-            height          : 100%;
-            border-radius   : 10px;
+            opacity: 1;
+            height: 100%;
+            border-radius: 10px;
         }
 
-        flex-grow  : 1;
+        flex-grow : 1;
         flex-shrink: 1;
-        position   : relative;
+        position : relative;
 
         &-circle {
-            @r              : 7px;
-            position        : absolute;
-            top             : 50%;
-            margin-top      : 0-@r;
-            width           : @r*2;
-            height          : @r*2;
-            margin-left     : 0-@r;
+            @r : 7px;
+            position: absolute;
+            top: 50%;
+            margin-top: 0-@r;
+            width: @r*2;
+            height: @r*2;
+            margin-left: 0-@r;
             background-color: #e16259;
-            border-radius   : 50%;
+            border-radius: 50%;
         }
     }
 
     &-value {
-        flex-grow  : 0;
+        flex-grow: 0;
         flex-shrink: 0;
         margin-left: 10px;
-        color      : rgba(55, 53, 47, 0.4);
+        color: rgba(55, 53, 47, 0.4);
+    }
+}
+
+/* 
+      turn : 定义的动画名称
+      1s : 动画时间
+      linear : 动画以何种运行轨迹完成一个周期
+      infinite :规定动画应该无限次播放
+     */
+@keyframes turn {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    25% {
+        -webkit-transform: rotate(90deg);
+    }
+
+    50% {
+        -webkit-transform: rotate(180deg);
+    }
+
+    75% {
+        -webkit-transform: rotate(270deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
     }
 }
