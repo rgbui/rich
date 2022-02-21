@@ -19,11 +19,12 @@ export interface EmojiPicker {
     emit(name: 'pick', data: EmojiCode);
 }
 export async function useOpenEmoji(pos: PopoverPosition) {
-    var popover = await PopoverSingleton(EmojiPicker);
+    var popover = await PopoverSingleton(EmojiPicker, { mask: true });
     var emojiPicker = await popover.open(pos);
     return new Promise((resolve: (emoji: EmojiCode) => void, reject) => {
         emojiPicker.only('pick', (data) => {
             resolve(data);
+            popover.close();
         });
         popover.only('close', () => {
             resolve(null);
