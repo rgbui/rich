@@ -1,5 +1,5 @@
 import { TextInput } from "..";
-import { parseDom } from "../../../import/html/parse";
+import { parseDom } from "../../../import-export/html/parse";
 export class TextInput$Paster {
     async onPaste(this: TextInput, event: ClipboardEvent) {
         var files: File[] = Array.from(event.clipboardData.files);
