@@ -1,10 +1,26 @@
 .shy-data-grid-field-selector {
     padding: 10px;
     width  : 300px;
-    &-field-type{
-        display: flex;
+
+    &-field-type {
+        width          : 100%;
+        display        : flex;
         justify-content: flex-start;
-        align-items: center;
-        height:30px;
+        align-items    : center;
+        height         : 30px;
+        color          : rgb(55, 53, 47);
+
+        span {
+            display    : inline-block;
+            margin     : 0px 5px;
+            flex-grow  : 1;
+            flex-shrink: 1;
+        }
+
+        .shy-icon {
+            fill       : rgba(55, 53, 47, 0.4);
+            flex-grow  : 0;
+            flex-shrink: 0;
+        }
     }
 }
