@@ -17,7 +17,7 @@ export async function createFieldBlock(viewField: ViewField, data: { row: Record
             viewField
         }, block);
     }
-    else {
+    else if (field) {
         switch (field.type) {
             case FieldType.text:
                 cellContent = await BlockFactory.createBlock('/field/text', page, {
@@ -55,6 +55,18 @@ export async function createFieldBlock(viewField: ViewField, data: { row: Record
                 break;
             case FieldType.bool:
                 cellContent = await BlockFactory.createBlock('/field/check', page, {
+                    viewField,
+                    value: viewField.getValue(row),
+                }, block);
+                break;
+            case FieldType.emoji:
+                cellContent = await BlockFactory.createBlock('/field/emoji', page, {
+                    viewField,
+                    value: viewField.getValue(row),
+                }, block);
+                break;
+            case FieldType.relation:
+                cellContent = await BlockFactory.createBlock('/field/relation', page, {
                     viewField,
                     value: viewField.getValue(row),
                 }, block);

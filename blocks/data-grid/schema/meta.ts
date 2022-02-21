@@ -34,7 +34,7 @@ export class TableSchema {
             text: field.text
         }, this);
     }
-    fieldAdd(field: { text: string, type: FieldType }) {
+    fieldAdd(field: { text: string, type: FieldType, config?: Record<string, any> }) {
         return channel.put('/schema/operate', {
             operate: {
                 schemaId: this.id,

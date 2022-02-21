@@ -139,7 +139,7 @@ export class DataGridView extends Block {
         if (this.fields.length == 0) {
             this.fields = this.schema.getViewFields()
         } else {
-            if (!this.fields.some(s => s.fieldId || s.type)) {
+            if (!this.fields.every(s => s.fieldId || s.type ? true : false)) {
                 this.fields = this.schema.getViewFields()
             }
             this.fields.each(f => {
@@ -325,10 +325,14 @@ export class DataGridView extends Block {
         );
         if (!result) return;
         this.page.onAction(ActionDirective.onSchemaCreateField, async () => {
-            var fieldData = await this.schema.fieldAdd({ text: result.text, type: result.type });
+            var fieldData = await this.schema.fieldAdd({
+                text: result.text,
+                type: result.type,
+                config: result.config
+            });
             if (fieldData.ok) {
                 var field = new Field();
-                field.load(fieldData.data);
+                field.load(Object.assign(result, fieldData.data.actions[0]));
                 this.schema.fields.push(field);
                 if (typeof at == 'undefined') at = this.fields.length;
                 var vf = this.schema.createViewField(field);
@@ -341,6 +345,7 @@ export class DataGridView extends Block {
                         row[field.name] = defaultValue
                 });
                 await this.createItem();
+                this.forceUpdate();
             }
         });
     }
@@ -365,6 +370,7 @@ export class DataGridView extends Block {
                         delete row[name];
                     });
                     await this.createItem();
+                    this.forceUpdate();
                 }
             });
         }
