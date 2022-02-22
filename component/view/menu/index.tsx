@@ -65,9 +65,10 @@ interface MenuPanel<T> {
 export async function useSelectMenuItem<T = string>(pos: PopoverPosition, menus: MenuItemType<T>[], options?: {
     height?: number,
     overflow?: 'auto' | 'visible',
-    update?: (item: MenuItemType<T>) => void
+    update?: (item: MenuItemType<T>) => void,
+    nickName?: string
 }) {
-    var menuPanel = await Singleton<MenuPanel<T>>(MenuPanel);
+    var menuPanel = await Singleton<MenuPanel<T>>(MenuPanel, options?.nickName);
     return new Promise((resolve: (data: { item: MenuItemType<T>, event: MouseEvent }) => void, reject) => {
         menuPanel.open(pos, menus, options);
         menuPanel.only('select', (item, event) => {
