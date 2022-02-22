@@ -73,7 +73,8 @@ export interface ChannelPatchMapUrls {
     "/datastore/update":{args:{schemaId:string,dataId:string,data:Record<string, any>},returnType:Promise<SockResponse<void>>},
 	"/user/patch":{args:{data:Record<string,any>},returnType:Promise<SockResponse<void>>},
 	"/ws/sitedomain/patch":{args:{domain:string},returnType:Promise<SockResponse<{success:boolean,overflowDue:boolean}>>},
-	"/ws/patch":{args:{wsId?:string,sockId?:string,data:Record<string,any>},returnType:Promise<SockResponse<void>>}
+	"/ws/patch":{args:{wsId?:string,sockId?:string,data:Record<string,any>},returnType:Promise<SockResponse<void>>},
+	"/interactive/emoji":{args:{elementUrl:string},returnType:Promise<SockResponse<{count:number}>>}
 }
 export interface ChannelPutMapUrls {
     "/schema/create":{args:{text:string,url:string,templateId?:string},returnType:Promise<{ ok: boolean, data: { schema:Partial<TableSchema> },warn:string }>},
