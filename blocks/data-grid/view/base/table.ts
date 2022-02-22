@@ -594,4 +594,7 @@ export class DataGridView extends Block {
             this.checkItems.remove(r => r.id == row.id);
         }
     }
+    async onChangeIndex(index:number){
+        
+    }
 }
