@@ -18,8 +18,8 @@ export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audi
                 }
             })
             if (r.ok) {
-                if (r.data.url) {
-                    this.props.change(r.data.url);
+                if (r.data?.file?.url) {
+                    this.props.change(r.data?.file?.url);
                 }
             }
         }

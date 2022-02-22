@@ -17,9 +17,10 @@ export class FieldImage extends OriginField {
                     console.log(event, 'ev');
                 }
             })
+            console.log(r);
             if (r.ok) {
-                if (r.data.url) {
-                    this.onUpdateCellValue(r.data);
+                if (r.data.file) {
+                    this.onUpdateCellValue(r.data.file);
                 }
             }
         }

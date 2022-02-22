@@ -45,14 +45,14 @@ export class Audio extends Block {
                         console.log(event, 'ev');
                     }
                 });
-                if (d.ok && d.data.url) {
-                    await this.onUpdateProps({ src: { url: d.data.url, name: 'upload' } }, BlockRenderRange.self);
+                if (d.ok && d.data?.file?.url) {
+                    await this.onUpdateProps({ src: { url: d.data?.file?.url, name: 'upload' } }, BlockRenderRange.self);
                 }
             }
             if (this.initialData && this.initialData.url) {
                 var d = await channel.post('/ws/download/url', { url: this.initialData.url });
-                if (d.ok && d.data.url) {
-                    await this.onUpdateProps({ src: { url: d.data.url, name: 'download', source: this.initialData.url } }, BlockRenderRange.self);
+                if (d.ok && d.data?.file?.url) {
+                    await this.onUpdateProps({ src: { url: d.data?.file?.url, name: 'download', source: this.initialData.url } }, BlockRenderRange.self);
                 }
             }
         }

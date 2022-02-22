@@ -53,23 +53,23 @@ export class Image extends Block {
                         console.log(event, 'ev');
                     }
                 });
-                if (d.ok && d.data.url) {
-                    var imgSize = await getImageSize(d.data.url);
+                if (d.ok && d.data?.file?.url) {
+                    var imgSize = await getImageSize(d.data?.file?.url);
                     var width = this.el.getBoundingClientRect().width;
                     var per = Math.min(100, parseInt((imgSize.width * 100 / width).toString()));
                     await this.onUpdateProps({
                         imageWidthPercent: per,
-                        src: { url: d.data.url, name: 'upload' }
+                        src: { url: d.data?.file?.url, name: 'upload' }
                     }, BlockRenderRange.self);
                 }
             }
             if (this.initialData && this.initialData.url) {
                 var d = await channel.post('/ws/download/url', { url: this.initialData.url });
-                if (d.ok && d.data.url) {
-                    var imgSize = await getImageSize(d.data.url);
+                if (d.ok && d.data?.file?.url) {
+                    var imgSize = await getImageSize(d.data?.file?.url);
                     var width = this.el.getBoundingClientRect().width;
                     var per = Math.min(100, parseInt((imgSize.width * 100 / width).toString()));
-                    await this.onUpdateProps({ imageWidthPercent: per, src: { url: d.data.url, name: 'download', source: this.initialData.url } }, BlockRenderRange.self);
+                    await this.onUpdateProps({ imageWidthPercent: per, src: { url: d.data?.file?.url, name: 'download', source: this.initialData.url } }, BlockRenderRange.self);
                 }
             }
         }
