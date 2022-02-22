@@ -581,7 +581,11 @@ export abstract class Block extends Events {
      * 标记，主要是标记block用，没有其它什么作用
      */
     mark: string;
-    
+    @prop()
+    refBlockId: string;
+    get refBlock() {
+        return this.page.find(g => g.id == this.refBlockId)
+    }
 }
 export interface Block extends Block$Seek { }
 export interface Block extends Block$Event { }
