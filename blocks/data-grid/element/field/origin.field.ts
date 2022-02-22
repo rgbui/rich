@@ -21,7 +21,7 @@ export class OriginField extends Block {
         console.log(text);
         await this.item.onUpdateCellValue(this.viewField, text);
     }
-    async changeProps(oldProps: Record<string, any>, newProps: Record<string, any>) {
+    async changeProps(oldProps:Record<string, any>,newProps: Record<string, any>) {
         if (newProps && Object.keys(newProps).length > 0) {
             if (typeof newProps['value'] != 'undefined') {
                 await this.item.onUpdateCellValue(this.viewField, newProps['value'])
