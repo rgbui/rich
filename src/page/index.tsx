@@ -166,7 +166,8 @@ export interface Page {
     emit(name: PageDirective.error, error: Error | string);
     on(name: PageDirective.warn, fn: (error: Error | string) => void);
     emit(name: PageDirective.warn, error: Error | string);
-
+    on(name: PageDirective.selectRows, fn: (rows:any[]) => void);
+    emit(name: PageDirective.selectRows,rows:any[]);
     on(name: PageDirective.save, fn: () => void);
     emit(name: PageDirective.save);
 }
