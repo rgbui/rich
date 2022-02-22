@@ -1,6 +1,7 @@
 
 
 var upload_file: HTMLInputElement;
+var lastSelectFile;
 /**
  * 批量选择多个文件
  * @param options 
@@ -18,17 +19,20 @@ export async function OpenMultipleFileDialoug(options?: {
             upload_file.style.display = 'none';
         }
         function selectFile(ev: Event) {
+            lastSelectFile = undefined;
+            upload_file.removeEventListener('change', selectFile);
             if (upload_file.files.length > 0) {
                 resolve(Array.from(upload_file.files))
             }
             else resolve([]);
-            upload_file.removeEventListener('change', selectFile);
         }
         if (options && Array.isArray(options.exts) && options.exts.length > 0) {
             upload_file.setAttribute('accept', options.exts.join(','));
         }
         else upload_file.removeAttribute('accept');
+        if (lastSelectFile) upload_file.removeEventListener('change', lastSelectFile);
         upload_file.addEventListener('change', selectFile);
+        lastSelectFile = selectFile;
         upload_file.click();
     })
 }
