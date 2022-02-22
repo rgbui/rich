@@ -54,16 +54,23 @@ import SortSvg from "../src/assert/svg/sort.svg";
 import SquareplusSvg from "../src/assert/svg/squareplus.svg";
 import TemplatesSvg from "../src/assert/svg/templates.svg";
 import TrashSvg from "../src/assert/svg/trash.svg";
+import TypesButtonSvg from "../src/assert/svg/types.button.svg";
 import TypesCheckboxSvg from "../src/assert/svg/types.checkbox.svg";
+import TypesCreateAtSvg from "../src/assert/svg/types.create.at.svg";
+import TypesCreateBySvg from "../src/assert/svg/types.create.by.svg";
 import TypesDateSvg from "../src/assert/svg/types.date.svg";
 import TypesEmailSvg from "../src/assert/svg/types.email.svg";
 import TypesFileSvg from "../src/assert/svg/types.file.svg";
+import TypesFormulaSvg from "../src/assert/svg/types.formula.svg";
 import TypesLinkSvg from "../src/assert/svg/types.link.svg";
 import TypesMultipleSelectSvg from "../src/assert/svg/types.multiple.select.svg";
 import TypesNumberSvg from "../src/assert/svg/types.number.svg";
 import TypesPersonSvg from "../src/assert/svg/types.person.svg";
 import TypesPhoneSvg from "../src/assert/svg/types.phone.svg";
+import TypesRelationSvg from "../src/assert/svg/types.relation.svg";
+import TypesRollupSvg from "../src/assert/svg/types.rollup.svg";
 import TypesSelectSvg from "../src/assert/svg/types.select.svg";
+import TypesSortSvg from "../src/assert/svg/types.sort.svg";
 import TypesStringSvg from "../src/assert/svg/types.string.svg";
 import UnsplashSvg from "../src/assert/svg/unsplash.svg";
 import UploadSvg from "../src/assert/svg/upload.svg";
@@ -126,16 +133,23 @@ SortSvg,
 SquareplusSvg,
 TemplatesSvg,
 TrashSvg,
+TypesButtonSvg,
 TypesCheckboxSvg,
+TypesCreateAtSvg,
+TypesCreateBySvg,
 TypesDateSvg,
 TypesEmailSvg,
 TypesFileSvg,
+TypesFormulaSvg,
 TypesLinkSvg,
 TypesMultipleSelectSvg,
 TypesNumberSvg,
 TypesPersonSvg,
 TypesPhoneSvg,
+TypesRelationSvg,
+TypesRollupSvg,
 TypesSelectSvg,
+TypesSortSvg,
 TypesStringSvg,
 UnsplashSvg,
 UploadSvg,

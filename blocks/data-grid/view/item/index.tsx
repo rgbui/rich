@@ -28,11 +28,18 @@ export class TableStoreItem extends Block {
             return this.parent;
         }
     }
-    async createElements() {
+    async createElements()
+    {
         for (let i = 0; i < this.fields.length; i++) {
             var field = this.fields[i];
-            var block = await createFieldBlock(field, { row: this.dataRow, index: this.dataIndex }, this);
-            this.blocks.childs.push(block);
+            if (field) {
+                var block = await createFieldBlock(field, { row: this.dataRow, index: this.dataIndex }, this);
+                if (block)
+                    this.blocks.childs.push(block);
+            }
+            else {
+                console.log(this, this.fields);
+            }
         }
     }
     async onUpdateCellValue(viewField: ViewField, value: any) {

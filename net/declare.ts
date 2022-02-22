@@ -1,12 +1,13 @@
 
-
+import { Field } from "../blocks/data-grid/schema/field";
 import { TableSchema } from "../blocks/data-grid/schema/meta";
+import { FieldType } from "../blocks/data-grid/schema/type";
 import { LinkPageItem } from "../extensions/at/declare";
-import { ResourceArguments } from "../extensions/icon/declare";
+import { IconArguments, ResourceArguments } from "../extensions/icon/declare";
 import { GalleryType, OuterPic } from "../extensions/image/declare";
-import { UserAction } from "../src/history/action";
 import { User } from "../src/types/user";
 import { StatusCode } from "./status.code";
+import { UserAction } from "../src/history/action";
 export type SockResponse<T, U = string> = {
         /**
          * 返回状态码
@@ -88,8 +89,8 @@ export interface ChannelPutMapUrls {
 export interface ChannelGetMapUrls {
     "/gallery/query":{args:{type: GalleryType, word: string},returnType:Promise<{ok:boolean,data:OuterPic[],warn:string}>},
 	"/page/query/info":{args:{id: string},returnType:Promise<SockResponse<LinkPageItem>>},
-	"/workspace/query/schemas":{args:{page?:number,size?:number},returnType:Promise<{ok:boolean,data:{total:number,list:Partial<TableSchema>[],page:number,size:number},warn:string}>},
 	"/schema/query":{args:{id:string},returnType:Promise<{ok:boolean,data:{schema:Partial<TableSchema>},warn:string}>},
+	"/schema/list":{args:{page?:number,size?:number},returnType:Promise<SockResponse<{total:number,list:Partial<TableSchema>[],page:number,size:number}>>},
 	"/datastore/query":{args:{schemaId:string,id:string},returnType:Promise<{ok:boolean,data:{data:Record<string, any>},warn:string}>},
 	"/datastore/query/list":{args:{schemaId:string,page?:number,size?:number,filter?:Record<string, any>,sorts?:Record<string, 1|-1>},returnType:Promise<{ok:boolean,data:{list:any[],total:number,page:number,size:number},warn:string}>},
 	"/datastore/query/all":{args:{schemaId:string,page?:number,size?:number,filter?:Record<string, any>,sorts?:Record<string, 1|-1>},returnType:Promise<{ok:boolean,data:{list:any[],total:number,page:number,size:number},warn:string}>},
