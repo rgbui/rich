@@ -7,8 +7,7 @@ import { BlockView } from "../../../../src/block/view";
 import { OriginField } from "./origin.field";
 @url('/field/image')
 export class FieldImage extends OriginField {
-    async uploadFile(event: React.MouseEvent)
-    {
+    async uploadFile(event: React.MouseEvent) {
         var exts = ['image/*'];
         var file = await OpenFileDialoug({ exts });
         if (file) {
@@ -17,7 +16,6 @@ export class FieldImage extends OriginField {
                     console.log(event, 'ev');
                 }
             })
-            console.log(r);
             if (r.ok) {
                 if (r.data.file) {
                     this.onUpdateCellValue(r.data.file);
@@ -30,10 +28,14 @@ export class FieldImage extends OriginField {
 export class FieldImageView extends BlockView<FieldImage>{
     render() {
         return <div className='sy-field-image' onMouseDown={e => e.stopPropagation()}>
-            {this.block.value && <div>
+            {this.block.value && <div className="sy-field-image-wrapper">
                 <img src={this.block.value.url} />
             </div>}
-            {!this.block.value && <Button ghost onClick={e => this.block.uploadFile(e)}>上传文件</Button>}
+            {(!this.block.value || this.block.field?.config?.isMultiple) && <div
+                className="sy-field-image-add"
+            >
+                <Button ghost onClick={e => this.block.uploadFile(e)}>上传文件</Button>
+            </div>}
         </div>
     }
 }

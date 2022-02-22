@@ -14,5 +14,22 @@
         line-height  : 120%;
         margin       : 0px 6px 6px 0px;
     }
+}
 
+.sy-field-image {
+    &-wrapper {
+        img {
+            max-width: 100%;
+        }
+    }
+
+    &-add {
+        visibility: hidden;
+    }
+
+    &:hover {
+        .sy-field-image-add {
+            visibility: visible;
+        }
+    }
 }
