@@ -71,6 +71,18 @@ export async function createFieldBlock(viewField: ViewField, data: { row: Record
                     value: viewField.getValue(row),
                 }, block);
                 break;
+            case FieldType.file:
+                cellContent = await BlockFactory.createBlock('/field/file', page, {
+                    viewField,
+                    value: viewField.getValue(row),
+                }, block);
+                break;
+            case FieldType.image:
+                cellContent = await BlockFactory.createBlock('/field/image', page, {
+                    viewField,
+                    value: viewField.getValue(row),
+                }, block);
+                break;
         }
     }
     return cellContent;

@@ -18,9 +18,8 @@ export class FieldRelationView extends BlockView<FieldRelation>{
     async onPickRelationData(event: React.MouseEvent) {
         var r = await useRelationPickData({ roundArea: Rect.fromEvent(event) }, {
             field: this.block.viewField.field,
-            relationDatas:[]
+            relationDatas: []
         });
-
     }
     renderList() {
         return <div>
