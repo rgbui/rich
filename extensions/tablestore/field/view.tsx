@@ -144,7 +144,7 @@ export class TableFieldView extends EventsComponent {
             </Row >
                 {this.config.rollupFieldId && <Row>
                     <Col><Remark>对数据进行统计:</Remark></Col>
-                    <Col><Select onChange={e => this.config.rollupStat = e} value={this.config.rollupStat} options={[]} style={{ width: '100%' }}> </Select>
+                    <Col><Select onChange={e => this.config.rollupStatistic = e} value={this.config.rollupStatistic} options={[]} style={{ width: '100%' }}> </Select>
                     </Col>
                 </Row>}
             </>

@@ -4,7 +4,6 @@ import { PopoverSingleton } from "../../popover/popover";
 import { FieldType } from "../../../blocks/data-grid/schema/type";
 import { TableFieldView } from "./view";
 import { FieldConfig } from "../../../blocks/data-grid/schema/field";
-
 import './style.less';
 
 export async function useTableStoreAddField(pos: PopoverPosition,
