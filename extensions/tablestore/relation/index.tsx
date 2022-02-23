@@ -1,85 +1,84 @@
 import React from "react";
-import { Field } from "../../../blocks/data-grid/schema/field";
+import { ReactNode } from "react";
+import { FieldConfig } from "../../../blocks/data-grid/schema/field";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { EventsComponent } from "../../../component/lib/events.component";
+import { Row, Col } from "../../../component/view/grid";
+import { Select } from "../../../component/view/select";
+import { Switch } from "../../../component/view/switch";
+import { Remark } from "../../../component/view/text";
 import { channel } from "../../../net/channel";
-import { Page } from "../../../src/page";
-import { PageDirective } from "../../../src/page/directive";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
-import { createFormPage } from "./page";
-class RelationPicker extends EventsComponent {
-    render(): React.ReactNode {
-        return <div className="shy-relation-picker">
-            <div ref={e => this.el = e}></div>
+import "./style.less";
+
+export class RelationView extends EventsComponent {
+    render(): ReactNode {
+
+        return <div className="shy-relation-view">
+            {this.relationDatas && <Row>
+                <Col><Remark>关联表格:</Remark></Col>
+                <Col><Select
+                    onChange={e => { this.config.relationTableId = e; this.isChange = true; this.forceUpdate() }}
+                    value={this.config.relationTableId}
+                    options={this.relationDatas.map(r => {
+                        return {
+                            text: r.text + (Array.isArray(r.views) && r.views.length > 0 ? r.views[0].text : ''),
+                            value: r.id
+                        }
+                    })}
+                    style={{ width: '100%' }}>
+                </Select>
+                </Col>
+                <Col><Remark>是否一对多:</Remark><Switch onChange={e => this.onChangeConfig({ isMultiple: e })} checked={this.config?.isMultiple ? true : false}></Switch></Col>
+            </Row >}
         </div>
     }
-    componentDidMount(): void {
-        if (this.el && this.relationSchema) this.renderPage();
+    isChange: boolean = false;
+    private relationDatas: TableSchema[];
+    config: FieldConfig = {};
+    async open(option: { config?: FieldConfig }) {
+        this.isChange = false;
+        this.config = option.config || {};
+        this.relationDatas = null;
+        await this.loadTypeDatas();
+        this.forceUpdate();
     }
-    pageView: Page;
-    async renderPage() {
-        var self = this;
-        if (!this.pageView) {
-            this.pageView = await createFormPage(this.el, { schema: this.relationSchema, ids: [], isMultiple: this.isMultiple });
-            this.pageView.on(PageDirective.selectRows, function (rows) {
-                if (self.isMultiple == true) self.emit('change', rows);
-                else { self.emit('save', rows) };
-            })
+    async loadTypeDatas(force?: boolean) {
+        var isUpdate: boolean = false;
+        if (!Array.isArray(this.relationDatas)) {
+            var r = await channel.get('/schema/list');
+            if (r.ok) {
+                this.relationDatas = r.data.list as TableSchema[];
+                isUpdate = true;
+            }
+        }
+        if (force == true && isUpdate) {
+            this.forceUpdate()
         }
     }
-    private el: HTMLElement;
-    field: Field;
-    relationDatas: any[];
-    isMultiple: boolean;
-    relationSchema: TableSchema;
-    async open(options: {
-        relationDatas: { id: string }[],
-        field: Field,
-        isMultiple?: boolean
-    }) {
-        this.field = options.field;
-        this.relationDatas = options.relationDatas;
-        this.isMultiple = options.isMultiple;
-        var rr = await channel.get('/schema/query', { id: options.field.config.relationTableId as string });
-        if (rr.ok) {
-            this.relationSchema = this.relationSchema;
-        }
-        this.forceUpdate(() => {
-            if (this.el && this.relationSchema) this.renderPage();
-        });
+    async onChangeConfig(config: Partial<FieldConfig>) {
+        Object.assign(this.config, config);
+        this.isChange = true;
+        this.forceUpdate();
     }
 }
-/**
- * 挑选关联的数据
- * @param pos 
- * @param options 
- * @returns 
- */
-export async function useRelationPickData(pos: PopoverPosition,
-    options: {
-        relationDatas: { id: string }[],
-        field: Field,
-        isMultiple?: boolean,
-        change?: (rows: any[]) => void
+
+export async function useRelationView(pos: PopoverPosition,
+    option: {
+        // type: FieldType,
+        config?: Record<string, any>
     }) {
-    let popover = await PopoverSingleton(RelationPicker, { mask: true });
+    let popover = await PopoverSingleton(RelationView, { mask: true });
     let fv = await popover.open(pos);
-    await fv.open(options);
-    return new Promise((resolve: (data: string) => void, reject) => {
-        fv.only('save', (data: string) => {
-            popover.close();
-            resolve(data);
-        });
+    fv.open(option);
+    return new Promise((resolve: (data: { config?: FieldConfig }) => void, reject) => {
         fv.only('close', () => {
             popover.close();
-            resolve(null);
-        });
-        fv.only('change', (rows) => {
-            options.change(rows);
+            resolve(fv.isChange ? { config: fv.config } : undefined);
         })
         popover.only('close', () => {
-            resolve(null)
+            resolve(fv.isChange ? { config: fv.config } : undefined);
         })
     })
 }
