@@ -4,6 +4,8 @@ import { EventsComponent } from "../../../component/lib/events.component";
 import { Textarea } from "../../../component/view/input";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
+import "./style.less";
+
 class FormulaSelector extends EventsComponent {
     schema: TableSchema;
     render(): React.ReactNode {
