@@ -28,7 +28,7 @@ export class PageLayoutView extends Component<{ pageLayout: PageLayout, boardSel
                 </div>
             </div>
         }
-        else if (this.pageLayout.type == PageLayoutType.dbForm) {
+        else if ([PageLayoutType.dbForm, PageLayoutType.dbPickRecord].includes(this.pageLayout.type)) {
             return <div className={"shy-page-layout shy-page-layout-db-form"}>
                 <div className='shy-page-layout-wrapper' >
                     {this.props.children}
