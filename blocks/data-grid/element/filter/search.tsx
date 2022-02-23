@@ -5,8 +5,7 @@ import { OriginFilterField } from "./origin.field";
 
 @url('/field/filter/search')
 export class SearchText extends OriginFilterField {
-    @prop()
-    refFieldIds: string[] = [];
+  
     word: string = '';
 }
 @view('/field/filter/search')
