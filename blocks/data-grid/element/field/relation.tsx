@@ -1,7 +1,7 @@
 import React from "react";
 import { PlusSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
-import { useRelationPickData } from "../../../../extensions/tablestore/relation";
+import { useRelationPickData } from "../../../../extensions/tablestore/relation.picker";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { Rect } from "../../../../src/common/vector/point";
