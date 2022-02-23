@@ -11,10 +11,12 @@
         min-height     : 28px;
         font-size      : 14px;
         padding        : 0px 10px;
+
         .shy-icon {
-            fill: rgba(55, 53, 47, 0.4);
+            fill        : rgba(55, 53, 47, 0.4);
             margin-right: 5px;
         }
+
         span {}
     }
 }
@@ -53,5 +55,27 @@
 
     &:hover {
         background-color: rgba(55, 53, 47, 0.08);
+    }
+}
+
+.shy-schema-view-selector-head {
+    display        : flex;
+    justify-content: flex-start;
+    align-items    : center;
+    min-height     : 28px;
+    font-size      : 14px;
+    cursor         : pointer;
+    padding        : 0px 10px;
+    fill           : rgba(55, 53, 47, 0.4);
+
+    .icon {
+        flex-shrink: 0;
+        flex-grow  : 0;
+        margin     : 0px 5px;
+    }
+
+    >span {
+        flex-grow  : 1;
+        flex-shrink: 1;
     }
 }

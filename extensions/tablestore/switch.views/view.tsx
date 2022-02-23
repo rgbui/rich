@@ -108,12 +108,42 @@ class TabelSchemaViewDrop extends EventsComponent {
             return;
         }
     }
+    async onTableProperty(event: React.MouseEvent) {
+        event.stopPropagation();
+        var menus = [
+            {
+                type: MenuItemTypeValue.input,
+                text: '重命名表名',
+                value: this.schema.text,
+                icon: TrashSvg,
+                name: 'rename'
+            }
+        ]
+        await useSelectMenuItem({ roundPoint: Point.from(event) }, menus);
+        var it = menus.find(g => g.name == 'rename');
+        if (it.value != this.schema.text && it.value) {
+            var result = await channel.put('/schema/operate', {
+                operate: {
+                    schemaId: this.schema.id,
+                    date: new Date(),
+                    actions: [{ name: 'updateSchema', data: { text: it.value } }]
+                }
+            });
+            this.schema.text = it.value;
+            this.forceUpdate();
+            return;
+        }
+    }
     render(): ReactNode {
         var self = this;
         if (!this.schema) return <div></div>
         var views = this.schema.views;
         if (!Array.isArray(views)) views = [];
         return <div className="shy-schema-view-selectors">
+            <div className="shy-schema-view-selector-head">
+                <span><b>{this.schema.text}</b>的视图</span>
+                <Icon size={14} className={'property'} icon={Dots} click={e => this.onTableProperty(e)}></Icon>
+            </div>
             {views.map(v => {
                 return <div className="shy-schema-view-selector-item" key={v.id} onClick={e => this.onChange(v)}>
                     <Icon size={12} className={'drag'} icon={DragSvg}></Icon>
