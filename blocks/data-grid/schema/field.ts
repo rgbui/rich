@@ -42,7 +42,7 @@ export interface FieldConfig {
     relationTableId?: string,
     rollupTableId?: string,
     rollupFieldId?: string,
-    rollupStat?: string,
+    rollupStatistic?: string,
     formula?: string,
     emoji?:EmojiCode
 }
