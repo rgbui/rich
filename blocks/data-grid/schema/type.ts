@@ -56,7 +56,7 @@ export enum FieldType {
     /**
      * 邮件
      */
-    email = 520,
+    email = 510,
     /**
      * 手机号（这里仅支持手机，主要来用来短信通知）
      */
