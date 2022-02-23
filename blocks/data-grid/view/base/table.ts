@@ -23,6 +23,12 @@ import { ViewField } from "../../schema/view";
 import { DataGridTurns } from "../../turn";
 import { TableStoreItem } from "../item";
 import { ArrowDownSvg, ArrowUpSvg, FilterSvg, HideSvg, TrashSvg } from "../../../../component/svgs";
+import { getFieldMenus, getTypeSvg } from "../../schema/util";
+import { useRelationView } from "../../../../extensions/tablestore/relation";
+import { useRollupView } from "../../../../extensions/tablestore/rollup";
+import { useFormula } from "../../../../extensions/tablestore/formula";
+import { useFieldEmojiView } from "../../../../extensions/tablestore/emoji";
+
 export class DataGridView extends Block {
     checkItems: Record<string, any>[] = [];
     @prop()
@@ -395,22 +401,21 @@ export class DataGridView extends Block {
             await this.createItem();
         });
     }
-    async onTurnField(at: number, type: FieldType) {
-        if (typeof at == 'undefined') at = this.fields.length - 1;
-        var viewField = this.fields[at];
+    async onTurnField(viewField: ViewField, type: FieldType, config?: Record<string, any>) {
         var field = viewField.field;
         await this.page.onAction(ActionDirective.onSchemaTurnField, async () => {
-            var r = await this.schema.turnField({ fieldId: field.id, type: type });
+            var r = await this.schema.turnField({ fieldId: field.id, type: type, config });
             if (r.ok) {
                 field.type = type;
                 await this.loadData();
                 await this.createItem();
+                this.forceUpdate();
             }
         });
-        await this.loadData()
     }
-    async openConfigField(event: React.MouseEvent | MouseEvent, viewField: ViewField) {
+    async onOpenConfigField(event: React.MouseEvent | MouseEvent, viewField: ViewField) {
         event.stopPropagation();
+        var rp = Rect.fromEvent(event);
         var items: MenuItemType<BlockDirective | string>[] = [];
         if (viewField.type) {
             items.push(...[
@@ -429,6 +434,9 @@ export class DataGridView extends Block {
             ]);
         }
         else {
+            var fieldMenus = getFieldMenus();
+            var fm = fieldMenus.find(g => g.value == viewField.field.type);
+            var icon = getTypeSvg(viewField?.field.type);
             items.push(...[
                 {
                     name: 'name',
@@ -436,6 +444,8 @@ export class DataGridView extends Block {
                     value: viewField.field?.text,
                     text: '编辑列名',
                 },
+                { text: '字段类型', type: MenuItemTypeValue.text },
+                { text: fm.text, icon, childs: fieldMenus },
                 { type: MenuItemTypeValue.divide },
                 { name: 'filter', icon: FilterSvg, text: '过滤' },
                 { name: 'sortDesc', icon: ArrowDownSvg, text: '降序' },
@@ -456,7 +466,7 @@ export class DataGridView extends Block {
         }
         var re = await useSelectMenuItem(
             {
-                roundArea: Rect.fromEvent(event),
+                roundArea: rp,
                 direction: 'left'
             },
             items
@@ -477,6 +487,46 @@ export class DataGridView extends Block {
             }
             else if (re.item.name == 'sortAsc') {
                 this.onSetSortField(viewField, 1);
+            }
+            else if (re.item.name == 'turnFieldType') {
+                if (re.item.value == FieldType.relation) {
+                    var r = await useRelationView({ roundArea: rp }, {
+                        config: viewField.field.config
+                    });
+                    if (r) {
+                        await this.onTurnField(viewField, re.item.value, r);
+                    }
+                }
+                else if (re.item.value == FieldType.rollup) {
+                    var r = await useRollupView({ roundArea: rp }, {
+                        schema: this.schema,
+                        config: viewField.field.config
+                    })
+                    if (r) {
+                        await this.onTurnField(viewField, re.item.value, r);
+                    }
+                }
+                else if (re.item.value == FieldType.formula) {
+                    var formula = await useFormula({ roundArea: rp }, {
+                        schema: this.schema,
+                        formula: viewField.field.config.formula
+                    });
+                    if (formula) {
+                        await this.onTurnField(viewField, re.item.value, { formula });
+                    }
+                }
+                else if (re.item.value == FieldType.emoji) {
+                    var r = await useFieldEmojiView({ roundArea: rp }, {
+                        schema: this.schema,
+                        config: viewField.field.config
+                    })
+                    if (r) {
+                        await this.onTurnField(viewField, re.item.value, r);
+                    }
+                }
+                else {
+                    this.onTurnField(viewField, re.item.value);
+                }
             }
             if (ReItem.value != viewField.field?.text) {
                 //编辑列名了
@@ -594,7 +644,8 @@ export class DataGridView extends Block {
             this.checkItems.remove(r => r.id == row.id);
         }
     }
-    async onChangeIndex(index:number){
-        
+    async onChangeIndex(index: number) {
+
     }
 }
+

@@ -111,7 +111,7 @@ export class TableStoreView extends BlockView<TableStore>{
                     key={f?.field?.id || i}>
                     <div className={'sy-dg-table-head-th-icon'} ><Icon icon={icon} size='none'></Icon></div>
                     <label>{f.text || f.field?.text}</label>
-                    <div className={'sy-dg-table-head-th-property'} onMouseDown={e => this.block.openConfigField(e, f)}><Icon icon='elipsis:sy'></Icon></div>
+                    <div className={'sy-dg-table-head-th-property'} onMouseDown={e => this.block.onOpenConfigField(e, f)}><Icon icon='elipsis:sy'></Icon></div>
                 </div>
             })}
             <div className='sy-dg-table-head-th sy-dg-table-head-th-plus'
