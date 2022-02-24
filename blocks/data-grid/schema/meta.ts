@@ -16,6 +16,7 @@ export class TableSchema {
             })
     }
     id: string
+    url:string;
     creater: string;
     createDate: Date;
     fields: Field[] = [];
