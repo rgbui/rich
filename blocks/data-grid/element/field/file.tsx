@@ -22,6 +22,7 @@ export class FieldFile extends OriginField {
                     if (!Array.isArray(this.value)) this.value = [];
                     this.value.push(r.data.file);
                     this.onUpdateCellValue(this.value);
+                    this.forceUpdate();
                 }
             }
         }
