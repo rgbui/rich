@@ -28,6 +28,8 @@ import { useRelationView } from "../../../../extensions/tablestore/relation";
 import { useRollupView } from "../../../../extensions/tablestore/rollup";
 import { useFormula } from "../../../../extensions/tablestore/formula";
 import { useFieldEmojiView } from "../../../../extensions/tablestore/emoji";
+import { PageLayoutType } from "../../../../src/layout/declare";
+import { PageDirective } from "../../../../src/page/directive";
 
 export class DataGridView extends Block {
     checkItems: Record<string, any>[] = [];
@@ -154,6 +156,11 @@ export class DataGridView extends Block {
                 f.schema = this.schema;
             })
         }
+        if (this.page.pageLayout.type == PageLayoutType.dbPickRecord) {
+            if (!this.fields.some(s => s.type == 'check')) {
+                this.fields.insertAt(0, new ViewField({ type: 'check', text: '选择' }, this.schema))
+            }
+        }
     }
     async loadRelationSchemas() {
         var tableIds: string[] = [];
@@ -223,7 +230,6 @@ export class DataGridView extends Block {
                 this.data = Array.isArray(r.data.list) ? r.data.list : [];
                 this.total = r.data?.total || 0;
                 this.isLoadData = true;
-                console.log(this.data, 'data');
             }
         }
     }
@@ -455,9 +461,12 @@ export class DataGridView extends Block {
     async onTurnField(viewField: ViewField, type: FieldType, config?: Record<string, any>) {
         var field = viewField.field;
         await this.page.onAction(ActionDirective.onSchemaTurnField, async () => {
+            console.log(type, config,)
             var r = await this.schema.turnField({ fieldId: field.id, type: type, config });
             if (r.ok) {
                 field.type = type;
+                if (config)
+                    Object.assign(field.config, config);
                 await this.loadData();
                 await this.createItem();
                 this.forceUpdate();
@@ -545,7 +554,7 @@ export class DataGridView extends Block {
                         config: viewField.field.config
                     });
                     if (r) {
-                        await this.onTurnField(viewField, re.item.value, r);
+                        await this.onTurnField(viewField, re.item.value, r.config);
                     }
                 }
                 else if (re.item.value == FieldType.rollup) {
@@ -694,6 +703,7 @@ export class DataGridView extends Block {
         else {
             this.checkItems.remove(r => r.id == row.id);
         }
+        this.page.emit(PageDirective.selectRows, this, this.checkItems)
     }
     async onChangeIndex(index: number) {
         this.index = index;
@@ -701,8 +711,8 @@ export class DataGridView extends Block {
         await this.loadData();
         this.forceUpdate();
     }
-    async onSearch(){
-        
+    async onSearch() {
+
     }
 }
 

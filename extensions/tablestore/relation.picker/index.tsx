@@ -3,6 +3,7 @@ import { Field } from "../../../blocks/data-grid/schema/field";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { channel } from "../../../net/channel";
+import { Block } from "../../../src/block";
 import { Page } from "../../../src/page";
 import { PageDirective } from "../../../src/page/directive";
 import { PopoverSingleton } from "../../popover/popover";
@@ -24,7 +25,8 @@ class RelationPicker extends EventsComponent {
         var self = this;
         if (!this.pageView) {
             this.pageView = await createFormPage(this.el, { schema: this.relationSchema, ids: [], isMultiple: this.isMultiple });
-            this.pageView.on(PageDirective.selectRows, function (rows) {
+            this.pageView.on(PageDirective.selectRows, function (block: Block, rows) {
+                console.log('selectRows', rows);
                 if (self.isMultiple == true) self.emit('change', rows);
                 else { self.emit('save', rows) };
             })
