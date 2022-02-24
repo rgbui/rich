@@ -180,25 +180,27 @@ export class DataGridView extends Block {
     }
     async loadRelationDatas() {
         if (this.relationSchemas.length > 0) {
-            var maps = new Map<string, string[]>();
+            var maps: { key: string, ids: string[] }[] = [];
             this.data.forEach(row => {
                 this.fields.each(f => {
                     if (f?.field?.type == FieldType.relation) {
                         var vs = row[f?.field.name];
                         if (!Array.isArray(vs)) vs = [];
-                        var ms = maps.get(f?.field.config.relationTableId);
-                        if (Array.isArray(ms)) {
+                        var ms = maps.find(g => g.key == f?.field.config.relationTableId);
+                        if (Array.isArray(ms?.ids)) {
                             vs.each(v => {
-                                if (!ms.includes(v)) ms.push(v)
+                                if (!ms?.ids.includes(v)) ms?.ids.push(v)
                             })
                         }
                         else {
-                            maps.set(f?.field.config.relationTableId, vs);
+                            maps.push({ key: f?.field.config.relationTableId, ids: vs })
                         }
                     }
                 })
             });
-            maps.forEach(async (v, key) => {
+            await maps.eachAsync(async (vr) => {
+                var key = vr.key;
+                var v=vr.ids;
                 var sea = this.relationSchemas.find(g => g.id == key);
                 if (sea) {
                     var rd = await sea.all({ page: 1, filter: { id: { $in: v } } });
@@ -206,7 +208,7 @@ export class DataGridView extends Block {
                         this.relationDatas.set(key, rd.data.list);
                     }
                 }
-            });
+            })
         }
     }
     async onGetTurnUrls() {

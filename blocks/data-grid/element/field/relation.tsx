@@ -11,7 +11,8 @@ import { OriginField } from "./origin.field";
 @url('/field/relation')
 export class FieldRelation extends OriginField {
     get relationList() {
-        var rs: any[] = []; var vs: string[] = this.value;
+        var rs: any[] = [];
+        var vs: string[] = this.value;
         if (!Array.isArray(vs)) vs = [];
         if (vs.length == 0) return [];
         var g = this.dataGrid.relationDatas.get(this.field.config?.relationTableId);
@@ -29,18 +30,30 @@ export class FieldRelationView extends BlockView<FieldRelation>{
     async onPickRelationData(event: React.MouseEvent) {
         var r = await useRelationPickData({ roundArea: Rect.fromEvent(event) }, {
             field: this.block.viewField.field,
-            relationDatas: []
+            relationDatas: this.block.relationList,
+            relationSchema: this.block.relationSchema
         });
         if (r) {
+            var rs = this.block.dataGrid.relationDatas.get(this.block.relationSchema.id);
+            if (!Array.isArray(rs)) {
+                rs = [];
+                this.block.dataGrid.relationDatas.set(this.block.relationSchema.id, rs)
+            }
+            r.each(g => {
+                if (!rs.some(c => c.id == g.id)) rs.push(g)
+            });
             var ids = r.map(r => r.id);
-            this.block.onUpdateCellValue(ids);
+            this.block.value = ids;
+            await this.block.onUpdateCellValue(ids);
+            this.forceUpdate();
         }
     }
     renderList() {
         var rs = this.block.relationSchema;
         var f = rs?.fields?.find(g => g.type == FieldType.title);
+        if (!f) f = rs?.fields.find(g => g.type == FieldType.text);
         return <div>{this.block.relationList?.map(r => {
-            return <a>{r[f.name]}</a>
+            return <a key={r.id}>{r[f?.name]}</a>
         })}
             <Icon click={e => this.onPickRelationData(e)} icon={PlusSvg}></Icon>
         </div>

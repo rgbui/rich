@@ -2,7 +2,6 @@ import React from "react";
 import { Field } from "../../../blocks/data-grid/schema/field";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { EventsComponent } from "../../../component/lib/events.component";
-import { channel } from "../../../net/channel";
 import { Block } from "../../../src/block";
 import { Page } from "../../../src/page";
 import { PageDirective } from "../../../src/page/directive";
@@ -10,6 +9,7 @@ import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
 import { createFormPage } from "./page";
 import "./style.less";
+
 class RelationPicker extends EventsComponent {
     render(): React.ReactNode {
         return <div className="shy-relation-picker">
@@ -24,14 +24,15 @@ class RelationPicker extends EventsComponent {
     async renderPage() {
         var self = this;
         if (!this.pageView) {
-            this.pageView = await createFormPage(this.el, { schema: this.relationSchema, ids: [], isMultiple: this.isMultiple });
+            this.pageView = await createFormPage(this.el, { schema: this.relationSchema, datas:this.relationDatas, isMultiple: this.isMultiple });
             this.pageView.on(PageDirective.selectRows, function (block: Block, rows) {
-                console.log('selectRows', rows);
-                if (self.isMultiple == true) self.emit('change', rows);
-                else { self.emit('save', rows) };
+                self.isChange = true;
+                self.relationDatas = rows;
+                if (!self.isMultiple) self.emit('save', rows);
             })
         }
     }
+    isChange: boolean = false;
     private el: HTMLElement;
     field: Field;
     relationDatas: any[];
@@ -39,16 +40,15 @@ class RelationPicker extends EventsComponent {
     relationSchema: TableSchema;
     async open(options: {
         relationDatas: { id: string }[],
+        relationSchema: TableSchema,
         field: Field,
         isMultiple?: boolean
     }) {
+        this.isChange = false;
         this.field = options.field;
         this.relationDatas = options.relationDatas;
         this.isMultiple = options.isMultiple;
-        var rr = await channel.get('/schema/query', { id: options.field.config.relationTableId as string });
-        if (rr.ok) {
-            this.relationSchema = rr.data.schema as TableSchema;
-        }
+        this.relationSchema = options.relationSchema;
         this.forceUpdate(() => {
             if (this.el && this.relationSchema) this.renderPage();
         });
@@ -63,6 +63,7 @@ class RelationPicker extends EventsComponent {
 export async function useRelationPickData(pos: PopoverPosition,
     options: {
         relationDatas: { id: string }[],
+        relationSchema: TableSchema,
         field: Field,
         isMultiple?: boolean
     }) {
@@ -72,13 +73,13 @@ export async function useRelationPickData(pos: PopoverPosition,
     return new Promise((resolve: (data: any[]) => void, reject) => {
         fv.only('close', () => {
             popover.close();
-            resolve(null);
+            resolve(fv.isMultiple && fv.isChange && fv.relationDatas.length > 0 ? fv.relationDatas : undefined);
         });
-        fv.only('change', (rows) => {
+        fv.only('save', (rows) => {
             resolve(rows);
         })
         popover.only('close', () => {
-            resolve(null)
+            resolve(fv.isMultiple && fv.isChange && fv.relationDatas.length > 0 ? fv.relationDatas : undefined);
         })
     })
 }
