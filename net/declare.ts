@@ -1,6 +1,9 @@
+
+import { Field } from "../blocks/data-grid/schema/field";
 import { TableSchema } from "../blocks/data-grid/schema/meta";
+import { FieldType } from "../blocks/data-grid/schema/type";
 import { LinkPageItem } from "../extensions/at/declare";
-import {  ResourceArguments } from "../extensions/icon/declare";
+import { IconArguments, ResourceArguments } from "../extensions/icon/declare";
 import { GalleryType, OuterPic } from "../extensions/image/declare";
 import { User } from "../src/types/user";
 import { StatusCode } from "./status.code";
@@ -71,7 +74,7 @@ export interface ChannelPatchMapUrls {
 	"/user/patch":{args:{data:Record<string,any>},returnType:Promise<SockResponse<void>>},
 	"/ws/sitedomain/patch":{args:{domain:string},returnType:Promise<SockResponse<{success:boolean,overflowDue:boolean}>>},
 	"/ws/patch":{args:{wsId?:string,sockId?:string,data:Record<string,any>},returnType:Promise<SockResponse<void>>},
-	"/interactive/emoji":{args:{elementUrl:string},returnType:Promise<SockResponse<{count:number}>>}
+	"/interactive/emoji":{args:{elementUrl:string,schemaUrl:string,fieldName:string},returnType:Promise<SockResponse<{count:number}>>}
 }
 export interface ChannelPutMapUrls {
     "/schema/create":{args:{text:string,url:string,templateId?:string},returnType:Promise<{ ok: boolean, data: { schema:Partial<TableSchema> },warn:string }>},
