@@ -44,6 +44,8 @@ export class DataGridView extends Block {
     @prop()
     showCheckRow: boolean = false;
     schema: TableSchema;
+    relationSchemas: TableSchema[] = [];
+    relationDatas: Map<string, any[]> = new Map();
     init(): void {
         this.registerPropMeta('fields', ViewField, true);
     }
@@ -153,6 +155,53 @@ export class DataGridView extends Block {
             })
         }
     }
+    async loadRelationSchemas() {
+        var tableIds: string[] = [];
+        this.fields.each(f => {
+            if (f.field?.type == FieldType.relation) {
+                if (f.field.config.relationTableId) {
+                    tableIds.push(f.field.config.relationTableId);
+                }
+            }
+        });
+        if (tableIds.length > 0) {
+            var rs = await channel.get('/schema/ids/list', { ids: tableIds });
+            if (rs.ok) {
+                this.relationSchemas = rs.data.list.map(g => new TableSchema(g))
+            }
+        }
+    }
+    async loadRelationDatas() {
+        if (this.relationSchemas.length > 0) {
+            var maps = new Map<string, string[]>();
+            this.data.forEach(row => {
+                this.fields.each(f => {
+                    if (f?.field?.type == FieldType.relation) {
+                        var vs = row[f?.field.name];
+                        if (!Array.isArray(vs)) vs = [];
+                        var ms = maps.get(f?.field.config.relationTableId);
+                        if (Array.isArray(ms)) {
+                            vs.each(v => {
+                                if (!ms.includes(v)) ms.push(v)
+                            })
+                        }
+                        else {
+                            maps.set(f?.field.config.relationTableId, vs);
+                        }
+                    }
+                })
+            });
+            maps.forEach(async (v, key) => {
+                var sea = this.relationSchemas.find(g => g.id == key);
+                if (sea) {
+                    var rd = await sea.all({ page: 1, filter: { id: { $in: v } } });
+                    if (rd.ok) {
+                        this.relationDatas.set(key, rd.data.list);
+                    }
+                }
+            });
+        }
+    }
     async onGetTurnUrls() {
         return DataGridTurns.urls
     }
@@ -239,6 +288,8 @@ export class DataGridView extends Block {
         if (this.schema) {
             await this.loadViewFields();
             await this.loadData();
+            await this.loadRelationSchemas();
+            await this.loadRelationDatas();
             await this.createItem();
             this.view.forceUpdate();
         }
@@ -645,7 +696,13 @@ export class DataGridView extends Block {
         }
     }
     async onChangeIndex(index: number) {
-
+        this.index = index;
+        this.emit('changeIndex', this.index);
+        await this.loadData();
+        this.forceUpdate();
+    }
+    async onSearch(){
+        
     }
 }
 
