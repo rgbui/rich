@@ -118,6 +118,7 @@ export function DataGridTool(props: { block: DataGridView }) {
         })
     }
     var view = props.block.schema?.views?.find(g => g.id == props.block.syncBlockId)
+    if (props.block.isLock == true) return <></>
     return <div className="sy-dg-tool">
         <div className="sy-dg-tool-templates">
             <label onMouseDown={e => changeDataGridView(e)}>

@@ -577,6 +577,10 @@ export abstract class Block extends Events {
     get isGroup() {
         return this.url == BlockUrlConstant.Group;
     }
+    get isLock() {
+        if (this.locker?.lock) return true;
+        return this.page.isLock;
+    }
     /**
      * 标记，主要是标记block用，没有其它什么作用
      */
