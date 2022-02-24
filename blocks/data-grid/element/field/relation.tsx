@@ -31,6 +31,7 @@ export class FieldRelationView extends BlockView<FieldRelation>{
         var r = await useRelationPickData({ roundArea: Rect.fromEvent(event) }, {
             field: this.block.viewField.field,
             relationDatas: this.block.relationList,
+            isMultiple: this.block.viewField.field.config.isMultiple,
             relationSchema: this.block.relationSchema
         });
         if (r) {
@@ -52,7 +53,7 @@ export class FieldRelationView extends BlockView<FieldRelation>{
         var rs = this.block.relationSchema;
         var f = rs?.fields?.find(g => g.type == FieldType.title);
         if (!f) f = rs?.fields.find(g => g.type == FieldType.text);
-        return <div>{this.block.relationList?.map(r => {
+        return <div className='sy-field-relation-items'>{this.block.relationList?.map(r => {
             return <a key={r.id}>{r[f?.name]}</a>
         })}
             <Icon click={e => this.onPickRelationData(e)} icon={PlusSvg}></Icon>
