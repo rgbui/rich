@@ -142,10 +142,10 @@ export class TableStoreView extends BlockView<TableStore>{
                 {this.renderHead()}
                 {this.renderBody()}
                 <div className='sy-block-table-subline' onMouseDown={e => this.onMousedownLine(e)} ref={e => this.subline = e}></div>
-                <div onMouseDown={e => { e.stopPropagation(); self.block.onAddRow({}, undefined, 'after') }}
+                {!this.block.isLock && <div onMouseDown={e => { e.stopPropagation(); self.block.onAddRow({}, undefined, 'after') }}
                     className="sy-dg-table-add" style={{ width: this.block.fields.sum(s => s.colWidth) + 40 }}>
                     <Icon size={12} icon={Plus}></Icon><span>新增</span>
-                </div>
+                </div>}
             </div>}
             {this.renderCreateTable()}
         </div>
