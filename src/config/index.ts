@@ -4,7 +4,7 @@
 import { FontCss } from "../block/pattern/css";
 import { Page } from "../page";
 import { PageConfig, WorkspaceConfig } from "./type";
-export class ConfigurationManager {
+export class ConfigViewer {
     private page: Page;
     constructor(page: Page) {
         this.page = page;
@@ -13,23 +13,25 @@ export class ConfigurationManager {
     workspaceConfig: WorkspaceConfig;
     loadPageConfig(config: Partial<PageConfig>) {
         if (config) {
-            this.pageConfig = {
-                fontCss: new FontCss()
-            } as any;
+            if (typeof this.pageConfig == 'undefined')
+                this.pageConfig = { fontCss: new FontCss() } as any;
             for (var n in config) {
                 if (n == 'fontCss') {
                     this.pageConfig.fontCss = new FontCss(config[n]);
                 }
+                else this.pageConfig[n] = config[n]
             }
         }
     }
     loadWorkspaceConfig(config: Partial<WorkspaceConfig>) {
         if (config) {
-            this.workspaceConfig = { fontCss: new FontCss() } as any;
+            if (typeof this.workspaceConfig == 'undefined')
+                this.workspaceConfig = { fontCss: new FontCss() } as any;
             for (var n in config) {
                 if (n == 'fontCss') {
                     this.workspaceConfig.fontCss = new FontCss(config[n]);
                 }
+                else this.pageConfig[n] = config[n]
             }
         }
     }

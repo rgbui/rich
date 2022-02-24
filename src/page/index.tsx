@@ -9,8 +9,7 @@ import { PageLayout } from "../layout/index";
 import { PageEvent } from "./partial/event";
 import { HistorySnapshoot } from '../history/snapshoot';
 import { Block } from '../block';
-import { ConfigurationManager } from '../config';
-import { PageConfig, WorkspaceConfig } from '../config/type';
+import { ConfigViewer } from '../config';
 import { KeyboardPlate } from '../common/keys';
 import { Page$Seek } from './partial/seek';
 import { PageView } from './view';
@@ -38,7 +37,7 @@ export class Page extends Events<PageDirective> {
     id: string;
     date: number;
     readonly: boolean = false;
-    pageItemId:string;
+    pageItemId: string;
     constructor(options?: {
         id?: string,
         readonly?: boolean
@@ -56,11 +55,7 @@ export class Page extends Events<PageDirective> {
     }
     kit: Kit = new Kit(this);
     snapshoot = new HistorySnapshoot(this)
-    cfm: ConfigurationManager;
-    loadConfig(pageConfig: PageConfig, workspaceConfig: WorkspaceConfig) {
-        if (pageConfig) this.cfm.loadPageConfig(pageConfig);
-        if (workspaceConfig) this.cfm.loadPageConfig(workspaceConfig);
-    }
+    configViewer: ConfigViewer;
     pageLayout: PageLayout;
     views: View[] = [];
     view: PageView;
@@ -133,7 +128,10 @@ export class Page extends Events<PageDirective> {
     get scale() {
         return this.matrix.getScaling().x;
     }
-    schema:TableSchema;
+    schema: TableSchema;
+    get isLock() {
+        return this.configViewer.pageConfig.locker?.lock ? true : false;
+    }
 }
 export interface Page {
     on(name: PageDirective.init, fn: () => void);
@@ -166,8 +164,8 @@ export interface Page {
     emit(name: PageDirective.error, error: Error | string);
     on(name: PageDirective.warn, fn: (error: Error | string) => void);
     emit(name: PageDirective.warn, error: Error | string);
-    on(name: PageDirective.selectRows, fn: (rows:any[]) => void);
-    emit(name: PageDirective.selectRows,rows:any[]);
+    on(name: PageDirective.selectRows, fn: (block: Block, rows: any[]) => void);
+    emit(name: PageDirective.selectRows, block: Block, rows: any[]);
     on(name: PageDirective.save, fn: () => void);
     emit(name: PageDirective.save);
 }

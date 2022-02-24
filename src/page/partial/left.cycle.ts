@@ -4,7 +4,7 @@ import { langProvider } from "../../../i18n/provider";
 import { Block } from "../../block";
 import { View } from "../../block/element/view";
 import { BlockFactory } from "../../block/factory/block.factory";
-import { ConfigurationManager } from "../../config";
+import { ConfigViewer } from "../../config";
 import { UserAction } from "../../history/action";
 import { ActionDirective } from "../../history/declare";
 import { PageLayout } from "../../layout";
@@ -20,8 +20,8 @@ import { Matrix } from "../../common/matrix";
 export class Page$Cycle {
     async init(this: Page) {
         this.grid = new PageGrid(this);
-        this.cfm = new ConfigurationManager(this);
-        this.cfm.loadPageConfig({
+        this.configViewer = new ConfigViewer(this);
+        this.configViewer.loadPageConfig({
             fontCss: {
                 lineHeight: 24,
                 letterSpacing: 0,
@@ -29,7 +29,7 @@ export class Page$Cycle {
                 fontStyle: 'normail'
             } as any
         });
-        this.cfm.loadWorkspaceConfig({
+        this.configViewer.loadWorkspaceConfig({
             fontCss: {
 
             } as any
