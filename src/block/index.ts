@@ -586,6 +586,15 @@ export abstract class Block extends Events {
     get refBlock() {
         return this.page.find(g => g.id == this.refBlockId)
     }
+    referenceBlockers: Block[] = [];
+    registerReferenceBlocker(block: Block) {
+        if (!this.referenceBlockers.some(s => s.id == block.id)) {
+            this.referenceBlockers.push(block);
+        }
+    }
+    cancelReferenceBlocker(block: Block) {
+        this.referenceBlockers.remove(g => g.id == block.id);
+    }
 }
 export interface Block extends Block$Seek { }
 export interface Block extends Block$Event { }
