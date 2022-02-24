@@ -5,7 +5,7 @@ import { url, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
 import { DataGridView } from "../view/base/table";
 
-@url('/paging')
+@url('/data-grid/paging')
 export class Paging extends Block {
     display = BlockDisplay.block;
     get refBlock(): DataGridView {
@@ -16,7 +16,7 @@ export class Paging extends Block {
             this.refBlock.onChangeIndex(index);
     }
 }
-@view('/paging')
+@view('/data-grid/paging')
 export class PagingView extends BlockView<Paging>{
     getPages() {
         var page = Math.ceil(this.block.refBlock.total / this.block.refBlock.size);
