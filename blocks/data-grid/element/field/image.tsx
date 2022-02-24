@@ -18,7 +18,9 @@ export class FieldImage extends OriginField {
             })
             if (r.ok) {
                 if (r.data.file) {
-                    this.onUpdateCellValue(r.data.file);
+                    if (!Array.isArray(this.value)) this.value = [];
+                    this.value.push(r.data.file);
+                    this.onUpdateCellValue(this.value);
                 }
             }
         }
@@ -26,12 +28,21 @@ export class FieldImage extends OriginField {
 }
 @view('/field/image')
 export class FieldImageView extends BlockView<FieldImage>{
+    renderImages(images: { url: string }[]) {
+        return images.map((img, i) => {
+            return <div className="sy-field-image-item" key={i}>
+                <img src={img.url} />
+            </div>
+        })
+    }
     render() {
+        var vs = Array.isArray(this.block.value) ? this.block.value : (this.block.value ? [this.block.value] : []);
+        if (!this.block.field?.config?.isMultiple && vs.length > 1) vs = [vs.first()]
         return <div className='sy-field-image' onMouseDown={e => e.stopPropagation()}>
-            {this.block.value && <div className="sy-field-image-wrapper">
-                <img src={this.block.value.url} />
+            {vs.length > 0 && <div className="sy-field-images">
+                {this.renderImages(vs)}
             </div>}
-            {(!this.block.value || this.block.field?.config?.isMultiple) && <div
+            {(vs.length == 0 || this.block.field?.config?.isMultiple) && <div
                 className="sy-field-image-add"
             >
                 <Button ghost onClick={e => this.block.uploadFile(e)}>上传文件</Button>

@@ -12,6 +12,7 @@ export class FieldEmoji extends OriginField {
 @view('/field/emoji')
 export class FieldEmailView extends BlockView<FieldEmoji>{
     render() {
+        var self = this;
         async function mousedown(event: React.MouseEvent) {
             var r = await channel.patch('/interactive/emoji', {
                 elementUrl: getElementUrl(
@@ -21,10 +22,15 @@ export class FieldEmailView extends BlockView<FieldEmoji>{
                     this.block.item.id
                 )
             });
-            console.log(r);
+            if (r.ok) {
+                self.block.value = r.data.count;
+                self.block.item.dataRow[self.block.field.name]= r.data.count;
+                self.forceUpdate();
+            }
         }
+        var countStr = typeof this.block.value == 'number' && this.block.value > 0 ? `(${this.block.value})` : '';
         return <div className='sy-field-email' onMouseDown={e => mousedown(e)}>
-            {this.block.viewField?.field.config?.emoji?.code}
+            {this.block.viewField?.field.config?.emoji?.code}{countStr}
         </div>
     }
 }

@@ -19,7 +19,9 @@ export class FieldFile extends OriginField {
             })
             if (r.ok) {
                 if (r.data.file) {
-                    this.onUpdateCellValue(r.data.file);
+                    if (!Array.isArray(this.value)) this.value = [];
+                    this.value.push(r.data.file);
+                    this.onUpdateCellValue(this.value);
                 }
             }
         }
@@ -27,12 +29,21 @@ export class FieldFile extends OriginField {
 }
 @view('/field/file')
 export class FieldFileView extends BlockView<FieldFile>{
+    renderFiles(images: { name: string, url: string }[]) {
+        return images.map((img, i) => {
+            return <div className="sy-field-file-item" key={i}>
+                {img.name}
+            </div>
+        })
+    }
     render() {
+        var vs = Array.isArray(this.block.value) ? this.block.value : (this.block.value ? [this.block.value] : []);
+        if (!this.block.field?.config?.isMultiple && vs.length > 1) vs = [vs.first()]
         return <div className='sy-field-file' onMouseDown={e => e.stopPropagation()}>
             {this.block.value && <div className="sy-field-files">
-                {this.block.value?.name}
+                {this.renderFiles(vs)}
             </div>}
-            {(!this.block.value || this.block.field?.config?.isMultiple) && <Button ghost onClick={e => this.block.uploadFile(e)}>上传文件</Button>}
+            {(vs.length == 0 || this.block.field?.config?.isMultiple) && <Button ghost onClick={e => this.block.uploadFile(e)}>上传文件</Button>}
         </div>
     }
 }

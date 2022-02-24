@@ -5,12 +5,23 @@ import { useRelationPickData } from "../../../../extensions/tablestore/relation.
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { Rect } from "../../../../src/common/vector/point";
+import { FieldType } from "../../schema/type";
 import { OriginField } from "./origin.field";
 
 @url('/field/relation')
 export class FieldRelation extends OriginField {
     get relationList() {
-        return []
+        var rs: any[] = []; var vs: string[] = this.value;
+        if (!Array.isArray(vs)) vs = [];
+        if (vs.length == 0) return [];
+        var g = this.dataGrid.relationDatas.get(this.field.config?.relationTableId);
+        if (Array.isArray(g)) {
+            return g.findAll(g => vs.includes(g.id))
+        }
+        return rs;
+    }
+    get relationSchema() {
+        return this.dataGrid.relationSchemas.find(g => g.id == this.field.config?.relationTableId)
     }
 }
 @view('/field/relation')
@@ -20,9 +31,17 @@ export class FieldRelationView extends BlockView<FieldRelation>{
             field: this.block.viewField.field,
             relationDatas: []
         });
+        if (r) {
+            var ids = r.map(r => r.id);
+            this.block.onUpdateCellValue(ids);
+        }
     }
     renderList() {
-        return <div>
+        var rs = this.block.relationSchema;
+        var f = rs?.fields?.find(g => g.type == FieldType.title);
+        return <div>{this.block.relationList?.map(r => {
+            return <a>{r[f.name]}</a>
+        })}
             <Icon click={e => this.onPickRelationData(e)} icon={PlusSvg}></Icon>
         </div>
     }
