@@ -16,6 +16,9 @@ export class OriginFilterField extends Block {
     get fieldText() {
         return this.field?.text;
     }
+    get filters() {
+        return {}
+    }
 }
 export class OriginFilterFieldView extends React.Component<{
     filterField: OriginFilterField,

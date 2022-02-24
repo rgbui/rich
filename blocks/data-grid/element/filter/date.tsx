@@ -15,7 +15,7 @@ export class FilterFieldDate extends OriginFilterField {
 @view('/field/filter/date')
 export class FilterFieldDateView extends BlockView<FilterFieldDate>{
     render() {
-        return <div className='sy-filter-option'>
+        return <div className='sy-filter-date'>
 
         </div>
     }

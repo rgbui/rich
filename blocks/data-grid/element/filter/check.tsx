@@ -11,12 +11,16 @@ export class FilterFieldCheck extends OriginFilterField {
     get field() {
         return (this.refBlock as DataGridView)?.schema.fields.find(g => g.id == this.refFieldId);
     }
+    checked: boolean = false;
 }
 @view('/field/filter/check')
 export class FilterFieldCheckView extends BlockView<FilterFieldCheck>{
     render() {
         return <div className='sy-filter-option'>
-            <input type='checkbox' />
+            <input type='checkbox' checked={this.block.checked} onChange={e=>{
+                this.block.checked=(e.target as HTMLInputElement).checked;
+                this.block.refBlock.onSearch();
+            }} />
         </div>
     }
 }

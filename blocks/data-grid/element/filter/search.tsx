@@ -5,15 +5,17 @@ import { OriginFilterField } from "./origin.field";
 
 @url('/field/filter/search')
 export class SearchText extends OriginFilterField {
-  
+    @prop()
+    refFieldIds: string[] = [];
     word: string = '';
 }
 @view('/field/filter/search')
 export class SearchTextView extends BlockView<SearchText>{
     render() {
+        var self = this;
         function keydown(e: KeyboardEvent) {
             if (e.code == 'Enter') {
-
+                self.block.refBlock.onSearch();
             }
         }
         return <div className='sy-filter-search'>
