@@ -28,10 +28,25 @@ export class Block$LifeCycle {
         if (this.createSource) {
             await this.createdDidMounted()
         }
+        var refBlock = this.refBlock;
+        if (refBlock) {
+            refBlock.registerReferenceBlocker(this);
+        }
         if (typeof this.didMounted == 'function') await this.didMounted();
         this.emit('mounted');
     }
+    async onUnmount(this: Block) {
+        var refBlock = this.refBlock;
+        if (refBlock) {
+            refBlock.cancelReferenceBlocker(this);
+        }
+        if (typeof this.didUnmounted == 'function') await this.didUnmounted();
+        this.emit('mounted');
+    }
     async didMounted(this: Block) {
+
+    }
+    async didUnmounted(this: Block) {
 
     }
     async createdDidMounted() {
