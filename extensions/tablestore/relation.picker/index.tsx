@@ -62,23 +62,18 @@ export async function useRelationPickData(pos: PopoverPosition,
     options: {
         relationDatas: { id: string }[],
         field: Field,
-        isMultiple?: boolean,
-        change?: (rows: any[]) => void
+        isMultiple?: boolean
     }) {
     let popover = await PopoverSingleton(RelationPicker, { mask: true });
     let fv = await popover.open(pos);
     await fv.open(options);
-    return new Promise((resolve: (data: string) => void, reject) => {
-        fv.only('save', (data: string) => {
-            popover.close();
-            resolve(data);
-        });
+    return new Promise((resolve: (data: any[]) => void, reject) => {
         fv.only('close', () => {
             popover.close();
             resolve(null);
         });
         fv.only('change', (rows) => {
-            options.change(rows);
+            resolve(rows);
         })
         popover.only('close', () => {
             resolve(null)
