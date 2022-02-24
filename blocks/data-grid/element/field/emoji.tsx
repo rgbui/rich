@@ -17,14 +17,16 @@ export class FieldEmailView extends BlockView<FieldEmoji>{
             var r = await channel.patch('/interactive/emoji', {
                 elementUrl: getElementUrl(
                     ElementType.SchemaRecordField,
-                    this.block.dataGrid.schema.id,
-                    this.block.field.id,
-                    this.block.item.id
-                )
+                    self.block.dataGrid.schema.id,
+                    self.block.field.id,
+                    self.block.item.dataRow.id
+                ),
+                schemaUrl: self.block.dataGrid.schema.url,
+                fieldName: self.block.field.name
             });
             if (r.ok) {
                 self.block.value = r.data.count;
-                self.block.item.dataRow[self.block.field.name]= r.data.count;
+                self.block.item.dataRow[self.block.field.name] = r.data.count;
                 self.forceUpdate();
             }
         }
