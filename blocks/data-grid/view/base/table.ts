@@ -30,6 +30,7 @@ import { useFormula } from "../../../../extensions/tablestore/formula";
 import { useFieldEmojiView } from "../../../../extensions/tablestore/emoji";
 import { PageLayoutType } from "../../../../src/layout/declare";
 import { PageDirective } from "../../../../src/page/directive";
+import { DataGridTool } from "../components/tool";
 
 export class DataGridView extends Block {
     checkItems: Record<string, any>[] = [];
@@ -48,6 +49,7 @@ export class DataGridView extends Block {
     schema: TableSchema;
     relationSchemas: TableSchema[] = [];
     relationDatas: Map<string, any[]> = new Map();
+    isOver: boolean=false;
     init(): void {
         this.registerPropMeta('fields', ViewField, true);
     }
@@ -460,7 +462,6 @@ export class DataGridView extends Block {
             this.forceUpdate();
         });
     }
-
     async onSetSortField(viewField: ViewField, sort?: 0 | 1 | -1) {
         if (this.sorts.some(s => s.field == viewField.field.id && s.sort == sort)) {
             return;
@@ -729,5 +730,10 @@ export class DataGridView extends Block {
     async onSearch() {
 
     }
+    async onOver(isOver: boolean) {
+        this.isOver = isOver;
+        if (this.dataGridTool) this.dataGridTool.forceUpdate();
+    }
+    dataGridTool: DataGridTool;
 }
 

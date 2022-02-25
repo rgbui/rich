@@ -1,14 +1,16 @@
 .sy-dg-table {
-    margin  : 10px 0px;
-    overflow: auto;
+    margin: 10px 0px;
+    position: relative;
     &-content {
         position: relative;
+        overflow: auto;
     }
     &-head {
         display        : flex;
         justify-content: flex-start;
         align-items    : stretch;
         flex-wrap      : nowrap;
+
         &-th {
             border         : 1px solid #ddd;
             display        : inline-flex;
@@ -77,6 +79,7 @@
             }
         }
     }
+
     &-body {}
 
     &-row {
@@ -122,7 +125,6 @@
             color: rgba(55, 53, 47, 0.4);
         }
     }
-
     &-subline {
         display    : none;
         position   : absolute;
@@ -145,5 +147,4 @@
             background   : rgb(116, 182, 219);
         }
     }
-
 }

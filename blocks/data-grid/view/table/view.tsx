@@ -136,7 +136,12 @@ export class TableStoreView extends BlockView<TableStore>{
     }
     render() {
         var self = this;
-        return <div className="sy-dg-table" onMouseMove={e => this.mousemove(e.nativeEvent)}>
+        return <div className="sy-dg-table"
+
+            onMouseMove={e => this.mousemove(e.nativeEvent)}
+            onMouseEnter={e => this.block.onOver(true)}
+            onMouseLeave={e => this.block.onOver(false)}
+        >
             <DataGridTool block={this.block}></DataGridTool>
             {this.block.schema && <div className="sy-dg-table-content" >
                 {this.renderHead()}
