@@ -31,7 +31,6 @@ class TablePropertyView extends EventsComponent {
         var fs = this.schema.fields.findAll(g => g.text ? true : false);
         var self = this;
         async function change(field: Field, checked: boolean) {
-            console.log(field, checked, 'fc');
             if (checked == true) {
                 await self.block.onShowField(field);
             }
@@ -57,7 +56,7 @@ class TablePropertyView extends EventsComponent {
                     { text: '100条', value: 100 },
                     { text: '150条', value: 150 },
                     { text: '200条', value: 200 }
-                ]} value={this.block.size} onChange={e => { this.block.size = e; self.forceUpdate() }}></Select>
+                ]} value={this.block.size} onChange={e => { this.block.onChangeSize(e); self.forceUpdate() }}></Select>
             </div>
             <Divider></Divider>
             <div className="shy-table-property-view-operator">

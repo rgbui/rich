@@ -734,6 +734,14 @@ export class DataGridView extends Block {
         await this.loadData();
         this.forceUpdate();
     }
+    async onChangeSize(size: number) {
+        this.onAction(ActionDirective.onDataGridChangeSize, async () => {
+            this.updateProps({ size });
+            await this.loadData();
+            await this.createItem();
+            this.forceUpdate();
+        })
+    }
     async onSearch() {
 
     }
