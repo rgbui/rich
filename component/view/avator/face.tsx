@@ -52,3 +52,18 @@ export class Avatar extends React.Component<{
         </div>
     }
 }
+export class UserNameLink extends React.Component<{ userid: string }> {
+    private userName: string;
+    async componentDidMount() {
+        if (this.props.userid) {
+            var r = await channel.get('/user/basic', { userid: this.props.userid });
+            if (r.data?.user?.name) {
+                this.userName = r.data?.user?.name;
+                this.forceUpdate();
+            }
+        }
+    }
+    render(): React.ReactNode {
+        return <a>{this.userName}</a>
+    }
+}
