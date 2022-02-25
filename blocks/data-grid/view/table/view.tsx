@@ -18,13 +18,10 @@ export class TableStoreView extends BlockView<TableStore>{
     mousemove(event: MouseEvent) {
         if (this.isMoveLine) return;
         if (!this.block.schema) return;
-        var box = this.block.el as HTMLElement;
-        var body = box.querySelector('.sy-dg-table-body') as HTMLElement;
+        var box = (this.block.el as HTMLElement).querySelector('.sy-dg-table-content') as HTMLElement;
         var head = box.querySelector('.sy-dg-table-head') as HTMLElement;
-        if (!body) return;
         if (!head) return;
         var boxRect = Rect.fromEle(box);
-        var tableRect = Rect.fromEle(body);
         var tableHeadRect = Rect.fromEle(head);
         var scrollLeft = box.scrollLeft;
         var tableLeft = boxRect.left - scrollLeft;
@@ -42,8 +39,8 @@ export class TableStoreView extends BlockView<TableStore>{
         }
         if (index > -1) {
             this.subline.style.display = 'block';
-            this.subline.style.left = (w + 1) + 'px';
-            this.subline.style.height = (tableHeadRect.height + tableRect.height) + 'px';
+            this.subline.style.left = w + 'px';
+            this.subline.style.height = tableHeadRect.height + 'px';
             this.subline.setAttribute('data-index', index.toString());
         }
         else {
@@ -63,7 +60,8 @@ export class TableStoreView extends BlockView<TableStore>{
                 var rs = self.block.el.querySelectorAll('.sy-dg-table-row');
                 var cols: HTMLElement[] = [];
                 var head = self.block.el.querySelector('.sy-dg-table-head');
-                cols.push(head.children[data.colIndex] as HTMLElement)
+                var cs = Array.from(head.querySelectorAll('.sy-dg-table-head-th'));
+                cols.push(cs[data.colIndex] as HTMLElement)
                 rs.forEach(r => {
                     var c = r.children[data.colIndex] as HTMLElement;
                     cols.push(c);
@@ -81,9 +79,8 @@ export class TableStoreView extends BlockView<TableStore>{
                 })
                 var left = this.block.fields.findAll((g, i) => i < data.colIndex).sum(g => g.colWidth) + w + 1;
                 self.subline.style.left = left + 'px';
-                var tableRect = Rect.fromEle(self.block.el.querySelector('.sy-dg-table-body'));
                 var tableHeadRect = Rect.fromEle(self.block.el.querySelector('.sy-dg-table-head'));
-                self.subline.style.height = (tableRect.height + tableHeadRect.height) + 'px';
+                self.subline.style.height = (tableHeadRect.height) + 'px';
                 if (isend) {
                     var cols = self.block.fields;
                     var col = cols[data.colIndex];
@@ -100,7 +97,8 @@ export class TableStoreView extends BlockView<TableStore>{
     subline: HTMLElement;
     private isMoveLine: boolean = false;
     renderHead() {
-        return <div className="sy-dg-table-head">
+        return <div className="sy-dg-table-head" onMouseMove={e => this.mousemove(e.nativeEvent)}>
+            <div className='sy-block-table-subline' onMouseDown={e => this.onMousedownLine(e)} ref={e => this.subline = e}></div>
             {this.block.fields.map((f, i) => {
                 var icon: SvgrComponent | JSX.Element;
                 if (f.type == 'check') icon = CheckSvg;
@@ -138,7 +136,7 @@ export class TableStoreView extends BlockView<TableStore>{
         var self = this;
         return <div className="sy-dg-table"
 
-            onMouseMove={e => this.mousemove(e.nativeEvent)}
+
             onMouseEnter={e => this.block.onOver(true)}
             onMouseLeave={e => this.block.onOver(false)}
         >
@@ -146,7 +144,6 @@ export class TableStoreView extends BlockView<TableStore>{
             {this.block.schema && <div className="sy-dg-table-content" >
                 {this.renderHead()}
                 {this.renderBody()}
-                <div className='sy-block-table-subline' onMouseDown={e => this.onMousedownLine(e)} ref={e => this.subline = e}></div>
                 {!this.block.isLock && <div onMouseDown={e => { e.stopPropagation(); self.block.onAddRow({}, undefined, 'after') }}
                     className="sy-dg-table-add" style={{ width: this.block.fields.sum(s => s.colWidth) + 40 }}>
                     <Icon size={12} icon={Plus}></Icon><span>新增</span>

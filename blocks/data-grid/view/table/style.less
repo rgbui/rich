@@ -1,5 +1,5 @@
 .sy-dg-table {
-    margin: 10px 0px;
+    margin  : 10px 0px;
     position: relative;
     &-content {
         position: relative;
@@ -10,7 +10,7 @@
         justify-content: flex-start;
         align-items    : stretch;
         flex-wrap      : nowrap;
-
+        position       : relative;
         &-th {
             border         : 1px solid #ddd;
             display        : inline-flex;
@@ -21,7 +21,7 @@
             box-sizing     : border-box;
             padding        : 5px;
             position       : relative;
-
+            overflow       : hidden;
             &-icon {
                 flex-shrink    : 0;
                 flex-grow      : 0;
@@ -41,32 +41,27 @@
                     margin-right       : 10px;
                 }
             }
-
             >label {
                 flex-grow    : 1;
                 flex-shrink  : 1;
                 overflow     : hidden;
                 text-overflow: ellipsis;
             }
-
             &-property {
                 flex-shrink: 0;
                 flex-grow  : 0;
                 display    : none;
                 cursor     : pointer;
             }
-
             &:hover {
                 .sy-dg-table-head-th-property {
                     display: flex;
                 }
             }
         }
-
         &-th+&-th {
             border-left: 1px solid transparent;
         }
-
         &-th-plus {
             display        : flex;
             align-items    : center;
@@ -125,6 +120,7 @@
             color: rgba(55, 53, 47, 0.4);
         }
     }
+
     &-subline {
         display    : none;
         position   : absolute;
