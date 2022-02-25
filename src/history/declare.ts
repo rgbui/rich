@@ -41,14 +41,16 @@ export enum ActionDirective {
     onSchemaCreateDefaultRow = 203,
     onSchemaRowUpdate = 204,
     onSchemaRowDelete = 205,
+    onSchemaShowField = 207,
+    onSchemaHideField = 208,
     onTablestoreUpdateViewField = 210,
     onTablestoreHideViewField = 211,
     onCreateTableSchema = 220,
     onDataGridTurnView = 221,
     onDataGridUpdateSorts = 222,
     onDataGridUpdateFilter = 223,
-    onDataGridShowRowNum=224,
-    onDataGridShowCheck=225,
+    onDataGridShowRowNum = 224,
+    onDataGridShowCheck = 225,
     /**
      * 错误修正的
      */

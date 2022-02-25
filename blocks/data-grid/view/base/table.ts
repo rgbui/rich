@@ -200,7 +200,7 @@ export class DataGridView extends Block {
             });
             await maps.eachAsync(async (vr) => {
                 var key = vr.key;
-                var v=vr.ids;
+                var v = vr.ids;
                 var sea = this.relationSchemas.find(g => g.id == key);
                 if (sea) {
                     var rd = await sea.all({ page: 1, filter: { id: { $in: v } } });
@@ -441,13 +441,26 @@ export class DataGridView extends Block {
         }
     }
     async onHideField(viewField: ViewField) {
-        this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
+        await this.page.onAction(ActionDirective.onSchemaHideField, async () => {
             var fields = this.fields.map(f => f.clone());
-            fields.remove(g => g == viewField);
+            fields.remove(g => g.field?.id == viewField?.field.id);
             this.changeFields(this.fields, fields);
             await this.createItem();
+            this.forceUpdate();
         });
     }
+    async onShowField(field: Field) {
+        if (this.fields.some(s => s.field.id == field.id)) return;
+        await this.page.onAction(ActionDirective.onSchemaShowField, async () => {
+            var fields = this.fields.map(f => f.clone());
+            var newFeild = this.schema.createViewField(field);
+            fields.push(newFeild);
+            this.changeFields(this.fields, fields);
+            await this.createItem();
+            this.forceUpdate();
+        });
+    }
+
     async onSetSortField(viewField: ViewField, sort?: 0 | 1 | -1) {
         if (this.sorts.some(s => s.field == viewField.field.id && s.sort == sort)) {
             return;

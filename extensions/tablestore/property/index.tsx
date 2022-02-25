@@ -30,16 +30,15 @@ class TablePropertyView extends EventsComponent {
         if (!this.schema) return <div></div>
         var fs = this.schema.fields.findAll(g => g.text ? true : false);
         var self = this;
-        function change(field: Field, checked: boolean) {
-            console.log(field, checked);
+        async function change(field: Field, checked: boolean) {
+            console.log(field, checked, 'fc');
             if (checked == true) {
-                if (!self.block.fields.some(s => s.fieldId == field.id)) {
-                    var fr = self.block.schema.createViewField(field);
-                    self.block.fields.push(fr);
-                }
+                await self.block.onShowField(field);
             }
             else {
-                self.block.fields.remove(g => g.fieldId == field.id);
+                var vf = self.block.fields.find(g => g.field.id == field.id);
+                if (vf)
+                    await self.block.onHideField(vf);
             }
             self.forceUpdate();
         }
