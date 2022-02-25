@@ -83,6 +83,12 @@ export async function createFieldBlock(viewField: ViewField, data: { row: Record
                     value: viewField.getValue(row),
                 }, block);
                 break;
+            case FieldType.comment:
+                cellContent = await BlockFactory.createBlock('/field/comment', page, {
+                    viewField,
+                    value: viewField.getValue(row),
+                }, block);
+                break;
         }
     }
     return cellContent;
