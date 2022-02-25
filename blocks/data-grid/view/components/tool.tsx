@@ -27,36 +27,47 @@ import FileSvg from "../../../../src/assert/svg/file.svg";
 import { FieldType } from "../../schema/type";
 
 export class DataGridTool extends React.Component<{ block: DataGridView }>{
+    isOpenTool: boolean = false;
     render() {
         var props = this.props;
         props.block.dataGridTool = this;
+        var self = this;
         async function changeDataGridView(event: React.MouseEvent) {
+            self.isOpenTool = true;
             var result = await useTabelSchemaViewDrop({ roundArea: Rect.fromEvent(event) }, {
                 schema: props.block.schema
             });
             if (result) {
                 props.block.onDataGridTurnView(result.id);
             }
+            self.isOpenTool = false;
         }
         async function openSortView(event: React.MouseEvent) {
+            self.isOpenTool = true;
             var r = await useTableSortView({ roundArea: Rect.fromEvent(event) }, { schema: props.block.schema, sorts: props.block.sorts });
             if (r) {
                 await props.block.onUpdateSorts(r);
             }
+            self.isOpenTool = false;
         }
         async function openFilterView(event: React.MouseEvent) {
+            self.isOpenTool = true;
             var r = await useTableFilterView({ roundArea: Rect.fromEvent(event) }, { schema: props.block.schema, filter: props.block.filter, block: props.block });
             if (r) {
                 await props.block.onUpdateFilter(r);
             }
+            self.isOpenTool = false;
         }
         async function openConfigProperty(event: React.MouseEvent) {
+            self.isOpenTool = true;
             var r = await useTablePropertyView({ roundArea: Rect.fromEvent(event) }, {
                 schema: props.block.schema,
                 gridView: props.block
             });
+            self.isOpenTool = false;
         }
         async function openConfigView(event: React.MouseEvent) {
+            self.isOpenTool = true;
             var menus = [
                 { text: '复制链接', icon: LinkSvg, name: 'copylink' },
                 { text: '属性', icon: PropertySvg, name: 'propertys' },
@@ -102,8 +113,10 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                         break;
                 }
             }
+            self.isOpenTool = false;
         }
         async function openForm(event: React.MouseEvent) {
+            self.isOpenTool = true;
             var newRow = await useFormPage({
                 schema: props.block.schema,
                 recordViewId: props.block.schema.recordViews.first().id
@@ -111,12 +124,15 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
             if (newRow) {
                 await props.block.onAddRow(newRow, undefined, 'after')
             }
+            self.isOpenTool = false;
         }
         async function openFormDrop(event: React.MouseEvent) {
+            self.isOpenTool = true;
             event.stopPropagation();
             useTabelSchemaFormDrop({ roundArea: Rect.fromEvent(event) }, {
                 schema: props.block.schema
             })
+            self.isOpenTool = false;
         }
         var view = props.block.schema?.views?.find(g => g.id == props.block.syncBlockId)
         if (props.block.isLock == true) return <></>

@@ -738,6 +738,7 @@ export class DataGridView extends Block {
 
     }
     async onOver(isOver: boolean) {
+        if (this.dataGridTool && this.dataGridTool.isOpenTool) return;
         this.isOver = isOver;
         if (this.dataGridTool) this.dataGridTool.forceUpdate();
     }
