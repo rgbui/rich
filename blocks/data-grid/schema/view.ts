@@ -38,4 +38,11 @@ export class ViewField {
     getValue(row) {
         if (this?.field?.name) return row[this.field.name];
     }
+    isSame(vf: ViewField) {
+        if (vf.fieldId === this.fieldId) return true;
+        if (!vf.fieldId && !this.fieldId) {
+            if (this.type == vf.type) return true;
+        }
+        return false;
+    }
 }

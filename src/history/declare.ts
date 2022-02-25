@@ -51,6 +51,7 @@ export enum ActionDirective {
     onDataGridUpdateFilter = 223,
     onDataGridShowRowNum = 224,
     onDataGridShowCheck = 225,
+    onDataGridChangeFields=226,
     /**
      * 错误修正的
      */

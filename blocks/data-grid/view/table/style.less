@@ -58,6 +58,11 @@
                     display: flex;
                 }
             }
+            &.dragging{
+                >*{
+                    opacity: 0;
+                }
+            }
         }
         &-th+&-th {
             border-left: 1px solid transparent;

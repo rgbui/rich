@@ -49,7 +49,7 @@ export class DataGridView extends Block {
     schema: TableSchema;
     relationSchemas: TableSchema[] = [];
     relationDatas: Map<string, any[]> = new Map();
-    isOver: boolean=false;
+    isOver: boolean = false;
     init(): void {
         this.registerPropMeta('fields', ViewField, true);
     }
@@ -709,6 +709,13 @@ export class DataGridView extends Block {
             fields: newFields.map(f => f.get())
         }, BlockRenderRange.none, true);
         this.fields = newFields;
+    }
+    async onChangeFields(oldFields: ViewField[], newFields: ViewField[]) {
+        await this.onAction(ActionDirective.onDataGridChangeFields, async () => {
+            this.changeFields(oldFields, newFields);
+            await this.createItem();
+            this.forceUpdate();
+        })
     }
     async onCheckRow(row: Record<string, any>, checked: boolean) {
         if (checked) {

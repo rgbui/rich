@@ -7,17 +7,20 @@ import { ChildsArea } from "../../../../src/block/view/appear"
 import Plus from "../../../../src/assert/svg/plus.svg";
 import { getTypeSvg } from "../../schema/util"
 import { Loading } from "../../../../component/view/loading"
-import { Rect } from "../../../../src/common/vector/point"
+import { Point, Rect } from "../../../../src/common/vector/point"
 import { MouseDragger } from "../../../../src/common/dragger"
 import { DataGridTool } from "../components/tool"
 import { BlockRenderRange } from "../../../../src/block/enum"
 import { CheckSvg, TypesNumberSvg } from "../../../../component/svgs"
+import { ghostView } from "../../../../src/common/ghost"
+import { ViewField } from "../../schema/view"
 
 @view('/data-grid/table')
 export class TableStoreView extends BlockView<TableStore>{
     mousemove(event: MouseEvent) {
         if (this.isMoveLine) return;
         if (!this.block.schema) return;
+        if (this.isDragMouseField) return;
         var box = (this.block.el as HTMLElement).querySelector('.sy-dg-table-content') as HTMLElement;
         var head = box.querySelector('.sy-dg-table-head') as HTMLElement;
         if (!head) return;
@@ -48,6 +51,7 @@ export class TableStoreView extends BlockView<TableStore>{
         }
     }
     onMousedownLine(event: React.MouseEvent) {
+        if (this.isDragMouseField) return;
         var self = this;
         self.isMoveLine = true;
         event.stopPropagation();
@@ -94,6 +98,54 @@ export class TableStoreView extends BlockView<TableStore>{
             }
         })
     }
+    private isDragMouseField: boolean = false;
+    onDragMouseField(event: React.MouseEvent, vf: ViewField) {
+        var th = (event.target as HTMLElement).closest('.sy-dg-table-head-th') as HTMLElement;
+        var parent = th.parentElement;
+        var self = this;
+        MouseDragger({
+            event,
+            moveStart: (ev, data) => {
+                self.isDragMouseField = true;
+                ghostView.load(th, { point: Point.from(ev), opacity: .9 });
+                th.classList.add('dragging')
+                th.style.pointerEvents = 'none';
+            },
+            moving: (ev, data, isend) => {
+                ghostView.move(Point.from(ev));
+                var ele = ev.target as HTMLElement;
+                var overTh = ele.closest('.sy-dg-table-head-th') as HTMLElement;
+                if (overTh && parent.contains(overTh) && !overTh.classList.contains('sy-dg-table-head-th-plus')) {
+                    var rect = Rect.fromEle(overTh);
+                    if (ev.pageX < rect.center) {
+                        parent.insertBefore(th, overTh);
+                    }
+                    else {
+                        var next = overTh.nextElementSibling;
+                        if (next) parent.insertBefore(th, next)
+                        else parent.appendChild(th)
+                    }
+                }
+            },
+            moveEnd(ev, isMove) {
+                if (isMove) {
+                    self.isDragMouseField = false;
+                    ghostView.unload()
+                    th.classList.remove('dragging')
+                    th.style.pointerEvents = 'auto';
+                    var cs = Array.from(parent.querySelectorAll('.sy-dg-table-head-th'));
+                    var b = th.previousElementSibling;
+                    var at = -1;
+                    if (b) at = cs.findIndex(g => g === b);
+                    var vs = self.block.fields.map(c => c.clone());
+                    vs.remove(v => v.isSame(vf));
+                    if (at == -1) vs.splice(0, 0, vf.clone())
+                    else vs.splice(at + 1, 0, vf.clone());
+                    self.block.onChangeFields(self.block.fields, vs);
+                }
+            }
+        })
+    }
     subline: HTMLElement;
     private isMoveLine: boolean = false;
     renderHead() {
@@ -104,7 +156,7 @@ export class TableStoreView extends BlockView<TableStore>{
                 if (f.type == 'check') icon = CheckSvg;
                 else if (f.type == 'rowNum') icon = TypesNumberSvg;
                 else if (f.field) icon = getTypeSvg(f.field.type);
-                return <div className="sy-dg-table-head-th"
+                return <div className="sy-dg-table-head-th" onMouseDown={e => this.onDragMouseField(e, f)}
                     style={{ width: f.colWidth || 120 }}
                     key={f?.field?.id || i}>
                     <div className={'sy-dg-table-head-th-icon'} ><Icon icon={icon} size='none'></Icon></div>
@@ -135,7 +187,6 @@ export class TableStoreView extends BlockView<TableStore>{
     render() {
         var self = this;
         return <div className="sy-dg-table"
-
 
             onMouseEnter={e => this.block.onOver(true)}
             onMouseLeave={e => this.block.onOver(false)}
