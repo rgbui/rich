@@ -54,8 +54,9 @@ class TablePropertyView extends EventsComponent {
                     { text: '20条', value: 20 },
                     { text: '50条', value: 50 },
                     { text: '80条', value: 80 },
-                    { text: '120条', value: 120 },
-                    { text: '150条', value: 150 }
+                    { text: '100条', value: 100 },
+                    { text: '150条', value: 150 },
+                    { text: '200条', value: 200 }
                 ]} value={this.block.size} onChange={e => { this.block.size = e; self.forceUpdate() }}></Select>
             </div>
             <Divider></Divider>
