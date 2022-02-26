@@ -1,5 +1,6 @@
 import lodash from "lodash";
 import { EmojiCode } from "../../../extensions/emoji/store";
+import { util } from "../../../util/util";
 import { FieldType } from "./type";
 export class Field {
     id: string;
@@ -15,7 +16,7 @@ export class Field {
                 }
                 else this.type = col[n];
             }
-            else this[n] = col[n];
+            else this[n] = util.clone(col[n]);
         }
     }
     get() {
@@ -37,13 +38,15 @@ export class Field {
     }
 }
 export interface FieldConfig {
-    options?: { text: string,value:string, color: string }[];
-    isMultiple?:boolean
+    options?: { text: string, value: string, color: string }[];
+    isMultiple?: boolean
     relationTableId?: string,
     rollupTableId?: string,
     rollupFieldId?: string,
     rollupStatistic?: string,
     formula?: string,
-    emoji?:EmojiCode
+    emoji?: EmojiCode,
+    dateFormat?: string,
+    includeTime?:boolean
 }
 

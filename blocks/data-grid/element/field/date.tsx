@@ -10,7 +10,8 @@ import { BlockRenderRange } from "../../../../src/block/enum";
 export class FieldDate extends OriginField {
     get dateString() {
         var r = dayjs(this.value);
-        return r.format('YYYY-MM-DD')
+        var format = this.field?.config?.dateFormat || 'YYYY年MM月DD日'
+        return r.format(format)
     }
     async onCellMousedown(event: React.MouseEvent<Element, MouseEvent>) {
         event.stopPropagation();

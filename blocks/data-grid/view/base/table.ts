@@ -22,7 +22,7 @@ import { FieldType } from "../../schema/type";
 import { ViewField } from "../../schema/view";
 import { DataGridTurns } from "../../turn";
 import { TableStoreItem } from "../item";
-import { ArrowDownSvg, ArrowUpSvg, FilterSvg, HideSvg, TrashSvg } from "../../../../component/svgs";
+import { ArrowDownSvg, ArrowUpSvg, FilterSvg, HideSvg, SettingsSvg, TrashSvg } from "../../../../component/svgs";
 import { getFieldMenus, getTypeSvg } from "../../schema/util";
 import { useRelationView } from "../../../../extensions/tablestore/relation";
 import { useRollupView } from "../../../../extensions/tablestore/rollup";
@@ -31,6 +31,7 @@ import { useFieldEmojiView } from "../../../../extensions/tablestore/emoji";
 import { PageLayoutType } from "../../../../src/layout/declare";
 import { PageDirective } from "../../../../src/page/directive";
 import { DataGridTool } from "../components/tool";
+import dayjs from "dayjs";
 
 export class DataGridView extends Block {
     checkItems: Record<string, any>[] = [];
@@ -417,7 +418,7 @@ export class DataGridView extends Block {
         });
     }
     async onUpdateField(viewField: ViewField, data: Record<string, any>) {
-        this.page.onAction(ActionDirective.onSchemaUpdateField, async () => {
+        await this.page.onAction(ActionDirective.onSchemaUpdateField, async () => {
             await this.schema.fieldUpdate({ fieldId: viewField.field.id, data });
             viewField.field.load(data);
             await this.createItem();
@@ -491,6 +492,7 @@ export class DataGridView extends Block {
     }
     async onOpenConfigField(event: React.MouseEvent | MouseEvent, viewField: ViewField) {
         event.stopPropagation();
+        var self=this;
         var rp = Rect.fromEvent(event);
         var items: MenuItemType<BlockDirective | string>[] = [];
         if (viewField.type) {
@@ -513,6 +515,10 @@ export class DataGridView extends Block {
             var fieldMenus = getFieldMenus();
             var fm = fieldMenus.find(g => g.value == viewField.field.type);
             var icon = getTypeSvg(viewField?.field.type);
+            var fieldSettingVisible: boolean = false;
+            if ([FieldType.date].includes(viewField?.field.type)) {
+                fieldSettingVisible = true;
+            }
             items.push(...[
                 {
                     name: 'name',
@@ -522,6 +528,7 @@ export class DataGridView extends Block {
                 },
                 { text: '字段类型', type: MenuItemTypeValue.text },
                 { text: fm.text, icon, childs: fieldMenus },
+                { icon: SettingsSvg, visible: fieldSettingVisible, text: fm.text + '设置', name: 'fieldSetting' },
                 { type: MenuItemTypeValue.divide },
                 { name: 'filter', icon: FilterSvg, text: '过滤' },
                 { name: 'sortDesc', icon: ArrowDownSvg, text: '降序' },
@@ -539,13 +546,31 @@ export class DataGridView extends Block {
                     text: '隐藏列'
                 }
             ]);
+            if (viewField.field?.type == FieldType.date) {
+                items.insertAt(3, {
+                    text: '包括时间',
+                    type: MenuItemTypeValue.switch,
+                    name: 'includeTime',
+                    value: viewField?.field?.config?.includeTime ? true : false
+                });
+            }
         }
         var re = await useSelectMenuItem(
             {
                 roundArea: rp,
                 direction: 'left'
             },
-            items
+            items,
+            {
+                async update(item) {
+                    if (item.name == 'includeTime') {
+                        var config = util.clone(viewField?.field?.config);
+                        if (typeof config == 'undefined') config = {};
+                        config.includeTime = item.value;
+                        await self.onUpdateField(viewField, { config });
+                    }
+                }
+            }
         );
         if (re) {
             var ReItem = items.find(g => g.name == 'name');
@@ -604,10 +629,86 @@ export class DataGridView extends Block {
                     this.onTurnField(viewField, re.item.value);
                 }
             }
+            else if (re.item.name == 'fieldSetting') {
+                if (viewField?.field.type == FieldType.date) {
+                    await this.onOpenConfigFieldSettings(rp, viewField);
+                }
+            }
             if (ReItem.value != viewField.field?.text) {
                 //编辑列名了
                 this.onUpdateField(viewField, { text: ReItem.value })
             }
+        }
+    }
+    async onOpenConfigFieldSettings(event: MouseEvent | MouseEvent | Rect, viewField: ViewField) {
+        console.log(event);
+        switch (viewField?.field?.type) {
+            case FieldType.date:
+                var items: MenuItemType<BlockDirective | string>[] = [];
+                var day = dayjs(new Date());
+                items.push(...[
+                    {
+                        name: 'name',
+                        type: MenuItemTypeValue.input,
+                        value: viewField?.field?.config?.dateFormat || 'YYYY年MM月DD日',
+                        text: '编辑日期格式',
+                    },
+                    { type: MenuItemTypeValue.divide },
+                    {
+                        name: 'format',
+                        text: '年月日',
+                        value: 'YYYY年MM月DD日',
+                        label: day.format('YYYY年MM月DD日')
+                    },
+                    {
+                        name: 'format',
+                        text: '年月',
+                        value: 'YYYY年MM月',
+                        label: day.format('YYYY年MM月')
+                    },
+                    {
+                        name: 'format',
+                        text: '月日',
+                        value: 'MM月DD日',
+                        label: day.format('MM月DD日')
+                    },
+                    {
+                        name: 'format',
+                        text: '日期时间',
+                        value: 'YYYY/MM/DD HH:mm',
+                        label: day.format('YYYY/MM/DD HH:mm')
+                    },
+                    {
+                        name: 'format',
+                        text: '时间',
+                        value: 'HH:mm',
+                        label: day.format('HH:mm')
+                    }
+                ]);
+                var re = await useSelectMenuItem(
+                    {
+                        roundArea: event instanceof Rect ? event : Rect.fromEvent(event),
+                        direction: 'left'
+                    },
+                    items
+                );
+                if (re?.item.name == 'format') {
+                    var config = util.clone(viewField?.field?.config);
+                    if (typeof config == 'undefined') config = {};
+                    config.dateFormat = re.item.value;
+                    await this.onUpdateField(viewField, { config });
+                    this.forceUpdate()
+                }
+                else {
+                    if (items[0].value != viewField?.field.config?.dateFormat) {
+                        var config = util.clone(viewField?.field?.config);
+                        if (typeof config == 'undefined') config = {};
+                        config.dateFormat = items[0].value;
+                        await this.onUpdateField(viewField, { config });
+                        this.forceUpdate()
+                    }
+                }
+                break;
         }
     }
     async onDataGridTurnView(viewId: string) {
