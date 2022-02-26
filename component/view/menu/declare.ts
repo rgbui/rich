@@ -15,7 +15,8 @@ export type MenuItemType<T = string> = {
      */
     remark?: string,
     param?: any,
-    url?: string
+    url?: string,
+    visible?:boolean
 }
 export enum MenuItemTypeValue {
     divide = 1,

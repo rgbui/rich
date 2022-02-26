@@ -47,6 +47,7 @@ export class MenuItem extends React.Component<{
     menubox: MenuBox;
     render() {
         var item = this.props.item;
+        if (item.visible == false) return <></>
         return <div
             onMouseLeave={e => this.mouseleave(item, e.nativeEvent)}
             onMouseEnter={e => this.mouseenter(item, e.nativeEvent)}
