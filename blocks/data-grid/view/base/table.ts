@@ -492,7 +492,7 @@ export class DataGridView extends Block {
     }
     async onOpenConfigField(event: React.MouseEvent | MouseEvent, viewField: ViewField) {
         event.stopPropagation();
-        var self=this;
+        var self = this;
         var rp = Rect.fromEvent(event);
         var items: MenuItemType<BlockDirective | string>[] = [];
         if (viewField.type) {
@@ -551,7 +551,7 @@ export class DataGridView extends Block {
                     text: '包括时间',
                     type: MenuItemTypeValue.switch,
                     name: 'includeTime',
-                    value: viewField?.field?.config?.includeTime ? true : false
+                    checked: viewField?.field?.config?.includeTime ? true : false
                 });
             }
         }
@@ -566,7 +566,7 @@ export class DataGridView extends Block {
                     if (item.name == 'includeTime') {
                         var config = util.clone(viewField?.field?.config);
                         if (typeof config == 'undefined') config = {};
-                        config.includeTime = item.value;
+                        config.includeTime = item.checked;
                         await self.onUpdateField(viewField, { config });
                     }
                 }
