@@ -4,6 +4,7 @@ import React, { CSSProperties } from "react";
  * 
  */
 import dayjs, { Dayjs } from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import { EventsComponent } from "../../component/lib/events.component";
 
 import chevronLeft from "../../src/assert/svg/chevronLeft.svg";
@@ -12,15 +13,19 @@ import { Icon } from "../../component/view/icon";
 import "./style.less";
 import { PopoverPosition } from "../popover/position";
 import { PopoverSingleton } from "../popover/popover";
-
+import { result } from "lodash";
+import { Divider } from "../../component/view/grid";
+dayjs.extend(customParseFormat);
 export class DatePicker extends EventsComponent {
-    private date: Date = new Date();
-    open(date: Date, options?: {}) {
-        this.mode = 'month';
-        this.isInEditing = false;
+    date: Date = new Date();
+    includeTime: boolean = false;
+    open(date: Date, options?: { includeTime?: boolean }) {
         if (typeof date == 'string') date = new Date(date);
         if (!date) date = new Date();
         this.date = date;
+        if (typeof options != 'undefined') {
+            if (typeof options.includeTime == 'boolean') this.includeTime = options.includeTime
+        }
         this.forceUpdate()
     }
     private renderDays(): JSX.Element {
@@ -61,11 +66,24 @@ export class DatePicker extends EventsComponent {
             </div>
         </div>
     }
-    private isInEditing: boolean = false;
-    private mode: 'month' | 'year' = 'month'
     setDay(date: Dayjs) {
-        this.isInEditing = true;
-        this.date = date.toDate();
+        if (this.includeTime == true) {
+            var dm = dayjs(this.date);
+            var dj = date.clone();
+            dj = dj.hour(dm.hour());
+            dj = dj.minute(dm.minute());
+            dj = dj.second(0);
+            dj = dj.millisecond(0);
+            this.date = dj.toDate();
+        }
+        else {
+            var dj = date.clone();
+            dj = dj.hour(0);
+            dj = dj.minute(0);
+            dj = dj.second(0);
+            dj = dj.millisecond(0);
+            this.date = dj.toDate();
+        }
         this.onChange();
         this.onSave();
     }
@@ -78,42 +96,74 @@ export class DatePicker extends EventsComponent {
     }
     onAdd(event: React.MouseEvent) {
         if (event) event.preventDefault()
-        this.isInEditing = true;
-        if (this.mode == 'month') {
-            var m = this.date.getMonth() + 1;
-            if (m > 12) m = 1;
-            this.date.setMonth(m)
-        }
-        else {
-            this.date.setFullYear(this.date.getFullYear() + 1);
-        }
+        this.date = dayjs(this.date).add(1, 'M').toDate();
+        this.updateInput();
         this.onChange();
     }
-    setMode(mode: 'year' | 'month') {
-        this.mode = mode;
-        this.isInEditing = true;
-        this.forceUpdate()
+    onClear() {
+        this.emit('clear');
     }
     onReduce(event: React.MouseEvent) {
         if (event) event.preventDefault()
-        this.isInEditing = true;
-        if (this.mode == 'month') {
-            var m = this.date.getMonth() - 1;
-            if (m == -1) m = 11;
-            this.date.setMonth(m)
+        this.date = dayjs(this.date).subtract(1, 'M').toDate();
+        this.updateInput();
+        this.onChange();
+    }
+    changeDate(value: string) {
+        value = value.trim();
+        var v = dayjs(value, "YYYY/MM/DD");
+        this.error = '';
+        if (!v.isValid() || (v.month() >= 12 || v.month() < 0 || v.date() > 31 || v.date() <= 0)) {
+            this.error = '解析日期错误';
+            this.forceUpdate();
         }
         else {
-            this.date.setFullYear(this.date.getFullYear() - 1);
+            var dj = dayjs(this.date);
+            dj = dj.year(v.year());
+            dj = dj.month(v.month());
+            dj = dj.date(v.date());
+            this.date = dj.toDate();
+            this.forceUpdate();
         }
-        this.onChange();
+    }
+    changeTime(value: string) {
+        value = value.trim();
+        var v = dayjs('2008/09/01 ' + value, "YYYY/MM/DD HH:mm");
+        this.error = '';
+        if (!v.isValid() || (v.hour() < 0 || v.hour() > 23 || v.minute() < 0 || v.minute() > 59)) {
+            this.error = '解析日期错误';
+            this.forceUpdate();
+        }
+        else {
+            var dj = dayjs(this.date);
+            dj = dj.hour(v.hour());
+            dj = dj.minute(v.minute());
+            dj = dj.second(0);
+            this.date = dj.toDate();
+            this.forceUpdate();
+        }
+    }
+    error: string = '';
+    inputDate: HTMLInputElement;
+    inputTime: HTMLInputElement;
+    private updateInput() {
+        var dj = dayjs(this.date);
+        this.inputDate.value = dj.format('YYYY/MM/DD');
+        if (this.inputTime)
+            this.inputTime.value = dj.format('HH:mm')
     }
     render() {
         var dj = dayjs(this.date);
         return <div className='shy-date-picker'>
+            {this.error && <div className="shy-date-picker-error">{this.error}</div>}
+            <div className={"shy-date-picker-input" + (this.error ? " shy-date-picker-input-error" : "")}>
+                <div><input type='text' ref={e => this.inputDate = e} defaultValue={dj.format('YYYY/MM/DD')} onBlur={e => this.changeDate((e.target as HTMLInputElement).value)} /></div>
+                {this.includeTime && <><span></span><div><input ref={e => this.inputTime = e} type='text' defaultValue={dj.format('HH:mm')} onBlur={e => this.changeTime((e.target as HTMLInputElement).value)} /></div></>}
+            </div>
             <div className='shy-date-picker-head'>
                 <div className='shy-date-picker-head-title'>
-                    <span style={{ cursor: 'pointer' }} onMouseDown={e => this.setMode('year')} className={this.mode == 'year' ? "hover" : ""}>{dj.year()}年</span>
-                    <span style={{ cursor: 'pointer' }} onMouseDown={e => this.setMode('month')} className={this.mode == 'month' && this.isInEditing ? "hover" : ""}>{dj.month() + 1}月</span>
+                    <span style={{ cursor: 'pointer' }}>{dj.year()}年</span>
+                    <span style={{ cursor: 'pointer' }}>{dj.month() + 1}月</span>
                     <span>{dj.date()}日</span>
                 </div>
                 <div className='shy-date-picker-head-operators'>
@@ -122,6 +172,10 @@ export class DatePicker extends EventsComponent {
                 </div>
             </div>
             {this.renderDays()}
+            <Divider></Divider>
+            <div className="shy-date-picker-clear" onClick={e => this.onClear()}>
+                清理
+            </div>
         </div>
     }
     private onClose() {
@@ -135,8 +189,10 @@ export interface DatePicker {
     emit(name: 'save', data: Date);
     only(name: 'close', fn: () => void);
     emit(name: 'close');
+    only(name: 'clear', fn: () => void);
+    emit(name: 'clear');
 }
-export async function useDatePicker(pos: PopoverPosition, date: Date, options?: {}) {
+export async function useDatePicker(pos: PopoverPosition, date: Date, options?: { includeTime?: boolean }) {
     let popover = await PopoverSingleton(DatePicker);
     let datePicker = await popover.open(pos);
     datePicker.open(date, options);
@@ -146,11 +202,15 @@ export async function useDatePicker(pos: PopoverPosition, date: Date, options?: 
             resolve(data);
         });
         popover.only('close', () => {
-            resolve(undefined)
-        })
-        datePicker.only('close', () => {
-            popover.close();
-            resolve(undefined);
+            resolve(datePicker.date);
         });
+        datePicker.only('clear', () => {
+            popover.close();
+            resolve(null);
+        })
+        // datePicker.only('close', () => {
+        //     popover.close();
+        //     resolve(datePicker.date);
+        // });
     })
 }
