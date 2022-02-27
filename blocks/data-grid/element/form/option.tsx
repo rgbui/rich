@@ -4,9 +4,7 @@ import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { Rect } from "../../../../src/common/vector/point";
 import { FieldConfig } from "../../schema/field";
-import { getTypeSvg } from "../../schema/util";
 import { FieldView, OriginFormField } from "./origin.field";
-
 
 @url('/form/option')
 class FieldText extends OriginFormField {
@@ -27,13 +25,14 @@ class FieldTextView extends BlockView<FieldText>{
                 }
             }
         );
-        if (op != null && typeof op != 'undefined') {
+        if (typeof op != 'undefined') {
             this.block.onChange(op);
         }
     }
     render() {
+        var op = this.block.field?.config?.options?.find(g => g.value == this.block.value);
         return <FieldView block={this.block}>
-            <div className="sy-form-field-option-value" onMouseDown={e => this.mousedown(e)}>{this.block.value}</div>
+            <div className="sy-form-field-option-value" onMouseDown={e => this.mousedown(e)}>{op?.text}</div>
         </FieldView>
     }
 }
