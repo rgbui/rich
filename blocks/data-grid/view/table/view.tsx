@@ -165,16 +165,23 @@ export class TableStoreView extends BlockView<TableStore>{
                 </div>
             })}
             <div className='sy-dg-table-head-th sy-dg-table-head-th-plus'
-                style={{ width: 40 }} onMouseDown={e => this.block.onAddField(e)}>
+                style={{ minWidth: 40, flexGrow: 1, flexShrink: 1 }} onMouseDown={e => this.block.onAddField(e)}>
                 <Icon icon={Plus}></Icon>
             </div>
         </div>
     }
     renderBody() {
+        var self = this;
         if (this.block.data && this.block.isLoadData) {
             var ids = this.block.childs.map(c => c.id)
             return <div className='sy-dg-table-body'>
                 <ChildsArea childs={this.block.childs}></ChildsArea>
+                {!this.block.isLock && <div
+                    style={{ width: (this.block.fields.sum(c => c.colWidth) + 40) + 'px' }}
+                    onMouseDown={e => { e.stopPropagation(); self.block.onAddRow({}, undefined, 'after') }}
+                    className="sy-dg-table-add">
+                    <Icon size={12} icon={Plus}></Icon><span>新增</span>
+                </div>}
             </div>
         }
         else return <div><Loading></Loading></div>
@@ -195,10 +202,7 @@ export class TableStoreView extends BlockView<TableStore>{
             {this.block.schema && <div className="sy-dg-table-content" >
                 {this.renderHead()}
                 {this.renderBody()}
-                {!this.block.isLock && <div onMouseDown={e => { e.stopPropagation(); self.block.onAddRow({}, undefined, 'after') }}
-                    className="sy-dg-table-add" style={{ width: this.block.fields.sum(s => s.colWidth) + 40 }}>
-                    <Icon size={12} icon={Plus}></Icon><span>新增</span>
-                </div>}
+
             </div>}
             {this.renderCreateTable()}
         </div>

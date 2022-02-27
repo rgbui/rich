@@ -16,7 +16,7 @@ export class DataGridTableItemView extends BlockView<DataGridTableItem>{
                     <block.viewComponent block={block}></block.viewComponent>
                 </div>
             })}
-            <div className='sy-dg-table-row-cell' style={{ width: 40 }}></div>
+            <div className='sy-dg-table-row-cell' style={{ minWidth: 40, flexGrow: 1, flexShrink: 1 }}></div>
         </div>
     }
 }
