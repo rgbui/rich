@@ -51,6 +51,9 @@
                 flex-shrink  : 1;
                 overflow     : hidden;
                 text-overflow: ellipsis;
+                display      : inline-block;
+                height       : 24px;
+                line-height  : 24px;
             }
 
             &-property {
@@ -106,6 +109,7 @@
         align-items    : stretch;
         flex-wrap      : nowrap;
         min-width      : 100%;
+
         &-cell {
             border     : 1px solid #ddd;
             padding    : 5px;
@@ -114,13 +118,16 @@
             flex-grow  : 0;
             overflow   : hidden;
             border-top : 1px solid transparent;
+
             &:first-child {
                 border-left: 1px solid transparent;
             }
+
             &:last-child {
                 border-right: 1px solid transparent;
             }
         }
+
         &:first-child {
             .sy-dg-table-row-cell {
                 border-top: 1px solid transparent;
@@ -139,7 +146,7 @@
     }
 
     &-add {
-        min-width      : 100%;
+        min-width       : 100%;
         border          : 1px solid #ddd;
         padding         : 5px;
         box-sizing      : border-box;
