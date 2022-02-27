@@ -483,6 +483,11 @@ export class Page$Seek {
         }
         return bs;
     }
+    each(this: Page, predict: (block: Block) => false | void | -1) {
+        this.views.each(v=>{
+            v.each(predict,true);
+        })
+    }
     findNearestBlockByPoint(this: Page, blocks: Block[], point: Point) {
         var ps = blocks.toArray(e => {
             var bounds = e.getBounds();
