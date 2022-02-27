@@ -124,7 +124,7 @@ export function getFieldMenus() {
         { type: MenuItemTypeValue.text, text: '基础' },
         ...map([
             { text: '单行文本', value: FieldType.text },
-            { text: '多行文本', value: FieldType.textarea },
+            // { text: '多行文本', value: FieldType.textarea },
             { text: '数字', value: FieldType.number },
             // { text: '价钱', value: FieldType.price },
             { text: '单选', value: FieldType.option },
