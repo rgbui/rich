@@ -1,5 +1,6 @@
 import React from "react";
 import { Rect } from "../../../src/common/vector/point";
+import { CheckSvg } from "../../svgs";
 import { Button } from "../button";
 import { Icon } from "../icon";
 import { Input } from "../input";
@@ -57,9 +58,10 @@ export class MenuItem extends React.Component<{
                 onMouseUp={e => this.mousedown(item, e.nativeEvent)}>
                 {item.render && item.render(item)}
                 {!item.render && <>{item.icon && <Icon icon={item.icon} size={item.iconSize ? item.iconSize : 17}></Icon>}
-                    <span className='shy-ws-item-page-text'>{item.text}</span>
+                    <span className='shy-menu-box-item-option-text'>{item.text}</span>
                     {item.label && <label>{item.label}</label>}
-                    {item.childs && item.childs.length > 0 && <Icon icon='arrow-right:sy'></Icon>}
+                    {item.checkLabel && <Icon className={'shy-menu-box-item-option-label-icon'} size={14} icon={CheckSvg}></Icon>}
+                    {item.childs && item.childs.length > 0 && <Icon className={'shy-menu-box-item-option-spread'} icon='arrow-right:sy'></Icon>}
                 </>}
             </a>}
             {item.type == MenuItemTypeValue.divide && <a className='shy-menu-box-item-divide'></a>}

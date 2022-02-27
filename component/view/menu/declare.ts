@@ -6,6 +6,7 @@ export type MenuItemType<T = string> = {
     render?: (item: MenuItemType<T>) => JSX.Element,
     iconSize?: number,
     label?: string,
+    checkLabel?: boolean,
     childs?: MenuItemType<T>[],
     value?: any,
     checked?: boolean,
@@ -16,7 +17,7 @@ export type MenuItemType<T = string> = {
     remark?: string,
     param?: any,
     url?: string,
-    visible?:boolean
+    visible?: boolean
 }
 export enum MenuItemTypeValue {
     divide = 1,

@@ -52,11 +52,11 @@
                 }
             }
 
-            .shy-ws-item-page-spread {
+            .shy-menu-box-item-option-spread {
                 flex-shrink: 0;
             }
 
-            .shy-ws-item-page-text {
+            .shy-menu-box-item-option-text {
                 display     : inline-flex;
                 margin-left : 8px;
                 margin-right: 14px;
@@ -80,6 +80,16 @@
                 line-height : 28px;
             }
 
+            .shy-menu-box-item-option-label-icon {
+                position    : absolute;
+                top         : 0px;
+                right       : 0px;
+                bottom      : 0px;
+                margin-right: 14px;
+                min-height  : 28px;
+                line-height : 28px;
+            }
+
             &.disabled {
                 cursor: default;
 
@@ -88,7 +98,7 @@
                     fill : rgba(55, 53, 47, 0.6);
                 }
 
-                .shy-ws-item-page-text {
+                .shy-menu-box-item-option-text {
                     color: rgba(55, 53, 47, 0.6);
                 }
 
@@ -101,11 +111,13 @@
                 }
             }
         }
-        &-button{
-            padding:0px 14px;
+
+        &-button {
+            padding: 0px 14px;
         }
-        &-input{
-            padding:0px 14px;
+
+        &-input {
+            padding: 0px 14px;
         }
 
         &-divide {
