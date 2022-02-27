@@ -30,6 +30,7 @@ import { PageContextmenu } from './partial/contextmenu';
 import { Kit } from '../kit';
 import { channel } from '../../net/channel';
 import { TableSchema } from '../../blocks/data-grid/schema/meta';
+import { OriginFormField } from '../../blocks/data-grid/element/form/origin.field';
 
 export class Page extends Events<PageDirective> {
     root: HTMLElement;
@@ -129,6 +130,28 @@ export class Page extends Events<PageDirective> {
         return this.matrix.getScaling().x;
     }
     schema: TableSchema;
+    loadSchemaRecord(row: Record<string, any>) {
+        this.each(g => {
+            if (g instanceof OriginFormField) {
+                var f = g.field;
+                if (f) {
+                    g.value = row[f.name];
+                }
+            }
+        })
+    }
+    getSchemaRow() {
+        var row: Record<string, any> = {};
+        this.each(g => {
+            if (g instanceof OriginFormField) {
+                var f = g.field;
+                if (f) {
+                    row[f.name] = g.value;
+                }
+            }
+        })
+        return row;
+    }
     get isLock() {
         return this.configViewer.pageConfig.locker?.lock ? true : false;
     }
