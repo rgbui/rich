@@ -8,8 +8,8 @@ import { createFormPage } from "./page";
 import Dots from "../../../src/assert/svg/dots.svg";
 import { Icon } from "../../../component/view/icon";
 import "./style.less";
-import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.field";
 import { channel } from "../../../net/channel";
+
 class FormPage extends EventsComponent {
     schema: TableSchema;
     row?: Record<string, any>;
@@ -46,13 +46,8 @@ class FormPage extends EventsComponent {
             row: this.row
         });
     }
-    getData() {
-        var row = {};
-        var rs: OriginFormField[] = this.pageView.findAll(g => typeof (g as any).field != 'undefined') as any;
-        rs.each(r => {
-            row[r.field.name] = r.value;
-        });
-        return row
+    getSchemaRow() {
+        return this.pageView.getSchemaRow()
     }
     el: HTMLDivElement;
     render() {
@@ -101,10 +96,10 @@ export async function useFormPage(options: {
         });
         formPage.only('close', () => {
             popover.close();
-            resolve(formPage.getData());
+            resolve(formPage.getSchemaRow());
         })
         popover.only('close', () => {
-            resolve(formPage.getData())
+            resolve(formPage.getSchemaRow())
         })
     })
 }
