@@ -1,61 +1,9 @@
-import { FieldType } from "../../../blocks/data-grid/schema/type";
+
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
-import { PageLayoutType } from "../../../src/layout/declare";
 import { Page } from "../../../src/page";
 import { PageDirective } from "../../../src/page/directive";
 import { channel } from "../../../net/channel";
-export function schemaCreatePageFormData(schema: TableSchema, row?: Record<string, any>) {
-    var cs: Record<string, any>[] = schema.fields.toArray(field => {
-        switch (field.type) {
-            case FieldType.text:
-            case FieldType.title:
-                return {
-                    url: '/form/text',
-                    value: row ? row[field.name] : undefined,
-                    fieldId: field.id
-                }
-                break;
-            case FieldType.bool:
-                return {
-                    url: '/form/check',
-                    value: row ? row[field.name] : undefined,
-                    fieldId: field.id
-                }
-            case FieldType.date:
-                return {
-                    url: '/form/date',
-                    value: row ? row[field.name] : undefined,
-                    fieldId: field.id
-                }
-            case FieldType.number:
-                return {
-                    url: '/form/number',
-                    value: row ? row[field.name] : undefined,
-                    fieldId: field.id
-                }
-                break;
-            case FieldType.option:
-                return {
-                    url: '/form/option',
-                    value: row ? row[field.name] : undefined,
-                    fieldId: field.id
-                }
-                break;
-        }
-    })
-    return {
-        url: '/page',
-        pageLayout: { type: PageLayoutType.dbForm },
-        views: [
-            {
-                url: '/view',
-                blocks: {
-                    childs: cs
-                }
-            }
-        ]
-    }
-}
+import { schemaCreatePageFormData } from "../../../blocks/data-grid/element/service";
 
 export async function createFormPage(el: HTMLElement,
     options: {
@@ -65,15 +13,6 @@ export async function createFormPage(el: HTMLElement,
     }) {
     var page = new Page();
     page.schema = options.schema;
-    page.on(PageDirective.blur, function (ev) {
-        // console.log('blur', ev)
-    });
-    page.on(PageDirective.focus, function (ev) {
-        //console.log('focus', ev);
-    });
-    page.on(PageDirective.focusAnchor, function (anchor) {
-        // console.log('focusAnchor', anchor);
-    });
     page.on(PageDirective.history, async function (action) {
         var syncBlocks = action.syncBlock();
         if (syncBlocks.length > 0) {
@@ -107,9 +46,12 @@ export async function createFormPage(el: HTMLElement,
         pageData = r.data.content as any;
         if (typeof pageData == 'string') pageData = JSON.parse(pageData);
     }
-    if (!pageData) pageData = schemaCreatePageFormData(options.schema, options.row);
+    if (!pageData) pageData = schemaCreatePageFormData(options.schema);
     await page.load(pageData);
+    if (options.row) page.loadSchemaRecord(options.row);
     var bound = el.getBoundingClientRect();
     page.render(el, { width: bound.width, height: bound.height });
     return page;
 }
+
+
