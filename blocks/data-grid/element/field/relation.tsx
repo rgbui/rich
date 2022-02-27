@@ -2,6 +2,7 @@ import React from "react";
 import { PlusSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import { useRelationPickData } from "../../../../extensions/tablestore/relation.picker";
+import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { Rect } from "../../../../src/common/vector/point";
@@ -24,43 +25,43 @@ export class FieldRelation extends OriginField {
     get relationSchema() {
         return this.dataGrid.relationSchemas.find(g => g.id == this.field.config?.relationTableId)
     }
-}
-@view('/field/relation')
-export class FieldRelationView extends BlockView<FieldRelation>{
-    async onPickRelationData(event: React.MouseEvent) {
+    async onCellMousedown(event: React.MouseEvent<Element, MouseEvent>) {
         var r = await useRelationPickData({ roundArea: Rect.fromEvent(event) }, {
-            field: this.block.viewField.field,
-            relationDatas: this.block.relationList,
-            isMultiple: this.block.viewField.field.config.isMultiple,
-            relationSchema: this.block.relationSchema
+            field: this.viewField.field,
+            relationDatas: this.relationList,
+            isMultiple: this.viewField.field.config.isMultiple,
+            relationSchema: this.relationSchema
         });
         if (r) {
-            var rs = this.block.dataGrid.relationDatas.get(this.block.relationSchema.id);
+            var rs = this.dataGrid.relationDatas.get(this.relationSchema.id);
             if (!Array.isArray(rs)) {
                 rs = [];
-                this.block.dataGrid.relationDatas.set(this.block.relationSchema.id, rs)
+                this.dataGrid.relationDatas.set(this.relationSchema.id, rs)
             }
             r.each(g => {
                 if (!rs.some(c => c.id == g.id)) rs.push(g)
             });
             var ids = r.map(r => r.id);
-            this.block.value = ids;
-            await this.block.onUpdateCellValue(ids);
+            this.value = ids;
+            await this.onUpdateCellValue(ids);
             this.forceUpdate();
         }
     }
+}
+@view('/field/relation')
+export class FieldRelationView extends BlockView<FieldRelation>{
     renderList() {
         var rs = this.block.relationSchema;
         var f = rs?.fields?.find(g => g.type == FieldType.title);
         if (!f) f = rs?.fields.find(g => g.type == FieldType.text);
         return <div className='sy-field-relation-items'>{this.block.relationList?.map(r => {
-            return <a key={r.id}>{r[f?.name]}</a>
+            var url = getElementUrl(ElementType.SchemaRecord, rs.id, r.id);
+            return <a href={url} onClick={e => e.preventDefault()} key={r.id}>{r[f?.name]}</a>
         })}
-            <Icon click={e => this.onPickRelationData(e)} icon={PlusSvg}></Icon>
         </div>
     }
     render() {
-        return <div className='sy-field-relation'>
+        return <div className='sy-field-relation' onMouseDown={e => this.block.onCellMousedown(e)}>
             {this.renderList()}
         </div>
     }
