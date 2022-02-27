@@ -9,7 +9,7 @@ export class Button extends React.Component<{
     ghost?: boolean,
     link?: boolean,
     style?: CSSProperties,
-    size?: 'normal' | 'medium' | 'larger',
+    size?: 'normal' | 'medium' | 'larger'|'small',
     className?:string
 }>{
     private _loading: boolean;
