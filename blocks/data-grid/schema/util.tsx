@@ -27,6 +27,7 @@ import {
     TypesSelectSvg,
     TypesSortSvg,
     TypesStringSvg,
+    TypesTitleSvg,
     VideoSvg
 } from "../../../component/svgs";
 import { MenuItemTypeValue } from "../../../component/view/menu/declare";
@@ -80,9 +81,11 @@ export function getTypeSvg(type: FieldType) {
             return EmojiSvg
         case FieldType.autoIncrement:
             return TypesSortSvg
-        // return  <img src={numberList}/>
+        case FieldType.title:
+            return TypesTitleSvg
         default:
             return TypesStringSvg
+
     }
 }
 

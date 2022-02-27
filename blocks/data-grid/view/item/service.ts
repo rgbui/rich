@@ -19,6 +19,12 @@ export async function createFieldBlock(viewField: ViewField, data: { row: Record
     }
     else if (field) {
         switch (field.type) {
+            case FieldType.title:
+                cellContent = await BlockFactory.createBlock('/field/title', page, {
+                    value: viewField.getValue(row),
+                    viewField
+                }, block);
+                break;
             case FieldType.text:
                 cellContent = await BlockFactory.createBlock('/field/text', page, {
                     value: viewField.getValue(row),

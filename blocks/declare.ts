@@ -83,7 +83,6 @@ import "./board/shape/index"
  */
 import "./general/style.less";
 import "./present/style.less";
-import "./data-grid/style.less";
 import "./at/style.less";
 import "./media/style.less";
 

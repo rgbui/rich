@@ -72,6 +72,7 @@ import TypesRollupSvg from "../src/assert/svg/types.rollup.svg";
 import TypesSelectSvg from "../src/assert/svg/types.select.svg";
 import TypesSortSvg from "../src/assert/svg/types.sort.svg";
 import TypesStringSvg from "../src/assert/svg/types.string.svg";
+import TypesTitleSvg from "../src/assert/svg/types.title.svg";
 import UnsplashSvg from "../src/assert/svg/unsplash.svg";
 import UploadSvg from "../src/assert/svg/upload.svg";
 import VideoSvg from "../src/assert/svg/video.svg";
@@ -151,6 +152,7 @@ TypesRollupSvg,
 TypesSelectSvg,
 TypesSortSvg,
 TypesStringSvg,
+TypesTitleSvg,
 UnsplashSvg,
 UploadSvg,
 VideoSvg
