@@ -37,7 +37,33 @@
 .sy-field-relation {
     &-items {
         a {
-            display: flex;
+            cursor             : pointer;
+            display            : inline-flex;
+            background         : linear-gradient(to right, rgba(55, 53, 47, 0.16) 0%, rgba(55, 53, 47, 0.16) 100%);
+            background-repeat  : repeat-x;
+            background-position: 0px 100%;
+            background-size    : 100% 1px;
+            line-height        : 1.2;
+            height             : 18px;
+            align-items        : center;
+            border-radius      : 3px;
+            font-size          : 14px;
+            font-weight        : 500;
+            min-width          : auto;
+            margin             : 0px 12px 6px 0px;
+            color              : rgb(55, 53, 47);
         }
+    }
+}
+
+.sy-field-title {
+    position: relative;
+
+    .sy-field-title-button {
+        position : absolute;
+        right    : 0px;
+        top      : 50%;
+        transform: translate(0px, -50%);
+        visibility: hidden;
     }
 }
