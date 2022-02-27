@@ -28,8 +28,8 @@ export class TableStoreItem extends Block {
             return this.parent;
         }
     }
-    async createElements()
-    {
+    async createElements() {
+        this.blocks.childs = [];
         for (let i = 0; i < this.fields.length; i++) {
             var field = this.fields[i];
             if (field) {

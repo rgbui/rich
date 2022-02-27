@@ -334,21 +334,22 @@ export class DataGridView extends Block {
             }
         })
     }
-    async onAddOpenForm() {
+    async onOpenAddForm() {
         var row = await useFormPage({
             schema: this.schema,
             recordViewId: this.schema.recordViews[0].id
         });
-        await this.onAddRow(row, undefined, 'after');
+        if (row)
+            await this.onAddRow(row, undefined, 'after');
     }
-    async onEditOpenForm(id: string) {
+    async onOpenEditForm(id: string) {
         var rowData = this.data.find(g => g.id == id);
         var row = await useFormPage({
             schema: this.schema,
             recordViewId: this.schema.recordViews[0].id,
             row: rowData
         });
-        await this.onRowUpdate(id, row);
+        if (row) await this.onRowUpdate(id, row);
     }
     async onAddRow(data, id?: string, arrow: 'before' | 'after' = 'after') {
         if (typeof id == 'undefined') {
@@ -367,13 +368,18 @@ export class DataGridView extends Block {
         });
     }
     async onRowUpdate(id: string, data: Record<string, any>) {
+        console.log(id, data, 'da');
         var oldItem = this.data.find(g => g.id == id);
         if (!util.valueIsEqual(oldItem, data)) {
-            var r = await this.schema.rowUpdate({ dataId: id, data });
+            var r = await this.schema.rowUpdate({ dataId: id, data: util.clone(data) });
             if (r.ok) {
                 Object.assign(oldItem, data);
-                var row: Block = this.blocks.childs.find(g => (g as TableStoreItem).dataRow.id == id);
-                if (row) row.forceUpdate();
+                var row: TableStoreItem = this.blocks.childs.find(g => (g as TableStoreItem).dataRow.id == id) as TableStoreItem;
+                if (row) {
+                    row.dataRow = oldItem;
+                    await row.createElements();
+                    row.forceUpdate();
+                }
             }
         }
     }

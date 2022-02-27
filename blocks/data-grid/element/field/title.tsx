@@ -7,7 +7,7 @@ import { Button } from "../../../../component/view/button";
 @url('/field/title')
 export class FieldText extends OriginField {
     async openPage() {
-        this.dataGrid.onEditOpenForm(this.item.dataRow.id);
+        this.dataGrid.onOpenEditForm(this.item.dataRow.id);
     }
 }
 @view('/field/title')
