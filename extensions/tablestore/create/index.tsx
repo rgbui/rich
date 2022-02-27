@@ -8,7 +8,8 @@ import { PopoverPosition } from "../../popover/position";
 import "./style.less";
 import { getSchemaViewIcon } from "../../../blocks/data-grid/schema/util";
 import { Divider } from "../../../component/view/grid";
-import CheckSvg from "../../../src/assert/svg/check.svg";
+import { CheckSvg } from "../../../component/svgs";
+
 export class DataGridCreate extends EventsComponent {
     render() {
         var views = [

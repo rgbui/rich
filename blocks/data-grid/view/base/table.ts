@@ -368,7 +368,6 @@ export class DataGridView extends Block {
         });
     }
     async onRowUpdate(id: string, data: Record<string, any>) {
-        console.log(id, data, 'da');
         var oldItem = this.data.find(g => g.id == id);
         if (!util.valueIsEqual(oldItem, data)) {
             var r = await this.schema.rowUpdate({ dataId: id, data: util.clone(data) });
@@ -428,6 +427,7 @@ export class DataGridView extends Block {
             await this.schema.fieldUpdate({ fieldId: viewField.field.id, data });
             viewField.field.load(data);
             await this.createItem();
+            this.forceUpdate();
         });
     }
     async onDeleteField(viewField: ViewField) {
@@ -520,6 +520,7 @@ export class DataGridView extends Block {
         else {
             var fieldMenus = getFieldMenus();
             var fm = fieldMenus.find(g => g.value == viewField.field.type);
+            fm.checkLabel = true;
             var icon = getTypeSvg(viewField?.field.type);
             var fieldSettingVisible: boolean = false;
             if ([FieldType.date].includes(viewField?.field.type)) {
@@ -560,6 +561,14 @@ export class DataGridView extends Block {
                     checked: viewField?.field?.config?.includeTime ? true : false
                 });
             }
+            else if ([FieldType.file, FieldType.image, FieldType.audio, FieldType.video].includes(viewField.field?.type)) {
+                items.insertAt(3, {
+                    text: '多文件上传',
+                    type: MenuItemTypeValue.switch,
+                    name: 'isMultiple',
+                    checked: viewField?.field?.config?.isMultiple ? true : false
+                });
+            }
         }
         var re = await useSelectMenuItem(
             {
@@ -573,6 +582,12 @@ export class DataGridView extends Block {
                         var config = util.clone(viewField?.field?.config);
                         if (typeof config == 'undefined') config = {};
                         config.includeTime = item.checked;
+                        await self.onUpdateField(viewField, { config });
+                    }
+                    else if (item.name == 'isMultiple') {
+                        var config = util.clone(viewField?.field?.config);
+                        if (typeof config == 'undefined') config = {};
+                        config.isMultiple = item.checked;
                         await self.onUpdateField(viewField, { config });
                     }
                 }
@@ -596,6 +611,7 @@ export class DataGridView extends Block {
                 this.onSetSortField(viewField, 1);
             }
             else if (re.item.name == 'turnFieldType') {
+                if (re.item.value == viewField?.field?.type) return;
                 if (re.item.value == FieldType.relation) {
                     var r = await useRelationView({ roundArea: rp }, {
                         config: viewField.field.config
