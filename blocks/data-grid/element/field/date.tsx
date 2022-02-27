@@ -9,6 +9,7 @@ import { useDatePicker } from "../../../../extensions/date";
 @url('/field/date')
 export class FieldDate extends OriginField {
     get dateString() {
+        if (this.value === null) return ''
         var r = dayjs(this.value);
         var format = this.field?.config?.dateFormat || 'YYYY年MM月DD日'
         return r.format(format)
@@ -16,10 +17,10 @@ export class FieldDate extends OriginField {
     async onCellMousedown(event: React.MouseEvent<Element, MouseEvent>) {
         event.stopPropagation();
         var el = event.target as HTMLElement;
-        var pickDate = await useDatePicker({ roundArea: Rect.from(el.getBoundingClientRect()) }, this.value,{
-            includeTime:this.field?.config?.includeTime?true:false
+        var pickDate = await useDatePicker({ roundArea: Rect.from(el.getBoundingClientRect()) }, this.value, {
+            includeTime: this.field?.config?.includeTime ? true : false
         });
-        if (pickDate) {
+        if (typeof pickDate != 'undefined') {
             this.onUpdateProps({ value: pickDate }, BlockRenderRange.self);
         }
     }

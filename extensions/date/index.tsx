@@ -208,9 +208,5 @@ export async function useDatePicker(pos: PopoverPosition, date: Date, options?: 
             popover.close();
             resolve(null);
         })
-        // datePicker.only('close', () => {
-        //     popover.close();
-        //     resolve(datePicker.date);
-        // });
     })
 }
