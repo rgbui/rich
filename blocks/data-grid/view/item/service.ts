@@ -52,6 +52,7 @@ export async function createFieldBlock(viewField: ViewField, data: { row: Record
                     viewField
                 }, block);
                 break;
+            case FieldType.user:
             case FieldType.creater:
             case FieldType.modifyer:
                 cellContent = await BlockFactory.createBlock('/field/user', page, {
@@ -91,6 +92,24 @@ export async function createFieldBlock(viewField: ViewField, data: { row: Record
                 break;
             case FieldType.comment:
                 cellContent = await BlockFactory.createBlock('/field/comment', page, {
+                    viewField,
+                    value: viewField.getValue(row),
+                }, block);
+                break;
+            case FieldType.email:
+                cellContent = await BlockFactory.createBlock('/field/email', page, {
+                    viewField,
+                    value: viewField.getValue(row),
+                }, block);
+                break;
+            case FieldType.phone:
+                cellContent = await BlockFactory.createBlock('/field/phone', page, {
+                    viewField,
+                    value: viewField.getValue(row),
+                }, block);
+                break;
+            case FieldType.link:
+                cellContent = await BlockFactory.createBlock('/field/url', page, {
                     viewField,
                     value: viewField.getValue(row),
                 }, block);
