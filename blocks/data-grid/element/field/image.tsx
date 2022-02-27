@@ -43,11 +43,7 @@ export class FieldImageView extends BlockView<FieldImage>{
             {vs.length > 0 && <div className="sy-field-images">
                 {this.renderImages(vs)}
             </div>}
-            {(vs.length == 0 || this.block.field?.config?.isMultiple) && <div
-                className="sy-field-image-add"
-            >
-                <Button ghost onClick={e => this.block.uploadFile(e)}>上传文件</Button>
-            </div>}
+            {(vs.length == 0 || this.block.field?.config?.isMultiple) && <Button size="small" ghost onClick={e => this.block.uploadFile(e)}>上传文件</Button>}
         </div>
     }
 }

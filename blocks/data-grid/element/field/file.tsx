@@ -33,7 +33,7 @@ export class FieldFileView extends BlockView<FieldFile>{
     renderFiles(images: { name: string, url: string }[]) {
         return images.map((img, i) => {
             return <div className="sy-field-file-item" key={i}>
-                {img.name}
+                <a download={img.url} href={img.url}>{img.name}</a>
             </div>
         })
     }
@@ -44,7 +44,7 @@ export class FieldFileView extends BlockView<FieldFile>{
             {this.block.value && <div className="sy-field-files">
                 {this.renderFiles(vs)}
             </div>}
-            {(vs.length == 0 || this.block.field?.config?.isMultiple) && <Button ghost onClick={e => this.block.uploadFile(e)}>上传文件</Button>}
+            {(vs.length == 0 || this.block.field?.config?.isMultiple) && <Button size={'small'} ghost onClick={e => this.block.uploadFile(e)}>上传文件</Button>}
         </div>
     }
 }

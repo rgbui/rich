@@ -17,18 +17,37 @@
 }
 
 .sy-field-image {
+    width:100%;
+    min-height: 30px;
     &-item {
         img {
             max-width: 100%;
         }
     }
-
-    &-add {
+    >.shy-button {
+        position  : absolute;
+        right     : 0px;
+        top       : 50%;
+        transform : translate(0px, -50%);
         visibility: hidden;
     }
-
     &:hover {
-        .sy-field-image-add {
+        >.shy-button {
+            visibility: visible;
+        }
+    }
+}
+
+.sy-field-file {
+    >.shy-button {
+        position  : absolute;
+        right     : 0px;
+        top       : 50%;
+        transform : translate(0px, -50%);
+        visibility: hidden;
+    }
+    &:hover {
+        >.shy-button {
             visibility: visible;
         }
     }
@@ -60,10 +79,10 @@
     position: relative;
 
     .sy-field-title-button {
-        position : absolute;
-        right    : 0px;
-        top      : 50%;
-        transform: translate(0px, -50%);
+        position  : absolute;
+        right     : 0px;
+        top       : 50%;
+        transform : translate(0px, -50%);
         visibility: hidden;
     }
 }
