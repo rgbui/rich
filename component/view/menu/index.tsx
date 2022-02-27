@@ -5,7 +5,7 @@ import { EventsComponent } from "../../lib/events.component";
 import "./style.less";
 import { MenuBox } from "./box";
 import { MenuItemType, MenuItemTypeValue } from "./declare";
-import { LayerWield, popoverLayer } from "../../lib/zindex";
+import { popoverLayer } from "../../lib/zindex";
 class MenuPanel<T> extends EventsComponent {
     open(pos: PopoverPosition, menus: MenuItemType<T>[], options?: { height?: number, overflow?: 'auto' | 'visible' }) {
         this.menus = menus;
@@ -27,7 +27,7 @@ class MenuPanel<T> extends EventsComponent {
     }
     close() {
         this.visible = false;
-        popoverLayer.clear(LayerWield.menuBox, LayerWield.menuMask)
+        popoverLayer.clear(g => g.obj == this || g.obj instanceof MenuBox)
         this.forceUpdate();
     }
     onSelect(item: MenuItemType<T>, event: MouseEvent) {
@@ -41,7 +41,7 @@ class MenuPanel<T> extends EventsComponent {
     mb: MenuBox;
     render() {
         return this.visible && <div data-shy-page-unselect="true" className='shy-menu-panel'>
-            <div className='shy-menu-mask' style={{ zIndex: popoverLayer.zoom(LayerWield.menuMask) }} onMouseDown={e => this.onClose(e)}></div>
+            <div className='shy-menu-mask' style={{ zIndex: popoverLayer.zoom(this) }} onMouseDown={e => this.onClose(e)}></div>
             <MenuBox
                 style={{ height: this.options.height, maxHeight: this.options.height, overflow: this.options.overflow }}
                 ref={e => this.mb = e}

@@ -16,13 +16,7 @@ export enum LayerType {
     rise
 }
 
-export enum LayerWield {
-    menuMask,
-    menuBox,
 
-    alert,
-    confirm
-}
 
 class Layer {
     constructor(type: LayerType) {
@@ -52,22 +46,23 @@ class Layer {
     private min: number;
     private max: number;
     private index: number;
-    private indexs: { index: number, wield: LayerWield }[] = [];
-    zoom(wield: LayerWield): number {
+    private objectIndexs: { index: number, obj: Object }[] = [];
+    // private indexs: { index: number, wield: LayerWield }[] = [];
+    zoom(user: Object): number {
         var i = this.index += 1;
-        this.indexs.push({ wield, index: i });
+        this.objectIndexs.push({ index: i, obj: user })
         return i;
     }
     /**
      * 使用过后，需要释放
      * @param wields 
      */
-    clear(...wields: LayerWield[]) {
-        this.indexs.removeAll(g => wields.exists(x => x === g.wield));
-        if (this.indexs.length == 0) {
-            if (this.index > this.min + (this.max - this.min) * 0.8) {
-                this.index = this.min;
-            }
+    clear(predict: ((item: { index: number, obj: Object }) => boolean) | Object) {
+        if (typeof predict == 'function')
+            this.objectIndexs.removeAll(predict as any);
+        else this.objectIndexs.removeAll(g => g.obj == predict);
+        if (this.objectIndexs.length == 0) {
+            this.index = this.min;
         }
     }
 }

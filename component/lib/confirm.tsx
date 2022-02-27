@@ -4,7 +4,7 @@ import { EventsComponent } from "./events.component";
 import { Button } from "../view/button";
 import "./style.less";
 import { Space } from "../view/grid";
-import { tipLayer, LayerWield } from "./zindex";
+import { tipLayer } from "./zindex";
 class SyConfirm extends EventsComponent {
     private msg: string;
     private description: string;
@@ -17,7 +17,7 @@ class SyConfirm extends EventsComponent {
     }
     close() {
         this.visible = false;
-        tipLayer.clear(LayerWield.confirm)
+        tipLayer.clear(this)
         this.forceUpdate()
     }
     onConfirm() {
@@ -29,7 +29,7 @@ class SyConfirm extends EventsComponent {
         this.close()
     }
     render() {
-        return this.visible && <div className='shy-confirm-box' style={{ zIndex: tipLayer.zoom(LayerWield.confirm) }}>
+        return this.visible && <div className='shy-confirm-box' style={{ zIndex: tipLayer.zoom(this) }}>
             <div className='shy-confirm-mask' onMouseDown={e => this.onCancel()}></div>
             <div className='shy-confirm'>
                 <div className='shy-confirm-msg'>{this.msg}</div>
