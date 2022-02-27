@@ -9,7 +9,8 @@ export class Button extends React.Component<{
     ghost?: boolean,
     link?: boolean,
     style?: CSSProperties,
-    size?: 'normal' | 'medium' | 'larger'
+    size?: 'normal' | 'medium' | 'larger',
+    className?:string
 }>{
     private _loading: boolean;
     set loading(loading: boolean) {
@@ -42,7 +43,7 @@ export class Button extends React.Component<{
             if (props.icon) return <Icon icon={props.icon}></Icon>
         }
         var btn = <button style={this.props.style || {}}
-            className={'shy-button' + (props.link ? " shy-button-link" : "") + (props.ghost ? " shy-button-ghost" : "") + (this.props.size ? " shy-button-" + this.props.size : "")}
+            className={'shy-button'+(props.className?" "+props.className:"") + (props.link ? " shy-button-link" : "") + (props.ghost ? " shy-button-ghost" : "") + (this.props.size ? " shy-button-" + this.props.size : "")}
             disabled={props.disabled || this._disabled ? props.disabled : false}
             onClick={e => props.onClick && !this._loading ? props.onClick(e, this) : undefined}
         >{renderLoading()}{props.children}</button>;
