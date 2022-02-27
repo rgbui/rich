@@ -195,7 +195,7 @@ export class Block$Event {
     }
     async onInputStore(this: Block, appear: AppearAnchor, value: string, at: number, end: number, action?: () => Promise<void>) {
         await this.page.onAction(ActionDirective.onInputText, async () => {
-            var replaceText = lodash.get(this, appear.prop).slice(at, end);
+            var replaceText = (lodash.get(this, appear.prop) || '').slice(at, end);
             lodash.set(this, appear.prop, appear.textContent);
             this.page.snapshoot.record(OperatorDirective.inputStore, {
                 blockId: this.id,
@@ -220,7 +220,7 @@ export class Block$Event {
                 end,
                 text: value,
                 prop: appear.prop
-            },this);
+            }, this);
             if (typeof action == 'function') await action();
             this.changeAppear(appear);
         })
@@ -237,7 +237,7 @@ export class Block$Event {
     }
     async onManualUpdateProps(this: Block, oldProps: Record<string, any>, newProps: Record<string, any>, range = BlockRenderRange.none, isOnlyRecord: boolean = false) {
         await this.page.onAction(ActionDirective.onUpdateProps, async () => {
-            this.manualUpdateProps(oldProps, newProps, range,isOnlyRecord);
+            this.manualUpdateProps(oldProps, newProps, range, isOnlyRecord);
         })
     }
     async onKeyTab(this: Block, isBack?: boolean) {
