@@ -12,16 +12,10 @@ class FieldText extends OriginFormField {
 class FieldTextView extends BlockView<FieldText>{
     render() {
         var self = this;
-        function keydown(event: React.KeyboardEvent<HTMLInputElement>) {
-            if (event.key == 'Enter') {
-                self.block.onChange((event.target as HTMLInputElement).value);
-            }
-        }
-        return <FieldView    block={this.block}><input
+        return <FieldView block={this.block}><input
             type='checkbox'
             checked={this.block.value}
             onChange={e => this.block.onChange((e.target as HTMLInputElement).checked)}
-            onKeyDown={e => keydown(e)}
         />
         </FieldView>
     }

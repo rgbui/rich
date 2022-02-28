@@ -10,9 +10,11 @@ import { FieldView, OriginFormField } from "./origin.field";
 @url('/form/date')
 class FieldText extends OriginFormField {
     get dateString() {
-        if(!this.value)this.value=new Date();
+        if (!this.value) this.value = new Date();
         var r = dayjs(this.value);
-        return r.format('YYYY-MM-DD')
+        var fr = 'YYYY-MM-DD';
+        if (this.field?.config.includeTime) fr = 'YYYY-MM-DD HH:mm';
+        return r.format(fr)
     }
 }
 @view('/form/date')
@@ -26,7 +28,7 @@ class FieldTextView extends BlockView<FieldText>{
         }
     }
     render() {
-        return <FieldView    block={this.block}>
+        return <FieldView block={this.block}>
             <div className="sy-form-field-date-value" onMouseDown={e => this.mousedown(e)}>{this.block.dateString}</div>
         </FieldView>
     }

@@ -16,10 +16,10 @@ class FieldTextView extends BlockView<FieldText>{
                 self.block.onChange((event.target as HTMLInputElement).value);
             }
         }
-        return <FieldView   block={this.block}><input
-            type='number' 
+        return <FieldView block={this.block}><input
+            type='number'
             data-shy-page-no-focus={true}
-            value={this.block.value}
+            defaultValue={this.block.value}
             onInput={e => this.block.onInput((e.target as HTMLInputElement).value)}
             onKeyDown={e => keydown(e)}
         />

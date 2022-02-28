@@ -18,7 +18,7 @@ class FieldTextView extends BlockView<FieldText>{
             roundArea: Rect.fromEle(event.target as HTMLElement)
         }, this.block.value,
             {
-                multiple: false,
+                multiple: fc?.isMultiple ? true : false,
                 options: fc?.options || [],
                 changeOptions: (ops) => {
                     // this.onUpdateCellFieldSchema({ config: { options: ops } })
