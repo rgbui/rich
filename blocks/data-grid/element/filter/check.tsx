@@ -1,16 +1,10 @@
 import React from "react";
 import { url, prop, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
-import { DataGridView } from "../../view/base/table";
 import { OriginFilterField } from "./origin.field";
 
 @url('/field/filter/check')
 export class FilterFieldCheck extends OriginFilterField {
-    @prop()
-    refFieldId: string;
-    get field() {
-        return (this.refBlock as DataGridView)?.schema.fields.find(g => g.id == this.refFieldId);
-    }
     checked: boolean = false;
 }
 @view('/field/filter/check')
