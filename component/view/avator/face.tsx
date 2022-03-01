@@ -52,6 +52,16 @@ export class Avatar extends React.Component<{
         </div>
     }
 }
+
+// export function AvatarIcon(props: { icon?: IconArguments, text?: string, size?: number,fontSize?:number }) {
+//     var size = props.size ? props.size : 20;
+//     return <>
+//         {props.icon && <img style={{ width: size, height: size }} src={props.icon.url} />}
+//         {!props.icon && <span style={{ width: size, height: size, display: 'inline-flex', justifyContent: 'center', alignItems: 'center', fontSize:props.fontSize|| size, lineHeight: (props.fontSize|| size) + 'px' }}
+//         >{props.text.slice(0,2)}</span>}
+//     </>
+// }
+
 export class UserNameLink extends React.Component<{ userid: string }> {
     private userName: string;
     async componentDidMount() {
