@@ -6,6 +6,7 @@ export type User = {
     inc?: number,
     name?: string,
     avatar?: IconArguments,
+    cover?: IconArguments,
     email?: string,
     phone?: string
 }

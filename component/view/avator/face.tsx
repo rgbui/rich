@@ -1,6 +1,8 @@
 import React from 'react';
 import { IconArguments } from '../../../extensions/icon/declare';
 import { channel } from '../../../net/channel';
+import { Rect } from '../../../src/common/vector/point';
+import { useUserCard } from './card';
 import "./style.less";
 export class Avatar extends React.Component<{
     icon?: IconArguments,
@@ -8,7 +10,8 @@ export class Avatar extends React.Component<{
     size?: number,
     circle?: boolean,
     onClick?: (event: React.MouseEvent) => void,
-    userid?: string
+    userid?: string,
+    openCard?: boolean
 }> {
     private userFaceUrl: string;
     private userName: string;
@@ -24,6 +27,10 @@ export class Avatar extends React.Component<{
                 this.forceUpdate();
             }
         }
+    }
+    async mousedown(event: React.MouseEvent) {
+        if(this.props.userid)
+        await useUserCard({ roundArea: Rect.fromEvent(event) },{userid:this.props.userid})
     }
     render() {
         var size = this.props.size ? this.props.size : 20;
@@ -45,14 +52,17 @@ export class Avatar extends React.Component<{
                 </>
             }
         }
-        return <div className={'shy-avatar' + (this.props.circle ? " shy-avatar-circle" : "")} onClick={e => {
+        return <div className={'shy-avatar' + (this.props.circle ? " shy-avatar-circle" : "")} onMouseDown={e => this.mousedown(e)} onClick={e => {
             if (typeof this.props.onClick == 'function') this.props.onClick(e);
         }}>
             {renderIcon()}
         </div>
     }
 }
-export class UserNameLink extends React.Component<{ userid: string }> {
+export class UserNameLink extends React.Component<{
+    userid?: string,
+    openCard?: boolean
+}> {
     private userName: string;
     async componentDidMount() {
         if (this.props.userid) {
@@ -62,6 +72,9 @@ export class UserNameLink extends React.Component<{ userid: string }> {
                 this.forceUpdate();
             }
         }
+    }
+    async mousedown(event: React.MouseEvent) {
+        await useUserCard({ roundArea: Rect.fromEvent(event) },{userid:this.props.userid})
     }
     render(): React.ReactNode {
         return <a>{this.userName}</a>
