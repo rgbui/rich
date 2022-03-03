@@ -1,7 +1,7 @@
 import React, { CSSProperties } from "react";
 import { PopoverPosition } from "../../../extensions/popover/position";
 import { Point, Rect, RectUtility } from "../../../src/common/vector/point";
-import {  popoverLayer } from "../../lib/zindex";
+import { popoverLayer } from "../../lib/zindex";
 import { MenuItemType } from "./declare";
 import { MenuItem } from "./item";
 export class MenuBox extends React.Component<{
@@ -32,8 +32,12 @@ export class MenuBox extends React.Component<{
     el: HTMLElement;
     point = new Point(0, 0);
     open(pos: PopoverPosition) {
-        this.point = pos.roundArea ? pos.roundArea.leftTop : pos.roundPoint;
-        this.forceUpdate(() => {
+        if (pos.fixPoint) this.point = pos.fixPoint;
+        else this.point = pos.roundArea ? pos.roundArea.leftTop : pos.roundPoint;
+        if (pos.fixPoint) {
+            this.forceUpdate()
+        }
+        else this.forceUpdate(() => {
             if (this.el) {
                 var b = Rect.from(this.el.getBoundingClientRect());
                 pos.elementArea = b;
