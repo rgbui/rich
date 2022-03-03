@@ -103,3 +103,28 @@ export class Divider extends React.Component<{
         </div>
     }
 }
+
+export class Dialoug extends React.Component<{
+    head?: React.ReactNode,
+    children?: React.ReactNode,
+    footer?: React.ReactNode,
+    style?: CSSProperties,
+    className?: string[] | string
+}>{
+    render(): React.ReactNode {
+        var classList: string[] = ['shy-dialoug'];
+        if (this.props.className) {
+            var cs = Array.isArray(this.props.className) ? this.props.className : [this.props.className];
+            cs.each(c => {
+                if (!classList.includes(c)) classList.push(c)
+            })
+        }
+        return <div className={classList.join(" ")} style={this.props.style || {}}>
+            {this.props.head && <div className="shy-dialoug-head">{this.props.head}</div>}
+            <div className="shy-dialoug-content">
+                {this.props.children}
+            </div>
+            {this.props.footer && <div className="shy-dialoug-footer">{this.props.footer}</div>}
+        </div>
+    }
+}
