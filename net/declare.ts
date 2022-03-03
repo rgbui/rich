@@ -87,8 +87,9 @@ export interface ChannelPutMapUrls {
 	"/datastore/query/ids":{args:{schemaId:string,ids:string[]},returnType:Promise<{ok:boolean,data:{list:any[]},warn:string}>},
 	"/device/sign":{args:any,returnType:Promise<void>},
 	"/phone/sign":{args:{phone:string,code:string,inviteCode:string},returnType:Promise<{ok:boolean,warn:string,data:{user:Record<string,any>,guid:string,token:string}}>},
-	"/friend/join":{args:{name?:string,sn?:number},returnType:Promise<SockResponse<{exists?:boolean,send?:boolean}>>},
+	"/friend/join":{args:{userid?:string,sn?:number},returnType:Promise<SockResponse<{exists?:boolean,send?:boolean}>>},
 	"/blacklist/join":{args:{otherId:string},returnType:Promise<SockResponse<void>>},
+	"/friend/agree":{args:{id:string},returnType:Promise<SockResponse<{userFriend:Record<string,any>}>>},
 	"/ws/create":{args:{text:string,templateId?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
 	"/ws/invite/create":{args:any,returnType:Promise<SockResponse<{code:string}>>}
 }
