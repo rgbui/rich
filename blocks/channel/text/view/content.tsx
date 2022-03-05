@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import React from "react";
 import { ChannelText } from "..";
-import { Avatar, UserNameLink } from "../../../../component/view/avator/face";
+import { Avatar } from "../../../../component/view/avator/face";
 import { ChannelTextType } from "../declare";
 export function renderChannelTextContent(block: ChannelText) {
     var dm = block.datas;
@@ -17,10 +17,10 @@ export function renderChannelTextContent(block: ChannelText) {
         return <div className="sy-channel-text-item" key={d.id}>
             <div className="sy-channel-text-item-avatar"><Avatar userid={d.creater}></Avatar></div>
             <div className="sy-channel-text-item-box">
-                <div className="sy-channel-text-item-name"><UserNameLink userid={d.creater}></UserNameLink></div>
+                {/* <div className="sy-channel-text-item-name"><UserNameLink userid={d.creater}></UserNameLink></div>
                 <div className="sy-channel-text-item-content">
                     {renderContent(d)}
-                </div>
+                </div> */}
             </div>
         </div>
     }
