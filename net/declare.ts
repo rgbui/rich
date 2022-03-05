@@ -63,7 +63,8 @@ export interface ChannelDelMapUrls {
     "/datastore/remove":{args:{schemaId:string,dataId:string},returnType:Promise<{ok:boolean,warn:string}>},
 	"/user/channel/delete":{args:{id:string},returnType:Promise<SockResponse<void>>},
 	"/friend/delete":{args:{id:string},returnType:Promise<SockResponse<void>>},
-	"/user/blacklist/delete":{args:{id:string},returnType:Promise<SockResponse<void>>}
+	"/user/blacklist/delete":{args:{id:string},returnType:Promise<SockResponse<void>>},
+	"/user/chat/cancel":{args:{id:string},returnType:Promise<SockResponse<void>>}
 }
 export interface ChannelPostMapUrls {
     "/phone/sms/code":{args:{phone:string},returnType:Promise<{ok:boolean,warn:string,data:{success:boolean,code?:string}}>},
@@ -91,6 +92,7 @@ export interface ChannelPutMapUrls {
 	"/friend/join":{args:{userid?:string,sn?:number},returnType:Promise<SockResponse<{exists?:boolean,send?:boolean}>>},
 	"/blacklist/join":{args:{otherId:string},returnType:Promise<SockResponse<void>>},
 	"/friend/agree":{args:{id:string},returnType:Promise<SockResponse<{userFriend:Record<string,any>}>>},
+	"/user/chat/send":{args:{roomId:string,content?:string,file?:any},returnType:Promise<SockResponse<{id:string,seq:number,createDate:Date}>>},
 	"/ws/create":{args:{text:string,templateId?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
 	"/ws/invite/create":{args:any,returnType:Promise<SockResponse<{code:string}>>}
 }
@@ -110,13 +112,15 @@ export interface ChannelGetMapUrls {
 	"/sign/out":{args:any,returnType:Promise<SockResponse<void>>},
 	"/phone/check/sign":{args:{phone:string},returnType:Promise<{ok:boolean,warn:string,data:{sign:boolean}}>},
 	"/user/query":{args:any,returnType:Promise<SockResponse<{user:Record<string,any>}>>},
-	"/user/basic":{args:{userid:string},returnType:Promise<SockResponse<{user:{sn: number, avatar: ResourceArguments, name: string}}>>},
+	"/user/basic":{args:{userid:string},returnType:Promise<SockResponse<{user:{sn: number,avatar: ResourceArguments, name: string}}>>},
+	"/users/basic":{args:{ids:string[]},returnType:Promise<SockResponse<{list:{id:string,sn:number,avatar: ResourceArguments, name: string}[]}>>},
 	"/user/wss":{args:any,returnType:Promise<SockResponse<{list:any[]}>>},
-	"/user/channels":{args:{page?:number,size?:number},returnType:Promise<SockResponse<{list:any[],page:number,size:number,rooms:any[]}>>},
-	"/friends":{args:{page?:number,size?:number},returnType:Promise<SockResponse<{list:any[],page:number,size:number}>>},
-	"/friends/pending":{args:{page?:number,size?:number},returnType:Promise<SockResponse<{list:any[],page:number,size:number}>>},
-	"/user/blacklist":{args:{page?:number,size?:number},returnType:Promise<SockResponse<{list:any[],page:number,size:number}>>},
+	"/user/channels":{args:{page?:number,size?:number},returnType:Promise<SockResponse<{list:any[],total:number,page:number,size:number,rooms:any[]}>>},
+	"/friends":{args:{page?:number,size?:number},returnType:Promise<SockResponse<{list:any[],total:number,page:number,size:number}>>},
+	"/friends/pending":{args:{page?:number,size?:number},returnType:Promise<SockResponse<{list:any[],total:number,page:number,size:number}>>},
+	"/user/blacklist":{args:{page?:number,size?:number},returnType:Promise<SockResponse<{list:any[],total:number,page:number,size:number}>>},
 	"/friend/is":{args:{friendId:string},returnType:Promise<SockResponse<{is:boolean}>>},
+	"/user/chat/list":{args:{roomId:string,seq?:number,size?:number},returnType:Promise<SockResponse<{list:any[]}>>},
 	"/ws/basic":{args:{name?:string,wsId?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
 	"/ws/query":{args:{wsId?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
 	"/ws/latest":{args:any,returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
