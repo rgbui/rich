@@ -1,27 +1,29 @@
 import React from "react";
 import { PopoverSingleton } from "../../../extensions/popover/popover";
 import { PopoverPosition } from "../../../extensions/popover/position";
-import { User } from "../../../src/types/user";
+import { UserBasic } from "../../../types/user";
 import { EventsComponent } from "../../lib/events.component";
 import { Avatar } from "./face";
+import "./style.less";
 
 export class UserCard extends EventsComponent {
-    user: User;
+    user: Partial<UserBasic>;
     render(): React.ReactNode {
         return <div className="shy-user-card">
             {this.user && <><div className="shy-user-card-cover">
                 {this.user?.cover && <img src={this.user?.cover?.url} />}
             </div><div className="shy-user-card-content">
-                    <Avatar icon={this.user.avatar} text={this.user.name}></Avatar>
+                    <Avatar userid={this.user.id}></Avatar>
                 </div></>}
         </div>
     }
-    async open(options?: { user?: Partial<User>, userid?: string }) {
-
+    async open(options?: { user?: Partial<UserBasic> }) {
+        this.user = options.user;
+        this.forceUpdate()
     }
 }
 
-export async function useUserCard(pos: PopoverPosition, options?: { user?: Partial<User>, userid?: string }) {
+export async function useUserCard(pos: PopoverPosition, options?: { user?: Partial<UserBasic>, userid?: string }) {
     let popover = await PopoverSingleton(UserCard, { mask: true });
     let fv = await popover.open(pos);
     fv.open(options);

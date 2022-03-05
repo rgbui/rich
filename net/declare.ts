@@ -1,11 +1,10 @@
 
-import { Field } from "../blocks/data-grid/schema/field";
+
 import { TableSchema } from "../blocks/data-grid/schema/meta";
-import { FieldType } from "../blocks/data-grid/schema/type";
 import { LinkPageItem } from "../extensions/at/declare";
-import { IconArguments, ResourceArguments } from "../extensions/icon/declare";
+import {  ResourceArguments } from "../extensions/icon/declare";
 import { GalleryType, OuterPic } from "../extensions/image/declare";
-import { User } from "../src/types/user";
+import { UserBasic } from "../types/user";
 import { StatusCode } from "./status.code";
 import { UserAction } from "../src/history/action";
 export type SockResponse<T, U = string> = {
@@ -133,7 +132,7 @@ export interface ChannelGetMapUrls {
 }
 export interface ChannelQueryMapUrls {
     "/current/workspace":{args:any,returnType:{id:string,sn:number,text:string}},
-	"/query/current/user":{args:any,returnType:User},
+	"/query/current/user":{args:any,returnType:UserBasic},
 	"/device/query":{args:any,returnType:Promise<string>},
 	"/amap/key_pair":{args:any,returnType:{key:string,pair:string}},
 	"/guid":{args:any,returnType:string}
