@@ -7,12 +7,10 @@ import { LinkPageItem } from "../../extensions/at/declare";
 import { IconArguments } from "../../extensions/icon/declare";
 
 import { channel } from "../../net/channel";
-import { channelService } from "../../net/service";
 import { Block } from "../../src/block";
 import { BlockDisplay } from "../../src/block/enum";
 import { prop, url, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
-import { Directive } from "../../util/bus/directive";
 
 @url('/link')
 export class Link extends Block {

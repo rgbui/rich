@@ -3,7 +3,6 @@ import { Input } from "../../component/view/input";
 import { Sp } from "../../i18n/view";
 import { LangID } from "../../i18n/declare";
 import { langProvider } from "../../i18n/provider";
-import { Directive } from "../../util/bus/directive";
 import { GalleryType, OuterPic } from "./declare";
 import { channel } from "../../net/channel";
 export class ThirdGallery extends React.Component<{ type: GalleryType, onChange: (image: OuterPic) => void }>{
