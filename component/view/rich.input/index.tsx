@@ -1,8 +1,12 @@
 import React from "react";
-
-
+import "./style.less";
+import { InsertSelectionText } from "./util";
 export class RichTextInput extends React.Component<{
     escape_chars?: string[],
+    allowUploadFile?: boolean,
+    placeholder?: string,
+    disabled?: boolean,
+    readonly?: boolean,
     popOpen: (cs: { char: string, span: HTMLElement }) => void,
     popInput?: (key: "ArrowDown" | 'ArrowUp' | 'Enter' | 'Input', charSpan?: { char: string, span: HTMLElement }) => void,
     popClose?: () => void,
@@ -20,14 +24,16 @@ export class RichTextInput extends React.Component<{
         }
     }
     send() {
-
+        var text = this.richEl.innerHTML;
+        this.props.onInput({ content: text });
     }
     charSpan: { char: string, span: HTMLElement } = { char: '', span: null };
     keydown(event: KeyboardEvent) {
         if (!event.shiftKey && event.key == 'Enter') {
+            console.log(event, 'ggg');
             if (this.charSpan.char) {
                 this.props.popInput(event.key, { ...this.charSpan });
-            } else this.send();
+            } else { event.preventDefault(); this.send(); }
         }
         else {
             var key = event.key;
@@ -96,9 +102,11 @@ export class RichTextInput extends React.Component<{
             if (typeof this.props.popClose == 'function') this.props.popClose()
         }
     }
+    richEl: HTMLElement;
     render(): React.ReactNode {
-        return <div className="shy-rich-text-input">
-            <div className="shy-rich-text-input-editor"
+        return <div className="shy-rich-input">
+            <div className="shy-rich-input-editor"
+                ref={e => this.richEl = e}
                 onKeyDown={e => { this.keydown(e.nativeEvent) }}
                 onInput={e => { this.input(e.nativeEvent) }}
                 onMouseDown={e => this.mousedown(e)}
@@ -127,31 +135,3 @@ export class RichTextInput extends React.Component<{
     }
 }
 
-function InsertSelectionText(text: string) {
-    var sel = window.getSelection(); //DOM 
-    var range = sel.getRangeAt(0); // DOM下 
-    if (range.startContainer) { // DOM下 
-        sel.removeAllRanges(); // 删除Selection中的所有Range 
-        range.deleteContents(); // 清除Range中的内容 
-        // 获得Range中的第一个html结点 
-        var container = range.startContainer;
-        // 获得Range起点的位移 
-        var pos = range.startOffset;
-        // 建一个空Range 
-        range = document.createRange();
-        // 插入内容 
-        var cons = window.document.createTextNode(text);
-        if (container.nodeType == 3) {// 如是一个TextNode 
-            (container as Text).insertData(pos, cons.nodeValue);
-            // 改变光标位置 
-            range.setEnd(container, pos + cons.nodeValue.length);
-            range.setStart(container, pos + cons.nodeValue.length);
-        } else {// 如果是一个HTML Node 
-            var afternode = container.childNodes[pos];
-            container.insertBefore(cons, afternode);
-            range.setEnd(cons, cons.nodeValue.length);
-            range.setStart(cons, cons.nodeValue.length);
-        }
-        sel.addRange(range);
-    }
-}

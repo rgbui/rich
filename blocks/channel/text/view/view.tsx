@@ -1,6 +1,6 @@
 import React from "react";
 import { ChannelText } from "..";
-import { RichTextInput } from "../../../../component/view/text.input";
+import { RichTextInput } from "../../../../component/view/rich.input";
 import { view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { renderChannelTextContent } from "./content";
