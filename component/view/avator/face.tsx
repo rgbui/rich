@@ -16,9 +16,14 @@ export class Avatar extends React.Component<{
     private user: UserBasic;
     async componentDidMount() {
         if (!this.user) {
+            if(!this.props.userid){
+                // console.trace(this.props);
+                return;
+            }
             var r = await channel.get('/user/basic', { userid: this.props.userid });
             if (r.ok) {
                 this.user = r.data.user as any;
+                this.forceUpdate()
             }
         }
     }
@@ -32,13 +37,11 @@ export class Avatar extends React.Component<{
         var size = this.props.size ? this.props.size : 20;
         var renderIcon = () => {
             if (this.props.userid) {
-                if (this.user.avatar) return <img style={{ width: size, height: size }} src={this.user.avatar.url} />
-                if (this.user.name) {
-                    {
-                        return <span style={{ width: size, height: size, fontSize: size * 0.6, lineHeight: (size * 0.6) + 'px' }}
-                            className='shy-avatar-name'>{this.user.name.slice(0, 1)}</span>
-                    }
-                }
+                if (this.user?.avatar) return <img style={{ width: size, height: size }} src={this.user.avatar.url} />
+                if (this.user?.name) return <span style={{ width: size, height: size, fontSize: size * 0.6, lineHeight: (size * 0.6) + 'px' }}
+                    className='shy-avatar-name'>{this.user.name.slice(0, 1)}</span>
+
+
             }
         }
         if (this.props.head || this.props.showName || this.props.children || this.props.showSn) {
