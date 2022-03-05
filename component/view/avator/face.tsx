@@ -10,7 +10,8 @@ export class Avatar extends React.Component<{
     openCard?: boolean,
     head?: React.ReactNode,
     children?: React.ReactNode,
-    showSn?: boolean
+    showSn?: boolean,
+    showName?: boolean
 }> {
     private user: UserBasic;
     async componentDidMount() {
@@ -40,7 +41,7 @@ export class Avatar extends React.Component<{
                 }
             }
         }
-        if (this.props.head || this.props.children || this.props.showSn) {
+        if (this.props.head || this.props.showName || this.props.children || this.props.showSn) {
             return <div className={'shy-avatar-say'}>
                 <div className={'shy-avatar-say-face'} onMouseDown={e => this.mousedown(e)}>{renderIcon()}</div>
                 <div className={'shy-avatar-say-content'} >
