@@ -9,6 +9,23 @@
     }
 }
 
+.shy-icon-button {
+    display        : flex;
+    justify-content: center;
+    align-items    : center;
+    cursor         : pointer;
+    border-radius  : 4px;
+
+    &:hover {
+        color           : var(--interactive-hover);
+        background-color: var(--background-modifier-selected);
+    }
+
+    >.shy-icon {
+        fill: currentColor
+    }
+}
+
 .shy-tooltip {
     .rc-tooltip-arrow {
         opacity: 0;
@@ -436,13 +453,14 @@
     height         : 300px;
 
     &-head {
-        padding:0px 10px;
+        padding        : 0px 10px;
         height         : 30px;
         flex-shrink    : 0;
         flex-grow      : 0;
         display        : flex;
         justify-content: flex-start;
         align-items    : center;
+
         span {
             font-weight: 600;
             color      : var(--header-primary);
@@ -452,14 +470,14 @@
     }
 
     &-content {
-        padding:0px 10px;
+        padding    : 0px 10px;
         flex-grow  : 1;
         flex-shrink: 1;
         overflow   : auto;
     }
 
     &-footer {
-        padding:0px 10px;
+        padding    : 0px 10px;
         height     : 30px;
         flex-shrink: 0;
         flex-grow  : 1;

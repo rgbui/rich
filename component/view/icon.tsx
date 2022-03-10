@@ -111,3 +111,30 @@ export function Icon(props: {
         return <span className={classList.join(" ")} style={style}>{props.icon}</span>
     }
 }
+
+export function IconButton(props: {
+    icon: string | SvgrComponent | JSX.Element | IconArguments,
+    click?: (e: React.MouseEvent) => void,
+    onMouseDown?: (e: React.MouseEvent) => void,
+    rotate?: number,
+    size?: number | 'none',
+    fontSize?: number,
+    className?: string[] | string,
+    style?: CSSProperties,
+    width: number,
+    wrapper?: boolean
+}) {
+    var style: CSSProperties = {
+        width: props.width,
+        height: props.width
+    }
+    var iconProps = {
+        icon: props.icon,
+        rotate: props.rotate,
+        size: props.size,
+        fontSize: props.fontSize,
+        style: props.style,
+        wrapper: props.wrapper
+    }
+    return <div style={style} onMouseDown={e => props.onMouseDown ? props.onMouseDown(e) : undefined} className='shy-icon-button'><Icon {...iconProps}></Icon></div>
+}
