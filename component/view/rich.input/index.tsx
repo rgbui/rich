@@ -26,11 +26,13 @@ export class RichTextInput extends React.Component<{
     send() {
         var text = this.richEl.innerHTML;
         this.props.onInput({ content: text });
+        this.richEl.innerHTML = '';
+        var sel = window.getSelection();
+        sel.collapse(this.richEl, 0);
     }
     charSpan: { char: string, span: HTMLElement } = { char: '', span: null };
     keydown(event: KeyboardEvent) {
         if (!event.shiftKey && event.key == 'Enter') {
-            console.log(event, 'ggg');
             if (this.charSpan.char) {
                 this.props.popInput(event.key, { ...this.charSpan });
             } else { event.preventDefault(); this.send(); }
