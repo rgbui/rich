@@ -129,8 +129,9 @@
 }
 
 .shy-input {
-    display: block;
-    width  : 100%;
+    display : block;
+    width   : 100%;
+    position: relative;
 
     input {
         width        : 100%;
@@ -148,6 +149,24 @@
         &:focus {
             box-shadow: rgba(46 170 220, 0.7) 0px 0px 0px 1px inset, rgba(46 170 220, 0.4) 0px 0px 0px 2px !important;
         }
+    }
+
+    &.small {
+        input {
+            height     : 28px;
+            line-height: 28px;
+        }
+    }
+
+    &-clear {
+        position       : absolute;
+        right          : 10px;
+        top            : 0px;
+        bottom         : 0px;
+        display        : flex;
+        justify-content: center;
+        align-items    : center;
+        cursor: pointer;
     }
 }
 
