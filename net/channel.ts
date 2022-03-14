@@ -26,28 +26,28 @@ class Channel {
         return this._ch;
     }
     put<K extends keyof ChannelPutMapUrls>(url: K, args?: ChannelPutMapUrls[K]['args']): ChannelPutMapUrls[K]['returnType'] {
-        return channelService.push(MethodType.put, url, args);
+        return channelService.excute(MethodType.put, url, args);
     }
     act<K extends keyof ChannelActMapUrls>(url: K, args?: ChannelActMapUrls[K]['args']): ChannelActMapUrls[K]['returnType'] {
-        return channelService.push(MethodType.act, url, args) as any;
+        return channelService.excute(MethodType.act, url, args) as any;
     }
     get<K extends keyof ChannelGetMapUrls>(url: K, args?: ChannelGetMapUrls[K]['args']): ChannelGetMapUrls[K]['returnType'] {
-        return channelService.push(MethodType.get, url, args);
+        return channelService.excute(MethodType.get, url, args);
     }
     query<K extends keyof ChannelQueryMapUrls>(url: K, args?: ChannelQueryMapUrls[K]['args']): ChannelQueryMapUrls[K]['returnType'] {
-        return channelService.push(MethodType.query, url, args) as any;
+        return channelService.excute(MethodType.query, url, args) as any;
     }
     post<K extends keyof ChannelPostMapUrls>(url: K, args: ChannelPostMapUrls[K]['args']): ChannelPostMapUrls[K]['returnType'] {
-        return channelService.push(MethodType.post, url, args);
+        return channelService.excute(MethodType.post, url, args);
     }
     patch<K extends keyof ChannelPatchMapUrls>(url: K, args: ChannelPatchMapUrls[K]['args']): ChannelPatchMapUrls[K]['returnType'] {
-        return channelService.push(MethodType.patch, url, args);
+        return channelService.excute(MethodType.patch, url, args);
     }
     del<K extends keyof ChannelDelMapUrls>(url: K, args: ChannelDelMapUrls[K]['args']): ChannelDelMapUrls[K]['returnType'] {
-        return channelService.push(MethodType.del, url, args);
+        return channelService.excute(MethodType.del, url, args);
     }
     air<K extends keyof ChannelAirMapUrls>(url: K, args: ChannelAirMapUrls[K]['args']): ChannelAirMapUrls[K]['returnType'] {
-        return channelService.push(MethodType.air, url, args) as any;
+        return channelService.excute(MethodType.air, url, args) as any;
     }
     fire<K extends keyof ChannelFireMapUrls>(url: K, args?: ChannelFireMapUrls[K]['args']): ChannelFireMapUrls[K]['returnType'] {
         return channelService.fire(url, args) as any;

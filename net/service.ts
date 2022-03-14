@@ -48,7 +48,7 @@ class ChannelService {
             this.serviceMetas.push(sm);
         }
     }
-    push(type: MethodType, url: string, args: Record<string, any>) {
+    excute(type: MethodType, url: string, args: Record<string, any>) {
         var sms = this.serviceMetas.filter(g => g.url == url && type == g.type);
         if (sms.length > 0) {
             var sm = sms.first();

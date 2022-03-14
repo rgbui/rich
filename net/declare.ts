@@ -1,11 +1,10 @@
 
-
 import { TableSchema } from "../blocks/data-grid/schema/meta";
 import { LinkPageItem } from "../extensions/at/declare";
 import { GalleryType, OuterPic } from "../extensions/image/declare";
 import { StatusCode } from "./status.code";
 import { UserAction } from "../src/history/action";
-import { UserBasic } from "../types/user";
+import { UserBasic, UserStatus } from "../types/user";
 export type SockResponse<T, U = string> = {
         /**
          * 返回状态码
@@ -74,6 +73,8 @@ export interface ChannelPostMapUrls {
 export interface ChannelPatchMapUrls {
     "/datastore/update":{args:{schemaId:string,dataId:string,data:Record<string, any>},returnType:Promise<SockResponse<void>>},
 	"/user/patch":{args:{data:Record<string,any>},returnType:Promise<SockResponse<void>>},
+	"/user/patch/status":{args:{status:UserStatus,customStatus?:{overDue: Date, text: string}},returnType:Promise<SockResponse<void>>},
+	"/user/channel/active":{args:{id:string},returnType:Promise<SockResponse<void>>},
 	"/ws/sitedomain/patch":{args:{domain:string},returnType:Promise<SockResponse<{success:boolean,overflowDue:boolean}>>},
 	"/ws/patch":{args:{wsId?:string,sockId?:string,data:Record<string,any>},returnType:Promise<SockResponse<void>>},
 	"/interactive/emoji":{args:{elementUrl:string,schemaUrl:string,fieldName:string},returnType:Promise<SockResponse<{count:number}>>}
@@ -116,6 +117,9 @@ export interface ChannelGetMapUrls {
 	"/user/channels":{args:{page?:number,size?:number},returnType:Promise<SockResponse<{list:any[],total:number,page:number,size:number,rooms:any[]}>>},
 	"/friends":{args:{page?:number,size?:number},returnType:Promise<SockResponse<{list:any[],total:number,page:number,size:number}>>},
 	"/friends/pending":{args:{page?:number,size?:number},returnType:Promise<SockResponse<{list:any[],total:number,page:number,size:number}>>},
+	"/search/friends":{args:{name:string,size?:number},returnType:Promise<SockResponse<{list:UserBasic[],size:number}>>},
+	"/search/friends/pending":{args:{name:string,size?:number},returnType:Promise<SockResponse<{list:UserBasic[],size:number}>>},
+	"/search/blacklist":{args:{name:string,size?:number},returnType:Promise<SockResponse<{list:UserBasic[],size:number}>>},
 	"/user/blacklist":{args:{page?:number,size?:number},returnType:Promise<SockResponse<{list:any[],total:number,page:number,size:number}>>},
 	"/friend/is":{args:{friendId:string},returnType:Promise<SockResponse<{is:boolean}>>},
 	"/user/chat/list":{args:{roomId:string,seq?:number,size?:number},returnType:Promise<SockResponse<{list:any[]}>>},
