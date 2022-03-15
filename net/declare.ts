@@ -59,12 +59,14 @@ export interface ChannelFireMapUrls {
 export interface ChannelDelMapUrls {
     "/datastore/remove":{args:{schemaId:string,dataId:string},returnType:Promise<{ok:boolean,warn:string}>},
 	"/user/channel/delete":{args:{id:string},returnType:Promise<SockResponse<void>>},
+	"/user/write/off":{args:{sn:number},returnType:Promise<SockResponse<void>>},
 	"/friend/delete":{args:{id:string},returnType:Promise<SockResponse<void>>},
 	"/user/blacklist/delete":{args:{id:string},returnType:Promise<SockResponse<void>>},
 	"/user/chat/cancel":{args:{id:string},returnType:Promise<SockResponse<void>>}
 }
 export interface ChannelPostMapUrls {
     "/phone/sms/code":{args:{phone:string},returnType:Promise<{ok:boolean,warn:string,data:{success:boolean,code?:string}}>},
+	"/email/send/code":{args:{email:string},returnType:Promise<SockResponse<{code?:string}>>},
 	"/user/upload/file":{args:{file:File,uploadProgress: (event: ProgressEvent) => void},returnType:Promise<SockResponse<{file:{url:string}}>>},
 	"/ws/invite/join":{args:{wsId:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
 	"/ws/upload/file":{args:{file:File,uploadProgress: (event: ProgressEvent) => void},returnType:Promise<SockResponse<{ file:{url:string} }>>},
@@ -72,6 +74,9 @@ export interface ChannelPostMapUrls {
 }
 export interface ChannelPatchMapUrls {
     "/datastore/update":{args:{schemaId:string,dataId:string,data:Record<string, any>},returnType:Promise<SockResponse<void>>},
+	"/phone/check/update":{args:{phone:string,code:string},returnType:Promise<SockResponse<void>>},
+	"/email/check/update":{args:{email:string,code:string},returnType:Promise<SockResponse<void>>},
+	"/user/set/paw":{args:{oldPaw?:string,newPaw:string,confirmPaw:string},returnType:Promise<SockResponse<void>>},
 	"/user/patch":{args:{data:Record<string,any>},returnType:Promise<SockResponse<void>>},
 	"/user/patch/status":{args:{status:UserStatus,customStatus?:{overDue: Date, text: string}},returnType:Promise<SockResponse<void>>},
 	"/user/channel/active":{args:{id:string},returnType:Promise<SockResponse<void>>},
