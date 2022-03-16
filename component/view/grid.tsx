@@ -35,6 +35,7 @@ export class Col extends React.Component<{
     children?: React.ReactNode,
     valign?: 'top' | 'middle' | 'bottom',
     align?: 'start' | 'end' | 'center',
+    style?: CSSProperties
 }> {
     render() {
         var sp = this.props.span;
@@ -50,6 +51,7 @@ export class Col extends React.Component<{
         else if (this.props.align == 'end') style.justifyContent = 'flex-end'
         if (this.props.valign == 'middle') style.alignItems = 'center'
         else if (this.props.valign == 'bottom') style.alignItems = 'flex-end'
+        if (this.props.style) Object.assign(style, this.props.style);
         return <div className='shy-col' style={style}>{this.props.children}</div>
     }
 }
