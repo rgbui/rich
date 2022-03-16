@@ -6,6 +6,7 @@ export class Input extends React.Component<{
     style?: CSSProperties,
     disabled?: boolean,
     value?: string,
+    type?: 'text' | 'password',
     placeholder?: string,
     readonly?: boolean,
     onChange?: (value: string) => void,
@@ -52,7 +53,7 @@ export class Input extends React.Component<{
             }
         }
         return <div className={'shy-input' + (props.size == 'small' ? " small" : "")} style={props.style || {}}>
-            <input ref={e => this.inputEl = e} type='text' defaultValue={props.value || ''}
+            <input ref={e => this.inputEl = e} type={props.type || 'text'} defaultValue={props.value || ''}
                 disabled={props.disabled ? true : false}
                 placeholder={props.placeholder}
                 onInput={e => onInput(e)}
