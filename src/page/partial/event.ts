@@ -103,7 +103,7 @@ export class PageEvent {
             this.snapshoot.record(OperatorDirective.pageTurnLayout, {
                 old: PageLayoutType.doc,
                 new: layoutType
-            },this);
+            }, this);
             switch (layoutType) {
                 case PageLayoutType.doc:
                     this.pageLayout.type = layoutType;
@@ -113,6 +113,14 @@ export class PageEvent {
                     break;
                 case PageLayoutType.board:
                     this.pageLayout.type = layoutType;
+                    break;
+                case PageLayoutType.textBroadcast:
+                    this.pageLayout.type = layoutType;
+                    break;
+                case PageLayoutType.textChannel:
+                    this.pageLayout.type = layoutType;
+                    var view = this.views[0];
+                    await this.createBlock('/channel/text', {}, view);
                     break;
             }
         });

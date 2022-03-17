@@ -107,6 +107,8 @@ export class PageView extends Component<{ page: Page }>{
             <div onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.doc)}><span>页面</span></div>
             <div onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.db)}><span>表格</span></div>
             <div onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.board)}><span>白板</span></div>
+            <div onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.textChannel)}><span>会话</span></div>
+            <div onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.textBroadcast)}><span>广播</span></div>
         </div>
     }
     render() {

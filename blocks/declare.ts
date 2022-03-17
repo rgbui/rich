@@ -78,6 +78,10 @@ import "./board/line/line";
 import "./board/pen/index";
 import "./board/shape/index"
 
+
+import "./channel/text/index";
+import "./channel/text/view/view";
+
 /***
  * import component style
  */

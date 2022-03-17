@@ -45,6 +45,25 @@ export class PageLayoutView extends Component<{ pageLayout: PageLayout, boardSel
                 {this.props.boardSelector}
             </div>
         }
+        else if (this.pageLayout.type == PageLayoutType.textChannel) {
+            var style: CSSProperties = { minHeight: mh, width: '100%' };
+            Object.assign(style, this.pageLayout.page.matrix.getCss());
+            return <div className={"shy-page-layout shy-page-layout-text-channel"} style={{ width: '100%', height: mh }}>
+                <div className='shy-page-layout-wrapper' style={style}>
+                    {this.props.children}
+                </div>
+            </div>
+        }
+        else if (this.pageLayout.type == PageLayoutType.textBroadcast) {
+            var style: CSSProperties = { minHeight: mh, width: '100%' };
+            Object.assign(style, this.pageLayout.page.matrix.getCss());
+            return <div className={"shy-page-layout shy-page-layout-text-broadcast"} style={{ width: '100%', height: mh }}>
+                <div className='shy-page-layout-wrapper' style={style}>
+                    {this.props.children}
+                </div>
+                {this.props.boardSelector}
+            </div>
+        }
         else {
             return <div>没有定义版面</div>
         }

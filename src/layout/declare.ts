@@ -16,5 +16,13 @@ export enum PageLayoutType {
     /**
      * 白板
      */
-    board = 30
+    board = 30,
+    /**
+     * 文字频道
+     */
+    textChannel = 40,
+    /**
+     * 文字广播
+     */
+    textBroadcast = 50,
 }
