@@ -26,35 +26,40 @@ export interface ChannelSyncMapUrls {
 	"/page/update/info":{args:(r:{id: string, pageInfo:LinkPageItem})=>void,returnType:void},
 	"/page/open":{args:(r:{item:string|{id:string}})=>void,returnType:void},
 	"/page/notify/toggle":{args:(r:{id: string,visible:boolean})=>void,returnType:void},
-	"/update/user":{args:(r:{user: Record<string, any>})=>void,returnType:void}
+	"/update/user":{args:(r:{user: Record<string, any>})=>void,returnType:void},
+	"/ws/channel/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void}
 }
 export interface ChannelOnlyMapUrls {
     "/log":{args:(r:{type:"error"|"warn"|"info",message:string|Error})=>void,returnType:void},
 	"/page/update/info":{args:(r:{id: string, pageInfo:LinkPageItem})=>void,returnType:void},
 	"/page/open":{args:(r:{item:string|{id:string}})=>void,returnType:void},
 	"/page/notify/toggle":{args:(r:{id: string,visible:boolean})=>void,returnType:void},
-	"/update/user":{args:(r:{user: Record<string, any>})=>void,returnType:void}
+	"/update/user":{args:(r:{user: Record<string, any>})=>void,returnType:void},
+	"/ws/channel/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void}
 }
 export interface ChannelOnceMapUrls {
     "/log":{args:(r:{type:"error"|"warn"|"info",message:string|Error})=>void,returnType:void},
 	"/page/update/info":{args:(r:{id: string, pageInfo:LinkPageItem})=>void,returnType:void},
 	"/page/open":{args:(r:{item:string|{id:string}})=>void,returnType:void},
 	"/page/notify/toggle":{args:(r:{id: string,visible:boolean})=>void,returnType:void},
-	"/update/user":{args:(r:{user: Record<string, any>})=>void,returnType:void}
+	"/update/user":{args:(r:{user: Record<string, any>})=>void,returnType:void},
+	"/ws/channel/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void}
 }
 export interface ChannelOffMapUrls {
     "/log":{args:(r:{type:"error"|"warn"|"info",message:string|Error})=>void,returnType:void},
 	"/page/update/info":{args:(r:{id: string, pageInfo:LinkPageItem})=>void,returnType:void},
 	"/page/open":{args:(r:{item:string|{id:string}})=>void,returnType:void},
 	"/page/notify/toggle":{args:(r:{id: string,visible:boolean})=>void,returnType:void},
-	"/update/user":{args:(r:{user: Record<string, any>})=>void,returnType:void}
+	"/update/user":{args:(r:{user: Record<string, any>})=>void,returnType:void},
+	"/ws/channel/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void}
 }
 export interface ChannelFireMapUrls {
     "/log":{args:{type:"error"|"warn"|"info",message:string|Error},returnType:void},
 	"/page/update/info":{args:{id: string, pageInfo:LinkPageItem},returnType:void},
 	"/page/open":{args:{item:string|{id:string}},returnType:void},
 	"/page/notify/toggle":{args:{id: string,visible:boolean},returnType:void},
-	"/update/user":{args:{user: Record<string, any>},returnType:void}
+	"/update/user":{args:{user: Record<string, any>},returnType:void},
+	"/ws/channel/notify":{args:{id:string,workspaceId:string,roomId:string},returnType:void}
 }
 export interface ChannelDelMapUrls {
     "/datastore/remove":{args:{schemaId:string,dataId:string},returnType:Promise<{ok:boolean,warn:string}>},
@@ -62,7 +67,8 @@ export interface ChannelDelMapUrls {
 	"/user/write/off":{args:{sn:number},returnType:Promise<SockResponse<void>>},
 	"/friend/delete":{args:{id:string},returnType:Promise<SockResponse<void>>},
 	"/user/blacklist/delete":{args:{id:string},returnType:Promise<SockResponse<void>>},
-	"/user/chat/cancel":{args:{id:string},returnType:Promise<SockResponse<void>>}
+	"/user/chat/cancel":{args:{id:string},returnType:Promise<SockResponse<void>>},
+	"/ws/channel/cancel":{args:{id:string,sockId?:string},returnType:Promise<SockResponse<void>>}
 }
 export interface ChannelPostMapUrls {
     "/phone/sms/code":{args:{phone:string},returnType:Promise<{ok:boolean,warn:string,data:{success:boolean,code?:string}}>},
@@ -98,7 +104,8 @@ export interface ChannelPutMapUrls {
 	"/friend/agree":{args:{id:string},returnType:Promise<SockResponse<{userFriend:Record<string,any>}>>},
 	"/user/chat/send":{args:{roomId:string,content?:string,file?:any,sockId:string,tos:string[]},returnType:Promise<SockResponse<{id:string,seq:number,createDate:Date}>>},
 	"/ws/create":{args:{text:string,templateId?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
-	"/ws/invite/create":{args:any,returnType:Promise<SockResponse<{code:string}>>}
+	"/ws/invite/create":{args:any,returnType:Promise<SockResponse<{code:string}>>},
+	"/ws/channel/send":{args:{roomId:string,content?:string,file?:any,sockId?:string},returnType:Promise<SockResponse<{id:string,seq:number,createDate:Date}>>}
 }
 export interface ChannelGetMapUrls {
     "/gallery/query":{args:{type: GalleryType, word: string},returnType:Promise<{ok:boolean,data:OuterPic[],warn:string}>},
@@ -132,6 +139,7 @@ export interface ChannelGetMapUrls {
 	"/ws/query":{args:{wsId?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
 	"/ws/latest":{args:any,returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
 	"/ws/invite/check":{args:{invite:string},returnType:Promise<SockResponse<{member:boolean,workspace:Record<string,any>}>>},
+	"/ws/channel/list":{args:{roomId:string,seq?:number,size?:number},returnType:Promise<SockResponse<{list:any[]}>>},
 	"/page/items":{args:{ids:string[]},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/item/subs":{args:{id:string},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/item":{args:{id:string},returnType:Promise<SockResponse<{ item:Record<string,any> }>>},
@@ -154,6 +162,7 @@ export interface ChannelAirMapUrls {
     "/page/update/info":{args:{id: string, pageInfo:LinkPageItem},returnType:void},
 	"/page/open":{args:{item:string|{id:string}},returnType:void},
 	"/page/notify/toggle":{args:{id: string,visible:boolean},returnType:void},
-	"/update/user":{args:{user: Record<string, any>},returnType:void}
+	"/update/user":{args:{user: Record<string, any>},returnType:void},
+	"/ws/channel/notify":{args:{id:string,workspaceId:string,roomId:string},returnType:void}
 }
     

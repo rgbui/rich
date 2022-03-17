@@ -4,7 +4,7 @@ import { ChannelText } from "..";
 import { Avatar } from "../../../../component/view/avator/face";
 import { ChannelTextType } from "../declare";
 export function renderChannelTextContent(block: ChannelText) {
-    var dm = block.datas;
+    var dm = block.chats;
     function renderContent(d: ChannelTextType) {
         if (typeof d.file != 'undefined') {
 
@@ -12,17 +12,6 @@ export function renderChannelTextContent(block: ChannelText) {
         else if (typeof d.content != 'undefined') {
             return <div className="sy-channel-text-item-content-text">{d.content}</div>;
         }
-    }
-    function renderItem(d: ChannelTextType) {
-        return <div className="sy-channel-text-item" key={d.id}>
-            <div className="sy-channel-text-item-avatar"><Avatar userid={d.creater}></Avatar></div>
-            <div className="sy-channel-text-item-box">
-                {/* <div className="sy-channel-text-item-name"><UserNameLink userid={d.creater}></UserNameLink></div>
-                <div className="sy-channel-text-item-content">
-                    {renderContent(d)}
-                </div> */}
-            </div>
-        </div>
     }
     function renderDateTip(date: Date) {
         var dateStr = '';
@@ -39,6 +28,12 @@ export function renderChannelTextContent(block: ChannelText) {
         else dateStr = day.format('YYYY-MM-DD HH:mm')
         return <div className="sy-channel-text-item-tip-date">
             {dateStr}
+        </div>
+    }
+    function renderItem(d: ChannelTextType) {
+        return <div className="sy-channel-text-item" key={d.id}>
+            <Avatar userid={d.userid} showName><div className='shy-user-channel-chat-content'>{d.content}</div>
+            </Avatar>
         </div>
     }
     var ds: JSX.Element[] = [];

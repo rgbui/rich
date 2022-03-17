@@ -1,10 +1,10 @@
 export type ChannelTextType = {
     id: string;
-    creater: string;
+    userid: string;
     createDate: Date,
-    parentId: string;
-    rootId: string;
+    workspaceId?:string,
+    roomId: string;
     seq: number;
-    content: string;
-    file: any;
+    content?: string;
+    file?: any;
 }
