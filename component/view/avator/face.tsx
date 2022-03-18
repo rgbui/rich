@@ -46,7 +46,7 @@ export class Avatar extends React.Component<{
             return <div className={'shy-avatar-say'}>
                 <div className={'shy-avatar-say-face'} onMouseDown={e => this.mousedown(e)}>{renderIcon()}</div>
                 <div className={'shy-avatar-say-content'} >
-                    <div className={'shy-avatar-say-content-head'}><div onMouseDown={e => this.mousedown(e)}><a >{this.user?.name}</a>{this.props.showSn!==false && <span>#{this.user?.sn}</span>}</div>{this.props.head && <div>{this.props.head}</div>}</div>
+                    <div className={'shy-avatar-say-content-head'}><div className='left' onMouseDown={e => this.mousedown(e)}><a >{this.user?.name}</a>{this.props.showSn!==false && <span>#{this.user?.sn}</span>}</div>{this.props.head && <div className='right'>{this.props.head}</div>}</div>
                     {this.props.children && <div className={'shy-avatar-say-content-body'}>{this.props.children}</div>}
                 </div>
             </div>

@@ -18,8 +18,11 @@
     display        : flex;
     justify-content: flex-start;
     align-items    : center;
-
+    flex-wrap: nowrap;
     &-face {
+        flex-shrink: 0;
+        flex-grow  : 0;
+
         img {
             border-radius: 50%;
         }
@@ -36,23 +39,28 @@
     }
 
     &-content {
+        flex-shrink: 1;
+        flex-grow  : 1;
+
         &-head {
             display        : flex;
             justify-content: flex-start;
             align-items    : center;
+
             >div {
-                &:first-child {
+                &.left{
                     flex-shrink: 0;
                     flex-grow  : 0;
                     margin-left: 5px;
                     a{
-                      color:  var(--channels-default )
+                        color: var(--channels-default)
                     }
-                    span{
-                        color:  var(--channels-default )
+                    span {
+                        color: var(--channels-default)
                     }
                 }
-                &:last-child {
+
+                &.right {
                     flex-shrink    : 1;
                     flex-grow      : 1;
                     display        : flex;
@@ -61,10 +69,11 @@
                 }
             }
         }
-        &-body {  margin-left: 5px;}
+
+        &-body {
+            margin-left: 5px;
+        }
     }
 }
 
-.shy-user-card{
-    
-}
+.shy-user-card {}
