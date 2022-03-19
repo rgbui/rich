@@ -4,6 +4,7 @@ import { BlockView } from "../../../src/block/view";
 import React from "react";
 import { ChildsArea } from "../../../src/block/view/appear";
 import { Tab } from ".";
+
 @url('/tab/page')
 export class TabPage extends Block {
     partName: string = 'tab-page';
@@ -21,7 +22,7 @@ export class TabPage extends Block {
 @view('/tab/page')
 export class TabPageView extends BlockView<TabPage>{
     render() {
-        return <div className='sy-block-tag-page'
+        return <div className='sy-block-tab-page'
             style={this.block.visibleStyle}>
             <ChildsArea childs={this.block.blocks.childs}></ChildsArea>
         </div>
