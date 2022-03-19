@@ -1,19 +1,35 @@
 {
-    "[]": [
+    "list": [
         {
-            "WindTaskDef": {
-                "id": "402881e57db1d870017db1da7fa90009",
-                "create_date": "2021-12-13T11:33:46",
-                "detail": "{\"inputParams\":[{\"name\":\"message\",\"type\":\"String\",\"label\":\"消息\",\"required\":false,\"defaultValue\":\"DEFAULT MESSAGE\"}],\"outputParams\":[],\"rootBlock\":{\"id\":-1,\"name\":\"-1\",\"remark\":\"\",\"refTaskDefId\":\"\",\"inputParams\":{},\"children\":{\"default\":[{\"id\":1,\"name\":\"b1\",\"remark\":\"\",\"refTaskDefId\":\"\",\"inputParams\":{\"num\":{\"type\":\"Simple\",\"value\":\"3\"}},\"children\":{\"default\":[{\"id\":2,\"name\":\"b2\",\"remark\":\"\",\"refTaskDefId\":\"402881e57db1d870017db1e5c7f8006b\",\"inputParams\":{\"message\":{\"type\":\"Simple\",\"value\":\"123\"}},\"children\":{}}]}}]}}}",
-                "label": "testParal",
-                "project_id": "",
-                "remark": "",
-                "status": 0,
-                "version": 8
-            }
+            "_id": "620525a12e143521322decfa",
+            "text": "我的页面",
+            "mime": 20,
+            "at": 0,
+            "workspaceId": "4Fwv5VMH-1",
+            "creater": "4Fwv5VMF-1",
+            "id": "4Fwva7xe-4",
+            "usable": true,
+            "sn": 6,
+            "sort": 164450448163000,
+            "createDate<d>": 1644504481630
+        },
+        {
+            "_id": "620525a12e143521322decfb",
+            "id": "4Fwva7xf-4",
+            "creater": "4Fwv5VMF-1",
+            "text": "页面",
+            "mime": 10,
+            "at": 0,
+            "workspaceId": "4Fwv5VMH-1",
+            "parentId": "4Fwva7xe-4",
+            "usable": true,
+            "sn": 7,
+            "sort": 164450448163001,
+            "icon": {
+                "name": "emoji",
+                "code": "🥰"
+            },
+            "createDate<d>": 1644504481631
         }
-    ],
-    "ok": true,
-    "code": 200,
-    "msg": "success"
+    ]
 }
