@@ -41,6 +41,7 @@ import LoopSvg from "../src/assert/svg/loop.svg";
 import MentionSvg from "../src/assert/svg/mention.svg";
 import MinusSvg from "../src/assert/svg/minus.svg";
 import MoveToSvg from "../src/assert/svg/moveTo.svg";
+import PageSvg from "../src/assert/svg/page.svg";
 import PenSvg from "../src/assert/svg/pen.svg";
 import PexelsSvg from "../src/assert/svg/pexels.svg";
 import PictureSvg from "../src/assert/svg/picture.svg";
@@ -121,6 +122,7 @@ LoopSvg,
 MentionSvg,
 MinusSvg,
 MoveToSvg,
+PageSvg,
 PenSvg,
 PexelsSvg,
 PictureSvg,
