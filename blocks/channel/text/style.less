@@ -1,7 +1,21 @@
 .sy-channel-text {
-    min-height: 200px;
-    position  : relative;
-    
+    position       : relative;
+    display        : flex;
+    justify-content: flex-start;
+    align-items    : stretch;
+    flex-direction : column;
+    &-head {}
+    &-content {
+        flex-grow    : 1;
+        flex-shrink  : 1;
+        padding      : 0px 20px;
+        overflow-y   : auto;
+        overflow-x   : hidden;
+        padding-bottom:30px;
+        margin-bottom: 40px;
+        scroll-behavior: smooth;
+    }
+
     &-input {
         z-index         : 2;
         position        : absolute;
@@ -14,4 +28,12 @@
         border-radius   : 8px;
         padding         : 10px;
     }
+
+    .sy-channel-text-item {
+        margin-bottom: 20px;
+    }
+}
+
+.sy-channel-text-item-tip-date {
+    text-align: center;
 }

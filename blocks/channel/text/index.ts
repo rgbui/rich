@@ -23,12 +23,13 @@ export class ChannelText extends Block {
     }
     async didMounted(): Promise<void> {
         await this.loadChannelTextDatas();
-        this.forceUpdate();
+        this.view.forceUpdate(()=>(this.view as any).updateScroll());
         channel.sync('/ws/channel/notify', this.channelNotify)
     }
     channelNotify = (data: { workspaceId: string, roomId: string }) => {
         if (this.roomId == data.roomId) {
             this.chats.push(data as any);
+            this.view.forceUpdate(()=>(this.view as any).updateScroll());
         }
     }
     async didUnmounted(): Promise<void> {

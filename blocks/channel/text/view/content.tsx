@@ -6,11 +6,23 @@ import { ChannelTextType } from "../declare";
 export function renderChannelTextContent(block: ChannelText) {
     var dm = block.chats;
     function renderContent(d: ChannelTextType) {
-        if (typeof d.file != 'undefined') {
-
+        if (d.file) {
+            if (d.file.mime == 'image') {
+                return <div className='shy-user-channel-chat-image' >
+                    <img src={d.file.url} />
+                </div>
+            }
+            else if (d.file.mime == 'video') {
+                return <div className='shy-user-channel-chat-video' >
+                    <video src={d.file.url}></video>
+                </div>
+            }
+            else return <div className='shy-user-channel-chat-file' >
+                <a download={d.file.url}>{d.file.name}</a>
+            </div>
         }
-        else if (typeof d.content != 'undefined') {
-            return <div className="sy-channel-text-item-content-text">{d.content}</div>;
+        else {
+            return <div className='shy-user-channel-chat-content' dangerouslySetInnerHTML={{ __html: d.content }}></div>
         }
     }
     function renderDateTip(date: Date) {
@@ -26,25 +38,24 @@ export function renderChannelTextContent(block: ChannelText) {
             dateStr = `周${w}${day.format(' HH:mm')}`
         }
         else dateStr = day.format('YYYY-MM-DD HH:mm')
-        return <div className="sy-channel-text-item-tip-date">
+        return <div key={date.getTime()} className="sy-channel-text-item-tip-date">
             {dateStr}
         </div>
     }
     function renderItem(d: ChannelTextType) {
         return <div className="sy-channel-text-item" key={d.id}>
-            <Avatar userid={d.userid} showName><div className='shy-user-channel-chat-content'>{d.content}</div>
-            </Avatar>
+            <Avatar size={40} userid={d.userid} showSn={false} showName>{renderContent(d)}</Avatar>
         </div>
     }
     var ds: JSX.Element[] = [];
     var lastDate: Date;
     for (let i = 0; i < dm.length; i++) {
         var d = dm[i];
-        if (lastDate && dayjs(lastDate).diff(d.createDate, 'minute') > 5) {
+        if (!lastDate || lastDate && dayjs(d.createDate).diff(lastDate, 'minute') > 5) {
             ds.push(renderDateTip(d.createDate))
+            lastDate = d.createDate;
         }
         ds.push(renderItem(d));
-        lastDate = d.createDate;
     }
-    return ds.reverse();
+    return ds;
 }
