@@ -1,7 +1,6 @@
 import { BlockView } from "../../../src/block/view";
 import React from 'react';
 import { url, view } from "../../../src/block/factory/observable";
-import "../../../node_modules/katex/dist/katex.min.css";
 import { Block } from "../../../src/block";
 import { BlockDisplay } from "../../../src/block/enum";
 
