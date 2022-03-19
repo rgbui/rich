@@ -1,4 +1,10 @@
 import React from "react";
+import { useOpenEmoji } from "../../../extensions/emoji";
+import { Rect } from "../../../src/common/vector/point";
+import { OpenMultipleFileDialoug } from "../../file";
+import { EmojiSvg, PlusSvg } from "../../svgs";
+import { Icon } from "../icon";
+import { useSelectMenuItem } from "../menu";
 import "./style.less";
 import { InsertSelectionText } from "./util";
 export class RichTextInput extends React.Component<{
@@ -104,9 +110,32 @@ export class RichTextInput extends React.Component<{
             if (typeof this.props.popClose == 'function') this.props.popClose()
         }
     }
+    async openAddFile(event: React.MouseEvent) {
+        var re = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, [{ name: 'addFile', text: '上传附件' }]);
+        if (re) {
+            if (re.item.name == 'addFile') {
+                var files = await OpenMultipleFileDialoug();
+                if (files.length > 0) {
+                    this.props.onInput({ files });
+                }
+            }
+        }
+    }
+    async openEmoji(event: React.MouseEvent) {
+        this.rememberCursor();
+        var re = await useOpenEmoji({ roundArea: Rect.fromEvent(event), direction: 'left' });
+        setTimeout(() => {
+            this.setCursor();
+            if (re) {
+                InsertSelectionText(re.code);
+            }
+        }, 100);
+    }
     richEl: HTMLElement;
+    el: HTMLElement;
     render(): React.ReactNode {
-        return <div className="shy-rich-input">
+        return <div className="shy-rich-input" ref={e => this.el = e}>
+            <Icon mousedown={e => this.openAddFile(e)} size={18} icon={PlusSvg}></Icon>
             <div className="shy-rich-input-editor"
                 ref={e => this.richEl = e}
                 onKeyDown={e => { this.keydown(e.nativeEvent) }}
@@ -116,14 +145,14 @@ export class RichTextInput extends React.Component<{
                 contentEditable={true}
                 onPaste={e => this.paste(e.nativeEvent)}>
             </div>
+            <Icon size={18} mousedown={e => this.openEmoji(e)} icon={EmojiSvg}></Icon>
         </div>
     }
     onInsert(text: string, data?: Record<string, any>, pos?: { char: string, span: HTMLElement }) {
         var cps = typeof pos == 'undefined' ? this.charSpan : pos;
         if (cps) {
             cps.span.innerHTML = text;
-            if (data)
-                cps.span.setAttribute('data-link', JSON.stringify(data))
+            if (data) cps.span.setAttribute('data-link', JSON.stringify(data))
             var sel = window.getSelection();
             sel.collapse(cps.span, text.length);
         }
@@ -133,6 +162,49 @@ export class RichTextInput extends React.Component<{
         if (this.charSpan.char) {
             this.charSpan = { char: '', span: null };
             if (typeof this.props.popClose == 'function') this.props.popClose()
+        }
+    }
+    private cursorEl: HTMLElement;
+    private cursorOffset: number;
+    private cursorEndEl: HTMLElement;
+    private cursorEndOffset: number;
+    rememberCursor() {
+        var sel = window.getSelection(); //DOM
+        if (sel && sel.rangeCount > 0) {
+            var range = sel.getRangeAt(0); // DOM下
+            if (this.el.contains(range.startContainer)) {
+                this.cursorEl = range.startContainer as HTMLElement;
+                this.cursorOffset = range.startOffset;
+                this.cursorEndEl = range.endContainer as HTMLElement;
+                this.cursorEndOffset = range.endOffset;
+            }
+        }
+    }
+    setCursor() {
+        if (this.cursorEl) {
+            var sel = window.getSelection(); //DOM
+            sel.removeAllRanges();
+            var range = document.createRange();
+            if (range) {
+                range.setStart(this.cursorEl, this.cursorOffset);
+                if (this.cursorEndEl)
+                    range.setEnd(this.cursorEndEl, this.cursorEndOffset);
+            }
+            window.getSelection().addRange(range);
+            delete this.cursorEl;
+            delete this.cursorOffset;
+            delete this.cursorEndEl;
+            delete this.cursorEndOffset;
+        }
+        else {
+            var sel = window.getSelection(); //DOM
+            sel.removeAllRanges();
+            var range = document.createRange();
+            if (range) {
+                var text = this.richEl.innerText;
+                range.setStart(this.richEl, text.length);
+            }
+            window.getSelection().addRange(range);
         }
     }
 }

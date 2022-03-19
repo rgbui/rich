@@ -1,8 +1,18 @@
 .shy-rich-input {
-    width:100%;
+    width          : 100%;
+    display        : flex;
+    justify-content: flex-start;
+    align-items    : flex-start;
+    .shy-icon {
+        flex-grow  : 0;
+        flex-shrink: 0;
+    }
     &-editor {
-        min-height: 22px;
-        outline: none;
-        border : none;
+        margin:0px 10px;
+        flex-grow  : 1;
+        flex-shrink: 1;
+        min-height : 22px;
+        outline    : none;
+        border     : none;
     }
 }
