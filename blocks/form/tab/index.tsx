@@ -1,12 +1,16 @@
+import { assignWith } from "lodash";
 import React from "react";
-import { PlusSvg } from "../../../component/svgs";
+import { ArrowLeftSvg, ArrowRightSvg, PlusSvg, TrashSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
+import { useSelectMenuItem } from "../../../component/view/menu";
+import { MenuItemTypeValue } from "../../../component/view/menu/declare";
 import { Block } from "../../../src/block";
 import { BlockUrlConstant } from "../../../src/block/constant";
 import { BlockFactory } from "../../../src/block/factory/block.factory";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
 import { ChildsArea } from "../../../src/block/view/appear";
+import { Rect } from "../../../src/common/vector/point";
 import { ActionDirective } from "../../../src/history/declare";
 import "./style.less";
 
@@ -39,7 +43,7 @@ export class Tab extends Block {
 
     }
     async onAddTabItem() {
-        this.onAction(ActionDirective.onAddTabItem, async () => {
+        this.onAction(ActionDirective.onTabAddItem, async () => {
             await this.appendBlock({ url: '/tab/item', content: '标签' }, this.blocks.childs.length, 'childs');
             await this.appendBlock({ url: '/tab/page', blocks: { childs: [{ url: BlockUrlConstant.TextSpan, content: '标签内容' }] } }, this.blocks.subChilds.length, 'subChilds');
         })
@@ -47,6 +51,26 @@ export class Tab extends Block {
     changeTabIndex(tabeIndex) {
         this.tabIndex = tabeIndex;
         this.forceUpdate()
+    }
+    async onTabeItemContextmenu(event: React.MouseEvent, at: number) {
+        console.log(event, at);
+        var um = await useSelectMenuItem(
+            { roundArea: Rect.fromEvent(event) },
+            [
+                { name: 'prev', text: '前移', disabled: at == 0 ? true : false, icon: ArrowLeftSvg },
+                { name: 'after', text: '后移', disabled: at == this.childs.length - 1 ? true : false, icon: ArrowRightSvg },
+                { type: MenuItemTypeValue.divide },
+                { name: 'delete', text: '删除', disabled: this.childs.length == 1 ? true : false, icon: TrashSvg },
+            ]
+        );
+        if (um) {
+            if (um.item.name == 'delete') {
+                this.onAction(ActionDirective.onTabRemoveItem, async () => {
+                    await this.blocks.childs[at].delete();
+                    await this.blocks.subChilds[at].delete();
+                })
+            }
+        }
     }
 }
 @view('/tab')

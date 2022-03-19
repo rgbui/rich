@@ -18,6 +18,9 @@ export class TabPage extends Block {
         }
         return style;
     }
+    get handleBlock(): Block {
+        return this.myTab
+    }
 }
 @view('/tab/page')
 export class TabPageView extends BlockView<TabPage>{
