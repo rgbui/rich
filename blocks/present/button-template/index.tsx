@@ -1,7 +1,6 @@
 import { Block } from "../../../src/block";
 import React from 'react';
 import { prop, url, view } from "../../../src/block/factory/observable";
-import "./style.less";
 import { BlockView } from "../../../src/block/view";
 import { BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
 import { ChildsArea, TextArea, TextLineChilds } from "../../../src/block/view/appear";
@@ -10,6 +9,8 @@ import { ActionDirective } from "../../../src/history/declare";
 import { Button } from "../../../component/view/button";
 import ChevronDown from "../../../src/assert/svg/chevronDown.svg";
 import { Icon } from "../../../component/view/icon";
+import "./style.less";
+
 @url('/button/template')
 export class ButtonTemplate extends Block {
     blocks: { childs: Block[], subChilds: Block[] } = { childs: [], subChilds: [] };
