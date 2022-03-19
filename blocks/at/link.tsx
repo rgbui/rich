@@ -2,6 +2,7 @@
 
 import lodash from "lodash";
 import React from "react";
+import { PageSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { LinkPageItem } from "../../extensions/at/declare";
 import { IconArguments } from "../../extensions/icon/declare";
@@ -28,6 +29,7 @@ export class Link extends Block {
     async loadPageInfo() {
         // var r = await  messageChannel.fireAsync(Directive.getPageInfo, this.pageId);
         var r = await channel.get('/page/query/info', { id: this.pageId });
+        console.log(r);
         if (r?.ok) {
             if (r.data.icon) this.icon = r.data.icon;
             if (r.data.text) this.text = r.data.text;
@@ -69,8 +71,8 @@ export class LinkView extends BlockView<Link>{
     }
     render() {
         return <div className='sy-block-link'>
-            {this.block.icon && <a href={'https://shy.live/page/' + this.block.sn} onClick={e => this.block.openPage(e)}>
-                <i><Icon size={18} icon={this.block.icon}></Icon></i>
+            {this.block.text && <a href={'https://shy.live/page/' + this.block.sn} onClick={e => this.block.openPage(e)}>
+                <i><Icon size={18} icon={this.block.icon||PageSvg}></Icon></i>
                 <span>{this.block.text}</span>
             </a>}
         </div>
