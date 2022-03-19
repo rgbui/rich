@@ -11,7 +11,6 @@ import { BlockAppear } from "../../src/block/appear";
 import lodash from "lodash";
 import { channel } from "../../net/channel";
 import { LinkPageItem } from "../../extensions/at/declare";
-
 @url('/title')
 export class Title extends Block {
     @prop()

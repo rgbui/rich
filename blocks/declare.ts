@@ -10,13 +10,24 @@ import "./media/embed";
 import "./media/file";
 import "./media/video";
 import './media/audio';
-import "./present/katex/katex";
-import "./present/bookmark";
+
 import "./form/todo";
 import "./form/measure";
+import "./form/button/index";
+import "./form/carousel/index";
+import "./form/carousel/content";
+import "./form/tab/index";
+import "./form/tab/item";
+import "./form/tab/page";
+
+import "./present/katex/katex";
+import "./present/bookmark";
 import "./present/list/list";
 import "./present/code/code";
 import "./present/divider";
+import "./present/button-template/index";
+import "./present/outline";
+
 import './table/cell';
 import './table/row';
 import './table';

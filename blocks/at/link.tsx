@@ -27,9 +27,7 @@ export class Link extends Block {
         return false;
     }
     async loadPageInfo() {
-        // var r = await  messageChannel.fireAsync(Directive.getPageInfo, this.pageId);
         var r = await channel.get('/page/query/info', { id: this.pageId });
-        console.log(r);
         if (r?.ok) {
             if (r.data.icon) this.icon = r.data.icon;
             if (r.data.text) this.text = r.data.text;
