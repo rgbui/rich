@@ -58,7 +58,15 @@ export enum ActionDirective {
      */
     onErrorRepairDidMounte = 300,
 
-    onPageTurnLayout = 400
+    onPageTurnLayout = 400,
+
+    /**
+     * 一些特殊的block操作
+     */
+     onTabAddItem=500,
+     onTabRemoveItem=501,
+     onCarouselAddItem=510,
+     onCarouselRemoveItem=511,
 
 }
 
