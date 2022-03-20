@@ -4,6 +4,7 @@ import { Matrix } from "../../common/matrix";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { PageLayoutType } from "../../layout/declare";
+
 export class PageEvent {
     /**
      * 鼠标点击页面,
@@ -112,14 +113,26 @@ export class PageEvent {
                     this.pageLayout.type = layoutType;
                     break;
                 case PageLayoutType.board:
+                    var view = this.views[0];
+                    var view = this.views[0];
+                    await view.childs.eachAsync(async block => {
+                        await block.delete()
+                    })
                     this.pageLayout.type = layoutType;
                     break;
                 case PageLayoutType.textBroadcast:
                     this.pageLayout.type = layoutType;
+                    var view = this.views[0];
+                    await view.childs.eachAsync(async block => {
+                        await block.delete()
+                    })
                     break;
                 case PageLayoutType.textChannel:
                     this.pageLayout.type = layoutType;
                     var view = this.views[0];
+                    await view.childs.eachAsync(async block => {
+                        await block.delete()
+                    })
                     await this.createBlock('/channel/text', {}, view);
                     break;
             }
