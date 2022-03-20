@@ -26,7 +26,7 @@ import "./present/list/list";
 import "./present/code/code";
 import "./present/divider";
 import "./present/button-template/index";
-import "./present/outline";
+import "./present/outline/index";
 
 import './table/cell';
 import './table/row';

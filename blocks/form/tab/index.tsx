@@ -52,8 +52,8 @@ export class Tab extends Block {
         this.tabIndex = tabeIndex;
         this.forceUpdate()
     }
-    async onTabeItemContextmenu(event: React.MouseEvent, at: number) {
-        console.log(event, at);
+    async onTabeItemContextmenu(event: React.MouseEvent, at: number)
+    {
         var um = await useSelectMenuItem(
             { roundArea: Rect.fromEvent(event) },
             [

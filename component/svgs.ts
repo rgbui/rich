@@ -25,6 +25,7 @@ import ConnetLineSvg from "../src/assert/svg/connet.line.svg";
 import DotsSvg from "../src/assert/svg/dots.svg";
 import DragHandleSvg from "../src/assert/svg/dragHandle.svg";
 import DuplicateSvg from "../src/assert/svg/duplicate.svg";
+import EditSvg from "../src/assert/svg/edit.svg";
 import EmojiSvg from "../src/assert/svg/emoji.svg";
 import EquationSvg from "../src/assert/svg/equation.svg";
 import FileSvg from "../src/assert/svg/file.svg";
@@ -106,6 +107,7 @@ ConnetLineSvg,
 DotsSvg,
 DragHandleSvg,
 DuplicateSvg,
+EditSvg,
 EmojiSvg,
 EquationSvg,
 FileSvg,
