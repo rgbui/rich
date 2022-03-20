@@ -162,7 +162,8 @@ export class Block$Operator {
         }
         var bs = this.blocks[childKey];
         if (typeof at == 'undefined') at = bs.length;
-        await this.page.createBlock(blockData.url, blockData, this, at, childKey);
+        var newBlock = await this.page.createBlock(blockData.url, blockData, this, at, childKey);
+        return newBlock;
     }
     async appendArray(this: Block, blocks: Block[], at?: number, childKey?: string) {
         if (typeof childKey == 'undefined') childKey = 'childs';
@@ -192,12 +193,10 @@ export class Block$Operator {
         for (let i = 0; i < blocks.length; i++) {
             var bb = blocks[i];
             if (i == 0) {
-                await this.appendBlock(bb, at, childKey);
-                b = bb;
+                b = await this.appendBlock(bb, at, childKey);
             }
             else {
-                await this.appendBlock(bb, b.at + 1, childKey);
-                b = bb;
+                b = await this.appendBlock(bb, b.at + 1, childKey);
             }
         }
     }
