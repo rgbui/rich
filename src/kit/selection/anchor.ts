@@ -96,6 +96,7 @@ export class Anchor {
             this.view.style.visibility = 'visible';
             this.view.style.backgroundColor = fontStyle.color;
             this.view.style.height = typeof fontStyle.lineHeight == 'number' ? fontStyle.lineHeight + 'px' : '20px';
+            this.view.style.lineHeight = this.view.style.height;
             this.view.style.display = 'inline';
             if (this.textContent.length == 0) {
                 this.el.classList.add('shy-text-empty');
