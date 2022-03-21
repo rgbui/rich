@@ -26,7 +26,6 @@ class BoardEditTool extends EventsComponent {
             left: this.point.x
         };
         var self = this;
-        console.log(this.commands);
         function getValue(name: string) {
             var command = self.commands.find(g => g.name == name);
             if (command) return command.value;
@@ -168,7 +167,6 @@ class BoardEditTool extends EventsComponent {
         }
     }
     async onChange(name: string, value: any) {
-        console.log(name, value);
         this.emit('save', { name, value });
     }
     close() {
