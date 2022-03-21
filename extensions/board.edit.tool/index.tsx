@@ -12,6 +12,7 @@ import { Point } from "../../src/common/vector/point";
 import { Polygon } from "../../src/common/vector/polygon";
 import { BackgroundColor } from "./background";
 import { ShapeFill } from "./fill";
+import { FontColor } from "./fontColor";
 import { FrameScale } from "./frame.scale";
 import { LineArrow, LineTypes } from "./line.arrow";
 import { TurnShapes } from "./shapes";
@@ -101,6 +102,11 @@ class BoardEditTool extends EventsComponent {
                     <BackgroundColor value={getValue('backgroundColor')} change={e => { this.onChange('backgroundColor', e) }}></BackgroundColor>
                 </div>
             </Tip>}
+            {is('fontColor') && <Tip overlay={'字体颜色'}>
+                <div className={'shy-board-edit-tool-item'}>
+                    <FontColor value={getValue('fontColor')} change={e => { this.onChange('fontColor', e) }}></FontColor>
+                </div>
+            </Tip>}
             {is('stoke') && <Tip overlay={'边框'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <ShapeStroke
@@ -147,7 +153,7 @@ class BoardEditTool extends EventsComponent {
         this.blocks = blocks;
         var poly = new Polygon(...this.blocks.map(b => b.getVisiblePolygon().points).flat());
         this.point = poly.bound.leftTop;
-        this.point.y -= 30;
+        this.point.y -= 40;
         var rs;
         await this.blocks.eachAsync(async block => {
             var cs = await block.getBoardEditCommand();

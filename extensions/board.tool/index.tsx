@@ -26,10 +26,6 @@ class BoardTool extends EventsComponent {
         }
         return <div className="shy-board-tool" style={style}>
             <div className="shy-board-tool-bar"
-                onMouseDown={e => this.selector(BoardToolOperator.arrow, e)}>
-                <span><ArrowSvg /></span>
-            </div>
-            <div className="shy-board-tool-bar"
                 onMouseDown={e => this.selector(BoardToolOperator.text, e)}>
                 <span><TextSvg /></span>
             </div>
@@ -115,6 +111,10 @@ class BoardTool extends EventsComponent {
         this.point = point;
         this.visible = true;
         this.forceUpdate()
+    }
+    onShow(visible: boolean) {
+        this.visible = visible;
+        this.forceUpdate();
     }
     close(): void {
         this.visible = false;

@@ -1,5 +1,4 @@
 import React from "react";
-import { TransparentSvg } from "../../component/svgs";
 import { ColorType } from "../note";
 
 var colors: ColorType[] = [
@@ -23,14 +22,13 @@ var colors: ColorType[] = [
     { color: 'rgb(255, 249, 177)' },
 
 ]
-export function BackgroundColor(props: { value: string, change?(value: string): void }) {
+export function FontColor(props: { value: string, change?(value: string): void }) {
     var [visible, setDropVisible] = React.useState(false);
-    return <div className="shy-board-edit-background-color" onMouseDown={e => setDropVisible(e => e ? false : true)}>
-        <div className="shy-board-edit-background-color-current">
-            {props.value == 'transparent' && <TransparentSvg></TransparentSvg>}
-            {props.value != 'transparent' && <a style={{ backgroundColor: props.value || '#000' }}></a>}
+    return <div className="shy-board-edit-font-color" onMouseDown={e => setDropVisible(e => e ? false : true)}>
+        <div className="shy-board-edit-font-color-current">
+            <a style={{ backgroundColor: props.value || '#000' }}></a>
         </div>
-        {visible && <div className="shy-board-edit-background-color-drops">
+        {visible && <div className="shy-board-edit-font-color-drops">
             {colors.map(c => {
                 return <a onMouseDown={e => props.change(c.color)} key={c.color} style={{ backgroundColor: c.color }}></a>
             })}

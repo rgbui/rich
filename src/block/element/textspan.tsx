@@ -150,7 +150,7 @@ export class TextSpan extends Block {
     async getBoardEditCommand(this: Block): Promise<{ name: string; value?: any; }[]> {
         var bold = this.pattern.css(BlockCssName.font).fontWeight;
         var cs: { name: string; value?: any; }[] = [];
-        cs.push({ name: 'fontSize', value: Math.round(this.pattern.css(BlockCssName.font).fontSize||14) });
+        cs.push({ name: 'fontSize', value: Math.round(this.pattern.css(BlockCssName.font).fontSize || 14) });
         cs.push({ name: 'fontWeight', value: bold == 'bold' || bold == 500 ? true : false });
         cs.push({ name: 'fontStyle', value: this.pattern.css(BlockCssName.font).fontStyle == 'italic' ? true : false });
         cs.push({ name: 'textDecoration', value: this.pattern.css(BlockCssName.font).textDecoration });
@@ -158,6 +158,18 @@ export class TextSpan extends Block {
         cs.push({ name: 'link' });
         cs.push({ name: 'backgroundColor', value: this.pattern.css(BlockCssName.fill)?.color || 'transparent' });
         return cs;
+    }
+    async setBoardEditCommand(this: Block, name: string, value: any) {
+        if (name == 'backgroundColor')
+            this.pattern.setFillStyle({ color: value, mode: 'color' });
+        else if (name == 'fontColor')
+            this.pattern.setFontStyle({ color: value });
+        else if (name == 'fontSize')
+            this.pattern.setFontStyle({ fontSize: value });
+        else if (name == 'fontWeight')
+            this.pattern.setFontStyle({ fontWeight: value })
+        else if (name == 'textDecoration')
+            this.pattern.setFontStyle({ textDecoration: value });
     }
 }
 @view("/textspan")

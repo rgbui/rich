@@ -48,7 +48,8 @@
     }
 }
 
-.shy-board-edit-background-color {
+.shy-board-edit-background-color,
+.shy-board-edit-font-color {
     position: relative;
     width   : 20px;
     height  : 20px;
@@ -80,8 +81,6 @@
         justify-content: center;
         align-items    : flex-start;
         flex-wrap      : wrap;
-
-
         a {
             display      : inline-block;
             box-sizing   : border-box;
@@ -91,7 +90,6 @@
             border-radius: 15px;
             transition   : opacity 0.2s;
             border       : 1px solid rgba(0, 0, 0, 0.1);
-
             &.selected {}
         }
     }
@@ -242,11 +240,13 @@
         top          : 28px;
         width        : 50px;
         min-height   : 100px;
+
         a {
             display        : flex;
             justify-content: center;
             align-items    : center;
-            transform      : scale(-1,1);
+            transform      : scale(-1, 1);
+
             svg {
                 width : 30px;
                 height: 30px;
@@ -263,10 +263,12 @@
         top          : 28px;
         width        : 50px;
         min-height   : 100px;
+
         a {
             display        : flex;
             justify-content: center;
             align-items    : center;
+
             svg {
                 width : 30px;
                 height: 30px;
