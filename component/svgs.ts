@@ -55,6 +55,7 @@ import SettingsSvg from "../src/assert/svg/settings.svg";
 import SortSvg from "../src/assert/svg/sort.svg";
 import SquareplusSvg from "../src/assert/svg/squareplus.svg";
 import TemplatesSvg from "../src/assert/svg/templates.svg";
+import TransparentSvg from "../src/assert/svg/transparent.svg";
 import TrashSvg from "../src/assert/svg/trash.svg";
 import TypesButtonSvg from "../src/assert/svg/types.button.svg";
 import TypesCheckboxSvg from "../src/assert/svg/types.checkbox.svg";
@@ -137,6 +138,7 @@ SettingsSvg,
 SortSvg,
 SquareplusSvg,
 TemplatesSvg,
+TransparentSvg,
 TrashSvg,
 TypesButtonSvg,
 TypesCheckboxSvg,
