@@ -1,5 +1,7 @@
 
+import React from "react";
 import { Page } from "..";
+import { getBoardTool } from "../../../extensions/board.tool";
 import { Matrix } from "../../common/matrix";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
@@ -188,6 +190,20 @@ export class PageEvent {
         matrix.translate(to.x - from.x, to.y - from.y);
         this.matrix = matrix;
         this.view.forceUpdate()
+    }
+    onMouseenter(this: Page, event: React.MouseEvent) {
+        if (this.isBoard) {
+            // getBoardTool().then(r => {
+            //     r.onShow(true);
+            // })
+        }
+    }
+    onMouseleave(this: Page, event: React.MouseEvent) {
+        if (this.isBoard) {
+            // getBoardTool().then(r => {
+            //     r.onShow(false);
+            // })
+        }
     }
 }
 

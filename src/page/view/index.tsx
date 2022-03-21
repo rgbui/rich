@@ -120,6 +120,8 @@ export class PageView extends Component<{ page: Page }>{
         return <div className={'shy-page-view' + (this.page.readonly ? " shy-page-view-readonly" : "")} style={pageStyle} tabIndex={1}
             onFocusCapture={e => this.page.onFocusCapture(e.nativeEvent)}
             onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}
+            onMouseEnter={e => this.page.onMouseenter(e)}
+            onMouseLeave={e => this.page.onMouseleave(e)}
         ><div className='shy-page-view-box' onContextMenu={e => e.preventDefault()} onMouseDown={e => this.page.onMousedown(e.nativeEvent)}>
                 <PageLayoutView
                     pageLayout={this.page.pageLayout}
