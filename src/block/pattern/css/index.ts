@@ -193,7 +193,7 @@ export class SvgCss extends BlockCss {
     get style() {
         return {
             stroke: this.stroke,
-            strokeDasharray: this.strokeDasharray == 'none' ? undefined : (this.strokeDasharray == 'dash' ? "10,10" : "2,2"),
+            strokeDasharray: this.strokeDasharray == 'none' || typeof this.strokeDasharray == 'undefined' || this.strokeDasharray === null ? undefined : (this.strokeDasharray == 'dash' ? "10,10" : "2,2"),
             strokeWidth: this.strokeWidth,
             strokeOpacity: this.strokeOpacity,
             fill: this.fill,
