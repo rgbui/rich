@@ -135,6 +135,19 @@ export class Line extends Block {
 }
 @view('/line')
 export class LineView extends BlockView<Line>{
+    renderLine(from: Point, to: Point) {
+        if (this.block.lineStart != 'none') {
+            if (this.block.lineStart == '1') {
+
+            }
+            else if (this.block.lineStart == '2') {
+
+            }
+        }
+        return <g>
+            <path className="visible" d={`M${from.x} ${from.y},${to.x} ${to.y}`}></path>
+        </g>
+    }
     render(): ReactNode {
         var from = this.block.cacPortLocationPos(this.block.from);
         var to = this.block.cacPortLocationPos(this.block.to);
@@ -156,7 +169,7 @@ export class LineView extends BlockView<Line>{
                 // marginLeft: re.x,
                 // marginTop: re.y
             }}>
-                <path className="visible" d={`M${from.x} ${from.y},${to.x} ${to.y}`}></path>
+                {this.renderLine(from, to)}
                 <path stroke="transparent" strokeWidth={strokeWidth} d={`M${from.x} ${from.y},${to.x} ${to.y}`}></path>
             </svg>
         </div>

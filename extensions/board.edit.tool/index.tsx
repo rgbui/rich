@@ -89,9 +89,12 @@ class BoardEditTool extends EventsComponent {
                         ]}></Select>
                 </div>
             </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
-            {is('stickerSize') && <><Tip id={LangID.textToolBold}>
+            {is('stickerSize') && <><Tip overlay='便利贴'>
                 <div className={'shy-board-edit-tool-item'} >
-                    <Select style={{ width: 50 }} value={'大小'} options={[{ text: '小', value: 'small' }, { text: '中', value: 'medium' }, { text: '大', value: 'big' }]}></Select>
+                    <Select value={getValue('stickerSize')} onChange={e => this.onChange('stickerSize', e)} style={{ width: 50 }} options={[
+                        { text: '小', value: 'small' },
+                        { text: '中', value: 'medium' },
+                        { text: '大', value: 'big' }]}></Select>
                 </div>
             </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
             {is('fontWeight') && <Tip id={LangID.textToolBold}>

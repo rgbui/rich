@@ -12,7 +12,7 @@ import "./style.less";
 @url('/note')
 export class Note extends Block {
     @prop()
-    color: string = 'rgb(166, 204, 245)';
+    color: string = 'rgb(166,204,245)';
     @prop()
     isScale: boolean = true;
     @prop()
@@ -58,8 +58,12 @@ export class Note extends Block {
         cs.push({ name: 'fontStyle', value: this.pattern.css(BlockCssName.font)?.fontStyle == 'italic' ? true : false });
         cs.push({ name: 'textDecoration', value: this.pattern.css(BlockCssName.font)?.textDecoration });
         cs.push({ name: 'fontColor', value: this.pattern.css(BlockCssName.font)?.color });
-        cs.push({ name: 'link' });
-        cs.push({ name: 'stickerSize' });
+        // cs.push({ name: 'link' });
+        var stickerSize = 'none';
+        if (this.fixedWidth == 400) stickerSize = 'big'
+        else if (this.fixedWidth == 200) stickerSize = 'medium'
+        else if (this.fixedWidth == 100) stickerSize = 'small'
+        cs.push({ name: 'stickerSize', value: stickerSize });
         cs.push({ name: 'backgroundColor', value: this.color });
         return cs;
     }
@@ -68,15 +72,26 @@ export class Note extends Block {
             this.updateProps({ color: value })
         else (await super.setBoardEditCommand(name, value) == false)
         {
-
+            if (name == 'stickerSize') {
+                if (value == 'big') { this.updateProps({ fixedWidth: 400, fixedHeight: 400 }) }
+                else if (value == 'medium') { this.updateProps({ fixedWidth: 200, fixedHeight: 200 }) }
+                else if (value == 'small') { this.updateProps({ fixedWidth: 100, fixedHeight: 100 }) }
+            }
         }
     }
 }
 @view('/note')
 export class NoteView extends BlockView<Note>{
     renderBg() {
-        var size = this.block.fixedSize.width;
-        return <svg style={{ width: size, height: size }} viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+        var bw = this.block.fixedSize.width;
+        var size = (8 / 48) * bw + bw - 4;
+
+        return <svg style={{
+            width: size,
+            height: size,
+            top: (bw - size) / 2,
+            left: (bw - size) / 2
+        }} viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <filter x="-18.8%" y="-120%" width="137.5%" height="340%" filterUnits="objectBoundingBox" id="aeqa">
                     <feGaussianBlur stdDeviation="2" in="SourceGraphic"></feGaussianBlur>
@@ -95,7 +110,7 @@ export class NoteView extends BlockView<Note>{
     render(): ReactNode {
         return <div className="sy-block-note" style={this.block.visibleStyle}>
             {this.renderBg()}
-            <div className="sy-block-note-content">
+            <div className="sy-block-note-content" style={{width:this.block.fixedWidth,height:this.block.fixedWidth}}>
                 <TextSpanArea block={this.block}></TextSpanArea>
             </div>
         </div>
