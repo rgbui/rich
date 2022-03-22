@@ -12,6 +12,8 @@ import { ActionDirective } from '../../history/declare';
 import { FontCss, BlockCssName } from '../pattern/css';
 import { CssSelectorType } from '../pattern/type';
 import { MouseDragger } from '../../common/dragger';
+import { forceCloseBoardEditTool } from '../../../extensions/board.edit.tool';
+import { useBoardTool } from '../../kit/mouse/board';
 
 @url("/textspan")
 export class TextSpan extends Block {
@@ -35,7 +37,7 @@ export class TextSpan extends Block {
     get visibleStyle(): React.CSSProperties {
         var style = super.visibleStyle;
         if (this.isFreeBlock) {
-            style.minWidth = this.fixedWidth || 80
+            style.minWidth = this.fixedWidth || 20
         }
         return style;
     }
@@ -74,8 +76,12 @@ export class TextSpan extends Block {
         var block = this;
         var style = this.pattern.style;
         var fontSize = style.fontSize || 14;
+        var self=this;
         MouseDragger({
             event,
+            moveStart() {
+                forceCloseBoardEditTool();
+            },
             async moving(ev, data, isEnd) {
                 if ((arrows.includes(PointArrow.right) || arrows.includes(PointArrow.left)) && arrows.includes(PointArrow.middle)) {
                     var tp = gm.inverseTransform(Point.from(ev));
@@ -98,6 +104,7 @@ export class TextSpan extends Block {
                     }
                     block.matrix = matrix.appended(ma);
                     block.fixedWidth = bw;
+                    block.updateRenderLines();
                     await block.forceUpdate();
                     block.page.kit.picker.view.forceUpdate();
                     if (isEnd) {
@@ -144,6 +151,9 @@ export class TextSpan extends Block {
                         })
                     }
                 }
+            },
+            async moveEnd() {
+                await useBoardTool(self.page.kit);
             }
         });
     }
@@ -164,8 +174,9 @@ export class TextSpan extends Block {
             this.pattern.setFillStyle({ color: value, mode: 'color' });
         else if (name == 'fontColor')
             this.pattern.setFontStyle({ color: value });
-        else if (name == 'fontSize')
-            this.pattern.setFontStyle({ fontSize: value });
+        else if (name == 'fontSize') {
+            this.pattern.setFontStyle({ fontSize: value, lineHeight: (value * 1.2)+'px'  });
+        }
         else if (name == 'fontWeight')
             this.pattern.setFontStyle({ fontWeight: value })
         else if (name == 'textDecoration')

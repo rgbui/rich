@@ -2,13 +2,15 @@
 import React from "react";
 import { Kit } from "..";
 import { Line } from "../../../blocks/board/line/line";
+import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
 import { util } from "../../../util/util";
 import { Block } from "../../block";
 import { BoardBlockSelector } from "../../block/partial/board";
 import { MouseDragger } from "../../common/dragger";
 import { Matrix } from "../../common/matrix";
-import { Point, PointArrow, Rect } from "../../common/vector/point";
+import { Point, PointArrow } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
+import { useBoardTool } from "../mouse/board";
 import { BlockPickerView } from "./view";
 
 export class BlockPicker {
@@ -24,6 +26,12 @@ export class BlockPicker {
         this.visible = true;
         this.view.forceUpdate();
     }
+    onRePicker() {
+        this.blocks.forEach(bl => {
+            bl.updateRenderLines();
+        });
+        this.view.forceUpdate();
+    }
     onShiftPicker(blocks: Block[]) {
         blocks.each(b => {
             if (!this.blocks.some(g => g == b)) this.blocks.push(b)
@@ -37,20 +45,11 @@ export class BlockPicker {
             this.view.forceUpdate();
     }
     onMove(from: Point, to: Point) {
-        this.blocks.forEach((bl) => {
+        this.blocks.forEach(bl => {
             var matrix = new Matrix();
             matrix.translateMove(bl.globalWindowMatrix.inverseTransform(from), bl.globalWindowMatrix.inverseTransform(to))
             bl.moveMatrix = matrix;
-            if (bl.isFrame) {
-                bl.childs.each(b => {
-                    b.lines.each(line => { line.forceUpdate() })
-                })
-            }
-            else {
-                if (bl.lines.length > 0) {
-                    bl.lines.each(line => { line.forceUpdate() })
-                }
-            }
+            bl.updateRenderLines();
             bl.forceUpdate()
         });
         this.view.forceUpdate();
@@ -118,6 +117,7 @@ export class BlockPicker {
         MouseDragger({
             event,
             moveStart() {
+                forceCloseBoardEditTool()
                 createConnectLine();
             },
             move(ev, data) {
@@ -157,6 +157,9 @@ export class BlockPicker {
         var key = arrows.includes(PointArrow.from) ? 'from' : 'to';
         MouseDragger({
             event,
+            moveStart() {
+                forceCloseBoardEditTool()
+            },
             moving(ev, data, isEnd) {
                 var point = gm.inverseTransform(Point.from(ev));
                 block[key] = { x: point.x, y: point.y };
@@ -189,6 +192,9 @@ export class BlockPicker {
         var self = this;
         MouseDragger({
             event,
+            moveStart() {
+                forceCloseBoardEditTool();
+            },
             moving(ev, data, isEnd) {
                 var pos = gm.inverseTransform(Point.from(ev));
                 var toAngle = Math.atan2(pos.y - center.y, pos.x - center.x) * d + 180;
@@ -200,7 +206,7 @@ export class BlockPicker {
                 var mc = ma.clone();
                 mc.rotate(r, center);
                 block.moveMatrix = mc;
-                block.lines.each(line => { line.forceUpdate() })
+                block.updateRenderLines();
                 block.view.forceUpdate();
                 self.view.forceUpdate();
                 if (isEnd) {
@@ -209,6 +215,9 @@ export class BlockPicker {
                         block.moveMatrix = new Matrix();
                     })
                 }
+            },
+            async moveEnd() {
+                await useBoardTool(self.kit);
             }
         });
     }

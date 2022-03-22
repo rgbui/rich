@@ -1,11 +1,13 @@
 
 import { Block } from "..";
 import { PortLocation } from "../../../blocks/board/line/line";
+import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
 import { MouseDragger } from "../../common/dragger";
 import { Matrix } from "../../common/matrix";
 import { Point, PointArrow, Rect, RectUtility } from "../../common/vector/point";
 import { Polygon } from "../../common/vector/polygon";
 import { ActionDirective } from "../../history/declare";
+import { useBoardTool } from "../../kit/mouse/board";
 export enum BoardPointType {
     path,
     pathConnectPort,
@@ -110,9 +112,14 @@ export class Block$Board {
         var s = gm.getScaling().x;
         var minW = 50 / s;
         var minH = 20 / s;
+        var self = this;
         MouseDragger({
             event,
+            moveStart() {
+                forceCloseBoardEditTool();
+            },
             moving(ev, data, isEnd) {
+                console.log('xxx');
                 var tp = gm.inverseTransform(Point.from(ev));
                 var ma = new Matrix();
                 var [dx, dy] = tp.diff(fp);
@@ -147,6 +154,7 @@ export class Block$Board {
                 block.matrix = matrix.appended(ma);
                 block.fixedHeight = bh;
                 block.fixedWidth = bw;
+                block.updateRenderLines();
                 block.forceUpdate();
                 block.page.kit.picker.view.forceUpdate();
                 if (isEnd) {
@@ -158,6 +166,9 @@ export class Block$Board {
                         )
                     })
                 }
+            },
+            async moveEnd() {
+                await useBoardTool(self.page.kit);
             }
         });
     }
@@ -191,7 +202,7 @@ export class Block$Board {
         var cs = [];
         return []
     }
-    async setBoardEditCommand(this: Block, name: string, value: any):Promise<boolean|void> {
+    async setBoardEditCommand(this: Block, name: string, value: any): Promise<boolean | void> {
         if (name == 'fontSize') {
             this.pattern.setFontStyle({ fontSize: value });
         }
@@ -209,6 +220,24 @@ export class Block$Board {
         }
         else return false;
         return undefined;
+    }
+
+    /**
+     * 重新渲染线条
+     * @param this 
+     */
+    updateRenderLines(this: Block, isSelfUpdate?: boolean) {
+        if (this.isFrame) {
+            this.childs.each(b => {
+                b.lines.each(line => { line.forceUpdate() })
+            })
+        }
+        else {
+            if (this.lines.length > 0) {
+                this.lines.each(line => { line.forceUpdate() })
+            }
+        }
+        if (isSelfUpdate) this.forceUpdate()
     }
 }
 

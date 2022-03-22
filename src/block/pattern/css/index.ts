@@ -81,7 +81,7 @@ export class FontCss extends BlockCss {
     fontFamily: string;
     color: string;
     fontSize: number;
-    lineHeight: number;
+    lineHeight: number | string;
     fontStyle: 'normal' | 'italic';
     fontWeight: 'normal' | 'bold' | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
     letterSpacing: 'normal' | number;
@@ -97,7 +97,7 @@ export class FontCss extends BlockCss {
         return {
             color: this.color,
             fontSize: this.fontSize,
-            lineHeight: this.lineHeight,
+            lineHeight: typeof this.lineHeight == 'number' ? this.lineHeight + 'px' : this.lineHeight,
             textDecoration: this.textDecoration,
             fontStyle: this.fontStyle,
             fontFamily: this.fontFamily,
