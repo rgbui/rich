@@ -1,9 +1,18 @@
 .sy-block-shape {
-    svg {
-        width : 100%;
-        height: 100%;
+    &-svg {
+        svg {
+            width           : 100%;
+            height          : 100%;
+            stroke-dasharray: inherit;
+            stroke-width    : inherit;
+            stroke-opacity  : inherit;
+            fill            : inherit !important;
+            fill-opacity    : inherit;
+        }
     }
+
     position: relative;
+
     &-content {
         position       : absolute;
         top            : 50%;

@@ -27,8 +27,10 @@ export class Shape extends Block {
         return cs;
     }
     async setBoardEditCommand(this: Block, name: string, value: any): Promise<boolean | void> {
-        if (['stroke', 'strokeOpacity', 'strokeWidth', 'fillColor', 'fillOpacity',].includes(name)) {
-            this.pattern.setSvgStyle({ [name]: value })
+        if (['stroke', 'strokeDasharray', 'strokeOpacity', 'strokeWidth', 'fillColor', 'fillOpacity',].includes(name)) {
+            var key = name;
+            if (name == 'fillColor') key = 'fill';
+            this.pattern.setSvgStyle({ [key]: value })
         }
     }
 }
@@ -36,8 +38,11 @@ export class Shape extends Block {
 export class ShapeView extends BlockView<Shape>{
     render(): ReactNode {
         return <div className="sy-block-shape" style={this.block.visibleStyle}>
-            <div
-                style={{ width: this.block.fixedWidth, height: this.block.fixedHeight }}
+            <div className="sy-block-shape-svg"
+                style={{
+                    width: this.block.fixedWidth,
+                    height: this.block.fixedHeight
+                }}
                 dangerouslySetInnerHTML={{ __html: this.block.svgContent }}>
             </div>
             <div className="sy-block-shape-content">
