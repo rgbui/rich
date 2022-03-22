@@ -1,4 +1,6 @@
 import React from "react";
+import { FontcolorSvg } from "../../component/svgs";
+import { Icon } from "../../component/view/icon";
 import { ColorType } from "../note";
 
 var colors: ColorType[] = [
@@ -26,7 +28,8 @@ export function FontColor(props: { value: string, change?(value: string): void }
     var [visible, setDropVisible] = React.useState(false);
     return <div className="shy-board-edit-font-color" onMouseDown={e => setDropVisible(e => e ? false : true)}>
         <div className="shy-board-edit-font-color-current">
-            <a style={{ backgroundColor: props.value || '#000' }}></a>
+            <Icon size={10} icon={FontcolorSvg}></Icon>
+            <div className="bottom-border" style={{ backgroundColor: props.value || '#fff' }}></div>
         </div>
         {visible && <div className="shy-board-edit-font-color-drops">
             {colors.map(c => {
