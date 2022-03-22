@@ -22,7 +22,8 @@ export async function useBoardTool(kit: Kit) {
                 await kit.picker.blocks.eachAsync(async (block) => {
                     await block.setBoardEditCommand(r.name, r.value);
                 })
-            })
+            });
+            kit.picker.onRePicker();
         } else break;
     }
 
@@ -120,7 +121,6 @@ export function SelectorBoardBlock(kit: Kit, block: Block | undefined, event: Mo
                         kit.page.onContextMenu(ev);
                     }
                 }
-
             }
         })
     }
