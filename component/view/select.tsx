@@ -9,6 +9,7 @@ export class Select extends React.Component<{
     onChange?: (value: any) => void,
     style?: CSSProperties,
     dropAlign?: 'left' | 'right' | 'center',
+    optionAlign?: 'left' | 'right' | 'center',
     border?: boolean
 }>{
     private toggle: boolean = false;
@@ -47,6 +48,10 @@ export class Select extends React.Component<{
             dropStyle = { left: '50%', transform: 'translate(-50%,0px)' };
         }
         var op = props.options.find(g => g.value == props.value);
+        var optionStyle: CSSProperties = { justifyContent: 'flex-start' }
+        if (props.optionAlign == 'center') optionStyle.justifyContent = 'center';
+        else if (props.optionAlign == 'right') optionStyle.justifyContent = 'flex-end';
+
         return <div className={'shy-select' + (props.border ? " shy-select-border" : "")} style={this.props.style || {}} ref={e => this.el = e}>
             <div className='shy-select-selection' onClick={e => props.disabled ? undefined : (setToggle())}>
                 {props.children && <>{props.children}<ChevronDownSvg></ChevronDownSvg></>}
@@ -55,7 +60,7 @@ export class Select extends React.Component<{
             </div>
             {this.toggle && <div className='shy-select-drop' style={dropStyle} >
                 {props.options.map((op, index) => {
-                    return <a key={index} className={props.value == op.value ? "hover" : ""} onClick={e => click(op)}><span>{op.text}</span></a>
+                    return <a key={index} style={optionStyle} className={props.value == op.value ? "hover" : ""} onClick={e => click(op)}><span>{op.text}</span></a>
                 })}
             </div>}
         </div>
