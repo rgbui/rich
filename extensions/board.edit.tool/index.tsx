@@ -45,11 +45,12 @@ class BoardEditTool extends EventsComponent {
                     <TurnShapes></TurnShapes>
                 </div>
             </Tip>}
-            {is('fontSize') && <><Tip id={LangID.textToolBold}>
+            {is('fontSize') && <><Tip overlay={'字体大小'}>
                 <div className={'shy-board-edit-tool-item'} >
                     <Select value={getValue('fontSize')}
                         onChange={e => this.onChange('fontSize', e)}
                         style={{ width: 40 }}
+                        dropAlign='center'
                         options={[
                             { text: '12', value: 12 },
                             { text: '14', value: 14 },
@@ -97,14 +98,14 @@ class BoardEditTool extends EventsComponent {
                 ><Icon icon='underline:sy'></Icon>
                 </div>
             </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
-            {is('backgroundColor') && <Tip overlay={'背景'}>
-                <div className={'shy-board-edit-tool-item'}>
-                    <BackgroundColor value={getValue('backgroundColor')} change={e => { this.onChange('backgroundColor', e) }}></BackgroundColor>
-                </div>
-            </Tip>}
             {is('fontColor') && <Tip overlay={'字体颜色'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <FontColor value={getValue('fontColor')} change={e => { this.onChange('fontColor', e) }}></FontColor>
+                </div>
+            </Tip>}
+            {is('backgroundColor') && <Tip overlay={'背景'}>
+                <div className={'shy-board-edit-tool-item'}>
+                    <BackgroundColor value={getValue('backgroundColor')} change={e => { this.onChange('backgroundColor', e) }}></BackgroundColor>
                 </div>
             </Tip>}
             {is('stoke') && <Tip overlay={'边框'}>

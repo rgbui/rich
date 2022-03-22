@@ -8,7 +8,7 @@ export class Select extends React.Component<{
     options: { text: string, value: any }[],
     onChange?: (value: any) => void,
     style?: CSSProperties,
-    dropAlign?: 'left' | 'right',
+    dropAlign?: 'left' | 'right' | 'center',
     border?: boolean
 }>{
     private toggle: boolean = false;
@@ -42,6 +42,9 @@ export class Select extends React.Component<{
         var dropStyle: CSSProperties = { left: 0 };
         if (this.props.dropAlign == 'right') {
             dropStyle = { right: 0 };
+        }
+        else if (this.props.dropAlign == 'center') {
+            dropStyle = { left: '50%', transform: 'translate(-50%,0px)' };
         }
         var op = props.options.find(g => g.value == props.value);
         return <div className={'shy-select' + (props.border ? " shy-select-border" : "")} style={this.props.style || {}} ref={e => this.el = e}>
