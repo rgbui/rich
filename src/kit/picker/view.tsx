@@ -4,6 +4,7 @@ import { Line } from "../../../blocks/board/line/line";
 import { RotatingSvg } from "../../../component/svgs";
 import { Block } from "../../block";
 import { BoardPointType } from "../../block/partial/board";
+import { PointArrow } from "../../common/vector/point";
 import "./style.less";
 export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
     constructor(props) {
@@ -21,16 +22,27 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
             {pickers.map((pi, i) => {
                 switch (pi.type) {
                     case BoardPointType.path:
-                        return <path onMouseDown={e => this.picker.onResizeBlock(block, pi.arrows, e)} style={{ cursor: i == 0 || i == 2 ? "ns-resize" : "ew-resize" }} d={pi.poly.pathString()} key={i}></path>
+                        var cursor = 'n-resize';
+                        if (pi.arrows.includes(PointArrow.right)) cursor = 'e-resize';
+                        else if (pi.arrows.includes(PointArrow.bottom)) cursor = 's-resize';
+                        else if (pi.arrows.includes(PointArrow.left)) cursor = 'w-resize';
+                        return <path onMouseDown={e => this.picker.onResizeBlock(block, pi.arrows, e)}
+                            style={{ cursor: cursor }}
+                            d={pi.poly.pathString()} key={i}></path>
                     case BoardPointType.movePort:
                         return <circle onMouseDown={e => this.picker.onMovePortBlock(block as Line, pi.arrows, e)} className="move-port" key={i} cx={pi.point.x} cy={pi.point.y} r={r}   ></circle>
                     case BoardPointType.connectPort:
                         return <circle onMouseDown={e => this.picker.onCreateBlockConnect(block, pi.arrows, e)} className="connect" key={i} cx={pi.point.x} cy={pi.point.y} r={connectR}  ></circle>
                     case BoardPointType.resizePort:
+                        var cursor = 'ne-resize';
+                        if (pi.arrows.includes(PointArrow.top) && pi.arrows.includes(PointArrow.right)) cursor = 'ne-resize'
+                        else if (pi.arrows.includes(PointArrow.top) && pi.arrows.includes(PointArrow.left)) cursor = 'nw-resize'
+                        else if (pi.arrows.includes(PointArrow.bottom) && pi.arrows.includes(PointArrow.left)) cursor = 'sw-resize'
+                        else if (pi.arrows.includes(PointArrow.bottom) && pi.arrows.includes(PointArrow.right)) cursor = 'se-resize'
                         return <circle
                             key={i}
                             onMouseDown={e => this.picker.onResizeBlock(block, pi.arrows, e)}
-                            style={{ cursor: i == 0 || i == 2 ? 'ne-resize' : 'se-resize' }}
+                            style={{ cursor: cursor }}
                             r={r} cx={pi.point.x} cy={pi.point.y}
                         ></circle>
                         break;
