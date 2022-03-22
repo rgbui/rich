@@ -2,7 +2,7 @@ import React from "react";
 import { MeasureView } from "../../component/view/progress";
 import { ShapeType } from "../shapes/shapes";
 
-export var rightArrows: ShapeType[] = [
+export var leftArrows: ShapeType[] = [
     {
         shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
     <path d="M18.64 14H0v2h18.64c-.218 1-.765 2-1.64 3l14-4-14-4c.875 1 1.422 2 1.64 3z" fill="currentColor"
@@ -58,7 +58,7 @@ export var rightArrows: ShapeType[] = [
     </svg>`
     }
 ]
-export var leftArrows: ShapeType[] = [
+export var rightArrows: ShapeType[] = [
     {
         shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
     <path d="M18.64 14H0v2h18.64c-.218 1-.765 2-1.64 3l14-4-14-4c.875 1 1.422 2 1.64 3z" fill="currentColor"
@@ -133,11 +133,11 @@ export function LineArrow(props: { lineStart?: string, lineEnd?: string, change:
     var [visible, setDropVisible] = React.useState(0);
     return <div className="shy-line-arrow">
         <div className="shy-line-arrow-current">
-            {props.lineStart && <span style={{ transform: `scale(-1,1)` }} onMouseDown={e => setDropVisible(e => e == 1 ? 0 : 1)}
+            {props.lineStart && <span  style={{ transform: `scale(-1,1)` }}  onMouseDown={e => setDropVisible(e => e == 1 ? 0 : 1)}
                 dangerouslySetInnerHTML={{ __html: leftArrows[parseInt(props.lineStart) || 0].shape }}
             ></span>}
             {props.lineEnd && <span onMouseDown={e => setDropVisible(e => e == 2 ? 0 : 2)}
-                dangerouslySetInnerHTML={{ __html: leftArrows[parseInt(props.lineEnd) || 0].shape }}
+                dangerouslySetInnerHTML={{ __html: rightArrows[parseInt(props.lineEnd) || 0].shape }}
             ></span>}
         </div>
         {visible == 1 && <div className="shy-line-arrow-left-drops">

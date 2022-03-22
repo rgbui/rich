@@ -2,6 +2,7 @@ import React, { CSSProperties } from "react";
 import { ReactNode } from "react";
 import { EventsComponent } from "../../component/lib/events.component";
 import { Singleton } from "../../component/lib/Singleton";
+import { BoardRefreshSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { MeasureView } from "../../component/view/progress";
 import { Select } from "../../component/view/select";
@@ -38,6 +39,29 @@ class BoardEditTool extends EventsComponent {
             {is('frameScale') && <Tip id={LangID.textToolBold}>
                 <div className={'shy-board-edit-tool-item'} >
                     <FrameScale></FrameScale>
+                </div>
+            </Tip>}
+            {is('lineStart') && <><Tip overlay={'开始箭头'}>
+                <div className={'shy-board-edit-tool-item'}>
+                    <LineArrow
+                        lineStart={getValue('lineStart')}
+                        change={(name, e) => this.onChange(name, e)}></LineArrow>
+                </div>
+            </Tip>
+                <div className={'shy-board-edit-tool-icon'}> <Icon size={16} icon={BoardRefreshSvg}></Icon></div>
+                <Tip overlay={'结束箭头'}>
+                    <div className={'shy-board-edit-tool-item'}>
+                        <LineArrow lineEnd={getValue('lineEnd')}
+                            change={(name, e) => this.onChange(name, e)}></LineArrow>
+                    </div>
+                </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
+            {is('lineType') && <Tip overlay={'线形'}>
+                <div className={'shy-board-edit-tool-item'}>
+                    <LineTypes
+                        lineType={getValue('lineType')}
+                        strokeWidth={getValue('strokeWidth')}
+                        strokeDasharray={getValue('strokeDasharray')}
+                        change={(name, e) => this.onChange(name, e)}></LineTypes>
                 </div>
             </Tip>}
             {is('turnShapes') && <Tip id={LangID.textToolBold}>
@@ -125,23 +149,6 @@ class BoardEditTool extends EventsComponent {
                         fillOpacity={getValue('fillOpacity')}
                         change={(name, e) => this.onChange(name, e)}
                     ></ShapeFill>
-                </div>
-            </Tip>}
-            {is('lineStart') && <Tip id={LangID.textToolDeleteLine}>
-                <div className={'shy-board-edit-tool-item'}>
-                    <LineArrow
-                        lineStart={getValue('lineStart')}
-                        lineEnd={getValue('lineEnd')}
-                        change={(name, e) => this.onChange(name, e)}></LineArrow>
-                </div>
-            </Tip>}
-            {is('lineType') && <Tip id={LangID.textToolDeleteLine}>
-                <div className={'shy-board-edit-tool-item'}>
-                    <LineTypes
-                        lineType={getValue('lineType')}
-                        strokeWidth={getValue('strokeWidth')}
-                        strokeDasharray={getValue('strokeDasharray')}
-                        change={(name, e) => this.onChange(name, e)}></LineTypes>
                 </div>
             </Tip>}
         </div>

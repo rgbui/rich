@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
 import { Block } from "../../../src/block";
+import { BlockRenderRange } from "../../../src/block/enum";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { BoardPointType } from "../../../src/block/partial/board";
 import { BlockView } from "../../../src/block/view";
@@ -116,6 +117,12 @@ export class Line extends Block {
     async setBoardEditCommand(name: string, value: any) {
         if (name == 'backgroundColor') {
             this.pattern.setSvgStyle({ stroke: value })
+        }
+        else if (['lineStart', 'lineEnd', 'lineType'].includes(name)) {
+            this.updateProps({ [name]: value }, BlockRenderRange.self);
+        }
+        else if (['strokeWidth', 'strokeDasharray'].includes(name)) {
+            this.pattern.setSvgStyle({ [name]: value });
         }
     }
     getVisiblePolygon() {
