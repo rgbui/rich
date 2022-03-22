@@ -133,17 +133,19 @@ export function LineArrow(props: { lineStart?: string, lineEnd?: string, change:
     var [visible, setDropVisible] = React.useState(0);
     return <div className="shy-line-arrow">
         <div className="shy-line-arrow-current">
-            {props.lineStart && <span  style={{ transform: `scale(-1,1)` }}  onMouseDown={e => setDropVisible(e => e == 1 ? 0 : 1)}
-                dangerouslySetInnerHTML={{ __html: leftArrows[parseInt(props.lineStart) || 0].shape }}
+            {props.lineStart && <span style={{ transform: `scale(-1,1)` }} onMouseDown={e => setDropVisible(e => e == 1 ? 0 : 1)}
+                dangerouslySetInnerHTML={{ __html: props.lineStart == 'none' ? "<span style='transform:scale(-1,1)'>无</span>" : leftArrows[parseInt(props.lineStart) || 0].shape }}
             ></span>}
             {props.lineEnd && <span onMouseDown={e => setDropVisible(e => e == 2 ? 0 : 2)}
-                dangerouslySetInnerHTML={{ __html: rightArrows[parseInt(props.lineEnd) || 0].shape }}
+                dangerouslySetInnerHTML={{ __html: props.lineEnd == 'none' ? "无" : rightArrows[parseInt(props.lineEnd) || 0].shape }}
             ></span>}
         </div>
         {visible == 1 && <div className="shy-line-arrow-left-drops">
+            <a style={{ transform: `scale(1,1)` }} onMouseDown={e => props.change('lineStart', 'none')}>无</a>
             {leftArrows.map((arrow, index) => { return <a key={index} onMouseDown={e => props.change('lineStart', index.toString())} dangerouslySetInnerHTML={{ __html: arrow.shape }}></a> })}
         </div>}
         {visible == 2 && <div className="shy-line-arrow-right-drops">
+            <a onMouseDown={e => props.change('lineEnd', 'none')}>无</a>
             {rightArrows.map((arrow, index) => { return <a key={index} onMouseDown={e => props.change('lineEnd', index.toString())} dangerouslySetInnerHTML={{ __html: arrow.shape }}></a> })}
         </div>}
     </div>
