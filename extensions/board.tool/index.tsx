@@ -16,6 +16,7 @@ import { BoardToolOperator } from "./declare";
 import { BlockUrlConstant } from "../../src/block/constant";
 import { getNoteSelector } from "../note";
 import { getShapeSelector } from "../shapes";
+
 class BoardTool extends EventsComponent {
     render(): ReactNode {
         if (this.visible == false) return <></>;
