@@ -1,5 +1,6 @@
 
 import { Kit } from "..";
+import { Pen } from "../../../blocks/board/pen";
 import { forceCloseBoardEditTool, useBoardEditTool } from "../../../extensions/board.edit.tool";
 import { getBoardTool } from "../../../extensions/board.tool";
 import { util } from "../../../util/util";
@@ -283,6 +284,7 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
                         newBlock.matrix = ma;
                         newBlock.fixedWidth = bound.width;
                         newBlock.fixedHeight = bound.height;
+                        (newBlock as Pen).viewBox = `0 0 ${bound.width} ${bound.height}`;
                         (newBlock as any).pathString = path.pathData;
                         path.remove();
                         if (isMounted) newBlock.forceUpdate();
