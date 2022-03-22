@@ -37,7 +37,7 @@ export class TextSpan extends Block {
     get visibleStyle(): React.CSSProperties {
         var style = super.visibleStyle;
         if (this.isFreeBlock) {
-            style.minWidth = this.fixedWidth || 20
+            style.width = this.fixedWidth || 20
         }
         return style;
     }
@@ -70,13 +70,13 @@ export class TextSpan extends Block {
         var gm = this.globalWindowMatrix.clone();
         var fp = gm.inverseTransform(Point.from(event));
         var s = gm.getScaling().x;
-        var minW = 50 / s;
+        var minW = 20 / s;
         var minH = 20 / s;
         var matrix = this.matrix.clone();
         var block = this;
         var style = this.pattern.style;
         var fontSize = style.fontSize || 14;
-        var self=this;
+        var self = this;
         MouseDragger({
             event,
             moveStart() {
@@ -104,8 +104,8 @@ export class TextSpan extends Block {
                     }
                     block.matrix = matrix.appended(ma);
                     block.fixedWidth = bw;
-                    block.updateRenderLines();
                     await block.forceUpdate();
+                    block.updateRenderLines();
                     block.page.kit.picker.view.forceUpdate();
                     if (isEnd) {
                         block.onAction(ActionDirective.onResizeBlock, async () => {
@@ -141,6 +141,7 @@ export class TextSpan extends Block {
                     block.page.snapshoot.pause();
                     block.pattern.setStyle(BlockCssName.font, { lineHeight: (currentFontSize * 1.2) + 'px', fontSize: currentFontSize });
                     await block.forceUpdate();
+                    block.updateRenderLines();
                     block.page.kit.picker.view.forceUpdate();
                     if (isEnd) {
                         block.pattern.setStyle(BlockCssName.font, { fontSize });
@@ -175,7 +176,7 @@ export class TextSpan extends Block {
         else if (name == 'fontColor')
             this.pattern.setFontStyle({ color: value });
         else if (name == 'fontSize') {
-            this.pattern.setFontStyle({ fontSize: value, lineHeight: (value * 1.2)+'px'  });
+            this.pattern.setFontStyle({ fontSize: value, lineHeight: (value * 1.2) + 'px' });
         }
         else if (name == 'fontWeight')
             this.pattern.setFontStyle({ fontWeight: value })
