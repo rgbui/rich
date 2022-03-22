@@ -143,11 +143,17 @@
         z-index      : 2;
         box-shadow   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
         top          : 28px;
-        max-height   : 200px;
+        max-height   : 260px;
         overflow-y   : auto;
         overflow-x   : hidden;
-        width        : 150px;
-        min-height   : 100px;
+        width        : 160px;
+        min-height   : 160px;
+        padding      : 10px;
+
+        .shy-shape-stroke-opacity,
+        .shy-shape-stroke-width {
+            margin: 0px 6px;
+        }
 
         .shy-shape-stroke-types {
             display        : flex;
@@ -155,7 +161,9 @@
             align-items    : flex-start;
 
             a {
-                cursor: pointer;
+                cursor   : pointer;
+                flex-grow: 1;
+                height   : 30px;
 
                 svg {
                     width : 30px;
@@ -196,6 +204,13 @@
         width  : 20px;
         height : 20px;
 
+        a {
+            display      : inline-block;
+            width        : 20px;
+            height       : 20px;
+            border-radius: 50%;
+            border       : 1px solid rgba(0, 0, 0, 0.1);
+        }
     }
 
     &-drops {
@@ -210,10 +225,13 @@
         max-height   : 200px;
         overflow-y   : auto;
         overflow-x   : hidden;
-        width        : 150px;
+        width        : 160px;
         min-height   : 100px;
+        padding      : 10px;
 
-        .shy-shape-fill-opacity {}
+        .shy-shape-fill-opacity {
+            margin: 0px 6px;
+        }
 
         .shy-shape-fill-colors {
             display        : flex;
@@ -241,14 +259,17 @@
     position: relative;
     width   : 20px;
     height  : 20px;
+
     &-current {
         span {
             display: inline-block;
             width  : 20px;
             height : 20px;
+
             &:first-child {
                 margin-right: 10px;
             }
+
             &:last-child {}
         }
     }

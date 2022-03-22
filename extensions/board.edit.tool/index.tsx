@@ -64,7 +64,7 @@ class BoardEditTool extends EventsComponent {
                         change={(name, e) => this.onChange(name, e)}></LineTypes>
                 </div>
             </Tip>}
-            {is('turnShapes') && <Tip id={LangID.textToolBold}>
+            {is('turnShapes') && <Tip overlay={'加粗'}>
                 <div className={'shy-board-edit-tool-item'} >
                     <TurnShapes></TurnShapes>
                 </div>
@@ -106,7 +106,7 @@ class BoardEditTool extends EventsComponent {
             {is('tickness') && <><div style={{ width: 90 }} className={'shy-board-edit-tool-item'}>
                 <MeasureView min={1} max={40} showValue={false} value={getValue('tickness')} onChange={e => { this.onChange('tickness', e) }}></MeasureView>
             </div></>}
-            {is('itailc') && <Tip id={LangID.textToolItailc}>
+            {is('itailc') && <Tip overlay='斜体'>
                 <div className={'shy-board-edit-tool-item' + (getValue('itailc') == 'itailc' ? " hover" : "")}
                     onMouseDown={e => this.onChange('itailc', getValue('itailc') == 'itailc' ? false : true)}
                 ><Icon icon='italic:sy'></Icon>
@@ -135,7 +135,7 @@ class BoardEditTool extends EventsComponent {
                     <BackgroundColor value={getValue('backgroundColor')} change={e => { this.onChange('backgroundColor', e) }}></BackgroundColor>
                 </div>
             </Tip>}
-            {is('stoke') && <Tip overlay={'边框'}>
+            {is('stroke') && <Tip overlay={'边框'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <ShapeStroke
                         stroke={getValue('stroke')}
@@ -145,7 +145,7 @@ class BoardEditTool extends EventsComponent {
                         change={(name, e) => this.onChange(name, e)}></ShapeStroke>
                 </div>
             </Tip>}
-            {is('fillColor') && is('fillOpacity') && <Tip id={LangID.textToolDeleteLine}>
+            {is('fillColor') && is('fillOpacity') && <Tip overlay={'填充'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <ShapeFill
                         fillColor={getValue('fillColor')}

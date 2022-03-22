@@ -65,7 +65,7 @@ export function ShapeStroke(props: {
                 </a>
             </div>
             <div className="shy-shape-stroke-opacity">
-                <MeasureView min={1} max={10} showValue={false} value={props.strokeOpacity} onChange={e => { props.change('strokeOpacity', e) }}></MeasureView>
+                <MeasureView  ratio={0.1}  min={1} max={10} showValue={false} value={props.strokeOpacity} onChange={e => { props.change('strokeOpacity', e) }}></MeasureView>
             </div>
             <div className="shy-shape-stroke-width">
                 <MeasureView min={1} max={30} showValue={false} value={props.strokeWidth} onChange={e => { props.change('strokeWidth', e) }}></MeasureView>
