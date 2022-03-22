@@ -4,6 +4,7 @@ import ArrowRightSvg from "../src/assert/svg/arrowRight.svg";
 import ArrowUpSvg from "../src/assert/svg/arrowUp.svg";
 import AudioSvg from "../src/assert/svg/audio.svg";
 import BlockcolorSvg from "../src/assert/svg/blockcolor.svg";
+import BoardRefreshSvg from "../src/assert/svg/board.refresh.svg";
 import BoardToolArrowSvg from "../src/assert/svg/board.tool.arrow.svg";
 import BoardToolFrameSvg from "../src/assert/svg/board.tool.frame.svg";
 import BoardToolMeiSvg from "../src/assert/svg/board.tool.mei.svg";
@@ -89,6 +90,7 @@ ArrowRightSvg,
 ArrowUpSvg,
 AudioSvg,
 BlockcolorSvg,
+BoardRefreshSvg,
 BoardToolArrowSvg,
 BoardToolFrameSvg,
 BoardToolMeiSvg,

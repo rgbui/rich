@@ -129,16 +129,16 @@ export var Lines: ShapeType[] = [
 </svg>` }
 ]
 
-export function LineArrow(props: { lineStart: string, lineEnd: string, change: (name: string, value: any) => void }) {
+export function LineArrow(props: { lineStart?: string, lineEnd?: string, change: (name: string, value: any) => void }) {
     var [visible, setDropVisible] = React.useState(0);
     return <div className="shy-line-arrow">
         <div className="shy-line-arrow-current">
-            <span style={{ transform: `scale(-1,1)` }} onMouseDown={e => setDropVisible(e => e == 1 ? 0 : 1)}
+            {props.lineStart && <span style={{ transform: `scale(-1,1)` }} onMouseDown={e => setDropVisible(e => e == 1 ? 0 : 1)}
                 dangerouslySetInnerHTML={{ __html: leftArrows[parseInt(props.lineStart) || 0].shape }}
-            ></span>
-            <span onMouseDown={e => setDropVisible(e => e == 2 ? 0 : 2)}
+            ></span>}
+            {props.lineEnd && <span onMouseDown={e => setDropVisible(e => e == 2 ? 0 : 2)}
                 dangerouslySetInnerHTML={{ __html: leftArrows[parseInt(props.lineEnd) || 0].shape }}
-            ></span>
+            ></span>}
         </div>
         {visible == 1 && <div className="shy-line-arrow-left-drops">
             {leftArrows.map((arrow, index) => { return <a key={index} onMouseDown={e => props.change('lineStart', index.toString())} dangerouslySetInnerHTML={{ __html: arrow.shape }}></a> })}
@@ -189,8 +189,7 @@ export function LineTypes(props: {
             <div className="shy-line-types-stash">
                 <a className={props.strokeDasharray == 'none' ? "hover" : ""}
                     onMouseDown={e => props.change('strokeDasharray', 'none')}
-                >
-                    <svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
+                ><svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
                         <g fill="none" fillRule="evenodd">
                             <path d="M-18-5h60v40h-60z"></path>
                             <path fill="currentColor" d="M0 14h24v2H0z"></path>
