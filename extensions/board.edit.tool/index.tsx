@@ -49,8 +49,8 @@ class BoardEditTool extends EventsComponent {
                 <div className={'shy-board-edit-tool-item'} >
                     <Select value={getValue('fontSize')}
                         onChange={e => this.onChange('fontSize', e)}
-                        style={{ width: 40 }}
                         dropAlign='center'
+                        optionAlign="right"
                         options={[
                             { text: '12', value: 12 },
                             { text: '14', value: 14 },

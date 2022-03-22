@@ -32,6 +32,7 @@ import FileSvg from "../src/assert/svg/file.svg";
 import FilterSvg from "../src/assert/svg/filter.svg";
 import FitSvg from "../src/assert/svg/fit.svg";
 import FontawesomeSvg from "../src/assert/svg/fontawesome.svg";
+import FontcolorSvg from "../src/assert/svg/fontcolor.svg";
 import GlobalLinkSvg from "../src/assert/svg/globalLink.svg";
 import HideSvg from "../src/assert/svg/hide.svg";
 import ImageErrorSvg from "../src/assert/svg/imageError.svg";
@@ -42,6 +43,7 @@ import LoopSvg from "../src/assert/svg/loop.svg";
 import MentionSvg from "../src/assert/svg/mention.svg";
 import MinusSvg from "../src/assert/svg/minus.svg";
 import MoveToSvg from "../src/assert/svg/moveTo.svg";
+import NoneSvg from "../src/assert/svg/none.svg";
 import PageSvg from "../src/assert/svg/page.svg";
 import PenSvg from "../src/assert/svg/pen.svg";
 import PexelsSvg from "../src/assert/svg/pexels.svg";
@@ -115,6 +117,7 @@ FileSvg,
 FilterSvg,
 FitSvg,
 FontawesomeSvg,
+FontcolorSvg,
 GlobalLinkSvg,
 HideSvg,
 ImageErrorSvg,
@@ -125,6 +128,7 @@ LoopSvg,
 MentionSvg,
 MinusSvg,
 MoveToSvg,
+NoneSvg,
 PageSvg,
 PenSvg,
 PexelsSvg,
