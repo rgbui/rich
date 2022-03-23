@@ -2,6 +2,7 @@ import React, { ReactNode } from "react";
 import { Block } from "../../../src/block";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
+import { Rect } from "../../../src/common/vector/point";
 import "./style.less";
 // https://github.com/szimek/signature_pad
 // https://www.cnblogs.com/fangsmile/p/13427794.html
@@ -34,9 +35,17 @@ export class Pen extends Block {
 }
 @view('/pen')
 export class PenView extends BlockView<Pen>{
-    render(): ReactNode {
+    render():ReactNode {
+        var vb;
+        if (this.block.viewBox) {
+            var vs = this.block.viewBox.split(/ /g);
+            var rect = new Rect(0, 0, parseInt(vs[2]), parseInt(vs[3]));
+            var w = this.block.pattern.getSvgStyle()?.strokeWidth || 2;
+            rect = rect.extend(w / 2);
+            vb = `${rect.x} ${rect.y} ${rect.width} ${rect.height}`;
+        }
         return <div className="sy-block-pen" style={this.block.visibleStyle}>
-            <svg viewBox={this.block.viewBox || undefined} preserveAspectRatio="xMinYMin" style={{ width: this.block.fixedWidth, height: this.block.fixedHeight }}>
+            <svg viewBox={vb || undefined} preserveAspectRatio="xMinYMin" style={{ width: this.block.fixedWidth, height: this.block.fixedHeight }}>
                 {this.block.pathString && <path d={this.block.pathString}></path>}
             </svg>
         </div>
