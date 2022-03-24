@@ -67,6 +67,7 @@ export enum ActionDirective {
      onTabRemoveItem=501,
      onCarouselAddItem=510,
      onCarouselRemoveItem=511,
+     onMindAddSub=512,
 
 }
 

@@ -42,6 +42,7 @@ import LinkSvg from "../src/assert/svg/link.svg";
 import LinkToSvg from "../src/assert/svg/linkTo.svg";
 import LoopSvg from "../src/assert/svg/loop.svg";
 import MentionSvg from "../src/assert/svg/mention.svg";
+import MindSvg from "../src/assert/svg/mind.svg";
 import MinusSvg from "../src/assert/svg/minus.svg";
 import MoveToSvg from "../src/assert/svg/moveTo.svg";
 import NoneSvg from "../src/assert/svg/none.svg";
@@ -128,6 +129,7 @@ LinkSvg,
 LinkToSvg,
 LoopSvg,
 MentionSvg,
+MindSvg,
 MinusSvg,
 MoveToSvg,
 NoneSvg,

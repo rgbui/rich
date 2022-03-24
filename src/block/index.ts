@@ -503,6 +503,9 @@ export abstract class Block extends Events {
     get isFrame() {
         return this.url == BlockUrlConstant.Frame
     }
+    get isMind() {
+        return this.url == BlockUrlConstant.Mind;
+    }
     get frameBlock() {
         var r = this.closest(x => x.isFrame);
         if (r) return r;
@@ -524,7 +527,7 @@ export abstract class Block extends Events {
      * 没有就是相对于页面
      */
     get relativeBlock() {
-        var rb = this.closest(x => x.isFrame || x.url == BlockUrlConstant.Group, true);
+        var rb = this.closest(x => x.isFrame || x.isMind || x.url == BlockUrlConstant.Group, true);
         if (rb) return rb;
     }
     matrix = new Matrix();

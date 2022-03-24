@@ -18,6 +18,9 @@ export class FlowMindLine extends React.Component {
     }
     render() {
         if (!this.origin) return <div style={{ display: 'none' }}></div>
-        return <svg viewBox={`${this.range.left}px ${this.range.left}px ${this.range.left}px ${this.range.left}px `}>{this.renderLines()}</svg>
+        return <svg
+            className="sy-flow-mind-line"
+            style={{ top: this.range.top, left: this.range.left }}
+            viewBox={`${this.range.left} ${this.range.top} ${this.range.width} ${this.range.height} `}>{this.renderLines()}</svg>
     }
 }

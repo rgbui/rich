@@ -137,7 +137,7 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
         var gm = fra.globalWindowMatrix;
         var re = gm.inverseTransform(Point.from(event));
         var url = toolBoard.currentSelector.url;
-        if (url == '/note' || url == BlockUrlConstant.TextSpan || url == BlockUrlConstant.Frame) {
+        if (url == '/note' || url == '/flow/mind' || url == BlockUrlConstant.TextSpan || url == BlockUrlConstant.Frame) {
             await fra.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
                 var data = toolBoard.currentSelector.data || {};
                 var ma = new Matrix();

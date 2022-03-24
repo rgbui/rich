@@ -5,5 +5,7 @@ export enum BoardToolOperator{
     note,
     connect,
     pen,
-    frame
+    frame,
+    upload,
+    mind
 }

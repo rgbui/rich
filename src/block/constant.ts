@@ -8,5 +8,6 @@ export enum BlockUrlConstant {
     List='/list',
     Head='/head',
     Frame='/frame',
+    Mind='/flow/mind',
     Group='/group'
 }

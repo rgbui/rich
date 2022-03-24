@@ -20,6 +20,8 @@ import "./form/tab/index";
 import "./form/tab/item";
 import "./form/tab/page";
 
+import "./board/mind/index";
+
 import "./present/katex/katex";
 import "./present/bookmark";
 import "./present/list/list";
@@ -45,7 +47,6 @@ import './data-grid/view/item';
 import './data-grid/view/map';
 import "./data-grid/view/statistic/value";
 import "./data-grid/view/statistic/charts";
-
 
 import "./data-grid/element/field/text";
 import "./data-grid/element/field/number";

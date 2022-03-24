@@ -16,6 +16,7 @@ import { BoardToolOperator } from "./declare";
 import { BlockUrlConstant } from "../../src/block/constant";
 import { getNoteSelector } from "../note";
 import { getShapeSelector } from "../shapes";
+import { MindSvg, UploadSvg } from "../../component/svgs";
 
 class BoardTool extends EventsComponent {
     render(): ReactNode {
@@ -49,6 +50,14 @@ class BoardTool extends EventsComponent {
             <div className="shy-board-tool-bar"
                 onMouseDown={e => this.selector(BoardToolOperator.frame, e)}>
                 <span><FrameSvg></FrameSvg></span>
+            </div>
+            <div className="shy-board-tool-bar"
+                onMouseDown={e => this.selector(BoardToolOperator.upload, e)}>
+                <span><UploadSvg></UploadSvg></span>
+            </div>
+            <div className="shy-board-tool-bar"
+                onMouseDown={e => this.selector(BoardToolOperator.mind, e)}>
+                <span><MindSvg></MindSvg></span>
             </div>
         </div>
     }
@@ -95,6 +104,14 @@ class BoardTool extends EventsComponent {
                     break;
                 case BoardToolOperator.pen:
                     sel.url = '/pen';
+                    break;
+                case BoardToolOperator.upload:
+                    /**
+                     * 这里上传文件
+                     */
+                    break;
+                case BoardToolOperator.mind:
+                    sel.url = '/flow/mind';
                     break;
             }
             this.currentSelector = sel as any;

@@ -15,6 +15,7 @@ export enum BoardPointType {
     connectPort,
     movePort,
     rotatePort,
+    mindAdd,
 }
 export type BoardBlockSelector = {
     type: BoardPointType;
@@ -171,6 +172,9 @@ export class Block$Board {
                 await useBoardTool(self.page.kit);
             }
         });
+    }
+    async onPickerMousedown(this: Block, selector: BoardBlockSelector, event: React.MouseEvent) {
+        console.log(selector, event);
     }
     conectLine(this: Block, line: Block) {
         if (!Array.isArray(this._lines)) this._lines = [];

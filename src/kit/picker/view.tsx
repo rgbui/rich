@@ -1,7 +1,7 @@
 import React from "react";
 import { BlockPicker } from ".";
 import { Line } from "../../../blocks/board/line/line";
-import { RotatingSvg } from "../../../component/svgs";
+import { PlusSvg, RotatingSvg } from "../../../component/svgs";
 import { Block } from "../../block";
 import { BoardPointType } from "../../block/partial/board";
 import { PointArrow } from "../../common/vector/point";
@@ -53,7 +53,17 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
                             onMouseDown={e => this.picker.onRotateBlock(block, pi, e)} x={pi.point.x} y={pi.point.y}>
                             <RotatingSvg></RotatingSvg>
                         </foreignObject>
-
+                        break;
+                    case BoardPointType.mindAdd:
+                        return <foreignObject key={i}
+                            width={20}
+                            height={20}
+                            onMouseDown={e => this.picker.onPickerMousedown(block, pi, e)}
+                            x={pi.point.x - 10}
+                            y={pi.point.y - 10}>
+                            <PlusSvg></PlusSvg>
+                        </foreignObject>
+                        break;
                 }
             })}
         </g>

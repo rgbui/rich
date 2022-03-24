@@ -221,4 +221,8 @@ export class BlockPicker {
             }
         });
     }
+    async onPickerMousedown(block: Block, selector: BoardBlockSelector, event: React.MouseEvent) {
+        event.stopPropagation();
+        await block.onPickerMousedown(selector, event);
+    }
 }
