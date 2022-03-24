@@ -23,21 +23,32 @@
             stroke-width  : 2;
             stroke-opacity: 0.3;
             pointer-events: visible;
-
             &.connect {
                 stroke-width  : 0;
                 fill          : #e16259;
                 stroke        : #e16259;
                 stroke-opacity: 1;
-
                 &:hover {
                     stroke-width: 6px;
                 }
             }
         }
-
         foreignObject {
             pointer-events: visible;
+            &.mind-add {
+                background-color: rgba(0, 0, 0, .3);
+               
+                border-radius   : 50%;
+                display         : flex;
+                cursor: pointer;
+                justify-content : center;
+                align-items     : center;
+                svg{
+                    path{
+                         fill            : #fff;
+                    }
+                }
+            }
         }
     }
 }

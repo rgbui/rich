@@ -2,6 +2,7 @@ import React from "react";
 import { BlockPicker } from ".";
 import { Line } from "../../../blocks/board/line/line";
 import { PlusSvg, RotatingSvg } from "../../../component/svgs";
+import { Icon } from "../../../component/view/icon";
 import { Block } from "../../block";
 import { BoardPointType } from "../../block/partial/board";
 import { PointArrow } from "../../common/vector/point";
@@ -55,13 +56,17 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
                         </foreignObject>
                         break;
                     case BoardPointType.mindAdd:
-                        return <foreignObject key={i}
+                        return <foreignObject
+                            className="mind-add"
+                            key={i}
                             width={20}
                             height={20}
                             onMouseDown={e => this.picker.onPickerMousedown(block, pi, e)}
                             x={pi.point.x - 10}
                             y={pi.point.y - 10}>
-                            <PlusSvg></PlusSvg>
+                            <div style={{ width: 20, height: 20, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                <Icon size={12} icon={PlusSvg}></Icon>
+                            </div>
                         </foreignObject>
                         break;
                 }
