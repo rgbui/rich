@@ -7,7 +7,7 @@ export class FlowMindLine extends React.Component {
     updateView(origin: Point, points: Point[]) {
         this.origin = origin;
         this.points = points;
-        this.range = RectUtility.getPointsBound([this.origin, ...points]).extend(30);
+        this.range = RectUtility.getPointsBound([this.origin, ...points]);
         this.forceUpdate();
     }
     renderLines() {
@@ -20,7 +20,7 @@ export class FlowMindLine extends React.Component {
         if (!this.origin) return <div style={{ display: 'none' }}></div>
         return <svg
             className="sy-flow-mind-line"
-            style={{ top: this.range.top, left: this.range.left }}
+            style={{ top: this.range.top, left: this.range.left, width: this.range.width, height: this.range.height }}
             viewBox={`${this.range.left} ${this.range.top} ${this.range.width} ${this.range.height} `}>{this.renderLines()}</svg>
     }
 }

@@ -120,13 +120,18 @@ export class FlowMindView extends BlockView<FlowMind>{
     updateFlowLine() {
         if (this.flowMindLine && this.block.blocks.subChilds.length > 0) {
             var gm = this.block.page.windowMatrix;
-            var origin = Rect.fromEle(this.block.mindEl).rightMiddle;
+            var { width, height } = this.block.fixedSize;
+            var rect = new Rect(0, 0, width, height);
+            var origin = rect.rightMiddle;
             var points = this.block.blocks.subChilds.map((sub: FlowMind) => {
-                if (sub.mindEl) return Rect.fromEle(sub.mindEl).leftMiddle;
+                var s = sub.fixedSize;
+                var subRect = new Rect(0, 0, s.width, s.height);
+                return sub.matrix.transform(subRect.leftMiddle);
             });
+            console.log(origin,points);
             this.flowMindLine.updateView(
-                gm.transform(origin),
-                points.map(p => gm.transform(p))
+                origin,
+                points
             );
         }
     }
