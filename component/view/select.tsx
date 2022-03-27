@@ -1,11 +1,13 @@
 import React, { CSSProperties } from "react";
+import { IconArguments } from "../../extensions/icon/declare";
 import { ChevronDownSvg } from "../svgs";
+import { Icon } from "./icon";
 
 export class Select extends React.Component<{
     children?: JSX.Element | string | React.ReactNode,
     disabled?: boolean,
     value?: any,
-    options: { text: string, value: any }[],
+    options: { text?: string, icon?: string | SvgrComponent | JSX.Element | IconArguments, value: any }[],
     onChange?: (value: any) => void,
     style?: CSSProperties,
     dropAlign?: 'left' | 'right' | 'center',
@@ -51,16 +53,17 @@ export class Select extends React.Component<{
         var optionStyle: CSSProperties = { justifyContent: 'flex-start' }
         if (props.optionAlign == 'center') optionStyle.justifyContent = 'center';
         else if (props.optionAlign == 'right') optionStyle.justifyContent = 'flex-end';
-
         return <div className={'shy-select' + (props.border ? " shy-select-border" : "")} style={this.props.style || {}} ref={e => this.el = e}>
             <div className='shy-select-selection' onClick={e => props.disabled ? undefined : (setToggle())}>
                 {props.children && <>{props.children}<ChevronDownSvg></ChevronDownSvg></>}
-                {!props.children && <><span>{op?.text || props.value}</span><ChevronDownSvg></ChevronDownSvg></>}
-                {/*<input defaultValue={props.options.find(g => g.value == props.value)?.text} /> */}
+                {!props.children && <><span>{op.icon && <Icon icon={op.icon}></Icon>}{op?.text}</span><ChevronDownSvg></ChevronDownSvg></>}
             </div>
             {this.toggle && <div className='shy-select-drop' style={dropStyle} >
                 {props.options.map((op, index) => {
-                    return <a key={index} style={optionStyle} className={props.value == op.value ? "hover" : ""} onClick={e => click(op)}><span>{op.text}</span></a>
+                    return <a key={index} style={optionStyle} className={props.value == op.value ? "hover" : ""} onClick={e => click(op)}>
+                        {op.icon && <Icon icon={op.icon}></Icon>}
+                        <span>{op.text}</span>
+                    </a>
                 })}
             </div>}
         </div>
