@@ -2,7 +2,7 @@ import React, { CSSProperties } from "react";
 import { ReactNode } from "react";
 import { EventsComponent } from "../../component/lib/events.component";
 import { Singleton } from "../../component/lib/Singleton";
-import { BoardRefreshSvg } from "../../component/svgs";
+import { BoardRefreshSvg, BrokenLineSvg, CureSvg, MindDirectionXSvg, MindDirectionYSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { MeasureView } from "../../component/view/progress";
 import { Select } from "../../component/view/select";
@@ -36,6 +36,35 @@ class BoardEditTool extends EventsComponent {
             return self.commands.some(s => s.name == name);
         }
         return <div style={style} className="shy-board-edit-tool">
+            {is('mindDirection') && <Tip overlay='思维导图方向'>
+                <div className={'shy-board-edit-tool-item'}>
+                    <Select value={getValue('mindDirection')}
+                        onChange={e => this.onChange('mindDirection', e)}
+                        dropAlign='center'
+                        optionAlign="right"
+                        options={[
+                            { icon: MindDirectionXSvg, value: 'x' },
+                            { icon: MindDirectionYSvg, value: 'y' },
+                        ]}></Select>
+                </div>
+            </Tip>}
+            {is('mindLineType') && <><Tip overlay='线框类型'>
+                <div className={'shy-board-edit-tool-item'} >
+                    <Select value={getValue('mindLineType')}
+                        onChange={e => this.onChange('mindLineType', e)}
+                        dropAlign='center'
+                        optionAlign="right"
+                        options={[
+                            { icon: BrokenLineSvg, value: 'brokenLine' },
+                            { icon: CureSvg, value: 'cure' },
+                        ]}></Select>
+                </div>
+            </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
+            {is('mindLineColor') && <Tip overlay=''>
+                <div className={'shy-board-edit-tool-item'}>
+                    <BackgroundColor value={getValue('mindLineColor')} change={e => { this.onChange('mindLineColor', e) }}></BackgroundColor>
+                </div>
+            </Tip>}
             {is('frameScale') && <Tip id={LangID.textToolBold}>
                 <div className={'shy-board-edit-tool-item'} >
                     <FrameScale></FrameScale>

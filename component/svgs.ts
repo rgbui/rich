@@ -11,6 +11,7 @@ import BoardToolMeiSvg from "../src/assert/svg/board.tool.mei.svg";
 import BoardToolSharpSvg from "../src/assert/svg/board.tool.sharp.svg";
 import BoardToolStickerSvg from "../src/assert/svg/board.tool.sticker.svg";
 import BoardToolTextSvg from "../src/assert/svg/board.tool.text.svg";
+import BrokenLineSvg from "../src/assert/svg/brokenLine.svg";
 import CheckSvg from "../src/assert/svg/check.svg";
 import ChevronDownSvg from "../src/assert/svg/chevronDown.svg";
 import ChevronLeftSvg from "../src/assert/svg/chevronLeft.svg";
@@ -23,6 +24,7 @@ import CollectionGallerySvg from "../src/assert/svg/collectionGallery.svg";
 import CollectionListSvg from "../src/assert/svg/collectionList.svg";
 import CommentSvg from "../src/assert/svg/comment.svg";
 import ConnetLineSvg from "../src/assert/svg/connet.line.svg";
+import CureSvg from "../src/assert/svg/cure.svg";
 import DotsSvg from "../src/assert/svg/dots.svg";
 import DragHandleSvg from "../src/assert/svg/dragHandle.svg";
 import DuplicateSvg from "../src/assert/svg/duplicate.svg";
@@ -42,6 +44,8 @@ import LinkSvg from "../src/assert/svg/link.svg";
 import LinkToSvg from "../src/assert/svg/linkTo.svg";
 import LoopSvg from "../src/assert/svg/loop.svg";
 import MentionSvg from "../src/assert/svg/mention.svg";
+import MindDirectionXSvg from "../src/assert/svg/mind.direction.x.svg";
+import MindDirectionYSvg from "../src/assert/svg/mind.direction.y.svg";
 import MindSvg from "../src/assert/svg/mind.svg";
 import MinusSvg from "../src/assert/svg/minus.svg";
 import MoveToSvg from "../src/assert/svg/moveTo.svg";
@@ -98,6 +102,7 @@ BoardToolMeiSvg,
 BoardToolSharpSvg,
 BoardToolStickerSvg,
 BoardToolTextSvg,
+BrokenLineSvg,
 CheckSvg,
 ChevronDownSvg,
 ChevronLeftSvg,
@@ -110,6 +115,7 @@ CollectionGallerySvg,
 CollectionListSvg,
 CommentSvg,
 ConnetLineSvg,
+CureSvg,
 DotsSvg,
 DragHandleSvg,
 DuplicateSvg,
@@ -129,6 +135,8 @@ LinkSvg,
 LinkToSvg,
 LoopSvg,
 MentionSvg,
+MindDirectionXSvg,
+MindDirectionYSvg,
 MindSvg,
 MinusSvg,
 MoveToSvg,
