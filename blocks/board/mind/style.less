@@ -1,25 +1,25 @@
 .sy-flow-mind {
     top : 0px;
     left: 0px;
-
     &-text {
         border       : 1px solid #000;
         border-radius: 16px;
+        padding      : 0px 10px;
         min-height   : 30px;
         min-width    : 60px;
     }
-
     &-items {
-        >.sy-flow-mind-item {}
+        >.sy-flow-mind-item{}
     }
 }
 
 .sy-flow-mind-line {
     position      : absolute;
     pointer-events: none;
+    stroke      : #000;
     path {
         fill        : none;
-        stroke      : #000;
+        stroke      : inherit;
         stroke-width: 1px;
     }
 }
