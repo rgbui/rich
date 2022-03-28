@@ -20,8 +20,12 @@ class ShapeSelector extends EventsComponent {
         };
         return <div style={style} className="shy-shapes-selector">
             <div className="shy-shapes-selector-list">
-                {ShapesList.map((s, index) => {
-                    return <span className="shy-shapes-selector-shape" onMouseDown={e => { this.onMousedown(s, e) }} key={index} dangerouslySetInnerHTML={{ __html: s.shape }}></span>
+                {ShapesList.findAll(g => g.svg ? true : false).map((s, index) => {
+                    return <span
+                        className="shy-shapes-selector-shape"
+                        onMouseDown={e => { this.onMousedown(s, e) }}
+                        key={index}
+                        dangerouslySetInnerHTML={{ __html: s.shape }}></span>
                 })}
             </div>
         </div>
