@@ -1,4 +1,3 @@
-import { Directive } from "../../util/bus/directive";
 
 import { AtSelectorItem } from "./declare";
 
