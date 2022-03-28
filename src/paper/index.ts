@@ -8,7 +8,7 @@ export async function loadPaper() {
             /* webpackPrefetch: true */
             './lib/paper-full.js'
         );
-        paper=r.paper;
+        paper = r.paper;
         paper.install(window);
         var canvas = document.createElement('canvas');
         paper.setup(canvas);
