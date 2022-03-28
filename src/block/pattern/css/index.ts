@@ -195,9 +195,9 @@ export class SvgCss extends BlockCss {
             stroke: this.stroke,
             strokeDasharray: this.strokeDasharray == 'none' || typeof this.strokeDasharray == 'undefined' || this.strokeDasharray === null ? undefined : (this.strokeDasharray == 'dash' ? "10,10" : "2,2"),
             strokeWidth: this.strokeWidth,
-            strokeOpacity: this.strokeOpacity,
+            strokeOpacity: typeof this.strokeOpacity != 'number' ? 1 : this.strokeOpacity,
             fill: this.fill,
-            fillOpacity: this.fillOpacity
+            fillOpacity: typeof this.fillOpacity != 'number' ? 1 : this.fillOpacity
         }
     }
 }
