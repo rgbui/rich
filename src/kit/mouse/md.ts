@@ -6,6 +6,7 @@ import { onAutoScroll, onAutoScrollStop } from "../../common/scroll";
 import { TextEle } from "../../common/text.ele";
 import { PageLayoutType } from "../../layout/declare";
 import { CreateBoardBlock, IsBoardTextAnchorBlock, SelectorBoardBlock } from "./board";
+import { getShapeSelector } from "../../../extensions/shapes";
 function triggerCreateAnchor(kit: Kit, block: Block, event: MouseEvent) {
     if (!block) return;
     if (!block.exists(g => g.isSupportAnchor, true)) return;
@@ -57,8 +58,8 @@ async function createTailBlock(kit: Kit, event: MouseEvent) {
         }
     }
 }
-export async function mousedown(kit: Kit, event: MouseEvent)
-{
+export async function mousedown(kit: Kit, event: MouseEvent) {
+    (await getShapeSelector()).close();
     onAutoScrollStop();
     var block = kit.page.getBlockInMouseRegion(event);
     var isBloard = kit.page.pageLayout.type != PageLayoutType.board ? false : true;

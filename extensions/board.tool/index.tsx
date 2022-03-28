@@ -14,9 +14,7 @@ import { BoardToolOperator } from "./declare";
 import { BlockUrlConstant } from "../../src/block/constant";
 import { getNoteSelector } from "../note";
 import { getShapeSelector } from "../shapes";
-import { MindSvg, UploadSvg } from "../../component/svgs";
-import _ from "lodash";
-
+import { MindSvg, UploadSvg } from "../../component/svgs"
 
 class BoardTool extends EventsComponent {
     render(): ReactNode {
