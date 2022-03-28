@@ -22,7 +22,8 @@ export class MeasureView extends React.Component<{
             var dx = ev.clientX - bound.left;
             if (dx < 0) dx = 0;
             else if (dx > bound.width) dx = bound.width;
-            var pre = dx * 1.0 / bound.width
+            var pre = dx * 1.0 / bound.width;
+
             var value = min + Math.round((max - min) * pre);
             if (value > max) value = max;
             if (value < min) value = min;
@@ -46,17 +47,13 @@ export class MeasureView extends React.Component<{
     el: HTMLElement;
     render() {
         var props = this.props;
-
         var value = ((this.props.value || 0) / (props.ratio || 1)) || 0;
-
-
-
         let min = props.min || 0;
         let max = props.max || 10;
         if (value < min) value = min;
         else if (value > max) value = max;
         let pa = (value - min) / (max - min);
-        console.log(JSON.stringify(props), pa, 'ss');
+        console.log(pa, JSON.stringify(props));
         return <div className='shy-measure' ref={e => this.el = e} onMouseDown={e => e.stopPropagation()} >
             <div className="shy-measure-wrapper" onMouseDown={e => this.setProgress(e)}>
                 <div className='shy-measure-progress'>
