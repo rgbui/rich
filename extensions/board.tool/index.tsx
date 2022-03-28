@@ -4,12 +4,10 @@ import { EventsComponent } from "../../component/lib/events.component";
 import TextSvg from "../../src/assert/svg/board.tool.text.svg";
 import StickerSvg from "../../src/assert/svg/board.tool.sticker.svg";
 import ConnectSvg from "../../src/assert/svg/connet.line.svg";
-import PenSvg from "../../src/assert/svg/pen.svg";
 import MeiSvg from "../../src/assert/svg/board.tool.mei.svg";
 import SharpSvg from "../../src/assert/svg/board.tool.sharp.svg";
 import FrameSvg from "../../src/assert/svg/board.tool.frame.svg";
-import ArrowSvg from "../../src/assert/svg/board.tool.arrow.svg";
-import { Point } from "../../src/common/vector/point";
+import { Point, Rect } from "../../src/common/vector/point";
 import { Singleton } from "../../component/lib/Singleton";
 import "./style.less";
 import { BoardToolOperator } from "./declare";
@@ -17,6 +15,8 @@ import { BlockUrlConstant } from "../../src/block/constant";
 import { getNoteSelector } from "../note";
 import { getShapeSelector } from "../shapes";
 import { MindSvg, UploadSvg } from "../../component/svgs";
+import _ from "lodash";
+
 
 class BoardTool extends EventsComponent {
     render(): ReactNode {
@@ -77,9 +77,9 @@ class BoardTool extends EventsComponent {
                 case BoardToolOperator.shape:
                     sel.url = '/shape';
                     var shapeSelector = await getShapeSelector();
-                    shapeSelector.only('selector', (data) => {
+                    shapeSelector.only('selector', async (data) => {
                         if (this.currentSelector && this.currentSelector.url == '/shape') {
-                            this.currentSelector.data = { svgContent: data.shape };
+                            this.currentSelector.data = { svgContent: data.shape, svg: data.svg };
                         }
                         shapeSelector.close();
                     });
