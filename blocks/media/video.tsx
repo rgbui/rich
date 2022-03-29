@@ -12,6 +12,9 @@ import { Block } from "../../src/block";
 import { SolidArea } from "../../src/block/view/appear";
 import { channel } from "../../net/channel";
 
+/**
+ * https://www.zhangxinxu.com/wordpress/2018/12/html5-video-play-picture-in-picture/s
+ */
 @url('/video')
 export class Video extends Block {
     @prop()
