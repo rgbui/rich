@@ -5,7 +5,9 @@ import { EmojiCode } from "./store";
 import { EmojiView } from "./view";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
-
+/**
+ * https://www.zhangxinxu.com/wordpress/2020/03/css-emoji-opentype-svg-fonts/
+ */
 export class EmojiPicker extends EventsComponent {
     render() {
         return <div className='sy-emoji-picker' ><EmojiView onChange={e => this.onPick(e)}></EmojiView></div>
