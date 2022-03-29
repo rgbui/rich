@@ -8,6 +8,7 @@ import { Point, PointArrow } from "../../../src/common/vector/point";
 import { Polygon } from "../../../src/common/vector/polygon";
 import { util } from "../../../util/util";
 import "./style.less";
+
 export type PortLocation = {
     x: number | PointArrow,
     y: number | PointArrow,
@@ -57,7 +58,6 @@ export class Line extends Block {
             }
         }
         else {
-            //var po=this.globalWindowMatrix.transform(pl  as Point);
             point.x = pl.x as number;
             point.y = pl.y as number;
         }

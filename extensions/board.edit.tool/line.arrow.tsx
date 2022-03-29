@@ -188,7 +188,7 @@ export function LineTypes(props: {
                     dangerouslySetInnerHTML={{ __html: Lines[2].shape }}
                 ></a>
             </div>
-            <div className="shy-line-types-stash">
+            {/* <div className="shy-line-types-stash">
                 <a className={props.strokeDasharray == 'none' ? "hover" : ""}
                     onMouseDown={e => props.change('strokeDasharray', 'none')}
                 ><svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
@@ -219,7 +219,7 @@ export function LineTypes(props: {
                         </g>
                     </svg>
                 </a>
-            </div>
+            </div> */}
         </div>}
     </div>
 }
