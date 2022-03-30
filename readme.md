@@ -23,3 +23,4 @@
 * [平滑线](https://medium.com/square-corner-blog/smoother-signatures-be64515adb33)
 * [平滑线案例]https://www.cnblogs.com/fangsmile/p/8296348.html
 * [react-pdf](https://github.com/wojtekmaj/react-pdf)
+* [bezierjs](http://pomax.github.io/bezierjs/)
