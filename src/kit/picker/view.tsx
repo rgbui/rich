@@ -18,7 +18,7 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
     renderBlockRange(block: Block) {
         var r = 5;
         var connectR = 3;
-        var pickers = block.getBlockBoardSelector([BoardPointType.path, BoardPointType.movePort, BoardPointType.connectPort, BoardPointType.resizePort]);
+        var pickers = block.getBlockBoardSelector([BoardPointType.path, BoardPointType.lineMovePort, BoardPointType.connectPort, BoardPointType.resizePort]);
         return <g key={block.id}>
             {pickers.map((pi, i) => {
                 switch (pi.type) {
@@ -30,8 +30,11 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
                         return <path onMouseDown={e => this.picker.onResizeBlock(block, pi.arrows, e)}
                             style={{ cursor: cursor }}
                             d={pi.poly.pathString()} key={i}></path>
-                    case BoardPointType.movePort:
-                        return <circle onMouseDown={e => this.picker.onMovePortBlock(block as Line, pi.arrows, e)} className="move-port" key={i} cx={pi.point.x} cy={pi.point.y} r={r}   ></circle>
+                    case BoardPointType.lineSplitPort:
+                        return <circle onMouseDown={e => this.picker.onSplitLinePort(block as Line, pi, e)} className="line-split-port" key={i} cx={pi.point.x} cy={pi.point.y} r={connectR}  ></circle>
+                        break;
+                    case BoardPointType.lineMovePort:
+                        return <circle onMouseDown={e => this.picker.onMovePortBlock(block as Line, pi, e)} className="move-port" key={i} cx={pi.point.x} cy={pi.point.y} r={r}   ></circle>
                     case BoardPointType.connectPort:
                         return <circle onMouseDown={e => this.picker.onCreateBlockConnect(block, pi.arrows, e)} className="connect" key={i} cx={pi.point.x} cy={pi.point.y} r={connectR}  ></circle>
                     case BoardPointType.resizePort:

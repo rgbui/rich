@@ -1,10 +1,11 @@
 
 import React from "react";
 import { Kit } from "..";
-import { Line } from "../../../blocks/board/line/line";
+import { Line, PortLocation } from "../../../blocks/board/line/line";
 import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
 import { util } from "../../../util/util";
 import { Block } from "../../block";
+import { BlockRenderRange } from "../../block/enum";
 import { BoardBlockSelector } from "../../block/partial/board";
 import { MouseDragger } from "../../common/dragger";
 import { Matrix } from "../../common/matrix";
@@ -147,39 +148,104 @@ export class BlockPicker {
             }
         });
     }
-    async onMovePortBlock(block: Line, arrows: PointArrow[], event: React.MouseEvent) {
+    async onSplitLinePort(block: Line, selector: BoardBlockSelector, event: React.MouseEvent) {
         event.stopPropagation();
         var gm = block.globalWindowMatrix;
-        var oldData = { from: util.clone(block.from), to: util.clone(block.to) };
+        var po: PortLocation;
         var self = this;
-        this.kit.boardLine.onStartConnectOther();
-        this.kit.boardLine.line = block;
-        var key = arrows.includes(PointArrow.from) ? 'from' : 'to';
         MouseDragger({
             event,
-            moveStart() {
+            moveStart(ev) {
                 forceCloseBoardEditTool()
-            },
-            moving(ev, data, isEnd) {
-                var point = gm.inverseTransform(Point.from(ev));
-                block[key] = { x: point.x, y: point.y };
+                var tr = gm.inverseTransform(Point.from(ev));
+                po = { x: tr.x, y: tr.y } as PortLocation;
+                block.points.insertAt(selector.data.at, po);
+                self.onRePicker();
                 block.forceUpdate();
-                self.view.forceUpdate();
-                if (isEnd) {
-                    if (self.kit.boardLine.over) {
-                        block[key] = {
-                            blockId: self.kit.boardLine.over.block.id,
-                            x: self.kit.boardLine.over.selector.arrows[1],
-                            y: self.kit.boardLine.over.selector.arrows[0]
-                        };
-                    }
-                    block.onUpdateLine(block.from, block.to, oldData);
+            },
+            move(ev, data) {
+                if (po) {
+                    var tr = gm.inverseTransform(Point.from(ev));
+                    po.x = tr.x;
+                    po.y = tr.y;
+                    self.onRePicker();
+                    block.forceUpdate();
                 }
             },
-            moveEnd() {
-                self.kit.boardLine.onEndConnectOther()
+            moveEnd(ev, isMove, data) {
+                if (isMove) {
+                    var ps = block.points.find(g => g != po);
+                    block.onManualUpdateProps({ points: ps }, { points: block.points }, BlockRenderRange.self);
+                    self.onRePicker();
+                    block.forceUpdate();
+                }
             }
         });
+    }
+    async onMovePortBlock(block: Line, selector: BoardBlockSelector, event: React.MouseEvent) {
+        event.stopPropagation();
+        var gm = block.globalWindowMatrix;
+        var self = this;
+        if (selector.data.at == 0 || selector.data.at == block.points.length + 1) {
+            var oldData = { from: util.clone(block.from), to: util.clone(block.to) };
+            this.kit.boardLine.onStartConnectOther();
+            this.kit.boardLine.line = block;
+            var key = selector.data.at == 0 ? "from" : "to";
+            MouseDragger({
+                event,
+                moveStart() {
+                    forceCloseBoardEditTool()
+                },
+                moving(ev, data, isEnd) {
+                    var point = gm.inverseTransform(Point.from(ev));
+                    block[key] = { x: point.x, y: point.y };
+                    block.forceUpdate();
+                    self.view.forceUpdate();
+                    if (isEnd) {
+                        if (self.kit.boardLine.over) {
+                            block[key] = {
+                                blockId: self.kit.boardLine.over.block.id,
+                                x: self.kit.boardLine.over.selector.arrows[1],
+                                y: self.kit.boardLine.over.selector.arrows[0]
+                            };
+                        }
+                        block.onUpdateLine(block.from, block.to, oldData);
+                    }
+                },
+                moveEnd() {
+                    self.kit.boardLine.onEndConnectOther()
+                }
+            });
+        }
+        else {
+            var oldProps = { points: util.clone(block.points) };
+            var point = block.points[selector.data.at - 1];
+            var pre = block.points[selector.data.at - 2];
+            var next = block.points[selector.data.at];
+            MouseDragger({
+                event,
+                moveStart() {
+                    forceCloseBoardEditTool()
+                },
+                moving(ev, data, isEnd) {
+                    var current = gm.inverseTransform(Point.from(ev));
+                    point.x = current.x;
+                    point.y = current.y;
+                    if (isEnd) {
+                        var r = block.realPx(5);
+                        if (pre && new Point(pre.x as number, pre.y as number).nearBy(new Point(point.x as number, point.y as number), r)) {
+                            block.points.remove(g => g === pre);
+                        }
+                        if (next && new Point(next.x as number, next.y as number).nearBy(new Point(point.x as number, point.y as number), r)) {
+                            block.points.remove(g => g === next);
+                        }
+                        block.onManualUpdateProps(oldProps, { points: block.points });
+                    }
+                    block.forceUpdate();
+                    self.view.forceUpdate();
+                }
+            });
+        }
     }
     async onRotateBlock(block: Block, selector: BoardBlockSelector, event: React.MouseEvent) {
         event.stopPropagation();
