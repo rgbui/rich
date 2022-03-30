@@ -1,8 +1,6 @@
-import { faXbox } from "../assert/font-awesome/js-packages/@fortawesome/free-brands-svg-icons/faXbox";
 import { dom } from "./dom";
 import { Matrix } from "./matrix";
 import { Point, Rect } from "./vector/point";
-
 var time;
 export function onAutoScroll(options: {
     el: HTMLElement,

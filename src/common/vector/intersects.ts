@@ -1,7 +1,7 @@
 import { Point } from "./point";
 import { Polygon } from "./polygon";
 
-//#region 验证两个面是否相交的算法
+//#region 验证两个线是否相交的算法
 export function intersectsPolygonAndPolygon(polygon1LinearRings: Point[], polygon2LinearRings: Point[]) {
 
     // polygon1LinearRings : array[LinearRing,...]
