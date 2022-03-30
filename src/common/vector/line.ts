@@ -19,4 +19,7 @@ export class Line {
             this.y2 = y2;
         }
     }
+    center() {
+        return new Point((this.x1 + this.x2) / 2, (this.y1 + this.y2) / 2)
+    }
 }
