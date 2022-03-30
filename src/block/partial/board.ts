@@ -9,12 +9,37 @@ import { Polygon } from "../../common/vector/polygon";
 import { ActionDirective } from "../../history/declare";
 import { useBoardTool } from "../../kit/mouse/board";
 export enum BoardPointType {
+    /**
+     * 路径
+     */
     path,
+    /**
+     * 当鼠标移上去，块上面显示的可以连接的块点
+     */
     pathConnectPort,
+    /**
+     * 调整块的大小
+     */
     resizePort,
+    /**
+     * 创建线来连结
+     */
     connectPort,
-    movePort,
+    /***
+     * 线的端点（可以移动的）
+     */
+    lineMovePort,
+    /**
+     * 线的分割点
+     */
+    lineSplitPort,
+    /**
+     * 旋转
+     */
     rotatePort,
+    /**
+     * 思维导图的添加按钮
+     */
     mindAdd,
 }
 export type BoardBlockSelector = {
