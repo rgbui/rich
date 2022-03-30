@@ -2,7 +2,9 @@ import React, { ReactNode } from "react";
 import { Block } from "../../../src/block";
 import { BlockRenderRange } from "../../../src/block/enum";
 import { prop, url, view } from "../../../src/block/factory/observable";
-import { BoardPointType } from "../../../src/block/partial/board";
+import { BoardBlockSelector, BoardPointType } from "../../../src/block/partial/board";
+import { CurveUtil } from "../../../src/block/svg/curve";
+import { Segment } from "../../../src/block/svg/segment";
 import { BlockView } from "../../../src/block/view";
 import { Point, PointArrow } from "../../../src/common/vector/point";
 import { Polygon } from "../../../src/common/vector/polygon";
@@ -14,6 +16,7 @@ export type PortLocation = {
     y: number | PointArrow,
     blockId?: string
 }
+
 @url('/line')
 export class Line extends Block {
     getBlockBoardSelector(types: BoardPointType[] = [
@@ -21,47 +24,135 @@ export class Line extends Block {
         BoardPointType.resizePort,
         BoardPointType.connectPort
     ]) {
-        var pickers: { type: BoardPointType, arrows: PointArrow[], point?: Point, poly?: Polygon }[] = [];
         var gm = this.globalWindowMatrix;
-        var fp = this.cacPortLocationPos(this.from);
-        if (fp) pickers.push({
-            type: BoardPointType.movePort,
-            arrows: [PointArrow.from],
-            point: gm.transform(fp)
+        var pickers: BoardBlockSelector[] = [];
+        var segs = this.segments;
+        segs.each((seg, i) => {
+            pickers.push({
+                type: BoardPointType.lineMovePort,
+                arrows: [PointArrow.point],
+                point: gm.transform(seg.point),
+                data: { at: i }
+            });
         });
-        var to = this.cacPortLocationPos(this.to);
-        if (to) pickers.push({
-            type: BoardPointType.movePort,
-            arrows: [PointArrow.to],
-            point: gm.transform(to)
-        });
+        for (var i = 0; i < segs.length - 1; i++) {
+            var current = segs[i];
+            var next = segs[i + 1];
+            pickers.push({
+                type: BoardPointType.lineSplitPort,
+                arrows: [PointArrow.point],
+                point: gm.transform(CurveUtil.cacCurvePoint(
+                    {
+                        start: current.point,
+                        end: next.point,
+                        control1: current.handleOut,
+                        control2: next.handleIn
+                    }, .5)),
+                data: { at: i }
+            });
+        }
         return pickers;
     }
     @prop()
     from: PortLocation = { x: 0, y: 0 };
     @prop()
     to: PortLocation = { x: 100, y: 100 };
-    cacPortLocationPos(pl: PortLocation): Point {
-        var point = new Point();
-        if (pl.blockId) {
-            var block = this.page.find(g => g.id == pl.blockId);
-            if (block) {
-                var pickers = block.getBlockBoardSelector([BoardPointType.pathConnectPort]);
-                var ps = typeof pl.x == 'string' && typeof pl.y == 'string' ? pickers.findAll(x => x.type == BoardPointType.pathConnectPort) : pickers.findAll(x => x.type == BoardPointType.path);
-                if (typeof pl.x == 'string' && typeof pl.y == 'string') {
-                    var pi = ps.find(g => g.arrows.every(s => [pl.x, pl.y].includes(s)));
-                    return this.globalWindowMatrix.inverseTransform(pi.point)
+    @prop()
+    points: PortLocation[] = [];
+    cacPointSegment(pl: PortLocation, options?: { isOnlyPointSegment?: boolean }) {
+        var feelDistance = 40;
+        var s = this.globalWindowMatrix.getScaling().x;
+        var dis = feelDistance / s;
+        var seg: Segment;
+        if (pl == this.from || pl == this.to) {
+            if (pl.blockId) {
+                var block = this.page.find(g => g.id == pl.blockId);
+                if (block) {
+                    var pickers = block.getBlockBoardSelector([BoardPointType.pathConnectPort]);
+                    var ps = typeof pl.x == 'string' && typeof pl.y == 'string' ? pickers.findAll(x => x.type == BoardPointType.pathConnectPort) : pickers.findAll(x => x.type == BoardPointType.path);
+                    if (typeof pl.x == 'string' && typeof pl.y == 'string') {
+                        var pi = ps.find(g => g.arrows.every(s => [pl.x, pl.y].includes(s)));
+                        if (pi) {
+                            var point = this.globalWindowMatrix.inverseTransform(pi.point);
+                            var handleOut: Point;
+                            if ([PointArrow.top, PointArrow.center].every(s => pi.arrows.includes(s))) {
+                                handleOut = point.move(0, 0 - dis);
+                            }
+                            else if ([PointArrow.middle, PointArrow.right].every(s => pi.arrows.includes(s))) {
+                                handleOut = point.move(dis, 0);
+                            }
+                            else if ([PointArrow.bottom, PointArrow.center].every(s => pi.arrows.includes(s))) {
+                                handleOut = point.move(dis, 0);
+                            }
+                            else if ([PointArrow.middle, PointArrow.left].every(s => pi.arrows.includes(s))) {
+                                handleOut = point.move(0 - dis, 0);
+                            }
+                            var isFrom = pl == this.from;
+                            seg = Segment.create(new Point(point), !isFrom ? handleOut : undefined, isFrom ? handleOut : undefined)
+                        }
+                    }
+                }
+            }
+            else seg = Segment.create(new Point(pl.x as number, pl.y as number))
+        }
+        else if (this.points.includes(pl)) {
+            var at = this.points.findIndex(g => g === pl);
+            var current = new Point(pl.x as number, pl.y as number);
+            if (options?.isOnlyPointSegment) {
+                seg = Segment.create(
+                    current,
+                    undefined,
+                    undefined
+                )
+            }
+            else {
+                if (at == 0) {
+                    var pre = this.cacPointSegment(this.from, { isOnlyPointSegment: true });
+                    var next = this.cacPointSegment(this.points.length - 1 == at ? this.to : this.points[at + 1], { isOnlyPointSegment: true });
+                    var ce = pre.point.center(next.point);
+                    var r = current.diff(ce);
+                    seg = Segment.create(
+                        current,
+                        pre.point.center(ce).move(r[0], r[1]),
+                        next.point.center(ce).move(r[0], r[1]),
+                    )
+                }
+                else if (at == this.points.length - 1) {
+                    var pre = this.cacPointSegment(this.points[at - 1], { isOnlyPointSegment: true });
+                    var next = this.cacPointSegment(this.to, { isOnlyPointSegment: true });
+                    var ce = pre.point.center(next.point);
+                    var r = current.diff(ce);
+                    seg = Segment.create(
+                        current,
+                        pre.point.center(ce).move(r[0], r[1]),
+                        next.point.center(ce).move(r[0], r[1]),
+                    )
                 }
                 else {
-
+                    var pre = this.cacPointSegment(this.points[at - 1], { isOnlyPointSegment: true });
+                    var next = this.cacPointSegment(this.points[at + 1], { isOnlyPointSegment: true });
+                    var ce = pre.point.center(next.point);
+                    var r = current.diff(ce);
+                    seg = Segment.create(
+                        current,
+                        pre.point.center(ce).move(r[0], r[1]),
+                        next.point.center(ce).move(r[0], r[1]),
+                    )
                 }
             }
         }
-        else {
-            point.x = pl.x as number;
-            point.y = pl.y as number;
+        if (this.lineType == 'straight') {
+            delete seg.handleIn;
+            delete seg.handleOut;
         }
-        return point;
+        return seg;
+    }
+    get segments() {
+        return [
+            this.cacPointSegment(this.from),
+            ...(this.points.toArray(pl => this.cacPointSegment(pl))),
+            this.cacPointSegment(this.to)
+        ]
     }
     async updateLine(from: PortLocation, to: PortLocation, oldData?: {
         from: PortLocation;
@@ -103,7 +194,7 @@ export class Line extends Block {
     @prop()
     lineEnd: string = 'none';
     @prop()
-    lineType: string = 'cure';
+    lineType: 'straight' | 'curve' = 'curve';
     async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
         var cs: { name: string; value?: any; }[] = [];
         cs.push({ name: 'lineStart', value: this.lineStart });
@@ -126,51 +217,29 @@ export class Line extends Block {
         }
     }
     getVisiblePolygon() {
-        var from = this.cacPortLocationPos(this.from);
-        var to = this.cacPortLocationPos(this.to);
         var gm = this.globalWindowMatrix;
-        var poly = new Polygon(gm.transform(from), gm.transform(to));
+        var poly = new Polygon(...(this.segments.map(seg => gm.transform(seg.point))));
         return poly;
     }
 }
 @view('/line')
 export class LineView extends BlockView<Line>{
-    renderLine(from: Point, to: Point) {
-        if (this.block.lineStart != 'none') {
-            if (this.block.lineStart == '1') {
-
-            }
-            else if (this.block.lineStart == '2') {
-
-            }
-        }
-        return <g>
-            <path className="visible" d={`M${from.x} ${from.y},${to.x} ${to.y}`}></path>
-        </g>
-    }
     render(): ReactNode {
-        var from = this.block.cacPortLocationPos(this.block.from);
-        var to = this.block.cacPortLocationPos(this.block.to);
-        if (!from || !to) return <></>;
-        if (from.equal(to)) {
-            //to = from.move(20, 20);
-        }
-        var poly = new Polygon(from, to);
-        var rect = poly.bound;
-        var re = rect.extend(30);
+        var w = this.block.pattern.getSvgStyle()?.strokeWidth || 1
+        var rect = Segment.getSegmentsBound(this.block.segments);
+        var re = rect.extend(Math.max(30, w + 5));
         var feelLineDistance = 10;
         var s = this.block.globalWindowMatrix.getScaling().x;
         var strokeWidth = feelLineDistance / s;
+        var d = Segment.getSegmentsPathString(this.block.segments);
         return <div className="sy-block-line" style={this.block.visibleStyle}>
             <svg viewBox={`${re.x} ${re.y} ${re.width} ${re.height}`} style={{
                 width: re.width,
                 height: re.height,
-                transform: `translate(${re.x}px,${re.y}px)`,
-                // marginLeft: re.x,
-                // marginTop: re.y
+                transform: `translate(${re.x}px,${re.y}px)`
             }}>
-                {this.renderLine(from, to)}
-                <path stroke="transparent" strokeWidth={strokeWidth} d={`M${from.x} ${from.y},${to.x} ${to.y}`}></path>
+                <path className="visible" d={d}></path>
+                <path d={d} stroke="transparent" strokeWidth={strokeWidth}></path>
             </svg>
         </div>
     }
