@@ -547,6 +547,17 @@ export abstract class Block extends Events {
         return ma.getCss();
     }
     /**
+     * 
+     * @param visiblePx 视觉上的距离值
+     * @returns 返回最终渲染的值
+     */
+    realPx(visiblePx: number) {
+        return visiblePx / this.globalWindowMatrix.getScaling().x;
+    }
+    visiblePx(realPx: number) {
+        return realPx * this.globalWindowMatrix.getScaling().x
+    }
+    /**
      * 运行的move matrix
      */
     moveMatrix = new Matrix();
