@@ -108,6 +108,17 @@ export class Point {
             this.y - point.y
         ]
     }
+    /**
+     * 计算与另一个点的中心坐标
+     * @param point 
+     * @returns 
+     */
+    center(point: Point) {
+        return new Point(
+            this.x / 2 + point.x / 2,
+            this.y / 2 + point.y / 2
+        );
+    }
 }
 export enum PointArrow {
     top = 'top',
@@ -117,7 +128,8 @@ export enum PointArrow {
     middle = 'middle',
     bottom = 'bottom',
     from = 'from',
-    to = 'to'
+    to = 'to',
+    point = 'point'
 }
 export class Rect {
     top: number;
@@ -276,7 +288,7 @@ export class Rect {
 export class RectUtility {
     /**
      * 围绕一个小的矩形，弹一个窗，
-     * 尽可能的展示自已，尽可以的不要挡住这个小的矩形
+     * 尽可能的展示自已，尽量不要挡住这个小的矩形
      * @param pos 
      */
     static cacPopoverPosition(pos: PopoverPosition) {
