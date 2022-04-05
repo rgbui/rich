@@ -1,6 +1,7 @@
 
 import React from "react";
 import { Page } from "..";
+import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
 import { Matrix } from "../../common/matrix";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
@@ -192,7 +193,8 @@ export class PageEvent {
     }
     onSetMatrix(this: Page, matrix: Matrix) {
         this.matrix = matrix;
-        this.view.forceUpdate()
+        this.view.forceUpdate();
+        forceCloseBoardEditTool();
     }
     onFitZoom(this: Page) {
         var bound = this.grid.gridRange();
@@ -211,6 +213,7 @@ export class PageEvent {
         var to = matrix.inverseTransform(currentVisible.x, currentVisible.y);
         matrix.translate(to.x - from.x, to.y - from.y);
         this.matrix = matrix;
+
         this.view.forceUpdate()
     }
     onMouseenter(this: Page, event: React.MouseEvent) {
