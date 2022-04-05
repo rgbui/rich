@@ -33,7 +33,10 @@ export class PageView extends Component<{ page: Page }>{
         this.el = ReactDOM.findDOMNode(this) as HTMLElement;
         this.observeOutsideDrop();
         this.el.addEventListener('keydown', (this._keydown = e => this.page.onKeydown(e)), true);
-        this.el.addEventListener('wheel', this._wheel = e => this.page.onWheel(e), { passive: true });
+        this.el.addEventListener('wheel', this._wheel = e => this.page.onWheel(e), {
+            passive: false
+        });
+        this.el.addEventListener('touchstart', e => console.log(e));
         document.addEventListener('mousedown', this._mousedown = this.page.onGlobalMousedown.bind(this));
         document.addEventListener('mousemove', (this._mousemove = this.page.onMousemove.bind(this.page)));
         document.addEventListener('mouseup', (this._mouseup = this.page.onMouseup.bind(this.page)));

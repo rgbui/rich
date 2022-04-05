@@ -55,21 +55,49 @@ export class PageEvent {
             this.onBlur(event);
         }
     }
+
+    private lastTriggerTime;
     onWheel(this: Page, event: React.WheelEvent) {
         if (this.readonly) return;
         this.kit.handle.onCloseBlockHandle();
         if (this.isBoard) {
-            var g = (x) => {
-                if (x > 0) return 0 - x;
-                else if (x < 0) return 0 - x;
-                else return 0;
+            event.preventDefault();
+            if (event.ctrlKey == true) {
+                if (this.lastTriggerTime && (Date.now() - this.lastTriggerTime < 60)) return;
+                this.lastTriggerTime = Date.now();
+                var ma = this.matrix.clone();
+                // var current = this.scale * 100;
+                var ro = this.globalMatrix.inverseTransform(new Point(event.pageX, event.pageY));
+                if (event.deltaY > 0) {
+                    //缩小
+                    // var s = (current - 2);
+                    // s = s / current;
+                    ma.scale(0.8, 0.8, ro);
+                    if (ma.getScaling().x * 100 < 1) return;
+                    this.onSetMatrix(ma);
+                }
+                else {
+                    //放大
+                    // var s = (current + 2);
+                    // s = s / current;
+                    ma.scale(1.2, 1.2, ro);
+                    if (ma.getScaling().x * 100 > 300) return;
+                    this.onSetMatrix(ma);
+                }
             }
-            var r = 1 / this.scale;
-            var dx = g(event.deltaX) * r;
-            var dy = g(event.deltaY) * r;
-            var ma = this.matrix.clone();
-            ma.translate(dx, dy);
-            this.onSetMatrix(ma);
+            else {
+                var g = (x) => {
+                    if (x > 0) return 0 - x;
+                    else if (x < 0) return 0 - x;
+                    else return 0;
+                }
+                var r = 1 / this.scale;
+                var dx = g(event.deltaX) * r;
+                var dy = g(event.deltaY) * r;
+                var ma = this.matrix.clone();
+                ma.translate(dx, dy);
+                this.onSetMatrix(ma);
+            }
         }
     }
     /**
@@ -145,10 +173,10 @@ export class PageEvent {
             var rect = Rect.from(this.root.getBoundingClientRect());
             point = rect.middleCenter;
         }
-        var zs = [1, 2, 3, 5, 10, 15, 20, 33, 50, 75, 100, 125, 150, 200, 250, 300, 400];
+        var zs = [1, 2, 3, 5, 10, 15, 20, 33, 50, 75, 100, 125, 150, 200, 250, 300];
         var current = zs.findMin(x => Math.abs(x - this.scale * 100));
         var at = zs.findIndex(g => g == current);
-        var ro = this.windowMatrix.inverseTransform(point);
+        var ro = this.globalMatrix.inverseTransform(point);
         var r = 1;
         var current = this.scale * 100;
         if (zoom > 0) {
@@ -165,7 +193,7 @@ export class PageEvent {
         }
         r = Math.round(r * 100) / 100;
         this.matrix.scale(r, r, ro);
-        this.view.forceUpdate();
+        this.onSetMatrix(this.matrix);
     }
     onSetMatrix(this: Page, matrix: Matrix) {
         this.matrix = matrix;
