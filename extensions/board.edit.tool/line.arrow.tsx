@@ -1,25 +1,33 @@
 import React from "react";
+import { BoardEditTool } from ".";
 import { MeasureView } from "../../component/view/progress";
 import { ShapeType } from "../shapes/shapes";
+
+var lineSvg = `<svg viewBox="0 0 32 32"  xmlns="http://www.w3.org/2000/svg">
+<path d="M2 15 L30 15 L30 17 L2 17Z" fill="currentColor"></path>
+</svg>`;
 
 export var leftArrows: ShapeType[] = [
     {
         shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
     <path d="M18.64 14H0v2h18.64c-.218 1-.765 2-1.64 3l14-4-14-4c.875 1 1.422 2 1.64 3z" fill="currentColor"
         fillRule="evenodd"></path>
-</svg>`
+</svg>`,
+        value: '0'
     },
     {
         shape: `<svg viewBox="0 0 31 32" xmlns="http://www.w3.org/2000/svg">
         <path
             d="M25.587 16.003H0v2h25.58l-.55.234-5.443 3.023.826 1.486 10.337-5.743-10.337-5.743-.826 1.486 5.415 3.009.585.248z"
             fill="currentColor" fillRule="evenodd"></path>
-    </svg>`
+    </svg>`,
+        value: '1'
     },
     {
         shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
         <path d="M20 16H0v2h20v5l11-6-11-6v5z" fill="currentColor" fillRule="evenodd"></path>
-    </svg>`
+    </svg>`,
+        value: '2'
     },
     {
         shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
@@ -27,12 +35,14 @@ export var leftArrows: ShapeType[] = [
             <path d="M0 16h21v2H0z"></path>
             <path d="M31 17l-11 6V11l11 6zm-3.536.004L21.7 13.85v6.295l5.764-3.14z"></path>
         </g>
-    </svg>`
+    </svg>`,
+        value: '3'
     },
     {
         shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
         <path d="M20 16H0v2h20l5 5 6-6-6-6-5 5z" fill="currentColor" fillRule="evenodd"></path>
-    </svg>`
+    </svg>`,
+        value: '4'
     },
     {
         shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
@@ -41,13 +51,15 @@ export var leftArrows: ShapeType[] = [
             <path fillRule="nonzero"
                 d="M31 17l-6 6-6-6 6-6 6 6zm-2.4.006l-3.6-3.61-3.591 3.607 3.596 3.597 3.595-3.594z"></path>
         </g>
-    </svg>`
+    </svg>`,
+        value: '5'
     },
     {
         shape: `<svg viewBox="0 0 29 32"  xmlns="http://www.w3.org/2000/svg">
         <path d="M19.1 16a5.002 5.002 0 019.9 1 5 5 0 01-9.9 1H0v-2h19.1z" fill="currentColor" fillRule="evenodd">
         </path>
-    </svg>`
+    </svg>`,
+        value: '6'
     },
     {
         shape: `<svg viewBox="0 0 29 32"  xmlns="http://www.w3.org/2000/svg">
@@ -55,7 +67,8 @@ export var leftArrows: ShapeType[] = [
             <path d="M0 15h20v2H0z"></path>
             <path d="M24 19.3a3.3 3.3 0 100-6.6 3.3 3.3 0 000 6.6zm0 1.7a5 5 0 110-10 5 5 0 010 10z"></path>
         </g>
-    </svg>`
+    </svg>`,
+        value: '7'
     }
 ]
 export var rightArrows: ShapeType[] = [
@@ -63,28 +76,38 @@ export var rightArrows: ShapeType[] = [
         shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
     <path d="M18.64 14H0v2h18.64c-.218 1-.765 2-1.64 3l14-4-14-4c.875 1 1.422 2 1.64 3z" fill="currentColor"
         fillRule="evenodd"></path>
-</svg>`},
+</svg>`,
+        value: '0'
+    },
     {
         shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
     <path
         d="M25.587 16.003H0v2h25.58l-.55.234-5.443 3.023.826 1.486 10.337-5.743-10.337-5.743-.826 1.486 5.415 3.009.585.248z"
         fill="currentColor" fillRule="evenodd"></path>
-</svg>` },
+</svg>`,
+        value: '1'
+    },
     {
         shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
     <path d="M20 16H0v2h20v5l11-6-11-6v5z" fill="currentColor" fillRule="evenodd"></path>
-</svg>` },
+</svg>`,
+        value: '2'
+    },
     {
         shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
     <g fill="currentColor" fillRule="evenodd">
         <path d="M0 16h21v2H0z"></path>
         <path d="M31 17l-11 6V11l11 6zm-3.536.004L21.7 13.85v6.295l5.764-3.14z"></path>
     </g>
-</svg>` },
+</svg>` ,
+        value: '3'
+    },
     {
         shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
     <path d="M20 16H0v2h20l5 5 6-6-6-6-5 5z" fill="currentColor" fillRule="evenodd"></path>
-</svg>` },
+</svg>`,
+        value: '4'
+    },
     {
         shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
     <g fill="currentColor" fillRule="evenodd">
@@ -92,19 +115,25 @@ export var rightArrows: ShapeType[] = [
         <path fillRule="nonzero"
             d="M31 17l-6 6-6-6 6-6 6 6zm-2.4.006l-3.6-3.61-3.591 3.607 3.596 3.597 3.595-3.594z"></path>
     </g>
-</svg>` },
+</svg>`,
+        value: '5'
+    },
     {
         shape: `<svg viewBox="0 0 29 32"  xmlns="http://www.w3.org/2000/svg">
     <path d="M19.1 16a5.002 5.002 0 019.9 1 5 5 0 01-9.9 1H0v-2h19.1z" fill="currentColor" fillRule="evenodd">
     </path>
-</svg>` },
+</svg>`,
+        value: '6'
+    },
     {
         shape: `<svg viewBox="0 0 29 32"  xmlns="http://www.w3.org/2000/svg">
     <g fill="currentColor" fillRule="evenodd">
         <path d="M0 15h20v2H0z"></path>
         <path d="M24 19.3a3.3 3.3 0 100-6.6 3.3 3.3 0 000 6.6zm0 1.7a5 5 0 110-10 5 5 0 010 10z"></path>
     </g>
-</svg>` },
+</svg>`,
+        value: '7'
+    },
 ]
 
 export var Lines: ShapeType[] = [
@@ -129,41 +158,45 @@ export var Lines: ShapeType[] = [
 </svg>` }
 ]
 
-export function LineArrow(props: { lineStart?: string, lineEnd?: string, change: (name: string, value: any) => void }) {
-    var [visible, setDropVisible] = React.useState(0);
+export function LineArrow(props: { tool: BoardEditTool, lineStart?: string, lineEnd?: string, change: (name: string, value: any) => void }) {
+
     return <div className="shy-line-arrow">
         <div className="shy-line-arrow-current">
-            {props.lineStart && <span style={{ transform: `scale(-1,1)` }} onMouseDown={e => setDropVisible(e => e == 1 ? 0 : 1)}
-                dangerouslySetInnerHTML={{ __html: props.lineStart == 'none' ? "<span style='transform:scale(-1,1)'>无</span>" : leftArrows[parseInt(props.lineStart) || 0].shape }}
+            {props.lineStart && <span
+                style={{ transform: `scale(-1,1)` }}
+                onMouseDown={e => props.tool.showDrop('leftArrow')}
+                dangerouslySetInnerHTML={{ __html: props.lineStart == 'none' ? `<span style='transform:scale(-1,1)'>${lineSvg}</span>` : leftArrows.find(g => g.value == props.lineStart).shape }}
             ></span>}
-            {props.lineEnd && <span onMouseDown={e => setDropVisible(e => e == 2 ? 0 : 2)}
-                dangerouslySetInnerHTML={{ __html: props.lineEnd == 'none' ? "无" : rightArrows[parseInt(props.lineEnd) || 0].shape }}
+            {props.lineEnd && <span
+                onMouseDown={e => props.tool.showDrop('rightArrow')}
+                dangerouslySetInnerHTML={{ __html: props.lineEnd == 'none' ? lineSvg : rightArrows.find(g => g.value == props.lineEnd).shape }}
             ></span>}
         </div>
-        {visible == 1 && <div className="shy-line-arrow-left-drops">
-            <a style={{ transform: `scale(1,1)` }} onMouseDown={e => props.change('lineStart', 'none')}>无</a>
-            {leftArrows.map((arrow, index) => { return <a key={index} onMouseDown={e => props.change('lineStart', index.toString())} dangerouslySetInnerHTML={{ __html: arrow.shape }}></a> })}
+        {props.tool.isShowDrop('leftArrow') && <div className="shy-line-arrow-left-drops">
+            <a style={{ transform: `scale(1,1)` }} dangerouslySetInnerHTML={{ __html: lineSvg }} onMouseDown={e => props.change('lineStart', 'none')}></a>
+            {leftArrows.map((arrow, index) => { return <a key={index} onMouseDown={e => props.change('lineStart', arrow.value)} dangerouslySetInnerHTML={{ __html: arrow.shape }}></a> })}
         </div>}
-        {visible == 2 && <div className="shy-line-arrow-right-drops">
-            <a onMouseDown={e => props.change('lineEnd', 'none')}>无</a>
-            {rightArrows.map((arrow, index) => { return <a key={index} onMouseDown={e => props.change('lineEnd', index.toString())} dangerouslySetInnerHTML={{ __html: arrow.shape }}></a> })}
+        {props.tool.isShowDrop('rightArrow') && <div className="shy-line-arrow-right-drops">
+            <a onMouseDown={e => props.change('lineEnd', 'none')} dangerouslySetInnerHTML={{ __html: lineSvg }} ></a>
+            {rightArrows.map((arrow, index) => { return <a key={index} onMouseDown={e => props.change('lineEnd', arrow.value)} dangerouslySetInnerHTML={{ __html: arrow.shape }}></a> })}
         </div>}
     </div>
 }
 
 export function LineTypes(props: {
+    tool: BoardEditTool,
     lineType: string,
     strokeWidth: number,
     strokeDasharray: string,
     change: (name: string, value: any) => void
 }) {
-    var [visible, setDropVisible] = React.useState(false);
+
     return <div className="shy-line-types">
         <div className="shy-line-types-current"
-            onMouseDown={e => setDropVisible(e => e ? false : true)}
+            onMouseDown={e => props.tool.showDrop('lineType')}
             dangerouslySetInnerHTML={{ __html: Lines[props.lineType == 'straight' ? 0 : (props.lineType == 'line' ? 1 : 2)].shape }}
         ></div>
-        {visible && <div className="shy-line-types-drops">
+        {props.tool.isShowDrop('lineType') && <div className="shy-line-types-drops">
             <div className="shy-line-types-opacity">
                 <MeasureView
                     showValue={false}
@@ -173,18 +206,19 @@ export function LineTypes(props: {
                     onChange={e => {
                         props.change('strokeWidth', e);
                     }}></MeasureView>
+                <div className="shy-measure-view-label"><label>线宽</label><span style={{ float: 'right' }}>{Math.round(props.strokeWidth)}px</span></div>
             </div>
             <div className="shy-line-types-all">
                 <a className={props.lineType == 'straight' ? "hover" : ""}
                     onMouseDown={e => props.change('lineType', 'straight')}
                     dangerouslySetInnerHTML={{ __html: Lines[0].shape }}
                 ></a>
-                <a className={props.lineType == 'line' ? "hover" : ""}
+                {/* <a className={props.lineType == 'line' ? "hover" : ""}
                     onMouseDown={e => props.change('lineType', 'line')}
                     dangerouslySetInnerHTML={{ __html: Lines[1].shape }}
-                ></a>
-                <a className={props.lineType == 'cure' ? "hover" : ""}
-                    onMouseDown={e => props.change('lineType', 'cure')}
+                ></a> */}
+                <a className={props.lineType == 'curve' ? "hover" : ""}
+                    onMouseDown={e => props.change('lineType', 'curve')}
                     dangerouslySetInnerHTML={{ __html: Lines[2].shape }}
                 ></a>
             </div>

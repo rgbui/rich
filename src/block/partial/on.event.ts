@@ -281,6 +281,12 @@ export class Block$Event {
             this.updateProps({ zindex }, BlockRenderRange.self);
         })
     }
+    /**
+     * 光标输入完后触发的事件
+     */
+    async onInputed() {
+
+    }
 }
 
 

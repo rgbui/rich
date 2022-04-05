@@ -67,6 +67,11 @@ export class TextSpan extends Block {
     }
     onResizeBoardSelector(this: Block, arrows: PointArrow[], event: React.MouseEvent) {
         var { width: w, height: h } = this.fixedSize;
+        var lineHeight = parseFloat(this.el.style.lineHeight);
+        var rh = h / lineHeight;
+        var lineCount = Math.floor(rh);
+        if (rh - lineCount > 0.2) lineCount += 1;
+        console.log('lineCount', h, h / lineHeight, lineHeight, lineCount);
         var gm = this.globalWindowMatrix.clone();
         var fp = gm.inverseTransform(Point.from(event));
         var s = gm.getScaling().x;
@@ -137,9 +142,12 @@ export class TextSpan extends Block {
                         bh += dy;
                     }
                     block.matrix = matrix.appended(ma);
-                    var currentFontSize = Math.max(12, Math.round(fontSize + (bh - h)));
+                    var currentLineHeight = Math.max(12 * 1.2, Math.round((lineHeight + (bh - h) / lineCount)));
                     block.page.snapshoot.pause();
-                    block.pattern.setStyle(BlockCssName.font, { lineHeight: (currentFontSize * 1.2) + 'px', fontSize: currentFontSize });
+                    block.pattern.setStyle(BlockCssName.font, {
+                        lineHeight: currentLineHeight + 'px',
+                        fontSize: currentLineHeight / 1.2
+                    });
                     await block.forceUpdate();
                     block.updateRenderLines();
                     block.page.kit.picker.view.forceUpdate();
@@ -148,7 +156,10 @@ export class TextSpan extends Block {
                         block.page.snapshoot.start();
                         block.onAction(ActionDirective.onResizeBlock, async () => {
                             if (!matrix.equals(block.matrix)) block.updateMatrix(matrix, block.matrix);
-                            block.pattern.setStyle(BlockCssName.font, { lineHeight: (currentFontSize * 1.2) + 'px', fontSize: currentFontSize });
+                            block.pattern.setStyle(BlockCssName.font, {
+                                lineHeight: currentLineHeight + 'px',
+                                fontSize: currentLineHeight / 1.2
+                            });
                         })
                     }
                 }
@@ -182,6 +193,13 @@ export class TextSpan extends Block {
             this.pattern.setFontStyle({ fontWeight: value })
         else if (name == 'textDecoration')
             this.pattern.setFontStyle({ textDecoration: value });
+    }
+    async onInputed(): Promise<void> {
+        this.page.kit.picker.onRePicker();
+    }
+    get isEnterInputNewLine(): boolean {
+        if (this.isFreeBlock) return false;
+        return true;
     }
 }
 @view("/textspan")

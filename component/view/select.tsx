@@ -56,7 +56,7 @@ export class Select extends React.Component<{
         return <div className={'shy-select' + (props.border ? " shy-select-border" : "")} style={this.props.style || {}} ref={e => this.el = e}>
             <div className='shy-select-selection' onClick={e => props.disabled ? undefined : (setToggle())}>
                 {props.children && <>{props.children}<ChevronDownSvg></ChevronDownSvg></>}
-                {!props.children && <><span>{op.icon && <Icon icon={op.icon}></Icon>}{op?.text}</span><ChevronDownSvg></ChevronDownSvg></>}
+                {!props.children && <><span>{op?.icon && <Icon icon={op.icon}></Icon>}{op?.text}</span><ChevronDownSvg></ChevronDownSvg></>}
             </div>
             {this.toggle && <div className='shy-select-drop' style={dropStyle} >
                 {props.options.map((op, index) => {

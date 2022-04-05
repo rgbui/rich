@@ -91,7 +91,8 @@ export class Page extends Events<PageDirective> {
             this.isOff = true;
             this.kit.picker.onCancel();
             getBoardTool().then(r => {
-                r.close()
+                r.off('selector')
+                r.close();
             })
         }
         catch (ex) {
@@ -104,6 +105,7 @@ export class Page extends Events<PageDirective> {
             this.isOff = true;
             if (this.pageLayout.type == PageLayoutType.board) {
                 getBoardTool().then(r => {
+                    r.on('selector',function(event){ });
                     r.open(Point.from(this.view.el.getBoundingClientRect()));
                 })
             }

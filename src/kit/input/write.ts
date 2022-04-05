@@ -91,13 +91,10 @@ export class TextInput$Write {
                     break;
             }
         }
-      
-
         this.isWillInput = true;
     }
     private isWillInput: boolean;
     async onInput(this: TextInput, event: KeyboardEvent) {
-
         if (this.isWillInput) {
             if (this.explorer.isOnlyAnchor) {
                 var anchor = this.explorer.activeAnchor;
@@ -108,6 +105,7 @@ export class TextInput$Write {
                         anchor.view.parentNode.insertBefore(this.cursorTextElement, anchor.view);
                     }
                     await InputHandle(this);
+                    await anchor.inputed();
                 }
             }
             else if (this.explorer.hasTextRange) {

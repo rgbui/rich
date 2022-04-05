@@ -165,6 +165,11 @@ export class Anchor {
             this.inputtingTime = null;
         }, 1e3);
     }
+    async inputed() {
+        if (this.block) {
+            await this.block.onInputed()
+        }
+    }
     private isInputting: boolean = false;
     private inputtingTime;
     private textVisibleCursorTimer;

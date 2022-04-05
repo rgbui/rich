@@ -8,9 +8,9 @@ import { InputDeleteStore } from "../store";
 export async function backspaceDeleteHandle(tp: TextInput) {
     var anchor = tp.explorer.activeAnchor;
     anchor.inputting();
-    if (await backspaceSolidBlock(tp)) return;
-    else if (await backspaceCrossBlock(tp)) return;
-    else if (await backspaceBlock(tp)) return;
+    if (await backspaceSolidBlock(tp)) { await anchor.inputed(); return; }
+    else if (await backspaceCrossBlock(tp)) { await anchor.inputed(); return; }
+    else if (await backspaceBlock(tp)) { await anchor.inputed(); return; }
 }
 export async function backspaceSolidBlock(tp: TextInput) {
     var anchor = tp.explorer.activeAnchor;

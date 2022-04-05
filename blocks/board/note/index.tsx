@@ -79,6 +79,9 @@ export class Note extends Block {
             }
         }
     }
+    get isEnterInputNewLine(): boolean {
+        return false;
+    }
 }
 @view('/note')
 export class NoteView extends BlockView<Note>{
@@ -110,7 +113,7 @@ export class NoteView extends BlockView<Note>{
     render(): ReactNode {
         return <div className="sy-block-note" style={this.block.visibleStyle}>
             {this.renderBg()}
-            <div className="sy-block-note-content" style={{width:this.block.fixedWidth,height:this.block.fixedWidth}}>
+            <div className="sy-block-note-content" style={{ width: this.block.fixedWidth, height: this.block.fixedWidth }}>
                 <TextSpanArea block={this.block}></TextSpanArea>
             </div>
         </div>

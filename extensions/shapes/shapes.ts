@@ -3,7 +3,8 @@
 export type ShapeType = {
     shape: string,
     text?: string,
-    svg?: Record<string, any>
+    svg?: Record<string, any>,
+    value?:string
 }
 
 

@@ -1,7 +1,6 @@
 
 import React from "react";
 import { Page } from "..";
-import { getBoardTool } from "../../../extensions/board.tool";
 import { Matrix } from "../../common/matrix";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";

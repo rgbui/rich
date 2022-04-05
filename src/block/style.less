@@ -9,7 +9,7 @@
     font-style     : inherit;
     text-decoration: inherit;
 
-    >* {
+    *{
         font-size      : inherit;
         text-decoration: inherit;
         font-style     : inherit;
@@ -27,19 +27,21 @@
             content    : '\D\A';
             white-space: pre;
         }
-
         &::before {
             content: '\20';
         }
     }
-
 }
 
 .shy-appear-texts {
-    display    : block;
-    white-space: pre-wrap;
-    word-break : break-all;
-    word-wrap  : break-word;
+    display        : block;
+    white-space    : pre-wrap;
+    word-break     : break-all;
+    word-wrap      : break-word;
+    font-size      : inherit;
+    font-weight    : inherit;
+    font-style     : inherit;
+    text-decoration: inherit;
 
     &::after {
         content    : '\D\A';

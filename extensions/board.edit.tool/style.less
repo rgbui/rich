@@ -74,6 +74,7 @@
             height       : 20px;
             border-radius: 50%;
             border       : 1px solid rgba(0, 0, 0, 0.1);
+            box-sizing   : border-box;
         }
 
         .bottom-border {
@@ -95,15 +96,15 @@
         z-index        : 2;
         box-shadow     : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
         top            : 28px;
-        max-height     : 200px;
         overflow-y     : auto;
         overflow-x     : hidden;
-        width          : 150px;
+        width          : 160px;
         min-height     : 100px;
         display        : flex;
-        justify-content: center;
+        justify-content: flex-start;
         align-items    : flex-start;
         flex-wrap      : wrap;
+        padding        : 10px;
 
         a {
             display      : inline-block;
@@ -114,8 +115,11 @@
             border-radius: 15px;
             transition   : opacity 0.2s;
             border       : 1px solid rgba(0, 0, 0, 0.1);
+            position     : relative;
 
-            &.selected {}
+            &.selected {
+                box-shadow: 0 0 0 2px #fff, 0 0 0 4px blue;
+            }
         }
     }
 }
@@ -126,12 +130,31 @@
     height  : 20px;
 
     &-current {
-        display      : inline-block;
-        width        : 20px;
-        height       : 20px;
-        border       : 4px solid #000;
-        box-sizing   : border-box;
-        border-radius: 50%;
+        display : inline-block;
+        position: relative;
+        width   : 20px;
+        height  : 20px;
+
+        a,
+        >svg {
+            border-radius: 50%;
+            display      : inline-block;
+            width        : 20px;
+            height       : 20px;
+        }
+
+        &::after {
+            border-radius   : 50%;
+            content         : '\20';
+            position        : absolute;
+            z-index         : 1;
+            top             : 50%;
+            left            : 50%;
+            width           : 12px;
+            height          : 12px;
+            background-color: #fff;
+            transform       : translate(-50%, -50%);
+        }
     }
 
     &-drops {
@@ -188,7 +211,20 @@
                 transition   : opacity 0.2s;
                 border       : 1px solid rgba(0, 0, 0, 0.1);
 
-                &.selected {}
+                &.selected {
+                    box-shadow: 0 0 0 2px #fff, 0 0 0 4px blue;
+                }
+            }
+        }
+
+        .shy-measure-view-label {
+            text-align: left;
+            font-size : 12px;
+
+            >label {}
+
+            span {
+                float: right;
             }
         }
     }
@@ -222,7 +258,6 @@
         z-index      : 2;
         box-shadow   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
         top          : 28px;
-        max-height   : 200px;
         overflow-y   : auto;
         overflow-x   : hidden;
         width        : 160px;
@@ -249,7 +284,9 @@
                 transition   : opacity 0.2s;
                 border       : 1px solid rgba(0, 0, 0, 0.1);
 
-                &.selected {}
+                &.selected {
+                    box-shadow: 0 0 0 2px #fff, 0 0 0 4px blue;
+                }
             }
         }
     }

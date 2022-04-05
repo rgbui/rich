@@ -190,9 +190,9 @@ export class Line extends Block {
         this.manualUpdateProps(oldData, { from, to });
     }
     @prop()
-    lineStart: string = 'none';
+    lineStart: string | number = 'none';
     @prop()
-    lineEnd: string = 'none';
+    lineEnd: string | number = 'none';
     @prop()
     lineType: 'straight' | 'curve' = 'curve';
     async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
@@ -225,13 +225,64 @@ export class Line extends Block {
 @view('/line')
 export class LineView extends BlockView<Line>{
     render(): ReactNode {
-        var w = this.block.pattern.getSvgStyle()?.strokeWidth || 1
-        var rect = Segment.getSegmentsBound(this.block.segments);
-        var re = rect.extend(Math.max(30, w + 5));
-        var feelLineDistance = 10;
-        var s = this.block.globalWindowMatrix.getScaling().x;
-        var strokeWidth = feelLineDistance / s;
-        var d = Segment.getSegmentsPathString(this.block.segments);
+        var w = this.block.pattern.getSvgStyle()?.strokeWidth || 1;
+        var segs = this.block.segments
+        var rect = Segment.getSegmentsBound(segs);
+        var re = rect.extend(Math.max(30, w + 5, 100));
+        var strokeWidth = this.block.realPx(10);
+        var d = Segment.getSegmentsPathString(segs);
+        var self = this;
+        var o = (d) => `${d.x} ${d.y}`;
+        var color = this.block.pattern.getSvgStyle()?.stroke || '#000';
+        var gap = w;
+        function renderLineStart() {
+            var point = segs[0].point;
+            if (self.block.lineStart == '0') {
+                return <path fill={color} stroke={'none'} d={`M${o(point.move(w, 0).rotate(30, point))}L${o(point)}L${o(point.move(w, 0).rotate(-30, point))}L${o(point.move(w * 0.6, 0))}z`}></path>
+            }
+            else if (self.block.lineStart == '1') {
+                return <path fill={'none'} strokeWidth={w} d={`M${o(point.move(w*4, 0).rotate(30, point))}L${o(point)}L${o(point.move(w*4, 0).rotate(-30, point))}`}></path>
+            }
+            if (self.block.lineStart == '2') {
+                /**
+                 * 实心
+                 */
+                return <path fill={color} stroke={'none'} d={`M${o(point.move(0 - w - gap, 0))}L${o(point.move(0 - w - gap, 0).rotate(120, point))}L${o(point.move(0 - w - gap, 0).rotate(-120, point))}z`}></path>
+            }
+            else if (self.block.lineStart == '3') {
+                /**
+                 * 虚心
+                 */
+                return <path fill={'none'} strokeWidth={w} d={`M${o(point.move(0 - gap, 0))}L${o(point.move(0 - gap, 0).rotate(120, point))}L${o(point.move(0 - gap, 0).rotate(-120, point))}z`}></path>
+            }
+            if (self.block.lineStart == '4') {
+                /**
+                 * 实心
+                 */
+                return <path fill={color} stroke={'none'} strokeWidth={0} d={`M${o(point.move(0, 0 - w - gap))}L${o(point.move(w + gap, 0))}L${o(point.move(0, w + gap))}L${o(point.move(0 - w - gap, 0))}z`}></path>
+            }
+            else if (self.block.lineStart == '5') {
+                /**
+                 * 虚心
+                 */
+                return <path fill={'none'} strokeWidth={w} d={`M${o(point.move(0, 0 - (gap + w)))}L${o(point.move((gap + w), 0))}L${o(point.move(0, (gap + w)))}L${o(point.move(0 - (gap + w), 0))}z`}></path>
+            }
+            else if (self.block.lineStart == '6') {
+                /**
+                 * 实心
+                 */
+                return <circle fill={color} stroke={'none'} strokeWidth={0} r={w + gap} cx={point.x} cy={point.y}></circle>
+            }
+            else if (self.block.lineStart == '7') {
+                /**
+                 * 虚心
+                 */
+                return <circle fill={'none'} strokeWidth={w} r={gap + w / 2} cx={point.x} cy={point.y}></circle>
+            }
+        }
+        function renderLineEnd() {
+
+        }
         return <div className="sy-block-line" style={this.block.visibleStyle}>
             <svg viewBox={`${re.x} ${re.y} ${re.width} ${re.height}`} style={{
                 width: re.width,
@@ -239,7 +290,8 @@ export class LineView extends BlockView<Line>{
                 transform: `translate(${re.x}px,${re.y}px)`
             }}>
                 <path className="visible" d={d}></path>
-                <path d={d} stroke="transparent" strokeWidth={strokeWidth}></path>
+                {renderLineStart()}
+                <path className="transparent" d={d} stroke="transparent" strokeWidth={strokeWidth}></path>
             </svg>
         </div>
     }

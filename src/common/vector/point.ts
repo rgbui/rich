@@ -1,5 +1,7 @@
+
 import React from "react";
 import { PopoverPosition } from "../../../extensions/popover/position";
+import { Matrix } from "../matrix";
 
 export class Point {
     x: number;
@@ -119,6 +121,14 @@ export class Point {
             this.y / 2 + point.y / 2
         );
     }
+
+    rotate(angle: number, center: Point) {
+        var matrix = new Matrix();
+        matrix.rotate(angle, center);
+        var c= matrix.transform(this);
+        return new Point(c.x,c.y);
+    }
+
 }
 export enum PointArrow {
     top = 'top',
