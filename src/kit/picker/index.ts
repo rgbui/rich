@@ -42,6 +42,7 @@ export class BlockPicker {
     }
     onCancel() {
         this.visible = false;
+        this.blocks=[];
         if (this.view)
             this.view.forceUpdate();
     }

@@ -38,7 +38,7 @@ export class Page$Operator {
             at,
             preBlockId: block.prev ? block.prev.id : undefined,
             data: await block.get()
-        },block);
+        }, block);
         this.addBlockUpdate(parent);
         return block;
     }
@@ -69,6 +69,13 @@ export class Page$Operator {
     }
     async onBatchDelete(this: Page, blocks: Block[]) {
         await this.onAction(ActionDirective.onBatchDeleteBlocks, async () => {
+            if (this.kit.picker.blocks.some(s => blocks.some(c => c == s))) {
+                this.kit.picker.blocks.removeAll(s => blocks.includes(s));
+                if (this.kit.picker.blocks.length == 0) {
+                    this.kit.picker.onCancel();
+                }
+                else this.kit.picker.onRePicker();
+            }
             await blocks.eachAsync(async bl => {
                 await bl.delete()
             });
@@ -262,7 +269,6 @@ export class Page$Operator {
                 });
             })
         }
-
     }
     async onPasteCreateBlocks(this: Page, blocks: any[]) {
         if (blocks.length == 0) return;
