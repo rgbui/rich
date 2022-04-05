@@ -22,15 +22,15 @@ var colors: ColorType[] = [
     { color: 'rgb(101,44,179)' },
     { color: 'rgb(255,249,177)' }
 ]
-export function BackgroundColor(props: { tool: BoardEditTool, value: string, change?(value: string): void }) {
-
+export function BackgroundColor(props: { tool: BoardEditTool, noTransparent?: boolean, value: string, change?(value: string): void }) {
+    var cs = props.noTransparent ? colors.filter(g => g.color != 'transparent') : colors;
     return <div className="shy-board-edit-background-color" >
         <div className="shy-board-edit-background-color-current" onMouseDown={e => props.tool.showDrop('fill')}>
             {props.value == 'transparent' && <TransparentSvg></TransparentSvg>}
             {props.value != 'transparent' && <a style={{ backgroundColor: props.value || '#000' }}></a>}
         </div>
         {props.tool.isShowDrop('fill') && <div className="shy-board-edit-background-color-drops">
-            {colors.map(c => {
+            {cs.map(c => {
                 if (c.color == 'transparent') return <a
                     className={'transparent ' + (c.color == props.value ? "selected" : "")}
                     onMouseDown={e => props.change(c.color)} key={c.color}

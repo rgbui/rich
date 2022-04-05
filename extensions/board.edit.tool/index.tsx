@@ -164,6 +164,11 @@ export class BoardEditTool extends EventsComponent {
                     <BackgroundColor tool={this} value={getValue('backgroundColor')} change={e => { this.onChange('backgroundColor', e) }}></BackgroundColor>
                 </div>
             </Tip>}
+            {is('backgroundNoTransparentColor') && <Tip overlay={'背景'}>
+                <div className={'shy-board-edit-tool-item'}>
+                    <BackgroundColor noTransparent tool={this} value={getValue('backgroundNoTransparentColor')} change={e => { this.onChange('backgroundNoTransparentColor', e) }}></BackgroundColor>
+                </div>
+            </Tip>}
             {is('stroke') && <Tip overlay={'边框'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <ShapeStroke
