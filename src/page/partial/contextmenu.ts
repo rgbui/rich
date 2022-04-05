@@ -19,7 +19,7 @@ export class PageContextmenu {
         items.push({ name: 'add-favourite', text: '星标' });
         items.push({ name: 'copy-link', text: '复制链接' })
         items.push({ type: MenuItemTypeValue.divide });
-        items.push({ name: 'show-all', text: '显示所有' });
+        items.push({ name: 'show-all', text: '显示所有内容' });
         items.push({ name: 'show-grid', text: '显示网格' })
         return items;
     }

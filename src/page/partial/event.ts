@@ -66,20 +66,15 @@ export class PageEvent {
                 if (this.lastTriggerTime && (Date.now() - this.lastTriggerTime < 60)) return;
                 this.lastTriggerTime = Date.now();
                 var ma = this.matrix.clone();
-                // var current = this.scale * 100;
                 var ro = this.globalMatrix.inverseTransform(new Point(event.pageX, event.pageY));
                 if (event.deltaY > 0) {
                     //缩小
-                    // var s = (current - 2);
-                    // s = s / current;
                     ma.scale(0.8, 0.8, ro);
                     if (ma.getScaling().x * 100 < 1) return;
                     this.onSetMatrix(ma);
                 }
                 else {
                     //放大
-                    // var s = (current + 2);
-                    // s = s / current;
                     ma.scale(1.2, 1.2, ro);
                     if (ma.getScaling().x * 100 > 300) return;
                     this.onSetMatrix(ma);
