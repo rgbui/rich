@@ -60,9 +60,8 @@ export class Line extends Block {
     @prop()
     points: PortLocation[] = [];
     cacPointSegment(pl: PortLocation, options?: { isOnlyPointSegment?: boolean }) {
-        var feelDistance = 40;
-        var s = this.globalWindowMatrix.getScaling().x;
-        var dis = feelDistance / s;
+        var feelDistance = 80;
+        var dis = this.realPx(feelDistance);
         var seg: Segment;
         if (pl == this.from || pl == this.to) {
             if (pl.blockId) {
@@ -82,7 +81,7 @@ export class Line extends Block {
                                 handleOut = point.move(dis, 0);
                             }
                             else if ([PointArrow.bottom, PointArrow.center].every(s => pi.arrows.includes(s))) {
-                                handleOut = point.move(dis, 0);
+                                handleOut = point.move(0, dis);
                             }
                             else if ([PointArrow.middle, PointArrow.left].every(s => pi.arrows.includes(s))) {
                                 handleOut = point.move(0 - dis, 0);
@@ -241,7 +240,7 @@ export class LineView extends BlockView<Line>{
                 return <path fill={color} stroke={'none'} d={`M${o(point.move(w, 0).rotate(30, point))}L${o(point)}L${o(point.move(w, 0).rotate(-30, point))}L${o(point.move(w * 0.6, 0))}z`}></path>
             }
             else if (self.block.lineStart == '1') {
-                return <path fill={'none'} strokeWidth={w} d={`M${o(point.move(w*4, 0).rotate(30, point))}L${o(point)}L${o(point.move(w*4, 0).rotate(-30, point))}`}></path>
+                return <path fill={'none'} strokeWidth={w} d={`M${o(point.move(w * 4, 0).rotate(30, point))}L${o(point)}L${o(point.move(w * 4, 0).rotate(-30, point))}`}></path>
             }
             if (self.block.lineStart == '2') {
                 /**
