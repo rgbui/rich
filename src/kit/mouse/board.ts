@@ -3,6 +3,7 @@ import { Kit } from "..";
 import { Pen } from "../../../blocks/board/pen";
 import { forceCloseBoardEditTool, useBoardEditTool } from "../../../extensions/board.edit.tool";
 import { getBoardTool } from "../../../extensions/board.tool";
+
 import { util } from "../../../util/util";
 import { Block } from "../../block";
 import { BlockUrlConstant } from "../../block/constant";
@@ -27,7 +28,6 @@ export async function useBoardTool(kit: Kit) {
             kit.picker.onRePicker();
         } else break;
     }
-
 }
 export function SelectorBoardBlock(kit: Kit, block: Block | undefined, event: MouseEvent) {
     var isBoardSelector = false;
@@ -139,10 +139,6 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
         var gm = fra.globalWindowMatrix;
         var re = gm.inverseTransform(Point.from(event));
         var url = toolBoard.currentSelector.url;
-        // var cursorEl = fra.url == BlockUrlConstant.Frame ? fra.el : kit.page.root;
-        // if (url == BlockUrlConstant.TextSpan) {
-        //     cursorEl.style.cursor = `-webkit-image-set(url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAsCAYAAABVLInsAAAAAXNSR0IArs4c6QAAAMhJREFUSA3tVsENwyAMxBULZI7OlG+zQkboCu03M3UORqB3KK4sS7VoH5EigYQw4MP28fBJrfWaUpoxJ8yeUeC0CYB3GL0gfbhkBYnITU+jFYGexFwip+jueCBrJEvTnvsnO63Zn+8OhalumAT3jvYdGS+/gFgVhQgPte0Kv8XujydnRLT8O3uQ4wix20GOZcPZgxxHiN0Ociwbzs7oFV0awPSU1nTI6i/CgXGpF2aKh9adtB/yJhrwpwZIJ/rHrxogqhN3/2uANx+qOgPN1ThFAAAAAElFTkSuQmCC") 2x) 4 11, auto`;
-        // }
         if (url == '/note' || url == '/flow/mind' || url == BlockUrlConstant.TextSpan || url == BlockUrlConstant.Frame) {
             await fra.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
                 var data = toolBoard.currentSelector.data || {};
@@ -152,8 +148,6 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
                 var newBlock = await kit.page.createBlock(toolBoard.currentSelector.url, data, fra);
                 toolBoard.clearSelector();
                 newBlock.mounted(() => {
-                    //cursorEl.style.cursor = 'auto';
-                    // this.mousedown(newBlock, event);
                 })
             });
         }
@@ -184,7 +178,7 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
                         if (isMounted) newBlock.forceUpdate();
                     }
                 },
-                moveEnd(ev, isMove, data) {
+                async moveEnd(ev, isMove, data) {
                     if (newBlock) {
                         if (kit.boardLine.over) {
                             (newBlock as any).to = {

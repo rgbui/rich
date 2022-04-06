@@ -3,10 +3,12 @@ import React from "react";
 import { Kit } from "..";
 import { Line, PortLocation } from "../../../blocks/board/line/line";
 import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
+import { useShapeSelector } from "../../../extensions/shapes/box";
+
 import { util } from "../../../util/util";
 import { Block } from "../../block";
 import { BlockRenderRange } from "../../block/enum";
-import { BoardBlockSelector } from "../../block/partial/board";
+import { BoardBlockSelector, BoardPointType } from "../../block/partial/board";
 import { MouseDragger } from "../../common/dragger";
 import { Matrix } from "../../common/matrix";
 import { Point, PointArrow } from "../../common/vector/point";
@@ -42,7 +44,7 @@ export class BlockPicker {
     }
     onCancel() {
         this.visible = false;
-        this.blocks=[];
+        this.blocks = [];
         if (this.view)
             this.view.forceUpdate();
     }
@@ -102,52 +104,81 @@ export class BlockPicker {
         var gm = fra.globalWindowMatrix;
         var re = gm.inverseTransform(Point.from(event));
         var self = this;
-        async function createConnectLine() {
-            await fra.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
-                var data = { url: '/line' } as Record<string, any>;
-                data.from = { x: arrows[1], y: arrows[0], blockId: block.id };
-                data.to = { x: re.x, y: re.y };
-                newBlock = await self.kit.page.createBlock(data.url, data, fra);
-                block.conectLine(newBlock);
-                newBlock.mounted(() => {
-                    isMounted = true;
+        fra.onAction(ActionDirective.onBoardToolCreateBlock, () => {
+            return new Promise((resolve: () => void, reject) => {
+                async function createConnectLine() {
+                    var data = { url: '/line' } as Record<string, any>;
+                    data.from = { x: arrows[1], y: arrows[0], blockId: block.id };
+                    data.to = { x: re.x, y: re.y };
+                    newBlock = await self.kit.page.createBlock(data.url, data, fra);
+                    block.conectLine(newBlock);
+                    newBlock.mounted(() => {
+                        isMounted = true;
+                    });
+                    self.kit.boardLine.onStartConnectOther();
+                    if (newBlock) self.kit.boardLine.line = newBlock;
+                    newBlock.parent.forceUpdate();
+                }
+                MouseDragger({
+                    event,
+                    moveStart() {
+                        forceCloseBoardEditTool()
+                        createConnectLine();
+                    },
+                    move(ev, data) {
+                        if (newBlock) {
+                            var tr = gm.inverseTransform(Point.from(ev));
+                            (newBlock as any).to = { x: tr.x, y: tr.y };
+                            if (isMounted) newBlock.forceUpdate();
+                        }
+                    },
+                    async moveEnd(ev, isMove, data) {
+                        if (newBlock) {
+                            if (self.kit.boardLine.over) {
+                                await newBlock.updateProps({
+                                    to: {
+                                        blockId: self.kit.boardLine.over.block.id,
+                                        x: self.kit.boardLine.over.selector.arrows[1],
+                                        y: self.kit.boardLine.over.selector.arrows[0]
+                                    }
+                                });
+                                self.kit.boardLine.over.block.conectLine(newBlock);
+                            }
+                            else {
+                                var s = await useShapeSelector({ roundPoint: Point.from(ev) });
+                                if (s) {
+                                    var da: Record<string, any> = { svg: s.svg };
+                                    var ma = new Matrix();
+                                    re = gm.inverseTransform(Point.from(ev));
+                                    ma.translate(re.x, re.y);
+                                    da.matrix = ma.getValues();
+                                    var shapeBlock = await fra.page.createBlock('/shape', da, fra);
+                                    var pickers = shapeBlock.getBlockBoardSelector([BoardPointType.pathConnectPort]);
+                                    await newBlock.updateProps({
+                                        to: {
+                                            blockId: shapeBlock.id,
+                                            x: pickers[0].arrows[1],
+                                            y: pickers[0].arrows[0]
+                                        }
+                                    });
+                                    shapeBlock.conectLine(newBlock);
+                                }
+                                else {
+                                    var tr = gm.inverseTransform(Point.from(ev));
+                                    await newBlock.updateProps({
+                                        to: { x: tr.x, y: tr.y }
+                                    });
+                                }
+                            }
+                            if (isMounted) newBlock.forceUpdate();
+                        }
+                        self.kit.boardLine.onEndConnectOther();
+                        resolve();
+                    }
                 });
-                self.kit.boardLine.onStartConnectOther();
-                if (newBlock) self.kit.boardLine.line = newBlock;
-            });
-        }
-        MouseDragger({
-            event,
-            moveStart() {
-                forceCloseBoardEditTool()
-                createConnectLine();
-            },
-            move(ev, data) {
-                if (newBlock) {
-                    var tr = gm.inverseTransform(Point.from(ev));
-                    (newBlock as any).to = { x: tr.x, y: tr.y };
-                    if (isMounted) newBlock.forceUpdate();
-                }
-            },
-            moveEnd(ev, isMove, data) {
-                if (newBlock) {
-                    if (self.kit.boardLine.over) {
-                        (newBlock as any).to = {
-                            blockId: self.kit.boardLine.over.block.id,
-                            x: self.kit.boardLine.over.selector.arrows[1],
-                            y: self.kit.boardLine.over.selector.arrows[0]
-                        };
-                        self.kit.boardLine.over.block.conectLine(newBlock);
-                    }
-                    else {
-                        var tr = gm.inverseTransform(Point.from(ev));
-                        (newBlock as any).to = { x: tr.x, y: tr.y };
-                    }
-                    if (isMounted) newBlock.forceUpdate();
-                }
-                self.kit.boardLine.onEndConnectOther()
-            }
-        });
+            })
+
+        })
     }
     async onSplitLinePort(block: Line, selector: BoardBlockSelector, event: React.MouseEvent) {
         event.stopPropagation();
