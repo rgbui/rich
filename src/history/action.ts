@@ -50,7 +50,7 @@ export class UserAction {
         });
         return syncBlocks;
     }
-    get():Partial<UserAction> {
+    get(): Partial<UserAction> {
         return {
             id: this.id,
             userid: this.userid,
@@ -60,5 +60,8 @@ export class UserAction {
             directive: this.directive,
             operators: this.operators.map(op => { return op.get() }) as any
         }
+    }
+    get isEmpty() {
+        return this.operators.length > 0 ? false : true
     }
 }

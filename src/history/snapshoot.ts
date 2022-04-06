@@ -60,13 +60,15 @@ export class HistorySnapshoot extends Events {
         this.action.operators.push(up);
     }
     store() {
-        this.action.endDate = Date.now();
-        this.emit('history', this.action);
-        if (this.historyRecord) {
-            if (!(this.action.directive == ActionDirective.onRedo || this.action.directive == ActionDirective.onUndo))
-                this.historyRecord.push(this.action);
-        };
-        console.log(this.action.toString());
+        if (!this.action.isEmpty) {
+            this.action.endDate = Date.now();
+            this.emit('history', this.action);
+            if (this.historyRecord) {
+                if (!(this.action.directive == ActionDirective.onRedo || this.action.directive == ActionDirective.onUndo))
+                    this.historyRecord.push(this.action);
+            };
+            console.log(this.action.toString());
+        }
         delete this.action;
     }
     private disabledSync: boolean = false;
