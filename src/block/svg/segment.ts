@@ -40,23 +40,23 @@ export class Segment {
     }
     static getSegmentsPathString(segs: Segment[], closeType?: 1 | 2) {
         var ds = [];
-        var o = (p) => `${p.x} ${p.y}`;
+        var o = (p: Point) => p ? `${p.x.toFixed(3)} ${p.y.toFixed(3)}` : '';
         var vs = segs;
         var pg = (current: Segment, next: Segment) => {
-            if (current.handleOut && next.handleIn) {
-                return (`C${o(current.handleOut)},${o(next.handleIn)},${o(next.point)}`);
+            if (current?.handleOut && next?.handleIn) {
+                return (`C${o(current?.handleOut)},${o(next?.handleIn)},${o(next?.point)}`);
             }
-            else if (current.handleOut && !next.handleIn) {
-                return (`Q${o(current.handleOut)},${o(next.point)}`);
+            else if (current?.handleOut && next&&!next.handleIn) {
+                return (`Q${o(current?.handleOut)},${o(next?.point)}`);
             }
-            else if (!current.handleOut && next.handleIn) {
-                return (`Q${o(next.handleIn)},${o(next.point)}`);
+            else if (!current.handleOut && next?.handleIn) {
+                return (`Q${o(next?.handleIn)},${o(next?.point)}`);
             }
             else if (!current.handleOut && !next.handleIn) {
-                return (`L${o(next.point)}`);
+                return (`L${o(next?.point)}`);
             }
         }
-        for (let i = 0; i < segs.length-1; i++) {
+        for (let i = 0; i < segs.length - 1; i++) {
             var handleIn = vs[i];
             var handleOut = vs[i + 1];
             if (i == 0) {
@@ -72,8 +72,9 @@ export class Segment {
         return ds.join("");
     }
     static getSegmentsBound(segs: Segment[]) {
-        var ps = segs.map(se => {
-            return [se.point,...(se.handleIn?[se.handleIn]:[]),...(se.handleOut?[se.handleOut]:[])]
+        var ps = segs.toArray(se => {
+            if (se)
+                return [se.point, ...(se.handleIn ? [se.handleIn] : []), ...(se.handleOut ? [se.handleOut] : [])]
         }).flat();
         return new Polygon(...ps).bound;
     }
