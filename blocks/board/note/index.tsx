@@ -31,9 +31,8 @@ export class Note extends Block {
         if (types.some(s => s == BoardPointType.pathConnectPort)) {
             var gm = this.globalWindowMatrix;
             var { width, height } = this.fixedSize;
-            var d = (width / 48) * 4;
             var rect = new Rect(0, 0, width, height);
-            rect = rect.extend(0 - d);
+            rect = rect.extend(0 - 4);
             pickers.removeAll(x => x.type == BoardPointType.pathConnectPort);
             pickers.push(...rect.centerPoints.map((pr, i) => {
                 var arrows: PointArrow[] = [];
