@@ -24,34 +24,41 @@ export class Line extends Block {
         BoardPointType.resizePort,
         BoardPointType.connectPort
     ]) {
-        var gm = this.globalWindowMatrix;
+
         var pickers: BoardBlockSelector[] = [];
-        var segs = this.segments;
-        segs.each((seg, i) => {
-            pickers.push({
-                type: BoardPointType.lineMovePort,
-                arrows: [PointArrow.point],
-                point: gm.transform(seg.point),
-                data: { at: i }
+        try {
+            var gm = this.globalWindowMatrix;
+            var segs = this.segments;
+            segs.each((seg, i) => {
+                pickers.push({
+                    type: BoardPointType.lineMovePort,
+                    arrows: [PointArrow.point],
+                    point: gm.transform(seg.point),
+                    data: { at: i }
+                });
             });
-        });
-        for (var i = 0; i < segs.length - 1; i++) {
-            var current = segs[i];
-            var next = segs[i + 1];
-            pickers.push({
-                type: BoardPointType.lineSplitPort,
-                arrows: [PointArrow.point],
-                point: gm.transform(CurveUtil.cacCurvePoint(
-                    {
-                        start: current.point,
-                        end: next.point,
-                        control1: current.handleOut,
-                        control2: next.handleIn
-                    }, .5)),
-                data: { at: i }
-            });
+            for (var i = 0; i < segs.length - 1; i++) {
+                var current = segs[i];
+                var next = segs[i + 1];
+                pickers.push({
+                    type: BoardPointType.lineSplitPort,
+                    arrows: [PointArrow.point],
+                    point: gm.transform(CurveUtil.cacCurvePoint(
+                        {
+                            start: current.point,
+                            end: next.point,
+                            control1: current.handleOut,
+                            control2: next.handleIn
+                        }, .5)),
+                    data: { at: i }
+                });
+            }
+            return pickers;
         }
-        return pickers;
+        catch (ex) {
+            console.error(ex);
+            return []
+        }
     }
     @prop()
     from: PortLocation = { x: 0, y: 0 };
@@ -60,91 +67,98 @@ export class Line extends Block {
     @prop()
     points: PortLocation[] = [];
     cacPointSegment(pl: PortLocation, options?: { isOnlyPointSegment?: boolean }) {
-        var feelDistance = 80;
-        var dis = this.realPx(feelDistance);
-        var seg: Segment;
-        if (pl == this.from || pl == this.to) {
-            if (pl.blockId) {
-                var block = this.page.find(g => g.id == pl.blockId);
-                if (block) {
-                    var pickers = block.getBlockBoardSelector([BoardPointType.pathConnectPort]);
-                    var ps = typeof pl.x == 'string' && typeof pl.y == 'string' ? pickers.findAll(x => x.type == BoardPointType.pathConnectPort) : pickers.findAll(x => x.type == BoardPointType.path);
-                    if (typeof pl.x == 'string' && typeof pl.y == 'string') {
-                        var pi = ps.find(g => g.arrows.every(s => [pl.x, pl.y].includes(s)));
-                        if (pi) {
-                            var point = this.globalWindowMatrix.inverseTransform(pi.point);
-                            var handleOut: Point;
-                            if ([PointArrow.top, PointArrow.center].every(s => pi.arrows.includes(s))) {
-                                handleOut = point.move(0, 0 - dis);
+        try {
+            var feelDistance = 80;
+            var dis = this.realPx(feelDistance);
+            var seg: Segment;
+            if (pl == this.from || pl == this.to) {
+                if (pl.blockId) {
+                    var block = this.page.find(g => g.id == pl.blockId);
+                    if (block) {
+                        var pickers = block.getBlockBoardSelector([BoardPointType.pathConnectPort]);
+                        var ps = typeof pl.x == 'string' && typeof pl.y == 'string' ? pickers.findAll(x => x.type == BoardPointType.pathConnectPort) : pickers.findAll(x => x.type == BoardPointType.path);
+                        if (typeof pl.x == 'string' && typeof pl.y == 'string') {
+                            var pi = ps.find(g => g.arrows.every(s => [pl.x, pl.y].includes(s)));
+                            if (pi) {
+                                var point = this.globalWindowMatrix.inverseTransform(pi.point);
+                                var handleOut: Point;
+                                if ([PointArrow.top, PointArrow.center].every(s => pi.arrows.includes(s))) {
+                                    handleOut = point.move(0, 0 - dis);
+                                }
+                                else if ([PointArrow.middle, PointArrow.right].every(s => pi.arrows.includes(s))) {
+                                    handleOut = point.move(dis, 0);
+                                }
+                                else if ([PointArrow.bottom, PointArrow.center].every(s => pi.arrows.includes(s))) {
+                                    handleOut = point.move(0, dis);
+                                }
+                                else if ([PointArrow.middle, PointArrow.left].every(s => pi.arrows.includes(s))) {
+                                    handleOut = point.move(0 - dis, 0);
+                                }
+                                var isFrom = pl == this.from;
+                                seg = Segment.create(new Point(point), !isFrom ? handleOut : undefined, isFrom ? handleOut : undefined)
                             }
-                            else if ([PointArrow.middle, PointArrow.right].every(s => pi.arrows.includes(s))) {
-                                handleOut = point.move(dis, 0);
-                            }
-                            else if ([PointArrow.bottom, PointArrow.center].every(s => pi.arrows.includes(s))) {
-                                handleOut = point.move(0, dis);
-                            }
-                            else if ([PointArrow.middle, PointArrow.left].every(s => pi.arrows.includes(s))) {
-                                handleOut = point.move(0 - dis, 0);
-                            }
-                            var isFrom = pl == this.from;
-                            seg = Segment.create(new Point(point), !isFrom ? handleOut : undefined, isFrom ? handleOut : undefined)
                         }
                     }
                 }
+                else seg = Segment.create(new Point(pl.x as number, pl.y as number))
             }
-            else seg = Segment.create(new Point(pl.x as number, pl.y as number))
-        }
-        else if (this.points.includes(pl)) {
-            var at = this.points.findIndex(g => g === pl);
-            var current = new Point(pl.x as number, pl.y as number);
-            if (options?.isOnlyPointSegment) {
-                seg = Segment.create(
-                    current,
-                    undefined,
-                    undefined
-                )
-            }
-            else {
-                if (at == 0) {
-                    var pre = this.cacPointSegment(this.from, { isOnlyPointSegment: true });
-                    var next = this.cacPointSegment(this.points.length - 1 == at ? this.to : this.points[at + 1], { isOnlyPointSegment: true });
-                    var ce = pre.point.center(next.point);
-                    var r = current.diff(ce);
+            else if (this.points.includes(pl)) {
+                var at = this.points.findIndex(g => g === pl);
+                var current = new Point(pl.x as number, pl.y as number);
+                if (options?.isOnlyPointSegment) {
                     seg = Segment.create(
                         current,
-                        pre.point.center(ce).move(r[0], r[1]),
-                        next.point.center(ce).move(r[0], r[1]),
-                    )
-                }
-                else if (at == this.points.length - 1) {
-                    var pre = this.cacPointSegment(this.points[at - 1], { isOnlyPointSegment: true });
-                    var next = this.cacPointSegment(this.to, { isOnlyPointSegment: true });
-                    var ce = pre.point.center(next.point);
-                    var r = current.diff(ce);
-                    seg = Segment.create(
-                        current,
-                        pre.point.center(ce).move(r[0], r[1]),
-                        next.point.center(ce).move(r[0], r[1]),
+                        undefined,
+                        undefined
                     )
                 }
                 else {
-                    var pre = this.cacPointSegment(this.points[at - 1], { isOnlyPointSegment: true });
-                    var next = this.cacPointSegment(this.points[at + 1], { isOnlyPointSegment: true });
-                    var ce = pre.point.center(next.point);
-                    var r = current.diff(ce);
-                    seg = Segment.create(
-                        current,
-                        pre.point.center(ce).move(r[0], r[1]),
-                        next.point.center(ce).move(r[0], r[1]),
-                    )
+                    if (at == 0) {
+                        var pre = this.cacPointSegment(this.from, { isOnlyPointSegment: true });
+                        var next = this.cacPointSegment(this.points.length - 1 == at ? this.to : this.points[at + 1], { isOnlyPointSegment: true });
+                        var ce = pre.point.center(next.point);
+                        var r = current.diff(ce);
+                        seg = Segment.create(
+                            current,
+                            pre.point.center(ce).move(r[0], r[1]),
+                            next.point.center(ce).move(r[0], r[1]),
+                        )
+                    }
+                    else if (at == this.points.length - 1) {
+                        var pre = this.cacPointSegment(this.points[at - 1], { isOnlyPointSegment: true });
+                        var next = this.cacPointSegment(this.to, { isOnlyPointSegment: true });
+                        var ce = pre.point.center(next.point);
+                        var r = current.diff(ce);
+                        seg = Segment.create(
+                            current,
+                            pre.point.center(ce).move(r[0], r[1]),
+                            next.point.center(ce).move(r[0], r[1]),
+                        )
+                    }
+                    else {
+                        var pre = this.cacPointSegment(this.points[at - 1], { isOnlyPointSegment: true });
+                        var next = this.cacPointSegment(this.points[at + 1], { isOnlyPointSegment: true });
+                        var ce = pre.point.center(next.point);
+                        var r = current.diff(ce);
+                        seg = Segment.create(
+                            current,
+                            pre.point.center(ce).move(r[0], r[1]),
+                            next.point.center(ce).move(r[0], r[1]),
+                        )
+                    }
                 }
             }
+            if (this.lineType == 'straight') {
+                delete seg.handleIn;
+                delete seg.handleOut;
+            }
+            return seg;
         }
-        if (this.lineType == 'straight') {
-            delete seg.handleIn;
-            delete seg.handleOut;
+        catch (ex) {
+            console.error(ex);
+            return undefined;
         }
-        return seg;
+
     }
     get segments() {
         return [
@@ -224,6 +238,7 @@ export class Line extends Block {
 @view('/line')
 export class LineView extends BlockView<Line>{
     render(): ReactNode {
+        // return <div style={{ width: 200, height: 200, background: '#000' }}></div>
         var w = this.block.pattern.getSvgStyle()?.strokeWidth || 1;
         var segs = this.block.segments
         var rect = Segment.getSegmentsBound(segs);
@@ -235,7 +250,9 @@ export class LineView extends BlockView<Line>{
         var color = this.block.pattern.getSvgStyle()?.stroke || '#000';
         var gap = w;
         function renderLineStart() {
-            var point = segs[0].point;
+            if (segs.length == 0) return <></>;
+            var point = segs[0]?.point;
+            if (!point) return <></>
             if (self.block.lineStart == '0') {
                 return <path fill={color} stroke={'none'} d={`M${o(point.move(w, 0).rotate(30, point))}L${o(point)}L${o(point.move(w, 0).rotate(-30, point))}L${o(point.move(w * 0.6, 0))}z`}></path>
             }
@@ -283,7 +300,7 @@ export class LineView extends BlockView<Line>{
 
         }
         return <div className="sy-block-line" style={this.block.visibleStyle}>
-            <svg viewBox={`${re.x} ${re.y} ${re.width} ${re.height}`} style={{
+            {/* <svg viewBox={`${re.x} ${re.y} ${re.width} ${re.height}`} style={{
                 width: re.width,
                 height: re.height,
                 transform: `translate(${re.x}px,${re.y}px)`
@@ -291,7 +308,7 @@ export class LineView extends BlockView<Line>{
                 <path className="visible" d={d}></path>
                 {renderLineStart()}
                 <path className="transparent" d={d} stroke="transparent" strokeWidth={strokeWidth}></path>
-            </svg>
+            </svg> */}
         </div>
     }
 }
