@@ -1,5 +1,7 @@
 import React, { ReactNode } from "react";
+import { ShapesList } from "../../../extensions/shapes/shapes";
 import { Block } from "../../../src/block";
+import { BlockRenderRange } from "../../../src/block/enum";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { ShySvg } from "../../../src/block/svg";
 import { BlockView } from "../../../src/block/view";
@@ -12,15 +14,16 @@ export class Shape extends Block {
     fixedWidth: number = 200;
     @prop()
     fixedHeight: number = 200;
-    async getBoardEditCommand(this: Block): Promise<{ name: string; value?: any; }[]> {
+    async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
         var cs: { name: string; value?: any; }[] = [];
         cs.push({ name: 'stroke', value: this.pattern.getSvgStyle()?.stroke || '#000' });
-        cs.push({ name: 'strokeOpacity', value: this.pattern.getSvgStyle()?.strokeOpacity });
+        cs.push({ name: 'strokeOpacity', value: this.pattern.getSvgStyle()?.strokeOpacity || 1 });
         cs.push({ name: 'strokeWidth', value: this.pattern.getSvgStyle()?.strokeWidth || 1 });
         cs.push({ name: 'strokeDasharray', value: this.pattern.getSvgStyle()?.strokeDasharray || 'none' })
 
         cs.push({ name: 'fillColor', value: this.pattern.getSvgStyle()?.fill || '#000' });
-        cs.push({ name: 'fillOpacity', value: this.pattern.getSvgStyle()?.fillOpacity });
+        cs.push({ name: 'fillOpacity', value: this.pattern.getSvgStyle()?.fillOpacity || 1 });
+        cs.push({ name: 'turnShapes', value: this.svgName });
         return cs;
     }
     get fixedSize(): { width: number; height: number; } {
@@ -32,9 +35,17 @@ export class Shape extends Block {
     async setBoardEditCommand(this: Block, name: string, value: any): Promise<boolean | void> {
         if (['stroke', 'strokeDasharray', 'strokeOpacity', 'strokeWidth', 'fillColor', 'fillOpacity',].includes(name)) {
             var key = name;
-            console.log('ggg', key, value);
             if (name == 'fillColor') key = 'fill';
             this.pattern.setSvgStyle({ [key]: value })
+        }
+        else if (name == 'turnShapes') {
+            var r = ShapesList.find(g => g.name == value);
+            if (r) {
+                this.updateProps(
+                    { svg: new ShySvg(r.svg), svgName: value },
+                    BlockRenderRange.self
+                )
+            }
         }
     }
     init(this: Block): void {
@@ -69,6 +80,8 @@ export class Shape extends Block {
                 }]
             }]
         });
+    @prop()
+    svgName: string = '5';
 }
 @view('/shape')
 export class ShapeView extends BlockView<Shape>{
@@ -82,7 +95,7 @@ export class ShapeView extends BlockView<Shape>{
         style.width = this.block.fixedWidth || 200;
         style.height = this.block.fixedHeight || 200;
         return <div className="sy-block-shape" style={style}>
-            {sb.render({ marginLeft: 0 - w/2, marginTop: 0 - w/2, width: sb.viewBox.width, height: sb.viewBox.height })}
+            {sb.render({ marginLeft: 0 - w / 2, marginTop: 0 - w / 2, width: sb.viewBox.width, height: sb.viewBox.height })}
             <div className="sy-block-shape-content">
                 <TextSpanArea block={this.block}></TextSpanArea>
             </div>

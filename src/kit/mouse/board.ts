@@ -22,7 +22,11 @@ export async function useBoardTool(kit: Kit) {
         if (r) {
             await kit.page.onAction(ActionDirective.onBoardEditProp, async () => {
                 await kit.picker.blocks.eachAsync(async (block) => {
-                    await block.setBoardEditCommand(r.name, r.value);
+                    if (r.name)
+                        await block.setBoardEditCommand(r.name, r.value);
+                    else for (let n in r) {
+                        await block.setBoardEditCommand(n, r[n]);
+                    }
                 })
             });
             kit.picker.onRePicker();

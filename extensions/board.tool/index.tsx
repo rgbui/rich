@@ -77,7 +77,7 @@ class BoardTool extends EventsComponent {
                     var shapeSelector = await getShapeSelector();
                     shapeSelector.only('selector', async (data) => {
                         if (this.currentSelector && this.currentSelector.url == '/shape') {
-                            this.currentSelector.data = {svg: data.svg };
+                            this.currentSelector.data = { svg: data.svg, svgName: data.name };
                         }
                         shapeSelector.close();
                     });
