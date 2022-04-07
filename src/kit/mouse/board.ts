@@ -170,7 +170,6 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
                 data.from = { x: re.x, y: re.y };
                 data.to = util.clone(data.from);
                 newBlock = await kit.page.createBlock(toolBoard.currentSelector.url, data, fra);
-
                 newBlock.mounted(() => {
                     isMounted = true;
                 })
