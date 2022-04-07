@@ -27,7 +27,8 @@ export class BlockPicker {
     onPicker(blocks: Block[]) {
         this.blocks = blocks;
         this.visible = true;
-        this.view.forceUpdate();
+        if (this.view)
+            this.view.forceUpdate();
     }
     onRePicker() {
         this.blocks.forEach(bl => {
@@ -147,7 +148,7 @@ export class BlockPicker {
                             else {
                                 var s = await useShapeSelector({ roundPoint: Point.from(ev) });
                                 if (s) {
-                                    var da: Record<string, any> = { svg: s.svg };
+                                    var da: Record<string, any> = { svg: s.svg, svgName: s.name };
                                     var ma = new Matrix();
                                     re = gm.inverseTransform(Point.from(ev));
                                     ma.translate(re.x, re.y);

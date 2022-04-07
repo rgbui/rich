@@ -46,7 +46,7 @@ export class Segment {
             if (current?.handleOut && next?.handleIn) {
                 return (`C${o(current?.handleOut)},${o(next?.handleIn)},${o(next?.point)}`);
             }
-            else if (current?.handleOut && next&&!next.handleIn) {
+            else if (current?.handleOut && next && !next.handleIn) {
                 return (`Q${o(current?.handleOut)},${o(next?.point)}`);
             }
             else if (!current.handleOut && next?.handleIn) {
@@ -56,20 +56,26 @@ export class Segment {
                 return (`L${o(next?.point)}`);
             }
         }
-        for (let i = 0; i < segs.length - 1; i++) {
-            var handleIn = vs[i];
-            var handleOut = vs[i + 1];
-            if (i == 0) {
-                ds.push(`M${o(handleIn.point)}`);
-                ds.push(pg(handleIn, handleOut));
+        try {
+            for (let i = 0; i < segs.length - 1; i++) {
+                var handleIn = vs[i];
+                var handleOut = vs[i + 1];
+                if (i == 0) {
+                    ds.push(`M${o(handleIn.point)}`);
+                    ds.push(pg(handleIn, handleOut));
+                }
+                else ds.push(pg(handleIn, handleOut));
             }
-            else ds.push(pg(handleIn, handleOut));
+            if (closeType) {
+                if (closeType == 1) ds.push('z');
+                else if (closeType == 2) ds.push(pg(vs[vs.length - 1], vs[0]));
+            }
+            return ds.join("");
         }
-        if (closeType) {
-            if (closeType == 1) ds.push('z');
-            else if (closeType == 2) ds.push(pg(vs[vs.length - 1], vs[0]));
+        catch (ex) {
+            console.error(ex);
+            return '';
         }
-        return ds.join("");
     }
     static getSegmentsBound(segs: Segment[]) {
         var ps = segs.toArray(se => {

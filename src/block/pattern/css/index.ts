@@ -136,10 +136,10 @@ export class FillCss extends BlockCss {
 }
 export class BorderCss extends BlockCss {
     cssName = BlockCssName.border;
-    top: { width: number, color: string, style: "sold" | 'none' | 'dashed', abled: boolean };
-    left: { width: number, color: string, style: "sold" | 'none' | 'dashed', abled: boolean };
-    right: { width: number, color: string, style: "sold" | 'none' | 'dashed', abled: boolean };
-    bottom: { width: number, color: string, style: "sold" | 'none' | 'dashed', abled: boolean };
+    top: { width: number, color: string, style: "solid" | 'none' | 'dashed', abled: boolean };
+    left: { width: number, color: string, style: "solid" | 'none' | 'dashed', abled: boolean };
+    right: { width: number, color: string, style: "solid" | 'none' | 'dashed', abled: boolean };
+    bottom: { width: number, color: string, style: "solid" | 'none' | 'dashed', abled: boolean };
 }
 export class RadiusCss extends BlockCss {
     cssName = BlockCssName.radius;
@@ -191,13 +191,14 @@ export class SvgCss extends BlockCss {
     fill: string;
     fillOpacity: number;
     get style() {
-        return {
+        var st = {
             stroke: this.stroke,
             strokeDasharray: this.strokeDasharray == 'none' || typeof this.strokeDasharray == 'undefined' || this.strokeDasharray === null ? undefined : (this.strokeDasharray == 'dash' ? "10,10" : "2,2"),
             strokeWidth: this.strokeWidth,
-            strokeOpacity: typeof this.strokeOpacity != 'number' ? 1 : this.strokeOpacity,
+            strokeOpacity: typeof this.strokeOpacity == 'number' ? this.strokeOpacity : 1,
             fill: this.fill,
-            fillOpacity: typeof this.fillOpacity != 'number' ? 1 : this.fillOpacity
-        }
+            fillOpacity: typeof this.fillOpacity == 'number' ? this.fillOpacity : 1
+        };
+        return st;
     }
 }
