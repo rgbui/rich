@@ -64,9 +64,8 @@ export class Block$Board {
          * 这里基本没有skew，只有scale,rotate,translate
          * scale 水平和垂直相等
          */
-        var s = gm.getScaling().x;
-        var extendRect = rect.extend(20 / s);
-        var pathRects = RectUtility.getRectLineRects(rect, 1 / s);
+        var extendRect = rect.extend(this.realPx(20));
+        var pathRects = RectUtility.getRectLineRects(rect, this.realPx(1));
         if (types.includes(BoardPointType.path))
             pickers.push(...pathRects.map((pr, i) => {
                 var arrows: PointArrow[] = [];
@@ -250,7 +249,6 @@ export class Block$Board {
         else return false;
         return undefined;
     }
-
     /**
      * 重新渲染线条
      * @param this 

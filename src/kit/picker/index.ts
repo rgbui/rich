@@ -178,7 +178,6 @@ export class BlockPicker {
                     }
                 });
             })
-
         })
     }
     async onSplitLinePort(block: Line, selector: BoardBlockSelector, event: React.MouseEvent) {

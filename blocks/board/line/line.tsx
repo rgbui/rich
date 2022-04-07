@@ -300,7 +300,7 @@ export class LineView extends BlockView<Line>{
 
         }
         return <div className="sy-block-line" style={this.block.visibleStyle}>
-            {/* <svg viewBox={`${re.x} ${re.y} ${re.width} ${re.height}`} style={{
+            <svg viewBox={`${re.x} ${re.y} ${re.width} ${re.height}`} style={{
                 width: re.width,
                 height: re.height,
                 transform: `translate(${re.x}px,${re.y}px)`
@@ -308,7 +308,7 @@ export class LineView extends BlockView<Line>{
                 <path className="visible" d={d}></path>
                 {renderLineStart()}
                 <path className="transparent" d={d} stroke="transparent" strokeWidth={strokeWidth}></path>
-            </svg> */}
+            </svg>
         </div>
     }
 }

@@ -37,11 +37,11 @@ export abstract class BlockView<T extends Block> extends Component<{ block: T }>
         this.block.page.grid.remove(this.block);
     }
     willUnmount() {
-try{
-    this.block.onUnmount()
-} catch (ex) {
-    this.block.page.onError(ex);
-}
+        try {
+            this.block.onUnmount()
+        } catch (ex) {
+            this.block.page.onError(ex);
+        }
     }
     get block(): T {
         return this.props.block;

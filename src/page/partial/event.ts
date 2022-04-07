@@ -56,7 +56,6 @@ export class PageEvent {
             this.onBlur(event);
         }
     }
-
     private lastTriggerTime;
     onWheel(this: Page, event: React.WheelEvent) {
         if (this.readonly) return;
