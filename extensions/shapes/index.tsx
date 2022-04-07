@@ -3,8 +3,6 @@ import { ReactNode } from "react";
 import { EventsComponent } from "../../component/lib/events.component";
 import { Singleton } from "../../component/lib/Singleton";
 import { Point } from "../../src/common/vector/point";
-import { PopoverSingleton } from "../popover/popover";
-import { PopoverPosition } from "../popover/position";
 import { ShapesList, ShapeType } from "./shapes";
 import "./style.less";
 

@@ -4,6 +4,7 @@ import { EventsComponent } from "../../component/lib/events.component";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
 import { ShapesList, ShapeType } from "./shapes";
+
 class ShapeBox extends EventsComponent {
     render(): ReactNode {
         return <div className="shy-shapes-selector" style={{ position: 'relative' }}>
