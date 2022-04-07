@@ -118,6 +118,7 @@ class BoardTool extends EventsComponent {
     }
     async clearSelector() {
         delete this.currentSelector;
+        this.closeCursor();
         var noteSelector = await getNoteSelector();
         noteSelector.close();
     }
@@ -136,6 +137,16 @@ class BoardTool extends EventsComponent {
         this.visible = false;
         this.clearSelector();
         this.forceUpdate();
+    }
+    private cursorEl: HTMLElement;
+    openCursor(el: HTMLElement, cursor: string) {
+        this.cursorEl = el;
+        el.style.cursor = cursor;
+    }
+    closeCursor() {
+        if (this.cursorEl) {
+            this.cursorEl.style.cursor = 'default';
+        }
     }
 }
 interface BoardTool {
