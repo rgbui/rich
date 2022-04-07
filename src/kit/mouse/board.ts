@@ -152,6 +152,13 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
                 var newBlock = await kit.page.createBlock(toolBoard.currentSelector.url, data, fra);
                 toolBoard.clearSelector();
                 newBlock.mounted(() => {
+                    if (url == BlockUrlConstant.Frame) {
+                        kit.picker.onPicker([newBlock]);
+                    }
+                    else {
+                        kit.picker.onPicker([newBlock]);
+                        kit.explorer.onFocusBlockAtAnchor(newBlock);
+                    }
                 })
             });
         }
@@ -163,7 +170,7 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
                 data.from = { x: re.x, y: re.y };
                 data.to = util.clone(data.from);
                 newBlock = await kit.page.createBlock(toolBoard.currentSelector.url, data, fra);
-                toolBoard.clearSelector();
+
                 newBlock.mounted(() => {
                     isMounted = true;
                 })
@@ -197,8 +204,10 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
                             (newBlock as any).to = { x: tr.x, y: tr.y };
                         }
                         if (isMounted) newBlock.forceUpdate();
+                        kit.picker.onPicker([newBlock]);
                     }
-                    kit.boardLine.onEndConnectOther()
+                    kit.boardLine.onEndConnectOther();
+                    toolBoard.clearSelector();
                 }
             })
         }
@@ -240,7 +249,10 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
                         newBlock.fixedWidth = Math.abs(tr.x - re.x) || 200;
                         newBlock.fixedHeight = Math.abs(tr.y - re.y) || 200;
                         if (isMounted) newBlock.forceUpdate();
+                        kit.picker.onPicker([newBlock]);
+                        kit.explorer.onFocusBlockAtAnchor(newBlock);
                     }
+                    toolBoard.clearSelector();
                 }
             })
         }
@@ -256,7 +268,6 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
                 path = new paper.Path({ segments: [{ x: re.x, y: re.y }] });
                 newBlock.fixedWidth = 0;
                 newBlock.fixedHeight = 0;
-                toolBoard.clearSelector();
                 newBlock.mounted(() => {
                     isMounted = true;
                 })
@@ -293,7 +304,10 @@ export async function CreateBoardBlock(kit: Kit, block: Block | undefined, event
                         (newBlock as any).pathString = path.pathData;
                         path.remove();
                         if (isMounted) newBlock.forceUpdate();
+                        kit.picker.onPicker([newBlock]);
                     }
+                    toolBoard.clearSelector();
+
                 }
             })
         }
