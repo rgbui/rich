@@ -1,3 +1,4 @@
+import lodash from "lodash";
 import { Block } from "..";
 import { channel } from "../../../net/channel";
 import { util } from "../../../util/util";
@@ -92,6 +93,52 @@ export class Block$LifeCycle {
 
     }
     private propMetas: { key: string, meta: Function, isArray: boolean }[] = [];
+    cloneProp(prop: string, value?: any) {
+        if (!this.propMetas.some(s => s.key == prop)) {
+            return typeof value != 'undefined' ? lodash.cloneDeep(value) : lodash.cloneDeep(lodash.get(this, prop))
+        }
+        else {
+            var pm = this.propMetas.find(g => g.key == prop);
+            var value = typeof value != 'undefined' ? value : lodash.get(this, prop);
+            if (pm.isArray && Array.isArray(value)) {
+                value = value.map(v => v.get());
+            }
+            else if (value) {
+                value = value.get();
+            }
+            if (pm.isArray) {
+                if (Array.isArray(value)) return value.map(v => {
+                    return new (pm.meta as any)(v);
+                })
+                return []
+            }
+            else {
+                return new (pm.meta as any)(value);
+            }
+        }
+    }
+    clonePropData(prop: string, value?: any) {
+        if (!this.propMetas.some(s => s.key == prop)) {
+            return typeof value != 'undefined' ? lodash.cloneDeep(value) : lodash.cloneDeep(lodash.get(this, prop))
+        }
+        else {
+            var pm = this.propMetas.find(g => g.key == prop);
+            var value = typeof value != 'undefined' ? value : lodash.get(this, prop);
+            if (pm.isArray && Array.isArray(value)) {
+                value = value.map(v => v.get());
+            }
+            else if (value) {
+                value = value.get();
+            }
+            if (pm.isArray) {
+                if (Array.isArray(value)) return value;
+                return []
+            }
+            else {
+                return value;
+            }
+        }
+    }
     registerPropMeta(key: string, meta: Function, isArray: boolean = false) {
         this.propMetas.push({ key, meta, isArray });
     }

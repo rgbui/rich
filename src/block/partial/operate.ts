@@ -502,10 +502,10 @@ export class Block$Operator {
         var oldValue: Record<string, any> = {};
         var newValue: Record<string, any> = {};
         for (let prop in props) {
-            if (!lodash.isEqual(lodash.get(this, prop), props[prop])) {
-                oldValue[prop] = lodash.cloneDeep(lodash.get(this, prop));
-                newValue[prop] = lodash.cloneDeep(props[prop]);
-                lodash.set(this, prop, lodash.cloneDeep(props[prop]))
+            if (!lodash.isEqual(lodash.get(this, prop), lodash.get(props, prop))) {
+                oldValue[prop] = this.clonePropData(prop);
+                newValue[prop] = this.clonePropData(prop, lodash.get(props, prop));
+                lodash.set(this, prop, this.cloneProp(prop, lodash.get(props, prop)));
             }
         }
         if (Object.keys(oldValue).length > 0 || Object.keys(newValue).length > 0) {
@@ -543,16 +543,16 @@ export class Block$Operator {
         var newValue: Record<string, any> = {};
         if (isOnlyRecord == true) {
             for (let prop in newProps) {
-                oldValue[prop] = lodash.cloneDeep(lodash.get(oldProps, prop));
-                newValue[prop] = lodash.cloneDeep(newProps[prop]);
+                oldValue[prop] = this.clonePropData(prop, lodash.get(oldProps, prop));
+                newValue[prop] = this.clonePropData(prop, lodash.get(newProps, prop));
             }
         }
         else {
             for (let prop in newProps) {
                 if (!lodash.isEqual(lodash.get(oldProps, prop), newProps[prop])) {
-                    oldValue[prop] = lodash.cloneDeep(lodash.get(oldProps, prop));
-                    newValue[prop] = lodash.cloneDeep(newProps[prop]);
-                    lodash.set(this, prop, lodash.cloneDeep(newProps[prop]))
+                    oldValue[prop] = this.clonePropData(prop, lodash.get(oldProps, prop));
+                    newValue[prop] = this.clonePropData(prop, lodash.get(newProps, prop));
+                    lodash.set(this, prop, this.cloneProp(prop, lodash.get(newProps, prop)));
                 }
             }
         }
