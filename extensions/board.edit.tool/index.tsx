@@ -77,7 +77,12 @@ export class BoardEditTool extends EventsComponent {
                         change={(name, e) => this.onChange(name, e)}></LineArrow>
                 </div>
             </Tip>
-                <div className={'shy-board-edit-tool-icon'}> <Icon size={16} icon={BoardRefreshSvg}></Icon></div>
+                <div className={'shy-board-edit-tool-icon'} onMouseDown={e => {
+                    this.onChangeObject({
+                        lineStart: getValue('lineEnd'),
+                        lineEnd: getValue('lineStart')
+                    });
+                }}> <Icon size={16} icon={BoardRefreshSvg}></Icon></div>
                 <Tip overlay={'结束箭头'}>
                     <div className={'shy-board-edit-tool-item'}>
                         <LineArrow tool={this} lineEnd={getValue('lineEnd')}
@@ -93,9 +98,9 @@ export class BoardEditTool extends EventsComponent {
                         change={(name, e) => this.onChange(name, e)}></LineTypes>
                 </div>
             </Tip>}
-            {is('turnShapes') && <Tip overlay={'加粗'}>
+            {is('turnShapes') && <Tip overlay={'形状'}>
                 <div className={'shy-board-edit-tool-item'} >
-                    <TurnShapes></TurnShapes>
+                    <TurnShapes tool={this} change={(e) => this.onChange('turnShapes', e)} turnShapes={getValue('turnShapes')}></TurnShapes>
                 </div>
             </Tip>}
             {is('fontSize') && <><Tip overlay={'字体大小'}>
@@ -222,6 +227,9 @@ export class BoardEditTool extends EventsComponent {
     async onChange(name: string, value: any) {
         this.emit('save', { name, value });
     }
+    async onChangeObject(obj: Record<string, any>) {
+        this.emit('save', obj);
+    }
     close() {
         if (this.visible == true) {
             this.dropName = '';
@@ -242,17 +250,17 @@ export class BoardEditTool extends EventsComponent {
     }
 }
 export interface BoardEditTool {
-    emit(name: 'save', data: { name: string, value: any });
+    emit(name: 'save', data: { name: string, value: any } | Record<string, any>);
     emit(name: 'close');
-    only(name: 'save', fn: (data: { name: string, value: any }) => void);
+    only(name: 'save', fn: (data: { name: string, value: any } | Record<string, any>) => void);
     only(name: 'close', fn: () => void);
 }
 var editTool: BoardEditTool;
 export async function useBoardEditTool(blocks: Block[]) {
     editTool = await Singleton(BoardEditTool);
     editTool.open(blocks);
-    return new Promise((resolve: (result: { name: string, value: any }) => void, reject) => {
-        editTool.only('save', (data: { name: string, value: any }) => {
+    return new Promise((resolve: (result: { name: string, value: any } | Record<string, any>) => void, reject) => {
+        editTool.only('save', (data: { name: string, value: any } | Record<string, any>) => {
             resolve(data)
         });
         editTool.only("close", () => {

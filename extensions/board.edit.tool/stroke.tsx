@@ -31,6 +31,7 @@ export function ShapeStroke(props: {
     strokeDasharray: 'none' | 'dash' | 'dash-circle';
     change: (name: string, value: any) => void
 }) {
+    console.log('props', props);
     return <div className="shy-shape-stroke">
         <div className="shy-shape-stroke-current" onMouseDown={e => props.tool.showDrop('stroke')}>
             {(props.stroke == 'transparent' || props.strokeOpacity == 0) && <TransparentSvg></TransparentSvg>}
