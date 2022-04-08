@@ -3,7 +3,7 @@ import React from 'react';
 import { Block } from '..';
 import { BlockView } from '../view';
 import { BlockDisplay } from '../enum';
-import { prop, url, view } from '../factory/observable';
+import { url, view } from '../factory/observable';
 
 /**
  * 可以将相邻的block变成一个整体去操作，

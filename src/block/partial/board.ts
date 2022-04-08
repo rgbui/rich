@@ -59,7 +59,6 @@ export class Block$Board {
         var { width, height } = this.fixedSize;
         var rect = new Rect(0, 0, width, height);
         var gm = this.globalWindowMatrix;
-        // var gs = gm.resolveMatrixs();
         /**
          * 这里基本没有skew，只有scale,rotate,translate
          * scale 水平和垂直相等

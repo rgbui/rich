@@ -72,7 +72,6 @@ export class TextSpan extends Block {
         var rh = h / lineHeight;
         var lineCount = Math.floor(rh);
         if (rh - lineCount > 0.2) lineCount += 1;
-        console.log('lineCount', h, h / lineHeight, lineHeight, lineCount);
         var gm = this.globalWindowMatrix.clone();
         var fp = gm.inverseTransform(Point.from(event));
         var s = gm.getScaling().x;

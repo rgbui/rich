@@ -10,6 +10,7 @@ import { BoardPointType, BoardBlockSelector } from '../../partial/board';
 import { BlockCssName } from '../../pattern/css';
 import { Rect, RectUtility, PointArrow } from '../../../common/vector/point';
 import { Polygon } from '../../../common/vector/polygon';
+
 /**
  * 可以将相邻的block变成一个整体去操作，
  * 可以看成是contentBlock
