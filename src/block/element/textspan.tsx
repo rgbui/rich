@@ -14,6 +14,7 @@ import { CssSelectorType } from '../pattern/type';
 import { MouseDragger } from '../../common/dragger';
 import { forceCloseBoardEditTool } from '../../../extensions/board.edit.tool';
 import { useBoardTool } from '../../kit/mouse/board';
+import { dom } from '../../common/dom';
 
 @url("/textspan")
 export class TextSpan extends Block {
@@ -67,7 +68,7 @@ export class TextSpan extends Block {
     }
     onResizeBoardSelector(this: Block, arrows: PointArrow[], event: React.MouseEvent) {
         var { width: w, height: h } = this.fixedSize;
-        var lineHeight = parseFloat(this.el.style.lineHeight);
+        var lineHeight = parseFloat(dom(this.el).style('lineHeight'));
         var rh = h / lineHeight;
         var lineCount = Math.floor(rh);
         if (rh - lineCount > 0.2) lineCount += 1;
