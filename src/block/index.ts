@@ -198,6 +198,8 @@ export abstract class Block extends Events {
         if (this.isFreeBlock) {
             style.position = 'absolute';
             style.zIndex = this.zindex;
+            style.top=0;
+            style.left=0;
             style.transformOrigin = '0% 0%';
             Object.assign(style, this.transformStyle);
         }
