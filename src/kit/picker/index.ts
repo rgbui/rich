@@ -204,12 +204,13 @@ export class BlockPicker {
                     block.forceUpdate();
                 }
             },
-            moveEnd(ev, isMove, data) {
+            async moveEnd(ev, isMove, data) {
                 if (isMove) {
                     var ps = block.points.find(g => g != po);
                     block.onManualUpdateProps({ points: ps }, { points: block.points }, BlockRenderRange.self);
                     self.onRePicker();
                     block.forceUpdate();
+                    await useBoardTool(self.kit);
                 }
             }
         });
@@ -244,8 +245,9 @@ export class BlockPicker {
                         block.onUpdateLine(block.from, block.to, oldData);
                     }
                 },
-                moveEnd() {
-                    self.kit.boardLine.onEndConnectOther()
+                async moveEnd() {
+                    self.kit.boardLine.onEndConnectOther();
+                    await useBoardTool(self.kit);
                 }
             });
         }
@@ -259,7 +261,7 @@ export class BlockPicker {
                 moveStart() {
                     forceCloseBoardEditTool()
                 },
-                moving(ev, data, isEnd) {
+                async moving(ev, data, isEnd) {
                     var current = gm.inverseTransform(Point.from(ev));
                     point.x = current.x;
                     point.y = current.y;
@@ -272,6 +274,7 @@ export class BlockPicker {
                             block.points.remove(g => g === next);
                         }
                         block.onManualUpdateProps(oldProps, { points: block.points });
+                        await useBoardTool(self.kit);
                     }
                     block.forceUpdate();
                     self.view.forceUpdate();

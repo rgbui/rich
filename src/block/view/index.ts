@@ -10,6 +10,7 @@ export abstract class BlockView<T extends Block> extends Component<{ block: T }>
         this.block.isMounted = true;
     }
     componentDidUpdate(prevProps: Readonly<{ block: T; }>, prevState: Readonly<{}>, snapshot?: any): void {
+        this.block.el = ReactDOM.findDOMNode(this) as HTMLDivElement;
         this.block.page.grid.sync(this.block);
     }
     componentDidMount() {
