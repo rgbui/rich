@@ -34,7 +34,8 @@ export class BlockPicker {
         this.blocks.forEach(bl => {
             bl.updateRenderLines();
         });
-        this.view.forceUpdate();
+        if (this.view)
+            this.view.forceUpdate();
     }
     onShiftPicker(blocks: Block[]) {
         blocks.each(b => {
