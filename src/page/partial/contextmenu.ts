@@ -4,7 +4,10 @@ import { Page } from "..";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItemType, MenuItemTypeValue } from "../../../component/view/menu/declare";
 import { BlockDirective } from "../../block/enum";
-import { Point } from "../../common/vector/point";
+import { Point, Rect } from "../../common/vector/point";
+import { PageLayoutType } from "../../layout/declare";
+import { CustomizePageSvg, FileSvg, LinkSvg, LockSvg, MoveToSvg, TrashSvg, UndoSvg, UploadSvg, VersionHistorySvg } from "../../../component/svgs";
+
 
 export class PageContextmenu {
     async onGetContextMenus(this: Page) {
@@ -42,5 +45,36 @@ export class PageContextmenu {
         if (re) {
             await this.onClickContextMenu(re.item, re.event);
         }
+    }
+    async onPageContextmenu(this: Page, event: React.MouseEvent) {
+        var items: MenuItemType<BlockDirective | string>[] = [];
+        if (this.pageLayout.type == PageLayoutType.doc) {
+            items = [
+                { name: 'smallText', text: '小字号', type: MenuItemTypeValue.switch },
+                { name: 'fullWidth', text: '宽版', type: MenuItemTypeValue.switch },
+                { type: MenuItemTypeValue.divide },
+                { name: 'layout', text: '版面', icon: CustomizePageSvg, disabled: true },
+                { name: 'lock', text: '编辑保护', icon: LockSvg, disabled: true },
+                { type: MenuItemTypeValue.divide },
+                { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
+                { name: 'history', icon: VersionHistorySvg, text: '页面历史', disabled: true },
+                { name: 'copylink', icon: LinkSvg, text: '复制链接', disabled: true },
+                { type: MenuItemTypeValue.divide },
+                { name: 'undo', text: '撤消', icon: UndoSvg, disabled: true },
+                { name: 'redo', text: '重做', icon: UndoSvg, disabled: true },
+                { name: 'delete', icon: TrashSvg, text: '删除', disabled: true },
+                { type: MenuItemTypeValue.divide },
+                { name: 'import', icon: UploadSvg, text: '导入', disabled: true },
+                { name: 'export', text: '导出', icon: FileSvg, disabled: true, remark: '导出PDF,HTML,Markdown' },
+                { type: MenuItemTypeValue.divide },
+                { name: 'move', text: '移动', icon: MoveToSvg, disabled: true },
+            ];
+        }
+        var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, items, {
+            overflow: 'visible', update: (item) => {
+                console.log(item);
+            }
+        });
+        console.log(r);
     }
 }
