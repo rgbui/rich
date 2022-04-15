@@ -6,6 +6,7 @@ function makeRichSvg() {
     var svgDir = path.join(__dirname, "../src/assert/svg")
     var files = fs.readdirSync(svgDir);
     files = files.map(f => {
+        if (!f.endsWith('.svg')) return;
         var name = f.replace('.svg', '')
             .replace(/\.([a-z])/g, ($, $1) => { return $1.toUpperCase() })
             .replace(/\./, "")
@@ -28,6 +29,7 @@ function makeShySvg() {
     var svgDir = path.join(__dirname, "../../shy/src/assert/svg")
     var files = fs.readdirSync(svgDir);
     files = files.map(f => {
+        if (!f.endsWith('.svg')) return;
         var name = f.replace('.svg', '')
             .replace(/\.([a-z])/g, ($, $1) => { return $1.toUpperCase() })
             .replace(/\./, "")
