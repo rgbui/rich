@@ -13,8 +13,13 @@ function makeRichSvg() {
             .replace(/^([a-z])/g, ($, $1) => { return $1.toUpperCase() }) + 'Svg';
         return { name, file: f }
     });
-
+    for (let i = files.length - 1; i >= 0; i--) {
+        if (!files[i]) {
+            files.splice(i, 1)
+        }
+    }
     var str = `${files.map(f => {
+        if (!f) return;
         return `import ${f.name} from "../src/assert/svg/${f.file}";`
     }).join("\n")}
 
@@ -36,8 +41,14 @@ function makeShySvg() {
             .replace(/^([a-z])/g, ($, $1) => { return $1.toUpperCase() }) + 'Svg';
         return { name, file: f }
     });
+    for (let i = files.length - 1; i >= 0; i--) {
+        if (!files[i]) {
+            files.splice(i, 1)
+        }
+    }
 
     var str = `${files.map(f => {
+        if (!f) return;
         return `import ${f.name} from "../assert/svg/${f.file}";`
     }).join("\n")}
 

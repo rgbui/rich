@@ -1,4 +1,3 @@
-
 import ArrowDownSvg from "../src/assert/svg/arrowDown.svg";
 import ArrowLeftSvg from "../src/assert/svg/arrowLeft.svg";
 import ArrowRightSvg from "../src/assert/svg/arrowRight.svg";
@@ -50,6 +49,15 @@ import GlobalLinkSvg from "../src/assert/svg/globalLink.svg";
 import HideSvg from "../src/assert/svg/hide.svg";
 import ImageErrorSvg from "../src/assert/svg/imageError.svg";
 import ImportSvg from "../src/assert/svg/import.svg";
+import LayoutColSvg from "../src/assert/svg/layoutCol.svg";
+import LayoutCol2Svg from "../src/assert/svg/layoutCol2.svg";
+import LayoutCol3Svg from "../src/assert/svg/layoutCol3.svg";
+import LayoutColLeftSvg from "../src/assert/svg/layoutColLeft.svg";
+import LayoutColRightSvg from "../src/assert/svg/layoutColRight.svg";
+import LayoutContentSvg from "../src/assert/svg/layoutContent.svg";
+import LayoutContentCoverSvg from "../src/assert/svg/layoutContentCover.svg";
+import LayoutContentHeadFootSvg from "../src/assert/svg/layoutContentHeadFoot.svg";
+import LayoutContentsSvg from "../src/assert/svg/layoutContents.svg";
 import LinkSvg from "../src/assert/svg/link.svg";
 import LinkToSvg from "../src/assert/svg/linkTo.svg";
 import LockSvg from "../src/assert/svg/lock.svg";
@@ -158,6 +166,15 @@ GlobalLinkSvg,
 HideSvg,
 ImageErrorSvg,
 ImportSvg,
+LayoutColSvg,
+LayoutCol2Svg,
+LayoutCol3Svg,
+LayoutColLeftSvg,
+LayoutColRightSvg,
+LayoutContentSvg,
+LayoutContentCoverSvg,
+LayoutContentHeadFootSvg,
+LayoutContentsSvg,
 LinkSvg,
 LinkToSvg,
 LockSvg,
