@@ -4,11 +4,15 @@ import { PageLayoutView } from './view';
 import "./style.less";
 export class PageLayout {
     type: PageLayoutType;
-    screen: 'web' | 'mobile';
     screenWidth: number;
     screenHeight: number;
     page: Page;
     view: PageLayoutView;
+    /**
+     * 如果是文档，下面的content,col将起作用
+     */
+    content: 'content' | 'contentCover' | 'contentHeadFooter' | 'contents' = 'content';
+    col: 'col' | 'col2' | 'col3' | 'colLeft' | 'colRight' = 'col';
     constructor(page: Page, options?: Record<string, any>) {
         this.page = page;
         if (typeof options != 'undefined') {
@@ -21,7 +25,6 @@ export class PageLayout {
     async get() {
         var json: Record<string, any> = {
             type: this.type,
-            screen: this.screen,
             screenWidth: this.screenWidth,
             screenHeight: this.screenHeight
         };
