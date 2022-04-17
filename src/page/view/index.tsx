@@ -1,15 +1,19 @@
 import { Component } from "react";
 import React from 'react';
 import { Page } from "../index";
-import { PageLayoutView } from "../../layout/view";
 import { ChildsArea } from "../../block/view/appear";
 import ReactDOM from "react-dom";
 import { KitView } from "../../kit/view";
-import { PageLayoutType } from "../../layout/declare";
+import { PageLayoutType } from "../declare";
 import { getBoardTool } from "../../../extensions/board.tool";
 import { Point } from "../../common/vector/point";
 import { BlockPickerView } from "../../kit/picker/view";
 import { BlockUrlConstant } from "../../block/constant";
+import { PageLayoutView } from "./layout";
+import { channel } from "../../../net/channel";
+import { LinkPageItem } from "../../../extensions/at/declare";
+import { PageCover } from "./cover";
+
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
  * 对于同时支持这4个事件的浏览器，事件执行顺序为focusin > focus > focusout > blur
@@ -31,6 +35,7 @@ export class PageView extends Component<{ page: Page }>{
     private _wheel;
     el: HTMLElement;
     componentDidMount() {
+        channel.sync('/page/update/info', this.updatePageInfo);
         this.el = ReactDOM.findDOMNode(this) as HTMLElement;
         this.observeOutsideDrop();
         this.el.addEventListener('keydown', (this._keydown = e => this.page.onKeydown(e)), true);
@@ -43,6 +48,22 @@ export class PageView extends Component<{ page: Page }>{
         document.addEventListener('mouseup', (this._mouseup = this.page.onMouseup.bind(this.page)));
         document.addEventListener('keyup', (this._keyup = this.page.onKeyup.bind(this.page)), true);
         this.observeToolBoard();
+    }
+    updatePageInfo = (r: { id: string, pageInfo: LinkPageItem }) => {
+        if (this.page.pageItemId == r.id) {
+            var isUpdate: boolean = false;
+            var currentPageInfo = this.page.pageInfo;
+            if (!(r.pageInfo?.text == currentPageInfo?.text)) {
+                currentPageInfo.text = r.pageInfo.text;
+                isUpdate = true;
+            }
+            if (!(currentPageInfo?.icon && this.page.pageInfo?.icon && JSON.stringify(r.pageInfo.icon) == JSON.stringify(this.page.pageInfo.icon))) {
+                currentPageInfo.icon = r.pageInfo.icon;
+                isUpdate = true;
+            }
+            if (isUpdate)
+                this.forceUpdate();
+        }
     }
     async observeToolBoard() {
         if (this.page.pageLayout.type == PageLayoutType.board) {
@@ -115,6 +136,7 @@ export class PageView extends Component<{ page: Page }>{
         }
     }
     componentWillUnmount() {
+        channel.off('/page/update/info', this.updatePageInfo);
         this.el.removeEventListener('keydown', this._keydown, true);
         document.removeEventListener('mousedown', this._mousedown);
         document.removeEventListener('mouseup', this._mouseup);
@@ -145,11 +167,12 @@ export class PageView extends Component<{ page: Page }>{
             onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}
             onMouseEnter={e => this.page.onMouseenter(e)}
             onMouseLeave={e => this.page.onMouseleave(e)}
-        ><div className='shy-page-view-box' onContextMenu={e => e.preventDefault()} onMouseDown={e => this.page.onMousedown(e.nativeEvent)}>
+        ><div className='shy-page-view-box' onContextMenu={e => this.page.onContextmenu(e)} onMouseDown={e => this.page.onMousedown(e.nativeEvent)}>
                 <PageLayoutView
-                    pageLayout={this.page.pageLayout}
+                    page={this.page}
                     boardSelector={<BlockPickerView picker={this.page.kit.picker}></BlockPickerView>}>
                     <div className='shy-page-view-content' ref={e => this.page.contentEl = e}>
+                        <PageCover page={this.page}></PageCover>
                         <ChildsArea childs={this.page.views}></ChildsArea>
                         {this.page.requireSelectLayout && this.selectPageLayout()}
                     </div>
