@@ -1,9 +1,12 @@
 
+import lodash from "lodash";
 import React from "react";
 import { Page } from "..";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItemType, MenuItemTypeValue } from "../../../component/view/menu/declare";
 import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
+import { emojiStore } from "../../../extensions/emoji/store";
+import { channel } from "../../../net/channel";
 import { BlockDirective } from "../../block/enum";
 import { Matrix } from "../../common/matrix";
 import { Point, Rect } from "../../common/vector/point";
@@ -269,8 +272,7 @@ export class PageEvent {
             }
         }
     }
-    async onAddCover(this: Page)
-    {
+    async onAddCover(this: Page) {
         if (this.cover?.abled) {
             this.onUpdateProps({ 'cover.abled': false }, true);
         }
@@ -286,6 +288,18 @@ export class PageEvent {
                 }
             }, true);
         }
+    }
+    async onAddIcon(this: Page) {
+        var codes = await emojiStore.get();
+        var r = lodash.random(0, codes.length);
+        var b = lodash.random(0, codes[r].childs.length);
+        channel.air('/page/update/info',{
+            id: this.pageInfo.id,
+            pageInfo: {
+                id: this.pageInfo.id,
+                icon: { name: "emoji", code: codes[r].childs[b].code }
+            }
+        })
     }
 }
 
