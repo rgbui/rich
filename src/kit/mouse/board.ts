@@ -12,7 +12,7 @@ import { Matrix } from "../../common/matrix";
 import { Point } from "../../common/vector/point";
 import { Polygon } from "../../common/vector/polygon";
 import { ActionDirective } from "../../history/declare";
-import { PageLayoutType } from "../../layout/declare";
+import { PageLayoutType } from "../../page/declare";
 import { loadPaper } from "../../paper";
 
 

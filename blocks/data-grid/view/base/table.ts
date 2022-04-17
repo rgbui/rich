@@ -28,7 +28,7 @@ import { useRelationView } from "../../../../extensions/tablestore/relation";
 import { useRollupView } from "../../../../extensions/tablestore/rollup";
 import { useFormula } from "../../../../extensions/tablestore/formula";
 import { useFieldEmojiView } from "../../../../extensions/tablestore/emoji";
-import { PageLayoutType } from "../../../../src/layout/declare";
+import { PageLayoutType } from "../../../../src/page/declare";
 import { PageDirective } from "../../../../src/page/directive";
 import { DataGridTool } from "../components/tool";
 import dayjs from "dayjs";

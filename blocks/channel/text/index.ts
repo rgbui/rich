@@ -1,7 +1,7 @@
 import { channel } from "../../../net/channel";
 import { Block } from "../../../src/block";
 import { url } from "../../../src/block/factory/observable";
-import { PageLayoutType } from "../../../src/layout/declare";
+import { PageLayoutType } from "../../../src/page/declare";
 import { ChannelTextType } from "./declare";
 import "./style.less";
 

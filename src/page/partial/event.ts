@@ -1,11 +1,14 @@
 
 import React from "react";
 import { Page } from "..";
+import { useSelectMenuItem } from "../../../component/view/menu";
+import { MenuItemType, MenuItemTypeValue } from "../../../component/view/menu/declare";
 import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
+import { BlockDirective } from "../../block/enum";
 import { Matrix } from "../../common/matrix";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
-import { PageLayoutType } from "../../layout/declare";
+import { PageLayoutType } from "../declare";
 
 export class PageEvent {
     /**
@@ -227,6 +230,61 @@ export class PageEvent {
             // getBoardTool().then(r => {
             //     r.onShow(false);
             // })
+        }
+    }
+    async onContextmenu(this: Page, event: React.MouseEvent) {
+        event.preventDefault();
+        var items: MenuItemType<BlockDirective | string>[] = [
+            { name: 'smallText', text: '小字号', type: MenuItemTypeValue.switch },
+            { name: 'fullWidth', text: '宽版', type: MenuItemTypeValue.switch },
+            { type: MenuItemTypeValue.divide },
+            { name: 'addCover', text: this.cover?.abled ? "移除封面" : '添加封面' },
+            { type: MenuItemTypeValue.divide },
+            { name: 'addContent', text: '向上插入内容栏', type: MenuItemTypeValue.item },
+            { name: 'addContent', text: '向下插入内容栏', type: MenuItemTypeValue.item },
+            { type: MenuItemTypeValue.divide },
+            { name: 'setContentType', text: '设置内容样式', type: MenuItemTypeValue.item },
+            { type: MenuItemTypeValue.divide },
+            {
+                name: 'addContent',
+                text: '分栏',
+                childs: [
+                    { text: '一栏', name: '' },
+                    { text: '二栏', name: '' },
+                    { text: '三栏', name: '' },
+                    { text: '偏右', name: '' },
+                    { text: '偏左', name: '' },
+                ]
+            },
+        ];
+        var r = await useSelectMenuItem({ roundPoint: Point.from(event) }, items, {
+            // overflow: 'visible',
+            update: (item) => {
+                console.log(item);
+            }
+        });
+        if (r) {
+            if (r.item.name == 'addCover') {
+                await this.onAddCover();
+            }
+        }
+    }
+    async onAddCover(this: Page)
+    {
+        if (this.cover?.abled) {
+            this.onUpdateProps({ 'cover.abled': false }, true);
+        }
+        else {
+            if (this.cover?.url) {
+                this.onUpdateProps({ 'cover.abled': true }, true);
+            }
+            else this.onUpdateProps({
+                cover: {
+                    abled: true,
+                    url: 'https://cdn.allflow.cn/cover/graphs1?time=1650123259&token=ffdab4c4400fa7074b0fd74e09244b05',
+                    top: 50
+                }
+            }, true);
         }
     }
 }

@@ -1,5 +1,5 @@
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
-import { PageLayoutType } from "../../../src/layout/declare";
+import { PageLayoutType } from "../../../src/page/declare";
 import { Page } from "../../../src/page";
 import { PageDirective } from "../../../src/page/directive";
 export function schemaCreatePageFormData(schema: TableSchema, datas: Record<string, any>[]) {

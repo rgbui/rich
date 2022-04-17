@@ -1,11 +1,10 @@
 
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import ReactDOM from 'react-dom';
 import "./style.less";
 import { Events } from "../../util/events";
 import { util } from "../../util/util";
 import { View } from "../block/element/view";
-import { PageLayout } from "../layout/index";
 import { PageEvent } from "./partial/event";
 import { HistorySnapshoot } from '../history/snapshoot';
 import { Block } from '../block';
@@ -18,11 +17,11 @@ import { UserAction } from '../history/action';
 import { DropDirection } from '../kit/handle/direction';
 import { PageDirective } from './directive';
 import { Mix } from '../../util/mix';
-import { Page$Cycle } from './partial/left.cycle';
+import { Page$Cycle } from './partial/life.cycle';
 import { Page$Operator } from './partial/operator';
 
 import { getBoardTool } from '../../extensions/board.tool';
-import { PageLayoutType } from '../layout/declare';
+import { PageLayoutType } from './declare';
 import { Point, Rect } from '../common/vector/point';
 import { PageGrid } from './grid';
 import { Matrix } from '../common/matrix';
@@ -31,6 +30,7 @@ import { Kit } from '../kit';
 import { channel } from '../../net/channel';
 import { TableSchema } from '../../blocks/data-grid/schema/meta';
 import { OriginFormField } from '../../blocks/data-grid/element/form/origin.field';
+import { LinkPageItem } from '../../extensions/at/declare';
 
 export class Page extends Events<PageDirective> {
     root: HTMLElement;
@@ -57,7 +57,7 @@ export class Page extends Events<PageDirective> {
     kit: Kit = new Kit(this);
     snapshoot = new HistorySnapshoot(this)
     configViewer: ConfigViewer;
-    pageLayout: PageLayout;
+    pageLayout: { type: PageLayoutType };
     views: View[] = [];
     view: PageView;
     keyboardPlate: KeyboardPlate = new KeyboardPlate();
@@ -67,6 +67,7 @@ export class Page extends Events<PageDirective> {
     requireSelectLayout: boolean;
     grid: PageGrid;
     matrix: Matrix = new Matrix();
+    cover: { abled: boolean, url: string, top: number } = null;
     get windowMatrix() {
         var rect = Rect.fromEle(this.root);
         var matrix = new Matrix();
@@ -105,7 +106,7 @@ export class Page extends Events<PageDirective> {
             this.isOff = true;
             if (this.pageLayout.type == PageLayoutType.board) {
                 getBoardTool().then(r => {
-                    r.on('selector',function(event){ });
+                    r.on('selector', function (event) { });
                     r.open(Point.from(this.view.el.getBoundingClientRect()));
                 })
             }
@@ -157,6 +158,25 @@ export class Page extends Events<PageDirective> {
     get isLock() {
         return this.configViewer.pageConfig.locker?.lock ? true : false;
     }
+    getScreenStyle() {
+        var style: CSSProperties = {};
+        if (this.pageLayout?.type == PageLayoutType.doc) {
+            var isFull: boolean = true;
+            if (isFull) {
+                style.paddingLeft = 100;
+                style.paddingRight = 100;
+            }
+            else {
+                style.width = 1000;
+                style.margin = '0 auto';
+            }
+        }
+        return style;
+    }
+    loadPageInfo(pageInfo: LinkPageItem) {
+        this.pageInfo = util.clone(pageInfo);
+    }
+    pageInfo: LinkPageItem = null;
 }
 export interface Page {
     on(name: PageDirective.init, fn: () => void);

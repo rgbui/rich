@@ -4,7 +4,7 @@ import { MouseDragger } from "../../common/dragger";
 import { Point } from "../../common/vector/point";
 import { onAutoScroll, onAutoScrollStop } from "../../common/scroll";
 import { TextEle } from "../../common/text.ele";
-import { PageLayoutType } from "../../layout/declare";
+import { PageLayoutType } from "../../page/declare";
 import { CreateBoardBlock, IsBoardTextAnchorBlock, SelectorBoardBlock } from "./board";
 import { getShapeSelector } from "../../../extensions/shapes";
 function triggerCreateAnchor(kit: Kit, block: Block, event: MouseEvent) {

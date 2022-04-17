@@ -1,4 +1,4 @@
-import { PageLayoutType } from "../../../src/layout/declare";
+import { PageLayoutType } from "../../../src/page/declare";
 import { TableSchema } from "../schema/meta";
 import { FieldType } from "../schema/type";
 
