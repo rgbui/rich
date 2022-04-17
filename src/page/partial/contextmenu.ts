@@ -5,9 +5,9 @@ import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItemType, MenuItemTypeValue } from "../../../component/view/menu/declare";
 import { BlockDirective } from "../../block/enum";
 import { Point, Rect } from "../../common/vector/point";
-import { PageLayoutType } from "../../layout/declare";
+import { PageLayoutType } from "../declare";
 import { CustomizePageSvg, FileSvg, LinkSvg, LockSvg, MoveToSvg, TrashSvg, UndoSvg, UploadSvg, VersionHistorySvg } from "../../../component/svgs";
-
+import { usePageLayout } from "../../../extensions/layout";
 
 export class PageContextmenu {
     async onGetContextMenus(this: Page) {
@@ -47,13 +47,24 @@ export class PageContextmenu {
         }
     }
     async onPageContextmenu(this: Page, event: React.MouseEvent) {
+        /* <Row>
+                    <Col>宽度：</Col>
+                    <Col>
+                        <Space>
+                            <span>小宽</span>
+                            <span>大宽</span>
+                            <span>全屏</span>
+                            <span>大屏</span>
+                        </Space>
+                    </Col>
+            </Row> */
         var items: MenuItemType<BlockDirective | string>[] = [];
         if (this.pageLayout.type == PageLayoutType.doc) {
             items = [
                 { name: 'smallText', text: '小字号', type: MenuItemTypeValue.switch },
                 { name: 'fullWidth', text: '宽版', type: MenuItemTypeValue.switch },
                 { type: MenuItemTypeValue.divide },
-                { name: 'layout', text: '版面', icon: CustomizePageSvg, disabled: true },
+                { name: 'layout', text: '版面', icon: CustomizePageSvg },
                 { name: 'lock', text: '编辑保护', icon: LockSvg, disabled: true },
                 { type: MenuItemTypeValue.divide },
                 { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
@@ -71,10 +82,15 @@ export class PageContextmenu {
             ];
         }
         var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, items, {
-            overflow: 'visible', update: (item) => {
+            overflow: 'visible',
+            update: (item) => {
                 console.log(item);
             }
         });
-        console.log(r);
+        if (r) {
+            if (r.item.name == 'layout') {
+                var up = await usePageLayout({ roundArea: Rect.fromEvent(event) })
+            }
+        }
     }
 }

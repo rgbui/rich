@@ -1,9 +1,10 @@
 
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { BlockView } from "../view";
 import { url, view } from "../factory/observable";
 import { Block } from '..';
 import { ChildsArea } from '../view/appear';
+import { PageLayoutType } from '../../page/declare';
 @url('/view')
 export class View extends Block {
     get isView() {
@@ -17,6 +18,17 @@ export class View extends Block {
 @view('/view')
 export class ViewComponent extends BlockView<View>{
     render() {
-        return <div className='sy-block-view' ><ChildsArea childs={this.block.childs}></ChildsArea></div>
+        if ([PageLayoutType.doc].includes(this.block.page.pageLayout.type)) {
+            var style = this.block.page.getScreenStyle();
+            return <div className='sy-block-view' >
+                <div className='sy-block-view-wrapper' style={style}>
+                    <div style={{ height: 10, display: 'block' }}></div>
+                    <ChildsArea childs={this.block.childs}></ChildsArea>
+                </div>
+            </div>
+        }
+        else {
+            return <div className='sy-block-view' ><ChildsArea childs={this.block.childs}></ChildsArea></div>
+        }
     }
 }
