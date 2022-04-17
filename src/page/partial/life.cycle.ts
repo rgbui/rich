@@ -6,16 +6,17 @@ import { View } from "../../block/element/view";
 import { BlockFactory } from "../../block/factory/block.factory";
 import { ConfigViewer } from "../../config";
 import { UserAction } from "../../history/action";
-import { ActionDirective } from "../../history/declare";
-import { PageLayout } from "../../layout";
+import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { PageDirective } from "../directive";
 import { PageHistory } from "../interaction/history";
 import { PageKeys } from "../interaction/keys";
 import JSZip from 'jszip';
 import { BlockUrlConstant } from "../../block/constant";
-import { PageLayoutType } from "../../layout/declare";
+import { PageLayoutType } from "../declare";
 import { PageGrid } from "../grid";
 import { Matrix } from "../../common/matrix";
+import { util } from "echarts";
+import lodash from "lodash";
 
 export class Page$Cycle {
     async init(this: Page) {
@@ -55,10 +56,7 @@ export class Page$Cycle {
                 else if (n == 'matrix') {
                     this.matrix = new Matrix(...data[n]);
                 }
-                else if (n == 'pageLayout') {
-                    this.pageLayout = new PageLayout(this, data[n]);
-                }
-                else this[n] = data[n];
+                else this[n] = util.clone(data[n]);
             }
             if (Array.isArray(data.views)) {
                 for (var i = 0; i < data.views.length; i++) {
@@ -67,7 +65,7 @@ export class Page$Cycle {
                     this.views.push(dc as View);
                 }
             }
-            if (typeof this.pageLayout == 'undefined') this.pageLayout = new PageLayout(this);
+            if (typeof this.pageLayout == 'undefined') this.pageLayout = { type: PageLayoutType.doc };
             if ([
                 PageLayoutType.dbForm,
                 PageLayoutType.dbPickRecord,
@@ -94,16 +92,17 @@ export class Page$Cycle {
     async get(this: Page) {
         var json: Record<string, any> = {
             id: this.id,
-            date: this.date
+            date: this.date,
+            cover: util.clone(this.cover)
         };
-        json.pageLayout = await this.pageLayout.get();
+        json.pageLayout = util.clone(this.pageLayout);
         json.matrix = this.matrix.getValues();
         json.views = await this.views.asyncMap(async x => {
             return await x.get()
         })
         return json;
     }
-    async getString(this: Page){
+    async getString(this: Page) {
         return JSON.stringify(await this.get());
     }
     async getFile(this: Page) {
@@ -332,5 +331,29 @@ export class Page$Cycle {
             }
         })
         return outlines;
+    }
+
+    async updateProps(this: Page, props: Record<string, any>) {
+        var oldValue: Record<string, any> = {};
+        var newValue: Record<string, any> = {};
+        for (let prop in props) {
+            if (!lodash.isEqual(lodash.get(this, prop), lodash.get(props, prop))) {
+                oldValue[prop] = util.clone(lodash.get(this, prop));
+                newValue[prop] = util.clone(lodash.get(props, prop));
+                lodash.set(this, prop, util.clone(lodash.get(props, prop)));
+            }
+        }
+        if (Object.keys(oldValue).length > 0 || Object.keys(newValue).length > 0) {
+            this.snapshoot.record(OperatorDirective.pageUpdateProp, {
+                old: oldValue,
+                new: newValue
+            }, this);
+        }
+    }
+    async onUpdateProps(this: Page, props: Record<string, any>, isUpdate?: boolean) {
+        await this.onAction(ActionDirective.onPageUpdateProps, async () => {
+            await this.updateProps(props);
+        });
+        if (isUpdate) { this.view.forceUpdate();console.log('ggg'); }
     }
 }
