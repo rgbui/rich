@@ -1,8 +1,133 @@
 .shy {
     &-page-view {
         outline: none;
-        &-content{
-            padding-bottom:200px;
+        &-content {
+            padding-bottom: 200px;
+        }
+    }
+}
+
+.shy-page-view-cover {
+    position     : relative;
+    height       : 240px;
+    margin-bottom: 40px;
+
+    img {
+        width          : 100%;
+        object-fit     : cover;
+        object-position: 50%;
+    }
+
+    &-nav {
+        position: absolute;
+        bottom  : 0px;
+        left    : 0px;
+        right   : 0px;
+
+        .shy-page-view-cover-icon {
+            position     : absolute;
+            top          : -15px;
+            left         : 0px;
+            width        : 78px;
+            height       : 78px;
+            border-radius: 4px;
+
+            &:hover {
+                background-color: rgba(43, 47, 45, .08);
+            }
+        }
+
+        .shy-page-view-cover-operators {
+            position       : absolute;
+            top            : 0px;
+            right          : 0px;
+            height         : 24px;
+            line-height    : 24px;
+            visibility     : hidden;
+            display        : flex;
+            justify-content: flex-start;
+            align-items    : center;
+
+            a {
+                color           : #fff;
+                padding         : 0px 10px;
+                height          : 24px;
+                line-height     : 24px;
+                display         : inline-block;
+                cursor          : pointer;
+                font-size       : 12px;
+                background-color: rgba(43, 47, 45, .3);
+
+                &:first-child {
+                    border-radius: 4px 0px 0px 4px;
+                }
+
+                &:last-child {
+                    border-radius: 0px 4px 4px 0px;
+                }
+
+                &:hover {
+                    background-color: rgba(43, 47, 45, .5);
+                }
+            }
+        }
+    }
+
+    &:hover {
+        .shy-page-view-cover-operators {
+            visibility: visible;
+        }
+    }
+}
+
+.shy-page-layout-doc {
+    box-sizing: border-box;
+    min-height: 100%;
+
+    .shy-page-layout-wrapper {
+        background-color: #fff;
+    }
+}
+
+.shy-page-layout-db-form {
+    box-sizing    : border-box;
+    padding-top   : 20px;
+    padding-bottom: 20px;
+    min-height    : 100%;
+    padding-left  : 100px;
+    padding-right : 100px;
+
+    .shy-page-layout-wrapper {
+        min-height: calc(100% - 40px);
+    }
+}
+
+.shy-page-layout-board {
+    position  : relative;
+    box-sizing: border-box;
+    padding   : 0px;
+    min-height: 100%;
+    overflow  : hidden;
+
+    .shy-page-layout-wrapper {
+        width           : 100%;
+        transform-origin: 0px 0px;
+    }
+}
+
+.shy-page-layout-text-channel {
+    .shy-page-layout-wrapper {
+        width           : 100%;
+        transform-origin: 0px 0px;
+        position        : relative;
+
+        .sy-channel-text {
+            background-color: #fff;
+            position        : absolute;
+            top             : 0px;
+            left            : 0px;
+            width           : 100%;
+            height          : 100%;
         }
     }
 }
