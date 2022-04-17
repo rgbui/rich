@@ -10,7 +10,6 @@
     &-content {
         flex-grow      : 1;
         flex-shrink    : 1;
-        padding        : 0px 20px;
         overflow-y     : auto;
         overflow-x     : hidden;
         padding-bottom : 30px;
@@ -32,12 +31,48 @@
     }
 
     .sy-channel-text-item {
-        margin-bottom: 20px;
+        margin-bottom : 20px;
+        padding-top   : 2px;
+        padding-bottom: 2px;
+        padding-left  : 20px;
+        padding-right : 48px;
+
+        &:hover {
+            background-color: var(--background-message-hover);
+        }
     }
 }
 
 .sy-channel-text-item-tip-date {
     text-align: center;
+    position  : relative;
+    height    : 24px;
+    margin    : 10px 20px;
+
+    .line {
+        position        : absolute;
+        top             : 50%;
+        left            : 0px;
+        right           : 0px;
+        transform       : translate(0%, -50%);
+        height          : 1px;
+        background-color: var(--background-modifier-accent);
+    }
+
+    .text {
+        padding    : 2px 4px;
+        color      : var(--text-muted);
+        background : var(--background-primary);
+        line-height: 13px;
+        font-size  : 12px;
+        position   : absolute;
+        top        : 50%;
+        left       : 50%;
+        transform  : translate(-50%, -50%);
+        padding    : 0px 10px;
+        line-height: 24px;
+        height     : 24px;
+    }
 }
 
 .shy-user-channel-chat-image {

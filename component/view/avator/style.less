@@ -18,7 +18,8 @@
     display        : flex;
     justify-content: flex-start;
     align-items    : flex-start;
-    flex-wrap: nowrap;
+    flex-wrap      : nowrap;
+
     &-face {
         flex-shrink: 0;
         flex-grow  : 0;
@@ -48,13 +49,15 @@
             align-items    : center;
 
             >div {
-                &.left{
+                &.left {
                     flex-shrink: 0;
                     flex-grow  : 0;
                     margin-left: 5px;
-                    a{
+
+                    a {
                         color: var(--channels-default)
                     }
+
                     span {
                         color: var(--channels-default)
                     }
@@ -73,6 +76,13 @@
         &-body {
             margin-left: 5px;
         }
+    }
+
+    .shy-avatar-say-username {
+        font-weight: 500;
+        font-size  : 16px;
+        line-height: 22px;
+        color      : var(--header-primary);
     }
 }
 

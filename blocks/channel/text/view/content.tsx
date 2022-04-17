@@ -39,7 +39,8 @@ export function renderChannelTextContent(block: ChannelText) {
         }
         else dateStr = day.format('YYYY-MM-DD HH:mm')
         return <div key={date.getTime()} className="sy-channel-text-item-tip-date">
-            {dateStr}
+            <div className="line"></div>
+            <span className="text">{dateStr}</span>
         </div>
     }
     function renderItem(d: ChannelTextType) {
