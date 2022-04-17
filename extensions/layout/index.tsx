@@ -69,7 +69,6 @@ import "./style.less";
  * （头部、内容、底部）
  *  内容可以有在分N个
  * 
- * 
  * 处理上不好的地方
  * 如果背景是纯色、渐变色，则文字与纯色如何搭配
  * 如果背景是图片，则内容最好形成一个白色的框
@@ -77,34 +76,34 @@ import "./style.less";
  */
 
 export class PageLayout extends EventsComponent {
+    content: string = '';
+    col: string = '';
     render() {
         return <div className="page-layout-selector">
-            {/* <Row>
-                <Col>宽度：</Col>
-                <Col>
-                    <Space>
-                        <span>小宽</span>
-                        <span>大宽</span>
-                        <span>全屏</span>
-                        <span>大屏</span>
-                    </Space>
-                </Col>
-            </Row> */}
             <Row>
                 <Col>版面:</Col>
                 <Col>
                     <Space>
-                        <Tip overlay={'文档'}><div>
-                            <Icon size={30} icon={LayoutContentSvg}></Icon>
+                        <Tip overlay={'文档'}><div
+                            className={this.content == 'content' ? "page-layout-selector-option  hover" : "page-layout-selector-option"}
+                            onMouseDown={e => this.mousedown({ content: 'content' })}
+                        >
+                            <Icon size={24} icon={LayoutContentSvg}></Icon>
                         </div></Tip>
-                        <Tip overlay={'带有封面的文档'}><div>
-                            <Icon size={30} icon={LayoutContentCoverSvg}></Icon></div></Tip>
-                        <Tip overlay={'顶部内容底部'}><div>
-                            <Icon size={30} icon={LayoutContentHeadFootSvg}></Icon>
+                        <Tip overlay={'带有封面的文档'}><div
+                            className={this.content == 'contentCover' ? "page-layout-selector-option  hover" : "page-layout-selector-option"}
+                            onMouseDown={e => this.mousedown({ content: 'contentCover' })}>
+                            <Icon size={24} icon={LayoutContentCoverSvg}></Icon></div></Tip>
+                        <Tip overlay={'顶部内容底部'}><div
+                            className={this.content == 'contentHeadFooter' ? "page-layout-selector-option  hover" : "page-layout-selector-option"}
+                            onMouseDown={e => this.mousedown({ content: 'contentHeadFooter' })}>
+                            <Icon size={24} icon={LayoutContentHeadFootSvg}></Icon>
                         </div>
                         </Tip>
-                        <Tip overlay={'多行内容'}><div>
-                            <Icon size={30} icon={LayoutContentsSvg}></Icon>
+                        <Tip overlay={'多行内容'}><div
+                            className={this.content == 'contents' ? "page-layout-selector-option  hover" : "page-layout-selector-option"}
+                            onMouseDown={e => this.mousedown({ content: 'contents' })}>
+                            <Icon size={24} icon={LayoutContentsSvg}></Icon>
                         </div></Tip>
                     </Space>
                 </Col>
@@ -114,28 +113,36 @@ export class PageLayout extends EventsComponent {
                 <Col>
                     <Space>
                         <Tip overlay={'一栏'}>
-                            <div>
-                                <Icon size={30} icon={LayoutColSvg}></Icon>
+                            <div
+                                className={this.col == 'col' ? "page-layout-selector-option  hover" : "page-layout-selector-option"}
+                                onMouseDown={e => this.mousedown({ col: 'col' })}
+                            ><Icon size={24} icon={LayoutColSvg}></Icon>
                             </div>
                         </Tip>
                         <Tip overlay={'两栏'}>
-                            <div>
-                                <Icon size={30} icon={LayoutCol2Svg}></Icon>
+                            <div
+                                className={this.col == 'col2' ? "page-layout-selector-option  hover" : "page-layout-selector-option"}
+                                onMouseDown={e => this.mousedown({ col: 'col2' })}
+                            >
+                                <Icon size={24} icon={LayoutCol2Svg}></Icon>
                             </div>
                         </Tip>
                         <Tip overlay={'三栏'}>
-                            <div>
-                                <Icon size={30} icon={LayoutCol3Svg}></Icon>
+                            <div className={this.col == 'col3' ? "page-layout-selector-option  hover" : "page-layout-selector-option"}
+                                onMouseDown={e => this.mousedown({ col: 'col3' })}>
+                                <Icon size={24} icon={LayoutCol3Svg}></Icon>
                             </div>
                         </Tip>
                         <Tip overlay={'偏左'}>
-                            <div>
-                                <Icon size={30} icon={LayoutColLeftSvg}></Icon>
+                            <div className={this.col == 'colLeft' ? "page-layout-selector-option  hover" : "page-layout-selector-option"}
+                                onMouseDown={e => this.mousedown({ col: 'colLeft' })}>
+                                <Icon size={24} icon={LayoutColLeftSvg}></Icon>
                             </div>
                         </Tip>
                         <Tip overlay={'偏右'}>
-                            <div>
-                                <Icon size={30} icon={LayoutColRightSvg}></Icon>
+                            <div className={this.col == 'colRight' ? "page-layout-selector-option  hover" : "page-layout-selector-option"}
+                                onMouseDown={e => this.mousedown({ col: 'colRight' })}>
+                                <Icon size={24} icon={LayoutColRightSvg}></Icon>
                             </div>
                         </Tip>
                         {/* <span>N栏</span> */}
@@ -148,8 +155,11 @@ export class PageLayout extends EventsComponent {
     open(page: Page) {
 
     }
+    mousedown(data: Record<string, any>) {
+        Object.assign(this, data);
+        this.forceUpdate();
+    }
 }
-
 export async function usePageLayout(pos: PopoverPosition, options?: { page: Page }) {
     let popover = await PopoverSingleton(PageLayout, { mask: true });
     let fv = await popover.open(pos);

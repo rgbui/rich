@@ -4,35 +4,70 @@ import { Icon } from "../../../component/view/icon";
 import { useIconPicker } from "../../../extensions/icon";
 import { useImagePicker } from "../../../extensions/image/picker";
 import { channel } from "../../../net/channel";
+import { MouseDragger } from "../../common/dragger";
 import { Rect } from "../../common/vector/point";
 
 
 export class PageCover extends React.Component<{ page: Page }>{
-
+    private startPos: boolean = false;
+    img: HTMLImageElement;
+    private top: number;
     render() {
         var self = this;
         var page = this.props.page;
         if (page.cover?.abled) {
             async function changeIcon(event: React.MouseEvent) {
+                event.stopPropagation();
                 var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) });
                 if (icon) {
                     channel.air('/page/update/info', { id: page.pageItemId, pageInfo: { icon } })
                 }
             }
             async function changeCover(event: React.MouseEvent) {
+                event.stopPropagation();
                 var r = await useImagePicker({ roundArea: Rect.fromEvent(event) });
                 if (r) {
                     page.onUpdateProps({ cover: { url: r.url, top: 50, abled: true } }, true)
                 }
             }
-            function startPosition(event: React.MouseEvent) {
 
+            function startPosition(event: React.MouseEvent) {
+                event.stopPropagation();
+                self.top = typeof page?.cover?.top == 'number' ? page?.cover?.top : 50;
+                self.startPos = true;
+                self.forceUpdate();
             }
-            return <div className="shy-page-view-cover">
-                <img src={page.cover.url} draggable={false} style={{
+            function dragStart(event: React.MouseEvent) {
+                event.stopPropagation();
+                var currentTop = self.top;
+                MouseDragger({
+                    event,
+                    moving(ev, data, isEnd) {
+                        const dy = ev.pageY - event.pageY;
+                        const z = (dy / 240) * 100;
+                        var newTop = currentTop - z;
+                        if (newTop < 0) newTop = 0;
+                        else if (newTop > 100) newTop = 100;
+                        self.top = newTop;
+                        self.img.style.objectPosition = `center ` + newTop + '%';
+                    }
+                })
+            }
+            function savePostion() {
+                page.onUpdateProps({ 'cover.top': self.top });
+                self.startPos = false;
+                self.forceUpdate();
+            }
+            function endPostion() {
+                self.startPos = false;
+                self.forceUpdate();
+            }
+            return <div className="shy-page-view-cover" onMouseDown={e => dragStart(e)}>
+                <img ref={e => this.img = e} onDragStart={e => false} src={page.cover.url} draggable={false} style={{
                     height: 240,
-                    objectPosition: 'center' + (page.cover.top || 50) + '%'
+                    objectPosition: 'center' + (typeof page?.cover?.top == 'number' ? page.cover.top : 50) + '%'
                 }} />
+                {self.startPos && <div className="shy-page-view-cover-drag-tip">拖动图片调整位置</div>}
                 <div className="shy-page-view-cover-nav">
                     <div style={page.getScreenStyle()}>
                         <div style={{ position: 'relative', height: 24 }}>
@@ -40,9 +75,15 @@ export class PageCover extends React.Component<{ page: Page }>{
                                 <Icon size={72} icon={page.pageInfo?.icon}></Icon>
                             </div>}
                             <div className="shy-page-view-cover-operators">
-                                <a onMouseDown={e => changeCover(e)}>更换</a>
-                                <a onMouseDown={e => startPosition(e)}>调整</a>
-                                <a onMouseDown={e => page.onAddCover()}>移除</a>
+                                {self.startPos && <>
+                                    <a onMouseDown={e => savePostion()}>保存</a>
+                                    <a onMouseDown={e => endPostion()}>取消</a>
+                                </>}
+                                {!self.startPos && <>
+                                    <a onMouseDown={e => changeCover(e)}>更换</a>
+                                    <a onMouseDown={e => startPosition(e)}>调整</a>
+                                    <a onMouseDown={e => page.onAddCover()}>移除</a>
+                                </>}
                             </div>
                         </div>
                     </div>
