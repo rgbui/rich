@@ -59,6 +59,16 @@ export var BlockSelectorData: BlockGroup[] = [
         ]
     },
     {
+        text: '展示',
+        childs: [
+            { text: '卡片', pic: <img src={embed} />, url: "/card", label: '/卡片' },
+            { text: '标签页', pic: <img src={embed} />, url: "/tab", label: '/嵌入' },
+            { text: '轮播', pic: <img src={embed} />, url: "/carousel", label: '/嵌入' },
+            { text: '模板按钮', pic: <img src={embed} />, url: '/button/template', label: '/模板按钮' },
+            { text: '目录大纲', pic: <img src={embed} />, url: '/outline', label: '/目录' }
+        ]
+    },
+    {
         text: '媒体与附件',
         childs: [
             { text: "图片", pic: <img src={image} />, url: '/image', description: '', label: '/图片' },
@@ -88,10 +98,7 @@ export var BlockSelectorData: BlockGroup[] = [
         text: '嵌入',
         childs: [
             { text: '嵌入', pic: <img src={embed} />, url: "/embed", label: '/嵌入' },
-            { text: '标签页', pic: <img src={embed} />, url: "/tab", label: '/嵌入' },
-            { text: '轮播', pic: <img src={embed} />, url: "/carousel", label: '/嵌入' },
-            { text: '模板按钮', pic: <img src={embed} />, url: '/button/template', label: '/模板按钮' },
-            { text: '目录大纲', pic: <img src={embed} />, url: '/outline', label: '/目录' }
+
         ]
     }
 ]
