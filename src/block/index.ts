@@ -19,7 +19,7 @@ import { TextContent } from "./element/text";
 import { BlockUrlConstant } from "./constant";
 import { List } from "../../blocks/present/list/list";
 import { CSSProperties } from "react";
-import { PageLayoutType } from "../layout/declare";
+import { PageLayoutType } from "../page/declare";
 import { Matrix } from "../common/matrix";
 import { Block$Board } from "./partial/board";
 import { Polygon } from "../common/vector/polygon";
