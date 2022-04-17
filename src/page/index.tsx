@@ -68,6 +68,9 @@ export class Page extends Events<PageDirective> {
     grid: PageGrid;
     matrix: Matrix = new Matrix();
     cover: { abled: boolean, url: string, top: number } = null;
+    isFullWidth: boolean = true;
+    smallFont: boolean = false;
+
     get windowMatrix() {
         var rect = Rect.fromEle(this.root);
         var matrix = new Matrix();
@@ -161,13 +164,13 @@ export class Page extends Events<PageDirective> {
     getScreenStyle() {
         var style: CSSProperties = {};
         if (this.pageLayout?.type == PageLayoutType.doc) {
-            var isFull: boolean = true;
+            var isFull: boolean = this.isFullWidth;
             if (isFull) {
-                style.paddingLeft = 100;
-                style.paddingRight = 100;
+                style.paddingLeft = 80;
+                style.paddingRight = 80;
             }
             else {
-                style.width = 1000;
+                style.width = 800;
                 style.margin = '0 auto';
             }
         }

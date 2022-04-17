@@ -61,8 +61,8 @@ export class PageContextmenu {
         var items: MenuItemType<BlockDirective | string>[] = [];
         if (this.pageLayout.type == PageLayoutType.doc) {
             items = [
-                { name: 'smallText', text: '小字号', type: MenuItemTypeValue.switch },
-                { name: 'fullWidth', text: '宽版', type: MenuItemTypeValue.switch },
+                { name: 'smallText', text: '小字号', checked: this.smallFont ? true : false, type: MenuItemTypeValue.switch },
+                { name: 'fullWidth', text: '宽版', checked: this.isFullWidth ? true : false, type: MenuItemTypeValue.switch },
                 { type: MenuItemTypeValue.divide },
                 { name: 'layout', text: '版面', icon: CustomizePageSvg },
                 { name: 'lock', text: '编辑保护', icon: LockSvg, disabled: true },
@@ -84,7 +84,12 @@ export class PageContextmenu {
         var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, items, {
             overflow: 'visible',
             update: (item) => {
-                console.log(item);
+                if (item.name == 'smallText') {
+                    this.onUpdateProps({ smallFont: item.checked }, true);
+                }
+                else if (item.name == 'fullWidth') {
+                    this.onUpdateProps({ isFullWidth: item.checked }, true);
+                }
             }
         });
         if (r) {

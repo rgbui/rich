@@ -93,7 +93,9 @@ export class Page$Cycle {
         var json: Record<string, any> = {
             id: this.id,
             date: this.date,
-            cover: util.clone(this.cover)
+            cover: util.clone(this.cover),
+            isFullWidth: this.isFullWidth,
+            smallFont: this.smallFont,
         };
         json.pageLayout = util.clone(this.pageLayout);
         json.matrix = this.matrix.getValues();
@@ -354,6 +356,6 @@ export class Page$Cycle {
         await this.onAction(ActionDirective.onPageUpdateProps, async () => {
             await this.updateProps(props);
         });
-        if (isUpdate) { this.view.forceUpdate();console.log('ggg'); }
+        if (isUpdate) { this.view.forceUpdate(); console.log('ggg'); }
     }
 }
