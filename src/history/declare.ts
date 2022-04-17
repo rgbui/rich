@@ -51,23 +51,24 @@ export enum ActionDirective {
     onDataGridUpdateFilter = 223,
     onDataGridShowRowNum = 224,
     onDataGridShowCheck = 225,
-    onDataGridChangeFields=226,
-    onDataGridChangeSize=227,
+    onDataGridChangeFields = 226,
+    onDataGridChangeSize = 227,
     /**
      * 错误修正的
      */
     onErrorRepairDidMounte = 300,
 
     onPageTurnLayout = 400,
+    onPageUpdateProps = 401,
 
     /**
      * 一些特殊的block操作
      */
-     onTabAddItem=500,
-     onTabRemoveItem=501,
-     onCarouselAddItem=510,
-     onCarouselRemoveItem=511,
-     onMindAddSub=512,
+    onTabAddItem = 500,
+    onTabRemoveItem = 501,
+    onCarouselAddItem = 510,
+    onCarouselRemoveItem = 511,
+    onMindAddSub = 512,
 
 }
 
@@ -109,5 +110,6 @@ export enum OperatorDirective {
     schemaRowRemove = 302,
 
     pageTurnLayout = 400,
+    pageUpdateProp = 401,
 }
 

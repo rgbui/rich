@@ -597,6 +597,8 @@ export class Block$Operator {
                 break;
             case BlockRenderRange.none:
                 break;
+            case BlockRenderRange.page:
+                break;
         }
     }
     updateArrayUpdate(this: Block, key: string, at: number, data: any, range = BlockRenderRange.self) {
