@@ -1,4 +1,37 @@
 .sy-block-page-info {
+    &-operators {
+        height         : 24px;
+        line-height    : 24px;
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : center;
+
+        a {
+            margin-right    : 10px;
+            display         : inline-flex;
+            justify-content : flex-start;
+            align-items     : center;
+            padding-left    : 6px;
+            padding-right   : 8px;
+            border-radius   : 4px;
+            color           : rgba(55, 53, 47, 0.5);
+            fill            : currentColor;
+            background-color: transparent;
+            cursor          : pointer;
+
+            &:hover {
+                background-color: rgba(55, 53, 47, 0.08);
+            }
+        }
+
+        visibility: hidden;
+    }
+
+    &:hover {
+        .sy-block-page-info-operators {
+            visibility: visible;
+        }
+    }
 
     &-head {
         margin-bottom  : 20px;
@@ -32,23 +65,24 @@
 }
 
 .sy-block-link {
-    cursor: pointer;
+    cursor    : pointer;
     min-height: 30px;
+
     &:hover {
         background-color: rgba(55, 53, 47, 0.08);
         transition      : background 20ms ease-in 0s;
     }
 
-    white-space  : nowrap;
-    overflow     : hidden;
-    text-overflow: ellipsis;
-    display: flex;
+    white-space    : nowrap;
+    overflow       : hidden;
+    text-overflow  : ellipsis;
+    display        : flex;
     justify-content: flex-start;
-    align-items: center;
+    align-items    : center;
 
     a {
 
-        display        : inline-flex;
+        display: inline-flex;
 
         align-items    : center;
         justify-content: flex-start;

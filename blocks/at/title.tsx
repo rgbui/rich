@@ -1,22 +1,18 @@
 import React from "react";
 import { Block } from "../../src/block";
 import { BlockDisplay } from "../../src/block/enum";
-import { prop, url, view } from "../../src/block/factory/observable";
+import { url, view } from "../../src/block/factory/observable";
 import { TextArea } from "../../src/block/view/appear";
 import { BlockView } from "../../src/block/view";
-import { Icon } from "../../component/view/icon";
-import { useIconPicker } from "../../extensions/icon";
-import { Rect } from "../../src/common/vector/point";
 import { BlockAppear } from "../../src/block/appear";
-import lodash from "lodash";
 import { channel } from "../../net/channel";
 import { LinkPageItem } from "../../extensions/at/declare";
+import { PageLayoutType } from "../../src/page/declare";
+import { Icon } from "../../component/view/icon";
+import { AddPageCoverSvg, AddPageIconSvg } from "../../component/svgs";
+
 @url('/title')
 export class Title extends Block {
-    @prop()
-    isShowIcon: boolean = true;
-    @prop()
-    isShowDescription: boolean = false;
     display = BlockDisplay.block;
     pageInfo: LinkPageItem = null;
     async loadPageInfo() {
@@ -26,20 +22,14 @@ export class Title extends Block {
         }
     }
     async changeAppear(appear) {
-        if (appear.prop == 'pageInfo.text' || appear.prop == 'pageInfo.description') {
+        if (appear.prop == 'pageInfo.text') {
             channel.air('/page/update/info', {
-                id: this.pageInfo.id, pageInfo: {
+                id: this.pageInfo.id,
+                pageInfo: {
                     id: this.pageInfo.id,
-                    text: this.pageInfo?.text,
-                    description: this.pageInfo?.description
+                    text: this.pageInfo?.text
                 }
             })
-        }
-    }
-    async onChangeIcon(event: React.MouseEvent) {
-        var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) });
-        if (icon) {
-            channel.air('/page/update/info', { id: this.pageInfo.id, pageInfo: { icon } })
         }
     }
     get isSupportTextStyle() {
@@ -56,41 +46,29 @@ export class TitleView extends BlockView<Title>{
     updatePageInfo = (r: { id: string, pageInfo: LinkPageItem }) => {
         var { id, pageInfo } = r;
         if (this.block.pageInfo.id == id) {
-            var isUpdate: boolean = false;
             if (typeof pageInfo.text != 'undefined' && pageInfo.text != this.block.pageInfo.text) {
                 this.block.pageInfo.text = pageInfo.text;
-                isUpdate = true;
-            }
-            if (!this.block.pageInfo.icon && pageInfo.icon || typeof pageInfo.icon != 'undefined' && !lodash.isEqual(pageInfo.icon, this.block.pageInfo.icon)) {
-                this.block.pageInfo.icon = pageInfo.icon;
-                isUpdate = true;
-            }
-            if (isUpdate)
                 this.forceUpdate();
+            }
         }
     }
     willUnmount() {
         channel.off('/page/update/info', this.updatePageInfo);
     }
     render() {
+        var isAdd: boolean = [PageLayoutType.doc].includes(this.block.page.pageLayout.type)
         return <div className='sy-block-page-info' style={this.block.visibleStyle}>
+            {isAdd && (!this.block.page.pageInfo?.icon || !this.block.page.cover?.abled) && <div className='sy-block-page-info-operators' >
+                {!this.block.page.pageInfo?.icon && <a onMouseDown={e => this.block.page.onAddIcon()}><Icon size={14} icon={AddPageIconSvg}></Icon><span>添加图标</span></a>}
+                {!this.block.page.cover?.abled && <a onMouseDown={e => this.block.page.onAddCover()}><Icon size={14} icon={AddPageCoverSvg}></Icon><span>添加封面</span></a>}
+            </div>}
             {this.block.pageInfo == null && <div className='sy-block-page-info-loading'></div>}
             {this.block.pageInfo != null &&
-                <><div className='sy-block-page-info-head'>
-                    {this.block.isShowIcon && this.block.pageInfo.icon && <span onMouseDown={e => this.block.onChangeIcon(e)} className='sy-block-page-info-head-icon'>
-                        <Icon size={42} icon={this.block.pageInfo.icon}></Icon>
-                    </span>}
+                <div className='sy-block-page-info-head'>
                     <span className='sy-block-page-info-head-title'><TextArea placeholder='输入标题'
                         rf={e => this.block.elementAppear({ el: e, appear: BlockAppear.text, prop: 'pageInfo.text' })}
                         html={this.block.pageInfo.text}></TextArea></span>
-                </div>
-                    {this.block.isShowDescription && <div className='sy-block-page-info-description'>
-                        <TextArea
-                            rf={e => this.block.elementAppear({ el: e, appear: BlockAppear.text, prop: 'pageInfo.description' })}
-                            html={this.block.pageInfo.description}
-                        ></TextArea>
-                    </div>}
-                </>}
+                </div>}
         </div>
     }
 }

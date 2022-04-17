@@ -1,3 +1,6 @@
+import AddPageCommentSvg from "../src/assert/svg/addPageComment.svg";
+import AddPageCoverSvg from "../src/assert/svg/addPageCover.svg";
+import AddPageIconSvg from "../src/assert/svg/addPageIcon.svg";
 import ArrowDownSvg from "../src/assert/svg/arrowDown.svg";
 import ArrowLeftSvg from "../src/assert/svg/arrowLeft.svg";
 import ArrowRightSvg from "../src/assert/svg/arrowRight.svg";
@@ -115,6 +118,9 @@ import VideoSvg from "../src/assert/svg/video.svg";
 import WsSettingsSvg from "../src/assert/svg/wsSettings.svg";
 
 export  {
+AddPageCommentSvg,
+AddPageCoverSvg,
+AddPageIconSvg,
 ArrowDownSvg,
 ArrowLeftSvg,
 ArrowRightSvg,
