@@ -29,6 +29,7 @@ import "./present/code/code";
 import "./present/divider";
 import "./present/button-template/index";
 import "./present/outline/index";
+import "./present/card/index";
 
 import './table/cell';
 import './table/row';
