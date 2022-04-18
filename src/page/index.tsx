@@ -70,7 +70,6 @@ export class Page extends Events<PageDirective> {
     cover: { abled: boolean, url: string, top: number } = null;
     isFullWidth: boolean = true;
     smallFont: boolean = false;
-
     get windowMatrix() {
         var rect = Rect.fromEle(this.root);
         var matrix = new Matrix();
