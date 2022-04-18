@@ -1,5 +1,5 @@
+
 import { Events } from "../../util/events";
-import { util } from "../../util/util";
 import { Point, Rect } from "../common/vector/point";
 import { Page } from "../page";
 import { BlockDisplay } from "./enum";
@@ -198,8 +198,8 @@ export abstract class Block extends Events {
         if (this.isFreeBlock) {
             style.position = 'absolute';
             style.zIndex = this.zindex;
-            style.top=0;
-            style.left=0;
+            style.top = 0;
+            style.left = 0;
             style.transformOrigin = '0% 0%';
             Object.assign(style, this.transformStyle);
         }
@@ -211,7 +211,7 @@ export abstract class Block extends Events {
                     });
                 Object.assign(style, {
                     padding: '3px 0px'
-                })
+                });
             }
         }
         Object.assign(style, this.pattern.style);
@@ -254,6 +254,7 @@ export abstract class Block extends Events {
     get isCell(): boolean {
         return false;
     }
+
     get isEmptyCell(): boolean {
         if (this.childs.length == 0) return true;
         else if (this.childs.length == 1) {
@@ -508,8 +509,11 @@ export abstract class Block extends Events {
     get isMind() {
         return this.url == BlockUrlConstant.Mind;
     }
+    get isBoardBlock() {
+        return this.url == BlockUrlConstant.Board;
+    }
     get frameBlock() {
-        var r = this.closest(x => x.isFrame);
+        var r = this.closest(x => x.isFrame || x.isBoardBlock);
         if (r) return r;
         else {
             if (this.page.pageLayout.type == PageLayoutType.board) {
@@ -522,7 +526,7 @@ export abstract class Block extends Events {
         if (this.isPart) return false;
         if (this.isLine) return false;
         if (this.page.pageLayout.type == PageLayoutType.board) return true;
-        return this.closest(x => x.isFrame) ? true : false;
+        return this.closest(x => x.isFrame || x.isBoardBlock) ? true : false;
     }
     /**
      * 坐标系相对的块，
