@@ -170,13 +170,14 @@ export class TextSpan extends Block {
         });
     }
     async getBoardEditCommand(this: Block): Promise<{ name: string; value?: any; }[]> {
-        var bold = this.pattern.css(BlockCssName.font).fontWeight;
+        var fontStyle = this.pattern.css(BlockCssName.font)
+        var bold = fontStyle?.fontWeight || false;
         var cs: { name: string; value?: any; }[] = [];
-        cs.push({ name: 'fontSize', value: Math.round(this.pattern.css(BlockCssName.font).fontSize || 14) });
+        cs.push({ name: 'fontSize', value: Math.round(fontStyle?.fontSize || 14) });
         cs.push({ name: 'fontWeight', value: bold == 'bold' || bold == 500 ? true : false });
-        cs.push({ name: 'fontStyle', value: this.pattern.css(BlockCssName.font).fontStyle == 'italic' ? true : false });
-        cs.push({ name: 'textDecoration', value: this.pattern.css(BlockCssName.font).textDecoration });
-        cs.push({ name: 'fontColor', value: this.pattern.css(BlockCssName.font).color });
+        cs.push({ name: 'fontStyle', value: fontStyle?.fontStyle == 'italic' ? true : false });
+        cs.push({ name: 'textDecoration', value: fontStyle?.textDecoration || 'none' });
+        cs.push({ name: 'fontColor', value: fontStyle?.color || '#000' });
         cs.push({ name: 'link' });
         cs.push({ name: 'backgroundColor', value: this.pattern.css(BlockCssName.fill)?.color || 'transparent' });
         return cs;
