@@ -66,9 +66,10 @@ export class PageView extends Component<{ page: Page }>{
         }
     }
     async observeToolBoard() {
-        if (this.page.pageLayout.type == PageLayoutType.board) {
+        if ([PageLayoutType.board, PageLayoutType.doc].includes(this.page.pageLayout.type)) {
             var toolBoard = await getBoardTool();
-            toolBoard.open(Point.from(this.el.getBoundingClientRect()).move(10, 10));
+            if (this.page.pageLayout.type == PageLayoutType.board)
+                toolBoard.open(Point.from(this.el.getBoundingClientRect()).move(10, 10));
             toolBoard.only('selector', (data) => {
                 var cursor: string = '';
                 if (data.url == BlockUrlConstant.TextSpan) {

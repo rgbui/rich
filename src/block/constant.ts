@@ -4,10 +4,11 @@ export enum BlockUrlConstant {
     Text = '/text',
     Row = '/row',
     Col = '/col',
-    Divider='/divider',
-    List='/list',
-    Head='/head',
-    Frame='/frame',
-    Mind='/flow/mind',
-    Group='/group'
+    Divider = '/divider',
+    List = '/list',
+    Head = '/head',
+    Frame = '/frame',
+    Mind = '/flow/mind',
+    Group = '/group',
+    Board = '/board'
 }
