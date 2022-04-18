@@ -534,7 +534,7 @@ export abstract class Block extends Events {
      * 没有就是相对于页面
      */
     get relativeBlock() {
-        var rb = this.closest(x => x.isFrame || x.isMind || x.url == BlockUrlConstant.Group, true);
+        var rb = this.closest(x => x.isFrame || x.isBoardBlock || x.isMind || x.url == BlockUrlConstant.Group, true);
         if (rb) return rb;
     }
     matrix = new Matrix();
@@ -555,8 +555,8 @@ export abstract class Block extends Events {
     }
     get globalMatrix(): Matrix {
         var rb = this.relativeBlock;
-        if (rb) return rb.globalMatrix.appended(this.matrix.appended(this.moveMatrix).appended(this.childsOffsetMatrix))
-        else return this.page.matrix.appended(this.matrix.appended(this.moveMatrix).appended(this.childsOffsetMatrix));
+        if (rb) return rb.globalMatrix.appended(this.matrix).appended(this.moveMatrix).appended(this.childsOffsetMatrix)
+        else return this.page.matrix.appended(this.matrix).appended(this.moveMatrix).appended(this.childsOffsetMatrix);
     }
     get transformStyle() {
         var ma = this.matrix.appended(this.moveMatrix).appended(this.childsOffsetMatrix);
