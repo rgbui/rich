@@ -89,7 +89,8 @@ import "./map/amap";
 import './board/note/index';
 import "./board/line/line";
 import "./board/pen/index";
-import "./board/shape/index"
+import "./board/shape/index";
+import "./board/board/index";
 
 
 import "./channel/text/index";

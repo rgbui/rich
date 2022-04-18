@@ -62,6 +62,7 @@ export var BlockSelectorData: BlockGroup[] = [
         text: '展示',
         childs: [
             { text: '卡片', pic: <img src={embed} />, url: "/card", label: '/卡片' },
+            { text: '画板', pic: <img src={embed} />, url: '/board', label: '/画板' },
             { text: '标签页', pic: <img src={embed} />, url: "/tab", label: '/嵌入' },
             { text: '轮播', pic: <img src={embed} />, url: "/carousel", label: '/嵌入' },
             { text: '模板按钮', pic: <img src={embed} />, url: '/button/template', label: '/模板按钮' },
