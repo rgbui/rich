@@ -18,7 +18,7 @@ export class Board extends Block {
             var rect = Rect.fromEle(root);
             var currentRect = Rect.fromEle(this.el);
             var r = currentRect.leftTop.relative(rect.leftTop);
-            matrix.transform(r.x, r.y);
+            matrix.translate(r.x, r.y);
         }
         return matrix;
     }
