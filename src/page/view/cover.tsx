@@ -7,7 +7,6 @@ import { channel } from "../../../net/channel";
 import { MouseDragger } from "../../common/dragger";
 import { Rect } from "../../common/vector/point";
 
-
 export class PageCover extends React.Component<{ page: Page }>{
     private startPos: boolean = false;
     img: HTMLImageElement;
@@ -30,7 +29,6 @@ export class PageCover extends React.Component<{ page: Page }>{
                     page.onUpdateProps({ cover: { url: r.url, top: 50, abled: true } }, true)
                 }
             }
-
             function startPosition(event: React.MouseEvent) {
                 event.stopPropagation();
                 self.top = typeof page?.cover?.top == 'number' ? page?.cover?.top : 50;
