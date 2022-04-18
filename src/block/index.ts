@@ -24,6 +24,8 @@ import { Matrix } from "../common/matrix";
 import { Block$Board } from "./partial/board";
 import { Polygon } from "../common/vector/polygon";
 import { channel } from "../../net/channel";
+
+
 export abstract class Block extends Events {
     constructor(page: Page) {
         super();
@@ -254,7 +256,6 @@ export abstract class Block extends Events {
     get isCell(): boolean {
         return false;
     }
-
     get isEmptyCell(): boolean {
         if (this.childs.length == 0) return true;
         else if (this.childs.length == 1) {
@@ -272,8 +273,7 @@ export abstract class Block extends Events {
         else return false;
     }
     get partParent(): Block {
-        if (this.partParentId)
-            return this.page.find(x => x.id == this.partParentId)
+        if (this.partParentId) return this.page.find(x => x.id == this.partParentId)
         else return this.closest(x => !x.isPart);
     }
     @prop()
@@ -525,6 +525,7 @@ export abstract class Block extends Events {
     get isFreeBlock() {
         if (this.isPart) return false;
         if (this.isLine) return false;
+        if (this.isBoardBlock) return false;
         if (this.page.pageLayout.type == PageLayoutType.board) return true;
         return this.closest(x => x.isFrame || x.isBoardBlock) ? true : false;
     }
@@ -537,6 +538,15 @@ export abstract class Block extends Events {
         if (rb) return rb;
     }
     matrix = new Matrix();
+    private _childsOffsetMatrix: Matrix;
+    get childsOffsetMatrix() {
+        if (typeof this._childsOffsetMatrix == 'undefined')
+            this._childsOffsetMatrix = new Matrix();
+        return this._childsOffsetMatrix;
+    }
+    set childsOffsetMatrix(value: Matrix) {
+        this._childsOffsetMatrix = value;
+    }
     /**
      * 相对窗体的matrix
      */
@@ -545,11 +555,11 @@ export abstract class Block extends Events {
     }
     get globalMatrix(): Matrix {
         var rb = this.relativeBlock;
-        if (rb) return rb.globalMatrix.appended(this.matrix.appended(this.moveMatrix))
-        else return this.page.matrix.appended(this.matrix.appended(this.moveMatrix));
+        if (rb) return rb.globalMatrix.appended(this.matrix.appended(this.moveMatrix).appended(this.childsOffsetMatrix))
+        else return this.page.matrix.appended(this.matrix.appended(this.moveMatrix).appended(this.childsOffsetMatrix));
     }
     get transformStyle() {
-        var ma = this.matrix.appended(this.moveMatrix);
+        var ma = this.matrix.appended(this.moveMatrix).appended(this.childsOffsetMatrix);
         return ma.getCss();
     }
     /**
