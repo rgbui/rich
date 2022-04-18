@@ -8,6 +8,7 @@ import { PageLayoutType } from "../../page/declare";
 import { CreateBoardBlock, IsBoardTextAnchorBlock, SelectorBoardBlock } from "./board";
 import { getShapeSelector } from "../../../extensions/shapes";
 import { getBoardTool } from "../../../extensions/board.tool";
+import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
 function triggerCreateAnchor(kit: Kit, block: Block, event: MouseEvent) {
     if (!block) return;
     if (!block.exists(g => g.isSupportAnchor, true)) return;
@@ -72,6 +73,8 @@ export async function mousedown(kit: Kit, event: MouseEvent) {
     else {
         if (kit.page.pageLayout.type != PageLayoutType.board) {
             (await getBoardTool()).close();
+            forceCloseBoardEditTool();
+            kit.picker.onCancel();
         }
     }
     var isBloard = kit.page.pageLayout.type != PageLayoutType.board ? false : true;
