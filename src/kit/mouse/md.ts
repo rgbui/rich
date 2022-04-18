@@ -7,6 +7,7 @@ import { TextEle } from "../../common/text.ele";
 import { PageLayoutType } from "../../page/declare";
 import { CreateBoardBlock, IsBoardTextAnchorBlock, SelectorBoardBlock } from "./board";
 import { getShapeSelector } from "../../../extensions/shapes";
+import { getBoardTool } from "../../../extensions/board.tool";
 function triggerCreateAnchor(kit: Kit, block: Block, event: MouseEvent) {
     if (!block) return;
     if (!block.exists(g => g.isSupportAnchor, true)) return;
@@ -27,9 +28,7 @@ function triggerCreateAnchor(kit: Kit, block: Block, event: MouseEvent) {
         }
         else kit.explorer.onFocusAnchor(anchor);
     }
-    else {
-        kit.explorer.onFocusAnchor(anchor);
-    }
+    else kit.explorer.onFocusAnchor(anchor);
     return anchor;
 }
 function dblClick(kit: Kit, event: MouseEvent) {
@@ -58,10 +57,23 @@ async function createTailBlock(kit: Kit, event: MouseEvent) {
         }
     }
 }
+async function focusBoardBlock(kit: Kit, block: Block, event: MouseEvent) {
+    var toolBoard = await getBoardTool();
+    var rect = block.getVisibleBound();
+    toolBoard.open(Point.from(rect.leftTop).move(-40, 30));
+}
 export async function mousedown(kit: Kit, event: MouseEvent) {
     (await getShapeSelector()).close();
     onAutoScrollStop();
     var block = kit.page.getBlockInMouseRegion(event);
+    if (block?.isBoardBlock) {
+        await focusBoardBlock(kit, block, event);
+    }
+    else {
+        if (kit.page.pageLayout.type != PageLayoutType.board) {
+            (await getBoardTool()).close();
+        }
+    }
     var isBloard = kit.page.pageLayout.type != PageLayoutType.board ? false : true;
     if (!block && !isBloard) {
         block = kit.page.getPageEmptyAreaBlock(event);
@@ -126,6 +138,7 @@ export async function mousedown(kit: Kit, event: MouseEvent) {
         }
     })
 }
+
 
 
 
