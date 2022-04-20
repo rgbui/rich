@@ -69,8 +69,8 @@ export interface ChannelDelMapUrls {
 	"/user/blacklist/delete":{args:{id:string},returnType:Promise<SockResponse<void>>},
 	"/user/chat/cancel":{args:{id:string},returnType:Promise<SockResponse<void>>},
 	"/ws/channel/cancel":{args:{id:string,sockId?:string},returnType:Promise<SockResponse<void>>},
-	"/ws/memeber/delete":{args:{userid:string},returnType:Promise<void>},
-	"/ws/role/delete":{args:{roleId:string},returnType:Promise<void>}
+	"/ws/memeber/delete":{args:{userid:string},returnType:Promise<SockResponse<void>>},
+	"/ws/role/delete":{args:{roleId:string},returnType:Promise<SockResponse<void>>}
 }
 export interface ChannelPostMapUrls {
     "/phone/sms/code":{args:{phone:string},returnType:Promise<{ok:boolean,warn:string,data:{success:boolean,code?:string}}>},
@@ -90,7 +90,7 @@ export interface ChannelPatchMapUrls {
 	"/user/channel/active":{args:{id:string},returnType:Promise<SockResponse<void>>},
 	"/ws/sitedomain/patch":{args:{domain:string},returnType:Promise<SockResponse<{success:boolean,overflowDue:boolean}>>},
 	"/ws/patch":{args:{wsId?:string,sockId?:string,data:Record<string,any>},returnType:Promise<SockResponse<void>>},
-	"/ws/role/patch":{args:{roleId:string,data:Record<string,any>},returnType:Promise<void>},
+	"/ws/role/patch":{args:{roleId:string,data:Record<string,any>},returnType:Promise<SockResponse<void>>},
 	"/interactive/emoji":{args:{elementUrl:string,schemaUrl:string,fieldName:string},returnType:Promise<SockResponse<{count:number}>>}
 }
 export interface ChannelPutMapUrls {
@@ -109,7 +109,7 @@ export interface ChannelPutMapUrls {
 	"/ws/create":{args:{text:string,templateId?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
 	"/ws/invite/create":{args:any,returnType:Promise<SockResponse<{code:string}>>},
 	"/ws/channel/send":{args:{roomId:string,content?:string,file?:any,sockId?:string},returnType:Promise<SockResponse<{id:string,seq:number,createDate:Date}>>},
-	"/ws/role/create":{args:{data:Record<string,any>},returnType:Promise<void>}
+	"/ws/role/create":{args:{data:Record<string,any>},returnType:Promise<SockResponse<{role:Record<string,any>}>>}
 }
 export interface ChannelGetMapUrls {
     "/gallery/query":{args:{type: GalleryType, word: string},returnType:Promise<{ok:boolean,data:OuterPic[],warn:string}>},
@@ -144,10 +144,10 @@ export interface ChannelGetMapUrls {
 	"/ws/latest":{args:any,returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
 	"/ws/invite/check":{args:{invite:string},returnType:Promise<SockResponse<{member:boolean,workspace:Record<string,any>}>>},
 	"/ws/channel/list":{args:{roomId:string,seq?:number,size?:number},returnType:Promise<SockResponse<{list:any[]}>>},
-	"/ws/member/word/query":{args:{word:string},returnType:Promise<{page:number,size:number,total:number,list:any[]}>},
-	"/ws/members":{args:{page:number,size:number},returnType:Promise<{page:number,size:number,total:number,list:any[]}>},
-	"/ws/roles":{args:{list:any[]},returnType:Promise<void>},
-	"/ws/role/members":{args:{roleId:string,page:number,size:number},returnType:Promise<{page:number,size:number,total:number,list:any[]}>},
+	"/ws/member/word/query":{args:{word:string},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
+	"/ws/members":{args:{page:number,size:number},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
+	"/ws/roles":{args:{},returnType:Promise<SockResponse<{list:any[]}>>},
+	"/ws/role/members":{args:{roleId:string,page:number,size:number},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
 	"/page/items":{args:{ids:string[]},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/item/subs":{args:{id:string},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/item":{args:{id:string},returnType:Promise<SockResponse<{ item:Record<string,any> }>>},
