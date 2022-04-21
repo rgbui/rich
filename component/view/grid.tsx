@@ -5,7 +5,8 @@ export class Row extends React.Component<{
     align?: 'start' | 'end' | 'center',
     style?: CSSProperties,
     children?: React.ReactNode,
-    className?: string[] | string
+    className?: string[] | string,
+    onMouseDown?:(event:React.MouseEvent)=>void,
 }>{
     render() {
         var cns: string[] = ['shy-row'];
@@ -24,7 +25,7 @@ export class Row extends React.Component<{
         else if (this.props.align == 'end') style.justifyContent = 'flex-end'
         if (this.props.valign == 'middle') style.alignItems = 'center'
         else if (this.props.valign == 'bottom') style.alignItems = 'flex-end'
-        return <div className={cns.join(" ")} style={style}>{this.props.children}</div>
+        return <div onMouseDown={e=>this.props.onMouseDown?this.props.onMouseDown(e):undefined} className={cns.join(" ")} style={style}>{this.props.children}</div>
     }
 }
 /**
