@@ -88,9 +88,9 @@ export interface ChannelPatchMapUrls {
 	"/user/patch":{args:{data:Record<string,any>},returnType:Promise<SockResponse<void>>},
 	"/user/patch/status":{args:{status:UserStatus,customStatus?:{overDue: Date, text: string}},returnType:Promise<SockResponse<void>>},
 	"/user/channel/active":{args:{id:string},returnType:Promise<SockResponse<void>>},
-	"/ws/sitedomain/patch":{args:{domain:string},returnType:Promise<SockResponse<{success:boolean,overflowDue:boolean}>>},
 	"/ws/patch":{args:{wsId?:string,sockId?:string,data:Record<string,any>},returnType:Promise<SockResponse<void>>},
 	"/ws/role/patch":{args:{roleId:string,data:Record<string,any>},returnType:Promise<SockResponse<void>>},
+	"/ws/set/domain":{args:{wsId?:string,domain:string},returnType:Promise<SockResponse<{exists?:boolean,illegal?:boolean}>>},
 	"/interactive/emoji":{args:{elementUrl:string,schemaUrl:string,fieldName:string},returnType:Promise<SockResponse<{count:number}>>}
 }
 export interface ChannelPutMapUrls {
