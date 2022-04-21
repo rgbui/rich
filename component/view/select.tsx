@@ -10,6 +10,7 @@ export class Select extends React.Component<{
     options: { text?: string, icon?: string | SvgrComponent | JSX.Element | IconArguments, value: any }[],
     onChange?: (value: any) => void,
     style?: CSSProperties,
+    dropStyle?: CSSProperties,
     dropAlign?: 'left' | 'right' | 'center',
     optionAlign?: 'left' | 'right' | 'center',
     border?: boolean
@@ -36,19 +37,22 @@ export class Select extends React.Component<{
         function click(item) {
             self.toggle = false;
             self.forceUpdate();
-            props.onChange(item.value);
+            if (typeof props.onChange == 'function')
+                props.onChange(item.value);
         }
         function setToggle() {
             self.toggle = !self.toggle;
             self.forceUpdate()
         }
         var dropStyle: CSSProperties = { left: 0 };
+
         if (this.props.dropAlign == 'right') {
             dropStyle = { right: 0 };
         }
         else if (this.props.dropAlign == 'center') {
             dropStyle = { left: '50%', transform: 'translate(-50%,0px)' };
         }
+        if (this.props.dropStyle) Object.assign(dropStyle, this.props.dropStyle)
         var op = props.options.find(g => g.value == props.value);
         var optionStyle: CSSProperties = { justifyContent: 'flex-start' }
         if (props.optionAlign == 'center') optionStyle.justifyContent = 'center';
