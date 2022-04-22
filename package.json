@@ -24,6 +24,7 @@
   "homepage": "https://github.com/rgbui/kanhai#readme",
   "dependencies": {
     "@types/ua-parser-js": "^0.7.36",
+    "animate.css": "^4.1.1",
     "axios": "^0.21.1",
     "bezier-js": "^6.1.0",
     "dayjs": "^1.10.6",
