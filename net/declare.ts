@@ -91,6 +91,7 @@ export interface ChannelPatchMapUrls {
 	"/ws/patch":{args:{wsId?:string,sockId?:string,data:Record<string,any>},returnType:Promise<SockResponse<void>>},
 	"/ws/role/patch":{args:{roleId:string,data:Record<string,any>},returnType:Promise<SockResponse<void>>},
 	"/ws/set/domain":{args:{wsId?:string,domain:string},returnType:Promise<SockResponse<{exists?:boolean,illegal?:boolean}>>},
+	"/ws/patch/member/roles":{args:{wsId?:string,userid:string,roleIds:string[]},returnType:Promise<SockResponse<void>>},
 	"/interactive/emoji":{args:{elementUrl:string,schemaUrl:string,fieldName:string},returnType:Promise<SockResponse<{count:number}>>}
 }
 export interface ChannelPutMapUrls {
