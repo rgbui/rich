@@ -13,6 +13,8 @@ import { PageLayoutView } from "./layout";
 import { channel } from "../../../net/channel";
 import { LinkPageItem } from "../../../extensions/at/declare";
 import { PageCover } from "./cover";
+import { Icon } from "../../../component/view/icon";
+import { BoardToolFrameSvg, CollectTableSvg, CommentSvg, PageSvg } from "../../../component/svgs";
 
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
@@ -148,13 +150,16 @@ export class PageView extends Component<{ page: Page }>{
         delete this.el.shy_drop_over;
         delete this.el.shy_end;
     }
-    selectPageLayout() {
-        return <div className="shy-page-view-first">
-            <div onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.doc)}><span>页面</span></div>
-            <div onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.db)}><span>表格</span></div>
-            <div onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.board)}><span>白板</span></div>
-            <div onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.textChannel)}><span>会话</span></div>
-            <div onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.textBroadcast)}><span>广播</span></div>
+    renderPageTemplate() {
+        return <div className="shy-page-view-template-picker" style={this.page.getScreenStyle()}>
+            <div className="shy-page-view-template-picker-tip">回车开始编辑，或者从下方选择</div>
+            <div className="shy-page-view-template-picker-items">
+                <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.doc)}><Icon size={16} icon={PageSvg} ></Icon><span>页面</span></a>
+                <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.db)}><Icon size={16} icon={CollectTableSvg} ></Icon><span>表格</span></a>
+                <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.board)}><Icon size={16} icon={BoardToolFrameSvg}></Icon><span>白板</span></a>
+                <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.textChannel)}><Icon size={16} icon={CommentSvg}></Icon><span>会话</span></a>
+                {/*<a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.textBroadcast)}><span>广播</span></a> */}
+            </div>
         </div>
     }
     render() {
@@ -174,7 +179,7 @@ export class PageView extends Component<{ page: Page }>{
                     <div className='shy-page-view-content' ref={e => this.page.contentEl = e}>
                         <PageCover page={this.page}></PageCover>
                         <ChildsArea childs={this.page.views}></ChildsArea>
-                        {this.page.requireSelectLayout && this.selectPageLayout()}
+                        {this.page.requireSelectLayout && this.renderPageTemplate()}
                     </div>
                 </PageLayoutView>
             </div>
