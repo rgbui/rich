@@ -41,7 +41,14 @@ export class TitleView extends BlockView<Title>{
     async didMount() {
         channel.sync('/page/update/info', this.updatePageInfo);
         await this.block.loadPageInfo();
-        this.forceUpdate();
+        this.forceUpdate(() => {
+            if (this.block.page?.pageInfo) {
+                if (!this.block.page?.pageInfo.text) {
+                    var title = this.block;
+                    this.block.page.kit.explorer.onFocusBlockAtAnchor(title);
+                }
+            }
+        });
     }
     updatePageInfo = (r: { id: string, pageInfo: LinkPageItem }) => {
         var { id, pageInfo } = r;
