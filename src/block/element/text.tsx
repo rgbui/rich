@@ -53,8 +53,8 @@ export class TextContentView extends BlockView<TextContent>{
             ta = <span className='sy-block-text-content-code'>{ta}</span>;
         }
         var style = this.block.visibleStyle;
-        if (typeof style.fontSize != 'undefined') style.fontSize = 'inherit';
-        if (typeof style.lineHeight != 'undefined') style.lineHeight = 'inherit';
+        style.fontSize = 'inherit';
+        style.lineHeight = 'inherit';
         return <span className='sy-block-text-content' style={style}>{ta}</span>
     }
 }
