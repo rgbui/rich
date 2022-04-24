@@ -35,6 +35,13 @@ export class Title extends Block {
     get isSupportTextStyle() {
         return false;
     }
+    onEmptyTitleFocusAnchor() {
+        if (this.page?.pageInfo) {
+            if (!this.page?.pageInfo.text) {
+                this.page.kit.explorer.onFocusBlockAtAnchor(this);
+            }
+        }
+    }
 }
 @view('/title')
 export class TitleView extends BlockView<Title>{
@@ -42,12 +49,7 @@ export class TitleView extends BlockView<Title>{
         channel.sync('/page/update/info', this.updatePageInfo);
         await this.block.loadPageInfo();
         this.forceUpdate(() => {
-            if (this.block.page?.pageInfo) {
-                if (!this.block.page?.pageInfo.text) {
-                    var title = this.block;
-                    this.block.page.kit.explorer.onFocusBlockAtAnchor(title);
-                }
-            }
+            this.block.onEmptyTitleFocusAnchor();
         });
     }
     updatePageInfo = (r: { id: string, pageInfo: LinkPageItem }) => {

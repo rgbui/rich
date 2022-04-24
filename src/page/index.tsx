@@ -31,6 +31,7 @@ import { channel } from '../../net/channel';
 import { TableSchema } from '../../blocks/data-grid/schema/meta';
 import { OriginFormField } from '../../blocks/data-grid/element/form/origin.field';
 import { LinkPageItem } from '../../extensions/at/declare';
+import { Title } from '../../blocks/at/title';
 
 export class Page extends Events<PageDirective> {
     root: HTMLElement;
@@ -105,6 +106,14 @@ export class Page extends Events<PageDirective> {
     renderFragment(panel: HTMLElement) {
         try {
             panel.appendChild(this.root);
+            if (this.pageInfo) {
+                if (!this.pageInfo.text) {
+                    var title = this.find(g => g.url == '/title') as Title;
+                    if (title) {
+                        title.onEmptyTitleFocusAnchor();
+                    }
+                }
+            }
             this.isOff = true;
             if (this.pageLayout.type == PageLayoutType.board) {
                 getBoardTool().then(r => {
