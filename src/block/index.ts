@@ -77,7 +77,7 @@ export abstract class Block extends Events {
      * 创建block的方式,访方式在初始创建时，
      * 可以触发一些操作
      */
-    createSource: 'InputBlockSelector';
+    createSource: 'InputBlockSelector'|'pageTurnLayout';
     __props: string[];
     get childs() {
         return this.blocks.childs;

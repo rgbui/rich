@@ -274,7 +274,8 @@ export class DataGridView extends Block {
         }
     }
     async createdDidMounted(): Promise<void> {
-        if (this.createSource == 'InputBlockSelector') {
+        if (this.createSource == 'InputBlockSelector'||this.createSource=='pageTurnLayout')
+        {
             if (!this.schemaId) {
                 var dg = await useDataGridCreate({ roundArea: Rect.fromEle(this.el) });
                 if (dg) {

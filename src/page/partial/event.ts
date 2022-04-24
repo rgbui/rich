@@ -141,9 +141,10 @@ export class PageEvent {
                     break;
                 case PageLayoutType.db:
                     this.pageLayout.type = layoutType;
+                    var view = this.views[0];
+                    await this.createBlock('/data-grid/table', { createSource: 'pageTurnLayout' }, view);
                     break;
                 case PageLayoutType.board:
-                    var view = this.views[0];
                     var view = this.views[0];
                     await view.childs.eachAsync(async block => {
                         await block.delete()
@@ -293,7 +294,7 @@ export class PageEvent {
         var codes = await emojiStore.get();
         var r = lodash.random(0, codes.length);
         var b = lodash.random(0, codes[r].childs.length);
-        channel.air('/page/update/info',{
+        channel.air('/page/update/info', {
             id: this.pageInfo.id,
             pageInfo: {
                 id: this.pageInfo.id,
