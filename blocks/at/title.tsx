@@ -65,7 +65,7 @@ export class TitleView extends BlockView<Title>{
         channel.off('/page/update/info', this.updatePageInfo);
     }
     render() {
-        var isAdd: boolean = [PageLayoutType.doc].includes(this.block.page.pageLayout.type)
+        var isAdd: boolean = this.block.page.isSupportCover;
         return <div className='sy-block-page-info' style={this.block.visibleStyle}>
             {isAdd && (!this.block.page.pageInfo?.icon || !this.block.page.cover?.abled) && <div className='sy-block-page-info-operators' >
                 {!this.block.page.pageInfo?.icon && <a onMouseDown={e => this.block.page.onAddIcon()}><Icon size={14} icon={AddPageIconSvg}></Icon><span>添加图标</span></a>}
