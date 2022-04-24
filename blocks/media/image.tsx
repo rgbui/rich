@@ -154,12 +154,7 @@ export class ImageView extends BlockView<Image>{
                     <div className='sy-block-image-left-resize' onMouseDown={e => this.onMousedown(e, 'left')}></div>
                     <div className='sy-block-image-right-resize' onMouseDown={e => this.onMousedown(e, 'right')}></div>
                     {this.block.allowCaption && <div className='sy-block-image-caption'>
-                        {<TextArea rf={e => this.block.elementAppear({
-                            el: e,
-                            appear: BlockAppear.text,
-                            prop: 'caption'
-                        })}
-                            html={this.block.caption} placeholder={'键入图片描述'}></TextArea>}
+                        {<TextArea block={this.block} prop='content' placeholder={'键入图片描述'}></TextArea>}
                     </div>}
                 </div>
             </div>}

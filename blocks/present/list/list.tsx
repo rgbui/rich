@@ -119,7 +119,7 @@ export class ListView extends BlockView<List>{
         if (this.block.childs.length > 0)
             return <TextLineChilds childs={this.block.childs}></TextLineChilds>
         else
-            return <TextArea rf={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent} placeholder={'键入文字或"/"选择'}></TextArea>
+            return <TextArea  block={this.block}  prop='content' placeholder={'键入文字或"/"选择'}></TextArea>
     }
     render() {
         return <div className='sy-block-list' style={this.block.visibleStyle} >

@@ -61,7 +61,7 @@ export class HeadView extends BlockView<Head>{
                 childs={this.block.childs}></TextLineChilds></div>
         else
             return <div className='sy-block-text-head' style={style}>
-                <TextArea rf={e => this.block.elementAppear({ el: e })} placeholder={'大标题'} html={this.block.htmlContent}></TextArea>
+                <TextArea  block={this.block}   placeholder={'大标题'}  prop='content' ></TextArea>
             </div>
     }
 }

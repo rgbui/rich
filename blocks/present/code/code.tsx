@@ -97,7 +97,7 @@ export class TextCodeView extends BlockView<TextCode>{
                     </div>
                 </div>
                 <div className='sy-block-code-content'>
-                    <TextArea rf={e => this.block.elementAppear({ el: e, prop: 'content' })}
+                    <TextArea  block={this.block}  prop='content'
                         placeholder={'键入代码'}
                         html={this.block.htmlCode}></TextArea>
                 </div>

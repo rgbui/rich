@@ -32,7 +32,7 @@ export class CalloutView extends BlockView<Callout>{
                     <TextLineChilds style={this.block.visibleStyle} rf={e => this.block.childsEl = e} childs={this.block.childs}></TextLineChilds>
                 }
                 {this.block.childs.length == 0 && <span className='sy-appear-text-line' style={this.block.visibleStyle}>
-                    <TextArea rf={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent} placeholder={'键入文字或"/"选择'}></TextArea>
+                    <TextArea  block={this.block}  prop='content'  placeholder={'键入文字或"/"选择'}></TextArea>
                 </span>
                 }</div>
         </div>

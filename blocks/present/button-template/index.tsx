@@ -85,7 +85,7 @@ export class ButtonTemplateView extends BlockView<ButtonTemplate>{
             <Divider></Divider>
             <div className="sy-button-template-box-label">模板名称</div>
             <div className="sy-button-template-box-title">
-                <TextArea rf={e => this.block.elementAppear({ el: e, prop: 'content', appear: BlockAppear.text, })} html={this.block.content || '添加待办事项'} placeholder={'添加待办事项'}></TextArea>
+                <TextArea  block={this.block}   prop='content'  default='添加待办事项' placeholder={'添加待办事项'}></TextArea>
             </div>
             <Divider></Divider>
             <div className="sy-button-template-box-label">模板内容</div>

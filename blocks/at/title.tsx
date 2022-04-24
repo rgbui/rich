@@ -74,9 +74,11 @@ export class TitleView extends BlockView<Title>{
             {this.block.pageInfo == null && <div className='sy-block-page-info-loading'></div>}
             {this.block.pageInfo != null &&
                 <div className='sy-block-page-info-head'>
-                    <span className='sy-block-page-info-head-title'><TextArea placeholder='输入标题'
-                        rf={e => this.block.elementAppear({ el: e, appear: BlockAppear.text, prop: 'pageInfo.text' })}
-                        html={this.block.pageInfo.text}></TextArea></span>
+                    <span className='sy-block-page-info-head-title'><TextArea
+                        block={this.block}
+                        placeholder='输入标题'
+                        prop='pageInfo.text'
+                    ></TextArea></span>
                 </div>}
         </div>
     }

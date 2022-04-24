@@ -26,7 +26,7 @@ export class QuoteView extends BlockView<Quote>{
             <div className='sy-block-quote-bar'></div>
             <div className='sy-block-quote-content'>
                 {this.block.childs.length > 0 && <TextLineChilds childs={this.block.childs} rf={e => this.block.childsEl = e}></TextLineChilds>}
-                {this.block.childs.length == 0 && <TextArea rf={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent} placeholder={'键入文字或"/"选择'}></TextArea>}
+                {this.block.childs.length == 0 && <TextArea  block={this.block}   prop='content'  placeholder={'键入文字或"/"选择'}></TextArea>}
             </div>
         </div>
     }

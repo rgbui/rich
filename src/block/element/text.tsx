@@ -40,7 +40,7 @@ export class TextContent extends Block {
 @view('/text')
 export class TextContentView extends BlockView<TextContent>{
     render() {
-        var ta = <TextArea rf={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent}></TextArea>
+        var ta = <TextArea block={this.block} prop='content' ></TextArea>
         if (this.block.link) {
             if (this.block.link.pageId) {
                 ta = <a href={'/page/' + this.block.link.pageId}>{ta}</a>

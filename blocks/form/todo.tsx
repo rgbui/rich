@@ -59,7 +59,9 @@ export class ToDoView extends BlockView<ToDo>{
         else {
             return <div className='sy-block-todo' style={this.block.visibleStyle}>
                 <div className='sy-block-todo-checkbox'><input onMouseDown={e => e.stopPropagation()} type='checkbox' checked={this.block.checked} onChange={e => this.block.onChange(e.nativeEvent)} /></div>
-                <span className='sy-block-todo-text'><TextArea placeholder={langProvider.getText(LangID.todoPlaceholder)} rf={e => this.block.elementAppear({ el: e })} html={this.block.htmlContent}></TextArea></span>
+                <span className='sy-block-todo-text'><TextArea   block={this.block} placeholder={langProvider.getText(LangID.todoPlaceholder)} 
+               prop='content' 
+                 ></TextArea></span>
             </div>
         }
     }

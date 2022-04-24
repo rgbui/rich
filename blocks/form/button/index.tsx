@@ -28,9 +28,8 @@ export class BlockButton extends Block {
 @view('/button')
 export class BlockButtonView extends BlockView<BlockButton>{
     render() {
-        return <div className='sy-button' onMouseDown={e => this.block.mousedown(e.nativeEvent)} style={this.block.visibleStyle} ><TextArea placeholder='按钮'
-            rf={e => this.block.elementAppear({ el: e, appear: BlockAppear.text, prop: 'content' })}
-            html={this.block.content}></TextArea>
+        return <div className='sy-button' onMouseDown={e => this.block.mousedown(e.nativeEvent)} style={this.block.visibleStyle} ><TextArea block={this.block} placeholder='按钮'
+            prop='content' ></TextArea>
         </div>
     }
 }
