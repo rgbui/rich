@@ -171,7 +171,7 @@ export class Page extends Events<PageDirective> {
     }
     getScreenStyle() {
         var style: CSSProperties = {};
-        if (this.pageLayout?.type == PageLayoutType.doc) {
+        if (this.isSupportScreen) {
             var isFull: boolean = this.isFullWidth;
             if (isFull) {
                 style.paddingLeft = 80;
@@ -188,6 +188,18 @@ export class Page extends Events<PageDirective> {
         this.pageInfo = util.clone(pageInfo);
     }
     pageInfo: LinkPageItem = null;
+    /**
+     * 是否支持宽屏及窄屏的切换
+     */
+    get isSupportScreen() {
+        return [PageLayoutType.db, PageLayoutType.doc].includes(this.pageLayout.type)
+    }
+    /**
+     * 是否支持用户自定义封面
+     */
+    get isSupportCover() {
+        return [PageLayoutType.db, PageLayoutType.doc].includes(this.pageLayout.type)
+    }
 }
 export interface Page {
     on(name: PageDirective.init, fn: () => void);
