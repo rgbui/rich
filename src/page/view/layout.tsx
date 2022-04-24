@@ -17,6 +17,14 @@ export function PageLayoutView(props: {
             {props.boardSelector}
         </div>
     }
+    else if (type == PageLayoutType.db) {
+        return <div className='shy-page-layout shy-page-layout-db'>
+            <div className='shy-page-layout-wrapper'>
+                {props.children}
+            </div>
+            {props.boardSelector}
+        </div>
+    }
     else if ([PageLayoutType.dbForm, PageLayoutType.dbPickRecord].includes(type)) {
         return <div className={"shy-page-layout shy-page-layout-db-form"}>
             <div className='shy-page-layout-wrapper' >
