@@ -44,7 +44,6 @@ export class PageView extends Component<{ page: Page }>{
         this.el.addEventListener('wheel', this._wheel = e => this.page.onWheel(e), {
             passive: false
         });
-        this.el.addEventListener('touchstart', e => console.log(e));
         document.addEventListener('mousedown', this._mousedown = this.page.onGlobalMousedown.bind(this));
         document.addEventListener('mousemove', (this._mousemove = this.page.onMousemove.bind(this.page)));
         document.addEventListener('mouseup', (this._mouseup = this.page.onMouseup.bind(this.page)));
@@ -172,7 +171,7 @@ export class PageView extends Component<{ page: Page }>{
             onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}
             onMouseEnter={e => this.page.onMouseenter(e)}
             onMouseLeave={e => this.page.onMouseleave(e)}
-        ><div className='shy-page-view-box' onContextMenu={e => this.page.onContextmenu(e)} onMouseDown={e => this.page.onMousedown(e.nativeEvent)}>
+        ><div className='shy-page-view-box' onContextMenu={e => this.page.onContextmenu(e)} onMouseDown={e => this.page.onMousedown(e)}>
                 <PageLayoutView
                     page={this.page}
                     boardSelector={<BlockPickerView picker={this.page.kit.picker}></BlockPickerView>}>

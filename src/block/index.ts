@@ -77,7 +77,7 @@ export abstract class Block extends Events {
      * 创建block的方式,访方式在初始创建时，
      * 可以触发一些操作
      */
-    createSource: 'InputBlockSelector'|'pageTurnLayout';
+    createSource: 'InputBlockSelector' | 'pageTurnLayout';
     __props: string[];
     get childs() {
         return this.blocks.childs;
@@ -451,6 +451,7 @@ export abstract class Block extends Events {
         return false;
     }
     async forceUpdate() {
+        console.log('block forceUpdate')
         return new Promise((resolve, reject) => {
             if (this.view && this.isMounted) this.view.forceUpdate(() => {
                 resolve(true);
@@ -628,6 +629,10 @@ export abstract class Block extends Events {
     }
     cancelReferenceBlocker(block: Block) {
         this.referenceBlockers.remove(g => g.id == block.id);
+    }
+    isCanEdit(prop?: string) {
+        if (typeof prop == 'undefined') prop = 'content';
+        return true;
     }
 }
 export interface Block extends Block$Seek { }

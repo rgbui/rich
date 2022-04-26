@@ -129,7 +129,7 @@ export class GridSearch {
         // }
     }
     private findPointBlock(point: Point | MouseEvent) {
-        var block = this.page.getBlockInMouseRegion(point);
+        var block = this.page.getBlockByMouseOrPoint(point);
         if (block?.isLine) block = block.closest(x => !x.isLine);
         return block;
     }

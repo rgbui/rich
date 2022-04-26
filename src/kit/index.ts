@@ -11,6 +11,8 @@ import { PageMouse } from "./mouse";
 import { BlockPicker } from "./picker";
 import { BoardLine } from "./connect/line";
 import { BoardBlockHover } from "./connect/block.hover";
+import { PageWrite } from "./write";
+import { PageOperator } from "./operator";
 
 export class Kit extends Events {
     page: Page;
@@ -27,7 +29,11 @@ export class Kit extends Events {
         this.handle = new Handle(this);
         this.picker = new BlockPicker(this);
         this.boardLine = new BoardLine(this);
+        this.writer = new PageWrite(this);
+        this.operator = new PageOperator(this);
     }
+    writer: PageWrite;
+    operator: PageOperator;
     mouse: PageMouse;
     textInput: TextInput;
     selector: Selector;

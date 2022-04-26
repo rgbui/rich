@@ -339,12 +339,19 @@ export class Block$Anchor {
             typeof elementAppear.prop == 'undefined'
         ) elementAppear.prop = 'content';
         if (!this.__appearAnchors.exists(x => x.prop == elementAppear.prop))
-            this.__appearAnchors.push(new AppearAnchor(this, elementAppear.el, elementAppear.appear, elementAppear.prop))
+            this.__appearAnchors.push(new AppearAnchor(this, elementAppear.el, elementAppear.appear, elementAppear.prop, elementAppear.plain || false))
         else {
             var ep = this.__appearAnchors.find(g => g.prop == elementAppear.prop);
             if (ep) {
                 ep.el = elementAppear.el;
             }
+        }
+    }
+    elementAppearEvent(this: Block, prop: string, eventName: string, event: any) {
+        var aa = this.appearAnchors.find(g => g.prop == prop);
+        if (aa) {
+            if (typeof this.page.kit.writer[eventName] == 'function')
+                this.page.kit.writer[eventName](aa, event);
         }
     }
 }

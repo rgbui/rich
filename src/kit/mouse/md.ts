@@ -66,7 +66,7 @@ async function focusBoardBlock(kit: Kit, block: Block, event: MouseEvent) {
 export async function mousedown(kit: Kit, event: MouseEvent) {
     (await getShapeSelector()).close();
     onAutoScrollStop();
-    var block = kit.page.getBlockInMouseRegion(event);
+    var block = kit.page.getBlockByMouseOrPoint(event);
     if (block?.isBoardBlock) {
         await focusBoardBlock(kit, block, event);
     }

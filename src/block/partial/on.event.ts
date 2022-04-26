@@ -153,7 +153,7 @@ export class Block$Event {
     }
     async onClickContextMenu(this: Block, item: MenuItemType<BlockDirective | string>, event: MouseEvent) {
         if (this.isFreeBlock) {
-            return await this.onClockBoardContextMenu(item, event);
+            return await this.onClickBoardContextMenu(item, event);
         }
         switch (item.name) {
             case BlockDirective.delete:
@@ -174,7 +174,7 @@ export class Block$Event {
                 break;
         }
     }
-    async onClockBoardContextMenu(this: Block, item: MenuItemType<BlockDirective | string>, event: MouseEvent) {
+    async onClickBoardContextMenu(this: Block, item: MenuItemType<BlockDirective | string>, event: MouseEvent) {
         switch (item.name) {
             case BlockDirective.lock:
                 this.onLock(true);
@@ -192,6 +192,13 @@ export class Block$Event {
                 this.page.onBatchDelete([this]);
                 break;
         }
+    }
+    async onInputText(this: Block, appear: AppearAnchor, oldValue: string, newValue: string, action?: () => Promise<void>) {
+        await this.page.onAction(ActionDirective.onInputText, async () => {
+            this.manualUpdateProps({ [appear.prop]: oldValue }, { [appear.prop]: newValue },BlockRenderRange.none)
+            if (typeof action == 'function') await action();
+            this.changeAppear(appear);
+        })
     }
     async onInputStore(this: Block, appear: AppearAnchor, value: string, at: number, end: number, action?: () => Promise<void>) {
         await this.page.onAction(ActionDirective.onInputText, async () => {

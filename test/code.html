@@ -1,0 +1,166 @@
+<html>
+
+<head>
+    <title>卡特单点登陆</title>
+</head>
+
+<body>
+
+   <div>code:<span id='code'></span></div>
+
+
+</body>
+<script>
+
+    function getUrlParameters(queryString) {
+        var parameters = {};
+        if (queryString != null && typeof queryString !== 'undefined') {
+            queryString.split('&').map(function (pair) {
+                if (pair != null && typeof pair !== 'undefined' && pair.indexOf('=') >= 1) {
+                    var kv = pair.split('=', 2);
+                    if (kv != null && kv.length == 2) {
+                        var key = decodeURIComponent(kv[0]).trim();
+                        var value = decodeURIComponent(kv[1]);
+                        parameters[key] = value;
+                    }
+                }
+            });
+        }
+        return parameters;
+    }
+
+    function encodeFormData(data) {
+        if (!data) return '';
+        var pairs = [];
+        for (var name in data) {
+            if (!data.hasOwnProperty(name)) continue;
+            if (typeof data[name] === 'function') continue;
+            var value = data[name].toString();
+            name = encodeURIComponent(name.replace('%20', '+'));
+            value = encodeURIComponent(value.replace('%20', '+'));
+            pairs.push(name + '=' + value);
+        }
+        return pairs.join('&');
+    }
+
+    /**
+     * post请求
+     * @url 
+     * @data 请求的内容
+     * @headers 请求头
+     */
+    function post(url, data, headers, callback) {
+        data = encodeFormData(data);
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+                    try {
+                        var text = xhr.responseText;
+                        if (typeof text == 'string') text = JSON.parse(text);
+                        callback(null, text);
+                    }
+                    catch (ex) {
+                        console.error(ex);
+                        console.log(xhr.responseText);
+                        callback(ex);
+                    }
+                } else {
+                    callback(xhr.status);
+                }
+            }
+        }
+        xhr.open('post', url);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        if (headers) {
+            for (let n in headers) {
+                xhr.setRequestHeader(n, headers[n]);
+            }
+        }
+        xhr.send(data);
+    }
+    function get(url, headers, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+                    try {
+                        var text = xhr.responseText;
+                        if (typeof text == 'string') text = JSON.parse(text);
+                        callback(null, text);
+                    }
+                    catch (ex) {
+                        console.error(ex);
+                        console.log(xhr.responseText);
+                        callback(ex);
+                    }
+                } else {
+                    callback(xhr.status);
+                }
+            }
+        }
+        xhr.open('get', url);
+        if (headers) {
+            for (let n in headers) {
+                xhr.setRequestHeader(n, headers[n]);
+            }
+        }
+        xhr.send(null);
+    }
+
+
+
+    /**
+     * 这个是通过code拿到最终的用户信息
+     * 这里现场有很大的可能会出现跨域的报错 https://segmentfault.com/a/1190000038192212
+     * 
+     */
+    function getUserNameByCode(code) {
+
+        post('https://fedlogin.cat.com/as/token.oauth2', {
+            grant_type: 'authorization_code',
+            code: code,
+            redirect_uri: 'https://cxlagv.ecorp.cat.com/oath/authorize',
+            client_id: 'CXLAGVManagement_ac_client',
+        }, {
+            'Authorization': 'Basic Q1hMQUdWTWFuYWdlbWVudF9hY19jbGllbnQ6TTJrTXc1dVJZa0NJYnpENmNycHI3NlB5VmZpc1hKMm9UNnJ2cVNVN2JZWExEcTdTM0tHM3p1Q3kwNzh4SDhqVg=='
+        }, (err, data) => {
+            if (err) { console.error('获取token时报错', err); return; }
+            var token = data.access_token;
+            get('https://fedlogin.cat.com/idp/userinfo.openid', {}, {
+                "Authorization": "Bearer " + token
+            }, (err, data) => {
+                if (err) { console.error('获取帐号时报错', err); return; }
+                //这里拿到当前的帐号信息,页面跳转到我们指定的后台,与上面跳转至后台，后台拿到code是一样的
+                console.log(data);
+
+                location.href = '/oath/userinfo?userinfo=' + (encodeURIComponent(JSON.stringify(data)));
+
+            })
+        })
+
+    }
+
+    var queryString = location.href.substring(location.href.indexOf('?') + 1);
+    var parameters = getUrlParameters(queryString);
+
+    if (parameters.state !== sessionState) {
+        // Request was tampered with and authorization code can not be used
+        // TODO Handle error condition here (see step #10 below)
+    } else if (typeof parameters.code !== 'undefined') {
+        var ele=document.getElementById('code');
+        ele.innerHTML=code;
+        // TODO Exchange the authorization code for a token (see step #11 below)
+        getUserNameByCode(parameters.code);
+    } else {
+        // TODO Handle an authorization error here
+        var error = parameters.error;
+        var errorDescription = parameters.error_description;
+        document.body.innerHTML = `
+            <div>error:${error}</div>
+            <div>description:${errorDescription}</div>
+            `;
+    }
+</script>
+
+</html>

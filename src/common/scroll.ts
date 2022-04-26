@@ -11,7 +11,7 @@ export function onAutoScroll(options: {
     callback?(first: boolean, scrollDisY: number, scrollDisX?: number): void
 }) {
     onAutoScrollStop();
-    if (typeof options.interval == 'undefined') options.interval = 50;
+    if (typeof options.interval == 'undefined') options.interval =200;
     var fn = (fir: boolean) => {
         if (fir == true) { return options.callback ? options?.callback(fir, 0) : undefined; }
         onceAutoScroll({

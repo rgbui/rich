@@ -1,7 +1,7 @@
 import { Page } from "..";
 import { Block } from "../../block";
 import { Point, Rect } from "../../common/vector/point";
-const CellSize = 100;
+const CellSize = 200;
 export class PageGrid {
     constructor(public page: Page) { }
     private gridMap: Map<string, Block[]> = new Map();
@@ -101,14 +101,19 @@ export class PageGrid {
         var gyMin = Math.floor(relativeRect.y / CellSize);
         var gyMax = Math.ceil((relativeRect.y + relativeRect.height) / CellSize);
         var blocks: Block[] = [];
+        if (typeof predict == 'undefined') predict = (b) => {
+            return b.isCrossBlockArea(rect);
+        }
         for (let i = gxMin; i <= gxMax; i++) {
             for (let j = gyMin; j <= gyMax; j++) {
                 var key = this.getKey(i, j);
                 var gm = this.gridMap.get(key);
                 if (gm && Array.isArray(gm)) {
                     if (typeof predict == 'function') {
-                        var r = gm.find(predict);
-                        if (r && !blocks.exists(r)) { blocks.push(r); }
+                        var rs = gm.findAll(predict);
+                        rs.forEach(r => {
+                            if (r && !blocks.exists(r)) { blocks.push(r); }
+                        })
                     }
                     else {
                         gm.each(g => {

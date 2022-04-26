@@ -35,6 +35,18 @@ export class TextEle {
             throw e;
         }
     }
+    static getLineHeight(ele: HTMLElement) {
+        var dm = dom(ele)
+        var lineHeight = dm.style('lineHeight');
+        if (lineHeight == 'normal' || lineHeight == 'inherit') {
+            var e = dm.closest(g => dom(g as HTMLElement).style('lineHeight') != 'normal' && dom(g as HTMLElement).style('lineHeight') != 'inherit')
+            if (e) lineHeight = dom(e as HTMLElement).style('lineHeight');
+        }
+        if (!/^[\d\.]+px$/.test(lineHeight)) {
+            throw new Error('the font lineHeight is not number' + lineHeight)
+        }
+        return parseInt(lineHeight.replace('px', ''));
+    }
     static getBounds(ele: HTMLElement) {
         var cs = ele.getClientRects();
         var rs: Rect[] = [];

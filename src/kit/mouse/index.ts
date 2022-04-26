@@ -17,7 +17,7 @@ export class PageMouse {
     public lastMouseupDate: number;
     public lastMouseupEvent: MouseEvent;
     onMousedown(event: MouseEvent) {
-        mousedown(this.kit, event);
+       // mousedown(this.kit, event);
     }
     onMousemove(event: MouseEvent) {
         this.moveEvent = event;
@@ -26,7 +26,7 @@ export class PageMouse {
         if (this.kit.handle.containsEl(ele)) return;
         var block: Block;
         if (this.page.root.contains(ele)) {
-            block = this.page.getBlockInMouseRegion(event);
+            block = this.page.getBlockByMouseOrPoint(event);
         }
         this.page.onHoverBlock(block);
     }

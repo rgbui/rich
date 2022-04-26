@@ -18,7 +18,7 @@ export class Page$Seek {
      * 如果没有找到block，则在水平方向上延伸一定的宽度去查找邻近的block
      * @param event 
      */
-    getBlockInMouseRegion(this: Page, event: MouseEvent | Point) {
+    getBlockByMouseOrPoint(this: Page, event: MouseEvent | Point) {
         if (event instanceof Point) {
             var block = this.getBlockFromPoint(event);
             if (block) return block;
@@ -286,14 +286,14 @@ export class Page$Seek {
         }) {
 
         var bs: Block[] = [];
-        var fromBlock = filter?.fromBlock ? filter.fromBlock : this.getBlockInMouseRegion(from);
+        var fromBlock = filter?.fromBlock ? filter.fromBlock : this.getBlockByMouseOrPoint(from);
         if (fromBlock?.isLayout || fromBlock?.isPart) {
             var fb = fromBlock.getVisibleContentBound();
             if (Math.abs(from.y - fb.y) > Math.abs(from.y - fb.y - fb.height))
                 fromBlock = fromBlock.findReverse(g => g.isBlock && !g.isLayout && !g.isPart);
             else fromBlock = fromBlock.find(g => g.isBlock && !g.isLayout && !g.isPart);
         }
-        var toBlock = this.getBlockInMouseRegion(to);
+        var toBlock = this.getBlockByMouseOrPoint(to);
         if (toBlock?.isLayout || toBlock?.isPart) {
             var fb = toBlock.getVisibleContentBound();
             if (Math.abs(to.y - fb.y) > Math.abs(to.y - fb.y - fb.height))

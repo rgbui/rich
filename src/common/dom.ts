@@ -25,7 +25,8 @@ class Dom {
                 letterSpacing: this.style('letterSpacing'),
                 color: this.style('color')
             };
-            fontStyle.lineHeight = parseInt(fontStyle.lineHeight.replace('px', ''));
+            if (typeof fontStyle.lineHeight == 'string')
+                fontStyle.lineHeight = parseInt(fontStyle.lineHeight.replace('px', ''));
             fontStyle.letterSpacing = parseInt(fontStyle.letterSpacing.replace('px', ''));
             if (isNaN(fontStyle.letterSpacing)) fontStyle.letterSpacing = 0;
             return fontStyle;
