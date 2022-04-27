@@ -4,7 +4,7 @@ import { dom } from "../../common/dom";
 import { TextEle } from "../../common/text.ele";
 import { Rect } from "../../common/vector/point";
 const GAP = 10;
-function findBlockAppear(el) {
+export function findBlockAppear(el) {
     if (el) {
         var r = el.closest('.shy-appear-text');
         if (r) {
