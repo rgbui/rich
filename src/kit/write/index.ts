@@ -2,6 +2,8 @@ import React from "react";
 import { Kit } from "..";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
+import { findBlockAppear } from "../../block/appear/visible.seek";
+import { MouseDragger } from "../../common/dragger";
 import { KeyboardCode } from "../../common/keys";
 import { TextEle } from "../../common/text.ele";
 import { Point } from "../../common/vector/point";
@@ -45,12 +47,48 @@ import { InputStore } from "./store";
      * keydown-input keydown-input keydown-input-keyup
      * 注意keydown是要输入，input是输入完成，keyup不一定会触发
  */
+
 export class PageWrite {
     constructor(public kit: Kit) { }
     mousedown(aa: AppearAnchor, event: React.MouseEvent) {
         this.kit.operator.onClearSelectBlocks();
         event.stopPropagation();
-        this.onInputStart(aa);
+        var sel = window.getSelection();
+        var anchorNode;
+        var anchorOffset;
+        var self = this;
+        self.onInputStart(aa);
+        MouseDragger({
+            event,
+            dis: 5,
+            allowSelection: true,
+            moveStart() {
+                /**
+                 * 鼠标刚按下，sel.anchorNode不一定有，
+                 * 当有想选区的举动时，这时sel.anchorNode可能有了，如果没有就强算一个坐标
+                 */
+                anchorNode = sel.anchorNode;
+                anchorOffset = sel.anchorOffset;
+                if (!anchorNode) {
+                    anchorNode = aa.textNode;
+                    anchorOffset = TextEle.getAt(aa.el, Point.from(event));
+                }
+            },
+            move(ev, data) {
+                var findAppear = findBlockAppear(ev.target);
+                if (findAppear) {
+                    sel.setBaseAndExtent(anchorNode, anchorOffset, findAppear.textNode, TextEle.getAt(findAppear.el, Point.from(ev)))
+                }
+            },
+            moveEnd(ev, isMove, data) {
+                if (isMove) {
+                    if (!sel.isCollapsed) {
+                        self.onOpenTextTool();
+                    }
+                }
+                else self.onInputStart(aa);
+            }
+        })
     }
     mouseup(aa: AppearAnchor, event: React.MouseEvent) {
 
@@ -96,7 +134,8 @@ export class PageWrite {
         }
         this.isWillInput = true;
     }
-    async input(aa: AppearAnchor, event: React.KeyboardEvent) {
+    async input(aa: AppearAnchor, event: React.FormEvent)
+    {
         if (!this.isWillInput) return;
         /**
          * 这里需要判断是否有必要弹出弹窗
@@ -111,7 +150,7 @@ export class PageWrite {
          * 因为这样会导致输入的时候一直输入到line块中，或者空格一下  该功能暂时不做
          */
         if (await inputLineTail(this, aa, event)) return;
-        await InputStore(aa, aa.textContent, this.oldText);
+        await InputStore(aa, aa.textContent, this.startAnchorText);
     }
     focus(aa: AppearAnchor, event: React.FocusEvent) {
         /**
@@ -141,11 +180,14 @@ export class PageWrite {
     /***
      * 对外开放的事件
      */
-    anchor: AppearAnchor;
-    oldText: string = '';
+    startAnchor: AppearAnchor;
+    startAnchorText: string = '';
+    startOffset: number;
     onInputStart(aa: AppearAnchor) {
-        this.anchor = aa;
-        this.oldText = this.anchor.textContent;
+        this.startAnchor = aa;
+        this.startAnchorText = this.startAnchor.textContent;
+        var sel = window.getSelection();
+        this.startOffset = sel.anchorOffset;
     }
     /**
      * 
@@ -175,6 +217,10 @@ export class PageWrite {
             this.onInputStart(aa);
         }
     }
+    /**
+     * 通过AppearAnchor来选中当前行
+     * @param aa
+     */
     onSelectionAll(aa: AppearAnchor) {
         var block = aa.block;
         if (block.isLine) block = block.closest(x => !x.isLine);
@@ -184,6 +230,28 @@ export class PageWrite {
             var sel = window.getSelection();
             sel.setBaseAndExtent(firstAppear.textNode, 0, lastAppear.textNode, lastAppear.textContent.length)
         }
+    }
+    async onOpenTextTool() {
+        // while (true) {
+        //     var result = await useTextTool(this.getSelectionPoint(), {
+        //         block: rowBlock,
+        //        style: this.page.pickBlocksTextStyle(this.selectedBlocks)
+        //    });
+        //     if (result) {
+        //         if (result.command == 'setStyle') {
+        //             await this.onSelectionSetPatternOrProps(result.styles);
+        //         }
+        //         else if (result.command == 'setProp') {
+        //              await this.onSelectionSetPatternOrProps(undefined, result.props);
+        //         }
+        //         else if (result.command == 'turn') {
+        //              await rowBlock.onClickContextMenu(result.item, result.event);
+        //             break;
+        //         }
+        //         else break;
+        //     }
+        //     else break;
+        // }
     }
 }
 
