@@ -11,6 +11,7 @@ export function MouseDragger<T = Record<string, any>>(options: {
      * 是否跨区域拖动
      */
     isCross?: boolean,
+    allowSelection?:boolean,
     moveStart?: (event: MouseEvent | React.MouseEvent, data: T, crossData?: { type: string, data: any }) => void,
     move?: (event: MouseEvent, data: T) => void,
     moving?: (event: MouseEvent, data: T, isEnd?: boolean) => void,
@@ -29,6 +30,7 @@ export function MouseDragger<T = Record<string, any>>(options: {
     var crossPanels: HTMLElement[] = [];
     move = (event: MouseEvent) => {
         if (scope.isDown == true) {
+            if(options.allowSelection!=true)
             window.getSelection ? window.getSelection().removeAllRanges() : (document as any).selection.empty();
             if (scope.isMove == true) {
                 if (options.cursor) MouseCursor.show(options.cursor);
