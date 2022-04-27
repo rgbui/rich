@@ -10,6 +10,10 @@ import { Point, Rect } from "../../../common/vector/point";
  * 如果点在文档的空白处，那么左右上需要找到邻近的编辑点，如果是下面，一般是尾部，需要创建一个空白的文本块，且聚焦
  * 拖动时，形成一个选区，且滚动条适配拖选
  * 拖完时，判断是否有选区，弹一个文本编辑工具栏。
+ * 
+ * 注意：通过kit.page.grid.findBlocksByRect查找，最好在查找前同grid同步，
+ * 否在编辑中，实际改变了元素的物理坐标，但没有同步到grid中
+ * 
  */
 export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
     kit.operator.onClearSelectBlocks();
@@ -47,7 +51,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                 kit.selector.close();
             }
             else {
-               
+
             }
         }
     })
