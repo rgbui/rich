@@ -11,26 +11,26 @@ import { getBoardTool } from "../../../extensions/board.tool";
 import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
 function triggerCreateAnchor(kit: Kit, block: Block, event: MouseEvent) {
     if (!block) return;
-    if (!block.exists(g => g.isSupportAnchor, true)) return;
-    var anchor = block.visibleAnchor(Point.from(event));
-    if (!(anchor && anchor.block.isAllowMouseAnchor)) return;
-    /**
-    * shift连选
-    */
-    if (kit.page.keyboardPlate.isShift() && kit.explorer.hasAnchor) {
-        if (anchor.isText && kit.page.isInlineAnchor(anchor, kit.explorer.activeAnchor))
-            kit.explorer.onShiftFocusAnchor(anchor);
-        else if (!anchor.equal(kit.explorer.activeAnchor)) {
-            var blocks = kit.page.searchBlocksBetweenAnchor(kit.explorer.activeAnchor, anchor, { rowOrCol: true, lineBlock: true });
-            if (Array.isArray(blocks) && blocks.length > 0) {
-                kit.explorer.onSelectBlocks(blocks);
-            }
-            else kit.explorer.onFocusAnchor(anchor);
-        }
-        else kit.explorer.onFocusAnchor(anchor);
-    }
-    else kit.explorer.onFocusAnchor(anchor);
-    return anchor;
+    // if (!block.exists(g => g.isSupportAnchor, true)) return;
+    // var anchor = block.visibleAnchor(Point.from(event));
+    // if (!(anchor && anchor.block.isAllowMouseAnchor)) return;
+    // /**
+    // * shift连选
+    // */
+    // if (kit.page.keyboardPlate.isShift() && kit.explorer.hasAnchor) {
+    //     if (anchor.isText && kit.page.isInlineAnchor(anchor, kit.explorer.activeAnchor))
+    //         kit.explorer.onShiftFocusAnchor(anchor);
+    //     else if (!anchor.equal(kit.explorer.activeAnchor)) {
+    //         var blocks = kit.page.searchBlocksBetweenAnchor(kit.explorer.activeAnchor, anchor, { rowOrCol: true, lineBlock: true });
+    //         if (Array.isArray(blocks) && blocks.length > 0) {
+    //             kit.explorer.onSelectBlocks(blocks);
+    //         }
+    //         else kit.explorer.onFocusAnchor(anchor);
+    //     }
+    //     else kit.explorer.onFocusAnchor(anchor);
+    // }
+    // else kit.explorer.onFocusAnchor(anchor);
+    // return anchor;
 }
 function dblClick(kit: Kit, event: MouseEvent) {
     if (kit.explorer.isOnlyAnchor && kit.explorer.activeAnchor.isText && kit.mouse.lastMouseupDate && Date.now() - kit.mouse.lastMouseupDate < 700) {
@@ -87,7 +87,7 @@ export async function mousedown(kit: Kit, event: MouseEvent) {
 
     var anchor = triggerCreateAnchor(kit, block, event);
     var downPoint = Point.from(event);
-    if (!anchor) kit.explorer.onCancelSelection();
+    // if (!anchor) kit.explorer.onCancelSelection();
     MouseDragger({
         event,
         dis: 5,
@@ -95,39 +95,39 @@ export async function mousedown(kit: Kit, event: MouseEvent) {
             kit.selector.setStart(Point.from(event));
         },
         move(ev, data) {
-            var movePoint = Point.from(ev)
-            function cacSelector(dis: number) {
-                var hasTextRange: boolean = false;
-                if (anchor) {
-                    var moveBlock = kit.page.getBlockFromPoint(movePoint);
-                    if (moveBlock) {
-                        var moveAnchor = moveBlock.visibleAnchor(movePoint);
-                        if (moveAnchor && kit.page.isInlineAnchor(moveAnchor, anchor)) {
-                            kit.explorer.onShiftFocusAnchor(moveAnchor);
-                            hasTextRange = true;
-                        }
-                    }
-                }
-                if (!hasTextRange) {
-                    downPoint.y -= dis;
-                    kit.selector.setStart(downPoint);
-                    kit.selector.setMove(movePoint);
-                    var blocks = kit.page.searchBlocksBetweenMouseRect(downPoint, movePoint, { fromBlock: block, lineBlock: true });
-                    if (Array.isArray(blocks) && blocks.length > 0) {
-                        kit.explorer.onSelectBlocks(blocks);
-                    }
-                    else kit.explorer.onCancelSelection();
-                }
-                else kit.selector.close();
-            };
-            onAutoScroll({
-                el: kit.page.root,
-                point: movePoint,
-                callback(fir, dis) {
-                    if (fir) cacSelector(0)
-                    else if (fir == false && dis != 0) cacSelector(dis);
-                }
-            })
+            // var movePoint = Point.from(ev)
+            // function cacSelector(dis: number) {
+            //     var hasTextRange: boolean = false;
+            //     if (anchor) {
+            //         var moveBlock = kit.page.getBlockFromPoint(movePoint);
+            //         if (moveBlock) {
+            //             var moveAnchor = moveBlock.visibleAnchor(movePoint);
+            //             if (moveAnchor && kit.page.isInlineAnchor(moveAnchor, anchor)) {
+            //                 kit.explorer.onShiftFocusAnchor(moveAnchor);
+            //                 hasTextRange = true;
+            //             }
+            //         }
+            //     }
+            //     if (!hasTextRange) {
+            //         downPoint.y -= dis;
+            //         kit.selector.setStart(downPoint);
+            //         kit.selector.setMove(movePoint);
+            //         var blocks = kit.page.searchBlocksBetweenMouseRect(downPoint, movePoint, { fromBlock: block, lineBlock: true });
+            //         if (Array.isArray(blocks) && blocks.length > 0) {
+            //             kit.explorer.onSelectBlocks(blocks);
+            //         }
+            //         else kit.explorer.onCancelSelection();
+            //     }
+            //     else kit.selector.close();
+            // };
+            // onAutoScroll({
+            //     el: kit.page.root,
+            //     point: movePoint,
+            //     callback(fir, dis) {
+            //         if (fir) cacSelector(0)
+            //         else if (fir == false && dis != 0) cacSelector(dis);
+            //     }
+            // })
         },
         async moveEnd(ev, isMove, data) {
             if (isMove) {

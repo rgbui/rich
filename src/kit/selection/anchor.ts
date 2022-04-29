@@ -220,14 +220,16 @@ export class Anchor {
         return false
     }
     get prevAnchor() {
-        var pre = this.elementAppear.prev;
-        if (pre) return pre.createBackAnchor();
-        return this.block.visiblePrevAnchor;
+        // var pre = this.elementAppear.prev;
+        // if (pre) return pre.createBackAnchor();
+        // return this.block.visiblePrevAnchor;
+        return null;
     }
     get nextAnchor() {
-        var next = this.elementAppear.next;
-        if (next) return next.createHeadAnchor();
-        return this.block.visibleNextAnchor;
+        // var next = this.elementAppear.next;
+        // if (next) return next.createHeadAnchor();
+        // return this.block.visibleNextAnchor;
+        return null;
     }
 }
 

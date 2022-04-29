@@ -76,10 +76,10 @@ export function SelectorBoardBlock(kit: Kit, block: Block | undefined, event: Mo
                     else {
                         if (isPicker && kit.picker.blocks.length == 1) {
                             //这里对block进入聚焦编辑
-                            var block = kit.picker.blocks[0];
-                            var anchor = block.visibleAnchor(Point.from(event));
-                            if (!(anchor && anchor.block.isAllowMouseAnchor)) return;
-                            kit.explorer.onFocusAnchor(anchor);
+                            // var block = kit.picker.blocks[0];
+                            // var anchor = block.visibleAnchor(Point.from(event));
+                            // if (!(anchor && anchor.block.isAllowMouseAnchor)) return;
+                            // kit.explorer.onFocusAnchor(anchor);
                             return;
                         }
                     }

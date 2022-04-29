@@ -15,13 +15,13 @@ import { InputStore } from "../store";
  * @returns 如果返回true，说明被处理占用了
  */
 export async function onPreKeydown(tp: TextInput, event: KeyboardEvent) {
-    var blockSelectorResult = (await useBlockSelector()).onKeydown(event);
-    if (blockSelectorResult) {
-        if (!(typeof blockSelectorResult == 'boolean')) {
-            await InputBlockSelectorAfter(tp, blockSelectorResult.block, blockSelectorResult.matchValue);
-        }
-        return true;
-    }
+    // var blockSelectorResult = (await useBlockSelector()).onKeydown(event);
+    // if (blockSelectorResult) {
+    //     if (!(typeof blockSelectorResult == 'boolean')) {
+    //         await InputBlockSelectorAfter(tp, blockSelectorResult.block, blockSelectorResult.matchValue);
+    //     }
+    //     return true;
+    // }
     return false;
 }
 /**
@@ -49,58 +49,58 @@ export async function InputHandle(tp: TextInput) {
 export async function InputDetectorHandle(tp: TextInput) {
     var anchor = tp.explorer.activeAnchor;
     var value = tp.textarea.value;
-    var mr = InputDetector(value, anchor, {
-        at: tp.cursorStartAt,
-        rowStart: (!anchor.block.prev) && anchor.block.at == 0 ? true : false
-    });
-    if (mr) {
-        var rule = mr.rule;
-        var block = anchor.block;
-        switch (rule.operator) {
-            case DetectorOperator.firstLetterCreateBlock:
-                tp.page.onAction(ActionDirective.onInputDetector, async () => {
-                    block.updateAppear(anchor.elementAppear, '');
-                    var newBlock = await block.turn(rule.url);
-                    var newRowBlock = await newBlock.visibleDownCreateBlock(BlockUrlConstant.TextSpan);
-                    newRowBlock.mounted(() => {
-                        tp.explorer.onFocusAnchor(newRowBlock.visibleHeadAnchor);
-                    });
-                });
-                break;
-            case DetectorOperator.firstLetterTurnBlock:
-                tp.page.onAction(ActionDirective.onInputDetector, async () => {
-                    block.updateAppear(anchor.elementAppear, '');
-                    var newBlock = await block.turn(rule.url);
-                    newBlock.mounted(() => {
-                        tp.explorer.onFocusAnchor(newBlock.visibleHeadAnchor);
-                    });
-                });
-                break;
-            case DetectorOperator.inputCharReplace:
-                tp.cursorTextElement.innerHTML = mr.value;
-                anchor.at = tp.cursorStartAt + mr.value.length;
-                tp.textarea.value = mr.value;
-                await InputStore(block, anchor.elementAppear, mr.value, tp.cursorStartAt);
-                tp.followAnchor(anchor);
-                break;
-            case DetectorOperator.letterReplaceCreateBlock:
-                tp.cursorTextElement.innerHTML = mr.value;
-                anchor.at = tp.cursorStartAt + mr.value.length;
-                tp.textarea.value = mr.value;
-                var action = async () => {
-                    var newBlock = await anchor.block.visibleRightCreateBlock(anchor.at, rule.url, { content: mr.matchValue })
-                    if (rule.style) newBlock.pattern.setStyles(rule.style)
-                    newBlock.mounted(() => {
-                        tp.explorer.onFocusAnchor(newBlock.visibleBackAnchor);
-                    });
-                }
-                await InputStore(block, anchor.elementAppear, mr.value, tp.cursorStartAt, true, action);
-                tp.followAnchor(tp.explorer.activeAnchor);
-                break;
-        }
-        return true;
-    }
-    else return false;
+    // var mr = InputDetector(value, anchor, {
+    //     at: tp.cursorStartAt,
+    //     rowStart: (!anchor.block.prev) && anchor.block.at == 0 ? true : false
+    // });
+    // if (mr) {
+    //     var rule = mr.rule;
+    //     var block = anchor.block;
+    //     switch (rule.operator) {
+    //         case DetectorOperator.firstLetterCreateBlock:
+    //             tp.page.onAction(ActionDirective.onInputDetector, async () => {
+    //                 block.updateAppear(anchor.elementAppear, '');
+    //                 var newBlock = await block.turn(rule.url);
+    //                 var newRowBlock = await newBlock.visibleDownCreateBlock(BlockUrlConstant.TextSpan);
+    //                 newRowBlock.mounted(() => {
+    //                     tp.explorer.onFocusAnchor(newRowBlock.visibleHeadAnchor);
+    //                 });
+    //             });
+    //             break;
+    //         case DetectorOperator.firstLetterTurnBlock:
+    //             tp.page.onAction(ActionDirective.onInputDetector, async () => {
+    //                 block.updateAppear(anchor.elementAppear, '');
+    //                 var newBlock = await block.turn(rule.url);
+    //                 newBlock.mounted(() => {
+    //                     tp.explorer.onFocusAnchor(newBlock.visibleHeadAnchor);
+    //                 });
+    //             });
+    //             break;
+    //         case DetectorOperator.inputCharReplace:
+    //             tp.cursorTextElement.innerHTML = mr.value;
+    //             anchor.at = tp.cursorStartAt + mr.value.length;
+    //             tp.textarea.value = mr.value;
+    //             await InputStore(block, anchor.elementAppear, mr.value, tp.cursorStartAt);
+    //             tp.followAnchor(anchor);
+    //             break;
+    //         case DetectorOperator.letterReplaceCreateBlock:
+    //             tp.cursorTextElement.innerHTML = mr.value;
+    //             anchor.at = tp.cursorStartAt + mr.value.length;
+    //             tp.textarea.value = mr.value;
+    //             var action = async () => {
+    //                 var newBlock = await anchor.block.visibleRightCreateBlock(anchor.at, rule.url, { content: mr.matchValue })
+    //                 if (rule.style) newBlock.pattern.setStyles(rule.style)
+    //                 newBlock.mounted(() => {
+    //                     tp.explorer.onFocusAnchor(newBlock.visibleBackAnchor);
+    //                 });
+    //             }
+    //             await InputStore(block, anchor.elementAppear, mr.value, tp.cursorStartAt, true, action);
+    //             tp.followAnchor(tp.explorer.activeAnchor);
+    //             break;
+    //     }
+    //     return true;
+    // }
+     return false;
 }
 export async function InputBlockSelectorAfter(tp: TextInput, blockData: BlockSelectorItem, matchValue: string) {
     var anchor = tp.explorer.activeAnchor;
@@ -124,8 +124,8 @@ export async function InputBlockSelectorAfter(tp: TextInput, blockData: BlockSel
             }
         }
         newBlock.mounted(() => {
-            var anchor = newBlock.visibleHeadAnchor;
-            if (anchor) tp.explorer.onFocusAnchor(anchor);
+            // var anchor = newBlock.visibleHeadAnchor;
+            // if (anchor) tp.explorer.onFocusAnchor(anchor);
         });
     });
     tp.followAnchor(tp.explorer.activeAnchor);
@@ -150,7 +150,7 @@ export async function InputTextCode(tp: TextInput) {
         tp.page.onAction(ActionDirective.onInputText, async () => {
             var newBlock = await anchor.block.visibleRightCreateBlock(anchor.at, BlockUrlConstant.Text, { content: value })
             newBlock.mounted(() => {
-                tp.explorer.onFocusAnchor(newBlock.visibleBackAnchor);
+                // tp.explorer.onFocusAnchor(newBlock.visibleBackAnchor);
             });
         })
         return true;
