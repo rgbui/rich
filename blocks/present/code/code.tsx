@@ -59,8 +59,8 @@ export class TextCode extends Block {
             var pos = isActive ? this.page.kit.explorer.activeAnchor.bound.leftMiddle : undefined;
             await this.renderCode();
             if (pos) {
-                var anchor = this.visibleAnchor(pos);
-                this.page.kit.explorer.onFocusAnchor(anchor);
+                // var anchor = this.visibleAnchor(pos);
+                // this.page.kit.explorer.onFocusAnchor(anchor);
             }
         }, 2e3);
     }

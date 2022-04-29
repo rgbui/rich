@@ -76,8 +76,8 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             operator.data.childKey
         );
         page.addUpdateEvent(async () => {
-            if (block.appearAnchors.length > 0)
-                page.kit.explorer.onFocusAnchor(block.visibleBackAnchor);
+            // if (block.appearAnchors.length > 0)
+            //     page.kit.explorer.onFocusAnchor(block.visibleBackAnchor);
         });
     }, async (operator) => {
         var block = page.find(x => x.id == operator.data.data.id);
@@ -104,8 +104,8 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             operator.data.childKey
         );
         page.addUpdateEvent(async () => {
-            if (block.appearAnchors.length > 0)
-                page.kit.explorer.onFocusAnchor(block.visibleBackAnchor);
+            // if (block.appearAnchors.length > 0)
+            //     page.kit.explorer.onFocusAnchor(block.visibleBackAnchor);
         });
     });
     snapshoot.registerOperator(OperatorDirective.append,

@@ -92,7 +92,7 @@ export class SelectionExplorer extends Events {
         }
     }
     onFocusBlockAtAnchor(block: Block, at?: number) {
-        this.onFocusAnchor(block.createAnchor(at));
+      //  this.onFocusAnchor(block.createAnchor(at));
     }
     onShiftFocusAnchor(anchor: Anchor) {
         if (this.end) anchor.acceptView(this.end);
@@ -102,9 +102,9 @@ export class SelectionExplorer extends Events {
         this.renderSelection();
     }
     onBlockTextRange(block: Block) {
-        var start = block.visibleHeadAnchor;
-        var end = block.visibleBackAnchor;
-        this.onSelectAnchors(start, end);
+        // var start = block.visibleHeadAnchor;
+        // var end = block.visibleBackAnchor;
+        // this.onSelectAnchors(start, end);
     }
     onSelectAnchors(start: Anchor, end: Anchor) {
         if (this.start) start.acceptView(this.start);

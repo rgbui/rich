@@ -55,7 +55,7 @@ export class Page$Operator {
                         newBlock = await this.createBlock(BlockUrlConstant.TextSpan, {}, this.views.last());
                     }
                     newBlock.mounted(() => {
-                        this.kit.explorer.onFocusAnchor(newBlock.createAnchor());
+                       // this.kit.explorer.onFocusAnchor(newBlock.createAnchor());
                         resolve(true);
                     })
                 })
@@ -238,9 +238,9 @@ export class Page$Operator {
                     await firstBlock.delete();
                 }
                 block.mounted(() => {
-                    var anchor = block.visibleHeadAnchor;
-                    if (anchor)
-                        anchor.explorer.onFocusAnchor(anchor);
+                    // var anchor = block.visibleHeadAnchor;
+                    // if (anchor)
+                    //     anchor.explorer.onFocusAnchor(anchor);
                 });
             })
         }
@@ -263,9 +263,9 @@ export class Page$Operator {
                     await b.delete();
                 })
                 block.mounted(() => {
-                    var anchor = block.visibleHeadAnchor;
-                    if (anchor)
-                        anchor.explorer.onFocusAnchor(anchor);
+                    // var anchor = block.visibleHeadAnchor;
+                    // if (anchor)
+                    //     anchor.explorer.onFocusAnchor(anchor);
                 });
             })
         }
@@ -285,9 +285,9 @@ export class Page$Operator {
                     await firstBlock.delete();
                 }
                 block.mounted(() => {
-                    var anchor = block.visibleHeadAnchor;
-                    if (anchor)
-                        anchor.explorer.onFocusAnchor(anchor);
+                    // var anchor = block.visibleHeadAnchor;
+                    // if (anchor)
+                    //     anchor.explorer.onFocusAnchor(anchor);
                 });
             })
         }
@@ -304,9 +304,9 @@ export class Page$Operator {
                     await b.delete();
                 })
                 block.mounted(() => {
-                    var anchor = block.visibleHeadAnchor;
-                    if (anchor)
-                        anchor.explorer.onFocusAnchor(anchor);
+                    // var anchor = block.visibleHeadAnchor;
+                    // if (anchor)
+                    //     anchor.explorer.onFocusAnchor(anchor);
                 });
             })
         }
