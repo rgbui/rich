@@ -15,9 +15,9 @@ import { DetectorOperator, DetectorRule, rules } from "./rules";
  * 
  */
 
-export function InputDetector(value: string, anchor: Anchor, options: { rowStart?: boolean, at?: number }): { rule: DetectorRule, value: string, matchValue?: string } {
+export function InputDetector(value: string,options: { rowStart?: boolean }): { rule: DetectorRule, value: string, matchValue?: string } {
     var rs = rules;
-    if (!(options.rowStart && options.at == 0)) rs = rs.findAll(x => x.operator != DetectorOperator.firstLetterCreateBlock && x.operator != DetectorOperator.firstLetterTurnBlock);
+    if (!(options.rowStart)) rs = rs.findAll(x => x.operator != DetectorOperator.firstLetterCreateBlock && x.operator != DetectorOperator.firstLetterTurnBlock);
     var ru: DetectorRule;
     for (let i = 0; i < rs.length; i++) {
         var rule = rs[i];
