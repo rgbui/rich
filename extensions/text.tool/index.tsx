@@ -35,7 +35,7 @@ class TextTool extends EventsComponent {
     }
     private block: Block = null;
     el: HTMLElement;
-    open(point, options: { style: TextToolStyle, block: Block }) {
+    open(point, options: { style: TextToolStyle, block?: Block }) {
         this.point = this.point;
         this.visible = true;
         this.textStyle = options.style;
@@ -244,7 +244,7 @@ export type textToolResult = { command: 'setStyle', styles: Record<BlockCssName,
     | { command: "setProp", props: Record<string, any> }
     | false;
 var textTool: TextTool;
-export async function useTextTool(point: Point, options: { style: TextToolStyle, block: Block }) {
+export async function useTextTool(point: Point, options: { style: TextToolStyle, block?: Block }) {
     textTool = await Singleton(TextTool);
     textTool.open(point, options);
     return new Promise((resolve: (result: textToolResult) => void, reject) => {
