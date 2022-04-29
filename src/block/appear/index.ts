@@ -93,7 +93,7 @@ export class AppearAnchor {
         var content = this.block[this.prop];
         this.el.innerHTML = content;
     }
-    
+
 
 
     visibleTextNext(): AppearAnchor {
@@ -173,8 +173,30 @@ export class AppearAnchor {
         }
         return false;
     }
-    get textNode(){
-        if(this.el.childNodes.length>0)return this.el.childNodes[0]
+    get textNode() {
+        if (this.el.childNodes.length > 0) return this.el.childNodes[0]
         else return this.el;
+    }
+
+    /**
+     * 判断是否为当前行块的最开始处的appear
+     */
+    get isRowStart() {
+        var row = this.block.closest(x => !x.isLine);
+        if (row == this.block) {
+            if (row.appearAnchors[0] === this) return true;
+        }
+        else {
+            var r = row.find(g => g.appearAnchors.length > 0);
+            if (r && r.appearAnchors[0] === this) return true;
+        }
+        return false;
+    }
+    isBefore(anchor: AppearAnchor) {
+        var pos = this.el.compareDocumentPosition(anchor.el);
+        if (pos == 4 || pos == 20) {
+            return true
+        }
+        return false
     }
 }
