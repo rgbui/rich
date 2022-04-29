@@ -35,60 +35,60 @@ export class SelectionExplorer$Events {
      * 删除选区
      */
     async onDeleteSelection(this: SelectionExplorer) {
-        forceCloseTextTool();
-        await this.page.onAction(ActionDirective.onDeleteSelection, async () => {
-            if (this.currentSelectedBlocks.length > 0) {
-                await this.currentSelectedBlocks.eachAsync(async block => {
-                    await block.delete();
-                });
-                this.onCancelSelection();
-            }
-            else {
-                var bs = this.selectedBlocks;
-                var start = this.start;
-                var end = this.end;
-                if (end.isBefore(start)) {
-                    start = this.end;
-                    end = this.start;
-                }
-                var rowBlock = start.block.closest(x => x.isBlock);
-                var point = start.bound.leftMiddle;
-                await bs.eachAsync(async (block) => {
-                    if (!block.isOnlyElementText) await block.delete();
-                    if (block == start.block && block == end.block) {
-                        var ae = block.firstElementAppear;
-                        var text = block[ae.prop];
-                        text = text.slice(0, start.at) + text.slice(end.at);
-                        block.updateAppear(ae, text, BlockRenderRange.self);
-                        // newAnchor = { block: start.block, at: start.at };
-                    }
-                    else if (block == start.block) {
-                        var ae = block.firstElementAppear;
-                        var text = block[ae.prop];
-                        text = text.slice(0, start.at);
-                        if (text) block.updateAppear(ae, text, BlockRenderRange.self);
-                        else await block.delete();
-                        // newAnchor = { block: start.block, at: start.at };
-                    }
-                    else if (block == end.block) {
-                        var ae = block.firstElementAppear;
-                        var text = block[ae.prop];
-                        text = text.slice(end.at);
-                        if (text) block.updateAppear(ae, text, BlockRenderRange.self);
-                        else await block.delete()
-                        // newAnchor = { block: end.block, at: 0 };
-                    }
-                    else {
-                        await block.delete();
-                    }
-                });
-                this.onCancelSelection();
-                this.page.addUpdateEvent(async () => {
-                    var anchor = rowBlock.visibleAnchor(point);
-                    this.page.kit.explorer.onFocusAnchor(anchor);
-                })
-            }
-        })
+        // forceCloseTextTool();
+        // await this.page.onAction(ActionDirective.onDeleteSelection, async () => {
+        //     if (this.currentSelectedBlocks.length > 0) {
+        //         await this.currentSelectedBlocks.eachAsync(async block => {
+        //             await block.delete();
+        //         });
+        //         this.onCancelSelection();
+        //     }
+        //     else {
+        //         var bs = this.selectedBlocks;
+        //         var start = this.start;
+        //         var end = this.end;
+        //         if (end.isBefore(start)) {
+        //             start = this.end;
+        //             end = this.start;
+        //         }
+        //         var rowBlock = start.block.closest(x => x.isBlock);
+        //         var point = start.bound.leftMiddle;
+        //         await bs.eachAsync(async (block) => {
+        //             if (!block.isOnlyElementText) await block.delete();
+        //             if (block == start.block && block == end.block) {
+        //                 var ae = block.firstElementAppear;
+        //                 var text = block[ae.prop];
+        //                 text = text.slice(0, start.at) + text.slice(end.at);
+        //                 block.updateAppear(ae, text, BlockRenderRange.self);
+        //                 // newAnchor = { block: start.block, at: start.at };
+        //             }
+        //             else if (block == start.block) {
+        //                 var ae = block.firstElementAppear;
+        //                 var text = block[ae.prop];
+        //                 text = text.slice(0, start.at);
+        //                 if (text) block.updateAppear(ae, text, BlockRenderRange.self);
+        //                 else await block.delete();
+        //                 // newAnchor = { block: start.block, at: start.at };
+        //             }
+        //             else if (block == end.block) {
+        //                 var ae = block.firstElementAppear;
+        //                 var text = block[ae.prop];
+        //                 text = text.slice(end.at);
+        //                 if (text) block.updateAppear(ae, text, BlockRenderRange.self);
+        //                 else await block.delete()
+        //                 // newAnchor = { block: end.block, at: 0 };
+        //             }
+        //             else {
+        //                 await block.delete();
+        //             }
+        //         });
+        //         this.onCancelSelection();
+        //         this.page.addUpdateEvent(async () => {
+        //             var anchor = rowBlock.visibleAnchor(point);
+        //             this.page.kit.explorer.onFocusAnchor(anchor);
+        //         })
+        //     }
+        // })
     }
     /**
      * 光标移动
@@ -114,10 +114,10 @@ export class SelectionExplorer$Events {
                 else if (arrow == KeyboardCode.ArrowRight && anchor.isEnd) {
                     newAnchor = anchor.nextAnchor;
                 }
-                else if (arrow == KeyboardCode.ArrowDown)
-                    newAnchor = anchor.block.visibleInnerDownAnchor(anchor);
-                else if (arrow == KeyboardCode.ArrowUp)
-                    newAnchor = anchor.block.visibleInnerUpAnchor(anchor);
+                // else if (arrow == KeyboardCode.ArrowDown)
+                //     newAnchor = anchor.block.visibleInnerDownAnchor(anchor);
+                // else if (arrow == KeyboardCode.ArrowUp)
+                //     newAnchor = anchor.block.visibleInnerUpAnchor(anchor);
             }
             else if (anchor.isSolid) {
                 if (arrow == KeyboardCode.ArrowLeft) {
@@ -127,10 +127,10 @@ export class SelectionExplorer$Events {
                     newAnchor = anchor.nextAnchor
                 }
                 else if (arrow == KeyboardCode.ArrowDown) {
-                    newAnchor = anchor.block.visibleDownAnchor(anchor);
+                   // newAnchor = anchor.block.visibleDownAnchor(anchor);
                 }
                 else if (arrow == KeyboardCode.ArrowUp) {
-                    newAnchor = anchor.block.visibleUpAnchor(anchor);
+                   // newAnchor = anchor.block.visibleUpAnchor(anchor);
                 }
             }
             if (newAnchor) {
@@ -170,8 +170,8 @@ export class SelectionExplorer$Events {
                 newBlock = await block.visibleDownCreateBlock(url, { ...continuouslyProps });
             }
             newBlock.mounted(() => {
-                var anchor = newBlock.visibleHeadAnchor;
-                this.onFocusAnchor(anchor);
+                // var anchor = newBlock.visibleHeadAnchor;
+                // this.onFocusAnchor(anchor);
             });
         })
     }
@@ -205,11 +205,11 @@ export class SelectionExplorer$Events {
                 }
             }
             this.page.addUpdateEvent(async () => {
-                var anchor = newBlock.visibleHeadAnchor;
-                if (!anchor) {
-                    console.log(newBlock);
-                }
-                this.onFocusAnchor(anchor);
+                // var anchor = newBlock.visibleHeadAnchor;
+                // if (!anchor) {
+                //     console.log(newBlock);
+                // }
+                // this.onFocusAnchor(anchor);
             })
         })
     }
@@ -327,13 +327,13 @@ export class SelectionExplorer$Events {
                 * 所以对光标的操作可能得在渲染之后才可以触发
                 */
                 this.page.addUpdateEvent(async () => {
-                    var newStartAnchor = ns.block.createAnchor(ns.at);
-                    newStartAnchor.acceptView(this.start);
-                    this.start = newStartAnchor;
-                    var newEndAnchor = ne.block.createAnchor(ne.at);
-                    newEndAnchor.acceptView(this.end);
-                    this.end = newEndAnchor;
-                    this.renderSelection();
+                    // var newStartAnchor = ns.block.createAnchor(ns.at);
+                    // newStartAnchor.acceptView(this.start);
+                    // this.start = newStartAnchor;
+                    // var newEndAnchor = ne.block.createAnchor(ne.at);
+                    // newEndAnchor.acceptView(this.end);
+                    // this.end = newEndAnchor;
+                    // this.renderSelection();
                 });
             }
         });
@@ -385,8 +385,8 @@ export class SelectionExplorer$Events {
                     text = text.slice(0, start.at) + inputText + text.slice(end.at);
                     block.updateAppear(ae, text, BlockRenderRange.self);
                     this.page.addUpdateEvent(async () => {
-                        var anchor = block.createAnchor(start.at + inputText.length);
-                        this.page.kit.explorer.onFocusAnchor(anchor);
+                        // var anchor = block.createAnchor(start.at + inputText.length);
+                        // this.page.kit.explorer.onFocusAnchor(anchor);
                     })
                 }
                 else if (block == start.block) {
@@ -405,8 +405,8 @@ export class SelectionExplorer$Events {
                     if (text) block.updateAppear(ae, text, BlockRenderRange.self);
                     else await block.delete();
                     this.page.addUpdateEvent(async () => {
-                        var anchor = newBlock.createBackAnchor();
-                        this.page.kit.explorer.onFocusAnchor(anchor);
+                        // var anchor = newBlock.createBackAnchor();
+                        // this.page.kit.explorer.onFocusAnchor(anchor);
                     })
                 }
                 else {
@@ -415,8 +415,8 @@ export class SelectionExplorer$Events {
             });
             this.onCancelSelection();
             this.page.addUpdateEvent(async () => {
-                var anchor = rowBlock.visibleAnchor(point);
-                this.page.kit.explorer.onFocusAnchor(anchor);
+                // var anchor = rowBlock.visibleAnchor(point);
+                // this.page.kit.explorer.onFocusAnchor(anchor);
             })
 
         })
