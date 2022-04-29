@@ -5,11 +5,12 @@ import { LangID } from "../../i18n/declare";
 import { Sp } from "../../i18n/view";
 import { KeyboardCode } from "../../src/common/keys";
 import { Point, Rect, RectUtility } from "../../src/common/vector/point";
+import { InputTextPopSelector } from "../common/input.pop";
 import { PopoverPosition } from "../popover/position";
 import { BlockSelectorItem } from "./delcare";
 import { blockStore } from "./store";
 
-class BlockSelector extends React.Component {
+class BlockSelector extends InputTextPopSelector {
     private get filterSelectorData() {
         return blockStore.findAll(this.command);
     }
@@ -203,10 +204,8 @@ class BlockSelector extends React.Component {
                     return true;
                 case KeyboardCode.Enter:
                     var block = this.selectBlockData;
-                    this.close();
-                    if (block)
-                        return { block, matchValue: this.getFilterText(this.inputValue) };
-                    else return false;
+                    this.onSelect(block);
+                    return true;
             }
         }
         return false;

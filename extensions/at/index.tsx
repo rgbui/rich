@@ -1,11 +1,20 @@
 import React from "react";
 import { createPortal } from "react-dom";
 import { KeyboardCode } from "../../src/common/keys";
-import { Point } from "../../src/common/vector/point";
-import { EventsComponent } from "../../component/lib/events.component";
-import { ReferenceSelectorData } from "./data";
+import { Point, Rect } from "../../src/common/vector/point";
 
-export class AtSelector extends EventsComponent {
+import { ReferenceSelectorData } from "./data";
+import { Singleton } from "../../component/lib/Singleton";
+import { InputTextPopSelector } from "../common/input.pop";
+
+export class AtSelector extends InputTextPopSelector {
+    open(round: Rect, text: string, callback: (...args: any[]) => void): Promise<boolean> {
+        throw new Error("Method not implemented.");
+    }
+   
+    onKeydown(event: KeyboardEvent): boolean {
+        throw new Error("Method not implemented.");
+    }
     private node: HTMLElement;
     constructor(props) {
         super(props);
@@ -45,11 +54,11 @@ export class AtSelector extends EventsComponent {
     get isVisible() {
         return this.visible;
     }
-    open(point: Point) {
-        this.pos = point;
-        this.visible = true;
-        this.forceUpdate();
-    }
+    // open(point: Point) {
+    //     this.pos = point;
+    //     this.visible = true;
+    //     this.forceUpdate();
+    // }
     isTriggerOpen(value: string) {
         return value.endsWith('@')
     }
@@ -113,4 +122,7 @@ export class AtSelector extends EventsComponent {
 export interface AtSelector {
     on(name: 'error', fn: (error: Error) => void);
     emit(name: 'error', error: Error);
+}
+export async function useAtSelector() {
+    return await Singleton(AtSelector);
 }
