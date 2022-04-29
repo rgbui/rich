@@ -1,5 +1,4 @@
 
-import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
 var inputStoreTime;
 var inputStore;
