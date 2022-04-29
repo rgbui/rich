@@ -184,3 +184,26 @@ export function AppearVisibleCursorPoint(appear: AppearAnchor) {
     }
     return new Rect(row.x, currentRect.top + (rowCount - 1) * lineHeight, 0, lineHeight)
 }
+
+/**
+ * 查询两个appearAnchor之间的所有块
+ * 
+ */
+export function findBlocksBetweenAppears(start: HTMLElement, end: HTMLElement) {
+    if (TextEle.isBefore(start, end)) {
+        [start, end] = [end, start];
+    }
+    var list: AppearAnchor[] = [];
+    var dm = dom(end);
+    dm.prevFind((b: HTMLElement) => {
+        if (typeof b?.closest == 'function') {
+            var r = findBlockAppear(b);
+            if (r) {
+                if (!list.includes(r)) list.push(r);
+                return false;
+            }
+        }
+        return false;
+    }, false, f => f === start);
+    return list;
+}
