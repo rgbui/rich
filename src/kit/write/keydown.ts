@@ -11,6 +11,10 @@ import { TextEle } from "../../common/text.ele";
  * 这里主要是判断当前的keydown事件是否还需要触发，继续执行输入
  */
 export function predictKeydown(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
+    if (write.inputPop) {
+        var r = write.inputPop.selector.onKeydown(event.nativeEvent);
+        if(r==true)return false;
+    }
     return true;
 }
 
