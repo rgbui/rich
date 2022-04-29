@@ -1,14 +1,19 @@
+import lodash from "lodash";
 import React from "react";
 import { Kit } from "..";
+import { InputTextPopSelector, InputTextPopSelectorType } from "../../../extensions/common/input.pop";
+import { useTextTool } from "../../../extensions/text.tool";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
-import { findBlockAppear } from "../../block/appear/visible.seek";
+import { findBlockAppear, findBlocksBetweenAppears } from "../../block/appear/visible.seek";
 import { MouseDragger } from "../../common/dragger";
 import { KeyboardCode } from "../../common/keys";
 import { TextEle } from "../../common/text.ele";
-import { Point } from "../../common/vector/point";
+import { Point, Rect } from "../../common/vector/point";
+
 import { inputDetector, inputLineTail, inputPop } from "./input";
 import { MoveCursor, predictKeydown } from "./keydown";
+import { onPaste } from "./paste";
 import { InputStore } from "./store";
 
 /**
@@ -52,6 +57,7 @@ export class PageWrite {
     constructor(public kit: Kit) { }
     mousedown(aa: AppearAnchor, event: React.MouseEvent) {
         this.kit.operator.onClearSelectBlocks();
+        this.inputPop = null;
         event.stopPropagation();
         var sel = window.getSelection();
         var anchorNode;
@@ -134,22 +140,21 @@ export class PageWrite {
         }
         this.isWillInput = true;
     }
-    async input(aa: AppearAnchor, event: React.FormEvent)
-    {
+    async input(aa: AppearAnchor, event: React.FormEvent) {
         if (!this.isWillInput) return;
         /**
          * 这里需要判断是否有必要弹出弹窗
          */
-        if (await inputPop(this, aa, event)) return;
+        if (await inputPop(this, aa, event)) { }
         /**
          * 这里需要判断当前的输入文字是否有必要触发替换的问题
          */
-        if (await inputDetector(this, aa, event)) return;
+        else if (await inputDetector(this, aa, event)) { }
         /**
          * 这里判断是否为输入到当前line块的末尾，且为当前row块的尾部。
          * 因为这样会导致输入的时候一直输入到line块中，或者空格一下  该功能暂时不做
          */
-        if (await inputLineTail(this, aa, event)) return;
+        else if (await inputLineTail(this, aa, event)) { }
         await InputStore(aa, aa.textContent, this.startAnchorText);
     }
     focus(aa: AppearAnchor, event: React.FocusEvent) {
@@ -163,7 +168,7 @@ export class PageWrite {
         // console.log('blur', aa, event);
     }
     paste(aa: AppearAnchor, event: React.ClipboardEvent) {
-
+        onPaste(this.kit, aa, event.nativeEvent);
     }
     dblclick(aa: AppearAnchor, event: React.MouseEvent) {
         this.onSelectionAll(aa);
@@ -232,26 +237,75 @@ export class PageWrite {
         }
     }
     async onOpenTextTool() {
-        // while (true) {
-        //     var result = await useTextTool(this.getSelectionPoint(), {
-        //         block: rowBlock,
-        //        style: this.page.pickBlocksTextStyle(this.selectedBlocks)
-        //    });
-        //     if (result) {
-        //         if (result.command == 'setStyle') {
-        //             await this.onSelectionSetPatternOrProps(result.styles);
-        //         }
-        //         else if (result.command == 'setProp') {
-        //              await this.onSelectionSetPatternOrProps(undefined, result.props);
-        //         }
-        //         else if (result.command == 'turn') {
-        //              await rowBlock.onClickContextMenu(result.item, result.event);
-        //             break;
-        //         }
-        //         else break;
-        //     }
-        //     else break;
-        // }
+        var sel = window.getSelection();
+        var range = sel.getRangeAt(0);
+        if (range) {
+            var list = findBlocksBetweenAppears(sel.anchorNode as HTMLElement, sel.focusNode as HTMLElement);
+            var blocks = lodash.identity(list.map(l => l.block));
+            var c = range.getBoundingClientRect();
+            while (true) {
+                var result = await useTextTool(
+                    new Point(c.left, c.top),
+                    { style: this.kit.page.pickBlocksTextStyle(blocks) }
+                );
+                if (result) {
+                    if (result.command == 'setStyle') {
+                        // await this.onSelectionSetPatternOrProps(result.styles);
+                    }
+                    else if (result.command == 'setProp') {
+                        // await this.onSelectionSetPatternOrProps(undefined, result.props);
+                    }
+                    else if (result.command == 'turn') {
+                        // await rowBlock.onClickContextMenu(result.item, result.event);
+                        // break;
+                    }
+                    else break;
+                }
+                else break;
+            }
+        }
+
+
+
+    }
+
+    /***
+     * 输入式的弹窗
+     */
+    inputPop: { aa: AppearAnchor, type: InputTextPopSelectorType, selector: InputTextPopSelector, offset: number, rect: Rect } = null;
+    /**
+     * 
+     * 如果@blockData 是 isLine ,则在指定的appear某处@offset插入一个新的block(@blockData)
+     * 如果块，则在appear下面一行插入，如果appear本身是空的文本，则替换自身，在下面插入
+     */
+    async onInputPopCreateBlock(offset: number, blockData: Record<string, any>) {
+        await InputStore(this.inputPop.aa, this.inputPop.aa.textContent, this.startAnchorText, true, async () => {
+            var aa = this.inputPop.aa;
+            var newBlock: Block;
+            if (blockData.isLine) {
+                /**
+                 * 说明创建的是行内块
+                 */
+                newBlock = await aa.block.visibleRightCreateBlock(offset, blockData.url, { createSource: 'InputBlockSelector' });
+            }
+            else {
+                /**
+                 * 判断是否为空行块，如果是空行块，则将当前的块转用
+                 * 否则创建一个换行块
+                 */
+                if (aa.block.isTextContentBlockEmpty) {
+                    newBlock = await aa.block.visibleDownCreateBlock(blockData.url, { createSource: 'InputBlockSelector' });
+                    //说明是空白的textBlock
+                    await aa.block.delete();
+                }
+                else {
+                    newBlock = await aa.block.visibleDownCreateBlock(blockData.url, { createSource: 'InputBlockSelector' });
+                }
+            }
+            newBlock.mounted(() => {
+                this.onFocusBlockAnchor(newBlock, { last: true })
+            });
+        });
     }
 }
 
