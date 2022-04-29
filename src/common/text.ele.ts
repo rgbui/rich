@@ -275,6 +275,13 @@ export class TextEle {
         else if (c && typeof (c as any).toString == 'function') return (c as any).toString();
         return '';
     }
+    static isBefore(start, end) {
+        var pos = start.compareDocumentPosition(end);
+        if (pos == 4 || pos == 20) {
+            return true
+        }
+        return false
+    }
 }
 export type TextFontStyle = {
     fontStyle: string,
