@@ -190,15 +190,19 @@ export class Block$Operator {
         var bs = this.blocks[childKey];
         if (typeof at == 'undefined') at = bs.length;
         var b;
+        var cs:Block[]=[];
         for (let i = 0; i < blocks.length; i++) {
             var bb = blocks[i];
             if (i == 0) {
                 b = await this.appendBlock(bb, at, childKey);
+                cs.push(b);
             }
             else {
                 b = await this.appendBlock(bb, b.at + 1, childKey);
+                cs.push(b);
             }
         }
+        return cs;
     }
     /**
      * 注意元素移到to元素下面，并非简单的append，
