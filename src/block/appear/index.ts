@@ -3,6 +3,7 @@ import { Point, Rect } from "../../common/vector/point";
 import { TextEle } from "../../common/text.ele";
 import { Anchor } from "../../kit/selection/anchor";
 import { AppearVisibleSeek } from "./visible.seek";
+import { BlockUrlConstant } from "../constant";
 export enum BlockAppear {
     /**
      * 呈现的是文字的模式
@@ -177,7 +178,6 @@ export class AppearAnchor {
         if (this.el.childNodes.length > 0) return this.el.childNodes[0]
         else return this.el;
     }
-
     /**
      * 判断是否为当前行块的最开始处的appear
      */
@@ -198,5 +198,38 @@ export class AppearAnchor {
             return true
         }
         return false
+    }
+    async split(ats: number[]) {
+        var text = this.textContent;
+        var pre = 0;
+        var ts: string[] = [];
+        for (let i = 0; i < ats.length; i++) {
+            var t = text.slice(pre, ats[i]);
+            if (t) ts.push(t);
+            pre = ats[i];
+        }
+        var lastT = text.slice(ats[ats.length - 1]);
+        if (lastT) ts.push(lastT);
+        var bs: Block[] = [];
+        if (this.block.isLine) {
+            var at = this.block.at;
+            await this.block.updateProps({ content: ts[0] });
+            bs.push(this.block);
+            if (ts.length > 1) {
+                var rs = await this.block.parent.appendArrayBlockData(
+                    ts.findAll((g, i) => i > 1).map(t => ({ url: BlockUrlConstant.Text, content: t })),
+                    at + 1,
+                    this.block.parent.childKey
+                );
+                bs.addRange(rs);
+            };
+            return bs;
+        }
+        else {
+            await this.block.updateProps({ content: '' });
+            return await this.block.appendArrayBlockData(
+                ts.map(t => ({ url: BlockUrlConstant.Text, content: t }))
+            )
+        }
     }
 }
