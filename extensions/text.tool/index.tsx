@@ -33,13 +33,13 @@ class TextTool extends EventsComponent {
     constructor(props) {
         super(props);
     }
-    private block: Block = null;
+    private turnBlock: Block = null;
     el: HTMLElement;
-    open(point, options: { style: TextToolStyle, block?: Block }) {
+    open(point, options: { style: TextToolStyle, turnBlock?:Block}) {
         this.point = this.point;
         this.visible = true;
         this.textStyle = options.style;
-        this.block = options.block;
+        this.turnBlock = options?.turnBlock;
         this.forceUpdate(() => {
             var menu: HTMLElement = this.el.querySelector('.shy-tool-text-menu');
             this.point = RectUtility.cacPopoverPosition({
@@ -66,11 +66,11 @@ class TextTool extends EventsComponent {
             left: this.point.x
         };
         return <div tabIndex={1} data-shy-page-unselect="true" onMouseUp={e => e.stopPropagation()} ref={el => this.el = el}>{this.visible == true && <div className='shy-tool-text-menu' style={style}>
-            <Tip id={LangID.textToolTurn}>
+           {this.turnBlock&& <Tip id={LangID.textToolTurn}>
                 <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenBlockSelector(e)}>
                     <span>Text</span><Icon icon='arrow-down:sy'></Icon>
                 </div>
-            </Tip>
+            </Tip>}
             {/* <Tip id={LangID.textToolLink}>
                         <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenLink(e)}>
                             <Icon icon='link:sy'></Icon><Icon icon='arrow-down:sy'></Icon>
@@ -208,7 +208,7 @@ class TextTool extends EventsComponent {
     }
     async onOpenBlockSelector(event: React.MouseEvent) {
         event.stopPropagation();
-        var block = this.block;
+        var block = this.turnBlock;
         this.blocked = true;
         var re = await useSelectMenuItem({
             roundArea: Rect.fromEvent(event),
@@ -244,7 +244,7 @@ export type textToolResult = { command: 'setStyle', styles: Record<BlockCssName,
     | { command: "setProp", props: Record<string, any> }
     | false;
 var textTool: TextTool;
-export async function useTextTool(point: Point, options: { style: TextToolStyle, block?: Block }) {
+export async function useTextTool(point: Point, options: { style: TextToolStyle,turnBlock?:Block }) {
     textTool = await Singleton(TextTool);
     textTool.open(point, options);
     return new Promise((resolve: (result: textToolResult) => void, reject) => {
