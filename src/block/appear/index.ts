@@ -211,13 +211,14 @@ export class AppearAnchor {
         var lastT = text.slice(ats[ats.length - 1]);
         if (lastT) ts.push(lastT);
         var bs: Block[] = [];
+        var pattern = await this.block.pattern.cloneData();
         if (this.block.isLine) {
             var at = this.block.at;
             await this.block.updateProps({ content: ts[0] });
             bs.push(this.block);
             if (ts.length > 1) {
                 var rs = await this.block.parent.appendArrayBlockData(
-                    ts.findAll((g, i) => i > 1).map(t => ({ url: BlockUrlConstant.Text, content: t })),
+                    ts.findAll((g, i) => i > 0).map(t => ({ url: BlockUrlConstant.Text, pattern, content: t })),
                     at + 1,
                     this.block.parent.childKey
                 );
@@ -228,7 +229,7 @@ export class AppearAnchor {
         else {
             await this.block.updateProps({ content: '' });
             return await this.block.appendArrayBlockData(
-                ts.map(t => ({ url: BlockUrlConstant.Text, content: t }))
+                ts.map(t => ({ url: BlockUrlConstant.Text, pattern, content: t }))
             )
         }
     }
