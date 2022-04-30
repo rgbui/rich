@@ -339,30 +339,30 @@ export class SelectionExplorer$Events {
         });
     }
     async onOpenTextTool(this: SelectionExplorer, event: MouseEvent) {
-        if (this.selectedBlocks.length == 0) return;
-        var rowBlock = this.selectedBlocks.first().closest(x => !x.isLine);
-        if (!rowBlock.isSupportTextStyle) return;
-        while (true) {
-            if (this.selectedBlocks.length == 0) break;
-            var result = await useTextTool(this.getSelectionPoint(), {
-                block: rowBlock,
-                style: this.page.pickBlocksTextStyle(this.selectedBlocks)
-            });
-            if (result) {
-                if (result.command == 'setStyle') {
-                    await this.onSelectionSetPatternOrProps(result.styles);
-                }
-                else if (result.command == 'setProp') {
-                    await this.onSelectionSetPatternOrProps(undefined, result.props);
-                }
-                else if (result.command == 'turn') {
-                    await rowBlock.onClickContextMenu(result.item, result.event);
-                    break;
-                }
-                else break;
-            }
-            else break;
-        }
+        // if (this.selectedBlocks.length == 0) return;
+        // var rowBlock = this.selectedBlocks.first().closest(x => !x.isLine);
+        // if (!rowBlock.isSupportTextStyle) return;
+        // while (true) {
+        //     if (this.selectedBlocks.length == 0) break;
+        //     var result = await useTextTool(this.getSelectionPoint(), {
+        //         block: rowBlock,
+        //         style: this.page.pickBlocksTextStyle(this.selectedBlocks)
+        //     });
+        //     if (result) {
+        //         if (result.command == 'setStyle') {
+        //             await this.onSelectionSetPatternOrProps(result.styles);
+        //         }
+        //         else if (result.command == 'setProp') {
+        //             await this.onSelectionSetPatternOrProps(undefined, result.props);
+        //         }
+        //         else if (result.command == 'turn') {
+        //             await rowBlock.onClickContextMenu(result.item, result.event);
+        //             break;
+        //         }
+        //         else break;
+        //     }
+        //     else break;
+        // }
     }
     async onSelectionInputText(this: SelectionExplorer, inputText: string) {
         forceCloseTextTool();

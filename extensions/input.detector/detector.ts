@@ -1,6 +1,4 @@
-import { BlockCssName } from "../../src/block/pattern/css";
-import { Anchor } from "../../src/kit/selection/anchor";
-import { Events } from "../../util/events";
+
 import { DetectorOperator, DetectorRule, rules } from "./rules";
 /**
  * 输入检测器
