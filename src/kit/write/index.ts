@@ -6,10 +6,12 @@ import { useTextTool } from "../../../extensions/text.tool";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
 import { findBlockAppear, findBlocksBetweenAppears } from "../../block/appear/visible.seek";
+import { BlockCssName } from "../../block/pattern/css";
 import { MouseDragger } from "../../common/dragger";
 import { KeyboardCode } from "../../common/keys";
 import { TextEle } from "../../common/text.ele";
 import { Point, Rect } from "../../common/vector/point";
+import { ActionDirective } from "../../history/declare";
 
 import { inputDetector, inputLineTail, inputPop } from "./input";
 import { MoveCursor, predictKeydown } from "./keydown";
@@ -236,10 +238,31 @@ export class PageWrite {
             sel.setBaseAndExtent(firstAppear.textNode, 0, lastAppear.textNode, lastAppear.textContent.length)
         }
     }
+    endAnchor: AppearAnchor;
+    endOffset: number;
+    onSaveSelection() {
+        var sel = window.getSelection();
+        this.startAnchor = findBlockAppear(sel.anchorNode);
+        this.startOffset = sel.anchorOffset;
+        this.startAnchorText = this.startAnchor?.textContent || '';
+        if (!sel.isCollapsed) {
+            this.endAnchor = findBlockAppear(sel.focusNode);
+            this.endOffset = sel.focusOffset;
+        }
+    }
+    onRenderSelection() {
+        var sel = window.getSelection();
+        if (this.startAnchor && this.endAnchor)
+            sel.setBaseAndExtent(this.startAnchor.textNode, this.startOffset, this.endAnchor.textNode, this.endOffset)
+        else if (this.startAnchor) {
+            sel.setPosition(this.startAnchor.textNode, this.startOffset);
+        }
+    }
     async onOpenTextTool() {
         var sel = window.getSelection();
         var range = sel.getRangeAt(0);
         if (range) {
+            this.onSaveSelection();
             var list = findBlocksBetweenAppears(sel.anchorNode as HTMLElement, sel.focusNode as HTMLElement);
             var blocks = lodash.identity(list.map(l => l.block));
             var c = range.getBoundingClientRect();
@@ -250,10 +273,10 @@ export class PageWrite {
                 );
                 if (result) {
                     if (result.command == 'setStyle') {
-                        // await this.onSelectionSetPatternOrProps(result.styles);
+                        await this.onSelectionSetPatternOrProps(list, result.styles);
                     }
                     else if (result.command == 'setProp') {
-                        // await this.onSelectionSetPatternOrProps(undefined, result.props);
+                        await this.onSelectionSetPatternOrProps(list, undefined, result.props);
                     }
                     else if (result.command == 'turn') {
                         // await rowBlock.onClickContextMenu(result.item, result.event);
@@ -264,11 +287,7 @@ export class PageWrite {
                 else break;
             }
         }
-
-
-
     }
-
     /***
      * 输入式的弹窗
      */
@@ -304,6 +323,50 @@ export class PageWrite {
             }
             newBlock.mounted(() => {
                 this.onFocusBlockAnchor(newBlock, { last: true })
+            });
+        });
+    }
+    async onSelectionSetPatternOrProps(
+        appears: AppearAnchor[],
+        styles: Record<BlockCssName, Record<string, any>>,
+        props?: Record<string, any>
+    ) {
+        await this.kit.page.onActionAsync(ActionDirective.onUpdatePattern, async () => {
+            await appears.eachAsync(async appear => {
+                if (appear == this.startAnchor || appear == this.endAnchor) {
+
+                }
+                else {
+                    var block = appear.block;
+                    if (styles) block.pattern.setStyles(styles);
+                    if (props) await block.updateProps(props);
+                }
+            });
+            if (TextEle.isBefore(this.endAnchor.el, this.startAnchor.el) || this.endAnchor === this.startAnchor && this.endOffset < this.startOffset) {
+                [this.startAnchor, this.endAnchor] = [this.endAnchor, this.startAnchor];
+                [this.startOffset, this.endOffset] = [this.endOffset, this.startOffset];
+                this.startAnchorText = this.endAnchor.textContent;
+            }
+            var nstart: Block;
+            var nend: Block;
+            if (this.startAnchor == this.endAnchor) {
+                var rs = await this.startAnchor.split([this.startOffset, this.endOffset]);
+                nstart = rs.first();
+                nend = rs.last();
+            }
+            else {
+                var ss = await this.startAnchor.split([this.startOffset]);
+                nstart = ss.last();
+                var es = await this.endAnchor.split([this.endOffset]);
+                nend = es.first();
+            }
+            this.kit.page.addUpdateEvent(async () => {
+                this.startAnchor = nstart.appearAnchors.first();
+                this.startOffset = 0;
+                this.endAnchor = nend.appearAnchors.first();
+                this.endOffset = this.endAnchor.textContent.length;
+                this.startAnchorText = this.startAnchor.textContent;
+                this.onRenderSelection();
             });
         });
     }
