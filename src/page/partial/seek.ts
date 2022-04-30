@@ -253,7 +253,7 @@ export class Page$Seek {
             fromBlock?: Block
         }) {
         var rect = new Rect(Point.from(from), Point.from(to));
-        var bs = this.grid.findBlocksByRect(rect, b => {
+        var bs = this.gridMap.findBlocksByRect(rect, b => {
             if (!b.isLayout && !b.isPart) {
                 if (b.isCrossBlockArea(rect)) return true;
             }

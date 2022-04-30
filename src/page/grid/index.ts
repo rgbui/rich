@@ -2,14 +2,30 @@ import { Page } from "..";
 import { Block } from "../../block";
 import { Point, Rect } from "../../common/vector/point";
 const CellSize = 200;
-export class PageGrid {
-    constructor(public page: Page) { }
+export class GridMap {
+    constructor(public panel: Page | Block) { }
     private gridMap: Map<string, Block[]> = new Map();
     private getKey(x: number, y: number) { return x + "," + y }
+    private getRelativeRect(rect: Rect) {
+        if (this.panel instanceof Page) {
+            return this.panel.getRelativeRect(rect);
+        }
+        else if (this.panel instanceof Block) {
+            return this.panel.getRelativeRect(rect);
+        }
+    }
+    private getRelativePoint(point: Point) {
+        if (this.panel instanceof Page) {
+            return this.panel.getRelativePoint(point);
+        }
+        else if (this.panel instanceof Block) {
+            return this.panel.getRelativePoint(point);
+        }
+    }
     public sync(block: Block) {
         if (block.el) {
             var rect = Rect.fromEle(block.el);
-            var newRect = this.page.getRelativeRect(rect);
+            var newRect = this.getRelativeRect(rect);
             var gxMin = Math.floor(newRect.left / CellSize);
             var gxMax = Math.ceil((newRect.left + newRect.width) / CellSize);
             var gyMin = Math.floor(newRect.top / CellSize);
@@ -35,6 +51,24 @@ export class PageGrid {
                 }
             }
             block.grid = { min: [gxMin, gyMin], max: [gxMax, gyMax], rect };
+        }
+    }
+    public buildGridMap() {
+        if (this.panel instanceof Page) {
+            this.panel.each((b) => {
+                if (b.gridMap === this) {
+                    if (!b.isLine && !b.isView && !b.isRow && !b.isCol && !b.isPart)
+                        this.sync(b);
+                }
+            })
+        }
+        else if (this.panel instanceof Block) {
+            this.panel.each(b => {
+                if (b.gridMap === this) {
+                    if (!b.isLine && !b.isView && !b.isRow && !b.isCol && !b.isPart)
+                        this.sync(b);
+                }
+            });
         }
     }
     public remove(block: Block) {
@@ -75,12 +109,15 @@ export class PageGrid {
      * @param point 全局坐标
      * @returns 
      */
-    public findBlocksByPoint(point: Point, predict: (block: Block) => boolean) {
-        var relativePoint = this.page.getRelativePoint(point);
+    public findBlocksByPoint(point: Point, predict?: (block: Block) => boolean) {
+        var relativePoint = this.getRelativePoint(point);
         var gxMin = Math.floor(relativePoint.x / CellSize);
         var gxMax = Math.ceil(relativePoint.x / CellSize);
         var gyMin = Math.floor(relativePoint.y / CellSize);
         var gyMax = Math.ceil(relativePoint.y / CellSize);
+        if (typeof predict == 'undefined') predict = (b) => {
+            return b.getVisibleContentBound().conatin(point);
+        }
         var blocks: Block[] = [];
         for (let i = gxMin; i <= gxMax; i++) {
             for (let j = gyMin; j <= gyMax; j++) {
@@ -95,7 +132,7 @@ export class PageGrid {
         return blocks;
     }
     public findBlocksByRect(rect: Rect, predict?: (block: Block) => boolean) {
-        var relativeRect = this.page.getRelativeRect(rect);
+        var relativeRect = this.getRelativeRect(rect);
         var gxMin = Math.floor(relativeRect.x / CellSize);
         var gxMax = Math.ceil((relativeRect.x + relativeRect.width) / CellSize);
         var gyMin = Math.floor(relativeRect.y / CellSize);
@@ -124,53 +161,5 @@ export class PageGrid {
             }
         }
         return blocks;
-    }
-    public findBlockNearestByPoint(point: Point, predict: (block: Block) => boolean) {
-        var relativePoint = this.page.getRelativePoint(point);
-        var gxMin = Math.floor(relativePoint.x / CellSize);
-        var gxMax = Math.ceil(relativePoint.x / CellSize);
-        var gyMin = Math.floor(relativePoint.y / CellSize);
-        var gyMax = Math.ceil(relativePoint.y / CellSize);
-        var xs: number[] = [];
-        var ys: number[] = [];
-        for (let i = gyMin; i <= gyMax; i++) { ys.push(i) }
-        for (let j = gxMin; j <= gxMax; j++) { xs.push(j) }
-        var xBs: Block[] = [];
-        var yBs: Block[] = [];
-
-        var yMin: number;
-        var yMinBlocks: Block[] = [];
-
-        var yMax: number;
-        var yMaxBlocks: Block[] = [];
-        this.gridMap.forEach((bs, key) => {
-            var xy = key.split(",");
-            var x = parseInt(xy[0]);
-            var y = parseInt(xy[1]);
-            if (xs.includes(x)) {
-                xBs.addRange(bs.findAll(predict));
-            }
-            if (ys.includes(y)) {
-                yBs.addRange(bs.findAll(predict));
-            }
-            if (typeof yMin == 'undefined') { yMin = y; yMinBlocks = bs; }
-            else if (yMin > y) { yMin = y; yMinBlocks = bs; }
-            else if (yMin == y) { yMinBlocks.addRange(bs) }
-            if (typeof yMax == 'undefined') { yMax = y; yMaxBlocks = bs; }
-            else if (yMax < y) { yMax = y; yMaxBlocks = bs; }
-            else if (yMax == y) { yMaxBlocks.addRange(bs); }
-        })
-        if (yBs.length > 0) {
-            return this.page.findNearestBlockByPoint(yBs, point);
-        }
-        if (xBs.length > 0) {
-            return this.page.findNearestBlockByPoint(xBs, point);
-        }
-        if (gyMin <= yMin) {
-            return this.page.findNearestBlockByPoint(yMinBlocks, point);
-        }
-        if (gyMax >= yMax) {
-            return this.page.findNearestBlockByPoint(yMaxBlocks, point);
-        }
     }
 }

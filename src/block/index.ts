@@ -24,7 +24,7 @@ import { Matrix } from "../common/matrix";
 import { Block$Board } from "./partial/board";
 import { Polygon } from "../common/vector/polygon";
 import { channel } from "../../net/channel";
-
+import { GridMap } from "../page/grid";
 
 export abstract class Block extends Events {
     constructor(page: Page) {
@@ -35,6 +35,15 @@ export abstract class Block extends Events {
         this.page = page;
         this.pattern = new Pattern(this);
         if (typeof this.init == 'function') this.init();
+    }
+    /**
+     * 建产索引查询
+     */
+    gridMap: GridMap;
+    get panelGridMap() {
+        var c = this.closest(x => x.gridMap ? true : false);
+        if (c) return c.gridMap;
+        else return this.page.gridMap;
     }
     parent: Block;
     url: string;
@@ -633,6 +642,16 @@ export abstract class Block extends Events {
     isCanEdit(prop?: string) {
         if (typeof prop == 'undefined') prop = 'content';
         return true;
+    }
+    getRelativePoint(point: Point) {
+        if (this.page.isBoard || this.isFrame || this.isFreeBlock || this.isBoardBlock)
+            return this.globalMatrix.transform(point);
+        else if (this.el) return point.relative(Rect.fromEle(this.el).leftTop);
+    }
+    getRelativeRect(rect: Rect) {
+        if (this.page.isBoard || this.isFrame || this.isFreeBlock || this.isBoardBlock)
+            return new Rect(this.globalMatrix.transform(rect.leftBottom), this.matrix.transform(rect.rightBottom))
+        else if (this.el) return rect.relative(Rect.fromEle(this.el).leftTop)
     }
 }
 export interface Block extends Block$Seek { }

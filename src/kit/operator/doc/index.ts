@@ -33,7 +33,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                 /***
                * 这里怎么基于当前界面的视觉不断的收集选中block
                */
-                var bs = kit.page.grid.findBlocksByRect(new Rect(downPoint, movePoint));
+                var bs = kit.page.gridMap.findBlocksByRect(new Rect(downPoint, movePoint));
                 kit.operator.onSelectBlocks(bs);
             };
             onAutoScroll({

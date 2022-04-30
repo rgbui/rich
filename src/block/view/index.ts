@@ -9,7 +9,7 @@ export abstract class BlockView<T extends Block> extends Component<{ block: T }>
     }
     private syncGrid() {
         if (!this.block.isLine && !this.block.isView && !this.block.isRow&& !this.block.isCol&& !this.block.isPart)
-            this.block.page.grid.sync(this.block);
+            this.block.page.gridMap.sync(this.block);
     }
     UNSAFE_componentWillMount(): void {
         this.block.isMounted = true;
@@ -40,7 +40,7 @@ export abstract class BlockView<T extends Block> extends Component<{ block: T }>
             this.willUnmount();
         }
         this.block.isMounted = false;
-        this.block.page.grid.remove(this.block);
+        this.block.page.gridMap.remove(this.block);
     }
     willUnmount() {
         try {

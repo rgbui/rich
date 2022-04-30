@@ -322,7 +322,7 @@ export class Block$Seek {
      * @param this 
      */
     findFramesByIntersect(this: Block) {
-        var blocks = this.page.grid.findBlocksByRect(Rect.from(this.el.getBoundingClientRect()), g => g.isFrame);
+        var blocks = this.page.gridMap.findBlocksByRect(Rect.from(this.el.getBoundingClientRect()), g => g.isFrame);
         var poly = this.getVisiblePolygon();
         return blocks.findAll(g => {
             var vp = g.getVisiblePolygon();

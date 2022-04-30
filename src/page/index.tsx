@@ -23,7 +23,7 @@ import { Page$Operator } from './partial/operator';
 import { getBoardTool } from '../../extensions/board.tool';
 import { PageLayoutType } from './declare';
 import { Point, Rect } from '../common/vector/point';
-import { PageGrid } from './grid';
+import { GridMap } from './grid';
 import { Matrix } from '../common/matrix';
 import { PageContextmenu } from './partial/contextmenu';
 import { Kit } from '../kit';
@@ -66,7 +66,7 @@ export class Page extends Events<PageDirective> {
     pageVisibleWidth: number;
     pageVisibleHeight: number;
     requireSelectLayout: boolean;
-    grid: PageGrid;
+    gridMap: GridMap;
     matrix: Matrix = new Matrix();
     cover: { abled: boolean, url: string, top: number } = null;
     isFullWidth: boolean = true;
@@ -130,12 +130,10 @@ export class Page extends Events<PageDirective> {
         return this.views[0];
     }
     getRelativePoint(point: Point) {
-        var eb = this.root.getBoundingClientRect();
-        return point.relative(Point.from(eb))
+        return this.globalMatrix.transform(point);
     }
     getRelativeRect(rect: Rect) {
-        var eb = this.root.getBoundingClientRect();
-        return rect.relative(Point.from(eb))
+        return new Rect(this.globalMatrix.transform(rect.leftBottom), this.globalMatrix.transform(rect.rightBottom))
     }
     get isBoard() {
         return this.pageLayout.type == PageLayoutType.board;

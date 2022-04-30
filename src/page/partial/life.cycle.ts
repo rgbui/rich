@@ -13,14 +13,14 @@ import { PageKeys } from "../interaction/keys";
 import JSZip from 'jszip';
 import { BlockUrlConstant } from "../../block/constant";
 import { PageLayoutType } from "../declare";
-import { PageGrid } from "../grid";
+import { GridMap } from "../grid";
 import { Matrix } from "../../common/matrix";
 import { util } from "echarts";
 import lodash from "lodash";
 
 export class Page$Cycle {
     async init(this: Page) {
-        this.grid = new PageGrid(this);
+        this.gridMap = new GridMap(this);
         this.configViewer = new ConfigViewer(this);
         this.configViewer.loadPageConfig({
             fontCss: {

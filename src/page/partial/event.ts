@@ -198,7 +198,7 @@ export class PageEvent {
         forceCloseBoardEditTool();
     }
     onFitZoom(this: Page) {
-        var bound = this.grid.gridRange();
+        var bound = this.gridMap.gridRange();
         var matrix = new Matrix();
         var center = bound.middleCenter;
         var point = bound.leftTop;
