@@ -6,6 +6,7 @@ import { Rect } from "../../common/vector/point";
 const GAP = 10;
 export function findBlockAppear(el) {
     if (el) {
+        if (el instanceof Text) el = el.parentNode;
         var r = el.closest('.shy-appear-text');
         if (r) {
             var blockEl = dom(r).closest(x => (x as any).block);
@@ -190,20 +191,23 @@ export function AppearVisibleCursorPoint(appear: AppearAnchor) {
  * 
  */
 export function findBlocksBetweenAppears(start: HTMLElement, end: HTMLElement) {
-    if (TextEle.isBefore(start, end)) {
+    if (TextEle.isBefore(end, start)) {
         [start, end] = [end, start];
     }
     var list: AppearAnchor[] = [];
-    var dm = dom(end);
-    dm.prevFind((b: HTMLElement) => {
-        if (typeof b?.closest == 'function') {
+    if (start !== end) {
+        var dm = dom(end);
+        dm.prevFind((b: HTMLElement) => {
             var r = findBlockAppear(b);
             if (r) {
                 if (!list.includes(r)) list.push(r);
-                return false;
             }
-        }
-        return false;
-    }, false, f => f === start);
+            return false;
+        }, false, f => f === start);
+    }
+    var sa = findBlockAppear(start);
+    if (sa && !list.includes(sa)) list.insertAt(0, sa);
+    var en = findBlockAppear(end);
+    if (end && !list.includes(en)) list.push(en);
     return list;
 }
