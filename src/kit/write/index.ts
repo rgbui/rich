@@ -2,7 +2,7 @@ import lodash from "lodash";
 import React from "react";
 import { Kit } from "..";
 import { InputTextPopSelector, InputTextPopSelectorType } from "../../../extensions/common/input.pop";
-import { useTextTool } from "../../../extensions/text.tool";
+import { forceCloseTextTool, useTextTool } from "../../../extensions/text.tool";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
 import { findBlockAppear, findBlocksBetweenAppears } from "../../block/appear/visible.seek";
@@ -59,6 +59,7 @@ export class PageWrite {
     constructor(public kit: Kit) { }
     mousedown(aa: AppearAnchor, event: React.MouseEvent) {
         this.kit.operator.onClearSelectBlocks();
+        forceCloseTextTool();
         this.inputPop = null;
         event.stopPropagation();
         var sel = window.getSelection();
@@ -262,16 +263,29 @@ export class PageWrite {
         var sel = window.getSelection();
         var range = sel.getRangeAt(0);
         if (range) {
+            var cs = range.getClientRects();
+            var c = cs[0];
             this.onSaveSelection();
-            var list = findBlocksBetweenAppears(sel.anchorNode as HTMLElement, sel.focusNode as HTMLElement);
-            var blocks = lodash.identity(list.map(l => l.block));
-            var c = range.getBoundingClientRect();
             while (true) {
+                var list = findBlocksBetweenAppears(this.startAnchor.el, this.endAnchor.el);
+                var blocks = lodash.identity(list.map(l => l.block));
+                if (blocks.some(s => !s.isSupportTextStyle)) return;
+                var turnBlock: Block = undefined;
+                if (blocks.every(b => b.isLine)) {
+                    turnBlock = blocks[0].parent;
+                    if (!blocks.every(b => b.parent == turnBlock)) {
+                        turnBlock = undefined;
+                    }
+                }
+                else if (blocks.length == 1) {
+                    turnBlock = blocks[0].closest(x => !x.isLine);
+                }
                 var result = await useTextTool(
                     new Point(c.left, c.top),
-                    { style: this.kit.page.pickBlocksTextStyle(blocks) }
+                    { style: this.kit.page.pickBlocksTextStyle(blocks), turnBlock }
                 );
                 if (result) {
+
                     if (result.command == 'setStyle') {
                         await this.onSelectionSetPatternOrProps(list, result.styles);
                     }
@@ -279,8 +293,8 @@ export class PageWrite {
                         await this.onSelectionSetPatternOrProps(list, undefined, result.props);
                     }
                     else if (result.command == 'turn') {
-                        // await rowBlock.onClickContextMenu(result.item, result.event);
-                        // break;
+                        await turnBlock.onClickContextMenu(result.item, result.event);
+                        break;
                     }
                     else break;
                 }
@@ -342,23 +356,29 @@ export class PageWrite {
                     if (props) await block.updateProps(props);
                 }
             });
-            if (TextEle.isBefore(this.endAnchor.el, this.startAnchor.el) || this.endAnchor === this.startAnchor && this.endOffset < this.startOffset) {
+            if (this.endAnchor === this.startAnchor && this.endOffset < this.startOffset || TextEle.isBefore(this.endAnchor.el, this.startAnchor.el)) {
                 [this.startAnchor, this.endAnchor] = [this.endAnchor, this.startAnchor];
                 [this.startOffset, this.endOffset] = [this.endOffset, this.startOffset];
                 this.startAnchorText = this.endAnchor.textContent;
             }
             var nstart: Block;
             var nend: Block;
-            if (this.startAnchor == this.endAnchor) {
+            if (this.startAnchor === this.endAnchor) {
                 var rs = await this.startAnchor.split([this.startOffset, this.endOffset]);
-                nstart = rs.first();
-                nend = rs.last();
+                if (this.startOffset == 0) { nstart = rs.first(); nend = rs.first() }
+                else {
+                    nstart = rs[1]; nend = rs[1]
+                }
+                if (styles) { nstart.pattern.setStyles(styles); }
+                if (props) { await nstart.updateProps(props); }
             }
             else {
                 var ss = await this.startAnchor.split([this.startOffset]);
                 nstart = ss.last();
                 var es = await this.endAnchor.split([this.endOffset]);
                 nend = es.first();
+                if (styles) { nstart.pattern.setStyles(styles); nend.pattern.setStyles(styles); }
+                if (props) { await nstart.updateProps(props); await nend.updateProps(props); }
             }
             this.kit.page.addUpdateEvent(async () => {
                 this.startAnchor = nstart.appearAnchors.first();
