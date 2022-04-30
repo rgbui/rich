@@ -60,15 +60,15 @@ class Dom {
     prevFind(predict: (block: Node) => boolean, consider: boolean = false, finalPredict?: (block: Node) => boolean) {
         var isFinal: boolean = false;
         function _find(block: Node, consider: boolean = false) {
-            var block: Node;
+            var bl: Node;
             dom(block as HTMLElement).eachReverse(r => {
                 if (typeof finalPredict == 'function' && finalPredict(r) == true) { isFinal = true; return false; }
                 if (predict(r) == true) {
-                    block = r;
+                    bl = r;
                     return false;
                 }
             }, consider);
-            return block;
+            return bl;
         }
         if (consider == true) {
             var r = _find(this.el, true);
@@ -79,7 +79,7 @@ class Dom {
             var pa = block.parentNode;
             if (pa) {
                 var rs = Array.from(pa.childNodes);
-                var at = rs.findIndex(g => g == block);
+                var at = rs.findIndex(g => g === block);
                 for (let i = at - 1; i > -1; i--) {
                     var r = _find(rs[i], true);
                     if (r) return r;
