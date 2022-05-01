@@ -106,6 +106,8 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
 }
 
 export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
+    var sel = window.getSelection();
+    var offset = sel.focusOffset;
     await InputStore(aa, aa.textContent, write.endAnchorText, true, async () => {
         var block = aa.block;
         var rowBlock = block.closest(x => !x.isLine);
@@ -136,11 +138,4 @@ export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: Re
             write.onFocusBlockAnchor(newBlock);
         })
     });
-
-
-    var sel = window.getSelection();
-    var offset = sel.focusOffset;
-    await this.page.onAction(ActionDirective.onCreateBlockByEnter, async () => {
-
-    })
 }
