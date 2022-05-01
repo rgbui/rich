@@ -1,9 +1,16 @@
+import React from "react";
 import { PageWrite } from ".";
+import { Kit } from "..";
+import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
 import { AppearVisibleCursorPoint } from "../../block/appear/visible.seek";
+import { BlockUrlConstant } from "../../block/constant";
+import { BlockRenderRange } from "../../block/enum";
 import { KeyboardCode } from "../../common/keys";
 import { onceAutoScroll } from "../../common/scroll";
 import { TextEle } from "../../common/text.ele";
+import { ActionDirective } from "../../history/declare";
+import { InputStore } from "./store";
 
 
 
@@ -13,7 +20,7 @@ import { TextEle } from "../../common/text.ele";
 export function predictKeydown(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
     if (write.inputPop) {
         var r = write.inputPop.selector.onKeydown(event.nativeEvent);
-        if(r==true)return false;
+        if (r == true) return false;
     }
     return true;
 }
@@ -96,4 +103,44 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
             }
         }
     }
+}
+
+export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
+    await InputStore(aa, aa.textContent, write.endAnchorText, true, async () => {
+        var block = aa.block;
+        var rowBlock = block.closest(x => !x.isLine);
+        var gs = block.isLine ? block.nexts : [];
+        var rest = aa.textContent.slice(0, offset);
+        var text = aa.textContent.slice(offset);
+        var childs = text ? [{ url: BlockUrlConstant.Text, content: text }] : [];
+        if (rest || !block.isLine) block.updateAppear(aa, rest, BlockRenderRange.self);
+        else await block.delete();
+        var newBlock: Block;
+        if (rowBlock.isListBlock && rowBlock.getChilds(rowBlock.childKey).length > 0) {
+            var fb = rowBlock.getChilds(rowBlock.childKey).first();
+            var url = fb.isContinuouslyCreated ? fb.url : BlockUrlConstant.TextSpan;
+            var continuouslyProps = fb.continuouslyProps;
+            newBlock = await this.page.createBlock(url, { ...continuouslyProps, blocks: { childs } }, fb.parent, 0, fb.parent.childKey)
+        }
+        else {
+            var url = rowBlock.isContinuouslyCreated ? rowBlock.url : BlockUrlConstant.TextSpan;
+            var continuouslyProps = rowBlock.continuouslyProps;
+            newBlock = await rowBlock.visibleDownCreateBlock(url, { ...continuouslyProps, blocks: { childs } });
+        }
+        if (gs.length > 0) {
+            for (let i = 0; i < gs.length; i++) {
+                await newBlock.append(gs[i]);
+            }
+        }
+        this.page.addUpdateEvent(async () => {
+            write.onFocusBlockAnchor(newBlock);
+        })
+    });
+
+
+    var sel = window.getSelection();
+    var offset = sel.focusOffset;
+    await this.page.onAction(ActionDirective.onCreateBlockByEnter, async () => {
+
+    })
 }
