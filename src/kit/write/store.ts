@@ -18,5 +18,10 @@ export async function InputStore(appear: AppearAnchor, value: string, oldValue: 
     if (force == true) await inputStore()
     else inputStoreTime = setTimeout(async () => {
         if (inputStore) await inputStore()
-    },7e2);
+    }, 7e2);
+}
+
+export async function ForceInputStore() {
+    if (inputStoreTime) { clearTimeout(inputStoreTime); inputStoreTime = undefined }
+    if (inputStore) { var fn = inputStore; inputStore = undefined; await fn(); }
 }
