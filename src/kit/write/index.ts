@@ -3,9 +3,11 @@ import React from "react";
 import { Kit } from "..";
 import { InputTextPopSelector, InputTextPopSelectorType } from "../../../extensions/common/input.pop";
 import { forceCloseTextTool, useTextTool } from "../../../extensions/text.tool";
+import { util } from "../../../util/util";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
 import { findBlockAppear, findBlocksBetweenAppears } from "../../block/appear/visible.seek";
+import { BlockUrlConstant } from "../../block/constant";
 import { BlockCssName } from "../../block/pattern/css";
 import { MouseDragger } from "../../common/dragger";
 import { KeyboardCode } from "../../common/keys";
@@ -13,10 +15,10 @@ import { TextEle } from "../../common/text.ele";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
 
-import { inputDetector, inputLineTail, inputPop } from "./input";
-import { MoveCursor, predictKeydown } from "./keydown";
+import { inputBackspaceDeleteContent, inputBackSpaceTextContent, inputDetector, inputLineTail, inputPop } from "./input";
+import { MoveCursor, onEnterInput, predictKeydown } from "./keydown";
 import { onPaste } from "./paste";
-import { InputStore } from "./store";
+import { ForceInputStore, InputStore } from "./store";
 
 /**
  * https://blog.csdn.net/mafan121/article/details/78519348
@@ -57,7 +59,7 @@ import { InputStore } from "./store";
 
 export class PageWrite {
     constructor(public kit: Kit) { }
-    mousedown(aa: AppearAnchor, event: React.MouseEvent) {
+    async mousedown(aa: AppearAnchor, event: React.MouseEvent) {
         this.kit.operator.onClearSelectBlocks();
         forceCloseTextTool();
         this.inputPop = null;
@@ -66,7 +68,11 @@ export class PageWrite {
         var anchorNode;
         var anchorOffset;
         var self = this;
-        self.onInputStart(aa);
+        anchorOffset = TextEle.getAt(aa.el, Point.from(event));
+        self.onInputStart(aa, anchorOffset);
+        setTimeout(() => {
+            self.onSaveSelection();
+        }, 100);
         MouseDragger({
             event,
             dis: 5,
@@ -80,7 +86,6 @@ export class PageWrite {
                 anchorOffset = sel.anchorOffset;
                 if (!anchorNode) {
                     anchorNode = aa.textNode;
-                    anchorOffset = TextEle.getAt(aa.el, Point.from(event));
                 }
             },
             move(ev, data) {
@@ -90,12 +95,12 @@ export class PageWrite {
                 }
             },
             moveEnd(ev, isMove, data) {
+                self.onSaveSelection();
                 if (isMove) {
                     if (!sel.isCollapsed) {
                         self.onOpenTextTool();
                     }
                 }
-                else self.onInputStart(aa);
             }
         })
     }
@@ -120,31 +125,51 @@ export class PageWrite {
          * 这里判断是光标、选区、还是选择多行块
          */
         var hasSelectionRange: boolean = false;
-        if (hasSelectionRange) {
+        if (this.kit.operator.currentSelectedBlocks.length > 0) hasSelectionRange = true;
+        else if (this.hasAnchorSelection) hasSelectionRange = true;
 
-        }
-        else {
-            switch (event.key) {
-                case KeyboardCode.ArrowDown:
-                case KeyboardCode.ArrowUp:
-                case KeyboardCode.ArrowLeft:
-                case KeyboardCode.ArrowRight:
-                    MoveCursor(this, aa, event);
+        switch (event.key) {
+            case KeyboardCode.ArrowDown:
+            case KeyboardCode.ArrowUp:
+            case KeyboardCode.ArrowLeft:
+            case KeyboardCode.ArrowRight:
+                await ForceInputStore();
+                MoveCursor(this, aa, event);
+                return;
+                break;
+            case KeyboardCode.Enter:
+                if (aa.block.isEnterInputNewLine) {
+                    if (!this.kit.page.keyboardPlate.isShift()) {
+                        await onEnterInput(this, aa, event);
+                        return;
+                    }
+                }
+                break;
+            case KeyboardCode.Delete:
+            case KeyboardCode.Backspace:
+                if (hasSelectionRange) {
+                    //这里回车删除选区的内容
+                    await inputBackspaceDeleteContent(this, aa, event)
                     return;
-                    break;
-                case KeyboardCode.Enter:
-                    break;
-                case KeyboardCode.Delete:
-                case KeyboardCode.Backspace:
-                    break;
-                case KeyboardCode.Tab:
-                    break;
-            }
+                }
+                break;
+            case KeyboardCode.Tab:
+                if (aa.block.closest(x => x.isListBlock)) {
+                    await ForceInputStore();
+                    var r = await aa.block.onKeyTab(this.kit.page.keyboardPlate.isShift())
+                    if (r != false) {
+                        event.preventDefault();
+                    }
+                    return
+                }
+                break;
         }
+
         this.isWillInput = true;
     }
     async input(aa: AppearAnchor, event: React.FormEvent) {
         if (!this.isWillInput) return;
+        var inputEvent = event.nativeEvent as InputEvent;
         /**
          * 这里需要判断是否有必要弹出弹窗
          */
@@ -152,7 +177,12 @@ export class PageWrite {
         /**
          * 这里需要判断当前的输入文字是否有必要触发替换的问题
          */
-        else if (await inputDetector(this, aa, event)) { }
+        else if (await inputDetector(this, aa, event)) { return; }
+        /**
+         * 这里判断是否为删除性的输入 
+         * https://developer.mozilla.org/zh-CN/docs/Web/API/InputEvent/inputType
+         */
+        else if (inputEvent.inputType == 'deleteContentBackward' && await inputBackSpaceTextContent(this, aa, event)) { return; }
         /**
          * 这里判断是否为输入到当前line块的末尾，且为当前row块的尾部。
          * 因为这样会导致输入的时候一直输入到line块中，或者空格一下  该功能暂时不做
@@ -191,11 +221,19 @@ export class PageWrite {
     startAnchor: AppearAnchor;
     startAnchorText: string = '';
     startOffset: number;
-    onInputStart(aa: AppearAnchor) {
+    endAnchor: AppearAnchor;
+    endOffset: number;
+    endAnchorText: string = '';
+    get hasAnchorSelection() {
+        return this.startAnchor === this.endAnchor && this.startOffset == this.endOffset ? false : true;
+    }
+    onInputStart(aa: AppearAnchor, offset?: number) {
         this.startAnchor = aa;
         this.startAnchorText = this.startAnchor.textContent;
-        var sel = window.getSelection();
-        this.startOffset = sel.anchorOffset;
+        this.startOffset = typeof offset == 'number' ? offset : (window.getSelection()).anchorOffset;
+        this.endAnchor = this.startAnchor;
+        this.endOffset = this.startOffset;
+        this.endAnchorText = this.endAnchor.textContent;
     }
     /**
      * 
@@ -203,8 +241,21 @@ export class PageWrite {
      */
     onFocusBlockAnchor(block: Block, options?: { last?: boolean }) {
         var acs = block.appearAnchors;
-        if (options?.last) this.onFocusAppearAnchor(acs.last(), { last: true });
-        else this.onFocusAppearAnchor(acs.first());
+        if (acs.length > 0) {
+            if (options?.last) this.onFocusAppearAnchor(acs.last(), { last: true });
+            else this.onFocusAppearAnchor(acs.first());
+        }
+        else {
+            if (options?.last) {
+                var g = block.findReverse(g => g.appearAnchors.some(s => s.isText));
+                if (g) this.onFocusAppearAnchor(g.appearAnchors.last(), { last: true })
+            }
+            else {
+                var g = block.find(g => g.appearAnchors.some(s => s.isText), true);
+                if (g) this.onFocusAppearAnchor(g.appearAnchors.first())
+            }
+        }
+
     }
     /**
      * 这里指定将光标移到appearAnchor的最前面或者最后面
@@ -217,12 +268,12 @@ export class PageWrite {
             var y = options?.last ? bounds.last().bottom - lineHeight / 2 : bounds.first().top + lineHeight / 2;
             var pos = TextEle.getAt(aa.el, new Point(options.left, y));
             sel.collapse(aa.textNode, pos);
-            this.onInputStart(aa);
+            this.onInputStart(aa, pos);
         }
         else {
             if (options?.last) sel.collapse(aa.textNode, aa.textContent.length);
             else sel.collapse(aa.textNode, 0);
-            this.onInputStart(aa);
+            this.onInputStart(aa, 0);
         }
     }
     /**
@@ -239,17 +290,15 @@ export class PageWrite {
             sel.setBaseAndExtent(firstAppear.textNode, 0, lastAppear.textNode, lastAppear.textContent.length)
         }
     }
-    endAnchor: AppearAnchor;
-    endOffset: number;
+
     onSaveSelection() {
         var sel = window.getSelection();
         this.startAnchor = findBlockAppear(sel.anchorNode);
         this.startOffset = sel.anchorOffset;
         this.startAnchorText = this.startAnchor?.textContent || '';
-        if (!sel.isCollapsed) {
-            this.endAnchor = findBlockAppear(sel.focusNode);
-            this.endOffset = sel.focusOffset;
-        }
+        this.endAnchor = findBlockAppear(sel.focusNode);
+        this.endOffset = sel.focusOffset;
+        this.endAnchorText = this.endAnchor.textContent;
     }
     onRenderSelection() {
         var sel = window.getSelection();
