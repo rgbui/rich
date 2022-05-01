@@ -201,6 +201,7 @@ export class PageWrite {
         // console.log('blur', aa, event);
     }
     paste(aa: AppearAnchor, event: React.ClipboardEvent) {
+        console.log('ae', aa, event);
         onPaste(this.kit, aa, event.nativeEvent);
     }
     dblclick(aa: AppearAnchor, event: React.MouseEvent) {
