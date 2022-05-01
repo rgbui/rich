@@ -157,15 +157,15 @@ export class Block$Seek {
     prevFind(this: Block, predict: (block: Block) => boolean, consider: boolean = false, finalPredict?: (block: Block) => boolean): Block {
         var isFinal: boolean = false;
         function _find(block: Block, consider: boolean = false) {
-            var block: Block;
+            var bl: Block;
             block.eachReverse(r => {
                 if (typeof finalPredict == 'function' && finalPredict(r) == true) { isFinal = true; return false; }
                 if (predict(r) == true) {
-                    block = r;
+                    bl = r;
                     return false;
                 }
             }, consider, true);
-            return block;
+            return bl;
         }
         if (consider == true) {
             var r = _find(this, true);
@@ -193,15 +193,15 @@ export class Block$Seek {
     nextFind(this: Block, predict: (block: Block) => boolean, consider: boolean = false, finalPredict?: (block: Block) => boolean): Block {
         var isFinal: boolean = false;
         function _find(block: Block, consider: boolean = false) {
-            var block: Block;
+            var bl: Block;
             block.each(r => {
                 if (typeof finalPredict == 'function' && finalPredict(r) == true) { isFinal = true; return false; }
                 if (predict(r) == true) {
-                    block = r;
+                    bl = r;
                     return false;
                 }
             }, consider);
-            return block;
+            return bl;
         }
         if (consider == true) {
             var r = _find(this, true);
