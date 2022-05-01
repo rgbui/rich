@@ -1,41 +1,99 @@
 import { Kit } from "..";
 import { AppearAnchor } from "../../block/appear";
 import { parseDom } from "../../import-export/html/parse";
+import { InputStore } from "./store";
 
-export async function onPaste(kit:Kit,aa: AppearAnchor, event: ClipboardEvent) {
+export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent) {
     var files: File[] = Array.from(event.clipboardData.files);
     var text = event.clipboardData.getData('text/plain');
     var html = event.clipboardData.getData('text/html');
+    // console.log(text, html);
     if (!html && text) return;
-    var anchor = kit.explorer.activeAnchor;
-    /**
-     * 不支持文本样式，说明可以粘贴文本内容
-     */
-    if (kit.explorer.isOnlyAnchor && !anchor.block.isSupportTextStyle && text) {
-        return;
-    }
     if (files.length > 0) {
         event.preventDefault();
         //说明复制的是文件
-        await kit.page.onPasterFiles(files);
+        await onPasterFiles(kit, aa, files);
     }
     else if (html) {
-        var regexText = text.replace(/[\(\)\\\.\[\]\*\?]/g, ($, $1) => {
-            return '\\' + $1
-        })
-        if (html.match(new RegExp('<[^>]+>' + regexText + '</[^>]+>'))) {
-            console.log('ggg');
-            return;
+        try {
+            event.preventDefault();
+            var regexText = text.replace(/[\(\)\\\.\[\]\*\?]/g, ($, $1) => {
+                return '\\' + $1
+            })
+            if (html.match(new RegExp('<[^>]+>' + regexText + '</[^>]+>'))) {
+                /**
+                 * 这里表示当前的文本就仅仅在外面包一层html，没有多个块
+                 * 列如:
+                 * text: 你好
+                 * html: <p>你好</p>
+                 */
+                await onPasteInsertText(kit, aa, text);
+                return;
+            }
+            let parser = new DOMParser();
+            var doc = parser.parseFromString(html, "text/html");
+            // console.log(doc);
+            var blocks = await parseDom(doc);
+            console.log(blocks);
+            // console.log(blocks);
+            if (blocks?.length > 0) {
+                await onPasteCreateBlocks(kit, aa, blocks);
+            }
         }
-        event.preventDefault();
-        let parser = new DOMParser();
-        var doc = parser.parseFromString(html, "text/html");
-        // console.log(doc);
-        var blocks = await parseDom(doc);
-        // console.log(blocks);
-        if (blocks?.length > 0) {
-            await this.page.onPasteCreateBlocks(blocks);
+        catch (ex) {
+            console.error(ex);
         }
     }
+}
+
+async function onPasterFiles(kit: Kit, aa: AppearAnchor, files: File[]) {
+    await InputStore(aa, aa.textContent, kit.writer.endAnchorText, true, async () => {
+        var rowBlock = aa.block.closest(x => !x.isLine);
+        var firstBlock = rowBlock;
+        for (let i = 0; i < files.length; i++) {
+            var file = files[i];
+            if (file.type == 'image/png') {
+                //图片
+                rowBlock = await rowBlock.visibleDownCreateBlock('/image', { initialData: { file } });
+            }
+            else {
+                rowBlock = await rowBlock.visibleDownCreateBlock('/file', { initialData: { file } });
+            }
+        }
+        if (firstBlock.isTextContentBlockEmpty) {
+            await firstBlock.delete();
+        }
+        kit.page.addUpdateEvent(async () => {
+
+        })
+    })
+}
+async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
+    if (blocks.length == 0) return;
+    await InputStore(aa, aa.textContent, kit.writer.endAnchorText, true, async () => {
+        var rowBlock = aa.block.closest(x => !x.isLine);
+        var firstBlock = rowBlock;
+        for (let i = 0; i < blocks.length; i++) {
+            var bd = blocks[i];
+            rowBlock = await rowBlock.visibleDownCreateBlock(bd.url, bd);
+        }
+        if (firstBlock.isTextContentBlockEmpty) {
+            await firstBlock.delete();
+        }
+        kit.page.addUpdateEvent(async () => {
+            kit.writer.onFocusBlockAnchor(rowBlock, { last: true });
+        })
+    })
+}
+async function onPasteInsertText(kit: Kit, aa: AppearAnchor, text: string) {
+    var content = aa.textContent;
+    var sel = window.getSelection();
+    var offset = sel.focusOffset;
+    var newContent = content.slice(0, offset) + text + content.slice(offset);
+    aa.textNode.textContent = newContent;
+    sel.setPosition(aa.textNode, offset + text.length);
+    await InputStore(aa, aa.textContent, kit.writer.endAnchorText, true, async () => {
+
+    })
 }
 
