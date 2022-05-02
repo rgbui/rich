@@ -69,7 +69,7 @@ export var rules: DetectorRule[] = [
         operator: DetectorOperator.letterReplaceCreateBlock,
         match: [/\*\*([^*]+)\*\*$/],
         url: '/text',
-        style: { [BlockCssName.font]: { fontWeight: 500 } }
+        style: { [BlockCssName.font]: { fontWeight: 700 } }
     },
     {
         operator: DetectorOperator.letterReplaceCreateBlock,
