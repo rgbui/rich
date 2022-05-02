@@ -7,7 +7,6 @@ import { Point, Rect } from "../../common/vector/point";
 import { TextToolStyle } from "../../../extensions/text.tool";
 import { DropDirection } from "../../kit/handle/direction";
 import { BlockUrlConstant } from "../../block/constant";
-import { TextEle } from "../../common/text.ele";
 
 export class Page$Seek {
     /**
@@ -26,58 +25,6 @@ export class Page$Seek {
             var target = event.target as HTMLElement;
             var block = this.getEleBlock(target);
             if (block) return block;
-        }
-    }
-    getPageEmptyAreaBlock(this: Page, event: MouseEvent | Point) {
-        /**
-              * 如果没有找到，说明在在pageLayout的空白处，
-              * 那么先水平找找，如果水平找不到
-              * 那么垂直找，
-              * 这里需要计算内容域和pageLout中间的范围大小区域
-              */
-        var block: Block;
-        var contentBound = TextEle.getContentBound(this.contentEl);
-        var x = event.x;
-        var y = event.y;
-        var dis = 15;
-        var el = document.elementFromPoint(contentBound.left + dis, event.y);
-        if (el) {
-            block = this.getEleBlock(el as HTMLElement);
-            if (block) return block;
-        }
-        el = document.elementFromPoint(contentBound.left + contentBound.width - dis, event.y);
-        if (el) {
-            block = this.getEleBlock(el as HTMLElement);
-            if (block) return block;
-        }
-        /**
-         * 将x 缩放到content范围内，这样便于查找
-         */
-        x = Math.max(contentBound.left + dis, x);
-        x = Math.min(contentBound.left + contentBound.width - dis, x);
-        if (Math.abs(y - contentBound.y) > Math.abs(y - contentBound.y - contentBound.height)) {
-            el = document.elementFromPoint(x, contentBound.top + contentBound.height - dis);
-            if (el) {
-                block = this.getEleBlock(el as HTMLElement);
-                if (block) return block;
-            }
-            el = document.elementFromPoint(x, contentBound.top + dis);
-            if (el) {
-                block = this.getEleBlock(el as HTMLElement);
-                if (block) return block;
-            }
-        }
-        else {
-            el = document.elementFromPoint(x, contentBound.top + dis);
-            if (el) {
-                block = this.getEleBlock(el as HTMLElement);
-                if (block) return block;
-            }
-            el = document.elementFromPoint(x, contentBound.top + contentBound.height - dis);
-            if (el) {
-                block = this.getEleBlock(el as HTMLElement);
-                if (block) return block;
-            }
         }
     }
     getEleBlock(this: Page, el: HTMLElement): Block {
@@ -119,197 +66,6 @@ export class Page$Seek {
         }
         return bs;
     }
-    cacBlockDirection(this: Page, block: Block, event: MouseEvent) {
-        var direction = DropDirection.none;
-        var point = Point.from(event);
-        var bound = block.getVisibleContentBound();
-        block = block.closest(x => x.isBlock);
-        if (block) {
-            if (block.isLayout) {
-                if (block.isRow) {
-                    if (point.y <= bound.top + bound.height / 2) {
-                        direction = DropDirection.top;
-                        return { direction: direction, block };
-                    }
-                    else if (point.y >= bound.top + bound.height / 2) {
-                        direction = DropDirection.bottom;
-                        return { direction: direction, block };
-                    }
-                }
-                return { direction: direction, block };
-            }
-            else if (block.isCell) {
-                if (block.isEmptyCell) {
-                    return { direction: DropDirection.inner, block };
-                }
-                return { direction: direction, block };
-            }
-            else {
-                if (point.x <= bound.left && point.y > bound.top && point.y < bound.top + bound.height) {
-                    direction = DropDirection.left;
-                    if (block.parent.isCol && !block.parent.isPart) {
-                        block = block.parent;
-                    }
-                }
-                else if (point.x >= bound.left + bound.width && point.y > bound.top && point.y < bound.top + bound.height) {
-                    direction = DropDirection.right;
-                    if (block.parent.isCol && !block.parent.isPart) {
-                        block = block.parent;
-                    }
-                }
-                else if (point.y <= bound.top + bound.height / 2) {
-                    direction = DropDirection.top;
-                }
-                else if (point.y >= bound.top + bound.height / 2) {
-                    if (block.url == BlockUrlConstant.List) {
-                        direction = DropDirection.sub;
-                        if (point.x - bound.left < 30) {
-                            direction = DropDirection.bottom;
-                        }
-                    }
-                    else direction = DropDirection.bottom;
-                }
-            }
-        }
-        return { direction: direction, block };
-    }
-    private filterRepeat(this: Page, blocks: Block[]) {
-
-        var rs: Block[] = [];
-        while (true) {
-            if (blocks.length == 0) break;
-            else {
-                var bl = blocks[0];
-                var isPush: boolean = true;
-                for (let j = blocks.length - 1; j > 0; j--) {
-                    var current = blocks[j];
-                    if (bl.contains(current)) {
-                        blocks.remove(current);
-                    }
-                    else if (current.contains(bl)) {
-                        isPush = false;
-                        blocks.remove(bl);
-                        break;
-                    }
-                    else continue;
-                }
-                if (isPush) {
-                    rs.push(bl);
-                    blocks.remove(bl);
-                }
-            }
-        }
-        return rs;
-    }
-    searchBoardBetweenRect(this: Page,
-        from: MouseEvent | Point,
-        to: MouseEvent | Point,
-        filter?: {
-            lineBlock?: boolean,
-            fromBlock?: Block
-        }) {
-        var rect = new Rect(Point.from(from), Point.from(to));
-        var bs = this.gridMap.findBlocksByRect(rect, b => {
-            if (!b.isLayout && !b.isPart) {
-                if (b.isCrossBlockArea(rect)) return true;
-            }
-            return false;
-        });
-        bs = bs.map(b => {
-            if (b.isLine) {
-                return b.closest(g => !g.isLine);
-            }
-            else return b;
-        })
-        return this.filterRepeat(bs);
-    }
-    /**
-     * 通过鼠标勾选的区域来查找在这个范围内的block,
-     * 先通过from，to来锁定block，然后基于当前的两个block之间来实际的计算处于这个区域的block有多少
-     * from,to没有前后区分，只代表鼠标开始点击的位置到结束的位置
-     * @param this 
-     * @param from 
-     * @param to 
-     * @param filter  lineBlock=ture 表示过滤掉isLine的block
-     * @returns 
-     */
-    searchBlocksBetweenMouseRect(this: Page,
-        from: MouseEvent | Point,
-        to: MouseEvent | Point,
-        filter?: {
-            lineBlock?: boolean,
-            fromBlock?: Block
-        }) {
-
-        var bs: Block[] = [];
-        var fromBlock = filter?.fromBlock ? filter.fromBlock : this.getBlockByMouseOrPoint(from);
-        if (fromBlock?.isLayout || fromBlock?.isPart) {
-            var fb = fromBlock.getVisibleContentBound();
-            if (Math.abs(from.y - fb.y) > Math.abs(from.y - fb.y - fb.height))
-                fromBlock = fromBlock.findReverse(g => g.isBlock && !g.isLayout && !g.isPart);
-            else fromBlock = fromBlock.find(g => g.isBlock && !g.isLayout && !g.isPart);
-        }
-        var toBlock = this.getBlockByMouseOrPoint(to);
-        if (toBlock?.isLayout || toBlock?.isPart) {
-            var fb = toBlock.getVisibleContentBound();
-            if (Math.abs(to.y - fb.y) > Math.abs(to.y - fb.y - fb.height))
-                toBlock = toBlock.findReverse(g => g.isBlock && !g.isLayout && !g.isPart);
-            else toBlock = toBlock.find(g => g.isBlock && !g.isLayout && !g.isPart);
-        }
-        var topFromRow = fromBlock ? fromBlock.closest(g => g.isBlock && !g.isLayout && !g.isPart) : undefined;
-        var topToRow = toBlock ? toBlock.closest(g => g.isBlock && !g.isLayout && !g.isPart) : undefined;
-        var rect = new Rect(Point.from(from), Point.from(to));
-        if (!topFromRow && !topToRow) return bs;
-        if (topFromRow && !topToRow || !topFromRow && topToRow) {
-            var block = topFromRow ? topFromRow : topToRow;
-            block.each(b => {
-                if (!b.isLayout && !b.isPart) {
-                    if (b.isCrossBlockArea(rect)) {
-                        if (filter && filter.lineBlock == true && b.isLine) {
-                            var pa = b.closest(x => !x.isLine);
-                            if (!bs.exists(pa)) bs.push(pa);
-                        }
-                        else bs.push(b);
-                        return -1;
-                    }
-                }
-            }, true);
-            return this.filterRepeat(bs);
-        }
-        else {
-            if (topToRow.isBefore(topFromRow)) {
-                [topFromRow, topToRow] = [topToRow, topFromRow];
-            }
-            if (topFromRow == topToRow) {
-                topFromRow.each(b => {
-                    if (!b.isLayout && !b.isPart) {
-                        if (b.isCrossBlockContentArea(rect)) {
-                            if (filter?.lineBlock == true) {
-                                var pa = b.closest(x => !x.isLine);
-                                if (!bs.exists(pa)) bs.push(pa);
-                            }
-                            else bs.push(b);
-                            return -1;
-                        }
-                    }
-                }, true);
-            }
-            else
-                topFromRow.nextFindAll(b => {
-                    if (!b.isLayout && !b.isPart) {
-                        if (b.isCrossBlockContentArea(rect)) {
-                            if (filter?.lineBlock == true) {
-                                var pa = b.closest(x => !x.isLine);
-                                if (!bs.exists(pa)) bs.push(pa);
-                            }
-                            else bs.push(b);
-                        }
-                    }
-                    return false;
-                }, true, g => g == topToRow, true);
-            return this.filterRepeat(bs);
-        }
-    }
     pickBlocksTextStyle(blocks: Block[]) {
         var textStyle: TextToolStyle = {} as any;
         textStyle.italic = true;
@@ -324,7 +80,7 @@ export class Page$Seek {
             let font = bl.pattern.css(BlockCssName.font);
             if (font) {
                 if (font.fontStyle != 'italic') textStyle.italic = false;
-                if (font.fontWeight != 500 && font.fontWeight != 'bold') textStyle.bold = false;
+                if (font.fontWeight != 700 && font.fontWeight != 'bold') textStyle.bold = false;
                 if (font.textDecoration != 'underline') textStyle.underline = false;
                 if (font.textDecoration != 'line-through') textStyle.deleteLine = false;
                 if (!textStyle.color && font.color) textStyle.color = font.color;
@@ -368,33 +124,5 @@ export class Page$Seek {
         this.views.each(v => {
             v.each(predict, true);
         })
-    }
-    findNearestBlockByPoint(this: Page, blocks: Block[], point: Point) {
-        var ps = blocks.toArray(e => {
-            var bounds = e.getBounds();
-            if (bounds.length == 0) console.warn('the bounds is empty', e);
-            var newPoint = TextEle.cacDistance(point, bounds);
-            if (newPoint)
-                return {
-                    dis: newPoint,
-                    block: e
-                }
-        });
-        if (ps.exists(g => g.dis.x == 0 && g.dis.y == 0))
-            return ps.find(g => g.dis.x == 0 && g.dis.y == 0).block;
-        if (ps.exists(g => g.dis.y == 0))
-            return ps.findAll(g => g.dis.y == 0).findMin(g => g.dis.x).block
-        if (ps.length > 0) {
-            /**
-             * 这里表示水平方向等距的block，
-             * 那么在从最小的等距的block找水平方向最近的点
-             */
-            var minY = ps.min(g => g.dis.y);
-            var ds = ps.findAll(g => g.dis.y == minY);
-            if (ds.length == 1) return ds.first().block;
-            else {
-                return ds.findMin(g => g.dis.x).block;
-            }
-        }
     }
 }
