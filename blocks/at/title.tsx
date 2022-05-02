@@ -4,10 +4,8 @@ import { BlockDisplay } from "../../src/block/enum";
 import { url, view } from "../../src/block/factory/observable";
 import { TextArea } from "../../src/block/view/appear";
 import { BlockView } from "../../src/block/view";
-import { BlockAppear } from "../../src/block/appear";
 import { channel } from "../../net/channel";
 import { LinkPageItem } from "../../extensions/at/declare";
-import { PageLayoutType } from "../../src/page/declare";
 import { Icon } from "../../component/view/icon";
 import { AddPageCoverSvg, AddPageIconSvg } from "../../component/svgs";
 
@@ -38,7 +36,7 @@ export class Title extends Block {
     onEmptyTitleFocusAnchor() {
         if (this.page?.pageInfo) {
             if (!this.page?.pageInfo.text) {
-                this.page.kit.explorer.onFocusBlockAtAnchor(this);
+                this.page.kit.writer.onFocusBlockAnchor(this);
             }
         }
     }
