@@ -235,7 +235,7 @@ export class Rect {
         var ele = event.target as HTMLElement;
         return this.from(ele.getBoundingClientRect())
     }
-    static fromEle(el: HTMLElement) {
+    static fromEle(el: HTMLElement|Range) {
         return this.from(el.getBoundingClientRect())
     }
     conatin(point: Point) {
