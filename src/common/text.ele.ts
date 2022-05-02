@@ -47,6 +47,24 @@ export class TextEle {
         }
         return parseInt(lineHeight.replace('px', ''));
     }
+    static getWindowCusorBound() {
+        var sel = window.getSelection();
+        var range = sel.getRangeAt(0);
+        if (range)
+            return Rect.fromEle(range);
+    }
+    static getWindowCusorBounds() {
+        var sel = window.getSelection();
+        var range = sel.getRangeAt(0);
+        var rs: Rect[] = [];
+        if (range) {
+            var cs = range.getClientRects();
+            for (var i = 0; i < cs.length; i++) {
+                rs.push(Rect.from(cs.item(i)))
+            }
+        }
+        return rs;
+    }
     static getBounds(ele: HTMLElement) {
         var cs = ele.getClientRects();
         var rs: Rect[] = [];
