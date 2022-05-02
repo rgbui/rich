@@ -22,7 +22,8 @@ export class GridMap {
             return this.panel.getRelativePoint(point);
         }
     }
-    public sync(block: Block) {
+    public sync(block: Block)
+    {
         if (block.el) {
             var rect = Rect.fromEle(block.el);
             var newRect = this.getRelativeRect(rect);
@@ -54,22 +55,24 @@ export class GridMap {
         }
     }
     public buildGridMap() {
+        var t = Date.now();
         if (this.panel instanceof Page) {
             this.panel.each((b) => {
-                if (b.gridMap === this) {
-                    if (!b.isLine && !b.isView && !b.isRow && !b.isCol && !b.isPart)
+                if (b.panelGridMap === this) {
+                    if (!b.isLine && !b.isLayout && !b.isPart)
                         this.sync(b);
                 }
             })
         }
         else if (this.panel instanceof Block) {
             this.panel.each(b => {
-                if (b.gridMap === this) {
-                    if (!b.isLine && !b.isView && !b.isRow && !b.isCol && !b.isPart)
+                if (b.panelGridMap === this) {
+                    if (!b.isLine && !b.isLayout && !b.isPart)
                         this.sync(b);
                 }
             });
         }
+        console.log('es', Date.now() - t);
     }
     public remove(block: Block) {
         if (block.grid) {
