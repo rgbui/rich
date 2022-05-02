@@ -7,9 +7,11 @@ import { InputDetector } from "../../../extensions/input.detector/detector";
 import { DetectorOperator } from "../../../extensions/input.detector/rules";
 import { usePageLinkSelector } from "../../../extensions/link/page";
 import { AppearAnchor } from "../../block/appear";
-import { AppearVisibleCursorPoint } from "../../block/appear/visible.seek";
+import { findBlocksBetweenAppears } from "../../block/appear/visible.seek";
 import { BlockUrlConstant } from "../../block/constant";
-import { ActionDirective } from "../../history/declare";
+import { BlockRenderRange } from "../../block/enum";
+import { TextEle } from "../../common/text.ele";
+import { Rect } from "../../common/vector/point";
 import { InputStore } from "./store";
 
 async function inputPopCallback(write: PageWrite, ...args: any) {
@@ -31,12 +33,13 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
     var sel = window.getSelection();
     var offset = sel.focusOffset;
     if (!write.inputPop) {
+        var rect = Rect.fromEle(sel.getRangeAt(0));
         var data = ev.data;
         var textContent = aa.textContent;
         var data2 = textContent.slice(offset - 1, offset + 1);
         if (data == '/' || data == '、') {
             write.inputPop = {
-                rect: AppearVisibleCursorPoint(aa),
+                rect,
                 type: InputTextPopSelectorType.BlockSelector,
                 offset: offset - 1,
                 aa,
@@ -45,7 +48,7 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
         }
         else if (data == '@') {
             write.inputPop = {
-                rect: AppearVisibleCursorPoint(aa),
+                rect,
                 type: InputTextPopSelectorType.AtSelector,
                 offset: offset - 1,
                 aa,
@@ -54,7 +57,7 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
         }
         else if (data2 == '[[' || data2 == '【【') {
             write.inputPop = {
-                rect: AppearVisibleCursorPoint(aa),
+                rect,
                 type: InputTextPopSelectorType.LinkeSelector,
                 offset: offset - 2,
                 aa,
@@ -80,6 +83,7 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
     }
     return false;
 }
+
 /**
  * 对输入的内容进行检测
  * @returns 
@@ -87,47 +91,64 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
 export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: React.FormEvent) {
     var sel = window.getSelection();
     var offset = sel.focusOffset;
+    var current = aa.textContent.slice(0, offset);
     var rest = aa.textContent.slice(offset);
-    var mr = InputDetector(aa.textContent.slice(0, offset), { rowStart: aa.isRowStart });
+    var mr = InputDetector(current, { rowStart: aa.isRowStart });
     if (mr) {
         var rule = mr.rule;
+        console.log(mr);
         switch (rule.operator) {
             case DetectorOperator.firstLetterCreateBlock:
-                write.kit.page.onAction(ActionDirective.onInputDetector, async () => {
+                var newOffset = offset + (mr.value.length - current.length);
+                aa.textNode.textContent = mr.value + rest;
+                sel.setPosition(aa.textNode, newOffset);
+                await InputStore(aa, aa.textNode.textContent, write.endAnchorText, true, async () => {
                     var row = aa.block.closest(x => !x.isLine);
-                    var newBlock = await row.visibleUpCreateBlock(rule.url, { createSource: 'InputBlockSelector' })
-                    newBlock.mounted(() => {
-                        write.onFocusBlockAnchor(newBlock, { last: true });
-                    });
+                    var newBlock = await row.visibleUpCreateBlock(rule.url, { createSource: 'InputBlockSelector' });
+                    if (row.isContentEmpty) {
+                        await row.delete();
+                        row = undefined;
+                    }
+                    if (row)
+                        newBlock.mounted(() => {
+                            write.onFocusBlockAnchor(row);
+                        });
                 });
                 break;
             case DetectorOperator.firstLetterTurnBlock:
-                write.kit.page.onAction(ActionDirective.onInputDetector, async () => {
+                aa.textNode.textContent = rest;
+                sel.setPosition(aa.textNode, 0);
+                await InputStore(aa, rest, write.endAnchorText, true, async () => {
                     var row = aa.block.closest(x => !x.isLine);
                     var newBlock = await row.turn(rule.url);
-                    newBlock.mounted(() => {
-                        write.onFocusBlockAnchor(newBlock, { last: true });
-                    });
+                    write.kit.page.addUpdateEvent(async () => {
+                        write.onFocusBlockAnchor(newBlock);
+                    })
                 });
                 break;
             case DetectorOperator.inputCharReplace:
-                var content = aa.textContent.slice(0, offset - mr.matchValue.length) + mr.value + aa.textContent.slice(offset);
-                aa.textNode.textContent = content;
-                var newOffset = offset - mr.matchValue.length + mr.value.length;
+                var newOffset = offset + (mr.value.length - current.length);
+                aa.textNode.textContent = mr.value + rest;
                 sel.setPosition(aa.textNode, newOffset);
-                await InputStore(aa, content, write.startAnchorText);
+                await InputStore(aa, aa.textNode.textContent, write.endAnchorText);
                 break;
             case DetectorOperator.letterReplaceCreateBlock:
-                var content = aa.textContent.slice(0, offset - mr.matchValue.length) + mr.value + aa.textContent.slice(offset);
-                aa.textNode.textContent = content;
-                var newOffset = offset - mr.matchValue.length + mr.value.length;
-                sel.setPosition(aa.textNode, newOffset);
-                await InputStore(aa, content, write.startAnchorText, true, async () => {
-                    var newBlock = await aa.block.visibleRightCreateBlock(newOffset, rule.url, { content: mr.matchValue })
-                    if (rule.style) newBlock.pattern.setStyles(rule.style)
-                    newBlock.mounted(() => {
+                aa.textNode.textContent = mr.value;
+                sel.setPosition(aa.textNode, mr.value.length);
+                await InputStore(aa, aa.textContent, write.endAnchorText, true, async () => {
+                    var block = aa.block;
+                    var rowBlock = block.closest(x => !x.isLine);
+                    var pattern = await block.pattern.cloneData();
+                    if (rowBlock === block) {
+                        await rowBlock.appendBlock({ url: BlockUrlConstant.Text, pattern, content: rowBlock.content });
+                        await rowBlock.updateProps({ content: '' });
+                    }
+                    var newBlock = await rowBlock.appendBlock({ url: BlockUrlConstant.Text, content: mr.matchValue });
+                    if (rule.style) newBlock.pattern.setStyles(rule.style);
+                    if (rest) await rowBlock.appendBlock({ url: BlockUrlConstant.Text, pattern, content: rest });
+                    write.kit.page.addUpdateEvent(async () => {
                         write.onFocusBlockAnchor(newBlock, { last: true });
-                    });
+                    })
                 });
                 break;
         }
@@ -176,7 +197,7 @@ export async function inputBackSpaceTextContent(write: PageWrite, aa: AppearAnch
                     var preBlock = rowBlock.prev;
                     if (preBlock) {
                         //这个需要合并块
-                        if (rowBlock.isLikeTextSpan && preBlock.isLikeTextSpan) {
+                        if (rowBlock.isTextBlock && preBlock.isTextBlock) {
                             var lastPreBlock = preBlock.childs.last();
                             if (preBlock.childs.length == 0) {
                                 var content = preBlock.content;
@@ -243,6 +264,35 @@ export async function inputBackSpaceTextContent(write: PageWrite, aa: AppearAnch
 }
 
 
-export async function inputBackspaceDeleteContent(write:PageWrite,aa:AppearAnchor,event:React.KeyboardEvent){
-    
+export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
+
+    await InputStore(aa, aa.textContent, write.endAnchorText, true, async () => {
+        write.onSaveSelection();
+        var appears = findBlocksBetweenAppears(write.startAnchor.el, write.endAnchor.el);
+        await appears.eachAsync(async appear => {
+            if (appear == write.startAnchor || appear == write.endAnchor) {
+
+            }
+            else {
+                var block = appear.block;
+                await block.updateAppear(appear, '', BlockRenderRange.self);
+                if (block.isContentEmpty) await block.delete();
+            }
+        });
+        if (write.endAnchor === write.startAnchor && write.endOffset < write.startOffset || TextEle.isBefore(write.endAnchor.el, write.startAnchor.el)) {
+            [write.startAnchor, write.endAnchor] = [write.endAnchor, write.startAnchor];
+            [write.startOffset, write.endOffset] = [write.endOffset, write.startOffset];
+            write.startAnchorText = write.endAnchor.textContent;
+        }
+        write.startAnchor.textNode.textContent = write.startAnchor.textContent.slice(0, write.startOffset);
+        write.endAnchor.textNode.textContent = write.endAnchor.textContent.slice(write.endOffset);
+        await write.startAnchor.block.updateAppear(write.startAnchor, write.startAnchor.textContent, BlockRenderRange.self);
+        await write.endAnchor.block.updateAppear(write.endAnchor, write.endAnchor.textContent, BlockRenderRange.self);
+        write.kit.page.addUpdateEvent(async () => {
+            write.onFocusAppearAnchor(write.startAnchor, { last: true });
+        })
+    });
+
 }
+
+

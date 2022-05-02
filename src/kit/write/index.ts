@@ -3,18 +3,16 @@ import React from "react";
 import { Kit } from "..";
 import { InputTextPopSelector, InputTextPopSelectorType } from "../../../extensions/common/input.pop";
 import { forceCloseTextTool, useTextTool } from "../../../extensions/text.tool";
-import { util } from "../../../util/util";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
 import { findBlockAppear, findBlocksBetweenAppears } from "../../block/appear/visible.seek";
-import { BlockUrlConstant } from "../../block/constant";
 import { BlockCssName } from "../../block/pattern/css";
 import { MouseDragger } from "../../common/dragger";
 import { KeyboardCode } from "../../common/keys";
+import { onceAutoScroll } from "../../common/scroll";
 import { TextEle } from "../../common/text.ele";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
-
 import { inputBackspaceDeleteContent, inputBackSpaceTextContent, inputDetector, inputLineTail, inputPop } from "./input";
 import { MoveCursor, onEnterInput, predictKeydown } from "./keydown";
 import { onPaste } from "./paste";
@@ -261,20 +259,23 @@ export class PageWrite {
     /**
      * 这里指定将光标移到appearAnchor的最前面或者最后面
      */
-    onFocusAppearAnchor(aa: AppearAnchor, options?: { last?: boolean, left?: number }) {
+    onFocusAppearAnchor(aa: AppearAnchor, options?: { at?: number, last?: boolean | number, left?: number, y?: number }) {
         var sel = window.getSelection();
         if (typeof options?.left == 'number') {
             var bounds = TextEle.getBounds(aa.el);
             var lineHeight = TextEle.getLineHeight(aa.el);
-            var y = options?.last ? bounds.last().bottom - lineHeight / 2 : bounds.first().top + lineHeight / 2;
+            var y = options?.last ? Math.min(bounds.last().bottom - lineHeight / 2, options.y) : Math.max(options.y, bounds.first().top + lineHeight / 2);
             var pos = TextEle.getAt(aa.el, new Point(options.left, y));
+            if (pos > aa.textContent.length) pos = aa.textContent.length;
             sel.collapse(aa.textNode, pos);
+            onceAutoScroll({ el: aa.el, point: TextEle.getWindowCusorBound().leftMiddle, feelDis: 60, dis: 120 });
             this.onInputStart(aa, pos);
         }
         else {
-            if (options?.last) sel.collapse(aa.textNode, aa.textContent.length);
-            else sel.collapse(aa.textNode, 0);
-            this.onInputStart(aa, 0);
+            if (options?.last) sel.collapse(aa.textNode, aa.textContent.length + (typeof options.last == 'number' ? options.last : 0));
+            else sel.collapse(aa.textNode, options?.at || 0);
+            onceAutoScroll({ el: aa.el, point: TextEle.getWindowCusorBound().leftMiddle, feelDis: 60, dis: 120 });
+            this.onInputStart(aa, sel.focusOffset);
         }
     }
     /**
@@ -313,8 +314,6 @@ export class PageWrite {
         var sel = window.getSelection();
         var range = sel.getRangeAt(0);
         if (range) {
-            var cs = range.getClientRects();
-            var c = cs[0];
             this.onSaveSelection();
             while (true) {
                 var list = findBlocksBetweenAppears(this.startAnchor.el, this.endAnchor.el);
@@ -331,7 +330,7 @@ export class PageWrite {
                     turnBlock = blocks[0].closest(x => !x.isLine);
                 }
                 var result = await useTextTool(
-                    new Point(c.left, c.top),
+                    { roundAreas: TextEle.getWindowCusorBounds(), relativeEleAutoScroll: this.endAnchor.el },
                     { style: this.kit.page.pickBlocksTextStyle(blocks), turnBlock }
                 );
                 if (result) {
@@ -376,7 +375,7 @@ export class PageWrite {
                  * 判断是否为空行块，如果是空行块，则将当前的块转用
                  * 否则创建一个换行块
                  */
-                if (aa.block.isTextContentBlockEmpty) {
+                if (aa.block.isContentEmpty) {
                     newBlock = await aa.block.visibleDownCreateBlock(blockData.url, { createSource: 'InputBlockSelector' });
                     //说明是空白的textBlock
                     await aa.block.delete();

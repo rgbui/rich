@@ -9,10 +9,8 @@ import { BlockRenderRange } from "../../block/enum";
 import { KeyboardCode } from "../../common/keys";
 import { onceAutoScroll } from "../../common/scroll";
 import { TextEle } from "../../common/text.ele";
-import { ActionDirective } from "../../history/declare";
+import { Rect } from "../../common/vector/point";
 import { InputStore } from "./store";
-
-
 
 /***
  * 这里主要是判断当前的keydown事件是否还需要触发，继续执行输入
@@ -47,10 +45,10 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
         onceAutoScroll({ el: aa.el, feelDis: 60, dis: 120 })
         if (aa.isStart(sel.focusNode, sel.focusOffset)) {
             //这里找到当前aa前面的AppearAnchor，然后光标移到尾部，这里需要判断相邻的两个元素之间是否紧挨着
-            var prevAA = aa.visibleTextPrev();
+            var prevAA = aa.visibleLeft();
             if (prevAA) {
                 event.preventDefault();
-                write.onFocusAppearAnchor(prevAA, { last: true })
+                write.onFocusAppearAnchor(prevAA, { last: prevAA.isBeforeNear(aa) ? -1 : true })
             }
             else {
                 //这说明光标处于当前文档的头部
@@ -61,10 +59,10 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
     else if (event.key == KeyboardCode.ArrowRight) {
         onceAutoScroll({ el: aa.el, feelDis: 60, dis: 120 })
         if (aa.isEnd(sel.focusNode, sel.focusOffset)) {
-            var nextAA = aa.visibleTextNext();
+            var nextAA = aa.visibleRight();
             if (nextAA) {
                 event.preventDefault();
-                write.onFocusAppearAnchor(nextAA)
+                write.onFocusAppearAnchor(nextAA, { at: nextAA.isAfterNear(aa) ? 1 : 0 })
             } else {
                 //说明光标处于文档的尾部
             }
@@ -72,34 +70,36 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
         }
     }
     else if (event.key == KeyboardCode.ArrowDown) {
-        var rect = AppearVisibleCursorPoint(aa);
-        onceAutoScroll({ el: aa.el, point: rect.leftMiddle, feelDis: 60, dis: 120 })
+        var range = sel.getRangeAt(0);
+        var rect = Rect.fromEle(range);
         var rects = TextEle.getBounds(aa.el);
+        onceAutoScroll({ el: aa.el, point: rect.leftMiddle, feelDis: 60, dis: 120 })
         var lineHeight = TextEle.getLineHeight(aa.el);
         if (Math.abs(rect.bottom - rects.last().bottom) < lineHeight) {
             /**
              * 说明向下移动
              */
-            var nextAA = aa.visibleDown();
+            var nextAA = aa.visibleDown(rect.leftMiddle.x);
             if (nextAA) {
                 event.preventDefault();
-                write.onFocusAppearAnchor(nextAA, { left: rect.left })
+                write.onFocusAppearAnchor(nextAA, { left: rect.left, y: rects.last().bottom + lineHeight / 2 })
             }
         }
     }
     else if (event.key == KeyboardCode.ArrowUp) {
-        var rect = AppearVisibleCursorPoint(aa);
-        onceAutoScroll({ el: aa.el, point: rect.leftMiddle, feelDis: 60, dis: 120 });
+        var range = sel.getRangeAt(0);
+        var rect = Rect.fromEle(range);
         var rects = TextEle.getBounds(aa.el);
         var lineHeight = TextEle.getLineHeight(aa.el);
+        onceAutoScroll({ el: aa.el, point: rect.leftMiddle, feelDis: 60, dis: 120 });
         if (Math.abs(rect.top - rects.first().top) < lineHeight) {
             /**
              * 说明向下移动
              */
-            var upAA = aa.visibleUp();
+            var upAA = aa.visibleUp(rect.leftMiddle.x);
             if (upAA) {
                 event.preventDefault();
-                write.onFocusAppearAnchor(upAA, { left: rect.left, last: true })
+                write.onFocusAppearAnchor(upAA, { left: rect.left, last: true, y: rects.first().top + lineHeight / 2 })
             }
         }
     }
@@ -108,6 +108,7 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
 export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
     var sel = window.getSelection();
     var offset = sel.focusOffset;
+    var page = write.kit.page;
     await InputStore(aa, aa.textContent, write.endAnchorText, true, async () => {
         var block = aa.block;
         var rowBlock = block.closest(x => !x.isLine);
@@ -122,7 +123,7 @@ export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: Re
             var fb = rowBlock.getChilds(rowBlock.childKey).first();
             var url = fb.isContinuouslyCreated ? fb.url : BlockUrlConstant.TextSpan;
             var continuouslyProps = fb.continuouslyProps;
-            newBlock = await this.page.createBlock(url, { ...continuouslyProps, blocks: { childs } }, fb.parent, 0, fb.parent.childKey)
+            newBlock = await page.createBlock(url, { ...continuouslyProps, blocks: { childs } }, fb.parent, 0, fb.parent.childKey)
         }
         else {
             var url = rowBlock.isContinuouslyCreated ? rowBlock.url : BlockUrlConstant.TextSpan;
@@ -134,7 +135,7 @@ export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: Re
                 await newBlock.append(gs[i]);
             }
         }
-        this.page.addUpdateEvent(async () => {
+        page.addUpdateEvent(async () => {
             write.onFocusBlockAnchor(newBlock);
         })
     });
