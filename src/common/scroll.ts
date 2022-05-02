@@ -1,5 +1,5 @@
+import { Events } from "../../util/events";
 import { dom } from "./dom";
-import { Matrix } from "./matrix";
 import { Point, Rect } from "./vector/point";
 var time;
 export function onAutoScroll(options: {
@@ -11,7 +11,7 @@ export function onAutoScroll(options: {
     callback?(first: boolean, scrollDisY: number, scrollDisX?: number): void
 }) {
     onAutoScrollStop();
-    if (typeof options.interval == 'undefined') options.interval =200;
+    if (typeof options.interval == 'undefined') options.interval = 200;
     var fn = (fir: boolean) => {
         if (fir == true) { return options.callback ? options?.callback(fir, 0) : undefined; }
         onceAutoScroll({
@@ -96,53 +96,98 @@ export function onceAutoScroll(options: {
     if (options.callback) options.callback(sy, sx);
 }
 
-var fixedScrolls: { fixedObject: any, fixedMatrix?: Matrix, autoFixed?: boolean, svs: any[], el: HTMLElement, point: Point, callback?: (dx: number, dy: number) => void }[] = [];
-export function onFixedScroll(options: {
-    fixedObject: any,
-    fixedMatrix?: Matrix,
-    el: HTMLElement,
-    point: Point,
-    autoFixed?: boolean,
-    callback?: (dx: number, dy: number) => void
-}) {
-    var svs = [];
-    var fs = { ...options, svs };
-    if (fs.autoFixed && options.fixedObject instanceof HTMLElement && !fs.fixedMatrix) {
-        options.fixedMatrix = dom(options.fixedObject).getMatrix();
+
+export class FixedViewScroll extends Events {
+    private svs: { ele: HTMLElement, top: number, left: number, scroll: (event: Event) => void, }[] = [];
+
+    bind(el: HTMLElement) {
+        var self = this;
+        self.unbind();
+        var predict = x => { return dom(x as HTMLElement).style('overflowY') == 'auto' || dom(x as HTMLElement).style('overflowX') == 'auto' };
+        function findScroll(el: HTMLElement) {
+            var sv: { ele: HTMLElement, top: number, left: number, scroll: (event: Event) => void } = {} as any;
+            var scrollDiv: HTMLElement = dom(el).closest(predict) as any;
+            if (scrollDiv) {
+                sv.ele = scrollDiv;
+                sv.top = scrollDiv.scrollTop;
+                sv.left = scrollDiv.scrollLeft;
+                sv.scroll = function (event) {
+                    self.changeAll();
+                }
+                scrollDiv.addEventListener('scroll', sv.scroll);
+                self.svs.push(sv);
+                var pa = scrollDiv.parentNode as HTMLElement;
+                if (pa) findScroll(pa);
+            }
+        }
+        findScroll(el);
     }
-    var predict = x => { return dom(x as HTMLElement).style('overflowY') == 'auto' || dom(x as HTMLElement).style('overflowX') == 'auto' };
-    function changeAll() {
+    private changeAll() {
         var dx = 0;
         var dy = 0;
-        fs.svs.forEach(sv => {
-            dx += sv.ele.scrollTop - sv.top;
-            dy += sv.ele.scrollLeft - sv.left;
+        this.svs.forEach(sv => {
+            dy += (sv.ele.scrollTop - sv.top);
+            dx += (sv.ele.scrollLeft - sv.left);
         });
-        if (typeof options.callback == 'function') options.callback(dx, dy);
-        if (options.autoFixed && options.fixedObject instanceof HTMLElement) {
-            var ma = options.fixedMatrix.clone().translate(dx, dy);
-            options.fixedObject.style.transform = `matrix(${ma.getValues().join(",")})`
-        }
+        this.emit('change', new Point(0 - dx, 0 - dy));
     }
-    function findScroll(el: HTMLElement) {
-        var sv: Record<string, any> = {};
-        var scrollDiv: HTMLElement = dom(el).closest(predict) as any;
-        if (scrollDiv) {
-            sv.ele = scrollDiv;
-            sv.top = scrollDiv.scrollTop;
-            sv.left = scrollDiv.scrollLeft;
-            sv.scroll = function (event) {
-                changeAll();
-            }
-            scrollDiv.addEventListener('scroll', sv.scroll);
-            svs.push(sv);
-            var pa = scrollDiv.parentNode as HTMLElement;
-            if (pa) findScroll(pa);
-        }
+    unbind() {
+        this.svs.forEach(sv => {
+            (sv.ele as HTMLElement).removeEventListener('scroll', sv.scroll);
+        });
+        this.svs = [];
     }
-    findScroll(options.el);
-    fixedScrolls.push(fs);
 }
-export function offFixedScroll(fixedObject: any) {
-    fixedScrolls.removeAll(x => x.fixedObject === fixedObject);
-}
+
+
+
+// var fixedScrolls: { fixedObject: any, fixedMatrix?: Matrix, autoFixed?: boolean, svs: any[], el: HTMLElement, point: Point, callback?: (dx: number, dy: number) => void }[] = [];
+// export function onFixedScroll(options: {
+//     fixedObject: any,
+//     fixedMatrix?: Matrix,
+//     el: HTMLElement,
+//     point: Point,
+//     autoFixed?: boolean,
+//     callback?: (dx: number, dy: number) => void
+// }) {
+//     var svs = [];
+//     var fs = { ...options, svs };
+//     if (fs.autoFixed && options.fixedObject instanceof HTMLElement && !fs.fixedMatrix) {
+//         options.fixedMatrix = dom(options.fixedObject).getMatrix();
+//     }
+//     var predict = x => { return dom(x as HTMLElement).style('overflowY') == 'auto' || dom(x as HTMLElement).style('overflowX') == 'auto' };
+//     function changeAll() {
+//         var dx = 0;
+//         var dy = 0;
+//         fs.svs.forEach(sv => {
+//             dx += sv.ele.scrollTop - sv.top;
+//             dy += sv.ele.scrollLeft - sv.left;
+//         });
+//         if (typeof options.callback == 'function') options.callback(dx, dy);
+//         if (options.autoFixed && options.fixedObject instanceof HTMLElement) {
+//             var ma = options.fixedMatrix.clone().translate(dx, dy);
+//             options.fixedObject.style.transform = `matrix(${ma.getValues().join(",")})`
+//         }
+//     }
+//     function findScroll(el: HTMLElement) {
+//         var sv: Record<string, any> = {};
+//         var scrollDiv: HTMLElement = dom(el).closest(predict) as any;
+//         if (scrollDiv) {
+//             sv.ele = scrollDiv;
+//             sv.top = scrollDiv.scrollTop;
+//             sv.left = scrollDiv.scrollLeft;
+//             sv.scroll = function (event) {
+//                 changeAll();
+//             }
+//             scrollDiv.addEventListener('scroll', sv.scroll);
+//             svs.push(sv);
+//             var pa = scrollDiv.parentNode as HTMLElement;
+//             if (pa) findScroll(pa);
+//         }
+//     }
+//     findScroll(options.el);
+//     fixedScrolls.push(fs);
+// }
+// export function offFixedScroll(fixedObject: any) {
+//     fixedScrolls.removeAll(x => x.fixedObject === fixedObject);
+// }
