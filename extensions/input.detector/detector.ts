@@ -15,14 +15,14 @@ import { DetectorOperator, DetectorRule, rules } from "./rules";
 
 export function InputDetector(value: string,options: { rowStart?: boolean }): { rule: DetectorRule, value: string, matchValue?: string } {
     var rs = rules;
-    if (!(options.rowStart)) rs = rs.findAll(x => x.operator != DetectorOperator.firstLetterCreateBlock && x.operator != DetectorOperator.firstLetterTurnBlock);
+    if (!options.rowStart) rs = rs.findAll(x => x.operator != DetectorOperator.firstLetterCreateBlock && x.operator != DetectorOperator.firstLetterTurnBlock);
     var ru: DetectorRule;
     for (let i = 0; i < rs.length; i++) {
         var rule = rs[i];
         if (typeof rule.matchFn == 'function' && rule.matchFn(value) != true) continue;
         var ms = Array.isArray(rule.match) ? rule.match : [rule.match];
         for (let m of ms) {
-            if (typeof m == 'string' && value == m) {
+            if (typeof m == 'string' && value === m) {
                 ru = rule;
                 break;
             }
