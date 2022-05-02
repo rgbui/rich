@@ -16,13 +16,12 @@ export function findBlockAppear(el) {
         }
     }
 }
-
 function findXBlockAppear(appear: AppearAnchor, start: number, top: number, bound: Rect, direction: 'left' | 'right') {
     if (direction == 'left') {
         for (var i = start - GAP; i >= bound.x; i = i - GAP) {
             var el = document.elementFromPoint(i, top) as HTMLElement;
             var fa = findBlockAppear(el);
-            if (fa) return fa;
+            if (fa && fa !== appear) return fa;
             else if (el) {
                 var rg = el.querySelector('.shy-appear-text');
                 if (!rg) {
@@ -36,7 +35,7 @@ function findXBlockAppear(appear: AppearAnchor, start: number, top: number, boun
         for (var i = start + GAP; i <= bound.x + bound.width; i = i + GAP) {
             var el = document.elementFromPoint(i, top) as HTMLElement;
             var fa = findBlockAppear(el);
-            if (fa) return fa;
+            if (fa && fa !== appear) return fa;
             else if (el) {
                 var rg = el.querySelector('.shy-appear-text');
                 if (!rg) {
@@ -48,64 +47,108 @@ function findXBlockAppear(appear: AppearAnchor, start: number, top: number, boun
         }
     }
 }
-
 /***
- * 查找的时候，如果元素不在视野中 document.elementFromPoint是查找不到的。
+ * 查找的时候，如果元素不在视野中 
+ * document.elementFromPoint是查找不到的。
  */
 export function AppearVisibleSeek(appear: AppearAnchor, options: {
-    arrow: 'left' | 'right' | 'down' | 'up'
+    arrow: 'left' | 'right' | 'down' | 'up',
+    left?: number
 }) {
     var panel = appear.block.page.root;
     var el = appear.el as HTMLElement;
     var bound = Rect.fromEle(panel);
-    var eb = Rect.fromEle(el);
+    var eb: Rect;
+    var cs = TextEle.getBounds(el);
     var lineHeight = TextEle.getLineHeight(el);
+    var aa: AppearAnchor;
     if (options.arrow == 'left') {
+        eb = cs.first();
         /**
          * 水平查找
          */
-        var rs = findXBlockAppear(appear, eb.x, eb.top - lineHeight / 2, bound, 'left');
-        if (rs) return rs;
+        aa = findXBlockAppear(appear, eb.x, eb.top + lineHeight / 2, bound, 'left');
+        if (aa) return aa;
         /**
          * 垂直查找
          */
-        for (var j = eb.y - GAP; j >= bound.y; j = j - GAP) {
-            var rs = findXBlockAppear(appear, bound.x + bound.width, j, bound, 'left');
-            if (rs) return rs;
+        for (var j = eb.y - GAP; j >= Math.max(0, bound.y); j = j - GAP) {
+            aa = findXBlockAppear(appear, bound.x + bound.width, j, bound, 'left');
+            if (aa) return aa;
         }
+        var s = appear.block.prevFind(g => g.appearAnchors.length > 0 && g.appearAnchors.some(s => s.isText));
+        if (s) return s.appearAnchors.findLast(g => g.isText);
     }
     else if (options.arrow == 'right') {
+        eb = cs.last();
         /**
          * 水平查找
          */
-        var rs = findXBlockAppear(appear, eb.x, eb.top - lineHeight / 2, bound, 'right');
-        if (rs) return rs;
+        aa = findXBlockAppear(appear, eb.x, eb.top + lineHeight / 2, bound, 'right');
+        if (aa) return aa;
         /**
          * 垂直查找
          */
-        for (var j = eb.y + GAP; j <= bound.y + bound.height; j = j + GAP) {
-            var rs = findXBlockAppear(appear, bound.x + bound.width, j, bound, 'right');
-            if (rs) return rs;
+        for (var j = eb.y + GAP; j <= Math.min(window.innerHeight, bound.y + bound.height); j = j + GAP) {
+            aa = findXBlockAppear(appear, bound.x + bound.width, j, bound, 'right');
+            if (aa) return aa;
         }
+        var s = appear.block.nextFind(g => g.appearAnchors.length > 0 && g.appearAnchors.some(s => s.isText));
+        if (s) return s.appearAnchors.find(g => g.isText);
     }
     else if (options.arrow == 'down') {
-        for (var j = eb.y + eb.height + GAP; j <= bound.y + bound.height; j = j + GAP) {
-            var rs = findXBlockAppear(appear, bound.x + bound.width, j, bound, 'left');
-            if (rs) return rs;
-            rs = findXBlockAppear(appear, bound.x + bound.width, j, bound, 'right');
-            if (rs) return rs;
+        eb = cs.last();
+        for (var j = eb.bottom + GAP; j <= Math.min(window.innerHeight, bound.bottom); j = j + GAP) {
+            aa = findXBlockAppear(appear, options.left || bound.right, j, bound, 'left');
+            if (aa) return aa;
+            aa = findXBlockAppear(appear, options.left || bound.right, j, bound, 'right');
+            if (aa) return aa;
+        }
+        var s = appear.block.nextFind(g => g.appearAnchors.some(s => s.isText && TextEle.getBounds(s.el).first().top >= eb.bottom));
+        if (s) {
+            if (s.isLine) {
+                var row = s.closest(x => x.isBlock);
+                if (row) {
+                    var r = row.find(g => g.appearAnchors.some(s => s.isText && TextEle.getBounds(s.el).first().containX(options.left) && TextEle.getBounds(s.el).first().top >= eb.bottom));
+                    if (r) {
+                        return r.appearAnchors.find(s => s.isText && TextEle.getBounds(s.el).first().containX(options.left) && TextEle.getBounds(s.el).first().top >= eb.bottom)
+                    }
+                }
+            }
+            return s.appearAnchors.find(s => s.isText && TextEle.getBounds(s.el).first().top >= eb.bottom);
         }
     }
     else if (options.arrow == 'up') {
-        for (var j = eb.y - GAP; j >= bound.y; j = j - GAP) {
-            var rs = findXBlockAppear(appear, bound.x + bound.width, j, bound, 'left');
-            if (rs) return rs;
-            rs = findXBlockAppear(appear, bound.x + bound.width, j, bound, 'right');
-            if (rs) return rs;
+        eb = cs.first();
+        for (var j = eb.y - GAP; j >= Math.max(0, bound.y); j = j - GAP) {
+            aa = findXBlockAppear(appear, options.left || bound.right, j, bound, 'left');
+            if (aa) return aa;
+            aa = findXBlockAppear(appear, options.left || bound.right, j, bound, 'right');
+            if (aa) return aa;
+        }
+        var s = appear.block.prevFind(g => g.appearAnchors.some(s => s.isText && TextEle.getBounds(s.el).last().bottom <= eb.top));
+        if (s) {
+            if (s.isLine) {
+                var row = s.closest(x => x.isBlock);
+                if (row) {
+                    var r = row.find(g => g.appearAnchors.some(s => s.isText && TextEle.getBounds(s.el).last().containX(options.left) && TextEle.getBounds(s.el).last().bottom <= eb.top));
+                    if (r) {
+                        return r.appearAnchors.find(s => s.isText && TextEle.getBounds(s.el).last().containX(options.left) && TextEle.getBounds(s.el).last().bottom <= eb.top)
+                    }
+                }
+            }
+            return s.appearAnchors.findLast(s => s.isText && TextEle.getBounds(s.el).last().bottom <= eb.top);
         }
     }
 }
 
+
+/**
+ * 这里可以通过光标自动获取光株所在的位置坐标
+ * @deprecated 该方法弃用
+ * @param appear 
+ * @returns 
+ */
 export function AppearVisibleCursorPoint(appear: AppearAnchor) {
     var ele = appear.el;
     var content = appear.textContent;
