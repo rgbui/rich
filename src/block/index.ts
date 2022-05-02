@@ -247,7 +247,7 @@ export abstract class Block extends Events {
         return false;
     }
     get isBlock(): boolean {
-        return this.display == BlockDisplay.block;
+        return this.display != BlockDisplay.inline && !this.isLayout
     }
     /***
      * 注意换行的元素不一定非得是/row，
@@ -292,7 +292,7 @@ export abstract class Block extends Events {
      */
     get isCanAutomaticallyDeleted() {
         if (this.childs.length == 1) {
-            if (this.childs.first().isTextContentBlockEmpty) return true;
+            if (this.childs.first().isContentEmpty) return true;
         }
         else if (this.childs.length == 0) {
             if (this.appearAnchors.length == 1) {
@@ -301,6 +301,9 @@ export abstract class Block extends Events {
         }
         return false;
     }
+    /**
+     * 回车换行时，是否创建新行
+     */
     get isEnterInputNewLine() {
         return true;
     }
@@ -347,15 +350,15 @@ export abstract class Block extends Events {
     get isTextSpan() {
         return this.url == BlockUrlConstant.TextSpan
     }
-    get isLikeTextSpan() {
-        if (this.appearAnchors.length == 1 && this.firstElementAppear.isText) return true;
-        else if (this.childs.every(c => c.isTextContent)) return true;
-    }
-    get isEmptyTextSpan() {
-        if (this.isTextSpan) {
-            if (this.childs.length == 0 && !this.content) return true;
-            else if (this.childs.length == 1 && !this.childs.first().content) return true;
-            else return false;
+    get isContentEmpty() {
+        if (this.isLine) {
+            if (this.content == '') return true;
+        }
+        else {
+            if (this.isTextBlock) {
+                if (this.childs.length == 0 && this.content == '') return true;
+                if (this.childs.length > 0 && this.childs.every(c => c.isLine && c.content == '')) return true;
+            }
         }
         return false;
     }
@@ -369,12 +372,6 @@ export abstract class Block extends Events {
     }
     get asListBlock() {
         return (this as any) as List;
-    }
-    get isTextContentBlockEmpty() {
-        if (this.isTextContent) {
-            return this.firstElementAppear.isEmpty;
-        }
-        return false;
     }
     /**
      * 判断当前块是否为文本块
