@@ -256,17 +256,17 @@ export class Page$Cycle {
     onWarn(this: Page, error: string | Error) {
         this.emit(PageDirective.warn, error);
     }
-    onFocus(this: Page, event: FocusEvent) {
-        this.kit.textInput.onFocus();
+    onFocus(this: Page, event: FocusEvent)
+    {
         if (this.isFocus == false) {
             this.isFocus = true;
             this.emit(PageDirective.focus, event);
         }
     }
     onBlur(this: Page, event: FocusEvent) {
-        if (this.isFocus == true) {
+        if (this.isFocus == true)
+        {
             this.isFocus = false;
-            this.kit.explorer.onClearAnchorAndSelection();
             this.emit(PageDirective.blur, event);
         }
     }

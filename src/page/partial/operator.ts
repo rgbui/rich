@@ -2,13 +2,13 @@ import { Page } from "..";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItemType } from "../../../component/view/menu/declare";
 import { Block } from "../../block";
+import { AppearAnchor } from "../../block/appear";
 import { BlockUrlConstant } from "../../block/constant";
 import { BlockDirective } from "../../block/enum";
 import { BlockFactory } from "../../block/factory/block.factory";
 import { Rect } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { DropDirection } from "../../kit/handle/direction";
-import { Anchor } from "../../kit/selection/anchor";
 import { PageDirective } from "../directive";
 
 export class Page$Operator {
@@ -55,7 +55,7 @@ export class Page$Operator {
                         newBlock = await this.createBlock(BlockUrlConstant.TextSpan, {}, this.views.last());
                     }
                     newBlock.mounted(() => {
-                       // this.kit.explorer.onFocusAnchor(newBlock.createAnchor());
+                        // this.kit.explorer.onFocusAnchor(newBlock.createAnchor());
                         resolve(true);
                     })
                 })
@@ -134,13 +134,13 @@ export class Page$Operator {
             }
         });
     }
-    onBlurAnchor(this: Page, anchor: Anchor) {
+    onBlurAnchor(this: Page, anchor: AppearAnchor) {
         if (anchor.block) {
             anchor.block.blurAnchor(anchor);
         }
         this.emit(PageDirective.blurAnchor, anchor);
     }
-    onFocusAnchor(this: Page, anchor: Anchor) {
+    onFocusAnchor(this: Page, anchor: AppearAnchor) {
         if (anchor.block) {
             anchor.block.focusAnchor(anchor);
         }
@@ -215,100 +215,6 @@ export class Page$Operator {
                 break;
             case BlockDirective.trunIntoPage:
                 break;
-        }
-    }
-    async onPasterFiles(this: Page, files: File[]) {
-        if (!files || Array.isArray(files) && files.length == 0) return;
-        if (this.kit.explorer.isOnlyAnchor) {
-            var anchor = this.kit.explorer.activeAnchor;
-            var block = anchor.block;
-            await this.onAction(ActionDirective.onPasteCreateBlocks, async () => {
-                var firstBlock = block;
-                for (let i = 0; i < files.length; i++) {
-                    var file = files[i];
-                    if (file.type == 'image/png') {
-                        //图片
-                        block = await block.visibleDownCreateBlock('/image', { initialData: { file } });
-                    }
-                    else {
-                        block = await block.visibleDownCreateBlock('/file', { initialData: { file } });
-                    }
-                }
-                if (firstBlock.isTextContentBlockEmpty) {
-                    await firstBlock.delete();
-                }
-                block.mounted(() => {
-                    // var anchor = block.visibleHeadAnchor;
-                    // if (anchor)
-                    //     anchor.explorer.onFocusAnchor(anchor);
-                });
-            })
-        }
-        else if (this.kit.explorer.hasSelectionRange) {
-            var bs = this.kit.explorer.selectedBlocks;
-            var block = bs.last().closest(x => x.isBlock);
-            if (this.kit.explorer.hasTextRange) bs = [];
-            await this.onAction(ActionDirective.onPasteCreateBlocks, async () => {
-                for (let i = 0; i < files.length; i++) {
-                    var file = files[i];
-                    if (file.type == 'image/png') {
-                        //图片
-                        block = await block.visibleDownCreateBlock('/image', { initialData: { file } });
-                    }
-                    else {
-                        block = await block.visibleDownCreateBlock('/file', { initialData: { file } });
-                    }
-                }
-                await bs.eachAsync(async b => {
-                    await b.delete();
-                })
-                block.mounted(() => {
-                    // var anchor = block.visibleHeadAnchor;
-                    // if (anchor)
-                    //     anchor.explorer.onFocusAnchor(anchor);
-                });
-            })
-        }
-    }
-    async onPasteCreateBlocks(this: Page, blocks: any[]) {
-        if (blocks.length == 0) return;
-        if (this.kit.explorer.isOnlyAnchor) {
-            var anchor = this.kit.explorer.activeAnchor;
-            var block = anchor.block;
-            await this.onAction(ActionDirective.onPasteCreateBlocks, async () => {
-                var firstBlock = block;
-                for (let i = 0; i < blocks.length; i++) {
-                    var bd = blocks[i];
-                    block = await block.visibleDownCreateBlock(bd.url, bd);
-                }
-                if (firstBlock.isTextContentBlockEmpty) {
-                    await firstBlock.delete();
-                }
-                block.mounted(() => {
-                    // var anchor = block.visibleHeadAnchor;
-                    // if (anchor)
-                    //     anchor.explorer.onFocusAnchor(anchor);
-                });
-            })
-        }
-        else if (this.kit.explorer.hasSelectionRange) {
-            var bs = this.kit.explorer.selectedBlocks;
-            var block = bs.last().closest(x => x.isBlock);
-            if (this.kit.explorer.hasTextRange) bs = [];
-            await this.onAction(ActionDirective.onPasteCreateBlocks, async () => {
-                for (let i = 0; i < blocks.length; i++) {
-                    var bd = blocks[i];
-                    block = await block.visibleDownCreateBlock(bd.url, bd);
-                }
-                await bs.eachAsync(async b => {
-                    await b.delete();
-                })
-                block.mounted(() => {
-                    // var anchor = block.visibleHeadAnchor;
-                    // if (anchor)
-                    //     anchor.explorer.onFocusAnchor(anchor);
-                });
-            })
         }
     }
 }

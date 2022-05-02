@@ -12,7 +12,6 @@ import { ConfigViewer } from '../config';
 import { KeyboardPlate } from '../common/keys';
 import { Page$Seek } from './partial/seek';
 import { PageView } from './view';
-import { Anchor } from '../kit/selection/anchor';
 import { UserAction } from '../history/action';
 import { DropDirection } from '../kit/handle/direction';
 import { PageDirective } from './directive';
@@ -32,6 +31,7 @@ import { TableSchema } from '../../blocks/data-grid/schema/meta';
 import { OriginFormField } from '../../blocks/data-grid/element/form/origin.field';
 import { LinkPageItem } from '../../extensions/at/declare';
 import { Title } from '../../blocks/at/title';
+import { AppearAnchor } from '../block/appear';
 
 export class Page extends Events<PageDirective> {
     root: HTMLElement;
@@ -133,7 +133,7 @@ export class Page extends Events<PageDirective> {
         return this.globalMatrix.transform(point);
     }
     getRelativeRect(rect: Rect) {
-        return new Rect(this.globalMatrix.transform(rect.leftBottom), this.globalMatrix.transform(rect.rightBottom))
+        return new Rect(this.globalMatrix.transform(rect.leftTop), this.globalMatrix.transform(rect.rightBottom))
     }
     get isBoard() {
         return this.pageLayout.type == PageLayoutType.board;
@@ -206,10 +206,10 @@ export interface Page {
     emit(name: PageDirective.blur, ev: FocusEvent): void;
     on(name: PageDirective.focus, fn: (ev: FocusEvent) => void);
     emit(name: PageDirective.focus, ev: FocusEvent): void;
-    on(name: PageDirective.focusAnchor, fn: (anchor: Anchor) => void);
-    emit(name: PageDirective.focusAnchor, anchor: Anchor): void;
-    on(name: PageDirective.blurAnchor, fn: (anchor: Anchor) => void);
-    emit(name: PageDirective.blurAnchor, anchor: Anchor): void;
+    on(name: PageDirective.focusAnchor, fn: (anchor: AppearAnchor) => void);
+    emit(name: PageDirective.focusAnchor, anchor: AppearAnchor): void;
+    on(name: PageDirective.blurAnchor, fn: (anchor: AppearAnchor) => void);
+    emit(name: PageDirective.blurAnchor, anchor: AppearAnchor): void;
     on(name: PageDirective.history, fn: (ev: UserAction) => void);
     emit(name: PageDirective.history, ev: UserAction): void;
     on(name: PageDirective.hoverOutBlock, fn: (block: Block) => void): void;

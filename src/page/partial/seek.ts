@@ -6,7 +6,6 @@ import { dom } from "../../common/dom";
 import { Point, Rect } from "../../common/vector/point";
 import { TextToolStyle } from "../../../extensions/text.tool";
 import { DropDirection } from "../../kit/handle/direction";
-import { Anchor } from "../../kit/selection/anchor";
 import { BlockUrlConstant } from "../../block/constant";
 import { TextEle } from "../../common/text.ele";
 
@@ -116,49 +115,6 @@ export class Page$Seek {
                 if (b) {
                     bs.push(b);
                 }
-            }
-        }
-        return bs;
-    }
-    /**
-     * 通过起始光标，结束光标来查找之间的block
-     * @param this 
-     * @param from 
-     * @param to 
-     * @param filter  rowOrCol 表示查找时过滤isRow,isCol的块
-     * @param filter  lineBlock 表示查找的时候过滤isLine的块
-     * @returns 
-     */
-    searchBlocksBetweenAnchor(this: Page, from: Anchor, to: Anchor, filter?: {
-        rowOrCol?: boolean,
-        lineBlock?: boolean,
-        /**
-         * 这里是否默认考虑边界，比如 from:anchor 是一个block的结尾处 ，
-         * 那么此时通过from-to实际没有选中from所涉及到的block
-         */
-        consideBoundary?: boolean
-    }) {
-        var bs: Block[] = [];
-        var start: Anchor, end: Anchor;
-        if (from.isBefore(to)) {
-            start = from;
-            end = to;
-        }
-        else {
-            start = to;
-            end = from;
-        }
-        var predict = (g) => true;
-        if (filter && filter.rowOrCol == true && !filter.lineBlock) predict = (g: Block) => !g.isRow && !g.isCol;
-        else if (filter && filter.lineBlock == true && filter.rowOrCol == true) predict = (g: Block) => !g.isLine && !g.isRow && !g.isCol;
-        var rs = start.block.nextFindAll(predict, true, c => c === end.block, true);
-        bs.addRange(rs);
-        if (filter?.consideBoundary != true) {
-            if (start.isEnd && !start.isSolid) {
-                bs.remove(s => start.block === s);
-            }
-            if (end.isStart && !end.isSolid) {
-                bs.remove(s => end.block === s)
             }
         }
         return bs;
@@ -354,65 +310,6 @@ export class Page$Seek {
             return this.filterRepeat(bs);
         }
     }
-    /**
-     * 这里判断两个anchor是否相邻,是否紧挨着
-     * @param from 
-     * @param to 
-     */
-    textAnchorIsAdjoin(from: Anchor, to: Anchor) {
-        if (from.isText && to.isText) {
-            var fb = from.el;
-            var tb = to.el;
-            var ob = fb.getBoundingClientRect();
-            var nb = tb.getBoundingClientRect();
-            if (Math.abs(ob.left + ob.width - nb.left) < 10) {
-                var y = ob.top + ob.height - 10;
-                if (y >= nb.top && y <= nb.top + 20) { return true; }
-            }
-        }
-        return false;
-    }
-    /**
-     * 文本依据选区裂变返回三块内容块
-     * 返回三块内容块
-     * @param from 
-     * @param to 
-     * @param styles 
-     * @returns {
-          before: string;
-          current: string;
-          after: string;
-        }
-    */
-    fissionBlockBySelection(block: Block, from: Anchor, to: Anchor) {
-        if (!from.isBefore(to)) [to, from] = [from, to];
-        var selectionBeforeContent = '', selectionAfterContent = '', selectionContent = '';
-        var content = block.firstElementAppear.textContent;
-        if (block == from.block && block == to.block) {
-            //说明block包含选区
-            selectionBeforeContent = content.substring(0, from.at);
-            selectionContent = content.substring(from.at, to.at);
-            selectionAfterContent = content.substring(to.at);
-        }
-        else if (block == from.block) {
-            //block后半部分是选区
-            selectionBeforeContent = content.substring(0, from.at);
-            selectionContent = content.substring(from.at);
-        }
-        else if (block == to.block) {
-            //block前半部分是选区
-            selectionAfterContent = content.substring(to.at);
-            selectionContent = content.substring(0, to.at);
-        }
-        else {
-            selectionContent = content;
-        }
-        return {
-            before: selectionBeforeContent,
-            current: selectionContent,
-            after: selectionAfterContent
-        }
-    }
     pickBlocksTextStyle(blocks: Block[]) {
         var textStyle: TextToolStyle = {} as any;
         textStyle.italic = true;
@@ -444,22 +341,6 @@ export class Page$Seek {
         });
         return textStyle;
     }
-    /**
-     * 判断两个block，是否在同一行中，
-     * 能够形成一个选区
-     * @param from 
-     * @param to 
-     * @returns 
-     */
-    isInlineAnchor(from: Anchor, to: Anchor) {
-        if (from.block == to.block) {
-            return true
-        }
-        if (from.isText && from.block.isLine && to.block.isLine && to.isText) {
-            if (from.block.parent === to.block.parent) return true;
-        }
-        return false;
-    }
     find(this: Page, predict: (block: Block) => boolean) {
         for (let i = 0; i < this.views.length; i++) {
             var view = this.views[i];
@@ -484,8 +365,8 @@ export class Page$Seek {
         return bs;
     }
     each(this: Page, predict: (block: Block) => false | void | -1) {
-        this.views.each(v=>{
-            v.each(predict,true);
+        this.views.each(v => {
+            v.each(predict, true);
         })
     }
     findNearestBlockByPoint(this: Page, blocks: Block[], point: Point) {

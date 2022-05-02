@@ -1,4 +1,4 @@
-import { Anchor } from "../kit/selection/anchor";
+
 import { Matrix } from "./matrix";
 
 
@@ -99,85 +99,6 @@ class Dom {
             p.appendChild(this.el);
         }
         else p.insertBefore(this.el, el.nextSibling);
-    }
-    insertAnchor(at: number, anchor: Anchor) {
-        var el = this.el;
-        var index = 0;
-        var isEnd: boolean = false;
-        function traverseNodes(el: HTMLElement) {
-            var cs: Node[] = Array.from(el.childNodes);
-            cs.remove(g => {
-                if (g instanceof HTMLElement && g.classList.contains('shy-anchor-appear')) return true;
-                else return false;
-            })
-            for (let i = 0; i < cs.length; i++) {
-                if (isEnd == true) break;
-                var c = cs[i];
-                if (c instanceof Text) {
-                    var text = c.textContent || '';
-                    if (text.length > 0) {
-                        if (at >= index && at <= index + text.length) {
-                            if (at == index) {
-                                c.parentNode.insertBefore(anchor.view, c);
-                            }
-                            else if (at == index + text.length) {
-                                if (c.nextSibling) c.parentNode.insertBefore(anchor.view, c.nextSibling)
-                                else c.parentNode.appendChild(anchor.view);
-                            }
-                            else {
-                                var frontText = text.slice(0, at - index);
-                                var behindText = text.slice(at - index);
-                                c.textContent = behindText;
-                                c.parentNode.insertBefore(anchor.view, c);
-                                var newTextNode = document.createTextNode(frontText);
-                                c.parentNode.insertBefore(newTextNode, anchor.view);
-                            }
-                            isEnd = true;
-                        }
-                        else index += text.length;
-                    }
-                }
-                else if (c instanceof HTMLBRElement) {
-                    if (at == index) {
-                        c.parentNode.insertBefore(anchor.view, c);
-                        isEnd = true;
-                    }
-                    else if (at == index + 1) {
-                        if (c.nextSibling) c.parentNode.insertBefore(anchor.view, c.nextSibling)
-                        else c.parentNode.appendChild(anchor.view);
-                        isEnd = true;
-                    }
-                    else index += 1;
-                }
-                else {
-                    if (c.childNodes.length > 0 && !isEnd) traverseNodes(c as HTMLElement);
-                }
-            }
-        }
-        if (at == 0 && this.el.childNodes.length == 0) {
-            this.el.appendChild(anchor.view);
-        }
-        else traverseNodes(el as HTMLElement);
-        function combineText(el: Node) {
-            var current = el.firstChild;
-            while (true) {
-                if (!current) break;
-                var next = current.nextSibling;
-                if (!next) break;
-                if (current instanceof Text && next instanceof Text) {
-                    next.textContent = current.textContent + next.textContent;
-                    current.remove();
-                    current = next;
-                }
-                else {
-                    if (current.childNodes.length > 0) {
-                        combineText(current);
-                    }
-                    current = next;
-                }
-            }
-        }
-        combineText(el);
     }
     removeClass(predict: (cla: string) => boolean) {
         var cs = Array.from((this.el as HTMLElement).classList);
