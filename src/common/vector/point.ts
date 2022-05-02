@@ -125,8 +125,8 @@ export class Point {
     rotate(angle: number, center: Point) {
         var matrix = new Matrix();
         matrix.rotate(angle, center);
-        var c= matrix.transform(this);
-        return new Point(c.x,c.y);
+        var c = matrix.transform(this);
+        return new Point(c.x, c.y);
     }
 
 }
@@ -235,13 +235,23 @@ export class Rect {
         var ele = event.target as HTMLElement;
         return this.from(ele.getBoundingClientRect())
     }
-    static fromEle(el: HTMLElement|Range) {
+    static fromEle(el: HTMLElement | Range) {
         return this.from(el.getBoundingClientRect())
     }
     conatin(point: Point) {
         if (point.x >= this.left && point.x <= this.left + this.width) {
             if (point.y >= this.top && point.y <= this.top + this.height) return true;
         }
+        return false;
+    }
+    containX(x: number) {
+        if (x >= this.left && x <= this.left + this.width) {
+            return true;
+        }
+        return false;
+    }
+    containY(y: number) {
+        if (y >= this.top && y <= this.top + this.height) return true;
         return false;
     }
     isContainRect(rect: Rect) {
