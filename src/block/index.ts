@@ -215,15 +215,19 @@ export abstract class Block extends Events {
             Object.assign(style, this.transformStyle);
         }
         else {
-            if (this.isBlock) {
-                if (this.isCol)
-                    Object.assign(style, {
-                        width: ((this as any).widthPercent || 100) + '%'
-                    });
+            if (this.isCol)
+                Object.assign(style, {
+                    width: ((this as any).widthPercent || 100) + '%'
+                });
+            if (this.parent?.isRow && !this.parent.isPart) {
+                Object.assign(style, {
+                    width: ((this as any).widthPercent || 100) + '%'
+                });
+            }
+            if (this.isBlock)
                 Object.assign(style, {
                     padding: '3px 0px'
                 });
-            }
         }
         Object.assign(style, this.pattern.style);
         return style;
@@ -247,7 +251,7 @@ export abstract class Block extends Events {
         return false;
     }
     get isBlock(): boolean {
-        return this.display != BlockDisplay.inline && !this.isLayout
+        return this.display !== BlockDisplay.inline
     }
     /***
      * 注意换行的元素不一定非得是/row，
