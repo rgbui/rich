@@ -6,6 +6,7 @@ import { InputTextPopSelectorType } from "../../../extensions/common/input.pop";
 import { InputDetector } from "../../../extensions/input.detector/detector";
 import { DetectorOperator } from "../../../extensions/input.detector/rules";
 import { usePageLinkSelector } from "../../../extensions/link/page";
+import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
 import { findBlocksBetweenAppears } from "../../block/appear/visible.seek";
 import { BlockUrlConstant } from "../../block/constant";
@@ -14,8 +15,7 @@ import { TextEle } from "../../common/text.ele";
 import { Rect } from "../../common/vector/point";
 import { InputStore } from "./store";
 
-async function inputPopCallback(write: PageWrite,...args: any)
-{
+async function inputPopCallback(write: PageWrite, ...args: any) {
     var blockData = args[0];
     var sel = window.getSelection();
     var offset = sel.focusOffset;
@@ -162,6 +162,91 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
 export async function inputLineTail(write: PageWrite, aa: AppearAnchor, event: React.FormEvent) {
     return false;
 }
+
+
+
+
+
+/**
+ * 将要回车删除
+ * 两种情况
+ * 1.textContent回车删除
+ *   这里主要是如果触发删除，则删除当前行的prev项的最后一位字符
+ * 2.首行删除
+ * @param write 
+ * @param aa 
+ * @param event 
+ */
+export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
+    var sel = window.getSelection();
+    var isEmpty = aa.textContent == '';
+    if (sel.focusOffset == 0) {
+        event.preventDefault();
+        await InputStore(aa, aa.textContent, write.endAnchorText, true, async () => {
+            var block = aa.block;
+            var rowBlock = block.closest(x => !x.isLine);
+            if (block.isLine && block.prev) {
+                /**这里判断block前面有没有line */
+                var pv = block.prev;
+                if (isEmpty) await block.delete();
+                pv.updateProps({ content: pv.content.slice(0, pv.content.length - 1) }, BlockRenderRange.self);
+                if (pv.isContentEmpty) {
+                    var fr = pv.prev;
+                    await pv.delete();
+                    write.kit.page.addUpdateEvent(async () => {
+                        if (fr) write.onFocusBlockAnchor(fr, { last: true });
+                        else write.onFocusBlockAnchor(rowBlock);
+                    })
+                }
+                else write.kit.page.addUpdateEvent(async () => {
+                    write.onFocusBlockAnchor(pv, { last: true });
+                });
+                return;
+            }
+            else {
+                if (isEmpty && block.isLine) await block.delete()
+                /**如果满足转换，则自动转换 */
+                if (rowBlock.isBackspaceAutomaticallyTurnText) {
+                    var newBlock = await rowBlock.turn(BlockUrlConstant.TextSpan);
+                    write.kit.page.addUpdateEvent(async () => {
+                        write.onFocusBlockAnchor(newBlock);
+                    });
+                    return;
+                }
+                //这里判断块前面没有同级的块，所以这里考虑能否升级
+                if (rowBlock?.parent?.isListBlock) {
+                    var ppa = rowBlock.parent.parent;
+                    var at = rowBlock.parent.at;
+                    await ppa.append(rowBlock, at + 1);
+                    write.kit.page.addUpdateEvent(async () => {
+                        write.onFocusBlockAnchor(rowBlock);
+                    });
+                    return;
+                }
+                if (!rowBlock.isContentEmpty && rowBlock.isTextBlock && rowBlock.prev.isTextBlock) {
+                    //这个需要合并块
+                    await combineTextBlock(write, rowBlock);
+                    return;
+                }
+                /***
+                 * 这个回车啥也没干，光标跳动
+                 */
+                var prevAppearBlock = rowBlock.prevFind(x => x.appearAnchors.some(s => s.isText));
+                if (prevAppearBlock) {
+                    write.kit.page.addUpdateEvent(async () => {
+                        write.onFocusBlockAnchor(prevAppearBlock, { last: true });
+                    });
+                }
+                if (rowBlock.isContentEmpty) {
+                    await rowBlock.delete();
+                }
+            }
+        });
+    }
+
+}
+
+
 /**
  *   有两种情况发生上面的
  *    1. 块的rowBlock 中的子textContent为空了，但textContent前面还有其它子textContent
@@ -174,96 +259,59 @@ export async function inputLineTail(write: PageWrite, aa: AppearAnchor, event: R
  */
 export async function inputBackSpaceTextContent(write: PageWrite, aa: AppearAnchor, event: React.FormEvent) {
     var sel = window.getSelection();
-    var isFirst = sel.focusOffset == 0;
-    var isEmpty = aa.textContent == '';
-    if (isFirst) {
+    if (sel.focusOffset == 0) {
         await InputStore(aa, aa.textContent, write.endAnchorText, true, async () => {
             var block = aa.block;
             var rowBlock = block.closest(x => !x.isLine);
-            var preLineBlock = block.isLine ? block.prev : undefined;
-            if (isEmpty)
-                await block.delete();
-            if (preLineBlock) {
-                write.onFocusBlockAnchor(preLineBlock, { last: true })
+            var prev = block.prev;
+            var isLine = block.isLine;
+            if (block.isContentEmpty && isLine) await block.delete();
+            if (isLine && prev) {
+                write.onFocusBlockAnchor(prev, { last: true })
             }
             else {
-
-                //如果是列表，则先切换成正常块，然后在考虑合并的事情
-                if (rowBlock.isBackspaceAutomaticallyTurnText) {
-                    var newBlock = await rowBlock.turn(BlockUrlConstant.TextSpan);
-                    write.kit.page.addUpdateEvent(async () => {
-                        write.onFocusBlockAnchor(newBlock);
-                    });
-                    return;
-                }
-                else {
-                    var preBlock = rowBlock.prev;
-                    if (preBlock) {
-                        //这个需要合并块
-                        if (rowBlock.isTextBlock && preBlock.isTextBlock) {
-                            var lastPreBlock = preBlock.childs.last();
-                            if (preBlock.childs.length == 0) {
-                                var content = preBlock.content;
-                                preBlock.updateProps({ content: '' });
-                                var pattern = await preBlock.pattern.cloneData();
-                                await preBlock.appendBlock({ url: BlockUrlConstant.Text, content, pattern });
-                                lastPreBlock = preBlock.childs.last();
-                            }
-                            /**
-                             * 这里判断rowBlock里面是否有子的childs,
-                             * 如果有转移到preBlock中，
-                             * 如果没有取其content
-                             */
-                            if (rowBlock.childs.length > 0) {
-                                var cs = rowBlock.childs.map(c => c);
-                                for (let i = 0; i < cs.length; i++) {
-                                    await preBlock.append(cs[i]);
-                                }
-                            }
-                            else {
-                                await preBlock.appendBlock({ url: BlockUrlConstant.Text, content: rowBlock.content, pattern: await rowBlock.pattern.cloneData() })
-                            }
-
-                            await rowBlock.delete();
-                            write.kit.page.addUpdateEvent(async () => {
-                                write.onFocusBlockAnchor(lastPreBlock, { last: true });
-                            });
-                            return;
-                        }
-                    }
-                    else {
-                        //这里判断块前面没有同级的块，所以这里考虑能否升级
-                        if (rowBlock?.parent.isListBlock) {
-                            var ppa = rowBlock.parent.parent;
-                            var at = rowBlock.parent.at;
-                            await ppa.append(rowBlock, at + 1);
-                            return;
-                        }
-                    }
-                    /**
-                     * 如果块本身是空的，则需要自动删除
-                     */
-                    if (rowBlock.isCanAutomaticallyDeleted) { await rowBlock.delete(); return; }
-                    /**这里以当前块的为起点，查找这个块前面的有编辑点的块，然后光标移过去 */
-                    var prevAppearBlock = rowBlock.prevFind(x => x.appearAnchors.some(s => s.isText));
-                    if (prevAppearBlock) {
-                        write.kit.page.addUpdateEvent(async () => {
-                            write.onFocusBlockAnchor(prevAppearBlock, { last: true });
-                        });
-                        return;
-                    }
-                    else {
-                        //这个可能是当前页的最上面编辑点
-                        console.warn('to top page editor')
-                    }
-                }
+                write.onFocusBlockAnchor(rowBlock)
             }
         });
-        /**
-         * 说明当前文本是空的
-         */
+        return true;
     }
     return false;
+}
+
+/**
+ * 合并块
+ * @param write 
+ * @param rowBlock 
+ */
+async function combineTextBlock(write: PageWrite, rowBlock: Block) {
+
+    var preBlock = rowBlock.prev;
+    var lastPreBlock = preBlock.childs.last();
+    if (preBlock.childs.length == 0) {
+        var content = preBlock.content;
+        preBlock.updateProps({ content: '' });
+        var pattern = await preBlock.pattern.cloneData();
+        await preBlock.appendBlock({ url: BlockUrlConstant.Text, content, pattern });
+        lastPreBlock = preBlock.childs.last();
+    }
+    /**
+     * 这里判断rowBlock里面是否有子的childs,
+     * 如果有转移到preBlock中，
+     * 如果没有取其content
+     */
+    if (rowBlock.childs.length > 0) {
+        var cs = rowBlock.childs.map(c => c);
+        for (let i = 0; i < cs.length; i++) {
+            await preBlock.append(cs[i]);
+        }
+    }
+    else {
+        await preBlock.appendBlock({ url: BlockUrlConstant.Text, content: rowBlock.content, pattern: await rowBlock.pattern.cloneData() })
+    }
+    await rowBlock.delete();
+    write.kit.page.addUpdateEvent(async () => {
+        write.onFocusBlockAnchor(lastPreBlock, { last: true });
+    });
 }
 
 
