@@ -19,11 +19,11 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
     kit.operator.onClearSelectBlocks();
     var downPoint = Point.from(event);
     var gm = block ? block.panelGridMap : kit.page.gridMap;
-    gm.buildGridMap();
     MouseDragger({
         event,
         dis: 5,
         moveStart() {
+            gm.buildGridMap();
             kit.selector.setStart(Point.from(event));
         },
         move(ev, data) {
