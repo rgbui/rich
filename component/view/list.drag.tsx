@@ -24,7 +24,7 @@ export class ListDrag extends React.Component<{
                         ghostView.move(Point.from(ev));
                         if (self.hoverItem) {
                             var bound = Rect.fromEle(self.hoverItem.el);
-                            if (bound.conatin(Point.from(ev))) {
+                            if (bound.contain(Point.from(ev))) {
                                 if (ev.y > bound.middleCenter.y) {
                                     self.hoverItem.el.classList.add('drag-over-top')
                                 }

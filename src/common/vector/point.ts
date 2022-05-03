@@ -238,7 +238,7 @@ export class Rect {
     static fromEle(el: HTMLElement | Range) {
         return this.from(el.getBoundingClientRect())
     }
-    conatin(point: Point) {
+    contain(point: Point) {
         if (point.x >= this.left && point.x <= this.left + this.width) {
             if (point.y >= this.top && point.y <= this.top + this.height) return true;
         }
@@ -255,7 +255,7 @@ export class Rect {
         return false;
     }
     isContainRect(rect: Rect) {
-        return rect.points.every(e => this.conatin(e));
+        return rect.points.every(e => this.contain(e));
     }
     /**
      * 判断是否与矩形r2相交
