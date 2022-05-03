@@ -5,9 +5,7 @@ import { BlockCssName } from "../../block/pattern/css";
 import { dom } from "../../common/dom";
 import { Point, Rect } from "../../common/vector/point";
 import { TextToolStyle } from "../../../extensions/text.tool";
-import { DropDirection } from "../../kit/handle/direction";
-import { BlockUrlConstant } from "../../block/constant";
-
+const GAP = 10;
 export class Page$Seek {
     /**
      * 这里需要在当前的PageLout内进行查找
@@ -34,15 +32,26 @@ export class Page$Seek {
         }
         return null;
     }
-    /**
-     * 获取当前鼠标所在的block
-     * @param this 
-     * @param event 
-     * @returns 
-     */
-    getMouseTargetBlock(this: Page, event: MouseEvent): Block {
-        var block = this.getEleBlock(event.target as HTMLElement);
-        return block;
+    findXBlock(this: Page, event: MouseEvent, predict: (block: Block) => boolean, direction: 'left' | 'right') {
+        var x = event.clientX;
+        var y = event.clientY;
+        var bound = Rect.fromEle(this.root);
+        if (direction == 'left') {
+            for (var i = x - GAP; i >= bound.x; i = i - GAP) {
+                var block = this.getBlockByMouseOrPoint(new Point(i, y));
+                if (block) {
+                    if (predict(block)) return block;
+                }
+            }
+        }
+        else if (direction == 'right') {
+            for (var i = x + GAP; i <= bound.right; i = i + GAP) {
+                var block = this.getBlockByMouseOrPoint(new Point(i, y));
+                if (block) {
+                    if (predict(block)) return block;
+                }
+            }
+        }
     }
     getBlockFromPoint(this: Page, point: Point) {
         var els = document.elementsFromPoint(point.x, point.y);
@@ -124,5 +133,15 @@ export class Page$Seek {
         this.views.each(v => {
             v.each(predict, true);
         })
+    }
+    /**
+     * 页面最底部的块,
+     * 也是视图栏最下面的一个块
+     * @param this 
+     * @param block  指视图块，每个视图块的的底部
+     */
+    getViewLastBlock(this: Page, block?: Block) {
+        if (!block) block = this.views[0];
+        if (block) return block.childs.last()
     }
 }
