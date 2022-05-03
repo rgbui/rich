@@ -7,7 +7,8 @@ import { Matrix } from "../../common/matrix";
 import { Point, PointArrow, Rect, RectUtility } from "../../common/vector/point";
 import { Polygon } from "../../common/vector/polygon";
 import { ActionDirective } from "../../history/declare";
-import { useBoardTool } from "../../kit/operator/board";
+import { openBoardEditTool } from "../../kit/operator/board/edit";
+
 export enum BoardPointType {
     /**
      * 路径
@@ -192,7 +193,7 @@ export class Block$Board {
                 }
             },
             async moveEnd() {
-                await useBoardTool(self.page.kit);
+                await openBoardEditTool(self.page.kit);
             }
         });
     }

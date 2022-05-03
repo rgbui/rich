@@ -15,7 +15,8 @@ import { MouseDragger } from '../../common/dragger';
 import { forceCloseBoardEditTool } from '../../../extensions/board.edit.tool';
 
 import { dom } from '../../common/dom';
-import { useBoardTool } from '../../kit/operator/board';
+import { openBoardEditTool } from '../../kit/operator/board/edit';
+
 
 @url("/textspan")
 export class TextSpan extends Block {
@@ -166,7 +167,7 @@ export class TextSpan extends Block {
                 }
             },
             async moveEnd() {
-                await useBoardTool(self.page.kit);
+                await openBoardEditTool(self.page.kit);
             }
         });
     }

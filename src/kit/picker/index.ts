@@ -13,7 +13,7 @@ import { MouseDragger } from "../../common/dragger";
 import { Matrix } from "../../common/matrix";
 import { Point, PointArrow } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
-import { useBoardTool } from "../operator/board";
+import { openBoardEditTool } from "../operator/board/edit";
 import { BlockPickerView } from "./view";
 
 export class BlockPicker {
@@ -211,7 +211,7 @@ export class BlockPicker {
                     block.onManualUpdateProps({ points: ps }, { points: block.points }, BlockRenderRange.self);
                     self.onRePicker();
                     block.forceUpdate();
-                    await useBoardTool(self.kit);
+                    await openBoardEditTool(self.kit);
                 }
             }
         });
@@ -248,7 +248,7 @@ export class BlockPicker {
                 },
                 async moveEnd() {
                     self.kit.boardLine.onEndConnectOther();
-                    await useBoardTool(self.kit);
+                    await openBoardEditTool(self.kit);
                 }
             });
         }
@@ -275,7 +275,7 @@ export class BlockPicker {
                             block.points.remove(g => g === next);
                         }
                         block.onManualUpdateProps(oldProps, { points: block.points });
-                        await useBoardTool(self.kit);
+                        await openBoardEditTool(self.kit);
                     }
                     block.forceUpdate();
                     self.view.forceUpdate();
@@ -319,7 +319,7 @@ export class BlockPicker {
                 }
             },
             async moveEnd() {
-                await useBoardTool(self.kit);
+                await openBoardEditTool(self.kit);
             }
         });
     }

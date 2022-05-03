@@ -1,27 +1,10 @@
 import { Kit } from "../..";
-import { useBoardEditTool } from "../../../../extensions/board.edit.tool";
 import { Block } from "../../../block";
 import { MouseDragger } from "../../../common/dragger";
-import { Point } from "../../../common/vector/point";
-import { ActionDirective } from "../../../history/declare";
-import { CheckBoardTool } from "./tool";
-export async function useBoardTool(kit: Kit) {
-    while (true) {
-        var r = await useBoardEditTool(kit.picker.blocks);
-        if (r) {
-            await kit.page.onAction(ActionDirective.onBoardEditProp, async () => {
-                await kit.picker.blocks.eachAsync(async (block) => {
-                    if (r.name)
-                        await block.setBoardEditCommand(r.name, r.value);
-                    else for (let n in r) {
-                        await block.setBoardEditCommand(n, r[n]);
-                    }
-                })
-            });
-            kit.picker.onRePicker();
-        } else break;
-    }
-}
+import { Point, Rect } from "../../../common/vector/point";
+import { openBoardEditTool } from "./edit";
+import { CheckBoardTool } from "./selector";
+
 export async function BoardDrag(kit: Kit, block: Block, event: React.MouseEvent) {
     /**
      * 先判断toolBoard工具栏有没有被使用，
@@ -29,20 +12,27 @@ export async function BoardDrag(kit: Kit, block: Block, event: React.MouseEvent)
      */
     if (await CheckBoardTool(kit, block, event)) return;
     var downPoint = Point.from(event);
+    var gm = block ? block.panelGridMap : kit.page.gridMap;
     MouseDragger({
         event,
         dis: 5,
         moveStart() {
+            gm.start();
             kit.selector.setStart(Point.from(event));
         },
         move(ev, data) {
             /***
              * 这里需要基于视觉查找当前有那些块可以被选中
              */
+            var movePoint = Point.from(ev);
+            var bs = gm.findBlocksByRect(new Rect(downPoint, movePoint));
+            kit.picker.onPicker(bs);
         },
         async moveEnd(ev, isMove, data) {
+            gm.over();
             if (isMove) {
                 kit.selector.close();
+                await openBoardEditTool(kit);
             }
             else {
                 /**
