@@ -7,7 +7,8 @@
     font-weight    : inherit;
     font-style     : inherit;
     text-decoration: inherit;
-    outline: none;
+    outline        : none;
+
     * {
         font-size      : inherit;
         text-decoration: inherit;
@@ -15,20 +16,29 @@
         font-weight    : inherit;
     }
 
-    &.shy-text-empty::after {
-        content                : attr(placeholder);
-        display                : inline;
+    &:empty {
+        display                : inline-block;
+        padding-right          : 10px;
+        caret-color            : rgb(55, 53, 47);
+        padding-right          : 10px;
         -webkit-text-fill-color: rgba(55, 53, 47, 0.4);
+
+        &::after {
+            content: '\20';
+        }
     }
 
-    &:empty {
-        &::after {
-            content    : '\D\A';
-            white-space: pre;
-        }
+    &.shy-text-focus {
+        &:empty {
+            display                : inline-block;
+            padding-right          : 10px;
+            caret-color            : rgb(55, 53, 47);
+            padding-right          : 10px;
+            -webkit-text-fill-color: rgba(55, 53, 47, 0.4);
 
-        &::before {
-            content: '\20';
+            &::after {
+                content: attr(placeholder);
+            }
         }
     }
 }
@@ -42,10 +52,10 @@
     font-style     : inherit;
     text-decoration: inherit;
 
-    &::after {
-        content    : '\D\A';
-        white-space: pre;
-    }
+    // &::after {
+    //     content    : '\D\A';
+    //     white-space: pre;
+    // }
 }
 
 .shy-appear-solid {

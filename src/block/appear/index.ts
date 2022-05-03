@@ -94,21 +94,21 @@ export class AppearAnchor {
          */
         return AppearVisibleSeek(this, { arrow: 'left' });
     }
-    visibleDown(left?:number): AppearAnchor {
+    visibleDown(left?: number): AppearAnchor {
         /**
       * 在块内查找
       */
         var vp = this.block.appearAnchors.find((g, i) => i > this.at && g.isText);
         if (vp) return vp;
-        return AppearVisibleSeek(this, { arrow: 'down',left });
+        return AppearVisibleSeek(this, { arrow: 'down', left });
     }
-    visibleUp(left?:number): AppearAnchor {
+    visibleUp(left?: number): AppearAnchor {
         /**
         * 在块内查找
         */
         var vp = this.block.appearAnchors.find((g, i) => i < this.at && g.isText);
         if (vp) return vp;
-        return AppearVisibleSeek(this, { arrow: 'up' ,left});
+        return AppearVisibleSeek(this, { arrow: 'up', left });
     }
     isStart(node: Node, offset: number) {
         if (offset != 0) return false;
@@ -200,5 +200,16 @@ export class AppearAnchor {
             return true;
         }
         else return false;
+    }
+    focus() {
+        var rs = this.block.page.root.querySelectorAll('.shy-text-focus');
+        for (let i = 0; i < rs.length; i++) {
+            if (rs[i] !== this.el)
+                rs[i].classList.remove('shy-text-focus');
+        }
+        this.el.classList.add('shy-text-focus');
+    }
+    blur() {
+        this.el.classList.remove('shy-text-focus')
     }
 }
