@@ -9,11 +9,10 @@ import { findBlockAppear, findBlocksBetweenAppears } from "../../block/appear/vi
 import { BlockCssName } from "../../block/pattern/css";
 import { MouseDragger } from "../../common/dragger";
 import { KeyboardCode } from "../../common/keys";
-import { onceAutoScroll } from "../../common/scroll";
 import { TextEle } from "../../common/text.ele";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
-import { inputBackspaceDeleteContent, inputBackSpaceTextContent, inputDetector, inputLineTail, inputPop } from "./input";
+import { inputBackspaceDeleteContent, inputBackSpaceTextContent, inputDetector, inputLineTail, inputPop, keydownBackspaceTextContent } from "./input";
 import { MoveCursor, onEnterInput, predictKeydown } from "./keydown";
 import { onPaste } from "./paste";
 import { ForceInputStore, InputStore } from "./store";
@@ -105,27 +104,20 @@ export class PageWrite {
     mouseup(aa: AppearAnchor, event: React.MouseEvent) {
 
     }
-    private isWillInput: boolean;
     /**
      * 注意点:event.preventDefault() 在触发前最好不要有执行async的操作，否则会失效
      */
     async keydown(aa: AppearAnchor, event: React.KeyboardEvent) {
-        this.isWillInput = false;
         /**
          * 判断是否阻止输入
          */
         if (predictKeydown(this, aa, event) == false) { event.preventDefault(); return; }
-        /**
-         * 这行好像不用也可以
-         */
-        if (this.kit.page.keyboardPlate.isPredict()) return;
         /**
          * 这里判断是光标、选区、还是选择多行块
          */
         var hasSelectionRange: boolean = false;
         if (this.kit.operator.currentSelectedBlocks.length > 0) hasSelectionRange = true;
         else if (this.hasAnchorSelection) hasSelectionRange = true;
-
         switch (event.key) {
             case KeyboardCode.ArrowDown:
             case KeyboardCode.ArrowUp:
@@ -139,34 +131,29 @@ export class PageWrite {
                 if (aa.block.isEnterInputNewLine) {
                     if (!this.kit.page.keyboardPlate.isShift()) {
                         await onEnterInput(this, aa, event);
-                        return;
                     }
                 }
                 break;
             case KeyboardCode.Delete:
             case KeyboardCode.Backspace:
-                if (hasSelectionRange) {
-                    //这里回车删除选区的内容
-                    await inputBackspaceDeleteContent(this, aa, event)
-                    return;
-                }
+                //这里删除选区的内容
+                if (hasSelectionRange) await inputBackspaceDeleteContent(this, aa, event)
+                else await keydownBackspaceTextContent(this, aa, event);
                 break;
             case KeyboardCode.Tab:
                 if (aa.block.closest(x => x.isListBlock)) {
+                    event.preventDefault();
                     await ForceInputStore();
-                    var r = await aa.block.onKeyTab(this.kit.page.keyboardPlate.isShift())
-                    if (r != false) {
-                        event.preventDefault();
-                    }
+                    await aa.block.onKeyTab(this.kit.page.keyboardPlate.isShift())
                     return
                 }
                 break;
         }
 
-        this.isWillInput = true;
     }
     async input(aa: AppearAnchor, event: React.FormEvent) {
-        if (!this.isWillInput) return;
+
+
         var inputEvent = event.nativeEvent as InputEvent;
         /**
          * 这里需要判断是否有必要弹出弹窗
@@ -189,14 +176,10 @@ export class PageWrite {
         await InputStore(aa, aa.textContent, this.startAnchorText);
     }
     focus(aa: AppearAnchor, event: React.FocusEvent) {
-        /**
-         * 光标聚焦后，在重新点击就不起作用，用mousedown感觉更靠谱
-         */
-        //var sel = window.getSelection();
-        // console.log('focus', aa, sel.focusNode, sel.focusOffset)
+        aa.focus();
     }
     blur(aa: AppearAnchor, event: React.FocusEvent) {
-        // console.log('blur', aa, event);
+        aa.blur();
     }
     paste(aa: AppearAnchor, event: React.ClipboardEvent) {
         console.log('ae', aa, event);
@@ -227,6 +210,7 @@ export class PageWrite {
         return this.startAnchor === this.endAnchor && this.startOffset == this.endOffset ? false : true;
     }
     onInputStart(aa: AppearAnchor, offset?: number) {
+        aa.focus();
         this.startAnchor = aa;
         this.startAnchorText = this.startAnchor.textContent;
         this.startOffset = typeof offset == 'number' ? offset : (window.getSelection()).anchorOffset;
@@ -268,13 +252,11 @@ export class PageWrite {
             var pos = TextEle.getAt(aa.el, new Point(options.left, y));
             if (pos > aa.textContent.length) pos = aa.textContent.length;
             sel.collapse(aa.textNode, pos);
-            onceAutoScroll({ el: aa.el, point: TextEle.getWindowCusorBound().leftMiddle, feelDis: 60, dis: 120 });
             this.onInputStart(aa, pos);
         }
         else {
             if (options?.last) sel.collapse(aa.textNode, aa.textContent.length + (typeof options.last == 'number' ? options.last : 0));
             else sel.collapse(aa.textNode, options?.at || 0);
-            onceAutoScroll({ el: aa.el, point: TextEle.getWindowCusorBound().leftMiddle, feelDis: 60, dis: 120 });
             this.onInputStart(aa, sel.focusOffset);
         }
     }
