@@ -24,13 +24,12 @@ export class HandleView extends React.Component<{ handle: Handle }>{
         var self = this;
         if (event) {
             self.handle.dragBlocks = [];
-            if (self.handle.kit.explorer.hasSelectionRange && self.handle.handleBlock && self.handle.kit.explorer.selectedBlocks.exists(c => c.find(g => g == self.handle.handleBlock, true) ? true : false)) {
-                var cs = self.handle.kit.explorer.selectedBlocks.map(c => c.handleBlock);
+            if (self.handle.kit.operator.currentSelectedBlocks.exists(c => c.find(g => g == self.handle.handleBlock, true) ? true : false)) {
+                var cs = self.handle.kit.operator.currentSelectedBlocks.map(c => c.handleBlock);
                 cs.each(c => {
                     if (!self.handle.dragBlocks.some(s => s == c)) self.handle.dragBlocks.push(c)
                 });
-            }
-            else self.handle.dragBlocks = [self.handle.handleBlock];
+            } else self.handle.dragBlocks = [self.handle.handleBlock];
             if (self.handle.dragBlocks.some(s => s.isFreeBlock)) {
                 self.handle.kit.picker.onPicker(self.handle.dragBlocks);
                 MouseDragger<{ item: HTMLElement }>({
@@ -56,6 +55,7 @@ export class HandleView extends React.Component<{ handle: Handle }>{
                         ghostView.load(self.handle.dragBlocks.map(b => b.contentEl), { point: Point.from(ev) })
                     },
                     moving(ev, data, isend) {
+                        self.handle.onDropOverBlock(self.handle.kit.page.getBlockByMouseOrPoint(event), event);
                         ghostView.move(Point.from(ev));
                         onAutoScroll({ el: self.handle.kit.page.root, feelDis: 100, dis: 100, point: Point.from(ev) })
                     },
@@ -69,7 +69,6 @@ export class HandleView extends React.Component<{ handle: Handle }>{
                             self.handle.kit.emit('error', ex);
                         }
                         finally {
-
                             self.handle.onDropEnd();
                             ghostView.unload();
                         }

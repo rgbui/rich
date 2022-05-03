@@ -3,7 +3,7 @@ import { Block } from "../../block";
 import { dom } from "../../common/dom";
 import { Point } from "../../common/vector/point";
 import { Events } from "../../../util/events";
-import { DropDirection } from "./direction";
+import { cacDragDirection, DropDirection } from "./direction";
 import { HandleView } from "./view";
 
 export class Handle extends Events {
@@ -33,16 +33,15 @@ export class Handle extends Events {
             handleEl.style.display = 'none';
         }
         if (this.handleBlock?.isFreeBlock) {
-            
             if (this.kit.boardLine.isConnectOther && this.kit.boardLine.line)
                 this.kit.boardBlockHover.block = this.handleBlock;
             else this.kit.boardBlockHover.block = undefined;
             this.kit.boardBlockHover.forceUpdate();
         }
         else {
-            if (this.isDown) {
-                this.onDropOverBlock(hoverBlock.dropOverBlock, this.kit.mouse.moveEvent);
-            }
+            // if (this.isDown) {
+            //     this.onDropOverBlock(hoverBlock.dropOverBlock, this.kit.operator.moveEvent);
+            // }
         }
     }
     onCloseBlockHandle() {
@@ -67,16 +66,12 @@ export class Handle extends Events {
                 willDropBlock = undefined;
             }
         }
-        var dir: DropDirection;
-        if (willDropBlock) {
-            var dr = this.kit.page.cacBlockDirection(willDropBlock, event);
-            if (dr.direction != DropDirection.none) {
-                dir = dr.direction;
-                willDropBlock = dr.block;
-            }
-            else {
-                willDropBlock = undefined;
-            }
+        var dr = cacDragDirection(this.kit, this.dragBlocks, willDropBlock, event);
+        if (dr.direction != DropDirection.none) {
+            willDropBlock = dr.dropBlock;
+        }
+        else {
+            willDropBlock = undefined;
         }
         if (willDropBlock !== this.dropBlock && this.dropBlock) {
             dom(this.dropBlock.el).removeClass(g => g.startsWith('shy-block-drag-over'));
@@ -84,7 +79,7 @@ export class Handle extends Events {
         }
         if (willDropBlock) {
             this.dropDirection = dr.direction;
-            this.dropBlock = dr.block;
+            this.dropBlock = dr.dropBlock;
             var direction = DropDirection[this.dropDirection];
             var className = 'shy-block-drag-over-' + direction;
             if (!this.dropBlock.el.classList.contains(className)) {
