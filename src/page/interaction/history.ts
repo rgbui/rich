@@ -1,5 +1,4 @@
 import { Page } from "..";
-import { BlockRenderRange } from "../../block/enum";
 import { OperatorDirective } from "../../history/declare";
 import { HistorySnapshoot } from "../../history/snapshoot";
 import { PageDirective } from "../directive";
@@ -18,11 +17,11 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             var newValue = value.slice(0, operator.data.start) + operator.data.text + value.slice(operator.data.end);
             await block.updateProps({ [key]: newValue });
             var appear = block.getAppear(key);
-            if (appear) appear.updateElementHtml();
+            //if (appear) appear.updateElementHtml();
             page.addUpdateEvent(async () => {
-                page.kit.explorer.onFocusBlockAtAnchor(block,
-                    operator.data.start + operator.data.text.length
-                );
+                // page.kit.explorer.onFocusBlockAtAnchor(block,
+                //     operator.data.start + operator.data.text.length
+                // );
             });
         }
     }, async (operator) => {
@@ -33,11 +32,11 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             var newValue = value.slice(0, operator.data.start) + operator.data.replaceText + value.slice(operator.data.start + operator.data.text.length);
             await block.updateProps({ [key]: newValue });
             var appear = block.getAppear(key);
-            if (appear) appear.updateElementHtml();
+            //if (appear) appear.updateElementHtml();
             page.addUpdateEvent(async () => {
-                page.kit.explorer.onFocusBlockAtAnchor(block,
-                    operator.data.start + operator.data.replaceText.length
-                );
+                // page.kit.explorer.onFocusBlockAtAnchor(block,
+                //     operator.data.start + operator.data.replaceText.length
+                // );
             });
         }
     });
@@ -49,9 +48,9 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             var newValue = value.slice(0, operator.data.end) + value.slice(operator.data.start);
             await block.updateProps({ [key]: newValue });
             page.addUpdateEvent(async () => {
-                page.kit.explorer.onFocusBlockAtAnchor(block,
-                    operator.data.end
-                );
+                // page.kit.explorer.onFocusBlockAtAnchor(block,
+                //     operator.data.end
+                // );
             });
         }
     }, async (operator) => {
@@ -62,9 +61,9 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             var newValue = value.slice(0, operator.data.end) + operator.data.text + value.slice(operator.data.end);
             await block.updateProps({ [key]: newValue });
             page.addUpdateEvent(async () => {
-                page.kit.explorer.onFocusBlockAtAnchor(block,
-                    operator.data.end + operator.data.text.length
-                );
+                // page.kit.explorer.onFocusBlockAtAnchor(block,
+                //     operator.data.end + operator.data.text.length
+                // );
             });
         }
     });
@@ -82,7 +81,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     }, async (operator) => {
         var block = page.find(x => x.id == operator.data.data.id);
         if (block) {
-            if (page.kit.explorer.selectedBlocks.exists(block)) page.kit.explorer.onClearAnchorAndSelection()
+            //if (page.kit.explorer.selectedBlocks.exists(block)) page.kit.explorer.onClearAnchorAndSelection()
             await block.delete()
         }
     });
@@ -90,9 +89,9 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         var block = page.find(x => x.id == operator.data.data.id);
         if (block) {
             page.addUpdateEvent(async () => {
-                page.kit.explorer.onFocusBlockAtAnchor(block,
-                    operator.data.end + operator.data.text.length
-                );
+                // page.kit.explorer.onFocusBlockAtAnchor(block,
+                //     operator.data.end + operator.data.text.length
+                // );
             });
             await block.delete()
         }
