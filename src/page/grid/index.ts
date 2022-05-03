@@ -1,8 +1,9 @@
 import { Page } from "..";
 import { Block } from "../../block";
 import { Point, Rect } from "../../common/vector/point";
-const CellSize = 200;
+
 export class GridMap {
+    public cellSize = 200;
     constructor(public panel: Page | Block) { }
     private gridMap: Map<string, Block[]> = new Map();
     private getKey(x: number, y: number) { return x + "," + y }
@@ -22,15 +23,14 @@ export class GridMap {
             return this.panel.getRelativePoint(point);
         }
     }
-    public sync(block: Block)
-    {
+    public sync(block: Block) {
         if (block.el) {
             var rect = Rect.fromEle(block.el);
             var newRect = this.getRelativeRect(rect);
-            var gxMin = Math.floor(newRect.left / CellSize);
-            var gxMax = Math.ceil((newRect.left + newRect.width) / CellSize);
-            var gyMin = Math.floor(newRect.top / CellSize);
-            var gyMax = Math.ceil((newRect.top + newRect.height) / CellSize);
+            var gxMin = Math.floor(newRect.left / this.cellSize);
+            var gxMax = Math.ceil((newRect.left + newRect.width) / this.cellSize);
+            var gyMin = Math.floor(newRect.top / this.cellSize);
+            var gyMax = Math.ceil((newRect.top + newRect.height) / this.cellSize);
             for (let i = gxMin; i <= gxMax; i++) {
                 for (let j = gyMin; j <= gyMax; j++) {
                     var key = this.getKey(i, j);
@@ -54,7 +54,7 @@ export class GridMap {
             block.grid = { min: [gxMin, gyMin], max: [gxMax, gyMax], rect };
         }
     }
-    public buildGridMap() {
+    public start() {
         var t = Date.now();
         if (this.panel instanceof Page) {
             this.panel.each((b) => {
@@ -73,6 +73,9 @@ export class GridMap {
             });
         }
         console.log('es', Date.now() - t);
+    }
+    public over() {
+        this.gridMap = new Map();
     }
     public remove(block: Block) {
         if (block.grid) {
@@ -105,7 +108,7 @@ export class GridMap {
                 maxY = Math.max(maxY, y);
             }
         });
-        return new Rect(minX * CellSize, minY * CellSize, maxX * CellSize, maxY * CellSize);
+        return new Rect(minX * this.cellSize, minY * this.cellSize, maxX * this.cellSize, maxY * this.cellSize);
     }
     /**
      * 
@@ -114,10 +117,10 @@ export class GridMap {
      */
     public findBlocksByPoint(point: Point, predict?: (block: Block) => boolean) {
         var relativePoint = this.getRelativePoint(point);
-        var gxMin = Math.floor(relativePoint.x / CellSize);
-        var gxMax = Math.ceil(relativePoint.x / CellSize);
-        var gyMin = Math.floor(relativePoint.y / CellSize);
-        var gyMax = Math.ceil(relativePoint.y / CellSize);
+        var gxMin = Math.floor(relativePoint.x / this.cellSize);
+        var gxMax = Math.ceil(relativePoint.x / this.cellSize);
+        var gyMin = Math.floor(relativePoint.y / this.cellSize);
+        var gyMax = Math.ceil(relativePoint.y / this.cellSize);
         if (typeof predict == 'undefined') predict = (b) => {
             return b.getVisibleContentBound().contain(point);
         }
@@ -136,10 +139,10 @@ export class GridMap {
     }
     public findBlocksByRect(rect: Rect, predict?: (block: Block) => boolean) {
         var relativeRect = this.getRelativeRect(rect);
-        var gxMin = Math.floor(relativeRect.x / CellSize);
-        var gxMax = Math.ceil((relativeRect.x + relativeRect.width) / CellSize);
-        var gyMin = Math.floor(relativeRect.y / CellSize);
-        var gyMax = Math.ceil((relativeRect.y + relativeRect.height) / CellSize);
+        var gxMin = Math.floor(relativeRect.x / this.cellSize);
+        var gxMax = Math.ceil((relativeRect.x + relativeRect.width) / this.cellSize);
+        var gyMin = Math.floor(relativeRect.y / this.cellSize);
+        var gyMax = Math.ceil((relativeRect.y + relativeRect.height) / this.cellSize);
         var blocks: Block[] = [];
         if (typeof predict == 'undefined') predict = (b) => {
             return b.isCrossBlockArea(rect);
