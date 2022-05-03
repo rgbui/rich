@@ -16,7 +16,12 @@ class GhostView {
         }
         return this._el;
     }
-    load(el: HTMLElement | HTMLElement[], options: { point: Point, opacity?: number, size?: { width: number, height: number } }) {
+    load(el: HTMLElement | HTMLElement[], options: {
+        point: Point,
+        opacity?: number,
+        background?: string,
+        size?: { width: number, height: number }
+    }) {
         if (typeof options.opacity == 'undefined') {
             options.opacity = .6;
         }
@@ -28,6 +33,7 @@ class GhostView {
         for (let i = 0; i < els.length; i++) {
             var e = els[i];
             var cloneEl = e.cloneNode(true) as HTMLElement;
+            if (options.background) cloneEl.style.background = options.background;
             this.el.appendChild(cloneEl);
             if (options.size) {
                 cloneEl.style.width = options.size.width + 'px';
