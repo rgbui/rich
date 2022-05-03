@@ -14,13 +14,16 @@ import { TextEle } from "../../common/text.ele";
 import { Rect } from "../../common/vector/point";
 import { InputStore } from "./store";
 
-async function inputPopCallback(write: PageWrite, ...args: any) {
+async function inputPopCallback(write: PageWrite,...args: any)
+{
     var blockData = args[0];
     var sel = window.getSelection();
     var offset = sel.focusOffset;
-    var content = write.inputPop.aa.textContent;
+    var aa = write.inputPop.aa;
+    var content = aa.textContent;
     var textContent = content.slice(0, write.inputPop.offset) + content.slice(offset);
-    write.inputPop.aa.textNode.textContent = textContent;
+    aa.textNode.textContent = textContent;
+    sel.collapse(aa.textNode, write.inputPop.offset);
     await write.onInputPopCreateBlock(write.inputPop.offset, blockData);
     write.inputPop = null;
 }

@@ -361,7 +361,7 @@ export class PageWrite {
      * 如果块，则在appear下面一行插入，如果appear本身是空的文本，则替换自身，在下面插入
      */
     async onInputPopCreateBlock(offset: number, blockData: Record<string, any>) {
-        await InputStore(this.inputPop.aa, this.inputPop.aa.textContent, this.startAnchorText, true, async () => {
+        await InputStore(this.inputPop.aa, this.inputPop.aa.textContent, this.endAnchorText, true, async () => {
             var aa = this.inputPop.aa;
             var newBlock: Block;
             if (blockData.isLine) {
