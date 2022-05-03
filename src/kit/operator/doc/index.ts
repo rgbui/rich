@@ -23,7 +23,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
         event,
         dis: 5,
         moveStart() {
-            gm.buildGridMap();
+            gm.start();
             kit.selector.setStart(Point.from(event));
         },
         move(ev, data) {
@@ -48,6 +48,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
             })
         },
         async moveEnd(ev, isMove, data) {
+            gm.over();
             if (isMove) {
                 onAutoScrollStop();
                 kit.selector.close();
