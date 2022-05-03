@@ -18,7 +18,8 @@ import "./style.less";
 export class Tab extends Block {
     blocks: { childs: Block[], subChilds: Block[] } = { childs: [], subChilds: [] };
     tabIndex: number = 0;
-    get allBlockKeys(): string[] {
+    get allBlockKeys(): string[]
+    {
         return ['childs', 'subChilds']
     }
     @prop()
@@ -52,8 +53,7 @@ export class Tab extends Block {
         this.tabIndex = tabeIndex;
         this.forceUpdate()
     }
-    async onTabeItemContextmenu(event: React.MouseEvent, at: number)
-    {
+    async onTabeItemContextmenu(event: React.MouseEvent, at: number) {
         var um = await useSelectMenuItem(
             { roundArea: Rect.fromEvent(event) },
             [

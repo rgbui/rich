@@ -14,6 +14,9 @@ export class CarouselContent extends Block {
     get myCarousel() {
         return this.parent as Carousel
     }
+    get isPanel(): boolean {
+        return true;
+    }
     get visibleStyle() {
         var style = super.visibleStyle;
         if (this.at != this.myCarousel.carouselIndex) {
