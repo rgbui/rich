@@ -15,6 +15,8 @@ import { useSelectMenuItem } from "../../component/view/menu";
 import { Singleton } from "../../component/lib/Singleton";
 import { MenuItemType } from "../../component/view/menu/declare";
 import { BlockDirective } from "../../src/block/enum";
+import { PopoverPosition } from "../popover/position";
+import { FixedViewScroll } from "../../src/common/scroll";
 
 export type TextToolStyle = {
     link: string,
@@ -32,18 +34,27 @@ class TextTool extends EventsComponent {
     private textStyle: TextToolStyle = {} as any;
     constructor(props) {
         super(props);
+        this.fvs.on('change', (offset: Point) => {
+            if (this.visible == true && this.boxEl)
+                this.boxEl.style.transform = `translate(${offset.x}px,${offset.y}px)`
+        })
     }
+    private fvs: FixedViewScroll = new FixedViewScroll();
     private turnBlock: Block = null;
     el: HTMLElement;
-    open(point, options: { style: TextToolStyle, turnBlock?:Block}) {
-        this.point = this.point;
+    boxEl: HTMLElement;
+    open(pos: PopoverPosition, options: { style: TextToolStyle, turnBlock?: Block }) {
+        var rs = pos.roundArea;
+        if (!rs && Array.isArray(pos.roundAreas)) rs = pos.roundAreas[0];
+        if (pos.relativeEleAutoScroll) this.fvs.bind(pos.relativeEleAutoScroll);
+        this.point = rs.leftTop;
         this.visible = true;
         this.textStyle = options.style;
         this.turnBlock = options?.turnBlock;
         this.forceUpdate(() => {
             var menu: HTMLElement = this.el.querySelector('.shy-tool-text-menu');
             this.point = RectUtility.cacPopoverPosition({
-                roundArea: new Rect(point.x, point.y, 20, 30),
+                roundArea: new Rect(this.point.x, this.point.y, 20, 30),
                 elementArea: Rect.from(menu.getBoundingClientRect()),
                 direction: "top",
                 dist: 10
@@ -53,6 +64,7 @@ class TextTool extends EventsComponent {
     }
     close() {
         if (this.visible == true) {
+            this.fvs.unbind();
             this.visible = false;
             this.forceUpdate();
             this.emit('close');
@@ -65,8 +77,8 @@ class TextTool extends EventsComponent {
             top: this.point.y,
             left: this.point.x
         };
-        return <div tabIndex={1} data-shy-page-unselect="true" onMouseUp={e => e.stopPropagation()} ref={el => this.el = el}>{this.visible == true && <div className='shy-tool-text-menu' style={style}>
-           {this.turnBlock&& <Tip id={LangID.textToolTurn}>
+        return <div tabIndex={1} data-shy-page-unselect="true" onMouseUp={e => e.stopPropagation()} ref={el => this.el = el}>{this.visible == true && <div className='shy-tool-text-menu' ref={e => this.boxEl = e} style={style}>
+            {this.turnBlock && <Tip id={LangID.textToolTurn}>
                 <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenBlockSelector(e)}>
                     <span>Text</span><Icon icon='arrow-down:sy'></Icon>
                 </div>
@@ -244,7 +256,7 @@ export type textToolResult = { command: 'setStyle', styles: Record<BlockCssName,
     | { command: "setProp", props: Record<string, any> }
     | false;
 var textTool: TextTool;
-export async function useTextTool(point: Point, options: { style: TextToolStyle,turnBlock?:Block }) {
+export async function useTextTool(point: PopoverPosition, options: { style: TextToolStyle, turnBlock?: Block }) {
     textTool = await Singleton(TextTool);
     textTool.open(point, options);
     return new Promise((resolve: (result: textToolResult) => void, reject) => {
