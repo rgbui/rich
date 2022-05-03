@@ -32,10 +32,7 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
             }
             let parser = new DOMParser();
             var doc = parser.parseFromString(html, "text/html");
-            // console.log(doc);
             var blocks = await parseDom(doc);
-            console.log(blocks);
-            // console.log(blocks);
             if (blocks?.length > 0) {
                 await onPasteCreateBlocks(kit, aa, blocks);
             }
@@ -60,7 +57,7 @@ async function onPasterFiles(kit: Kit, aa: AppearAnchor, files: File[]) {
                 rowBlock = await rowBlock.visibleDownCreateBlock('/file', { initialData: { file } });
             }
         }
-        if (firstBlock.isTextContentBlockEmpty) {
+        if (firstBlock.isContentEmpty) {
             await firstBlock.delete();
         }
         kit.page.addUpdateEvent(async () => {
@@ -77,7 +74,7 @@ async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
             var bd = blocks[i];
             rowBlock = await rowBlock.visibleDownCreateBlock(bd.url, bd);
         }
-        if (firstBlock.isTextContentBlockEmpty) {
+        if (firstBlock.isContentEmpty) {
             await firstBlock.delete();
         }
         kit.page.addUpdateEvent(async () => {

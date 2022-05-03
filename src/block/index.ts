@@ -262,16 +262,16 @@ export abstract class Block extends Events {
     get isView(): boolean {
         return false;
     }
+    get isPanel(): boolean {
+        return false;
+    }
     get isCell(): boolean {
         return false;
     }
     get isEmptyCell(): boolean {
         if (this.childs.length == 0) return true;
         else if (this.childs.length == 1) {
-            var b = this.childs[0];
-            if (b.url == BlockUrlConstant.TextSpan && (!b.content && b.childs.length == 0)) {
-                return true;
-            }
+            if (this.childs.first().isContentEmpty) return true;
         }
         return false;
     }
@@ -429,7 +429,7 @@ export abstract class Block extends Events {
             if (rect instanceof Rect && bound.isCross(rect)) {
                 return true;
             }
-            else if (rect instanceof Point && bound.conatin(rect)) {
+            else if (rect instanceof Point && bound.contain(rect)) {
                 return true;
             }
         }
@@ -440,7 +440,7 @@ export abstract class Block extends Events {
         if (rect instanceof Rect && bound.isCross(rect)) {
             return true;
         }
-        else if (rect instanceof Point && bound.conatin(rect)) {
+        else if (rect instanceof Point && bound.contain(rect)) {
             return true;
         }
         return false;
@@ -451,7 +451,7 @@ export abstract class Block extends Events {
         if (rect instanceof Rect && bound.isCross(rect)) {
             return true;
         }
-        else if (rect instanceof Point && bound.conatin(rect)) {
+        else if (rect instanceof Point && bound.contain(rect)) {
             return true;
         }
         return false;

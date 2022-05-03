@@ -83,7 +83,7 @@ export class TableStoreView extends BlockView<TableStore>{
                 })
                 var left = this.block.fields.findAll((g, i) => i < data.colIndex).sum(g => g.colWidth) + w + 1;
                 self.subline.style.left = left + 'px';
-                var tableHeadRect = Rect.fromEle(self.block.el.querySelector('.sy-dg-table-head'));
+                var tableHeadRect = Rect.fromEle(self.block.el.querySelector('.sy-dg-table-head') as HTMLElement);
                 self.subline.style.height = (tableHeadRect.height) + 'px';
                 if (isend) {
                     var cols = self.block.fields;

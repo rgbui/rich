@@ -326,7 +326,7 @@ export class Block$Seek {
         var poly = this.getVisiblePolygon();
         return blocks.findAll(g => {
             var vp = g.getVisiblePolygon();
-            return poly.points.some(s => vp.bound.conatin(s)) || poly.isIntersect(vp);
+            return poly.points.some(s => vp.bound.contain(s)) || poly.isIntersect(vp);
         })
     }
 }

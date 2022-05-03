@@ -119,7 +119,7 @@ export class GridMap {
         var gyMin = Math.floor(relativePoint.y / CellSize);
         var gyMax = Math.ceil(relativePoint.y / CellSize);
         if (typeof predict == 'undefined') predict = (b) => {
-            return b.getVisibleContentBound().conatin(point);
+            return b.getVisibleContentBound().contain(point);
         }
         var blocks: Block[] = [];
         for (let i = gxMin; i <= gxMax; i++) {

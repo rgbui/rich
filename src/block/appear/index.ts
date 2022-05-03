@@ -50,8 +50,7 @@ export class AppearAnchor {
     get prev() {
         return this.block.appearAnchors[this.at - 1];
     }
-    
-    visibleTextNext(): AppearAnchor {
+    visibleRight(): AppearAnchor {
         /**
         * 在块内查找
         */
@@ -73,7 +72,7 @@ export class AppearAnchor {
          */
         return AppearVisibleSeek(this, { arrow: 'right' });
     }
-    visibleTextPrev(): AppearAnchor {
+    visibleLeft(): AppearAnchor {
         /**
          * 在块内查找
          */
@@ -85,32 +84,31 @@ export class AppearAnchor {
         if (this.block.isLine) {
             var pbs = this.block.parentBlocks;
             var at = pbs.findIndex(g => g === this.block);
-            var pb = pbs.find((g, i) => i < at && g.isLine && g.appearAnchors.some(s => s.isText));
+            var pb = pbs.findLast((g, i) => i < at && g.isLine && g.appearAnchors.some(s => s.isText));
             if (pb) {
                 return pb.appearAnchors.findLast(g => g.isText);
             }
         }
-        var row = this.block.closest(x => !x.isLine);
         /**
          * 下面是通过视觉去查找，先从右到左，然后上一行从右到左
          */
         return AppearVisibleSeek(this, { arrow: 'left' });
     }
-    visibleDown(): AppearAnchor {
+    visibleDown(left?:number): AppearAnchor {
         /**
       * 在块内查找
       */
         var vp = this.block.appearAnchors.find((g, i) => i > this.at && g.isText);
         if (vp) return vp;
-        return AppearVisibleSeek(this, { arrow: 'down' });
+        return AppearVisibleSeek(this, { arrow: 'down',left });
     }
-    visibleUp(): AppearAnchor {
+    visibleUp(left?:number): AppearAnchor {
         /**
         * 在块内查找
         */
         var vp = this.block.appearAnchors.find((g, i) => i < this.at && g.isText);
         if (vp) return vp;
-        return AppearVisibleSeek(this, { arrow: 'up' });
+        return AppearVisibleSeek(this, { arrow: 'up' ,left});
     }
     isStart(node: Node, offset: number) {
         if (offset != 0) return false;
@@ -123,7 +121,7 @@ export class AppearAnchor {
         if (node instanceof Text) {
             if (node = this.el.childNodes[this.el.childNodes.length - 1]) {
                 var text = node.textContent;
-                if (offset = text.length) return true;
+                if (offset == text.length) return true;
             }
         }
         return false;
@@ -186,5 +184,21 @@ export class AppearAnchor {
                 ts.map(t => ({ url: BlockUrlConstant.Text, pattern, content: t }))
             )
         }
+    }
+    isBeforeNear(anchor: AppearAnchor) {
+        var rect = TextEle.getBounds(this.el).last();
+        var afterRect = TextEle.getBounds(anchor.el).first();
+        if (rect.rightMiddle.nearBy(afterRect.leftMiddle, 5)) {
+            return true;
+        }
+        else return false;
+    }
+    isAfterNear(anchor: AppearAnchor) {
+        var rect = TextEle.getBounds(this.el).first();
+        var afterRect = TextEle.getBounds(anchor.el).last();
+        if (rect.rightMiddle.nearBy(afterRect.leftMiddle, 5)) {
+            return true;
+        }
+        else return false;
     }
 }

@@ -40,7 +40,6 @@ export abstract class BlockView<T extends Block> extends Component<{ block: T }>
             this.willUnmount();
         }
         this.block.isMounted = false;
-        this.block.page.gridMap.remove(this.block);
     }
     willUnmount() {
         try {
