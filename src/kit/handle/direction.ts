@@ -1,5 +1,6 @@
 
 
+
 import { Kit } from "..";
 import { Block } from "../../block";
 import { BlockUrlConstant } from "../../block/constant";
@@ -74,7 +75,7 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
     var direction = DropDirection.none;
     if (dropBlock) {
         var point = Point.from(event);
-        dropBlock = dropBlock.closest(x => x.isBlock);
+        if (dropBlock.isLine) dropBlock = dropBlock.closest(x => x.isBlock);
         var bound = dropBlock.getVisibleContentBound();
         /**
          * 如果块是行
