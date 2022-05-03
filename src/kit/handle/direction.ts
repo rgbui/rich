@@ -60,17 +60,18 @@ export enum DropDirection {
 export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block, event: MouseEvent) {
     var fr: 'left' | 'right' | 'bottom' | 'none' = 'none';
     var ele = event.target as HTMLElement;
-    if (!dropBlock) {
+    if (!dropBlock || dropBlock?.isView) {
+        dropBlock = undefined;
         dropBlock = kit.page.findXBlock(event, g => !g.isView, 'left');
+        if (dropBlock) fr = 'left';
         if (!dropBlock) {
             dropBlock = kit.page.findXBlock(event, g => !g.isView, 'right');
+            if (dropBlock) fr = 'right';
         }
-        else fr = 'left'
         if (!dropBlock) {
             dropBlock = kit.page.getViewLastBlock();
             if (dropBlock) fr = 'bottom';
         }
-        else fr = 'right'
     }
     var direction = DropDirection.none;
     if (dropBlock) {
