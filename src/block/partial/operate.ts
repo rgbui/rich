@@ -190,7 +190,7 @@ export class Block$Operator {
         var bs = this.blocks[childKey];
         if (typeof at == 'undefined') at = bs.length;
         var b;
-        var cs:Block[]=[];
+        var cs: Block[] = [];
         for (let i = 0; i < blocks.length; i++) {
             var bb = blocks[i];
             if (i == 0) {
@@ -303,7 +303,7 @@ export class Block$Operator {
         switch (direction) {
             case DropDirection.bottom:
             case DropDirection.top:
-                var row = this.closest(x => x.isBlock);
+                var row = this.closest(x => !x.isLine);
                 var childsKey = row.parent.childKey;
                 if (direction == DropDirection.bottom) {
                     await row.parent.appendArray(blocks, row.at + 1, childsKey);
