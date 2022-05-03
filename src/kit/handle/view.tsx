@@ -52,7 +52,10 @@ export class HandleView extends React.Component<{ handle: Handle }>{
                     moveStart(ev, data) {
                         onAutoScrollStop();
                         self.handle.isDrag = true;
-                        ghostView.load(self.handle.dragBlocks.map(b => b.contentEl), { point: Point.from(ev) })
+                        ghostView.load(self.handle.dragBlocks.map(b => b.contentEl), {
+                            background: '#fff',
+                            point: Point.from(ev)
+                        })
                     },
                     moving(ev, data, isend) {
                         self.handle.onDropOverBlock(self.handle.kit.page.getBlockByMouseOrPoint(ev), ev);
