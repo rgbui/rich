@@ -7,7 +7,7 @@ import { Matrix } from "../../common/matrix";
 import { Point, PointArrow, Rect, RectUtility } from "../../common/vector/point";
 import { Polygon } from "../../common/vector/polygon";
 import { ActionDirective } from "../../history/declare";
-import { useBoardTool } from "../../kit/mouse/board";
+import { useBoardTool } from "../../kit/operator/board";
 export enum BoardPointType {
     /**
      * 路径

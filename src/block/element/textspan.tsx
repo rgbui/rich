@@ -13,8 +13,9 @@ import { FontCss, BlockCssName } from '../pattern/css';
 import { CssSelectorType } from '../pattern/type';
 import { MouseDragger } from '../../common/dragger';
 import { forceCloseBoardEditTool } from '../../../extensions/board.edit.tool';
-import { useBoardTool } from '../../kit/mouse/board';
+
 import { dom } from '../../common/dom';
+import { useBoardTool } from '../../kit/operator/board';
 
 @url("/textspan")
 export class TextSpan extends Block {
@@ -29,7 +30,7 @@ export class TextSpan extends Block {
     async getWillTurnData(url: string) {
         return await TextTurns.turn(this, url);
     }
-    get isTextContentBlockEmpty() {
+    get isContentEmpty() {
         if (this.childs.length == 0) {
             return this.firstElementAppear.isEmpty
         }

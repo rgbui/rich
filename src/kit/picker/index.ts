@@ -13,7 +13,7 @@ import { MouseDragger } from "../../common/dragger";
 import { Matrix } from "../../common/matrix";
 import { Point, PointArrow } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
-import { useBoardTool } from "../mouse/board";
+import { useBoardTool } from "../operator/board";
 import { BlockPickerView } from "./view";
 
 export class BlockPicker {
