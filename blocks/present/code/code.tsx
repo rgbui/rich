@@ -55,13 +55,17 @@ export class TextCode extends Block {
             this.time = null;
         }
         this.time = setTimeout(async () => {
-            var isActive = this.page.kit.explorer.activeAnchor?.block == this;
-            var pos = isActive ? this.page.kit.explorer.activeAnchor.bound.leftMiddle : undefined;
-            await this.renderCode();
-            if (pos) {
-                // var anchor = this.visibleAnchor(pos);
-                // this.page.kit.explorer.onFocusAnchor(anchor);
+            var sel = window.getSelection();
+            if (sel.focusNode && appear.el.contains(sel.focusNode)) {
+
             }
+            //var isActive = this.page.kit.explorer.activeAnchor?.block == this;
+            // var pos = isActive ? this.page.kit.explorer.activeAnchor.bound.leftMiddle : undefined;
+            // await this.renderCode();
+            // if (pos) {
+            // var anchor = this.visibleAnchor(pos);
+            // this.page.kit.explorer.onFocusAnchor(anchor);
+            // }
         }, 2e3);
     }
 }
@@ -97,7 +101,7 @@ export class TextCodeView extends BlockView<TextCode>{
                     </div>
                 </div>
                 <div className='sy-block-code-content'>
-                    <TextArea  block={this.block}  prop='content'
+                    <TextArea block={this.block} prop='content'
                         placeholder={'键入代码'}
                         html={this.block.htmlCode}></TextArea>
                 </div>
