@@ -109,6 +109,7 @@ export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: Re
     var sel = window.getSelection();
     var offset = sel.focusOffset;
     var page = write.kit.page;
+    event.preventDefault();
     await InputStore(aa, aa.textContent, write.endAnchorText, true, async () => {
         var block = aa.block;
         var rowBlock = block.closest(x => !x.isLine);
