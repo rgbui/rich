@@ -82,6 +82,7 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
             var nextAA = aa.visibleDown(rect.leftMiddle.x);
             if (nextAA) {
                 event.preventDefault();
+                onceAutoScroll({ el: nextAA.el, feelDis: 60, dis: 120 })
                 write.onFocusAppearAnchor(nextAA, { left: rect.left, y: rects.last().bottom + lineHeight / 2 })
             }
         }
@@ -99,6 +100,7 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
             var upAA = aa.visibleUp(rect.leftMiddle.x);
             if (upAA) {
                 event.preventDefault();
+                onceAutoScroll({ el: upAA.el, feelDis: 60, dis: 120 })
                 write.onFocusAppearAnchor(upAA, { left: rect.left, last: true, y: rects.first().top + lineHeight / 2 })
             }
         }
