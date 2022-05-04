@@ -56,17 +56,25 @@ import { ForceInputStore, InputStore } from "./store";
 
 export class PageWrite {
     constructor(public kit: Kit) { }
-    async mousedown(aa: AppearAnchor, event: React.MouseEvent) {
+    async mousedown(aa: AppearAnchor,event: React.MouseEvent)
+    {
+        var sel = window.getSelection();
+        var rowBlock = aa.block.closest(x =>x.isBlock);
+        if (rowBlock.isFreeBlock && !(sel.focusNode && rowBlock.el.contains(sel.focusNode))) {
+            event.preventDefault();
+            return;
+        }
         this.kit.operator.onClearSelectBlocks();
         forceCloseTextTool();
         this.inputPop = null;
         event.stopPropagation();
-        var sel = window.getSelection();
         var anchorNode;
         var anchorOffset;
         var self = this;
-        anchorOffset = TextEle.getAt(aa.el, Point.from(event));
-        self.onInputStart(aa, anchorOffset);
+        if (sel.anchorNode) {
+            anchorOffset = sel.anchorOffset;
+            self.onInputStart(aa, anchorOffset);
+        }
         setTimeout(() => {
             self.onSaveSelection();
         }, 100);
@@ -86,9 +94,9 @@ export class PageWrite {
                 }
             },
             move(ev, data) {
-                var findAppear = findBlockAppear(ev.target);
-                if (findAppear) {
-                    sel.setBaseAndExtent(anchorNode, anchorOffset, findAppear.textNode, TextEle.getAt(findAppear.el, Point.from(ev)))
+                var currentAppear = findBlockAppear(ev.target);
+                if (currentAppear && currentAppear != aa) {
+                    currentAppear.collapseByPoint(Point.from(ev), { startNode: anchorNode, startOffset: anchorOffset });
                 }
             },
             moveEnd(ev, isMove, data) {
@@ -182,7 +190,6 @@ export class PageWrite {
         aa.blur();
     }
     paste(aa: AppearAnchor, event: React.ClipboardEvent) {
-        console.log('ae', aa, event);
         onPaste(this.kit, aa, event.nativeEvent);
     }
     dblclick(aa: AppearAnchor, event: React.MouseEvent) {
@@ -238,7 +245,6 @@ export class PageWrite {
                 if (g) this.onFocusAppearAnchor(g.appearAnchors.first())
             }
         }
-
     }
     /**
      * 这里指定将光标移到appearAnchor的最前面或者最后面
@@ -249,10 +255,8 @@ export class PageWrite {
             var bounds = TextEle.getBounds(aa.el);
             var lineHeight = TextEle.getLineHeight(aa.el);
             var y = options?.last ? Math.min(bounds.last().bottom - lineHeight / 2, options.y) : Math.max(options.y, bounds.first().top + lineHeight / 2);
-            var pos = TextEle.getAt(aa.el, new Point(options.left, y));
-            if (pos > aa.textContent.length) pos = aa.textContent.length;
-            sel.collapse(aa.textNode, pos);
-            this.onInputStart(aa, pos);
+            aa.collapseByPoint(new Point(options.left, y))
+            this.onInputStart(aa, sel.focusOffset);
         }
         else {
             if (options?.last) sel.collapse(aa.textNode, aa.textContent.length + (typeof options.last == 'number' ? options.last : 0));
@@ -274,7 +278,6 @@ export class PageWrite {
             sel.setBaseAndExtent(firstAppear.textNode, 0, lastAppear.textNode, lastAppear.textContent.length)
         }
     }
-
     onSaveSelection() {
         var sel = window.getSelection();
         this.startAnchor = findBlockAppear(sel.anchorNode);
@@ -282,7 +285,7 @@ export class PageWrite {
         this.startAnchorText = this.startAnchor?.textContent || '';
         this.endAnchor = findBlockAppear(sel.focusNode);
         this.endOffset = sel.focusOffset;
-        this.endAnchorText = this.endAnchor.textContent;
+        this.endAnchorText = this.endAnchor?.textContent || '';
     }
     onRenderSelection() {
         var sel = window.getSelection();
