@@ -76,8 +76,8 @@ export enum OperatorDirective {
     /**
      * 更新文本
      */
-    inputStore = 101,
-    inputDeleteStore = 102,
+    // inputStore = 101,
+    // inputDeleteStore = 102,
     create = 103,
     /**
      * 删除，你可以认为是彻底的删除了,与create正好相反

@@ -9,64 +9,6 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     });
     snapshoot.on('error', err => page.onError(err));
     snapshoot.on('warn', (error) => page.onWarn(error));
-    snapshoot.registerOperator(OperatorDirective.inputStore, async (operator) => {
-        var block = page.find(x => x.id == operator.data.blockId);
-        if (block) {
-            var key = operator.data.prop || 'content';
-            var value = block[key];
-            var newValue = value.slice(0, operator.data.start) + operator.data.text + value.slice(operator.data.end);
-            await block.updateProps({ [key]: newValue });
-            var appear = block.getAppear(key);
-            //if (appear) appear.updateElementHtml();
-            page.addUpdateEvent(async () => {
-                // page.kit.explorer.onFocusBlockAtAnchor(block,
-                //     operator.data.start + operator.data.text.length
-                // );
-            });
-        }
-    }, async (operator) => {
-        var block = page.find(x => x.id == operator.data.blockId);
-        if (block) {
-            var key = operator.data.prop || 'content';
-            var value = block[key];
-            var newValue = value.slice(0, operator.data.start) + operator.data.replaceText + value.slice(operator.data.start + operator.data.text.length);
-            await block.updateProps({ [key]: newValue });
-            var appear = block.getAppear(key);
-            //if (appear) appear.updateElementHtml();
-            page.addUpdateEvent(async () => {
-                // page.kit.explorer.onFocusBlockAtAnchor(block,
-                //     operator.data.start + operator.data.replaceText.length
-                // );
-            });
-        }
-    });
-    snapshoot.registerOperator(OperatorDirective.inputDeleteStore, async (operator) => {
-        var block = page.find(x => x.id == operator.data.blockId);
-        if (block) {
-            var key = operator.data.prop || 'content';
-            var value = block[key];
-            var newValue = value.slice(0, operator.data.end) + value.slice(operator.data.start);
-            await block.updateProps({ [key]: newValue });
-            page.addUpdateEvent(async () => {
-                // page.kit.explorer.onFocusBlockAtAnchor(block,
-                //     operator.data.end
-                // );
-            });
-        }
-    }, async (operator) => {
-        var block = page.find(x => x.id == operator.data.blockId);
-        if (block) {
-            var key = operator.data.prop || 'content';
-            var value = block[key];
-            var newValue = value.slice(0, operator.data.end) + operator.data.text + value.slice(operator.data.end);
-            await block.updateProps({ [key]: newValue });
-            page.addUpdateEvent(async () => {
-                // page.kit.explorer.onFocusBlockAtAnchor(block,
-                //     operator.data.end + operator.data.text.length
-                // );
-            });
-        }
-    });
     snapshoot.registerOperator(OperatorDirective.create, async (operator) => {
         var block = await page.createBlock(operator.data.data.url,
             operator.data.data,
@@ -75,8 +17,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             operator.data.childKey
         );
         page.addUpdateEvent(async () => {
-            // if (block.appearAnchors.length > 0)
-            //     page.kit.explorer.onFocusAnchor(block.visibleBackAnchor);
+            page.kit.writer.onFocusBlockAnchor(block, { last: true });
         });
     }, async (operator) => {
         var block = page.find(x => x.id == operator.data.data.id);
@@ -103,8 +44,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             operator.data.childKey
         );
         page.addUpdateEvent(async () => {
-            // if (block.appearAnchors.length > 0)
-            //     page.kit.explorer.onFocusAnchor(block.visibleBackAnchor);
+            page.kit.writer.onFocusBlockAnchor(block, { last: true });
         });
     });
     snapshoot.registerOperator(OperatorDirective.append,
@@ -121,12 +61,12 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     snapshoot.registerOperator(OperatorDirective.updateProp, async (operator) => {
         var block = page.find(x => x.id == operator.data.blockId);
         if (block) {
-            await  block.updateProps(operator.data.new);
+            await block.updateProps(operator.data.new);
         }
     }, async (operator) => {
         var block = page.find(x => x.id == operator.data.blockId);
         if (block) {
-            await  block.updateProps(operator.data.old);
+            await block.updateProps(operator.data.old);
         }
     });
     snapshoot.registerOperator(OperatorDirective.arrayPropInsert, async (operator) => {

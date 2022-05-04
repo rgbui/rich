@@ -195,39 +195,7 @@ export class Block$Event {
     }
     async onInputText(this: Block, appear: AppearAnchor, oldValue: string, newValue: string, action?: () => Promise<void>) {
         await this.page.onAction(ActionDirective.onInputText, async () => {
-            this.manualUpdateProps({ [appear.prop]: oldValue }, { [appear.prop]: newValue }, BlockRenderRange.none,true);
-            if (typeof action == 'function') await action();
-            this.changeAppear(appear);
-        })
-    }
-    async onInputStore(this: Block, appear: AppearAnchor, value: string, at: number, end: number, action?: () => Promise<void>) {
-        await this.page.onAction(ActionDirective.onInputText, async () => {
-            var replaceText = (lodash.get(this, appear.prop) || '').slice(at, end);
-            lodash.set(this, appear.prop, appear.textContent);
-            this.page.snapshoot.record(OperatorDirective.inputStore, {
-                blockId: this.id,
-                start: at,
-                end: end,
-                text: value,
-                prop: appear.prop,
-                replaceText
-            }, this);
-            if (typeof action == 'function') await action();
-            this.changeAppear(appear);
-        })
-    }
-    async onInputDeleteStore(this: Block, appear: AppearAnchor, value: string, start: number, end: number, action?: () => Promise<void>) {
-        await this.page.onAction(ActionDirective.onDeleteText, async () => {
-            var block = this;
-            var pa = this.page;
-            lodash.set(this, appear.prop, appear.textContent);
-            pa.snapshoot.record(OperatorDirective.inputDeleteStore, {
-                blockId: block.id,
-                start,
-                end,
-                text: value,
-                prop: appear.prop
-            }, this);
+            this.manualUpdateProps({ [appear.prop]: oldValue }, { [appear.prop]: newValue }, BlockRenderRange.none, true);
             if (typeof action == 'function') await action();
             this.changeAppear(appear);
         })

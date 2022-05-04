@@ -153,20 +153,6 @@ export interface HistorySnapshoot {
     record(directive: OperatorDirective.append, data: { to: { parentId: string, childKey?: string, at?: number }, from: { parentId: string, childKey?: string, at?: number }, blockId: string }, obj: Block | Page);
     record(directive: OperatorDirective.updateProp, data: { blockId: string, old: any, new: any }, obj: Block | Page);
     record(directive: OperatorDirective.updatePropMatrix, data: { blockId: string, old: number[], new: number[] }, obj: Block | Page);
-    /**
-     * 替换文本内容，表示在[start,end]之间替成成text
-     * @param directive 
-     * @param data 
-     */
-    record(directive: OperatorDirective.inputStore, data: { blockId: string, start: number, end: number, prop?: string, text: string, replaceText: string }, obj: Block | Page);
-    /**
-     * 删除的内容，区间表示[end,start],删除的内容为text
-     * 这里的start一般会比end大，表示从start位置删除文字
-     * @param directive 
-     * @param data 
-     */
-    record(directive: OperatorDirective.inputDeleteStore, data: { blockId: string, start: number, end: number, prop?: string, text: string }, obj: Block | Page);
-
     record(directive: OperatorDirective.arrayPropInsert, data: { blockId: string, at: number, data: Record<string, any>, propKey: string }, obj: Block | Page);
     record(directive: OperatorDirective.arrayPropRemove, data: { blockId: string, at: number, data: Record<string, any>, propKey: string }, obj: Block | Page);
     record(directive: OperatorDirective.arrayPropUpdate, data: { blockId: string, at: number, old: Record<string, any>, new: Record<string, any>, propKey: string }, obj: Block | Page);
