@@ -320,14 +320,11 @@ export abstract class Block extends Events {
     get htmlContent() {
         return this.content;
     }
-    getBounds() {
-        return TextEle.getBounds(this.el);
-    }
     getVisibleBound() {
         if (!this.el) {
             console.log(this);
         }
-        return Rect.from(this.el.getBoundingClientRect())
+        return Rect.fromEle(this.el)
     }
     getVisibleContentBound() {
         return this.getVisibleBound();
@@ -451,7 +448,7 @@ export abstract class Block extends Events {
     }
     isCrossBlockArea(rect: Rect | Point) {
         var el = this.el;
-        var bound = Rect.fromEle(el);
+        var bound = this.getVisibleBound();
         if (rect instanceof Rect && bound.isCross(rect)) {
             return true;
         }

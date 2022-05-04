@@ -6,7 +6,7 @@ import { BoardBlockSelector, BoardPointType } from "../../../src/block/partial/b
 import { CurveUtil } from "../../../src/block/svg/curve";
 import { Segment } from "../../../src/block/svg/segment";
 import { BlockView } from "../../../src/block/view";
-import { Point, PointArrow } from "../../../src/common/vector/point";
+import { Point, PointArrow, Rect } from "../../../src/common/vector/point";
 import { Polygon } from "../../../src/common/vector/polygon";
 import { util } from "../../../util/util";
 import "./style.less";
@@ -24,34 +24,35 @@ export class Line extends Block {
         BoardPointType.resizePort,
         BoardPointType.connectPort
     ]) {
-
         var pickers: BoardBlockSelector[] = [];
         try {
             var gm = this.globalWindowMatrix;
             var segs = this.segments;
             segs.each((seg, i) => {
-                pickers.push({
-                    type: BoardPointType.lineMovePort,
-                    arrows: [PointArrow.point],
-                    point: gm.transform(seg.point),
-                    data: { at: i }
-                });
+                if (seg)
+                    pickers.push({
+                        type: BoardPointType.lineMovePort,
+                        arrows: [PointArrow.point],
+                        point: gm.transform(seg.point),
+                        data: { at: i }
+                    });
             });
             for (var i = 0; i < segs.length - 1; i++) {
                 var current = segs[i];
                 var next = segs[i + 1];
-                pickers.push({
-                    type: BoardPointType.lineSplitPort,
-                    arrows: [PointArrow.point],
-                    point: gm.transform(CurveUtil.cacCurvePoint(
-                        {
-                            start: current.point,
-                            end: next.point,
-                            control1: current.handleOut,
-                            control2: next.handleIn
-                        }, .5)),
-                    data: { at: i }
-                });
+                if (current && next)
+                    pickers.push({
+                        type: BoardPointType.lineSplitPort,
+                        arrows: [PointArrow.point],
+                        point: gm.transform(CurveUtil.cacCurvePoint(
+                            {
+                                start: current.point,
+                                end: next.point,
+                                control1: current.handleOut,
+                                control2: next.handleIn
+                            }, .5)),
+                        data: { at: i }
+                    });
             }
             return pickers;
         }
@@ -231,8 +232,12 @@ export class Line extends Block {
     }
     getVisiblePolygon() {
         var gm = this.globalWindowMatrix;
-        var poly = new Polygon(...(this.segments.map(seg => gm.transform(seg.point))));
+        var poly = new Polygon(...(this.segments.toArray(seg => seg ? gm.transform(seg.point) : undefined)));
         return poly;
+    }
+    getVisibleBound(): Rect {
+        if (this.el)
+            return Rect.fromEle(this.el.querySelector('.visible') as HTMLElement)
     }
 }
 @view('/line')

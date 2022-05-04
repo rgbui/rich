@@ -25,7 +25,7 @@ export class GridMap {
     }
     public sync(block: Block) {
         if (block.el) {
-            var rect = Rect.fromEle(block.el);
+            var rect = block.getVisibleContentBound();
             var newRect = this.getRelativeRect(rect);
             var gxMin = Math.floor(newRect.left / this.cellSize);
             var gxMax = Math.ceil((newRect.left + newRect.width) / this.cellSize);

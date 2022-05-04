@@ -16,12 +16,15 @@ export async function BoardDrag(kit: Kit, block: Block, event: React.MouseEvent)
     var gm = block ? block.panelGridMap : kit.page.gridMap;
     if (block?.isLine) block = block.closest(x => !x.isLine);
     var beforeIsPicked = kit.picker.blocks.some(s => s == block);
-    if (block?.isFreeBlock) kit.picker.onPicker([block]);
     var hasBlock: boolean = block ? true : false;
-    if (kit.page.keyboardPlate.isShift()) {
+    if (kit.page.keyboardPlate.isShift() && block?.isFreeBlock) {
         //连选
         kit.picker.onShiftPicker([block]);
     }
+    else if (block?.isFreeBlock) {
+        kit.picker.onPicker([block]);
+    }
+    else kit.picker.onCancel();
     MouseDragger({
         event,
         dis: 5,
@@ -31,7 +34,7 @@ export async function BoardDrag(kit: Kit, block: Block, event: React.MouseEvent)
             }
             else {
                 gm.start();
-                kit.selector.setStart(Point.from(event));
+                kit.selector.setStart(Point.from(ev));
             }
         },
         move(ev, data) {
@@ -43,6 +46,7 @@ export async function BoardDrag(kit: Kit, block: Block, event: React.MouseEvent)
                  * 这里需要基于视觉查找当前有那些块可以被选中
                  */
                 var movePoint = Point.from(ev);
+                kit.selector.setMove(movePoint);
                 var bs = gm.findBlocksByRect(new Rect(downPoint, movePoint));
                 kit.picker.onPicker(bs);
             }
@@ -56,7 +60,8 @@ export async function BoardDrag(kit: Kit, block: Block, event: React.MouseEvent)
                 else {
                     kit.selector.close();
                 }
-                await openBoardEditTool(kit);
+                if (kit.picker.blocks.length > 0)
+                    await openBoardEditTool(kit);
             }
             else {
                 /**
@@ -64,7 +69,8 @@ export async function BoardDrag(kit: Kit, block: Block, event: React.MouseEvent)
                  * 
                  */
                 if (ev.button == 2) {
-                    kit.page.onOpenMenu(kit.picker.blocks, ev);
+                    if (kit.picker.blocks.length > 0)
+                        kit.page.onOpenMenu(kit.picker.blocks, ev);
                 }
                 else if (beforeIsPicked) {
                     var appear = findBlockAppear(ev.target as HTMLElement);
