@@ -212,4 +212,71 @@ export class AppearAnchor {
     blur() {
         this.el.classList.remove('shy-text-focus')
     }
+    collapseByPoint(point: Point, options?: { startNode: Node, startOffset: number }) {
+        point = point.clone();
+        var bs = TextEle.getBounds(this.el);
+        var sel = window.getSelection();
+        var startNode = sel.anchorNode;
+        var startOffset = sel.anchorOffset;
+        var oldNode = sel.focusNode;
+        var oldOffset = sel.focusOffset;
+        var endOffset: number;
+        if (point.y < bs.first().top) point.y = bs.first().middle;
+        if (point.y > bs.last().bottom) point.y = bs.last().middle;
+        if (point.x < bs.min(g => g.left)) point.x = bs.min(g => g.left);
+        if (point.x > bs.max(g => g.right)) point.y = bs.max(g => g.right);
+        if (typeof endOffset == 'undefined') {
+            var s = 0;
+            var e = this.textContent.length;
+            var couter = 0;
+            var t = this.textContent.length;
+            while (true) {
+                if (couter > t) break;
+                var at = Math.round((s + e) / 2);
+                if (Math.abs(s - e) < 2) {
+                    sel.collapse(this.textNode, s);
+                    var sb = Rect.fromEle(sel.getRangeAt(0));
+                    sel.collapse(this.textNode, e);
+                    var eb = Rect.fromEle(sel.getRangeAt(0));
+                    if (Math.abs(sb.left - point.x) < Math.abs(eb.left - point.x))
+                        endOffset = s;
+                    else endOffset == e;
+                    break;
+                }
+                else {
+                    sel.collapse(this.textNode, at);
+                    var b = Rect.fromEle(sel.getRangeAt(0));
+                    if (point.y <= b.top || point.x <= b.left && point.y >= b.top && point.y <= b.bottom) {
+                        e = at;
+                    }
+                    else {
+                        s = at;
+                    }
+                }
+                couter += 1;
+            }
+        }
+        if (typeof endOffset == 'number') {
+            /**
+             * 说明找到光标的位置了
+             */
+            if (options?.startNode) {
+                sel.setBaseAndExtent(options.startNode, options.startOffset, this.textNode, endOffset);
+            }
+            else {
+                sel.collapse(this.textNode, endOffset);
+            }
+        }
+        else {
+            /**
+             * 这里恢复至原样
+             */
+            if (startNode && oldNode) {
+                sel.setBaseAndExtent(startNode, startOffset, oldNode, oldOffset);
+            }
+            else {
+                sel.removeAllRanges();
+            }
+        }
+    }
 }
