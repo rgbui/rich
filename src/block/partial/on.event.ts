@@ -12,9 +12,8 @@ import trash from "../../assert/svg/trash.svg";
 import { blockStore } from "../../../extensions/block/store";
 import { langProvider } from "../../../i18n/provider";
 import { LangID } from "../../../i18n/declare";
-import { ActionDirective, OperatorDirective } from "../../history/declare";
+import { ActionDirective } from "../../history/declare";
 import { AppearAnchor } from "../appear";
-import lodash from "lodash";
 import { BlockUrlConstant } from "../constant";
 import { Point, Rect } from "../../common/vector/point";
 import { useSelectMenuItem } from "../../../component/view/menu";
@@ -193,7 +192,15 @@ export class Block$Event {
                 break;
         }
     }
-    async onInputText(this: Block, appear: AppearAnchor, oldValue: string, newValue: string, action?: () => Promise<void>) {
+    async onInputText(this: Block, options: {
+        appear: AppearAnchor,
+        oldValue: string,
+        oldOffset:number,
+        newValue: string,
+        newOffset:number
+        action?: () => Promise<void>
+    }) {
+        var { appear, oldValue, newValue, action } = options;
         await this.page.onAction(ActionDirective.onInputText, async () => {
             this.manualUpdateProps({ [appear.prop]: oldValue }, { [appear.prop]: newValue }, BlockRenderRange.none, true);
             if (typeof action == 'function') await action();

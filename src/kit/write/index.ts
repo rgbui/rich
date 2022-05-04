@@ -15,7 +15,7 @@ import { ActionDirective } from "../../history/declare";
 import { inputBackspaceDeleteContent, inputBackSpaceTextContent, inputDetector, inputLineTail, inputPop, keydownBackspaceTextContent } from "./input";
 import { MoveCursor, onEnterInput, predictKeydown } from "./keydown";
 import { onPaste } from "./paste";
-import { ForceInputStore, InputStore } from "./store";
+import { AutoInputStore, InputForceStore, InputStore } from "./store";
 
 /**
  * https://blog.csdn.net/mafan121/article/details/78519348
@@ -139,7 +139,7 @@ export class PageWrite {
             case KeyboardCode.ArrowUp:
             case KeyboardCode.ArrowLeft:
             case KeyboardCode.ArrowRight:
-                await ForceInputStore();
+                await AutoInputStore();
                 MoveCursor(this, aa, event);
                 return;
                 break;
@@ -159,7 +159,7 @@ export class PageWrite {
             case KeyboardCode.Tab:
                 if (aa.block.closest(x => x.isListBlock)) {
                     event.preventDefault();
-                    await ForceInputStore();
+                    await AutoInputStore();
                     await aa.block.onKeyTab(this.kit.page.keyboardPlate.isShift())
                     return
                 }
@@ -186,7 +186,7 @@ export class PageWrite {
          * 因为这样会导致输入的时候一直输入到line块中，或者空格一下  该功能暂时不做
          */
         else if (await inputLineTail(this, aa, event)) { }
-        await InputStore(aa, this.endAnchorText);
+        await InputStore(aa);
     }
     focus(aa: AppearAnchor, event: React.FocusEvent) {
         aa.focus();
@@ -348,7 +348,7 @@ export class PageWrite {
      * 如果块，则在appear下面一行插入，如果appear本身是空的文本，则替换自身，在下面插入
      */
     async onInputPopCreateBlock(offset: number, blockData: Record<string, any>) {
-        await InputStore(this.inputPop.aa, this.endAnchorText, true, async () => {
+        await InputForceStore(this.inputPop.aa, async () => {
             var aa = this.inputPop.aa;
             var newBlock: Block;
             if (blockData.isLine) {

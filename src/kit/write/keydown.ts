@@ -1,16 +1,14 @@
 import React from "react";
 import { PageWrite } from ".";
-import { Kit } from "..";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
-import { AppearVisibleCursorPoint } from "../../block/appear/visible.seek";
 import { BlockUrlConstant } from "../../block/constant";
 import { BlockRenderRange } from "../../block/enum";
 import { KeyboardCode } from "../../common/keys";
 import { onceAutoScroll } from "../../common/scroll";
 import { TextEle } from "../../common/text.ele";
 import { Rect } from "../../common/vector/point";
-import { InputStore } from "./store";
+import { InputForceStore } from "./store";
 
 /***
  * 这里主要是判断当前的keydown事件是否还需要触发，继续执行输入
@@ -112,7 +110,7 @@ export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: Re
     var offset = sel.focusOffset;
     var page = write.kit.page;
     event.preventDefault();
-    await InputStore(aa, write.endAnchorText, true, async () => {
+    await InputForceStore(aa, async () => {
         var block = aa.block;
         var rowBlock = block.closest(x => !x.isLine);
         var gs = block.isLine ? block.nexts : [];

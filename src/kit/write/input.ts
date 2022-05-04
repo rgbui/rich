@@ -13,7 +13,7 @@ import { BlockUrlConstant } from "../../block/constant";
 import { BlockRenderRange } from "../../block/enum";
 import { TextEle } from "../../common/text.ele";
 import { Rect } from "../../common/vector/point";
-import { InputStore } from "./store";
+import { InputForceStore, InputStore } from "./store";
 
 async function inputPopCallback(write: PageWrite, ...args: any) {
     var blockData = args[0];
@@ -104,7 +104,7 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                 var newOffset = offset + (mr.value.length - current.length);
                 aa.textNode.textContent = mr.value + rest;
                 sel.collapse(aa.textNode, newOffset);
-                await InputStore(aa, write.endAnchorText, true, async () => {
+                await InputForceStore(aa, async () => {
                     var row = aa.block.closest(x => !x.isLine);
                     var newBlock = await row.visibleUpCreateBlock(rule.url, { createSource: 'InputBlockSelector' });
                     if (row.isContentEmpty) {
@@ -120,7 +120,7 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
             case DetectorOperator.firstLetterTurnBlock:
                 aa.textNode.textContent = rest;
                 sel.collapse(aa.textNode, 0);
-                await InputStore(aa, write.endAnchorText, true, async () => {
+                await InputForceStore(aa, async () => {
                     var row = aa.block.closest(x => !x.isLine);
                     var newBlock = await row.turn(rule.url);
                     write.kit.page.addUpdateEvent(async () => {
@@ -132,12 +132,12 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                 var newOffset = offset + (mr.value.length - current.length);
                 aa.textNode.textContent = mr.value + rest;
                 sel.collapse(aa.textNode, newOffset);
-                await InputStore(aa, write.endAnchorText);
+                await InputStore(aa);
                 break;
             case DetectorOperator.letterReplaceCreateBlock:
                 aa.textNode.textContent = mr.value;
                 sel.collapse(aa.textNode, mr.value.length);
-                await InputStore(aa, write.endAnchorText, true, async () => {
+                await InputForceStore(aa, async () => {
                     var block = aa.block;
                     var rowBlock = block.closest(x => !x.isLine);
                     var pattern = await block.pattern.cloneData();
@@ -181,7 +181,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
     var isEmpty = aa.textContent == '';
     if (sel.focusOffset == 0) {
         event.preventDefault();
-        await InputStore(aa, write.endAnchorText, true, async () => {
+        await InputForceStore(aa, async () => {
             var block = aa.block;
             var rowBlock = block.closest(x => !x.isLine);
             if (block.isLine && block.prev) {
@@ -259,7 +259,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
 export async function inputBackSpaceTextContent(write: PageWrite, aa: AppearAnchor, event: React.FormEvent) {
     var sel = window.getSelection();
     if (sel.focusOffset == 0) {
-        await InputStore(aa, write.endAnchorText, true, async () => {
+        await InputForceStore(aa, async () => {
             var block = aa.block;
             var rowBlock = block.closest(x => !x.isLine);
             var prev = block.prev;
@@ -314,7 +314,7 @@ async function combineTextBlock(write: PageWrite, rowBlock: Block) {
 
 
 export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
-    await InputStore(aa, write.endAnchorText, true, async () => {
+    await InputForceStore(aa, async () => {
         write.onSaveSelection();
         var appears = findBlocksBetweenAppears(write.startAnchor.el, write.endAnchor.el);
         await appears.eachAsync(async appear => {
