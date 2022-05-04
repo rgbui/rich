@@ -115,12 +115,8 @@ export class Page extends Events<PageDirective> {
                 }
             }
             this.isOff = true;
-            if (this.pageLayout.type == PageLayoutType.board) {
-                getBoardTool().then(r => {
-                    r.on('selector', function (event) { });
-                    r.open(Point.from(this.view.el.getBoundingClientRect()));
-                })
-            }
+            if (this.isBoard) this.view.openPageToolBoard();
+
         }
         catch (ex) {
             console.error(ex);

@@ -3,7 +3,9 @@ import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
 import { getBoardTool } from "../../../extensions/board.tool";
 import { getShapeSelector } from "../../../extensions/shapes";
 import { forceCloseTextTool } from "../../../extensions/text.tool";
+import { Block } from "../../block";
 import { onAutoScrollStop } from "../../common/scroll";
+import { Point } from "../../common/vector/point";
 import { BoardDrag } from "./board";
 import { DocDrag } from "./doc";
 
@@ -21,6 +23,11 @@ export async function PageDrag(kit: Kit, event: React.MouseEvent) {
      * 判断块的类型来决定后续的操作分类，不一定靠谱
      */
     var block = kit.page.getBlockByMouseOrPoint(event.nativeEvent);
+    if (!kit.page.isBoard) {
+        (await getBoardTool()).close();
+        var bb = block.closest(x => x.isBoardBlock);
+        if (bb) await focusBoardBlock(kit, bb, event.nativeEvent);
+    }
     if (block?.isLine) block = block.closest(x => !x.isLine);
     if (kit.page.isBoard || block?.isFreeBlock) {
         BoardDrag(kit, block, event);
@@ -30,7 +37,14 @@ export async function PageDrag(kit: Kit, event: React.MouseEvent) {
         DocDrag(kit, block, event);
     }
 }
-
+async function focusBoardBlock(kit: Kit, block: Block, event: MouseEvent) {
+    var toolBoard = await getBoardTool();
+    var rect = block.getVisibleBound();
+    toolBoard.open({
+        roundPoint: Point.from(rect.leftTop).move(-40, 30),
+        relativeEleAutoScroll: block.el
+    });
+}
 /**
  *拖动前做一些清理，
  *由于有部分方法是async的，那么PageDragBeforeClear需要申明为async，
@@ -39,7 +53,6 @@ export async function PageDrag(kit: Kit, event: React.MouseEvent) {
 async function PageDragBeforeClear(kit: Kit, event: React.MouseEvent) {
     (await getShapeSelector()).close();
     onAutoScrollStop();
-    (await getBoardTool()).close();
     forceCloseBoardEditTool();
     forceCloseTextTool();
 }
