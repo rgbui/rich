@@ -166,8 +166,7 @@ export class PageWrite {
                 break;
         }
     }
-    async input(aa: AppearAnchor, event: React.FormEvent)
-    {
+    async input(aa: AppearAnchor, event: React.FormEvent) {
         var inputEvent = event.nativeEvent as InputEvent;
         /**
          * 这里需要判断是否有必要弹出弹窗
@@ -214,7 +213,6 @@ export class PageWrite {
      * 对外开放的事件
      */
     startAnchor: AppearAnchor;
-    startAnchorText: string = '';
     startOffset: number;
     endAnchor: AppearAnchor;
     endOffset: number;
@@ -225,7 +223,6 @@ export class PageWrite {
     onInputStart(aa: AppearAnchor, offset?: number) {
         aa.focus();
         this.startAnchor = aa;
-        this.startAnchorText = this.startAnchor.textContent;
         this.startOffset = typeof offset == 'number' ? offset : (window.getSelection()).anchorOffset;
         this.endAnchor = this.startAnchor;
         this.endOffset = this.startOffset;
@@ -288,7 +285,6 @@ export class PageWrite {
         var sel = window.getSelection();
         this.startAnchor = findBlockAppear(sel.anchorNode);
         this.startOffset = sel.anchorOffset;
-        this.startAnchorText = this.startAnchor?.textContent || '';
         this.endAnchor = findBlockAppear(sel.focusNode);
         this.endOffset = sel.focusOffset;
         this.endAnchorText = this.endAnchor?.textContent || '';
@@ -298,7 +294,7 @@ export class PageWrite {
         if (this.startAnchor && this.endAnchor)
             sel.setBaseAndExtent(this.startAnchor.textNode, this.startOffset, this.endAnchor.textNode, this.endOffset)
         else if (this.startAnchor) {
-            sel.setPosition(this.startAnchor.textNode, this.startOffset);
+            sel.collapse(this.startAnchor.textNode, this.startOffset)
         }
     }
     async onOpenTextTool() {
@@ -399,7 +395,6 @@ export class PageWrite {
             if (this.endAnchor === this.startAnchor && this.endOffset < this.startOffset || TextEle.isBefore(this.endAnchor.el, this.startAnchor.el)) {
                 [this.startAnchor, this.endAnchor] = [this.endAnchor, this.startAnchor];
                 [this.startOffset, this.endOffset] = [this.endOffset, this.startOffset];
-                this.startAnchorText = this.endAnchor.textContent;
             }
             var nstart: Block;
             var nend: Block;
@@ -425,7 +420,7 @@ export class PageWrite {
                 this.startOffset = 0;
                 this.endAnchor = nend.appearAnchors.first();
                 this.endOffset = this.endAnchor.textContent.length;
-                this.startAnchorText = this.startAnchor.textContent;
+                this.endAnchorText = this.endAnchor.textContent;
                 this.onRenderSelection();
             });
         });

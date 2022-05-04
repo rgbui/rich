@@ -103,7 +103,7 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
             case DetectorOperator.firstLetterCreateBlock:
                 var newOffset = offset + (mr.value.length - current.length);
                 aa.textNode.textContent = mr.value + rest;
-                sel.setPosition(aa.textNode, newOffset);
+                sel.collapse(aa.textNode, newOffset);
                 await InputStore(aa, write.endAnchorText, true, async () => {
                     var row = aa.block.closest(x => !x.isLine);
                     var newBlock = await row.visibleUpCreateBlock(rule.url, { createSource: 'InputBlockSelector' });
@@ -119,7 +119,7 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                 break;
             case DetectorOperator.firstLetterTurnBlock:
                 aa.textNode.textContent = rest;
-                sel.setPosition(aa.textNode, 0);
+                sel.collapse(aa.textNode, 0);
                 await InputStore(aa, write.endAnchorText, true, async () => {
                     var row = aa.block.closest(x => !x.isLine);
                     var newBlock = await row.turn(rule.url);
@@ -131,12 +131,12 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
             case DetectorOperator.inputCharReplace:
                 var newOffset = offset + (mr.value.length - current.length);
                 aa.textNode.textContent = mr.value + rest;
-                sel.setPosition(aa.textNode, newOffset);
+                sel.collapse(aa.textNode, newOffset);
                 await InputStore(aa, write.endAnchorText);
                 break;
             case DetectorOperator.letterReplaceCreateBlock:
                 aa.textNode.textContent = mr.value;
-                sel.setPosition(aa.textNode, mr.value.length);
+                sel.collapse(aa.textNode, mr.value.length);
                 await InputStore(aa, write.endAnchorText, true, async () => {
                     var block = aa.block;
                     var rowBlock = block.closest(x => !x.isLine);
@@ -283,7 +283,6 @@ export async function inputBackSpaceTextContent(write: PageWrite, aa: AppearAnch
  * @param rowBlock 
  */
 async function combineTextBlock(write: PageWrite, rowBlock: Block) {
-
     var preBlock = rowBlock.prev;
     var lastPreBlock = preBlock.childs.last();
     if (preBlock.childs.length == 0) {
@@ -315,8 +314,7 @@ async function combineTextBlock(write: PageWrite, rowBlock: Block) {
 
 
 export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
-
-    await InputStore(aa,write.endAnchorText, true, async () => {
+    await InputStore(aa, write.endAnchorText, true, async () => {
         write.onSaveSelection();
         var appears = findBlocksBetweenAppears(write.startAnchor.el, write.endAnchor.el);
         await appears.eachAsync(async appear => {
@@ -332,7 +330,6 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
         if (write.endAnchor === write.startAnchor && write.endOffset < write.startOffset || TextEle.isBefore(write.endAnchor.el, write.startAnchor.el)) {
             [write.startAnchor, write.endAnchor] = [write.endAnchor, write.startAnchor];
             [write.startOffset, write.endOffset] = [write.endOffset, write.startOffset];
-            write.startAnchorText = write.endAnchor.textContent;
         }
         write.startAnchor.textNode.textContent = write.startAnchor.textContent.slice(0, write.startOffset);
         write.endAnchor.textNode.textContent = write.endAnchor.textContent.slice(write.endOffset);
@@ -342,7 +339,6 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
             write.onFocusAppearAnchor(write.startAnchor, { last: true });
         })
     });
-
 }
 
 

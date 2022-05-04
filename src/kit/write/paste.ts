@@ -42,7 +42,6 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
         }
     }
 }
-
 async function onPasterFiles(kit: Kit, aa: AppearAnchor, files: File[]) {
     await InputStore(aa, kit.writer.endAnchorText, true, async () => {
         var rowBlock = aa.block.closest(x => !x.isLine);
@@ -88,7 +87,7 @@ async function onPasteInsertText(kit: Kit, aa: AppearAnchor, text: string) {
     var offset = sel.focusOffset;
     var newContent = content.slice(0, offset) + text + content.slice(offset);
     aa.textNode.textContent = newContent;
-    sel.setPosition(aa.textNode, offset + text.length);
+    sel.collapse(aa.textNode, offset + text.length);
     await InputStore(aa, kit.writer.endAnchorText, true, async () => {
 
     })
