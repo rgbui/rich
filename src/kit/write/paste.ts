@@ -44,7 +44,7 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
 }
 
 async function onPasterFiles(kit: Kit, aa: AppearAnchor, files: File[]) {
-    await InputStore(aa, aa.textContent, kit.writer.endAnchorText, true, async () => {
+    await InputStore(aa, kit.writer.endAnchorText, true, async () => {
         var rowBlock = aa.block.closest(x => !x.isLine);
         var firstBlock = rowBlock;
         for (let i = 0; i < files.length; i++) {
@@ -67,7 +67,7 @@ async function onPasterFiles(kit: Kit, aa: AppearAnchor, files: File[]) {
 }
 async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
     if (blocks.length == 0) return;
-    await InputStore(aa, aa.textContent, kit.writer.endAnchorText, true, async () => {
+    await InputStore(aa, kit.writer.endAnchorText, true, async () => {
         var rowBlock = aa.block.closest(x => !x.isLine);
         var firstBlock = rowBlock;
         for (let i = 0; i < blocks.length; i++) {
@@ -89,7 +89,7 @@ async function onPasteInsertText(kit: Kit, aa: AppearAnchor, text: string) {
     var newContent = content.slice(0, offset) + text + content.slice(offset);
     aa.textNode.textContent = newContent;
     sel.setPosition(aa.textNode, offset + text.length);
-    await InputStore(aa, aa.textContent, kit.writer.endAnchorText, true, async () => {
+    await InputStore(aa, kit.writer.endAnchorText, true, async () => {
 
     })
 }

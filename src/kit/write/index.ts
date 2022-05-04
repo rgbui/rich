@@ -70,11 +70,15 @@ export class PageWrite {
         var anchorNode;
         var anchorOffset;
         var self = this;
-        if (sel.anchorNode) {
-            anchorOffset = sel.anchorOffset;
-            self.onInputStart(aa, anchorOffset);
-        }
-        setTimeout(() => {
+        /**
+         * 光标的位置刚触发mousedown时，并不准确，
+         * 而且mouseup还没触发时，其实就有了光标位置
+         * 
+         */
+        var cr = TextEle.getCursorRangeByPoint(Point.from(event));
+        if (cr?.node && aa.el.contains(cr?.node))
+            this.onInputStart(aa, cr.offset);
+        else setTimeout(() => {
             self.onSaveSelection();
         }, 100);
         MouseDragger({
@@ -94,7 +98,7 @@ export class PageWrite {
             },
             move(ev, data) {
                 var currentAppear = findBlockAppear(ev.target);
-                if (currentAppear && currentAppear != aa) {
+                if (currentAppear && currentAppear !== aa) {
                     currentAppear.collapseByPoint(Point.from(ev), { startNode: anchorNode, startOffset: anchorOffset });
                 }
             },
@@ -119,6 +123,11 @@ export class PageWrite {
          * 判断是否阻止输入
          */
         if (predictKeydown(this, aa, event) == false) { event.preventDefault(); return; }
+        /**
+         * 这里如果当前的按键事件触发了，那么这里将不做任何处理。
+         * keyboardPlate是处于capture模式，是先触发的，这里做拦截，由页面去处理
+         */
+        if (this.kit.page.keyboardPlate.isPredict()) return;
         /**
          * 这里判断是光标、选区、还是选择多行块
          */
@@ -156,11 +165,9 @@ export class PageWrite {
                 }
                 break;
         }
-
     }
-    async input(aa: AppearAnchor, event: React.FormEvent) {
-
-
+    async input(aa: AppearAnchor, event: React.FormEvent)
+    {
         var inputEvent = event.nativeEvent as InputEvent;
         /**
          * 这里需要判断是否有必要弹出弹窗
@@ -180,7 +187,7 @@ export class PageWrite {
          * 因为这样会导致输入的时候一直输入到line块中，或者空格一下  该功能暂时不做
          */
         else if (await inputLineTail(this, aa, event)) { }
-        await InputStore(aa, aa.textContent, this.startAnchorText);
+        await InputStore(aa, this.endAnchorText);
     }
     focus(aa: AppearAnchor, event: React.FocusEvent) {
         aa.focus();
@@ -345,7 +352,7 @@ export class PageWrite {
      * 如果块，则在appear下面一行插入，如果appear本身是空的文本，则替换自身，在下面插入
      */
     async onInputPopCreateBlock(offset: number, blockData: Record<string, any>) {
-        await InputStore(this.inputPop.aa, this.inputPop.aa.textContent, this.endAnchorText, true, async () => {
+        await InputStore(this.inputPop.aa, this.endAnchorText, true, async () => {
             var aa = this.inputPop.aa;
             var newBlock: Block;
             if (blockData.isLine) {
