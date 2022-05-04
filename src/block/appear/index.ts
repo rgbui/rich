@@ -214,6 +214,7 @@ export class AppearAnchor {
     }
     collapseByPoint(point: Point, options?: { startNode: Node, startOffset: number }) {
         point = point.clone();
+        var isCollapsed: boolean = false;
         var bs = TextEle.getBounds(this.el);
         var sel = window.getSelection();
         var startNode = sel.anchorNode;
@@ -225,7 +226,13 @@ export class AppearAnchor {
         if (point.y > bs.last().bottom) point.y = bs.last().middle;
         if (point.x < bs.min(g => g.left)) point.x = bs.min(g => g.left);
         if (point.x > bs.max(g => g.right)) point.y = bs.max(g => g.right);
+
+        var r = TextEle.getCursorRangeByPoint(point);
+        if (r && this.el.contains(r.node) && typeof r.offset == 'number') {
+            endOffset = r.offset;
+        }
         if (typeof endOffset == 'undefined') {
+            isCollapsed = true;
             var s = 0;
             var e = this.textContent.length;
             var couter = 0;
@@ -268,14 +275,16 @@ export class AppearAnchor {
             }
         }
         else {
-            /**
-             * 这里恢复至原样
-             */
-            if (startNode && oldNode) {
-                sel.setBaseAndExtent(startNode, startOffset, oldNode, oldOffset);
-            }
-            else {
-                sel.removeAllRanges();
+            if (isCollapsed) {
+                /**
+                * 这里恢复至原样
+                */
+                if (startNode && oldNode) {
+                    sel.setBaseAndExtent(startNode, startOffset, oldNode, oldOffset);
+                }
+                else {
+                    sel.removeAllRanges();
+                }
             }
         }
     }

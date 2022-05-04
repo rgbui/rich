@@ -65,6 +65,23 @@ export class TextEle {
         }
         return rs;
     }
+    static getCursorRangeByPoint(point: Point) {
+        let range;
+        let textNode;
+        let offset;
+        if (document.caretRangeFromPoint) {
+            range = document.caretRangeFromPoint(point.x, point.y);
+            textNode = range.startContainer;
+            offset = range.startOffset;
+        } else if ((document as any).caretPositionFromPoint) {
+            range = (document as any).caretPositionFromPoint(point.x, point.x);
+            textNode = range.offsetNode;
+            offset = range.offset;
+        } else {
+            return null;
+        }
+        return { node: textNode, offset: offset };
+    }
     static getBounds(ele: HTMLElement) {
         var cs = ele.getClientRects();
         var rs: Rect[] = [];
