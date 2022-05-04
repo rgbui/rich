@@ -26,6 +26,7 @@ export async function PageDrag(kit: Kit, event: React.MouseEvent) {
         BoardDrag(kit, block, event);
     }
     else {
+        kit.picker.onCancel();
         DocDrag(kit, block, event);
     }
 }
@@ -40,7 +41,6 @@ async function PageDragBeforeClear(kit: Kit, event: React.MouseEvent) {
     onAutoScrollStop();
     (await getBoardTool()).close();
     forceCloseBoardEditTool();
-    kit.picker.onCancel();
     forceCloseTextTool();
 }
 
