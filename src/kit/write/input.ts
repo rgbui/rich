@@ -99,7 +99,6 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
     var mr = InputDetector(current, { rowStart: aa.isRowStart });
     if (mr) {
         var rule = mr.rule;
-        console.log(mr);
         switch (rule.operator) {
             case DetectorOperator.firstLetterCreateBlock:
                 var newOffset = offset + (mr.value.length - current.length);
@@ -120,8 +119,8 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                 break;
             case DetectorOperator.firstLetterTurnBlock:
                 aa.textNode.textContent = rest;
-                sel.setPosition(aa.textNode, 0);
-                await InputStore(aa, rest, write.endAnchorText, true, async () => {
+                sel.setPosition(aa.textNode,0);
+                await InputStore(aa, aa.textNode.textContent, write.endAnchorText, true, async () => {
                     var row = aa.block.closest(x => !x.isLine);
                     var newBlock = await row.turn(rule.url);
                     write.kit.page.addUpdateEvent(async () => {
