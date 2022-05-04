@@ -86,6 +86,11 @@ export class Page extends Events<PageDirective> {
         if (options?.height) this.pageVisibleHeight = options?.height;
         ReactDOM.render(<PageView page={this}></PageView>, this.root);
     }
+    layout(options: { width?: number, height?: number }) {
+        this.pageVisibleWidth = options?.width;
+        this.pageVisibleHeight = options?.height;
+        this.view.forceUpdate()
+    }
     fragment: DocumentFragment;
     isOff: boolean = false;
     cacheFragment() {
@@ -103,20 +108,26 @@ export class Page extends Events<PageDirective> {
             console.error(ex);
         }
     }
-    renderFragment(panel: HTMLElement) {
+    renderFragment(panel: HTMLElement, options?: { width?: number, height?: number }) {
         try {
             panel.appendChild(this.root);
-            if (this.pageInfo) {
-                if (!this.pageInfo.text) {
-                    var title = this.find(g => g.url == '/title') as Title;
-                    if (title) {
-                        title.onEmptyTitleFocusAnchor();
+            var nextAction = () => {
+                if (this.pageInfo) {
+                    if (!this.pageInfo.text) {
+                        var title = this.find(g => g.url == '/title') as Title;
+                        if (title) {
+                            title.onEmptyTitleFocusAnchor();
+                        }
                     }
                 }
+                this.isOff = true;
+                if (this.isBoard) this.view.openPageToolBoard();
             }
-            this.isOff = true;
-            if (this.isBoard) this.view.openPageToolBoard();
-
+            if (options && (options?.width !== this.pageVisibleWidth || options?.height !== this.pageVisibleHeight)) {
+                this.pageVisibleWidth = options?.width;
+                this.pageVisibleHeight = options?.height;
+                this.view.forceUpdate(() => nextAction())
+            } else nextAction();
         }
         catch (ex) {
             console.error(ex);
