@@ -56,10 +56,9 @@ import { ForceInputStore, InputStore } from "./store";
 
 export class PageWrite {
     constructor(public kit: Kit) { }
-    async mousedown(aa: AppearAnchor,event: React.MouseEvent)
-    {
+    async mousedown(aa: AppearAnchor, event: React.MouseEvent) {
         var sel = window.getSelection();
-        var rowBlock = aa.block.closest(x =>x.isBlock);
+        var rowBlock = aa.block.closest(x => x.isBlock);
         if (rowBlock.isFreeBlock && !(sel.focusNode && rowBlock.el.contains(sel.focusNode))) {
             event.preventDefault();
             return;

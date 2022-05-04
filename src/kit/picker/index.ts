@@ -92,7 +92,6 @@ export class BlockPicker {
                 }
             });
         })
-
     }
     onResizeBlock(block: Block, arrows: PointArrow[], event: React.MouseEvent) {
         event.stopPropagation();
