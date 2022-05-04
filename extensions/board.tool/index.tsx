@@ -15,8 +15,19 @@ import { BlockUrlConstant } from "../../src/block/constant";
 import { getNoteSelector } from "../note";
 import { getShapeSelector } from "../shapes";
 import { MindSvg, UploadSvg } from "../../component/svgs"
+import { PopoverPosition } from "../popover/position";
+import { FixedViewScroll } from "../../src/common/scroll";
 
 class BoardTool extends EventsComponent {
+    constructor(props) {
+        super(props);
+        this.fvs.on('change', (offset: Point) => {
+            if (this.visible == true && this.el)
+                this.el.style.transform = `translate(${offset.x}px,${offset.y}px)`
+        })
+    }
+    private fvs: FixedViewScroll = new FixedViewScroll();
+    el: HTMLElement;
     render(): ReactNode {
         if (this.visible == false) return <></>;
         var style: CSSProperties = {};
@@ -24,7 +35,7 @@ class BoardTool extends EventsComponent {
             style.top = this.point.y;
             style.left = this.point.x;
         }
-        return <div className="shy-board-tool" style={style}>
+        return <div className="shy-board-tool" ref={e => this.el = e} style={style}>
             <div className="shy-board-tool-bar"
                 onMouseDown={e => this.selector(BoardToolOperator.text, e)}>
                 <span><TextSvg /></span>
@@ -124,8 +135,9 @@ class BoardTool extends EventsComponent {
     }
     private point: Point;
     visible: boolean = false;
-    open(point: Point) {
-        this.point = point;
+    open(pos: PopoverPosition) {
+        this.point = pos.roundPoint;
+        if (pos.relativeEleAutoScroll) this.fvs.bind(pos.relativeEleAutoScroll);
         this.visible = true;
         this.forceUpdate()
     }
@@ -134,6 +146,7 @@ class BoardTool extends EventsComponent {
         this.forceUpdate();
     }
     close(): void {
+        this.fvs.unbind();
         this.visible = false;
         this.clearSelector();
         this.forceUpdate();
