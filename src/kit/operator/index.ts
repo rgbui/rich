@@ -58,7 +58,7 @@ export class PageOperator {
             el.classList.remove('shy-block-selected');
         })
     }
-    onClearSelectBlocks(){
+    onClearSelectBlocks() {
         this.onSelectBlocks([]);
     }
 }

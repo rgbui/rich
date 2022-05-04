@@ -2,6 +2,7 @@ import React from "react";
 import { MouseDragger } from "../../src/common/dragger";
 import { Rect } from "../../src/common/vector/point";
 import "./style.less";
+
 export class MeasureView extends React.Component<{
     min?: number,
     max?: number,
@@ -23,7 +24,6 @@ export class MeasureView extends React.Component<{
             if (dx < 0) dx = 0;
             else if (dx > bound.width) dx = bound.width;
             var pre = dx * 1.0 / bound.width;
-
             var value = min + Math.round((max - min) * pre);
             if (value > max) value = max;
             if (value < min) value = min;
@@ -53,7 +53,6 @@ export class MeasureView extends React.Component<{
         if (value < min) value = min;
         else if (value > max) value = max;
         let pa = (value - min) / (max - min);
-        console.log(pa, JSON.stringify(props));
         return <div className='shy-measure' ref={e => this.el = e} onMouseDown={e => e.stopPropagation()} >
             <div className="shy-measure-wrapper" onMouseDown={e => this.setProgress(e)}>
                 <div className='shy-measure-progress'>
