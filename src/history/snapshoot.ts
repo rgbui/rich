@@ -160,5 +160,6 @@ export interface HistorySnapshoot {
     record(directive: OperatorDirective.mergeStyle, data: { blockId: string, styleId: string, old: Record<string, any>, new: Record<string, any> }, obj: Block | Page);
     record(directive: OperatorDirective.schemaRowUpdate, data: { schemaId: string, id: string, old: Record<string, any>, new: Record<string, any> }, obj: Block | Page);
     record(directive: OperatorDirective.schemaCreateRow, data: { schemaId: string, data: Record<string, any> }, obj: Block | Page);
-    record(directive: OperatorDirective.schemaRowRemove, data: { schemaId: string, data: Record<string, any> }, obj: Block | Page)
+    record(directive: OperatorDirective.schemaRowRemove, data: { schemaId: string, data: Record<string, any> }, obj: Block | Page);
+    record(directive: OperatorDirective.keepCursorOffset, data: { blockId: string, prop: string, old: number, new: number }, obj: Block | Page);
 }

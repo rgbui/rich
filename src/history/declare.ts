@@ -111,5 +111,11 @@ export enum OperatorDirective {
 
     pageTurnLayout = 400,
     pageUpdateProp = 401,
+
+
+    /**
+     * 记录光标的位置
+     */
+    keepCursorOffset=500,
 }
 

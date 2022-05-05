@@ -195,14 +195,15 @@ export class Block$Event {
     async onInputText(this: Block, options: {
         appear: AppearAnchor,
         oldValue: string,
-        oldOffset:number,
+        oldOffset: number,
         newValue: string,
-        newOffset:number
+        newOffset: number
         action?: () => Promise<void>
     }) {
         var { appear, oldValue, newValue, action } = options;
         await this.page.onAction(ActionDirective.onInputText, async () => {
             this.manualUpdateProps({ [appear.prop]: oldValue }, { [appear.prop]: newValue }, BlockRenderRange.none, true);
+            this.keepCursorOffset(appear.prop, options.oldOffset, options.newOffset);
             if (typeof action == 'function') await action();
             this.changeAppear(appear);
         })

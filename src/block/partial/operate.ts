@@ -592,6 +592,14 @@ export class Block$Operator {
         }, this);
         this.syncUpdate(range);
     }
+    keepCursorOffset(this: Block, prop: string, oldOffset: number, newOffset: number) {
+        this.page.snapshoot.record(OperatorDirective.keepCursorOffset, {
+            blockId: this.id,
+            prop,
+            old: oldOffset,
+            new: newOffset
+        }, this);
+    }
     syncUpdate(this: Block, range = BlockRenderRange.none) {
         switch (range) {
             case BlockRenderRange.self:
