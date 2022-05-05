@@ -6,7 +6,7 @@ var inputStore;
  * 马上保存
  */
 export async function InputForceStore(appear: AppearAnchor, action?: () => Promise<void>) {
-    await inputStore(appear, true, action);
+    await InputStore(appear, true, action);
 }
 /**
  * 延迟保存，大概在700ms，如果比较短，则会一直不保存
