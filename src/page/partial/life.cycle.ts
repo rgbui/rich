@@ -96,6 +96,7 @@ export class Page$Cycle {
             cover: util.clone(this.cover),
             isFullWidth: this.isFullWidth,
             smallFont: this.smallFont,
+            version: this.version
         };
         json.pageLayout = util.clone(this.pageLayout);
         json.matrix = this.matrix.getValues();
@@ -256,16 +257,14 @@ export class Page$Cycle {
     onWarn(this: Page, error: string | Error) {
         this.emit(PageDirective.warn, error);
     }
-    onFocus(this: Page, event: FocusEvent)
-    {
+    onFocus(this: Page, event: FocusEvent) {
         if (this.isFocus == false) {
             this.isFocus = true;
             this.emit(PageDirective.focus, event);
         }
     }
     onBlur(this: Page, event: FocusEvent) {
-        if (this.isFocus == true)
-        {
+        if (this.isFocus == true) {
             this.isFocus = false;
             this.emit(PageDirective.blur, event);
         }

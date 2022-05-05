@@ -20,7 +20,7 @@ import { Page$Cycle } from './partial/life.cycle';
 import { Page$Operator } from './partial/operator';
 
 import { getBoardTool } from '../../extensions/board.tool';
-import { PageLayoutType } from './declare';
+import { PageLayoutType, PageVersion } from './declare';
 import { Point, Rect } from '../common/vector/point';
 import { GridMap } from './grid';
 import { Matrix } from '../common/matrix';
@@ -40,12 +40,14 @@ export class Page extends Events<PageDirective> {
     date: number;
     readonly: boolean = false;
     pageItemId: string;
+    version: PageVersion;
     constructor(options?: {
         id?: string,
         readonly?: boolean
 
     }) {
         super();
+        this.version = PageVersion.v1;
         this.__init_mixs();
         if (typeof options == 'object') Object.assign(this, util.clone(options));
         if (typeof this.id == 'undefined') this.id = util.guid();

@@ -26,3 +26,7 @@ export enum PageLayoutType {
      */
     textBroadcast = 50,
 }
+
+export enum PageVersion {
+    v1 = '0.0.1'
+}
