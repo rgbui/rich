@@ -4,29 +4,25 @@ import { PageLayoutType } from "../declare";
 
 export function PageLayoutView(props: {
     page: Page,
-    boardSelector?: React.ReactNode,
     children?: React.ReactNode
 }) {
     var type = props.page.pageLayout.type;
     var mh = props.page.pageVisibleHeight ? (props.page.pageVisibleHeight + 'px') : '100%';
     if (type == PageLayoutType.doc) {
-        return <div className='shy-page-layout shy-page-layout-doc'>
-            <div className='shy-page-layout-wrapper'>
-                {props.children}
-            </div>
-            {props.boardSelector}
+        var style: CSSProperties = { minHeight: mh, width: '100%' };
+        return <div className='shy-page-layout shy-page-layout-doc' style={style}>
+            {props.children}
         </div>
     }
     else if (type == PageLayoutType.db) {
-        return <div className='shy-page-layout shy-page-layout-db'>
-            <div className='shy-page-layout-wrapper'>
-                {props.children}
-            </div>
-            {props.boardSelector}
+        var style: CSSProperties = { minHeight: mh, width: '100%' };
+        return <div className='shy-page-layout shy-page-layout-db' style={style}>
+            {props.children}
         </div>
     }
     else if ([PageLayoutType.dbForm, PageLayoutType.dbPickRecord].includes(type)) {
-        return <div className={"shy-page-layout shy-page-layout-db-form"}>
+        var style: CSSProperties = { minHeight: mh, width: '100%' };
+        return <div className={"shy-page-layout shy-page-layout-db-form"} style={style}>
             <div className='shy-page-layout-wrapper' >
                 {props.children}
             </div>
@@ -39,7 +35,6 @@ export function PageLayoutView(props: {
             <div className='shy-page-layout-wrapper' style={style}>
                 {props.children}
             </div>
-            {props.boardSelector}
         </div>
     }
     else if (type == PageLayoutType.textChannel) {
@@ -58,7 +53,6 @@ export function PageLayoutView(props: {
             <div className='shy-page-layout-wrapper' style={style}>
                 {props.children}
             </div>
-            {props.boardSelector}
         </div>
     }
     else {
