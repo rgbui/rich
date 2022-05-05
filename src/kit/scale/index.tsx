@@ -9,7 +9,7 @@ import { Point } from "../../common/vector/point";
 
 export class BoardScale extends React.Component<{ kit: Kit }>{
     render(): ReactNode {
-        if (this.props.kit.page.isBoard) return <></>
+        if (!this.props.kit.page.isBoard) return <></>
         return <div className="shy-board-scale">
             <Icon icon={FitSvg} mousedown={e => this.props.kit.page.onFitZoom()}></Icon>
             <Icon icon={PlusSvg} mousedown={e => this.props.kit.page.onZoom(25, Point.from(e))} ></Icon>
