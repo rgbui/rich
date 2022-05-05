@@ -25,8 +25,10 @@ export async function PageDrag(kit: Kit, event: React.MouseEvent) {
     var block = kit.page.getBlockByMouseOrPoint(event.nativeEvent);
     if (!kit.page.isBoard) {
         (await getBoardTool()).close();
-        var bb = block.closest(x => x.isBoardBlock);
-        if (bb) await focusBoardBlock(kit, bb, event.nativeEvent);
+        if (block) {
+            var bb = block.closest(x => x.isBoardBlock);
+            if (bb) await focusBoardBlock(kit, bb, event.nativeEvent);
+        }
     }
     if (block?.isLine) block = block.closest(x => !x.isLine);
     if (kit.page.isBoard || block?.isFreeBlock) {
