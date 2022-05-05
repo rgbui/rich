@@ -179,8 +179,7 @@ export class PageView extends Component<{ page: Page }>{
             onMouseLeave={e => this.page.onMouseleave(e)}
         ><div className='shy-page-view-box' onContextMenu={e => this.page.onContextmenu(e)} onMouseDown={e => this.page.onMousedown(e)}>
                 <PageLayoutView
-                    page={this.page}
-                    boardSelector={<BlockPickerView picker={this.page.kit.picker}></BlockPickerView>}>
+                    page={this.page}>
                     <div className='shy-page-view-content' ref={e => this.page.contentEl = e}>
                         <PageCover page={this.page}></PageCover>
                         <ChildsArea childs={this.page.views}></ChildsArea>
