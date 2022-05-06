@@ -119,6 +119,7 @@ export class PageWrite {
      * 注意点:event.preventDefault() 在触发前最好不要有执行async的操作，否则会失效
      */
     async keydown(aa: AppearAnchor, event: React.KeyboardEvent) {
+        var sel = window.getSelection();
         /**
          * 判断是否阻止输入
          */
@@ -133,7 +134,7 @@ export class PageWrite {
          */
         var hasSelectionRange: boolean = false;
         if (this.kit.operator.currentSelectedBlocks.length > 0) hasSelectionRange = true;
-        else if (this.hasAnchorSelection) hasSelectionRange = true;
+        else if (!sel.isCollapsed) hasSelectionRange = true;
         switch (event.key) {
             case KeyboardCode.ArrowDown:
             case KeyboardCode.ArrowUp:
@@ -217,9 +218,6 @@ export class PageWrite {
     endAnchor: AppearAnchor;
     endOffset: number;
     endAnchorText: string = '';
-    get hasAnchorSelection() {
-        return this.startAnchor === this.endAnchor && this.startOffset == this.endOffset ? false : true;
-    }
     onInputStart(aa: AppearAnchor, offset?: number) {
         aa.focus();
         this.startAnchor = aa;
@@ -262,8 +260,16 @@ export class PageWrite {
             this.onInputStart(aa, sel.focusOffset);
         }
         else {
-            if (options?.last) sel.collapse(aa.textNode, aa.textContent.length + (typeof options.last == 'number' ? options.last : 0));
-            else sel.collapse(aa.textNode, options?.at || 0);
+            var pos = 0;
+            if (options?.last) pos = aa.textContent.length + (typeof options.last == 'number' ? options.last : 0);
+            else pos = options?.at || 0;
+            /**
+             * 这里需要加个empty,
+             * 因为重复点击某个位置，该光标会消失，原因未知
+             */
+            sel.empty();
+            sel.collapse(aa.textNode, pos);
+            console.log('sis', sel.isCollapsed);
             this.onInputStart(aa, sel.focusOffset);
         }
     }
