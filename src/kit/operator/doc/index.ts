@@ -54,7 +54,26 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                 kit.selector.close();
             }
             else {
-
+                if (block) {
+                    /**这里得水平找到相近的appearanchor */
+                    if (block.appearAnchors.some(s => s.isText)) {
+                        var aa = block.appearAnchors.find(s => s.isText);
+                        var rect = Rect.fromEle(aa.el);
+                        ev.preventDefault();
+                        if (ev.clientX > rect.right) kit.writer.onFocusAppearAnchor(aa, { last: true })
+                        else kit.writer.onFocusAppearAnchor(aa)
+                    }
+                }
+                else {
+                    /**这里得找页面的最末尾块 */
+                    var lastBlock = kit.page.getViewLastBlock();
+                    if (lastBlock && lastBlock.appearAnchors.some(s => s.isText)) {
+                        kit.writer.onFocusBlockAnchor(lastBlock, { last: true });
+                    }
+                    else {
+                        kit.page.onCreateTailTextSpan();
+                    }
+                }
             }
         }
     })
