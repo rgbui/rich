@@ -179,7 +179,8 @@ export async function inputLineTail(write: PageWrite, aa: AppearAnchor, event: R
 export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
     var sel = window.getSelection();
     var isEmpty = aa.textContent == '';
-    if (sel.focusOffset == 0) {
+    if (sel.focusOffset == 0)
+    {
         event.preventDefault();
         await InputForceStore(aa, async () => {
             var block = aa.block;
@@ -314,6 +315,7 @@ async function combineTextBlock(write: PageWrite, rowBlock: Block) {
 
 
 export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
+    //  console.log('input backspace selection');
     await InputForceStore(aa, async () => {
         write.onSaveSelection();
         var appears = findBlocksBetweenAppears(write.startAnchor.el, write.endAnchor.el);
