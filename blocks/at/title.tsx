@@ -8,6 +8,8 @@ import { channel } from "../../net/channel";
 import { LinkPageItem } from "../../extensions/at/declare";
 import { Icon } from "../../component/view/icon";
 import { AddPageCoverSvg, AddPageIconSvg } from "../../component/svgs";
+import { useIconPicker } from "../../extensions/icon";
+import { Rect } from "../../src/common/vector/point";
 
 @url('/title')
 export class Title extends Block {
@@ -65,21 +67,31 @@ export class TitleView extends BlockView<Title>{
         channel.off('/page/update/info', this.updatePageInfo);
     }
     render() {
+        var self = this;
+        async function changeIcon(event: React.MouseEvent) {
+            event.stopPropagation();
+            var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) });
+            if (icon) {
+                channel.air('/page/update/info', { id: self.block.page.pageItemId, pageInfo: { icon } })
+            }
+        }
         var isAdd: boolean = this.block.page.isSupportCover;
         return <div className='sy-block-page-info' style={this.block.visibleStyle}>
+            {this.block.pageInfo?.icon && this.block.page.cover?.abled !== true && <div onMouseDown={e => changeIcon(e)} className="sy-block-page-info-icon">
+                <Icon size={72} icon={this.block.pageInfo?.icon}></Icon>
+            </div>}
             {isAdd && (!this.block.page.pageInfo?.icon || !this.block.page.cover?.abled) && <div className='sy-block-page-info-operators' >
                 {!this.block.page.pageInfo?.icon && <a onMouseDown={e => this.block.page.onAddIcon()}><Icon size={14} icon={AddPageIconSvg}></Icon><span>添加图标</span></a>}
                 {!this.block.page.cover?.abled && <a onMouseDown={e => this.block.page.onAddCover()}><Icon size={14} icon={AddPageCoverSvg}></Icon><span>添加封面</span></a>}
             </div>}
             {this.block.pageInfo == null && <div className='sy-block-page-info-loading'></div>}
-            {this.block.pageInfo != null &&
-                <div className='sy-block-page-info-head'>
-                    <span className='sy-block-page-info-head-title'><TextArea
-                        block={this.block}
-                        placeholder='输入标题'
-                        prop='pageInfo.text'
-                    ></TextArea></span>
-                </div>}
+            {this.block.pageInfo != null && <div className='sy-block-page-info-head'>
+                <span className='sy-block-page-info-head-title'><TextArea
+                    block={this.block}
+                    placeholder='输入标题'
+                    prop='pageInfo.text'
+                ></TextArea></span>
+            </div>}
         </div>
     }
 }
