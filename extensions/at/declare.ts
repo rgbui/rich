@@ -1,3 +1,4 @@
+import { PageLayoutType } from "../../src/page/declare";
 import { IconArguments } from "../icon/declare"
 
 
@@ -12,6 +13,7 @@ export type LinkPageItem = {
     id?: string;
     text?: string;
     icon?: IconArguments,
-    sn?:number,
-    description?:string
+    sn?: number,
+    description?: string,
+    pageType?: PageLayoutType
 }

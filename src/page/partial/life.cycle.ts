@@ -45,11 +45,8 @@ export class Page$Cycle {
             if (!data || typeof data == 'object' && Object.keys(data).length == 0) {
                 //这里加载默认的页面数据
                 data = await this.getDefaultData();
-                this.requireSelectLayout = true;
             }
-            else {
-                this.requireSelectLayout = false;
-            }
+            else this.requireSelectLayout = false;
             await this.emit(PageDirective.loading);
             for (var n in data) {
                 if (n == 'views') continue;
@@ -66,6 +63,7 @@ export class Page$Cycle {
                 }
             }
             if (typeof this.pageLayout == 'undefined') this.pageLayout = { type: PageLayoutType.doc };
+
             if ([
                 PageLayoutType.dbForm,
                 PageLayoutType.dbPickRecord,
@@ -80,7 +78,6 @@ export class Page$Cycle {
             this.onError(ex);
             console.error(ex);
             console.log(JSON.stringify(data));
-            console.log(this);
         }
     }
     async loadUserActions(this: Page, actions: UserAction[]) {
@@ -98,6 +95,7 @@ export class Page$Cycle {
             smallFont: this.smallFont,
             version: this.version
         };
+        json.requireSelectLayout = this.requireSelectLayout;
         json.pageLayout = util.clone(this.pageLayout);
         json.matrix = this.matrix.getValues();
         json.views = await this.views.asyncMap(async x => {

@@ -162,6 +162,7 @@ export class PageEvent {
                     await this.createBlock('/channel/text', {}, view);
                     break;
             }
+            await channel.air('/page/update/info', { id: this.pageItemId, pageInfo: { pageType: this.pageLayout.type } })
         });
         this.view.forceUpdate();
     }

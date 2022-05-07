@@ -67,7 +67,7 @@ export class Page extends Events<PageDirective> {
     isFocus: boolean = false;
     pageVisibleWidth: number;
     pageVisibleHeight: number;
-    requireSelectLayout: boolean;
+    requireSelectLayout: boolean = true;
     gridMap: GridMap;
     matrix: Matrix = new Matrix();
     cover: { abled: boolean, url: string, top: number } = null;

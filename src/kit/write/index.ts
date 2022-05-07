@@ -12,6 +12,7 @@ import { KeyboardCode } from "../../common/keys";
 import { TextEle } from "../../common/text.ele";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
+import { PageLayoutType } from "../../page/declare";
 import { inputBackspaceDeleteContent, inputBackSpaceTextContent, inputDetector, inputLineTail, inputPop, keydownBackspaceTextContent } from "./input";
 import { MoveCursor, onEnterInput, predictKeydown } from "./keydown";
 import { onPaste } from "./paste";
@@ -145,6 +146,11 @@ export class PageWrite {
                 return;
                 break;
             case KeyboardCode.Enter:
+                if (this.kit.page.requireSelectLayout == true) {
+                    event.preventDefault();
+                    this.kit.page.onPageTurnLayout(PageLayoutType.doc);
+                    return;
+                }
                 if (aa.block.isEnterInputNewLine) {
                     if (!this.kit.page.keyboardPlate.isShift()) {
                         await onEnterInput(this, aa, event);
