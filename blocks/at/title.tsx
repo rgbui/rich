@@ -21,6 +21,8 @@ export class Title extends Block {
     }
     async changeAppear(appear) {
         if (appear.prop == 'pageInfo.text') {
+            if (this.page.pageInfo)
+                this.page.pageInfo.text = this.pageInfo?.text
             channel.air('/page/update/info', {
                 id: this.pageInfo.id,
                 pageInfo: {

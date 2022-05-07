@@ -7,7 +7,6 @@ import { KitView } from "../../kit/view";
 import { PageLayoutType } from "../declare";
 import { getBoardTool } from "../../../extensions/board.tool";
 import { Point } from "../../common/vector/point";
-import { BlockPickerView } from "../../kit/picker/view";
 import { BlockUrlConstant } from "../../block/constant";
 import { PageLayoutView } from "./layout";
 import { channel } from "../../../net/channel";
@@ -53,13 +52,12 @@ export class PageView extends Component<{ page: Page }>{
     updatePageInfo = (r: { id: string, pageInfo: LinkPageItem }) => {
         if (this.page.pageItemId == r.id) {
             var isUpdate: boolean = false;
-            var currentPageInfo = this.page.pageInfo;
-            if (!(r.pageInfo?.text == currentPageInfo?.text)) {
-                currentPageInfo.text = r.pageInfo.text;
+            if (!(typeof r.pageInfo?.text != 'undefined' && r.pageInfo?.text == this.page.pageInfo?.text)) {
+                this.page.pageInfo.text = r.pageInfo.text;
                 isUpdate = true;
             }
-            if (!(currentPageInfo?.icon && this.page.pageInfo?.icon && JSON.stringify(r.pageInfo.icon) == JSON.stringify(this.page.pageInfo.icon))) {
-                currentPageInfo.icon = r.pageInfo.icon;
+            if (typeof r.pageInfo.icon != 'undefined' && this.page.pageInfo?.icon && this.page.pageInfo?.icon && JSON.stringify(r.pageInfo.icon) != JSON.stringify(this.page.pageInfo.icon)) {
+                this.page.pageInfo.icon = r.pageInfo.icon;
                 isUpdate = true;
             }
             if (isUpdate)
