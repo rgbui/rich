@@ -179,9 +179,14 @@ export async function inputLineTail(write: PageWrite, aa: AppearAnchor, event: R
 export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
     var sel = window.getSelection();
     var isEmpty = aa.textContent == '';
-    if (sel.focusOffset == 0)
-    {
+    if (sel.focusOffset == 0) {
         event.preventDefault();
+        /**
+         * 标题不能回退删除
+         */
+        if (isEmpty && aa.block.url == '/title') {
+            return;
+        }
         await InputForceStore(aa, async () => {
             var block = aa.block;
             var rowBlock = block.closest(x => !x.isLine);
