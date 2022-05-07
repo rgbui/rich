@@ -23,9 +23,10 @@ export function TextArea(props: {
         }),
         style: props.style,
         placeholder: props.placeholder,
-        contentEditable: props.block.isCanEdit(props.prop) ? true : false,
+        contentEditable: props.block.isCanEdit(props.prop) ? true : undefined,
+        spellCheck: false,
         onMouseDown: (e) => props.block.elementAppearEvent(props.prop, 'mousedown', e),
-        onMouseUp:(e)=>props.block.elementAppearEvent(props.prop, 'mouseup', e),
+        onMouseUp: (e) => props.block.elementAppearEvent(props.prop, 'mouseup', e),
         onFocus: (e) => props.block.elementAppearEvent(props.prop, 'focus', e),
         onBlur: (e) => props.block.elementAppearEvent(props.prop, 'blur', e),
         onKeyDown: (e) => props.block.elementAppearEvent(props.prop, 'keydown', e),
@@ -34,7 +35,7 @@ export function TextArea(props: {
         onDoubleClick: (e) => props.block.elementAppearEvent(props.prop, 'dblclick', e),
         onCompositionStart: (e) => props.block.elementAppearEvent(props.prop, 'compositionstart', e),
         onCompositionEnd: (e) => props.block.elementAppearEvent(props.prop, 'compositionend', e),
-        onCompositionUpdate:(e)=>props.block.elementAppearEvent(props.prop,'compositionupdate',e)
+        onCompositionUpdate: (e) => props.block.elementAppearEvent(props.prop, 'compositionupdate', e)
     };
     var html = props.html;
     if (typeof html == 'undefined') html = lodash.get(props.block, props.prop);
