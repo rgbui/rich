@@ -269,7 +269,6 @@ export class PageWrite {
              */
             sel.empty();
             sel.collapse(aa.textNode, pos);
-            console.log('sis', sel.isCollapsed);
             this.onInputStart(aa, sel.focusOffset);
         }
     }
