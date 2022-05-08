@@ -35,29 +35,9 @@ export class PageEvent {
         this.kit.operator.mouseup(event);
     }
     onFocusCapture(this: Page, event: FocusEvent) {
-        // if (this.readonly) return;
-        // var ele = event.target as HTMLElement;
-        // var e = ele.closest('[data-shy-page-no-focus]');
-        // if (e) return;
-        // this.onFocus(event);
     }
     onBlurCapture(this: Page, event: FocusEvent) {
-        // if (this.readonly) return;
-        // if (this.kit && this.kit.mouse.isDown) {
-        //     /*** 说明鼠标是处于down下，这个不可能失焦
-        //     * 如果当前的元素中有一些节点发生了改变，那么此时event.relatedTarget是空的，这很蛋疼
-        //      * 这里通过鼠标状态的来纠正一下
-        //      */
-        //     return
-        // }
-        // var el = event.relatedTarget as Node;
-        // /**
-        //  * 例如textTool操作时，页面是不能失焦的
-        //  */
-        // if (el && (el as HTMLElement).getAttribute('data-shy-page-unselect')) return;
-        // if (!el || el && (!this.root.contains(el) || el === this.root)) {
-        //     this.onBlur(event);
-        // }
+
     }
     private lastTriggerTime;
     onWheel(this: Page, event: React.WheelEvent) {
@@ -123,7 +103,7 @@ export class PageEvent {
             await this.snapshoot.redo();
         })
     }
-    async onPageTurnLayout(this: Page, layoutType: PageLayoutType) {
+    async onPageTurnLayout(this: Page, layoutType: PageLayoutType, actions?: () => Promise<void>) {
         this.requireSelectLayout = false;
         await this.onAction(ActionDirective.onPageTurnLayout, async () => {
             this.snapshoot.record(OperatorDirective.pageTurnLayout, {
@@ -162,9 +142,10 @@ export class PageEvent {
                     await this.createBlock('/channel/text', {}, view);
                     break;
             }
-            await channel.air('/page/update/info', { id: this.pageItemId, pageInfo: { pageType: this.pageLayout.type } })
+            await channel.air('/page/update/info', { id: this.pageItemId, pageInfo: { pageType: this.pageLayout.type } });
+            if (typeof actions == 'function') await actions();
+            this.addPageUpdate();
         });
-        this.view.forceUpdate();
     }
     onZoom(this: Page, zoom: number, point?: Point) {
         if (!point) {
