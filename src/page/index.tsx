@@ -207,6 +207,13 @@ export class Page extends Events<PageDirective> {
     get isSupportCover() {
         return [PageLayoutType.db, PageLayoutType.doc].includes(this.pageLayout.type)
     }
+    async forceUpdate() {
+        return new Promise((resolve, reject) => {
+            return this.view.forceUpdate(() => {
+                resolve(true);
+            })
+        })
+    }
 }
 export interface Page {
     on(name: PageDirective.init, fn: () => void);
