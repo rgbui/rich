@@ -88,8 +88,8 @@ export class TitleView extends BlockView<Title>{
             {this.block.pageInfo?.icon && this.block.page.cover?.abled !== true && <div onMouseDown={e => changeIcon(e)} className="sy-block-page-info-icon">
                 <Icon size={72} icon={this.block.pageInfo?.icon}></Icon>
             </div>}
-            {isAdd && (!this.block.page.pageInfo?.icon || !this.block.page.cover?.abled) && <div className='sy-block-page-info-operators' >
-                {!this.block.page.pageInfo?.icon && <a onMouseDown={e => this.block.page.onAddIcon()}><Icon size={14} icon={AddPageIconSvg}></Icon><span>添加图标</span></a>}
+            {isAdd && (!this.block.pageInfo?.icon || !this.block.page.cover?.abled) && <div className='sy-block-page-info-operators' >
+                {!this.block.pageInfo?.icon && <a onMouseDown={e => this.block.page.onAddIcon()}><Icon size={14} icon={AddPageIconSvg}></Icon><span>添加图标</span></a>}
                 {!this.block.page.cover?.abled && <a onMouseDown={e => this.block.page.onAddCover()}><Icon size={14} icon={AddPageCoverSvg}></Icon><span>添加封面</span></a>}
             </div>}
             {this.block.pageInfo == null && <div className='sy-block-page-info-loading'></div>}

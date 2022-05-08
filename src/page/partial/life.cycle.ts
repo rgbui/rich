@@ -15,8 +15,8 @@ import { BlockUrlConstant } from "../../block/constant";
 import { PageLayoutType } from "../declare";
 import { GridMap } from "../grid";
 import { Matrix } from "../../common/matrix";
-import { util } from "echarts";
 import lodash from "lodash";
+import { util } from "../../../util/util";
 
 export class Page$Cycle {
     async init(this: Page) {
@@ -30,11 +30,7 @@ export class Page$Cycle {
                 fontStyle: 'normail'
             } as any
         });
-        this.configViewer.loadWorkspaceConfig({
-            fontCss: {
-
-            } as any
-        });
+        this.configViewer.loadWorkspaceConfig({ fontCss: {} as any });
         PageHistory(this, this.snapshoot);
         PageKeys(this, this.keyboardPlate);
         this.emit(PageDirective.init);
@@ -63,7 +59,6 @@ export class Page$Cycle {
                 }
             }
             if (typeof this.pageLayout == 'undefined') this.pageLayout = { type: PageLayoutType.doc };
-
             if ([
                 PageLayoutType.dbForm,
                 PageLayoutType.dbPickRecord,
@@ -312,7 +307,6 @@ export class Page$Cycle {
                  * 如果是空文本块，则删除掉空文本块
                  */
                 if (b.isTextContent && !b.content) {
-
                     rs.push(b);
                 }
                 /**
@@ -325,11 +319,11 @@ export class Page$Cycle {
             });
             return
         });
-
         await rs.eachAsync(async r => {
             r.parentBlocks.remove(r);
         })
     }
+
     async getOutLines(this: Page) {
         var outlines: { id: string, head: string, text: string }[] = [];
         var bs = this.findAll(x => x.url == BlockUrlConstant.Head);
@@ -363,7 +357,7 @@ export class Page$Cycle {
     async onUpdateProps(this: Page, props: Record<string, any>, isUpdate?: boolean) {
         await this.onAction(ActionDirective.onPageUpdateProps, async () => {
             await this.updateProps(props);
+            if (isUpdate) this.addPageUpdate();
         });
-        if (isUpdate) { this.view.forceUpdate(); console.log('ggg'); }
     }
 }
