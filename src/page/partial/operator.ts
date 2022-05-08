@@ -146,9 +146,6 @@ export class Page$Operator {
         }
         this.emit(PageDirective.focusAnchor, anchor);
     }
-    onBackspaceToTopPage(this: Page) {
-
-    }
     onDropLeaveBlock(this: Page, dragBlocks: Block[], dropBlock: Block, direction: DropDirection) {
         this.kit.page.emit(PageDirective.dropLeaveBlock, dragBlocks, dropBlock, direction);
     }

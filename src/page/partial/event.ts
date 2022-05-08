@@ -6,6 +6,7 @@ import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItemType, MenuItemTypeValue } from "../../../component/view/menu/declare";
 import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
 import { emojiStore } from "../../../extensions/emoji/store";
+import { GalleryPics } from "../../../extensions/image/gellery";
 import { channel } from "../../../net/channel";
 import { BlockDirective } from "../../block/enum";
 import { Matrix } from "../../common/matrix";
@@ -258,24 +259,27 @@ export class PageEvent {
             if (this.cover?.url) {
                 this.onUpdateProps({ 'cover.abled': true }, true);
             }
-            else this.onUpdateProps({
-                cover: {
-                    abled: true,
-                    url: 'https://cdn.allflow.cn/cover/graphs1?time=1650123259&token=ffdab4c4400fa7074b0fd74e09244b05',
-                    top: 50
-                }
-            }, true);
+            else {
+                var g = GalleryPics.randomOf().childs.randomOf();
+                this.onUpdateProps({
+                    cover: {
+                        abled: true,
+                        url: g.url,
+                        thumb: g.thumb,
+                        top: 50
+                    }
+                }, true);
+            }
         }
     }
     async onAddIcon(this: Page) {
         var codes = await emojiStore.get();
-        var r = lodash.random(0, codes.length);
-        var b = lodash.random(0, codes[r].childs.length);
+        var g = codes.randomOf().childs.randomOf();
         channel.air('/page/update/info', {
             id: this.pageInfo.id,
             pageInfo: {
                 id: this.pageInfo.id,
-                icon: { name: "emoji", code: codes[r].childs[b].code }
+                icon: { name: "emoji", code: g.code }
             }
         })
     }
