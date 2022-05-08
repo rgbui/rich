@@ -9,6 +9,7 @@ import { Rect } from "../../common/vector/point";
 
 export class PageCover extends React.Component<{ page: Page }>{
     private startPos: boolean = false;
+    private loadThumb: boolean = false;
     img: HTMLImageElement;
     private top: number;
     render() {
@@ -26,7 +27,7 @@ export class PageCover extends React.Component<{ page: Page }>{
                 event.stopPropagation();
                 var r = await useImagePicker({ roundArea: Rect.fromEvent(event) });
                 if (r) {
-                    page.onUpdateProps({ cover: { url: r.url, top: 50, abled: true } }, true)
+                    page.onUpdateProps({ cover: { url: r.url, thumb: r.thumb, top: 50, abled: true } }, true)
                 }
             }
             function startPosition(event: React.MouseEvent) {
@@ -60,11 +61,24 @@ export class PageCover extends React.Component<{ page: Page }>{
                 self.startPos = false;
                 self.forceUpdate();
             }
+            function onloadSuccess() {
+                self.loadThumb = true;
+                self.forceUpdate();
+            }
             return <div className="shy-page-view-cover" onMouseDown={e => dragStart(e)}>
-                <img ref={e => this.img = e} onDragStart={e => false} src={page.cover.url} draggable={false} style={{
+                <img ref={e => this.img = e}
+                    onDragStart={e => false} onLoad={e => onloadSuccess()}
+                    src={page.cover.url}
+                    draggable={false}
+                    style={{
+                        height: 240,
+                        objectPosition: 'center' + (typeof page?.cover?.top == 'number' ? page.cover.top : 50) + '%'
+                    }} />
+                {page.cover.thumb && <img className="shy-page-view-cover-thumb" style={{
                     height: 240,
+                    visibility: self.loadThumb ? "hidden" : 'visible',
                     objectPosition: 'center' + (typeof page?.cover?.top == 'number' ? page.cover.top : 50) + '%'
-                }} />
+                }} onDragStart={e => false} draggable={false} src={page.cover.thumb} />}
                 {self.startPos && <div className="shy-page-view-cover-drag-tip">拖动图片调整位置</div>}
                 <div className="shy-page-view-cover-nav">
                     <div style={page.getScreenStyle()}>

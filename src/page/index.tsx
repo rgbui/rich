@@ -70,7 +70,7 @@ export class Page extends Events<PageDirective> {
     requireSelectLayout: boolean = true;
     gridMap: GridMap;
     matrix: Matrix = new Matrix();
-    cover: { abled: boolean, url: string, top: number } = null;
+    cover: { abled: boolean, url: string, thumb: string, top: number } = null;
     isFullWidth: boolean = true;
     smallFont: boolean = false;
     get windowMatrix() {

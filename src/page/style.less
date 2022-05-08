@@ -1,6 +1,6 @@
 .shy {
     &-page-view {
-        outline: none;
+        outline    : none;
         user-select: none;
 
         &-content {
@@ -15,6 +15,17 @@
     margin-bottom: 40px;
 
     img {
+        width          : 100%;
+        object-fit     : cover;
+        object-position: center 50%;
+    }
+
+    &-thumb {
+        position       : absolute;
+        top            : 0px;
+        right          : 0px;
+        left           : 0px;
+        bottom         : 0px;
         width          : 100%;
         object-fit     : cover;
         object-position: center 50%;
@@ -98,7 +109,8 @@
     }
 }
 
-.shy-page-layout-doc,.shy-page-layout-db {
+.shy-page-layout-doc,
+.shy-page-layout-db {
     box-sizing      : border-box;
     min-height      : 100%;
     background-color: #fff;
