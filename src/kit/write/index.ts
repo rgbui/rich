@@ -6,6 +6,7 @@ import { forceCloseTextTool, useTextTool } from "../../../extensions/text.tool";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
 import { findBlockAppear, findBlocksBetweenAppears } from "../../block/appear/visible.seek";
+import { BlockUrlConstant } from "../../block/constant";
 import { BlockCssName } from "../../block/pattern/css";
 import { MouseDragger } from "../../common/dragger";
 import { KeyboardCode } from "../../common/keys";
@@ -148,7 +149,19 @@ export class PageWrite {
             case KeyboardCode.Enter:
                 if (this.kit.page.requireSelectLayout == true) {
                     event.preventDefault();
-                    this.kit.page.onPageTurnLayout(PageLayoutType.doc);
+                    this.kit.page.onPageTurnLayout(PageLayoutType.doc, async () => {
+                        var lastBlock = this.kit.page.findReverse(g => g.isBlock);
+                        var newBlock: Block;
+                        if (lastBlock && lastBlock.parent == this.kit.page.views.last()) {
+                            newBlock = await this.kit.page.createBlock(BlockUrlConstant.TextSpan, {}, lastBlock.parent, lastBlock.at + 1);
+                        }
+                        else {
+                            newBlock = await this.kit.page.createBlock(BlockUrlConstant.TextSpan, {}, this.kit.page.views.last());
+                        }
+                        newBlock.mounted(() => {
+                            this.kit.writer.onFocusBlockAnchor(newBlock, { last: true });
+                        })
+                    });
                     return;
                 }
                 if (aa.block.isEnterInputNewLine) {

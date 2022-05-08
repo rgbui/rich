@@ -132,9 +132,13 @@ export class Page$Cycle {
     onSave(this: Page) {
         this.emit(PageDirective.save);
     }
+    private willUpdateAll: boolean = false;
     private willUpdateBlocks: Block[];
     private willLayoutBlocks: Block[];
     private updatedFns: (() => Promise<void>)[] = [];
+    addPageUpdate() {
+        this.willUpdateAll = true;
+    }
     addBlockUpdate(block: Block) {
         if (this.willUpdateBlocks) {
             var pa = this.willUpdateBlocks.find(g => g.contains(block));
@@ -161,9 +165,11 @@ export class Page$Cycle {
         var fns = this.updatedFns.map(f => f);
         this.willUpdateBlocks = [];
         this.updatedFns = [];
+        var self = this;
         var fn = async function () {
             try {
-                await ups.eachAsync(async (up) => {
+                if (self.willUpdateAll) await self.forceUpdate();
+                else await ups.eachAsync(async (up) => {
                     await up.forceUpdate();
                 })
             }
@@ -179,11 +185,14 @@ export class Page$Cycle {
         var fns = this.updatedFns.map(f => f);
         this.willUpdateBlocks = [];
         this.updatedFns = [];
+        var self = this;
         var fn = async function () {
             try {
-                await ups.eachAsync(async (up) => {
-                    await up.forceUpdate();
-                })
+                if (self.willUpdateAll) await self.forceUpdate();
+                else
+                    await ups.eachAsync(async (up) => {
+                        await up.forceUpdate();
+                    })
             }
             catch (ex) {
                 this.onError(ex);
@@ -196,6 +205,7 @@ export class Page$Cycle {
         await this.snapshoot.sync(directive, async () => {
             this.willUpdateBlocks = [];
             this.willLayoutBlocks = [];
+            this.willUpdateAll = false;
             this.updatedFns = [];
             try {
                 if (typeof fn == 'function') await fn();
@@ -223,6 +233,7 @@ export class Page$Cycle {
         await this.snapshoot.sync(directive, async () => {
             this.willUpdateBlocks = [];
             this.willLayoutBlocks = [];
+            this.willUpdateAll = false;
             this.updatedFns = [];
             try {
                 if (typeof fn == 'function') await fn();
