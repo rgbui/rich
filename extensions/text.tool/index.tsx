@@ -187,6 +187,7 @@ class TextTool extends EventsComponent {
         event.stopPropagation();
         this.blocked = true;
         var fontColor = await useColorSelector({ roundArea: Rect.fromEvent(event) });
+        console.log(fontColor,'fontColor');
         this.blocked = false;
         if (fontColor) {
             var font: Record<string, any> = {};

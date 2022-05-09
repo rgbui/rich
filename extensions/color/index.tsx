@@ -19,7 +19,7 @@ class ColorSelector extends EventsComponent {
             <div className='shy-color-selector-box-content'>
                 {FontColorList.map((x, i) => {
                     return <div key={x.color + i} className='shy-color-selector-item'>
-                        <a onMouseDown={e => this.onChange({ color: x.color })}
+                        <a onClick={e => this.onChange({ color: x.color })}
                             style={{ color: x.color }}>A</a>
                         <span>{x.text}</span>
                     </div>
@@ -33,7 +33,7 @@ class ColorSelector extends EventsComponent {
             <div className='shy-color-selector-box-content'>
                 {BackgroundColorList.map(x => {
                     return <div key={x.color + 'bg'} className='shy-color-selector-item'>
-                        <a onMouseDown={e => this.onChange({ backgroundColor: x.color })}
+                        <a onClick={e => this.onChange({ backgroundColor: x.color })}
                             style={{ backgroundColor: x.color }}>A</a>
                         <span>{x.text}</span>
                     </div>
