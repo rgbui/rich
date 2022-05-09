@@ -151,6 +151,7 @@ export interface ChannelGetMapUrls {
 	"/ws/is/member":{args:{sock?:any,wsId:string},returnType:Promise<SockResponse<{exists:boolean}>>},
 	"/ws/roles":{args:{},returnType:Promise<SockResponse<{list:any[]}>>},
 	"/ws/role/members":{args:{roleId:string,page:number,size:number,word?:string},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
+	"/ws/discovery":{args:{word?:string,page?:number,size?:number,type?:string},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
 	"/page/items":{args:{ids:string[]},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/item/subs":{args:{id:string},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/item":{args:{id:string},returnType:Promise<SockResponse<{ item:Record<string,any> }>>},

@@ -33,6 +33,7 @@ import ConsoleSvg from "../src/assert/svg/console.svg";
 import CureSvg from "../src/assert/svg/cure.svg";
 import CustomizePageSvg from "../src/assert/svg/customizePage.svg";
 import CutSvg from "../src/assert/svg/cut.svg";
+import DiscoverySvg from "../src/assert/svg/discovery.svg";
 import DotsSvg from "../src/assert/svg/dots.svg";
 import DoubleRightSvg from "../src/assert/svg/doubleRight.svg";
 import DownloadSvg from "../src/assert/svg/download.svg";
@@ -153,6 +154,7 @@ ConsoleSvg,
 CureSvg,
 CustomizePageSvg,
 CutSvg,
+DiscoverySvg,
 DotsSvg,
 DoubleRightSvg,
 DownloadSvg,
