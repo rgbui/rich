@@ -87,3 +87,155 @@
 }
 
 .shy-user-card {}
+
+
+.shy-ws-avatar {
+    box-shadow         : 0 0 0 1px rgba(185, 187, 190, .3), var(--elevation-medium);
+    display            : flex;
+    flex-direction     : column;
+    height             : 320px;
+    // width           : 250px;
+    overflow           : hidden;
+    border-radius      : 8px;
+    position           : relative;
+    cursor             : pointer;
+    transition         : box-shadow .2s ease-out, transform .2s ease-out, background .2s ease-out, opacity .2s ease-in, -webkit-box-shadow .2s ease-out, -webkit-transform .2s ease-out;
+    background-color   : var(--activity-card-background);
+&:hover{
+    box-shadow: var(--elevation-high);transform: translateY(-1px);
+}
+    &-cover {
+        position     : relative;
+        display      : block;
+        margin-bottom: 32px;
+        overflow     : hidden;
+        height       : 143px;
+
+        img {
+            height         : inherit;
+            width          : 100%;
+            object-fit     : cover;
+            object-position: 50% 50%;
+        }
+    }
+
+    &-face {
+        position        : absolute;
+        left            : 12px;
+        top             : 120px;
+        width           : 50px;
+        height          : 50px;
+        background-color: #fff;
+        display         : flex;
+        justify-content : center;
+        align-items     : center;
+        border-radius   : 12px;
+
+        img {
+            width          : 44px;
+            height         : 44px;
+            border-radius  : 12px;
+            object-fit     : cover;
+            object-position: 50% 50%;
+        }
+
+        >span {
+            width           : 44px;
+            height          : 44px;
+            border-radius   : 12px;
+            display         : inline-flex;
+            justify-content : center;
+            align-items     : center;
+            font-size       : 14px;
+            background-color: #5865f2;
+            color           : #fff;
+        }
+    }
+
+    &-content {
+        margin: 0px 12px;
+
+        h3 {
+            display        : flex;
+            justify-content: flex-start;
+            align-items    : center;
+            color          : var(--header-primary);
+            margin         : 10px 0px;
+
+            svg {
+                color: hsl(139, calc(var(--saturation-factor, 1)*47.3%), 43.9%);
+            }
+
+            span {
+                display    : inline-block;
+                margin-left: 4px;
+            }
+        }
+    }
+
+    &-slogan {
+        height       : 70px;
+        overflow     : hidden;
+        text-overflow: ellipsis;
+        color        : var(--header-secondary);
+    }
+
+    &-count {
+        color  : var(--header-secondary);
+        display: flex;
+
+        span {
+            flex-grow      : 1.0;
+            flex-shrink    : 1.0;
+            display        : inline-flex;
+            justify-content: flex-start;
+            align-items    : center;
+            font-size      : 12px;
+
+            &:last-child {
+                justify-content: flex-end;
+                align-items    : center;
+            }
+
+            i {
+                display: inline-block;
+            }
+
+            i.online {
+                border-radius    : 50%;
+                width            : 8px;
+                height           : 8px;
+                margin-right     : 4px;
+                -ms-flex-negative: 0;
+                flex-shrink      : 0;
+                background-color : hsl(139, calc(var(--saturation-factor, 1)*47.3%), 43.9%);
+            }
+
+            i.off {
+                border-radius    : 50%;
+                width            : 8px;
+                height           : 8px;
+                margin-right     : 4px;
+                -ms-flex-negative: 0;
+                flex-shrink      : 0;
+                background-color : #b9bbbe;
+            }
+        }
+    }
+
+}
+
+.shy-ws-avatar-flag {
+    position: relative;
+    width   : 16px;
+    height  : 16px;
+
+    svg {
+        &:last-child {
+            position : absolute;
+            top      : 50%;
+            left     : 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+}
