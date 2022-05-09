@@ -16,6 +16,8 @@ import { IconArguments } from "./declare";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
 import './style.less';
+import { LinkSvg } from "../../component/svgs";
+import { Icon } from "../../component/view/icon";
 class IconPicker extends EventsComponent {
     onChange(data: IconArguments) {
         this.emit('change', data);
@@ -32,7 +34,7 @@ class IconPicker extends EventsComponent {
                 <Tab.Page item={<Tip placement='bottom' id={LangID.IconUpload}><Upload ></Upload></Tip>}>
                     <UploadView mine='image' change={e => this.onChange({ name: 'image', url: e })}></UploadView>
                 </Tab.Page>
-                <Tab.Page item={<Tip placement='bottom' id={LangID.ImageLink}><Link ></Link></Tip>}>
+                <Tab.Page item={<Tip placement='bottom' id={LangID.ImageLink}><Icon icon={LinkSvg} size={18}></Icon></Tip>}>
                     <OutsideUrl change={e => this.onChange({ name: 'link', url: e })}></OutsideUrl>
                 </Tab.Page>
             </Tab>
