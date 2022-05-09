@@ -6,6 +6,7 @@ import { InputTextPopSelectorType } from "../../../extensions/common/input.pop";
 import { InputDetector } from "../../../extensions/input.detector/detector";
 import { DetectorOperator } from "../../../extensions/input.detector/rules";
 import { usePageLinkSelector } from "../../../extensions/link/page";
+import { forceCloseTextTool } from "../../../extensions/text.tool";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
 import { findBlocksBetweenAppears } from "../../block/appear/visible.seek";
@@ -320,15 +321,15 @@ async function combineTextBlock(write: PageWrite, rowBlock: Block) {
 
 
 export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
-    //  console.log('input backspace selection');
+    event.preventDefault();
     await InputForceStore(aa, async () => {
         write.onSaveSelection();
         var appears = findBlocksBetweenAppears(write.startAnchor.el, write.endAnchor.el);
         await appears.eachAsync(async appear => {
             if (appear == write.startAnchor || appear == write.endAnchor) {
-
             }
             else {
+                console.log('update');
                 var block = appear.block;
                 await block.updateAppear(appear, '', BlockRenderRange.self);
                 if (block.isContentEmpty) await block.delete();
@@ -338,12 +339,20 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
             [write.startAnchor, write.endAnchor] = [write.endAnchor, write.startAnchor];
             [write.startOffset, write.endOffset] = [write.endOffset, write.startOffset];
         }
-        write.startAnchor.textNode.textContent = write.startAnchor.textContent.slice(0, write.startOffset);
-        write.endAnchor.textNode.textContent = write.endAnchor.textContent.slice(write.endOffset);
-        await write.startAnchor.block.updateAppear(write.startAnchor, write.startAnchor.textContent, BlockRenderRange.self);
-        await write.endAnchor.block.updateAppear(write.endAnchor, write.endAnchor.textContent, BlockRenderRange.self);
+        if (write.startAnchor == write.endAnchor) {
+            var tc = write.startAnchor.textContent;
+            write.startAnchor.textNode.textContent = tc.slice(0, write.startOffset) + tc.slice(write.endOffset);
+            await write.startAnchor.block.updateAppear(write.startAnchor, write.startAnchor.textContent, BlockRenderRange.self);
+        }
+        else {
+            write.startAnchor.textNode.textContent = write.startAnchor.textContent.slice(0, write.startOffset);
+            write.endAnchor.textNode.textContent = write.endAnchor.textContent.slice(write.endOffset);
+            await write.startAnchor.block.updateAppear(write.startAnchor, write.startAnchor.textContent, BlockRenderRange.self);
+            await write.endAnchor.block.updateAppear(write.endAnchor, write.endAnchor.textContent, BlockRenderRange.self);
+        }
         write.kit.page.addUpdateEvent(async () => {
-            write.onFocusAppearAnchor(write.startAnchor, { last: true });
+            forceCloseTextTool()
+            write.onFocusAppearAnchor(write.startAnchor, { at: write.startOffset });
         })
     });
 }
