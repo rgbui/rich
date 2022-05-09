@@ -1,7 +1,6 @@
 import React from "react";
 import { OuterPic } from "./declare";
 
-
 export var GalleryPics = [
     {
         "group": "NASA & SpaceX",
@@ -168,11 +167,6 @@ export var GalleryPics = [
             },
             {
                 "title": "",
-                "url": "https://resources.shy.red/gallery/cover18.jpeg",
-                "thumb": "https://resources.shy.red/gallery/cover18_thumb.jpeg"
-            },
-            {
-                "title": "",
                 "url": "https://resources.shy.red/gallery/cover20.jpeg",
                 "thumb": "https://resources.shy.red/gallery/cover20_thumb.jpeg"
             },
@@ -210,11 +204,6 @@ export var GalleryPics = [
                 "title": "",
                 "url": "https://resources.shy.red/gallery/cover29.jpeg",
                 "thumb": "https://resources.shy.red/gallery/cover29_thumb.jpeg"
-            },
-            {
-                "title": "",
-                "url": "https://resources.shy.red/gallery/cover30.jpeg",
-                "thumb": "https://resources.shy.red/gallery/cover30_thumb.jpeg"
             }
         ]
     },
@@ -228,11 +217,6 @@ export var GalleryPics = [
             },
             {
                 "title": "",
-                "url": "https://resources.shy.red/gallery/img5.jpeg",
-                "thumb": "https://resources.shy.red/gallery/img5_thumb.jpeg"
-            },
-            {
-                "title": "",
                 "url": "https://resources.shy.red/gallery/img6.jpeg",
                 "thumb": "https://resources.shy.red/gallery/img6_thumb.jpeg"
             },
@@ -243,18 +227,8 @@ export var GalleryPics = [
             },
             {
                 "title": "",
-                "url": "https://resources.shy.red/gallery/img9.jpeg",
-                "thumb": "https://resources.shy.red/gallery/img9_thumb.jpeg"
-            },
-            {
-                "title": "",
                 "url": "https://resources.shy.red/gallery/img10.jpeg",
                 "thumb": "https://resources.shy.red/gallery/img10_thumb.jpeg"
-            },
-            {
-                "title": "",
-                "url": "https://resources.shy.red/gallery/img12.jpeg",
-                "thumb": "https://resources.shy.red/gallery/img12_thumb.jpeg"
             },
             {
                 "title": "",
