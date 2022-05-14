@@ -141,7 +141,7 @@ export interface ChannelGetMapUrls {
 	"/friend/is":{args:{friendId:string},returnType:Promise<SockResponse<{is:boolean}>>},
 	"/user/chat/list":{args:{roomId:string,seq?:number,size?:number},returnType:Promise<SockResponse<{list:any[]}>>},
 	"/ws/basic":{args:{name?:string,wsId?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
-	"/ws/info":{args:{name?:string,wsId?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>,roles:any[],member:Record<string,any>}>>},
+	"/ws/info":{args:{name?:string|number,wsId?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>,roles:any[],member:Record<string,any>}>>},
 	"/ws/query":{args:{wsId?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
 	"/ws/latest":{args:any,returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
 	"/ws/invite/check":{args:{invite:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
