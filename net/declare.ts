@@ -65,10 +65,12 @@ export interface ChannelDelMapUrls {
     "/datastore/remove":{args:{schemaId:string,dataId:string},returnType:Promise<{ok:boolean,warn:string}>},
 	"/user/channel/delete":{args:{id:string},returnType:Promise<SockResponse<void>>},
 	"/user/write/off":{args:{sn:number},returnType:Promise<SockResponse<void>>},
+	"/user/exit/ws":{args:{wsId:string},returnType:Promise<SockResponse<void>>},
 	"/friend/delete":{args:{id:string},returnType:Promise<SockResponse<void>>},
 	"/user/blacklist/delete":{args:{id:string},returnType:Promise<SockResponse<void>>},
 	"/user/chat/cancel":{args:{id:string},returnType:Promise<SockResponse<void>>},
 	"/ws/channel/cancel":{args:{id:string,sockId?:string},returnType:Promise<SockResponse<void>>},
+	"/ws/member/exit":{args:{wsId:string,sock:any},returnType:Promise<SockResponse<void>>},
 	"/ws/memeber/delete":{args:{userid:string},returnType:Promise<SockResponse<void>>},
 	"/ws/role/delete":{args:{roleId:string},returnType:Promise<SockResponse<void>>}
 }
