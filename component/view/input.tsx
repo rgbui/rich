@@ -65,6 +65,9 @@ export class Input extends React.Component<{
             {props.clear && this.clearVisible && <div className="shy-input-clear" onClick={e => this.onClear()}><Icon size={10} icon={CloseTickSvg}></Icon></div>}
         </div>
     }
+    updateValue(value){
+        this.inputEl.value=value;
+    }
 }
 
 export function Textarea(props: {
