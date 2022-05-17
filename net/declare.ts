@@ -5,6 +5,7 @@ import { GalleryType, OuterPic } from "../extensions/image/declare";
 import { StatusCode } from "./status.code";
 import { UserAction } from "../src/history/action";
 import { UserBasic, UserStatus } from "../types/user";
+import { AtomPermission } from "../src/page/permission";
 export type SockResponse<T, U = string> = {
         /**
          * 返回状态码
@@ -168,7 +169,8 @@ export interface ChannelQueryMapUrls {
 	"/query/current/user":{args:any,returnType:UserBasic},
 	"/device/query":{args:any,returnType:Promise<string>},
 	"/amap/key_pair":{args:any,returnType:{key:string,pair:string}},
-	"/guid":{args:any,returnType:string}
+	"/guid":{args:any,returnType:string},
+	"/page/query/permissions":{args:{pageId:string},returnType:AtomPermission[]}
 }
 export interface ChannelActMapUrls {
     "/page/create/by_text":{args:{word:string},returnType:SockResponse<LinkPageItem>},

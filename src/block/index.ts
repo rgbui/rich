@@ -25,6 +25,7 @@ import { Block$Board } from "./partial/board";
 import { Polygon } from "../common/vector/polygon";
 import { channel } from "../../net/channel";
 import { GridMap } from "../page/grid";
+import { AtomPermission } from "../page/permission";
 
 export abstract class Block extends Events {
     constructor(page: Page) {
@@ -639,7 +640,12 @@ export abstract class Block extends Events {
     }
     isCanEdit(prop?: string) {
         if (typeof prop == 'undefined') prop = 'content';
-        return true;
+        if (this.url == '/title') {
+            if (this.page.permissions.includes(AtomPermission.createOrDeleteDoc)) return true;
+            else return false;
+        }
+        if (this.page.permissions.includes(AtomPermission.editDoc)) return true;
+        else return false;
     }
     getRelativePoint(point: Point) {
         if (this.page.isBoard || this.isFrame || this.isFreeBlock || this.isBoardBlock)
