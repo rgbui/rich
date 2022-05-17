@@ -71,7 +71,7 @@ export interface ChannelDelMapUrls {
 	"/user/chat/cancel":{args:{id:string},returnType:Promise<SockResponse<void>>},
 	"/ws/channel/cancel":{args:{id:string,sockId?:string},returnType:Promise<SockResponse<void>>},
 	"/ws/member/exit":{args:{wsId:string,sock:any},returnType:Promise<SockResponse<void>>},
-	"/ws/memeber/delete":{args:{userid:string},returnType:Promise<SockResponse<void>>},
+	"/ws/member/delete":{args:{userid:string},returnType:Promise<SockResponse<void>>},
 	"/ws/role/delete":{args:{roleId:string},returnType:Promise<SockResponse<void>>}
 }
 export interface ChannelPostMapUrls {
@@ -145,7 +145,7 @@ export interface ChannelGetMapUrls {
 	"/user/chat/list":{args:{roomId:string,seq?:number,size?:number},returnType:Promise<SockResponse<{list:any[]}>>},
 	"/ws/basic":{args:{name?:string,wsId?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
 	"/ws/info":{args:{name?:string|number,wsId?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
-	"/ws/access/info":{args:{wsId:string},returnType:Promise<SockResponse<{roles:any[],member:Record<string,any>}>>},
+	"/ws/access/info":{args:{wsId:string,pageId?:string,sock?:any},returnType:Promise<SockResponse<{roles:any[],member:Record<string,any>,page:any}>>},
 	"/ws/query":{args:{wsId?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
 	"/ws/latest":{args:any,returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
 	"/ws/invite/check":{args:{invite:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
@@ -157,7 +157,7 @@ export interface ChannelGetMapUrls {
 	"/ws/role/members":{args:{roleId:string,page:number,size:number,word?:string},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
 	"/ws/discovery":{args:{word?:string,page?:number,size?:number,type?:string},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
 	"/ws/view/online/users":{args:{viewId:string},returnType:Promise<SockResponse<{ users:string[] }>>},
-	"/page/items":{args:{ids:string[]},returnType:Promise<SockResponse<{ list:any[] }>>},
+	"/page/items":{args:{ids:string[],sock?:any,wsId?:string},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/item/subs":{args:{id:string},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/item":{args:{id:string},returnType:Promise<SockResponse<{ item:Record<string,any> }>>},
 	"/page/word/query":{args:{word:string},returnType:Promise<SockResponse<LinkPageItem[]>>},
