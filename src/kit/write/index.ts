@@ -130,7 +130,7 @@ export class PageWrite {
          * 这里如果当前的按键事件触发了，那么这里将不做任何处理。
          * keyboardPlate是处于capture模式，是先触发的，这里做拦截，由页面去处理
          */
-        if (this.kit.page.keyboardPlate.isPredict()) return;
+        if (this.kit.page.keyboardPlate.isPredict()) { event.preventDefault(); return; }
         /**
          * 这里判断是光标、选区、还是选择多行块
          */
@@ -287,6 +287,7 @@ export class PageWrite {
              * 因为重复点击某个位置，该光标会消失，原因未知
              */
             sel.empty();
+            if (pos > aa.textNode.textContent.length) pos = aa.textContent.length;
             sel.collapse(aa.textNode, pos);
             this.onInputStart(aa, sel.focusOffset);
         }
