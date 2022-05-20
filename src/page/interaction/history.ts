@@ -49,26 +49,13 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     snapshoot.registerOperator(OperatorDirective.keepCursorOffset, async (operator) => {
         var block = page.find(x => x.id == operator.data.blockId);
         if (block) {
-            var aa = block.appearAnchors.find(g => g.prop == operator.data.prop);
-            if (page.hasUpdate && aa) {
-                block.page.addUpdateEvent(async () => {
-                    aa = block.appearAnchors.find(g => g.prop == operator.data.prop);
-                    if (aa) {
-                        page.kit.writer.onFocusAppearAnchor(aa, { at: operator.data.new });
-                    }
-                })
-            }
-            else if (aa) {
-                page.kit.writer.onFocusAppearAnchor(aa, { at: operator.data.new });
-            }
-            else {
-                block.page.addUpdateEvent(async () => {
-                    aa = block.appearAnchors.find(g => g.prop == operator.data.prop);
-                    if (aa) {
-                        page.kit.writer.onFocusAppearAnchor(aa, { at: operator.data.new });
-                    }
-                })
-            }
+            block.syncUpdate(BlockRenderRange.self);
+            block.page.addUpdateEvent(async () => {
+                var aa = block.appearAnchors.find(g => g.prop == operator.data.prop);
+                if (aa) {
+                    page.kit.writer.onFocusAppearAnchor(aa, { at: operator.data.new });
+                }
+            })
         }
     }, async (operator) => {
         var block = page.find(x => x.id == operator.data.blockId);
