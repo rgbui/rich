@@ -50,7 +50,15 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         var block = page.find(x => x.id == operator.data.blockId);
         if (block) {
             var aa = block.appearAnchors.find(g => g.prop == operator.data.prop);
-            if (aa) {
+            if (page.hasUpdate && aa) {
+                block.page.addUpdateEvent(async () => {
+                    aa = block.appearAnchors.find(g => g.prop == operator.data.prop);
+                    if (aa) {
+                        page.kit.writer.onFocusAppearAnchor(aa, { at: operator.data.new });
+                    }
+                })
+            }
+            else if (aa) {
                 page.kit.writer.onFocusAppearAnchor(aa, { at: operator.data.new });
             }
             else {
@@ -65,29 +73,24 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     }, async (operator) => {
         var block = page.find(x => x.id == operator.data.blockId);
         if (block) {
-            var aa = block.appearAnchors.find(g => g.prop == operator.data.prop);
-            if (aa) {
-                page.kit.writer.onFocusAppearAnchor(aa, { at: operator.data.old });
-            }
-            else {
-                block.page.addUpdateEvent(async () => {
-                    aa = block.appearAnchors.find(g => g.prop == operator.data.prop);
-                    if (aa) {
-                        page.kit.writer.onFocusAppearAnchor(aa, { at: operator.data.old });
-                    }
-                })
-            }
+            block.syncUpdate(BlockRenderRange.self);
+            block.page.addUpdateEvent(async () => {
+                var aa = block.appearAnchors.find(g => g.prop == operator.data.prop);
+                if (aa) {
+                    page.kit.writer.onFocusAppearAnchor(aa, { at: operator.data.old });
+                }
+            })
         }
     });
     snapshoot.registerOperator(OperatorDirective.updateProp, async (operator) => {
         var block = page.find(x => x.id == operator.data.blockId);
         if (block) {
-            await block.updateProps(operator.data.new, BlockRenderRange.self);
+            block.manualUpdateProps(operator.data.old, operator.data.new, BlockRenderRange.self);
         }
     }, async (operator) => {
         var block = page.find(x => x.id == operator.data.blockId);
         if (block) {
-            await block.updateProps(operator.data.old, BlockRenderRange.self);
+            block.manualUpdateProps(operator.data.new, operator.data.old, BlockRenderRange.self);
         }
     });
     snapshoot.registerOperator(OperatorDirective.arrayPropInsert, async (operator) => {
