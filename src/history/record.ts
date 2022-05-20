@@ -10,11 +10,14 @@ export class HistoryRecord extends Events {
         else return false;
     }
     get isCanRedo() {
-        if (this.index <= this.actions.length - 1 && this.index != -1) return true;
+        if (this.index < this.actions.length - 1) return true;
         else return false;
     }
     private get action() {
         return this.actions[this.index];
+    }
+    private get nextAction() {
+        return this.actions[this.index + 1]
     }
     async undo(handler: (action: UserAction) => Promise<void>) {
         if (this.isCanUndo) {
@@ -33,7 +36,7 @@ export class HistoryRecord extends Events {
     async redo(handler: (action: UserAction) => Promise<void>) {
         if (this.isCanRedo) {
             try {
-                await handler(this.action);
+                await handler(this.nextAction);
             }
             catch (ex) {
                 console.log(ex);
