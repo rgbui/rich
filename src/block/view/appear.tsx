@@ -41,12 +41,9 @@ export function TextArea(props: {
     var html = props.html;
     if (typeof html == 'undefined') html = lodash.get(props.block, props.prop);
     if (html == '' && typeof props.default != 'undefined') html = props.default;
-    console.log('render shy appear-text', html);
     return <span className='shy-appear-text'
         suppressContentEditableWarning
         {...ps}
-    // dangerouslySetInnerHTML={{ __html: html }}
-
     >{html}</span>
 }
 export function SolidArea(props: {
