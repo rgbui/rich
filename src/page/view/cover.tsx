@@ -6,6 +6,7 @@ import { useImagePicker } from "../../../extensions/image/picker";
 import { channel } from "../../../net/channel";
 import { MouseDragger } from "../../common/dragger";
 import { Rect } from "../../common/vector/point";
+import { AtomPermission } from "../permission";
 
 export class PageCover extends React.Component<{ page: Page }>{
     private startPos: boolean = false;
@@ -86,7 +87,7 @@ export class PageCover extends React.Component<{ page: Page }>{
                             {page.pageInfo?.icon && <div onMouseDown={e => changeIcon(e)} className="shy-page-view-cover-icon">
                                 <Icon size={72} icon={page.pageInfo?.icon}></Icon>
                             </div>}
-                            <div className="shy-page-view-cover-operators">
+                            {page.permissions.includes(AtomPermission.editDoc) && <div className="shy-page-view-cover-operators">
                                 {self.startPos && <>
                                     <a onMouseDown={e => savePostion()}>保存</a>
                                     <a onMouseDown={e => endPostion()}>取消</a>
@@ -96,7 +97,7 @@ export class PageCover extends React.Component<{ page: Page }>{
                                     <a onMouseDown={e => startPosition(e)}>调整</a>
                                     <a onMouseDown={e => page.onAddCover()}>移除</a>
                                 </>}
-                            </div>
+                            </div>}
                         </div>
                     </div>
                 </div>
