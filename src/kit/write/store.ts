@@ -28,13 +28,11 @@ export async function InputStore(appear: AppearAnchor, force: boolean = false, a
         clearTimeout(inputStoreTime);
         inputStoreTime = undefined
     }
-    // console.log('current', value, offset);
     inputStore = async function () {
         try {
             inputStore = undefined;
             appear.block.page.kit.writer.endAnchorText = value;
             appear.block.page.kit.writer.endOffset = offset;
-            // console.log('will', value, offset, oldOffset, oldValue);
             await appear.block.onInputText({
                 appear,
                 oldValue,

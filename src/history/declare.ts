@@ -4,7 +4,6 @@
  */
 export enum ActionDirective {
     onInputText = 100,
-    onDeleteText = 101,
     onBatchDragBlocks = 102,
     onDelete = 103,
     onUndo = 104,
@@ -73,11 +72,6 @@ export enum ActionDirective {
 }
 
 export enum OperatorDirective {
-    /**
-     * 更新文本
-     */
-    // inputStore = 101,
-    // inputDeleteStore = 102,
     create = 103,
     /**
      * 删除，你可以认为是彻底的删除了,与create正好相反
