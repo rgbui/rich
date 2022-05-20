@@ -1,5 +1,3 @@
-
-import lodash from "lodash";
 import React from "react";
 import { Page } from "..";
 import { useSelectMenuItem } from "../../../component/view/menu";
