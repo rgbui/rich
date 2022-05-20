@@ -100,6 +100,37 @@ export class HistorySnapshoot extends Events {
     }
     async redo() {
         await this.historyRecord.redo(async (action) => {
+            if (Array.isArray(action?.operators)) {
+                for (let i = 0; i < action.operators.length; i++) {
+                    let op = action.operators[i];
+                    var command = this.ops.get(op.directive);
+                    if (command) {
+                        await command.redo(op);
+                    }
+                    else this.emit("warn", new Warn(ExceptionType.notRegisterActionDirectiveInHistorySnapshoot))
+                }
+                this.emit('redo', action)
+            }
+        })
+    }
+    async undo() {
+        await this.historyRecord.undo(async (action) => {
+            if (Array.isArray(action?.operators)) {
+                for (let i = action.operators.length - 1; i >= 0; i--) {
+                    let op = action.operators[i];
+                    var command = this.ops.get(op.directive);
+                    if (command) {
+                        await command.undo(op);
+                    }
+                    else this.emit("warn", new Warn(ExceptionType.notRegisterActionDirectiveInHistorySnapshoot))
+                }
+                this.emit('undo', action)
+            }
+
+        })
+    }
+    async redoUserAction(action: UserAction) {
+        if (Array.isArray(action?.operators)) {
             for (let i = 0; i < action.operators.length; i++) {
                 let op = action.operators[i];
                 var command = this.ops.get(op.directive);
@@ -108,30 +139,6 @@ export class HistorySnapshoot extends Events {
                 }
                 else this.emit("warn", new Warn(ExceptionType.notRegisterActionDirectiveInHistorySnapshoot))
             }
-            this.emit('redo', action)
-        })
-    }
-    async undo() {
-        await this.historyRecord.undo(async (action) => {
-            for (let i = action.operators.length - 1; i >= 0; i--) {
-                let op = action.operators[i];
-                var command = this.ops.get(op.directive);
-                if (command) {
-                    await command.undo(op);
-                }
-                else this.emit("warn", new Warn(ExceptionType.notRegisterActionDirectiveInHistorySnapshoot))
-            }
-            this.emit('undo', action)
-        })
-    }
-    async redoUserAction(action: UserAction) {
-        for (let i = 0; i < action.operators.length; i++) {
-            let op = action.operators[i];
-            var command = this.ops.get(op.directive);
-            if (command) {
-                await command.redo(op);
-            }
-            else this.emit("warn", new Warn(ExceptionType.notRegisterActionDirectiveInHistorySnapshoot))
         }
     }
 }
