@@ -1,4 +1,6 @@
 import { Page } from "..";
+import { BlockRenderRange } from "../../block/enum";
+import { Matrix } from "../../common/matrix";
 import { OperatorDirective } from "../../history/declare";
 import { HistorySnapshoot } from "../../history/snapshoot";
 import { PageDirective } from "../directive";
@@ -10,42 +12,30 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     snapshoot.on('error', err => page.onError(err));
     snapshoot.on('warn', (error) => page.onWarn(error));
     snapshoot.registerOperator(OperatorDirective.create, async (operator) => {
-        var block = await page.createBlock(operator.data.data.url,
+        await page.createBlock(operator.data.data.url,
             operator.data.data,
             page.find(x => x.id == operator.data.parentId),
             operator.data.at,
             operator.data.childKey
         );
-        page.addUpdateEvent(async () => {
-            page.kit.writer.onFocusBlockAnchor(block, { last: true });
-        });
     }, async (operator) => {
         var block = page.find(x => x.id == operator.data.data.id);
         if (block) {
-            //if (page.kit.explorer.selectedBlocks.exists(block)) page.kit.explorer.onClearAnchorAndSelection()
             await block.delete()
         }
     });
     snapshoot.registerOperator(OperatorDirective.delete, async (operator) => {
         var block = page.find(x => x.id == operator.data.data.id);
         if (block) {
-            page.addUpdateEvent(async () => {
-                // page.kit.explorer.onFocusBlockAtAnchor(block,
-                //     operator.data.end + operator.data.text.length
-                // );
-            });
             await block.delete()
         }
     }, async (operator) => {
-        var block = await page.createBlock(operator.data.data.url,
+        await page.createBlock(operator.data.data.url,
             operator.data.data,
             page.find(x => x.id == operator.data.parentId),
             operator.data.at,
             operator.data.childKey
         );
-        page.addUpdateEvent(async () => {
-            page.kit.writer.onFocusBlockAnchor(block, { last: true });
-        });
     });
     snapshoot.registerOperator(OperatorDirective.append, async (operator) => {
         var block = page.find(x => x.id == operator.data.blockId);
@@ -63,6 +53,14 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             if (aa) {
                 page.kit.writer.onFocusAppearAnchor(aa, { at: operator.data.new });
             }
+            else {
+                block.page.addUpdateEvent(async () => {
+                    aa = block.appearAnchors.find(g => g.prop == operator.data.prop);
+                    if (aa) {
+                        page.kit.writer.onFocusAppearAnchor(aa, { at: operator.data.new });
+                    }
+                })
+            }
         }
     }, async (operator) => {
         var block = page.find(x => x.id == operator.data.blockId);
@@ -71,17 +69,25 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             if (aa) {
                 page.kit.writer.onFocusAppearAnchor(aa, { at: operator.data.old });
             }
+            else {
+                block.page.addUpdateEvent(async () => {
+                    aa = block.appearAnchors.find(g => g.prop == operator.data.prop);
+                    if (aa) {
+                        page.kit.writer.onFocusAppearAnchor(aa, { at: operator.data.old });
+                    }
+                })
+            }
         }
-    })
+    });
     snapshoot.registerOperator(OperatorDirective.updateProp, async (operator) => {
         var block = page.find(x => x.id == operator.data.blockId);
         if (block) {
-            await block.updateProps(operator.data.new);
+            await block.updateProps(operator.data.new, BlockRenderRange.self);
         }
     }, async (operator) => {
         var block = page.find(x => x.id == operator.data.blockId);
         if (block) {
-            await block.updateProps(operator.data.old);
+            await block.updateProps(operator.data.old, BlockRenderRange.self);
         }
     });
     snapshoot.registerOperator(OperatorDirective.arrayPropInsert, async (operator) => {
@@ -117,6 +123,24 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             block.updateArrayInsert(operator.data.propKey, operator.data.at, operator.data.data);
         }
     });
+    snapshoot.registerOperator(OperatorDirective.updatePropMatrix, async (operator) => {
+        var block = page.find(x => x.id == operator.data.blockId);
+        if (block) {
+            await block.updateMatrix(
+                new Matrix(...(operator.data.new as number[])),
+                new Matrix(...(operator.data.old as number[]))
+            );
+        }
+    }, async (operator) => {
+        var block = page.find(x => x.id == operator.data.blockId);
+        if (block) {
+            await block.updateMatrix(
+                new Matrix(...(operator.data.old as number[])),
+                new Matrix(...(operator.data.new as number[])),
+            );
+        }
+    });
+
     snapshoot.registerOperator(OperatorDirective.insertStyle, async (operator) => {
 
     }, async (operator) => {
