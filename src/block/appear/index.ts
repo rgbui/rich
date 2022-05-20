@@ -3,6 +3,7 @@ import { Point, Rect } from "../../common/vector/point";
 import { TextEle } from "../../common/text.ele";
 import { AppearVisibleSeek } from "./visible.seek";
 import { BlockUrlConstant } from "../constant";
+import lodash from "lodash";
 export enum BlockAppear {
     /**
      * 呈现的是文字的模式
@@ -26,7 +27,8 @@ export class AppearAnchor {
         public el: HTMLElement,
         public appear: BlockAppear,
         public prop: string,
-        public plain: boolean
+        public plain: boolean,
+        public defaultValue: string
     ) {
 
     }
@@ -286,6 +288,16 @@ export class AppearAnchor {
                     sel.removeAllRanges();
                 }
             }
+        }
+    }
+    get propValue() {
+        var html = lodash.get(this.block, this.prop);
+        if (html == '' && typeof this.defaultValue != 'undefined') html = this.defaultValue;
+        return html;
+    }
+    updateViewValue() {
+        if (this.isText&& this.el) {
+            this.el.innerHTML = this.propValue;
         }
     }
 }

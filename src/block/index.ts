@@ -459,11 +459,16 @@ export abstract class Block extends Events {
         return false;
     }
     async forceUpdate() {
-        console.log('block forceUpdate')
         return new Promise((resolve, reject) => {
-            if (this.view && this.isMounted) this.view.forceUpdate(() => {
-                resolve(true);
-            })
+            if (this.view && this.isMounted) {
+                this.appearAnchors.forEach(aa => {
+                    aa.updateViewValue();
+                })
+                this.view.forceUpdate(() => {
+                    console.log('block view forceUpdate', this.appearAnchors);
+                    resolve(true);
+                })
+            }
             else resolve(true);
         })
     }
