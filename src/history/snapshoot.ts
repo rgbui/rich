@@ -69,7 +69,7 @@ export class HistorySnapshoot extends Events {
                 this.emit('history', this.action);
             }
             if (this.historyRecord) {
-                if (!(this.action.directive == ActionDirective.onRedo || this.action.directive == ActionDirective.onLoadUserActions || this.action.directive == ActionDirective.onUndo))
+                if (!(this.action.directive == ActionDirective.onRedo || this.action.directive == ActionDirective.onPageTurnLayout || this.action.directive == ActionDirective.onLoadUserActions || this.action.directive == ActionDirective.onUndo))
                     this.historyRecord.push(this.action);
             };
             console.log(this.action.toString());
