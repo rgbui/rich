@@ -10,6 +10,7 @@ import { Icon } from "../../component/view/icon";
 import { AddPageCoverSvg, AddPageIconSvg } from "../../component/svgs";
 import { useIconPicker } from "../../extensions/icon";
 import { Rect } from "../../src/common/vector/point";
+import lodash from "lodash";
 
 @url('/title')
 export class Title extends Block {
@@ -62,8 +63,8 @@ export class TitleView extends BlockView<Title>{
                 this.block.pageInfo.text = pageInfo.text;
                 isUpdate = true;
             }
-            if (typeof pageInfo.icon != 'undefined' && JSON.stringify(pageInfo.icon) != JSON.stringify(this.block.pageInfo.text)) {
-                this.block.pageInfo.icon = pageInfo.icon;
+            if (typeof pageInfo.icon != 'undefined' && JSON.stringify(pageInfo.icon) != JSON.stringify(this.block.pageInfo.icon)) {
+                this.block.pageInfo.icon = lodash.cloneDeep(pageInfo.icon);
                 isUpdate = true;
             }
             if (isUpdate) {

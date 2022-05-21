@@ -14,6 +14,7 @@ import { LinkPageItem } from "../../../extensions/at/declare";
 import { PageCover } from "./cover";
 import { Icon } from "../../../component/view/icon";
 import { BoardToolFrameSvg, CollectTableSvg, CommentSvg, PageSvg } from "../../../component/svgs";
+import lodash from "lodash";
 
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
@@ -52,16 +53,15 @@ export class PageView extends Component<{ page: Page }>{
     updatePageInfo = (r: { id: string, pageInfo: LinkPageItem }) => {
         if (this.page.pageItemId == r.id) {
             var isUpdate: boolean = false;
-            if (!(typeof r.pageInfo?.text != 'undefined' && r.pageInfo?.text == this.page.pageInfo?.text)) {
+            if (typeof r.pageInfo?.text != 'undefined' && r.pageInfo?.text != this.page.pageInfo?.text) {
                 this.page.pageInfo.text = r.pageInfo.text;
                 isUpdate = true;
             }
-            if (typeof r.pageInfo.icon != 'undefined' && this.page.pageInfo?.icon && this.page.pageInfo?.icon && JSON.stringify(r.pageInfo.icon) != JSON.stringify(this.page.pageInfo.icon)) {
-                this.page.pageInfo.icon = r.pageInfo.icon;
+            if (typeof r.pageInfo.icon != 'undefined' && JSON.stringify(r.pageInfo.icon) != JSON.stringify(this.page.pageInfo.icon)) {
+                this.page.pageInfo.icon = lodash.cloneDeep(r.pageInfo.icon);
                 isUpdate = true;
             }
-            if (isUpdate)
-                this.forceUpdate();
+            if (isUpdate) this.forceUpdate();
         }
     }
     async observeToolBoard() {
