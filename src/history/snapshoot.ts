@@ -62,9 +62,14 @@ export class HistorySnapshoot extends Events {
     store() {
         if (!this.action.isEmpty) {
             this.action.endDate = Date.now();
-            this.emit('history', this.action);
+            /**
+             * onLoadUserActions 一般是从别的地方触发的，那么相应的history就不应该在触发了
+             */
+            if (this.action.directive !== ActionDirective.onLoadUserActions) {
+                this.emit('history', this.action);
+            }
             if (this.historyRecord) {
-                if (!(this.action.directive == ActionDirective.onRedo || this.action.directive == ActionDirective.onUndo))
+                if (!(this.action.directive == ActionDirective.onRedo || this.action.directive == ActionDirective.onLoadUserActions || this.action.directive == ActionDirective.onUndo))
                     this.historyRecord.push(this.action);
             };
             console.log(this.action.toString());
@@ -94,8 +99,8 @@ export class HistorySnapshoot extends Events {
     cancelSync() {
         this.disabledSync = true;
     }
-    private ops = new Map<OperatorDirective, { redo: (userOperator: UserOperator) => Promise<void>, undo: (userOperator: UserOperator) => Promise<void> }>();
-    registerOperator(directive: OperatorDirective, redo: (userOperator: UserOperator) => Promise<void>, undo: (userOperator: UserOperator) => Promise<void>) {
+    private ops = new Map<OperatorDirective, { redo: (userOperator: UserOperator, source?: 'load' | 'notify' | 'notifyView') => Promise<void>, undo: (userOperator: UserOperator) => Promise<void> }>();
+    registerOperator(directive: OperatorDirective, redo: (userOperator: UserOperator, source?: 'load' | 'notify' | 'notifyView') => Promise<void>, undo: (userOperator: UserOperator) => Promise<void>) {
         this.ops.set(directive, { redo, undo });
     }
     async redo() {
@@ -129,13 +134,13 @@ export class HistorySnapshoot extends Events {
 
         })
     }
-    async redoUserAction(action: UserAction) {
+    async redoUserAction(action: UserAction, source: 'load' | 'notify' | 'notifyView') {
         if (Array.isArray(action?.operators)) {
             for (let i = 0; i < action.operators.length; i++) {
                 let op = action.operators[i];
                 var command = this.ops.get(op.directive);
                 if (command) {
-                    await command.redo(op);
+                    await command.redo(op, source);
                 }
                 else this.emit("warn", new Warn(ExceptionType.notRegisterActionDirectiveInHistorySnapshoot))
             }
