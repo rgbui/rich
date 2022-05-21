@@ -76,7 +76,7 @@ export function parseElementUrl(url: string) {
     else if (us.includes('PageItem')) {
         us.removeAll(g => g == 'PageItem')
         return {
-            type: ElementType.Block,
+            type: ElementType.PageItem,
             id: us[0]
         }
     }

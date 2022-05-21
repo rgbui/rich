@@ -33,6 +33,7 @@ export class UserAction {
     seq: number;
     directive: ActionDirective | string;
     operators: UserOperator[] = [];
+    elementUrl?:string;
     constructor() {
         this.id = channel.query('/guid');
     }

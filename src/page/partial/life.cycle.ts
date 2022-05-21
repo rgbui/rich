@@ -75,11 +75,18 @@ export class Page$Cycle {
             console.log(JSON.stringify(data));
         }
     }
-    async loadUserActions(this: Page, actions: UserAction[]) {
-        for (let i = 0; i < actions.length; i++) {
-            let action = actions[i];
-            await this.snapshoot.redoUserAction(action);
-        }
+    async loadUserActions(this: Page, actions: UserAction[], source: 'load' | 'notify' | 'notifyView') {
+        await this.onAction(ActionDirective.onLoadUserActions, async () => {
+            for (let i = 0; i < actions.length; i++) {
+                let action = actions[i];
+                try {
+                    await this.snapshoot.redoUserAction(action, source);
+                }
+                catch (ex) {
+                    this.onError(ex);
+                }
+            }
+        })
     }
     async get(this: Page) {
         var json: Record<string, any> = {
