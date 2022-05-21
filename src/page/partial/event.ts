@@ -103,8 +103,8 @@ export class PageEvent {
         })
     }
     async onPageTurnLayout(this: Page, layoutType: PageLayoutType, actions?: () => Promise<void>) {
-        this.requireSelectLayout = false;
         await this.onAction(ActionDirective.onPageTurnLayout, async () => {
+            this.requireSelectLayout = false;
             this.snapshoot.record(OperatorDirective.pageTurnLayout, {
                 old: PageLayoutType.doc,
                 new: layoutType
