@@ -138,7 +138,19 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     });
     snapshoot.registerOperator(OperatorDirective.mergeStyle, async (operator, source) => {
 
-    }, async (operator) => {
+    },async (operator) => {
 
+    });
+    snapshoot.registerOperator(OperatorDirective.pageTurnLayout, async (operator, source) => {
+        page.pageLayout.type = operator.data.new;
+        page.requireSelectLayout = false;
+    }, async (operator) => {
+        page.pageLayout.type = operator.data.old;
+        page.requireSelectLayout = true;
+    });
+    snapshoot.registerOperator(OperatorDirective.pageUpdateProp, async (operator, source) => {
+        page.updateProps(operator.data.new);
+    }, async (operator) => {
+        page.updateProps(operator.data.old);
     });
 }
