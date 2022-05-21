@@ -28,7 +28,10 @@ export interface ChannelSyncMapUrls {
 	"/page/open":{args:(r:{item:string|{id:string}})=>void,returnType:void},
 	"/page/notify/toggle":{args:(r:{id: string,visible:boolean})=>void,returnType:void},
 	"/update/user":{args:(r:{user: Record<string, any>})=>void,returnType:void},
-	"/ws/channel/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void}
+	"/ws/channel/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void},
+	"/ws/view/operate/notify":{args:(r:{id:string,directive:number,operators:any[],elementUrl:string,workspaceId:string,userid:string})=>void,returnType:void},
+	"/ws/page/item/operate/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void},
+	"/ws/datagrid/schema/operate/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void}
 }
 export interface ChannelOnlyMapUrls {
     "/log":{args:(r:{type:"error"|"warn"|"info",message:string|Error})=>void,returnType:void},
@@ -36,7 +39,10 @@ export interface ChannelOnlyMapUrls {
 	"/page/open":{args:(r:{item:string|{id:string}})=>void,returnType:void},
 	"/page/notify/toggle":{args:(r:{id: string,visible:boolean})=>void,returnType:void},
 	"/update/user":{args:(r:{user: Record<string, any>})=>void,returnType:void},
-	"/ws/channel/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void}
+	"/ws/channel/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void},
+	"/ws/view/operate/notify":{args:(r:{id:string,directive:number,operators:any[],elementUrl:string,workspaceId:string,userid:string})=>void,returnType:void},
+	"/ws/page/item/operate/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void},
+	"/ws/datagrid/schema/operate/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void}
 }
 export interface ChannelOnceMapUrls {
     "/log":{args:(r:{type:"error"|"warn"|"info",message:string|Error})=>void,returnType:void},
@@ -44,7 +50,10 @@ export interface ChannelOnceMapUrls {
 	"/page/open":{args:(r:{item:string|{id:string}})=>void,returnType:void},
 	"/page/notify/toggle":{args:(r:{id: string,visible:boolean})=>void,returnType:void},
 	"/update/user":{args:(r:{user: Record<string, any>})=>void,returnType:void},
-	"/ws/channel/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void}
+	"/ws/channel/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void},
+	"/ws/view/operate/notify":{args:(r:{id:string,directive:number,operators:any[],elementUrl:string,workspaceId:string,userid:string})=>void,returnType:void},
+	"/ws/page/item/operate/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void},
+	"/ws/datagrid/schema/operate/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void}
 }
 export interface ChannelOffMapUrls {
     "/log":{args:(r:{type:"error"|"warn"|"info",message:string|Error})=>void,returnType:void},
@@ -52,7 +61,10 @@ export interface ChannelOffMapUrls {
 	"/page/open":{args:(r:{item:string|{id:string}})=>void,returnType:void},
 	"/page/notify/toggle":{args:(r:{id: string,visible:boolean})=>void,returnType:void},
 	"/update/user":{args:(r:{user: Record<string, any>})=>void,returnType:void},
-	"/ws/channel/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void}
+	"/ws/channel/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void},
+	"/ws/view/operate/notify":{args:(r:{id:string,directive:number,operators:any[],elementUrl:string,workspaceId:string,userid:string})=>void,returnType:void},
+	"/ws/page/item/operate/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void},
+	"/ws/datagrid/schema/operate/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void}
 }
 export interface ChannelFireMapUrls {
     "/log":{args:{type:"error"|"warn"|"info",message:string|Error},returnType:void},
@@ -60,7 +72,10 @@ export interface ChannelFireMapUrls {
 	"/page/open":{args:{item:string|{id:string}},returnType:void},
 	"/page/notify/toggle":{args:{id: string,visible:boolean},returnType:void},
 	"/update/user":{args:{user: Record<string, any>},returnType:void},
-	"/ws/channel/notify":{args:{id:string,workspaceId:string,roomId:string},returnType:void}
+	"/ws/channel/notify":{args:{id:string,workspaceId:string,roomId:string},returnType:void},
+	"/ws/view/operate/notify":{args:{id:string,directive:number,operators:any[],elementUrl:string,workspaceId:string,userid:string},returnType:void},
+	"/ws/page/item/operate/notify":{args:{id:string,workspaceId:string,roomId:string},returnType:void},
+	"/ws/datagrid/schema/operate/notify":{args:{id:string,workspaceId:string,roomId:string},returnType:void}
 }
 export interface ChannelDelMapUrls {
     "/datastore/remove":{args:{schemaId:string,dataId:string},returnType:Promise<{ok:boolean,warn:string}>},
@@ -182,6 +197,9 @@ export interface ChannelAirMapUrls {
 	"/page/open":{args:{item:string|{id:string}},returnType:void},
 	"/page/notify/toggle":{args:{id: string,visible:boolean},returnType:void},
 	"/update/user":{args:{user: Record<string, any>},returnType:void},
-	"/ws/channel/notify":{args:{id:string,workspaceId:string,roomId:string},returnType:void}
+	"/ws/channel/notify":{args:{id:string,workspaceId:string,roomId:string},returnType:void},
+	"/ws/view/operate/notify":{args:{id:string,directive:number,operators:any[],elementUrl:string,workspaceId:string,userid:string},returnType:void},
+	"/ws/page/item/operate/notify":{args:{id:string,workspaceId:string,roomId:string},returnType:void},
+	"/ws/datagrid/schema/operate/notify":{args:{id:string,workspaceId:string,roomId:string},returnType:void}
 }
     

@@ -8,6 +8,7 @@ export enum ActionDirective {
     onDelete = 103,
     onUndo = 104,
     onRedo = 105,
+
     onUpdateProps = 106,
     onUpdatePattern = 107,
     onBatchDeleteBlocks = 108,
@@ -24,6 +25,7 @@ export enum ActionDirective {
     onBackTurn = 119,
     onBatchDragBlockDatas = 120,
     onButtonTemplateCreateInstance = 121,
+    onLoadUserActions = 122,
 
     onBoardToolCreateBlock = 130,
     onResizeBlock = 132,
@@ -110,6 +112,6 @@ export enum OperatorDirective {
     /**
      * 记录光标的位置
      */
-    keepCursorOffset=500,
+    keepCursorOffset = 500,
 }
 
