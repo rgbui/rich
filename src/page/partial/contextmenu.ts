@@ -20,13 +20,13 @@ export class PageContextmenu {
     }
     async onGetBoardContextMenus(this: Page) {
         var items: MenuItemType<BlockDirective | string>[] = [];
-        items.push({ type: MenuItemTypeValue.switch, text: '编辑保护', name: 'edit-prodict' });
+        items.push({ type: MenuItemTypeValue.switch, checked: this.pageInfo?.locker?.userid ? true : false, text: '编辑保护', name: 'lock' });
         items.push({ type: MenuItemTypeValue.divide });
-        items.push({ name: 'add-favourite', text: '星标' });
+        // items.push({ name: 'add-favourite', text: '星标' });
         items.push({ name: 'copy-link', text: '复制链接' })
         items.push({ type: MenuItemTypeValue.divide });
         items.push({ name: 'show-all', text: '显示所有内容' });
-        items.push({ name: 'show-grid', text: '显示网格' })
+        // items.push({ name: 'show-grid', text: '显示网格' })
         return items;
     }
     async onClickContextMenu(this: Page, item: MenuItemType<BlockDirective | string>, event: MouseEvent) {
@@ -37,6 +37,21 @@ export class PageContextmenu {
     }
     async onClickBoardContextMenu(this: Page, item: MenuItemType<BlockDirective | string>, event: MouseEvent) {
         switch (item.name) {
+            case 'lock':
+                channel.air('/page/update/info', {
+                    id: this.pageInfo.id, pageInfo: {
+                        locker: this.pageInfo.locker?.userid ? null : {
+                            userid: this.user.id,
+                            lockDate: Date.now()
+                        }
+                    }
+                });
+            case 'copy-link':
+                CopyText(this.pageInfo.url);
+                ShyAlert('复制链接');
+                break;
+            case 'show-all':
+                break;
 
         }
     }
