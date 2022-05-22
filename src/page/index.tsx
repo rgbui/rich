@@ -8,7 +8,6 @@ import { View } from "../block/element/view";
 import { PageEvent } from "./partial/event";
 import { HistorySnapshoot } from '../history/snapshoot';
 import { Block } from '../block';
-import { ConfigViewer } from '../config';
 import { KeyboardPlate } from '../common/keys';
 import { Page$Seek } from './partial/seek';
 import { PageView } from './view';
@@ -62,7 +61,6 @@ export class Page extends Events<PageDirective> {
     }
     kit: Kit = new Kit(this);
     snapshoot = new HistorySnapshoot(this)
-    configViewer: ConfigViewer;
     pageLayout: { type: PageLayoutType };
     views: View[] = [];
     view: PageView;
@@ -177,7 +175,7 @@ export class Page extends Events<PageDirective> {
         return row;
     }
     get isLock() {
-        return this.configViewer.pageConfig.locker?.lock ? true : false;
+        return this.pageInfo.locker?.userid ? true : false;
     }
     getScreenStyle() {
         var style: CSSProperties = {};
