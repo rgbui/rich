@@ -4,7 +4,6 @@ import { langProvider } from "../../../i18n/provider";
 import { Block } from "../../block";
 import { View } from "../../block/element/view";
 import { BlockFactory } from "../../block/factory/block.factory";
-import { ConfigViewer } from "../../config";
 import { UserAction } from "../../history/action";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { PageDirective } from "../directive";
@@ -21,16 +20,6 @@ import { util } from "../../../util/util";
 export class Page$Cycle {
     async init(this: Page) {
         this.gridMap = new GridMap(this);
-        this.configViewer = new ConfigViewer(this);
-        this.configViewer.loadPageConfig({
-            fontCss: {
-                lineHeight: 24,
-                letterSpacing: 0,
-                fontSize: 16,
-                fontStyle: 'normail'
-            } as any
-        });
-        this.configViewer.loadWorkspaceConfig({ fontCss: {} as any });
         PageHistory(this, this.snapshoot);
         PageKeys(this, this.keyboardPlate);
         this.emit(PageDirective.init);
@@ -364,6 +353,7 @@ export class Page$Cycle {
             }, this);
         }
     }
+
     async onUpdateProps(this: Page, props: Record<string, any>, isUpdate?: boolean) {
         await this.onAction(ActionDirective.onPageUpdateProps, async () => {
             await this.updateProps(props);

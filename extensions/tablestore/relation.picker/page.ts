@@ -32,7 +32,7 @@ export async function createFormPage(el: HTMLElement,
         // await item.store.saveHistory(action);
         // await item.store.savePageContent(action, await page.getFile());
     });
-    page.configViewer.loadPageConfig({ locker: { lock: true, date: Date.now() } })
+    //page.configViewer.loadPageConfig({ locker: { lock: true, date: Date.now() } })
     var pageData = schemaCreatePageFormData(options.schema, options.datas);
     await page.load(pageData);
     page.render(el, { width: 600, height: 500 });

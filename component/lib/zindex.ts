@@ -47,7 +47,6 @@ class Layer {
     private max: number;
     private index: number;
     private objectIndexs: { index: number, obj: Object }[] = [];
-    // private indexs: { index: number, wield: LayerWield }[] = [];
     zoom(user: Object): number {
         var i = this.index += 1;
         this.objectIndexs.push({ index: i, obj: user })

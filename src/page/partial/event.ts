@@ -219,23 +219,23 @@ export class PageEvent {
             { name: 'fullWidth', text: '宽版', type: MenuItemTypeValue.switch },
             { type: MenuItemTypeValue.divide },
             { name: 'addCover', text: this.cover?.abled ? "移除封面" : '添加封面' },
-            { type: MenuItemTypeValue.divide },
-            { name: 'addContent', text: '向上插入内容栏', type: MenuItemTypeValue.item },
-            { name: 'addContent', text: '向下插入内容栏', type: MenuItemTypeValue.item },
-            { type: MenuItemTypeValue.divide },
-            { name: 'setContentType', text: '设置内容样式', type: MenuItemTypeValue.item },
-            { type: MenuItemTypeValue.divide },
-            {
-                name: 'addContent',
-                text: '分栏',
-                childs: [
-                    { text: '一栏', name: '' },
-                    { text: '二栏', name: '' },
-                    { text: '三栏', name: '' },
-                    { text: '偏右', name: '' },
-                    { text: '偏左', name: '' },
-                ]
-            },
+            // { type: MenuItemTypeValue.divide },
+            // { name: 'addContent', text: '向上插入内容栏', type: MenuItemTypeValue.item },
+            // { name: 'addContent', text: '向下插入内容栏', type: MenuItemTypeValue.item },
+            // { type: MenuItemTypeValue.divide },
+            // { name: 'setContentType', text: '设置内容样式', type: MenuItemTypeValue.item },
+            // { type: MenuItemTypeValue.divide },
+            // {
+            //     name: 'addContent',
+            //     text: '分栏',
+            //     childs: [
+            //         { text: '一栏', name: '' },
+            //         { text: '二栏', name: '' },
+            //         { text: '三栏', name: '' },
+            //         { text: '偏右', name: '' },
+            //         { text: '偏左', name: '' },
+            //     ]
+            // },
         ];
         var r = await useSelectMenuItem({ roundPoint: Point.from(event) }, items, {
             // overflow: 'visible',
