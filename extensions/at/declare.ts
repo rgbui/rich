@@ -15,5 +15,7 @@ export type LinkPageItem = {
     icon?: IconArguments,
     sn?: number,
     description?: string,
-    pageType?: PageLayoutType
+    pageType?: PageLayoutType,
+    url?: string,
+    locker?: { userid: string, lockDate: number }
 }
