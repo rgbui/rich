@@ -11,6 +11,7 @@ import { usePageLayout } from "../../../extensions/layout";
 import { CopyText } from "../../../component/copy";
 import { ShyAlert } from "../../../component/lib/alert";
 import { channel } from "../../../net/channel";
+import { Confirm } from "../../../component/lib/confirm";
 
 export class PageContextmenu {
     async onGetContextMenus(this: Page) {
@@ -117,7 +118,9 @@ export class PageContextmenu {
                 })
             }
             else if (r.item.name == 'delete') {
-                channel.air('/page/remove', { item: this.pageInfo.id });
+                if (await Confirm('确认要删除吗?')) {
+                    channel.air('/page/remove', { item: this.pageInfo.id });
+                }
             }
             else if (r.item.name == 'undo') {
                 this.onUndo();
