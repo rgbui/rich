@@ -167,8 +167,8 @@ export class PageView extends Component<{ page: Page }>{
     }
     render() {
         var pageStyle: Record<string, any> = {
-            lineHeight: (this.page.smallFont ? 14 : 16) * 1.2 + 'px',
-            fontSize: (this.page.smallFont ? 14 : 16) + 'px'
+            lineHeight: this.page.lineHeight + 'px',
+            fontSize: this.page.fontSize + 'px'
         }
         return <div className={'shy-page-view' + (this.page.readonly ? " shy-page-view-readonly" : "")} style={pageStyle} tabIndex={1}
             onFocusCapture={e => this.page.onFocusCapture(e.nativeEvent)}

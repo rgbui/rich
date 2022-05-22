@@ -217,6 +217,12 @@ export class Page extends Events<PageDirective> {
             })
         })
     }
+    get fontSize() {
+        return this.smallFont ? 14 : 16
+    }
+    get lineHeight() {
+        return this.fontSize * 1.2;
+    }
 }
 export interface Page {
     on(name: PageDirective.init, fn: () => void);
