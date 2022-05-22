@@ -213,6 +213,7 @@ export class PageEvent {
         }
     }
     async onContextmenu(this: Page, event: React.MouseEvent) {
+        if(!this.isCanEdit)return;
         event.preventDefault();
         var items: MenuItemType<BlockDirective | string>[] = [
             { name: 'smallText', text: '小字号', type: MenuItemTypeValue.switch },

@@ -15,29 +15,35 @@ export function TextArea(props: {
     var prop = props.prop;
     if (typeof prop == 'undefined') prop = 'content';
     var ps: React.DetailedHTMLProps<React.HTMLAttributes<HTMLSpanElement>, HTMLSpanElement> = {
-        ref: (e) => props.block.elementAppear({
-            el: e,
-            prop: props.prop,
-            appear: BlockAppear.text,
-            plain: props.plain,
-            defaultValue: props.default
-        }),
         style: props.style,
         placeholder: props.placeholder,
-        contentEditable: props.block.isCanEdit(props.prop) ? true : undefined,
-        spellCheck: false,
-        onMouseDown: (e) => props.block.elementAppearEvent(props.prop, 'mousedown', e),
-        onMouseUp: (e) => props.block.elementAppearEvent(props.prop, 'mouseup', e),
-        onFocus: (e) => props.block.elementAppearEvent(props.prop, 'focus', e),
-        onBlur: (e) => props.block.elementAppearEvent(props.prop, 'blur', e),
-        onKeyDown: (e) => props.block.elementAppearEvent(props.prop, 'keydown', e),
-        onInput: (e) => props.block.elementAppearEvent(props.prop, 'input', e),
-        onPaste: (e) => props.block.elementAppearEvent(props.prop, 'paste', e),
-        onDoubleClick: (e) => props.block.elementAppearEvent(props.prop, 'dblclick', e),
-        onCompositionStart: (e) => props.block.elementAppearEvent(props.prop, 'compositionstart', e),
-        onCompositionEnd: (e) => props.block.elementAppearEvent(props.prop, 'compositionend', e),
-        onCompositionUpdate: (e) => props.block.elementAppearEvent(props.prop, 'compositionupdate', e)
     };
+    if (props.block.isCanEdit(props.prop)) {
+        ps = {
+            ref: (e) => props.block.elementAppear({
+                el: e,
+                prop: props.prop,
+                appear: BlockAppear.text,
+                plain: props.plain,
+                defaultValue: props.default
+            }),
+            style: props.style,
+            placeholder: props.placeholder,
+            contentEditable: true,
+            spellCheck: false,
+            onMouseDown: (e) => props.block.elementAppearEvent(props.prop, 'mousedown', e),
+            onMouseUp: (e) => props.block.elementAppearEvent(props.prop, 'mouseup', e),
+            onFocus: (e) => props.block.elementAppearEvent(props.prop, 'focus', e),
+            onBlur: (e) => props.block.elementAppearEvent(props.prop, 'blur', e),
+            onKeyDown: (e) => props.block.elementAppearEvent(props.prop, 'keydown', e),
+            onInput: (e) => props.block.elementAppearEvent(props.prop, 'input', e),
+            onPaste: (e) => props.block.elementAppearEvent(props.prop, 'paste', e),
+            onDoubleClick: (e) => props.block.elementAppearEvent(props.prop, 'dblclick', e),
+            onCompositionStart: (e) => props.block.elementAppearEvent(props.prop, 'compositionstart', e),
+            onCompositionEnd: (e) => props.block.elementAppearEvent(props.prop, 'compositionend', e),
+            onCompositionUpdate: (e) => props.block.elementAppearEvent(props.prop, 'compositionupdate', e)
+        };
+    }
     var html = props.html;
     if (typeof html == 'undefined') html = lodash.get(props.block, props.prop);
     if (html == '' && typeof props.default != 'undefined') html = props.default;

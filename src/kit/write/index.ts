@@ -58,7 +58,8 @@ import { AutoInputStore, InputForceStore, InputStore } from "./store";
 
 export class PageWrite {
     constructor(public kit: Kit) { }
-    async mousedown(aa: AppearAnchor, event: React.MouseEvent) {
+    async mousedown(aa: AppearAnchor, event: React.MouseEvent)
+    {
         var sel = window.getSelection();
         var rowBlock = aa.block.closest(x => x.isBlock);
         if (rowBlock.isFreeBlock && !(sel.focusNode && rowBlock.el.contains(sel.focusNode))) {
@@ -121,6 +122,7 @@ export class PageWrite {
      * 注意点:event.preventDefault() 在触发前最好不要有执行async的操作，否则会失效
      */
     async keydown(aa: AppearAnchor, event: React.KeyboardEvent) {
+        console.log('sss')
         var sel = window.getSelection();
         /**
          * 判断是否阻止输入

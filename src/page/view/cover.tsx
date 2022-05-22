@@ -18,6 +18,7 @@ export class PageCover extends React.Component<{ page: Page }>{
         var page = this.props.page;
         if (page.cover?.abled) {
             async function changeIcon(event: React.MouseEvent) {
+                if (!page.isCanEdit) return;
                 event.stopPropagation();
                 var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) });
                 if (icon) {
@@ -87,7 +88,7 @@ export class PageCover extends React.Component<{ page: Page }>{
                             {page.pageInfo?.icon && <div onMouseDown={e => changeIcon(e)} className="shy-page-view-cover-icon">
                                 <Icon size={72} icon={page.pageInfo?.icon}></Icon>
                             </div>}
-                            {page.permissions.includes(AtomPermission.editDoc) && <div className="shy-page-view-cover-operators">
+                            {page.isCanEdit && <div className="shy-page-view-cover-operators">
                                 {self.startPos && <>
                                     <a onMouseDown={e => savePostion()}>保存</a>
                                     <a onMouseDown={e => endPostion()}>取消</a>

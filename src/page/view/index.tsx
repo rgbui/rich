@@ -174,7 +174,10 @@ export class PageView extends Component<{ page: Page }>{
             lineHeight: this.page.lineHeight + 'px',
             fontSize: this.page.fontSize + 'px'
         }
-        return <div className={'shy-page-view' + (this.page.readonly ? " shy-page-view-readonly" : "")} style={pageStyle} tabIndex={1}
+        return <div className={'shy-page-view' + (this.page.readonly ? " shy-page-view-readonly" : "")} style={pageStyle}
+
+            tabIndex={this.page.isCanEdit ? 1 : undefined}
+
             onFocusCapture={e => this.page.onFocusCapture(e.nativeEvent)}
             onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}
             onMouseEnter={e => this.page.onMouseenter(e)}

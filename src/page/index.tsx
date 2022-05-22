@@ -31,6 +31,7 @@ import { OriginFormField } from '../../blocks/data-grid/element/form/origin.fiel
 import { LinkPageItem } from '../../extensions/at/declare';
 import { Title } from '../../blocks/at/title';
 import { AppearAnchor } from '../block/appear';
+import { AtomPermission } from './permission';
 
 export class Page extends Events<PageDirective> {
     root: HTMLElement;
@@ -193,6 +194,11 @@ export class Page extends Events<PageDirective> {
         this.pageInfo = util.clone(pageInfo);
     }
     pageInfo: LinkPageItem = null;
+    get isCanEdit() {
+        if (this.kit.page.pageInfo?.locker?.userid) return false;
+        if (!this.kit.page.permissions.includes(AtomPermission.editDoc)) return false;
+        return true;
+    }
     /**
      * 是否支持宽屏及窄屏的切换
      */

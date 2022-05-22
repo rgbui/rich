@@ -5,7 +5,6 @@ import { Point } from "../../common/vector/point";
 import { Events } from "../../../util/events";
 import { cacDragDirection, DropDirection } from "./direction";
 import { HandleView } from "./view";
-import { AtomPermission } from "../../page/permission";
 
 export class Handle extends Events {
     kit: Kit;
@@ -16,7 +15,7 @@ export class Handle extends Events {
     }
     handleBlock: Block;
     onShowBlockHandle(hoverBlock: Block) {
-        if (!this.kit.page.permissions.includes(AtomPermission.editDoc)) return
+        if (!this.kit.page.isCanEdit) return;
         this.handleBlock = hoverBlock.handleBlock;
         if (this.isDown) {
             var handleEl = this.view.handleEle;

@@ -17,7 +17,8 @@ export class HandleView extends React.Component<{ handle: Handle }>{
         return this.props.handle;
     }
     el: HTMLElement;
-    private onMousedown(event: MouseEvent) {
+    private onMousedown(event: MouseEvent)
+    {
         if (this.toolTip) this.toolTip.close();
         this.handle.isDown = true;
         this.handle.isDrag = false;
