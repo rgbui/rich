@@ -61,6 +61,10 @@ export class PageView extends Component<{ page: Page }>{
                 this.page.pageInfo.icon = lodash.cloneDeep(r.pageInfo.icon);
                 isUpdate = true;
             }
+            if (typeof r.pageInfo.locker != 'undefined') {
+                this.page.pageInfo.locker = lodash.cloneDeep(r.pageInfo.locker);
+                isUpdate = true;
+            }
             if (isUpdate) this.forceUpdate();
         }
     }
