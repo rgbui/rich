@@ -174,9 +174,6 @@ export class Page extends Events<PageDirective> {
         })
         return row;
     }
-    get isLock() {
-        return this.pageInfo.locker?.userid ? true : false;
-    }
     getScreenStyle() {
         var style: CSSProperties = {};
         if (this.isSupportScreen) {

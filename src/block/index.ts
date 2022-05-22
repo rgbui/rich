@@ -623,7 +623,7 @@ export abstract class Block extends Events {
     }
     get isLock() {
         if (this.locker?.lock) return true;
-        return this.page.isLock;
+        return this.page.pageInfo?.locker?.userid?true:false;
     }
     /**
      * 标记，主要是标记block用，没有其它什么作用
@@ -644,6 +644,7 @@ export abstract class Block extends Events {
         this.referenceBlockers.remove(g => g.id == block.id);
     }
     isCanEdit(prop?: string) {
+        if (this.page.pageInfo.locker?.userid) return false;
         if (typeof prop == 'undefined') prop = 'content';
         if (this.url == '/title') {
             if (this.page.permissions.includes(AtomPermission.createOrDeleteDoc)) return true;
