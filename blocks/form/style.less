@@ -6,10 +6,13 @@
     &-checkbox {
         flex-shrink    : 0;
         width          : 24px;
-        height         : 24px;
         display        : inline-flex;
         justify-content: center;
         align-items    : center;
+
+        input[type='checkbox'] {
+            margin: 0px;
+        }
     }
 
     >*:last-child {
@@ -21,7 +24,7 @@
     display        : flex;
     justify-content: flex-start;
     align-items    : center;
-    min-height: 26px;
+    min-height     : 26px;
 
     &-progress {
         cursor          : pointer;

@@ -52,16 +52,16 @@ export class ToDoView extends BlockView<ToDo>{
     render() {
         if (this.block.childs.length > 0) {
             return <div className='sy-block-todo' style={this.block.visibleStyle}>
-                <div className='sy-block-todo-checkbox'>    <input onMouseDown={e => e.stopPropagation()} type='checkbox' checked={this.block.checked} onChange={e => this.block.onChange(e.nativeEvent)} /></div>
+                <div className='sy-block-todo-checkbox' style={{ height: this.block.page.lineHeight }}><input onMouseDown={e => e.stopPropagation()} type='checkbox' checked={this.block.checked} onChange={e => this.block.onChange(e.nativeEvent)} /></div>
                 <TextLineChilds rf={e => this.block.childsEl = e} childs={this.block.childs}></TextLineChilds>
             </div>
         }
         else {
             return <div className='sy-block-todo' style={this.block.visibleStyle}>
-                <div className='sy-block-todo-checkbox'><input onMouseDown={e => e.stopPropagation()} type='checkbox' checked={this.block.checked} onChange={e => this.block.onChange(e.nativeEvent)} /></div>
-                <span className='sy-block-todo-text'><TextArea   block={this.block} placeholder={langProvider.getText(LangID.todoPlaceholder)} 
-               prop='content' 
-                 ></TextArea></span>
+                <div className='sy-block-todo-checkbox' style={{ height: this.block.page.lineHeight }}><input onMouseDown={e => e.stopPropagation()} type='checkbox' checked={this.block.checked} onChange={e => this.block.onChange(e.nativeEvent)} /></div>
+                <span className='sy-block-todo-text'><TextArea block={this.block} placeholder={langProvider.getText(LangID.todoPlaceholder)}
+                    prop='content'
+                ></TextArea></span>
             </div>
         }
     }
