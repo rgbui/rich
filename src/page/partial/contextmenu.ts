@@ -6,10 +6,11 @@ import { MenuItemType, MenuItemTypeValue } from "../../../component/view/menu/de
 import { BlockDirective } from "../../block/enum";
 import { Point, Rect } from "../../common/vector/point";
 import { PageLayoutType } from "../declare";
-import { FileSvg, LinkSvg, LockSvg, MoveToSvg, TrashSvg, UndoSvg, UploadSvg, VersionHistorySvg } from "../../../component/svgs";
+import { FileSvg, LinkSvg, LockSvg, MoveToSvg, TrashSvg, UndoSvg, UnlockSvg, UploadSvg, VersionHistorySvg } from "../../../component/svgs";
 import { usePageLayout } from "../../../extensions/layout";
 import { CopyText } from "../../../component/copy";
 import { ShyAlert } from "../../../component/lib/alert";
+import { channel } from "../../../net/channel";
 
 export class PageContextmenu {
     async onGetContextMenus(this: Page) {
@@ -49,19 +50,7 @@ export class PageContextmenu {
         }
     }
     async onPageContextmenu(this: Page, event: React.MouseEvent) {
-        /* <Row>
-                    <Col>宽度：</Col>
-                    <Col>
-                        <Space>
-                            <span>小宽</span>
-                            <span>大宽</span>
-                            <span>全屏</span>
-                            <span>大屏</span>
-                        </Space>
-                    </Col>
-            </Row> */
         var items: MenuItemType<BlockDirective | string>[] = [];
-
         if (this.pageLayout.type == PageLayoutType.doc) {
             items = [
                 { name: 'smallText', text: '小字号', checked: this.smallFont ? true : false, type: MenuItemTypeValue.switch },
@@ -103,13 +92,20 @@ export class PageContextmenu {
                 ShyAlert('复制链接');
             }
             else if (r.item.name == 'lock') {
-
+                channel.air('/page/update/info', {
+                    id: this.pageInfo.id, pageInfo: {
+                        locker: this.pageInfo.locker?.userid ? null : {
+                            userid: this.user.id,
+                            lockDate: Date.now()
+                        }
+                    }
+                })
             }
             else if (r.item.name == 'delete') {
-
+                channel.air('/page/remove', { item: this.pageInfo.id });
             }
             else if (r.item.name == 'undo') {
-
+                this.onUndo();
             }
         }
     }

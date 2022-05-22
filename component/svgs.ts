@@ -112,6 +112,7 @@ import TypesSortSvg from "../src/assert/svg/types.sort.svg";
 import TypesStringSvg from "../src/assert/svg/types.string.svg";
 import TypesTitleSvg from "../src/assert/svg/types.title.svg";
 import UndoSvg from "../src/assert/svg/undo.svg";
+import UnlockSvg from "../src/assert/svg/unlock.svg";
 import UnsplashSvg from "../src/assert/svg/unsplash.svg";
 import UploadSvg from "../src/assert/svg/upload.svg";
 import VersionHistorySvg from "../src/assert/svg/versionHistory.svg";
@@ -233,6 +234,7 @@ TypesSortSvg,
 TypesStringSvg,
 TypesTitleSvg,
 UndoSvg,
+UnlockSvg,
 UnsplashSvg,
 UploadSvg,
 VersionHistorySvg,
