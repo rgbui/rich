@@ -12,12 +12,12 @@ import Dots from "../../../src/assert/svg/dots.svg";
 import { MenuItemTypeValue } from "../../../component/view/menu/declare";
 import { CheckSvg, TrashSvg } from "../../../component/svgs";
 import { useSelectMenuItem } from "../../../component/view/menu";
-import { channel } from "../../../net/channel";
 import { Point } from "../../../src/common/vector/point";
 import { Icon } from "../../../component/view/icon";
-import { Alert } from "../../../component/lib/alert";
+
 import { util } from "../../../util/util";
 import { Confirm } from "../../../component/lib/confirm";
+import { ShyAlert } from "../../../component/lib/alert";
 /**
  * 背景色
  */
@@ -156,7 +156,7 @@ export class TableStoreOption extends EventsComponent {
         var name = menus[0].value;
         if (name && name != option.text) {
             if (this.options.some(s => s.text == name && s !== option)) {
-                Alert('当前标签项已存在。')
+                ShyAlert('当前标签项已存在。')
             }
             else {
                 option.text = name;
