@@ -62,11 +62,14 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
     var ele = event.target as HTMLElement;
     if (!dropBlock || dropBlock?.isView) {
         dropBlock = undefined;
+        /**
+         * 这表示从左边开始查找，如果找到，说明方位在右边
+         */
         dropBlock = kit.page.findXBlock(event, g => !g.isView, 'left');
-        if (dropBlock) fr = 'left';
+        if (dropBlock) fr = 'right';
         if (!dropBlock) {
             dropBlock = kit.page.findXBlock(event, g => !g.isView, 'right');
-            if (dropBlock) fr = 'right';
+            if (dropBlock) fr = 'left';
         }
         if (!dropBlock) {
             dropBlock = kit.page.getViewLastBlock();
