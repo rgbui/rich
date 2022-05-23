@@ -148,14 +148,6 @@ export abstract class Block extends Events {
             if (at > 0) {
                 return this.parentBlocks[at - 1];
             }
-            else if (at == 0) {
-                var keys = this.parent.blockKeys;
-                var parentKey = this.parentKey;
-                var i = keys.findIndex(g => g == parentKey);
-                if (i > 0) {
-                    return this.parent.blocks[keys[i - 1]].last()
-                }
-            }
         }
     }
     get next() {
@@ -165,16 +157,9 @@ export abstract class Block extends Events {
             if (at < pbs.length - 1) {
                 return pbs[at + 1];
             }
-            else if (at == pbs.length - 1) {
-                var keys = this.parent.blockKeys;
-                var parentKey = this.parentKey;
-                var i = keys.findIndex(g => g == parentKey);
-                if (i < keys.length - 1) {
-                    return this.parent.blocks[keys[i + 1]].first();
-                }
-            }
         }
     }
+
     /**
      * 当前元素下面的元素，注意在同一个ChildKey中
      */
@@ -313,6 +298,13 @@ export abstract class Block extends Events {
         return true;
     }
     /**
+     * 是否允许输入换行符，一般是通过shift+enter键入，
+     * 但像标题，可能不允许输入换行
+     */
+    get isAllowInputTextLine() {
+        return true;
+    }
+    /**
      * 回退时，最后一步是否转换成普通文本
      */
     get isBackspaceAutomaticallyTurnText() {
@@ -396,15 +388,6 @@ export abstract class Block extends Events {
     get lastElementAppear() {
         return this.appearAnchors.last();
     }
-    get isOnlyElementAppear() {
-        return this.appearAnchors.length == 1;
-    }
-    get isOnlyElementText() {
-        return this.isOnlyElementAppear && this.firstElementAppear.isText;
-    }
-    get isOnlyElementSolid() {
-        return this.isOnlyElementAppear && this.firstElementAppear.isSolid;
-    }
     get isSupportAnchor() {
         if (this.isLayout) return false;
         if (this.appearAnchors.length > 0) return true;
@@ -423,32 +406,14 @@ export abstract class Block extends Events {
         return true;
     }
     isMounted: boolean = false;
-    isCrossElementAppear(rect: Rect | Point) {
-        var es = this.appearAnchors;
-        for (var i = 0; i < es.length; i++) {
-            var e = es[i];
-            var bound = Rect.fromEle(e.el);
-            if (rect instanceof Rect && bound.isCross(rect)) {
-                return true;
-            }
-            else if (rect instanceof Point && bound.contain(rect)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    isCrossBlockContentArea(rect: Rect | Point) {
-        var bound = this.getVisibleContentBound();
-        if (rect instanceof Rect && bound.isCross(rect)) {
-            return true;
-        }
-        else if (rect instanceof Point && bound.contain(rect)) {
-            return true;
-        }
-        return false;
-    }
-    isCrossBlockArea(rect: Rect | Point) {
-        var el = this.el;
+    /**
+     * 这里主要是判断当前的rect,point是否与当前块的视野内相交
+     * 注意，如果有子块，那么只表示与子块相交，不是与父块视野相关
+     * 一般只是简单的判断即可，对于各别的可继承使用
+     * @param rect 
+     * @returns 
+     */
+    isCrossBlockVisibleArea(rect: Rect | Point) {
         var bound = this.getVisibleBound();
         if (rect instanceof Rect && bound.isCross(rect)) {
             return true;
@@ -623,7 +588,7 @@ export abstract class Block extends Events {
     }
     get isLock() {
         if (this.locker?.lock) return true;
-        return this.page.pageInfo?.locker?.userid?true:false;
+        return this.page.pageInfo?.locker?.userid ? true : false;
     }
     /**
      * 标记，主要是标记block用，没有其它什么作用
