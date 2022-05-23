@@ -1,6 +1,7 @@
 import React from "react";
 import { Kit } from "../..";
 import { Block } from "../../../block";
+import { findBlockNearAppearByPoint } from "../../../block/appear/visible.seek";
 import { MouseDragger } from "../../../common/dragger";
 import { onAutoScroll, onAutoScrollStop } from "../../../common/scroll";
 import { Point, Rect } from "../../../common/vector/point";
@@ -56,13 +57,17 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
             }
             else {
                 if (block) {
-                    /**这里得水平找到相近的appearanchor */
-                    if (block.appearAnchors.some(s => s.isText)) {
-                        var aa = block.appearAnchors.find(s => s.isText);
-                        var rect = Rect.fromEle(aa.el);
-                        ev.preventDefault();
-                        if (ev.clientX > rect.right) kit.writer.onFocusAppearAnchor(aa, { last: true })
-                        else kit.writer.onFocusAppearAnchor(aa)
+                    if (!block.isLayout) {
+                        var a = findBlockNearAppearByPoint(block, Point.from(ev));
+                        console.log(block,a,'sss');
+                        if (a) {
+                            if (a.end) {
+                                kit.writer.onFocusAppearAnchor(a.anchor, { last: true })
+                            }
+                            else {
+                                kit.writer.onFocusAppearAnchor(a.anchor)
+                            }
+                        }
                     }
                 }
                 else {

@@ -1,8 +1,9 @@
+import { moveMessagePortToContext } from "worker_threads";
 import { AppearAnchor } from ".";
 import { Block } from "..";
 import { dom } from "../../common/dom";
 import { TextEle } from "../../common/text.ele";
-import { Rect } from "../../common/vector/point";
+import { Point, Rect } from "../../common/vector/point";
 const GAP = 10;
 export function findBlockAppear(el) {
     if (el) {
@@ -253,4 +254,64 @@ export function findBlocksBetweenAppears(start: HTMLElement, end: HTMLElement) {
     var en = findBlockAppear(end);
     if (end && !list.includes(en)) list.push(en);
     return list;
+}
+
+/**
+ * 通过point查找在block下面相关的appear
+ * 这个通常是空白处
+ * @param point 
+ */
+export function findBlockNearAppearByPoint(block: Block, point: Point) {
+    var ps: any[] = [];
+    block.each(b => {
+        b.appearAnchors.findAll(g => g.isText).each(aa => {
+            var cs = TextEle.getBounds(aa.el);
+            var x = 0;
+            var y = 0;
+            var isStart = true;
+            if (point.y < cs.first().top) {
+                y = point.y - cs.first().top;
+                x = point.x - cs.first().left;
+                isStart = true;
+            }
+            else if (point.y > cs.last().bottom) {
+                y = cs.last().bottom - point.y;
+                x = cs.last().right - point.x;
+                isStart = false;
+            }
+            else {
+                y = 0;
+                if (Math.abs(cs.min(g => g.left) - point.x) < Math.abs(cs.max(g => g.right) - point.x)) {
+                    isStart = true;
+                    x = cs.min(g => g.left) - point.x
+                }
+                else { isStart = false; x = cs.max(g => g.right) - point.x }
+            }
+            ps.push({
+                aa,
+                y: Math.abs(y),
+                x: Math.abs(x),
+                isStart
+            })
+        })
+    }, true);
+    var prs = ps.findAll(g => g.y == 0);
+    if (prs.length > 0) {
+        var pr = prs.findMin(p => p.x);
+        return {
+            anchor: pr.aa,
+            end: pr.isStart ? false : true,
+        }
+    }
+    else {
+        var my = ps.min(g => g.y);
+        var mg = ps.findAll(g => g.y == my);
+        if (mg.length == 1) {
+            return { anchor: mg[0].aa, end: mg[0].isStart ? false : true }
+        }
+        else if (mg.length > 1) {
+            var mx = mg.findMin(g => g.x);
+            return { anchor: mx.aa, end: mx.isStart ? false : true }
+        }
+    }
 }
