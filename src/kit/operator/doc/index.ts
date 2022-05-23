@@ -59,7 +59,6 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                 if (block) {
                     if (!block.isLayout) {
                         var a = findBlockNearAppearByPoint(block, Point.from(ev));
-                        console.log(block,a,'sss');
                         if (a) {
                             if (a.end) {
                                 kit.writer.onFocusAppearAnchor(a.anchor, { last: true })
