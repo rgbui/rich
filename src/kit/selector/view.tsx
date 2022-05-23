@@ -1,19 +1,14 @@
 import React from "react";
-import ReactDOM, { createPortal } from "react-dom";
+import ReactDOM from "react-dom";
 import { Selector } from ".";
 
 export class SelectorView extends React.Component<{ selector: Selector }> {
     constructor(props) {
         super(props);
-        this.node = document.body.appendChild(document.createElement('div'));
         this.selector.view = this;
     }
-    private node: HTMLElement;
     get selector() {
         return this.props.selector;
-    }
-    componentWillUnmount() {
-        if (this.node) this.node.remove()
     }
     el: HTMLElement;
     componentDidMount() {
@@ -28,8 +23,8 @@ export class SelectorView extends React.Component<{ selector: Selector }> {
             style.top = rect.top;
             style.left = rect.left;
         }
-        return createPortal(<div className='shy-kit-selector'>
+        return <div className='shy-kit-selector'>
             {this.selector.visible && <div className='shy-kit-selector-region' style={style}></div>}
-        </div>, this.node)
+        </div>
     }
 }
