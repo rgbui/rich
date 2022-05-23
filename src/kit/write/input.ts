@@ -215,7 +215,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                  * 如果满足转换，
                  * 则自动转换,如果是list块，且有子块，则不自动转换
                  *  */
-                if (rowBlock.isBackspaceAutomaticallyTurnText && !(rowBlock.isListBlock && rowBlock.blockChilds[rowBlock.childKey].length > 0)) {
+                if (rowBlock.isBackspaceAutomaticallyTurnText && !(rowBlock.isListBlock && rowBlock.getChilds(rowBlock.childKey).length > 0)) {
                     var newBlock = await rowBlock.turn(BlockUrlConstant.TextSpan);
                     write.kit.page.addUpdateEvent(async () => {
                         write.onFocusBlockAnchor(newBlock);
