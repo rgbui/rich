@@ -94,13 +94,13 @@ export class Block$Operator {
     async insertBefore(this: Block, to: Block) {
         await to.parent.append(this,
             to.at,
-            to.parentKey
+            to.parent.childKey
         );
     }
     async insertAfter(this: Block, to: Block) {
         await to.parent.append(this,
             to.at + 1,
-            to.parentKey
+            to.parent.childKey
         );
     }
     /**

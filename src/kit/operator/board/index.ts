@@ -48,6 +48,7 @@ export async function BoardDrag(kit: Kit, block: Block, event: React.MouseEvent)
                 var movePoint = Point.from(ev);
                 kit.selector.setMove(movePoint);
                 var bs = gm.findBlocksByRect(new Rect(downPoint, movePoint));
+                bs = kit.page.getAtomBlocks(bs);
                 kit.picker.onPicker(bs);
             }
         },

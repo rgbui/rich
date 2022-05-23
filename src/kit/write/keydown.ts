@@ -57,10 +57,10 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
     else if (event.key == KeyboardCode.ArrowRight) {
         onceAutoScroll({ el: aa.el, feelDis: 60, dis: 120 })
         if (aa.isEnd(sel.focusNode, sel.focusOffset)) {
-            var nextAA = aa.visibleRight();
-            if (nextAA) {
+            var downAA = aa.visibleRight();
+            if (downAA) {
                 event.preventDefault();
-                write.onFocusAppearAnchor(nextAA, { at: nextAA.isAfterNear(aa) ? 1 : 0 })
+                write.onFocusAppearAnchor(downAA, { at: downAA.isAfterNear(aa) ? 1 : 0 })
             } else {
                 //说明光标处于文档的尾部
             }
@@ -77,11 +77,11 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
             /**
              * 说明向下移动
              */
-            var nextAA = aa.visibleDown(rect.leftMiddle.x);
-            if (nextAA) {
+            var downAA = aa.visibleDown(rect.leftMiddle.x);
+            if (downAA) {
                 event.preventDefault();
-                onceAutoScroll({ el: nextAA.el, feelDis: 60, dis: 120 })
-                write.onFocusAppearAnchor(nextAA, { left: rect.left, y: rects.last().bottom + lineHeight / 2 })
+                onceAutoScroll({ el: downAA.el, feelDis: 60, dis: 120 })
+                write.onFocusAppearAnchor(downAA, { left: rect.left, y: rects.last().bottom + lineHeight / 2 })
             }
         }
     }
@@ -93,7 +93,7 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
         onceAutoScroll({ el: aa.el, point: rect.leftMiddle, feelDis: 60, dis: 120 });
         if (Math.abs(rect.top - rects.first().top) < lineHeight) {
             /**
-             * 说明向下移动
+             * 说明向上移动
              */
             var upAA = aa.visibleUp(rect.leftMiddle.x);
             if (upAA) {
@@ -120,7 +120,7 @@ export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: Re
         if (rest || !block.isLine) block.updateAppear(aa, rest, BlockRenderRange.self);
         else await block.delete();
         var newBlock: Block;
-        if (rowBlock.isListBlock && rowBlock.getChilds(rowBlock.childKey).length > 0) {
+        if (rowBlock.isListBlock && rowBlock.asListBlock.expand && rowBlock.getChilds(rowBlock.childKey).length > 0) {
             var fb = rowBlock.getChilds(rowBlock.childKey).first();
             var url = fb.isContinuouslyCreated ? fb.url : BlockUrlConstant.TextSpan;
             var continuouslyProps = fb.continuouslyProps;
@@ -139,5 +139,44 @@ export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: Re
         page.addUpdateEvent(async () => {
             write.onFocusBlockAnchor(newBlock);
         })
+    });
+}
+export async function onKeyTab(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
+    event.preventDefault();
+    var sel = window.getSelection();
+    var offset = sel.focusOffset;
+    var bl = aa.block;
+    var prop = aa.prop;
+    var page = write.kit.page;
+    var list = bl.closest(x => x.url == BlockUrlConstant.List);
+    var isBack = page.keyboardPlate.isShift()
+    if (isBack) {
+        if (!list.parent?.isListBlock) return false
+    }
+    else {
+        var prev = list.prev;
+        if (!list.prev?.isListBlock) return false;
+    }
+    await InputForceStore(aa, async () => {
+        if (isBack) {
+            var pa = list.parent;
+            var at = list.at;
+            var rest = pa.blocks[pa.childKey].findAll((item, i) => i > at);
+            await list.appendArray(rest, undefined, list.childKey);
+            await list.insertAfter(pa);
+        }
+        else {
+            var prev = list.prev;
+            if (prev.isListBlock && prev.asListBlock.expand == false) {
+                prev.updateProps({ expand: true });
+            }
+            await prev.append(list, undefined, prev.childKey);
+        }
+        page.addUpdateEvent(async () => {
+            var newAA = bl.appearAnchors.find(g => g.prop == prop);
+            if (newAA)
+                write.onFocusAppearAnchor(newAA, { at: offset });
+        })
+        page.kit.handle.onCloseBlockHandle();
     });
 }
