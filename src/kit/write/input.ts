@@ -164,9 +164,6 @@ export async function inputLineTail(write: PageWrite, aa: AppearAnchor, event: R
 }
 
 
-
-
-
 /**
  * 将要回车删除
  * 两种情况
@@ -176,6 +173,7 @@ export async function inputLineTail(write: PageWrite, aa: AppearAnchor, event: R
  * @param write 
  * @param aa 
  * @param event 
+ * 
  */
 export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
     var sel = window.getSelection();
