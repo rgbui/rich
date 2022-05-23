@@ -227,8 +227,7 @@ export class AppearAnchor {
         if (point.y < bs.first().top) point.y = bs.first().middle;
         if (point.y > bs.last().bottom) point.y = bs.last().middle;
         if (point.x < bs.min(g => g.left)) point.x = bs.min(g => g.left);
-        if (point.x > bs.max(g => g.right)) point.y = bs.max(g => g.right);
-
+        if (point.x > bs.max(g => g.right)) point.x = bs.max(g => g.right);
         var r = TextEle.getCursorRangeByPoint(point);
         if (r && this.el.contains(r.node) && typeof r.offset == 'number') {
             endOffset = r.offset;
@@ -265,6 +264,12 @@ export class AppearAnchor {
                 couter += 1;
             }
         }
+        if (typeof endOffset == 'undefined') {
+            if (Math.abs(point.y - bs.last().bottom) > Math.abs(point.y - bs.first().top)) {
+                endOffset = this.textContent.length;
+            }
+            else endOffset = 0;
+        }
         if (typeof endOffset == 'number') {
             /**
              * 说明找到光标的位置了
@@ -275,6 +280,7 @@ export class AppearAnchor {
             else {
                 sel.collapse(this.textNode, endOffset);
             }
+            return true;
         }
         else {
             if (isCollapsed) {
@@ -288,6 +294,7 @@ export class AppearAnchor {
                     sel.removeAllRanges();
                 }
             }
+            return false;
         }
     }
     get propValue() {
@@ -296,7 +303,7 @@ export class AppearAnchor {
         return html;
     }
     updateViewValue() {
-        if (this.isText&& this.el) {
+        if (this.isText && this.el) {
             this.el.innerHTML = this.propValue;
         }
     }
