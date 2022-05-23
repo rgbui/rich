@@ -144,4 +144,38 @@ export class Page$Seek {
         if (!block) block = this.views[0];
         if (block) return block.childs.last()
     }
+    /**
+     * 过滤掉被包含的块
+     * @param this 
+     * @param blocks 
+     */
+    getAtomBlocks(this: Page, blocks: Block[]) {
+        var cs = blocks.map(b => b);
+        if (cs.length <= 1) return cs;
+        var bs: Block[] = [];
+        while (true) {
+            if (cs.length == 0) return bs;
+            else {
+                var c1 = cs[0];
+                var isOk: boolean = true;
+                for (var i = cs.length - 1; i > 0; i--) {
+                    var current = cs[i];
+                    if (c1 === current || c1.exists(g => g === current)) {
+                        cs.splice(i, 1);
+                    }
+                    else if (current.exists(g => g === c1)) {
+                        cs.splice(0, 1);
+                        isOk = false;
+                        break;
+                    }
+                }
+                if (isOk) {
+                    cs.splice(0, 1);
+                    bs.push(c1);
+                }
+            }
+        }
+        return bs;
+    }
+
 }
