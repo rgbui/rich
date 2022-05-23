@@ -69,6 +69,9 @@ async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
     await InputForceStore(aa, async () => {
         var rowBlock = aa.block.closest(x => !x.isLine);
         var firstBlock = rowBlock;
+        if (firstBlock.isContentEmpty) {
+            blocks[0].url = firstBlock.url;
+        }
         for (let i = 0; i < blocks.length; i++) {
             var bd = blocks[i];
             rowBlock = await rowBlock.visibleDownCreateBlock(bd.url, bd);
