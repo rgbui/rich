@@ -180,7 +180,7 @@ export async function inputLineTail(write: PageWrite, aa: AppearAnchor, event: R
 export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
     var sel = window.getSelection();
     var isEmpty = aa.textContent == '';
-    if (sel.focusOffset == 0) {
+    if (sel.focusOffset==0) {
         event.preventDefault();
         /**
          * 标题不能回退删除
@@ -211,8 +211,11 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
             }
             else {
                 if (isEmpty && block.isLine) await block.delete()
-                /**如果满足转换，则自动转换 */
-                if (rowBlock.isBackspaceAutomaticallyTurnText) {
+                /**
+                 * 如果满足转换，
+                 * 则自动转换,如果是list块，且有子块，则不自动转换
+                 *  */
+                if (rowBlock.isBackspaceAutomaticallyTurnText && !(rowBlock.isListBlock && rowBlock.blockChilds[rowBlock.childKey].length > 0)) {
                     var newBlock = await rowBlock.turn(BlockUrlConstant.TextSpan);
                     write.kit.page.addUpdateEvent(async () => {
                         write.onFocusBlockAnchor(newBlock);
@@ -220,16 +223,22 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                     return;
                 }
                 //这里判断块前面没有同级的块，所以这里考虑能否升级
-                if (rowBlock?.parent?.isListBlock) {
-                    var ppa = rowBlock.parent.parent;
-                    var at = rowBlock.parent.at;
-                    await ppa.append(rowBlock, at + 1);
+                if (rowBlock?.parent?.isListBlock && rowBlock.isListBlock && !rowBlock.prev) {
+                    var rp = rowBlock.parent;
+                    var rest = rowBlock.parentBlocks.findAll((g, i) => i > rowBlock.at);
+                    await rowBlock.appendArray(rest);
+                    await rowBlock.insertAfter(rp);
                     write.kit.page.addUpdateEvent(async () => {
                         write.onFocusBlockAnchor(rowBlock);
                     });
                     return;
                 }
-                if (!rowBlock.isContentEmpty && rowBlock.isTextBlock && rowBlock.prev.isTextBlock) {
+                if (!rowBlock.isContentEmpty && rowBlock.isTextBlock && !rowBlock.prev && rowBlock.parent.isTextBlock) {
+                    //这个父块合并子块的内容
+                    await combindSubBlock(write, rowBlock);
+                    return;
+                }
+                if (!rowBlock.isContentEmpty && rowBlock.isTextBlock && rowBlock.prev?.isTextBlock) {
                     //这个需要合并块
                     await combineTextBlock(write, rowBlock);
                     return;
@@ -282,6 +291,38 @@ export async function inputBackSpaceTextContent(write: PageWrite, aa: AppearAnch
         return true;
     }
     return false;
+}
+/**
+ * 
+ * @param write 
+ * @param rowBlock 
+ */
+async function combindSubBlock(write: PageWrite, rowBlock: Block) {
+    var pa = rowBlock.parent;
+    var lastPreBlock = pa.childs.last();
+    if (pa.childs.length == 0) {
+        var content = pa.content;
+        pa.updateProps({ content: '' });
+        var pattern = await pa.pattern.cloneData();
+        lastPreBlock = await pa.appendBlock({ url: BlockUrlConstant.Text, content, pattern }, undefined, 'childs');
+    }
+    if (rowBlock.childs.length > 0) {
+        await pa.appendArray(rowBlock.childs, undefined, 'childs');
+    }
+    else {
+        await pa.appendBlock({
+            url: BlockUrlConstant.Text,
+            content: rowBlock.content,
+            pattern: await rowBlock.pattern.cloneData()
+        }, undefined, 'childs');
+    }
+    if (rowBlock.isListBlock && rowBlock.blocks[rowBlock.childKey].length > 0) {
+        await pa.appendArray(rowBlock.blocks[rowBlock.childKey], 0, rowBlock.childKey);
+    }
+    await rowBlock.delete();
+    write.kit.page.addUpdateEvent(async () => {
+        write.onFocusBlockAnchor(lastPreBlock, { last: true });
+    });
 }
 
 /**
