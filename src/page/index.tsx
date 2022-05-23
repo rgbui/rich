@@ -58,7 +58,9 @@ export class Page extends Events<PageDirective> {
         return channel.query('/query/current/user');
     }
     get permissions() {
-        return channel.query('/page/query/permissions', { pageId: this.pageItemId });
+        var ps = channel.query('/page/query/permissions', { pageId: this.pageItemId });
+        if (Array.isArray(ps)) return ps;
+        else return [];
     }
     kit: Kit = new Kit(this);
     snapshoot = new HistorySnapshoot(this)

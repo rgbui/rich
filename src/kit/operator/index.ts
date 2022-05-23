@@ -21,12 +21,12 @@ import { PageDrag } from "./drag";
 export class PageOperator {
     constructor(public kit: Kit) { }
     mousedown(event: React.MouseEvent) {
-        if (!this.kit.page.isCanEdit) return
+        if (!this.kit.page?.isCanEdit) return
         PageDrag(this.kit, event);
     }
     public moveEvent: MouseEvent;
     mousemove(event: MouseEvent) {
-        if (!this.kit.page.isCanEdit) return
+        if (!this.kit.page?.isCanEdit) return
         this.moveEvent = event;
         //判断当前的ele是否在bar自已本身内
         /**
