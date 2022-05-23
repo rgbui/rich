@@ -9,7 +9,7 @@ import { TextTurns } from "../../src/block/turn/text";
 export class Head extends Block {
     @prop()
     level: 'h1' | 'h2' | 'h3' | 'h4' = 'h1';
-    get multiLines() {
+    get isAllowInputTextLine() {
         return false;
     }
     get appearAnchors() {
@@ -61,7 +61,7 @@ export class HeadView extends BlockView<Head>{
                 childs={this.block.childs}></TextLineChilds></div>
         else
             return <div className='sy-block-text-head' style={style}>
-                <TextArea  block={this.block}   placeholder={'大标题'}  prop='content' ></TextArea>
+                <TextArea block={this.block} placeholder={'大标题'} prop='content' ></TextArea>
             </div>
     }
 }
