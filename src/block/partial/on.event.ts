@@ -223,29 +223,6 @@ export class Block$Event {
             this.manualUpdateProps(oldProps, newProps, range, isOnlyRecord);
         })
     }
-    async onKeyTab(this: Block, isBack?: boolean) {
-        var list = this.closest(x => x.url == BlockUrlConstant.List);
-        if (isBack) {
-            if (!(list.parent && list.parent.url == BlockUrlConstant.List)) return false
-        }
-        else {
-            var prev = list.prev;
-            if (!(prev && prev.url == BlockUrlConstant.List)) return false
-        }
-        await this.page.onAction(ActionDirective.onKeyTab, async () => {
-            if (isBack) {
-                var pa = list.parent;
-                var at = list.at;
-                var rest = pa.blocks[pa.childKey].findAll((item, i) => i > at);
-                await list.insertAfter(pa);
-                await list.appendArray(rest, undefined, list.childKey)
-            }
-            else {
-                var prev = list.prev;
-                await prev.append(this, undefined, prev.childKey);
-            }
-        })
-    }
     async onLock(this: Block, locked: boolean) {
         this.onAction(ActionDirective.onLock, async () => {
             this.updateProps({

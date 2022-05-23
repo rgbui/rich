@@ -15,7 +15,7 @@ import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
 import { PageLayoutType } from "../../page/declare";
 import { inputBackspaceDeleteContent, inputBackSpaceTextContent, inputDetector, inputLineTail, inputPop, keydownBackspaceTextContent } from "./input";
-import { MoveCursor, onEnterInput, predictKeydown } from "./keydown";
+import { MoveCursor, onEnterInput, onKeyTab, predictKeydown } from "./keydown";
 import { onPaste } from "./paste";
 import { AutoInputStore, InputForceStore, InputStore } from "./store";
 
@@ -58,8 +58,7 @@ import { AutoInputStore, InputForceStore, InputStore } from "./store";
 
 export class PageWrite {
     constructor(public kit: Kit) { }
-    async mousedown(aa: AppearAnchor, event: React.MouseEvent)
-    {
+    async mousedown(aa: AppearAnchor, event: React.MouseEvent) {
         var sel = window.getSelection();
         var rowBlock = aa.block.closest(x => x.isBlock);
         if (rowBlock.isFreeBlock && !(sel.focusNode && rowBlock.el.contains(sel.focusNode))) {
@@ -122,7 +121,6 @@ export class PageWrite {
      * 注意点:event.preventDefault() 在触发前最好不要有执行async的操作，否则会失效
      */
     async keydown(aa: AppearAnchor, event: React.KeyboardEvent) {
-        console.log('sss')
         var sel = window.getSelection();
         /**
          * 判断是否阻止输入
@@ -170,6 +168,9 @@ export class PageWrite {
                     if (!this.kit.page.keyboardPlate.isShift()) {
                         await onEnterInput(this, aa, event);
                     }
+                    else if (this.kit.page.keyboardPlate.isShift() && aa.block.isAllowInputTextLine) {
+                        await onEnterInput(this, aa, event);
+                    }
                 }
                 break;
             case KeyboardCode.Delete:
@@ -180,10 +181,7 @@ export class PageWrite {
                 break;
             case KeyboardCode.Tab:
                 if (aa.block.closest(x => x.isListBlock)) {
-                    event.preventDefault();
-                    await AutoInputStore();
-                    await aa.block.onKeyTab(this.kit.page.keyboardPlate.isShift())
-                    return
+                    await onKeyTab(this, aa, event);
                 }
                 break;
         }
