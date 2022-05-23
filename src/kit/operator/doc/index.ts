@@ -67,7 +67,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                 else {
                     /**这里得找页面的最末尾块 */
                     var lastBlock = kit.page.getViewLastBlock();
-                    if (lastBlock && lastBlock.appearAnchors.some(s => s.isText)) {
+                    if (lastBlock && lastBlock.isContentEmpty && lastBlock.appearAnchors.some(s => s.isText)) {
                         kit.writer.onFocusBlockAnchor(lastBlock, { last: true });
                     }
                     else {
