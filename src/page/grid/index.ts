@@ -135,6 +135,7 @@ export class GridMap {
                 }
             }
         }
+        
         return blocks;
     }
     public findBlocksByRect(rect: Rect, predict?: (block: Block) => boolean) {
@@ -145,7 +146,7 @@ export class GridMap {
         var gyMax = Math.ceil((relativeRect.y + relativeRect.height) / this.cellSize);
         var blocks: Block[] = [];
         if (typeof predict == 'undefined') predict = (b) => {
-            return b.isCrossBlockArea(rect);
+            return b.isCrossBlockVisibleArea(rect);
         }
         for (let i = gxMin; i <= gxMax; i++) {
             for (let j = gyMin; j <= gyMax; j++) {

@@ -7,6 +7,7 @@ import { BlockView } from "../../../src/block/view";
 import { BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
 import { ChildsArea, TextArea, TextLineChilds } from "../../../src/block/view/appear";
 import { TextTurns } from "../../../src/block/turn/text";
+import { Rect, Point } from "../../../src/common/vector/point";
 export enum ListType {
     circle = 0,
     number = 1,
@@ -40,9 +41,6 @@ export class List extends Block {
         var keys = Object.keys(this.blocks);
         if (this.isExpand == false && this.listType == ListType.arrow) keys.remove('subChilds');
         return keys;
-    }
-    get multiLines() {
-        return false;
     }
     get isContinuouslyCreated() {
         return true;
@@ -88,6 +86,20 @@ export class List extends Block {
         if (this.isExpand == false && this.listType == ListType.arrow) return [];
         return super.getChilds(key);
     }
+    isCrossBlockVisibleArea(rect: Rect | Point) {
+        var bound = this.getVisibleBound();
+        var contentEle = this.el.querySelector('.sy-block-list-text');
+        var cb = Rect.fromEle(contentEle as HTMLElement);
+        if (rect instanceof Rect && bound.isCross(rect)) {
+            if (cb.isCross(rect)) return true;
+            else return false;
+        }
+        else if (rect instanceof Point && bound.contain(rect)) {
+            if (cb.contain(rect)) return true;
+            else return false;
+        }
+        return false;
+    }
 }
 @view('/list')
 export class ListView extends BlockView<List>{
@@ -119,7 +131,7 @@ export class ListView extends BlockView<List>{
         if (this.block.childs.length > 0)
             return <TextLineChilds childs={this.block.childs}></TextLineChilds>
         else
-            return <TextArea  block={this.block}  prop='content' placeholder={'键入文字或"/"选择'}></TextArea>
+            return <TextArea block={this.block} prop='content' placeholder={'键入文字或"/"选择'}></TextArea>
     }
     render() {
         return <div className='sy-block-list' style={this.block.visibleStyle} >
