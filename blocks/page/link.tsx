@@ -1,6 +1,4 @@
 
-
-import lodash from "lodash";
 import React from "react";
 import { PageSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
@@ -21,7 +19,7 @@ export class Link extends Block {
     display = BlockDisplay.block;
     icon: IconArguments;
     text: string;
-    sn: number;
+    pageUrl: string;
     get isSupportTextStyle() {
         return false;
     }
@@ -30,15 +28,14 @@ export class Link extends Block {
         if (r?.ok) {
             if (r.data.icon) this.icon = r.data.icon;
             if (r.data.text) this.text = r.data.text;
-            if (r.data.sn) this.sn = r.data.sn;
+            if (r.data.url) this.pageUrl = r.data.url;
         }
     }
     async openPage(event: React.MouseEvent) {
         event.preventDefault();
-        channel.fire('/page/open', { item: this.pageId });
+        channel.air('/page/open', { item: { id: this.pageId } });
     }
 }
-
 @view('/link')
 export class LinkView extends BlockView<Link>{
     async didMount() {
@@ -54,12 +51,12 @@ export class LinkView extends BlockView<Link>{
                 this.block.text = pageInfo.text;
                 isUpdate = true;
             }
-            if (typeof pageInfo.icon != 'undefined' && !lodash.isEqual(pageInfo.icon, this.block.icon)) {
+            if (typeof pageInfo.icon != 'undefined' && JSON.stringify(pageInfo.icon) != JSON.stringify(this.block.icon)) {
                 this.block.icon = pageInfo.icon;
                 isUpdate = true;
             }
-            if (typeof pageInfo.sn != 'undefined')
-                this.block.sn = pageInfo.sn;
+            if (typeof pageInfo.url != 'undefined')
+                this.block.pageUrl = pageInfo.url;
             if (isUpdate)
                 this.forceUpdate();
         }
@@ -69,7 +66,7 @@ export class LinkView extends BlockView<Link>{
     }
     render() {
         return <div className='sy-block-link'>
-            {this.block.text && <a href={'https://shy.live/page/' + this.block.sn} onClick={e => this.block.openPage(e)}>
+            {this.block.text && <a href={this.block.pageUrl} onClick={e => this.block.openPage(e)}>
                 <i><Icon size={18} icon={this.block.icon || PageSvg}></Icon></i>
                 <span>{this.block.text}</span>
             </a>}

@@ -39,7 +39,7 @@ declare module "*.json" {
  * 自动在HTMLElement上面申明一个接收拖放元素的函数
  */
 interface HTMLElement {
-  shy_drop_move?: (type: string, data: any) => void;
-  shy_drop_over?: (type: string, data: any) => void;
-  shy_end?: () => void;
+  shy_drop_move?: (type: string, data: any,event:MouseEvent) => void;
+  shy_drop_over?: (type: string, data: any,event:MouseEvent) => void;
+  shy_end?: (event:MouseEvent) => void;
 }

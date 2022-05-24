@@ -45,7 +45,7 @@ export function MouseDragger<T = Record<string, any>>(options: {
                     var cp = dom(event.target as HTMLElement).closest(x => typeof (x as HTMLElement).shy_drop_move == 'function') as HTMLElement;
                     if (cp) {
                         if (!crossPanels.some(s => s === cp)) crossPanels.push(cp);
-                        cp.shy_drop_move(crossData.type, crossData.data);
+                        cp.shy_drop_move(crossData.type, crossData.data,event);
                     }
                 }
             }
@@ -84,11 +84,11 @@ export function MouseDragger<T = Record<string, any>>(options: {
                     try {
                         var cp = dom(event.target as HTMLElement).closest(x => typeof (x as HTMLElement).shy_drop_move == 'function') as HTMLElement;
                         if (cp) {
-                            cp.shy_drop_over(crossData.type, crossData.data);
+                            cp.shy_drop_over(crossData.type, crossData.data,event);
                         }
                         if (crossPanels.length > 0) {
                             for (let i = 0; i < crossPanels.length; i++) {
-                                crossPanels[i].shy_end()
+                                crossPanels[i].shy_end(event)
                             }
                         }
                     }
