@@ -79,11 +79,10 @@ export class PageView extends Component<{ page: Page }>{
     }
     async openPageToolBoard() {
         var toolBoard = await getBoardTool();
-        if (this.page.isBoard)
-            toolBoard.open({
-                roundPoint: Point.from(this.el.getBoundingClientRect()).move(10, 10),
-                relativeEleAutoScroll: this.page.root
-            });
+        if (this.page.isBoard) toolBoard.open({
+            roundPoint: Point.from(this.el.getBoundingClientRect()).move(10, 10),
+            relativeEleAutoScroll: this.page.root
+        });
         toolBoard.only('selector', (data) => {
             var cursor: string = '';
             if (data.url == BlockUrlConstant.TextSpan) {
@@ -108,7 +107,7 @@ export class PageView extends Component<{ page: Page }>{
         var isMove: boolean = false;
         var self = this;
         var handle = self.page.kit.handle;
-        this.el.shy_drop_move = function (type, data) {
+        this.el.shy_drop_move = function (type, data, ev) {
             if (!isMove) {
                 switch (type) {
                     case 'pageItem':
@@ -118,8 +117,12 @@ export class PageView extends Component<{ page: Page }>{
                 }
                 isMove = true;
             }
+            else {
+                console.log('ssss');
+                handle.onDropOverBlock(handle.kit.page.getBlockByMouseOrPoint(ev), ev);
+            }
         }
-        this.el.shy_drop_over = async function (type, data) {
+        this.el.shy_drop_over = async function (type, data, ev) {
             if (isMove) {
                 switch (type) {
                     case 'pageItem':

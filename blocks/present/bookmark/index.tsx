@@ -3,7 +3,7 @@ import React from 'react';
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { Block } from "../../../src/block";
 import { BlockDisplay } from "../../../src/block/enum";
-import { ResourceArguments } from "../../../extensions/icon/declare";
+import { IconArguments, ResourceArguments } from "../../../extensions/icon/declare";
 import { useOutSideUrlInput } from "../../../extensions/link/outsite.input";
 import { Rect } from "../../../src/common/vector/point";
 import { Loading } from "../../../component/view/loading";
@@ -11,6 +11,8 @@ import { Loading } from "../../../component/view/loading";
 @url('/bookmark')
 export class Bookmark extends Block {
     display = BlockDisplay.block;
+    @prop()
+    src: IconArguments = { name: 'none' };
     @prop()
     bookmarkInfo: { url: string, title: string, description: string, thumbnail: ResourceArguments, icon: ResourceArguments } = null;
     loading: boolean = false;

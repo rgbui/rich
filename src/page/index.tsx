@@ -29,7 +29,7 @@ import { channel } from '../../net/channel';
 import { TableSchema } from '../../blocks/data-grid/schema/meta';
 import { OriginFormField } from '../../blocks/data-grid/element/form/origin.field';
 import { LinkPageItem } from '../../extensions/at/declare';
-import { Title } from '../../blocks/at/title';
+import { Title } from '../../blocks/page/title';
 import { AppearAnchor } from '../block/appear';
 import { AtomPermission } from './permission';
 
