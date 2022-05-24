@@ -28,7 +28,6 @@ import "./present/list/list";
 import "./present/code/code";
 import "./present/divider";
 import "./present/button-template/index";
-import "./present/outline/index";
 import "./present/card/index";
 
 import './table/cell';
@@ -80,9 +79,16 @@ import "./data-grid/element/form/video";
 import "./data-grid/element/form/file";
 
 import "./at/date";
-import './at/link';
 import './at/mention';
-import './at/title';
+
+import './page/link';
+import './page/title';
+import "./page/outline/index";
+import './page/ref.links';
+import './page/sub.links';
+import './page/comment/index';
+
+
 
 import "./map/amap";
 

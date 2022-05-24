@@ -6,7 +6,6 @@ import { PageSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { LinkPageItem } from "../../extensions/at/declare";
 import { IconArguments } from "../../extensions/icon/declare";
-
 import { channel } from "../../net/channel";
 import { Block } from "../../src/block";
 import { BlockDisplay } from "../../src/block/enum";
@@ -39,6 +38,7 @@ export class Link extends Block {
         channel.fire('/page/open', { item: this.pageId });
     }
 }
+
 @view('/link')
 export class LinkView extends BlockView<Link>{
     async didMount() {
@@ -70,7 +70,7 @@ export class LinkView extends BlockView<Link>{
     render() {
         return <div className='sy-block-link'>
             {this.block.text && <a href={'https://shy.live/page/' + this.block.sn} onClick={e => this.block.openPage(e)}>
-                <i><Icon size={18} icon={this.block.icon||PageSvg}></Icon></i>
+                <i><Icon size={18} icon={this.block.icon || PageSvg}></Icon></i>
                 <span>{this.block.text}</span>
             </a>}
         </div>
