@@ -33,11 +33,19 @@
 }
 
 .sy-block-text-content {
-    display: inline !important;
-    font-size: inherit;
+    display    : inline !important;
+    font-size  : inherit;
     line-height: inherit;
 
-    &-code {
+    a {
+        text-decoration: underline;
+        color          : inherit;
+    }
+}
+
+.sy-block-text-content-code {
+    em {
+        font-style         : normal;
         line-height        : normal;
         background         : rgba(135, 131, 120, 0.15);
         color              : #EB5757;
@@ -49,11 +57,19 @@
         border-left-width  : 0.4em;
         border-right-width : 0.4em;
         display            : inline;
-    }
 
-    a {
-        text-decoration: underline;
-        color          : inherit;
+        &.next-code {
+            border-right-width        : 0px;
+            border-top-right-radius   : 0px;
+            border-bottom-right-radius: 0px;
+        }
     }
 }
 
+.sy-block-text-content-code+.sy-block-text-content-code {
+    em {
+        border-left-width        : 0px;
+        border-top-left-radius   : 0px;
+        border-bottom-left-radius: 0px;
+    }
+}

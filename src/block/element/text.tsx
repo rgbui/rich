@@ -41,6 +41,7 @@ export class TextContent extends Block {
 export class TextContentView extends BlockView<TextContent>{
     render() {
         var ta = <TextArea block={this.block} prop='content' ></TextArea>
+        var classList: string[] = ['sy-block-text-content'];
         if (this.block.link) {
             if (this.block.link.pageId) {
                 ta = <a href={'/page/' + this.block.link.pageId}>{ta}</a>
@@ -50,12 +51,14 @@ export class TextContentView extends BlockView<TextContent>{
             }
         }
         else if (this.block.code) {
-            ta = <span className='sy-block-text-content-code'>{ta}</span>;
+            var next = this.block.next;
+            classList.push('sy-block-text-content-code');
+            ta = <em className={next && (next as TextContent).code ? "next-code" : ""}>{ta}</em>;
         }
         var style = this.block.visibleStyle;
         delete style.fontSize;
         delete style.lineHeight;
-        return <span className='sy-block-text-content' style={style}>{ta}</span>
+        return <span className={classList.join(" ")} style={style}>{ta}</span>
     }
 }
 
