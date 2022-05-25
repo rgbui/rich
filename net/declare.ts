@@ -189,6 +189,7 @@ export interface ChannelQueryMapUrls {
 	"/query/current/user":{args:any,returnType:UserBasic},
 	"/device/query":{args:any,returnType:Promise<string>},
 	"/amap/key_pair":{args:any,returnType:{key:string,pair:string}},
+	"/ws/current/pages":{args:{},returnType:LinkPageItem[]},
 	"/guid":{args:any,returnType:string},
 	"/page/query/permissions":{args:{pageId:string},returnType:AtomPermission[]}
 }

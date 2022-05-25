@@ -1,69 +1,57 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Singleton } from "../../component/lib/Singleton";
-import { LangID } from "../../i18n/declare";
-import { Sp } from "../../i18n/view";
+import { PageSvg, Plus2Svg } from "../../component/svgs";
+import { Divider } from "../../component/view/grid";
+import { Icon } from "../../component/view/icon";
+import { channel } from "../../net/channel";
 import { KeyboardCode } from "../../src/common/keys";
-import { Point, Rect, RectUtility } from "../../src/common/vector/point";
-import { BlockSelectorItem } from "../block/delcare";
-import { blockStore } from "../block/store";
+import { Point, Rect } from "../../src/common/vector/point";
 import { InputTextPopSelector } from "../common/input.pop";
-import { PopoverPosition } from "../popover/position";
+import { IconArguments } from "../icon/declare";
+import "./style.less";
 
 /**
  * 用户输入[[触发
  */
 class PageLinkSelector extends InputTextPopSelector {
-    open(round: Rect, text: string, callback: (...args: any[]) => void): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async open(
+        round: Rect,
+        text: string,
+        callback: (...args: any[]) => void): Promise<boolean> {
+        this._select = callback;
+        this.pos = round.leftTop;
+        var rs = channel.query('/ws/current/pages');
+        this.visible = true;
+        var t = text.replace(/\[\[|【【/, '');
+        if (t) { this.text = t; this.syncSearch() }
+        else {
+            this.links = rs.map(r => {
+                return {
+                    id: r.id,
+                    text: r.text,
+                    icon: r.icon
+                }
+            });
+            this.forceUpdate();
+        }
+        return true;
     }
-    private get filterSelectorData() {
-        return blockStore.findAll(this.command);
-    }
-    private get filterBlocks() {
-        return blockStore.findAllBlocks(this.command);
+    links: { icon: IconArguments, id: string, text: string }[] = [];
+    private async syncSearch() {
+       var rs= channel.query('/ws/current/pages')
     }
     private get isSelectIndex() {
-        return this.selectIndex >= 0 && this.selectIndex < this.filterBlocks.length;
+        return this.selectIndex >= 0 && this.selectIndex < this.links.length;
     }
-    private renderSelectors() {
-        var i = -1;
-        var fsd = this.filterSelectorData;
-        if (fsd.length == 0) {
-            return <div className='shy-block-selector-no-data'>
-                <Sp id={LangID.blockSelectorNoData}></Sp>
-            </div>
-        }
-        return fsd.map((group, g) => {
-            return <div className='shy-block-selector-group' key={group.text}>
-                <div className='shy-block-selector-group-head'><span>{group.text}</span></div>
-                <div className='shy-block-selector-group-blocks'>{
-                    group.childs.map((child, index) => {
-                        i += 1;
-                        let j = i;
-                        return <div
-                            className={'shy-block-selector-group-block ' + (j == this.selectIndex ? 'selected' : '')}
-                            key={child.url}
-                            onMouseEnter={e => {
-                                this.selectIndex = j;
-                                this.forceUpdate();
-                            }}
-                            onMouseLeave={e => {
-                                this.selectIndex = -1;
-                                this.forceUpdate();
-                            }}
-                            onMouseDown={e => this.onSelect(child)}
-                        > {child.pic}
-                            <div className='shy-block-selector-group-block-info'>
-                                <span>{child.text}</span>
-                                <em>{child.description}</em>
-                            </div>
-                            <label>{child.label}</label>
-                        </div>
-                    })
-                }</div>
-            </div>
-        })
+    private renderLinks() {
+        return <div>
+            <a className={"shy-page-link-item" + (0 == this.selectIndex ? " selected" : "")} onMouseDown={e => this.onSelect({ name: 'create' })}><Icon icon={Plus2Svg}></Icon><span>创建{this.text || '新页面'}</span></a>
+            <Divider></Divider>
+            {this.links.map((link, i) => {
+                return <a onMouseDown={e => this.onSelect(link)} className={"shy-page-link-item" + ((i + 1) == this.selectIndex ? " selected" : "")} key={link.id}><Icon icon={link.icon || PageSvg}></Icon><span>{link.text}</span></a>
+            })}
+        </div>
     }
     render() {
         var style: Record<string, any> = {
@@ -71,85 +59,28 @@ class PageLinkSelector extends InputTextPopSelector {
             left: this.pos.x
         }
         return <div>
-            {this.visible && <div className='shy-block-selector'
-                style={style}>{this.renderSelectors()}</div>}
+            {this.visible && <div className='shy-page-link' style={style}>{this.renderLinks()}</div>}
         </div>
     }
-    private onSelect(block?: BlockSelectorItem) {
-        if (typeof this._select == 'function') this._select(block, this.getFilterText(this.inputValue))
+    private onSelect(block) {
+        if (block.name == 'create') {
+            this._select({ url: '/link/line', isLine: true, text: this.text })
+        }
+        else {
+            this._select({ url: '/link/line', isLine: true, pageId: block.id, text: block.text, icon: block.icon })
+        }
         this.close();
     }
     private visible: boolean = false;
-    private pos: Point = new Point(0, 0);
-    private round: Rect;
-    private command: string = '';
+    private pos: Point = new Point(0, 0)
     private selectIndex: number = 0;
-    private _select: (block: BlockSelectorItem, matchValue: string) => void;
-    // async open(round: Rect, text: string, callback: BlockSelector['_select']) {
-    //     var cs = text.match(/(\/|、)[^\s]*$/g);
-    //     if (!(cs && cs[0])) {
-    //         this.close();
-    //         return false;
-    //     }
-    //     this.round = round;
-    //     this.pos = round.leftBottom;
-    //     this.selectIndex = 0;
-    //     this.visible = true;
-    //     await blockStore.import();
-    //     this.inputFilter(text);
-    //     if (this.visible) {
-    //         this._select = callback;
-    //     }
-    //     return this.visible;
-    // }
-    private inputValue: string;
-    private previsible: boolean = false;
-    private inputFilter(text: string) {
-        this.inputValue = text;
-        var cs = text.match(/(\/|、)[^\s]*$/g);
-        var command = cs ? cs[0] : "";
-        if (command) {
-            command = command.replace(/、/g, "/");
-            this.command = command;
-            if (this.filterBlocks.length == 0) {
-                if (this.previsible == true) {
-                    this.previsible = false;
-                    this.adjuctPosition();
-                }
-                else this.close()
-            }
-            else { this.previsible = true; this.adjuctPosition(); }
-        }
-        else {
-            this.close();
-        }
-    }
-    private adjuctPosition() {
-        this.forceUpdate(() => {
-            var selectorEl = this.el.querySelector('.shy-block-selector') as HTMLElement;
-            if (selectorEl) {
-                var b = Rect.fromEle(selectorEl);
-                var pos: PopoverPosition = {
-                    roundArea: this.round,
-                    elementArea: b
-                }
-                var newPoint = RectUtility.cacPopoverPosition(pos);
-                if (!this.pos.equal(newPoint)) {
-                    this.pos = newPoint;
-                    this.forceUpdate();
-                }
-            }
-        })
-    }
-    private getFilterText(text): string {
-        return text.replace(/(\/|、)[\w \-\u4e00-\u9fa5]*$/g, '');
-    }
+    private _select: (block: Record<string, any>) => void;
+    private text: string;
     private get selectBlockData() {
-        var b = this.filterBlocks[this.selectIndex];
+        var b = this.links[this.selectIndex];
         return b;
     }
     private close() {
-        this.command = '';
         if (this.visible == true) {
             this.visible = false;
             this.forceUpdate();
@@ -160,7 +91,7 @@ class PageLinkSelector extends InputTextPopSelector {
      */
     private keydown() {
         if (!this.isSelectIndex) this.selectIndex = -1;
-        if (this.selectIndex < this.filterBlocks.length - 1) {
+        if (this.selectIndex < this.links.length - 1) {
             this.selectIndex += 1;
             this.forceUpdate();
         }
@@ -169,7 +100,7 @@ class PageLinkSelector extends InputTextPopSelector {
      * 向下选择内容
      */
     private keyup() {
-        if (!this.isSelectIndex) this.selectIndex = this.filterBlocks.length - 1;
+        if (!this.isSelectIndex) this.selectIndex = this.links.length - 1;
         if (this.selectIndex > 0) {
             this.selectIndex -= 1;
             this.forceUpdate();
@@ -211,8 +142,7 @@ class PageLinkSelector extends InputTextPopSelector {
                 case KeyboardCode.Enter:
                     var block = this.selectBlockData;
                     this.close();
-                    if (block)
-                        return { block, matchValue: this.getFilterText(this.inputValue) };
+                    if (block) return { block };
                     else return false;
             }
         }
