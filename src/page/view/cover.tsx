@@ -4,6 +4,7 @@ import { Icon } from "../../../component/view/icon";
 import { useIconPicker } from "../../../extensions/icon";
 import { useImagePicker } from "../../../extensions/image/picker";
 import { channel } from "../../../net/channel";
+import { autoImageUrl } from "../../../net/element.type";
 import { MouseDragger } from "../../common/dragger";
 import { Rect } from "../../common/vector/point";
 import { AtomPermission } from "../permission";
@@ -67,10 +68,14 @@ export class PageCover extends React.Component<{ page: Page }>{
                 self.loadThumb = true;
                 self.forceUpdate();
             }
+
+            
+
+
             return <div className="shy-page-view-cover" onMouseDown={e => dragStart(e)}>
                 <img ref={e => this.img = e}
                     onDragStart={e => false} onLoad={e => onloadSuccess()}
-                    src={page.cover.url}
+                    src={autoImageUrl(page.cover.url)}
                     draggable={false}
                     style={{
                         height: 240,
@@ -80,7 +85,7 @@ export class PageCover extends React.Component<{ page: Page }>{
                     height: 240,
                     visibility: self.loadThumb ? "hidden" : 'visible',
                     objectPosition: 'center' + (typeof page?.cover?.top == 'number' ? page.cover.top : 50) + '%'
-                }} onDragStart={e => false} draggable={false} src={page.cover.thumb} />}
+                }} onDragStart={e => false} draggable={false} src={autoImageUrl(page.cover.thumb)} />}
                 {self.startPos && <div className="shy-page-view-cover-drag-tip">拖动图片调整位置</div>}
                 <div className="shy-page-view-cover-nav">
                     <div style={page.getScreenStyle()}>
