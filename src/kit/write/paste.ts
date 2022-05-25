@@ -1,14 +1,24 @@
 import { Kit } from "..";
+import { InputTextPopSelectorType } from "../../../extensions/common/input.pop";
+import { useInputUrlSelector } from "../../../extensions/url";
 import { AppearAnchor } from "../../block/appear";
+import { Rect } from "../../common/vector/point";
 import { parseDom } from "../../import-export/html/parse";
+import { inputPopCallback } from "./input";
 import { InputForceStore } from "./store";
-
+const URL_RGEX = /(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?/ig;
 export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent) {
     var files: File[] = Array.from(event.clipboardData.files);
     var text = event.clipboardData.getData('text/plain');
     var html = event.clipboardData.getData('text/html');
-    // console.log(text, html);
-    if (!html && text) return;
+    if (!html && text) {
+        event.preventDefault();
+        if (URL_RGEX.test(text)) {
+            await onPasteUrl(kit, aa, text);
+        }
+        else await onPasteInsertText(kit, aa, text);
+        return;
+    }
     if (files.length > 0) {
         event.preventDefault();
         //说明复制的是文件
@@ -27,7 +37,12 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
                  * text: 你好
                  * html: <p>你好</p>
                  */
-                await onPasteInsertText(kit, aa, text);
+                if (URL_RGEX.test(text)) {
+                    await onPasteUrl(kit, aa, text);
+                }
+                else {
+                    await onPasteInsertText(kit, aa, text);
+                }
                 return;
             }
             let parser = new DOMParser();
@@ -92,5 +107,25 @@ async function onPasteInsertText(kit: Kit, aa: AppearAnchor, text: string) {
     aa.textNode.textContent = newContent;
     sel.collapse(aa.textNode, offset + text.length);
     await InputForceStore(aa, async () => { })
+}
+async function onPasteUrl(kit: Kit, aa: AppearAnchor, url: string) {
+    var content = aa.textContent;
+    var sel = window.getSelection();
+    var offset = sel.focusOffset;
+    var newContent = content.slice(0, offset) + url + content.slice(offset);
+    aa.textNode.textContent = newContent;
+    sel.collapse(aa.textNode, offset + url.length);
+    var rect = Rect.fromEle(sel.getRangeAt(0));
+    kit.writer.inputPop = {
+        rect,
+        type: InputTextPopSelectorType.UrlSelector,
+        offset: offset - 1,
+        aa,
+        selector: (await useInputUrlSelector())
+    };
+    await kit.writer.inputPop.selector.open(rect, url, (...data) => {
+        inputPopCallback(kit.writer, ...data);
+    });
+    //await InputForceStore(aa, async () => { })
 }
 
