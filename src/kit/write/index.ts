@@ -372,15 +372,18 @@ export class PageWrite {
      * 如果@blockData 是 isLine ,则在指定的appear某处@offset插入一个新的block(@blockData)
      * 如果块，则在appear下面一行插入，如果appear本身是空的文本，则替换自身，在下面插入
      */
-    async onInputPopCreateBlock(offset: number, blockData: Record<string, any>) {
+    async onInputPopCreateBlock(offset: number, blockData: { isLine?: boolean, url: string }) {
         await InputForceStore(this.inputPop.aa, async () => {
             var aa = this.inputPop.aa;
             var newBlock: Block;
+            var bd = lodash.cloneDeep(blockData);
+            delete bd.isLine;
+            delete bd.url;
             if (blockData.isLine) {
                 /**
                  * 说明创建的是行内块
                  */
-                newBlock = await aa.block.visibleRightCreateBlock(offset, blockData.url, { createSource: 'InputBlockSelector' });
+                newBlock = await aa.block.visibleRightCreateBlock(offset, blockData.url, { ...bd, createSource: 'InputBlockSelector' });
             }
             else {
                 /**
@@ -388,12 +391,12 @@ export class PageWrite {
                  * 否则创建一个换行块
                  */
                 if (aa.block.isContentEmpty) {
-                    newBlock = await aa.block.visibleDownCreateBlock(blockData.url, { createSource: 'InputBlockSelector' });
+                    newBlock = await aa.block.visibleDownCreateBlock(blockData.url, { ...bd, createSource: 'InputBlockSelector' });
                     //说明是空白的textBlock
                     await aa.block.delete();
                 }
                 else {
-                    newBlock = await aa.block.visibleDownCreateBlock(blockData.url, { createSource: 'InputBlockSelector' });
+                    newBlock = await aa.block.visibleDownCreateBlock(blockData.url, { ...bd, createSource: 'InputBlockSelector' });
                 }
             }
             newBlock.mounted(() => {

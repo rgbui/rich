@@ -16,7 +16,7 @@ import { TextEle } from "../../common/text.ele";
 import { Rect } from "../../common/vector/point";
 import { InputForceStore, InputStore } from "./store";
 
-async function inputPopCallback(write: PageWrite, ...args: any) {
+export async function inputPopCallback(write: PageWrite, ...args: any) {
     var blockData = args[0];
     var sel = window.getSelection();
     var offset = sel.focusOffset;
@@ -40,7 +40,7 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
         var rect = Rect.fromEle(sel.getRangeAt(0));
         var data = ev.data;
         var textContent = aa.textContent;
-        var data2 = textContent.slice(offset - 1, offset + 1);
+        var data2 = textContent.slice(offset - 2, offset);
         if (data == '/' || data == '、') {
             write.inputPop = {
                 rect,
@@ -67,6 +67,9 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
                 aa,
                 selector: (await usePageLinkSelector())
             };
+        }
+        else if (data2 == ';;' || data2 == '；；') {
+
         }
         // else if(data2=='{{'){
 
@@ -178,7 +181,7 @@ export async function inputLineTail(write: PageWrite, aa: AppearAnchor, event: R
 export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
     var sel = window.getSelection();
     var isEmpty = aa.textContent == '';
-    if (sel.focusOffset==0) {
+    if (sel.focusOffset == 0) {
         event.preventDefault();
         /**
          * 标题不能回退删除
