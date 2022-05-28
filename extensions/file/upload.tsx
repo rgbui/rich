@@ -25,13 +25,15 @@ export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audi
         }
     }
     render() {
-        var id = LangID.UploadFile;
-        if (this.props.mine == 'image') id = LangID.UploadImage
+        var text = '上传文件';
+        if (this.props.mine == 'image') text = '上传图片';
+        else if (this.props.mine == 'video') text = '上传视频';
+        else if(this.props.mine=='audio')text='上传音频';
         return <div className='shy-upload'>
             <div className='shy-upload-remark'>
                 <Sp id={LangID.UploadRemark}></Sp>
             </div>
-            <Button block onClick={e => this.uploadFile()}><Sp id={id}></Sp></Button>
+            <Button block onClick={e => this.uploadFile()}>{text}</Button>
             <div className='shy-upload-error'>
             </div>
         </div>
