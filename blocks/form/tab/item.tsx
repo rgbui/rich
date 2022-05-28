@@ -18,7 +18,10 @@ export class TabItem extends Block {
 @view('/tab/item')
 export class TabItemView extends BlockView<TabItem>{
     render() {
-        return <div onContextMenu={e => this.block.myTab.onTabeItemContextmenu(e,this.block.at)} onClick={e => this.block.myTab.changeTabIndex(this.block.at)}
+        return <div
+            onContextMenu={e => this.block.myTab.onTabeItemContextmenu(e, this.block.at)}
+            onClick={e => this.block.myTab.changeTabIndex(this.block.at)}
+            onMouseDown={e => this.block.myTab.onDraggerItem(e, this.block.at)}
             className={'sy-block-tab-item' + (this.block.at == this.block.myTab.tabIndex ? " hover" : "")}
             style={this.block.visibleStyle}>
             <div className="sy-block-tab-item-content">

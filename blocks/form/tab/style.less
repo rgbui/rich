@@ -1,14 +1,17 @@
 .sy-block-tab {
-    margin    : 10px 0px;
-    min-height: 150px;
+    margin: 10px 0px;
+
+
+
+
 
     &-items {
         height         : 30px;
         display        : flex;
         justify-content: flex-start;
         align-items    : center;
-        box-shadow     : rgb(233 233 231) 0px -1px 0px inset;
-        
+        box-shadow     : rgb(233, 233, 231) 0px -1px 0px inset;
+
         .sy-block-tab-item {
             border-bottom: 2px solid transparent;
 
@@ -54,12 +57,35 @@
         }
     }
 
+    &-pages {
+        border      : 1px solid rgba(55, 53, 47, .08);
+        border-top  : 0px;
+        border-color: transparent;
+        min-height  : 150px;
+        padding     : 10px;
+        .sy-block-tab-page {
+            min-height: 100%;
+        }
+    }
+    &-resize {
+        visibility      : hidden;
+        height          : 10px;
+        background-color: rgba(55, 53, 47, 0.06);
+        cursor          : row-resize;
+    }
+
     &:hover {
         .sy-block-tab-plus {
             visibility: visible;
         }
+
+        .sy-block-tab-pages {
+            border-color: rgba(55, 53, 47, 0.06);
+        }
+
+        .sy-block-tab-resize {
+            visibility: visible;
+        }
+
     }
 }
-
-
-.sy-block-tab-page {}
