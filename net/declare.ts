@@ -6,6 +6,7 @@ import { StatusCode } from "./status.code";
 import { UserAction } from "../src/history/action";
 import { UserBasic, UserStatus } from "../types/user";
 import { AtomPermission } from "../src/page/permission";
+import { ResourceArguments } from "../extensions/icon/declare";
 export type SockResponse<T, U = string> = {
         /**
          * 返回状态码
@@ -134,7 +135,8 @@ export interface ChannelPutMapUrls {
 	"/ws/invite/create":{args:any,returnType:Promise<SockResponse<{code:string}>>},
 	"/ws/invite/join":{args:{wsId:string,sock?:any},returnType:Promise<SockResponse<void>>},
 	"/ws/channel/send":{args:{roomId:string,content?:string,file?:any,sockId?:string},returnType:Promise<SockResponse<{id:string,seq:number,createDate:Date}>>},
-	"/ws/role/create":{args:{data:Record<string,any>},returnType:Promise<SockResponse<{role:Record<string,any>}>>}
+	"/ws/role/create":{args:{data:Record<string,any>},returnType:Promise<SockResponse<{role:Record<string,any>}>>},
+	"/bookmark/url":{args:{url:string},returnType:Promise<SockResponse<{title:string,description:string,image:ResourceArguments,icon:ResourceArguments}>>}
 }
 export interface ChannelGetMapUrls {
     "/gallery/query":{args:{type: GalleryType, word: string},returnType:Promise<{ok:boolean,data:OuterPic[],warn:string}>},
