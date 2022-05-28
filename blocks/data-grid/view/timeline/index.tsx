@@ -50,7 +50,6 @@ export class TableStoreCalendar extends DataGridView {
                 });
                 if (r.ok) {
                     this.data = r.data.list;
-                    console.log(this.data, 'data');
                     r.data.list.forEach(row => {
                         var value = this.getModeValue(row);
                         if (value) {

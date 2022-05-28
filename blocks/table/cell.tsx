@@ -11,6 +11,7 @@ import { Point } from "../../src/common/vector/point";
 import { TableRow } from "./row";
 import { MenuItemTypeValue } from "../../component/view/menu/declare";
 import lodash from "lodash";
+
 @url('/table/cell')
 export class TableCell extends Block {
     @prop()
@@ -33,8 +34,8 @@ export class TableCellView extends BlockView<TableCell>{
             event.stopPropagation()
             await this.block.onAction(ActionDirective.onCreateBlockByEnter, async () => {
                 var newBlock = await this.block.page.createBlock(BlockUrlConstant.TextSpan, {}, this.block);
-                newBlock.mounted(() => {
-                    //this.block.page.kit.explorer.onFocusAnchor(newBlock.createAnchor());
+                newBlock.mounted(()=>{
+                    this.block.page.kit.writer.onFocusBlockAnchor(newBlock);
                 })
             });
         }
