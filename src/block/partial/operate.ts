@@ -91,16 +91,16 @@ export class Block$Operator {
             }
         }
     }
-    async insertBefore(this: Block, to: Block) {
+    async insertBefore(this: Block, to: Block, childsKey?: string) {
         await to.parent.append(this,
             to.at,
-            to.parent.childKey
+            childsKey || to.parent.childKey
         );
     }
-    async insertAfter(this: Block, to: Block) {
+    async insertAfter(this: Block, to: Block, childsKey?: string) {
         await to.parent.append(this,
             to.at + 1,
-            to.parent.childKey
+            childsKey || to.parent.childKey
         );
     }
     /**
