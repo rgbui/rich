@@ -7,6 +7,10 @@ import { IconArguments, ResourceArguments } from "../../../extensions/icon/decla
 import { useOutSideUrlInput } from "../../../extensions/link/outsite.input";
 import { Rect } from "../../../src/common/vector/point";
 import { Loading } from "../../../component/view/loading";
+import { BookSvg } from "../../../component/svgs";
+import { Icon } from "../../../component/view/icon";
+import "./style.less";
+import { channel } from "../../../net/channel";
 
 @url('/bookmark')
 export class Bookmark extends Block {
@@ -32,6 +36,7 @@ export class Bookmark extends Block {
     }
     async loadBookmarkByUrl(url: string) {
         this.loading = true;
+        var r = await channel.put('/bookmark/url', { url });
         this.loadUrl = url;
     }
     async openInputBookmark(event: React.MouseEvent) {
@@ -52,7 +57,8 @@ export class BookmarkView extends BlockView<Bookmark>{
             }
             else {
                 return <div className="sy-block-bookmark-empty" onMouseDown={e => this.block.openInputBookmark(e)}>
-
+                    <Icon icon={BookSvg}></Icon>
+                    <span>添加书签</span>
                 </div>
             }
         }
