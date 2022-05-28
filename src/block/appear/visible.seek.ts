@@ -266,6 +266,7 @@ export function findBlockNearAppearByPoint(block: Block, point: Point) {
     block.each(b => {
         b.appearAnchors.findAll(g => g.isText).each(aa => {
             var cs = TextEle.getBounds(aa.el);
+            if (cs.length == 0) return;
             var x = 0;
             var y = 0;
             var isStart = true;
