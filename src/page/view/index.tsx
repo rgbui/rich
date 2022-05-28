@@ -118,7 +118,6 @@ export class PageView extends Component<{ page: Page }>{
                 isMove = true;
             }
             else {
-                console.log('ssss');
                 handle.onDropOverBlock(handle.kit.page.getBlockByMouseOrPoint(ev), ev);
             }
         }
