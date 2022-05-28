@@ -151,8 +151,8 @@ export class ImageView extends BlockView<Image>{
             {!this.isLoadError && <div className='sy-block-image-content-view'>
                 <div className='sy-block-image-content-view-wrapper' ref={e => this.imageWrapper = e} style={{ width: this.block.imageWidthPercent ? this.block.imageWidthPercent + "%" : undefined }}>
                     {this.block.src.name != 'none' && <SolidArea rf={e => this.block.elementAppear({ el: e })} ><img onError={e => this.onError(e)} src={autoImageUrl(this.block?.src?.url)} /></SolidArea>}
-                    <div className='sy-block-image-left-resize' onMouseDown={e => this.onMousedown(e, 'left')}></div>
-                    <div className='sy-block-image-right-resize' onMouseDown={e => this.onMousedown(e, 'right')}></div>
+                    {this.block.isCanEdit() && <><div className='sy-block-image-left-resize' onMouseDown={e => this.onMousedown(e, 'left')}></div>
+                        <div className='sy-block-image-right-resize' onMouseDown={e => this.onMousedown(e, 'right')}></div></>}
                     {this.block.allowCaption && <div className='sy-block-image-caption'>
                         {<TextArea block={this.block} prop='content' placeholder={'键入图片描述'}></TextArea>}
                     </div>}
@@ -163,7 +163,7 @@ export class ImageView extends BlockView<Image>{
     render() {
         return <div className='sy-block-image' style={this.block.visibleStyle} >
             <div className='sy-block-image-content' >
-                {!this.block?.src && this.renderEmptyImage()}
+                {!this.block?.src && this.block.isCanEdit() && this.renderEmptyImage()}
                 {this.block?.src && this.renderImage()}
             </div>
 
