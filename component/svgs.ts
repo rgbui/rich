@@ -16,6 +16,7 @@ import BoardToolMeiSvg from "../src/assert/svg/board.tool.mei.svg";
 import BoardToolSharpSvg from "../src/assert/svg/board.tool.sharp.svg";
 import BoardToolStickerSvg from "../src/assert/svg/board.tool.sticker.svg";
 import BoardToolTextSvg from "../src/assert/svg/board.tool.text.svg";
+import BookSvg from "../src/assert/svg/book.svg";
 import BrokenLineSvg from "../src/assert/svg/brokenLine.svg";
 import CheckSvg from "../src/assert/svg/check.svg";
 import ChevronDownSvg from "../src/assert/svg/chevronDown.svg";
@@ -139,6 +140,7 @@ BoardToolMeiSvg,
 BoardToolSharpSvg,
 BoardToolStickerSvg,
 BoardToolTextSvg,
+BookSvg,
 BrokenLineSvg,
 CheckSvg,
 ChevronDownSvg,
