@@ -1,3 +1,4 @@
+import FileIconSvg from "../src/assert/svg/FileIcon.svg";
 import AddPageCommentSvg from "../src/assert/svg/addPageComment.svg";
 import AddPageCoverSvg from "../src/assert/svg/addPageCover.svg";
 import AddPageIconSvg from "../src/assert/svg/addPageIcon.svg";
@@ -120,6 +121,7 @@ import VideoSvg from "../src/assert/svg/video.svg";
 import WsSettingsSvg from "../src/assert/svg/wsSettings.svg";
 
 export  {
+FileIconSvg,
 AddPageCommentSvg,
 AddPageCoverSvg,
 AddPageIconSvg,
