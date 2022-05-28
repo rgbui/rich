@@ -61,12 +61,13 @@ export enum ActionDirective {
 
     onPageTurnLayout = 400,
     onPageUpdateProps = 401,
-
+    
     /**
      * 一些特殊的block操作
      */
     onTabAddItem = 500,
     onTabRemoveItem = 501,
+    onTabExchangeItem = 502,
     onCarouselAddItem = 510,
     onCarouselRemoveItem = 511,
     onMindAddSub = 512,
