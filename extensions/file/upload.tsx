@@ -4,7 +4,8 @@ import { OpenFileDialoug } from "../../component/file";
 import { Sp } from "../../i18n/view";
 import { LangID } from "../../i18n/declare";
 import { channel } from "../../net/channel";
-export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audio' | 'video', change: (url: string) => void }> {
+import {  ResourceArguments } from "../icon/declare";
+export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audio' | 'video', change: (file:ResourceArguments) => void }> {
     async uploadFile() {
         var exts = ['*'];
         if (this.props.mine == 'image') exts = ['image/*'];
@@ -19,7 +20,7 @@ export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audi
             })
             if (r.ok) {
                 if (r.data?.file?.url) {
-                    this.props.change(r.data?.file?.url);
+                    this.props.change(r.data?.file as any);
                 }
             }
         }
