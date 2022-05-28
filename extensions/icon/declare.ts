@@ -11,5 +11,7 @@ export type ResourceArguments = {
     name: 'none' | 'link' | 'upload' | 'download'
     url?: string,
     source?: string,
-    thumb?:string
+    thumb?:string,
+    text?:string,
+    size?:number
 }

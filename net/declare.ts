@@ -99,8 +99,8 @@ export interface ChannelPostMapUrls {
     "/phone/sms/code":{args:{phone:string},returnType:Promise<{ok:boolean,warn:string,data:{success:boolean,code?:string}}>},
 	"/email/send/code":{args:{email:string},returnType:Promise<SockResponse<{code?:string}>>},
 	"/user/upload/file":{args:{file:File,uploadProgress: (event: ProgressEvent) => void},returnType:Promise<SockResponse<{file:{url:string}}>>},
-	"/ws/upload/file":{args:{file:File,uploadProgress: (event: ProgressEvent) => void},returnType:Promise<SockResponse<{ file:{url:string} }>>},
-	"/ws/download/url":{args:{url:string},returnType:Promise<SockResponse<{ file:{url:string} }>>}
+	"/ws/upload/file":{args:{file:File,uploadProgress: (event: ProgressEvent) => void},returnType:Promise<SockResponse<{ file:{url:string,name:string,size:number} }>>},
+	"/ws/download/url":{args:{url:string},returnType:Promise<SockResponse<{ file:{url:string,name:string,size:number} }>>}
 }
 export interface ChannelPatchMapUrls {
     "/datastore/update":{args:{schemaId:string,dataId:string,data:Record<string, any>},returnType:Promise<SockResponse<void>>},
