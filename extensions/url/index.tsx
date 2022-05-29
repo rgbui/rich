@@ -29,7 +29,7 @@ class InputUrlSelector extends InputTextPopSelector {
                 var props: Record<string, any> = {};
                 if (item.url == '/text') { props.content = this.url; props.link = { url: this.url } }
                 else if (item.url == '/embed') { props.src = { url: this.url }; }
-                else if (item.url == '/bookmark') { props.src = { url: this.url }; }
+                else if (item.url == '/bookmark') { props.bookmarkUrl = this.url; }
                 this._select({
                     url: item.url,
                     isLine: item.isLine,

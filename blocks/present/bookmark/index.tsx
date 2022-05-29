@@ -3,7 +3,7 @@ import React from 'react';
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { Block } from "../../../src/block";
 import { BlockDisplay } from "../../../src/block/enum";
-import { IconArguments, ResourceArguments } from "../../../extensions/icon/declare";
+import { ResourceArguments } from "../../../extensions/icon/declare";
 import { useOutSideUrlInput } from "../../../extensions/link/outsite.input";
 import { Rect } from "../../../src/common/vector/point";
 import { Loading } from "../../../component/view/loading";
@@ -17,21 +17,24 @@ import { autoImageUrl } from "../../../net/element.type";
 export class Bookmark extends Block {
     display = BlockDisplay.block;
     @prop()
-    src: IconArguments = { name: 'none' };
-    @prop()
     bookmarkInfo: { title: string, description: string, icon: ResourceArguments, image: ResourceArguments } = null;
     loading: boolean = false;
     @prop()
-    loadUrl: string = '';
+    bookmarkUrl: string = '';
     async didMounted() {
         if (!this.bookmarkInfo) {
             if (this.initialData && this.initialData.url) {
                 await this.loadBookmarkByUrl(this.initialData.url);
             }
             else if (this.createSource == 'InputBlockSelector') {
-                var r = await useOutSideUrlInput({ roundArea: Rect.fromEle(this.el) });
-                if (r.url) {
-                    await this.loadBookmarkByUrl(r.url);
+                if (this.bookmarkUrl) {
+                    await this.loadBookmarkByUrl(this.bookmarkUrl);
+                }
+                else {
+                    var r = await useOutSideUrlInput({ roundArea: Rect.fromEle(this.el) });
+                    if (r.url) {
+                        await this.loadBookmarkByUrl(r.url);
+                    }
                 }
             }
         }
@@ -47,7 +50,7 @@ export class Bookmark extends Block {
             else {
 
             }
-            this.loadUrl = url;
+            this.bookmarkUrl = url;
         }
         catch (ex) {
 
@@ -70,7 +73,7 @@ export class BookmarkView extends BlockView<Bookmark>{
         if (!this.block.bookmarkInfo) {
             if (this.block.loading) {
                 return <div className="sy-block-bookmark-loading">
-                    <Loading></Loading><span>{this.block.loadUrl}</span>
+                    <Loading></Loading><span>{this.block.bookmarkUrl}</span>
                 </div>
             }
             else {
@@ -83,11 +86,11 @@ export class BookmarkView extends BlockView<Bookmark>{
     }
     render() {
         return <div className='sy-block-bookmark' style={this.block.visibleStyle}>
-            {this.block.bookmarkInfo && <a className='sy-block-bookmark-link' href={this.block.loadUrl} target="_blank">
+            {this.block.bookmarkInfo && <a className='sy-block-bookmark-link' href={this.block.bookmarkUrl} target="_blank">
                 <div className="sy-block-bookmark-content">
                     {this.block.bookmarkInfo.title && <div className="sy-block-bookmark-title">{this.block.bookmarkInfo.title}</div>}
                     {this.block.bookmarkInfo.description && <div className="sy-block-bookmark-description">{this.block.bookmarkInfo.description}</div>}
-                    <div className="sy-block-bookmark-iconurl"> {this.block.bookmarkInfo.icon && <img src={this.block.bookmarkInfo.icon.url || this.block.bookmarkInfo.icon.origin} />}<span>{this.block.loadUrl}</span></div>
+                    <div className="sy-block-bookmark-iconurl"> {this.block.bookmarkInfo.icon && <img src={this.block.bookmarkInfo.icon.url || this.block.bookmarkInfo.icon.origin} />}<span>{this.block.bookmarkUrl}</span></div>
                 </div>
                 {this.block.bookmarkInfo.image && <div className='sy-block-bookmark-image'>
                     <div style={{ position: 'absolute', inset: 0 }}>
