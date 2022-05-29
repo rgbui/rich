@@ -11,6 +11,7 @@ import { BookSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import "./style.less";
 import { channel } from "../../../net/channel";
+import { autoImageUrl } from "../../../net/element.type";
 
 @url('/bookmark')
 export class Bookmark extends Block {
@@ -18,8 +19,9 @@ export class Bookmark extends Block {
     @prop()
     src: IconArguments = { name: 'none' };
     @prop()
-    bookmarkInfo: { url: string, title: string, description: string, thumbnail: ResourceArguments, icon: ResourceArguments } = null;
+    bookmarkInfo: { title: string, description: string, icon: ResourceArguments, image: ResourceArguments } = null;
     loading: boolean = false;
+    @prop()
     loadUrl: string = '';
     async didMounted() {
         if (!this.bookmarkInfo) {
@@ -36,12 +38,28 @@ export class Bookmark extends Block {
     }
     async loadBookmarkByUrl(url: string) {
         this.loading = true;
-        var r = await channel.put('/bookmark/url', { url });
-        this.loadUrl = url;
+        this.forceUpdate();
+        try {
+            var r = await channel.put('/bookmark/url', { url });
+            if (r?.ok) {
+                this.bookmarkInfo = r.data;
+            }
+            else {
+
+            }
+            this.loadUrl = url;
+        }
+        catch (ex) {
+
+        }
+        finally {
+            this.loading = false;
+        }
+        this.forceUpdate();
     }
     async openInputBookmark(event: React.MouseEvent) {
         var r = await useOutSideUrlInput({ roundArea: Rect.fromEle(this.el) });
-        if (r.url) {
+        if (r?.url) {
             await this.loadBookmarkByUrl(r.url);
         }
     }
@@ -65,13 +83,17 @@ export class BookmarkView extends BlockView<Bookmark>{
     }
     render() {
         return <div className='sy-block-bookmark' style={this.block.visibleStyle}>
-            {this.block.bookmarkInfo && <a href={this.block.bookmarkInfo.url} target="_blank">
-                {this.block.bookmarkInfo.thumbnail && <img src={this.block.bookmarkInfo.thumbnail?.url} />}
+            {this.block.bookmarkInfo && <a className='sy-block-bookmark-link' href={this.block.loadUrl} target="_blank">
                 <div className="sy-block-bookmark-content">
-                    <div className="sy-block-bookmark-title">{this.block.bookmarkInfo.title}</div>
-                    <div className="sy-block-bookmark-description">{this.block.bookmarkInfo.description}</div>
-                    <div className="sy-block-bookmark-iconurl">{this.block.bookmarkInfo.icon && <img src={this.block.bookmarkInfo.icon.url} />} {this.block.bookmarkInfo.url}</div>
+                    {this.block.bookmarkInfo.title && <div className="sy-block-bookmark-title">{this.block.bookmarkInfo.title}</div>}
+                    {this.block.bookmarkInfo.description && <div className="sy-block-bookmark-description">{this.block.bookmarkInfo.description}</div>}
+                    <div className="sy-block-bookmark-iconurl"> {this.block.bookmarkInfo.icon && <img src={this.block.bookmarkInfo.icon.url || this.block.bookmarkInfo.icon.origin} />}<span>{this.block.loadUrl}</span></div>
                 </div>
+                {this.block.bookmarkInfo.image && <div className='sy-block-bookmark-image'>
+                    <div style={{ position: 'absolute', inset: 0 }}>
+                        <img src={autoImageUrl(this.block.bookmarkInfo.image.url, 250)} />
+                    </div>
+                </div>}
             </a>}
             {this.renderEmpty()}
         </div>
