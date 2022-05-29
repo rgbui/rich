@@ -1,4 +1,4 @@
-import React, { CSSProperties } from "react";
+import React from "react";
 /**
  * https://dayjs.gitee.io/docs/zh-CN/installation/installation
  * 
@@ -6,14 +6,12 @@ import React, { CSSProperties } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { EventsComponent } from "../../component/lib/events.component";
-
 import chevronLeft from "../../src/assert/svg/chevronLeft.svg";
 import chevronRight from "../../src/assert/svg/chevronRight.svg";
 import { Icon } from "../../component/view/icon";
 import "./style.less";
 import { PopoverPosition } from "../popover/position";
 import { PopoverSingleton } from "../popover/popover";
-import { result } from "lodash";
 import { Divider } from "../../component/view/grid";
 dayjs.extend(customParseFormat);
 export class DatePicker extends EventsComponent {
