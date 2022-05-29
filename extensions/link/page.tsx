@@ -1,14 +1,17 @@
+import lodash from "lodash";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Singleton } from "../../component/lib/Singleton";
 import { PageSvg, Plus2Svg } from "../../component/svgs";
 import { Divider } from "../../component/view/grid";
 import { Icon } from "../../component/view/icon";
+import { Loading } from "../../component/view/loading";
+import { Remark } from "../../component/view/text";
 import { channel } from "../../net/channel";
 import { KeyboardCode } from "../../src/common/keys";
 import { Point, Rect } from "../../src/common/vector/point";
+import { LinkPageItem } from "../at/declare";
 import { InputTextPopSelector } from "../common/input.pop";
-import { IconArguments } from "../icon/declare";
 import "./style.less";
 
 /**
@@ -20,12 +23,17 @@ class PageLinkSelector extends InputTextPopSelector {
         text: string,
         callback: (...args: any[]) => void): Promise<boolean> {
         this._select = callback;
-        this.pos = round.leftTop;
-        var rs = channel.query('/ws/current/pages');
+        this.pos = round.leftBottom;
         this.visible = true;
-        var t = text.replace(/\[\[|【【/, '');
-        if (t) { this.text = t; this.syncSearch() }
+        var t = text.replace(/^(\[\[)|(【【)/, '');
+        console.log(t);
+        if (t) {
+            this.text = t;
+            this.syncSearch();
+        }
         else {
+            var rs = channel.query('/ws/current/pages');
+            this.isSearch = false;
             this.links = rs.map(r => {
                 return {
                     id: r.id,
@@ -37,10 +45,20 @@ class PageLinkSelector extends InputTextPopSelector {
         }
         return true;
     }
-    links: { icon: IconArguments, id: string, text: string }[] = [];
-    private async syncSearch() {
-       var rs= channel.query('/ws/current/pages')
-    }
+    links: LinkPageItem[] = [];
+    loading = false;
+    isSearch = false;
+    syncSearch = lodash.debounce(async () => {
+        this.loading = true; this.forceUpdate();
+        var r = await channel.get('/page/word/query', { word: this.text });
+        this.isSearch = true;
+        if (r.ok) {
+            this.links = r.data.list;
+        }
+        else this.links = [];
+        this.loading = false;
+        this.forceUpdate();
+    }, 1000)
     private get isSelectIndex() {
         return this.selectIndex >= 0 && this.selectIndex < this.links.length;
     }
@@ -48,9 +66,11 @@ class PageLinkSelector extends InputTextPopSelector {
         return <div>
             <a className={"shy-page-link-item" + (0 == this.selectIndex ? " selected" : "")} onMouseDown={e => this.onSelect({ name: 'create' })}><Icon icon={Plus2Svg}></Icon><span>创建{this.text || '新页面'}</span></a>
             <Divider></Divider>
-            {this.links.map((link, i) => {
-                return <a onMouseDown={e => this.onSelect(link)} className={"shy-page-link-item" + ((i + 1) == this.selectIndex ? " selected" : "")} key={link.id}><Icon icon={link.icon || PageSvg}></Icon><span>{link.text}</span></a>
+            {this.loading && <Loading></Loading>}
+            {!this.loading && this.links.map((link, i) => {
+                return <a onMouseDown={e => this.onSelect(link)} className={"shy-page-link-item" + ((i + 1) == this.selectIndex ? " selected" : "")} key={link.id}><Icon icon={link.icon || PageSvg}></Icon><span>{link.text || '新页面'}</span></a>
             })}
+            {!this.loading && this.links.length == 0 && this.isSearch && <a><Remark>没有搜索到</Remark></a>}
         </div>
     }
     render() {
@@ -81,6 +101,8 @@ class PageLinkSelector extends InputTextPopSelector {
         return b;
     }
     private close() {
+        this.isSearch = false;
+        this.loading = false;
         if (this.visible == true) {
             this.visible = false;
             this.forceUpdate();
