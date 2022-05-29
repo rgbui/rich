@@ -210,10 +210,12 @@ export abstract class Block extends Events {
                     width: ((this as any).widthPercent || 100) + '%'
                 });
             }
-            if (this.isBlock)
-                Object.assign(style, {
-                    padding: '3px 0px'
-                });
+            if (this.isBlock) {
+                Object.assign(style, { margin: '4px 0px' })
+                //    Object.assign(style, {
+                //     padding: '3px 0px'
+                // });
+            }
         }
         Object.assign(style, this.pattern.style);
         return style;
