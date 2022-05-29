@@ -24,7 +24,9 @@ export async function inputPopCallback(write: PageWrite, ...args: any) {
     var content = aa.textContent;
     var textContent = content.slice(0, write.inputPop.offset) + content.slice(offset);
     aa.textNode.textContent = textContent;
-    sel.collapse(aa.textNode, write.inputPop.offset);
+    var off = write.inputPop.offset;
+    if (offset > aa.textContent.length) off = aa.textContent.length
+    sel.collapse(aa.textNode, off);
     await write.onInputPopCreateBlock(write.inputPop.offset, blockData);
     write.inputPop = null;
 }
