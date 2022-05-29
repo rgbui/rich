@@ -10,5 +10,6 @@ export enum BlockUrlConstant {
     Frame = '/frame',
     Mind = '/flow/mind',
     Group = '/group',
-    Board = '/board'
+    Board = '/board',
+    Outline='/outline'
 }

@@ -15,6 +15,8 @@ import { PageCover } from "./cover";
 import { Icon } from "../../../component/view/icon";
 import { BoardToolFrameSvg, CollectTableSvg, CommentSvg, PageSvg } from "../../../component/svgs";
 import lodash from "lodash";
+import { dom } from "../../common/dom";
+import { PageOutLine } from "../../../blocks/page/outline";
 
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
@@ -37,8 +39,9 @@ export class PageView extends Component<{ page: Page }>{
     private _wheel;
     el: HTMLElement;
     componentDidMount() {
-        channel.sync('/page/update/info', this.updatePageInfo);
         this.el = ReactDOM.findDOMNode(this) as HTMLElement;
+        channel.sync('/page/update/info', this.updatePageInfo);
+        this.observeScroll();
         this.observeOutsideDrop();
         this.el.addEventListener('keydown', (this._keydown = e => this.page.onKeydown(e)), true);
         this.el.addEventListener('wheel', this._wheel = e => this.page.onWheel(e), {
@@ -147,6 +150,22 @@ export class PageView extends Component<{ page: Page }>{
             handle.onDropEnd();
         }
     }
+    observeScroll() {
+        var predict = x => { return dom(x as HTMLElement).style('overflowY') == 'auto' }
+        this.scrollDiv = dom(this.el).closest(predict) as any;
+        var outLineBlock = this.page.find(g => g.url == BlockUrlConstant.Outline);
+        if (outLineBlock) {
+            (outLineBlock as PageOutLine).updateOutLines();
+        }
+        if (this.scrollDiv) this.scrollDiv.addEventListener('scroll', (this._scroll = lodash.debounce(s => {
+            var outLineBlock = this.page.find(g => g.url == BlockUrlConstant.Outline);
+            if (outLineBlock) {
+                (outLineBlock as PageOutLine).updateOutLines();
+            }
+        }, 400)));
+    }
+    _scroll;
+    scrollDiv: HTMLElement;
     componentWillUnmount() {
         channel.off('/page/update/info', this.updatePageInfo);
         this.el.removeEventListener('keydown', this._keydown, true);
@@ -158,6 +177,7 @@ export class PageView extends Component<{ page: Page }>{
         delete this.el.shy_drop_move;
         delete this.el.shy_drop_over;
         delete this.el.shy_end;
+        if (this.scrollDiv && this._scroll) this.scrollDiv.removeEventListener('scroll', this._scroll);
     }
     renderPageTemplate() {
         return <div className="shy-page-view-template-picker" style={this.page.getScreenStyle()}>
