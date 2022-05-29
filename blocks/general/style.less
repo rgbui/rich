@@ -1,7 +1,37 @@
 .sy-block-text-span {
     display: block;
 }
-.sy-block-text-head {}
+
+.sy-block-text-head {
+    position: relative;
+
+    &-tip {
+        position       : absolute;
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : center;
+        height         : 10px;
+        top            : -10px;
+        left           : 0px;
+        pointer-events : none;
+        visibility     : hidden;
+
+        em {
+            display         : inline-block;
+            width           : 3px;
+            height          : 3px;
+            border-radius   : 50%;
+            margin-right    : 5px;
+            background-color: rgba(55, 53, 47, 0.2);
+        }
+    }
+
+    &:hover {
+        .sy-block-text-head-tip {
+            visibility: visible;
+        }
+    }
+}
 
 .sy-block-quote {
     margin-top   : 4 px;

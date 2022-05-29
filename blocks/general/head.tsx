@@ -31,37 +31,50 @@ export class Head extends Block {
 export class HeadView extends BlockView<Head>{
     render() {
         var style: Record<string, any> = { ...this.block.visibleStyle, fontWeight: 600 };
+        var pt: string = '';
+        var ns: string[] = [];
         if (this.block.level == 'h1') {
             style.fontSize = 30
             style.lineHeight = '39px';
             style.marginTop = 32;
             style.marginBottom = '4px';
+            pt = '一级标题';
+            ns = [undefined]
         }
         else if (this.block.level == 'h2') {
             style.fontSize = 24;
             style.lineHeight = '31.2px';
             style.marginTop = 22;
             style.marginBottom = '1px';
+            pt = '二级标题';
+            ns = [undefined, undefined]
         }
         else if (this.block.level == 'h3') {
             style.fontSize = 20;
             style.lineHeight = '26px';
             style.marginTop = '1em';
             style.marginBottom = '1px';
+            pt = '三级标题';
+            ns = [undefined, undefined, undefined]
         }
         else if (this.block.level == 'h4') {
             style.fontSize = 16;
             style.lineHeight = '26px';
             style.marginTop = '1em';
             style.marginBottom = '1px';
+            pt = '四级标题';
+            ns = [undefined, undefined, undefined, undefined]
         }
         if (this.block.childs.length > 0)
-            return <div className='sy-block-text-head' style={style}><TextLineChilds
-                rf={e => this.block.childsEl = e}
-                childs={this.block.childs}></TextLineChilds></div>
+            return <div className='sy-block-text-head' style={style}>
+                <div className="sy-block-text-head-tip">{ns.map((n, i) => <em key={i}></em>)}</div>
+                <TextLineChilds
+                    rf={e => this.block.childsEl = e}
+                    childs={this.block.childs}></TextLineChilds></div>
         else
             return <div className='sy-block-text-head' style={style}>
-                <TextArea block={this.block} placeholder={'大标题'} prop='content' ></TextArea>
+                <div className="sy-block-text-head-tip">{ns.map((n, i) => <em key={i}></em>)}</div>
+                <TextArea block={this.block} placeholder={pt} prop='content' ></TextArea>
             </div>
     }
 }
