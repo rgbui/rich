@@ -94,7 +94,8 @@ export interface ChannelDelMapUrls {
 	"/ws/channel/cancel":{args:{id:string,sockId?:string},returnType:Promise<SockResponse<void>>},
 	"/ws/member/exit":{args:{wsId:string,sock:any},returnType:Promise<SockResponse<void>>},
 	"/ws/member/delete":{args:{userid:string},returnType:Promise<SockResponse<void>>},
-	"/ws/role/delete":{args:{roleId:string},returnType:Promise<SockResponse<void>>}
+	"/ws/role/delete":{args:{roleId:string},returnType:Promise<SockResponse<void>>},
+	"/block/ref/remove":{args:{wsId?:string,pageId:string,blockId?:string,rowBlockId?:string},returnType:Promise<AtomPermission[]>}
 }
 export interface ChannelPostMapUrls {
     "/phone/sms/code":{args:{phone:string},returnType:Promise<{ok:boolean,warn:string,data:{success:boolean,code?:string}}>},
@@ -115,6 +116,7 @@ export interface ChannelPatchMapUrls {
 	"/ws/role/patch":{args:{roleId:string,data:Record<string,any>},returnType:Promise<SockResponse<void>>},
 	"/ws/set/domain":{args:{wsId?:string,domain:string},returnType:Promise<SockResponse<{exists?:boolean,illegal?:boolean}>>},
 	"/ws/patch/member/roles":{args:{wsId?:string,userid:string,roleIds:string[]},returnType:Promise<SockResponse<void>>},
+	"/block/ref/sync":{args:{wsId?:string,pageId:string,data:{rowBlockId: string, text: string}},returnType:Promise<AtomPermission[]>},
 	"/interactive/emoji":{args:{elementUrl:string,schemaUrl:string,fieldName:string},returnType:Promise<SockResponse<{count:number}>>}
 }
 export interface ChannelPutMapUrls {
@@ -136,6 +138,7 @@ export interface ChannelPutMapUrls {
 	"/ws/invite/join":{args:{wsId:string,sock?:any},returnType:Promise<SockResponse<void>>},
 	"/ws/channel/send":{args:{roomId:string,content?:string,file?:any,sockId?:string},returnType:Promise<SockResponse<{id:string,seq:number,createDate:Date}>>},
 	"/ws/role/create":{args:{data:Record<string,any>},returnType:Promise<SockResponse<{role:Record<string,any>}>>},
+	"/block/ref/add":{args:{wsId?:string,pageId:string,data:{blockId: string, rowBlockId: string, text: string, refPageId: string}},returnType:Promise<SockResponse<void>>},
 	"/bookmark/url":{args:{url:string},returnType:Promise<SockResponse<{title:string,description:string,image:ResourceArguments,icon:ResourceArguments}>>}
 }
 export interface ChannelGetMapUrls {
@@ -184,7 +187,8 @@ export interface ChannelGetMapUrls {
 	"/page/item/subs":{args:{id:string},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/item":{args:{id:string},returnType:Promise<SockResponse<{ item:Record<string,any> }>>},
 	"/page/word/query":{args:{word:string},returnType:Promise<SockResponse<{list:LinkPageItem[],total:number,page:number,size:number}>>},
-	"/page/sync/block":{args:{syncBlockId:string},returnType:Promise<SockResponse<{content:string,operates:any[]}>>}
+	"/page/sync/block":{args:{syncBlockId:string},returnType:Promise<SockResponse<{content:string,operates:any[]}>>},
+	"/block/ref/pages":{args:{wsId?:string,pageId:string},returnType:Promise<SockResponse<{list:any[],total:number,size:number,page:number}>>}
 }
 export interface ChannelQueryMapUrls {
     "/current/workspace":{args:any,returnType:{id:string,sn:number,text:string}},
