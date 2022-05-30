@@ -26,7 +26,6 @@ class PageLinkSelector extends InputTextPopSelector {
         this.pos = round.leftBottom;
         this.visible = true;
         var t = text.replace(/^(\[\[)|(【【)/, '');
-        console.log(t);
         if (t) {
             this.text = t;
             this.syncSearch();
@@ -49,7 +48,8 @@ class PageLinkSelector extends InputTextPopSelector {
     loading = false;
     isSearch = false;
     syncSearch = lodash.debounce(async () => {
-        this.loading = true; this.forceUpdate();
+        this.loading = true;
+        this.forceUpdate();
         var r = await channel.get('/page/word/query', { word: this.text });
         this.isSearch = true;
         if (r.ok) {
@@ -84,7 +84,7 @@ class PageLinkSelector extends InputTextPopSelector {
     }
     private onSelect(block) {
         if (block.name == 'create') {
-            this._select({ url: '/link/line', isLine: true, text: this.text })
+            this._select({ url: '/link/line', isLine: true, createPage: true, text: this.text })
         }
         else {
             this._select({ url: '/link/line', isLine: true, pageId: block.id, text: block.text, icon: block.icon })
