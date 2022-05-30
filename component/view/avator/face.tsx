@@ -1,5 +1,6 @@
 import React from 'react';
 import { channel } from '../../../net/channel';
+import { autoImageUrl } from '../../../net/element.type';
 import { Rect } from '../../../src/common/vector/point';
 import { UserBasic } from '../../../types/user';
 import { useUserCard } from './card';
@@ -37,7 +38,7 @@ export class Avatar extends React.Component<{
         var size = this.props.size ? this.props.size : 20;
         var renderIcon = () => {
             if (this.props.userid) {
-                if (this.user?.avatar) return <img style={{ width: size, height: size }} src={this.user.avatar.url} />
+                if (this.user?.avatar) return <img style={{ width: size, height: size }} src={autoImageUrl(this.user.avatar.url, 120)} />
                 if (this.user?.name) return <span style={{ width: size, height: size, fontSize: size * 0.6, lineHeight: (size * 0.6) + 'px' }}
                     className='shy-avatar-name'>{this.user.name.slice(0, 1)}</span>
             }
@@ -46,7 +47,7 @@ export class Avatar extends React.Component<{
             return <div className={'shy-avatar-say'}>
                 <div className={'shy-avatar-say-face'} onMouseDown={e => this.mousedown(e)}>{renderIcon()}</div>
                 <div className={'shy-avatar-say-content'} >
-                    <div className={'shy-avatar-say-content-head'}><div className='left' onMouseDown={e => this.mousedown(e)}><a className='shy-avatar-say-username' >{this.user?.name}</a>{this.props.showSn!==false && <span>#{this.user?.sn}</span>}</div>{this.props.head && <div className='right'>{this.props.head}</div>}</div>
+                    <div className={'shy-avatar-say-content-head'}><div className='left' onMouseDown={e => this.mousedown(e)}><a className='shy-avatar-say-username' >{this.user?.name}</a>{this.props.showSn !== false && <span>#{this.user?.sn}</span>}</div>{this.props.head && <div className='right'>{this.props.head}</div>}</div>
                     {this.props.children && <div className={'shy-avatar-say-content-body'}>{this.props.children}</div>}
                 </div>
             </div>

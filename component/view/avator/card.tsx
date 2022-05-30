@@ -1,6 +1,7 @@
 import React from "react";
 import { PopoverSingleton } from "../../../extensions/popover/popover";
 import { PopoverPosition } from "../../../extensions/popover/position";
+import { autoImageUrl } from "../../../net/element.type";
 import { UserBasic } from "../../../types/user";
 import { EventsComponent } from "../../lib/events.component";
 import { Avatar } from "./face";
@@ -11,7 +12,7 @@ export class UserCard extends EventsComponent {
     render(): React.ReactNode {
         return <div className="shy-user-card">
             {this.user && <><div className="shy-user-card-cover">
-                {this.user?.cover && <img src={this.user?.cover?.url} />}
+                {this.user?.cover && <img src={autoImageUrl(this.user?.cover?.url, 500)} />}
             </div><div className="shy-user-card-content">
                     <Avatar userid={this.user.id}></Avatar>
                 </div></>}
