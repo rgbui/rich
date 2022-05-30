@@ -4,6 +4,7 @@
     align-items    : center;
     justify-content: center;
     flex-direction : column;
+
     .shy-button {
         margin: 14px 0px;
     }
@@ -38,10 +39,84 @@
         cursor         : pointer;
         color          : rgb(55, 53, 47);
         font-size      : 14px;
-
         &:hover,
         &.selected {
             background-color: rgba(55, 53, 47, 0.08);
+        }
+    }
+}
+
+.shy-link-picker {
+    color              : rgb(55, 53, 47);
+    box-sizing         : border-box;
+    border-radius      : 3px;
+    user-select        : none;
+    box-shadow         : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+    overflow           : hidden;
+    width              : 324px;
+    min-width          : 180px;
+    max-width          : calc(100vw - 24px);
+    max-height         : 40vh;
+    position           : fixed;
+    z-index            : 100000;
+    padding            : 10px;
+    overflow-y         : auto;
+    overflow-x         : hidden;
+    background-color   : #fff;
+    overscroll-behavior: none;
+    scroll-behavior    : smooth;
+    user-select        : none;
+
+    &-current-page {
+        a {
+            display        : flex;
+            justify-content: flex-start;
+            align-items    : center;
+            padding        : 5px 10px;
+            cursor         : pointer;
+            color          : rgb(55, 53, 47);
+            font-size      : 14px;
+            color          : rgb(55, 53, 47);
+
+            .shy-icon {
+                margin-right: 5px;
+            }
+        }
+
+        &:hover {
+            background-color: rgba(55, 53, 47, 0.08);
+        }
+    }
+
+    &-operators {
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : center;
+        padding        : 5px 10px;
+        cursor         : pointer;
+        color          : rgb(55, 53, 47);
+        font-size      : 14px;
+
+        &:hover {
+            background-color: rgba(55, 53, 47, 0.08);
+        }
+    }
+
+    &-search-pages {
+        .shy-page-link-item {
+            padding        : 5px 10px;
+            position       : relative;
+            display        : flex;
+            justify-content: flex-start;
+            align-items    : center;
+            cursor         : pointer;
+            color          : rgb(55, 53, 47);
+            font-size      : 14px;
+
+            &:hover,
+            &.selected {
+                background-color: rgba(55, 53, 47, 0.08);
+            }
         }
     }
 }
