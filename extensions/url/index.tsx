@@ -3,6 +3,7 @@ import { Singleton } from "../../component/lib/Singleton";
 import { KeyboardCode } from "../../src/common/keys";
 import { Point, Rect } from "../../src/common/vector/point";
 import { InputTextPopSelector } from "../common/input.pop";
+import { ConvertEmbed } from "./embed.url";
 import "./style.less";
 
 class InputUrlSelector extends InputTextPopSelector {
@@ -27,8 +28,16 @@ class InputUrlSelector extends InputTextPopSelector {
         try {
             if (typeof this._select == 'function') {
                 var props: Record<string, any> = {};
-                if (item.url == '/text') { props.content = this.url; props.link = { url: this.url } }
-                else if (item.url == '/embed') { props.src = { url: this.url }; }
+                if (item.url == '/text') {
+                    props.content = this.url;
+                    props.link = { url: this.url }
+                }
+                else if (item.url == '/embed') {
+                    var ru = ConvertEmbed(this.url);
+                    props.src = { name: 'link', url: ru.url };
+                    props.embedType = ru.embedType;
+                    props.origin = ru.origin;
+                }
                 else if (item.url == '/bookmark') { props.bookmarkUrl = this.url; }
                 this._select({
                     url: item.url,

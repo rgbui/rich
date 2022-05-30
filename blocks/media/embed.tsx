@@ -8,25 +8,84 @@
  * B站
  * 原网址：
  * https://www.bilibili.com/video/BV1xU4y1m7BK?spm_id_from=333.851.b_7265636f6d6d656e64.4
- *  嵌入：<iframe referrerpolicy="origin" src="//player.bilibili.com/player.html?bvid=BV1xU4y1m7BK&amp;page=1&amp;high_quality=1&amp;as_wide=1&amp;allowfullscreen=true" frameborder="no" allowfullscreen="" sandbox="allow-top-navigation-by-user-activation allow-same-origin allow-forms allow-scripts allow-popups" class="" style="width: 100%; height: 100%;"></iframe>
+ * 嵌入：<iframe referrerpolicy="origin" src="//player.bilibili.com/player.html?bvid=BV1xU4y1m7BK&amp;page=1&amp;high_quality=1&amp;as_wide=1&amp;allowfullscreen=true" frameborder="no" allowfullscreen="" sandbox="allow-top-navigation-by-user-activation allow-same-origin allow-forms allow-scripts allow-popups" class="" style="width: 100%; height: 100%;"></iframe>
  * 
  */
 
 import React from "react";
+import { CompassSvg } from "../../component/svgs";
+import { Icon } from "../../component/view/icon";
 import { ResourceArguments } from "../../extensions/icon/declare";
+import { useOutSideUrlInput } from "../../extensions/link/outsite.input";
+import { ConvertEmbed } from "../../extensions/url/embed.url";
 import { Block } from "../../src/block";
 import { prop, url, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
+import { MouseDragger } from "../../src/common/dragger";
+import { Rect } from "../../src/common/vector/point";
+
 @url('/embed')
 export class Embed extends Block {
     @prop()
     src: ResourceArguments = { name: 'none', url: '' }
+    @prop()
+    contentWidthPercent: number = 100;
+    // @prop()
+    // contentHeight: number;
+    @prop()
+    origin: string = '';
+    @prop()
+    embedType: string = '';
+    async addEmbed(event) {
+        var r = await useOutSideUrlInput({ roundArea: Rect.fromEle(this.el) });
+        if (r?.url) {
+            var cr = ConvertEmbed(r.url);
+            this.onUpdateProps({ embedType: cr.embedType, origin: cr.origin, src: { name: 'link', url: cr.url } })
+        }
+    }
 }
+
 @view('/embed')
 export class FileView extends BlockView<Embed>{
+    onMousedown(event: React.MouseEvent, operator: 'left' | "right") {
+        event.stopPropagation();
+        var el = this.block.el;
+        var bound = el.getBoundingClientRect();
+        var self = this;
+        MouseDragger<{ event: React.MouseEvent, realWidth: number }>({
+            event,
+            moveStart(ev, data) {
+                data.realWidth = self.imageWrapper.getBoundingClientRect().width;
+                data.event = ev as any;
+            },
+            moving: (ev, data, isEnd) => {
+                var dx = ev.clientX - data.event.clientX;
+                var width: number;
+                if (operator == 'right') width = data.realWidth + dx * 2;
+                else width = data.realWidth - dx * 2;
+                width = Math.max(100, width);
+                width = Math.min(bound.width, width);
+                self.imageWrapper.style.width = width + "px";
+                if (isEnd) {
+                    var rw = width * 100 / bound.width;
+                    rw = Math.ceil(rw);
+                    self.block.onUpdateProps({ imageWidthPercent: rw });
+                }
+            }
+        })
+    }
+    imageWrapper: HTMLDivElement;
     render() {
         return <div className='sy-block-embed' style={this.block.visibleStyle}>
-            <iframe referrerPolicy="origin" src="https://music.163.com/outchain/player?type=2&amp;id=1928721936&amp;auto=0&amp;height=66" frameBorder="no" sandbox="allow-top-navigation-by-user-activation allow-same-origin allow-forms allow-scripts allow-popups" style={{ width: '100%', height: '100%', pointerEvents: 'auto' }}></iframe>
+            {this.block.src.name == 'none' && <div onMouseDown={e => this.block.addEmbed(e)} className='sy-block-file-nofile'>
+                <Icon icon={CompassSvg}></Icon>
+                <span>添加内嵌网页(网易云音乐、B站)</span>
+            </div>}
+            <div className='sy-block-embed-wrapper' ref={e => this.imageWrapper = e} style={{ width: this.block.contentWidthPercent ? this.block.contentWidthPercent + "%" : undefined }}>
+                {this.block.isCanEdit() && <><div className='sy-block-embed-left-resize' onMouseDown={e => this.onMousedown(e, 'left')}></div>
+                    <div className='sy-block-embed-right-resize' onMouseDown={e => this.onMousedown(e, 'right')}></div></>}
+                <iframe referrerPolicy="origin" src={this.block.src.url} style={{ width: '100%', height: '100%', pointerEvents: 'auto' }}></iframe>
+            </div>
         </div>
     }
 }
