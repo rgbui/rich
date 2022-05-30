@@ -372,7 +372,7 @@ export class PageWrite {
      * 如果@blockData 是 isLine ,则在指定的appear某处@offset插入一个新的block(@blockData)
      * 如果块，则在appear下面一行插入，如果appear本身是空的文本，则替换自身，在下面插入
      */
-    async onInputPopCreateBlock(offset: number, blockData: { isLine?: boolean, url: string }) {
+    async onInputPopCreateBlock(offset: number, blockData: { isLine?: boolean, createPage?: boolean, url: string }) {
         await InputForceStore(this.inputPop.aa, async () => {
             var aa = this.inputPop.aa;
             var newBlock: Block;

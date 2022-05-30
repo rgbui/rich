@@ -1,5 +1,6 @@
 import React from "react";
 import { PageWrite } from ".";
+import { isBlockedTextTool } from "../../../extensions/text.tool";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
 import { BlockUrlConstant } from "../../block/constant";
@@ -18,6 +19,7 @@ export function predictKeydown(write: PageWrite, aa: AppearAnchor, event: React.
         var r = write.inputPop.selector.onKeydown(event.nativeEvent);
         if (r == true) return false;
     }
+    if (isBlockedTextTool()) return false;
     return true;
 }
 
