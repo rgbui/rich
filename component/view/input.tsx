@@ -9,8 +9,8 @@ export class Input extends React.Component<{
     type?: 'text' | 'password',
     placeholder?: string,
     readonly?: boolean,
-    onChange?: (value: string) => void,
-    onEnter?: (value) => void,
+    onChange?: (value: string, e?: React.FormEvent<HTMLInputElement>) => void,
+    onEnter?: (value: string, e?: React.KeyboardEvent) => void,
     onClear?: () => void,
     clear?: boolean,
     maxLength?: number,
@@ -38,7 +38,7 @@ export class Input extends React.Component<{
         }
         function onInput(e: React.FormEvent<HTMLInputElement>) {
             var value = filterValue((e.target as HTMLInputElement).value)
-            props.onChange && props.onChange(value);
+            props.onChange && props.onChange(value, e);
             if (props.clear) {
                 var visible = value ? true : false;
                 if (visible != self.clearVisible) {
@@ -49,7 +49,7 @@ export class Input extends React.Component<{
         }
         function keydown(e: React.KeyboardEvent) {
             if (e.key == 'Enter' && props.onEnter) {
-                props.onEnter(filterValue((e.target as HTMLInputElement).value));
+                props.onEnter(filterValue((e.target as HTMLInputElement).value), e);
             }
         }
         return <div className={'shy-input' + (props.size == 'small' ? " small" : "")} style={props.style || {}}>
@@ -65,8 +65,8 @@ export class Input extends React.Component<{
             {props.clear && this.clearVisible && <div className="shy-input-clear" onClick={e => this.onClear()}><Icon size={10} icon={CloseTickSvg}></Icon></div>}
         </div>
     }
-    updateValue(value){
-        this.inputEl.value=value;
+    updateValue(value) {
+        this.inputEl.value = value;
     }
 }
 
