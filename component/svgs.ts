@@ -29,6 +29,7 @@ import CollectionCalendarSvg from "../src/assert/svg/collectionCalendar.svg";
 import CollectionGallerySvg from "../src/assert/svg/collectionGallery.svg";
 import CollectionListSvg from "../src/assert/svg/collectionList.svg";
 import CommentSvg from "../src/assert/svg/comment.svg";
+import CompassSvg from "../src/assert/svg/compass.svg";
 import ComponentsSvg from "../src/assert/svg/components.svg";
 import ConnetLineSvg from "../src/assert/svg/connet.line.svg";
 import ConsoleSvg from "../src/assert/svg/console.svg";
@@ -153,6 +154,7 @@ CollectionCalendarSvg,
 CollectionGallerySvg,
 CollectionListSvg,
 CommentSvg,
+CompassSvg,
 ComponentsSvg,
 ConnetLineSvg,
 ConsoleSvg,
