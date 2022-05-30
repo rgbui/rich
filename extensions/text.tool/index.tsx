@@ -17,6 +17,7 @@ import { MenuItemType } from "../../component/view/menu/declare";
 import { BlockDirective } from "../../src/block/enum";
 import { PopoverPosition } from "../popover/position";
 import { FixedViewScroll } from "../../src/common/scroll";
+import { channel } from "../../net/channel";
 
 export type TextToolStyle = {
     link: string,
@@ -83,11 +84,11 @@ class TextTool extends EventsComponent {
                     <span>Text</span><Icon icon='arrow-down:sy'></Icon>
                 </div>
             </Tip>}
-            {/* <Tip id={LangID.textToolLink}>
-                        <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenLink(e)}>
-                            <Icon icon='link:sy'></Icon><Icon icon='arrow-down:sy'></Icon>
-                        </div>
-                    </Tip> */}
+            <Tip id={LangID.textToolLink}>
+                <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenLink(e)}>
+                    <Icon icon='link:sy'></Icon><Icon icon='arrow-down:sy'></Icon>
+                </div>
+            </Tip>
             {/* <Tip id={LangID.textToolComment}>
                         <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenComment(e)}>
                             <Icon icon='comment:sy'></Icon>
@@ -187,7 +188,6 @@ class TextTool extends EventsComponent {
         event.stopPropagation();
         this.blocked = true;
         var fontColor = await useColorSelector({ roundArea: Rect.fromEvent(event) });
-        console.log(fontColor,'fontColor');
         this.blocked = false;
         if (fontColor) {
             var font: Record<string, any> = {};
@@ -205,9 +205,20 @@ class TextTool extends EventsComponent {
         }
     }
     async onOpenLink(event: React.MouseEvent) {
+        event.stopPropagation();
+        this.blocked = true;
         var pageLink = await useLinkPicker({ roundArea: Rect.fromEvent(event) });
+        this.blocked = false;
         if (pageLink) {
-
+            if (pageLink.name == 'create') {
+                var r = await channel.air('/page/create/sub', { pageId: this.turnBlock.page.pageItemId, text: pageLink.url });
+                if (r) {
+                    pageLink.pageId = r.id;
+                    pageLink.name = 'page';
+                    delete pageLink.url;
+                }
+            }
+            this.emit('setProp', { link: pageLink });
         }
     }
     onOpenComment(event: React.MouseEvent) {
@@ -232,7 +243,7 @@ class TextTool extends EventsComponent {
             this.emit('turn', re.item, re.event);
         }
     }
-    private blocked: boolean = false;
+    blocked: boolean = false;
     onGlobalMousedown = (event: MouseEvent) => {
         if (this.blocked == true) return;
         if (this.visible == true && this.el) {
@@ -278,4 +289,8 @@ export async function useTextTool(point: PopoverPosition, options: { style: Text
 export function forceCloseTextTool() {
     if (textTool)
         textTool.close();
+}
+export function isBlockedTextTool() {
+    if (textTool) return textTool.blocked;
+    return false;
 }

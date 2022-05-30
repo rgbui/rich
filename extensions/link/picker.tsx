@@ -7,9 +7,15 @@ import { EventsComponent } from "../../component/lib/events.component";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
 import { PageLink } from "./declare";
-import { GlobalLinkSvg } from "../../component/svgs";
+import { GlobalLinkSvg, PageSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
-
+import { LinkPageItem } from "../at/declare";
+import lodash from "lodash";
+import { channel } from "../../net/channel";
+import "./style.less";
+import { Loading } from "../../component/view/loading";
+import { Remark } from "../../component/view/text";
+import { Divider } from "../../component/view/grid";
 
 /**
  * 
@@ -27,36 +33,77 @@ class LinkPicker extends EventsComponent<{ link: PageLink }> {
     url: string = '';
     name: PageLink['name'];
     onEnter(url) {
-
+        if (url.startsWith('https://') || url.startsWith('http://')) {
+            this.emit('change', { url, name: 'outside' });
+        }
     }
-    onInput(e) {
-
+    onInput(e: string) {
         /**
          * 说明是网址开头的
          */
-        if (/^https?:\/\//g.test(e)) {
+        if (e && (e.startsWith('http://') || e.startsWith('https://'))) {
             this.name = 'outside';
             this.url = e;
+            this.isSearch = false;
+            this.links = [];
+            this.forceUpdate();
+        }
+        else if (e) {
+            //这里搜索
+            this.name = 'page';
+            this.url = e;
+            this.isSearch = true;
+            this.forceUpdate();
+            if (this.url) this.syncSearch();
         }
         else {
-            //这里搜索
+            this.url = '';
+            this.isSearch = false;
+            this.links = [];
+            this.forceUpdate();
         }
     }
+    links: LinkPageItem[] = [];
+    loading = false;
+    isSearch = false;
+    syncSearch = lodash.debounce(async () => {
+        this.loading = true; this.forceUpdate();
+        var r = await channel.get('/page/word/query', { word: this.url });
+        this.isSearch = true;
+        if (r.ok) {
+            this.links = r.data.list;
+        }
+        else this.links = [];
+        this.loading = false;
+        this.forceUpdate();
+    }, 1000)
     render() {
         return <div className='shy-link-picker'>
-            <Input
+            <Input size='small'
                 placeholder={langProvider.getText(LangID.PleashInputLinkAndSearchPages)}
                 onChange={e => this.onInput(e)}
-                onEnter={e => this.onEnter(e)}
+                onEnter={(e, g) => { g.preventDefault(); g.stopPropagation(); this.onEnter(e); }}
                 value={this.url}></Input>
             <div className='shy-link-picker-current-page'>
-                {this.name == 'outside' && <a ><Icon icon={GlobalLinkSvg}></Icon><span>{this.url}</span></a>}
+                {this.name == 'outside' && this.url && <a onClick={e => this.onEnter(this.url)}><Icon size={16} icon={GlobalLinkSvg}></Icon><span>{this.url}</span></a>}
             </div>
-            <div className='shy-link-picker-operators'></div>
-            <div className='shy-link-picker-search-pages'>
-
-            </div>
+            {this.name == 'page' && this.url && <><div onClick={e => this.onCreate()} className='shy-link-picker-operators'>
+                <span>创建<em>{this.url}</em></span>
+            </div><Divider></Divider></>}
+            {this.name == 'page' && <div className='shy-link-picker-search-pages'>
+                {this.loading && <Loading></Loading>}
+                {!this.loading && this.links.map((link, i) => {
+                    return <a onClick={e => this.onSelect(link)} className={"shy-page-link-item"} key={link.id}><Icon icon={link.icon || PageSvg}></Icon><span>{link.text || '新页面'}</span></a>
+                })}
+                {!this.loading && this.links.length == 0 && this.isSearch && <a><Remark>没有搜索到</Remark></a>}
+            </div>}
         </div>
+    }
+    onSelect(link: LinkPageItem) {
+        this.emit('change', { name: 'page', pageId: link.id })
+    }
+    onCreate() {
+        this.emit('change', { name: 'create', url: this.url })
     }
 }
 
@@ -66,6 +113,7 @@ export async function useLinkPicker(pos: PopoverPosition, link?: PageLink) {
     return new Promise((resolve: (link: PageLink) => void, reject) => {
         picker.on('change', (link: PageLink) => {
             resolve(link);
+            popover.close();
         })
         popover.on('close', () => resolve(null))
     })
