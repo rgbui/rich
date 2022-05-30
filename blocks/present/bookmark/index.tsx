@@ -32,7 +32,7 @@ export class Bookmark extends Block {
                 }
                 else {
                     var r = await useOutSideUrlInput({ roundArea: Rect.fromEle(this.el) });
-                    if (r.url) {
+                    if (r?.url) {
                         await this.loadBookmarkByUrl(r.url);
                     }
                 }

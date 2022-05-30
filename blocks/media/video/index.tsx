@@ -8,7 +8,7 @@ import { useVideoPicker } from "../../../extensions/file/video.picker";
 import { Block } from "../../../src/block";
 import { channel } from "../../../net/channel";
 import { Icon } from "../../../component/view/icon";
-import "./video.min.css";
+// import "./video.min.css";
 import { VideoSvg } from "../../../component/svgs";
 import { MouseDragger } from "../../../src/common/dragger";
 

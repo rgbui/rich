@@ -305,13 +305,14 @@
             height         : 24px;
             justify-content: center;
             align-items    : center;
-            padding:0px;
+            padding        : 0px;
             visibility     : hidden;
             margin-right   : 10px;
             border-radius  : 4px;
             color          : rgba(55, 53, 47, 0.65);
             fill           : currentColor;
-            >.shy-icon{
+
+            >.shy-icon {
                 transform: scale(.8);
             }
 
@@ -326,6 +327,89 @@
 
             .sy-block-file-content-link {
                 visibility: visible;
+            }
+        }
+    }
+}
+
+.sy-block-embed {
+    &-nofile {
+        cursor         : pointer;
+        background     : rgb(242, 241, 238);
+        padding        : 12px 36px 12px 12px;
+        border-radius  : 3px;
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : center;
+        color          : rgba(55, 53, 47, 0.6);
+        .shy-icon {
+            fill        : rgba(55, 53, 47, 0.4);
+            margin-right: 12px;
+        }
+    }
+    &-wrapper {
+        position : relative;
+        max-width: 100%;
+
+        iframe {
+            width           : 100%;
+            border          : 0px;
+            padding         : 0px;
+            background-color: transparent;
+            margin          : 0px;
+        }
+
+        .sy-block-embed-left-resize {
+            position: absolute;
+            top     : 0px;
+            left    : 0px;
+            bottom  : 0px;
+            height  : 100%;
+            width   : 15px;
+            cursor  : col-resize;
+
+            &::after {
+                content      : '\20';
+                display      : block;
+                opacity      : 0;
+                transition   : opacity 300ms ease-in 0s;
+                border-radius: 20px;
+                background   : rgba(15, 15, 15, 0.6);
+                border       : 1px solid rgba(255, 255, 255, 0.9);
+                width        : 6px;
+                height       : 48px;
+                max-height   : 50%;
+                position     : absolute;
+                top          : 50%;
+                left         : 50%;
+                transform    : translate(-50%, -50%);
+            }
+        }
+
+        .sy-block-embed-right-resize {
+            position: absolute;
+            top     : 0px;
+            right   : 0px;
+            bottom  : 0px;
+            height  : 100%;
+            width   : 15px;
+            cursor  : col-resize;
+
+            &::after {
+                content      : '\20';
+                position     : absolute;
+                top          : 50%;
+                left         : 50%;
+                transform    : translate(-50%, -50%);
+                display      : block;
+                opacity      : 0;
+                transition   : opacity 300ms ease-in 0s;
+                border-radius: 20px;
+                background   : rgba(15, 15, 15, 0.6);
+                border       : 1px solid rgba(255, 255, 255, 0.9);
+                width        : 6px;
+                height       : 48px;
+                max-height   : 50%;
             }
         }
     }
