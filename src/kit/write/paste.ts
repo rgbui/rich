@@ -27,10 +27,12 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
     else if (html) {
         try {
             event.preventDefault();
+
             var regexText = text.replace(/[\(\)\\\.\[\]\*\?]/g, ($, $1) => {
-                return '\\' + $1
+                return '\\' + $
             })
-            if (html.match(new RegExp('<[^>]+>' + regexText + '</[^>]+>'))) {
+            console.log(html, text, regexText);
+            if (html.match(new RegExp('([\s]*<[^>]+>[\s]*)?<[^>]+>' + regexText + '</[^>]+>'))) {
                 /**
                  * 这里表示当前的文本就仅仅在外面包一层html，没有多个块
                  * 列如:
