@@ -12,7 +12,7 @@
  * 
  */
 
-import React from "react";
+import React, { CSSProperties } from "react";
 import { CompassSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { ResourceArguments } from "../../extensions/icon/declare";
@@ -30,8 +30,8 @@ export class Embed extends Block {
     src: ResourceArguments = { name: 'none', url: '' }
     @prop()
     contentWidthPercent: number = 100;
-    // @prop()
-    // contentHeight: number;
+    @prop()
+    contentHeight = 200;
     @prop()
     origin: string = '';
     @prop()
@@ -47,44 +47,82 @@ export class Embed extends Block {
 
 @view('/embed')
 export class FileView extends BlockView<Embed>{
-    onMousedown(event: React.MouseEvent, operator: 'left' | "right") {
+    isResize: boolean = false;
+    onMousedown(event: React.MouseEvent, operator: 'left' | "right" | 'height') {
         event.stopPropagation();
         var el = this.block.el;
         var bound = el.getBoundingClientRect();
         var self = this;
-        MouseDragger<{ event: React.MouseEvent, realWidth: number }>({
+        MouseDragger<{ event: React.MouseEvent, realWidth: number, realHeight: number }>({
             event,
             moveStart(ev, data) {
                 data.realWidth = self.imageWrapper.getBoundingClientRect().width;
+                data.realHeight = self.imageWrapper.getBoundingClientRect().height;
                 data.event = ev as any;
+                self.isResize = true;
+                self.forceUpdate();
             },
             moving: (ev, data, isEnd) => {
-                var dx = ev.clientX - data.event.clientX;
-                var width: number;
-                if (operator == 'right') width = data.realWidth + dx * 2;
-                else width = data.realWidth - dx * 2;
-                width = Math.max(100, width);
-                width = Math.min(bound.width, width);
-                self.imageWrapper.style.width = width + "px";
-                if (isEnd) {
-                    var rw = width * 100 / bound.width;
-                    rw = Math.ceil(rw);
-                    self.block.onUpdateProps({ imageWidthPercent: rw });
+                if (operator == 'height') {
+                    var dy = ev.clientY - data.event.clientY;
+                    var height = data.realHeight + dy;
+                    height = Math.max(40, height);
+                    self.imageWrapper.style.height = height + "px";
+                    if (isEnd) {
+                        self.block.onUpdateProps({ contentHeight: height });
+                        self.isResize = false;
+                        self.forceUpdate();
+                    }
+                }
+                else {
+                    var dx = ev.clientX - data.event.clientX;
+                    var width: number;
+                    if (operator == 'right') width = data.realWidth + dx * 2;
+                    else width = data.realWidth - dx * 2;
+                    width = Math.max(100, width);
+                    width = Math.min(bound.width, width);
+                    self.imageWrapper.style.width = width + "px";
+                    if (isEnd) {
+                        var rw = width * 100 / bound.width;
+                        rw = Math.ceil(rw);
+                        self.block.onUpdateProps({ imageWidthPercent: rw });
+                        self.isResize = false;
+                        self.forceUpdate();
+                    }
                 }
             }
         })
     }
     imageWrapper: HTMLDivElement;
     render() {
+        var self = this;
+        var isAllowResizeHeight = self.block.embedType == 'music.163' ? false : true;
+        var height = self.block.embedType == 'music.163' ? 90 : self.block.contentHeight;
+        function getIframeStyle() {
+            var style: CSSProperties = {height:'inherit'};
+            if (self.block.embedType == 'music.163') {
+                // style.height = 90;
+                style.margin = '0px 10px';
+            }
+            else {
+                // style.height = self.block.contentHeight;
+            }
+            return style;
+        }
         return <div className='sy-block-embed' style={this.block.visibleStyle}>
             {this.block.src.name == 'none' && <div onMouseDown={e => this.block.addEmbed(e)} className='sy-block-file-nofile'>
                 <Icon icon={CompassSvg}></Icon>
                 <span>添加内嵌网页(网易云音乐、B站)</span>
             </div>}
-            <div className='sy-block-embed-wrapper' ref={e => this.imageWrapper = e} style={{ width: this.block.contentWidthPercent ? this.block.contentWidthPercent + "%" : undefined }}>
-                {this.block.isCanEdit() && <><div className='sy-block-embed-left-resize' onMouseDown={e => this.onMousedown(e, 'left')}></div>
-                    <div className='sy-block-embed-right-resize' onMouseDown={e => this.onMousedown(e, 'right')}></div></>}
-                <iframe referrerPolicy="origin" src={this.block.src.url} style={{ width: '100%', height: '100%', pointerEvents: 'auto' }}></iframe>
+            <div className='sy-block-embed-wrapper' ref={e => this.imageWrapper = e} style={{ height, width: this.block.contentWidthPercent ? this.block.contentWidthPercent + "%" : undefined }}>
+                <div style={{ ...getIframeStyle(), pointerEvents: this.isResize ? "none" : 'auto' }}>
+                    <iframe referrerPolicy="origin" src={this.block.src.url} ></iframe>
+                </div>
+                {this.block.isCanEdit() && <>
+                    <div className='sy-block-embed-left-resize' onMouseDown={e => this.onMousedown(e, 'left')}></div>
+                    <div className='sy-block-embed-right-resize' onMouseDown={e => this.onMousedown(e, 'right')}></div>
+                    {isAllowResizeHeight && <div className="sy-block-embed-height-resize" onMouseDown={e => this.onMousedown(e, 'height')}></div>}
+                </>}
             </div>
         </div>
     }
