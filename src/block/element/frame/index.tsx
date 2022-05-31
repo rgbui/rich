@@ -4,7 +4,6 @@ import { Block } from '../..';
 import { BlockView } from '../../view';
 import { prop, url, view } from '../../factory/observable';
 import { ChildsArea, TextArea } from '../../view/appear';
-import { BlockAppear } from '../../appear';
 import "./style.less";
 import { BoardPointType, BoardBlockSelector } from '../../partial/board';
 import { BlockCssName } from '../../pattern/css';

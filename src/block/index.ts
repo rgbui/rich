@@ -159,7 +159,6 @@ export abstract class Block extends Events {
             }
         }
     }
-
     /**
      * 当前元素下面的元素，注意在同一个ChildKey中
      */
@@ -211,10 +210,9 @@ export abstract class Block extends Events {
                 });
             }
             if (this.isBlock) {
-                Object.assign(style, { margin: '4px 0px' })
-                //    Object.assign(style, {
-                //     padding: '3px 0px'
-                // });
+                Object.assign(style, {
+                    padding: '3px 0px'
+                });
             }
         }
         Object.assign(style, this.pattern.style);
