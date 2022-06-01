@@ -13,7 +13,7 @@ export class HistoryRecord extends Events {
         if (this.index < this.actions.length - 1) return true;
         else return false;
     }
-    private get action() {
+    get action() {
         return this.actions[this.index];
     }
     private get nextAction() {

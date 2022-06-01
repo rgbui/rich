@@ -26,6 +26,7 @@ export class HistorySnapshoot extends Events {
             this.page.onError(new Warn(ExceptionType.notStoreLastAction))
         }
         this.disabledSync = false;
+        this._merge = false;
         this._pause = false;
         delete this.isSyncBlock;
         this.action = new UserAction();
@@ -40,6 +41,16 @@ export class HistorySnapshoot extends Events {
      */
     setSyncBlock(isSyncBlock: boolean) {
         this.isSyncBlock = isSyncBlock;
+    }
+    /**
+     * 合并，两次的action合并掉
+     */
+    private _merge: boolean = false;
+    merge() {
+        this._merge = true;
+    }
+    unmerge() {
+        this._merge = false;
     }
     private _pause: boolean = false;
     pause() {
@@ -69,8 +80,21 @@ export class HistorySnapshoot extends Events {
                 this.emit('history', this.action);
             }
             if (this.historyRecord) {
-                if (!(this.action.directive == ActionDirective.onRedo || this.action.directive == ActionDirective.onPageTurnLayout || this.action.directive == ActionDirective.onLoadUserActions || this.action.directive == ActionDirective.onUndo))
-                    this.historyRecord.push(this.action);
+                if (!(this.action.directive == ActionDirective.onRedo || this.action.directive == ActionDirective.onPageTurnLayout || this.action.directive == ActionDirective.onLoadUserActions || this.action.directive == ActionDirective.onUndo)) {
+                    if (this._merge == true) {
+                        /**
+                         * 合并上次的action
+                         */
+                        var action = this.historyRecord.action;
+                        if (action) {
+                            this.action.operators.forEach(op => {
+                                action.operators.push(op);
+                            });
+                        } else this.historyRecord.push(this.action);
+                        this._merge = false;
+                    }
+                    else this.historyRecord.push(this.action);
+                }
             };
             console.log(this.action.toString());
         }
