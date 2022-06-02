@@ -76,13 +76,12 @@ export class Table extends Block {
         });
     }
     async onDragAdd(options: { save?: boolean, row: number, column: number, newRow: number, newColumn: number }) {
-        console.log('options', JSON.stringify(options));
         this.page.onAction('onDragAdd', async () => {
             this.page.snapshoot.pause();
             var ds: Block[] = [];
-            await this.childs.eachAsync(async (b, r) => {
-                await b.childs.eachAsync(async (g, c) => {
-                    if (c >= options.column) ds.push(g);
+            await this.childs.eachReverseAsync(async (b, r) => {
+                await b.childs.eachReverseAsync(async (g, c) => {
+                    if(c >= options.column) ds.push(g);
                 });
                 if (r >= options.row) ds.push(b)
             });
@@ -353,7 +352,17 @@ export class TableView extends BlockView<Table>{
             if (cs.every(c => c.childs.length == 0)) endEmptyColumnCount += 1;
             else break;
         }
-        MouseDragger<{ colIndex: number, colWidth: number, colEle: HTMLElement }>({
+        var top: number, left: number;
+        if (resize == 'resize') {
+            top = parseInt(this.resizePlus.style.top.replace('px', ''));
+            left = parseInt(this.resizePlus.style.left.replace('px', ''));
+        }
+        else {
+            top = parseInt(this.bottomPlus.style.top.replace('px', ''));
+            left = parseInt(this.rightPlus.style.left.replace('px', ''));
+        }
+        var rdata: string = '';
+        MouseDragger({
             event,
             cursor: 'col-resize',
             moveStart: (ev, data) => {
@@ -363,37 +372,46 @@ export class TableView extends BlockView<Table>{
                 var rc = rowCount;
                 var rx = columnCount;
                 if (resize == 'bottom') {
-                    this.bottomPlus.style.top = (ev.clientY - tableRect.top) + 'px';
+
                     var dy = ev.clientY - event.clientY;
                     rc = rowCount + Math.ceil(dy / CELL_HEIGHT);
                     if (rc < rowCount - endEmptyRowCount) rc = rowCount - endEmptyRowCount;
+                    this.bottomPlus.style.top = (top + (rc - rowCount) * CELL_HEIGHT) + 'px';
                 }
                 if (resize == 'right') {
-                    this.rightPlus.style.left = (ev.clientX - tableRect.left) + 'px';
+
                     var dx = ev.clientX - event.clientX;
                     rx = columnCount + Math.ceil(dx / COL_WIDTH);
                     if (rx < columnCount - endEmptyColumnCount) rx = columnCount - endEmptyColumnCount;
+                    this.rightPlus.style.left = (left + (rx - columnCount) * COL_WIDTH) + 'px';
                 }
                 if (resize == 'resize') {
-                    this.resizePlus.style.top = (ev.clientY - tableRect.top) + 'px';
+
                     var dy = ev.clientY - event.clientY;
                     rc = rowCount + Math.ceil(dy / CELL_HEIGHT);
+                    this.resizePlus.style.top = (ev.clientY - tableRect.top) + 'px';
                     if (rc < rowCount - endEmptyRowCount) rc = rowCount - endEmptyRowCount;
+                    this.resizePlus.style.top = (top + (rc - rowCount) * CELL_HEIGHT) + 'px';
 
                     this.resizePlus.style.left = (ev.clientX - tableRect.left) + 'px';
                     var dx = ev.clientX - event.clientX;
                     rx = columnCount + Math.ceil(dx / COL_WIDTH);
                     if (rx < columnCount - endEmptyColumnCount) rx = columnCount - endEmptyColumnCount;
+                    this.resizePlus.style.left = (left + (rx - columnCount) * COL_WIDTH) + 'px';
                 }
-                this.block.onDragAdd({
+                var args = {
                     row: rowCount,
                     column: columnCount,
                     newRow: rc,
                     newColumn: rx
-                })
+                }
+                if (JSON.stringify(args) == rdata) return;
+                rdata = JSON.stringify(args);
+                this.block.onDragAdd(args);
             },
             moveEnd: async (ev, isMove) => {
                 self.isMoveLine = false;
+                rdata = '';
                 if (isMove) {
                     var rc = rowCount;
                     var rx = columnCount;
@@ -564,6 +582,17 @@ export class TableView extends BlockView<Table>{
             })
         }
     }
+    onMouseleave() {
+        if (this.isMoveLine == false) {
+            this.subline.style.display = 'none';
+            this.sublineX.style.display = 'none';
+            this.bottomPlus.style.display = 'none';
+            this.rightPlus.style.display = 'none';
+            this.resizePlus.style.display = 'none';
+            this.topDrag.style.display = 'none';
+            this.leftDrag.style.display = 'none';
+        }
+    }
     table: HTMLElement;
     box: HTMLElement;
     subline: HTMLElement;
@@ -575,8 +604,9 @@ export class TableView extends BlockView<Table>{
     leftDrag: HTMLElement;
     private isMoveLine: boolean = false;
     render() {
+        console.log(this.block.childs, this.block.childs.length);
         return <div className='sy-block-table' style={this.block.visibleStyle}
-            onMouseMove={e => this.mousemove(e.nativeEvent)}>
+            onMouseMove={e => this.mousemove(e.nativeEvent)} onMouseLeave={e => this.onMouseleave()}>
             <div className='sy-block-table-box' ref={e => this.box = e}>
                 <table ref={e => this.table = e}>
                     <colgroup>
@@ -591,12 +621,11 @@ export class TableView extends BlockView<Table>{
                 <div className='sy-block-table-subline' onMouseDown={e => this.onMousedownLine(e)} ref={e => this.subline = e}></div>
                 <div className='sy-block-table-subline-x' ref={e => this.sublineX = e}></div>
                 <div onMouseDown={e => this.onMousedownDrag(e, 'top')} ref={e => this.topDrag = e} className="sy-block-table-top-drag"><span>
-
                 </span>
                 </div>
                 <div onMouseDown={e => this.onMousedownDrag(e, 'left')} ref={e => this.leftDrag = e} className="sy-block-table-left-drag"><span>
-
-                </span></div>
+                </span>
+                </div>
                 <div onMouseDown={e => this.onMousedownResize(e, 'bottom')} ref={e => this.bottomPlus = e} className="sy-block-table-bottom-plus"><Icon size={10} icon={PlusSvg}></Icon></div>
                 <div onMouseDown={e => this.onMousedownResize(e, 'right')} ref={e => this.rightPlus = e} className="sy-block-table-right-plus"><Icon size={10} icon={PlusSvg}></Icon></div>
                 <div onMouseDown={e => this.onMousedownResize(e, 'resize')} ref={e => this.resizePlus = e} className="sy-block-table-resize-plus"><Icon size={10} icon={PlusSvg}></Icon></div>
