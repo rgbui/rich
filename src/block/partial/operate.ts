@@ -73,7 +73,7 @@ export class Block$Operator {
                 else break;
             }
         }
-        if (this.isRow) {
+        if (this.isRow && !this.isPart) {
             var cols = this.childs;
             if (cols.length > 1) {
                 var sum = cols.sum(x => (x as Col).widthPercent);
