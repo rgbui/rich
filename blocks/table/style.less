@@ -6,13 +6,33 @@
         overflow      : auto;
         padding-right : 20px;
         padding-bottom: 20px;
+        padding-left  : 5px;
+        padding-top   : 5px;
+    }
+
+    table {
+        border-collapse: collapse;
+        font-size      : inherit;
+        border-color   : transparent;
+        border-spacing : 0px;
+        text-indent    : 0px;
+        >tbody {
+            >tr {
+                >td {
+                    padding       : 5px 13px;
+                    border        : 1px solid #ddd;
+                    min-height    : 20px;
+                    vertical-align: top;
+                }
+            }
+        }
     }
 
     &-subline {
         display    : none;
         position   : absolute;
         z-index    : 1;
-        top        : 0px;
+        top        : 5px;
         left       : 0px;
         width      : 10px;
         margin-left: -5px;
@@ -31,22 +51,106 @@
         }
     }
 
-    table {
-        border-collapse: collapse;
-        font-size      : inherit;
-        border-color   : transparent;
-        border-spacing : 0px;
-        text-indent    : 0px;
+    &-subline-x {
+        display   : none;
+        position  : absolute;
+        z-index   : 1;
+        top       : 0px;
+        left      : 5px;
+        height    : 10px;
+        margin-top: -5px;
+        cursor    : row-resize;
 
-        >tbody {
-            >tr {
-                >td {
-                    padding       : 10px 13px;
-                    border        : 1px solid #ddd;
-                    min-height    : 30px;
-                    vertical-align: top;
-                }
+        &::after {
+            cursor       : row-resize;
+            content      : '\20';
+            position     : absolute;
+            top          : 3px;
+            left         : 0px;
+            right        : 0px;
+            bottom       : 3px;
+            border-radius: 1px;
+            background   : rgb(116, 182, 219);
+        }
+    }
+
+    &-top-drag,
+    &-left-drag {
+        position: absolute;
+        z-index : 1;
+        cursor  : pointer;
+        display: none;
+
+        >span {
+            background-color: #ddd;
+            background-color: rgba(55, 53, 47, 0.1);
+            box-shadow      : rgba(15, 15, 15, 0.1) 0px 0px 0px 1px,
+                rgba(15, 15, 15, 0.1) 0px 2px 4px;
+
+            &:hover {
+                background: rgb(116, 182, 219);
             }
         }
+    }
+
+    &-top-drag {
+        height: 5px;
+        top   : 0px;
+
+        >span {
+            position     : absolute;
+            top          : 50%;
+            left         : 50%;
+            transform    : translate(-50%, -50%);
+            border-radius: 4px 4px 0px 0px;
+            width        : inherit;
+            height       : 4px;
+        }
+    }
+
+    &-left-drag {
+        left    : 0px;
+        width   : 5px;
+        position: absolute;
+        z-index : 1;
+
+        >span {
+            position     : absolute;
+            top          : 50%;
+            left         : 50%;
+            transform    : translate(-50%, -50%);
+            border-radius: 4px 0px 0px 4px;
+            width        : 4px;
+            height       : inherit;
+        }
+    }
+
+    &-bottom-plus,
+    &-right-plus,
+    &-resize-plus {
+        position        : absolute;
+        z-index         : 1;
+        background-color: rgba(55, 53, 47, 0.06);
+        color           : rgba(55, 53, 47, 0.45);
+        fill            : currentColor;
+        display         : none;
+        justify-content : center;
+        align-items     : center;
+        cursor          : pointer;
+    }
+
+    &-bottom-plus {
+        left  : 5px;
+        height: 14px;
+    }
+
+    &-right-plus {
+        top  : 5px;
+        width: 14px;
+    }
+
+    &-resize-plus {
+        width : 14px;
+        height: 14px;
     }
 }

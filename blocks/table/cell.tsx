@@ -34,7 +34,7 @@ export class TableCellView extends BlockView<TableCell>{
             event.stopPropagation()
             await this.block.onAction(ActionDirective.onCreateBlockByEnter, async () => {
                 var newBlock = await this.block.page.createBlock(BlockUrlConstant.TextSpan, {}, this.block);
-                newBlock.mounted(()=>{
+                newBlock.mounted(() => {
                     this.block.page.kit.writer.onFocusBlockAnchor(newBlock);
                 })
             });
@@ -45,17 +45,14 @@ export class TableCellView extends BlockView<TableCell>{
         event.stopPropagation();
         var result = await useSelectMenuItem({ roundPoint: Point.from(event) },
             [
-                {
-                    text: '插入',
-                    childs: [
-                        { text: '左侧插入列', name: 'left' },
-                        { text: '右侧插入列', name: 'right' },
-                        { type: MenuItemTypeValue.divide },
-                        { text: '上面插入行', name: 'up' },
-                        { text: '下面插入行', name: 'down' }
-                    ]
-                },
-                { text: '删除', childs: [{ text: '删除所在行', name: 'delRow' }, { name: 'delCol', text: '删除所在列' }] },
+                { text: '在上方插入一行', name: 'up' },
+                { text: '在下方插入一行', name: 'down' },
+                { text: '在左边插入一列', name: 'left' },
+                { text: '在右侧插入一列', name: 'right' },
+                { type: MenuItemTypeValue.divide },
+                { name: 'delRow', text: '删除所在行', },
+                { name: 'delCol', text: '删除所在列' },
+                { type: MenuItemTypeValue.divide },
                 { text: '清空', name: 'clear' }
             ]
         );
@@ -140,6 +137,9 @@ export class TableCellView extends BlockView<TableCell>{
             rowSpan={this.block.rowspan == 1 ? undefined : this.block.rowspan}
             colSpan={this.block.colspan == 1 ? undefined : this.block.colspan}
             ref={e => this.block.childsEl = e}
-        ><ChildsArea childs={this.block.childs}></ChildsArea></td>
+        >
+            {this.block.childs.length == 0 && <div style={{ height: 20 }}></div>}
+            <ChildsArea childs={this.block.childs}></ChildsArea>
+        </td>
     }
 }

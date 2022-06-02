@@ -4,10 +4,10 @@ import { Icon } from "../../../component/view/icon";
 import { Handle } from ".";
 import { Tip } from "../../../component/view/tip";
 import { LangID } from "../../../i18n/declare";
-import DragHandle from "../../assert/svg/dragHandle.svg";
 import { MouseDragger } from "../../common/dragger";
 import { ghostView } from "../../common/ghost";
 import { onAutoScroll, onAutoScrollStop } from "../../common/scroll";
+import { DragHandleSvg } from "../../../component/svgs";
 export class HandleView extends React.Component<{ handle: Handle }>{
     constructor(props) {
         super(props);
@@ -90,7 +90,7 @@ export class HandleView extends React.Component<{ handle: Handle }>{
                 onMouseDown={e => this.onMousedown(e.nativeEvent)}>
                 <Tip placement='left' ref={e => { this.toolTip = e; }} id={LangID.bar} >
                     <span>
-                        <Icon icon={DragHandle} size={14}></Icon>
+                        <Icon icon={DragHandleSvg} size={14}></Icon>
                     </span>
                 </Tip>
             </div>
