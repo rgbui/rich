@@ -16,7 +16,7 @@ class GhostView {
         }
         return this._el;
     }
-    load(el: HTMLElement | HTMLElement[], options: {
+    load(el: HTMLElement | HTMLElement[] | string, options: {
         point: Point,
         opacity?: number,
         background?: string,
@@ -29,20 +29,25 @@ class GhostView {
         this.el.style.top = options.point.y + 'px';
         this.el.style.left = options.point.x + 'px';
         this.el.style.opacity = options.opacity.toString();
-        var els = Array.isArray(el) ? el : [el];
-        for (let i = 0; i < els.length; i++) {
-            var e = els[i];
-            var cloneEl = e.cloneNode(true) as HTMLElement;
-            if (options.background) cloneEl.style.background = options.background;
-            this.el.appendChild(cloneEl);
-            if (options.size) {
-                cloneEl.style.width = options.size.width + 'px';
-                cloneEl.style.height = options.size.height + 'px';
-            }
-            else {
-                var bound = Rect.fromEle(e);
-                cloneEl.style.width = bound.width + 'px';
-                cloneEl.style.height = bound.height + 'px';
+        if (typeof el == 'string') {
+            this.el.innerHTML = el;
+        }
+        else {
+            var els = Array.isArray(el) ? el : [el];
+            for (let i = 0; i < els.length; i++) {
+                var e = els[i];
+                var cloneEl = e.cloneNode(true) as HTMLElement;
+                if (options.background) cloneEl.style.background = options.background;
+                this.el.appendChild(cloneEl);
+                if (options.size) {
+                    cloneEl.style.width = options.size.width + 'px';
+                    cloneEl.style.height = options.size.height + 'px';
+                }
+                else {
+                    var bound = Rect.fromEle(e);
+                    cloneEl.style.width = bound.width + 'px';
+                    cloneEl.style.height = bound.height + 'px';
+                }
             }
         }
     }
