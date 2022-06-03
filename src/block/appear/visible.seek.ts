@@ -284,8 +284,12 @@ export function findBlockNearAppearByPoint(block: Block, point: Point) {
             }
             ps.push({ aa, dis, isY });
         })
-    },true);
-    var pr = ps.find(g => g.isY);
+    }, true);
+    var pr;
+    if (ps.findAll(g => g.isY).length > 1) {
+        pr = ps.findAll(g => g.isY).findMin(g => g.dis);
+    }
+    else pr = ps.find(g => g.isY);
     if (!pr) {
         pr = ps.findMin(g => g.dis);
     }
