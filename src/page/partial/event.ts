@@ -6,6 +6,7 @@ import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
 import { emojiStore } from "../../../extensions/emoji/store";
 import { GalleryPics } from "../../../extensions/image/gellery";
 import { channel } from "../../../net/channel";
+import { Block } from "../../block";
 import { BlockDirective } from "../../block/enum";
 import { Matrix } from "../../common/matrix";
 import { Point, Rect } from "../../common/vector/point";
@@ -213,7 +214,7 @@ export class PageEvent {
         }
     }
     async onContextmenu(this: Page, event: React.MouseEvent) {
-        if(!this.isCanEdit)return;
+        if (!this.isCanEdit) return;
         event.preventDefault();
         var items: MenuItemType<BlockDirective | string>[] = [
             { name: 'smallText', text: '小字号', type: MenuItemTypeValue.switch },
@@ -282,5 +283,31 @@ export class PageEvent {
             }
         })
     }
+
+    //#region  注意这里的notify均发生在onAction中，对里面的处理方法，
+    //最好添加至this.page.onAddUdpate(中)
+
+    /**
+     * 通知页面，当前块将要删除
+     * @param block 
+     */
+    async nofityWillRemoveBlock(block: Block) {
+
+    }
+    /**
+     * 通知块，当前块的内容修改了
+     * @param block 
+     */
+    async notifyBlockEditedContent(block: Block) {
+
+    }
+    /**
+     * 通知当前块被移动了
+     * @param block 
+     */
+    async notityMovedBlock(block: Block) {
+
+    }
+    //#endregion
 }
 

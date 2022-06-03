@@ -23,7 +23,13 @@ export class Block$Operator {
                 childKey: this.parentKey,
                 at: this.at,
                 data: await this.get()
-            }, this)
+            }, this);
+            try {
+                await this.page.nofityWillRemoveBlock(this);
+            }
+            catch (ex) {
+                this.page.onError(ex);
+            }
             pbs.remove(this);
             if (pbs.length > 0) {
                 if (this.parent.isRow && !this.parent.isPart) {
@@ -144,6 +150,7 @@ export class Block$Operator {
         await block.remove();
         bs.insertAt(at, block);
         block.parent = this;
+        await this.page.notityMovedBlock(block);
         this.page.snapshoot.record(OperatorDirective.append, {
             to: {
                 parentId: this.id,
@@ -515,6 +522,9 @@ export class Block$Operator {
         if (Object.keys(oldValue).length > 0 || Object.keys(newValue).length > 0) {
             await this.changeProps(oldValue, newValue);
             this.syncUpdate(range);
+            if (Object.keys(newValue).includes('content')) {
+                await this.page.notifyBlockEditedContent(this);
+            }
             this.page.snapshoot.record(OperatorDirective.updateProp, {
                 blockId: this.id,
                 old: oldValue,
@@ -563,6 +573,9 @@ export class Block$Operator {
         }
         if (Object.keys(oldValue).length > 0) {
             this.syncUpdate(range);
+            if (Object.keys(newValue).includes('content')) {
+                this.page.notifyBlockEditedContent(this);
+            }
             this.page.snapshoot.record(OperatorDirective.updateProp, {
                 blockId: this.id,
                 old: oldValue,

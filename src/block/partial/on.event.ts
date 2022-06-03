@@ -14,7 +14,6 @@ import { langProvider } from "../../../i18n/provider";
 import { LangID } from "../../../i18n/declare";
 import { ActionDirective } from "../../history/declare";
 import { AppearAnchor } from "../appear";
-import { BlockUrlConstant } from "../constant";
 import { Point, Rect } from "../../common/vector/point";
 import { useSelectMenuItem } from "../../../component/view/menu";
 
