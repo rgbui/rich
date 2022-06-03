@@ -193,6 +193,8 @@ export interface ChannelGetMapUrls {
 	"/page/item":{args:{id:string},returnType:Promise<SockResponse<{ item:Record<string,any> }>>},
 	"/page/word/query":{args:{word:string},returnType:Promise<SockResponse<{list:LinkPageItem[],total:number,page:number,size:number}>>},
 	"/page/sync/block":{args:{syncBlockId:string},returnType:Promise<SockResponse<{content:string,operates:any[]}>>},
+	"/view/snap/list":{args:{wsId?: string, elementUrl: string, page: number, size: number},returnType:Promise<SockResponse<{list:any[],total:number,size:number,page:number}>>},
+	"/view/snap/content":{args:{wsId?:string,id:string},returnType:Promise<SockResponse<{id:string,content:string}>>},
 	"/block/ref/pages":{args:{wsId?:string,pageId:string},returnType:Promise<SockResponse<{list:any[],total:number,size:number,page:number}>>}
 }
 export interface ChannelQueryMapUrls {
