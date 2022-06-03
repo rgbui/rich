@@ -38,7 +38,7 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
     var ev = event.nativeEvent as InputEvent;
     var sel = window.getSelection();
     var offset = sel.focusOffset;
-    if (!write.inputPop) {
+    if (!write.inputPop && aa.block.url != BlockUrlConstant.Title) {
         var rect = Rect.fromEle(sel.getRangeAt(0));
         var data = ev.data;
         var textContent = aa.textContent;
