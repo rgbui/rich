@@ -2,6 +2,7 @@ import { Kit } from "..";
 import { InputTextPopSelectorType } from "../../../extensions/common/input.pop";
 import { useInputUrlSelector } from "../../../extensions/url";
 import { AppearAnchor } from "../../block/appear";
+import { BlockUrlConstant } from "../../block/constant";
 import { Rect } from "../../common/vector/point";
 import { parseDom } from "../../import-export/html/parse";
 import { inputPopCallback } from "./input";
@@ -27,11 +28,9 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
     else if (html) {
         try {
             event.preventDefault();
-
             var regexText = text.replace(/[\(\)\\\.\[\]\*\?]/g, ($, $1) => {
                 return '\\' + $
             })
-            console.log(html, text, regexText);
             if (html.match(new RegExp('([\s]*<[^>]+>[\s]*)?<[^>]+>' + regexText + '</[^>]+>'))) {
                 /**
                  * 这里表示当前的文本就仅仅在外面包一层html，没有多个块
@@ -83,22 +82,59 @@ async function onPasterFiles(kit: Kit, aa: AppearAnchor, files: File[]) {
 }
 async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
     if (blocks.length == 0) return;
+    var sel = window.getSelection();
     await InputForceStore(aa, async () => {
-        var rowBlock = aa.block.closest(x => !x.isLine);
-        var firstBlock = rowBlock;
-        if (firstBlock.isContentEmpty) {
-            blocks[0].url = firstBlock.url;
+        /**
+         * 这说明只有一行，那么在当前的位置插入它
+         */
+        if (blocks.length == 1 && blocks[0].url == BlockUrlConstant.TextSpan) {
+            var content = aa.textContent;
+            var offset = sel.focusOffset;
+            var rowBlock = aa.block.closest(x => !x.isLine);
+            var beforeText = content.slice(0, offset);
+            var lastText = content.slice(offset);
+            if (rowBlock.childs.length == 0) {
+                await rowBlock.updateProps({ content: '' });
+                if (beforeText) await rowBlock.appendBlock({ url: BlockUrlConstant.Text, content: beforeText });
+                var bs = blocks[0].blocks.childs;
+                var rs = await rowBlock.appendArrayBlockData(bs, undefined, 'childs');
+                if (lastText) await rowBlock.appendBlock({ url: BlockUrlConstant.Text, content: lastText });
+                kit.page.addUpdateEvent(async () => {
+                    kit.writer.onFocusBlockAnchor(rs.last(), { last: true });
+                })
+            }
+            else {
+                await aa.block.updateProps({ content: beforeText });
+                var bs = blocks[0].blocks.childs;
+                var rs = await aa.block.parent.appendArrayBlockData(bs, aa.block.at, 'childs');
+                if (lastText) await aa.block.parent.appendBlock({
+                    url: BlockUrlConstant.Text,
+                    pattern: await aa.block.pattern.cloneData(),
+                    content: lastText
+                });
+                if (aa.block.isContentEmpty) await aa.block.delete();
+                kit.page.addUpdateEvent(async () => {
+                    kit.writer.onFocusBlockAnchor(rs.last(), { last: true });
+                })
+            }
         }
-        for (let i = 0; i < blocks.length; i++) {
-            var bd = blocks[i];
-            rowBlock = await rowBlock.visibleDownCreateBlock(bd.url, bd);
+        else {
+            var rowBlock = aa.block.closest(x => !x.isLine);
+            var firstBlock = rowBlock;
+            if (firstBlock.isContentEmpty) {
+                blocks[0].url = firstBlock.url;
+            }
+            for (let i = 0; i < blocks.length; i++) {
+                var bd = blocks[i];
+                rowBlock = await rowBlock.visibleDownCreateBlock(bd.url, bd);
+            }
+            if (firstBlock.isContentEmpty) {
+                await firstBlock.delete();
+            }
+            kit.page.addUpdateEvent(async () => {
+                kit.writer.onFocusBlockAnchor(rowBlock, { last: true });
+            })
         }
-        if (firstBlock.isContentEmpty) {
-            await firstBlock.delete();
-        }
-        kit.page.addUpdateEvent(async () => {
-            kit.writer.onFocusBlockAnchor(rowBlock, { last: true });
-        })
     })
 }
 async function onPasteInsertText(kit: Kit, aa: AppearAnchor, text: string) {
@@ -121,7 +157,7 @@ async function onPasteUrl(kit: Kit, aa: AppearAnchor, url: string) {
     kit.writer.inputPop = {
         rect,
         type: InputTextPopSelectorType.UrlSelector,
-        offset: offset - 1,
+        offset: offset - url.length,
         aa,
         selector: (await useInputUrlSelector())
     };
