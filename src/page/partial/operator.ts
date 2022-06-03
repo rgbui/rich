@@ -21,6 +21,7 @@ export class Page$Operator {
     * 
     */
     async createBlock(this: Page, url: string, data: Record<string, any>, parent: Block, at?: number, childKey?: string) {
+        if (!parent) return;
         var block = await BlockFactory.createBlock(url, this, data, parent);
         if (typeof childKey == 'undefined') childKey = parent.childKey;
         if (!parent.allBlockKeys.some(s => s == childKey)) {

@@ -7,7 +7,7 @@ import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import { ChildsArea } from "../../src/block/view/appear";
 import { ActionDirective } from "../../src/history/declare";
 import { Point, Rect } from "../../src/common/vector/point";
-import lodash, { assignWith } from 'lodash';
+import lodash from 'lodash';
 import { MouseDragger } from "../../src/common/dragger";
 import { PlusSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
@@ -81,7 +81,7 @@ export class Table extends Block {
             var ds: Block[] = [];
             await this.childs.eachReverseAsync(async (b, r) => {
                 await b.childs.eachReverseAsync(async (g, c) => {
-                    if(c >= options.column) ds.push(g);
+                    if (c >= options.column) ds.push(g);
                 });
                 if (r >= options.row) ds.push(b)
             });
@@ -604,7 +604,6 @@ export class TableView extends BlockView<Table>{
     leftDrag: HTMLElement;
     private isMoveLine: boolean = false;
     render() {
-        console.log(this.block.childs, this.block.childs.length);
         return <div className='sy-block-table' style={this.block.visibleStyle}
             onMouseMove={e => this.mousemove(e.nativeEvent)} onMouseLeave={e => this.onMouseleave()}>
             <div className='sy-block-table-box' ref={e => this.box = e}>
