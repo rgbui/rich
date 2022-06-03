@@ -262,57 +262,41 @@ export function findBlocksBetweenAppears(start: HTMLElement, end: HTMLElement) {
  * @param point 
  */
 export function findBlockNearAppearByPoint(block: Block, point: Point) {
-    var ps: any[] = [];
+    var ps: { aa: AppearAnchor, isY: boolean, dis: number }[] = [];
     block.each(b => {
         b.appearAnchors.findAll(g => g.isText).each(aa => {
             var cs = TextEle.getBounds(aa.el);
             if (cs.length == 0) return;
-            var x = 0;
-            var y = 0;
-            var isStart = true;
+            var isY: boolean = false;
+            var dis;
             if (point.y < cs.first().top) {
-                y = point.y - cs.first().top;
-                x = point.x - cs.first().left;
-                isStart = true;
+                dis = cs.first().dis(point);
             }
             else if (point.y > cs.last().bottom) {
-                y = cs.last().bottom - point.y;
-                x = cs.last().right - point.x;
-                isStart = false;
+                dis = cs.last().dis(point);
             }
             else {
-                y = 0;
-                if (Math.abs(cs.min(g => g.left) - point.x) < Math.abs(cs.max(g => g.right) - point.x)) {
-                    isStart = true;
-                    x = cs.min(g => g.left) - point.x
+                isY = true;
+                var r = cs.find(g => g.containY(point.y));
+                if (r) {
+                    dis = r.dis(point);
                 }
-                else { isStart = false; x = cs.max(g => g.right) - point.x }
             }
-            ps.push({
-                aa,
-                y: Math.abs(y),
-                x: Math.abs(x),
-                isStart
-            })
+            ps.push({ aa, dis, isY });
         })
-    }, true);
-    var prs = ps.findAll(g => g.y == 0);
-    if (prs.length > 0) {
-        var pr = prs.findMin(p => p.x);
-        return {
-            anchor: pr.aa,
-            end: pr.isStart ? false : true,
-        }
+    },true);
+    var pr = ps.find(g => g.isY);
+    if (!pr) {
+        pr = ps.findMin(g => g.dis);
     }
-    else {
-        var my = ps.min(g => g.y);
-        var mg = ps.findAll(g => g.y == my);
-        if (mg.length == 1) {
-            return { anchor: mg[0].aa, end: mg[0].isStart ? false : true }
-        }
-        else if (mg.length > 1) {
-            var mx = mg.findMin(g => g.x);
-            return { anchor: mx.aa, end: mx.isStart ? false : true }
+    if (pr) {
+        var r = pr.aa.collapseByPoint(point);
+        if (r) {
+            var sel = window.getSelection();
+            return {
+                aa: pr.aa,
+                offset: sel.focusOffset
+            }
         }
     }
 }
