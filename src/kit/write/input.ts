@@ -241,7 +241,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                     await combindSubBlock(write, rowBlock);
                     return;
                 }
-                if (!rowBlock.isContentEmpty && rowBlock.isTextBlock && rowBlock.prev?.isTextBlock) {
+                if (!rowBlock.isContentEmpty && rowBlock.isTextBlock && rowBlock.prev?.isTextBlock && rowBlock.prev?.url != BlockUrlConstant.Title) {
                     //这个需要合并块
                     await combineTextBlock(write, rowBlock);
                     return;
@@ -283,13 +283,15 @@ export async function inputBackSpaceTextContent(write: PageWrite, aa: AppearAnch
             var rowBlock = block.closest(x => !x.isLine);
             var prev = block.prev;
             var isLine = block.isLine;
-            if (block.isContentEmpty && isLine) await block.delete();
-            if (isLine && prev) {
-                write.onFocusBlockAnchor(prev, { last: true })
-            }
-            else {
-                write.onFocusBlockAnchor(rowBlock)
-            }
+            if (block.isContentEmpty && block.isLine) await block.delete();
+            write.kit.page.addUpdateEvent(async () => {
+                if (isLine && prev) {
+                    write.onFocusBlockAnchor(prev, { last: true })
+                }
+                else {
+                    write.onFocusBlockAnchor(rowBlock)
+                }
+            });
         });
         return true;
     }
