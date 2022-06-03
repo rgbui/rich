@@ -19,6 +19,7 @@ import BoardToolTextSvg from "../src/assert/svg/board.tool.text.svg";
 import BookSvg from "../src/assert/svg/book.svg";
 import BrokenLineSvg from "../src/assert/svg/brokenLine.svg";
 import CheckSvg from "../src/assert/svg/check.svg";
+import CheckboxSquareSvg from "../src/assert/svg/checkbox.square.svg";
 import ChevronDownSvg from "../src/assert/svg/chevronDown.svg";
 import ChevronLeftSvg from "../src/assert/svg/chevronLeft.svg";
 import ChevronRightSvg from "../src/assert/svg/chevronRight.svg";
@@ -144,6 +145,7 @@ BoardToolTextSvg,
 BookSvg,
 BrokenLineSvg,
 CheckSvg,
+CheckboxSquareSvg,
 ChevronDownSvg,
 ChevronLeftSvg,
 ChevronRightSvg,
