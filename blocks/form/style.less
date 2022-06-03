@@ -3,15 +3,21 @@
     justify-content: flex-start;
     align-items    : flex-start;
 
-    &-checkbox {
-        flex-shrink    : 0;
-        width          : 16px;
-        height         : 16px;
+    .sy-block-todo-checkbox-wrapper {
         display        : inline-flex;
         justify-content: center;
         align-items    : center;
         margin-right   : 6px;
-        transition     : background 200ms ease-out 0s;
+    }
+
+    &-checkbox {
+        flex-shrink: 0;
+        width      : 16px;
+        height     : 16px;
+        display        : inline-flex;
+        justify-content: center;
+        align-items    : center;
+        transition: background 200ms ease-out 0s;
 
         input[type='checkbox'] {
             margin: 0px;
