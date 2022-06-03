@@ -128,6 +128,9 @@ export class Point {
         var c = matrix.transform(this);
         return new Point(c.x, c.y);
     }
+    dis(point: Point) {
+        return Math.sqrt(Math.pow(point.x - this.x, 2) + Math.pow(point.y - this.y, 2));
+    }
 
 }
 export enum PointArrow {
@@ -302,6 +305,29 @@ export class Rect {
     moveTo(point: Point) {
         this.left = point.x;
         this.top = point.y;
+    }
+    /**
+     * 矩形到点point的距离
+     * @param point 
+     */
+    dis(point: Point) {
+        if (this.contain(point)) return 0;
+        if (point.y > this.top) {
+            if (this.containX(point.x)) return point.dis(new Point(point.x, this.top));
+            else if (point.x < this.left) return point.dis(this.leftTop)
+            else return point.dis(this.rightTop)
+        }
+        else if (point.y < this.bottom) {
+            if (this.containX(point.x)) return point.dis(new Point(point.x, this.bottom));
+            else if (point.x < this.left) return point.dis(this.leftBottom)
+            else return point.dis(this.rightBottom)
+        }
+        else if (point.x < this.left) {
+            return point.dis(new Point(this.left, point.y))
+        }
+        else if (point.x > this.right) {
+            return point.dis(new Point(this.right, point.y))
+        }
     }
 }
 
