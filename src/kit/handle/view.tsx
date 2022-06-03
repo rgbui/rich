@@ -7,7 +7,8 @@ import { LangID } from "../../../i18n/declare";
 import { MouseDragger } from "../../common/dragger";
 import { ghostView } from "../../common/ghost";
 import { onAutoScroll, onAutoScrollStop } from "../../common/scroll";
-import { DragHandleSvg } from "../../../component/svgs";
+import { DragHandleSvg, PlusSvg } from "../../../component/svgs";
+import { BlockUrlConstant } from "../../block/constant";
 export class HandleView extends React.Component<{ handle: Handle }>{
     constructor(props) {
         super(props);
@@ -17,9 +18,34 @@ export class HandleView extends React.Component<{ handle: Handle }>{
         return this.props.handle;
     }
     el: HTMLElement;
-    private onMousedown(event: MouseEvent)
-    {
-        if (this.toolTip) this.toolTip.close();
+    private async onPlus(event: React.MouseEvent) {
+        this.closeTip();
+        event.stopPropagation();
+        var self = this;
+        if (self.handle.kit.operator.currentSelectedBlocks.length > 0) {
+            var bs = self.handle.kit.page.getAtomBlocks(self.handle.kit.operator.currentSelectedBlocks);
+            var b = bs.findMax(g => g.getVisibleContentBound().bottom);
+            if (b) {
+                await self.handle.kit.page.onAction('handle.plus.create', async () => {
+                    var block = await b.visibleDownCreateBlock(BlockUrlConstant.TextSpan);
+                    self.handle.kit.page.addUpdateEvent(async () => {
+                        self.handle.kit.writer.onFocusBlockAnchor(block);
+                    })
+                })
+            }
+        }
+        else if (self.handle.handleBlock) {
+            await self.handle.kit.page.onAction('handle.plus.create', async () => {
+                var block = await self.handle.handleBlock.visibleDownCreateBlock(BlockUrlConstant.TextSpan);
+                self.handle.kit.page.addUpdateEvent(async () => {
+                    console.log(block, 'usss');
+                    self.handle.kit.writer.onFocusBlockAnchor(block);
+                })
+            })
+        }
+    }
+    private onMousedown(event: MouseEvent) {
+        this.closeTip();
         this.handle.isDown = true;
         this.handle.isDrag = false;
         var self = this;
@@ -81,18 +107,31 @@ export class HandleView extends React.Component<{ handle: Handle }>{
             }
         }
     }
+    private closeTip() {
+        if (this.toolTip) this.toolTip.close();
+        if (this.plusToolTip) this.plusToolTip.close();
+    }
     handleEle: HTMLElement;
     toolTip: Tip;
+    plusToolTip: Tip;
     render() {
         return <div>
             <div className='shy-selector-bar'
                 ref={e => this.handleEle = e}
-                onMouseDown={e => this.onMousedown(e.nativeEvent)}>
-                <Tip placement='left' ref={e => { this.toolTip = e; }} id={LangID.bar} >
-                    <span>
+            >
+                <Tip placement='bottom' ref={e => { this.plusToolTip = e; }} overlay={'点击下面插入块'} >
+                    <span onClick={e => this.onPlus(e)}>
+                        <Icon icon={PlusSvg} size={14}></Icon>
+                    </span>
+                </Tip>
+
+                <Tip placement='bottom' ref={e => { this.toolTip = e; }} id={LangID.bar} >
+                    <span onMouseDown={e => this.onMousedown(e.nativeEvent)}>
                         <Icon icon={DragHandleSvg} size={14}></Icon>
                     </span>
                 </Tip>
+
+
             </div>
         </div>
     }
