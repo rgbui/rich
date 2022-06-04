@@ -199,7 +199,6 @@ export class PageView extends Component<{ page: Page }>{
         return <div className={'shy-page-view' + (this.page.readonly ? " shy-page-view-readonly" : "")} style={pageStyle}
 
             tabIndex={this.page.isCanEdit ? 1 : undefined}
-
             onFocusCapture={e => this.page.onFocusCapture(e.nativeEvent)}
             onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}
             onMouseEnter={e => this.page.onMouseenter(e)}
@@ -210,7 +209,7 @@ export class PageView extends Component<{ page: Page }>{
                     <div className='shy-page-view-content' ref={e => this.page.contentEl = e}>
                         <PageCover page={this.page}></PageCover>
                         <ChildsArea childs={this.page.views}></ChildsArea>
-                        {this.page.requireSelectLayout && this.renderPageTemplate()}
+                        {this.page.requireSelectLayout && this.page.isCanEdit && this.renderPageTemplate()}
                     </div>
                 </PageLayoutView>
             </div>
