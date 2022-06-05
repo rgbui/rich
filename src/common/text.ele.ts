@@ -319,6 +319,84 @@ export class TextEle {
         }
         return false
     }
+    /**
+     * 通过at计算的位置不一定很准确，
+     * 不过也无所谓了
+     * @param ele 
+     * @param at 
+     * @returns 
+     */
+    static getLineByAt(ele: HTMLElement, at: number) {
+        var content = this.getTextContent(ele);
+        var ts = content.split("");
+        var rect = new Rect();
+        var dm = dom(ele);
+        var currentDisplay = dm.style('display');
+        var currentRect = Rect.from(ele.getBoundingClientRect());
+        if (currentDisplay == 'inline') {
+            var closetELe = dm.closest(g => {
+                var display = dom(g as HTMLElement).style("display");
+                if (display != 'inline') return true;
+            }) as HTMLElement;
+            if (closetELe) {
+                rect = this.getContentBound(closetELe);
+            }
+        }
+        else rect = currentRect;
+        var fontStyle = this.getFontStyle(ele);
+        var rowWidth = rect.width;
+        var firstRowWidth = currentRect.width;
+        var rowCount = 1;
+        var row = { x: currentRect.left };
+        var lineHeight = fontStyle.lineHeight;
+        let i = 0;
+        var point = new Point(0, 0);
+        var currentRow = 0;
+        for (; i < ts.length; i++) {
+            if (i == at) {
+                point.x = row.x;
+                point.y = (rowCount - 1) * lineHeight + rect.top;
+                currentRow = rowCount;
+            }
+            var word = ts[i];
+            /**
+             * https://zhidao.baidu.com/question/386412786.html
+             */
+            if (word == '\n' || word == '\r') {
+                row.x = rect.left;
+                rowCount += 1;
+                /**
+                 * 如果是\r\n
+                 */
+                if (ts[i + 1] == '\n' && word == '\r') {
+                    i += 1;
+                }
+            }
+            else {
+                var w = this.wordWidth(word, fontStyle);
+                if (rowCount == 1 && row.x + w > firstRowWidth + currentRect.left) {
+                    row.x = rect.left;
+                    rowCount += 1;
+                }
+                else if (rowCount > 1 && row.x + w > rowWidth + rect.left) {
+                    row.x = rect.left;
+                    rowCount += 1;
+                }
+                row.x += w;
+            }
+        }
+        if (at == ts.length) {
+            point.x = row.x;
+            point.y = (rowCount - 1) * lineHeight + currentRect.top;
+            currentRow = rowCount;
+        }
+        return {
+            total: rowCount,
+            line: currentRow,
+            lineheight: lineHeight,
+            point
+        }
+    }
 }
 export type TextFontStyle = {
     fontStyle: string,
