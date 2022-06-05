@@ -311,7 +311,11 @@ export class PageEvent {
 
     }
     //#endregion
+    lastCursorBlockId: string;
     async nofityViewCursor(this: Page, aa: AppearAnchor, offset: number) {
+        var row = aa.block.closest(x => x.isBlock);
+        if (row.id == this.lastCursorBlockId) return;
+        this.lastCursorBlockId = row.id;
         this.emit(PageDirective.viewCursor, { blockId: aa.block.id, prop: aa.prop, offset })
     }
     loadUserViewCursor(this: Page,

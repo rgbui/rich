@@ -80,7 +80,6 @@ export class PageWrite {
         var cr = TextEle.getCursorRangeByPoint(Point.from(event));
         if (cr?.node && aa.el.contains(cr?.node)) {
             this.onInputStart(aa, cr.offset);
-
         }
         else setTimeout(() => {
             self.onSaveSelection();
@@ -316,6 +315,7 @@ export class PageWrite {
         this.endAnchor = findBlockAppear(sel.focusNode);
         this.endOffset = sel.focusOffset;
         this.endAnchorText = this.endAnchor?.textContent || '';
+        this.kit.page.nofityViewCursor(this.endAnchor, this.endOffset);
     }
     onRenderSelection() {
         var sel = window.getSelection();

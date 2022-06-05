@@ -375,7 +375,6 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
             if (appear == write.startAnchor || appear == write.endAnchor) {
             }
             else {
-                console.log('update');
                 var block = appear.block;
                 await block.updateAppear(appear, '', BlockRenderRange.self);
                 if (block.isContentEmpty) await block.delete();

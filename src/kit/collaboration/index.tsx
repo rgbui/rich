@@ -28,21 +28,23 @@ export class Collaboration extends React.Component<{ kit: Kit }>{
         try {
             var block = this.props.kit.page.find(g => g.id == operate.blockId);
             if (block) {
-                var appear = block.appearAnchors.find(g => g.prop == operate.prop);
-                if (appear && appear.el) {
-                    var pr = TextEle.getLineByAt(appear.el, operate.offset);
-                    if (pr?.point) {
-                        if (this.users.some(s => s.userid == userid)) {
-                            var ur = this.users.find(g => g.userid == userid);
-                            ur.point = pr.point.relative(this.offset)
-                        }
-                        else {
-                            this.users.push({ userid, point: pr.point.relative(this.offset) })
-                        }
-                        console.log(this.users);
-                        this.forceUpdate();
+                var rowBlock = block.closest(x => x.isBlock);
+                if (rowBlock) {
+                    var rect = rowBlock.getVisibleBound();
+                    if (this.users.some(s => s.userid == userid)) {
+                        var ur = this.users.find(g => g.userid == userid);
+                        ur.point = rect.leftTop.relative(this.offset).move(-30, 0)
                     }
+                    else {
+                        this.users.push({ userid, point: rect.leftTop.relative(this.offset).move(-30, 0) })
+                    }
+                    this.forceUpdate();
+                    return;
                 }
+            }
+            if (userid) {
+                this.users.remove(g => g.userid == userid);
+                this.forceUpdate();
             }
         }
         catch (ex) {
@@ -54,7 +56,7 @@ export class Collaboration extends React.Component<{ kit: Kit }>{
     render() {
         return <div className="shy-collaboration" ref={e => this.el = e} >
             {this.users.map(u => {
-                return <div key={u.userid} className="shy-collaboration-user" style={{ top: u.point.y, left: u.point.x }} ><Avatar size={30} userid={u.userid}></Avatar></div>
+                return <div key={u.userid} className="shy-collaboration-user" style={{ top: u.point.y, left: u.point.x }} ><Avatar size={24} userid={u.userid}></Avatar></div>
             })}
         </div>
     }
