@@ -71,10 +71,12 @@ export class TextEle {
         let offset;
         if (document.caretRangeFromPoint) {
             range = document.caretRangeFromPoint(point.x, point.y);
+            if (!range) return null;
             textNode = range.startContainer;
             offset = range.startOffset;
         } else if ((document as any).caretPositionFromPoint) {
             range = (document as any).caretPositionFromPoint(point.x, point.x);
+            if (!range) return null;
             textNode = range.offsetNode;
             offset = range.offset;
         } else {
