@@ -10,10 +10,11 @@ import { BoardLine } from "./connect/line";
 import { BoardBlockHover } from "./connect/block.hover";
 import { PageWrite } from "./write";
 import { PageOperator } from "./operator";
+import { Collaboration } from "./collaboration";
 
 export class Kit extends Events {
     page: Page;
-    constructor(page: Page) {
+    constructor(page:Page) {
         super();
         this.page = page;
         this.init();
@@ -34,4 +35,5 @@ export class Kit extends Events {
     picker: BlockPicker;
     boardLine: BoardLine;
     boardBlockHover: BoardBlockHover;
+    collaboration: Collaboration
 }

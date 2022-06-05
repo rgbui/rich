@@ -1,5 +1,6 @@
 import React from "react";
 import { Kit } from ".";
+import { Collaboration } from "./collaboration";
 import { BoardBlockHover } from "./connect/block.hover";
 import { HandleView } from "./handle/view";
 import { BlockPickerView } from "./picker/view";
@@ -21,6 +22,7 @@ export class KitView extends React.Component<{ kit: Kit }>{
             <SelectorView selector={this.kit.selector}></SelectorView>
             <HandleView handle={this.kit.handle}></HandleView>
             <BoardScale kit={this.props.kit}></BoardScale>
+            <Collaboration kit={this.props.kit} ref={e => this.kit.collaboration = e}></Collaboration>
             <BoardBlockHover ref={e => this.kit.boardBlockHover = e} kit={this.kit}></BoardBlockHover>
         </div>
     }

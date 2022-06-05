@@ -314,8 +314,16 @@ export class PageEvent {
     async nofityViewCursor(this: Page, aa: AppearAnchor, offset: number) {
         this.emit(PageDirective.viewCursor, { blockId: aa.block.id, prop: aa.prop, offset })
     }
-    loadUserViewCursor(this: Page, data) {
-        console.log(data);
+    loadUserViewCursor(this: Page,
+        data: {
+            deviceId: string
+            operate: { blockId: string, prop: string, offset: 0 }
+            sockId: string
+            userid: string
+            viewId: string
+            workspaceId: string
+        }) {
+        this.kit.collaboration.push(data.userid, data.operate);
     }
 }
 
