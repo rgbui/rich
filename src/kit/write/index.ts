@@ -238,6 +238,7 @@ export class PageWrite {
     endOffset: number;
     endAnchorText: string = '';
     onInputStart(aa: AppearAnchor, offset?: number) {
+        this.kit.page.nofityViewCursor(aa,offset);
         aa.focus();
         this.startAnchor = aa;
         this.startOffset = typeof offset == 'number' ? offset : (window.getSelection()).anchorOffset;

@@ -7,11 +7,13 @@ import { emojiStore } from "../../../extensions/emoji/store";
 import { GalleryPics } from "../../../extensions/image/gellery";
 import { channel } from "../../../net/channel";
 import { Block } from "../../block";
+import { AppearAnchor } from "../../block/appear";
 import { BlockDirective } from "../../block/enum";
 import { Matrix } from "../../common/matrix";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { PageLayoutType } from "../declare";
+import { PageDirective } from "../directive";
 
 export class PageEvent {
     /**
@@ -309,5 +311,11 @@ export class PageEvent {
 
     }
     //#endregion
+    async nofityViewCursor(this: Page, aa: AppearAnchor, offset: number) {
+        this.emit(PageDirective.viewCursor, { blockId: aa.block.id, prop: aa.prop, offset })
+    }
+    loadUserViewCursor(this: Page, data) {
+        console.log(data);
+    }
 }
 
