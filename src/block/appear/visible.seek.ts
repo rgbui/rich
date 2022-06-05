@@ -1,4 +1,3 @@
-import { moveMessagePortToContext } from "worker_threads";
 import { AppearAnchor } from ".";
 import { Block } from "..";
 import { dom } from "../../common/dom";
@@ -145,7 +144,7 @@ export function AppearVisibleSeek(appear: AppearAnchor, options: {
 
 
 /**
- * 这里可以通过光标自动获取光株所在的位置坐标
+ * 这里可以通过光标自动获取光标所在的位置坐标
  * @deprecated 该方法弃用
  * @param appear 
  * @returns 

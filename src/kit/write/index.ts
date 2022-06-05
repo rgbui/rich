@@ -78,8 +78,10 @@ export class PageWrite {
          * 
          */
         var cr = TextEle.getCursorRangeByPoint(Point.from(event));
-        if (cr?.node && aa.el.contains(cr?.node))
+        if (cr?.node && aa.el.contains(cr?.node)) {
             this.onInputStart(aa, cr.offset);
+
+        }
         else setTimeout(() => {
             self.onSaveSelection();
         }, 100);
@@ -238,7 +240,7 @@ export class PageWrite {
     endOffset: number;
     endAnchorText: string = '';
     onInputStart(aa: AppearAnchor, offset?: number) {
-        this.kit.page.nofityViewCursor(aa,offset);
+        this.kit.page.nofityViewCursor(aa, offset);
         aa.focus();
         this.startAnchor = aa;
         this.startOffset = typeof offset == 'number' ? offset : (window.getSelection()).anchorOffset;
