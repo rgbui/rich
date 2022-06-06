@@ -9,6 +9,7 @@ import {
     CommentSvg,
     EmojiSvg,
     PictureSvg,
+    RowNoSvg,
     TypesButtonSvg,
     TypesCheckboxSvg,
     TypesCreateAtSvg,
@@ -25,7 +26,6 @@ import {
     TypesRelationSvg,
     TypesRollupSvg,
     TypesSelectSvg,
-    TypesSortSvg,
     TypesStringSvg,
     TypesTitleSvg,
     VideoSvg
@@ -80,7 +80,7 @@ export function getTypeSvg(type: FieldType) {
         case FieldType.emoji:
             return EmojiSvg
         case FieldType.autoIncrement:
-            return TypesSortSvg
+            return RowNoSvg
         case FieldType.title:
             return TypesTitleSvg
         default:
