@@ -609,7 +609,7 @@ export abstract class Block extends Events {
         this.referenceBlockers.remove(g => g.id == block.id);
     }
     isCanEdit(prop?: string) {
-        if (this.page.pageInfo.locker?.userid) return false;
+        if (this.page.pageInfo?.locker?.userid) return false;
         if (typeof prop == 'undefined') prop = 'content';
         if (this.url == '/title') {
             if (this.page.permissions.includes(AtomPermission.createOrDeleteDoc)) return true;
