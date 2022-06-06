@@ -274,8 +274,7 @@ export class DataGridView extends Block {
         }
     }
     async createdDidMounted(): Promise<void> {
-        if (this.createSource == 'InputBlockSelector'||this.createSource=='pageTurnLayout')
-        {
+        if (this.createSource == 'InputBlockSelector' || this.createSource == 'pageTurnLayout') {
             if (!this.schemaId) {
                 var dg = await useDataGridCreate({ roundArea: Rect.fromEle(this.el) });
                 if (dg) {
@@ -305,6 +304,7 @@ export class DataGridView extends Block {
             await this.createItem();
             this.view.forceUpdate();
         }
+        console.log(this,'this');
     }
     async createTableSchema() {
         if (!this.schemaId) {

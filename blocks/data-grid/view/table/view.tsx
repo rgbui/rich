@@ -4,16 +4,16 @@ import { Icon } from "../../../../component/view/icon"
 import { view } from "../../../../src/block/factory/observable"
 import { BlockView } from "../../../../src/block/view"
 import { ChildsArea } from "../../../../src/block/view/appear"
-import Plus from "../../../../src/assert/svg/plus.svg";
 import { getTypeSvg } from "../../schema/util"
 import { Loading } from "../../../../component/view/loading"
 import { Point, Rect } from "../../../../src/common/vector/point"
 import { MouseDragger } from "../../../../src/common/dragger"
 import { DataGridTool } from "../components/tool"
 import { BlockRenderRange } from "../../../../src/block/enum"
-import { CheckSvg, TypesNumberSvg } from "../../../../component/svgs"
+import { CheckSvg, PlusSvg, TypesNumberSvg } from "../../../../component/svgs"
 import { ghostView } from "../../../../src/common/ghost"
 import { ViewField } from "../../schema/view"
+import lodash from "lodash"
 
 @view('/data-grid/table')
 export class TableStoreView extends BlockView<TableStore>{
@@ -55,7 +55,10 @@ export class TableStoreView extends BlockView<TableStore>{
         var self = this;
         self.isMoveLine = true;
         event.stopPropagation();
-        var oldFields = this.block.fields.map(f => f.get());
+        var oldFields = this.block.fields.map(f => {
+            if (typeof f.get == 'function') return f.get()
+            else return lodash.cloneDeep(f)
+        });
         MouseDragger<{ colIndex: number, colWidth: number, colEles: HTMLElement[] }>({
             event,
             cursor: 'col-resize',
@@ -150,7 +153,7 @@ export class TableStoreView extends BlockView<TableStore>{
     private isMoveLine: boolean = false;
     renderHead() {
         return <div className="sy-dg-table-head" onMouseMove={e => this.mousemove(e.nativeEvent)}>
-            <div className='sy-block-table-subline' onMouseDown={e => this.onMousedownLine(e)} ref={e => this.subline = e}></div>
+            <div className='sy-dg-table-subline' onMouseDown={e => this.onMousedownLine(e)} ref={e => this.subline = e}></div>
             {this.block.fields.map((f, i) => {
                 var icon: SvgrComponent | JSX.Element;
                 if (f.type == 'check') icon = CheckSvg;
@@ -166,7 +169,7 @@ export class TableStoreView extends BlockView<TableStore>{
             })}
             <div className='sy-dg-table-head-th sy-dg-table-head-th-plus'
                 style={{ minWidth: 40, flexGrow: 1, flexShrink: 1 }} onMouseDown={e => this.block.onAddField(e)}>
-                <Icon icon={Plus}></Icon>
+                <Icon icon={PlusSvg}></Icon>
             </div>
         </div>
     }
@@ -180,7 +183,7 @@ export class TableStoreView extends BlockView<TableStore>{
                     style={{ width: (this.block.fields.sum(c => c.colWidth) + 40) + 'px' }}
                     onMouseDown={e => { e.stopPropagation(); self.block.onAddRow({}, undefined, 'after') }}
                     className="sy-dg-table-add">
-                    <Icon size={12} icon={Plus}></Icon><span>新增</span>
+                    <Icon size={12} icon={PlusSvg}></Icon><span>新增</span>
                 </div>}
             </div>
         }
