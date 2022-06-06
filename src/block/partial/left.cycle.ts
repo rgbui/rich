@@ -101,10 +101,14 @@ export class Block$LifeCycle {
             var pm = this.propMetas.find(g => g.key == prop);
             var value = typeof value != 'undefined' ? value : lodash.get(this, prop);
             if (pm.isArray && Array.isArray(value)) {
-                value = value.map(v => v.get());
+                value = value.map(v => {
+                    if (typeof v.get == 'function') return v.get();
+                    else return lodash.cloneDeep(v);
+                });
             }
             else if (value) {
-                value = value.get();
+                if (typeof value.get == 'function') value = value.get();
+                else value = lodash.cloneDeep(value);
             }
             if (pm.isArray) {
                 if (Array.isArray(value)) return value.map(v => {
@@ -125,10 +129,14 @@ export class Block$LifeCycle {
             var pm = this.propMetas.find(g => g.key == prop);
             var value = typeof value != 'undefined' ? value : lodash.get(this, prop);
             if (pm.isArray && Array.isArray(value)) {
-                value = value.map(v => v.get());
+                value = value.map(v => {
+                    if (typeof v.get == 'function') return v.get();
+                    else return lodash.cloneDeep(v);
+                });
             }
             else if (value) {
-                value = value.get();
+                if (typeof value.get == 'function') value = value.get();
+                else value = lodash.cloneDeep(value);
             }
             if (pm.isArray) {
                 if (Array.isArray(value)) return value;

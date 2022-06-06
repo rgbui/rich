@@ -559,7 +559,7 @@ export class Block$Operator {
             for (let prop in newProps) {
                 oldValue[prop] = this.clonePropData(prop, lodash.get(oldProps, prop));
                 newValue[prop] = this.clonePropData(prop, lodash.get(newProps, prop));
-                lodash.set(this, prop, this.clonePropData(prop, lodash.get(newProps, prop)))
+                lodash.set(this, prop, this.cloneProp(prop, lodash.get(newProps, prop)))
             }
         }
         else {
