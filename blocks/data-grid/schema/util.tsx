@@ -123,7 +123,7 @@ export function getFieldMenus() {
     var menus = [
         { type: MenuItemTypeValue.text, text: '基础' },
         ...map([
-            { text: '单行文本', value: FieldType.text },
+            { text: '文本', value: FieldType.text },
             // { text: '多行文本', value: FieldType.textarea },
             { text: '数字', value: FieldType.number },
             // { text: '价钱', value: FieldType.price },
@@ -148,6 +148,7 @@ export function getFieldMenus() {
         ...map([
             { text: '反应', value: FieldType.emoji },
             { text: '评论', value: FieldType.comment },
+            // { text: '操作按钮', value: FieldType.button },
             // { text: '收藏', value: FieldType.favourite },
             // { text: '分享', value: FieldType.share },
             // { text: '打赏', value: FieldType.donate },
@@ -156,8 +157,7 @@ export function getFieldMenus() {
         ]),
         { type: MenuItemTypeValue.text, text: '高级' },
         ...map([
-            { text: '自动编号', value: FieldType.autoIncrement },
-            { text: '操作按钮', value: FieldType.button },
+            // { text: '自动编号', value: FieldType.autoIncrement },
             //{ text: '置顶', value: FieldType.top },
             { text: '创建人', value: FieldType.creater },
             { text: '创建时间', value: FieldType.createDate },
