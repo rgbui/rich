@@ -4,6 +4,7 @@ import { DataGridView } from '../base/table';
 import "./style.less";
 import { BlockFactory } from '../../../../src/block/factory/block.factory';
 import { DataGridTableItem } from './row';
+
 /***
  * 数据总共分三部分
  * 1. 数据源（调用第三方接口获取数据），编辑的数据源需要触发保存
@@ -17,10 +18,16 @@ export class TableStore extends DataGridView {
         this.blocks.childs = [];
         for (let i = 0; i < this.data.length; i++) {
             var row = this.data[i];
-            var rowBlock: DataGridTableItem = await BlockFactory.createBlock('/data-grid/table/row', this.page, { mark: i,dataIndex:i, dataRow: row }, this) as DataGridTableItem;
+            var rowBlock: DataGridTableItem = await BlockFactory.createBlock('/data-grid/table/row', this.page, { mark: i, dataIndex: i, dataRow: row }, this) as DataGridTableItem;
             this.blocks.childs.push(rowBlock);
             await rowBlock.createElements();
         }
+    }
+    async onOver(isOver: boolean) {
+        if (isOver == false && (this.view as any).isMoveLine == false) {
+            (this.view as any).subline.style.display = 'none';
+        }
+        return await super.onOver(isOver);
     }
 }
 

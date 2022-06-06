@@ -150,7 +150,7 @@ export class TableStoreView extends BlockView<TableStore>{
         })
     }
     subline: HTMLElement;
-    private isMoveLine: boolean = false;
+    isMoveLine: boolean = false;
     renderHead() {
         return <div className="sy-dg-table-head" onMouseMove={e => this.mousemove(e.nativeEvent)}>
             <div className='sy-dg-table-subline' onMouseDown={e => this.onMousedownLine(e)} ref={e => this.subline = e}></div>
@@ -197,7 +197,6 @@ export class TableStoreView extends BlockView<TableStore>{
     render() {
         var self = this;
         return <div className="sy-dg-table"
-
             onMouseEnter={e => this.block.onOver(true)}
             onMouseLeave={e => this.block.onOver(false)}
         >

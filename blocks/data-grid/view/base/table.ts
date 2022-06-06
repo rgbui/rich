@@ -36,6 +36,8 @@ import dayjs from "dayjs";
 export class DataGridView extends Block {
     checkItems: Record<string, any>[] = [];
     @prop()
+    tableText: string = '';
+    @prop()
     fields: ViewField[] = [];
     @prop()
     sorts: { field: string, sort: number }[] = [];
@@ -520,7 +522,7 @@ export class DataGridView extends Block {
         }
         else {
             var fieldMenus = getFieldMenus();
-            var fm = fieldMenus.find(g =>g.value == viewField.field.type);
+            var fm = fieldMenus.find(g => g.value == viewField.field.type);
             if (fm) fm.checkLabel = true;
             var icon = getTypeSvg(viewField?.field.type);
             var fieldSettingVisible: boolean = false;

@@ -1,12 +1,6 @@
 import React from "react";
 import { Icon } from "../../../../component/view/icon";
 import { DataGridView } from "../base/table";
-import Settings from "../../../../src/assert/svg/settings.svg";
-import Filter from "../../../../src/assert/svg/filter.svg";
-import Sort from "../../../../src/assert/svg/sort.svg";
-import chevronDown from "../../../../src/assert/svg/chevronDown.svg";
-import collectTable from "../../../../src/assert/svg/collectTable.svg";
-import "./style.less";
 import { useTableSortView } from "../../../../extensions/tablestore/sort";
 import { Point, Rect } from "../../../../src/common/vector/point";
 import { useTabelSchemaViewDrop } from "../../../../extensions/tablestore/switch.views/view";
@@ -17,14 +11,10 @@ import { useTableFilterView } from "../../../../extensions/tablestore/filter";
 import { useSelectMenuItem } from "../../../../component/view/menu";
 import { MenuItemTypeValue } from "../../../../component/view/menu/declare";
 import { useTablePropertyView } from "../../../../extensions/tablestore/property";
-import LinkSvg from "../../../../src/assert/svg/link.svg";
-import PropertySvg from "../../../../src/assert/svg/propertys.svg";
-import FilterSvg from "../../../../src/assert/svg/filter.svg";
-import SortSvg from "../../../../src/assert/svg/sort.svg";
-import TemplatesSvg from "../../../../src/assert/svg/templates.svg";
-import ImportSvg from "../../../../src/assert/svg/import.svg";
-import FileSvg from "../../../../src/assert/svg/file.svg";
 import { FieldType } from "../../schema/type";
+import { TextArea } from "../../../../src/block/view/appear";
+import { ChevronDownSvg, CollectTableSvg, FileSvg, FilterSvg, ImportSvg, LinkSvg, PropertysSvg, SettingsSvg, SortSvg, TemplatesSvg } from "../../../../component/svgs";
+import "./style.less";
 
 export class DataGridTool extends React.Component<{ block: DataGridView }>{
     isOpenTool: boolean = false;
@@ -70,14 +60,14 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
             self.isOpenTool = true;
             var menus = [
                 { text: '复制链接', icon: LinkSvg, name: 'copylink' },
-                { text: '属性', icon: PropertySvg, name: 'propertys' },
+                { text: '属性', icon: PropertysSvg, name: 'propertys' },
                 { text: '表单模板', icon: TemplatesSvg, name: 'form' },
                 { text: '过滤', icon: FilterSvg, name: 'filter' },
                 { text: '排序', icon: SortSvg, name: 'sort' },
                 { type: MenuItemTypeValue.divide },
                 { text: '显示行号', checked: props.block.showRowNum as any, type: MenuItemTypeValue.switch, name: 'showRowNum' },
                 { text: '显示选中', checked: props.block.showCheckRow as any, type: MenuItemTypeValue.switch, name: 'check' },
-                { text: '显示编号(自增)', checked: props.block.fields.some(s => s.field?.type == FieldType.autoIncrement), type: MenuItemTypeValue.switch, name: 'autoIncrement' },
+                { text: '显示序号(自增)', checked: props.block.fields.some(s => s.field?.type == FieldType.autoIncrement), type: MenuItemTypeValue.switch, name: 'autoIncrement' },
                 { type: MenuItemTypeValue.divide },
                 { text: '导入', icon: ImportSvg, name: 'import' },
                 { text: '导出', icon: FileSvg, name: 'export' },
@@ -137,21 +127,22 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
         var view = props.block.schema?.views?.find(g => g.id == props.block.syncBlockId)
         if (props.block.isLock == true) return <></>
         return <div className="sy-dg-tool">
+            <div className="sy-dg-tool-title"><TextArea block={props.block} prop='tableText' placeholder={'表格名称'}></TextArea></div>
             <div className="sy-dg-tool-templates">
                 <label onMouseDown={e => changeDataGridView(e)}>
-                    <Icon size={14} icon={view ? getSchemaViewIcon(view.url) : collectTable}></Icon>
+                    <Icon size={14} icon={view ? getSchemaViewIcon(view.url) : CollectTableSvg}></Icon>
                     <span>{view?.text}</span>
-                    <Icon size={10} icon={chevronDown}></Icon>
+                    <Icon size={10} icon={ChevronDownSvg}></Icon>
                 </label>
             </div>
             {props.block.isOver && <div className="sy-dg-tool-operators">
-                <label onMouseDown={e => openConfigProperty(e)}><Icon size={14} icon={Settings}></Icon><span>字段配置</span></label>
-                <label onMouseDown={e => openFilterView(e)}><Icon size={14} icon={Filter}></Icon><span>过滤</span></label>
-                <label onMouseDown={e => openSortView(e)}><Icon size={14} icon={Sort}></Icon><span>排序</span></label>
+                <label onMouseDown={e => openConfigProperty(e)}><Icon size={14} icon={SettingsSvg}></Icon><span>字段配置</span></label>
+                <label onMouseDown={e => openFilterView(e)}><Icon size={14} icon={FilterSvg}></Icon><span>过滤</span></label>
+                <label onMouseDown={e => openSortView(e)}><Icon size={14} icon={SortSvg}></Icon><span>排序</span></label>
                 <label onMouseDown={e => openConfigView(e)}><Icon size={14} icon='elipsis:sy'></Icon></label>
                 <div className="sy-dg-tool-operators-add">
                     <span className="text" onClick={e => openForm(e)}>新增</span>
-                    <span className="icon" onClick={e => openFormDrop(e)}><Icon size={10} icon={chevronDown}></Icon></span>
+                    <span className="icon" onClick={e => openFormDrop(e)}><Icon size={10} icon={ChevronDownSvg}></Icon></span>
                 </div>
             </div>}
         </div>
