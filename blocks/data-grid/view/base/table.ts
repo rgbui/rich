@@ -304,7 +304,7 @@ export class DataGridView extends Block {
             await this.createItem();
             this.view.forceUpdate();
         }
-        console.log(this,'this');
+        console.log(this, 'this');
     }
     async createTableSchema() {
         if (!this.schemaId) {
@@ -520,8 +520,8 @@ export class DataGridView extends Block {
         }
         else {
             var fieldMenus = getFieldMenus();
-            var fm = fieldMenus.find(g => g.value == viewField.field.type);
-            fm.checkLabel = true;
+            var fm = fieldMenus.find(g =>g.value == viewField.field.type);
+            if (fm) fm.checkLabel = true;
             var icon = getTypeSvg(viewField?.field.type);
             var fieldSettingVisible: boolean = false;
             if ([FieldType.date].includes(viewField?.field.type)) {
@@ -664,7 +664,6 @@ export class DataGridView extends Block {
         }
     }
     async onOpenConfigFieldSettings(event: MouseEvent | MouseEvent | Rect, viewField: ViewField) {
-        console.log(event);
         switch (viewField?.field?.type) {
             case FieldType.date:
                 var items: MenuItemType<BlockDirective | string>[] = [];
