@@ -89,6 +89,7 @@ import PropertysSvg from "../src/assert/svg/propertys.svg";
 import PubWorkspaceSvg from "../src/assert/svg/pubWorkspace.svg";
 import RenameSvg from "../src/assert/svg/rename.svg";
 import RotatingSvg from "../src/assert/svg/rotating.svg";
+import RowNoSvg from "../src/assert/svg/row.no.svg";
 import SettingsSvg from "../src/assert/svg/settings.svg";
 import SortSvg from "../src/assert/svg/sort.svg";
 import SquareplusSvg from "../src/assert/svg/squareplus.svg";
@@ -215,6 +216,7 @@ PropertysSvg,
 PubWorkspaceSvg,
 RenameSvg,
 RotatingSvg,
+RowNoSvg,
 SettingsSvg,
 SortSvg,
 SquareplusSvg,
