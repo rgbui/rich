@@ -92,7 +92,7 @@ export class Block$LifeCycle {
     async initialLoad(this: Block) {
 
     }
-    private propMetas: { key: string, meta: Function, isArray: boolean }[] = [];
+    private propMetas: { key: string, meta?: Function, create?: (v: any) => any, isArray: boolean }[] = [];
     cloneProp(prop: string, value?: any) {
         if (!this.propMetas.some(s => s.key == prop)) {
             return typeof value != 'undefined' ? lodash.cloneDeep(value) : lodash.cloneDeep(lodash.get(this, prop))
@@ -112,11 +112,13 @@ export class Block$LifeCycle {
             }
             if (pm.isArray) {
                 if (Array.isArray(value)) return value.map(v => {
+                    if (pm.create) return pm.create(v);
                     return new (pm.meta as any)(v);
                 })
                 return []
             }
             else {
+                if (pm.create) return pm.create(value);
                 return new (pm.meta as any)(value);
             }
         }
@@ -147,8 +149,8 @@ export class Block$LifeCycle {
             }
         }
     }
-    registerPropMeta(key: string, meta: Function, isArray: boolean = false) {
-        this.propMetas.push({ key, meta, isArray });
+    registerPropMeta(key: string, meta: Function, isArray: boolean = false, create?: (v: any) => any) {
+        this.propMetas.push({ key, meta, isArray, create });
     }
     isLoad = false;
     async load(this: Block, data) {

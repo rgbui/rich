@@ -54,7 +54,9 @@ export class DataGridView extends Block {
     relationDatas: Map<string, any[]> = new Map();
     isOver: boolean = false;
     init(): void {
-        this.registerPropMeta('fields', ViewField, true);
+        this.registerPropMeta('fields', undefined, true, (v) => {
+            return new ViewField(v, this.schema);
+        });
     }
     async load(data) {
         if (!this.pattern) this.pattern = new Pattern(this);
@@ -306,7 +308,6 @@ export class DataGridView extends Block {
             await this.createItem();
             this.view.forceUpdate();
         }
-        console.log(this, 'this');
     }
     async createTableSchema() {
         if (!this.schemaId) {
@@ -487,12 +488,10 @@ export class DataGridView extends Block {
     async onTurnField(viewField: ViewField, type: FieldType, config?: Record<string, any>) {
         var field = viewField.field;
         await this.page.onAction(ActionDirective.onSchemaTurnField, async () => {
-            console.log(type, config,)
             var r = await this.schema.turnField({ fieldId: field.id, type: type, config });
             if (r.ok) {
                 field.type = type;
-                if (config)
-                    Object.assign(field.config, config);
+                if (config) Object.assign(field.config, config);
                 await this.loadData();
                 await this.createItem();
                 this.forceUpdate();
