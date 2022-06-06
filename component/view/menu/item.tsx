@@ -57,7 +57,7 @@ export class MenuItem extends React.Component<{
             {(item.type == MenuItemTypeValue.item || !item.type) && <a className={'shy-menu-box-item-option' + (item.disabled == true ? " disabled" : "")}
                 onMouseUp={e => this.mousedown(item, e.nativeEvent)}>
                 {item.render && item.render(item)}
-                {!item.render && <>{item.icon && <Icon icon={item.icon} size={item.iconSize ? item.iconSize : 17}></Icon>}
+                {!item.render && <>{item.icon && <Icon icon={item.icon} size={item.iconSize ? item.iconSize : 14}></Icon>}
                     <span className='shy-menu-box-item-option-text'>{item.text}</span>
                     {item.label && <label>{item.label}</label>}
                     {item.checkLabel && <Icon className={'shy-menu-box-item-option-label-icon'} size={14} icon={CheckSvg}></Icon>}
