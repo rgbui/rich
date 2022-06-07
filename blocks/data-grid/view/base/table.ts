@@ -219,7 +219,8 @@ export class DataGridView extends Block {
         }
     }
     async onGetTurnUrls() {
-        return DataGridTurns.urls
+        return [];
+        // return DataGridTurns.urls
     }
     async getWillTurnData(url: string) {
         return await DataGridTurns.turn(this, url);
@@ -739,7 +740,7 @@ export class DataGridView extends Block {
             this.onAction(ActionDirective.onDataGridTurnView, async () => {
                 this.page.snapshoot.setSyncBlock(false);
                 var view = this.schema.views.find(g => g.id == viewId);
-                await this.page.createBlock(view.url,
+                var newBlock = await this.page.createBlock(view.url,
                     {
                         syncBlockId: viewId,
                         schemaId: this.schema.id
@@ -747,6 +748,7 @@ export class DataGridView extends Block {
                     this.parent,
                     this.at
                 );
+                await newBlock.updateProps({ tableText: this.tableText });
                 await this.delete();
             })
         }
