@@ -23,6 +23,7 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
         props.block.dataGridTool = this;
         var self = this;
         async function changeDataGridView(event: React.MouseEvent) {
+            event.stopPropagation();
             self.isOpenTool = true;
             var result = await useTabelSchemaViewDrop({ roundArea: Rect.fromEvent(event) }, {
                 schema: props.block.schema
