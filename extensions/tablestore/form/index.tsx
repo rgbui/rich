@@ -8,7 +8,6 @@ import { createFormPage } from "./page";
 import Dots from "../../../src/assert/svg/dots.svg";
 import { Icon } from "../../../component/view/icon";
 import "./style.less";
-import { channel } from "../../../net/channel";
 
 class FormPage extends EventsComponent {
     schema: TableSchema;
@@ -23,8 +22,7 @@ class FormPage extends EventsComponent {
         row?: Record<string, any>
     }) {
         if (typeof this.schema == 'string') {
-            var r = await (channel.get('/schema/query', { id: this.schema }));
-            this.schema = new TableSchema(r.data.schema);
+            this.schema = await TableSchema.loadTableSchema(this.schema);
         }
         else this.schema = options.schema as TableSchema;
         this.row = options.row;

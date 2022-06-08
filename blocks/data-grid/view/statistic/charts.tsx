@@ -25,10 +25,7 @@ export class DataGridChart extends Block {
     }
     async loadSchema() {
         if (this.schemaId && !this.schema) {
-            var r = await channel.get('/schema/query', { id: this.schemaId });
-            if (r.ok) {
-                this.schema = new TableSchema(r.data.schema);
-            }
+            this.schema = await TableSchema.loadTableSchema(this.schemaId)
         }
     }
     data: any[] = [];

@@ -173,6 +173,7 @@ export class TableSchema {
             if (r.ok) {
                 schema = new TableSchema(r.data.schema);
                 this.schemas.set(schemaId, schema);
+                return schema;
             }
         }
     }

@@ -15,6 +15,7 @@ import { FieldType } from "../../schema/type";
 import { TextArea } from "../../../../src/block/view/appear";
 import { ChevronDownSvg, CollectTableSvg, FileSvg, FilterSvg, ImportSvg, LinkSvg, PropertysSvg, SettingsSvg, SortSvg, TemplatesSvg } from "../../../../component/svgs";
 import "./style.less";
+import { ElementType, getElementUrl } from "../../../../net/element.type";
 
 export class DataGridTool extends React.Component<{ block: DataGridView }>{
     isOpenTool: boolean = false;
@@ -70,8 +71,8 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                 { text: '显示选中', checked: props.block.showCheckRow as any, type: MenuItemTypeValue.switch, name: 'check' },
                 { text: '显示序号(自增)', checked: props.block.fields.some(s => s.field?.type == FieldType.autoIncrement), type: MenuItemTypeValue.switch, name: 'autoIncrement' },
                 { type: MenuItemTypeValue.divide },
-                { text: '导入', icon: ImportSvg, name: 'import' },
-                { text: '导出', icon: FileSvg, name: 'export' },
+                // { text: '导入', icon: ImportSvg, name: 'import' },
+                { text: '导出', disabled: true, icon: FileSvg, name: 'export' },
             ]
             var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus, {
                 async update(item) {
@@ -89,6 +90,8 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
             if (um) {
                 switch (um.item.name) {
                     case 'copylink':
+                        var elementUrl = getElementUrl(ElementType.SchemaView, self.props.block.schema.id, self.props.block.syncBlockId);
+                        //var url = self.props.block.page.pageInfo.url + '?elementUrl=' + encodeURIComponent(elementUrl);
                         break;
                     case 'propertys':
                         await openConfigProperty(event);

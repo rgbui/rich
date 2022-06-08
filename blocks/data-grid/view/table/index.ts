@@ -24,7 +24,7 @@ export class TableStore extends DataGridView {
         }
     }
     async onOver(isOver: boolean) {
-        if (isOver == false && (this.view as any).isMoveLine == false) {
+        if (isOver == false && (this.view as any).isMoveLine == false&& (this.view as any).subline) {
             (this.view as any).subline.style.display = 'none';
         }
         return await super.onOver(isOver);
