@@ -67,7 +67,7 @@ class TableSortView extends EventsComponent {
             <div className="shy-table-sorts-view-footer">
                 <a style={{
                     fontSize: 14,
-                    display: 'inline-flex',
+                    display: 'flex',
                     justifyContent: 'flex-start',
                     alignItems: 'center',
                     cursor:'pointer'
