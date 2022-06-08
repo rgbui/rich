@@ -276,8 +276,7 @@ export class DataGridView extends Block {
         if (this.createSource == 'InputBlockSelector' || this.createSource == 'pageTurnLayout') {
             if (!this.schemaId) {
                 var dg = await useDataGridCreate({ roundArea: Rect.fromEle(this.el) });
-                if (dg)
-                {
+                if (dg) {
                     this.schema = await TableSchema.onCreate({ text: dg.text, url: this.url });
                     await this.onAction(ActionDirective.onCreateTableSchema, async () => {
                         this.page.snapshoot.setSyncBlock(false);
@@ -735,7 +734,7 @@ export class DataGridView extends Block {
                     this.parent,
                     this.at
                 );
-                await newBlock.updateProps({ tableText: this.tableText });
+                if (!(newBlock as any).tableText) await newBlock.updateProps({ tableText: this.schema.text });
                 await this.delete();
             })
         }
