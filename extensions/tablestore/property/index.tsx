@@ -49,7 +49,7 @@ class TablePropertyView extends EventsComponent {
             <Divider></Divider>
             <div className="shy-table-property-view-operator">
                 <Remark>每页数量</Remark>
-                <Select options={[
+                <Select style={{ minWidth: 80, display: 'inline-flex', fontSize: 14, justifyContent: 'flex-end' }} options={[
                     { text: '20条', value: 20 },
                     { text: '50条', value: 50 },
                     { text: '80条', value: 80 },
