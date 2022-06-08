@@ -40,13 +40,7 @@ class TabelSchemaViewDrop extends EventsComponent {
             if (r.url == '/data-grid/board' && !this.schema.fields.some(f => f.type == FieldType.option || f.type == FieldType.options)) {
                 actions.push({ name: 'addField', field: { text: '状态', type: FieldType.option } })
             }
-            var result = await channel.put('/schema/operate', {
-                operate: {
-                    schemaId: this.schema.id,
-                    date: new Date(),
-                    actions
-                }
-            });
+            var result = await this.schema.onSchemaOperate(action)
             var oneAction = result.data.actions.first();
             if (result.data.actions.length > 1) {
                 var action = result.data.actions[1];
@@ -82,28 +76,16 @@ class TabelSchemaViewDrop extends EventsComponent {
         var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus);
         if (um) {
             if (um.item.name == 'delete') {
-                var result = await channel.put('/schema/operate', {
-                    operate: {
-                        schemaId: this.schema.id,
-                        date: new Date(),
-                        actions: [{ name: 'removeSchemaView', id: view.id }]
-                    }
-                });
-                this.schema.views.remove(g => g.id == view.id);
+                var result = this.schema.onSchemaOperate([{ name: 'removeSchemaView', id: view.id }])
                 this.forceUpdate();
                 return;
             }
         }
         var it = menus.find(g => g.name == 'rename');
         if (it.value != view.text && it.value) {
-            var result = await channel.put('/schema/operate', {
-                operate: {
-                    schemaId: this.schema.id,
-                    date: new Date(),
-                    actions: [{ name: 'updateSchemaView', id: view.id, data: { text: it.value } }]
-                }
-            });
-            view.text = it.value;
+            var result = this.schema.onSchemaOperate([
+                { name: 'updateSchemaView', id: view.id, data: { text: it.value } }
+            ])
             this.forceUpdate();
             return;
         }
@@ -122,14 +104,9 @@ class TabelSchemaViewDrop extends EventsComponent {
         await useSelectMenuItem({ roundPoint: Point.from(event) }, menus);
         var it = menus.find(g => g.name == 'rename');
         if (it.value != this.schema.text && it.value) {
-            var result = await channel.put('/schema/operate', {
-                operate: {
-                    schemaId: this.schema.id,
-                    date: new Date(),
-                    actions: [{ name: 'updateSchema', data: { text: it.value } }]
-                }
-            });
-            this.schema.text = it.value;
+            var result = this.schema.onSchemaOperate([
+                { name: 'updateSchema', data: { text: it.value } }
+            ])
             this.forceUpdate();
             return;
         }
