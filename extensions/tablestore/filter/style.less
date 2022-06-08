@@ -1,14 +1,15 @@
 .shy-table-filter-view {
-    min-width  : 500px;
-   padding-bottom: 10px;
+    min-width     : 500px;
+    padding-bottom: 10px;
 
     &-head {
-        display        : flex;
-        justify-content: flex-start;
-        align-items    : center;
+        display           : flex;
+        justify-content   : flex-start;
+        align-items       : center;
         // height         : 38px;
-        padding:10px;
-        color          : rgb(55, 53, 47);
+        padding           : 10px;
+        font-size         : 14px;
+        color             : rgb(55, 53, 47);
     }
 
     &-content {}
@@ -17,15 +18,16 @@
         display        : flex;
         justify-content: flex-start;
         align-items    : flex-start;
-        padding:0px 10px;
-        margin:10px 0px;
+        padding        : 0px 10px;
+        margin         : 10px 0px;
+        font-size      : 14px;
 
         >span {
             flex-grow   : 0;
             flex-shrink : 0;
             margin-right: 10px;
-            display: inline-block;
-            width:50px;
+            display     : inline-block;
+            width       : 50px;
         }
 
         &-content {
@@ -34,35 +36,54 @@
             display        : flex;
             justify-content: flex-start;
             align-items    : center;
-            margin-right: 10px;
+            margin-right   : 10px;
+
             .shy-select {
                 margin: 0px 5px;
             }
         }
 
         >.shy-icon {
-            flex-grow  : 0;
-            flex-shrink: 0;
-            fill       : rgba(55, 53, 47, 0.4);
-            display    : inline-flex;
-            width      : 32px;
-            height     : 32px;
+            flex-grow    : 0;
+            flex-shrink  : 0;
+            fill         : rgba(55, 53, 47, 0.4);
+            display      : inline-flex;
+            width        : 32px;
+            height       : 32px;
             border-radius: 4px;
-            margin-left: 10px;
-            &:hover{
-                background-color:rgba(55, 53, 47, 0.08);
+            margin-left  : 10px;
+
+            &:hover {
+                background-color: rgba(55, 53, 47, 0.08);
             }
 
         }
     }
 }
 
-.shy-table-filter-view-group{
+.shy-table-filter-view-group {
     margin-left: 5px;
-    .shy-table-filter-view-group{
-        box-shadow: rgba(55, 53, 47, 0.1) 0px 0px 0px 1px;
-        background-color: rgba(0,0,0,0.02);
-        padding:8px;
-        border-radius: 4px;
+
+    .shy-table-filter-view-group {
+        box-shadow      : rgba(55, 53, 47, 0.1) 0px 0px 0px 1px;
+        background-color: rgba(0, 0, 0, 0.02);
+        padding         : 8px;
+        border-radius   : 4px;
+    }
+}
+
+.shy-table-filter-view-group-footer {
+    a {
+        color: rgb(55, 53, 47);
+    }
+
+    .shy-select {
+        display      : inline-block;
+        padding      : 3px 5px;
+        border-radius: 3px;
+
+        &:hover {
+            background-color: rgba(55, 53, 47, 0.08);
+        }
     }
 }

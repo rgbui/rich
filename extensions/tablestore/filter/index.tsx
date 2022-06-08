@@ -11,14 +11,15 @@ import { Icon } from "../../../component/view/icon";
 import { Select } from "../../../component/view/select";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
-import PlusSvg from "../../../src/assert/svg/plus.svg";
-import Dots from "../../../src/assert/svg/dots.svg";
-import TrashSvg from "../../../src/assert/svg/trash.svg";
+// import PlusSvg from "../../../src/assert/svg/plus.svg";
+// import Dots from "../../../src/assert/svg/dots.svg";
+// import TrashSvg from "../../../src/assert/svg/trash.svg";
 import "./style.less";
 import { Input } from "../../../component/view/input";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { Point } from "../../../src/common/vector/point";
 import { util } from "../../../util/util";
+import { DotsSvg, LinkSvg, PlusSvg, TrashSvg } from "../../../component/svgs";
 
 class TableFilterView extends EventsComponent {
     schema: TableSchema;
@@ -94,7 +95,7 @@ class TableFilterView extends EventsComponent {
         }
         async function clickProperty(event: React.MouseEvent, filter) {
             var menus = [
-                { text: '复制', name: 'copy', icon: TrashSvg },
+                { text: '复制', name: 'copy', icon:LinkSvg },
                 { text: '删除', name: 'delete', icon: TrashSvg }
             ]
             var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus);
@@ -120,7 +121,7 @@ class TableFilterView extends EventsComponent {
                 if (index == 0) return <div className="shy-table-filter-view-item" key={index}>
                     <span style={{ display: 'inline-block', height: 32, lineHeight: '32px' }}>条件</span>
                     {renderFilterItem(it, index)}
-                    <Icon style={{ padding: 5 }} mousedown={e => clickProperty(e, it)} icon={Dots} wrapper></Icon>
+                    <Icon style={{ padding: 5 }} mousedown={e => clickProperty(e, it)} icon={DotsSvg} wrapper></Icon>
                 </div>
                 else if (index == 1) return <div className="shy-table-filter-view-item" key={index}>
                     <span><Select value={filter.logic}
@@ -134,22 +135,24 @@ class TableFilterView extends EventsComponent {
                         }}></Select>
                     </span>
                     {renderFilterItem(it, index)}
-                    <Icon style={{ padding: 5 }} mousedown={e => clickProperty(e, it)} icon={Dots} wrapper></Icon>
+                    <Icon style={{ padding: 5 }} mousedown={e => clickProperty(e, it)} icon={DotsSvg} wrapper></Icon>
                 </div>
                 else if (index > 1) return <div className="shy-table-filter-view-item" key={index}>
                     <span>{filter.logic}</span>
                     {renderFilterItem(it, index)}
-                    <Icon style={{ padding: 5 }} mousedown={e => clickProperty(e, it)} icon={Dots} wrapper></Icon>
+                    <Icon style={{ padding: 5 }} mousedown={e => clickProperty(e, it)} icon={DotsSvg} wrapper></Icon>
                 </div>
             })}
             {deep == 0 && <Divider></Divider>}
-            <Select options={this.getFilters()} onChange={e => { addFilter(e) }}><a
-                style={{
-                    fontSize: 14,
-                    display: 'inline-flex',
-                    justifyContent: 'flex-start',
-                    alignItems: 'center'
-                }}><Icon size={14} icon={PlusSvg}></Icon>添加筛选条件</a></Select>
+            <div className="shy-table-filter-view-group-footer">
+                <Select options={this.getFilters()} onChange={e => { addFilter(e) }}><a
+                    style={{
+                        fontSize: 14,
+                        display: 'inline-flex',
+                        justifyContent: 'flex-start',
+                        alignItems: 'center'
+                    }}><Icon size={14} icon={PlusSvg}></Icon>添加筛选条件</a></Select>
+            </div>
         </div>
     }
     private getFilters() {
@@ -162,7 +165,7 @@ class TableFilterView extends EventsComponent {
         return <div className="shy-table-filter-view">
             {this.schema && <div className="shy-table-filter-view-head">
                 <span>设置过滤条件</span>
-                <Icon icon={getSchemaViewIcon(this.block.url)}></Icon>
+                <Icon style={{ marginLeft: 5 }} size={14} icon={getSchemaViewIcon(this.block.url)}></Icon>
                 <span>{this.block.schemaView?.text}</span>
             </div>}
             <div className="shy-table-filter-view-content">
