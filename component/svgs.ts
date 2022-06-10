@@ -44,7 +44,9 @@ import DownloadSvg from "../src/assert/svg/download.svg";
 import DragHandleSvg from "../src/assert/svg/dragHandle.svg";
 import DuplicateSvg from "../src/assert/svg/duplicate.svg";
 import EditSvg from "../src/assert/svg/edit.svg";
+import Edit1Svg from "../src/assert/svg/edit1.svg";
 import EmojiSvg from "../src/assert/svg/emoji.svg";
+import Emoji1Svg from "../src/assert/svg/emoji1.svg";
 import EquationSvg from "../src/assert/svg/equation.svg";
 import ExpandSvg from "../src/assert/svg/expand.svg";
 import FileSvg from "../src/assert/svg/file.svg";
@@ -89,6 +91,7 @@ import PlusSvg from "../src/assert/svg/plus.svg";
 import PropertysSvg from "../src/assert/svg/propertys.svg";
 import PubWorkspaceSvg from "../src/assert/svg/pubWorkspace.svg";
 import RenameSvg from "../src/assert/svg/rename.svg";
+import ReplySvg from "../src/assert/svg/reply.svg";
 import RotatingSvg from "../src/assert/svg/rotating.svg";
 import RowNoSvg from "../src/assert/svg/row.no.svg";
 import SettingsSvg from "../src/assert/svg/settings.svg";
@@ -172,7 +175,9 @@ DownloadSvg,
 DragHandleSvg,
 DuplicateSvg,
 EditSvg,
+Edit1Svg,
 EmojiSvg,
+Emoji1Svg,
 EquationSvg,
 ExpandSvg,
 FileSvg,
@@ -217,6 +222,7 @@ PlusSvg,
 PropertysSvg,
 PubWorkspaceSvg,
 RenameSvg,
+ReplySvg,
 RotatingSvg,
 RowNoSvg,
 SettingsSvg,
