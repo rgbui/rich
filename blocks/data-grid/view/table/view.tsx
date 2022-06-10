@@ -31,13 +31,16 @@ export class TableStoreView extends BlockView<TableStore>{
         var w = 0;
         var gap = 5;
         var index = -1;
-        for (let i = 0; i < this.block.fields.length; i++) {
-            var col = this.block.fields[i];
-            w += col.colWidth;
-            var bw = tableLeft + w;
-            if (bw - gap < event.clientX && event.clientX < bw + gap) {
-                index = i;
-                break;
+        var headRect = Rect.fromEle(head);
+        if (event.clientY > headRect.top && event.clientY < headRect.bottom) {
+            for (let i = 0; i < this.block.fields.length; i++) {
+                var col = this.block.fields[i];
+                w += col.colWidth;
+                var bw = tableLeft + w;
+                if (bw - gap < event.clientX && event.clientX < bw + gap) {
+                    index = i;
+                    break;
+                }
             }
         }
         if (index > -1) {
