@@ -10,7 +10,7 @@ import { PopoverPosition } from "../popover/position";
  */
 export class EmojiPicker extends EventsComponent {
     render() {
-        return <div className='sy-emoji-picker' ><EmojiView onChange={e => this.onPick(e)}></EmojiView></div>
+        return <div className='shy-emoji-picker' ><EmojiView onChange={e => this.onPick(e)}></EmojiView></div>
     }
     private onPick(emoji: EmojiCode) {
         this.emit('pick', emoji);
