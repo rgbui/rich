@@ -166,6 +166,5 @@ export function getFieldMenus() {
             // { text: '修改情况', value: FieldType.modifyDate },
         ])
     ];
-
     return menus;
 }
