@@ -10,7 +10,8 @@ export enum ElementType {
     SchemaRecord,
     SchemaView,
     SchemaRecordView,
-    SchemaRecordField
+    SchemaRecordField,
+    RoomChat
 }
 
 /***
@@ -28,6 +29,7 @@ export function getElementUrl(type: ElementType, id: string, id1?: string, id2?:
     else if (type == ElementType.SchemaView) return `/Schema/${id}/View/${id1}`
     else if (type == ElementType.SchemaRecordView) return `/Schema/${id}/RecordView/${id1}`
     else if (type == ElementType.SchemaRecordField) return `/Schema/${id}/Field/${id1}/Record/${id2}`
+    else if (type == ElementType.RoomChat) return `/Room/${id}/Chat/${id1}`
     else return `/${ElementType[type]}/${id}`
 }
 
@@ -78,6 +80,14 @@ export function parseElementUrl(url: string) {
         return {
             type: ElementType.PageItem,
             id: us[0]
+        }
+    }
+    else if(us.includes("Room")){
+        us.removeAll(g => g == 'Room' || g == 'Chat' )
+        return {
+            type: ElementType.RoomChat,
+            id: us[0],
+            id1:us[1]
         }
     }
 }
