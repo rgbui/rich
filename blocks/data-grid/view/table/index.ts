@@ -23,11 +23,11 @@ export class TableStore extends DataGridView {
             await rowBlock.createElements();
         }
     }
-    async onOver(isOver: boolean) {
+     onOver(isOver: boolean) {
         if (isOver == false && (this.view as any).isMoveLine == false&& (this.view as any).subline) {
             (this.view as any).subline.style.display = 'none';
         }
-        return await super.onOver(isOver);
+        return super.onOver(isOver);
     }
 }
 

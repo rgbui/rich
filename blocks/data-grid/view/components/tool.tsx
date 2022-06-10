@@ -33,6 +33,7 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                 props.block.onDataGridTurnView(result.id);
             }
             self.isOpenTool = false;
+            props.block.onOver(props.block.getVisibleContentBound().contain(Point.from(props.block.page.kit.operator.moveEvent)))
         }
         async function openSortView(event: React.MouseEvent) {
             self.isOpenTool = true;
@@ -41,6 +42,7 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                 await props.block.onUpdateSorts(r);
             }
             self.isOpenTool = false;
+            props.block.onOver(props.block.getVisibleContentBound().contain(Point.from(props.block.page.kit.operator.moveEvent)))
         }
         async function openFilterView(event: React.MouseEvent) {
             self.isOpenTool = true;
@@ -49,6 +51,7 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                 await props.block.onUpdateFilter(r);
             }
             self.isOpenTool = false;
+            props.block.onOver(props.block.getVisibleContentBound().contain(Point.from(props.block.page.kit.operator.moveEvent)))
         }
         async function openConfigProperty(event: React.MouseEvent) {
             self.isOpenTool = true;
@@ -57,6 +60,7 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                 gridView: props.block
             });
             self.isOpenTool = false;
+            props.block.onOver(props.block.getVisibleContentBound().contain(Point.from(props.block.page.kit.operator.moveEvent)))
         }
         async function openConfigView(event: React.MouseEvent) {
             self.isOpenTool = true;
@@ -108,6 +112,7 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                 }
             }
             self.isOpenTool = false;
+            props.block.onOver(props.block.getVisibleContentBound().contain(Point.from(props.block.page.kit.operator.moveEvent)))
         }
         async function openForm(event: React.MouseEvent) {
             self.isOpenTool = true;
@@ -119,14 +124,16 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                 await props.block.onAddRow(newRow, undefined, 'after')
             }
             self.isOpenTool = false;
+            props.block.onOver(props.block.getVisibleContentBound().contain(Point.from(props.block.page.kit.operator.moveEvent)))
         }
         async function openFormDrop(event: React.MouseEvent) {
             self.isOpenTool = true;
             event.stopPropagation();
-            useTabelSchemaFormDrop({ roundArea: Rect.fromEvent(event) }, {
+            await useTabelSchemaFormDrop({ roundArea: Rect.fromEvent(event) }, {
                 schema: props.block.schema
-            })
+            });
             self.isOpenTool = false;
+            props.block.onOver(props.block.getVisibleContentBound().contain(Point.from(props.block.page.kit.operator.moveEvent)))
         }
         var view = props.block.schema?.views?.find(g => g.id == props.block.syncBlockId)
         if (props.block.isLock == true) return <></>
