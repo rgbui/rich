@@ -3,21 +3,32 @@
         height       : 40px;
         border-bottom: 1px solid rgb(233, 233, 231);
         padding      : 0px 10px;
+
         &-left {
             height         : 100%;
             float          : left;
             display        : flex;
             justify-content: flex-start;
             align-items    : center;
-            span {
-                font-weight : bold;
-                font-size   : 16px;
-                display     : inline-block;
-                margin-right: 30px;
+
+            >span {
+                font-weight: bold;
+                font-size  : 16px;
+                display    : inline-block;
             }
-            .shy-icon {
-                padding:5px;
-                border-radius: 4px;
+
+            a {
+                color          : rgba(55, 53, 47, 0.4);
+                display        : inline-flex;
+                justify-content: center;
+                align-items    : center;
+                width          : 24px;
+                height         : 24px;
+                border-radius  : 3px;
+                cursor         : pointer;
+                margin-left    : 10px;
+                font-size      : 12px;
+
                 &:hover {
                     background-color: rgba(55, 53, 47, 0.08);
                 }
@@ -34,18 +45,18 @@
             align-items    : center;
 
             a {
-                color        : rgba(55, 53, 47, 0.4);
-                display      : inline-block;
-                padding      : 3px 5px;
-                border-radius: 3px;
-                cursor       : pointer;
+                color          : rgba(55, 53, 47, 0.4);
+                display        : inline-flex;
+                justify-content: center;
+                align-items    : center;
+                width          : 24px;
+                height         : 24px;
+                border-radius  : 3px;
+                cursor         : pointer;
+                margin-left    : 10px;
 
                 &:hover {
                     background-color: rgba(55, 53, 47, 0.08);
-                }
-
-                .shy-icon {
-                    margin-right: 5px;
                 }
             }
         }

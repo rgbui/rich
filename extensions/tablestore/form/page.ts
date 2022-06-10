@@ -4,7 +4,6 @@ import { Page } from "../../../src/page";
 import { PageDirective } from "../../../src/page/directive";
 import { channel } from "../../../net/channel";
 import { schemaCreatePageFormData } from "../../../blocks/data-grid/element/service";
-
 export async function createFormPage(el: HTMLElement,
     options: {
         schema: TableSchema,

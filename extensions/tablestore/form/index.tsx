@@ -1,13 +1,16 @@
 import React from "react";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { EventsComponent } from "../../../component/lib/events.component";
-import { Point } from "../../../src/common/vector/point";
+import { Point, Rect } from "../../../src/common/vector/point";
 import { Page } from "../../../src/page";
 import { PopoverSingleton } from "../../popover/popover";
 import { createFormPage } from "./page";
 import Dots from "../../../src/assert/svg/dots.svg";
 import { Icon } from "../../../component/view/icon";
 import "./style.less";
+import { useSelectMenuItem } from "../../../component/view/menu";
+import { MenuItemTypeValue } from "../../../component/view/menu/declare";
+import { LinkSvg, LockSvg, OpenAsPageThickSvg, TrashSvg, UnlockSvg } from "../../../component/svgs";
 
 class FormPage extends EventsComponent {
     schema: TableSchema;
@@ -33,6 +36,61 @@ class FormPage extends EventsComponent {
             if (this.el && this.schema) this.renderPage();
         });
     }
+    async openProperty(event: React.MouseEvent) {
+        var result = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) },
+            [
+                { name: 'smallText', text: '小字号', checked: this.pageView.smallFont ? true : false, type: MenuItemTypeValue.switch },
+                { name: 'fullWidth', text: '宽版', checked: this.pageView.isFullWidth ? true : false, type: MenuItemTypeValue.switch },
+                { type: MenuItemTypeValue.divide },
+                { name: 'lock', text: 'this.pageInfo.locker?.userid' ? "解除锁定" : '编辑保护', icon: 'this.pageInfo.locker?.userid' ? UnlockSvg : LockSvg },
+                { name: 'copylink', icon: LinkSvg, text: '复制链接' },
+                { type: MenuItemTypeValue.divide },
+                { name: 'delete', icon: TrashSvg, text: '删除' }
+            ],
+            {
+                update: (item) => {
+                    if (item.name == 'smallText') {
+                        this.pageView.onUpdateProps({ smallFont: item.checked }, true);
+                    }
+                    else if (item.name == 'fullWidth') {
+                        this.pageView.onUpdateProps({ isFullWidth: item.checked }, true);
+                    }
+                }
+            }
+        );
+        if (result?.item) {
+
+        }
+    }
+    async openPublish(event: React.MouseEvent) {
+        var result = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) },
+            [
+                { name: 'smallText', text: '公开至互联网', checked: this.pageView.smallFont ? true : false, type: MenuItemTypeValue.switch },
+                { name: 'smallText', text: '仅限用户提交一次', checked: this.pageView.smallFont ? true : false, type: MenuItemTypeValue.switch },
+                { type: MenuItemTypeValue.divide },
+                { name: 'copylink', icon: LinkSvg, text: '复制链接' },
+                // { name: 'fullWidth', text: '宽版', checked: this.pageView.isFullWidth ? true : false, type: MenuItemTypeValue.switch },
+                // { type: MenuItemTypeValue.divide },
+                // { name: 'lock', text: 'this.pageInfo.locker?.userid' ? "解除锁定" : '编辑保护', icon: 'this.pageInfo.locker?.userid' ? UnlockSvg : LockSvg },
+                // { name: 'copylink', icon: LinkSvg, text: '复制链接' },
+                // { type: MenuItemTypeValue.divide },
+                // { name: 'delete', icon: TrashSvg, text: '删除' }
+            ],
+            {
+                update: (item) => {
+                    // if (item.name == 'smallText') {
+                    //     this.pageView.onUpdateProps({ smallFont: item.checked }, true);
+                    // }
+                    // else if (item.name == 'fullWidth') {
+                    //     this.pageView.onUpdateProps({ isFullWidth: item.checked }, true);
+                    // }
+                }
+            }
+        );
+        if (result?.item) {
+
+        }
+    }
     componentDidMount(): void {
         if (this.el && this.schema) this.renderPage();
     }
@@ -53,11 +111,12 @@ class FormPage extends EventsComponent {
             <div className="shy-form-head">
                 <div className="shy-form-head-left">
                     <span>{this.schema?.text}</span>
-                    <Icon wrapper size={16} icon={Dots}></Icon>
+                    <a onMouseDown={e => this.openProperty(e)}><Icon size={14} icon={OpenAsPageThickSvg}></Icon><span></span></a>
                 </div>
-                {/* <div className="shy-form-head-right">
-                    <a><Icon size={16} icon={Dots}></Icon><span>动态</span></a>
-                </div> */}
+                <div className="shy-form-head-right">
+                    <a><Icon size={20} icon='publish:sy' click={e => this.openPublish(e)}></Icon></a>
+                    <a onMouseDown={e => this.openProperty(e)}><Icon size={16} icon={Dots}></Icon></a>
+                </div>
             </div>
             <div className="shy-form-content" style={{ height: this.height - 40 }}>
                 <div className="shy-form-box" ref={e => this.el = e} ></div>
