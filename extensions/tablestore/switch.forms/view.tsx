@@ -143,7 +143,7 @@ export async function useTabelSchemaFormDrop(pos: PopoverPosition,
     popover.updateLayout()
     return new Promise((resolve: (view: { id: string, text: string, url: string }) => void, reject) => {
         popover.only('close', () => {
-            // resolve()
+            resolve(null)
         });
         fv.only('save', (data) => {
             resolve(data);
