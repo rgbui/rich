@@ -106,6 +106,7 @@ export class TableStoreView extends BlockView<TableStore>{
     }
     private isDragMouseField: boolean = false;
     onDragMouseField(event: React.MouseEvent, vf: ViewField) {
+        event.stopPropagation();
         var th = (event.target as HTMLElement).closest('.sy-dg-table-head-th') as HTMLElement;
         var parent = th.parentElement;
         var self = this;
