@@ -1,4 +1,5 @@
 
+import dayjs from 'dayjs';
 import lodash from 'lodash';
 import { channel } from '../net/channel';
 export var util = {
@@ -25,6 +26,41 @@ export var util = {
             }, time);
         })
     },
+    showTime(date: Date) {
+        var now = new Date();
+        if (dayjs(now).isSame(date, 'day')) {
+            var hour = date.getHours();
+            if (hour > 0 && hour < 6) {
+                return '今天' + dayjs(date).format('HH:mm')
+            }
+            else if (hour >= 6 && hour < 11) {
+                return '上午' + dayjs(date).format('HH:mm')
+            }
+            else if (hour >= 11 && hour < 13) {
+                return '中午' + dayjs(date).format('HH:mm')
+            }
+            else if (hour >= 13 && hour < 18) {
+                return '下午' + dayjs(date).format('HH:mm')
+            }
+            else if (hour >= 18 && hour <= 23) {
+                return '晚上' + dayjs(date).format('HH:mm')
+            }
+        }
+        else if (dayjs(now).diff(dayjs(date), 'day') == 1) {
+            return '昨天' + dayjs(date).format('HH:mm')
+        }
+        else if (dayjs(now).diff(dayjs(date), 'day') == 2) {
+            return '前天' + dayjs(date).format('HH:mm')
+        }
+        else {
+            return dayjs(date).format('YYYY/MM/DD');
+        }
+    },
+    /**
+     * 时间差，还剩多少
+     * @param time 
+     * @returns 
+     */
     timeToString(time: number) {
         if (typeof time != 'number' || isNaN(time)) return '';
         var t = time;
