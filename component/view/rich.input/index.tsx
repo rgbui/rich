@@ -123,7 +123,11 @@ export class RichTextInput extends React.Component<{
     }
     async openEmoji(event: React.MouseEvent) {
         this.rememberCursor();
-        var re = await useOpenEmoji({ roundArea: Rect.fromEvent(event), direction: 'left' });
+        var re = await useOpenEmoji({
+            roundArea: Rect.fromEvent(event),
+            direction: 'top',
+            align: 'end'
+        });
         setTimeout(() => {
             this.setCursor();
             if (re) {
