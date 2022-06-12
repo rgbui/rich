@@ -4,6 +4,7 @@
   "description": "rich block editor",
   "main": "index.js",
   "scripts": {
+    "build-svg": "node scripts/svg.js",
     "webpack": "webpack --config scripts/webpack.config.prod.js",
     "webpack-dev": "webpack-dev-server  --env development  --config scripts/webpack.config.dev.js  --hot --progress --colors  "
   },
