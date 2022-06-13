@@ -105,5 +105,5 @@ export var util = {
         else if (byte > 0) {
             return (byte).toFixed(2) + "B"
         }
-    }
+    },
 }
