@@ -289,6 +289,14 @@ export class TextEle {
         c = c.replace(/\r\n?|\n/g, '<br/>');
         return c;
     }
+    static filterHtml(content:string){
+        var c=content;
+        if (!c) c = '';
+        if (typeof c == 'number') c = (c as any).toString();
+        if (typeof c != 'string') console.trace(content);
+        c=c.replace(/(<([^>]+)>)/ig,'');
+        return c;
+    }
     /**
      * 计算坐标于bounds的距离，这里分水平和垂直
      * @param point 
