@@ -1,64 +1,53 @@
-import React from "react";
+import React, { ReactNode } from "react";
+import { dom } from "../../src/common/dom";
 import { MouseDragger } from "../../src/common/dragger";
-import { ghostView } from "../../src/common/ghost";
-import { Point, Rect } from "../../src/common/vector/point";
+import { Rect } from "../../src/common/vector/point";
 export class ListDrag extends React.Component<{
-    list: any[],
-    renderItem(item: any): JSX.Element,
+    children?: ReactNode,
     isDragBar: (ele: HTMLElement) => boolean,
-    move(start: any, toItem: any, pos: 'top' | 'bottom')
+    onChange: (to: number, from?: number) => void
 }>{
-    private hoverItem: { el: HTMLElement, item: any };
+    el: HTMLElement;
     render() {
         var self = this;
-        function mousedown(event: React.MouseEvent, item: any) {
-            var el = (event.target as HTMLElement).closest('.shy-list-drag-item') as HTMLElement;
-            if (self.props.isDragBar(event.target as HTMLElement)) {
-                MouseDragger({
-                    event,
-                    moveStart(ev) {
-                        ghostView.load(el,{ point: Point.from(ev) });
-                        el.style.display = 'none';
-                    },
-                    moving(ev, da, isEnd) {
-                        ghostView.move(Point.from(ev));
-                        if (self.hoverItem) {
-                            var bound = Rect.fromEle(self.hoverItem.el);
-                            if (bound.contain(Point.from(ev))) {
-                                if (ev.y > bound.middleCenter.y) {
-                                    self.hoverItem.el.classList.add('drag-over-top')
-                                }
-                                else {
-                                    self.hoverItem.el.classList.add('drag-over-bottom')
+        function mousedown(event: React.MouseEvent) {
+            var ele = event.target as HTMLElement;
+            if (self.props.isDragBar(ele) && self.el) {
+                var item = dom(ele).closest(x => x.parentElement == self.el);
+                if (item) {
+                    var cs = Array.from(self.el.children);
+                    var oldAt = cs.findIndex(c => c === item);
+                    MouseDragger({
+                        event,
+                        moveStart(ev) {
+                            // ghostView.load(item,{ point: Point.from(ev) });
+                            // el.style.display = 'none';
+                        },
+                        moving(ev, da, isEnd) {
+                            var newTarget = ev.target as HTMLElement;
+                            var newItem = dom(newTarget).closest(x => x.parentElement === self.el) as HTMLElement;
+                            if (newItem) {
+                                if (newItem !== item) {
+                                    var rect = Rect.fromEle(newItem);
+                                    if (ev.clientY > rect.middle) {
+                                        item.insertBefore(self.el, newItem);
+                                    }
+                                    else {
+                                        newItem.insertBefore(self.el, item);
+                                    }
                                 }
                             }
-                        }
-                        if (isEnd) {
-                            ghostView.unload();
-                            if (self.hoverItem) {
-                                var pos: 'top' | 'bottom' = 'top';
-                                if (self.hoverItem.el.classList.contains('drag-over-top')) {
-                                    pos = 'top';
-                                }
-                                else {
-                                    pos = 'bottom';
-                                }
-                                self.hoverItem.el.classList.remove('drag-over-top', 'drag-over-bottom');
-                                self.props.move(item, self.hoverItem.item, pos);
+                            if (isEnd) {
+                                var at = cs.findIndex(c => c == item);
+                                self.props.onChange(at, oldAt);
                             }
-                            el.style.display = 'block';
                         }
-                    }
-                })
+                    })
+                }
             }
         }
-        return <div className="shy-list-drag">
-            {this.props.list.map((item, i) => <div
-                className="shy-list-drag-item"
-                onMouseEnter={e => this.hoverItem = { el: (e.target as HTMLElement).closest('.shy-list-drag-item'), item: item }}
-                onMouseLeave={e => { var el = (e.target as HTMLElement).closest('.shy-list-drag-item'); el.classList.remove('drag-over-top', 'drag-over-bottom'); this.hoverItem = null }}
-                onMouseDown={e => mousedown(item, i)}
-                key={i}>{this.props.renderItem(item)}</div>)}
+        return <div className="shy-list-drag" ref={e => this.el = e} onMouseDown={e => mousedown(e)}>
+            {this.props.children}
         </div>
     }
 }
