@@ -2,21 +2,23 @@ import React from "react";
 import { useOpenEmoji } from "../../../extensions/emoji";
 import { Rect } from "../../../src/common/vector/point";
 import { OpenMultipleFileDialoug } from "../../file";
-import { EmojiSvg, PlusSvg } from "../../svgs";
+import { CloseTickSvg, EmojiSvg, PlusSvg } from "../../svgs";
 import { Icon } from "../icon";
 import { useSelectMenuItem } from "../menu";
 import "./style.less";
 import { InsertSelectionText } from "./util";
+
 export class RichTextInput extends React.Component<{
     escape_chars?: string[],
     allowUploadFile?: boolean,
     placeholder?: string,
+    content?: string,
     disabled?: boolean,
     readonly?: boolean,
     popOpen: (cs: { char: string, span: HTMLElement }) => void,
     popInput?: (key: "ArrowDown" | 'ArrowUp' | 'Enter' | 'Input', charSpan?: { char: string, span: HTMLElement }) => void,
     popClose?: () => void,
-    onInput: (data: { files?: File[], content?: string }) => void
+    onInput: (data: { files?: File[], content?: string, reply?: { replyId: string } }) => void
 }>{
     paste(event: ClipboardEvent) {
         var files: File[] = Array.from(event.clipboardData.files);
@@ -31,10 +33,11 @@ export class RichTextInput extends React.Component<{
     }
     send() {
         var text = this.richEl.innerHTML;
-        this.props.onInput({ content: text });
+        this.props.onInput({ content: text, reply: this.reply || undefined });
         this.richEl.innerHTML = '';
         var sel = window.getSelection();
         sel.collapse(this.richEl, 0);
+        this.clearReply();
     }
     charSpan: { char: string, span: HTMLElement } = { char: '', span: null };
     keydown(event: KeyboardEvent) {
@@ -135,11 +138,20 @@ export class RichTextInput extends React.Component<{
             }
         }, 100);
     }
+    componentDidMount(): void {
+        if (this.props.content) {
+            this.richEl.innerHTML = this.props.content
+        }
+    }
     richEl: HTMLElement;
     el: HTMLElement;
     render(): React.ReactNode {
         return <div className="shy-rich-input" ref={e => this.el = e}>
-            <Icon mousedown={e => this.openAddFile(e)} size={18} icon={PlusSvg}></Icon>
+            {this.reply && <div className="shy-rich-input-reply">
+                <span className="shy-rich-input-reply-content">{this.reply.text}</span>
+                <span className="shy-rich-input-reply-operators" onMouseDown={e => this.clearReply()}><a><Icon size={12} icon={CloseTickSvg}></Icon></a></span>
+            </div>}
+            {!(this.props.allowUploadFile == false) && <Icon mousedown={e => this.openAddFile(e)} size={18} icon={PlusSvg}></Icon>}
             <div className="shy-rich-input-editor"
                 ref={e => this.richEl = e}
                 onKeyDown={e => { this.keydown(e.nativeEvent) }}
@@ -168,6 +180,11 @@ export class RichTextInput extends React.Component<{
             if (typeof this.props.popClose == 'function') this.props.popClose()
         }
     }
+    onReplaceInsert(text: string) {
+        this.richEl.innerHTML = '';
+        var sel = window.getSelection();
+        sel.collapse(this.richEl, text.length);
+    }
     private cursorEl: HTMLElement;
     private cursorOffset: number;
     private cursorEndEl: HTMLElement;
@@ -176,7 +193,7 @@ export class RichTextInput extends React.Component<{
         var sel = window.getSelection(); //DOM
         if (sel && sel.rangeCount > 0) {
             var range = sel.getRangeAt(0); // DOM下
-            if (this.el.contains(range.startContainer)) {
+            if (range && this.el.contains(range.startContainer)) {
                 this.cursorEl = range.startContainer as HTMLElement;
                 this.cursorOffset = range.startOffset;
                 this.cursorEndEl = range.endContainer as HTMLElement;
@@ -209,6 +226,23 @@ export class RichTextInput extends React.Component<{
                 range.setStart(this.richEl, text.length);
             }
             window.getSelection().addRange(range);
+        }
+    }
+    reply: { text: string, replyId: string }
+    openReply(reply: { text: string, replyId: string }) {
+        this.reply = reply;
+        this.rememberCursor();
+        this.forceUpdate(() => {
+            this.setCursor()
+        })
+    }
+    clearReply() {
+        if (this.reply) {
+            this.reply = null;
+            this.rememberCursor();
+            this.forceUpdate(() => {
+                this.setCursor()
+            })
         }
     }
 }
