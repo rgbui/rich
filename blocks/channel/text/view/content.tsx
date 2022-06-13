@@ -5,58 +5,16 @@ import { DotsSvg, Emoji1Svg, ReplySvg, Edit1Svg } from "../../../../component/sv
 import { Avatar } from "../../../../component/view/avator/face";
 import { UserBox } from "../../../../component/view/avator/user";
 import { Icon } from "../../../../component/view/icon";
-import { useSelectMenuItem } from "../../../../component/view/menu";
-import { MenuItemType } from "../../../../component/view/menu/declare";
-import { Block } from "../../../../src/block";
-import { Rect } from "../../../../src/common/vector/point";
+import { RichTextInput } from "../../../../component/view/rich.input";
+import { Remark } from "../../../../component/view/text";
 import { util } from "../../../../util/util";
 import { ChannelTextType } from "../declare";
+import { ChatChannelService } from "./service";
+import { ChannelTextView } from "./view";
 
-async function addEmoji(d: ChannelTextType, e: React.MouseEvent) {
-
-}
-async function edit(d: ChannelTextType) {
-
-}
-async function reply(d: ChannelTextType) {
-
-}
-async function report(d: ChannelTextType) {
-
-}
-async function del(d: ChannelTextType) {
-
-}
-async function openProperty(block: Block, d: ChannelTextType, event: React.MouseEvent) {
-    var items: MenuItemType<string>[] = [];
-    if (d.userid == block.page.user.id) {
-        items.push({ name: 'edit', text: '编辑' });
-        items.push({ name: 'delete', text: '删除' });
-    }
-    else {
-        items.push({ name: 'reply', text: '回复' });
-        items.push({ name: 'report', text: '举报' });
-    }
-    var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) },
-        items
-    );
-    if (r?.item) {
-        if (r.item.name == 'report') {
-            await report(d);
-        }
-        else if (r.item.name == 'edit') {
-            await edit(d)
-        }
-        else if (r.item.name == 'reply') {
-            await reply(d)
-        }
-        else if (r.item.name == 'delete') {
-            await del(d);
-        }
-    }
-}
-export function renderChannelTextContent(block: ChannelText) {
+export function RenderChannelTextContent(block: ChannelText) {
     var dm = block.chats;
+    var view: ChannelTextView = block.view as ChannelTextView;
     function renderContent(d: ChannelTextType) {
         if (d.file) {
             if (d.file.mime == 'image') {
@@ -74,17 +32,20 @@ export function renderChannelTextContent(block: ChannelText) {
             </div>
         }
         else {
-            return <div className='shy-user-channel-chat-content' dangerouslySetInnerHTML={{ __html: d.content }}></div>
+            return <div className='shy-user-channel-chat-content'>
+                <span dangerouslySetInnerHTML={{ __html: d.content }}></span>
+                {d.isEdited &&<span className="sy-channel-text-edited-tip">(已编辑)</span>}
+            </div>
         }
     }
     function renderDateTip(date: Date) {
         var dateStr = '';
-        var now = new Date();
+        var now = dayjs(new Date());
         var day = dayjs(date);
-        if (day.diff(now, 'hour') < 24) {
+        if (now.diff(day, 'hour') < 24) {
             dateStr = day.format('HH:mm')
         }
-        else if (day.diff(now, 'day') < 7) {
+        else if (now.diff(day, 'day') < 7) {
             var d = day.day();
             var w = ['日', '一', '二', '三', '四', '五', '六'][d];
             dateStr = `周${w}${day.format(' HH:mm')}`
@@ -95,34 +56,89 @@ export function renderChannelTextContent(block: ChannelText) {
             <span className="text">{dateStr}</span>
         </div>
     }
-    function renderItem(d: ChannelTextType) {
-        return <div className="sy-channel-text-item" key={d.id}>
-            <UserBox userid={d.userid}>{us => {
+    function renderItem(d: ChannelTextType, noUser: boolean) {
+        if (d.isDeleted) {
+            if (d.userid == block.page.user.id) {
+                return <div key={d.id} className="sy-channel-text-item-deleted"><Remark>你撤回了一条消息<a onMouseDown={e => ChatChannelService.redit(block, d)}>重新编辑</a></Remark></div>
+            }
+            else return <div key={d.id} className="sy-channel-text-item-deleted"><Remark><UserBox userid={d.userid}>{us => <span>"{us.name}"</span>}</UserBox>撤回了一条消息</Remark></div>
+        }
+        return <div data-channel-text-id={d.id} className={"sy-channel-text-item" + (noUser ? " no-user" : "")} key={d.id}>
+            {d.reply && <div className="sy-channel-text-item-reply">
+                <UserBox userid={d.reply.userid}>{us => {
+                    return < ><Avatar user={us} userid={d.userid} size={16}></Avatar>
+                        <div className="sy-channel-text-item-reply-content">{renderContent(d.reply)}</div>
+                    </>
+                }}</UserBox>
+            </div>}
+            {d.id == view.editChannelText?.id && <div key={d.id} className="sy-channel-text-item-edited">
+                <UserBox userid={d.userid}>{us => {
+                    return <>
+                        <div className="sy-channel-text-item-edited-content">
+                            <Avatar user={us} userid={d.userid} size={40}></Avatar>
+                            <div className="sy-channel-text-item-edited-content-wrapper" >
+                                <div className="sy-channel-text-item-head"><a>{us.name}</a><span>{util.showTime(d.createDate)}</span></div>
+                                <div className="sy-channel-text-item-edited-content-input">
+                                    <RichTextInput
+                                        ref={e => view.editRichTextInput = e}
+                                        placeholder="回车提交"
+                                        allowUploadFile={false}
+                                        content={d.content}
+                                        popOpen={e => view.popOpen(e)}
+                                        onInput={e => ChatChannelService.edit(block, d, e)} ></RichTextInput>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="sy-channel-text-item-edited-tip">ESC键<a onClick={e => ChatChannelService.closeEdit(block, d)}>取消</a>•回车键<a onMouseDown={e => view.editRichTextInput.send()}>保存</a></div>
+                    </>
+                }}</UserBox>
+            </div>
+            }
+            {!(d.id == view.editChannelText?.id) && !noUser && <UserBox userid={d.userid}>{us => {
                 return <div className="sy-channel-text-item-box" >
-                    <Avatar userid={d.userid} size={40}></Avatar>
+                    <Avatar user={us} userid={d.userid} size={40}></Avatar>
                     <div className="sy-channel-text-item-wrapper" >
                         <div className="sy-channel-text-item-head"><a>{us.name}</a><span>{util.showTime(d.createDate)}</span></div>
                         <div className="sy-channel-text-item-content">{renderContent(d)}</div>
                     </div>
                 </div>
-            }}</UserBox>
-            <div className="sy-channel-text-item-operators">
-                <span onMouseDown={e => addEmoji(d, e)}><Icon size={16} icon={Emoji1Svg}></Icon></span>
-                {d.userid == block.page.user.id && <span onMouseDown={e => edit(d)}><Icon size={16} icon={Edit1Svg}></Icon></span>}
-                {d.userid != block.page.user.id && <span onMouseDown={e => reply(d)}><Icon size={16} icon={ReplySvg}></Icon></span>}
-                <span onMouseDown={e => openProperty(block, d, e)}><Icon size={16} icon={DotsSvg}></Icon></span>
-            </div>
+            }}</UserBox>}
+            {!(d.id == view.editChannelText?.id) && noUser && <div className="sy-channel-text-item-box" >
+                <div className="sy-channel-text-item-date">{dayjs(d.createDate).format('HH:mm')}</div>
+                <div className="sy-channel-text-item-wrapper" >
+                    <div className="sy-channel-text-item-content">{renderContent(d)}</div>
+                </div>
+            </div>}
+            {Array.isArray(d.emojis) && <div className="sy-channel-text-item-emojis">{d.emojis.map(em => {
+                return <a key={em.emojiId}>
+                    <span>{em.code}</span>
+                    <span>{em.count}</span>
+                </a>
+            })}</div>}
+            {!(d.id == view.editChannelText?.id) && <div className="sy-channel-text-item-operators">
+                <span onMouseDown={e => ChatChannelService.addEmoji(block, d, e)}><Icon size={16} icon={Emoji1Svg}></Icon></span>
+                {d.userid == block.page.user.id && <span onMouseDown={e => ChatChannelService.openEdit(block, d)}><Icon size={16} icon={Edit1Svg}></Icon></span>}
+                {d.userid != block.page.user.id && <span onMouseDown={e => ChatChannelService.reply(block, d)}><Icon size={16} icon={ReplySvg}></Icon></span>}
+                <span onMouseDown={e => ChatChannelService.openProperty(block, d, e)}><Icon size={16} icon={DotsSvg}></Icon></span>
+            </div>}
         </div>
     }
     var ds: JSX.Element[] = [];
+    var splitLastDate: Date;
+    var lastUserid: string = '';
     var lastDate: Date;
     for (let i = 0; i < dm.length; i++) {
         var d = dm[i];
-        if (!lastDate || lastDate && dayjs(d.createDate).diff(lastDate, 'minute') > 5) {
+        var noUser: boolean = false;
+        if (lastUserid == d.userid && lastDate && d.createDate && (d.createDate.getTime() - lastDate.getTime()) < 1000 * 60 * 3)
+            noUser = true;
+        if (!splitLastDate || splitLastDate && dayjs(d.createDate).diff(splitLastDate, 'minute') > 5) {
             ds.push(renderDateTip(d.createDate))
-            lastDate = d.createDate;
+            splitLastDate = d.createDate;
         }
-        ds.push(renderItem(d));
+        lastDate = d.createDate;
+        ds.push(renderItem(d, noUser));
+        lastUserid = d.userid;
     }
     return ds;
 }

@@ -5,7 +5,8 @@ import { channel } from "../../../../net/channel";
 import { view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { util } from "../../../../util/util";
-import { renderChannelTextContent } from "./content";
+import { ChannelTextType } from "../declare";
+import { RenderChannelTextContent } from "./content";
 
 @view('/channel/text')
 export class ChannelTextView extends BlockView<ChannelText>{
@@ -15,32 +16,39 @@ export class ChannelTextView extends BlockView<ChannelText>{
     contentEl: HTMLElement;
     renderContent() {
         return <div className="sy-channel-text-content" ref={e => this.contentEl = e}>
-            {renderChannelTextContent(this.block)}
+            {RenderChannelTextContent(this.block)}
         </div>
     }
+    richTextInput: RichTextInput;
     renderInput() {
         return <div className="sy-channel-text-input" data-shy-page-no-focus onMouseDown={e => e.stopPropagation()}>
-            <RichTextInput placeholder="回车提交" popOpen={e => this.popOpen(e)} onInput={e => this.onInput(e)} ></RichTextInput>
+            <RichTextInput ref={e => this.richTextInput = e} placeholder="回车提交" popOpen={e => this.popOpen(e)} onInput={e => this.onInput(e)} ></RichTextInput>
         </div>
     }
     popOpen(cs: { char: string, span: HTMLElement }) {
 
     }
-    async onInput(data: { files?: File[], content?: string }) {
+    async onInput(data: { files?: File[], content?: string, reply?: { replyId: string } }) {
         if (data.content) {
             var re = await channel.put('/ws/channel/send', {
                 roomId: this.block.roomId,
                 content: data.content,
+                replyId: data.reply?.replyId || undefined
             });
             if (re.data) {
-                this.block.chats.push({
+                var chat: ChannelTextType = {
                     id: re.data.id,
                     userid: this.block.page.user.id,
                     createDate: re.data.createDate || new Date(),
                     content: data.content,
                     roomId: this.block.roomId,
-                    seq: re.data.seq
-                });
+                    seq: re.data.seq,
+                    replyId: data.reply?.replyId || undefined
+                };
+                if (chat.replyId) {
+                    chat.reply = this.block.chats.find(b => b.id == chat.replyId);
+                }
+                this.block.chats.push(chat);
                 this.forceUpdate(() => this.updateScroll());
             }
         }
@@ -67,7 +75,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
                             roomId: this.block.roomId,
                             seq: re.data.seq
                         });
-                        this.forceUpdate(() => this.updateScroll());
+                        this.forceUpdate(() =>this.updateScroll());
                     }
                 }
                 await util.delay(20)
@@ -84,7 +92,10 @@ export class ChannelTextView extends BlockView<ChannelText>{
     }
     updateScroll() {
         if (this.contentEl) {
-            this.contentEl.scrollTop = this.contentEl.scrollHeight;
+            this.contentEl.scrollTop = this.contentEl.scrollHeight + 100;
         }
     }
+    editChannelText: ChannelTextType;
+    editRichTextInput: RichTextInput;
+    
 }
