@@ -9,4 +9,11 @@ export type ChannelTextType = {
     file?: any;
     isEdited?: boolean;
     isDeleted?: boolean;
+    replyId?: string;
+    reply?: ChannelTextType,
+    emojis?: {
+        emojiId: string;
+        code?: string;
+        count: number;
+    }[]
 }
