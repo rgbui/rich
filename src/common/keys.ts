@@ -13,7 +13,8 @@ export enum KeyboardCode {
     B = 'B',
     Z = 'Z',
     Y = 'Y',
-    S = 'S'
+    S = 'S',
+    Esc = 'Esc'
 }
 export class KeyboardPlate {
     private altKey: boolean = false;
@@ -113,9 +114,16 @@ export class KeyboardPlate {
         predict: (kbp: KeyboardPlate) => boolean,
         keydown: (event: KeyboardEvent, kbp: KeyboardPlate) => void,
         keyup?: (event: KeyboardEvent, kbp: KeyboardPlate) => void,
+        key?: any
     }[] = [];
-    listener(predict: (kbp: KeyboardPlate) => boolean, keydown: (event: KeyboardEvent, kbp: KeyboardPlate) => void, keyup?: (event: KeyboardEvent, kbp: KeyboardPlate) => void) {
-        this.listeners.push({ predict, keydown: keydown, keyup });
+    listener(
+        predict: (kbp: KeyboardPlate) => boolean,
+        keydown: (event: KeyboardEvent, kbp: KeyboardPlate) => void,
+        keyup?: (event: KeyboardEvent, kbp: KeyboardPlate) => void, key?: any) {
+        this.listeners.push({ predict, keydown: keydown, keyup, key });
+    }
+    off(key: any) {
+        this.listeners.removeAll(g => g.key === key);
     }
 }
 
