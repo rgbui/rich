@@ -92,10 +92,14 @@ export class ChannelTextView extends BlockView<ChannelText>{
     }
     updateScroll() {
         if (this.contentEl) {
+            console.log('scrollTop',this.contentEl.scrollTop);
             this.contentEl.scrollTop = this.contentEl.scrollHeight + 100;
+            setTimeout(() => {
+                console.log('scrollTop1',this.contentEl.scrollTop);
+                this.contentEl.scrollTop = this.contentEl.scrollHeight + 100;
+            }, 300);
         }
     }
     editChannelText: ChannelTextType;
     editRichTextInput: RichTextInput;
-
 }
