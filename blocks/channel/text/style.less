@@ -7,6 +7,51 @@
 
     &-head {}
 
+    &-unread-tip {
+        position        : absolute;
+        top             : 0px;
+        left            : 20px;
+        right           : 20px;
+        z-index         : 1000;
+        border-radius   : 0px 0px 8px 8px;
+        background-color: #e16259;
+        text-align      : center;
+        box-shadow      : var(--elevation-low);
+        display         : flex;
+        justify-content : flex-start;
+        align-items     : center;
+        color           : #fff;
+        font-weight     : 500;
+        padding         : 0 12px;
+        font-size       : 14px;
+        line-height     : 24px;
+        height          : 24px;
+
+        span {
+            flex-grow      : 1;
+            flex-shrink    : 1;
+            display        : flex;
+            justify-content: flex-start;
+            align-items    : center;
+        }
+
+        a {
+            color          : #fff;
+            flex-grow      : 0;
+            flex-shrink    : 0;
+            width          : 180px;
+            display        : flex;
+            justify-content: flex-end;
+            align-items    : center;
+            cursor         : pointer;
+
+            .shy-icon {
+                display    : inline-block;
+                margin-left: 5px;
+            }
+        }
+    }
+
     &-content {
         flex-grow      : 1;
         flex-shrink    : 1;

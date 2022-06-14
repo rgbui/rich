@@ -1,5 +1,7 @@
 import React, { CSSProperties } from "react";
 import { ChannelText } from "..";
+import { UnreadTextSvg } from "../../../../component/svgs";
+import { Icon } from "../../../../component/view/icon";
 import { RichTextInput } from "../../../../component/view/rich.input";
 import { channel } from "../../../../net/channel";
 import { view } from "../../../../src/block/factory/observable";
@@ -11,7 +13,12 @@ import { RenderChannelTextContent } from "./content";
 @view('/channel/text')
 export class ChannelTextView extends BlockView<ChannelText>{
     renderHead() {
-        return <div className="sy-channel-text-head"></div>
+        return <div className="sy-channel-text-head">
+            {this.block.unreadTip && <div className="sy-channel-text-unread-tip" >
+                <span>自{util.showTime(new Date(this.block.unreadTip.date))}来有{this.block.unreadTip.count}条消息未读</span>
+                <a onMouseDown={e =>this.block.onClearUnread()}>标记为已读<Icon size={14} icon={UnreadTextSvg}></Icon></a>
+            </div>}
+        </div>
     }
     contentEl: HTMLElement;
     renderContent() {
@@ -92,10 +99,10 @@ export class ChannelTextView extends BlockView<ChannelText>{
     }
     updateScroll() {
         if (this.contentEl) {
-            console.log('scrollTop',this.contentEl.scrollTop);
+            console.log('scrollTop', this.contentEl.scrollTop);
             this.contentEl.scrollTop = this.contentEl.scrollHeight + 100;
             setTimeout(() => {
-                console.log('scrollTop1',this.contentEl.scrollTop);
+                console.log('scrollTop1', this.contentEl.scrollTop);
                 this.contentEl.scrollTop = this.contentEl.scrollHeight + 100;
             }, 300);
         }
