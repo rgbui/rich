@@ -7,6 +7,7 @@ import { UserBox } from "../../../../component/view/avator/user";
 import { Icon } from "../../../../component/view/icon";
 import { RichTextInput } from "../../../../component/view/rich.input";
 import { Remark } from "../../../../component/view/text";
+import { autoImageUrl } from "../../../../net/element.type";
 import { util } from "../../../../util/util";
 import { ChannelTextType } from "../declare";
 import { ChatChannelService } from "./service";
@@ -19,7 +20,7 @@ export function RenderChannelTextContent(block: ChannelText) {
         if (d.file) {
             if (d.file.mime == 'image') {
                 return <div className='shy-user-channel-chat-image' >
-                    <img src={d.file.url} />
+                    <img src={autoImageUrl(d.file.url, 500)} />
                 </div>
             }
             else if (d.file.mime == 'video') {

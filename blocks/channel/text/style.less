@@ -342,6 +342,7 @@
 
 .shy-user-channel-chat-image {
     img {
+        border-radius  : 4px;
         max-width      : 400px;
         max-height     : 500px;
         object-fit     : cover;
@@ -351,6 +352,7 @@
 
 .shy-user-channel-chat-video {
     video {
+        border-radius  : 4px;
         max-width      : 400px;
         max-height     : 500px;
         object-fit     : cover;
@@ -367,23 +369,27 @@
         display         : inline-flex;
         justify-content : flex-start;
         align-items     : flex-start;
+
         >.shy-icon {
             color: var(--text-link);
             fill : currentColor;
         }
+
         &-info {
             color: var(--text-link);
         }
+
         >a {
-            cursor: pointer;
-            width:24px;
-            height:24px;
-            display: inline-block;
+            cursor         : pointer;
+            width          : 24px;
+            height         : 24px;
+            display        : inline-block;
             justify-content: center;
-            align-items: center;
-            border-radius: 4px;
-            &:hover{
-                background-color: rgba(55, 53, 47,.08);
+            align-items    : center;
+            border-radius  : 4px;
+
+            &:hover {
+                background-color: rgba(55, 53, 47, .08);
             }
         }
     }
