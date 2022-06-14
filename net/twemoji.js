@@ -1,5 +1,5 @@
 /*jslint indent: 2, browser: true, bitwise: true, plusplus: true */
-var twemoji = (function (
+window.twemoji = (function (
   /*! Copyright Twitter Inc. and other contributors. Licensed under MIT *//*
     https://github.com/twitter/twemoji/blob/gh-pages/LICENSE
   */

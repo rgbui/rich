@@ -113,7 +113,7 @@ export function getEmoji(code: string) {
     if (!UA.isMacOs) {
         return (window as any).twemoji.parse(code, {
             folder: 'svg',
-            base: 'https://resources.shy.live/emoji',
+            base: 'https://resources.shy.live/emoji/',
             ext: '.svg'
         });
     }
