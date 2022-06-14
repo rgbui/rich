@@ -123,6 +123,7 @@ import TypesStringSvg from "../src/assert/svg/types.string.svg";
 import TypesTitleSvg from "../src/assert/svg/types.title.svg";
 import UndoSvg from "../src/assert/svg/undo.svg";
 import UnlockSvg from "../src/assert/svg/unlock.svg";
+import UnreadTextSvg from "../src/assert/svg/unread.text.svg";
 import UnsplashSvg from "../src/assert/svg/unsplash.svg";
 import UploadSvg from "../src/assert/svg/upload.svg";
 import VersionHistorySvg from "../src/assert/svg/versionHistory.svg";
@@ -255,6 +256,7 @@ TypesStringSvg,
 TypesTitleSvg,
 UndoSvg,
 UnlockSvg,
+UnreadTextSvg,
 UnsplashSvg,
 UploadSvg,
 VersionHistorySvg,
