@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import React from "react";
 import { ChannelText } from "..";
-import { DotsSvg, Emoji1Svg, ReplySvg, Edit1Svg } from "../../../../component/svgs";
+import { DotsSvg, Emoji1Svg, ReplySvg, Edit1Svg, FileSvg, FileIconSvg, DownloadSvg } from "../../../../component/svgs";
 import { Avatar } from "../../../../component/view/avator/face";
 import { UserBox } from "../../../../component/view/avator/user";
 import { Icon } from "../../../../component/view/icon";
@@ -24,17 +24,26 @@ export function RenderChannelTextContent(block: ChannelText) {
             }
             else if (d.file.mime == 'video') {
                 return <div className='shy-user-channel-chat-video' >
-                    <video src={d.file.url}></video>
+                    <video controls src={d.file.url}></video>
                 </div>
             }
             else return <div className='shy-user-channel-chat-file' >
-                <a download={d.file.url}>{d.file.name}</a>
+                <div className="shy-user-channel-chat-file-content">
+                    <Icon size={40} icon={FileIconSvg}></Icon>
+                    <div className='shy-user-channel-chat-file-content-info' >
+                        <span>{d.file.name}</span>
+                        <Remark>{util.byteToString(d.file.size)}</Remark>
+                    </div>
+                    <a href={d.file.url} download={d.file.name}>
+                        <Icon size={30} icon={DownloadSvg}></Icon>
+                    </a>
+                </div>
             </div>
         }
         else {
             return <div className='shy-user-channel-chat-content'>
                 <span dangerouslySetInnerHTML={{ __html: d.content }}></span>
-                {d.isEdited &&<span className="sy-channel-text-edited-tip">(已编辑)</span>}
+                {d.isEdited && <span className="sy-channel-text-edited-tip">(已编辑)</span>}
             </div>
         }
     }
@@ -59,7 +68,7 @@ export function RenderChannelTextContent(block: ChannelText) {
     function renderItem(d: ChannelTextType, noUser: boolean) {
         if (d.isDeleted) {
             if (d.userid == block.page.user.id) {
-                return <div key={d.id} className="sy-channel-text-item-deleted"><Remark>你撤回了一条消息<a onMouseDown={e => ChatChannelService.redit(block, d)}>重新编辑</a></Remark></div>
+                return <div key={d.id} className="sy-channel-text-item-deleted"><Remark>你撤回了一条消息<a onClick={e => ChatChannelService.redit(block, d)}>重新编辑</a></Remark></div>
             }
             else return <div key={d.id} className="sy-channel-text-item-deleted"><Remark><UserBox userid={d.userid}>{us => <span>"{us.name}"</span>}</UserBox>撤回了一条消息</Remark></div>
         }
@@ -71,7 +80,7 @@ export function RenderChannelTextContent(block: ChannelText) {
                     </>
                 }}</UserBox>
             </div>}
-            {d.id == view.editChannelText?.id && <div key={d.id} className="sy-channel-text-item-edited">
+            {d.id && d.id == view.editChannelText?.id && <div key={d.id} className="sy-channel-text-item-edited">
                 <UserBox userid={d.userid}>{us => {
                     return <>
                         <div className="sy-channel-text-item-edited-content">
@@ -109,8 +118,8 @@ export function RenderChannelTextContent(block: ChannelText) {
                     <div className="sy-channel-text-item-content">{renderContent(d)}</div>
                 </div>
             </div>}
-            {Array.isArray(d.emojis) && <div className="sy-channel-text-item-emojis">{d.emojis.map(em => {
-                return <a key={em.emojiId}>
+            {Array.isArray(d.emojis) && <div className="sy-channel-text-item-emojis">{d.emojis.filter(g => g.count > 0).map(em => {
+                return <a onMouseDown={e => ChatChannelService.editEmoji(block, d, em)} key={em.emojiId} >
                     <span>{em.code}</span>
                     <span>{em.count}</span>
                 </a>
