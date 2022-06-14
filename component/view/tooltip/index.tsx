@@ -1,5 +1,6 @@
 import React, { CSSProperties } from "react";
 import ReactDOM from "react-dom";
+import { FixedViewScroll } from "../../../src/common/scroll";
 import { Point, Rect } from "../../../src/common/vector/point";
 import { SyncLoad } from "../../lib/sync";
 import "./style.less";
@@ -13,6 +14,14 @@ class ToolTipOverlay extends React.Component {
             <div className="shy-tooltip-overlay" style={this.overlayStyle} ref={e => this.overlayEl = e}>{this.overlay}</div>
         </div>
     }
+    constructor(props) {
+        super(props);
+        this.fvs.on('change', (offset: Point) => {
+            if (this.visible == true && this.el)
+                this.el.style.transform = `translate(${offset.x}px,${offset.y}px)`
+        })
+    }
+    private fvs: FixedViewScroll = new FixedViewScroll();
     arrow: HTMLElement;
     el: HTMLElement;
     tipEl: HTMLElement;
@@ -31,6 +40,7 @@ class ToolTipOverlay extends React.Component {
             mouseLeaveDelay?: number;
         }) {
         this.tipEl = el;
+        this.fvs.bind(this.tipEl);
         this.mouseLeaveDelay = options.mouseLeaveDelay;
         this.overlay = options.overlay;
         this.placement = options.placement;
@@ -40,6 +50,7 @@ class ToolTipOverlay extends React.Component {
         })
     }
     close() {
+        this.fvs.unbind();
         if (this.leaveTime) {
             clearTimeout(this.leaveTime);
             this.leaveTime = null;
