@@ -246,8 +246,9 @@
                 margin-left: 5px;
                 line-height: 22px;
                 height     : 22px;
-                font-size: 14px;
-                .shy-user-channel-chat-content{
+                font-size  : 14px;
+
+                .shy-user-channel-chat-content {
                     font-size: inherit;
                 }
             }
@@ -346,4 +347,45 @@
         object-fit     : cover;
         object-position: center;
     }
+}
+
+.shy-user-channel-chat-video {
+    video {
+        max-width      : 400px;
+        max-height     : 500px;
+        object-fit     : cover;
+        object-position: center;
+    }
+}
+
+.shy-user-channel-chat-file {
+    &-content {
+        padding         : 10px;
+        border-radius   : 4px;
+        border-color    : var(--background-secondary-alt);
+        background-color: var(--background-secondary);
+        display         : inline-flex;
+        justify-content : flex-start;
+        align-items     : flex-start;
+        >.shy-icon {
+            color: var(--text-link);
+            fill : currentColor;
+        }
+        &-info {
+            color: var(--text-link);
+        }
+        >a {
+            cursor: pointer;
+            width:24px;
+            height:24px;
+            display: inline-block;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+            &:hover{
+                background-color: rgba(55, 53, 47,.08);
+            }
+        }
+    }
+
 }

@@ -34,7 +34,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
                 roomId: this.block.roomId,
                 content: data.content,
                 replyId: data.reply?.replyId || undefined
-            });
+            })
             if (re.data) {
                 var chat: ChannelTextType = {
                     id: re.data.id,
@@ -75,7 +75,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
                             roomId: this.block.roomId,
                             seq: re.data.seq
                         });
-                        this.forceUpdate(() =>this.updateScroll());
+                        this.forceUpdate(() => this.updateScroll());
                     }
                 }
                 await util.delay(20)
@@ -97,5 +97,5 @@ export class ChannelTextView extends BlockView<ChannelText>{
     }
     editChannelText: ChannelTextType;
     editRichTextInput: RichTextInput;
-    
+
 }
