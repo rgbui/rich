@@ -181,9 +181,11 @@ export class RichTextInput extends React.Component<{
         }
     }
     onReplaceInsert(text: string) {
-        this.richEl.innerHTML = '';
+        this.richEl.innerHTML =text;
         var sel = window.getSelection();
-        sel.collapse(this.richEl, text.length);
+        if (this.richEl.childNodes.length > 0)
+            sel.collapse(this.richEl.childNodes[0], text.length);
+        else sel.collapse(this.richEl, text.length)
     }
     private cursorEl: HTMLElement;
     private cursorOffset: number;
