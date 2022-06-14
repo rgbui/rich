@@ -175,7 +175,7 @@ export interface ChannelGetMapUrls {
 	"/datastore/group":{args:{schemaId:string,page?:number,size?:number,filter?:Record<string, any>,sorts?:Record<string, 1|-1>,group:string},returnType:Promise<{ok:boolean,data:{list:any[],total:number,page:number,size:number},warn:string}>},
 	"/datastore/statistics":{args:{schemaId:string,page?:number,size?:number,filter?:Record<string, any>,having?:Record<string, any>,sorts?:Record<string, 1|-1>,groups:string[],aggregate?: Record<string, any>},returnType:Promise<{ok:boolean,data:{list:any[],total:number,page:number,size:number},warn:string}>},
 	"/datastore/statistics/value":{args:{schemaId:string,filter?:Record<string, any>,indicator:string},returnType:Promise<{ok:boolean,data:{value:number},warn:string}>},
-	"/sign":{args:any,returnType:Promise<{ok:boolean,warn:string,data:{user:Record<string,any>,guid:string,token:string}}>},
+	"/sign":{args:any,returnType:Promise<SockResponse<{user:Record<string,any>,guid:string,token:string}>>},
 	"/sign/out":{args:any,returnType:Promise<SockResponse<void>>},
 	"/phone/check/sign":{args:{phone:string},returnType:Promise<{ok:boolean,warn:string,data:{sign:boolean}}>},
 	"/user/query":{args:any,returnType:Promise<SockResponse<{user:Record<string,any>}>>},
@@ -197,7 +197,7 @@ export interface ChannelGetMapUrls {
 	"/ws/query":{args:{wsId?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
 	"/ws/latest":{args:any,returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
 	"/ws/invite/check":{args:{invite:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
-	"/ws/channel/list":{args:{roomId:string,seq?:number,size?:number},returnType:Promise<SockResponse<{list:any[]}>>},
+	"/ws/channel/list":{args:{roomId:string,seq?:number,page?:number,size?:number},returnType:Promise<SockResponse<{list:any[],unreadCount?:number}>>},
 	"/ws/member/word/query":{args:{word:string},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
 	"/ws/members":{args:{page:number,size:number,word?:string,roleId?:string},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
 	"/ws/is/member":{args:{sock?:any,wsId:string},returnType:Promise<SockResponse<{exists:boolean}>>},
@@ -217,6 +217,7 @@ export interface ChannelGetMapUrls {
 export interface ChannelQueryMapUrls {
     "/current/workspace":{args:any,returnType:{id:string,sn:number,text:string}},
 	"/query/current/user":{args:any,returnType:UserBasic},
+	"/cache/get":{args:{key:string},returnType:Promise<any>},
 	"/device/query":{args:any,returnType:Promise<string>},
 	"/amap/key_pair":{args:any,returnType:{key:string,pair:string}},
 	"/ws/current/pages":{args:{},returnType:LinkPageItem[]},
@@ -225,6 +226,7 @@ export interface ChannelQueryMapUrls {
 }
 export interface ChannelActMapUrls {
     "/page/create/by_text":{args:{word:string},returnType:SockResponse<LinkPageItem>},
+	"/cache/set":{args:{key:string,value:any},returnType:Promise<void>},
 	"/page/view/operator":{args:{syncBlockId: string, operate: Partial<UserAction> },returnType:Promise<{seq: number,id: string;}>},
 	"/page/view/snap":{args:{ syncBlockId: string, seq: number, content: any },returnType:Promise<void>}
 }

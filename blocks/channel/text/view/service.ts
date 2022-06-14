@@ -85,8 +85,7 @@ export class ChatChannelService {
             var re = await channel.patch('/ws/channel/patch', {
                 id: d.id,
                 roomId: block.roomId,
-                content: data.content,
-                // replyId: data.reply?.replyId || undefined,
+                content: data.content
             });
             if (re.ok) {
                 d.content = data.content;
