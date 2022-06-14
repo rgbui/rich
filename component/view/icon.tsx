@@ -1,6 +1,7 @@
 
 import React, { CSSProperties } from 'react';
 import { IconArguments } from '../../extensions/icon/declare';
+import { getEmoji } from '../../net/element.type';
 
 export function Icon(props: {
     icon: string | SvgrComponent | JSX.Element | IconArguments,
@@ -90,7 +91,7 @@ export function Icon(props: {
                     , ...(props.style || {})
                 });
                 return <span className={classList.join(" ")} style={style}>
-                    {pc.code}
+                    {getEmoji(pc.code)}
                 </span>
                 break;
             case 'image':

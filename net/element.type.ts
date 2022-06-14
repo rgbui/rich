@@ -1,3 +1,4 @@
+import { UA } from "../util/ua"
 
 export class SchemaName {
     UserDefineDataSchemaViewTemplate = 'UserDefineDataSchemaViewTemplate'
@@ -82,12 +83,12 @@ export function parseElementUrl(url: string) {
             id: us[0]
         }
     }
-    else if(us.includes("Room")){
-        us.removeAll(g => g == 'Room' || g == 'Chat' )
+    else if (us.includes("Room")) {
+        us.removeAll(g => g == 'Room' || g == 'Chat')
         return {
             type: ElementType.RoomChat,
             id: us[0],
-            id1:us[1]
+            id1: us[1]
         }
     }
 }
@@ -106,4 +107,15 @@ export function autoImageUrl(url: string, width?: 50 | 120 | 250 | 500 | 900) {
         newUrl = newUrl + (newUrl.indexOf('?') > -1 ? "&" : "?") + "width=" + width;
     }
     return newUrl;
+}
+import "./twemoji.js";
+export function getEmoji(code: string) {
+    if (!UA.isMacOs) {
+        return (window as any).twemoji.parse(code, {
+            folder: 'svg',
+            base: 'https://resources.shy.live/emoji',
+            ext: '.svg'
+        });
+    }
+    else return code;
 }
