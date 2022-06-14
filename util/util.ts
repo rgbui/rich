@@ -106,4 +106,23 @@ export var util = {
             return (byte).toFixed(2) + "B"
         }
     },
+    async downloadFile(url, fileName) {
+        return new Promise((resolve, reject) => {
+            var x = new XMLHttpRequest();
+            x.open("GET", url, true);
+            x.responseType = 'blob';
+            x.onload = function (e) {
+                var url = window.URL.createObjectURL(x.response)
+                var a = document.createElement('a');
+                a.href = url
+                a.download = fileName;
+                a.click();
+                resolve(true)
+            }
+            x.onerror = function (err) {
+                reject(err);
+            }
+            x.send();
+        })
+    },
 }
