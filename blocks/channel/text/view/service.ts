@@ -1,3 +1,4 @@
+import lodash from "lodash";
 import { ChannelText } from "..";
 import { useSelectMenuItem } from "../../../../component/view/menu";
 import { MenuItemType } from "../../../../component/view/menu/declare";
@@ -44,6 +45,28 @@ export class ChatChannelService {
         op.classList.remove('operating');
         block.view.forceUpdate();
     }
+    static editEmoji = lodash.throttle(async (block: Block,
+        d: ChannelTextType,
+        emoji: { emojiId: string; code?: string; count: number; }) => {
+        var result = await channel.put('/ws/channel/emoji', {
+            elementUrl: getElementUrl(ElementType.RoomChat,
+                block.page.pageLayout.type == PageLayoutType.textChannel ? block.page.pageItemId : block.syncBlockId,
+                d.id),
+            emoji: {
+                emojiId: emoji.emojiId,
+                code: emoji.code
+            }
+        });
+        if (!Array.isArray(d.emojis)) {
+            d.emojis = [];
+        }
+        var em = d.emojis.find(g => g.emojiId == result.data.emoji.emojiId);
+        if (em) {
+            Object.assign(em, result.data.emoji)
+        }
+        else d.emojis.push(result.data.emoji);
+        block.view.forceUpdate();
+    }, 1000)
     static async openEdit(block: Block, d: ChannelTextType) {
         var view: ChannelTextView = block.view as ChannelTextView;
         view.editChannelText = d;
@@ -63,10 +86,11 @@ export class ChatChannelService {
                 id: d.id,
                 roomId: block.roomId,
                 content: data.content,
-                replyId: data.reply?.replyId || undefined
+                // replyId: data.reply?.replyId || undefined,
             });
             if (re.ok) {
                 d.content = data.content;
+                d.isEdited = true;
                 block.view.forceUpdate();
             }
         }
