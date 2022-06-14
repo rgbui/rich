@@ -90,8 +90,7 @@ export function Icon(props: {
                     height: props.size == 'none' ? undefined : (props.size) || 20
                     , ...(props.style || {})
                 });
-                return <span className={classList.join(" ")} style={style}>
-                    {getEmoji(pc.code)}
+                return <span dangerouslySetInnerHTML={{ __html: getEmoji(pc.code) }} className={classList.join(" ")} style={style}>
                 </span>
                 break;
             case 'image':
