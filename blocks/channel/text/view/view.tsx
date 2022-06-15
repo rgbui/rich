@@ -2,10 +2,13 @@ import React, { CSSProperties } from "react";
 import { ChannelText } from "..";
 import { UnreadTextSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
+import { Loading } from "../../../../component/view/loading";
 import { RichTextInput } from "../../../../component/view/rich.input";
+import { Remark } from "../../../../component/view/text";
 import { channel } from "../../../../net/channel";
 import { view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
+import { PageLayoutType } from "../../../../src/page/declare";
 import { util } from "../../../../util/util";
 import { ChannelTextType } from "../declare";
 import { RenderChannelTextContent } from "./content";
@@ -16,13 +19,15 @@ export class ChannelTextView extends BlockView<ChannelText>{
         return <div className="sy-channel-text-head">
             {this.block.unreadTip && <div className="sy-channel-text-unread-tip" >
                 <span>自{util.showTime(new Date(this.block.unreadTip.date))}来有{this.block.unreadTip.count}条消息未读</span>
-                <a onMouseDown={e =>this.block.onClearUnread()}>标记为已读<Icon size={14} icon={UnreadTextSvg}></Icon></a>
+                <a onMouseDown={e => this.block.onClearUnread()}>标记为已读<Icon size={14} icon={UnreadTextSvg}></Icon></a>
             </div>}
         </div>
     }
     contentEl: HTMLElement;
     renderContent() {
-        return <div className="sy-channel-text-content" ref={e => this.contentEl = e}>
+        return <div className="sy-channel-text-content" onScroll={this.scroll} ref={e => this.contentEl = e}>
+            {this.block.pageIndex > 2 && this.block.isLast && <div className="sy-channel-text-tip"><Remark>无记录了</Remark></div>}
+            {this.block.loading && <div className="sy-channel-text-loading"><Loading></Loading></div>}
             {RenderChannelTextContent(this.block)}
         </div>
     }
@@ -91,18 +96,27 @@ export class ChannelTextView extends BlockView<ChannelText>{
     }
     render() {
         var style: CSSProperties = this.block.visibleStyle;
+        if (this.block.page.pageLayout.type == PageLayoutType.textChannel) {
+            delete style.padding;
+        }
         return <div className='sy-channel-text' style={style}>
             {this.renderHead()}
             {this.renderContent()}
             {this.renderInput()}
         </div>
     }
+    loadding: boolean = false;
+    scroll = async (e) => {
+        if (this.block.el && this.block.el.scrollTop < 60) {
+            await this.block.scrollTopLoad();
+        }
+    }
     updateScroll() {
         if (this.contentEl) {
-            console.log('scrollTop', this.contentEl.scrollTop);
+            // console.log('scrollTop', this.contentEl.scrollTop);
             this.contentEl.scrollTop = this.contentEl.scrollHeight + 100;
             setTimeout(() => {
-                console.log('scrollTop1', this.contentEl.scrollTop);
+                // console.log('scrollTop1', this.contentEl.scrollTop);
                 this.contentEl.scrollTop = this.contentEl.scrollHeight + 100;
             }, 300);
         }

@@ -7,6 +7,7 @@ import "./style.less";
 import { KeyboardCode } from "../../../src/common/keys";
 import { ChannelTextView } from "./view/view";
 import lodash from "lodash";
+import { Rect } from "../../../src/common/vector/point";
 
 @url('/channel/text')
 export class ChannelText extends Block {
@@ -16,19 +17,20 @@ export class ChannelText extends Block {
     }
     pageIndex: number = 1;
     isLast: boolean = false;
-    unreadTip: { seq: number, count: number, date: number } =null;
+    unreadTip: { seq: number, count: number, date: number } = null;
     async onClearUnread() {
         this.unreadTip = null;
         await this.setLocalSeq(this.chats.max(x => x.seq));
         this.forceUpdate();
     }
+    loading: boolean = false;
     async loadChannelTextDatas() {
         var localSeq = this.pageIndex == 1 ? await this.getLocalSeq() : null;
         var r = await channel.get('/ws/channel/list',
             {
                 roomId: this.roomId,
                 page: this.pageIndex,
-                seq: localSeq?.seq || undefined
+                seq: localSeq?.seq || undefined,
             }
         );
         if (r.ok) {
@@ -50,7 +52,10 @@ export class ChannelText extends Block {
         }
     }
     async didMounted(): Promise<void> {
+        this.loading = true;
+        this.view.forceUpdate();
         await this.loadChannelTextDatas();
+        this.loading = false;
         this.view.forceUpdate(() => (this.view as any).updateScroll());
         channel.sync('/ws/channel/notify', this.channelNotify);
         channel.sync('/ws/channel/patch/notify', this.patchNotify);
@@ -121,7 +126,18 @@ export class ChannelText extends Block {
     scrollTopLoad = lodash.throttle(async () => {
         if (this.isLast == false) {
             this.pageIndex += 1;
-            await this.loadChannelTextDatas()
+            this.loading = true;
+            this.view.forceUpdate();
+            var td = this.chats.findMin(g => g.createDate.getTime());
+            await this.loadChannelTextDatas();
+            this.loading = false;
+            this.view.forceUpdate(() => {
+                var ce = (this.view as any).contentEl as HTMLElement
+                var it = ce.querySelector(`[data-channel-text-id='${td.id}']`);
+                if (it) {
+                    ce.scrollTop = Rect.fromEle(it as HTMLElement).top - Rect.fromEle(ce).top;
+                }
+            });
         }
     }, 2000)
 }

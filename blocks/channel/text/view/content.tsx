@@ -14,7 +14,10 @@ import { ChatChannelService } from "./service";
 import { ChannelTextView } from "./view";
 
 export function RenderChannelTextContent(block: ChannelText) {
-    var dm = block.chats;
+    var dm = block.chats.sort((x,y)=>{
+        if(x.createDate.getTime()>y.createDate.getTime())return 1
+        else return -1;
+    });
     var view: ChannelTextView = block.view as ChannelTextView;
     function renderContent(d: ChannelTextType) {
         if (d.file) {
