@@ -4,7 +4,6 @@ import { FixedViewScroll } from "../../../src/common/scroll";
 import { Point, Rect } from "../../../src/common/vector/point";
 import { SyncLoad } from "../../lib/sync";
 import "./style.less";
-
 export type OverlayPlacement = 'top' | 'left' | 'right' | 'bottom';
 class ToolTipOverlay extends React.Component {
     render() {
@@ -62,7 +61,7 @@ class ToolTipOverlay extends React.Component {
         if (this.visible && this.overlayEl) {
             var tipRect = Rect.fromEle(this.tipEl);
             var overlayRect = Rect.fromEle(this.overlayEl);
-            var size = 30;
+            var size = 16;
             this.arrowStyle = {};
             this.overlayStyle = {};
             switch (this.placement) {
@@ -70,7 +69,7 @@ class ToolTipOverlay extends React.Component {
                     this.arrowStyle.bottom = 0;
                     this.arrowStyle.width = overlayRect.width;
                     this.arrowStyle.height = size;
-                    this.point.y = tipRect.top + size + overlayRect.height;
+                    this.point.y = tipRect.top - size - overlayRect.height;
                     this.point.x = tipRect.center - overlayRect.width / 2;
                     this.overlayStyle.marginBottom = size;
                     break;
@@ -78,7 +77,7 @@ class ToolTipOverlay extends React.Component {
                     this.arrowStyle.top = 0;
                     this.arrowStyle.width = overlayRect.width;
                     this.arrowStyle.height = size;
-                    this.point.y = tipRect.top + size + overlayRect.height;
+                    this.point.y = tipRect.bottom;
                     this.point.x = tipRect.center - overlayRect.width / 2;
                     this.overlayStyle.marginTop = size;
                     break;
@@ -95,7 +94,7 @@ class ToolTipOverlay extends React.Component {
                     this.arrowStyle.width = size;
                     this.arrowStyle.height = overlayRect.height;
                     this.point.y = tipRect.middle - overlayRect.height / 2;
-                    this.point.x = tipRect.x - (overlayRect.width + size);
+                    this.point.x = tipRect.right;
                     this.overlayStyle.marginLeft = size;
                     break;
             }
@@ -122,9 +121,7 @@ class ToolTipOverlay extends React.Component {
                 this.leaveTime = null;
             }
             this.leaveTime = setTimeout(() => {
-                this.visible = false;
-                this.leaveTime = null;
-                this.forceUpdate();
+                this.close();
             }, (this.mouseLeaveDelay || 0.1) * 100);
         }
     }
