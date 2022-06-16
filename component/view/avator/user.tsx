@@ -15,7 +15,7 @@ export class UserBox extends React.Component<{
             var r = await channel.get('/user/basic', { userid: this.props.userid });
             if (r.ok) {
                 this.user = r.data.user as any;
-                this.forceUpdate()
+               this.forceUpdate()
             }
         }
     }

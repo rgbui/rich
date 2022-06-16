@@ -1,6 +1,7 @@
+
 import React from "react";
 import { PageWrite } from ".";
-import { useAtSelector } from "../../../extensions/at";
+import { useAtUserSelector } from "../../../extensions/at";
 import { useBlockSelector } from "../../../extensions/block";
 import { InputTextPopSelectorType } from "../../../extensions/common/input.pop";
 import { InputDetector } from "../../../extensions/input.detector/detector";
@@ -58,7 +59,7 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
                 type: InputTextPopSelectorType.AtSelector,
                 offset: offset - 1,
                 aa,
-                selector: (await useAtSelector())
+                selector: (await useAtUserSelector())
             };
         }
         else if (data2 == '[[' || data2 == '【【') {
@@ -70,9 +71,9 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
                 selector: (await usePageLinkSelector())
             };
         }
-        else if (data2 == ';;' || data2 == '；；') {
+        // else if (data2 == ';;' || data2 == '；；') {
 
-        }
+        // }
         // else if(data2=='{{'){
 
         // }
@@ -84,9 +85,11 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
         // }
     }
     if (write.inputPop) {
-        var popVisible = await write.inputPop.selector.open(write.inputPop.rect, aa.textContent.slice(write.inputPop.offset, offset), (...data) => {
-            inputPopCallback(write, ...data);
-        });
+        var popVisible = await write.inputPop.selector.open(write.inputPop.rect,
+            aa.textContent.slice(write.inputPop.offset, offset),
+            (...data) => {
+                inputPopCallback(write, ...data);
+            });
         if (!popVisible) write.inputPop = null;
         else return true;
     }
@@ -401,5 +404,6 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
         })
     });
 }
+
 
 

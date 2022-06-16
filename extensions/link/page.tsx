@@ -21,7 +21,7 @@ class PageLinkSelector extends InputTextPopSelector {
     async open(
         round: Rect,
         text: string,
-        callback: (...args: any[]) => void): Promise<boolean> {
+        callback:(...args: any[]) => void): Promise<boolean> {
         this._select = callback;
         this.pos = round.leftBottom;
         this.visible = true;
