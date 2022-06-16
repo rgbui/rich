@@ -1,89 +1,88 @@
+import lodash from "lodash";
 import React from "react";
-import { createPortal } from "react-dom";
+import ReactDOM from "react-dom";
+import { Singleton } from "../../component/lib/Singleton";
+import { Avatar } from "../../component/view/avator/face";
+import { Loading } from "../../component/view/loading";
+import { Remark } from "../../component/view/text";
+import { channel } from "../../net/channel";
 import { KeyboardCode } from "../../src/common/keys";
 import { Point, Rect } from "../../src/common/vector/point";
-
-import { ReferenceSelectorData } from "./data";
-import { Singleton } from "../../component/lib/Singleton";
+import { UserBasic } from "../../types/user";
 import { InputTextPopSelector } from "../common/input.pop";
+import "./style.less";
 
-export class AtSelector extends InputTextPopSelector {
-    open(round: Rect, text: string, callback: (...args: any[]) => void): Promise<boolean> {
-        throw new Error("Method not implemented.");
+/**
+ * 用户输入@触发
+ */
+class AtUserSelector extends InputTextPopSelector {
+    async open(
+        round: Rect,
+        text: string,
+        callback: (...args: any[]) => void): Promise<boolean> {
+        this._select = callback;
+        this.pos = round.leftBottom;
+        this.visible = true;
+        var t = text.replace(/^@/, '');
+        this.text = t;
+        this.syncSearch();
+        return true;
     }
-   
-    onKeydown(event: KeyboardEvent): boolean {
-        throw new Error("Method not implemented.");
+    links: UserBasic[] = [];
+    loading = false;
+    isSearch = false;
+    syncSearch = lodash.debounce(async () => {
+        this.loading = true;
+        this.forceUpdate();
+        var r = await channel.get('/ws/member/word/query', { word: this.text });
+        this.isSearch = true;
+        if (r.ok) {
+            this.links = r.data.list;
+        }
+        else this.links = [];
+        this.loading = false;
+        this.forceUpdate();
+    }, 1000)
+    private get isSelectIndex() {
+        return this.selectIndex >= 0 && this.selectIndex < this.links.length;
     }
-    private node: HTMLElement;
-    constructor(props) {
-        super(props);
-        this.node = document.body.appendChild(document.createElement('div'));
-    }
-    renderSelectors() {
-        return ReferenceSelectorData.map(group => {
-            return <div className='shy-reference-selector-group' key={group.text}>
-                <div className='shy-reference-selector-head'>{group.text}</div>
-                <div className='shy-reference-selector-blocks'>{
-                    group.childs.map(child => {
-                        return <div className='shy-reference-selector-block' key={child.url}>
-                            <div className='shy-reference-selector-info'>
-                                <span>{child.text}</span>
-                                <em>{child.description}</em>
-                            </div>
-                            <label>{child.label}</label>
-                        </div>
-                    })
-                }</div>
-            </div>
-        })
+    private renderLinks() {
+        return <div>
+            {this.loading && <Loading></Loading>}
+            {!this.loading && this.links.map((link, i) => {
+                return <a onMouseDown={e => this.onSelect(link)} className={"shy-memeber" + ((i + 1) == this.selectIndex ? " selected" : "")} key={link.id}>
+                    <Avatar user={link} userid={(link as any).userid}></Avatar>
+                    <span>{link.name}</span>
+                </a>
+            })}
+            {!this.loading && this.links.length == 0 && this.isSearch && <a><Remark>没有搜索到</Remark></a>}
+        </div>
     }
     render() {
         var style: Record<string, any> = {
             top: this.pos.y,
             left: this.pos.x
         }
-        return createPortal(<div>
-            {this.visible && <div className='shy-reference-selector' style={style}>{this.renderSelectors()}</div>}
-        </div>, this.node);
+        return <div>
+            {this.visible && <div className='shy-memebers' style={style}>{this.renderLinks()}</div>}
+        </div>
+    }
+    private onSelect(block) {
+        this._select({ url: '/user/mention', isLine: true, userid: (block as any).userid, })
+        this.close();
     }
     private visible: boolean = false;
-    private pos: Point = new Point(0, 0);
-    private command: string = '';
+    private pos: Point = new Point(0, 0)
     private selectIndex: number = 0;
-    get isVisible() {
-        return this.visible;
+    private _select: (block: Record<string, any>) => void;
+    private text: string;
+    private get selectBlockData() {
+        var b = this.links[this.selectIndex];
+        return b;
     }
-    // open(point: Point) {
-    //     this.pos = point;
-    //     this.visible = true;
-    //     this.forceUpdate();
-    // }
-    isTriggerOpen(value: string) {
-        return value.endsWith('@')
-    }
-    isTriggerFilter(value: string) {
-        if (this.visible) {
-            if (/@[\w \-\u4e00-\u9fa5]+$/g.test(value)) return true;
-        }
-        return false;
-    }
-    onInputFilter(text: string) {
-        var cs = text.match(/@[^\s]+$/g);
-        var command = cs[0];
-        if (command) {
-            this.command = command;
-            this.forceUpdate();
-        }
-        else {
-            this.command = '';
-            this.close();
-        }
-    }
-    get selectBlockData() {
-        return null;
-    }
-    close() {
+    private close() {
+        this.isSearch = false;
+        this.loading = false;
         if (this.visible == true) {
             this.visible = false;
             this.forceUpdate();
@@ -92,37 +91,66 @@ export class AtSelector extends InputTextPopSelector {
     /**
      * 向上选择内容
      */
-    keydown() {
-        if (this.selectIndex > 0)
-            this.selectIndex -= 1;
+    private keydown() {
+        if (!this.isSelectIndex) this.selectIndex = -1;
+        if (this.selectIndex < this.links.length - 1) {
+            this.selectIndex += 1;
+            this.forceUpdate();
+        }
     }
     /**
      * 向下选择内容
      */
-    keyup() {
-        this.selectIndex += 1;
-    }
-    componentWillUnmount() {
-        if (this.node) this.node.remove()
-    }
-    interceptKey(event: KeyboardEvent) {
-        switch (event.key) {
-            case KeyboardCode.ArrowDown:
-                this.keydown();
-                return true;
-            case KeyboardCode.ArrowUp:
-                this.keyup();
-                return true;
-            case KeyboardCode.Enter:
-                //this.onSelect();
-                return true;
+    private keyup() {
+        if (!this.isSelectIndex) this.selectIndex = this.links.length - 1;
+        if (this.selectIndex > 0) {
+            this.selectIndex -= 1;
+            this.forceUpdate();
         }
     }
+    private el: HTMLElement;
+    componentDidMount() {
+        this.el = ReactDOM.findDOMNode(this) as HTMLElement;
+        document.addEventListener('mousedown', this.onGlobalMousedown);
+    }
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.onGlobalMousedown);
+    }
+    componentDidUpdate() {
+        var el = this.el.querySelector('.selected') as HTMLElement;
+        if (el) {
+            el.scrollIntoView({
+                block: "nearest",
+                inline: "nearest"
+            });
+        }
+    }
+    onGlobalMousedown = (event: MouseEvent) => {
+        if (this.visible == true && this.el) {
+            var target = event.target as HTMLElement;
+            if (this.el.contains(target)) return;
+            this.close();
+        }
+    }
+    onKeydown(event: KeyboardEvent) {
+        if (this.visible == true) {
+            switch (event.key) {
+                case KeyboardCode.ArrowDown:
+                    this.keydown();
+                    return true;
+                case KeyboardCode.ArrowUp:
+                    this.keyup();
+                    return true;
+                case KeyboardCode.Enter:
+                    var block = this.selectBlockData;
+                    this.close();
+                    if (block) return { block };
+                    else return false;
+            }
+        }
+        return false;
+    }
 }
-export interface AtSelector {
-    on(name: 'error', fn: (error: Error) => void);
-    emit(name: 'error', error: Error);
-}
-export async function useAtSelector() {
-    return await Singleton(AtSelector);
+export async function useAtUserSelector() {
+    return await Singleton(AtUserSelector);
 }
