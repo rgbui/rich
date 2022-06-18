@@ -12,6 +12,7 @@ import { Icon } from "../../../component/view/icon";
 import "./style.less";
 import { channel } from "../../../net/channel";
 import { autoImageUrl } from "../../../net/element.type";
+import { ActionDirective } from "../../../src/history/declare";
 
 @url('/bookmark')
 export class Bookmark extends Block {
@@ -24,33 +25,33 @@ export class Bookmark extends Block {
     async didMounted() {
         if (!this.bookmarkInfo) {
             if (this.initialData && this.initialData.url) {
-                await this.loadBookmarkByUrl(this.initialData.url);
+                await this.onLoadBookmarkByUrl(this.initialData.url, true);
             }
             else if (this.createSource == 'InputBlockSelector') {
                 if (this.bookmarkUrl) {
-                    await this.loadBookmarkByUrl(this.bookmarkUrl);
+                    await this.onLoadBookmarkByUrl(this.bookmarkUrl, true);
                 }
                 else {
                     var r = await useOutSideUrlInput({ roundArea: Rect.fromEle(this.el) });
                     if (r?.url) {
-                        await this.loadBookmarkByUrl(r.url);
+                        await this.onLoadBookmarkByUrl(r.url, true);
                     }
                 }
             }
         }
     }
-    async loadBookmarkByUrl(url: string) {
+    async onLoadBookmarkByUrl(url: string, isInit?: boolean) {
         this.loading = true;
         this.forceUpdate();
         try {
             var r = await channel.put('/bookmark/url', { url });
-            if (r?.ok) {
-                this.bookmarkInfo = r.data;
-            }
-            else {
-
-            }
-            this.bookmarkUrl = url;
+            await this.onAction(ActionDirective.onBookMark, async () => {
+                if (isInit) this.page.snapshoot.merge();
+                if (r?.ok) {
+                    this.updateProps({ bookmarkInfo: r.data })
+                }
+                this.updateProps({ bookmarkUrl: url });
+            })
         }
         catch (ex) {
 
@@ -63,7 +64,7 @@ export class Bookmark extends Block {
     async openInputBookmark(event: React.MouseEvent) {
         var r = await useOutSideUrlInput({ roundArea: Rect.fromEle(this.el) });
         if (r?.url) {
-            await this.loadBookmarkByUrl(r.url);
+            await this.onLoadBookmarkByUrl(r.url);
         }
     }
 }
