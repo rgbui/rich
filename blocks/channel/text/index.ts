@@ -30,7 +30,7 @@ export class ChannelText extends Block {
             {
                 roomId: this.roomId,
                 page: this.pageIndex,
-                seq: localSeq?.seq || undefined,
+                seq: localSeq?.seq || undefined
             }
         );
         if (r.ok) {
@@ -123,8 +123,9 @@ export class ChannelText extends Block {
     get cacheSeqKey() {
         return [this.id, this.roomId, 'seq'].join("/")
     }
-    scrollTopLoad = lodash.throttle(async () => {
+    scrollTopLoad = lodash.debounce(async () => {
         if (this.isLast == false) {
+            if (this.loading) return;
             this.pageIndex += 1;
             this.loading = true;
             this.view.forceUpdate();
@@ -139,5 +140,5 @@ export class ChannelText extends Block {
                 }
             });
         }
-    }, 2000)
+    }, 1200)
 }

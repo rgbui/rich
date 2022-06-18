@@ -25,11 +25,10 @@ export class ChannelTextView extends BlockView<ChannelText>{
     }
     contentEl: HTMLElement;
     renderContent() {
-        return <div className="sy-channel-text-content" onScroll={this.scroll} ref={e => this.contentEl = e}>
+        return <div className="sy-channel-text-content" onWheel={this.wheel} ref={e => this.contentEl = e}>
             {this.block.pageIndex > 2 && this.block.isLast && <div className="sy-channel-text-tip"><Remark>无记录了</Remark></div>}
             {this.block.loading && <div className="sy-channel-text-loading"><Loading></Loading></div>}
             {RenderChannelTextContent(this.block)}
-
         </div>
     }
     richTextInput: RichTextInput;
@@ -120,18 +119,19 @@ export class ChannelTextView extends BlockView<ChannelText>{
         </div>
     }
     loadding: boolean = false;
-    scroll = async (e) => {
+    wheel = async (e) => {
         if (this.block.el && this.block.el.scrollTop < 60) {
             await this.block.scrollTopLoad();
         }
     }
     updateScroll() {
         if (this.contentEl) {
-            // console.log('scrollTop', this.contentEl.scrollTop);
+            console.log('scrollTop', this.contentEl.scrollTop);
             this.contentEl.scrollTop = this.contentEl.scrollHeight + 100;
             setTimeout(() => {
-                // console.log('scrollTop1', this.contentEl.scrollTop);
+                console.log('scrollTop1', this.contentEl.scrollTop);
                 this.contentEl.scrollTop = this.contentEl.scrollHeight + 100;
+                console.log('scrollTop3', this.contentEl.scrollTop);
             }, 300);
         }
     }
