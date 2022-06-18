@@ -66,7 +66,7 @@ class LinkPicker extends EventsComponent<{ link: PageLink }> {
     links: LinkPageItem[] = [];
     loading = false;
     isSearch = false;
-    syncSearch = lodash.debounce(async () => {
+    syncSearch = lodash.throttle(async () => {
         this.loading = true; this.forceUpdate();
         var r = await channel.get('/page/word/query', { word: this.url });
         this.isSearch = true;

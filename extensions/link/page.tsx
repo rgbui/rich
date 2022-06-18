@@ -21,7 +21,7 @@ class PageLinkSelector extends InputTextPopSelector {
     async open(
         round: Rect,
         text: string,
-        callback:(...args: any[]) => void): Promise<boolean> {
+        callback: (...args: any[]) => void): Promise<boolean> {
         this._select = callback;
         this.pos = round.leftBottom;
         this.visible = true;
@@ -47,7 +47,9 @@ class PageLinkSelector extends InputTextPopSelector {
     links: LinkPageItem[] = [];
     loading = false;
     isSearch = false;
-    syncSearch = lodash.debounce(async () => {
+    syncSearch = lodash.throttle(async () => {
+        if (!this.text) return;
+        if (!this.visible) return;
         this.loading = true;
         this.forceUpdate();
         var r = await channel.get('/page/word/query', { word: this.text });
@@ -70,7 +72,7 @@ class PageLinkSelector extends InputTextPopSelector {
             {!this.loading && this.links.map((link, i) => {
                 return <a onMouseDown={e => this.onSelect(link)} className={"shy-page-link-item" + ((i + 1) == this.selectIndex ? " selected" : "")} key={link.id}><Icon icon={link.icon || PageSvg}></Icon><span>{link.text || '新页面'}</span></a>
             })}
-            {!this.loading && this.links.length == 0 && this.isSearch && <a><Remark>没有搜索到</Remark></a>}
+            {!this.loading && this.links.length == 0 && this.isSearch && <a className="shy-page-link-no"><Remark>没有搜索到</Remark></a>}
         </div>
     }
     render() {
