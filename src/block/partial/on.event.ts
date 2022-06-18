@@ -212,9 +212,15 @@ export class Block$Event {
             await this.delete();
         })
     }
-    async onUpdateProps(this: Block, props: Record<string, any>, range = BlockRenderRange.none) {
+    async onUpdateProps(this: Block, props: Record<string, any>, options?: {
+        range?: BlockRenderRange,
+        merge?: boolean
+    }) {
+        if (typeof options == 'undefined') options = { range: BlockRenderRange.none };
+        if (typeof options.range == 'undefined') options.range = BlockRenderRange.none;
         await this.page.onAction(ActionDirective.onUpdateProps, async () => {
-            await this.updateProps(props, range);
+            if (options.merge) this.page.snapshoot.merge();
+            await this.updateProps(props, options.range);
         })
     }
     async onManualUpdateProps(this: Block, oldProps: Record<string, any>, newProps: Record<string, any>, range = BlockRenderRange.none, isOnlyRecord: boolean = false) {

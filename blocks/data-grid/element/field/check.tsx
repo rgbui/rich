@@ -6,7 +6,7 @@ import { OriginField } from "./origin.field";
 @url('/field/check')
 export class FieldCheck extends OriginField {
     changeValue(e: React.ChangeEvent<HTMLInputElement>) {
-        this.onUpdateProps({ value: e.target.checked },BlockRenderRange.self);
+        this.onUpdateProps({ value: e.target.checked },{range:BlockRenderRange.self});
     }
 }
 @view('/field/check')

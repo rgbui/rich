@@ -20,7 +20,7 @@ class AudioPicker extends EventsComponent {
         return <div className='shy-audio-picker'>
             <Tab keeplive>
                 <Tab.Page item={<Tip placement='bottom' id={LangID.UploadAudio}><Icon size={30} icon={Upload}></Icon></Tip>}>
-                    <UploadView mine='file' change={e => this.onChange({ name: 'upload', url: e })}></UploadView>
+                    <UploadView mine='file' change={e => this.onChange({ name: 'upload',...e })}></UploadView>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' id={LangID.ImageLink}><Icon size={16} icon={Link}></Icon></Tip>}>
                     <OutsideUrl change={e => this.onChange({ name: 'link', url: e })}></OutsideUrl>

@@ -28,7 +28,7 @@ export class List extends Block {
         /**
          * 当前元素会折叠
          */
-        this.onUpdateProps({ expand: !this.expand }, BlockRenderRange.self);
+        this.onUpdateProps({ expand: !this.expand }, { range: BlockRenderRange.self });
     }
     get isExpand() {
         return this.blocks.subChilds.length > 0 && !(this.listType == ListType.arrow && this.expand == false)

@@ -6,6 +6,7 @@ import { OriginField } from "./origin.field";
 import dayjs from "dayjs";
 import { BlockRenderRange } from "../../../../src/block/enum";
 import { useDatePicker } from "../../../../extensions/date";
+
 @url('/field/date')
 export class FieldDate extends OriginField {
     get dateString() {
@@ -21,7 +22,7 @@ export class FieldDate extends OriginField {
             includeTime: this.field?.config?.includeTime ? true : false
         });
         if (typeof pickDate != 'undefined') {
-            this.onUpdateProps({ value: pickDate }, BlockRenderRange.self);
+            this.onUpdateProps({ value: pickDate }, { range: BlockRenderRange.self });
         }
     }
 }

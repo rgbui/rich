@@ -27,7 +27,7 @@ export class ToDo extends Block {
     checked: boolean = false;
     onChange(checked: boolean, event: React.MouseEvent) {
         event.stopPropagation();
-        this.onUpdateProps({ checked }, BlockRenderRange.self);
+        this.onUpdateProps({ checked }, { range: BlockRenderRange.self });
     }
     get patternState() {
         if (this.checked == true) return 'checked';

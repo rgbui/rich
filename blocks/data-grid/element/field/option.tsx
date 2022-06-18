@@ -25,7 +25,7 @@ export class FieldOption extends OriginField {
             }
         );
         if (op != null && typeof op != 'undefined') {
-            this.onUpdateProps({ value: op }, BlockRenderRange.self);
+            this.onUpdateProps({ value: op }, { range: BlockRenderRange.self });
         }
     }
 }

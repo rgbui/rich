@@ -11,6 +11,7 @@ import { PopoverPosition } from "../popover/position";
 import { PopoverSingleton } from "../popover/popover";
 import { Tab } from "../../component/view/tab";
 import { Icon } from "../../component/view/icon";
+
 class VideoPicker extends EventsComponent {
     onChange(data: any) {
         this.emit('select', { ...data });
@@ -19,7 +20,7 @@ class VideoPicker extends EventsComponent {
         return <div className='shy-video-picker' >
             <Tab keeplive>
                 <Tab.Page item={<Tip placement='bottom' id={LangID.UploadFile}><Icon size={30} icon={Upload}></Icon></Tip>}>
-                    <UploadView mine='video' change={e => this.onChange({ name: 'upload', url: e })}></UploadView>
+                    <UploadView mine='video' change={e => this.onChange({ name: 'upload', ...e })}></UploadView>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' id={LangID.ImageLink}><Icon size={18} icon={Link}></Icon></Tip>}>
                     <OutsideUrl change={e => this.onChange({ name: 'link', url: e })}></OutsideUrl>

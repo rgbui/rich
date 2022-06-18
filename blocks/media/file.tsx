@@ -7,7 +7,7 @@ import { BlockView } from "../../src/block/view";
 import { Rect } from "../../src/common/vector/point";
 import { useFilePicker } from "../../extensions/file/file.picker";
 import { channel } from "../../net/channel";
-import { DownloadSvg, FileSvg, PropertysSvg } from "../../component/svgs";
+import { DownloadSvg, FileSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { util } from "../../util/util";
 
@@ -26,15 +26,15 @@ export class File extends Block {
         var bound = Rect.from(target.getBoundingClientRect());
         var r = await useFilePicker({ roundArea: bound });
         if (r) {
-            await this.onUpdateProps({ src: r }, BlockRenderRange.self);
+            await this.onUpdateProps({ src: r }, { range: BlockRenderRange.self, merge: true });
         }
     }
     async didMounted() {
         try {
-            if (this.createSource == 'InputBlockSelector' && !this.src) {
+            if (this.createSource == 'InputBlockSelector') {
                 var r = await useFilePicker({ roundArea: Rect.fromEle(this.el) });
                 if (r) {
-                    await this.onUpdateProps({ src: r }, BlockRenderRange.self);
+                    await this.onUpdateProps({ src: r }, { range: BlockRenderRange.self, merge: true });
                 }
             }
             if (this.initialData && this.initialData.file) {
@@ -47,12 +47,9 @@ export class File extends Block {
                 if (d.ok && d.data?.file?.url) {
                     await this.onUpdateProps({
                         src: {
-                            url: d.data?.file?.url,
-                            text: d.data?.file?.name,
-                            size: d.data?.file?.size,
-                            name: 'upload'
+                            ...d.data?.file
                         }
-                    }, BlockRenderRange.self);
+                    }, { range: BlockRenderRange.self, merge: true });
                 }
             }
             if (this.initialData && this.initialData.url) {
@@ -60,13 +57,10 @@ export class File extends Block {
                 if (d.ok && d.data?.file?.url) {
                     await this.onUpdateProps({
                         src: {
-                            url: d.data?.file?.url,
-                            text: d.data?.file?.name,
-                            size: d.data?.file?.size,
-                            name: 'download',
+                            ...d.data?.file,
                             source: this.initialData.url
                         }
-                    }, BlockRenderRange.self);
+                    }, { range: BlockRenderRange.self, merge: true });
                 }
             }
         }
@@ -87,7 +81,7 @@ export class FileView extends BlockView<File>{
                 <Icon icon={FileSvg} size={18} className='sy-block-file-content-icon'></Icon>
                 <span className='sy-block-file-content-title'>{this.block.src.text}</span>
                 <span className='sy-block-file-content-bytes'>{util.byteToString(this.block.src.size)}</span>
-                <a className='sy-block-file-content-link' download={this.block.src.url}><Icon  size={30} icon={DownloadSvg}></Icon></a>
+                <a className='sy-block-file-content-link' download={this.block.src.url}><Icon size={30} icon={DownloadSvg}></Icon></a>
             </div>}
         </div>
     }

@@ -62,7 +62,7 @@ export class ButtonTemplate extends Block {
         this.view.forceUpdate()
     }
     async onSave() {
-        this.onUpdateProps({ expand: false }, BlockRenderRange.self)
+        this.onUpdateProps({ expand: false }, {range:BlockRenderRange.self})
     }
     async didMounted(): Promise<void> {
         if (this.blocks.childs.length == 0) {

@@ -25,7 +25,7 @@ export class Audio extends Block {
         var bound = Rect.from(target.getBoundingClientRect());
         var r = await useAudioPicker({ roundArea: bound });
         if (r) {
-            await this.onUpdateProps({ src: r }, BlockRenderRange.self);
+            await this.onUpdateProps({ src: r }, { range: BlockRenderRange.self, merge: true });
         }
     }
 
@@ -35,10 +35,10 @@ export class Audio extends Block {
     }
     async didMounted() {
         try {
-            if (this.createSource == 'InputBlockSelector' && !this.src) {
+            if (this.createSource == 'InputBlockSelector') {
                 var r = await useAudioPicker({ roundArea: Rect.fromEle(this.el) });
                 if (r) {
-                    await this.onUpdateProps({ src: r }, BlockRenderRange.self);
+                    await this.onUpdateProps({ src: r }, { range: BlockRenderRange.self, merge: true });
                 }
             }
             if (this.initialData && this.initialData.file) {
@@ -48,13 +48,13 @@ export class Audio extends Block {
                     }
                 });
                 if (d.ok && d.data?.file?.url) {
-                    await this.onUpdateProps({ src: { url: d.data?.file?.url, name: 'upload' } }, BlockRenderRange.self);
+                    await this.onUpdateProps({ src: { ...d.data?.file } }, { range: BlockRenderRange.self, merge: true });
                 }
             }
             if (this.initialData && this.initialData.url) {
                 var d = await channel.post('/ws/download/url', { url: this.initialData.url });
                 if (d.ok && d.data?.file?.url) {
-                    await this.onUpdateProps({ src: { url: d.data?.file?.url, name: 'download', source: this.initialData.url } }, BlockRenderRange.self);
+                    await this.onUpdateProps({ src: { ...d.data?.file, source: this.initialData.url } }, { range: BlockRenderRange.self, merge: true });
                 }
             }
         }

@@ -39,10 +39,10 @@ export class Video extends Block {
     }
     async didMounted() {
         try {
-            if (this.createSource == 'InputBlockSelector' && !this.src) {
+            if (this.createSource == 'InputBlockSelector') {
                 var r = await useVideoPicker({ roundArea: Rect.fromEle(this.el) });
                 if (r) {
-                    await this.onUpdateProps({ src: r }, BlockRenderRange.self);
+                    await this.onUpdateProps({ src: r }, { range: BlockRenderRange.self, merge: true });
                 }
             }
             if (this.initialData && this.initialData.file) {
@@ -53,30 +53,15 @@ export class Video extends Block {
                     }
                 });
                 if (d.ok && d.data?.file?.url) {
-                    await this.onUpdateProps({ src: { url: d.data?.file?.url, name: 'upload' } }, BlockRenderRange.self);
+                    await this.onUpdateProps({ src: { ...d.data?.file, name: 'upload' } }, { range: BlockRenderRange.self, merge: true });
                 }
             }
             if (this.initialData && this.initialData.url) {
                 var d = await channel.post('/ws/download/url', { url: this.initialData.url });
                 if (d.ok && d.data?.file?.url) {
-                    await this.onUpdateProps({ src: { url: d.data?.file?.url, name: 'download', source: this.initialData.url } }, BlockRenderRange.self);
+                    await this.onUpdateProps({ src: { ...d.data?.file, name: 'download', source: this.initialData.url } }, { merge: true, range: BlockRenderRange.self });
                 }
             }
-            // var video = this.el.querySelector('video');
-            // if (video) {
-            //     var videojs = await loadVideoJs();
-            //     this.player = videojs(video, {}, function onPlayerReady() {
-            //         // videojs.log('Your player is ready!');
-            //         // In this context, `this` is the player that was created by Video.js.
-            //         // this.play();
-            //         // How about an event listener?
-            //         // this.on('ended', function () {
-            //         //     videojs.log('Awww...over so soon?!');
-            //         // });
-            //     });
-            //     var bound = Rect.fromEle((this.view as any).contentWrapper);
-            //     (this.view as any).contentWrapper.style.height = (bound.width * 3 / 4) + 'px';
-            // }
         }
         catch (ex) {
             console.error(ex);
@@ -86,8 +71,7 @@ export class Video extends Block {
 }
 @view('/video')
 export class VideoView extends BlockView<Video>{
-    onMousedown(event: React.MouseEvent, operator: 'left' | "right")
-    {
+    onMousedown(event: React.MouseEvent, operator: 'left' | "right") {
         event.stopPropagation();
         var el = this.block.el;
         var bound = el.getBoundingClientRect();
@@ -117,6 +101,7 @@ export class VideoView extends BlockView<Video>{
     }
     contentWrapper: HTMLDivElement;
     render() {
+        console.log(this.block.src, 'src');
         return <div className='sy-block-video' style={this.block.visibleStyle}>
             {!this.block.src?.url && this.block.isCanEdit() && <div onMouseDown={e => this.block.addVideo(e)} className='sy-block-video-nofile'>
                 <Icon icon={VideoSvg} size={24}></Icon>
@@ -127,7 +112,7 @@ export class VideoView extends BlockView<Video>{
                     className="sy-block-video-wrapper"
                     ref={e => this.contentWrapper = e}
                     style={{ width: this.block.contentWidthPercent ? this.block.contentWidthPercent + "%" : undefined }}>
-                    <video data-setup='{}' preload={'metadata'} className="video-js vjs-default-skin vjs-big-play-centered" controls src={this.block.src.url} style={{
+                    <video preload={'metadata'} className="video-js vjs-default-skin vjs-big-play-centered" controls src={this.block.src.url} style={{
                         width: '100%', height: '100%'
                     }} >
                     </video>

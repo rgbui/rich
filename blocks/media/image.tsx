@@ -32,7 +32,7 @@ export class Image extends Block {
     async onOpenUploadImage(event: React.MouseEvent) {
         var r = await useImagePicker({ roundArea: Rect.fromEvent(event) });
         if (r) {
-            await this.onUpdateProps({ src: r }, BlockRenderRange.self);
+            await this.onUpdateProps({ src: r }, { range: BlockRenderRange.self, merge: true });
         }
     }
     get appearAnchors() {
@@ -41,10 +41,10 @@ export class Image extends Block {
     }
     async didMounted() {
         try {
-            if (this.createSource == 'InputBlockSelector' && !this.src) {
+            if (this.createSource == 'InputBlockSelector') {
                 var r = await useImagePicker({ roundArea: Rect.fromEle(this.el) });
                 if (r) {
-                    await this.onUpdateProps({ src: r }, BlockRenderRange.self);
+                    await this.onUpdateProps({ src: r }, { range: BlockRenderRange.self, merge: true });
                 }
             }
             if (this.initialData && this.initialData.file) {
@@ -59,8 +59,8 @@ export class Image extends Block {
                     var per = Math.min(100, parseInt((imgSize.width * 100 / width).toString()));
                     await this.onUpdateProps({
                         imageWidthPercent: per,
-                        src: { url: d.data?.file?.url, name: 'upload' }
-                    }, BlockRenderRange.self);
+                        src: { ...d.data?.file }
+                    }, { range: BlockRenderRange.self, merge: true });
                 }
             }
             if (this.initialData && this.initialData.url) {
@@ -69,7 +69,7 @@ export class Image extends Block {
                     var imgSize = await getImageSize(d.data?.file?.url);
                     var width = this.el.getBoundingClientRect().width;
                     var per = Math.min(100, parseInt((imgSize.width * 100 / width).toString()));
-                    await this.onUpdateProps({ imageWidthPercent: per, src: { url: d.data?.file?.url, name: 'download', source: this.initialData.url } }, BlockRenderRange.self);
+                    await this.onUpdateProps({ imageWidthPercent: per, src: { ...d.data?.file, source: this.initialData.url } }, { range: BlockRenderRange.self, merge: true });
                 }
             }
         }
