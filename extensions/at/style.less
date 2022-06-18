@@ -17,7 +17,7 @@
     background-color   : #fff;
     overscroll-behavior: none;
     scroll-behavior    : smooth;
-
+user-select: none;
     .shy-memeber {
         padding        : 5px 10px;
         position       : relative;
@@ -27,7 +27,9 @@
         cursor         : pointer;
         color          : rgb(55, 53, 47);
         font-size      : 14px;
-        &:hover,
+        &:hover{
+            background-color: rgba(55, 53, 47, 0.05);
+        }
         &.selected {
             background-color: rgba(55, 53, 47, 0.08);
         }

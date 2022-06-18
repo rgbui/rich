@@ -144,7 +144,7 @@ class AtUserSelector extends InputTextPopSelector {
                 case KeyboardCode.Enter:
                     var block = this.selectBlockData;
                     this.close();
-                    if (block) return { block };
+                    if (block) return { blockData: block };
                     else return false;
             }
         }
