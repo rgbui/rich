@@ -60,6 +60,9 @@ class PageLinkSelector extends InputTextPopSelector {
             this.links = r.data.list;
         }
         else this.links = [];
+        if (this.selectIndex > this.links.length) {
+            this.selectIndex = 0;
+        }
         this.loading = false;
         this.forceUpdate();
     }, 1200)
@@ -103,12 +106,18 @@ class PageLinkSelector extends InputTextPopSelector {
     private _select: (block: Record<string, any>) => void;
     private text: string;
     private get selectBlockData() {
-        var b = this.links[this.selectIndex];
+        if (this.selectIndex == 0) {
+            return {
+                name: 'create'
+            }
+        }
+        var b = this.links[this.selectIndex - 1];
         return b;
     }
     private close() {
         this.isSearch = false;
         this.loading = false;
+        this.selectIndex = 0;
         if (this.visible == true) {
             this.visible = false;
             this.forceUpdate();
@@ -168,9 +177,20 @@ class PageLinkSelector extends InputTextPopSelector {
                     this.keyup();
                     return true;
                 case KeyboardCode.Enter:
-                    var block = this.selectBlockData;
+                    var block: any = this.selectBlockData;
                     this.close();
-                    if (block) return { block };
+                    if ((block as any)?.name == 'create') {
+                        return { blockData: { url: '/link/line', isLine: true, createPage: true, text: this.text } }
+                    }
+                    else if (block)
+                        return {
+                            blockData: {
+                                url: '/link/line',
+                                isLine: true, pageId: block.id,
+                                text: block.text,
+                                icon: block.icon
+                            }
+                        };
                     else return false;
             }
         }
