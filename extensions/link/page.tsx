@@ -47,7 +47,7 @@ class PageLinkSelector extends InputTextPopSelector {
     links: LinkPageItem[] = [];
     loading = false;
     isSearch = false;
-    syncSearch = lodash.throttle(async () => {
+    syncSearch = lodash.debounce(async () => {
         if (!this.text) return;
         if (!this.visible) return;
         this.loading = true;
@@ -60,7 +60,7 @@ class PageLinkSelector extends InputTextPopSelector {
         else this.links = [];
         this.loading = false;
         this.forceUpdate();
-    }, 1000)
+    }, 1200)
     private get isSelectIndex() {
         return this.selectIndex >= 0 && this.selectIndex < this.links.length;
     }

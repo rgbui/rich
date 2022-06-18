@@ -66,8 +66,10 @@ class LinkPicker extends EventsComponent<{ link: PageLink }> {
     links: LinkPageItem[] = [];
     loading = false;
     isSearch = false;
-    syncSearch = lodash.throttle(async () => {
-        this.loading = true; this.forceUpdate();
+    syncSearch = lodash.debounce(async () => {
+        if (!this.url) return;
+        this.loading = true;
+        this.forceUpdate();
         var r = await channel.get('/page/word/query', { word: this.url });
         this.isSearch = true;
         if (r.ok) {
@@ -76,7 +78,7 @@ class LinkPicker extends EventsComponent<{ link: PageLink }> {
         else this.links = [];
         this.loading = false;
         this.forceUpdate();
-    }, 1000)
+    }, 1200)
     render() {
         return <div className='shy-link-picker'>
             <Input size='small'
