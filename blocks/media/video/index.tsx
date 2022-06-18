@@ -109,7 +109,6 @@ export class VideoView extends BlockView<Video>{
     }
     contentWrapper: HTMLDivElement;
     render() {
-        console.log(this.block.src, 'src');
         return <div className='sy-block-video' style={this.block.visibleStyle}>
             {!this.block.src?.url && this.block.isCanEdit() && <div onMouseDown={e => this.block.addVideo(e)} className='sy-block-video-nofile'>
                 <Icon icon={VideoSvg} size={24}></Icon>
