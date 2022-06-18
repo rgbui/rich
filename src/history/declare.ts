@@ -34,6 +34,7 @@ export enum ActionDirective {
     onRotate = 135,
     onMove = 136,
     onBoardEditProp = 137,
+    onBookMark=138,
 
     onSchemaCreateField = 200,
     onSchemaDeleteField = 201,
