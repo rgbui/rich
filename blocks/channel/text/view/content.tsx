@@ -1,10 +1,11 @@
 import dayjs from "dayjs";
 import React from "react";
 import { ChannelText } from "..";
-import { DotsSvg, Emoji1Svg, ReplySvg, Edit1Svg, FileSvg, FileIconSvg, DownloadSvg } from "../../../../component/svgs";
+import { DotsSvg, Emoji1Svg, ReplySvg, Edit1Svg, FileIconSvg, DownloadSvg } from "../../../../component/svgs";
 import { Avatar } from "../../../../component/view/avator/face";
 import { UserBox } from "../../../../component/view/avator/user";
 import { Icon } from "../../../../component/view/icon";
+import { Loading } from "../../../../component/view/loading";
 import { RichTextInput } from "../../../../component/view/rich.input";
 import { Remark } from "../../../../component/view/text";
 import { autoImageUrl } from "../../../../net/element.type";
@@ -14,8 +15,8 @@ import { ChatChannelService } from "./service";
 import { ChannelTextView } from "./view";
 
 export function RenderChannelTextContent(block: ChannelText) {
-    var dm = block.chats.sort((x,y)=>{
-        if(x.createDate.getTime()>y.createDate.getTime())return 1
+    var dm = block.chats.sort((x, y) => {
+        if (x.createDate.getTime() > y.createDate.getTime()) return 1
         else return -1;
     });
     var view: ChannelTextView = block.view as ChannelTextView;
@@ -136,6 +137,15 @@ export function RenderChannelTextContent(block: ChannelText) {
             </div>}
         </div>
     }
+    function renderUploadFile(uf) {
+        return <div className="sy-channel-text-upload" key={uf.id}>
+            <Avatar user={block.page.user} userid={block.page.user.id} size={40}></Avatar>
+            <div className="sy-channel-text-upload-content">
+                <Loading></Loading>
+                <span style={{ display: 'inline-block', marginLeft: 5 }}>{uf.speed}</span>
+            </div>
+        </div>
+    }
     var ds: JSX.Element[] = [];
     var splitLastDate: Date;
     var lastUserid: string = '';
@@ -153,5 +163,8 @@ export function RenderChannelTextContent(block: ChannelText) {
         ds.push(renderItem(d, noUser));
         lastUserid = d.userid;
     }
+    (block.view as any).uploadFiles.each(uf => {
+        ds.push(renderUploadFile(uf));
+    })
     return ds;
 }

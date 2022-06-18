@@ -29,6 +29,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
             {this.block.pageIndex > 2 && this.block.isLast && <div className="sy-channel-text-tip"><Remark>无记录了</Remark></div>}
             {this.block.loading && <div className="sy-channel-text-loading"><Loading></Loading></div>}
             {RenderChannelTextContent(this.block)}
+
         </div>
     }
     richTextInput: RichTextInput;
@@ -40,6 +41,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
     popOpen(cs: { char: string, span: HTMLElement }) {
 
     }
+    uploadFiles: { id: string, speed: string }[] = [];
     async onInput(data: { files?: File[], content?: string, reply?: { replyId: string } }) {
         if (data.content) {
             var re = await channel.put('/ws/channel/send', {
@@ -61,24 +63,35 @@ export class ChannelTextView extends BlockView<ChannelText>{
                     chat.reply = this.block.chats.find(b => b.id == chat.replyId);
                 }
                 this.block.chats.push(chat);
+                await this.block.setLocalSeq(re.data.seq);
                 this.forceUpdate(() => this.updateScroll());
             }
         }
         else if (data.files) {
             for (let i = 0; i < data.files.length; i++) {
+                var id = util.guid();
                 var file = data.files[i];
+                var fr = { id, speed: `${file.name}-读取中...` };
+                this.uploadFiles.push(fr);
+                this.forceUpdate(() => this.updateScroll());
                 var d = await channel.post('/ws/upload/file', {
-                    file: file,
+                    file,
                     uploadProgress: (event) => {
-                        console.log(event, 'ev');
+                        if (event.lengthComputable) {
+                            fr.speed = `${file.name}-${util.byteToString(event.total)}(${(100 * event.loaded / event.total).toFixed(2)}%)`;
+                            this.forceUpdate();
+                        }
                     }
                 });
                 if (d) {
+                    fr.speed = `${file.name}-上传完成`;
+                    this.forceUpdate();
                     var re = await channel.put('/ws/channel/send', {
                         roomId: this.block.roomId,
                         file: d.data.file
                     });
                     if (re.data) {
+                        this.uploadFiles.remove(g => g.id == fr.id);
                         this.block.chats.push({
                             id: re.data.id,
                             userid: this.block.page.user.id,
@@ -87,6 +100,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
                             roomId: this.block.roomId,
                             seq: re.data.seq
                         });
+                        await this.block.setLocalSeq(re.data.seq);
                         this.forceUpdate(() => this.updateScroll());
                     }
                 }

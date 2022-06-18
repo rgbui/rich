@@ -52,11 +52,12 @@
         }
     }
 
-    .sy-channel-text-tip,.sy-channel-text-loading {
+    .sy-channel-text-tip,
+    .sy-channel-text-loading {
         display        : flex;
         justify-content: center;
         align-items    : center;
-        padding:10px 0px;
+        padding        : 10px 0px;
     }
 
     &-content {
@@ -356,6 +357,30 @@
                     cursor: pointer;
                 }
             }
+        }
+    }
+
+    .sy-channel-text-upload {
+        margin-top     : 10px;
+        padding-top    : 5px;
+        padding-bottom : 5px;
+        padding-left   : 5px;
+        padding-right  : 5px;
+        border-radius  : 5px;
+        margin-left    : 20px;
+        margin-right   : 48px;
+        position       : relative;
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : flex-start;
+        &-content {
+            margin-left     : 10px;
+            padding         : 10px;
+            border-radius   : 4px;
+            display         : flex;
+            justify-content : center;
+            align-items     : flex-start;
+            background-color: rgba(55, 53, 47, .08);
         }
     }
 }
