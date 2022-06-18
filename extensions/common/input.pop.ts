@@ -9,5 +9,5 @@ export enum InputTextPopSelectorType{
 }
 export abstract class InputTextPopSelector extends React.Component {
     abstract open(round: Rect, text: string, callback: (...args:any[]) => void): Promise<boolean>
-    abstract onKeydown(event: KeyboardEvent): any
+    abstract onKeydown(event: KeyboardEvent):boolean|{blockData:Record<string,any>}
 }

@@ -9,6 +9,7 @@ import { KeyboardCode } from "../../common/keys";
 import { onceAutoScroll } from "../../common/scroll";
 import { TextEle } from "../../common/text.ele";
 import { Rect } from "../../common/vector/point";
+import { inputPopCallback } from "./input";
 import { InputForceStore } from "./store";
 
 /***
@@ -18,6 +19,14 @@ export function predictKeydown(write: PageWrite, aa: AppearAnchor, event: React.
     if (write.inputPop) {
         var r = write.inputPop.selector.onKeydown(event.nativeEvent);
         if (r == true) return false;
+        /**
+         * 这里不光阻止，还触发了事件
+         */
+        else if (typeof r != 'boolean' && r?.blockData) {
+            console.log(r?.blockData);
+            inputPopCallback(write, r?.blockData);
+            return false;
+        }
     }
     if (isBlockedTextTool()) return false;
     return true;
