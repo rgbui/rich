@@ -155,6 +155,7 @@ export function RenderChannelTextContent(block: ChannelText) {
         var noUser: boolean = false;
         if (lastUserid == d.userid && lastDate && d.createDate && (d.createDate.getTime() - lastDate.getTime()) < 1000 * 60 * 3)
             noUser = true;
+        if (i > 0 && dm[i - 1].isDeleted == true) noUser = false;
         if (!splitLastDate || splitLastDate && dayjs(d.createDate).diff(splitLastDate, 'minute') > 5) {
             ds.push(renderDateTip(d.createDate))
             splitLastDate = d.createDate;
