@@ -1,6 +1,7 @@
 import React from "react";
 import { useOpenEmoji } from "../../../extensions/emoji";
 import { Rect } from "../../../src/common/vector/point";
+import { util } from "../../../util/util";
 import { OpenMultipleFileDialoug } from "../../file";
 import { CloseTickSvg, EmojiSvg, PlusSvg } from "../../svgs";
 import { Icon } from "../icon";
@@ -118,6 +119,12 @@ export class RichTextInput extends React.Component<{
         if (re) {
             if (re.item.name == 'addFile') {
                 var files = await OpenMultipleFileDialoug();
+                var size = 1024 * 1024 * 1024;
+                var rs = files.filter(g => g.size > size);
+                if (rs.length > 0) {
+                    this.openEror(`${rs.map(r => r.name + `(${util.byteToString(r.size)})`).join(",")}文件大于1G,暂不支持上传`)
+                }
+                files = files.filter(g => g.size <= size);
                 if (files.length > 0) {
                     this.props.onInput({ files });
                 }
@@ -151,6 +158,10 @@ export class RichTextInput extends React.Component<{
                 <span className="shy-rich-input-reply-content">{this.reply.text}</span>
                 <span className="shy-rich-input-reply-operators" onMouseDown={e => this.clearReply()}><a><Icon size={12} icon={CloseTickSvg}></Icon></a></span>
             </div>}
+            {this.errorTip && <div className="shy-rich-input-error">
+                <span className="shy-rich-input-error-content">{this.errorTip}</span>
+                <span className="shy-rich-input-error-operators" onMouseDown={e => this.clearError()}><a><Icon size={12} icon={CloseTickSvg}></Icon></a></span>
+            </div>}
             {!(this.props.allowUploadFile == false) && <Icon mousedown={e => this.openAddFile(e)} size={18} icon={PlusSvg}></Icon>}
             <div className="shy-rich-input-editor"
                 ref={e => this.richEl = e}
@@ -181,7 +192,7 @@ export class RichTextInput extends React.Component<{
         }
     }
     onReplaceInsert(text: string) {
-        this.richEl.innerHTML =text;
+        this.richEl.innerHTML = text;
         var sel = window.getSelection();
         if (this.richEl.childNodes.length > 0)
             sel.collapse(this.richEl.childNodes[0], text.length);
@@ -229,6 +240,28 @@ export class RichTextInput extends React.Component<{
             }
             window.getSelection().addRange(range);
         }
+    }
+    errorTip: string = '';
+    clearError() {
+        if (this.errorTime) { clearTimeout(this.errorTime); this.errorTime = null; }
+        this.errorTip = '';
+        this.rememberCursor();
+        this.forceUpdate(() => {
+            this.setCursor()
+        })
+    }
+    errorTime
+    openEror(error: string) {
+        this.errorTip = error;
+        this.rememberCursor();
+        this.forceUpdate(() => {
+            this.setCursor()
+        })
+        if (this.errorTime) { clearTimeout(this.errorTime); this.errorTime = null; }
+        this.errorTime = setTimeout(() => {
+            if (this.errorTime) { clearTimeout(this.errorTime); this.errorTime = null; }
+            this.clearError();
+        }, 10e3);
     }
     reply: { text: string, replyId: string }
     openReply(reply: { text: string, replyId: string }) {
