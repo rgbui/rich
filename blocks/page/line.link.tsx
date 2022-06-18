@@ -5,7 +5,7 @@ import { LinkPageItem } from "../../extensions/at/declare";
 import { IconArguments } from "../../extensions/icon/declare";
 import { channel } from "../../net/channel";
 import { Block } from "../../src/block";
-import { BlockDisplay } from "../../src/block/enum";
+import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import { url, prop, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
 import "./style.less";
@@ -24,16 +24,35 @@ export class LineLink extends Block {
         return false;
     }
     async loadPageInfo() {
-        var r = await channel.get('/page/query/info', { id: this.pageId });
-        if (r?.ok) {
-            if (r.data.icon) this.icon = r.data.icon;
-            if (r.data.text) this.text = r.data.text;
-            if (r.data.url) this.pageUrl = r.data.url;
+        if (this.pageId) {
+            var r = await channel.get('/page/query/info', { id: this.pageId });
+            if (r?.ok) {
+                if (r.data.icon) this.icon = r.data.icon;
+                if (r.data.text) this.text = r.data.text;
+                if (r.data.url) this.pageUrl = r.data.url;
+            }
         }
     }
     async openPage(event: React.MouseEvent) {
         event.preventDefault();
         channel.air('/page/open', { item: { id: this.pageId } });
+    }
+    async didMounted() {
+        try {
+            if (this.createSource == 'InputBlockSelector') {
+                if ((this as any).createPage) {
+                    var newItem = await channel.air('/page/create/sub', {
+                        pageId: this.page.pageItemId,
+                        text: this.text
+                    });
+                    if (newItem)
+                        this.onUpdateProps({ pageId: newItem.id }, { range: BlockRenderRange.self, merge: true });
+                }
+            }
+        }
+        catch (ex) {
+            console.error(ex);
+        }
     }
 }
 @view('/link/line')
@@ -67,7 +86,7 @@ export class LinkView extends BlockView<LineLink>{
     render() {
         return <span className='sy-block-line-link'>
             {this.block.text && <a href={this.block.pageUrl} onClick={e => this.block.openPage(e)}>
-                <i><Icon size={18} icon={this.block.icon || PageSvg}></Icon></i>
+                <i><Icon size={this.block.page.fontSize} icon={this.block.icon || PageSvg}></Icon></i>
                 <span>{this.block.text}</span>
             </a>}
         </span>

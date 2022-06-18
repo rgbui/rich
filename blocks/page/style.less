@@ -1,10 +1,25 @@
 .sy-block-line-link {
-    display      : inline;
     border-bottom: 0.05em solid rgba(55, 53, 47, 0.25);
     font-weight  : 500;
+
     a {
-        color: rgb(55, 53, 47);
+        display        : inline-flex;
+        justify-content: flex-start;
+        align-items    : center;
+        color          : rgb(55, 53, 47);
+        min-height: 20px;
+
+        i {
+            display        : inline-flex;
+            justify-content: center;
+            align-items    : center;
+            width:20px;height:20px;
+            margin-right: 5px;
+        }
+
+      
     }
+
     &:hover {
         background   : rgba(148, 148, 148, 0.15);
         box-shadow   : 0 0 0 3px rgba(148, 148, 148, 0.15);
@@ -46,16 +61,18 @@
             visibility: visible;
         }
     }
+
     &-icon {
-        width:78px;
-        height:78px;
-        display: flex;
+        width          : 78px;
+        height         : 78px;
+        display        : flex;
         justify-content: center;
-        align-items: center;
-        margin-top:20px;
-        margin-bottom: 5px;
+        align-items    : center;
+        margin-top     : 20px;
+        margin-bottom  : 5px;
         border-radius  : 3px;
         cursor         : pointer;
+
         &:hover {
             background-color: rgba(55, 53, 47, 0.08);
         }
@@ -66,6 +83,7 @@
         display        : flex;
         justify-content: center;
         align-items    : flex-start;
+
         &-title {
             font-size  : 40px;
             line-height: 40px;
