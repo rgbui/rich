@@ -10,6 +10,7 @@ import { channel } from "../../net/channel";
 import { DownloadSvg, FileSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { util } from "../../util/util";
+import { Remark } from "../../component/view/text";
 
 
 @url('/file')
@@ -17,6 +18,7 @@ export class File extends Block {
     @prop()
     src: ResourceArguments = { name: 'none' }
     display = BlockDisplay.block;
+    speed = '';
     get appearAnchors() {
         if (this.src.name == 'none') return [];
         return this.__appearAnchors;
@@ -41,7 +43,10 @@ export class File extends Block {
                 var d = await channel.post('/ws/upload/file', {
                     file: this.initialData.file,
                     uploadProgress: (event) => {
-                        console.log(event, 'ev');
+                        if (event.lengthComputable) {
+                            this.speed = `${util.byteToString(event.total)}${(100 * event.loaded / event.total).toFixed(2)}%`;
+                            this.forceUpdate();
+                        }
                     }
                 });
                 if (d.ok && d.data?.file?.url) {
@@ -75,7 +80,8 @@ export class FileView extends BlockView<File>{
         return <div className='sy-block-file' style={this.block.visibleStyle}>
             {this.block.src.name == 'none' && <div onMouseDown={e => this.block.addFile(e)} className='sy-block-file-nofile'>
                 <Icon icon={FileSvg}></Icon>
-                <span>添加附件</span>
+                {!this.block.speed && <span>添加附件</span>}
+                {this.block.speed && <Remark>{this.block.speed}</Remark>}
             </div>}
             {this.block.src.name != 'none' && <div className='sy-block-file-content' >
                 <Icon icon={FileSvg} size={18} className='sy-block-file-content-icon'></Icon>

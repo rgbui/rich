@@ -99,7 +99,7 @@ export class FileView extends BlockView<Embed>{
         var isAllowResizeHeight = self.block.embedType == 'music.163' ? false : true;
         var height = self.block.embedType == 'music.163' ? 90 : self.block.contentHeight;
         function getIframeStyle() {
-            var style: CSSProperties = {height:'inherit'};
+            var style: CSSProperties = { height: 'inherit' };
             if (self.block.embedType == 'music.163') {
                 // style.height = 90;
                 style.margin = '0px 10px';

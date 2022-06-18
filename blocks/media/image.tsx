@@ -17,6 +17,7 @@ import { useImagePicker } from "../../extensions/image/picker";
 import { getImageSize } from "../../component/file";
 import { channel } from "../../net/channel";
 import { autoImageUrl } from "../../net/element.type";
+import { util } from "../../util/util";
 
 @url('/image')
 export class Image extends Block {
@@ -29,6 +30,7 @@ export class Image extends Block {
     @prop()
     allowCaption: boolean = false;
     display = BlockDisplay.block;
+    speed = '';
     async onOpenUploadImage(event: React.MouseEvent) {
         var r = await useImagePicker({ roundArea: Rect.fromEvent(event) });
         if (r) {
@@ -50,7 +52,10 @@ export class Image extends Block {
             if (this.initialData && this.initialData.file) {
                 var d = await channel.post('/ws/upload/file', {
                     file: this.initialData.file, uploadProgress: (event) => {
-                        console.log(event, 'ev');
+                        if (event.lengthComputable) {
+                            this.speed = `${util.byteToString(event.total)}${(100 * event.loaded / event.total).toFixed(2)}%`;
+                            this.forceUpdate();
+                        }
                     }
                 });
                 if (d.ok && d.data?.file?.url) {

@@ -11,6 +11,8 @@ import { Icon } from "../../../component/view/icon";
 // import "./video.min.css";
 import { VideoSvg } from "../../../component/svgs";
 import { MouseDragger } from "../../../src/common/dragger";
+import { util } from "../../../util/util";
+import { Remark } from "../../../component/view/text";
 
 /**
  * https://www.zhangxinxu.com/wordpress/2018/12/html5-video-play-picture-in-picture/s
@@ -29,7 +31,9 @@ export class Video extends Block {
     @prop()
     contentWidthPercent: number = 100;
     display = BlockDisplay.block;
+    speed = '';
     async addVideo(event: React.MouseEvent) {
+        if (this.speed) return;
         var target = event.target as HTMLElement;
         var bound = Rect.from(target.getBoundingClientRect());
         var r = await useVideoPicker({ roundArea: bound });
@@ -49,9 +53,13 @@ export class Video extends Block {
                 var d = await channel.post('/ws/upload/file', {
                     file: this.initialData.file,
                     uploadProgress: (event) => {
-                        console.log(event, 'ev');
+                        if (event.lengthComputable) {
+                            this.speed = `${util.byteToString(event.total)}${(100 * event.loaded / event.total).toFixed(2)}%`;
+                            this.forceUpdate();
+                        }
                     }
                 });
+                this.speed = '';
                 if (d.ok && d.data?.file?.url) {
                     await this.onUpdateProps({ src: { ...d.data?.file, name: 'upload' } }, { range: BlockRenderRange.self, merge: true });
                 }
@@ -105,7 +113,8 @@ export class VideoView extends BlockView<Video>{
         return <div className='sy-block-video' style={this.block.visibleStyle}>
             {!this.block.src?.url && this.block.isCanEdit() && <div onMouseDown={e => this.block.addVideo(e)} className='sy-block-video-nofile'>
                 <Icon icon={VideoSvg} size={24}></Icon>
-                <span>添加视频</span>
+                {!this.block.speed && <span>添加视频</span>}
+                {this.block.speed && <Remark>{this.block.speed}</Remark>}
             </div>}
             {this.block.src?.url && <div className='sy-block-video-content'>
                 <div

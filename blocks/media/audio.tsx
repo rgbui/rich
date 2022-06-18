@@ -8,10 +8,11 @@ import { useAudioPicker } from "../../extensions/file/audio.picker";
 import { Rect } from "../../src/common/vector/point";
 import { Block } from "../../src/block";
 import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
-import { SolidArea } from "../../src/block/view/appear";
 import { channel } from "../../net/channel";
 import { AudioSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
+import { util } from "../../util/util";
+import { Remark } from "../../component/view/text";
 /*
  * https://howlerjs.com/
  */
@@ -28,7 +29,7 @@ export class Audio extends Block {
             await this.onUpdateProps({ src: r }, { range: BlockRenderRange.self, merge: true });
         }
     }
-
+    speed = '';
     get appearAnchors() {
         if (this.src.name == 'none') return [];
         return this.__appearAnchors;
@@ -44,7 +45,10 @@ export class Audio extends Block {
             if (this.initialData && this.initialData.file) {
                 var d = await channel.post('/ws/upload/file', {
                     file: this.initialData.file, uploadProgress: (event) => {
-                        console.log(event, 'ev');
+                        if (event.lengthComputable) {
+                            this.speed = `${util.byteToString(event.total)}${(100 * event.loaded / event.total).toFixed(2)}%`;
+                            this.forceUpdate();
+                        }
                     }
                 });
                 if (d.ok && d.data?.file?.url) {
@@ -69,7 +73,8 @@ export class AudioView extends BlockView<Audio>{
         return <div className='sy-block-audio' style={this.block.visibleStyle}>
             {this.block.src.name == 'none' && <div onMouseDown={e => this.block.addAudio(e)} className='sy-block-audio-nofile'>
                 <Icon icon={AudioSvg}></Icon>
-                <Sp id={LangID.AddAudioTip}></Sp>
+                {!this.block.speed && <Sp id={LangID.AddAudioTip}></Sp>}
+                {this.block.speed && <Remark>{this.block.speed}</Remark>}
             </div>}
             {this.block.src.name != 'none' && <div className='sy-block-audio-content'>
                 <audio controls style={{ width: 'inherit', height: 'inherit' }} src={this.block.src.url}></audio>
