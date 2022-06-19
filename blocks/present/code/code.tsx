@@ -5,7 +5,7 @@ import Prism from 'prismjs';
 import "../../../node_modules/prismjs/themes/prism.css";
 import { TextArea } from "../../../src/block/view/appear";
 import { Block } from "../../../src/block";
-import { BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
+import { BlockDisplay } from "../../../src/block/enum";
 import ChevronDown from "../../../src/assert/svg/chevronDown.svg";
 import "./style.less";
 import { useSelectMenuItem } from "../../../component/view/menu";
@@ -25,7 +25,7 @@ export class TextCode extends Block {
     get isSupportTextStyle() {
         return false;
     }
-    get isEnterInputNewLine() {
+    get isEnterCreateNewLine() {
         return false;
     }
     htmlCode = '';

@@ -294,15 +294,15 @@ export abstract class Block extends Events {
     /**
      * 回车换行时，是否创建新行
      */
-    get isEnterInputNewLine() {
+    get isEnterCreateNewLine() {
         return true;
     }
     /**
      * 是否允许输入换行符，一般是通过shift+enter键入，
      * 但像标题，可能不允许输入换行
      */
-    get isAllowInputTextLine() {
-        return true;
+    get isDisabledInputLine() {
+        return false;
     }
     /**
      * 回退时，最后一步是否转换成普通文本

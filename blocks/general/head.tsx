@@ -9,7 +9,7 @@ import { TextTurns } from "../../src/block/turn/text";
 export class Head extends Block {
     @prop()
     level: 'h1' | 'h2' | 'h3' | 'h4' = 'h1';
-    get isAllowInputTextLine() {
+    get isDisabledInputLine() {
         return false;
     }
     get appearAnchors() {

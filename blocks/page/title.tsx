@@ -38,8 +38,8 @@ export class Title extends Block {
     get isSupportTextStyle() {
         return false;
     }
-    get isAllowInputTextLine(){
-        return false;
+    get isDisabledInputLine() {
+        return true;
     }
     onEmptyTitleFocusAnchor() {
         if (this.page?.pageInfo) {

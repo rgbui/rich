@@ -78,7 +78,7 @@ export class Note extends Block {
             }
         }
     }
-    get isEnterInputNewLine(): boolean {
+    get isEnterCreateNewLine(): boolean {
         return false;
     }
 }
