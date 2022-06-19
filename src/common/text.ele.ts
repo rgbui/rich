@@ -277,6 +277,28 @@ export class TextEle {
         }
         return getText(ele);
     }
+    static eachTextNode(el: HTMLElement, predict: (node: Text) => void | boolean) {
+        var cs = el.childNodes;
+        var isBreak: boolean = false;
+        function fc(cs: ChildNode[]) {
+            for (var i = 0; i < cs.length; i++) {
+                if (isBreak) return;
+                var t = cs[i];
+                if (t instanceof Text) {
+                    var r = predict(t);
+                    if (r == false) {
+                        isBreak = true;
+                    }
+                }
+                else {
+                    if (typeof t.childNodes != 'undefined') {
+                        fc(Array.from(t.childNodes));
+                    }
+                }
+            }
+        }
+        fc(Array.from(cs));
+    }
     static getTextHtml(content: string) {
         var c = content;
         if (!c) c = '';
@@ -289,12 +311,12 @@ export class TextEle {
         c = c.replace(/\r\n?|\n/g, '<br/>');
         return c;
     }
-    static filterHtml(content:string){
-        var c=content;
+    static filterHtml(content: string) {
+        var c = content;
         if (!c) c = '';
         if (typeof c == 'number') c = (c as any).toString();
         if (typeof c != 'string') console.trace(content);
-        c=c.replace(/(<([^>]+)>)/ig,'');
+        c = c.replace(/(<([^>]+)>)/ig, '');
         return c;
     }
     /**
