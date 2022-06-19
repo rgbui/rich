@@ -23,7 +23,7 @@ export class Emoji extends Block {
 export class EmojiView extends BlockView<Emoji>{
     render() {
         return <div className='sy-block-emoji'>
-            <SolidArea rf={e => this.block.elementAppear({ el: e, prop: 'src' })}>
+            <SolidArea block={this.block} prop='src'>
                 {this.block.src.mime == 'emoji' && <span>{this.block.src.code}</span>}
                 {this.block.src.mime == 'image' && <span><img src={this.block.src.url} /></span>}
             </SolidArea>
