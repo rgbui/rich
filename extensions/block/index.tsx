@@ -79,7 +79,7 @@ class BlockSelector extends InputTextPopSelector {
     private command: string = '';
     private selectIndex: number = 0;
     private _select: (block: BlockSelectorItem, matchValue: string) => void;
-    async open(round: Rect, text: string, callback: BlockSelector['_select']) {
+    async open(round: Rect, text: string, callback: BlockSelector['_select'], options: { isComposing: boolean }) {
         var cs = text.match(/(\/|、)[^\s]*$/g);
         if (!(cs && cs[0])) {
             this.close();
@@ -90,7 +90,7 @@ class BlockSelector extends InputTextPopSelector {
         this.selectIndex = 0;
         this.visible = true;
         await blockStore.import();
-        this.inputFilter(text);
+        this.inputFilter(text, options);
         if (this.visible) {
             this._select = callback;
         }
@@ -98,7 +98,7 @@ class BlockSelector extends InputTextPopSelector {
     }
     private inputValue: string;
     private previsible: boolean = false;
-    private inputFilter(text: string) {
+    private inputFilter(text: string, options: { isComposing: boolean }) {
         this.inputValue = text;
         var cs = text.match(/(\/|、)[^\s]*$/g);
         var command = cs ? cs[0] : "";
@@ -106,11 +106,13 @@ class BlockSelector extends InputTextPopSelector {
             command = command.replace(/、/g, "/");
             this.command = command;
             if (this.filterBlocks.length == 0) {
-                if (this.previsible == true) {
-                    this.previsible = false;
-                    this.adjuctPosition();
+                if (!options?.isComposing) {
+                    if (this.previsible == true) {
+                        this.previsible = false;
+                        this.adjuctPosition();
+                    }
+                    else this.close()
                 }
-                else this.close()
             }
             else { this.previsible = true; this.adjuctPosition(); }
         }

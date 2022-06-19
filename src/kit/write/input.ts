@@ -89,7 +89,7 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
             aa.textContent.slice(write.inputPop.offset, offset),
             (...data) => {
                 inputPopCallback(write, ...data);
-            });
+            }, { isComposing: (event.nativeEvent as InputEvent).isComposing });
         if (!popVisible) write.inputPop = null;
         else return true;
     }
