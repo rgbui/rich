@@ -8,6 +8,7 @@ import { Block } from "../../src/block";
 import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import { url, prop, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
+import { SolidArea } from "../../src/block/view/appear";
 import "./style.less";
 
 @url('/link/line')
@@ -87,7 +88,7 @@ export class LinkView extends BlockView<LineLink>{
         return <span className='sy-block-line-link'>
             {this.block.text && <a href={this.block.pageUrl} onClick={e => this.block.openPage(e)}>
                 <i><Icon size={this.block.page.fontSize} icon={this.block.icon || PageSvg}></Icon></i>
-                <span>{this.block.text}</span>
+                <SolidArea block={this.block} prop={'text'} ><span>{this.block.text}</span></SolidArea>
             </a>}
         </span>
     }
