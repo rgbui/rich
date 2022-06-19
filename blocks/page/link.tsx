@@ -9,6 +9,7 @@ import { Block } from "../../src/block";
 import { BlockDisplay } from "../../src/block/enum";
 import { prop, url, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
+import { SolidArea } from "../../src/block/view/appear";
 
 @url('/link')
 export class Link extends Block {
@@ -68,7 +69,7 @@ export class LinkView extends BlockView<Link>{
         return <div className='sy-block-link'>
             {this.block.text && <a href={this.block.pageUrl} onClick={e => this.block.openPage(e)}>
                 <i><Icon size={18} icon={this.block.icon || PageSvg}></Icon></i>
-                <span>{this.block.text}</span>
+                <SolidArea block={this.block} prop='text'><span>{this.block.text}</span></SolidArea>
             </a>}
         </div>
     }
