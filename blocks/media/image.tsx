@@ -155,7 +155,7 @@ export class ImageView extends BlockView<Image>{
         </div>}
             {!this.isLoadError && <div className='sy-block-image-content-view'>
                 <div className='sy-block-image-content-view-wrapper' ref={e => this.imageWrapper = e} style={{ width: this.block.imageWidthPercent ? this.block.imageWidthPercent + "%" : undefined }}>
-                    {this.block.src.name != 'none' && <SolidArea rf={e => this.block.elementAppear({ el: e })} ><img onError={e => this.onError(e)} src={autoImageUrl(this.block?.src?.url)} /></SolidArea>}
+                    {this.block.src.name != 'none' && <img onError={e => this.onError(e)} src={autoImageUrl(this.block?.src?.url)} />}
                     {this.block.isCanEdit() && <><div className='sy-block-image-left-resize' onMouseDown={e => this.onMousedown(e, 'left')}></div>
                         <div className='sy-block-image-right-resize' onMouseDown={e => this.onMousedown(e, 'right')}></div></>}
                     {this.block.allowCaption && <div className='sy-block-image-caption'>
