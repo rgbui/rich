@@ -185,7 +185,7 @@ export class AppearAnchor {
             focusNode = sel.focusNode;
             offset = sel.focusOffset;
         }
-        var pos: number;
+        var pos: number=0;
         TextEle.eachTextNode(this.el, t => {
             if (t === focusNode) {
                 pos += offset;
