@@ -200,7 +200,7 @@ export class TextSpan extends Block {
     async onInputed(): Promise<void> {
         this.page.kit.picker.onRePicker();
     }
-    get isEnterInputNewLine(): boolean {
+    get isEnterCreateNewLine(): boolean {
         if (this.isFreeBlock) return false;
         return true;
     }
