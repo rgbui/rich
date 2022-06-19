@@ -259,11 +259,11 @@ export class PageWrite {
         }
         else {
             if (options?.last) {
-                var g = block.findReverse(g => g.appearAnchors.some(s => s.isText));
+                var g = block.findReverse(g => g.appearAnchors.length > 0);
                 if (g) this.onFocusAppearAnchor(g.appearAnchors.last(), { last: true })
             }
             else {
-                var g = block.find(g => g.appearAnchors.some(s => s.isText), true);
+                var g = block.find(g => g.appearAnchors.length > 0, true);
                 if (g) this.onFocusAppearAnchor(g.appearAnchors.first())
             }
         }
@@ -289,6 +289,7 @@ export class PageWrite {
              * 因为重复点击某个位置，该光标会消失，原因未知
              */
             sel.empty();
+            console.log('ggg');
             aa.collapse(pos);
             this.onInputStart(aa, sel.focusOffset);
         }
@@ -300,8 +301,8 @@ export class PageWrite {
     onSelectionAll(aa: AppearAnchor) {
         var block = aa.block;
         if (block.isLine) block = block.closest(x => !x.isLine);
-        var firstAppear = block.find(g => g.appearAnchors.length > 0 && g.appearAnchors.some(s => s.isText), true)?.appearAnchors.find(g => g.isText);
-        var lastAppear = block.findReverse(g => g.appearAnchors.length > 0 && g.appearAnchors.some(s => s.isText), true)?.appearAnchors.findLast(g => g.isText);
+        var firstAppear = block.find(g => g.appearAnchors.length > 0, true)?.appearAnchors.find(g => true);
+        var lastAppear = block.findReverse(g => g.appearAnchors.length > 0, true)?.appearAnchors.findLast(g => true);
         if (firstAppear && lastAppear) {
             var sel = window.getSelection();
             sel.setBaseAndExtent(firstAppear.firstTextNode, 0, lastAppear.lastTextNode, lastAppear.lastTextNode.textContent.length)

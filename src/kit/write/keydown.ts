@@ -78,10 +78,10 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
     }
     else if (event.key == KeyboardCode.ArrowDown) {
         var range = sel.getRangeAt(0);
-        var rect = aa.textContent == '' ? Rect.fromEle(aa.el) : Rect.fromEle(range);
+        var rect = aa.textContent == '' || aa.isSolid ? Rect.fromEle(aa.el) : Rect.fromEle(range);
         onceAutoScroll({ el: aa.el, point: rect.leftMiddle, feelDis: 60, dis: 120 })
         range = sel.getRangeAt(0);
-        rect = aa.textContent == '' ? Rect.fromEle(aa.el) : Rect.fromEle(range);
+        rect = aa.textContent == '' || aa.isSolid ? Rect.fromEle(aa.el) : Rect.fromEle(range);
         var rects = TextEle.getBounds(aa.el);
         var lineHeight = TextEle.getLineHeight(aa.el);
         if (Math.abs(rect.bottom - rects.last().bottom) < lineHeight) {
@@ -98,10 +98,10 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
     }
     else if (event.key == KeyboardCode.ArrowUp) {
         var range = sel.getRangeAt(0);
-        var rect = aa.textContent == '' ? Rect.fromEle(aa.el) : Rect.fromEle(range);
+        var rect = aa.textContent == '' || aa.isSolid ? Rect.fromEle(aa.el) : Rect.fromEle(range);
         onceAutoScroll({ el: aa.el, point: rect.leftMiddle, feelDis: 60, dis: 120 });
         range = sel.getRangeAt(0);
-        rect = aa.textContent == '' ? Rect.fromEle(aa.el) : Rect.fromEle(range);
+        rect = aa.textContent == '' || aa.isSolid ? Rect.fromEle(aa.el) : Rect.fromEle(range);
         var rects = TextEle.getBounds(aa.el);
         var lineHeight = TextEle.getLineHeight(aa.el);
         if (Math.abs(rect.top - rects.first().top) < lineHeight) {
@@ -127,11 +127,16 @@ export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: Re
         var block = aa.block;
         var rowBlock = block.closest(x => !x.isLine);
         var gs = block.isLine ? block.nexts : [];
-        var rest = aa.textContent.slice(0, offset);
-        var text = aa.textContent.slice(offset);
+        var rest, text;
+        if (aa.isText) {
+            rest = aa.textContent.slice(0, offset);
+            text = aa.textContent.slice(offset);
+        }
         var childs = text ? [{ url: BlockUrlConstant.Text, content: text }] : [];
-        if (rest || !block.isLine) block.updateAppear(aa, rest, BlockRenderRange.self);
-        else await block.delete();
+        if (aa.isText) {
+            if (rest || !block.isLine) block.updateAppear(aa, rest, BlockRenderRange.self);
+            else await block.delete();
+        }
         var newBlock: Block;
         if (rowBlock.isListBlock && rowBlock.asListBlock.expand && rowBlock.getChilds(rowBlock.childKey).length > 0) {
             var fb = rowBlock.getChilds(rowBlock.childKey).first();

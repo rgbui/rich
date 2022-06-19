@@ -59,7 +59,7 @@ export class AppearAnchor {
         /**
         * 在块内查找
         */
-        var vp = this.block.appearAnchors.find((g, i) => i > this.at && g.isText);
+        var vp = this.block.appearAnchors.find((g, i) => i > this.at);
         if (vp) return vp;
         /**
         * 如果当前块是行内块，那么在行内查找
@@ -67,9 +67,9 @@ export class AppearAnchor {
         if (this.block.isLine) {
             var pbs = this.block.parentBlocks;
             var at = pbs.findIndex(g => g === this.block);
-            var pb = pbs.find((g, i) => i > at && g.isLine && g.appearAnchors.some(s => s.isText));
+            var pb = pbs.find((g, i) => i > at && g.isLine && g.appearAnchors.length > 0);
             if (pb) {
-                return pb.appearAnchors.find(g => g.isText);
+                return pb.appearAnchors.find(g => true);
             }
         }
         /**
@@ -81,7 +81,7 @@ export class AppearAnchor {
         /**
          * 在块内查找
          */
-        var vp = this.block.appearAnchors.find((g, i) => i < this.at && g.isText);
+        var vp = this.block.appearAnchors.find((g, i) => i < this.at);
         if (vp) return vp;
         /**
          * 如果当前块是行内块，那么在行内查找
@@ -89,9 +89,9 @@ export class AppearAnchor {
         if (this.block.isLine) {
             var pbs = this.block.parentBlocks;
             var at = pbs.findIndex(g => g === this.block);
-            var pb = pbs.findLast((g, i) => i < at && g.isLine && g.appearAnchors.some(s => s.isText));
+            var pb = pbs.findLast((g, i) => i < at && g.isLine && g.appearAnchors.length > 0);
             if (pb) {
-                return pb.appearAnchors.findLast(g => g.isText);
+                return pb.appearAnchors.findLast(g => true);
             }
         }
         /**
@@ -103,7 +103,7 @@ export class AppearAnchor {
         /**
       * 在块内查找
       */
-        var vp = this.block.appearAnchors.find((g, i) => i > this.at && g.isText);
+        var vp = this.block.appearAnchors.find((g, i) => i > this.at);
         if (vp) return vp;
         return AppearVisibleSeek(this, { arrow: 'down', left });
     }
@@ -111,11 +111,12 @@ export class AppearAnchor {
         /**
         * 在块内查找
         */
-        var vp = this.block.appearAnchors.find((g, i) => i < this.at && g.isText);
+        var vp = this.block.appearAnchors.find((g, i) => i < this.at);
         if (vp) return vp;
         return AppearVisibleSeek(this, { arrow: 'up', left });
     }
     isStart(node: Node, offset: number) {
+        if (this.isSolid) return true;
         if (offset != 0) return false;
         if (node instanceof Text) {
             if (node == this.el.childNodes[0]) return true;
@@ -123,6 +124,7 @@ export class AppearAnchor {
         return false;
     }
     isEnd(node: Node, offset: number) {
+        if (this.isSolid) return true;
         if (node instanceof Text) {
             if (node == this.el.childNodes[this.el.childNodes.length - 1]) {
                 var text = node.textContent;
@@ -174,18 +176,30 @@ export class AppearAnchor {
     }
     collapse(offset: number, sel?: Selection) {
         if (typeof sel == 'undefined') sel = window.getSelection();
-        var cr = this.cacCollapseFocusPos(offset);
-        if (cr.node) {
-            sel.collapse(cr.node, cr.pos);
+        if (this.isSolid) {
+            var c = this.el.querySelector('.shy-appear-solid-cursor');
+            if (c.childNodes.length > 0) {
+                sel.collapse(c.childNodes[0], 0)
+            }
+            else sel.collapse(c, 0);
+        }
+        else {
+            var cr = this.cacCollapseFocusPos(offset);
+            if (cr.node) {
+                sel.collapse(cr.node, cr.pos);
+            }
         }
     }
     getCursorOffset(focusNode?: Node, offset?: number) {
+        if(this.isSolid){
+            return 0;
+        }
         if (typeof focusNode == 'undefined') {
             var sel = window.getSelection();
             focusNode = sel.focusNode;
             offset = sel.focusOffset;
         }
-        var pos: number=0;
+        var pos: number = 0;
         TextEle.eachTextNode(this.el, t => {
             if (t === focusNode) {
                 pos += offset;
@@ -278,6 +292,10 @@ export class AppearAnchor {
         this.el.classList.remove('shy-text-focus')
     }
     collapseByPoint(point: Point, options?: { startNode: Node, startOffset: number }) {
+        if (this.isSolid) {
+            this.collapse(0);
+            return true;
+        }
         point = point.clone();
         var isCollapsed: boolean = false;
         var bs = TextEle.getBounds(this.el);
@@ -367,7 +385,7 @@ export class AppearAnchor {
     }
     updateViewValue() {
         if (this.isText && this.el) {
-            this.el.innerHTML = this.propValue;
+            this.el.innerText = this.propValue;
         }
     }
 }

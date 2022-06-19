@@ -190,7 +190,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
         /**
          * 标题不能回退删除
          */
-        if (isEmpty && aa.block.url == '/title') {
+        if (isEmpty && aa.block.url == BlockUrlConstant.Title) {
             return;
         }
         await InputForceStore(aa, async () => {
@@ -199,8 +199,12 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
             if (block.isLine && block.prev) {
                 /**这里判断block前面有没有line */
                 var pv = block.prev;
-                if (isEmpty) await block.delete();
-                pv.updateProps({ content: pv.content.slice(0, pv.content.length - 1) }, BlockRenderRange.self);
+                if (isEmpty && !aa.isSolid) await block.delete();
+                else if (aa.isSolid) await block.delete();
+                if (pv.appearAnchors.some(s => s.isSolid)) {
+
+                }
+                else pv.updateProps({ content: pv.content.slice(0, pv.content.length - 1) }, BlockRenderRange.self);
                 if (pv.isContentEmpty) {
                     var fr = pv.prev;
                     await pv.delete();
@@ -216,6 +220,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
             }
             else {
                 if (isEmpty && block.isLine) await block.delete()
+                else if (aa.isSolid) await block.delete()
                 /**
                  * 如果满足转换，
                  * 则自动转换,如果是list块，且有子块，则不自动转换
@@ -251,7 +256,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                 /***
                  * 这个回车啥也没干，光标跳动
                  */
-                var prevAppearBlock = rowBlock.prevFind(x => x.appearAnchors.some(s => s.isText));
+                var prevAppearBlock = rowBlock.prevFind(x => x.appearAnchors.length > 0);
                 if (prevAppearBlock) {
                     write.kit.page.addUpdateEvent(async () => {
                         write.onFocusBlockAnchor(prevAppearBlock, { last: true });
@@ -379,28 +384,45 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
             }
             else {
                 var block = appear.block;
-                await block.updateAppear(appear, '', BlockRenderRange.self);
-                if (block.isContentEmpty) await block.delete();
+                if (appear.isText) {
+                    await block.updateAppear(appear, '', BlockRenderRange.self);
+                    if (block.isContentEmpty) await block.delete();
+                }
+                else if (appear.isSolid) {
+                    await block.delete();
+                }
             }
         });
         if (write.endAnchor === write.startAnchor && write.endOffset < write.startOffset || TextEle.isBefore(write.endAnchor.el, write.startAnchor.el)) {
             [write.startAnchor, write.endAnchor] = [write.endAnchor, write.startAnchor];
             [write.startOffset, write.endOffset] = [write.endOffset, write.startOffset];
         }
+        var isStartDelete: boolean = false;
+        var preAppear = write.endAnchor.block.prevFind(g => g.appearAnchors.length > 0)?.appearAnchors.last();
         if (write.startAnchor == write.endAnchor) {
-            var tc = write.startAnchor.textContent;
-            write.startAnchor.setContent(tc.slice(0, write.startOffset) + tc.slice(write.endOffset))
-            await write.startAnchor.block.updateAppear(write.startAnchor, write.startAnchor.textContent, BlockRenderRange.self);
+            if (write.startAnchor.isText) {
+                var tc = write.startAnchor.textContent;
+                write.startAnchor.setContent(tc.slice(0, write.startOffset) + tc.slice(write.endOffset))
+                await write.startAnchor.block.updateAppear(write.startAnchor, write.startAnchor.textContent, BlockRenderRange.self);
+                if (write.startAnchor.block.isContentEmpty) { await write.startAnchor.block.delete(); isStartDelete = true; }
+            }
         }
         else {
-            write.startAnchor.setContent(write.startAnchor.textContent.slice(0, write.startOffset));
-            write.endAnchor.setContent(write.endAnchor.textContent.slice(write.endOffset));
-            await write.startAnchor.block.updateAppear(write.startAnchor, write.startAnchor.textContent, BlockRenderRange.self);
-            await write.endAnchor.block.updateAppear(write.endAnchor, write.endAnchor.textContent, BlockRenderRange.self);
+            if (write.startAnchor.isText) {
+                write.startAnchor.setContent(write.startAnchor.textContent.slice(0, write.startOffset));
+                await write.startAnchor.block.updateAppear(write.startAnchor, write.startAnchor.textContent, BlockRenderRange.self);
+                if (write.startAnchor.block.isContentEmpty) { await write.startAnchor.block.delete(); isStartDelete = true; }
+            }
+            if (write.endAnchor.isText) {
+                write.endAnchor.setContent(write.endAnchor.textContent.slice(write.endOffset));
+                await write.endAnchor.block.updateAppear(write.endAnchor, write.endAnchor.textContent, BlockRenderRange.self);
+                if (write.endAnchor.block.isContentEmpty) await write.endAnchor.block.delete()
+            }
         }
         write.kit.page.addUpdateEvent(async () => {
             forceCloseTextTool()
-            write.onFocusAppearAnchor(write.startAnchor, { at: write.startOffset });
+            if (isStartDelete) write.onFocusAppearAnchor(preAppear, { last: true })
+            else write.onFocusAppearAnchor(write.startAnchor, { at: write.startOffset });
         })
     });
 }

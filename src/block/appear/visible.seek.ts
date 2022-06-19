@@ -8,6 +8,7 @@ export function findBlockAppear(el) {
     if (el) {
         if (el instanceof Text) el = el.parentNode;
         var r = el.closest('.shy-appear-text');
+        if (!r) r = el.closest('.shy-appear-solid');
         if (r) {
             var blockEl = dom(r).closest(x => (x as any).block);
             if (blockEl) {
@@ -24,6 +25,7 @@ function findXBlockAppear(appear: AppearAnchor, start: number, top: number, boun
             if (fa && fa !== appear) return fa;
             else if (el) {
                 var rg = el.querySelector('.shy-appear-text');
+                if (!rg) rg = el.closest('.shy-appear-solid');
                 if (!rg) {
                     var lx = el.getBoundingClientRect().left;
                     if (i > lx) i = lx;
@@ -38,6 +40,7 @@ function findXBlockAppear(appear: AppearAnchor, start: number, top: number, boun
             if (fa && fa !== appear) return fa;
             else if (el) {
                 var rg = el.querySelector('.shy-appear-text');
+                if (!rg) rg = el.closest('.shy-appear-solid');
                 if (!rg) {
                     var rc = el.getBoundingClientRect();
                     var lx = rc.left + rc.width;
@@ -76,8 +79,8 @@ export function AppearVisibleSeek(appear: AppearAnchor, options: {
             aa = findXBlockAppear(appear, bound.x + bound.width, j, bound, 'left');
             if (aa) return aa;
         }
-        var s = appear.block.prevFind(g => g.appearAnchors.length > 0 && g.appearAnchors.some(s => s.isText));
-        if (s) return s.appearAnchors.findLast(g => g.isText);
+        var s = appear.block.prevFind(g => g.appearAnchors.length > 0 && g.appearAnchors.length > 0);
+        if (s) return s.appearAnchors.findLast(g => true);
     }
     else if (options.arrow == 'right') {
         eb = cs.last();
@@ -93,8 +96,8 @@ export function AppearVisibleSeek(appear: AppearAnchor, options: {
             aa = findXBlockAppear(appear, bound.x + bound.width, j, bound, 'right');
             if (aa) return aa;
         }
-        var s = appear.block.nextFind(g => g.appearAnchors.length > 0 && g.appearAnchors.some(s => s.isText));
-        if (s) return s.appearAnchors.find(g => g.isText);
+        var s = appear.block.nextFind(g => g.appearAnchors.length > 0 && g.appearAnchors.length > 0);
+        if (s) return s.appearAnchors.find(g => true);
     }
     else if (options.arrow == 'down') {
         eb = cs.last();
@@ -104,18 +107,18 @@ export function AppearVisibleSeek(appear: AppearAnchor, options: {
             aa = findXBlockAppear(appear, options.left || bound.right, j, bound, 'right');
             if (aa) return aa;
         }
-        var s = appear.block.nextFind(g => g.appearAnchors.some(s => s.isText && TextEle.getBounds(s.el).first().top >= eb.bottom));
+        var s = appear.block.nextFind(g => g.appearAnchors.some(s => TextEle.getBounds(s.el).first().top >= eb.bottom));
         if (s) {
             if (s.isLine) {
                 var row = s.closest(x => x.isBlock);
                 if (row) {
-                    var r = row.find(g => g.appearAnchors.some(s => s.isText && TextEle.getBounds(s.el).first().containX(options.left) && TextEle.getBounds(s.el).first().top >= eb.bottom));
+                    var r = row.find(g => g.appearAnchors.some(s => TextEle.getBounds(s.el).first().containX(options.left) && TextEle.getBounds(s.el).first().top >= eb.bottom));
                     if (r) {
-                        return r.appearAnchors.find(s => s.isText && TextEle.getBounds(s.el).first().containX(options.left) && TextEle.getBounds(s.el).first().top >= eb.bottom)
+                        return r.appearAnchors.find(s => TextEle.getBounds(s.el).first().containX(options.left) && TextEle.getBounds(s.el).first().top >= eb.bottom)
                     }
                 }
             }
-            return s.appearAnchors.find(s => s.isText && TextEle.getBounds(s.el).first().top >= eb.bottom);
+            return s.appearAnchors.find(s => TextEle.getBounds(s.el).first().top >= eb.bottom);
         }
     }
     else if (options.arrow == 'up') {
@@ -126,18 +129,18 @@ export function AppearVisibleSeek(appear: AppearAnchor, options: {
             aa = findXBlockAppear(appear, options.left || bound.right, j, bound, 'right');
             if (aa) return aa;
         }
-        var s = appear.block.prevFind(g => g.appearAnchors.some(s => s.isText && TextEle.getBounds(s.el).last().bottom <= eb.top));
+        var s = appear.block.prevFind(g => g.appearAnchors.some(s => TextEle.getBounds(s.el).last().bottom <= eb.top));
         if (s) {
             if (s.isLine) {
                 var row = s.closest(x => x.isBlock);
                 if (row) {
-                    var r = row.find(g => g.appearAnchors.some(s => s.isText && TextEle.getBounds(s.el).last().containX(options.left) && TextEle.getBounds(s.el).last().bottom <= eb.top));
+                    var r = row.find(g => g.appearAnchors.some(s => TextEle.getBounds(s.el).last().containX(options.left) && TextEle.getBounds(s.el).last().bottom <= eb.top));
                     if (r) {
-                        return r.appearAnchors.find(s => s.isText && TextEle.getBounds(s.el).last().containX(options.left) && TextEle.getBounds(s.el).last().bottom <= eb.top)
+                        return r.appearAnchors.find(s => TextEle.getBounds(s.el).last().containX(options.left) && TextEle.getBounds(s.el).last().bottom <= eb.top)
                     }
                 }
             }
-            return s.appearAnchors.findLast(s => s.isText && TextEle.getBounds(s.el).last().bottom <= eb.top);
+            return s.appearAnchors.findLast(s => TextEle.getBounds(s.el).last().bottom <= eb.top);
         }
     }
 }
@@ -263,7 +266,7 @@ export function findBlocksBetweenAppears(start: HTMLElement, end: HTMLElement) {
 export function findBlockNearAppearByPoint(block: Block, point: Point) {
     var ps: { aa: AppearAnchor, isY: boolean, dis: number }[] = [];
     block.each(b => {
-        b.appearAnchors.findAll(g => g.isText).each(aa => {
+        b.appearAnchors.each(aa => {
             var cs = TextEle.getBounds(aa.el);
             if (cs.length == 0) return;
             var isY: boolean = false;

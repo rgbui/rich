@@ -8,7 +8,7 @@
     font-style     : inherit;
     text-decoration: inherit;
     outline        : none;
-    user-select: text;
+    user-select    : text;
 
     * {
         font-size      : inherit;
@@ -23,7 +23,7 @@
         caret-color            : rgb(55, 53, 47);
         padding-right          : 10px;
         -webkit-text-fill-color: rgba(55, 53, 47, 0.4);
-
+        
         &::after {
             content: '\20';
         }
@@ -52,13 +52,21 @@
     font-weight    : inherit;
     font-style     : inherit;
     text-decoration: inherit;
-
-    // &::after {
-    //     content    : '\D\A';
-    //     white-space: pre;
-    // }
 }
 
 .shy-appear-solid {
     position: relative;
+
+    &-cursor {
+        height                 : 100%;
+        display                : inline-block;
+        caret-color            : rgb(55, 53, 47);
+        -webkit-text-fill-color: rgba(55, 53, 47, 0.4);
+        outline                : none;
+        user-select            : text;
+        padding-right: 2px;
+        &::after {
+            content: '\20';
+        }
+    }
 }
