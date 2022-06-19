@@ -184,7 +184,8 @@ export async function inputLineTail(write: PageWrite, aa: AppearAnchor, event: R
 export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
     var sel = window.getSelection();
     var isEmpty = aa.textContent == '';
-    if (sel.focusOffset == 0) {
+    var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
+    if (offset == 0) {
         event.preventDefault();
         /**
          * 标题不能回退删除

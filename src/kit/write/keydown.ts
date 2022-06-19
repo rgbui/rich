@@ -31,7 +31,6 @@ export function predictKeydown(write: PageWrite, aa: AppearAnchor, event: React.
     return true;
 }
 
-
 /**
  * 
  * 水平移动光标：需要判断当前光标是否处于AppearAnchor的最前边或最后边,
@@ -121,7 +120,7 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
 
 export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
     var sel = window.getSelection();
-    var offset = sel.focusOffset;
+    var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
     var page = write.kit.page;
     event.preventDefault();
     await InputForceStore(aa, async () => {
@@ -158,7 +157,7 @@ export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: Re
 export async function onKeyTab(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
     event.preventDefault();
     var sel = window.getSelection();
-    var offset = sel.focusOffset;
+    var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
     var bl = aa.block;
     var prop = aa.prop;
     var page = write.kit.page;
