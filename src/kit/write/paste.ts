@@ -140,19 +140,17 @@ async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
 async function onPasteInsertText(kit: Kit, aa: AppearAnchor, text: string) {
     var content = aa.textContent;
     var sel = window.getSelection();
-    var offset = sel.focusOffset;
-    var newContent = content.slice(0, offset) + text + content.slice(offset);
-    aa.textNode.textContent = newContent;
-    sel.collapse(aa.textNode, offset + text.length);
+    var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
+    aa.setContent(content.slice(0, offset) + text + content.slice(offset))
+    aa.collapse(offset + text.length);
     await InputForceStore(aa, async () => { })
 }
 async function onPasteUrl(kit: Kit, aa: AppearAnchor, url: string) {
     var content = aa.textContent;
     var sel = window.getSelection();
-    var offset = sel.focusOffset;
-    var newContent = content.slice(0, offset) + url + content.slice(offset);
-    aa.textNode.textContent = newContent;
-    sel.collapse(aa.textNode, offset + url.length);
+    var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
+    aa.setContent(content.slice(0, offset) + url + content.slice(offset));
+    aa.collapse(offset + url.length);
     var rect = Rect.fromEle(sel.getRangeAt(0));
     kit.writer.inputPop = {
         rect,

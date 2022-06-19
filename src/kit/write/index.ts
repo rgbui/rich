@@ -96,7 +96,7 @@ export class PageWrite {
                 anchorNode = sel.anchorNode;
                 anchorOffset = sel.anchorOffset;
                 if (!anchorNode) {
-                    anchorNode = aa.textNode;
+                    anchorNode = aa.firstTextNode;
                 }
             },
             move(ev, data) {
@@ -165,11 +165,11 @@ export class PageWrite {
                     });
                     return;
                 }
-                if (aa.block.isEnterInputNewLine) {
+                if (aa.block.isEnterCreateNewLine) {
                     if (!this.kit.page.keyboardPlate.isShift()) {
                         await onEnterInput(this, aa, event);
                     }
-                    else if (this.kit.page.keyboardPlate.isShift() && aa.block.isAllowInputTextLine) {
+                    else if (this.kit.page.keyboardPlate.isShift() && aa.block.isDisabledInputLine) {
                         await onEnterInput(this, aa, event);
                     }
                 }
@@ -289,8 +289,7 @@ export class PageWrite {
              * 因为重复点击某个位置，该光标会消失，原因未知
              */
             sel.empty();
-            if (pos > aa.textNode.textContent.length) pos = aa.textContent.length;
-            sel.collapse(aa.textNode, pos);
+            aa.collapse(pos);
             this.onInputStart(aa, sel.focusOffset);
         }
     }
@@ -305,24 +304,27 @@ export class PageWrite {
         var lastAppear = block.findReverse(g => g.appearAnchors.length > 0 && g.appearAnchors.some(s => s.isText), true)?.appearAnchors.findLast(g => g.isText);
         if (firstAppear && lastAppear) {
             var sel = window.getSelection();
-            sel.setBaseAndExtent(firstAppear.textNode, 0, lastAppear.textNode, lastAppear.textContent.length)
+            sel.setBaseAndExtent(firstAppear.firstTextNode, 0, lastAppear.lastTextNode, lastAppear.lastTextNode.textContent.length)
         }
     }
     onSaveSelection() {
         var sel = window.getSelection();
         this.startAnchor = findBlockAppear(sel.anchorNode);
-        this.startOffset = sel.anchorOffset;
+        this.startOffset = this.startAnchor.getCursorOffset(sel.anchorNode, sel.anchorOffset);
         this.endAnchor = findBlockAppear(sel.focusNode);
-        this.endOffset = sel.focusOffset;
+        this.endOffset = this.endAnchor.getCursorOffset(sel.focusNode, sel.focusOffset);
         this.endAnchorText = this.endAnchor?.textContent || '';
         this.kit.page.nofityViewCursor(this.endAnchor, this.endOffset);
     }
     onRenderSelection() {
         var sel = window.getSelection();
-        if (this.startAnchor && this.endAnchor)
-            sel.setBaseAndExtent(this.startAnchor.textNode, this.startOffset, this.endAnchor.textNode, this.endOffset)
+        if (this.startAnchor && this.endAnchor) {
+            var cr = this.startAnchor.cacCollapseFocusPos(this.startOffset);
+            var er = this.endAnchor.cacCollapseFocusPos(this.endOffset);
+            sel.setBaseAndExtent(cr.node, cr.pos, er.node, er.pos);
+        }
         else if (this.startAnchor) {
-            sel.collapse(this.startAnchor.textNode, this.startOffset)
+            this.startAnchor.collapse(this.startOffset);
         }
     }
     async onOpenTextTool() {

@@ -20,14 +20,12 @@ import { InputForceStore, InputStore } from "./store";
 export async function inputPopCallback(write: PageWrite, ...args: any) {
     var blockData = args[0];
     var sel = window.getSelection();
-    var offset = sel.focusOffset;
     var aa = write.inputPop.aa;
+    var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
     var content = aa.textContent;
     var textContent = content.slice(0, write.inputPop.offset) + content.slice(offset);
-    aa.textNode.textContent = textContent;
-    var off = write.inputPop.offset;
-    if (offset > aa.textContent.length) off = aa.textContent.length
-    sel.collapse(aa.textNode, off);
+    aa.setContent(textContent);
+    aa.collapse(offset);
     await write.onInputPopCreateBlock(write.inputPop.offset, blockData);
     write.inputPop = null;
 }
@@ -38,7 +36,7 @@ export async function inputPopCallback(write: PageWrite, ...args: any) {
 export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.FormEvent) {
     var ev = event.nativeEvent as InputEvent;
     var sel = window.getSelection();
-    var offset = sel.focusOffset;
+    var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
     if (!write.inputPop && aa.block.url != BlockUrlConstant.Title) {
         var rect = Rect.fromEle(sel.getRangeAt(0));
         var data = ev.data;
@@ -102,7 +100,7 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
  */
 export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: React.FormEvent) {
     var sel = window.getSelection();
-    var offset = sel.focusOffset;
+    var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
     var current = aa.textContent.slice(0, offset);
     var rest = aa.textContent.slice(offset);
     var mr = InputDetector(current, { rowStart: aa.isRowStart });
@@ -111,8 +109,8 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
         switch (rule.operator) {
             case DetectorOperator.firstLetterCreateBlock:
                 var newOffset = offset + (mr.value.length - current.length);
-                aa.textNode.textContent = mr.value + rest;
-                sel.collapse(aa.textNode, newOffset);
+                aa.setContent(mr.value + rest);
+                aa.collapse(newOffset);
                 await InputForceStore(aa, async () => {
                     var row = aa.block.closest(x => !x.isLine);
                     var newBlock = await row.visibleUpCreateBlock(rule.url, { createSource: 'InputBlockSelector' });
@@ -127,8 +125,8 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                 });
                 break;
             case DetectorOperator.firstLetterTurnBlock:
-                aa.textNode.textContent = rest;
-                sel.collapse(aa.textNode, 0);
+                aa.setContent(rest);
+                aa.collapse(0);
                 await InputForceStore(aa, async () => {
                     var row = aa.block.closest(x => !x.isLine);
                     var newBlock = await row.turn(rule.url);
@@ -139,13 +137,13 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                 break;
             case DetectorOperator.inputCharReplace:
                 var newOffset = offset + (mr.value.length - current.length);
-                aa.textNode.textContent = mr.value + rest;
-                sel.collapse(aa.textNode, newOffset);
+                aa.setContent(mr.value + rest);
+                aa.collapse(newOffset);
                 await InputStore(aa);
                 break;
             case DetectorOperator.letterReplaceCreateBlock:
-                aa.textNode.textContent = mr.value;
-                sel.collapse(aa.textNode, mr.value.length);
+                aa.setContent(mr.value);
+                aa.collapse(mr.value.length);
                 await InputForceStore(aa, async () => {
                     var block = aa.block;
                     var rowBlock = block.closest(x => !x.isLine);
@@ -280,7 +278,8 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
  */
 export async function inputBackSpaceTextContent(write: PageWrite, aa: AppearAnchor, event: React.FormEvent) {
     var sel = window.getSelection();
-    if (sel.focusOffset == 0) {
+    var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
+    if (offset == 0) {
         await InputForceStore(aa, async () => {
             var block = aa.block;
             var rowBlock = block.closest(x => !x.isLine);
@@ -389,12 +388,12 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
         }
         if (write.startAnchor == write.endAnchor) {
             var tc = write.startAnchor.textContent;
-            write.startAnchor.textNode.textContent = tc.slice(0, write.startOffset) + tc.slice(write.endOffset);
+            write.startAnchor.setContent(tc.slice(0, write.startOffset) + tc.slice(write.endOffset))
             await write.startAnchor.block.updateAppear(write.startAnchor, write.startAnchor.textContent, BlockRenderRange.self);
         }
         else {
-            write.startAnchor.textNode.textContent = write.startAnchor.textContent.slice(0, write.startOffset);
-            write.endAnchor.textNode.textContent = write.endAnchor.textContent.slice(write.endOffset);
+            write.startAnchor.setContent(write.startAnchor.textContent.slice(0, write.startOffset));
+            write.endAnchor.setContent(write.endAnchor.textContent.slice(write.endOffset));
             await write.startAnchor.block.updateAppear(write.startAnchor, write.startAnchor.textContent, BlockRenderRange.self);
             await write.endAnchor.block.updateAppear(write.endAnchor, write.endAnchor.textContent, BlockRenderRange.self);
         }

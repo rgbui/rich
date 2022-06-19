@@ -37,6 +37,9 @@ export class AppearAnchor {
             return TextEle.getTextContent(this.el);
         }
     }
+    setContent(value: string) {
+        this.el.innerText = value;
+    }
     get isEmpty() {
         if (this.isText) {
             var c = this.textContent;
@@ -128,9 +131,69 @@ export class AppearAnchor {
         }
         return false;
     }
-    get textNode() {
+    get firstTextNode() {
         if (this.el.childNodes.length > 0) return this.el.childNodes[0]
         else return this.el;
+    }
+    get lastTextNode() {
+        if (this.el.childNodes.length > 0) return this.el.childNodes[this.el.childNodes.length - 1]
+        else return this.el;
+    }
+    /**
+     * 通过offset来计算光标应该处于appear中那个textContent上及偏移位置
+     * @param offset  这个是appear中的文本偏移位置
+     */
+    cacCollapseFocusPos(offset: number, isFirst = true) {
+        var count = 0;
+        var pos: number;
+        var node: Text;
+        TextEle.eachTextNode(this.el, (t) => {
+            var len = t.textContent.length;
+            if (offset >= count && offset <= count + len) {
+                pos = offset - count;
+                node = t;
+                return false;
+            } else count += len;
+        });
+        if (typeof pos == 'number')
+            return {
+                pos,
+                node
+            }
+        else {
+            if (isFirst)
+                return {
+                    pos: 0,
+                    node: this.firstTextNode
+                }
+            else return {
+                pos: this.lastTextNode.textContent.length,
+                node: this.lastTextNode
+            }
+        }
+    }
+    collapse(offset: number, sel?: Selection) {
+        if (typeof sel == 'undefined') sel = window.getSelection();
+        var cr = this.cacCollapseFocusPos(offset);
+        if (cr.node) {
+            sel.collapse(cr.node, cr.pos);
+        }
+    }
+    getCursorOffset(focusNode?: Node, offset?: number) {
+        if (typeof focusNode == 'undefined') {
+            var sel = window.getSelection();
+            focusNode = sel.focusNode;
+            offset = sel.focusOffset;
+        }
+        var pos: number;
+        TextEle.eachTextNode(this.el, t => {
+            if (t === focusNode) {
+                pos += offset;
+                return false;
+            }
+            else pos += t.textContent.length;
+        });
+        return pos;
     }
     /**
      * 判断是否为当前行块的最开始处的appear
@@ -242,17 +305,16 @@ export class AppearAnchor {
                 if (couter > t) break;
                 var at = Math.round((s + e) / 2);
                 if (Math.abs(s - e) < 2) {
-                    sel.collapse(this.textNode, s);
+                    this.collapse(s, sel);
                     var sb = Rect.fromEle(sel.getRangeAt(0));
-                    sel.collapse(this.textNode, e);
+                    this.collapse(e, sel);
                     var eb = Rect.fromEle(sel.getRangeAt(0));
-                    if (Math.abs(sb.left - point.x) < Math.abs(eb.left - point.x))
-                        endOffset = s;
+                    if (Math.abs(sb.left - point.x) < Math.abs(eb.left - point.x)) endOffset = s;
                     else endOffset == e;
                     break;
                 }
                 else {
-                    sel.collapse(this.textNode, at);
+                    this.collapse(at, sel);
                     var b = Rect.fromEle(sel.getRangeAt(0));
                     if (point.y <= b.top || point.x <= b.left && point.y >= b.top && point.y <= b.bottom) {
                         e = at;
@@ -275,10 +337,11 @@ export class AppearAnchor {
              * 说明找到光标的位置了
              */
             if (options?.startNode) {
-                sel.setBaseAndExtent(options.startNode, options.startOffset, this.textNode, endOffset);
+                var cr = this.cacCollapseFocusPos(endOffset);
+                sel.setBaseAndExtent(options.startNode, options.startOffset, cr.node, cr.pos);
             }
             else {
-                sel.collapse(this.textNode, endOffset);
+                this.collapse(endOffset);
             }
             return true;
         }

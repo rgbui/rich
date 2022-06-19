@@ -23,7 +23,6 @@ export function predictKeydown(write: PageWrite, aa: AppearAnchor, event: React.
          * 这里不光阻止，还触发了事件
          */
         else if (typeof r != 'boolean' && r?.blockData) {
-            console.log(r?.blockData);
             inputPopCallback(write, r?.blockData);
             return false;
         }
