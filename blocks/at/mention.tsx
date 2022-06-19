@@ -4,7 +4,9 @@ import { Block } from "../../src/block";
 import { BlockDisplay } from "../../src/block/enum";
 import { url, prop, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
+import { SolidArea } from "../../src/block/view/appear";
 import "./style.less";
+
 @url('/user/mention')
 export class ShyMention extends Block {
     @prop()
@@ -18,9 +20,9 @@ export class ShyMention extends Block {
 export class ShyMentionView extends BlockView<ShyMention>{
     render() {
         return <div className='sy-block-mention' onMouseDown={e => this.block.openUser(e)} >
-            <UserBox userid={this.block.userid}>{(user) => {
+            <SolidArea block={this.block} prop={'userid'} ><UserBox userid={this.block.userid}>{(user) => {
                 return <>@<span>{user.name}</span></>
-            }}</UserBox>
+            }}</UserBox></SolidArea>
         </div>
     }
 }
