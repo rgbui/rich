@@ -17,10 +17,10 @@ export class Quote extends TextSpan {
         return 'subChilds';
     }
     /**
- * 表示当前元素如何接收该元素至sub,
- * @param this 
- * @param sub  子元素是要移动的
- */
+     * 表示当前元素如何接收该元素至sub,
+     * @param this 
+     * @param sub  子元素是要移动的
+    */
     async acceptSubFromMove(sub: Block) {
         await this.append(sub, 0, 'subChilds');
     }

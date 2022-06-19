@@ -11,6 +11,8 @@ export enum BlockUrlConstant {
     Mind = '/flow/mind',
     Group = '/group',
     Board = '/board',
-    Outline='/outline',
-    Title='/title'
+    Outline = '/outline',
+    Title = '/title',
+    Quote = '/quote',
+    Callout = '/callout'
 }
