@@ -2,7 +2,6 @@ import React from "react";
 import { ResourceArguments } from "../../extensions/icon/declare";
 import { Block } from "../../src/block";
 import { SolidArea } from "../../src/block/view/appear";
-import { BlockAppear } from "../../src/block/appear";
 import { BlockDisplay } from "../../src/block/enum";
 import { url, prop, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
@@ -32,7 +31,7 @@ export class ShyDate extends Block {
 export class ShyDateView extends BlockView<ShyDate>{
     render() {
         return <div className='sy-block-date' onMouseDown={e => this.block.openDate(e)} >
-            <SolidArea rf={e => this.block.elementAppear({ el: e, appear: BlockAppear.solid })}> </SolidArea>
+            <SolidArea prop='date' block={this.block}></SolidArea>
         </div>
     }
 }
