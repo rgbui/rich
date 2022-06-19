@@ -159,7 +159,10 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
                 direction = DropDirection.top;
             }
             else if (point.y >= bound.top + bound.height / 2) {
-                if (dropBlock.url == BlockUrlConstant.List) {
+                if ([BlockUrlConstant.List,
+                BlockUrlConstant.Callout,
+                BlockUrlConstant.Quote].some(s => s == dropBlock.url)
+                ) {
                     direction = DropDirection.sub;
                     if (point.x - bound.left < 30) {
                         direction = DropDirection.bottom;
