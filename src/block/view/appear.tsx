@@ -53,12 +53,38 @@ export function TextArea(props: {
     >{html}</span>
 }
 export function SolidArea(props: {
-    children: React.ReactNode,
-    rf?: (e: HTMLElement) => void
+    children?: React.ReactNode,
+    block: Block,
+    prop?: string,
     style?: CSSProperties
 }) {
-    var ps = { ref: props.rf, style: props.style }
-    return <div className='shy-appear-solid'  {...ps} >{props.children}</div>
+    var ps = {
+        ref: (e) => props.block.elementAppear({
+            el: e,
+            prop: props.prop,
+            appear: BlockAppear.solid,
+        }),
+        style: props.style
+    };
+    var editProps = {
+        contentEditable: true,
+        spellCheck: false,
+        onMouseDown: (e) => props.block.elementAppearEvent(props.prop, 'mousedown', e),
+        onMouseUp: (e) => props.block.elementAppearEvent(props.prop, 'mouseup', e),
+        onFocus: (e) => props.block.elementAppearEvent(props.prop, 'focus', e),
+        onBlur: (e) => props.block.elementAppearEvent(props.prop, 'blur', e),
+        onKeyDown: (e) => props.block.elementAppearEvent(props.prop, 'keydown', e),
+        onInput: (e) => props.block.elementAppearEvent(props.prop, 'input', e),
+        onPaste: (e) => props.block.elementAppearEvent(props.prop, 'paste', e),
+        onDoubleClick: (e) => props.block.elementAppearEvent(props.prop, 'dblclick', e),
+        onCompositionStart: (e) => props.block.elementAppearEvent(props.prop, 'compositionstart', e),
+        onCompositionEnd: (e) => props.block.elementAppearEvent(props.prop, 'compositionend', e),
+        onCompositionUpdate: (e) => props.block.elementAppearEvent(props.prop, 'compositionupdate', e)
+    }
+    return <div className='shy-appear-solid'  {...ps} >
+        {props.children}
+        {props.block.isCanEdit(props.prop) && <span  className='shy-appear-solid-cursor' suppressContentEditableWarning contentEditable={true}></span>}
+    </div>
 }
 export function ChildsArea(props: { childs: Block[] }) {
     return <>{props.childs.map(x => {
