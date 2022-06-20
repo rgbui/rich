@@ -2,7 +2,6 @@ import lodash from 'lodash';
 import React, { CSSProperties } from 'react';
 import { Block } from '..';
 import { BlockAppear } from '../appear';
-
 export function TextArea(props: {
     block: Block,
     prop?: string,
@@ -57,7 +56,9 @@ export function SolidArea(props: {
     children?: React.ReactNode,
     block: Block,
     prop?: string,
-    style?: CSSProperties
+    style?: CSSProperties,
+    isHtml?: boolean,
+    line?: boolean
 }) {
     var ps = {
         ref: (e) => props.block.elementAppear({
@@ -82,9 +83,13 @@ export function SolidArea(props: {
         onCompositionEnd: (e) => props.block.elementAppearEvent(props.prop, 'compositionend', e),
         onCompositionUpdate: (e) => props.block.elementAppearEvent(props.prop, 'compositionupdate', e)
     }
+    if (props.line) return <span className='shy-appear-solid'  {...ps} >
+        {props.children}
+        {props.block.isCanEdit(props.prop) && <span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}
+    </span>
     return <div className='shy-appear-solid'  {...ps} >
         {props.children}
-        {props.block.isCanEdit(props.prop) && <span className='shy-appear-solid-cursor' suppressContentEditableWarning contentEditable={true}></span>}
+        {props.block.isCanEdit(props.prop) && <span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}
     </div>
 }
 export function ChildsArea(props: { childs: Block[] }) {
