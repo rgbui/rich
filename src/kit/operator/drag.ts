@@ -6,6 +6,7 @@ import { forceCloseTextTool } from "../../../extensions/text.tool";
 import { Block } from "../../block";
 import { onAutoScrollStop } from "../../common/scroll";
 import { Point } from "../../common/vector/point";
+import { PageLayoutType } from "../../page/declare";
 import { BoardDrag } from "./board";
 import { DocDrag } from "./doc";
 
@@ -17,6 +18,7 @@ import { DocDrag } from "./doc";
  */
 export async function PageDrag(kit: Kit, event: React.MouseEvent) {
     await PageDragBeforeClear(kit, event);
+    if (kit.page.pageLayout.type == PageLayoutType.board) return;
     /**
      * 通过鼠标来查找block，然后判断当前文档类型或块的类型来决后续该由谁来操作
      * 注意:block不一定能找到
