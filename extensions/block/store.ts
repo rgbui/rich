@@ -13,6 +13,20 @@ class BlockStore extends Events {
             this._blockGroups = r.BlockSelectorData;
         }
     }
+    find(predict: (data: Record<string, any>) => boolean) {
+        var isBreak: boolean = false;
+        var d: any;
+        this._blockGroups.forEach(bg => {
+            bg.childs.forEach(c => {
+                var r = predict(c);
+                if (r == true) {
+                    d = c;
+                    isBreak = true;
+                }
+            })
+        });
+        return d;
+    }
     findAll(label: string) {
         var bs = this._blockGroups.map(b => {
             return {

@@ -18,6 +18,7 @@ import { BlockDirective } from "../../src/block/enum";
 import { PopoverPosition } from "../popover/position";
 import { FixedViewScroll } from "../../src/common/scroll";
 import { channel } from "../../net/channel";
+import { blockStore } from "../block/store";
 
 export type TextToolStyle = {
     link: string,
@@ -42,6 +43,7 @@ class TextTool extends EventsComponent {
     }
     private fvs: FixedViewScroll = new FixedViewScroll();
     private turnBlock: Block = null;
+    private turnText: string = '';
     el: HTMLElement;
     boxEl: HTMLElement;
     open(pos: PopoverPosition, options: { style: TextToolStyle, turnBlock?: Block }) {
@@ -52,6 +54,9 @@ class TextTool extends EventsComponent {
         this.visible = true;
         this.textStyle = options.style;
         this.turnBlock = options?.turnBlock;
+        var tb = blockStore.find(g => g.url == this.turnBlock.url);
+        if (tb) this.turnText = tb.text;
+        else this.turnText = '';
         this.forceUpdate(() => {
             var menu: HTMLElement = this.el.querySelector('.shy-tool-text-menu');
             this.point = RectUtility.cacPopoverPosition({
@@ -79,9 +84,9 @@ class TextTool extends EventsComponent {
             left: this.point.x
         };
         return <div tabIndex={1} data-shy-page-unselect="true" onMouseUp={e => e.stopPropagation()} ref={el => this.el = el}>{this.visible == true && <div className='shy-tool-text-menu' ref={e => this.boxEl = e} style={style}>
-            {this.turnBlock && <Tip id={LangID.textToolTurn}>
+            {this.turnBlock && this.turnText && <Tip id={LangID.textToolTurn}>
                 <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenBlockSelector(e)}>
-                    <span>Text</span><Icon icon='arrow-down:sy'></Icon>
+                    <span>{this.turnText}</span><Icon icon='arrow-down:sy'></Icon>
                 </div>
             </Tip>}
             <Tip id={LangID.textToolLink}>
@@ -119,22 +124,22 @@ class TextTool extends EventsComponent {
                     <Icon icon='code:sy'></Icon>
                 </div>
             </Tip>
-            {/* <Tip id={LangID.textToolEquation}>
-                        <div className={'shy-tool-text-menu-item' + (this.textStyle.equation == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.equation == true ? TextCommand.cancelEquation : TextCommand.equation)}>
-                            <Icon icon={Equation}></Icon>
-                        </div>
-                    </Tip> */}
+            <Tip id={LangID.textToolEquation}>
+                <div className={'shy-tool-text-menu-item' + (this.textStyle.equation == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.equation == true ? TextCommand.cancelEquation : TextCommand.equation)}>
+                    <Icon icon={Equation}></Icon>
+                </div>
+            </Tip>
             <Tip id={LangID.textToolColor}>
                 <div className='shy-tool-text-menu-item' onMouseDown={e => this.onOpenFontColor(e)}>
                     <span>A</span>
                     <Icon icon='arrow-down:sy'></Icon>
                 </div>
             </Tip>
-            {/* <Tip id={LangID.textToolMention}>
-                        <div className='shy-tool-text-menu-item'>
-                            <Icon icon={Mention}></Icon>
-                        </div>
-                    </Tip> */}
+            <Tip id={LangID.textToolMention}>
+                <div className='shy-tool-text-menu-item' onMouseDown={e => this.onOpenMention(e)}>
+                    <Icon icon={Mention}></Icon>
+                </div>
+            </Tip>
         </div>}
         </div>;
     }
@@ -179,6 +184,12 @@ class TextTool extends EventsComponent {
                 this.textStyle.code = false;
                 this.emit('setProp', { code: false });
                 return this.forceUpdate();
+                break;
+            case TextCommand.equation:
+                break;
+            case TextCommand.cancelEquation:
+                break;
+            case TextCommand.mention:
                 break;
         }
         this.emit('setStyle', { [BlockCssName.font]: font } as any);
@@ -252,13 +263,20 @@ class TextTool extends EventsComponent {
             this.close();
         }
     }
+    onOpenMention(event: React.MouseEvent) {
+
+    }
 }
 interface TextTool {
     emit(name: 'setStyle', styles: Record<BlockCssName, Record<string, any>>);
     emit(name: 'setProp', props: Record<string, any>);
+    emit(name: 'setTurn', props: Record<string, any>);
+    emit(name: 'insertBlock', props: Record<string, any>);
     emit(name: 'turn', item: MenuItemType<BlockDirective>, event: MouseEvent);
     emit(name: 'close');
     only(name: 'setProp', props: Record<string, any>);
+    only(name: 'setTurn', props: Record<string, any>);
+    only(name: 'insertBlock', props: Record<string, any>);
     only(name: 'setStyle', fn: (syles: Record<BlockCssName, Record<string, any>>) => void);
     only(name: 'turn', fn: (item: MenuItemType<BlockDirective>, event: MouseEvent) => void);
     only(name: 'close', fn: () => void);
@@ -266,6 +284,8 @@ interface TextTool {
 export type textToolResult = { command: 'setStyle', styles: Record<BlockCssName, Record<string, any>> }
     | { command: 'turn', item: MenuItemType<BlockDirective>, event: MouseEvent }
     | { command: "setProp", props: Record<string, any> }
+    | { command: 'setTurn', props: Record<string, any> }
+    | { command: 'insertBlock', props: Record<string, any> }
     | false;
 var textTool: TextTool;
 export async function useTextTool(point: PopoverPosition, options: { style: TextToolStyle, turnBlock?: Block }) {
@@ -278,6 +298,16 @@ export async function useTextTool(point: PopoverPosition, options: { style: Text
         textTool.only('setProp', (props) => {
             resolve({ command: 'setProp', props })
         })
+        textTool.only('setTurn', (props) => {
+            resolve({ command: 'setTurn', props })
+        })
+        textTool.only('setProp', (props) => {
+            resolve({ command: 'setProp', props })
+        })
+        textTool.only('insertBlock', (props) => {
+            resolve({ command: 'insertBlock', props })
+        })
+        //textTool.only
         textTool.only("turn", (item, event) => {
             resolve({ command: 'turn', item, event })
         });

@@ -11,5 +11,6 @@ export enum TextCommand {
     code,
     cancelCode,
     equation,
-    cancelEquation
+    cancelEquation,
+    mention
 }
