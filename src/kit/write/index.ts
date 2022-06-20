@@ -289,7 +289,6 @@ export class PageWrite {
              * 因为重复点击某个位置，该光标会消失，原因未知
              */
             sel.empty();
-            console.log('ggg');
             aa.collapse(pos);
             this.onInputStart(aa, sel.focusOffset);
         }
@@ -362,6 +361,12 @@ export class PageWrite {
                     else if (result.command == 'turn') {
                         await turnBlock.onClickContextMenu(result.item, result.event);
                         break;
+                    }
+                    else if (result.command == 'insertBlock') {
+
+                    }
+                    else if (result.command == 'setTurn') {
+
                     }
                     else break;
                 }
