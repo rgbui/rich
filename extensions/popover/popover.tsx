@@ -68,7 +68,7 @@ class Popover<T extends React.Component> extends EventsComponent<{
             </div>
         }
         else {
-            return <div ref={e => this.box = e} >{this.visible && <>
+            return <div ref={e => this.box = e} style={{ display: this.visible == false ? 'none' : undefined }} >{this.visible && <>
                 {this.props.mask == true && <div style={{ zIndex: this.maskZindex }} className={'shy-popover-mask' + (this.props.shadow ? " shy-popover-mask-shadow" : "")} onMouseDown={e => this.onClose(e)}></div>}
                 <div style={style} className='shy-popover' ref={e => this.el = e}><CP {...this.props.args} ref={e => this.cp = e}></CP></div>
             </>}</div>
