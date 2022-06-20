@@ -34,6 +34,7 @@ export class Block$Event {
                 text: it.text,
                 icon: it.pic,
                 url: it.url,
+                checkLabel: it.url == this.url ? true : false,
                 iconSize: 22
             }
         })
@@ -172,7 +173,7 @@ export class Block$Event {
                 });
                 break;
             case BlockDirective.link:
-                
+
                 break;
             case BlockDirective.trun:
                 this.page.onBatchTurn([this], (item as any).url);
