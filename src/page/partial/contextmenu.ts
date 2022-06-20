@@ -12,6 +12,7 @@ import { CopyText } from "../../../component/copy";
 import { ShyAlert } from "../../../component/lib/alert";
 import { channel } from "../../../net/channel";
 import { Confirm } from "../../../component/lib/confirm";
+import { usePageHistoryStore } from "../../../extensions/history";
 
 export class PageContextmenu {
     async onGetContextMenus(this: Page) {
@@ -53,7 +54,6 @@ export class PageContextmenu {
                 break;
             case 'show-all':
                 break;
-
         }
     }
     async onContextMenu(this: Page, event: React.MouseEvent | MouseEvent) {
@@ -76,13 +76,14 @@ export class PageContextmenu {
                 { name: 'lock', text: this.pageInfo.locker?.userid ? "解除锁定" : '编辑保护', icon: this.pageInfo.locker?.userid ? UnlockSvg : LockSvg },
                 // { type: MenuItemTypeValue.divide },
                 // { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
-                // { name: 'history', icon: VersionHistorySvg, text: '页面历史', disabled: true },
+                { name: 'history', icon: VersionHistorySvg, text: '页面历史', disabled: true },
                 { name: 'copylink', icon: LinkSvg, text: '复制链接' },
                 { type: MenuItemTypeValue.divide },
-                { name: 'undo', text: '撤消', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'ctrl+Z' },
+                { name: 'undo', text: '撤消', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
+                { name: 'redo', text: '重做', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
                 { name: 'delete', icon: TrashSvg, text: '删除' },
                 { type: MenuItemTypeValue.divide },
-                { name: 'import', icon: UploadSvg, text: '导入', disabled: true },
+                { name: 'import', iconSize: 30, icon: UploadSvg, text: '导入', disabled: true },
                 { name: 'export', text: '导出', icon: FileSvg, disabled: true, remark: '导出PDF,HTML,Markdown' },
                 // { type: MenuItemTypeValue.divide },
                 // { name: 'move', text: '移动', icon: MoveToSvg, disabled: true },
@@ -109,7 +110,8 @@ export class PageContextmenu {
             }
             else if (r.item.name == 'lock') {
                 channel.air('/page/update/info', {
-                    id: this.pageInfo.id, pageInfo: {
+                    id: this.pageInfo.id,
+                    pageInfo: {
                         locker: this.pageInfo.locker?.userid ? null : {
                             userid: this.user.id,
                             lockDate: Date.now()
@@ -124,6 +126,11 @@ export class PageContextmenu {
             }
             else if (r.item.name == 'undo') {
                 this.onUndo();
+            } else if (r.item.name == 'redo') {
+                this.onRedo();
+            }
+            else if (r.item.name == 'history') {
+                var result = await usePageHistoryStore({ roundArea: Rect.fromEvent(event) }, { pageId: this.pageItemId })
             }
         }
     }
