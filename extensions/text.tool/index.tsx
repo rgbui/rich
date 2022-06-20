@@ -126,18 +126,18 @@ class TextTool extends EventsComponent {
             </Tip>
             <Tip id={LangID.textToolEquation}>
                 <div className={'shy-tool-text-menu-item' + (this.textStyle.equation == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.equation == true ? TextCommand.cancelEquation : TextCommand.equation)}>
-                    <Icon icon={Equation}></Icon>
+                    <Icon size={16} icon={Equation}></Icon>
                 </div>
             </Tip>
             <Tip id={LangID.textToolColor}>
                 <div className='shy-tool-text-menu-item' onMouseDown={e => this.onOpenFontColor(e)}>
                     <span>A</span>
-                    <Icon icon='arrow-down:sy'></Icon>
+                    <Icon size={16} icon='arrow-down:sy'></Icon>
                 </div>
             </Tip>
             <Tip id={LangID.textToolMention}>
                 <div className='shy-tool-text-menu-item' onMouseDown={e => this.onOpenMention(e)}>
-                    <Icon icon={Mention}></Icon>
+                    <Icon size={13} icon={Mention}></Icon>
                 </div>
             </Tip>
         </div>}
