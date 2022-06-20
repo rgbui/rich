@@ -61,44 +61,48 @@ export class Block$Event {
             text: langProvider.getText(LangID.menuTurn),
             icon: loop,
             disabled: menus.length > 0 ? false : true,
-            childs: menus
+            childs: menus.map(m => {
+                return {
+                    ...m,
+                }
+            })
         });
-        items.push({
-            name: BlockDirective.trunIntoPage,
-            text: langProvider.getText(LangID.menuTurnInPage),
-            icon: squareplus,
-            disabled: true
-        });
-        items.push({
-            name: BlockDirective.moveTo,
-            text: langProvider.getText(LangID.menuMoveTo),
-            icon: moveTo,
-            disabled: true
-        });
+        // items.push({
+        //     name: BlockDirective.trunIntoPage,
+        //     text: langProvider.getText(LangID.menuTurnInPage),
+        //     icon: squareplus,
+        //     disabled: true
+        // });
+        // items.push({
+        //     name: BlockDirective.moveTo,
+        //     text: langProvider.getText(LangID.menuMoveTo),
+        //     icon: moveTo,
+        //     disabled: true
+        // });
         items.push({
             name: BlockDirective.link,
             text: langProvider.getText(LangID.menuCopyLink),
             icon: link,
             disabled: true
         });
-        items.push({
-            type: MenuItemTypeValue.divide
-        });
-        items.push({
-            name: BlockDirective.comment,
-            text: langProvider.getText(LangID.menuComment),
-            icon: comment,
-            disabled: true
-        });
-        items.push({
-            type: MenuItemTypeValue.divide
-        });
-        items.push({
-            name: BlockDirective.color,
-            text: langProvider.getText(LangID.menuColor),
-            icon: blockcolor,
-            disabled: true
-        });
+        // items.push({
+        //     type: MenuItemTypeValue.divide
+        // });
+        // items.push({
+        //     name: BlockDirective.comment,
+        //     text: langProvider.getText(LangID.menuComment),
+        //     icon: comment,
+        //     disabled: true
+        // });
+        // items.push({
+        //     type: MenuItemTypeValue.divide
+        // });
+        // items.push({
+        //     name: BlockDirective.color,
+        //     text: langProvider.getText(LangID.menuColor),
+        //     icon: blockcolor,
+        //     disabled: true
+        // });
         return items;
     }
     async onGetBoardContextMenus(this: Block) {
@@ -159,16 +163,25 @@ export class Block$Event {
                 break;
             case BlockDirective.copy:
                 /**
-                 * 将元素复制到服务器，
-                 * 然后可以跨平台粘贴
+                 * 复制块
                  */
+                this.onAction(ActionDirective.onCopyBlock, async () => {
+                    var d = this.cloneData();
+                    var pa = this.parent;
+                    await pa.appendBlock(d, this.at, this.parentKey);
+                });
                 break;
             case BlockDirective.link:
+                
                 break;
             case BlockDirective.trun:
                 this.page.onBatchTurn([this], (item as any).url);
                 break;
             case BlockDirective.trunIntoPage:
+                break;
+            case BlockDirective.comment:
+                break;
+            case BlockDirective.color:
                 break;
         }
     }

@@ -26,6 +26,7 @@ export enum ActionDirective {
     onBatchDragBlockDatas = 120,
     onButtonTemplateCreateInstance = 121,
     onLoadUserActions = 122,
+    onCopyBlock=123,
 
     onBoardToolCreateBlock = 130,
     onResizeBlock = 132,
