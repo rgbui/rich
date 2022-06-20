@@ -6,12 +6,13 @@ import "../../../node_modules/prismjs/themes/prism.css";
 import { TextArea } from "../../../src/block/view/appear";
 import { Block } from "../../../src/block";
 import { BlockDisplay } from "../../../src/block/enum";
-import ChevronDown from "../../../src/assert/svg/chevronDown.svg";
 import "./style.less";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { Rect } from "../../../src/common/vector/point";
 import { loadPrismLang, PrismLangLabels } from "./lang";
 import { AppearAnchor } from "../../../src/block/appear";
+import { ChevronDownSvg } from "../../../component/svgs";
+import { Icon } from "../../../component/view/icon";
 /**
  * prism url : https://prismjs.com/#examples
  * prism babel plug :https://www.npmjs.com/package/babel-plugin-prismjs
@@ -57,15 +58,10 @@ export class TextCode extends Block {
         this.time = setTimeout(async () => {
             var sel = window.getSelection();
             if (sel.focusNode && appear.el.contains(sel.focusNode)) {
-
+                var offset = appear.getCursorOffset(sel.focusNode, sel.focusOffset);
+                await this.renderCode();
+                appear.collapse(offset);
             }
-            //var isActive = this.page.kit.explorer.activeAnchor?.block == this;
-            // var pos = isActive ? this.page.kit.explorer.activeAnchor.bound.leftMiddle : undefined;
-            // await this.renderCode();
-            // if (pos) {
-            // var anchor = this.visibleAnchor(pos);
-            // this.page.kit.explorer.onFocusAnchor(anchor);
-            // }
         }, 2e3);
     }
 }
@@ -97,12 +93,15 @@ export class TextCodeView extends BlockView<TextCode>{
             <div className='sy-block-code-box' >
                 <div className='sy-block-code-head'>
                     <div className='sy-block-code-head-lang' onMouseDown={e => e.stopPropagation()} onMouseUp={e => this.changeLang(e)}>
-                        <span>{label}</span><ChevronDown></ChevronDown>
+                        <span>{label}</span>
+                        <Icon icon={ChevronDownSvg}></Icon>
                     </div>
                 </div>
                 <div className='sy-block-code-content'>
-                    <TextArea block={this.block} prop='content'
-                        placeholder={'键入代码'}
+                    <TextArea
+                        block={this.block}
+                        prop='content'
+                        placeholder={'键入代码'} isHtml
                         html={this.block.htmlCode}></TextArea>
                 </div>
             </div></div>
