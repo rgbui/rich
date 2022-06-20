@@ -51,7 +51,7 @@ class AtUserSelector extends InputTextPopSelector {
             {this.loading && <Loading></Loading>}
             {!this.loading && this.links.map((link, i) => {
                 return <a onMouseDown={e => this.onSelect(link)} className={"shy-memeber" + ((i + 1) == this.selectIndex ? " selected" : "")} key={link.id}>
-                    <Avatar user={link} userid={(link as any).userid}></Avatar>
+                    <Avatar size={30} user={link} userid={(link as any).userid}></Avatar>
                     <span>{link.name}</span>
                 </a>
             })}
