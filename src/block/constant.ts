@@ -15,5 +15,7 @@ export enum BlockUrlConstant {
     Title = '/title',
     Quote = '/quote',
     Callout = '/callout',
-    Code='/code'
+    Code = '/code',
+    Katex = '/katex',
+    KatexLine = '/katex/line'
 }

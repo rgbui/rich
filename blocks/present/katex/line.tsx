@@ -6,6 +6,7 @@ import React from "react";
 import { BlockView } from "../../../src/block/view";
 import { Rect } from "../../../src/common/vector/point";
 import { loadKatex } from "./load";
+import { SolidArea } from "../../../src/block/view/appear";
 
 @url('/katex/line')
 export class KatexLine extends Block {
@@ -20,7 +21,7 @@ export class KatexLine extends Block {
         this.forceUpdate()
     }
     async open(event: React.MouseEvent) {
-        event.stopPropagation();
+        // event.stopPropagation();
         this.opened = true;
         var old = this.content;
         this.forceUpdate();
@@ -40,9 +41,7 @@ export class KatexLine extends Block {
 export class KatexView extends BlockView<KatexLine>{
     render() {
         return <span className={'sy-block-katex-line' + (this.block.opened ? " sy-block-katex-opened" : "")}
-            onMouseDown={e => this.block.open(e)}
-            dangerouslySetInnerHTML={{ __html: this.block.katexContent }}
-        >
+            onMouseDown={e => this.block.open(e)}><SolidArea line prop='content' isHtml={true} block={this.block} ><span dangerouslySetInnerHTML={{ __html: this.block.katexContent }}></span></SolidArea>
         </span>
     }
 }

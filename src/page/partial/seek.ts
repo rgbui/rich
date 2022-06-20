@@ -104,6 +104,7 @@ export class Page$Seek {
                 textStyle.code = false;
             }
         });
+        textStyle.equation = blocks.every(b => b.url == '/katex/line');
         return textStyle;
     }
     find(this: Page, predict: (block: Block) => boolean) {

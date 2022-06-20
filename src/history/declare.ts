@@ -26,7 +26,7 @@ export enum ActionDirective {
     onBatchDragBlockDatas = 120,
     onButtonTemplateCreateInstance = 121,
     onLoadUserActions = 122,
-    onCopyBlock=123,
+    onCopyBlock = 123,
 
     onBoardToolCreateBlock = 130,
     onResizeBlock = 132,
@@ -35,7 +35,8 @@ export enum ActionDirective {
     onRotate = 135,
     onMove = 136,
     onBoardEditProp = 137,
-    onBookMark=138,
+    onBookMark = 138,
+    onUpdateEquation = 139,
 
     onSchemaCreateField = 200,
     onSchemaDeleteField = 201,
@@ -63,7 +64,7 @@ export enum ActionDirective {
 
     onPageTurnLayout = 400,
     onPageUpdateProps = 401,
-    
+
     /**
      * 一些特殊的block操作
      */

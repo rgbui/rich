@@ -1,8 +1,6 @@
 import React, { CSSProperties } from "react";
 import { Point, Rect, RectUtility } from "../../src/common/vector/point";
 import { Icon } from "../../component/view/icon";
-import Equation from "../../src/assert/svg/equation.svg";
-import Mention from "../../src/assert/svg/mention.svg";
 import { TextCommand } from "./text.command";
 import { EventsComponent } from "../../component/lib/events.component";
 import { BlockCssName, FillCss } from "../../src/block/pattern/css";
@@ -19,7 +17,7 @@ import { PopoverPosition } from "../popover/position";
 import { FixedViewScroll } from "../../src/common/scroll";
 import { channel } from "../../net/channel";
 import { blockStore } from "../block/store";
-
+import { EquationSvg } from "../../component/svgs";
 export type TextToolStyle = {
     link: string,
     blockUrl: string,
@@ -32,6 +30,7 @@ export type TextToolStyle = {
     color: string,
     fill: Partial<FillCss>
 }
+
 class TextTool extends EventsComponent {
     private textStyle: TextToolStyle = {} as any;
     constructor(props) {
@@ -100,33 +99,33 @@ class TextTool extends EventsComponent {
                         </div>
                     </Tip> */}
             <Tip id={LangID.textToolBold}>
-                <div className={'shy-tool-text-menu-item' + (this.textStyle.bold == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.bold == true ? TextCommand.cancelBold : TextCommand.bold)}>
+                <div className={'shy-tool-text-menu-item' + (this.textStyle.bold == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.bold == true ? TextCommand.cancelBold : TextCommand.bold, e)}>
                     <Icon icon='bold:sy'></Icon>
                 </div>
             </Tip>
             <Tip id={LangID.textToolItailc}>
-                <div className={'shy-tool-text-menu-item' + (this.textStyle.italic == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.italic == true ? TextCommand.cancelItalic : TextCommand.italic)}>
+                <div className={'shy-tool-text-menu-item' + (this.textStyle.italic == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.italic == true ? TextCommand.cancelItalic : TextCommand.italic, e)}>
                     <Icon icon='italic:sy'></Icon>
                 </div>
             </Tip>
             <Tip id={LangID.textToolUnderline}>
-                <div className={'shy-tool-text-menu-item' + (this.textStyle.underline == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.underline == true ? TextCommand.cancelLine : TextCommand.underline)}>
+                <div className={'shy-tool-text-menu-item' + (this.textStyle.underline == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.underline == true ? TextCommand.cancelLine : TextCommand.underline, e)}>
                     <Icon icon='underline:sy'></Icon>
                 </div>
             </Tip>
             <Tip id={LangID.textToolDeleteLine}>
-                <div className={'shy-tool-text-menu-item' + (this.textStyle.deleteLine == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.deleteLine == true ? TextCommand.cancelLine : TextCommand.deleteLine)}>
+                <div className={'shy-tool-text-menu-item' + (this.textStyle.deleteLine == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.deleteLine == true ? TextCommand.cancelLine : TextCommand.deleteLine, e)}>
                     <Icon icon='delete-line:sy'></Icon>
                 </div>
             </Tip>
             <Tip id={LangID.textToolCode}>
-                <div className={'shy-tool-text-menu-item' + (this.textStyle.code == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.code == true ? TextCommand.cancelCode : TextCommand.code)}>
+                <div className={'shy-tool-text-menu-item' + (this.textStyle.code == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.code == true ? TextCommand.cancelCode : TextCommand.code, e)}>
                     <Icon icon='code:sy'></Icon>
                 </div>
             </Tip>
             <Tip id={LangID.textToolEquation}>
-                <div className={'shy-tool-text-menu-item' + (this.textStyle.equation == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.equation == true ? TextCommand.cancelEquation : TextCommand.equation)}>
-                    <Icon size={16} icon={Equation}></Icon>
+                <div className={'shy-tool-text-menu-item' + (this.textStyle.equation == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.equation == true ? TextCommand.cancelEquation : TextCommand.equation, e)}>
+                    <Icon size={16} icon={EquationSvg}></Icon>
                 </div>
             </Tip>
             <Tip id={LangID.textToolColor}>
@@ -135,15 +134,10 @@ class TextTool extends EventsComponent {
                     <Icon size={16} icon='arrow-down:sy'></Icon>
                 </div>
             </Tip>
-            <Tip id={LangID.textToolMention}>
-                <div className='shy-tool-text-menu-item' onMouseDown={e => this.onOpenMention(e)}>
-                    <Icon size={13} icon={Mention}></Icon>
-                </div>
-            </Tip>
         </div>}
         </div>;
     }
-    onExcute(command: TextCommand) {
+    onExcute(command: TextCommand, event: React.MouseEvent) {
         var font: Record<string, any> = {};
         switch (command) {
             case TextCommand.bold:
@@ -186,10 +180,14 @@ class TextTool extends EventsComponent {
                 return this.forceUpdate();
                 break;
             case TextCommand.equation:
+                this.textStyle.equation = true;
+                this.emit('setEquation', { equation: true })
+                return this.forceUpdate();
                 break;
             case TextCommand.cancelEquation:
-                break;
-            case TextCommand.mention:
+                this.textStyle.equation = false;
+                this.emit('setProp', { equation: false });
+                return this.forceUpdate();
                 break;
         }
         this.emit('setStyle', { [BlockCssName.font]: font } as any);
@@ -263,20 +261,16 @@ class TextTool extends EventsComponent {
             this.close();
         }
     }
-    onOpenMention(event: React.MouseEvent) {
 
-    }
 }
 interface TextTool {
     emit(name: 'setStyle', styles: Record<BlockCssName, Record<string, any>>);
     emit(name: 'setProp', props: Record<string, any>);
-    emit(name: 'setTurn', props: Record<string, any>);
-    emit(name: 'insertBlock', props: Record<string, any>);
+    emit(name: 'setEquation', props: Record<string, any>);
     emit(name: 'turn', item: MenuItemType<BlockDirective>, event: MouseEvent);
     emit(name: 'close');
     only(name: 'setProp', props: Record<string, any>);
-    only(name: 'setTurn', props: Record<string, any>);
-    only(name: 'insertBlock', props: Record<string, any>);
+    only(name: 'setEquation', props: Record<string, any>);
     only(name: 'setStyle', fn: (syles: Record<BlockCssName, Record<string, any>>) => void);
     only(name: 'turn', fn: (item: MenuItemType<BlockDirective>, event: MouseEvent) => void);
     only(name: 'close', fn: () => void);
@@ -284,8 +278,7 @@ interface TextTool {
 export type textToolResult = { command: 'setStyle', styles: Record<BlockCssName, Record<string, any>> }
     | { command: 'turn', item: MenuItemType<BlockDirective>, event: MouseEvent }
     | { command: "setProp", props: Record<string, any> }
-    | { command: 'setTurn', props: Record<string, any> }
-    | { command: 'insertBlock', props: Record<string, any> }
+    | { command: 'setEquation', props: { equation: boolean } }
     | false;
 var textTool: TextTool;
 export async function useTextTool(point: PopoverPosition, options: { style: TextToolStyle, turnBlock?: Block }) {
@@ -298,14 +291,11 @@ export async function useTextTool(point: PopoverPosition, options: { style: Text
         textTool.only('setProp', (props) => {
             resolve({ command: 'setProp', props })
         })
-        textTool.only('setTurn', (props) => {
-            resolve({ command: 'setTurn', props })
+        textTool.only('setEquation', (props) => {
+            resolve({ command: 'setEquation', props })
         })
         textTool.only('setProp', (props) => {
             resolve({ command: 'setProp', props })
-        })
-        textTool.only('insertBlock', (props) => {
-            resolve({ command: 'insertBlock', props })
         })
         //textTool.only
         textTool.only("turn", (item, event) => {
