@@ -220,7 +220,13 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
             }
             else {
                 if (isEmpty && block.isLine) await block.delete()
-                else if (aa.isSolid) { await block.delete(); return; }
+                else if (aa.isSolid) {
+                    await block.delete();
+                    write.kit.page.addUpdateEvent(async () => {
+                        write.onFocusBlockAnchor(rowBlock);
+                    });
+                    return;
+                }
                 /**
                  * 如果满足转换，
                  * 则自动转换,如果是list块，且有子块，则不自动转换
@@ -313,7 +319,7 @@ export async function inputBackSpaceTextContent(write: PageWrite, aa: AppearAnch
 async function combindSubBlock(write: PageWrite, rowBlock: Block) {
     var pa = rowBlock.parent;
     var lastPreBlock = pa.childs.last();
-    if (pa.childs.length == 0) {
+    if (pa.childs.length==0) {
         var content = pa.content;
         pa.updateProps({ content: '' });
         var pattern = await pa.pattern.cloneData();
