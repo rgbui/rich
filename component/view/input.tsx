@@ -91,7 +91,7 @@ export function Textarea(props: {
         }
     }
     return <div className='shy-textarea' style={props.style || {}}>
-        <textarea maxLength={props.maxLength || undefined} value={props.value || ''}
+        <textarea maxLength={props.maxLength || undefined} defaultValue={props.value || ''}
             disabled={props.disabled ? true : false}
             placeholder={props.placeholder} onInput={e => props.onChange && props.onChange(filterValue((e.target as HTMLInputElement).value))}
             onKeyDown={e => keydown(e)}></textarea>
