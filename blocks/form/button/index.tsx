@@ -1,6 +1,5 @@
 import React from "react";
 import { Block } from "../../../src/block";
-import { BlockAppear } from "../../../src/block/appear";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
 import { TextArea } from "../../../src/block/view/appear";
@@ -9,7 +8,7 @@ import { ActionFlowType, ActionScope, ExcuteAction, ExcuteScope } from "./declar
 @url('/button')
 export class BlockButton extends Block {
     @prop()
-    showIcon: boolean = true;
+    showIcon: boolean = false;
     @prop()
     showText: boolean = true;
     @prop()
@@ -28,8 +27,11 @@ export class BlockButton extends Block {
 @view('/button')
 export class BlockButtonView extends BlockView<BlockButton>{
     render() {
-        return <div className='sy-button' onMouseDown={e => this.block.mousedown(e.nativeEvent)} style={this.block.visibleStyle} ><TextArea block={this.block} placeholder='按钮'
-            prop='content' ></TextArea>
+        return <div className='sy-button'
+            onMouseDown={e => this.block.mousedown(e.nativeEvent)}
+            style={this.block.visibleStyle}>
+            <TextArea block={this.block} placeholder='按钮'
+                prop='content' ></TextArea>
         </div>
     }
 }
