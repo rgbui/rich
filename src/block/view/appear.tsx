@@ -2,6 +2,7 @@ import lodash from 'lodash';
 import React, { CSSProperties } from 'react';
 import { Block } from '..';
 import { BlockAppear } from '../appear';
+
 export function TextArea(props: {
     block: Block,
     prop?: string,
@@ -11,12 +12,13 @@ export function TextArea(props: {
     placeholder?: string,
     style?: CSSProperties,
     default?: string,
+    isHtml?: boolean
 }) {
     var prop = props.prop;
     if (typeof prop == 'undefined') prop = 'content';
     var ps: React.DetailedHTMLProps<React.HTMLAttributes<HTMLSpanElement>, HTMLSpanElement> = {
         style: props.style,
-        placeholder: props.placeholder,
+        placeholder: props.placeholder
     };
     if (props.block.isCanEdit(props.prop)) {
         ps = {
@@ -27,6 +29,7 @@ export function TextArea(props: {
                 plain: props.plain,
                 defaultValue: props.default
             }),
+            suppressContentEditableWarning: true,
             style: props.style,
             placeholder: props.placeholder,
             contentEditable: true,
@@ -47,10 +50,8 @@ export function TextArea(props: {
     var html = props.html;
     if (typeof html == 'undefined') html = lodash.get(props.block, props.prop);
     if (html == '' && typeof props.default != 'undefined') html = props.default;
-    return <span className='shy-appear-text'
-        suppressContentEditableWarning
-        {...ps}
-    >{html}</span>
+    if (props.isHtml) return <span className='shy-appear-text' dangerouslySetInnerHTML={{ __html: html }} {...ps}></span>
+    return <span className='shy-appear-text' {...ps}>{html}</span>
 }
 export function SolidArea(props: {
     children?: React.ReactNode,
@@ -83,7 +84,7 @@ export function SolidArea(props: {
     }
     return <div className='shy-appear-solid'  {...ps} >
         {props.children}
-        {props.block.isCanEdit(props.prop) && <span  className='shy-appear-solid-cursor' suppressContentEditableWarning contentEditable={true}></span>}
+        {props.block.isCanEdit(props.prop) && <span className='shy-appear-solid-cursor' suppressContentEditableWarning contentEditable={true}></span>}
     </div>
 }
 export function ChildsArea(props: { childs: Block[] }) {
