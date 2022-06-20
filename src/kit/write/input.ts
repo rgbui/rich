@@ -220,7 +220,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
             }
             else {
                 if (isEmpty && block.isLine) await block.delete()
-                else if (aa.isSolid) await block.delete()
+                else if (aa.isSolid) { await block.delete(); return; }
                 /**
                  * 如果满足转换，
                  * 则自动转换,如果是list块，且有子块，则不自动转换
