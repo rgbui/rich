@@ -6,6 +6,7 @@ import { BlockDisplay } from "../../../src/block/enum";
 import { listenKatexInput } from "../../../extensions/katex";
 import { Rect } from "../../../src/common/vector/point";
 import { loadKatex } from "./load";
+import "./style.less";
 
 @url('/katex')
 export class Katex extends Block {
@@ -16,7 +17,8 @@ export class Katex extends Block {
         await this.renderKatex();
     }
     async renderKatex() {
-        this.katexContent = (await loadKatex()).renderToString(this.content, { throwOnError: false })
+        this.katexContent = (await loadKatex()).renderToString(this.content, { throwOnError: false });
+        this.forceUpdate();
     }
     async open(event: React.MouseEvent) {
         event.stopPropagation();
