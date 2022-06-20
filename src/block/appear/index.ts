@@ -191,7 +191,7 @@ export class AppearAnchor {
         }
     }
     getCursorOffset(focusNode?: Node, offset?: number) {
-        if(this.isSolid){
+        if (this.isSolid) {
             return 0;
         }
         if (typeof focusNode == 'undefined') {
@@ -311,7 +311,7 @@ export class AppearAnchor {
         if (point.x > bs.max(g => g.right)) point.x = bs.max(g => g.right);
         var r = TextEle.getCursorRangeByPoint(point);
         if (r && this.el.contains(r.node) && typeof r.offset == 'number') {
-            endOffset = r.offset;
+            endOffset = this.getCursorOffset(r.node, r.offset);
         }
         if (typeof endOffset == 'undefined') {
             isCollapsed = true;
@@ -345,9 +345,7 @@ export class AppearAnchor {
             }
         }
         if (typeof endOffset == 'undefined') {
-            if (Math.abs(point.y - bs.last().bottom) > Math.abs(point.y - bs.first().top)) {
-                endOffset = this.textContent.length;
-            }
+            if (Math.abs(point.y - bs.last().bottom) > Math.abs(point.y - bs.first().top)) endOffset = this.textContent.length;
             else endOffset = 0;
         }
         if (typeof endOffset == 'number') {
@@ -359,6 +357,7 @@ export class AppearAnchor {
                 sel.setBaseAndExtent(options.startNode, options.startOffset, cr.node, cr.pos);
             }
             else {
+                console.log(endOffset, 'ggg')
                 this.collapse(endOffset);
             }
             return true;

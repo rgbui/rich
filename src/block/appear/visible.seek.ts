@@ -299,9 +299,10 @@ export function findBlockNearAppearByPoint(block: Block, point: Point) {
         var r = pr.aa.collapseByPoint(point);
         if (r) {
             var sel = window.getSelection();
+            var offset = pr.aa.getCursorOffset(sel.focusNode, sel.focusOffset);
             return {
                 aa: pr.aa,
-                offset: sel.focusOffset
+                offset
             }
         }
     }
