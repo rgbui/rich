@@ -85,8 +85,10 @@ export class UserPicker extends EventsComponent {
     open() {
         this.loading = false;
         this.text = '';
+        if (this.inputEl) this.inputEl.value = '';
         this.links = [];
         this.selectIndex = 0;
+        this.forceUpdate();
     }
     onSelect(link: UserBasic) {
         this.emit('change', link);
@@ -106,10 +108,7 @@ export async function useUserPicker(pos: PopoverPosition, options?: {}) {
     let popover = await PopoverSingleton(UserPicker, { mask: true });
     let fv = await popover.open(pos);
     fv.open();
-    return new Promise((resolve: (data: {
-        text: string,
-        url: string
-    }) => void, reject) => {
+    return new Promise((resolve: (data: UserBasic) => void, reject) => {
         fv.only('change', (value) => {
             popover.close();
             resolve(value);

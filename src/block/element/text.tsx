@@ -7,7 +7,6 @@ import { TextArea } from "../view/appear";
 import { PageLink } from "../../../extensions/link/declare";
 import { Block } from "..";
 import { channel } from "../../../net/channel";
-
 /***
  * 文字型的block，
  * 注意该文字block里面含有子文字或其它的如图像block等
