@@ -217,41 +217,24 @@ export class PageEvent {
     }
     async onContextmenu(this: Page, event: React.MouseEvent) {
         if (!this.isCanEdit) return;
-        event.preventDefault();
-        var items: MenuItemType<BlockDirective | string>[] = [
-            { name: 'smallText', text: '小字号', type: MenuItemTypeValue.switch },
-            { name: 'fullWidth', text: '宽版', type: MenuItemTypeValue.switch },
-            { type: MenuItemTypeValue.divide },
-            { name: 'addCover', text: this.cover?.abled ? "移除封面" : '添加封面' },
-            // { type: MenuItemTypeValue.divide },
-            // { name: 'addContent', text: '向上插入内容栏', type: MenuItemTypeValue.item },
-            // { name: 'addContent', text: '向下插入内容栏', type: MenuItemTypeValue.item },
-            // { type: MenuItemTypeValue.divide },
-            // { name: 'setContentType', text: '设置内容样式', type: MenuItemTypeValue.item },
-            // { type: MenuItemTypeValue.divide },
-            // {
-            //     name: 'addContent',
-            //     text: '分栏',
-            //     childs: [
-            //         { text: '一栏', name: '' },
-            //         { text: '二栏', name: '' },
-            //         { text: '三栏', name: '' },
-            //         { text: '偏右', name: '' },
-            //         { text: '偏左', name: '' },
-            //     ]
-            // },
-        ];
-        var r = await useSelectMenuItem({ roundPoint: Point.from(event) }, items, {
-            // overflow: 'visible',
-            update: (item) => {
-                console.log(item);
-            }
-        });
-        if (r) {
-            if (r.item.name == 'addCover') {
-                await this.onAddCover();
-            }
-        }
+        // event.preventDefault();
+        // var items: MenuItemType<BlockDirective | string>[] = [
+        //     { name: 'smallText', text: '小字号', type: MenuItemTypeValue.switch },
+        //     { name: 'fullWidth', text: '宽版', type: MenuItemTypeValue.switch },
+        //     { type: MenuItemTypeValue.divide },
+        //     { name: 'addCover', text: this.cover?.abled ? "移除封面" : '添加封面' }
+        // ];
+        // var r = await useSelectMenuItem({ roundPoint: Point.from(event) }, items, {
+        //     // overflow: 'visible',
+        //     update: (item) => {
+        //         console.log(item);
+        //     }
+        // });
+        // if (r) {
+        //     if (r.item.name == 'addCover') {
+        //         await this.onAddCover();
+        //     }
+        // }
     }
     async onAddCover(this: Page) {
         if (this.cover?.abled) {
