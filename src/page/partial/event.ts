@@ -1,14 +1,11 @@
 import React from "react";
 import { Page } from "..";
-import { useSelectMenuItem } from "../../../component/view/menu";
-import { MenuItemType, MenuItemTypeValue } from "../../../component/view/menu/declare";
 import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
 import { emojiStore } from "../../../extensions/emoji/store";
 import { GalleryPics } from "../../../extensions/image/gellery";
 import { channel } from "../../../net/channel";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
-import { BlockDirective } from "../../block/enum";
 import { Matrix } from "../../common/matrix";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
@@ -198,7 +195,6 @@ export class PageEvent {
         var to = matrix.inverseTransform(currentVisible.x, currentVisible.y);
         matrix.translate(to.x - from.x, to.y - from.y);
         this.matrix = matrix;
-
         this.view.forceUpdate()
     }
     onMouseenter(this: Page, event: React.MouseEvent) {
@@ -295,7 +291,7 @@ export class PageEvent {
     }
     //#endregion
     lastCursorBlockId: string;
-    async nofityViewCursor(this: Page, aa: AppearAnchor, offset: number) {
+    async notifyViewCursor(this: Page, aa: AppearAnchor, offset: number) {
         var row = aa.block.closest(x => x.isBlock);
         if (row.id == this.lastCursorBlockId) return;
         this.lastCursorBlockId = row.id;

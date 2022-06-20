@@ -239,7 +239,7 @@ export class PageWrite {
     endOffset: number;
     endAnchorText: string = '';
     onInputStart(aa: AppearAnchor, offset?: number) {
-        this.kit.page.nofityViewCursor(aa, offset);
+        this.kit.page.notifyViewCursor(aa, offset);
         aa.focus();
         this.startAnchor = aa;
         this.startOffset = typeof offset == 'number' ? offset : (window.getSelection()).anchorOffset;
@@ -282,7 +282,7 @@ export class PageWrite {
         }
         else {
             var pos = 0;
-            if (options?.last) pos = aa.textContent.length + (typeof options.last == 'number' ? options.last : 0);
+            if (options?.last && aa.isText) pos = aa.textContent.length + (typeof options.last == 'number' ? options.last : 0);
             else pos = options?.at || 0;
             /**
              * 这里需要加个empty,
@@ -314,7 +314,7 @@ export class PageWrite {
         this.endAnchor = findBlockAppear(sel.focusNode);
         this.endOffset = this.endAnchor.getCursorOffset(sel.focusNode, sel.focusOffset);
         this.endAnchorText = this.endAnchor?.textContent || '';
-        this.kit.page.nofityViewCursor(this.endAnchor, this.endOffset);
+        this.kit.page.notifyViewCursor(this.endAnchor, this.endOffset);
     }
     onRenderSelection() {
         var sel = window.getSelection();
@@ -351,7 +351,6 @@ export class PageWrite {
                     { style: this.kit.page.pickBlocksTextStyle(blocks), turnBlock }
                 );
                 if (result) {
-
                     if (result.command == 'setStyle') {
                         await this.onSelectionSetPatternOrProps(list, result.styles);
                     }
@@ -362,11 +361,9 @@ export class PageWrite {
                         await turnBlock.onClickContextMenu(result.item, result.event);
                         break;
                     }
-                    else if (result.command == 'insertBlock') {
-
-                    }
-                    else if (result.command == 'setTurn') {
-
+                    else if (result.command == 'setEquation') {
+                        await this.onSelectionEquation(list, result.props);
+                        break;
                     }
                     else break;
                 }
@@ -462,6 +459,54 @@ export class PageWrite {
                 this.endOffset = this.endAnchor.textContent.length;
                 this.endAnchorText = this.endAnchor.textContent;
                 this.onRenderSelection();
+            });
+        });
+    }
+    async onSelectionEquation(appears: AppearAnchor[], props: { equation: boolean }) {
+        await this.kit.page.onActionAsync(ActionDirective.onUpdateEquation, async () => {
+            await appears.eachAsync(async appear => {
+                if (appear == this.startAnchor || appear == this.endAnchor) {
+
+                }
+                else {
+                    var block = appear.block;
+                    if (props.equation == true) {
+                        if (block.url != BlockUrlConstant.KatexLine)
+                            await block.turn(BlockUrlConstant.KatexLine)
+                    }
+                    else {
+                        if (block.url == BlockUrlConstant.KatexLine) {
+                            await block.turn(BlockUrlConstant.Text);
+                        }
+                    }
+                }
+            });
+            if (this.endAnchor === this.startAnchor && this.endOffset < this.startOffset || TextEle.isBefore(this.endAnchor.el, this.startAnchor.el)) {
+                [this.startAnchor, this.endAnchor] = [this.endAnchor, this.startAnchor];
+                [this.startOffset, this.endOffset] = [this.endOffset, this.startOffset];
+            }
+            var nstart: Block;
+            var nend: Block;
+            if (this.startAnchor === this.endAnchor) {
+                var rs = await this.startAnchor.split([this.startOffset, this.endOffset]);
+                if (this.startOffset == 0) { nstart = rs.first(); nend = rs.first() }
+                else {
+                    nstart = rs[1];
+                    nend = rs[1]
+                }
+                if (props.equation) await nstart.turn(BlockUrlConstant.KatexLine)
+                else await nstart.turn(BlockUrlConstant.Text);
+            }
+            else {
+                var ss = await this.startAnchor.split([this.startOffset]);
+                nstart = ss.last();
+                var es = await this.endAnchor.split([this.endOffset]);
+                nend = es.first();
+                if (props.equation) { await nstart.turn(BlockUrlConstant.KatexLine); await nend.turn(BlockUrlConstant.KatexLine) }
+                else { await nstart.turn(BlockUrlConstant.Text); await nstart.turn(BlockUrlConstant.Text) }
+            }
+            this.kit.page.addUpdateEvent(async () => {
+                this.onFocusBlockAnchor(nend, { last: true });
             });
         });
     }
