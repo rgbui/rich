@@ -14,7 +14,7 @@ import { Collaboration } from "./collaboration";
 
 export class Kit extends Events {
     page: Page;
-    constructor(page:Page) {
+    constructor(page: Page) {
         super();
         this.page = page;
         this.init();

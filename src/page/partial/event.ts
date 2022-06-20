@@ -293,9 +293,14 @@ export class PageEvent {
     lastCursorBlockId: string;
     async notifyViewCursor(this: Page, aa: AppearAnchor, offset: number) {
         var row = aa.block.closest(x => x.isBlock);
-        if (row.id == this.lastCursorBlockId) return;
-        this.lastCursorBlockId = row.id;
-        this.emit(PageDirective.viewCursor, { blockId: aa.block.id, prop: aa.prop, offset })
+        if (row) {
+            if (row.id == this.lastCursorBlockId) return;
+            this.lastCursorBlockId = row.id;
+            this.emit(PageDirective.viewCursor, { blockId: aa.block.id, prop: aa.prop, offset })
+        }
+        else {
+            console.error(aa, offset);
+        }
     }
     loadUserViewCursor(this: Page,
         data: {
