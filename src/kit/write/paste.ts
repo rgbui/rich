@@ -28,6 +28,10 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
     else if (html) {
         try {
             event.preventDefault();
+            if (aa.block.url == BlockUrlConstant.Code) {
+                await onPasteInsertText(kit, aa, text);
+                return;
+            }
             var regexText = text.replace(/[\(\)\\\.\[\]\*\?]/g, ($, $1) => {
                 return '\\' + $
             })
