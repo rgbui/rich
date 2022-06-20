@@ -20,8 +20,6 @@ export class TextContent extends Block {
     @prop()
     comment: { id: string } = null;
     @prop()
-    mention: { userid: string } = null;
-    @prop()
     code: boolean = false;
     get isTextContent() {
         return true;
@@ -34,7 +32,6 @@ export class TextContent extends Block {
         return {
             link: this.link,
             comment: this.comment,
-            mention: this.mention,
             code: this.code
         }
     }

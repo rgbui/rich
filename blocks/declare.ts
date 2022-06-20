@@ -23,6 +23,7 @@ import "./form/tab/page";
 import "./board/mind/index";
 
 import "./present/katex/katex";
+import "./present/katex/line";
 import "./present/bookmark";
 import "./present/list/list";
 import "./present/code/code";

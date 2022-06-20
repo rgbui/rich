@@ -1,22 +1,23 @@
-import { BlockView } from "../../../src/block/view";
-import React from 'react';
-import { url, view } from "../../../src/block/factory/observable";
 import { Block } from "../../../src/block";
 import { BlockDisplay } from "../../../src/block/enum";
+import { url, view } from "../../../src/block/factory/observable";
 import { listenKatexInput } from "../../../extensions/katex";
+import React from "react";
+import { BlockView } from "../../../src/block/view";
 import { Rect } from "../../../src/common/vector/point";
 import { loadKatex } from "./load";
 
-@url('/katex')
-export class Katex extends Block {
-    display = BlockDisplay.block;
+@url('/katex/line')
+export class KatexLine extends Block {
+    display = BlockDisplay.inline;
     katexContent = '';
     opened: boolean = false;
     async didMounted() {
         await this.renderKatex();
     }
     async renderKatex() {
-        this.katexContent = (await loadKatex()).renderToString(this.content, { throwOnError: false })
+        this.katexContent = (await loadKatex()).renderToString(this.content, { throwOnError: false });
+        this.forceUpdate()
     }
     async open(event: React.MouseEvent) {
         event.stopPropagation();
@@ -35,12 +36,13 @@ export class Katex extends Block {
         }
     }
 }
-@view('/katex')
-export class KatexView extends BlockView<Katex>{
+@view('/katex/line')
+export class KatexView extends BlockView<KatexLine>{
     render() {
-        return <div className={'sy-block-katex' + (this.block.opened ? " sy-block-katex-opened" : "")} onMouseDown={e => this.block.open(e)} style={this.block.visibleStyle}>
-            <div className='sy-block-katex-content' dangerouslySetInnerHTML={{ __html: this.block.katexContent }}>
-            </div>
-        </div>
+        return <span className={'sy-block-katex-line' + (this.block.opened ? " sy-block-katex-opened" : "")}
+            onMouseDown={e => this.block.open(e)}
+            dangerouslySetInnerHTML={{ __html: this.block.katexContent }}
+        >
+        </span>
     }
 }
