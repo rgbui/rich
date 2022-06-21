@@ -1,5 +1,5 @@
 import React from "react";
-import { Tip } from "../../component/view/tip";
+import { Tip } from "../../component/view/tooltip/tip";
 import { langProvider } from "../../i18n/provider";
 
 

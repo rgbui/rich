@@ -1,5 +1,5 @@
 import React from "react";
-import { Tip } from "../../component/view/tip";
+import { Tip } from "../../component/view/tooltip/tip";
 import { LangID } from "../../i18n/declare";
 import { OutsideUrl } from "../link/outside";
 import { EventsComponent } from "../../component/lib/events.component";

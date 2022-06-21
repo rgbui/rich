@@ -1,5 +1,5 @@
 import React from "react";
-import { Tip } from "../../component/view/tip";
+import { Tip } from "../../component/view/tooltip/tip";
 import { getEmoji } from "../../net/element.type";
 import { dom } from "../../src/common/dom";
 import { EmojiCode, emojiStore, EmojiType } from "./store";

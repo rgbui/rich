@@ -1,7 +1,7 @@
 
 import { EventsComponent } from "../../component/lib/events.component";
 import React from "react";
-import { Tip } from "../../component/view/tip";
+import { Tip } from "../../component/view/tooltip/tip";
 import { LangID } from "../../i18n/declare";
 import Link from "../../src/assert/svg/link.svg";
 import Upload from "../../src/assert/svg/upload.svg";

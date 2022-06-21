@@ -1,5 +1,5 @@
 import React from "react";
-import { Tip } from "../../component/view/tip";
+import { Tip } from "../../component/view/tooltip/tip";
 import { LangID } from "../../i18n/declare";
 import { PopoverSingleton } from "../popover/popover";
 import { EventsComponent } from "../../component/lib/events.component";
