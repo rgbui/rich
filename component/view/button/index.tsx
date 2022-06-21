@@ -1,5 +1,6 @@
 import React, { CSSProperties } from "react";
-import { Icon } from "./icon";
+import { Icon } from "../icon";
+import "./style.less";
 export class Button extends React.Component<{
     children?: JSX.Element | string | React.ReactNode,
     icon?: string | SvgrComponent | JSX.Element,
