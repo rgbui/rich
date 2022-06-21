@@ -1,5 +1,5 @@
 import React, { CSSProperties } from "react";
-
+import "./style.less";
 function TabPage(props: { item?: React.ReactNode, style?: CSSProperties, children?: React.ReactNode }) {
     return <div className='shy-tab-page' style={props.style || {}}>{props.children}</div>
 }
