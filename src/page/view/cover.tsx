@@ -28,7 +28,7 @@ export class PageCover extends React.Component<{ page: Page }>{
             }
             async function changeCover(event: React.MouseEvent) {
                 event.stopPropagation();
-                var r = await useImagePicker({ roundArea: Rect.fromEvent(event) });
+                var r = await useImagePicker({ roundArea: Rect.fromEvent(event) }, { gallery: true });
                 if (r) {
                     page.onUpdateProps({ cover: { url: r.url, thumb: r.thumb, top: 50, abled: true } }, true)
                 }
@@ -69,7 +69,7 @@ export class PageCover extends React.Component<{ page: Page }>{
                 self.forceUpdate();
             }
 
-            
+
 
 
             return <div className="shy-page-view-cover" onMouseDown={e => dragStart(e)}>

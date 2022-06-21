@@ -22,12 +22,17 @@ class ImagePicker extends EventsComponent {
     onChange(data: any) {
         this.emit('select', { ...data });
     }
+    showGallery: boolean = false;
+    onOpen(options?: { gallery: boolean }) {
+        this.showGallery = options?.gallery ? true : false;
+        this.forceUpdate()
+    }
     render() {
         return <div className='shy-image-picker' >
             <Tab keeplive>
-                <Tab.Page item={<Tip placement='bottom' overlay={'画廊'}><Icon size={18} icon={PictureSvg}></Icon></Tip>}>
+                {this.showGallery && <Tab.Page item={<Tip placement='bottom' overlay={'画廊'}><Icon size={18} icon={PictureSvg}></Icon></Tip>}>
                     <GalleryView onChange={e => this.onChange({ ...e })}></GalleryView>
-                </Tab.Page>
+                </Tab.Page>}
                 <Tab.Page item={<Tip placement='bottom' id={LangID.UploadImage}><Icon size={28} icon={Upload}></Icon></Tip>}>
                     <UploadView mine='image' change={e => this.onChange({ url: e })}></UploadView>
                 </Tab.Page>
@@ -50,9 +55,10 @@ interface ImagePicker {
     emit(name: 'select', data: ResourceArguments);
 }
 
-export async function useImagePicker(pos: PopoverPosition) {
+export async function useImagePicker(pos: PopoverPosition, options?: { gallery: boolean }) {
     let popover = await PopoverSingleton(ImagePicker);
     let filePicker = await popover.open(pos);
+    filePicker.onOpen(options)
     return new Promise((resolve: (data: ResourceArguments) => void, reject) => {
         filePicker.only('select', (data) => {
             popover.close();
