@@ -16,16 +16,17 @@ import { PopoverPosition } from "../popover/position";
 import './style.less';
 import { EmojiSvg, FontawesomeSvg, LinkSvg, TrashSvg, UploadSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
+import { ToolTip } from "../../component/view/tooltip";
 class IconPicker extends EventsComponent {
     onChange(data: IconArguments) {
         this.emit('change', data);
     }
     onClearIcon() {
-        this.emit('change', { name: 'none' });
+        this.emit('change', null);
     }
     render() {
         return <div className='shy-icon-picker' >
-            <Tab keeplive rightBtns={<><Icon mousedown={e => this.onClearIcon()} icon={TrashSvg}></Icon></>}>
+            <Tab keeplive rightBtns={<label><ToolTip overlay={'清理图标'}><Icon size={18} mousedown={e => this.onClearIcon()} icon={TrashSvg}></Icon></ToolTip></label>}>
                 <Tab.Page item={<Tip placement='bottom' id={LangID.IconEmoji}><Icon icon={EmojiSvg} size={18}></Icon></Tip>}>
                     <EmojiView onChange={e => this.onChange({ name: "emoji", code: e.code })}></EmojiView>
                 </Tab.Page>
@@ -55,7 +56,7 @@ export async function useIconPicker(pos: PopoverPosition) {
             resolve(data);
         })
         popover.only('close', () => {
-            resolve(null)
+            resolve(undefined)
         })
     })
 }

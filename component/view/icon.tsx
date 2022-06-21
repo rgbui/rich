@@ -2,6 +2,7 @@
 import React, { CSSProperties } from 'react';
 import { IconArguments } from '../../extensions/icon/declare';
 import { getEmoji } from '../../net/element.type';
+import { PageSvg } from '../svgs';
 
 export function Icon(props: {
     icon: string | SvgrComponent | JSX.Element | IconArguments,
@@ -101,6 +102,13 @@ export function Icon(props: {
                     , ...(props.style || {})
                 });
                 return <img src={pc.url} className={classList.join(" ")} style={style} />
+            case 'none':
+                Object.assign(style, {
+                    width: props.size == 'none' ? undefined : (props.size) || 20,
+                    height: props.size == 'none' ? undefined : (props.size) || 20
+                    , ...(props.style || {})
+                });
+                return <PageSvg style={style}></PageSvg>
         }
     }
     else {
