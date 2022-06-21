@@ -52,7 +52,7 @@ export class Col extends React.Component<{
         else if (this.props.align == 'end') style.justifyContent = 'flex-end'
         if (this.props.valign == 'middle') style.alignItems = 'center'
         else if (this.props.valign == 'bottom') style.alignItems = 'flex-end'
-        if (this.props.style) Object.assign(style, this.props.style);
+        if (this.props.style) style=Object.assign(style, this.props.style);
         return <div className='shy-col' style={style}>{this.props.children}</div>
     }
 }
