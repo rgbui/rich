@@ -6,7 +6,7 @@ export class Row extends React.Component<{
     style?: CSSProperties,
     children?: React.ReactNode,
     className?: string[] | string,
-    onMouseDown?:(event:React.MouseEvent)=>void,
+    onMouseDown?: (event: React.MouseEvent) => void,
 }>{
     render() {
         var cns: string[] = ['shy-row'];
@@ -25,7 +25,7 @@ export class Row extends React.Component<{
         else if (this.props.align == 'end') style.justifyContent = 'flex-end'
         if (this.props.valign == 'middle') style.alignItems = 'center'
         else if (this.props.valign == 'bottom') style.alignItems = 'flex-end'
-        return <div onMouseDown={e=>this.props.onMouseDown?this.props.onMouseDown(e):undefined} className={cns.join(" ")} style={style}>{this.props.children}</div>
+        return <div onMouseDown={e => this.props.onMouseDown ? this.props.onMouseDown(e) : undefined} className={cns.join(" ")} style={style}>{this.props.children}</div>
     }
 }
 /**
@@ -52,13 +52,14 @@ export class Col extends React.Component<{
         else if (this.props.align == 'end') style.justifyContent = 'flex-end'
         if (this.props.valign == 'middle') style.alignItems = 'center'
         else if (this.props.valign == 'bottom') style.alignItems = 'flex-end'
-        if (this.props.style) style=Object.assign(style, this.props.style);
+        if (this.props.style) style = Object.assign(style, this.props.style);
         return <div className='shy-col' style={style}>{this.props.children}</div>
     }
 }
 
 export class Space extends React.Component<{
     align?: 'start' | 'end' | 'center',
+    valign?: 'start' | 'end' | 'center',
     direction?: 'x' | 'y'
     gap?: number,
     children?: React.ReactNode,
@@ -72,8 +73,12 @@ export class Space extends React.Component<{
             justifyContent: 'flex-start',
             ...(this.props.style || {})
         };
+        
         if (this.props.align == 'center') style.justifyContent = 'center'
         else if (this.props.align == 'end') style.justifyContent = 'flex-end';
+        if (this.props.valign == 'start') style.alignItems = 'flex-start';
+        else if (this.props.valign == 'end') style.alignItems = 'flex-end';
+
         if (this.props.direction == 'y') style.flexDirection = 'column';
         var itemStyle: CSSProperties = {};
         if (this.props.direction == 'y') itemStyle.marginBottom = this.props.gap || 10;
