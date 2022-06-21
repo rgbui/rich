@@ -2,8 +2,7 @@ import React from "react";
 import { Tip } from "../../component/view/tip";
 import { langProvider } from "../../i18n/provider";
 
-import "../../src/assert/font-awesome/less/solid.less";
-import "../../src/assert/font-awesome/less/fontawesome.less";
+
 import { fontAwesomeStore } from "./store";
 import './style.less';
 import { FontAwesomeIconType, FontAwesomeType } from "./declare";

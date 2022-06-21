@@ -1,6 +1,7 @@
 import axios from "axios";
 import { FontAwesomeType } from "./declare";
-
+import "../../src/assert/font-awesome/less/solid.less";
+import "../../src/assert/font-awesome/less/fontawesome.less";
 class FontAwesomeStore {
     private icons: FontAwesomeType[] = [];
     private isLoad: boolean = false;
