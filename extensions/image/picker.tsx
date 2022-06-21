@@ -28,11 +28,29 @@ class ImagePicker extends EventsComponent {
         this.forceUpdate()
     }
     render() {
+        if (this.showGallery) {
+            return <div className='shy-image-picker' >
+                <Tab keeplive>
+                    <Tab.Page item={<Tip placement='bottom' overlay={'画廊'}><Icon size={18} icon={PictureSvg}></Icon></Tip>}>
+                        <GalleryView onChange={e => this.onChange({ ...e })}></GalleryView>
+                    </Tab.Page>
+                    <Tab.Page item={<Tip placement='bottom' id={LangID.UploadImage}><Icon size={28} icon={Upload}></Icon></Tip>}>
+                        <UploadView mine='image' change={e => this.onChange({ url: e })}></UploadView>
+                    </Tab.Page>
+                    <Tab.Page item={<Tip placement='bottom' id={LangID.ImageLink}><Icon size={18} icon={Link}></Icon></Tip>}>
+                        <OutsideUrl change={e => this.onChange({ url: e })}></OutsideUrl>
+                    </Tab.Page>
+                    <Tab.Page item={<Tip placement='bottom' overlay={'Pexels'}><Icon size={18} icon={Pexels}></Icon></Tip>}>
+                        <ThirdGallery type={GalleryType.pexels} onChange={e => { this.onChange({ ...e }) }}></ThirdGallery>
+                    </Tab.Page>
+                    <Tab.Page item={<Tip placement='bottom' overlay={'Unsplash'}><Icon size={16} icon={Unsplash}></Icon></Tip>}>
+                        <ThirdGallery type={GalleryType.unsplash} onChange={e => this.onChange({ ...e })}></ThirdGallery>
+                    </Tab.Page>
+                </Tab>
+            </div>
+        }
         return <div className='shy-image-picker' >
             <Tab keeplive>
-                {this.showGallery && <Tab.Page item={<Tip placement='bottom' overlay={'画廊'}><Icon size={18} icon={PictureSvg}></Icon></Tip>}>
-                    <GalleryView onChange={e => this.onChange({ ...e })}></GalleryView>
-                </Tab.Page>}
                 <Tab.Page item={<Tip placement='bottom' id={LangID.UploadImage}><Icon size={28} icon={Upload}></Icon></Tip>}>
                     <UploadView mine='image' change={e => this.onChange({ url: e })}></UploadView>
                 </Tab.Page>
