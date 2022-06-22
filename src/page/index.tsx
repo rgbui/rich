@@ -205,13 +205,13 @@ export class Page extends Events<PageDirective> {
      * 是否支持宽屏及窄屏的切换
      */
     get isSupportScreen() {
-        return [PageLayoutType.db, PageLayoutType.doc].includes(this.pageLayout.type)
+        return [PageLayoutType.db, PageLayoutType.doc].includes(this.pageLayout?.type || PageLayoutType.doc)
     }
     /**
      * 是否支持用户自定义封面
      */
     get isSupportCover() {
-        return [PageLayoutType.db, PageLayoutType.doc].includes(this.pageLayout.type)
+        return [PageLayoutType.db, PageLayoutType.doc].includes(this.pageLayout?.type || PageLayoutType.doc)
     }
     async forceUpdate() {
         return new Promise((resolve, reject) => {
