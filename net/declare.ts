@@ -126,6 +126,7 @@ export interface ChannelPostMapUrls {
 }
 export interface ChannelPatchMapUrls {
     "/datastore/update":{args:{schemaId:string,dataId:string,data:Record<string, any>},returnType:Promise<SockResponse<void>>},
+	"/sign/patch":{args:{name: string, paw: string},returnType:Promise<SockResponse<{list:any[]}>>},
 	"/phone/check/update":{args:{phone:string,code:string},returnType:Promise<SockResponse<void>>},
 	"/email/check/update":{args:{email:string,code:string},returnType:Promise<SockResponse<void>>},
 	"/user/set/paw":{args:{oldPaw?:string,newPaw:string,confirmPaw:string},returnType:Promise<SockResponse<void>>},
@@ -147,6 +148,7 @@ export interface ChannelPutMapUrls {
 	"/datastore/batch/add":{args:{schemaId:string,list:any[]},returnType:Promise<{ok:boolean,data:{list:any[]},warn:string}>},
 	"/datastore/query/ids":{args:{schemaId:string,ids:string[]},returnType:Promise<{ok:boolean,data:{list:any[]},warn:string}>},
 	"/device/sign":{args:any,returnType:Promise<void>},
+	"/paw/sign":{args:{phone:string,paw:string,inviteCode:string},returnType:Promise<{ok:boolean,warn:string,data:{user:Record<string,any>,guid:string,token:string}}>},
 	"/phone/sign":{args:{phone:string,code:string,inviteCode:string},returnType:Promise<{ok:boolean,warn:string,data:{user:Record<string,any>,guid:string,token:string}}>},
 	"/user/channel/join":{args:{roomName?:string,userids:string[]},returnType:Promise<SockResponse<{room:Record<string,any>,channel:Record<string,any>}>>},
 	"/user/join/ws":{args:{wsId:string},returnType:Promise<SockResponse<void>>},
