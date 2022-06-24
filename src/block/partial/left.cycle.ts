@@ -270,4 +270,16 @@ export class Block$LifeCycle {
     async getString(this: Block) {
         return JSON.stringify(await this.get());
     }
+    async getPlain(this: Block) {
+        var text = '';
+        return text + await this.getChildsPlain();
+    }
+    async getChildsPlain(this: Block) {
+        var text = '';
+        for (let b in this.blocks) {
+            if (this.allBlockKeys.some(s => s == b))
+                text += await this.blocks[b].asyncMap(async x => await x.getPlain());
+        };
+        return text;
+    }
 }

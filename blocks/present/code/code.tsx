@@ -64,6 +64,9 @@ export class TextCode extends Block {
             }
         }, 2e3);
     }
+    async getPlain(this: Block) {
+      return this.content;
+    }
 }
 @view('/code')
 export class TextCodeView extends BlockView<TextCode>{

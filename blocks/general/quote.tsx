@@ -34,6 +34,11 @@ export class Quote extends TextSpan {
     async getWillTurnData(url: string) {
         return await TextTurns.turn(this, url);
     }
+    async getPlain(this: Block) {
+        if (this.childs.length > 0)
+            return await this.getChildsPlain();
+        else return this.content + await this.getChildsPlain();
+    }
 }
 @view('/quote')
 export class QuoteView extends BlockView<Quote>{

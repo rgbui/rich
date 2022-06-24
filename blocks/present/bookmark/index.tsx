@@ -67,6 +67,9 @@ export class Bookmark extends Block {
             await this.onLoadBookmarkByUrl(r.url);
         }
     }
+    async getPlain() {
+        return this.bookmarkInfo.title + (this.bookmarkInfo.description || '')
+    }
 }
 @view('/bookmark')
 export class BookmarkView extends BlockView<Bookmark>{

@@ -73,6 +73,9 @@ export class File extends Block {
             console.error(ex);
         }
     }
+    async getPlain() {
+         return this.src?.text||''
+    }
 }
 @view('/file')
 export class FileView extends BlockView<File>{

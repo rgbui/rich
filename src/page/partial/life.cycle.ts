@@ -107,6 +107,9 @@ export class Page$Cycle {
         });
         return zipFile;
     }
+    async getPlain(this: Page) {
+
+    }
     async loadFile(this: Page, blob: Blob) {
         if (blob) {
             var zip = new JSZip();

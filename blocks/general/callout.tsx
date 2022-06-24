@@ -38,6 +38,11 @@ export class Callout extends TextSpan {
     async acceptSubFromMove(sub: Block) {
         await this.append(sub, 0, 'subChilds');
     }
+    async getPlain(this: Block) {
+        if (this.childs.length > 0)
+            return await this.getChildsPlain();
+        else return this.content + await this.getChildsPlain();
+    }
 }
 @view('/callout')
 export class CalloutView extends BlockView<Callout>{
