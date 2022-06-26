@@ -73,7 +73,7 @@ export class Space extends React.Component<{
             justifyContent: 'flex-start',
             ...(this.props.style || {})
         };
-        
+
         if (this.props.align == 'center') style.justifyContent = 'center'
         else if (this.props.align == 'end') style.justifyContent = 'flex-end';
         if (this.props.valign == 'start') style.alignItems = 'flex-start';
@@ -105,9 +105,12 @@ export class Divider extends React.Component<{
 }>{
     render() {
         var style: CSSProperties = this.props.style || {};
+        var align = this.props.align || 'left';
         return <div style={style} className='shy-divider'>
             <div className='shy-divider-line'></div>
-            {this.props.children && <div className='shy-divider-title'>{this.props.children}</div>}
+            {this.props.children && <div className={'shy-divider-title' + " " + align}>
+                <span>{this.props.children}</span>
+            </div>}
         </div>
     }
 }
