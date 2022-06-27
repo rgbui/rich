@@ -330,33 +330,35 @@ export class Page$Cycle {
         var outlines: { id: string, deep: number, hover: boolean, text: string }[] = [];
         var bs = this.findAll(x => x.url == BlockUrlConstant.Head);
         var currentDeep = 0, lastLevel;
-        var sd = this.view.scrollDiv;
-        var rect = Rect.fromEle(sd);
-        outlines = bs.map((b, i) => {
-            var level = parseInt((b as any).level.replace('h', ''));
-            var deep = currentDeep;
-            if (typeof lastLevel == 'number' && level < lastLevel) deep -= 1;
-            else if (typeof lastLevel == 'number' && level > lastLevel) deep += 1;
-            currentDeep = deep;
-            lastLevel = level;
-            var currentBound = b.el ? Rect.fromEle(b.el) : undefined;
-            var nextB = bs[i + 1];
-            var hover = false;
-            if (nextB) {
-                var nextBound = Rect.fromEle(nextB.el);
-                if (rect.top >= currentBound.top && rect.top <= nextBound.top) {
-                    hover = true;
+        if (this.view) {
+            var sd = this.view.scrollDiv;
+            var rect = Rect.fromEle(sd);
+            outlines = bs.map((b, i) => {
+                var level = parseInt((b as any).level.replace('h', ''));
+                var deep = currentDeep;
+                if (typeof lastLevel == 'number' && level < lastLevel) deep -= 1;
+                else if (typeof lastLevel == 'number' && level > lastLevel) deep += 1;
+                currentDeep = deep;
+                lastLevel = level;
+                var currentBound = b.el ? Rect.fromEle(b.el) : undefined;
+                var nextB = bs[i + 1];
+                var hover = false;
+                if (nextB) {
+                    var nextBound = Rect.fromEle(nextB.el);
+                    if (rect.top >= currentBound.top && rect.top <= nextBound.top) {
+                        hover = true;
+                    }
                 }
-            }
-            else if (rect.top >= currentBound.top) hover = true;
+                else if (rect.top >= currentBound.top) hover = true;
 
-            return {
-                id: b.id,
-                deep,
-                hover,
-                text: b.childs.length > 0 ? b.childs.map(c => c.content).join("") : b.content
-            }
-        })
+                return {
+                    id: b.id,
+                    deep,
+                    hover,
+                    text: b.childs.length > 0 ? b.childs.map(c => c.content).join("") : b.content
+                }
+            })
+        }
         return outlines;
     }
     async updateProps(this: Page, props: Record<string, any>) {
