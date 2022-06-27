@@ -197,6 +197,7 @@ export class Page extends Events<PageDirective> {
     }
     pageInfo: LinkPageItem = null;
     get isCanEdit() {
+        if(this.readonly)return false;
         if (this.kit.page.pageInfo?.locker?.userid) return false;
         if (!this.kit.page.permissions.includes(AtomPermission.editDoc)) return false;
         return true;
