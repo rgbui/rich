@@ -6,14 +6,13 @@ import { MenuItemType, MenuItemTypeValue } from "../../../component/view/menu/de
 import { BlockDirective } from "../../block/enum";
 import { Point, Rect } from "../../common/vector/point";
 import { PageLayoutType } from "../declare";
-import { FileSvg, LinkSvg, LockSvg, MoveToSvg, TrashSvg, UndoSvg, UnlockSvg, UploadSvg, VersionHistorySvg } from "../../../component/svgs";
+import { FileSvg, LinkSvg, LockSvg,  TrashSvg, UndoSvg, UnlockSvg, UploadSvg, VersionHistorySvg } from "../../../component/svgs";
 import { usePageLayout } from "../../../extensions/layout";
 import { CopyText } from "../../../component/copy";
 import { ShyAlert } from "../../../component/lib/alert";
 import { channel } from "../../../net/channel";
 import { Confirm } from "../../../component/lib/confirm";
 import { usePageHistoryStore } from "../../../extensions/history";
-
 export class PageContextmenu {
     async onGetContextMenus(this: Page) {
         if (this.isBoard) return this.onGetBoardContextMenus();
@@ -76,7 +75,7 @@ export class PageContextmenu {
                 { name: 'lock', text: this.pageInfo.locker?.userid ? "解除锁定" : '编辑保护', icon: this.pageInfo.locker?.userid ? UnlockSvg : LockSvg },
                 // { type: MenuItemTypeValue.divide },
                 // { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
-                { name: 'history', icon: VersionHistorySvg, text: '页面历史', disabled: true },
+                { name: 'history', icon: VersionHistorySvg, text: '页面历史' },
                 { name: 'copylink', icon: LinkSvg, text: '复制链接' },
                 { type: MenuItemTypeValue.divide },
                 { name: 'undo', text: '撤消', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
@@ -130,7 +129,7 @@ export class PageContextmenu {
                 this.onRedo();
             }
             else if (r.item.name == 'history') {
-                var result = await usePageHistoryStore({ roundArea: Rect.fromEvent(event) }, { pageId: this.pageItemId })
+                var result = await usePageHistoryStore( { pageId: this.pageItemId })
             }
         }
     }
