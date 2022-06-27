@@ -31,11 +31,12 @@ class FormDialoug extends EventsComponent {
                 </Col>
                 <Col span={12} align={'end'}>
                     <Space>
-                        <Button onClick={e => this.onClose()} ghost>取消</Button><Button onClick={e => this.onSave()} ref={e => this.button = e}>确定</Button>
+                        <Button onClick={e => this.onClose()} ghost>取消</Button>
+                        <Button onClick={e => this.onSave()} ref={e => this.button = e}>确定</Button>
                     </Space>
                 </Col>
             </Row>}
-        >{this.remark && <Remark>{this.remark}</Remark>}
+        >{this.remark && <Row className={'shy-form-remark'} align="center"><Remark>{this.remark}</Remark></Row>}
             <div className="shy-form-box">
                 {this.fields.map(f => {
                     return <div className="shy-form-element" key={f.name}>
