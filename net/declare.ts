@@ -115,6 +115,7 @@ export interface ChannelDelMapUrls {
 	"/ws/member/exit":{args:{wsId:string,sock:any},returnType:Promise<SockResponse<void>>},
 	"/ws/member/delete":{args:{userid:string},returnType:Promise<SockResponse<void>>},
 	"/ws/role/delete":{args:{roleId:string},returnType:Promise<SockResponse<void>>},
+	"/view/snap/del":{args:{id:string},returnType:Promise<SockResponse<void>>},
 	"/block/ref/remove":{args:{wsId?:string,pageId:string,blockId?:string,rowBlockId?:string},returnType:Promise<AtomPermission[]>}
 }
 export interface ChannelPostMapUrls {
@@ -138,6 +139,7 @@ export interface ChannelPatchMapUrls {
 	"/ws/role/patch":{args:{roleId:string,data:Record<string,any>},returnType:Promise<SockResponse<void>>},
 	"/ws/set/domain":{args:{wsId?:string,domain:string},returnType:Promise<SockResponse<{exists?:boolean,illegal?:boolean}>>},
 	"/ws/patch/member/roles":{args:{wsId?:string,userid:string,roleIds:string[]},returnType:Promise<SockResponse<void>>},
+	"/view/snap/patch":{args:{id:string,data:Record<string,any>},returnType:Promise<SockResponse<void>>},
 	"/block/ref/sync":{args:{wsId?:string,pageId:string,data:{rowBlockId: string, text: string}},returnType:Promise<AtomPermission[]>},
 	"/interactive/emoji":{args:{elementUrl:string,schemaUrl:string,fieldName:string},returnType:Promise<SockResponse<{count:number}>>}
 }
