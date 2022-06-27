@@ -197,7 +197,7 @@ export class Page extends Events<PageDirective> {
     }
     pageInfo: LinkPageItem = null;
     get isCanEdit() {
-        if(this.readonly)return false;
+        if (this.readonly) return false;
         if (this.kit.page.pageInfo?.locker?.userid) return false;
         if (!this.kit.page.permissions.includes(AtomPermission.editDoc)) return false;
         return true;
@@ -265,6 +265,8 @@ export interface Page {
     emit(name: PageDirective.save);
     on(name: PageDirective.viewCursor, fn: (d: { blockId: string, prop: string, offset: number }) => void);
     emit(name: PageDirective.viewCursor, data: { blockId: string, prop: string, offset: number });
+    on(name: PageDirective.rollup, fn: (id: string) => void);
+    emit(name: PageDirective.rollup, id: string);
 }
 export interface Page extends PageEvent { }
 export interface Page extends Page$Seek { }

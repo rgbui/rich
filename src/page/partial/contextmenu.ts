@@ -6,13 +6,14 @@ import { MenuItemType, MenuItemTypeValue } from "../../../component/view/menu/de
 import { BlockDirective } from "../../block/enum";
 import { Point, Rect } from "../../common/vector/point";
 import { PageLayoutType } from "../declare";
-import { FileSvg, LinkSvg, LockSvg,  TrashSvg, UndoSvg, UnlockSvg, UploadSvg, VersionHistorySvg } from "../../../component/svgs";
+import { FileSvg, LinkSvg, LockSvg, TrashSvg, UndoSvg, UnlockSvg, UploadSvg, VersionHistorySvg } from "../../../component/svgs";
 import { usePageLayout } from "../../../extensions/layout";
 import { CopyText } from "../../../component/copy";
 import { ShyAlert } from "../../../component/lib/alert";
 import { channel } from "../../../net/channel";
 import { Confirm } from "../../../component/lib/confirm";
 import { usePageHistoryStore } from "../../../extensions/history";
+import { PageDirective } from "../directive";
 export class PageContextmenu {
     async onGetContextMenus(this: Page) {
         if (this.isBoard) return this.onGetBoardContextMenus();
@@ -129,7 +130,14 @@ export class PageContextmenu {
                 this.onRedo();
             }
             else if (r.item.name == 'history') {
-                var result = await usePageHistoryStore( { pageId: this.pageItemId })
+                var result = await usePageHistoryStore({
+                    pageId: this.pageItemId,
+                    pageTitle: this.pageInfo.text
+                });
+                if (result) {
+                    console.log(result);
+                    this.emit(PageDirective.rollup, result);
+                }
             }
         }
     }

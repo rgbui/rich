@@ -123,7 +123,8 @@ export interface ChannelPostMapUrls {
 	"/email/send/code":{args:{email:string},returnType:Promise<SockResponse<{code?:string}>>},
 	"/user/upload/file":{args:{file:File,uploadProgress: (event: ProgressEvent) => void},returnType:Promise<SockResponse<{file:{url:string}}>>},
 	"/ws/upload/file":{args:{file:File,uploadProgress: (event: ProgressEvent) => void},returnType:Promise<SockResponse<{ file:{url:string,name:string,size:number} }>>},
-	"/ws/download/url":{args:{url:string},returnType:Promise<SockResponse<{ file:{url:string,name:string,size:number} }>>}
+	"/ws/download/url":{args:{url:string},returnType:Promise<SockResponse<{ file:{url:string,name:string,size:number} }>>},
+	"/view/snap/rollup":{args:{id:string,elementUrl:string,wsId?:string,bakeTitle?:string,pageTitle?:string},returnType:Promise<SockResponse<{seq:number,id:string}>>}
 }
 export interface ChannelPatchMapUrls {
     "/datastore/update":{args:{schemaId:string,dataId:string,data:Record<string, any>},returnType:Promise<SockResponse<void>>},
