@@ -9,8 +9,9 @@ export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
     keyboardPlate.listener(kt => UA.isMacOs && kt.isMeta(KeyboardCode.Y) || !UA.isMacOs && kt.isCtrl(KeyboardCode.Y), (event, kt) => {
         page.onRedo();
     });
-    keyboardPlate.listener(kt => kt.isCtrl(KeyboardCode.S),
+    keyboardPlate.listener(kt => kt.isCtrl(KeyboardCode.S) || UA.isMacOs && kt.isMeta(KeyboardCode.S),
         (event, kt) => {
+            event.preventDefault()
             page.onSave();
         }
     );
