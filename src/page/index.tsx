@@ -149,7 +149,7 @@ export class Page extends Events<PageDirective> {
         return new Rect(this.globalMatrix.transform(rect.leftTop), this.globalMatrix.transform(rect.rightBottom))
     }
     get isBoard() {
-        return this.pageLayout.type == PageLayoutType.board;
+        return this.pageLayout?.type == PageLayoutType.board;
     }
     get scale() {
         return this.matrix.getScaling().x;
