@@ -134,7 +134,7 @@ export class Page$Cycle {
         return zipFile;
     }
     async getPlain(this: Page) {
-
+        return (await this.views.asyncMap(async v => await v.getPlain())).join(" ");
     }
     async loadFile(this: Page, blob: Blob) {
         if (blob) {
