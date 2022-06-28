@@ -210,6 +210,7 @@ export interface ChannelGetMapUrls {
 	"/ws/role/members":{args:{roleId:string,page:number,size:number,word?:string},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
 	"/ws/discovery":{args:{word?:string,page?:number,size?:number,type?:string},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
 	"/ws/view/online/users":{args:{viewId:string},returnType:Promise<SockResponse<{ users:string[] }>>},
+	"/ws/search":{args:{page?:number,size?:number,mime?:string,word:string,wsId?:string,isOnlySearchTitle?:boolean,createDate?:number,editDate?:number},returnType:Promise<SockResponse<{ list:{id:string,title:string,content:string,score:number}[],total:number }>>},
 	"/page/items":{args:{ids:string[],sock?:any,wsId?:string},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/item/subs":{args:{id:string},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/item":{args:{id:string},returnType:Promise<SockResponse<{ item:Record<string,any> }>>},
