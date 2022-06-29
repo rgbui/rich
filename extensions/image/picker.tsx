@@ -10,7 +10,7 @@ import Pexels from "../../src/assert/svg/pexels.svg";
 import { OutsideUrl } from "../link/outside";
 import { UploadView } from "../file/upload";
 import { PopoverPosition } from "../popover/position";
-import { ResourceArguments } from "../icon/declare";
+import { IconArguments, ResourceArguments } from "../icon/declare";
 import { GalleryType } from "./declare";
 import { ThirdGallery } from "./third.gallery";
 import { Icon } from "../../component/view/icon";
@@ -19,8 +19,8 @@ import "./style.less";
 import { GalleryView } from "./gellery";
 import { PictureSvg } from "../../component/svgs";
 class ImagePicker extends EventsComponent {
-    onChange(data: any) {
-        this.emit('select', { ...data });
+    onChange(data: ResourceArguments) {
+        this.emit('select', data);
     }
     showGallery: boolean = false;
     onOpen(options?: { gallery: boolean }) {
@@ -32,19 +32,19 @@ class ImagePicker extends EventsComponent {
             return <div className='shy-image-picker' >
                 <Tab keeplive>
                     <Tab.Page item={<Tip placement='bottom' overlay={'画廊'}><Icon size={18} icon={PictureSvg}></Icon></Tip>}>
-                        <GalleryView onChange={e => this.onChange({ ...e })}></GalleryView>
+                        <GalleryView onChange={e => this.onChange(e as any)}></GalleryView>
                     </Tab.Page>
                     <Tab.Page item={<Tip placement='bottom' id={LangID.UploadImage}><Icon size={28} icon={Upload}></Icon></Tip>}>
-                        <UploadView mine='image' change={e => this.onChange({ url: e })}></UploadView>
+                        <UploadView mine='image' change={e => this.onChange(e)}></UploadView>
                     </Tab.Page>
                     <Tab.Page item={<Tip placement='bottom' id={LangID.ImageLink}><Icon size={18} icon={Link}></Icon></Tip>}>
                         <OutsideUrl change={e => this.onChange({ url: e })}></OutsideUrl>
                     </Tab.Page>
                     <Tab.Page item={<Tip placement='bottom' overlay={'Pexels'}><Icon size={18} icon={Pexels}></Icon></Tip>}>
-                        <ThirdGallery type={GalleryType.pexels} onChange={e => { this.onChange({ ...e }) }}></ThirdGallery>
+                        <ThirdGallery type={GalleryType.pexels} onChange={e => { this.onChange(e as any) }}></ThirdGallery>
                     </Tab.Page>
                     <Tab.Page item={<Tip placement='bottom' overlay={'Unsplash'}><Icon size={16} icon={Unsplash}></Icon></Tip>}>
-                        <ThirdGallery type={GalleryType.unsplash} onChange={e => this.onChange({ ...e })}></ThirdGallery>
+                        <ThirdGallery type={GalleryType.unsplash} onChange={e => this.onChange(e as any)}></ThirdGallery>
                     </Tab.Page>
                 </Tab>
             </div>
@@ -52,16 +52,16 @@ class ImagePicker extends EventsComponent {
         return <div className='shy-image-picker' >
             <Tab keeplive>
                 <Tab.Page item={<Tip placement='bottom' id={LangID.UploadImage}><Icon size={28} icon={Upload}></Icon></Tip>}>
-                    <UploadView mine='image' change={e => this.onChange({ url: e })}></UploadView>
+                    <UploadView mine='image' change={e => this.onChange(e)}></UploadView>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' id={LangID.ImageLink}><Icon size={18} icon={Link}></Icon></Tip>}>
                     <OutsideUrl change={e => this.onChange({ url: e })}></OutsideUrl>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' overlay={'Pexels'}><Icon size={18} icon={Pexels}></Icon></Tip>}>
-                    <ThirdGallery type={GalleryType.pexels} onChange={e => { this.onChange({ ...e }) }}></ThirdGallery>
+                    <ThirdGallery type={GalleryType.pexels} onChange={e => { this.onChange(e as any) }}></ThirdGallery>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' overlay={'Unsplash'}><Icon size={16} icon={Unsplash}></Icon></Tip>}>
-                    <ThirdGallery type={GalleryType.unsplash} onChange={e => this.onChange({ ...e })}></ThirdGallery>
+                    <ThirdGallery type={GalleryType.unsplash} onChange={e => this.onChange(e as any)}></ThirdGallery>
                 </Tab.Page>
             </Tab>
         </div>
