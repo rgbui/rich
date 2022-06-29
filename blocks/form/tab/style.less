@@ -1,20 +1,13 @@
 .sy-block-tab {
     margin: 10px 0px;
-
-
-
-
-
     &-items {
         height         : 30px;
         display        : flex;
         justify-content: flex-start;
         align-items    : center;
         box-shadow     : rgb(233, 233, 231) 0px -1px 0px inset;
-
         .sy-block-tab-item {
             border-bottom: 2px solid transparent;
-
             &-content {
                 transition   : background 20ms ease-in 0s;
                 cursor       : pointer;
@@ -63,10 +56,13 @@
         border-color: transparent;
         min-height  : 150px;
         padding     : 10px;
+        overflow-y  : auto;
+
         .sy-block-tab-page {
             min-height: 100%;
         }
     }
+
     &-resize {
         visibility      : hidden;
         height          : 10px;
