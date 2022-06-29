@@ -4,6 +4,7 @@ import { Avatar } from "../../../component/view/avator/face";
 import { FixedViewScroll } from "../../common/scroll";
 import { Point } from "../../common/vector/point";
 import "./style.less";
+
 export class Collaboration extends React.Component<{ kit: Kit }>{
     constructor(props) {
         super(props);
