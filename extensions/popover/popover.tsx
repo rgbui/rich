@@ -119,7 +119,6 @@ class Popover<T extends React.Component> extends EventsComponent<{
             }
             else if (pos.roundArea) {
                 pos.elementArea = b;
-                console.log(pos);
                 var newPoint = RectUtility.cacPopoverPosition(pos);
                 if (!this.point.equal(newPoint)) {
                     this.point = newPoint;
