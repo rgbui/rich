@@ -18,6 +18,9 @@ import "./style.less";
  * 用户输入[[触发
  */
 class PageLinkSelector extends InputTextPopSelector {
+    onClose(): void {
+        this.close();
+    }
     async open(
         round: Rect,
         text: string,

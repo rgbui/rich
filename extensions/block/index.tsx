@@ -144,6 +144,9 @@ class BlockSelector extends InputTextPopSelector {
         var b = this.filterBlocks[this.selectIndex];
         return b;
     }
+    onClose(){
+        this.close();
+    }
     private close() {
         this.command = '';
         if (this.visible == true) {

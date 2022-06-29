@@ -67,6 +67,9 @@ export class PageWrite {
         }
         this.kit.operator.onClearSelectBlocks();
         forceCloseTextTool();
+        if(this.inputPop&&this.inputPop.selector){
+            this.inputPop.selector.onClose();
+        }
         this.inputPop = null;
         event.stopPropagation();
         var anchorNode;
