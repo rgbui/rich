@@ -319,7 +319,7 @@ export async function inputBackSpaceTextContent(write: PageWrite, aa: AppearAnch
 async function combindSubBlock(write: PageWrite, rowBlock: Block) {
     var pa = rowBlock.parent;
     var lastPreBlock = pa.childs.last();
-    if (pa.childs.length==0) {
+    if (pa.childs.length == 0) {
         var content = pa.content;
         pa.updateProps({ content: '' });
         var pattern = await pa.pattern.cloneData();
