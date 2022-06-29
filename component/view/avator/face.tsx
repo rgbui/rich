@@ -7,9 +7,9 @@ import { useUserCard } from './card';
 import "./style.less";
 export class Avatar extends React.Component<{
     size?: number,
-    userid: string,
+    userid?: string,
     user?: UserBasic,
-    openCard?: boolean,
+    showCard?: boolean,
     head?: React.ReactNode,
     children?: React.ReactNode,
     showSn?: boolean,
@@ -30,16 +30,16 @@ export class Avatar extends React.Component<{
         }
     }
     async mousedown(event: React.MouseEvent) {
-        if (this.props.userid && this.props.openCard == true) {
+        if (this.props.userid && this.props.showCard == true) {
             event.stopPropagation();
-            await useUserCard({ roundArea: Rect.fromEvent(event) }, { userid: this.props.userid })
+            await useUserCard({ roundArea: Rect.fromEvent(event) }, { user: this.props.user, userid: this.props.userid })
         }
     }
     render() {
         var user = this.props.user || this.user;
         var size = this.props.size ? this.props.size : 20;
         var renderIcon = () => {
-            if (this.props.userid) {
+            if (user) {
                 if (user?.avatar) return <img style={{ width: size, height: size }} src={autoImageUrl(user.avatar.url, 120)} />
                 if (user?.name) return <span style={{ width: size, height: size, fontSize: size * 0.6, lineHeight: (size * 0.6) + 'px' }}
                     className='shy-avatar-name'>{user.name.slice(0, 1)}</span>
@@ -55,7 +55,7 @@ export class Avatar extends React.Component<{
             </div>
         }
         else
-            return <div className={'shy-avatar'} onMouseDown={e => this.mousedown(e)}>
+            return <div className={'shy-avatar'} style={{width:size,height:size}} onMouseDown={e => this.mousedown(e)}>
                 {renderIcon()}
             </div>
     }

@@ -13,5 +13,6 @@ export type UserBasic = {
     cover?: IconArguments,
     sn: number,
     name: string,
-    status: UserStatus
+    status: UserStatus,
+    slogan:string
 }
