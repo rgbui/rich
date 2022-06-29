@@ -7,7 +7,7 @@ import { Rect } from "../../common/vector/point";
 import { parseDom } from "../../import-export/html/parse";
 import { inputPopCallback } from "./input";
 import { InputForceStore } from "./store";
-const URL_RGEX = /(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?/ig;
+const URL_RGEX = /https?:\/\/([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?/ig;
 export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent) {
     var files: File[] = Array.from(event.clipboardData.files);
     var text = event.clipboardData.getData('text/plain');
@@ -166,6 +166,5 @@ async function onPasteUrl(kit: Kit, aa: AppearAnchor, url: string) {
     await kit.writer.inputPop.selector.open(rect, url, (...data) => {
         inputPopCallback(kit.writer, ...data);
     });
-    //await InputForceStore(aa, async () => { })
 }
 
