@@ -86,7 +86,55 @@
     }
 }
 
-.shy-user-card {}
+.shy-user-card {
+    width           : 300px;
+    border-radius   : 8px;
+    background-color: #fff;
+    box-shadow      : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+
+    &-cover {
+        img {
+            border-radius  : 8px 8px 0px 0px;
+            width          : 300px;
+            height         : 100px;
+            object-fit     : cover;
+            object-position: center center;
+        }
+        >div{
+            border-radius  : 8px 8px 0px 0px;
+        }
+    }
+
+    &-content {
+        position: relative;
+        z-index : 1;
+
+        .user-avatar {
+            position        : absolute;
+            left            : 15px;
+            top             : -30px;
+            width           : 60px;
+            height          : 60px;
+            border-radius   : 50%;
+            display         : flex;
+            justify-content : center;
+            align-items     : center;
+            background-color: #fff;
+        }
+
+        .shy-user-card-head {
+            min-height     : 40px;
+            display        : flex;
+            justify-content: flex-start;
+            align-items    : center;
+
+            .shy-user-card-name {
+                margin-left: 70px;
+            }
+        }
+    }
+}
+
 
 
 .shy-ws-avatar {
@@ -101,9 +149,12 @@
     cursor             : pointer;
     transition         : box-shadow .2s ease-out, transform .2s ease-out, background .2s ease-out, opacity .2s ease-in, -webkit-box-shadow .2s ease-out, -webkit-transform .2s ease-out;
     background-color   : var(--activity-card-background);
-&:hover{
-    box-shadow: var(--elevation-high);transform: translateY(-1px);
-}
+
+    &:hover {
+        box-shadow: var(--elevation-high);
+        transform : translateY(-1px);
+    }
+
     &-cover {
         position     : relative;
         display      : block;
