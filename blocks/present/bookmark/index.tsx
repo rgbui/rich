@@ -68,7 +68,9 @@ export class Bookmark extends Block {
         }
     }
     async getPlain() {
-        return this.bookmarkInfo.title + (this.bookmarkInfo.description || '')
+        if (this.bookmarkInfo)
+            return this.bookmarkInfo.title + (this.bookmarkInfo.description || '')
+        else return '';
     }
 }
 @view('/bookmark')
