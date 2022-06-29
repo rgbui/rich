@@ -166,6 +166,7 @@ export class ImageView extends BlockView<Image>{
         </>
     }
     render() {
+        if (this.isViewError) return this.renderViewError();
         return <div className='sy-block-image' style={this.block.visibleStyle} >
             <div className='sy-block-image-content' >
                 {!this.block?.src && this.block.isCanEdit() && this.renderEmptyImage()}
