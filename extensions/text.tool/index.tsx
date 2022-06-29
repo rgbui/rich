@@ -53,7 +53,7 @@ class TextTool extends EventsComponent {
         this.visible = true;
         this.textStyle = options.style;
         this.turnBlock = options?.turnBlock;
-        var tb = blockStore.find(g => g.url == this.turnBlock.url);
+        var tb = this.turnBlock ? blockStore.find(g => g.url == this.turnBlock.url) : undefined;
         if (tb) this.turnText = tb.text;
         else this.turnText = '';
         this.forceUpdate(() => {
