@@ -3,27 +3,35 @@
     border-radius: 3px;
 
     &-link {
-        display        : flex;
-        justify-content: flex-start;
-        align-items    : stretch;
+        position          : relative;
+        // display        : flex;
+        // justify-content: flex-start;
+        // align-items    : stretch;
     }
 
     &-content {
-        padding        : 12px 14px 14px;
-        flex           : 4 1 180px;
-        display        : flex;
-        justify-content: flex-start;
-        align-items    : flex-start;
-        flex-direction : column;
+        padding           : 12px 14px 14px;
+        // flex           : 4 1 180px;
+        // display        : flex;
+        // justify-content: flex-start;
+        // align-items    : flex-start;
+        // flex-direction : column;
+        // flex-grow: 1;
+        // flex-shrink: 1;
+        // flex-wrap: wrap;
     }
 
     &-image {
-        flex    : 1 1 180px;
-        position: relative;
-
-
+        // flex-grow: 0;
+        // flex-shrink: 0;
+        // min-width: 180px;
+        // flex    : 1 1 180px;
+        position: absolute;
+        width   : 180px;
+        top     : 0px;
+        right   : 0px;
+        bottom  : 0px;
         img {
-
             object-fit: cover;
             width     : 100%;
             height    : 100%;
@@ -35,22 +43,23 @@
     }
 
     &-title {
-        font-size    : 14px;
-        line-height  : 20px;
-        color        : rgb(55, 53, 47);
-        white-space  : nowrap;
-        overflow     : hidden;
-        text-overflow: ellipsis;
-        min-height   : 24px;
-        margin-bottom: 2px;
+        font-size          : 16px;
+        line-height        : 20px;
+        color              : rgb(55, 53, 47);
+        // white-space     : nowrap;
+        // overflow     : hidden;
+        // text-overflow: ellipsis;
+        min-height         : 24px;
+        margin-bottom      : 2px;
     }
 
     &-description {
-        font-size  : 12px;
-        line-height: 16px;
-        color      : rgba(55, 53, 47, 0.65);
-        height     : 32px;
-        overflow   : hidden;
+        font-size     : 12px;
+        line-height   : 16px;
+        color         : rgba(55, 53, 47, 0.65);
+        min-height    : 16px;
+        margin-bottom : 10px;
+        // overflow   : hidden;
     }
 
     &-iconurl {
