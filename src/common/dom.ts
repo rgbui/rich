@@ -93,6 +93,42 @@ class Dom {
         }
         return prevParentFind(this.el);
     }
+    nextFind(predict: (block: Node) => boolean, consider: boolean = false, finalPredict?: (block: Node) => boolean) {
+        var isFinal: boolean = false;
+        function _find(block: Node, consider: boolean = false) {
+            var bl: Node;
+            dom(block as HTMLElement).each(r => {
+                if (typeof finalPredict == 'function' && finalPredict(r) == true) { isFinal = true; return false; }
+                if (predict(r) == true) {
+                    bl = r;
+                    return false;
+                }
+            }, consider);
+            return bl;
+        }
+        if (consider == true) {
+            var r = _find(this.el, true);
+            if (r) return r;
+        }
+        if (isFinal) return;
+        function prevParentFind(block: Node) {
+            var pa = block.parentNode;
+            if (pa) {
+                var rs = Array.from(pa.childNodes);
+                var at = rs.findIndex(g => g === block);
+                for (let i = at + 1; i < rs.length; i++) {
+                    var r = _find(rs[i], true);
+                    if (r) return r;
+                    if (isFinal) return;
+                }
+                if (typeof finalPredict == 'function' && finalPredict(pa) == true) return;
+                if (predict(pa) == true) return pa;
+                var g = prevParentFind(pa);
+                if (g) return g;
+            }
+        }
+        return prevParentFind(this.el);
+    }
     insertAfter(el: HTMLElement) {
         var p = el.parentNode;
         if (p.lastChild == el) {
