@@ -249,7 +249,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                     });
                     return;
                 }
-                if (!rowBlock.isContentEmpty && rowBlock.isTextBlock && !rowBlock.prev && rowBlock.parent.isTextBlock) {
+                if(!rowBlock.isContentEmpty && rowBlock.isTextBlock && !rowBlock.prev && rowBlock.parent.isTextBlock) {
                     //这个父块合并子块的内容
                     await combindSubBlock(write, rowBlock);
                     return;
@@ -268,7 +268,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                         write.onFocusBlockAnchor(prevAppearBlock, { last: true });
                     });
                 }
-                if (rowBlock.isContentEmpty) {
+                if (rowBlock.isContentEmpty && !rowBlock.isPart) {
                     await rowBlock.delete();
                 }
             }
