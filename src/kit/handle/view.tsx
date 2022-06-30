@@ -2,7 +2,7 @@ import React from "react";
 import { Point } from "../../common/vector/point";
 import { Icon } from "../../../component/view/icon";
 import { Handle } from ".";
-import { Tip } from "../../../component/view/tip";
+import { Tip } from "../../../component/view/tooltip/tip";
 import { LangID } from "../../../i18n/declare";
 import { MouseDragger } from "../../common/dragger";
 import { ghostView } from "../../common/ghost";

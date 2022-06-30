@@ -1,0 +1,78 @@
+.shy-button {
+
+    outline        : none;
+    user-select    : none;
+    transition     : background 20ms ease-in 0s;
+    cursor         : pointer;
+    display        : inline-flex;
+    align-items    : center;
+    justify-content: center;
+    white-space    : nowrap;
+    height         : 28px;
+    border-radius  : 3px;
+    color          : white;
+    fill           : currentColor;
+    font-size      : 14px;
+    line-height    : 1;
+    padding-left   : 12px;
+    padding-right  : 12px;
+    font-weight    : 500;
+    background     : rgb(225, 98, 89);
+    border         : 1px solid rgb(190, 86, 67);
+    box-shadow     : rgba(15, 15, 15, 0.1) 0px 1px 2px 0px;
+
+    >.shy-icon {
+        margin: 0px 3px;
+    }
+
+    &:hover {
+        background-color: #B84C4E;
+    }
+
+    &-small {
+        height : auto;
+        padding: 3px 5px;
+
+    }
+
+    &-medium {
+        height: 34px;
+    }
+
+    &-ghost {
+        background-color: transparent;
+        color           : rgb(225, 98, 89);
+        border          : 1px solid #ddd;
+        font-weight     : normal;
+
+        &:hover {
+            background-color: #f5f5f5;
+        }
+    }
+
+    &-link {
+        background-color: transparent;
+        color           : rgb(46, 170, 220);
+        cursor          : pointer;
+        border-color    : transparent;
+        font-weight     : normal;
+        box-shadow      : none;
+        &:hover {
+            background-color: transparent;
+            color           : rgb(46, 170, 220);
+            cursor          : pointer;
+            border-color    : transparent;
+            font-weight     : normal;
+            box-shadow      : none;
+        }
+    }
+
+    .shy-button-loading {
+        width    : 14px;
+        height   : 14px;
+        animation: turn 1s linear infinite;
+    }
+    &[disabled]{
+        opacity: .5;
+    }
+}

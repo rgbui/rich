@@ -6,19 +6,19 @@ import { SyncLoad } from "../../lib/sync";
 import "./style.less";
 export type OverlayPlacement = 'top' | 'left' | 'right' | 'bottom';
 class ToolTipOverlay extends React.Component {
-    render() {
-        if (this.visible !== true) return <div ref={e => this.el = e} className="shy-tooltip" style={{ display: 'none' }}></div>
-        return <div className="shy-tooltip" ref={e => this.el = e} style={{ top: this.point.y, left: this.point.x }}>
-            <div className={"shy-tooltip-arrow " + (this.placement)} style={this.arrowStyle} ref={e => this.arrow = e}><span><em></em></span></div>
-            <div className="shy-tooltip-overlay" style={this.overlayStyle} ref={e => this.overlayEl = e}>{this.overlay}</div>
-        </div>
-    }
     constructor(props) {
         super(props);
         this.fvs.on('change', (offset: Point) => {
             if (this.visible == true && this.el)
                 this.el.style.transform = `translate(${offset.x}px,${offset.y}px)`
         })
+    }
+    render() {
+        if (this.visible !== true) return <div ref={e => this.el = e} className="shy-tooltip" style={{ display: 'none' }}></div>
+        return <div className="shy-tooltip" ref={e => this.el = e} style={{ top: this.point.y, left: this.point.x }}>
+            <div className={"shy-tooltip-arrow " + (this.placement)} style={this.arrowStyle} ref={e => this.arrow = e}><span><em></em></span></div>
+            <div className="shy-tooltip-overlay" style={this.overlayStyle} ref={e => this.overlayEl = e}>{this.overlay}</div>
+        </div>
     }
     private fvs: FixedViewScroll = new FixedViewScroll();
     arrow: HTMLElement;
@@ -29,7 +29,7 @@ class ToolTipOverlay extends React.Component {
     visible: boolean;
     point: Point = new Point(0, 0);
     mouseLeaveDelay?: number;
-    placement: OverlayPlacement = 'bottom';
+    placement: OverlayPlacement = 'top';
     arrowStyle?: CSSProperties = {};
     overlayStyle?: CSSProperties = {};
     open(el: HTMLElement,
@@ -40,9 +40,11 @@ class ToolTipOverlay extends React.Component {
         }) {
         this.tipEl = el;
         this.fvs.bind(this.tipEl);
+        this.el.style.transform = 'none';
         this.mouseLeaveDelay = options.mouseLeaveDelay;
         this.overlay = options.overlay;
         this.placement = options.placement;
+        if (!this.placement) this.placement = 'top';
         this.visible = true;
         this.forceUpdate(() => {
             this.adjustmentPosition();
@@ -116,13 +118,12 @@ class ToolTipOverlay extends React.Component {
                     return;
                 }
             }
-            if (this.leaveTime) {
-                clearTimeout(this.leaveTime);
-                this.leaveTime = null;
-            }
-            this.leaveTime = setTimeout(() => {
-                this.close();
-            }, (this.mouseLeaveDelay || 0.1) * 100);
+            if (!this.leaveTime)
+                this.leaveTime = setTimeout(() => {
+                    clearTimeout(this.leaveTime);
+                    this.leaveTime = null;
+                    this.close();
+                }, (this.mouseLeaveDelay || 0.1) * 1000);
         }
     }
 }
@@ -172,9 +173,10 @@ export class ToolTip extends React.Component<{
             this.enterTime = null;
         }
         this.enterTime = setTimeout(async () => {
+            clearTimeout(this.enterTime);
             this.enterTime = null;
             await openOverlay(this.el, { overlay: this.props.overlay, placement: this.props.placement })
-        }, (this.props.mouseEnterDelay || 0.1) * 1000);
+        }, (this.props.mouseEnterDelay || 0.2) * 1000);
     }
     mouseleave = async (event: MouseEvent) => {
         if (this.enterTime) {

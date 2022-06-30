@@ -22,7 +22,7 @@ export class PageCover extends React.Component<{ page: Page }>{
                 if (!page.isCanEdit) return;
                 event.stopPropagation();
                 var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) });
-                if (icon) {
+                if (typeof icon != 'undefined') {
                     channel.air('/page/update/info', { id: page.pageItemId, pageInfo: { icon } })
                 }
             }

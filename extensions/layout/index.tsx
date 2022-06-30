@@ -3,7 +3,7 @@ import { EventsComponent } from "../../component/lib/events.component";
 import { LayoutCol2Svg, LayoutCol3Svg, LayoutColLeftSvg, LayoutColRightSvg, LayoutColSvg, LayoutContentCoverSvg, LayoutContentHeadFootSvg, LayoutContentsSvg, LayoutContentSvg } from "../../component/svgs";
 import { Col, Row, Space } from "../../component/view/grid";
 import { Icon } from "../../component/view/icon";
-import { Tip } from "../../component/view/tip";
+import { Tip } from "../../component/view/tooltip/tip";
 import { Page } from "../../src/page";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";

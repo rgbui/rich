@@ -26,11 +26,17 @@ class AtUserSelector extends InputTextPopSelector {
         var t = text.replace(/^@/, '');
         this.text = t;
         this.syncSearch();
+        if (this.isSearch == true && this.links.length == 0) {
+            if (this.resultIsEmpty == true) { this.close(); return false; }
+            this.resultIsEmpty = true;
+        }
+        else this.resultIsEmpty = false;
         return true;
     }
     links: UserBasic[] = [];
     loading = false;
     isSearch = false;
+    resultIsEmpty: boolean = false;
     syncSearch = lodash.debounce(async () => {
         this.loading = true;
         this.forceUpdate();
@@ -55,7 +61,7 @@ class AtUserSelector extends InputTextPopSelector {
                     <span>{link.name}</span>
                 </a>
             })}
-            {!this.loading && this.links.length == 0 && this.isSearch && <a><Remark>没有搜索到</Remark></a>}
+            {!this.loading && this.links.length == 0 && this.isSearch && <a style={{ display: 'block', marginLeft: 10 }}><Remark>没有搜索到</Remark></a>}
         </div>
     }
     render() {
@@ -87,6 +93,9 @@ class AtUserSelector extends InputTextPopSelector {
             this.visible = false;
             this.forceUpdate();
         }
+    }
+    onClose(): void {
+        this.close()
     }
     /**
      * 向上选择内容

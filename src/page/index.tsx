@@ -149,7 +149,7 @@ export class Page extends Events<PageDirective> {
         return new Rect(this.globalMatrix.transform(rect.leftTop), this.globalMatrix.transform(rect.rightBottom))
     }
     get isBoard() {
-        return this.pageLayout.type == PageLayoutType.board;
+        return this.pageLayout?.type == PageLayoutType.board;
     }
     get scale() {
         return this.matrix.getScaling().x;
@@ -197,6 +197,7 @@ export class Page extends Events<PageDirective> {
     }
     pageInfo: LinkPageItem = null;
     get isCanEdit() {
+        if (this.readonly) return false;
         if (this.kit.page.pageInfo?.locker?.userid) return false;
         if (!this.kit.page.permissions.includes(AtomPermission.editDoc)) return false;
         return true;
@@ -205,13 +206,13 @@ export class Page extends Events<PageDirective> {
      * 是否支持宽屏及窄屏的切换
      */
     get isSupportScreen() {
-        return [PageLayoutType.db, PageLayoutType.doc].includes(this.pageLayout.type)
+        return [PageLayoutType.db, PageLayoutType.doc].includes(this.pageLayout?.type || PageLayoutType.doc)
     }
     /**
      * 是否支持用户自定义封面
      */
     get isSupportCover() {
-        return [PageLayoutType.db, PageLayoutType.doc].includes(this.pageLayout.type)
+        return [PageLayoutType.db, PageLayoutType.doc].includes(this.pageLayout?.type || PageLayoutType.doc)
     }
     async forceUpdate() {
         return new Promise((resolve, reject) => {
@@ -264,6 +265,8 @@ export interface Page {
     emit(name: PageDirective.save);
     on(name: PageDirective.viewCursor, fn: (d: { blockId: string, prop: string, offset: number }) => void);
     emit(name: PageDirective.viewCursor, data: { blockId: string, prop: string, offset: number });
+    on(name: PageDirective.rollup, fn: (id: string) => void);
+    emit(name: PageDirective.rollup, id: string);
 }
 export interface Page extends PageEvent { }
 export interface Page extends Page$Seek { }

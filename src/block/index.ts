@@ -258,6 +258,9 @@ export abstract class Block extends Events {
     get isCell(): boolean {
         return false;
     }
+    get isCanDrop():boolean{
+        return true;
+    }
     get isEmptyCell(): boolean {
         if (this.childs.length == 0) return true;
         else if (this.childs.length == 1) {

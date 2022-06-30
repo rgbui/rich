@@ -77,7 +77,7 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
         }
     }
     var direction = DropDirection.none;
-    if (dropBlock) {
+    if (dropBlock && dropBlock.isCanDrop) {
         var point = Point.from(event);
         if (dropBlock.isLine) dropBlock = dropBlock.closest(x => x.isBlock);
         var bound = dropBlock.getVisibleContentBound();

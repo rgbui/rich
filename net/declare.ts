@@ -115,6 +115,7 @@ export interface ChannelDelMapUrls {
 	"/ws/member/exit":{args:{wsId:string,sock:any},returnType:Promise<SockResponse<void>>},
 	"/ws/member/delete":{args:{userid:string},returnType:Promise<SockResponse<void>>},
 	"/ws/role/delete":{args:{roleId:string},returnType:Promise<SockResponse<void>>},
+	"/view/snap/del":{args:{id:string},returnType:Promise<SockResponse<void>>},
 	"/block/ref/remove":{args:{wsId?:string,pageId:string,blockId?:string,rowBlockId?:string},returnType:Promise<AtomPermission[]>}
 }
 export interface ChannelPostMapUrls {
@@ -122,10 +123,12 @@ export interface ChannelPostMapUrls {
 	"/email/send/code":{args:{email:string},returnType:Promise<SockResponse<{code?:string}>>},
 	"/user/upload/file":{args:{file:File,uploadProgress: (event: ProgressEvent) => void},returnType:Promise<SockResponse<{file:{url:string}}>>},
 	"/ws/upload/file":{args:{file:File,uploadProgress: (event: ProgressEvent) => void},returnType:Promise<SockResponse<{ file:{url:string,name:string,size:number} }>>},
-	"/ws/download/url":{args:{url:string},returnType:Promise<SockResponse<{ file:{url:string,name:string,size:number} }>>}
+	"/ws/download/url":{args:{url:string},returnType:Promise<SockResponse<{ file:{url:string,name:string,size:number} }>>},
+	"/view/snap/rollup":{args:{id:string,elementUrl:string,wsId?:string,bakeTitle?:string,pageTitle?:string},returnType:Promise<SockResponse<{seq:number,id:string}>>}
 }
 export interface ChannelPatchMapUrls {
     "/datastore/update":{args:{schemaId:string,dataId:string,data:Record<string, any>},returnType:Promise<SockResponse<void>>},
+	"/sign/patch":{args:{name: string, paw: string},returnType:Promise<SockResponse<{list:any[]}>>},
 	"/phone/check/update":{args:{phone:string,code:string},returnType:Promise<SockResponse<void>>},
 	"/email/check/update":{args:{email:string,code:string},returnType:Promise<SockResponse<void>>},
 	"/user/set/paw":{args:{oldPaw?:string,newPaw:string,confirmPaw:string},returnType:Promise<SockResponse<void>>},
@@ -137,6 +140,7 @@ export interface ChannelPatchMapUrls {
 	"/ws/role/patch":{args:{roleId:string,data:Record<string,any>},returnType:Promise<SockResponse<void>>},
 	"/ws/set/domain":{args:{wsId?:string,domain:string},returnType:Promise<SockResponse<{exists?:boolean,illegal?:boolean}>>},
 	"/ws/patch/member/roles":{args:{wsId?:string,userid:string,roleIds:string[]},returnType:Promise<SockResponse<void>>},
+	"/view/snap/patch":{args:{id:string,data:Record<string,any>},returnType:Promise<SockResponse<void>>},
 	"/block/ref/sync":{args:{wsId?:string,pageId:string,data:{rowBlockId: string, text: string}},returnType:Promise<AtomPermission[]>},
 	"/interactive/emoji":{args:{elementUrl:string,schemaUrl:string,fieldName:string},returnType:Promise<SockResponse<{count:number}>>}
 }
@@ -147,6 +151,7 @@ export interface ChannelPutMapUrls {
 	"/datastore/batch/add":{args:{schemaId:string,list:any[]},returnType:Promise<{ok:boolean,data:{list:any[]},warn:string}>},
 	"/datastore/query/ids":{args:{schemaId:string,ids:string[]},returnType:Promise<{ok:boolean,data:{list:any[]},warn:string}>},
 	"/device/sign":{args:any,returnType:Promise<void>},
+	"/paw/sign":{args:{phone:string,paw:string,inviteCode:string},returnType:Promise<{ok:boolean,warn:string,data:{user:Record<string,any>,guid:string,token:string}}>},
 	"/phone/sign":{args:{phone:string,code:string,inviteCode:string},returnType:Promise<{ok:boolean,warn:string,data:{user:Record<string,any>,guid:string,token:string}}>},
 	"/user/channel/join":{args:{roomName?:string,userids:string[]},returnType:Promise<SockResponse<{room:Record<string,any>,channel:Record<string,any>}>>},
 	"/user/join/ws":{args:{wsId:string},returnType:Promise<SockResponse<void>>},
@@ -205,6 +210,7 @@ export interface ChannelGetMapUrls {
 	"/ws/role/members":{args:{roleId:string,page:number,size:number,word?:string},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
 	"/ws/discovery":{args:{word?:string,page?:number,size?:number,type?:string},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
 	"/ws/view/online/users":{args:{viewId:string},returnType:Promise<SockResponse<{ users:string[] }>>},
+	"/ws/search":{args:{page?:number,size?:number,mime?:string,word:string,wsId?:string,isOnlySearchTitle?:boolean,createDate?:number,editDate?:number},returnType:Promise<SockResponse<{ list:{id:string,title:string,content:string,score:number}[],total:number }>>},
 	"/page/items":{args:{ids:string[],sock?:any,wsId?:string},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/item/subs":{args:{id:string},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/item":{args:{id:string},returnType:Promise<SockResponse<{ item:Record<string,any> }>>},

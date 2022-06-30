@@ -10,7 +10,7 @@ export type IconArguments = {
 }
 
 export type ResourceArguments = {
-    name: 'none' | 'link' | 'upload' | 'download'
+    name?: 'none' | 'link' | 'upload' | 'download'
     url?: string,
     source?: string,
     thumb?:string,

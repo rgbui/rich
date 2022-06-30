@@ -3,7 +3,7 @@ import Link from "../../src/assert/svg/link.svg";
 import { EventsComponent } from "../../component/lib/events.component";
 import { Icon } from "../../component/view/icon";
 import { Tab } from "../../component/view/tab";
-import { Tip } from "../../component/view/tip";
+import { Tip } from "../../component/view/tooltip/tip";
 import { LangID } from "../../i18n/declare";
 import { ResourceArguments } from "../icon/declare";
 import { PopoverSingleton } from "../popover/popover";

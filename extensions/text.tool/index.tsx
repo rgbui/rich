@@ -5,7 +5,7 @@ import { TextCommand } from "./text.command";
 import { EventsComponent } from "../../component/lib/events.component";
 import { BlockCssName, FillCss } from "../../src/block/pattern/css";
 import { LangID } from "../../i18n/declare";
-import { Tip } from "../../component/view/tip";
+import { Tip } from "../../component/view/tooltip/tip";
 import { useLinkPicker } from "../link/picker";
 import { useColorSelector } from "../color";
 import { Block } from "../../src/block";
@@ -53,7 +53,7 @@ class TextTool extends EventsComponent {
         this.visible = true;
         this.textStyle = options.style;
         this.turnBlock = options?.turnBlock;
-        var tb = blockStore.find(g => g.url == this.turnBlock.url);
+        var tb = this.turnBlock ? blockStore.find(g => g.url == this.turnBlock.url) : undefined;
         if (tb) this.turnText = tb.text;
         else this.turnText = '';
         this.forceUpdate(() => {

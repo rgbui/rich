@@ -23,6 +23,9 @@ export class TabPage extends Block {
     get handleBlock(): Block {
         return this.myTab
     }
+    get isCanDrop() {
+        return false;
+    }
 }
 @view('/tab/page')
 export class TabPageView extends BlockView<TabPage>{

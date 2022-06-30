@@ -65,9 +65,7 @@ export class PageWrite {
             event.preventDefault();
             return;
         }
-        this.kit.operator.onClearSelectBlocks();
-        forceCloseTextTool();
-        this.inputPop = null;
+        this.kit.operator.onClearPage();
         event.stopPropagation();
         var anchorNode;
         var anchorOffset;

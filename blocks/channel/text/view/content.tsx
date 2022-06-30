@@ -80,7 +80,7 @@ export function RenderChannelTextContent(block: ChannelText) {
         return <div data-channel-text-id={d.id} className={"sy-channel-text-item" + (noUser ? " no-user" : "")} key={d.id}>
             {d.reply && <div className="sy-channel-text-item-reply">
                 <UserBox userid={d.reply.userid}>{us => {
-                    return < ><Avatar user={us} userid={d.userid} size={16}></Avatar>
+                    return < ><Avatar showCard user={us} userid={d.userid} size={16}></Avatar>
                         <div className="sy-channel-text-item-reply-content">{renderContent(d.reply)}</div>
                     </>
                 }}</UserBox>
@@ -89,7 +89,7 @@ export function RenderChannelTextContent(block: ChannelText) {
                 <UserBox userid={d.userid}>{us => {
                     return <>
                         <div className="sy-channel-text-item-edited-content">
-                            <Avatar user={us} userid={d.userid} size={40}></Avatar>
+                            <Avatar  showCard user={us} userid={d.userid} size={40}></Avatar>
                             <div className="sy-channel-text-item-edited-content-wrapper" >
                                 <div className="sy-channel-text-item-head"><a>{us.name}</a><span>{util.showTime(d.createDate)}</span></div>
                                 <div className="sy-channel-text-item-edited-content-input">
@@ -110,7 +110,7 @@ export function RenderChannelTextContent(block: ChannelText) {
             }
             {!(d.id == view.editChannelText?.id) && !noUser && <UserBox userid={d.userid}>{us => {
                 return <div className="sy-channel-text-item-box" >
-                    <Avatar user={us} userid={d.userid} size={40}></Avatar>
+                    <Avatar  showCard  user={us} userid={d.userid} size={40}></Avatar>
                     <div className="sy-channel-text-item-wrapper" >
                         <div className="sy-channel-text-item-head"><a>{us.name}</a><span>{util.showTime(d.createDate)}</span></div>
                         <div className="sy-channel-text-item-content">{renderContent(d)}</div>
@@ -139,7 +139,7 @@ export function RenderChannelTextContent(block: ChannelText) {
     }
     function renderUploadFile(uf) {
         return <div className="sy-channel-text-upload" key={uf.id}>
-            <Avatar user={block.page.user} userid={block.page.user.id} size={40}></Avatar>
+            <Avatar  showCard  user={block.page.user} userid={block.page.user.id} size={40}></Avatar>
             <div className="sy-channel-text-upload-content">
                 <Loading></Loading>
                 <span style={{ display: 'inline-block', marginLeft: 5 }}>{uf.speed}</span>

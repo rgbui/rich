@@ -30,7 +30,7 @@ export var util = {
         var now = new Date();
         if (dayjs(now).isSame(date, 'day')) {
             var hour = date.getHours();
-            if (hour > 0 && hour < 6) {
+            if (hour >= 0 && hour < 6) {
                 return '今天' + dayjs(date).format('HH:mm')
             }
             else if (hour >= 6 && hour < 11) {

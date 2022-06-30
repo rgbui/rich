@@ -13,7 +13,7 @@ import { channel } from "../../../net/channel";
 import { LinkPageItem } from "../../../extensions/at/declare";
 import { PageCover } from "./cover";
 import { Icon } from "../../../component/view/icon";
-import { BoardToolFrameSvg, CollectTableSvg, CommentSvg, PageSvg } from "../../../component/svgs";
+import { CollectTableSvg, CommentSvg, PageSvg } from "../../../component/svgs";
 import lodash from "lodash";
 import { dom } from "../../common/dom";
 import { PageOutLine } from "../../../blocks/page/outline";
@@ -196,16 +196,15 @@ export class PageView extends Component<{ page: Page }>{
             lineHeight: this.page.lineHeight + 'px',
             fontSize: this.page.fontSize + 'px'
         }
-        return <div className={'shy-page-view' + (this.page.readonly ? " shy-page-view-readonly" : "")} style={pageStyle}
-
+        return <div className={'shy-page-view' + (this.page.readonly ? " shy-page-view-readonly" : "")}
+            style={pageStyle}
             tabIndex={this.page.isCanEdit ? 1 : undefined}
             onFocusCapture={e => this.page.onFocusCapture(e.nativeEvent)}
             onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}
             onMouseEnter={e => this.page.onMouseenter(e)}
             onMouseLeave={e => this.page.onMouseleave(e)}
         ><div className='shy-page-view-box' onContextMenu={e => this.page.onContextmenu(e)} onMouseDown={e => this.page.onMousedown(e)}>
-                <PageLayoutView
-                    page={this.page}>
+                <PageLayoutView page={this.page}>
                     <div className='shy-page-view-content' ref={e => this.page.contentEl = e}>
                         <PageCover page={this.page}></PageCover>
                         <ChildsArea childs={this.page.views}></ChildsArea>

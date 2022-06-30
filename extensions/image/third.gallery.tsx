@@ -66,13 +66,19 @@ export class ThirdGallery extends React.Component<{ type: GalleryType, onChange:
             this.error = '图片资源获取失败';
             this.pics = [];
         }
-        this.forceUpdate()
+        if (this.isM)
+            this.forceUpdate()
     }
     onmousedown(pic) {
         this.props.onChange(pic);
     }
     componentDidMount() {
+        this.isM = true;
         this.onSearch(this.props.type == GalleryType.pexels ? "flowers" : 'dog');
+    }
+    isM = false;
+    componentWillUnmount(): void {
+        this.isM = false;
     }
     renderImages() {
         return <div className='shy-third-gallery-pics'>{this.pics.map((pic, i) => {

@@ -10,8 +10,7 @@ import { prop, url, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
 import { ChildsArea } from "../../../src/block/view/appear";
 import { MouseDragger } from "../../../src/common/dragger";
-import { ghostView } from "../../../src/common/ghost";
-import { Point, Rect } from "../../../src/common/vector/point";
+import { Rect } from "../../../src/common/vector/point";
 import { ActionDirective } from "../../../src/history/declare";
 import "./style.less";
 
@@ -27,7 +26,7 @@ export class Tab extends Block {
     @prop()
     contentHeight: number = 200;
     async didMounted(): Promise<void> {
-        if (this.childs.length == 0) {
+        if(this.childs.length == 0) {
             await this.createInitTabItems();
             this.forceUpdate()
         }

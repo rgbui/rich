@@ -34,6 +34,9 @@ export class TextContent extends Block {
             code: this.code
         }
     }
+    async getPlain() {
+        return this.content;
+    }
 }
 @view('/text')
 export class TextContentView extends BlockView<TextContent>{

@@ -1,9 +1,8 @@
 import React from "react";
-import { Tip } from "../../component/view/tip";
+import { Tip } from "../../component/view/tooltip/tip";
 import { langProvider } from "../../i18n/provider";
 
-import "../../src/assert/font-awesome/less/solid.less";
-import "../../src/assert/font-awesome/less/fontawesome.less";
+
 import { fontAwesomeStore } from "./store";
 import './style.less';
 import { FontAwesomeIconType, FontAwesomeType } from "./declare";
@@ -58,7 +57,7 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
     renderFontColors() {
         return <div className='shy-font-awesome-colors'>
             {FontColorList.map(c => {
-                return <ToolTip overlay={c.text} key={c.color} ><a className={this.color == c.color ? "hover" : ""} onMouseDown={e => this.onSetFont(e)} style={{ backgroundColor: c.color }}></a></ToolTip>
+                return <ToolTip overlay={c.text} key={c.color} ><a className={this.color == c.color ? "hover" : ""} onMouseDown={e => this.onSetFont(c)} style={{ backgroundColor: c.color }}></a></ToolTip>
             })}
         </div>
     }

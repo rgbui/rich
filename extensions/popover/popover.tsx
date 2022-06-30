@@ -10,7 +10,8 @@ class Popover<T extends React.Component> extends EventsComponent<{
     shadow?: boolean,
     args?: Record<string, any>,
     mask?: boolean,
-    visible?: "hidden" | "none"
+    visible?: "hidden" | "none",
+    frame?:boolean
 }> {
     visible: boolean;
     point: Point = new Point(0, 0);
@@ -60,6 +61,11 @@ class Popover<T extends React.Component> extends EventsComponent<{
             top: this.point.y,
             left: this.point.x,
             zIndex: this.zindex
+        }
+        if(this.props.frame){
+            style.background='none';
+            style.backgroundColor='transparent';
+            style.boxShadow='none';
         }
         if (this.props.visible == 'hidden') {
             return <div ref={e => this.box = e} style={{ display: this.visible == true ? "block" : "none" }}>
@@ -119,7 +125,6 @@ class Popover<T extends React.Component> extends EventsComponent<{
             }
             else if (pos.roundArea) {
                 pos.elementArea = b;
-                console.log(pos);
                 var newPoint = RectUtility.cacPopoverPosition(pos);
                 if (!this.point.equal(newPoint)) {
                     this.point = newPoint;
@@ -140,7 +145,7 @@ let maps: MapC<React.Component> = new Map();
  * @returns 
  */
 export async function PopoverSingleton<T extends React.Component>(CP: { new(...args: any[]): T },
-    props?: { mask?: boolean, style?: CSSProperties, visible?: 'hidden' | "none", shadow?: boolean }, args?: Record<string, any>) {
+    props?: { mask?: boolean, frame?: boolean, style?: CSSProperties, visible?: 'hidden' | "none", shadow?: boolean }, args?: Record<string, any>) {
     return new Promise((resolve: (data: Popover<T>) => void, reject) => {
         if (maps.has(CP)) return resolve(maps.get(CP) as any)
         var ele = document.createElement('div');

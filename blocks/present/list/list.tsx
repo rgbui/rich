@@ -100,6 +100,11 @@ export class List extends Block {
         }
         return false;
     }
+    async getPlain(this: Block) {
+        if (this.childs.length > 0)
+            return await this.getChildsPlain();
+        else return this.content + await this.getChildsPlain();
+    }
 }
 @view('/list')
 export class ListView extends BlockView<List>{

@@ -46,89 +46,13 @@
 
 .shy-button-block {
     display: block;
-    width:100%;
+    width  : 100%;
 
     .shy-button {
         width: 100%
     }
 }
 
-.shy-button {
-
-    outline        : none;
-    user-select    : none;
-    transition     : background 20ms ease-in 0s;
-    cursor         : pointer;
-    display        : inline-flex;
-    align-items    : center;
-    justify-content: center;
-    white-space    : nowrap;
-    height         : 28px;
-    border-radius  : 3px;
-    color          : white;
-    fill           : currentColor;
-    font-size      : 14px;
-    line-height    : 1;
-    padding-left   : 12px;
-    padding-right  : 12px;
-    font-weight    : 500;
-    background     : rgb(225, 98, 89);
-    border         : 1px solid rgb(190, 86, 67);
-    box-shadow     : rgba(15, 15, 15, 0.1) 0px 1px 2px 0px;
-
-    >.shy-icon {
-        margin: 0px 3px;
-    }
-
-    &:hover {
-        background-color: #B84C4E;
-    }
-
-    &-small {
-        height : auto;
-        padding: 3px 5px;
-        
-    }
-
-    &-medium {
-        height: 34px;
-    }
-
-    &-ghost {
-        background-color: transparent;
-        color           : rgb(225, 98, 89);
-        border          : 1px solid #ddd;
-        font-weight     : normal;
-
-        &:hover {
-            background-color: #f5f5f5;
-        }
-    }
-
-    &-link {
-        background-color: transparent;
-        color           : rgb(46, 170, 220);
-        cursor          : pointer;
-        border-color    : transparent;
-        font-weight     : normal;
-        box-shadow      : none;
-
-        &:hover {
-            background-color: transparent;
-            color           : rgb(46, 170, 220);
-            cursor          : pointer;
-            border-color    : transparent;
-            font-weight     : normal;
-            box-shadow      : none;
-        }
-    }
-
-    .shy-button-loading {
-        width    : 14px;
-        height   : 14px;
-        animation: turn 1s linear infinite;
-    }
-}
 
 .shy-input {
     display : block;
@@ -168,7 +92,7 @@
         display        : flex;
         justify-content: center;
         align-items    : center;
-        cursor: pointer;
+        cursor         : pointer;
     }
 }
 
@@ -307,67 +231,13 @@
     }
 }
 
-.shy-tab {
-    &-items {
-        display        : flex;
-        justify-content: flex-start;
-        align-items    : center;
-        font-size      : 14px;
-        padding-left   : 10px;
-        padding-right  : 10px;
-        height         : 50px;
-        box-shadow     : rgba(55, 53, 47, 0.09) 0px 1px 0px 0px;
 
-        &-right {
-            justify-content: flex-end;
-        }
-
-        &-center {
-            justify-content: center;
-        }
-
-        >label {
-            user-select       : none;
-            transition        : background 20ms ease-in 0s;
-            cursor            : pointer;
-            display           : inline-flex;
-            align-items       : center;
-            justify-content   : center;
-            flex-shrink       : 0;
-            white-space       : nowrap;
-            height            : 32px;
-            width             : 32px;
-            border-radius     : 3px;
-            font-size         : 14px;
-            line-height       : 1.2;
-            min-width         : 0px;
-            // padding-left   : 8px;
-            // padding-right  : 8px;
-            color             : rgb(55, 53, 47);
-            margin-right      : 10px;
-            position          : relative;
-
-            &:hover,
-            &.hover {
-                background-color: rgba(55, 53, 47, 0.08);
-            }
-
-            &.hover {
-                color: #cf5659;
-                fill : #cf5659;
-            }
-        }
-    }
-
-    &-pages {
-        .shy-tab-page {}
-    }
-}
 
 .shy-loading {
     display        : flex;
     justify-content: center;
     align-items    : center;
+    transform      : none;
 
     &-content {
         color: rgba(46 170 220, 0.4);
@@ -376,19 +246,57 @@
 }
 
 .shy-divider {
-    display        : flex;
-    align-items    : center;
-    justify-content: center;
-    pointer-events : none;
+    display           : flex;
+    align-items       : center;
+    justify-content   : center;
+    pointer-events    : none;
     // width          : 100%;
-    min-height     : 10px;
-    flex           : 0 0 auto;
+    min-height        : 10px;
+    flex              : 0 0 auto;
+    position          : relative;
 
     &-line {
         width        : 100%;
         height       : 1px;
         visibility   : visible;
         border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+    }
+
+    &-title {
+        position       : absolute;
+        top            : 0px;
+        left           : 0px;
+        right          : 0px;
+        bottom         : 0px;
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : center;
+
+        >span {
+            background-color: #fff;
+            font-size       : 14px;
+            display         : inline-block;
+            padding         : 3px 5px;
+            color           : rgba(55, 53, 47, 0.4);
+        }
+
+        &.center {
+            justify-content: center;
+        }
+
+        &.left {
+            >span {
+                margin-left: 20px;
+            }
+        }
+
+        &.right {
+            justify-content: flex-end;
+
+            >span {
+                margin-right: 20px;
+            }
+        }
     }
 }
 
@@ -471,7 +379,7 @@
     align-items    : stretch;
     flex-direction : column;
     width          : 400px;
-    height         : 300px;
+    max-height     : 480px;
 
     &-head {
         padding        : 0px 10px;
@@ -481,27 +389,38 @@
         display        : flex;
         justify-content: flex-start;
         align-items    : center;
+        box-sizing     : border-box;
+        border-bottom  : 1px solid rgba(43, 45, 47, .1);
 
         span {
-            font-weight: 600;
+            font-weight: normal;
             color      : var(--header-primary);
-            font-size  : 20px;
+            font-size  : 16px;
             line-height: 24px;
         }
     }
 
     &-content {
-        padding    : 0px 10px;
+        padding    : 10px;
         flex-grow  : 1;
         flex-shrink: 1;
         overflow   : auto;
+        max-height : 400px;
     }
 
     &-footer {
-        padding    : 0px 10px;
-        height     : 30px;
-        flex-shrink: 0;
-        flex-grow  : 1;
+        border-top     : 1px solid rgba(43, 45, 47, .1);
+        padding        : 0px 10px;
+        height         : 50px;
+        flex-shrink    : 0;
+        flex-grow      : 0;
+        display        : flex;
+        justify-content: center;
+        align-items    : center;
+
+        >.shy-row {
+            width: 100%;
+        }
     }
 }
 

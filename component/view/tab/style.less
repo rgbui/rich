@@ -1,0 +1,94 @@
+.shy-tab {
+    position: relative;
+
+    &-items {
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : center;
+        font-size      : 14px;
+        padding-left   : 10px;
+        padding-right  : 10px;
+        height         : 50px;
+        box-shadow     : rgba(55, 53, 47, 0.09) 0px 1px 0px 0px;
+
+        &-right {
+            justify-content: flex-end;
+        }
+
+        &-center {
+            justify-content: center;
+        }
+
+        >label {
+            user-select       : none;
+            transition        : background 20ms ease-in 0s;
+            cursor            : pointer;
+            display           : inline-flex;
+            align-items       : center;
+            justify-content   : center;
+            flex-shrink       : 0;
+            white-space       : nowrap;
+            height            : 32px;
+            width             : 32px;
+            border-radius     : 3px;
+            font-size         : 14px;
+            line-height       : 1.2;
+            min-width         : 0px;
+            color             : rgb(55, 53, 47);
+            margin-right      : 10px;
+            position          : relative;
+
+            &:hover,
+            &.hover {
+                background-color: rgba(55, 53, 47, 0.08);
+            }
+
+            &.hover {
+                color: #cf5659;
+                fill : #cf5659;
+            }
+        }
+    }
+
+    &-btns {
+        position       : absolute;
+        top            : 0px;
+        right          : 0px;
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : center;
+        font-size      : 14px;
+        padding-left   : 10px;
+        padding-right  : 10px;
+        height         : 50px;
+        box-shadow     : rgba(55, 53, 47, 0.09) 0px 1px 0px 0px;
+        label{
+            user-select       : none;
+            transition        : background 20ms ease-in 0s;
+            cursor            : pointer;
+            display           : inline-flex;
+            align-items       : center;
+            justify-content   : center;
+            flex-shrink       : 0;
+            white-space       : nowrap;
+            height            : 32px;
+            width             : 32px;
+            border-radius     : 3px;
+            font-size         : 14px;
+            line-height       : 1.2;
+            min-width         : 0px;
+            color             : rgb(55, 53, 47);
+            margin-right      : 10px;
+            position          : relative;
+
+            &:hover,
+            &.hover {
+                background-color: rgba(55, 53, 47, 0.08);
+            }
+        }
+    }
+
+    &-pages {
+        .shy-tab-page {}
+    }
+}

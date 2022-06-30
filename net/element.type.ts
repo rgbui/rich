@@ -98,6 +98,10 @@ export function parseElementUrl(url: string) {
  * @param url 
  */
 export function autoImageUrl(url: string, width?: 50 | 120 | 250 | 500 | 900) {
+    if (!url || typeof url != 'string') {
+        console.warn('auto image url is null');
+        return '';
+    }
     var newUrl = url;
     if (url.startsWith('https://resources.shy.red')) newUrl = url.replace('https://resources.shy.red', 'https://resources.shy.live')
     else if (url.indexOf('shy.red') > -1) {

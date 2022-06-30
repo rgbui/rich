@@ -204,6 +204,11 @@ export class TextSpan extends Block {
         if (this.isFreeBlock) return false;
         return true;
     }
+    async getPlain(this: Block) {
+        if (this.childs.length > 0)
+            return await this.getChildsPlain();
+        else return this.content;
+    }
 }
 @view("/textspan")
 export class TextSpanView extends BlockView<TextSpan>{

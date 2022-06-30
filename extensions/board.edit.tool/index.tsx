@@ -6,7 +6,7 @@ import { BoardRefreshSvg, BrokenLineSvg, CureSvg, MindDirectionXSvg, MindDirecti
 import { Icon } from "../../component/view/icon";
 import { MeasureView } from "../../component/view/progress";
 import { Select } from "../../component/view/select";
-import { Tip } from "../../component/view/tip";
+import { Tip } from "../../component/view/tooltip/tip";
 import { LangID } from "../../i18n/declare";
 import { Block } from "../../src/block";
 import { Point } from "../../src/common/vector/point";

@@ -1,0 +1,115 @@
+.shy-page-history {
+    width          : 80vw;
+    height         : 80vh;
+    display        : flex;
+    justify-content: flex-start;
+    align-items    : stretch;
+    flex-direction : column;
+    flex-wrap      : nowrap;
+
+    &-head {
+        flex-grow      : 0;
+        flex-shrink    : 0;
+        height         : 30px;
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : center;
+        border-bottom  : 1px solid rgba(55, 53, 47, 0.08);
+    }
+
+    &-body {
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : stretch;
+        flex-grow      : 1;
+        flex-shrink    : 1;
+        height         : calc(80vh - 50px);
+
+        .shy-page-history-list {
+            padding    : 10px;
+            width      : 200px;
+            box-sizing : border-box;
+            flex-grow  : 0;
+            flex-shrink: 0;
+            overflow-y : auto;
+            height     : inherit;
+
+            &-record {
+                font-size: 14px;
+                color    : rgba(55, 53, 47, .4);
+            }
+
+            a {
+                display        : flex;
+                justify-content: flex-start;
+                align-items    : center;
+                color          : rgba(55, 53, 47, 1);
+                border-radius  : 4px;
+                line-height    : 24px;
+                height         : 30px;
+                padding        : 0px 10px;
+                cursor         : pointer;
+                font-size      : 14px;
+
+                &:hover {
+                    background-color: rgba(55, 53, 47, 0.04);
+                }
+
+                &.hover {
+                    background-color: rgba(55, 53, 47, 0.08);
+                }
+
+                span {
+                    flex-shrink: 1;
+                    flex-grow  : 1;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    height:24px;
+                    line-height: 24px;
+                    display: block;
+                }
+
+                .operate {
+                    width        : 24px;
+                    height       : 24px;
+                    border-radius: 4px;
+                    flex-shrink  : 0;
+                    flex-grow    : 0;
+                    visibility   : hidden;
+
+                    &:hover {
+                        background-color: rgba(55, 53, 47, 0.06);
+                    }
+                }
+
+                &:hover {
+                    .operate {
+                        visibility: visible;
+                    }
+                }
+            }
+        }
+
+        .shy-page-history-view {
+            flex-grow  : 1;
+            flex-shrink: 1;
+            height     : calc(80vh - 50px);
+            overflow-y : auto;
+        }
+    }
+
+    &-footer {
+        flex-grow      : 0;
+        flex-shrink    : 0;
+        height         : 50px;
+        border-top     : 1px solid rgba(55, 53, 47, 0.08);
+        display        : flex;
+        justify-content: center;
+        align-items    : center;
+        padding        : 0px 10px;
+
+        >.shy-row {
+            width: 100%;
+        }
+    }
+}

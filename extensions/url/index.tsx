@@ -7,6 +7,9 @@ import { ConvertEmbed } from "./embed.url";
 import "./style.less";
 
 class InputUrlSelector extends InputTextPopSelector {
+    onClose(): void {
+        this.close();
+    }
     private _select: (blockData: Record<string, any>) => void;
     private url: string;
     async open(round: Rect, text: string, callback: (...args: any[]) => void): Promise<boolean> {

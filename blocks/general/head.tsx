@@ -26,6 +26,11 @@ export class Head extends Block {
     async getWillTurnData(url: string) {
         return await TextTurns.turn(this, url);
     }
+    async getPlain(this: Block) {
+        if (this.childs.length > 0)
+            return await this.getChildsPlain();
+        else return this.content;
+    }
 }
 @view("/head")
 export class HeadView extends BlockView<Head>{

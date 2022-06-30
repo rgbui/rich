@@ -1,5 +1,6 @@
 import React from "react";
 import { Kit } from "..";
+import { forceCloseTextTool } from "../../../extensions/text.tool";
 import { Block } from "../../block";
 import { PageDrag } from "./drag";
 
@@ -17,6 +18,7 @@ import { PageDrag } from "./drag";
  * 当鼠标停在块上面时，会显示一个小把手，表示对块的操作
  * 当鼠标移到把手时，该把手不能隐藏，
  * 移到块及把手之外，小把手消失
+ * 
  */
 export class PageOperator {
     constructor(public kit: Kit) { }
@@ -62,5 +64,16 @@ export class PageOperator {
     }
     onClearSelectBlocks() {
         this.onSelectBlocks([]);
+    }
+    /**
+     * 清理页面的输入状态
+     */
+    onClearPage() {
+        this.kit.operator.onClearSelectBlocks();
+        forceCloseTextTool();
+        if (this.kit.writer.inputPop && this.kit.writer.inputPop.selector) {
+            this.kit.writer.inputPop.selector.onClose();
+        }
+        this.kit.writer.inputPop = null;
     }
 }

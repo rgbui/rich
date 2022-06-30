@@ -50,6 +50,11 @@ export class ToDo extends Block {
     get isBackspaceAutomaticallyTurnText() {
         return true;
     }
+    async getPlain(this: Block) {
+        if (this.childs.length > 0)
+            return await this.getChildsPlain();
+        else return this.content;
+    }
 }
 @view('/todo')
 export class ToDoView extends BlockView<ToDo>{

@@ -100,7 +100,7 @@ export class AppearAnchor {
         return AppearVisibleSeek(this, { arrow: 'left' });
     }
     visibleDown(left?: number): AppearAnchor {
-        /**
+      /**
       * 在块内查找
       */
         var vp = this.block.appearAnchors.find((g, i) => i > this.at);
@@ -357,7 +357,6 @@ export class AppearAnchor {
                 sel.setBaseAndExtent(options.startNode, options.startOffset, cr.node, cr.pos);
             }
             else {
-                console.log(endOffset, 'ggg')
                 this.collapse(endOffset);
             }
             return true;
