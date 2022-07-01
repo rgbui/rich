@@ -24,7 +24,7 @@ export class Image extends Block {
     @prop()
     src: ResourceArguments;
     @prop()
-    imageWidthPercent: number = 100;
+    imageWidthPercent: number =70;
     @prop()
     caption: string = '';
     @prop()
