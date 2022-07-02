@@ -17,19 +17,6 @@ import { TextEle } from "../../common/text.ele";
 import { Rect } from "../../common/vector/point";
 import { InputForceStore, InputStore } from "./store";
 
-export async function inputPopCallback(write: PageWrite, ...args: any) {
-    var blockData = args[0];
-    var sel = window.getSelection();
-    var aa = write.inputPop.aa;
-    var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
-    var content = aa.textContent;
-    var textContent = content.slice(0, write.inputPop.offset) + content.slice(offset);
-    aa.setContent(textContent);
-    aa.collapse(offset);
-    await write.onInputPopCreateBlock(write.inputPop.offset, blockData);
-    write.inputPop = null;
-}
-
 /**
  * 输入弹窗
  */
@@ -87,7 +74,7 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
             write.inputPop.rect,
             aa.textContent.slice(write.inputPop.offset, offset),
             (...data) => {
-                inputPopCallback(write, ...data);
+                write.onInputPopCreateBlock(...data);
             });
         if (!popVisible) write.inputPop = null;
         else return true;

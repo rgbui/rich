@@ -4,8 +4,8 @@ import { useInputUrlSelector } from "../../../extensions/url";
 import { AppearAnchor } from "../../block/appear";
 import { BlockUrlConstant } from "../../block/constant";
 import { Rect } from "../../common/vector/point";
+import { ActionDirective } from "../../history/declare";
 import { parseDom } from "../../import-export/html/parse";
-import { inputPopCallback } from "./input";
 import { InputForceStore } from "./store";
 const URL_RGEX = /https?:\/\/([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?/ig;
 export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent) {
@@ -143,29 +143,65 @@ async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
     })
 }
 async function onPasteInsertText(kit: Kit, aa: AppearAnchor, text: string) {
-    var content = aa.textContent;
-    var sel = window.getSelection();
-    var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
-    aa.setContent(content.slice(0, offset) + text + content.slice(offset))
-    aa.collapse(offset + text.length);
-    await InputForceStore(aa, async () => { })
+    if (aa.isSolid) {
+        kit.writer.onSolidInputCreateTextBlock(aa, undefined, text);
+    }
+    else {
+        var content = aa.textContent;
+        var sel = window.getSelection();
+        var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
+        aa.setContent(content.slice(0, offset) + text + content.slice(offset))
+        aa.collapse(offset + text.length);
+        await InputForceStore(aa, async () => { })
+    }
 }
 async function onPasteUrl(kit: Kit, aa: AppearAnchor, url: string) {
-    var content = aa.textContent;
-    var sel = window.getSelection();
-    var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
-    aa.setContent(content.slice(0, offset) + url + content.slice(offset));
-    aa.collapse(offset + url.length);
-    var rect = Rect.fromEle(sel.getRangeAt(0));
-    kit.writer.inputPop = {
-        rect,
-        type: InputTextPopSelectorType.UrlSelector,
-        offset: offset - url.length,
-        aa,
-        selector: (await useInputUrlSelector())
-    };
-    await kit.writer.inputPop.selector.open(rect, url, (...data) => {
-        inputPopCallback(kit.writer, ...data);
-    });
+    if (aa.isSolid) {
+        await this.kit.page.onActionAsync(ActionDirective.onSolidBlockInputTextContent, async () => {
+            var text = aa.solidCursorEl.innerText;
+            aa.solidCursorEl.innerHTML = '';
+            var c = url;
+            var newBlock = await aa.block.parent.appendBlock({
+                url: BlockUrlConstant.Text,
+                content: c
+            },
+                aa.block.at + 1,
+                aa.block.parentKey
+            );
+            this.kit.page.addUpdateEvent(async () => {
+                this.kit.writer.onFocusBlockAnchor(newBlock, { last: true });
+                var sel = window.getSelection();
+                var rect = Rect.fromEle(sel.getRangeAt(0));
+                kit.writer.inputPop = {
+                    rect,
+                    type: InputTextPopSelectorType.UrlSelector,
+                    offset: 0,
+                    aa: newBlock.appearAnchors.first(),
+                    selector: (await useInputUrlSelector())
+                };
+                await kit.writer.inputPop.selector.open(rect, url, (...data) => {
+                    kit.writer.onInputPopCreateBlock(...data);
+                });
+            });
+        });
+    }
+    else {
+        var content = aa.textContent;
+        var sel = window.getSelection();
+        var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
+        aa.setContent(content.slice(0, offset) + url + content.slice(offset));
+        aa.collapse(offset + url.length);
+        var rect = Rect.fromEle(sel.getRangeAt(0));
+        kit.writer.inputPop = {
+            rect,
+            type: InputTextPopSelectorType.UrlSelector,
+            offset: offset - url.length,
+            aa,
+            selector: (await useInputUrlSelector())
+        };
+        await kit.writer.inputPop.selector.open(rect, url, (...data) => {
+            kit.writer.onInputPopCreateBlock(kit.writer, ...data);
+        });
+    }
 }
 

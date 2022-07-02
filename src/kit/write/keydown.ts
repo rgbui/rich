@@ -9,7 +9,6 @@ import { KeyboardCode } from "../../common/keys";
 import { onceAutoScroll } from "../../common/scroll";
 import { TextEle } from "../../common/text.ele";
 import { Rect } from "../../common/vector/point";
-import { inputPopCallback } from "./input";
 import { InputForceStore } from "./store";
 
 /***
@@ -23,7 +22,7 @@ export function predictKeydown(write: PageWrite, aa: AppearAnchor, event: React.
          * 这里不光阻止，还触发了事件
          */
         else if (typeof r != 'boolean' && r?.blockData) {
-            inputPopCallback(write, r?.blockData);
+            write.onInputPopCreateBlock(r?.blockData);
             return false;
         }
     }
