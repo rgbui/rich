@@ -67,9 +67,9 @@ export class LinkView extends BlockView<Link>{
     }
     render() {
         return <div className='sy-block-link'>
-            {this.block.text && <a href={this.block.pageUrl} onClick={e => this.block.openPage(e)}>
+            {this.block.pageId && <a href={this.block.pageUrl} onClick={e => this.block.openPage(e)}>
                 <i><Icon size={18} icon={this.block.icon || PageSvg}></Icon></i>
-                <SolidArea block={this.block} prop='text'><span>{this.block.text}</span></SolidArea>
+                <SolidArea block={this.block} prop='text'><span>{this.block.text || '新页面'}</span></SolidArea>
             </a>}
         </div>
     }
