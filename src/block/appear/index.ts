@@ -386,4 +386,7 @@ export class AppearAnchor {
             this.el.innerText = this.propValue;
         }
     }
+    get solidCursorEl(){
+        return this.el.querySelector('.shy-appear-solid-cursor') as HTMLElement;
+    }
 }

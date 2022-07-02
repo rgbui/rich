@@ -214,7 +214,11 @@ export class PageWrite {
         this.textInput(aa, event);
     }
     async textInput(aa: AppearAnchor, event: React.CompositionEvent | React.FormEvent<Element>) {
-        var inputEvent=event.nativeEvent as InputEvent;
+        var inputEvent = event.nativeEvent as InputEvent;
+        if (aa.isSolid) {
+            this.onSolidInputCreateTextBlock(aa, event);
+            return;
+        }
         /**
          * 这里需要判断是否有必要弹出弹窗
          */
@@ -385,38 +389,56 @@ export class PageWrite {
      * 如果@blockData 是 isLine ,则在指定的appear某处@offset插入一个新的block(@blockData)
      * 如果块，则在appear下面一行插入，如果appear本身是空的文本，则替换自身，在下面插入
      */
-    async onInputPopCreateBlock(offset: number,
-        blockData: { isLine?: boolean, createPage?: boolean, url: string }) {
-        await InputForceStore(this.inputPop.aa, async () => {
-            var aa = this.inputPop.aa;
-            var newBlock: Block;
-            var bd = lodash.cloneDeep(blockData);
-            delete bd.isLine;
-            delete bd.url;
-            if (blockData.isLine) {
-                /**
-                 * 说明创建的是行内块
-                 */
-                newBlock = await aa.block.visibleRightCreateBlock(offset, blockData.url, { ...bd, createSource: 'InputBlockSelector' });
-            }
-            else {
-                /**
-                 * 判断是否为空行块，如果是空行块，则将当前的块转用
-                 * 否则创建一个换行块
-                 */
-                if (aa.block.isContentEmpty) {
-                    newBlock = await aa.block.visibleDownCreateBlock(blockData.url, { ...bd, createSource: 'InputBlockSelector' });
-                    //说明是空白的textBlock
-                    await aa.block.delete();
+    async onInputPopCreateBlock(...args: any[]) {
+
+        var inputPopHandle = async (offset: number,
+            blockData: { isLine?: boolean, createPage?: boolean, url: string }) => {
+            await InputForceStore(this.inputPop.aa, async () => {
+                var aa = this.inputPop.aa;
+                var newBlock: Block;
+                var bd = lodash.cloneDeep(blockData);
+                delete bd.isLine;
+                delete bd.url;
+                if (blockData.isLine) {
+                    /**
+                     * 说明创建的是行内块
+                     */
+                    newBlock = await aa.block.visibleRightCreateBlock(offset, blockData.url, { ...bd, createSource: 'InputBlockSelector' });
                 }
                 else {
-                    newBlock = await aa.block.visibleDownCreateBlock(blockData.url, { ...bd, createSource: 'InputBlockSelector' });
+                    /**
+                     * 判断是否为空行块，如果是空行块，则将当前的块转用
+                     * 否则创建一个换行块
+                     */
+                    var row = aa.block.closest(g => g.isBlock);
+                    if (row.isContentEmpty) {
+                        newBlock = await aa.block.visibleDownCreateBlock(blockData.url, { ...bd, createSource: 'InputBlockSelector' });
+                        //说明是空白的textBlock
+                        await row.delete();
+                    }
+                    else {
+                        newBlock = await aa.block.visibleDownCreateBlock(blockData.url, { ...bd, createSource: 'InputBlockSelector' });
+                    }
+                    if (aa.block.isLine && aa.block.isContentEmpty) {
+                        await aa.block.delete();
+                    }
                 }
-            }
-            newBlock.mounted(() => {
-                this.onFocusBlockAnchor(newBlock, { last: true })
+                newBlock.mounted(() => {
+                    this.onFocusBlockAnchor(newBlock, { last: true })
+                });
             });
-        });
+        }
+        var blockData = args[0];
+        var sel = window.getSelection();
+        var aa = this.inputPop.aa;
+        var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
+        var content = aa.textContent;
+        var textContent = content.slice(0, this.inputPop.offset) + content.slice(offset);
+        aa.setContent(textContent);
+        aa.collapse(offset);
+        await inputPopHandle(this.inputPop.offset, blockData);
+        this.inputPop = null;
+
     }
     async onSelectionSetPatternOrProps(
         appears: AppearAnchor[],
@@ -512,6 +534,23 @@ export class PageWrite {
             }
             this.kit.page.addUpdateEvent(async () => {
                 this.onFocusBlockAnchor(nend, { last: true });
+            });
+        });
+    }
+    async onSolidInputCreateTextBlock(aa: AppearAnchor, event?: React.CompositionEvent | React.FormEvent<Element>, forceText?: string) {
+        await this.kit.page.onActionAsync(ActionDirective.onSolidBlockInputTextContent, async () => {
+            var text = aa.solidCursorEl.innerText;
+            aa.solidCursorEl.innerHTML = '';
+            var c = forceText ? forceText : text;
+            var newBlock = await aa.block.parent.appendBlock({
+                url: BlockUrlConstant.Text,
+                content: c
+            },
+                aa.block.at + 1,
+                aa.block.parentKey
+            );
+            this.kit.page.addUpdateEvent(async () => {
+                this.kit.writer.onFocusBlockAnchor(newBlock, { last: true });
             });
         });
     }

@@ -27,6 +27,7 @@ export enum ActionDirective {
     onButtonTemplateCreateInstance = 121,
     onLoadUserActions = 122,
     onCopyBlock = 123,
+    onSolidBlockInputTextContent = 124,
 
     onBoardToolCreateBlock = 130,
     onResizeBlock = 132,
