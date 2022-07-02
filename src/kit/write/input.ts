@@ -83,13 +83,12 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
         // }
     }
     if (write.inputPop) {
-        console.log('input', (event.nativeEvent as InputEvent));
         var popVisible = await write.inputPop.selector.open(
             write.inputPop.rect,
             aa.textContent.slice(write.inputPop.offset, offset),
             (...data) => {
                 inputPopCallback(write, ...data);
-            }, { isComposing: (event.nativeEvent as InputEvent).isComposing });
+            });
         if (!popVisible) write.inputPop = null;
         else return true;
     }
