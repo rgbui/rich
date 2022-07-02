@@ -32,7 +32,7 @@ export var BlockSelectorData: BlockGroup[] = [
         text: '基本',
         childs: [
             { text: '文本', pic: <img src={text} />, url: '/textspan', description: '文本', label: '/文本', labels: ['/wb', '/wenben', '/text', '/plain'] },
-            { text: '文章标题', pic: <img src={header} />, url: '/title', description: '标题', label: '/文本', labels: ['/title', '/yemianbiaoti'] },
+            //{ text: '文章标题', pic: <img src={header} />, url: '/title', description: '标题', label: '/文本', labels: ['/title', '/yemianbiaoti'] },
             { text: '大标题', pic: <img src={header} />, url: '/head', description: '大标题', label: '/大标题', labels: ['/bt', '/标题', '/biaoti', '/head', '/h1'] },
             { text: '二级标题', pic: <img src={subheader} />, url: '/head?{level:"h2"}', description: '', label: '/四级标题', labels: ['/bt', '/标题', '/biaoti', '/head', '/h2'] },
             { text: '三级标题', pic: <img src={subsubheader} />, url: '/head?{level:"h3"}', description: '', label: '/三级标题', labels: ['/bt', '/标题', '/biaoti', '/head', '/h3'] },
@@ -49,22 +49,22 @@ export var BlockSelectorData: BlockGroup[] = [
             { text: '进度条', pic: <img src={link} />, url: '/measure', description: "", label: "/进度条", labels: ['/jdt', '/jindutiao', '/progressbar'] }
         ]
     },
-    {
-        text: '行内块',
-        childs: [
-            { text: "表情", isLine: true, pic: <img src={emoji} />, url: "/emoji", description: "", label: "/表情", labels: ['/bq', '/biaoqing', '/emoji'] },
-            { text: "日期", isLine: true, pic: <img src={mentionDate} />, url: '/mention/date', description: '', label: '/引用日期', labels: ['/date', '/rq', '/riqi'] },
-            { text: "页面", isLine: true, pic: <img src={mentionPage} />, url: '/mention/page', description: '', label: '/引用页面', labels: ['/page', '/ym', '/yemian'] },
-            { text: "@ta人", isLine: true, pic: <img src={mentionPerson} />, url: '/mention/person', description: '', label: '/ta人', labels: ['/mention', '/at'] },
-        ]
-    },
+    // {
+    //     text: '行内块',
+    //     childs: [
+    //         { text: "表情", isLine: true, pic: <img src={emoji} />, url: "/emoji", description: "", label: "/表情", labels: ['/bq', '/biaoqing', '/emoji'] },
+    //         { text: "日期", isLine: true, pic: <img src={mentionDate} />, url: '/mention/date', description: '', label: '/引用日期', labels: ['/date', '/rq', '/riqi'] },
+    //         { text: "页面", isLine: true, pic: <img src={mentionPage} />, url: '/mention/page', description: '', label: '/引用页面', labels: ['/page', '/ym', '/yemian'] },
+    //         { text: "@ta人", isLine: true, pic: <img src={mentionPerson} />, url: '/mention/person', description: '', label: '/ta人', labels: ['/mention', '/at'] },
+    //     ]
+    // },
     {
         text: '展示',
         childs: [
-            { text: '卡片', pic: <img src={embed} />, url: "/card", label: '/卡片', labels: ['/card', '/kp', '/kaipian'] },
-            { text: '画板', pic: <img src={embed} />, url: '/board', label: '/画板', labels: ['/canvas', '/huaban', '/hb'] },
+            // { text: '卡片', pic: <img src={embed} />, url: "/card", label: '/卡片', labels: ['/card', '/kp', '/kaipian'] },
+            // { text: '画板', pic: <img src={embed} />, url: '/board', label: '/画板', labels: ['/canvas', '/huaban', '/hb'] },
             { text: '标签页', pic: <img src={embed} />, url: "/tab", label: '/标签页', labels: ['/tab', '/bjy', '/bianqianye'] },
-            { text: '轮播', pic: <img src={embed} />, url: "/carousel", label: '/轮播', labels: ['/carousel', '/lb', '/lunbo'] },
+            //  { text: '轮播', pic: <img src={embed} />, url: "/carousel", label: '/轮播', labels: ['/carousel', '/lb', '/lunbo'] },
             { text: '模板按钮', pic: <img src={embed} />, url: '/button/template', label: '/模板按钮', labels: ['/mban', '/mubananniu', '/template'] },
             { text: '目录大纲', pic: <img src={embed} />, url: '/outline', label: '/目录', labels: ['/outline', '/note', '/mulu', '/dagang'] }
         ]
