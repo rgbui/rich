@@ -8,13 +8,16 @@ import { Loading } from "../../component/view/loading";
 import { EmojiCode, emojiStore, EmojiType } from "./store";
 import { Remark } from "../../component/view/text";
 import { dom } from "../../src/common/dom";
-import { Tip } from "../../component/view/tip";
 import { getEmoji } from "../../net/element.type";
+import { Tip } from "../../component/view/tooltip/tip";
 
 /**
  * 用户输入@触发
  */
 class EmojiSelector extends InputTextPopSelector {
+    onClose(): void {
+        throw new Error("Method not implemented.");
+    }
     async open(
         round: Rect,
         text: string,
