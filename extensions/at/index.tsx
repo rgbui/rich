@@ -7,9 +7,10 @@ import { Loading } from "../../component/view/loading";
 import { Remark } from "../../component/view/text";
 import { channel } from "../../net/channel";
 import { KeyboardCode } from "../../src/common/keys";
-import { Point, Rect } from "../../src/common/vector/point";
+import { Point, Rect, RectUtility } from "../../src/common/vector/point";
 import { UserBasic } from "../../types/user";
 import { InputTextPopSelector } from "../common/input.pop";
+import { PopoverPosition } from "../popover/position";
 import "./style.less";
 
 /**
@@ -21,33 +22,46 @@ class AtUserSelector extends InputTextPopSelector {
         text: string,
         callback: (...args: any[]) => void): Promise<boolean> {
         this._select = callback;
+        this.round = round;
         this.pos = round.leftBottom;
+        if (!this.visible) {
+            this.selectIndex = 0;
+        }
         this.visible = true;
         var t = text.replace(/^@/, '');
         this.text = t;
-        this.syncSearch();
-        if (this.isSearch == true && this.links.length == 0) {
-            if (this.resultIsEmpty == true) { this.close(); return false; }
-            this.resultIsEmpty = true;
+        if (this.searchWord && this.text.startsWith(this.searchWord) && this.links.length == 0) {
+            if (this.searchIsEmpty == true) {
+                this.close();
+                return this.visible;
+            }
+            this.searchIsEmpty = true;
         }
-        else this.resultIsEmpty = false;
-        return true;
+        else this.searchIsEmpty = false;
+        this.syncSearch();
+        return this.visible;
     }
+    private round: Rect;
     links: UserBasic[] = [];
     loading = false;
-    isSearch = false;
-    resultIsEmpty: boolean = false;
+    searchWord: string = '';
+    searchIsEmpty: boolean = false;
     syncSearch = lodash.debounce(async () => {
         this.loading = true;
-        this.forceUpdate();
-        var r = await channel.get('/ws/member/word/query', { word: this.text });
-        this.isSearch = true;
+        this.searchWord = this.text;
+        if (this.visible == false) return;
+        this.adjuctPosition();
+        var r = await channel.get('/ws/member/word/query', { word: this.searchWord });
+        if ((this.visible as any) == false) return;
         if (r.ok) {
             this.links = r.data.list;
         }
         else this.links = [];
+        if (this.selectIndex >= this.links.length) {
+            this.selectIndex = 0;
+        }
         this.loading = false;
-        this.forceUpdate();
+        this.adjuctPosition();
     }, 1000)
     private get isSelectIndex() {
         return this.selectIndex >= 0 && this.selectIndex < this.links.length;
@@ -61,7 +75,7 @@ class AtUserSelector extends InputTextPopSelector {
                     <span>{link.name}</span>
                 </a>
             })}
-            {!this.loading && this.links.length == 0 && this.isSearch && <a style={{ display: 'block', marginLeft: 10 }}><Remark>没有搜索到</Remark></a>}
+            {!this.loading && this.searchWord && this.links.length == 0 && <a style={{ display: 'block', marginLeft: 10 }}><Remark>没有搜索到</Remark></a>}
         </div>
     }
     render() {
@@ -87,12 +101,32 @@ class AtUserSelector extends InputTextPopSelector {
         return b;
     }
     private close() {
-        this.isSearch = false;
+        this.searchIsEmpty = false;
         this.loading = false;
+        this.text = '';
+        this.searchWord = '';
+        this.selectIndex = 0;
         if (this.visible == true) {
             this.visible = false;
             this.forceUpdate();
         }
+    }
+    private adjuctPosition() {
+        this.forceUpdate(() => {
+            var selectorEl = this.el.querySelector('.shy-memebers') as HTMLElement;
+            if (selectorEl) {
+                var b = Rect.fromEle(selectorEl);
+                var pos: PopoverPosition = {
+                    roundArea: this.round,
+                    elementArea: b
+                }
+                var newPoint = RectUtility.cacPopoverPosition(pos);
+                if (!this.pos.equal(newPoint)) {
+                    this.pos = newPoint;
+                    this.forceUpdate();
+                }
+            }
+        })
     }
     onClose(): void {
         this.close()
