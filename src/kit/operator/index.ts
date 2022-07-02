@@ -1,7 +1,10 @@
 import React from "react";
 import { Kit } from "..";
+import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
+import { getShapeSelector } from "../../../extensions/shapes";
 import { forceCloseTextTool } from "../../../extensions/text.tool";
 import { Block } from "../../block";
+import { onAutoScrollStop } from "../../common/scroll";
 import { PageDrag } from "./drag";
 
 /****
@@ -68,9 +71,12 @@ export class PageOperator {
     /**
      * 清理页面的输入状态
      */
-    onClearPage() {
-        this.kit.operator.onClearSelectBlocks();
+    async onClearPage() {
+        (await getShapeSelector()).close();
+        onAutoScrollStop();
+        forceCloseBoardEditTool();
         forceCloseTextTool();
+        this.kit.operator.onClearSelectBlocks();
         if (this.kit.writer.inputPop && this.kit.writer.inputPop.selector) {
             this.kit.writer.inputPop.selector.onClose();
         }

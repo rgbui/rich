@@ -12,7 +12,6 @@ export class Collaboration extends React.Component<{ kit: Kit }>{
             if (this.el) {
                 this.offset = offset.clone();
                 this.forceUpdate();
-                // this.el.style.transform = `translate(${offset.x}px,${offset.y}px)`
             }
         })
     }
