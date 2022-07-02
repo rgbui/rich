@@ -1,5 +1,5 @@
 import lodash from "lodash";
-import React from "react";
+import React, { FormEvent } from "react";
 import { Kit } from "..";
 import { InputTextPopSelector, InputTextPopSelectorType } from "../../../extensions/common/input.pop";
 import { forceCloseTextTool, useTextTool } from "../../../extensions/text.tool";
@@ -59,6 +59,7 @@ import { AutoInputStore, InputForceStore, InputStore } from "./store";
 export class PageWrite {
     constructor(public kit: Kit) { }
     async mousedown(aa: AppearAnchor, event: React.MouseEvent) {
+        this.isCompositionstart = false;
         var sel = window.getSelection();
         var rowBlock = aa.block.closest(x => x.isBlock);
         if (rowBlock.isFreeBlock && !(sel.focusNode && rowBlock.el.contains(sel.focusNode))) {
@@ -185,8 +186,35 @@ export class PageWrite {
                 break;
         }
     }
-    async input(aa: AppearAnchor, event: React.FormEvent) {
-        var inputEvent = event.nativeEvent as InputEvent;
+    input(aa: AppearAnchor, event: React.FormEvent) {
+        if (this.isCompositionstart == true) return;
+        this.textInput(aa, event);
+    }
+    focus(aa: AppearAnchor, event: React.FocusEvent) {
+        aa.focus();
+    }
+    blur(aa: AppearAnchor, event: React.FocusEvent) {
+        aa.blur();
+    }
+    paste(aa: AppearAnchor, event: React.ClipboardEvent) {
+        onPaste(this.kit, aa, event.nativeEvent);
+    }
+    dblclick(aa: AppearAnchor, event: React.MouseEvent) {
+        this.onSelectionAll(aa);
+    }
+    isCompositionstart: boolean = false;
+    compositionstart(aa: AppearAnchor, event: React.CompositionEvent) {
+        this.isCompositionstart = true;
+    }
+    compositionupdate(aa: AppearAnchor, event: React.CompositionEvent) {
+        this.isCompositionstart = true;
+    }
+    compositionend(aa: AppearAnchor, event: React.CompositionEvent) {
+        this.isCompositionstart = false;
+        this.textInput(aa, event);
+    }
+    async textInput(aa: AppearAnchor, event: React.CompositionEvent | React.FormEvent<Element>) {
+        var inputEvent=event.nativeEvent as InputEvent;
         /**
          * 这里需要判断是否有必要弹出弹窗
          */
@@ -206,27 +234,6 @@ export class PageWrite {
          */
         else if (await inputLineTail(this, aa, event)) { }
         await InputStore(aa);
-    }
-    focus(aa: AppearAnchor, event: React.FocusEvent) {
-        aa.focus();
-    }
-    blur(aa: AppearAnchor, event: React.FocusEvent) {
-        aa.blur();
-    }
-    paste(aa: AppearAnchor, event: React.ClipboardEvent) {
-        onPaste(this.kit, aa, event.nativeEvent);
-    }
-    dblclick(aa: AppearAnchor, event: React.MouseEvent) {
-        this.onSelectionAll(aa);
-    }
-    compositionstart(aa: AppearAnchor, event: React.MouseEvent) {
-
-    }
-    compositionend(aa: AppearAnchor, event: React.MouseEvent) {
-
-    }
-    compositionupdate(aa: AppearAnchor, event: React.MouseEvent) {
-
     }
     /***
      * 对外开放的事件

@@ -83,7 +83,9 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
         // }
     }
     if (write.inputPop) {
-        var popVisible = await write.inputPop.selector.open(write.inputPop.rect,
+        console.log('input', (event.nativeEvent as InputEvent));
+        var popVisible = await write.inputPop.selector.open(
+            write.inputPop.rect,
             aa.textContent.slice(write.inputPop.offset, offset),
             (...data) => {
                 inputPopCallback(write, ...data);
@@ -249,7 +251,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                     });
                     return;
                 }
-                if(!rowBlock.isContentEmpty && rowBlock.isTextBlock && !rowBlock.prev && rowBlock.parent.isTextBlock) {
+                if (!rowBlock.isContentEmpty && rowBlock.isTextBlock && !rowBlock.prev && rowBlock.parent.isTextBlock) {
                     //这个父块合并子块的内容
                     await combindSubBlock(write, rowBlock);
                     return;

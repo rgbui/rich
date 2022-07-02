@@ -47,7 +47,7 @@ class BlockSelector extends InputTextPopSelector {
                                 this.forceUpdate();
                             }}
                             onMouseDown={e => this.onSelect(child)}
-                        > {child.pic}
+                        >{child.pic}
                             <div className='shy-block-selector-group-block-info'>
                                 <span>{child.text}</span>
                                 <em>{child.description}</em>
@@ -80,6 +80,8 @@ class BlockSelector extends InputTextPopSelector {
     private selectIndex: number = 0;
     private _select: (block: BlockSelectorItem, matchValue: string) => void;
     async open(round: Rect, text: string, callback: BlockSelector['_select'], options: { isComposing: boolean }) {
+        console.log('isCom', options.isComposing);
+        if (options.isComposing == true) return this.visible;
         var cs = text.match(/(\/|、)[^\s]*$/g);
         if (!(cs && cs[0])) {
             this.close();
@@ -91,9 +93,7 @@ class BlockSelector extends InputTextPopSelector {
         this.visible = true;
         await blockStore.import();
         this.inputFilter(text, options);
-        if (this.visible) {
-            this._select = callback;
-        }
+        this._select = callback;
         return this.visible;
     }
     private inputValue: string;
@@ -106,13 +106,11 @@ class BlockSelector extends InputTextPopSelector {
             command = command.replace(/、/g, "/");
             this.command = command;
             if (this.filterBlocks.length == 0) {
-                if (!options?.isComposing) {
-                    if (this.previsible == true) {
-                        this.previsible = false;
-                        this.adjuctPosition();
-                    }
-                    else this.close()
+                if (this.previsible == true) {
+                    this.previsible = false;
+                    this.adjuctPosition();
                 }
+                else this.close()
             }
             else { this.previsible = true; this.adjuctPosition(); }
         }
@@ -144,7 +142,7 @@ class BlockSelector extends InputTextPopSelector {
         var b = this.filterBlocks[this.selectIndex];
         return b;
     }
-    onClose(){
+    onClose() {
         this.close();
     }
     private close() {
