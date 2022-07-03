@@ -11,6 +11,8 @@ import { prop, url, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
 import { SolidArea } from "../../src/block/view/appear";
 
+import "./style.less";
+
 @url('/link')
 export class Link extends Block {
     @prop()
