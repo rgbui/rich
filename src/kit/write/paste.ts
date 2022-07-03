@@ -1,4 +1,5 @@
 import { Kit } from "..";
+import { TextCode } from "../../../blocks/present/code/code";
 import { InputTextPopSelectorType } from "../../../extensions/common/input.pop";
 import { useInputUrlSelector } from "../../../extensions/url";
 import { AppearAnchor } from "../../block/appear";
@@ -152,7 +153,13 @@ async function onPasteInsertText(kit: Kit, aa: AppearAnchor, text: string) {
         var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
         aa.setContent(content.slice(0, offset) + text + content.slice(offset))
         aa.collapse(offset + text.length);
-        await InputForceStore(aa, async () => { })
+        await InputForceStore(aa, async () => {
+            kit.page.addUpdateEvent(async () => {
+                if (aa.block.url == BlockUrlConstant.Code) {
+                    (aa.block as TextCode).renderCode()
+                }
+            })
+        })
     }
 }
 async function onPasteUrl(kit: Kit, aa: AppearAnchor, url: string) {

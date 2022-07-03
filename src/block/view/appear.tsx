@@ -11,11 +11,12 @@ export function TextArea(props: {
     placeholder?: string,
     style?: CSSProperties,
     default?: string,
-    isHtml?: boolean
+    isHtml?: boolean,
+    isBlock?: boolean
 }) {
     var prop = props.prop;
     if (typeof prop == 'undefined') prop = 'content';
-    var ps: React.DetailedHTMLProps<React.HTMLAttributes<HTMLSpanElement>, HTMLSpanElement> = {
+    var ps: React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> = {
         style: props.style,
         placeholder: props.placeholder
     };
@@ -49,8 +50,14 @@ export function TextArea(props: {
     var html = props.html;
     if (typeof html == 'undefined') html = lodash.get(props.block, props.prop);
     if (html == '' && typeof props.default != 'undefined') html = props.default;
-    if (props.isHtml) return <span className='shy-appear-text' dangerouslySetInnerHTML={{ __html: html }} {...ps}></span>
-    return <span className='shy-appear-text' {...ps}>{html}</span>
+    if (props.isBlock) {
+        if (props.isHtml) return <div className='shy-appear-text' dangerouslySetInnerHTML={{ __html: html }} {...(ps as any)}></div>
+        return <div className='shy-appear-text' {...(ps as any)}>{html}</div>
+    }
+    else {
+        if (props.isHtml) return <span className='shy-appear-text' dangerouslySetInnerHTML={{ __html: html }} {...ps}></span>
+        return <span className='shy-appear-text' {...ps}>{html}</span>
+    }
 }
 export function SolidArea(props: {
     children?: React.ReactNode,

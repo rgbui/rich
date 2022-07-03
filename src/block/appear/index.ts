@@ -38,7 +38,7 @@ export class AppearAnchor {
         }
     }
     setContent(value: string) {
-        this.el.innerText = value;
+        this.el.innerHTML = value;
     }
     get isEmpty() {
         if (this.isText) {
@@ -100,9 +100,9 @@ export class AppearAnchor {
         return AppearVisibleSeek(this, { arrow: 'left' });
     }
     visibleDown(left?: number): AppearAnchor {
-      /**
-      * 在块内查找
-      */
+        /**
+        * 在块内查找
+        */
         var vp = this.block.appearAnchors.find((g, i) => i > this.at);
         if (vp) return vp;
         return AppearVisibleSeek(this, { arrow: 'down', left });
@@ -386,7 +386,7 @@ export class AppearAnchor {
             this.el.innerText = this.propValue;
         }
     }
-    get solidCursorEl(){
+    get solidCursorEl() {
         return this.el.querySelector('.shy-appear-solid-cursor') as HTMLElement;
     }
 }
