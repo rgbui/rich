@@ -27,6 +27,7 @@ export class TableCell extends Block {
         return this.parent as TableRow;
     }
 }
+
 @view('/table/cell')
 export class TableCellView extends BlockView<TableCell>{
     async mousedown(event: React.MouseEvent) {
@@ -110,13 +111,7 @@ export class TableCellView extends BlockView<TableCell>{
                     })
                     break;
                 case 'delCol':
-                    this.block.page.onAction('table.' + result.item.name, async () => {
-                        var at = this.block.at;
-                        var rows = this.block.row.table.childs;
-                        await rows.eachReverseAsync(async (row) => {
-                            await row.childs[at].delete()
-                        })
-                    })
+                    this.block.row.table.onRemoveColumn(this.block.at);
                     break;
                 case 'clear':
                     this.block.page.onAction('table.' + result.item.name, async () => {

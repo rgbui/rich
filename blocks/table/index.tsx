@@ -187,6 +187,17 @@ export class Table extends Block {
             this.manualUpdateProps({ cols: this.cols }, { cols: cs }, BlockRenderRange.self)
         });
     }
+    async onRemoveColumn(columnIndex: number) {
+        this.page.onAction('table.columnIndex', async () => {
+            var cs = lodash.cloneDeep(this.cols);
+            cs.splice(columnIndex,1);
+            var rows = this.childs;
+            await rows.eachReverseAsync(async (row) => {
+                await row.childs[columnIndex].delete()
+            });
+            this.manualUpdateProps({ cols: this.cols }, { cols: cs }, BlockRenderRange.self)
+        })
+    }
 }
 @view('/table')
 export class TableView extends BlockView<Table>{
