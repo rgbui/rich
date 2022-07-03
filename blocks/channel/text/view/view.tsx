@@ -120,18 +120,15 @@ export class ChannelTextView extends BlockView<ChannelText>{
     }
     loadding: boolean = false;
     wheel = async (e) => {
-        if (this.block.el && this.block.el.scrollTop < 60) {
+        if (this.contentEl && this.contentEl.scrollTop < 60) {
             await this.block.scrollTopLoad();
         }
     }
     updateScroll() {
         if (this.contentEl) {
-            console.log('scrollTop', this.contentEl.scrollTop);
             this.contentEl.scrollTop = this.contentEl.scrollHeight + 100;
-            setTimeout(() => {
-                console.log('scrollTop1', this.contentEl.scrollTop);
+            setTimeout(()=>{
                 this.contentEl.scrollTop = this.contentEl.scrollHeight + 100;
-                console.log('scrollTop3', this.contentEl.scrollTop);
             }, 300);
         }
     }
