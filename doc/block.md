@@ -11,3 +11,7 @@
     block(list)-本身是一个类似于textspan的组件
     list-[line,line]
     list-subchilds[row,row]
+
+
+## 
+1. 画面有点单调
