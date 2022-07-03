@@ -1,45 +1,3 @@
-.sy-block-link {
-    cursor    : pointer;
-    min-height: 30px;
-
-    &:hover {
-        background-color: rgba(55, 53, 47, 0.08);
-        transition      : background 20ms ease-in 0s;
-    }
-
-    white-space    : nowrap;
-    overflow       : hidden;
-    text-overflow  : ellipsis;
-    display        : flex;
-    justify-content: flex-start;
-    align-items    : center;
-
-    a {
-
-        display: inline-flex;
-
-        align-items    : center;
-        justify-content: flex-start;
-        text-decoration: none;
-
-        >i {
-            display        : inline-flex;
-            justify-content: center;
-            align-items    : center;
-            width          : 24px;
-            height         : 24px;
-            margin-right   : 4px;
-        }
-
-        >span {
-            // text-decoration: underline;
-            color        : rgb(55, 53, 47);
-            font-weight  : 500;
-            border-bottom: 1px solid rgba(55, 53, 47, 0.16);
-        }
-    }
-}
-
 .sy-block-mention {
     background-color: rgba(100, 161, 223, 0.14);
     line-height     : 22px;
@@ -49,4 +7,17 @@
     border-radius   : 6px;
     margin          : 0px 2px;
     white-space     : nowrap;
+    cursor          : pointer;
+}
+
+.sy-block-date {
+    background-color: rgba(100, 161, 223, 0.14);
+    line-height     : 22px;
+    padding         : 0px !important;
+    display         : inline-block;
+    color           : #64a1df;
+    border-radius   : 6px;
+    margin          : 0px 2px;
+    white-space     : nowrap;
+    cursor          : pointer;
 }

@@ -1,42 +1,72 @@
 
 import React from "react";
-import { PageSvg } from "../../component/svgs";
+import { GlobalLinkSvg, PageSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { LinkPageItem } from "../../extensions/at/declare";
 import { IconArguments } from "../../extensions/icon/declare";
+import { useLinkPicker } from "../../extensions/link/picker";
 import { channel } from "../../net/channel";
 import { Block } from "../../src/block";
 import { BlockDisplay } from "../../src/block/enum";
 import { prop, url, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
 import { SolidArea } from "../../src/block/view/appear";
-
+import { Rect } from "../../src/common/vector/point";
 import "./style.less";
 
 @url('/link')
 export class Link extends Block {
-    @prop()
-    isShowIcon: boolean = true;
     @prop()
     pageId: string;
     display = BlockDisplay.block;
     icon: IconArguments;
     text: string;
     pageUrl: string;
+    @prop()
+    outsideUrl: string;
     get isSupportTextStyle() {
         return false;
     }
     async loadPageInfo() {
-        var r = await channel.get('/page/query/info', { id: this.pageId });
-        if (r?.ok) {
-            if (r.data.icon) this.icon = r.data.icon;
-            if (r.data.text) this.text = r.data.text;
-            if (r.data.url) this.pageUrl = r.data.url;
+        if (this.pageId) {
+            var r = await channel.get('/page/query/info', { id: this.pageId });
+            if (r?.ok) {
+                if (r.data.icon) this.icon = r.data.icon;
+                if (r.data.text) this.text = r.data.text;
+                if (r.data.url) this.pageUrl = r.data.url;
+            }
+            this.forceUpdate();
         }
     }
     async openPage(event: React.MouseEvent) {
+        if (!this.pageId) return;
         event.preventDefault();
         channel.air('/page/open', { item: { id: this.pageId } });
+    }
+    async onPickerLinker() {
+        var pageLink = await useLinkPicker({ roundArea: Rect.fromEle(this.el) });
+        if (pageLink) {
+            if (pageLink.name == 'outside') {
+                this.onUpdateProps({ outsideUrl: pageLink.url }, {
+                    merge: this.createSource == 'InputBlockSelector' ? true : false
+                })
+            }
+            else {
+                if (pageLink.name == 'create') {
+                    var r = await channel.air('/page/create/sub', { pageId: this.page.pageItemId, text: pageLink.text || pageLink.url });
+                    if (r) {
+                        pageLink.pageId = r.id;
+                        pageLink.name = 'page';
+                        delete pageLink.url;
+                        delete pageLink.text;
+                    }
+                }
+                await this.onUpdateProps({ pageId: pageLink.pageId }, {
+                    merge: this.createSource == 'InputBlockSelector' ? true : false
+                });
+                await this.loadPageInfo();
+            }
+        }
     }
 }
 @view('/link')
@@ -44,11 +74,16 @@ export class LinkView extends BlockView<Link>{
     async didMount() {
         channel.sync('/page/update/info', this.updatePageInfo);
         await this.block.loadPageInfo();
-        this.forceUpdate();
+        if (!this.block.pageId && !this.block.outsideUrl) {
+            if (this.block.createSource == 'InputBlockSelector') {
+                this.block.onPickerLinker();
+            }
+        }
+
     }
     updatePageInfo = (data: { id: string, pageInfo: LinkPageItem }) => {
         var { id, pageInfo } = data;
-        if (this.block.pageId == id) {
+        if (this.block.pageId && this.block.pageId == id) {
             var isUpdate: boolean = false;
             if (typeof pageInfo.text != 'undefined' && pageInfo.text != this.block.text) {
                 this.block.text = pageInfo.text;
@@ -73,6 +108,10 @@ export class LinkView extends BlockView<Link>{
                 <i><Icon size={18} icon={this.block.icon || PageSvg}></Icon></i>
                 <SolidArea block={this.block} prop='text'><span>{this.block.text || '新页面'}</span></SolidArea>
             </a>}
+            {this.block.outsideUrl && <a href={this.block.outsideUrl}><SolidArea block={this.block} prop='outsideUrl'><span>{this.block.outsideUrl}</span></SolidArea></a>}
+            {!this.block.pageId && !this.block.outsideUrl && <div className='sy-block-link-create' onMouseDown={e => { e.stopPropagation(); this.block.onPickerLinker() }}><Icon size={16} icon={GlobalLinkSvg}></Icon>
+                <span>添加链接</span>
+            </div>}
         </div>
     }
 }

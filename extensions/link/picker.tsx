@@ -20,7 +20,7 @@ import { Divider } from "../../component/view/grid";
 /**
  * 
  * 输入网址，
- * 如果不是互联网址，则搜索本地的页面，同时也可以概据当前的输入的页面名称，自动创建一个新的子页面
+ * 如果不是互联网址，则搜索本地的页面，同时也可以根据当前的输入的页面名称，自动创建一个新的子页面
  * 
  */
 class LinkPicker extends EventsComponent<{ link: PageLink }> {

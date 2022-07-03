@@ -53,15 +53,15 @@ export var BlockSelectorData: BlockGroup[] = [
         text: '行内块',
         childs: [
             { text: "表情", isLine: true, pic: <img src={emoji} />, url: "/emoji", description: "", label: "/表情", labels: ['/bq', '/biaoqing', '/emoji'] },
-            //{ text: "日期", isLine: true, pic: <img src={mentionDate} />, url: '/mention/date', description: '', label: '/引用日期', labels: ['/date', '/rq', '/riqi'] },
-            // { text: "页面", isLine: true, pic: <img src={mentionPage} />, url: '/mention/page', description: '', label: '/引用页面', labels: ['/page', '/ym', '/yemian'] },
-            { text: "@ta人", isLine: true, pic: <img src={mentionPerson} />, url: '/mention/person', description: '', label: '/ta人', labels: ['/mention', '/at'] },
+            { text: "日期", isLine: true, pic: <img src={mentionDate} />, url: '/mention/date', description: '', label: '/引用日期', labels: ['/date', '/rq', '/riqi'] },
+            { text: "页面", isLine: true, pic: <img src={mentionPage} />, url: '/link', description: '', label: '/引用页面', labels: ['/page', '/ym', '/yemian'] },
+            { text: "提及", isLine: true, pic: <img src={mentionPerson} />, url: '/mention/person', description: '', label: '/ta人', labels: ['/mention', '/at'] },
         ]
     },
     {
         text: '展示',
         childs: [
-            // { text: '卡片', pic: <img src={embed} />, url: "/card", label: '/卡片', labels: ['/card', '/kp', '/kaipian'] },
+            { text: '卡片', pic: <img src={embed} />, url: "/card", label: '/卡片', labels: ['/card', '/kp', '/kaipian'] },
             // { text: '画板', pic: <img src={embed} />, url: '/board', label: '/画板', labels: ['/canvas', '/huaban', '/hb'] },
             { text: '标签页', pic: <img src={embed} />, url: "/tab", label: '/标签页', labels: ['/tab', '/bjy', '/bianqianye'] },
             //  { text: '轮播', pic: <img src={embed} />, url: "/carousel", label: '/轮播', labels: ['/carousel', '/lb', '/lunbo'] },
