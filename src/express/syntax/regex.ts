@@ -3,8 +3,8 @@ import { Token } from "../token/token";
 
 /**
  * @link https://microsoft.github.io/monaco-editor/monarch.html
+ * 
  */
-
 export type LangSyntaxRule = {
     include?: string,
     name?: string,

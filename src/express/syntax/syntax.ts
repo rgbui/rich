@@ -1,21 +1,21 @@
 
 import { TokenType } from "../token/token";
 import { convertLangSyntax, LangSyntax } from "./regex";
-export var mvelTokenSyntax: LangSyntax = {
-    keyword: /true|false|null|in/,
+export var VeTokenSyntax: LangSyntax = {
+    keyword: /true|false|null/,
     operator: ['+', '.', '-', '*', '/', '%', '?', '=', '==', '&&', '||', '!', '!=', '>', "<", '>=', '<='],
     escapes: /\\\\([abfnrtv\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})/,
     white: /[ \t\f\v]/,
     unit: /[a-zA-Z_\$]/,
     word: /@unit[a-zA-Z_\$\d]*/,
-    namespace: /@word(@white*\.@white*@word)*/,
+    // namespace: /@word@white*\.@white*@word/,
     number: /(\-)?\d+(\.\d+)?([eE][\-+]?\d+)?/,
     root: [
         { match: /@white+/, name: 'white' },
         { match: /[\{\(\[]/, name: 'bracket_open', push: true },
         { match: /[\)\]\}]/, name: 'bracket_close', pop: true },
         { match: /@keyword(?![a-zA-Z_\$\u4E00-\u9FA5\d])/, name: 'keyword' },
-        { match: /@namespace/, name: 'word' },
+        { match: /@word/, name: 'word' },
         {
             match: '@operator',
             name: 'operator',
@@ -46,4 +46,4 @@ export var mvelTokenSyntax: LangSyntax = {
         { match: '\'', name: 'quote_close', pop: true, next: '@root' }
     ]
 }
-convertLangSyntax(mvelTokenSyntax);
+convertLangSyntax(VeTokenSyntax);

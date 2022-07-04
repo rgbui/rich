@@ -1,7 +1,7 @@
 
 
 
-import { mvelTokenSyntax } from "../syntax/syntax";
+import { VeTokenSyntax } from "../syntax/syntax";
 import { LangSyntax, LangSyntaxRoot, LangSyntaxRule } from "../syntax/regex";
 import { Token, TokenType } from "./token";
 
@@ -22,7 +22,7 @@ export class Tokenizer {
     private syntax: LangSyntax;
     error: (error: string) => void;
     protected init() {
-        this.load(mvelTokenSyntax);
+        this.load(VeTokenSyntax);
     }
     protected load(syntax: LangSyntax) {
         this.syntax = syntax;

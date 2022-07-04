@@ -1,41 +1,51 @@
+
+
 import { ExpType, ExpUnitType } from "../exp/declare";
+export enum TypeKind {
+    /**
+     * 类
+     */
+    class,
+    /**
+     * 静态方法
+     */
+    static,
+    /**
+     * 参数
+     */
+    arg
+}
+
+export type TypeDeclare = {
+    path: string,
+    kind: TypeKind,
+    caller?: ExpUnitType,
+    type: ExpType,
+    template?: string,
+    references?: { name: string, code: string }[]
+}
 export class DeclareTypes {
-    private static types: { type: ExpUnitType, props: { key: string, propertyType: ExpType }[] }[] = [];
-    static register(type: ExpUnitType, key: string, propertyType: ExpType) {
-        var tp = this.types.find(g => g.type == type);
-        if (!tp) {
-            this.types.push({ type, props: [{ key, propertyType }] });
+    static declares: TypeDeclare[] = [];
+    static registerType(caller: ExpUnitType, propKey: string, propType: ExpType, template?: string, references?: { name: string, code: string }[]) {
+        var dec = this.declares.find(g => g.kind == TypeKind.class && g.caller == caller && g.path == propKey);
+        if (dec) {
+            Object.assign(dec, { caller, kind: TypeKind.class, type: propType, template, references });
         }
         else {
-            tp.props.push({ key, propertyType });
+            this.declares.push({ caller, path: propKey, kind: TypeKind.class, type: propType, template, references });
         }
     }
-    static recommendType(type: ExpUnitType, key: string) {
-        var ns = key.split(/\./g);
-        var index = ns.length;
-        var currentType = type;
-        var beforeKey = ns.slice(0, index).join(".");
-        var afterKey = ns.slice(index).join(".");
-        var ts = this.types.find(g => g.type == currentType);
-        var rt: ExpType;
-        while (true) {
-            var tp = ts.props.find(pro => pro.key == beforeKey);
-            if (tp) {
-                rt = tp.propertyType;
-                break;
-            }
-            else {
-                index -= 1;
-                beforeKey = ns.slice(0, index).join('.');
-                afterKey = ns.slice(index).join(".");
-                if (!beforeKey) break;
-            }
+    static registerStatic(propKey: string, propType: ExpType, template?: string, references?: { name: string, code: string }[]) {
+        var dec = this.declares.find(g => g.kind == TypeKind.static && g.path == propKey);
+        if (dec) {
+            Object.assign(dec, { kind: TypeKind.static, type: propType, template, references });
         }
-        if (rt) {
-            if (afterKey) return this.recommendType(rt as ExpUnitType, afterKey);
-            else return rt;
+        else {
+            this.declares.push({ path: propKey, kind: TypeKind.static, type: propType, template, references });
         }
     }
 }
-
-DeclareTypes.register('string', 'length', 'number');
+DeclareTypes.registerType('string', 'length', 'number', 'len($this)');
+DeclareTypes.registerType('string', 'slice', { __args: ['int', 'int'], __returnType: 'string' });
+DeclareTypes.registerStatic('Math.round', { __args: ['number'], __returnType: 'int' }, `round($args1)`)
+DeclareTypes.registerStatic('Math.PI', 'double', `math.pi`, [{ name: 'math', code: 'import math' }]);
