@@ -1,5 +1,6 @@
 import { Page } from "..";
 import { UA } from "../../../util/ua";
+import { Block } from "../../block";
 import { KeyboardCode, KeyboardPlate } from "../../common/keys";
 
 export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
@@ -15,4 +16,19 @@ export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
             page.onSave();
         }
     );
+    keyboardPlate.listener(kt => UA.isMacOs && kt.is(KeyboardCode.Backspace) || !UA.isMacOs && kt.is(KeyboardCode.Delete),
+        (event, kt) => {
+            if (page.kit.operator.currentSelectedBlocks.length > 0) {
+                var ds: Block[] = [];
+                var cs = page.kit.operator.currentSelectedBlocks.map(c => c.handleBlock);
+                cs.each(c => { if (!ds.some(s => s == c)) ds.push(c) });
+                page.onBatchDelete(ds);
+            }
+        },
+        (event, kt) => {
+
+        },
+        'delete',
+        false
+    )
 }
