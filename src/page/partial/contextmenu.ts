@@ -83,9 +83,9 @@ export class PageContextmenu {
                 { name: 'undo', iconSize: 16, text: '撤消', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
                 // { name: 'redo', text: '重做', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
                 { name: 'delete', iconSize: 16, icon: TrashSvg, text: '删除' },
-                { type: MenuItemTypeValue.divide },
-                { name: 'import', iconSize: 16, icon: ImportSvg, text: '导入', disabled: true },
-                { name: 'export', iconSize: 16, text: '导出', icon: FileSvg, disabled: true, remark: '导出PDF,HTML,Markdown' },
+                // { type: MenuItemTypeValue.divide },
+                // { name: 'import', iconSize: 16, icon: ImportSvg, text: '导入', disabled: true },
+                // { name: 'export', iconSize: 16, text: '导出', icon: FileSvg, disabled: true, remark: '导出PDF,HTML,Markdown' },
                 // { type: MenuItemTypeValue.divide },
                 // { name: 'move', text: '移动', icon: MoveToSvg, disabled: true },
             ];
