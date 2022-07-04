@@ -1,5 +1,6 @@
 import React from "react";
 import { useOpenEmoji } from "../../../extensions/emoji";
+import { TextEle } from "../../../src/common/text.ele";
 import { Rect } from "../../../src/common/vector/point";
 import { util } from "../../../util/util";
 import { OpenMultipleFileDialoug } from "../../file";
@@ -101,6 +102,9 @@ export class RichTextInput extends React.Component<{
                 this.props.popInput('Input', { ...this.charSpan });
             }
         }
+        if (!this.isComposition) {
+            //说明是正常的输入，如果输入一些特定的md语法，那么将触发一些操作
+        }
     }
     blur(event: React.FocusEvent) {
         if (this.charSpan.char) {
@@ -113,6 +117,9 @@ export class RichTextInput extends React.Component<{
             this.charSpan = { char: '', span: null };
             if (typeof this.props.popClose == 'function') this.props.popClose()
         }
+    }
+    mouseup(event: React.MouseEvent) {
+        this.openTool();
     }
     async openAddFile(event: React.MouseEvent) {
         var re = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, [{ name: 'addFile', text: '上传附件' }]);
@@ -152,6 +159,7 @@ export class RichTextInput extends React.Component<{
     }
     richEl: HTMLElement;
     el: HTMLElement;
+    toolEl: HTMLElement;
     render(): React.ReactNode {
         return <div className="shy-rich-input" ref={e => this.el = e}>
             {this.reply && <div className="shy-rich-input-reply">
@@ -168,12 +176,33 @@ export class RichTextInput extends React.Component<{
                 onKeyDown={e => { this.keydown(e.nativeEvent) }}
                 onInput={e => { this.input(e.nativeEvent) }}
                 onMouseDown={e => this.mousedown(e)}
+                onMouseUp={e => this.mouseup(e)}
+                onCompositionStart={e => { }}
+                onCompositionUpdate={e => { }}
+                onCompositionEnd={e => { }}
                 onBlur={e => this.blur(e)}
                 contentEditable={true}
                 onPaste={e => this.paste(e.nativeEvent)}>
             </div>
             <Icon size={18} mousedown={e => this.openEmoji(e)} icon={EmojiSvg}></Icon>
+            <div ref={e => this.toolEl = e} className="shy-rich-input-tool">
+                <a onMouseDown={e => this.onToolStyle({ fontWeight: 'bold' })}><Icon icon='bold:sy'></Icon></a>
+                <a onMouseDown={e => this.onToolStyle({ fontStyle: 'italic' })}><Icon icon='italic:sy'></Icon></a>
+                <a onMouseDown={e => this.onToolStyle({ textDecoration: 'underline' })}><Icon icon='underline:sy'></Icon></a>
+                <a onMouseDown={e => this.onToolStyle({ textDecoration: 'delete-line' })}><Icon icon='delete-line:sy'></Icon></a>
+                <a><Icon icon='link:sy'></Icon><Icon icon='arrow-down:sy'></Icon></a>
+            </div>
         </div>
+    }
+    isComposition: boolean = false;
+    onCompositionStart() {
+        this.isComposition = true;
+    }
+    onCompositionUpdate() {
+        this.isComposition = true;
+    }
+    onCompositionEnd() {
+        this.isComposition = false;
     }
     onInsert(text: string, data?: Record<string, any>, pos?: { char: string, span: HTMLElement }) {
         var cps = typeof pos == 'undefined' ? this.charSpan : pos;
@@ -194,8 +223,7 @@ export class RichTextInput extends React.Component<{
     onReplaceInsert(text: string) {
         this.richEl.innerHTML = text;
         var sel = window.getSelection();
-        if (this.richEl.childNodes.length > 0)
-            sel.collapse(this.richEl.childNodes[0], text.length);
+        if (this.richEl.childNodes.length > 0) sel.collapse(this.richEl.childNodes[0], text.length);
         else sel.collapse(this.richEl, text.length)
     }
     private cursorEl: HTMLElement;
@@ -221,8 +249,7 @@ export class RichTextInput extends React.Component<{
             var range = document.createRange();
             if (range) {
                 range.setStart(this.cursorEl, this.cursorOffset);
-                if (this.cursorEndEl)
-                    range.setEnd(this.cursorEndEl, this.cursorEndOffset);
+                if (this.cursorEndEl) range.setEnd(this.cursorEndEl, this.cursorEndOffset);
             }
             window.getSelection().addRange(range);
             delete this.cursorEl;
@@ -279,6 +306,110 @@ export class RichTextInput extends React.Component<{
                 this.setCursor()
             })
         }
+    }
+    openTool() {
+        var sel = window.getSelection();
+        if (this.richEl.contains(sel.focusNode) && this.richEl.contains(sel.anchorNode)) {
+            var range = sel.getRangeAt(0);
+            var rect = Rect.fromEle(range);
+            var eRect = Rect.fromEle(this.el);
+            this.toolEl.style.visibility = 'visible';
+            this.toolEl.style.top = (rect.top - eRect.top) + 'px';
+            this.toolEl.style.left = (rect.left - eRect.left) + 'px';
+        }
+    }
+    closeTool() {
+        this.toolEl.style.visibility = 'hidden';
+    }
+    onToolStyle(style: Record<string, any>) {
+        var sel = window.getSelection();
+        var startNode = sel.anchorNode;
+        var startOffset = sel.anchorOffset;
+        var endNode = sel.focusNode;
+        var endOffset = sel.focusOffset;
+        var isExchange = false;
+        if (startNode === endNode && startOffset > endOffset) isExchange = true;
+        else isExchange = TextEle.isBefore(endNode, startNode)
+        if (isExchange) {
+            [endNode, startNode] = [startNode, endNode];
+            [endOffset, startOffset] = [startOffset, endOffset];
+        }
+        var cs = Array.from(this.richEl.childNodes);
+        var isIn: boolean;
+        var texts: Text[] = [];
+        for (let i = 0; i < cs.length; i++) {
+            if (isIn === false) break;
+            var ts = cs[i];
+            if (ts === startNode) { isIn = true; }
+            if (ts instanceof Text) {
+                texts.push(ts);
+            }
+            else {
+                var subs = Array.from(ts.childNodes);
+                for (var g = 0; g < subs.length; g++) {
+                    if (isIn === false) break;
+                    var sg = subs[g] as Text;
+                    if (sg === startNode) isIn = true;
+                    texts.push(sg);
+                    if (ts == sg) isIn = false;
+                }
+            }
+            if (ts === endNode) isIn = false;
+        }
+        // if (startNode === endNode) {
+        //     if (startNode.parentNode === this.richEl) {
+        //         if (startNode instanceof Text) {
+        //             var data = startNode.textContent;
+        //             var t1 = document.createElement('span');
+        //             t1.innerText = data.slice(0, startOffset);
+        //             var t2 = document.createElement('span');
+        //             t2.innerText = data.slice(startOffset, endOffset);
+        //             Object.keys(style).forEach(s => { t2.style[s] = style[s]; });
+        //             var t3 = document.createElement('span');
+        //             t3.innerText = data.slice(endOffset);
+        //             this.richEl.removeChild(startNode);
+        //             this.richEl.appendChild(t1);
+        //             this.richEl.appendChild(t2);
+        //             this.richEl.appendChild(t3);
+        //             if (t1.innerText == '') t1.remove()
+        //             if (t3.innerText == '') t3.remove()
+        //         }
+        //         else {
+        //             var data = startNode.textContent;
+        //             var t2 = startNode as HTMLSpanElement;
+        //             var t1 = (startNode as HTMLSpanElement).cloneNode(true) as HTMLSpanElement;
+        //             t1.innerText = data.slice(0, startOffset);
+        //             t1.insertBefore(startNode.parentNode, startNode);
+
+        //             t2.innerText = data.slice(startOffset, endOffset);
+        //             Object.keys(style).forEach(s => { t2.style[s] = style[s]; });
+
+        //             var t3 = (startNode as HTMLSpanElement).cloneNode(true) as HTMLSpanElement;
+        //             t3.innerText = data.slice(endOffset);
+        //             var n = startNode.nextSibling;
+        //             if (n) t3.insertBefore(startNode.parentNode, n)
+        //             else startNode.parentNode.appendChild(t3)
+        //             if (t1.innerText == '') t1.remove()
+        //             if (t3.innerText == '') t3.remove()
+        //         }
+        //     }
+        //     else {
+        //         /*****<span>text</span> */
+        //     }
+        // }
+        // var cs = Array.from(this.richEl.childNodes);
+        // for (let i = 0; i < cs.length; i++) {
+        //     var e = cs[i];
+        //     if (e instanceof Text) {
+
+        //     }
+        //     else if (e instanceof HTMLSpanElement) {
+        //         var subs = Array.from(e.childNodes);
+        //     }
+        // }
+    }
+    onOpenLink(event: React.MouseEvent) {
+
     }
 }
 
