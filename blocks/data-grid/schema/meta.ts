@@ -1,8 +1,19 @@
 import { channel } from "../../../net/channel";
-import { SchemaName } from "../../../net/element.type";
 import { Field } from "./field";
 import { FieldType } from "./type";
 import { ViewField } from "./view";
+
+/**
+ * 
+ * schema  table fields meta
+ * syncBlockId ViewFields （控制展示的数据结构信息）
+ * block fields(控制列宽)
+ *
+ * model: business modelMeta
+ * 
+ * show view(schema->syncBlock->block-business model)
+ * 
+ */
 export class TableSchema {
     private constructor(data) {
         for (var n in data) {
@@ -24,6 +35,7 @@ export class TableSchema {
     text: string;
     views: { id: string, text: string, url: string }[] = [];
     recordViews: { id: string, text: string, type?: 'form' | 'card' }[] = [];
+    modelMetaId?: string;
     getViewFields() {
         var fs = this.fields.findAll(g => g.text ? true : false);
         return fs.map(f => {
@@ -194,13 +206,12 @@ export class TableSchema {
         }
         return rs;
     }
-    static async onCreate(data:{text:string,url:string})
-    {
-        var r = await channel.put('/schema/create', { text:data.text, url: data.url });
+    static async onCreate(data: { text: string, url: string }) {
+        var r = await channel.put('/schema/create', { text: data.text, url: data.url });
         if (r.ok) {
             var schemaData = r.data.schema;
             var schema = new TableSchema(schemaData);
-            this.schemas.set(schema.id,schema);
+            this.schemas.set(schema.id, schema);
             return schema;
         }
     }

@@ -33,6 +33,15 @@ import { PageDirective } from "../../../../src/page/directive";
 import { DataGridTool } from "../components/tool";
 import dayjs from "dayjs";
 
+/**
+ * 
+ * schema  table fields meta
+ * syncBlockId ViewFields （控制展示的数据结构信息）
+ * block fields(控制列宽)
+ * 
+ * show view(schema->syncBlock->block)
+ * 
+ */
 export class DataGridView extends Block {
     checkItems: Record<string, any>[] = [];
     @prop()
