@@ -125,4 +125,14 @@ export var util = {
             x.send();
         })
     },
+    getListName<T>(list: T[], name: string, predict: (g: T) => string, getName?: (text: string, number: number) => string) {
+        var index = 0;
+        while (true) {
+            var n = typeof getName == 'function' ? getName(name, index) : (name + (index == 0 ? "" : index));
+            if (list.some(c => predict(c) == n)) {
+                index += 1;
+            }
+            else return n;
+        }
+    }
 }
