@@ -313,9 +313,9 @@ export class RichTextInput extends React.Component<{
             var range = sel.getRangeAt(0);
             var rect = Rect.fromEle(range);
             var eRect = Rect.fromEle(this.el);
-            this.toolEl.style.visibility = 'visible';
-            this.toolEl.style.top = (rect.top - eRect.top) + 'px';
-            this.toolEl.style.left = (rect.left - eRect.left) + 'px';
+            // this.toolEl.style.visibility = 'visible';
+            // this.toolEl.style.top = (rect.top - eRect.top) + 'px';
+            // this.toolEl.style.left = (rect.left - eRect.left) + 'px';
         }
     }
     closeTool() {
