@@ -26,6 +26,20 @@ export class Page$Cycle {
         this.emit(PageDirective.init);
         await langProvider.import();
     }
+    async onReplace(this: Page, itemId: string, content: any, operates?: any) {
+        await this.clear();
+        await this.load(content);
+        if (Array.isArray(operates) && operates.length > 0) {
+            var operates = operates.map(op => op.operate ? op.operate : op) as any;
+            await this.loadUserActions(operates, 'load');
+        }
+        await this.onAction(ActionDirective.onPageUpdateProps, async () => {
+            await this.updateProps({ sourceItemId: itemId });
+        });
+    }
+    async clear(this: Page) {
+        this.views = [];
+    }
     async load(this: Page, data?: Record<string, any>) {
         try {
             if (!data || typeof data == 'object' && Object.keys(data).length == 0) {
@@ -111,7 +125,8 @@ export class Page$Cycle {
             cover: util.clone(this.cover),
             isFullWidth: this.isFullWidth,
             smallFont: this.smallFont,
-            version: this.version
+            version: this.version,
+            sourceItemId: this.sourceItemId
         };
         json.requireSelectLayout = this.requireSelectLayout;
         json.pageLayout = util.clone(this.pageLayout);
