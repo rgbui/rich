@@ -137,7 +137,7 @@ export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: Re
             else await block.delete();
         }
         var newBlock: Block;
-        if (rowBlock.isListBlock && rowBlock.asListBlock.expand && rowBlock.getChilds(rowBlock.childKey).length > 0) {
+        if (rowBlock.isListBlock && rowBlock.asListBlock.isExpand && rowBlock.getChilds(rowBlock.childKey).length > 0) {
             var fb = rowBlock.getChilds(rowBlock.childKey).first();
             var url = fb.isContinuouslyCreated ? fb.url : BlockUrlConstant.TextSpan;
             var continuouslyProps = fb.continuouslyProps;
