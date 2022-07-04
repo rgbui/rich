@@ -6,7 +6,7 @@ import { MenuItemType, MenuItemTypeValue } from "../../../component/view/menu/de
 import { BlockDirective } from "../../block/enum";
 import { Point, Rect } from "../../common/vector/point";
 import { PageLayoutType } from "../declare";
-import { FileSvg, LinkSvg, LockSvg, TrashSvg, UndoSvg, UnlockSvg, UploadSvg, VersionHistorySvg } from "../../../component/svgs";
+import { FileSvg, ImportSvg, LinkSvg, LockSvg, TrashSvg, UndoSvg, UnlockSvg, UploadSvg, VersionHistorySvg } from "../../../component/svgs";
 import { usePageLayout } from "../../../extensions/layout";
 import { CopyText } from "../../../component/copy";
 import { ShyAlert } from "../../../component/lib/alert";
@@ -41,7 +41,8 @@ export class PageContextmenu {
         switch (item.name) {
             case 'lock':
                 channel.air('/page/update/info', {
-                    id: this.pageInfo.id, pageInfo: {
+                    id: this.pageInfo.id,
+                    pageInfo: {
                         locker: this.pageInfo.locker?.userid ? null : {
                             userid: this.user.id,
                             lockDate: Date.now()
@@ -73,18 +74,18 @@ export class PageContextmenu {
                 { name: 'fullWidth', text: '宽版', checked: this.isFullWidth ? true : false, type: MenuItemTypeValue.switch },
                 { type: MenuItemTypeValue.divide },
                 // { name: 'layout', text: '版面', icon: CustomizePageSvg },
-                { name: 'lock', text: this.pageInfo.locker?.userid ? "解除锁定" : '编辑保护', icon: this.pageInfo.locker?.userid ? UnlockSvg : LockSvg },
+                { name: 'lock', iconSize: 16, text: this.pageInfo.locker?.userid ? "解除锁定" : '编辑保护', icon: this.pageInfo.locker?.userid ? UnlockSvg : LockSvg },
                 // { type: MenuItemTypeValue.divide },
                 // { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
-                { name: 'history', icon: VersionHistorySvg, text: '页面历史' },
-                { name: 'copylink', icon: LinkSvg, text: '复制链接' },
+                { name: 'history', iconSize: 16, icon: VersionHistorySvg, text: '页面历史' },
+                { name: 'copylink', iconSize: 16, icon: LinkSvg, text: '复制链接' },
                 { type: MenuItemTypeValue.divide },
-                { name: 'undo', text: '撤消', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
-                { name: 'redo', text: '重做', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
-                { name: 'delete', icon: TrashSvg, text: '删除' },
+                { name: 'undo', iconSize: 16, text: '撤消', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
+                // { name: 'redo', text: '重做', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
+                { name: 'delete', iconSize: 16, icon: TrashSvg, text: '删除' },
                 { type: MenuItemTypeValue.divide },
-                { name: 'import', iconSize: 30, icon: UploadSvg, text: '导入', disabled: true },
-                { name: 'export', text: '导出', icon: FileSvg, disabled: true, remark: '导出PDF,HTML,Markdown' },
+                { name: 'import', iconSize: 16, icon: ImportSvg, text: '导入', disabled: true },
+                { name: 'export', iconSize: 16, text: '导出', icon: FileSvg, disabled: true, remark: '导出PDF,HTML,Markdown' },
                 // { type: MenuItemTypeValue.divide },
                 // { name: 'move', text: '移动', icon: MoveToSvg, disabled: true },
             ];
