@@ -1,6 +1,4 @@
 import React from "react";
-import { PlusSvg } from "../../../../component/svgs";
-import { Icon } from "../../../../component/view/icon";
 import { useRelationPickData } from "../../../../extensions/tablestore/relation.picker";
 import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { url, view } from "../../../../src/block/factory/observable";

@@ -17,7 +17,7 @@ class FormFieldRelation extends OriginFormField {
         var relationTable = this.field.config?.relationTableId;
         var sea = await channel.get('/schema/query', { id: relationTable });
         if (sea.ok) {
-            this.relationSchema = new TableSchema(sea.data.schema);
+            this.relationSchema = await TableSchema.onCreate(sea.data.schema as any);
             if (Array.isArray(this.value) && this.value.length > 0) {
                 var d = await this.relationSchema.all({ page: 1, filter: { id: { $in: this.value } } });
                 if (d.ok) {
