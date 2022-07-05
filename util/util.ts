@@ -28,7 +28,7 @@ export var util = {
     },
     showTime(date: Date) {
         var now = new Date();
-        if (dayjs(now).isSame(date, 'day')) {
+        if (dayjs(now).isSame(dayjs(date), 'day')) {
             var hour = date.getHours();
             if (hour >= 0 && hour < 6) {
                 return '今天' + dayjs(date).format('HH:mm')
@@ -46,10 +46,10 @@ export var util = {
                 return '晚上' + dayjs(date).format('HH:mm')
             }
         }
-        else if (dayjs(now).diff(dayjs(date), 'day') == 1) {
+        else if (dayjs(now).isSame(dayjs(date).add(1, 'day'), 'day')) {
             return '昨天' + dayjs(date).format('HH:mm')
         }
-        else if (dayjs(now).diff(dayjs(date), 'day') == 2) {
+        else if (dayjs(now).isSame(dayjs(date).add(2, 'day'), 'day')) {
             return '前天' + dayjs(date).format('HH:mm')
         }
         else {
