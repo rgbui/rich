@@ -201,7 +201,6 @@ export class Block$LifeCycle {
     }
     async loadSyncBlock(this: Block) {
         var r = await channel.get('/page/sync/block', { syncBlockId: this.syncBlockId });
-
         if (r.ok) {
             var data;
             try {
