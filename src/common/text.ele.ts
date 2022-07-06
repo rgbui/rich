@@ -1,4 +1,3 @@
-
 import { Exception, ExceptionType } from "../error/exception";
 import { dom } from "./dom";
 import { Point, Rect } from "./vector/point";
@@ -427,7 +426,8 @@ export class TextEle {
             point
         }
     }
-    static searchTexts(ele: HTMLElement, startNode: Node, endNode: Node, startOffset: number, endOffset: number) {
+    static searchTexts(options:{ ele: HTMLElement, startNode: Node, endNode: Node, startOffset: number, endOffset: number, ignore?: (ele: HTMLElement) => boolean }) {
+        var { ele, startNode, endNode, startOffset, endOffset, ignore } = options;
         var isExchange = false;
         if (startNode === endNode && startOffset > endOffset) isExchange = true;
         else isExchange = TextEle.isBefore(endNode, startNode)
@@ -435,28 +435,30 @@ export class TextEle {
             [endNode, startNode] = [startNode, endNode];
             [endOffset, startOffset] = [startOffset, endOffset];
         }
-        var cs = Array.from(ele.childNodes);
         var isIn: boolean;
         var texts: Text[] = [];
-        for (let i = 0; i < cs.length; i++) {
-            if (isIn === false) break;
-            var ts = cs[i];
-            if (ts === startNode) { isIn = true; }
-            if (ts instanceof Text) {
-                texts.push(ts);
-            }
-            else {
-                var subs = Array.from(ts.childNodes);
-                for (var g = 0; g < subs.length; g++) {
-                    if (isIn === false) break;
-                    var sg = subs[g] as Text;
-                    if (sg === startNode) isIn = true;
-                    texts.push(sg);
-                    if (ts == sg) isIn = false;
+        function searchEl(el: HTMLElement) {
+            var cs = Array.from(el.childNodes);
+            for (let i = 0; i < cs.length; i++) {
+                if (isIn === false) break;
+                var ts = cs[i] as HTMLElement;
+                if (ts === startNode) { isIn = true; }
+                if (!(typeof ignore == 'function' && ignore(ts))) {
+                    if (ts instanceof Text) {
+                        if (isIn) texts.push(ts);
+                    }
+                    else {
+                        searchEl(ts as HTMLElement)
+                    }
                 }
+                if (ts === endNode) isIn = false;
             }
-            if (ts === endNode) isIn = false;
         }
+        searchEl(ele);
+    }
+    static setTextStyle(options: { ele: HTMLElement, startNode: Node, endNode: Node, startOffset: number, endOffset: number, ignore?: (ele: HTMLElement) => boolean }) {
+        var { ele, startNode, endNode, startOffset, endOffset, ignore } = options;
+        var texts = this.searchTexts(options);
     }
 }
 export type TextFontStyle = {
