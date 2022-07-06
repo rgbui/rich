@@ -3,8 +3,41 @@
         display        : flex;
         justify-content: flex-start;
         align-items    : stretch;
-        .sy-data-grid-item {
-            width: 33%;
+        flex-wrap      : nowrap;
+
+        .sy-data-grid-gallery-cell {
+
+            // padding-left : 20px;
+            // margin-bottom: 20px;
+            // margin-right: 20px;
+            // margin-right : 20px;
+            &:first-child {
+                // padding-left: 0px;
+            }
+
+            .sy-data-grid-item {
+                margin: 0px;
+                height: calc(100% - 20px);
+            }
+        }
+    }
+
+    &-column {}
+
+    .sy-data-grid-gallery-list {
+        &-cols {
+            display        : flex;
+            justify-content: flex-start;
+            align-items    : flex-start;
+
+            .sy-data-grid-gallery-cell {
+                margin-bottom: 20px;
+
+                .sy-data-grid-item {
+                    margin: 0px;
+                   
+                }
+            }
         }
     }
 }

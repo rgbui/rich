@@ -13,6 +13,7 @@ import trash from "../../../../src/assert/svg/trash.svg";
 import "./style.less";
 import { langProvider } from "../../../../i18n/provider";
 import { LangID } from "../../../../i18n/declare";
+
 @url('/data-grid/item')
 export class TableStoreItem extends Block {
     dataRow: Record<string, any> = {};
@@ -34,8 +35,7 @@ export class TableStoreItem extends Block {
             var field = this.fields[i];
             if (field) {
                 var block = await createFieldBlock(field, { row: this.dataRow, index: this.dataIndex }, this);
-                if (block)
-                    this.blocks.childs.push(block);
+                if (block) this.blocks.childs.push(block);
             }
             else {
                 console.log(this, this.fields);

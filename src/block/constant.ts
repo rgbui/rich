@@ -17,5 +17,9 @@ export enum BlockUrlConstant {
     Callout = '/callout',
     Code = '/code',
     Katex = '/katex',
-    KatexLine = '/katex/line'
+    KatexLine = '/katex/line',
+    DataGridGallery = '/data-grid/gallery',
+    DataGridTable = '/data-grid/table',
+    DataGridList = '/data-grid/list',
+    DataGridCalendar = '/data-grid/calendar'
 }

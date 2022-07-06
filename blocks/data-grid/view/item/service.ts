@@ -118,9 +118,17 @@ export async function createFieldBlock(viewField: ViewField, data: { row: Record
                 cellContent = await BlockFactory.createBlock('/field/url', page, {
                     viewField,
                     value: viewField.getValue(row),
-                },block);
+                }, block);
                 break;
         }
     }
     return cellContent;
+}
+
+
+export interface CardConfig {
+    auto: boolean,
+    showCover: boolean,
+    coverFieldId: string,
+    coverAuto: boolean
 }
