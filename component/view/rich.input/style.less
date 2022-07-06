@@ -1,65 +1,66 @@
 .shy-rich-input {
-    width: 100%;
-    display: flex;
+    width          : 100%;
+    display        : flex;
     justify-content: flex-start;
-    align-items: flex-start;
-    position: relative;
+    align-items    : flex-start;
+    position       : relative;
+
     .shy-icon {
-        flex-grow: 0;
+        flex-grow  : 0;
         flex-shrink: 0;
-        cursor: pointer;
+        cursor     : pointer;
     }
 
     &-editor {
-        margin: 0px 10px;
-        flex-grow: 1;
+        margin     : 0px 10px;
+        flex-grow  : 1;
         flex-shrink: 1;
-        min-height: 22px;
-        outline: none;
-        border: none;
+        min-height : 22px;
+        outline    : none;
+        border     : none;
     }
 
     &-reply {
-        position: absolute;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        user-select: none;
-        top: -40px;
-        height: 30px;
-        line-height: 20px;
-        background: var(--background-secondary);
-        border-top-left-radius: 8px;
+        position               : absolute;
+        display                : flex;
+        justify-content        : flex-start;
+        align-items            : center;
+        user-select            : none;
+        top                    : -40px;
+        height                 : 30px;
+        line-height            : 20px;
+        background             : var(--background-secondary);
+        border-top-left-radius : 8px;
         border-top-right-radius: 8px;
-        left: -6px;
-        right: -6px;
-        font-size: 14px;
-        border-bottom: 1px solid rgba(53, 54, 57, .08);
+        left                   : -6px;
+        right                  : -6px;
+        font-size              : 14px;
+        border-bottom          : 1px solid rgba(53, 54, 57, .08);
 
         &-content {
-            flex-grow: 1;
-            flex-shrink: 1;
-            padding-left: 10px;
-            height: 20px;
-            line-height: 20px;
-            overflow: hidden;
+            flex-grow    : 1;
+            flex-shrink  : 1;
+            padding-left : 10px;
+            height       : 20px;
+            line-height  : 20px;
+            overflow     : hidden;
             text-overflow: ellipsis;
-            color: rgba(53, 54, 57, 1)
+            color        : rgba(53, 54, 57, 1)
         }
 
         &-operators {
             padding-right: 10px;
-            flex-grow: 0;
-            flex-shrink: 0;
+            flex-grow    : 0;
+            flex-shrink  : 0;
 
             a {
-                display: inline-flex;
+                display        : inline-flex;
                 justify-content: center;
-                align-items: center;
-                border-radius: 4px;
-                width: 24px;
-                cursor: pointer;
-                height: 24px;
+                align-items    : center;
+                border-radius  : 4px;
+                width          : 24px;
+                cursor         : pointer;
+                height         : 24px;
 
                 &:hover {
                     background-color: rgba(53, 54, 57, .08);
@@ -69,46 +70,46 @@
     }
 
     &-error {
-        position: absolute;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        user-select: none;
-        top: -40px;
-        height: 30px;
-        line-height: 20px;
-        background: var(--background-secondary);
-        border-top-left-radius: 8px;
+        position               : absolute;
+        display                : flex;
+        justify-content        : flex-start;
+        align-items            : center;
+        user-select            : none;
+        top                    : -40px;
+        height                 : 30px;
+        line-height            : 20px;
+        background             : var(--background-secondary);
+        border-top-left-radius : 8px;
         border-top-right-radius: 8px;
-        left: -6px;
-        right: -6px;
-        font-size: 14px;
-        border-bottom: 1px solid rgba(53, 54, 57, .08);
+        left                   : -6px;
+        right                  : -6px;
+        font-size              : 14px;
+        border-bottom          : 1px solid rgba(53, 54, 57, .08);
 
         &-content {
-            flex-grow: 1;
-            flex-shrink: 1;
-            padding-left: 10px;
-            height: 20px;
-            line-height: 20px;
-            overflow: hidden;
+            flex-grow    : 1;
+            flex-shrink  : 1;
+            padding-left : 10px;
+            height       : 20px;
+            line-height  : 20px;
+            overflow     : hidden;
             text-overflow: ellipsis;
-            color: #e16259;
+            color        : #e16259;
         }
 
         &-operators {
             padding-right: 10px;
-            flex-grow: 0;
-            flex-shrink: 0;
+            flex-grow    : 0;
+            flex-shrink  : 0;
 
             a {
-                display: inline-flex;
+                display        : inline-flex;
                 justify-content: center;
-                align-items: center;
-                border-radius: 4px;
-                width: 24px;
-                cursor: pointer;
-                height: 24px;
+                align-items    : center;
+                border-radius  : 4px;
+                width          : 24px;
+                cursor         : pointer;
+                height         : 24px;
 
                 &:hover {
                     background-color: rgba(53, 54, 57, .08);
@@ -116,5 +117,10 @@
 
             }
         }
+    }
+
+    &-tool {
+        position  : absolute;
+        visibility: hidden;
     }
 }

@@ -313,9 +313,9 @@ export class RichTextInput extends React.Component<{
             var range = sel.getRangeAt(0);
             var rect = Rect.fromEle(range);
             var eRect = Rect.fromEle(this.el);
-            this.toolEl.style.visibility = 'visible';
-            this.toolEl.style.top = (rect.top - eRect.top) + 'px';
-            this.toolEl.style.left = (rect.left - eRect.left) + 'px';
+            // this.toolEl.style.visibility = 'visible';
+            // this.toolEl.style.top = (rect.top - eRect.top) + 'px';
+            // this.toolEl.style.left = (rect.left - eRect.left) + 'px';
         }
     }
     closeTool() {
@@ -356,57 +356,6 @@ export class RichTextInput extends React.Component<{
             }
             if (ts === endNode) isIn = false;
         }
-        // if (startNode === endNode) {
-        //     if (startNode.parentNode === this.richEl) {
-        //         if (startNode instanceof Text) {
-        //             var data = startNode.textContent;
-        //             var t1 = document.createElement('span');
-        //             t1.innerText = data.slice(0, startOffset);
-        //             var t2 = document.createElement('span');
-        //             t2.innerText = data.slice(startOffset, endOffset);
-        //             Object.keys(style).forEach(s => { t2.style[s] = style[s]; });
-        //             var t3 = document.createElement('span');
-        //             t3.innerText = data.slice(endOffset);
-        //             this.richEl.removeChild(startNode);
-        //             this.richEl.appendChild(t1);
-        //             this.richEl.appendChild(t2);
-        //             this.richEl.appendChild(t3);
-        //             if (t1.innerText == '') t1.remove()
-        //             if (t3.innerText == '') t3.remove()
-        //         }
-        //         else {
-        //             var data = startNode.textContent;
-        //             var t2 = startNode as HTMLSpanElement;
-        //             var t1 = (startNode as HTMLSpanElement).cloneNode(true) as HTMLSpanElement;
-        //             t1.innerText = data.slice(0, startOffset);
-        //             t1.insertBefore(startNode.parentNode, startNode);
-
-        //             t2.innerText = data.slice(startOffset, endOffset);
-        //             Object.keys(style).forEach(s => { t2.style[s] = style[s]; });
-
-        //             var t3 = (startNode as HTMLSpanElement).cloneNode(true) as HTMLSpanElement;
-        //             t3.innerText = data.slice(endOffset);
-        //             var n = startNode.nextSibling;
-        //             if (n) t3.insertBefore(startNode.parentNode, n)
-        //             else startNode.parentNode.appendChild(t3)
-        //             if (t1.innerText == '') t1.remove()
-        //             if (t3.innerText == '') t3.remove()
-        //         }
-        //     }
-        //     else {
-        //         /*****<span>text</span> */
-        //     }
-        // }
-        // var cs = Array.from(this.richEl.childNodes);
-        // for (let i = 0; i < cs.length; i++) {
-        //     var e = cs[i];
-        //     if (e instanceof Text) {
-
-        //     }
-        //     else if (e instanceof HTMLSpanElement) {
-        //         var subs = Array.from(e.childNodes);
-        //     }
-        // }
     }
     onOpenLink(event: React.MouseEvent) {
 

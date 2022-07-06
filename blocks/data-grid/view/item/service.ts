@@ -114,6 +114,12 @@ export async function createFieldBlock(viewField: ViewField, data: { row: Record
                     value: viewField.getValue(row),
                 }, block);
                 break;
+            case FieldType.formula:
+                cellContent = await BlockFactory.createBlock('/field/url', page, {
+                    viewField,
+                    value: viewField.getValue(row),
+                },block);
+                break;
         }
     }
     return cellContent;

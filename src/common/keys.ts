@@ -52,7 +52,7 @@ export class KeyboardPlate {
         }
     }
     isPredict() {
-        return this.listeners.some(s => s.predict(this) && typeof s.keydown == 'function')
+        return this.listeners.some(s =>s.isBlocked!==false&& s.predict(this) && typeof s.keydown == 'function')
     }
     keyup(event: KeyboardEvent) {
         this.isKeyUped = true;
@@ -114,13 +114,15 @@ export class KeyboardPlate {
         predict: (kbp: KeyboardPlate) => boolean,
         keydown: (event: KeyboardEvent, kbp: KeyboardPlate) => void,
         keyup?: (event: KeyboardEvent, kbp: KeyboardPlate) => void,
-        key?: any
+        key?: any,
+        isBlocked?: boolean
     }[] = [];
     listener(
         predict: (kbp: KeyboardPlate) => boolean,
         keydown: (event: KeyboardEvent, kbp: KeyboardPlate) => void,
-        keyup?: (event: KeyboardEvent, kbp: KeyboardPlate) => void, key?: any) {
-        this.listeners.push({ predict, keydown: keydown, keyup, key });
+        keyup?: (event: KeyboardEvent, kbp: KeyboardPlate) => void, key?: any,
+        isBlocked?: boolean) {
+        this.listeners.push({ predict, keydown: keydown, keyup, key, isBlocked });
     }
     off(key: any) {
         this.listeners.removeAll(g => g.key === key);

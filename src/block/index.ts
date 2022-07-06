@@ -258,7 +258,7 @@ export abstract class Block extends Events {
     get isCell(): boolean {
         return false;
     }
-    get isCanDrop():boolean{
+    get isCanDrop(): boolean {
         return true;
     }
     get isEmptyCell(): boolean {
@@ -369,6 +369,9 @@ export abstract class Block extends Events {
     }
     get asListBlock() {
         return (this as any) as List;
+    }
+    get blockUrl() {
+        return this.page.pageInfo.url + '#' + this.id;
     }
     /**
      * 判断当前块是否为文本块

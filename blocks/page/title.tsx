@@ -26,13 +26,14 @@ export class Title extends Block {
         if (appear.prop == 'pageInfo.text') {
             if (this.page.pageInfo)
                 this.page.pageInfo.text = this.pageInfo?.text
-            channel.air('/page/update/info', {
-                id: this.pageInfo.id,
-                pageInfo: {
+            if (this.pageInfo.id)
+                channel.air('/page/update/info', {
                     id: this.pageInfo.id,
-                    text: this.pageInfo?.text
-                }
-            })
+                    pageInfo: {
+                        id: this.pageInfo.id,
+                        text: this.pageInfo?.text
+                    }
+                })
         }
     }
     get isSupportTextStyle() {
@@ -60,7 +61,7 @@ export class TitleView extends BlockView<Title>{
     }
     updatePageInfo = (r: { id: string, pageInfo: LinkPageItem }) => {
         var { id, pageInfo } = r;
-        if (this.block.pageInfo.id == id) {
+        if (this.block.pageInfo?.id == id && id) {
             var isUpdate: boolean = false;
             if (typeof pageInfo.text != 'undefined' && pageInfo.text != this.block.pageInfo.text) {
                 this.block.pageInfo.text = pageInfo.text;

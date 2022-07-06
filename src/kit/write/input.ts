@@ -299,6 +299,7 @@ export async function inputBackSpaceTextContent(write: PageWrite, aa: AppearAnch
     }
     return false;
 }
+
 /**
  * 
  * @param write 
@@ -367,17 +368,19 @@ async function combineTextBlock(write: PageWrite, rowBlock: Block) {
     });
 }
 
-
 export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
     event.preventDefault();
     await InputForceStore(aa, async () => {
         write.onSaveSelection();
         var appears = findBlocksBetweenAppears(write.startAnchor.el, write.endAnchor.el);
+        var rowBlocks: Block[] = [];
         await appears.eachAsync(async appear => {
+            var block = appear.block;
+            var rb = block.closest(x => x.isBlock);
+            if (!rowBlocks.some(s => s === rb)) rowBlocks.push(rb);
             if (appear == write.startAnchor || appear == write.endAnchor) {
             }
             else {
-                var block = appear.block;
                 if (appear.isText) {
                     await block.updateAppear(appear, '', BlockRenderRange.self);
                     if (block.isContentEmpty) await block.delete();
@@ -413,6 +416,9 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
                 if (write.endAnchor.block.isContentEmpty) await write.endAnchor.block.delete()
             }
         }
+        await rowBlocks.eachAsync(async (b) => {
+            if (b.isContentEmpty) await b.delete()
+        })
         write.kit.page.addUpdateEvent(async () => {
             forceCloseTextTool()
             if (isStartDelete) write.onFocusAppearAnchor(preAppear, { last: true })

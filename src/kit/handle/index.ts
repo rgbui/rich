@@ -34,8 +34,7 @@ export class Handle extends Events {
             handleEl.style.display = 'none';
         }
         if (this.handleBlock?.isFreeBlock) {
-            if (this.kit.boardLine.isConnectOther && this.kit.boardLine.line)
-                this.kit.boardBlockHover.block = this.handleBlock;
+            if (this.kit.boardLine.isConnectOther && this.kit.boardLine.line) this.kit.boardBlockHover.block = this.handleBlock;
             else this.kit.boardBlockHover.block = undefined;
             this.kit.boardBlockHover.forceUpdate();
         }
@@ -106,7 +105,6 @@ export class Handle extends Events {
             await this.kit.page.onBatchDragBlocks(this.dragBlocks, this.dropBlock, this.dropDirection);
         }
     }
-
     async onClickBlock(event: MouseEvent) {
         await this.kit.page.onOpenMenu(this.dragBlocks, event);
     }

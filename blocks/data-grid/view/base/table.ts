@@ -22,7 +22,7 @@ import { FieldType } from "../../schema/type";
 import { ViewField } from "../../schema/view";
 import { DataGridTurns } from "../../turn";
 import { TableStoreItem } from "../item";
-import { ArrowDownSvg, ArrowUpSvg, FilterSvg, HideSvg, SettingsSvg, TrashSvg } from "../../../../component/svgs";
+import { ArrowDownSvg, ArrowUpSvg, FilterSvg, HideSvg, SettingsSvg, TrashSvg, TypesFormulaSvg } from "../../../../component/svgs";
 import { getFieldMenus, getTypeSvg } from "../../schema/util";
 import { useRelationView } from "../../../../extensions/tablestore/relation";
 import { useRollupView } from "../../../../extensions/tablestore/rollup";
@@ -567,6 +567,13 @@ export class DataGridView extends Block {
                     checked: viewField?.field?.config?.isMultiple ? true : false
                 });
             }
+            else if (viewField.field?.type == FieldType.formula) {
+                items.insertAt(3, {
+                    text: '编辑公式',
+                    name: 'formula',
+                    icon: TypesFormulaSvg
+                });
+            }
         }
         var re = await useSelectMenuItem(
             {
@@ -653,6 +660,16 @@ export class DataGridView extends Block {
                 if (viewField?.field.type == FieldType.date) {
                     await this.onOpenConfigFieldSettings(rp, viewField);
                 }
+            }
+            else if (re.item.name == 'formula') {
+                var formula = await useFormula({ roundArea: rp }, {
+                    schema: this.schema,
+                    formula: viewField.field.config.formula
+                });
+                var config = util.clone(viewField?.field?.config);
+                if (typeof config == 'undefined') config = {};
+                config.formula = formula;
+                await self.onUpdateField(viewField, { config });
             }
             if (ReItem.value != viewField.field?.text) {
                 //编辑列名了

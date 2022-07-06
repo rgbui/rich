@@ -1,8 +1,8 @@
 import lodash from "lodash";
-import React, { FormEvent } from "react";
+import React from "react";
 import { Kit } from "..";
 import { InputTextPopSelector, InputTextPopSelectorType } from "../../../extensions/common/input.pop";
-import { forceCloseTextTool, useTextTool } from "../../../extensions/text.tool";
+import { useTextTool } from "../../../extensions/text.tool";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
 import { findBlockAppear, findBlocksBetweenAppears } from "../../block/appear/visible.seek";

@@ -8,6 +8,7 @@ import { TableStoreItem } from "../item";
 import { ChildsArea } from "../../../../src/block/view/appear";
 import './style.less';
 import { DataGridTool } from "../components/tool";
+
 @url('/data-grid/board')
 export class TableStoreBoard extends DataGridView {
     @prop()

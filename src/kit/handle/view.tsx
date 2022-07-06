@@ -38,7 +38,6 @@ export class HandleView extends React.Component<{ handle: Handle }>{
             await self.handle.kit.page.onAction('handle.plus.create', async () => {
                 var block = await self.handle.handleBlock.visibleDownCreateBlock(BlockUrlConstant.TextSpan);
                 self.handle.kit.page.addUpdateEvent(async () => {
-                    console.log(block, 'usss');
                     self.handle.kit.writer.onFocusBlockAnchor(block);
                 })
             })
@@ -54,7 +53,8 @@ export class HandleView extends React.Component<{ handle: Handle }>{
             if (self.handle.kit.operator.currentSelectedBlocks.exists(c => c.find(g => g == self.handle.handleBlock, true) ? true : false)) {
                 var cs = self.handle.kit.operator.currentSelectedBlocks.map(c => c.handleBlock);
                 cs.each(c => {
-                    if (!self.handle.dragBlocks.some(s => s == c)) self.handle.dragBlocks.push(c)
+                    if (!self.handle.dragBlocks.some(s => s == c))
+                        self.handle.dragBlocks.push(c)
                 });
             } else self.handle.dragBlocks = [self.handle.handleBlock];
             if (self.handle.dragBlocks.some(s => s.isFreeBlock)) {

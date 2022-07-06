@@ -40,6 +40,7 @@ export class Page extends Events<PageDirective> {
     date: number;
     readonly: boolean = false;
     pageItemId: string;
+    sourceItemId:string;
     version: PageVersion;
     constructor(options?: {
         id?: string,

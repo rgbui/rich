@@ -16,6 +16,8 @@ import { ActionDirective } from "../../history/declare";
 import { AppearAnchor } from "../appear";
 import { Point, Rect } from "../../common/vector/point";
 import { useSelectMenuItem } from "../../../component/view/menu";
+import { CopyText } from "../../../component/copy";
+import { ShyAlert } from "../../../component/lib/alert";
 
 export class Block$Event {
     /**
@@ -83,8 +85,7 @@ export class Block$Event {
         items.push({
             name: BlockDirective.link,
             text: langProvider.getText(LangID.menuCopyLink),
-            icon: link,
-            disabled: true
+            icon: link
         });
         // items.push({
         //     type: MenuItemTypeValue.divide
@@ -173,7 +174,8 @@ export class Block$Event {
                 });
                 break;
             case BlockDirective.link:
-
+                CopyText(this.blockUrl);
+                ShyAlert('块的链接已复制')
                 break;
             case BlockDirective.trun:
                 this.page.onBatchTurn([this], (item as any).url);

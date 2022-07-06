@@ -208,7 +208,6 @@ export class TableStoreView extends BlockView<TableStore>{
             {this.block.schema && <div className="sy-dg-table-content" >
                 {this.renderHead()}
                 {this.renderBody()}
-
             </div>}
             {this.renderCreateTable()}
         </div>
