@@ -16,7 +16,7 @@ export class TableStoreBoard extends DataGridView {
     get groupField() {
         return this.schema.fields.find(g => g.id == this.groupFieldId);
     }
-    dataGroups: { group: string, count: number }[] = [];
+    dataGroups: { group: string, color: string, value: string, count: number }[] = [];
     async loadData() {
         if (!this.groupFieldId) {
             this.groupFieldId = this.fields.find(g => g.field.type == FieldType.option || g.field.type == FieldType.options)?.field?.id;
@@ -34,12 +34,16 @@ export class TableStoreBoard extends DataGridView {
                         this.dataGroups = ops.map(op => {
                             return {
                                 group: op.text,
-                                count: r.data.list.find(g => g[name] == op.text)?.count || 0
+                                color: op.color,
+                                value: op.value,
+                                count: r.data.list.find(g => g[name] == op.value)?.count || 0
                             }
                         });
                         if (keys.exists(g => g === null)) {
                             this.dataGroups.push({
                                 group: null,
+                                value: null,
+                                color: null,
                                 count: r.data.list.find(g => g[name] === null)?.count || 0
                             })
                         };
@@ -55,7 +59,7 @@ export class TableStoreBoard extends DataGridView {
             var dg = this.dataGroups[i];
             var list = this.data.findAll(x => {
                 if (dg.group === null && typeof x[name] == 'undefined') return true;
-                else if (x[name] == dg.group) return true;
+                else if (x[name] == dg.value) return true;
                 else return false;
             });
             await list.eachAsync(async row => {
@@ -71,14 +75,15 @@ export class TableStoreBoardView extends BlockView<TableStoreBoard>{
     renderGroup(dg: ArrayOf<TableStoreBoard['dataGroups']>, index: number) {
         var cs = this.block.childs.findAll(g => g.mark == dg.group);
         return <div className="sy-data-grid-board-group" key={index}>
-            <div className="sy-data-grid-board-group-head"><span>{dg.group || '未定义'}</span><label>{dg.count}</label></div>
+            <div className="sy-data-grid-board-group-head"><span style={{ backgroundColor: dg.color || undefined }}>{dg.group || '未定义'}</span><label>{dg.count}</label></div>
             <div className="sy-data-grid-board-group-childs">
                 <ChildsArea childs={cs}></ChildsArea>
             </div>
         </div>
     }
     render() {
-        return <div className='sy-data-grid-board'>
+        return <div className='sy-data-grid-board' onMouseEnter={e => this.block.onOver(true)}
+            onMouseLeave={e => this.block.onOver(false)}>
             <DataGridTool block={this.block}></DataGridTool>
             <div className="sy-data-grid-board-list">
                 {this.block.dataGroups.map((dg, i) => {

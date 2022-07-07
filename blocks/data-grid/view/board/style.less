@@ -1,19 +1,23 @@
 .sy-data-grid-board {
     display : block;
-    overflow: auto;
     margin  : 10px 0px;
     position: relative;
+
     &-list {
-        padding        : 0px 10px;
+        overflow       : auto;
         display        : flex;
         justify-content: flex-start;
         align-items    : flex-start;
+        flex-wrap      : nowrap;
+        padding-left   : 5px;
     }
 
     &-group {
-        font-size  : 14px;
-        width      : 260px;
-        flex-shrink: 0;
+        font-size   : 14px;
+        width       : 260px;
+        flex-shrink : 0;
+        margin-right: 20px;
+
         &-head {
             height         : 30px;
             font-size      : 14px;
@@ -24,8 +28,12 @@
             align-items    : center;
 
             span {
-                color: rgb(55, 53, 47);
-                fill : currentcolor;
+                color        : rgb(55, 53, 47);
+                fill         : currentcolor;
+                padding      : 0px 6px;
+                border-radius: 4px;
+                line-height  : 18px;
+                font-size    : 14px;
             }
 
             label {
@@ -35,6 +43,10 @@
             }
         }
 
-        &-childs {}
+        &-childs {
+            .sy-data-grid-item {
+                margin-bottom: 20px;
+            }
+        }
     }
 }
