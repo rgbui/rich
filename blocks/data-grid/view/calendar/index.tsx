@@ -1,23 +1,25 @@
 import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
-import ArrowLeft from "../../../../src/assert/svg/chevronLeft.svg";
-import ArrowRight from "../../../../src/assert/svg/chevronRight.svg";
-import Plus from "../../../../src/assert/svg/plus.svg";
 import React from 'react';
 import dayjs, { Dayjs } from "dayjs";
 import { DataGridView } from "../base/table";
-import { BlockFactory } from "../../../../src/block/factory/block.factory";
-import { TableStoreItem } from "../item";
-import { ChildsArea } from "../../../../src/block/view/appear";
 import { FieldType } from "../../schema/type";
 import './style.less';
 import { Icon } from "../../../../component/view/icon";
 import { DataGridTool } from "../components/tool";
+import { ChevronLeftSvg, ChevronRightSvg, PlusSvg } from "../../../../component/svgs";
 
 @url('/data-grid/calendar')
 export class TableStoreCalendar extends DataGridView {
-    @prop()
     date: number = Date.now();
+    constructor(props) {
+        super(props);
+        this.date = Date.now();
+    }
+    async didMounted() {
+        this.date = Date.now();
+        await super.didMounted();
+    }
     @prop()
     dateFieldId: string;
     get dateField() {
@@ -28,7 +30,17 @@ export class TableStoreCalendar extends DataGridView {
             this.dateFieldId = this.fields.find(g => g.field.type == FieldType.date)?.field?.id;
         }
         if (this.schema) {
-            var r = await this.schema.all({ page: 1, filter: { [this.dateField.name]: { $regex: dayjs(this.date).format('yyyy-MM') } } });
+            var start = dayjs(this.date).startOf('month').toDate();
+            var end = dayjs(this.date).endOf('month').toDate();
+            var r = await this.schema.all({
+                page: 1,
+                filter: {
+                    [this.dateField.name]: {
+                        $gte: start,
+                        $lte: end
+                    }
+                }
+            });
             if (r.data) {
                 this.data = Array.isArray(r.data.list) ? r.data.list : [];
                 this.total = r.data?.total || 0;
@@ -36,18 +48,37 @@ export class TableStoreCalendar extends DataGridView {
         }
     }
     async createItem() {
-        this.blocks.childs = [];
-        for (let i = 0; i < this.data.length; i++) {
-            var row = this.data[i];
-            var mark = row[this.dateField.name];
-            var rowBlock: TableStoreItem = await BlockFactory.createBlock('/data-grid/item', this.page, { mark, dataRow: row }, this) as TableStoreItem;
-            this.blocks.childs.push(rowBlock);
-            await rowBlock.createElements();
-        }
+
+    }
+    async onPrevMonth() {
+        var day = dayjs(this.date);
+        var r = day.subtract(1, 'month');
+        this.date = r.toDate().getTime();
+        await this.loadData();
+        this.forceUpdate();
+    }
+    async onNextMonth() {
+        var day = dayjs(this.date);
+        var r = day.subtract(-1, 'month');
+        this.date = r.toDate().getTime();
+        await this.loadData();
+        this.forceUpdate();
+    }
+    async onAddCalendar(day) {
+        await this.onOpenAddForm({ [this.dateField.name]: day.toDate() });
     }
 }
 @view('/data-grid/calendar')
 export class TableStoreCalendarView extends BlockView<TableStoreCalendar>{
+    renderItems(day) {
+        if (!this.block?.schema) return <></>
+        var rs = this.block.data.filter(g => typeof g[this.block.dateField.name] != 'undefined' && dayjs(g[this.block.dateField.name]).isSame(day, 'day'))
+        var title = this.block.schema.fields.find(g => g.type == FieldType.title);
+        if (!title) title = this.block.schema.fields.find(g => g.type == FieldType.text);
+        return <div className="sy-data-grid-calendar-items">
+            {rs.map(r => { return <a onMouseDown={e => this.block.onOpenEditForm(r.id)} className="sy-data-grid-calendar-item" key={r.id}><span>{r[title.name]}</span></a> })}
+        </div>
+    }
     renderMonth() {
         var dj = dayjs(this.block.date);
         var startDay = dj.startOf('M');
@@ -66,11 +97,7 @@ export class TableStoreCalendarView extends BlockView<TableStoreCalendar>{
         }
         var weeks: string[] = ['一', '二', '三', '四', '五', '六', '日'];
         return <>
-            <div className="sy-data-grid-calendar-cells-head">{
-                weeks.map(w => {
-                    return <div key={w} className="sy-data-grid-calendar-cells-head-label">周{w}</div>
-                })
-            }
+            <div className="sy-data-grid-calendar-cells-head">{weeks.map(w => <div key={w} className="sy-data-grid-calendar-cells-head-label">周{w}</div>)}
             </div>
             <div className="sy-data-grid-calendar-cells-days">
                 {days.map((day, i) => {
@@ -81,14 +108,13 @@ export class TableStoreCalendarView extends BlockView<TableStoreCalendar>{
                     if (day.isSame(dj, 'day')) {
                         classList.push('selected')
                     }
-                    var cs = this.block.childs.findAll(g => dayjs(g.mark).isSame(dayjs(day), 'day'))
                     return <div key={i} className={classList.join(" ")}
                     ><div className="sy-data-grid-calendar-cell-head">
-                            <Icon icon={Plus} size={14}></Icon>
+                            <Icon click={e => this.block.onAddCalendar(day)} icon={PlusSvg} size={14}></Icon>
                             <label>{day.get('date')}</label>
                         </div>
                         <div className="sy-data-grid-calendar-cell-content">
-                            <ChildsArea childs={cs}></ChildsArea>
+                            {this.renderItems(day)}
                         </div>
                     </div>
                 })}
@@ -96,16 +122,18 @@ export class TableStoreCalendarView extends BlockView<TableStoreCalendar>{
         </>
     }
     render() {
+        var now = dayjs();
+        var day = dayjs(this.block.date);
         return <div className='sy-data-grid-calendar'>
             <DataGridTool block={this.block}></DataGridTool>
-            <div className="sy-data-grid-calendar-head">
+            <div className="sy-data-grid-calendar-head" onMouseDown={e => e.stopPropagation()}>
                 <div className="sy-data-grid-calendar-head-date">
-                    <label>{dayjs(this.block.date).format('yyyy年MM月')}</label>
+                    <label>{day.format('YYYY年MM月')}</label>
                 </div>
                 <div className="sy-data-grid-calendar-head-operator">
-                    <Icon icon={ArrowLeft}></Icon>
-                    <label>今天</label>
-                    <Icon icon={ArrowRight}></Icon>
+                    <span className="icon"><Icon size={14} click={e => this.block.onPrevMonth()} icon={ChevronLeftSvg}></Icon></span>
+                    <label>{now.isSame(day, 'date') ? "今天" : (day.get('date'))}</label>
+                    <span className="icon"><Icon size={14} click={e => this.block.onNextMonth()} icon={ChevronRightSvg}></Icon></span>
                 </div>
             </div>
             <div className="sy-data-grid-calendar-cells">

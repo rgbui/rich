@@ -12,7 +12,8 @@ export class TableStoreList extends DataGridView {
 @view('/data-grid/list')
 export class TableStoreListView extends BlockView<TableStoreList>{
     render() {
-        return <div className='sy-data-grid-list'>
+        return <div className='sy-data-grid-list' onMouseEnter={e => this.block.onOver(true)}
+            onMouseLeave={e => this.block.onOver(false)}>
             <DataGridTool block={this.block}></DataGridTool>
             <ChildsArea childs={this.block.childs}></ChildsArea>
         </div>

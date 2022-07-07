@@ -334,13 +334,12 @@ export class DataGridView extends Block {
             }
         })
     }
-    async onOpenAddForm() {
+    async onOpenAddForm(initData?: Record<string, any>) {
         var row = await useFormPage({
             schema: this.schema,
             recordViewId: this.schema.recordViews[0].id
         });
-        if (row)
-            await this.onAddRow(row, undefined, 'after');
+        if (row) await this.onAddRow(row, undefined, 'after');
     }
     async onOpenEditForm(id: string) {
         var rowData = this.data.find(g => g.id == id);

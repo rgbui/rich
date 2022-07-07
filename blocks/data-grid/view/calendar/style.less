@@ -17,27 +17,49 @@
             justify-content: flex-end;
             align-items    : center;
 
-            svg {
-                fill: rgba(55, 53, 47, 0.4);
-            }
-
             .shy-icon {
+                svg {
+                    fill: rgba(55, 53, 47, 0.4);
+                }
+
                 border-radius: 4px;
 
                 :hover {
                     background-color: rgba(55, 53, 47, 0.08);
                 }
+            }
 
+            .icon {
+                width          : 24px;
+                height         : 24px;
+                border-radius  : 4px;
+                cursor         : pointer;
+                display        : inline-flex;
+                justify-content: center;
+                align-items    : center;
+
+                &:hover {
+                    background-color: rgba(55, 53, 47, 0.08);
+                }
+            }
+
+            label {
+                display: inline-block;
+                margin : 0px 10px;
             }
         }
     }
 
     &-cells {
+        margin-top: 10px;
+
         &-head {
             display        : flex;
             justify-content: flex-start;
             align-items    : flex-start;
             flex-wrap      : nowrap;
+            height         : 20px;
+            line-height    : 20px;
 
             >* {
                 width     : calc(100% / 7);
@@ -62,20 +84,22 @@
                 background   : white;
                 height       : 124px;
                 width        : calc(100%/7);
+
                 &-head {
                     height: 30px;
+
                     .shy-icon {
                         visibility   : hidden;
                         float        : left;
                         border-radius: 3px;
                         height       : 20px;
-                        margin-top  : 4px;
-                        margin-left: 4px;
-                        cursor: pointer;
+                        margin-top   : 4px;
+                        margin-left  : 4px;
+                        cursor       : pointer;
                         width        : 20px;
                         padding      : 0px;
                         background   : white;
-                        fill      : rgba(55, 53, 47, 0.4);
+                        fill         : rgba(55, 53, 47, 0.4);
                         box-shadow   : rgba(15, 15, 15, 0.1) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 2px 4px;
                     }
 
@@ -100,6 +124,24 @@
                     }
                 }
             }
+        }
+    }
+}
+
+.sy-data-grid-calendar-items {
+    padding: 10px;
+
+    a {
+        display      : block;
+        color        : rgba(55, 53, 47);
+        height       : 24px;
+        line-height  : 24px;
+        cursor       : pointer;
+        border-radius: 4px;
+        padding      : 0px 10px;
+
+        &:hover {
+            background-color: rgba(55, 53, 47, 0.08);
         }
     }
 }
