@@ -13,6 +13,9 @@ import trash from "../../../../src/assert/svg/trash.svg";
 import "./style.less";
 import { langProvider } from "../../../../i18n/provider";
 import { LangID } from "../../../../i18n/declare";
+import { BlockUrlConstant } from "../../../../src/block/constant";
+import { TableStoreGallery } from "../gallery";
+import { autoImageUrl } from "../../../../net/element.type";
 
 @url('/data-grid/item')
 export class TableStoreItem extends Block {
@@ -75,10 +78,32 @@ export class TableStoreItem extends Block {
 }
 @view('/data-grid/item')
 export class TableStoreItemView extends BlockView<TableStoreItem>{
+    renderItems() {
+        return <div className='sy-data-grid-item'><ChildsArea childs={this.block.childs}></ChildsArea> </div>
+    }
+    renderCards() {
+        var ga = this.block.dataGrid as TableStoreGallery;
+        if (ga.cardConfig.showCover) {
+            var field = this.block.schema.fields.find(g => g.id == ga.cardConfig.coverFieldId);
+            var imageData;
+            if (field) imageData = this.block.dataRow[field.name];
+            if (Array.isArray(imageData)) imageData = imageData[0];
+            return <div className='sy-data-grid-item sy-data-grid-card'>
+                <div className="sy-data-grid-card-cover">
+                    {imageData && <img style={{ maxHeight: ga.cardConfig.coverAuto ? "auto" : 200 }} src={autoImageUrl(imageData.url, 500)} />}
+                </div>
+                <div className="sy-data-grid-card-items">
+                    <ChildsArea childs={this.block.childs}></ChildsArea>
+                </div>
+            </div>
+        }
+        else {
+            return <div className='sy-data-grid-item'><ChildsArea childs={this.block.childs}></ChildsArea> </div>
+        }
+    }
     render() {
-        return <div className='sy-data-grid-item'>
-            <ChildsArea childs={this.block.childs}></ChildsArea>
-        </div>
+        if (this.block.dataGrid.url == BlockUrlConstant.DataGridGallery) return this.renderCards()
+        else return this.renderItems();
     }
 }
 

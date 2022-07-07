@@ -32,7 +32,6 @@ export class TableStoreGalleryView extends BlockView<TableStoreGallery>{
             }
             for (let i = 0; i < childs.length; i++) {
                 var c = i % size;
-                console.log('cs', c, childs[i])
                 rss[c].push(childs[i]);
             }
             eles = rss.map((rs, i) => {
@@ -64,7 +63,7 @@ export class TableStoreGalleryView extends BlockView<TableStoreGallery>{
             onMouseEnter={e => this.block.onOver(true)}
             onMouseLeave={e => this.block.onOver(false)}>
             <DataGridTool block={this.block}></DataGridTool>
-            <div className={"sy-data-grid-gallery-list"+(this.block.cardConfig.auto?" sy-data-grid-gallery-list-cols":"")}>{this.renderRows()} </div>
+            <div className={"sy-data-grid-gallery-list" + (this.block.cardConfig.auto ? " sy-data-grid-gallery-list-cols" : "")}>{this.renderRows()} </div>
         </div>
     }
 }
