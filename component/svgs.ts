@@ -82,6 +82,7 @@ import MinusSvg from "../src/assert/svg/minus.svg";
 import MoveToSvg from "../src/assert/svg/moveTo.svg";
 import NoneSvg from "../src/assert/svg/none.svg";
 import OpenAsPageThickSvg from "../src/assert/svg/openAsPageThick.svg";
+import OptionsSvg from "../src/assert/svg/options.svg";
 import PageSvg from "../src/assert/svg/page.svg";
 import PenSvg from "../src/assert/svg/pen.svg";
 import PexelsSvg from "../src/assert/svg/pexels.svg";
@@ -215,6 +216,7 @@ MinusSvg,
 MoveToSvg,
 NoneSvg,
 OpenAsPageThickSvg,
+OptionsSvg,
 PageSvg,
 PenSvg,
 PexelsSvg,
