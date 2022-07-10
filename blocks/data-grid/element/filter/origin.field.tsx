@@ -1,7 +1,7 @@
 import React from "react";
 import { Block } from "../../../../src/block";
 import { prop } from "../../../../src/block/factory/observable";
-import { DataGridView } from "../../view/base/table";
+import { DataGridView } from "../../view/base";
 export class OriginFilterField extends Block {
     @prop()
     showFieldText: boolean = true;

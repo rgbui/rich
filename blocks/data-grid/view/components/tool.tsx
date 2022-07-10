@@ -1,28 +1,40 @@
 import React from "react";
 import { Icon } from "../../../../component/view/icon";
-import { DataGridView } from "../base/table";
+import { DataGridView } from "../base";
 import { useTableSortView } from "../../../../extensions/tablestore/sort";
 import { Point, Rect } from "../../../../src/common/vector/point";
-import { useTabelSchemaViewDrop } from "../../../../extensions/tablestore/switch.views/view";
+//import { useTabelSchemaViewDrop } from "../../../../extensions/tablestore/switch.views/view";
 import { getSchemaViewIcon } from "../../schema/util";
 import { useFormPage } from "../../../../extensions/tablestore/form";
 import { useTabelSchemaFormDrop } from "../../../../extensions/tablestore/switch.forms/view";
 import { useTableFilterView } from "../../../../extensions/tablestore/filter";
 import { useSelectMenuItem } from "../../../../component/view/menu";
-import { MenuItemTypeValue } from "../../../../component/view/menu/declare";
+import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import { useTablePropertyView } from "../../../../extensions/tablestore/property";
 import { FieldType } from "../../schema/type";
-import { TextArea } from "../../../../src/block/view/appear";
-import { ChevronDownSvg, CollectTableSvg, FileSvg, FilterSvg, ImportSvg, LinkSvg, PropertysSvg, SettingsSvg, SortSvg, TemplatesSvg } from "../../../../component/svgs";
+import {
+    ChevronDownSvg,
+    CollectTableSvg,
+    DuplicateSvg,
+    FileSvg,
+    FilterSvg,
+    LinkSvg,
+    LinkToSvg,
+    PropertysSvg,
+    SettingsSvg,
+    SortSvg,
+    TemplatesSvg,
+    TrashSvg
+} from "../../../../component/svgs";
 import "./style.less";
 import { ElementType, getElementUrl } from "../../../../net/element.type";
-
+import { useTabelSchemaViewDrop } from "../../../../extensions/tablestore/switch.views/view";
 export class DataGridTool extends React.Component<{ block: DataGridView }>{
     isOpenTool: boolean = false;
     render() {
+        var self = this;
         var props = this.props;
         props.block.dataGridTool = this;
-        var self = this;
         async function changeDataGridView(event: React.MouseEvent) {
             event.stopPropagation();
             self.isOpenTool = true;
@@ -35,6 +47,52 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
             self.isOpenTool = false;
             props.block.onOver(props.block.getVisibleContentBound().contain(Point.from(props.block.page.kit.operator.moveEvent)))
         }
+        // async function openViewSettings(event: React.MouseEvent) {
+        //     self.isOpenTool = true;
+        //     event.stopPropagation();
+        //     var items: MenuItemType<BlockDirective | string>[] = [];
+        //     items.push(...[
+        //         {
+        //             name: 'name',
+        //             type: MenuItemTypeValue.input,
+        //             value: props.block.schemaView.text,
+        //             text: '编辑视图名',
+        //         },
+        //         {
+        //             text: "切换",
+        //             childs: props.block.schema.views.map(v => {
+        //                 return {
+        //                     name: 'turn',
+        //                     text: v.text,
+        //                     value: v.id,
+        //                     icon: getSchemaViewIcon(v.url),
+        //                     checkLabel: v.id == props.block.schemaView.id
+        //                 }
+        //             })
+        //         },
+        //         { type: MenuItemTypeValue.divide },
+        //         { name: 'link', icon: LinkSvg, text: '复制视图链接' },
+        //         { name: 'duplicate', icon: DuplicateSvg, text: '复制视图' },
+        //         { name: 'delete', icon: TrashSvg, text: '移除视图' },
+        //     ]);
+        //     var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, items);
+        //     if (r?.item?.name) {
+        //         if (r.item.name == 'link') {
+
+        //         }
+        //         else if (r.item.name == 'duplicate') {
+
+        //         }
+        //         else if (r.item.name == 'delete') {
+
+        //         }
+        //         else if (r.item.name == 'turn') {
+        //             props.block.onDataGridTurnView(r.item.value);
+        //         }
+        //     }
+        //     props.block.onOver(props.block.getVisibleContentBound().contain(Point.from(props.block.page.kit.operator.moveEvent)))
+        //     self.isOpenTool = false;
+        // }
         async function openSortView(event: React.MouseEvent) {
             self.isOpenTool = true;
             var r = await useTableSortView({ roundArea: Rect.fromEvent(event) }, { schema: props.block.schema, sorts: props.block.sorts });
@@ -70,16 +128,16 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                 { text: '表单模板', icon: TemplatesSvg, name: 'form' },
                 { text: '过滤', icon: FilterSvg, name: 'filter' },
                 { text: '排序', icon: SortSvg, name: 'sort' },
-                { type: MenuItemTypeValue.divide },
-                { text: '显示行号', checked: props.block.showRowNum as any, type: MenuItemTypeValue.switch, name: 'showRowNum' },
-                { text: '显示选中', checked: props.block.showCheckRow as any, type: MenuItemTypeValue.switch, name: 'check' },
-                { text: '显示序号(自增)', checked: props.block.fields.some(s => s.field?.type == FieldType.autoIncrement), type: MenuItemTypeValue.switch, name: 'autoIncrement' },
-                { type: MenuItemTypeValue.divide },
+                { type: MenuItemType.divide },
+                { text: '显示行号', checked: props.block.showRowNum as any, type: MenuItemType.switch, name: 'showRowNum' },
+                { text: '显示选中', checked: props.block.showCheckRow as any, type: MenuItemType.switch, name: 'check' },
+                { text: '显示序号(自增)', checked: props.block.fields.some(s => s.field?.type == FieldType.autoIncrement), type: MenuItemType.switch, name: 'autoIncrement' },
+                { type: MenuItemType.divide },
                 // { text: '导入', icon: ImportSvg, name: 'import' },
                 { text: '导出', disabled: true, icon: FileSvg, name: 'export' },
             ]
             var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus, {
-                async update(item) {
+                async input(item) {
                     if (item.name == 'showRowNum') {
                         await props.block.onShowNum(item.checked)
                     }
@@ -138,14 +196,20 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
         var view = props.block.schema?.views?.find(g => g.id == props.block.syncBlockId)
         if (props.block.isLock == true) return <></>
         return <div className="sy-dg-tool">
-            <div className="sy-dg-tool-title"><TextArea block={props.block} prop='tableText' placeholder={'表格名称'}></TextArea></div>
-            <div className="sy-dg-tool-templates">
+            <div className="sy-dg-tool-title" onMouseDown={e => changeDataGridView(e)}>
+                <label onMouseDown={e => changeDataGridView(e)}>
+                    <Icon size={14} icon={view ? getSchemaViewIcon(view.url) : CollectTableSvg}></Icon>
+                    <span>{view?.text}</span>
+                    {/*<Icon size={10} icon={ChevronDownSvg}></Icon> */}
+                </label>
+            </div>
+            {/* <div className="sy-dg-tool-templates">
                 <label onMouseDown={e => changeDataGridView(e)}>
                     <Icon size={14} icon={view ? getSchemaViewIcon(view.url) : CollectTableSvg}></Icon>
                     <span>{view?.text}</span>
                     <Icon size={10} icon={ChevronDownSvg}></Icon>
                 </label>
-            </div>
+            </div> */}
             {props.block.isOver && <div className="sy-dg-tool-operators">
                 <label onMouseDown={e => openConfigProperty(e)}><Icon size={14} icon={SettingsSvg}></Icon><span>字段配置</span></label>
                 <label onMouseDown={e => openFilterView(e)}><Icon size={14} icon={FilterSvg}></Icon><span>过滤</span></label>

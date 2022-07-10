@@ -3,10 +3,14 @@ import { BlockRenderRange } from "../../../../src/block/enum";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { OriginField } from "./origin.field";
+
 @url('/field/check')
 export class FieldCheck extends OriginField {
     changeValue(e: React.ChangeEvent<HTMLInputElement>) {
-        this.onUpdateProps({ value: e.target.checked },{range:BlockRenderRange.self});
+        this.onUpdateProps(
+            { value: e.target.checked },
+            { range: BlockRenderRange.self }
+        );
     }
 }
 @view('/field/check')

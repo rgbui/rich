@@ -1,5 +1,5 @@
 import React from "react";
-import { MenuItemType } from "../../../../component/view/menu/declare";
+import { MenuItem } from "../../../../component/view/menu/declare";
 import { Block } from "../../../../src/block";
 import { BlockDirective } from "../../../../src/block/enum";
 import { url, view } from "../../../../src/block/factory/observable";
@@ -7,7 +7,7 @@ import { BlockView } from "../../../../src/block/view";
 import { ChildsArea } from "../../../../src/block/view/appear";
 import { util } from "../../../../util/util";
 import { ViewField } from "../../schema/view";
-import { DataGridView } from "../base/table";
+import { DataGridView } from "../base";
 import { createFieldBlock } from "./service";
 import trash from "../../../../src/assert/svg/trash.svg";
 import "./style.less";
@@ -58,8 +58,8 @@ export class TableStoreItem extends Block {
         viewField.field.update(data);
         await this.schema.fieldUpdate({ fieldId: viewField.field.id, data })
     }
-    async onGetContextMenus(): Promise<MenuItemType<string | BlockDirective>[]> {
-        var items: MenuItemType<BlockDirective>[] = [];
+    async onGetContextMenus(): Promise<MenuItem<string | BlockDirective>[]> {
+        var items: MenuItem<BlockDirective>[] = [];
         items.push({
             name: BlockDirective.delete,
             icon: trash,
@@ -68,7 +68,7 @@ export class TableStoreItem extends Block {
         });
         return items;
     }
-    async onClickContextMenu(item: MenuItemType<BlockDirective | string>, event: MouseEvent) {
+    async onClickContextMenu(item: MenuItem<BlockDirective | string>, event: MouseEvent) {
         switch (item.name) {
             case BlockDirective.delete:
                 this.dataGrid.onRemoveItem(this.dataRow.id);

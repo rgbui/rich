@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import { Field } from "../../../blocks/data-grid/schema/field";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { getTypeSvg } from "../../../blocks/data-grid/schema/util";
-import { DataGridView } from "../../../blocks/data-grid/view/base/table";
+import { DataGridView } from "../../../blocks/data-grid/view/base";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { Icon } from "../../../component/view/icon";
 import { Switch } from "../../../component/view/switch";
@@ -28,8 +28,8 @@ class TablePropertyView extends EventsComponent {
         schema: TableSchema,
         gridView: DataGridView
     }) {
-        this.schema = options.schema;
-        this.block = options.gridView;
+        this.schema=options.schema;
+        this.block=options.gridView;
         this.forceUpdate()
     }
     render(): ReactNode {

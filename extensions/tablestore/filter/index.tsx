@@ -4,7 +4,7 @@ import { SchemaFilter } from "../../../blocks/data-grid/schema/declare";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { FieldType } from "../../../blocks/data-grid/schema/type";
 import { getSchemaViewIcon } from "../../../blocks/data-grid/schema/util";
-import { DataGridView } from "../../../blocks/data-grid/view/base/table";
+import { DataGridView } from "../../../blocks/data-grid/view/base";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { Divider } from "../../../component/view/grid";
 import { Icon } from "../../../component/view/icon";

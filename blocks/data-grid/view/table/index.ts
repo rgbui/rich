@@ -1,6 +1,6 @@
 
 import { url } from "../../../../src/block/factory/observable";
-import { DataGridView } from '../base/table';
+import { DataGridView } from '../base';
 import "./style.less";
 import { BlockFactory } from '../../../../src/block/factory/block.factory';
 import { DataGridTableItem } from './row';

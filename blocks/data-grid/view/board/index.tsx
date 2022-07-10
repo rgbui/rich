@@ -1,7 +1,7 @@
 import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import React from 'react';
-import { DataGridView } from "../base/table";
+import { DataGridView } from "../base";
 import { FieldType } from "../../schema/type";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { TableStoreItem } from "../item";

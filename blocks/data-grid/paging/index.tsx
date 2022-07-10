@@ -3,7 +3,7 @@ import { Block } from "../../../src/block";
 import { BlockDisplay } from "../../../src/block/enum";
 import { url, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
-import { DataGridView } from "../view/base/table";
+import { DataGridView } from "../view/base";
 
 @url('/data-grid/paging')
 export class Paging extends Block {

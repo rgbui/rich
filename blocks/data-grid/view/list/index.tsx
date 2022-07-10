@@ -2,7 +2,7 @@ import React from "react";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { ChildsArea } from "../../../../src/block/view/appear";
-import { DataGridView } from "../base/table";
+import { DataGridView } from "../base";
 import { DataGridTool } from "../components/tool";
 import "./style.less";
 @url('/data-grid/list')

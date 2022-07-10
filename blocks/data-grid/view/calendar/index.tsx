@@ -2,7 +2,7 @@ import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import React from 'react';
 import dayjs, { Dayjs } from "dayjs";
-import { DataGridView } from "../base/table";
+import { DataGridView } from "../base";
 import { FieldType } from "../../schema/type";
 import './style.less';
 import { Icon } from "../../../../component/view/icon";
