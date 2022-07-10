@@ -9,7 +9,7 @@ import Dots from "../../../src/assert/svg/dots.svg";
 import { Icon } from "../../../component/view/icon";
 import "./style.less";
 import { useSelectMenuItem } from "../../../component/view/menu";
-import { MenuItemTypeValue } from "../../../component/view/menu/declare";
+import { MenuItemType } from "../../../component/view/menu/declare";
 import { LinkSvg, LockSvg, OpenAsPageThickSvg, TrashSvg, UnlockSvg } from "../../../component/svgs";
 
 class FormPage extends EventsComponent {
@@ -39,16 +39,16 @@ class FormPage extends EventsComponent {
     async openProperty(event: React.MouseEvent) {
         var result = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) },
             [
-                { name: 'smallText', text: '小字号', checked: this.pageView.smallFont ? true : false, type: MenuItemTypeValue.switch },
-                { name: 'fullWidth', text: '宽版', checked: this.pageView.isFullWidth ? true : false, type: MenuItemTypeValue.switch },
-                { type: MenuItemTypeValue.divide },
+                { name: 'smallText', text: '小字号', checked: this.pageView.smallFont ? true : false, type: MenuItemType.switch },
+                { name: 'fullWidth', text: '宽版', checked: this.pageView.isFullWidth ? true : false, type: MenuItemType.switch },
+                { type: MenuItemType.divide },
                 { name: 'lock', text: 'this.pageInfo.locker?.userid' ? "解除锁定" : '编辑保护', icon: 'this.pageInfo.locker?.userid' ? UnlockSvg : LockSvg },
                 { name: 'copylink', icon: LinkSvg, text: '复制链接' },
-                { type: MenuItemTypeValue.divide },
+                { type: MenuItemType.divide },
                 { name: 'delete', icon: TrashSvg, text: '删除' }
             ],
             {
-                update: (item) => {
+                input: (item) => {
                     if (item.name == 'smallText') {
                         this.pageView.onUpdateProps({ smallFont: item.checked }, true);
                     }
@@ -65,9 +65,9 @@ class FormPage extends EventsComponent {
     async openPublish(event: React.MouseEvent) {
         var result = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) },
             [
-                { name: 'smallText', text: '公开至互联网', checked: this.pageView.smallFont ? true : false, type: MenuItemTypeValue.switch },
-                { name: 'smallText', text: '仅限用户提交一次', checked: this.pageView.smallFont ? true : false, type: MenuItemTypeValue.switch },
-                { type: MenuItemTypeValue.divide },
+                { name: 'smallText', text: '公开至互联网', checked: this.pageView.smallFont ? true : false, type: MenuItemType.switch },
+                { name: 'smallText', text: '仅限用户提交一次', checked: this.pageView.smallFont ? true : false, type: MenuItemType.switch },
+                { type: MenuItemType.divide },
                 { name: 'copylink', icon: LinkSvg, text: '复制链接' },
                 // { name: 'fullWidth', text: '宽版', checked: this.pageView.isFullWidth ? true : false, type: MenuItemTypeValue.switch },
                 // { type: MenuItemTypeValue.divide },
@@ -77,7 +77,7 @@ class FormPage extends EventsComponent {
                 // { name: 'delete', icon: TrashSvg, text: '删除' }
             ],
             {
-                update: (item) => {
+                input: (item) => {
                     // if (item.name == 'smallText') {
                     //     this.pageView.onUpdateProps({ smallFont: item.checked }, true);
                     // }

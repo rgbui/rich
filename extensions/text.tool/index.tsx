@@ -11,7 +11,7 @@ import { useColorSelector } from "../color";
 import { Block } from "../../src/block";
 import { useSelectMenuItem } from "../../component/view/menu";
 import { Singleton } from "../../component/lib/Singleton";
-import { MenuItemType } from "../../component/view/menu/declare";
+import { MenuItem } from "../../component/view/menu/declare";
 import { BlockDirective } from "../../src/block/enum";
 import { PopoverPosition } from "../popover/position";
 import { FixedViewScroll } from "../../src/common/scroll";
@@ -268,16 +268,16 @@ interface TextTool {
     emit(name: 'setStyle', styles: Record<BlockCssName, Record<string, any>>);
     emit(name: 'setProp', props: Record<string, any>);
     emit(name: 'setEquation', props: Record<string, any>);
-    emit(name: 'turn', item: MenuItemType<BlockDirective>, event: MouseEvent);
+    emit(name: 'turn', item: MenuItem<BlockDirective>, event: MouseEvent);
     emit(name: 'close');
     only(name: 'setProp', props: Record<string, any>);
     only(name: 'setEquation', props: Record<string, any>);
     only(name: 'setStyle', fn: (syles: Record<BlockCssName, Record<string, any>>) => void);
-    only(name: 'turn', fn: (item: MenuItemType<BlockDirective>, event: MouseEvent) => void);
+    only(name: 'turn', fn: (item: MenuItem<BlockDirective>, event: MouseEvent) => void);
     only(name: 'close', fn: () => void);
 }
 export type textToolResult = { command: 'setStyle', styles: Record<BlockCssName, Record<string, any>> }
-    | { command: 'turn', item: MenuItemType<BlockDirective>, event: MouseEvent }
+    | { command: 'turn', item: MenuItem<BlockDirective>, event: MouseEvent }
     | { command: "setProp", props: Record<string, any> }
     | { command: 'setEquation', props: { equation: boolean } }
     | false;

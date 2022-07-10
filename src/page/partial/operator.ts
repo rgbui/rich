@@ -1,6 +1,6 @@
 import { Page } from "..";
 import { useSelectMenuItem } from "../../../component/view/menu";
-import { MenuItemType } from "../../../component/view/menu/declare";
+import { MenuItem } from "../../../component/view/menu/declare";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
 import { BlockUrlConstant } from "../../block/constant";
@@ -195,7 +195,7 @@ export class Page$Operator {
             else await this.onClickBatchBlocksContextMenu(blocks, re.item, re.event)
         }
     }
-    async onClickBatchBlocksContextMenu(this: Page, blocks: Block[], item: MenuItemType<BlockDirective | string>, event: MouseEvent) {
+    async onClickBatchBlocksContextMenu(this: Page, blocks: Block[], item: MenuItem<BlockDirective | string>, event: MouseEvent) {
         switch (item.name) {
             case BlockDirective.delete:
                 this.onBatchDelete(blocks);

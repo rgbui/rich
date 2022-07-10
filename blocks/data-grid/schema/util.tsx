@@ -30,7 +30,7 @@ import {
     TypesTitleSvg,
     VideoSvg
 } from "../../../component/svgs";
-import { MenuItemTypeValue } from "../../../component/view/menu/declare";
+import { MenuItemType } from "../../../component/view/menu/declare";
 export function getTypeSvg(type: FieldType) {
     switch (type) {
         case FieldType.bool:
@@ -85,7 +85,6 @@ export function getTypeSvg(type: FieldType) {
             return TypesTitleSvg
         default:
             return TypesStringSvg
-
     }
 }
 
@@ -108,7 +107,6 @@ export function getSchemaViewIcon(url: string) {
             break;
     }
 }
-
 export function getFieldMenus() {
     function map(arr) {
         return arr.map(a => {
@@ -121,7 +119,7 @@ export function getFieldMenus() {
         })
     }
     var menus = [
-        { type: MenuItemTypeValue.text, text: '基础' },
+        { type: MenuItemType.text, text: '基础' },
         ...map([
             { text: '文本', value: FieldType.text },
             // { text: '多行文本', value: FieldType.textarea },
@@ -132,7 +130,7 @@ export function getFieldMenus() {
             { text: '勾选', value: FieldType.bool },
             { text: '日期', value: FieldType.date },
             { text: '图像', value: FieldType.image },
-            { text: '音频', value: FieldType.audio },
+            // { text: '音频', value: FieldType.audio },
             { text: '视频', value: FieldType.video },
             { text: '文件', value: FieldType.file },
             { text: '用户', value: FieldType.user },
@@ -144,7 +142,7 @@ export function getFieldMenus() {
             { text: '统计', value: FieldType.rollup },
             { text: '公式', value: FieldType.formula }
         ]),
-        { type: MenuItemTypeValue.text, text: '互动' },
+        { type: MenuItemType.text, text: '互动' },
         ...map([
             { text: '反应', value: FieldType.emoji },
             { text: '评论', value: FieldType.comment },
@@ -155,7 +153,7 @@ export function getFieldMenus() {
             // { text: '购买', value: FieldType.buy },
             // { text: '浏览访问', value: FieldType.browse },
         ]),
-        { type: MenuItemTypeValue.text, text: '高级' },
+        { type: MenuItemType.text, text: '高级' },
         ...map([
             // { text: '自动编号', value: FieldType.autoIncrement },
             //{ text: '置顶', value: FieldType.top },

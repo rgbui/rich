@@ -9,7 +9,7 @@ import './style.less';
 import { Remark } from "../../../component/view/text";
 import DragHandle from "../../../src/assert/svg/dragHandle.svg";
 import Dots from "../../../src/assert/svg/dots.svg";
-import { MenuItemTypeValue } from "../../../component/view/menu/declare";
+import { MenuItemType } from "../../../component/view/menu/declare";
 import { CheckSvg, TrashSvg } from "../../../component/svgs";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { Point } from "../../../src/common/vector/point";
@@ -119,10 +119,10 @@ export class TableStoreOption extends EventsComponent {
     async configOption(option: TableStoreOptionType, event: React.MouseEvent) {
         event.stopPropagation();
         var menus = [
-            { text: '标签', name: 'name', value: option.text, type: MenuItemTypeValue.input },
+            { text: '标签', name: 'name', value: option.text, type: MenuItemType.input },
             { name: 'delete', icon: TrashSvg, text: '删除' },
-            { type: MenuItemTypeValue.divide },
-            { type: MenuItemTypeValue.text, text: '颜色' },
+            { type: MenuItemType.divide },
+            { type: MenuItemType.text, text: '颜色' },
             ...BackgroundColorList.map(b => {
                 return {
                     name: 'color',

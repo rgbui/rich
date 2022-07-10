@@ -9,7 +9,7 @@ import { Col, Row } from "../../component/view/grid";
 import { Icon } from "../../component/view/icon";
 import { Loading } from "../../component/view/loading";
 import { useSelectMenuItem } from "../../component/view/menu";
-import { MenuItemTypeValue } from "../../component/view/menu/declare";
+import { MenuItemType } from "../../component/view/menu/declare";
 import { Remark } from "../../component/view/text";
 import { channel } from "../../net/channel";
 import { ElementType, getElementUrl } from "../../net/element.type";
@@ -56,7 +56,7 @@ export class PageHistoryStore extends EventsComponent {
             [
                 { name: 'delete', icon: TrashSvg, text: '删除' },
                 { name: 'rename', icon: RenameSvg, text: '备份重命名' },
-                { type: MenuItemTypeValue.divide },
+                { type: MenuItemType.divide },
                 { name: 'export', icon: ImportSvg, text: '导出', disabled: true }
             ]
         );

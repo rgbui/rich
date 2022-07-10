@@ -1,7 +1,7 @@
 import lodash from "lodash";
 import { ChannelText } from "..";
 import { useSelectMenuItem } from "../../../../component/view/menu";
-import { MenuItemType } from "../../../../component/view/menu/declare";
+import { MenuItem } from "../../../../component/view/menu/declare";
 import { useOpenEmoji } from "../../../../extensions/emoji";
 import { channel } from "../../../../net/channel";
 import { getElementUrl, ElementType } from "../../../../net/element.type";
@@ -116,7 +116,7 @@ export class ChatChannelService {
     }
     static async openProperty(block: Block, d: ChannelTextType, event: React.MouseEvent) {
         var op = this.getOp(block, d);
-        var items: MenuItemType<string>[] = [];
+        var items: MenuItem<string>[] = [];
         if (d.userid == block.page.user.id) {
             items.push({ name: 'edit', text: '编辑' });
             items.push({ name: 'delete', text: '删除' });

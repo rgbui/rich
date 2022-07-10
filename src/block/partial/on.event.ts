@@ -1,5 +1,5 @@
 import { Block } from "..";
-import { MenuItemType, MenuItemTypeValue } from "../../../component/view/menu/declare";
+import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { BlockDirective, BlockRenderRange } from "../enum";
 import duplicate from "../../assert/svg/duplicate.svg";
 import loop from "../../assert/svg/loop.svg";
@@ -45,7 +45,7 @@ export class Block$Event {
         if (this.isFreeBlock) {
             return await this.onGetBoardContextMenus()
         }
-        var items: MenuItemType<BlockDirective>[] = [];
+        var items: MenuItem<BlockDirective>[] = [];
         items.push({
             name: BlockDirective.delete,
             icon: trash,
@@ -108,7 +108,7 @@ export class Block$Event {
         return items;
     }
     async onGetBoardContextMenus(this: Block) {
-        var items: MenuItemType<BlockDirective | string>[] = [];
+        var items: MenuItem<BlockDirective | string>[] = [];
         items.push({
             name: BlockDirective.bringToFront,
             text: '移到前面'
@@ -118,14 +118,14 @@ export class Block$Event {
             text: '移到最下面'
         });
         items.push({
-            type: MenuItemTypeValue.divide
+            type: MenuItemType.divide
         });
         items.push({
             name: this.locker?.lock == false ? BlockDirective.lock : BlockDirective.unlock,
             text: this.locker?.lock == false ? '解锁' : '锁住',
         });
         items.push({
-            type: MenuItemTypeValue.divide
+            type: MenuItemType.divide
         });
         items.push({
             name: 'copy',
@@ -136,7 +136,7 @@ export class Block$Event {
             text: '粘贴'
         });
         items.push({
-            type: MenuItemTypeValue.divide
+            type: MenuItemType.divide
         });
         items.push({
             name: BlockDirective.delete,
@@ -155,7 +155,7 @@ export class Block$Event {
             await this.onClickContextMenu(re.item, re.event);
         }
     }
-    async onClickContextMenu(this: Block, item: MenuItemType<BlockDirective | string>, event: MouseEvent) {
+    async onClickContextMenu(this: Block, item: MenuItem<BlockDirective | string>, event: MouseEvent) {
         if (this.isFreeBlock) {
             return await this.onClickBoardContextMenu(item, event);
         }
@@ -188,7 +188,7 @@ export class Block$Event {
                 break;
         }
     }
-    async onClickBoardContextMenu(this: Block, item: MenuItemType<BlockDirective | string>, event: MouseEvent) {
+    async onClickBoardContextMenu(this: Block, item: MenuItem<BlockDirective | string>, event: MouseEvent) {
         switch (item.name) {
             case BlockDirective.lock:
                 this.onLock(true);

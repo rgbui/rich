@@ -4,10 +4,11 @@ import { Singleton } from "../../lib/Singleton";
 import { EventsComponent } from "../../lib/events.component";
 import "./style.less";
 import { MenuBox } from "./box";
-import { MenuItemType, MenuItemTypeValue } from "./declare";
+import { MenuItem } from "./declare";
 import { popoverLayer } from "../../lib/zindex";
+
 class MenuPanel<T> extends EventsComponent {
-    open(pos: PopoverPosition, menus: MenuItemType<T>[], options?: { height?: number, overflow?: 'auto' | 'visible' }) {
+    open(pos: PopoverPosition, menus: MenuItem<T>[], options?: { height?: number, overflow?: 'auto' | 'visible' }) {
         this.menus = menus;
         this.visible = true;
         this.options = {};
@@ -30,14 +31,17 @@ class MenuPanel<T> extends EventsComponent {
         popoverLayer.clear(g => g.obj == this || g.obj instanceof MenuBox)
         this.forceUpdate();
     }
-    onSelect(item: MenuItemType<T>, event: MouseEvent) {
+    onSelect(item: MenuItem<T>, event: MouseEvent) {
         this.close();
         this.emit('select', item, event);
     }
-    onUpdate(item: MenuItemType<T>) {
-        this.emit('update', item);
+    onInput(item: MenuItem<T>) {
+        this.emit('input', item);
     }
-    menus: MenuItemType<T>[] = [];
+    onClick(item: MenuItem<T>, event: React.MouseEvent) {
+
+    }
+    menus: MenuItem<T>[] = [];
     mb: MenuBox;
     render() {
         return this.visible && <div data-shy-page-unselect="true" className='shy-menu-panel'>
@@ -45,7 +49,8 @@ class MenuPanel<T> extends EventsComponent {
             <MenuBox
                 style={{ height: this.options.height, maxHeight: this.options.height, overflow: this.options.overflow }}
                 ref={e => this.mb = e}
-                update={(item) => this.onUpdate(item as any)}
+                input={(item) => this.onInput(item as any)}
+                click={(item, ev) => this.onClick(item as any, ev)}
                 select={(item, event) => this.onSelect(item as any, event)} items={this.menus as any} deep={0}></MenuBox>
         </div>
     }
@@ -54,28 +59,28 @@ interface MenuPanel<T> {
     on(name: 'error', fn: (error: Error) => void);
     only(name: 'error', fn: (error: Error) => void);
     emit(name: 'error', error: Error);
-    on(name: 'select', fn: (item: MenuItemType<T>, event: MouseEvent) => void);
-    only(name: 'select', fn: (item: MenuItemType<T>, event: MouseEvent) => void);
-    emit(name: 'select', item: MenuItemType<T>, event: MouseEvent);
-    only(name: 'update', fn: (item: MenuItemType<T>) => void);
-    emit(name: 'update', item: MenuItemType<T>);
+    on(name: 'select', fn: (item: MenuItem<T>, event: MouseEvent) => void);
+    only(name: 'select', fn: (item: MenuItem<T>, event: MouseEvent) => void);
+    emit(name: 'select', item: MenuItem<T>, event: MouseEvent);
+    only(name: 'input', fn: (item: MenuItem<T>) => void);
+    emit(name: 'input', item: MenuItem<T>);
     only(name: 'close', fn: () => void);
     emit(name: 'close');
 }
-export async function useSelectMenuItem<T = string>(pos: PopoverPosition, menus: MenuItemType<T>[], options?: {
+export async function useSelectMenuItem<T = string>(pos: PopoverPosition, menus: MenuItem<T>[], options?: {
     height?: number,
     overflow?: 'auto' | 'visible',
-    update?: (item: MenuItemType<T>) => void,
+    input?: (item: MenuItem<T>) => void,
     nickName?: string
 }) {
     var menuPanel = await Singleton<MenuPanel<T>>(MenuPanel, options?.nickName);
-    return new Promise((resolve: (data: { item: MenuItemType<T>, event: MouseEvent }) => void, reject) => {
+    return new Promise((resolve: (data: { item: MenuItem<T>, event: MouseEvent }) => void, reject) => {
         menuPanel.open(pos, menus, options);
         menuPanel.only('select', (item, event) => {
             resolve({ item, event });
         });
-        menuPanel.only('update', item => {
-            if (options?.update) options?.update(item);
+        menuPanel.only('input', item => {
+            if (options?.input) options?.input(item);
         })
         menuPanel.only('error', (error: Error) => {
             reject(error);

@@ -2,7 +2,7 @@
 import React from "react";
 import { Page } from "..";
 import { useSelectMenuItem } from "../../../component/view/menu";
-import { MenuItemType, MenuItemTypeValue } from "../../../component/view/menu/declare";
+import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { BlockDirective } from "../../block/enum";
 import { Point, Rect } from "../../common/vector/point";
 import { PageLayoutType } from "../declare";
@@ -17,27 +17,27 @@ import { PageDirective } from "../directive";
 export class PageContextmenu {
     async onGetContextMenus(this: Page) {
         if (this.isBoard) return this.onGetBoardContextMenus();
-        var items: MenuItemType<BlockDirective | string>[] = [];
+        var items: MenuItem<BlockDirective | string>[] = [];
         return items;
     }
     async onGetBoardContextMenus(this: Page) {
-        var items: MenuItemType<BlockDirective | string>[] = [];
-        items.push({ type: MenuItemTypeValue.switch, checked: this.pageInfo?.locker?.userid ? true : false, text: '编辑保护', name: 'lock' });
-        items.push({ type: MenuItemTypeValue.divide });
+        var items: MenuItem<BlockDirective | string>[] = [];
+        items.push({ type: MenuItemType.switch, checked: this.pageInfo?.locker?.userid ? true : false, text: '编辑保护', name: 'lock' });
+        items.push({ type: MenuItemType.divide });
         // items.push({ name: 'add-favourite', text: '星标' });
         items.push({ name: 'copy-link', text: '复制链接' })
-        items.push({ type: MenuItemTypeValue.divide });
+        items.push({ type: MenuItemType.divide });
         items.push({ name: 'show-all', text: '显示所有内容' });
         // items.push({ name: 'show-grid', text: '显示网格' })
         return items;
     }
-    async onClickContextMenu(this: Page, item: MenuItemType<BlockDirective | string>, event: MouseEvent) {
+    async onClickContextMenu(this: Page, item: MenuItem<BlockDirective | string>, event: MouseEvent) {
         if (this.isBoard) return this.onClickBoardContextMenu(item, event);
         switch (item.name) {
 
         }
     }
-    async onClickBoardContextMenu(this: Page, item: MenuItemType<BlockDirective | string>, event: MouseEvent) {
+    async onClickBoardContextMenu(this: Page, item: MenuItem<BlockDirective | string>, event: MouseEvent) {
         switch (item.name) {
             case 'lock':
                 channel.air('/page/update/info', {
@@ -67,19 +67,19 @@ export class PageContextmenu {
         }
     }
     async onPageContextmenu(this: Page, event: React.MouseEvent) {
-        var items: MenuItemType<BlockDirective | string>[] = [];
+        var items: MenuItem<BlockDirective | string>[] = [];
         if (this.pageLayout.type == PageLayoutType.doc) {
             items = [
-                { name: 'smallText', text: '小字号', checked: this.smallFont ? true : false, type: MenuItemTypeValue.switch },
-                { name: 'fullWidth', text: '宽版', checked: this.isFullWidth ? true : false, type: MenuItemTypeValue.switch },
-                { type: MenuItemTypeValue.divide },
+                { name: 'smallText', text: '小字号', checked: this.smallFont ? true : false, type: MenuItemType.switch },
+                { name: 'fullWidth', text: '宽版', checked: this.isFullWidth ? true : false, type: MenuItemType.switch },
+                { type: MenuItemType.divide },
                 // { name: 'layout', text: '版面', icon: CustomizePageSvg },
                 { name: 'lock', iconSize: 18, text: this.pageInfo.locker?.userid ? "解除锁定" : '编辑保护', icon: this.pageInfo.locker?.userid ? UnlockSvg : LockSvg },
                 // { type: MenuItemTypeValue.divide },
                 // { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
                 { name: 'history', iconSize: 18, icon: VersionHistorySvg, text: '页面历史' },
                 { name: 'copylink', iconSize: 16, icon: LinkSvg, text: '复制链接' },
-                { type: MenuItemTypeValue.divide },
+                { type: MenuItemType.divide },
                 { name: 'undo', iconSize: 18, text: '撤消', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
                 // { name: 'redo', text: '重做', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
                 { name: 'delete', iconSize: 16, icon: TrashSvg, text: '删除' },
@@ -92,7 +92,7 @@ export class PageContextmenu {
         }
         var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, items, {
             overflow: 'visible',
-            update: (item) => {
+            input: (item) => {
                 if (item.name == 'smallText') {
                     this.onUpdateProps({ smallFont: item.checked }, true);
                 }

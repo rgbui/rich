@@ -12,7 +12,7 @@ import { useDataGridCreate } from "../create";
 import { Point } from "../../../src/common/vector/point";
 import { channel } from "../../../net/channel";
 import { useSelectMenuItem } from "../../../component/view/menu";
-import { MenuItemTypeValue } from "../../../component/view/menu/declare";
+import { MenuItemType } from "../../../component/view/menu/declare";
 import "./style.less";
 import { getSchemaViewIcon } from "../../../blocks/data-grid/schema/util";
 import { Divider } from "../../../component/view/grid";
@@ -64,13 +64,13 @@ class TabelSchemaViewDrop extends EventsComponent {
         event.stopPropagation();
         var menus = [
             {
-                type: MenuItemTypeValue.input,
+                type: MenuItemType.input,
                 text: '重命名视图',
                 value: view.text,
                 icon: TrashSvg,
                 name: 'rename'
             },
-            { type: MenuItemTypeValue.divide },
+            { type: MenuItemType.divide },
             { text: '删除', name: 'delete', icon: TrashSvg }
         ]
         var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus);
@@ -94,7 +94,7 @@ class TabelSchemaViewDrop extends EventsComponent {
         event.stopPropagation();
         var menus = [
             {
-                type: MenuItemTypeValue.input,
+                type: MenuItemType.input,
                 text: '重命名表名',
                 value: this.schema.text,
                 icon: TrashSvg,

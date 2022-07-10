@@ -3,7 +3,7 @@ import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { Icon } from "../../../component/view/icon";
 import { useSelectMenuItem } from "../../../component/view/menu";
-import { MenuItemTypeValue } from "../../../component/view/menu/declare";
+import { MenuItemType } from "../../../component/view/menu/declare";
 import { channel } from "../../../net/channel";
 import { Point } from "../../../src/common/vector/point";
 import { PopoverSingleton } from "../../popover/popover";
@@ -32,10 +32,10 @@ class TabelSchemaFormDrop extends EventsComponent {
     }
     async onAdd(event: React.MouseEvent) {
         var menus = [
-            { text: '表单名', name: 'name', value: '', type: MenuItemTypeValue.input },
-            { type: MenuItemTypeValue.divide },
+            { text: '表单名', name: 'name', value: '', type: MenuItemType.input },
+            { type: MenuItemType.divide },
             {
-                type: MenuItemTypeValue.button,
+                type: MenuItemType.button,
                 text: '创建表单',
                 name: 'create'
             }
@@ -66,13 +66,13 @@ class TabelSchemaFormDrop extends EventsComponent {
         event.stopPropagation();
         var menus = [
             {
-                type: MenuItemTypeValue.input,
+                type: MenuItemType.input,
                 text: '重命名表单',
                 value: view.text,
                 icon: TrashSvg,
                 name: 'rename'
             },
-            { type: MenuItemTypeValue.divide },
+            { type: MenuItemType.divide },
             { text: '编辑', name: 'edit', icon: TrashSvg },
             { text: '删除', name: 'delete', icon: TrashSvg }
         ]
