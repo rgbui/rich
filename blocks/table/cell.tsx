@@ -9,7 +9,7 @@ import { BlockUrlConstant } from "../../src/block/constant";
 import { useSelectMenuItem } from "../../component/view/menu";
 import { Point } from "../../src/common/vector/point";
 import { TableRow } from "./row";
-import { MenuItemTypeValue } from "../../component/view/menu/declare";
+import { MenuItemType } from "../../component/view/menu/declare";
 import lodash from "lodash";
 
 @url('/table/cell')
@@ -50,10 +50,10 @@ export class TableCellView extends BlockView<TableCell>{
                 { text: '在下方插入一行', name: 'down' },
                 { text: '在左边插入一列', name: 'left' },
                 { text: '在右侧插入一列', name: 'right' },
-                { type: MenuItemTypeValue.divide },
+                { type: MenuItemType.divide },
                 { name: 'delRow', text: '删除所在行', },
                 { name: 'delCol', text: '删除所在列' },
-                { type: MenuItemTypeValue.divide },
+                { type: MenuItemType.divide },
                 { text: '清空', name: 'clear' }
             ]
         );

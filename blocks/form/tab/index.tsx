@@ -2,7 +2,7 @@ import React from "react";
 import { ArrowLeftSvg, ArrowRightSvg, PlusSvg, TrashSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { useSelectMenuItem } from "../../../component/view/menu";
-import { MenuItemTypeValue } from "../../../component/view/menu/declare";
+import { MenuItemType } from "../../../component/view/menu/declare";
 import { Block } from "../../../src/block";
 import { BlockUrlConstant } from "../../../src/block/constant";
 import { BlockFactory } from "../../../src/block/factory/block.factory";
@@ -63,7 +63,7 @@ export class Tab extends Block {
             [
                 { name: 'prev', text: '前移', disabled: at == 0 ? true : false, icon: ArrowLeftSvg },
                 { name: 'after', text: '后移', disabled: at == this.childs.length - 1 ? true : false, icon: ArrowRightSvg },
-                { type: MenuItemTypeValue.divide },
+                { type: MenuItemType.divide },
                 { name: 'delete', text: '删除', disabled: this.childs.length == 1 ? true : false, icon: TrashSvg },
             ]
         );
