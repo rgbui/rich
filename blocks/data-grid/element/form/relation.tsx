@@ -1,5 +1,5 @@
 import React from "react";
-import { useRelationPickData } from "../../../../extensions/tablestore/relation.picker";
+import { useRelationPickData } from "../../../../extensions/datagrid/relation.picker";
 import { channel } from "../../../../net/channel";
 import { getElementUrl, ElementType } from "../../../../net/element.type";
 import { url, view } from "../../../../src/block/factory/observable";

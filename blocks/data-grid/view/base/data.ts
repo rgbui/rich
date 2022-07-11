@@ -1,4 +1,4 @@
-import { useFormPage } from "../../../../extensions/tablestore/form";
+import { useFormPage } from "../../../../extensions/datagrid/form";
 import { Block } from "../../../../src/block";
 import { ActionDirective } from "../../../../src/history/declare";
 import { util } from "../../../../util/util";

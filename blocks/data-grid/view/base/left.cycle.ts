@@ -1,7 +1,4 @@
-import { util } from "echarts";
-import { channel } from "../../../../net/channel";
-import { Pattern } from "../../../../src/block/pattern";
-import { Matrix } from "../../../../src/common/matrix";
+
 import { PageLayoutType } from "../../../../src/page/declare";
 import { TableSchema } from "../../schema/meta";
 import { FieldType } from "../../schema/type";

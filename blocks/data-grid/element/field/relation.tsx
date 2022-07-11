@@ -1,5 +1,5 @@
 import React from "react";
-import { useRelationPickData } from "../../../../extensions/tablestore/relation.picker";
+import { useRelationPickData } from "../../../../extensions/datagrid/relation.picker";
 import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";

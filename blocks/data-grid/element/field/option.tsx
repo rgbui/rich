@@ -1,5 +1,5 @@
 import React from "react";
-import { useTableStoreOption } from "../../../../extensions/tablestore/option/option";
+import { useTableStoreOption } from "../../../../extensions/datagrid/option/option";
 import { BlockRenderRange } from "../../../../src/block/enum";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";

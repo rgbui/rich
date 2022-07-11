@@ -244,11 +244,12 @@ export class Block$Event {
             this.manualUpdateProps(oldProps, newProps, range, isOnlyRecord);
         })
     }
-    async onLock(this: Block, locked: boolean) {
+    async onLock(this: Block,locked: boolean) {
         this.onAction(ActionDirective.onLock, async () => {
             this.updateProps({
                 locker: {
-                    lock: locked, date: Date.now(),
+                    lock: locked,
+                    date: Date.now(),
                     userid: this.page.user.id
                 }
             });

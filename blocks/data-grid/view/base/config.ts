@@ -2,8 +2,8 @@ import dayjs from "dayjs";
 import { HideSvg, FilterSvg, ArrowDownSvg, ArrowUpSvg, TypesFormulaSvg, OptionsSvg } from "../../../../component/svgs";
 import { useSelectMenuItem } from "../../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
-import { useTableStoreAddField } from "../../../../extensions/tablestore/field";
-import { useFormula } from "../../../../extensions/tablestore/formula";
+import { useTableStoreAddField } from "../../../../extensions/datagrid/field";
+import { useFormula } from "../../../../extensions/datagrid/formula";
 import { BlockDirective } from "../../../../src/block/enum";
 import { Rect, Point } from "../../../../src/common/vector/point";
 import { util } from "../../../../util/util";
@@ -52,6 +52,7 @@ export class DataGridViewConfig {
                     value: viewField.field?.text,
                     text: '编辑列名',
                 },
+                { type: MenuItemType.divide },
                 {
                     name: 'editProperty',
                     disabled: viewField.field.type == FieldType.title ? true : false,
