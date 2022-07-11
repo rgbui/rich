@@ -1,46 +1,28 @@
 import React from "react";
 import { ReactNode } from "react";
-import { SchemaFilter } from "../../../blocks/data-grid/schema/declare";
-import { TableSchema } from "../../../blocks/data-grid/schema/meta";
-import { FieldType } from "../../../blocks/data-grid/schema/type";
-import { getSchemaViewIcon } from "../../../blocks/data-grid/schema/util";
-import { DataGridView } from "../../../blocks/data-grid/view/base";
-import { EventsComponent } from "../../../component/lib/events.component";
-import { Divider } from "../../../component/view/grid";
-import { Icon } from "../../../component/view/icon";
-import { Select } from "../../../component/view/select";
-import { PopoverSingleton } from "../../popover/popover";
-import { PopoverPosition } from "../../popover/position";
-// import PlusSvg from "../../../src/assert/svg/plus.svg";
-// import Dots from "../../../src/assert/svg/dots.svg";
-// import TrashSvg from "../../../src/assert/svg/trash.svg";
+import { FieldType } from "../../../../blocks/data-grid/schema/type";
+//import { getSchemaViewIcon } from "../../../../blocks/data-grid/schema/util";
+import { DataGridView } from "../../../../blocks/data-grid/view/base";
+import { EventsComponent } from "../../../../component/lib/events.component";
+import { Divider } from "../../../../component/view/grid";
+import { Icon } from "../../../../component/view/icon";
+import { Select } from "../../../../component/view/select";
 import "./style.less";
-import { Input } from "../../../component/view/input";
-import { useSelectMenuItem } from "../../../component/view/menu";
-import { Point } from "../../../src/common/vector/point";
-import { util } from "../../../util/util";
-import { DotsSvg, LinkSvg, PlusSvg, TrashSvg } from "../../../component/svgs";
+import { Input } from "../../../../component/view/input";
+import { useSelectMenuItem } from "../../../../component/view/menu";
+import { Point } from "../../../../src/common/vector/point";
+import { util } from "../../../../util/util";
+import { DotsSvg, LinkSvg, PlusSvg, TrashSvg } from "../../../../component/svgs";
 
-class TableFilterView extends EventsComponent {
-    schema: TableSchema;
-    filter: SchemaFilter;
-    block: DataGridView;
-    open(options: {
-        schema: TableSchema,
-        block: DataGridView,
-        filter?: SchemaFilter;
-    }) {
-        this.schema = options.schema;
-        this.filter = options.filter;
-        if (!this.filter) {
-            this.filter = {
-                logic: 'and',
-                items: []
-            }
-        }
-        if (!this.filter.items) this.filter.items = [];
-        this.block = options.block;
-        this.forceUpdate()
+export class TableFilterView extends EventsComponent<{ dataGrid: DataGridView }>{
+    get block() {
+        return this.props.dataGrid;
+    }
+    get schema() {
+        return this.props.dataGrid?.schema;
+    }
+    get filter() {
+        return this.block.filter;
     }
     getFields() {
         var fs = this.schema.fields.findAll(g => g.text ? true : false).map(fe => {
@@ -64,6 +46,7 @@ class TableFilterView extends EventsComponent {
         ]
     }
     renderFilter(filter, deep?: number) {
+        if (!this.props.dataGrid) return <></>;
         var items = filter?.items;
         var self = this;
         var nameField = this.schema.fields.find(g => g.type == FieldType.title);
@@ -95,7 +78,7 @@ class TableFilterView extends EventsComponent {
         }
         async function clickProperty(event: React.MouseEvent, filter) {
             var menus = [
-                { text: '复制', name: 'copy', icon:LinkSvg },
+                { text: '复制', name: 'copy', icon: LinkSvg },
                 { text: '删除', name: 'delete', icon: TrashSvg }
             ]
             var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus);
@@ -163,29 +146,14 @@ class TableFilterView extends EventsComponent {
     }
     render(): ReactNode {
         return <div className="shy-table-filter-view">
-            {this.schema && <div className="shy-table-filter-view-head">
+            {/* {this.schema && <div className="shy-table-filter-view-head">
                 <span>设置过滤条件</span>
                 <Icon style={{ marginLeft: 5 }} size={14} icon={getSchemaViewIcon(this.block.url)}></Icon>
                 <span>{this.block.schemaView?.text}</span>
-            </div>}
+            </div>} */}
             <div className="shy-table-filter-view-content">
                 {this.schema && this.renderFilter(this.filter, 0)}
             </div>
         </div>
     }
-}
-
-export async function useTableFilterView(pos: PopoverPosition, options: {
-    schema: TableSchema,
-    block: DataGridView,
-    filter?: SchemaFilter
-}) {
-    let popover = await PopoverSingleton(TableFilterView, { mask: true });
-    let fv = await popover.open(pos);
-    fv.open(options);
-    return new Promise((resolve: (data: SchemaFilter) => void, reject) => {
-        popover.only('close', () => {
-            resolve(fv.filter)
-        })
-    })
 }
