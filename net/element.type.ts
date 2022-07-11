@@ -1,4 +1,6 @@
+import { Block } from "../src/block"
 import { UA } from "../util/ua"
+import { channel } from "./channel"
 
 export class SchemaName {
     UserDefineDataSchemaViewTemplate = 'UserDefineDataSchemaViewTemplate'
@@ -23,7 +25,8 @@ export enum ElementType {
 /Schema/id/Record/id
 /Schema/id/View/id
 /Schema/id/RecordView/id
-
+/Schema/${id}/Field/${id1}/Record/${id2} 表示数据表格中某条记录下面的某个字段值
+/Room/{id}/Chat/{id} 表示聊天频道的某条聊天记录
  */
 export function getElementUrl(type: ElementType, id: string, id1?: string, id2?: string) {
     if (type == ElementType.SchemaRecord) return ` /Schema/${id}/Record/${id1}`
@@ -31,6 +34,7 @@ export function getElementUrl(type: ElementType, id: string, id1?: string, id2?:
     else if (type == ElementType.SchemaRecordView) return `/Schema/${id}/RecordView/${id1}`
     else if (type == ElementType.SchemaRecordField) return `/Schema/${id}/Field/${id1}/Record/${id2}`
     else if (type == ElementType.RoomChat) return `/Room/${id}/Chat/${id1}`
+    else if (type == ElementType.Block) return `/Page/${id}/block/${id1}`
     else return `/${ElementType[type]}/${id}`
 }
 
@@ -76,6 +80,14 @@ export function parseElementUrl(url: string) {
             id: us[0]
         }
     }
+    else if (us.includes('Page')) {
+        us.removeAll(g => g == 'Page' || g == 'Block');
+        return {
+            type: ElementType.Block,
+            id: us[0],
+            id1: us[1]
+        }
+    }
     else if (us.includes('PageItem')) {
         us.removeAll(g => g == 'PageItem')
         return {
@@ -92,6 +104,17 @@ export function parseElementUrl(url: string) {
         }
     }
 }
+
+export function getWsElementUrl(options: { wsUrl?: string, type: ElementType, id: string, id1?: string, id2?: string }) {
+    var { type, id, id1, id2, wsUrl } = options;
+    if (!wsUrl) {
+        var ws = channel.query('/current/workspace');
+        wsUrl = `https://${ws.sn}shy.live/`;
+    }
+    if (!wsUrl.endsWith('/')) wsUrl += '/';
+    return wsUrl + 'r?url=' + encodeURIComponent(getElementUrl(type, id, id1, id2))
+}
+
 
 /**
  * 对当前的图做显示性的兼容性处理
