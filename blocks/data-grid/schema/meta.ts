@@ -33,7 +33,16 @@ export class TableSchema {
     createDate: Date;
     fields: Field[] = [];
     text: string;
-    views: { id: string, text: string, url: string }[] = [];
+    views: {
+        id: string,
+        text: string,
+        url: string,
+        locker: {
+            lock: boolean,
+            date: number,
+            userid: string
+        }
+    }[] = [];
     recordViews: { id: string, text: string, type?: 'form' | 'card' }[] = [];
     modelMetaId?: string;
     getViewFields() {
@@ -139,6 +148,7 @@ export class TableSchema {
      * { name: 'createSchemaView', text: r.text, url: r.url }
      * { name: 'addField', field: { text: '状态', type: FieldType.option } }
      * { name: 'removeSchemaView', id: view.id }
+     * { name: 'duplicateSchemaView',id:view.id }
      * { name: 'updateSchemaView', id: view.id, data: { text: it.value } }
      * { name: 'updateSchema', data: { text: it.value } }
      */
@@ -170,6 +180,9 @@ export class TableSchema {
                     break;
                 case 'updateSchema':
                     Object.assign(this, action.data);
+                    break;
+                case 'duplicateSchemaView':
+                    this.views.push(action.data as any);
                     break;
 
             }

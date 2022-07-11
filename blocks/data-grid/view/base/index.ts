@@ -1,37 +1,19 @@
-import React, { MouseEvent } from "react";
-import { Confirm } from "../../../../component/lib/confirm";
-import { useSelectMenuItem } from "../../../../component/view/menu";
-import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
-import { useDataGridCreate } from "../../../../extensions/tablestore/create";
-import { useTableStoreAddField } from "../../../../extensions/tablestore/field";
-import { useFormPage } from "../../../../extensions/tablestore/form";
+import { useDataGridCreate } from "../../../../extensions/datagrid/create";
 import { channel } from "../../../../net/channel";
 import { Block } from "../../../../src/block";
-import { BlockDirective, BlockRenderRange } from "../../../../src/block/enum";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { prop } from "../../../../src/block/factory/observable";
 import { Pattern } from "../../../../src/block/pattern";
 import { Matrix } from "../../../../src/common/matrix";
-import { Point, Rect } from "../../../../src/common/vector/point";
+import { Rect } from "../../../../src/common/vector/point";
 import { ActionDirective } from "../../../../src/history/declare";
 import { util } from "../../../../util/util";
 import { SchemaFilter } from "../../schema/declare";
-import { Field } from "../../schema/field";
 import { TableSchema } from "../../schema/meta";
-import { FieldType } from "../../schema/type";
 import { ViewField } from "../../schema/view";
 import { DataGridTurns } from "../../turn";
 import { TableStoreItem } from "../item";
-import { ArrowDownSvg, ArrowUpSvg, FilterSvg, HideSvg, SettingsSvg, TrashSvg, TypesFormulaSvg } from "../../../../component/svgs";
-import { getFieldMenus, getTypeSvg } from "../../schema/util";
-import { useRelationView } from "../../../../extensions/tablestore/relation";
-import { useRollupView } from "../../../../extensions/tablestore/rollup";
-import { useFormula } from "../../../../extensions/tablestore/formula";
-import { useFieldEmojiView } from "../../../../extensions/tablestore/emoji";
-import { PageLayoutType } from "../../../../src/page/declare";
-import { PageDirective } from "../../../../src/page/directive";
 import { DataGridTool } from "../components/tool";
-import dayjs from "dayjs";
 import { Mix } from "../../../../util/mix";
 import { DataGridViewLife } from "./left.cycle";
 import { DataGridViewOperator } from "./operator";
@@ -251,6 +233,20 @@ export class DataGridView extends Block {
         }
     }
     dataGridTool: DataGridTool;
+    async onLock(this: DataGridView, locked: boolean) {
+        await this.schema.onSchemaOperate([
+            {
+                name: 'updateSchemaView',
+                id: this.schemaView.id,
+                data: {
+                    lock: locked,
+                    date: Date.now(),
+                    userid: this.page.user.id
+                }
+            }
+        ]);
+        this.forceUpdate()
+    }
 }
 
 export interface DataGridView extends DataGridViewLife { }
