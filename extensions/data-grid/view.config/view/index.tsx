@@ -13,6 +13,7 @@ import lodash from "lodash";
 import { FieldType } from "../../../../blocks/data-grid/schema/type";
 import { BlockRenderRange } from "../../../../src/block/enum";
 import { SelectBox } from "../../../../component/view/select/box";
+import { getTypeSvg } from "../../../../blocks/data-grid/schema/util";
 
 export class DataGridViewConfig extends EventsComponent {
     get schema() {
@@ -46,13 +47,7 @@ export class DataGridViewConfig extends EventsComponent {
             {this.block.url == BlockUrlConstant.DataGridGallery && <>
                 <Row className="shy-table-property-view-operator">
                     <Col span={12} align={'start'}><Remark>列数</Remark></Col>
-                    <Col span={12} align={'end'}><Select
-                        style={{
-                            minWidth: 80,
-                            display: 'inline-flex',
-                            fontSize: 14,
-                            justifyContent: 'flex-end'
-                        }}
+                    <Col span={12} align={'end'}><SelectBox
                         options={[
                             { text: '1', value: 1 },
                             { text: '2', value: 2 },
@@ -62,7 +57,7 @@ export class DataGridViewConfig extends EventsComponent {
                             { text: '6', value: 6 }
                         ]}
                         value={(this.block as TableStoreGallery).gallerySize}
-                        onChange={async e => { await this.block.onUpdateProps({ gallerySize: e }, { range: BlockRenderRange.self }); self.forceUpdate() }}></Select>
+                        onChange={async e => { await this.block.onUpdateProps({ gallerySize: e }, { range: BlockRenderRange.self }); self.forceUpdate() }}></SelectBox>
                     </Col>
                 </Row>
                 <Row className="shy-table-property-view-operator">
@@ -101,13 +96,13 @@ export class DataGridViewConfig extends EventsComponent {
                     <Row className="shy-table-property-view-operator">
                         <Col span={12} align={'start'}><Remark>封面字段</Remark></Col>
                         <Col span={12} align={'end'}>
-                            <Select style={{ minWidth: 80, display: 'inline-flex', fontSize: 14, justifyContent: 'flex-end' }}
-                                options={fs.filter(g => g.type == FieldType.image).map(f => {
-                                    return {
-                                        text: f.text,
-                                        value: f.id
-                                    }
-                                })}
+                            <SelectBox options={fs.filter(g => g.type == FieldType.image).map(f => {
+                                return {
+                                    icon: getTypeSvg(f.type),
+                                    text: f.text,
+                                    value: f.id
+                                }
+                            })}
                                 value={(this.block as TableStoreGallery).cardConfig.coverFieldId}
                                 onChange={async e => {
                                     var g = lodash.cloneDeep((this.block as TableStoreGallery).cardConfig);
@@ -115,7 +110,7 @@ export class DataGridViewConfig extends EventsComponent {
                                     await this.block.onUpdateProps({ cardConfig: g }, { range: BlockRenderRange.self });
                                     self.forceUpdate()
                                 }}>
-                            </Select>
+                            </SelectBox>
                         </Col>
                     </Row>
                 </>}

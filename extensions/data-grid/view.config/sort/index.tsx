@@ -32,7 +32,8 @@ export class TableSortView extends EventsComponent {
         })
     }
     onStore = lodash.debounce(async () => {
-        this.block.onManualUpdateProps({ sorts: this.oldSorts }, { sorts: this.block.sorts })
+        await this.block.onManualUpdateProps({ sorts: this.oldSorts }, { sorts: this.block.sorts });
+        this.oldSorts = lodash.cloneDeep(this.block.sorts);
     }, 800);
     render(): ReactNode {
         if (!this.block) return <></>;
@@ -75,7 +76,7 @@ export class TableSortView extends EventsComponent {
                     justifyContent: 'flex-start',
                     alignItems: 'center',
                     cursor: 'pointer'
-                }} onClick={e =>addSort()}><Icon size={14} style={{ marginRight: 5 }} icon={PlusSvg}></Icon>添加排序</a>
+                }} onClick={e => addSort()}><Icon size={14} style={{ marginRight: 5 }} icon={PlusSvg}></Icon>添加排序</a>
             </div>
         </div>
     }

@@ -14,6 +14,8 @@ import { util } from "../../../../util/util";
 import { DotsSvg, LinkSvg, PlusSvg, TrashSvg } from "../../../../component/svgs";
 import lodash from "lodash";
 import { SchemaFilter } from "../../../../blocks/data-grid/schema/declare";
+import { SelectBox } from "../../../../component/view/select/box";
+import { getTypeSvg } from "../../../../blocks/data-grid/schema/util";
 
 export class TableFilterView extends EventsComponent {
     get schema() {
@@ -29,6 +31,7 @@ export class TableFilterView extends EventsComponent {
     getFields() {
         var fs = this.schema.fields.findAll(g => g.text ? true : false).map(fe => {
             return {
+                icon: getTypeSvg(fe.type),
                 text: fe.text,
                 value: fe.id
             }
@@ -48,20 +51,20 @@ export class TableFilterView extends EventsComponent {
         ]
     }
     onStore = lodash.debounce(async () => {
-        this.block.onManualUpdateProps({ filter: this.oldFilters }, { filter: this.block.filter })
+        await this.block.onManualUpdateProps({ filter: this.oldFilters }, { filter: this.block.filter });
+        this.oldFilters = lodash.cloneDeep(this.block.filter);
     }, 800);
     renderFilter(filter, deep?: number) {
         if (!this.block) return <></>;
-        var items = filter?.items;
         var self = this;
         var nameField = this.schema.fields.find(g => g.type == FieldType.title);
         if (!nameField) nameField = this.schema.fields.find(g => g.text ? true : false);
         function renderFilterItem(item, index) {
             if (item.logic) return self.renderFilter(item, deep + 1);
             else return <div className="shy-table-filter-view-item-content">
-                <Select border style={{ width: 100 }} options={self.getFields()} value={item.field} onChange={e => { item.field = e; self.forceUpdate() }}></Select>
-                <Select border style={{ width: 100 }} options={self.getFieldType(item.field)} value={item.operator} onChange={e => { item.operator = e; self.forceUpdate() }} ></Select>
-                <Input style={{ width: 150 }} value={item.value} onChange={e => item.value = e}></Input>
+                <SelectBox border options={self.getFields()} value={item.field} onChange={e => { item.field = e; self.onStore(); self.forceUpdate() }}></SelectBox>
+                <SelectBox border options={self.getFieldType(item.field)} value={item.operator} onChange={e => { item.operator = e; self.onStore(); self.forceUpdate() }} ></SelectBox>
+                <Input style={{ width: 80 }} value={item.value} onChange={e => { item.value = e; self.onStore(); }}></Input>
             </div>
         }
         function addFilter(value: 'item' | 'group') {
@@ -89,16 +92,16 @@ export class TableFilterView extends EventsComponent {
             var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus);
             if (um) {
                 if (um.item.name == 'delete') {
-                    items.remove(g => g == filter);
+                    filter.items.remove(g => g == filter);
                     self.onStore()
                     self.forceUpdate();
                 }
                 else if (um.item.name == 'copy') {
-                    var at = items.findIndex(g => g == filter);
+                    var at = filter.items.findIndex(g => g == filter);
                     if (at > -1) {
                         var newItem = util.clone(filter);
                         if (newItem) {
-                            items.splice(at + 1, 0, newItem);
+                            filter.items.splice(at + 1, 0, newItem);
                             self.onStore()
                             self.forceUpdate()
                         }
@@ -107,14 +110,14 @@ export class TableFilterView extends EventsComponent {
             }
         }
         return <div className="shy-table-filter-view-group">
-            {items.map((it, index) => {
+            {filter.items.map((it, index) => {
                 if (index == 0) return <div className="shy-table-filter-view-item" key={index}>
                     <span style={{ display: 'inline-block', height: 32, lineHeight: '32px' }}>条件</span>
                     {renderFilterItem(it, index)}
-                    <Icon style={{ padding: 5 }} mousedown={e => clickProperty(e, it)} icon={DotsSvg} wrapper></Icon>
+                    <Icon style={{ padding: 5 }} size={14} mousedown={e => clickProperty(e, it)} icon={DotsSvg} wrapper></Icon>
                 </div>
                 else if (index == 1) return <div className="shy-table-filter-view-item" key={index}>
-                    <span><Select value={filter.logic}
+                    <span><SelectBox border value={filter.logic}
                         options={[
                             { text: 'and', value: 'and' },
                             { text: 'or', value: 'or' }
@@ -123,26 +126,26 @@ export class TableFilterView extends EventsComponent {
                             filter.logic = e;
                             self.onStore();
                             self.forceUpdate();
-                        }}></Select>
+                        }}></SelectBox>
                     </span>
                     {renderFilterItem(it, index)}
-                    <Icon style={{ padding: 5 }} mousedown={e => clickProperty(e, it)} icon={DotsSvg} wrapper></Icon>
+                    <Icon style={{ padding: 5 }} size={14} mousedown={e => clickProperty(e, it)} icon={DotsSvg} wrapper></Icon>
                 </div>
                 else if (index > 1) return <div className="shy-table-filter-view-item" key={index}>
                     <span>{filter.logic}</span>
                     {renderFilterItem(it, index)}
-                    <Icon style={{ padding: 5 }} mousedown={e => clickProperty(e, it)} icon={DotsSvg} wrapper></Icon>
+                    <Icon style={{ padding: 5 }} size={14} mousedown={e => clickProperty(e, it)} icon={DotsSvg} wrapper></Icon>
                 </div>
             })}
             {deep == 0 && <Divider></Divider>}
             <div className="shy-table-filter-view-group-footer">
-                <Select options={this.getFilters()} onChange={e => { addFilter(e) }}><a
+                <SelectBox options={this.getFilters()} onChange={e => { addFilter(e) }}><a
                     style={{
                         fontSize: 14,
                         display: 'flex',
                         justifyContent: 'flex-start',
                         alignItems: 'center'
-                    }}><Icon size={14} icon={PlusSvg}></Icon>添加筛选条件</a></Select>
+                    }}><Icon size={14} icon={PlusSvg}></Icon>添加筛选条件</a></SelectBox>
             </div>
         </div>
     }
@@ -154,7 +157,7 @@ export class TableFilterView extends EventsComponent {
     }
     render(): ReactNode {
         if (!this.block) return <></>;
-        if (!Array.isArray(this.block.filter)) {
+        if (!Array.isArray(this.block.filter?.items)) {
             this.block.filter = { logic: 'and', items: [] };
         }
         return <div className="shy-table-filter-view">
