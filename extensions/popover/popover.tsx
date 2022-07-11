@@ -11,7 +11,7 @@ class Popover<T extends React.Component> extends EventsComponent<{
     args?: Record<string, any>,
     mask?: boolean,
     visible?: "hidden" | "none",
-    frame?:boolean
+    frame?: boolean
 }> {
     visible: boolean;
     point: Point = new Point(0, 0);
@@ -59,23 +59,22 @@ class Popover<T extends React.Component> extends EventsComponent<{
         var CP = this.props.component;
         var style: CSSProperties = {
             top: this.point.y,
-            left: this.point.x,
-            zIndex: this.zindex
+            left: this.point.x
         }
-        if(this.props.frame){
-            style.background='none';
-            style.backgroundColor='transparent';
-            style.boxShadow='none';
+        if (this.props.frame) {
+            style.background = 'none';
+            style.backgroundColor = 'transparent';
+            style.boxShadow = 'none';
         }
         if (this.props.visible == 'hidden') {
-            return <div ref={e => this.box = e} style={{ display: this.visible == true ? "block" : "none" }}>
-                {this.props.mask == true && <div style={{ zIndex: this.maskZindex }} className={'shy-popover-mask' + (this.props.shadow ? " shy-popover-mask-shadow" : "")} onMouseDown={e => this.onClose(e)}></div>}
+            return <div className="shy-popover-box" ref={e => this.box = e} style={{ zIndex: this.zindex, display: this.visible == true ? "block" : "none" }}>
+                {this.props.mask == true && <div className={'shy-popover-mask' + (this.props.shadow ? " shy-popover-mask-shadow" : "")} onMouseDown={e => this.onClose(e)}></div>}
                 <div style={style} className='shy-popover' ref={e => this.el = e}><CP {...this.props.args} ref={e => this.cp = e}></CP></div>
             </div>
         }
         else {
-            return <div ref={e => this.box = e} style={{ display: this.visible == false ? 'none' : undefined }} >{this.visible && <>
-                {this.props.mask == true && <div style={{ zIndex: this.maskZindex }} className={'shy-popover-mask' + (this.props.shadow ? " shy-popover-mask-shadow" : "")} onMouseDown={e => this.onClose(e)}></div>}
+            return <div className="shy-popover-box" ref={e => this.box = e} style={{ zIndex: this.zindex, display: this.visible == false ? 'none' : undefined }} >{this.visible && <>
+                {this.props.mask == true && <div className={'shy-popover-mask' + (this.props.shadow ? " shy-popover-mask-shadow" : "")} onMouseDown={e => this.onClose(e)}></div>}
                 <div style={style} className='shy-popover' ref={e => this.el = e}><CP {...this.props.args} ref={e => this.cp = e}></CP></div>
             </>}</div>
         }
@@ -93,8 +92,7 @@ class Popover<T extends React.Component> extends EventsComponent<{
         if (this.props.visible == 'hidden') {
             this.box.style.display = 'none';
         }
-        else
-            this.forceUpdate();
+        else this.forceUpdate();
     }
     componentDidMount() {
         document.addEventListener('mousedown', this.onGlobalMousedown, true);
