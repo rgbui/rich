@@ -9,7 +9,8 @@ export class Tab extends React.Component<{
     rightBtns?: React.ReactNode,
     style?: CSSProperties,
     align?: 'left' | 'right' | 'center',
-    keeplive?: boolean
+    keeplive?: boolean,
+    show?: 'text' | 'icon'
 }>{
     static get Page(): typeof TabPage {
         return TabPage;
@@ -29,6 +30,7 @@ export class Tab extends React.Component<{
             <div className={'shy-tab-items' + (' shy-tab-items-' + (this.props.align ?? 'left'))}>
                 {
                     React.Children.map(this.props.children, (element, index) => {
+                        if (this.props.show == 'text') return <span onClick={e => { this.onFocus(index) }} key={index} className={index == this.focusIndex ? "hover" : ""}>{(element as any).props.item}</span>
                         return <label onClick={e => { this.onFocus(index) }} key={index} className={index == this.focusIndex ? "hover" : ""}>{(element as any).props.item}</label>
                     })
                 }

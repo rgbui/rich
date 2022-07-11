@@ -48,6 +48,35 @@
                 fill : #cf5659;
             }
         }
+
+        >span {
+            user-select    : none;
+            transition     : background 20ms ease-in 0s;
+            cursor         : pointer;
+            display        : inline-flex;
+            align-items    : center;
+            justify-content: center;
+            flex-shrink    : 0;
+            white-space    : nowrap;
+            height         : 32px;
+            padding        : 0px 10px;
+            border-radius  : 3px;
+            font-size      : 14px;
+            line-height    : 1.2;
+            min-width      : 0px;
+            color          : rgb(55, 53, 47);
+            margin-right   : 10px;
+            position       : relative;
+            &:hover,
+            &.hover {
+                background-color: rgba(55, 53, 47, 0.08);
+            }
+
+            &.hover {
+                // color: #cf5659;
+                // fill : #cf5659;
+            }
+        }
     }
 
     &-btns {
