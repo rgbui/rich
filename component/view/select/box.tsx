@@ -1,7 +1,7 @@
 import lodash from "lodash";
 import React, { CSSProperties } from "react"
 import { Rect } from "../../../src/common/vector/point";
-import { ChevronDownSvg } from "../../svgs";
+import { ChevronDownSvg, ChevronRightSvg } from "../../svgs";
 import { Icon } from "../icon";
 import { useSelectMenuItem } from "../menu";
 import { MenuItem } from "../menu/declare";
@@ -32,8 +32,8 @@ export class SelectBox extends React.Component<{
         return <div style={this.props.style || {}}
             className={"shy-select-box" + (this.props.disabled ? " disabled" : "") + (this.props.border ? " border" : "")}
             onMouseUp={e => mousedown(e)}>
-            {this.props.children && <>{this.props.children}<ChevronDownSvg></ChevronDownSvg></>}
-            {!this.props.children && <><span>{op?.icon && <Icon icon={op.icon}></Icon>}{op?.text}</span><ChevronDownSvg></ChevronDownSvg></>}
+            {this.props.children && <>{this.props.children}<Icon size={12} icon={ChevronDownSvg}></Icon></>}
+            {!this.props.children && <><span>{op?.icon && <Icon size={14} icon={op.icon}></Icon>}{op?.text}</span><Icon size={12} icon={ChevronDownSvg}></Icon></>}
         </div>
     }
 }

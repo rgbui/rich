@@ -84,17 +84,24 @@
     display        : flex;
     justify-content: flex-start;
     align-items    : center;
+    flex-wrap      : nowrap;
     cursor         : pointer;
-    padding:4px 10px;
+    padding        : 4px 10px;
 
     span {
         color: rgb(55, 53, 47);
+        display: inline-flex; justify-content: flex-start;
+        align-items    : center;
+        flex-wrap      : nowrap;
+        .shy-icon{
+            margin-right: 5px;
+        }
     }
 
     svg {
-        fill       : rgb(55, 53, 47);
-        width      : 10px;
-        margin-left: 4px;
+        fill          : rgb(55, 53, 47);
+        // width      : 10px;
+        margin-left   : 4px;
     }
 
     &.border {
