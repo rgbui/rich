@@ -1,6 +1,6 @@
 
 import { Confirm } from "../../../../component/lib/confirm";
-import { useTableStoreAddField } from "../../../../extensions/tablestore/field";
+import { useTableStoreAddField } from "../../../../extensions/datagrid/field";
 import { BlockRenderRange } from "../../../../src/block/enum";
 import { Rect } from "../../../../src/common/vector/point";
 import { ActionDirective } from "../../../../src/history/declare";
@@ -10,9 +10,11 @@ import { Field } from "../../schema/field";
 import { FieldType } from "../../schema/type";
 import { ViewField } from "../../schema/view";
 import { DataGridView } from ".";
+import { ElementType, getWsElementUrl } from "../../../../net/element.type";
+import { CopyText } from "../../../../component/copy";
+import { ShyAlert } from "../../../../component/lib/alert";
 export class DataGridViewOperator {
-    async onAddField(this: DataGridView,event: React.MouseEvent | MouseEvent,at?: number)
-    {
+    async onAddField(this: DataGridView, event: React.MouseEvent | MouseEvent, at?: number) {
         event.stopPropagation();
         var self = this;
         var result = await useTableStoreAddField(
@@ -274,5 +276,14 @@ export class DataGridViewOperator {
         if (this.dataGridTool && this.dataGridTool.isOpenTool) return;
         this.isOver = isOver;
         if (this.dataGridTool) this.dataGridTool.forceUpdate();
+    }
+    onCopyViewLink(this: DataGridView,) {
+        var url = getWsElementUrl({
+            type: ElementType.SchemaView,
+            id: this.syncBlockId,
+            id1: this.schemaView.id
+        });
+        CopyText(url);
+        ShyAlert('视图链接已复制')
     }
 }
