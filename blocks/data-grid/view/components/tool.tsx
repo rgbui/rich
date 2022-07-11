@@ -3,8 +3,8 @@ import { Icon } from "../../../../component/view/icon";
 import { DataGridView } from "../base";
 import { Point, Rect } from "../../../../src/common/vector/point";
 import { getSchemaViewIcon } from "../../schema/util";
-import { useFormPage } from "../../../../extensions/datagrid/form";
-import { useTabelSchemaFormDrop } from "../../../../extensions/datagrid/switch.forms/view";
+import { useFormPage } from "../../../../extensions/data-grid/form";
+import { useTabelSchemaFormDrop } from "../../../../extensions/data-grid/switch.forms/view";
 import { useSelectMenuItem } from "../../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 
@@ -26,7 +26,7 @@ import {
 import "./style.less";
 import { ElementType, getWsElementUrl } from "../../../../net/element.type";
 import { BlockDirective } from "../../../../src/block/enum";
-import { useDataGridConfig } from "../../../../extensions/datagrid/view.config";
+import { useDataGridConfig } from "../../../../extensions/data-grid/view.config";
 export class DataGridTool extends React.Component<{ block: DataGridView }>{
     isOpenTool: boolean = false;
     render() {

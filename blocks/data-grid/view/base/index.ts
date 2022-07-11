@@ -1,4 +1,4 @@
-import { useDataGridCreate } from "../../../../extensions/datagrid/create";
+import { useDataGridCreate } from "../../../../extensions/data-grid/create";
 import { channel } from "../../../../net/channel";
 import { Block } from "../../../../src/block";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";

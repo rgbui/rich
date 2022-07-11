@@ -1,6 +1,6 @@
 
 import { Confirm } from "../../../../component/lib/confirm";
-import { useTableStoreAddField } from "../../../../extensions/datagrid/field";
+import { useTableStoreAddField } from "../../../../extensions/data-grid/field";
 import { BlockRenderRange } from "../../../../src/block/enum";
 import { Rect } from "../../../../src/common/vector/point";
 import { ActionDirective } from "../../../../src/history/declare";
