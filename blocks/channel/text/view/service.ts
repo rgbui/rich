@@ -50,7 +50,7 @@ export class ChatChannelService {
         emoji: { emojiId: string; code?: string; count: number; }) => {
         var result = await channel.put('/ws/channel/emoji', {
             elementUrl: getElementUrl(ElementType.RoomChat,
-                block.page.pageLayout.type == PageLayoutType.textChannel ? block.page.pageItemId : block.syncBlockId,
+                (block as ChannelText).roomId,
                 d.id),
             emoji: {
                 emojiId: emoji.emojiId,
