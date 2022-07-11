@@ -161,5 +161,81 @@
                 flex-grow  : 0;
             }
         }
+
+        &-drag {
+            position       : relative;
+            display        : flex;
+            justify-content: flex-start;
+            align-items    : center;
+            user-select    : none;
+            min-height     : 28px;
+            line-height    : 28px;
+            font-size      : 14px;
+            color          : rgba(55, 53, 47);
+            padding        : 0px 14px;
+            cursor         : pointer;
+
+            &:hover {
+                background-color: rgba(55, 53, 47, 0.08);
+            }
+
+            .drag {
+                flex-grow      : 0;
+                flex-shrink    : 0;
+                width          : 20px;
+                height         : 20px;
+                display        : inline-flex;
+                justify-content: center;
+                align-items    : center;
+                cursor         : grab;
+                border-radius  : 4px;
+                .shy-icon {
+                    color: rgba(55, 53, 47, 0.4);
+                    fill : currentColor
+                }
+                &:hover {
+                    background-color: rgba(55, 53, 47, 0.08);
+                }
+            }
+            &-text {
+                display     : inline-flex;
+                margin-left : 8px;
+                margin-right: 14px;
+                flex-grow   : 1.0;
+            }
+
+            &-label-icon {
+                flex-grow      : 0;
+                flex-shrink    : 0;
+                width          : 20px;
+                height         : 20px;
+                display        : inline-flex;
+                justify-content: center;
+                align-items    : center;
+                border-radius  : 4px;
+
+            }
+
+            .btn {
+                margin-left    : 5px;
+                flex-grow      : 0;
+                flex-shrink    : 0;
+                width          : 20px;
+                height         : 20px;
+                display        : inline-flex;
+                justify-content: center;
+                align-items    : center;
+                border-radius  : 4px;
+
+                .shy-icon {
+                    color: rgba(55, 53, 47, 0.4);
+                    fill : currentColor
+                }
+
+                &:hover {
+                    background-color: rgba(55, 53, 47, 0.08);
+                }
+            }
+        }
     }
 }

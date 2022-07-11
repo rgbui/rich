@@ -1,5 +1,6 @@
 
 import React from "react";
+import { MenuPanel } from ".";
 import { Rect } from "../../../src/common/vector/point";
 import { CheckSvg, ChevronDownSvg, DragHandleSvg } from "../../svgs";
 import { Button } from "../button";
@@ -9,9 +10,11 @@ import { Switch } from "../switch";
 import { ToolTip } from "../tooltip";
 import { MenuBox } from "./box";
 import { MenuItem, MenuItemType } from "./declare";
+import { MenuView } from "./menu";
 export class MenuItemView extends React.Component<{
     item: MenuItem,
     deep: number,
+    parent: MenuPanel<any> | MenuView,
     select: (item: MenuItem, event?: MouseEvent) => void,
     input: (item: MenuItem) => void,
     click: (item: MenuItem, event?: React.MouseEvent, clickName?: string) => void
@@ -34,6 +37,7 @@ export class MenuItemView extends React.Component<{
     }
     hover: boolean = false;
     mouseenter(item: MenuItem, event: MouseEvent) {
+        if (this.props.parent.free) return;
         this.hover = true;
         this.forceUpdate(() => {
             if (this.el && this.props.item?.childs?.length > 0 && this.menubox) {
@@ -48,6 +52,7 @@ export class MenuItemView extends React.Component<{
         });
     }
     mouseleave(item: MenuItem, event: MouseEvent) {
+        if (this.props.parent.free) return;
         this.hover = false;
         this.forceUpdate();
     }
@@ -60,7 +65,7 @@ export class MenuItemView extends React.Component<{
         if (item.visible == false) return <></>
         if (item.type == MenuItemType.container) return <div style={{ maxHeight: item.containerHeight || undefined }} className="shy-menu-box-item-container">
             {item.childs.map((item, i) => {
-                return <MenuItemView key={i} select={this.props.select} click={this.props.click} input={this.props.input} item={this.props.item} deep={this.props.deep}></MenuItemView>
+                return <MenuItemView parent={this.props.parent} key={i} select={this.props.select} click={this.props.click} input={this.props.input} item={this.props.item} deep={this.props.deep}></MenuItemView>
             })}
         </div>
         return <div
@@ -98,18 +103,18 @@ export class MenuItemView extends React.Component<{
                     <Icon icon={ChevronDownSvg}></Icon>
                 </span>
             </div>}
-            {item.type == MenuItemType.drag && <ToolTip overlay={item.overlay} placement={item.placement || 'right'} ><div data-drag={item.drag} className="shy-menu-box-item-select">
-                <Icon size={12} icon={DragHandleSvg}></Icon>
+            {item.type == MenuItemType.drag && <ToolTip overlay={item.overlay} placement={item.placement || 'right'} ><div data-drag={item.drag} onMouseUp={e => this.select(item, e.nativeEvent)} className="shy-menu-box-item-drag">
+                <em className={'drag'} onMouseUp={e => e.stopPropagation()}> <Icon size={12} icon={DragHandleSvg}></Icon></em>
                 {item.icon && <Icon icon={item.icon} size={item.iconSize ? item.iconSize : 14}></Icon>}
                 {item.renderIcon && item.renderIcon(item, this)}
-                <span className='shy-menu-box-item-option-text'>{item.text}</span>
-                {item.checkLabel && <Icon className={'shy-menu-box-item-option-label-icon'} size={14} icon={CheckSvg}></Icon>}
+                <span className='shy-menu-box-item-drag-text'>{item.text}</span>
+                {item.checkLabel && <Icon className={'shy-menu-box-item-drag-label-icon'} size={14} icon={CheckSvg}></Icon>}
                 {item.label && <label>{item.label}</label>}
                 {Array.isArray(item.btns) && item.btns.map(btn => {
-                    return <ToolTip key={btn.name} overlay={btn.overlay} placement={btn.placement || 'top'} ><em onMouseUp={e => { e.stopPropagation(); this.click(item, e, btn.name) }}><Icon icon={btn.icon}></Icon></em></ToolTip>
+                    return <ToolTip key={btn.name} overlay={btn.overlay} placement={btn.placement || 'top'} ><em className="btn" onMouseUp={e => { e.stopPropagation(); this.click(item, e, btn.name) }}><Icon size={14} icon={btn.icon}></Icon></em></ToolTip>
                 })}
             </div></ToolTip>}
-            {item?.childs?.length > 0 && this.hover && <MenuBox select={this.props.select} click={this.props.click} input={this.props.input} items={item.childs} ref={e => this.menubox = e} deep={this.props.deep}></MenuBox>}
+            {item?.childs?.length > 0 && this.hover && <MenuBox parent={this.props.parent} select={this.props.select} click={this.props.click} input={this.props.input} items={item.childs} ref={e => this.menubox = e} deep={this.props.deep}></MenuBox>}
         </div>
     }
 }

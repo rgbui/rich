@@ -1,16 +1,19 @@
 import React, { CSSProperties } from "react";
+import { MenuPanel } from ".";
 import { PopoverPosition } from "../../../extensions/popover/position";
 import { Point, Rect, RectUtility } from "../../../src/common/vector/point";
 import { popoverLayer } from "../../lib/zindex";
 import { MenuItem } from "./declare";
 import { MenuItemView } from "./item";
+import { MenuView } from "./menu";
 export class MenuBox extends React.Component<{
+    parent:MenuPanel<any>| MenuView,
     items: MenuItem[],
     style?: CSSProperties,
     deep: number,
     input: (item: MenuItem) => void,
     select: (item: MenuItem, event?: MouseEvent) => void,
-    click: (item: MenuItem, event?: React.MouseEvent, name?: string) => void
+    click: (item: MenuItem, event?: React.MouseEvent, name?: string,mv?:MenuItemView) => void
 }>{
     render() {
         var isVisible = this.props.style?.overflow == 'visible' || this.props.items.exists(g => g.childs && g.childs.length > 0)
@@ -22,7 +25,7 @@ export class MenuBox extends React.Component<{
             overflowY: isVisible ? "visible" : "auto",
             maxHeight: isVisible ? '100vh' : undefined,
         }}>{this.props.items.map((item, index) => {
-            return <MenuItemView key={index}
+            return <MenuItemView parent={this.props.parent} key={index}
                 item={item} deep={this.props.deep + 1}
                 select={this.props.select}
                 input={this.props.input}

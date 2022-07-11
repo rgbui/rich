@@ -7,7 +7,7 @@ import { MenuBox } from "./box";
 import { MenuItem } from "./declare";
 import { popoverLayer } from "../../lib/zindex";
 
-class MenuPanel<T> extends EventsComponent {
+export class MenuPanel<T> extends EventsComponent {
     open(pos: PopoverPosition, menus: MenuItem<T>[], options?: { height?: number, overflow?: 'auto' | 'visible' }) {
         this.menus = menus;
         this.visible = true;
@@ -38,24 +38,31 @@ class MenuPanel<T> extends EventsComponent {
     onInput(item: MenuItem<T>) {
         this.emit('input', item);
     }
-    onClick(item: MenuItem<T>, event: React.MouseEvent) {
-
+    onClick(item: MenuItem<T>, event: React.MouseEvent, name: string) {
+        this.emit('click', item, event, name, this);
+    }
+    free: boolean = false;
+    onFree() {
+        this.free = true;
+    }
+    onUnfree() {
+        this.free = false;
     }
     menus: MenuItem<T>[] = [];
     mb: MenuBox;
     render() {
         return this.visible && <div data-shy-page-unselect="true" className='shy-menu-panel'>
             <div className='shy-menu-mask' style={{ zIndex: popoverLayer.zoom(this) }} onMouseDown={e => this.onClose(e)}></div>
-            <MenuBox
+            <MenuBox parent={this}
                 style={{ height: this.options.height, maxHeight: this.options.height, overflow: this.options.overflow }}
                 ref={e => this.mb = e}
                 input={(item) => this.onInput(item as any)}
-                click={(item, ev) => this.onClick(item as any, ev)}
+                click={(item, ev, name) => this.onClick(item as any, ev, name)}
                 select={(item, event) => this.onSelect(item as any, event)} items={this.menus as any} deep={0}></MenuBox>
         </div>
     }
 }
-interface MenuPanel<T> {
+export interface MenuPanel<T> {
     on(name: 'error', fn: (error: Error) => void);
     only(name: 'error', fn: (error: Error) => void);
     emit(name: 'error', error: Error);
@@ -64,6 +71,8 @@ interface MenuPanel<T> {
     emit(name: 'select', item: MenuItem<T>, event: MouseEvent);
     only(name: 'input', fn: (item: MenuItem<T>) => void);
     emit(name: 'input', item: MenuItem<T>);
+    only(name: 'click', fn: (item: MenuItem<T>, event: React.MouseEvent, name: string, mv: MenuPanel<T>) => void);
+    emit(name: 'click', item: MenuItem<T>, event: React.MouseEvent, na: string, mv: MenuPanel<T>);
     only(name: 'close', fn: () => void);
     emit(name: 'close');
 }
@@ -71,7 +80,8 @@ export async function useSelectMenuItem<T = string>(pos: PopoverPosition, menus:
     height?: number,
     overflow?: 'auto' | 'visible',
     input?: (item: MenuItem<T>) => void,
-    nickName?: string
+    click?: (item: MenuItem<T>, event: React.MouseEvent, clickName: string, mp: MenuPanel<T>) => void,
+    nickName?: 'second' | 'three'
 }) {
     var menuPanel = await Singleton<MenuPanel<T>>(MenuPanel, options?.nickName);
     return new Promise((resolve: (data: { item: MenuItem<T>, event: MouseEvent }) => void, reject) => {
@@ -81,6 +91,9 @@ export async function useSelectMenuItem<T = string>(pos: PopoverPosition, menus:
         });
         menuPanel.only('input', item => {
             if (options?.input) options?.input(item);
+        });
+        menuPanel.only('click', (item, e, name, mp) => {
+            if (options.click) options.click(item, e, name, mp)
         })
         menuPanel.only('error', (error: Error) => {
             reject(error);

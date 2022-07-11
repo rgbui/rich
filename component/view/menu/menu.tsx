@@ -12,7 +12,9 @@ export class MenuView extends React.Component<{
         return <div className='shy-menu-view' style={{
             ...(this.props.style || {}),
         }}>{this.props.items.map((item, index) => {
-            return <MenuItemView key={index}
+            return <MenuItemView
+                key={index}
+                parent={this}
                 item={item}
                 deep={0}
                 select={this.props.select}
@@ -21,5 +23,12 @@ export class MenuView extends React.Component<{
             ></MenuItemView>
         })}
         </div>
+    }
+    free: boolean = false;
+    onFree() {
+        this.free = true;
+    }
+    onUnfree() {
+        this.free = false;
     }
 }
