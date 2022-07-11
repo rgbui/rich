@@ -11,15 +11,17 @@ import { Remark } from "../../../../component/view/text";
 import { Divider, Row } from "../../../../component/view/grid";
 import { DragHandleSvg, PlusSvg } from "../../../../component/svgs";
 
-export class DataGridFields extends EventsComponent<{ dataGrid: DataGridView }> {
-    get block() {
-        return this.props.dataGrid;
-    }
+export class DataGridFields extends EventsComponent{
     get schema() {
-        return this.props.dataGrid?.schema;
+        return this.block?.schema;
+    }
+    block: DataGridView;
+    onOpen(block: DataGridView) {
+        this.block = block;
+        this.forceUpdate();
     }
     render(): ReactNode {
-        if (!this.props.dataGrid) return <></>;
+        if (!this.block) return <></>;
         if (!this.schema) return <div></div>
         var fs = this.schema.fields.findAll(g => g.text ? true : false);
         var self = this;
@@ -36,13 +38,13 @@ export class DataGridFields extends EventsComponent<{ dataGrid: DataGridView }> 
         function addField(event: React.MouseEvent) {
             self.block.onAddField(event);
         }
-        return <div className="shy-table-property-view">
-            <div className="shy-table-property-view-operator">
+        return <div className="shy-table-field-view">
+            <div className="shy-table-field-view-operator">
                 <Remark>所有字段</Remark>
                 <a style={{ fontSize: '14px' }}>{this.block.fields.length == 0 ? "显示" : "隐蔽"}</a>
             </div>
-            {fs.map(f => {
-                return <div className="shy-table-property-view-item" key={f.id}>
+            {fs.map(f =>{
+                return <div className="shy-table-field-view-item" key={f.id}>
                     <Icon size={14} style={{ padding: 10 }} wrapper className={'drag'} icon={DragHandleSvg}></Icon>
                     <Icon size={14} icon={getTypeSvg(f.type)}></Icon>
                     <span>{f.text}</span>
@@ -50,14 +52,14 @@ export class DataGridFields extends EventsComponent<{ dataGrid: DataGridView }> 
                 </div>
             })}
             <Divider></Divider>
-            <div className="shy-table-property-view-add">
+            <div className="shy-table-field-view-add">
                 <a style={{
                     fontSize: 14,
                     display: 'inline-flex',
                     justifyContent: 'flex-start',
                     alignItems: 'center',
                     cursor: 'pointer'
-                }} onClick={e => addField(e)}><Icon size={14} style={{ marginRight: 5 }} icon={PlusSvg}></Icon>添加字段</a>
+                }} onClick={e =>addField(e)}><Icon size={14} style={{ marginRight: 5 }} icon={PlusSvg}></Icon>添加字段</a>
             </div>
         </div>
     }

@@ -12,34 +12,36 @@ import { TableStoreGallery } from "../../../../blocks/data-grid/view/gallery";
 import lodash from "lodash";
 import { FieldType } from "../../../../blocks/data-grid/schema/type";
 import { BlockRenderRange } from "../../../../src/block/enum";
+import { SelectBox } from "../../../../component/view/select/box";
 
-export class DataGridViewConfig extends EventsComponent<{ dataGrid: DataGridView }> {
-    get block() {
-        return this.props.dataGrid;
-    }
+export class DataGridViewConfig extends EventsComponent {
     get schema() {
-        return this.props.dataGrid?.schema;
+        return this.block?.schema;
+    }
+    block: DataGridView;
+    onOpen(block: DataGridView) {
+        this.block = block;
+        console.log('ggg', this.block);
+        this.forceUpdate();
     }
     render(): ReactNode {
-        if (!this.props.dataGrid) return <></>;
-        if (!this.schema) return <div></div>
+        if (!this.block) return <div></div>;
         var fs = this.schema.fields.findAll(g => g.text ? true : false);
         var self = this;
         return <div className="shy-table-property-view">
             <div className="shy-table-property-view-operator">
                 <Remark>每页数量</Remark>
-                <Select style={{ minWidth: 80, display: 'inline-flex', fontSize: 14, justifyContent: 'flex-end' }}
-                    options={[
-                        { text: '20条', value: 20 },
-                        { text: '50条', value: 50 },
-                        { text: '80条', value: 80 },
-                        { text: '100条', value: 100 },
-                        { text: '150条', value: 150 },
-                        { text: '200条', value: 200 }
-                    ]}
+                <SelectBox options={[
+                    { text: '20条', value: 20 },
+                    { text: '50条', value: 50 },
+                    { text: '80条', value: 80 },
+                    { text: '100条', value: 100 },
+                    { text: '150条', value: 150 },
+                    { text: '200条', value: 200 }
+                ]}
                     value={this.block.size}
                     onChange={e => { this.block.onChangeSize(e); self.forceUpdate() }}>
-                </Select>
+                </SelectBox>
             </div>
             {this.block.url == BlockUrlConstant.DataGridGallery && <>
                 <Row className="shy-table-property-view-operator">

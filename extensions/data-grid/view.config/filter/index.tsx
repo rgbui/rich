@@ -1,7 +1,6 @@
 import React from "react";
 import { ReactNode } from "react";
 import { FieldType } from "../../../../blocks/data-grid/schema/type";
-//import { getSchemaViewIcon } from "../../../../blocks/data-grid/schema/util";
 import { DataGridView } from "../../../../blocks/data-grid/view/base";
 import { EventsComponent } from "../../../../component/lib/events.component";
 import { Divider } from "../../../../component/view/grid";
@@ -13,16 +12,19 @@ import { useSelectMenuItem } from "../../../../component/view/menu";
 import { Point } from "../../../../src/common/vector/point";
 import { util } from "../../../../util/util";
 import { DotsSvg, LinkSvg, PlusSvg, TrashSvg } from "../../../../component/svgs";
+import lodash from "lodash";
+import { SchemaFilter } from "../../../../blocks/data-grid/schema/declare";
 
-export class TableFilterView extends EventsComponent<{ dataGrid: DataGridView }>{
-    get block() {
-        return this.props.dataGrid;
-    }
+export class TableFilterView extends EventsComponent {
     get schema() {
-        return this.props.dataGrid?.schema;
+        return this.block?.schema;
     }
-    get filter() {
-        return this.block.filter;
+    block: DataGridView;
+    oldFilters: SchemaFilter;
+    onOpen(block: DataGridView) {
+        this.block = block;
+        this.oldFilters = lodash.cloneDeep(this.block.filter);
+        this.forceUpdate();
     }
     getFields() {
         var fs = this.schema.fields.findAll(g => g.text ? true : false).map(fe => {
@@ -45,8 +47,11 @@ export class TableFilterView extends EventsComponent<{ dataGrid: DataGridView }>
             { text: '不为空', value: '$isNotNull' },
         ]
     }
+    onStore = lodash.debounce(async () => {
+        this.block.onManualUpdateProps({ filter: this.oldFilters }, { filter: this.block.filter })
+    }, 800);
     renderFilter(filter, deep?: number) {
-        if (!this.props.dataGrid) return <></>;
+        if (!this.block) return <></>;
         var items = filter?.items;
         var self = this;
         var nameField = this.schema.fields.find(g => g.type == FieldType.title);
@@ -60,7 +65,6 @@ export class TableFilterView extends EventsComponent<{ dataGrid: DataGridView }>
             </div>
         }
         function addFilter(value: 'item' | 'group') {
-            // if (!Array.isArray(filter)) filter = { logic: 'and', items: [] };
             if (value == 'item') {
                 filter.items.push({
                     field: nameField.id,
@@ -74,6 +78,7 @@ export class TableFilterView extends EventsComponent<{ dataGrid: DataGridView }>
                     items: [{ field: nameField.id, operator: '$eq', value: '' }]
                 })
             }
+            self.onStore();
             self.forceUpdate();
         }
         async function clickProperty(event: React.MouseEvent, filter) {
@@ -85,6 +90,7 @@ export class TableFilterView extends EventsComponent<{ dataGrid: DataGridView }>
             if (um) {
                 if (um.item.name == 'delete') {
                     items.remove(g => g == filter);
+                    self.onStore()
                     self.forceUpdate();
                 }
                 else if (um.item.name == 'copy') {
@@ -93,6 +99,7 @@ export class TableFilterView extends EventsComponent<{ dataGrid: DataGridView }>
                         var newItem = util.clone(filter);
                         if (newItem) {
                             items.splice(at + 1, 0, newItem);
+                            self.onStore()
                             self.forceUpdate()
                         }
                     }
@@ -114,6 +121,7 @@ export class TableFilterView extends EventsComponent<{ dataGrid: DataGridView }>
                         ]}
                         onChange={e => {
                             filter.logic = e;
+                            self.onStore();
                             self.forceUpdate();
                         }}></Select>
                     </span>
@@ -131,7 +139,7 @@ export class TableFilterView extends EventsComponent<{ dataGrid: DataGridView }>
                 <Select options={this.getFilters()} onChange={e => { addFilter(e) }}><a
                     style={{
                         fontSize: 14,
-                        display: 'inline-flex',
+                        display: 'flex',
                         justifyContent: 'flex-start',
                         alignItems: 'center'
                     }}><Icon size={14} icon={PlusSvg}></Icon>添加筛选条件</a></Select>
@@ -145,14 +153,13 @@ export class TableFilterView extends EventsComponent<{ dataGrid: DataGridView }>
         ]
     }
     render(): ReactNode {
+        if (!this.block) return <></>;
+        if (!Array.isArray(this.block.filter)) {
+            this.block.filter = { logic: 'and', items: [] };
+        }
         return <div className="shy-table-filter-view">
-            {/* {this.schema && <div className="shy-table-filter-view-head">
-                <span>设置过滤条件</span>
-                <Icon style={{ marginLeft: 5 }} size={14} icon={getSchemaViewIcon(this.block.url)}></Icon>
-                <span>{this.block.schemaView?.text}</span>
-            </div>} */}
             <div className="shy-table-filter-view-content">
-                {this.schema && this.renderFilter(this.filter, 0)}
+                {this.schema && this.renderFilter(this.block.filter, 0)}
             </div>
         </div>
     }

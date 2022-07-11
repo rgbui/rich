@@ -10,26 +10,39 @@ import { TableFilterView } from "./filter";
 import { TableSortView } from "./sort";
 import { DataGridViewConfig } from "./view";
 import "./style.less";
+
 class DataGridConfig extends EventsComponent {
     dataGrid: DataGridView
     onOpen(dataGrid: DataGridView) {
         this.dataGrid = dataGrid;
-        this.forceUpdate()
+        console.log(this, 'gg');
+        if (this.dataGridViewConfig)
+            this.dataGridViewConfig.onOpen(this.dataGrid);
+        if (this.dataGridFields)
+            this.dataGridFields.onOpen(this.dataGrid);
+        if (this.tableFilterView)
+            this.tableFilterView.onOpen(this.dataGrid);
+        if (this.tableSortView)
+            this.tableSortView.onOpen(this.dataGrid);
     }
+    dataGridViewConfig: DataGridViewConfig;
+    dataGridFields: DataGridFields;
+    tableFilterView: TableFilterView;
+    tableSortView: TableSortView;
     render() {
         return <div className='shy-data-grid-config' >
-            <Tab show="text">
+            <Tab show="text" keeplive>
                 <Tab.Page item={'视图配置'}>
-                    <DataGridViewConfig dataGrid={this.dataGrid}></DataGridViewConfig>
+                    <DataGridViewConfig ref={e => this.dataGridViewConfig = e} ></DataGridViewConfig>
                 </Tab.Page>
                 <Tab.Page item={'字段'}>
-                    <DataGridFields dataGrid={this.dataGrid}></DataGridFields>
+                    <DataGridFields ref={e => this.dataGridFields = e}></DataGridFields>
                 </Tab.Page>
                 <Tab.Page item={'过滤'}>
-                    <TableFilterView dataGrid={this.dataGrid}></TableFilterView>
+                    <TableFilterView ref={e => this.tableFilterView = e}></TableFilterView>
                 </Tab.Page>
                 <Tab.Page item={'排序'}>
-                    <TableSortView dataGrid={this.dataGrid}></TableSortView>
+                    <TableSortView ref={e => this.tableSortView = e}></TableSortView>
                 </Tab.Page>
             </Tab>
         </div>
@@ -41,7 +54,7 @@ interface DataGridConfig {
 }
 
 export async function useDataGridConfig(pos: PopoverPosition, options?: { dataGrid: DataGridView }) {
-    let popover = await PopoverSingleton(DataGridConfig);
+    let popover = await PopoverSingleton(DataGridConfig, { mask: true });
     let filePicker = await popover.open(pos);
     filePicker.onOpen(options.dataGrid)
     return new Promise((resolve: (data: ResourceArguments) => void, reject) => {
