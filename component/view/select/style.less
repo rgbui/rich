@@ -1,0 +1,118 @@
+.shy-select {
+    position: relative;
+
+    &-selection {
+
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : center;
+        cursor         : pointer;
+
+        input {
+            width        : 100%;
+            font-size    : 14px;
+            line-height  : 28px;
+            height       : 28px;
+            padding      : 0px 10px;
+            border-radius: 3px;
+            box-shadow   : rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
+            background   : rgba(242, 241, 238, 0.6);
+            cursor       : text;
+            outline      : none;
+            border       : 0px;
+            box-sizing   : border-box;
+
+            &:focus {
+                box-shadow: rgba(46 170 220, 0.7) 0px 0px 0px 1px inset, rgba(46 170 220, 0.4) 0px 0px 0px 2px !important;
+            }
+        }
+
+        span {
+            color: rgb(55, 53, 47);
+        }
+
+        svg {
+            // fill       : rgba(55, 53, 47, 0.3);
+            width      : 10px;
+            margin-left: 4px;
+        }
+    }
+
+    &-drop {
+        position     : absolute;
+        border-radius: 3px;
+        background   : white;
+        z-index      : 2;
+        box-shadow   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+        top          : 28px;
+        max-height   : 300px;
+        overflow-y   : auto;
+        overflow-x   : hidden;
+        min-width    : 30px;
+
+        a {
+            display        : flex;
+            justify-content: flex-start;
+            align-items    : center;
+            user-select    : none;
+            min-height     : 28px;
+            line-height    : 28px;
+            font-size      : 14px;
+            color          : rgba(55, 53, 47);
+            padding        : 0px 14px;
+            cursor         : pointer;
+
+            &:hover {
+                background-color: rgba(55, 53, 47, 0.08);
+            }
+        }
+    }
+
+    &-border {
+        border       : 1px solid rgba(55, 53, 47, 0.16);
+        border-radius: 4px;
+
+        .shy-select-selection {
+            line-height: 24px;
+            height     : 24px;
+            padding    : 0px 10px;
+        }
+    }
+}
+
+.shy-select-box {
+    display        : flex;
+    justify-content: flex-start;
+    align-items    : center;
+    cursor         : pointer;
+    padding:4px 10px;
+
+    span {
+        color: rgb(55, 53, 47);
+    }
+
+    svg {
+        fill       : rgb(55, 53, 47);
+        width      : 10px;
+        margin-left: 4px;
+    }
+
+    &.border {
+        border       : 1px solid rgba(55, 53, 47, 0.16);
+        border-radius: 4px;
+
+        .shy-select-selection {
+            line-height: 24px;
+            height     : 24px;
+            padding    : 0px 10px;
+        }
+    }
+
+    &.disabled {
+        color: rgb(55, 53, 47, 0.3);
+
+        svg {
+            fill: rgb(55, 53, 47, 0.3);
+        }
+    }
+}

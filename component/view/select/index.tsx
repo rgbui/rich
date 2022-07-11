@@ -1,7 +1,8 @@
 import React, { CSSProperties } from "react";
-import { IconArguments } from "../../extensions/icon/declare";
-import { ChevronDownSvg } from "../svgs";
-import { Icon } from "./icon";
+import { IconArguments } from "../../../extensions/icon/declare";
+import { ChevronDownSvg } from "../../svgs";
+import { Icon } from "../icon";
+import "./style.less";
 
 export class Select extends React.Component<{
     children?: JSX.Element | string | React.ReactNode,

@@ -81,7 +81,7 @@ export async function useSelectMenuItem<T = string>(pos: PopoverPosition, menus:
     overflow?: 'auto' | 'visible',
     input?: (item: MenuItem<T>) => void,
     click?: (item: MenuItem<T>, event: React.MouseEvent, clickName: string, mp: MenuPanel<T>) => void,
-    nickName?: 'second' | 'three'
+    nickName?: 'second' | 'three' | 'selectBox'
 }) {
     var menuPanel = await Singleton<MenuPanel<T>>(MenuPanel, options?.nickName);
     return new Promise((resolve: (data: { item: MenuItem<T>, event: MouseEvent }) => void, reject) => {
