@@ -49,6 +49,8 @@ import EmojiSvg from "../src/assert/svg/emoji.svg";
 import Emoji1Svg from "../src/assert/svg/emoji1.svg";
 import EquationSvg from "../src/assert/svg/equation.svg";
 import ExpandSvg from "../src/assert/svg/expand.svg";
+import EyeSvg from "../src/assert/svg/eye.svg";
+import EyeHideSvg from "../src/assert/svg/eyeHide.svg";
 import FileSvg from "../src/assert/svg/file.svg";
 import FilterSvg from "../src/assert/svg/filter.svg";
 import FitSvg from "../src/assert/svg/fit.svg";
@@ -183,6 +185,8 @@ EmojiSvg,
 Emoji1Svg,
 EquationSvg,
 ExpandSvg,
+EyeSvg,
+EyeHideSvg,
 FileSvg,
 FilterSvg,
 FitSvg,
