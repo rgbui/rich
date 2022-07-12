@@ -10,7 +10,8 @@ export class SelectBox extends React.Component<{
     children?: JSX.Element | string | React.ReactNode,
     disabled?: boolean,
     value?: any,
-    options: MenuItem<string>[],
+    options?: MenuItem<string>[],
+    computedOptions?: () => Promise<MenuItem<string>[]>,
     onChange?: (value: any, item: MenuItem<string>) => void,
     style?: CSSProperties,
     dropHeight?: number,
@@ -20,7 +21,8 @@ export class SelectBox extends React.Component<{
         var self = this;
         async function mousedown(event: React.MouseEvent) {
             if (self.props.disabled) return;
-            var ms = lodash.cloneDeep(self.props.options);
+            var options = typeof self.props.computedOptions == 'function' ? await self.props.computedOptions() : self.props.options;
+            var ms = lodash.cloneDeep(options);
             var op = ms.arrayJsonFind('childs', g => g.value == self.props.value);
             if (op) op.checkLabel = true;
             var r = await useSelectMenuItem(

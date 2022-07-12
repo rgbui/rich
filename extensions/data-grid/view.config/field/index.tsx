@@ -38,7 +38,7 @@ export class DataGridFields extends EventsComponent {
             self.block.onAddField(event);
         }
         async function changeAll(checked: boolean) {
-            await self.block.onShowAllField(checked);
+            await self.block.onShowAllField(!checked);
             self.forceUpdate();
         }
         return <div className="shy-table-field-view">

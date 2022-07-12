@@ -7,7 +7,6 @@ import { channel } from "../../../net/channel";
 import { autoImageUrl } from "../../../net/element.type";
 import { MouseDragger } from "../../common/dragger";
 import { Rect } from "../../common/vector/point";
-import { AtomPermission } from "../permission";
 
 export class PageCover extends React.Component<{ page: Page }>{
     private startPos: boolean = false;

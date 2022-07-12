@@ -15,7 +15,6 @@ class DataGridConfig extends EventsComponent {
     dataGrid: DataGridView
     onOpen(dataGrid: DataGridView) {
         this.dataGrid = dataGrid;
-        console.log(this, 'gg');
         if (this.dataGridViewConfig)
             this.dataGridViewConfig.onOpen(this.dataGrid);
         if (this.dataGridFields)

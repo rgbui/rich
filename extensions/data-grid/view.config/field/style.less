@@ -30,6 +30,7 @@
                 flex-shrink: 0;
                 flex-grow  : 0;
                 color      : rgba(55, 53, 47, 0.6);
+                cursor     : pointer;
             }
         }
     }
@@ -47,16 +48,13 @@
         fill           : rgba(55, 53, 47, 0.8);
         font-size      : 14px;
         cursor         : pointer;
-
         * {
             flex-shrink: 0;
             flex-grow  : 0;
         }
-
         .drag {
             margin-right: 5px;
         }
-
         >span {
             display    : inline-block;
             margin-left: 5px;
@@ -69,8 +67,9 @@
         &.hide {
             color: rgb(55, 53, 47, .4);
             fill : rgba(55, 53, 47, .4);
-
-            .eye {}
+            .eye {
+                cursor: pointer;
+            }
         }
     }
 

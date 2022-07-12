@@ -1,6 +1,5 @@
 
 import lodash from "lodash";
-
 import React from "react";
 import { PopoverSingleton } from "../../../extensions/popover/popover";
 import { EventsComponent } from "../../lib/events.component";
@@ -8,7 +7,8 @@ import { Plus2Svg } from "../../svgs";
 import { Button } from "../button";
 import { Col, Dialoug, Row, Space } from "../grid";
 import { Icon } from "../icon";
-import { Input, Textarea } from "../input";
+import { Input } from "../input";
+import { Textarea } from "../input/textarea";
 import { Remark, ErrorText } from "../text";
 import { ToolTip } from "../tooltip";
 import "./style.less";
@@ -22,8 +22,7 @@ export type FormDialougType = {
     saveModel?: (model: Record<string, any>) => Promise<string>;
 }
 class FormDialoug extends EventsComponent {
-    render()
-    {
+    render() {
         return <Dialoug className={'shy-form-dialoug'}
             head={<span>{this.title}</span>}
             footer={<Row>

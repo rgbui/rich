@@ -43,6 +43,8 @@ export class DataGridView extends Block {
     showRowNum: boolean = false;
     @prop()
     showCheckRow: boolean = false;
+    @prop()
+    noTitle: boolean = false;
     schema: TableSchema;
     relationSchemas: TableSchema[] = [];
     relationDatas: Map<string, any[]> = new Map();

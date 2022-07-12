@@ -1,6 +1,6 @@
 import React from "react";
 import { EventsComponent } from "../../component/lib/events.component";
-import { Textarea } from "../../component/view/input";
+import { Textarea } from "../../component/view/input/textarea";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
 import "./style.less";

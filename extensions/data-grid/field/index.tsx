@@ -17,10 +17,11 @@ import { getMenus } from "./view";
 import { Button } from "../../../component/view/button";
 import { Row, Col, Space } from "../../../component/view/grid";
 import { Icon } from "../../../component/view/icon";
-import { Textarea, Input } from "../../../component/view/input";
+import { Input } from "../../../component/view/input";
 import { Select } from "../../../component/view/select";
 import { Switch } from "../../../component/view/switch";
 import { Remark, ErrorText } from "../../../component/view/text";
+import { Textarea } from "../../../component/view/input/textarea";
 
 export class TableFieldView extends EventsComponent {
     onSave() {

@@ -1,5 +1,5 @@
 
-import { url } from "../../../../src/block/factory/observable";
+import { prop, url } from "../../../../src/block/factory/observable";
 import { DataGridView } from '../base';
 import "./style.less";
 import { BlockFactory } from '../../../../src/block/factory/block.factory';
@@ -14,6 +14,10 @@ import { DataGridTableItem } from './row';
  */
 @url('/data-grid/table')
 export class TableStore extends DataGridView {
+    @prop()
+    noBorder: boolean = false;
+    @prop()
+    noHead: boolean = false;
     async createItem() {
         this.blocks.childs = [];
         for (let i = 0; i < this.data.length; i++) {
@@ -23,8 +27,8 @@ export class TableStore extends DataGridView {
             await rowBlock.createElements();
         }
     }
-     onOver(isOver: boolean) {
-        if (isOver == false && (this.view as any).isMoveLine == false&& (this.view as any).subline) {
+    onOver(isOver: boolean) {
+        if (isOver == false && (this.view as any).isMoveLine == false && (this.view as any).subline) {
             (this.view as any).subline.style.display = 'none';
         }
         return super.onOver(isOver);

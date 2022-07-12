@@ -12,6 +12,9 @@ import { BlockRenderRange } from "../../../../src/block/enum";
 import { SelectBox } from "../../../../component/view/select/box";
 import { getTypeSvg } from "../../../../blocks/data-grid/schema/util";
 import { Divider } from "../../../../component/view/grid";
+import { TableStore } from "../../../../blocks/data-grid/view/table";
+import { TableStoreCalendar } from "../../../../blocks/data-grid/view/calendar";
+import { TableStoreBoard } from "../../../../blocks/data-grid/view/board";
 
 export class DataGridViewConfig extends EventsComponent {
     get schema() {
@@ -28,6 +31,14 @@ export class DataGridViewConfig extends EventsComponent {
         var self = this;
         return <div className="shy-table-property-view">
             <div className="shy-table-property-view-item">
+                <label>视图标题</label>
+                <div className="operator"><Switch onChange={async e => {
+                    await this.block.onUpdateProps({ noTitle: !e }, { range: BlockRenderRange.self });
+                    this.forceUpdate()
+                }} checked={!(this.block as TableStoreGallery).noTitle}></Switch>
+                </div>
+            </div>
+            <div className="shy-table-property-view-item">
                 <label>每页数量</label>
                 <div className="operator"><SelectBox options={[
                     { text: '20条', value: 20 },
@@ -42,24 +53,43 @@ export class DataGridViewConfig extends EventsComponent {
                 </SelectBox>
                 </div>
             </div>
-            {this.block.url == BlockUrlConstant.DataGridGallery && <>
-                <Divider></Divider>
+            <Divider></Divider>
+            {this.block.url == BlockUrlConstant.DataGridTable && <>
                 <div className="shy-table-property-view-item">
-                    <label>列数</label>
+                    <label>显示表格头部</label>
+                    <div className="operator"><Switch onChange={async e => {
+                        await this.block.onUpdateProps({ noTitle: !e }, { range: BlockRenderRange.self });
+                        this.forceUpdate()
+                    }} checked={!(this.block as TableStore).noHead}></Switch>
+                    </div>
+                </div>
+                <div className="shy-table-property-view-item">
+                    <label>无边框</label>
+                    <div className="operator"><Switch onChange={async e => {
+                        await this.block.onUpdateProps({ noTitle: e }, { range: BlockRenderRange.self });
+                        this.forceUpdate()
+                    }} checked={(this.block as TableStore).noBorder}></Switch>
+                    </div>
+                </div>
+                <Divider></Divider>
+            </>}
+            {this.block.url == BlockUrlConstant.DataGridGallery && <>
+                <div className="shy-table-property-view-item">
+                    <label>卡片列数</label>
                     <div className="operator"><SelectBox
                         options={[
-                            { text: '1', value: 1 },
-                            { text: '2', value: 2 },
-                            { text: '3', value: 3 },
-                            { text: '4', value: 4 },
-                            { text: '5', value: 5 },
-                            { text: '6', value: 6 }
+                            { text: '1列', value: 1 },
+                            { text: '2列', value: 2 },
+                            { text: '3列', value: 3 },
+                            { text: '4列', value: 4 },
+                            { text: '5列', value: 5 },
+                            { text: '6列', value: 6 }
                         ]}
                         value={(this.block as TableStoreGallery).gallerySize}
                         onChange={async e => { await this.block.onUpdateProps({ gallerySize: e }, { range: BlockRenderRange.self }); self.forceUpdate() }}></SelectBox></div>
                 </div>
                 <div className="shy-table-property-view-item">
-                    <label>卡片是否自适应</label>
+                    <label>卡片是否自适应高度</label>
                     <div className="operator"><Switch onChange={async e => {
                         var g = lodash.cloneDeep((this.block as TableStoreGallery).cardConfig);
                         g.auto = e;
@@ -69,7 +99,7 @@ export class DataGridViewConfig extends EventsComponent {
                 </div>
                 <Divider></Divider>
                 <div className="shy-table-property-view-item">
-                    <label>是否显示封面</label>
+                    <label>显示封面</label>
                     <div className="operator"><Switch onChange={async e => {
                         var g = lodash.cloneDeep((this.block as TableStoreGallery).cardConfig);
                         g.showCover = e;
@@ -107,6 +137,45 @@ export class DataGridViewConfig extends EventsComponent {
                         </SelectBox></div>
                     </div>
                 </>}
+            </>}
+            {this.block.url == BlockUrlConstant.DataGridCalendar && <>
+                <div className="shy-table-property-view-item">
+                    <label>日历日期字段</label>
+                    <div className="operator"><SelectBox
+                        options={fs.filter(g => g.type == FieldType.date || g.type == FieldType.createDate).map(f => {
+                            return {
+                                icon: getTypeSvg(f.type),
+                                text: f.text,
+                                value: f.id
+                            }
+                        })}
+                        value={(this.block as TableStoreCalendar).dateFieldId}
+                        onChange={async e => {
+
+                            await this.block.onUpdateProps({ dateFieldId: e }, { range: BlockRenderRange.self });
+                            self.forceUpdate()
+                        }}>
+                    </SelectBox></div>
+                </div>
+            </>}
+            {this.block.url == BlockUrlConstant.TableStoreBoard && <>
+                <div className="shy-table-property-view-item">
+                    <label>看板分类字段</label>
+                    <div className="operator"><SelectBox
+                        options={fs.filter(g => g.type == FieldType.option).map(f => {
+                            return {
+                                icon: getTypeSvg(f.type),
+                                text: f.text,
+                                value: f.id
+                            }
+                        })}
+                        value={(this.block as TableStoreBoard).groupFieldId}
+                        onChange={async e => {
+                            await this.block.onUpdateProps({ groupFieldId: e }, { range: BlockRenderRange.self });
+                            self.forceUpdate()
+                        }}>
+                    </SelectBox></div>
+                </div>
             </>}
         </div>
     }
