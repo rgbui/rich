@@ -111,6 +111,23 @@ export class DataGridViewOperator {
             this.forceUpdate();
         });
     }
+    async onShowAllField(this: DataGridView, show: boolean) {
+        await this.page.onAction(ActionDirective.onSchemaShowField, async () => {
+            if (show) {
+                var fs = this.schema.fields.map(g => this.schema.createViewField(g));
+                var oss = this.fields.map(f => f.clone()).filter(g => g.type ? true : false);
+                fs.each(f => { oss.push(f) });
+                this.changeFields(this.fields,oss);
+                await this.createItem();
+                this.forceUpdate();
+            }
+            else {
+                this.changeFields(this.fields, []);
+                await this.createItem();
+                this.forceUpdate();
+            }
+        });
+    }
     async onSetSortField(this: DataGridView, viewField: ViewField, sort?: 0 | 1 | -1) {
         if (this.sorts.some(s => s.field == viewField.field.id && s.sort == sort)) {
             return;
