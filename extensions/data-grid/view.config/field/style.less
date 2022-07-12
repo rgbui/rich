@@ -1,6 +1,4 @@
-.shy-table-field-view{
-    max-height: 300px;
-    overflow-y: auto;
+.shy-table-field-view {
     &-head {
         height         : 30px;
         padding        : 0px 10px;
@@ -11,13 +9,13 @@
     }
 
     &-operator {
-
-        padding-left   : 10px;
+        border-radius  : 4px;
+        height         : 28px;
+        line-height    : 28px;
         display        : flex;
         justify-content: flex-start;
         align-items    : center;
-        height         : 30px;
-        padding-right  : 10px;
+        padding-left   : 10px;
 
         >* {
             &:first-child {
@@ -40,15 +38,23 @@
         display        : flex;
         justify-content: flex-start;
         align-items    : center;
-        padding-right  : 10px;
+        margin         : 0px 5px;
+        padding        : 0px 5px;
+        border-radius  : 4px;
+        height         : 28px;
+        line-height    : 28px;
         color          : rgb(55, 53, 47);
         fill           : rgba(55, 53, 47, 0.8);
-        min-height     : 30px;
         font-size      : 14px;
+        cursor         : pointer;
 
         * {
             flex-shrink: 0;
             flex-grow  : 0;
+        }
+
+        .drag {
+            margin-right: 5px;
         }
 
         >span {
@@ -57,9 +63,14 @@
             flex-grow  : 1;
             flex-shrink: 1;
         }
-
         &:hover {
             background-color: rgba(55, 53, 47, 0.08);
+        }
+        &.hide {
+            color: rgb(55, 53, 47, .4);
+            fill : rgba(55, 53, 47, .4);
+
+            .eye {}
         }
     }
 
@@ -77,4 +88,9 @@
             background-color: rgba(55, 53, 47, 0.08);
         }
     }
+}
+
+.shy-table-field-view-items {
+    max-height: 250px;
+    overflow-y: auto;
 }

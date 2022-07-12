@@ -5,13 +5,12 @@ import { getTypeSvg } from "../../../../blocks/data-grid/schema/util";
 import { DataGridView } from "../../../../blocks/data-grid/view/base";
 import { EventsComponent } from "../../../../component/lib/events.component";
 import { Icon } from "../../../../component/view/icon";
-import { Switch } from "../../../../component/view/switch";
-import "./style.less";
 import { Remark } from "../../../../component/view/text";
-import { Divider, Row } from "../../../../component/view/grid";
-import { DragHandleSvg, PlusSvg } from "../../../../component/svgs";
+import { Divider } from "../../../../component/view/grid";
+import { DragHandleSvg, EyeHideSvg, EyeSvg, PlusSvg } from "../../../../component/svgs";
 
-export class DataGridFields extends EventsComponent{
+import "./style.less";
+export class DataGridFields extends EventsComponent {
     get schema() {
         return this.block?.schema;
     }
@@ -38,19 +37,25 @@ export class DataGridFields extends EventsComponent{
         function addField(event: React.MouseEvent) {
             self.block.onAddField(event);
         }
+        async function changeAll(checked: boolean) {
+            await self.block.onShowAllField(checked);
+            self.forceUpdate();
+        }
         return <div className="shy-table-field-view">
             <div className="shy-table-field-view-operator">
                 <Remark>所有字段</Remark>
-                <a style={{ fontSize: '14px' }}>{this.block.fields.length == 0 ? "显示" : "隐蔽"}</a>
+                <Icon size={14} click={e => changeAll(this.block.fields.filter(g => g.type ? false : true).length > 0 ? true : false)} icon={this.block.fields.filter(g => g.type ? false : true).length > 0 ? EyeSvg : EyeHideSvg}></Icon>
             </div>
-            {fs.map(f =>{
-                return <div className="shy-table-field-view-item" key={f.id}>
-                    <Icon size={14} style={{ padding: 10 }} wrapper className={'drag'} icon={DragHandleSvg}></Icon>
-                    <Icon size={14} icon={getTypeSvg(f.type)}></Icon>
-                    <span>{f.text}</span>
-                    <Switch onChange={e => change(f, e)} checked={this.block.fields.some(s => s.fieldId == f.id)}></Switch>
-                </div>
-            })}
+            <div className="shy-table-field-view-items">
+                {fs.map(f => {
+                    return <div className={"shy-table-field-view-item" + (this.block.fields.some(s => s.fieldId == f.id) ? "" : " hide")} key={f.id}>
+                        <Icon size={14} wrapper className={'drag'} icon={DragHandleSvg}></Icon>
+                        <Icon size={14} icon={getTypeSvg(f.type)}></Icon>
+                        <span>{f.text}</span>
+                        <Icon className={'eye'} size={14} click={() => change(f, this.block.fields.some(s => s.fieldId == f.id) ? false : true)} icon={this.block.fields.some(s => s.fieldId == f.id) ? EyeSvg : EyeHideSvg}></Icon>
+                    </div>
+                })}
+            </div>
             <Divider></Divider>
             <div className="shy-table-field-view-add">
                 <a style={{
@@ -59,7 +64,7 @@ export class DataGridFields extends EventsComponent{
                     justifyContent: 'flex-start',
                     alignItems: 'center',
                     cursor: 'pointer'
-                }} onClick={e =>addField(e)}><Icon size={14} style={{ marginRight: 5 }} icon={PlusSvg}></Icon>添加字段</a>
+                }} onClick={e => addField(e)}><Icon size={14} style={{ marginRight: 5 }} icon={PlusSvg}></Icon>添加字段</a>
             </div>
         </div>
     }
