@@ -10,6 +10,7 @@ import { TableFilterView } from "./filter";
 import { TableSortView } from "./sort";
 import { DataGridViewConfig } from "./view";
 import "./style.less";
+import { DataGridDynamic } from "./dynamic";
 
 class DataGridConfig extends EventsComponent {
     dataGrid: DataGridView
@@ -28,6 +29,7 @@ class DataGridConfig extends EventsComponent {
     dataGridFields: DataGridFields;
     tableFilterView: TableFilterView;
     tableSortView: TableSortView;
+    dataGridDynamic: DataGridDynamic;
     render() {
         return <div className='shy-data-grid-config' >
             <Tab show="text" keeplive>
