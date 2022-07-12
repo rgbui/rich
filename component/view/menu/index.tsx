@@ -8,7 +8,13 @@ import { MenuItem } from "./declare";
 import { popoverLayer } from "../../lib/zindex";
 
 export class MenuPanel<T> extends EventsComponent {
-    open(pos: PopoverPosition, menus: MenuItem<T>[], options?: { height?: number, overflow?: 'auto' | 'visible' }) {
+    open(pos: PopoverPosition,
+        menus: MenuItem<T>[],
+        options?: {
+            height?: number,
+            width?: number,
+            overflow?: 'auto' | 'visible'
+        }) {
         this.menus = menus;
         this.visible = true;
         this.options = {};
@@ -20,7 +26,7 @@ export class MenuPanel<T> extends EventsComponent {
         })
     }
     visible: boolean = false;
-    private options: { height?: number, overflow?: 'auto' | 'visible' } = {};
+    private options: { height?: number, width?: number, overflow?: 'auto' | 'visible' } = {};
     onClose(e: React.MouseEvent) {
         if (e) e.stopPropagation();
         this.close();
@@ -54,7 +60,7 @@ export class MenuPanel<T> extends EventsComponent {
         return this.visible && <div data-shy-page-unselect="true" className='shy-menu-panel'>
             <div className='shy-menu-mask' style={{ zIndex: popoverLayer.zoom(this) }} onMouseDown={e => this.onClose(e)}></div>
             <MenuBox parent={this}
-                style={{ height: this.options.height, maxHeight: this.options.height, overflow: this.options.overflow }}
+                style={{ height: this.options.height, width: this.options.width, maxHeight: this.options.height, overflow: this.options.overflow }}
                 ref={e => this.mb = e}
                 input={(item) => this.onInput(item as any)}
                 click={(item, ev, name) => this.onClick(item as any, ev, name)}
@@ -78,6 +84,7 @@ export interface MenuPanel<T> {
 }
 export async function useSelectMenuItem<T = string>(pos: PopoverPosition, menus: MenuItem<T>[], options?: {
     height?: number,
+    width?: number,
     overflow?: 'auto' | 'visible',
     input?: (item: MenuItem<T>) => void,
     click?: (item: MenuItem<T>, event: React.MouseEvent, clickName: string, mp: MenuPanel<T>) => void,
