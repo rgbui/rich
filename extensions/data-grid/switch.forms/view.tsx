@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React,{ ReactNode } from "react";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { Icon } from "../../../component/view/icon";
@@ -15,6 +15,7 @@ import DragSvg from "../../../src/assert/svg/dragHandle.svg";
 import TrashSvg from "../../../src/assert/svg/trash.svg";
 import { Divider } from "../../../component/view/grid";
 import { useFormPage } from "../form";
+import { EditSvg } from "../../../component/svgs";
 
 class TabelSchemaFormDrop extends EventsComponent {
     schema: TableSchema;
@@ -69,11 +70,10 @@ class TabelSchemaFormDrop extends EventsComponent {
                 type: MenuItemType.input,
                 text: '重命名表单',
                 value: view.text,
-                icon: TrashSvg,
                 name: 'rename'
             },
             { type: MenuItemType.divide },
-            { text: '编辑', name: 'edit', icon: TrashSvg },
+            { text: '编辑', name: 'edit', icon: EditSvg },
             { text: '删除', name: 'delete', icon: TrashSvg }
         ]
         var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus);
