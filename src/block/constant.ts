@@ -21,5 +21,6 @@ export enum BlockUrlConstant {
     DataGridGallery = '/data-grid/gallery',
     DataGridTable = '/data-grid/table',
     DataGridList = '/data-grid/list',
-    DataGridCalendar = '/data-grid/calendar'
+    DataGridCalendar = '/data-grid/calendar',
+    TableStoreBoard='/data-grid/board'
 }
