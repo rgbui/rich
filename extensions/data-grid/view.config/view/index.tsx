@@ -15,8 +15,6 @@ import { Divider } from "../../../../component/view/grid";
 import { TableStore } from "../../../../blocks/data-grid/view/table";
 import { TableStoreCalendar } from "../../../../blocks/data-grid/view/calendar";
 import { TableStoreBoard } from "../../../../blocks/data-grid/view/board";
-import { Remark } from "../../../../component/view/text";
-
 export class DataGridViewConfig extends EventsComponent {
     get schema() {
         return this.block?.schema;
@@ -178,7 +176,7 @@ export class DataGridViewConfig extends EventsComponent {
                     </SelectBox></div>
                 </div>
             </>}
-            <Remark>视图动态控制</Remark>
+            {/* <Remark>视图动态控制</Remark>
             <div className="shy-table-property-view-item">
                 <label>显示分页</label>
                 <div className="operator">
@@ -196,7 +194,7 @@ export class DataGridViewConfig extends EventsComponent {
                 <div className="operator">
                     <Switch checked={true} onChange={e => { }}></Switch>
                 </div>
-            </div>
+            </div> */}
         </div>
     }
 }
