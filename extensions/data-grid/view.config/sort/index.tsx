@@ -66,7 +66,7 @@ export class TableSortView extends EventsComponent {
                         ]} onChange={e => { so.sort = e; self.forceUpdate() }}>
                         </SelectBox>
                         <div style={{ flexGrow: 1, flexShrink: 1 }}></div>
-                        <Icon size={12} style={{ padding: 6 }} wrapper className={'close'} icon={TypesFormulaSvg} click={e => addDynamic(i)}></Icon>
+                        {/* <Icon size={12} style={{ padding: 6 }} wrapper className={'close'} icon={TypesFormulaSvg} click={e => addDynamic(i)}></Icon> */}
                         <Icon size={12} style={{ padding: 6 }} wrapper className={'close'} icon={CloseTickSvg} click={e => removeSort(i)}></Icon>
                     </div>
                 })}
