@@ -1,4 +1,3 @@
-import { Block } from "../src/block"
 import { UA } from "../util/ua"
 import { channel } from "./channel"
 

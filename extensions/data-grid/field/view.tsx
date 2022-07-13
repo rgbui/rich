@@ -1,4 +1,3 @@
-
 import { FieldType } from "../../../blocks/data-grid/schema/type";
 import { getTypeSvg } from "../../../blocks/data-grid/schema/util";
 import { MenuItemType } from "../../../component/view/menu/declare";
@@ -15,7 +14,7 @@ export function getMenus() {
     var menus = [
         { type: MenuItemType.text, text: '基础' },
         ...map([
-            { text: '单行文本', value: FieldType.text },
+            { text: '文本', value: FieldType.text },
             // { text: '多行文本', value: FieldType.textarea },
             { text: '数字', value: FieldType.number },
             // { text: '价钱', value: FieldType.price },
@@ -36,17 +35,17 @@ export function getMenus() {
             { text: '统计', value: FieldType.rollup },
             { text: '公式', value: FieldType.formula }
         ]),
-        { type: MenuItemType.text, text: '交互' },
+        // { type: MenuItemType.text, text: '交互' },
         ...map([
-            { text: '反应', value: FieldType.emoji },
-            { text: '评论', value: FieldType.comment },
+            // { text: '反应', value: FieldType.emoji },
+            // { text: '评论', value: FieldType.comment },
             // { text: '收藏', value: FieldType.favourite },
             // { text: '分享', value: FieldType.share },
             // { text: '打赏', value: FieldType.donate },
             // { text: '购买', value: FieldType.buy },
             // { text: '浏览访问', value: FieldType.browse },
         ]),
-        { type: MenuItemType.text, text: '高级' },
+        // { type: MenuItemType.text, text: '高级' },
         // ...map([
         //{ text: '自动编号', value: FieldType.autoIncrement },
         //{ text: '操作按钮', value: FieldType.button },
