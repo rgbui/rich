@@ -7,7 +7,7 @@ export class Input extends React.Component<{
     style?: CSSProperties,
     disabled?: boolean,
     value?: string,
-    type?: 'text' | 'password',
+    type?: 'text' | 'password'|'number',
     placeholder?: string,
     readonly?: boolean,
     onChange?: (value: string, e?: React.FormEvent<HTMLInputElement>) => void,
