@@ -144,7 +144,8 @@ export class DatePicker extends EventsComponent {
     error: string = '';
     inputDate: HTMLInputElement;
     inputTime: HTMLInputElement;
-    private updateInput() {
+    private updateInput()
+    {
         var dj = dayjs(this.date);
         this.inputDate.value = dj.format('YYYY/MM/DD');
         if (this.inputTime)
