@@ -20,12 +20,7 @@ export class DataGridViewOperator {
         var result = await useTableStoreAddField(
             { roundArea: Rect.fromEle(event.target as HTMLDivElement) },
             {
-                text: '',
-                type: FieldType.text,
-                check(newText) {
-                    if (!newText) return '表格列名不能为空'
-                    return self.fields.some(s => s.text == newText) ? '表列名有重复' : ""
-                }
+                dataGrid: self
             }
         );
         if (!result) return;
@@ -117,7 +112,7 @@ export class DataGridViewOperator {
                 var fs = this.schema.fields.map(g => this.schema.createViewField(g));
                 var oss = this.fields.map(f => f.clone()).filter(g => g.type ? true : false);
                 fs.each(f => { oss.push(f) });
-                this.changeFields(this.fields,oss);
+                this.changeFields(this.fields, oss);
                 await this.createItem();
                 this.forceUpdate();
             }

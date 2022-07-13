@@ -175,7 +175,7 @@ export class DataGridViewConfig {
             else if (re.item.name == 'editProperty') {
                 var r = await useTableStoreAddField(
                     { roundArea: rp },
-                    { text: viewField.field.text, type: viewField.field.type }
+                    { field:viewField.field,dataGrid:self }
                 )
             }
             else if (re.item.name == 'delete') {

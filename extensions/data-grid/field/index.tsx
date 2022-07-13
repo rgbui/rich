@@ -1,9 +1,7 @@
-
 import { PopoverPosition } from "../../popover/position";
 import { PopoverSingleton } from "../../popover/popover";
 import { FieldType } from "../../../blocks/data-grid/schema/type";
 import { Field, FieldConfig } from "../../../blocks/data-grid/schema/field";
-import './style.less';
 import React from "react";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { getTypeSvg } from "../../../blocks/data-grid/schema/util";
@@ -15,101 +13,139 @@ import { Point, Rect } from "../../../src/common/vector/point";
 import { useOpenEmoji } from "../../emoji";
 import { getMenus } from "./view";
 import { Button } from "../../../component/view/button";
-import { Row, Col, Space } from "../../../component/view/grid";
+import { Divider } from "../../../component/view/grid";
 import { Icon } from "../../../component/view/icon";
 import { Input } from "../../../component/view/input";
-import { Select } from "../../../component/view/select";
 import { Switch } from "../../../component/view/switch";
 import { Remark, ErrorText } from "../../../component/view/text";
 import { Textarea } from "../../../component/view/input/textarea";
+import { getEmoji } from "../../../net/element.type";
+import { SelectBox } from "../../../component/view/select/box";
+import './style.less';
+import { DataGridView } from "../../../blocks/data-grid/view/base";
+import lodash from "lodash";
 
 export class TableFieldView extends EventsComponent {
     onSave() {
         var self = this;
         self.error = '';
-        if (typeof self.check == 'function') {
-            var r = self.check(self.text);
-            if (r) {
-                self.error = r;
-                self.forceUpdate();
-                return;
-            }
+        if (!self.text) {
+            self.error = '字段名不能为空';
+            return self.forceUpdate();
+        }
+        if (self.dataGrid.schema.fields.some(s => s.text == self.text && !this.fieldId || this.fieldId && this.fieldId != s.id && this.text == s.text)) {
+            self.error = '字段名有重复';
+            return self.forceUpdate();
         }
         self.forceUpdate();
-        self.emit('save', { text: self.text, type: self.type, config: self.config });
+        self.emit('save', { text: self.text, type: self.type, config: lodash.cloneDeep(self.config) });
     }
     renderMultiple() {
-        if ([FieldType.file, FieldType.user, FieldType.image].includes(this.type)) {
-            return <Row>
-                <Col><Remark>是否允许多个:</Remark><Switch onChange={e => this.onChangeConfig({ isMultiple: e })} checked={this.config?.isMultiple ? true : false}></Switch></Col>
-            </Row >
+        if ([FieldType.file, FieldType.video, FieldType.user, FieldType.image].includes(this.type)) {
+            return <div className="shy-data-grid-field-selector-item">
+                <div className="shy-data-grid-field-selector-item-control" >
+                    <Remark>是否允许多个:</Remark><Switch onChange={e => this.onChangeConfig({ isMultiple: e })} checked={this.config?.isMultiple ? true : false}></Switch>
+                </div>
+            </div>
         }
         else return <></>
     }
     renderRelation() {
         if (this.type != FieldType.relation) return <></>
-        return <Row>
-            <Col><Remark>关联表格:</Remark></Col>
-            <Col><Select
-                onChange={e => { this.config.relationTableId = e; this.forceUpdate() }}
-                value={this.config.relationTableId}
-                options={this.relationDatas.map(r => {
-                    return {
-                        text: r.text + (Array.isArray(r.views) && r.views.length > 0 ? r.views[0].text : ''),
-                        value: r.id
-                    }
-                })}
-                style={{ width: '100%' }}>
-            </Select>
-            </Col>
-            <Col><Remark>是否一对多:</Remark><Switch onChange={e => this.onChangeConfig({ isMultiple: e })} checked={this.config?.isMultiple ? true : false}></Switch></Col>
-        </Row >
+        return <>
+            <div className="shy-data-grid-field-selector-item">
+                <label className="label">关联表格:</label>
+                <div className="shy-data-grid-field-selector-item-control">
+                    <SelectBox
+                        onChange={e => { this.config.relationTableId = e; this.forceUpdate() }}
+                        value={this.config.relationTableId}
+                        options={this.relationDatas.map(r => {
+                            return {
+                                text: r.text + (Array.isArray(r.views) && r.views.length > 0 ? r.views[0].text : ''),
+                                value: r.id
+                            }
+                        })}
+                        style={{ width: '100%' }}>
+                    </SelectBox>
+                </div>
+            </div>
+            <div className="shy-data-grid-field-selector-item">
+                <div className="shy-data-grid-field-selector-item-control" >
+                    <Remark>是否一对多:</Remark><Switch onChange={e => this.onChangeConfig({ isMultiple: e })} checked={this.config?.isMultiple ? true : false}></Switch>
+                </div>
+            </div>
+        </>
     }
     renderRollup() {
-        if (this.type != FieldType.rollup) return <></>
+        if (this.type != FieldType.rollup) return <></>;
+        var rs = this.dataGrid.schema.fields.findAll(g => g.type == FieldType.relation);
+        var ts = this.relationDatas.findAll(g => rs.some(r => r.config.relationTableId == g.id));
+        if (ts.length == 0) return <>
+            <div className="shy-data-grid-field-selector-item">
+                <Remark>没有关联的表，无法聚合统计</Remark>
+            </div>
+        </>;
         return <>
-            <Row>
-                <Col><Remark>关联表格:</Remark></Col>
-                <Col><Select
-                    value={this.config.rollupTableId}
-                    options={this.relationDatas.map(r => { return { text: r.text, value: r.id } })}
-                    onChange={e => { this.config.rollupTableId = e; this.loadTypeDatas() }}
-                    style={{ width: '100%' }}
-                >
-                </Select>
-                </Col>
-            </Row >
-            {this.rollFields && this.rollFields[this.config.rollupTableId] && <><Row>
-                <Col><Remark>统计表格列:</Remark></Col>
-                <Col><Select value={this.config.rollupFieldId} options={this.rollFields[this.config.rollupTableId].map(c => {
-                    return { text: c.text, value: c.id }
-                })}
-                    onChange={e => { this.config.rollupFieldId = e; this.loadTypeDatas() }}
-                    style={{ width: '100%' }}></Select>
-                </Col>
-            </Row >
-                {this.config.rollupFieldId && <Row>
-                    <Col><Remark>对数据进行统计:</Remark></Col>
-                    <Col><Select onChange={e => this.config.rollupStatistic = e} value={this.config.rollupStatistic} options={[]} style={{ width: '100%' }}> </Select>
-                    </Col>
-                </Row>}
+            <div className="shy-data-grid-field-selector-item">
+                <label className="label">关联表格:</label>
+                <div className="shy-data-grid-field-selector-item-control">
+                    <SelectBox
+                        value={this.config.rollupTableId}
+                        options={ts.map(r => { return { text: r.text, value: r.id } })}
+                        onChange={e => { this.config.rollupTableId = e; this.loadTypeDatas(true) }}
+                    >
+                    </SelectBox>
+                </div>
+            </div>
+            {this.rollFields && this.rollFields[this.config.rollupTableId] && <>
+                <div className="shy-data-grid-field-selector-item">
+                    <label className="label">统计表格列:</label>
+                    <div className="shy-data-grid-field-selector-item-control">
+                        <SelectBox value={this.config.rollupFieldId} options={this.rollFields[this.config.rollupTableId].map(c => {
+                            return { text: c.text, value: c.id, icon: getTypeSvg(c.type) }
+                        })}
+                            onChange={e => { this.config.rollupFieldId = e; this.loadTypeDatas(true) }}
+                            style={{ width: '100%' }}>
+                        </SelectBox>
+                    </div>
+                </div>
+                {this.config.rollupFieldId && <div className="shy-data-grid-field-selector-item">
+                    <label className="label">对数据进行统计:</label>
+                    <div className="shy-data-grid-field-selector-item-control">
+                        <SelectBox
+                            onChange={e => { this.config.rollupStatistic = e; this.forceUpdate() }}
+                            value={this.config.rollupStatistic}
+                            options={[
+                                { text: '平均值', value: '$agv' },
+                                { text: '求和', value: '$sum' },
+                                { text: '最小值', value: '$min' },
+                                { text: '最大值', value: '$max' }
+                            ]}
+                        ></SelectBox>
+                    </div>
+                </div>}
             </>
             }
         </>
     }
     renderFormula() {
         if (this.type != FieldType.formula) return <></>
-        return <Row>
-            <Col><Remark>公式:</Remark></Col>
-            <Col><Textarea value={this.config.formula} onEnter={e => this.config.formula = e}></Textarea>
-            </Col>
-        </Row >
+        return <div className="shy-data-grid-field-selector-item">
+            <label className="label">公式:</label>
+            <div className="shy-data-grid-field-selector-item-control">
+                <Textarea value={this.config.formula} onEnter={e => this.config.formula = e}></Textarea>
+            </div>
+        </div>
     }
     renderEmoji() {
         if ([FieldType.emoji].includes(this.type)) {
-            return <Row>
-                <Col><Remark>表情:</Remark><span onClick={e => this.onSetEmoji(e)}>{this.config?.emoji?.code || <Button ghost icon={PlusSvg}>添加表情</Button>}</span></Col>
-            </Row >
+            return <div className="shy-data-grid-field-selector-item">
+                <label className="label">表情:</label>
+                <div className="shy-data-grid-field-selector-emoji">
+                    {this.config?.emoji?.code && <span onClick={e => this.onSetEmoji(e)} dangerouslySetInnerHTML={{ __html: getEmoji(this.config?.emoji?.code) }}></span>}
+                    {!this.config?.emoji?.code && <Button onClick={e => this.onSetEmoji(e)} ghost icon={PlusSvg}>添加表情</Button>}
+                </div>
+            </div>
         }
         else return <></>
     }
@@ -125,35 +161,36 @@ export class TableFieldView extends EventsComponent {
         var self = this;
         var ms = getMenus();
         var tm = ms.find(g => g.value == this.type);
-        return <div className="shy-data-grid-field-selector" style={{ padding: 10, width: 300 }}>
-            <Row>
-                <Col><Remark>表格列名:</Remark></Col>
-                <Col><Input onChange={e => this.text = e} value={this.text}></Input></Col>
-            </Row>
-            <Row>
-                <Col><Remark>表格列类型:</Remark></Col>
-                <Col>
-                    <div className="shy-data-grid-field-selector-field-type" onClick={e => this.openSelectType(e)}>
-                        <Icon size={12} icon={getTypeSvg(this.type)}></Icon>
-                        <span>{tm?.text}</span>
-                        <Icon size={12} icon={ChevronDownSvg}></Icon>
-                    </div>
-                </Col>
-            </Row>
+        return <div className="shy-data-grid-field-selector">
+            <div className="shy-data-grid-field-selector-head">
+                <span>编辑表格字段</span>
+            </div>
+            <Divider></Divider>
+            <div className="shy-data-grid-field-selector-item">
+                <label className="label">表格列名:</label>
+                <div className="shy-data-grid-field-selector-item-control">
+                    <Input onChange={e => this.text = e} value={this.text}></Input>
+                </div>
+            </div>
+            <div className="shy-data-grid-field-selector-item">
+                <label className="label">表格列类型:</label>
+                <div className="shy-data-grid-field-selector-field-type" onClick={e => this.openSelectType(e)}>
+                    <Icon size={14} icon={getTypeSvg(this.type)}></Icon>
+                    <span>{tm?.text}</span>
+                    <Icon size={12} icon={ChevronDownSvg}></Icon>
+                </div>
+            </div>
             {this.renderRelation()}
             {this.renderRollup()}
             {this.renderFormula()}
             {this.renderMultiple()}
             {this.renderEmoji()}
-            <Row style={{ marginTop: 10 }}>
-                <Col align="end">
-                    <Space>
-                        {this.error && <ErrorText>{this.error}</ErrorText>}
-                        <Button ghost onClick={e => this.emit('close')}>取消</Button>
-                        <Button onClick={e => self.onSave()}>确定</Button>
-                    </Space>
-                </Col>
-            </Row>
+            <Divider></Divider>
+            <div className="shy-data-grid-field-selector-footer">
+                {this.error && <ErrorText>{this.error}</ErrorText>}
+                <Button ghost onClick={e => this.emit('close')}>取消</Button>
+                <Button onClick={e => self.onSave()}>确定</Button>
+            </div>
         </div>
     }
     async changeType(type: FieldType) {
@@ -182,7 +219,7 @@ export class TableFieldView extends EventsComponent {
                     isUpdate = true;
                 }
             }
-            if (!(this.rollFields && this.rollFields[this.config.rollupTableId])) {
+            if (this.config.rollupTableId && !(this.rollFields && this.rollFields[this.config.rollupTableId])) {
                 if (!this.rollFields) { this.rollFields = {} }
                 if (!this.rollFields[this.config.rollupTableId]) {
                     var rr = await channel.get('/schema/query', { id: this.config.rollupTableId as string });
@@ -206,13 +243,18 @@ export class TableFieldView extends EventsComponent {
     private error: string = '';
     private text: string = '';
     private type: FieldType;
-    private check: (text: string) => string;
     private config: FieldConfig = {};
-    async open(option: { text: string, type: FieldType, config?: FieldConfig }, check: (newText: string) => string) {
-        this.text = option.text;
-        this.type = option.type;
-        this.check = check;
-        this.config = option.config || {};
+    private fieldId: string = '';
+    private dataGrid: DataGridView;
+    async open(option: {
+        field?: Field,
+        dataGrid: DataGridView
+    }
+    ) {
+        this.fieldId = option?.field?.id || '';
+        this.text = option.field?.text || '属性';
+        this.type = option.field?.type || FieldType.text;
+        this.config = lodash.cloneDeep(option.field?.config || {});
         this.relationDatas = null;
         this.rollFields = null;
         await this.loadTypeDatas();
@@ -223,16 +265,15 @@ export class TableFieldView extends EventsComponent {
         this.forceUpdate();
     }
 }
+
 export async function useTableStoreAddField(pos: PopoverPosition,
     option: {
-        text: string,
-        type: FieldType,
-        check?: (newText: string) => string,
-        config?: Record<string, any>
+        field?: Field,
+        dataGrid: DataGridView
     }) {
     let popover = await PopoverSingleton(TableFieldView, { mask: true });
     let fv = await popover.open(pos);
-    fv.open(option, option.check);
+    fv.open(option);
     return new Promise((resolve: (data: { text: string, type: FieldType, config?: FieldConfig }) => void, reject) => {
         fv.only('save', (data: { text: string, type: FieldType, config?: FieldConfig }) => {
             popover.close();

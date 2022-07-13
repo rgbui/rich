@@ -1,26 +1,82 @@
 .shy-data-grid-field-selector {
-    padding: 10px;
-    width  : 300px;
+    width: 300px;
+
+    &-head {
+        height         : 24px;
+        font-size      : 14px;
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : center;
+        padding-left   : 10px;
+    }
+
+    &-item {
+        margin-bottom: 15px;
+        margin-left  : 5px;
+        margin-right : 5px;
+        .label {
+            display: block;
+            padding      : 0px 5px;
+            font-size    : 14px;
+            color        : rgba(55, 53, 47, 0.7);
+            margin-bottom: 5px;
+        }
+        &-control {
+            padding: 0px 5px;
+        }
+
+    }
+
+
 
     &-field-type {
-        width          : 100%;
+        padding        : 0px 5px;
         display        : flex;
         justify-content: flex-start;
         align-items    : center;
         height         : 30px;
         color          : rgb(55, 53, 47);
+        cursor         : pointer;
 
         span {
             display    : inline-block;
             margin     : 0px 5px;
             flex-grow  : 1;
             flex-shrink: 1;
+            font-size  : 14px;
         }
 
         .shy-icon {
             fill       : rgba(55, 53, 47, 0.4);
             flex-grow  : 0;
             flex-shrink: 0;
+        }
+
+        &:hover {
+            background-color: rgba(55, 53, 47, 0.08);
+        }
+    }
+
+    &-emoji {
+        padding: 0px 5px;
+        >span {
+            padding      : 0px 10px;
+            border-radius: 4px;
+            line-height  : 20px;
+            cursor: pointer;
+            border:1px solid rgba(55, 53, 47, 0.16)
+        }
+    }
+
+    &-footer{
+        height:40px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin:0px 5px;
+        padding:0px 5px;
+        .shy-button{
+            margin-left: 10px;
         }
     }
 }
