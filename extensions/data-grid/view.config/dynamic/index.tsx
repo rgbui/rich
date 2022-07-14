@@ -1,10 +1,8 @@
 
 import React, { ReactNode } from "react";
 import { Field } from "../../../../blocks/data-grid/schema/field";
-import { getTypeSvg } from "../../../../blocks/data-grid/schema/util";
 import { DataGridView } from "../../../../blocks/data-grid/view/base";
 import { EventsComponent } from "../../../../component/lib/events.component";
-import { EyeSvg, EyeHideSvg, DragHandleSvg, PlusSvg } from "../../../../component/svgs";
 import "./style.less";
 export class DataGridDynamic extends EventsComponent {
     get schema() {
@@ -30,9 +28,7 @@ export class DataGridDynamic extends EventsComponent {
             }
             self.forceUpdate();
         }
-        function addField(event: React.MouseEvent) {
-            self.block.onAddField(event);
-        }
+        
         async function changeAll(checked: boolean) {
             await self.block.onShowAllField(!checked);
             self.forceUpdate();

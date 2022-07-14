@@ -2,9 +2,9 @@ import { Block } from "..";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { BlockDirective, BlockRenderRange } from "../enum";
 import duplicate from "../../assert/svg/duplicate.svg";
-import loop from "../../assert/svg/loop.svg";
+// import loop from "../../assert/svg/loop.svg";
 import blockcolor from "../../assert/svg/blockcolor.svg";
-import link from "../../assert/svg/link.svg";
+// import link from "../../assert/svg/link.svg";
 import squareplus from "../../assert/svg/squareplus.svg";
 import moveTo from '../../assert/svg/moveTo.svg';
 import comment from "../../assert/svg/comment.svg";
@@ -18,6 +18,7 @@ import { Point, Rect } from "../../common/vector/point";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { CopyText } from "../../../component/copy";
 import { ShyAlert } from "../../../component/lib/alert";
+import { LinkSvg, LoopSvg } from "../../../component/svgs";
 
 export class Block$Event {
     /**
@@ -62,7 +63,7 @@ export class Block$Event {
         var menus = await this.onGetTurnMenus();
         items.push({
             text: langProvider.getText(LangID.menuTurn),
-            icon: loop,
+            icon:LoopSvg,
             disabled: menus.length > 0 ? false : true,
             childs: menus.map(m => {
                 return {
@@ -85,7 +86,7 @@ export class Block$Event {
         items.push({
             name: BlockDirective.link,
             text: langProvider.getText(LangID.menuCopyLink),
-            icon: link
+            icon: LinkSvg
         });
         // items.push({
         //     type: MenuItemTypeValue.divide
@@ -244,7 +245,7 @@ export class Block$Event {
             this.manualUpdateProps(oldProps, newProps, range, isOnlyRecord);
         })
     }
-    async onLock(this: Block,locked: boolean) {
+    async onLock(this: Block, locked: boolean) {
         this.onAction(ActionDirective.onLock, async () => {
             this.updateProps({
                 locker: {

@@ -10,6 +10,7 @@ import { Divider } from "../../../../component/view/grid";
 import { DragHandleSvg, EyeHideSvg, EyeSvg, PlusSvg } from "../../../../component/svgs";
 
 import "./style.less";
+import { Rect } from "../../../../src/common/vector/point";
 export class DataGridFields extends EventsComponent {
     get schema() {
         return this.block?.schema;
@@ -35,7 +36,8 @@ export class DataGridFields extends EventsComponent {
             self.forceUpdate();
         }
         function addField(event: React.MouseEvent) {
-            self.block.onAddField(event);
+            event.stopPropagation();
+            self.block.onAddField(Rect.fromEvent(event));
         }
         async function changeAll(checked: boolean) {
             await self.block.onShowAllField(!checked);
