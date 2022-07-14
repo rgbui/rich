@@ -24,7 +24,6 @@ import { SelectBox } from "../../../component/view/select/box";
 import './style.less';
 import { DataGridView } from "../../../blocks/data-grid/view/base";
 import lodash from "lodash";
-
 export class TableFieldView extends EventsComponent {
     onSave() {
         var self = this;
@@ -246,17 +245,18 @@ export class TableFieldView extends EventsComponent {
     private config: FieldConfig = {};
     private fieldId: string = '';
     private dataGrid: DataGridView;
-    async open(option: {
+    async open(options: {
         field?: Field,
         dataGrid: DataGridView
     }
     ) {
-        this.fieldId = option?.field?.id || '';
-        this.text = option.field?.text || '属性';
-        this.type = option.field?.type || FieldType.text;
-        this.config = lodash.cloneDeep(option.field?.config || {});
+        this.fieldId = options?.field?.id || '';
+        this.text = options.field?.text || '属性';
+        this.type = options.field?.type || FieldType.text;
+        this.config = lodash.cloneDeep(options.field?.config || {});
         this.relationDatas = null;
         this.rollFields = null;
+        this.dataGrid = options.dataGrid;
         await this.loadTypeDatas();
         this.forceUpdate();
     }
