@@ -13,12 +13,13 @@ import { DataGridView } from ".";
 import { ElementType, getWsElementUrl } from "../../../../net/element.type";
 import { CopyText } from "../../../../component/copy";
 import { ShyAlert } from "../../../../component/lib/alert";
+import lodash from "lodash";
+
 export class DataGridViewOperator {
-    async onAddField(this: DataGridView, event: React.MouseEvent | MouseEvent, at?: number) {
-        event.stopPropagation();
+    async onAddField(this: DataGridView, event: Rect, at?: number) {
         var self = this;
         var result = await useTableStoreAddField(
-            { roundArea: Rect.fromEle(event.target as HTMLDivElement) },
+            { roundArea: event },
             {
                 dataGrid: self
             }
@@ -37,7 +38,38 @@ export class DataGridViewOperator {
                 if (typeof at == 'undefined') at = this.fields.length;
                 var vf = this.schema.createViewField(field);
                 var newFields = this.fields.map(f => f.clone());
-                newFields.push(vf);
+                newFields.splice(at, 0, vf);
+                this.changeFields(this.fields, newFields);
+                this.data.forEach(row => {
+                    var defaultValue = field.getDefaultValue();
+                    if (typeof defaultValue != 'undefined')
+                        row[field.name] = defaultValue
+                });
+                await this.createItem();
+                this.forceUpdate();
+            }
+        });
+    }
+    async onCloneField(this: DataGridView, viewField: ViewField) {
+        var result = {
+            text: viewField.field.text + '副本',
+            type: viewField.field.type,
+            config: lodash.cloneDeep(viewField.field.config)
+        };
+        var at = this.fields.findIndex(g => g === viewField) + 1;
+        this.page.onAction(ActionDirective.onSchemaCreateField, async () => {
+            var fieldData = await this.schema.fieldAdd({
+                text: result.text,
+                type: result.type,
+                config: result.config
+            });
+            if (fieldData.ok) {
+                var field = new Field();
+                field.load(Object.assign(result, fieldData.data.actions[0]));
+                this.schema.fields.push(field);
+                var vf = this.schema.createViewField(field);
+                var newFields = this.fields.map(f => f.clone());
+                newFields.splice(at, 0, vf);
                 this.changeFields(this.fields, newFields);
                 this.data.forEach(row => {
                     var defaultValue = field.getDefaultValue();
@@ -134,6 +166,9 @@ export class DataGridViewOperator {
             await this.loadData();
             await this.createItem();
         });
+        var rect = this.getVisibleContentBound();
+        rect.height = 20;
+        await this.onOpenViewConfig(rect)
     }
     async onTurnField(this: DataGridView, viewField: ViewField, type: FieldType, config?: Record<string, any>) {
         var field = viewField.field;
@@ -166,6 +201,9 @@ export class DataGridViewOperator {
             })
         }
     }
+    async onCopySchemaView(this: DataGridView) {
+
+    }
     async onUpdateSorts(this: DataGridView, sorts: { field: string, sort: number }[]) {
         this.onAction(ActionDirective.onDataGridUpdateSorts, async () => {
             this.updateProps({ sorts })
@@ -177,16 +215,20 @@ export class DataGridViewOperator {
         })
     }
     async onAddFilter(this: DataGridView, viewField: ViewField) {
-        this.onAction(ActionDirective.onDataGridUpdateFilter, async () => {
+        await this.onAction(ActionDirective.onDataGridUpdateFilter, async () => {
             if (!Array.isArray(this.filter.items)) {
                 this.filter = { logic: 'and', items: [] }
             }
             this.filter.items.push({
                 operator: '$contain',
-                field: viewField.field.id
+                field: viewField.field.id,
+                value: ''
             })
             this.updateProps({ filter: this.filter })
-        })
+        });
+        var rect = this.getVisibleContentBound();
+        rect.height = 20;
+        await this.onOpenViewConfig(rect)
     }
     async onShowNum(this: DataGridView, visible: boolean) {
         var newFields = this.fields.map(f => f.clone());
