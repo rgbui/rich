@@ -413,79 +413,94 @@ export class DataGridViewConfig {
     }
     async onOpenViewSettings(this: DataGridView, rect: Rect) {
         var self = this;
+        var view = self.schemaView;
         self.dataGridTool.isOpenTool = true;
-        var items: MenuItem<BlockDirective | string>[] = [];
-        items.push(...[
-            {
-                name: 'name',
-                type: MenuItemType.input,
-                value: this.schemaView.text,
-                text: '编辑视图名',
-            },
-            { type: MenuItemType.divide },
-            {
-                text: "切换视图",
-                icon: LoopSvg,
-                childs: [...this.schema.views.map(v => {
-                    return {
-                        name: 'turn',
-                        text: v.text,
-                        type: MenuItemType.drag,
-                        drag: 'view',
-                        value: v.id,
-                        icon: getSchemaViewIcon(v.url),
-                        checkLabel: v.id == this.schemaView.id,
-                        btns: [
-                            { icon: DotsSvg, name: 'property' }
-                        ]
-                    }
-                }),
+        function getMenuItems() {
+            var items: MenuItem<BlockDirective | string>[] = []; items.push(...[
+                {
+                    name: 'name',
+                    type: MenuItemType.input,
+                    value: self.schemaView.text,
+                    text: '编辑视图名',
+                },
                 { type: MenuItemType.divide },
-                { name: 'addView', type: MenuItemType.button, text: '创建视图' }
-                ]
-            },
-            { text: '配置设图', name: 'viewConfig', icon: SettingsSvg },
-            { type: MenuItemType.divide },
-            { name: 'link', icon: LinkSvg, text: '复制视图链接' },
-            { type: MenuItemType.divide },
-            { name: 'clone', icon: DuplicateSvg, text: '复制视图' },
-            { name: 'delete', icon: TrashSvg, text: '移除视图' },
-        ]);
+                {
+                    text: "切换视图",
+                    icon: LoopSvg,
+                    childs: [...self.schema.views.map(v => {
+                        return {
+                            name: 'turn',
+                            text: v.text,
+                            type: MenuItemType.drag,
+                            drag: 'view',
+                            value: v.id,
+                            icon: getSchemaViewIcon(v.url),
+                            checkLabel: v.id == self.schemaView.id,
+                            btns: [
+                                { icon: DotsSvg, name: 'property' }
+                            ]
+                        }
+                    }),
+                    { type: MenuItemType.divide },
+                    { name: 'addView', type: MenuItemType.button, text: '创建视图' }
+                    ]
+                },
+                { text: '配置设图', name: 'viewConfig', icon: SettingsSvg },
+                { type: MenuItemType.divide },
+                { name: 'link', icon: LinkSvg, text: '复制视图链接' },
+                { type: MenuItemType.divide },
+                { name: 'clone', icon: DuplicateSvg, text: '复制视图' },
+                { name: 'delete', icon: TrashSvg, text: '移除视图' },
+            ]);
+            return items;
+        }
+        var items: MenuItem<BlockDirective | string>[] = getMenuItems();
+        var rname = items.find(g => g.name == 'name');
         var r = await useSelectMenuItem({ roundArea: rect }, items, {
             async click(item, ev, name, mp) {
                 mp.onFree();
                 try {
                     if (item.name == 'turn') {
                         var rs: MenuItem<BlockDirective | string>[] = [];
-                        rs.push(...[
-                            {
-                                name: 'name',
-                                type: MenuItemType.input,
-                                value: item.text,
-                                text: '编辑视图名',
-                            },
-                            { type: MenuItemType.divide },
-                            { name: 'duplicate', icon: DuplicateSvg, text: '复制' },
-                            { name: 'delete', icon: TrashSvg, text: '删除' }
-                        ])
+                        if (item.value == view.id) {
+                            rs.push(...[
+                                { name: 'duplicate', icon: DuplicateSvg, text: '复制' }
+                            ])
+                        }
+                        else
+                            rs.push(...[
+                                {
+                                    name: 'name',
+                                    type: MenuItemType.input,
+                                    value: item.text,
+                                    text: '编辑视图名',
+                                },
+                                { type: MenuItemType.divide },
+                                { name: 'duplicate', icon: DuplicateSvg, text: '复制' },
+                                { name: 'delete', disabled: item.value == view.id, icon: TrashSvg, text: '删除' }
+                            ])
                         var rg = await useSelectMenuItem({ roundArea: Rect.fromEvent(ev) },
                             rs,
                             { nickName: 'second' }
                         );
                         if (rg?.item) {
                             if (rg?.item.name == 'delete') {
-                                self.schema.onSchemaOperate([{ name: 'removeSchemaView', id: rg?.item.value }])
+                                self.schema.onSchemaOperate([{ name: 'removeSchemaView', id: item.value }])
+                                items.arrayJsonRemove('childs', g => g === item);
+                                mp.updateItems(items);
                             }
                             else if (rg?.item.name == 'duplicate') {
-                                self.schema.onSchemaOperate([{ name: 'duplicateSchemaView', id: rg?.item.value }])
+                                self.schema.onSchemaOperate([{ name: 'duplicateSchemaView', id: item.value }])
+                                mp.updateItems(getMenuItems());
                             }
                         }
                         var rn = rs.find(g => g.name == 'name');
-                        if (rn.value != self.schemaView.text && rname.value) {
+                        if (rn.value != item.text && rn.value) {
                             self.schema.onSchemaOperate([
-                                { name: 'updateSchemaView', id: view.id, data: { text: rn.value } }
+                                { name: 'updateSchemaView', id: item.value, data: { text: rn.value } }
                             ]);
-                            self.forceUpdate()
+                            item.text = rn.value;
+                            mp.updateItems(items);
                         }
                     }
                 }
@@ -517,8 +532,8 @@ export class DataGridViewConfig {
                 self.onCopySchemaView();
             }
         }
-        var view = self.schemaView;
-        var rname = items.find(g => g.name == 'name');
+
+
         if (rname.value != self.schemaView.text && rname.value) {
             self.schema.onSchemaOperate([
                 {
