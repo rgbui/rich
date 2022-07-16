@@ -8,12 +8,16 @@ import { KeyboardCode } from "../../../src/common/keys";
 import { ChannelTextView } from "./view/view";
 import lodash from "lodash";
 import { Rect } from "../../../src/common/vector/point";
+import { ElementType, getElementUrl } from "../../../net/element.type";
 
 @url('/channel/text')
 export class ChannelText extends Block {
     chats: ChannelTextType[] = [];
     get roomId() {
         return this.page.pageLayout.type == PageLayoutType.textChannel ? this.page.pageItemId : this.syncBlockId
+    }
+    get elementUrl() {
+        return getElementUrl(ElementType.Room, this.roomId);
     }
     pageIndex: number = 1;
     isLast: boolean = false;

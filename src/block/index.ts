@@ -5,7 +5,6 @@ import { Page } from "../page";
 import { BlockDisplay } from "./enum";
 import { Pattern } from "./pattern/index";
 import { BlockView } from "./view";
-import { TextEle } from "../common/text.ele";
 import { Block$Seek } from "./partial/seek";
 import { prop } from "./factory/observable";
 import "./style.less";
@@ -26,6 +25,7 @@ import { Polygon } from "../common/vector/polygon";
 import { channel } from "../../net/channel";
 import { GridMap } from "../page/grid";
 import { AtomPermission } from "../page/permission";
+import { ElementType, getElementUrl } from "../../net/element.type";
 
 export abstract class Block extends Events {
     constructor(page: Page) {
@@ -372,6 +372,10 @@ export abstract class Block extends Events {
     }
     get blockUrl() {
         return this.page.pageInfo.url + '#' + this.id;
+    }
+    get elementUrl() {
+        if (this.syncBlockId) return getElementUrl(ElementType.SyncBlock, this.syncBlockId);
+        else return getElementUrl(ElementType.Block, this.page.pageItemId, this.id);
     }
     /**
      * 判断当前块是否为文本块

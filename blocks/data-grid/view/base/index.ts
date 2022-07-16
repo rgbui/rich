@@ -19,6 +19,7 @@ import { DataGridViewLife } from "./left.cycle";
 import { DataGridViewOperator } from "./operator";
 import { DataGridViewData } from "./data";
 import { DataGridViewConfig } from "./config";
+import { ElementType, getElementUrl } from "../../../../net/element.type";
 
 /**
  * 
@@ -123,7 +124,7 @@ export class DataGridView extends Block {
         return json;
     }
     async loadSyncBlock(this: DataGridView): Promise<void> {
-        var r = await channel.get('/page/sync/block', { syncBlockId: this.syncBlockId });
+        var r = await channel.get('/view/snap/query', { elementUrl:this.elementUrl });
         if (r.ok) {
             var data;
             try {
@@ -248,6 +249,9 @@ export class DataGridView extends Block {
             }
         ]);
         this.forceUpdate()
+    }
+    get elementUrl() {
+        return getElementUrl(ElementType.SchemaView, this.schemaId, this.syncBlockId);
     }
 }
 
