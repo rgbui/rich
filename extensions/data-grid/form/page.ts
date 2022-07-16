@@ -16,31 +16,31 @@ export async function createFormPage(el: HTMLElement,
         var syncBlocks = action.syncBlock();
         if (syncBlocks.length > 0) {
             syncBlocks.eachAsync(async (block) => {
-                var r = await channel.act('/page/view/operator', {
-                    syncBlockId: block.syncBlockId,
+                var r = await channel.act('/view/snap/operator', {
+                    elementUrl: block.elementUrl,
                     operate: action.get()
                 });
-                await channel.act('/page/view/snap', {
-                    syncBlockId: block.syncBlockId,
+                await channel.act('/view/snap/store', {
+                    elementUrl: block.elementUrl,
                     seq: r.seq,
                     content: await block.getString()
                 });
             })
         }
         else {
-            var r = await channel.act('/page/view/operator', {
-                syncBlockId: options.recordViewId,
+            var r = await channel.act('/view/snap/operator', {
+                elementUrl: page.elementUrl,
                 operate: action.get()
             });
-            await channel.act('/page/view/snap', {
-                syncBlockId: options.recordViewId,
+            await channel.act('/view/snap/store', {
+                elementUrl: page.elementUrl,
                 seq: r.seq,
                 content: await page.getString()
             });
         }
     });
     var pageData: Record<string, any>;
-    var r = await channel.get('/page/sync/block', { syncBlockId: options.recordViewId });
+    var r = await channel.get('/view/snap/query', { elementUrl: page.elementUrl });
     if (r.ok && r.data.content && Object.keys(r.data.content).length > 0) {
         pageData = r.data.content as any;
         if (typeof pageData == 'string') pageData = JSON.parse(pageData);

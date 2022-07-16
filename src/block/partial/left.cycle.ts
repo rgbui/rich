@@ -200,7 +200,7 @@ export class Block$LifeCycle {
         }
     }
     async loadSyncBlock(this: Block) {
-        var r = await channel.get('/page/sync/block', { syncBlockId: this.syncBlockId });
+        var r = await channel.get('/view/snap/query', { elementUrl: this.elementUrl });
         if (r.ok) {
             var data;
             try {

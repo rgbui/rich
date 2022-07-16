@@ -215,7 +215,7 @@ export interface ChannelGetMapUrls {
 	"/page/item/subs":{args:{id:string},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/item":{args:{id:string},returnType:Promise<SockResponse<{ item:Record<string,any> }>>},
 	"/page/word/query":{args:{word:string},returnType:Promise<SockResponse<{list:LinkPageItem[],total:number,page:number,size:number}>>},
-	"/page/sync/block":{args:{syncBlockId:string},returnType:Promise<SockResponse<{content:string,operates:any[]}>>},
+	"/view/snap/query":{args:{ elementUrl: string},returnType:Promise<SockResponse<{content:string,operates:any[]}>>},
 	"/view/snap/list":{args:{wsId?: string, elementUrl: string, page: number, size: number},returnType:Promise<SockResponse<{list:any[],total:number,size:number,page:number}>>},
 	"/view/snap/content":{args:{wsId?:string,id:string},returnType:Promise<SockResponse<{id:string,content:string}>>},
 	"/block/ref/pages":{args:{wsId?:string,pageId:string},returnType:Promise<SockResponse<{list:any[],total:number,size:number,page:number}>>}
@@ -233,8 +233,8 @@ export interface ChannelQueryMapUrls {
 export interface ChannelActMapUrls {
     "/page/create/by_text":{args:{word:string},returnType:SockResponse<LinkPageItem>},
 	"/cache/set":{args:{key:string,value:any},returnType:Promise<void>},
-	"/page/view/operator":{args:{syncBlockId: string, operate: Partial<UserAction> },returnType:Promise<{seq: number,id: string;}>},
-	"/page/view/snap":{args:{ syncBlockId: string, seq: number, content: any },returnType:Promise<void>}
+	"/view/snap/operator":{args:{ elementUrl: string, operate: Partial<UserAction> },returnType:Promise<{seq: number,id: string;}>},
+	"/view/snap/store":{args:{  elementUrl: string, seq: number, content: any },returnType:Promise<void>}
 }
 export interface ChannelAirMapUrls {
     "/page/update/info":{args:{id: string, pageInfo:LinkPageItem},returnType:void},
