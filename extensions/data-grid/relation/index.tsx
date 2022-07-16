@@ -14,7 +14,6 @@ import "./style.less";
 
 export class RelationView extends EventsComponent {
     render(): ReactNode {
-
         return <div className="shy-relation-view">
             {this.relationDatas && <Row>
                 <Col><Remark>关联表格:</Remark></Col>
