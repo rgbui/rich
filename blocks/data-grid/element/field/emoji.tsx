@@ -16,7 +16,7 @@ export class FieldEmailView extends BlockView<FieldEmoji>{
         async function mousedown(event: React.MouseEvent) {
             var r = await channel.patch('/interactive/emoji', {
                 elementUrl: getElementUrl(
-                    ElementType.SchemaRecordField,
+                    ElementType.SchemaFieldData,
                     self.block.dataGrid.schema.id,
                     self.block.field.id,
                     self.block.item.dataRow.id

@@ -1,81 +1,135 @@
 import { UA } from "../util/ua"
 import { channel } from "./channel"
-
-export class SchemaName {
-    UserDefineDataSchemaViewTemplate = 'UserDefineDataSchemaViewTemplate'
-}
-
 export enum ElementType {
+    /**
+     * PageItem/{id} 文档、白板
+     */
     PageItem,
+    /**
+     * /Page/{id}/Block/{id1} 文档中的某个块
+     */
     Block,
+    /**
+     * /SyncBlock/${id} 同步块
+     */
+    SyncBlock,
+    /**
+     * /Schema/{id} 数据表格
+     */
     Schema,
-    SchemaRecord,
+    /**
+     * /Schema/{id}/Data/{id1} 数据表格的某条记录
+     */
+    SchemaData,
+    /**
+     * /Schema/{id}/View/{id1}  数据表格的视图id
+     */
     SchemaView,
+    /**
+     * `/Schema/${id}/RecordView/${id1}` 数据表格的数据模板视图id
+     */
     SchemaRecordView,
-    SchemaRecordField,
-    RoomChat
+    /**
+   * `/Schema/${id}/RecordView/${id1}/Data/${id2}` 数据表格的争对某条数据显示特定数据模板id
+   */
+    SchemaRecordViewData,
+    /**
+     * `/Schema/${id}/Field/${id1}/Data/${id2}`  数据表格某个字段对应的某条记录的id
+     */
+    SchemaFieldData,
+    /**
+     * `/Schema/${id}/Field/${id1}  数据表格某个字段
+     */
+    SchemaField,
+    /**
+     * /Room/${id}/Chat/${id1} 空间聊天的某条记录
+     */
+    RoomChat,
+    /**
+     * /Room/${id} 空间聊天室
+     */
+    Room
 }
-
-/***
- * 
-/PageItem/id
-/Block/id
-/Schema/id
-/Schema/id/Record/id
-/Schema/id/View/id
-/Schema/id/RecordView/id
-/Schema/${id}/Field/${id1}/Record/${id2} 表示数据表格中某条记录下面的某个字段值
-/Room/{id}/Chat/{id} 表示聊天频道的某条聊天记录
- */
 export function getElementUrl(type: ElementType, id: string, id1?: string, id2?: string) {
-    if (type == ElementType.SchemaRecord) return ` /Schema/${id}/Record/${id1}`
+    if (type == ElementType.SchemaData) return ` /Schema/${id}/Data/${id1}`
     else if (type == ElementType.SchemaView) return `/Schema/${id}/View/${id1}`
     else if (type == ElementType.SchemaRecordView) return `/Schema/${id}/RecordView/${id1}`
-    else if (type == ElementType.SchemaRecordField) return `/Schema/${id}/Field/${id1}/Record/${id2}`
+    else if (type == ElementType.SchemaRecordViewData) return `/Schema/${id}/RecordView/${id1}/Data/${id2}`
+    else if (type == ElementType.SchemaFieldData) return `/Schema/${id}/Field/${id1}/Record/${id2}`
     else if (type == ElementType.RoomChat) return `/Room/${id}/Chat/${id1}`
-    else if (type == ElementType.Block) return `/Page/${id}/block/${id1}`
+    else if (type == ElementType.Block) return `/Page/${id}/Block/${id1}`
+    else if (type == ElementType.SyncBlock) return `/SyncBlock/${id}`
     else return `/${ElementType[type]}/${id}`
 }
-
 export function parseElementUrl(url: string) {
     var us = url.split(/\//g);
     us.removeAll(g => g ? false : true);
     if (us.includes('Field')) {
-        us.removeAll(g => g == 'Schema' || g == 'Field' || g == 'Record')
-        return {
-            type: ElementType.SchemaRecordField,
-            id: us[0],
-            id1: us[1],
-            id2: us[2]
+        if (us.includes('Data')) {
+            us.removeAll(g => g == 'Schema' || g == 'Field' || g == 'Data')
+            return {
+                type: ElementType.SchemaFieldData,
+                id: us[0],
+                id1: us[1],
+                id2: us[2]
+            }
+        }
+        else {
+            us.removeAll(g => g == 'Schema' || g == 'Field' || g == 'Data')
+            return {
+                type: ElementType.SchemaField,
+                id: us[0],
+                id1: us[1]
+            }
         }
     }
     else if (us.includes('Schema')) {
-        if (us.includes('Record')) {
+        var ns = ['Schema', 'View', 'RecordView', 'Data'];
+        if (us.includes('RecordView') && us.includes('Data')) {
+            us.removeAll(g => ns.includes(g))
             return {
-                type: ElementType.SchemaRecord,
+                type: ElementType.SchemaRecordViewData,
                 id: us[0],
-                id1: us[1]
-            }
-        }
-        else if (us.includes('RecordView')) {
-            return {
-                type: ElementType.SchemaRecordView,
-                id: us[0],
-                id1: us[1]
+                id1: us[1],
+                id2: us[2]
             }
         }
         else if (us.includes('View')) {
+            us.removeAll(g => ns.includes(g))
             return {
                 type: ElementType.SchemaView,
                 id: us[0],
-                id1: us[1]
+                id1: us[1],
+            }
+        }
+        else if (us.includes('RecordView')) {
+            us.removeAll(g => ns.includes(g))
+            return {
+                type: ElementType.SchemaRecordView,
+                id: us[0],
+                id1: us[1],
+            }
+        }
+        else if (us.includes('Data')) {
+            us.removeAll(g => ns.includes(g))
+            return {
+                type: ElementType.SchemaData,
+                id: us[0],
+                id1: us[1],
+            }
+        }
+        else {
+            us.removeAll(g => ns.includes(g))
+            return {
+                type: ElementType.Schema,
+                id: us[0]
             }
         }
     }
-    else if (us.includes('Block')) {
-        us.removeAll(g => g == 'Block')
+    else if (us.includes('SyncBlock')) {
+        us.removeAll(g => g == 'SyncBlock')
         return {
-            type: ElementType.Block,
+            type: ElementType.SyncBlock,
             id: us[0]
         }
     }
@@ -95,11 +149,20 @@ export function parseElementUrl(url: string) {
         }
     }
     else if (us.includes("Room")) {
-        us.removeAll(g => g == 'Room' || g == 'Chat')
-        return {
-            type: ElementType.RoomChat,
-            id: us[0],
-            id1: us[1]
+        if (us.includes('Chat')) {
+            us.removeAll(g => g == 'Room' || g == 'Chat')
+            return {
+                type: ElementType.RoomChat,
+                id: us[0],
+                id1: us[1]
+            }
+        }
+        else {
+            us.removeAll(g => g == 'Room' || g == 'Chat')
+            return {
+                type: ElementType.Room,
+                id: us[0]
+            }
         }
     }
 }
@@ -108,7 +171,7 @@ export function getWsElementUrl(options: { wsUrl?: string, type: ElementType, id
     var { type, id, id1, id2, wsUrl } = options;
     if (!wsUrl) {
         var ws = channel.query('/current/workspace');
-        wsUrl = `https://${ws.sn}shy.live/`;
+        wsUrl = `https://${ws.sn}.shy.live/`;
     }
     if (!wsUrl.endsWith('/')) wsUrl += '/';
     return wsUrl + 'r?url=' + encodeURIComponent(getElementUrl(type, id, id1, id2))

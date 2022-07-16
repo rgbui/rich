@@ -53,7 +53,7 @@ export class FieldRelationView extends BlockView<FieldRelation>{
         var f = rs?.fields?.find(g => g.type == FieldType.title);
         if (!f) f = rs?.fields.find(g => g.type == FieldType.text);
         return <div className='sy-field-relation-items'>{this.block.relationList?.map(r => {
-            var url = getElementUrl(ElementType.SchemaRecord, rs.id, r.id);
+            var url = getElementUrl(ElementType.SchemaData, rs.id, r.id);
             return <a href={url} onClick={e => e.preventDefault()} key={r.id}>{r[f?.name]}</a>
         })}
         </div>

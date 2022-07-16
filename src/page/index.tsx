@@ -32,6 +32,7 @@ import { LinkPageItem } from '../../extensions/at/declare';
 import { Title } from '../../blocks/page/title';
 import { AppearAnchor } from '../block/appear';
 import { AtomPermission } from './permission';
+import { ElementType, getElementUrl } from '../../net/element.type';
 
 export class Page extends Events<PageDirective> {
     root: HTMLElement;
@@ -40,7 +41,7 @@ export class Page extends Events<PageDirective> {
     date: number;
     readonly: boolean = false;
     pageItemId: string;
-    sourceItemId:string;
+    sourceItemId: string;
     version: PageVersion;
     constructor(options?: {
         id?: string,
@@ -156,6 +157,7 @@ export class Page extends Events<PageDirective> {
         return this.matrix.getScaling().x;
     }
     schema: TableSchema;
+    recordViewId: string;
     loadSchemaRecord(row: Record<string, any>) {
         this.each(g => {
             if (g instanceof OriginFormField) {
@@ -227,6 +229,26 @@ export class Page extends Events<PageDirective> {
     }
     get lineHeight() {
         return this.fontSize * 1.2;
+    }
+    get elementUrl() {
+        if ([
+            PageLayoutType.board,
+            PageLayoutType.doc
+        ].includes(this.pageLayout.type)) {
+            return getElementUrl(ElementType.PageItem, this.pageItemId);
+        }
+        else if (this.pageLayout.type == PageLayoutType.textChannel) {
+            return getElementUrl(ElementType.Room, this.pageItemId);
+        }
+        else if (this.pageLayout.type == PageLayoutType.db) {
+            return getElementUrl(ElementType.Schema, this.pageItemId);
+        }
+        else if ([
+            PageLayoutType.dbForm,
+            PageLayoutType.dbSubPage
+        ].includes(this.pageLayout.type)) {
+            return getElementUrl(ElementType.SchemaRecordView, this.schema.id, this.recordViewId);
+        }
     }
 }
 export interface Page {
