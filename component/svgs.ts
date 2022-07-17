@@ -97,6 +97,7 @@ import RenameSvg from "../src/assert/svg/rename.svg";
 import ReplySvg from "../src/assert/svg/reply.svg";
 import RotatingSvg from "../src/assert/svg/rotating.svg";
 import RowNoSvg from "../src/assert/svg/row.no.svg";
+import SearchSvg from "../src/assert/svg/search.svg";
 import SettingsSvg from "../src/assert/svg/settings.svg";
 import SortSvg from "../src/assert/svg/sort.svg";
 import SquareplusSvg from "../src/assert/svg/squareplus.svg";
@@ -233,6 +234,7 @@ RenameSvg,
 ReplySvg,
 RotatingSvg,
 RowNoSvg,
+SearchSvg,
 SettingsSvg,
 SortSvg,
 SquareplusSvg,
