@@ -14,7 +14,7 @@ import { ElementType, getElementUrl } from "../../../net/element.type";
 export class ChannelText extends Block {
     chats: ChannelTextType[] = [];
     get roomId() {
-        return this.page.pageLayout.type == PageLayoutType.textChannel ? this.page.pageItemId : this.syncBlockId
+        return this.page.pageLayout.type == PageLayoutType.textChannel ? this.page.pageInfo.id: this.syncBlockId
     }
     get elementUrl() {
         return getElementUrl(ElementType.Room, this.roomId);

@@ -43,7 +43,7 @@ export class LineLink extends Block {
             if (this.createSource == 'InputBlockSelector') {
                 if ((this as any).createPage) {
                     var newItem = await channel.air('/page/create/sub', {
-                        pageId: this.page.pageItemId,
+                        pageId: this.page.pageInfo?.id,
                         text: this.text
                     });
                     if (newItem)

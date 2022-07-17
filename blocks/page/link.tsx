@@ -53,7 +53,7 @@ export class Link extends Block {
             }
             else {
                 if (pageLink.name == 'create') {
-                    var r = await channel.air('/page/create/sub', { pageId: this.page.pageItemId, text: pageLink.text || pageLink.url });
+                    var r = await channel.air('/page/create/sub', { pageId: this.page.pageInfo?.id, text: pageLink.text || pageLink.url });
                     if (r) {
                         pageLink.pageId = r.id;
                         pageLink.name = 'page';

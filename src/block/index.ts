@@ -375,7 +375,7 @@ export abstract class Block extends Events {
     }
     get elementUrl() {
         if (this.syncBlockId) return getElementUrl(ElementType.SyncBlock, this.syncBlockId);
-        else return getElementUrl(ElementType.Block, this.page.pageItemId, this.id);
+        else return getElementUrl(ElementType.Block, this.page.pageInfo?.id, this.id);
     }
     /**
      * 判断当前块是否为文本块

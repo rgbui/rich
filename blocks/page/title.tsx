@@ -17,15 +17,16 @@ export class Title extends Block {
     display = BlockDisplay.block;
     pageInfo: LinkPageItem = null;
     async loadPageInfo() {
-        var r = await channel.get('/page/query/info', { id: this.page.pageItemId });
-        if (r.ok) {
-            this.pageInfo = r.data;
+        if (this.page.pageInfo) {
+            this.pageInfo = {
+                id: this.page.pageInfo.id,
+                text: this.page.pageInfo.text,
+                icon: this.page.pageInfo.icon,
+            }
         }
     }
     async changeAppear(appear) {
         if (appear.prop == 'pageInfo.text') {
-            if (this.page.pageInfo)
-                this.page.pageInfo.text = this.pageInfo?.text
             if (this.pageInfo.id)
                 channel.air('/page/update/info', {
                     id: this.pageInfo.id,
@@ -85,7 +86,7 @@ export class TitleView extends BlockView<Title>{
             event.stopPropagation();
             var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) });
             if (typeof icon != 'undefined') {
-                channel.air('/page/update/info', { id: self.block.page.pageItemId, pageInfo: { icon } })
+                channel.air('/page/update/info', { id: self.block.page.pageInfo?.id, pageInfo: { icon } })
             }
         }
         var isAdd: boolean = this.block.page.isSupportCover;

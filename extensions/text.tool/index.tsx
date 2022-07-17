@@ -220,7 +220,7 @@ class TextTool extends EventsComponent {
         this.blocked = false;
         if (pageLink) {
             if (pageLink.name == 'create') {
-                var r = await channel.air('/page/create/sub', { pageId: this.turnBlock.page.pageItemId, text: pageLink.text || pageLink.url });
+                var r = await channel.air('/page/create/sub', { pageId: this.turnBlock.page.pageInfo?.id, text: pageLink.text || pageLink.url });
                 if (r) {
                     pageLink.pageId = r.id;
                     pageLink.name = 'page';

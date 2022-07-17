@@ -40,7 +40,7 @@ export class Page extends Events<PageDirective> {
     id: string;
     date: number;
     readonly: boolean = false;
-    pageItemId: string;
+ 
     sourceItemId: string;
     version: PageVersion;
     constructor(options?: {
@@ -60,7 +60,7 @@ export class Page extends Events<PageDirective> {
         return channel.query('/query/current/user');
     }
     get permissions() {
-        var ps = channel.query('/page/query/permissions', { pageId: this.pageItemId });
+        var ps = channel.query('/page/query/permissions', { pageId: this.pageInfo?.id });
         if (Array.isArray(ps)) return ps;
         else return [];
     }
@@ -88,7 +88,8 @@ export class Page extends Events<PageDirective> {
     get globalMatrix() {
         return this.windowMatrix.appended(this.matrix);
     }
-    render(el: HTMLElement, options?: { width?: number, height?: number }) {
+    render(panel: HTMLElement, options?: { width?: number, height?: number }) {
+        var el = panel.appendChild(document.createElement('div'));
         this.root = el;
         if (options?.width) this.pageVisibleWidth = options?.width;
         if (options?.height) this.pageVisibleHeight = options?.height;
@@ -104,7 +105,8 @@ export class Page extends Events<PageDirective> {
     cacheFragment() {
         try {
             if (!this.fragment) this.fragment = document.createDocumentFragment();
-            this.fragment.appendChild(this.root);
+            if (!this.fragment.contains(this.root))
+                this.fragment.appendChild(this.root);
             this.isOff = true;
             this.kit.picker.onCancel();
             getBoardTool().then(r => {
@@ -195,10 +197,16 @@ export class Page extends Events<PageDirective> {
         }
         return style;
     }
-    loadPageInfo(pageInfo: LinkPageItem) {
-        this.pageInfo = util.clone(pageInfo);
+    get pageInfo() {
+        return this._pageItem;
     }
-    pageInfo: LinkPageItem = null;
+    _pageItem: LinkPageItem;
+    set pageInfo(pageInfo: LinkPageItem) {
+        this._pageItem = pageInfo;
+    }
+    // get pageItemId(){
+    //     return this._pageItem?.id;
+    // }
     get isCanEdit() {
         if (this.readonly) return false;
         if (this.kit.page.pageInfo?.locker?.userid) return false;
@@ -235,13 +243,13 @@ export class Page extends Events<PageDirective> {
             PageLayoutType.board,
             PageLayoutType.doc
         ].includes(this.pageLayout.type)) {
-            return getElementUrl(ElementType.PageItem, this.pageItemId);
+            return getElementUrl(ElementType.PageItem, this.pageInfo?.id);
         }
         else if (this.pageLayout.type == PageLayoutType.textChannel) {
-            return getElementUrl(ElementType.Room, this.pageItemId);
+            return getElementUrl(ElementType.Room, this.pageInfo?.id);
         }
         else if (this.pageLayout.type == PageLayoutType.db) {
-            return getElementUrl(ElementType.Schema, this.pageItemId);
+            return getElementUrl(ElementType.Schema, this.pageInfo?.id);
         }
         else if ([
             PageLayoutType.dbForm,
