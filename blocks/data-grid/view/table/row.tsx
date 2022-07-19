@@ -10,7 +10,8 @@ export class DataGridTableItem extends TableStoreItem {
 @view('/data-grid/table/row')
 export class DataGridTableItemView extends BlockView<DataGridTableItem>{
     render() {
-        return <div className='sy-dg-table-row'>
+        var totalWidth = this.block.childs.sum(block => (block as OriginField).viewField.colWidth || 120) + 40;
+        return <div className='sy-dg-table-row' style={{width:totalWidth}}>
             {this.block.childs.map((block: OriginField) => {
                 return <div key={block.id} className='sy-dg-table-row-cell' style={{ width: block.viewField.colWidth || 120 }}>
                     <block.viewComponent block={block}></block.viewComponent>

@@ -172,7 +172,7 @@ export class TableStoreView extends BlockView<TableStore>{
                 </div>
             })}
             <div className='sy-dg-table-head-th sy-dg-table-head-th-plus'
-                style={{ minWidth: 40, flexGrow: 1, flexShrink: 1 }} onMouseDown={e => {e.stopPropagation(); this.block.onAddField(Rect.fromEvent(e))}}>
+                style={{ minWidth: 40, flexGrow: 1, flexShrink: 1 }} onMouseDown={e => { e.stopPropagation(); this.block.onAddField(Rect.fromEvent(e)) }}>
                 <Icon icon={PlusSvg}></Icon>
             </div>
         </div>
@@ -200,13 +200,16 @@ export class TableStoreView extends BlockView<TableStore>{
     }
     render() {
         var self = this;
-        return <div className="sy-dg-table"
+        return <div className={"sy-dg-table" +
+            (this.block.noBorder ? " sy-dg-table-no-border" : "") +
+            (this.block.noHead ? " sy-dg-table-no-header" : "")
+        }
             onMouseEnter={e => this.block.onOver(true)}
             onMouseLeave={e => this.block.onOver(false)}
         >
             <DataGridTool block={this.block}></DataGridTool>
             {this.block.schema && <div className="sy-dg-table-content" >
-                {this.renderHead()}
+                {this.block.noHead !== true && this.renderHead()}
                 {this.renderBody()}
             </div>}
             {this.renderCreateTable()}
