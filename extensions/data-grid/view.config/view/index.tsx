@@ -15,6 +15,7 @@ import { Divider } from "../../../../component/view/grid";
 import { TableStore } from "../../../../blocks/data-grid/view/table";
 import { TableStoreCalendar } from "../../../../blocks/data-grid/view/calendar";
 import { TableStoreBoard } from "../../../../blocks/data-grid/view/board";
+
 export class DataGridViewConfig extends EventsComponent {
     get schema() {
         return this.block?.schema;
@@ -30,11 +31,11 @@ export class DataGridViewConfig extends EventsComponent {
         var self = this;
         return <div className="shy-table-property-view">
             <div className="shy-table-property-view-item">
-                <label>视图标题</label>
+                <label>隐藏视图标题</label>
                 <div className="operator"><Switch onChange={async e => {
-                    await this.block.onUpdateProps({ noTitle: !e }, { range: BlockRenderRange.self });
+                    await this.block.onUpdateProps({ noTitle: e }, { syncBlock: this.block, range: BlockRenderRange.self });
                     this.forceUpdate()
-                }} checked={!(this.block as TableStoreGallery).noTitle}></Switch>
+                }} checked={(this.block as TableStoreGallery).noTitle}></Switch>
                 </div>
             </div>
             <div className="shy-table-property-view-item">
@@ -55,17 +56,17 @@ export class DataGridViewConfig extends EventsComponent {
             <Divider></Divider>
             {this.block.url == BlockUrlConstant.DataGridTable && <>
                 <div className="shy-table-property-view-item">
-                    <label>显示表格头部</label>
+                    <label>隐藏表格头部</label>
                     <div className="operator"><Switch onChange={async e => {
-                        await this.block.onUpdateProps({ noTitle: !e }, { range: BlockRenderRange.self });
+                        await this.block.onUpdateProps({ noHead: e }, { syncBlock: this.block, range: BlockRenderRange.self });
                         this.forceUpdate()
-                    }} checked={!(this.block as TableStore).noHead}></Switch>
+                    }} checked={(this.block as TableStore).noHead}></Switch>
                     </div>
                 </div>
                 <div className="shy-table-property-view-item">
                     <label>无边框</label>
                     <div className="operator"><Switch onChange={async e => {
-                        await this.block.onUpdateProps({ noTitle: e }, { range: BlockRenderRange.self });
+                        await this.block.onUpdateProps({ noBorder: e }, { syncBlock: this.block, range: BlockRenderRange.self });
                         this.forceUpdate()
                     }} checked={(this.block as TableStore).noBorder}></Switch>
                     </div>
