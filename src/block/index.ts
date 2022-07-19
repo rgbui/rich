@@ -527,6 +527,7 @@ export abstract class Block extends Events {
         var rb = this.closest(x => x.isFrame || x.isBoardBlock || x.isMind || x.url == BlockUrlConstant.Group, true);
         if (rb) return rb;
     }
+    @prop()
     matrix = new Matrix();
     private _childsOffsetMatrix: Matrix;
     get childsOffsetMatrix() {

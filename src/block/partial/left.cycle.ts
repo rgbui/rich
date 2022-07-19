@@ -223,12 +223,13 @@ export class Block$LifeCycle {
 
         }
     }
-    async get(this: Block, args?: { syncBlock: boolean }) {
+    async get(this: Block, args?: { syncBlock: boolean })
+    {
         var json: Record<string, any> = {
             id: this._id,
             url: this.url,
             syncBlockId: this.syncBlockId,
-            matrix: this.matrix.getValues()
+            // matrix: this.matrix.getValues()
         };
         if (typeof this.pattern.get == 'function')
             json.pattern = await this.pattern.get();
