@@ -10,18 +10,17 @@ import lodash from 'lodash';
 import { AppearAnchor } from "../appear";
 import { Matrix } from "../../common/matrix";
 import { Point } from "../../common/vector/point";
-export class Block$Operator {
+import { BlockFactory } from "../factory/block.factory";
 
+export class Block$Operator {
     /***
      * 彻底的删除元素
      */
     async delete(this: Block) {
         var pbs = this.parentBlocks;
         if (Array.isArray(pbs) && pbs.exists(g => g === this)) {
-            this.page.snapshoot.record(OperatorDirective.delete, {
-                parentId: this.parent.id,
-                childKey: this.parentKey,
-                at: this.at,
+            this.page.snapshoot.record(OperatorDirective.$delete, {
+                pos: this.pos,
                 data: await this.get()
             }, this);
             try {
@@ -48,10 +47,18 @@ export class Block$Operator {
         return await this.get();
     }
     async turn(this: Block, url: string) {
+        var oldUrl = this.url;
         var data = await this.getWillTurnData(url);
-        var childKey = this.parent.childKey;
-        var newBlock = await this.page.createBlock(url, data, this.parent, this.at, childKey);
-        await this.delete();
+        var newBlock = await BlockFactory.createBlock(url, this.page, data, this.parent);
+        var bs = this.parent.blocks[this.parentKey];
+        bs.insertAt(this.at, newBlock);
+        bs.remove(g => g == this);
+        newBlock.id = this.id;
+        this.page.snapshoot.record(OperatorDirective.$turn, {
+            pos: this.pos,
+            from: oldUrl,
+            to: url
+        }, this);
         return newBlock;
     }
     /***
@@ -142,23 +149,14 @@ export class Block$Operator {
         if (block.parent && bs.exists(block) && block.at < at) {
             at -= 1;
         }
-        var from = {
-            parentId: block.parent.id,
-            childKey: block.parentKey,
-            at: block.at,
-        }
+        var from = block.pos;
         await block.remove();
         bs.insertAt(at, block);
         block.parent = this;
         await this.page.notityMovedBlock(block);
-        this.page.snapshoot.record(OperatorDirective.append, {
-            to: {
-                parentId: this.id,
-                childKey,
-                at,
-            },
-            from: from,
-            blockId: block.id
+        this.page.snapshoot.record(OperatorDirective.$move, {
+            from,
+            to: this.pos
         }, this);
         this.page.addBlockUpdate(this);
     }
@@ -525,20 +523,20 @@ export class Block$Operator {
             if (Object.keys(newValue).includes('content')) {
                 await this.page.notifyBlockEditedContent(this);
             }
-            this.page.snapshoot.record(OperatorDirective.updateProp, {
-                blockId: this.id,
-                old: oldValue,
-                new: newValue
+            this.page.snapshoot.record(OperatorDirective.$update, {
+                pos: this.pos,
+                old_value: oldValue,
+                new_value: newValue
             }, this);
         }
     }
     async updateMatrix(this: Block, oldMatrix: Matrix, newMatrix: Matrix) {
         this.syncUpdate(BlockRenderRange.self);
         this.matrix = newMatrix;
-        this.page.snapshoot.record(OperatorDirective.updatePropMatrix, {
-            blockId: this.id,
-            old: oldMatrix.getValues(),
-            new: newMatrix.getValues()
+        this.page.snapshoot.record(OperatorDirective.$update, {
+            pos: this.pos,
+            old_value: { matrix: oldMatrix.getValues() },
+            new_value: { matrix: newMatrix.getValues() },
         }, this);
     }
     /**
@@ -564,7 +562,7 @@ export class Block$Operator {
         }
         else {
             for (let prop in newProps) {
-                if (!lodash.isEqual(lodash.get(oldProps, prop), newProps[prop])) {
+                if (!lodash.isEqual(lodash.get(oldProps, prop), lodash.get(newProps, prop))) {
                     oldValue[prop] = this.clonePropData(prop, lodash.get(oldProps, prop));
                     newValue[prop] = this.clonePropData(prop, lodash.get(newProps, prop));
                     lodash.set(this, prop, this.cloneProp(prop, lodash.get(newProps, prop)));
@@ -576,13 +574,14 @@ export class Block$Operator {
             if (Object.keys(newValue).includes('content')) {
                 this.page.notifyBlockEditedContent(this);
             }
-            this.page.snapshoot.record(OperatorDirective.updateProp, {
-                blockId: this.id,
-                old: oldValue,
-                new: newValue
+            this.page.snapshoot.record(OperatorDirective.$update, {
+                pos:this.pos,
+                old_value: oldValue,
+                new_value: newValue
             }, this);
         }
     }
+
     updateArrayInsert(this: Block, key: string, at: number, data: any, range = BlockRenderRange.self) {
         if (!Array.isArray(this[key])) this[key] = [];
         this[key].insertAt(at, data);
@@ -594,6 +593,7 @@ export class Block$Operator {
         }, this);
         this.syncUpdate(range);
     }
+
     updateArrayRemove(this: Block, key: string, at: number, range = BlockRenderRange.self) {
         var data = this[key][at];
         lodash.remove(this[key], (g, i) => i == at);
@@ -604,28 +604,6 @@ export class Block$Operator {
             at: at
         }, this);
         this.syncUpdate(range);
-    }
-    keepCursorOffset(this: Block, prop: string, oldOffset: number, newOffset: number) {
-        this.page.snapshoot.record(OperatorDirective.keepCursorOffset, {
-            blockId: this.id,
-            prop,
-            old: oldOffset,
-            new: newOffset
-        }, this);
-    }
-    syncUpdate(this: Block, range = BlockRenderRange.none) {
-        switch (range) {
-            case BlockRenderRange.self:
-                this.page.addBlockUpdate(this);
-                break;
-            case BlockRenderRange.parent:
-                this.page.addBlockUpdate(this.parent)
-                break;
-            case BlockRenderRange.none:
-                break;
-            case BlockRenderRange.page:
-                break;
-        }
     }
     updateArrayUpdate(this: Block, key: string, at: number, data: any, range = BlockRenderRange.self) {
         var old = this[key][at];
@@ -643,6 +621,30 @@ export class Block$Operator {
             this.syncUpdate(range);
         }
     }
+
+    // keepCursorOffset(this: Block, prop: string, oldOffset: number, newOffset: number) {
+    //     this.page.snapshoot.record(OperatorDirective.$keep_cursor_offset, {
+    //         blockId: this.id,
+    //         prop,
+    //         old: oldOffset,
+    //         new: newOffset
+    //     }, this);
+    // }
+    syncUpdate(this: Block, range = BlockRenderRange.none) {
+        switch (range) {
+            case BlockRenderRange.self:
+                this.page.addBlockUpdate(this);
+                break;
+            case BlockRenderRange.parent:
+                this.page.addBlockUpdate(this.parent)
+                break;
+            case BlockRenderRange.none:
+                break;
+            case BlockRenderRange.page:
+                break;
+        }
+    }
+
     relativePagePoint(this: Block, point: Point) {
         var rb = this.relativeBlock;
         if (rb) {
@@ -651,4 +653,6 @@ export class Block$Operator {
         }
         else return point;
     }
+
+
 }

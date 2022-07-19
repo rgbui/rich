@@ -4,8 +4,9 @@ import { Matrix } from "../../common/matrix";
 import { OperatorDirective } from "../../history/declare";
 import { HistorySnapshoot } from "../../history/snapshoot";
 import { PageDirective } from "../directive";
+
 export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
-    snapshoot.on('history', (action) => {
+    snapshoot.on('history',(action)=>{
         page.emit(PageDirective.history, action);
         page.emit(PageDirective.change);
     });
@@ -138,7 +139,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     });
     snapshoot.registerOperator(OperatorDirective.mergeStyle, async (operator, source) => {
 
-    },async (operator) => {
+    }, async (operator) => {
 
     });
     snapshoot.registerOperator(OperatorDirective.pageTurnLayout, async (operator, source) => {
@@ -153,4 +154,87 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     }, async (operator) => {
         page.updateProps(operator.data.old);
     });
+
+    snapshoot.registerOperator(OperatorDirective.$create, async (operator, source) => {
+        var dr = operator.data;
+        await page.createBlock(dr.data.url,
+            dr.data,
+            page.find(x => x.id == dr.pos.parentId),
+            dr.pos.at,
+            dr.pos.childKey
+        );
+    }, async (operator) => {
+        var dr = operator.data;
+        var block = page.find(x => x.id == dr.data.id);
+        if (block) {
+            await block.delete()
+        }
+    });
+    snapshoot.registerOperator(OperatorDirective.$delete, async (operator, source) => {
+        var dr = operator.data;
+        var block = page.find(x => x.id == dr.data.id);
+        if (block) {
+            await block.delete()
+        }
+    }, async (operator) => {
+        var dr = operator.data;
+        await page.createBlock(dr.data.url,
+            dr.data,
+            page.find(x => x.id == dr.pos.parentId),
+            dr.pos.at,
+            dr.pos.childKey
+        );
+    });
+    snapshoot.registerOperator(OperatorDirective.$move, async (operator, source) => {
+        var dr = operator.data;
+        var block = page.find(x => x.id == dr.from.pos.blockId);
+        var parent = page.find(x => x.id == dr.to.pos.parentId);
+        await parent.append(block, dr.to.pos.at, dr.to.pos.childKey)
+    }, async (operator) => {
+        var dr = operator.data;
+        var block = page.find(x => x.id == dr.to.pos.blockId);
+        var parent = page.find(x => x.id == dr.from.pos.parentId);
+        await parent.append(block, dr.from.pos.at, dr.from.pos.childKey)
+    });
+    // snapshoot.registerOperator(OperatorDirective.keepCursorOffset, async (operator, source) => {
+    //     var block = page.find(x => x.id == operator.data.blockId);
+    //     if (block) {
+    //         block.syncUpdate(BlockRenderRange.self);
+    //         block.page.addUpdateEvent(async () => {
+    //             var aa = block.appearAnchors.find(g => g.prop == operator.data.prop);
+    //             if (aa) {
+    //                 page.kit.writer.onFocusAppearAnchor(aa, { at: operator.data.new });
+    //             }
+    //         })
+    //     }
+    // }, async (operator) => {
+    //     var block = page.find(x => x.id == operator.data.blockId);
+    //     if (block) {
+    //         block.syncUpdate(BlockRenderRange.self);
+    //         block.page.addUpdateEvent(async () => {
+    //             var aa = block.appearAnchors.find(g => g.prop == operator.data.prop);
+    //             if (aa) {
+    //                 page.kit.writer.onFocusAppearAnchor(aa, { at: operator.data.old });
+    //             }
+    //         })
+    //     }
+    // });
+    snapshoot.registerOperator(OperatorDirective.$update, async (operator, source) => {
+        var dr = operator.data;
+        var block = page.find(x => x.id == dr.pos.blockId);
+        if (block) {
+            block.manualUpdateProps(operator.data.old_value, operator.data.new_value, BlockRenderRange.self);
+        }
+    }, async (operator) => {
+        var dr = operator.data;
+        var block = page.find(x => x.id == dr.pos.blockId);
+        if (block) {
+            block.manualUpdateProps(operator.data.new_value, operator.data.old_value, BlockRenderRange.self);
+        }
+    });
+
+   
+
+
+
 }
