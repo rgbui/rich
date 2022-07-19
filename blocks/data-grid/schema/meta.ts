@@ -135,11 +135,11 @@ export class TableSchema {
         })
     }
     fieldUpdate(args: { fieldId: string, data: Record<string, any> }) {
-        return channel.put('/schema/operate',{
+        return channel.put('/schema/operate', {
             operate: {
                 schemaId: this.id,
                 date: new Date(),
-                actions: [{ name: 'updateField',...args }]
+                actions: [{ name: 'updateField', ...args }]
             }
         })
     }
@@ -156,7 +156,7 @@ export class TableSchema {
      * { name: 'createSchemaView', text: r.text, url: r.url }
      * { name: 'addField', field: { text: '状态', type: FieldType.option } }
      * { name: 'removeSchemaView', id: view.id }
-     * { name: 'duplicateSchemaView',id:view.id }
+     * { name: 'duplicateSchemaView',id:view.id,data:{snap:any}}
      * { name: 'updateSchemaView', id: view.id, data: { text: it.value } }
      * { name: 'updateSchema', data: { text: it.value } }
      */
@@ -175,7 +175,8 @@ export class TableSchema {
                 actions
             }
         });
-        actions.forEach(action => {
+        actions.forEach((action, i) => {
+            var re = result.data.actions[i];
             switch (action.name) {
                 case 'removeSchemaView':
                     this.views.remove(g => g.id == action.id);
@@ -190,9 +191,8 @@ export class TableSchema {
                     Object.assign(this, action.data);
                     break;
                 case 'duplicateSchemaView':
-                    this.views.push(action.data as any);
+                    this.views.push(re);
                     break;
-
             }
         })
         return result;

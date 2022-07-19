@@ -199,7 +199,16 @@ export class DataGridViewOperator {
         }
     }
     async onCopySchemaView(this: DataGridView) {
-
+        var r = await this.schema.onSchemaOperate([{
+            name: 'duplicateSchemaView',
+            id: this.schemaView.id,
+            data: { snap: await this.getSyncString() }
+        }]);
+        console.log(r, this.schema);
+        var act = r?.data?.actions[0];
+        if (act.id) {
+            this.onDataGridTurnView(act.id);
+        }
     }
     async onUpdateSorts(this: DataGridView, sorts: { field: string, sort: number }[]) {
         this.page.onAction(ActionDirective.onDataGridUpdateSorts, async () => {

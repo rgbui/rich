@@ -476,7 +476,6 @@ export class DataGridViewConfig {
                                     text: '编辑视图名',
                                 },
                                 { type: MenuItemType.divide },
-                                { name: 'duplicate', icon: DuplicateSvg, text: '复制' },
                                 { name: 'delete', disabled: item.value == view.id, icon: TrashSvg, text: '删除' }
                             ])
                         var rg = await useSelectMenuItem({ roundArea: Rect.fromEvent(ev) },
@@ -488,10 +487,6 @@ export class DataGridViewConfig {
                                 self.schema.onSchemaOperate([{ name: 'removeSchemaView', id: item.value }])
                                 items.arrayJsonRemove('childs', g => g === item);
                                 mp.updateItems(items);
-                            }
-                            else if (rg?.item.name == 'duplicate') {
-                                self.schema.onSchemaOperate([{ name: 'duplicateSchemaView', id: item.value }])
-                                mp.updateItems(getMenuItems());
                             }
                         }
                         var rn = rs.find(g => g.name == 'name');
