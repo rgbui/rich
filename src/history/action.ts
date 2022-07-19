@@ -7,8 +7,8 @@ import { util } from "../../util/util";
 export class UserOperator {
     directive: OperatorDirective;
     data: Record<string, any>;
+    isLocal: boolean;
     obj: Block | Page;
-    isSyncBlock: boolean;
     toString() {
         return `{${OperatorDirective[this.directive]}->${JSON.stringify(this.data)}}`
     }
@@ -33,23 +33,13 @@ export class UserAction {
     seq: number;
     directive: ActionDirective | string;
     operators: UserOperator[] = [];
-    elementUrl?:string;
+    syncBlock?: Block;
+    elementUrl?: string
     constructor() {
         this.id = channel.query('/guid');
     }
     toString() {
         return `[${this.endDate - this.startDate}ms]${this.userid}:${typeof this.directive == 'string' ? this.directive : ActionDirective[this.directive]}${this.operators.map(oper => oper.toString())}`
-    }
-    syncBlock() {
-        var syncBlocks: Block[] = [];
-        this.operators.forEach(op => {
-            if (op.isSyncBlock == false) return;
-            if (op.obj instanceof Block) {
-                var b = op.obj.syncBlock;
-                if (b) syncBlocks.push(b);
-            }
-        });
-        return syncBlocks;
     }
     get(): Partial<UserAction> {
         return {
@@ -58,8 +48,9 @@ export class UserAction {
             startDate: this.startDate,
             endDate: this.endDate,
             seq: this.seq,
+            syncBlock: this.syncBlock?.id,
             directive: this.directive,
-            operators: this.operators.map(op => { return op.get() }) as any
+            operators: this.operators.findAll(op => op.isLocal !== true).map(op => { return op.get() }) as any
         }
     }
     get isEmpty() {

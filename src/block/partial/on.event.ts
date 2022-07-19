@@ -63,7 +63,7 @@ export class Block$Event {
         var menus = await this.onGetTurnMenus();
         items.push({
             text: langProvider.getText(LangID.menuTurn),
-            icon:LoopSvg,
+            icon: LoopSvg,
             disabled: menus.length > 0 ? false : true,
             childs: menus.map(m => {
                 return {
@@ -168,7 +168,7 @@ export class Block$Event {
                 /**
                  * 复制块
                  */
-                this.onAction(ActionDirective.onCopyBlock, async () => {
+                this.page.onAction(ActionDirective.onCopyBlock, async () => {
                     var d = this.cloneData();
                     var pa = this.parent;
                     await pa.appendBlock(d, this.at, this.parentKey);
@@ -219,7 +219,7 @@ export class Block$Event {
         var { appear, oldValue, newValue, action } = options;
         await this.page.onAction(ActionDirective.onInputText, async () => {
             this.manualUpdateProps({ [appear.prop]: oldValue }, { [appear.prop]: newValue }, BlockRenderRange.none, true);
-            this.keepCursorOffset(appear.prop, options.oldOffset, options.newOffset);
+            //this.keepCursorOffset(appear.prop, options.oldOffset, options.newOffset);
             if (typeof action == 'function') await action();
             this.changeAppear(appear);
         })
@@ -246,7 +246,7 @@ export class Block$Event {
         })
     }
     async onLock(this: Block, locked: boolean) {
-        this.onAction(ActionDirective.onLock, async () => {
+        this.page.onAction(ActionDirective.onLock, async () => {
             this.updateProps({
                 locker: {
                     lock: locked,
@@ -257,7 +257,7 @@ export class Block$Event {
         })
     }
     async onZIndex(this: Block, layer: 'top' | 'bottom') {
-        this.onAction(ActionDirective.onZIndex, async () => {
+        this.page.onAction(ActionDirective.onZIndex, async () => {
             var zindex = this.zindex;
             if (layer == 'top') zindex = this.parent.childs.max(g => g.zindex) + 1;
             else zindex = this.parent.childs.min(g => g.zindex) - 1;
