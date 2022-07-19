@@ -26,6 +26,7 @@ import { channel } from "../../net/channel";
 import { GridMap } from "../page/grid";
 import { AtomPermission } from "../page/permission";
 import { ElementType, getElementUrl } from "../../net/element.type";
+import { SnapshootBlockPos } from "../history/snapshoot";
 
 export abstract class Block extends Events {
     constructor(page: Page) {
@@ -637,6 +638,19 @@ export abstract class Block extends Events {
         if (this.page.isBoard || this.isFrame || this.isFreeBlock || this.isBoardBlock)
             return new Rect(this.globalMatrix.transform(rect.leftBottom), this.matrix.transform(rect.rightBottom))
         else if (this.el) return rect.relative(Rect.fromEle(this.el).leftTop)
+    }
+    get pos(): SnapshootBlockPos {
+        return {
+            blockId: this.id,
+            pageId: this.page.id,
+            parentId: this.parent?.id || undefined,
+            childKey: this.parentKey,
+            at: this.at,
+            nextBlockId: this.next?.id,
+            prevBlockId: this.prev?.id,
+            parents: this.parents(g => true, true).map(c => c.id),
+            elementUrl: this.elementUrl
+        }
     }
 }
 export interface Block extends Block$Seek { }
