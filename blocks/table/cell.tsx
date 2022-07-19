@@ -33,7 +33,7 @@ export class TableCellView extends BlockView<TableCell>{
     async mousedown(event: React.MouseEvent) {
         if (this.block.childs.length == 0) {
             event.stopPropagation()
-            await this.block.onAction(ActionDirective.onCreateBlockByEnter, async () => {
+            await this.block.page.onAction(ActionDirective.onCreateBlockByEnter, async () => {
                 var newBlock = await this.block.page.createBlock(BlockUrlConstant.TextSpan, {}, this.block);
                 newBlock.mounted(() => {
                     this.block.page.kit.writer.onFocusBlockAnchor(newBlock);

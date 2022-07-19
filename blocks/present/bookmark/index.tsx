@@ -51,7 +51,7 @@ export class Bookmark extends Block {
         this.forceUpdate();
         try {
             var r = await channel.put('/bookmark/url', { url });
-            await this.onAction(ActionDirective.onBookMark, async () => {
+            await this.page.onAction(ActionDirective.onBookMark, async () => {
                 if (isInit) this.page.snapshoot.merge();
                 if (r?.ok) {
                     this.updateProps({ bookmarkInfo: r.data })

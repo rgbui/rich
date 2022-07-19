@@ -126,7 +126,7 @@ export class FlowMind extends Block {
     async onPickerMousedown(selector: BoardBlockSelector, event: React.MouseEvent) {
         var self = this;
         if (selector.type == BoardPointType.mindAdd) {
-            this.onAction(ActionDirective.onMindAddSub, async () => {
+            this.page.onAction(ActionDirective.onMindAddSub, async () => {
                 var keys = 'subChilds';
                 if (selector.arrows.every(g => [PointArrow.top, PointArrow.center].includes(g))) {
                     if (this.isMindRoot) await this.updateProps({ direction: 'y' });

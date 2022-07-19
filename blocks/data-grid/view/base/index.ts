@@ -77,7 +77,7 @@ export class DataGridView extends Block {
             else if (n == 'blocks') {
                 this.blocks = { childs: [] };
             }
-            else this[n] = this.setPropData(n, data[n]);
+            else this.setPropData(n, data[n]);
         }
         if (this.syncBlockId) {
             await this.loadSyncBlock();
@@ -127,6 +127,7 @@ export class DataGridView extends Block {
     }
     async loadSyncBlock(this: DataGridView): Promise<void> {
         var r = await channel.get('/view/snap/query', { elementUrl: this.elementUrl });
+        console.log('rrrr',r);
         if (r.ok) {
             var data;
             try {
@@ -146,7 +147,7 @@ export class DataGridView extends Block {
                 else if (n == 'blocks') {
                     this.blocks = { childs: [] };
                 }
-                else this[n] = this.setPropData(n, data[n]);
+                else this.setPropData(n, data[n]);
             }
         }
     }

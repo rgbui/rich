@@ -45,7 +45,7 @@ export class TableSchema {
     }[] = [];
     recordViews: {
         id: string, text: string,
-        locker: {
+        locker?: {
             lock: boolean,
             date: number,
             userid: string

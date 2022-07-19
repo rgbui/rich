@@ -12,29 +12,25 @@ export async function createFormPage(el: HTMLElement,
     }) {
     var page = new Page();
     page.schema = options.schema;
-    page.on(PageDirective.history,async function (action)
-    {
-        var syncBlocks = action.syncBlock();
-        if (syncBlocks.length > 0)
-        {
-            syncBlocks.eachAsync(async (block) => {
-                var r = await channel.act('/view/snap/operator', {
-                    elementUrl: block.elementUrl,
-                    operate: action.get()
-                });
-                await channel.act('/view/snap/store', {
-                    elementUrl: block.elementUrl,
-                    seq: r.seq,
-                    content: await block.getString()
-                });
-            })
+    page.on(PageDirective.history, async function (action) {
+        var syncBlock = action.syncBlock;
+        if (syncBlock) {
+            var r = await channel.act('/view/snap/operator', {
+                elementUrl: syncBlock.elementUrl,
+                operate: action.get()
+            });
+            await channel.act('/view/snap/store', {
+                elementUrl: syncBlock.elementUrl,
+                seq: r.seq,
+                content: await syncBlock.getSyncString()
+            });
         }
         else {
             var r = await channel.act('/view/snap/operator', {
                 elementUrl: page.elementUrl,
                 operate: action.get()
             });
-            await channel.act('/view/snap/store',{
+            await channel.act('/view/snap/store', {
                 elementUrl: page.elementUrl,
                 seq: r.seq,
                 content: await page.getString()

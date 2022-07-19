@@ -105,7 +105,7 @@ export class BlockPicker {
         var gm = fra.globalWindowMatrix;
         var re = gm.inverseTransform(Point.from(event));
         var self = this;
-        fra.onAction(ActionDirective.onBoardToolCreateBlock, () => {
+        fra.page.onAction(ActionDirective.onBoardToolCreateBlock, () => {
             return new Promise((resolve: () => void, reject) => {
                 async function createConnectLine() {
                     var data = { url: '/line' } as Record<string, any>;
@@ -311,7 +311,7 @@ export class BlockPicker {
                 block.view.forceUpdate();
                 self.view.forceUpdate();
                 if (isEnd) {
-                    block.onAction(ActionDirective.onRotate, async () => {
+                    block.page.onAction(ActionDirective.onRotate, async () => {
                         block.updateMatrix(block.matrix, block.matrix.appended(block.moveMatrix));
                         block.moveMatrix = new Matrix();
                     })
