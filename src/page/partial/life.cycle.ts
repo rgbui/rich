@@ -219,28 +219,11 @@ export class Page$Cycle {
         }
         fn()
     }
-    private async notifyUpdateBlockAsync(this: Page) {
-        var ups = this.willUpdateBlocks.map(c => c);
-        var fns = this.updatedFns.map(f => f);
-        this.willUpdateBlocks = [];
-        this.updatedFns = [];
-        var self = this;
-        var fn = async function () {
-            try {
-                if (self.willUpdateAll) await self.forceUpdate();
-                else
-                    await ups.eachAsync(async (up) => {
-                        await up.forceUpdate();
-                    })
-            }
-            catch (ex) {
-                this.onError(ex);
-            }
-            await fns.eachAsync(async g => await g());
-        }
-        await fn()
-    }
-    async onAction(this: Page, directive: ActionDirective | string, fn: () => Promise<void>) {
+
+    async onAction(this: Page,
+        directive: ActionDirective | string,
+        fn: () => Promise<void>, syncBlock?: { block?: Block }
+    ) {
         await this.snapshoot.sync(directive, async () => {
             this.willUpdateBlocks = [];
             this.willLayoutBlocks = [];
@@ -266,36 +249,57 @@ export class Page$Cycle {
                 }
                 this.notifyUpdateBlock();
             }
-        })
+        }, syncBlock)
     }
-    async onActionAsync(this: Page, directive: ActionDirective | string, fn: () => Promise<void>) {
-        await this.snapshoot.sync(directive, async () => {
-            this.willUpdateBlocks = [];
-            this.willLayoutBlocks = [];
-            this.willUpdateAll = false;
-            this.updatedFns = [];
-            try {
-                if (typeof fn == 'function') await fn();
-            } catch (ex) {
-                this.onError(ex);
-            }
-            finally {
-                try {
-                    if (Array.isArray(this.willLayoutBlocks) && this.willLayoutBlocks.length > 0) {
-                        var bs = this.willLayoutBlocks;
-                        await bs.eachAsync(async (block) => {
-                            await block.layoutCollapse();
-                        });
-                        this.willLayoutBlocks = [];
-                    }
-                }
-                catch (ex) {
-                    this.onError(ex);
-                }
-                await this.notifyUpdateBlockAsync();
-            }
-        })
-    }
+    // private async notifyUpdateBlockAsync(this: Page) {
+    //     var ups = this.willUpdateBlocks.map(c => c);
+    //     var fns = this.updatedFns.map(f => f);
+    //     this.willUpdateBlocks = [];
+    //     this.updatedFns = [];
+    //     var self = this;
+    //     var fn = async function () {
+    //         try {
+    //             if (self.willUpdateAll) await self.forceUpdate();
+    //             else
+    //                 await ups.eachAsync(async (up) => {
+    //                     await up.forceUpdate();
+    //                 })
+    //         }
+    //         catch (ex) {
+    //             this.onError(ex);
+    //         }
+    //         await fns.eachAsync(async g => await g());
+    //     }
+    //     await fn()
+    // }
+    // async onActionAsync(this: Page, directive: ActionDirective | string, fn: () => Promise<void>) {
+    //     await this.snapshoot.sync(directive, async () => {
+    //         this.willUpdateBlocks = [];
+    //         this.willLayoutBlocks = [];
+    //         this.willUpdateAll = false;
+    //         this.updatedFns = [];
+    //         try {
+    //             if (typeof fn == 'function') await fn();
+    //         } catch (ex) {
+    //             this.onError(ex);
+    //         }
+    //         finally {
+    //             try {
+    //                 if (Array.isArray(this.willLayoutBlocks) && this.willLayoutBlocks.length > 0) {
+    //                     var bs = this.willLayoutBlocks;
+    //                     await bs.eachAsync(async (block) => {
+    //                         await block.layoutCollapse();
+    //                     });
+    //                     this.willLayoutBlocks = [];
+    //                 }
+    //             }
+    //             catch (ex) {
+    //                 this.onError(ex);
+    //             }
+    //             await this.notifyUpdateBlockAsync();
+    //         }
+    //     })
+    // }
     onUnmount(this: Page) {
         ReactDOM.unmountComponentAtNode(this.root);
     }
