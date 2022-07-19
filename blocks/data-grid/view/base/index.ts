@@ -88,13 +88,11 @@ export class DataGridView extends Block {
             id: this._id,
             syncBlockId: this.syncBlockId,
             url: this.url,
+            schemaId: this.schemaId,
             matrix: this.matrix ? this.matrix.getValues() : undefined
         };
         if (typeof this.pattern.get == 'function')
             json.pattern = await this.pattern.get();
-        else {
-            console.log(this, this.pattern);
-        }
         json.blocks = {};
         if (Array.isArray(this.__props)) {
             super.__props.each(pro => {
@@ -104,17 +102,9 @@ export class DataGridView extends Block {
         return json;
     }
     async getSyncString() {
-        var json: Record<string, any> = {
-            // id: this._id,
-            syncBlockId: this.syncBlockId,
-            url: this.url,
-            // matrix: this.matrix ? this.matrix.getValues() : undefined
-        };
+        var json: Record<string, any> = { url: this.url };
         if (typeof this.pattern.get == 'function')
             json.pattern = await this.pattern.get();
-        else {
-            console.log(this, this.pattern);
-        }
         json.blocks = {};
         if (Array.isArray(this.__props)) {
             var ss = super.__props;
@@ -127,7 +117,6 @@ export class DataGridView extends Block {
     }
     async loadSyncBlock(this: DataGridView): Promise<void> {
         var r = await channel.get('/view/snap/query', { elementUrl: this.elementUrl });
-        console.log('rrrr',r);
         if (r.ok) {
             var data;
             try {
@@ -149,6 +138,8 @@ export class DataGridView extends Block {
                 }
                 else this.setPropData(n, data[n]);
             }
+            if (Array.isArray(r.data.operates) && r.data.operates.length > 0)
+                this.page.loadUserActions(r.data.operates, 'load');
         }
     }
     private getSearchFilter() {

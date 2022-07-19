@@ -220,11 +220,11 @@ export class Block$LifeCycle {
                     }
                 }
             }
-
+            if (Array.isArray(r.data.operates) && r.data.operates.length > 0)
+                this.page.loadUserActions(r.data.operates, 'load');
         }
     }
-    async get(this: Block, args?: { syncBlock: boolean })
-    {
+    async get(this: Block, args?: { syncBlock: boolean }) {
         var json: Record<string, any> = {
             id: this._id,
             url: this.url,
