@@ -18,12 +18,12 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
         var view = props.block.schema?.views?.find(g => g.id == props.block.syncBlockId)
         if (props.block.isLock == true) return <></>
         return <div className="sy-dg-tool">
-            <div className="sy-dg-tool-title">
+            {(props.block.noTitle && props.block.isOver || !props.block.noTitle) && <div className="sy-dg-tool-title">
                 <label onMouseDown={e => { e.stopPropagation(); props.block.onOpenViewSettings(Rect.fromEvent(e)) }}>
                     <Icon size={14} icon={view ? getSchemaViewIcon(view.url) : CollectTableSvg}></Icon>
                     <span>{view?.text}</span>
                 </label>
-            </div>
+            </div>}
             {props.block.isOver && <div className="sy-dg-tool-operators">
                 <label onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e))}><Icon size={14} icon={SettingsSvg}></Icon><span>视图配置</span></label>
                 {/* <label onMouseDown={e => openFilterView(e)}><Icon size={14} icon={FilterSvg}></Icon><span>过滤</span></label>
