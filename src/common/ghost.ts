@@ -8,7 +8,7 @@ class GhostView {
             this._el.style.position = 'absolute';
             this._el.style.width = '0px';
             this._el.style.height = '0px';
-            this._el.style.zIndex = '10000';
+            this._el.style.zIndex = '1000000';
             this._el.style.top = '0px';
             this._el.style.left = '0px';
             this._el.style.opacity = '0.6';
