@@ -4,6 +4,7 @@ import { Field } from "../../../../blocks/data-grid/schema/field";
 import { DataGridView } from "../../../../blocks/data-grid/view/base";
 import { EventsComponent } from "../../../../component/lib/events.component";
 import "./style.less";
+
 export class DataGridDynamic extends EventsComponent {
     get schema() {
         return this.block?.schema;
@@ -26,11 +27,6 @@ export class DataGridDynamic extends EventsComponent {
                 var vf = self.block.fields.find(g => g.field.id == field.id);
                 if (vf) await self.block.onHideField(vf);
             }
-            self.forceUpdate();
-        }
-        
-        async function changeAll(checked: boolean) {
-            await self.block.onShowAllField(!checked);
             self.forceUpdate();
         }
         return <div className="shy-table-field-view">

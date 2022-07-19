@@ -98,7 +98,7 @@ export class DataGridViewOperator {
     }
     async onMoveViewField(this: DataGridView, to: number, from: number) {
         this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
-            console.log(to,from,'ggg');
+          
             var f = this.fields[from];
             var vs = this.fields.map(f => f.clone());
             vs.remove(g => g.type && f.type && g.type == f.type || g.field?.id == f.field?.id);
