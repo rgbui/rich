@@ -32,6 +32,9 @@ export class TableSchema {
     creater: string;
     createDate: Date;
     fields: Field[] = [];
+    get userFields(): Field[] {
+        return this.fields.findAll(g => g.text ? true : false);
+    }
     text: string;
     views: {
         id: string,
