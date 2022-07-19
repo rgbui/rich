@@ -96,6 +96,18 @@ export class DataGridViewOperator {
             this.forceUpdate();
         }, { block: this });
     }
+    async onMoveViewField(this: DataGridView, to: number, from: number) {
+        this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
+            console.log(to,from,'ggg');
+            var f = this.fields[from];
+            var vs = this.fields.map(f => f.clone());
+            vs.remove(g => g.type && f.type && g.type == f.type || g.field?.id == f.field?.id);
+            vs.splice(to, 0,f.clone());
+            this.changeFields(this.fields, vs);
+            await this.createItem();
+            this.forceUpdate();
+        }, { block: this });
+    }
     async onDeleteField(this: DataGridView, viewField: ViewField) {
         if (await Confirm('确定要删除该列吗')) {
             var field = viewField.field;
@@ -135,22 +147,23 @@ export class DataGridViewOperator {
             this.forceUpdate();
         }, { block: this });
     }
-    async onShowAllField(this: DataGridView, show: boolean) {
+    async onHideAllField(this: DataGridView) {
         await this.page.onAction(ActionDirective.onSchemaShowField, async () => {
-            if (show) {
-                var fs = this.schema.fields.map(g => this.schema.createViewField(g));
-                var oss = this.fields.map(f => f.clone()).filter(g => g.type ? true : false);
-                fs.each(f => { oss.push(f) });
-                this.changeFields(this.fields, oss);
-                await this.createItem();
-                this.forceUpdate();
-            }
-            else {
-                this.changeFields(this.fields, []);
-                await this.createItem();
-                this.forceUpdate();
-            }
+            this.changeFields(this.fields, this.fields.findAll(g => g.field?.type == FieldType.title));
+            await this.createItem();
+            this.forceUpdate();
         }, { block: this });
+    }
+    async onShowAllField(this: DataGridView) {
+        await this.page.onAction(ActionDirective.onSchemaShowField, async () => {
+            var fs = this.schema.userFields.map(g => this.schema.createViewField(g));
+            var oss = this.fields.map(f => f.clone()).filter(g => g.type ? true : false);
+            fs.each(f => { oss.push(f) });
+            this.changeFields(this.fields, oss);
+            await this.createItem();
+            this.forceUpdate();
+        }, { block: this });
+
     }
     async onSetSortField(this: DataGridView, viewField: ViewField, sort?: 0 | 1 | -1) {
         if (this.sorts.some(s => s.field == viewField.field.id && s.sort == sort)) {
