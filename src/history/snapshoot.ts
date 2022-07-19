@@ -30,7 +30,7 @@ export class HistorySnapshoot extends Events {
         this._merge = false;
         this._pause = false;
         this.action = new UserAction();
-        if (syncBlock) this.action.syncBlock = syncBlock.block;
+        if (syncBlock?.block) this.action.syncBlock = syncBlock.block;
         this.action.userid = this.page?.user.id;
         this.action.directive = directive;
         this.action.startDate = new Date().getTime();
