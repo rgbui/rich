@@ -43,7 +43,15 @@ export class TableSchema {
             userid: string
         }
     }[] = [];
-    recordViews: { id: string, text: string, type?: 'form' | 'card' }[] = [];
+    recordViews: {
+        id: string, text: string,
+        locker: {
+            lock: boolean,
+            date: number,
+            userid: string
+        },
+        type?: 'form' | 'card'
+    }[] = [];
     modelMetaId?: string;
     getViewFields() {
         var fs = this.fields.findAll(g => g.text ? true : false);
@@ -127,11 +135,11 @@ export class TableSchema {
         })
     }
     fieldUpdate(args: { fieldId: string, data: Record<string, any> }) {
-        return channel.put('/schema/operate', {
+        return channel.put('/schema/operate',{
             operate: {
                 schemaId: this.id,
                 date: new Date(),
-                actions: [{ name: 'updateField', ...args }]
+                actions: [{ name: 'updateField',...args }]
             }
         })
     }

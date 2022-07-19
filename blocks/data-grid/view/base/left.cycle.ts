@@ -7,12 +7,12 @@ import { DataGridView } from ".";
 
 
 export class DataGridViewLife {
-    async loadSchema(this: DataGridView,) {
+    async loadSchema(this: DataGridView) {
         if (this.schemaId && !this.schema) {
             this.schema = await TableSchema.loadTableSchema(this.schemaId);
         }
     }
-    async loadViewFields(this: DataGridView,) {
+    async loadViewFields(this: DataGridView) {
         if (this.fields.length == 0) {
             this.fields = this.schema.getViewFields()
         } else {

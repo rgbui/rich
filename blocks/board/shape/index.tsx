@@ -49,6 +49,7 @@ export class Shape extends Block {
         }
     }
     init(this: Block): void {
+        super.init();
         this.registerPropMeta('svg', ShySvg, false);
     }
     @prop()

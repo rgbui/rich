@@ -4,8 +4,8 @@ import { util } from "../../../util/util";
 import { FieldType } from "./type";
 export class Field {
     id: string;
-    name: string
-    text: string
+    name: string;
+    text: string;
     type: FieldType;
     required: boolean;
     load(col: Record<string, any>) {
@@ -47,6 +47,6 @@ export interface FieldConfig {
     formula?: string,
     emoji?: EmojiCode,
     dateFormat?: string,
-    includeTime?:boolean
+    includeTime?: boolean
 }
 
