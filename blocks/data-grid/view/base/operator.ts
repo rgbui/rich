@@ -181,7 +181,7 @@ export class DataGridViewOperator {
         }, { block: this });
         var rect = this.getVisibleContentBound();
         rect.height = 20;
-        await this.onOpenViewConfig(rect)
+        await this.onOpenViewConfig(rect, 'sort')
     }
     async onTurnField(this: DataGridView, viewField: ViewField, type: FieldType, config?: Record<string, any>) {
         var field = viewField.field;
@@ -248,7 +248,7 @@ export class DataGridViewOperator {
         }, { block: this });
         var rect = this.getVisibleContentBound();
         rect.height = 20;
-        await this.onOpenViewConfig(rect)
+        await this.onOpenViewConfig(rect, 'filter')
     }
     async onShowNum(this: DataGridView, visible: boolean) {
         var newFields = this.fields.map(f => f.clone());
