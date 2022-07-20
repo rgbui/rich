@@ -165,6 +165,7 @@ export class TableSchema {
      * { name: 'duplicateSchemaView',id:view.id,data:{snap:any}}
      * { name: 'updateSchemaView', id: view.id, data: { text: it.value } }
      * { name: 'updateSchema', data: { text: it.value } }
+     * { name: 'moveSchemaView',id:view.id,data:{from:number,to:number}}
      */
     async onSchemaOperate(actions: {
         name: string,
@@ -198,6 +199,11 @@ export class TableSchema {
                     break;
                 case 'duplicateSchemaView':
                     this.views.push(re);
+                    break;
+                case 'moveSchemaView':
+                    var view = this.views.find(g => g.id == action.id);
+                    this.views.remove(g => g === view);
+                    this.views.splice(action.data.to as number, 0, view);
                     break;
             }
         })

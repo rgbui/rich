@@ -15,6 +15,7 @@ import { CopyText } from "../../../../component/copy";
 import { ShyAlert } from "../../../../component/lib/alert";
 import lodash from "lodash";
 import { util } from "../../../../util/util";
+
 export class DataGridViewOperator {
     async onAddField(this: DataGridView, event: Rect, at?: number) {
         var self = this;
@@ -218,11 +219,17 @@ export class DataGridViewOperator {
             id: this.schemaView.id,
             data: { snap: await this.getSyncString() }
         }]);
-        console.log(r, this.schema);
         var act = r?.data?.actions[0];
         if (act.id) {
             this.onDataGridTurnView(act.id);
         }
+    }
+    async onSchemaViewMove(this: DataGridView, viewId: string, from: number, to: number) {
+        await this.schema.onSchemaOperate([{
+            name: 'moveSchemaView',
+            id: this.schemaView.id,
+            data: { from, to }
+        }]);
     }
     async onUpdateSorts(this: DataGridView, sorts: { field: string, sort: number }[]) {
         this.page.onAction(ActionDirective.onDataGridUpdateSorts, async () => {
