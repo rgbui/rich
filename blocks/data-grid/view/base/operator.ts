@@ -14,6 +14,7 @@ import { ElementType, getWsElementUrl } from "../../../../net/element.type";
 import { CopyText } from "../../../../component/copy";
 import { ShyAlert } from "../../../../component/lib/alert";
 import lodash from "lodash";
+import { util } from "../../../../util/util";
 export class DataGridViewOperator {
     async onAddField(this: DataGridView, event: Rect, at?: number) {
         var self = this;
@@ -173,7 +174,7 @@ export class DataGridViewOperator {
             var sos = lodash.cloneDeep(this.sorts);
             var so = sos.find(g => g.field == viewField.field.id);
             if (so) so.sort = sort;
-            else sos.push({ field: viewField.field.id, sort });
+            else sos.push({ id: util.guid(), field: viewField.field.id, sort });
             this.manualUpdateProps({ sorts: this.sorts }, { sorts: sos });
             await this.loadData();
             await this.createItem();

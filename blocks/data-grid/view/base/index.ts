@@ -32,7 +32,7 @@ export class DataGridView extends Block {
     @prop()
     fields: ViewField[] = [];
     @prop()
-    sorts: { field: string, sort: number }[] = [];
+    sorts: {id:string, field: string, sort: number }[] = [];
     @prop()
     filter: SchemaFilter = {};
     @prop()
