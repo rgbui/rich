@@ -11,9 +11,17 @@ export class Block$LifeCycle {
     }
     /**
      * 继承使用的
+     * 
      * @param this 
      */
     init(this: Block) {
+
+    }
+    /**
+     * 不能继承使用
+     * @param this 
+     */
+    protected _init(this: Block) {
         this.registerPropMeta('matrix', Matrix, false, (v) => new Matrix(v), (v) => v.getValues())
     }
     /**

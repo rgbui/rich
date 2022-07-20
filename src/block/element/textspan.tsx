@@ -61,6 +61,7 @@ export class TextSpan extends Block {
         }
     }
     init(this: Block): void {
+        super.init();
         if (this.isFreeBlock) {
             this.pattern.declare<FontCss>('default', CssSelectorType.pseudo, {
                 cssName: BlockCssName.font,

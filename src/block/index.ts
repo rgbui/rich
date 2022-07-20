@@ -37,6 +37,7 @@ export abstract class Block extends Events {
         this.date = new Date().getTime();
         this.page = page;
         this.pattern = new Pattern(this);
+        if (typeof this._init == 'function') this._init();
         if (typeof this.init == 'function') this.init();
     }
     /**
@@ -547,10 +548,16 @@ export abstract class Block extends Events {
     }
     get globalMatrix(): Matrix {
         var rb = this.relativeBlock;
-        if (rb) return rb.globalMatrix.appended(this.matrix).appended(this.moveMatrix).appended(this.childsOffsetMatrix)
-        else return this.page.matrix.appended(this.matrix).appended(this.moveMatrix).appended(this.childsOffsetMatrix);
+        var ma = this.matrix;
+        if (!ma) ma = new Matrix();
+        if (rb) return rb.globalMatrix.appended(ma).appended(this.moveMatrix).appended(this.childsOffsetMatrix)
+        else return this.page.matrix.appended(ma).appended(this.moveMatrix).appended(this.childsOffsetMatrix);
     }
     get transformStyle() {
+        if (!(this.matrix instanceof Matrix)) {
+            console.log(this);
+        }
+        if (!this.matrix) return new Matrix().getCss()
         var ma = this.matrix.appended(this.moveMatrix).appended(this.childsOffsetMatrix);
         return ma.getCss();
     }
