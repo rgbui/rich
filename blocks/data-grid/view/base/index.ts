@@ -18,6 +18,7 @@ import { DataGridViewOperator } from "./operator";
 import { DataGridViewData } from "./data";
 import { DataGridViewConfig } from "./config";
 import { ElementType, getElementUrl } from "../../../../net/element.type";
+import { DataGridViewField } from "./field";
 
 /**
  * 
@@ -243,4 +244,5 @@ export interface DataGridView extends DataGridViewLife { }
 export interface DataGridView extends DataGridViewOperator { }
 export interface DataGridView extends DataGridViewData { }
 export interface DataGridView extends DataGridViewConfig { }
-Mix(DataGridView, DataGridViewLife, DataGridViewOperator, DataGridViewData, DataGridViewConfig)
+export interface DataGridView extends DataGridViewField { }
+Mix(DataGridView, DataGridViewLife, DataGridViewOperator, DataGridViewData, DataGridViewConfig,DataGridViewField)
