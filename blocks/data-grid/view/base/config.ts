@@ -305,10 +305,10 @@ export class DataGridViewConfig {
                 )
             }
             else if (re.item.name == 'leftInsert') {
-                this.onAddField(rp, this.fields.findIndex(g => g == viewField) - 1);
+                this.onAddField(rp, this.fields.findIndex(g => g == viewField));
             }
             else if (re.item.name == 'rightInsert') {
-                this.onAddField(rp, this.fields.findIndex(g => g == viewField));
+                this.onAddField(rp, this.fields.findIndex(g => g == viewField) + 1);
             }
             else if (re.item.name == 'clone') {
                 this.onCloneField(viewField);
