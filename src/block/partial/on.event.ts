@@ -12,13 +12,15 @@ import trash from "../../assert/svg/trash.svg";
 import { blockStore } from "../../../extensions/block/store";
 import { langProvider } from "../../../i18n/provider";
 import { LangID } from "../../../i18n/declare";
-import { ActionDirective } from "../../history/declare";
+import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { AppearAnchor } from "../appear";
 import { Point, Rect } from "../../common/vector/point";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { CopyText } from "../../../component/copy";
 import { ShyAlert } from "../../../component/lib/alert";
 import { LinkSvg, LoopSvg } from "../../../component/svgs";
+import lodash from "lodash";
+
 
 export class Block$Event {
     /**
@@ -241,10 +243,18 @@ export class Block$Event {
             await this.updateProps(props, options.range);
         }, { block: options?.syncBlock })
     }
-    async onManualUpdateProps(this: Block, oldProps: Record<string, any>, newProps: Record<string, any>, range = BlockRenderRange.none, isOnlyRecord: boolean = false) {
+    async onManualUpdateProps(this: Block,
+        oldProps: Record<string, any>,
+        newProps: Record<string, any>,
+        options?: {
+            range?: BlockRenderRange,
+            isOnlyRecord?: boolean,
+            syncBlock?: Block
+        }
+    ) {
         await this.page.onAction(ActionDirective.onUpdateProps, async () => {
-            this.manualUpdateProps(oldProps, newProps, range, isOnlyRecord);
-        })
+            this.manualUpdateProps(oldProps, newProps, options?.range, options?.isOnlyRecord);
+        }, { block: options?.syncBlock })
     }
     async onLock(this: Block, locked: boolean) {
         this.page.onAction(ActionDirective.onLock, async () => {
@@ -270,6 +280,125 @@ export class Block$Event {
      */
     async onInputed() {
 
+    }
+    async onArrayUpdate<T>(this: Block, options: {
+        syncBlock?: Block,
+        prop: string,
+        data: T | ((t: T) => boolean),
+        update: Partial<T>
+    }) {
+        await this.page.onAction('onArrayUpdate', async () => {
+            await this.arrayUpdate(options);
+        }, options.syncBlock ? { block: options.syncBlock } : undefined)
+    }
+    async onArrayRemove<T>(this: Block, options: {
+        syncBlock?: Block, prop: string,
+        data?: T | ((t: T) => boolean),
+        at?: number,
+    }) {
+        await this.page.onAction('onArrayRemove', async () => {
+            await this.arrayRemove(options);
+        }, options.syncBlock ? { block: options.syncBlock } : undefined)
+    }
+    async onArrayPush<T>(this: Block, options: {
+        syncBlock?: Block,
+        prop: string,
+        data: T,
+        at?: number,
+        where?: { item?: T | ((t: T) => boolean), arrow?: 'down' | 'up' }
+    }) {
+        await this.page.onAction('onArrayPush', async () => {
+            await this.arrayPush(options);
+        }, options.syncBlock ? { block: options.syncBlock } : undefined)
+    }
+    async arrayUpdate<T>(this: Block, options: {
+        prop: string,
+        data: T | ((t: T) => boolean),
+        update: Partial<T>
+    }) {
+        var arr = lodash.get(this, options.prop);
+        if (Array.isArray(arr)) {
+            var ar = typeof options.data == 'function' ? arr.find(options.data) : options.data;
+            if (ar) {
+                var oldValue: Record<string, any> = {};
+                var newValue: Record<string, any> = {};
+                for (let n in options.update) {
+                    if (!lodash.isEqual(options.update[n], ar[n])) {
+                        oldValue[n] = lodash.cloneDeep(ar[n]);
+                        newValue[n] = lodash.cloneDeep(options.update[n]);
+                        ar[n] = newValue[n];
+                    }
+                }
+                this.page.snapshoot.record(OperatorDirective.$array_update, {
+                    pos: this.getArrayItemPos(options.prop, ar),
+                    old_value: oldValue,
+                    new_value: newValue
+                }, this)
+            }
+        }
+    }
+    async arrayPush<T>(this: Block, options: {
+        prop: string,
+        data: T,
+        at?: number,
+        where?: { item?: T | ((t: T) => boolean), arrow?: 'down' | 'up' }
+    }) {
+        var arr: T[] = lodash.get(this, options.prop);
+        if (Array.isArray(arr)) {
+            var at = options.at;
+            if (typeof options.where == 'undefined' && typeof options.at == 'undefined') {
+                at = arr.length;
+            }
+            else if (typeof options.at == 'number') at = options.at;
+            else if (typeof options.where != 'undefined') {
+                var nat = arr.findIndex(g => (typeof options.where.item == 'function' ? (options.where as any).item(g) == true : options.where.item === g));
+                if (options.where.arrow == 'down' || typeof options.where.arrow == 'undefined') {
+                    nat += 1;
+                }
+                at = nat;
+            }
+            arr.splice(at, 0, options.data);
+            var pos = this.getArrayItemPos(options.prop, options.data);
+            var pm = this.pm(options.prop);
+            var cd;
+            if (pm) {
+                if (typeof pm.get == 'function') cd = pm.get(options.data)
+                else if (typeof (options.data as any).get == 'function') cd = (options.data as any).get()
+                else cd = lodash.cloneDeep(options.data);
+            } else cd = lodash.cloneDeep(options.data);
+            this.page.snapshoot.record(OperatorDirective.$array_create, {
+                pos,
+                data: cd
+            }, this)
+        }
+    }
+    async arrayRemove<T>(this: Block, options: {
+        prop: string,
+        data?: T | ((t: T) => boolean),
+        at?: number,
+    }) {
+        var arr: T[] = lodash.get(this, options.prop);
+        if (Array.isArray(arr)) {
+            var at = options.at;
+            if (typeof options.at == 'number') at = options.at;
+            else if (typeof options.data != 'undefined') {
+                at = arr.findIndex(g => (typeof options.data == 'function' ? (options.data as any)(g) == true : options.data === g));
+            }
+            var currentData = arr[at];
+            var pos = this.getArrayItemPos(options.prop, currentData);
+            arr.splice(at, 1);
+            var cd;
+            var pm = this.pm(options.prop);
+            if (pm) {
+                if (typeof pm.get == 'function') cd = pm.get(currentData)
+                else if (typeof (currentData as any).get == 'function') cd = (currentData as any).get()
+                else cd = lodash.cloneDeep(currentData);
+            } else cd = lodash.cloneDeep(currentData);
+            this.page.snapshoot.record(OperatorDirective.$array_delete, {
+                pos,
+                data: cd
+            }, this)
+        }
     }
 }
 

@@ -139,7 +139,8 @@ export enum OperatorDirective {
     $update = 1004,
     $map_splice = 1005,
     $text_splice = 1012,
-    $array_splice = 1030,
+    $array_create = 1030,
+    $array_delete = 1031,
     $array_update = 1032,
 
     $schema_data_push = 1040,

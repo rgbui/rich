@@ -203,8 +203,9 @@ export interface HistorySnapshoot {
     record(directive: OperatorDirective.$update, data: { pos: SnapshootBlockPropPos, old_value: any, new_value: any }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.$map_splice, data: { pos: SnapshootBlockPropPos, delete_map?: any, insert_map?: any }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.$text_splice, data: { pos: SnapshootBlockPropPos, start: number, end?: number, delete_text?: string, insert_text: string }, obj: HistorySnapshootObject);
-    record(directive: OperatorDirective.$array_splice, data: { pos: SnapshootBlockPropPos, start: number, end?: number, deletes?: any[], inserts?: any[] }, obj: HistorySnapshootObject);
-    record(directive: OperatorDirective.$array_update, data: { pos: SnapshootBlockPropPos, start: number, end?: number, old_value: any, new_value: any }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.$array_create, data: { pos: SnapshootBlockPropPos, data: any }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.$array_delete, data: { pos: SnapshootBlockPropPos, data: any }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.$array_update, data: { pos: SnapshootBlockPropPos, old_value: any, new_value: any }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.$keep_cursor_offset, data: { pos: SnapshootBlockPropPos, from: number, to: number }, obj: HistorySnapshootObject);
 
 
@@ -231,7 +232,13 @@ export type SnapshootBlockPos = {
 
 export type SnapshootBlockPropPos = {
     /**
-     * 支持json xpath 简单路径
+     * 支持json xpath 简单路径,参考lodash对xpath的支持
      */
-    prop: string
+    prop: string,
+
+    arrayId?: string,
+    arrayAt?: number,
+    arrayPrevId?: string,
+    arrayNextId?: string
+
 } & SnapshootBlockPos
