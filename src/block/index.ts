@@ -26,7 +26,8 @@ import { channel } from "../../net/channel";
 import { GridMap } from "../page/grid";
 import { AtomPermission } from "../page/permission";
 import { ElementType, getElementUrl } from "../../net/element.type";
-import { SnapshootBlockPos } from "../history/snapshoot";
+import { SnapshootBlockPos, SnapshootBlockPropPos } from "../history/snapshoot";
+import lodash from "lodash";
 
 export abstract class Block extends Events {
     constructor(page: Page) {
@@ -652,6 +653,23 @@ export abstract class Block extends Events {
             parents: this.parents(g => true, true).map(c => c.id),
             elementUrl: this.elementUrl
         }
+    }
+    getPropPos(prop: string) {
+        var pr = this.pos as SnapshootBlockPropPos;
+        pr.prop = prop;
+        return pr;
+    }
+    getArrayItemPos(arrayProp: string, item: any) {
+        var pr = this.pos as SnapshootBlockPropPos;
+        pr.prop = arrayProp;
+        var arr = lodash.get(this, arrayProp);
+        var at = arr.find(g => g === item);
+        if (at > -1) {
+            pr.arrayAt = at;
+            pr.arrayNextId = arr[at + 1]?.id;
+            pr.arrayPrevId = arr[at - 1]?.id;
+        }
+        return pr;
     }
 }
 export interface Block extends Block$Seek { }
