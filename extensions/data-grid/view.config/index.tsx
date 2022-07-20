@@ -24,15 +24,20 @@ class DataGridConfig extends EventsComponent {
             this.tableFilterView.onOpen(this.dataGrid);
         if (this.tableSortView)
             this.tableSortView.onOpen(this.dataGrid);
+        if (mode == 'field' && this.tab) this.tab.onFocus(1)
+        if (mode == 'filter' && this.tab) this.tab.onFocus(2)
+        if (mode == 'sort' && this.tab) this.tab.onFocus(3)
+        if (mode == 'group' && this.tab) this.tab.onFocus(4)
     }
     dataGridViewConfig: DataGridViewConfig;
     dataGridFields: DataGridFields;
     tableFilterView: TableFilterView;
     tableSortView: TableSortView;
     dataGridDynamic: DataGridDynamic;
+    tab: Tab;
     render() {
         return <div className='shy-data-grid-config' >
-            <Tab show="text" keeplive>
+            <Tab ref={e => this.tab = e} show="text" keeplive>
                 <Tab.Page item={'视图配置'}>
                     <DataGridViewConfig ref={e => this.dataGridViewConfig = e} ></DataGridViewConfig>
                 </Tab.Page>
