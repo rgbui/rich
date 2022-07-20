@@ -231,6 +231,7 @@ export class DataGridViewConfig {
                     name: 'formula',
                     icon: EditSvg
                 });
+                items.removeAll(g => ['sortDesc', 'sortAsc', 'filter'].includes((g as any).name));
             }
             else if (viewField.field?.type == FieldType.relation) {
                 items.insertAt(4, {
@@ -295,6 +296,7 @@ export class DataGridViewConfig {
             }
         );
         var ReItem = items.find(g => g.name == 'name');
+        var dItem = items.arrayJsonFind('childs', g => g.name == 'dateCustomFormat');
         if (re) {
             if (re.item.name == 'hide') {
                 this.onHideField(viewField);
@@ -371,6 +373,7 @@ export class DataGridViewConfig {
                 var config = util.clone(viewField?.field?.config);
                 if (typeof config == 'undefined') config = {};
                 config.dateFormat = re.item.value;
+                if (dItem) dItem.value = re.item.value;
                 await this.onUpdateField(viewField, { config });
             }
             else if (re.item.name == 'formula') {
@@ -407,7 +410,7 @@ export class DataGridViewConfig {
                 this.onUpdateField(viewField, { text: ReItem.value })
             }
         }
-        var dItem = items.arrayJsonFind('childs', g => g.name == 'dateCustomFormat');
+
         if (dItem) {
             if (dItem.value != viewField.field.config.dateFormat) {
                 var config = util.clone(viewField?.field?.config);
