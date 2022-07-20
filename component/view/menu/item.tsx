@@ -4,6 +4,7 @@ import { MenuPanel } from ".";
 import { Rect } from "../../../src/common/vector/point";
 import { CheckSvg, ChevronDownSvg, DragHandleSvg } from "../../svgs";
 import { Button } from "../button";
+import { DragList } from "../drag.list";
 import { Icon } from "../icon";
 import { Input } from "../input";
 import { Switch } from "../switch";
@@ -60,15 +61,32 @@ export class MenuItemView extends React.Component<{
     openSelectMenu(item: MenuItem, event: React.MouseEvent) {
 
     }
+    dragChange(to: number, from: number) {
+
+        this.props.item.value = [from, to];
+        this.props?.input(this.props.item);
+        this.props.item.value = undefined;
+    }
     menubox: MenuBox;
     render() {
         var item = this.props.item;
         if (item.visible == false) return <></>
-        if (item.type == MenuItemType.container) return <div style={{ maxHeight: item.containerHeight || undefined }} className="shy-menu-box-item-container">
+        if (item.type == MenuItemType.container) return <DragList
+            onChange={(e, c) => this.dragChange(e, c)}
+            isDragBar={e => e.closest('.drag') ? true : false}
+            style={{ maxHeight: item.containerHeight || undefined }}
+            className="shy-menu-box-item-container">
             {item.childs.map((item, i) => {
-                return <MenuItemView parent={this.props.parent} key={i} select={this.props.select} click={this.props.click} input={this.props.input} item={this.props.item} deep={this.props.deep}></MenuItemView>
+                return <MenuItemView
+                    parent={this.props.parent}
+                    key={i}
+                    select={this.props.select}
+                    click={this.props.click}
+                    input={this.props.input}
+                    item={item}
+                    deep={this.props.deep}></MenuItemView>
             })}
-        </div>
+        </DragList>
         return <div
             onMouseLeave={e => this.mouseleave(item, e.nativeEvent)}
             onMouseEnter={e => this.mouseenter(item, e.nativeEvent)}

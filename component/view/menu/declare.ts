@@ -25,7 +25,7 @@ export type MenuItem<T = string> = {
     param?: any,
     url?: string,
     visible?: boolean,
-    drag?: string,
+    drag?: boolean,
     btns?: {
         overlay?: JSX.Element,
         placement?: OverlayPlacement,
