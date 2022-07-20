@@ -15,6 +15,7 @@ import { getSchemaViewIcon } from "../../schema/util";
 import { useTabelSchemaFormDrop } from "../../../../extensions/data-grid/switch.forms/view";
 import { useFormPage } from "../../../../extensions/data-grid/form";
 import { getWsElementUrl, ElementType } from "../../../../net/element.type";
+import { useOpenEmoji } from "../../../../extensions/emoji";
 
 export class DataGridViewConfig {
     async onOpenFieldConfig(this: DataGridView, event: React.MouseEvent | MouseEvent, viewField: ViewField) {
@@ -242,7 +243,7 @@ export class DataGridViewConfig {
             else if (viewField.field?.type == FieldType.emoji) {
                 items.insertAt(4, {
                     text: '更换表情',
-                    name: 'changeEmoji',
+                    name: 'emoji',
                     icon: EmojiSvg
                 });
             }
@@ -383,7 +384,14 @@ export class DataGridViewConfig {
                 await self.onUpdateField(viewField, { config });
             }
             else if (re.item.name == 'emoji') {
-
+                console.log('ggg');
+                var rc = await useOpenEmoji({ roundArea: rp });
+                if (rc) {
+                    var config = util.clone(viewField?.field?.config);
+                    if (typeof config == 'undefined') config = {};
+                    config.emoji = rc;
+                    await self.onUpdateField(viewField, { config });
+                }
             }
         }
         if (isSysField) {
