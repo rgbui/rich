@@ -110,6 +110,9 @@ export class Block$LifeCycle {
             }
         }
     }
+    pm(prop: string) {
+        return this.propMetas.find(g => g.key == prop);
+    }
     clonePropData(prop: string, value?: any) {
         if (!this.propMetas.some(s => s.key == prop)) {
             return typeof value != 'undefined' ? lodash.cloneDeep(value) : lodash.cloneDeep(lodash.get(this, prop))
@@ -156,6 +159,26 @@ export class Block$LifeCycle {
             }
         }
         else lodash.set(this, prop, lodash.cloneDeep(value));
+    }
+    createPropObject(prop: string, value: any) {
+        var pm = this.propMetas.find(g => g.key == prop);
+        if (pm) {
+            if (pm.isArray && Array.isArray(value)) {
+                var vs = [];
+                if (Array.isArray(value)) {
+                    value.forEach(d => {
+                        if (typeof pm.create == 'function') vs.push(pm.create(d))
+                        else vs.push(new (pm.meta as any)(d));
+                    })
+                }
+                return vs;
+            }
+            else {
+                if (typeof pm.create == 'function') return pm.create(value)
+                else return new (pm.meta as any)(value)
+            }
+        }
+        else return lodash.cloneDeep(value)
     }
     registerPropMeta(key: string, meta: Function, isArray: boolean = false, create?: (v: any) => any, get?: (vobj: any) => any) {
         this.propMetas.push({ key, meta, isArray, create, get });
