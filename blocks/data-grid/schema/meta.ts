@@ -35,6 +35,9 @@ export class TableSchema {
     get userFields(): Field[] {
         return this.fields.findAll(g => g.text ? true : false);
     }
+    get allowSortFields() {
+        return this.userFields.findAll(x => x.text && ![FieldType.formula, FieldType.image, FieldType.file, FieldType.audio, FieldType.video].includes(x.type) ? true : false)
+    }
     text: string;
     views: {
         id: string,
