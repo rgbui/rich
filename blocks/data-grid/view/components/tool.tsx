@@ -6,7 +6,9 @@ import { getSchemaViewIcon } from "../../schema/util";
 import {
     ChevronDownSvg,
     CollectTableSvg,
-    SettingsSvg
+    FilterSvg,
+    SettingsSvg,
+    SortSvg
 } from "../../../../component/svgs";
 import "./style.less";
 export class DataGridTool extends React.Component<{ block: DataGridView }>{
@@ -26,8 +28,8 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
             </div>}
             {props.block.isOver && <div className="sy-dg-tool-operators">
                 <label onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e))}><Icon size={14} icon={SettingsSvg}></Icon><span>视图配置</span></label>
-                {/* <label onMouseDown={e => openFilterView(e)}><Icon size={14} icon={FilterSvg}></Icon><span>过滤</span></label>
-                <label onMouseDown={e => openSortView(e)}><Icon size={14} icon={SortSvg}></Icon><span>排序</span></label> */}
+                {props.block.filter?.items?.length > 0 && <label onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e), 'filter')}><Icon size={14} icon={FilterSvg}></Icon><span>过滤</span></label>}
+                {props.block.sorts?.length > 0 && <label onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e), 'sort')}><Icon size={14} icon={SortSvg}></Icon><span>排序</span></label>}
                 <label onMouseDown={e => { e.stopPropagation(); props.block.onOpenViewProperty(Rect.fromEvent(e)) }}><Icon size={14} icon='elipsis:sy'></Icon></label>
                 <div className="sy-dg-tool-operators-add">
                     <span className="text" onClick={e => { e.stopPropagation(); props.block.onOpenForm(Rect.fromEvent(e)) }}>新增</span>
