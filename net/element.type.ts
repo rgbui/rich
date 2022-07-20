@@ -55,7 +55,8 @@ export function getElementUrl(type: ElementType, id: string, id1?: string, id2?:
     else if (type == ElementType.SchemaView) return `/Schema/${id}/View/${id1}`
     else if (type == ElementType.SchemaRecordView) return `/Schema/${id}/RecordView/${id1}`
     else if (type == ElementType.SchemaRecordViewData) return `/Schema/${id}/RecordView/${id1}/Data/${id2}`
-    else if (type == ElementType.SchemaFieldData) return `/Schema/${id}/Field/${id1}/Record/${id2}`
+    else if (type == ElementType.SchemaFieldData) return `/Schema/${id}/Field/${id1}/Data/${id2}`
+    else if (type == ElementType.SchemaField) return `/Schema/${id}/Field/${id1}`
     else if (type == ElementType.RoomChat) return `/Room/${id}/Chat/${id1}`
     else if (type == ElementType.Block) return `/Page/${id}/Block/${id1}`
     else if (type == ElementType.SyncBlock) return `/SyncBlock/${id}`
