@@ -1,3 +1,4 @@
+import lodash from "lodash";
 import { Page } from "..";
 import { BlockRenderRange } from "../../block/enum";
 import { Matrix } from "../../common/matrix";
@@ -6,7 +7,7 @@ import { HistorySnapshoot } from "../../history/snapshoot";
 import { PageDirective } from "../directive";
 
 export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
-    snapshoot.on('history',(action)=>{
+    snapshoot.on('history', (action) => {
         page.emit(PageDirective.history, action);
         page.emit(PageDirective.change);
     });
@@ -232,8 +233,50 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             block.manualUpdateProps(operator.data.new_value, operator.data.old_value, BlockRenderRange.self);
         }
     });
+    snapshoot.registerOperator(OperatorDirective.$array_update, async (operator, source) => {
+        var dr = operator.data;
+        var block = page.find(x => x.id == dr.pos.blockId);
+        if (block) {
+            var arr = lodash.get(block, dr.pos.prop);
+            var ar = arr.find(g => g.id == dr.pos.arrayId);
+            block.arrayUpdate({ prop: dr.pos.prop, data: ar, update: dr.new_value })
+        }
+    }, async (operator) => {
+        var dr = operator.data;
+        var block = page.find(x => x.id == dr.pos.blockId);
+        if (block) {
+            var arr = lodash.get(block, dr.pos.prop);
+            var ar = arr.find(g => g.id == dr.pos.arrayId);
+            block.arrayUpdate({ prop: dr.pos.prop, data: ar, update: dr.old_value })
+        }
+    });
+    snapshoot.registerOperator(OperatorDirective.$array_delete, async (operator, source) => {
+        var dr = operator.data;
+        var block = page.find(x => x.id == dr.pos.blockId);
+        if (block) {
+            block.arrayRemove({ prop: dr.pos.prop, at: dr.pos.arrayAt })
+        }
+    }, async (operator) => {
+        var dr = operator.data;
+        var block = page.find(x => x.id == dr.pos.blockId);
+        if (block) {
+            block.arrayPush({ prop: dr.pos.prop, data: block.createPropObject(dr.pos.prop, dr.data), at: dr.pos.arrayAt })
+        }
+    });
+    snapshoot.registerOperator(OperatorDirective.$array_create, async (operator, source) => {
+        var dr = operator.data;
+        var block = page.find(x => x.id == dr.pos.blockId);
+        if (block) {
+            block.arrayPush({ prop: dr.pos.prop, data: block.createPropObject(dr.pos.prop, dr.data), at: dr.pos.arrayAt })
+        }
+    }, async (operator) => {
+        var dr = operator.data;
+        var block = page.find(x => x.id == dr.pos.blockId);
+        if (block) {
+            block.arrayRemove({ prop: dr.pos.prop, at: dr.pos.arrayAt })
+        }
+    });
 
-   
 
 
 
