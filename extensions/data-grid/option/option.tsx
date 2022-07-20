@@ -18,6 +18,7 @@ import { Icon } from "../../../component/view/icon";
 import { util } from "../../../util/util";
 import { Confirm } from "../../../component/lib/confirm";
 import { ShyAlert } from "../../../component/lib/alert";
+import { DragList } from "../../../component/view/drag.list";
 /**
  * 背景色
  */
@@ -52,6 +53,23 @@ export class TableStoreOption extends EventsComponent {
             self.value = (event.target as HTMLInputElement).value;
             self.forceUpdate()
         }
+        function change(to: number, from: number) {
+            var fs = self.filterOptions;
+            var t = fs[from];
+            fs.splice(from, 1);
+            var pre = to == 0 ? null : fs[to - 1];
+            var ops = lodash.cloneDeep(self.options);
+            ops.remove(o => o.value == t.value);
+            if (lodash.isNull(pre)) ops.insertAt(0, t);
+            else {
+                var at = ops.findIndex(g => g.value == pre.value);
+                ops.insertAt(at + 1, t);
+            }
+            self.options = ops;
+            self.forceUpdate()
+            self.emit('changeOptions', lodash.cloneDeep(self.options))
+
+        }
         return <div className="shy-tablestore-option-selector">
             <div className="shy-tablestore-option-selector-input">
                 {this.option && <a style={{ backgroundColor: this.option.color }}><span>{this.option.text}</span><em><CloseTick onClick={e => self.clearOption()}></CloseTick></em></a>}
@@ -59,13 +77,15 @@ export class TableStoreOption extends EventsComponent {
             </div>
             <div className="shy-tablestore-option-selector-drop">
                 <Remark style={{ height: 20, margin: '8px 0px', padding: '0px 10px' }}>{this.filterOptions.length > 0 ? '选择或创建一个选项' : '暂无选项'}</Remark>
-                {this.filterOptions.map(op => {
-                    return <div className="shy-tablestore-option-item" key={op.text} onClick={e => this.setOption(op)} >
-                        <span className="shy-tablestore-option-item-icon"><DragHandle></DragHandle></span>
-                        <span className="shy-tablestore-option-item-text"><em style={{ backgroundColor: op.color }}>{op.text}</em></span>
-                        <span className="shy-tablestore-option-item-property" onClick={e => this.configOption(op, e)}><Dots></Dots></span>
-                    </div>
-                })}
+                <DragList onChange={change} isDragBar={e => e.closest('.shy-tablestore-option-item-icon') ? true : false}>
+                    {this.filterOptions.map(op => {
+                        return <div className="shy-tablestore-option-item" key={op.text} onClick={e => this.setOption(op)} >
+                            <span className="shy-tablestore-option-item-icon"><DragHandle></DragHandle></span>
+                            <span className="shy-tablestore-option-item-text"><em style={{ backgroundColor: op.color }}>{op.text}</em></span>
+                            <span className="shy-tablestore-option-item-property" onClick={e => this.configOption(op, e)}><Dots></Dots></span>
+                        </div>
+                    })}
+                </DragList>
                 {this.isNeedCreated && <div className="shy-tablestore-option-item-create" onClick={e => this.onCreateOption()}><em>创建</em><span style={{ backgroundColor: this.optionColor }}>{this.value}</span></div>}
             </div>
         </div>
@@ -120,6 +140,7 @@ export class TableStoreOption extends EventsComponent {
         event.stopPropagation();
         var menus = [
             { text: '标签', name: 'name', value: option.text, type: MenuItemType.input },
+            { type: MenuItemType.divide },
             { name: 'delete', icon: TrashSvg, text: '删除' },
             { type: MenuItemType.divide },
             { type: MenuItemType.text, text: '颜色' },
@@ -128,6 +149,7 @@ export class TableStoreOption extends EventsComponent {
                     name: 'color',
                     value: b.color,
                     text: b.text,
+                    type: MenuItemType.custom,
                     render(item) {
                         return <div className="shy-tablestore-option-selector-property">
                             <span style={{ backgroundColor: item.value }}></span>
