@@ -96,7 +96,7 @@ export class TableStoreView extends BlockView<TableStore>{
                     var col = cols[data.colIndex];
                     col.colWidth = w;
                     var newFields = self.block.fields.map(f => f.get());
-                    self.block.onManualUpdateProps({ fields: oldFields }, { fields: newFields }, BlockRenderRange.none, true)
+                    self.block.onManualUpdateProps({ fields: oldFields }, { fields: newFields }, { range: BlockRenderRange.none, isOnlyRecord: true })
                 }
             },
             moveEnd() {

@@ -207,7 +207,7 @@ export class BlockPicker {
             async moveEnd(ev, isMove, data) {
                 if (isMove) {
                     var ps = block.points.find(g => g != po);
-                    block.onManualUpdateProps({ points: ps }, { points: block.points }, BlockRenderRange.self);
+                    block.onManualUpdateProps({ points: ps }, { points: block.points }, {range:BlockRenderRange.self});
                     self.onRePicker();
                     block.forceUpdate();
                     await openBoardEditTool(self.kit);
