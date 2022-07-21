@@ -18,10 +18,10 @@ export class OriginField extends Block {
     async changeAppear(appear: AppearAnchor): Promise<void> {
         // console.log(appear);
         var text = lodash.get(this, appear.prop);
-        console.log(text);
         await this.item.onUpdateCellValue(this.viewField, text);
     }
     async onUpdateCellValue(value) {
+        this.value = value;
         await this.item.onUpdateCellValue(this.viewField, value);
     }
     async changeProps(oldProps: Record<string, any>, newProps: Record<string, any>) {
