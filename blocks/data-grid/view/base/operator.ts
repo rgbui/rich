@@ -187,7 +187,7 @@ export class DataGridViewOperator {
     async onTurnField(this: DataGridView, viewField: ViewField, type: FieldType, options: { text?: string, config?: Record<string, any> }) {
         var field = viewField.field;
         await this.page.onAction(ActionDirective.onSchemaTurnField, async () => {
-            var r = await this.schema.turnField({ fieldId: field.id,text:options.text, type: type, config: options.config });
+            var r = await this.schema.turnField({ fieldId: field.id, text: options.text, type: type, config: options.config });
             if (r.ok) {
                 field.type = type;
                 if (options.text) field.text = options.text;
@@ -258,7 +258,7 @@ export class DataGridViewOperator {
         rect.height = 20;
         await this.onOpenViewConfig(rect, 'filter')
     }
-    async onShowNum(this: DataGridView, visible: boolean) {
+    async onShowRowNum(this: DataGridView, visible: boolean) {
         var newFields = this.fields.map(f => f.clone());
         if (visible == true && newFields.some(s => s.type == 'rowNum')) {
             return
