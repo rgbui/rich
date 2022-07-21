@@ -53,6 +53,8 @@ export interface FieldConfig {
     formula?: string,
     emoji?: EmojiCode,
     dateFormat?: string,
-    includeTime?: boolean
+    includeTime?: boolean,
+    numberFormat?: string,
+    numberRadix?: string
 }
 
