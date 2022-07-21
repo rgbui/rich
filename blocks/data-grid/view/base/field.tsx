@@ -417,7 +417,17 @@ export class DataGridViewField {
                 var r = await useTableStoreAddField(
                     { roundArea: rp },
                     { field: viewField.field, dataGrid: self }
-                )
+                );
+                if (r) {
+                    if (r.type == viewField.field.type) {
+
+                    }
+                    else {
+                        var config = lodash.cloneDeep(viewField.field.config || {});
+                        Object.assign(config, r.config);
+                        await this.onTurnField(viewField, r.type, { text: r.text, config });
+                    }
+                }
             }
             else if (re.item.name == 'leftInsert') {
                 this.onAddField(rp, this.fields.findIndex(g => g == viewField));

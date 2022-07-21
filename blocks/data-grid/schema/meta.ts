@@ -149,7 +149,7 @@ export class TableSchema {
             }
         })
     }
-    turnField(args: { fieldId: string, type: FieldType, config?: Record<string, any> }) {
+    turnField(args: { fieldId: string, text: string, type: FieldType, config?: Record<string, any> }) {
         return channel.put('/schema/operate', {
             operate: {
                 schemaId: this.id,

@@ -184,13 +184,14 @@ export class DataGridViewOperator {
         rect.height = 20;
         await this.onOpenViewConfig(rect, 'sort')
     }
-    async onTurnField(this: DataGridView, viewField: ViewField, type: FieldType, config?: Record<string, any>) {
+    async onTurnField(this: DataGridView, viewField: ViewField, type: FieldType, options: { text?: string, config?: Record<string, any> }) {
         var field = viewField.field;
         await this.page.onAction(ActionDirective.onSchemaTurnField, async () => {
-            var r = await this.schema.turnField({ fieldId: field.id, type: type, config });
+            var r = await this.schema.turnField({ fieldId: field.id,text:options.text, type: type, config: options.config });
             if (r.ok) {
                 field.type = type;
-                if (config) Object.assign(field.config, config);
+                if (options.text) field.text = options.text;
+                if (options.config) Object.assign(field.config, options.config);
                 await this.loadData();
                 await this.createItem();
                 this.forceUpdate();
