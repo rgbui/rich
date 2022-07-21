@@ -138,40 +138,41 @@ export class DataGridViewField {
             else if (viewField.field?.type == FieldType.number) {
                 var dateItems: MenuItem<BlockDirective | string>[] = [];
                 dateItems.push(...[
-                    { text: '数字', value: '' },
-                    { text: '整数', value: '' },
-                    { text: '千分位', value: '' },
-                    { text: '两位小数', value: '' },
-                    { text: '百分比', value: '' },
+                    { name: 'numberFormat', text: '数字', value: 'number', checkLabel: viewField.field.config?.numberFormat == 'number' },
+                    { name: 'numberFormat', text: '整数', value: 'int', checkLabel: viewField.field.config?.numberFormat == 'int' },
+                    { name: 'numberFormat', text: '千分位', value: '1000', checkLabel: viewField.field.config?.numberFormat == '1000' },
+                    { name: 'numberFormat', text: '两位小数', value: '0.00', checkLabel: viewField.field.config?.numberFormat == '0.00' },
+                    { name: 'numberFormat', text: '百分比', value: '%', checkLabel: viewField.field.config?.numberFormat == '%' },
+                    { name: 'numberFormat', type: MenuItemType.divide },
+                    { name: 'numberFormat', text: '进度条', value: 'progress', checkLabel: viewField.field.config?.numberFormat == 'progress' },
+                    // { text: '评分', value: 'score' },
                     { type: MenuItemType.divide },
-                    { text: '进度条', value: '' },
-                    { text: '评分', value: '' },
-                    { type: MenuItemType.divide },
-                    { text: '人民币', value: '' },
-                    { text: '美元', value: '' },
-                    { text: '欧元', value: '' },
-                    { text: '日元', value: '' },
-                    { text: '港元', value: '' },
+                    { name: 'numberFormat', text: '人民币', value: '￥', checkLabel: viewField.field.config?.numberFormat == '￥' },
+                    { name: 'numberFormat', text: '美元', value: '$', checkLabel: viewField.field.config?.numberFormat == '$' },
+                    { name: 'numberFormat', text: '欧元', value: '€', checkLabel: viewField.field.config?.numberFormat == '€' },
+                    { name: 'numberFormat', text: '日元', value: 'JP¥', checkLabel: viewField.field.config?.numberFormat == 'JP¥' },
+                    { name: 'numberFormat', text: '港元', value: 'HK$', checkLabel: viewField.field.config?.numberFormat == 'HK$' },
                     { type: MenuItemType.divide },
                     {
                         text: '自定义格式',
                         childs: [
                             {
-                                name: 'dateCustomFormat',
+                                name: 'numberUnitCustom',
                                 type: MenuItemType.input,
-                                value: '',
+                                value: viewField.field.config?.numberFormat.indexOf('{value}') > -1 ? viewField.field.config?.numberFormat : '',
                                 text: '编辑日期格式',
                             },
-                            { text: 'm/s' },
-                            { text: 'kg' },
-                            { text: 'C/' }
+                            { type: MenuItemType.divide },
+                            { name: 'numberUnit', text: 'm/s', value: '{value}m/s', checkLabel: viewField.field.config?.numberFormat == 'number' },
+                            { name: 'numberUnit', text: 'kg', value: '{value}kg', checkLabel: viewField.field.config?.numberFormat == 'number' },
+                            { name: 'numberUnit', text: ' °c', value: '{value}°c', checkLabel: viewField.field.config?.numberFormat == 'number' }
                         ]
                     },
                     /**
                      * 这里需要加上单位的基准
                      */
-                    { text: '单位换算', childs: [{ text: '距离' }] },
-                    { text: '数字区间', childs: [{ text: '胖' }] }
+                    // { text: '单位换算', childs: [{ text: '距离' }] },
+                    // { text: '数字区间', childs: [{ text: '胖' }] }
                 ]);
                 items.insertAt(3, { type: MenuItemType.divide });
                 items.insertAt(4, {
@@ -409,6 +410,7 @@ export class DataGridViewField {
         );
         var ReItem = items.find(g => g.name == 'name');
         var dItem = items.arrayJsonFind('childs', g => g.name == 'dateCustomFormat');
+        var nItem = items.arrayJsonFind('childs', g => g.name == 'numberUnitCustom');
         if (re) {
             if (re.item.name == 'hide') {
                 this.onHideField(viewField);
@@ -450,52 +452,19 @@ export class DataGridViewField {
             else if (re.item.name == 'sortAsc') {
                 this.onSetSortField(viewField, 1);
             }
-            // else if (re.item.name == 'turnFieldType') {
-            //     if (re.item.value == viewField?.field?.type) return;
-            //     if (re.item.value == FieldType.relation) {
-            //         var r = await useRelationView({ roundArea: rp }, {
-            //             config: viewField.field.config
-            //         });
-            //         if (r) {
-            //             await this.onTurnField(viewField, re.item.value, r.config);
-            //         }
-            //     }
-            //     else if (re.item.value == FieldType.rollup) {
-            //         var r = await useRollupView({ roundArea: rp }, {
-            //             schema: this.schema,
-            //             config: viewField.field.config
-            //         })
-            //         if (r) {
-            //             await this.onTurnField(viewField, re.item.value, r);
-            //         }
-            //     }
-            //     else if (re.item.value == FieldType.formula) {
-            //         var formula = await useFormula({ roundArea: rp }, {
-            //             schema: this.schema,
-            //             formula: viewField.field.config.formula
-            //         });
-            //         if (formula) {
-            //             await this.onTurnField(viewField, re.item.value, { formula });
-            //         }
-            //     }
-            //     else if (re.item.value == FieldType.emoji) {
-            //         var r = await useFieldEmojiView({ roundArea: rp }, {
-            //             schema: this.schema,
-            //             config: viewField.field.config
-            //         })
-            //         if (r) {
-            //             await this.onTurnField(viewField, re.item.value, r);
-            //         }
-            //     }
-            //     else {
-            //         this.onTurnField(viewField, re.item.value);
-            //     }
-            // }
             else if (re?.item.name == 'dateFormat') {
                 var config = lodash.cloneDeep(viewField?.field?.config);
                 if (typeof config == 'undefined') config = {};
                 config.dateFormat = re.item.value;
                 if (dItem) dItem.value = re.item.value;
+                await this.onUpdateField(viewField, { config });
+            }
+            else if (re?.item.name == 'numberFormat' || re?.item.name == 'numberUnit') {
+                var config = lodash.cloneDeep(viewField?.field?.config);
+                if (typeof config == 'undefined') config = {};
+                config.numberFormat = re.item.value;
+                if (nItem && re.item.value.indexOf('{value}') > -1)
+                    nItem.value = re.item.value;
                 await this.onUpdateField(viewField, { config });
             }
             else if (re.item.name == 'formula') {
@@ -509,7 +478,6 @@ export class DataGridViewField {
                 await self.onUpdateField(viewField, { config });
             }
             else if (re.item.name == 'emoji') {
-                console.log('ggg');
                 var rc = await useOpenEmoji({ roundArea: rp });
                 if (rc) {
                     var config = lodash.cloneDeep(viewField?.field?.config);
@@ -531,12 +499,19 @@ export class DataGridViewField {
                 this.onUpdateField(viewField, { text: ReItem.value })
             }
         }
-
         if (dItem) {
             if (dItem.value != viewField.field.config.dateFormat) {
                 var config = lodash.cloneDeep(viewField?.field?.config);
                 if (typeof config == 'undefined') config = {};
                 config.dateFormat = dItem.value;
+                await this.onUpdateField(viewField, { config });
+            }
+        }
+        if (nItem) {
+            if (nItem.value && nItem.value != viewField.field.config.numberFormat) {
+                var config = lodash.cloneDeep(viewField?.field?.config);
+                if (typeof config == 'undefined') config = {};
+                config.numberFormat = nItem.value;
                 await this.onUpdateField(viewField, { config });
             }
         }
