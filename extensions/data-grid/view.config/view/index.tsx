@@ -54,6 +54,31 @@ export class DataGridViewConfig extends EventsComponent {
                 </div>
             </div>
             <Divider></Divider>
+            <div className="shy-table-property-view-item">
+                <label>显示行号</label>
+                <div className="operator"><Switch onChange={async e => {
+                    await this.block.onShowRowNum(e);
+                    this.forceUpdate()
+                }} checked={(this.block as TableStore).showRowNum}></Switch>
+                </div>
+            </div>
+            <div className="shy-table-property-view-item">
+                <label>显示序号</label>
+                <div className="operator"><Switch onChange={async e => {
+                      await this.block.onShowAutoIncrement(e);
+                    this.forceUpdate()
+                }} checked={(this.block as TableStore).fields.some(s => s.field?.type == FieldType.autoIncrement)}></Switch>
+                </div>
+            </div>
+            <div className="shy-table-property-view-item">
+                <label>显示勾选</label>
+                <div className="operator"><Switch onChange={async e => {
+                     await this.block.onShowCheck(e);
+                    this.forceUpdate()
+                }} checked={(this.block as TableStore).showCheckRow}></Switch>
+                </div>
+            </div>
+            <Divider></Divider>
             {this.block.url == BlockUrlConstant.DataGridTable && <>
                 <div className="shy-table-property-view-item">
                     <label>隐藏表格头部</label>
