@@ -159,7 +159,7 @@ export class DataGridViewField {
                             {
                                 name: 'numberUnitCustom',
                                 type: MenuItemType.input,
-                                value: viewField.field.config?.numberFormat.indexOf('{value}') > -1 ? viewField.field.config?.numberFormat : '',
+                                value: viewField.field.config?.numberFormat?.indexOf('{value}') > -1 ? viewField.field.config?.numberFormat : '',
                                 text: '编辑日期格式',
                             },
                             { type: MenuItemType.divide },
@@ -463,8 +463,7 @@ export class DataGridViewField {
                 var config = lodash.cloneDeep(viewField?.field?.config);
                 if (typeof config == 'undefined') config = {};
                 config.numberFormat = re.item.value;
-                if (nItem && re.item.value.indexOf('{value}') > -1)
-                    nItem.value = re.item.value;
+                nItem.value = re.item.value;
                 await this.onUpdateField(viewField, { config });
             }
             else if (re.item.name == 'formula') {
