@@ -183,7 +183,7 @@ export class Block$Board {
                 block.forceUpdate();
                 block.page.kit.picker.view.forceUpdate();
                 if (isEnd) {
-                    block.onAction(ActionDirective.onResizeBlock, async () => {
+                    block.page.onAction(ActionDirective.onResizeBlock, async () => {
                         if (!matrix.equals(block.matrix)) block.updateMatrix(matrix, block.matrix);
                         block.manualUpdateProps(
                             { fixedWidth: w, fixedHeight: h },

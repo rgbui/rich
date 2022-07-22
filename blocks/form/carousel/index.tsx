@@ -36,7 +36,7 @@ export class Carousel extends Block {
             }, this));
     }
     async onAddTabItem() {
-        this.onAction(ActionDirective.onCarouselAddItem, async () => {
+        this.page.onAction(ActionDirective.onCarouselAddItem, async () => {
             await this.appendBlock({ url: '/carousel/content', blocks: { childs: [{ url: BlockUrlConstant.TextSpan, content: '内容' }] } }, this.blocks.childs.length, 'childs');
         })
     }
@@ -52,7 +52,7 @@ export class Carousel extends Block {
         );
         if (um) {
             if (um.item.name == 'delete') {
-                this.onAction(ActionDirective.onCarouselRemoveItem, async () => {
+                this.page.onAction(ActionDirective.onCarouselRemoveItem, async () => {
                     await this.blocks.childs[at].delete();
                 })
             }

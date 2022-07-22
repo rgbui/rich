@@ -61,6 +61,7 @@ export class TextSpan extends Block {
         }
     }
     init(this: Block): void {
+        super.init();
         if (this.isFreeBlock) {
             this.pattern.declare<FontCss>('default', CssSelectorType.pseudo, {
                 cssName: BlockCssName.font,
@@ -115,7 +116,7 @@ export class TextSpan extends Block {
                     block.updateRenderLines();
                     block.page.kit.picker.view.forceUpdate();
                     if (isEnd) {
-                        block.onAction(ActionDirective.onResizeBlock, async () => {
+                        block.page.onAction(ActionDirective.onResizeBlock, async () => {
                             if (!matrix.equals(block.matrix)) block.updateMatrix(matrix, block.matrix);
                             block.manualUpdateProps(
                                 { fixedWidth: w },
@@ -156,7 +157,7 @@ export class TextSpan extends Block {
                     if (isEnd) {
                         block.pattern.setStyle(BlockCssName.font, { fontSize });
                         block.page.snapshoot.start();
-                        block.onAction(ActionDirective.onResizeBlock, async () => {
+                        block.page.onAction(ActionDirective.onResizeBlock, async () => {
                             if (!matrix.equals(block.matrix)) block.updateMatrix(matrix, block.matrix);
                             block.pattern.setStyle(BlockCssName.font, {
                                 lineHeight: currentLineHeight + 'px',

@@ -33,11 +33,8 @@ export class Page$Operator {
         if (typeof at == 'undefined') at = bs.length;
         bs.insertAt(at, block);
         await block.created();
-        this.snapshoot.record(OperatorDirective.create, {
-            parentId: parent.id,
-            childKey,
-            at,
-            preBlockId: block.prev ? block.prev.id : undefined,
+        this.snapshoot.record(OperatorDirective.$create, {
+            pos: block.pos,
             data: await block.get()
         }, block);
         this.addBlockUpdate(parent);

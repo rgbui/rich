@@ -54,21 +54,9 @@ export class PageView extends Component<{ page: Page }>{
         this.observeToolBoard();
     }
     updatePageInfo = (r: { id: string, pageInfo: LinkPageItem }) => {
-        if (this.page.pageItemId == r.id) {
-            var isUpdate: boolean = false;
-            if (typeof r.pageInfo?.text != 'undefined' && r.pageInfo?.text != this.page.pageInfo?.text) {
-                this.page.pageInfo.text = r.pageInfo.text;
-                isUpdate = true;
-            }
-            if (typeof r.pageInfo.icon != 'undefined' && JSON.stringify(r.pageInfo.icon) != JSON.stringify(this.page.pageInfo.icon)) {
-                this.page.pageInfo.icon = lodash.cloneDeep(r.pageInfo.icon);
-                isUpdate = true;
-            }
-            if (typeof r.pageInfo.locker != 'undefined') {
-                this.page.pageInfo.locker = lodash.cloneDeep(r.pageInfo.locker);
-                isUpdate = true;
-            }
-            if (isUpdate) this.forceUpdate();
+        if (this.page.pageInfo?.id == r.id)
+        {
+            this.forceUpdate();
         }
     }
     async observeToolBoard() {

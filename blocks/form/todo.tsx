@@ -17,6 +17,7 @@ import { Icon } from "../../component/view/icon";
 @url('/todo')
 export class ToDo extends Block {
     init() {
+        super.init();
         this.pattern.declare<FontCss>('checked', CssSelectorType.pseudo, {
             cssName: BlockCssName.font,
             textDecoration: 'line-through',

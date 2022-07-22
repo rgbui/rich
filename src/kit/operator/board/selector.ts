@@ -19,7 +19,7 @@ export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseE
         var re = gm.inverseTransform(Point.from(event));
         var url = toolBoard.currentSelector.url;
         if (url == '/note' || url == '/flow/mind' || url == BlockUrlConstant.TextSpan || url == BlockUrlConstant.Frame) {
-            await fra.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
+            await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
                 var data = toolBoard.currentSelector.data || {};
                 var ma = new Matrix();
                 ma.translate(re.x, re.y);
@@ -40,7 +40,7 @@ export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseE
         else if (url == '/line') {
             var newBlock: Block;
             var isMounted: boolean = false;
-            await fra.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
+            await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
                 var data = toolBoard.currentSelector.data || {};
                 data.from = { x: re.x, y: re.y };
                 data.to = util.clone(data.from);
@@ -88,7 +88,7 @@ export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseE
         else if (url == '/shape') {
             var newBlock: Block;
             var isMounted: boolean = false;
-            await fra.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
+            await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
                 var data = toolBoard.currentSelector.data || {};
                 var ma = new Matrix();
                 ma.translate(re.x, re.y);
@@ -135,7 +135,7 @@ export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseE
             var isMounted: boolean = false;
             var path: paper.Path;
             var points: { x: number, y: number }[] = [];
-            await fra.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
+            await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
                 var data = toolBoard.currentSelector.data || {};
                 newBlock = await kit.page.createBlock(toolBoard.currentSelector.url, data, fra);
                 points.push(re);

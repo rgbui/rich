@@ -445,7 +445,7 @@ export class PageWrite {
         styles: Record<BlockCssName, Record<string, any>>,
         props?: Record<string, any>
     ) {
-        await this.kit.page.onActionAsync(ActionDirective.onUpdatePattern, async () => {
+        await this.kit.page.onAction(ActionDirective.onUpdatePattern, async () => {
             await appears.eachAsync(async appear => {
                 if (appear == this.startAnchor || appear == this.endAnchor) {
 
@@ -490,7 +490,7 @@ export class PageWrite {
         });
     }
     async onSelectionEquation(appears: AppearAnchor[], props: { equation: boolean }) {
-        await this.kit.page.onActionAsync(ActionDirective.onUpdateEquation, async () => {
+        await this.kit.page.onAction(ActionDirective.onUpdateEquation, async () => {
             await appears.eachAsync(async appear => {
                 if (appear == this.startAnchor || appear == this.endAnchor) {
 
@@ -538,7 +538,7 @@ export class PageWrite {
         });
     }
     async onSolidInputCreateTextBlock(aa: AppearAnchor, event?: React.CompositionEvent | React.FormEvent<Element>, forceText?: string) {
-        await this.kit.page.onActionAsync(ActionDirective.onSolidBlockInputTextContent, async () => {
+        await this.kit.page.onAction(ActionDirective.onSolidBlockInputTextContent, async () => {
             var text = aa.solidCursorEl.innerText;
             aa.solidCursorEl.innerHTML = '';
             var c = forceText ? forceText : text;

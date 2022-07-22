@@ -1,6 +1,5 @@
 import React from "react";
 import { ReactNode } from "react";
-import { Field } from "../../../../blocks/data-grid/schema/field";
 import { getTypeSvg } from "../../../../blocks/data-grid/schema/util";
 import { DataGridView } from "../../../../blocks/data-grid/view/base";
 import { EventsComponent } from "../../../../component/lib/events.component";
@@ -8,8 +7,10 @@ import { Icon } from "../../../../component/view/icon";
 import { Remark } from "../../../../component/view/text";
 import { Divider } from "../../../../component/view/grid";
 import { DragHandleSvg, EyeHideSvg, EyeSvg, PlusSvg } from "../../../../component/svgs";
-
 import "./style.less";
+import { Rect } from "../../../../src/common/vector/point";
+import { DragList } from "../../../../component/view/drag.list";
+
 export class DataGridFields extends EventsComponent {
     get schema() {
         return this.block?.schema;
@@ -22,39 +23,51 @@ export class DataGridFields extends EventsComponent {
     render(): ReactNode {
         if (!this.block) return <></>;
         if (!this.schema) return <div></div>
-        var fs = this.schema.fields.findAll(g => g.text ? true : false);
+        var fs = this.schema.userFields.findAll(g => g.text && !this.block.fields.some(s => s.fieldId == g.id) ? true : false);
         var self = this;
-        async function change(field: Field, checked: boolean) {
-            if (checked == true) {
-                await self.block.onShowField(field);
-            }
-            else {
-                var vf = self.block.fields.find(g => g.field.id == field.id);
-                if (vf) await self.block.onHideField(vf);
-            }
+        function addField(event: React.MouseEvent) {
+            event.stopPropagation();
+            self.block.onAddField(Rect.fromEvent(event));
+        }
+        async function onShowAll() {
+            await self.block.onShowAllField();
             self.forceUpdate();
         }
-        function addField(event: React.MouseEvent) {
-            self.block.onAddField(event);
+        async function onHideAll() {
+            await self.block.onHideAllField();
+            self.forceUpdate();
         }
-        async function changeAll(checked: boolean) {
-            await self.block.onShowAllField(!checked);
+        async function onChange(to: number, from: number) {
+            await self.block.onMoveViewField(to, from);
             self.forceUpdate();
         }
         return <div className="shy-table-field-view">
-            <div className="shy-table-field-view-operator">
-                <Remark>所有字段</Remark>
-                <Icon size={14} click={e => changeAll(this.block.fields.filter(g => g.type ? false : true).length > 0 ? true : false)} icon={this.block.fields.filter(g => g.type ? false : true).length > 0 ? EyeSvg : EyeHideSvg}></Icon>
-            </div>
-            <div className="shy-table-field-view-items">
-                {fs.map(f => {
-                    return <div className={"shy-table-field-view-item" + (this.block.fields.some(s => s.fieldId == f.id) ? "" : " hide")} key={f.id}>
-                        <Icon size={14} wrapper className={'drag'} icon={DragHandleSvg}></Icon>
-                        <Icon size={14} icon={getTypeSvg(f.type)}></Icon>
+            <div style={{ overflowY: 'auto', maxHeight: 250 }}>
+                <div className="shy-table-field-view-operator">
+                    <Remark>显示的字段</Remark>
+                    <Icon size={14} click={e => onHideAll()} icon={EyeSvg}></Icon>
+                </div>
+                <DragList onChange={onChange} isDragBar={e => e.closest('.shy-table-field-view-item') && !e.closest('.eye') ? true : false} className="shy-table-field-view-items">  {this.block.fields.map(f => {
+                    return <div className={"shy-table-field-view-item"} key={f.fieldId || f.type}>
+                        <em className={'drag'} ><Icon size={12} icon={DragHandleSvg}></Icon></em>
+                        <Icon size={14} icon={getTypeSvg(f.field?.type)}></Icon>
                         <span>{f.text}</span>
-                        <Icon className={'eye'} size={14} click={() => change(f, this.block.fields.some(s => s.fieldId == f.id) ? false : true)} icon={this.block.fields.some(s => s.fieldId == f.id) ? EyeSvg : EyeHideSvg}></Icon>
+                        <Icon className={'eye'} size={14} click={async () => { await self.block.onHideField(f); self.forceUpdate() }} icon={EyeSvg}></Icon>
                     </div>
-                })}
+                })}</DragList>
+                {fs.length > 0 && <>
+                    <div className="shy-table-field-view-operator">
+                        <Remark>未显示的字段</Remark>
+                        <Icon size={14} click={e => onShowAll()} icon={EyeHideSvg}></Icon>
+                    </div>
+                    <div className="shy-table-field-view-items">{fs.map(f => {
+                        return <div className={"shy-table-field-view-item" + (" hide")} key={f.id}>
+                            <Icon size={14} icon={getTypeSvg(f.type)}></Icon>
+                            <span>{f.text}</span>
+                            <Icon className={'eye'} size={14} click={async () => { await self.block.onShowField(f); self.forceUpdate() }} icon={EyeHideSvg}></Icon>
+                        </div>
+                    })}</div>
+                </>}
             </div>
             <Divider></Divider>
             <div className="shy-table-field-view-add">

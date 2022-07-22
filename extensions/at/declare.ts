@@ -1,4 +1,5 @@
 import { PageLayoutType } from "../../src/page/declare";
+import { PagePermission } from "../../src/page/permission";
 import { IconArguments } from "../icon/declare"
 
 
@@ -17,5 +18,7 @@ export type LinkPageItem = {
     description?: string,
     pageType?: PageLayoutType,
     url?: string,
-    locker?: { userid: string, lockDate: number }
+    locker?: { userid: string, lockDate: number },
+    share?: 'net' | 'nas' | 'local' ;
+    permission?: PagePermission;
 }

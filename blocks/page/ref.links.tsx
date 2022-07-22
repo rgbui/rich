@@ -35,7 +35,7 @@ export class RefLinks extends Block {
     async loadList() {
         this.loading = true;
         this.forceUpdate();
-        var r = await channel.get('/block/ref/pages', { pageId: this.page.pageItemId });
+        var r = await channel.get('/block/ref/pages', { pageId: this.page.pageInfo?.id });
         this.loading = false;
         if (r.ok) {
             this.list = r.data.list;

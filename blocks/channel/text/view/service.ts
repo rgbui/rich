@@ -27,7 +27,7 @@ export class ChatChannelService {
         });
         var result = await channel.put('/ws/channel/emoji', {
             elementUrl: getElementUrl(ElementType.RoomChat,
-                block.page.pageLayout.type == PageLayoutType.textChannel ? block.page.pageItemId : block.syncBlockId,
+                block.page.pageLayout.type == PageLayoutType.textChannel ? block.page.pageInfo.id : block.syncBlockId,
                 d.id),
             emoji: {
                 emojiId: re.code,
@@ -110,7 +110,7 @@ export class ChatChannelService {
     static async del(block: Block, d: ChannelTextType) {
         var op = this.getOp(block, d);
         d.isDeleted = true;
-        var r = await channel.del('/ws/channel/cancel', { roomId: block.page.pageItemId, id: d.id });
+        var r = await channel.del('/ws/channel/cancel', { roomId: block.page.pageInfo?.id, id: d.id });
         op.classList.remove('operating');
         block.view.forceUpdate();
     }

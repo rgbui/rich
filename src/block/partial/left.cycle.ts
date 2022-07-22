@@ -1,25 +1,28 @@
 import lodash from "lodash";
 import { Block } from "..";
 import { channel } from "../../../net/channel";
-import { util } from "../../../util/util";
 import { Matrix } from "../../common/matrix";
-import { ActionDirective } from "../../history/declare";
 import { BlockFactory } from "../factory/block.factory";
 import { Pattern } from "../pattern";
 
 export class Block$LifeCycle {
-    async onAction(this: Block, directive: ActionDirective, action: () => Promise<void>) {
-        await this.page.onAction(directive, action);
-    }
     mounted(this: Block, fn: () => void) {
         this.once('mounted', fn);
     }
     /**
      * 继承使用的
+     * 
      * @param this 
      */
     init(this: Block) {
 
+    }
+    /**
+     * 不能继承使用
+     * @param this 
+     */
+    protected _init(this: Block) {
+        this.registerPropMeta('matrix', Matrix, false, (v) => new Matrix(v), (v) => v.getValues())
     }
     /**
      * 不能被继承
@@ -70,17 +73,7 @@ export class Block$LifeCycle {
         }
         if (Array.isArray(this.__props)) {
             this.__props.each(pro => {
-                if (Array.isArray(this[pro])) {
-                    json[pro] = this[pro].map(pr => {
-                        if (typeof pr?.get == 'function') return pr.get();
-                        else return util.clone(pr);
-                    })
-                }
-                else if (typeof this[pro] != 'undefined') {
-                    if (typeof this[pro]?.get == 'function')
-                        json[pro] = this[pro].get();
-                    else json[pro] = util.clone(this[pro]);
-                }
+                json[pro] = this.clonePropData(pro, this[pro]);
             })
         }
         return json;
@@ -92,7 +85,7 @@ export class Block$LifeCycle {
     async initialLoad(this: Block) {
 
     }
-    private propMetas: { key: string, meta?: Function, create?: (v: any) => any, isArray: boolean }[] = [];
+    private propMetas: { key: string, meta?: Function, create?: (v: any) => any, get?: (v: any) => any, isArray: boolean }[] = [];
     cloneProp(prop: string, value?: any) {
         if (!this.propMetas.some(s => s.key == prop)) {
             return typeof value != 'undefined' ? lodash.cloneDeep(value) : lodash.cloneDeep(lodash.get(this, prop))
@@ -102,12 +95,14 @@ export class Block$LifeCycle {
             var value = typeof value != 'undefined' ? value : lodash.get(this, prop);
             if (pm.isArray && Array.isArray(value)) {
                 value = value.map(v => {
-                    if (typeof v.get == 'function') return v.get();
+                    if (typeof pm.get == 'function') return pm.get(v);
+                    else if (typeof v.get == 'function') return v.get();
                     else return lodash.cloneDeep(v);
                 });
             }
             else if (value) {
-                if (typeof value.get == 'function') value = value.get();
+                if (typeof pm.get == 'function') return pm.get(value);
+                else if (typeof value.get == 'function') value = value.get();
                 else value = lodash.cloneDeep(value);
             }
             if (pm.isArray) {
@@ -123,6 +118,9 @@ export class Block$LifeCycle {
             }
         }
     }
+    pm(prop: string) {
+        return this.propMetas.find(g => g.key == prop);
+    }
     clonePropData(prop: string, value?: any) {
         if (!this.propMetas.some(s => s.key == prop)) {
             return typeof value != 'undefined' ? lodash.cloneDeep(value) : lodash.cloneDeep(lodash.get(this, prop))
@@ -132,12 +130,14 @@ export class Block$LifeCycle {
             var value = typeof value != 'undefined' ? value : lodash.get(this, prop);
             if (pm.isArray && Array.isArray(value)) {
                 value = value.map(v => {
-                    if (typeof v.get == 'function') return v.get();
+                    if (typeof pm.get == 'function') return pm.get(v);
+                    else if (typeof v.get == 'function') return v.get();
                     else return lodash.cloneDeep(v);
                 });
             }
             else if (value) {
-                if (typeof value.get == 'function') value = value.get();
+                if (typeof pm.get == 'function') value = pm.get(value);
+                else if (typeof value.get == 'function') value = value.get();
                 else value = lodash.cloneDeep(value);
             }
             if (pm.isArray) {
@@ -149,8 +149,47 @@ export class Block$LifeCycle {
             }
         }
     }
-    registerPropMeta(key: string, meta: Function, isArray: boolean = false, create?: (v: any) => any) {
-        this.propMetas.push({ key, meta, isArray, create });
+    setPropData(prop: string, value: any) {
+        var pm = this.propMetas.find(g => g.key == prop);
+        if (pm) {
+            if (pm.isArray) {
+                this[prop] = [];
+                if (Array.isArray(value)) {
+                    value.forEach(d => {
+                        if (typeof pm.create == 'function') this[prop].push(pm.create(d))
+                        else this[prop].push(new (pm.meta as any)(d));
+                    })
+                }
+            }
+            else {
+                if (typeof pm.create == 'function') lodash.set(this, prop, pm.create(value))
+                else lodash.set(this, prop, new (pm.meta as any)(value))
+            }
+        }
+        else lodash.set(this, prop, lodash.cloneDeep(value));
+    }
+    createPropObject(prop: string, value: any) {
+        var pm = this.propMetas.find(g => g.key == prop);
+        if (pm) {
+            if (pm.isArray && Array.isArray(value)) {
+                var vs = [];
+                if (Array.isArray(value)) {
+                    value.forEach(d => {
+                        if (typeof pm.create == 'function') vs.push(pm.create(d))
+                        else vs.push(new (pm.meta as any)(d));
+                    })
+                }
+                return vs;
+            }
+            else {
+                if (typeof pm.create == 'function') return pm.create(value)
+                else return new (pm.meta as any)(value)
+            }
+        }
+        else return lodash.cloneDeep(value)
+    }
+    registerPropMeta(key: string, meta: Function, isArray: boolean = false, create?: (v: any) => any, get?: (vobj: any) => any) {
+        this.propMetas.push({ key, meta, isArray, create, get });
     }
     isLoad = false;
     async load(this: Block, data) {
@@ -158,25 +197,8 @@ export class Block$LifeCycle {
             if (!this.pattern) this.pattern = new Pattern(this);
             for (var n in data) {
                 if (n == 'blocks') continue;
-                else if (n == 'matrix') this.matrix = new Matrix(data[n]);
                 else if (n == 'pattern') await this.pattern.load(data[n]);
-                else {
-                    var pm = this.propMetas.find(g => g.key == n);
-                    if (pm) {
-                        if (pm.isArray) {
-                            this[n] = [];
-                            if (Array.isArray(data[n])) {
-                                data[n].forEach(d => {
-                                    this[n].push(new (pm.meta as any)(d));
-                                })
-                            }
-                        }
-                        else {
-                            this[n] = new (pm.meta as any)(data[n]);
-                        }
-                    }
-                    else this[n] = data[n];
-                }
+                else this.setPropData(n, data[n]);
             }
             if (this.syncBlockId) {
                 await this.loadSyncBlock();
@@ -200,7 +222,7 @@ export class Block$LifeCycle {
         }
     }
     async loadSyncBlock(this: Block) {
-        var r = await channel.get('/page/sync/block', { syncBlockId: this.syncBlockId });
+        var r = await channel.get('/view/snap/query', { elementUrl: this.elementUrl });
         if (r.ok) {
             var data;
             try {
@@ -215,9 +237,8 @@ export class Block$LifeCycle {
             if (typeof data == 'object') {
                 for (var n in data) {
                     if (n == 'blocks') continue;
-                    else if (n == 'matrix') this.matrix = new Matrix(data[n]);
                     else if (n == 'pattern') await this.pattern.load(data[n]);
-                    else this[n] = data[n];
+                    else this.setPropData(n, data[n]);
                 }
                 if (typeof data.blocks == 'object') {
                     for (var n in data.blocks) {
@@ -230,6 +251,8 @@ export class Block$LifeCycle {
                     }
                 }
             }
+            if (Array.isArray(r.data.operates) && r.data.operates.length > 0)
+                this.page.loadUserActions(r.data.operates, 'load');
         }
     }
     async get(this: Block, args?: { syncBlock: boolean }) {
@@ -237,7 +260,7 @@ export class Block$LifeCycle {
             id: this._id,
             url: this.url,
             syncBlockId: this.syncBlockId,
-            matrix: this.matrix.getValues()
+            // matrix: this.matrix.getValues()
         };
         if (typeof this.pattern.get == 'function')
             json.pattern = await this.pattern.get();
@@ -251,22 +274,20 @@ export class Block$LifeCycle {
         }
         if (Array.isArray(this.__props)) {
             this.__props.each(pro => {
-                if (Array.isArray(this[pro])) {
-                    json[pro] = this[pro].map(pr => {
-                        if (typeof pr?.get == 'function') return pr.get();
-                        else return util.clone(pr);
-                    })
-                }
-                else if (typeof this[pro] != 'undefined') {
-                    if (typeof this[pro]?.get == 'function')
-                        json[pro] = this[pro].get();
-                    else json[pro] = util.clone(this[pro]);
-                }
+                json[pro] = this.clonePropData(pro, this[pro]);
             })
         }
         return json;
     }
     async getString(this: Block) {
+        return JSON.stringify(await this.get());
+    }
+    /**
+     * 获取同步块保存的信息
+     * @param this 
+     * @returns 
+     */
+    async getSyncString(this: Block) {
         return JSON.stringify(await this.get());
     }
     async getPlain(this: Block) {

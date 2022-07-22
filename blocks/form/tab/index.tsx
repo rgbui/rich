@@ -46,7 +46,7 @@ export class Tab extends Block {
 
     }
     async onAddTabItem() {
-        this.onAction(ActionDirective.onTabAddItem, async () => {
+        this.page.onAction(ActionDirective.onTabAddItem, async () => {
             await this.appendBlock({ url: '/tab/item', content: '标签' }, this.blocks.childs.length, 'childs');
             await this.appendBlock({ url: '/tab/page', blocks: { childs: [{ url: BlockUrlConstant.TextSpan, content: '' }] } }, this.blocks.subChilds.length, 'subChilds');
         })
@@ -69,20 +69,20 @@ export class Tab extends Block {
         );
         if (um) {
             if (um.item.name == 'delete') {
-                this.onAction(ActionDirective.onTabRemoveItem, async () => {
+                this.page.onAction(ActionDirective.onTabRemoveItem, async () => {
                     await this.blocks.childs[at].delete();
                     await this.blocks.subChilds[at].delete();
                 })
             }
             else if (um.item.name == 'after') {
-                this.onAction(ActionDirective.onTabExchangeItem, async () => {
+                this.page.onAction(ActionDirective.onTabExchangeItem, async () => {
                     this.tabIndex = at + 1;
                     this.blocks.childs[at].insertAfter(this.blocks.childs[at + 1], 'childs');
                     this.blocks.subChilds[at].insertAfter(this.blocks.subChilds[at + 1], 'subChilds');
                 })
             }
             else if (um.item.name == 'prev') {
-                this.onAction(ActionDirective.onTabExchangeItem, async () => {
+                this.page.onAction(ActionDirective.onTabExchangeItem, async () => {
                     this.tabIndex = at - 1;
                     this.blocks.childs[at].insertBefore(this.blocks.childs[at - 1], 'childs');
                     this.blocks.subChilds[at].insertBefore(this.blocks.subChilds[at - 1], 'subChilds');

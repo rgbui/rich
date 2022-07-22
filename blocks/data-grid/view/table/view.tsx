@@ -96,7 +96,7 @@ export class TableStoreView extends BlockView<TableStore>{
                     var col = cols[data.colIndex];
                     col.colWidth = w;
                     var newFields = self.block.fields.map(f => f.get());
-                    self.block.onManualUpdateProps({ fields: oldFields }, { fields: newFields }, BlockRenderRange.none, true)
+                    self.block.onManualUpdateProps({ fields: oldFields }, { fields: newFields }, { range: BlockRenderRange.none, isOnlyRecord: true })
                 }
             },
             moveEnd() {
@@ -168,11 +168,11 @@ export class TableStoreView extends BlockView<TableStore>{
                     key={f?.field?.id || i}>
                     <div className={'sy-dg-table-head-th-icon'} ><Icon icon={icon} size='none'></Icon></div>
                     <label>{f.text || f.field?.text}</label>
-                    <div className={'sy-dg-table-head-th-property'} onMouseDown={e => this.block.onOpenConfigField(e, f)}><Icon icon='elipsis:sy'></Icon></div>
+                    <div className={'sy-dg-table-head-th-property'} onMouseDown={e => this.block.onOpenFieldConfig(e, f)}><Icon icon='elipsis:sy'></Icon></div>
                 </div>
             })}
             <div className='sy-dg-table-head-th sy-dg-table-head-th-plus'
-                style={{ minWidth: 40, flexGrow: 1, flexShrink: 1 }} onMouseDown={e => this.block.onAddField(e)}>
+                style={{ minWidth: 40, flexGrow: 1, flexShrink: 1 }} onMouseDown={e => { e.stopPropagation(); this.block.onAddField(Rect.fromEvent(e)) }}>
                 <Icon icon={PlusSvg}></Icon>
             </div>
         </div>
@@ -200,13 +200,16 @@ export class TableStoreView extends BlockView<TableStore>{
     }
     render() {
         var self = this;
-        return <div className="sy-dg-table"
+        return <div className={"sy-dg-table" +
+            (this.block.noBorder ? " sy-dg-table-no-border" : "") +
+            (this.block.noHead ? " sy-dg-table-no-header" : "")
+        }
             onMouseEnter={e => this.block.onOver(true)}
             onMouseLeave={e => this.block.onOver(false)}
         >
             <DataGridTool block={this.block}></DataGridTool>
             {this.block.schema && <div className="sy-dg-table-content" >
-                {this.renderHead()}
+                {this.block.noHead !== true && this.renderHead()}
                 {this.renderBody()}
             </div>}
             {this.renderCreateTable()}

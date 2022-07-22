@@ -5,6 +5,8 @@ import { UserAction, UserOperator } from "./action";
 import { ActionDirective, OperatorDirective } from "./declare";
 import { HistoryRecord } from "./record";
 import { Block } from "../block";
+import { TableSchema } from "../../blocks/data-grid/schema/meta";
+
 /**
  * 
  * 用户的所有操作快照，
@@ -21,26 +23,17 @@ export class HistorySnapshoot extends Events {
         this.historyRecord = new HistoryRecord();
         this.historyRecord.on('error', err => this.emit('error', err));
     }
-    declare(directive: ActionDirective | string) {
+    declare(directive: ActionDirective | string, syncBlock?: { block?: Block }) {
         if (this.action) {
             this.page.onError(new Warn(ExceptionType.notStoreLastAction))
         }
-        this.disabledSync = false;
         this._merge = false;
         this._pause = false;
-        delete this.isSyncBlock;
         this.action = new UserAction();
+        if (syncBlock?.block) this.action.syncBlock = syncBlock.block;
         this.action.userid = this.page?.user.id;
         this.action.directive = directive;
         this.action.startDate = new Date().getTime();
-    }
-    isSyncBlock: boolean;
-    /**
-     * 
-     * @param isSyncBlock 如果false表示禁用syncBlock记录
-     */
-    setSyncBlock(isSyncBlock: boolean) {
-        this.isSyncBlock = isSyncBlock;
     }
     /**
      * 合并，两次的action合并掉
@@ -59,15 +52,22 @@ export class HistorySnapshoot extends Events {
     start() {
         this._pause = false;
     }
-    record(directive: OperatorDirective, data: Record<string, any>, obj: Block | Page) {
+    /**
+     * 如果isLocal为ture，表示是用户在本地的操作
+     * 该操作将不在传到服务器
+     * @param directive 
+     * @param data 
+     * @param obj 
+     * @param isLocal 
+     * @returns 
+     */
+    record(directive: OperatorDirective, data: Record<string, any>, obj: Block | Page, isLocal?: boolean) {
         if (this._pause == true) return;
         var up = new UserOperator();
         up.directive = directive;
         up.obj = obj;
         up.data = data;
-        if (typeof this.isSyncBlock != 'undefined') {
-            up.isSyncBlock = this.isSyncBlock;
-        }
+        up.isLocal = isLocal;
         this.action.operators.push(up);
     }
     store() {
@@ -100,9 +100,8 @@ export class HistorySnapshoot extends Events {
         }
         delete this.action;
     }
-    private disabledSync: boolean = false;
-    async sync(directive: ActionDirective | string, action: () => Promise<void>) {
-        this.declare(directive);
+    async sync(directive: ActionDirective | string, action: () => Promise<void>, syncBlock?: { block?: Block }) {
+        this.declare(directive, syncBlock);
         try {
             await action();
         }
@@ -110,21 +109,20 @@ export class HistorySnapshoot extends Events {
             console.error(ex);
             this.page.onError(ex);
         }
-        if (this.disabledSync != true)
-            this.store()
+        this.store()
     }
+    private ops = new Map<OperatorDirective, { redo: (userOperator: UserOperator, source: 'redo' | 'load' | 'notify' | 'notifyView') => Promise<void>, undo: (userOperator: UserOperator) => Promise<void> }>();
     /**
-     * 取消异步操作
-     * 注意如果取消了，
-     * 需要手动执行store方法，
-     * 否则该操作将不记录
-     * 每次申明时，该disabledSync则为false
+     * 
+     * 如果source不等于redo，说明是页面自动加载的
+     * 如果source等于redo，说明是撤消回滚的
+     * 如果不为redo时，有部分对数据的操作将不在执行
+     * 
+     * @param directive 
+     * @param redo 
+     * @param undo 
      */
-    cancelSync() {
-        this.disabledSync = true;
-    }
-    private ops = new Map<OperatorDirective, { redo: (userOperator: UserOperator, source?: 'load' | 'notify' | 'notifyView') => Promise<void>, undo: (userOperator: UserOperator) => Promise<void> }>();
-    registerOperator(directive: OperatorDirective, redo: (userOperator: UserOperator, source?: 'load' | 'notify' | 'notifyView') => Promise<void>, undo: (userOperator: UserOperator) => Promise<void>) {
+    registerOperator(directive: OperatorDirective, redo: (userOperator: UserOperator, source: 'redo' | 'load' | 'notify' | 'notifyView') => Promise<void>, undo: (userOperator: UserOperator) => Promise<void>) {
         this.ops.set(directive, { redo, undo });
     }
     async redo() {
@@ -134,7 +132,7 @@ export class HistorySnapshoot extends Events {
                     let op = action.operators[i];
                     var command = this.ops.get(op.directive);
                     if (command) {
-                        await command.redo(op);
+                        await command.redo(op, 'redo');
                     }
                     else this.emit("warn", new Warn(ExceptionType.notRegisterActionDirectiveInHistorySnapshoot))
                 }
@@ -155,7 +153,6 @@ export class HistorySnapshoot extends Events {
                 }
                 this.emit('undo', action)
             }
-
         })
     }
     async redoUserAction(action: UserAction, source: 'load' | 'notify' | 'notifyView') {
@@ -184,18 +181,64 @@ export interface HistorySnapshoot {
     emit(name: 'redo', action: UserAction);
     emit(name: "history", action: UserAction);
 
-    record(directive: OperatorDirective.delete, data: { parentId: string, childKey?: string, at?: number, data: Record<string, any> }, obj: Block | Page);
-    record(directive: OperatorDirective.create, data: { parentId: string, childKey?: string, at?: number, data: Record<string, any> }, obj: Block | Page);
-    record(directive: OperatorDirective.append, data: { to: { parentId: string, childKey?: string, at?: number }, from: { parentId: string, childKey?: string, at?: number }, blockId: string }, obj: Block | Page);
-    record(directive: OperatorDirective.updateProp, data: { blockId: string, old: any, new: any }, obj: Block | Page);
-    record(directive: OperatorDirective.updatePropMatrix, data: { blockId: string, old: number[], new: number[] }, obj: Block | Page);
-    record(directive: OperatorDirective.arrayPropInsert, data: { blockId: string, at: number, data: Record<string, any>, propKey: string }, obj: Block | Page);
-    record(directive: OperatorDirective.arrayPropRemove, data: { blockId: string, at: number, data: Record<string, any>, propKey: string }, obj: Block | Page);
-    record(directive: OperatorDirective.arrayPropUpdate, data: { blockId: string, at: number, old: Record<string, any>, new: Record<string, any>, propKey: string }, obj: Block | Page);
-    record(directive: OperatorDirective.insertStyle, data: { blockId: string, at: number, data: Record<string, any> }, obj: Block | Page);
-    record(directive: OperatorDirective.mergeStyle, data: { blockId: string, styleId: string, old: Record<string, any>, new: Record<string, any> }, obj: Block | Page);
-    record(directive: OperatorDirective.schemaRowUpdate, data: { schemaId: string, id: string, old: Record<string, any>, new: Record<string, any> }, obj: Block | Page);
-    record(directive: OperatorDirective.schemaCreateRow, data: { schemaId: string, data: Record<string, any> }, obj: Block | Page);
-    record(directive: OperatorDirective.schemaRowRemove, data: { schemaId: string, data: Record<string, any> }, obj: Block | Page);
-    record(directive: OperatorDirective.keepCursorOffset, data: { blockId: string, prop: string, old: number, new: number }, obj: Block | Page);
+    record(directive: OperatorDirective.delete, data: { parentId: string, childKey?: string, at?: number, data: Record<string, any> }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.create, data: { parentId: string, childKey?: string, at?: number, data: Record<string, any> }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.append, data: { to: { parentId: string, childKey?: string, at?: number }, from: { parentId: string, childKey?: string, at?: number }, blockId: string }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.updateProp, data: { blockId: string, old: any, new: any }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.updatePropMatrix, data: { blockId: string, old: number[], new: number[] }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.arrayPropInsert, data: { blockId: string, at: number, data: Record<string, any>, propKey: string }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.arrayPropRemove, data: { blockId: string, at: number, data: Record<string, any>, propKey: string }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.arrayPropUpdate, data: { blockId: string, at: number, old: Record<string, any>, new: Record<string, any>, propKey: string }, HistorySnapshootObject);
+    record(directive: OperatorDirective.insertStyle, data: { blockId: string, at: number, data: Record<string, any> }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.mergeStyle, data: { blockId: string, styleId: string, old: Record<string, any>, new: Record<string, any> }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.schemaRowUpdate, data: { schemaId: string, id: string, old: Record<string, any>, new: Record<string, any> }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.schemaCreateRow, data: { schemaId: string, data: Record<string, any> }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.schemaRowRemove, data: { schemaId: string, data: Record<string, any> }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.keepCursorOffset, data: { blockId: string, prop: string, old: number, new: number }, obj: HistorySnapshootObject);
+
+    record(directive: OperatorDirective.$create, data: { pos: SnapshootBlockPos, data: Record<string, any> }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.$delete, data: { pos: SnapshootBlockPos, data: Record<string, any> }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.$move, data: { from: SnapshootBlockPos, to: SnapshootBlockPos }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.$turn, data: { pos: SnapshootBlockPos, from: string, to: string }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.$update, data: { pos: SnapshootBlockPropPos, old_value: any, new_value: any }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.$map_splice, data: { pos: SnapshootBlockPropPos, delete_map?: any, insert_map?: any }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.$text_splice, data: { pos: SnapshootBlockPropPos, start: number, end?: number, delete_text?: string, insert_text: string }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.$array_create, data: { pos: SnapshootBlockPropPos, data: any }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.$array_delete, data: { pos: SnapshootBlockPropPos, data: any }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.$array_update, data: { pos: SnapshootBlockPropPos, old_value: any, new_value: any }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.$keep_cursor_offset, data: { pos: SnapshootBlockPropPos, from: number, to: number }, obj: HistorySnapshootObject);
+
+
+    // $text_delete = 1010,
+    // $text_replace = 1012,
+    // $map_extend = 1004,
+    // $map_delete = 1005,
+    // $map_update = 1006,
+
 }
+
+export type HistorySnapshootObject = Block | Page | TableSchema;
+export type SnapshootBlockPos = {
+    blockId?: string,
+    pageId?: string,
+    parents?: string[],
+    parentId?: string,
+    childKey?: string,
+    at?: number,
+    prevBlockId?: string,
+    nextBlockId?: string,
+    elementUrl?: string
+}
+
+export type SnapshootBlockPropPos = {
+    /**
+     * 支持json xpath 简单路径,参考lodash对xpath的支持
+     */
+    prop: string,
+
+    arrayId?: string,
+    arrayAt?: number,
+    arrayPrevId?: string,
+    arrayNextId?: string
+
+} & SnapshootBlockPos

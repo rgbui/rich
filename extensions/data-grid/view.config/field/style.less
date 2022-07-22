@@ -1,5 +1,6 @@
 .shy-table-field-view {
     padding-bottom: 10px;
+
     &-head {
         height         : 30px;
         padding        : 0px 10px;
@@ -17,6 +18,7 @@
         justify-content: flex-start;
         align-items    : center;
         padding-left   : 10px;
+        padding-right  : 10px;
 
         >* {
             &:first-child {
@@ -26,50 +28,11 @@
 
             &:last-child {
                 display    : inline-block;
-                min-width  : 50px;
                 text-align : right;
                 flex-shrink: 0;
                 flex-grow  : 0;
                 color      : rgba(55, 53, 47, 0.6);
                 cursor     : pointer;
-            }
-        }
-    }
-
-    &-item {
-        display        : flex;
-        justify-content: flex-start;
-        align-items    : center;
-        margin         : 0px 5px;
-        padding        : 0px 5px;
-        border-radius  : 4px;
-        height         : 28px;
-        line-height    : 28px;
-        color          : rgb(55, 53, 47);
-        fill           : rgba(55, 53, 47, 0.8);
-        font-size      : 14px;
-        cursor         : pointer;
-        * {
-            flex-shrink: 0;
-            flex-grow  : 0;
-        }
-        .drag {
-            margin-right: 5px;
-        }
-        >span {
-            display    : inline-block;
-            margin-left: 5px;
-            flex-grow  : 1;
-            flex-shrink: 1;
-        }
-        &:hover {
-            background-color: rgba(55, 53, 47, 0.08);
-        }
-        &.hide {
-            color: rgb(55, 53, 47, .4);
-            fill : rgba(55, 53, 47, .4);
-            .eye {
-                cursor: pointer;
             }
         }
     }
@@ -90,7 +53,51 @@
     }
 }
 
-.shy-table-field-view-items {
-    max-height: 250px;
-    overflow-y: auto;
+.shy-table-field-view-item {
+    display        : flex;
+    justify-content: flex-start;
+    align-items    : center;
+    margin         : 0px 5px;
+    padding        : 0px 5px;
+    border-radius  : 4px;
+    height         : 28px;
+    line-height    : 28px;
+    color          : rgb(55, 53, 47);
+    fill           : rgba(55, 53, 47, 0.8);
+    font-size      : 14px;
+    cursor         : pointer;
+    * {
+        flex-shrink: 0;
+        flex-grow  : 0;
+    }
+    .drag {
+        width          : 24px;
+        height         : 24px;
+        display        : inline-flex;
+        justify-content: center;
+        align-items    : center;
+        &:hover {
+            background-color: rgba(55, 53, 47, 0.08);
+        }
+    }
+
+    >span {
+        display    : inline-block;
+        margin-left: 5px;
+        flex-grow  : 1;
+        flex-shrink: 1;
+    }
+
+    &:hover {
+        background-color: rgba(55, 53, 47, 0.08);
+    }
+
+    &.hide {
+        color: rgb(55, 53, 47, .4);
+        fill : rgba(55, 53, 47, .4);
+
+        .eye {
+            cursor: pointer;
+        }
+    }
 }

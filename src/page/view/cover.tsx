@@ -22,7 +22,7 @@ export class PageCover extends React.Component<{ page: Page }>{
                 event.stopPropagation();
                 var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) });
                 if (typeof icon != 'undefined') {
-                    channel.air('/page/update/info', { id: page.pageItemId, pageInfo: { icon } })
+                    channel.air('/page/update/info', { id: page.pageInfo?.id, pageInfo: { icon } })
                 }
             }
             async function changeCover(event: React.MouseEvent) {
@@ -67,9 +67,6 @@ export class PageCover extends React.Component<{ page: Page }>{
                 self.loadThumb = true;
                 self.forceUpdate();
             }
-
-
-
 
             return <div className="shy-page-view-cover" onMouseDown={e => dragStart(e)}>
                 <img ref={e => this.img = e}

@@ -11,6 +11,11 @@ export enum PageLayoutType {
      * 从表里选择一些数据的页面窗体
      */
     dbPickRecord = 23,
+
+    /**
+     * schema view
+     */
+    dbView=24,
     //#endregion
 
     /**

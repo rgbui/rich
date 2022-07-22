@@ -1,6 +1,7 @@
 /**
  * 该指令的值不能随便变更(指令的值会存储下来，变更将导致混乱)
  * 只能新增
+ * 
  */
 export enum ActionDirective {
     onInputText = 100,
@@ -62,10 +63,8 @@ export enum ActionDirective {
      * 错误修正的
      */
     onErrorRepairDidMounte = 300,
-
     onPageTurnLayout = 400,
     onPageUpdateProps = 401,
-
     /**
      * 一些特殊的block操作
      */
@@ -75,10 +74,12 @@ export enum ActionDirective {
     onCarouselAddItem = 510,
     onCarouselRemoveItem = 511,
     onMindAddSub = 512,
-
 }
 
 export enum OperatorDirective {
+    /***
+     * 创建新块
+     */
     create = 103,
     /**
      * 删除，你可以认为是彻底的删除了,与create正好相反
@@ -93,6 +94,10 @@ export enum OperatorDirective {
      * 更新属性
      */
     updateProp = 106,
+    /**
+     * 块的相互转换
+     */
+    turn = 102,
 
     /**
      * 数组属性发生变化
@@ -118,5 +123,36 @@ export enum OperatorDirective {
      * 记录光标的位置
      */
     keepCursorOffset = 500,
+
+
+
+    //#region  新的指令，以1000~2000为主
+
+    /**
+     * https://github.com/yjs/yjs
+     * 
+     */
+    $create = 1000,
+    $delete = 1001,
+    $move = 1002,
+    $turn = 1003,
+    $update = 1004,
+    $map_splice = 1005,
+    $text_splice = 1012,
+    $array_create = 1030,
+    $array_delete = 1031,
+    $array_update = 1032,
+
+    $schema_data_push = 1040,
+    $schema_data_remove = 1041,
+    $schema_data_update = 1042,
+
+
+    $keep_cursor_offset = 1055,
+    $page_turn_layout = 1060,
+    $page_update_prop = 1061,
+    //#endregion
+
+
 }
 

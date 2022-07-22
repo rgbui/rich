@@ -48,6 +48,8 @@ export class TableStoreItem extends Block {
     async onUpdateCellValue(viewField: ViewField, value: any) {
         value = util.clone(value);
         this.dataRow[viewField.field.name] = value;
+        var dr = this.dataGrid.data.find(g => g.id == this.dataRow.id);
+        dr[viewField.field.name] = value;
         await this.schema.rowUpdate({
             dataId: this.dataRow.id,
             data: { [viewField.field.name]: value }

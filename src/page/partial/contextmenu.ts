@@ -132,7 +132,7 @@ export class PageContextmenu {
             }
             else if (r.item.name == 'history') {
                 var result = await usePageHistoryStore({
-                    pageId: this.pageItemId,
+                    pageId: this.pageInfo?.id,
                     pageTitle: this.pageInfo.text
                 });
                 if (result) {
@@ -141,5 +141,8 @@ export class PageContextmenu {
                 }
             }
         }
+    }
+    async onOpenPublish(this:Page,event:React.MouseEvent){
+        
     }
 }

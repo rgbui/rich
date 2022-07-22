@@ -141,7 +141,7 @@ export class PageEvent {
                     await this.createBlock('/channel/text', {}, view);
                     break;
             }
-            await channel.air('/page/update/info', { id: this.pageItemId, pageInfo: { pageType: this.pageLayout.type } });
+            await channel.air('/page/update/info', { id: this.pageInfo?.id, pageInfo: { pageType: this.pageLayout.type } });
             if (typeof actions == 'function') await actions();
             this.addPageUpdate();
         });

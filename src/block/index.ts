@@ -5,7 +5,6 @@ import { Page } from "../page";
 import { BlockDisplay } from "./enum";
 import { Pattern } from "./pattern/index";
 import { BlockView } from "./view";
-import { TextEle } from "../common/text.ele";
 import { Block$Seek } from "./partial/seek";
 import { prop } from "./factory/observable";
 import "./style.less";
@@ -26,6 +25,9 @@ import { Polygon } from "../common/vector/polygon";
 import { channel } from "../../net/channel";
 import { GridMap } from "../page/grid";
 import { AtomPermission } from "../page/permission";
+import { ElementType, getElementUrl } from "../../net/element.type";
+import { SnapshootBlockPos, SnapshootBlockPropPos } from "../history/snapshoot";
+import lodash from "lodash";
 
 export abstract class Block extends Events {
     constructor(page: Page) {
@@ -35,6 +37,7 @@ export abstract class Block extends Events {
         this.date = new Date().getTime();
         this.page = page;
         this.pattern = new Pattern(this);
+        if (typeof this._init == 'function') this._init();
         if (typeof this.init == 'function') this.init();
     }
     /**
@@ -373,6 +376,10 @@ export abstract class Block extends Events {
     get blockUrl() {
         return this.page.pageInfo.url + '#' + this.id;
     }
+    get elementUrl() {
+        if (this.syncBlockId) return getElementUrl(ElementType.SyncBlock, this.syncBlockId);
+        else return getElementUrl(ElementType.Block, this.page.pageInfo?.id, this.id);
+    }
     /**
      * 判断当前块是否为文本块
      */
@@ -522,6 +529,7 @@ export abstract class Block extends Events {
         var rb = this.closest(x => x.isFrame || x.isBoardBlock || x.isMind || x.url == BlockUrlConstant.Group, true);
         if (rb) return rb;
     }
+    @prop()
     matrix = new Matrix();
     private _childsOffsetMatrix: Matrix;
     get childsOffsetMatrix() {
@@ -540,10 +548,16 @@ export abstract class Block extends Events {
     }
     get globalMatrix(): Matrix {
         var rb = this.relativeBlock;
-        if (rb) return rb.globalMatrix.appended(this.matrix).appended(this.moveMatrix).appended(this.childsOffsetMatrix)
-        else return this.page.matrix.appended(this.matrix).appended(this.moveMatrix).appended(this.childsOffsetMatrix);
+        var ma = this.matrix;
+        if (!ma) ma = new Matrix();
+        if (rb) return rb.globalMatrix.appended(ma).appended(this.moveMatrix).appended(this.childsOffsetMatrix)
+        else return this.page.matrix.appended(ma).appended(this.moveMatrix).appended(this.childsOffsetMatrix);
     }
     get transformStyle() {
+        if (!(this.matrix instanceof Matrix)) {
+            console.log(this);
+        }
+        if (!this.matrix) return new Matrix().getCss()
         var ma = this.matrix.appended(this.moveMatrix).appended(this.childsOffsetMatrix);
         return ma.getCss();
     }
@@ -633,6 +647,36 @@ export abstract class Block extends Events {
         if (this.page.isBoard || this.isFrame || this.isFreeBlock || this.isBoardBlock)
             return new Rect(this.globalMatrix.transform(rect.leftBottom), this.matrix.transform(rect.rightBottom))
         else if (this.el) return rect.relative(Rect.fromEle(this.el).leftTop)
+    }
+    get pos(): SnapshootBlockPos {
+        return {
+            blockId: this.id,
+            pageId: this.page.id,
+            parentId: this.parent?.id || undefined,
+            childKey: this.parentKey,
+            at: this.at,
+            nextBlockId: this.next?.id,
+            prevBlockId: this.prev?.id,
+            parents: this.parents(g => true, true).map(c => c.id),
+            elementUrl: this.elementUrl
+        }
+    }
+    getPropPos(prop: string) {
+        var pr = this.pos as SnapshootBlockPropPos;
+        pr.prop = prop;
+        return pr;
+    }
+    getArrayItemPos(arrayProp: string, item: any) {
+        var pr = this.pos as SnapshootBlockPropPos;
+        pr.prop = arrayProp;
+        var arr = lodash.get(this, arrayProp);
+        var at = arr.find(g => g === item);
+        if (at > -1) {
+            pr.arrayAt = at;
+            pr.arrayNextId = arr[at + 1]?.id;
+            pr.arrayPrevId = arr[at - 1]?.id;
+        }
+        return pr;
     }
 }
 export interface Block extends Block$Seek { }

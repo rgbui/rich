@@ -1,6 +1,6 @@
 
 
-export type CursorName = 'default' | 'pointer' | 'col-resize' | 'column-resize';
+export type CursorName = 'default' | 'pointer' | 'col-resize' | 'column-resize'|'grab'|'grabbing';
 
 class Cursor {
     private _el: HTMLElement;

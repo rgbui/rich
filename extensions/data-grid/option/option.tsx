@@ -18,10 +18,12 @@ import { Icon } from "../../../component/view/icon";
 import { util } from "../../../util/util";
 import { Confirm } from "../../../component/lib/confirm";
 import { ShyAlert } from "../../../component/lib/alert";
+import { DragList } from "../../../component/view/drag.list";
+import { DataGridOptionType } from "../../../blocks/data-grid/schema/field";
 /**
  * 背景色
  */
-var BackgroundColorList = [
+export var OptionBackgroundColorList = [
     { color: 'rgba(247,214,183,0.5)', text: '幼杏' },
     { color: 'rgba(255,193,153,0.5)', text: '鲜橘' },
     { color: 'rgba(252,246,189,0.5)', text: '淡黄' },
@@ -34,12 +36,7 @@ var BackgroundColorList = [
     { color: 'rgba(217,211,215,0.5)', text: '暗银' },
     { color: 'rgba(253,198,200,0.5)', text: '将红' },
 ]
-export interface TableStoreOptionType {
 
-    text: string,
-    value: string,
-    color: string;
-}
 export class TableStoreOption extends EventsComponent {
     render() {
         var self = this;
@@ -52,6 +49,23 @@ export class TableStoreOption extends EventsComponent {
             self.value = (event.target as HTMLInputElement).value;
             self.forceUpdate()
         }
+        function change(to: number, from: number) {
+            var fs = self.filterOptions;
+            var t = fs[from];
+            fs.splice(from, 1);
+            var pre = to == 0 ? null : fs[to - 1];
+            var ops = lodash.cloneDeep(self.options);
+            ops.remove(o => o.value == t.value);
+            if (lodash.isNull(pre)) ops.insertAt(0, t);
+            else {
+                var at = ops.findIndex(g => g.value == pre.value);
+                ops.insertAt(at + 1, t);
+            }
+            self.options = ops;
+            self.forceUpdate()
+            self.emit('changeOptions', lodash.cloneDeep(self.options))
+
+        }
         return <div className="shy-tablestore-option-selector">
             <div className="shy-tablestore-option-selector-input">
                 {this.option && <a style={{ backgroundColor: this.option.color }}><span>{this.option.text}</span><em><CloseTick onClick={e => self.clearOption()}></CloseTick></em></a>}
@@ -59,13 +73,15 @@ export class TableStoreOption extends EventsComponent {
             </div>
             <div className="shy-tablestore-option-selector-drop">
                 <Remark style={{ height: 20, margin: '8px 0px', padding: '0px 10px' }}>{this.filterOptions.length > 0 ? '选择或创建一个选项' : '暂无选项'}</Remark>
-                {this.filterOptions.map(op => {
-                    return <div className="shy-tablestore-option-item" key={op.text} onClick={e => this.setOption(op)} >
-                        <span className="shy-tablestore-option-item-icon"><DragHandle></DragHandle></span>
-                        <span className="shy-tablestore-option-item-text"><em style={{ backgroundColor: op.color }}>{op.text}</em></span>
-                        <span className="shy-tablestore-option-item-property" onClick={e => this.configOption(op, e)}><Dots></Dots></span>
-                    </div>
-                })}
+                <DragList onChange={change} isDragBar={e => e.closest('.shy-tablestore-option-item-icon') ? true : false}>
+                    {this.filterOptions.map(op => {
+                        return <div className="shy-tablestore-option-item" key={op.text} onClick={e => this.setOption(op)} >
+                            <span className="shy-tablestore-option-item-icon"><DragHandle></DragHandle></span>
+                            <span className="shy-tablestore-option-item-text"><em style={{ backgroundColor: op.color }}>{op.text}</em></span>
+                            <span className="shy-tablestore-option-item-property" onClick={e => this.configOption(op, e)}><Dots></Dots></span>
+                        </div>
+                    })}
+                </DragList>
                 {this.isNeedCreated && <div className="shy-tablestore-option-item-create" onClick={e => this.onCreateOption()}><em>创建</em><span style={{ backgroundColor: this.optionColor }}>{this.value}</span></div>}
             </div>
         </div>
@@ -74,7 +90,7 @@ export class TableStoreOption extends EventsComponent {
         return this.value && !(this.options.length > 0 && this.options.some(s => s.text == this.value)) ? true : false;
     }
     get optionColor() {
-        return BackgroundColorList.find(g => !this.options.some(o => o.color == g.color))?.color;
+        return OptionBackgroundColorList.find(g => !this.options.some(o => o.color == g.color))?.color;
     }
     get filterOptions() {
         return this.options.filter(g => g.text == this.value || !this.value);
@@ -92,7 +108,7 @@ export class TableStoreOption extends EventsComponent {
             this.forceUpdate();
         }
     }
-    setOption(option: TableStoreOptionType) {
+    setOption(option: DataGridOptionType) {
         this.option = option;
         if (!this.option.value) {
             this.option.value = util.guid();
@@ -108,26 +124,28 @@ export class TableStoreOption extends EventsComponent {
         this.emit('save', '');
     }
     private value: string = '';
-    private options: TableStoreOptionType[] = [];
-    private option: TableStoreOptionType = null;
-    open(value, data: { multiple: boolean, options: TableStoreOptionType[] }) {
+    private options: DataGridOptionType[] = [];
+    private option: DataGridOptionType = null;
+    open(value, data: { multiple: boolean, options: DataGridOptionType[] }) {
         this.option = data.options.find(g => g.value == value);
         this.options = data.options;
         this.value = '';
         this.forceUpdate();
     }
-    async configOption(option: TableStoreOptionType, event: React.MouseEvent) {
+    async configOption(option: DataGridOptionType, event: React.MouseEvent) {
         event.stopPropagation();
         var menus = [
             { text: '标签', name: 'name', value: option.text, type: MenuItemType.input },
+            { type: MenuItemType.divide },
             { name: 'delete', icon: TrashSvg, text: '删除' },
             { type: MenuItemType.divide },
             { type: MenuItemType.text, text: '颜色' },
-            ...BackgroundColorList.map(b => {
+            ...OptionBackgroundColorList.map(b => {
                 return {
                     name: 'color',
                     value: b.color,
                     text: b.text,
+                    type: MenuItemType.custom,
                     render(item) {
                         return <div className="shy-tablestore-option-selector-property">
                             <span style={{ backgroundColor: item.value }}></span>
@@ -170,8 +188,8 @@ export class TableStoreOption extends EventsComponent {
 export async function useTableStoreOption(pos: PopoverPosition,
     value: any, options: {
         multiple: boolean,
-        options: TableStoreOptionType[],
-        changeOptions: (options: TableStoreOptionType[]) => void
+        options: DataGridOptionType[],
+        changeOptions: (options: DataGridOptionType[]) => void
     }) {
     let popover = await PopoverSingleton(TableStoreOption, { mask: true });
     let fv = await popover.open(pos);
@@ -184,7 +202,7 @@ export async function useTableStoreOption(pos: PopoverPosition,
         fv.only('input', (ops: TableStoreOption[]) => {
 
         });
-        fv.only('changeOptions', (ops: TableStoreOptionType[]) => {
+        fv.only('changeOptions', (ops: DataGridOptionType[]) => {
             options.changeOptions(ops);
         });
         fv.only('close', () => {

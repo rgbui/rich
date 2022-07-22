@@ -4,10 +4,8 @@ import { Block } from "../../../../src/block";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { prop } from "../../../../src/block/factory/observable";
 import { Pattern } from "../../../../src/block/pattern";
-import { Matrix } from "../../../../src/common/matrix";
 import { Rect } from "../../../../src/common/vector/point";
 import { ActionDirective } from "../../../../src/history/declare";
-import { util } from "../../../../util/util";
 import { SchemaFilter } from "../../schema/declare";
 import { TableSchema } from "../../schema/meta";
 import { ViewField } from "../../schema/view";
@@ -19,13 +17,14 @@ import { DataGridViewLife } from "./left.cycle";
 import { DataGridViewOperator } from "./operator";
 import { DataGridViewData } from "./data";
 import { DataGridViewConfig } from "./config";
+import { ElementType, getElementUrl } from "../../../../net/element.type";
+import { DataGridViewField } from "./field";
 
 /**
  * 
  * schema  table fields meta
  * syncBlockId ViewFields （控制展示的数据结构信息）
  * block fields(控制列宽)
- * 
  * show view(schema->syncBlock->block)
  * 
  */
@@ -34,7 +33,7 @@ export class DataGridView extends Block {
     @prop()
     fields: ViewField[] = [];
     @prop()
-    sorts: { field: string, sort: number }[] = [];
+    sorts: {id:string, field: string, sort: number }[] = [];
     @prop()
     filter: SchemaFilter = {};
     @prop()
@@ -65,6 +64,7 @@ export class DataGridView extends Block {
     size: number = 50;
     total: number = 0;
     init(this: DataGridView): void {
+        super.init();
         this.registerPropMeta('fields', undefined, true, (v) => {
             return new ViewField(v, this.schema);
         });
@@ -75,18 +75,10 @@ export class DataGridView extends Block {
             if (n == 'pattern') {
                 await this.pattern.load(data[n]);
             }
-            else if (n == 'matrix') this.matrix = new Matrix(data[n]);
-            else if (n == 'fields') {
-                data.fields.each(n => {
-                    this.fields.push(new ViewField(n));
-                })
-            }
             else if (n == 'blocks') {
                 this.blocks = { childs: [] };
             }
-            else {
-                this[n] = data[n];
-            }
+            else this.setPropData(n, data[n]);
         }
         if (this.syncBlockId) {
             await this.loadSyncBlock();
@@ -97,33 +89,35 @@ export class DataGridView extends Block {
             id: this._id,
             syncBlockId: this.syncBlockId,
             url: this.url,
+            schemaId: this.schemaId,
             matrix: this.matrix ? this.matrix.getValues() : undefined
         };
         if (typeof this.pattern.get == 'function')
             json.pattern = await this.pattern.get();
-        else {
-            console.log(this, this.pattern);
-        }
         json.blocks = {};
         if (Array.isArray(this.__props)) {
-            this.__props.each(pro => {
-                if (Array.isArray(this[pro])) {
-                    json[pro] = this[pro].map(pr => {
-                        if (typeof pr?.get == 'function') return pr.get();
-                        else return util.clone(pr);
-                    })
-                }
-                else if (typeof this[pro] != 'undefined') {
-                    if (typeof this[pro]?.get == 'function')
-                        json[pro] = this[pro].get();
-                    else json[pro] = util.clone(this[pro]);
-                }
+            super.__props.each(pro => {
+                json[pro] = this.clonePropData(pro, this[pro]);
             })
         }
         return json;
     }
+    async getSyncString() {
+        var json: Record<string, any> = { url: this.url };
+        if (typeof this.pattern.get == 'function')
+            json.pattern = await this.pattern.get();
+        json.blocks = {};
+        if (Array.isArray(this.__props)) {
+            var ss = super.__props;
+            this.__props.each(pro => {
+                if (ss.includes(pro)) return;
+                json[pro] = this.clonePropData(pro, this[pro]);
+            })
+        }
+        return JSON.stringify(json);
+    }
     async loadSyncBlock(this: DataGridView): Promise<void> {
-        var r = await channel.get('/page/sync/block', { syncBlockId: this.syncBlockId });
+        var r = await channel.get('/view/snap/query', { elementUrl: this.elementUrl });
         if (r.ok) {
             var data;
             try {
@@ -140,19 +134,13 @@ export class DataGridView extends Block {
                 if (n == 'pattern') {
                     await this.pattern.load(data[n]);
                 }
-                else if (n == 'matrix') this.matrix = new Matrix(data[n]);
-                else if (n == 'fields') {
-                    data.fields.each(n => {
-                        this.fields.push(new ViewField(n));
-                    })
-                }
                 else if (n == 'blocks') {
                     this.blocks = { childs: [] };
                 }
-                else {
-                    this[n] = data[n];
-                }
+                else this.setPropData(n, data[n]);
             }
+            if (Array.isArray(r.data.operates) && r.data.operates.length > 0)
+                this.page.loadUserActions(r.data.operates, 'load');
         }
     }
     private getSearchFilter() {
@@ -196,8 +184,7 @@ export class DataGridView extends Block {
                 var dg = await useDataGridCreate({ roundArea: Rect.fromEle(this.el) });
                 if (dg) {
                     this.schema = await TableSchema.onCreate({ text: dg.text, url: this.url });
-                    await this.onAction(ActionDirective.onCreateTableSchema, async () => {
-                        this.page.snapshoot.setSyncBlock(false);
+                    await this.page.onAction(ActionDirective.onCreateTableSchema, async () => {
                         this.updateProps({
                             schemaId: this.schema.id,
                             syncBlockId: this.schema.views.first().id
@@ -223,8 +210,7 @@ export class DataGridView extends Block {
             var dg = await useDataGridCreate({ roundArea: Rect.fromEle(this.el) });
             if (dg) {
                 this.schema = await TableSchema.onCreate({ text: dg.text, url: this.url });
-                await this.onAction(ActionDirective.onCreateTableSchema, async () => {
-                    this.page.snapshoot.setSyncBlock(false);
+                await this.page.onAction(ActionDirective.onCreateTableSchema, async () => {
                     this.updateProps({
                         schemaId: this.schema.id,
                         syncBlockId: this.schema.views.first().id
@@ -249,10 +235,14 @@ export class DataGridView extends Block {
         ]);
         this.forceUpdate()
     }
+    get elementUrl() {
+        return getElementUrl(ElementType.SchemaView, this.schemaId, this.syncBlockId);
+    }
 }
 
 export interface DataGridView extends DataGridViewLife { }
 export interface DataGridView extends DataGridViewOperator { }
 export interface DataGridView extends DataGridViewData { }
 export interface DataGridView extends DataGridViewConfig { }
-Mix(DataGridView, DataGridViewLife, DataGridViewOperator, DataGridViewData, DataGridViewConfig)
+export interface DataGridView extends DataGridViewField { }
+Mix(DataGridView, DataGridViewLife, DataGridViewOperator, DataGridViewData, DataGridViewConfig,DataGridViewField)

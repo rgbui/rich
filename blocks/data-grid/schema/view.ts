@@ -1,7 +1,7 @@
 import { util } from "../../../util/util";
 import { TableSchema } from "./meta";
-
 export class ViewField {
+    id: string;
     fieldId?: string;
     text?: string;
     colWidth: number = 120;
@@ -11,6 +11,7 @@ export class ViewField {
         if (this.fieldId) return this.schema.fields.find(g => g.id == this.fieldId);
     }
     constructor(options?: Partial<ViewField>, schema?: TableSchema) {
+        this.id = util.guid();
         if (options) this.load(options)
         if (schema) this.schema = schema;
     }
@@ -22,6 +23,7 @@ export class ViewField {
     get() {
         var json: Record<string, any> = {};
         var keys = [
+            'id',
             'fieldId',
             'text',
             'colWidth',

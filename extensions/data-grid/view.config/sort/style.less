@@ -1,6 +1,5 @@
 .shy-table-sorts-view {
     padding-bottom: 10px;
-   
 
     &-head {
         display        : flex;
@@ -10,52 +9,6 @@
         color          : rgb(55, 53, 47);
         font-size      : 14px;
     }
-
-    .shy-table-sorts-view-item {
-        display        : flex;
-        justify-content: flex-start;
-        align-items    : center;
-        height         : 38px;
-        font-size      : 14px;
-
-        >* {
-            margin     : 0px 5px;
-            flex-grow  : 0;
-            flex-shrink: 0;
-        }
-
-        .drag {
-            flex-grow    : 0;
-            flex-shrink  : 0;
-            fill         : rgba(55, 53, 47, 0.4);
-            display      : inline-flex;
-            margin-left  : 5px;
-            width        : 16px;
-            height       : 16px;
-            border-radius: 4px;
-
-            &:hover {
-                background-color: rgba(55, 53, 47, 0.08);
-            }
-        }
-
-        .close {
-            flex-grow    : 0;
-            flex-shrink  : 0;
-            fill         : rgba(55, 53, 47, 0.4);
-            display      : inline-flex;
-            width        : 32px;
-            height       : 32px;
-            border-radius: 4px;
-            margin-right : 10px;
-            cursor       : pointer;
-
-            &:hover {
-                background-color: rgba(55, 53, 47, 0.08);
-            }
-        }
-    }
-
     &-footer {
         color      : rgb(55, 53, 47);
         height     : 28px;
@@ -65,8 +18,8 @@
         a {
 
             color          : rgb(55, 53, 47);
-            height     : 28px;
-            line-height: 28px;
+            height         : 28px;
+            line-height    : 28px;
             padding-left   : 5px;
             border-radius  : 4px;
             font-size      : 14px;
@@ -78,6 +31,51 @@
             &:hover {
                 background-color: rgba(55, 53, 47, 0.08);
             }
+        }
+    }
+}
+
+.shy-table-sorts-view-item {
+    display        : flex;
+    justify-content: flex-start;
+    align-items    : center;
+    height         : 38px;
+    font-size      : 14px;
+
+    >* {
+        margin     : 0px 5px;
+        flex-grow  : 0;
+        flex-shrink: 0;
+    }
+
+    .drag {
+        flex-grow    : 0;
+        flex-shrink  : 0;
+        fill         : rgba(55, 53, 47, 0.4);
+        display      : inline-flex;
+        margin-left  : 5px;
+        width        : 16px;
+        height       : 16px;
+        border-radius: 4px;
+
+        &:hover {
+            background-color: rgba(55, 53, 47, 0.08);
+        }
+    }
+
+    .close {
+        flex-grow    : 0;
+        flex-shrink  : 0;
+        fill         : rgba(55, 53, 47, 0.4);
+        display      : inline-flex;
+        width        : 32px;
+        height       : 32px;
+        border-radius: 4px;
+        margin-right : 10px;
+        cursor       : pointer;
+
+        &:hover {
+            background-color: rgba(55, 53, 47, 0.08);
         }
     }
 }

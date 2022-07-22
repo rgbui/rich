@@ -32,6 +32,12 @@ export class TableSchema {
     creater: string;
     createDate: Date;
     fields: Field[] = [];
+    get userFields(): Field[] {
+        return this.fields.findAll(g => g.text ? true : false);
+    }
+    get allowSortFields() {
+        return this.userFields.findAll(x => x.text && ![FieldType.formula, FieldType.image, FieldType.file, FieldType.audio, FieldType.video].includes(x.type) ? true : false)
+    }
     text: string;
     views: {
         id: string,
@@ -43,7 +49,15 @@ export class TableSchema {
             userid: string
         }
     }[] = [];
-    recordViews: { id: string, text: string, type?: 'form' | 'card' }[] = [];
+    recordViews: {
+        id: string, text: string,
+        locker?: {
+            lock: boolean,
+            date: number,
+            userid: string
+        },
+        type?: 'form' | 'card'
+    }[] = [];
     modelMetaId?: string;
     getViewFields() {
         var fs = this.fields.findAll(g => g.text ? true : false);
@@ -135,7 +149,7 @@ export class TableSchema {
             }
         })
     }
-    turnField(args: { fieldId: string, type: FieldType, config?: Record<string, any> }) {
+    turnField(args: { fieldId: string, text: string, type: FieldType, config?: Record<string, any> }) {
         return channel.put('/schema/operate', {
             operate: {
                 schemaId: this.id,
@@ -148,9 +162,10 @@ export class TableSchema {
      * { name: 'createSchemaView', text: r.text, url: r.url }
      * { name: 'addField', field: { text: '状态', type: FieldType.option } }
      * { name: 'removeSchemaView', id: view.id }
-     * { name: 'duplicateSchemaView',id:view.id }
+     * { name: 'duplicateSchemaView',id:view.id,data:{snap:any}}
      * { name: 'updateSchemaView', id: view.id, data: { text: it.value } }
      * { name: 'updateSchema', data: { text: it.value } }
+     * { name: 'moveSchemaView',id:view.id,data:{from:number,to:number}}
      */
     async onSchemaOperate(actions: {
         name: string,
@@ -167,7 +182,8 @@ export class TableSchema {
                 actions
             }
         });
-        actions.forEach(action => {
+        actions.forEach((action, i) => {
+            var re = result.data.actions[i];
             switch (action.name) {
                 case 'removeSchemaView':
                     this.views.remove(g => g.id == action.id);
@@ -182,9 +198,13 @@ export class TableSchema {
                     Object.assign(this, action.data);
                     break;
                 case 'duplicateSchemaView':
-                    this.views.push(action.data as any);
+                    this.views.push(re);
                     break;
-
+                case 'moveSchemaView':
+                    var view = this.views.find(g => g.id == action.id);
+                    this.views.remove(g => g === view);
+                    this.views.splice(action.data.to as number, 0, view);
+                    break;
             }
         })
         return result;

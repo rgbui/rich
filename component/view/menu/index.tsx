@@ -25,6 +25,10 @@ export class MenuPanel<T> extends EventsComponent {
             if (this.mb) this.mb.open(pos);
         })
     }
+    updateItems(menus: MenuItem<T>[]) {
+        this.menus = menus;
+        this.forceUpdate();
+    }
     visible: boolean = false;
     private options: { height?: number, width?: number, overflow?: 'auto' | 'visible' } = {};
     onClose(e: React.MouseEvent) {

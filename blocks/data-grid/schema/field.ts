@@ -4,8 +4,8 @@ import { util } from "../../../util/util";
 import { FieldType } from "./type";
 export class Field {
     id: string;
-    name: string
-    text: string
+    name: string;
+    text: string;
     type: FieldType;
     required: boolean;
     load(col: Record<string, any>) {
@@ -37,8 +37,14 @@ export class Field {
         return undefined;
     }
 }
+export interface DataGridOptionType {
+
+    text: string,
+    value: string,
+    color: string;
+}
 export interface FieldConfig {
-    options?: { text: string, value: string, color: string }[];
+    options?: DataGridOptionType[];
     isMultiple?: boolean
     relationTableId?: string,
     rollupTableId?: string,
@@ -47,6 +53,8 @@ export interface FieldConfig {
     formula?: string,
     emoji?: EmojiCode,
     dateFormat?: string,
-    includeTime?:boolean
+    includeTime?: boolean,
+    numberFormat?: string,
+    numberRadix?: string
 }
 
