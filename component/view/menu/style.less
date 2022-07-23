@@ -20,221 +20,294 @@
     padding            : 6px 0px;
     max-height         : 70vh;
     overscroll-behavior: contain;
+}
 
-    .shy-menu-box-item {
-        position: relative;
+.shy-menu-box-item {
+    position: relative;
 
-        &-option {
-            position       : relative;
-            display        : flex;
-            justify-content: flex-start;
-            align-items    : center;
-            user-select    : none;
-            min-height     : 28px;
-            line-height    : 28px;
-            font-size      : 14px;
-            color          : rgba(55, 53, 47);
-            padding        : 0px 14px;
-            cursor         : pointer;
+    &-option {
+        position       : relative;
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : center;
+        user-select    : none;
+        min-height     : 28px;
+        line-height    : 28px;
+        font-size      : 14px;
+        color          : rgba(55, 53, 47);
+        padding        : 0px 14px;
+        cursor         : pointer;
+
+        .shy-icon {
+            width              : 17px;
+            height             : 17px;
+            display            : block;
+            fill               : rgba(55, 53, 47);
+            color              : rgba(55, 53, 47);
+            overflow           : hidden;
+            flex-shrink        : 0;
+            backface-visibility: hidden;
+
+            img {
+                width: 17px
+            }
+        }
+
+        .shy-menu-box-item-option-spread {
+            flex-shrink: 0;
+        }
+
+        .shy-menu-box-item-option-text {
+            display     : inline-flex;
+            margin-right: 14px;
+            flex-grow   : 1.0;
+        }
+
+        &:hover {
+            background-color: rgba(55, 53, 47, 0.08);
+        }
+
+        label {
+            position    : absolute;
+            top         : 0px;
+            right       : 0px;
+            bottom      : 0px;
+            color       : rgba(55, 53, 47, 0.4);
+            font-size   : 12px;
+            white-space : nowrap;
+            margin-right: 14px;
+            min-height  : 28px;
+            line-height : 28px;
+        }
+
+        .shy-menu-box-item-option-label-icon {
+            position    : absolute;
+            top         : 0px;
+            right       : 0px;
+            bottom      : 0px;
+            margin-right: 14px;
+            min-height  : 28px;
+            line-height : 28px;
+        }
+
+        &.disabled {
+            cursor: default;
 
             .shy-icon {
-                width              : 17px;
-                height             : 17px;
-                display            : block;
-                fill               : rgba(55, 53, 47);
-                color              : rgba(55, 53, 47);
-                overflow           : hidden;
-                flex-shrink        : 0;
-                backface-visibility: hidden;
-
-                img {
-                    width: 17px
-                }
-            }
-
-            .shy-menu-box-item-option-spread {
-                flex-shrink: 0;
+                color: rgba(55, 53, 47, 0.6);
+                fill : rgba(55, 53, 47, 0.6);
             }
 
             .shy-menu-box-item-option-text {
-                display     : inline-flex;
-                margin-right: 14px;
-                flex-grow   : 1.0;
-            }
-
-            &:hover {
-                background-color: rgba(55, 53, 47, 0.08);
+                color: rgba(55, 53, 47, 0.6);
             }
 
             label {
-                position    : absolute;
-                top         : 0px;
-                right       : 0px;
-                bottom      : 0px;
-                color       : rgba(55, 53, 47, 0.4);
-                font-size   : 12px;
-                white-space : nowrap;
-                margin-right: 14px;
-                min-height  : 28px;
-                line-height : 28px;
+                color: rgba(55, 53, 47, 0.6);
             }
 
-            .shy-menu-box-item-option-label-icon {
-                position    : absolute;
-                top         : 0px;
-                right       : 0px;
-                bottom      : 0px;
-                margin-right: 14px;
-                min-height  : 28px;
-                line-height : 28px;
-            }
-
-            &.disabled {
-                cursor: default;
-
-                .shy-icon {
-                    color: rgba(55, 53, 47, 0.6);
-                    fill : rgba(55, 53, 47, 0.6);
-                }
-
-                .shy-menu-box-item-option-text {
-                    color: rgba(55, 53, 47, 0.6);
-                }
-
-                label {
-                    color: rgba(55, 53, 47, 0.6);
-                }
-
-                &:hover {
-                    background-color: transparent;
-                }
+            &:hover {
+                background-color: transparent;
             }
         }
+    }
 
-        &-button {
-            padding: 0px 14px;
+    &-button {
+        padding: 0px 14px;
+    }
+
+    &-input {
+        padding: 0px 14px;
+    }
+
+    &-divide {
+        height       : 1px;
+        display      : block;
+        margin-top   : 6px;
+        margin-bottom: 6px;
+        box-shadow   : rgba(55, 53, 47, 0.09) 0px -1px 0px;
+    }
+
+    &-text {
+        display    : block;
+        padding    : 0px 14px;
+        font-size  : 12px;
+        line-height: 16px;
+        color      : rgba(55, 53, 47, 0.4);
+    }
+
+    &-switch {
+        padding        : 0px 14px;
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : center;
+        min-height     : 28px;
+        cursor         : pointer;
+
+        &:hover {
+            background-color: rgba(55, 53, 47, 0.08);
         }
 
-        &-input {
-            padding: 0px 14px;
+        span {
+            flex-shrink: 1;
+            flex-grow  : 1;
+            font-size  : 14px;
+            color      : rgb(55, 53, 47);
         }
 
-        &-divide {
-            height       : 1px;
-            display      : block;
-            margin-top   : 6px;
-            margin-bottom: 6px;
-            box-shadow   : rgba(55, 53, 47, 0.09) 0px -1px 0px;
+        .shy-switch {
+            // width      : 30px;
+            flex-shrink: 0;
+            flex-grow  : 0;
+        }
+    }
+
+    &-drag {
+        position       : relative;
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : center;
+        user-select    : none;
+        min-height     : 28px;
+        line-height    : 28px;
+        font-size      : 14px;
+        color          : rgba(55, 53, 47);
+        padding        : 0px 14px;
+        cursor         : pointer;
+
+        &:hover {
+            background-color: rgba(55, 53, 47, 0.08);
+        }
+
+        .drag {
+            flex-grow      : 0;
+            flex-shrink    : 0;
+            width          : 20px;
+            height         : 20px;
+            display        : inline-flex;
+            justify-content: center;
+            align-items    : center;
+            cursor         : grab;
+            border-radius  : 4px;
+
+            .shy-icon {
+                color: rgba(55, 53, 47, 0.4);
+                fill : currentColor
+            }
+
+            &:hover {
+                background-color: rgba(55, 53, 47, 0.08);
+            }
         }
 
         &-text {
-            display    : block;
-            padding    : 0px 14px;
-            font-size  : 12px;
-            line-height: 16px;
-            color      : rgba(55, 53, 47, 0.4);
+            display     : inline-flex;
+            margin-left : 8px;
+            margin-right: 14px;
+            flex-grow   : 1.0;
         }
 
-        &-switch {
-            padding        : 0px 14px;
-            display        : flex;
-            justify-content: flex-start;
+        &-label-icon {
+            flex-grow      : 0;
+            flex-shrink    : 0;
+            width          : 20px;
+            height         : 20px;
+            display        : inline-flex;
+            justify-content: center;
             align-items    : center;
-            min-height     : 28px;
-            cursor         : pointer;
+            border-radius  : 4px;
+
+        }
+
+        .btn {
+            margin-left    : 5px;
+            flex-grow      : 0;
+            flex-shrink    : 0;
+            width          : 20px;
+            height         : 20px;
+            display        : inline-flex;
+            justify-content: center;
+            align-items    : center;
+            border-radius  : 4px;
+
+            .shy-icon {
+                color: rgba(55, 53, 47, 0.4);
+                fill : currentColor
+            }
 
             &:hover {
                 background-color: rgba(55, 53, 47, 0.08);
             }
+        }
+    }
 
-            span {
-                flex-shrink: 1;
-                flex-grow  : 1;
-                font-size  : 14px;
-                color      : rgb(55, 53, 47);
-            }
+    &-select {
+        position       : relative;
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : center;
+        user-select    : none;
+        min-height     : 28px;
+        line-height    : 28px;
+        font-size      : 14px;
+        color          : rgba(55, 53, 47);
+        padding        : 0px 14px;
+        cursor         : pointer;
 
-            .shy-switch {
-                // width      : 30px;
-                flex-shrink: 0;
-                flex-grow  : 0;
+        .shy-icon {
+            width              : 17px;
+            height             : 17px;
+            display            : block;
+            fill               : rgba(55, 53, 47);
+            color              : rgba(55, 53, 47);
+            overflow           : hidden;
+            flex-shrink        : 0;
+            backface-visibility: hidden;
+
+            img {
+                width: 17px
             }
         }
 
-        &-drag {
-            position       : relative;
-            display        : flex;
-            justify-content: flex-start;
+        .shy-menu-box-item-option-text {
+            display     : inline-flex;
+            margin-right: 14px;
+            flex-grow   : 1.0;
+        }
+
+        .shy-menu-box-item-select-value {
+            flex-grow      : 0;
+            display        : inline-flex;
+            justify-content: center;
             align-items    : center;
-            user-select    : none;
-            min-height     : 28px;
-            line-height    : 28px;
-            font-size      : 14px;
-            color          : rgba(55, 53, 47);
-            padding        : 0px 14px;
-            cursor         : pointer;
+            em {
+                font-style  : normal;
+                display     : inline-block;
+                margin-right: 5px;
+            }
+        }
+
+        &:hover {
+            background-color: rgba(55, 53, 47, 0.08);
+        }
+
+        &.disabled {
+            cursor: default;
+
+            .shy-icon {
+                color: rgba(55, 53, 47, 0.6);
+                fill : rgba(55, 53, 47, 0.6);
+            }
+
+            .shy-menu-box-item-option-text {
+                color: rgba(55, 53, 47, 0.6);
+            }
 
             &:hover {
-                background-color: rgba(55, 53, 47, 0.08);
-            }
-
-            .drag {
-                flex-grow      : 0;
-                flex-shrink    : 0;
-                width          : 20px;
-                height         : 20px;
-                display        : inline-flex;
-                justify-content: center;
-                align-items    : center;
-                cursor         : grab;
-                border-radius  : 4px;
-                .shy-icon {
-                    color: rgba(55, 53, 47, 0.4);
-                    fill : currentColor
-                }
-                &:hover {
-                    background-color: rgba(55, 53, 47, 0.08);
-                }
-            }
-            &-text {
-                display     : inline-flex;
-                margin-left : 8px;
-                margin-right: 14px;
-                flex-grow   : 1.0;
-            }
-
-            &-label-icon {
-                flex-grow      : 0;
-                flex-shrink    : 0;
-                width          : 20px;
-                height         : 20px;
-                display        : inline-flex;
-                justify-content: center;
-                align-items    : center;
-                border-radius  : 4px;
-
-            }
-
-            .btn {
-                margin-left    : 5px;
-                flex-grow      : 0;
-                flex-shrink    : 0;
-                width          : 20px;
-                height         : 20px;
-                display        : inline-flex;
-                justify-content: center;
-                align-items    : center;
-                border-radius  : 4px;
-
-                .shy-icon {
-                    color: rgba(55, 53, 47, 0.4);
-                    fill : currentColor
-                }
-
-                &:hover {
-                    background-color: rgba(55, 53, 47, 0.08);
-                }
+                background-color: transparent;
             }
         }
     }
 }
+
+.shy-menu-view {}
