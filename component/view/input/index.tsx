@@ -7,7 +7,7 @@ export class Input extends React.Component<{
     style?: CSSProperties,
     disabled?: boolean,
     value?: string,
-    type?: 'text' | 'password'|'number',
+    type?: 'text' | 'password' | 'number',
     placeholder?: string,
     readonly?: boolean,
     onChange?: (value: string, e?: React.FormEvent<HTMLInputElement>) => void,
@@ -21,6 +21,7 @@ export class Input extends React.Component<{
 }>{
     private clearVisible: boolean = false;
     private inputEl: HTMLInputElement;
+    private isCompositionStart: boolean = false;
     onClear() {
         var self = this;
         var props = this.props;
@@ -38,6 +39,7 @@ export class Input extends React.Component<{
             return value.trim()
         }
         function onInput(e: React.FormEvent<HTMLInputElement>) {
+            if (self.isCompositionStart) return;
             var value = filterValue((e.target as HTMLInputElement).value)
             props.onChange && props.onChange(value, e);
             if (props.clear) {
@@ -63,6 +65,8 @@ export class Input extends React.Component<{
                     readOnly={props.readonly}
                     maxLength={props.maxLength || undefined}
                     name={props.name}
+                    onCompositionEnd={e => this.isCompositionStart = false}
+                    onCompositionStart={e => this.isCompositionStart = true}
                 ></input>
             </div>
             {props.clear && this.clearVisible && <div className="shy-input-clear" onClick={e => this.onClear()}><Icon size={10} icon={CloseTickSvg}></Icon></div>}
