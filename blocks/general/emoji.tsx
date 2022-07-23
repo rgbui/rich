@@ -4,6 +4,7 @@ import { prop, url, view } from "../../src/block/factory/observable";
 import { Block } from "../../src/block";
 import { BlockDisplay } from "../../src/block/enum";
 import { SolidArea } from "../../src/block/view/appear";
+import { getEmoji } from "../../net/element.type";
 
 /**
  * 表情
@@ -24,7 +25,7 @@ export class EmojiView extends BlockView<Emoji>{
     render() {
         return <div className='sy-block-emoji'>
             <SolidArea block={this.block} prop='src'>
-                {this.block.src.mime == 'emoji' && <span>{this.block.src.code}</span>}
+                {this.block.src.mime == 'emoji' && <span dangerouslySetInnerHTML={{ __html: getEmoji(this.block.src.code) }}>{this.block.src.code}</span>}
                 {this.block.src.mime == 'image' && <span><img src={this.block.src.url} /></span>}
             </SolidArea>
         </div>
