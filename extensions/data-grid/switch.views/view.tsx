@@ -53,7 +53,7 @@ class TabelSchemaViewDrop extends EventsComponent {
                 });
                 this.schema.fields.push(f);
             }
-            this.schema.views.push({ id: oneAction.id, text: r.text, url: r.url });
+            this.schema.views.push({ id: oneAction.id, text: r.text, url: r.url } as any);
             this.onChange(this.schema.views.find(g => g.id == oneAction.id));
         }
     }

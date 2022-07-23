@@ -6,23 +6,16 @@ import { Input } from "../../../component/view/input";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
 import "./style.less";
-import { getSchemaViewIcon } from "../../../blocks/data-grid/schema/util";
+import { getSchemaViewIcon, getSchemaViews } from "../../../blocks/data-grid/schema/util";
 import { Divider } from "../../../component/view/grid";
 import { CheckSvg } from "../../../component/svgs";
 
 export class DataGridCreate extends EventsComponent {
     render() {
-        var views = [
-            { url: '/data-grid/table', text: '表格' },
-            { url: '/data-grid/gallery', text: '卡片' },
-            { url: '/data-grid/board', text: '看板' },
-            // { url: '/data-grid/list', text: '列表' },
-            { url: '/data-grid/calendar', text: '日历' }
-        ]
         return <div className="data-grid-create">
             <div style={{ margin: '0px 10px' }}><Input value={this.text} onChange={e => { this.text = e }}></Input></div>
             {this.selectView && <><Divider ></Divider><div className="data-grid-create-views">
-                {views.map(v => {
+                {getSchemaViews().map(v => {
                     return <div
                         key={v.url}
                         onMouseDown={e => this.selectUrl(v.url)}
@@ -78,3 +71,4 @@ export async function useDataGridCreate(pos: PopoverPosition, options?: { select
         });
     })
 }
+
