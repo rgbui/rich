@@ -33,7 +33,7 @@ export class DataGridView extends Block {
     @prop()
     fields: ViewField[] = [];
     @prop()
-    sorts: {id:string, field: string, sort: number }[] = [];
+    sorts: { id: string, field: string, sort: number }[] = [];
     @prop()
     filter: SchemaFilter = {};
     @prop()
@@ -245,4 +245,4 @@ export interface DataGridView extends DataGridViewOperator { }
 export interface DataGridView extends DataGridViewData { }
 export interface DataGridView extends DataGridViewConfig { }
 export interface DataGridView extends DataGridViewField { }
-Mix(DataGridView, DataGridViewLife, DataGridViewOperator, DataGridViewData, DataGridViewConfig,DataGridViewField)
+Mix(DataGridView, DataGridViewLife, DataGridViewOperator, DataGridViewData, DataGridViewConfig, DataGridViewField)

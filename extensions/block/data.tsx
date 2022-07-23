@@ -46,7 +46,8 @@ export var BlockSelectorData: BlockGroup[] = [
             { text: "首重文字", pic: <img src={callout} />, url: "/callout", description: "", label: "/首重文字", labels: ['/zzwz', '/zhuozhongwenzi', '/callout'] },
             { text: "数学公式", pic: <img src={equation} />, url: "/katex", description: "", label: "/数学公式", labels: ['/sxgs', '/公式', '/shuxuegongshi', '/latex', '/math'] },
             { text: '链接页面', pic: <img src={link} />, url: '/link', description: "", label: "/链接", labels: ['/link', '/wz'] },
-            { text: '进度条', pic: <img src={link} />, url: '/measure', description: "", label: "/进度条", labels: ['/jdt', '/jindutiao', '/progressbar'] }
+            { text: '进度条', pic: <img src={link} />, url: '/measure', description: "", label: "/进度条", labels: ['/jdt', '/jindutiao', '/progressbar'] },
+            { text: '按钮', isLine:true, pic: <img src={link} />, url: '/button', description: '', label: '/按钮', labels: ['/button', '/al'] }
         ]
     },
     {
