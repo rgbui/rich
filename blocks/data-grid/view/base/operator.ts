@@ -277,20 +277,21 @@ export class DataGridViewOperator {
             this.forceUpdate();
         }, { block: this })
     }
-    async onShowAutoIncrement(this: DataGridView, visible: boolean) {
+    async onShowExtendField(this: DataGridView, visible: boolean, fieldType: FieldType) {
         var newFields = this.fields.map(f => f.clone());
-        if (visible == true && newFields.some(s => s.field?.type == FieldType.autoIncrement)) {
+        if (visible == true && newFields.some(s => s.field?.type == fieldType)) {
             return
         }
-        else if (visible == false && !newFields.some(s => s.field?.type == FieldType.autoIncrement)) {
+        else if (visible == false && !newFields.some(s => s.field?.type == fieldType)) {
             return
         }
         this.page.onAction(ActionDirective.onSchemaCreateField, async () => {
-            var sf = this.schema.fields.find(g => g.type == FieldType.autoIncrement);
+            var sf = this.schema.fields.find(g => g.type == fieldType);
             if (visible == true) {
-                newFields.insertAt(0, new ViewField({ text: '编号', fieldId: sf.id }, this.schema))
+                if (fieldType == FieldType.autoIncrement) newFields.insertAt(0, new ViewField({ text: '编号', fieldId: sf.id }, this.schema))
+                else newFields.push(new ViewField({ fieldId: sf.id }, this.schema))
             }
-            else newFields.remove(g => g.field?.type == FieldType.autoIncrement);
+            else newFields.remove(g => g.field?.type == fieldType);
             this.changeFields(this.fields, newFields);
             await this.createItem();
             this.forceUpdate();
