@@ -6,7 +6,17 @@ export class ModelMeta {
     schemas: { name: string, schemaId: string; }[] = [];
     fields: { name: string, schemaId: string; fieldId: string }[] = [];
 }
-
+/**
+ * 
+ * view add ask
+ * view add ask question
+ * view ask-questions
+ * view recommend ask-question
+ * view asks list
+ * 
+ * 
+ * 
+ */
 /***
  * 
  * blog{ 
