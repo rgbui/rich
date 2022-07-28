@@ -1,0 +1,574 @@
+//屏幕自适应宽度
+.screen-width {
+    margin-left: 100px;
+    margin-right: 100px;
+    display: block;
+}
+
+/**
+布局
+flex:从左到右，水平居中
+flex-end:从右到左，水平居中
+flex-center:水平、垂直居中
+flex-top:从左到右，上对齐
+flex-line:行内flex
+flex-full:从左到右，水平与父元素同高
+flex-auto:子元素自动填充大小
+flex-fixed:固定大小
+**/
+.flex {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.flex-end {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.flex-top {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-line {
+    display: flex-line;
+}
+
+.flex-full {
+    display: flex;
+    justify-content: flex-start;
+    align-items: stretch;
+    flex-wrap: nowrap;
+}
+
+.flex-auto {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+.flex-fixed {
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+
+
+/**
+position的布局
+.pos-inset: 适配父元素
+.pos-center:水平垂直居中
+.pos-center-l:右对齐，水平垂直居中
+.pos-full: 宽度、高度与屏幕大小一致
+.fixed: fixed定位模式
+.fixed-full: fixed与屏幕大小一致
+.relative: 
+**/
+.pos {
+    position: absolute;
+}
+
+.pos-inset {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+}
+
+.pos-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.pos-center-l {
+    position: absolute;
+    top: 50%;
+    right: 0px;
+    transform: translate(0%, -50%);
+}
+
+.pos-full {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.fixed {
+    position: fixed;
+}
+
+.fixed-full {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.relative {
+    position: relative;
+}
+
+/**
+大小
+size-24:图标大小
+**/
+.size-24 {
+    width: 24px;
+    height: 24px;
+}
+
+.size-48 {
+    width: 48px;
+    height: 48px;
+}
+
+/**
+形状
+circle:圆
+.round:圆角（图标、按钮类）
+.round-card:卡片类的圆角，比较大一些
+**/
+.circle {
+    border-radius: 50%;
+}
+
+.rect {
+    border-radius: 0%;
+}
+
+.round {
+    border-radius: 4px;
+}
+
+.round-card {
+    border-radius: 16px;
+}
+
+/***
+间距
+gap-5：相邻的行内元素间距，适用于符号（如文字与图标符合的组合）
+gap-l-5:相邻的行内元素左间距
+gap-r-5:相邻的行内元素右间距
+gap-10:一般指两个图标的间隔
+gap-l-10
+gap-r-10
+gap-p-10:指段落的间距（适用于行间距）
+gap-b-20:指模块间距（有明显的块与块之间的间距），大标题内容与另外的大标题内容，垂直的两张卡片
+**/
+.gap-5 {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.gap-l-5 {
+    margin-left: 5px;
+}
+
+.gap-r-5 {
+    margin-right: 5px;
+}
+
+.gap-10 {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.gap-l-10 {
+    margin-left: 10px;
+}
+
+.gap-r-10 {
+    margin-right: 10px;
+}
+
+.gap-p-10 {
+    margin-top: 10p;
+    margin-bottom: 10px
+}
+
+.gap-b-20 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/***
+内间距
+.pad-10：一般指段落的水平内补白（优先选择）
+.pad-15: 一般指段落的水平内补白
+.pad-20: 一般指卡片或对话框的全补白
+***/
+.pad-10 {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.pad-15 {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.pad-20 {
+    padding: 20px;
+}
+
+/**
+分列布局
+中间有空隙，左右两边无空隙
+.col-2 2栏间隔10
+.col-2-20 2栏间隔20
+.col-3 3栏间隔10
+.col-3-20 3栏间隔20
+.col-4 4栏间隔10
+.col-4-20 4栏间隔20
+.col-full 列不换行且等高
+***/
+.col-2 {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+
+    >* {
+        &:first-child {
+            width: calc(50% - 5px);
+            margin-right: 5px;
+        }
+
+        &:last-child {
+            margin-left: 5px;
+            width: calc(50% - 5px)
+        }
+    }
+}
+
+.col-2-20 {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+
+    >* {
+        &:first-child {
+            width: calc(50% - 10px);
+            margin-right: 10px;
+        }
+
+        &:last-child {
+            margin-left: 10px;
+            width: calc(50% - 10px)
+        }
+    }
+}
+
+.col-3 {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+
+    >* {
+        width: calc(33.3% - 5px);
+        margin-right: 5px;
+
+        &:last-child {
+            margin-right: 0px;
+            margin-left: 5px;
+            width: calc(33.3% - 5px)
+        }
+    }
+}
+
+.col-3-20 {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+
+    >* {
+        width: calc(33.3% - 10px);
+        margin-left: 10px;
+
+        &:last-child {
+            margin-right: 0px;
+            margin-left: 10px;
+            width: calc(33.3% - 10px)
+        }
+    }
+}
+
+.col-4 {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+
+    >* {
+        width: calc(25% - 5px);
+        margin-right: 5px;
+
+        &:last-child {
+            margin-left: 5px;
+            margin-right: 0px;
+            width: calc(25% - 5px)
+        }
+    }
+}
+
+.col-4-20 {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+
+    >* {
+        width: calc(25% - 10px);
+        margin-right: 10px;
+
+        &:last-child {
+            margin-right: 0px;
+            margin-left: 10px;
+            width: calc(25% - 10px)
+        }
+    }
+}
+
+.col-full {
+    align-items: stretch;
+    flex-wrap: nowrap;
+}
+
+
+/***
+卡片
+***/
+.card {
+    box-sizing: border-box;
+    padding: 15px;
+    border-radius: 16px;
+    background: white;
+    box-shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+}
+
+.card-menu {
+    width: 220px;
+    box-sizing: border-box;
+    padding: 10px 0px;
+    border-radius: 16px;
+    background: white;
+    box-shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+    max-height: 80vh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+/**
+鼠标移上去的hover效果
+item-hover:行移去的效果
+item-hover-focus:行处于的效果（由js判定)
+item-hover-light:行移去的效果
+item-hover-light-focus:行处于的效果，偏轻
+item-selected:选中的效果
+***/
+.item-hover {
+    &:hover {
+        background-color: rgba(55, 53, 47, 0.08);
+    }
+}
+
+.item-hover-focus {
+    background-color: rgba(55, 53, 47, 0.08);
+}
+
+.item-hover-light {
+    &:hover {
+        background-color: rgba(55, 53, 47, 0.06);
+    }
+}
+
+.item-hover-light-focus {
+    background-color: rgba(55, 53, 47, 0.06);
+}
+
+.item-selected {
+    background-color: rgba(55, 53, 47, 0.08);
+}
+
+/**
+文本显示
+字的大小、精细
+***/
+.h1 {
+    margin-top: 0px;
+    margin-bottom: 0.5em;
+    color: #000000d9;
+    font-weight: 600;
+    font-size: 38px;
+    line-height: 1.23;
+}
+
+.h2 {
+    margin-top: 0px;
+    margin-bottom: 0.5em;
+    color: #000000d9;
+    font-weight: 600;
+    font-size: 30px;
+    line-height: 1.35;
+}
+
+.h3 {
+    margin-top: 0px;
+    margin-bottom: 0.5em;
+    color: #000000d9;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 1.35;
+}
+
+.h4 {
+    margin-top: 0px;
+    margin-bottom: 0.5em;
+    color: #000000d9;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 1.4;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+.remark {
+    color: rgba(55, 53, 47, 0.5);
+    fill: rgba(55, 53, 47);
+    fill-opacity: .5;
+}
+
+.text {
+    color: rgba(55, 53, 47);
+    fill: currentColor;
+}
+
+.text-1 {
+    color: rgba(55, 53, 47, 0.8);
+    fill: rgba(55, 53, 47);
+    fill-opacity: 0.8;
+}
+
+.text-0 {
+    color: transparent;
+    fill: transparent;
+    fill-opacity: 0;
+}
+
+.link {
+    color: #64a1df;
+}
+
+.code {
+    display: inline-block;
+    margin: 0 1px;
+    padding: 0.2em 0.4em;
+    background: #f2f4f5;
+    border: 1px solid rgba(0, 0, 0, .06);
+    border-radius: 3px;
+}
+
+.error {
+    color: #ff4d4f;
+}
+
+.f-14 {
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.f-16 {
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.f-12 {
+    font-size: 12px;
+    line-height: 16px;
+}
+
+
+
+
+/**
+可见性
+**/
+.visible {
+    visibility: visible;
+}
+
+.hide {
+    visibility: hidden;
+}
+
+.none {
+    display: none;
+}
+
+.text-over {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+/***
+图片显示
+定宽居中显示
+***/
+.img-fit {
+    object-fit: cover;
+    object-position: center center;
+}
+
+/**
+cursor鼠标
+**/
+.cursor {
+    cursor: pointer;
+}
+
+.cursor-col {
+    cursor: col-resize;
+}
+
+.cursor-row {
+    cursor: row-resize;
+}
+
+.cursor-grab {
+    cursor: grab;
+}
+
+.cursor-text {
+    cursor: text;
+}
+
+.cursor-help {
+    cursor: help;
+}
+
+.cursor-default {
+    cursor: default;
+}
