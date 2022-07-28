@@ -42,15 +42,15 @@ export class Comment extends Block {
 @view('/comments')
 export class CommentView extends BlockView<Comment>{
     renderComments() {
-        return this.block.list.map(l => {
+        return this.block.list.map(l =>{
             return <div className="sy-block-comment">
-                <UserBox userid={l.userid}>{(user) => <><div className="sy-block-comment-user"><Avatar userid={l.userid}></Avatar></div>
-                    <div className="sy-block-comment-body">
-                        <div className="sy-block-comment-user"><span></span><span ><Icon icon={PropertysSvg}></Icon></span></div>
-                        <div className="sy-block-comment-content">{l.content}</div>
-                        <div className="sy-block-comment-operators">
-                            <div><span>{util.showTime(l.createDate)}</span></div>
-                            <div><span>回复</span></div>
+                <UserBox userid={l.userid}>{(user) => <><div className="flex-top"><Avatar className="flex-fixed" size={40} userid={l.userid}></Avatar></div>
+                    <div className="flex-auto gap-l-10">
+                        <div className="flex"><span className="flex-auto" ></span><span className="size-20 flex-fixed flex-center flex-line item-hover cursor"><Icon icon={PropertysSvg}></Icon></span></div>
+                        <div className="text">{l.content}</div>
+                        <div className="flex">
+                            <div className="flex-auto flex flex-line"><span>{util.showTime(l.createDate)}</span></div>
+                            <div className="flex-fixed flex-end flex-line"><span>回复</span></div>
                         </div>
                     </div></>}</UserBox>
             </div>

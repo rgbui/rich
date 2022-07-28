@@ -13,6 +13,7 @@ export class Avatar extends React.Component<{
     head?: React.ReactNode,
     children?: React.ReactNode,
     showSn?: boolean,
+    className?: string,
     showName?: boolean
 }> {
     private user: UserBasic;
@@ -46,7 +47,7 @@ export class Avatar extends React.Component<{
             }
         }
         if (this.props.head || this.props.showName || this.props.children || this.props.showSn) {
-            return <div className={'shy-avatar-say'}>
+            return <div className={'shy-avatar-say' + " " + this.props.className}>
                 <div className={'shy-avatar-say-face'} onMouseDown={e => this.mousedown(e)}>{renderIcon()}</div>
                 <div className={'shy-avatar-say-content'} >
                     <div className={'shy-avatar-say-content-head'}><div className='left' onMouseDown={e => this.mousedown(e)}><a className='shy-avatar-say-username' >{user?.name}</a>{this.props.showSn !== false && <span>#{user?.sn}</span>}</div>{this.props.head && <div className='right'>{this.props.head}</div>}</div>
@@ -55,7 +56,7 @@ export class Avatar extends React.Component<{
             </div>
         }
         else
-            return <div className={'shy-avatar'} style={{width:size,height:size}} onMouseDown={e => this.mousedown(e)}>
+            return <div className={'shy-avatar' + " " + this.props.className} style={{ width: size, height: size }} onMouseDown={e => this.mousedown(e)}>
                 {renderIcon()}
             </div>
     }
