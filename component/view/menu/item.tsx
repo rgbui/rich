@@ -1,6 +1,6 @@
 
 import React from "react";
-import { MenuPanel } from ".";
+import { MenuPanel, useSelectMenuItem } from ".";
 import { Rect } from "../../../src/common/vector/point";
 import { CheckSvg, ChevronDownSvg, DragHandleSvg } from "../../svgs";
 import { Button } from "../button";
@@ -26,15 +26,18 @@ export class MenuItemView extends React.Component<{
         if (item.disabled != true) this.props?.select(item, event);
     }
     checked(checked: boolean, item: MenuItem) {
+        if (item.disabled) return;
         item.checked = checked;
         this.forceUpdate();
         this.props?.input(item);
     }
     input(e: string, item: MenuItem) {
+        if (item.disabled) return;
         item.value = e;
         this.props?.input(item);
     }
     click(item: MenuItem, event?: React.MouseEvent, name?: string) {
+        if (item.disabled) return;
         this.props?.click(item, event, name);
     }
     hover: boolean = false;
@@ -43,12 +46,16 @@ export class MenuItemView extends React.Component<{
         this.hover = true;
         this.forceUpdate(() => {
             if (this.el && this.props.item?.childs?.length > 0 && this.menubox) {
+                var isFixed = this.props.deep == 0 && this.props.parent instanceof MenuView;
+                console.log(this.props.deep, isFixed)
                 var rect = Rect.from(this.el.getBoundingClientRect());
                 this.menubox.open({
                     roundArea: rect,
                     direction: 'right',
-                    relativePoint: rect.leftTop,
+                    relativePoint: isFixed ? undefined : rect.leftTop,
                     dist: -10
+                }, {
+                    position: isFixed ? 'fixed' : "absolute"
                 });
             }
         });
@@ -58,8 +65,22 @@ export class MenuItemView extends React.Component<{
         this.hover = false;
         this.forceUpdate();
     }
-    openSelectMenu(item: MenuItem, event: React.MouseEvent) {
-
+    async openSelectMenu(item: MenuItem, event: React.MouseEvent) {
+        var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) },
+            item.options.map(op => {
+                return {
+                    ...op,
+                    checkLabel: item.value == op.value
+                }
+            }), {
+            nickName: 'selectBox'
+        }
+        );
+        if (r) {
+            item.value = r.item.value;
+            this.forceUpdate();
+            this.props?.input(item);
+        }
     }
     dragChange(to: number, from: number) {
 
@@ -115,7 +136,7 @@ export class MenuItemView extends React.Component<{
                 <span>{item.text}</span>
                 <Switch onChange={e => this.checked(e, item)} checked={item.checked ? item.checked : false}></Switch>
             </a>}
-            {item.type == MenuItemType.input && <div className="shy-menu-box-item-input"><Input size={'small'} value={item.value} onEnter={e => { item.value = e; this.select(item) }} onChange={e => item.value = e} placeholder={item.text}></Input></div>}
+            {item.type == MenuItemType.input && <div className="shy-menu-box-item-input"><Input size={'small'} value={item.value} onEnter={e => { item.value = e; this.select(item) }} onChange={e => {item.value = e;this.input(e,item)}} placeholder={item.text}></Input></div>}
             {item.type == MenuItemType.button && <div className="shy-menu-box-item-button"><Button icon={item.icon} disabled={item.disabled} block onClick={e => item.buttonClick != 'click' ? this.select(item, e.nativeEvent) : this.click(item, e)}>{item.text}</Button></div>}
             {item.type == MenuItemType.select && <div className="shy-menu-box-item-select">
                 {item.icon && <Icon icon={item.icon} style={{ marginRight: 5 }} size={item.iconSize ? item.iconSize : 14}></Icon>}
@@ -123,7 +144,7 @@ export class MenuItemView extends React.Component<{
                 <span className='shy-menu-box-item-option-text'>{item.text}</span>
                 <span className="shy-menu-box-item-select-value" onMouseDown={e => this.openSelectMenu(item, e)}>
                     <em>{item?.options?.find(g => g.value == item.value)?.text}</em>
-                    <Icon icon={ChevronDownSvg}></Icon>
+                    <Icon size={14} icon={ChevronDownSvg}></Icon>
                 </span>
             </div>}
             {item.type == MenuItemType.drag && <ToolTip overlay={item.overlay} placement={item.placement || 'right'} ><div data-drag={item.drag} onMouseUp={e => this.select(item, e.nativeEvent)} className="shy-menu-box-item-drag">

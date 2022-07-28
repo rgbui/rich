@@ -5,7 +5,7 @@ import { BlockView } from "../../../../src/block/view";
 import { OriginField } from "./origin.field";
 @url('/field/user')
 export class FieldUser extends OriginField {
-   
+
 }
 @view('/field/user')
 export class FieldTextView extends BlockView<FieldUser>{

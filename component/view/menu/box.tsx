@@ -7,14 +7,17 @@ import { MenuItem } from "./declare";
 import { MenuItemView } from "./item";
 import { MenuView } from "./menu";
 export class MenuBox extends React.Component<{
-    parent:MenuPanel<any>| MenuView,
+    parent: MenuPanel<any> | MenuView,
     items: MenuItem[],
     style?: CSSProperties,
     deep: number,
     input: (item: MenuItem) => void,
     select: (item: MenuItem, event?: MouseEvent) => void,
-    click: (item: MenuItem, event?: React.MouseEvent, name?: string,mv?:MenuItemView) => void
+    click: (item: MenuItem, event?: React.MouseEvent, name?: string, mv?: MenuItemView) => void
 }>{
+
+
+
     render() {
         var isVisible = this.props.style?.overflow == 'visible' || this.props.items.exists(g => g.childs && g.childs.length > 0)
         return <div className='shy-menu-box' ref={e => this.el = e} style={{
@@ -24,6 +27,7 @@ export class MenuBox extends React.Component<{
             ...(this.props.style || {}),
             overflowY: isVisible ? "visible" : "auto",
             maxHeight: isVisible ? '100vh' : undefined,
+            ...(this.style)
         }}>{this.props.items.map((item, index) => {
             return <MenuItemView parent={this.props.parent} key={index}
                 item={item} deep={this.props.deep + 1}
@@ -36,7 +40,9 @@ export class MenuBox extends React.Component<{
     }
     el: HTMLElement;
     point = new Point(0, 0);
-    open(pos: PopoverPosition) {
+    style: CSSProperties = {}
+    open(pos: PopoverPosition, style?: CSSProperties) {
+        this.style = style || {};
         if (pos.fixPoint) this.point = pos.fixPoint;
         else this.point = pos.roundArea ? pos.roundArea.leftTop : pos.roundPoint;
         if (pos.fixPoint) {
