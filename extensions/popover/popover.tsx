@@ -118,7 +118,7 @@ class Popover<T extends React.Component> extends EventsComponent<{
             if (pos.center == true) {
                 this.point = new Point(
                     (window.innerWidth - b.width) / 2,
-                    (window.innerHeight - b.height) / 2);
+                    pos.centerTop ? pos.centerTop : (window.innerHeight - b.height) / 2);
                 this.forceUpdate();
             }
             else if (pos.roundArea) {
