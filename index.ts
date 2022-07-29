@@ -1,5 +1,6 @@
 
 import "./util/array";
+import "./src/assert/atom.less";
 import "./src/assert/theme.less";
 import "./component/view/style.less";
 import './src/assert/font/iconfont.css';
