@@ -11,6 +11,7 @@ import { PagePermission } from "../../src/page/permission";
 import { LinkPageItem } from "../at/declare";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
+import "./style.less"
 
 class PagePublish extends EventsComponent {
     constructor(props) {
