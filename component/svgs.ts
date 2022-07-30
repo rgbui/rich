@@ -101,6 +101,7 @@ import SearchSvg from "../src/assert/svg/search.svg";
 import SettingsSvg from "../src/assert/svg/settings.svg";
 import SortSvg from "../src/assert/svg/sort.svg";
 import SquareplusSvg from "../src/assert/svg/squareplus.svg";
+import SuccessSvg from "../src/assert/svg/success.svg";
 import SystemSvg from "../src/assert/svg/system.svg";
 import TemplatesSvg from "../src/assert/svg/templates.svg";
 import TopicSvg from "../src/assert/svg/topic.svg";
@@ -239,6 +240,7 @@ SearchSvg,
 SettingsSvg,
 SortSvg,
 SquareplusSvg,
+SuccessSvg,
 SystemSvg,
 TemplatesSvg,
 TopicSvg,
