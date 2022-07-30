@@ -1,8 +1,18 @@
 //屏幕自适应宽度
 .screen-width {
-    margin-left: 100px;
+    margin-left : 100px;
     margin-right: 100px;
-    display: block;
+    display     : block;
+}
+
+.screen-content-1200 {
+    width : 1200px;
+    margin: 0 auto;
+}
+
+.screen-content-1000 {
+    width : 1000px;
+    margin: 0 auto;
 }
 
 /**
@@ -17,30 +27,30 @@ flex-auto:子元素自动填充大小
 flex-fixed:固定大小
 **/
 .flex {
-    display: flex;
+    display        : flex;
     justify-content: flex-start;
-    align-items: center;
-    flex-wrap: nowrap;
+    align-items    : center;
+    flex-wrap      : nowrap;
 }
 
 .flex-end {
-    display: flex;
+    display        : flex;
     justify-content: flex-end;
-    align-items: center;
-    flex-wrap: nowrap;
+    align-items    : center;
+    flex-wrap      : nowrap;
 }
 
 .flex-top {
-    display: flex;
+    display        : flex;
     justify-content: flex-start;
-    align-items: flex-start;
-    flex-wrap: nowrap;
+    align-items    : flex-start;
+    flex-wrap      : nowrap;
 }
 
 .flex-center {
-    display: flex;
+    display        : flex;
     justify-content: center;
-    align-items: center;
+    align-items    : center;
 }
 
 .flex-inline {
@@ -48,19 +58,23 @@ flex-fixed:固定大小
 }
 
 .flex-full {
-    display: flex;
+    display        : flex;
     justify-content: flex-start;
-    align-items: stretch;
-    flex-wrap: nowrap;
+    align-items    : stretch;
+    flex-wrap      : nowrap;
+}
+
+.flex-column {
+    flex-direction: column;
 }
 
 .flex-auto {
-    flex-grow: 1;
+    flex-grow  : 1;
     flex-shrink: 1;
 }
 
 .flex-fixed {
-    flex-grow: 0;
+    flex-grow  : 0;
     flex-shrink: 0;
 }
 
@@ -82,32 +96,32 @@ position的布局
 
 .pos-inset {
     position: absolute;
-    top: 0px;
-    left: 0px;
-    right: 0px;
-    bottom: 0px;
+    top     : 0px;
+    left    : 0px;
+    right   : 0px;
+    bottom  : 0px;
 }
 
 .pos-center {
-    position: absolute;
-    top: 50%;
-    left: 50%;
+    position : absolute;
+    top      : 50%;
+    left     : 50%;
     transform: translate(-50%, -50%);
 }
 
 .pos-center-l {
-    position: absolute;
-    top: 50%;
-    right: 0px;
+    position : absolute;
+    top      : 50%;
+    right    : 0px;
     transform: translate(0%, -50%);
 }
 
 .pos-full {
     position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 100vw;
-    height: 100vh;
+    top     : 0px;
+    left    : 0px;
+    width   : 100vw;
+    height  : 100vh;
     overflow: hidden;
 }
 
@@ -117,10 +131,10 @@ position的布局
 
 .fixed-full {
     position: fixed;
-    top: 0px;
-    left: 0px;
-    width: 100vw;
-    height: 100vh;
+    top     : 0px;
+    left    : 0px;
+    width   : 100vw;
+    height  : 100vh;
     overflow: hidden;
 }
 
@@ -132,108 +146,7 @@ position的布局
     position: sticky;
 }
 
-/**
-大小
-size-24:图标大小
-**/
-.size-24 {
-    width: 24px;
-    height: 24px;
-}
 
-.size-48 {
-    width: 48px;
-    height: 48px;
-}
-
-/**
-形状
-circle:圆
-.round:圆角（图标、按钮类）
-.round-card:卡片类的圆角，比较大一些
-**/
-.circle {
-    border-radius: 50%;
-}
-
-.rect {
-    border-radius: 0%;
-}
-
-.round {
-    border-radius: 4px;
-}
-
-.round-card {
-    border-radius: 16px;
-}
-
-/***
-间距
-gap-5：相邻的行内元素间距，适用于符号（如文字与图标符合的组合）
-gap-l-5:相邻的行内元素左间距
-gap-r-5:相邻的行内元素右间距
-gap-10:一般指两个图标的间隔
-gap-l-10
-gap-r-10
-gap-p-10:指段落的间距（适用于行间距）
-gap-b-20:指模块间距（有明显的块与块之间的间距），大标题内容与另外的大标题内容，垂直的两张卡片
-**/
-.gap-5 {
-    margin-left: 5px;
-    margin-right: 5px;
-}
-
-.gap-l-5 {
-    margin-left: 5px;
-}
-
-.gap-r-5 {
-    margin-right: 5px;
-}
-
-.gap-10 {
-    margin-left: 10px;
-    margin-right: 10px;
-}
-
-.gap-l-10 {
-    margin-left: 10px;
-}
-
-.gap-r-10 {
-    margin-right: 10px;
-}
-
-.gap-p-10 {
-    margin-top: 10p;
-    margin-bottom: 10px
-}
-
-.gap-b-20 {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
-/***
-内间距
-.pad-10：一般指段落的水平内补白（优先选择）
-.pad-15: 一般指段落的水平内补白
-.pad-20: 一般指卡片或对话框的全补白
-***/
-.pad-10 {
-    padding-left: 10px;
-    padding-right: 10px;
-}
-
-.pad-15 {
-    padding-left: 15px;
-    padding-right: 15px;
-}
-
-.pad-20 {
-    padding: 20px;
-}
 
 /**
 分列布局
@@ -247,121 +160,121 @@ gap-b-20:指模块间距（有明显的块与块之间的间距），大标题�
 .col-full 列不换行且等高
 ***/
 .col-2 {
-    display: flex;
+    display        : flex;
     justify-content: flex-start;
-    flex-wrap: wrap;
+    flex-wrap      : wrap;
 
     >* {
         &:first-child {
-            width: calc(50% - 5px);
+            width       : calc(50% - 5px);
             margin-right: 5px;
         }
 
         &:last-child {
             margin-left: 5px;
-            width: calc(50% - 5px)
+            width      : calc(50% - 5px)
         }
     }
 }
 
 .col-2-20 {
-    display: flex;
+    display        : flex;
     justify-content: flex-start;
-    flex-wrap: wrap;
+    flex-wrap      : wrap;
 
     >* {
         &:first-child {
-            width: calc(50% - 10px);
+            width       : calc(50% - 10px);
             margin-right: 10px;
         }
 
         &:last-child {
             margin-left: 10px;
-            width: calc(50% - 10px)
+            width      : calc(50% - 10px)
         }
     }
 }
 
 .col-3 {
-    display: flex;
+    display        : flex;
     justify-content: flex-start;
-    flex-wrap: wrap;
+    flex-wrap      : wrap;
 
     >* {
-        width: calc(33.3% - 5px);
+        width       : calc(33.3% - 5px);
         margin-right: 5px;
 
         &:last-child {
             margin-right: 0px;
-            margin-left: 5px;
-            width: calc(33.3% - 5px)
+            margin-left : 5px;
+            width       : calc(33.3% - 5px)
         }
     }
 }
 
 .col-3-20 {
-    display: flex;
+    display        : flex;
     justify-content: flex-start;
-    flex-wrap: wrap;
+    flex-wrap      : wrap;
 
     >* {
-        width: calc(33.3% - 10px);
+        width      : calc(33.3% - 10px);
         margin-left: 10px;
 
         &:last-child {
             margin-right: 0px;
-            margin-left: 10px;
-            width: calc(33.3% - 10px)
+            margin-left : 10px;
+            width       : calc(33.3% - 10px)
         }
     }
 }
 
 .col-4 {
-    display: flex;
+    display        : flex;
     justify-content: flex-start;
-    flex-wrap: wrap;
+    flex-wrap      : wrap;
 
     >* {
-        width: calc(25% - 5px);
+        width       : calc(25% - 5px);
         margin-right: 5px;
 
         &:last-child {
-            margin-left: 5px;
+            margin-left : 5px;
             margin-right: 0px;
-            width: calc(25% - 5px)
+            width       : calc(25% - 5px)
         }
     }
 }
 
 .col-4-20 {
-    display: flex;
+    display        : flex;
     justify-content: flex-start;
-    flex-wrap: wrap;
+    flex-wrap      : wrap;
 
     >* {
-        width: calc(25% - 10px);
+        width       : calc(25% - 10px);
         margin-right: 10px;
 
         &:last-child {
             margin-right: 0px;
-            margin-left: 10px;
-            width: calc(25% - 10px)
+            margin-left : 10px;
+            width       : calc(25% - 10px)
         }
     }
 }
 
 .col-full {
     align-items: stretch;
-    flex-wrap: nowrap;
+    flex-wrap  : nowrap;
 }
 
 /**
 多个子元素的间距是10px
 ***/
 .space {
-    display: inline-flex;
+    display        : inline-flex;
     justify-content: flex-start;
-    align-items: center;
+    align-items    : center;
 
     >* {
         margin-right: 10px;
@@ -377,22 +290,22 @@ gap-b-20:指模块间距（有明显的块与块之间的间距），大标题�
 卡片
 ***/
 .card {
-    box-sizing: border-box;
-    padding: 15px;
+    box-sizing   : border-box;
+    padding      : 15px;
     border-radius: 16px;
-    background: white;
-    box-shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+    background   : white;
+    box-shadow   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
 }
 
 .card-menu {
-    width: 220px;
-    box-sizing: border-box;
-    padding: 10px 0px;
-    border-radius: 16px;
-    background: white;
-    box-shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
-    max-height: 80vh;
-    overflow-y: auto;
+    width              : 220px;
+    box-sizing         : border-box;
+    padding            : 10px 0px;
+    border-radius      : 16px;
+    background         : white;
+    box-shadow         : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+    max-height         : 80vh;
+    overflow-y         : auto;
     overscroll-behavior: contain;
 }
 
@@ -433,39 +346,38 @@ item-selected:选中的效果
 字的大小、精细
 ***/
 .h1 {
-    margin-top: 0px;
+    margin-top   : 0px;
     margin-bottom: 0.5em;
-    color: #000000d9;
-    font-weight: 600;
-    font-size: 38px;
-    line-height: 1.23;
+    color        : rgba(55, 53, 47);
+    font-weight  : 600;
+    font-size    : 30px;
+    line-height  : 1.35;
 }
 
 .h2 {
-    margin-top: 0px;
+    margin-top   : 0px;
     margin-bottom: 0.5em;
-    color: #000000d9;
-    font-weight: 600;
-    font-size: 30px;
-    line-height: 1.35;
+    color        : rgba(55, 53, 47);
+    font-weight  : 600;
+    font-size    : 24px;
+    line-height  : 1.35;
 }
 
 .h3 {
-    margin-top: 0px;
+    margin-top   : 0px;
     margin-bottom: 0.5em;
-    color: #000000d9;
-    font-weight: 600;
-    font-size: 24px;
-    line-height: 1.35;
+    color        : rgba(55, 53, 47);
+    font-weight  : 600;
+    font-size    : 20px;
+    line-height  : 1.4;
 }
 
 .h4 {
-    margin-top: 0px;
     margin-bottom: 0.5em;
-    color: #000000d9;
-    font-weight: 600;
-    font-size: 20px;
-    line-height: 1.4;
+    color        : rgba(55, 53, 47);
+    font-weight  : 600;
+    font-size    : 16px;
+    line-height  : 1.5;
 }
 
 .bold {
@@ -485,8 +397,8 @@ item-selected:选中的效果
 }
 
 .remark {
-    color: rgba(55, 53, 47, 0.5);
-    fill: rgba(55, 53, 47);
+    color       : rgba(55, 53, 47, 0.5);
+    fill        : rgba(55, 53, 47);
     fill-opacity: .5;
 }
 
@@ -500,18 +412,18 @@ item-selected:选中的效果
 
 .text {
     color: rgba(55, 53, 47);
-    fill: currentColor;
+    fill : currentColor;
 }
 
 .text-1 {
-    color: rgba(55, 53, 47, 0.8);
-    fill: rgba(55, 53, 47);
+    color       : rgba(55, 53, 47, 0.8);
+    fill        : rgba(55, 53, 47);
     fill-opacity: 0.8;
 }
 
 .text-0 {
-    color: transparent;
-    fill: transparent;
+    color       : transparent;
+    fill        : transparent;
     fill-opacity: 0;
 }
 
@@ -519,31 +431,47 @@ item-selected:选中的效果
     color: #64a1df;
 }
 
+.green {
+    color: #21af5a;
+    fill : #21af5a;
+}
+
 .code {
-    display: inline-block;
-    margin: 0 1px;
-    padding: 0.2em 0.4em;
-    background: #f2f4f5;
-    border: 1px solid rgba(0, 0, 0, .06);
+    display      : inline-block;
+    margin       : 0 1px;
+    padding      : 0.2em 0.4em;
+    background   : #f2f4f5;
+    border       : 1px solid rgba(0, 0, 0, .06);
     border-radius: 3px;
 }
+
+.code-block {
+    display      : block;
+    margin       : 0 1px;
+    padding      : 20px;
+    background   : #f2f4f5;
+    border       : 1px solid rgba(0, 0, 0, .06);
+    border-radius: 8px;
+}
+
+
 
 .error {
     color: #ff4d4f;
 }
 
 .f-12 {
-    font-size: 12px;
+    font-size  : 12px;
     line-height: 16px;
 }
 
 .f-14 {
-    font-size: 14px;
+    font-size  : 14px;
     line-height: 20px;
 }
 
 .f-16 {
-    font-size: 16px;
+    font-size  : 16px;
     line-height: 24px;
 }
 
@@ -566,7 +494,7 @@ item-selected:选中的效果
 
 .text-over {
     text-overflow: ellipsis;
-    overflow: hidden;
+    overflow     : hidden;
 }
 
 /***
@@ -574,7 +502,7 @@ item-selected:选中的效果
 定宽居中显示
 ***/
 .object-cover {
-    object-fit: cover;
+    object-fit     : cover;
     object-position: center center;
 }
 
@@ -663,6 +591,14 @@ each(@selectors, {
 
 );
 
+.h100 {
+    height: 100%;
+}
+
+.w100 {
+    width: 100%;
+}
+
 
 @ops: 1, 0, 2, 4, 6, 8, 9, 7, 5;
 
@@ -672,7 +608,8 @@ each(@ops, {
         }
     }
 
-) .box-border {
+)
+.box-border {
     box-sizing: border-box;
 }
 
@@ -764,7 +701,7 @@ each(@ops, {
 }
 
 .outline-none {
-    outline: 2px solid transparent;
+    outline       : 2px solid transparent;
     outline-offset: 2px;
 }
 
@@ -794,39 +731,39 @@ each(@ops, {
 }
 
 .ts-all {
-    transition-property: all;
+    transition-property       : all;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
+    transition-duration       : 150ms;
 }
 
 .ts {
-    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+    transition-property       : background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
+    transition-duration       : 150ms;
 }
 
 .ts-colors {
-    transition-property: background-color, border-color, color, fill, stroke;
+    transition-property       : background-color, border-color, color, fill, stroke;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
+    transition-duration       : 150ms;
 }
 
 .ts-op {
-    transition-property: opacity;
+    transition-property       : opacity;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
+    transition-duration       : 150ms;
 }
 
 .ts-shadow {
-    transition-property: box-shadow;
+    transition-property       : box-shadow;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
+    transition-duration       : 150ms;
 }
 
 .ts-transform {
-    transition-property: transform;
+    transition-property       : transform;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
+    transition-duration       : 150ms;
 }
 
 
@@ -857,7 +794,7 @@ each(@ops, {
     75%,
     100% {
         transform: scale(2);
-        opacity: 0;
+        opacity  : 0;
     }
 }
 
@@ -885,12 +822,12 @@ each(@ops, {
 
     0%,
     100% {
-        transform: translateY(-25%);
+        transform                : translateY(-25%);
         animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
     }
 
     50% {
-        transform: translateY(0);
+        transform                : translateY(0);
         animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
     }
 }
@@ -918,7 +855,7 @@ each(@ops, {
 
 .break-normal {
     overflow-wrap: normal;
-    word-break: normal;
+    word-break   : normal;
 }
 
 .break-words {
@@ -948,3 +885,151 @@ each(@ops, {
 .lowercase {
     text-transform: lowercase;
 }
+
+
+/**
+大小
+size-24:图标大小
+**/
+
+@sizes: 24, 32, 48, 50, 100, 120, 150, 200, 240, 300;
+
+each(@sizes, {
+        .size-@{value} {
+            width  :@value+0px;
+            height :@value+0px;
+        }
+    }
+
+)
+
+/**
+形状
+circle:圆
+.round:圆角（图标、按钮类）
+.round-card:卡片类的圆角，比较大一些
+**/
+.circle {
+    border-radius: 50%;
+}
+
+.rect {
+    border-radius: 0%;
+}
+
+.round-0 {
+    border-radius: 0%;
+}
+
+.round {
+    border-radius: 4px;
+}
+
+.round-16 {
+    border-radius: 16px;
+}
+
+.round-8 {
+    border-radius: 8px;
+}
+
+.round-32 {
+    border-radius: 32px;
+}
+
+
+
+/***
+间距
+gap-5：相邻的行内元素间距，适用于符号（如文字与图标符合的组合）
+gap-l-5:相邻的行内元素左间距
+gap-r-5:相邻的行内元素右间距
+gap-10:一般指两个图标的间隔
+gap-l-10
+gap-r-10
+gap-b-20:指模块间距（有明显的块与块之间的间距），大标题内容与另外的大标题内容，垂直的两张卡片
+**/
+
+@gaps: 5, 10, 20, 30, 50, 100;
+
+each(@gaps, {
+        .gap-@{value} {
+            margin-top   :@value+0px;
+            margin-left  :@value+0px;
+            margin-bottom:@value+0px;
+            margin-right :@value+0px;
+        }
+
+        .gap-w-@{value} {
+            margin-left :@value+0px;
+            margin-right:@value+0px;
+        }
+
+        .gap-h-@{value} {
+            margin-top   :@value+0px;
+            margin-bottom:@value+0px;
+        }
+
+        .gap-t-@{value} {
+            margin-top:@value+0px;
+        }
+
+        .gap-l-@{value} {
+            margin-left:@value+0px;
+        }
+
+        .gap-r-@{value} {
+            margin-right:@value+0px;
+        }
+
+        .gap-b-@{value} {
+            margin-bottom:@value+0px;
+        }
+    }
+
+)
+/***
+内间距
+.pad-10：一般指段落的水平内补白（优先选择）
+.pad-15: 一般指段落的水平内补白
+.pad-20: 一般指卡片或对话框的全补白
+***/
+
+@pads: 5, 10, 15, 20, 30, 50, 60, 80, 100;
+
+each(@pads, {
+        .padding-@{value} {
+            padding-top   :@value+0px;
+            padding-left  :@value+0px;
+            padding-bottom:@value+0px;
+            padding-right :@value+0px;
+        }
+
+        .padding-w-@{value} {
+            padding-left :@value+0px;
+            padding-right:@value+0px;
+        }
+
+        .padding-h-@{value} {
+            padding-top   :@value+0px;
+            padding-bottom:@value+0px;
+        }
+
+        .padding-t-@{value} {
+            padding-top:@value+0px;
+        }
+
+        .padding-l-@{value} {
+            padding-left:@value+0px;
+        }
+
+        .padding-r-@{value} {
+            padding-right:@value+0px;
+        }
+
+        .padding-b-@{value} {
+            padding-bottom:@value+0px;
+        }
+    }
+
+)
