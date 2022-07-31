@@ -655,10 +655,10 @@ export abstract class Block extends Events {
             parentId: this.parent?.id || undefined,
             childKey: this.parentKey,
             at: this.at,
-            nextBlockId: this.next?.id,
-            prevBlockId: this.prev?.id,
-            parents: this.parents(g => true, true).map(c => c.id),
-            elementUrl: this.elementUrl
+            // nextBlockId: this.next?.id,
+            // prevBlockId: this.prev?.id,
+            // parents: this.parents(g => true, true).map(c => c.id),
+            // elementUrl: this.elementUrl
         }
     }
     getPropPos(prop: string) {
