@@ -70,7 +70,7 @@ async function onPasterFiles(kit: Kit, aa: AppearAnchor, files: File[]) {
         var firstBlock = rowBlock;
         for (let i = 0; i < files.length; i++) {
             var file = files[i];
-            if (file.type == 'image/png') {
+            if (file.type == 'image/png' || file.type == 'image/jpeg') {
                 //图片
                 rowBlock = await rowBlock.visibleDownCreateBlock('/image', { initialData: { file } });
             }
