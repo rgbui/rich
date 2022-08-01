@@ -74,10 +74,6 @@ export class TitleView extends BlockView<Title>{
                 this.block.pageInfo.icon = lodash.cloneDeep(pageInfo.icon);
                 isUpdate = true;
             }
-            console.log(isUpdate,
-                JSON.stringify(pageInfo),
-                JSON.stringify(this.block.pageInfo)
-            )
             if (isUpdate) {
                 this.forceUpdate();
             }
