@@ -55,7 +55,7 @@ export class Block$Operator {
         bs.remove(g => g == this);
         newBlock.id = this.id;
         this.page.snapshoot.record(OperatorDirective.$turn, {
-            pos: this.pos,
+            pos: newBlock.pos,
             from: oldUrl,
             to: url
         }, this);
@@ -575,7 +575,7 @@ export class Block$Operator {
                 this.page.notifyBlockEditedContent(this);
             }
             this.page.snapshoot.record(OperatorDirective.$update, {
-                pos:this.pos,
+                pos: this.pos,
                 old_value: oldValue,
                 new_value: newValue
             }, this);
