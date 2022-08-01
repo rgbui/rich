@@ -54,6 +54,7 @@ export class Block$Operator {
         bs.insertAt(this.at, newBlock);
         bs.remove(g => g == this);
         newBlock.id = this.id;
+        this.page.addBlockUpdate(newBlock.parent);
         this.page.snapshoot.record(OperatorDirective.$turn, {
             pos: newBlock.pos,
             from: oldUrl,
