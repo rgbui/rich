@@ -40,7 +40,7 @@ export class Page extends Events<PageDirective> {
     id: string;
     date: number;
     readonly: boolean = false;
- 
+
     sourceItemId: string;
     version: PageVersion;
     constructor(options?: {
@@ -200,13 +200,11 @@ export class Page extends Events<PageDirective> {
     get pageInfo() {
         return this._pageItem;
     }
+    onceStopRenderByPageInfo: boolean = false;
     _pageItem: LinkPageItem;
     set pageInfo(pageInfo: LinkPageItem) {
         this._pageItem = pageInfo;
     }
-    // get pageItemId(){
-    //     return this._pageItem?.id;
-    // }
     get isCanEdit() {
         if (this.readonly) return false;
         if (this.kit.page.pageInfo?.locker?.userid) return false;
