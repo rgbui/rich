@@ -73,6 +73,7 @@ export class Handle extends Events {
         else {
             willDropBlock = undefined;
         }
+        if (willDropBlock && this.dragBlocks.some(s => s === willDropBlock)) return;
         if (willDropBlock !== this.dropBlock && this.dropBlock) {
             dom(this.dropBlock.el).removeClass(g => g.startsWith('shy-block-drag-over'));
             this.kit.page.onDropLeaveBlock(this.dragBlocks, this.dropBlock, this.dropDirection);
