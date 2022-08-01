@@ -124,6 +124,7 @@ export abstract class Block extends Events {
                 }
             }
         }
+        else return this.page.views;
     }
     get hasBrother() {
         var pb = this.parentBlocks;
@@ -131,9 +132,11 @@ export abstract class Block extends Events {
         else return false;
     }
     get parentKey() {
-        var pb = this.parentBlocks;
-        for (var n in this.parent.blocks) {
-            if (this.parent.blocks[n] == pb) return n;
+        if (this.parent) {
+            var pb = this.parentBlocks;
+            for (var n in this.parent.blocks) {
+                if (this.parent.blocks[n] == pb) return n;
+            }
         }
     }
     get blockKeys() {
