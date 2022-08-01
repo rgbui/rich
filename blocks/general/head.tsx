@@ -5,6 +5,7 @@ import { TextArea, TextLineChilds } from "../../src/block/view/appear";
 import { BlockDisplay } from "../../src/block/enum";
 import { Block } from "../../src/block";
 import { TextTurns } from "../../src/block/turn/text";
+import { Rect } from "../../src/common/vector/point";
 @url('/head')
 export class Head extends Block {
     @prop()
@@ -30,6 +31,10 @@ export class Head extends Block {
         if (this.childs.length > 0)
             return await this.getChildsPlain();
         else return this.content;
+    }
+    getVisibleContentBound() {
+        if (this.el)
+            return Rect.fromEle(this.el.querySelector('.sy-block-text-head-content') as HTMLElement);
     }
 }
 @view("/head")
@@ -71,15 +76,20 @@ export class HeadView extends BlockView<Head>{
             ns = [undefined, undefined, undefined, undefined]
         }
         if (this.block.childs.length > 0)
-            return <div className='sy-block-text-head' style={style}>
-                <div className="sy-block-text-head-tip">{ns.map((n, i) => <em key={i}></em>)}</div>
-                <TextLineChilds
-                    rf={e => this.block.childsEl = e}
-                    childs={this.block.childs}></TextLineChilds></div>
+            return <div className='sy-block-text-head' style={this.block.visibleStyle}>
+                <div className='sy-block-text-head-content' style={style}>
+                    <div className="sy-block-text-head-content-tip">{ns.map((n, i) => <em key={i}></em>)}</div>
+                    <TextLineChilds
+                        rf={e => this.block.childsEl = e}
+                        childs={this.block.childs}></TextLineChilds>
+                </div>
+            </div>
         else
-            return <div className='sy-block-text-head' style={style}>
-                <div className="sy-block-text-head-tip">{ns.map((n, i) => <em key={i}></em>)}</div>
-                <TextArea block={this.block} placeholder={pt} prop='content' ></TextArea>
+            return <div className='sy-block-text-head' style={this.block.visibleStyle}>
+                <div className='sy-block-text-head-content' style={style}>
+                    <div className="sy-block-text-head-content-tip">{ns.map((n, i) => <em key={i}></em>)}</div>
+                    <TextArea block={this.block} placeholder={pt} prop='content' ></TextArea>
+                </div>
             </div>
     }
 }
