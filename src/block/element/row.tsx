@@ -91,11 +91,13 @@ export class RowView extends BlockView<Row>{
         var ps: JSX.Element[] = [];
         for (let i = 0; i < this.block.childs.length; i++) {
             var block = this.block.childs[i];
-            if (i > 0) ps.push(<div
-                onMouseDown={e => { this.mousedown(i, e.nativeEvent); e.stopPropagation() }}
-                key={block.id + 'gap'}
-                data-index={i}
-                className='sy-block-row-gap'></div>)
+            if (this.block.isCanEdit) {
+                if (i > 0) ps.push(<div
+                    onMouseDown={e => { this.mousedown(i, e.nativeEvent); e.stopPropagation() }}
+                    key={block.id + 'gap'}
+                    data-index={i}
+                    className='sy-block-row-gap'></div>)
+            }
             ps.push(<block.viewComponent key={block.id} block={block}></block.viewComponent>)
         }
         return ps;
