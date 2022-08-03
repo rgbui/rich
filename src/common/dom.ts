@@ -1,16 +1,23 @@
 
 import { Matrix } from "./matrix";
 
-
 class Dom {
     el: Node;
     constructor(el: Node) {
         this.el = el;
     }
     style(attr: string, pseudoElt?: string | null) {
-        if (this.el instanceof Element)
-            return getComputedStyle(this.el, pseudoElt)[attr];
-        else throw 'the el not computed style'
+        if (this.el instanceof Text) {
+            return null;
+        }
+        try {
+            return getComputedStyle(this.el as HTMLElement, pseudoElt)[attr];
+        }
+        catch (ex) {
+            console.error(ex);
+            console.warn('not el computed style')
+            return null;
+        }
     }
     fontStyle() {
         var ele = this.el;

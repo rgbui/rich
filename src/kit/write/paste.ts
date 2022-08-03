@@ -61,6 +61,7 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
         }
         catch (ex) {
             console.error(ex);
+            await onPasteInsertText(kit, aa, text);
         }
     }
 }
