@@ -102,14 +102,10 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                 await InputForceStore(aa, async () => {
                     var row = aa.block.closest(x => !x.isLine);
                     var newBlock = await row.visibleUpCreateBlock(rule.url, { createSource: 'InputBlockSelector' });
-                    if (row.isContentEmpty) {
-                        await row.delete();
-                        row = undefined;
-                    }
-                    if (row)
-                        newBlock.mounted(() => {
-                            write.onFocusBlockAnchor(row);
-                        });
+                    newBlock.mounted(() => {
+                        var b = row.nextFind(g => g.appearAnchors.some(s => s.isText));
+                        if (b) write.onFocusBlockAnchor(b)
+                    });
                 });
                 break;
             case DetectorOperator.firstLetterTurnBlock:
@@ -345,7 +341,8 @@ async function combineTextBlock(write: PageWrite, rowBlock: Block) {
         var content = preBlock.content;
         preBlock.updateProps({ content: '' });
         var pattern = await preBlock.pattern.cloneData();
-        await preBlock.appendBlock({ url: BlockUrlConstant.Text, content, pattern });
+        if (content != '')
+            await preBlock.appendBlock({ url: BlockUrlConstant.Text, content, pattern });
         lastPreBlock = preBlock.childs.last();
     }
     /**
@@ -356,13 +353,19 @@ async function combineTextBlock(write: PageWrite, rowBlock: Block) {
     if (rowBlock.childs.length > 0) {
         var cs = rowBlock.childs.map(c => c);
         for (let i = 0; i < cs.length; i++) {
-            await preBlock.append(cs[i]);
+            if (cs[i].isTextBlock && cs[i].content != '')
+                await preBlock.append(cs[i]);
         }
     }
     else {
-        await preBlock.appendBlock({ url: BlockUrlConstant.Text, content: rowBlock.content, pattern: await rowBlock.pattern.cloneData() })
+        if (rowBlock.content != '')
+            await preBlock.appendBlock({ url: BlockUrlConstant.Text, content: rowBlock.content, pattern: await rowBlock.pattern.cloneData() })
     }
     await rowBlock.delete();
+    if (!lastPreBlock) {
+        lastPreBlock = preBlock.childs.first();
+    }
+    if (!lastPreBlock) lastPreBlock = preBlock;
     write.kit.page.addUpdateEvent(async () => {
         write.onFocusBlockAnchor(lastPreBlock, { last: true });
     });
