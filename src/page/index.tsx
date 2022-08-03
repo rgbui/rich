@@ -118,6 +118,15 @@ export class Page extends Events<PageDirective> {
             console.error(ex);
         }
     }
+    destory() {
+        this.kit.picker.onCancel();
+        getBoardTool().then(r => {
+            r.off('selector')
+            r.close();
+        });
+        ReactDOM.unmountComponentAtNode(this.root);
+        this.root.remove();
+    }
     renderFragment(panel: HTMLElement, options?: { width?: number, height?: number }) {
         try {
             panel.appendChild(this.root);
