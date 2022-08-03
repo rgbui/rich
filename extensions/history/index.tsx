@@ -14,6 +14,7 @@ import { Remark } from "../../component/view/text";
 import { channel } from "../../net/channel";
 import { ElementType, getElementUrl } from "../../net/element.type";
 import { Rect } from "../../src/common/vector/point";
+import { Page } from "../../src/page";
 import { util } from "../../util/util";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
@@ -74,7 +75,7 @@ export class PageHistoryStore extends EventsComponent {
             else if (r.item.name == 'rename') {
                 var d = await useForm({
                     title: '重命版本',
-                    model: { naem: data.bakeTitle || '' },
+                    model: { name: data.bakeTitle || '' },
                     remark: '被重命名的版本,系统将不在自动清理',
                     fields: [{ name: 'name', text: '版本名称', type: 'input' }],
                     checkModel: async (d) => {
@@ -116,9 +117,13 @@ export class PageHistoryStore extends EventsComponent {
         }
         this.loadList = false;
         this.forceUpdate();
+        if (this.list.length > 0) {
+            await this.loadPageContent(this.list.first().id)
+        }
     }
     currentId: string = '';
     loadContent: boolean = false;
+    viewPage: Page;
     async loadPageContent(id) {
         this.loadContent = true;
         this.currentId = id;
@@ -127,7 +132,8 @@ export class PageHistoryStore extends EventsComponent {
         this.loadContent = false;
         this.forceUpdate()
         if (r.ok) {
-            createFormPage(this.el, r.data.content);
+            if (this.viewPage) this.viewPage.destory();
+            this.viewPage = await createFormPage(this.el, r.data.content);
         }
     }
     async onBake() {
