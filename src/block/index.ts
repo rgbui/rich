@@ -116,7 +116,7 @@ export abstract class Block extends Events {
     get hasVisibleChilds() {
         return this.hasChilds;
     }
-    get parentBlocks() {
+    get parentBlocks():Block[] {
         if (this.parent) {
             for (var n in this.parent.blocks) {
                 if (this.parent.blocks[n].exists(g => g === this)) {
