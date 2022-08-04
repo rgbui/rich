@@ -370,9 +370,16 @@ async function combineTextBlock(write: PageWrite, rowBlock: Block) {
         write.onFocusBlockAnchor(lastPreBlock, { last: true });
     });
 }
-
-export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
-    event.preventDefault();
+/**
+ * 删除选区，
+ * @param write 
+ * @param aa 
+ * @param event 
+ * @param insertContent  删除选区并插入内容
+ */
+export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent, insertContent?: string) {
+    if (event)
+        event.preventDefault();
     await InputForceStore(aa, async () => {
         write.onSaveSelection();
         var appears = findBlocksBetweenAppears(write.startAnchor.el, write.endAnchor.el);
@@ -402,7 +409,7 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
         if (write.startAnchor == write.endAnchor) {
             if (write.startAnchor.isText) {
                 var tc = write.startAnchor.textContent;
-                write.startAnchor.setContent(tc.slice(0, write.startOffset) + tc.slice(write.endOffset))
+                write.startAnchor.setContent(tc.slice(0, write.startOffset) + (insertContent || '') + tc.slice(write.endOffset))
                 await write.startAnchor.block.updateAppear(write.startAnchor, write.startAnchor.textContent, BlockRenderRange.self);
                 if (write.startAnchor.block.isContentEmpty) { await write.startAnchor.block.delete(); isStartDelete = true; }
             }
@@ -414,7 +421,7 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
                 if (write.startAnchor.block.isContentEmpty) { await write.startAnchor.block.delete(); isStartDelete = true; }
             }
             if (write.endAnchor.isText) {
-                write.endAnchor.setContent(write.endAnchor.textContent.slice(write.endOffset));
+                write.endAnchor.setContent((insertContent || '') + write.endAnchor.textContent.slice(write.endOffset));
                 await write.endAnchor.block.updateAppear(write.endAnchor, write.endAnchor.textContent, BlockRenderRange.self);
                 if (write.endAnchor.block.isContentEmpty) await write.endAnchor.block.delete()
             }
@@ -425,7 +432,7 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
         write.kit.page.addUpdateEvent(async () => {
             forceCloseTextTool()
             if (isStartDelete) write.onFocusAppearAnchor(preAppear, { last: true })
-            else write.onFocusAppearAnchor(write.startAnchor, { at: write.startOffset });
+            else write.onFocusAppearAnchor(write.startAnchor, { at: write.startOffset + (insertContent || '').length });
         })
     });
 }
