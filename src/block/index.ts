@@ -217,7 +217,7 @@ export abstract class Block extends Events {
             }
             if (this.isBlock) {
                 Object.assign(style, {
-                    padding: '3px 0px'
+                    padding: '7px 0px 3px 0px'
                 });
             }
         }
