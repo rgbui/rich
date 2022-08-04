@@ -2,7 +2,8 @@ import lodash from "lodash";
 import React from "react";
 import { Kit } from "..";
 import { InputTextPopSelector, InputTextPopSelectorType } from "../../../extensions/common/input.pop";
-import { useTextTool } from "../../../extensions/text.tool";
+import { forceCloseTextTool, useTextTool } from "../../../extensions/text.tool";
+import { UA } from "../../../util/ua";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
 import { findBlockAppear, findBlocksBetweenAppears } from "../../block/appear/visible.seek";
@@ -137,16 +138,16 @@ export class PageWrite {
         var hasSelectionRange: boolean = false;
         if (this.kit.operator.currentSelectedBlocks.length > 0) hasSelectionRange = true;
         else if (!sel.isCollapsed) hasSelectionRange = true;
-        switch (event.key) {
-            case KeyboardCode.ArrowDown:
-            case KeyboardCode.ArrowUp:
-            case KeyboardCode.ArrowLeft:
-            case KeyboardCode.ArrowRight:
+        switch (event.key.toLowerCase()) {
+            case KeyboardCode.ArrowDown.toLowerCase():
+            case KeyboardCode.ArrowUp.toLowerCase():
+            case KeyboardCode.ArrowLeft.toLowerCase():
+            case KeyboardCode.ArrowRight.toLowerCase():
                 await AutoInputStore();
-                MoveCursor(this, aa, event);
+                MoveCursor(this,aa,event);
                 return;
                 break;
-            case KeyboardCode.Enter:
+            case KeyboardCode.Enter.toLowerCase():
                 if (this.kit.page.requireSelectLayout == true) {
                     event.preventDefault();
                     this.kit.page.onPageTurnLayout(PageLayoutType.doc, async () => {
@@ -173,15 +174,20 @@ export class PageWrite {
                     }
                 }
                 break;
-            case KeyboardCode.Delete:
-            case KeyboardCode.Backspace:
+            case KeyboardCode.Delete.toLowerCase():
+            case KeyboardCode.Backspace.toLowerCase():
                 //这里删除选区的内容
                 if (hasSelectionRange) await inputBackspaceDeleteContent(this, aa, event)
                 else await keydownBackspaceTextContent(this, aa, event);
                 break;
-            case KeyboardCode.Tab:
+            case KeyboardCode.Tab.toLowerCase():
                 if (aa.block.closest(x => x.isListBlock)) {
                     await onKeyTab(this, aa, event);
+                }
+                break;
+            case KeyboardCode.X.toLowerCase():
+                if (UA.isMacOs && this.kit.page.keyboardPlate.isMeta() || !UA.isMacOs && this.kit.page.keyboardPlate.isCtrl()) {
+                    forceCloseTextTool();
                 }
                 break;
         }
@@ -341,6 +347,7 @@ export class PageWrite {
         var range = sel.getRangeAt(0);
         if (range) {
             this.onSaveSelection();
+            var rs = TextEle.getWindowCusorBounds();
             while (true) {
                 var list = findBlocksBetweenAppears(this.startAnchor.el, this.endAnchor.el);
                 var blocks = lodash.identity(list.map(l => l.block));
@@ -356,7 +363,7 @@ export class PageWrite {
                     turnBlock = blocks[0].closest(x => !x.isLine);
                 }
                 var result = await useTextTool(
-                    { roundAreas: TextEle.getWindowCusorBounds(), relativeEleAutoScroll: this.endAnchor.el },
+                    { roundAreas: rs, relativeEleAutoScroll: this.endAnchor.el },
                     { style: this.kit.page.pickBlocksTextStyle(blocks), turnBlock }
                 );
                 if (result) {
@@ -390,7 +397,6 @@ export class PageWrite {
      * 如果块，则在appear下面一行插入，如果appear本身是空的文本，则替换自身，在下面插入
      */
     async onInputPopCreateBlock(...args: any[]) {
-
         var inputPopHandle = async (offset: number,
             blockData: { isLine?: boolean, createPage?: boolean, url: string }) => {
             await InputForceStore(this.inputPop.aa, async () => {
