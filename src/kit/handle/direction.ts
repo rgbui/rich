@@ -75,7 +75,6 @@ export function cacDragDirection(kit: Kit,dragBlocks: Block[], dropBlock: Block,
             dropBlock = kit.page.getViewLastBlock();
             if (dropBlock) fr = 'bottom';
         }
-        console.log('ddd', fr, dropBlock);
     }
     var direction = DropDirection.none;
     if (dropBlock && dropBlock.isCanDrop) {
