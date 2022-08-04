@@ -53,7 +53,6 @@ export async function InputStore(appear: AppearAnchor, force: boolean = false, a
         if (inputStore) await inputStore()
     }, 7e2);
 }
-
 /**
  * 主动保存
  */
