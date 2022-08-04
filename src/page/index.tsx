@@ -243,7 +243,7 @@ export class Page extends Events<PageDirective> {
         return this.smallFont ? 14 : 16
     }
     get lineHeight() {
-        return this.fontSize * 1.2;
+        return this.smallFont ? 23 : 26
     }
     get elementUrl() {
         if ([
