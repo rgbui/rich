@@ -46,18 +46,18 @@
 }
 
 .shy-block-hover {
-    position: relative;
-
-    &::after {
-        content         : '\20';
-        position        : absolute;
-        pointer-events  : none;
-        inset           : 0px;
-        background      : rgba(255, 0, 0, 0.2);
-        background-color: transparent;
-        z-index         : 81;
-        opacity         : 1;
-    }
+    //position: relative;
+    // 这里的after与拖动的方位有冲途
+    // &::after {
+    //     content         : '\20';
+    //     position        : absolute;
+    //     pointer-events  : none;
+    //     inset           : 0px;
+    //     background      : rgba(255, 0, 0, 0.2);
+    //     background-color: transparent;
+    //     z-index         : 81;
+    //     opacity         : 1;
+    // }
 }
 
 .shy-selector-drag-copy {
@@ -74,7 +74,6 @@
 .shy-block-drag-over-sub,
 .shy-block-drag-over-inner {
     position: relative;
-
     &::after {
         content       : '\20';
         position      : absolute;
