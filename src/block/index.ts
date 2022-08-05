@@ -116,7 +116,7 @@ export abstract class Block extends Events {
     get hasVisibleChilds() {
         return this.hasChilds;
     }
-    get parentBlocks():Block[] {
+    get parentBlocks(): Block[] {
         if (this.parent) {
             for (var n in this.parent.blocks) {
                 if (this.parent.blocks[n].exists(g => g === this)) {
@@ -222,6 +222,19 @@ export abstract class Block extends Events {
             }
         }
         Object.assign(style, this.pattern.style);
+        return style;
+    }
+    get marginStyle() {
+        var style: CSSProperties = {
+            paddingTop: 4
+        };
+        return style;
+    }
+    get contentStyle() {
+        var style: CSSProperties = {
+            paddingTop: 3,
+            paddingBottom: 3
+        };
         return style;
     }
     protected display: BlockDisplay;
@@ -657,11 +670,7 @@ export abstract class Block extends Events {
             pageId: this.page.id,
             parentId: this.parent?.id || undefined,
             childKey: this.parentKey,
-            at: this.at,
-            // nextBlockId: this.next?.id,
-            // prevBlockId: this.prev?.id,
-            // parents: this.parents(g => true, true).map(c => c.id),
-            // elementUrl: this.elementUrl
+            at: this.at
         }
     }
     getPropPos(prop: string) {
