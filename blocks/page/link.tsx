@@ -79,7 +79,6 @@ export class LinkView extends BlockView<Link>{
                 this.block.onPickerLinker();
             }
         }
-
     }
     updatePageInfo = (data: { id: string, pageInfo: LinkPageItem }) => {
         var { id, pageInfo } = data;
@@ -103,13 +102,13 @@ export class LinkView extends BlockView<Link>{
         channel.off('/page/update/info', this.updatePageInfo);
     }
     render() {
-        return <div className='sy-block-link'>
-            {this.block.pageId && <a href={this.block.pageUrl} onClick={e => this.block.openPage(e)}>
+        return <div className='sy-block-link' style={this.block.marginStyle}>
+            {this.block.pageId && <a style={this.block.contentStyle} href={this.block.pageUrl} onClick={e => this.block.openPage(e)}>
                 <i><Icon size={18} icon={this.block.icon || PageSvg}></Icon></i>
                 <SolidArea block={this.block} prop='text'><span>{this.block.text || '新页面'}</span></SolidArea>
             </a>}
-            {this.block.outsideUrl && <a href={this.block.outsideUrl}><SolidArea block={this.block} prop='outsideUrl'><span>{this.block.outsideUrl}</span></SolidArea></a>}
-            {!this.block.pageId && !this.block.outsideUrl && <div className='sy-block-link-create' onMouseDown={e => { e.stopPropagation(); this.block.onPickerLinker() }}><Icon size={16} icon={GlobalLinkSvg}></Icon>
+            {this.block.outsideUrl && <a style={this.block.contentStyle} href={this.block.outsideUrl}><SolidArea block={this.block} prop='outsideUrl'><span>{this.block.outsideUrl}</span></SolidArea></a>}
+            {!this.block.pageId && !this.block.outsideUrl && <div style={this.block.contentStyle} className='sy-block-link-create' onMouseDown={e => { e.stopPropagation(); this.block.onPickerLinker() }}><Icon size={16} icon={GlobalLinkSvg}></Icon>
                 <span>添加链接</span>
             </div>}
         </div>

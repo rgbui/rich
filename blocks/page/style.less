@@ -95,26 +95,21 @@
 }
 
 .sy-block-link {
-    cursor    : pointer;
-    min-height: 30px;
-
-    &:hover {
-        background-color: rgba(55, 53, 47, 0.08);
-        transition      : background 20ms ease-in 0s;
-    }
-
+    cursor         : pointer;
     white-space    : nowrap;
     overflow       : hidden;
     text-overflow  : ellipsis;
     display        : flex;
     justify-content: flex-start;
     align-items    : center;
-
-    a {
-        display        : inline-flex;
+    a{
+        border-radius: 4px;
+        flex-grow      : 1;
+        display        : flex;
         align-items    : center;
         justify-content: flex-start;
         text-decoration: none;
+        text-overflow  : ellipsis;
 
         >i {
             display        : inline-flex;
@@ -133,6 +128,11 @@
                 border-bottom: 1px solid rgba(55, 53, 47, 0.16);
             }
         }
+
+        &:hover {
+            background-color: rgba(55, 53, 47, 0.08);
+            transition      : background 20ms ease-in 0s;
+        }
     }
 
     &-create {
@@ -145,6 +145,7 @@
         justify-content: flex-start;
         align-items    : center;
         color          : rgba(55, 53, 47, 0.6);
+
         .shy-icon {
             fill        : rgba(55, 53, 47, 0.4);
             margin-right: 12px;
