@@ -165,7 +165,7 @@ async function onPasteInsertText(kit: Kit, aa: AppearAnchor, text: string) {
             })
         }
         else {
-            await inputBackspaceDeleteContent(kit.writer, aa, null, text)
+            await inputBackspaceDeleteContent(kit.writer, aa, null, {insertContent:text})
         }
 
     }
