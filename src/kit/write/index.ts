@@ -186,7 +186,9 @@ export class PageWrite {
                 }
                 break;
             case KeyboardCode.X.toLowerCase():
-                if (UA.isMacOs && this.kit.page.keyboardPlate.isMeta() || !UA.isMacOs && this.kit.page.keyboardPlate.isCtrl()) {
+                if (UA.isMacOs && this.kit.page.keyboardPlate.isMeta() || !UA.isMacOs && this.kit.page.keyboardPlate.isCtrl())
+                {
+                    inputBackspaceDeleteContent(this,aa,event,{cut:true})
                     forceCloseTextTool();
                 }
                 break;
