@@ -13,11 +13,8 @@ import { FontCss, BlockCssName } from '../pattern/css';
 import { CssSelectorType } from '../pattern/type';
 import { MouseDragger } from '../../common/dragger';
 import { forceCloseBoardEditTool } from '../../../extensions/board.edit.tool';
-
 import { dom } from '../../common/dom';
 import { openBoardEditTool } from '../../kit/operator/board/edit';
-
-
 @url("/textspan")
 export class TextSpan extends Block {
     display = BlockDisplay.block;

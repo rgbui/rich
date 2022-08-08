@@ -26,9 +26,6 @@ import { Divider } from "../../component/view/grid";
 class LinkPicker extends EventsComponent {
     constructor(props) {
         super(props);
-        // if (this.props.link && this.props.link.name == 'outside') this.url = this.props.link.url;
-        // else this.url = '';
-        // if (this.props.link) this.name = this.props.link.name;
     }
     url: string = '';
     name: PageLink['name'];
@@ -110,16 +107,17 @@ class LinkPicker extends EventsComponent {
     onCreate() {
         this.emit('change', { name: 'create', url: this.url })
     }
-    onOpen(link: PageLink) {
+    async onOpen(link: PageLink) {
         if (link) {
             if (link.url) {
                 this.url = link.url;
-                this.name = 'outside'; this.forceUpdate()
+                this.name = 'outside';
+                this.forceUpdate()
             }
             else if (link.pageId) {
                 this.url = link.text;
                 this.name = 'page';
-                this.forceSyncSearch();
+                await this.forceSyncSearch();
             }
         }
         else {
@@ -133,7 +131,7 @@ class LinkPicker extends EventsComponent {
 export async function useLinkPicker(pos: PopoverPosition, link?: PageLink) {
     var popover = await PopoverSingleton(LinkPicker, {}, { link: link });
     var picker = await popover.open(pos);
-    picker.onOpen(link);
+    await picker.onOpen(link);
     return new Promise((resolve: (link: PageLink) => void, reject) => {
         picker.on('change', (link: PageLink) => {
             resolve(link);

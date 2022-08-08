@@ -52,11 +52,15 @@ export class TextContentView extends BlockView<TextContent>{
     openPage(e: React.MouseEvent) {
         e.stopPropagation();
         e.preventDefault();
+        if (this.boxTip)
+            this.boxTip.close();
         channel.air('/page/open', { item: { id: this.block.link.pageId } });
     }
     async openCreatePage(e: React.MouseEvent) {
         e.stopPropagation();
         e.preventDefault();
+        if (this.boxTip)
+            this.boxTip.close();
         var r = await channel.air('/page/create/sub', {
             pageId: this.block.page.pageInfo?.id,
             text: this.block.content
@@ -71,24 +75,35 @@ export class TextContentView extends BlockView<TextContent>{
         }
     }
     async onClearLink() {
+        if (this.boxTip)
+            this.boxTip.close();
         this.block.onUpdateProps({ link: null }, { range: BlockRenderRange.self })
     }
     async openLink(e: React.MouseEvent) {
-        var pageLink = await useLinkPicker({ roundArea: Rect.fromEvent(e) }, lodash.cloneDeep(this.block.link));
-        if (pageLink.name == 'create') {
-            var r = await channel.air('/page/create/sub', {
-                pageId: this.block.page.pageInfo?.id,
-                text: this.block.content
-            });
-            if (r) {
-                pageLink.pageId = r.id;
-                pageLink.name = 'page';
-                delete pageLink.url;
-                delete pageLink.text;
-            }
+        if (this.boxTip)
+            this.boxTip.close();
+        var lc = lodash.cloneDeep(this.block.link);
+        if (lc.name == 'page') {
+            lc.text = this.block.content;
         }
-        this.block.onUpdateProps({ link: pageLink }, { range: BlockRenderRange.self })
+        var pageLink = await useLinkPicker({ roundArea: Rect.fromEvent(e) }, lc);
+        if (pageLink) {
+            if (pageLink.name == 'create') {
+                var r = await channel.air('/page/create/sub', {
+                    pageId: this.block.page.pageInfo?.id,
+                    text: this.block.content
+                });
+                if (r) {
+                    pageLink.pageId = r.id;
+                    pageLink.name = 'page';
+                    delete pageLink.url;
+                    delete pageLink.text;
+                }
+            }
+            this.block.onUpdateProps({ link: pageLink }, { range: BlockRenderRange.self })
+        }
     }
+    boxTip: BoxTip;
     render() {
         var ta = <TextArea block={this.block} prop='content' ></TextArea>
         var classList: string[] = ['sy-block-text-content'];
@@ -98,16 +113,16 @@ export class TextContentView extends BlockView<TextContent>{
                     ta = <a className="sy-block-text-content-link">{ta}<i onMouseDown={e => this.openCreatePage(e)}>(创建)</i></a>
             }
             else if (this.block.link.pageId) {
-                ta = <BoxTip placement="bottom" overlay={<div className="flex-center">
+                ta = <BoxTip ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center">
                     <ToolTip overlay={'/page/' + this.block.link.pageId}><a className="flex-center size-24 round item-hover gap-5 cursor" onMouseDown={e => this.openPage(e)} ><Icon size={14} icon={LinkSvg}></Icon></a></ToolTip>
-                    <ToolTip overlay={'编辑'}><a className="flex-center size-24 round item-hover gap-5 cursor" ><Icon size={18} icon={EditSvg}></Icon></a></ToolTip>
+                    <ToolTip overlay={'编辑'}><a className="flex-center size-24 round item-hover gap-5 cursor" onMouseDown={e => this.openLink(e)}><Icon size={18} icon={EditSvg}></Icon></a></ToolTip>
                     <ToolTip overlay={'取消'}><a className="flex-center size-24 round item-hover gap-5 cursor" onMouseDown={e => this.onClearLink()}><Icon size={14} icon={TrashSvg}></Icon></a></ToolTip>
-                </div>}><a className="sy-block-text-content-link" onClick={e => e.preventDefault()} onMouseDown={e => this.openPage(e)} href={'/page/' + this.block.link.pageId}>{ta}</a></BoxTip>
+                </div>}><a className="sy-block-text-content-link" onClick={e => this.openPage(e)} href={'/page/' + this.block.link.pageId}>{ta}</a></BoxTip>
             }
             else if (this.block.link.url) {
-                ta = <BoxTip placement="bottom" overlay={<div className="flex-center">
+                ta = <BoxTip ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center">
                     <ToolTip overlay={this.block.link.url}><a className="flex-center size-24 round item-hover gap-5 cursor" onMouseDown={e => this.openPage(e)} ><Icon size={14} icon={LinkSvg}></Icon></a></ToolTip>
-                    <ToolTip overlay={'编辑'}><a className="flex-center size-24 round item-hover gap-5 cursor"><Icon size={18} icon={EditSvg}></Icon></a></ToolTip>
+                    <ToolTip overlay={'编辑'}><a className="flex-center size-24 round item-hover gap-5 cursor" onMouseDown={e => this.openLink(e)}><Icon size={18} icon={EditSvg}></Icon></a></ToolTip>
                     <ToolTip overlay={'取消'}><a className="flex-center size-24 round item-hover gap-5 cursor" onMouseDown={e => this.onClearLink()}><Icon size={14} icon={TrashSvg}></Icon></a></ToolTip>
                 </div>}><a className="sy-block-text-content-link" target='_blank' href={this.block.link.url}>{ta}</a></BoxTip>
             }
