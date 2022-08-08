@@ -1,6 +1,7 @@
 
 import React from "react";
 import { PageWrite } from ".";
+import { CopyText } from "../../../component/copy";
 import { useAtUserSelector } from "../../../extensions/at";
 import { useBlockSelector } from "../../../extensions/block";
 import { InputTextPopSelectorType } from "../../../extensions/common/input.pop";
@@ -102,14 +103,10 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                 await InputForceStore(aa, async () => {
                     var row = aa.block.closest(x => !x.isLine);
                     var newBlock = await row.visibleUpCreateBlock(rule.url, { createSource: 'InputBlockSelector' });
-                    if (row.isContentEmpty) {
-                        await row.delete();
-                        row = undefined;
-                    }
-                    if (row)
-                        newBlock.mounted(() => {
-                            write.onFocusBlockAnchor(row);
-                        });
+                    newBlock.mounted(() => {
+                        var b = row.nextFind(g => g.appearAnchors.some(s => s.isText));
+                        if (b) write.onFocusBlockAnchor(b)
+                    });
                 });
                 break;
             case DetectorOperator.firstLetterTurnBlock:
@@ -345,7 +342,8 @@ async function combineTextBlock(write: PageWrite, rowBlock: Block) {
         var content = preBlock.content;
         preBlock.updateProps({ content: '' });
         var pattern = await preBlock.pattern.cloneData();
-        await preBlock.appendBlock({ url: BlockUrlConstant.Text, content, pattern });
+        if (content != '')
+            await preBlock.appendBlock({ url: BlockUrlConstant.Text, content, pattern });
         lastPreBlock = preBlock.childs.last();
     }
     /**
@@ -356,21 +354,36 @@ async function combineTextBlock(write: PageWrite, rowBlock: Block) {
     if (rowBlock.childs.length > 0) {
         var cs = rowBlock.childs.map(c => c);
         for (let i = 0; i < cs.length; i++) {
-            await preBlock.append(cs[i]);
+            if (cs[i].isTextBlock && cs[i].content != '')
+                await preBlock.append(cs[i]);
         }
     }
     else {
-        await preBlock.appendBlock({ url: BlockUrlConstant.Text, content: rowBlock.content, pattern: await rowBlock.pattern.cloneData() })
+        if (rowBlock.content != '')
+            await preBlock.appendBlock({ url: BlockUrlConstant.Text, content: rowBlock.content, pattern: await rowBlock.pattern.cloneData() })
     }
     await rowBlock.delete();
+    if (!lastPreBlock) {
+        lastPreBlock = preBlock.childs.first();
+    }
+    if (!lastPreBlock) lastPreBlock = preBlock;
     write.kit.page.addUpdateEvent(async () => {
         write.onFocusBlockAnchor(lastPreBlock, { last: true });
     });
 }
-
-export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
-    event.preventDefault();
+/**
+ * 删除选区，
+ * @param write 
+ * @param aa 
+ * @param event 
+ * @param insertContent  删除选区并插入内容
+ */
+export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent, options?: { cut?: boolean, insertContent?: string }) {
+    if (event)
+        event.preventDefault();
     await InputForceStore(aa, async () => {
+        var sel = window.getSelection();
+        var deleteText = sel.getRangeAt(0)?.cloneContents()?.textContent;
         write.onSaveSelection();
         var appears = findBlocksBetweenAppears(write.startAnchor.el, write.endAnchor.el);
         var rowBlocks: Block[] = [];
@@ -379,6 +392,7 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
             var rb = block.closest(x => x.isBlock);
             if (!rowBlocks.some(s => s === rb)) rowBlocks.push(rb);
             if (appear == write.startAnchor || appear == write.endAnchor) {
+
             }
             else {
                 if (appear.isText) {
@@ -399,7 +413,7 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
         if (write.startAnchor == write.endAnchor) {
             if (write.startAnchor.isText) {
                 var tc = write.startAnchor.textContent;
-                write.startAnchor.setContent(tc.slice(0, write.startOffset) + tc.slice(write.endOffset))
+                write.startAnchor.setContent(tc.slice(0, write.startOffset) + (options?.insertContent || '') + tc.slice(write.endOffset))
                 await write.startAnchor.block.updateAppear(write.startAnchor, write.startAnchor.textContent, BlockRenderRange.self);
                 if (write.startAnchor.block.isContentEmpty) { await write.startAnchor.block.delete(); isStartDelete = true; }
             }
@@ -411,7 +425,7 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
                 if (write.startAnchor.block.isContentEmpty) { await write.startAnchor.block.delete(); isStartDelete = true; }
             }
             if (write.endAnchor.isText) {
-                write.endAnchor.setContent(write.endAnchor.textContent.slice(write.endOffset));
+                write.endAnchor.setContent((options?.insertContent || '') + write.endAnchor.textContent.slice(write.endOffset));
                 await write.endAnchor.block.updateAppear(write.endAnchor, write.endAnchor.textContent, BlockRenderRange.self);
                 if (write.endAnchor.block.isContentEmpty) await write.endAnchor.block.delete()
             }
@@ -419,10 +433,14 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
         await rowBlocks.eachAsync(async (b) => {
             if (b.isContentEmpty) await b.delete()
         })
+        if (options?.cut) {
+            if (deleteText)
+                CopyText(deleteText);
+        }
         write.kit.page.addUpdateEvent(async () => {
             forceCloseTextTool()
             if (isStartDelete) write.onFocusAppearAnchor(preAppear, { last: true })
-            else write.onFocusAppearAnchor(write.startAnchor, { at: write.startOffset });
+            else write.onFocusAppearAnchor(write.startAnchor, { at: write.startOffset + (options?.insertContent || '').length });
         })
     });
 }

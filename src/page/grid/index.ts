@@ -7,7 +7,9 @@ export class GridMap {
     constructor(public panel: Page | Block) { }
     private gridMap: Map<string, Block[]> = new Map();
     private getKey(x: number, y: number) { return x + "," + y }
+    relativePanelPoint: Point;
     private getRelativeRect(rect: Rect) {
+        if (this.relativePanelPoint) return rect.relative(this.relativePanelPoint);
         if (this.panel instanceof Page) {
             return this.panel.getRelativeRect(rect);
         }
@@ -16,6 +18,7 @@ export class GridMap {
         }
     }
     private getRelativePoint(point: Point) {
+        if (this.relativePanelPoint) return point.relative(this.relativePanelPoint);
         if (this.panel instanceof Page) {
             return this.panel.getRelativePoint(point);
         }
@@ -55,7 +58,7 @@ export class GridMap {
         }
     }
     public start() {
-        var t = Date.now();
+        this.relativePanelPoint = this.getRelativeRect(new Rect(0, 0, 0, 0)).leftTop;
         if (this.panel instanceof Page) {
             this.panel.each((b) => {
                 if (b.panelGridMap === this) {
@@ -72,9 +75,9 @@ export class GridMap {
                 }
             });
         }
-        console.log('es', Date.now() - t);
     }
     public over() {
+        delete this.relativePanelPoint;
         this.gridMap = new Map();
     }
     public remove(block: Block) {
@@ -135,7 +138,7 @@ export class GridMap {
                 }
             }
         }
-        
+
         return blocks;
     }
     public findBlocksByRect(rect: Rect, predict?: (block: Block) => boolean) {

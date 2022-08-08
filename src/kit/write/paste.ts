@@ -7,6 +7,7 @@ import { BlockUrlConstant } from "../../block/constant";
 import { Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
 import { parseDom } from "../../import-export/html/parse";
+import { inputBackspaceDeleteContent } from "./input";
 import { InputForceStore } from "./store";
 const URL_RGEX = /https?:\/\/([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?/ig;
 export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent) {
@@ -61,6 +62,7 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
         }
         catch (ex) {
             console.error(ex);
+            await onPasteInsertText(kit, aa, text);
         }
     }
 }
@@ -150,16 +152,22 @@ async function onPasteInsertText(kit: Kit, aa: AppearAnchor, text: string) {
     else {
         var content = aa.textContent;
         var sel = window.getSelection();
-        var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
-        aa.setContent(content.slice(0, offset) + text + content.slice(offset))
-        aa.collapse(offset + text.length);
-        await InputForceStore(aa, async () => {
-            kit.page.addUpdateEvent(async () => {
-                if (aa.block.url == BlockUrlConstant.Code) {
-                    (aa.block as TextCode).renderCode()
-                }
+        if (sel.isCollapsed) {
+            var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
+            aa.setContent(content.slice(0, offset) + text + content.slice(offset))
+            aa.collapse(offset + text.length);
+            await InputForceStore(aa, async () => {
+                kit.page.addUpdateEvent(async () => {
+                    if (aa.block.url == BlockUrlConstant.Code) {
+                        (aa.block as TextCode).renderCode()
+                    }
+                })
             })
-        })
+        }
+        else {
+            await inputBackspaceDeleteContent(kit.writer, aa, null, {insertContent:text})
+        }
+
     }
 }
 async function onPasteUrl(kit: Kit, aa: AppearAnchor, url: string) {

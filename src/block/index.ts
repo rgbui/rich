@@ -116,7 +116,7 @@ export abstract class Block extends Events {
     get hasVisibleChilds() {
         return this.hasChilds;
     }
-    get parentBlocks() {
+    get parentBlocks(): Block[] {
         if (this.parent) {
             for (var n in this.parent.blocks) {
                 if (this.parent.blocks[n].exists(g => g === this)) {
@@ -124,6 +124,7 @@ export abstract class Block extends Events {
                 }
             }
         }
+        else return this.page.views;
     }
     get hasBrother() {
         var pb = this.parentBlocks;
@@ -131,9 +132,11 @@ export abstract class Block extends Events {
         else return false;
     }
     get parentKey() {
-        var pb = this.parentBlocks;
-        for (var n in this.parent.blocks) {
-            if (this.parent.blocks[n] == pb) return n;
+        if (this.parent) {
+            var pb = this.parentBlocks;
+            for (var n in this.parent.blocks) {
+                if (this.parent.blocks[n] == pb) return n;
+            }
         }
     }
     get blockKeys() {
@@ -214,11 +217,24 @@ export abstract class Block extends Events {
             }
             if (this.isBlock) {
                 Object.assign(style, {
-                    padding: '3px 0px'
+                    padding: '7px 0px 3px 0px'
                 });
             }
         }
         Object.assign(style, this.pattern.style);
+        return style;
+    }
+    get marginStyle() {
+        var style: CSSProperties = {
+            paddingTop: 4
+        };
+        return style;
+    }
+    get contentStyle() {
+        var style: CSSProperties = {
+            paddingTop: 3,
+            paddingBottom: 3
+        };
         return style;
     }
     protected display: BlockDisplay;
@@ -654,11 +670,7 @@ export abstract class Block extends Events {
             pageId: this.page.id,
             parentId: this.parent?.id || undefined,
             childKey: this.parentKey,
-            at: this.at,
-            // nextBlockId: this.next?.id,
-            // prevBlockId: this.prev?.id,
-            // parents: this.parents(g => true, true).map(c => c.id),
-            // elementUrl: this.elementUrl
+            at: this.at
         }
     }
     getPropPos(prop: string) {

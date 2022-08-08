@@ -114,7 +114,7 @@ export class ListView extends BlockView<List>{
             return <span className='sy-block-list-text-type' style={{ cursor: 'pointer' }} onMouseDown={e => {
                 e.stopPropagation();
                 this.block.onExpand();
-            }}><Icon icon={this.block.expand == true ? 'arrow-down:sy' : 'arrow-right:sy'}></Icon></span>
+            }}><Icon size={this.block.page.lineHeight} icon={this.block.expand == true ? 'arrow-down:sy' : 'arrow-right:sy'}></Icon></span>
         }
         else if (this.block.listType == ListType.number) {
             var pas = this.block.parentBlocks;

@@ -27,7 +27,8 @@ export class Title extends Block {
     }
     async changeAppear(appear) {
         if (appear.prop == 'pageInfo.text') {
-            if (this.pageInfo.id)
+            if (this.pageInfo.id) {
+                this.page.onceStopRenderByPageInfo = true;
                 channel.air('/page/update/info', {
                     id: this.pageInfo.id,
                     pageInfo: {
@@ -35,6 +36,7 @@ export class Title extends Block {
                         text: this.pageInfo?.text
                     }
                 })
+            }
         }
     }
     get isSupportTextStyle() {
@@ -68,7 +70,7 @@ export class TitleView extends BlockView<Title>{
                 this.block.pageInfo.text = pageInfo.text;
                 isUpdate = true;
             }
-            if (typeof pageInfo.icon != 'undefined' && JSON.stringify(pageInfo.icon) != JSON.stringify(this.block.pageInfo.icon)) {
+            if (typeof pageInfo.icon != 'undefined' && !lodash.isNull(pageInfo.icon) && JSON.stringify(pageInfo.icon) != JSON.stringify(this.block.pageInfo.icon)) {
                 this.block.pageInfo.icon = lodash.cloneDeep(pageInfo.icon);
                 isUpdate = true;
             }

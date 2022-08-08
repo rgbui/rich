@@ -5,17 +5,28 @@ class GhostView {
     private get el() {
         if (typeof this._el == 'undefined') {
             this._el = document.body.appendChild(document.createElement('div'));
+            // var el = this._el;
+            // el.style.position = 'absolute';
+            // el.style.width = '100vw';
+            // el.style.height = '100vh';
+            // el.style.zIndex = '1000000';
+            // el.style.top = '0px';
+            // el.style.left = '0px';
+            // el.style.overflow = 'hidden';
+            // el.style.pointerEvents = 'none'
+            // this._el = el.appendChild(document.createElement('div'));
             this._el.style.position = 'absolute';
             this._el.style.width = '0px';
             this._el.style.height = '0px';
-            this._el.style.zIndex = '1000000';
             this._el.style.top = '0px';
             this._el.style.left = '0px';
             this._el.style.opacity = '0.6';
             this._el.style.pointerEvents = 'none';
+            this._el.style.zIndex = '1000000';
         }
         return this._el;
     }
+    bodyOverFlow: string;
     load(el: HTMLElement | HTMLElement[] | string, options: {
         point: Point,
         opacity?: number,
@@ -50,10 +61,12 @@ class GhostView {
                 }
             }
         }
+        this.bodyOverFlow = getComputedStyle(document.body).overflow;
     }
     move(point: { x: number, y: number }) {
         this.el.style.top = point.y + 'px';
         this.el.style.left = point.x + 'px';
+        document.body.style.overflow = 'hidden';
     }
     unload() {
         this.el.innerHTML = '';
@@ -61,6 +74,12 @@ class GhostView {
         this.el.style.display = 'none';
         this.el.style.width = '0px';
         this.el.style.height = '0px';
+        document.body.style.overflow = this.bodyOverFlow;
+    }
+    containEl(e: HTMLElement) {
+        if (this._el === e) return true;
+        if (this._el.contains(e)) return true;
+        return false;
     }
 }
 export var ghostView = new GhostView();

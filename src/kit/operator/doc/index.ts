@@ -6,7 +6,6 @@ import { MouseDragger } from "../../../common/dragger";
 import { onAutoScroll, onAutoScrollStop } from "../../../common/scroll";
 import { Point, Rect } from "../../../common/vector/point";
 
-
 /**
  * 如果点在文档的空白处，那么左右上需要找到邻近的编辑点，如果是下面，一般是尾部，需要创建一个空白的文本块，且聚焦
  * 拖动时，形成一个选区，且滚动条适配拖选
@@ -31,6 +30,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
             var movePoint = Point.from(ev)
             function cacSelector(dis: number) {
                 downPoint.y -= dis;
+                gm.relativePanelPoint.y -= dis;
                 kit.selector.setStart(downPoint);
                 kit.selector.setMove(movePoint);
                 /***
@@ -43,6 +43,9 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
             onAutoScroll({
                 el: kit.page.root,
                 point: movePoint,
+                feelDis: 100,
+                interval: 50,
+                dis: 30,
                 callback(fir, dis) {
                     if (fir) cacSelector(0)
                     else if (fir == false && dis != 0) cacSelector(dis);

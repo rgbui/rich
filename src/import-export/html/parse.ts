@@ -177,7 +177,7 @@ async function parseBlock(element: HTMLElement) {
         else return null;
     }
     else if (name == 'table') return await parseTable(element)
-    else if (name == 'ol' || name == 'li') return await parseOl(element)
+    else if (name == 'ol'||name=='ul' || name == 'li') return await parseOl(element)
     else if (name == 'img' || name == 'video' || name == 'audio' || name == 'iframe') return await parseMedia(element)
     else if (name == 'figure') {
         return await parsefigure(element);

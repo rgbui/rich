@@ -14,7 +14,8 @@ export enum KeyboardCode {
     Z = 'Z',
     Y = 'Y',
     S = 'S',
-    Esc = 'Esc'
+    Esc = 'Escape',
+    X = 'X'
 }
 export class KeyboardPlate {
     private altKey: boolean = false;
@@ -52,7 +53,7 @@ export class KeyboardPlate {
         }
     }
     isPredict() {
-        return this.listeners.some(s =>s.isBlocked!==false&& s.predict(this) && typeof s.keydown == 'function')
+        return this.listeners.some(s => s.isBlocked !== false && s.predict(this) && typeof s.keydown == 'function')
     }
     keyup(event: KeyboardEvent) {
         this.isKeyUped = true;

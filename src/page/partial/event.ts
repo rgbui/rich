@@ -233,6 +233,7 @@ export class PageEvent {
         // }
     }
     async onAddCover(this: Page) {
+        if (!this.isCanEdit) return;
         if (this.cover?.abled) {
             this.onUpdateProps({ 'cover.abled': false }, true);
         }
@@ -254,6 +255,7 @@ export class PageEvent {
         }
     }
     async onAddIcon(this: Page) {
+        if (!this.isCanEdit) return;
         var codes = await emojiStore.get();
         var g = codes.randomOf().childs.randomOf();
         channel.air('/page/update/info', {

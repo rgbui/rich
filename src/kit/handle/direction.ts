@@ -57,7 +57,7 @@ export enum DropDirection {
  * @returns 
  * 
  */
-export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block, event: MouseEvent) {
+export function cacDragDirection(kit: Kit,dragBlocks: Block[], dropBlock: Block, event: MouseEvent) {
     var fr: 'left' | 'right' | 'bottom' | 'none' = 'none';
     var ele = event.target as HTMLElement;
     if (!dropBlock || dropBlock?.isView) {
@@ -155,13 +155,15 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
                 direction = DropDirection.right;
                 dropBlock = getOutXBlock(dropBlock);
             }
-            else if (point.y <= bound.top + bound.height / 2) {
+            else if (point.y <= bound.top + bound.height * 0.4) {
                 direction = DropDirection.top;
             }
-            else if (point.y >= bound.top + bound.height / 2) {
-                if ([BlockUrlConstant.List,
-                BlockUrlConstant.Callout,
-                BlockUrlConstant.Quote].some(s => s == dropBlock.url)
+            else if (point.y > bound.top + bound.height * 0.4) {
+                if ([
+                    BlockUrlConstant.List,
+                    BlockUrlConstant.Callout,
+                    BlockUrlConstant.Quote
+                ].some(s => s == dropBlock.url)
                 ) {
                     direction = DropDirection.sub;
                     if (point.x - bound.left < 30) {

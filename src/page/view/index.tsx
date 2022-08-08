@@ -54,8 +54,11 @@ export class PageView extends Component<{ page: Page }>{
         this.observeToolBoard();
     }
     updatePageInfo = (r: { id: string, pageInfo: LinkPageItem }) => {
-        if (this.page.pageInfo?.id == r.id)
-        {
+        if (this.page.pageInfo?.id == r.id) {
+            if (this.page.onceStopRenderByPageInfo == true) {
+                this.page.onceStopRenderByPageInfo = false;
+                return;
+            }
             this.forceUpdate();
         }
     }
