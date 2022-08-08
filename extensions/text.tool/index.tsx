@@ -140,20 +140,19 @@ class TextTool extends EventsComponent {
                 </div>
             </Tip>
             <ToolTip overlay={'双链'} >
-                <div className={'shy-tool-text-menu-item' + (this.textStyle.page == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.page !=true ? TextCommand.doubleLink : undefined, e)}>
+                <div className={'shy-tool-text-menu-item' + (this.textStyle.page == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.page != true ? TextCommand.doubleLink : undefined, e)}>
                     <Icon size={18} icon={DoubleLinkSvg}></Icon>
                 </div>
             </ToolTip>
             <ToolTip overlay={'搜索'}>
-                <div className="shy-tool-text-menu-item" onMouseDown={e=>this.onSearch(e)}>
+                <div className="shy-tool-text-menu-item" onMouseDown={e => this.onSearch(e)}>
                     <Icon size={12} icon={SearchSvg}></Icon>
                 </div>
             </ToolTip>
         </div>}
         </div>;
     }
-    onExcute(command: TextCommand, event: React.MouseEvent) {  
-         console.log(command,event);
+    onExcute(command: TextCommand, event: React.MouseEvent) {
         var font: Record<string, any> = {};
         if (typeof command == 'undefined') return;
         switch (command) {
