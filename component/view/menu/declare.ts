@@ -45,5 +45,6 @@ export enum MenuItemType {
     select = 7,
     drag = 8,
     custom = 9,
-    container = 10
+    container = 10,
+    color=11
 }
