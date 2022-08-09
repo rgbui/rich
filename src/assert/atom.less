@@ -96,32 +96,58 @@ position的布局
 
 .pos-inset {
     position: absolute;
-    top     : 0px;
-    left    : 0px;
-    right   : 0px;
-    bottom  : 0px;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
 }
 
 .pos-center {
-    position : absolute;
-    top      : 50%;
-    left     : 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
 }
 
-.pos-center-l {
-    position : absolute;
-    top      : 50%;
-    right    : 0px;
+.pos-center-right {
+    position: absolute;
+    top: 50%;
+    right: 0px;
     transform: translate(0%, -50%);
+}
+
+.pos-center-left {
+    position: absolute;
+    top: 50%;
+    left: 0px;
+    transform: translate(0%, -50%);
+}
+
+.pos-center-top {
+    position: absolute;
+    left: 50%;
+    top: 0px;
+    transform: translate(-50%, 0px);
+}
+
+.pos-top-right {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+.pos-top-left {
+    position: absolute;
+    top: 0px;
+    left: 0px;
 }
 
 .pos-full {
     position: absolute;
-    top     : 0px;
-    left    : 0px;
-    width   : 100vw;
-    height  : 100vh;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
     overflow: hidden;
 }
 
@@ -131,10 +157,10 @@ position的布局
 
 .fixed-full {
     position: fixed;
-    top     : 0px;
-    left    : 0px;
-    width   : 100vw;
-    height  : 100vh;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
     overflow: hidden;
 }
 
@@ -145,7 +171,6 @@ position的布局
 .sticky {
     position: sticky;
 }
-
 
 
 /**
