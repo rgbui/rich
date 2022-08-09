@@ -5,6 +5,7 @@ import { CopyText } from "../../../component/copy";
 import { useAtUserSelector } from "../../../extensions/at";
 import { useBlockSelector } from "../../../extensions/block";
 import { InputTextPopSelectorType } from "../../../extensions/common/input.pop";
+import { useEmojiSelector } from "../../../extensions/emoji/selector";
 import { InputDetector } from "../../../extensions/input.detector/detector";
 import { DetectorOperator } from "../../../extensions/input.detector/rules";
 import { usePageLinkSelector } from "../../../extensions/link/page";
@@ -57,9 +58,15 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
                 selector: (await usePageLinkSelector())
             };
         }
-        // else if (data2 == ';;' || data2 == '；；') {
-
-        // }
+        else if (data2 == '::' || data2 == '：：' || data2 == ';;') {
+            write.inputPop = {
+                rect,
+                type: InputTextPopSelectorType.EmojiSelector,
+                offset: offset - 2,
+                aa,
+                selector: (await useEmojiSelector())
+            };
+        }
         // else if(data2=='{{'){
 
         // }
