@@ -144,7 +144,7 @@ export class PageWrite {
             case KeyboardCode.ArrowLeft.toLowerCase():
             case KeyboardCode.ArrowRight.toLowerCase():
                 await AutoInputStore();
-                MoveCursor(this,aa,event);
+                MoveCursor(this, aa, event);
                 return;
                 break;
             case KeyboardCode.Enter.toLowerCase():
@@ -186,9 +186,8 @@ export class PageWrite {
                 }
                 break;
             case KeyboardCode.X.toLowerCase():
-                if (UA.isMacOs && this.kit.page.keyboardPlate.isMeta() || !UA.isMacOs && this.kit.page.keyboardPlate.isCtrl())
-                {
-                    inputBackspaceDeleteContent(this,aa,event,{cut:true})
+                if (UA.isMacOs && this.kit.page.keyboardPlate.isMeta() || !UA.isMacOs && this.kit.page.keyboardPlate.isCtrl()) {
+                    inputBackspaceDeleteContent(this, aa, event, { cut: true })
                     forceCloseTextTool();
                 }
                 break;
