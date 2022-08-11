@@ -39,6 +39,7 @@ import CustomizePageSvg from "../src/assert/svg/customizePage.svg";
 import CutSvg from "../src/assert/svg/cut.svg";
 import DiscoverySvg from "../src/assert/svg/discovery.svg";
 import DotsSvg from "../src/assert/svg/dots.svg";
+import DoubleLinkSvg from "../src/assert/svg/double.link.svg";
 import DoubleRightSvg from "../src/assert/svg/doubleRight.svg";
 import DownloadSvg from "../src/assert/svg/download.svg";
 import DragHandleSvg from "../src/assert/svg/dragHandle.svg";
@@ -178,6 +179,7 @@ CustomizePageSvg,
 CutSvg,
 DiscoverySvg,
 DotsSvg,
+DoubleLinkSvg,
 DoubleRightSvg,
 DownloadSvg,
 DragHandleSvg,

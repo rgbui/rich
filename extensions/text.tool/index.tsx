@@ -17,7 +17,9 @@ import { PopoverPosition } from "../popover/position";
 import { FixedViewScroll } from "../../src/common/scroll";
 import { channel } from "../../net/channel";
 import { blockStore } from "../block/store";
-import { EquationSvg } from "../../component/svgs";
+import { DoubleLinkSvg, EquationSvg, SearchSvg } from "../../component/svgs";
+import { ToolTip } from "../../component/view/tooltip";
+
 export type TextToolStyle = {
     link: string,
     blockUrl: string,
@@ -28,7 +30,8 @@ export type TextToolStyle = {
     code: boolean,
     equation: boolean,
     color: string,
-    fill: Partial<FillCss>
+    fill: Partial<FillCss>,
+    page: boolean
 }
 
 class TextTool extends EventsComponent {
@@ -43,6 +46,7 @@ class TextTool extends EventsComponent {
     private fvs: FixedViewScroll = new FixedViewScroll();
     private turnBlock: Block = null;
     private turnText: string = '';
+    private selectionText: string = '';
     el: HTMLElement;
     boxEl: HTMLElement;
     open(pos: PopoverPosition, options: { style: TextToolStyle, turnBlock?: Block }) {
@@ -56,6 +60,7 @@ class TextTool extends EventsComponent {
         var tb = this.turnBlock ? blockStore.find(g => g.url == this.turnBlock.url) : undefined;
         if (tb) this.turnText = tb.text;
         else this.turnText = '';
+        this.selectionText = window.getSelection().toString();
         this.forceUpdate(() => {
             var menu: HTMLElement = this.el.querySelector('.shy-tool-text-menu');
             this.point = RectUtility.cacPopoverPosition({
@@ -134,11 +139,22 @@ class TextTool extends EventsComponent {
                     <Icon size={16} icon='arrow-down:sy'></Icon>
                 </div>
             </Tip>
+            <ToolTip overlay={'双链'} >
+                <div className={'shy-tool-text-menu-item' + (this.textStyle.page == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.page != true ? TextCommand.doubleLink : undefined, e)}>
+                    <Icon size={18} icon={DoubleLinkSvg}></Icon>
+                </div>
+            </ToolTip>
+            <ToolTip overlay={'搜索'}>
+                <div className="shy-tool-text-menu-item" onMouseDown={e => this.onSearch(e)}>
+                    <Icon size={12} icon={SearchSvg}></Icon>
+                </div>
+            </ToolTip>
         </div>}
         </div>;
     }
     onExcute(command: TextCommand, event: React.MouseEvent) {
         var font: Record<string, any> = {};
+        if (typeof command == 'undefined') return;
         switch (command) {
             case TextCommand.bold:
                 font.fontWeight = 'bold';
@@ -189,6 +205,11 @@ class TextTool extends EventsComponent {
                 this.emit('setProp', { equation: false });
                 return this.forceUpdate();
                 break;
+            case TextCommand.doubleLink:
+                this.textStyle.page = false;
+                this.emit('setProp', { link: { name: 'page' } });
+                return this.forceUpdate();
+                break;
         }
         this.emit('setStyle', { [BlockCssName.font]: font } as any);
         this.forceUpdate();
@@ -233,6 +254,12 @@ class TextTool extends EventsComponent {
     }
     onOpenComment(event: React.MouseEvent) {
 
+    }
+    onSearch(event: React.MouseEvent) {
+        if (this.selectionText) {
+            //这里打开搜索框
+            console.log(this.selectionText);
+        }
     }
     componentDidMount() {
         document.addEventListener('mousedown', this.onGlobalMousedown);

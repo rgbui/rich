@@ -5,7 +5,8 @@ export enum InputTextPopSelectorType{
     BlockSelector,
     AtSelector,
     LinkeSelector,
-    UrlSelector
+    UrlSelector,
+    EmojiSelector
 }
 export abstract class InputTextPopSelector extends React.Component {
     abstract open(round: Rect, text: string, callback: (...args:any[]) => void,options?:Record<string,any>): Promise<boolean>

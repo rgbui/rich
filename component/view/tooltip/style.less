@@ -1,40 +1,45 @@
 .shy-tooltip {
     position: absolute;
-    z-index: 100000;
+    z-index : 100000;
 
     &-arrow {
         position: absolute;
-        @size: 16px;
+        @size   : 16px;
+
         span {
-            position: absolute;
-            top: 50%;
-            left: 50%;
+            position : absolute;
+            top      : 50%;
+            left     : 50%;
             transform: translate(-50%, -50%);
-            width: @size;
-            height: @size;
-            overflow: hidden;
+            width    : @size;
+            height   : @size;
+            overflow : hidden;
+
             em {
                 background: linear-gradient(to right bottom, rgba(0, 0, 0, .65), rgba(0, 0, 0, .75));
-                width: @size;
-                height: @size;
-                top: 0px;
-                left: 0px;
-                position: absolute;
-                transform: rotate(0deg);
+                width     : @size;
+                height    : @size;
+                top       : 0px;
+                left      : 0px;
+                position  : absolute;
+                transform : rotate(0deg);
                 box-shadow: 3px -3px 7px #00000012;
             }
         }
+
         &.top {
             bottom: 0px;
-            left: 0px;
-            right: 0px;
+            left  : 0px;
+            right : 0px;
+
             em {
                 transform: translateY(-12px) rotate(45deg);
             }
         }
+
         &.bottom {
-            top: 0px;
-            left: 0px;
+            top  : 0px;
+            left : 0px;
             right: 0px;
 
             em {
@@ -43,8 +48,8 @@
         }
 
         &.right {
-            left: 0px;
-            top: 0px;
+            left  : 0px;
+            top   : 0px;
             bottom: 0px;
 
             em {
@@ -53,8 +58,8 @@
         }
 
         &.left {
-            right: 0px;
-            top: 0px;
+            right : 0px;
+            top   : 0px;
             bottom: 0px;
 
             em {
@@ -64,16 +69,33 @@
     }
 
     &-overlay {
-        min-width: 10px;
-        min-height: 10px;
-        padding: 4px 8px;
-        color: #fff;
-        text-align: left;
-        text-decoration: none;
-        word-wrap: break-word;
+        min-width       : 10px;
+        min-height      : 10px;
+        padding         : 4px 8px;
+        color           : #fff;
+        text-align      : left;
+        text-decoration : none;
+        word-wrap       : break-word;
         background-color: #000000bf;
-        border-radius: 2px;
-        font-size: 12px;
-        box-shadow: 0 3px 6px -4px #0000001f, 0 6px 16px #00000014, 0 9px 28px 8px #0000000d;
+        border-radius   : 2px;
+        font-size       : 12px;
+        box-shadow      : 0 3px 6px -4px #0000001f, 0 6px 16px #00000014, 0 9px 28px 8px #0000000d;
+    }
+}
+
+.shy-box-tip {
+    position: absolute;
+    z-index : calc(100000 - 1);
+
+    &-overlay {
+        min-width          : 10px;
+        min-height         : 10px;
+        color              : #fff;
+        text-align         : left;
+        text-decoration    : none;
+        word-wrap          : break-word;
+        background-color   : #fff;
+        border-radius      : 4px;
+        box-shadow   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
     }
 }

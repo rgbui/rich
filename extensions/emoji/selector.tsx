@@ -16,7 +16,7 @@ import { Tip } from "../../component/view/tooltip/tip";
  */
 class EmojiSelector extends InputTextPopSelector {
     onClose(): void {
-        throw new Error("Method not implemented.");
+        this.close();
     }
     async open(
         round: Rect,
@@ -25,7 +25,7 @@ class EmojiSelector extends InputTextPopSelector {
         this._select = callback;
         this.pos = round.leftBottom;
         this.visible = true;
-        var t = text.replace(/^::/, '');
+        var t = text.replace(/^::|；；|;;/, '');
         this.text = t;
         this.syncSearch();
         return true;
@@ -84,8 +84,8 @@ class EmojiSelector extends InputTextPopSelector {
         }
         return <div>
             {this.visible && <div className='emoji-selectors' onScroll={e => this.onScroll(e)} style={style}>
-                {!this.isSearch && this.renderEmojis()}
-                {this.isSearch && this.renderSearchs()}
+                {!this.text && this.renderEmojis()}
+                {this.text && this.renderSearchs()}
             </div>}
         </div>
     }
@@ -106,7 +106,7 @@ class EmojiSelector extends InputTextPopSelector {
         }
     }
     private onSelect(block: EmojiCode) {
-        this._select({ url: '/emoji', isLine: true, src: { mime: 'emoji', code: block.code } })
+        this._select({ url: '/emoji', isLine: true, src: { name: 'emoji', code: block.code } })
         this.close();
     }
     private visible: boolean = false;
@@ -183,7 +183,11 @@ class EmojiSelector extends InputTextPopSelector {
     componentDidMount() {
         this.el = ReactDOM.findDOMNode(this) as HTMLElement;
         document.addEventListener('mousedown', this.onGlobalMousedown);
-        emojiStore.get().then(r => { this.emojis = r; this.selectCode = this.emojis.first().childs.first().code; });
+        emojiStore.get().then(r => {
+            this.emojis = r;
+            this.selectCode = this.emojis.first().childs.first().code;
+            this.forceUpdate();
+        });
     }
     componentWillUnmount() {
         document.removeEventListener('mousedown', this.onGlobalMousedown);
@@ -221,7 +225,7 @@ class EmojiSelector extends InputTextPopSelector {
                     return true;
                 case KeyboardCode.Enter:
                     this.close();
-                    if (this.selectCode) return { blockData: { url: '/emoji', isLine: true, src: { mime: 'emoji', code: this.selectCode } } };
+                    if (this.selectCode) return { blockData: { url: '/emoji', isLine: true, src: { name: 'emoji', code: this.selectCode } } };
             }
         }
         return false;

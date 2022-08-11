@@ -23,12 +23,9 @@ import { Divider } from "../../component/view/grid";
  * 如果不是互联网址，则搜索本地的页面，同时也可以根据当前的输入的页面名称，自动创建一个新的子页面
  * 
  */
-class LinkPicker extends EventsComponent<{ link: PageLink }> {
+class LinkPicker extends EventsComponent {
     constructor(props) {
         super(props);
-        if (this.props.link && this.props.link.name == 'outside') this.url = this.props.link.url;
-        else this.url = '';
-        if (this.props.link) this.name = this.props.link.name;
     }
     url: string = '';
     name: PageLink['name'];
@@ -67,6 +64,9 @@ class LinkPicker extends EventsComponent<{ link: PageLink }> {
     loading = false;
     isSearch = false;
     syncSearch = lodash.debounce(async () => {
+        this.forceSyncSearch();
+    }, 1200)
+    forceSyncSearch = async () => {
         if (!this.url) return;
         this.loading = true;
         this.forceUpdate();
@@ -78,7 +78,7 @@ class LinkPicker extends EventsComponent<{ link: PageLink }> {
         else this.links = [];
         this.loading = false;
         this.forceUpdate();
-    }, 1200)
+    }
     render() {
         return <div className='shy-link-picker'>
             <Input size='small'
@@ -107,11 +107,31 @@ class LinkPicker extends EventsComponent<{ link: PageLink }> {
     onCreate() {
         this.emit('change', { name: 'create', url: this.url })
     }
+    async onOpen(link: PageLink) {
+        if (link) {
+            if (link.url) {
+                this.url = link.url;
+                this.name = 'outside';
+                this.forceUpdate()
+            }
+            else if (link.pageId) {
+                this.url = link.text;
+                this.name = 'page';
+                await this.forceSyncSearch();
+            }
+        }
+        else {
+            this.url = '';
+            this.name = undefined;
+            this.forceUpdate();
+        }
+    }
 }
 
 export async function useLinkPicker(pos: PopoverPosition, link?: PageLink) {
     var popover = await PopoverSingleton(LinkPicker, {}, { link: link });
     var picker = await popover.open(pos);
+    await picker.onOpen(link);
     return new Promise((resolve: (link: PageLink) => void, reject) => {
         picker.on('change', (link: PageLink) => {
             resolve(link);
