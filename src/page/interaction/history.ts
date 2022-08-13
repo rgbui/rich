@@ -3,7 +3,7 @@ import { Page } from "..";
 import { BlockRenderRange } from "../../block/enum";
 import { Matrix } from "../../common/matrix";
 import { OperatorDirective } from "../../history/declare";
-import { HistorySnapshoot } from "../../history/snapshoot";
+import { AppearCursorPos, HistorySnapshoot } from "../../history/snapshoot";
 import { PageDirective } from "../directive";
 
 export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
@@ -55,7 +55,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             block.page.addUpdateEvent(async () => {
                 var aa = block.appearAnchors.find(g => g.prop == operator.data.prop);
                 if (aa) {
-                    page.kit.writer.onFocusAppearAnchor(aa, { at: operator.data.new });
+                    page.kit.writer.cursor.onFocusAppearAnchor(aa, { at: operator.data.new });
                 }
             })
         }
@@ -66,11 +66,57 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             block.page.addUpdateEvent(async () => {
                 var aa = block.appearAnchors.find(g => g.prop == operator.data.prop);
                 if (aa) {
-                    page.kit.writer.onFocusAppearAnchor(aa, { at: operator.data.old });
+                    page.kit.writer.cursor.onFocusAppearAnchor(aa, { at: operator.data.old });
                 }
             })
         }
     });
+
+    snapshoot.registerOperator(OperatorDirective.changeCursorPos, async (operator, source) => {
+        var oc: {
+            old_value: { start: AppearCursorPos, end: AppearCursorPos },
+            new_value: { start: AppearCursorPos, end: AppearCursorPos }
+        } = operator.data as any;
+        var startBlock = page.find(x => x.id == oc.new_value.start.blockId);
+        var startAppear = startBlock.appearAnchors.find(g => g.prop == oc.new_value.start.prop);
+        var endBlock = oc.new_value.end.blockId == startBlock?.id ? startBlock : page.find(x => x.id == oc.new_value.end.blockId);
+        var endAppear = endBlock.appearAnchors.find(g => g.prop == oc.old_value.end.prop);
+        page.kit.writer.cursor.setTextSelection({
+            startAnchor: startAppear,
+            startOffset: oc.new_value.start.offset,
+            endAnchor:endAppear,
+            endOffset: oc.new_value.end.offset
+        });
+        if (page.hasUpdate) {
+            page.addUpdateEvent(async () => {
+                page.kit.writer.cursor.renderWindowSelection()
+            })
+        }
+        else page.kit.writer.cursor.renderWindowSelection()
+    }, async (operator) => {
+        var oc: {
+            old_value: { start: AppearCursorPos, end: AppearCursorPos },
+            new_value: { start: AppearCursorPos, end: AppearCursorPos }
+        } = operator.data as any;
+        if (oc.old_value.start || oc.old_value.end) return;
+        var startBlock = page.find(x => x.id == oc.old_value.start.blockId);
+        var startAppear = startBlock.appearAnchors.find(g => g.prop == oc.old_value.start.prop);
+        var endBlock = oc.old_value.end.blockId == startBlock?.id ? startBlock : page.find(x => x.id == oc.old_value.end.blockId);
+        var endAppear = endBlock.appearAnchors.find(g => g.prop == oc.old_value.end.prop);
+        page.kit.writer.cursor.setTextSelection({
+            startAnchor: startAppear,
+            startOffset: oc.old_value.start.offset,
+            endAnchor: endAppear,
+            endOffset: oc.old_value.end.offset
+        });
+        if (page.hasUpdate) {
+            page.addUpdateEvent(async () => {
+                page.kit.writer.cursor.renderWindowSelection()
+            })
+        }
+        else page.kit.writer.cursor.renderWindowSelection()
+    })
+
     snapshoot.registerOperator(OperatorDirective.updateProp, async (operator, source) => {
         var block = page.find(x => x.id == operator.data.blockId);
         if (block) {

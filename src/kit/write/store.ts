@@ -17,9 +17,7 @@ export async function InputForceStore(appear: AppearAnchor, action?: () => Promi
  */
 export async function InputStore(appear: AppearAnchor, force: boolean = false, action?: () => Promise<void>) {
     var value = appear.textContent;
-    var oldValue = appear.block.page.kit.writer.endAnchorText;
-    var offset = (window.getSelection()).focusOffset;
-    var oldOffset = appear.block.page.kit.writer.endOffset;
+    var oldValue = appear.propValue;
     /**
      * 如果值没变，且无操作，那么这里将不做任何的事件保存
      */
@@ -28,18 +26,20 @@ export async function InputStore(appear: AppearAnchor, force: boolean = false, a
         clearTimeout(inputStoreTime);
         inputStoreTime = undefined
     }
+    var cursor = appear.block.page.kit.writer.cursor;
+    var sr = cursor.getWindowSelectionAnchors();
+    var doAction = async () => {
+        if (typeof action == 'function') await action();
+        cursor.setTextSelection(sr)
+    }
     inputStore = async function () {
         try {
             inputStore = undefined;
-            appear.block.page.kit.writer.endAnchorText = value;
-            appear.block.page.kit.writer.endOffset = offset;
             await appear.block.onInputText({
                 appear,
                 oldValue,
                 newValue: value,
-                oldOffset: oldOffset,
-                newOffset: offset,
-                action
+                action: doAction
             });
         }
         catch (ex) {

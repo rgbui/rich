@@ -6,6 +6,7 @@ import { ActionDirective, OperatorDirective } from "./declare";
 import { HistoryRecord } from "./record";
 import { Block } from "../block";
 import { TableSchema } from "../../blocks/data-grid/schema/meta";
+import { BlockAppear } from "../block/appear";
 
 /**
  * 
@@ -195,7 +196,8 @@ export interface HistorySnapshoot {
     record(directive: OperatorDirective.schemaCreateRow, data: { schemaId: string, data: Record<string, any> }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.schemaRowRemove, data: { schemaId: string, data: Record<string, any> }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.keepCursorOffset, data: { blockId: string, prop: string, old: number, new: number }, obj: HistorySnapshootObject);
-
+    
+    record(directive: OperatorDirective.changeCursorPos, data: { old_value: { start: AppearCursorPos, end: AppearCursorPos }, new_value: { start: AppearCursorPos, end: AppearCursorPos } }, obj: HistorySnapshootObject)
     record(directive: OperatorDirective.$create, data: { pos: SnapshootBlockPos, data: Record<string, any> }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.$delete, data: { pos: SnapshootBlockPos, data: Record<string, any> }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.$move, data: { from: SnapshootBlockPos, to: SnapshootBlockPos }, obj: HistorySnapshootObject);
@@ -242,3 +244,10 @@ export type SnapshootBlockPropPos = {
     arrayNextId?: string
 
 } & SnapshootBlockPos
+
+export type AppearCursorPos = {
+    blockId: string,
+    prop: string,
+    appear: BlockAppear,
+    offset: number
+}

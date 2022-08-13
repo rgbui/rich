@@ -15,6 +15,7 @@ import { ToolTip } from "../../../component/view/tooltip";
 import { useLinkPicker } from "../../../extensions/link/picker";
 import { Rect } from "../../common/vector/point";
 
+
 /***
  * 文字型的block，
  * 注意该文字block里面含有子文字或其它的如图像block等
@@ -45,6 +46,17 @@ export class TextContent extends Block {
     }
     async getPlain() {
         return this.content;
+    }
+    isEqualFormat(block: TextContent) {
+        if (this.pattern.isEqual(block.pattern)) {
+            if (this.code == true && block.code == true) return true;
+            if (this.comment && block.comment && lodash.isEqual(this.comment, block.comment)) return true;
+            if (this.link && block.link && lodash.isEqual(this.link, block.link)) return true;
+            if (this.code == false && block.code == false) {
+                if (!this.link && !block.link && !this.comment && !block.comment) return true;
+            }
+        }
+        return false;
     }
 }
 @view('/text')
@@ -121,7 +133,7 @@ export class TextContentView extends BlockView<TextContent>{
             }
             else if (this.block.link.url) {
                 ta = <BoxTip ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center">
-                    <ToolTip overlay={this.block.link.url}><a className="flex-center size-24 round item-hover gap-5 cursor" onMouseDown={e => this.openPage(e)} ><Icon size={14} icon={LinkSvg}></Icon></a></ToolTip>
+                    <ToolTip overlay={this.block.link.url}><a href={this.block.link.url} target='_blank' className="flex-center size-24 round item-hover gap-5 cursor"><Icon size={14} icon={LinkSvg}></Icon></a></ToolTip>
                     <ToolTip overlay={'编辑'}><a className="flex-center size-24 round item-hover gap-5 cursor" onMouseDown={e => this.openLink(e)}><Icon size={18} icon={EditSvg}></Icon></a></ToolTip>
                     <ToolTip overlay={'取消'}><a className="flex-center size-24 round item-hover gap-5 cursor" onMouseDown={e => this.onClearLink()}><Icon size={14} icon={TrashSvg}></Icon></a></ToolTip>
                 </div>}><a className="sy-block-text-content-link" target='_blank' href={this.block.link.url}>{ta}</a></BoxTip>

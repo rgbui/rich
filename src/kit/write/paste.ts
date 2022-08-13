@@ -108,7 +108,7 @@ async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
                 var rs = await rowBlock.appendArrayBlockData(bs, undefined, 'childs');
                 if (lastText) await rowBlock.appendBlock({ url: BlockUrlConstant.Text, content: lastText });
                 kit.page.addUpdateEvent(async () => {
-                    kit.writer.onFocusBlockAnchor(rs.last(), { last: true });
+                    kit.writer.cursor.onFocusBlockAnchor(rs.last(), { last: true, render: true, merge: true });
                 })
             }
             else {
@@ -122,7 +122,7 @@ async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
                 });
                 if (aa.block.isContentEmpty) await aa.block.delete();
                 kit.page.addUpdateEvent(async () => {
-                    kit.writer.onFocusBlockAnchor(rs.last(), { last: true });
+                    kit.writer.cursor.onFocusBlockAnchor(rs.last(), { last: true, render: true, merge: true });
                 })
             }
         }
@@ -140,7 +140,7 @@ async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
                 await firstBlock.delete();
             }
             kit.page.addUpdateEvent(async () => {
-                kit.writer.onFocusBlockAnchor(rowBlock, { last: true });
+                kit.writer.cursor.onFocusBlockAnchor(rowBlock, { last: true, render: true, merge: true });
             })
         }
     })
@@ -165,7 +165,7 @@ async function onPasteInsertText(kit: Kit, aa: AppearAnchor, text: string) {
             })
         }
         else {
-            await inputBackspaceDeleteContent(kit.writer, aa, null, {insertContent:text})
+            await inputBackspaceDeleteContent(kit.writer, aa, null, { insertContent: text })
         }
 
     }
@@ -184,7 +184,7 @@ async function onPasteUrl(kit: Kit, aa: AppearAnchor, url: string) {
                 aa.block.parentKey
             );
             this.kit.page.addUpdateEvent(async () => {
-                this.kit.writer.onFocusBlockAnchor(newBlock, { last: true });
+                this.kit.writer.cursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true });
                 var sel = window.getSelection();
                 var rect = Rect.fromEle(sel.getRangeAt(0));
                 kit.writer.inputPop = {

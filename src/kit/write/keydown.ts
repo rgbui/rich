@@ -54,7 +54,7 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
             var prevAA = aa.visibleLeft();
             if (prevAA) {
                 event.preventDefault();
-                write.onFocusAppearAnchor(prevAA, { last: prevAA.isBeforeNear(aa) ? -1 : true })
+                write.cursor.onFocusAppearAnchor(prevAA, { last: prevAA.isBeforeNear(aa) ? -1 : true })
             }
             else {
                 //这说明光标处于当前文档的头部
@@ -68,7 +68,7 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
             var downAA = aa.visibleRight();
             if (downAA) {
                 event.preventDefault();
-                write.onFocusAppearAnchor(downAA, { at: downAA.isAfterNear(aa) ? 1 : 0 })
+                write.cursor.onFocusAppearAnchor(downAA, { at: downAA.isAfterNear(aa) ? 1 : 0 })
             } else {
                 //说明光标处于文档的尾部
             }
@@ -91,7 +91,7 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
             if (downAA) {
                 event.preventDefault();
                 onceAutoScroll({ el: downAA.el, feelDis: 60, dis: 120 })
-                write.onFocusAppearAnchor(downAA, { left: rect.left, y: rects.last().bottom + lineHeight / 2 })
+                write.cursor.onFocusAppearAnchor(downAA, { left: rect.left, y: rects.last().bottom + lineHeight / 2 })
             }
         }
     }
@@ -111,7 +111,7 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
             if (upAA) {
                 event.preventDefault();
                 onceAutoScroll({ el: upAA.el, feelDis: 60, dis: 120 })
-                write.onFocusAppearAnchor(upAA, { left: rect.left, last: true, y: rects.first().top + lineHeight / 2 })
+                write.cursor.onFocusAppearAnchor(upAA, { left: rect.left, last: true, y: rects.first().top + lineHeight / 2 })
             }
         }
     }
@@ -154,7 +154,7 @@ export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: Re
             }
         }
         page.addUpdateEvent(async () => {
-            write.onFocusBlockAnchor(newBlock);
+            write.cursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
         })
     });
 }
@@ -192,7 +192,7 @@ export async function onKeyTab(write: PageWrite, aa: AppearAnchor, event: React.
         page.addUpdateEvent(async () => {
             var newAA = bl.appearAnchors.find(g => g.prop == prop);
             if (newAA)
-                write.onFocusAppearAnchor(newAA, { at: offset });
+                write.cursor.onFocusAppearAnchor(newAA, { merge: true, at: offset });
         })
         page.kit.handle.onCloseBlockHandle();
     });

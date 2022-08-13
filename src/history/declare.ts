@@ -124,6 +124,8 @@ export enum OperatorDirective {
      */
     keepCursorOffset = 500,
 
+    changeCursorPos = 501,
+
 
 
     //#region  新的指令，以1000~2000为主

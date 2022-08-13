@@ -53,7 +53,7 @@ export class Page$Operator {
                         newBlock = await this.createBlock(BlockUrlConstant.TextSpan, {}, this.views.last());
                     }
                     newBlock.mounted(() => {
-                        this.kit.writer.onFocusBlockAnchor(newBlock, { last: true });
+                        this.kit.writer.cursor.onFocusBlockAnchor(newBlock, { last: true,render:true,merge:true });
                         resolve(true);
                     })
                 })

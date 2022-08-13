@@ -95,6 +95,9 @@ export abstract class Block extends Events {
     get childs() {
         return this.blocks.childs;
     }
+    get subChilds() {
+        return this.blocks.subChilds;
+    }
     get allChilds() {
         var keys = this.blockKeys;
         var rs: Block[] = [];

@@ -12,10 +12,8 @@ import { usePageLinkSelector } from "../../../extensions/link/page";
 import { forceCloseTextTool } from "../../../extensions/text.tool";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
-import { findBlocksBetweenAppears } from "../../block/appear/visible.seek";
 import { BlockUrlConstant } from "../../block/constant";
 import { BlockRenderRange } from "../../block/enum";
-import { TextEle } from "../../common/text.ele";
 import { Rect } from "../../common/vector/point";
 import { InputForceStore, InputStore } from "./store";
 
@@ -31,6 +29,7 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
         var data = ev.data;
         var textContent = aa.textContent;
         var data2 = textContent.slice(offset - 2, offset);
+
         if (data == '/' || data == '、') {
             write.inputPop = {
                 rect,
@@ -112,7 +111,7 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                     var newBlock = await row.visibleUpCreateBlock(rule.url, { createSource: 'InputBlockSelector' });
                     newBlock.mounted(() => {
                         var b = row.nextFind(g => g.appearAnchors.some(s => s.isText));
-                        if (b) write.onFocusBlockAnchor(b)
+                        if (b) write.cursor.onFocusBlockAnchor(b, { render: true, merge: true })
                     });
                 });
                 break;
@@ -123,7 +122,7 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                     var row = aa.block.closest(x => !x.isLine);
                     var newBlock = await row.turn(rule.url);
                     write.kit.page.addUpdateEvent(async () => {
-                        write.onFocusBlockAnchor(newBlock);
+                        write.cursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
                     })
                 });
                 break;
@@ -148,7 +147,7 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                     if (rule.style) newBlock.pattern.setStyles(rule.style);
                     if (rest) await rowBlock.appendBlock({ url: BlockUrlConstant.Text, pattern, content: rest });
                     write.kit.page.addUpdateEvent(async () => {
-                        write.onFocusBlockAnchor(newBlock, { last: true });
+                        write.cursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true });
                     })
                 });
                 break;
@@ -201,12 +200,12 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                     var fr = pv.prev;
                     await pv.delete();
                     write.kit.page.addUpdateEvent(async () => {
-                        if (fr) write.onFocusBlockAnchor(fr, { last: true });
-                        else write.onFocusBlockAnchor(rowBlock);
+                        if (fr) write.cursor.onFocusBlockAnchor(fr, { last: true, render: true, merge: true });
+                        else write.cursor.onFocusBlockAnchor(rowBlock, { render: true, merge: true });
                     })
                 }
                 else write.kit.page.addUpdateEvent(async () => {
-                    write.onFocusBlockAnchor(pv, { last: true });
+                    write.cursor.onFocusBlockAnchor(pv, { last: true, render: true, merge: true });
                 });
                 return;
             }
@@ -215,7 +214,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                 else if (aa.isSolid) {
                     await block.delete();
                     write.kit.page.addUpdateEvent(async () => {
-                        write.onFocusBlockAnchor(rowBlock);
+                        write.cursor.onFocusBlockAnchor(rowBlock, { render: true, merge: true });
                     });
                     return;
                 }
@@ -226,7 +225,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                 if (rowBlock.isBackspaceAutomaticallyTurnText && !(rowBlock.isListBlock && rowBlock.getChilds(rowBlock.childKey).length > 0)) {
                     var newBlock = await rowBlock.turn(BlockUrlConstant.TextSpan);
                     write.kit.page.addUpdateEvent(async () => {
-                        write.onFocusBlockAnchor(newBlock);
+                        write.cursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
                     });
                     return;
                 }
@@ -237,7 +236,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                     await rowBlock.appendArray(rest);
                     await rowBlock.insertAfter(rp);
                     write.kit.page.addUpdateEvent(async () => {
-                        write.onFocusBlockAnchor(rowBlock);
+                        write.cursor.onFocusBlockAnchor(rowBlock, { render: true, merge: true });
                     });
                     return;
                 }
@@ -257,7 +256,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                 var prevAppearBlock = rowBlock.prevFind(x => x.appearAnchors.length > 0);
                 if (prevAppearBlock) {
                     write.kit.page.addUpdateEvent(async () => {
-                        write.onFocusBlockAnchor(prevAppearBlock, { last: true });
+                        write.cursor.onFocusBlockAnchor(prevAppearBlock, { last: true, render: true, merge: true });
                     });
                 }
                 if (rowBlock.isContentEmpty && !rowBlock.isPart) {
@@ -292,10 +291,10 @@ export async function inputBackSpaceTextContent(write: PageWrite, aa: AppearAnch
             if (block.isContentEmpty && block.isLine) await block.delete();
             write.kit.page.addUpdateEvent(async () => {
                 if (isLine && prev) {
-                    write.onFocusBlockAnchor(prev, { last: true })
+                    write.cursor.onFocusBlockAnchor(prev, { last: true, render: true, merge: true })
                 }
                 else {
-                    write.onFocusBlockAnchor(rowBlock)
+                    write.cursor.onFocusBlockAnchor(rowBlock, { render: true, merge: true })
                 }
             });
         });
@@ -333,7 +332,7 @@ async function combindSubBlock(write: PageWrite, rowBlock: Block) {
     }
     await rowBlock.delete();
     write.kit.page.addUpdateEvent(async () => {
-        write.onFocusBlockAnchor(lastPreBlock, { last: true });
+        write.cursor.onFocusBlockAnchor(lastPreBlock, { last: true, render: true, merge: true });
     });
 }
 
@@ -375,7 +374,7 @@ async function combineTextBlock(write: PageWrite, rowBlock: Block) {
     }
     if (!lastPreBlock) lastPreBlock = preBlock;
     write.kit.page.addUpdateEvent(async () => {
-        write.onFocusBlockAnchor(lastPreBlock, { last: true });
+        write.cursor.onFocusBlockAnchor(lastPreBlock, { last: true, render: true, merge: true });
     });
 }
 /**
@@ -391,14 +390,14 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
     await InputForceStore(aa, async () => {
         var sel = window.getSelection();
         var deleteText = sel.getRangeAt(0)?.cloneContents()?.textContent;
-        write.onSaveSelection();
-        var appears = findBlocksBetweenAppears(write.startAnchor.el, write.endAnchor.el);
+        write.cursor.catchWindowSelection();
+        var appears = write.cursor.getAppears()
         var rowBlocks: Block[] = [];
         await appears.eachAsync(async appear => {
             var block = appear.block;
             var rb = block.closest(x => x.isBlock);
             if (!rowBlocks.some(s => s === rb)) rowBlocks.push(rb);
-            if (appear == write.startAnchor || appear == write.endAnchor) {
+            if (appear == write.cursor.startAnchor || appear == write.cursor.endAnchor) {
 
             }
             else {
@@ -411,30 +410,27 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
                 }
             }
         });
-        if (write.endAnchor === write.startAnchor && write.endOffset < write.startOffset || TextEle.isBefore(write.endAnchor.el, write.startAnchor.el)) {
-            [write.startAnchor, write.endAnchor] = [write.endAnchor, write.startAnchor];
-            [write.startOffset, write.endOffset] = [write.endOffset, write.startOffset];
-        }
+        write.cursor.adjustAnchorSorts()
         var isStartDelete: boolean = false;
-        var preAppear = write.endAnchor.block.prevFind(g => g.appearAnchors.length > 0)?.appearAnchors.last();
-        if (write.startAnchor == write.endAnchor) {
-            if (write.startAnchor.isText) {
-                var tc = write.startAnchor.textContent;
-                write.startAnchor.setContent(tc.slice(0, write.startOffset) + (options?.insertContent || '') + tc.slice(write.endOffset))
-                await write.startAnchor.block.updateAppear(write.startAnchor, write.startAnchor.textContent, BlockRenderRange.self);
-                if (write.startAnchor.block.isContentEmpty) { await write.startAnchor.block.delete(); isStartDelete = true; }
+        var preAppear = write.cursor.endAnchor.block.prevFind(g => g.appearAnchors.length > 0)?.appearAnchors.last();
+        if (write.cursor.startAnchor == write.cursor.endAnchor) {
+            if (write.cursor.startAnchor.isText) {
+                var tc = write.cursor.startAnchor.textContent;
+                write.cursor.startAnchor.setContent(tc.slice(0, write.cursor.startOffset) + (options?.insertContent || '') + tc.slice(write.cursor.endOffset))
+                await write.cursor.startAnchor.block.updateAppear(write.cursor.startAnchor, write.cursor.startAnchor.textContent, BlockRenderRange.self);
+                if (write.cursor.startAnchor.block.isContentEmpty) { await write.cursor.startAnchor.block.delete(); isStartDelete = true; }
             }
         }
         else {
-            if (write.startAnchor.isText) {
-                write.startAnchor.setContent(write.startAnchor.textContent.slice(0, write.startOffset));
-                await write.startAnchor.block.updateAppear(write.startAnchor, write.startAnchor.textContent, BlockRenderRange.self);
-                if (write.startAnchor.block.isContentEmpty) { await write.startAnchor.block.delete(); isStartDelete = true; }
+            if (write.cursor.startAnchor.isText) {
+                write.cursor.startAnchor.setContent(write.cursor.startAnchor.textContent.slice(0, write.cursor.startOffset));
+                await write.cursor.startAnchor.block.updateAppear(write.cursor.startAnchor, write.cursor.startAnchor.textContent, BlockRenderRange.self);
+                if (write.cursor.startAnchor.block.isContentEmpty) { await write.cursor.startAnchor.block.delete(); isStartDelete = true; }
             }
-            if (write.endAnchor.isText) {
-                write.endAnchor.setContent((options?.insertContent || '') + write.endAnchor.textContent.slice(write.endOffset));
-                await write.endAnchor.block.updateAppear(write.endAnchor, write.endAnchor.textContent, BlockRenderRange.self);
-                if (write.endAnchor.block.isContentEmpty) await write.endAnchor.block.delete()
+            if (write.cursor.endAnchor.isText) {
+                write.cursor.endAnchor.setContent((options?.insertContent || '') + write.cursor.endAnchor.textContent.slice(write.cursor.endOffset));
+                await write.cursor.endAnchor.block.updateAppear(write.cursor.endAnchor, write.cursor.endAnchor.textContent, BlockRenderRange.self);
+                if (write.cursor.endAnchor.block.isContentEmpty) await write.cursor.endAnchor.block.delete()
             }
         }
         await rowBlocks.eachAsync(async (b) => {
@@ -446,8 +442,8 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
         }
         write.kit.page.addUpdateEvent(async () => {
             forceCloseTextTool()
-            if (isStartDelete) write.onFocusAppearAnchor(preAppear, { last: true })
-            else write.onFocusAppearAnchor(write.startAnchor, { at: write.startOffset + (options?.insertContent || '').length });
+            if (isStartDelete) write.cursor.onFocusAppearAnchor(preAppear, { merge: true, last: true })
+            else write.cursor.onFocusAppearAnchor(write.cursor.startAnchor, { merge: true, at: write.cursor.startOffset + (options?.insertContent || '').length });
         })
     });
 }

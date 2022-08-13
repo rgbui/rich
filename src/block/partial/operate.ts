@@ -62,6 +62,22 @@ export class Block$Operator {
         }, this);
         return newBlock;
     }
+    async clearEmptyBlock(this: Block) {
+        var c = this.closest(x => x.isBlock);
+        if (c.isContentEmpty) {
+            await c.delete()
+        }
+        else {
+            var rs: Block[] = [];
+
+            c.eachReverse(g => {
+                if (g.isContentEmpty) {
+                    rs.push(g);
+                }
+            })
+            await rs.eachAsync(async r => await r.delete())
+        }
+    }
     /***
      * 移出元素或是彻底的删除元素，这里需要一个向上查换，一个向下查找的过程
      * 1. 如果元素本身是布局的元素，那么此时的布局元结构是空的，那么可能会从里到外依次删除

@@ -173,7 +173,7 @@ export class Page$Cycle {
     private willLayoutBlocks: Block[];
     private updatedFns: (() => Promise<void>)[] = [];
     get hasUpdate() {
-        return this.updatedFns.length > 0 ? true : false || this.willUpdateAll;
+        return this.willUpdateBlocks.length > 0 ||  this.willUpdateAll;
     }
     addPageUpdate() {
         this.willUpdateAll = true;

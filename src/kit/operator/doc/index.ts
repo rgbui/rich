@@ -63,7 +63,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                     if (!block.isLayout) {
                         var a = findBlockNearAppearByPoint(block, Point.from(ev));
                         if (a) {
-                            kit.writer.onFocusAppearAnchor(a.aa, { at: a.offset });
+                            kit.writer.cursor.onFocusAppearAnchor(a.aa, { at: a.offset });
                         }
                     }
                 }
@@ -71,7 +71,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                     /**这里得找页面的最末尾块 */
                     var lastBlock = kit.page.getViewLastBlock();
                     if (lastBlock && lastBlock.isContentEmpty && lastBlock.appearAnchors.some(s => s.isText)) {
-                        kit.writer.onFocusBlockAnchor(lastBlock, { last: true });
+                        kit.writer.cursor.onFocusBlockAnchor(lastBlock, { last: true, render: true });
                     }
                     else {
                         kit.page.onCreateTailTextSpan();

@@ -4,6 +4,8 @@ import { TextEle } from "../../common/text.ele";
 import { AppearVisibleSeek } from "./visible.seek";
 import { BlockUrlConstant } from "../constant";
 import lodash from "lodash";
+import { TextContent } from "../element/text";
+
 export enum BlockAppear {
     /**
      * 呈现的是文字的模式
@@ -17,12 +19,6 @@ export enum BlockAppear {
 }
 
 export class AppearAnchor {
-    get isText() {
-        return this.appear == BlockAppear.text;
-    }
-    get isSolid() {
-        return this.appear == BlockAppear.solid;
-    }
     constructor(public block: Block,
         public el: HTMLElement,
         public appear: BlockAppear,
@@ -30,7 +26,12 @@ export class AppearAnchor {
         public plain: boolean,
         public defaultValue: string
     ) {
-
+    }
+    get isText() {
+        return this.appear == BlockAppear.text;
+    }
+    get isSolid() {
+        return this.appear == BlockAppear.solid;
     }
     get textContent() {
         if (this.isText) {
@@ -146,6 +147,12 @@ export class AppearAnchor {
      * @param offset  这个是appear中的文本偏移位置
      */
     cacCollapseFocusPos(offset: number, isFirst = true) {
+        if (this.isSolid) {
+            return {
+                node: this.solidCursorEl.childNodes[0],
+                pos: 0
+            }
+        }
         var count = 0;
         var pos: number;
         var node: Text;
@@ -177,7 +184,7 @@ export class AppearAnchor {
     collapse(offset: number, sel?: Selection) {
         if (typeof sel == 'undefined') sel = window.getSelection();
         if (this.isSolid) {
-            var c = this.el.querySelector('.shy-appear-solid-cursor');
+            var c = this.solidCursorEl;
             if (c.childNodes.length > 0) {
                 sel.collapse(c.childNodes[0], 0)
             }
@@ -243,13 +250,20 @@ export class AppearAnchor {
         if (lastT) ts.push(lastT);
         var bs: Block[] = [];
         var pattern = await this.block.pattern.cloneData();
+        var tc = this.block as TextContent;
+        var props = { code: tc.code, link: lodash.cloneDeep(tc.link), comment: tc.comment };
         if (this.block.isLine) {
             var at = this.block.at;
             await this.block.updateProps({ content: ts[0] });
             bs.push(this.block);
             if (ts.length > 1) {
                 var rs = await this.block.parent.appendArrayBlockData(
-                    ts.findAll((g, i) => i > 0).map(t => ({ url: BlockUrlConstant.Text, pattern, content: t })),
+                    ts.findAll((g, i) => i > 0).map(t => ({
+                        url: BlockUrlConstant.Text,
+                        pattern,
+                        content: t,
+                        ...props
+                    })),
                     at + 1,
                     this.block.parent.childKey
                 );
@@ -260,7 +274,11 @@ export class AppearAnchor {
         else {
             await this.block.updateProps({ content: '' });
             return await this.block.appendArrayBlockData(
-                ts.map(t => ({ url: BlockUrlConstant.Text, pattern, content: t }))
+                ts.map(t => ({
+                    url: BlockUrlConstant.Text,
+                    pattern, content: t,
+                    ...props
+                }))
             )
         }
     }
@@ -377,9 +395,7 @@ export class AppearAnchor {
         }
     }
     get propValue() {
-        var html = lodash.get(this.block, this.prop);
-        if (html == '' && typeof this.defaultValue != 'undefined') html = this.defaultValue;
-        return html;
+        return lodash.get(this.block, this.prop);
     }
     updateViewValue() {
         if (this.isText && this.el) {
@@ -388,5 +404,18 @@ export class AppearAnchor {
     }
     get solidCursorEl() {
         return this.el.querySelector('.shy-appear-solid-cursor') as HTMLElement;
+    }
+    get() {
+        return {
+            blockId: this.block.id,
+            appear: this.appear,
+            prop: this.prop
+        }
+    }
+    isEqual(anchor: AppearAnchor) {
+        var r = this.get();
+        var a = anchor.get();
+        if (r.blockId == a.blockId && a.appear == r.appear && a.prop == r.prop) return true;
+        else return false
     }
 }

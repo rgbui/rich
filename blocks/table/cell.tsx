@@ -36,7 +36,7 @@ export class TableCellView extends BlockView<TableCell>{
             await this.block.page.onAction(ActionDirective.onCreateBlockByEnter, async () => {
                 var newBlock = await this.block.page.createBlock(BlockUrlConstant.TextSpan, {}, this.block);
                 newBlock.mounted(() => {
-                    this.block.page.kit.writer.onFocusBlockAnchor(newBlock);
+                    this.block.page.kit.writer.cursor.onFocusBlockAnchor(newBlock,{render:true,merge:true});
                 })
             });
         }

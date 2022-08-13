@@ -30,13 +30,12 @@ export class TabPage extends Block {
 @view('/tab/page')
 export class TabPageView extends BlockView<TabPage>{
     async mousedown(event: React.MouseEvent) {
-        console.log('sss');
         if (this.block.childs.length == 0) {
             event.stopPropagation()
             await this.block.page.onAction(ActionDirective.onCreateBlockByEnter, async () => {
                 var newBlock = await this.block.page.createBlock(BlockUrlConstant.TextSpan, {}, this.block);
                 newBlock.mounted(() => {
-                    this.block.page.kit.writer.onFocusBlockAnchor(newBlock);
+                    this.block.page.kit.writer.cursor.onFocusBlockAnchor(newBlock, {render:true, merge: true });
                 })
             });
         }

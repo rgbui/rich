@@ -32,7 +32,7 @@ export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseE
                     }
                     else {
                         kit.picker.onPicker([newBlock]);
-                        kit.writer.onFocusBlockAnchor(newBlock);
+                        kit.writer.cursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
                     }
                 })
             });
@@ -124,7 +124,7 @@ export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseE
                         newBlock.fixedHeight = Math.abs(tr.y - re.y) || 200;
                         if (isMounted) newBlock.forceUpdate();
                         kit.picker.onPicker([newBlock]);
-                        kit.writer.onFocusBlockAnchor(newBlock);
+                        kit.writer.cursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
                     }
                     toolBoard.clearSelector();
                 }

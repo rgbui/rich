@@ -254,7 +254,7 @@ export function findBlocksBetweenAppears(start: HTMLElement, end: HTMLElement) {
     var sa = findBlockAppear(start);
     if (sa && !list.includes(sa)) list.insertAt(0, sa);
     var en = findBlockAppear(end);
-    if (end && !list.includes(en)) list.push(en);
+    if (en && !list.includes(en)) list.push(en);
     return list;
 }
 
