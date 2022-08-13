@@ -58,15 +58,7 @@ export class KeyboardPlate {
     keyup(event: KeyboardEvent) {
         this.isKeyUped = true;
         delete this.lastKeydownDate;
-        this.metaKey = event.metaKey;
-        this.altKey = event.altKey;
-        this.shiftKey = event.shiftKey;
-        this.ctrlKey = event.ctrlKey;
-        for (let i = 0; i < this.listeners.length; i++) {
-            let listener = this.listeners[i];
-            if (listener.predict(this) == true && typeof listener.keyup == 'function') listener.keyup(event, this);
-        }
-        this.keys.removeAll(event.key as KeyboardCode);
+        this.keys=[];
     }
     is(...codes: KeyboardCode[]) {
         return this.keys.exists(g => codes.exists(c => c.toLowerCase() == g.toLowerCase()));
