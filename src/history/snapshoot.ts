@@ -24,10 +24,8 @@ export class HistorySnapshoot extends Events {
         this.historyRecord = new HistoryRecord();
         this.historyRecord.on('error', err => this.emit('error', err));
     }
-    declare(directive: ActionDirective | string, syncBlock?: { block?: Block }) {
-        if (this.action) {
-            this.page.onError(new Warn(ExceptionType.notStoreLastAction))
-        }
+    declare(directive: ActionDirective | string, syncBlock?: { block?: Block })
+    {
         this._merge = false;
         this._pause = false;
         this.action = new UserAction();
@@ -72,34 +70,43 @@ export class HistorySnapshoot extends Events {
         this.action.operators.push(up);
     }
     store() {
-        if (!this.action.isEmpty) {
-            this.action.endDate = Date.now();
-            /**
-             * onLoadUserActions 一般是从别的地方触发的，那么相应的history就不应该在触发了
-             */
-            if (this.action.directive !== ActionDirective.onLoadUserActions) {
-                this.emit('history', this.action);
-            }
-            if (this.historyRecord) {
-                if (!(this.action.directive == ActionDirective.onRedo || this.action.directive == ActionDirective.onPageTurnLayout || this.action.directive == ActionDirective.onLoadUserActions || this.action.directive == ActionDirective.onUndo)) {
-                    if (this._merge == true) {
-                        /**
-                         * 合并上次的action
-                         */
-                        var action = this.historyRecord.action;
-                        if (action) {
-                            this.action.operators.forEach(op => {
-                                action.operators.push(op);
-                            });
-                        } else this.historyRecord.push(this.action);
-                        this._merge = false;
-                    }
-                    else this.historyRecord.push(this.action);
+        try {
+            if (!this.action?.isEmpty) {
+                this.action.endDate = Date.now();
+                /**
+                 * onLoadUserActions 一般是从别的地方触发的，那么相应的history就不应该在触发了
+                 */
+                if (this.action.directive !== ActionDirective.onLoadUserActions) {
+                    this.emit('history', this.action);
                 }
-            };
-            console.log(this.action.toString());
+                if (this.historyRecord) {
+                    if (!([
+                        ActionDirective.onRedo,
+                        ActionDirective.onPageTurnLayout,
+                        ActionDirective.onLoadUserActions,
+                        ActionDirective.onUndo
+                    ].includes(this.action.directive as any))) {
+                        if (this._merge == true) {
+                            /**
+                             * 合并上次的action
+                             */
+                            var action = this.historyRecord.action;
+                            if (action) {
+                                this.action.operators.forEach(op => {
+                                    action.operators.push(op);
+                                });
+                            } else this.historyRecord.push(this.action);
+                            this._merge = false;
+                        }
+                        else this.historyRecord.push(this.action);
+                    }
+                };
+                console.log(this.action.toString());
+            }
         }
-        delete this.action;
+        catch (ex) {
+            console.error(ex);
+        }
     }
     async sync(directive: ActionDirective | string, action: () => Promise<void>, syncBlock?: { block?: Block }) {
         this.declare(directive, syncBlock);
@@ -196,7 +203,7 @@ export interface HistorySnapshoot {
     record(directive: OperatorDirective.schemaCreateRow, data: { schemaId: string, data: Record<string, any> }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.schemaRowRemove, data: { schemaId: string, data: Record<string, any> }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.keepCursorOffset, data: { blockId: string, prop: string, old: number, new: number }, obj: HistorySnapshootObject);
-    
+
     record(directive: OperatorDirective.changeCursorPos, data: { old_value: { start: AppearCursorPos, end: AppearCursorPos }, new_value: { start: AppearCursorPos, end: AppearCursorPos } }, obj: HistorySnapshootObject)
     record(directive: OperatorDirective.$create, data: { pos: SnapshootBlockPos, data: Record<string, any> }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.$delete, data: { pos: SnapshootBlockPos, data: Record<string, any> }, obj: HistorySnapshootObject);
