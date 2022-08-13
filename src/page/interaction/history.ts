@@ -71,34 +71,31 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             })
         }
     });
-
     snapshoot.registerOperator(OperatorDirective.changeCursorPos, async (operator, source) => {
         var oc: {
             old_value: { start: AppearCursorPos, end: AppearCursorPos },
             new_value: { start: AppearCursorPos, end: AppearCursorPos }
         } = operator.data as any;
+        if (!(oc.new_value.start && oc.new_value.end)) return;
         var startBlock = page.find(x => x.id == oc.new_value.start.blockId);
         var startAppear = startBlock.appearAnchors.find(g => g.prop == oc.new_value.start.prop);
         var endBlock = oc.new_value.end.blockId == startBlock?.id ? startBlock : page.find(x => x.id == oc.new_value.end.blockId);
-        var endAppear = endBlock.appearAnchors.find(g => g.prop == oc.old_value.end.prop);
+        var endAppear = endBlock.appearAnchors.find(g => g.prop == oc.new_value.end.prop);
         page.kit.writer.cursor.setTextSelection({
             startAnchor: startAppear,
             startOffset: oc.new_value.start.offset,
-            endAnchor:endAppear,
+            endAnchor: endAppear,
             endOffset: oc.new_value.end.offset
         });
-        if (page.hasUpdate) {
-            page.addUpdateEvent(async () => {
-                page.kit.writer.cursor.renderWindowSelection()
-            })
-        }
-        else page.kit.writer.cursor.renderWindowSelection()
+        page.addUpdateEvent(async () => {
+            page.kit.writer.cursor.renderWindowSelection()
+        })
     }, async (operator) => {
         var oc: {
             old_value: { start: AppearCursorPos, end: AppearCursorPos },
             new_value: { start: AppearCursorPos, end: AppearCursorPos }
         } = operator.data as any;
-        if (oc.old_value.start || oc.old_value.end) return;
+        if (!(oc.old_value.start && oc.old_value.end)) return;
         var startBlock = page.find(x => x.id == oc.old_value.start.blockId);
         var startAppear = startBlock.appearAnchors.find(g => g.prop == oc.old_value.start.prop);
         var endBlock = oc.old_value.end.blockId == startBlock?.id ? startBlock : page.find(x => x.id == oc.old_value.end.blockId);
@@ -109,12 +106,9 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             endAnchor: endAppear,
             endOffset: oc.old_value.end.offset
         });
-        if (page.hasUpdate) {
-            page.addUpdateEvent(async () => {
-                page.kit.writer.cursor.renderWindowSelection()
-            })
-        }
-        else page.kit.writer.cursor.renderWindowSelection()
+        page.addUpdateEvent(async () => {
+            page.kit.writer.cursor.renderWindowSelection()
+        })
     })
 
     snapshoot.registerOperator(OperatorDirective.updateProp, async (operator, source) => {
@@ -243,29 +237,6 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         var parent = page.find(x => x.id == dr.from.pos.parentId);
         await parent.append(block, dr.from.pos.at, dr.from.pos.childKey)
     });
-    // snapshoot.registerOperator(OperatorDirective.keepCursorOffset, async (operator, source) => {
-    //     var block = page.find(x => x.id == operator.data.blockId);
-    //     if (block) {
-    //         block.syncUpdate(BlockRenderRange.self);
-    //         block.page.addUpdateEvent(async () => {
-    //             var aa = block.appearAnchors.find(g => g.prop == operator.data.prop);
-    //             if (aa) {
-    //                 page.kit.writer.onFocusAppearAnchor(aa, { at: operator.data.new });
-    //             }
-    //         })
-    //     }
-    // }, async (operator) => {
-    //     var block = page.find(x => x.id == operator.data.blockId);
-    //     if (block) {
-    //         block.syncUpdate(BlockRenderRange.self);
-    //         block.page.addUpdateEvent(async () => {
-    //             var aa = block.appearAnchors.find(g => g.prop == operator.data.prop);
-    //             if (aa) {
-    //                 page.kit.writer.onFocusAppearAnchor(aa, { at: operator.data.old });
-    //             }
-    //         })
-    //     }
-    // });
     snapshoot.registerOperator(OperatorDirective.$update, async (operator, source) => {
         var dr = operator.data;
         var block = page.find(x => x.id == dr.pos.blockId);
