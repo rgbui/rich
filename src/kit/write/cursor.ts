@@ -205,7 +205,6 @@ export class AnchorCursor {
     }
     renderWindowSelection() {
         var sel = window.getSelection();
-        console.log(this, this.isCollapse);
         if (!this.isCollapse) {
             var cr = this.startAnchor.cacCollapseFocusPos(this.startOffset);
             var er = this.endAnchor.cacCollapseFocusPos(this.endOffset);

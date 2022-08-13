@@ -149,6 +149,7 @@ export class Page extends Events<PageDirective> {
             } else nextAction();
         }
         catch (ex) {
+            console.log(panel,this.root);
             console.error(ex);
         }
     }

@@ -98,9 +98,10 @@ export class PageEvent {
             })
     }
     async onRedo(this: Page) {
-        if (this.snapshoot.historyRecord.isCanRedo) await this.onAction(ActionDirective.onRedo, async () => {
-            await this.snapshoot.redo();
-        })
+        if (this.snapshoot.historyRecord.isCanRedo)
+            await this.onAction(ActionDirective.onRedo, async () => {
+                await this.snapshoot.redo();
+            })
     }
     async onPageTurnLayout(this: Page, layoutType: PageLayoutType, actions?: () => Promise<void>) {
         await this.onAction(ActionDirective.onPageTurnLayout, async () => {
