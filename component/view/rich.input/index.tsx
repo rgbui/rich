@@ -170,7 +170,7 @@ export class RichTextInput extends React.Component<{
                 <span className="shy-rich-input-error-content">{this.errorTip}</span>
                 <span className="shy-rich-input-error-operators" onMouseDown={e => this.clearError()}><a><Icon size={12} icon={CloseTickSvg}></Icon></a></span>
             </div>}
-            {!(this.props.allowUploadFile == false) && <Icon mousedown={e => this.openAddFile(e)} size={18} icon={PlusSvg}></Icon>}
+            {!(this.props.allowUploadFile == false) && <Icon style={{ marginTop: 3 }} mousedown={e => this.openAddFile(e)} size={18} icon={PlusSvg}></Icon>}
             <div className="shy-rich-input-editor"
                 ref={e => this.richEl = e}
                 onKeyDown={e => { this.keydown(e.nativeEvent) }}
@@ -184,7 +184,7 @@ export class RichTextInput extends React.Component<{
                 contentEditable={true}
                 onPaste={e => this.paste(e.nativeEvent)}>
             </div>
-            <Icon size={18} mousedown={e => this.openEmoji(e)} icon={EmojiSvg}></Icon>
+            <Icon size={18} style={{ marginTop: 3 }} mousedown={e => this.openEmoji(e)} icon={EmojiSvg}></Icon>
             <div ref={e => this.toolEl = e} className="shy-rich-input-tool">
                 <a onMouseDown={e => this.onToolStyle({ fontWeight: 'bold' })}><Icon icon='bold:sy'></Icon></a>
                 <a onMouseDown={e => this.onToolStyle({ fontStyle: 'italic' })}><Icon icon='italic:sy'></Icon></a>
