@@ -76,6 +76,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             old_value: { start: AppearCursorPos, end: AppearCursorPos },
             new_value: { start: AppearCursorPos, end: AppearCursorPos }
         } = operator.data as any;
+        if (source == 'notify' || source == 'notifyView'||source=='load') return;
         if (!(oc.new_value.start && oc.new_value.end)) return;
         var startBlock = page.find(x => x.id == oc.new_value.start.blockId);
         var startAppear = startBlock.appearAnchors.find(g => g.prop == oc.new_value.start.prop);
