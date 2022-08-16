@@ -4,6 +4,7 @@ import { AppearAnchor } from "../../block/appear";
 import { findBlockAppear, findBlocksBetweenAppears } from "../../block/appear/visible.seek";
 import { BlockUrlConstant } from "../../block/constant";
 import { TextContent } from "../../block/element/text";
+import { BlockRenderRange } from "../../block/enum";
 import { TextEle } from "../../common/text.ele";
 import { Point } from "../../common/vector/point";
 import { OperatorDirective } from "../../history/declare";
@@ -90,14 +91,12 @@ export class AnchorCursor {
         operators?: { merge?: boolean, render?: boolean, combine?: boolean }) {
         this.kit.page.onAction('onSetTextSelection', async () => {
             if (operators?.merge) this.kit.page.snapshoot.merge();
-            var isCombined: boolean = false;
-            if (operators.combine) isCombined = await this.combineBlockLines(options);
+            if (operators.combine) await this.combineBlockLines(options);
             this.setTextSelection(options)
             if (operators?.render) {
-                if (isCombined) this.kit.page.addUpdateEvent(async () => {
+                this.kit.page.addUpdateEvent(async () => {
                     this.renderWindowSelection()
                 })
-                else this.renderWindowSelection()
             }
         })
     }
@@ -117,7 +116,6 @@ export class AnchorCursor {
             var rb = ap.block.closest(g => g.isBlock);
             if (!rowBlocks.includes(rb)) rowBlocks.push(rb);
         });
-        var isCombined: boolean = false;
         async function cb(rowBlock: Block) {
             var cs = rowBlock.childs;
             for (let i = cs.length - 1; i > 0; i--) {
@@ -134,15 +132,13 @@ export class AnchorCursor {
                                 options.endAnchor = prev.appearAnchors.first();
                                 options.endOffset = prev.content.length + options.endOffset;
                             }
-                            await prev.updateProps({ content: prev.content + line.content });
+                            await prev.updateProps({ content: prev.content + line.content }, BlockRenderRange.self);
                             await line.delete();
-                            isCombined = true;
                         }
                     }
                     else if (line.url == BlockUrlConstant.KatexLine && prev.url == BlockUrlConstant.KatexLine) {
-                        await prev.updateProps({ content: prev.content + line.content });
+                        await prev.updateProps({ content: prev.content + line.content }, BlockRenderRange.self);
                         await line.delete();
-                        isCombined = true;
                     }
                 }
             }
@@ -156,7 +152,6 @@ export class AnchorCursor {
             })
         }
         await er(rowBlocks);
-        return isCombined;
     }
     setTextSelection(options: { startAnchor: AppearAnchor, startOffset: number, endAnchor: AppearAnchor, endOffset: number }) {
         var old = this.record;
@@ -205,6 +200,12 @@ export class AnchorCursor {
     }
     renderWindowSelection() {
         var sel = window.getSelection();
+        if(!this.startAnchor.block.appearAnchors.includes(this.startAnchor)){
+            console.log('ggg');
+        }
+        if(!this.endAnchor.block.appearAnchors.includes(this.endAnchor)){
+            console.log('ggg');
+        }
         if (!this.isCollapse) {
             var cr = this.startAnchor.cacCollapseFocusPos(this.startOffset);
             var er = this.endAnchor.cacCollapseFocusPos(this.endOffset);

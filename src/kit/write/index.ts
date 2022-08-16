@@ -273,7 +273,7 @@ export class PageWrite {
             while (true) {
                 var list = this.cursor.getAppears();
                 var blocks = lodash.identity(list.map(l => l.block));
-                if (blocks.some(s => !s.isSupportTextStyle)) return;
+                if (blocks.some(s =>!s.isSupportTextStyle)) return;
                 var turnBlock: Block = undefined;
                 if (blocks.length > 0 && blocks.every(b => b.isLine)) {
                     turnBlock = blocks[0].parent;
@@ -380,7 +380,9 @@ export class PageWrite {
             });
             this.cursor.adjustAnchorSorts();
             var nstart: Block;
+            var so: number;
             var nend: Block;
+            var no: number;
             if (this.cursor.isAnchorAppear) {
                 if (this.cursor.startAnchor.isText) {
                     var rs = await this.cursor.startAnchor.split([this.cursor.startOffset, this.cursor.endOffset]);
@@ -391,32 +393,54 @@ export class PageWrite {
                     }
                     if (styles) { nstart.pattern.setStyles(styles); }
                     if (props) { await nstart.updateProps(props); }
+                    so = 0;
+                    no = nend.content.length;
                 }
                 else {
-                    nstart = this.cursor.startAnchor.block; nend = this.cursor.startAnchor.block
+                    nstart = this.cursor.startAnchor.block;
+                    nend = this.cursor.startAnchor.block;
+                    so = no = 0;
                 }
             }
             else {
                 if (this.cursor.startAnchor.isText) {
                     var ss = await this.cursor.startAnchor.split([this.cursor.startOffset]);
-                    nstart = ss.last();
-                } else nstart = this.cursor.startAnchor.block;
+                    if (ss.length == 2) {
+                        nstart = ss.last();
+                        so = 0;
+                    }
+                    else {
+                        nstart = ss.last();
+                        if (this.cursor.startOffset == 0) so = 0;
+                        else { so = nstart.content.length; }
+                    }
+                } else { so = 0; nstart = this.cursor.startAnchor.block; }
                 if (this.cursor.endAnchor.isText) {
                     var es = await this.cursor.endAnchor.split([this.cursor.endOffset]);
-                    nend = es.first();
-                    if (styles) { nstart.pattern.setStyles(styles); nend.pattern.setStyles(styles); }
-                    if (props) { await nstart.updateProps(props); await nend.updateProps(props); }
+                    if (es.length == 2) {
+                        nend = es.first();
+                        no = nend.content.length;
+                    }
+                    else {
+                        if (this.cursor.endOffset == 0) no = 0;
+                        else no = nend.content.length;
+                    }
                 }
-                else nend = this.cursor.endAnchor.block;
+                else {
+                    nend = this.cursor.endAnchor.block;
+                    no = 0;
+                }
+                if (styles) { nstart.pattern.setStyles(styles); nend.pattern.setStyles(styles); }
+                if (props) { await nstart.updateProps(props); await nend.updateProps(props); }
             }
             this.kit.page.addUpdateEvent(async () => {
-                var na = nend.appearAnchors.first();
+                var na = nend.appearAnchors.last();
                 this.cursor.onSetTextSelection(
                     {
                         startAnchor: nstart.appearAnchors.first(),
-                        startOffset: 0,
+                        startOffset: so,
                         endAnchor: na,
-                        endOffset: na.isText ? na.textContent.length : 0
+                        endOffset: no
                     }, { merge: true, render: true, combine: true }
                 )
             });
