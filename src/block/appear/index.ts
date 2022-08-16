@@ -276,7 +276,8 @@ export class AppearAnchor {
             return await this.block.appendArrayBlockData(
                 ts.map(t => ({
                     url: BlockUrlConstant.Text,
-                    pattern, content: t,
+                    pattern,
+                    content: t,
                     ...props
                 }))
             )
