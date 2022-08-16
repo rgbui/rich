@@ -375,8 +375,10 @@ export abstract class Block extends Events {
         }
         else {
             if (this.isTextBlock) {
-                if (this.childs.length == 0 && this.content == '') return true;
-                if (this.childs.length > 0 && this.childs.every(c => c.isLine && c.content == '')) return true;
+                if (!(Array.isArray(this.subChilds) && this.subChilds.length > 0)) {
+                    if (this.childs.length == 0 && this.content == '') return true;
+                    if (this.childs.length > 0 && this.childs.every(c => c.isLine && c.content == '')) return true;
+                }
             }
         }
         return false;
