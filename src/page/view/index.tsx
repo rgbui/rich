@@ -147,16 +147,6 @@ export class PageView extends Component<{ page: Page }>{
         if (this.scrollDiv) this.scrollDiv.addEventListener('scroll', this.scroll);
     }
     scroll = (e) => {
-        if (this.page.nav) {
-            var r = this.page.root.querySelector('.shy-page-view-content-nav-left') as HTMLElement;
-            var rect = Rect.fromEle(r);
-            var g = this.page.root.querySelector('.shy-page-view-content-nav-right') as HTMLElement;
-            if (rect.top < 50) {
-                var isFirstDocTitle = this.page.views[0].childs[0].url == BlockUrlConstant.Title;
-                g.style.transform = `translate(0px,${(0 - rect.top) + (isFirstDocTitle ? -20 : 50)}px)`
-            }
-            else g.style.transform = `translate(0px,0px)`
-        }
         var outLineBlock = this.page.find(g => g.url == BlockUrlConstant.Outline);
         if (outLineBlock) {
             (outLineBlock as PageOutLine).updateOutlinesHover()
@@ -195,7 +185,7 @@ export class PageView extends Component<{ page: Page }>{
             <div className="shy-page-view-content-nav-left">
                 <ChildsArea childs={[this.page.views[0]]}></ChildsArea>
             </div>
-            <div className="shy-page-view-content-nav-right" style={{ marginTop: isFirstDocTitle ? 70 : 0 }}>
+            <div className="shy-page-view-content-nav-right" style={{top:0, marginTop: isFirstDocTitle ? 70 : 0 }}>
                 <ChildsArea childs={[this.page.views[1]]}></ChildsArea>
             </div>
         </div>
