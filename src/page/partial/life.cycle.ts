@@ -236,7 +236,6 @@ export class Page$Cycle {
         var changes: { head: boolean } = { head: false };
         for (let i = 0; i < this.snapshoot.action.operators.length; i++) {
             var op = this.snapshoot.action.operators[i];
-            //console.log(OperatorDirective[op.directive]);
             switch (op.directive) {
                 case OperatorDirective.$delete:
                     if (op.data.data.url == BlockUrlConstant.Head) changes.head = true;
@@ -261,7 +260,6 @@ export class Page$Cycle {
         if (changes.head) {
             var r = this.find(g => g.url == BlockUrlConstant.Outline);
             if (r) {
-                console.log(changes.head);
                 (r as PageOutLine).updateOutLine()
             }
         }
