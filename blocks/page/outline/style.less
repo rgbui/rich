@@ -1,23 +1,45 @@
 .sy-block-outline {
     border-left: 2px solid rgba(55, 53, 47, 0.08);
-    a {
-        margin-left  : 10px;
-        display      : block;
-        height       : 30px;
-        line-height  : 30px;
-        font-size    : 14px;
-        cursor       : pointer;
-        padding      : 0px 10px;
-        border-radius: 4px;
-        font-weight  : bold;
-        color        : rgba(55, 53, 47, 1);
+
+    .item {
+        display    : block;
+        height     : 30px;
+        line-height: 30px;
+        font-size  : 14px;
+        font-weight: bold;
+     
+        transform  : translate(-2px, 0px);
+
+        a {   color      : rgba(55, 53, 47, 1);
+            border-radius  : 4px;
+            cursor         : pointer;
+            padding        : 0px 10px;
+            margin-left    : 10px;
+            line-height    : 30px;
+            height         : 30px;
+            text-overflow  : ellipsis;
+            overflow       : hidden;
+            display        : flex;
+            justify-content: flex-start;
+            align-items    : center;
+        }
 
         &.hover {
-            background-color: rgba(55, 53, 47, 0.08);
+            a {
+                background-color: rgba(55, 53, 47, 0.08);
+                font-weight     : bold;
+            }
+
+            border-left : 2px solid rgba(255, 0, 0, .6);
         }
 
         &:hover {
-            background-color: rgba(55, 53, 47, 0.08);
+            a {
+                background-color: rgba(55, 53, 47, 0.06);
+            }
+
         }
     }
+
+
 }
