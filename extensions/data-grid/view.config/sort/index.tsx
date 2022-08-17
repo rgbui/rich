@@ -78,7 +78,7 @@ export class TableSortView extends EventsComponent {
                         </SelectBox>
                         <div style={{ flexGrow: 1, flexShrink: 1 }}></div>
                         {/* <Icon size={12} style={{ padding: 6 }} wrapper className={'close'} icon={TypesFormulaSvg} click={e => addDynamic(i)}></Icon> */}
-                        <Icon size={12} style={{ padding: 6 }} wrapper className={'close'} icon={CloseTickSvg} click={e => removeSort(i)}></Icon>
+                        <Icon size={12} style={{ padding: 6 }} wrapper className={'close'} icon={CloseTickSvg} onClick={e => removeSort(i)}></Icon>
                     </div>
                 })}</DragList>}
                 {!hasSorts && <Remark style={{ margin: 10 }}>还没有添加排序</Remark>}

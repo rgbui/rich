@@ -1,13 +1,18 @@
+import lodash from "lodash";
 import React, { CSSProperties } from "react";
 import { ChannelText } from "..";
-import { UnreadTextSvg } from "../../../../component/svgs";
+import { EditSvg, UnreadTextSvg } from "../../../../component/svgs";
+import { useForm } from "../../../../component/view/form/dialoug";
 import { Icon } from "../../../../component/view/icon";
 import { Loading } from "../../../../component/view/loading";
 import { RichTextInput } from "../../../../component/view/rich.input";
 import { Remark } from "../../../../component/view/text";
+import { LinkPageItem } from "../../../../extensions/at/declare";
+import { useIconPicker } from "../../../../extensions/icon";
 import { channel } from "../../../../net/channel";
 import { view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
+import { Rect } from "../../../../src/common/vector/point";
 import { PageLayoutType } from "../../../../src/page/declare";
 import { util } from "../../../../util/util";
 import { ChannelTextType } from "../declare";
@@ -24,8 +29,69 @@ export class ChannelTextView extends BlockView<ChannelText>{
         </div>
     }
     contentEl: HTMLElement;
+    async openEdit(event: React.MouseEvent) {
+        var f = await useForm({
+            fields: [{ name: 'text', text: '标题', type: 'input' }, { name: 'description', text: '描述', type: 'textarea' }],
+            title: '编辑讨论话题',
+            remark: '',
+            model: { text: this.block.pageInfo?.text||'新页面', description: this.block.pageInfo?.description },
+            checkModel: async (model) => {
+                if (!model.text) return '标题不能为空';
+            }
+        });
+        if (f) {
+            channel.air('/page/update/info', { id: this.block.page.pageInfo?.id, pageInfo: { ...f } })
+        }
+    }
+    renderPageTitle() {
+        var self = this;
+        async function changeIcon(event: React.MouseEvent) {
+            event.stopPropagation();
+            var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) });
+            if (typeof icon != 'undefined') {
+                channel.air('/page/update/info', { id: self.block.page.pageInfo?.id, pageInfo: { icon } })
+            }
+        }
+        if (this.block.page.pageLayout.type == PageLayoutType.textChannel) {
+            return <div className="gap-20 visible-hover">
+                <Icon className={'item-hover round cursor'} onMousedown={e => changeIcon(e)} size={72} icon={this.block?.pageInfo?.icon}></Icon>
+                <div className="h2 flex"><span>{this.block?.pageInfo?.text || '新页面'}</span><span className="flex-center round gap-l-5 cursor item-hover flex-line size-24 visible"><Icon onClick={e => this.openEdit(e)} size={18} icon={EditSvg}></Icon></span></div>
+                <div className="text">{this.block.pageInfo?.description}</div>
+            </div>
+        }
+        else return <></>
+    }
+    async didMount() {
+        channel.sync('/page/update/info', this.updatePageInfo);
+        await this.block.loadPageInfo();
+    }
+    updatePageInfo = (r: { id: string, pageInfo: LinkPageItem }) => {
+        var { id, pageInfo } = r;
+        if (this.block.pageInfo?.id == id && id) {
+            var isUpdate: boolean = false;
+            if (typeof pageInfo.text != 'undefined' && pageInfo.text != this.block.pageInfo.text) {
+                this.block.pageInfo.text = pageInfo.text;
+                isUpdate = true;
+            }
+            if (typeof pageInfo.description != 'undefined' && pageInfo.description != this.block.pageInfo.description) {
+                this.block.pageInfo.description = pageInfo.description;
+                isUpdate = true;
+            }
+            if (typeof pageInfo.icon != 'undefined' && !lodash.isNull(pageInfo.icon) && JSON.stringify(pageInfo.icon) != JSON.stringify(this.block.pageInfo.icon)) {
+                this.block.pageInfo.icon = lodash.cloneDeep(pageInfo.icon);
+                isUpdate = true;
+            }
+            if (isUpdate) {
+                this.forceUpdate();
+            }
+        }
+    }
+    willUnmount() {
+        channel.off('/page/update/info', this.updatePageInfo);
+    }
     renderContent() {
         return <div className="sy-channel-text-content" onWheel={this.wheel} ref={e => this.contentEl = e}>
+            {this.block&& this.renderPageTitle()}
             {this.block.pageIndex > 2 && this.block.isLast && <div className="sy-channel-text-tip"><Remark>无记录了</Remark></div>}
             {this.block.loading && <div className="sy-channel-text-loading"><Loading></Loading></div>}
             {RenderChannelTextContent(this.block)}
@@ -78,7 +144,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
                     uploadProgress: (event) => {
                         if (event.lengthComputable) {
                             fr.speed = `${file.name}-${util.byteToString(event.total)}(${(100 * event.loaded / event.total).toFixed(2)}%)`;
-                            this.forceUpdate();
+                            this.forceUpdate()
                         }
                     }
                 });
@@ -127,7 +193,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
     updateScroll() {
         if (this.contentEl) {
             this.contentEl.scrollTop = this.contentEl.scrollHeight + 100;
-            setTimeout(()=>{
+            setTimeout(() => {
                 this.contentEl.scrollTop = this.contentEl.scrollHeight + 100;
             }, 300);
         }
@@ -135,3 +201,5 @@ export class ChannelTextView extends BlockView<ChannelText>{
     editChannelText: ChannelTextType;
     editRichTextInput: RichTextInput;
 }
+
+

@@ -6,8 +6,8 @@ import { PageSvg } from '../svgs';
 
 export function Icon(props: {
     icon: string | SvgrComponent | JSX.Element | IconArguments,
-    click?: (e: React.MouseEvent) => void,
-    mousedown?: (e: React.MouseEvent) => void,
+    onClick?: (e: React.MouseEvent) => void,
+    onMousedown?: (e: React.MouseEvent) => void,
     rotate?: number,
     size?: number | 'none',
     fontSize?: number,
@@ -40,8 +40,8 @@ export function Icon(props: {
             ...(props.style || {})
         });
         return <i className={classList.join(" ")}
-            onClick={e => { props.click ? props.click(e) : undefined; }}
-            onMouseDown={e => { props.mousedown ? props.mousedown(e) : undefined }}
+            onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
+            onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }}
             style={style}></i>
     }
     else if (typeof props.icon == 'function') {
@@ -52,16 +52,16 @@ export function Icon(props: {
         })
         if (props.wrapper) {
             return <div className={classList.join(" ")}
-                onClick={e => { props.click ? props.click(e) : undefined; }}
-                onMouseDown={e => { props.mousedown ? props.mousedown(e) : undefined }}
+                onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
+                onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }}
                 style={style}>
                 <props.icon style={{ width: '100%', height: '100%' }}></props.icon>
             </div>
         }
         else {
             return <props.icon className={classList.join(" ")}
-                onClick={e => { props.click ? props.click(e) : undefined; }}
-                onMouseDown={e => { props.mousedown ? props.mousedown(e) : undefined }}
+                onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
+                onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }}
                 style={style}></props.icon>
         }
     }
@@ -77,7 +77,8 @@ export function Icon(props: {
                     height: props.size == 'none' ? undefined : (props.size) || 20
                     , ...(props.style || {})
                 });
-                return <span className={classList.join(" ")} style={style}>
+                return <span className={classList.join(" ")} style={style} onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
+                    onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }}>
                     <i className={'fa fa-' + pc.code}></i>
                 </span>
                 break;
@@ -92,7 +93,8 @@ export function Icon(props: {
                     , ...(props.style || {})
                 });
                 classList.push('ef');
-                return <span  dangerouslySetInnerHTML={{ __html: getEmoji(pc.code) }} className={classList.join(" ")} style={style}>
+                return <span onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
+                    onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }} dangerouslySetInnerHTML={{ __html: getEmoji(pc.code) }} className={classList.join(" ")} style={style}>
                 </span>
                 break;
             case 'image':
@@ -102,7 +104,8 @@ export function Icon(props: {
                     height: props.size == 'none' ? undefined : (props.size) || 20
                     , ...(props.style || {})
                 });
-                return <img src={pc.url} className={classList.join(" ")} style={style} />
+                return <img onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
+                    onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }} src={pc.url} className={classList.join(" ")} style={style} />
             case 'none':
                 Object.assign(style, {
                     width: props.size == 'none' ? undefined : (props.size) || 20,
@@ -118,7 +121,8 @@ export function Icon(props: {
             height: props.size == 'none' ? undefined : (props.size) || 20
             , ...(props.style || {})
         })
-        return <span className={classList.join(" ")} style={style}>{props.icon}</span>
+        return <span onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
+            onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }} className={classList.join(" ")} style={style}>{props.icon}</span>
     }
 }
 

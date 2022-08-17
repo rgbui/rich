@@ -267,7 +267,7 @@ export class TableFilterView extends EventsComponent {
                         {[FieldType.bool].includes(fe.type) && !['$isNull', '$isNOtNull'].includes(item.operator) && <Switch checked={item.value ? true : false} onChange={e => { item.value = e; self.onForceStore() }}></Switch>}
                         {[FieldType.creater, FieldType.modifyer, FieldType.user].includes(fe.type) && !['$isNull', '$isNOtNull'].includes(item.operator) && self.renderUserInput(item)}
                     </div>
-                    <Icon style={{ padding: 5 }} size={12} mousedown={e => removeFilter(e, item)} icon={CloseTickSvg} wrapper></Icon>
+                    <Icon style={{ padding: 5 }} size={12} onMousedown={e => removeFilter(e, item)} icon={CloseTickSvg} wrapper></Icon>
                 </div>
             })}
             {self.block.filter.items.length == 0 && <Remark style={{ margin: 10 }}>还没有添加筛选条件</Remark>}

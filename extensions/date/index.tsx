@@ -166,8 +166,8 @@ export class DatePicker extends EventsComponent {
                     <span>{dj.date()}日</span>
                 </div>
                 <div className='shy-date-picker-head-operators'>
-                    <a><Icon size={14} click={e => this.onReduce(e)} icon={chevronLeft}></Icon></a>
-                    <a><Icon size={14} click={e => this.onAdd(e)} icon={chevronRight}></Icon></a>
+                    <a><Icon size={14} onClick={e => this.onReduce(e)} icon={chevronLeft}></Icon></a>
+                    <a><Icon size={14} onClick={e => this.onAdd(e)} icon={chevronRight}></Icon></a>
                 </div>
             </div>
             {this.renderDays()}

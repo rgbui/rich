@@ -110,7 +110,7 @@ export class TableStoreCalendarView extends BlockView<TableStoreCalendar>{
                     }
                     return <div key={i} className={classList.join(" ")}
                     ><div className="sy-data-grid-calendar-cell-head">
-                            <Icon click={e => this.block.onAddCalendar(day)} icon={PlusSvg} size={14}></Icon>
+                            <Icon onClick={e => this.block.onAddCalendar(day)} icon={PlusSvg} size={14}></Icon>
                             <label>{day.get('date')}</label>
                         </div>
                         <div className="sy-data-grid-calendar-cell-content">
@@ -132,9 +132,9 @@ export class TableStoreCalendarView extends BlockView<TableStoreCalendar>{
                     <label>{day.format('YYYY年MM月')}</label>
                 </div>
                 <div className="sy-data-grid-calendar-head-operator">
-                    <span className="icon"><Icon size={14} click={e => this.block.onPrevMonth()} icon={ChevronLeftSvg}></Icon></span>
+                    <span className="icon"><Icon size={14} onClick={e => this.block.onPrevMonth()} icon={ChevronLeftSvg}></Icon></span>
                     <label>{now.isSame(day, 'date') ? "今天" : (day.get('date'))}</label>
-                    <span className="icon"><Icon size={14} click={e => this.block.onNextMonth()} icon={ChevronRightSvg}></Icon></span>
+                    <span className="icon"><Icon size={14} onClick={e => this.block.onNextMonth()} icon={ChevronRightSvg}></Icon></span>
                 </div>
             </div>
             <div className="sy-data-grid-calendar-cells">

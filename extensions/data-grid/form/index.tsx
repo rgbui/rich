@@ -114,7 +114,7 @@ class FormPage extends EventsComponent {
                     <a onMouseDown={e => this.openProperty(e)}><Icon size={14} icon={OpenAsPageThickSvg}></Icon><span></span></a>
                 </div>
                 <div className="shy-form-head-right">
-                    <a><Icon size={20} icon='publish:sy' click={e => this.openPublish(e)}></Icon></a>
+                    <a><Icon size={20} icon='publish:sy' onClick={e => this.openPublish(e)}></Icon></a>
                     <a onMouseDown={e => this.openProperty(e)}><Icon size={16} icon={Dots}></Icon></a>
                 </div>
             </div>

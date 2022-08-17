@@ -45,26 +45,26 @@ export class DataGridFields extends EventsComponent {
             <div style={{ overflowY: 'auto', maxHeight: 250 }}>
                 <div className="shy-table-field-view-operator">
                     <Remark>显示的字段</Remark>
-                    <Icon size={14} click={e => onHideAll()} icon={EyeSvg}></Icon>
+                    <Icon size={14} onClick={e => onHideAll()} icon={EyeSvg}></Icon>
                 </div>
                 <DragList onChange={onChange} isDragBar={e => e.closest('.shy-table-field-view-item') && !e.closest('.eye') ? true : false} className="shy-table-field-view-items">  {this.block.fields.map(f => {
                     return <div className={"shy-table-field-view-item"} key={f.fieldId || f.type}>
                         <em className={'drag'} ><Icon size={12} icon={DragHandleSvg}></Icon></em>
                         <Icon size={14} icon={getTypeSvg(f.field?.type)}></Icon>
                         <span>{f.text}</span>
-                        <Icon className={'eye'} size={14} click={async () => { await self.block.onHideField(f); self.forceUpdate() }} icon={EyeSvg}></Icon>
+                        <Icon className={'eye'} size={14} onClick={async () => { await self.block.onHideField(f); self.forceUpdate() }} icon={EyeSvg}></Icon>
                     </div>
                 })}</DragList>
                 {fs.length > 0 && <>
                     <div className="shy-table-field-view-operator">
                         <Remark>未显示的字段</Remark>
-                        <Icon size={14} click={e => onShowAll()} icon={EyeHideSvg}></Icon>
+                        <Icon size={14} onClick={e => onShowAll()} icon={EyeHideSvg}></Icon>
                     </div>
                     <div className="shy-table-field-view-items">{fs.map(f => {
                         return <div className={"shy-table-field-view-item" + (" hide")} key={f.id}>
                             <Icon size={14} icon={getTypeSvg(f.type)}></Icon>
                             <span>{f.text}</span>
-                            <Icon className={'eye'} size={14} click={async () => { await self.block.onShowField(f); self.forceUpdate() }} icon={EyeHideSvg}></Icon>
+                            <Icon className={'eye'} size={14} onClick={async () => { await self.block.onShowField(f); self.forceUpdate() }} icon={EyeHideSvg}></Icon>
                         </div>
                     })}</div>
                 </>}

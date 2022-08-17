@@ -98,7 +98,7 @@ export class ButtonTemplateView extends BlockView<ButtonTemplate>{
         return <div className='sy-button-template' style={this.block.visibleStyle} >
             <div className='sy-button-template-wrapper' onMouseDown={e => e.stopPropagation()} >
                 <a className="sy-button-template-btn" onMouseDown={e => this.block.addTemplateInstance(e)}>+{this.block.content || '添加待办事项'}</a>
-                <div className='sy-button-template-operator'><Icon mousedown={e => this.block.openSettings()} icon={EditSvg}></Icon></div>
+                <div className='sy-button-template-operator'><Icon onMousedown={e => this.block.openSettings()} icon={EditSvg}></Icon></div>
             </div>
             {this.block.expand == true && this.renderTemplate()}
         </div>

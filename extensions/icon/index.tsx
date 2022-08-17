@@ -26,7 +26,7 @@ class IconPicker extends EventsComponent {
     }
     render() {
         return <div className='shy-icon-picker' >
-            <Tab keeplive rightBtns={<label><ToolTip overlay={'清理图标'}><Icon size={18} mousedown={e => this.onClearIcon()} icon={TrashSvg}></Icon></ToolTip></label>}>
+            <Tab keeplive rightBtns={<label><ToolTip overlay={'清理图标'}><Icon size={18} onMousedown={e => this.onClearIcon()} icon={TrashSvg}></Icon></ToolTip></label>}>
                 <Tab.Page item={<Tip placement='bottom' id={LangID.IconEmoji}><Icon icon={EmojiSvg} size={18}></Icon></Tip>}>
                     <EmojiView onChange={e => this.onChange({ name: "emoji", code: e.code })}></EmojiView>
                 </Tab.Page>

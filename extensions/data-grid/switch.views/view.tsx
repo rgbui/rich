@@ -119,14 +119,14 @@ class TabelSchemaViewDrop extends EventsComponent {
         return <div className="shy-schema-view-selectors">
             <div className="shy-schema-view-selector-head">
                 <span><b>{this.schema.text}</b>的视图</span>
-                <Icon size={14} className={'property'} icon={Dots} click={e => this.onTableProperty(e)}></Icon>
+                <Icon size={14} className={'property'} icon={Dots} onClick={e => this.onTableProperty(e)}></Icon>
             </div>
             {views.map(v => {
                 return <div className="shy-schema-view-selector-item" key={v.id} onClick={e => this.onChange(v)}>
                     <Icon size={12} className={'drag'} icon={DragSvg}></Icon>
                     <Icon size={14} className={'icon'} icon={getSchemaViewIcon(v.url)}></Icon>
                     <span>{v.text}</span>
-                    <Icon size={14} className={'property'} icon={Dots} click={e => this.onProperty(v, e)}></Icon>
+                    <Icon size={14} className={'property'} icon={Dots} onClick={e => this.onProperty(v, e)}></Icon>
                 </div>
             })}
             <Divider></Divider>

@@ -122,7 +122,7 @@ class TabelSchemaFormDrop extends EventsComponent {
                 return <div className="shy-schema-view-form-item" key={v.id} onClick={e => this.onChange(v)}>
                     <Icon size={12} className={'drag'} icon={DragSvg}></Icon>
                     <span>{v.text}</span>
-                    <Icon size={14} className={'property'} icon={Dots} click={e => this.onProperty(v, e)}></Icon>
+                    <Icon size={14} className={'property'} icon={Dots} onClick={e => this.onProperty(v, e)}></Icon>
                 </div>
             })}
             <Divider></Divider>
