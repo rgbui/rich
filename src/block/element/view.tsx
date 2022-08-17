@@ -19,6 +19,9 @@ export class ViewComponent extends BlockView<View>{
     render() {
         if (this.block.page.isSupportScreen) {
             var style = this.block.page.getScreenStyle();
+            if (this.block.page.nav == true) {
+                style={};
+            }
             return <div className='sy-block-view' >
                 <div className='sy-block-view-wrapper' style={style}>
                     <div style={{ height: 10, display: 'block' }}></div>

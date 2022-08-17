@@ -79,6 +79,7 @@ export class Page extends Events<PageDirective> {
     cover: { abled: boolean, url: string, thumb: string, top: number } = null;
     isFullWidth: boolean = true;
     smallFont: boolean = false;
+    nav: boolean = false;
     get windowMatrix() {
         var rect = Rect.fromEle(this.root);
         var matrix = new Matrix();
@@ -149,7 +150,7 @@ export class Page extends Events<PageDirective> {
             } else nextAction();
         }
         catch (ex) {
-            console.log(panel,this.root);
+            console.log(panel, this.root);
             console.error(ex);
         }
     }

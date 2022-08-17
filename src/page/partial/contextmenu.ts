@@ -6,7 +6,7 @@ import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { BlockDirective } from "../../block/enum";
 import { Point, Rect } from "../../common/vector/point";
 import { PageLayoutType } from "../declare";
-import { FileSvg, ImportSvg, LinkSvg, LockSvg, TrashSvg, UndoSvg, UnlockSvg, UploadSvg, VersionHistorySvg } from "../../../component/svgs";
+import { CustomizePageSvg, FileSvg, ImportSvg, LinkSvg, LockSvg, TrashSvg, UndoSvg, UnlockSvg, UploadSvg, VersionHistorySvg } from "../../../component/svgs";
 import { usePageLayout } from "../../../extensions/layout";
 import { CopyText } from "../../../component/copy";
 import { ShyAlert } from "../../../component/lib/alert";
@@ -73,7 +73,7 @@ export class PageContextmenu {
                 { name: 'smallText', text: '小字号', checked: this.smallFont ? true : false, type: MenuItemType.switch },
                 { name: 'fullWidth', text: '宽版', checked: this.isFullWidth ? true : false, type: MenuItemType.switch },
                 { type: MenuItemType.divide },
-                // { name: 'layout', text: '版面', icon: CustomizePageSvg },
+                { name: 'nav', text: '目录',iconSize: 16, icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.nav },
                 { name: 'lock', iconSize: 18, text: this.pageInfo.locker?.userid ? "解除锁定" : '编辑保护', icon: this.pageInfo.locker?.userid ? UnlockSvg : LockSvg },
                 // { type: MenuItemTypeValue.divide },
                 // { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
@@ -98,6 +98,9 @@ export class PageContextmenu {
                 }
                 else if (item.name == 'fullWidth') {
                     this.onUpdateProps({ isFullWidth: item.checked }, true);
+                }
+                else if(item.name=='nav'){
+                    this.onOpenNav({nav:item.checked})
                 }
             }
         });
@@ -142,7 +145,7 @@ export class PageContextmenu {
             }
         }
     }
-    async onOpenPublish(this:Page,event:React.MouseEvent){
-        
+    async onOpenPublish(this: Page, event: React.MouseEvent) {
+
     }
 }

@@ -6,7 +6,7 @@ import ReactDOM from "react-dom";
 import { KitView } from "../../kit/view";
 import { PageLayoutType } from "../declare";
 import { getBoardTool } from "../../../extensions/board.tool";
-import { Point } from "../../common/vector/point";
+import { Point, Rect } from "../../common/vector/point";
 import { BlockUrlConstant } from "../../block/constant";
 import { PageLayoutView } from "./layout";
 import { channel } from "../../../net/channel";
@@ -144,18 +144,24 @@ export class PageView extends Component<{ page: Page }>{
     observeScroll() {
         var predict = x => { return dom(x as HTMLElement).style('overflowY') == 'auto' }
         this.scrollDiv = dom(this.el).closest(predict) as any;
+        if (this.scrollDiv) this.scrollDiv.addEventListener('scroll', this.scroll);
+    }
+    scroll = (e) => {
+        if (this.page.nav) {
+            var r = this.page.root.querySelector('.shy-page-view-content-nav-left') as HTMLElement;
+            var rect = Rect.fromEle(r);
+            var g = this.page.root.querySelector('.shy-page-view-content-nav-right') as HTMLElement;
+            if (rect.top < 50) {
+                var isFirstDocTitle = this.page.views[0].childs[0].url == BlockUrlConstant.Title;
+                g.style.transform = `translate(0px,${(0 - rect.top) + (isFirstDocTitle ? -20 : 50)}px)`
+            }
+            else g.style.transform = `translate(0px,0px)`
+        }
         var outLineBlock = this.page.find(g => g.url == BlockUrlConstant.Outline);
         if (outLineBlock) {
-            (outLineBlock as PageOutLine).updateOutLines();
+            (outLineBlock as PageOutLine).updateOutlinesHover()
         }
-        if (this.scrollDiv) this.scrollDiv.addEventListener('scroll', (this._scroll = lodash.debounce(s => {
-            var outLineBlock = this.page.find(g => g.url == BlockUrlConstant.Outline);
-            if (outLineBlock) {
-                (outLineBlock as PageOutLine).updateOutLines();
-            }
-        }, 400)));
-    }
-    _scroll;
+    };
     scrollDiv: HTMLElement;
     componentWillUnmount() {
         channel.off('/page/update/info', this.updatePageInfo);
@@ -168,7 +174,7 @@ export class PageView extends Component<{ page: Page }>{
         delete this.el.shy_drop_move;
         delete this.el.shy_drop_over;
         delete this.el.shy_end;
-        if (this.scrollDiv && this._scroll) this.scrollDiv.removeEventListener('scroll', this._scroll);
+        if (this.scrollDiv) this.scrollDiv.removeEventListener('scroll', this.scroll);
     }
     renderPageTemplate() {
         return <div className="shy-page-view-template-picker" style={this.page.getScreenStyle()}>
@@ -179,6 +185,18 @@ export class PageView extends Component<{ page: Page }>{
                 {/*<a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.board)}><Icon size={16} icon={BoardToolFrameSvg}></Icon><span>白板</span></a> */}
                 <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.textChannel)}><Icon size={16} icon={CommentSvg}></Icon><span>会话</span></a>
                 {/*<a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.textBroadcast)}><span>广播</span></a> */}
+            </div>
+        </div>
+    }
+    renderNavs() {
+
+        var isFirstDocTitle = this.page.views[0].childs[0].url == BlockUrlConstant.Title;
+        return <div className={"shy-page-view-content-nav" + (this.page.isFullWidth ? "" : " shy-page-view-content-nav-center")}>
+            <div className="shy-page-view-content-nav-left">
+                <ChildsArea childs={[this.page.views[0]]}></ChildsArea>
+            </div>
+            <div className="shy-page-view-content-nav-right" style={{ marginTop: isFirstDocTitle ? 70 : 0 }}>
+                <ChildsArea childs={[this.page.views[1]]}></ChildsArea>
             </div>
         </div>
     }
@@ -198,7 +216,8 @@ export class PageView extends Component<{ page: Page }>{
                 <PageLayoutView page={this.page}>
                     <div className='shy-page-view-content' ref={e => this.page.contentEl = e}>
                         <PageCover page={this.page}></PageCover>
-                        <ChildsArea childs={this.page.views}></ChildsArea>
+                        {this.page.nav && this.renderNavs()}
+                        {!this.page.nav && <ChildsArea childs={this.page.views}></ChildsArea>}
                         {this.page.requireSelectLayout && this.page.isCanEdit && this.renderPageTemplate()}
                     </div>
                 </PageLayoutView>

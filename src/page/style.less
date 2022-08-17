@@ -205,3 +205,41 @@
         }
     }
 }
+
+.shy-page-view-content-nav {
+    display: flex;
+
+    &-left {
+        margin-left : 100px;
+        flex-grow: 1;
+        flex-shrink: 1;
+        margin-right: 50px;
+    }
+
+    &-right {
+        flex-grow: 0;
+        flex-shrink: 0;
+        width       : 200px;
+        margin-right: 30px;
+      
+    }
+}
+
+.shy-page-view-content-nav-center {
+
+    margin         : 0 auto;
+    width          : 1000px;
+    display        : flex;
+    justify-content: flex-start;
+    align-items    : flex-start;
+
+    .shy-page-view-content-nav-left {
+        width       : 750px;
+        margin-right: 50px;
+    }
+
+    .shy-page-view-content-nav-right {
+        width: 200px;
+    }
+
+}
