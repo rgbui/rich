@@ -57,9 +57,10 @@ export class Page$Operator {
         return new Promise(async (resolve, reject) => {
             try {
                 await this.onAction(ActionDirective.onCreateTailTextSpan, async () => {
-                    var lastBlock = this.findReverse(g => g.isBlock);
+                    var panel = this.views[0];
+                    var lastBlock = panel.findReverse(g => g.isBlock);
                     var newBlock: Block;
-                    if (lastBlock && lastBlock.parent == this.views.last()) {
+                    if (lastBlock && lastBlock.parent == panel) {
                         newBlock = await this.createBlock(BlockUrlConstant.TextSpan, {}, lastBlock.parent, lastBlock.at + 1);
                     }
                     else {
