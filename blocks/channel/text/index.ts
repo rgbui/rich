@@ -9,6 +9,7 @@ import { ChannelTextView } from "./view/view";
 import lodash from "lodash";
 import { Rect } from "../../../src/common/vector/point";
 import { ElementType, getElementUrl } from "../../../net/element.type";
+import { LinkPageItem } from "../../../extensions/at/declare";
 
 @url('/channel/text')
 export class ChannelText extends Block {
@@ -145,4 +146,17 @@ export class ChannelText extends Block {
             });
         }
     }, 1200)
+
+    pageInfo: LinkPageItem = null;
+    async loadPageInfo() {
+        if (this.page.pageInfo) {
+            this.pageInfo = {
+                id: this.page.pageInfo.id,
+                text: this.page.pageInfo.text,
+                icon: this.page.pageInfo.icon,
+                description:this.page.pageInfo.description
+            };
+            this.forceUpdate()
+        }
+    }
 }
