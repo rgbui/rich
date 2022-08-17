@@ -4,6 +4,7 @@ export enum BlockUrlConstant {
     Text = '/text',
     Row = '/row',
     Col = '/col',
+    View = '/view',
     Divider = '/divider',
     List = '/list',
     Head = '/head',
@@ -22,5 +23,5 @@ export enum BlockUrlConstant {
     DataGridTable = '/data-grid/table',
     DataGridList = '/data-grid/list',
     DataGridCalendar = '/data-grid/calendar',
-    TableStoreBoard='/data-grid/board'
+    TableStoreBoard = '/data-grid/board'
 }

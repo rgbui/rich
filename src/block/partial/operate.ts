@@ -23,15 +23,9 @@ export class Block$Operator {
                 pos: this.pos,
                 data: await this.get()
             }, this);
-            try {
-                await this.page.nofityWillRemoveBlock(this);
-            }
-            catch (ex) {
-                this.page.onError(ex);
-            }
             pbs.remove(this);
             if (pbs.length > 0) {
-                if (this.parent.isRow && !this.parent.isPart) {
+                if (this.parent && this.parent.isRow && !this.parent.isPart) {
                     var sum = pbs.sum(pb => (pb as any).widthPercent || 100);
                     await pbs.eachAsync(async (pb) => {
                         await pb.updateProps({ widthPercent: ((pb as any).widthPercent || 100) * 100 / sum })
@@ -170,7 +164,6 @@ export class Block$Operator {
         await block.remove();
         bs.insertAt(at, block);
         block.parent = this;
-        await this.page.notityMovedBlock(block);
         this.page.snapshoot.record(OperatorDirective.$move, {
             from,
             to: this.pos
@@ -537,9 +530,6 @@ export class Block$Operator {
         if (Object.keys(oldValue).length > 0 || Object.keys(newValue).length > 0) {
             await this.changeProps(oldValue, newValue);
             this.syncUpdate(range);
-            if (Object.keys(newValue).includes('content')) {
-                await this.page.notifyBlockEditedContent(this);
-            }
             this.page.snapshoot.record(OperatorDirective.$update, {
                 pos: this.pos,
                 old_value: oldValue,
@@ -588,9 +578,6 @@ export class Block$Operator {
         }
         if (Object.keys(oldValue).length > 0) {
             this.syncUpdate(range);
-            if (Object.keys(newValue).includes('content')) {
-                this.page.notifyBlockEditedContent(this);
-            }
             this.page.snapshoot.record(OperatorDirective.$update, {
                 pos: this.pos,
                 old_value: oldValue,
@@ -598,7 +585,6 @@ export class Block$Operator {
             }, this);
         }
     }
-
     updateArrayInsert(this: Block, key: string, at: number, data: any, range = BlockRenderRange.self) {
         if (!Array.isArray(this[key])) this[key] = [];
         this[key].insertAt(at, data);
@@ -610,7 +596,6 @@ export class Block$Operator {
         }, this);
         this.syncUpdate(range);
     }
-
     updateArrayRemove(this: Block, key: string, at: number, range = BlockRenderRange.self) {
         var data = this[key][at];
         lodash.remove(this[key], (g, i) => i == at);
@@ -638,15 +623,6 @@ export class Block$Operator {
             this.syncUpdate(range);
         }
     }
-
-    // keepCursorOffset(this: Block, prop: string, oldOffset: number, newOffset: number) {
-    //     this.page.snapshoot.record(OperatorDirective.$keep_cursor_offset, {
-    //         blockId: this.id,
-    //         prop,
-    //         old: oldOffset,
-    //         new: newOffset
-    //     }, this);
-    // }
     syncUpdate(this: Block, range = BlockRenderRange.none) {
         switch (range) {
             case BlockRenderRange.self:
@@ -661,7 +637,6 @@ export class Block$Operator {
                 break;
         }
     }
-
     relativePagePoint(this: Block, point: Point) {
         var rb = this.relativeBlock;
         if (rb) {
@@ -670,6 +645,4 @@ export class Block$Operator {
         }
         else return point;
     }
-
-
 }

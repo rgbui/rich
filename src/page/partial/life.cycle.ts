@@ -16,7 +16,7 @@ import { GridMap } from "../grid";
 import { Matrix } from "../../common/matrix";
 import lodash from "lodash";
 import { util } from "../../../util/util";
-import { Rect } from "../../common/vector/point";
+import { PageOutLine } from "../../../blocks/page/outline";
 
 export class Page$Cycle {
     async init(this: Page) {
@@ -131,6 +131,7 @@ export class Page$Cycle {
         json.requireSelectLayout = this.requireSelectLayout;
         json.pageLayout = util.clone(this.pageLayout);
         json.matrix = this.matrix.getValues();
+        json.nav = this.nav;
         json.views = await this.views.asyncMap(async x => {
             return await x.get()
         })
@@ -173,7 +174,7 @@ export class Page$Cycle {
     private willLayoutBlocks: Block[];
     private updatedFns: (() => Promise<void>)[] = [];
     get hasUpdate() {
-        return this.willUpdateBlocks.length > 0 ||  this.willUpdateAll;
+        return this.willUpdateBlocks.length > 0 || this.willUpdateAll;
     }
     addPageUpdate() {
         this.willUpdateAll = true;
@@ -216,10 +217,55 @@ export class Page$Cycle {
                 this.onError(ex);
             }
             await fns.eachAsync(async g => await g());
+            try {
+                self.onNotifyChanged()
+            }
+            catch (ex) {
+                this.page.onError(ex);
+            }
         }
         fn()
     }
+    private onNotifyChanged(this: Page) {
+        /**
+         * 这里主要是同步大纲
+         * 双链的引用数据更新
+         * 定时器的引用数据更新
+         * 
+         */
+        var changes: { head: boolean } = { head: false };
+        for (let i = 0; i < this.snapshoot.action.operators.length; i++) {
+            var op = this.snapshoot.action.operators[i];
+            //console.log(OperatorDirective[op.directive]);
+            switch (op.directive) {
+                case OperatorDirective.$delete:
+                    if (op.data.data.url == BlockUrlConstant.Head) changes.head = true;
+                    break;
+                case OperatorDirective.$create:
+                    if (op.data.data.url == BlockUrlConstant.Head) changes.head = true;
+                    break;
+                case OperatorDirective.$update:
+                    var block = this.find(g => g.id == op.data.pos.blockId);
+                    if (block && block.url == BlockUrlConstant.Head) changes.head = true;
+                    break;
+                case OperatorDirective.$turn:
+                    if (op.data.from.startsWith(BlockUrlConstant.Head) || op.data.to.startsWith(BlockUrlConstant.Head)) changes.head = true;
+                    break;
+                case OperatorDirective.$move:
+                    var block = this.find(g => g.id == op.data.from.blockId);
+                    if (block && block.url == BlockUrlConstant.Head) changes.head = true;
+                    break;
+            }
+        }
 
+        if (changes.head) {
+            var r = this.find(g => g.url == BlockUrlConstant.Outline);
+            if (r) {
+                console.log(changes.head);
+                (r as PageOutLine).updateOutLine()
+            }
+        }
+    }
     async onAction(this: Page,
         directive: ActionDirective | string,
         fn: () => Promise<void>, syncBlock?: { block?: Block }
@@ -322,41 +368,6 @@ export class Page$Cycle {
             r.parentBlocks.remove(r);
         })
     }
-    async getOutLines(this: Page) {
-        var outlines: { id: string, deep: number, hover: boolean, text: string }[] = [];
-        var bs = this.findAll(x => x.url == BlockUrlConstant.Head);
-        var currentDeep = 0, lastLevel;
-        if (this.view) {
-            var sd = this.view.scrollDiv;
-            var rect = Rect.fromEle(sd);
-            outlines = bs.map((b, i) => {
-                var level = parseInt((b as any).level.replace('h', ''));
-                var deep = currentDeep;
-                if (typeof lastLevel == 'number' && level < lastLevel) deep -= 1;
-                else if (typeof lastLevel == 'number' && level > lastLevel) deep += 1;
-                currentDeep = deep;
-                lastLevel = level;
-                var currentBound = b.el ? Rect.fromEle(b.el) : undefined;
-                var nextB = bs[i + 1];
-                var hover = false;
-                if (nextB) {
-                    var nextBound = Rect.fromEle(nextB.el);
-                    if (rect.top >= currentBound.top && rect.top <= nextBound.top) {
-                        hover = true;
-                    }
-                }
-                else if (rect.top >= currentBound.top) hover = true;
-
-                return {
-                    id: b.id,
-                    deep,
-                    hover,
-                    text: b.childs.length > 0 ? b.childs.map(c => c.content).join("") : b.content
-                }
-            })
-        }
-        return outlines;
-    }
     async updateProps(this: Page, props: Record<string, any>) {
         var oldValue: Record<string, any> = {};
         var newValue: Record<string, any> = {};
@@ -374,7 +385,6 @@ export class Page$Cycle {
             }, this);
         }
     }
-
     async onUpdateProps(this: Page, props: Record<string, any>, isUpdate?: boolean) {
         await this.onAction(ActionDirective.onPageUpdateProps, async () => {
             await this.updateProps(props);

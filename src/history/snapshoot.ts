@@ -24,8 +24,7 @@ export class HistorySnapshoot extends Events {
         this.historyRecord = new HistoryRecord();
         this.historyRecord.on('error', err => this.emit('error', err));
     }
-    declare(directive: ActionDirective | string, syncBlock?: { block?: Block })
-    {
+    declare(directive: ActionDirective | string, syncBlock?: { block?: Block }) {
         this._merge = false;
         this._pause = false;
         this.action = new UserAction();

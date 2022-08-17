@@ -4,13 +4,11 @@ import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
 import { emojiStore } from "../../../extensions/emoji/store";
 import { GalleryPics } from "../../../extensions/image/gellery";
 import { channel } from "../../../net/channel";
-import { Block } from "../../block";
-import { AppearAnchor } from "../../block/appear";
 import { Matrix } from "../../common/matrix";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { PageLayoutType } from "../declare";
-import { PageDirective } from "../directive";
+
 
 export class PageEvent {
     /**
@@ -266,55 +264,6 @@ export class PageEvent {
                 icon: { name: "emoji", code: g.code }
             }
         })
-    }
-
-    //#region  注意这里的notify均发生在onAction中，对里面的处理方法，
-    //最好添加至this.page.onAddUdpate(中)
-
-    /**
-     * 通知页面，当前块将要删除
-     * @param block 
-     */
-    async nofityWillRemoveBlock(block: Block) {
-
-    }
-    /**
-     * 通知块，当前块的内容修改了
-     * @param block 
-     */
-    async notifyBlockEditedContent(block: Block) {
-
-    }
-    /**
-     * 通知当前块被移动了
-     * @param block 
-     */
-    async notityMovedBlock(block: Block) {
-
-    }
-    //#endregion
-    lastCursorBlockId: string;
-    async notifyViewCursor(this: Page, aa: AppearAnchor, offset: number) {
-        var row = aa.block.closest(x => x.isBlock);
-        if (row) {
-            if (row.id == this.lastCursorBlockId) return;
-            this.lastCursorBlockId = row.id;
-            this.emit(PageDirective.viewCursor, { blockId: aa.block.id, prop: aa.prop, offset })
-        }
-        else {
-            console.error(aa, offset);
-        }
-    }
-    loadUserViewCursor(this: Page,
-        data: {
-            deviceId: string
-            operate: { blockId: string, prop: string, offset: 0 }
-            sockId: string
-            userid: string
-            viewId: string
-            workspaceId: string
-        }) {
-        this.kit.collaboration.push(data.userid, data.operate);
     }
 }
 
