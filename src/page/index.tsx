@@ -130,6 +130,10 @@ export class Page extends Events<PageDirective> {
     }
     renderFragment(panel: HTMLElement, options?: { width?: number, height?: number }) {
         try {
+            if (!this.root) {
+                this.render(panel, options);
+                return;
+            }
             panel.appendChild(this.root);
             var nextAction = () => {
                 if (this.pageInfo) {
