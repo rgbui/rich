@@ -80,7 +80,7 @@ export class PageOutLineView extends BlockView<PageOutLine>{
     render() {
         return <div className='sy-block-outline' style={this.block.visibleStyle}>
             {this.block.outlines.map(line => {
-                return <div className={"item" + (this.block.hoverId == line.block.id ? " hover" : "")} key={line.id}><a key={line.id} style={{ paddingLeft: 20 + line.deep * 15 }} onMouseDown={e => this.mousedownLine(line, e)}>{line.text}</a></div>
+                return <div className={"item text-over" + (this.block.hoverId == line.block.id ? " hover" : "")} key={line.id}><a key={line.id} style={{ paddingLeft: 20 + line.deep * 15 }} onMouseDown={e => this.mousedownLine(line, e)}>{line.text}</a></div>
             })}
         </div>
     }
