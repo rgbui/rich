@@ -56,7 +56,8 @@ flex-fixed:固定大小
 .flex-inline {
     display: inline-flex;
 }
-.flex-line{
+
+.flex-line {
     display: inline-flex;
 }
 
@@ -351,6 +352,13 @@ item-selected:选中的效果
     }
 }
 
+.item-hover-1 {
+    &:hover {
+        color           : var(--interactive-hover);
+        background-color: var(--background-modifier-selected);
+    }
+}
+
 .item-hover-focus {
     background-color: rgba(55, 53, 47, 0.08);
 }
@@ -503,6 +511,21 @@ item-selected:选中的效果
     line-height: 24px;
 }
 
+.l-12 {
+    line-height: 12px;
+}
+
+.l-14 {
+    line-height: 14px;
+}
+
+.l-16 {
+    line-height: 16px;
+}
+
+.l-20 {
+    line-height: 20px;
+}
 
 
 /**
@@ -516,6 +539,7 @@ item-selected:选中的效果
     .visible {
         visibility: hidden;
     }
+
     &:hover {
         .visible {
             visibility: visible;
@@ -930,7 +954,7 @@ each(@ops, {
 size-24:图标大小
 **/
 
-@sizes:10,14,16,18,20 ,24,30, 32, 48, 50, 100, 120, 150, 200, 240, 300;
+@sizes: 10, 14, 16, 18, 20, 24, 30, 32, 48, 50, 100, 120, 150, 200, 240, 300;
 
 each(@sizes, {
         .size-@{value} {
