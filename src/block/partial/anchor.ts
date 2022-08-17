@@ -6,8 +6,6 @@ import { BlockUrlConstant } from "../constant";
  * 主要是用来确定光标的上下左右移动
  */
 export class Block$Anchor {
-    
-
     async visibleDownCreateBlock(this: Block, url: string, data: Record<string, any> = {}) {
         var row = this.closest(x => x.isBlock);
         return await this.page.createBlock(url, { ...data }, row.parent, row.at + 1, row.parent.childKey);
@@ -16,7 +14,6 @@ export class Block$Anchor {
         var row = this.closest(x => x.isBlock);
         return await this.page.createBlock(url, { ...data }, row.parent, row.at, row.parent.childKey);
     }
-
     async visibleRightCreateBlock(this: Block, at: number, url: string, data: Record<string, any>) {
         if (this.isTextContent) {
             var frontConent = this.content.slice(0, at);
@@ -55,8 +52,6 @@ export class Block$Anchor {
             return newBlock;
         }
     }
-
-
     focusAnchor(this: Block, anchor: AppearAnchor) {
 
     }

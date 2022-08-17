@@ -32,9 +32,11 @@ export class Block$Operator {
                     })
                 }
             }
-            this.page.addBlockUpdate(this.parent);
-            this.page.addBlockClearLayout(this.parent);
-            delete this.parent;
+            if (this.parent) {
+                this.page.addBlockUpdate(this.parent);
+                this.page.addBlockClearLayout(this.parent);
+                delete this.parent;
+            }
         }
     }
     async getWillTurnData(this: Block, url: string) {

@@ -23,12 +23,19 @@ export class Handle extends Events {
         }
         else if (this.handleBlock) {
             var bound = this.handleBlock.getVisibleContentBound();
-            var pos = Point.from(bound);
-            pos = pos.move(0, 7);
-            var handleEl = this.view.handleEle;
-            handleEl.style.top = pos.y + 'px';
-            handleEl.style.left = pos.x + 'px';
-            handleEl.style.display = 'flex';
+            if (bound) {
+                var pos = Point.from(bound);
+                pos = pos.move(0, 7);
+                var handleEl = this.view.handleEle;
+                handleEl.style.top = pos.y + 'px';
+                handleEl.style.left = pos.x + 'px';
+                handleEl.style.display = 'flex';
+            }
+            else {
+                var handleEl = this.view.handleEle;
+                handleEl.style.display = 'none';
+            }
+
         }
         else {
             var handleEl = this.view.handleEle;

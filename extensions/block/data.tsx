@@ -47,7 +47,7 @@ export var BlockSelectorData: BlockGroup[] = [
             { text: "数学公式", pic: <img src={equation} />, url: "/katex", description: "", label: "/数学公式", labels: ['/sxgs', '/公式', '/shuxuegongshi', '/latex', '/math'] },
             { text: '链接页面', pic: <img src={link} />, url: '/link', description: "", label: "/链接", labels: ['/link', '/wz'] },
             { text: '进度条', pic: <img src={link} />, url: '/measure', description: "", label: "/进度条", labels: ['/jdt', '/jindutiao', '/progressbar'] },
-            { text: '按钮', isLine:true, pic: <img src={link} />, url: '/button', description: '', label: '/按钮', labels: ['/button', '/al'] }
+            { text: '按钮', isLine: true, pic: <img src={link} />, url: '/button', description: '', label: '/按钮', labels: ['/button', '/al'] }
         ]
     },
     {
@@ -67,7 +67,7 @@ export var BlockSelectorData: BlockGroup[] = [
             { text: '标签页', pic: <img src={embed} />, url: "/tab", label: '/标签页', labels: ['/tab', '/bjy', '/bianqianye'] },
             //  { text: '轮播', pic: <img src={embed} />, url: "/carousel", label: '/轮播', labels: ['/carousel', '/lb', '/lunbo'] },
             { text: '模板按钮', pic: <img src={embed} />, url: '/button/template', label: '/模板按钮', labels: ['/mban', '/mubananniu', '/template'] },
-            { text: '目录大纲', pic: <img src={embed} />, url: '/outline', label: '/目录', labels: ['/outline', '/note', '/mulu', '/dagang'] }
+            //{ text: '目录大纲', pic: <img src={embed} />, url: '/outline', label: '/目录', labels: ['/outline', '/note', '/mulu', '/dagang'] }
         ]
     },
     {

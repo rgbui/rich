@@ -59,6 +59,9 @@ export class PageOutLine extends Block {
         this.getOutLines();
         this.updateOutlinesHover()
     }
+    get handleBlock() {
+        return null;
+    }
 }
 @view('/outline')
 export class PageOutLineView extends BlockView<PageOutLine>{
@@ -77,7 +80,7 @@ export class PageOutLineView extends BlockView<PageOutLine>{
     render() {
         return <div className='sy-block-outline' style={this.block.visibleStyle}>
             {this.block.outlines.map(line => {
-                return <div className={"item" + (this.block.hoverId == line.block.id ? " hover" : "")} key={line.id}><a key={line.id} style={{ paddingLeft: 10 + line.deep * 15 }} onMouseDown={e => this.mousedownLine(line, e)}>{line.text}</a></div>
+                return <div className={"item" + (this.block.hoverId == line.block.id ? " hover" : "")} key={line.id}><a key={line.id} style={{ paddingLeft: 20 + line.deep * 15 }} onMouseDown={e => this.mousedownLine(line, e)}>{line.text}</a></div>
             })}
         </div>
     }
