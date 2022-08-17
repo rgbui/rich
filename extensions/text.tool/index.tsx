@@ -19,6 +19,7 @@ import { channel } from "../../net/channel";
 import { blockStore } from "../block/store";
 import { DoubleLinkSvg, EquationSvg, SearchSvg } from "../../component/svgs";
 import { ToolTip } from "../../component/view/tooltip";
+import { useSearchBox } from "../search";
 
 export type TextToolStyle = {
     link: string,
@@ -258,7 +259,7 @@ class TextTool extends EventsComponent {
     onSearch(event: React.MouseEvent) {
         if (this.selectionText) {
             //这里打开搜索框
-            console.log(this.selectionText);
+            useSearchBox({ word: this.selectionText, isNav: true })
         }
     }
     componentDidMount() {
