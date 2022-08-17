@@ -256,7 +256,6 @@ export class Page$Cycle {
                     break;
             }
         }
-
         if (changes.head) {
             var r = this.find(g => g.url == BlockUrlConstant.Outline);
             if (r) {
