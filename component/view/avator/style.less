@@ -1,4 +1,6 @@
 .shy-avatar {
+    position: relative;
+
     img {
         border-radius  : 50%;
         object-fit     : cover;
@@ -13,6 +15,32 @@
         color          : rgba(255, 255, 255, 0.9);
         font-size      : 14px;
         border-radius  : 50%;
+    }
+
+    &-status {
+        position: absolute;
+        width   : 100%;
+        height  : 100%;
+        top     : 0px;
+        left    : 0px;
+
+        &::before {
+            content         : '\20';
+            width           : 14px;
+            height          : 14px;
+            background-color: #fff;
+            border-radius   : 50%;
+            position        : absolute;
+            bottom          : 0px;
+            right           : 0px;
+        }
+        >div {
+            width   : 25px;
+            height  : 15px;
+            position: absolute;
+            bottom: 2.5px;
+            right: -5.5px;
+        }
     }
 }
 
