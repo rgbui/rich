@@ -14,6 +14,7 @@ import { channel } from "../../../net/channel";
 import { Confirm } from "../../../component/lib/confirm";
 import { usePageHistoryStore } from "../../../extensions/history";
 import { PageDirective } from "../directive";
+import { usePagePublish } from "../../../extensions/publish";
 export class PageContextmenu {
     async onGetContextMenus(this: Page) {
         if (this.isBoard) return this.onGetBoardContextMenus();
@@ -73,7 +74,7 @@ export class PageContextmenu {
                 { name: 'smallText', text: '小字号', checked: this.smallFont ? true : false, type: MenuItemType.switch },
                 { name: 'fullWidth', text: '宽版', checked: this.isFullWidth ? true : false, type: MenuItemType.switch },
                 { type: MenuItemType.divide },
-                { name: 'nav', text: '目录',iconSize: 16, icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.nav },
+                { name: 'nav', text: '目录', iconSize: 16, icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.nav },
                 { name: 'lock', iconSize: 18, text: this.pageInfo.locker?.userid ? "解除锁定" : '编辑保护', icon: this.pageInfo.locker?.userid ? UnlockSvg : LockSvg },
                 // { type: MenuItemTypeValue.divide },
                 // { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
@@ -99,8 +100,8 @@ export class PageContextmenu {
                 else if (item.name == 'fullWidth') {
                     this.onUpdateProps({ isFullWidth: item.checked }, true);
                 }
-                else if(item.name=='nav'){
-                    this.onOpenNav({nav:item.checked})
+                else if (item.name == 'nav') {
+                    this.onOpenNav({ nav: item.checked })
                 }
             }
         });
@@ -146,6 +147,6 @@ export class PageContextmenu {
         }
     }
     async onOpenPublish(this: Page, event: React.MouseEvent) {
-
+        await usePagePublish({ roundArea: Rect.fromEvent(event) }, this.pageInfo)
     }
 }
