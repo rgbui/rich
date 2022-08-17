@@ -56,6 +56,9 @@ flex-fixed:固定大小
 .flex-inline {
     display: inline-flex;
 }
+.flex-line{
+    display: inline-flex;
+}
 
 .flex-full {
     display        : flex;
@@ -927,7 +930,7 @@ each(@ops, {
 size-24:图标大小
 **/
 
-@sizes: 24, 32, 48, 50, 100, 120, 150, 200, 240, 300;
+@sizes:10,14,16,18,20 ,24,30, 32, 48, 50, 100, 120, 150, 200, 240, 300;
 
 each(@sizes, {
         .size-@{value} {
