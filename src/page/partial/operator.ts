@@ -21,23 +21,36 @@ export class Page$Operator {
     * 
     */
     async createBlock(this: Page, url: string, data: Record<string, any>, parent: Block, at?: number, childKey?: string) {
-        if (!parent) return;
+
         var block = await BlockFactory.createBlock(url, this, data, parent);
-        if (typeof childKey == 'undefined') childKey = parent.childKey;
-        if (!parent.allBlockKeys.some(s => s == childKey)) {
-            console.error(`${parent.url} not support childKey:${childKey}`);
-            childKey = parent.allBlockKeys[0];
+        if (parent) {
+            if (typeof childKey == 'undefined') childKey = parent.childKey;
+            if (!parent.allBlockKeys.some(s => s == childKey)) {
+                console.error(`${parent.url} not support childKey:${childKey}`);
+                childKey = parent.allBlockKeys[0];
+            }
+            var bs = parent.blocks[childKey];
+            if (!Array.isArray(bs)) parent.blocks[childKey] = bs = [];
+            if (typeof at == 'undefined') at = bs.length;
+            bs.insertAt(at, block);
+            await block.created();
+            this.snapshoot.record(OperatorDirective.$create, {
+                pos: block.pos,
+                data: await block.get()
+            }, block);
+            this.addBlockUpdate(parent);
         }
-        var bs = parent.blocks[childKey];
-        if (!Array.isArray(bs)) parent.blocks[childKey] = bs = [];
-        if (typeof at == 'undefined') at = bs.length;
-        bs.insertAt(at, block);
-        await block.created();
-        this.snapshoot.record(OperatorDirective.$create, {
-            pos: block.pos,
-            data: await block.get()
-        }, block);
-        this.addBlockUpdate(parent);
+        else {
+            if (typeof at == 'undefined')
+                this.views.push(block);
+            else this.views.splice(at, 0, block);
+            await block.created();
+            this.snapshoot.record(OperatorDirective.$create, {
+                pos: block.pos,
+                data: await block.get()
+            }, block);
+            this.addPageUpdate();
+        }
         return block;
     }
     async onCreateTailTextSpan(this: Page) {
@@ -53,7 +66,7 @@ export class Page$Operator {
                         newBlock = await this.createBlock(BlockUrlConstant.TextSpan, {}, this.views.last());
                     }
                     newBlock.mounted(() => {
-                        this.kit.writer.cursor.onFocusBlockAnchor(newBlock, { last: true,render:true,merge:true });
+                        this.kit.writer.cursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true });
                         resolve(true);
                     })
                 })
@@ -211,5 +224,25 @@ export class Page$Operator {
             case BlockDirective.trunIntoPage:
                 break;
         }
+    }
+    async onOpenNav(this: Page, d: { nav: boolean }) {
+        this.onAction('onOpenNav', async () => {
+            this.updateProps({ nav: d.nav });
+            if (d.nav == false) {
+                if (this.views.length > 1)
+                    await this.views[1].delete()
+            }
+            else {
+                await this.createBlock(BlockUrlConstant.View,
+                    {
+                        url: BlockUrlConstant.View,
+                        blocks: { childs: [{ url: BlockUrlConstant.Outline }] }
+                    },
+                    undefined,
+                    undefined,
+                    undefined
+                )
+            }
+        })
     }
 }
