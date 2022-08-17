@@ -115,7 +115,7 @@ export class MenuItemView extends React.Component<{
             ref={e => this.el = e}>
             {(item.type == MenuItemType.item || !item.type) && <ToolTip overlay={item.overlay} placement={item.placement || 'right'} > <a className={'shy-menu-box-item-option' + (item.disabled == true ? " disabled" : "")}
                 onMouseUp={e => this.select(item, e.nativeEvent)}>
-                {item.icon && <Icon style={{ marginRight: 5 }} icon={item.icon} size={item.iconSize ? item.iconSize : 14}></Icon>}
+                {item.icon && <i className="flex-center flex-line size-20"><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 14}></Icon></i>}
                 {item.renderIcon && item.renderIcon(item, this)}
                 <span className='shy-menu-box-item-option-text'>{item.text}</span>
                 {item.checkLabel && <Icon className={'shy-menu-box-item-option-label-icon'} size={14} icon={CheckSvg}></Icon>}
@@ -132,14 +132,14 @@ export class MenuItemView extends React.Component<{
             {item.type == MenuItemType.divide && <a className='shy-menu-box-item-divide'></a>}
             {item.type == MenuItemType.text && <a className='shy-menu-box-item-text'>{item.text}</a>}
             {item.type == MenuItemType.switch && <a className='shy-menu-box-item-switch'>
-                {item.icon && <Icon style={{ marginRight: 5 }} icon={item.icon} size={item.iconSize ? item.iconSize : 14}></Icon>}
+                {item.icon && <i className="flex-center flex-inline size-20"><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 14}></Icon></i>}
                 <span>{item.text}</span>
                 <Switch onChange={e => this.checked(e, item)} checked={item.checked ? item.checked : false}></Switch>
             </a>}
             {item.type == MenuItemType.input && <div className="shy-menu-box-item-input"><Input size={'small'} value={item.value} onEnter={e => { item.value = e; this.select(item) }} onChange={e => { item.value = e; this.input(e, item) }} placeholder={item.text}></Input></div>}
             {item.type == MenuItemType.button && <div className="shy-menu-box-item-button"><Button icon={item.icon} disabled={item.disabled} block onClick={e => item.buttonClick != 'click' ? this.select(item, e.nativeEvent) : this.click(item, e)}>{item.text}</Button></div>}
             {item.type == MenuItemType.select && <div className="shy-menu-box-item-select">
-                {item.icon && <Icon icon={item.icon} style={{ marginRight: 5 }} size={item.iconSize ? item.iconSize : 14}></Icon>}
+                {item.icon &&<i className="flex-center flex-inline size-20"><Icon icon={item.icon}  size={item.iconSize ? item.iconSize : 14}></Icon></i>}
                 {item.renderIcon && item.renderIcon(item, this)}
                 <span className='shy-menu-box-item-option-text'>{item.text}</span>
                 <span className="shy-menu-box-item-select-value" onMouseDown={e => this.openSelectMenu(item, e)}>
@@ -159,8 +159,8 @@ export class MenuItemView extends React.Component<{
                 })}
             </div></ToolTip>}
             {item.type == MenuItemType.color && <div className="shy-menu-box-item-colors">
-                {item.options.map(t=>{
-                    return <ToolTip overlay={t.overlay} ><a className="round size-24 item-hover " style={{ backgroundColor: t.value }} onMouseDown={e=>{e.stopPropagation();this.input(t.value,t)}}></a></ToolTip>
+                {item.options.map(t => {
+                    return <ToolTip overlay={t.overlay} ><a className="round size-24 item-hover " style={{ backgroundColor: t.value }} onMouseDown={e => { e.stopPropagation(); this.input(t.value, t) }}></a></ToolTip>
                 })}
             </div>}
             {item?.childs?.length > 0 && this.hover && <MenuBox parent={this.props.parent} select={this.props.select} click={this.props.click} input={this.props.input} items={item.childs} ref={e => this.menubox = e} deep={this.props.deep}></MenuBox>}
