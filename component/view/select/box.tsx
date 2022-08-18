@@ -15,7 +15,8 @@ export class SelectBox extends React.Component<{
     onChange?: (value: any, item: MenuItem<string>) => void,
     style?: CSSProperties,
     dropHeight?: number,
-    border?: boolean
+    border?: boolean,
+    width?: number
 }>{
     render() {
         var self = this;
@@ -29,7 +30,7 @@ export class SelectBox extends React.Component<{
                 { roundArea: Rect.fromEvent(event) },
                 ms,
                 {
-                    width: 160,
+                    width: self.props.width || 160,
                     nickName: 'selectBox'
                 });
             if (r) {
