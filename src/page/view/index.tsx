@@ -39,6 +39,7 @@ export class PageView extends Component<{ page: Page }>{
     private _wheel;
     el: HTMLElement;
     componentDidMount() {
+        
         this.el = ReactDOM.findDOMNode(this) as HTMLElement;
         channel.sync('/page/update/info', this.updatePageInfo);
         this.observeScroll();
@@ -179,13 +180,12 @@ export class PageView extends Component<{ page: Page }>{
         </div>
     }
     renderNavs() {
-
         var isFirstDocTitle = this.page.views[0].childs[0].url == BlockUrlConstant.Title;
         return <div className={"shy-page-view-content-nav" + (this.page.isFullWidth ? "" : " shy-page-view-content-nav-center")}>
             <div className="shy-page-view-content-nav-left">
                 <ChildsArea childs={[this.page.views[0]]}></ChildsArea>
             </div>
-            <div className="shy-page-view-content-nav-right" style={{top:0, marginTop: isFirstDocTitle ? 70 : 0 }}>
+            <div className="shy-page-view-content-nav-right" style={{ top: 0, marginTop: isFirstDocTitle ? 70 : 0 }}>
                 <ChildsArea childs={[this.page.views[1]]}></ChildsArea>
             </div>
         </div>

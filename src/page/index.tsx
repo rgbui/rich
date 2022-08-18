@@ -135,6 +135,7 @@ export class Page extends Events<PageDirective> {
                 return;
             }
             panel.appendChild(this.root);
+            this.view.observeScroll();
             var nextAction = () => {
                 if (this.pageInfo) {
                     if (!this.pageInfo.text) {
