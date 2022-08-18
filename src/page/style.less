@@ -214,9 +214,10 @@
 
     &-left {
         margin-left : 100px;
-        flex-grow   : 1;
-        flex-shrink : 1;
+        flex-grow   : 0;
+        flex-shrink : 0;
         margin-right: 50px;
+        width       : calc(100% - 150px - 230px)
     }
 
     &-right {
@@ -225,14 +226,12 @@
         width       : 200px;
         margin-right: 30px;
         position    : sticky;
-        // top     :300px;
     }
 }
 
 .shy-page-view-content-nav-center {
-
     margin         : 0 auto;
-    width          : 1000px;
+    // width          : 1000px;
     display        : flex;
     justify-content: flex-start;
     align-items    : flex-start;
@@ -240,12 +239,16 @@
     .shy-page-view-content-nav-left {
         width       : 750px;
         margin-right: 50px;
+        flex-grow   : 0;
+        flex-shrink : 0;
     }
 
     .shy-page-view-content-nav-right {
         width      : 200px;
         position   : sticky;
-        // top     :300px;
+        flex-grow  : 0;
+        flex-shrink: 0;
+
     }
 
 }
