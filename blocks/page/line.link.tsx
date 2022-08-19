@@ -1,3 +1,6 @@
+
+
+
 import React from "react";
 import { PageSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
@@ -11,6 +14,12 @@ import { BlockView } from "../../src/block/view";
 import { SolidArea } from "../../src/block/view/appear";
 import "./style.less";
 
+/*******
+ * 
+ * 该块弃用
+ * 使用Text中的link来实现双链链接
+ * 
+ */
 @url('/link/line')
 export class LineLink extends Block {
     @prop()
