@@ -19,6 +19,12 @@ export class Block$Operator {
     async delete(this: Block) {
         var pbs = this.parentBlocks;
         if (Array.isArray(pbs) && pbs.exists(g => g === this)) {
+            try {
+                await this.page.onNotifyWillRemove(this);
+            }
+            catch (ex) {
+                this.page.onError(ex)
+            }
             this.page.snapshoot.record(OperatorDirective.$delete, {
                 pos: this.pos,
                 data: await this.get()
