@@ -114,6 +114,9 @@ export class Page$Seek {
             if (r) return r;
         }
     }
+    exists(this: Page, predict: (block: Block) => boolean) {
+        return this.find(predict) ? true : false
+    }
     findReverse(this: Page, predict: (block: Block) => boolean) {
         for (let i = this.views.length - 1; i >= 0; i--) {
             var view = this.views[i];
