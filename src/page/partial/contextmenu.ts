@@ -75,6 +75,7 @@ export class PageContextmenu {
                 { name: 'fullWidth', text: '宽版', checked: this.isFullWidth ? true : false, type: MenuItemType.switch },
                 { type: MenuItemType.divide },
                 { name: 'nav', text: '目录', iconSize: 16, icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.nav },
+                { name: 'refPages', text: "显示引用", iconSize: 18, icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
                 { name: 'lock', iconSize: 18, text: this.pageInfo.locker?.userid ? "解除锁定" : '编辑保护', icon: this.pageInfo.locker?.userid ? UnlockSvg : LockSvg },
                 // { type: MenuItemTypeValue.divide },
                 // { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
@@ -102,6 +103,9 @@ export class PageContextmenu {
                 }
                 else if (item.name == 'nav') {
                     this.onOpenNav({ nav: item.checked })
+                }
+                else if(item.name=='refPages'){
+                    this.onOpenRefPages({refPages:item.checked})
                 }
             }
         });

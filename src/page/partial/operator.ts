@@ -9,6 +9,7 @@ import { BlockFactory } from "../../block/factory/block.factory";
 import { Rect } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { DropDirection } from "../../kit/handle/direction";
+import { PageLayoutType } from "../declare";
 import { PageDirective } from "../directive";
 
 export class Page$Operator {
@@ -229,6 +230,9 @@ export class Page$Operator {
     async onOpenNav(this: Page, d: { nav: boolean }) {
         this.onAction('onOpenNav', async () => {
             this.updateProps({ nav: d.nav });
+            if (this.requireSelectLayout == true) {
+                this.updateProps({ requireSelectLayout: false, 'pageLayout.type': PageLayoutType.doc });
+            }
             if (d.nav == false) {
                 if (this.views.length > 1)
                     await this.views[1].delete()
@@ -245,5 +249,23 @@ export class Page$Operator {
                 )
             }
         })
+        this.forceUpdate();
+    }
+    async onOpenRefPages(this: Page, d: { refPages: boolean }) {
+        await this.onAction('onOpenNav', async () => {
+            this.updateProps({ autoRefPages: d.refPages });
+            if (this.requireSelectLayout == true) {
+                this.updateProps({ requireSelectLayout: false, 'pageLayout.type': PageLayoutType.doc });
+            }
+            if (d.refPages == false) {
+                var r = this.views.find(g => g.url == BlockUrlConstant.RefLinks);
+                if (r) await r.delete()
+            }
+            else {
+                var view = this.views[0];
+                await this.createBlock(BlockUrlConstant.RefLinks, { url: BlockUrlConstant.RefLinks }, view, view.childs.length, 'childs');
+            }
+        })
+        this.forceUpdate();
     }
 }
