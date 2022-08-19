@@ -10,7 +10,7 @@ export type AtSelectorItem = {
 }
 
 
-export type LinkPageItem = {
+export interface LinkPageItem {
     id?: string;
     text?: string;
     icon?: IconArguments,
@@ -19,6 +19,7 @@ export type LinkPageItem = {
     pageType?: PageLayoutType,
     url?: string,
     locker?: { userid: string, lockDate: number },
-    share?: 'net' | 'nas' | 'local' ;
+    share?: 'net' | 'nas' | 'local';
     permission?: PagePermission;
+    getSubItems?():Promise<LinkPageItem[]>
 }
