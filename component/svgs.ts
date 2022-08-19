@@ -108,6 +108,7 @@ import TemplatesSvg from "../src/assert/svg/templates.svg";
 import TopicSvg from "../src/assert/svg/topic.svg";
 import TransparentSvg from "../src/assert/svg/transparent.svg";
 import TrashSvg from "../src/assert/svg/trash.svg";
+import TriangleSvg from "../src/assert/svg/triangle.svg";
 import TypesButtonSvg from "../src/assert/svg/types.button.svg";
 import TypesCheckboxSvg from "../src/assert/svg/types.checkbox.svg";
 import TypesCreateAtSvg from "../src/assert/svg/types.create.at.svg";
@@ -248,6 +249,7 @@ TemplatesSvg,
 TopicSvg,
 TransparentSvg,
 TrashSvg,
+TriangleSvg,
 TypesButtonSvg,
 TypesCheckboxSvg,
 TypesCreateAtSvg,
