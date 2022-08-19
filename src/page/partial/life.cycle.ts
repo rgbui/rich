@@ -14,9 +14,10 @@ import { BlockUrlConstant } from "../../block/constant";
 import { PageLayoutType } from "../declare";
 import { GridMap } from "../grid";
 import { Matrix } from "../../common/matrix";
-import lodash from "lodash";
+import lodash, { chain } from "lodash";
 import { util } from "../../../util/util";
 import { PageOutLine } from "../../../blocks/page/outline";
+import { channel } from "../../../net/channel";
 
 export class Page$Cycle {
     async init(this: Page) {
@@ -132,6 +133,7 @@ export class Page$Cycle {
         json.pageLayout = util.clone(this.pageLayout);
         json.matrix = this.matrix.getValues();
         json.nav = this.nav;
+        json.autoRefPages = this.autoRefPages;
         json.views = await this.views.asyncMap(async x => {
             return await x.get()
         })
@@ -214,19 +216,53 @@ export class Page$Cycle {
                 })
             }
             catch (ex) {
-                this.onError(ex);
+                console.error(ex);
+                self.onError(ex);
             }
             await fns.eachAsync(async g => await g());
             try {
                 self.onNotifyChanged()
             }
             catch (ex) {
-                this.page.onError(ex);
+                console.error(ex);
+                self.onError(ex);
             }
         }
         fn()
     }
-    private onNotifyChanged(this: Page) {
+    /**
+     * 对于将要删除的块
+     * 这里触发通知事件
+     * 这里不做任何的复杂的耗时操作，
+     * 避免阻塞正常的删除的交互操作
+     * @param this 
+     * @param block 
+     */
+    async onNotifyWillRemove(this: Page, block: Block) {
+        var predict = (g) => g.url == BlockUrlConstant.Text && (g.asTextContent.link ? true : false) && g.asTextContent.link.name == 'page';
+        var deleteBlocks: string[] = [];
+        if (block.exists(predict, true)) {
+            var rs = block.findAll(predict, true);
+            deleteBlocks = rs.map(r => r.id);
+        }
+        var cs: {
+            rowBlockId: string;
+            text: string;
+        }[] = [];
+        if (block.isLine) {
+            var rowBlock = block.closest(x => x.isBlock);
+            if (rowBlock.exists(c => c.url == BlockUrlConstant.Text && predict(c) && c !== block)) {
+                cs.push({ rowBlockId: rowBlock.id, text: JSON.stringify(rowBlock.childs.map(g => g.get())) })
+            }
+        }
+        if (deleteBlocks.length > 0 || cs.length > 0)
+            this.addUpdateEvent(async () => {
+                await channel.patch('/block/ref/sync', {
+                    data: { deleteBlockIds: deleteBlocks, updates: cs }
+                })
+            })
+    }
+    private async onNotifyChanged(this: Page) {
         /**
          * 这里主要是同步大纲
          * 双链的引用数据更新
@@ -234,18 +270,43 @@ export class Page$Cycle {
          * 
          */
         var changes: { head: boolean } = { head: false };
+        var blockSyncs: {
+            deleteBlockIds: string[]; updates: { rowBlockId: string; text: string; }[]
+        } = { deleteBlockIds: [], updates: [] };
         for (let i = 0; i < this.snapshoot.action.operators.length; i++) {
             var op = this.snapshoot.action.operators[i];
             switch (op.directive) {
                 case OperatorDirective.$delete:
+                    /**
+                     * 如果在块删除之前，请在onNotifyWillRemove处理
+                     */
                     if (op.data.data.url == BlockUrlConstant.Head) changes.head = true;
                     break;
                 case OperatorDirective.$create:
                     if (op.data.data.url == BlockUrlConstant.Head) changes.head = true;
+                    /**
+                     * 这里只考虑撤消时的的重建
+                     */
+                    var block = this.find(g => g.id == op.data.pos.blockId);
+                    if (block) {
+                        if (block.exists(g => g.isTextBlock && g.asTextContent?.link?.name == 'page')) {
+                            var rb = block.closest(g => g.isBlock);
+                            blockSyncs.updates.push({ rowBlockId: rb.id, text: JSON.stringify(rb.childs.map(c => c.get())) })
+                        }
+                    }
                     break;
                 case OperatorDirective.$update:
                     var block = this.find(g => g.id == op.data.pos.blockId);
-                    if (block && block.url == BlockUrlConstant.Head) changes.head = true;
+                    if (block) {
+                        if (block.url == BlockUrlConstant.Head) changes.head = true;
+                        if (Object.keys(op.data.new_value).includes('content')) {
+                            var rb = block.closest(x => x.isBlock);
+                            if (rb.exists(g => g.isTextBlock && g.asTextContent?.link?.name == 'page')) {
+                                var rb = block.closest(g => g.isBlock);
+                                blockSyncs.updates.push({ rowBlockId: rb.id, text: JSON.stringify(rb.childs.map(c => c.get())) })
+                            }
+                        }
+                    }
                     break;
                 case OperatorDirective.$turn:
                     if (op.data.from.startsWith(BlockUrlConstant.Head) || op.data.to.startsWith(BlockUrlConstant.Head)) changes.head = true;
@@ -261,6 +322,11 @@ export class Page$Cycle {
             if (r) {
                 (r as PageOutLine).updateOutLine()
             }
+        }
+        if (blockSyncs.deleteBlockIds.length > 0 || blockSyncs.updates.length > 0) {
+            await channel.patch('/block/ref/sync', {
+                data: blockSyncs
+            })
         }
     }
     async onAction(this: Page,
