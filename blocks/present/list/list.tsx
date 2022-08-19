@@ -8,6 +8,7 @@ import { BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
 import { ChildsArea, TextArea, TextLineChilds } from "../../../src/block/view/appear";
 import { TextTurns } from "../../../src/block/turn/text";
 import { Rect, Point } from "../../../src/common/vector/point";
+import { TriangleSvg } from "../../../component/svgs";
 export enum ListType {
     circle = 0,
     number = 1,
@@ -111,10 +112,17 @@ export class ListView extends BlockView<List>{
     renderListType() {
         if (this.block.listType == ListType.circle) return <span className='sy-block-list-text-type'>•</span>
         else if (this.block.listType == ListType.arrow) {
-            return <span className='sy-block-list-text-type' style={{ cursor: 'pointer' }} onMouseDown={e => {
-                e.stopPropagation();
-                this.block.onExpand();
-            }}><Icon size={this.block.page.lineHeight} icon={this.block.expand == true ? 'arrow-down:sy' : 'arrow-right:sy'}></Icon></span>
+            return <span className='sy-block-list-text-type text ts-transform'
+                style={{
+                    cursor: 'pointer',
+                    transform: this.block.expand ? 'rotateZ(180deg)' : 'rotateZ(90deg)',
+                    height: this.block.page.lineHeight,
+                }} onMouseDown={e => {
+                    e.stopPropagation();
+                    this.block.onExpand();
+                }}>
+                <Icon size={12} icon={TriangleSvg}></Icon>
+            </span>
         }
         else if (this.block.listType == ListType.number) {
             var pas = this.block.parentBlocks;
