@@ -69,7 +69,6 @@ import "./data-grid/element/field/relation";
 import "./data-grid/element/field/comment";
 import "./data-grid/element/field/button";
 
-
 import "./data-grid/element/form/text";
 import "./data-grid/element/form/number";
 import "./data-grid/element/form/date";
@@ -90,9 +89,6 @@ import './page/ref.links';
 import './page/sub.links';
 import './page/comment/index';
 import "./page/line.link";
-
-
-
 import "./map/amap";
 
 import './board/note/index';

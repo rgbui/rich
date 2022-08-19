@@ -80,6 +80,8 @@ export class Page extends Events<PageDirective> {
     isFullWidth: boolean = true;
     smallFont: boolean = false;
     nav: boolean = false;
+    autoRefPages: boolean = false;
+    autoRefSubPages: boolean = true;
     get windowMatrix() {
         var rect = Rect.fromEle(this.root);
         var matrix = new Matrix();
@@ -136,6 +138,7 @@ export class Page extends Events<PageDirective> {
             }
             panel.appendChild(this.root);
             this.view.observeScroll();
+            this.view.AutomaticHandle();
             var nextAction = () => {
                 if (this.pageInfo) {
                     if (!this.pageInfo.text) {
@@ -241,9 +244,11 @@ export class Page extends Events<PageDirective> {
     }
     async forceUpdate() {
         return new Promise((resolve, reject) => {
-            return this.view.forceUpdate(() => {
-                resolve(true);
-            })
+            if (this.view)
+                return this.view.forceUpdate(() => {
+                    resolve(true);
+                })
+            else resolve(false)
         })
     }
     get fontSize() {

@@ -273,7 +273,7 @@ export class PageWrite {
             while (true) {
                 var list = this.cursor.getAppears();
                 var blocks = lodash.identity(list.map(l => l.block));
-                if (blocks.some(s =>!s.isSupportTextStyle)) return;
+                if (blocks.some(s => !s.isSupportTextStyle)) return;
                 var turnBlock: Block = undefined;
                 if (blocks.length > 0 && blocks.every(b => b.isLine)) {
                     turnBlock = blocks[0].parent;
@@ -358,7 +358,6 @@ export class PageWrite {
         aa.collapse(offset);
         await inputPopHandle(this.inputPop.offset, blockData);
         this.inputPop = null;
-
     }
     async onSelectionSetPatternOrProps(
         appears: AppearAnchor[],
@@ -537,7 +536,6 @@ export class PageWrite {
             });
         });
     }
-
 }
 
 

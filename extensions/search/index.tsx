@@ -16,7 +16,7 @@ export class SearchBox extends EventsComponent {
     render() {
         return <div className="w-600  card padding-0">
             <div className="padding-10  h-30 flex-center">
-                <Input clear onClear={() => { this.word = ''; this.onForceSearch() }} placeholder="搜索内容" value={this.word} onEnter={e => { this.word = e; this.onForceSearch() }} onChange={e => { this.word = e; this.onSearch() }} ></Input>
+                <Input clear onClear={() => { this.word = ''; this.onForceSearch() }} placeholder="空间页面搜索" value={this.word} onEnter={e => { this.word = e; this.onForceSearch() }} onChange={e => { this.word = e; this.onSearch() }} ></Input>
             </div>
             <Divider></Divider>
             <div className="padding-h-10 overflow-y max-h-300 min-h-200">
