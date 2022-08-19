@@ -14,9 +14,9 @@ import { LinkPageItem } from "../../../extensions/at/declare";
 import { PageCover } from "./cover";
 import { Icon } from "../../../component/view/icon";
 import { CollectTableSvg, CommentSvg, PageSvg } from "../../../component/svgs";
-import lodash from "lodash";
 import { dom } from "../../common/dom";
 import { PageOutLine } from "../../../blocks/page/outline";
+import { BlockFactory } from "../../block/factory/block.factory";
 
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
@@ -39,7 +39,6 @@ export class PageView extends Component<{ page: Page }>{
     private _wheel;
     el: HTMLElement;
     componentDidMount() {
-        
         this.el = ReactDOM.findDOMNode(this) as HTMLElement;
         channel.sync('/page/update/info', this.updatePageInfo);
         this.observeScroll();
@@ -53,6 +52,7 @@ export class PageView extends Component<{ page: Page }>{
         document.addEventListener('mouseup', (this._mouseup = this.page.onMouseup.bind(this.page)));
         document.addEventListener('keyup', (this._keyup = this.page.onKeyup.bind(this.page)), true);
         this.observeToolBoard();
+        this.AutomaticHandle();
     }
     updatePageInfo = (r: { id: string, pageInfo: LinkPageItem }) => {
         if (this.page.pageInfo?.id == r.id) {
@@ -214,5 +214,45 @@ export class PageView extends Component<{ page: Page }>{
             </div>
             <KitView kit={this.page.kit}></KitView>
         </div>
+    }
+    async AutomaticHandle() {
+        var isForceUpdate: boolean = false;
+        if (this.page.pageLayout.type == PageLayoutType.doc && this.page.requireSelectLayout == false) {
+            if (this.page.autoRefPages == true) {
+                if (!this.page.exists(g => g.url == BlockUrlConstant.RefLinks)) {
+                    var view = this.page.views[0];
+                    var block = await BlockFactory.createBlock(BlockUrlConstant.RefLinks, this.page, {}, view);
+                    view.blocks.childs.push(block);
+                    isForceUpdate = true;
+                }
+            }
+            if (this.page.autoRefSubPages == true) {
+                var items = await this.page.pageInfo.getSubItems();
+                var view = this.page.views[0];
+                items.removeAll(r => view.exists(c => c.url == BlockUrlConstant.Link && (c as any).pageId == r.id))
+                await items.eachAsync(async item => {
+                    var block = await BlockFactory.createBlock(BlockUrlConstant.Link, this.page, { pageId: item.id }, view);
+                    view.blocks.childs.push(block);
+                    isForceUpdate = true;
+                })
+            }
+        }
+        if (this.page.requireSelectLayout == true) {
+            var items = await this.page.pageInfo.getSubItems();
+            if (items.length > 0) {
+                this.page.requireSelectLayout = false;
+                this.page.pageLayout.type = PageLayoutType.doc;
+                var view = this.page.views[0];
+                items.removeAll(r => view.exists(c => c.url == BlockUrlConstant.Link && (c as any).pageId == r.id))
+                await items.eachAsync(async item => {
+                    var block = await BlockFactory.createBlock(BlockUrlConstant.Link, this.page, { pageId: item.id }, view);
+                    view.blocks.childs.push(block);
+                })
+                isForceUpdate = true;
+            }
+        }
+        if (isForceUpdate = true) {
+            this.forceUpdate()
+        }
     }
 }
