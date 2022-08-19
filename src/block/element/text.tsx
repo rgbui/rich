@@ -15,7 +15,6 @@ import { ToolTip } from "../../../component/view/tooltip";
 import { useLinkPicker } from "../../../extensions/link/picker";
 import { Rect } from "../../common/vector/point";
 
-
 /***
  * 文字型的block，
  * 注意该文字block里面含有子文字或其它的如图像block等
@@ -58,14 +57,49 @@ export class TextContent extends Block {
         }
         return false;
     }
+    didMount() {
+        this.createLink();
+    }
+    async createLink() {
+        if (this.createSource == 'InputBlockSelector') {
+            if (this.link) {
+                if (this.link.name == 'create') {
+                    var r = await channel.air('/page/create/sub', {
+                        pageId: this.page.pageInfo?.id,
+                        text: this.link.text
+                    });
+                    if (r) {
+                        var pa = lodash.cloneDeep(this.link);
+                        pa.pageId = r.id;
+                        pa.name = 'page';
+                        delete pa.url;
+                        delete pa.text;
+                        this.onUpdateProps({ link: pa }, { range: BlockRenderRange.self, merge: true })
+                        this.syncRefLink(r.id);
+                    }
+                }
+            }
+        }
+    }
+    async syncRefLink(pageId: string) {
+        var rb = this.closest(x => x.isBlock);
+        await channel.put('/block/ref/add', {
+            pageId,
+            data: {
+                blockId: this.id,
+                rowBlockId: rb.id,
+                refPageId: this.page.pageInfo.id,
+                text: JSON.stringify(await rb.childs.asyncMap(async c => (await c.get()))),
+            }
+        })
+    }
 }
 @view('/text')
 export class TextContentView extends BlockView<TextContent>{
     openPage(e: React.MouseEvent) {
         e.stopPropagation();
         e.preventDefault();
-        if (this.boxTip)
-            this.boxTip.close();
+        if (this.boxTip) this.boxTip.close();
         channel.air('/page/open', { item: { id: this.block.link.pageId } });
     }
     async openCreatePage(e: React.MouseEvent) {
@@ -84,6 +118,7 @@ export class TextContentView extends BlockView<TextContent>{
             delete pa.url;
             delete pa.text;
             this.block.onUpdateProps({ link: pa }, { range: BlockRenderRange.self })
+            this.block.syncRefLink(r.id);
         }
     }
     async onClearLink() {
@@ -112,7 +147,8 @@ export class TextContentView extends BlockView<TextContent>{
                     delete pageLink.text;
                 }
             }
-            this.block.onUpdateProps({ link: pageLink }, { range: BlockRenderRange.self })
+            this.block.onUpdateProps({ link: pageLink }, { range: BlockRenderRange.self });
+            this.block.syncRefLink(r.id);
         }
     }
     boxTip: BoxTip;

@@ -8,6 +8,7 @@ import { Icon } from "../../component/view/icon";
 import { Loading } from "../../component/view/loading";
 import { Remark } from "../../component/view/text";
 import { channel } from "../../net/channel";
+import { BlockUrlConstant } from "../../src/block/constant";
 import { KeyboardCode } from "../../src/common/keys";
 import { Point, Rect, RectUtility } from "../../src/common/vector/point";
 import { LinkPageItem } from "../at/declare";
@@ -77,15 +78,16 @@ class PageLinkSelector extends InputTextPopSelector {
     }
     private renderLinks() {
         return <div>
-            <a className={"shy-page-link-item" + (0 == this.selectIndex ? " selected" : "")} onMouseDown={e => this.onSelect({ name: 'create' })}>
-                <Icon size={14} icon={PlusSvg}></Icon><span>创建<b>{this.text || '新页面'}</b></span>
+            <a className={"h-30 gap-l-10 text item-hover cursor round padding-w-10 flex" + (0 == this.selectIndex ? " selected" : "")} onMouseDown={e => this.onSelect({ name: 'create' })}>
+                <Icon size={14} icon={PlusSvg}></Icon><span className="f-14">创建<b>{this.text || '新页面'}</b></span>
             </a>
             <Divider></Divider>
             {this.loading && <Loading></Loading>}
             {!this.loading && this.links.map((link, i) => {
-                return <a onMouseDown={e => this.onSelect(link)} className={"shy-page-link-item" + ((i + 1) == this.selectIndex ? " selected" : "")} key={link.id}><Icon size={14} icon={link.icon || PageSvg}></Icon><span>{link.text || '新页面'}</span></a>
+                return <a onMouseDown={e => this.onSelect(link)} className={"h-30 gap-l-10 text  item-hover cursor round padding-w-10 flex" + ((i + 1) == this.selectIndex ? " selected" : "")} key={link.id}>
+                    <Icon size={14} icon={link.icon || PageSvg}></Icon><span className="f-14">{link.text || '新页面'}</span></a>
             })}
-            {!this.loading && this.links.length == 0 && this.searchWord && <a className="shy-page-link-no"><Remark>没有搜索到</Remark></a>}
+            {!this.loading && this.links.length == 0 && this.searchWord && <a className="remark flex-center gap-h-10 f-14"><Remark>没有搜索到</Remark></a>}
         </div>
     }
     render() {
@@ -99,10 +101,10 @@ class PageLinkSelector extends InputTextPopSelector {
     }
     private onSelect(block) {
         if (block.name == 'create') {
-            this._select({ url: '/link/line', isLine: true, createPage: true, text: this.text })
+            this._select({ url: BlockUrlConstant.Text, isLine: true, content: this.text, link: { name: "create", text: this.text } })
         }
         else {
-            this._select({ url: '/link/line', isLine: true, pageId: block.id, text: block.text, icon: block.icon })
+            this._select({ url: BlockUrlConstant.Text, isLine: true, content: block.text, link: { name: 'page', pageId: block.id } })
         }
         this.close();
     }
@@ -188,16 +190,15 @@ class PageLinkSelector extends InputTextPopSelector {
                     var text = this.text;
                     this.close();
                     if ((block as any)?.name == 'create') {
-                        return { blockData: { url: '/link/line', isLine: true, createPage: true, text: text } }
+                        return { blockData: { url: BlockUrlConstant.Text, isLine: true, content: text, link: { name: 'create', text: text } } }
                     }
                     else if (block)
                         return {
                             blockData: {
-                                url: '/link/line',
+                                url: BlockUrlConstant.Text,
                                 isLine: true,
-                                pageId: block.id,
-                                text: block.text,
-                                icon: block.icon
+                                content: text,
+                                link: { name: "page", pageId: block.id }
                             }
                         };
                     else return false;
