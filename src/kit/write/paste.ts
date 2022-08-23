@@ -149,6 +149,10 @@ async function onPasteInsertText(kit: Kit, aa: AppearAnchor, text: string) {
     if (aa.isSolid) {
         kit.writer.onSolidInputCreateTextBlock(aa, undefined, text);
     }
+    else if (aa.isText && aa.block.isLine && !aa.block.next) {
+        this.onRowLastLineBlockCreateTextBlock(aa, undefined, text);
+        return;
+    }
     else {
         var content = aa.textContent;
         var sel = window.getSelection();

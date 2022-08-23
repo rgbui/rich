@@ -231,6 +231,10 @@ export class PageWrite {
             this.onSolidInputCreateTextBlock(aa, event);
             return;
         }
+        if (aa.isText && aa.block.isLine && !aa.block.next) {
+            this.onRowLastLineBlockCreateTextBlock(aa, event);
+            return;
+        }
         /**
          * 这里需要判断是否有必要弹出弹窗
          */
@@ -524,6 +528,24 @@ export class PageWrite {
             var text = aa.solidCursorEl.innerText;
             aa.solidCursorEl.innerHTML = '';
             var c = forceText ? forceText : text;
+            var newBlock = await aa.block.parent.appendBlock({
+                url: BlockUrlConstant.Text,
+                content: c
+            },
+                aa.block.at + 1,
+                aa.block.parentKey
+            );
+            this.kit.page.addUpdateEvent(async () => {
+                this.kit.writer.cursor.onFocusBlockAnchor(newBlock, { last: true, merge: true, render: true });
+            });
+        });
+    }
+    async onRowLastLineBlockCreateTextBlock(aa: AppearAnchor, event?: React.CompositionEvent | React.FormEvent<Element>, forceText?: string) {
+        await this.kit.page.onAction('onRowLastLineBlockCreateTextBlock', async () => {
+            var text = aa.textContent;
+            var oldValue = aa.propValue;
+            aa.setContent(oldValue);
+            var c = forceText ? forceText : text.slice(oldValue.length);
             var newBlock = await aa.block.parent.appendBlock({
                 url: BlockUrlConstant.Text,
                 content: c
