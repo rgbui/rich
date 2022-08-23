@@ -22,7 +22,6 @@ export class Page$Operator {
     * 
     */
     async createBlock(this: Page, url: string, data: Record<string, any>, parent: Block, at?: number, childKey?: string) {
-
         var block = await BlockFactory.createBlock(url, this, data, parent);
         if (parent) {
             if (typeof childKey == 'undefined') childKey = parent.childKey;
@@ -228,25 +227,34 @@ export class Page$Operator {
         }
     }
     async onOpenNav(this: Page, d: { nav: boolean }) {
-        this.onAction('onOpenNav', async () => {
+        await this.onAction('onOpenNav', async () => {
             this.updateProps({ nav: d.nav });
             if (this.requireSelectLayout == true) {
                 this.updateProps({ requireSelectLayout: false, 'pageLayout.type': PageLayoutType.doc });
             }
             if (d.nav == false) {
                 if (this.views.length > 1)
-                    await this.views[1].delete()
+                    await this.views.findAll((g, i) => i > 0).eachReverseAsync(async (b) => {
+                        await b.delete()
+                    })
             }
             else {
-                await this.createBlock(BlockUrlConstant.View,
-                    {
-                        url: BlockUrlConstant.View,
-                        blocks: { childs: [{ url: BlockUrlConstant.Outline }] }
-                    },
-                    undefined,
-                    undefined,
-                    undefined
-                )
+                if (this.views.length == 1)
+                    await this.createBlock(BlockUrlConstant.View,
+                        {
+                            url: BlockUrlConstant.View,
+                            blocks: { childs: [{ url: BlockUrlConstant.Outline }] }
+                        },
+                        undefined,
+                        undefined,
+                        undefined
+                    )
+                else {
+                    await this.createBlock(BlockUrlConstant.Outline,
+                        { url: BlockUrlConstant.Outline },
+                        this.views[1]
+                    )
+                }
             }
         })
         this.forceUpdate();
@@ -258,7 +266,7 @@ export class Page$Operator {
                 this.updateProps({ requireSelectLayout: false, 'pageLayout.type': PageLayoutType.doc });
             }
             if (d.refPages == false) {
-                var r = this.views.find(g => g.url == BlockUrlConstant.RefLinks);
+                var r = this.find(g => g.url == BlockUrlConstant.RefLinks);
                 if (r) await r.delete()
             }
             else {

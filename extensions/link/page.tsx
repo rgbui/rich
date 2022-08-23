@@ -72,20 +72,20 @@ class PageLinkSelector extends InputTextPopSelector {
         }
         this.loading = false;
         this.adjuctPosition();
-    }, 1200)
+    }, 700)
     private get isSelectIndex() {
         return this.selectIndex >= 0 && this.selectIndex < this.links.length;
     }
     private renderLinks() {
         return <div>
-            <a className={"h-30 gap-l-10 text item-hover cursor round padding-w-10 flex" + (0 == this.selectIndex ? " selected" : "")} onMouseDown={e => this.onSelect({ name: 'create' })}>
-                <Icon size={14} icon={PlusSvg}></Icon><span className="f-14">创建<b>{this.text || '新页面'}</b></span>
+            <a className={"h-30 gap-l-10 text item-hover cursor round padding-w-10 flex" + (0 == this.selectIndex ? " item-hover-focus" : "")} onMouseDown={e => this.onSelect({ name: 'create' })}>
+                <span className="flex flex-inline size-24 item-hover round">   <Icon size={14} icon={PlusSvg}></Icon></span><span className="f-14">创建<b>{this.text || '新页面'}</b></span>
             </a>
             <Divider></Divider>
             {this.loading && <Loading></Loading>}
             {!this.loading && this.links.map((link, i) => {
-                return <a onMouseDown={e => this.onSelect(link)} className={"h-30 gap-l-10 text  item-hover cursor round padding-w-10 flex" + ((i + 1) == this.selectIndex ? " selected" : "")} key={link.id}>
-                    <Icon size={14} icon={link.icon || PageSvg}></Icon><span className="f-14">{link.text || '新页面'}</span></a>
+                return <a onMouseDown={e => this.onSelect(link)} className={"h-30 gap-l-10 text  item-hover cursor round padding-w-10 flex" + ((i + 1) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
+                    <span className="flex flex-inline size-24 item-hover round"> <Icon size={14} icon={link.icon || PageSvg}></Icon></span> <span className="f-14">{link.text || '新页面'}</span></a>
             })}
             {!this.loading && this.links.length == 0 && this.searchWord && <a className="remark flex-center gap-h-10 f-14"><Remark>没有搜索到</Remark></a>}
         </div>
@@ -197,7 +197,7 @@ class PageLinkSelector extends InputTextPopSelector {
                             blockData: {
                                 url: BlockUrlConstant.Text,
                                 isLine: true,
-                                content: text,
+                                content:block.text,
                                 link: { name: "page", pageId: block.id }
                             }
                         };
