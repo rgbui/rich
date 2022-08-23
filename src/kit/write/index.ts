@@ -231,7 +231,7 @@ export class PageWrite {
             this.onSolidInputCreateTextBlock(aa, event);
             return;
         }
-        if (aa.isText && aa.block.isLine && !aa.block.next) {
+        if (aa.isText && aa.block.isLine && !(aa.block.isTextContent && aa.block.asTextContent.isBlankPlain) && !aa.block.next) {
             this.onRowLastLineBlockCreateTextBlock(aa, event);
             return;
         }

@@ -93,6 +93,13 @@ export class TextContent extends Block {
             }
         })
     }
+    get isBlankPlain() {
+        if (this.link) return false;
+        if (this.code == true) return false;
+        if (this.pattern.getFontStyle()?.color) return false;
+        if (this.pattern.getFillStyle()?.color) return false;
+        return true;
+    }
 }
 @view('/text')
 export class TextContentView extends BlockView<TextContent>{
