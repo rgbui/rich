@@ -70,7 +70,7 @@ export class TitleView extends BlockView<Title>{
                 this.block.pageInfo.text = pageInfo.text;
                 isUpdate = true;
             }
-            if (typeof pageInfo.icon != 'undefined' && !lodash.isNull(pageInfo.icon) && JSON.stringify(pageInfo.icon) != JSON.stringify(this.block.pageInfo.icon)) {
+            if (typeof pageInfo.icon != 'undefined') {
                 this.block.pageInfo.icon = lodash.cloneDeep(pageInfo.icon);
                 isUpdate = true;
             }
