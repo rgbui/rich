@@ -329,7 +329,6 @@ export class PageWrite {
                 var bd = lodash.cloneDeep(blockData);
                 delete bd.isLine;
                 delete bd.url;
-                console.log(bd);
                 if (blockData.isLine) {
                     /**
                      * 说明创建的是行内块

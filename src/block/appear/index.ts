@@ -265,7 +265,7 @@ export class AppearAnchor {
                         ...props
                     })),
                     at + 1,
-                    this.block.parent.childKey
+                    'childs'
                 );
                 bs.addRange(rs);
             };
