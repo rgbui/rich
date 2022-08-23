@@ -52,6 +52,9 @@ export class Title extends Block {
             }
         }
     }
+    get handleBlock() {
+        return null;
+    }
 }
 @view('/title')
 export class TitleView extends BlockView<Title>{
@@ -93,9 +96,9 @@ export class TitleView extends BlockView<Title>{
         }
         var isAdd: boolean = this.block.page.isSupportCover;
         return <div className='sy-block-page-info' style={this.block.visibleStyle}>
-            {this.block.pageInfo?.icon && this.block.page.cover?.abled !== true && <div onMouseDown={e => changeIcon(e)} className="sy-block-page-info-icon">
+            <div className="min-h-72">{this.block.pageInfo?.icon && this.block.page.cover?.abled !== true && <div onMouseDown={e => changeIcon(e)} className="sy-block-page-info-icon">
                 <Icon size={72} icon={this.block.pageInfo?.icon}></Icon>
-            </div>}
+            </div>}</div>
             {isAdd && (!this.block.pageInfo?.icon || !this.block.page.cover?.abled) && <div className='sy-block-page-info-operators' >
                 {!this.block.pageInfo?.icon && <a onMouseDown={e => this.block.page.onAddIcon()}><Icon size={14} icon={AddPageIconSvg}></Icon><span>添加图标</span></a>}
                 {!this.block.page.cover?.abled && <a onMouseDown={e => this.block.page.onAddCover()}><Icon size={14} icon={AddPageCoverSvg}></Icon><span>添加封面</span></a>}
