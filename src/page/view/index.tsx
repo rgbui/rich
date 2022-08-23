@@ -217,6 +217,7 @@ export class PageView extends Component<{ page: Page }>{
     }
     async AutomaticHandle() {
         var isForceUpdate: boolean = false;
+       
         if (this.page.pageLayout.type == PageLayoutType.doc && this.page.requireSelectLayout == false) {
             if (this.page.autoRefPages == true) {
                 if (!this.page.exists(g => g.url == BlockUrlConstant.RefLinks)) {
@@ -239,6 +240,7 @@ export class PageView extends Component<{ page: Page }>{
         }
         if (this.page.requireSelectLayout == true) {
             var items = await this.page.pageInfo.getSubItems();
+         
             if (items.length > 0) {
                 this.page.requireSelectLayout = false;
                 this.page.pageLayout.type = PageLayoutType.doc;

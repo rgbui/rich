@@ -118,6 +118,7 @@ export class Page$Cycle {
                 }
             }
         })
+        await this.onRepair();
     }
     async get(this: Page) {
         var json: Record<string, any> = {
@@ -410,6 +411,10 @@ export class Page$Cycle {
     async onRepair(this: Page) {
         var rs: Block[] = [];
         await this.views.eachAsync(async (view) => {
+            if (view.url != BlockUrlConstant.View) {
+                rs.push(view);
+                return;
+            }
             view.eachReverse(b => {
                 /**
                  * 如果是空文本块，则删除掉空文本块
