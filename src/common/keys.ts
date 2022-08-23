@@ -15,14 +15,16 @@ export enum KeyboardCode {
     Y = 'Y',
     S = 'S',
     Esc = 'Escape',
-    X = 'X'
+    X = 'X',
+    "\\" = '\\',
+    "\/" = "/"
 }
 export class KeyboardPlate {
     private altKey: boolean = false;
     private ctrlKey: boolean = false;
     private metaKey: boolean = false;
     private shiftKey: boolean = false;
-    private keys: KeyboardCode[] = [];
+    keys: KeyboardCode[] = [];
     private isKeyUped: boolean = true;
     private lastKeydownDate: number;
     /**
@@ -58,7 +60,7 @@ export class KeyboardPlate {
     keyup(event: KeyboardEvent) {
         this.isKeyUped = true;
         delete this.lastKeydownDate;
-        this.keys=[];
+        this.keys = [];
     }
     is(...codes: KeyboardCode[]) {
         return this.keys.exists(g => codes.exists(c => c.toLowerCase() == g.toLowerCase()));

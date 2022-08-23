@@ -14,6 +14,7 @@ import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
 import { BlockUrlConstant } from "../../block/constant";
 import { BlockRenderRange } from "../../block/enum";
+import { KeyboardCode } from "../../common/keys";
 import { Rect } from "../../common/vector/point";
 import { InputForceStore, InputStore } from "./store";
 
@@ -29,7 +30,7 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
         var data = ev.data;
         var textContent = aa.textContent;
         var data2 = textContent.slice(offset - 2, offset);
-        if (data == '/' || data == '、') {
+        if (data == '/' || data == '、' && write.kit.page.keyboardPlate.is(KeyboardCode['/'])) {
             write.inputPop = {
                 rect,
                 type: InputTextPopSelectorType.BlockSelector,
