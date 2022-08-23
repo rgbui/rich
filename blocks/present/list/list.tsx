@@ -112,7 +112,7 @@ export class ListView extends BlockView<List>{
     renderListType() {
         if (this.block.listType == ListType.circle) return <span className='sy-block-list-text-type'>•</span>
         else if (this.block.listType == ListType.arrow) {
-            return <span className='sy-block-list-text-type text ts-transform'
+            return <span className='sy-block-list-text-type text ts-transform round item-hover'
                 style={{
                     cursor: 'pointer',
                     transform: this.block.expand ? 'rotateZ(180deg)' : 'rotateZ(90deg)',
@@ -121,7 +121,7 @@ export class ListView extends BlockView<List>{
                     e.stopPropagation();
                     this.block.onExpand();
                 }}>
-                <Icon size={12} icon={TriangleSvg}></Icon>
+                <Icon size={10} icon={TriangleSvg}></Icon>
             </span>
         }
         else if (this.block.listType == ListType.number) {
