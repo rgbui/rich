@@ -264,6 +264,7 @@ export class Page$Cycle {
             })
     }
     private async onNotifyChanged(this: Page) {
+        var ua = this.snapshoot.action;
         /**
          * 这里主要是同步大纲
          * 双链的引用数据更新
@@ -302,7 +303,7 @@ export class Page$Cycle {
                         if (block.url == BlockUrlConstant.Head) changes.head = true;
                         if (Object.keys(op.data.new_value).includes('content')) {
                             var rb = block.closest(x => x.isBlock);
-                            if (rb.exists(g => g.isTextBlock && g.asTextContent?.link?.name == 'page')) {
+                            if (rb && rb.exists(g => g.isTextBlock && g.asTextContent?.link?.name == 'page')) {
                                 var rb = block.closest(g => g.isBlock);
                                 blockSyncs.updates.push({ rowBlockId: rb.id, text: JSON.stringify(rb.childs.map(c => c.get())) })
                             }

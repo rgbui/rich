@@ -95,13 +95,13 @@ class PageLinkSelector extends InputTextPopSelector {
             top: this.pos.y,
             left: this.pos.x
         }
-        return <div>
+        return <div ref={e=>this.el=e}>
             {this.visible && <div className='shy-page-link' style={style}>{this.renderLinks()}</div>}
         </div>
     }
     private onSelect(block) {
         if (block.name == 'create') {
-            this._select({ url: BlockUrlConstant.Text, isLine: true, content: this.text, link: { name: "create", text: this.text } })
+            this._select({ url: BlockUrlConstant.Text, isLine: true, content: this.text || "新页面", link: { name: "create", text: this.text } })
         }
         else {
             this._select({ url: BlockUrlConstant.Text, isLine: true, content: block.text, link: { name: 'page', pageId: block.id } })
@@ -161,7 +161,7 @@ class PageLinkSelector extends InputTextPopSelector {
         document.removeEventListener('mousedown', this.onGlobalMousedown);
     }
     componentDidUpdate() {
-        var el = this.el.querySelector('.selected') as HTMLElement;
+        var el = this.el.querySelector('.item-hover-focus') as HTMLElement;
         if (el) {
             el.scrollIntoView({
                 block: "nearest",
@@ -190,14 +190,14 @@ class PageLinkSelector extends InputTextPopSelector {
                     var text = this.text;
                     this.close();
                     if ((block as any)?.name == 'create') {
-                        return { blockData: { url: BlockUrlConstant.Text, isLine: true, content: text, link: { name: 'create', text: text } } }
+                        return { blockData: { url: BlockUrlConstant.Text, isLine: true, content: text || '新页面', link: { name: 'create', text: text || '新页面' } } }
                     }
                     else if (block)
                         return {
                             blockData: {
                                 url: BlockUrlConstant.Text,
                                 isLine: true,
-                                content:block.text,
+                                content: block.text,
                                 link: { name: "page", pageId: block.id }
                             }
                         };

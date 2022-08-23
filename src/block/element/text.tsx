@@ -57,8 +57,8 @@ export class TextContent extends Block {
         }
         return false;
     }
-    didMount() {
-        this.createLink();
+    async didMounted() {
+        await this.createLink();
     }
     async createLink() {
         if (this.createSource == 'InputBlockSelector') {
@@ -74,7 +74,7 @@ export class TextContent extends Block {
                         pa.name = 'page';
                         delete pa.url;
                         delete pa.text;
-                        this.onUpdateProps({ link: pa }, { range: BlockRenderRange.self, merge: true })
+                        await this.onUpdateProps({ link: pa }, { range: BlockRenderRange.self, merge: true })
                         this.syncRefLink(r.id);
                     }
                 }
