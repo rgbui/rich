@@ -61,6 +61,10 @@ flex-fixed:固定大小
     display: inline-flex;
 }
 
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
 .flex-full {
     display        : flex;
     justify-content: flex-start;
@@ -68,7 +72,8 @@ flex-fixed:固定大小
     flex-wrap      : nowrap;
 }
 
-.flex-column {
+.flex-column,
+.flex-col {
     flex-direction: column;
 }
 
@@ -360,7 +365,7 @@ item-selected:选中的效果
 }
 
 .item-hover-focus {
-    background-color: rgba(55, 53, 47, 0.08);
+    background-color: rgba(55, 53, 47, 0.1);
 }
 
 .item-hover-light {
@@ -665,7 +670,6 @@ each(@selectors, {
     width: 100%;
 }
 
-
 @ops: 1, 0, 2, 4, 6, 8, 9, 7, 5;
 
 each(@ops, {
@@ -916,6 +920,10 @@ each(@ops, {
 
 .bg {
     background-color: rgba(55, 53, 47, 0.08);
+}
+
+.border {
+    border: 1px solid rgba(55, 53, 47, 0.08);
 }
 
 .break-normal {
