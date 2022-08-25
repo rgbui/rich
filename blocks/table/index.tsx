@@ -190,7 +190,7 @@ export class Table extends Block {
     async onRemoveColumn(columnIndex: number) {
         this.page.onAction('table.columnIndex', async () => {
             var cs = lodash.cloneDeep(this.cols);
-            cs.splice(columnIndex,1);
+            cs.splice(columnIndex, 1);
             var rows = this.childs;
             await rows.eachReverseAsync(async (row) => {
                 await row.childs[columnIndex].delete()
@@ -535,7 +535,7 @@ export class TableView extends BlockView<Table>{
                         ghostView.unload();
                     }
                     else {
-
+                        self.isMoveLine = false;
                     }
                 }
             })
@@ -615,7 +615,8 @@ export class TableView extends BlockView<Table>{
     leftDrag: HTMLElement;
     private isMoveLine: boolean = false;
     render() {
-        return <div className='sy-block-table' style={this.block.visibleStyle}
+        return <div style={this.block.visibleStyle}><div className='sy-block-table'
+            style={this.block.contentStyle}
             onMouseMove={e => this.mousemove(e.nativeEvent)} onMouseLeave={e => this.onMouseleave()}>
             <div className='sy-block-table-box' ref={e => this.box = e}>
                 <table ref={e => this.table = e}>
@@ -640,6 +641,6 @@ export class TableView extends BlockView<Table>{
                 <div onMouseDown={e => this.onMousedownResize(e, 'right')} ref={e => this.rightPlus = e} className="sy-block-table-right-plus"><Icon size={10} icon={PlusSvg}></Icon></div>
                 <div onMouseDown={e => this.onMousedownResize(e, 'resize')} ref={e => this.resizePlus = e} className="sy-block-table-resize-plus"><Icon size={10} icon={PlusSvg}></Icon></div>
             </div>
-        </div>
+        </div></div>
     }
 }

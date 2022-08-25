@@ -11,6 +11,8 @@ import { Point } from "../../src/common/vector/point";
 import { TableRow } from "./row";
 import { MenuItemType } from "../../component/view/menu/declare";
 import lodash from "lodash";
+import { ArrowDownSvg, ArrowLeftSvg, ArrowRightSvg, ArrowUpSvg, BlockcolorSvg, CloseTickSvg, TrashSvg } from "../../component/svgs";
+import { BackgroundColorList, FontColorList } from "../../extensions/color/data";
 
 @url('/table/cell')
 export class TableCell extends Block {
@@ -36,7 +38,7 @@ export class TableCellView extends BlockView<TableCell>{
             await this.block.page.onAction(ActionDirective.onCreateBlockByEnter, async () => {
                 var newBlock = await this.block.page.createBlock(BlockUrlConstant.TextSpan, {}, this.block);
                 newBlock.mounted(() => {
-                    this.block.page.kit.writer.cursor.onFocusBlockAnchor(newBlock,{render:true,merge:true});
+                    this.block.page.kit.writer.cursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
                 })
             });
         }
@@ -44,88 +46,197 @@ export class TableCellView extends BlockView<TableCell>{
     async onContextMenu(event: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>) {
         event.preventDefault();
         event.stopPropagation();
-        var result = await useSelectMenuItem({ roundPoint: Point.from(event) },
-            [
-                { text: '在上方插入一行', name: 'up' },
-                { text: '在下方插入一行', name: 'down' },
-                { text: '在左边插入一列', name: 'left' },
-                { text: '在右侧插入一列', name: 'right' },
+        try {
+            function getColors(name?: string, options?: { font: string, fill: string }) {
+                if (!name) name = '';
+                else name = name + '-'
+                return [
+                    {
+                        text: '文字颜色',
+                        type: MenuItemType.text
+                    },
+                    {
+                        name: name + 'fontColor',
+                        type: MenuItemType.color,
+                        options: FontColorList.map(f => {
+                            return {
+                                text: f.text,
+                                overlay: f.text,
+                                value: f.color,
+                                checked: options?.font == f.color ? true : false
+                            }
+                        })
+                    },
+                    {
+                        type: MenuItemType.divide
+                    },
+                    {
+                        text: '背景颜色',
+                        type: MenuItemType.text
+                    },
+                    {
+                        type: MenuItemType.color,
+                        name: name + 'fillColor',
+                        options: BackgroundColorList.map(f => {
+                            return {
+                                text: f.text,
+                                value: f.color,
+                                checked: options?.fill == f.color ? true : false
+                            }
+                        })
+                    },
+                ]
+            }
+            var items = [
+                { icon: ArrowUpSvg, text: '在上方插入一行', name: 'up' },
+                { icon: ArrowDownSvg, text: '在下方插入一行', name: 'down' },
+                { icon: ArrowLeftSvg, text: '在左边插入一列', name: 'left' },
+                { icon: ArrowRightSvg, text: '在右侧插入一列', name: 'right' },
+                { type: MenuItemType.divide },
+                {
+                    text: '所在行颜色',
+                    icon: BlockcolorSvg,
+                    childs: getColors('row', {
+                        font: this.block.parent?.pattern?.getFontStyle()?.color,
+                        fill: this.block.parent?.pattern?.getFillStyle()?.color
+                    })
+                },
+                {
+                    text: '所在列颜色',
+                    icon: BlockcolorSvg,
+                    childs: getColors('col', {
+                        font: this.block?.pattern?.getFontStyle()?.color,
+                        fill: this.block?.pattern?.getFillStyle()?.color
+                    })
+                },
                 { type: MenuItemType.divide },
                 { name: 'delRow', text: '删除所在行', },
                 { name: 'delCol', text: '删除所在列' },
                 { type: MenuItemType.divide },
-                { text: '清空', name: 'clear' }
+                { icon: TrashSvg, text: '清空单元格', name: 'clear' },
+                {
+                    text: '单元格颜色',
+                    icon: BlockcolorSvg,
+                    childs: getColors(undefined, {
+                        font: this.block.pattern?.getFontStyle()?.color,
+                        fill: this.block.pattern?.getFillStyle()?.color
+                    })
+                },
             ]
-        );
-        if (result) {
-            switch (result.item.name) {
-                case 'left':
-                    this.block.page.onAction('table.' + result.item.name, async () => {
+            console.log(items,  Point.from(event));
+            var result = await useSelectMenuItem({ roundPoint: Point.from(event) },
+                items
+            );
+
+            if (result) {
+                switch (result.item.name) {
+                    case 'left':
+                        this.block.page.onAction('table.' + result.item.name, async () => {
+                            var at = this.block.at;
+                            var table = this.block.row.table;
+                            var cs = lodash.cloneDeep(table.cols);
+                            cs.splice(at, 0, { width: 250 });
+                            await table.updateProps({ cols: cs }, BlockRenderRange.self);
+                            await table.childs.eachAsync(async (row) => {
+                                await row.page.createBlock('/table/cell', {}, row, at);
+                            })
+                        });
+                        break;
+                    case 'right':
+                        this.block.page.onAction('table.' + result.item.name, async () => {
+                            var at = this.block.at;
+                            var table = this.block.row.table;
+                            var cs = lodash.cloneDeep(table.cols);
+                            cs.splice(at + 1, 0, { width: 250 });
+                            await table.updateProps({ cols: cs }, BlockRenderRange.self);
+                            await table.childs.eachAsync(async (row) => {
+                                await row.page.createBlock('/table/cell', {}, row, at + 1);
+                            })
+                        });
+                        break;
+                    case 'up':
+                        this.block.page.onAction('table.' + result.item.name, async () => {
+                            var at = this.block.row.at;
+                            var cs = this.block.row.table.cols.map(c => {
+                                return {
+                                    url: '/table/cell'
+                                }
+                            })
+                            await this.block.page.createBlock('/table/row', { blocks: { childs: cs } }, this.block.row.table, at);
+                        });
+                        break;
+                    case 'down':
+                        this.block.page.onAction('table.' + result.item.name, async () => {
+                            var at = this.block.row.at;
+                            var cs = this.block.row.table.cols.map(c => {
+                                return {
+                                    url: '/table/cell'
+                                }
+                            })
+                            await this.block.page.createBlock('/table/row', { blocks: { childs: cs } }, this.block.row.table, at + 1);
+                        });
+                        break;
+                    case 'delRow':
+                        this.block.page.onAction('table.' + result.item.name, async () => {
+                            await this.block.row.delete()
+                        })
+                        break;
+                    case 'delCol':
+                        this.block.row.table.onRemoveColumn(this.block.at);
+                        break;
+                    case 'clear':
+                        this.block.page.onAction('table.' + result.item.name, async () => {
+                            var cs = this.block.childs.map(c => c);
+                            await cs.eachAsync(async (c) => await c.delete())
+                        })
+                        break;
+                    case 'fontColor':
+                        this.block.page.onAction('setFontStyle', async () => {
+                            this.block.pattern.setFontStyle({ color: result.item.value });
+                        })
+                        break;
+                    case 'fillColor':
+                        this.block.page.onAction('setFillStyle', async () => {
+                            this.block.pattern.setFillStyle({ mode: 'color', color: result.item.value })
+                        })
+                        break;
+                    case 'row-fontColor':
+                        this.block.page.onAction('setFontStyle', async () => {
+                            this.block.parent.pattern.setFontStyle({ color: result.item.value });
+                        })
+                        break;
+                    case 'row-fillColor':
+                        this.block.page.onAction('setFillStyle', async () => {
+                            this.block.parent.pattern.setFillStyle({ mode: 'color', color: result.item.value })
+                        })
+                        break;
+                    case 'col-fontColor':
                         var at = this.block.at;
-                        var table = this.block.row.table;
-                        var cs = lodash.cloneDeep(table.cols);
-                        cs.splice(at, 0, { width: 250 });
-                        await table.updateProps({ cols: cs }, BlockRenderRange.self);
-                        await table.childs.eachAsync(async (row) => {
-                            await row.page.createBlock('/table/cell', {}, row, at);
+                        this.block.page.onAction('setFontStyle', async () => {
+                            this.block.parent.parent.childs.forEach(row => {
+                                row.childs[at].pattern.setFontStyle({ color: result.item.value });
+                            })
                         })
-                    });
-                    break;
-                case 'right':
-                    this.block.page.onAction('table.' + result.item.name, async () => {
+                        break;
+                    case 'col-fillColor':
                         var at = this.block.at;
-                        var table = this.block.row.table;
-                        var cs = lodash.cloneDeep(table.cols);
-                        cs.splice(at + 1, 0, { width: 250 });
-                        await table.updateProps({ cols: cs }, BlockRenderRange.self);
-                        await table.childs.eachAsync(async (row) => {
-                            await row.page.createBlock('/table/cell', {}, row, at + 1);
+                        this.block.page.onAction('setFillStyle', async () => {
+                            this.block.parent.parent.childs.forEach(row => {
+                                row.childs[at].pattern.setFillStyle({ mode: 'color', color: result.item.value })
+                            })
                         })
-                    });
-                    break;
-                case 'up':
-                    this.block.page.onAction('table.' + result.item.name, async () => {
-                        var at = this.block.row.at;
-                        var cs = this.block.row.table.cols.map(c => {
-                            return {
-                                url: '/table/cell'
-                            }
-                        })
-                        await this.block.page.createBlock('/table/row', { blocks: { childs: cs } }, this.block.row.table, at);
-                    });
-                    break;
-                case 'down':
-                    this.block.page.onAction('table.' + result.item.name, async () => {
-                        var at = this.block.row.at;
-                        var cs = this.block.row.table.cols.map(c => {
-                            return {
-                                url: '/table/cell'
-                            }
-                        })
-                        await this.block.page.createBlock('/table/row', { blocks: { childs: cs } }, this.block.row.table, at + 1);
-                    });
-                    break;
-                case 'delRow':
-                    this.block.page.onAction('table.' + result.item.name, async () => {
-                        await this.block.row.delete()
-                    })
-                    break;
-                case 'delCol':
-                    this.block.row.table.onRemoveColumn(this.block.at);
-                    break;
-                case 'clear':
-                    this.block.page.onAction('table.' + result.item.name, async () => {
-                        var cs = this.block.childs.map(c => c);
-                        await cs.eachAsync(async (c) => await c.delete())
-                    })
-                    break;
+                        break;
+                }
             }
         }
+        catch (ex) {
+            console.error(ex);
+            this.block.page.onError(ex);
+        }
+
     }
     render() {
-        var style: Record<string, any> = {
-
-        };
+        var style = this.block.pattern.style;
         return <td style={style}
             onMouseDown={e => this.mousedown(e)}
             onContextMenu={e => this.onContextMenu(e)}
