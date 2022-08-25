@@ -139,7 +139,7 @@ export class MenuItemView extends React.Component<{
             {item.type == MenuItemType.input && <div className="shy-menu-box-item-input"><Input size={'small'} value={item.value} onEnter={e => { item.value = e; this.select(item) }} onChange={e => { item.value = e; this.input(e, item) }} placeholder={item.text}></Input></div>}
             {item.type == MenuItemType.button && <div className="shy-menu-box-item-button"><Button icon={item.icon} disabled={item.disabled} block onClick={e => item.buttonClick != 'click' ? this.select(item, e.nativeEvent) : this.click(item, e)}>{item.text}</Button></div>}
             {item.type == MenuItemType.select && <div className="shy-menu-box-item-select">
-                {item.icon &&<i className="flex-center flex-inline size-20"><Icon icon={item.icon}  size={item.iconSize ? item.iconSize : 14}></Icon></i>}
+                {item.icon && <i className="flex-center flex-inline size-20"><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 14}></Icon></i>}
                 {item.renderIcon && item.renderIcon(item, this)}
                 <span className='shy-menu-box-item-option-text'>{item.text}</span>
                 <span className="shy-menu-box-item-select-value" onMouseDown={e => this.openSelectMenu(item, e)}>
@@ -158,9 +158,17 @@ export class MenuItemView extends React.Component<{
                     return <ToolTip key={btn.name} overlay={btn.overlay} placement={btn.placement || 'top'} ><em className="btn" onMouseUp={e => { e.stopPropagation(); this.click(item, e, btn.name) }}><Icon size={14} icon={btn.icon}></Icon></em></ToolTip>
                 })}
             </div></ToolTip>}
-            {item.type == MenuItemType.color && <div className="shy-menu-box-item-colors">
+            {item.type == MenuItemType.color && <div className="shy-menu-box-item-colors flex-top flex-wrap gap-h-10">
                 {item.options.map(t => {
-                    return <ToolTip overlay={t.overlay} ><a className="round size-24 item-hover " style={{ backgroundColor: t.value }} onMouseDown={e => { e.stopPropagation(); this.input(t.value, t) }}></a></ToolTip>
+                    return <ToolTip key={t.value} overlay={t.overlay} ><a className={"flex-center flex-col cursor padding-5 gap-w-5 round item-hover " + (t.checked ? "item-hover-focus" : "")}
+                        onMouseUp={e => { e.stopPropagation(); item.value = t.value; this.select(item, e.nativeEvent) }}>
+                        {item.name && item.name.indexOf('font') > -1 && <span className="size-24 flex-center circle  border" style={{ color: t.value }}>
+                            A
+                        </span>}
+                        {!(item.name && item.name.indexOf('font') > -1) && <span className="size-20 circle   border" style={{ backgroundColor: t.value }}>
+                        </span>}
+                        <span className="f-12 text-1">{t.text}</span>
+                    </a></ToolTip>
                 })}
             </div>}
             {item?.childs?.length > 0 && this.hover && <MenuBox parent={this.props.parent} select={this.props.select} click={this.props.click} input={this.props.input} items={item.childs} ref={e => this.menubox = e} deep={this.props.deep}></MenuBox>}

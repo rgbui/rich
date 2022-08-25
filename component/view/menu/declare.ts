@@ -6,7 +6,7 @@ export type MenuItem<T = string> = {
     type?: MenuItemType,
     text?: string,
     icon?: string | SvgrComponent | JSX.Element,
-    overlay?: JSX.Element,
+    overlay?: JSX.Element|string,
     placement?: OverlayPlacement,
     renderIcon?: (item: MenuItem<T>, view?: MenuItemView) => JSX.Element,
     render?: (item: MenuItem<T>, view?: MenuItemView) => JSX.Element,
