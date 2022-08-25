@@ -29,7 +29,7 @@ export class HandleView extends React.Component<{ handle: Handle }>{
                 await self.handle.kit.page.onAction('handle.plus.create', async () => {
                     var block = await b.visibleDownCreateBlock(BlockUrlConstant.TextSpan);
                     self.handle.kit.page.addUpdateEvent(async () => {
-                        self.handle.kit.writer.cursor.onFocusBlockAnchor(block,{render:true,merge:true});
+                        self.handle.kit.writer.cursor.onFocusBlockAnchor(block, { render: true, merge: true });
                     })
                 })
             }
@@ -38,7 +38,7 @@ export class HandleView extends React.Component<{ handle: Handle }>{
             await self.handle.kit.page.onAction('handle.plus.create', async () => {
                 var block = await self.handle.handleBlock.visibleDownCreateBlock(BlockUrlConstant.TextSpan);
                 self.handle.kit.page.addUpdateEvent(async () => {
-                    self.handle.kit.writer.cursor.onFocusBlockAnchor(block,{render:true,merge:true});
+                    self.handle.kit.writer.cursor.onFocusBlockAnchor(block, { render: true, merge: true });
                 })
             })
         }
@@ -87,8 +87,8 @@ export class HandleView extends React.Component<{ handle: Handle }>{
                     moving(ev, data, isend) {
                         if (ghostView.containEl(ev.target as HTMLElement)) return;
                         self.handle.onDropOverBlock(self.handle.kit.page.getBlockByMouseOrPoint(ev), ev);
-                        ghostView.move(Point.from(ev).move(50, 50));
-                        onAutoScroll({ el: self.handle.kit.page.root, feelDis: 100, dis:30,interval:50, point: Point.from(ev) })
+                        ghostView.move(Point.from(ev).move(20, 20));
+                        onAutoScroll({ el: self.handle.kit.page.root, feelDis: 100, dis: 30, interval: 50, point: Point.from(ev) })
                     },
                     async moveEnd(ev, isMove, data) {
                         onAutoScrollStop();
