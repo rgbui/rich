@@ -147,7 +147,7 @@ export class ListView extends BlockView<List>{
             return <TextArea block={this.block} prop='content' placeholder={'键入文字或"/"选择'}></TextArea>
     }
     render() {
-        return <div className='sy-block-list' style={this.block.visibleStyle} >
+        return <div style={this.block.visibleStyle}><div className='sy-block-list' style={this.block.contentStyle}>
             <div className='sy-block-list-text'>
                 {this.renderListType()}
                 <div className='sy-block-list-text-content'>{this.renderText()}</div>
@@ -155,6 +155,6 @@ export class ListView extends BlockView<List>{
             {this.block.isExpand && <div className='sy-block-list-subs'>
                 <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>
             </div>}
-        </div>
+        </div></div>
     }
 }
