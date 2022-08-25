@@ -3,7 +3,7 @@ import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { BlockDirective, BlockRenderRange } from "../enum";
 import duplicate from "../../assert/svg/duplicate.svg";
 // import loop from "../../assert/svg/loop.svg";
-import blockcolor from "../../assert/svg/blockcolor.svg";
+// import blockcolor from "../../assert/svg/blockcolor.svg";
 // import link from "../../assert/svg/link.svg";
 import squareplus from "../../assert/svg/squareplus.svg";
 import moveTo from '../../assert/svg/moveTo.svg';
@@ -18,9 +18,9 @@ import { Point, Rect } from "../../common/vector/point";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { CopyText } from "../../../component/copy";
 import { ShyAlert } from "../../../component/lib/alert";
-import { LinkSvg, LoopSvg } from "../../../component/svgs";
+import { BlockcolorSvg, LinkSvg, LoopSvg } from "../../../component/svgs";
 import lodash from "lodash";
-
+import { FontColorList, BackgroundColorList } from "../../../extensions/color/data";
 
 export class Block$Event {
     /**
@@ -48,7 +48,7 @@ export class Block$Event {
         if (this.isFreeBlock) {
             return await this.onGetBoardContextMenus()
         }
-        var items: MenuItem<BlockDirective>[] = [];
+        var items: MenuItem<BlockDirective | string>[] = [];
         items.push({
             name: BlockDirective.delete,
             icon: trash,
@@ -99,15 +99,49 @@ export class Block$Event {
         //     icon: comment,
         //     disabled: true
         // });
-        // items.push({
-        //     type: MenuItemTypeValue.divide
-        // });
-        // items.push({
-        //     name: BlockDirective.color,
-        //     text: langProvider.getText(LangID.menuColor),
-        //     icon: blockcolor,
-        //     disabled: true
-        // });
+        items.push({
+            type: MenuItemType.divide
+        });
+        items.push({
+            text: '颜色',
+            icon:BlockcolorSvg,
+            childs: [
+                {
+                    text: '文字颜色',
+                    type: MenuItemType.text
+                },
+                {
+                    name: 'fontColor',
+                    type: MenuItemType.color,
+                    options: FontColorList.map(f => {
+                        return {
+                            text: f.text,
+                            overlay: f.text,
+                            value: f.color,
+                            checked: this.pattern?.getFontStyle()?.color == f.color ? true : false
+                        }
+                    })
+                },
+                {
+                    type: MenuItemType.divide
+                },
+                {
+                    text: '背景颜色',
+                    type: MenuItemType.text
+                },
+                {
+                    type: MenuItemType.color,
+                    name: 'fillColor',
+                    options: BackgroundColorList.map(f => {
+                        return {
+                            text: f.text,
+                            value: f.color,
+                            checked: this.pattern?.getFillStyle()?.color == f.color ? true : false
+                        }
+                    })
+                },
+            ]
+        });
         return items;
     }
     async onGetBoardContextMenus(this: Block) {
@@ -187,7 +221,15 @@ export class Block$Event {
                 break;
             case BlockDirective.comment:
                 break;
-            case BlockDirective.color:
+            case 'fontColor':
+                this.page.onAction('setFontStyle', async () => {
+                    this.pattern.setFontStyle({ color: item.value });
+                })
+                break;
+            case 'fillColor':
+                this.page.onAction('setFillStyle', async () => {
+                    this.pattern.setFillStyle({ mode: 'color', color: item.value })
+                })
                 break;
         }
     }

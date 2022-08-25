@@ -209,35 +209,54 @@ export abstract class Block extends Events {
             Object.assign(style, this.transformStyle);
         }
         else {
-            if (this.isCol)
-                Object.assign(style, {
-                    width: ((this as any).widthPercent || 100) + '%'
-                });
-            if (this.parent?.isRow && !this.parent.isPart) {
-                Object.assign(style, {
-                    width: ((this as any).widthPercent || 100) + '%'
-                });
-            }
             if (this.isBlock) {
                 Object.assign(style, {
-                    padding: '7px 0px 3px 0px'
+                    paddingTop: 2,
+                    paddingBottom: 2,
                 });
             }
         }
-        Object.assign(style, this.pattern.style);
+        var s = this.pattern.style;
+        delete s.backgroundColor;
+        Object.assign(style, s);
         return style;
     }
-    get marginStyle() {
-        var style: CSSProperties = {
-            paddingTop: 4
-        };
+    get boxStyle() {
+        var style: CSSProperties = {};
+        if (this.isFreeBlock) {
+            style.position = 'absolute';
+            style.zIndex = this.zindex;
+            style.top = 0;
+            style.left = 0;
+            style.transformOrigin = '0% 0%';
+            Object.assign(style, this.transformStyle);
+        }
+        else {
+            if (this.isBlock) {
+                Object.assign(style, {
+                    paddingLeft: 2,
+                    paddingRight: 2,
+                });
+            }
+        }
+        var s = this.pattern.style;
+        if (s.color) style.color = s.color;
+        Object.assign(style, this.pattern.style);
+        var s = this.pattern.style;
+        if (s.backgroundColor) style.backgroundColor = s.backgroundColor;
+        style.borderRadius = 4;
         return style;
     }
     get contentStyle() {
         var style: CSSProperties = {
             paddingTop: 3,
+            paddingLeft: 2,
+            paddingRight: 2,
             paddingBottom: 3
         };
+        var s = this.pattern.style;
+        if (s.backgroundColor) style.backgroundColor = s.backgroundColor;
+        style.borderRadius = 4;
         return style;
     }
     protected display: BlockDisplay;
