@@ -42,22 +42,22 @@ export var rules: DetectorRule[] = [
     },
     {
         operator: DetectorOperator.firstLetterTurnBlock,
-        match: [/[\d]+[\.。] /],
+        match: [/^[\d]+[\.。] /],
         url: '/list?{listType:1}'
     },
     {
         operator: DetectorOperator.firstLetterTurnBlock,
-        match: [/[\>] /],
+        match: [/^[\>》] /],
         url: '/list?{listType:2}'
     },
     {
         operator: DetectorOperator.firstLetterTurnBlock,
-        match: [/["“] /],
+        match: [/^["“] /],
         url: '/quote'
     },
     {
         operator: DetectorOperator.firstLetterTurnBlock,
-        match: [/[\*\-\+] /],
+        match: [/^[\*\-\+] /],
         url: '/list?{listType:0}'
     },
     {
@@ -90,7 +90,7 @@ export var rules: DetectorRule[] = [
     {
         operator: DetectorOperator.letterReplaceCreateBlock,
         match: [/`([^]+)`$/],
-        url: '/text?{isCode:true}'
+        url: '/text?{code:true}'
     },
     {
         operator: DetectorOperator.inputCharReplace,
