@@ -76,7 +76,7 @@ export class CarouselView extends BlockView<Carousel>{
                     <Icon icon={PlusSvg} size={14}></Icon>
                 </div>
             </div>
-            <div className="sy-block-carousel-contents">
+            <div className="sy-block-carousel-contents" style={this.block.contentStyle}>
                 <ChildsArea childs={this.block.blocks.childs}></ChildsArea>
             </div>
         </div>

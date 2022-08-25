@@ -109,7 +109,7 @@ export class FileView extends BlockView<Embed>{
             }
             return style;
         }
-        return <div className='sy-block-embed' style={this.block.visibleStyle}>
+        return <div className='sy-block-embed' style={this.block.boxStyle}>
             {this.block.src.name == 'none' && <div onMouseDown={e => this.block.addEmbed(e)} className='sy-block-file-nofile'>
                 <Icon icon={CompassSvg}></Icon>
                 <span>添加内嵌网页(网易云音乐、B站)</span>

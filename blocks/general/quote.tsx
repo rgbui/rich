@@ -6,6 +6,7 @@ import { TextSpan } from "../../src/block/element/textspan";
 import { BlockDisplay } from "../../src/block/enum";
 import { TextTurns } from "../../src/block/turn/text";
 import { Block } from "../../src/block";
+
 @url('/quote')
 export class Quote extends TextSpan {
     display = BlockDisplay.block;
@@ -43,7 +44,7 @@ export class Quote extends TextSpan {
 @view('/quote')
 export class QuoteView extends BlockView<Quote>{
     render() {
-        return <div className='sy-block-quote' style={this.block.visibleStyle} >
+        return <div style={this.block.visibleStyle}><div className='sy-block-quote' >
             <div className='sy-block-quote-bar'></div>
             <div className='sy-block-quote-content'>
                 <div>
@@ -54,6 +55,6 @@ export class QuoteView extends BlockView<Quote>{
                     <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>
                 </div>
             </div>
-        </div>
+        </div></div>
     }
 }

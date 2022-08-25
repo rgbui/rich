@@ -62,7 +62,7 @@ export class ButtonTemplate extends Block {
         this.view.forceUpdate()
     }
     async onSave() {
-        this.onUpdateProps({ expand: false }, {range:BlockRenderRange.self})
+        this.onUpdateProps({ expand: false }, { range: BlockRenderRange.self })
     }
     async didMounted(): Promise<void> {
         if (this.blocks.childs.length == 0) {
@@ -85,7 +85,7 @@ export class ButtonTemplateView extends BlockView<ButtonTemplate>{
             <Divider></Divider>
             <div className="sy-button-template-box-label">模板名称</div>
             <div className="sy-button-template-box-title">
-                <TextArea  block={this.block}   prop='content'  default='添加待办事项' placeholder={'添加待办事项'}></TextArea>
+                <TextArea block={this.block} prop='content' default='添加待办事项' placeholder={'添加待办事项'}></TextArea>
             </div>
             <Divider></Divider>
             <div className="sy-button-template-box-label">模板内容</div>
@@ -95,12 +95,12 @@ export class ButtonTemplateView extends BlockView<ButtonTemplate>{
         </div>
     }
     render() {
-        return <div className='sy-button-template' style={this.block.visibleStyle} >
+        return <div style={this.block.visibleStyle}><div className='sy-button-template' >
             <div className='sy-button-template-wrapper' onMouseDown={e => e.stopPropagation()} >
                 <a className="sy-button-template-btn" onMouseDown={e => this.block.addTemplateInstance(e)}>+{this.block.content || '添加待办事项'}</a>
                 <div className='sy-button-template-operator'><Icon onMousedown={e => this.block.openSettings()} icon={EditSvg}></Icon></div>
             </div>
             {this.block.expand == true && this.renderTemplate()}
-        </div>
+        </div></div>
     }
 }

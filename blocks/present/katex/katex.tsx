@@ -40,9 +40,9 @@ export class Katex extends Block {
 @view('/katex')
 export class KatexView extends BlockView<Katex>{
     render() {
-        return <div className={'sy-block-katex' + (this.block.opened ? " sy-block-katex-opened" : "")} onMouseDown={e => this.block.open(e)} style={this.block.visibleStyle}>
+        return <div style={this.block.visibleStyle}><div className={'sy-block-katex' + (this.block.opened ? " sy-block-katex-opened" : "")} onMouseDown={e => this.block.open(e)}>
             <div className='sy-block-katex-content' dangerouslySetInnerHTML={{ __html: this.block.katexContent }}>
             </div>
-        </div>
+        </div></div>
     }
 }

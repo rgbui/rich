@@ -83,7 +83,7 @@ export class RefLinksView extends BlockView<RefLinks>{
         this.block.onUpdateProps({ expand: this.block.expand ? false : true }, { range: BlockRenderRange.self })
     }
     render() {
-        return <div className="sy-block-ref-links">
+        return <div className="sy-block-ref-links" style={this.block.visibleStyle}>
             <div className="flex h-24">
                 <span onMouseDown={e => this.onToggle(e)} className="remark ts-transform flex-center size-16 cursor  round"
                     style={{ transform: this.block.expand ? 'rotateZ(180deg)' : 'rotateZ(90deg)' }}>

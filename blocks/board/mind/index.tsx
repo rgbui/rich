@@ -348,7 +348,9 @@ export class FlowMindView extends BlockView<FlowMind>{
     }
     flowMindLine: FlowMindLine;
     render() {
-        return <div className='sy-flow-mind' style={this.block.visibleStyle}>
+        var style=this.block.visibleStyle;
+        style.padding=0;
+        return <div className='sy-flow-mind' style={style}>
             {this.renderItems()}
             {this.renderSubChilds()}
             <FlowMindLine mind={this.block} ref={e => this.flowMindLine = e}></FlowMindLine>

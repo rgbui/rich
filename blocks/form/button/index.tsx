@@ -26,8 +26,7 @@ export class BlockButton extends Block {
 export class BlockButtonView extends BlockView<BlockButton>{
     render() {
         return <button className='sy-button'
-            onMouseDown={e => this.block.mousedown(e.nativeEvent)}
-            style={this.block.visibleStyle}>
+            onMouseDown={e => this.block.mousedown(e.nativeEvent)}>
             {this.block.showIcon && <span>
                 <SolidArea block={this.block} prop='src'>
                     <Icon size={16} icon={this.block.src}></Icon>

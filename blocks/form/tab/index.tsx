@@ -26,7 +26,7 @@ export class Tab extends Block {
     @prop()
     contentHeight: number = 200;
     async didMounted(): Promise<void> {
-        if(this.childs.length == 0) {
+        if (this.childs.length == 0) {
             await this.createInitTabItems();
             this.forceUpdate()
         }
@@ -166,14 +166,16 @@ export class TabView extends BlockView<Tab>{
     render() {
         return <div className='sy-block-tab'
             style={this.block.visibleStyle}>
-            <div className="sy-block-tab-items">
-                <ChildsArea childs={this.block.blocks.childs}></ChildsArea>
-                <div className="sy-block-tab-plus" onMouseDown={e => this.block.onAddTabItem()}><Icon size={14} icon={PlusSvg}></Icon></div>
+            <div style={this.block.contentStyle}>
+                <div className="sy-block-tab-items">
+                    <ChildsArea childs={this.block.blocks.childs}></ChildsArea>
+                    <div className="sy-block-tab-plus" onMouseDown={e => this.block.onAddTabItem()}><Icon size={14} icon={PlusSvg}></Icon></div>
+                </div>
+                <div className="sy-block-tab-pages" style={{ height: this.block.contentHeight }}>
+                    <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>
+                </div>
+                <div className="sy-block-tab-resize" onMouseDown={e => this.onResize(e)}></div>
             </div>
-            <div className="sy-block-tab-pages" style={{ height: this.block.contentHeight }}>
-                <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>
-            </div>
-            <div className="sy-block-tab-resize" onMouseDown={e => this.onResize(e)}></div>
         </div>
     }
 }

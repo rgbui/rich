@@ -304,7 +304,9 @@ export class LineView extends BlockView<Line>{
         function renderLineEnd() {
 
         }
-        return <div className="sy-block-line" style={this.block.visibleStyle}>
+        var style = this.block.visibleStyle;
+        style.padding = 0;
+        return <div className="sy-block-line" style={style}>
             <svg viewBox={`${re.x} ${re.y} ${re.width} ${re.height}`} style={{
                 width: re.width,
                 height: re.height,

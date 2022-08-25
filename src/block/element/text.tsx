@@ -188,7 +188,7 @@ export class TextContentView extends BlockView<TextContent>{
             classList.push('sy-block-text-content-code');
             ta = <em className={next && (next as TextContent).code ? "next-code" : ""}>{ta}</em>;
         }
-        var style = this.block.visibleStyle;
+        var style = this.block.pattern.style;
         delete style.fontSize;
         delete style.lineHeight;
         return <span className={classList.join(" ")} style={style}>{ta}</span>

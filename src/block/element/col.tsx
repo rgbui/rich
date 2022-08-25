@@ -17,7 +17,10 @@ export class Col extends Block {
 @view('/col')
 export class ColView extends BlockView<Col>{
     render() {
-        return <div className='sy-block-col' style={this.block.visibleStyle} ref={e => this.block.childsEl = e}>
+        var style = {
+            width: (this.block.widthPercent || 100) + '%'
+        }
+        return <div className='sy-block-col' style={style} ref={e => this.block.childsEl = e}>
             <ChildsArea childs={this.block.childs}></ChildsArea>
         </div>
     }

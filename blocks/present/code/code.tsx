@@ -87,7 +87,7 @@ export class TextCodeView extends BlockView<TextCode>{
     }
     render() {
         var label = CodeMirrorModes.filter(g => g.abled).find(g => g.mode == this.block.language)?.label || 'unknow';
-        return <div className='sy-block-code' onMouseDown={e => e.stopPropagation()}>
+        return <div style={this.block.visibleStyle}><div className='sy-block-code' onMouseDown={e => e.stopPropagation()}>
             <div className='sy-block-code-box' >
                 <div className='sy-block-code-head'>
                     <div className='sy-block-code-head-lang' onMouseDown={e => e.stopPropagation()} onMouseUp={e => this.changeLang(e)}>
@@ -98,6 +98,6 @@ export class TextCodeView extends BlockView<TextCode>{
                 <div className='sy-block-code-content'>
                 </div>
             </div>
-        </div>
+        </div></div>
     }
 }

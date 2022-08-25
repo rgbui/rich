@@ -212,7 +212,9 @@ export class TextSpan extends Block {
 export class TextSpanView extends BlockView<TextSpan>{
     render() {
         return <div className='sy-block-text-span' style={this.block.visibleStyle}>
-            <TextSpanArea block={this.block}></TextSpanArea>
+            <div style={this.block.contentStyle}>
+                <TextSpanArea block={this.block}></TextSpanArea>
+            </div>
         </div>
     }
 }

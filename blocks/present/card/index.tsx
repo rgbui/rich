@@ -30,8 +30,8 @@ export class PageCard extends Block {
 @view('/card')
 export class PageCardView extends BlockView<PageCard>{
     render() {
-        return <div className='sy-block-card' style={this.block.visibleStyle}>
+        return <div style={this.block.visibleStyle}><div className='sy-block-card' >
             <ChildsArea childs={this.block.childs}></ChildsArea>
-        </div>
+        </div></div>
     }
 }
