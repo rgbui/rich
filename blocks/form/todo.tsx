@@ -78,19 +78,21 @@ export class ToDoView extends BlockView<ToDo>{
             </div>
         }
         else {
-            return <div style={this.block.visibleStyle}>
-                <div className='sy-block-todo' style={this.block.contentStyle} >
-                    <div className="sy-block-todo-checkbox-wrapper" style={{ height: this.block.page.lineHeight, width: this.block.page.lineHeight }}>
-                        <div className={'sy-block-todo-checkbox' + (this.block.checked ? " checked" : "")} onMouseDown={e => this.block.onChange(!this.block.checked, e)}>
-                            <Icon size={this.block.checked ? 14 : 16} icon={this.block.checked ? CheckSvg : CheckboxSquareSvg} ></Icon>
+            return <div>
+                <div style={this.block.visibleStyle}>
+                    <div className='sy-block-todo' style={this.block.contentStyle} >
+                        <div className="sy-block-todo-checkbox-wrapper" style={{ height: this.block.page.lineHeight, width: this.block.page.lineHeight }}>
+                            <div className={'sy-block-todo-checkbox' + (this.block.checked ? " checked" : "")} onMouseDown={e => this.block.onChange(!this.block.checked, e)}>
+                                <Icon size={this.block.checked ? 14 : 16} icon={this.block.checked ? CheckSvg : CheckboxSquareSvg} ></Icon>
+                            </div>
                         </div>
+                        <span className='sy-block-todo-text'><TextArea block={this.block} placeholder={langProvider.getText(LangID.todoPlaceholder)}
+                            prop='content'
+                        ></TextArea>
+                        </span>
                     </div>
-                    <span className='sy-block-todo-text'><TextArea block={this.block} placeholder={langProvider.getText(LangID.todoPlaceholder)}
-                        prop='content'
-                    ></TextArea>
-                    </span>
                 </div>
-                <div className='sy-block-todo-subs'>
+                <div className='sy-block-todo-subs' style={{ paddingLeft: 20 }}>
                     <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>
                 </div>
             </div>
