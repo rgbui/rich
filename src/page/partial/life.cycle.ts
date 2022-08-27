@@ -211,7 +211,7 @@ export class Page$Cycle {
         var self = this;
         var fn = async function () {
             try {
-                if (self.willUpdateAll) await self.forceUpdate();
+                if (self.willUpdateAll) { self.willUpdateAll = false; await self.forceUpdate(); }
                 else await ups.eachAsync(async (up) => {
                     await up.forceUpdate();
                 })
