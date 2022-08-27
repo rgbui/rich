@@ -125,11 +125,11 @@ export abstract class Block extends Events {
         }
         else return this.page.views;
     }
-    get parentKey() {
+    get parentKey(): BlockChildKey {
         if (this.parent) {
             var pb = this.parentBlocks;
             for (var n in this.parent.blocks) {
-                if (this.parent.blocks[n] == pb) return n;
+                if (this.parent.blocks[n] == pb) return n as BlockChildKey;
             }
         }
     }
@@ -183,9 +183,6 @@ export abstract class Block extends Events {
     get continuouslyProps() {
         return {}
     }
-    // get childKey() {
-    //     return 'childs';
-    // }
     viewComponent: typeof BlockView | ((props: any) => JSX.Element)
     view: BlockView<this>;
     el: HTMLElement;
@@ -348,6 +345,12 @@ export abstract class Block extends Events {
      */
     get isBackspaceAutomaticallyTurnText() {
         return false;
+    }
+    get isVisible() {
+        return this.closest(x => x.isVisibleKey(x.parentKey) == false) ? false : true
+    }
+    isVisibleKey(key: BlockChildKey) {
+        return true;
     }
     get htmlContent() {
         return this.content;
