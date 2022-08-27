@@ -3,7 +3,7 @@ import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItem } from "../../../component/view/menu/declare";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
-import { BlockUrlConstant } from "../../block/constant";
+import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
 import { BlockDirective } from "../../block/enum";
 import { BlockFactory } from "../../block/factory/block.factory";
 import { Rect } from "../../common/vector/point";
@@ -24,7 +24,7 @@ export class Page$Operator {
     async createBlock(this: Page, url: string, data: Record<string, any>, parent: Block, at?: number, childKey?: string) {
         var block = await BlockFactory.createBlock(url, this, data, parent);
         if (parent) {
-            if (typeof childKey == 'undefined') childKey = parent.childKey;
+            if (typeof childKey == 'undefined') childKey = block.isLine ? BlockChildKey.childs : (parent?.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
             if (!parent.allBlockKeys.some(s => s == childKey)) {
                 console.error(`${parent.url} not support childKey:${childKey}`);
                 childKey = parent.allBlockKeys[0];
@@ -108,16 +108,6 @@ export class Page$Operator {
             })
         });
         return bs;
-    }
-    async onBackTurn(this: Page, block: Block, callback: (newBlock: Block) => void) {
-        await this.onAction(ActionDirective.onBackTurn, async () => {
-            if (block.isListBlock) {
-                var cs = block.getChilds(block.childKey);
-                if (cs.length > 0) await block.parent.appendArray(cs, block.at + 1, block.parent.childKey);
-            }
-            var newBlock = await block.turn(BlockUrlConstant.TextSpan);
-            callback(newBlock);
-        });
     }
     async onCombineLikeTextSpan(this: Page, block: Block, willCombineBlock: Block, after?: () => Promise<void>) {
         await this.onAction(ActionDirective.combineTextSpan, async () => {
@@ -260,7 +250,7 @@ export class Page$Operator {
         this.forceUpdate();
     }
     async onOpenRefPages(this: Page, d: { refPages: boolean }) {
-        await this.onAction('onOpenNav', async () => {
+        await this.onAction('onOpenRefPages', async () => {
             this.updateProps({ autoRefPages: d.refPages });
             if (this.requireSelectLayout == true) {
                 this.updateProps({ requireSelectLayout: false, 'pageLayout.type': PageLayoutType.doc });
