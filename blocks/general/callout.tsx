@@ -6,16 +6,14 @@ import { TextSpan } from "../../src/block/element/textspan";
 import { BlockDisplay } from "../../src/block/enum";
 import { TextTurns } from "../../src/block/turn/text";
 import { Block } from "../../src/block";
+import { BlockChildKey } from "../../src/block/constant";
 
 @url('/callout')
 export class Callout extends TextSpan {
     display = BlockDisplay.block;
     blocks: { childs: Block[], subChilds: Block[] } = { childs: [], subChilds: [] };
-    get allBlockKeys(): string[] {
-        return ['childs', 'subChilds'];
-    }
-    get childKey() {
-        return 'subChilds';
+    get allBlockKeys() {
+        return [BlockChildKey.childs, BlockChildKey.subChilds];
     }
     get appearAnchors() {
         if (this.childs.length > 0) return []
@@ -29,14 +27,6 @@ export class Callout extends TextSpan {
     }
     get isBackspaceAutomaticallyTurnText() {
         return true;
-    }
-    /**
-  * 表示当前元素如何接收该元素至sub,
-  * @param this 
-  * @param sub  子元素是要移动的
-  */
-    async acceptSubFromMove(sub: Block) {
-        await this.append(sub, 0, 'subChilds');
     }
     async getPlain(this: Block) {
         if (this.childs.length > 0)

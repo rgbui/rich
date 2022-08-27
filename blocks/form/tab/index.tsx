@@ -4,7 +4,7 @@ import { Icon } from "../../../component/view/icon";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItemType } from "../../../component/view/menu/declare";
 import { Block } from "../../../src/block";
-import { BlockUrlConstant } from "../../../src/block/constant";
+import { BlockChildKey, BlockUrlConstant } from "../../../src/block/constant";
 import { BlockFactory } from "../../../src/block/factory/block.factory";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
@@ -18,8 +18,8 @@ import "./style.less";
 export class Tab extends Block {
     blocks: { childs: Block[], subChilds: Block[] } = { childs: [], subChilds: [] };
     tabIndex: number = 0;
-    get allBlockKeys(): string[] {
-        return ['childs', 'subChilds']
+    get allBlockKeys() {
+        return [BlockChildKey.childs, BlockChildKey.subChilds]
     }
     @prop()
     showIcon: boolean = false;

@@ -24,6 +24,15 @@ export enum BlockUrlConstant {
     DataGridList = '/data-grid/list',
     DataGridCalendar = '/data-grid/calendar',
     TableStoreBoard = '/data-grid/board',
-    RefLinks='/ref/links',
-    Link='/link'
+    RefLinks = '/ref/links',
+    Link = '/link'
+}
+
+export enum BlockChildKey {
+    childs = 'childs',
+    subChilds = 'subChilds',
+    /**
+     * mind中的子块（因为是平面的，自由布局的，有两个方南的blocks，和subChilds平级
+     */
+    otherChilds='otherChilds'
 }

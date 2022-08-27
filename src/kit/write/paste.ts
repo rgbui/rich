@@ -3,14 +3,16 @@ import { TextCode } from "../../../blocks/present/code/code";
 import { InputTextPopSelectorType } from "../../../extensions/common/input.pop";
 import { useInputUrlSelector } from "../../../extensions/url";
 import { AppearAnchor } from "../../block/appear";
-import { BlockUrlConstant } from "../../block/constant";
+import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
 import { Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
 import { parseDom } from "../../import-export/html/parse";
 import { inputBackspaceDeleteContent } from "./input";
 import { InputForceStore } from "./store";
 const URL_RGEX = /https?:\/\/([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?/ig;
-export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent) {
+
+export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
+{
     var files: File[] = Array.from(event.clipboardData.files);
     var text = event.clipboardData.getData('text/plain');
     var html = event.clipboardData.getData('text/html');
@@ -105,7 +107,7 @@ async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
                 await rowBlock.updateProps({ content: '' });
                 if (beforeText) await rowBlock.appendBlock({ url: BlockUrlConstant.Text, content: beforeText });
                 var bs = blocks[0].blocks.childs;
-                var rs = await rowBlock.appendArrayBlockData(bs, undefined, 'childs');
+                var rs = await rowBlock.appendArrayBlockData(bs, undefined, BlockChildKey.childs);
                 if (lastText) await rowBlock.appendBlock({ url: BlockUrlConstant.Text, content: lastText });
                 kit.page.addUpdateEvent(async () => {
                     kit.writer.cursor.onFocusBlockAnchor(rs.last(), { last: true, render: true, merge: true });
@@ -114,7 +116,7 @@ async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
             else {
                 await aa.block.updateProps({ content: beforeText });
                 var bs = blocks[0].blocks.childs;
-                var rs = await aa.block.parent.appendArrayBlockData(bs, aa.block.at, 'childs');
+                var rs = await aa.block.parent.appendArrayBlockData(bs, aa.block.at, BlockChildKey.childs);
                 if (lastText) await aa.block.parent.appendBlock({
                     url: BlockUrlConstant.Text,
                     pattern: await aa.block.pattern.cloneData(),

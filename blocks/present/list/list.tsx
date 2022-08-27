@@ -9,16 +9,19 @@ import { ChildsArea, TextArea, TextLineChilds } from "../../../src/block/view/ap
 import { TextTurns } from "../../../src/block/turn/text";
 import { Rect, Point } from "../../../src/common/vector/point";
 import { TriangleSvg } from "../../../component/svgs";
+import { BlockChildKey } from "../../../src/block/constant";
+
 export enum ListType {
     circle = 0,
     number = 1,
     arrow = 2
 }
+
 @url('/list')
 export class List extends Block {
     blocks: { childs: Block[], subChilds: Block[] } = { childs: [], subChilds: [] };
-    get allBlockKeys(): string[] {
-        return ['childs', 'subChilds'];
+    get allBlockKeys() {
+        return [BlockChildKey.childs, BlockChildKey.subChilds];
     }
     @prop()
     listType: ListType = ListType.circle;
@@ -66,26 +69,8 @@ export class List extends Block {
     async getWillTurnData(url: string) {
         return await TextTurns.turn(this, url);
     }
-    /**
-   * 表示当前元素如何接收该元素至sub,
-   * @param this 
-   * @param sub  子元素是要移动的
-   */
-    async acceptSubFromMove(sub: Block) {
-        await this.append(sub, 0, 'subChilds');
-        if (this.expand != true && this.listType == ListType.arrow) {
-            await this.updateProps({ expand: true }, BlockRenderRange.self);
-        }
-    }
     get isBackspaceAutomaticallyTurnText() {
         return true;
-    }
-    get childKey() {
-        return 'subChilds';
-    }
-    getChilds(key: string) {
-        if (this.isExpand == false && this.listType == ListType.arrow) return [];
-        return super.getChilds(key);
     }
     isCrossBlockVisibleArea(rect: Rect | Point) {
         var bound = this.getVisibleBound();

@@ -6,6 +6,7 @@ import { BlockDisplay } from "../../src/block/enum";
 import "./style.less";
 import { MouseDragger } from "../../src/common/dragger";
 import { Rect } from "../../src/common/vector/point";
+
 @url('/measure')
 export class Measure extends Block {
     @prop()

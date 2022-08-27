@@ -2,7 +2,7 @@ import { Block } from "..";
 import { Point, Rect } from "../../common/vector/point";
 import { TextEle } from "../../common/text.ele";
 import { AppearVisibleSeek } from "./visible.seek";
-import { BlockUrlConstant } from "../constant";
+import { BlockChildKey, BlockUrlConstant } from "../constant";
 import lodash from "lodash";
 import { TextContent } from "../element/text";
 
@@ -265,7 +265,7 @@ export class AppearAnchor {
                         ...props
                     })),
                     at + 1,
-                    'childs'
+                    BlockChildKey.childs
                 );
                 bs.addRange(rs);
             };
@@ -279,7 +279,9 @@ export class AppearAnchor {
                     pattern,
                     content: t,
                     ...props
-                }))
+                })),
+                undefined,
+                BlockChildKey.childs
             )
         }
     }

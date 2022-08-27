@@ -3,7 +3,7 @@ import { PageWrite } from ".";
 import { isBlockedTextTool } from "../../../extensions/text.tool";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
-import { BlockUrlConstant } from "../../block/constant";
+import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
 import { BlockRenderRange } from "../../block/enum";
 import { KeyboardCode } from "../../common/keys";
 import { onceAutoScroll } from "../../common/scroll";
@@ -137,60 +137,60 @@ export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: Re
             else await block.delete();
         }
         var newBlock: Block;
-        if (rowBlock.isListBlock && rowBlock.asListBlock.isExpand && rowBlock.getChilds(rowBlock.childKey).length > 0) {
-            var fb = rowBlock.getChilds(rowBlock.childKey).first();
-            var url = fb.isContinuouslyCreated ? fb.url : BlockUrlConstant.TextSpan;
-            var continuouslyProps = fb.continuouslyProps;
-            newBlock = await page.createBlock(url, { ...continuouslyProps, blocks: { childs } }, fb.parent, 0, fb.parent.childKey)
+        if (rowBlock.hasSubChilds && rowBlock.subChilds.length > 0 && !(rowBlock.url == BlockUrlConstant.List && !(rowBlock as any).isExpand)) {
+            var ch = rowBlock.subChilds[0];
+            var url = ch.isContinuouslyCreated ? ch.url : BlockUrlConstant.TextSpan;
+            var continuouslyProps = ch.continuouslyProps;
+            newBlock = await page.createBlock(url, { ...continuouslyProps, blocks: { childs } }, ch.parent, 0, ch.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs)
         }
         else {
             var url = rowBlock.isContinuouslyCreated ? rowBlock.url : BlockUrlConstant.TextSpan;
             var continuouslyProps = rowBlock.continuouslyProps;
             newBlock = await rowBlock.visibleDownCreateBlock(url, { ...continuouslyProps, blocks: { childs } });
         }
-        if (gs.length > 0) {
-            for (let i = 0; i < gs.length; i++) {
-                await newBlock.append(gs[i]);
-            }
-        }
+        await newBlock.appendArray(gs, undefined, BlockChildKey.childs);
         page.addUpdateEvent(async () => {
             write.cursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
         })
     });
 }
 export async function onKeyTab(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
-    event.preventDefault();
     var sel = window.getSelection();
     var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
-    var bl = aa.block;
+    var block = aa.block;
     var prop = aa.prop;
     var page = write.kit.page;
-    var list = bl.closest(x => x.url == BlockUrlConstant.List);
+    var rowBlock = block.closest(x => x.isBlock);
     var isBack = page.keyboardPlate.isShift()
-    if (isBack) {
-        if (!list.parent?.isListBlock) return false
+    if (page.keyboardPlate.isShift()) {
+        if (!rowBlock?.parent.hasSubChilds) return false;
     }
     else {
-        var prev = list.prev;
-        if (!list.prev?.isListBlock) return false;
+        if (!rowBlock.prev?.hasSubChilds) return false;
     }
+    event.preventDefault();
     await InputForceStore(aa, async () => {
         if (isBack) {
-            var pa = list.parent;
-            var at = list.at;
-            var rest = pa.blocks[pa.childKey].findAll((item, i) => i > at);
-            await list.appendArray(rest, undefined, list.childKey);
-            await list.insertAfter(pa);
+            var pa = rowBlock.parent;
+            var at = rowBlock.at;
+            var rest = pa.subChilds.findAll((item, i) => i > at);
+            if (rowBlock.hasSubChilds) {
+                await rowBlock.appendArray(rest, undefined, 'subChilds');
+                await rowBlock.insertAfter(pa);
+            }
+            else {
+                pa.parent.appendArray([rowBlock, ...rest], pa.at + 1, pa.parent.hasSubChilds ? 'subChilds' : 'childs')
+            }
         }
         else {
-            var prev = list.prev;
-            if (prev.isListBlock && prev.asListBlock.expand == false) {
+            var prev = rowBlock.prev;
+            if (prev.url == BlockUrlConstant.List && (prev as any).expand == false) {
                 prev.updateProps({ expand: true });
             }
-            await prev.append(list, undefined, prev.childKey);
+            await prev.append(rowBlock, undefined, 'subChilds');
         }
         page.addUpdateEvent(async () => {
-            var newAA = bl.appearAnchors.find(g => g.prop == prop);
+            var newAA = block.appearAnchors.find(g => g.prop == prop);
             if (newAA)
                 write.cursor.onFocusAppearAnchor(newAA, { merge: true, at: offset });
         })

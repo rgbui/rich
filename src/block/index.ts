@@ -15,8 +15,7 @@ import { Block$Operator } from "./partial/operate";
 import { BlockAppear, AppearAnchor } from "./appear";
 import { Mix } from "../../util/mix";
 import { TextContent } from "./element/text";
-import { BlockUrlConstant } from "./constant";
-import { List } from "../../blocks/present/list/list";
+import { BlockChildKey, BlockUrlConstant } from "./constant";
 import { CSSProperties } from "react";
 import { PageLayoutType } from "../page/declare";
 import { Matrix } from "../common/matrix";
@@ -96,7 +95,7 @@ export abstract class Block extends Events {
         return this.blocks.childs;
     }
     get subChilds() {
-        return this.blocks.subChilds;
+        return this.blocks.subChilds || [];
     }
     get allChilds() {
         var keys = this.blockKeys;
@@ -111,28 +110,20 @@ export abstract class Block extends Events {
     }
     get hasChilds() {
         if (Object.keys(this.blocks).length > 0) {
-            var keys = this.blockKeys;
+            var keys = this.allBlockKeys;
             if (keys.exists(key => this.blocks[key].length > 0)) return true;
         }
         return false;
     }
-    get hasVisibleChilds() {
-        return this.hasChilds;
-    }
     get parentBlocks(): Block[] {
         if (this.parent) {
             for (var n in this.parent.blocks) {
-                if (this.parent.blocks[n].exists(g => g === this)) {
+                if (this.parent.blocks[n].exists(g => g.id == this.id)) {
                     return this.parent.blocks[n];
                 }
             }
         }
         else return this.page.views;
-    }
-    get hasBrother() {
-        var pb = this.parentBlocks;
-        if (pb.length > 1) return true;
-        else return false;
     }
     get parentKey() {
         if (this.parent) {
@@ -146,10 +137,17 @@ export abstract class Block extends Events {
         return Object.keys(this.blocks);
     }
     get allBlockKeys() {
-        return ['childs'];
+        return [BlockChildKey.childs];
+    }
+    get hasSubChilds() {
+        return this.allBlockKeys.includes(BlockChildKey.subChilds)
     }
     get at() {
-        return this.parentBlocks.findIndex(g => g === this);
+        var bs = this.parentBlocks;
+        if (!Array.isArray(bs)) {
+            bs = [];
+        }
+        return bs.findIndex(g => g === this);
     }
     get prev() {
         if (this.parentBlocks) {
@@ -188,9 +186,9 @@ export abstract class Block extends Events {
     get continuouslyProps() {
         return {}
     }
-    get childKey() {
-        return 'childs';
-    }
+    // get childKey() {
+    //     return 'childs';
+    // }
     viewComponent: typeof BlockView | ((props: any) => JSX.Element)
     view: BlockView<this>;
     el: HTMLElement;
@@ -407,12 +405,6 @@ export abstract class Block extends Events {
             return (this as any) as TextContent
         else return null;
     }
-    get isListBlock() {
-        return this.url == BlockUrlConstant.List;
-    }
-    get asListBlock() {
-        return (this as any) as List;
-    }
     get blockUrl() {
         return this.page.pageInfo.url + '#' + this.id;
     }
@@ -531,9 +523,6 @@ export abstract class Block extends Events {
             if (!this.next) return true;
         }
         return false;
-    }
-    getChilds(key: string) {
-        return this.blocks[key];
     }
     get isFrame() {
         return this.url == BlockUrlConstant.Frame

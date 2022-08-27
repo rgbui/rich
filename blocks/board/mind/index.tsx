@@ -13,6 +13,7 @@ import { ActionDirective } from "../../../src/history/declare";
 import { Matrix } from "../../../src/common/matrix";
 import { BlockCssName } from "../../../src/block/pattern/css";
 import { BlockRenderRange } from "../../../src/block/enum";
+import { BlockChildKey } from "../../../src/block/constant";
 
 @url('/flow/mind')
 export class FlowMind extends Block {
@@ -31,8 +32,8 @@ export class FlowMind extends Block {
         if (this.parent instanceof FlowMind) return false;
         else return true
     }
-    get allBlockKeys(): string[] {
-        return ['childs', 'subChilds', 'otherChilds'];
+    get allBlockKeys() {
+        return [BlockChildKey.childs, BlockChildKey.subChilds, BlockChildKey.otherChilds];
     }
     @prop()
     fixedWidth: number = 60;
@@ -348,8 +349,8 @@ export class FlowMindView extends BlockView<FlowMind>{
     }
     flowMindLine: FlowMindLine;
     render() {
-        var style=this.block.visibleStyle;
-        style.padding=0;
+        var style = this.block.visibleStyle;
+        style.padding = 0;
         return <div className='sy-flow-mind' style={style}>
             {this.renderItems()}
             {this.renderSubChilds()}

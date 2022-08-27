@@ -13,6 +13,7 @@ import { EditSvg } from "../../../component/svgs";
 import { BlockFactory } from "../../../src/block/factory/block.factory";
 import { ActionDirective } from "../../../src/history/declare";
 import { BlockAppear } from "../../../src/block/appear";
+import { BlockChildKey } from "../../../src/block/constant";
 
 @url('/button/template')
 export class ButtonTemplate extends Block {
@@ -43,15 +44,11 @@ export class ButtonTemplate extends Block {
     async getWillTurnData(url: string) {
         return await TextTurns.turn(this, url);
     }
-    getChilds(key: string) {
-        if (this.expand == false && key == 'subChilds') return [];
-        return super.getChilds(key);
-    }
     async addTemplateInstance(event: React.MouseEvent) {
         var bs = await this.blocks.childs.asyncMap(async (block) => await block.cloneData());
         await this.page.onAction(ActionDirective.onButtonTemplateCreateInstance, async () => {
             var at = this.at;
-            await this.parent.appendArrayBlockData(bs, at + 1, this.parent.childKey);
+            await this.parent.appendArrayBlockData(bs, at + 1, this.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
         })
     }
     get isSupportTextStyle(): boolean {
