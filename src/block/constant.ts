@@ -25,7 +25,8 @@ export enum BlockUrlConstant {
     DataGridCalendar = '/data-grid/calendar',
     TableStoreBoard = '/data-grid/board',
     RefLinks = '/ref/links',
-    Link = '/link'
+    Link = '/link',
+    Todo='/todo'
 }
 
 export enum BlockChildKey {
