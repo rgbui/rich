@@ -14,7 +14,7 @@ import { BlockChildKey } from "../../../src/block/constant";
 export enum ListType {
     circle = 0,
     number = 1,
-    arrow = 2
+    toggle = 2
 }
 
 @url('/list')
@@ -35,7 +35,7 @@ export class List extends Block {
         this.onUpdateProps({ expand: !this.expand }, { range: BlockRenderRange.self });
     }
     get isExpand() {
-        return this.blocks.subChilds.length > 0 && !(this.listType == ListType.arrow && this.expand == false)
+        return this.blocks.subChilds.length > 0 && !(this.listType == ListType.toggle && this.expand == false)
     }
     get isContinuouslyCreated() {
         return true;
@@ -49,6 +49,12 @@ export class List extends Block {
     get appearAnchors() {
         if (this.childs.length > 0) return []
         return this.__appearAnchors;
+    }
+    isVisbileKey(key: BlockChildKey) {
+        if (this.listType == ListType.toggle) {
+            if (this.expand == false && key == BlockChildKey.subChilds) return false;
+        }
+        return super.isVisibleKey(key);
     }
     async onGetTurnUrls() {
         var urls = TextTurns.urls;
@@ -87,7 +93,7 @@ export class List extends Block {
 export class ListView extends BlockView<List>{
     renderListType() {
         if (this.block.listType == ListType.circle) return <span className='sy-block-list-text-type'>•</span>
-        else if (this.block.listType == ListType.arrow) {
+        else if (this.block.listType == ListType.toggle) {
             return <span className='sy-block-list-text-type text ts-transform round item-hover'
                 style={{
                     cursor: 'pointer',
