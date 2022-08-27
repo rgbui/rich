@@ -3,9 +3,7 @@
 
 import { Kit } from "..";
 import { Block } from "../../block";
-import { BlockUrlConstant } from "../../block/constant";
 import { Point, Rect } from "../../common/vector/point";
-
 export enum DropDirection {
     top,
     left,
@@ -57,9 +55,10 @@ export enum DropDirection {
  * @returns 
  * 
  */
-export function cacDragDirection(kit: Kit,dragBlocks: Block[], dropBlock: Block, event: MouseEvent) {
+export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block, event: MouseEvent) {
     var fr: 'left' | 'right' | 'bottom' | 'none' = 'none';
     var ele = event.target as HTMLElement;
+    var point = Point.from(event);
     if (!dropBlock || dropBlock?.isView) {
         dropBlock = undefined;
         /**
@@ -75,10 +74,26 @@ export function cacDragDirection(kit: Kit,dragBlocks: Block[], dropBlock: Block,
             dropBlock = kit.page.getViewLastBlock();
             if (dropBlock) fr = 'bottom';
         }
+        /**
+         * 这里需要通过dropBlock来重新计算一下fr，
+         * 当前的fr也只是表示从那查找的方位，并不代表真实的方位
+         */
+        var bound = dropBlock.getVisibleContentBound();
+        if (point.x < bound.left) {
+            fr = 'left'
+        }
+        else if (point.x > bound.right) {
+            fr = 'right'
+        }
+        else if (point.y <= bound.top + bound.height * 0.4) {
+            fr = undefined;
+        }
+        else if (point.y > bound.top + bound.height * 0.4) {
+            fr = 'bottom'
+        }
     }
     var direction = DropDirection.none;
     if (dropBlock && dropBlock.isCanDrop) {
-        var point = Point.from(event);
         if (dropBlock.isLine) dropBlock = dropBlock.closest(x => x.isBlock);
         var bound = dropBlock.getVisibleContentBound();
         /**
@@ -130,7 +145,6 @@ export function cacDragDirection(kit: Kit,dragBlocks: Block[], dropBlock: Block,
              * 上下不判断，主要是好拖放dropBlock
              */
         }
-
         /**
          * 普通的block
          */
@@ -159,12 +173,7 @@ export function cacDragDirection(kit: Kit,dragBlocks: Block[], dropBlock: Block,
                 direction = DropDirection.top;
             }
             else if (point.y > bound.top + bound.height * 0.4) {
-                if ([
-                    BlockUrlConstant.List,
-                    BlockUrlConstant.Callout,
-                    BlockUrlConstant.Quote
-                ].some(s => s == dropBlock.url)
-                ) {
+                if (dropBlock.hasSubChilds) {
                     direction = DropDirection.sub;
                     if (point.x - bound.left < 30) {
                         direction = DropDirection.bottom;
