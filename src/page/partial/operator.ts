@@ -81,6 +81,8 @@ export class Page$Operator {
     }
     async onBatchDelete(this: Page, blocks: Block[]) {
         await this.onAction(ActionDirective.onBatchDeleteBlocks, async () => {
+            var pre = blocks.first().prevFind(c => !blocks.includes(c) && c.isBlock);
+            if (!pre) blocks.first().nextFind(c => !blocks.includes(c) && c.isBlock);
             if (this.kit.picker.blocks.some(s => blocks.some(c => c == s))) {
                 this.kit.picker.blocks.removeAll(s => blocks.includes(s));
                 if (this.kit.picker.blocks.length == 0) {
@@ -91,6 +93,11 @@ export class Page$Operator {
             await blocks.eachAsync(async bl => {
                 await bl.delete()
             });
+            if (pre) {
+                this.addUpdateEvent(async () => {
+                    this.kit.writer.cursor.focusBlockAnchor(pre, { last: true, merge: true, render: true })
+                })
+            }
         })
     }
     async onTurn(this: Page, block: Block, url: string, callback: (newBlock: Block) => void) {
