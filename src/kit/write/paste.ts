@@ -11,13 +11,12 @@ import { inputBackspaceDeleteContent } from "./input";
 import { InputForceStore } from "./store";
 const URL_RGEX = /https?:\/\/([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?/ig;
 
-export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
-{
+export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent) {
     var files: File[] = Array.from(event.clipboardData.files);
     var text = event.clipboardData.getData('text/plain');
     var html = event.clipboardData.getData('text/html');
     kit.operator.onClearPage();
-    if (!html && text) {
+    if (!html && text || html && html.endsWith(text)) {
         event.preventDefault();
         if (URL_RGEX.test(text)) {
             await onPasteUrl(kit, aa, text);
