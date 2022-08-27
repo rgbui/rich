@@ -69,19 +69,10 @@ export class List extends Block {
     get isBackspaceAutomaticallyTurnText() {
         return true;
     }
-    isCrossBlockVisibleArea(rect: Rect | Point) {
-        var bound = this.getVisibleBound();
-        var contentEle = this.el.querySelector('.sy-block-list-text');
-        var cb = Rect.fromEle(contentEle as HTMLElement);
-        if (rect instanceof Rect && bound.isCross(rect)) {
-            if (cb.isCross(rect)) return true;
-            else return false;
-        }
-        else if (rect instanceof Point && bound.contain(rect)) {
-            if (cb.contain(rect)) return true;
-            else return false;
-        }
-        return false;
+    get contentEl() {
+        if (this.el)
+            return this.el.querySelector('[data-block-content]') as HTMLElement;
+        else return this.el;
     }
     async getPlain(this: Block) {
         if (this.childs.length > 0)
@@ -131,7 +122,7 @@ export class ListView extends BlockView<List>{
     render() {
         return <div className='sy-block-list'>
             <div style={this.block.visibleStyle}>
-                <div className='sy-block-list-text' style={this.block.contentStyle}> {this.renderListType()}
+                <div className='sy-block-list-text' data-block-content style={this.block.contentStyle}> {this.renderListType()}
                     <div className='sy-block-list-text-content'>{this.renderText()}</div>
                 </div>
             </div>

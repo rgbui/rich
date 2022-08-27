@@ -58,13 +58,18 @@ export class ToDo extends Block {
         }
         return style;
     }
+    get contentEl() {
+        if (this.el)
+            return this.el.querySelector('[data-block-content]') as HTMLElement;
+        else return this.el;
+    }
 }
 @view('/todo')
 export class ToDoView extends BlockView<ToDo>{
     render() {
         if (this.block.childs.length > 0) {
             return <div style={this.block.visibleStyle}>
-                <div className='sy-block-todo' style={this.block.contentStyle}>
+                <div className='sy-block-todo' data-block-content style={this.block.contentStyle}>
                     <div className="sy-block-todo-checkbox-wrapper" style={{ height: this.block.page.lineHeight, width: this.block.page.lineHeight }}>
                         <div className={'sy-block-todo-checkbox' + (this.block.checked ? " checked" : "")} onMouseDown={e => this.block.onChange(!this.block.checked, e)}>
                             <Icon size={this.block.checked ? 14 : 16} icon={this.block.checked ? CheckSvg : CheckboxSquareSvg} ></Icon>
@@ -72,7 +77,7 @@ export class ToDoView extends BlockView<ToDo>{
                     </div>
                     <TextLineChilds rf={e => this.block.childsEl = e} childs={this.block.childs}></TextLineChilds>
                 </div>
-                <div className='sy-block-todo-subs'>
+                <div className='sy-block-todo-subs' style={{ paddingLeft: 20 }}>
                     <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>
                 </div>
             </div>
@@ -80,7 +85,7 @@ export class ToDoView extends BlockView<ToDo>{
         else {
             return <div>
                 <div style={this.block.visibleStyle}>
-                    <div className='sy-block-todo' style={this.block.contentStyle} >
+                    <div className='sy-block-todo' data-block-content style={this.block.contentStyle} >
                         <div className="sy-block-todo-checkbox-wrapper" style={{ height: this.block.page.lineHeight, width: this.block.page.lineHeight }}>
                             <div className={'sy-block-todo-checkbox' + (this.block.checked ? " checked" : "")} onMouseDown={e => this.block.onChange(!this.block.checked, e)}>
                                 <Icon size={this.block.checked ? 14 : 16} icon={this.block.checked ? CheckSvg : CheckboxSquareSvg} ></Icon>

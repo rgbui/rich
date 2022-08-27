@@ -25,6 +25,10 @@ export class Callout extends TextSpan {
     async getWillTurnData(url: string) {
         return await TextTurns.turn(this, url);
     }
+    get contentEl() {
+        if (this.el) return this.el.querySelector('[data-block-content]') as HTMLElement;
+        else return this.el;
+    }
     get isBackspaceAutomaticallyTurnText() {
         return true;
     }
@@ -33,16 +37,19 @@ export class Callout extends TextSpan {
             return await this.getChildsPlain();
         else return this.content + await this.getChildsPlain();
     }
+    getVisibleContentBound() {
+        return this.getVisibleBound();
+    }
 }
 @view('/callout')
 export class CalloutView extends BlockView<Callout>{
     render() {
-        return <div style={this.block.visibleStyle}><div className='sy-block-callout' style={this.block.contentStyle}>
+        return <div style={this.block.visibleStyle}><div className='sy-block-callout' style={{ ...this.block.contentStyle, padding: 16 }}>
             <span className='sy-block-callout-icon'>💡</span>
             <div className='sy-block-callout-content'>
-                <div>{this.block.childs.length > 0 &&
+                <div data-block-content>{this.block.childs.length > 0 &&
                     <TextLineChilds rf={e => this.block.childsEl = e} childs={this.block.childs}></TextLineChilds>
-                }{this.block.childs.length == 0 && <span className='sy-appear-text-line' style={this.block.visibleStyle}><TextArea block={this.block} prop='content' placeholder={'键入文字或"/"选择'}></TextArea></span>}</div>
+                }{this.block.childs.length == 0 && <span className='sy-appear-text-line' style={this.block.visibleStyle}><TextArea block={this.block} prop='content' placeholder={'首重'}></TextArea></span>}</div>
                 <div>
                     <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>
                 </div>
