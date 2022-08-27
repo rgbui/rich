@@ -15,9 +15,9 @@ export class Block$Seek {
     each(this: Block, predict: (block: Block) => false | -1 | void, conside: boolean = false, isDepth = false) {
         function _each(block: Block) {
             var isBreak: boolean = false;
-            for (let i = 0; i < block.blockKeys.length; i++) {
+            for (let i = 0; i < block.allBlockKeys.length; i++) {
                 if (isBreak) break;
-                var bs = block.blocks[block.blockKeys[i]];
+                var bs = block.blocks[block.allBlockKeys[i]];
                 for (let j = 0; j < bs.length; j++) {
                     if (isDepth == true) {
                         if (_each(bs[j]) == true) { isBreak = true; break; }
@@ -54,9 +54,9 @@ export class Block$Seek {
     eachReverse(this: Block, predict: (Block: Block) => false | -1 | void, consider: boolean = false, isDepth = false) {
         function _each(block: Block) {
             var isBreak: boolean = false;
-            for (let i = block.blockKeys.length - 1; i > -1; i--) {
+            for (let i = block.allBlockKeys.length - 1; i > -1; i--) {
                 if (isBreak) break;
-                var bs = block.blocks[block.blockKeys[i]];
+                var bs = block.blocks[block.allBlockKeys[i]];
                 for (let j = bs.length - 1; j > -1; j--) {
                     if (isDepth == true) {
                         if (_each(bs[j]) == true) { isBreak = true; break; }

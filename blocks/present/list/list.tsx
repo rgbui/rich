@@ -37,15 +37,6 @@ export class List extends Block {
     get isExpand() {
         return this.blocks.subChilds.length > 0 && !(this.listType == ListType.arrow && this.expand == false)
     }
-    /**
-     * 当子元素处于折叠状态时，
-     * 其对应的subChilds就不应搜到了，不参于编辑
-     */
-    get blockKeys() {
-        var keys = Object.keys(this.blocks);
-        if (this.isExpand == false && this.listType == ListType.arrow) keys.remove('subChilds');
-        return keys;
-    }
     get isContinuouslyCreated() {
         return true;
     }

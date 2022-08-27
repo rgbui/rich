@@ -98,7 +98,7 @@ export abstract class Block extends Events {
         return this.blocks.subChilds || [];
     }
     get allChilds() {
-        var keys = this.blockKeys;
+        var keys = this.allBlockKeys;
         var rs: Block[] = [];
         keys.each(key => {
             rs.addRange(this.blocks[key]);
@@ -132,9 +132,6 @@ export abstract class Block extends Events {
                 if (this.parent.blocks[n] == pb) return n;
             }
         }
-    }
-    get blockKeys() {
-        return Object.keys(this.blocks);
     }
     get allBlockKeys() {
         return [BlockChildKey.childs];

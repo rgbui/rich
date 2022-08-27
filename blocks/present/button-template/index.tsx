@@ -12,7 +12,6 @@ import { Divider } from "../../../component/view/grid";
 import { EditSvg } from "../../../component/svgs";
 import { BlockFactory } from "../../../src/block/factory/block.factory";
 import { ActionDirective } from "../../../src/history/declare";
-import { BlockAppear } from "../../../src/block/appear";
 import { BlockChildKey } from "../../../src/block/constant";
 
 @url('/button/template')
@@ -22,15 +21,6 @@ export class ButtonTemplate extends Block {
     @prop()
     content = '添加待办事项';
     display = BlockDisplay.block;
-    /**
-     * 当子元素处于折叠状态时，
-     * 其对应的subChilds就不应搜到了，不参于编辑
-     */
-    get blockKeys() {
-        var keys = Object.keys(this.blocks);
-        if (this.expand == false) keys.remove('childs');
-        return keys;
-    }
     get multiLines() {
         return false;
     }

@@ -57,7 +57,7 @@ export class Block$LifeCycle {
 
     }
     async created(this: Block) {
-        var keys = this.blockKeys;
+        var keys = this.allBlockKeys;
         for (let key of keys) {
             await this.blocks[key].eachAsync(async (block) => {
                 await block.created();
