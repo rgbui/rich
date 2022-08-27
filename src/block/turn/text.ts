@@ -1,4 +1,5 @@
 import { Block } from "..";
+import { BlockChildKey, BlockUrlConstant } from "../constant";
 
 export var TextTurns = {
     urls: [
@@ -35,13 +36,17 @@ export var TextTurns = {
                 /**
                  * list 块转成其它块，期subChilds需要移到最外面，否则转换的不正常
                  */
-                if (block.url.startsWith('/list')) {
-                    if (!turnToUrl.startsWith('/list') && block.getChilds(block.childKey).length > 0) {
-                        var cs = block.getChilds(block.childKey).map(c => c);
-                        await block.parent.appendArray(cs, block.at + 1, block.parent.childKey);
-                        delete data.blocks[block.childKey];
+                if (block.hasSubChilds) {
+                    if (![BlockUrlConstant.List, '/todo', '/quote', '/callout'].some(s => turnToUrl.startsWith(s))) {
+                        if (block.subChilds.length > 0) {
+                            var cs = block.subChilds.map(c => c);
+                            await block.parent.appendArray(cs, block.at + 1, block.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
+                        }
+
+                        delete data.blocks[BlockChildKey.subChilds];
                     }
-                    delete data.listType;
+                    if (BlockUrlConstant.List == block.url)
+                        delete data.listType;
                 }
                 if (block.url == '/todo') delete data.checked;
                 return { url: turnToUrl, ...data }
