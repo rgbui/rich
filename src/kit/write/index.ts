@@ -186,9 +186,7 @@ export class PageWrite {
                 else await keydownBackspaceTextContent(this, aa, event);
                 break;
             case KeyboardCode.Tab.toLowerCase():
-                if (aa.block.closest(x => x.isListBlock)) {
-                    await onKeyTab(this, aa, event);
-                }
+                await onKeyTab(this, aa, event);
                 break;
             case KeyboardCode.X.toLowerCase():
                 if (UA.isMacOs && this.kit.page.keyboardPlate.isMeta() || !UA.isMacOs && this.kit.page.keyboardPlate.isCtrl()) {
