@@ -352,9 +352,6 @@ export abstract class Block extends Events {
     isVisibleKey(key: BlockChildKey) {
         return true;
     }
-    get htmlContent() {
-        return this.content;
-    }
     getVisibleBound() {
         if (!this.el) {
             console.log(this);
@@ -362,6 +359,8 @@ export abstract class Block extends Events {
         return Rect.fromEle(this.el)
     }
     getVisibleContentBound() {
+        var e = this.contentEl;
+        if (e) return Rect.fromEle(e);
         return this.getVisibleBound();
     }
     getVisiblePolygon() {
@@ -459,14 +458,30 @@ export abstract class Block extends Events {
      * @returns 
      */
     isCrossBlockVisibleArea(rect: Rect | Point) {
-        var bound = this.getVisibleBound();
-        if (rect instanceof Rect && bound.isCross(rect)) {
-            return true;
+        if (this.hasSubChilds) {
+            var bound = this.getVisibleBound();
+            var contentEle = this.contentEl;
+            var cb = Rect.fromEle(contentEle as HTMLElement);
+            if (rect instanceof Rect && bound.isCross(rect)) {
+                if (cb.isCross(rect)) return true;
+                else return false;
+            }
+            else if (rect instanceof Point && bound.contain(rect)) {
+                if (cb.contain(rect)) return true;
+                else return false;
+            }
+            return false;
         }
-        else if (rect instanceof Point && bound.contain(rect)) {
-            return true;
+        else {
+            var bound = this.getVisibleBound();
+            if (rect instanceof Rect && bound.isCross(rect)) {
+                return true;
+            }
+            else if (rect instanceof Point && bound.contain(rect)) {
+                return true;
+            }
+            return false;
         }
-        return false;
     }
     async forceUpdate() {
         return new Promise((resolve, reject) => {
@@ -660,7 +675,7 @@ export abstract class Block extends Events {
     isCanEdit(prop?: string) {
         if (this.page.pageInfo?.locker?.userid) return false;
         if (typeof prop == 'undefined') prop = 'content';
-        if (this.url == '/title') {
+        if (this.url == BlockUrlConstant.Title) {
             if (this.page.permissions.includes(AtomPermission.createOrDeleteDoc)) return true;
             else return false;
         }
