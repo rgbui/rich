@@ -190,34 +190,30 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
             if (block.isLine && block.prev) {
                 /**这里判断block前面有没有line */
                 var pv = block.prev;
-                if (isEmpty && !aa.isSolid) await block.delete();
-                else if (aa.isSolid) await block.delete();
-                if (pv.appearAnchors.some(s => s.isSolid)) {
-
+                if (aa.isSolid) await block.delete()
+                else if (isEmpty) await block.delete()
+                if (pv.appearAnchors.some(s => s.isText)) {
+                    pv.updateProps({ content: pv.content.slice(0, pv.content.length - 1) }, BlockRenderRange.self);
                 }
-                else pv.updateProps({ content: pv.content.slice(0, pv.content.length - 1) }, BlockRenderRange.self);
                 if (pv.isContentEmpty) {
                     var fr = pv.prev;
                     await pv.delete();
-                    write.kit.page.addUpdateEvent(async () => {
-                        if (fr) write.cursor.onFocusBlockAnchor(fr, { last: true, render: true, merge: true });
-                        else write.cursor.onFocusBlockAnchor(rowBlock, { render: true, merge: true });
-                    })
+                    pv = fr;
                 }
-                else write.kit.page.addUpdateEvent(async () => {
-                    write.cursor.onFocusBlockAnchor(pv, { last: true, render: true, merge: true });
+                write.kit.page.addUpdateEvent(async () => {
+                    if (pv) write.cursor.onFocusBlockAnchor(pv, { last: true, render: true, merge: true });
+                    else write.cursor.onFocusBlockAnchor(rowBlock, { render: true, merge: true });
+                });
+            }
+            else if (aa.isSolid) {
+                await block.delete();
+                write.kit.page.addUpdateEvent(async () => {
+                    write.cursor.onFocusBlockAnchor(rowBlock, { render: true, merge: true });
                 });
                 return;
             }
             else {
                 if (isEmpty && block.isLine) await block.delete()
-                else if (aa.isSolid) {
-                    await block.delete();
-                    write.kit.page.addUpdateEvent(async () => {
-                        write.cursor.onFocusBlockAnchor(rowBlock, { render: true, merge: true });
-                    });
-                    return;
-                }
                 /**
                  * 如果满足转换，
                  * 则自动转换,如果是list块，且有子块，则不自动转换
@@ -230,25 +226,21 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                     return;
                 }
                 //这里判断块前面没有同级的块，所以这里考虑能否升级
-                if (rowBlock?.parent?.hasSubChilds && !rowBlock.prev) {
+                if (rowBlock?.parent?.hasSubChilds && !rowBlock.next) {
                     var rp = rowBlock.parent;
-                    var rest = rowBlock.parentBlocks.findAll((g, i) => i > rowBlock.at);
-                    await rowBlock.appendArray(rest);
                     await rowBlock.insertAfter(rp);
                     write.kit.page.addUpdateEvent(async () => {
                         write.cursor.onFocusBlockAnchor(rowBlock, { render: true, merge: true });
                     });
                     return;
                 }
-                if (!rowBlock.isContentEmpty && rowBlock.isTextBlock && !rowBlock.prev && rowBlock.parent.isTextBlock) {
-                    //这个父块合并子块的内容
-                    await combindSubBlock(write, rowBlock);
-                    return;
-                }
-                if (!rowBlock.isContentEmpty && rowBlock.isTextBlock && rowBlock.prev?.isTextBlock && rowBlock.prev?.url != BlockUrlConstant.Title) {
+                if (rowBlock.isTextBlock && rowBlock?.prev?.isTextBlock && rowBlock?.prev?.url != BlockUrlConstant.Title) {
                     //这个需要合并块
-                    await combineTextBlock(write, rowBlock);
-                    return;
+                    return await combineTextBlock(write, rowBlock);
+                }
+                if (rowBlock.isTextBlock && !rowBlock?.prev) {
+                    //这个父块合并子块的内容
+                    return await combindSubBlock(write, rowBlock);
                 }
                 /***
                  * 这个回车啥也没干，光标跳动
@@ -265,7 +257,6 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
             }
         });
     }
-
 }
 
 
@@ -343,6 +334,12 @@ async function combindSubBlock(write: PageWrite, rowBlock: Block) {
  */
 async function combineTextBlock(write: PageWrite, rowBlock: Block) {
     var preBlock = rowBlock.prev;
+    if (preBlock.hasSubChilds && preBlock.subChilds.length > 0) {
+        var g = preBlock.findReverse(c => c.isVisible && c.isBlock);
+        if (g) {
+            preBlock = g;
+        }
+    }
     var lastPreBlock = preBlock.childs.last();
     if (preBlock.childs.length == 0) {
         var content = preBlock.content;
@@ -367,6 +364,14 @@ async function combineTextBlock(write: PageWrite, rowBlock: Block) {
     else {
         if (rowBlock.content != '')
             await preBlock.appendBlock({ url: BlockUrlConstant.Text, content: rowBlock.content, pattern: await rowBlock.pattern.cloneData() })
+    }
+    if (rowBlock.subChilds.length > 0) {
+        if (preBlock.hasSubChilds) {
+            await preBlock.appendArray(rowBlock.subChilds, undefined, BlockChildKey.subChilds)
+        }
+        else {
+            await preBlock.parent.appendArray(rowBlock.subChilds, preBlock.at + 1, preBlock.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs)
+        }
     }
     await rowBlock.delete();
     if (!lastPreBlock) {
