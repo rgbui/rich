@@ -436,6 +436,17 @@ export class Page$Cycle {
         await rs.eachAsync(async r => {
             r.parentBlocks.remove(r);
         })
+        if (this.pageLayout.type == PageLayoutType.doc) {
+            if (this.nav) {
+                var view = this.views[0];
+                var second = this.views[1];
+                if (view && second) {
+                    if (view.exists(c => c.url == BlockUrlConstant.Outline) && !second.exists(c => c.url == BlockUrlConstant.Outline)) {
+                        this.views = [second, view];
+                    }
+                }
+            }
+        }
     }
     async updateProps(this: Page, props: Record<string, any>) {
         var oldValue: Record<string, any> = {};
