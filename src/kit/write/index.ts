@@ -443,7 +443,7 @@ export class PageWrite {
                         startOffset: so,
                         endAnchor: na,
                         endOffset: no
-                    }, { merge: true, render: true, combine: true }
+                    },{ merge: true, render: true, combine: true }
                 )
             });
         });

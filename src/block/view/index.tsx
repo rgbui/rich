@@ -29,6 +29,7 @@ export abstract class BlockView<T extends Block> extends Component<{ block: T }>
         this.block.el = ReactDOM.findDOMNode(this) as HTMLDivElement;
     }
     componentDidMount() {
+        this.block.isMounted=true;
         this.block.el = ReactDOM.findDOMNode(this) as HTMLDivElement;
         if (this.block.el) {
             (this.block.el as any).block = this.block;

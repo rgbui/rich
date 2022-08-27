@@ -200,12 +200,6 @@ export class AnchorCursor {
     }
     renderWindowSelection() {
         var sel = window.getSelection();
-        if(!this.startAnchor.block.appearAnchors.includes(this.startAnchor)){
-            console.log('ggg');
-        }
-        if(!this.endAnchor.block.appearAnchors.includes(this.endAnchor)){
-            console.log('ggg');
-        }
         if (!this.isCollapse) {
             var cr = this.startAnchor.cacCollapseFocusPos(this.startOffset);
             var er = this.endAnchor.cacCollapseFocusPos(this.endOffset);
