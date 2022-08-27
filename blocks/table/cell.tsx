@@ -123,11 +123,9 @@ export class TableCellView extends BlockView<TableCell>{
                     })
                 },
             ]
-            console.log(items,  Point.from(event));
             var result = await useSelectMenuItem({ roundPoint: Point.from(event) },
                 items
             );
-
             if (result) {
                 switch (result.item.name) {
                     case 'left':
@@ -233,7 +231,6 @@ export class TableCellView extends BlockView<TableCell>{
             console.error(ex);
             this.block.page.onError(ex);
         }
-
     }
     render() {
         var style = this.block.pattern.style;
@@ -245,7 +242,7 @@ export class TableCellView extends BlockView<TableCell>{
             ref={e => this.block.childsEl = e}
         >
             {this.block.childs.length == 0 && <div style={{ height: 20 }}></div>}
-            <ChildsArea childs={this.block.childs}></ChildsArea>
+            <ChildsArea  childs={this.block.childs}></ChildsArea>
         </td>
     }
 }
