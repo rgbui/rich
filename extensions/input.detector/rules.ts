@@ -57,6 +57,11 @@ export var rules: DetectorRule[] = [
     },
     {
         operator: DetectorOperator.firstLetterTurnBlock,
+        match: [/^[！!]{2} /],
+        url: '/callout'
+    },
+    {
+        operator: DetectorOperator.firstLetterTurnBlock,
         match: [/^[\*\-\+] /],
         url: '/list?{listType:0}'
     },
