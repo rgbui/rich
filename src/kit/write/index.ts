@@ -225,11 +225,11 @@ export class PageWrite {
     }
     async textInput(aa: AppearAnchor, event: React.CompositionEvent | React.FormEvent<Element>) {
         var inputEvent = event.nativeEvent as InputEvent;
-        if (aa.isSolid) {
+        if (aa.isSolid && inputEvent.data) {
             this.onSolidInputCreateTextBlock(aa, event);
             return;
         }
-        if (aa.isText && aa.block.isLine && !(aa.block.isTextContent && aa.block.asTextContent.isBlankPlain) && !aa.block.next) {
+        if (aa.isText && inputEvent.data && aa.block.isLine && !(aa.block.isTextContent && aa.block.asTextContent.isBlankPlain) && !aa.block.next) {
             this.onRowLastLineBlockCreateTextBlock(aa, event);
             return;
         }
@@ -251,6 +251,7 @@ export class PageWrite {
          * 因为这样会导致输入的时候一直输入到line块中，或者空格一下  该功能暂时不做
          */
         else if (await inputLineTail(this, aa, event)) { }
+        console.log('ggg');
         await InputStore(aa);
     }
     /**
