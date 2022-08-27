@@ -251,7 +251,6 @@ export class PageWrite {
          * 因为这样会导致输入的时候一直输入到line块中，或者空格一下  该功能暂时不做
          */
         else if (await inputLineTail(this, aa, event)) { }
-        console.log('ggg');
         await InputStore(aa);
     }
     /**

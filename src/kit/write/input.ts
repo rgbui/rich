@@ -390,8 +390,7 @@ async function combineTextBlock(write: PageWrite, rowBlock: Block) {
  * @param insertContent  删除选区并插入内容
  */
 export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent, options?: { cut?: boolean, insertContent?: string }) {
-    if (event)
-        event.preventDefault();
+    if (event) event.preventDefault();
     await InputForceStore(aa, async () => {
         var sel = window.getSelection();
         var deleteText = sel.getRangeAt(0)?.cloneContents()?.textContent;
