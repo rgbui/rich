@@ -236,7 +236,11 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                 }
                 if (rowBlock.isTextBlock && rowBlock?.prev?.isTextBlock && rowBlock?.prev?.url != BlockUrlConstant.Title) {
                     //这个需要合并块
-                    return await combineTextBlock(write, rowBlock);
+                    var lastPreBlock = await combineTextBlock(write, rowBlock);
+                    write.kit.page.addUpdateEvent(async () => {
+                        write.cursor.onFocusBlockAnchor(lastPreBlock, { last: true, render: true, merge: true });
+                    });
+                    return
                 }
                 if (rowBlock.isTextBlock && !rowBlock?.prev) {
                     //这个父块合并子块的内容
@@ -332,8 +336,9 @@ async function combindSubBlock(write: PageWrite, rowBlock: Block) {
  * @param write 
  * @param rowBlock 
  */
-async function combineTextBlock(write: PageWrite, rowBlock: Block) {
-    var preBlock = rowBlock.prev;
+async function combineTextBlock(write: PageWrite, rowBlock: Block, preBlock?: Block) {
+    if (typeof preBlock == 'undefined')
+        preBlock = rowBlock.prev;
     if (preBlock.hasSubChilds && preBlock.subChilds.length > 0) {
         var g = preBlock.findReverse(c => c.isVisible && c.isBlock);
         if (g) {
@@ -378,9 +383,7 @@ async function combineTextBlock(write: PageWrite, rowBlock: Block) {
         lastPreBlock = preBlock.childs.first();
     }
     if (!lastPreBlock) lastPreBlock = preBlock;
-    write.kit.page.addUpdateEvent(async () => {
-        write.cursor.onFocusBlockAnchor(lastPreBlock, { last: true, render: true, merge: true });
-    });
+    return lastPreBlock;
 }
 /**
  * 删除选区，
@@ -395,6 +398,7 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
         var sel = window.getSelection();
         var deleteText = sel.getRangeAt(0)?.cloneContents()?.textContent;
         write.cursor.catchWindowSelection();
+        write.cursor.adjustAnchorSorts()
         var appears = write.cursor.getAppears()
         var rowBlocks: Block[] = [];
         await appears.eachAsync(async appear => {
@@ -414,9 +418,10 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
                 }
             }
         });
-        write.cursor.adjustAnchorSorts()
         var isStartDelete: boolean = false;
-        var preAppear = write.cursor.endAnchor.block.prevFind(g => g.appearAnchors.length > 0)?.appearAnchors.last();
+        var focusB;
+        var preAppear = write.cursor.endAnchor.block.prevFind(g => g.isVisible && g.appearAnchors.length > 0)?.appearAnchors.last();
+        if (!preAppear) preAppear = write.cursor.endAnchor.block.nextFind(g => g.isVisible && g.appearAnchors.length > 0)?.appearAnchors.last();
         if (write.cursor.startAnchor == write.cursor.endAnchor) {
             if (write.cursor.startAnchor.isText) {
                 var tc = write.cursor.startAnchor.textContent;
@@ -426,15 +431,36 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
             }
         }
         else {
+            var startBlock = write.cursor.startAnchor.block.closest(x => x.isBlock);
+            var endBlock = write.cursor.endAnchor.block.closest(c => c.isBlock);
+
             if (write.cursor.startAnchor.isText) {
                 write.cursor.startAnchor.setContent(write.cursor.startAnchor.textContent.slice(0, write.cursor.startOffset));
                 await write.cursor.startAnchor.block.updateAppear(write.cursor.startAnchor, write.cursor.startAnchor.textContent, BlockRenderRange.self);
-                if (write.cursor.startAnchor.block.isContentEmpty) { await write.cursor.startAnchor.block.delete(); isStartDelete = true; }
+                if (write.cursor.startAnchor.block.isContentEmpty) {
+                    var isLine = write.cursor.startAnchor.block.isLine;
+                    if (startBlock == write.cursor.startAnchor.block) { startBlock = undefined }
+                    await write.cursor.startAnchor.block.delete();
+                    if (isLine) {
+                        if (startBlock.isContentEmpty) { await startBlock.delete(); startBlock = undefined; }
+                    }
+                    isStartDelete = true;
+                }
             }
             if (write.cursor.endAnchor.isText) {
                 write.cursor.endAnchor.setContent((options?.insertContent || '') + write.cursor.endAnchor.textContent.slice(write.cursor.endOffset));
                 await write.cursor.endAnchor.block.updateAppear(write.cursor.endAnchor, write.cursor.endAnchor.textContent, BlockRenderRange.self);
-                if (write.cursor.endAnchor.block.isContentEmpty) await write.cursor.endAnchor.block.delete()
+                if (write.cursor.endAnchor.block.isContentEmpty) {
+                    var isLine = write.cursor.endAnchor.block.isLine;
+                    if (endBlock == write.cursor.endAnchor.block) { endBlock = undefined }
+                    await write.cursor.endAnchor.block.delete()
+                    if (isLine) {
+                        if (endBlock.isContentEmpty) { await endBlock.delete(); endBlock = undefined }
+                    }
+                }
+            }
+            if (startBlock && endBlock && startBlock !== endBlock) {
+                focusB = await combineTextBlock(write, endBlock, startBlock)
             }
         }
         await rowBlocks.eachAsync(async (b) => {
@@ -446,7 +472,8 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
         }
         write.kit.page.addUpdateEvent(async () => {
             forceCloseTextTool()
-            if (isStartDelete) write.cursor.onFocusAppearAnchor(preAppear, { merge: true, last: true })
+            if (focusB) write.cursor.onFocusBlockAnchor(focusB, { last: true, render: true, merge: true });
+            else if (isStartDelete) write.cursor.onFocusAppearAnchor(preAppear, { merge: true, last: true })
             else write.cursor.onFocusAppearAnchor(write.cursor.startAnchor, { merge: true, at: write.cursor.startOffset + (options?.insertContent || '').length });
         })
     });
