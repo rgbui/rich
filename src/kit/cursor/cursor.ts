@@ -1,4 +1,5 @@
 import { Kit } from "..";
+import { forceCloseTextTool } from "../../../extensions/text.tool";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
 import { findBlockAppear, findBlocksBetweenAppears } from "../../block/appear/visible.seek";
@@ -9,13 +10,17 @@ import { TextEle } from "../../common/text.ele";
 import { Point } from "../../common/vector/point";
 import { OperatorDirective } from "../../history/declare";
 import { AppearCursorPos } from "../../history/snapshoot";
+import { Selector } from "./selector";
 
 export class AnchorCursor {
+    selector: Selector;
     startAnchor: AppearAnchor;
     startOffset: number;
     endAnchor: AppearAnchor;
     endOffset: number;
-    constructor(public kit: Kit) { }
+    constructor(public kit: Kit) { 
+        this.selector=new Selector(this.kit);
+    }
     get isCollapse() {
         var sa = this.startAnchor.isEqual(this.endAnchor);
         if (sa) {
@@ -206,6 +211,7 @@ export class AnchorCursor {
             sel.setBaseAndExtent(cr.node, cr.pos, er.node, er.pos);
         }
         else {
+            forceCloseTextTool()
             var cr = this.startAnchor.cacCollapseFocusPos(this.startOffset);
             sel.collapse(cr.node, cr.pos);
         }
@@ -250,7 +256,6 @@ export class AnchorCursor {
             if (options?.merge) this.kit.page.snapshoot.merge();
             this.focusBlockAnchor(block, options)
             if (options?.render) {
-                this.kit.operator.onClearSelectBlocks();
                 this.renderWindowSelection()
             }
         })
@@ -279,5 +284,23 @@ export class AnchorCursor {
                 }
             }
         }
+    }
+    /***
+    * 事件
+    */
+    currentSelectedBlocks: Block[] = [];
+    onSelectBlocks(blocks) {
+        this.currentSelectedBlocks = blocks;
+        var currentEls = Array.from(this.kit.page.root.querySelectorAll(".shy-block-selected"));
+        this.currentSelectedBlocks.each(sel => {
+            var el = sel.addBlockSelect();
+            currentEls.remove(el);
+        });
+        currentEls.each(el => {
+            el.classList.remove('shy-block-selected');
+        })
+    }
+    onClearSelectBlocks() {
+        this.onSelectBlocks([]);
     }
 }

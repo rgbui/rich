@@ -26,7 +26,7 @@ export async function InputStore(appear: AppearAnchor, force: boolean = false, a
         clearTimeout(inputStoreTime);
         inputStoreTime = undefined
     }
-    var cursor = appear.block.page.kit.writer.cursor;
+    var cursor = appear.block.page.kit.cursor;
     var sr = cursor.getWindowSelectionAnchors();
     var doAction = async () => {
         if (typeof action == 'function') await action();

@@ -16,7 +16,7 @@ import { TextEle } from "../../common/text.ele";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
 import { PageLayoutType } from "../../page/declare";
-import { AnchorCursor } from "./cursor";
+import { AnchorCursor } from "../cursor/cursor";
 import { inputBackspaceDeleteContent, inputBackSpaceTextContent, inputDetector, inputLineTail, inputPop, keydownBackspaceTextContent } from "./input";
 import { MoveCursor, onEnterInput, onKeyTab, predictKeydown } from "./keydown";
 import { onPaste } from "./paste";
@@ -60,8 +60,7 @@ import { AutoInputStore, InputForceStore, InputStore } from "./store";
  */
 
 export class PageWrite {
-    constructor(public kit: Kit) { this.cursor = new AnchorCursor(kit); }
-    cursor: AnchorCursor;
+    constructor(public kit: Kit) { }
     async mousedown(aa: AppearAnchor, event: React.MouseEvent) {
         this.isCompositionstart = false;
         var sel = window.getSelection();
@@ -83,10 +82,10 @@ export class PageWrite {
         var cr = TextEle.getCursorRangeByPoint(Point.from(event));
         var timer;
         if (cr?.node && aa.el.contains(cr?.node)) {
-            this.cursor.onCollapse(aa, cr.offset);
+            this.kit.cursor.onCollapse(aa, cr.offset);
         }
         else timer = setTimeout(() => {
-            this.cursor.onCatchWindowSelection();
+            this.kit.cursor.onCatchWindowSelection();
         }, 100);
         MouseDragger({
             event,
@@ -112,7 +111,7 @@ export class PageWrite {
             },
             moveEnd(ev, isMove, data) {
                 if (isMove) {
-                    self.cursor.onCatchWindowSelection();
+                    self.kit.cursor.onCatchWindowSelection();
                     if (!sel.isCollapsed) {
                         self.onOpenTextTool();
                     }
@@ -141,7 +140,7 @@ export class PageWrite {
          * 这里判断是光标、选区、还是选择多行块
          */
         var hasSelectionRange: boolean = false;
-        if (this.kit.operator.currentSelectedBlocks.length > 0) hasSelectionRange = true;
+        if (this.kit.cursor.currentSelectedBlocks.length > 0) hasSelectionRange = true;
         else if (!sel.isCollapsed) hasSelectionRange = true;
         switch (event.key.toLowerCase()) {
             case KeyboardCode.ArrowDown.toLowerCase():
@@ -165,7 +164,7 @@ export class PageWrite {
                             newBlock = await this.kit.page.createBlock(BlockUrlConstant.TextSpan, {}, this.kit.page.views.last());
                         }
                         newBlock.mounted(() => {
-                            this.kit.writer.cursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true });
+                            this.kit.cursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true });
                         })
                     });
                     return;
@@ -273,7 +272,7 @@ export class PageWrite {
         if (range) {
             var rs = TextEle.getWindowCusorBounds();
             while (true) {
-                var list = this.cursor.getAppears();
+                var list = this.kit.cursor.getAppears();
                 var blocks = lodash.identity(list.map(l => l.block));
                 if (blocks.some(s => !s.isSupportTextStyle)) return;
                 var turnBlock: Block = undefined;
@@ -287,7 +286,7 @@ export class PageWrite {
                     turnBlock = blocks[0].closest(x => !x.isLine);
                 }
                 var result = await useTextTool(
-                    { roundAreas: rs, relativeEleAutoScroll: this.cursor.endAnchor.el },
+                    { roundAreas: rs, relativeEleAutoScroll: this.kit.cursor.endAnchor.el },
                     { style: this.kit.page.pickBlocksTextStyle(blocks), turnBlock }
                 );
                 if (result) {
@@ -346,7 +345,7 @@ export class PageWrite {
                     await aa.block.clearEmptyBlock();
                 }
                 newBlock.mounted(() => {
-                    this.cursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true })
+                    this.kit.cursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true })
                 });
             });
         }
@@ -368,7 +367,7 @@ export class PageWrite {
     ) {
         await this.kit.page.onAction(ActionDirective.onUpdatePattern, async () => {
             await appears.eachAsync(async appear => {
-                if (appear == this.cursor.startAnchor || appear == this.cursor.endAnchor) {
+                if (appear == this.kit.cursor.startAnchor || appear == this.kit.cursor.endAnchor) {
 
                 }
                 else {
@@ -379,15 +378,15 @@ export class PageWrite {
                     }
                 }
             });
-            this.cursor.adjustAnchorSorts();
+            this.kit.cursor.adjustAnchorSorts();
             var nstart: Block;
             var so: number;
             var nend: Block;
             var no: number;
-            if (this.cursor.isAnchorAppear) {
-                if (this.cursor.startAnchor.isText) {
-                    var rs = await this.cursor.startAnchor.split([this.cursor.startOffset, this.cursor.endOffset]);
-                    if (this.cursor.startOffset == 0) { nstart = rs[0]; nend = rs[0] }
+            if (this.kit.cursor.isAnchorAppear) {
+                if (this.kit.cursor.startAnchor.isText) {
+                    var rs = await this.kit.cursor.startAnchor.split([this.kit.cursor.startOffset, this.kit.cursor.endOffset]);
+                    if (this.kit.cursor.startOffset == 0) { nstart = rs[0]; nend = rs[0] }
                     else {
                         nstart = rs[1];
                         nend = rs[1]
@@ -398,37 +397,37 @@ export class PageWrite {
                     no = nend.content.length;
                 }
                 else {
-                    nstart = this.cursor.startAnchor.block;
-                    nend = this.cursor.startAnchor.block;
+                    nstart = this.kit.cursor.startAnchor.block;
+                    nend = this.kit.cursor.startAnchor.block;
                     so = no = 0;
                 }
             }
             else {
-                if (this.cursor.startAnchor.isText) {
-                    var ss = await this.cursor.startAnchor.split([this.cursor.startOffset]);
+                if (this.kit.cursor.startAnchor.isText) {
+                    var ss = await this.kit.cursor.startAnchor.split([this.kit.cursor.startOffset]);
                     if (ss.length == 2) {
                         nstart = ss.last();
                         so = 0;
                     }
                     else {
                         nstart = ss.last();
-                        if (this.cursor.startOffset == 0) so = 0;
+                        if (this.kit.cursor.startOffset == 0) so = 0;
                         else { so = nstart.content.length; }
                     }
-                } else { so = 0; nstart = this.cursor.startAnchor.block; }
-                if (this.cursor.endAnchor.isText) {
-                    var es = await this.cursor.endAnchor.split([this.cursor.endOffset]);
+                } else { so = 0; nstart = this.kit.cursor.startAnchor.block; }
+                if (this.kit.cursor.endAnchor.isText) {
+                    var es = await this.kit.cursor.endAnchor.split([this.kit.cursor.endOffset]);
                     if (es.length == 2) {
                         nend = es.first();
                         no = nend.content.length;
                     }
                     else {
-                        if (this.cursor.endOffset == 0) no = 0;
+                        if (this.kit.cursor.endOffset == 0) no = 0;
                         else no = nend.content.length;
                     }
                 }
                 else {
-                    nend = this.cursor.endAnchor.block;
+                    nend = this.kit.cursor.endAnchor.block;
                     no = 0;
                 }
                 if (styles) { nstart.pattern.setStyles(styles); nend.pattern.setStyles(styles); }
@@ -436,13 +435,13 @@ export class PageWrite {
             }
             this.kit.page.addUpdateEvent(async () => {
                 var na = nend.appearAnchors.last();
-                this.cursor.onSetTextSelection(
+                this.kit.cursor.onSetTextSelection(
                     {
                         startAnchor: nstart.appearAnchors.first(),
                         startOffset: so,
                         endAnchor: na,
                         endOffset: no
-                    },{ merge: true, render: true, combine: true }
+                    }, { merge: true, render: true, combine: true }
                 )
             });
         });
@@ -450,7 +449,7 @@ export class PageWrite {
     async onSelectionEquation(appears: AppearAnchor[], props: { equation: boolean }) {
         await this.kit.page.onAction(ActionDirective.onUpdateEquation, async () => {
             await appears.eachAsync(async appear => {
-                if (appear == this.cursor.startAnchor || appear == this.cursor.endAnchor) {
+                if (appear == this.kit.cursor.startAnchor || appear == this.kit.cursor.endAnchor) {
 
                 }
                 else {
@@ -466,51 +465,51 @@ export class PageWrite {
                     }
                 }
             });
-            this.cursor.adjustAnchorSorts();
+            this.kit.cursor.adjustAnchorSorts();
             var nstart: Block;
             var nend: Block;
-            if (this.cursor.isAnchorAppear) {
-                if (this.cursor.startAnchor.isText) {
-                    var rs = await this.cursor.startAnchor.split([this.cursor.startOffset, this.cursor.endOffset]);
-                    if (this.cursor.startOffset == 0) { nstart = rs[0]; nend = rs[0] }
+            if (this.kit.cursor.isAnchorAppear) {
+                if (this.kit.cursor.startAnchor.isText) {
+                    var rs = await this.kit.cursor.startAnchor.split([this.kit.cursor.startOffset, this.kit.cursor.endOffset]);
+                    if (this.kit.cursor.startOffset == 0) { nstart = rs[0]; nend = rs[0] }
                     else { nstart = rs[1]; nend = rs[1]; }
                     if (props.equation) await nstart.turn(BlockUrlConstant.KatexLine)
                 }
                 else {
-                    if (!props.equation && this.cursor.startAnchor.isSolid) {
-                        if (this.cursor.startAnchor.block.url == BlockUrlConstant.KatexLine) {
-                            nstart = nend = await this.cursor.startAnchor.block.turn(BlockUrlConstant.Text);
+                    if (!props.equation && this.kit.cursor.startAnchor.isSolid) {
+                        if (this.kit.cursor.startAnchor.block.url == BlockUrlConstant.KatexLine) {
+                            nstart = nend = await this.kit.cursor.startAnchor.block.turn(BlockUrlConstant.Text);
                         }
                     }
                 }
             }
             else {
                 if (props.equation == true) {
-                    if (this.cursor.startAnchor.isText) {
-                        var ss = await this.cursor.startAnchor.split([this.cursor.startOffset]);
+                    if (this.kit.cursor.startAnchor.isText) {
+                        var ss = await this.kit.cursor.startAnchor.split([this.kit.cursor.startOffset]);
                         nstart = ss.last();
                         nstart = await nstart.turn(BlockUrlConstant.KatexLine);
-                    } else nstart = this.cursor.startAnchor.block;
-                    if (this.cursor.endAnchor.isText) {
-                        var es = await this.cursor.endAnchor.split([this.cursor.endOffset]);
+                    } else nstart = this.kit.cursor.startAnchor.block;
+                    if (this.kit.cursor.endAnchor.isText) {
+                        var es = await this.kit.cursor.endAnchor.split([this.kit.cursor.endOffset]);
                         nend = es.first();
                         nend = await nend.turn(BlockUrlConstant.KatexLine);
                     }
-                    else nend = this.cursor.endAnchor.block;
+                    else nend = this.kit.cursor.endAnchor.block;
                 }
                 else {
-                    if (this.cursor.startAnchor.isSolid && this.cursor.startAnchor.block.url == BlockUrlConstant.KatexLine) {
-                        nstart = await this.cursor.startAnchor.block.turn(BlockUrlConstant.Text);
+                    if (this.kit.cursor.startAnchor.isSolid && this.kit.cursor.startAnchor.block.url == BlockUrlConstant.KatexLine) {
+                        nstart = await this.kit.cursor.startAnchor.block.turn(BlockUrlConstant.Text);
                     }
-                    else nstart = this.cursor.startAnchor.block;
-                    if (this.cursor.endAnchor.isSolid && this.cursor.endAnchor.block.url == BlockUrlConstant.KatexLine) {
-                        nend = await this.cursor.endAnchor.block.turn(BlockUrlConstant.Text)
+                    else nstart = this.kit.cursor.startAnchor.block;
+                    if (this.kit.cursor.endAnchor.isSolid && this.kit.cursor.endAnchor.block.url == BlockUrlConstant.KatexLine) {
+                        nend = await this.kit.cursor.endAnchor.block.turn(BlockUrlConstant.Text)
                     }
-                    else nend = this.cursor.endAnchor.block;
+                    else nend = this.kit.cursor.endAnchor.block;
                 }
             }
             this.kit.page.addUpdateEvent(async () => {
-                this.cursor.onSetTextSelection(
+                this.kit.cursor.onSetTextSelection(
                     {
                         startAnchor: nstart.appearAnchors.first(),
                         startOffset: 0,
@@ -534,7 +533,7 @@ export class PageWrite {
                 aa.block.parentKey
             );
             this.kit.page.addUpdateEvent(async () => {
-                this.kit.writer.cursor.onFocusBlockAnchor(newBlock, { last: true, merge: true, render: true });
+                this.kit.cursor.onFocusBlockAnchor(newBlock, { last: true, merge: true, render: true });
             });
         });
     }
@@ -552,7 +551,7 @@ export class PageWrite {
                 aa.block.parentKey
             );
             this.kit.page.addUpdateEvent(async () => {
-                this.kit.writer.cursor.onFocusBlockAnchor(newBlock, { last: true, merge: true, render: true });
+                this.kit.cursor.onFocusBlockAnchor(newBlock, { last: true, merge: true, render: true });
             });
         });
     }

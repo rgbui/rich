@@ -34,7 +34,7 @@ export async function BoardDrag(kit: Kit, block: Block, event: React.MouseEvent)
             }
             else {
                 gm.start();
-                kit.selector.setStart(Point.from(ev));
+                kit.cursor.selector.setStart(Point.from(ev));
             }
         },
         move(ev, data) {
@@ -46,7 +46,7 @@ export async function BoardDrag(kit: Kit, block: Block, event: React.MouseEvent)
                  * 这里需要基于视觉查找当前有那些块可以被选中
                  */
                 var movePoint = Point.from(ev);
-                kit.selector.setMove(movePoint);
+                kit.cursor.selector.setMove(movePoint);
                 var bs = gm.findBlocksByRect(new Rect(downPoint, movePoint));
                 bs = kit.page.getAtomBlocks(bs);
                 kit.picker.onPicker(bs);
@@ -59,7 +59,7 @@ export async function BoardDrag(kit: Kit, block: Block, event: React.MouseEvent)
                     kit.picker.onMoveEnd(Point.from(event), Point.from(ev));
                 }
                 else {
-                    kit.selector.close();
+                    kit.cursor.selector.close();
                 }
                 if (kit.picker.blocks.length > 0)
                     await openBoardEditTool(kit);

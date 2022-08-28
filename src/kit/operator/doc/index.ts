@@ -16,7 +16,7 @@ import { Point, Rect } from "../../../common/vector/point";
  * 
  */
 export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
-    kit.operator.onClearSelectBlocks();
+    kit.cursor.onClearSelectBlocks();
     var downPoint = Point.from(event);
     var gm = block ? block.panelGridMap : kit.page.gridMap;
     MouseDragger({
@@ -24,21 +24,21 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
         dis: 5,
         moveStart() {
             gm.start();
-            kit.selector.setStart(Point.from(event));
+            kit.cursor.selector.setStart(Point.from(event));
         },
         move(ev, data) {
             var movePoint = Point.from(ev)
             function cacSelector(dis: number) {
                 downPoint.y -= dis;
                 gm.relativePanelPoint.y -= dis;
-                kit.selector.setStart(downPoint);
-                kit.selector.setMove(movePoint);
+                kit.cursor.selector.setStart(downPoint);
+                kit.cursor.selector.setMove(movePoint);
                 /***
                * 这里怎么基于当前界面的视觉不断的收集选中block
                */
                 var bs = gm.findBlocksByRect(new Rect(downPoint, movePoint));
                 bs = kit.page.getAtomBlocks(bs);
-                kit.operator.onSelectBlocks(bs);
+                kit.cursor.onSelectBlocks(bs);
             };
             onAutoScroll({
                 el: kit.page.root,
@@ -56,14 +56,14 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
             gm.over();
             if (isMove) {
                 onAutoScrollStop();
-                kit.selector.close();
+                kit.cursor.selector.close();
             }
             else {
                 if (block) {
                     if (!block.isLayout) {
                         var a = findBlockNearAppearByPoint(block, Point.from(ev));
                         if (a) {
-                            kit.writer.cursor.onFocusAppearAnchor(a.aa, { at: a.offset });
+                            kit.cursor.onFocusAppearAnchor(a.aa, { at: a.offset });
                         }
                     }
                 }
@@ -71,7 +71,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                     /**这里得找页面的最末尾块 */
                     var lastBlock = kit.page.getViewLastBlock();
                     if (lastBlock && lastBlock.isContentEmpty && lastBlock.appearAnchors.some(s => s.isText)) {
-                        kit.writer.cursor.onFocusBlockAnchor(lastBlock, { last: true, render: true });
+                        kit.cursor.onFocusBlockAnchor(lastBlock, { last: true, render: true });
                     }
                     else {
                         kit.page.onCreateTailTextSpan();

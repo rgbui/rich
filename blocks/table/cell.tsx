@@ -38,7 +38,7 @@ export class TableCellView extends BlockView<TableCell>{
             await this.block.page.onAction(ActionDirective.onCreateBlockByEnter, async () => {
                 var newBlock = await this.block.page.createBlock(BlockUrlConstant.TextSpan, {}, this.block);
                 newBlock.mounted(() => {
-                    this.block.page.kit.writer.cursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
+                    this.block.page.kit.cursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
                 })
             });
         }
@@ -242,7 +242,7 @@ export class TableCellView extends BlockView<TableCell>{
             ref={e => this.block.childsEl = e}
         >
             {this.block.childs.length == 0 && <div style={{ height: 20 }}></div>}
-            <ChildsArea  childs={this.block.childs}></ChildsArea>
+            <ChildsArea childs={this.block.childs}></ChildsArea>
         </td>
     }
 }

@@ -5,7 +5,7 @@ import { BoardBlockHover } from "./connect/block.hover";
 import { HandleView } from "./handle/view";
 import { BlockPickerView } from "./picker/view";
 import { BoardScale } from "./scale";
-import { SelectorView } from "./selector/view";
+import { SelectorView } from "./cursor/selector/view";
 
 export class KitView extends React.Component<{ kit: Kit }>{
     constructor(props) {
@@ -19,7 +19,7 @@ export class KitView extends React.Component<{ kit: Kit }>{
     render() {
         return <div className='shy-kit' ref={e => this.el = e}>
             <BlockPickerView picker={this.kit.picker}></BlockPickerView>
-            <SelectorView selector={this.kit.selector}></SelectorView>
+            <SelectorView selector={this.kit.cursor.selector}></SelectorView>
             <HandleView handle={this.kit.handle}></HandleView>
             <BoardScale kit={this.props.kit}></BoardScale>
             <Collaboration kit={this.props.kit} ref={e => this.kit.collaboration = e}></Collaboration>

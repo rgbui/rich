@@ -109,7 +109,7 @@ async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
                 var rs = await rowBlock.appendArrayBlockData(bs, undefined, BlockChildKey.childs);
                 if (lastText) await rowBlock.appendBlock({ url: BlockUrlConstant.Text, content: lastText });
                 kit.page.addUpdateEvent(async () => {
-                    kit.writer.cursor.onFocusBlockAnchor(rs.last(), { last: true, render: true, merge: true });
+                    kit.cursor.onFocusBlockAnchor(rs.last(), { last: true, render: true, merge: true });
                 })
             }
             else {
@@ -123,7 +123,7 @@ async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
                 });
                 if (aa.block.isContentEmpty) await aa.block.delete();
                 kit.page.addUpdateEvent(async () => {
-                    kit.writer.cursor.onFocusBlockAnchor(rs.last(), { last: true, render: true, merge: true });
+                    kit.cursor.onFocusBlockAnchor(rs.last(), { last: true, render: true, merge: true });
                 })
             }
         }
@@ -141,7 +141,7 @@ async function onPasteCreateBlocks(kit: Kit, aa: AppearAnchor, blocks: any[]) {
                 await firstBlock.delete();
             }
             kit.page.addUpdateEvent(async () => {
-                kit.writer.cursor.onFocusBlockAnchor(rowBlock, { last: true, render: true, merge: true });
+                kit.cursor.onFocusBlockAnchor(rowBlock, { last: true, render: true, merge: true });
             })
         }
     })

@@ -50,33 +50,15 @@ export class PageOperator {
     mouseup(event: MouseEvent) {
 
     }
-    /***
-     * 事件
-     */
-    currentSelectedBlocks: Block[] = [];
-    onSelectBlocks(blocks) {
-        this.currentSelectedBlocks = blocks;
-        var currentEls = Array.from(this.kit.page.root.querySelectorAll(".shy-block-selected"));
-        this.currentSelectedBlocks.each(sel => {
-            var el = sel.addBlockSelect();
-            currentEls.remove(el);
-        });
-        currentEls.each(el => {
-            el.classList.remove('shy-block-selected');
-        })
-    }
-    onClearSelectBlocks() {
-        this.onSelectBlocks([]);
-    }
     /**
      * 清理页面的输入状态
      */
-    async onClearPage() {
+    async onClearPage()
+    {
         (await getShapeSelector()).close();
         onAutoScrollStop();
         forceCloseBoardEditTool();
         forceCloseTextTool();
-        this.kit.operator.onClearSelectBlocks();
         if (this.kit.writer.inputPop && this.kit.writer.inputPop.selector) {
             this.kit.writer.inputPop.selector.onClose();
         }
