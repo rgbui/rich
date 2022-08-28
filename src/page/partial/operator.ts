@@ -69,7 +69,7 @@ export class Page$Operator {
                         newBlock = await this.createBlock(BlockUrlConstant.TextSpan, {}, this.views.last());
                     }
                     newBlock.mounted(() => {
-                        this.kit.cursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true });
+                        this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true });
                         resolve(true);
                     })
                 })
@@ -96,7 +96,7 @@ export class Page$Operator {
             });
             if (pre) {
                 this.addUpdateEvent(async () => {
-                    this.kit.cursor.focusBlockAnchor(pre, { last: true, merge: true, render: true })
+                    this.kit.anchorCursor.focusBlockAnchor(pre, { last: true, merge: true, render: true })
                 })
             }
         })
@@ -228,7 +228,7 @@ export class Page$Operator {
                     var pa = blocks[0].parent;
                     var newBlocks = await pa.appendArrayBlockData(bs, Math.max(at, to) + 1, blocks.first().parentKey);
                     this.addUpdateEvent(async () => {
-                        this.kit.cursor.onSelectBlocks(newBlocks);
+                        this.kit.anchorCursor.onSelectBlocks(newBlocks);
                     })
                 });
                 break;

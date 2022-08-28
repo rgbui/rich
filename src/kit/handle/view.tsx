@@ -22,14 +22,14 @@ export class HandleView extends React.Component<{ handle: Handle }>{
         this.closeTip();
         event.stopPropagation();
         var self = this;
-        if (self.handle.kit.cursor.currentSelectedBlocks.length > 0) {
-            var bs = self.handle.kit.page.getAtomBlocks(self.handle.kit.cursor.currentSelectedBlocks);
+        if (self.handle.kit.anchorCursor.currentSelectedBlocks.length > 0) {
+            var bs = self.handle.kit.page.getAtomBlocks(self.handle.kit.anchorCursor.currentSelectedBlocks);
             var b = bs.findMax(g => g.getVisibleContentBound().bottom);
             if (b) {
                 await self.handle.kit.page.onAction('handle.plus.create', async () => {
                     var block = await b.visibleDownCreateBlock(BlockUrlConstant.TextSpan);
                     self.handle.kit.page.addUpdateEvent(async () => {
-                        self.handle.kit.cursor.onFocusBlockAnchor(block, { render: true, merge: true });
+                        self.handle.kit.anchorCursor.onFocusBlockAnchor(block, { render: true, merge: true });
                     })
                 })
             }
@@ -38,7 +38,7 @@ export class HandleView extends React.Component<{ handle: Handle }>{
             await self.handle.kit.page.onAction('handle.plus.create', async () => {
                 var block = await self.handle.handleBlock.visibleDownCreateBlock(BlockUrlConstant.TextSpan);
                 self.handle.kit.page.addUpdateEvent(async () => {
-                    self.handle.kit.cursor.onFocusBlockAnchor(block, { render: true, merge: true });
+                    self.handle.kit.anchorCursor.onFocusBlockAnchor(block, { render: true, merge: true });
                 })
             })
         }
@@ -50,8 +50,8 @@ export class HandleView extends React.Component<{ handle: Handle }>{
         var self = this;
         if (event) {
             self.handle.dragBlocks = [];
-            if (self.handle.kit.cursor.currentSelectedBlocks.exists(c => c.find(g => g == self.handle.handleBlock, true) ? true : false)) {
-                var cs = self.handle.kit.cursor.currentSelectedBlocks.map(c => c.handleBlock);
+            if (self.handle.kit.anchorCursor.currentSelectedBlocks.exists(c => c.find(g => g == self.handle.handleBlock, true) ? true : false)) {
+                var cs = self.handle.kit.anchorCursor.currentSelectedBlocks.map(c => c.handleBlock);
                 cs.each(c => {
                     if (!self.handle.dragBlocks.some(s => s == c))
                         self.handle.dragBlocks.push(c)

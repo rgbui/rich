@@ -197,7 +197,7 @@ export class Block$Event {
                     var pa = this.parent;
                     var nb = await pa.appendBlock(d, this.at + 1, this.parentKey);
                     this.page.addUpdateEvent(async ()=>{
-                         this.page.kit.cursor.onFocusBlockAnchor(nb, { merge: true, render: true, last: true })
+                         this.page.kit.anchorCursor.onFocusBlockAnchor(nb, { merge: true, render: true, last: true })
                     })
                 });
                 break;

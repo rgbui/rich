@@ -48,7 +48,7 @@ export class Title extends Block {
     onEmptyTitleFocusAnchor() {
         if (this.page?.pageInfo) {
             if (!this.page?.pageInfo.text) {
-                this.page.kit.cursor.onFocusBlockAnchor(this, { render: true });
+                this.page.kit.anchorCursor.onFocusBlockAnchor(this, { render: true });
             }
         }
     }

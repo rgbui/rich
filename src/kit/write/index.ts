@@ -16,7 +16,6 @@ import { TextEle } from "../../common/text.ele";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
 import { PageLayoutType } from "../../page/declare";
-import { AnchorCursor } from "../cursor/cursor";
 import { inputBackspaceDeleteContent, inputBackSpaceTextContent, inputDetector, inputLineTail, inputPop, keydownBackspaceTextContent } from "./input";
 import { MoveCursor, onEnterInput, onKeyTab, predictKeydown } from "./keydown";
 import { onPaste } from "./paste";
@@ -82,10 +81,10 @@ export class PageWrite {
         var cr = TextEle.getCursorRangeByPoint(Point.from(event));
         var timer;
         if (cr?.node && aa.el.contains(cr?.node)) {
-            this.kit.cursor.onCollapse(aa, cr.offset);
+            this.kit.anchorCursor.onCollapse(aa, cr.offset);
         }
         else timer = setTimeout(() => {
-            this.kit.cursor.onCatchWindowSelection();
+            this.kit.anchorCursor.onCatchWindowSelection();
         }, 100);
         MouseDragger({
             event,
@@ -111,7 +110,7 @@ export class PageWrite {
             },
             moveEnd(ev, isMove, data) {
                 if (isMove) {
-                    self.kit.cursor.onCatchWindowSelection();
+                    self.kit.anchorCursor.onCatchWindowSelection();
                     if (!sel.isCollapsed) {
                         self.onOpenTextTool();
                     }
@@ -140,7 +139,7 @@ export class PageWrite {
          * 这里判断是光标、选区、还是选择多行块
          */
         var hasSelectionRange: boolean = false;
-        if (this.kit.cursor.currentSelectedBlocks.length > 0) hasSelectionRange = true;
+        if (this.kit.anchorCursor.currentSelectedBlocks.length > 0) hasSelectionRange = true;
         else if (!sel.isCollapsed) hasSelectionRange = true;
         switch (event.key.toLowerCase()) {
             case KeyboardCode.ArrowDown.toLowerCase():
@@ -164,7 +163,7 @@ export class PageWrite {
                             newBlock = await this.kit.page.createBlock(BlockUrlConstant.TextSpan, {}, this.kit.page.views.last());
                         }
                         newBlock.mounted(() => {
-                            this.kit.cursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true });
+                            this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true });
                         })
                     });
                     return;
@@ -272,7 +271,7 @@ export class PageWrite {
         if (range) {
             var rs = TextEle.getWindowCusorBounds();
             while (true) {
-                var list = this.kit.cursor.getAppears();
+                var list = this.kit.anchorCursor.getAppears();
                 var blocks = lodash.identity(list.map(l => l.block));
                 if (blocks.some(s => !s.isSupportTextStyle)) return;
                 var turnBlock: Block = undefined;
@@ -286,7 +285,7 @@ export class PageWrite {
                     turnBlock = blocks[0].closest(x => !x.isLine);
                 }
                 var result = await useTextTool(
-                    { roundAreas: rs, relativeEleAutoScroll: this.kit.cursor.endAnchor.el },
+                    { roundAreas: rs, relativeEleAutoScroll: this.kit.anchorCursor.endAnchor.el },
                     { style: this.kit.page.pickBlocksTextStyle(blocks), turnBlock }
                 );
                 if (result) {
@@ -345,7 +344,7 @@ export class PageWrite {
                     await aa.block.clearEmptyBlock();
                 }
                 newBlock.mounted(() => {
-                    this.kit.cursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true })
+                    this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true })
                 });
             });
         }
@@ -367,7 +366,7 @@ export class PageWrite {
     ) {
         await this.kit.page.onAction(ActionDirective.onUpdatePattern, async () => {
             await appears.eachAsync(async appear => {
-                if (appear == this.kit.cursor.startAnchor || appear == this.kit.cursor.endAnchor) {
+                if (appear == this.kit.anchorCursor.startAnchor || appear == this.kit.anchorCursor.endAnchor) {
 
                 }
                 else {
@@ -378,15 +377,15 @@ export class PageWrite {
                     }
                 }
             });
-            this.kit.cursor.adjustAnchorSorts();
+            this.kit.anchorCursor.adjustAnchorSorts();
             var nstart: Block;
             var so: number;
             var nend: Block;
             var no: number;
-            if (this.kit.cursor.isAnchorAppear) {
-                if (this.kit.cursor.startAnchor.isText) {
-                    var rs = await this.kit.cursor.startAnchor.split([this.kit.cursor.startOffset, this.kit.cursor.endOffset]);
-                    if (this.kit.cursor.startOffset == 0) { nstart = rs[0]; nend = rs[0] }
+            if (this.kit.anchorCursor.isAnchorAppear) {
+                if (this.kit.anchorCursor.startAnchor.isText) {
+                    var rs = await this.kit.anchorCursor.startAnchor.split([this.kit.anchorCursor.startOffset, this.kit.anchorCursor.endOffset]);
+                    if (this.kit.anchorCursor.startOffset == 0) { nstart = rs[0]; nend = rs[0] }
                     else {
                         nstart = rs[1];
                         nend = rs[1]
@@ -397,37 +396,37 @@ export class PageWrite {
                     no = nend.content.length;
                 }
                 else {
-                    nstart = this.kit.cursor.startAnchor.block;
-                    nend = this.kit.cursor.startAnchor.block;
+                    nstart = this.kit.anchorCursor.startAnchor.block;
+                    nend = this.kit.anchorCursor.startAnchor.block;
                     so = no = 0;
                 }
             }
             else {
-                if (this.kit.cursor.startAnchor.isText) {
-                    var ss = await this.kit.cursor.startAnchor.split([this.kit.cursor.startOffset]);
+                if (this.kit.anchorCursor.startAnchor.isText) {
+                    var ss = await this.kit.anchorCursor.startAnchor.split([this.kit.anchorCursor.startOffset]);
                     if (ss.length == 2) {
                         nstart = ss.last();
                         so = 0;
                     }
                     else {
                         nstart = ss.last();
-                        if (this.kit.cursor.startOffset == 0) so = 0;
+                        if (this.kit.anchorCursor.startOffset == 0) so = 0;
                         else { so = nstart.content.length; }
                     }
-                } else { so = 0; nstart = this.kit.cursor.startAnchor.block; }
-                if (this.kit.cursor.endAnchor.isText) {
-                    var es = await this.kit.cursor.endAnchor.split([this.kit.cursor.endOffset]);
+                } else { so = 0; nstart = this.kit.anchorCursor.startAnchor.block; }
+                if (this.kit.anchorCursor.endAnchor.isText) {
+                    var es = await this.kit.anchorCursor.endAnchor.split([this.kit.anchorCursor.endOffset]);
                     if (es.length == 2) {
                         nend = es.first();
                         no = nend.content.length;
                     }
                     else {
-                        if (this.kit.cursor.endOffset == 0) no = 0;
+                        if (this.kit.anchorCursor.endOffset == 0) no = 0;
                         else no = nend.content.length;
                     }
                 }
                 else {
-                    nend = this.kit.cursor.endAnchor.block;
+                    nend = this.kit.anchorCursor.endAnchor.block;
                     no = 0;
                 }
                 if (styles) { nstart.pattern.setStyles(styles); nend.pattern.setStyles(styles); }
@@ -435,7 +434,7 @@ export class PageWrite {
             }
             this.kit.page.addUpdateEvent(async () => {
                 var na = nend.appearAnchors.last();
-                this.kit.cursor.onSetTextSelection(
+                this.kit.anchorCursor.onSetTextSelection(
                     {
                         startAnchor: nstart.appearAnchors.first(),
                         startOffset: so,
@@ -449,7 +448,7 @@ export class PageWrite {
     async onSelectionEquation(appears: AppearAnchor[], props: { equation: boolean }) {
         await this.kit.page.onAction(ActionDirective.onUpdateEquation, async () => {
             await appears.eachAsync(async appear => {
-                if (appear == this.kit.cursor.startAnchor || appear == this.kit.cursor.endAnchor) {
+                if (appear == this.kit.anchorCursor.startAnchor || appear == this.kit.anchorCursor.endAnchor) {
 
                 }
                 else {
@@ -465,51 +464,51 @@ export class PageWrite {
                     }
                 }
             });
-            this.kit.cursor.adjustAnchorSorts();
+            this.kit.anchorCursor.adjustAnchorSorts();
             var nstart: Block;
             var nend: Block;
-            if (this.kit.cursor.isAnchorAppear) {
-                if (this.kit.cursor.startAnchor.isText) {
-                    var rs = await this.kit.cursor.startAnchor.split([this.kit.cursor.startOffset, this.kit.cursor.endOffset]);
-                    if (this.kit.cursor.startOffset == 0) { nstart = rs[0]; nend = rs[0] }
+            if (this.kit.anchorCursor.isAnchorAppear) {
+                if (this.kit.anchorCursor.startAnchor.isText) {
+                    var rs = await this.kit.anchorCursor.startAnchor.split([this.kit.anchorCursor.startOffset, this.kit.anchorCursor.endOffset]);
+                    if (this.kit.anchorCursor.startOffset == 0) { nstart = rs[0]; nend = rs[0] }
                     else { nstart = rs[1]; nend = rs[1]; }
                     if (props.equation) await nstart.turn(BlockUrlConstant.KatexLine)
                 }
                 else {
-                    if (!props.equation && this.kit.cursor.startAnchor.isSolid) {
-                        if (this.kit.cursor.startAnchor.block.url == BlockUrlConstant.KatexLine) {
-                            nstart = nend = await this.kit.cursor.startAnchor.block.turn(BlockUrlConstant.Text);
+                    if (!props.equation && this.kit.anchorCursor.startAnchor.isSolid) {
+                        if (this.kit.anchorCursor.startAnchor.block.url == BlockUrlConstant.KatexLine) {
+                            nstart = nend = await this.kit.anchorCursor.startAnchor.block.turn(BlockUrlConstant.Text);
                         }
                     }
                 }
             }
             else {
                 if (props.equation == true) {
-                    if (this.kit.cursor.startAnchor.isText) {
-                        var ss = await this.kit.cursor.startAnchor.split([this.kit.cursor.startOffset]);
+                    if (this.kit.anchorCursor.startAnchor.isText) {
+                        var ss = await this.kit.anchorCursor.startAnchor.split([this.kit.anchorCursor.startOffset]);
                         nstart = ss.last();
                         nstart = await nstart.turn(BlockUrlConstant.KatexLine);
-                    } else nstart = this.kit.cursor.startAnchor.block;
-                    if (this.kit.cursor.endAnchor.isText) {
-                        var es = await this.kit.cursor.endAnchor.split([this.kit.cursor.endOffset]);
+                    } else nstart = this.kit.anchorCursor.startAnchor.block;
+                    if (this.kit.anchorCursor.endAnchor.isText) {
+                        var es = await this.kit.anchorCursor.endAnchor.split([this.kit.anchorCursor.endOffset]);
                         nend = es.first();
                         nend = await nend.turn(BlockUrlConstant.KatexLine);
                     }
-                    else nend = this.kit.cursor.endAnchor.block;
+                    else nend = this.kit.anchorCursor.endAnchor.block;
                 }
                 else {
-                    if (this.kit.cursor.startAnchor.isSolid && this.kit.cursor.startAnchor.block.url == BlockUrlConstant.KatexLine) {
-                        nstart = await this.kit.cursor.startAnchor.block.turn(BlockUrlConstant.Text);
+                    if (this.kit.anchorCursor.startAnchor.isSolid && this.kit.anchorCursor.startAnchor.block.url == BlockUrlConstant.KatexLine) {
+                        nstart = await this.kit.anchorCursor.startAnchor.block.turn(BlockUrlConstant.Text);
                     }
-                    else nstart = this.kit.cursor.startAnchor.block;
-                    if (this.kit.cursor.endAnchor.isSolid && this.kit.cursor.endAnchor.block.url == BlockUrlConstant.KatexLine) {
-                        nend = await this.kit.cursor.endAnchor.block.turn(BlockUrlConstant.Text)
+                    else nstart = this.kit.anchorCursor.startAnchor.block;
+                    if (this.kit.anchorCursor.endAnchor.isSolid && this.kit.anchorCursor.endAnchor.block.url == BlockUrlConstant.KatexLine) {
+                        nend = await this.kit.anchorCursor.endAnchor.block.turn(BlockUrlConstant.Text)
                     }
-                    else nend = this.kit.cursor.endAnchor.block;
+                    else nend = this.kit.anchorCursor.endAnchor.block;
                 }
             }
             this.kit.page.addUpdateEvent(async () => {
-                this.kit.cursor.onSetTextSelection(
+                this.kit.anchorCursor.onSetTextSelection(
                     {
                         startAnchor: nstart.appearAnchors.first(),
                         startOffset: 0,
@@ -533,7 +532,7 @@ export class PageWrite {
                 aa.block.parentKey
             );
             this.kit.page.addUpdateEvent(async () => {
-                this.kit.cursor.onFocusBlockAnchor(newBlock, { last: true, merge: true, render: true });
+                this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, merge: true, render: true });
             });
         });
     }
@@ -551,7 +550,7 @@ export class PageWrite {
                 aa.block.parentKey
             );
             this.kit.page.addUpdateEvent(async () => {
-                this.kit.cursor.onFocusBlockAnchor(newBlock, { last: true, merge: true, render: true });
+                this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, merge: true, render: true });
             });
         });
     }
