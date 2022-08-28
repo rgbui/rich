@@ -7,6 +7,7 @@ export type BlockGroup = {
 export type BlockSelectorItem = {
     text?: string,
     pic?: JSX.Element,
+    icon?:SvgrComponent,
     url?: string;
     description?: string,
     label?: string,

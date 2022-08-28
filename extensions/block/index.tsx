@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Singleton } from "../../component/lib/Singleton";
+import { Icon } from "../../component/view/icon";
 import { LangID } from "../../i18n/declare";
 import { Sp } from "../../i18n/view";
 import { KeyboardCode } from "../../src/common/keys";
@@ -24,38 +25,26 @@ class BlockSelector extends InputTextPopSelector {
         var i = -1;
         var fsd = this.filterSelectorData;
         if (fsd.length == 0) {
-            return <div className='shy-block-selector-no-data'>
+            return <div className="flex-center remark f-14  padding-10">
                 <Sp id={LangID.blockSelectorNoData}></Sp>
             </div>
         }
         return fsd.map((group, g) => {
-            return <div className='shy-block-selector-group' key={group.text}>
-                <div className='shy-block-selector-group-head'><span>{group.text}</span></div>
-                <div className='shy-block-selector-group-blocks'>{
-                    group.childs.map((child, index) => {
+            return <div key={group.text}>
+                <div className="remark flex f-12  padding-w-10 h-24">{group.text}</div>
+                <div>
+                    {group.childs.map((child, index) => {
                         i += 1;
                         let j = i;
-                        return <div
-                            className={'shy-block-selector-group-block ' + (j == this.selectIndex ? 'selected' : '')}
-                            key={child.url}
-                            onMouseEnter={e => {
-                                this.selectIndex = j;
-                                this.forceUpdate();
-                            }}
-                            onMouseLeave={e => {
-                                this.selectIndex = -1;
-                                this.forceUpdate();
-                            }}
-                            onMouseDown={e => this.onSelect(child)}
-                        >{child.pic}
-                            <div className='shy-block-selector-group-block-info'>
-                                <span>{child.text}</span>
-                                <em>{child.description}</em>
+                        return <div key={child.url} onMouseDown={e => this.onSelect(child)} className={'cursor flex h-30 round item-hover padding-w-10 ' + (j == this.selectIndex ? 'item-hover-focus' : '')}>
+                            <div className="flex-center size-24 text-1 gap-r-5">
+                                <Icon size={16} icon={child.icon}></Icon>
                             </div>
-                            <label>{child.label}</label>
+                            <div className="f-14 flex-auto text">{child.text}</div>
+                            <div className="remark f-14 flex-fixed">{child.label}</div>
                         </div>
-                    })
-                }</div>
+                    })}
+                </div>
             </div>
         })
     }
@@ -184,7 +173,7 @@ class BlockSelector extends InputTextPopSelector {
         document.removeEventListener('mousedown', this.onGlobalMousedown);
     }
     componentDidUpdate() {
-        var el = this.el.querySelector('.selected') as HTMLElement;
+        var el = this.el.querySelector('.item-hover-focus') as HTMLElement;
         if (el) {
             el.scrollIntoView({
                 block: "nearest",

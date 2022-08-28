@@ -16,14 +16,23 @@ import BoardToolMeiSvg from "../src/assert/svg/board.tool.mei.svg";
 import BoardToolSharpSvg from "../src/assert/svg/board.tool.sharp.svg";
 import BoardToolStickerSvg from "../src/assert/svg/board.tool.sticker.svg";
 import BoardToolTextSvg from "../src/assert/svg/board.tool.text.svg";
+import BoldSvg from "../src/assert/svg/bold.svg";
 import BookSvg from "../src/assert/svg/book.svg";
 import BrokenLineSvg from "../src/assert/svg/brokenLine.svg";
+import BrowserSvg from "../src/assert/svg/browser.svg";
+import ButtonSvg from "../src/assert/svg/button.svg";
+import ButtonTemplateSvg from "../src/assert/svg/button.template.svg";
+import CalloutSvg from "../src/assert/svg/callout.svg";
+import CardSvg from "../src/assert/svg/card.svg";
+import CarouselSvg from "../src/assert/svg/carousel.svg";
 import CheckSvg from "../src/assert/svg/check.svg";
 import CheckboxSquareSvg from "../src/assert/svg/checkbox.square.svg";
 import ChevronDownSvg from "../src/assert/svg/chevronDown.svg";
 import ChevronLeftSvg from "../src/assert/svg/chevronLeft.svg";
 import ChevronRightSvg from "../src/assert/svg/chevronRight.svg";
 import CloseTickSvg from "../src/assert/svg/closeTick.svg";
+import CodeSvg from "../src/assert/svg/code.svg";
+import Col2Svg from "../src/assert/svg/col2.svg";
 import CollectTableSvg from "../src/assert/svg/collectTable.svg";
 import CollectionBoardSvg from "../src/assert/svg/collectionBoard.svg";
 import CollectionCalendarSvg from "../src/assert/svg/collectionCalendar.svg";
@@ -37,7 +46,9 @@ import ConsoleSvg from "../src/assert/svg/console.svg";
 import CureSvg from "../src/assert/svg/cure.svg";
 import CustomizePageSvg from "../src/assert/svg/customizePage.svg";
 import CutSvg from "../src/assert/svg/cut.svg";
+import DeleteLineSvg from "../src/assert/svg/delete.line.svg";
 import DiscoverySvg from "../src/assert/svg/discovery.svg";
+import DividerSvg from "../src/assert/svg/divider.svg";
 import DotsSvg from "../src/assert/svg/dots.svg";
 import DoubleLinkSvg from "../src/assert/svg/double.link.svg";
 import DoubleRightSvg from "../src/assert/svg/doubleRight.svg";
@@ -46,6 +57,7 @@ import DragHandleSvg from "../src/assert/svg/dragHandle.svg";
 import DuplicateSvg from "../src/assert/svg/duplicate.svg";
 import EditSvg from "../src/assert/svg/edit.svg";
 import Edit1Svg from "../src/assert/svg/edit1.svg";
+import EmbedSvg from "../src/assert/svg/embed.svg";
 import EmojiSvg from "../src/assert/svg/emoji.svg";
 import Emoji1Svg from "../src/assert/svg/emoji1.svg";
 import EquationSvg from "../src/assert/svg/equation.svg";
@@ -55,13 +67,20 @@ import EyeHideSvg from "../src/assert/svg/eyeHide.svg";
 import FileSvg from "../src/assert/svg/file.svg";
 import FilterSvg from "../src/assert/svg/filter.svg";
 import FitSvg from "../src/assert/svg/fit.svg";
+import FontStyleSvg from "../src/assert/svg/font.style.svg";
+import FontSvg from "../src/assert/svg/font.svg";
 import FontawesomeSvg from "../src/assert/svg/fontawesome.svg";
 import FontcolorSvg from "../src/assert/svg/fontcolor.svg";
 import FriendsSvg from "../src/assert/svg/friends.svg";
 import GlobalLinkSvg from "../src/assert/svg/globalLink.svg";
+import H1Svg from "../src/assert/svg/h1.svg";
+import H2Svg from "../src/assert/svg/h2.svg";
+import H3Svg from "../src/assert/svg/h3.svg";
+import H4Svg from "../src/assert/svg/h4.svg";
 import HideSvg from "../src/assert/svg/hide.svg";
 import ImageErrorSvg from "../src/assert/svg/imageError.svg";
 import ImportSvg from "../src/assert/svg/import.svg";
+import ItalicSvg from "../src/assert/svg/italic.svg";
 import LayoutColSvg from "../src/assert/svg/layoutCol.svg";
 import LayoutCol2Svg from "../src/assert/svg/layoutCol2.svg";
 import LayoutCol3Svg from "../src/assert/svg/layoutCol3.svg";
@@ -73,6 +92,7 @@ import LayoutContentHeadFootSvg from "../src/assert/svg/layoutContentHeadFoot.sv
 import LayoutContentsSvg from "../src/assert/svg/layoutContents.svg";
 import LinkSvg from "../src/assert/svg/link.svg";
 import LinkToSvg from "../src/assert/svg/linkTo.svg";
+import ListSvg from "../src/assert/svg/list.svg";
 import LockSvg from "../src/assert/svg/lock.svg";
 import LoopSvg from "../src/assert/svg/loop.svg";
 import MemberSvg from "../src/assert/svg/member.svg";
@@ -84,16 +104,22 @@ import MindSvg from "../src/assert/svg/mind.svg";
 import MinusSvg from "../src/assert/svg/minus.svg";
 import MoveToSvg from "../src/assert/svg/moveTo.svg";
 import NoneSvg from "../src/assert/svg/none.svg";
+import NumberListSvg from "../src/assert/svg/number.list.svg";
 import OpenAsPageThickSvg from "../src/assert/svg/openAsPageThick.svg";
 import OptionsSvg from "../src/assert/svg/options.svg";
+import OutlineSvg from "../src/assert/svg/outline.svg";
 import PageSvg from "../src/assert/svg/page.svg";
 import PenSvg from "../src/assert/svg/pen.svg";
 import PexelsSvg from "../src/assert/svg/pexels.svg";
 import PictureSvg from "../src/assert/svg/picture.svg";
 import Plus2Svg from "../src/assert/svg/plus.2.svg";
 import PlusSvg from "../src/assert/svg/plus.svg";
+import ProgressSvg from "../src/assert/svg/progress.svg";
 import PropertysSvg from "../src/assert/svg/propertys.svg";
 import PubWorkspaceSvg from "../src/assert/svg/pubWorkspace.svg";
+import QuoteSvg from "../src/assert/svg/quote.svg";
+import RedoSvg from "../src/assert/svg/redo.svg";
+import RefreshSvg from "../src/assert/svg/refresh.svg";
 import RenameSvg from "../src/assert/svg/rename.svg";
 import ReplySvg from "../src/assert/svg/reply.svg";
 import RotatingSvg from "../src/assert/svg/rotating.svg";
@@ -104,7 +130,12 @@ import SortSvg from "../src/assert/svg/sort.svg";
 import SquareplusSvg from "../src/assert/svg/squareplus.svg";
 import SuccessSvg from "../src/assert/svg/success.svg";
 import SystemSvg from "../src/assert/svg/system.svg";
+import TableSvg from "../src/assert/svg/table.svg";
 import TemplatesSvg from "../src/assert/svg/templates.svg";
+import TextSvg from "../src/assert/svg/text.svg";
+import TimeSvg from "../src/assert/svg/time.svg";
+import TodoSvg from "../src/assert/svg/todo.svg";
+import ToggleListSvg from "../src/assert/svg/toggle.list.svg";
 import TopicSvg from "../src/assert/svg/topic.svg";
 import TransparentSvg from "../src/assert/svg/transparent.svg";
 import TrashSvg from "../src/assert/svg/trash.svg";
@@ -128,6 +159,7 @@ import TypesSelectSvg from "../src/assert/svg/types.select.svg";
 import TypesSortSvg from "../src/assert/svg/types.sort.svg";
 import TypesStringSvg from "../src/assert/svg/types.string.svg";
 import TypesTitleSvg from "../src/assert/svg/types.title.svg";
+import UnderlineSvg from "../src/assert/svg/underline.svg";
 import UndoSvg from "../src/assert/svg/undo.svg";
 import UnlockSvg from "../src/assert/svg/unlock.svg";
 import UnpaySvg from "../src/assert/svg/unpay.svg";
@@ -157,14 +189,23 @@ BoardToolMeiSvg,
 BoardToolSharpSvg,
 BoardToolStickerSvg,
 BoardToolTextSvg,
+BoldSvg,
 BookSvg,
 BrokenLineSvg,
+BrowserSvg,
+ButtonSvg,
+ButtonTemplateSvg,
+CalloutSvg,
+CardSvg,
+CarouselSvg,
 CheckSvg,
 CheckboxSquareSvg,
 ChevronDownSvg,
 ChevronLeftSvg,
 ChevronRightSvg,
 CloseTickSvg,
+CodeSvg,
+Col2Svg,
 CollectTableSvg,
 CollectionBoardSvg,
 CollectionCalendarSvg,
@@ -178,7 +219,9 @@ ConsoleSvg,
 CureSvg,
 CustomizePageSvg,
 CutSvg,
+DeleteLineSvg,
 DiscoverySvg,
+DividerSvg,
 DotsSvg,
 DoubleLinkSvg,
 DoubleRightSvg,
@@ -187,6 +230,7 @@ DragHandleSvg,
 DuplicateSvg,
 EditSvg,
 Edit1Svg,
+EmbedSvg,
 EmojiSvg,
 Emoji1Svg,
 EquationSvg,
@@ -196,13 +240,20 @@ EyeHideSvg,
 FileSvg,
 FilterSvg,
 FitSvg,
+FontStyleSvg,
+FontSvg,
 FontawesomeSvg,
 FontcolorSvg,
 FriendsSvg,
 GlobalLinkSvg,
+H1Svg,
+H2Svg,
+H3Svg,
+H4Svg,
 HideSvg,
 ImageErrorSvg,
 ImportSvg,
+ItalicSvg,
 LayoutColSvg,
 LayoutCol2Svg,
 LayoutCol3Svg,
@@ -214,6 +265,7 @@ LayoutContentHeadFootSvg,
 LayoutContentsSvg,
 LinkSvg,
 LinkToSvg,
+ListSvg,
 LockSvg,
 LoopSvg,
 MemberSvg,
@@ -225,16 +277,22 @@ MindSvg,
 MinusSvg,
 MoveToSvg,
 NoneSvg,
+NumberListSvg,
 OpenAsPageThickSvg,
 OptionsSvg,
+OutlineSvg,
 PageSvg,
 PenSvg,
 PexelsSvg,
 PictureSvg,
 Plus2Svg,
 PlusSvg,
+ProgressSvg,
 PropertysSvg,
 PubWorkspaceSvg,
+QuoteSvg,
+RedoSvg,
+RefreshSvg,
 RenameSvg,
 ReplySvg,
 RotatingSvg,
@@ -245,7 +303,12 @@ SortSvg,
 SquareplusSvg,
 SuccessSvg,
 SystemSvg,
+TableSvg,
 TemplatesSvg,
+TextSvg,
+TimeSvg,
+TodoSvg,
+ToggleListSvg,
 TopicSvg,
 TransparentSvg,
 TrashSvg,
@@ -269,6 +332,7 @@ TypesSelectSvg,
 TypesSortSvg,
 TypesStringSvg,
 TypesTitleSvg,
+UnderlineSvg,
 UndoSvg,
 UnlockSvg,
 UnpaySvg,

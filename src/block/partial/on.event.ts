@@ -32,10 +32,10 @@ export class Block$Event {
             return {
                 name: BlockDirective.trun,
                 text: it.text,
-                icon: it.pic,
+                icon: it.icon,
                 url: it.url,
                 checkLabel: it.url == this.url ? true : false,
-                iconSize: 22
+                iconSize: 16
             }
         })
     }
@@ -196,8 +196,8 @@ export class Block$Event {
                     var d = await this.cloneData();
                     var pa = this.parent;
                     var nb = await pa.appendBlock(d, this.at + 1, this.parentKey);
-                    this.page.addUpdateEvent(async ()=>{
-                         this.page.kit.anchorCursor.onFocusBlockAnchor(nb, { merge: true, render: true, last: true })
+                    this.page.addUpdateEvent(async () => {
+                        this.page.kit.anchorCursor.onFocusBlockAnchor(nb, { merge: true, render: true, last: true })
                     })
                 });
                 break;
