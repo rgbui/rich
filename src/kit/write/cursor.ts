@@ -249,7 +249,10 @@ export class AnchorCursor {
         this.kit.page.onAction('onFocusAppearAnchor', async () => {
             if (options?.merge) this.kit.page.snapshoot.merge();
             this.focusBlockAnchor(block, options)
-            if (options?.render) this.renderWindowSelection()
+            if (options?.render) {
+                this.kit.operator.onClearSelectBlocks();
+                this.renderWindowSelection()
+            }
         })
     }
     focusBlockAnchor(block: Block, options?: { merge?: boolean, render?: boolean, last?: boolean }) {

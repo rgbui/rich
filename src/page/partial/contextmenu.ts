@@ -15,6 +15,7 @@ import { Confirm } from "../../../component/lib/confirm";
 import { usePageHistoryStore } from "../../../extensions/history";
 import { PageDirective } from "../directive";
 import { usePagePublish } from "../../../extensions/publish";
+
 export class PageContextmenu {
     async onGetContextMenus(this: Page) {
         if (this.isBoard) return this.onGetBoardContextMenus();
@@ -104,8 +105,8 @@ export class PageContextmenu {
                 else if (item.name == 'nav') {
                     this.onOpenNav({ nav: item.checked })
                 }
-                else if(item.name=='refPages'){
-                    this.onOpenRefPages({refPages:item.checked})
+                else if (item.name == 'refPages') {
+                    this.onOpenRefPages({ refPages: item.checked })
                 }
             }
         });

@@ -1,14 +1,9 @@
 import { Block } from "..";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { BlockDirective, BlockRenderRange } from "../enum";
-import duplicate from "../../assert/svg/duplicate.svg";
-// import loop from "../../assert/svg/loop.svg";
-// import blockcolor from "../../assert/svg/blockcolor.svg";
-// import link from "../../assert/svg/link.svg";
-import squareplus from "../../assert/svg/squareplus.svg";
 import moveTo from '../../assert/svg/moveTo.svg';
 import comment from "../../assert/svg/comment.svg";
-import trash from "../../assert/svg/trash.svg";
+// import trash from "../../assert/svg/trash.svg";
 import { blockStore } from "../../../extensions/block/store";
 import { langProvider } from "../../../i18n/provider";
 import { LangID } from "../../../i18n/declare";
@@ -18,7 +13,7 @@ import { Point, Rect } from "../../common/vector/point";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { CopyText } from "../../../component/copy";
 import { ShyAlert } from "../../../component/lib/alert";
-import { BlockcolorSvg, LinkSvg, LoopSvg } from "../../../component/svgs";
+import { BlockcolorSvg, DuplicateSvg, LinkSvg, LoopSvg, TrashSvg } from "../../../component/svgs";
 import lodash from "lodash";
 import { FontColorList, BackgroundColorList } from "../../../extensions/color/data";
 
@@ -51,16 +46,15 @@ export class Block$Event {
         var items: MenuItem<BlockDirective | string>[] = [];
         items.push({
             name: BlockDirective.delete,
-            icon: trash,
+            icon: TrashSvg,
             text: langProvider.getText(LangID.menuDelete),
             label: "delete"
         });
         items.push({
             name: BlockDirective.copy,
-            text: langProvider.getText(LangID.menuCopy),
+            text: '拷贝副本',
             label: "ctrl+D",
-            disabled: true,
-            icon: duplicate
+            icon: DuplicateSvg
         });
         var menus = await this.onGetTurnMenus();
         items.push({
@@ -73,12 +67,6 @@ export class Block$Event {
                 }
             })
         });
-        // items.push({
-        //     name: BlockDirective.trunIntoPage,
-        //     text: langProvider.getText(LangID.menuTurnInPage),
-        //     icon: squareplus,
-        //     disabled: true
-        // });
         // items.push({
         //     name: BlockDirective.moveTo,
         //     text: langProvider.getText(LangID.menuMoveTo),
@@ -104,7 +92,7 @@ export class Block$Event {
         });
         items.push({
             text: '颜色',
-            icon:BlockcolorSvg,
+            icon: BlockcolorSvg,
             childs: [
                 {
                     text: '文字颜色',
@@ -177,7 +165,7 @@ export class Block$Event {
         });
         items.push({
             name: BlockDirective.delete,
-            icon: trash,
+            icon: TrashSvg,
             text: langProvider.getText(LangID.menuDelete),
             label: "delete"
         });
@@ -205,9 +193,12 @@ export class Block$Event {
                  * 复制块
                  */
                 this.page.onAction(ActionDirective.onCopyBlock, async () => {
-                    var d = this.cloneData();
+                    var d = await this.cloneData();
                     var pa = this.parent;
-                    await pa.appendBlock(d, this.at, this.parentKey);
+                    var nb = await pa.appendBlock(d, this.at + 1, this.parentKey);
+                    this.page.addUpdateEvent(async ()=>{
+                         this.page.kit.writer.cursor.onFocusBlockAnchor(nb, { merge: true, render: true, last: true })
+                    })
                 });
                 break;
             case BlockDirective.link:
@@ -216,8 +207,6 @@ export class Block$Event {
                 break;
             case BlockDirective.trun:
                 this.page.onBatchTurn([this], (item as any).url);
-                break;
-            case BlockDirective.trunIntoPage:
                 break;
             case BlockDirective.comment:
                 break;
