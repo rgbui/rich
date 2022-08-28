@@ -1,4 +1,6 @@
 import { Page } from "..";
+import { CopyText } from "../../../component/copy";
+import { ShyAlert } from "../../../component/lib/alert";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItem } from "../../../component/view/menu/declare";
 import { Block } from "../../block";
@@ -137,6 +139,14 @@ export class Page$Operator {
                     await this.createBlock(BlockUrlConstant.Text, { content: willCombineBlock.content }, block, block.childs.length);
                 }
             }
+            if (willCombineBlock.hasSubChilds && willCombineBlock.subChilds.length > 0) {
+                if (block.hasSubChilds) {
+                    await block.appendArray(willCombineBlock.subChilds, undefined, BlockChildKey.subChilds)
+                }
+                else {
+                    await block.parent.appendArray(willCombineBlock.subChilds, block.at + 1, block.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs)
+                }
+            }
             await willCombineBlock.delete();
             if (typeof after == 'function') {
                 await after();
@@ -210,16 +220,42 @@ export class Page$Operator {
                 break;
             case BlockDirective.copy:
                 /**
-                 * 将元素复制到服务器，
-                 * 然后可以跨平台粘贴
+                 * 复制块
                  */
+                this.onAction(ActionDirective.onCopyBlock, async () => {
+                    var bs = await blocks.asyncMap(async b => b.cloneData());
+                    var at = blocks[0].at;
+                    var to = blocks.last().at;
+                    var pa = blocks[0].parent;
+                    var newBlocks = await pa.appendArrayBlockData(bs, Math.max(at, to) + 1, blocks.first().parentKey);
+                    this.addUpdateEvent(async () => {
+                        this.kit.operator.onSelectBlocks(newBlocks);
+                    })
+                });
+                break;
                 break;
             case BlockDirective.link:
+                CopyText(blocks[0].blockUrl);
+                ShyAlert('块的链接已复制')
                 break;
             case BlockDirective.trun:
                 this.onBatchTurn(blocks, item.url);
                 break;
             case BlockDirective.trunIntoPage:
+                break;
+            case 'fontColor':
+                this.onAction('setFontStyle', async () => {
+                    await blocks.eachAsync(async (block) => {
+                        block.pattern.setFontStyle({ color: item.value });
+                    })
+                })
+                break;
+            case 'fillColor':
+                this.onAction('setFillStyle', async () => {
+                    await blocks.eachAsync(async (block) => {
+                        block.pattern.setFillStyle({ mode: 'color', color: item.value })
+                    })
+                })
                 break;
         }
     }
