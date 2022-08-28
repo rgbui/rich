@@ -228,7 +228,7 @@ export class Page$Operator {
                     var pa = blocks[0].parent;
                     var newBlocks = await pa.appendArrayBlockData(bs, Math.max(at, to) + 1, blocks.first().parentKey);
                     this.addUpdateEvent(async () => {
-                        this.kit.anchorCursor.onSelectBlocks(newBlocks);
+                        this.kit.anchorCursor.onSelectBlocks(newBlocks, { render: true, merge: true });
                     })
                 });
                 break;

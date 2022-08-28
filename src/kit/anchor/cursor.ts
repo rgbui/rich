@@ -9,7 +9,7 @@ import { BlockRenderRange } from "../../block/enum";
 import { TextEle } from "../../common/text.ele";
 import { Point } from "../../common/vector/point";
 import { OperatorDirective } from "../../history/declare";
-import { AppearCursorPos } from "../../history/snapshoot";
+import { AppearCursorPos, SnapshootBlockPos } from "../../history/snapshoot";
 import { Selector } from "./selector";
 
 export class AnchorCursor {
@@ -18,10 +18,11 @@ export class AnchorCursor {
     startOffset: number;
     endAnchor: AppearAnchor;
     endOffset: number;
-    constructor(public kit: Kit) { 
-        this.selector=new Selector(this.kit);
+    constructor(public kit: Kit) {
+        this.selector = new Selector(this.kit);
     }
     get isCollapse() {
+        if (this.currentSelectedBlocks.length > 0) return false;
         var sa = this.startAnchor.isEqual(this.endAnchor);
         if (sa) {
             if (this.startAnchor.isText) {
@@ -69,6 +70,7 @@ export class AnchorCursor {
         this.startOffset = this.startAnchor.getCursorOffset(sel.anchorNode, sel.anchorOffset);
         this.endAnchor = findBlockAppear(sel.focusNode);
         this.endOffset = this.endAnchor.getCursorOffset(sel.focusNode, sel.focusOffset);
+        this.currentSelectedBlocks = [];
         this.kit.page.snapshoot.record(OperatorDirective.changeCursorPos, { old_value: old, new_value: this.record }, this.kit.page)
     }
     onCollapse(anchor: AppearAnchor, offset: number) {
@@ -83,6 +85,8 @@ export class AnchorCursor {
         this.startOffset = offset;
         this.endAnchor = anchor;
         this.endOffset = offset;
+        this.currentSelectedBlocks = [];
+        this.renderSelectBlocks(this.currentSelectedBlocks);
         this.kit.page.snapshoot.record(OperatorDirective.changeCursorPos, { old_value: old, new_value: this.record }, this.kit.page)
     }
     /**
@@ -100,7 +104,7 @@ export class AnchorCursor {
             this.setTextSelection(options)
             if (operators?.render) {
                 this.kit.page.addUpdateEvent(async () => {
-                    this.renderWindowSelection()
+                    this.renderAnchorCursorSelection()
                 })
             }
         })
@@ -164,10 +168,11 @@ export class AnchorCursor {
         this.startOffset = options.startOffset;
         this.endAnchor = options.endAnchor;
         this.endOffset = options.endOffset;
+        this.currentSelectedBlocks = [];
         this.kit.page.snapshoot.record(OperatorDirective.changeCursorPos, { old_value: old, new_value: this.record }, this.kit.page)
     }
-    get record(): { start: AppearCursorPos, end: AppearCursorPos } {
-        return { start: this.startPos, end: this.endPos }
+    get record(): { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] } {
+        return { start: this.startPos, end: this.endPos, blocks: this.currentSelectedBlocks.map(c => c.pos) }
     }
     get startPos() {
         if (this.startAnchor) {
@@ -203,17 +208,20 @@ export class AnchorCursor {
             [this.startOffset, this.endOffset] = [this.endOffset, this.startOffset];
         }
     }
-    renderWindowSelection() {
-        var sel = window.getSelection();
-        if (!this.isCollapse) {
-            var cr = this.startAnchor.cacCollapseFocusPos(this.startOffset);
-            var er = this.endAnchor.cacCollapseFocusPos(this.endOffset);
-            sel.setBaseAndExtent(cr.node, cr.pos, er.node, er.pos);
-        }
-        else {
-            forceCloseTextTool()
-            var cr = this.startAnchor.cacCollapseFocusPos(this.startOffset);
-            sel.collapse(cr.node, cr.pos);
+    renderAnchorCursorSelection() {
+        this.renderSelectBlocks(this.currentSelectedBlocks || [])
+        if (this.currentSelectedBlocks.length == 0) {
+            var sel = window.getSelection();
+            if (!this.isCollapse) {
+                var cr = this.startAnchor.cacCollapseFocusPos(this.startOffset);
+                var er = this.endAnchor.cacCollapseFocusPos(this.endOffset);
+                sel.setBaseAndExtent(cr.node, cr.pos, er.node, er.pos);
+            }
+            else {
+                forceCloseTextTool()
+                var cr = this.startAnchor.cacCollapseFocusPos(this.startOffset);
+                sel.collapse(cr.node, cr.pos);
+            }
         }
     }
     /**
@@ -256,7 +264,7 @@ export class AnchorCursor {
             if (options?.merge) this.kit.page.snapshoot.merge();
             this.focusBlockAnchor(block, options)
             if (options?.render) {
-                this.renderWindowSelection()
+                this.renderAnchorCursorSelection()
             }
         })
     }
@@ -288,19 +296,29 @@ export class AnchorCursor {
     /***
     * 事件
     */
-    currentSelectedBlocks: Block[] = [];
-    onSelectBlocks(blocks) {
+    currentSelectedBlocks: Block[] = []
+    onSelectBlocks(blocks: Block[], options?: { merge?: boolean, render?: boolean }) {
+        this.kit.page.onAction('onSelectBlocks', async () => {
+            if (options?.merge) this.kit.page.snapshoot.merge();
+            this.selectBlocks(blocks)
+            if (options?.render) {
+                this.renderAnchorCursorSelection()
+            }
+        })
+    }
+    selectBlocks(blocks: Block[]) {
+        var old = this.record;
         this.currentSelectedBlocks = blocks;
+        this.kit.page.snapshoot.record(OperatorDirective.changeCursorPos, { old_value: old, new_value: this.record }, this.kit.page)
+    }
+    renderSelectBlocks(blocks: Block[]) {
         var currentEls = Array.from(this.kit.page.root.querySelectorAll(".shy-block-selected"));
-        this.currentSelectedBlocks.each(sel => {
+        blocks.each(sel => {
             var el = sel.addBlockSelect();
             currentEls.remove(el);
         });
         currentEls.each(el => {
             el.classList.remove('shy-block-selected');
         })
-    }
-    onClearSelectBlocks() {
-        this.onSelectBlocks([]);
     }
 }

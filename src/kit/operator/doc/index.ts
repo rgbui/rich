@@ -16,9 +16,10 @@ import { Point, Rect } from "../../../common/vector/point";
  * 
  */
 export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
-    kit.anchorCursor.onClearSelectBlocks();
+    kit.anchorCursor.renderSelectBlocks([]);
     var downPoint = Point.from(event);
     var gm = block ? block.panelGridMap : kit.page.gridMap;
+    var currentBlocks: Block[];
     MouseDragger({
         event,
         dis: 5,
@@ -37,8 +38,8 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                * 这里怎么基于当前界面的视觉不断的收集选中block
                */
                 var bs = gm.findBlocksByRect(new Rect(downPoint, movePoint));
-                bs = kit.page.getAtomBlocks(bs);
-                kit.anchorCursor.onSelectBlocks(bs);
+                currentBlocks = kit.page.getAtomBlocks(bs);
+                kit.anchorCursor.renderSelectBlocks(currentBlocks);
             };
             onAutoScroll({
                 el: kit.page.root,
@@ -57,6 +58,8 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
             if (isMove) {
                 onAutoScrollStop();
                 kit.anchorCursor.selector.close();
+                if (currentBlocks)
+                    kit.anchorCursor.onSelectBlocks(currentBlocks, { render: true });
             }
             else {
                 if (block) {
