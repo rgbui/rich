@@ -203,7 +203,7 @@ export interface HistorySnapshoot {
     record(directive: OperatorDirective.schemaRowRemove, data: { schemaId: string, data: Record<string, any> }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.keepCursorOffset, data: { blockId: string, prop: string, old: number, new: number }, obj: HistorySnapshootObject);
 
-    record(directive: OperatorDirective.changeCursorPos, data: { old_value: { start: AppearCursorPos, end: AppearCursorPos }, new_value: { start: AppearCursorPos, end: AppearCursorPos } }, obj: HistorySnapshootObject)
+    record(directive: OperatorDirective.changeCursorPos, data: { old_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] }, new_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] } }, obj: HistorySnapshootObject)
     record(directive: OperatorDirective.$create, data: { pos: SnapshootBlockPos, data: Record<string, any> }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.$delete, data: { pos: SnapshootBlockPos, data: Record<string, any> }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.$move, data: { from: SnapshootBlockPos, to: SnapshootBlockPos }, obj: HistorySnapshootObject);

@@ -3,7 +3,7 @@ import { Page } from "..";
 import { BlockRenderRange } from "../../block/enum";
 import { Matrix } from "../../common/matrix";
 import { OperatorDirective } from "../../history/declare";
-import { AppearCursorPos, HistorySnapshoot } from "../../history/snapshoot";
+import { AppearCursorPos, HistorySnapshoot, SnapshootBlockPos } from "../../history/snapshoot";
 import { PageDirective } from "../directive";
 
 export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
@@ -73,54 +73,71 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     });
     snapshoot.registerOperator(OperatorDirective.changeCursorPos, async (operator, source) => {
         var oc: {
-            old_value: { start: AppearCursorPos, end: AppearCursorPos },
-            new_value: { start: AppearCursorPos, end: AppearCursorPos }
+            old_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] },
+            new_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] }
         } = operator.data as any;
         if (source == 'notify' || source == 'notifyView' || source == 'load') return;
-        if (!(oc.new_value.start && oc.new_value.end)) return;
-        var startBlock = page.find(x => x.id == oc.new_value.start.blockId);
-        if (startBlock) {
-            var startAppear = startBlock.appearAnchors.find(g => g.prop == oc.new_value.start.prop);
-            var endBlock = oc.new_value.end.blockId == startBlock?.id ? startBlock : page.find(x => x.id == oc.new_value.end.blockId);
-            var endAppear = endBlock.appearAnchors.find(g => g.prop == oc.new_value.end.prop);
-            page.kit.anchorCursor.setTextSelection({
-                startAnchor: startAppear,
-                startOffset: oc.new_value.start.offset,
-                endAnchor: endAppear,
-                endOffset: oc.new_value.end.offset
-            });
+        if (oc.new_value.blocks?.length > 0) {
+            var bs = page.findAll(g => oc.new_value.blocks.some(s => s.blockId == g.id));
+            page.kit.anchorCursor.selectBlocks(bs);
             page.addUpdateEvent(async () => {
-                page.kit.anchorCursor.renderWindowSelection()
+                page.kit.anchorCursor.renderAnchorCursorSelection()
             })
         }
         else {
-            console.error('not found cursor pos block')
+            if (!(oc.new_value.start && oc.new_value.end)) return;
+            var startBlock = page.find(x => x.id == oc.new_value.start.blockId);
+            if (startBlock) {
+                var startAppear = startBlock.appearAnchors.find(g => g.prop == oc.new_value.start.prop);
+                var endBlock = oc.new_value.end.blockId == startBlock?.id ? startBlock : page.find(x => x.id == oc.new_value.end.blockId);
+                var endAppear = endBlock.appearAnchors.find(g => g.prop == oc.new_value.end.prop);
+                page.kit.anchorCursor.setTextSelection({
+                    startAnchor: startAppear,
+                    startOffset: oc.new_value.start.offset,
+                    endAnchor: endAppear,
+                    endOffset: oc.new_value.end.offset
+                });
+                page.addUpdateEvent(async () => {
+                    page.kit.anchorCursor.renderAnchorCursorSelection()
+                })
+            }
+            else {
+                console.error('not found cursor pos block')
+            }
         }
     }, async (operator) => {
         var oc: {
-            old_value: { start: AppearCursorPos, end: AppearCursorPos },
-            new_value: { start: AppearCursorPos, end: AppearCursorPos }
+            old_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] },
+            new_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] }
         } = operator.data as any;
-        if (!(oc.old_value.start && oc.old_value.end)) return;
-        var startBlock = page.find(x => x.id == oc.old_value.start.blockId);
-        if (startBlock) {
-            var startAppear = startBlock.appearAnchors.find(g => g.prop == oc.old_value.start.prop);
-            var endBlock = oc.old_value.end.blockId == startBlock?.id ? startBlock : page.find(x => x.id == oc.old_value.end.blockId);
-            var endAppear = endBlock.appearAnchors.find(g => g.prop == oc.old_value.end.prop);
-            page.kit.anchorCursor.setTextSelection({
-                startAnchor: startAppear,
-                startOffset: oc.old_value.start.offset,
-                endAnchor: endAppear,
-                endOffset: oc.old_value.end.offset
-            });
+        if (oc.old_value.blocks?.length > 0) {
+            var bs = page.findAll(g => oc.old_value.blocks.some(s => s.blockId == g.id));
+            page.kit.anchorCursor.selectBlocks(bs);
             page.addUpdateEvent(async () => {
-                page.kit.anchorCursor.renderWindowSelection()
+                page.kit.anchorCursor.renderAnchorCursorSelection()
             })
-        } else {
-            console.error('not found cursor pos block')
+        }
+        else {
+            if (!(oc.old_value.start && oc.old_value.end)) return;
+            var startBlock = page.find(x => x.id == oc.old_value.start.blockId);
+            if (startBlock) {
+                var startAppear = startBlock.appearAnchors.find(g => g.prop == oc.old_value.start.prop);
+                var endBlock = oc.old_value.end.blockId == startBlock?.id ? startBlock : page.find(x => x.id == oc.old_value.end.blockId);
+                var endAppear = endBlock.appearAnchors.find(g => g.prop == oc.old_value.end.prop);
+                page.kit.anchorCursor.setTextSelection({
+                    startAnchor: startAppear,
+                    startOffset: oc.old_value.start.offset,
+                    endAnchor: endAppear,
+                    endOffset: oc.old_value.end.offset
+                });
+                page.addUpdateEvent(async () => {
+                    page.kit.anchorCursor.renderAnchorCursorSelection()
+                })
+            } else {
+                console.error('not found cursor pos block')
+            }
         }
     })
-
     snapshoot.registerOperator(OperatorDirective.updateProp, async (operator, source) => {
         var block = page.find(x => x.id == operator.data.blockId);
         if (block) {
