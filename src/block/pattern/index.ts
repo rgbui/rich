@@ -20,8 +20,9 @@ export class Pattern {
             if (op == 'styles') continue;
             this[op] = options[op];
         }
-        if (Array.isArray(options.styles)) {
-            options.styles.each(sty => {
+        if (Array.isArray(options.styles))
+        {
+            options.styles.each(sty=>{
                 var style = new BlockStyleCss(sty, this);
                 this.styles.remove(x => x.name == style.name && x.selector == style.selector);
                 this.styles.push(style);
@@ -74,24 +75,50 @@ export class Pattern {
         if (st) {
             var old = st.get();
             st.merge(BlockCss.createBlockCss(Object.assign({ cssName }, style)));
-            this.block.page.snapshoot.record(OperatorDirective.mergeStyle, {
-                blockId: this.block.id,
-                styleId: st.id,
-                old,
-                new: st.get()
+            this.block.page.snapshoot.record(OperatorDirective.$merge_style, {
+                pos: st.pos,
+                old_value: old,
+                new_value: st.get()
             }, this.block)
+            this.block.page.addBlockUpdate(this.block);
         }
         else {
-            var sty = new BlockStyleCss({ name: name, cssList: [Object.assign({ cssName }, style)] }, this);
-            this.styles.push(sty);
-            this.block.page.snapshoot.record(OperatorDirective.insertStyle, {
-                blockId: this.block.id,
-                at: this.styles.length - 1,
-                data: sty.get()
-            }, this.block)
+            this.createStyle({ name: name, cssList: [Object.assign({ cssName }, style)] });
+        }
+    }
+    updateStyle(styleId: string, styleData: Record<string, any>) {
+        var style = this.styles.find(g => g.id == styleId);
+        var old = style.get();
+        style.load(styleData);
+        this.block.page.snapshoot.record(OperatorDirective.$merge_style, {
+            pos: style.pos,
+            old_value: old,
+            new_value: style.get()
+        }, this.block)
+        this.block.page.addBlockUpdate(this.block);
+    }
+    deleteStyle(styleId: string) {
+        var style = this.styles.find(g => g.id == styleId);
+        if (style) {
+            this.block.page.snapshoot.record(OperatorDirective.$delete_style, {
+                pos: style.pos,
+                data: style.get()
+            }, this.block);
+            this.styles.remove(g => g.id == styleId);
         }
         this.block.page.addBlockUpdate(this.block);
     }
+    createStyle(styleData: Record<string, any>) {
+        var sty = new BlockStyleCss(styleData, this);
+        this.styles.push(sty);
+        this.block.page.snapshoot.record(OperatorDirective.$insert_style, {
+            pos: sty.pos,
+            data: sty.get()
+        }, this.block);
+        this.block.page.addBlockUpdate(this.block);
+    }
+
+
     setFontStyle(style: Partial<FontCss>) {
         this.setStyle(BlockCssName.font, style);
     }

@@ -31,7 +31,7 @@ export class BlockStyleCss {
         for (var n in options) {
             if (n == 'cssList') {
                 this.cssList = [];
-                options[n].each(css => {
+                options[n].each(css=>{
                     this.cssList.push(BlockCss.createBlockCss(css));
                 })
             }
@@ -80,6 +80,13 @@ export class BlockStyleCss {
     }
     css(name: BlockCssName) {
         return this.cssList.find(g => g.cssName == name);
+    }
+    get pos() {
+        var p = this.pattern.block.pos;
+        return {
+            ...p,
+            styleId: this.id
+        }
     }
 }
 
