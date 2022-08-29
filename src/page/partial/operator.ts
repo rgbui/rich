@@ -27,7 +27,8 @@ export class Page$Operator {
         var block = await BlockFactory.createBlock(url, this, data, parent);
         if (parent) {
             if (typeof childKey == 'undefined') childKey = block.isLine ? BlockChildKey.childs : (parent?.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
-            if (!parent.allBlockKeys.some(s => s == childKey)) {
+            if (!parent.allBlockKeys.some(s => s == childKey))
+            {
                 console.error(`${parent.url} not support childKey:${childKey}`);
                 childKey = parent.allBlockKeys[0];
             }
@@ -82,8 +83,11 @@ export class Page$Operator {
     }
     async onBatchDelete(this: Page, blocks: Block[]) {
         await this.onAction(ActionDirective.onBatchDeleteBlocks, async () => {
-            var pre = blocks.first().prevFind(c => c.isVisible && !blocks.includes(c) && c.isBlock);
-            if (!pre) blocks.first().nextFind(c => c.isVisible && !blocks.includes(c) && c.isBlock);
+            var pre = blocks.first().prevFind(c => c.isVisible && !blocks.includes(c) && !blocks.some(s => s.exists(g => g.id == c.id)) && c.isBlock);
+            if (!pre) blocks.first().nextFind(c => c.isVisible && !blocks.includes(c) && !blocks.some(s => s.exists(g => g.id == c.id)) && c.isBlock);
+            if (pre) {
+                this.kit.anchorCursor.focusBlockAnchor(pre, { last: true, render: true })
+            }
             if (this.kit.picker.blocks.some(s => blocks.some(c => c == s))) {
                 this.kit.picker.blocks.removeAll(s => blocks.includes(s));
                 if (this.kit.picker.blocks.length == 0) {
@@ -94,11 +98,7 @@ export class Page$Operator {
             await blocks.eachAsync(async bl => {
                 await bl.delete()
             });
-            if (pre) {
-                this.addUpdateEvent(async () => {
-                    this.kit.anchorCursor.focusBlockAnchor(pre, { last: true, merge: true, render: true })
-                })
-            }
+
         })
     }
     async onTurn(this: Page, block: Block, url: string, callback: (newBlock: Block) => void) {

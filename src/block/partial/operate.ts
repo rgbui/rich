@@ -181,7 +181,7 @@ export class Block$Operator {
         block.parent = this;
         this.page.snapshoot.record(OperatorDirective.$move, {
             from,
-            to: this.pos
+            to: block.pos
         }, this);
         this.page.addBlockUpdate(this);
     }

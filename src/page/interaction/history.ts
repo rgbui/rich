@@ -257,12 +257,12 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         var dr = operator.data;
         var block = page.find(x => x.id == dr.from.blockId);
         var parent = page.find(x => x.id == dr.to.parentId);
-        await parent.append(block, dr.to.pos.at, dr.to.childKey)
+        await parent.append(block, dr.to.at, dr.to.childKey)
     }, async (operator) => {
         var dr = operator.data;
         var block = page.find(x => x.id == dr.to.blockId);
         var parent = page.find(x => x.id == dr.from.parentId);
-        await parent.append(block, dr.from.pos.at, dr.from.childKey)
+        await parent.append(block, dr.from.at, dr.from.childKey)
     });
     snapshoot.registerOperator(OperatorDirective.$update, async (operator, source) => {
         var dr = operator.data;
@@ -320,8 +320,4 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             block.arrayRemove({ prop: dr.pos.prop, at: dr.pos.arrayAt })
         }
     });
-
-
-
-
 }
