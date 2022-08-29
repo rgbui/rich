@@ -6,6 +6,7 @@ import { findBlockAppear, findBlocksBetweenAppears } from "../../block/appear/vi
 import { BlockUrlConstant } from "../../block/constant";
 import { TextContent } from "../../block/element/text";
 import { BlockRenderRange } from "../../block/enum";
+import { dom } from "../../common/dom";
 import { TextEle } from "../../common/text.ele";
 import { Point } from "../../common/vector/point";
 import { OperatorDirective } from "../../history/declare";
@@ -208,7 +209,8 @@ export class AnchorCursor {
             [this.startOffset, this.endOffset] = [this.endOffset, this.startOffset];
         }
     }
-    renderAnchorCursorSelection() {
+    renderAnchorCursorSelection()
+    {
         this.renderSelectBlocks(this.currentSelectedBlocks || [])
         if (this.currentSelectedBlocks.length == 0) {
             var sel = window.getSelection();
@@ -216,12 +218,20 @@ export class AnchorCursor {
                 var cr = this.startAnchor.cacCollapseFocusPos(this.startOffset);
                 var er = this.endAnchor.cacCollapseFocusPos(this.endOffset);
                 sel.setBaseAndExtent(cr.node, cr.pos, er.node, er.pos);
+                var c = dom(cr.node).closest(g => typeof (g as any).scrollIntoViewIfNeeded == 'function') as any;
+                if (c) c.scrollIntoViewIfNeeded()
             }
             else {
                 forceCloseTextTool()
                 var cr = this.startAnchor.cacCollapseFocusPos(this.startOffset);
                 sel.collapse(cr.node, cr.pos);
+                var c = dom(cr.node).closest(g => typeof (g as any).scrollIntoViewIfNeeded == 'function') as any;
+                if (c) c.scrollIntoViewIfNeeded()
             }
+        }
+        else {
+            var sel = window.getSelection();
+            if (sel) sel.removeAllRanges()
         }
     }
     /**
@@ -233,7 +243,7 @@ export class AnchorCursor {
             this.focusAppearAnchor(aa, options)
         })
     }
-    focusAppearAnchor(aa: AppearAnchor, options?: { merge?: boolean, at?: number, last?: boolean | number, left?: number, y?: number }) {
+    focusAppearAnchor(aa: AppearAnchor, options?: { at?: number, last?: boolean | number, left?: number, y?: number }) {
         var sel = window.getSelection();
         if (typeof options?.left == 'number') {
             var bounds = TextEle.getBounds(aa.el);
@@ -252,7 +262,7 @@ export class AnchorCursor {
              */
             sel.empty();
             aa.collapse(pos);
-            this.collapse(aa, sel.focusOffset)
+            this.collapse(aa, sel.focusOffset);
         }
     }
     /**
@@ -268,35 +278,45 @@ export class AnchorCursor {
             }
         })
     }
-    focusBlockAnchor(block: Block, options?: { merge?: boolean, render?: boolean, last?: boolean }) {
+    focusBlockAnchor(block: Block, options?: { render?: boolean, last?: boolean }) {
         var acs = block.appearAnchors;
         if (acs.length > 0) {
-            if (options?.last) this.focusAppearAnchor(acs.last(), { last: true, merge: options?.merge });
-            else this.focusAppearAnchor(acs.first(), { merge: options?.merge });
+            if (options?.last) this.focusAppearAnchor(acs.last(), { last: true });
+            else this.focusAppearAnchor(acs.first(), {});
         }
         else {
             if (options?.last) {
                 var g = block.findReverse(g => g.appearAnchors.length > 0);
-                if (g) this.focusAppearAnchor(g.appearAnchors.last(), { last: true, merge: options?.merge })
+                if (g) this.focusAppearAnchor(g.appearAnchors.last(), { last: true })
                 else {
                     var g = block.nextFind(g => g.appearAnchors.length > 0);
-                    if (g) this.focusAppearAnchor(g.appearAnchors.first(), { merge: options?.merge });
+                    if (g) this.focusAppearAnchor(g.appearAnchors.first(), {});
                 }
             }
             else {
                 var g = block.find(g => g.appearAnchors.length > 0, true);
-                if (g) this.focusAppearAnchor(g.appearAnchors.first(), { merge: options?.merge })
+                if (g) this.focusAppearAnchor(g.appearAnchors.first(), {})
                 else {
                     var g = block.prevFind(g => g.appearAnchors.length > 0);
-                    if (g) this.focusAppearAnchor(g.appearAnchors.last(), { last: true, merge: options?.merge });
+                    if (g) this.focusAppearAnchor(g.appearAnchors.last(), { last: true });
                 }
             }
         }
     }
     /***
-    * 事件
+    * 当前选择的块
     */
     currentSelectedBlocks: Block[] = []
+
+    /***
+     * 当前选择可操作的块
+     */
+    get currentSelectHandleBlocks(): Block[] {
+        var ds: Block[] = [];
+        var cs = this.currentSelectedBlocks.map(c => c.handleBlock);
+        cs.each(c => { if (!ds.some(s => s == c)) ds.push(c) });
+        return ds;
+    }
     onSelectBlocks(blocks: Block[], options?: { merge?: boolean, render?: boolean }) {
         this.kit.page.onAction('onSelectBlocks', async () => {
             if (options?.merge) this.kit.page.snapshoot.merge();
