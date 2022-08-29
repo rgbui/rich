@@ -72,7 +72,7 @@ export class AnchorCursor {
         this.endAnchor = findBlockAppear(sel.focusNode);
         this.endOffset = this.endAnchor.getCursorOffset(sel.focusNode, sel.focusOffset);
         this.currentSelectedBlocks = [];
-        this.kit.page.snapshoot.record(OperatorDirective.changeCursorPos, { old_value: old, new_value: this.record }, this.kit.page)
+        this.kit.page.snapshoot.record(OperatorDirective.$change_cursor_offset, { old_value: old, new_value: this.record }, this.kit.page)
     }
     onCollapse(anchor: AppearAnchor, offset: number) {
         this.kit.page.onAction('onCollapse', async () => {
@@ -88,7 +88,7 @@ export class AnchorCursor {
         this.endOffset = offset;
         this.currentSelectedBlocks = [];
         this.renderSelectBlocks(this.currentSelectedBlocks);
-        this.kit.page.snapshoot.record(OperatorDirective.changeCursorPos, { old_value: old, new_value: this.record }, this.kit.page)
+        this.kit.page.snapshoot.record(OperatorDirective.$change_cursor_offset, { old_value: old, new_value: this.record }, this.kit.page)
     }
     /**
      * 设置文本的选区
@@ -170,7 +170,7 @@ export class AnchorCursor {
         this.endAnchor = options.endAnchor;
         this.endOffset = options.endOffset;
         this.currentSelectedBlocks = [];
-        this.kit.page.snapshoot.record(OperatorDirective.changeCursorPos, { old_value: old, new_value: this.record }, this.kit.page)
+        this.kit.page.snapshoot.record(OperatorDirective.$change_cursor_offset, { old_value: old, new_value: this.record }, this.kit.page)
     }
     get record(): { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] } {
         return { start: this.startPos, end: this.endPos, blocks: this.currentSelectedBlocks.map(c => c.pos) }
@@ -209,8 +209,7 @@ export class AnchorCursor {
             [this.startOffset, this.endOffset] = [this.endOffset, this.startOffset];
         }
     }
-    renderAnchorCursorSelection()
-    {
+    renderAnchorCursorSelection() {
         this.renderSelectBlocks(this.currentSelectedBlocks || [])
         if (this.currentSelectedBlocks.length == 0) {
             var sel = window.getSelection();
@@ -237,10 +236,13 @@ export class AnchorCursor {
     /**
     * 这里指定将光标移到appearAnchor的最前面或者最后面
     */
-    onFocusAppearAnchor(aa: AppearAnchor, options?: { merge?: boolean, at?: number, last?: boolean | number, left?: number, y?: number }) {
+    onFocusAppearAnchor(aa: AppearAnchor, options?: { render?: boolean, merge?: boolean, at?: number, last?: boolean | number, left?: number, y?: number }) {
         this.kit.page.onAction('onFocusAppearAnchor', async () => {
             if (options?.merge) this.kit.page.snapshoot.merge();
             this.focusAppearAnchor(aa, options)
+            if (options?.render) {
+                this.renderAnchorCursorSelection()
+            }
         })
     }
     focusAppearAnchor(aa: AppearAnchor, options?: { at?: number, last?: boolean | number, left?: number, y?: number }) {
@@ -307,7 +309,6 @@ export class AnchorCursor {
     * 当前选择的块
     */
     currentSelectedBlocks: Block[] = []
-
     /***
      * 当前选择可操作的块
      */
@@ -329,7 +330,7 @@ export class AnchorCursor {
     selectBlocks(blocks: Block[]) {
         var old = this.record;
         this.currentSelectedBlocks = blocks;
-        this.kit.page.snapshoot.record(OperatorDirective.changeCursorPos, { old_value: old, new_value: this.record }, this.kit.page)
+        this.kit.page.snapshoot.record(OperatorDirective.$change_cursor_offset, { old_value: old, new_value: this.record }, this.kit.page)
     }
     renderSelectBlocks(blocks: Block[]) {
         var currentEls = Array.from(this.kit.page.root.querySelectorAll(".shy-block-selected"));
