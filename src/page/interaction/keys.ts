@@ -1,8 +1,6 @@
 import { Page } from "..";
 import { UA } from "../../../util/ua";
-import { Block } from "../../block";
 import { KeyboardCode, KeyboardPlate } from "../../common/keys";
-
 export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
     keyboardPlate.listener(kt => UA.isMacOs && kt.isMeta(KeyboardCode.Z) || !UA.isMacOs && kt.isCtrl(KeyboardCode.Z), (event, kt) => {
         page.onUndo();
@@ -18,11 +16,9 @@ export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
     );
     keyboardPlate.listener(kt => UA.isMacOs && kt.is(KeyboardCode.Backspace) || !UA.isMacOs && kt.is(KeyboardCode.Delete),
         (event, kt) => {
-            if (page.kit.anchorCursor.currentSelectedBlocks.length > 0) {
-                var ds: Block[] = [];
-                var cs = page.kit.anchorCursor.currentSelectedBlocks.map(c => c.handleBlock);
-                cs.each(c => { if (!ds.some(s => s == c)) ds.push(c) });
-                page.onBatchDelete(ds);
+            if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
+                event.preventDefault();
+                page.onBatchDelete(page.kit.anchorCursor.currentSelectHandleBlocks);
             }
         },
         (event, kt) => {
