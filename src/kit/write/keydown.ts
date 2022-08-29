@@ -54,7 +54,7 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
             var prevAA = aa.visibleLeft();
             if (prevAA) {
                 event.preventDefault();
-                write.kit.anchorCursor.onFocusAppearAnchor(prevAA, { last: prevAA.isBeforeNear(aa) ? -1 : true })
+                write.kit.anchorCursor.onFocusAppearAnchor(prevAA, { render: true, last: prevAA.isBeforeNear(aa) ? -1 : true })
             }
             else {
                 //这说明光标处于当前文档的头部
@@ -68,7 +68,7 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
             var downAA = aa.visibleRight();
             if (downAA) {
                 event.preventDefault();
-                write.kit.anchorCursor.onFocusAppearAnchor(downAA, { at: downAA.isAfterNear(aa) ? 1 : 0 })
+                write.kit.anchorCursor.onFocusAppearAnchor(downAA, { render: true, at: downAA.isAfterNear(aa) ? 1 : 0 })
             } else {
                 //说明光标处于文档的尾部
             }
@@ -91,7 +91,7 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
             if (downAA) {
                 event.preventDefault();
                 onceAutoScroll({ el: downAA.el, feelDis: 60, dis: 120 })
-                write.kit.anchorCursor.onFocusAppearAnchor(downAA, { left: rect.left, y: rects.last().bottom + lineHeight / 2 })
+                write.kit.anchorCursor.onFocusAppearAnchor(downAA, { render: true, left: rect.left, y: rects.last().bottom + lineHeight / 2 })
             }
         }
     }
@@ -111,7 +111,7 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
             if (upAA) {
                 event.preventDefault();
                 onceAutoScroll({ el: upAA.el, feelDis: 60, dis: 120 })
-                write.kit.anchorCursor.onFocusAppearAnchor(upAA, { left: rect.left, last: true, y: rects.first().top + lineHeight / 2 })
+                write.kit.anchorCursor.onFocusAppearAnchor(upAA, { render: true, left: rect.left, last: true, y: rects.first().top + lineHeight / 2 })
             }
         }
     }
