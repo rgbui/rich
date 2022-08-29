@@ -7,6 +7,7 @@ import { HistoryRecord } from "./record";
 import { Block } from "../block";
 import { TableSchema } from "../../blocks/data-grid/schema/meta";
 import { BlockAppear } from "../block/appear";
+import { BlockRenderRange } from "../block/enum";
 
 /**
  * 
@@ -198,30 +199,29 @@ export interface HistorySnapshoot {
     record(directive: OperatorDirective.arrayPropUpdate, data: { blockId: string, at: number, old: Record<string, any>, new: Record<string, any>, propKey: string }, HistorySnapshootObject);
     record(directive: OperatorDirective.insertStyle, data: { blockId: string, at: number, data: Record<string, any> }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.mergeStyle, data: { blockId: string, styleId: string, old: Record<string, any>, new: Record<string, any> }, obj: HistorySnapshootObject);
+
     record(directive: OperatorDirective.schemaRowUpdate, data: { schemaId: string, id: string, old: Record<string, any>, new: Record<string, any> }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.schemaCreateRow, data: { schemaId: string, data: Record<string, any> }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.schemaRowRemove, data: { schemaId: string, data: Record<string, any> }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.keepCursorOffset, data: { blockId: string, prop: string, old: number, new: number }, obj: HistorySnapshootObject);
-
     record(directive: OperatorDirective.changeCursorPos, data: { old_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] }, new_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] } }, obj: HistorySnapshootObject)
+
+
     record(directive: OperatorDirective.$create, data: { pos: SnapshootBlockPos, data: Record<string, any> }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.$delete, data: { pos: SnapshootBlockPos, data: Record<string, any> }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.$move, data: { from: SnapshootBlockPos, to: SnapshootBlockPos }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.$turn, data: { pos: SnapshootBlockPos, from: string, to: string }, obj: HistorySnapshootObject);
-    record(directive: OperatorDirective.$update, data: { pos: SnapshootBlockPropPos, old_value: any, new_value: any }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.$update, data: { pos: SnapshootBlockPropPos, old_value: any, new_value: any, render: BlockRenderRange }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.$change_cursor_offset, data: { old_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] }, new_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] } }, obj: HistorySnapshootObject)
+
     record(directive: OperatorDirective.$map_splice, data: { pos: SnapshootBlockPropPos, delete_map?: any, insert_map?: any }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.$text_splice, data: { pos: SnapshootBlockPropPos, start: number, end?: number, delete_text?: string, insert_text: string }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.$array_create, data: { pos: SnapshootBlockPropPos, data: any }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.$array_delete, data: { pos: SnapshootBlockPropPos, data: any }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.$array_update, data: { pos: SnapshootBlockPropPos, old_value: any, new_value: any }, obj: HistorySnapshootObject);
-    record(directive: OperatorDirective.$keep_cursor_offset, data: { pos: SnapshootBlockPropPos, from: number, to: number }, obj: HistorySnapshootObject);
-
-
-    // $text_delete = 1010,
-    // $text_replace = 1012,
-    // $map_extend = 1004,
-    // $map_delete = 1005,
-    // $map_update = 1006,
+    record(directive: OperatorDirective.$insert_style, data: { pos: SnapshootBlockStylePos, data: Record<string, any> }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.$delete_style, data: { pos: SnapshootBlockStylePos, data: Record<string, any> }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.$merge_style, data: { pos: SnapshootBlockStylePos, old_value: any, new_value: any }, obj: HistorySnapshootObject);
 
 }
 
@@ -249,6 +249,10 @@ export type SnapshootBlockPropPos = {
     arrayPrevId?: string,
     arrayNextId?: string
 
+} & SnapshootBlockPos
+
+export type SnapshootBlockStylePos = {
+    styleId: string
 } & SnapshootBlockPos
 
 export type AppearCursorPos = {

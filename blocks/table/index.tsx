@@ -153,7 +153,7 @@ export class Table extends Block {
                     await this.page.createBlock('/table/row', { blocks: { childs: cs } }, this, m);
                 }
             };
-            this.manualUpdateProps({ cols: this.cols }, { cols });
+            this.manualUpdateProps({ cols: this.cols }, { cols }, BlockRenderRange.self);
         });
     }
     async onChangeRowIndex(rowIndx: number, newRowIndex: number) {
@@ -335,7 +335,7 @@ export class TableView extends BlockView<Table>{
                     var cols = lodash.cloneDeep(self.block.cols);
                     var col = cols[data.colIndex];
                     col.width = w;
-                    self.block.onUpdateProps({ cols })
+                    self.block.onUpdateProps({ cols }, { range: BlockRenderRange.self })
                 }
             },
             moveEnd() {
@@ -390,7 +390,6 @@ export class TableView extends BlockView<Table>{
                     this.bottomPlus.style.top = (top + (rc - rowCount) * CELL_HEIGHT) + 'px';
                 }
                 if (resize == 'right') {
-
                     var dx = ev.clientX - event.clientX;
                     rx = columnCount + Math.ceil(dx / COL_WIDTH);
                     if (rx < columnCount - endEmptyColumnCount) rx = columnCount - endEmptyColumnCount;
