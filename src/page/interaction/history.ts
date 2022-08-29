@@ -3,7 +3,7 @@ import { Page } from "..";
 import { BlockRenderRange } from "../../block/enum";
 import { Matrix } from "../../common/matrix";
 import { OperatorDirective } from "../../history/declare";
-import { AppearCursorPos, HistorySnapshoot, SnapshootBlockPos } from "../../history/snapshoot";
+import { AppearCursorPos, HistorySnapshoot, SnapshootBlockPos, SnapshootBlockPropPos, SnapshootBlockStylePos } from "../../history/snapshoot";
 import { PageDirective } from "../directive";
 
 export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
@@ -223,6 +223,12 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         page.updateProps(operator.data.old);
     });
 
+
+    /***
+     * 新的指令
+     * 原来的仍然需要使用
+     */
+
     snapshoot.registerOperator(OperatorDirective.$create, async (operator, source) => {
         var dr = operator.data;
         await page.createBlock(dr.data.url,
@@ -265,16 +271,142 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         await parent.append(block, dr.from.at, dr.from.childKey)
     });
     snapshoot.registerOperator(OperatorDirective.$update, async (operator, source) => {
-        var dr = operator.data;
+        var dr: { pos: SnapshootBlockPropPos, old_value: any, new_value: any, render: BlockRenderRange } = operator.data as any;
         var block = page.find(x => x.id == dr.pos.blockId);
         if (block) {
-            block.manualUpdateProps(operator.data.old_value, operator.data.new_value, BlockRenderRange.self);
+            block.manualUpdateProps(dr.old_value, dr.new_value,typeof dr.render!='undefined'?dr.render:BlockRenderRange.self);
         }
     }, async (operator) => {
-        var dr = operator.data;
+        var dr: { pos: SnapshootBlockPropPos, old_value: any, new_value: any, render: BlockRenderRange } = operator.data as any;
         var block = page.find(x => x.id == dr.pos.blockId);
         if (block) {
-            block.manualUpdateProps(operator.data.new_value, operator.data.old_value, BlockRenderRange.self);
+            block.manualUpdateProps(dr.new_value, dr.old_value,typeof dr.render!='undefined'?dr.render:BlockRenderRange.self);
+        }
+    });
+    snapshoot.registerOperator(OperatorDirective.$change_cursor_offset, async (operator, source) => {
+        var oc: {
+            old_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] },
+            new_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] }
+        } = operator.data as any;
+        if (source == 'notify' || source == 'notifyView' || source == 'load') return;
+        if (oc.new_value.blocks?.length > 0) {
+            var bs = page.findAll(g => oc.new_value.blocks.some(s => s.blockId == g.id));
+            page.kit.anchorCursor.selectBlocks(bs);
+            page.addUpdateEvent(async () => {
+                page.kit.anchorCursor.renderAnchorCursorSelection()
+            })
+        }
+        else {
+            if (!(oc.new_value.start && oc.new_value.end)) return;
+            var startBlock = page.find(x => x.id == oc.new_value.start.blockId);
+            if (startBlock) {
+                var startAppear = startBlock.appearAnchors.find(g => g.prop == oc.new_value.start.prop);
+                var endBlock = oc.new_value.end.blockId == startBlock?.id ? startBlock : page.find(x => x.id == oc.new_value.end.blockId);
+                var endAppear = endBlock.appearAnchors.find(g => g.prop == oc.new_value.end.prop);
+                page.kit.anchorCursor.setTextSelection({
+                    startAnchor: startAppear,
+                    startOffset: oc.new_value.start.offset,
+                    endAnchor: endAppear,
+                    endOffset: oc.new_value.end.offset
+                });
+                page.addUpdateEvent(async () => {
+                    page.kit.anchorCursor.renderAnchorCursorSelection()
+                })
+            }
+            else {
+                console.error('not found cursor pos block')
+            }
+        }
+    }, async (operator) => {
+        var oc: {
+            old_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] },
+            new_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] }
+        } = operator.data as any;
+        if (oc.old_value.blocks?.length > 0) {
+            var bs = page.findAll(g => oc.old_value.blocks.some(s => s.blockId == g.id));
+            page.kit.anchorCursor.selectBlocks(bs);
+            page.addUpdateEvent(async () => {
+                page.kit.anchorCursor.renderAnchorCursorSelection()
+            })
+        }
+        else {
+            if (!(oc.old_value.start && oc.old_value.end)) return;
+            var startBlock = page.find(x => x.id == oc.old_value.start.blockId);
+            if (startBlock) {
+                var startAppear = startBlock.appearAnchors.find(g => g.prop == oc.old_value.start.prop);
+                var endBlock = oc.old_value.end.blockId == startBlock?.id ? startBlock : page.find(x => x.id == oc.old_value.end.blockId);
+                var endAppear = endBlock.appearAnchors.find(g => g.prop == oc.old_value.end.prop);
+                page.kit.anchorCursor.setTextSelection({
+                    startAnchor: startAppear,
+                    startOffset: oc.old_value.start.offset,
+                    endAnchor: endAppear,
+                    endOffset: oc.old_value.end.offset
+                });
+                page.addUpdateEvent(async () => {
+                    page.kit.anchorCursor.renderAnchorCursorSelection()
+                })
+            } else {
+                console.error('not found cursor pos block')
+            }
+        }
+    })
+    snapshoot.registerOperator(OperatorDirective.$insert_style, async (operator, source) => {
+        var oc: {
+            pos: SnapshootBlockStylePos,
+            data: Record<string, any>
+        } = operator.data as any;
+        var block = page.find(g => g.id == oc.pos.blockId);
+        if (block) {
+            block.pattern.createStyle(oc.data);
+        }
+    }, async (operator) => {
+        var oc: {
+            pos: SnapshootBlockStylePos,
+            data: Record<string, any>
+        } = operator.data as any;
+        var block = page.find(g => g.id == oc.pos.blockId);
+        if (block) {
+            block.pattern.deleteStyle(oc.data.id);
+        }
+    });
+    snapshoot.registerOperator(OperatorDirective.$delete_style, async (operator, source) => {
+        var oc: {
+            pos: SnapshootBlockStylePos,
+            data: Record<string, any>
+        } = operator.data as any;
+        var block = page.find(g => g.id == oc.pos.blockId);
+        if (block) {
+            block.pattern.deleteStyle(oc.data.id);
+        }
+    }, async (operator) => {
+        var oc: {
+            pos: SnapshootBlockStylePos,
+            data: Record<string, any>
+        } = operator.data as any;
+        var block = page.find(g => g.id == oc.pos.blockId);
+        if (block) {
+            block.pattern.createStyle(oc.data);
+        }
+    });
+    snapshoot.registerOperator(OperatorDirective.$merge_style, async (operator, source) => {
+        var oc: {
+            pos: SnapshootBlockStylePos,
+            old_value: any,
+            new_value: any
+        } = operator.data as any;
+        var block = page.find(g => g.id == oc.pos.blockId);
+        if (block) {
+            block.pattern.updateStyle(oc.pos.styleId, oc.new_value);
+        }
+    }, async (operator) => {
+        var oc: {
+            pos: SnapshootBlockStylePos,
+            old_value: any,
+            new_value: any
+        } = operator.data as any;
+        var block = page.find(g => g.id == oc.pos.blockId);
+        if (block) {
+            block.pattern.updateStyle(oc.pos.styleId, oc.old_value);
         }
     });
     snapshoot.registerOperator(OperatorDirective.$array_update, async (operator, source) => {

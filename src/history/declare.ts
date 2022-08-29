@@ -140,6 +140,11 @@ export enum OperatorDirective {
     $turn = 1003,
     $update = 1004,
     $map_splice = 1005,
+
+    $insert_style = 1006,
+    $merge_style = 1007,
+    $delete_style = 1008,
+
     $text_splice = 1012,
     $array_create = 1030,
     $array_delete = 1031,
@@ -150,7 +155,7 @@ export enum OperatorDirective {
     $schema_data_update = 1042,
 
 
-    $keep_cursor_offset = 1055,
+    $change_cursor_offset = 1055,
     $page_turn_layout = 1060,
     $page_update_prop = 1061,
     //#endregion
