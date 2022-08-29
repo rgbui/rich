@@ -462,7 +462,8 @@ export class Block$Operator {
             this.page.snapshoot.record(OperatorDirective.$update, {
                 pos: this.pos,
                 old_value: oldValue,
-                new_value: newValue
+                new_value: newValue,
+                range
             }, this);
         }
     }
@@ -473,6 +474,7 @@ export class Block$Operator {
             pos: this.pos,
             old_value: { matrix: oldMatrix.getValues() },
             new_value: { matrix: newMatrix.getValues() },
+            range: BlockRenderRange.self
         }, this);
     }
     /**
@@ -486,7 +488,8 @@ export class Block$Operator {
     manualUpdateProps(this: Block,
         oldProps: Record<string, any>,
         newProps: Record<string, any>,
-        range = BlockRenderRange.self, isOnlyRecord: boolean = false) {
+        range = BlockRenderRange.self,
+        isOnlyRecord: boolean = false) {
         var oldValue: Record<string, any> = {};
         var newValue: Record<string, any> = {};
         if (isOnlyRecord == true) {
@@ -510,7 +513,8 @@ export class Block$Operator {
             this.page.snapshoot.record(OperatorDirective.$update, {
                 pos: this.pos,
                 old_value: oldValue,
-                new_value: newValue
+                new_value: newValue,
+                range
             }, this);
         }
     }
