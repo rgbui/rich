@@ -1,3 +1,11 @@
 <div contenteditable="true" spellcheck="true" placeholder="Type '/' for commands" data-root="true" class="notranslate" style="max-width: 100%; width: 100%; white-space: pre-wrap; word-break: break-word; caret-color: rgb(55, 53, 47); padding: 3px 2px;"><span>
 </span>
 </div>
+
+
+Git的设置文件为.gitconfig，它可以在用户主目录下（全局配置），也可以在项目目录下（项目配置）。
+
+1. git config --list 显示当前的Git配置
+2. git config -e [--global] 编辑Git配置文件
+3. git config [--global] [user.name](http://user.name) "[name]"
+4. git config [--global] user.email "[email address]"

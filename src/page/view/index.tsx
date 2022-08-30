@@ -202,6 +202,8 @@ export class PageView extends Component<{ page: Page }>{
             onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}
             onMouseEnter={e => this.page.onMouseenter(e)}
             onMouseLeave={e => this.page.onMouseleave(e)}
+            // onCopy={e =>this.page.onCopy(e)}
+            // onCut={e =>this.page.onCut(e)}
         ><div className='shy-page-view-box' onContextMenu={e => this.page.onContextmenu(e)} onMouseDown={e => this.page.onMousedown(e)}>
                 <PageLayoutView page={this.page}>
                     <div className='shy-page-view-content' ref={e => this.page.contentEl = e}>
@@ -217,7 +219,7 @@ export class PageView extends Component<{ page: Page }>{
     }
     async AutomaticHandle() {
         var isForceUpdate: boolean = false;
-       
+
         if (this.page.pageLayout.type == PageLayoutType.doc && this.page.requireSelectLayout == false) {
             if (this.page.autoRefPages == true) {
                 if (!this.page.exists(g => g.url == BlockUrlConstant.RefLinks)) {
@@ -240,7 +242,7 @@ export class PageView extends Component<{ page: Page }>{
         }
         if (this.page.requireSelectLayout == true) {
             var items = await this.page.pageInfo.getSubItems();
-         
+
             if (items.length > 0) {
                 this.page.requireSelectLayout = false;
                 this.page.pageLayout.type = PageLayoutType.doc;

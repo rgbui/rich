@@ -16,6 +16,7 @@ export enum KeyboardCode {
     S = 'S',
     Esc = 'Escape',
     X = 'X',
+    C='C',
     "\\" = '\\',
     "\/" = "/"
 }
