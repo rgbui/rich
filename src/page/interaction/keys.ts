@@ -1,5 +1,4 @@
 import { Page } from "..";
-import { WriteClipboardHtml } from "../../../component/copy";
 import { UA } from "../../../util/ua";
 import { KeyboardCode, KeyboardPlate } from "../../common/keys";
 export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
@@ -30,11 +29,9 @@ export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
     );
     keyboardPlate.listener(kt => UA.isMacOs && kt.isMeta(KeyboardCode.C) || !UA.isMacOs && kt.isCtrl(KeyboardCode.C),
         (event, kt) => {
-            console.log('ggg');
             if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
-                console.log('gggxx');
                 event.preventDefault();
-                WriteClipboardHtml(`<div data-content-source='https://shy.live'><p>kankan</p></div>`)
+                page.onCopyBlocks(page.kit.anchorCursor.currentSelectHandleBlocks)
             }
         },
         (event, kt) => {
@@ -47,8 +44,7 @@ export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
         (event, kt) => {
             if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
                 event.preventDefault();
-                WriteClipboardHtml(`<div data-content-source='https://shy.live'><p>kankan</p></div>`)
-                // page.onBatchDelete(page.kit.anchorCursor.currentSelectHandleBlocks);
+                page.onCutBlocks(page.kit.anchorCursor.currentSelectHandleBlocks)
             }
         },
         (event, kt) => {

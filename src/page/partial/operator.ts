@@ -11,6 +11,7 @@ import { BlockFactory } from "../../block/factory/block.factory";
 import { Rect } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { DropDirection } from "../../kit/handle/direction";
+import { storeCopyBlocks } from "../cache/copy";
 import { PageLayoutType } from "../declare";
 import { PageDirective } from "../directive";
 
@@ -27,8 +28,7 @@ export class Page$Operator {
         var block = await BlockFactory.createBlock(url, this, data, parent);
         if (parent) {
             if (typeof childKey == 'undefined') childKey = block.isLine ? BlockChildKey.childs : (parent?.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
-            if (!parent.allBlockKeys.some(s => s == childKey))
-            {
+            if (!parent.allBlockKeys.some(s => s == childKey)) {
                 console.error(`${parent.url} not support childKey:${childKey}`);
                 childKey = parent.allBlockKeys[0];
             }
@@ -307,5 +307,12 @@ export class Page$Operator {
             }
         })
         this.forceUpdate();
+    }
+    async onCopyBlocks(this: Page, blocks: Block[]) {
+        await storeCopyBlocks(blocks);
+    }
+    async onCutBlocks(this: Page, blocks: Block[]) {
+        await storeCopyBlocks(blocks);
+        await this.onBatchDelete(blocks);
     }
 }

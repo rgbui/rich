@@ -7,6 +7,7 @@ import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
 import { Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
 import { parseDom } from "../../import-export/html/parse";
+import { readCopyBlocks } from "../../page/cache/copy";
 import { inputBackspaceDeleteContent } from "./input";
 import { InputForceStore } from "./store";
 const URL_RGEX = /https?:\/\/([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?/ig;
@@ -15,9 +16,8 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
     var files: File[] = Array.from(event.clipboardData.files);
     var text = event.clipboardData.getData('text/plain');
     var html = event.clipboardData.getData('text/html');
-    console.log(text, html);
     kit.operator.onClearPage();
-    if (!html && text || html && html.endsWith(text)) {
+    if (!html && text || text && html && html.endsWith(text)) {
         event.preventDefault();
         if (URL_RGEX.test(text)) {
             await onPasteUrl(kit, aa, text);
@@ -31,6 +31,16 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
         await onPasterFiles(kit, aa, files);
     }
     else if (html) {
+        var ma;
+        if (ma = html.match(new RegExp(`data\\-name\="shy\\.live"[\\s]+content\\="([^"]+)"`))) {
+            var id = ma[1];
+            if (id) {
+                var bs = readCopyBlocks(id);
+                event.preventDefault();
+                await onPasteCreateBlocks(kit, aa, bs);
+                return;
+            }
+        }
         try {
             event.preventDefault();
             if (aa.block.url == BlockUrlConstant.Code) {
@@ -40,7 +50,7 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
             var regexText = text.replace(/[\(\)\\\.\[\]\*\?]/g, ($, $1) => {
                 return '\\' + $
             })
-            if (html.match(new RegExp('([\s]*<[^>]+>[\s]*)?<[^>]+>' + regexText + '</[^>]+>'))) {
+            if (html.match(new RegExp('([\\s]*<[^>]+>[\\s]*)?<[^>]+>' + regexText + '</[^>]+>'))) {
                 /**
                  * 这里表示当前的文本就仅仅在外面包一层html，没有多个块
                  * 列如:
@@ -74,7 +84,7 @@ async function onPasterFiles(kit: Kit, aa: AppearAnchor, files: File[]) {
         var firstBlock = rowBlock;
         for (let i = 0; i < files.length; i++) {
             var file = files[i];
-            if (file.type == 'image/png' || file.type == 'image/jpeg') {
+            if (file.type.startsWith('image/')) {
                 //图片
                 rowBlock = await rowBlock.visibleDownCreateBlock('/image', { initialData: { file } });
             }
