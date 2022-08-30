@@ -46,3 +46,13 @@ export const CopyText = (text, fn?: any) => {
     }
   }
 }
+
+
+
+export async function WriteClipboardHtml(html: string) {
+  const bo = new Blob([html], { type: 'text/html' });
+  var item = new ClipboardItem({
+    'text/html': bo
+  } as any) as any
+  await navigator.clipboard.write([item]);
+}
