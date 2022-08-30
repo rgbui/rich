@@ -207,6 +207,10 @@ export class TextSpan extends Block {
             return await this.getChildsPlain();
         else return this.content;
     }
+    async getHtml() {
+        if (this.childs.length > 0) return `<p>${await this.getChildsHtml()}</p>`
+        else return `<p>${this.content}</p>`
+    }
 }
 @view("/textspan")
 export class TextSpanView extends BlockView<TextSpan>{

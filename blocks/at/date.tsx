@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import { useDatePicker } from "../../extensions/date";
 import { Rect } from "../../src/common/vector/point";
 import "./style.less";
+
 @url('/mention/date')
 export class ShyDate extends Block {
     @prop()
@@ -30,6 +31,9 @@ export class ShyDate extends Block {
         if (r) {
             this.onUpdateProps({ date: r.getTime() })
         }
+    }
+    async getHtml() {
+        return `<time datetime="${dayjs(this.date).format('YYYY-MM-DD')}">@${dayjs(this.date).format('YYYY-MM-DD')}</time>`
     }
 }
 @view('/mention/date')

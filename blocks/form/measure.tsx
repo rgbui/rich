@@ -12,6 +12,9 @@ export class Measure extends Block {
     @prop()
     value: number = 80;
     display = BlockDisplay.block;
+    async getHtml() {
+        return `<progress value='${this.value}'></progress>`
+    }
 }
 @view('/measure')
 export class MeasureView extends BlockView<Measure>{

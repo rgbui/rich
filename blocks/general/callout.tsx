@@ -40,6 +40,15 @@ export class Callout extends TextSpan {
     getVisibleContentBound() {
         return this.getVisibleBound();
     }
+    async getHtml() {
+        var quote = '';
+        if (this.childs.length > 0) quote = `<p>${(await this.childs.asyncMap(async c => c.getHtml())).join('')}</p>`
+        else quote = `<p>${this.content}</p>`;
+        if (this.subChilds.length > 0) {
+            quote += await (await this.childs.asyncMap(async c => c.getHtml())).join('')
+        }
+        return quote;
+    }
 }
 @view('/callout')
 export class CalloutView extends BlockView<Callout>{

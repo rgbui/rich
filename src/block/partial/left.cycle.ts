@@ -302,4 +302,16 @@ export class Block$LifeCycle {
         };
         return text;
     }
+    async getHtml(this: Block) {
+        var text = '';
+        return text + await this.getChildsHtml();
+    }
+    async getChildsHtml(this: Block) {
+        var text = '';
+        for (let b in this.blocks) {
+            if (this.allBlockKeys.some(s => s == b))
+                text += await this.blocks[b].asyncMap(async x => await x.getChildsHtml());
+        };
+        return text;
+    }
 }

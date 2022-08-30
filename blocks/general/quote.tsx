@@ -41,6 +41,15 @@ export class Quote extends TextSpan {
     getVisibleContentBound() {
         return this.getVisibleBound();
     }
+    async getHtml() {
+        var quote = '';
+        if (this.childs.length > 0) quote = `<quote>${(await this.childs.asyncMap(async c => c.getHtml())).join('')}</quote>`
+        else quote = `<quote>${this.content}</quote>`;
+        if (this.subChilds.length > 0) {
+            quote += await (await this.childs.asyncMap(async c => c.getHtml())).join('')
+        }
+        return quote;
+    }
 }
 @view('/quote')
 export class QuoteView extends BlockView<Quote>{

@@ -20,7 +20,7 @@ export class ViewComponent extends BlockView<View>{
         if (this.block.page.isSupportScreen) {
             var style = this.block.page.getScreenStyle();
             if (this.block.page.nav == true) {
-                style={};
+                style = {};
             }
             return <div className='sy-block-view' >
                 <div className='sy-block-view-wrapper' style={style}>

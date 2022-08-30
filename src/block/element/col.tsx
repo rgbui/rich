@@ -13,6 +13,7 @@ export class Col extends Block {
     }
     @prop()
     widthPercent: number = 100;
+    
 }
 @view('/col')
 export class ColView extends BlockView<Col>{

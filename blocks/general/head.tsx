@@ -36,6 +36,11 @@ export class Head extends Block {
         if (this.el)
             return Rect.fromEle(this.el.querySelector('.sy-block-text-head-content') as HTMLElement);
     }
+    async getHtml() {
+        var tag = this.level;
+        if (this.childs.length > 0) return `<${tag}>${this.getChildsHtml()}</${tag}>`
+        else return `<${tag}>${this.content}</${tag}>`
+    }
 }
 @view("/head")
 export class HeadView extends BlockView<Head>{
@@ -75,7 +80,7 @@ export class HeadView extends BlockView<Head>{
             pt = '四级标题';
             ns = [undefined, undefined, undefined, undefined]
         }
-        Object.assign(style,this.block.contentStyle);
+        Object.assign(style, this.block.contentStyle);
         if (this.block.childs.length > 0)
             return <div className='sy-block-text-head' style={this.block.visibleStyle}>
                 <div className='sy-block-text-head-content' style={style}>

@@ -17,6 +17,12 @@ export class Emoji extends Block {
     @prop()
     src: IconArguments = { name: 'emoji', code: '😀' };
     display = BlockDisplay.inline;
+    async getHtml() {
+        if (this.src && this.src.code) {
+            return `<span>${this.src.code}</span>`
+        }
+        else return '';
+    }
 }
 @view('/emoji')
 export class EmojiView extends BlockView<Emoji>{

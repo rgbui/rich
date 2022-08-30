@@ -46,8 +46,7 @@ export class ToDo extends Block {
         return true;
     }
     async getPlain(this: Block) {
-        if (this.childs.length > 0)
-            return await this.getChildsPlain();
+        if (this.childs.length > 0) return await this.getChildsPlain();
         else return this.content;
     }
     get visibleStyle() {
@@ -62,6 +61,15 @@ export class ToDo extends Block {
         if (this.el)
             return this.el.querySelector('[data-block-content]') as HTMLElement;
         else return this.el;
+    }
+    async getHtml() {
+        var quote = '';
+        if (this.childs.length > 0) quote = `<p><input type='checkbox' ${this.checked ? " checked " : ""} />${(await this.childs.asyncMap(async c => c.getHtml())).join('')}</p>`
+        else quote = `<p><input type='checkbox'  ${this.checked ? " checked " : ""} />${this.content}</p>`;
+        if (this.subChilds.length > 0) {
+            quote +=  (await this.childs.asyncMap(async c => c.getHtml())).join('')
+        }
+        return quote;
     }
 }
 @view('/todo')

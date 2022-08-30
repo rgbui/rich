@@ -2,7 +2,7 @@ import { BlockView } from "../../src/block/view";
 import { prop, url, view } from "../../src/block/factory/observable";
 import React from 'react';
 import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
-import { SolidArea, TextArea } from "../../src/block/view/appear";
+import { TextArea } from "../../src/block/view/appear";
 import { Rect } from "../../src/common/vector/point";
 import { ResourceArguments } from "../../extensions/icon/declare";
 import { Block } from "../../src/block";
@@ -24,7 +24,7 @@ export class Image extends Block {
     @prop()
     src: ResourceArguments;
     @prop()
-    imageWidthPercent: number =70;
+    imageWidthPercent: number = 70;
     @prop()
     caption: string = '';
     @prop()

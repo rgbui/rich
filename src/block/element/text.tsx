@@ -100,6 +100,13 @@ export class TextContent extends Block {
         if (this.pattern.getFillStyle()?.color) return false;
         return true;
     }
+    async getHtml() {
+        if (this.link) return `<a href='${this.link.url}'>${this.content}</a>`
+        else if (this.code) return `<pre>${this.content}</pre>`
+        else {
+            return `<span>${this.content}</span>`
+        }
+    }
 }
 @view('/text')
 export class TextContentView extends BlockView<TextContent>{
