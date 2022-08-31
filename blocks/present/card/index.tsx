@@ -4,6 +4,7 @@ import { BlockFactory } from "../../../src/block/factory/block.factory";
 import { url, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
 import { ChildsArea } from "../../../src/block/view/appear";
+import { GridMap } from "../../../src/page/grid";
 import "./style.less";
 
 @url('/card')
@@ -25,6 +26,9 @@ export class PageCard extends Block {
             this
         ));
         this.forceUpdate();
+    }
+    init() {
+        this.gridMap = new GridMap(this)
     }
 }
 @view('/card')
