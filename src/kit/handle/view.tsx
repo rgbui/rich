@@ -9,6 +9,7 @@ import { ghostView } from "../../common/ghost";
 import { onAutoScroll, onAutoScrollStop } from "../../common/scroll";
 import { DragHandleSvg, PlusSvg } from "../../../component/svgs";
 import { BlockUrlConstant } from "../../block/constant";
+
 export class HandleView extends React.Component<{ handle: Handle }>{
     constructor(props) {
         super(props);

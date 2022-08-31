@@ -5,7 +5,6 @@ import { Point } from "../../common/vector/point";
 import { Events } from "../../../util/events";
 import { cacDragDirection, DropDirection } from "./direction";
 import { HandleView } from "./view";
-
 export class Handle extends Events {
     kit: Kit;
     view: HandleView;
@@ -35,7 +34,6 @@ export class Handle extends Events {
                 var handleEl = this.view.handleEle;
                 handleEl.style.display = 'none';
             }
-
         }
         else {
             var handleEl = this.view.handleEle;
@@ -45,11 +43,6 @@ export class Handle extends Events {
             if (this.kit.boardLine.isConnectOther && this.kit.boardLine.line) this.kit.boardBlockHover.block = this.handleBlock;
             else this.kit.boardBlockHover.block = undefined;
             this.kit.boardBlockHover.forceUpdate();
-        }
-        else {
-            // if (this.isDown) {
-            //     this.onDropOverBlock(hoverBlock.dropOverBlock, this.kit.operator.moveEvent);
-            // }
         }
     }
     onCloseBlockHandle() {
@@ -75,7 +68,7 @@ export class Handle extends Events {
             }
         }
         var dr = cacDragDirection(this.kit, this.dragBlocks, willDropBlock, event);
-        if (dr.direction!= DropDirection.none) {
+        if (dr.direction != DropDirection.none) {
             willDropBlock = dr.dropBlock;
         }
         else {

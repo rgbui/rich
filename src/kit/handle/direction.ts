@@ -139,7 +139,7 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
         /**
          * dropBlock是容器，如tab块
          */
-        if (dropBlock.isPanel && bound.contain(point)) {
+        if (dropBlock.gridMap && bound.contain(point)) {
             /**
              * 这里只判断左右，
              * 上下不判断，主要是好拖放dropBlock
@@ -196,5 +196,5 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
  * @param block 
  */
 function getOutXBlock(block: Block) {
-    return block.closest(x => x.parent?.isView || x.parent?.isRow && !x.parent?.isPart || x.parent?.isPanel && !x.parent?.isPart);
+    return block.closest(x => x.parent?.isView || x.parent?.isRow && !x.parent?.isPart || x.parent?.gridMap && !x.parent?.isPart);
 }
