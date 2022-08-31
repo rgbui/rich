@@ -285,9 +285,10 @@ export abstract class Block extends Events {
     get isView(): boolean {
         return false;
     }
-    get isPanel(): boolean {
-        return false;
+    get isPanel() {
+        return this.gridMap ? true : false
     }
+
     get isCell(): boolean {
         return false;
     }
@@ -386,6 +387,7 @@ export abstract class Block extends Events {
         return this.url == BlockUrlConstant.TextSpan
     }
     get isContentEmpty() {
+        if (this.isPart) return false;
         if (this.isLine) {
             if (this.content == '') return true;
         }
@@ -415,6 +417,7 @@ export abstract class Block extends Events {
      * 判断当前块是否为文本块
      */
     get isTextBlock() {
+        if (this.isPart) return false;
         if (this.appearAnchors.some(s => s.isText)) return true;
         if (this.childs.length > 0 && this.childs.some(s => s.isTextContent)) return true;
         return false;
@@ -514,10 +517,13 @@ export abstract class Block extends Events {
      */
     get handleBlock() {
         if (this.isPart) {
-            return this.closest(x => !x.isPart && x.isBlock && !x.isLayout)
+            var c = this.closest(x => !x.isPart && x.isBlock && !x.isLayout && x.handleBlock)
+            if (c) return c.handleBlock;
         }
         if (this.isLine) {
-            return this.closest(x => x.isBlock && !x.isLayout)
+            var c = this.closest(x => x.isBlock && !x.isLayout)
+            c = c.closest(g => g.handleBlock ? true : false);
+            if (c) return c.handleBlock;
         }
         else if (this.isLayout) {
             return this.find(g => g.isBlock && !g.isLayout)
