@@ -183,6 +183,9 @@ export class Page$Operator {
          */
         await this.onAction(ActionDirective.onBatchDragBlocks, async () => {
             await to.drop(blocks, direction);
+            this.addUpdateEvent(async () => {
+                this.kit.anchorCursor.onSelectBlocks(blocks, { render: true, merge: true });
+            })
         })
     }
     async onBatchDargCreateBlocks(this: Page, blocks: any[], to: Block, direction: DropDirection) {
