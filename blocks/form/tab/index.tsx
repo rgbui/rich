@@ -46,9 +46,9 @@ export class Tab extends Block {
     }
     async onAddTabItem() {
         this.page.onAction(ActionDirective.onTabAddItem, async () => {
-            await this.appendBlock({
+            var newBlock = await this.appendBlock({
                 url: '/tab/item',
-                content: '标签'
+                content: ''
             }, this.blocks.childs.length,
                 BlockChildKey.childs
             );
@@ -59,6 +59,9 @@ export class Tab extends Block {
                 this.blocks.otherChilds.length,
                 BlockChildKey.otherChilds
             );
+            this.page.addUpdateEvent(async () => {
+                this.page.kit.anchorCursor.onFocusBlockAnchor(newBlock, { merge: true, render: true })
+            })
         })
     }
     changeTabIndex(tabeIndex) {
@@ -80,22 +83,35 @@ export class Tab extends Block {
         if (um) {
             if (um.item.name == 'delete') {
                 this.page.onAction(ActionDirective.onTabRemoveItem, async () => {
+                    var pre = this.blocks.childs[at - 1];
+                    if (!pre) this.blocks.childs[at + 1];
                     await this.blocks.childs[at].delete();
                     await this.blocks.otherChilds[at].delete();
+                    this.page.addUpdateEvent(async () => {
+                        this.page.kit.anchorCursor.onFocusBlockAnchor(pre, { merge: true, render: true, last: true })
+                    })
                 })
             }
             else if (um.item.name == 'after') {
                 this.page.onAction(ActionDirective.onTabExchangeItem, async () => {
                     this.tabIndex = at + 1;
-                    this.blocks.childs[at].insertAfter(this.blocks.childs[at + 1], BlockChildKey.childs);
-                    this.blocks.otherChilds[at].insertAfter(this.blocks.otherChilds[at + 1], BlockChildKey.otherChilds);
+                    var pre = this.blocks.childs[at];
+                    await this.blocks.childs[at].insertAfter(this.blocks.childs[at + 1], BlockChildKey.childs);
+                    await this.blocks.otherChilds[at].insertAfter(this.blocks.otherChilds[at + 1], BlockChildKey.otherChilds);
+                    this.page.addUpdateEvent(async () => {
+                        this.page.kit.anchorCursor.onFocusBlockAnchor(pre, { merge: true, render: true, last: true })
+                    })
                 })
             }
             else if (um.item.name == 'prev') {
                 this.page.onAction(ActionDirective.onTabExchangeItem, async () => {
                     this.tabIndex = at - 1;
-                    this.blocks.childs[at].insertBefore(this.blocks.childs[at - 1], BlockChildKey.childs);
-                    this.blocks.otherChilds[at].insertBefore(this.blocks.otherChilds[at - 1], BlockChildKey.otherChilds);
+                    var pre = this.blocks.childs[at];
+                    await this.blocks.childs[at].insertBefore(this.blocks.childs[at - 1], BlockChildKey.childs);
+                    await this.blocks.otherChilds[at].insertBefore(this.blocks.otherChilds[at - 1], BlockChildKey.otherChilds);
+                    this.page.addUpdateEvent(async () => {
+                        this.page.kit.anchorCursor.onFocusBlockAnchor(pre, { merge: true, render: true, last: true })
+                    })
                 })
             }
         }
