@@ -13,6 +13,7 @@ import { MenuItemType } from "../../component/view/menu/declare";
 import lodash from "lodash";
 import { ArrowDownSvg, ArrowLeftSvg, ArrowRightSvg, ArrowUpSvg, BlockcolorSvg, CloseTickSvg, TrashSvg } from "../../component/svgs";
 import { BackgroundColorList, FontColorList } from "../../extensions/color/data";
+import { GridMap } from "../../src/page/grid";
 
 @url('/table/cell')
 export class TableCell extends Block {
@@ -27,6 +28,9 @@ export class TableCell extends Block {
     }
     get row() {
         return this.parent as TableRow;
+    }
+    init() {
+        this.gridMap = new GridMap(this)
     }
 }
 
