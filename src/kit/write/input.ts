@@ -191,9 +191,10 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
             if (block.isLine && block.prev) {
                 /**这里判断block前面有没有line */
                 var pv = block.prev;
-                if (aa.isSolid) await block.delete()
+                var isSolidDelete: boolean = false;
+                if (aa.isSolid) { await block.delete(); isSolidDelete = true; }
                 else if (isEmpty) await block.delete()
-                if (pv.appearAnchors.some(s => s.isText)) {
+                if (!isSolidDelete && pv.appearAnchors.some(s => s.isText)) {
                     pv.updateProps({ content: pv.content.slice(0, pv.content.length - 1) }, BlockRenderRange.self);
                 }
                 if (pv.isContentEmpty) {
