@@ -6,10 +6,14 @@ import { ChildsArea } from "../../../src/block/view/appear";
 import { Tab } from ".";
 import { ActionDirective } from "../../../src/history/declare";
 import { BlockUrlConstant } from "../../../src/block/constant";
+import { GridMap } from "../../../src/page/grid";
 
 @url('/tab/page')
 export class TabPage extends Block {
     partName: string = 'tab-page';
+    init() {
+        this.gridMap = new GridMap(this)
+    }
     get myTab() {
         return this.parent as Tab
     }
@@ -35,7 +39,7 @@ export class TabPageView extends BlockView<TabPage>{
             await this.block.page.onAction(ActionDirective.onCreateBlockByEnter, async () => {
                 var newBlock = await this.block.page.createBlock(BlockUrlConstant.TextSpan, {}, this.block);
                 newBlock.mounted(() => {
-                    this.block.page.kit.anchorCursor.onFocusBlockAnchor(newBlock, {render:true, merge: true });
+                    this.block.page.kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
                 })
             });
         }

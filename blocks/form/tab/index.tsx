@@ -16,10 +16,10 @@ import "./style.less";
 
 @url('/tab')
 export class Tab extends Block {
-    blocks: { childs: Block[], subChilds: Block[] } = { childs: [], subChilds: [] };
+    blocks: { childs: Block[], otherChilds: Block[] } = { childs: [], otherChilds: [] };
     tabIndex: number = 0;
     get allBlockKeys() {
-        return [BlockChildKey.childs, BlockChildKey.subChilds]
+        return [BlockChildKey.childs, BlockChildKey.otherChilds]
     }
     @prop()
     showIcon: boolean = false;
@@ -33,22 +33,32 @@ export class Tab extends Block {
     }
     async createInitTabItems() {
         this.blocks.childs = [];
-        this.blocks.subChilds = [];
-
+        this.blocks.otherChilds = [];
         this.blocks.childs.push(await BlockFactory.createBlock('/tab/item', this.page, { content: '标签1' }, this));
-        this.blocks.subChilds.push(await BlockFactory.createBlock('/tab/page', this.page, { blocks: { childs: [{ url: BlockUrlConstant.TextSpan, content: '' }] } }, this));
+        this.blocks.otherChilds.push(await BlockFactory.createBlock('/tab/page', this.page, { blocks: { childs: [{ url: BlockUrlConstant.TextSpan, content: '' }] } }, this));
 
         this.blocks.childs.push(await BlockFactory.createBlock('/tab/item', this.page, { content: '标签2' }, this));
-        this.blocks.subChilds.push(await BlockFactory.createBlock('/tab/page', this.page, { blocks: { childs: [{ url: BlockUrlConstant.TextSpan, content: '' }] } }, this));
+        this.blocks.otherChilds.push(await BlockFactory.createBlock('/tab/page', this.page, { blocks: { childs: [{ url: BlockUrlConstant.TextSpan, content: '' }] } }, this));
 
         this.blocks.childs.push(await BlockFactory.createBlock('/tab/item', this.page, { content: '标签3' }, this));
-        this.blocks.subChilds.push(await BlockFactory.createBlock('/tab/page', this.page, { blocks: { childs: [{ url: BlockUrlConstant.TextSpan, content: '' }] } }, this));
+        this.blocks.otherChilds.push(await BlockFactory.createBlock('/tab/page', this.page, { blocks: { childs: [{ url: BlockUrlConstant.TextSpan, content: '' }] } }, this));
 
     }
     async onAddTabItem() {
         this.page.onAction(ActionDirective.onTabAddItem, async () => {
-            await this.appendBlock({ url: '/tab/item', content: '标签' }, this.blocks.childs.length, 'childs');
-            await this.appendBlock({ url: '/tab/page', blocks: { childs: [{ url: BlockUrlConstant.TextSpan, content: '' }] } }, this.blocks.subChilds.length, 'subChilds');
+            await this.appendBlock({
+                url: '/tab/item',
+                content: '标签'
+            }, this.blocks.childs.length,
+                BlockChildKey.childs
+            );
+            await this.appendBlock({
+                url: '/tab/page',
+                blocks: { childs: [{ url: BlockUrlConstant.TextSpan, content: '' }] }
+            },
+                this.blocks.otherChilds.length,
+                BlockChildKey.otherChilds
+            );
         })
     }
     changeTabIndex(tabeIndex) {
@@ -71,21 +81,21 @@ export class Tab extends Block {
             if (um.item.name == 'delete') {
                 this.page.onAction(ActionDirective.onTabRemoveItem, async () => {
                     await this.blocks.childs[at].delete();
-                    await this.blocks.subChilds[at].delete();
+                    await this.blocks.otherChilds[at].delete();
                 })
             }
             else if (um.item.name == 'after') {
                 this.page.onAction(ActionDirective.onTabExchangeItem, async () => {
                     this.tabIndex = at + 1;
-                    this.blocks.childs[at].insertAfter(this.blocks.childs[at + 1], 'childs');
-                    this.blocks.subChilds[at].insertAfter(this.blocks.subChilds[at + 1], 'subChilds');
+                    this.blocks.childs[at].insertAfter(this.blocks.childs[at + 1], BlockChildKey.childs);
+                    this.blocks.otherChilds[at].insertAfter(this.blocks.otherChilds[at + 1], BlockChildKey.otherChilds);
                 })
             }
             else if (um.item.name == 'prev') {
                 this.page.onAction(ActionDirective.onTabExchangeItem, async () => {
                     this.tabIndex = at - 1;
-                    this.blocks.childs[at].insertBefore(this.blocks.childs[at - 1], 'childs');
-                    this.blocks.subChilds[at].insertBefore(this.blocks.subChilds[at - 1], 'subChilds');
+                    this.blocks.childs[at].insertBefore(this.blocks.childs[at - 1], BlockChildKey.childs);
+                    this.blocks.otherChilds[at].insertBefore(this.blocks.otherChilds[at - 1], BlockChildKey.otherChilds);
                 })
             }
         }
@@ -172,7 +182,7 @@ export class TabView extends BlockView<Tab>{
                     <div className="sy-block-tab-plus" onMouseDown={e => this.block.onAddTabItem()}><Icon size={14} icon={PlusSvg}></Icon></div>
                 </div>
                 <div className="sy-block-tab-pages" style={{ height: this.block.contentHeight }}>
-                    <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>
+                    <ChildsArea childs={this.block.blocks.otherChilds}></ChildsArea>
                 </div>
                 <div className="sy-block-tab-resize" onMouseDown={e => this.onResize(e)}></div>
             </div>
