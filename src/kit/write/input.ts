@@ -175,6 +175,7 @@ export async function inputLineTail(write: PageWrite, aa: AppearAnchor, event: R
 export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
     var sel = window.getSelection();
     var isEmpty = aa.textContent == '';
+    if (aa.block.isPart) isEmpty = false;
     var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
     if (offset == 0) {
         event.preventDefault();
@@ -255,7 +256,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                         write.kit.anchorCursor.onFocusBlockAnchor(prevAppearBlock, { last: true, render: true, merge: true });
                     });
                 }
-                if (rowBlock.isContentEmpty && !rowBlock.isPart) {
+                if (rowBlock.isContentEmpty) {
                     await rowBlock.delete();
                 }
             }
@@ -325,7 +326,8 @@ async function combindSubBlock(write: PageWrite, rowBlock: Block) {
     if (rowBlock.hasSubChilds && rowBlock.subChilds.length > 0) {
         await pa.appendArray(rowBlock.subChilds, 0, pa.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
     }
-    await rowBlock.delete();
+    if (!rowBlock.isPart)
+        await rowBlock.delete();
     write.kit.page.addUpdateEvent(async () => {
         write.kit.anchorCursor.onFocusBlockAnchor(lastPreBlock, { last: true, render: true, merge: true });
     });
@@ -378,7 +380,8 @@ async function combineTextBlock(write: PageWrite, rowBlock: Block, preBlock?: Bl
             await preBlock.parent.appendArray(rowBlock.subChilds, preBlock.at + 1, preBlock.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs)
         }
     }
-    await rowBlock.delete();
+    if (!rowBlock.isPart)
+        await rowBlock.delete();
     if (!lastPreBlock) {
         lastPreBlock = preBlock.childs.first();
     }
