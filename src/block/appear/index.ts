@@ -149,7 +149,7 @@ export class AppearAnchor {
     cacCollapseFocusPos(offset: number, isFirst = true) {
         if (this.isSolid) {
             return {
-                node: this.solidCursorEl.childNodes[0],
+                node: this.solidCursorEl.childNodes[0] || this.solidCursorEl,
                 pos: 0
             }
         }

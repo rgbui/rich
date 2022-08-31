@@ -217,15 +217,25 @@ export class AnchorCursor {
                 var cr = this.startAnchor.cacCollapseFocusPos(this.startOffset);
                 var er = this.endAnchor.cacCollapseFocusPos(this.endOffset);
                 sel.setBaseAndExtent(cr.node, cr.pos, er.node, er.pos);
-                var c = dom(cr.node).closest(g => typeof (g as any).scrollIntoViewIfNeeded == 'function') as any;
-                if (c) c.scrollIntoViewIfNeeded()
+                if (cr.node) {
+                    var c = dom(cr.node).closest(g => (g as any) && typeof (g as any).scrollIntoViewIfNeeded == 'function') as any;
+                    if (c) c.scrollIntoViewIfNeeded()
+                }
+                else {
+                    console.log(this.startAnchor, cr.node, er.node, this.endAnchor);
+                }
             }
             else {
                 forceCloseTextTool()
                 var cr = this.startAnchor.cacCollapseFocusPos(this.startOffset);
                 sel.collapse(cr.node, cr.pos);
-                var c = dom(cr.node).closest(g => typeof (g as any).scrollIntoViewIfNeeded == 'function') as any;
-                if (c) c.scrollIntoViewIfNeeded()
+                if (cr.node) {
+                    var c = dom(cr.node).closest(g => (g as any) && typeof (g as any).scrollIntoViewIfNeeded == 'function') as any;
+                    if (c) c.scrollIntoViewIfNeeded()
+                }
+                else {
+                    console.log(this.startAnchor,cr.node, this.endAnchor);
+                }
             }
         }
         else {
