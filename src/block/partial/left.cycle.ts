@@ -1,7 +1,9 @@
 import lodash from "lodash";
 import { Block } from "..";
 import { channel } from "../../../net/channel";
+import { dom } from "../../common/dom";
 import { Matrix } from "../../common/matrix";
+import { DropDirection } from "../../kit/handle/direction";
 import { BlockFactory } from "../factory/block.factory";
 import { Pattern } from "../pattern";
 
@@ -313,5 +315,16 @@ export class Block$LifeCycle {
                 text += await this.blocks[b].asyncMap(async x => await x.getChildsHtml());
         };
         return text;
+    }
+    dropEnter(this: Block, direction: DropDirection) {
+        var dire = DropDirection[direction];
+        var className = 'shy-block-drag-over-' + dire;
+        if (!this.el.classList.contains(className)) {
+            dom(this.el).removeClass(g => g.startsWith('shy-block-drag-over'));
+            this.el.classList.add(className);
+        }
+    }
+    dropLeave(this: Block) {
+        dom(this.el).removeClass(g => g.startsWith('shy-block-drag-over'));
     }
 }
