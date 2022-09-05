@@ -1,10 +1,10 @@
 import { Kit } from "..";
 import { Block } from "../../block";
-import { dom } from "../../common/dom";
 import { Point } from "../../common/vector/point";
 import { Events } from "../../../util/events";
 import { cacDragDirection, DropDirection } from "./direction";
 import { HandleView } from "./view";
+
 export class Handle extends Events {
     kit: Kit;
     view: HandleView;
@@ -76,27 +76,20 @@ export class Handle extends Events {
         }
         if (willDropBlock && this.dragBlocks.some(s => s === willDropBlock)) return;
         if (willDropBlock !== this.dropBlock && this.dropBlock) {
-            dom(this.dropBlock.el).removeClass(g => g.startsWith('shy-block-drag-over'));
-            this.kit.page.onDropLeaveBlock(this.dragBlocks, this.dropBlock, this.dropDirection);
+            this.dropBlock.dropLeave();
         }
         if (willDropBlock) {
             this.dropDirection = dr.direction;
             this.dropBlock = dr.dropBlock;
-            var direction = DropDirection[this.dropDirection];
-            var className = 'shy-block-drag-over-' + direction;
-            if (!this.dropBlock.el.classList.contains(className)) {
-                dom(this.dropBlock.el).removeClass(g => g.startsWith('shy-block-drag-over'));
-                this.dropBlock.el.classList.add(className);
-            }
+            this.dropBlock.dropEnter(this.dropDirection);
         }
-        if (this.dropBlock)
-            this.kit.page.onDropEnterBlock(this.dragBlocks, this.dropBlock, this.dropDirection);
+
     }
     onDropEnd() {
         this.isDrag = false;
         this.isDown = false;
         if (this.dropBlock) {
-            dom(this.dropBlock.el).removeClass(g => g.startsWith('shy-block-drag-over'));
+            this.dropBlock.dropLeave();
         }
         this.dragBlocks = [];
         delete this.dropBlock;

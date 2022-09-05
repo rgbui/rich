@@ -75,8 +75,8 @@ export class PageContextmenu {
                 { name: 'smallText', text: '小字号', checked: this.smallFont ? true : false, type: MenuItemType.switch },
                 { name: 'fullWidth', text: '宽版', checked: this.isFullWidth ? true : false, type: MenuItemType.switch },
                 { type: MenuItemType.divide },
-                { name: 'nav', text: '目录',  icon: OutlineSvg, type: MenuItemType.switch, checked: this.nav },
-                { name: 'refPages', text: "显示引用",  icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
+                { name: 'nav', text: '目录', icon: OutlineSvg, type: MenuItemType.switch, checked: this.nav },
+                { name: 'refPages', text: "显示引用", icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
                 { name: 'lock', text: this.pageInfo.locker?.userid ? "解除锁定" : '编辑保护', icon: this.pageInfo.locker?.userid ? UnlockSvg : LockSvg },
                 // { type: MenuItemTypeValue.divide },
                 // { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
@@ -140,10 +140,7 @@ export class PageContextmenu {
                 this.onRedo();
             }
             else if (r.item.name == 'history') {
-                var result = await usePageHistoryStore({
-                    pageId: this.pageInfo?.id,
-                    pageTitle: this.pageInfo.text
-                });
+                var result = await usePageHistoryStore(this.pageInfo);
                 if (result) {
                     console.log(result);
                     this.emit(PageDirective.rollup, result);
