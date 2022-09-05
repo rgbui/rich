@@ -16,6 +16,7 @@ import { ElementType, getElementUrl } from "../../net/element.type";
 import { Rect } from "../../src/common/vector/point";
 import { Page } from "../../src/page";
 import { util } from "../../util/util";
+import { LinkPageItem } from "../at/declare";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
 import { createFormPage } from "./page";
@@ -93,9 +94,11 @@ export class PageHistoryStore extends EventsComponent {
             }
         }
     }
-    async open(options?: { pageId: string, pageTitle: string }) {
-        this.pageId = options.pageId;
-        this.pageTitle = options.pageTitle;
+    pageItem: LinkPageItem;
+    async open(item: LinkPageItem) {
+        this.pageItem = item;
+        this.pageId = item.id;
+        this.pageTitle = item.text;
         this.button.loading = false;
         await this.load();
     }
@@ -133,7 +136,7 @@ export class PageHistoryStore extends EventsComponent {
         this.forceUpdate()
         if (r.ok) {
             if (this.viewPage) this.viewPage.destory();
-            this.viewPage = await createFormPage(this.el, r.data.content);
+            this.viewPage = await createFormPage(this.el, r.data.content, this.pageItem);
         }
     }
     async onBake() {
@@ -166,7 +169,7 @@ export class PageHistoryStore extends EventsComponent {
     }
 }
 
-export async function usePageHistoryStore(options?: { pageId: string, pageTitle: string }) {
+export async function usePageHistoryStore(options: LinkPageItem) {
     var pos: PopoverPosition = { center: true };
     let popover = await PopoverSingleton(PageHistoryStore, { mask: true, });
     let fv = await popover.open(pos);
