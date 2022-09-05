@@ -183,6 +183,7 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
             }
         }
     }
+    if (dropBlock && !dropBlock.isCanDrop) return { direction: DropDirection.none, dropBlock: undefined };
     return { direction: direction, dropBlock };
 }
 

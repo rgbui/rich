@@ -164,12 +164,6 @@ export class Page$Operator {
         }
         this.emit(PageDirective.focusAnchor, anchor);
     }
-    onDropLeaveBlock(this: Page, dragBlocks: Block[], dropBlock: Block, direction: DropDirection) {
-        this.kit.page.emit(PageDirective.dropLeaveBlock, dragBlocks, dropBlock, direction);
-    }
-    onDropEnterBlock(this: Page, dragBlocks: Block[], dropBlock: Block, direction: DropDirection) {
-        this.kit.page.emit(PageDirective.dropLeaveBlock, dragBlocks, dropBlock, direction);
-    }
     /**
      * 批量将block拖到另一个block
      * @param this 

@@ -17,7 +17,7 @@ export class TabItem extends Block {
     get isCanDrop() {
         return false;
     }
-    
+
 }
 @view('/tab/item')
 export class TabItemView extends BlockView<TabItem>{
