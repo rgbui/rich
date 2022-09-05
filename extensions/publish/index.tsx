@@ -29,6 +29,7 @@ class PagePublish extends EventsComponent {
         var self = this;
         function setGlobalShare(data) {
             channel.air('/page/update/info', { id: self.item.id, pageInfo: data });
+            self.forceUpdate()
         }
         return <div className='shy-page-publish'>
             <div className='shy-page-publish-access'>
