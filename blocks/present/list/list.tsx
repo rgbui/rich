@@ -7,9 +7,10 @@ import { BlockView } from "../../../src/block/view";
 import { BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
 import { ChildsArea, TextArea, TextLineChilds } from "../../../src/block/view/appear";
 import { TextTurns } from "../../../src/block/turn/text";
-import { Rect, Point } from "../../../src/common/vector/point";
 import { TriangleSvg } from "../../../component/svgs";
 import { BlockChildKey } from "../../../src/block/constant";
+import { DropDirection } from "../../../src/kit/handle/direction";
+import { dom } from "../../../src/common/dom";
 
 export enum ListType {
     circle = 0,
@@ -70,14 +71,26 @@ export class List extends Block {
         return true;
     }
     get contentEl() {
-        if (this.el)
-            return this.el.querySelector('[data-block-content]') as HTMLElement;
+        if (this.el) return this.el.querySelector('[data-block-content]') as HTMLElement;
         else return this.el;
     }
     async getPlain(this: Block) {
-        if (this.childs.length > 0)
-            return await this.getChildsPlain();
+        if (this.childs.length > 0) return await this.getChildsPlain();
         else return this.content + await this.getChildsPlain();
+    }
+    dropEnter(this: Block, direction: DropDirection) {
+        var el = this.contentEl;
+        var dire = DropDirection[direction];
+        var className = 'shy-block-drag-over-' + dire;
+        if (!el.classList.contains(className))
+        {
+            dom(el).removeClass(g => g.startsWith('shy-block-drag-over'));
+            el.classList.add(className);
+        }
+    }
+    dropLeave(this: Block) {
+        var el = this.contentEl;
+        dom(el).removeClass(g => g.startsWith('shy-block-drag-over'));
     }
 }
 @view('/list')

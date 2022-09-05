@@ -12,6 +12,8 @@ import { Block } from "../../src/block";
 import { CheckboxSquareSvg, CheckSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { BlockChildKey } from "../../src/block/constant";
+import { dom } from "../../src/common/dom";
+import { DropDirection } from "../../src/kit/handle/direction";
 
 @url('/todo')
 export class ToDo extends Block {
@@ -67,9 +69,22 @@ export class ToDo extends Block {
         if (this.childs.length > 0) quote = `<p><input type='checkbox' ${this.checked ? " checked " : ""} />${(await this.childs.asyncMap(async c => c.getHtml())).join('')}</p>`
         else quote = `<p><input type='checkbox'  ${this.checked ? " checked " : ""} />${this.content}</p>`;
         if (this.subChilds.length > 0) {
-            quote +=  (await this.childs.asyncMap(async c => c.getHtml())).join('')
+            quote += (await this.childs.asyncMap(async c => c.getHtml())).join('')
         }
         return quote;
+    }
+    dropEnter(this: Block, direction: DropDirection) {
+        var el = this.contentEl;
+        var dire = DropDirection[direction];
+        var className = 'shy-block-drag-over-' + dire;
+        if (!el.classList.contains(className)) {
+            dom(el).removeClass(g => g.startsWith('shy-block-drag-over'));
+            el.classList.add(className);
+        }
+    }
+    dropLeave(this: Block) {
+        var el = this.contentEl;
+        dom(el).removeClass(g => g.startsWith('shy-block-drag-over'));
     }
 }
 @view('/todo')
