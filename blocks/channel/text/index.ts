@@ -11,11 +11,12 @@ import { Rect } from "../../../src/common/vector/point";
 import { ElementType, getElementUrl } from "../../../net/element.type";
 import { LinkPageItem } from "../../../extensions/at/declare";
 
+
 @url('/channel/text')
 export class ChannelText extends Block {
     chats: ChannelTextType[] = [];
     get roomId() {
-        return this.page.pageLayout.type == PageLayoutType.textChannel ? this.page.pageInfo.id: this.syncBlockId
+        return this.page.pageLayout.type == PageLayoutType.textChannel ? this.page.pageInfo.id : this.syncBlockId
     }
     get elementUrl() {
         return getElementUrl(ElementType.Room, this.roomId);
@@ -154,7 +155,7 @@ export class ChannelText extends Block {
                 id: this.page.pageInfo.id,
                 text: this.page.pageInfo.text,
                 icon: this.page.pageInfo.icon,
-                description:this.page.pageInfo.description
+                description: this.page.pageInfo.description
             };
             this.forceUpdate()
         }

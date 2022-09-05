@@ -1,7 +1,7 @@
 import lodash from "lodash";
 import React, { CSSProperties } from "react";
 import { ChannelText } from "..";
-import { EditSvg, UnreadTextSvg } from "../../../../component/svgs";
+import { EditSvg, TopicSvg, UnreadTextSvg } from "../../../../component/svgs";
 import { useForm } from "../../../../component/view/form/dialoug";
 import { Icon } from "../../../../component/view/icon";
 import { Loading } from "../../../../component/view/loading";
@@ -34,7 +34,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
             fields: [{ name: 'text', text: '标题', type: 'input' }, { name: 'description', text: '描述', type: 'textarea' }],
             title: '编辑讨论话题',
             remark: '',
-            model: { text: this.block.pageInfo?.text||'新页面', description: this.block.pageInfo?.description },
+            model: { text: this.block.pageInfo?.text || '新页面', description: this.block.pageInfo?.description },
             checkModel: async (model) => {
                 if (!model.text) return '标题不能为空';
             }
@@ -54,7 +54,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
         }
         if (this.block.page.pageLayout.type == PageLayoutType.textChannel) {
             return <div className="gap-20 visible-hover">
-                <Icon className={'item-hover round cursor'} onMousedown={e => changeIcon(e)} size={72} icon={this.block?.pageInfo?.icon}></Icon>
+                <Icon className={'item-hover round cursor'} onMousedown={e => changeIcon(e)} size={72} icon={this.block?.pageInfo?.icon || TopicSvg}></Icon>
                 <div className="h2 flex"><span>{this.block?.pageInfo?.text || '新页面'}</span><span className="flex-center round gap-l-5 cursor item-hover flex-line size-24 visible"><Icon onClick={e => this.openEdit(e)} size={18} icon={EditSvg}></Icon></span></div>
                 <div className="text">{this.block.pageInfo?.description}</div>
             </div>
@@ -91,7 +91,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
     }
     renderContent() {
         return <div className="sy-channel-text-content" onWheel={this.wheel} ref={e => this.contentEl = e}>
-            {this.block&& this.renderPageTitle()}
+            {this.block && this.renderPageTitle()}
             {this.block.pageIndex > 2 && this.block.isLast && <div className="sy-channel-text-tip"><Remark>无记录了</Remark></div>}
             {this.block.loading && <div className="sy-channel-text-loading"><Loading></Loading></div>}
             {RenderChannelTextContent(this.block)}
