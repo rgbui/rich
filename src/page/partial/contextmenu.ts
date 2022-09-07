@@ -6,7 +6,7 @@ import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { BlockDirective } from "../../block/enum";
 import { Point, Rect } from "../../common/vector/point";
 import { PageLayoutType } from "../declare";
-import { CustomizePageSvg, FileSvg, ImportSvg, LinkSvg, LockSvg, OutlineSvg, TrashSvg, UndoSvg, UnlockSvg, UploadSvg, VersionHistorySvg } from "../../../component/svgs";
+import { CommunicationSvg, CustomizePageSvg, FourLeavesSvg, LinkSvg, LockSvg, OutlineSvg, TrashSvg, UndoSvg, UnlockSvg, UploadSvg, VersionHistorySvg } from "../../../component/svgs";
 import { usePageLayout } from "../../../extensions/layout";
 import { CopyText } from "../../../component/copy";
 import { ShyAlert } from "../../../component/lib/alert";
@@ -93,6 +93,55 @@ export class PageContextmenu {
                 // { name: 'move', text: '移动', icon: MoveToSvg, disabled: true },
             ];
         }
+        else if (this.pageLayout.type == PageLayoutType.textChannel) {
+            items = [
+                // { name: 'smallText', text: '小字号', checked: this.smallFont ? true : false, type: MenuItemType.switch },
+                // { name: 'fullWidth', text: '宽版', checked: this.isFullWidth ? true : false, type: MenuItemType.switch },
+                //{ type: MenuItemType.divide },
+                {
+                    name: 'channel',
+                    text: '频道',
+                    icon: FourLeavesSvg,
+                    type: MenuItemType.select,
+                    value: this.pageInfo?.textChannelMode || 'chat',
+                    options: [
+                        { text: '聊天', value: 'chat' },
+                        { text: '微博', value: "weibo" },
+                        { text: '问答', value: "ask" },
+                        { text: '贴吧', value: "tiebar" }
+                    ]
+                },
+                {
+                    name: 'speak',
+                    text: '发言',
+                    icon: CommunicationSvg,
+                    type: MenuItemType.select,
+                    value: this.pageInfo?.speak || 'more',
+                    options: [
+                        { text: '允许发言多次', value: 'more' },
+                        { text: '从此刻仅允许发言一次', value: "only" }
+                    ]
+                },
+                { type: MenuItemType.divide },
+                //{ name: 'refPages', text: "显示引用", icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
+                { name: 'lock', text: this.pageInfo.locker?.userid ? "解除锁定" : '编辑保护', icon: this.pageInfo.locker?.userid ? UnlockSvg : LockSvg },
+                // { type: MenuItemTypeValue.divide },
+                // { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
+                //{ name: 'history', icon: VersionHistorySvg, text: '页面历史' },
+                { type: MenuItemType.divide },
+                { name: 'copylink', icon: LinkSvg, text: '复制链接' },
+                { type: MenuItemType.divide },
+                //{ type: MenuItemType.divide },
+                //{ name: 'undo', text: '撤消', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
+                // { name: 'redo', text: '重做', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
+                { name: 'delete', icon: TrashSvg, text: '删除' },
+                // { type: MenuItemTypeValue.divide },
+                // { name: 'import', iconSize: 16, icon: ImportSvg, text: '导入', disabled: true },
+                // { name: 'export', iconSize: 16, text: '导出', icon: FileSvg, disabled: true, remark: '导出PDF,HTML,Markdown' },
+                // { type: MenuItemTypeValue.divide },
+                // { name: 'move', text: '移动', icon: MoveToSvg, disabled: true },
+            ];
+        }
         var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, items, {
             overflow: 'visible',
             input: (item) => {
@@ -108,9 +157,15 @@ export class PageContextmenu {
                 else if (item.name == 'refPages') {
                     this.onOpenRefPages({ refPages: item.checked })
                 }
+                else if (item.name == 'channel') {
+                    this.onChangeTextChannel(item.value as any)
+                } else if (item.name == 'speak') {
+                    this.onChangeTextChannelSpeak(item.value as any)
+                }
             }
         });
         if (r) {
+            console.log(r.item.name);
             if (r.item.name == 'layout') {
                 var up = await usePageLayout({ roundArea: Rect.fromEvent(event) })
             }

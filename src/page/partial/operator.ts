@@ -3,6 +3,8 @@ import { CopyText } from "../../../component/copy";
 import { ShyAlert } from "../../../component/lib/alert";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItem } from "../../../component/view/menu/declare";
+import { LinkPageItem } from "../../../extensions/at/declare";
+import { channel } from "../../../net/channel";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
 import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
@@ -15,13 +17,14 @@ import { storeCopyBlocks } from "../cache/copy";
 import { PageLayoutType } from "../declare";
 import { PageDirective } from "../directive";
 
-export class Page$Operator {
+export class Page$Operator{
     /**
     * 创建一个block
     * @param url 
     * @param data 
     * @param parent 
     * @param at 
+    * 
     * 
     */
     async createBlock(this: Page, url: string, data: Record<string, any>, parent: Block, at?: number, childKey?: string) {
@@ -311,5 +314,22 @@ export class Page$Operator {
     async onCutBlocks(this: Page, blocks: Block[]) {
         await storeCopyBlocks(blocks);
         await this.onBatchDelete(blocks);
+    }
+    async onChangeTextChannel(this: Page, mode: LinkPageItem['textChannelMode']) {
+        channel.air('/page/update/info', {
+            id: this.pageInfo.id,
+            pageInfo: {
+                textChannelMode: mode
+            }
+        })
+    }
+    async onChangeTextChannelSpeak(this: Page, speak: LinkPageItem['speak']) {
+        channel.air('/page/update/info', {
+            id: this.pageInfo.id,
+            pageInfo: {
+                speak: speak,
+                speakDate: new Date()
+            }
+        })
     }
 }

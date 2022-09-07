@@ -4,10 +4,9 @@ import { PagePermission } from "../../src/page/permission";
 import { IconArguments } from "../icon/declare"
 
 
-
 export type AtSelectorItem = {
     text: string,
-    childs: {
+    childs:{
         url: string,
         text: string,
         label?: string,
@@ -27,7 +26,10 @@ export interface LinkPageItem {
     locker?: { userid: string, lockDate: number },
     share?: 'net' | 'nas' | 'local';
     permission?: PagePermission;
-    getSubItems?(): Promise<LinkPageItem[]>
+    getSubItems?(): Promise<LinkPageItem[]>;
+    speak?: 'more' | 'only';
+    speakDate?: Date,
+    textChannelMode?: 'chat' | 'weibo' | 'ask' | 'tieba'
 }
 
 export function getPageIcon(item: LinkPageItem) {
