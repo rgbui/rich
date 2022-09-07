@@ -139,12 +139,12 @@ export class MenuItemView extends React.Component<{
             {item.type == MenuItemType.input && <div className="shy-menu-box-item-input"><Input size={'small'} value={item.value} onEnter={e => { item.value = e; this.select(item) }} onChange={e => { item.value = e; this.input(e, item) }} placeholder={item.text}></Input></div>}
             {item.type == MenuItemType.button && <div className="shy-menu-box-item-button"><Button icon={item.icon} disabled={item.disabled} block onClick={e => item.buttonClick != 'click' ? this.select(item, e.nativeEvent) : this.click(item, e)}>{item.text}</Button></div>}
             {item.type == MenuItemType.select && <div className="shy-menu-box-item-select">
-                {item.icon && <i className="flex-center flex-inline size-20"><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
+                {item.icon && <i className="flex-center flex-inline size-20 flex-fix"><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
                 {item.renderIcon && item.renderIcon(item, this)}
-                <span className='shy-menu-box-item-option-text'>{item.text}</span>
-                <span className="shy-menu-box-item-select-value" onMouseDown={e => this.openSelectMenu(item, e)}>
-                    <em>{item?.options?.find(g => g.value == item.value)?.text}</em>
-                    <Icon size={14} icon={ChevronDownSvg}></Icon>
+                <span className='shy-menu-box-item-option-text flex-auto'>{item.text}</span>
+                <span className="shy-menu-box-item-select-value flex  flex-fix" onMouseDown={e => this.openSelectMenu(item, e)}>
+                    <em className="text-over flex-auto max-w-100">{item?.options?.find(g => g.value == item.value)?.text}</em>
+                    <Icon className={'flex-fix'} size={14} icon={ChevronDownSvg}></Icon>
                 </span>
             </div>}
             {item.type == MenuItemType.drag && <ToolTip overlay={item.overlay} placement={item.placement || 'right'} ><div data-drag={item.drag} onMouseUp={e => this.select(item, e.nativeEvent)} className="shy-menu-box-item-drag">
