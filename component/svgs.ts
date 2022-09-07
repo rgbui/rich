@@ -39,6 +39,7 @@ import CollectionCalendarSvg from "../src/assert/svg/collectionCalendar.svg";
 import CollectionGallerySvg from "../src/assert/svg/collectionGallery.svg";
 import CollectionListSvg from "../src/assert/svg/collectionList.svg";
 import CommentSvg from "../src/assert/svg/comment.svg";
+import CommunicationSvg from "../src/assert/svg/communication.svg";
 import CompassSvg from "../src/assert/svg/compass.svg";
 import ComponentsSvg from "../src/assert/svg/components.svg";
 import ConnetLineSvg from "../src/assert/svg/connet.line.svg";
@@ -71,15 +72,18 @@ import FontStyleSvg from "../src/assert/svg/font.style.svg";
 import FontSvg from "../src/assert/svg/font.svg";
 import FontawesomeSvg from "../src/assert/svg/fontawesome.svg";
 import FontcolorSvg from "../src/assert/svg/fontcolor.svg";
+import FourLeavesSvg from "../src/assert/svg/four.leaves.svg";
 import FriendsSvg from "../src/assert/svg/friends.svg";
 import GlobalLinkSvg from "../src/assert/svg/globalLink.svg";
 import H1Svg from "../src/assert/svg/h1.svg";
 import H2Svg from "../src/assert/svg/h2.svg";
 import H3Svg from "../src/assert/svg/h3.svg";
 import H4Svg from "../src/assert/svg/h4.svg";
+import HelpSvg from "../src/assert/svg/help.svg";
 import HideSvg from "../src/assert/svg/hide.svg";
 import ImageErrorSvg from "../src/assert/svg/imageError.svg";
 import ImportSvg from "../src/assert/svg/import.svg";
+import InfoSvg from "../src/assert/svg/info.svg";
 import ItalicSvg from "../src/assert/svg/italic.svg";
 import LayoutColSvg from "../src/assert/svg/layoutCol.svg";
 import LayoutCol2Svg from "../src/assert/svg/layoutCol2.svg";
@@ -212,6 +216,7 @@ CollectionCalendarSvg,
 CollectionGallerySvg,
 CollectionListSvg,
 CommentSvg,
+CommunicationSvg,
 CompassSvg,
 ComponentsSvg,
 ConnetLineSvg,
@@ -244,15 +249,18 @@ FontStyleSvg,
 FontSvg,
 FontawesomeSvg,
 FontcolorSvg,
+FourLeavesSvg,
 FriendsSvg,
 GlobalLinkSvg,
 H1Svg,
 H2Svg,
 H3Svg,
 H4Svg,
+HelpSvg,
 HideSvg,
 ImageErrorSvg,
 ImportSvg,
+InfoSvg,
 ItalicSvg,
 LayoutColSvg,
 LayoutCol2Svg,
