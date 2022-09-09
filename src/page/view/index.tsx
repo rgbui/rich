@@ -7,7 +7,7 @@ import { KitView } from "../../kit/view";
 import { PageLayoutType } from "../declare";
 import { getBoardTool } from "../../../extensions/board.tool";
 import { Point, Rect } from "../../common/vector/point";
-import { BlockUrlConstant } from "../../block/constant";
+import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
 import { PageLayoutView } from "./layout";
 import { channel } from "../../../net/channel";
 import { LinkPageItem } from "../../../extensions/at/declare";
@@ -17,6 +17,7 @@ import { CollectTableSvg, CommentSvg, PageSvg } from "../../../component/svgs";
 import { dom } from "../../common/dom";
 import { PageOutLine } from "../../../blocks/page/outline";
 import { BlockFactory } from "../../block/factory/block.factory";
+import { ActionDirective } from "../../history/declare";
 
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
@@ -202,8 +203,8 @@ export class PageView extends Component<{ page: Page }>{
             onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}
             onMouseEnter={e => this.page.onMouseenter(e)}
             onMouseLeave={e => this.page.onMouseleave(e)}
-            // onCopy={e =>this.page.onCopy(e)}
-            // onCut={e =>this.page.onCut(e)}
+        // onCopy={e =>this.page.onCopy(e)}
+        // onCut={e =>this.page.onCut(e)}
         ><div className='shy-page-view-box' onContextMenu={e => this.page.onContextmenu(e)} onMouseDown={e => this.page.onMousedown(e)}>
                 <PageLayoutView page={this.page}>
                     <div className='shy-page-view-content' ref={e => this.page.contentEl = e}>
@@ -218,45 +219,57 @@ export class PageView extends Component<{ page: Page }>{
         </div>
     }
     async AutomaticHandle() {
-        var isForceUpdate: boolean = false;
-
-        if (this.page.pageLayout.type == PageLayoutType.doc && this.page.requireSelectLayout == false) {
-            if (this.page.autoRefPages == true) {
-                if (!this.page.exists(g => g.url == BlockUrlConstant.RefLinks)) {
+        await this.page.onAction(ActionDirective.AutomaticHandle, async () => {
+            var isForceUpdate: boolean = false;
+            if (this.page.pageLayout.type == PageLayoutType.doc && this.page.requireSelectLayout == false) {
+                if (this.page.autoRefPages == true) {
+                    if (!this.page.exists(g => g.url == BlockUrlConstant.RefLinks)) {
+                        var view = this.page.views[0];
+                        await this.page.createBlock(BlockUrlConstant.RefLinks, {}, view, view.blocks.childs.length, BlockChildKey.childs)
+                        isForceUpdate = true;
+                    }
+                }
+                if (this.page.autoRefSubPages == true) {
+                    var oldSubPages = this.page.addedSubPages.map(c => c)
+                    var items = await this.page.pageInfo.getSubItems();
+                    this.page.addedSubPages = items.map(it => it.id);
                     var view = this.page.views[0];
-                    var block = await BlockFactory.createBlock(BlockUrlConstant.RefLinks, this.page, {}, view);
-                    view.blocks.childs.push(block);
+                    oldSubPages.removeAll(c => items.exists(t => t.id == c));
+                    items.removeAll(r => view.exists(c => c.url == BlockUrlConstant.Link && (c as any).pageId == r.id))
+                    await items.eachAsync(async item => {
+                        await this.page.createBlock(BlockUrlConstant.Link, { pageId: item.id }, view, view.blocks.childs.length, BlockChildKey.childs);
+                        isForceUpdate = true;
+                    });
+                    if (oldSubPages.length > 0) {
+                        var willRemoveItems = view.findAll(c => c.url == BlockUrlConstant.Link && oldSubPages.includes((c as any).pageId));
+                        if (willRemoveItems.length > 0) {
+                            //这些链接需要自动清理掉
+                            await willRemoveItems.eachAsync(async r => {
+                                await r.delete()
+                            })
+                        }
+                    }
+                }
+            }
+            if (this.page.requireSelectLayout == true) {
+                var items = await this.page.pageInfo.getSubItems();
+                if (items.length > 0) {
+                    this.page.updateProps({
+                        requireSelectLayout: false,
+                        type: PageLayoutType.doc
+                    })
+                    var view = this.page.views[0];
+                    items.removeAll(r => view.exists(c => c.url == BlockUrlConstant.Link && (c as any).pageId == r.id))
+                    await items.eachAsync(async item => {
+                        await this.page.createBlock(BlockUrlConstant.Link, { pageId: item.id }, view, view.blocks.childs.length, BlockChildKey.childs);
+                    })
                     isForceUpdate = true;
                 }
             }
-            if (this.page.autoRefSubPages == true) {
-                var items = await this.page.pageInfo.getSubItems();
-                var view = this.page.views[0];
-                items.removeAll(r => view.exists(c => c.url == BlockUrlConstant.Link && (c as any).pageId == r.id))
-                await items.eachAsync(async item => {
-                    var block = await BlockFactory.createBlock(BlockUrlConstant.Link, this.page, { pageId: item.id }, view);
-                    view.blocks.childs.push(block);
-                    isForceUpdate = true;
-                })
+            if (isForceUpdate = true) {
+                this.forceUpdate()
             }
-        }
-        if (this.page.requireSelectLayout == true) {
-            var items = await this.page.pageInfo.getSubItems();
+        })
 
-            if (items.length > 0) {
-                this.page.requireSelectLayout = false;
-                this.page.pageLayout.type = PageLayoutType.doc;
-                var view = this.page.views[0];
-                items.removeAll(r => view.exists(c => c.url == BlockUrlConstant.Link && (c as any).pageId == r.id))
-                await items.eachAsync(async item => {
-                    var block = await BlockFactory.createBlock(BlockUrlConstant.Link, this.page, { pageId: item.id }, view);
-                    view.blocks.childs.push(block);
-                })
-                isForceUpdate = true;
-            }
-        }
-        if (isForceUpdate = true) {
-            this.forceUpdate()
-        }
     }
 }

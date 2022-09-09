@@ -165,7 +165,6 @@ export class PageContextmenu {
             }
         });
         if (r) {
-            console.log(r.item.name);
             if (r.item.name == 'layout') {
                 var up = await usePageLayout({ roundArea: Rect.fromEvent(event) })
             }

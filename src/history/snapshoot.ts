@@ -74,6 +74,12 @@ export class HistorySnapshoot extends Events {
             if (!this.action?.isEmpty) {
                 this.action.endDate = Date.now();
                 /**
+                 * 这是加载页面后，页面的自动处理动作
+                 */
+                if (this.action.directive == ActionDirective.AutomaticHandle) {
+                    return;
+                }
+                /**
                  * onLoadUserActions 一般是从别的地方触发的，那么相应的history就不应该在触发了
                  */
                 if (this.action.directive !== ActionDirective.onLoadUserActions) {

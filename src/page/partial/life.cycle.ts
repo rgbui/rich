@@ -138,6 +138,7 @@ export class Page$Cycle {
         json.views = await this.views.asyncMap(async x => {
             return await x.get()
         })
+        json.addedSubPages = this.addedSubPages.map(s => s);
         return json;
     }
     async getString(this: Page) {
