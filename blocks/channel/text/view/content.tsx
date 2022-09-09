@@ -89,7 +89,7 @@ export function RenderChannelTextContent(block: ChannelText) {
                 <UserBox userid={d.userid}>{us => {
                     return <>
                         <div className="sy-channel-text-item-edited-content">
-                            <Avatar  showCard user={us} userid={d.userid} size={40}></Avatar>
+                            <Avatar showCard user={us} userid={d.userid} size={40}></Avatar>
                             <div className="sy-channel-text-item-edited-content-wrapper" >
                                 <div className="sy-channel-text-item-head"><a>{us.name}</a><span>{util.showTime(d.createDate)}</span></div>
                                 <div className="sy-channel-text-item-edited-content-input">
@@ -110,7 +110,7 @@ export function RenderChannelTextContent(block: ChannelText) {
             }
             {!(d.id == view.editChannelText?.id) && !noUser && <UserBox userid={d.userid}>{us => {
                 return <div className="sy-channel-text-item-box" >
-                    <Avatar  showCard  user={us} userid={d.userid} size={40}></Avatar>
+                    <Avatar showCard user={us} userid={d.userid} size={40}></Avatar>
                     <div className="sy-channel-text-item-wrapper" >
                         <div className="sy-channel-text-item-head"><a>{us.name}</a><span>{util.showTime(d.createDate)}</span></div>
                         <div className="sy-channel-text-item-content">{renderContent(d)}</div>
@@ -139,7 +139,7 @@ export function RenderChannelTextContent(block: ChannelText) {
     }
     function renderUploadFile(uf) {
         return <div className="sy-channel-text-upload" key={uf.id}>
-            <Avatar  showCard  user={block.page.user} userid={block.page.user.id} size={40}></Avatar>
+            <Avatar showCard user={block.page.user} userid={block.page.user.id} size={40}></Avatar>
             <div className="sy-channel-text-upload-content">
                 <Loading></Loading>
                 <span style={{ display: 'inline-block', marginLeft: 5 }}>{uf.speed}</span>
@@ -156,7 +156,7 @@ export function RenderChannelTextContent(block: ChannelText) {
         if (lastUserid == d.userid && lastDate && d.createDate && (d.createDate.getTime() - lastDate.getTime()) < 1000 * 60 * 3)
             noUser = true;
         if (i > 0 && dm[i - 1].isDeleted == true) noUser = false;
-        if (!splitLastDate || splitLastDate && dayjs(d.createDate).diff(splitLastDate, 'minute') > 5) {
+        if (!splitLastDate || splitLastDate && dayjs(d.createDate).diff(splitLastDate, 'minute') > 60) {
             ds.push(renderDateTip(d.createDate))
             splitLastDate = d.createDate;
         }

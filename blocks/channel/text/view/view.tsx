@@ -177,6 +177,10 @@ export class ChannelTextView extends BlockView<ChannelText>{
         var style: CSSProperties = this.block.visibleStyle;
         if (this.block.page.pageLayout.type == PageLayoutType.textChannel) {
             delete style.padding;
+            delete style.paddingTop;
+            delete style.paddingBottom;
+            delete style.paddingLeft;
+            delete style.paddingRight;
         }
         return <div className='sy-channel-text' style={style}>
             {this.renderHead()}
