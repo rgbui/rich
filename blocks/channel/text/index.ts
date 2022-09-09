@@ -57,10 +57,23 @@ export class ChannelText extends Block {
                 this.setLocalSeq(this.chats.max(x => x.seq));
         }
     }
+    abledSend: boolean = false;
+    async loadHasAbledSend(force?: boolean) {
+        if (this.page.pageInfo?.speak == 'only') {
+            var r = await channel.get('/ws/channel/abled/send', { roomId: this.roomId, pageId: this.page.pageInfo.id });
+            if (r.ok) {
+                this.abledSend = r.data.abled;
+            }
+            else this.abledSend = false;
+        }
+        else this.abledSend = true;
+        if (force == true) this.view.forceUpdate();
+    }
     async didMounted(): Promise<void> {
         this.loading = true;
         this.view.forceUpdate();
         await this.loadChannelTextDatas();
+        await this.loadHasAbledSend();
         this.loading = false;
         this.view.forceUpdate(() => (this.view as any).updateScroll());
         channel.sync('/ws/channel/notify', this.channelNotify);

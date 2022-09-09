@@ -100,7 +100,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
     richTextInput: RichTextInput;
     renderInput() {
         return <div className="sy-channel-text-input" data-shy-page-no-focus onMouseDown={e => e.stopPropagation()}>
-            <RichTextInput ref={e => this.richTextInput = e} placeholder="回车提交" popOpen={e => this.popOpen(e)} onInput={e => this.onInput(e)} ></RichTextInput>
+            <RichTextInput disabled={this.block.abledSend} placeholder={this.block.abledSend ? "您不能发言" : "回车提交"} ref={e => this.richTextInput = e} popOpen={e => this.popOpen(e)} onInput={e => this.onInput(e)} ></RichTextInput>
         </div>
     }
     popOpen(cs: { char: string, span: HTMLElement }) {
@@ -171,6 +171,9 @@ export class ChannelTextView extends BlockView<ChannelText>{
                 }
                 await util.delay(20)
             }
+        }
+        if (this.block.page.pageInfo.speak == 'only') {
+            this.block.loadHasAbledSend(true);
         }
     }
     render() {

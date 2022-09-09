@@ -14,6 +14,7 @@ import { ChannelTextType } from "../declare";
 import { ChatChannelService } from "./service";
 import { ChannelTextView } from "./view";
 
+
 export function RenderChannelTextContent(block: ChannelText) {
     var dm = block.chats.sort((x, y) => {
         if (x.createDate.getTime() > y.createDate.getTime()) return 1
