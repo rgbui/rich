@@ -3,7 +3,7 @@ import { Avatar } from "../../component/view/avator/face";
 import { UserBasic } from "../../types/user"
 
 class OnlineUsers extends React.Component {
-    componentDidMount():void {
+    componentDidMount(): void {
 
     }
     users: UserBasic[] = [];
