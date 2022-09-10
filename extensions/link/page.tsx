@@ -11,7 +11,7 @@ import { channel } from "../../net/channel";
 import { BlockUrlConstant } from "../../src/block/constant";
 import { KeyboardCode } from "../../src/common/keys";
 import { Point, Rect, RectUtility } from "../../src/common/vector/point";
-import { LinkPageItem } from "../at/declare";
+import { getPageIcon, LinkPageItem } from "../at/declare";
 import { InputTextPopSelector } from "../common/input.pop";
 import { PopoverPosition } from "../popover/position";
 import "./style.less";
@@ -85,7 +85,7 @@ class PageLinkSelector extends InputTextPopSelector {
             {this.loading && <Loading></Loading>}
             {!this.loading && this.links.map((link, i) => {
                 return <a onMouseDown={e => this.onSelect(link)} className={"h-30 gap-l-10 text  item-hover cursor round padding-w-10 flex" + ((i + 1) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
-                    <span className="flex flex-inline size-24 item-hover round"> <Icon size={14} icon={link.icon || PageSvg}></Icon></span> <span className="f-14">{link.text || '新页面'}</span></a>
+                    <span className="flex flex-inline size-24 item-hover round"> <Icon size={14} icon={getPageIcon(link)}></Icon></span> <span className="f-14">{link.text || '新页面'}</span></a>
             })}
             {!this.loading && this.links.length == 0 && this.searchWord && <a className="remark flex-center gap-h-10 f-14"><Remark>没有搜索到</Remark></a>}
         </div>
@@ -95,7 +95,7 @@ class PageLinkSelector extends InputTextPopSelector {
             top: this.pos.y,
             left: this.pos.x
         }
-        return <div ref={e=>this.el=e}>
+        return <div ref={e => this.el = e}>
             {this.visible && <div className='shy-page-link' style={style}>{this.renderLinks()}</div>}
         </div>
     }
