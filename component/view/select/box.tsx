@@ -34,7 +34,8 @@ export class SelectBox extends React.Component<{
                     nickName: 'selectBox'
                 });
             if (r) {
-                self.props.onChange(r.item.value, r.item);
+                if (typeof self.props.onChange == 'function')
+                    self.props.onChange(r.item.value, r.item);
             }
         }
         var op = this.props.options.arrayJsonFind('childs', g => g.value == this.props.value);

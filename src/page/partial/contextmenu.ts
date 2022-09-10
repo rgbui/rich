@@ -95,22 +95,19 @@ export class PageContextmenu {
         }
         else if (this.pageLayout.type == PageLayoutType.textChannel) {
             items = [
-                // { name: 'smallText', text: '小字号', checked: this.smallFont ? true : false, type: MenuItemType.switch },
-                // { name: 'fullWidth', text: '宽版', checked: this.isFullWidth ? true : false, type: MenuItemType.switch },
-                //{ type: MenuItemType.divide },
-                {
-                    name: 'channel',
-                    text: '频道',
-                    icon: FourLeavesSvg,
-                    type: MenuItemType.select,
-                    value: this.pageInfo?.textChannelMode || 'chat',
-                    options: [
-                        { text: '聊天', value: 'chat' },
-                        { text: '微博', value: "weibo" },
-                        { text: '问答', value: "ask" },
-                        { text: '贴吧', value: "tiebar" }
-                    ]
-                },
+                // {
+                //     name: 'channel',
+                //     text: '频道',
+                //     icon: FourLeavesSvg,
+                //     type: MenuItemType.select,
+                //     value: this.pageInfo?.textChannelMode || 'chat',
+                //     options: [
+                //         { text: '聊天', value: 'chat' },
+                //         { text: '微博', value: "weibo" },
+                //         { text: '问答', value: "ask" },
+                //         { text: '贴吧', value: "tiebar" }
+                //     ]
+                // },
                 {
                     name: 'speak',
                     text: '发言',
