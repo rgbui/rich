@@ -83,6 +83,7 @@ export class Page extends Events<PageDirective> {
     autoRefPages: boolean = false;
     autoRefSubPages: boolean = true;
     addedSubPages: string[] = [];
+    showMembers: boolean = false;
     get windowMatrix() {
         var rect = Rect.fromEle(this.root);
         var matrix = new Matrix();

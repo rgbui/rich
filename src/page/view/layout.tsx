@@ -1,5 +1,6 @@
 import React, { CSSProperties } from "react";
 import { Page } from "..";
+import { OnlineUsers } from "../../../extensions/at/users";
 import { PageLayoutType } from "../declare";
 
 export function PageLayoutView(props: {
@@ -40,20 +41,18 @@ export function PageLayoutView(props: {
     else if (type == PageLayoutType.textChannel) {
         var style: CSSProperties = { minHeight: mh, width: '100%' };
         Object.assign(style, props.page.matrix.getCss());
-        return <div className={"shy-page-layout shy-page-layout-text-channel"} style={{ width: '100%', height: mh }}>
-            <div className='shy-page-layout-wrapper' style={style}>
-                {props.children}
+        if (props.page.showMembers) {
+            return <div className="flex flex-top" style={{ width: '100%', height: mh }}>
+                <div className="flex-auto white" style={style}>{props.children}</div>
+                <div className="flex-fix w-250" style={{ height: mh }}><OnlineUsers></OnlineUsers></div>
             </div>
-        </div>
-    }
-    else if (type == PageLayoutType.textBroadcast) {
-        var style: CSSProperties = { minHeight: mh, width: '100%' };
-        Object.assign(style, props.page.matrix.getCss());
-        return <div className={"shy-page-layout shy-page-layout-text-broadcast"} style={{ width: '100%', height: mh }}>
-            <div className='shy-page-layout-wrapper' style={style}>
-                {props.children}
+        }
+        else
+            return <div className={"shy-page-layout shy-page-layout-text-channel"} style={{ width: '100%', height: mh }}>
+                <div className='shy-page-layout-wrapper' style={style}>
+                    {props.children}
+                </div>
             </div>
-        </div>
     }
     else {
         return <div>没有定义版面</div>
