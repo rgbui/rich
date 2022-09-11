@@ -2,7 +2,7 @@ import React from "react";
 import { Avatar } from "../../component/view/avator/face";
 import { UserBasic } from "../../types/user"
 
-class OnlineUsers extends React.Component {
+export class OnlineUsers extends React.Component {
     componentDidMount(): void {
 
     }
