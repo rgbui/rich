@@ -32,7 +32,7 @@ export class Page$Cycle {
         await this.load(content);
         if (Array.isArray(operates) && operates.length > 0) {
             var operates = operates.map(op => op.operate ? op.operate : op) as any;
-            await this.loadUserActions(operates, 'load');
+            await this.syncUserActions(operates, 'load');
         }
         await this.onAction(ActionDirective.onPageUpdateProps, async () => {
             await this.updateProps({ sourceItemId: itemId });
@@ -106,7 +106,7 @@ export class Page$Cycle {
         }
         await this.onRepair();
     }
-    async loadUserActions(this: Page, actions: UserAction[], source: 'load' | 'notify' | 'notifyView') {
+    async syncUserActions(this: Page, actions: UserAction[], source: 'load' | 'notify' | 'notifyView') {
         await this.onAction(ActionDirective.onLoadUserActions, async () => {
             for (let i = 0; i < actions.length; i++) {
                 let action = actions[i];

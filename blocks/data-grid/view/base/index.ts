@@ -140,7 +140,7 @@ export class DataGridView extends Block {
                 else this.setPropData(n, data[n]);
             }
             if (Array.isArray(r.data.operates) && r.data.operates.length > 0)
-                this.page.loadUserActions(r.data.operates, 'load');
+                this.page.syncUserActions(r.data.operates, 'load');
         }
     }
     private getSearchFilter() {
