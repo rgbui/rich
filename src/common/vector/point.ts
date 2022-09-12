@@ -2,6 +2,7 @@
 import React from "react";
 import { PopoverPosition } from "../../../extensions/popover/position";
 import { Matrix } from "../matrix";
+import { Polygon } from "./polygon";
 
 export class Point {
     x: number;
@@ -329,6 +330,10 @@ export class Rect {
             return point.dis(new Point(this.right, point.y))
         }
     }
+    static getRectFromRects(rects: Rect[]) {
+        var ps = rects.map(r =>[r.leftTop, r.rightBottom]).flat();
+        return new Polygon(...ps).bound;
+    }
 }
 
 export class RectUtility {
@@ -448,6 +453,7 @@ export class RectUtility {
         }
         return new Rect(new Point(minX, minY), new Point(maxX, maxY))
     }
+
     static getRectLineRects(rect: Rect, d: number) {
         return [
             new Rect(rect.leftTop.sub(d / 2), d + rect.width, d),
