@@ -125,7 +125,7 @@ export class HistorySnapshoot extends Events {
         }
         this.store()
     }
-    private ops = new Map<OperatorDirective, { redo: (userOperator: UserOperator, source: 'redo' | 'load' | 'notify' | 'notifyView') => Promise<void>, undo: (userOperator: UserOperator) => Promise<void> }>();
+    private ops = new Map<OperatorDirective, { redo: (userOperator: UserOperator, source: 'redo' | 'load' | 'notify' | 'notifyView', action: UserAction) => Promise<void>, undo: (userOperator: UserOperator) => Promise<void> }>();
     /**
      * 
      * 如果source不等于redo，说明是页面自动加载的
@@ -136,7 +136,7 @@ export class HistorySnapshoot extends Events {
      * @param redo 
      * @param undo 
      */
-    registerOperator(directive: OperatorDirective, redo: (userOperator: UserOperator, source: 'redo' | 'load' | 'notify' | 'notifyView') => Promise<void>, undo: (userOperator: UserOperator) => Promise<void>) {
+    registerOperator(directive: OperatorDirective, redo: (userOperator: UserOperator, source: 'redo' | 'load' | 'notify' | 'notifyView', action: UserAction) => Promise<void>, undo: (userOperator: UserOperator) => Promise<void>) {
         this.ops.set(directive, { redo, undo });
     }
     async redo() {
@@ -146,7 +146,7 @@ export class HistorySnapshoot extends Events {
                     let op = action.operators[i];
                     var command = this.ops.get(op.directive);
                     if (command) {
-                        await command.redo(op, 'redo');
+                        await command.redo(op, 'redo', action);
                     }
                     else this.emit("warn", new Warn(ExceptionType.notRegisterActionDirectiveInHistorySnapshoot))
                 }
@@ -175,7 +175,7 @@ export class HistorySnapshoot extends Events {
                 let op = action.operators[i];
                 var command = this.ops.get(op.directive);
                 if (command) {
-                    await command.redo(op, source);
+                    await command.redo(op, source, action);
                 }
                 else this.emit("warn", new Warn(ExceptionType.notRegisterActionDirectiveInHistorySnapshoot))
             }

@@ -45,6 +45,22 @@
     }
 }
 
+.shy-block-user-selected {
+    position: relative;
+
+    &::before {
+        content          : '\20';
+        position         : absolute;
+        pointer-events   : none;
+        inset            : 0px;
+        outline          : 1px solid var(--user-selected-color);
+        outline-offset   : 2px;
+        // background    : var(--user-selected-color);
+        z-index          : 81;
+        opacity          : 1;
+    }
+}
+
 .shy-block-hover {
     //position: relative;
     // 这里的after与拖动的方位有冲途
@@ -74,6 +90,7 @@
 .shy-block-drag-over-sub,
 .shy-block-drag-over-inner {
     position: relative;
+
     &::after {
         content       : '\20';
         position      : absolute;

@@ -234,7 +234,7 @@ export class AnchorCursor {
                     if (c) c.scrollIntoViewIfNeeded()
                 }
                 else {
-                    console.log(this.startAnchor,cr.node, this.endAnchor);
+                    console.log(this.startAnchor, cr.node, this.endAnchor);
                 }
             }
         }

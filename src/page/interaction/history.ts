@@ -222,13 +222,10 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     }, async (operator) => {
         page.updateProps(operator.data.old);
     });
-
-
     /***
      * 新的指令
      * 原来的仍然需要使用
      */
-
     snapshoot.registerOperator(OperatorDirective.$create, async (operator, source) => {
         var dr = operator.data;
         await page.createBlock(dr.data.url,
@@ -274,20 +271,49 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         var dr: { pos: SnapshootBlockPropPos, old_value: any, new_value: any, render: BlockRenderRange } = operator.data as any;
         var block = page.find(x => x.id == dr.pos.blockId);
         if (block) {
-            block.manualUpdateProps(dr.old_value, dr.new_value,typeof dr.render!='undefined'?dr.render:BlockRenderRange.self);
+            block.manualUpdateProps(dr.old_value, dr.new_value, typeof dr.render != 'undefined' ? dr.render : BlockRenderRange.self);
         }
     }, async (operator) => {
         var dr: { pos: SnapshootBlockPropPos, old_value: any, new_value: any, render: BlockRenderRange } = operator.data as any;
         var block = page.find(x => x.id == dr.pos.blockId);
         if (block) {
-            block.manualUpdateProps(dr.new_value, dr.old_value,typeof dr.render!='undefined'?dr.render:BlockRenderRange.self);
+            block.manualUpdateProps(dr.new_value, dr.old_value, typeof dr.render != 'undefined' ? dr.render : BlockRenderRange.self);
         }
     });
-    snapshoot.registerOperator(OperatorDirective.$change_cursor_offset, async (operator, source) => {
+    snapshoot.registerOperator(OperatorDirective.$change_cursor_offset, async (operator, source, action) => {
         var oc: {
             old_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] },
             new_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] }
         } = operator.data as any;
+        if (source == 'notifyView') {
+            if (oc.new_value.blocks?.length > 0) {
+                var bs = page.findAll(g => oc.new_value.blocks.some(s => s.blockId == g.id));
+                page.addUpdateEvent(async () => {
+                    page.kit.collaboration.renderBlocks(action.userid, bs);
+                })
+            }
+            else {
+                if (!(oc.new_value.start && oc.new_value.end)) return;
+                var startBlock = page.find(x => x.id == oc.new_value.start.blockId);
+                if (startBlock) {
+                    var startAppear = startBlock.appearAnchors.find(g => g.prop == oc.new_value.start.prop);
+                    var endBlock = oc.new_value.end.blockId == startBlock?.id ? startBlock : page.find(x => x.id == oc.new_value.end.blockId);
+                    var endAppear = endBlock.appearAnchors.find(g => g.prop == oc.new_value.end.prop);
+                    var selection = ({
+                        startAnchor: startAppear,
+                        startOffset: oc.new_value.start.offset,
+                        endAnchor: endAppear,
+                        endOffset: oc.new_value.end.offset
+                    });
+                    page.addUpdateEvent(async () => {
+                        page.kit.collaboration.renderSelection(action.userid, selection);
+                    })
+                }
+                else {
+                    console.error('not found cursor pos block')
+                }
+            }
+        }
         if (source == 'notify' || source == 'notifyView' || source == 'load') return;
         if (oc.new_value.blocks?.length > 0) {
             var bs = page.findAll(g => oc.new_value.blocks.some(s => s.blockId == g.id));
