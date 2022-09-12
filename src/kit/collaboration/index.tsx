@@ -1,8 +1,6 @@
 import React from "react";
 import { Kit } from "..";
-import { Avatar } from "../../../component/view/avator/face";
 import { UserBox } from "../../../component/view/avator/user";
-import { BackgroundColorList } from "../../../extensions/color/data";
 import { util } from "../../../util/util";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
@@ -12,10 +10,21 @@ import { TextEle } from "../../common/text.ele";
 import { Point, Rect } from "../../common/vector/point";
 import "./style.less";
 
-var colors=[
-    
+var colors = [
+    'rgba(237,233,235)',
+    'rgba(217,211,215)',
+    'rgba(247,214,183)',
+    'rgba(255,193,153)',
+    'rgba(252,246,189)',
+    'rgba(205,243,220)',
+    'rgba(169,222,249)',
+    'rgba(189,201,255)',
+    'rgba(239,218,251)',
+    'rgba(234,202,220)',
+    'rgba(253,198,200)'
 ]
 
+const dure = 1000 * 30;
 
 export class Collaboration extends React.Component<{ kit: Kit }>{
     constructor(props) {
@@ -33,15 +42,32 @@ export class Collaboration extends React.Component<{ kit: Kit }>{
     componentWillUnmount() {
         this.fvs.unbind();
     }
+    private static UserColor: Map<string, string> = new Map();
+    static getUserColor(userid: string) {
+        var r = this.UserColor.get(userid);
+        if (r) return r;
+        if (this.UserColor.size > colors.length) {
+            var c = colors.randomOf();
+            this.UserColor.set(userid, c);
+            return c;
+        }
+        else {
+            var vs = Array.from(this.UserColor.values());
+            var rs = colors.findAll(g => !vs.includes(g));
+            var c = rs.randomOf();
+            if (!c) c = colors.randomOf();
+            this.UserColor.set(userid, c);
+            return c;
+        }
+    }
     private fvs: FixedViewScroll = new FixedViewScroll();
     private offset: Point = new Point(0, 0);
-    users: { id: string, eles: HTMLElement[], cursor?: boolean, rects: Rect[], timeOut: any, clear: () => void, userid: string, color: string, point?: Point, offset?: Point }[] = [];
-    private clearUser(userid: string) {
-        var u = this.users.find(g => g.userid == userid);
+    private userOperates: { id: string, eles: HTMLElement[], cursor?: boolean, rects: Rect[], timeOut: any, clear: (force?: boolean) => void, userid: string, color: string, point?: Point, offset?: Point }[] = [];
+    private clearUser(userid: string, force?: boolean) {
+        var u = this.userOperates.find(g => g.userid == userid);
         if (u) {
             clearTimeout(u.timeOut);
-            u.clear();
-            this.users.remove(g => g.id == u.id);
+            u.clear(force);
         }
     }
     renderBlocks(userid: string, blocks: Block[]) {
@@ -49,10 +75,7 @@ export class Collaboration extends React.Component<{ kit: Kit }>{
         var self = this;
         var rects: Rect[] = [];
         var eles: HTMLElement[] = [];
-        var color = BackgroundColorList.randomOf();
-        var c = color.color;
-        c = c.replace("0.5", '1');
-        console.log(c);
+        var c = Collaboration.getUserColor(userid);
         blocks.forEach(b => {
             if (b.el) {
                 eles.push(b.el);
@@ -63,7 +86,7 @@ export class Collaboration extends React.Component<{ kit: Kit }>{
         })
         var id = util.guid();
         var bound = Rect.getRectFromRects(rects);
-        var us: Partial<ArrayOf<Collaboration['users']>> = {
+        var us: Partial<ArrayOf<Collaboration['userOperates']>> = {
             id,
             userid,
             rects,
@@ -72,8 +95,8 @@ export class Collaboration extends React.Component<{ kit: Kit }>{
             color: c,
             point: bound.leftTop,
             offset: this.offset.clone(),
-            clear: () => {
-                var se = self.users.find(g => g.id == id);
+            clear: (force?: boolean) => {
+                var se = self.userOperates.find(g => g.id == id);
                 if (se) {
                     if (Array.isArray(se.eles))
                         se.eles.forEach(e => {
@@ -85,17 +108,18 @@ export class Collaboration extends React.Component<{ kit: Kit }>{
                                 console.error(ex);
                             }
                         })
-                    self.users.remove(g => g.id == id);
+                    self.userOperates.remove(g => g.id == id);
+                    if (force) self.forceUpdate()
                 }
             },
             timeOut: setTimeout(() => {
-                var se = self.users.find(g => g.id == id);
+                var se = self.userOperates.find(g => g.id == id);
                 if (se) {
-                    se.clear();
+                    se.clear(true);
                 }
-            }, 1000 * 60 * 4)
+            }, dure)
         };
-        this.users.push(us as any);
+        this.userOperates.push(us as any);
         this.forceUpdate();
     }
     renderSelection(userid: string,
@@ -109,10 +133,7 @@ export class Collaboration extends React.Component<{ kit: Kit }>{
         var self = this;
         var rects: Rect[] = [];
         var eles: HTMLElement[] = [];
-        var color = BackgroundColorList.randomOf();
-        var c = color.color;
-        // c = c.replace(/\[\d]?\.[\d]+/g, '1');
-        c = c.replace("0.5", '1');
+        var c = Collaboration.getUserColor(userid)
         var cursor = false;
         if (selecton.startAnchor.isEqual(selecton.endAnchor) && selecton.startOffset === selecton.endOffset) {
             //光标
@@ -147,7 +168,7 @@ export class Collaboration extends React.Component<{ kit: Kit }>{
         }
         var id = util.guid();
         var bound = Rect.getRectFromRects(rects);
-        var us: Partial<ArrayOf<Collaboration['users']>> = {
+        var us: Partial<ArrayOf<Collaboration['userOperates']>> = {
             id,
             userid,
             eles,
@@ -156,8 +177,8 @@ export class Collaboration extends React.Component<{ kit: Kit }>{
             color: c,
             point: bound.leftTop,
             offset: this.offset.clone(),
-            clear: () => {
-                var se = self.users.find(g => g.id == id);
+            clear: (force?: boolean) => {
+                var se = self.userOperates.find(g => g.id == id);
                 if (se) {
                     if (Array.isArray(se.eles))
                         se.eles.forEach(e => {
@@ -169,36 +190,37 @@ export class Collaboration extends React.Component<{ kit: Kit }>{
                                 console.error(ex);
                             }
                         })
-                    self.users.remove(g => g.id == id);
+                    self.userOperates.remove(g => g.id == id);
+                    if (force) self.forceUpdate();
                 }
             },
             timeOut: setTimeout(() => {
-                var se = self.users.find(g => g.id == id);
+                var se = self.userOperates.find(g => g.id == id);
                 if (se) {
-                    se.clear();
+                    se.clear(true);
                 }
-            }, 1000 * 60 * 4)
+            }, dure)
         };
-        this.users.push(us as any);
+        this.userOperates.push(us as any);
         this.forceUpdate();
     }
     el: HTMLElement;
     render() {
         return <div className="shy-collaboration" ref={e => this.el = e} >
-            {this.users.map(u => {
+            {this.userOperates.map(u => {
                 //var rect = u.rects[0];
                 var top = u.point.y + (this.offset.y - u.offset.y);
                 var left = u.point.x + (this.offset.x - u.offset.x);
                 return <div key={u.id} className="shy-collaboration-user" style={{
                     top: top,
                     left: left,
-                    marginTop: -60,
+                    marginTop: -25,
                     marginLeft: 0
                 }}>
                     <UserBox userid={u.userid}>{(user) => {
                         return <div className="flex flex-column flex-center">
-                            <Avatar user={user} size={30}></Avatar>
-                            <span style={{ backgroundColor: u.color, marginTop: 5, lineHeight: '20px', borderRadius: 4, padding: '0px 5px' }}>{user.name}</span>
+                            {/* <Avatar user={user} size={30}></Avatar> */}
+                            <span style={{ backgroundColor: u.color, marginTop: 0, lineHeight: '20px', borderRadius: 4, padding: '0px 5px' }}>{user.name}</span>
                         </div>
                     }}</UserBox>
                 </div>
