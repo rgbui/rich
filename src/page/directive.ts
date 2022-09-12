@@ -24,6 +24,5 @@ export enum PageDirective {
     error,
     warn,
     selectRows,
-    viewCursor,
     rollup
 }

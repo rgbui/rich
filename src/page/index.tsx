@@ -315,8 +315,6 @@ export interface Page {
     emit(name: PageDirective.selectRows, block: Block, rows: any[]);
     on(name: PageDirective.save, fn: () => void);
     emit(name: PageDirective.save);
-    on(name: PageDirective.viewCursor, fn: (d: { blockId: string, prop: string, offset: number }) => void);
-    emit(name: PageDirective.viewCursor, data: { blockId: string, prop: string, offset: number });
     on(name: PageDirective.rollup, fn: (id: string) => void);
     emit(name: PageDirective.rollup, id: string);
 }
