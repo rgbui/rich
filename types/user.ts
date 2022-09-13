@@ -14,5 +14,6 @@ export type UserBasic = {
     sn: number,
     name: string,
     status: UserStatus,
-    slogan:string
+    online: boolean,
+    slogan: string
 }
