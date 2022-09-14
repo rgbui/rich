@@ -192,6 +192,7 @@ export interface ChannelGetMapUrls {
 	"/users/basic":{args:{ids:string[]},returnType:Promise<SockResponse<{list:UserBasic[]}>>},
 	"/user/wss":{args:any,returnType:Promise<SockResponse<{list:any[]}>>},
 	"/user/channels":{args:{page?:number,size?:number},returnType:Promise<SockResponse<{list:any[],total:number,page:number,size:number,rooms:any[]}>>},
+	"/user/word/query":{args:{word:string},returnType:Promise<SockResponse<{list:{id:string}[]}>>},
 	"/friends":{args:{page?:number,size?:number},returnType:Promise<SockResponse<{list:any[],total:number,page:number,size:number}>>},
 	"/friends/pending":{args:{page?:number,size?:number},returnType:Promise<SockResponse<{list:any[],total:number,page:number,size:number}>>},
 	"/search/friends":{args:{name:string,size?:number},returnType:Promise<SockResponse<{list:UserBasic[],size:number}>>},
