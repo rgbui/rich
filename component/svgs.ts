@@ -30,6 +30,8 @@ import CheckboxSquareSvg from "../src/assert/svg/checkbox.square.svg";
 import ChevronDownSvg from "../src/assert/svg/chevronDown.svg";
 import ChevronLeftSvg from "../src/assert/svg/chevronLeft.svg";
 import ChevronRightSvg from "../src/assert/svg/chevronRight.svg";
+import CloseSvg from "../src/assert/svg/close.svg";
+import CloseSmallSvg from "../src/assert/svg/closeSmall.svg";
 import CloseTickSvg from "../src/assert/svg/closeTick.svg";
 import CodeSvg from "../src/assert/svg/code.svg";
 import Col2Svg from "../src/assert/svg/col2.svg";
@@ -207,6 +209,8 @@ CheckboxSquareSvg,
 ChevronDownSvg,
 ChevronLeftSvg,
 ChevronRightSvg,
+CloseSvg,
+CloseSmallSvg,
 CloseTickSvg,
 CodeSvg,
 Col2Svg,
