@@ -91,7 +91,7 @@ export class Avatar extends React.Component<{
         else
             return <div className={'shy-avatar' + " " + this.props.className} style={{ width: size, height: size }} onMouseDown={e => this.mousedown(e)}>
                 {renderIcon()}
-                {size > 30 && renderStatus()}
+                {size > 24 && renderStatus()}
             </div>
     }
 }
