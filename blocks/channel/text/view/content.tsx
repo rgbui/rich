@@ -16,7 +16,7 @@ import { ChannelTextView } from "./view";
 
 
 export function RenderChannelTextContent(block: ChannelText) {
-    var dm = block.chats.sort((x, y) => {
+    var dm = block.chats.sort((x,y)=>{
         if (x.createDate.getTime() > y.createDate.getTime()) return 1
         else return -1;
     });
@@ -125,7 +125,7 @@ export function RenderChannelTextContent(block: ChannelText) {
                 </div>
             </div>}
             {Array.isArray(d.emojis) && <div className="sy-channel-text-item-emojis">{d.emojis.filter(g => g.count > 0).map(em => {
-                return <a onMouseDown={e => ChatChannelService.editEmoji(block, d, em)} key={em.emojiId} >
+                return <a onMouseDown={e =>ChatChannelService.editEmoji(block, d, em)} key={em.emojiId} >
                     <span>{em.code}</span>
                     <span>{em.count}</span>
                 </a>
