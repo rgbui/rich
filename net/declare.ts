@@ -164,7 +164,7 @@ export interface ChannelPutMapUrls {
 	"/friend/join":{args:{userid?:string,sn?:number},returnType:Promise<SockResponse<{exists?:boolean,send?:boolean}>>},
 	"/blacklist/join":{args:{otherId:string},returnType:Promise<SockResponse<void>>},
 	"/friend/agree":{args:{id:string},returnType:Promise<SockResponse<{userFriend:Record<string,any>}>>},
-	"/user/chat/send":{args:{roomId:string,content?:string,file?:any,sockId:string,tos:string[]},returnType:Promise<SockResponse<{id:string,seq:number,createDate:Date}>>},
+	"/user/chat/send":{args:{roomId:string,content?:string,file?:any,sockId:string,tos:string[],replyId?:string},returnType:Promise<SockResponse<{id:string,seq:number,createDate:Date}>>},
 	"/create/qr_pay/order":{args:{subject: string,body: string,price: number,count: number,amount?: number,kind: string},returnType:Promise<SockResponse<{orderId:string,code:string}>>},
 	"/open/weixin/bind":{args:{weixinOpen:any},returnType:Promise<SockResponse<void>>},
 	"/open/sign":{args:{},returnType:Promise<SockResponse<{user:Record<string,any>,guid:string,token:string}>>},
