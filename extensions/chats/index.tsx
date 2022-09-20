@@ -253,7 +253,8 @@ export class ViewChats extends React.Component<{
     redit(d: ChannelTextType) {
         this.richTextInput.onReplaceInsert(d.content);
     }
-    async reply(d: ChannelTextType) {
+    async reply(d: ChannelTextType)
+    {
         //var use = await channel.get('/user/basic', { userid: d.userid });
         //var c = TextEle.filterHtml(d.content);
         await this.props.replyChat(d)
