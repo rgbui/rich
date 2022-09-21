@@ -17,6 +17,7 @@ import { util } from "../../util/util";
 import { useOpenEmoji } from "../emoji";
 import { EmojiCode } from "../emoji/store";
 import { ChannelTextType } from "./declare";
+import "./style.less";
 
 export class ViewChats extends React.Component<{
     delChat?(d: ChannelTextType): Promise<any>
@@ -30,7 +31,12 @@ export class ViewChats extends React.Component<{
 }> {
     editChannelText: ChannelTextType = null;
     el: HTMLElement;
+    currentChats: ChannelTextType[];
     get sortChats() {
+        if (Array.isArray(this.currentChats)) return this.currentChats.sort((x, y) => {
+            if (x.createDate.getTime() > y.createDate.getTime()) return 1
+            else return -1;
+        })
         return this.props.chats.sort((x, y) => {
             if (x.createDate.getTime() > y.createDate.getTime()) return 1
             else return -1;
@@ -191,7 +197,7 @@ export class ViewChats extends React.Component<{
         }
         if (Array.isArray(this.props.uploadFiles))
             ds.push(...this.props.uploadFiles.map(uf => this.renderUploadFile(uf)))
-        return <div ref={e => this.el = e}>{ds}</div>
+        return <div className="sy-channel-view-chats" ref={e => this.el = e}>{ds}</div>
     }
     private getOp(d: ChannelTextType) {
         var op = this.el.querySelector('[data-channel-text-id=\"' + d.id + '\"] .sy-channel-text-item-operators');
@@ -253,8 +259,7 @@ export class ViewChats extends React.Component<{
     redit(d: ChannelTextType) {
         this.richTextInput.onReplaceInsert(d.content);
     }
-    async reply(d: ChannelTextType)
-    {
+    async reply(d: ChannelTextType) {
         //var use = await channel.get('/user/basic', { userid: d.userid });
         //var c = TextEle.filterHtml(d.content);
         await this.props.replyChat(d)
@@ -308,5 +313,9 @@ export class ViewChats extends React.Component<{
             }
         }
         op.classList.remove('operating');
+    }
+    updateChats(chats:ChannelTextType[]){
+        this.currentChats=chats;
+        this.forceUpdate()
     }
 }
