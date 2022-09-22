@@ -162,7 +162,7 @@ export interface ChannelPutMapUrls {
 	"/phone/sign":{args:{phone:string,code:string,inviteCode:string,weixinOpen:Record<string,any>},returnType:Promise<SockResponse<{user:Record<string,any>,guid:string,token:string}>>},
 	"/user/channel/join":{args:{roomName?:string,userids:string[]},returnType:Promise<SockResponse<{room:Record<string,any>,channel:Record<string,any>}>>},
 	"/user/join/ws":{args:{wsId:string},returnType:Promise<SockResponse<void>>},
-	"/friend/join":{args:{userid?:string,sn?:number},returnType:Promise<SockResponse<{exists?:boolean,send?:boolean}>>},
+	"/friend/join":{args:{userid?:string,sn?:number},returnType:Promise<SockResponse<{exists?:boolean,send?:boolean,refuse?:boolean,black?:boolean}>>},
 	"/blacklist/join":{args:{otherId:string},returnType:Promise<SockResponse<void>>},
 	"/friend/agree":{args:{id:string},returnType:Promise<SockResponse<{userFriend:Record<string,any>}>>},
 	"/user/chat/send":{args:{roomId:string,content?:string,file?:any,tos:string[],replyId?:string},returnType:Promise<SockResponse<{id:string,seq:number,createDate:Date}>>},
