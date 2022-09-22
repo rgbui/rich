@@ -12,11 +12,12 @@ import { useIconPicker } from "../../../../extensions/icon";
 import { channel } from "../../../../net/channel";
 import { view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
+import { TextEle } from "../../../../src/common/text.ele";
 import { Rect } from "../../../../src/common/vector/point";
 import { PageLayoutType } from "../../../../src/page/declare";
 import { util } from "../../../../util/util";
 import { ChannelTextType } from "../declare";
-import { RenderChannelTextContent } from "./content";
+import { RenderChats } from "./chats";
 
 @view('/channel/text')
 export class ChannelTextView extends BlockView<ChannelText>{
@@ -89,12 +90,25 @@ export class ChannelTextView extends BlockView<ChannelText>{
     willUnmount() {
         channel.off('/page/update/info', this.updatePageInfo);
     }
+    async redit(d: ChannelTextType) {
+        this.richTextInput.onReplaceInsert(d.content);
+    }
+    async reply(d: ChannelTextType) {
+        var use = await channel.get('/user/basic', { userid: d.userid });
+        var c = TextEle.filterHtml(d.content);
+        this.richTextInput.openReply({ text: `回复${use.data.user.name}:${c}`, replyId: d.id })
+    }
     renderContent() {
-        return <div className="sy-channel-text-content" onWheel={this.wheel} ref={e => this.contentEl = e}>
+        return <div className="sy-channel-text-content"
+            onWheel={this.wheel}
+            ref={e => this.contentEl = e}>
             {this.block && this.renderPageTitle()}
             {this.block.pageIndex > 2 && this.block.isLast && <div className="sy-channel-text-tip"><Remark>无记录了</Remark></div>}
             {this.block.loading && <div className="sy-channel-text-loading"><Loading></Loading></div>}
-            {RenderChannelTextContent(this.block)}
+            {RenderChats(this.block, {
+                reditChat: (d) => this.redit(d),
+                replyChat: (d) => this.reply(d)
+            })}
         </div>
     }
     richTextInput: RichTextInput;
