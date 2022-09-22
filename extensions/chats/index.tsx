@@ -10,7 +10,9 @@ import { useSelectMenuItem } from "../../component/view/menu";
 import { MenuItem } from "../../component/view/menu/declare";
 import { RichTextInput } from "../../component/view/rich.input";
 import { Remark } from "../../component/view/text";
+import { SockResponse } from "../../net/declare";
 import { autoImageUrl } from "../../net/element.type";
+import { KeyboardCode } from "../../src/common/keys";
 import { Rect } from "../../src/common/vector/point";
 import { UserBasic } from "../../types/user";
 import { util } from "../../util/util";
@@ -20,11 +22,18 @@ import { ChannelTextType } from "./declare";
 import "./style.less";
 
 export class ViewChats extends React.Component<{
-    delChat?(d: ChannelTextType): Promise<any>
-    emojiChat?(d: ChannelTextType, re: Partial<EmojiCode>): Promise<any>
-    patchChat?(d: ChannelTextType, data: { content: string }): Promise<any>
-    reportChat?(d: ChannelTextType),
-    replyChat?(d: ChannelTextType),
+    redit(d: ChannelTextType)
+    delChat(d: ChannelTextType): Promise<SockResponse<void, string>>
+    emojiChat(d: ChannelTextType, re: Partial<EmojiCode>): Promise<SockResponse<{
+        emoji: {
+            emojiId: string;
+            code?: string;
+            count: number;
+        };
+    }, string>>,
+    patchChat(d: ChannelTextType, data: { content: string }): Promise<SockResponse<void, string>>
+    reportChat(d: ChannelTextType),
+    replyChat(d: ChannelTextType),
     user: UserBasic;
     chats: ChannelTextType[],
     uploadFiles?: { id: string, speed: string, text: string }[]
@@ -199,6 +208,17 @@ export class ViewChats extends React.Component<{
             ds.push(...this.props.uploadFiles.map(uf => this.renderUploadFile(uf)))
         return <div className="sy-channel-view-chats" ref={e => this.el = e}>{ds}</div>
     }
+    componentDidMount(): void {
+        document.addEventListener('keydown', this.keydown)
+    }
+    componentWillUnmount(): void {
+        document.addEventListener('keyup', this.keydown)
+    }
+    keydown = (event: KeyboardEvent) => {
+        if (event.key.toLowerCase() == KeyboardCode.Esc.toLowerCase()) {
+            this.closeEdit();
+        }
+    }
     private getOp(d: ChannelTextType) {
         var op = this.el.querySelector('[data-channel-text-id=\"' + d.id + '\"] .sy-channel-text-item-operators');
         op.classList.add('operating');
@@ -257,13 +277,10 @@ export class ViewChats extends React.Component<{
         }
     }
     redit(d: ChannelTextType) {
-        this.richTextInput.onReplaceInsert(d.content);
+        this.props.redit(d);
     }
     async reply(d: ChannelTextType) {
-        //var use = await channel.get('/user/basic', { userid: d.userid });
-        //var c = TextEle.filterHtml(d.content);
         await this.props.replyChat(d)
-        //this.richTextInput.openReply({ text: `回复${use.data.user.name}:${c}`, replyId: d.id })
     }
     async report(d: ChannelTextType) {
         await this.props.replyChat(d);
@@ -271,12 +288,9 @@ export class ViewChats extends React.Component<{
     private async del(d: ChannelTextType) {
         var op = this.getOp(d);
         d.isDeleted = true;
-        await this.delChat(d);
+        await this.props.delChat(d);
         op.classList.remove('operating');
         this.forceUpdate();
-    }
-    async delChat(d: ChannelTextType) {
-        // var r = await channel.del('/ws/channel/cancel', { roomId: block.page.pageInfo?.id, id: d.id });
     }
     async emojiChat(d: ChannelTextType, re: Partial<EmojiCode>) {
         return await this.props.emojiChat(d, re);
@@ -314,8 +328,12 @@ export class ViewChats extends React.Component<{
         }
         op.classList.remove('operating');
     }
-    updateChats(chats:ChannelTextType[]){
-        this.currentChats=chats;
-        this.forceUpdate()
+    async updateChats(chats: ChannelTextType[]) {
+        this.currentChats = chats;
+        return new Promise((resolve, reject) => {
+            this.forceUpdate(() => {
+                resolve(true);
+            })
+        })
     }
 }
