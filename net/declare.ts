@@ -221,6 +221,7 @@ export interface ChannelGetMapUrls {
 	"/ws/latest":{args:any,returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
 	"/ws/invite/check":{args:{invite:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
 	"/ws/channel/list":{args:{roomId:string,seq?:number,page?:number,size?:number},returnType:Promise<SockResponse<{list:any[],unreadCount?:number}>>},
+	"/ws/online/users":{args:{wsId:string,count?:number},returnType:Promise<SockResponse<{count:number,users:string[]}>>},
 	"/ws/channel/abled/send":{args:{wsId?:string,roomId:string,pageId:string},returnType:Promise<SockResponse<{abled:boolean}>>},
 	"/ws/member/word/query":{args:{word:string},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
 	"/ws/members":{args:{page:number,size:number,word?:string,roleId?:string},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
