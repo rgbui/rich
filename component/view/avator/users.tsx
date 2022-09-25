@@ -2,11 +2,12 @@ import React from "react";
 import { Avatar } from "./face";
 
 
-export class UserAvatars extends React.Component<{ users: string[] }>{
+export class UserAvatars extends React.Component<{size?:number, users: (string[]) | Set<string> }>{
 
     render(): React.ReactNode {
+        var us = Array.isArray(this.props.users) ? this.props.users : Array.from(this.props.users);
         return <div className="flex">
-            {this.props.users.map(u => <Avatar key={u} userid={u}></Avatar>)}
+            {us.map(u =><Avatar key={u} size={this.props.size} userid={u}></Avatar>)}
         </div>
     }
 }
