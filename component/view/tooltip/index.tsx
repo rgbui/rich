@@ -153,7 +153,7 @@ export class ToolTip extends React.Component<{
     /**0.1s */
     mouseLeaveDelay?: number;
     placement?: OverlayPlacement,
-    mouseenter?: (event: MouseEvent) => void
+    mouseenter?: (event: MouseEvent, tip: ToolTip) => void
 }>{
     el: HTMLElement;
     componentDidMount() {
@@ -186,8 +186,8 @@ export class ToolTip extends React.Component<{
         this.enterTime = setTimeout(async () => {
             clearTimeout(this.enterTime);
             this.enterTime = null;
-            if(typeof  this.props.mouseenter=='function')
-            this.props.mouseenter(event)
+            if (typeof this.props.mouseenter == 'function')
+                this.props.mouseenter(event, this)
             await openOverlay(this.el, { overlay: this.props.overlay, placement: this.props.placement })
         }, (this.props.mouseEnterDelay || 0.6) * 1000);
     }
@@ -197,6 +197,12 @@ export class ToolTip extends React.Component<{
             clearTimeout(this.enterTime);
             this.enterTime = null;
         }
+    }
+    updateView() {
+        this.forceUpdate(() => {
+            this.el = ReactDOM.findDOMNode(this) as HTMLElement;
+            openOverlay(this.el, { overlay: this.props.overlay, placement: this.props.placement })
+        })
     }
     render() {
         return this.props.children;
