@@ -1,5 +1,5 @@
 
-import React, { CSSProperties } from 'react';
+import React from 'react';
 import { BlockView } from "../view";
 import { url, view } from "../factory/observable";
 import { Block } from '..';

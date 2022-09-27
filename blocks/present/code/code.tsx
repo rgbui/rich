@@ -11,6 +11,8 @@ import "../../../src/assert/codemirror/lib/codemirror.css"
 import lodash from "lodash";
 import "./style.less";
 import { CodeMirrorModes, loadCodeMirror, getCodeMirrorModes } from "./lang";
+import { channel } from "../../../net/channel";
+const CODEMIRROR_MODE = 'CODE_MIRROR_MODE';
 /**
  * prism url : https://prismjs.com/#examples
  * prism babel plug :https://www.npmjs.com/package/babel-plugin-prismjs
@@ -28,17 +30,30 @@ export class TextCode extends Block {
     get isEnterCreateNewLine() {
         return false;
     }
+    async initialLoad() {
+        var lang = await channel.query('/cache/get',{ key: CODEMIRROR_MODE });
+        if (lang) this.language = lang;
+    }
     async didMounted() {
         await this.renderCode();
     }
+    @prop()
+    lineNumbers: boolean = false;
+    @prop()
+    lineWrapping: boolean = true;
     codeMirror: any;
     async renderCode() {
         var CodeMirror = await loadCodeMirror();
         var codeMode = getCodeMirrorModes().find(g => g.mode == this.language);
         if (codeMode) await codeMode.load();
         this.codeMirror = CodeMirror(this.el.querySelector('.sy-block-code-content'), {
+            lineNumbers: this.lineNumbers,
+            lineWrapping: this.lineWrapping,
             value: this.content,
-            mode: this.language
+            mode: this.language,
+            matchBrackets: true,  //括号匹配
+            autoCloseBrackets: true,
+            readOnly: this.isCanEdit('content') ? false : true
         });
         var save = lodash.debounce(() => {
             var value = this.codeMirror.getValue();
@@ -58,7 +73,8 @@ export class TextCode extends Block {
             if (codeMode) await codeMode.load();
             this.codeMirror.setOption({
                 mode: this.language
-            })
+            });
+            channel.act('/cache/set', { key: CODEMIRROR_MODE, value: this.language })
         }
     }
 }
