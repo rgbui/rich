@@ -1,4 +1,4 @@
-import React,{ ReactNode } from "react";
+import React, { ReactNode } from "react";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { Icon } from "../../../component/view/icon";
@@ -119,15 +119,18 @@ class TabelSchemaFormDrop extends EventsComponent {
         if (!Array.isArray(views)) views = [];
         return <div className="shy-schema-view-form-selectors">
             {views.map(v => {
-                return <div className="shy-schema-view-form-item" key={v.id} onClick={e => this.onChange(v)}>
-                    <Icon size={12} className={'drag'} icon={DragSvg}></Icon>
-                    <span>{v.text}</span>
-                    <Icon size={14} className={'property'} icon={Dots} onClick={e => this.onProperty(v, e)}></Icon>
+                return <div className="item-hover padding-w-10 h-30 round flex cursor text-1 f-14" key={v.id} onClick={e => this.onChange(v)}>
+                    <span className="size-24 flex-center flex-fixed"><Icon size={12} className={'drag'} icon={DragSvg}></Icon></span>
+                    <span className="flex-auto">{v.text}</span>
+                    <span className="size-24 flex-center flex-fixed item-hover round">
+                        <Icon size={14} className={'property'} icon={Dots} onClick={e => this.onProperty(v, e)}></Icon>
+                    </span>
                 </div>
             })}
             <Divider></Divider>
-            <div className="shy-schema-view-form-selectors-add" onClick={e => this.onAdd(e)}>
-                <Icon size={16} icon={Plus}></Icon><span>新增表单</span>
+            <div className="item-hover padding-w-10  h-30 round flex item-hover cursor  text-1 f-14" onClick={e => this.onAdd(e)}>
+                <span className="size-24 flex-center "><Icon size={16} icon={Plus}></Icon></span>
+                <span className="flex-auto">新增表单</span>
             </div>
         </div>
     }

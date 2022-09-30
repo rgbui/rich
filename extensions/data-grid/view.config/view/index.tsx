@@ -212,7 +212,7 @@ export class DataGridViewConfig extends EventsComponent {
         function click(item) {
 
         }
-        return <MenuView input={input} select={select} click={click} style={{ maxHeight: 300, overflowY: 'auto' }} items={this.getItems()}></MenuView>
+        return <MenuView input={input} select={select} click={click} style={{ maxHeight: 300, paddingTop: 10, paddingBottom: 30, overflowY: 'auto' }} items={this.getItems()}></MenuView>
     }
     onStoreViewText = lodash.debounce((value) => {
         console.log('deb', value);
