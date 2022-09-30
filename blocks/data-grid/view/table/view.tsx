@@ -10,7 +10,7 @@ import { Point, Rect } from "../../../../src/common/vector/point"
 import { MouseDragger } from "../../../../src/common/dragger"
 import { DataGridTool } from "../components/tool"
 import { BlockRenderRange } from "../../../../src/block/enum"
-import { CheckSvg, PlusSvg, TypesNumberSvg } from "../../../../component/svgs"
+import { CheckSvg, CollectTableSvg, PlusSvg, TypesNumberSvg } from "../../../../component/svgs"
 import { ghostView } from "../../../../src/common/ghost"
 import { ViewField } from "../../schema/view"
 import lodash from "lodash"
@@ -104,6 +104,7 @@ export class TableStoreView extends BlockView<TableStore>{
             }
         })
     }
+
     private isDragMouseField: boolean = false;
     onDragMouseField(event: React.MouseEvent, vf: ViewField) {
         event.stopPropagation();
@@ -166,7 +167,9 @@ export class TableStoreView extends BlockView<TableStore>{
                 return <div className="sy-dg-table-head-th" onMouseDown={e => this.onDragMouseField(e, f)}
                     style={{ width: f.colWidth || 120 }}
                     key={f?.field?.id || i}>
-                    <div className={'sy-dg-table-head-th-icon'} ><Icon icon={icon} size='none'></Icon></div>
+                    <div className={'sy-dg-table-head-th-icon flex-fix size-24 flex-center text-1'} >
+                        <Icon icon={icon} size={16}></Icon>
+                    </div>
                     <label>{f.text || f.field?.text}</label>
                     <div className={'sy-dg-table-head-th-property'} onMouseDown={e => this.block.onOpenFieldConfig(e, f)}><Icon icon='elipsis:sy'></Icon></div>
                 </div>
@@ -183,7 +186,7 @@ export class TableStoreView extends BlockView<TableStore>{
             var ids = this.block.childs.map(c => c.id)
             return <div className='sy-dg-table-body'>
                 <ChildsArea childs={this.block.childs}></ChildsArea>
-                {!this.block.isLock && <div
+                {!this.block.isLock &&<div
                     style={{ width: (this.block.fields.sum(c => c.colWidth) + 40) + 'px' }}
                     onMouseDown={e => { e.stopPropagation(); self.block.onAddRow({}, undefined, 'after') }}
                     className="sy-dg-table-add">
@@ -194,8 +197,9 @@ export class TableStoreView extends BlockView<TableStore>{
         else return <div><Loading></Loading></div>
     }
     renderCreateTable() {
-        return !this.block.schema && <div>
-            <a onClick={e => this.block.createTableSchema()}>创建表格</a>
+        return !this.block.schema && <div className="item-hover cursor round flex" onClick={e => this.block.createTableSchema()}>
+            <span className="size-24 flex-center "><Icon size={16} icon={CollectTableSvg}></Icon></span>
+            <span className="text-1">创建数据表格</span>
         </div>
     }
     render() {
@@ -207,7 +211,7 @@ export class TableStoreView extends BlockView<TableStore>{
             onMouseEnter={e => this.block.onOver(true)}
             onMouseLeave={e => this.block.onOver(false)}
         >
-            <DataGridTool block={this.block}></DataGridTool>
+            {this.block.schema && <DataGridTool block={this.block}></DataGridTool>}
             {this.block.schema && <div className="sy-dg-table-content" >
                 {this.block.noHead !== true && this.renderHead()}
                 {this.renderBody()}
