@@ -17,7 +17,8 @@ export class DataGridViewConfig {
         var view = self.schemaView;
         self.dataGridTool.isOpenTool = true;
         function getMenuItems() {
-            var items: MenuItem<BlockDirective | string>[] = []; items.push(...[
+            var items: MenuItem<BlockDirective | string>[] = [];
+            items.push(...[
                 {
                     name: 'name',
                     type: MenuItemType.input,

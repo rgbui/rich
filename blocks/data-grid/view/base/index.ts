@@ -94,9 +94,10 @@ export class DataGridView extends Block {
         };
         if (typeof this.pattern.get == 'function')
             json.pattern = await this.pattern.get();
-        json.blocks = {};
-        if (Array.isArray(this.__props)) {
-            super.__props.each(pro => {
+        json.blocks={};
+        if (Array.isArray(this.__props))
+        {
+            super.__props.each(pro =>{
                 json[pro] = this.clonePropData(pro, this[pro]);
             })
         }
