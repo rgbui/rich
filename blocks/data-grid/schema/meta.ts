@@ -33,7 +33,10 @@ export class TableSchema {
     createDate: Date;
     fields: Field[] = [];
     get userFields(): Field[] {
-        return this.fields.findAll(g => g.text ? true : false);
+        return this.fields.findAll(g => g.text && ![FieldType.id, FieldType.parentId, FieldType.icon, FieldType.cover, FieldType.description].includes(g.type) ? true : false);
+    }
+    get initUserFields(){
+        return this.userFields.findAll(g=>g.text&&![FieldType.creater,FieldType.modifyDate,FieldType.modifyer,FieldType.createDate,FieldType.autoIncrement,FieldType.sort].includes(g.type))
     }
     get allowSortFields() {
         return this.userFields.findAll(x => x.text && ![FieldType.formula, FieldType.image, FieldType.file, FieldType.audio, FieldType.video].includes(x.type) ? true : false)
@@ -60,7 +63,7 @@ export class TableSchema {
     }[] = [];
     modelMetaId?: string;
     getViewFields() {
-        var fs = this.fields.findAll(g => g.text ? true : false);
+        var fs = this.initUserFields;
         return fs.map(f => {
             return this.createViewField(f);
         })
