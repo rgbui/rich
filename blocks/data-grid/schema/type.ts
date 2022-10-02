@@ -1,10 +1,9 @@
 
-
 /**
  * 这里定义字段类型 
  * 但这个字段类型只是做为存储来用
  */
-export enum FieldType {
+ export enum FieldType {
     none = 0,
     any = 1,
     object = 2,
@@ -17,6 +16,9 @@ export enum FieldType {
      * 标题，每条记录的标题
      */
     title = 150,
+    icon = 151,
+    description = 152,
+    cover = 153,
     /**
      * 自增（从1开始，每次自增加1)
      * 理论上用户可以自行修改（但新加时，则取当前列表中的最大值）
@@ -53,6 +55,7 @@ export enum FieldType {
      * 多行文本
      */
     textarea = 501,
+    paw = 505,
     /**
      * 邮件
      */
@@ -131,6 +134,9 @@ export enum FieldType {
      * guid字段
      */
     guid = 1400,
+
+
+
     /**
      * 公式
      */
@@ -150,9 +156,6 @@ export enum FieldType {
     donate = 7040,
     buy = 7050,
     browse = 7060,
+
+
 }
-
-
-
-
-
