@@ -37,11 +37,13 @@ export class Field {
         return undefined;
     }
 }
+
 export interface DataGridOptionType {
 
     text: string,
     value: string,
     color: string;
+
 }
 export interface FieldConfig {
     options?: DataGridOptionType[];

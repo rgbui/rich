@@ -113,7 +113,7 @@ export function getSchemaViews() {
         { url: '/data-grid/table', text: '表格' },
         { url: '/data-grid/gallery', text: '卡片' },
         { url: '/data-grid/board', text: '看板' },
-        // { url: '/data-grid/list', text: '列表' },
+        { url: '/data-grid/list', text: '列表' },
         { url: '/data-grid/calendar', text: '日历' }
     ]
 }

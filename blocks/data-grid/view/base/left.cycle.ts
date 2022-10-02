@@ -5,12 +5,9 @@ import { FieldType } from "../../schema/type";
 import { ViewField } from "../../schema/view";
 import { DataGridView } from ".";
 
-
 export class DataGridViewLife {
-    async loadSchema(this: DataGridView)
-    {
-        if (this.schemaId && !this.schema)
-        {
+    async loadSchema(this: DataGridView) {
+        if (this.schemaId && !this.schema) {
             this.schema = await TableSchema.loadTableSchema(this.schemaId);
         }
     }
