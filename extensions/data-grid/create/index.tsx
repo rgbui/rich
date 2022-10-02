@@ -12,26 +12,28 @@ import { CheckSvg } from "../../../component/svgs";
 
 export class DataGridCreate extends EventsComponent {
     render() {
+        var vs = getSchemaViews();
         return <div className="data-grid-create">
-            <div style={{ margin: '0px 10px' }}><Input value={this.text} onChange={e => { this.text = e }}></Input></div>
-            {this.selectView && <><Divider ></Divider><div className="data-grid-create-views">
-                {getSchemaViews().map(v => {
+            <div className="gap-w-10"><Input placeholder={this.selectView ? "输入视图名" : "输入创建的数据表格名称"} value={this.text} onChange={e => { this.text = e }}></Input></div>
+            <Divider></Divider>
+            {this.selectView && <div className="data-grid-create-views">
+                {vs.map(v => {
                     return <div
                         key={v.url}
                         onMouseDown={e => this.selectUrl(v.url)}
-                        className={this.url == v.url ? "hover" : ""}>
-                        <Icon size={14} icon={getSchemaViewIcon(v.url)}></Icon>
-                        <span>{v.text}</span>
-                        {this.url == v.url && <Icon size={14} icon={CheckSvg}></Icon>}
+                        className={'padding-w-10 cursor flex item-hover round h-30' + (this.url == v.url ? " hover" : "")}>
+                        <span className="flex-fix  flex-center size-24 round"><Icon size={14} icon={getSchemaViewIcon(v.url)}></Icon></span>
+                        <span className="flex-auto f-14 ">{v.text}</span>
+                        {this.url == v.url && <span className="size-24 flex-center flex-fix"><Icon className={'flex-fix '} size={14} icon={CheckSvg}></Icon></span>}
                     </div>
                 })}
-            </div></>}
-            <div style={{ margin: '0px 10px' }}><Button block onClick={e => this.onChange()}>创建</Button></div>
+            </div>}
+            <div className="gap-w-10"><Button block onClick={e => this.onChange()}>创建</Button></div>
         </div>
     }
     selectView: boolean = false;
     open(options: { selectView: boolean }) {
-        this.url = '';
+        this.url = '/data-grid/table';
         if (options) {
             Object.assign(this, options);
             this.forceUpdate();
