@@ -1,5 +1,5 @@
 
-import { FilterSvg, TrashSvg, SettingsSvg, DotsSvg, DuplicateSvg, LinkSvg, FileSvg, LockSvg, PropertysSvg, SortSvg, TemplatesSvg, ImportSvg, LoopSvg, UnlockSvg } from "../../../../component/svgs";
+import { FilterSvg, TrashSvg, SettingsSvg, DotsSvg, DuplicateSvg, LinkSvg, FileSvg, LockSvg, PropertysSvg, SortSvg, TemplatesSvg, ImportSvg, LoopSvg, UnlockSvg, PlusSvg } from "../../../../component/svgs";
 import { useSelectMenuItem } from "../../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import { BlockDirective } from "../../../../src/block/enum";
@@ -48,7 +48,7 @@ export class DataGridViewConfig {
                                 }
                             }),
                             { type: MenuItemType.divide },
-                            { name: 'addView', type: MenuItemType.button, text: '创建视图' }
+                            { name: 'addView', icon: PlusSvg, type: MenuItemType.button, text: '创建视图' }
                             ]
                         }
                     ]
@@ -136,6 +136,9 @@ export class DataGridViewConfig {
             }
             else if (r.item.name == 'clone') {
                 self.onCopySchemaView();
+            }
+            else if (r.item.name == 'addView') {
+                await self.onAddCreateTableView();
             }
         }
         if (rname.value != self.schemaView.text && rname.value) {

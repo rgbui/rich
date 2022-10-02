@@ -232,6 +232,27 @@ export class DataGridViewOperator {
             data: { from, to }
         }]);
     }
+    async onSchemaViewCreate(this: DataGridView, text: string, url: string) {
+        var actions: any[] = [{ name: 'createSchemaView', text: text, url: url }];
+        if (url == '/data-grid/board' && !this.schema.fields.some(f => f.type == FieldType.option || f.type == FieldType.options)) {
+            actions.push({ name: 'addField', field: { text: '状态', type: FieldType.option } })
+        }
+        var result = await this.schema.onSchemaOperate(actions)
+        var oneAction = result.data.actions.first();
+        if (result.data.actions.length > 1) {
+            var action = result.data.actions[1];
+            var f = new Field();
+            f.load({
+                id: action.id,
+                name: action.name,
+                text: '状态',
+                type: FieldType.option
+            });
+            this.schema.fields.push(f);
+        }
+        this.schema.views.push({ id: oneAction.id, text: text, url: url } as any);
+        await this.onDataGridTurnView(oneAction.id);
+    }
     async onUpdateSorts(this: DataGridView, sorts: { field: string, sort: number }[]) {
         this.page.onAction(ActionDirective.onDataGridUpdateSorts, async () => {
             this.updateProps({ sorts })

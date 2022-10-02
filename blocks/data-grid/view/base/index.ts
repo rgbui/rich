@@ -94,10 +94,9 @@ export class DataGridView extends Block {
         };
         if (typeof this.pattern.get == 'function')
             json.pattern = await this.pattern.get();
-        json.blocks={};
-        if (Array.isArray(this.__props))
-        {
-            super.__props.each(pro =>{
+        json.blocks = {};
+        if (Array.isArray(this.__props)) {
+            super.__props.each(pro => {
                 json[pro] = this.clonePropData(pro, this[pro]);
             })
         }
@@ -206,7 +205,13 @@ export class DataGridView extends Block {
             this.view.forceUpdate();
         }
     }
-    async createTableSchema() {
+    async onAddCreateTableView() {
+        var dg = await useDataGridCreate({ roundArea: Rect.fromEle(this.el) }, { selectView: true });
+        if (dg) {
+            await this.onSchemaViewCreate(dg.text, dg.url);
+        }
+    }
+    async onCreateTableSchema() {
         if (!this.schemaId) {
             var dg = await useDataGridCreate({ roundArea: Rect.fromEle(this.el) });
             if (dg) {
