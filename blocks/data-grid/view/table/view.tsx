@@ -197,7 +197,7 @@ export class TableStoreView extends BlockView<TableStore>{
         else return <div><Loading></Loading></div>
     }
     renderCreateTable() {
-        return !this.block.schema && <div className="item-hover cursor round flex" onClick={e => this.block.createTableSchema()}>
+        return !this.block.schema && <div className="item-hover cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
             <span className="size-24 flex-center "><Icon size={16} icon={CollectTableSvg}></Icon></span>
             <span className="text-1">创建数据表格</span>
         </div>
