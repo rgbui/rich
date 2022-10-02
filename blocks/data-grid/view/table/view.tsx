@@ -186,7 +186,7 @@ export class TableStoreView extends BlockView<TableStore>{
             var ids = this.block.childs.map(c => c.id)
             return <div className='sy-dg-table-body'>
                 <ChildsArea childs={this.block.childs}></ChildsArea>
-                {!this.block.isLock &&<div
+                {!this.block.isLock && <div
                     style={{ width: (this.block.fields.sum(c => c.colWidth) + 40) + 'px' }}
                     onMouseDown={e => { e.stopPropagation(); self.block.onAddRow({}, undefined, 'after') }}
                     className="sy-dg-table-add">
@@ -197,9 +197,9 @@ export class TableStoreView extends BlockView<TableStore>{
         else return <div><Loading></Loading></div>
     }
     renderCreateTable() {
-        return !this.block.schema && <div className="item-hover cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
-            <span className="size-24 flex-center "><Icon size={16} icon={CollectTableSvg}></Icon></span>
-            <span className="text-1">创建数据表格</span>
+        return !this.block.schema && <div className="item-hover item-hover-focus cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
+            <span className="size-24 flex-center remark"><Icon size={16} icon={CollectTableSvg}></Icon></span>
+            <span className="remark">创建数据表格</span>
         </div>
     }
     render() {
