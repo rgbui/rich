@@ -1,6 +1,6 @@
 import React, { CSSProperties } from "react";
 import "./style.less";
-function TabPage(props: { item?: React.ReactNode, style?: CSSProperties, children?: React.ReactNode }) {
+function TabPage(props: { item?: React.ReactNode, visible?: boolean, style?: CSSProperties, children?: React.ReactNode }) {
     return <div className='shy-tab-page' style={props.style || {}}>{props.children}</div>
 }
 export class Tab extends React.Component<{
@@ -20,6 +20,10 @@ export class Tab extends React.Component<{
         if (typeof this.props.index == 'number')
             this.focusIndex = this.props.index;
     }
+    componentDidMount(): void {
+        if (typeof this.props.index == 'number'&&this.focusIndex!==this.props.index)
+         {   this.focusIndex = this.props.index;this.forceUpdate() }
+    }
     private focusIndex: number = 0;
     onFocus(index: number) {
         this.focusIndex = index;
@@ -30,8 +34,8 @@ export class Tab extends React.Component<{
             <div className={'shy-tab-items' + (' shy-tab-items-' + (this.props.align ?? 'left'))}>
                 {
                     React.Children.map(this.props.children, (element, index) => {
-                        if (this.props.show == 'text') return <span onClick={e => { this.onFocus(index) }} key={index} className={index == this.focusIndex ? "hover" : ""}>{(element as any).props.item}</span>
-                        return <label onClick={e => { this.onFocus(index) }} key={index} className={index == this.focusIndex ? "hover" : ""}>{(element as any).props.item}</label>
+                        if (this.props.show == 'text') return <span style={{ display: (element as any).props.visible ? undefined : 'none' }} onClick={e => { this.onFocus(index) }} key={index} className={index == this.focusIndex ? "hover" : ""}>{(element as any).props.item}</span>
+                        return <label style={{ display: (element as any).props.visible!==false ? undefined : 'none' }} onClick={e => { this.onFocus(index) }} key={index} className={index == this.focusIndex ? "hover" : ""}>{(element as any).props.item}</label>
                     })
                 }
             </div>
@@ -39,11 +43,11 @@ export class Tab extends React.Component<{
             <div className='shy-tab-pages'>{
                 React.Children.map(this.props.children, (element, index) => {
                     if (this.props.keeplive == true) {
-                        return <TabPage style={{ display: index == this.focusIndex ? "block" : "none" }}>{(element as any).props.children}</TabPage>
+                        return <div className='shy-tab-page' key={index} style={{ display: index == this.focusIndex ? "block" : "none" }}>{(element as any).props.children}</div>
                     }
                     else {
-                        if (index != this.focusIndex) return <></>
-                        else return <TabPage>{(element as any).props.children}</TabPage>
+                        if (index != this.focusIndex) return <div key={index} style={{ display: 'none' }}></div>
+                        else return <div style={{ display: (element as any).props.visible!==false ? undefined : 'none' }} className='shy-tab-page' key={index} >{(element as any).props.children}</div>
                     }
                 })
             }</div>

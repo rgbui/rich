@@ -1,6 +1,5 @@
 import React from "react";
 import { Tip } from "../../component/view/tooltip/tip";
-import { LangID } from "../../i18n/declare";
 import { PopoverSingleton } from "../popover/popover";
 import { EventsComponent } from "../../component/lib/events.component";
 import Link from "../../src/assert/svg/link.svg";
@@ -10,7 +9,7 @@ import Pexels from "../../src/assert/svg/pexels.svg";
 import { OutsideUrl } from "../link/outside";
 import { UploadView } from "../file/upload";
 import { PopoverPosition } from "../popover/position";
-import { IconArguments, ResourceArguments } from "../icon/declare";
+import { ResourceArguments } from "../icon/declare";
 import { GalleryType } from "./declare";
 import { ThirdGallery } from "./third.gallery";
 import { Icon } from "../../component/view/icon";
@@ -25,36 +24,23 @@ class ImagePicker extends EventsComponent {
     showGallery: boolean = false;
     onOpen(options?: { gallery: boolean }) {
         this.showGallery = options?.gallery ? true : false;
+        if (this.tab) {
+            if (this.showGallery) this.tab.onFocus(0)
+            else this.tab.onFocus(1)
+        }
         this.forceUpdate()
     }
+    tab: Tab;
     render() {
-        if (this.showGallery) {
-            return <div className='shy-image-picker' >
-                <Tab keeplive>
-                    <Tab.Page item={<Tip placement='bottom' overlay={'画廊'}><Icon size={18} icon={PictureSvg}></Icon></Tip>}>
-                        <GalleryView onChange={e => this.onChange(e as any)}></GalleryView>
-                    </Tab.Page>
-                    <Tab.Page item={<Tip placement='bottom' id={LangID.UploadImage}><Icon size={28} icon={Upload}></Icon></Tip>}>
-                        <UploadView mine='image' change={e => this.onChange(e)}></UploadView>
-                    </Tab.Page>
-                    <Tab.Page item={<Tip placement='bottom' id={LangID.ImageLink}><Icon size={18} icon={Link}></Icon></Tip>}>
-                        <OutsideUrl change={e => this.onChange({ url: e })}></OutsideUrl>
-                    </Tab.Page>
-                    <Tab.Page item={<Tip placement='bottom' overlay={'Pexels'}><Icon size={18} icon={Pexels}></Icon></Tip>}>
-                        <ThirdGallery type={GalleryType.pexels} onChange={e => { this.onChange(e as any) }}></ThirdGallery>
-                    </Tab.Page>
-                    <Tab.Page item={<Tip placement='bottom' overlay={'Unsplash'}><Icon size={16} icon={Unsplash}></Icon></Tip>}>
-                        <ThirdGallery type={GalleryType.unsplash} onChange={e => this.onChange(e as any)}></ThirdGallery>
-                    </Tab.Page>
-                </Tab>
-            </div>
-        }
         return <div className='shy-image-picker' >
-            <Tab keeplive>
-                <Tab.Page item={<Tip placement='bottom' id={LangID.UploadImage}><Icon size={28} icon={Upload}></Icon></Tip>}>
+            <Tab ref={e => this.tab = e} keeplive>
+                <Tab.Page visible={this.showGallery} item={<Tip placement='bottom' overlay={'画廊'}><Icon size={18} icon={PictureSvg}></Icon></Tip>}>
+                    <GalleryView onChange={e => this.onChange(e as any)}></GalleryView>
+                </Tab.Page>
+                <Tab.Page item={<Tip placement='bottom' overlay={'上传图片'}><Icon size={28} icon={Upload}></Icon></Tip>}>
                     <UploadView mine='image' change={e => this.onChange(e)}></UploadView>
                 </Tab.Page>
-                <Tab.Page item={<Tip placement='bottom' id={LangID.ImageLink}><Icon size={18} icon={Link}></Icon></Tip>}>
+                <Tab.Page item={<Tip placement='bottom' overlay={'图片网址'}><Icon size={18} icon={Link}></Icon></Tip>}>
                     <OutsideUrl change={e => this.onChange({ url: e })}></OutsideUrl>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' overlay={'Pexels'}><Icon size={18} icon={Pexels}></Icon></Tip>}>
