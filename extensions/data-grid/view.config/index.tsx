@@ -10,7 +10,8 @@ import { TableFilterView } from "./filter";
 import { TableSortView } from "./sort";
 import { DataGridViewConfig } from "./view";
 import "./style.less";
-import { DataGridDynamic } from "./dynamic";
+import { DataGridControl } from "./control";
+import { DataGridTrigger } from "./trigger";
 
 class DataGridConfig extends EventsComponent {
     dataGrid: DataGridView
@@ -33,15 +34,16 @@ class DataGridConfig extends EventsComponent {
     dataGridFields: DataGridFields;
     tableFilterView: TableFilterView;
     tableSortView: TableSortView;
-    dataGridDynamic: DataGridDynamic;
+    dataGridControl: DataGridControl;
+    dataGridTrigger: DataGridTrigger;
     tab: Tab;
     render() {
         return <div className='shy-data-grid-config' >
             <Tab ref={e => this.tab = e} show="text" keeplive>
-                <Tab.Page item={'视图配置'}>
+                <Tab.Page item={'视图'}>
                     <DataGridViewConfig ref={e => this.dataGridViewConfig = e} ></DataGridViewConfig>
                 </Tab.Page>
-                <Tab.Page item={'字段'}>
+                <Tab.Page item={'记录视图'}>
                     <DataGridFields ref={e => this.dataGridFields = e}></DataGridFields>
                 </Tab.Page>
                 <Tab.Page item={'过滤'}>
@@ -49,6 +51,12 @@ class DataGridConfig extends EventsComponent {
                 </Tab.Page>
                 <Tab.Page item={'排序'}>
                     <TableSortView ref={e => this.tableSortView = e}></TableSortView>
+                </Tab.Page>
+                <Tab.Page item={'控制'}>
+                    <DataGridControl ref={e => this.dataGridControl = e}></DataGridControl>
+                </Tab.Page>
+                <Tab.Page item={'触发器'}>
+                    <DataGridTrigger ref={e => this.dataGridTrigger = e}></DataGridTrigger>
                 </Tab.Page>
             </Tab>
         </div>

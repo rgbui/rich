@@ -17,7 +17,6 @@ import { Divider } from "../../../component/view/grid";
 import { Icon } from "../../../component/view/icon";
 import { Input } from "../../../component/view/input";
 import { Switch } from "../../../component/view/switch";
-import { Remark, ErrorText } from "../../../component/view/text";
 import { Textarea } from "../../../component/view/input/textarea";
 import { getEmoji } from "../../../net/element.type";
 import { SelectBox } from "../../../component/view/select/box";
@@ -41,10 +40,9 @@ export class TableFieldView extends EventsComponent {
     }
     renderMultiple() {
         if ([FieldType.file, FieldType.video, FieldType.user, FieldType.image].includes(this.type)) {
-            return <div className="shy-data-grid-field-selector-item">
-                <div className="shy-data-grid-field-selector-item-control" >
-                    <Remark>是否允许多个:</Remark><Switch onChange={e => this.onChangeConfig({ isMultiple: e })} checked={this.config?.isMultiple ? true : false}></Switch>
-                </div>
+            return <div className="flex gap-h-10 padding-w-14 ">
+                <span className="flex-auto remark f-12">是否允许多个:</span>
+                <div className="flex-fix flxe-end"><Switch onChange={e => this.onChangeConfig({ isMultiple: e })} checked={this.config?.isMultiple ? true : false}></Switch></div>
             </div>
         }
         else return <></>
@@ -56,7 +54,10 @@ export class TableFieldView extends EventsComponent {
                 <label className="label">关联表格:</label>
                 <div className="shy-data-grid-field-selector-item-control">
                     <SelectBox
-                        onChange={e => { this.config.relationTableId = e; this.forceUpdate() }}
+                        onChange={e => {
+                            this.config.relationTableId = e;
+                            this.forceUpdate()
+                        }}
                         value={this.config.relationTableId}
                         options={this.relationDatas.map(r => {
                             return {
@@ -68,10 +69,9 @@ export class TableFieldView extends EventsComponent {
                     </SelectBox>
                 </div>
             </div>
-            <div className="shy-data-grid-field-selector-item">
-                <div className="shy-data-grid-field-selector-item-control" >
-                    <Remark>是否一对多:</Remark><Switch onChange={e => this.onChangeConfig({ isMultiple: e })} checked={this.config?.isMultiple ? true : false}></Switch>
-                </div>
+            <div className="flex gap-h-10 padding-w-14 ">
+                <span className="flex-auto remark f-12">是否一对多:</span>
+                <div className="flex-fix flxe-end"><Switch onChange={e => this.onChangeConfig({ isMultiple: e })} checked={this.config?.isMultiple ? true : false}></Switch></div>
             </div>
         </>
     }
@@ -80,8 +80,8 @@ export class TableFieldView extends EventsComponent {
         var rs = this.dataGrid.schema.fields.findAll(g => g.type == FieldType.relation);
         var ts = this.relationDatas.findAll(g => rs.some(r => r.config.relationTableId == g.id));
         if (ts.length == 0) return <>
-            <div className="shy-data-grid-field-selector-item">
-                <Remark>没有关联的表，无法聚合统计</Remark>
+            <div className="flex-center gap-h-10 remark">
+                没有关联的表，无法聚合统计
             </div>
         </>;
         return <>
@@ -160,23 +160,24 @@ export class TableFieldView extends EventsComponent {
         var self = this;
         var ms = getMenus();
         var tm = ms.find(g => g.value == this.type);
-        return <div className="shy-data-grid-field-selector">
-            <div className="shy-data-grid-field-selector-head">
-                <span>编辑表格字段</span>
+        return <div className="w-300 max-h-250 overflow-y f-14 text">
+            <div className="flex item-hover-focus h-30 padding-w-14">
+                <span>{this.fieldId ? "编辑表格字段" : "新增表格字段"}</span>
             </div>
-            <Divider></Divider>
-            <div className="shy-data-grid-field-selector-item">
-                <label className="label">表格列名:</label>
-                <div className="shy-data-grid-field-selector-item-control">
+            <div className="gap-h-10 padding-w-14">
+                <div className="flex gap-b-5 remark f-12">字段名:</div>
+                <div>
                     <Input onChange={e => this.text = e} value={this.text}></Input>
                 </div>
             </div>
-            <div className="shy-data-grid-field-selector-item">
-                <label className="label">表格列类型:</label>
-                <div className="shy-data-grid-field-selector-field-type" onClick={e => this.openSelectType(e)}>
-                    <Icon size={14} icon={getTypeSvg(this.type)}></Icon>
-                    <span>{tm?.text}</span>
-                    <Icon size={12} icon={ChevronDownSvg}></Icon>
+            <div className="gap-h-10 padding-w-14">
+                <div className="flex gap-b-5 remark f-12">字段类型:</div>
+                <div className="flex item-hover cursor" onClick={e => this.openSelectType(e)}>
+                    <span className="flex-center  size-24  flex-fix cursor item-hover round "><Icon size={14} icon={getTypeSvg(this.type)}></Icon></span>
+                    <span className="flex-auto ">{tm?.text}</span>
+                    <span className="flex-fix size-24 round item-hover flex-center">
+                        <Icon size={14} icon={ChevronDownSvg}></Icon>
+                    </span>
                 </div>
             </div>
             {this.renderRelation()}
@@ -185,10 +186,12 @@ export class TableFieldView extends EventsComponent {
             {this.renderMultiple()}
             {this.renderEmoji()}
             <Divider></Divider>
-            <div className="shy-data-grid-field-selector-footer">
-                {this.error && <ErrorText>{this.error}</ErrorText>}
-                <Button ghost onClick={e => this.emit('close')}>取消</Button>
-                <Button onClick={e => self.onSave()}>确定</Button>
+            <div className="flex padding-w-14 gap-h-10">
+                <span className="flex-auto error">{this.error}</span>
+                <div className="flex-fix flex-end">
+                    <Button className="gap-r-10" ghost onClick={e => this.emit('close')}>取消</Button>
+                    <Button onClick={e => self.onSave()}>确定</Button>
+                </div>
             </div>
         </div>
     }

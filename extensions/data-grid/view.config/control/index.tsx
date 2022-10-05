@@ -5,7 +5,7 @@ import { DataGridView } from "../../../../blocks/data-grid/view/base";
 import { EventsComponent } from "../../../../component/lib/events.component";
 import "./style.less";
 
-export class DataGridDynamic extends EventsComponent {
+export class DataGridControl extends EventsComponent {
     get schema() {
         return this.block?.schema;
     }
