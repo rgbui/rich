@@ -632,7 +632,7 @@ cursor鼠标
 宽度
 ***/
 
-@selectors: 1, 2, 4, 5, 10, 12, 14, 16, 18, 20, 24, 28, 30, 32, 36, 40, 48, 50, 60, 72, 80, 100, 120, 150, 160, 180, 200, 220, 240,250, 280, 300, 320, 360, 400, 480, 500, 540, 600, 720, 800, 960;
+@selectors: 1, 2, 4, 5, 10, 12, 14, 16, 18, 20, 24, 28, 30, 32, 36, 40, 48, 50, 60, 72, 80, 100, 120, 150, 160, 180, 200, 220, 240, 250, 280, 300, 320, 360, 400, 480, 500, 540, 600, 720, 800, 960;
 
 each(@selectors, {
         .w-@{value} {
@@ -905,7 +905,8 @@ each(@ops, {
     background-color: transparent;
 }
 
-.bg-white,.white {
+.bg-white,
+.white {
     background-color: #fff;
 }
 
@@ -965,7 +966,7 @@ each(@ops, {
 size-24:图标大小
 **/
 
-@sizes: 10, 14, 16, 18, 20, 24, 30, 32, 48, 50, 70, 80, 90, 100, 120, 150, 200, 240, 300;
+@sizes: 2, 4, 8, 10, 14, 16, 18, 20, 24, 30, 32, 48, 50, 70, 80, 90, 100, 120, 150, 200, 240, 300;
 
 each(@sizes, {
         .size-@{value} {
@@ -997,23 +998,42 @@ circle:圆
 .round {
     border-radius: 4px;
 }
+
 .round-top {
     border-radius: 4px 4px 0px 0px;
 }
-.round-16 {
-    border-radius: 16px;
-}
-
-.round-8 {
-    border-radius: 8px;
-}
-
-.round-32 {
-    border-radius: 32px;
-}
 
 
 
+@ras: 2, 4, 8, 5, 10, 14, 16, 20, 24, 30, 32, 48, 50, 60, 80, 100, 0;
+
+each(@ras, {
+        .round-@{value} {
+            border-radius: @value+0px;
+        }
+
+        .round-top-@{value}, .round-t-@{value} {
+            border-top-left-radius : @value+0px;
+            border-top-right-radius: @value+0px;
+        }
+
+        .round-bottom-@{value}, .round-b-@{value} {
+            border-bottom-left-radius : @value+0px;
+            border-bottom-right-radius: @value+0px;
+        }
+
+        .round-left-@{value}, .round-l-@{value} {
+            border-top-left-radius    : @value+0px;
+            border-bottom-left-radius : @value+0px;
+        }
+
+        .round-right-@{value}, .round-r-@{value} {
+            border-top-right-radius   : @value+0px;
+            border-bottom-right-radius: @value+0px;
+        }
+    }
+
+)
 /***
 间距
 gap-5：相邻的行内元素间距，适用于符号（如文字与图标符合的组合）
@@ -1025,7 +1045,7 @@ gap-r-10
 gap-b-20:指模块间距（有明显的块与块之间的间距），大标题内容与另外的大标题内容，垂直的两张卡片
 **/
 
-@gaps: 5, 10, 20, 30, 50, 100;
+@gaps: 0, 3, 5, 10, 14, 15, 20, 25, 24, 30, 48, 50, 60, 80, 100;
 
 each(@gaps, {
         .gap-@{value} {
@@ -1070,7 +1090,7 @@ each(@gaps, {
 .pad-20: 一般指卡片或对话框的全补白
 ***/
 
-@pads: 0, 3, 5, 10, 15, 20, 30, 50, 60, 80, 100;
+@pads: 0, 3, 5, 10, 14, 15, 20, 25, 24, 30, 48, 50, 60, 80, 100;
 
 each(@pads, {
         .padding-@{value} {
