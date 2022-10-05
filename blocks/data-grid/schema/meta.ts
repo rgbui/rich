@@ -32,11 +32,14 @@ export class TableSchema {
     creater: string;
     createDate: Date;
     fields: Field[] = [];
+    get visibleFields(): Field[] {
+        return this.fields.findAll(g => g.text && ![FieldType.id, FieldType.parentId, FieldType.icon, FieldType.cover, FieldType.description].includes(g.type))
+    }
     get userFields(): Field[] {
         return this.fields.findAll(g => g.text && ![FieldType.id, FieldType.parentId, FieldType.icon, FieldType.cover, FieldType.description].includes(g.type) ? true : false);
     }
-    get initUserFields(){
-        return this.userFields.findAll(g=>g.text&&![FieldType.creater,FieldType.modifyDate,FieldType.modifyer,FieldType.createDate,FieldType.autoIncrement,FieldType.sort].includes(g.type))
+    get initUserFields() {
+        return this.userFields.findAll(g => g.text && ![FieldType.creater, FieldType.modifyDate, FieldType.modifyer, FieldType.createDate, FieldType.autoIncrement, FieldType.sort].includes(g.type))
     }
     get allowSortFields() {
         return this.userFields.findAll(x => x.text && ![FieldType.formula, FieldType.image, FieldType.file, FieldType.audio, FieldType.video].includes(x.type) ? true : false)
