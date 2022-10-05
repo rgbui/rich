@@ -34,8 +34,8 @@ export class Tab extends React.Component<{
             <div className={'shy-tab-items' + (' shy-tab-items-' + (this.props.align ?? 'left'))}>
                 {
                     React.Children.map(this.props.children, (element, index) => {
-                        if (this.props.show == 'text') return <span style={{ display: (element as any).props.visible ? undefined : 'none' }} onClick={e => { this.onFocus(index) }} key={index} className={index == this.focusIndex ? "hover" : ""}>{(element as any).props.item}</span>
-                        return <label style={{ display: (element as any).props.visible!==false ? undefined : 'none' }} onClick={e => { this.onFocus(index) }} key={index} className={index == this.focusIndex ? "hover" : ""}>{(element as any).props.item}</label>
+                        if (this.props.show == 'text') return <span style={{ display: (element as any).props.visible==false? 'none' :undefined }} onClick={e => { this.onFocus(index) }} key={index} className={index == this.focusIndex ? "hover" : ""}>{(element as any).props.item}</span>
+                        return <label style={{ display: (element as any).props.visible==false? 'none' :undefined  }} onClick={e => { this.onFocus(index) }} key={index} className={index == this.focusIndex ? "hover" : ""}>{(element as any).props.item}</label>
                     })
                 }
             </div>
@@ -47,7 +47,7 @@ export class Tab extends React.Component<{
                     }
                     else {
                         if (index != this.focusIndex) return <div key={index} style={{ display: 'none' }}></div>
-                        else return <div style={{ display: (element as any).props.visible!==false ? undefined : 'none' }} className='shy-tab-page' key={index} >{(element as any).props.children}</div>
+                        else return <div style={{ display: (element as any).props.visible==false? 'none' :undefined }} className='shy-tab-page' key={index} >{(element as any).props.children}</div>
                     }
                 })
             }</div>
