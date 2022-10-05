@@ -49,6 +49,7 @@ import ConsoleSvg from "../src/assert/svg/console.svg";
 import CureSvg from "../src/assert/svg/cure.svg";
 import CustomizePageSvg from "../src/assert/svg/customizePage.svg";
 import CutSvg from "../src/assert/svg/cut.svg";
+import DatasourceSvg from "../src/assert/svg/datasource.svg";
 import DeleteLineSvg from "../src/assert/svg/delete.line.svg";
 import DiscoverySvg from "../src/assert/svg/discovery.svg";
 import DividerSvg from "../src/assert/svg/divider.svg";
@@ -228,6 +229,7 @@ ConsoleSvg,
 CureSvg,
 CustomizePageSvg,
 CutSvg,
+DatasourceSvg,
 DeleteLineSvg,
 DiscoverySvg,
 DividerSvg,
