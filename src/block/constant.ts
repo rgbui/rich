@@ -23,7 +23,7 @@ export enum BlockUrlConstant {
     DataGridTable = '/data-grid/table',
     DataGridList = '/data-grid/list',
     DataGridCalendar = '/data-grid/calendar',
-    TableStoreBoard = '/data-grid/board',
+    DataGridBoard = '/data-grid/board',
     RefLinks = '/ref/links',
     Link = '/link',
     Todo='/todo'
