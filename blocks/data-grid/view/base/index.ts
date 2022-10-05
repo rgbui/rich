@@ -43,6 +43,8 @@ export class DataGridView extends Block {
     @prop()
     showCheckRow: boolean = false;
     @prop()
+    checkRow:'none'|'checkbox'|'selected'='none';
+    @prop()
     noTitle: boolean = false;
     schema: TableSchema;
     relationSchemas: TableSchema[] = [];

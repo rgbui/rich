@@ -13,7 +13,14 @@ export class TableStoreGallery extends DataGridView {
     @prop()
     gallerySize: number = 3;
     @prop()
-    cardConfig: CardConfig = { auto: false, showCover: false, coverFieldId: "", coverAuto: false };
+    cardConfig: CardConfig = {
+        auto: false,
+        showCover: false,
+        coverFieldId: "",
+        coverAuto: false,
+        showTemplate: false,
+        templateProps: {}
+    };
 }
 
 @view('/data-grid/gallery')

@@ -1,5 +1,5 @@
 
-import { FilterSvg, TrashSvg, SettingsSvg, DotsSvg, DuplicateSvg, LinkSvg, FileSvg, LockSvg, PropertysSvg, SortSvg, TemplatesSvg, ImportSvg, LoopSvg, UnlockSvg, PlusSvg } from "../../../../component/svgs";
+import { FilterSvg, TrashSvg, SettingsSvg, DotsSvg, DuplicateSvg, LinkSvg, FileSvg, LockSvg, PropertysSvg, SortSvg, TemplatesSvg, ImportSvg, LoopSvg, UnlockSvg, PlusSvg, DatasourceSvg } from "../../../../component/svgs";
 import { useSelectMenuItem } from "../../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import { BlockDirective } from "../../../../src/block/enum";
@@ -54,6 +54,8 @@ export class DataGridViewConfig {
                     ]
                 },
                 { text: '配置设图', name: 'viewConfig', icon: SettingsSvg },
+                { type: MenuItemType.divide },
+                { text: '数据源', name: 'datasource', icon: DatasourceSvg },
                 { type: MenuItemType.divide },
                 { name: 'link', icon: LinkSvg, text: '复制视图链接' },
                 { type: MenuItemType.divide },

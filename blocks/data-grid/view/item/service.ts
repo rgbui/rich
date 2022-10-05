@@ -125,10 +125,18 @@ export async function createFieldBlock(viewField: ViewField, data: { row: Record
     return cellContent;
 }
 
-
 export interface CardConfig {
     auto: boolean,
     showCover: boolean,
     coverFieldId: string,
-    coverAuto: boolean
+    coverAuto: boolean,
+    showTemplate: boolean,
+    templateProps: {
+        url?: string,
+        props?: {
+            name: string,
+            visible: boolean,
+            bindFieldId: string
+        }[]
+    }
 }
