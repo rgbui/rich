@@ -319,6 +319,22 @@ export class Block$Event {
             await this.arrayUpdate(options);
         }, options.syncBlock ? { block: options.syncBlock } : undefined)
     }
+    async onArraySave<T>(this: Block, options: {
+        syncBlock?: Block,
+        prop: string,
+        data: T | ((t: T) => boolean),
+        update: Partial<T>
+    }) {
+        if (typeof options.data != 'undefined')
+            await this.page.onAction('onArrayUpdate', async () => {
+                await this.arrayUpdate(options);
+            }, options.syncBlock ? { block: options.syncBlock } : undefined)
+        else await this.onArrayPush({
+            syncBlock: options.syncBlock,
+            prop: options.prop,
+            data: options.update
+        })
+    }
     async onArrayRemove<T>(this: Block, options: {
         syncBlock?: Block, prop: string,
         data?: T | ((t: T) => boolean),
@@ -345,6 +361,10 @@ export class Block$Event {
         update: Partial<T>
     }) {
         var arr = lodash.get(this, options.prop);
+        if (!Array.isArray(arr)) {
+            arr = [];
+            lodash.set(this, options.prop, arr);
+        }
         if (Array.isArray(arr)) {
             var ar = typeof options.data == 'function' ? arr.find(options.data) : options.data;
             if (ar) {
@@ -372,6 +392,10 @@ export class Block$Event {
         where?: { item?: T | ((t: T) => boolean), arrow?: 'down' | 'up' }
     }) {
         var arr: T[] = lodash.get(this, options.prop);
+        if (!Array.isArray(arr)) {
+            arr = [];
+            lodash.set(this, options.prop, arr);
+        }
         if (Array.isArray(arr)) {
             var at = options.at;
             if (typeof options.where == 'undefined' && typeof options.at == 'undefined') {
@@ -406,6 +430,10 @@ export class Block$Event {
         at?: number,
     }) {
         var arr: T[] = lodash.get(this, options.prop);
+        if (!Array.isArray(arr)) {
+            arr = [];
+            lodash.set(this, options.prop, arr);
+        }
         if (Array.isArray(arr)) {
             var at = options.at;
             if (typeof options.at == 'number') at = options.at;
