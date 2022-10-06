@@ -3,6 +3,8 @@ import React from "react";
 import { Block } from "../../../../src/block";
 import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
+import { getCardView } from "../../card/data";
+import { CardView } from "../../card/view";
 import { DataGridView } from "../base";
 import { DataGridTool } from "../components/tool";
 import { CardConfig } from "../item/service";
@@ -43,7 +45,7 @@ export class TableStoreGalleryView extends BlockView<TableStoreGallery>{
             }
             eles = rss.map((rs, i) => {
                 return <div className='sy-data-grid-gallery-column' style={{ width: `calc(${w}% - ${gap}px)`, marginRight: gap, marginBottom: gap }} key={i}>
-                    {rs.map(c => <div className="sy-data-grid-gallery-cell" style={{ width: '100%' }} key={c.id}><c.viewComponent block={c}></c.viewComponent></div>)}
+                    {rs.map(c => <div className="sy-data-grid-gallery-cell" style={{ width: '100%' }} key={c.id}>{this.renderItem(c)}</div>)}
                 </div>
             })
         }
@@ -58,12 +60,19 @@ export class TableStoreGalleryView extends BlockView<TableStoreGallery>{
                 i += (size - 1);
                 eles.push(<div className='sy-data-grid-gallery-row' key={i}>
                     {cs.map(c => <div className="sy-data-grid-gallery-cell" style={{ width: `calc(${w}% - ${gap}px)`, marginRight: gap, marginBottom: gap }}
-                        key={c.id}><c.viewComponent block={c}></c.viewComponent>
+                        key={c.id}>{this.renderItem(c)}
                     </div>)}
                 </div>)
             }
         }
         return eles;
+    }
+    renderItem(itemBlock: Block) {
+        if (this.block.cardConfig.showTemplate && this.block.cardConfig.templateProps.url) {
+            var CV: typeof CardView = getCardView(this.block.cardConfig.templateProps.url);
+            if (CV) return <CV item={itemBlock} dataGrid={this.block}></CV>
+        }
+        return <itemBlock.viewComponent block={itemBlock}></itemBlock.viewComponent>
     }
     render() {
         return <div className='sy-data-grid-gallery'
