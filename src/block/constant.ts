@@ -26,7 +26,8 @@ export enum BlockUrlConstant {
     DataGridBoard = '/data-grid/board',
     RefLinks = '/ref/links',
     Link = '/link',
-    Todo='/todo'
+    Todo = '/todo',
+    DataGridPage = '/data-grid/paging'
 }
 
 export enum BlockChildKey {
@@ -35,5 +36,5 @@ export enum BlockChildKey {
     /**
      * mind中的子块（因为是平面的，自由布局的，有两个方南的blocks，和subChilds平级
      */
-    otherChilds='otherChilds'
+    otherChilds = 'otherChilds'
 }

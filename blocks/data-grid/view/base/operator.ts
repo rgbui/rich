@@ -15,6 +15,7 @@ import { CopyText } from "../../../../component/copy";
 import { ShyAlert } from "../../../../component/lib/alert";
 import lodash from "lodash";
 import { util } from "../../../../util/util";
+import { BlockUrlConstant } from "../../../../src/block/constant";
 
 export class DataGridViewOperator {
     async onAddField(this: DataGridView, event: Rect, at?: number) {
@@ -399,7 +400,13 @@ export class DataGridViewOperator {
         CopyText(url);
         ShyAlert('视图链接已复制')
     }
-    onCreateControlBlock(this: DataGridView, name: string, visible: boolean) {
-
+    async onExtendControlBlock(this: DataGridView, url: BlockUrlConstant, visible: boolean) {
+        await this.page.onAction('onExtendControlBlock',async () => {
+            if (url == BlockUrlConstant.DataGridPage)
+            {
+                var newBlock = await this.page.createBlock(url,{ refBlockId: this.id }, this.parent, this.at + 1, this.parentKey);
+                this.registerReferenceBlocker(newBlock);
+            }
+        })
     }
 }
