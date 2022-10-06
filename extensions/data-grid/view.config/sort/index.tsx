@@ -70,8 +70,8 @@ export class TableSortView extends EventsComponent {
                 {hasSorts && <DragList onChange={change} isDragBar={e => e.classList.contains('shy-table-sorts-view-item') || e.closest('.drag') ? true : false}>{self.block.sorts.map((so, i) => {
                     return <div className="shy-table-sorts-view-item" key={i}>
                         <Icon size={14} style={{ padding: 6 }} wrapper className={'drag'} icon={DragHandleSvg}></Icon>
-                        <SelectBox border style={{ minWidth: 80 }} value={so.field} options={this.getFields()} onChange={e => { so.field = e; self.onForceStore(); }}></SelectBox>
-                        <SelectBox border value={so.sort} options={[
+                        <SelectBox  small border style={{ minWidth: 80 }} value={so.field} options={this.getFields()} onChange={e => { so.field = e; self.onForceStore(); }}></SelectBox>
+                        <SelectBox  small border value={so.sort} options={[
                             { text: '降序', value: -1 },
                             { text: '升序', value: 1 }
                         ]} onChange={e => { so.sort = e; self.onForceStore(); }}>

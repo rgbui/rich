@@ -238,7 +238,7 @@ export class TableFilterView extends EventsComponent {
             self.onForceStore();
         }
         return <div className="shy-table-filter-view">
-            <div className="shy-table-filter-view-logic">筛选符合下方<SelectBox style={{ margin: '0px 5px' }} value={self.block.filter.logic} border options={[
+            <div className="shy-table-filter-view-logic">筛选符合下方<SelectBox small style={{ margin: '0px 5px' }} value={self.block.filter.logic} border options={[
                 { text: '任意', value: 'or' },
                 { text: '所有', value: 'and' }
             ]} onChange={e => {

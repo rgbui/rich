@@ -255,7 +255,7 @@ export class DataGridFields extends EventsComponent {
                         <span className="flex-fix flex-center size-24 round item-hover cursor"><Icon size={16} icon={getTypeSvg(fe?.field?.type ? fe.field.type : pro.types[0])}></Icon></span>
                         <span className="flex-fix gap-r-10 text-over min-w-100 max-w-100">{pro.text}</span>
                         <div className="flex-fix">
-                            <SelectBox border
+                            <SelectBox border small
                                 value={bp?.bindFieldId}
                                 onChange={e => {
                                     changeArrayProp(bp, { name: pro.name, bindFieldId: e })
