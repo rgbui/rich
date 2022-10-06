@@ -154,11 +154,15 @@ export enum OperatorDirective {
     $schema_data_push = 1040,
     $schema_data_remove = 1041,
     $schema_data_update = 1042,
+   
 
 
     $change_cursor_offset = 1055,
     $page_turn_layout = 1060,
     $page_update_prop = 1061,
+
+    $data_grid_trun_view=1070,
+
     //#endregion
 
 

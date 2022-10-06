@@ -229,6 +229,10 @@ export interface HistorySnapshoot {
     record(directive: OperatorDirective.$delete_style, data: { pos: SnapshootBlockStylePos, data: Record<string, any> }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.$merge_style, data: { pos: SnapshootBlockStylePos, old_value: any, new_value: any }, obj: HistorySnapshootObject);
 
+
+    record(directive: OperatorDirective.$data_grid_trun_view, data: { pos: SnapshootBlockPos, from: string, to: string }, obj: HistorySnapshootObject);
+
+
 }
 
 export type HistorySnapshootObject = Block | Page | TableSchema;
