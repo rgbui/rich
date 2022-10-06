@@ -23,6 +23,7 @@ import { cardStores } from "../../../../blocks/data-grid/card/data";
 import { SelectBox } from "../../../../component/view/select/box";
 import { CardConfig } from "../../../../blocks/data-grid/view/item/service";
 import { Field } from "../../../../blocks/data-grid/schema/field";
+
 export class DataGridFields extends EventsComponent {
     get schema() {
         return this.block?.schema;
@@ -39,7 +40,7 @@ export class DataGridFields extends EventsComponent {
     }
     renderFields() {
         var fs = this.schema.visibleFields.findAll(g => g.text && !this.block.fields.some(s => s.fieldId == g.id) ? true : false);
-        var self =this;
+        var self = this;
         async function onShowAll() {
             await self.block.onShowAllField();
             self.forceUpdate();
@@ -90,7 +91,9 @@ export class DataGridFields extends EventsComponent {
         </div>
     }
     renderList() {
-        return <div></div>
+        return <div className="shy-table-field-view">
+            {this.renderFields()}
+        </div>
     }
     addField(event: React.MouseEvent) {
         event.stopPropagation();
@@ -227,6 +230,15 @@ export class DataGridFields extends EventsComponent {
                 self.forceUpdate()
             }
         }
+        async function changeArrayProp(data, update: Record<string, any>) {
+            await self.block.onArraySave({
+                syncBlock: self.block,
+                prop: 'cardConfig.templateProps?.props',
+                data,
+                update,
+            });
+            self.forceUpdate()
+        }
         if (card) return <div>
             <div className="flex remark f-12 padding-w-14 gap-h-10">
                 <span className="flex-auto text-over">{card.title}</span>
@@ -245,6 +257,9 @@ export class DataGridFields extends EventsComponent {
                         <div className="flex-fix">
                             <SelectBox border
                                 value={bp?.bindFieldId}
+                                onChange={e => {
+                                    changeArrayProp(bp, { name: pro.name, bindFieldId: e })
+                                }}
                                 options={self.block.schema.userFields.findAll(c => pro.types.includes(c.type)).map(c => {
                                     return {
                                         text: c.text,
@@ -253,7 +268,9 @@ export class DataGridFields extends EventsComponent {
                                 })}></SelectBox>
                         </div>
                         <div className="flex-auto flex-end">
-                            <span className="flex-center size-24 item-hover round cursor">
+                            <span className="flex-center size-24 item-hover round cursor"
+                                onMouseDown={e => changeArrayProp(bp, { name: pro.name, visible: bp?.visible === false ? true : false })}
+                            >
                                 <Icon size={18} icon={bp?.visible === false ? EyeHideSvg : EyeSvg} ></Icon>
                             </span>
                         </div>

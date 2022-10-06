@@ -12,6 +12,7 @@ import { DataGridViewConfig } from "./view";
 import "./style.less";
 import { DataGridControl } from "./control";
 import { DataGridTrigger } from "./trigger";
+import { BlockUrlConstant } from "../../../src/block/constant";
 
 class DataGridConfig extends EventsComponent {
     dataGrid: DataGridView
@@ -25,10 +26,15 @@ class DataGridConfig extends EventsComponent {
             this.tableFilterView.onOpen(this.dataGrid);
         if (this.tableSortView)
             this.tableSortView.onOpen(this.dataGrid);
+        if (this.dataGridControl)
+            this.dataGridControl.onOpen(this.dataGrid);
+        if (this.dataGridTrigger)
+            this.dataGridTrigger.onOpen(this.dataGrid);
         if (mode == 'field' && this.tab) this.tab.onFocus(1)
         if (mode == 'filter' && this.tab) this.tab.onFocus(2)
         if (mode == 'sort' && this.tab) this.tab.onFocus(3)
         if (mode == 'group' && this.tab) this.tab.onFocus(4)
+        this.forceUpdate()
     }
     dataGridViewConfig: DataGridViewConfig;
     dataGridFields: DataGridFields;
@@ -43,7 +49,7 @@ class DataGridConfig extends EventsComponent {
                 <Tab.Page item={'视图'}>
                     <DataGridViewConfig ref={e => this.dataGridViewConfig = e} ></DataGridViewConfig>
                 </Tab.Page>
-                <Tab.Page item={'记录视图'}>
+                <Tab.Page item={[BlockUrlConstant.DataGridBoard, BlockUrlConstant.DataGridGallery].includes(this.dataGrid?.url as any) ? '卡片' : "字段"}>
                     <DataGridFields ref={e => this.dataGridFields = e}></DataGridFields>
                 </Tab.Page>
                 <Tab.Page item={'过滤'}>
@@ -55,9 +61,9 @@ class DataGridConfig extends EventsComponent {
                 <Tab.Page item={'控制'}>
                     <DataGridControl ref={e => this.dataGridControl = e}></DataGridControl>
                 </Tab.Page>
-                <Tab.Page item={'触发器'}>
+                {/*<Tab.Page item={'触发器'}>
                     <DataGridTrigger ref={e => this.dataGridTrigger = e}></DataGridTrigger>
-                </Tab.Page>
+                </Tab.Page>*/}
             </Tab>
         </div>
     }
