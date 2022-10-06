@@ -1,5 +1,7 @@
 import * as Card1 from "../../../src/assert/img/card.1.png"
 import { FieldType } from "../schema/type"
+import { CardView } from "./view";
+import { CardPin } from "./views/pin";
 
 export type CardPropsType = {
     url: string,
@@ -45,3 +47,9 @@ class CardStores {
     }
 }
 export var cardStores = new CardStores()
+
+
+export function getCardView(url: string): typeof CardView {
+
+    return CardPin;
+}
