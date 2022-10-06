@@ -16,7 +16,8 @@ export class SelectBox extends React.Component<{
     style?: CSSProperties,
     dropHeight?: number,
     border?: boolean,
-    width?: number
+    width?: number,
+    small?:boolean
 }>{
     render() {
         var self = this;
@@ -40,7 +41,7 @@ export class SelectBox extends React.Component<{
         }
         var op = this.props.options.arrayJsonFind('childs', g => g.value == this.props.value);
         return <div style={this.props.style || {}}
-            className={"shy-select-box" + (this.props.disabled ? " disabled" : "") + (this.props.border ? " border" : "")}
+            className={"shy-select-box" + (this.props.disabled ? " disabled" : "") + (this.props.border ? " border" : "")+(this.props.small?" small":"")}
             onMouseDown={e => mousedown(e)}>
             {this.props.children && <>{this.props.children}<Icon size={12} icon={ChevronDownSvg}></Icon></>}
             {!this.props.children && <><span>{op?.icon && <Icon size={14} icon={op.icon}></Icon>}{op?.text}</span><Icon size={12} icon={ChevronDownSvg}></Icon></>}
