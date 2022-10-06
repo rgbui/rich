@@ -1,5 +1,6 @@
 import lodash from "lodash";
 import { Page } from "..";
+import { DataGridView } from "../../../blocks/data-grid/view/base";
 import { BlockRenderRange } from "../../block/enum";
 import { Matrix } from "../../common/matrix";
 import { OperatorDirective } from "../../history/declare";
@@ -441,7 +442,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         if (block) {
             var arr = lodash.get(block, dr.pos.prop);
             var ar = arr.find(g => g.id == dr.pos.arrayId);
-            block.arrayUpdate({ prop: dr.pos.prop, data: ar, update: dr.new_value })
+            await block.arrayUpdate({ prop: dr.pos.prop, data: ar, update: dr.new_value })
         }
     }, async (operator) => {
         var dr = operator.data;
@@ -449,33 +450,59 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         if (block) {
             var arr = lodash.get(block, dr.pos.prop);
             var ar = arr.find(g => g.id == dr.pos.arrayId);
-            block.arrayUpdate({ prop: dr.pos.prop, data: ar, update: dr.old_value })
+            await block.arrayUpdate({ prop: dr.pos.prop, data: ar, update: dr.old_value })
         }
     });
     snapshoot.registerOperator(OperatorDirective.$array_delete, async (operator, source) => {
         var dr = operator.data;
         var block = page.find(x => x.id == dr.pos.blockId);
         if (block) {
-            block.arrayRemove({ prop: dr.pos.prop, at: dr.pos.arrayAt })
+            await block.arrayRemove({ prop: dr.pos.prop, at: dr.pos.arrayAt })
         }
     }, async (operator) => {
         var dr = operator.data;
         var block = page.find(x => x.id == dr.pos.blockId);
         if (block) {
-            block.arrayPush({ prop: dr.pos.prop, data: block.createPropObject(dr.pos.prop, dr.data), at: dr.pos.arrayAt })
+            await block.arrayPush({ prop: dr.pos.prop, data: block.createPropObject(dr.pos.prop, dr.data), at: dr.pos.arrayAt })
         }
     });
     snapshoot.registerOperator(OperatorDirective.$array_create, async (operator, source) => {
         var dr = operator.data;
         var block = page.find(x => x.id == dr.pos.blockId);
         if (block) {
-            block.arrayPush({ prop: dr.pos.prop, data: block.createPropObject(dr.pos.prop, dr.data), at: dr.pos.arrayAt })
+            await block.arrayPush({ prop: dr.pos.prop, data: block.createPropObject(dr.pos.prop, dr.data), at: dr.pos.arrayAt })
         }
     }, async (operator) => {
         var dr = operator.data;
         var block = page.find(x => x.id == dr.pos.blockId);
         if (block) {
-            block.arrayRemove({ prop: dr.pos.prop, at: dr.pos.arrayAt })
+            await block.arrayRemove({ prop: dr.pos.prop, at: dr.pos.arrayAt })
+        }
+    });
+    snapshoot.registerOperator(OperatorDirective.$turn, async (operator) => {
+        var dr = operator.data;
+        var block = page.find(x => x.id == dr.pos.blockId);
+        if (block) {
+            await block.turn(dr.from)
+        }
+    }, async (operator) => {
+        var dr = operator.data;
+        var block = page.find(x => x.id == dr.pos.blockId);
+        if (block) {
+            await block.turn(dr.to)
+        }
+    });
+    snapshoot.registerOperator(OperatorDirective.$data_grid_trun_view, async (operator) => {
+        var dr = operator.data;
+        var block: DataGridView = page.find(x => x.id == dr.pos.blockId) as any;
+        if (block) {
+            await block.dataGridTrunView(dr.from)
+        }
+    }, async (operator) => {
+        var dr = operator.data;
+        var block: DataGridView = page.find(x => x.id == dr.pos.blockId) as any;
+        if (block) {
+            await block.dataGridTrunView(dr.to)
         }
     });
 }
