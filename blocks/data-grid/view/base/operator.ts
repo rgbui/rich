@@ -3,7 +3,7 @@ import { Confirm } from "../../../../component/lib/confirm";
 import { useTableStoreAddField } from "../../../../extensions/data-grid/field";
 import { BlockRenderRange } from "../../../../src/block/enum";
 import { Rect } from "../../../../src/common/vector/point";
-import { ActionDirective } from "../../../../src/history/declare";
+import { ActionDirective, OperatorDirective } from "../../../../src/history/declare";
 import { PageDirective } from "../../../../src/page/directive";
 import { SchemaFilter } from "../../schema/declare";
 import { Field } from "../../schema/field";
@@ -201,18 +201,31 @@ export class DataGridViewOperator {
     async onDataGridTurnView(this: DataGridView, viewId: string) {
         if (this.syncBlockId != viewId) {
             this.page.onAction(ActionDirective.onDataGridTurnView, async () => {
-                var view = this.schema.views.find(g => g.id == viewId);
-                await this.page.createBlock(view.url,
-                    {
-                        syncBlockId: viewId,
-                        schemaId: this.schema.id
-                    },
-                    this.parent,
-                    this.at
-                );
-                await this.delete();
+                this.dataGridTrunView(viewId);
             })
         }
+    }
+    async dataGridTrunView(this: DataGridView, viewId: string) {
+        var oldViewId = this.syncBlockId;
+        var view = this.schema.views.find(g => g.id == viewId);
+        var newBlock = await this.page.createBlock(view.url,
+            {
+                syncBlockId: viewId,
+                schemaId: this.schema.id
+            },
+            this.parent,
+            this.at
+        );
+        var bs = this.parent.blocks[this.parentKey];
+        bs.insertAt(this.at, newBlock);
+        bs.remove(g => g == this);
+        newBlock.id = this.id;
+        this.page.addBlockUpdate(newBlock.parent);
+        this.page.snapshoot.record(OperatorDirective.$data_grid_trun_view, {
+            pos: newBlock.pos,
+            from: oldViewId,
+            to: viewId
+        }, this);
     }
     async onCopySchemaView(this: DataGridView) {
         var r = await this.schema.onSchemaOperate([{
@@ -385,5 +398,8 @@ export class DataGridViewOperator {
         });
         CopyText(url);
         ShyAlert('视图链接已复制')
+    }
+    onCreateControlBlock(this: DataGridView, name: string, visible: boolean) {
+
     }
 }
