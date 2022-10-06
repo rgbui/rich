@@ -64,7 +64,6 @@ export class DataGridViewConfig extends EventsComponent {
                     { text: '200条', value: 200 }
                 ]
             },
-            // { text: '序号(自增)', type: MenuItemType.switch, checked: (this.block as TableStore).fields.some(s => s.field?.type == FieldType.autoIncrement), name: 'autoIncrement' },
             { type: MenuItemType.divide },
             {
                 text: '选中方式',
@@ -77,25 +76,6 @@ export class DataGridViewConfig extends EventsComponent {
                     { text: '高亮', value: 'selected' },
                 ]
             }
-            //{ text: '选择', type: MenuItemType.switch, checked: (this.block as TableStore).showCheckRow, name: 'showCheckRow' },
-            // {
-            //     text: '其它',
-            //     childs: [
-            //         {
-            //             text: '创建人', icon: getTypeSvg(FieldType.creater), type: MenuItemType.switch, checked: (this.block as TableStore).fields.some(s => s.field?.type == FieldType.creater),
-            //             name: 'creater'
-            //         },
-            //         { text: '创建时间', icon: getTypeSvg(FieldType.createDate), type: MenuItemType.switch, checked: (this.block as TableStore).fields.some(s => s.field?.type == FieldType.createDate), name: 'createDate' },
-            //         { text: '修改人', icon: getTypeSvg(FieldType.modifyer), type: MenuItemType.switch, checked: (this.block as TableStore).fields.some(s => s.field?.type == FieldType.modifyer), name: 'modifyer' },
-            //         { text: '修改时间', icon: getTypeSvg(FieldType.modifyDate), type: MenuItemType.switch, checked: (this.block as TableStore).fields.some(s => s.field?.type == FieldType.modifyDate), name: 'modifyDate' }]
-            // },
-            //{ type: MenuItemType.divide },
-            //{ text: '操作', type: MenuItemType.text },
-            // { text: '编辑按钮', type: MenuItemType.switch, checked: true, name: 'showEditButton' },
-            // { text: '分页', type: MenuItemType.switch, checked: true, name: 'showPager' },
-            // { text: '显示添加按钮', type: MenuItemType.switch, checked: true, name: 'showCheckRow' },
-            // { text: '显示批量处理按钮', type: MenuItemType.switch, checked: true, name: 'showCheckRow' },
-            // { text: '显示批量删除按钮', type: MenuItemType.switch, checked: true, name: 'showCheckRow' },
         ]
         if (this.block.url == BlockUrlConstant.DataGridTable) {
             baseItems.splice(baseItems.length, 0, ...[
@@ -161,79 +141,6 @@ export class DataGridViewConfig extends EventsComponent {
                 },
             ])
         }
-        // if (this.block.url == BlockUrlConstant.DataGridGallery) {
-        //     return [
-        //         {
-        //             name: 'cardConfig.auto',
-        //             text: "是否自适应",
-        //             type: MenuItemType.switch,
-        //             checked: (this.block as TableStoreGallery).cardConfig.auto,
-        //         },
-        //         {
-        //             name: 'cardConfig.showCover',
-        //             text: "显示封面",
-        //             type: MenuItemType.switch,
-        //             checked: (this.block as TableStoreGallery).cardConfig.showCover,
-        //         },
-        //         {
-        //             name: 'cardConfig.coverAuto',
-        //             text: "封面自适应",
-        //             disabled: (this.block as TableStoreGallery).cardConfig.showCover,
-        //             type: MenuItemType.switch,
-        //             checked: (this.block as TableStoreGallery).cardConfig.coverAuto,
-        //         },
-        //         {
-        //             text: '封面字段',
-        //             value: (this.block as TableStoreGallery).cardConfig.coverFieldId,
-        //             name: 'cardConfig.coverFieldId',
-        //             type: MenuItemType.select,
-        //             disabled: (this.block as TableStoreGallery).cardConfig.showCover,
-        //             options: this.block.schema.userFields.filter(g => g.type == FieldType.image).map(g => {
-        //                 return {
-        //                     text: g.text,
-        //                     icon: getTypeSvg(g.type),
-        //                     value: g.id
-        //                 }
-        //             })
-        //         },
-        //     ]
-        // }
-        // else if (this.block.url == BlockUrlConstant.Board) {
-        //     return [
-        //         {
-        //             text: '封面字段',
-        //             value: (this.block as TableStoreBoard).groupFieldId,
-        //             name: 'groupFieldId',
-        //             type: MenuItemType.select,
-        //             options: this.block.schema.userFields.filter(g => g.type == FieldType.option || g.type == FieldType.options).map(g => {
-        //                 return {
-        //                     text: g.text,
-        //                     icon: getTypeSvg(g.type),
-        //                     value: g.id
-        //                 }
-        //             })
-        //         }, ...baseItems]
-        // }
-        // else if (this.block.url == BlockUrlConstant.Board) {
-        //     return [
-        //         {
-        //             text: '日历日期字段',
-        //             value: (this.block as TableStoreCalendar).dateFieldId,
-        //             name: 'dateFieldId',
-        //             type: MenuItemType.select,
-        //             options: this.block.schema.userFields.filter(g => g.type == FieldType.date || g.type == FieldType.createDate || g.type == FieldType.modifyDate).map(g => {
-        //                 return {
-        //                     text: g.text,
-        //                     icon: getTypeSvg(g.type),
-        //                     value: g.id
-        //                 }
-        //             })
-        //         }, ...baseItems]
-        // }
-        // baseItems.insertAt(5, ...[
-        //  
-        //   
-        // ])
         return baseItems
     }
     renderItems() {
