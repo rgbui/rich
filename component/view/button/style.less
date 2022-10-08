@@ -33,10 +33,11 @@
         height : auto;
         padding: 3px 5px;
 
-        
+
     }
-    &-larger{
-        height:42px;
+
+    &-larger {
+        height: 42px;
     }
 
     &-medium {
@@ -44,10 +45,11 @@
     }
 
     &-ghost {
-        background-color: transparent;
-        color           : rgb(225, 98, 89);
-        border          : 1px solid #ddd;
-        font-weight     : normal;
+        background-color   : transparent;
+        color              : rgb(55, 53, 47, .65);
+        // color           : rgb(225, 98, 89);
+        border             : 1px solid #ddd;
+        font-weight        : normal;
 
         &:hover {
             background-color: #f5f5f5;
@@ -61,6 +63,7 @@
         border-color    : transparent;
         font-weight     : normal;
         box-shadow      : none;
+
         &:hover {
             background-color: transparent;
             color           : rgb(46, 170, 220);
@@ -76,7 +79,8 @@
         height   : 14px;
         animation: turn 1s linear infinite;
     }
-    &[disabled]{
+
+    &[disabled] {
         opacity: .5;
     }
 }
