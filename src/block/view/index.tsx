@@ -7,10 +7,6 @@ export abstract class BlockView<T extends Block> extends Component<{ block: T }>
         super(props);
         this.block.view = this;
     }
-    // private syncGrid() {
-    //     if (!this.block.isLine && !this.block.isView && !this.block.isRow && !this.block.isCol && !this.block.isPart)
-    //         this.block.page.gridMap.sync(this.block);
-    // }
     renderViewError() {
         if (this.isViewError) {
             return <div className="sy-block-error" style={this.block.visibleStyle}>块显示出错<span onMouseDown={e => { e.stopPropagation(); this.block.onDelete() }}>删除</span></div>
@@ -29,7 +25,7 @@ export abstract class BlockView<T extends Block> extends Component<{ block: T }>
         this.block.el = ReactDOM.findDOMNode(this) as HTMLDivElement;
     }
     componentDidMount() {
-        this.block.isMounted=true;
+        this.block.isMounted = true;
         this.block.el = ReactDOM.findDOMNode(this) as HTMLDivElement;
         if (this.block.el) {
             (this.block.el as any).block = this.block;
