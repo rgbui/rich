@@ -126,7 +126,7 @@ export class DataGridFields extends EventsComponent {
 
         }
         var getItems = () => {
-            if ((this.block as TableStoreGallery).cardConfig.showTemplate)
+            if ((this.block as TableStoreGallery)?.cardConfig?.showTemplate)
                 return [
                     {
                         name: 'cardConfig.showTemplate',
