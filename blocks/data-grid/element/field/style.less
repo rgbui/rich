@@ -26,16 +26,17 @@
         }
     }
 
-    >.shy-button {
-        position  : absolute;
-        right     : 0px;
-        top       : 50%;
-        transform : translate(0px, -50%);
-        visibility: hidden;
+    .shy-button {
+        display      : none;
+        // position  : absolute;
+        // right     : 0px;
+        // top       : 50%;
+        // transform : translate(0px, -50%);
+        visibility   : hidden;
     }
 
     &:hover {
-        >.shy-button {
+        .shy-button {
             visibility: visible;
         }
     }
@@ -118,12 +119,12 @@
 
 .sy-field-number {
     input {
-        width  : 100%;
-        border : 0px;
-        outline: none;
+        width      : 100%;
+        border     : 0px;
+        outline    : none;
         text-indent: 10px;
-        font-size: 14px;
+        font-size  : 14px;
         line-height: 20px;
-        max-height: 20px;
+        max-height : 20px;
     }
 }
