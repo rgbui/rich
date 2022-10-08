@@ -28,12 +28,14 @@ export class MenuItemView extends React.Component<{
     checked(checked: boolean, item: MenuItem) {
         if (item.disabled) return;
         item.checked = checked;
-        this.forceUpdate();
+        if (item.updateMenuPanel) this.props.parent.forceUpdate()
+        else this.forceUpdate();
         this.props?.input(item);
     }
     input(e: string, item: MenuItem) {
         if (item.disabled) return;
         item.value = e;
+        if (item.updateMenuPanel) this.props.parent.forceUpdate()
         this.props?.input(item);
     }
     click(item: MenuItem, event?: React.MouseEvent, name?: string) {
@@ -47,7 +49,6 @@ export class MenuItemView extends React.Component<{
         this.forceUpdate(() => {
             if (this.el && this.props.item?.childs?.length > 0 && this.menubox) {
                 var isFixed = this.props.deep == 0 && this.props.parent instanceof MenuView;
-                console.log(this.props.deep, isFixed)
                 var rect = Rect.from(this.el.getBoundingClientRect());
                 this.menubox.open({
                     roundArea: rect,
@@ -78,24 +79,32 @@ export class MenuItemView extends React.Component<{
         );
         if (r) {
             item.value = r.item.value;
-            this.forceUpdate();
-            this.props?.input(item);
+            if (item.updateMenuPanel) this.props.parent.forceUpdate()
+            else this.forceUpdate();
+            if (item.buttonClick == 'select')
+                this.props.select(item)
+            else
+                this.props?.input(item);
         }
     }
     dragChange(to: number, from: number) {
-
         this.props.item.value = [from, to];
         this.props?.input(this.props.item);
         this.props.item.value = undefined;
+        if (this.props.item.updateMenuPanel) this.props.parent.forceUpdate()
     }
     menubox: MenuBox;
     render() {
         var item = this.props.item;
-        if (item.visible == false) return <></>
+        if (typeof item.visible != 'undefined') {
+            var items = this.props.parent instanceof MenuView ? (this.props.parent.props.items) : (this.props.parent.menus);
+            if (typeof item.visible == 'function' && item.visible(items, item) === false) return <></>
+            else if (item.visible === false) return <></>
+        }
         if (item.type == MenuItemType.container) return <DragList
             onChange={(e, c) => this.dragChange(e, c)}
             isDragBar={e => e.closest('.drag') ? true : false}
-            style={{ maxHeight: item.containerHeight || undefined }}
+            style={{ maxHeight: item.containerHeight || undefined, overflowY: item.containerHeight ? 'auto' : undefined }}
             className="shy-menu-box-item-container">
             {item.childs.map((item, i) => {
                 return <MenuItemView

@@ -24,7 +24,7 @@ export type MenuItem<T = string> = {
     remark?: string,
     param?: any,
     url?: string,
-    visible?: boolean,
+    visible?: boolean|((items:MenuItem[],item:MenuItem)=>boolean),
     drag?: boolean,
     btns?: {
         overlay?: JSX.Element,
@@ -33,6 +33,7 @@ export type MenuItem<T = string> = {
         name: string
     }[],
     buttonClick?: 'select' | 'click',
+    updateMenuPanel?:boolean,
     containerHeight?:number
 }
 export enum MenuItemType {
