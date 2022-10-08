@@ -24,10 +24,10 @@ function numberFilter(oldNum, isFixed) {
     }
     return { oldNum, newNum };
 }
+
 //   ————————————————
 //   版权声明：本文为CSDN博主「前端攻城狮路飞」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
 //   原文链接：https://blog.csdn.net/m0_46156566/article/details/124801406
-
 
 @url('/field/number')
 export class FieldNumber extends OriginField {
@@ -40,7 +40,6 @@ export class FieldNumber extends OriginField {
         else return this.__appearAnchors;
     }
     formatValue(value: any) {
-
         if (typeof value == 'undefined' || lodash.isNull(value) || typeof value == 'string' && value == '') {
             return '';
         }
@@ -167,7 +166,7 @@ export class FieldTextView extends BlockView<FieldNumber>{
                 onCompositionEnd={end}
                 onPaste={paste}
             />}
-            {!this.block.isFocus && <span>{this.block.formatValue(this.block.value)}</span>}
+            {!this.block.isFocus && <span className="f-14 text">{this.block.formatValue(this.block.value)}</span>}
         </div>
     }
 }
