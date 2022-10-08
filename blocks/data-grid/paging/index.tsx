@@ -16,7 +16,6 @@ export class Paging extends Block {
             this.refBlock.onChangeIndex(index);
     }
     async onSyncReferenceBlock() {
-        console.log('sync...');
         this.view.forceUpdate();
     }
 }
