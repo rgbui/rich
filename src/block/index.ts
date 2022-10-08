@@ -678,6 +678,14 @@ export abstract class Block extends Events {
     cancelReferenceBlocker(block: Block) {
         this.referenceBlockers.remove(g => g.id == block.id);
     }
+    async onNotifyReferenceBlocks() {
+        await this.referenceBlockers.eachAsync(async b => {
+            await b.onSyncReferenceBlock()
+        })
+    }
+    async onSyncReferenceBlock() {
+
+    }
     isCanEdit(prop?: string) {
         if (this.page.pageInfo?.locker?.userid) return false;
         if (typeof prop == 'undefined') prop = 'content';

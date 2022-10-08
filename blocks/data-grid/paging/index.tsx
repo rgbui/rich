@@ -15,7 +15,12 @@ export class Paging extends Block {
         if (typeof index == 'number')
             this.refBlock.onChangeIndex(index);
     }
+    async onSyncReferenceBlock() {
+        console.log('sync...');
+        this.view.forceUpdate();
+    }
 }
+
 @view('/data-grid/paging')
 export class PagingView extends BlockView<Paging>{
     getPages() {
@@ -43,8 +48,8 @@ export class PagingView extends BlockView<Paging>{
         });
     }
     render() {
-        return <div className='sy-paging'>{this.getPages().map(pa => {
-            return <a className={pa.classList.join(" ")} onMouseDown={e => this.block.onChangeIndex(pa.index)}>{pa.text}</a>
+        return <div className='sy-paging'>{this.getPages().map((pa, index) => {
+            return <a key={index} className={pa.classList.join(" ")} onMouseDown={e => this.block.onChangeIndex(pa.index)}>{pa.text}</a>
         })}</div>
     }
 }
