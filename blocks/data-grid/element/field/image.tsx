@@ -1,8 +1,5 @@
 import React, { CSSProperties } from "react";
-import { OpenFileDialoug } from "../../../../component/file";
-import { Button } from "../../../../component/view/button";
 import { useDataGridFileViewer } from "../../../../extensions/data-grid/filer";
-import { channel } from "../../../../net/channel";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { Rect } from "../../../../src/common/vector/point";
@@ -15,11 +12,10 @@ export class FieldImage extends OriginField {
         if (!this.field?.config?.isMultiple) {
             vs = vs.slice(0, 1);
         }
-        console.log('ggg',vs);
         var rs = await useDataGridFileViewer({ roundArea: Rect.fromEvent(event) }, {
             mime: 'image',
             resources: vs,
-            isMultiple:this.field?.config?.isMultiple?true:false
+            isMultiple: this.field?.config?.isMultiple ? true : false
         });
         if (Array.isArray(rs) && rs.length > 0) {
             this.value = rs;
