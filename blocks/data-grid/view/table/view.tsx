@@ -104,7 +104,6 @@ export class TableStoreView extends BlockView<TableStore>{
             }
         })
     }
-
     private isDragMouseField: boolean = false;
     onDragMouseField(event: React.MouseEvent, vf: ViewField) {
         event.stopPropagation();
@@ -164,7 +163,7 @@ export class TableStoreView extends BlockView<TableStore>{
                 if (f.type == 'check') icon = CheckSvg;
                 else if (f.type == 'rowNum') icon = TypesNumberSvg;
                 else if (f.field) icon = getTypeSvg(f.field.type);
-                return <div className="sy-dg-table-head-th" onMouseDown={e => this.onDragMouseField(e, f)}
+                return <div className="sy-dg-table-head-th f-14 text-1" onMouseDown={e => this.onDragMouseField(e, f)}
                     style={{ width: f.colWidth || 120 }}
                     key={f?.field?.id || i}>
                     <div className={'sy-dg-table-head-th-icon flex-fix size-24 flex-center text-1'} >

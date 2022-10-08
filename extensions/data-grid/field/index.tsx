@@ -172,7 +172,7 @@ export class TableFieldView extends EventsComponent {
             </div>
             <div className="gap-h-10 padding-w-14">
                 <div className="flex gap-b-5 remark f-12">字段类型:</div>
-                <div className="flex item-hover cursor" onClick={e => this.openSelectType(e)}>
+                <div className="flex h-30 round item-hover cursor" onClick={e => this.openSelectType(e)}>
                     <span className="flex-center  size-24  flex-fix cursor item-hover round "><Icon size={14} icon={getTypeSvg(this.type)}></Icon></span>
                     <span className="flex-auto ">{tm?.text}</span>
                     <span className="flex-fix size-24 round item-hover flex-center">

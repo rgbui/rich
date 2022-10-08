@@ -6,6 +6,7 @@ import { DataGridView } from "../../../../blocks/data-grid/view/base";
 import { EventsComponent } from "../../../../component/lib/events.component";
 import { Icon } from "../../../../component/view/icon";
 import { Switch } from "../../../../component/view/switch";
+import { BlockUrlConstant } from "../../../../src/block/constant";
 import "./style.less";
 
 export class DataGridControl extends EventsComponent {
@@ -27,7 +28,7 @@ export class DataGridControl extends EventsComponent {
 
             <div className="flex item-hover round h-30 padding-w-14 ">
                 <span className="flex-auto">分页</span>
-                <span className="flex-fix"><Switch checked={false} onChange={e => { }}></Switch></span>
+                <span className="flex-fix"><Switch checked={false} onChange={e => {this.block.onExtendControlBlock(BlockUrlConstant.DataGridPage,true) }}></Switch></span>
             </div>
 
             <div className="flex item-hover round h-30 padding-w-14 ">
