@@ -1,7 +1,7 @@
 import React from "react";
 import lodash from "lodash";
 import { EventsComponent } from "../../component/lib/events.component";
-import { Remark } from "../../component/view/text";
+
 import { channel } from "../../net/channel";
 import { UserBasic } from "../../types/user";
 import { PopoverSingleton } from "../popover/popover";
@@ -9,24 +9,27 @@ import { PopoverPosition } from "../popover/position";
 import { Loading } from "../../component/view/loading";
 import { Avatar } from "../../component/view/avator/face";
 import { KeyboardCode } from "../../src/common/keys";
+import { Divider } from "../../component/view/grid";
+
 
 export class UserPicker extends EventsComponent {
     render() {
-        return <div className="shy-user-picker" ref={e => this.el = e}>
-            <div className="shy-user-picker-input">
-                <input ref={e => this.inputEl = e} value={this.text} onKeyDown={e => this.onKeydown(e)} onChange={e => this.onInput(e)} type='text' />
+        return <div className="gap-h-10 " ref={e => this.el = e}>
+            <div className="gap-w-10">
+                <input className="shy-input" ref={e => this.inputEl = e} value={this.text} onKeyDown={e => this.onKeydown(e)} onChange={e => this.onInput(e)} type='text' />
             </div>
-            <Remark>选择用户</Remark>
-            <div className="shy-user-picker-users">
+            <Divider></Divider>
+            <div className="max-h-300 overflow-y">
                 {this.loading && <Loading></Loading>}
                 {!this.loading && this.links.map((link, i) => {
-                    return <a onMouseDown={e => this.onSelect(link)} className={"shy-memeber" + ((i) == this.selectIndex ? " selected" : "")} key={link.id}>
-                        <Avatar size={30} user={link} userid={(link as any).userid}></Avatar>
-                        <span>{link.name}</span>
-                    </a>
+                    return <div onMouseDown={e => this.onSelect(link)} className={"h-40 padding-w-10 flex item-hover round cursor" + ((i) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
+                        <Avatar size={30} user={link} userid={(link as any).id}></Avatar>
+                        <span className="gap-l-10">{link.name}</span>
+                    </div>
                 })}
-                {!this.loading && this.links.length == 0 && this.isSearch && <a><Remark>没有搜索到</Remark></a>}
+                {!this.loading && this.links.length == 0 && this.isSearch && <a className="remark">没有搜索到</a>}
             </div>
+
         </div>
     }
     private el: HTMLElement;
@@ -74,7 +77,11 @@ export class UserPicker extends EventsComponent {
             var r = await channel.get('/ws/member/word/query', { word: this.text });
             this.isSearch = true;
             if (r.ok) {
-                this.links = r.data.list;
+                this.links = r.data.list.map(c => {
+                    return {
+                        id: c.userid
+                    }
+                }) as any
             }
             else this.links = [];
         }
