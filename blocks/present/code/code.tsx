@@ -12,6 +12,7 @@ import lodash from "lodash";
 import "./style.less";
 import { CodeMirrorModes, loadCodeMirror, getCodeMirrorModes } from "./lang";
 import { channel } from "../../../net/channel";
+import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 const CODEMIRROR_MODE = 'CODE_MIRROR_MODE';
 /**
  * prism url : https://prismjs.com/#examples
@@ -31,7 +32,7 @@ export class TextCode extends Block {
         return false;
     }
     async initialLoad() {
-        var lang = await channel.query('/cache/get',{ key: CODEMIRROR_MODE });
+        var lang = await channel.query('/cache/get', { key: CODEMIRROR_MODE });
         if (lang) this.language = lang;
     }
     async didMounted() {
@@ -81,16 +82,41 @@ export class TextCode extends Block {
 @view('/code')
 export class TextCodeView extends BlockView<TextCode>{
     async changeLang(e: React.MouseEvent) {
+        var vfx = (items: MenuItem[], currentItem: MenuItem) => {
+            var item = items.find(g => g.name == 'search_word');
+            if (item) {
+                if (item.value) {
+                    if ((currentItem.text as string).indexOf(item.value) == 0) {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+            return true;
+        }
         var menuItem = await useSelectMenuItem({
             roundArea: Rect.fromEle(e.currentTarget as HTMLElement)
         },
-            CodeMirrorModes.filter(g => g.abled).map(l => {
-                return {
-                    text: l.label,
-                    name: l.mode,
-                    checkLabel: this.block.language == l.mode
-                }
-            }));
+            [{
+                type: MenuItemType.input,
+                name: 'search_word',
+                updateMenuPanel: true,
+                value: '',
+            },
+            { type: MenuItemType.divide },
+            {
+                type: MenuItemType.container,
+                containerHeight: 200,
+                childs: CodeMirrorModes.filter(g => g.abled).map(l => {
+                    return {
+                        text: l.label,
+                        name: l.mode,
+                        visible: vfx as any,
+                        checkLabel: this.block.language == l.mode
+                    }
+                })
+            }]
+        );
         if (menuItem) {
             try {
                 await this.block.onChangeMode(menuItem.item.name);
