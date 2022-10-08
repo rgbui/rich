@@ -39,15 +39,14 @@ export class Field {
 }
 
 export interface DataGridOptionType {
-
     text: string,
     value: string,
     color: string;
-
 }
+
 export interface FieldConfig {
     options?: DataGridOptionType[];
-    isMultiple?: boolean
+    isMultiple?: boolean,
     relationTableId?: string,
     rollupTableId?: string,
     rollupFieldId?: string,
@@ -57,6 +56,10 @@ export interface FieldConfig {
     dateFormat?: string,
     includeTime?: boolean,
     numberFormat?: string,
-    numberRadix?: string
+    numberRadix?: string,
+    imageFormat?: {
+        display: 'thumb' | 'auto',
+        multipleDisplay: "tile" | 'carousel'
+    }
 }
 
