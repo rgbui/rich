@@ -25,6 +25,7 @@ export class DatePicker extends EventsComponent {
             if (typeof options.includeTime == 'boolean') this.includeTime = options.includeTime
         }
         this.forceUpdate()
+        this.updateInput();
     }
     private renderDays(): JSX.Element {
         var dj = dayjs(this.date);
