@@ -201,8 +201,8 @@ export class DataGridViewOperator {
     }
     async onDataGridTurnView(this: DataGridView, viewId: string) {
         if (this.syncBlockId != viewId) {
-            this.page.onAction(ActionDirective.onDataGridTurnView, async () => {
-                this.dataGridTrunView(viewId);
+            await this.page.onAction(ActionDirective.onDataGridTurnView, async () => {
+                await this.dataGridTrunView(viewId);
             })
         }
     }
@@ -218,8 +218,7 @@ export class DataGridViewOperator {
             this.at
         );
         var bs = this.parent.blocks[this.parentKey];
-        bs.insertAt(this.at, newBlock);
-        bs.remove(g => g == this);
+        lodash.remove(bs, g => g === this);
         newBlock.id = this.id;
         this.page.addBlockUpdate(newBlock.parent);
         this.page.snapshoot.record(OperatorDirective.$data_grid_trun_view, {
@@ -401,10 +400,9 @@ export class DataGridViewOperator {
         ShyAlert('视图链接已复制')
     }
     async onExtendControlBlock(this: DataGridView, url: BlockUrlConstant, visible: boolean) {
-        await this.page.onAction('onExtendControlBlock',async () => {
-            if (url == BlockUrlConstant.DataGridPage)
-            {
-                var newBlock = await this.page.createBlock(url,{ refBlockId: this.id }, this.parent, this.at + 1, this.parentKey);
+        await this.page.onAction('onExtendControlBlock', async () => {
+            if (url == BlockUrlConstant.DataGridPage) {
+                var newBlock = await this.page.createBlock(url, { refBlockId: this.id }, this.parent, this.at + 1, this.parentKey);
                 this.registerReferenceBlocker(newBlock);
             }
         })
