@@ -78,13 +78,13 @@ export class DataGridFileViewer extends EventsComponent {
             <DragList onChange={(e, c) => this.dragChange(e, c)}
                 isDragBar={e => e.closest('.drag') ? true : false}>
                 {this.resources.map((re, i) => {
-                    return <div className="flex min-h-30 padding-w-14 text-1 item-hover round" key={i}>
-                        <span className="round flex-fixed drag size-24 flex-center cursor item-hover">
-                            <Icon icon={DragHandleSvg} size={16}></Icon>
+                    return <div className="flex cursor min-h-30 padding-w-14 text-1 item-hover round" key={i}>
+                        <span className="round flex-fixed drag size-24 remark flex-center cursor item-hover">
+                            <Icon icon={DragHandleSvg} size={14}></Icon>
                         </span>
                         <div className="flex-auto">{renderItem(re)}</div>
-                        <span onClick={e => this.onContextmenu(re, e)} className="round flex-fixed drag size-24 flex-center cursor item-hover">
-                            <Icon icon={DotsSvg} size={16}></Icon>
+                        <span onClick={e => this.onContextmenu(re, e)} className="round  remark flex-fixed drag size-24 flex-center cursor item-hover">
+                            <Icon icon={DotsSvg} size={14}></Icon>
                         </span>
                     </div>
                 })}</DragList>
