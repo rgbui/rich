@@ -160,7 +160,7 @@ export class DataGridViewField {
                                 name: 'numberUnitCustom',
                                 type: MenuItemType.input,
                                 value: viewField.field.config?.numberFormat?.indexOf('{value}') > -1 ? viewField.field.config?.numberFormat : '',
-                                text: '编辑日期格式',
+                                text: '输入数字格式',
                             },
                             { type: MenuItemType.divide },
                             { name: 'numberUnit', text: 'm/s', value: '{value}m/s', checkLabel: viewField.field.config?.numberFormat == 'number' },
@@ -210,15 +210,43 @@ export class DataGridViewField {
                 FieldType.file,
                 FieldType.image,
             ].includes(viewField.field?.type)) {
+                items.insertAt(4, {
+                    text: '图片展示',
+                    type: MenuItemType.select,
+                    name: 'config.imageFormat.display',
+                    value: viewField.field.config?.imageFormat?.display || "thumb",
+                    options: [
+                        { text: '略缩图', value: 'thumb' },
+                        { text: '自适应', value: 'auto' }
+                    ],
+                    buttonClick: 'select'
+                });
                 var text = '允许多文件';
                 if (viewField.field.type == FieldType.image) {
                     text = '允许多张图片';
                 }
-                items.insertAt(4, {
+                items.insertAt(5, {
                     text: text,
                     type: MenuItemType.switch,
                     name: 'isMultiple',
+                    updateMenuPanel: true,
                     checked: viewField?.field?.config?.isMultiple ? true : false
+                });
+                items.insertAt(6, {
+                    text: '多张图片展示',
+                    visible: (items) => {
+                        var mp = items.find(g => g.name == 'isMultiple');
+                        if (mp?.checked) return true
+                        else return false
+                    },
+                    type: MenuItemType.select,
+                    name: 'config.imageFormat.multipleDisplay',
+                    value: viewField.field.config?.imageFormat?.multipleDisplay || "tile",
+                    options: [
+                        { text: '平铺', value: 'tile' },
+                        { text: '轮播', value: 'carousel' }
+                    ],
+                    buttonClick: 'select'
                 });
             }
             else if (viewField.field?.type == FieldType.formula) {
@@ -264,8 +292,7 @@ export class DataGridViewField {
                                     }
                                 })
                             ]
-                        }
-                        ,
+                        },
                         ...(viewField.field.config.options.length > 0 ? [{ type: MenuItemType.divide }] : []),
                         {
                             type: MenuItemType.button,
@@ -485,6 +512,18 @@ export class DataGridViewField {
                     await self.onUpdateField(viewField, { config });
                 }
             }
+            else if (re.item.name == 'config.imageFormat.display') {
+                var config = lodash.cloneDeep(viewField?.field?.config);
+                if (typeof config == 'undefined') config = {};
+                lodash.set(config, 'imageFormat.display', re.item.value)
+                await self.onUpdateField(viewField, { config });
+            }
+            else if (re.item.name == 'config.imageFormat.multipleDisplay') {
+                var config = lodash.cloneDeep(viewField?.field?.config);
+                if (typeof config == 'undefined') config = {};
+                lodash.set(config, 'imageFormat.multipleDisplay', re.item.value)
+                await self.onUpdateField(viewField, { config });
+            }
         }
         if (isSysField) {
             if (ReItem.value != viewField?.text) {
@@ -499,7 +538,7 @@ export class DataGridViewField {
             }
         }
         if (dItem) {
-            if (dItem.value != viewField.field.config.dateFormat) {
+            if (dItem.value != viewField.field?.config?.dateFormat) {
                 var config = lodash.cloneDeep(viewField?.field?.config);
                 if (typeof config == 'undefined') config = {};
                 config.dateFormat = dItem.value;
