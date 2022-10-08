@@ -15,7 +15,8 @@ export class FieldDate extends OriginField {
         var format = this.field?.config?.dateFormat || 'YYYY年MM月DD日'
         return r.format(format)
     }
-    async onCellMousedown(event: React.MouseEvent<Element, MouseEvent>) {
+    async onCellMousedown(event:React.MouseEvent<Element, MouseEvent>)
+    {
         event.stopPropagation();
         var el = event.target as HTMLElement;
         var pickDate = await useDatePicker({ roundArea: Rect.from(el.getBoundingClientRect()) }, this.value, {
@@ -29,6 +30,6 @@ export class FieldDate extends OriginField {
 @view('/field/date')
 export class FieldTextView extends BlockView<FieldDate>{
     render() {
-        return <div className='sy-field-date' style={{ width: '100%', minHeight: 30 }} onMouseDown={e => this.block.onCellMousedown(e)}>{this.block.dateString}</div>
+        return <div className='sy-field-date f-14' style={{ width: '100%', minHeight: 30 }} onMouseDown={e => this.block.onCellMousedown(e)}>{this.block.dateString}</div>
     }
 }
