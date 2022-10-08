@@ -43,7 +43,7 @@ export class DataGridView extends Block {
     @prop()
     showCheckRow: boolean = false;
     @prop()
-    checkRow:'none'|'checkbox'|'selected'='none';
+    checkRow: 'none' | 'checkbox' | 'selected' = 'none';
     @prop()
     noTitle: boolean = false;
     schema: TableSchema;
@@ -204,6 +204,7 @@ export class DataGridView extends Block {
             await this.loadRelationSchemas();
             await this.loadRelationDatas();
             await this.createItem();
+            await this.onNotifyReferenceBlocks();
             this.view.forceUpdate();
         }
     }
