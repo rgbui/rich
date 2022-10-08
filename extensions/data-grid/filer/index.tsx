@@ -3,12 +3,14 @@ import React from "react";
 import { ReactNode } from "react";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { DotsSvg, DragHandleSvg } from "../../../component/svgs";
+import { Avatar } from "../../../component/view/avator/face";
 import { Button } from "../../../component/view/button";
 import { DragList } from "../../../component/view/drag.list";
 import { Divider } from "../../../component/view/grid";
 import { Icon } from "../../../component/view/icon";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { Rect } from "../../../src/common/vector/point";
+import { useUserPicker } from "../../at/picker";
 import { useAudioPicker } from "../../file/audio.picker";
 import { useFilePicker } from "../../file/file.picker";
 import { useImageFilePicker } from "../../file/image.picker";
@@ -18,7 +20,7 @@ import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
 
 export class DataGridFileViewer extends EventsComponent {
-    mime: 'file' | 'image' | 'video' | 'audio' = 'file';
+    mime: 'file' | 'image' | 'video' | 'audio' | 'user' = 'file';
     resources: ResourceArguments[] = [];
     isMultiple: boolean = false;
     open(options: {
@@ -60,21 +62,39 @@ export class DataGridFileViewer extends EventsComponent {
         } else if (this.mime == 'video') {
             resource = await useVideoPicker({ roundArea: Rect.fromEvent(event) })
         }
-        this.resources.push(resource);
-        this.forceUpdate()
+        else if (this.mime == 'user') {
+            var r = await useUserPicker({ roundArea: Rect.fromEvent(event) });
+            if (r && !this.resources.includes(r.id as any)) {
+                resource = r.id as any;
+            }
+        }
+        if (resource) {
+            this.resources.push(resource);
+            console.log(this.resources, 'ggg')
+            this.forceUpdate()
+        }
+
     }
     render(): ReactNode {
         var self = this;
         function renderItem(resource: ResourceArguments) {
+            console.log(resource, 'ggg');
             if (self.mime == 'image') {
                 return <div className="flex-center gap-h-5"><img src={resource.url} className="round object-center max-w-250 max-h-100" /></div>
             }
             else if (self.mime == 'file') {
                 return <div><span>{resource.text}</span></div>
             }
+            else if (self.mime == 'user') return <div><Avatar size={40} userid={resource as string}></Avatar></div>
             else return <></>
         }
-        return <div className="max-h-300 w-250 gap-h-14">
+        function getButtonText() {
+            if (self.mime == 'file') return '上传文件'
+            else if (self.mime == 'user') return '添加用户'
+            else if (self.mime == 'image') return '上传图片'
+            else return '上传文件'
+        }
+        return <div className={"max-h-300 gap-h-14" + (this.mime == 'user' ? " w-120" : " w-250")}>
             <DragList onChange={(e, c) => this.dragChange(e, c)}
                 isDragBar={e => e.closest('.drag') ? true : false}>
                 {this.resources.map((re, i) => {
@@ -89,7 +109,7 @@ export class DataGridFileViewer extends EventsComponent {
                     </div>
                 })}</DragList>
             {(this.isMultiple || this.resources.length == 0) && <>{this.resources.length > 0 && <Divider></Divider>}<div className="gap-h-10 padding-w-14">
-                <Button onClick={e => this.uploadFile(e)} block>上传{this.mime == 'image' ? "图片" : "文件"}</Button>
+                <Button onClick={e => this.uploadFile(e)} block>{getButtonText()}</Button>
             </div></>}
         </div>
     }
