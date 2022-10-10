@@ -11,8 +11,8 @@ export class FieldPhone extends OriginField {
 @view('/field/phone')
 export class FieldPhoneView extends BlockView<FieldPhone>{
     render() {
-        return <div className='sy-field-phone'>
-            <TextArea  block={this.block}   placeholder="输入手机号" ></TextArea>
+        return <div className='sy-field-phone f-14'>
+            <TextArea block={this.block} placeholder="输入手机号" ></TextArea>
         </div>
     }
 }
