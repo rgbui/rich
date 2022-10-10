@@ -29,6 +29,7 @@ export class FieldUser extends OriginField {
         }
     }
 }
+
 @view('/field/user')
 export class FieldTextView extends BlockView<FieldUser>{
     render() {
@@ -41,7 +42,7 @@ export class FieldTextView extends BlockView<FieldUser>{
             if (!Array.isArray(vs) && vs) vs = [vs];
             if (!Array.isArray(vs)) vs = [];
             return <div className='sy-field-text'>
-                <UserAvatars users={vs}></UserAvatars>
+                <UserAvatars size={30} users={vs}></UserAvatars>
             </div>
         }
     }
