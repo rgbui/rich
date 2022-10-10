@@ -45,6 +45,18 @@ export class DataGridViewField {
                     { name: 'sortAsc', icon: ArrowUpSvg, text: '升序' },
                     { name: 'filter', icon: FilterSvg, text: '过滤' },
                 ])
+                items.push(...[
+                    {
+                        name: 'clone',
+                        icon: DuplicateSvg,
+                        text: '复制列'
+                    },
+                    {
+                        name: 'deleteProperty',
+                        icon: TrashSvg,
+                        text: '删除字段'
+                    }
+                ])
             }
         }
         else {
@@ -467,7 +479,7 @@ export class DataGridViewField {
             else if (re.item.name == 'clone') {
                 this.onCloneField(viewField);
             }
-            else if (re.item.name == 'delete') {
+            else if (re.item.name == 'deleteProperty') {
                 this.onDeleteField(viewField);
             }
             else if (re.item.name == 'filter') {
