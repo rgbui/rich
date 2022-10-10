@@ -18,9 +18,9 @@ export function getMenus() {
         },
         ...map([
             { text: '文本', value: FieldType.text },
-            // { text: '多行文本', value: FieldType.textarea },
+            //{ text: '多行文本', value: FieldType.textarea },
             { text: '数字', value: FieldType.number },
-            // { text: '价钱', value: FieldType.price },
+            //{ text: '价钱', value: FieldType.price },
             { text: '单选', value: FieldType.option },
             { text: '多选', value: FieldType.options },
             { text: '勾选', value: FieldType.bool },
@@ -43,24 +43,24 @@ export function getMenus() {
         ...map([
             { text: '反应', value: FieldType.emoji },
             { text: '评论', value: FieldType.comment },
-            { text: '收藏', value: FieldType.favourite },
-            { text: '分享', value: FieldType.share },
-            { text: '打赏', value: FieldType.donate },
-            { text: '购买', value: FieldType.buy },
-            { text: '置顶', value: FieldType.top },
-            { text: '浏览', value: FieldType.browse },
+            // { text: '收藏', value: FieldType.favourite },
+            // { text: '分享', value: FieldType.share },
+            // { text: '打赏', value: FieldType.donate },
+            // { text: '购买', value: FieldType.buy },
+            // { text: '置顶', value: FieldType.top },
+            // { text: '浏览', value: FieldType.browse },
         ]),
         { type: MenuItemType.text, text: '高级' },
         ...map([
-
             { text: '操作按钮', value: FieldType.button },
             { text: '创建人', value: FieldType.creater },
             { text: '创建时间', value: FieldType.createDate },
             { text: '修改人', value: FieldType.modifyer },
             { text: '修改时间', value: FieldType.modifyDate },
-            { text: '修改情况', value: FieldType.modifyDynamic },
+            // { text: '修改情况', value: FieldType.modifyDynamic },
         ])
     ];
+
     return menus;
 }
 

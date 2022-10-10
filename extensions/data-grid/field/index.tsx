@@ -196,9 +196,25 @@ export class TableFieldView extends EventsComponent {
         </div>
     }
     async changeType(type: FieldType) {
-        this.type = type;
-        await this.loadTypeDatas();
-        this.forceUpdate();
+        if (this.type != type) {
+            var m = getMenus();
+            var item = m.find(g => g.type == this.type);
+            var isAutoChangeText: boolean = false;
+            if (item) {
+                if (item.text == this.text || !this.text) {
+                    isAutoChangeText = true;
+                }
+            }
+            this.type = type;
+            if (isAutoChangeText) {
+                var nt = m.find(g => g.type == this.type);
+                if (nt) {
+                    this.text = nt.text;
+                }
+            }
+            await this.loadTypeDatas();
+            this.forceUpdate();
+        }
     }
     private relationDatas: TableSchema[];
     private rollFields: Record<string, Field[]>;
@@ -254,7 +270,7 @@ export class TableFieldView extends EventsComponent {
     }
     ) {
         this.fieldId = options?.field?.id || '';
-        this.text = options.field?.text || '属性';
+        this.text = options.field?.text || '';
         this.type = options.field?.type || FieldType.text;
         this.config = lodash.cloneDeep(options.field?.config || {});
         this.relationDatas = null;
