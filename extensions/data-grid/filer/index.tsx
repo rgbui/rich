@@ -70,22 +70,19 @@ export class DataGridFileViewer extends EventsComponent {
         }
         if (resource) {
             this.resources.push(resource);
-            console.log(this.resources, 'ggg')
             this.forceUpdate()
         }
-
     }
     render(): ReactNode {
         var self = this;
         function renderItem(resource: ResourceArguments) {
-            console.log(resource, 'ggg');
             if (self.mime == 'image') {
                 return <div className="flex-center gap-h-5"><img src={resource.url} className="round object-center max-w-250 max-h-100" /></div>
             }
             else if (self.mime == 'file') {
                 return <div><span>{resource.text}</span></div>
             }
-            else if (self.mime == 'user') return <div><Avatar size={40} userid={resource as string}></Avatar></div>
+            else if (self.mime == 'user') return <div><Avatar size={30} userid={resource as string}></Avatar></div>
             else return <></>
         }
         function getButtonText() {
@@ -94,7 +91,7 @@ export class DataGridFileViewer extends EventsComponent {
             else if (self.mime == 'image') return '上传图片'
             else return '上传文件'
         }
-        return <div className={"max-h-300 gap-h-14" + (this.mime == 'user' ? " w-120" : " w-250")}>
+        return <div className={"max-h-300 gap-h-14" + (this.mime == 'user' ? " w-180" : " w-250")}>
             <DragList onChange={(e, c) => this.dragChange(e, c)}
                 isDragBar={e => e.closest('.drag') ? true : false}>
                 {this.resources.map((re, i) => {
