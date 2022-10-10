@@ -3,7 +3,7 @@
  * 这里定义字段类型 
  * 但这个字段类型只是做为存储来用
  */
- export enum FieldType {
+export enum FieldType {
     none = 0,
     any = 1,
     object = 2,
@@ -159,3 +159,12 @@
 
 
 }
+
+export var sysFieldTypes: FieldType[] = [
+    FieldType.creater,
+    FieldType.modifyDate,
+    FieldType.modifyer,
+    FieldType.createDate,
+    FieldType.autoIncrement,
+    FieldType.sort
+]
