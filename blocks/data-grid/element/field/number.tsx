@@ -163,6 +163,7 @@ export class FieldTextView extends BlockView<FieldNumber>{
                 onKeyUp={keyup}
                 onBlur={blur}
                 onCompositionStart={start}
+                onCompositionUpdate={start}
                 onCompositionEnd={end}
                 onPaste={paste}
             />}
