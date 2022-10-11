@@ -23,6 +23,7 @@ import { SelectBox } from "../../../component/view/select/box";
 import './style.less';
 import { DataGridView } from "../../../blocks/data-grid/view/base";
 import lodash from "lodash";
+
 export class TableFieldView extends EventsComponent {
     onSave() {
         var self = this;
@@ -156,6 +157,7 @@ export class TableFieldView extends EventsComponent {
             await this.changeType(um.item.value);
         }
     }
+    input: Input;
     render() {
         var self = this;
         var ms = getMenus();
@@ -167,7 +169,7 @@ export class TableFieldView extends EventsComponent {
             <div className="gap-h-10 padding-w-14">
                 <div className="flex gap-b-5 remark f-12">字段名:</div>
                 <div>
-                    <Input onChange={e => this.text = e} value={this.text}></Input>
+                    <Input ref={e => this.input = e} onChange={e => this.text = e} value={this.text}></Input>
                 </div>
             </div>
             <div className="gap-h-10 padding-w-14">
@@ -175,7 +177,7 @@ export class TableFieldView extends EventsComponent {
                 <div className="flex h-30 round item-hover cursor" onClick={e => this.openSelectType(e)}>
                     <span className="flex-center  size-24  flex-fix cursor item-hover round "><Icon size={14} icon={getTypeSvg(this.type)}></Icon></span>
                     <span className="flex-auto ">{tm?.text}</span>
-                    <span className="flex-fix size-24 round item-hover flex-center">
+                    <span className="flex-fixed size-24 round item-hover flex-center">
                         <Icon size={14} icon={ChevronDownSvg}></Icon>
                     </span>
                 </div>
@@ -198,18 +200,18 @@ export class TableFieldView extends EventsComponent {
     async changeType(type: FieldType) {
         if (this.type != type) {
             var m = getMenus();
-            var item = m.find(g => g.type == this.type);
+            var item = m.find(g => g.value == this.type);
             var isAutoChangeText: boolean = false;
-            if (item) {
-                if (item.text == this.text || !this.text) {
-                    isAutoChangeText = true;
-                }
+            if (!this.text) isAutoChangeText = true;
+            else {
+                if (item.text == this.text) isAutoChangeText = true;
             }
             this.type = type;
             if (isAutoChangeText) {
-                var nt = m.find(g => g.type == this.type);
+                var nt = m.find(g => g.value == type);
                 if (nt) {
                     this.text = nt.text;
+                    if (this.input) this.input.updateValue(this.text);
                 }
             }
             await this.loadTypeDatas();
