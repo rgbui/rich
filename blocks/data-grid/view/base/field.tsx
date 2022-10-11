@@ -334,10 +334,12 @@ export class DataGridViewField {
                     text: b.text,
                     type: MenuItemType.custom,
                     render(item) {
-                        return <div className="shy-tablestore-option-selector-property">
-                            <span style={{ backgroundColor: item.value }}></span>
-                            <span >{b.text}</span>
-                            {option.color == item.value && <Icon size={12} icon={CheckSvg}></Icon>}
+                        return <div className="flex padding-w-14 h-30 item-hover round cursor">
+                            <span className="flex-fixed size-20 round gap-r-10 border" style={{ backgroundColor: item.value }}></span>
+                            <span className="flex-auto text f-14">{b.text}</span>
+                            {option.color == item.value &&
+                                <span className="flex-fixed size-24 flex-center"><Icon size={16} icon={CheckSvg}></Icon></span>
+                            }
                         </div>
                     }
                 }
