@@ -1,5 +1,22 @@
 
-import { FilterSvg, TrashSvg, SettingsSvg, DotsSvg, DuplicateSvg, LinkSvg, FileSvg, LockSvg, PropertysSvg, SortSvg, TemplatesSvg, ImportSvg, LoopSvg, UnlockSvg, PlusSvg, DatasourceSvg } from "../../../../component/svgs";
+import {
+    FilterSvg,
+    TrashSvg,
+    SettingsSvg,
+    DotsSvg,
+    DuplicateSvg,
+    LinkSvg,
+    FileSvg,
+    LockSvg,
+    PropertysSvg,
+    SortSvg,
+    TemplatesSvg,
+    ImportSvg,
+    LoopSvg,
+    UnlockSvg,
+    PlusSvg,
+    DatasourceSvg
+} from "../../../../component/svgs";
 import { useSelectMenuItem } from "../../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import { BlockDirective } from "../../../../src/block/enum";
@@ -8,8 +25,9 @@ import { DataGridView } from ".";
 import { useDataGridConfig } from "../../../../extensions/data-grid/view.config";
 import { getSchemaViewIcon } from "../../schema/util";
 import { useTabelSchemaFormDrop } from "../../../../extensions/data-grid/switch.forms/view";
-import { useFormPage } from "../../../../extensions/data-grid/form";
-import { getWsElementUrl, ElementType } from "../../../../net/element.type";
+import { getWsElementUrl, ElementType, getElementUrl } from "../../../../net/element.type";
+import { channel } from "../../../../net/channel";
+import { Page } from "../../../../src/page";
 
 export class DataGridViewConfig {
     async onOpenViewSettings(this: DataGridView, rect: Rect) {
@@ -223,20 +241,23 @@ export class DataGridViewConfig {
     }
     async onOpenForm(this: DataGridView, rect: Rect) {
         this.dataGridTool.isOpenTool = true;
-        var newRow = await useFormPage({
-            schema: this.schema,
-            recordViewId: this.schema.recordViews.first().id
-        });
-        if (newRow) {
-            await this.onAddRow(newRow, undefined, 'after')
+        var dialougPage: Page = await channel.air('/page/dialog', {
+            elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, this.schema.recordViews.first().id)
+        })
+        if (dialougPage) {
+            var newRow = dialougPage.getSchemaRow();
+            if (newRow) {
+                await this.onAddRow(newRow, undefined, 'after')
+            }
         }
+        await channel.air('/page/dialog', { elementUrl: null });
         this.dataGridTool.isOpenTool = false;
         this.onOver(this.getVisibleContentBound().contain(Point.from(this.page.kit.operator.moveEvent)))
     }
     async onOpenFormDrop(this: DataGridView, rect: Rect) {
         this.dataGridTool.isOpenTool = true;
         await useTabelSchemaFormDrop({ roundArea: rect }, {
-            schema: this.schema
+           block:this,
         });
         this.dataGridTool.isOpenTool = false;
         this.onOver(this.getVisibleContentBound().contain(Point.from(this.page.kit.operator.moveEvent)))

@@ -1,9 +1,12 @@
-import { useFormPage } from "../../../../extensions/data-grid/form";
+
 import { Block } from "../../../../src/block";
 import { ActionDirective } from "../../../../src/history/declare";
 import { util } from "../../../../util/util";
 import { TableStoreItem } from "../item";
 import { DataGridView } from ".";
+import { channel } from "../../../../net/channel";
+import { getElementUrl, ElementType } from "../../../../net/element.type";
+import { Page } from "../../../../src/page";
 
 export class DataGridViewData {
     async onRemoveItem(this: DataGridView, id: string) {
@@ -16,20 +19,28 @@ export class DataGridViewData {
         })
     }
     async onOpenAddForm(this: DataGridView, initData?: Record<string, any>) {
-        var row = await useFormPage({
-            schema: this.schema,
-            recordViewId: this.schema.recordViews[0].id
-        });
-        if (row) await this.onAddRow(row, undefined, 'after');
+        var dialougPage: Page = await channel.air('/page/dialog', {
+            elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, this.schema.recordViews.first().id)
+        })
+        if (dialougPage) {
+            var newRow = dialougPage.getSchemaRow();
+            if (newRow) {
+                await this.onAddRow(newRow, undefined, 'after')
+            }
+        }
+        await channel.air('/page/dialog', { elementUrl: null });
     }
     async onOpenEditForm(this: DataGridView, id: string) {
-        var rowData = this.data.find(g => g.id == id);
-        var row = await useFormPage({
-            schema: this.schema,
-            recordViewId: this.schema.recordViews[0].id,
-            row: rowData
-        });
-        if (row) await this.onRowUpdate(id, row);
+        var dialougPage: Page = await channel.air('/page/dialog', {
+            elementUrl: getElementUrl(ElementType.SchemaRecordViewData, this.schema.id, this.schema.recordViews.first().id, id)
+        })
+        if (dialougPage) {
+            var newRow = dialougPage.getSchemaRow();
+            if (newRow) {
+                await this.onRowUpdate(id, newRow);
+            }
+        }
+        await channel.air('/page/dialog', { elementUrl: null });
     }
     async onAddRow(this: DataGridView, data, id?: string, arrow: 'before' | 'after' = 'after') {
         if (typeof id == 'undefined') {
