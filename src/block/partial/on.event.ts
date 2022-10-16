@@ -16,6 +16,7 @@ import { ShyAlert } from "../../../component/lib/alert";
 import { BlockcolorSvg, DuplicateSvg, LinkSvg, LoopSvg, TrashSvg } from "../../../component/svgs";
 import lodash from "lodash";
 import { FontColorList, BackgroundColorList } from "../../../extensions/color/data";
+import { BlockUrlConstant } from "../constant";
 
 export class Block$Event {
     /**
@@ -455,6 +456,17 @@ export class Block$Event {
                 data: cd
             }, this)
         }
+    }
+    async onHandlePlus(this: Block) {
+        await this.page.onAction('handle.plus.create', async () => {
+            var block = await this.visibleDownCreateBlock(BlockUrlConstant.TextSpan);
+            this.page.addUpdateEvent(async () => {
+                this.page.kit.anchorCursor.onFocusBlockAnchor(block, {
+                    render: true,
+                    merge: true
+                });
+            })
+        })
     }
 }
 
