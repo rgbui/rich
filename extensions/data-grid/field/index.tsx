@@ -23,7 +23,7 @@ import { SelectBox } from "../../../component/view/select/box";
 import './style.less';
 import { DataGridView } from "../../../blocks/data-grid/view/base";
 import lodash from "lodash";
-import { useDataSourceView } from "../relation";
+import { useDataSourceView } from "../datasource";
 
 export class TableFieldView extends EventsComponent {
     onSave() {
