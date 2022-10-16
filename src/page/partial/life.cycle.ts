@@ -14,10 +14,14 @@ import { BlockUrlConstant } from "../../block/constant";
 import { PageLayoutType } from "../declare";
 import { GridMap } from "../grid";
 import { Matrix } from "../../common/matrix";
-import lodash, { chain } from "lodash";
+import lodash from "lodash";
 import { util } from "../../../util/util";
 import { PageOutLine } from "../../../blocks/page/outline";
 import { channel } from "../../../net/channel";
+import { ElementType, parseElementUrl } from "../../../net/element.type";
+import { TableSchema } from "../../../blocks/data-grid/schema/meta";
+import { schemaCreatePageFormData } from "../../../blocks/data-grid/element/service";
+import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.field";
 
 export class Page$Cycle {
     async init(this: Page) {
@@ -472,4 +476,20 @@ export class Page$Cycle {
             if (isUpdate) this.addPageUpdate();
         });
     }
+    async loadSchemaView(this: Page, elementUrl: string) {
+        var pe = parseElementUrl(elementUrl);
+        if (!this.schema) {
+            this.schema = await TableSchema.loadTableSchema(pe.id);
+        }
+        if (this.exists(g => !(g instanceof OriginFormField))) {
+            var pageData = schemaCreatePageFormData(this.schema);
+            this.views = [];
+            await this.load(pageData);
+        }
+        if (pe.type == ElementType.SchemaRecordViewData) {
+            var row = await this.schema.rowGet(pe.id2);
+            if (row) this.loadSchemaRecord(row);
+        }
+    }
 }
+
