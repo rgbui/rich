@@ -19,7 +19,8 @@ export class HandleView extends React.Component<{ handle: Handle }>{
         return this.props.handle;
     }
     el: HTMLElement;
-    private async onPlus(event: React.MouseEvent) {
+    private async onPlus(event: React.MouseEvent)
+    {
         this.closeTip();
         event.stopPropagation();
         var self = this;
@@ -27,21 +28,11 @@ export class HandleView extends React.Component<{ handle: Handle }>{
             var bs = self.handle.kit.page.getAtomBlocks(self.handle.kit.anchorCursor.currentSelectedBlocks);
             var b = bs.findMax(g => g.getVisibleContentBound().bottom);
             if (b) {
-                await self.handle.kit.page.onAction('handle.plus.create', async () => {
-                    var block = await b.visibleDownCreateBlock(BlockUrlConstant.TextSpan);
-                    self.handle.kit.page.addUpdateEvent(async () => {
-                        self.handle.kit.anchorCursor.onFocusBlockAnchor(block, { render: true, merge: true });
-                    })
-                })
+                await b.onHandlePlus();
             }
         }
         else if (self.handle.handleBlock) {
-            await self.handle.kit.page.onAction('handle.plus.create', async () => {
-                var block = await self.handle.handleBlock.visibleDownCreateBlock(BlockUrlConstant.TextSpan);
-                self.handle.kit.page.addUpdateEvent(async () => {
-                    self.handle.kit.anchorCursor.onFocusBlockAnchor(block, { render: true, merge: true });
-                })
-            })
+            await self.handle.handleBlock.onHandlePlus();
         }
     }
     private onMousedown(event: MouseEvent) {

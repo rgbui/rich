@@ -14,13 +14,18 @@ import Dots from "../../../src/assert/svg/dots.svg";
 import DragSvg from "../../../src/assert/svg/dragHandle.svg";
 import TrashSvg from "../../../src/assert/svg/trash.svg";
 import { Divider } from "../../../component/view/grid";
-import { useFormPage } from "../form";
 import { EditSvg } from "../../../component/svgs";
+import { getElementUrl, ElementType } from "../../../net/element.type";
+import { Page } from "../../../src/page";
+import { DataGridView } from "../../../blocks/data-grid/view/base";
 
 class TabelSchemaFormDrop extends EventsComponent {
-    schema: TableSchema;
-    async open(options: { schema: TableSchema }) {
-        this.schema = options.schema;
+    block: DataGridView;
+    get schema() {
+        return this.block?.schema
+    }
+    async open(options: { block: DataGridView }) {
+        this.block = options.block;
         await this.syncForceUpdate();
     }
     getFields() {
@@ -61,7 +66,17 @@ class TabelSchemaFormDrop extends EventsComponent {
     }
     async onChange(view) {
         this.emit('save', view);
-        await useFormPage({ schema: this.schema, recordViewId: view.id })
+        var dialougPage: Page = await channel.air('/page/dialog',
+            {
+                elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, view.id)
+            })
+        if (dialougPage) {
+            var newRow = dialougPage.getSchemaRow();
+            if (newRow) {
+                //   await this.block.onAddRow(newRow, undefined, 'after');
+            }
+        }
+        await channel.air('/page/dialog', { elementUrl: null });
     }
     async onProperty(view, event: React.MouseEvent) {
         event.stopPropagation();
@@ -138,7 +153,7 @@ class TabelSchemaFormDrop extends EventsComponent {
 
 export async function useTabelSchemaFormDrop(pos: PopoverPosition,
     options: {
-        schema: TableSchema,
+        block: DataGridView
     }) {
     let popover = await PopoverSingleton(TabelSchemaFormDrop, { mask: true });
     let fv = await popover.open(pos);
