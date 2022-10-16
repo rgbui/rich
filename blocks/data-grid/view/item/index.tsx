@@ -77,6 +77,9 @@ export class TableStoreItem extends Block {
                 break;
         }
     }
+    async onHandlePlus() {
+      await  this.dataGrid.onAddRow({}, this.dataRow.id, 'after');
+    }
 }
 @view('/data-grid/item')
 export class TableStoreItemView extends BlockView<TableStoreItem>{
