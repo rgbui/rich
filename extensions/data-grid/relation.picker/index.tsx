@@ -24,7 +24,7 @@ class RelationPicker extends EventsComponent {
     async renderPage() {
         var self = this;
         if (!this.pageView) {
-            this.pageView = await createFormPage(this.el, { schema: this.relationSchema, datas:this.relationDatas, isMultiple: this.isMultiple });
+            this.pageView = await createFormPage(this.el, { schema: this.relationSchema, datas: this.relationDatas, isMultiple: this.isMultiple });
             this.pageView.on(PageDirective.selectRows, function (block: Block, rows) {
                 self.isChange = true;
                 self.relationDatas = rows;

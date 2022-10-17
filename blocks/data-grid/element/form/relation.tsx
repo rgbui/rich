@@ -1,6 +1,5 @@
 import React from "react";
 import { useRelationPickData } from "../../../../extensions/data-grid/relation.picker";
-import { channel } from "../../../../net/channel";
 import { getElementUrl, ElementType } from "../../../../net/element.type";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
@@ -14,15 +13,14 @@ class FormFieldRelation extends OriginFormField {
     relationSchema: TableSchema;
     relationList: any[] = [];
     async loadFieldData() {
-        var relationTable = this.field.config?.relationTableId;
-        var sea = await channel.get('/schema/query', { id: relationTable });
-        if (sea.ok) {
-            this.relationSchema = await TableSchema.onCreate(sea.data.schema as any);
-            if (Array.isArray(this.value) && this.value.length > 0) {
-                var d = await this.relationSchema.all({ page: 1, filter: { id: { $in: this.value } } });
-                if (d.ok) {
-                    this.relationList = d.data.list;
-                }
+        this.relationSchema = await TableSchema.loadTableSchema(this.field.config?.relationTableId);
+        if (Array.isArray(this.value) && this.value.length > 0) {
+            var d = await this.relationSchema.all({
+                page: 1,
+                filter: { id: { $in: this.value } }
+            });
+            if (d.ok) {
+                this.relationList = d.data.list;
             }
         }
     }
@@ -52,7 +50,7 @@ class FormFieldRelationView extends BlockView<FormFieldRelation>{
         var f = rs?.fields?.find(g => g.type == FieldType.title);
         if (!f) f = rs?.fields.find(g => g.type == FieldType.text);
         return <div className='sy-field-relation-items'>{this.block.relationList?.map(r => {
-            var url = getElementUrl(ElementType.SchemaRecord, rs.id, r.id);
+            var url = getElementUrl(ElementType.SchemaData, rs.id, r.id);
             return <a href={url} onClick={e => e.preventDefault()} key={r.id}>{r[f?.name]}</a>
         })}
         </div>

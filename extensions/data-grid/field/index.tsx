@@ -75,7 +75,7 @@ export class TableFieldView extends EventsComponent {
         var r = await useDataSourceView({ roundArea: Rect.fromEvent(event) }, {
             tableId: this.config.relationTableId
         });
-        if (r) this.onChangeConfig({ relationTableId: r });
+        if (r) this.onChangeConfig({ relationTableId: r as string });
     }
     renderRollup() {
         if (this.type != FieldType.rollup) return <></>;

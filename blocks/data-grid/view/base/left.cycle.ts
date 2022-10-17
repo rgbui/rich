@@ -28,7 +28,7 @@ export class DataGridViewLife {
             }
         }
     }
-    async loadRelationSchemas(this: DataGridView,) {
+    async loadRelationSchemas(this: DataGridView) {
         var tableIds: string[] = [];
         this.fields.each(f => {
             if (f.field?.type == FieldType.relation) {
