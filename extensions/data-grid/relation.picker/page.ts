@@ -14,6 +14,7 @@ export function schemaCreatePageFormData(schema: TableSchema, datas: Record<stri
                     childs: [{
                         url: view.url,
                         syncBlockId: view.id,
+                        schemaId: schema.id,
                         checkItems: datas,
                     }]
                 }
