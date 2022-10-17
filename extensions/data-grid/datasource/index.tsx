@@ -1,9 +1,13 @@
+import lodash from "lodash";
 import React from "react";
 import { ReactNode } from "react";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
+import { getSchemaViewIcon } from "../../../blocks/data-grid/schema/util";
+import { Confirm } from "../../../component/lib/confirm";
 import { EventsComponent } from "../../../component/lib/events.component";
-import { CheckSvg, CollectTableSvg } from "../../../component/svgs";
-import { Icon } from "../../../component/view/icon";
+import { CollectTableSvg, DotsSvg, TrashSvg } from "../../../component/svgs";
+import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
+import { MenuView } from "../../../component/view/menu/menu";
 import { channel } from "../../../net/channel";
 import { util } from "../../../util/util";
 import { PopoverSingleton } from "../../popover/popover";
@@ -12,27 +16,124 @@ import "./style.less";
 
 export class DataSourceView extends EventsComponent {
     render(): ReactNode {
-        return <div className="w-200 overflow-y max-h-300 padding-h-14 round">
-            {this.relationDatas && this.relationDatas.map(r => {
-                return <div onMouseDown={e => this.onChange(r.id)} key={r.id} className="padding-w-14 f-14 item-hover round cursor">
-                    <div className="flex">
-                        <span className="flex-fixed flex-center size-24 round item-hover">
-                            <Icon size={16} icon={(r as any).icon || CollectTableSvg}></Icon>
-                        </span>
-                        <span className="flex-auto">{r.text}</span>
-                        <span className="flex-fixed size-24 round item-hover">
-                            {r.id == this.currentTableId && <Icon size={16} icon={CheckSvg}></Icon>}
-                        </span>
-                    </div>
-                    <div className="remark gap-b-10">{util.showTime(r.createDate)}</div>
-                </div>
-            })}
-        </div>
+        var self = this;
+        async function input(item) {
+
+        }
+        async function select(item) {
+            if (item?.name == 'table') {
+                // self.onChange(item.value);
+                self.emit('save', item.value);
+            }
+            else if (item?.name == 'view') {
+                self.emit('save', item.value);
+            }
+            else if (item?.name == 'deleteTable') {
+                if (await Confirm('确认要删除表格吗')) {
+                    await TableSchema.deleteTableSchema(item.value);
+                    lodash.remove(self.relationDatas, c => c.id == item.value)
+                    self.forceUpdate()
+                }
+            }
+        }
+        function click(item) {
+
+        }
+        var items: MenuItem[] = [];
+        if (Array.isArray(this.relationDatas)) {
+            this.relationDatas.forEach(rd => {
+                var btns = undefined
+                if (this.editTable)
+                    btns = [{ icon: DotsSvg, name: 'property' }]
+                if (this.selectView) {
+                    var cs: MenuItem[] = [];
+                    if (Array.isArray(rd.views) && rd.views.length > 0) {
+                        cs.push({ type: MenuItemType.text, text: '视图' })
+                        cs.push(...rd.views.map(rv => {
+                            return {
+                                text: rv.text,
+                                value: { tableId: rd.id, type: 'view', viewId: rv.id },
+                                name: 'view',
+                                viewUrl: rv.url,
+                                icon: getSchemaViewIcon(rv.url),
+                            }
+                        }))
+                    }
+
+                    // if (Array.isArray(rd.recordViews) && rd.recordViews.length > 0) {
+                    //     cs.push({ type: MenuItemType.text, text: '表单' })
+                    //     cs.push(...rd.recordViews.map(rv => {
+                    //         return {
+                    //             text: rv.text,
+                    //             value: { tableId: rd.id, type: 'form', viewId: rv.id },
+                    //             name: 'view',
+                    //             // icon: getSchemaViewIcon(rv.url),
+                    //         }
+                    //     }))
+                    // }
+
+                    if (cs.length > 0) {
+                        cs.push({ type: MenuItemType.divide });
+                        cs.push({
+                            text: '删除表格',
+                            name: 'deleteTable',
+                            icon: TrashSvg,
+                            value: rd.id
+                        })
+                    }
+                    else cs.push({
+                        text: '删除表格',
+                        name: 'deleteTable',
+                        icon: TrashSvg,
+                        value: rd.id
+                    })
+                    items.push({
+                        text: rd.text,
+                        value: rd.id,
+                        remark: util.showTime(rd.createDate),
+                        icon: (rd as any).icon || CollectTableSvg,
+                        forceHasChilds: true,
+                        childs: cs
+                    })
+                }
+                else {
+                    items.push({
+                        name: 'table',
+                        text: rd.text,
+                        value: rd.id,
+                        label: util.showTime(rd.createDate),
+                        icon: (rd as any).icon || CollectTableSvg,
+                        checkLabel: rd.id == this.currentTableId,
+                        btns: btns
+                    })
+                }
+            })
+        }
+        return <MenuView input={input}
+            select={select}
+            click={click} style={{
+                width: 300,
+                maxHeight: 300,
+                paddingTop: 10,
+                paddingBottom: 30,
+                overflowY: 'auto'
+            }} items={items}></MenuView>
     }
     private relationDatas: TableSchema[];
     currentTableId: string = '';
-    async open(option: { tableId: string }) {
+    currentViewId?: string = '';
+    selectView: boolean = false;
+    editTable: boolean = false;
+    async open(option: {
+        tableId?: string,
+        viewId?: string,
+        selectView?: boolean,
+        editTable?: boolean
+    }) {
+        this.selectView = option.selectView;
         this.currentTableId = option.tableId;
+        this.currentViewId = option.viewId;
+        this.editTable = option.editTable;
         if (!this.relationDatas) await this.loadTypeDatas();
         this.forceUpdate();
     }
@@ -46,20 +147,19 @@ export class DataSourceView extends EventsComponent {
             }
         }
     }
-    async onChange(id: string) {
-        this.currentTableId = id;
-        this.emit('save', id);
-    }
 }
 
 export async function useDataSourceView(pos: PopoverPosition,
     option: {
-        tableId: string,
+        tableId?: string,
+        viewId?: string,
+        selectView?: boolean,
+        editTable?: boolean
     }) {
     let popover = await PopoverSingleton(DataSourceView, { mask: true });
     let fv = await popover.open(pos);
     fv.open(option);
-    return new Promise((resolve: (data: string) => void, reject) => {
+    return new Promise((resolve: (data: string | { tableId: string, viewId: string, type: 'view' | 'form', viewUrl?: string }) => void, reject) => {
         fv.only('close', () => {
             popover.close();
             resolve(undefined);
