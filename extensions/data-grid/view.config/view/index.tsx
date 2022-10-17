@@ -174,7 +174,6 @@ export class DataGridViewConfig extends EventsComponent {
 
             }
             else if (item.name == 'viewText') {
-                console.log('ggg', item.value);
                 self.onStoreViewText(item.value);
             }
         }

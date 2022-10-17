@@ -115,7 +115,7 @@ export class FieldUrlView extends BlockView<FieldUrl>{
                 onCompositionEnd={end}
                 onPaste={paste}
             />}
-            {!this.block.isFocus && <a href={this.block.value}>{this.block.value}</a>}
+            {!this.block.isFocus && <a className="underline text" href={this.block.value}>{this.block.value}</a>}
             {!this.block.isFocus && <div onMouseDown={e => this.block.onEdit(e)} className="bg-white visible flex-center size-24 round cursor border pos-top-right">
                 <span className="item-hover size-24 flex-center"> <Icon icon={EditSvg} size={16}></Icon></span>
             </div>}
