@@ -463,7 +463,9 @@ export class DataGridViewField {
                 );
                 if (r) {
                     if (r.type == viewField.field.type) {
-
+                        var config = lodash.cloneDeep(viewField.field.config || {});
+                        Object.assign(config, r.config);
+                        await this.onUpdateField(viewField, { text: r.text, config })
                     }
                     else {
                         var config = lodash.cloneDeep(viewField.field.config || {});
