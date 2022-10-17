@@ -13,6 +13,7 @@ export type MenuItem<T = string> = {
     iconSize?: number,
     label?: string,
     checkLabel?: boolean,
+    forceHasChilds?:boolean,
     childs?: MenuItem<T>[],
     options?: MenuItem<T>[],
     value?: any,

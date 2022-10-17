@@ -126,13 +126,13 @@ export class MenuItemView extends React.Component<{
                 onMouseUp={e => this.select(item, e.nativeEvent)}>
                 {item.icon && <i className="flex-center flex-line size-20"><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
                 {item.renderIcon && item.renderIcon(item, this)}
-                <span className='shy-menu-box-item-option-text'>{item.text}</span>
+                <span className='shy-menu-box-item-option-text'>{item.text}{item.remark && <i className="remark padding-l-5">{item.remark}</i>}</span>
                 {item.checkLabel && <Icon className={'shy-menu-box-item-option-label-icon'} size={16} icon={CheckSvg}></Icon>}
                 {item.label && <label>{item.label}</label>}
                 {Array.isArray(item.btns) && item.btns.map(btn => {
-                    return <ToolTip key={btn.name} overlay={btn.overlay} placement={btn.placement || 'top'} ><em onMouseUp={e => { e.stopPropagation(); this.click(item, e, btn.name) }}><Icon size={16} icon={btn.icon}></Icon></em></ToolTip>
+                    return <ToolTip key={btn.name} overlay={btn.overlay} placement={btn.placement || 'top'} ><em className="flex-center flex-line size-20" onMouseUp={e => { e.stopPropagation(); this.click(item, e, btn.name) }}><Icon size={16} icon={btn.icon}></Icon></em></ToolTip>
                 })}
-                {item.childs && item.childs.length > 0 && <Icon className={'shy-menu-box-item-option-spread'} icon='arrow-right:sy'></Icon>}
+                {(item.childs && item.childs.length > 0 || item.forceHasChilds) && <Icon className={'shy-menu-box-item-option-spread'} icon='arrow-right:sy'></Icon>}
             </a></ToolTip>}
             {(item.type == MenuItemType.custom) && <ToolTip overlay={item.overlay} placement={'right'} ><a className={'shy-menu-box-item-custom' + (item.disabled == true ? " disabled" : "")}
                 onMouseUp={e => this.select(item, e.nativeEvent)}>
