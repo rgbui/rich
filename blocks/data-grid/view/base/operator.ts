@@ -16,6 +16,8 @@ import { ShyAlert } from "../../../../component/lib/alert";
 import lodash from "lodash";
 import { util } from "../../../../util/util";
 import { BlockUrlConstant } from "../../../../src/block/constant";
+import { useDataSourceView } from "../../../../extensions/data-grid/datasource";
+import { SnapshootDataGridViewPos } from "../../../../src/history/snapshoot";
 
 export class DataGridViewOperator {
     async onAddField(this: DataGridView, event: Rect, at?: number) {
@@ -199,20 +201,20 @@ export class DataGridViewOperator {
             }
         }, { block: this });
     }
-    async onDataGridTurnView(this: DataGridView, viewId: string) {
+    async onDataGridTurnView(this: DataGridView, viewId: string, schemaId?: string) {
         if (this.syncBlockId != viewId) {
             await this.page.onAction(ActionDirective.onDataGridTurnView, async () => {
-                await this.dataGridTrunView(viewId);
+                await this.dataGridTrunView(viewId, schemaId);
             })
         }
     }
-    async dataGridTrunView(this: DataGridView, viewId: string) {
+    async dataGridTrunView(this: DataGridView, viewId: string, schemaId?: string) {
         var oldViewId = this.syncBlockId;
         var view = this.schema.views.find(g => g.id == viewId);
         var newBlock = await this.page.createBlock(view.url,
             {
                 syncBlockId: viewId,
-                schemaId: this.schema.id
+                schemaId: schemaId || this.schema.id
             },
             this.parent,
             this.at
@@ -226,6 +228,43 @@ export class DataGridViewOperator {
             from: oldViewId,
             to: viewId
         }, this);
+    }
+
+    async onOtherDataGridTurnView(this: DataGridView, viewId: string, type: 'form' | 'view', schemaId: string, viewUrl?: string) {
+        if (this.syncBlockId != viewId) {
+            await this.page.onAction(ActionDirective.onDataGridTurnView, async () => {
+                await this.otherDataGridTrunView(viewId, type, schemaId, viewUrl);
+            })
+        }
+    }
+    async otherDataGridTrunView(this: DataGridView,
+        viewId: string,
+        type: 'form' | 'view',
+        schemaId: string,
+        viewUrl?: string) {
+        var from: SnapshootDataGridViewPos = this.pos as any;
+        from.schemaId = this.schema.id;
+        from.viewId = this.syncBlockId;
+        from.viewUrl = this.url;
+        from.type = 'view';
+        var newBlock = await this.page.createBlock(viewUrl,
+            {
+                syncBlockId: viewId,
+                schemaId: schemaId
+            },
+            this.parent,
+            this.at
+        );
+        var bs = this.parent.blocks[this.parentKey];
+        lodash.remove(bs, g => g === this);
+        newBlock.id = this.id;
+        var to: SnapshootDataGridViewPos = newBlock.pos as any;
+        to.schemaId = schemaId;
+        to.viewId = viewId;
+        to.viewUrl = viewUrl;
+        to.type = type;
+        this.page.addBlockUpdate(newBlock.parent);
+        this.page.snapshoot.record(OperatorDirective.$data_grid_trun_view_new, { from, to }, this);
     }
     async onCopySchemaView(this: DataGridView) {
         var r = await this.schema.onSchemaOperate([{
@@ -406,5 +445,19 @@ export class DataGridViewOperator {
                 this.registerReferenceBlocker(newBlock);
             }
         })
+    }
+    async onOpenDataSource(this: DataGridView, event: Rect) {
+        var g = await useDataSourceView({ roundArea: event }, {
+            tableId: this.schema.id,
+            viewId: this.syncBlockId,
+            selectView: true,
+            editTable: true
+        });
+        if (g) {
+            if (typeof g != 'string' && g.type == 'view') {
+                this.onOtherDataGridTurnView(g.viewId,g.type,
+                    g.tableId,g.viewUrl)
+            }
+        }
     }
 }
