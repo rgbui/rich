@@ -254,6 +254,10 @@ export class TableSchema {
             return schema;
         }
     }
+    static async deleteTableSchema(schemaId: string) {
+        await channel.del('/schema/delete', { id: schemaId });
+        this.schemas.delete(schemaId);
+    }
 }
 
 
