@@ -114,7 +114,8 @@ export interface ChannelFireMapUrls {
 	"/ws/datagrid/schema/operate/notify":{args:{id:string,workspaceId:string,roomId:string},returnType:void}
 }
 export interface ChannelDelMapUrls {
-    "/datastore/remove":{args:{schemaId:string,dataId:string},returnType:Promise<{ok:boolean,warn:string}>},
+    "/schema/delete":{args:{wsId?:string,id:string},returnType:Promise<SockResponse<void>>},
+	"/datastore/remove":{args:{schemaId:string,dataId:string},returnType:Promise<{ok:boolean,warn:string}>},
 	"/user/channel/delete":{args:{id:string},returnType:Promise<SockResponse<void>>},
 	"/user/write/off":{args:{sn:number},returnType:Promise<SockResponse<void>>},
 	"/user/exit/ws":{args:{wsId:string},returnType:Promise<SockResponse<void>>},
