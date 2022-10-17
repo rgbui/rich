@@ -4,7 +4,7 @@ import { DataGridView } from "../../../blocks/data-grid/view/base";
 import { BlockRenderRange } from "../../block/enum";
 import { Matrix } from "../../common/matrix";
 import { OperatorDirective } from "../../history/declare";
-import { AppearCursorPos, HistorySnapshoot, SnapshootBlockPos, SnapshootBlockPropPos, SnapshootBlockStylePos } from "../../history/snapshoot";
+import { AppearCursorPos, HistorySnapshoot, SnapshootBlockPos, SnapshootBlockPropPos, SnapshootBlockStylePos, SnapshootDataGridViewPos } from "../../history/snapshoot";
 import { PageDirective } from "../directive";
 
 export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
@@ -503,6 +503,19 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         var block: DataGridView = page.find(x => x.id == dr.pos.blockId) as any;
         if (block) {
             await block.dataGridTrunView(dr.to)
+        }
+    });
+    snapshoot.registerOperator(OperatorDirective.$data_grid_trun_view_new, async (operator) => {
+        var dr = operator.data as { from: SnapshootDataGridViewPos };
+        var block: DataGridView = page.find(x => x.id == dr.from.blockId) as any;
+        if (block) {
+            await block.otherDataGridTrunView(dr.from.viewId, dr.from.type, dr.from.schemaId, dr.from.viewUrl)
+        }
+    }, async (operator) => {
+        var dr = operator.data as { to: SnapshootDataGridViewPos };;
+        var block: DataGridView = page.find(x => x.id == dr.to.blockId) as any;
+        if (block) {
+            await block.otherDataGridTrunView(dr.to.viewId, dr.to.type, dr.to.schemaId, dr.to.viewUrl)
         }
     });
 }

@@ -231,6 +231,7 @@ export interface HistorySnapshoot {
 
 
     record(directive: OperatorDirective.$data_grid_trun_view, data: { pos: SnapshootBlockPos, from: string, to: string }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.$data_grid_trun_view_new, data: { from: SnapshootDataGridViewPos, to: SnapshootDataGridViewPos }, obj: HistorySnapshootObject);
 
 
 }
@@ -271,3 +272,11 @@ export type AppearCursorPos = {
     appear: BlockAppear,
     offset: number
 }
+
+
+export type SnapshootDataGridViewPos = {
+    schemaId:string,
+    viewId: string,
+    viewUrl?: string,
+    type?: 'view' | 'form'
+} & SnapshootBlockPos
