@@ -148,6 +148,9 @@ export class DataGridViewConfig {
             else if (r.item.name == 'delete') {
                 self.onDelete();
             }
+            else if (r.item.name == 'datasource') {
+                self.onOpenDataSource(rect);
+            }
             else if (r.item.name == 'turn') {
                 self.onDataGridTurnView(r.item.value);
             }
@@ -256,9 +259,7 @@ export class DataGridViewConfig {
     }
     async onOpenFormDrop(this: DataGridView, rect: Rect) {
         this.dataGridTool.isOpenTool = true;
-        await useTabelSchemaFormDrop({ roundArea: rect }, {
-           block:this,
-        });
+        await useTabelSchemaFormDrop({ roundArea: rect }, { block: this });
         this.dataGridTool.isOpenTool = false;
         this.onOver(this.getVisibleContentBound().contain(Point.from(this.page.kit.operator.moveEvent)))
     }
