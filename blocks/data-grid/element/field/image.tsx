@@ -1,4 +1,5 @@
 import React, { CSSProperties } from "react";
+import { Slick } from "../../../../component/view/slick";
 import { useDataGridFileViewer } from "../../../../extensions/data-grid/filer";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
@@ -39,6 +40,16 @@ export class FieldImageView extends BlockView<FieldImage>{
             style.height = 50;
             style.objectFit = 'cover';
             style.objectPosition = '50% 50%';
+        }
+        if (this.block.field.config.isMultiple && this.block.field?.config.imageFormat.multipleDisplay == 'carousel') {
+            var settings = {
+                autoplay: true,
+                renderCenterLeftControls: () => <></>,
+                renderCenterRightControls: () => <></>
+            };
+            return <div onMouseDown={e => { e.stopPropagation() }}><Slick {...settings}>{images.map((img, i) => {
+                return <img key={i} className="round" src={img.url} style={style} />
+            })}</Slick></div>
         }
         return images.map((img, i) => {
             return <div className="sy-field-image-item" key={i}>
