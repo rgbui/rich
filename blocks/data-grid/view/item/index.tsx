@@ -16,6 +16,7 @@ import { LangID } from "../../../../i18n/declare";
 import { BlockUrlConstant } from "../../../../src/block/constant";
 import { TableStoreGallery } from "../gallery";
 import { autoImageUrl } from "../../../../net/element.type";
+import { DropDirection } from "../../../../src/kit/handle/direction";
 
 @url('/data-grid/item')
 export class TableStoreItem extends Block {
@@ -78,12 +79,54 @@ export class TableStoreItem extends Block {
         }
     }
     async onHandlePlus() {
-      await  this.dataGrid.onAddRow({}, this.dataRow.id, 'after');
+        await this.dataGrid.onAddRow({}, this.dataRow.id, 'after');
     }
     get isCanDrop(): boolean {
+        return true;
+    }
+    isAllowDrops(dragBlocks: Block[]) {
+        if (dragBlocks.length == 1) {
+            var dg = dragBlocks[0];
+            if (dg instanceof TableStoreItem && dg.dataGrid === this.dataGrid) {
+                if (dg === this) return false;
+                return true;
+            }
+        }
         return false;
     }
-    
+    canDropDirections() {
+        return [
+            DropDirection.top,
+            DropDirection.bottom
+        ]
+    }
+    async drop(blocks: Block[], direction: DropDirection) {
+        var dragRow = blocks[0] as TableStoreItem;
+        switch (direction) {
+            case DropDirection.bottom:
+            case DropDirection.top:
+                var result = await this.schema.rowRank({
+                    id: dragRow.dataRow.id,
+                    pos: {
+                        dataId: this.id,
+                        pos: DropDirection.bottom == direction ? "after" : 'before'
+                    }
+                });
+                if (result.ok) {
+                    if (result.data?.isCacSort)
+                        this.page.addUpdateEvent(async () => {
+                            this.dataGrid.onReloadData()
+                        })
+                    else {
+                        dragRow.dataRow.sort = result.data.sort;
+                        this.page.addUpdateEvent(async () => {
+                            this.dataGrid.onSortRank()
+                        })
+                    }
+                }
+                break;
+        }
+    }
 }
 @view('/data-grid/item')
 export class TableStoreItemView extends BlockView<TableStoreItem>{

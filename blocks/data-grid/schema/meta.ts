@@ -80,6 +80,9 @@ export class TableSchema {
     rowAdd(args: { data: Record<string, any>, pos: { dataId: string, pos: 'before' | 'after' } }) {
         return channel.put('/datastore/add', Object.assign({ schemaId: this.id }, args));
     }
+    rowRank(args: { id: string, pos: { dataId: string, pos: 'before' | 'after' } }) {
+        return channel.put('/datastore/rank', Object.assign({ schemaId: this.id }, args));
+    }
     rowRemove(id: string) {
         return channel.del('/datastore/remove', Object.assign({ schemaId: this.id }, { dataId: id }));
     }

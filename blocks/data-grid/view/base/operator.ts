@@ -466,4 +466,16 @@ export class DataGridViewOperator {
             }
         }
     }
+    async onReloadData(this: DataGridView) {
+        await this.loadData();
+        this.view.forceUpdate()
+    }
+    async onSortRank(this: DataGridView) {
+        this.data.sort((x, y) => {
+            if (x.sort > y.sort) return -1
+            else if (x.sort == y.sort) return 0;
+            else return 1;
+        });
+        this.view.forceUpdate()
+    }
 }
