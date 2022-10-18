@@ -218,10 +218,7 @@ export class DataGridViewField {
                     icon: SettingsSvg
                 });
             }
-            else if ([
-                FieldType.file,
-                FieldType.image,
-            ].includes(viewField.field?.type)) {
+            else if (viewField.field.type == FieldType.image) {
                 items.insertAt(4, {
                     text: '图片展示',
                     type: MenuItemType.select,
@@ -232,11 +229,7 @@ export class DataGridViewField {
                         { text: '自适应', value: 'auto' }
                     ],
                     buttonClick: 'select'
-                });
-                var text = '允许多文件';
-                if (viewField.field.type == FieldType.image) {
-                    text = '允许多张图片';
-                }
+                }); text = '允许多张图片';
                 items.insertAt(5, {
                     text: text,
                     type: MenuItemType.switch,
@@ -259,6 +252,21 @@ export class DataGridViewField {
                         { text: '轮播', value: 'carousel' }
                     ],
                     buttonClick: 'select'
+                });
+            }
+            else if ([
+                FieldType.file,
+                FieldType.user
+            ].includes(viewField.field?.type)) {
+                var text = '允许多文件';
+                if (viewField.field.type == FieldType.user)
+                    text = '允许多用用户';
+                items.insertAt(5, {
+                    text: text,
+                    type: MenuItemType.switch,
+                    name: 'isMultiple',
+                    updateMenuPanel: true,
+                    checked: viewField?.field?.config?.isMultiple ? true : false
                 });
             }
             else if (viewField.field?.type == FieldType.formula) {
