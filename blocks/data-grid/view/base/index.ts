@@ -205,7 +205,8 @@ export class DataGridView extends Block {
             await this.loadRelationDatas();
             await this.createItem();
             await this.onNotifyReferenceBlocks();
-            this.view.forceUpdate();
+            if (this.view)
+                this.view.forceUpdate();
         }
     }
     async onAddCreateTableView() {

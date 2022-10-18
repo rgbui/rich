@@ -257,13 +257,17 @@ export class DataGridViewOperator {
         );
         var bs = this.parent.blocks[this.parentKey];
         lodash.remove(bs, g => g === this);
-        newBlock.id = this.id;
         var to: SnapshootDataGridViewPos = newBlock.pos as any;
+        to.blockId = this.id;
         to.schemaId = schemaId;
         to.viewId = viewId;
         to.viewUrl = viewUrl;
         to.type = type;
         this.page.addBlockUpdate(newBlock.parent);
+        this.page.addUpdateEvent(async () => {
+            newBlock.id = this.id;
+            await newBlock.didMounted();
+        })
         this.page.snapshoot.record(OperatorDirective.$data_grid_trun_view_new, { from, to }, this);
     }
     async onCopySchemaView(this: DataGridView) {
@@ -455,8 +459,11 @@ export class DataGridViewOperator {
         });
         if (g) {
             if (typeof g != 'string' && g.type == 'view') {
-                this.onOtherDataGridTurnView(g.viewId,g.type,
-                    g.tableId,g.viewUrl)
+                this.onOtherDataGridTurnView(
+                    g.viewId,
+                    g.type,
+                    g.tableId,
+                    g.viewUrl)
             }
         }
     }

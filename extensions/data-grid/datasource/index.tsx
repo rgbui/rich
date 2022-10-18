@@ -52,9 +52,14 @@ export class DataSourceView extends EventsComponent {
                         cs.push(...rd.views.map(rv => {
                             return {
                                 text: rv.text,
-                                value: { tableId: rd.id, type: 'view', viewId: rv.id },
+                                value: {
+                                    tableId: rd.id,
+                                    viewUrl: rv.url,
+                                    type: 'view',
+                                    viewId: rv.id
+                                },
                                 name: 'view',
-                                viewUrl: rv.url,
+                                checkLabel: rv.id == self.currentViewId,
                                 icon: getSchemaViewIcon(rv.url),
                             }
                         }))
@@ -72,7 +77,25 @@ export class DataSourceView extends EventsComponent {
                     //     }))
                     // }
 
-                    if (cs.length > 0) {
+                    // if (cs.length > 0) {
+                    //     cs.splice(0, 0, ...[
+                    //         {
+                    //             name: 'name',
+                    //             type: MenuItemType.input,
+                    //             value: rd.text,
+                    //             text: '编辑表名',
+                    //         },
+                    //         { type: MenuItemType.divide }
+                    //     ])
+                    // }
+                    // else cs.push({
+                    //     name: 'name',
+                    //     type: MenuItemType.input,
+                    //     value: rd.text,
+                    //     text: '编辑表名',
+                    // })
+
+                    if (cs.length > 0 && cs.last().type != MenuItemType.divide) {
                         cs.push({ type: MenuItemType.divide });
                         cs.push({
                             text: '删除表格',
