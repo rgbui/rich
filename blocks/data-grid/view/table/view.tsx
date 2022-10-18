@@ -17,6 +17,11 @@ import lodash from "lodash"
 
 @view('/data-grid/table')
 export class TableStoreView extends BlockView<TableStore>{
+    mouseleaveHead(event: React.MouseEvent) {
+        if (this.isMoveLine) return;
+        if (this.isDragMouseField) return;
+        this.subline.style.display = 'none';
+    }
     mousemove(event: MouseEvent) {
         if (this.isMoveLine) return;
         if (!this.block.schema) return;
@@ -101,6 +106,7 @@ export class TableStoreView extends BlockView<TableStore>{
             },
             moveEnd() {
                 self.isMoveLine = false;
+                self.subline.style.display = 'none';
             }
         })
     }
@@ -156,7 +162,7 @@ export class TableStoreView extends BlockView<TableStore>{
     subline: HTMLElement;
     isMoveLine: boolean = false;
     renderHead() {
-        return <div className="sy-dg-table-head" onMouseMove={e => this.mousemove(e.nativeEvent)}>
+        return <div style={{ width: this.sumWidth }} onMouseLeave={e => this.mouseleaveHead(e)} className="sy-dg-table-head" onMouseMove={e => this.mousemove(e.nativeEvent)}>
             <div className='sy-dg-table-subline' onMouseDown={e => this.onMousedownLine(e)} ref={e => this.subline = e}></div>
             {this.block.fields.map((f, i) => {
                 var icon: SvgrComponent | JSX.Element;
@@ -173,11 +179,14 @@ export class TableStoreView extends BlockView<TableStore>{
                     <div className={'sy-dg-table-head-th-property'} onMouseDown={e => this.block.onOpenFieldConfig(e, f)}><Icon icon='elipsis:sy'></Icon></div>
                 </div>
             })}
-            <div className='sy-dg-table-head-th sy-dg-table-head-th-plus'
+            {!this.block.isLock && <div className='sy-dg-table-head-th sy-dg-table-head-th-plus'
                 style={{ minWidth: 40, flexGrow: 1, flexShrink: 1 }} onMouseDown={e => { e.stopPropagation(); this.block.onAddField(Rect.fromEvent(e)) }}>
                 <Icon icon={PlusSvg}></Icon>
-            </div>
+            </div>}
         </div>
+    }
+    get sumWidth() {
+        return this.block.fields.sum(c => c.colWidth) + (this.block.isLock ? 0 : 40);
     }
     renderBody() {
         var self = this;
@@ -186,7 +195,7 @@ export class TableStoreView extends BlockView<TableStore>{
             return <div className='sy-dg-table-body'>
                 <ChildsArea childs={this.block.childs}></ChildsArea>
                 {!this.block.isLock && <div
-                    style={{ width: (this.block.fields.sum(c => c.colWidth) + 40) + 'px' }}
+                    style={{ width: this.sumWidth + 'px' }}
                     onMouseDown={e => { e.stopPropagation(); self.block.onAddRow({}, undefined, 'after') }}
                     className="sy-dg-table-add">
                     <Icon size={12} icon={PlusSvg}></Icon><span>新增</span>
