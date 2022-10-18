@@ -295,6 +295,13 @@ export abstract class Block extends Events {
     get isCanDrop(): boolean {
         return true;
     }
+    canDropDirections() {
+        return null;
+    }
+    isAllowDrops(dragBlocks: Block[]) {
+        if (this.isCanDrop == false) return false;
+        return true;
+    }
     get isEmptyCell(): boolean {
         if (this.childs.length == 0) return true;
         else if (this.childs.length == 1) {

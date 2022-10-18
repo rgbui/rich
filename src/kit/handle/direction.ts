@@ -93,7 +93,8 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
         }
     }
     var direction = DropDirection.none;
-    if (dropBlock && dropBlock.isCanDrop) {
+    var drs = dropBlock.canDropDirections();
+    if (dropBlock && dropBlock.isAllowDrops(dragBlocks)) {
         if (dropBlock.isLine) dropBlock = dropBlock.closest(x => x.isBlock);
         var bound = dropBlock.getVisibleContentBound();
         /**
@@ -119,6 +120,9 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
                     direction = DropDirection.top;
                 else if (point.y >= bound.top + bound.height / 2)
                     direction = DropDirection.bottom;
+            }
+            if (Array.isArray(drs) && drs.length > 0 && !drs.includes(direction)) {
+                direction = DropDirection.none
             }
             return { direction: direction, dropBlock };
         }
@@ -150,15 +154,15 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
          */
         if (fr == 'left') {
             dropBlock = getOutXBlock(dropBlock);
-            return { direction: DropDirection.left, dropBlock };
+            direction = DropDirection.left;
         }
         else if (fr == 'right') {
             dropBlock = getOutXBlock(dropBlock);
-            return { direction: DropDirection.right, dropBlock };
+            direction = DropDirection.right;
         }
         else if (fr == 'bottom') {
             dropBlock = getOutXBlock(dropBlock);
-            return { direction: DropDirection.bottom, dropBlock };
+            direction = DropDirection.bottom;
         }
         else {
             if (point.x < bound.left) {
@@ -183,7 +187,10 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
             }
         }
     }
-    if (dropBlock && !dropBlock.isCanDrop) return { direction: DropDirection.none, dropBlock: undefined };
+    if (dropBlock && !dropBlock.isAllowDrops(dragBlocks)) return { direction: DropDirection.none, dropBlock: undefined };
+    if (Array.isArray(drs) && drs.length > 0 && !drs.includes(direction)) {
+        direction = DropDirection.none
+    }
     return { direction: direction, dropBlock };
 }
 
