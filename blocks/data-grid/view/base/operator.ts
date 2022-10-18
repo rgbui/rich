@@ -229,7 +229,6 @@ export class DataGridViewOperator {
             to: viewId
         }, this);
     }
-
     async onOtherDataGridTurnView(this: DataGridView, viewId: string, type: 'form' | 'view', schemaId: string, viewUrl?: string) {
         if (this.syncBlockId != viewId) {
             await this.page.onAction(ActionDirective.onDataGridTurnView, async () => {
