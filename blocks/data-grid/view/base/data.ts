@@ -44,7 +44,7 @@ export class DataGridViewData {
     }
     async onAddRow(this: DataGridView, data, id?: string, arrow: 'before' | 'after' = 'after') {
         if (typeof id == 'undefined') {
-            id = this.data.last().id;
+            id = this.data.last()?.id
         }
         await this.page.onAction(ActionDirective.onSchemaCreateDefaultRow, async () => {
             var r = await this.schema.rowAdd({ data, pos: { dataId: id, pos: arrow } });
