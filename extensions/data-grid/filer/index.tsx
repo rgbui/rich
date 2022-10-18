@@ -77,7 +77,7 @@ export class DataGridFileViewer extends EventsComponent {
         var self = this;
         function renderItem(resource: ResourceArguments) {
             if (self.mime == 'image') {
-                return <div className="flex-center gap-h-5"><img src={resource.url} className="round object-center max-w-250 max-h-100" /></div>
+                return <div className="flex-center gap-5"><img src={resource.url} className="round object-center max-w-250 max-h-100" /></div>
             }
             else if (self.mime == 'file') {
                 return <div><span>{resource.text}</span></div>
@@ -91,20 +91,22 @@ export class DataGridFileViewer extends EventsComponent {
             else if (self.mime == 'image') return '上传图片'
             else return '上传文件'
         }
-        return <div className={"max-h-300 gap-h-14" + (this.mime == 'user' ? " w-180" : " w-250")}>
-            <DragList onChange={(e, c) => this.dragChange(e, c)}
-                isDragBar={e => e.closest('.drag') ? true : false}>
-                {this.resources.map((re, i) => {
-                    return <div className="flex cursor min-h-30 padding-w-14 text-1 item-hover round" key={i}>
-                        <span className="round flex-fixed drag size-24 remark flex-center cursor item-hover">
-                            <Icon icon={DragHandleSvg} size={14}></Icon>
-                        </span>
-                        <div className="flex-auto">{renderItem(re)}</div>
-                        <span onClick={e => this.onContextmenu(re, e)} className="round  remark flex-fixed drag size-24 flex-center cursor item-hover">
-                            <Icon icon={DotsSvg} size={14}></Icon>
-                        </span>
-                    </div>
-                })}</DragList>
+        return <div className={"gap-h-14" + (this.mime == 'user' ? " w-180" : " w-300")}>
+            <div className="max-h-300 overflow-y">
+                <DragList onChange={(e, c) => this.dragChange(e, c)}
+                    isDragBar={e => e.closest('.drag') ? true : false}>
+                    {this.resources.map((re, i) => {
+                        return <div className="flex cursor min-h-30 padding-w-14 text-1 item-hover round" key={i}>
+                            <span className="round flex-fixed drag size-24 remark flex-center cursor item-hover">
+                                <Icon icon={DragHandleSvg} size={14}></Icon>
+                            </span>
+                            <div className="flex-auto">{renderItem(re)}</div>
+                            <span onClick={e => this.onContextmenu(re, e)} className="round  remark flex-fixed drag size-24 flex-center cursor item-hover">
+                                <Icon icon={DotsSvg} size={14}></Icon>
+                            </span>
+                        </div>
+                    })}</DragList>
+            </div>
             {(this.isMultiple || this.resources.length == 0) && <>{this.resources.length > 0 && <Divider></Divider>}<div className="gap-h-10 padding-w-14">
                 <Button onClick={e => this.uploadFile(e)} block>{getButtonText()}</Button>
             </div></>}
