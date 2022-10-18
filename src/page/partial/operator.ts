@@ -185,7 +185,7 @@ export class Page$Operator{
             })
         })
     }
-    async onBatchDargCreateBlocks(this: Page, blocks: any[], to: Block, direction: DropDirection) {
+    async onBatchDragCreateBlocks(this: Page, blocks: any[], to: Block, direction: DropDirection) {
         /**
         * 就是将blocks append 到to 下面
         */

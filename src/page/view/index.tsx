@@ -123,7 +123,7 @@ export class PageView extends Component<{ page: Page }>{
                     case 'pageItem':
                         if (handle.dropBlock) {
                             var ds = Array.isArray(data) ? data : [data];
-                            await self.page.onBatchDargCreateBlocks(ds.map(d => {
+                            await self.page.onBatchDragCreateBlocks(ds.map(d => {
                                 return {
                                     url: '/link',
                                     icon: d.icon,
