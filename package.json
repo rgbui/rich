@@ -1,6 +1,6 @@
 {
   "name": "rich",
-  "version": "0.8.081-pro",
+  "version": "0.8.090-pro",
   "description": "rich block editor",
   "main": "index.js",
   "scripts": {
