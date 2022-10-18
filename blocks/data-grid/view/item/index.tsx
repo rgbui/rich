@@ -80,6 +80,10 @@ export class TableStoreItem extends Block {
     async onHandlePlus() {
       await  this.dataGrid.onAddRow({}, this.dataRow.id, 'after');
     }
+    get isCanDrop(): boolean {
+        return false;
+    }
+    
 }
 @view('/data-grid/item')
 export class TableStoreItemView extends BlockView<TableStoreItem>{

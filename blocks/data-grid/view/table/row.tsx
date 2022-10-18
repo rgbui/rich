@@ -6,6 +6,7 @@ import { TableStoreItem } from "../item";
 @url('/data-grid/table/row')
 export class DataGridTableItem extends TableStoreItem {
 
+ 
 }
 @view('/data-grid/table/row')
 export class DataGridTableItemView extends BlockView<DataGridTableItem>{
