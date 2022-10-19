@@ -17,6 +17,7 @@ import {
     PlusSvg,
     DatasourceSvg
 } from "../../../../component/svgs";
+
 import { useSelectMenuItem } from "../../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import { BlockDirective } from "../../../../src/block/enum";
@@ -173,10 +174,12 @@ export class DataGridViewConfig {
     async onOpenViewConfig(this: DataGridView, rect: Rect, mode?: 'view' | 'field' | 'sort' | 'filter' | 'group') {
         var self = this;
         self.dataGridTool.isOpenTool = true;
-        var r = await useDataGridConfig({ roundArea: rect }, {
-            dataGrid: this,
-            mode: mode
-        });
+        var r = await useDataGridConfig(
+            { roundArea: rect },
+            {
+                dataGrid: this,
+                mode: mode
+            });
         self.dataGridTool.isOpenTool = false;
         this.onOver(this.getVisibleContentBound().contain(Point.from(this.page.kit.operator.moveEvent)))
     }
