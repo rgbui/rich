@@ -167,6 +167,12 @@ export class TableSchema {
             }
         })
     }
+    async update(props: Record<string, any>) {
+        return await this.onSchemaOperate([{
+            name: 'updateSchema',
+            data: props
+        }])
+    }
     /*
      * { name: 'createSchemaView', text: r.text, url: r.url }
      * { name: 'addField', field: { text: '状态', type: FieldType.option } }
@@ -226,6 +232,7 @@ export class TableSchema {
         return result;
     }
     static schemas: Map<string, TableSchema> = new Map();
+    static isLoadAll: boolean = false;
     static async loadTableSchema(schemaId: string) {
         var schema = this.schemas.get(schemaId);
         if (schema) return schema;
@@ -264,9 +271,22 @@ export class TableSchema {
             return schema;
         }
     }
+    static async onLoadAll() {
+        if (this.isLoadAll) return;
+        var r = await channel.get('/schema/list');
+        if (r.ok) {
+            r.data.list.forEach(g => {
+                var schema = new TableSchema(g);
+                this.schemas.set(g.id, schema);
+            })
+        }
+    }
     static async deleteTableSchema(schemaId: string) {
         await channel.del('/schema/delete', { id: schemaId });
         this.schemas.delete(schemaId);
+    }
+    static async getTableSchema(schemaId: string) {
+        return this.schemas.get(schemaId)
     }
 }
 

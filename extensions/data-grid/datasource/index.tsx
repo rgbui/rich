@@ -8,7 +8,6 @@ import { EventsComponent } from "../../../component/lib/events.component";
 import { CollectTableSvg, DotsSvg, TrashSvg } from "../../../component/svgs";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { MenuView } from "../../../component/view/menu/menu";
-import { channel } from "../../../net/channel";
 import { util } from "../../../util/util";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
@@ -17,8 +16,20 @@ import "./style.less";
 export class DataSourceView extends EventsComponent {
     render(): ReactNode {
         var self = this;
+        var saveTable = lodash.debounce(async (schema: TableSchema, text: string) => {
+            if (text) {
+                var it = self.mv.props.items.find(g => g.value == schema.id);
+                if (it) {
+                    it.text = text;
+                    self.mv.forceUpdate()
+                }
+                await schema.update({ text })
+            }
+        }, 800)
         async function input(item) {
-
+            if (item.name == 'name') {
+                saveTable(item.data, item.value);
+            }
         }
         async function select(item) {
             if (item?.name == 'table') {
@@ -31,7 +42,6 @@ export class DataSourceView extends EventsComponent {
             else if (item?.name == 'deleteTable') {
                 if (await Confirm('确认要删除表格吗')) {
                     await TableSchema.deleteTableSchema(item.value);
-                    lodash.remove(self.relationDatas, c => c.id == item.value)
                     self.forceUpdate()
                 }
             }
@@ -40,99 +50,100 @@ export class DataSourceView extends EventsComponent {
 
         }
         var items: MenuItem[] = [];
-        if (Array.isArray(this.relationDatas)) {
-            this.relationDatas.forEach(rd => {
-                var btns = undefined
-                if (this.editTable)
-                    btns = [{ icon: DotsSvg, name: 'property' }]
-                if (this.selectView) {
-                    var cs: MenuItem[] = [];
-                    if (Array.isArray(rd.views) && rd.views.length > 0) {
-                        cs.push({ type: MenuItemType.text, text: '视图' })
-                        cs.push(...rd.views.map(rv => {
-                            return {
-                                text: rv.text,
-                                value: {
-                                    tableId: rd.id,
-                                    viewUrl: rv.url,
-                                    type: 'view',
-                                    viewId: rv.id
-                                },
-                                name: 'view',
-                                checkLabel: rv.id == self.currentViewId,
-                                icon: getSchemaViewIcon(rv.url),
-                            }
-                        }))
-                    }
+        var list = Array.from(TableSchema.schemas.values());
+        list = lodash.sortBy(list, g =>0-g.createDate.getTime())
+        list.forEach((rd) => {
+            var btns = undefined
+            if (this.editTable) btns = [{ icon: DotsSvg, name: 'property' }]
+            if (this.selectView) {
+                var cs: MenuItem[] = [];
+                if (Array.isArray(rd.views) && rd.views.length > 0) {
+                    cs.push({ type: MenuItemType.text, text: '视图' })
+                    cs.push(...rd.views.map(rv => {
+                        return {
+                            text: rv.text,
+                            value: {
+                                tableId: rd.id,
+                                viewUrl: rv.url,
+                                type: 'view',
+                                viewId: rv.id
+                            },
+                            name: 'view',
+                            checkLabel: rv.id == self.currentViewId,
+                            icon: getSchemaViewIcon(rv.url),
+                        }
+                    }))
+                }
 
-                    // if (Array.isArray(rd.recordViews) && rd.recordViews.length > 0) {
-                    //     cs.push({ type: MenuItemType.text, text: '表单' })
-                    //     cs.push(...rd.recordViews.map(rv => {
-                    //         return {
-                    //             text: rv.text,
-                    //             value: { tableId: rd.id, type: 'form', viewId: rv.id },
-                    //             name: 'view',
-                    //             // icon: getSchemaViewIcon(rv.url),
-                    //         }
-                    //     }))
-                    // }
+                // if (Array.isArray(rd.recordViews) && rd.recordViews.length > 0) {
+                //     cs.push({ type: MenuItemType.text, text: '表单' })
+                //     cs.push(...rd.recordViews.map(rv => {
+                //         return {
+                //             text: rv.text,
+                //             value: { tableId: rd.id, type: 'form', viewId: rv.id },
+                //             name: 'view',
+                //             // icon: getSchemaViewIcon(rv.url),
+                //         }
+                //     }))
+                // }
 
-                    // if (cs.length > 0) {
-                    //     cs.splice(0, 0, ...[
-                    //         {
-                    //             name: 'name',
-                    //             type: MenuItemType.input,
-                    //             value: rd.text,
-                    //             text: '编辑表名',
-                    //         },
-                    //         { type: MenuItemType.divide }
-                    //     ])
-                    // }
-                    // else cs.push({
-                    //     name: 'name',
-                    //     type: MenuItemType.input,
-                    //     value: rd.text,
-                    //     text: '编辑表名',
-                    // })
-
-                    if (cs.length > 0 && cs.last().type != MenuItemType.divide) {
-                        cs.push({ type: MenuItemType.divide });
-                        cs.push({
-                            text: '删除表格',
-                            name: 'deleteTable',
-                            icon: TrashSvg,
-                            value: rd.id
-                        })
-                    }
-                    else cs.push({
+                if (cs.length > 0) {
+                    cs.splice(0, 0, ...[
+                        {
+                            name: 'name',
+                            type: MenuItemType.input,
+                            value: rd.text,
+                            text: '编辑表名',
+                            data: rd,
+                        },
+                        { type: MenuItemType.divide }
+                    ])
+                }
+                else cs.push({
+                    name: 'name',
+                    type: MenuItemType.input,
+                    value: rd.text,
+                    text: '编辑表名',
+                    data: rd,
+                })
+                if (cs.length > 0 && cs.last().type != MenuItemType.divide) {
+                    cs.push({ type: MenuItemType.divide });
+                    cs.push({
                         text: '删除表格',
                         name: 'deleteTable',
                         icon: TrashSvg,
                         value: rd.id
                     })
-                    items.push({
-                        text: rd.text,
-                        value: rd.id,
-                        remark: util.showTime(rd.createDate),
-                        icon: (rd as any).icon || CollectTableSvg,
-                        forceHasChilds: true,
-                        childs: cs
-                    })
                 }
-                else {
-                    items.push({
-                        name: 'table',
-                        text: rd.text,
-                        value: rd.id,
-                        label: util.showTime(rd.createDate),
-                        icon: (rd as any).icon || CollectTableSvg,
-                        checkLabel: rd.id == this.currentTableId,
-                        btns: btns
-                    })
-                }
-            })
-        }
-        return <MenuView input={input}
+                else cs.push({
+                    text: '删除表格',
+                    name: 'deleteTable',
+                    icon: TrashSvg,
+                    value: rd.id
+                })
+                items.push({
+                    text: rd.text,
+                    value: rd.id,
+                    remark: util.showTime(rd.createDate),
+                    icon: (rd as any).icon || CollectTableSvg,
+                    forceHasChilds: true,
+                    childs: cs
+                })
+            }
+            else {
+                items.push({
+                    name: 'table',
+                    text: rd.text,
+                    value: rd.id,
+                    label: util.showTime(rd.createDate),
+                    icon: (rd as any).icon || CollectTableSvg,
+                    checkLabel: rd.id == this.currentTableId,
+                    btns: btns
+                })
+            }
+        })
+
+        return <MenuView ref={e => this.mv = e} input={input}
             select={select}
             click={click} style={{
                 width: 300,
@@ -142,7 +153,7 @@ export class DataSourceView extends EventsComponent {
                 overflowY: 'auto'
             }} items={items}></MenuView>
     }
-    private relationDatas: TableSchema[];
+    private mv: MenuView;
     currentTableId: string = '';
     currentViewId?: string = '';
     selectView: boolean = false;
@@ -157,18 +168,8 @@ export class DataSourceView extends EventsComponent {
         this.currentTableId = option.tableId;
         this.currentViewId = option.viewId;
         this.editTable = option.editTable;
-        if (!this.relationDatas) await this.loadTypeDatas();
+        await TableSchema.onLoadAll()
         this.forceUpdate();
-    }
-    async loadTypeDatas() {
-        var isUpdate: boolean = false;
-        if (!Array.isArray(this.relationDatas)) {
-            var r = await channel.get('/schema/list');
-            if (r.ok) {
-                this.relationDatas = r.data.list as TableSchema[];
-                isUpdate = true;
-            }
-        }
     }
 }
 
