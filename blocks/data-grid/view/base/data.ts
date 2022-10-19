@@ -47,7 +47,7 @@ export class DataGridViewData {
             id = this.data.last()?.id
         }
         await this.page.onAction(ActionDirective.onSchemaCreateDefaultRow, async () => {
-            var r = await this.schema.rowAdd({ data, pos: { dataId: id, pos: arrow } });
+            var r = await this.schema.rowAdd({ data, pos: { id: id, pos: arrow } });
             if (r.ok) {
                 var newRow = r.data.data;
                 var at = this.data.findIndex(g => g.id == id);

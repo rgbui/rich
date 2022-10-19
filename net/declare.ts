@@ -160,10 +160,10 @@ export interface ChannelPatchMapUrls {
 export interface ChannelPutMapUrls {
     "/schema/create":{args:{text:string,url:string,templateId?:string},returnType:Promise<{ ok: boolean, data: { schema:Partial<TableSchema> },warn:string }>},
 	"/schema/operate":{args:{operate:{operate?:string,schemaId:string,date?:Date,actions:any[]}},returnType:Promise<SockResponse<{actions:any[]}>>},
-	"/datastore/add":{args:{schemaId:string,data:Record<string, any>,pos:{dataId:string,pos:"before"|"after"}},returnType:Promise<SockResponse<{isCacSort:boolean,data:Record<string,any>}>>},
+	"/datastore/add":{args:{schemaId:string,data:Record<string, any>,pos:{id:string,pos:"before"|"after"}},returnType:Promise<SockResponse<{isCacSort:boolean,data:Record<string,any>}>>},
 	"/datastore/batch/add":{args:{schemaId:string,list:any[]},returnType:Promise<{ok:boolean,data:{list:any[]},warn:string}>},
 	"/datastore/query/ids":{args:{schemaId:string,ids:string[]},returnType:Promise<{ok:boolean,data:{list:any[]},warn:string}>},
-	"/datastore/rank":{args:{schemaId:string,wsId?:string,id:string,pos:{dataId:string,pos:"before"|"after"}},returnType:Promise<SockResponse<{isCacSort:boolean,sort:number}>>},
+	"/datastore/rank":{args:{schemaId:string,wsId?:string,id:string,pos:{id:string,pos:"before"|"after"}},returnType:Promise<SockResponse<{isCacSort:boolean,sort:number}>>},
 	"/device/sign":{args:any,returnType:Promise<void>},
 	"/paw/sign":{args:{phone:string,paw:string,inviteCode:string,weixinOpen:Record<string,any>},returnType:Promise<SockResponse<{user:Record<string,any>,guid:string,token:string}>>},
 	"/phone/sign":{args:{phone:string,code:string,inviteCode:string,weixinOpen:Record<string,any>},returnType:Promise<SockResponse<{user:Record<string,any>,guid:string,token:string}>>},

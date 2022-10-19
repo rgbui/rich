@@ -77,10 +77,10 @@ export class TableSchema {
             text: field.text
         }, this);
     }
-    rowAdd(args: { data: Record<string, any>, pos: { dataId: string, pos: 'before' | 'after' } }) {
+    rowAdd(args: { data: Record<string, any>, pos: { id: string, pos: 'before' | 'after' } }) {
         return channel.put('/datastore/add', Object.assign({ schemaId: this.id }, args));
     }
-    rowRank(args: { id: string, pos: { dataId: string, pos: 'before' | 'after' } }) {
+    rowRank(args: { id: string, pos: { id: string, pos: 'before' | 'after' } }) {
         return channel.put('/datastore/rank', Object.assign({ schemaId: this.id }, args));
     }
     rowRemove(id: string) {
