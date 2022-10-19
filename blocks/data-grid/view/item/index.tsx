@@ -108,7 +108,7 @@ export class TableStoreItem extends Block {
                 var result = await this.schema.rowRank({
                     id: dragRow.dataRow.id,
                     pos: {
-                        dataId: this.id,
+                        id: this.dataRow.id,
                         pos: DropDirection.bottom == direction ? "after" : 'before'
                     }
                 });
