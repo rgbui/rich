@@ -201,6 +201,44 @@ export class DataGridViewOperator {
             }
         }, { block: this });
     }
+    /**
+     * 将当前表格切换成相对应的视图url
+     * 
+     */
+    async onDataGridChangeView(this: DataGridView, url: string) {
+        await this.page.onAction('onDataGridChangeView', async () => {
+            await this.dataGridChangeView(url);
+        })
+    }
+    async dataGridChangeView(this: DataGridView, url: string) {
+        var view = this.schema.views.find(g => g.id == this.syncBlockId);
+        var oldViewUrl = view.url;
+        var actions: any[] = [{ name: 'changeSchemaView', id: this.syncBlockId, data: { url } }];
+        var result = await this.schema.onSchemaOperate(actions);
+        var at = this.at;
+        var pa = this.parent;
+        await this.delete();
+        var newBlock = await this.page.createBlock(view.url,
+            {
+                syncBlockId: view.id,
+                schemaId: this.schema
+            },
+            pa,
+            at
+        );
+        this.page.addBlockUpdate(newBlock.parent);
+        this.page.snapshoot.record(OperatorDirective.$data_grid_change_view_url, {
+            pos: newBlock.pos,
+            from: oldViewUrl,
+            to: url
+        }, this);
+    }
+    /**
+     * 将表格切换成其它视图
+     * @param this 
+     * @param viewId 
+     * @param schemaId 
+     */
     async onDataGridTurnView(this: DataGridView, viewId: string, schemaId?: string) {
         if (this.syncBlockId != viewId) {
             await this.page.onAction(ActionDirective.onDataGridTurnView, async () => {
@@ -308,6 +346,17 @@ export class DataGridViewOperator {
         this.schema.views.push({ id: oneAction.id, text: text, url: url } as any);
         await this.onDataGridTurnView(oneAction.id);
     }
+    async onSchemaViewRename(this: DataGridView, viewId: string, text: string) {
+        var self = this;
+        self.schema.onSchemaOperate([
+            {
+                name: 'updateSchemaView',
+                id: viewId,
+                data: { text: text }
+            }
+        ]);
+        self.forceUpdate()
+    }
     async onUpdateSorts(this: DataGridView, sorts: { field: string, sort: number }[]) {
         this.page.onAction(ActionDirective.onDataGridUpdateSorts, async () => {
             this.updateProps({ sorts })
@@ -353,36 +402,36 @@ export class DataGridViewOperator {
             this.forceUpdate();
         }, { block: this })
     }
-    async onShowExtendField(this: DataGridView, visible: boolean, fieldType: FieldType) {
+    // async onShowExtendField(this: DataGridView, visible: boolean, fieldType: FieldType) {
+    //     var newFields = this.fields.map(f => f.clone());
+    //     if (visible == true && newFields.some(s => s.field?.type == fieldType)) {
+    //         return
+    //     }
+    //     else if (visible == false && !newFields.some(s => s.field?.type == fieldType)) {
+    //         return
+    //     }
+    //     this.page.onAction(ActionDirective.onSchemaCreateField, async () => {
+    //         var sf = this.schema.fields.find(g => g.type == fieldType);
+    //         if (visible == true) {
+    //             if (fieldType == FieldType.autoIncrement) newFields.insertAt(0, new ViewField({ text: '编号', fieldId: sf.id }, this.schema))
+    //             else newFields.push(new ViewField({ fieldId: sf.id }, this.schema))
+    //         }
+    //         else newFields.remove(g => g.field?.type == fieldType);
+    //         this.changeFields(this.fields, newFields);
+    //         await this.createItem();
+    //         this.forceUpdate();
+    //     }, { block: this });
+    // }
+    async onShowCheck(this: DataGridView, value: DataGridView['checkRow']) {
         var newFields = this.fields.map(f => f.clone());
-        if (visible == true && newFields.some(s => s.field?.type == fieldType)) {
-            return
-        }
-        else if (visible == false && !newFields.some(s => s.field?.type == fieldType)) {
-            return
-        }
-        this.page.onAction(ActionDirective.onSchemaCreateField, async () => {
-            var sf = this.schema.fields.find(g => g.type == fieldType);
-            if (visible == true) {
-                if (fieldType == FieldType.autoIncrement) newFields.insertAt(0, new ViewField({ text: '编号', fieldId: sf.id }, this.schema))
-                else newFields.push(new ViewField({ fieldId: sf.id }, this.schema))
-            }
-            else newFields.remove(g => g.field?.type == fieldType);
-            this.changeFields(this.fields, newFields);
-            await this.createItem();
-            this.forceUpdate();
-        }, { block: this });
-    }
-    async onShowCheck(this: DataGridView, visible: boolean) {
-        var newFields = this.fields.map(f => f.clone());
-        if (visible == true && newFields.some(s => s.type == 'check')) return
-        else if (visible == false && !newFields.some(s => s.type == 'check')) return
+        if (value == 'checkbox' && newFields.some(s => s.type == 'check')) return
+        else if (value == 'none' && !newFields.some(s => s.type == 'check')) return
         this.page.onAction(ActionDirective.onDataGridShowCheck, async () => {
-            if (visible == true) {
+            if (value == 'checkbox') {
                 newFields.insertAt(0, new ViewField({ type: 'check', text: '选择' }, this.schema))
             }
             else newFields.remove(g => g.type == 'check');
-            this.updateProps({ showCheckRow: visible });
+            this.updateProps({ checkRow: value });
             this.changeFields(this.fields, newFields);
             await this.createItem();
             this.forceUpdate();

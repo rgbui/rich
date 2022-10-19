@@ -138,7 +138,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
                 console.error('not found cursor pos block')
             }
         }
-    })
+    });
     snapshoot.registerOperator(OperatorDirective.updateProp, async (operator, source) => {
         var block = page.find(x => x.id == operator.data.blockId);
         if (block) {
@@ -200,7 +200,6 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             );
         }
     });
-
     snapshoot.registerOperator(OperatorDirective.insertStyle, async (operator, source) => {
 
     }, async (operator) => {
@@ -376,7 +375,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
                 console.error('not found cursor pos block')
             }
         }
-    })
+    });
     snapshoot.registerOperator(OperatorDirective.$insert_style, async (operator, source) => {
         var oc: {
             pos: SnapshootBlockStylePos,
@@ -516,6 +515,19 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         var block: DataGridView = page.find(x => x.id == dr.to.blockId) as any;
         if (block) {
             await block.otherDataGridTrunView(dr.to.viewId, dr.to.type, dr.to.schemaId, dr.to.viewUrl)
+        }
+    });
+    snapshoot.registerOperator(OperatorDirective.$data_grid_change_view_url, async (operator) => {
+        var dr = operator.data;
+        var block: DataGridView = page.find(x => x.id == dr.pos.blockId) as any;
+        if (block) {
+            await block.dataGridChangeView(dr.from)
+        }
+    }, async (operator) => {
+        var dr = operator.data;
+        var block: DataGridView = page.find(x => x.id == dr.pos.blockId) as any;
+        if (block) {
+            await block.dataGridChangeView(dr.to)
         }
     });
 }

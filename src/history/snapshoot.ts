@@ -232,7 +232,7 @@ export interface HistorySnapshoot {
 
     record(directive: OperatorDirective.$data_grid_trun_view, data: { pos: SnapshootBlockPos, from: string, to: string }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.$data_grid_trun_view_new, data: { from: SnapshootDataGridViewPos, to: SnapshootDataGridViewPos }, obj: HistorySnapshootObject);
-
+    record(directive: OperatorDirective.$data_grid_change_view_url, data: { pos: SnapshootBlockPos, from: string, to: string }, obj: HistorySnapshootObject);
 
 }
 

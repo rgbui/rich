@@ -173,6 +173,7 @@ export class TableSchema {
      * { name: 'removeSchemaView', id: view.id }
      * { name: 'duplicateSchemaView',id:view.id,data:{snap:any}}
      * { name: 'updateSchemaView', id: view.id, data: { text: it.value } }
+     * { name: 'changeSchemaView',id:view.id,data:{url:string}}
      * { name: 'updateSchema', data: { text: it.value } }
      * { name: 'moveSchemaView',id:view.id,data:{from:number,to:number}}
      */
@@ -198,6 +199,12 @@ export class TableSchema {
                     this.views.remove(g => g.id == action.id);
                     break;
                 case 'updateSchemaView':
+                    var view = this.views.find(g => g.id == action.id);
+                    if (view) {
+                        Object.assign(view, action.data);
+                    }
+                    break;
+                case 'changeSchemaView':
                     var view = this.views.find(g => g.id == action.id);
                     if (view) {
                         Object.assign(view, action.data);

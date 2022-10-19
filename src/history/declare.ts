@@ -162,7 +162,8 @@ export enum OperatorDirective {
     $page_update_prop = 1061,
 
     $data_grid_trun_view=1070,
-    $data_grid_trun_view_new=1071
+    $data_grid_trun_view_new=1071,
+    $data_grid_change_view_url=1072
 
     //#endregion
 
