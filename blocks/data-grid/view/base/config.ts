@@ -165,14 +165,7 @@ export class DataGridViewConfig {
             }
         }
         if (rname.value != self.schemaView.text && rname.value) {
-            self.schema.onSchemaOperate([
-                {
-                    name: 'updateSchemaView',
-                    id: view.id,
-                    data: { text: rname.value }
-                }
-            ]);
-            self.forceUpdate()
+            self.onSchemaViewRename(view.id, rname.value);
         }
         self.onOver(self.getVisibleContentBound().contain(Point.from(self.page.kit.operator.moveEvent)))
         self.dataGridTool.isOpenTool = false;
@@ -212,7 +205,7 @@ export class DataGridViewConfig {
         var um = await useSelectMenuItem({ roundArea: rect }, menus, {
             async input(item) {
                 if (item.name == 'lock') {
-                    await self.onLock(item.checked);
+                    await self.onDataViewLock(item.checked);
                 }
             }
         });
