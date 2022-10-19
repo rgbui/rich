@@ -35,7 +35,8 @@ export type MenuItem<T = string> = {
     }[],
     buttonClick?: 'select' | 'click',
     updateMenuPanel?:boolean,
-    containerHeight?:number
+    containerHeight?:number,
+    data?:any
 }
 export enum MenuItemType {
     divide = 1,
