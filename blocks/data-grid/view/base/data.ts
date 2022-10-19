@@ -66,7 +66,6 @@ export class DataGridViewData {
                 Object.assign(oldItem, data);
                 var row: TableStoreItem = this.blocks.childs.find(g => (g as TableStoreItem).dataRow.id == id) as TableStoreItem;
                 if (row) {
-                    row.dataRow = oldItem;
                     await row.createElements();
                     row.forceUpdate();
                 }

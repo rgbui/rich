@@ -1,10 +1,11 @@
+import { TableStoreItem } from ".";
 import { Block } from "../../../../src/block";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { FieldType } from "../../schema/type";
 import { ViewField } from "../../schema/view";
-export async function createFieldBlock(viewField: ViewField, data: { row: Record<string, any>, index: number }, block: Block) {
+export async function createFieldBlock(viewField: ViewField, block: TableStoreItem) {
     var cellContent: Block;
-    var row = data.row;
+    var row = block.dataRow;
     var field = viewField.field;
     var page = block.page;
     if (viewField.type == 'check') {

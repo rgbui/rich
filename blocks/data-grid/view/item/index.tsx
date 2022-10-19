@@ -20,8 +20,18 @@ import { DropDirection } from "../../../../src/kit/handle/direction";
 
 @url('/data-grid/item')
 export class TableStoreItem extends Block {
-    dataRow: Record<string, any> = {};
-    dataIndex: number;
+    dataId: string;
+    get dataRow() {
+        if (Array.isArray(this.dataGrid.data))
+            return this.dataGrid.data.find(g => g.id == this.dataId);
+        else return null;
+    }
+    get dataIndex() {
+        if (Array.isArray(this.dataGrid.data))
+            return this.dataGrid.data.findIndex(g => g.id == this.dataId);
+        else return -1;
+    }
+
     get schema() {
         return (this.parent as DataGridView).schema;
     }
@@ -38,7 +48,7 @@ export class TableStoreItem extends Block {
         for (let i = 0; i < this.fields.length; i++) {
             var field = this.fields[i];
             if (field) {
-                var block = await createFieldBlock(field, { row: this.dataRow, index: this.dataIndex }, this);
+                var block = await createFieldBlock(field, this);
                 if (block) this.blocks.childs.push(block);
             }
             else {
