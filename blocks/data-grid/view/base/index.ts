@@ -41,8 +41,6 @@ export class DataGridView extends Block {
     @prop()
     showRowNum: boolean = false;
     @prop()
-    showCheckRow: boolean = false;
-    @prop()
     checkRow: 'none' | 'checkbox' | 'selected' = 'none';
     @prop()
     noTitle: boolean = false;
@@ -234,7 +232,7 @@ export class DataGridView extends Block {
         }
     }
     dataGridTool: DataGridTool;
-    async onLock(this: DataGridView, locked: boolean) {
+    async onDataViewLock(this: DataGridView, locked: boolean) {
         await this.schema.onSchemaOperate([
             {
                 name: 'updateSchemaView',

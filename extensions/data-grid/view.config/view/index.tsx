@@ -16,6 +16,7 @@ import { MenuView } from "../../../../component/view/menu/menu";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import lodash from "lodash";
 import { DatasourceSvg, LockSvg, LoopSvg, UnlockSvg } from "../../../../component/svgs";
+import { Rect } from "../../../../src/common/vector/point";
 
 export class DataGridViewConfig extends EventsComponent {
     get schema() {
@@ -39,6 +40,7 @@ export class DataGridViewConfig extends EventsComponent {
                 icon: LoopSvg,
                 childs: getSchemaViews().map(v => {
                     return {
+                        name: "toggleView",
                         value: v.url,
                         text: v.text,
                         icon: getSchemaViewIcon(v.url),
@@ -47,9 +49,9 @@ export class DataGridViewConfig extends EventsComponent {
                 })
             },
             { text: '数据源', name: 'datasource', icon: DatasourceSvg },
-            { text: '锁定数据表', name: 'lock', type: MenuItemType.switch, checked: this.block.locker?.lock ? true : false, icon: this.block.locker?.lock ? LockSvg : UnlockSvg },
+            { text: '锁定数据表', name: 'lock', type: MenuItemType.switch, checked: this.block.schemaView?.locker?.lock ? true : false, icon: this.block.schemaView?.locker?.lock ? UnlockSvg : LockSvg },
             { type: MenuItemType.divide },
-            { text: '视图标题', name: 'noTitle', type: MenuItemType.switch, checked: (this.block as TableStore).noTitle ? false : true },
+            { text: '标题', name: 'noTitle', type: MenuItemType.switch, checked: (this.block as TableStore).noTitle ? false : true },
             {
                 text: '每页加载的数量',
                 value: this.block.size,
@@ -73,7 +75,7 @@ export class DataGridViewConfig extends EventsComponent {
                 options: [
                     { text: '无', value: 'none' },
                     { text: '复选框', value: 'checkbox' },
-                    { text: '高亮', value: 'selected' },
+                    // { text: '高亮', value: 'selected' },
                 ]
             }
         ]
@@ -149,11 +151,8 @@ export class DataGridViewConfig extends EventsComponent {
             if (item.name == 'size') self.block.onChangeSize(item.value)
             else if (item.name == 'noTitle') self.block.onUpdateProps({ noTitle: !item.checked }, { syncBlock: self.block, range: BlockRenderRange.self });
             else if (item.name == 'showRowNum') self.block.onShowRowNum(item.checked);
-            else if (['autoIncrement', 'creater', 'createDate', 'modifyer', 'modifyDate'].includes(item.name)) {
-                await self.block.onShowExtendField(item.checked, FieldType[item.name] as any);
-            }
-            else if (item.name == 'showCheckRow') {
-                await self.block.onShowCheck(item.checked);
+            else if (item.name == 'checkRow') {
+                await self.block.onShowCheck(item.value);
             }
             else if (item.name == 'noHead') {
                 await self.block.onUpdateProps({ noHead: !item.checked }, { syncBlock: self.block, range: BlockRenderRange.self });
@@ -161,24 +160,26 @@ export class DataGridViewConfig extends EventsComponent {
             else if (['gallerySize', 'dateFieldId', 'groupFieldId'].includes(item.name)) {
                 await self.block.onUpdateProps({ [item.name]: item.value }, { syncBlock: self.block, range: BlockRenderRange.self });
             }
-            else if (['cardConfig.auto', 'cardConfig.showCover', 'cardConfig.coverAuto'].includes(item.name)) {
-                await self.block.onUpdateProps({ [item.name]: item.checked }, { syncBlock: self.block, range: BlockRenderRange.self });
-            }
-            else if (item.name == 'cardConfig.coverFieldId' && item.value) {
-                await self.block.onUpdateProps({ [item.name]: item.value }, { syncBlock: self.block, range: BlockRenderRange.self });
-            }
-            else if (item.name == 'showEditButton') {
-
-            }
-            else if (item.name == 'showPager') {
-
-            }
+            // else if (['cardConfig.auto', 'cardConfig.showCover', 'cardConfig.coverAuto'].includes(item.name)) {
+            //     await self.block.onUpdateProps({ [item.name]: item.checked }, { syncBlock: self.block, range: BlockRenderRange.self });
+            // }
+            // else if (item.name == 'cardConfig.coverFieldId' && item.value) {
+            //     await self.block.onUpdateProps({ [item.name]: item.value }, { syncBlock: self.block, range: BlockRenderRange.self });
+            // }
             else if (item.name == 'viewText') {
                 self.onStoreViewText(item.value);
             }
+            else if (item.name == 'lock') {
+                self.block.onDataViewLock(item.checked);
+            }
         }
-        function select(item) {
-
+        function select(item, event) {
+            if (item?.name == 'datasource') {
+                self.block.onOpenDataSource(Rect.fromEvent(event));
+            }
+            else if (item?.name == 'toggleView') {
+                self.block.onDataGridChangeView(item.value);
+            }
         }
         function click(item) {
 
@@ -186,8 +187,9 @@ export class DataGridViewConfig extends EventsComponent {
         return <MenuView input={input} select={select} click={click} style={{ maxHeight: 300, paddingTop: 10, paddingBottom: 30, overflowY: 'auto' }} items={this.getItems()}></MenuView>
     }
     onStoreViewText = lodash.debounce((value) => {
-        console.log('deb', value);
-    }, 1000)
+        var self = this;
+        self.block.onSchemaViewRename(self.block.syncBlockId, value);
+    }, 700)
     render(): ReactNode {
         if (!this.block) return <div></div>;
         return <div className="shy-table-property-view">
