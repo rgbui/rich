@@ -43,13 +43,11 @@ export class DataGridViewConfig extends EventsComponent {
                         name: "toggleView",
                         value: v.url,
                         text: v.text,
-                        icon: getSchemaViewIcon(v.url),
+                        icon:getSchemaViewIcon(v.url),
                         checkLabel: this.block.url == v.url
                     }
                 })
             },
-            { text: '数据源', name: 'datasource', icon: DatasourceSvg },
-            { text: '锁定数据表', name: 'lock', type: MenuItemType.switch, checked: this.block.schemaView?.locker?.lock ? true : false, icon: this.block.schemaView?.locker?.lock ? UnlockSvg : LockSvg },
             { type: MenuItemType.divide },
             { text: '标题', name: 'noTitle', type: MenuItemType.switch, checked: (this.block as TableStore).noTitle ? false : true },
             {
