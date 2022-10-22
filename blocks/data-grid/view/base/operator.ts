@@ -217,16 +217,21 @@ export class DataGridViewOperator {
         var result = await this.schema.onSchemaOperate(actions);
         var at = this.at;
         var pa = this.parent;
+        var id = this.id;
         await this.delete();
         var newBlock = await this.page.createBlock(view.url,
             {
                 syncBlockId: view.id,
-                schemaId: this.schema
+                schemaId: this.schema.id
             },
             pa,
             at
         );
         this.page.addBlockUpdate(newBlock.parent);
+        this.page.addUpdateEvent(async () => {
+            newBlock.id = id;
+            await newBlock.didMounted();
+        })
         this.page.snapshoot.record(OperatorDirective.$data_grid_change_view_url, {
             pos: newBlock.pos,
             from: oldViewUrl,

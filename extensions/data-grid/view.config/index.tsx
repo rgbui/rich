@@ -14,7 +14,7 @@ import { DataGridControl } from "./control";
 import { DataGridTrigger } from "./trigger";
 import { BlockUrlConstant } from "../../../src/block/constant";
 
-class DataGridConfig extends EventsComponent {
+export class DataGridConfig extends EventsComponent {
     dataGrid: DataGridView
     onOpen(dataGrid: DataGridView, mode?: 'view' | 'field' | 'sort' | 'filter' | 'group') {
         this.dataGrid = dataGrid;
@@ -47,7 +47,7 @@ class DataGridConfig extends EventsComponent {
         return <div className='shy-data-grid-config' >
             <Tab ref={e => this.tab = e} show="text" keeplive>
                 <Tab.Page item={'视图'}>
-                    <DataGridViewConfig ref={e => this.dataGridViewConfig = e} ></DataGridViewConfig>
+                    <DataGridViewConfig gc={this} ref={e => this.dataGridViewConfig = e} ></DataGridViewConfig>
                 </Tab.Page>
                 <Tab.Page item={[BlockUrlConstant.DataGridBoard, BlockUrlConstant.DataGridGallery].includes(this.dataGrid?.url as any) ? '卡片' : "字段"}>
                     <DataGridFields ref={e => this.dataGridFields = e}></DataGridFields>
@@ -67,18 +67,23 @@ class DataGridConfig extends EventsComponent {
             </Tab>
         </div>
     }
+    onClose() {
+        this.emit('close')
+    }
 }
 
-interface DataGridConfig {
 
-}
 
 export async function useDataGridConfig(pos: PopoverPosition, options?: { mode?: 'view' | 'field' | 'sort' | 'filter' | 'group', dataGrid: DataGridView }) {
     let popover = await PopoverSingleton(DataGridConfig, { mask: true });
-    let filePicker = await popover.open(pos);
-    filePicker.onOpen(options.dataGrid, options.mode)
+    let dataGridViewer = await popover.open(pos);
+    dataGridViewer.onOpen(options.dataGrid, options.mode)
     return new Promise((resolve: (data: ResourceArguments) => void, reject) => {
         popover.only('close', () => {
+            resolve(null);
+        });
+        dataGridViewer.only('close', () => {
+            popover.close();
             resolve(null)
         })
     })

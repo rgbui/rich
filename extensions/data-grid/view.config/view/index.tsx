@@ -17,8 +17,9 @@ import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare"
 import lodash from "lodash";
 import { DatasourceSvg, LockSvg, LoopSvg, UnlockSvg } from "../../../../component/svgs";
 import { Rect } from "../../../../src/common/vector/point";
+import { DataGridConfig } from "..";
 
-export class DataGridViewConfig extends EventsComponent {
+export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> {
     get schema() {
         return this.block?.schema;
     }
@@ -43,7 +44,7 @@ export class DataGridViewConfig extends EventsComponent {
                         name: "toggleView",
                         value: v.url,
                         text: v.text,
-                        icon:getSchemaViewIcon(v.url),
+                        icon: getSchemaViewIcon(v.url),
                         checkLabel: this.block.url == v.url
                     }
                 })
@@ -177,6 +178,7 @@ export class DataGridViewConfig extends EventsComponent {
             }
             else if (item?.name == 'toggleView') {
                 self.block.onDataGridChangeView(item.value);
+                if (self.props.gc) self.props.gc.onClose();
             }
         }
         function click(item) {
