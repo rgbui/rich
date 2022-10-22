@@ -18,9 +18,12 @@ export class DatePicker extends EventsComponent {
     date: Date = new Date();
     includeTime: boolean = false;
     open(date: Date, options?: { includeTime?: boolean }) {
-        if (typeof date == 'string') date = new Date(date);
-        if (!date) date = new Date();
-        this.date = date;
+        var d: dayjs.Dayjs;
+        if (typeof date == 'string') d = dayjs(date)
+        else if (!date) d = dayjs();
+        else d = dayjs(date);
+        if (!d.isValid()) d = dayjs();
+        this.date = d.toDate();
         if (typeof options != 'undefined') {
             if (typeof options.includeTime == 'boolean') this.includeTime = options.includeTime
         }
@@ -145,8 +148,7 @@ export class DatePicker extends EventsComponent {
     error: string = '';
     inputDate: HTMLInputElement;
     inputTime: HTMLInputElement;
-    private updateInput()
-    {
+    private updateInput() {
         var dj = dayjs(this.date);
         this.inputDate.value = dj.format('YYYY/MM/DD');
         if (this.inputTime)
