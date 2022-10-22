@@ -17,7 +17,7 @@ export class Input extends React.Component<{
     maxLength?: number,
     ignoreFilterWhitespace?: boolean,
     name?: string,
-    size?: 'small' | 'default',
+    size?: 'small' | 'default', className?: string | (string[]),
     onMousedown?: (event: React.MouseEvent) => void
 }>{
     private clearVisible: boolean = false;
@@ -54,7 +54,12 @@ export class Input extends React.Component<{
                 props.onEnter(filterValue((e.target as HTMLInputElement).value), e);
             }
         }
-        return <div onMouseDown={e => { props.onMousedown && props.onMousedown(e) }} className={'shy-input' + (props.size == 'small' ? " small" : "")} style={props.style || {}}>
+        var classList: string[] = ['shy-input'];
+        if (this.props.size == 'small') classList.push('small')
+        if (Array.isArray(this.props.className)) this.props.className.each(c => { classList.push(c) })
+        else if (this.props.className) classList.push(this.props.className)
+
+        return <div onMouseDown={e => { props.onMousedown && props.onMousedown(e) }} className={classList.join(" ")} style={props.style || {}}>
             <div className="shy-input-wrapper">
                 <input ref={e => this.inputEl = e} type={props.type || 'text'} defaultValue={props.value || ''}
                     disabled={props.disabled ? true : false}
