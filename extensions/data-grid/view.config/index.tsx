@@ -9,7 +9,6 @@ import { DataGridFields } from "./field";
 import { TableFilterView } from "./filter";
 import { TableSortView } from "./sort";
 import { DataGridViewConfig } from "./view";
-import "./style.less";
 import { DataGridControl } from "./control";
 import { DataGridTrigger } from "./trigger";
 import { BlockUrlConstant } from "../../../src/block/constant";
@@ -44,7 +43,7 @@ export class DataGridConfig extends EventsComponent {
     dataGridTrigger: DataGridTrigger;
     tab: Tab;
     render() {
-        return <div className='shy-data-grid-config' >
+        return <div className='min-w-480 min-h-50 max-h-500 overflow-y' >
             <Tab ref={e => this.tab = e} show="text" keeplive>
                 <Tab.Page item={'视图'}>
                     <DataGridViewConfig gc={this} ref={e => this.dataGridViewConfig = e} ></DataGridViewConfig>
