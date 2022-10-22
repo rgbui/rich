@@ -162,7 +162,7 @@ export class TableStoreView extends BlockView<TableStore>{
     subline: HTMLElement;
     isMoveLine: boolean = false;
     renderHead() {
-        return <div style={{ width: this.sumWidth }} onMouseLeave={e => this.mouseleaveHead(e)} className="sy-dg-table-head" onMouseMove={e => this.mousemove(e.nativeEvent)}>
+        return <div style={{ minWidth: this.sumWidth }} onMouseLeave={e => this.mouseleaveHead(e)} className="sy-dg-table-head" onMouseMove={e => this.mousemove(e.nativeEvent)}>
             <div className='sy-dg-table-subline' onMouseDown={e => this.onMousedownLine(e)} ref={e => this.subline = e}></div>
             {this.block.fields.map((f, i) => {
                 var icon: SvgrComponent | JSX.Element;
