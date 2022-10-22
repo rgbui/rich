@@ -10,6 +10,7 @@ export class SelectBox extends React.Component<{
     children?: JSX.Element | string | React.ReactNode,
     disabled?: boolean,
     value?: any,
+    className?: string | (string[]),
     options?: MenuItem<string>[],
     computedOptions?: () => Promise<MenuItem<string>[]>,
     onChange?: (value: any, item: MenuItem<string>) => void,
@@ -17,7 +18,7 @@ export class SelectBox extends React.Component<{
     dropHeight?: number,
     border?: boolean,
     width?: number,
-    small?:boolean
+    small?: boolean
 }>{
     render() {
         var self = this;
@@ -39,9 +40,15 @@ export class SelectBox extends React.Component<{
                     self.props.onChange(r.item.value, r.item);
             }
         }
+        var classList: string[] = ['shy-select-box'];
+        if (this.props.disabled) classList.push("disabled")
+        if(this.props.border)classList.push('border')
+        if(this.props.small)classList.push('small')
+        if (Array.isArray(this.props.className)) this.props.className.each(c => { classList.push(c) })
+        else if (this.props.className) classList.push(this.props.className)
         var op = this.props.options.arrayJsonFind('childs', g => g.value == this.props.value);
         return <div style={this.props.style || {}}
-            className={"shy-select-box" + (this.props.disabled ? " disabled" : "") + (this.props.border ? " border" : "")+(this.props.small?" small":"")}
+            className={classList.join(" ")}
             onMouseDown={e => mousedown(e)}>
             {this.props.children && <>{this.props.children}<Icon size={12} icon={ChevronDownSvg}></Icon></>}
             {!this.props.children && <><span>{op?.icon && <Icon size={14} icon={op.icon}></Icon>}{op?.text}</span><Icon size={12} icon={ChevronDownSvg}></Icon></>}
