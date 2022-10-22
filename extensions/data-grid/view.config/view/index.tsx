@@ -11,7 +11,6 @@ import { getSchemaViewIcon, getSchemaViews, getTypeSvg } from "../../../../block
 import { TableStore } from "../../../../blocks/data-grid/view/table";
 import { TableStoreCalendar } from "../../../../blocks/data-grid/view/calendar";
 import { TableStoreBoard } from "../../../../blocks/data-grid/view/board";
-import "./style.less";
 import { MenuView } from "../../../../component/view/menu/menu";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import lodash from "lodash";
@@ -184,7 +183,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
         function click(item) {
 
         }
-        return <MenuView input={input} select={select} click={click} style={{ maxHeight: 300, paddingTop: 10, paddingBottom: 30, overflowY: 'auto' }} items={this.getItems()}></MenuView>
+        return <MenuView input={input} select={select} click={click} style={{ maxHeight: 300, paddingTop: 10, paddingBottom: 10, overflowY: 'auto' }} items={this.getItems()}></MenuView>
     }
     onStoreViewText = lodash.debounce((value) => {
         var self = this;
@@ -192,8 +191,6 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
     }, 700)
     render(): ReactNode {
         if (!this.block) return <div></div>;
-        return <div className="shy-table-property-view">
-            {this.renderItems()}
-        </div>
+        return this.renderItems()
     }
 }
