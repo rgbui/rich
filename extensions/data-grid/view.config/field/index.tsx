@@ -132,7 +132,7 @@ export class DataGridFields extends EventsComponent {
                         name: 'cardConfig.showTemplate',
                         text: "卡片模板",
                         type: MenuItemType.switch,
-                        checked: (this.block as TableStoreGallery).cardConfig.showTemplate == true,
+                        checked: (this.block as TableStoreGallery).cardConfig?.showTemplate == true,
                     }
                 ]
             var baseItems: MenuItem[] = [
@@ -141,7 +141,7 @@ export class DataGridFields extends EventsComponent {
                     name: 'cardConfig.showTemplate',
                     text: "卡片模板",
                     type: MenuItemType.switch,
-                    checked: (this.block as TableStoreGallery).cardConfig.showTemplate == true,
+                    checked: (this.block as TableStoreGallery).cardConfig?.showTemplate == true,
                 },
                 {
                     name: 'cardConfig.auto',
@@ -151,31 +151,31 @@ export class DataGridFields extends EventsComponent {
                         { text: '固定', value: false },
                         { text: '自适应', value: true },
                     ],
-                    value: (this.block as TableStoreGallery).cardConfig.auto,
+                    value: (this.block as TableStoreGallery).cardConfig?.auto,
                 },
                 {
                     name: 'cardConfig.showCover',
                     text: "显示封面",
                     type: MenuItemType.switch,
-                    checked: (this.block as TableStoreGallery).cardConfig.showCover,
+                    checked: (this.block as TableStoreGallery).cardConfig?.showCover,
                 },
                 {
                     name: 'cardConfig.coverAuto',
                     text: "封面高度",
-                    visible: (this.block as TableStoreGallery).cardConfig.showCover,
+                    visible: (this.block as TableStoreGallery).cardConfig?.showCover,
                     type: MenuItemType.select,
                     options: [
                         { text: '固定', value: false },
                         { text: '自适应', value: true },
                     ],
-                    value: (this.block as TableStoreGallery).cardConfig.coverAuto,
+                    value: (this.block as TableStoreGallery).cardConfig?.coverAuto,
                 },
                 {
                     text: '封面字段',
-                    value: (this.block as TableStoreGallery).cardConfig.coverFieldId,
+                    value: (this.block as TableStoreGallery).cardConfig?.coverFieldId,
                     name: 'cardConfig.coverFieldId',
                     type: MenuItemType.select,
-                    visible: (this.block as TableStoreGallery).cardConfig.showCover,
+                    visible: (this.block as TableStoreGallery).cardConfig?.showCover,
                     options: this.block.schema.userFields.filter(g => g.type == FieldType.image).map(g => {
                         return {
                             text: g.text,
@@ -194,8 +194,8 @@ export class DataGridFields extends EventsComponent {
                 click={click}
                 style={{ maxHeight: 300, paddingTop: 10, paddingBottom: 10, overflowY: 'auto' }}
                 items={getItems()}></MenuView>
-            {(this.block as TableStoreGallery).cardConfig.showTemplate != true && this.renderFields()}
-            {(this.block as TableStoreGallery).cardConfig.showTemplate && this.renderCardView()}
+            {(this.block as TableStoreGallery).cardConfig?.showTemplate != true && this.renderFields()}
+            {(this.block as TableStoreGallery).cardConfig?.showTemplate && this.renderCardView()}
             <Divider></Divider>
             <div onClick={e => this.addField(e)} className="flex h-30 item-hover padding-w-14 round cursor text-1 f-14 ">
                 <span className="size-24 round flex-center flex-fix cursor">
