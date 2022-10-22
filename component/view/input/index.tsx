@@ -13,6 +13,7 @@ export class Input extends React.Component<{
     onChange?: (value: string, e?: React.FormEvent<HTMLInputElement>) => void,
     onEnter?: (value: string, e?: React.KeyboardEvent) => void,
     onClear?: () => void,
+    onKeydown?: (event: React.KeyboardEvent) => void,
     clear?: boolean,
     maxLength?: number,
     ignoreFilterWhitespace?: boolean,
@@ -53,6 +54,7 @@ export class Input extends React.Component<{
             if (e.key == 'Enter' && props.onEnter) {
                 props.onEnter(filterValue((e.target as HTMLInputElement).value), e);
             }
+            else if (props.onKeydown) props.onKeydown(e);
         }
         var classList: string[] = ['shy-input'];
         if (this.props.size == 'small') classList.push('small')
