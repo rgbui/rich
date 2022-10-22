@@ -42,16 +42,16 @@ export class SelectBox extends React.Component<{
         }
         var classList: string[] = ['shy-select-box'];
         if (this.props.disabled) classList.push("disabled")
-        if(this.props.border)classList.push('border')
-        if(this.props.small)classList.push('small')
+        if (this.props.border) classList.push('border')
+        if (this.props.small) classList.push('small')
         if (Array.isArray(this.props.className)) this.props.className.each(c => { classList.push(c) })
         else if (this.props.className) classList.push(this.props.className)
         var op = this.props.options.arrayJsonFind('childs', g => g.value == this.props.value);
         return <div style={this.props.style || {}}
             className={classList.join(" ")}
             onMouseDown={e => mousedown(e)}>
-            {this.props.children && <>{this.props.children}<Icon size={12} icon={ChevronDownSvg}></Icon></>}
-            {!this.props.children && <><span>{op?.icon && <Icon size={14} icon={op.icon}></Icon>}{op?.text}</span><Icon size={12} icon={ChevronDownSvg}></Icon></>}
+            {this.props.children && <>{this.props.children}<Icon className={'gap-l-3'} size={12} icon={ChevronDownSvg}></Icon></>}
+            {!this.props.children && <><span>{op?.icon && <Icon size={14} icon={op.icon}></Icon>}{op?.text}</span><Icon className={'gap-l-3'} size={12} icon={ChevronDownSvg}></Icon></>}
         </div>
     }
 }
