@@ -1,17 +1,15 @@
 import React, { ReactNode } from "react";
 import { EventsComponent } from "../../../../component/lib/events.component";
 import { Icon } from "../../../../component/view/icon";
-import { Remark } from "../../../../component/view/text";
 import { FieldType } from "../../../../blocks/data-grid/schema/type";
-import "./style.less";
 import { Divider } from "../../../../component/view/grid";
-import { CloseTickSvg, DragHandleSvg, PlusSvg } from "../../../../component/svgs";
+import { CloseSvg, DragHandleSvg, PlusSvg } from "../../../../component/svgs";
 import { DataGridView } from "../../../../blocks/data-grid/view/base";
 import lodash from "lodash";
 import { SelectBox } from "../../../../component/view/select/box";
 import { getTypeSvg } from "../../../../blocks/data-grid/schema/util";
 import { DragList } from "../../../../component/view/drag.list";
-import { channel } from "../../../../net/channel";
+import { util } from "../../../../util/util";
 
 export class TableSortView extends EventsComponent {
     get schema() {
@@ -37,11 +35,11 @@ export class TableSortView extends EventsComponent {
         })
     }
     onStore = lodash.debounce(async () => {
-        await this.block.onManualUpdateProps({ sorts: this.oldSorts }, { sorts: this.block.sorts },{syncBlock:this.block});
+        await this.block.onManualUpdateProps({ sorts: this.oldSorts }, { sorts: this.block.sorts }, { syncBlock: this.block });
         this.oldSorts = lodash.cloneDeep(this.block.sorts);
     }, 800);
     onForceStore = async () => {
-        await this.block.onManualUpdateProps({ sorts: this.oldSorts }, { sorts: this.block.sorts },{syncBlock:this.block});
+        await this.block.onManualUpdateProps({ sorts: this.oldSorts }, { sorts: this.block.sorts }, { syncBlock: this.block });
         this.oldSorts = lodash.cloneDeep(this.block.sorts);
         this.forceUpdate();
     }
@@ -52,10 +50,11 @@ export class TableSortView extends EventsComponent {
         function addSort() {
             var f = self.schema.fields.find(g => g.type == FieldType.title);
             if (!f) f = self.schema.fields.findAll(g => g.text ? true : false).first();
-            self.block.sorts.push({ id: channel.query('/guid'), field: f.id, sort: 1 });
+            self.block.sorts.push({ id: util.guid(), field: f.id, sort: 1 });
             self.onForceStore();
         }
         function removeSort(at: number) {
+            self.block.sorts.splice(at, 1);
             self.onForceStore();
         }
         function change(to, from) {
@@ -65,27 +64,29 @@ export class TableSortView extends EventsComponent {
             self.onForceStore();
         }
         var hasSorts = Array.isArray(self.block.sorts) && self.block.sorts.length > 0;
-        return <div className="shy-table-sorts-view">
-            <div className="shy-table-sorts-view-content">
-                {hasSorts && <DragList onChange={change} isDragBar={e => e.classList.contains('shy-table-sorts-view-item') || e.closest('.drag') ? true : false}>{self.block.sorts.map((so, i) => {
-                    return <div className="shy-table-sorts-view-item" key={i}>
-                        <Icon size={14} style={{ padding: 6 }} wrapper className={'drag'} icon={DragHandleSvg}></Icon>
-                        <SelectBox  small border style={{ minWidth: 80 }} value={so.field} options={this.getFields()} onChange={e => { so.field = e; self.onForceStore(); }}></SelectBox>
-                        <SelectBox  small border value={so.sort} options={[
-                            { text: '降序', value: -1 },
-                            { text: '升序', value: 1 }
-                        ]} onChange={e => { so.sort = e; self.onForceStore(); }}>
-                        </SelectBox>
-                        <div style={{ flexGrow: 1, flexShrink: 1 }}></div>
-                        {/* <Icon size={12} style={{ padding: 6 }} wrapper className={'close'} icon={TypesFormulaSvg} click={e => addDynamic(i)}></Icon> */}
-                        <Icon size={12} style={{ padding: 6 }} wrapper className={'close'} icon={CloseTickSvg} onClick={e => removeSort(i)}></Icon>
+        return <div className="f-14">
+            <div className="max-h-300 overflow-y">
+                {hasSorts && <DragList onChange={change} isDragBar={e => e.closest('.shy-table-sorts-view-item') && !e.closest('.btn-icon') ? true : false}>{self.block.sorts.map((so, i) => {
+                    return <div className="shy-table-sorts-view-item flex max-h-30 padding-w-14 gap-h-10" key={i}>
+                        <div className="flex-auto flex">
+                            <span className="cursor size-24 drag gap-r-5 text-1 round flex-center flex-fixed item-hover">
+                                <Icon size={14} icon={DragHandleSvg}></Icon>
+                            </span>
+                            <SelectBox small className={'gap-r-10 min-w-80'} border value={so.field} options={this.getFields()} onChange={e => { so.field = e; self.onForceStore(); }}></SelectBox>
+                            <SelectBox small className={'gap-r-10'} border value={so.sort} options={[
+                                { text: '降序', value: -1 },
+                                { text: '升序', value: 1 }
+                            ]} onChange={e => { so.sort = e; self.onForceStore(); }}>
+                            </SelectBox>
+                        </div>
+                        <span className="flex-fixed flex-center size-24 round item-hover cursor btn-icon"><Icon size={12} onMousedown={e => removeSort(i)} icon={CloseSvg} ></Icon></span>
                     </div>
                 })}</DragList>}
-                {!hasSorts && <Remark style={{ margin: 10 }}>还没有添加排序</Remark>}
+                {!hasSorts && <div className="remark padding-w-14 f-12 h-30 flex">还没有添加排序</div>}
             </div>
             <Divider></Divider>
-            <div className="shy-table-sorts-view-footer">
-                <a onClick={e => addSort()}><Icon size={14} style={{ marginRight: 5 }} icon={PlusSvg}></Icon>添加排序</a>
+            <div onClick={e => addSort()} className="h-30 gap-b-10 flex cursor item-hover padding-w-14">
+                <Icon size={14} style={{ marginRight: 5 }} icon={PlusSvg}></Icon>添加排序
             </div>
         </div>
     }
