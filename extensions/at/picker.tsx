@@ -10,41 +10,40 @@ import { Loading } from "../../component/view/loading";
 import { Avatar } from "../../component/view/avator/face";
 import { KeyboardCode } from "../../src/common/keys";
 import { Divider } from "../../component/view/grid";
+import { Input } from "../../component/view/input";
 
 
 export class UserPicker extends EventsComponent {
     render() {
-        return <div className="gap-h-10 " ref={e => this.el = e}>
-            <div className="gap-w-10">
-                <input className="shy-input" ref={e => this.inputEl = e} value={this.text} onKeyDown={e => this.onKeydown(e)} onChange={e => this.onInput(e)} type='text' />
+        return <div className="padding-h-10 min-w-300" ref={e => this.el = e}>
+            <div className="gap-w-14">
+                <Input value={this.text} placeholder={'搜索用户'}
+                    onEnter={e => this.onEnter()}
+                    onKeydown={e => this.onKeydown(e)}
+                    onChange={e => { this.text = e; this.syncSearch() }}
+                ></Input>
             </div>
             <Divider></Divider>
-            <div className="max-h-300 overflow-y">
+            <div className="max-h-300 padding-b-10 overflow-y">
                 {this.loading && <Loading></Loading>}
                 {!this.loading && this.links.map((link, i) => {
-                    return <div onMouseDown={e => this.onSelect(link)} className={"h-40 padding-w-10 flex item-hover round cursor" + ((i) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
-                        <Avatar size={30} user={link} userid={(link as any).id}></Avatar>
+                    return <div onMouseDown={e => this.onSelect(link)} className={"h-40 padding-w-14 flex item-hover round cursor" + ((i) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
+                        <Avatar size={30} userid={(link as any).id}></Avatar>
                         <span className="gap-l-10">{link.name}</span>
                     </div>
                 })}
-                {!this.loading && this.links.length == 0 && this.isSearch && <a className="remark">没有搜索到</a>}
+                {this.links.length == 0 && <a className="remark f-12 padding-w-14 h-30 flex">没有搜索到</a>}
             </div>
-
         </div>
     }
     private el: HTMLElement;
-    private inputEl: HTMLInputElement;
+    private inputEl: Input;
     private selectIndex: number = 0;
     text: string = '';
     links: UserBasic[] = [];
     loading = false;
-    isSearch = false;
-    onInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-        this.text = (e.target as HTMLInputElement).value;
-        this.text = this.text.trim();
-        this.syncSearch();
-    }
-    onKeydown(event: React.KeyboardEvent<HTMLInputElement>) {
+
+    onKeydown(event: React.KeyboardEvent) {
         if (event.code == KeyboardCode.ArrowDown) {
             event.stopPropagation();
             event.preventDefault();
@@ -70,12 +69,18 @@ export class UserPicker extends EventsComponent {
             if (link) this.onSelect(link);
         }
     }
+    onEnter() {
+        var u = this.links[this.selectIndex];
+        if (u) {
+            this.emit('change', u);
+        }
+    }
     syncSearch = lodash.debounce(async () => {
         this.loading = true;
         this.forceUpdate();
         if (this.text) {
             var r = await channel.get('/ws/member/word/query', { word: this.text });
-            this.isSearch = true;
+
             if (r.ok) {
                 this.links = r.data.list.map(c => {
                     return {
@@ -92,7 +97,7 @@ export class UserPicker extends EventsComponent {
     open() {
         this.loading = false;
         this.text = '';
-        if (this.inputEl) this.inputEl.value = '';
+        if (this.inputEl) this.inputEl.updateValue('');
         this.links = [];
         this.selectIndex = 0;
         this.forceUpdate();

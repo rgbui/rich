@@ -11,7 +11,6 @@ import { Point, Rect, RectUtility } from "../../src/common/vector/point";
 import { UserBasic } from "../../types/user";
 import { InputTextPopSelector } from "../common/input.pop";
 import { PopoverPosition } from "../popover/position";
-import "./style.less";
 
 /**
  * 用户输入@触发
