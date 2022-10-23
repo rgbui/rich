@@ -40,7 +40,6 @@ export class Page extends Events<PageDirective> {
     id: string;
     date: number;
     readonly: boolean = false;
-
     sourceItemId: string;
     version: PageVersion;
     constructor(options?: {
@@ -186,7 +185,7 @@ export class Page extends Events<PageDirective> {
             if (g instanceof OriginFormField) {
                 var f = g.field;
                 if (f) {
-                    g.value = row[f.name];
+                    g.value = g.field.getValue(row);
                 }
             }
         })
