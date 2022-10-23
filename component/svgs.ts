@@ -72,6 +72,7 @@ import EquationSvg from "../src/assert/svg/equation.svg";
 import ExpandSvg from "../src/assert/svg/expand.svg";
 import EyeSvg from "../src/assert/svg/eye.svg";
 import EyeHideSvg from "../src/assert/svg/eyeHide.svg";
+import FieldsSvg from "../src/assert/svg/fields.svg";
 import FileSvg from "../src/assert/svg/file.svg";
 import FilterSvg from "../src/assert/svg/filter.svg";
 import FitSvg from "../src/assert/svg/fit.svg";
@@ -106,6 +107,7 @@ import LinkToSvg from "../src/assert/svg/linkTo.svg";
 import ListSvg from "../src/assert/svg/list.svg";
 import LockSvg from "../src/assert/svg/lock.svg";
 import LoopSvg from "../src/assert/svg/loop.svg";
+import MaximizeSvg from "../src/assert/svg/maximize.svg";
 import MemberSvg from "../src/assert/svg/member.svg";
 import MentionSvg from "../src/assert/svg/mention.svg";
 import MenuSvg from "../src/assert/svg/menu.svg";
@@ -256,6 +258,7 @@ EquationSvg,
 ExpandSvg,
 EyeSvg,
 EyeHideSvg,
+FieldsSvg,
 FileSvg,
 FilterSvg,
 FitSvg,
@@ -290,6 +293,7 @@ LinkToSvg,
 ListSvg,
 LockSvg,
 LoopSvg,
+MaximizeSvg,
 MemberSvg,
 MentionSvg,
 MenuSvg,
