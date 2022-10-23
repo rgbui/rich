@@ -28,7 +28,10 @@ export function Icon(props: {
         classList.addRange(props.className);
     }
     else if (typeof props.className == 'string') classList.push(props.className)
-    var style: Record<string, any> = {};
+    var style: CSSProperties = {};
+    if (typeof props.rotate == 'number') {
+        style.transform = `rotate(${props.rotate}deg)`
+    }
     if (typeof props.icon == 'string') {
         var fs = props.fontSize || props.size;
         if (fs == 'none') fs = undefined;
