@@ -477,6 +477,7 @@ export class Page$Cycle {
             if (isUpdate) this.addPageUpdate();
         });
     }
+    formRowData: Record<string, any>;
     async loadSchemaView(this: Page, elementUrl: string) {
         var pe = parseElementUrl(elementUrl);
         if (!this.schema) {
@@ -489,7 +490,10 @@ export class Page$Cycle {
         }
         if (pe.type == ElementType.SchemaRecordViewData) {
             var row = await this.schema.rowGet(pe.id2);
-            if (row?.ok) this.loadSchemaRecord(row.data.data);
+            if (row?.ok) {
+                this.formRowData = lodash.cloneDeep(row.data.data);
+                this.loadSchemaRecord(row.data.data);
+            }
         }
     }
     async onToggleFieldView(this: Page, field: Field, checked: boolean) {
@@ -497,7 +501,9 @@ export class Page$Cycle {
             if (checked) {
                 var b = GetFieldFormBlockInfo(field);
                 if (b) {
-                    await this.createBlock(b.url, b, this.views[0]);
+                    var newBlock = await this.createBlock(b.url, b, this.views[0]);
+                    if (this.formRowData)
+                        newBlock.updateProps({ value: field.getValue(this.formRowData) })
                 }
             }
             else {
