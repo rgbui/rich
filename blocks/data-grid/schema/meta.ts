@@ -64,7 +64,18 @@ export class TableSchema {
         },
         type?: 'form' | 'card'
     }[] = [];
-    modelMetaId?: string;
+    defaultCollectFormId: string = '';
+    defaultEditFormId: string = '';
+    get defaultEditForm() {
+        var rv = this.defaultEditFormId ? this.recordViews.find(g => g.id == this.defaultEditFormId) : this.recordViews.first()
+        if (!rv) rv = this.recordViews.first();
+        return rv;
+    }
+    get defaultAddForm() {
+        var rv = this.defaultCollectFormId ? this.recordViews.find(g => g.id == this.defaultCollectFormId) : this.recordViews.first()
+        if (!rv) rv = this.recordViews.first();
+        return rv;
+    }
     getViewFields() {
         var fs = this.initUserFields;
         return fs.map(f => {
@@ -203,6 +214,9 @@ export class TableSchema {
             switch (action.name) {
                 case 'removeSchemaView':
                     this.views.remove(g => g.id == action.id);
+                    break;
+                case 'removeSchemaRecordView':
+                    this.recordViews.remove(g => g.id == action.id);
                     break;
                 case 'updateSchemaView':
                     var view = this.views.find(g => g.id == action.id);

@@ -13,7 +13,7 @@ import Dots from "../../../src/assert/svg/dots.svg";
 import DragSvg from "../../../src/assert/svg/dragHandle.svg";
 import TrashSvg from "../../../src/assert/svg/trash.svg";
 import { Divider } from "../../../component/view/grid";
-import { EditSvg } from "../../../component/svgs";
+import { DocAddSvg, DocEditSvg, EditSvg, PlusSvg } from "../../../component/svgs";
 import { getElementUrl, ElementType } from "../../../net/element.type";
 import { Page } from "../../../src/page";
 import { DataGridView } from "../../../blocks/data-grid/view/base";
@@ -49,15 +49,8 @@ class TabelSchemaFormDrop extends EventsComponent {
         if (um) {
             var name = menus[0].value;
             if (name) {
-                var result = await channel.put('/schema/operate', {
-                    operate: {
-                        schemaId: this.schema.id,
-                        date: new Date(),
-                        actions: [{ name: 'createSchemaRecordView', text: name }]
-                    }
-                });
+                var result = await this.schema.onSchemaOperate([{ name: 'createSchemaRecordView', text: name }])
                 var oneAction = result.data.actions.first();
-                this.schema.recordViews.push({ id: oneAction.id, text: name });
                 this.forceUpdate();
                 this.onChange(this.schema.recordViews.find(g => g.id == oneAction.id));
             }
@@ -88,19 +81,16 @@ class TabelSchemaFormDrop extends EventsComponent {
             },
             { type: MenuItemType.divide },
             { text: '编辑', name: 'edit', icon: EditSvg },
+            { type: MenuItemType.divide },
+            { text: '默认收集单', name: 'defaultCollect', checkLabel: this.schema.defaultCollectFormId == view.id ? true : false, icon: DocAddSvg },
+            { text: '默认编辑单', name: 'defaultEdit', checkLabel: this.schema.defaultCollectFormId == view.id ? true : false, icon: DocEditSvg },
+            { type: MenuItemType.divide },
             { text: '删除', name: 'delete', icon: TrashSvg }
         ]
         var um = await useSelectMenuItem({ roundPoint: Point.from(event) }, menus);
         if (um) {
             if (um.item.name == 'delete') {
-                var result = await channel.put('/schema/operate', {
-                    operate: {
-                        schemaId: this.schema.id,
-                        date: new Date(),
-                        actions: [{ name: 'removeSchemaRecordView', id: view.id }]
-                    }
-                });
-                this.schema.views.remove(g => g.id == view.id);
+                this.schema.onSchemaOperate([{ name: 'removeSchemaRecordView', id: view.id }])
                 this.forceUpdate();
                 return;
             }
@@ -111,16 +101,20 @@ class TabelSchemaFormDrop extends EventsComponent {
                  */
                 return;
             }
+            else if (um.item.name == 'defaultCollect') {
+                this.schema.update({ defaultCollectFormId: view.id })
+            }
+            else if (um.item.name == 'defaultEdit') {
+                this.schema.update({ defaultEditFormId: view.id })
+            }
         }
         var it = menus.find(g => g.name == 'rename');
         if (it.value != view.text && it.value) {
-            var result = await channel.put('/schema/operate', {
-                operate: {
-                    schemaId: this.schema.id,
-                    date: new Date(),
-                    actions: [{ name: 'updateSchemaRecordView', id: view.id, data: { text: it.value } }]
-                }
-            });
+            this.schema.onSchemaOperate([{
+                name: 'updateSchemaRecordView',
+                id: view.id,
+                data: { text: it.value }
+            }])
             view.text = it.value;
             this.forceUpdate();
             return;

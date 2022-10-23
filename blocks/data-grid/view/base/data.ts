@@ -20,7 +20,7 @@ export class DataGridViewData {
     }
     async onOpenAddForm(this: DataGridView, initData?: Record<string, any>) {
         var dialougPage: Page = await channel.air('/page/dialog', {
-            elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, this.schema.recordViews.first().id)
+            elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, this.schema.defaultAddForm?.id)
         })
         if (dialougPage) {
             var newRow = dialougPage.getSchemaRow();
@@ -32,7 +32,7 @@ export class DataGridViewData {
     }
     async onOpenEditForm(this: DataGridView, id: string) {
         var dialougPage: Page = await channel.air('/page/dialog', {
-            elementUrl: getElementUrl(ElementType.SchemaRecordViewData, this.schema.id, this.schema.recordViews.first().id, id)
+            elementUrl: getElementUrl(ElementType.SchemaRecordViewData, this.schema.id, this.schema.defaultEditForm.id, id)
         })
         if (dialougPage) {
             var newRow = dialougPage.getSchemaRow();
