@@ -4,7 +4,7 @@ import { Icon } from "../../../../component/view/icon"
 import { view } from "../../../../src/block/factory/observable"
 import { BlockView } from "../../../../src/block/view"
 import { ChildsArea } from "../../../../src/block/view/appear"
-import { getTypeSvg } from "../../schema/util"
+import { GetFieldTypeSvg } from "../../schema/util"
 import { Loading } from "../../../../component/view/loading"
 import { Point, Rect } from "../../../../src/common/vector/point"
 import { MouseDragger } from "../../../../src/common/dragger"
@@ -168,7 +168,7 @@ export class TableStoreView extends BlockView<TableStore>{
                 var icon: SvgrComponent | JSX.Element;
                 if (f.type == 'check') icon = CheckSvg;
                 else if (f.type == 'rowNum') icon = TypesNumberSvg;
-                else if (f.field) icon = getTypeSvg(f.field.type);
+                else if (f.field) icon = GetFieldTypeSvg(f.field.type);
                 return <div className="sy-dg-table-head-th f-14 text-1" onMouseDown={e => this.onDragMouseField(e, f)}
                     style={{ width: f.colWidth || 120 }}
                     key={f?.field?.id || i}>

@@ -31,7 +31,7 @@ import {
     VideoSvg
 } from "../../../component/svgs";
 import { MenuItemType } from "../../../component/view/menu/declare";
-export function getTypeSvg(type: FieldType) {
+export function GetFieldTypeSvg(type: FieldType) {
     switch (type) {
         case FieldType.bool:
             return TypesCheckboxSvg
@@ -124,7 +124,7 @@ export function getFieldMenus() {
                 text: a.text,
                 value: a.value,
                 name: 'turnFieldType',
-                icon: getTypeSvg(a.value)
+                icon: GetFieldTypeSvg(a.value)
             }
         })
     }

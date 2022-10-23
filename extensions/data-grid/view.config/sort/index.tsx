@@ -7,7 +7,7 @@ import { CloseSvg, DragHandleSvg, PlusSvg } from "../../../../component/svgs";
 import { DataGridView } from "../../../../blocks/data-grid/view/base";
 import lodash from "lodash";
 import { SelectBox } from "../../../../component/view/select/box";
-import { getTypeSvg } from "../../../../blocks/data-grid/schema/util";
+import { GetFieldTypeSvg } from "../../../../blocks/data-grid/schema/util";
 import { DragList } from "../../../../component/view/drag.list";
 import { util } from "../../../../util/util";
 
@@ -30,7 +30,7 @@ export class TableSortView extends EventsComponent {
             return {
                 text: fe.text,
                 value: fe.id,
-                icon: getTypeSvg(fe.type),
+                icon: GetFieldTypeSvg(fe.type),
             }
         })
     }

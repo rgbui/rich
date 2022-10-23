@@ -1,7 +1,7 @@
 
 import React from "react";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
-import { getTypeSvg } from "../../../blocks/data-grid/schema/util";
+import { GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { Icon } from "../../../component/view/icon";
 import { PopoverSingleton } from "../../popover/popover";
@@ -17,7 +17,7 @@ export class DataGridCardSelector extends EventsComponent {
                     <div className="pad-10">
                         {this.schema.userFields.map(f => {
                             return <a key={f.id} className="block h-24 item-hover round flex cursor"><span
-                                className="inline-block size-24 flex-fixed"><Icon size={16} icon={getTypeSvg(f.type)} ></Icon></span>
+                                className="inline-block size-24 flex-fixed"><Icon size={16} icon={GetFieldTypeSvg(f.type)} ></Icon></span>
                                 <span className="flex-auto gap-l-10">{f.text}</span>
                             </a>
                         })}

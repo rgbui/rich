@@ -1,6 +1,6 @@
 import React from "react";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
-import { getTypeSvg } from "../../../blocks/data-grid/schema/util";
+import { GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { Icon } from "../../../component/view/icon";
 import { Textarea } from "../../../component/view/input/textarea";
@@ -20,7 +20,7 @@ class FormulaSelector extends EventsComponent {
                     <div className="gap-p-10">
                         <div className="text-1 font-14">字段</div>
                         {this.schema.userFields.map(f => {
-                            return <a key={f.id} className="item-hover cursor flex h-24"><span className="inline-block size-24"><Icon icon={getTypeSvg(f.type)}></Icon></span><span className="f-14 inline-block gap-l-10">{f.text}</span></a>
+                            return <a key={f.id} className="item-hover cursor flex h-24"><span className="inline-block size-24"><Icon icon={GetFieldTypeSvg(f.type)}></Icon></span><span className="f-14 inline-block gap-l-10">{f.text}</span></a>
                         })}
                     </div>
                     {formulaLangs.map(fl => {

@@ -1,5 +1,5 @@
 import { FieldType } from "../../../blocks/data-grid/schema/type";
-import { getTypeSvg } from "../../../blocks/data-grid/schema/util";
+import { GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
 import { MenuItemType } from "../../../component/view/menu/declare";
 export function getMenus() {
     function map(arr) {
@@ -7,7 +7,7 @@ export function getMenus() {
             return {
                 text: a.text,
                 value: a.value,
-                icon: getTypeSvg(a.value)
+                icon: GetFieldTypeSvg(a.value)
             }
         })
     }

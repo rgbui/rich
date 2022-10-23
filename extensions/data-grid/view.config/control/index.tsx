@@ -1,7 +1,7 @@
 
 import React, { ReactNode } from "react";
 import { FieldType } from "../../../../blocks/data-grid/schema/type";
-import { getTypeSvg } from "../../../../blocks/data-grid/schema/util";
+import { GetFieldTypeSvg } from "../../../../blocks/data-grid/schema/util";
 import { DataGridView } from "../../../../blocks/data-grid/view/base";
 import { EventsComponent } from "../../../../component/lib/events.component";
 import { Icon } from "../../../../component/view/icon";
@@ -66,7 +66,7 @@ export class DataGridControl extends EventsComponent {
                 FieldType.file,
                 FieldType].includes(g.type)).map(f => {
                     return <div key={f.id} className="flex item-hover round h-30 padding-w-14 ">
-                        <span className="flex-fix size-24 flex-center cursor round item-hover"><Icon size={16} icon={getTypeSvg(f.type)}></Icon></span>
+                        <span className="flex-fix size-24 flex-center cursor round item-hover"><Icon size={16} icon={GetFieldTypeSvg(f.type)}></Icon></span>
                         <span className="flex-auto">{f.text}</span>
                         <span className="flex-fix"><Switch checked={false} onChange={e => { }}></Switch></span>
                     </div>

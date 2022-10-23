@@ -1,7 +1,7 @@
 import React from "react";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
-import { getTypeSvg } from "../../schema/util";
+import { GetFieldTypeSvg } from "../../schema/util";
 import { FieldView, OriginFormField } from "./origin.field";
 @url('/form/number')
 class FieldText extends OriginFormField {

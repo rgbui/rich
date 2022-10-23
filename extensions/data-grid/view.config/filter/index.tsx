@@ -10,7 +10,7 @@ import { ArrowRightSvg, CheckSvg, CloseSvg, PlusSvg } from "../../../../componen
 import lodash from "lodash";
 import { SchemaFilter } from "../../../../blocks/data-grid/schema/declare";
 import { SelectBox } from "../../../../component/view/select/box";
-import { getTypeSvg } from "../../../../blocks/data-grid/schema/util";
+import { GetFieldTypeSvg } from "../../../../blocks/data-grid/schema/util";
 import { Switch } from "../../../../component/view/switch";
 import { useSelectMenuItem } from "../../../../component/view/menu";
 import { Rect } from "../../../../src/common/vector/point";
@@ -34,7 +34,7 @@ export class TableFilterView extends EventsComponent {
     getFields() {
         var fs = this.schema.visibleFields.findAll(g => g.text && ![FieldType.formula].includes(g.type)).map(fe => {
             return {
-                icon: getTypeSvg(fe.type),
+                icon: GetFieldTypeSvg(fe.type),
                 text: fe.text,
                 value: fe.id
             }

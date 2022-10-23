@@ -4,7 +4,7 @@ import { FieldType } from "../../../blocks/data-grid/schema/type";
 import { Field, FieldConfig } from "../../../blocks/data-grid/schema/field";
 import React from "react";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
-import { getTypeSvg } from "../../../blocks/data-grid/schema/util";
+import { GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { PlusSvg, ChevronDownSvg } from "../../../component/svgs";
 import { useSelectMenuItem } from "../../../component/view/menu";
@@ -102,7 +102,7 @@ export class TableFieldView extends EventsComponent {
                     <label className="flex gap-b-5 remark f-12">统计表格列:</label>
                     <div className="flex h-30 padding-w-5 round item-hover cursor">
                         <SelectBox value={this.config.rollupFieldId} options={this.rollFields[this.config.rollupTableId].map(c => {
-                            return { text: c.text, value: c.id, icon: getTypeSvg(c.type) }
+                            return { text: c.text, value: c.id, icon: GetFieldTypeSvg(c.type) }
                         })}
                             onChange={e => { this.config.rollupFieldId = e; this.loadTypeDatas(true) }}
                             style={{ width: '100%' }}>
@@ -176,7 +176,7 @@ export class TableFieldView extends EventsComponent {
                 <div className="gap-h-10 padding-w-14">
                     <div className="flex gap-b-5 remark f-12">字段类型:</div>
                     <div className="flex h-30 round item-hover cursor" onClick={e => this.openSelectType(e)}>
-                        <span className="flex-center  size-24  flex-fix cursor item-hover round "><Icon size={14} icon={getTypeSvg(this.type)}></Icon></span>
+                        <span className="flex-center  size-24  flex-fix cursor item-hover round "><Icon size={14} icon={GetFieldTypeSvg(this.type)}></Icon></span>
                         <span className="flex-auto ">{tm?.text}</span>
                         <span className="flex-fixed size-24 round item-hover flex-center">
                             <Icon size={14} icon={ChevronDownSvg}></Icon>

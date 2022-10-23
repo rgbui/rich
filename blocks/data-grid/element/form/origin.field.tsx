@@ -4,7 +4,7 @@ import { Block } from "../../../../src/block";
 import { BlockDisplay } from "../../../../src/block/enum";
 import { prop } from "../../../../src/block/factory/observable";
 import { PageLayoutType } from "../../../../src/page/declare";
-import { getTypeSvg } from "../../schema/util";
+import { GetFieldTypeSvg } from "../../schema/util";
 import "./style.less";
 
 export class OriginFormField extends Block {
@@ -36,7 +36,7 @@ export function FieldView(props: { block: OriginFormField, children?: JSX.Elemen
     return <div className='sy-form-field' onMouseDown={e => e.stopPropagation()}>
         <div className="sy-form-field-box">
             <div className="sy-form-field-label">
-                <Icon icon={getTypeSvg(block.field.type)} size={16}></Icon>
+                <Icon icon={GetFieldTypeSvg(block.field.type)} size={16}></Icon>
                 {block.field.required && <em>*</em>}
                 <label>{block.field.text}:</label>
             </div>

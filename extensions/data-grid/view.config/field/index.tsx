@@ -1,6 +1,6 @@
 import React from "react";
 import { ReactNode } from "react";
-import { getTypeSvg } from "../../../../blocks/data-grid/schema/util";
+import { GetFieldTypeSvg } from "../../../../blocks/data-grid/schema/util";
 import { DataGridView } from "../../../../blocks/data-grid/view/base";
 import { EventsComponent } from "../../../../component/lib/events.component";
 import { Icon } from "../../../../component/view/icon";
@@ -62,7 +62,7 @@ export class DataGridFields extends EventsComponent {
                 <DragList onChange={onChange} isDragBar={e => e.closest('.shy-table-field-view-item') && !e.closest('.eye') ? true : false} className="shy-table-field-view-items">{this.block.fields.map(f => {
                     return <div className={"shy-table-field-view-item flex h-30 padding-w-14 cursor  item-hover"} key={f.fieldId || f.type}>
                         <span className="size-24 round flex-center flex-fixed item-hover"> <em className={'drag'} ><Icon size={12} icon={DragHandleSvg}></Icon></em></span>
-                        <span className="size-24 round flex-center flex-fixed"><Icon size={14} icon={getTypeSvg(f.field?.type)}></Icon></span>
+                        <span className="size-24 round flex-center flex-fixed"><Icon size={14} icon={GetFieldTypeSvg(f.field?.type)}></Icon></span>
                         <span className="flex-auto f-14">{f.text}</span>
                         <span className="size-24 round flex-center flex-fixed item-hover"><Icon className={'eye'} size={14} onClick={async () => { await self.block.onHideField(f); self.forceUpdate() }} icon={EyeSvg}></Icon></span>
                     </div>
@@ -76,7 +76,7 @@ export class DataGridFields extends EventsComponent {
                     </div>
                     <div className="shy-table-field-view-items">{fs.map(f => {
                         return <div className={"flex h-30 padding-w-14 cursor item-hover"} key={f.id}>
-                            <span className="size-24 round flex-center flex-fixed"> <Icon size={14} icon={getTypeSvg(f.type)}></Icon></span>
+                            <span className="size-24 round flex-center flex-fixed"> <Icon size={14} icon={GetFieldTypeSvg(f.type)}></Icon></span>
                             <span className="flex-auto f-14">{f.text}</span>
                             <span className="size-24 round flex-center flex-fixed item-hover">   <Icon className={'eye'} size={14} onClick={async () => { await self.block.onShowField(f); self.forceUpdate() }} icon={EyeHideSvg}></Icon></span>
                         </div>
@@ -181,7 +181,7 @@ export class DataGridFields extends EventsComponent {
                     options: this.block.schema.userFields.filter(g => g.type == FieldType.image).map(g => {
                         return {
                             text: g.text,
-                            icon: getTypeSvg(g.type),
+                            icon: GetFieldTypeSvg(g.type),
                             value: g.id
                         }
                     })
@@ -254,7 +254,7 @@ export class DataGridFields extends EventsComponent {
                     var bp = (self.block as TableStoreGallery).cardConfig.templateProps?.props?.find(g => g.name == pro.name);
                     var fe = self.block.fields.find(g => g.field?.id == bp?.bindFieldId)
                     return <div key={pro.name} className="flex h-30 f-14 padding-w-14 item-hover round cursor text-1">
-                        <span className="flex-fix flex-center size-24 round item-hover cursor"><Icon size={16} icon={getTypeSvg(fe?.field?.type ? fe.field.type : pro.types[0])}></Icon></span>
+                        <span className="flex-fix flex-center size-24 round item-hover cursor"><Icon size={16} icon={GetFieldTypeSvg(fe?.field?.type ? fe.field.type : pro.types[0])}></Icon></span>
                         <span className="flex-fix gap-r-10 text-over min-w-100 max-w-100">{pro.text}</span>
                         <div className="flex-fix">
                             <SelectBox border small

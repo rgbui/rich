@@ -7,7 +7,7 @@ import { BlockUrlConstant } from "../../../../src/block/constant";
 import { TableStoreGallery } from "../../../../blocks/data-grid/view/gallery";
 import { FieldType } from "../../../../blocks/data-grid/schema/type";
 import { BlockRenderRange } from "../../../../src/block/enum";
-import { getSchemaViewIcon, getSchemaViews, getTypeSvg } from "../../../../blocks/data-grid/schema/util";
+import { getSchemaViewIcon, getSchemaViews, GetFieldTypeSvg } from "../../../../blocks/data-grid/schema/util";
 import { TableStore } from "../../../../blocks/data-grid/view/table";
 import { TableStoreCalendar } from "../../../../blocks/data-grid/view/calendar";
 import { TableStoreBoard } from "../../../../blocks/data-grid/view/board";
@@ -117,7 +117,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                     options: this.block.schema.userFields.filter(g => g.type == FieldType.option || g.type == FieldType.options).map(g => {
                         return {
                             text: g.text,
-                            icon: getTypeSvg(g.type),
+                            icon: GetFieldTypeSvg(g.type),
                             value: g.id
                         }
                     })
@@ -134,7 +134,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                     options: this.block.schema.userFields.filter(g => g.type == FieldType.date || g.type == FieldType.createDate || g.type == FieldType.modifyDate).map(g => {
                         return {
                             text: g.text,
-                            icon: getTypeSvg(g.type),
+                            icon: GetFieldTypeSvg(g.type),
                             value: g.id
                         }
                     })
