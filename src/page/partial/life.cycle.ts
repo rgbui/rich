@@ -479,14 +479,22 @@ export class Page$Cycle {
     }
     formRowData: Record<string, any>;
     async loadSchemaView(this: Page, elementUrl: string) {
+        var isCreateField: boolean = false;
         var pe = parseElementUrl(elementUrl);
         if (!this.schema) {
             this.schema = await TableSchema.loadTableSchema(pe.id);
         }
-        if (this.exists(g => !(g instanceof OriginFormField))) {
+        if (!this.exists(g => (g instanceof OriginFormField))) {
             var pageData = SchemaCreatePageFormData(this.schema);
             this.views = [];
             await this.load(pageData);
+            isCreateField = true;
+        }
+        if ([ElementType.SchemaRecordView, ElementType.SchemaRecordViewData].includes(pe.type)) {
+            this.recordViewId = pe.id1;
+        }
+        if (pe.type == ElementType.SchemaView) {
+            this.scheamViewId = pe.id1;
         }
         if (pe.type == ElementType.SchemaRecordViewData) {
             var row = await this.schema.rowGet(pe.id2);
@@ -494,6 +502,9 @@ export class Page$Cycle {
                 this.formRowData = lodash.cloneDeep(row.data.data);
                 this.loadSchemaRecord(row.data.data);
             }
+        }
+        if (isCreateField) {
+            this.emit(PageDirective.save);
         }
     }
     async onToggleFieldView(this: Page, field: Field, checked: boolean) {
