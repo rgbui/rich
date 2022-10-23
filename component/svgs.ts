@@ -53,6 +53,10 @@ import DatasourceSvg from "../src/assert/svg/datasource.svg";
 import DeleteLineSvg from "../src/assert/svg/delete.line.svg";
 import DiscoverySvg from "../src/assert/svg/discovery.svg";
 import DividerSvg from "../src/assert/svg/divider.svg";
+import DocAddSvg from "../src/assert/svg/docAdd.svg";
+import DocDetailSvg from "../src/assert/svg/docDetail.svg";
+import DocEditSvg from "../src/assert/svg/docEdit.svg";
+import DocSearchSvg from "../src/assert/svg/docSearch.svg";
 import DotsSvg from "../src/assert/svg/dots.svg";
 import DoubleLinkSvg from "../src/assert/svg/double.link.svg";
 import DoubleRightSvg from "../src/assert/svg/doubleRight.svg";
@@ -233,6 +237,10 @@ DatasourceSvg,
 DeleteLineSvg,
 DiscoverySvg,
 DividerSvg,
+DocAddSvg,
+DocDetailSvg,
+DocEditSvg,
+DocSearchSvg,
 DotsSvg,
 DoubleLinkSvg,
 DoubleRightSvg,
