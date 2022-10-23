@@ -6,6 +6,7 @@ import { prop } from "../../../../src/block/factory/observable";
 import { PageLayoutType } from "../../../../src/page/declare";
 import { getTypeSvg } from "../../schema/util";
 import "./style.less";
+
 export class OriginFormField extends Block {
     display = BlockDisplay.block;
     value: any;

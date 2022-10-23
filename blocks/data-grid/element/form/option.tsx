@@ -25,7 +25,7 @@ class FieldTextView extends BlockView<FieldText>{
                 }
             }
         );
-        if (typeof op != 'undefined') {
+        if (op != null && typeof op != 'undefined') {
             this.block.onChange(op);
         }
     }
