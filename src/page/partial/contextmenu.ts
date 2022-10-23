@@ -15,6 +15,7 @@ import { Confirm } from "../../../component/lib/confirm";
 import { usePageHistoryStore } from "../../../extensions/history";
 import { PageDirective } from "../directive";
 import { usePagePublish } from "../../../extensions/publish";
+import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.field";
 
 export class PageContextmenu {
     async onGetContextMenus(this: Page) {
@@ -205,5 +206,23 @@ export class PageContextmenu {
     async openMember(this: Page, event: React.MouseEvent) {
         this.showMembers = this.showMembers ? false : true;
         this.forceUpdate()
+    }
+    async onOpenFieldProperty(this: Page, event: React.MouseEvent) {
+        var r = await useSelectMenuItem(
+            { roundArea: Rect.fromEvent(event) },
+            this.schema.initUserFields.map(uf => {
+                return {
+                    name: uf.id,
+                    text: uf.text,
+                    type: MenuItemType.switch,
+                    checked: this.exists(c => (c instanceof OriginFormField) && c.field.id == uf.id)
+                }
+            }),
+            {
+                input: (newItem) => {
+                   
+                }
+            }
+        )
     }
 }

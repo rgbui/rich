@@ -20,8 +20,9 @@ import { PageOutLine } from "../../../blocks/page/outline";
 import { channel } from "../../../net/channel";
 import { ElementType, parseElementUrl } from "../../../net/element.type";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
-import { schemaCreatePageFormData } from "../../../blocks/data-grid/element/service";
+import { GetFieldFormBlockInfo, SchemaCreatePageFormData } from "../../../blocks/data-grid/element/service";
 import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.field";
+import { Field } from "../../../blocks/data-grid/schema/field";
 
 export class Page$Cycle {
     async init(this: Page) {
@@ -482,7 +483,7 @@ export class Page$Cycle {
             this.schema = await TableSchema.loadTableSchema(pe.id);
         }
         if (this.exists(g => !(g instanceof OriginFormField))) {
-            var pageData = schemaCreatePageFormData(this.schema);
+            var pageData = SchemaCreatePageFormData(this.schema);
             this.views = [];
             await this.load(pageData);
         }
@@ -490,6 +491,20 @@ export class Page$Cycle {
             var row = await this.schema.rowGet(pe.id2);
             if (row?.ok) this.loadSchemaRecord(row.data.data);
         }
+    }
+    async onToggleFieldView(this: Page, field: Field, checked: boolean) {
+        await this.onAction('onToggleFieldView', async () => {
+            if (checked) {
+                var b = GetFieldFormBlockInfo(field);
+                if (b) {
+                    await this.createBlock(b.url, b, this.views[0]);
+                }
+            }
+            else {
+                var f = this.find(c => (c instanceof OriginFormField) && c.field.id == field.id);
+                if (f) await f.delete()
+            }
+        });
     }
 }
 
