@@ -488,7 +488,7 @@ export class Page$Cycle {
         }
         if (pe.type == ElementType.SchemaRecordViewData) {
             var row = await this.schema.rowGet(pe.id2);
-            if (row) this.loadSchemaRecord(row);
+            if (row?.ok) this.loadSchemaRecord(row.data.data);
         }
     }
 }
