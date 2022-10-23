@@ -180,6 +180,7 @@ export class Page extends Events<PageDirective> {
     }
     schema: TableSchema;
     recordViewId: string;
+    scheamViewId:string;
     loadSchemaRecord(row: Record<string, any>) {
         this.each(g => {
             if (g instanceof OriginFormField) {
