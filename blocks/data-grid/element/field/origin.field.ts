@@ -16,7 +16,6 @@ export class OriginField extends Block {
         return this.parent;
     }
     async changeAppear(appear: AppearAnchor): Promise<void> {
-        // console.log(appear);
         var text = lodash.get(this, appear.prop);
         await this.item.onUpdateCellValue(this.viewField, text);
     }
@@ -50,5 +49,5 @@ export class OriginField extends Block {
     get isCanDrop(): boolean {
         return false;
     }
-    
+
 }

@@ -3,8 +3,9 @@ import { Field } from "../schema/field";
 import { TableSchema } from "../schema/meta";
 import { FieldType } from "../schema/type";
 
-export function SchemaCreatePageFormData(schema: TableSchema) {
-    var cs: Record<string, any>[] = schema.initUserFields.toArray(field => {
+export function SchemaCreatePageFormData(schema: TableSchema)
+{
+    var cs: Record<string,any>[]=schema.initUserFields.toArray(field=>{
         var r = GetFieldFormBlockInfo(field);
         if (r) return r;
     })
