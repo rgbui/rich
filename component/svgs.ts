@@ -9,6 +9,7 @@ import ArrowUpSvg from "../src/assert/svg/arrowUp.svg";
 import AudioSvg from "../src/assert/svg/audio.svg";
 import BillingSvg from "../src/assert/svg/billing.svg";
 import BlockcolorSvg from "../src/assert/svg/blockcolor.svg";
+import BlogSvg from "../src/assert/svg/blog.svg";
 import BoardRefreshSvg from "../src/assert/svg/board.refresh.svg";
 import BoardToolArrowSvg from "../src/assert/svg/board.tool.arrow.svg";
 import BoardToolFrameSvg from "../src/assert/svg/board.tool.frame.svg";
@@ -76,6 +77,7 @@ import FieldsSvg from "../src/assert/svg/fields.svg";
 import FileSvg from "../src/assert/svg/file.svg";
 import FilterSvg from "../src/assert/svg/filter.svg";
 import FitSvg from "../src/assert/svg/fit.svg";
+import FlagSvg from "../src/assert/svg/flag.svg";
 import FontStyleSvg from "../src/assert/svg/font.style.svg";
 import FontSvg from "../src/assert/svg/font.svg";
 import FontawesomeSvg from "../src/assert/svg/fontawesome.svg";
@@ -102,11 +104,13 @@ import LayoutContentSvg from "../src/assert/svg/layoutContent.svg";
 import LayoutContentCoverSvg from "../src/assert/svg/layoutContentCover.svg";
 import LayoutContentHeadFootSvg from "../src/assert/svg/layoutContentHeadFoot.svg";
 import LayoutContentsSvg from "../src/assert/svg/layoutContents.svg";
+import LikeSvg from "../src/assert/svg/like.svg";
 import LinkSvg from "../src/assert/svg/link.svg";
 import LinkToSvg from "../src/assert/svg/linkTo.svg";
 import ListSvg from "../src/assert/svg/list.svg";
 import LockSvg from "../src/assert/svg/lock.svg";
 import LoopSvg from "../src/assert/svg/loop.svg";
+import LoveSvg from "../src/assert/svg/love.svg";
 import MaximizeSvg from "../src/assert/svg/maximize.svg";
 import MemberSvg from "../src/assert/svg/member.svg";
 import MentionSvg from "../src/assert/svg/mention.svg";
@@ -119,6 +123,7 @@ import MoveToSvg from "../src/assert/svg/moveTo.svg";
 import NoneSvg from "../src/assert/svg/none.svg";
 import NumberListSvg from "../src/assert/svg/number.list.svg";
 import OpenAsPageThickSvg from "../src/assert/svg/openAsPageThick.svg";
+import OpposeSvg from "../src/assert/svg/oppose.svg";
 import OptionsSvg from "../src/assert/svg/options.svg";
 import OutlineSvg from "../src/assert/svg/outline.svg";
 import PageSvg from "../src/assert/svg/page.svg";
@@ -135,6 +140,7 @@ import RedoSvg from "../src/assert/svg/redo.svg";
 import RefreshSvg from "../src/assert/svg/refresh.svg";
 import RenameSvg from "../src/assert/svg/rename.svg";
 import ReplySvg from "../src/assert/svg/reply.svg";
+import ReportSvg from "../src/assert/svg/report.svg";
 import RotatingSvg from "../src/assert/svg/rotating.svg";
 import RowNoSvg from "../src/assert/svg/row.no.svg";
 import SearchSvg from "../src/assert/svg/search.svg";
@@ -195,6 +201,7 @@ ArrowUpSvg,
 AudioSvg,
 BillingSvg,
 BlockcolorSvg,
+BlogSvg,
 BoardRefreshSvg,
 BoardToolArrowSvg,
 BoardToolFrameSvg,
@@ -262,6 +269,7 @@ FieldsSvg,
 FileSvg,
 FilterSvg,
 FitSvg,
+FlagSvg,
 FontStyleSvg,
 FontSvg,
 FontawesomeSvg,
@@ -288,11 +296,13 @@ LayoutContentSvg,
 LayoutContentCoverSvg,
 LayoutContentHeadFootSvg,
 LayoutContentsSvg,
+LikeSvg,
 LinkSvg,
 LinkToSvg,
 ListSvg,
 LockSvg,
 LoopSvg,
+LoveSvg,
 MaximizeSvg,
 MemberSvg,
 MentionSvg,
@@ -305,6 +315,7 @@ MoveToSvg,
 NoneSvg,
 NumberListSvg,
 OpenAsPageThickSvg,
+OpposeSvg,
 OptionsSvg,
 OutlineSvg,
 PageSvg,
@@ -321,6 +332,7 @@ RedoSvg,
 RefreshSvg,
 RenameSvg,
 ReplySvg,
+ReportSvg,
 RotatingSvg,
 RowNoSvg,
 SearchSvg,
