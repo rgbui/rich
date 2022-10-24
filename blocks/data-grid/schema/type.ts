@@ -158,6 +158,37 @@ export enum FieldType {
     browse = 7060,
 
 
+    /**
+     * 喜欢
+     */
+    love = 7070,
+    /**点赞 */
+    like = 7071,
+    /**
+     * 投票
+     */
+    vote = 7072,
+    /**
+     * 反对
+     */
+    oppose = 7073,
+
+    /**
+     * 审批
+     */
+    approve = 7080,
+
+    /**
+     * 举报
+     */
+    report = 7090,
+
+
+    /**
+   * 文章
+   */
+    blog = 8000,
+
 }
 
 export var sysFieldTypes: FieldType[] = [
@@ -166,5 +197,13 @@ export var sysFieldTypes: FieldType[] = [
     FieldType.modifyer,
     FieldType.createDate,
     FieldType.autoIncrement,
-    FieldType.sort
+    FieldType.sort,
+
+    FieldType.comment,
+    FieldType.oppose,
+    FieldType.like,
+    FieldType.love,
+    FieldType.report,
+    FieldType.vote,
+
 ]
