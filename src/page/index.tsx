@@ -180,7 +180,7 @@ export class Page extends Events<PageDirective> {
     }
     schema: TableSchema;
     recordViewId: string;
-    scheamViewId:string;
+    scheamViewId: string;
     loadSchemaRecord(row: Record<string, any>) {
         this.each(g => {
             if (g instanceof OriginFormField) {
@@ -236,13 +236,13 @@ export class Page extends Events<PageDirective> {
      * 是否支持宽屏及窄屏的切换
      */
     get isSupportScreen() {
-        return [PageLayoutType.db, PageLayoutType.doc].includes(this.pageLayout?.type || PageLayoutType.doc)
+        return [PageLayoutType.db, PageLayoutType.doc,PageLayoutType.blog].includes(this.pageLayout?.type || PageLayoutType.doc)
     }
     /**
      * 是否支持用户自定义封面
      */
     get isSupportCover() {
-        return [PageLayoutType.db, PageLayoutType.doc].includes(this.pageLayout?.type || PageLayoutType.doc)
+        return [PageLayoutType.db, PageLayoutType.doc,PageLayoutType.blog].includes(this.pageLayout?.type || PageLayoutType.doc)
     }
     async forceUpdate() {
         return new Promise((resolve, reject) => {
@@ -259,6 +259,7 @@ export class Page extends Events<PageDirective> {
     get lineHeight() {
         return this.smallFont ? 23 : 26
     }
+    customElementUrl: string;
     get elementUrl() {
         if ([
             PageLayoutType.board,
@@ -278,6 +279,7 @@ export class Page extends Events<PageDirective> {
         ].includes(this.pageLayout.type)) {
             return getElementUrl(ElementType.SchemaRecordView, this.schema.id, this.recordViewId);
         }
+        else if (this.customElementUrl) return this.customElementUrl;
     }
 }
 export interface Page {

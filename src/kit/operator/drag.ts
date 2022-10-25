@@ -14,7 +14,7 @@ import { DocDrag } from "./doc";
 export async function PageDrag(kit: Kit, event: React.MouseEvent) {
     kit.operator.onClearPage();
     if (!kit.page.pageLayout?.type || ![
-        PageLayoutType.board,
+        PageLayoutType.board,PageLayoutType.blog,
         PageLayoutType.doc].includes(kit.page.pageLayout.type)
     ) return;
     if (kit.page.pageLayout.type == PageLayoutType.board) return;

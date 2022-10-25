@@ -38,7 +38,7 @@ export function getPageIcon(item: LinkPageItem) {
     if (item.pageType == PageLayoutType.board) {
         return PageSvg
     }
-    else if (item.pageType == PageLayoutType.doc) {
+    else if (item.pageType == PageLayoutType.doc||item.pageType==PageLayoutType.blog) {
         return PageSvg
     }
     else if (item.pageType == PageLayoutType.textChannel) {
