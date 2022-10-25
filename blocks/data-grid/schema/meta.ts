@@ -103,6 +103,9 @@ export class TableSchema {
     rowUpdate(args: { dataId: string, data: Record<string, any> }) {
         return channel.patch('/datastore/update', Object.assign({ schemaId: this.id }, args));
     }
+    rowUpdateFieldObject(args: { rowId: string, fieldName: string, data: Record<string, any> }) {
+        return channel.put('/datastore/row/object/update', Object.assign({ schemaId: this.id }, args));
+    }
     list(options: {
         page: number,
         size?: number,
