@@ -30,6 +30,7 @@ export class FieldEmailView extends BlockView<FieldEmoji>{
             });
             if (r.ok) {
                 var ov = lodash.cloneDeep(self.block.value);
+                if (typeof ov == 'undefined') ov = {};
                 if (typeof ov == 'number') ov = { count: ov }
                 ov.count = r.data.count;
                 var userid = self.block.page.user?.id;
@@ -51,7 +52,7 @@ export class FieldEmailView extends BlockView<FieldEmoji>{
         var v = this.block.value;
         if (typeof v == 'object' && typeof v.count == 'number') v = v.count;
         var countStr = v > 0 ? `(${v})` : '';
-        return <div className='sy-field-email' onMouseDown={e => mousedown(e)}>
+        return <div onMouseDown={e => mousedown(e)}>
             {this.block.viewField.field.type != FieldType.emoji && <Icon size={16} icon={svg}></Icon>}
             {this.block.viewField.field.type == FieldType.emoji && this.block.viewField?.field.config?.emoji?.code}{countStr}
         </div>
