@@ -164,7 +164,7 @@ export function getSchemaFieldMenus(map: (list: any) => any) {
             { text: '统计', value: FieldType.rollup },
             { text: '公式', value: FieldType.formula },
             { text: '自动编号', value: FieldType.autoIncrement },
-            { text: '博文', value: FieldType.blog },
+            { text: '文档', value: FieldType.blog },
         ]),
         { type: MenuItemType.text, text: '交互' },
         ...map([

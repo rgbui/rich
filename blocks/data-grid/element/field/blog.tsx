@@ -8,13 +8,18 @@ import { OriginField } from "./origin.field";
 
 @url('/field/blog')
 export class FieldBlog extends OriginField {
+    onCellMousedown(event: React.MouseEvent) {
+        this.mousedown(event);
+    }
     async mousedown(event: React.MouseEvent) {
+        event.stopPropagation()
         var self = this;
         var elementUrl = getElementUrl(ElementType.SchemaFieldBlogData,
             self.dataGrid.schema.id,
             self.field.id,
             self.item.dataRow.id
         )
+        console.log(elementUrl);
         var dialougPage: Page = await channel.air('/page/dialog', {
             elementUrl
         })
@@ -52,7 +57,7 @@ export class FieldBlog extends OriginField {
 @view('/field/blog')
 export class FieldBlogView extends BlockView<FieldBlog>{
     render() {
-        return <div className='sy-field-button' onMouseDown={e => { e.stopPropagation(); this.block.mousedown(e) }}>
+        return <div className='sy-field-button' >
 
         </div>
     }

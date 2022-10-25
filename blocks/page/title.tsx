@@ -8,8 +8,6 @@ import { channel } from "../../net/channel";
 import { LinkPageItem } from "../../extensions/at/declare";
 import { Icon } from "../../component/view/icon";
 import { AddPageCoverSvg, AddPageIconSvg } from "../../component/svgs";
-import { useIconPicker } from "../../extensions/icon";
-import { Rect } from "../../src/common/vector/point";
 import lodash from "lodash";
 
 @url('/title')
@@ -28,14 +26,7 @@ export class Title extends Block {
     async changeAppear(appear) {
         if (appear.prop == 'pageInfo.text') {
             if (this.pageInfo.id) {
-                this.page.onceStopRenderByPageInfo = true;
-                channel.air('/page/update/info', {
-                    id: this.pageInfo.id,
-                    pageInfo: {
-                        id: this.pageInfo.id,
-                        text: this.pageInfo?.text
-                    }
-                })
+                await this.page.onUpdatePageTitle(this.pageInfo.text);
             }
         }
     }
@@ -86,17 +77,9 @@ export class TitleView extends BlockView<Title>{
         channel.off('/page/update/info', this.updatePageInfo);
     }
     render() {
-        var self = this;
-        async function changeIcon(event: React.MouseEvent) {
-            event.stopPropagation();
-            var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) });
-            if (typeof icon != 'undefined') {
-                channel.air('/page/update/info', { id: self.block.page.pageInfo?.id, pageInfo: { icon } })
-            }
-        }
         var isAdd: boolean = this.block.page.isSupportCover;
         return <div className='sy-block-page-info' style={this.block.visibleStyle}>
-            <div className="min-h-72">{this.block.pageInfo?.icon && this.block.page.cover?.abled !== true && <div onMouseDown={e => changeIcon(e)} className="sy-block-page-info-icon">
+            <div className="min-h-72">{this.block.pageInfo?.icon && this.block.page.cover?.abled !== true && <div onMouseDown={e => this.block.page.onChangeIcon(e)} className="sy-block-page-info-icon">
                 <Icon size={72} icon={this.block.pageInfo?.icon}></Icon>
             </div>}</div>
             {isAdd && (!this.block.pageInfo?.icon || !this.block.page.cover?.abled) && <div className='sy-block-page-info-operators' >

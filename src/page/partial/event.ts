@@ -2,6 +2,7 @@ import React from "react";
 import { Page } from "..";
 import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
 import { emojiStore } from "../../../extensions/emoji/store";
+import { useIconPicker } from "../../../extensions/icon";
 import { GalleryPics } from "../../../extensions/image/gellery";
 import { channel } from "../../../net/channel";
 import { Matrix } from "../../common/matrix";
@@ -264,6 +265,23 @@ export class PageEvent {
                 icon: { name: "emoji", code: g.code }
             }
         })
+    }
+    async onUpdatePageTitle(this: Page, text: string) {
+        this.onceStopRenderByPageInfo = true;
+        channel.air('/page/update/info', {
+            id: this.pageInfo.id,
+            pageInfo: {
+                id: this.pageInfo.id,
+                text: text
+            }
+        })
+    }
+    async onChangeIcon(this: Page, event: React.MouseEvent) {
+        event.stopPropagation();
+        var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) });
+        if (typeof icon != 'undefined') {
+            channel.air('/page/update/info', { id: this.pageInfo?.id, pageInfo: { icon } })
+        }
     }
 }
 

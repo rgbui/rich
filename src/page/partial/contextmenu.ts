@@ -79,7 +79,7 @@ export class PageContextmenu {
                 { type: MenuItemType.divide },
                 { name: 'nav', text: '目录', icon: OutlineSvg, type: MenuItemType.switch, checked: this.nav },
                 { name: 'refPages', text: "显示引用", icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
-                { name: 'lock', text: this.pageInfo?.locker?.userid ? "解除锁定" : '编辑保护', icon: this.pageInfo.locker?.userid ? UnlockSvg : LockSvg },
+                { name: 'lock', text: this.pageInfo?.locker?.userid ? "解除锁定" : '编辑保护', icon: this.pageInfo?.locker?.userid ? UnlockSvg : LockSvg },
                 // { type: MenuItemTypeValue.divide },
                 // { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
                 { name: 'history', icon: VersionHistorySvg, text: '页面历史' },
