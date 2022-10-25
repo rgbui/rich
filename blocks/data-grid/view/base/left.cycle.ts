@@ -4,7 +4,6 @@ import { TableSchema } from "../../schema/meta";
 import { FieldType } from "../../schema/type";
 import { ViewField } from "../../schema/view";
 import { DataGridView } from ".";
-
 export class DataGridViewLife {
     async loadSchema(this: DataGridView) {
         if (this.schemaId && !this.schema) {
@@ -21,6 +20,10 @@ export class DataGridViewLife {
             this.fields.each(f => {
                 f.schema = this.schema;
             })
+            for (let j = this.fields.length - 1; j >= 0; j--) {
+                if (!(this.fields[j].field || this.fields[j].type))
+                    this.fields.splice(j, 1);
+            }
         }
         if (this.page.pageLayout.type == PageLayoutType.dbPickRecord) {
             if (!this.fields.some(s => s.type == 'check')) {
@@ -84,5 +87,5 @@ export class DataGridViewLife {
             }
         }
     }
-    
+
 }
