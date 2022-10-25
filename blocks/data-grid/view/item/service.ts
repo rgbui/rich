@@ -114,6 +114,12 @@ export async function createFieldBlock(viewField: ViewField, block: TableStoreIt
                     value: viewField.getValue(row),
                 }, block);
                 break;
+            case FieldType.blog:
+                cellContent = await BlockFactory.createBlock('/field/blog', page, {
+                    viewField,
+                    value: viewField.getValue(row),
+                }, block);
+                break;
             case FieldType.link:
                 cellContent = await BlockFactory.createBlock('/field/url', page, {
                     viewField,
@@ -121,9 +127,9 @@ export async function createFieldBlock(viewField: ViewField, block: TableStoreIt
                 }, block);
                 break;
             case FieldType.formula:
-                cellContent = await BlockFactory.createBlock('/field/url', page, {
+                cellContent = await BlockFactory.createBlock('/field/formula', page, {
                     viewField,
-                    value: viewField.getValue(row),
+                    // value: viewField.getValue(row),
                 }, block);
                 break;
         }
