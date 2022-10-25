@@ -155,7 +155,7 @@ export interface ChannelPatchMapUrls {
 	"/ws/patch/member/roles":{args:{wsId?:string,userid:string,roleIds:string[]},returnType:Promise<SockResponse<void>>},
 	"/view/snap/patch":{args:{id:string,data:Record<string,any>},returnType:Promise<SockResponse<void>>},
 	"/block/ref/sync":{args:{wsId?:string,data:{deleteBlockIds: string[], updates: { rowBlockId: string, text: string }[]}},returnType:Promise<SockResponse<void>>},
-	"/interactive/emoji":{args:{elementUrl:string,schemaUrl:string,fieldName:string},returnType:Promise<SockResponse<{count:number}>>}
+	"/interactive/emoji":{args:{elementUrl:string,schemaUrl:string,fieldName:string},returnType:Promise<SockResponse<{count:number,exists:boolean,otherCount?:number,otherExists:boolean}>>}
 }
 export interface ChannelPutMapUrls {
     "/schema/create":{args:{text:string,url:string,templateId?:string},returnType:Promise<{ ok: boolean, data: { schema:Partial<TableSchema> },warn:string }>},
@@ -246,7 +246,8 @@ export interface ChannelGetMapUrls {
 	"/view/snap/query":{args:{ elementUrl: string},returnType:Promise<SockResponse<{content:string,operates:any[]}>>},
 	"/view/snap/list":{args:{wsId?: string, elementUrl: string, page: number, size: number},returnType:Promise<SockResponse<{list:any[],total:number,size:number,page:number}>>},
 	"/view/snap/content":{args:{wsId?:string,id:string},returnType:Promise<SockResponse<{id:string,content:string}>>},
-	"/block/ref/pages":{args:{wsId?:string,pageId:string},returnType:Promise<SockResponse<{list:any[],total:number,size:number,page:number}>>}
+	"/block/ref/pages":{args:{wsId?:string,pageId:string},returnType:Promise<SockResponse<{list:any[],total:number,size:number,page:number}>>},
+	"/user/interactives":{args:{elementUrl:string,schemaUrl:string,ids:string[],es:string[]},returnType:Promise<SockResponse<{list:{elementUrl:string,values:string[]}[]}>>}
 }
 export interface ChannelQueryMapUrls {
     "/current/workspace":{args:any,returnType:{id:string,sn:number,text:string}},

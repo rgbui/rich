@@ -11,11 +11,10 @@ export enum PageLayoutType {
      * 从表里选择一些数据的页面窗体
      */
     dbPickRecord = 23,
-
     /**
      * schema view
      */
-    dbView=24,
+    dbView = 24,
     //#endregion
 
     /**
@@ -30,6 +29,12 @@ export enum PageLayoutType {
      * 文字广播
      */
     textBroadcast = 50,
+
+    /**
+     * 博客
+     * 打开的是编辑博客
+     */
+    blog = 60,
 }
 
 export enum PageVersion {
