@@ -143,22 +143,10 @@ export class TableSchema {
         return channel.get('/datastore/statistics/value', Object.assign({ schemaId: this.id }, options));
     }
     fieldAdd(field: { text: string, type: FieldType, config?: Record<string, any> }) {
-        return channel.put('/schema/operate', {
-            operate: {
-                schemaId: this.id,
-                date: new Date(),
-                actions: [{ name: 'addField', field }]
-            }
-        })
+        return this.onSchemaOperate([{ name: 'addField', field }])
     }
     fieldRemove(fieldId: string) {
-        return channel.put('/schema/operate', {
-            operate: {
-                schemaId: this.id,
-                date: new Date(),
-                actions: [{ name: 'removeField', fieldId }]
-            }
-        })
+        return this.onSchemaOperate([{ name: 'removeField', fieldId }])
     }
     fieldUpdate(args: { fieldId: string, data: Record<string, any> }) {
         return channel.put('/schema/operate', {
@@ -193,6 +181,7 @@ export class TableSchema {
      * { name: 'changeSchemaView',id:view.id,data:{url:string}}
      * { name: 'updateSchema', data: { text: it.value } }
      * { name: 'moveSchemaView',id:view.id,data:{from:number,to:number}}
+     * {name:'removeField',fieldId:string}
      */
     async onSchemaOperate(actions: {
         name: string,
@@ -200,7 +189,8 @@ export class TableSchema {
         url?: string,
         field?: Record<string, any>,
         id?: string,
-        data?: Record<string, any>
+        data?: Record<string, any>,
+        fieldId?: string
     }[]) {
         var result = await channel.put('/schema/operate', {
             operate: {
@@ -240,6 +230,14 @@ export class TableSchema {
                     var view = this.views.find(g => g.id == action.id);
                     this.views.remove(g => g === view);
                     this.views.splice(action.data.to as number, 0, view);
+                    break;
+                case 'addField':
+                    var field = new Field();
+                    field.load(Object.assign({}, re));
+                    this.fields.push(field);
+                    break;
+                case 'removeField':
+                    this.fields.remove(c => c.id == action.fieldId)
                     break;
             }
         })
