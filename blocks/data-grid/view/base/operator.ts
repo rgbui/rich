@@ -34,9 +34,7 @@ export class DataGridViewOperator {
                 config: result.config
             });
             if (fieldData.ok) {
-                var field = new Field();
-                field.load(Object.assign(result, fieldData.data.actions[0]));
-                this.schema.fields.push(field);
+                var field = this.schema.fields.find(g => g.id == fieldData.data.actions[0].id);
                 if (typeof at == 'undefined') at = this.fields.length;
                 var vf = this.schema.createViewField(field);
                 var newFields = this.fields.map(f => f.clone());
@@ -66,9 +64,8 @@ export class DataGridViewOperator {
                 config: result.config
             });
             if (fieldData.ok) {
-                var field = new Field();
-                field.load(Object.assign(result, fieldData.data.actions[0]));
-                this.schema.fields.push(field);
+                var field = this.schema.fields.find(g => g.id == fieldData.data.actions[0].id)
+
                 var vf = this.schema.createViewField(field);
                 var newFields = this.fields.map(f => f.clone());
                 newFields.splice(at, 0, vf);
@@ -407,26 +404,6 @@ export class DataGridViewOperator {
             this.forceUpdate();
         }, { block: this })
     }
-    // async onShowExtendField(this: DataGridView, visible: boolean, fieldType: FieldType) {
-    //     var newFields = this.fields.map(f => f.clone());
-    //     if (visible == true && newFields.some(s => s.field?.type == fieldType)) {
-    //         return
-    //     }
-    //     else if (visible == false && !newFields.some(s => s.field?.type == fieldType)) {
-    //         return
-    //     }
-    //     this.page.onAction(ActionDirective.onSchemaCreateField, async () => {
-    //         var sf = this.schema.fields.find(g => g.type == fieldType);
-    //         if (visible == true) {
-    //             if (fieldType == FieldType.autoIncrement) newFields.insertAt(0, new ViewField({ text: '编号', fieldId: sf.id }, this.schema))
-    //             else newFields.push(new ViewField({ fieldId: sf.id }, this.schema))
-    //         }
-    //         else newFields.remove(g => g.field?.type == fieldType);
-    //         this.changeFields(this.fields, newFields);
-    //         await this.createItem();
-    //         this.forceUpdate();
-    //     }, { block: this });
-    // }
     async onShowCheck(this: DataGridView, value: DataGridView['checkRow']) {
         var newFields = this.fields.map(f => f.clone());
         if (value == 'checkbox' && newFields.some(s => s.type == 'check')) return
