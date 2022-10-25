@@ -133,7 +133,8 @@ export class Page$Cycle {
             isFullWidth: this.isFullWidth,
             smallFont: this.smallFont,
             version: this.version,
-            sourceItemId: this.sourceItemId
+            sourceItemId: this.sourceItemId,
+            loadElementUrl: this.customElementUrl
         };
         json.requireSelectLayout = this.requireSelectLayout;
         json.pageLayout = util.clone(this.pageLayout);
