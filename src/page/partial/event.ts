@@ -10,7 +10,6 @@ import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { PageLayoutType } from "../declare";
 
-
 export class PageEvent {
     /**
      * 鼠标点击页面,
@@ -264,6 +263,12 @@ export class PageEvent {
                 id: this.pageInfo.id,
                 icon: { name: "emoji", code: g.code }
             }
+        })
+    }
+    async onUpdatePageData(this: Page, data: Record<string, any>) {
+        channel.air('/page/update/info', {
+            id: this.pageInfo.id,
+            pageInfo: data
         })
     }
     async onUpdatePageTitle(this: Page, text: string) {

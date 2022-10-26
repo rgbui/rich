@@ -23,6 +23,8 @@ export class AnchorCursor {
         this.selector = new Selector(this.kit);
     }
     get isCollapse() {
+        if (!this.startAnchor) return false;
+        if (!this.endAnchor) return false;
         if (this.currentSelectedBlocks.length > 0) return false;
         var sa = this.startAnchor.isEqual(this.endAnchor);
         if (sa) {
