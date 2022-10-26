@@ -226,7 +226,7 @@ export class PageContextmenu {
         }
     }
     async onOpenPublish(this: Page, event: React.MouseEvent) {
-        await usePagePublish({ roundArea: Rect.fromEvent(event) }, this.pageInfo)
+        await usePagePublish({ roundArea: Rect.fromEvent(event) }, this.pageInfo, this)
     }
     async openMember(this: Page, event: React.MouseEvent) {
         this.showMembers = this.showMembers ? false : true;
