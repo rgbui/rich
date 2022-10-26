@@ -6,20 +6,22 @@ import { GlobalLinkSvg, LinkSvg } from "../../component/svgs";
 import { Divider } from "../../component/view/grid";
 import { Icon } from "../../component/view/icon";
 import { Switch } from "../../component/view/switch";
-import { channel } from "../../net/channel";
+import { Page } from "../../src/page";
 import { PagePermission } from "../../src/page/permission";
 import { LinkPageItem } from "../at/declare";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
-import "./style.less"
+import "./style.less";
 
 class PagePublish extends EventsComponent {
     constructor(props) {
         super(props);
     }
-    open(item: LinkPageItem) {
+    open(item: LinkPageItem, page: Page) {
         this.item = item;
+        this.page = page;
     }
+    page: Page;
     copyLink() {
         CopyText(this.item.url);
         ShyAlert('页面访问链接已复制');
@@ -27,8 +29,8 @@ class PagePublish extends EventsComponent {
     item: LinkPageItem = null;
     render() {
         var self = this;
-        function setGlobalShare(data) {
-            channel.air('/page/update/info', { id: self.item.id, pageInfo: data });
+        async function setGlobalShare(data) {
+            await self.page.onUpdatePageData(data);
             self.forceUpdate()
         }
         return <div className='shy-page-publish'>
@@ -53,10 +55,10 @@ class PagePublish extends EventsComponent {
         </div>
     }
 }
-export async function usePagePublish(pos: PopoverPosition, item: LinkPageItem) {
+export async function usePagePublish(pos: PopoverPosition, item: LinkPageItem, page: Page) {
     let popover = await PopoverSingleton(PagePublish, { mask: true });
     let pagePublish = await popover.open(pos);
-    pagePublish.open(item);
+    pagePublish.open(item, page);
     return new Promise((resolve: (data: any) => void, reject) => {
         popover.only('close', () => {
             resolve(null)
