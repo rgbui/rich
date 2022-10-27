@@ -18,9 +18,9 @@ export class DataGridViewData {
             }
         })
     }
-    async onOpenAddForm(this: DataGridView, initData?: Record<string, any>) {
+    async onOpenAddForm(this: DataGridView,viewId?:string, initData?: Record<string, any>) {
         var dialougPage: Page = await channel.air('/page/dialog', {
-            elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, this.schema.defaultAddForm?.id)
+            elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id,viewId|| this.schema.defaultAddForm?.id)
         })
         if (dialougPage) {
             var newRow = dialougPage.getSchemaRow();

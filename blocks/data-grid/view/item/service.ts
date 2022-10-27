@@ -1,9 +1,10 @@
 import { TableStoreItem } from ".";
 import { Block } from "../../../../src/block";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
+import { DataGridItemRecord } from "../../element/record";
 import { FieldType } from "../../schema/type";
 import { ViewField } from "../../schema/view";
-export async function createFieldBlock(viewField: ViewField, block: TableStoreItem) {
+export async function createFieldBlock(viewField: ViewField, block: TableStoreItem|DataGridItemRecord) {
     var cellContent: Block;
     var row = block.dataRow;
     var field = viewField.field;
