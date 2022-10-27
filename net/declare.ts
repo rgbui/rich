@@ -5,6 +5,7 @@ import { GalleryType, OuterPic } from "../extensions/image/declare";
 import { StatusCode } from "./status.code";
 import { UserAction } from "../src/history/action";
 import { UserBasic, UserStatus } from "../types/user";
+import { AtomPermission } from "../src/page/permission";
 import { ResourceArguments } from "../extensions/icon/declare";
 export type SockResponse<T, U = string> = {
         /**
@@ -115,6 +116,7 @@ export interface ChannelFireMapUrls {
 export interface ChannelDelMapUrls {
     "/schema/delete":{args:{wsId?:string,id:string},returnType:Promise<SockResponse<void>>},
 	"/datastore/remove":{args:{schemaId:string,dataId:string},returnType:Promise<{ok:boolean,warn:string}>},
+	"/datastore/remove/ids":{args:{schemaId: string,ids:string[]},returnType:Promise<SockResponse<void>>},
 	"/user/channel/delete":{args:{id:string},returnType:Promise<SockResponse<void>>},
 	"/user/write/off":{args:{sn:number},returnType:Promise<SockResponse<void>>},
 	"/user/exit/ws":{args:{wsId:string},returnType:Promise<SockResponse<void>>},
@@ -161,7 +163,6 @@ export interface ChannelPutMapUrls {
 	"/schema/operate":{args:{operate:{operate?:string,schemaId:string,date?:Date,actions:any[]}},returnType:Promise<SockResponse<{actions:any[]}>>},
 	"/datastore/add":{args:{schemaId:string,data:Record<string, any>,pos:{id:string,pos:"before"|"after"}},returnType:Promise<SockResponse<{isCacSort:boolean,data:Record<string,any>}>>},
 	"/datastore/batch/add":{args:{schemaId:string,list:any[]},returnType:Promise<{ok:boolean,data:{list:any[]},warn:string}>},
-	"/datastore/query/ids":{args:{schemaId:string,ids:string[]},returnType:Promise<{ok:boolean,data:{list:any[]},warn:string}>},
 	"/datastore/rank":{args:{schemaId:string,wsId?:string,id:string,pos:{id:string,pos:"before"|"after"}},returnType:Promise<SockResponse<{isCacSort:boolean,sort:number}>>},
 	"/datastore/row/object/update":{args:{schemaId: string, rowId: string, fieldName: string,data: Record<string, any>},returnType:Promise<SockResponse<void>>},
 	"/device/sign":{args:any,returnType:Promise<void>},
@@ -195,6 +196,7 @@ export interface ChannelGetMapUrls {
 	"/schema/ids/list":{args:{ids:string[]},returnType:Promise<SockResponse<{list:Partial<TableSchema>[]}>>},
 	"/datastore/query":{args:{schemaId:string,id:string},returnType:Promise<{ok:boolean,data:{data:Record<string, any>},warn:string}>},
 	"/datastore/query/list":{args:{schemaId:string,page?:number,size?:number,filter?:Record<string, any>,sorts?:Record<string, 1|-1>},returnType:Promise<{ok:boolean,data:{list:any[],total:number,page:number,size:number},warn:string}>},
+	"/datastore/query/ids":{args:{schemaId:string,ids:string[]},returnType:Promise<{ok:boolean,data:{list:any[]},warn:string}>},
 	"/datastore/query/all":{args:{schemaId:string,page?:number,size?:number,filter?:Record<string, any>,sorts?:Record<string, 1|-1>},returnType:Promise<{ok:boolean,data:{list:any[],total:number,page:number,size:number},warn:string}>},
 	"/datastore/group":{args:{schemaId:string,page?:number,size?:number,filter?:Record<string, any>,sorts?:Record<string, 1|-1>,group:string},returnType:Promise<{ok:boolean,data:{list:any[],total:number,page:number,size:number},warn:string}>},
 	"/datastore/statistics":{args:{schemaId:string,page?:number,size?:number,filter?:Record<string, any>,having?:Record<string, any>,sorts?:Record<string, 1|-1>,groups:string[],aggregate?: Record<string, any>},returnType:Promise<{ok:boolean,data:{list:any[],total:number,page:number,size:number},warn:string}>},

@@ -516,7 +516,9 @@ export class DataGridViewOperator {
         if (typeof ids == 'undefined') ids = this.checkItems.map(c => c.id);
         if (ids.length > 0) {
             if (await Confirm(`确定删除这些数据吗`)) {
-
+                await this.schema.rowRemoves(ids);
+                this.onReloadData()
+                ShyAlert('删除成功')
             }
         }
         else ShyAlert('请选择删除项')

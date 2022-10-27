@@ -98,6 +98,9 @@ export class TableSchema {
     rowRemove(id: string) {
         return channel.del('/datastore/remove', Object.assign({ schemaId: this.id }, { dataId: id }));
     }
+    rowRemoves(ids: string[]) {
+        return channel.del('/datastore/remove/ids', Object.assign({ schemaId: this.id }, { ids }));
+    }
     async rowGet(id: string) {
         return await this.batchRowGet.get<Record<string, any>>(id, [this.id])
         // return channel.get('/datastore/query',Object.assign({ schemaId: this.id }, { id }));
