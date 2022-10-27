@@ -1,3 +1,5 @@
+import lodash from "lodash";
+import { MergeSock } from "../../../component/lib/merge.sock";
 import { channel } from "../../../net/channel";
 import { Field } from "./field";
 import { FieldType } from "./type";
@@ -96,9 +98,18 @@ export class TableSchema {
     rowRemove(id: string) {
         return channel.del('/datastore/remove', Object.assign({ schemaId: this.id }, { dataId: id }));
     }
-    rowGet(id: string) {
-        return channel.get('/datastore/query', Object.assign({ schemaId: this.id }, { id }));
+    async rowGet(id: string) {
+        return await this.batchRowGet.get<Record<string, any>>(id, [this.id])
+        // return channel.get('/datastore/query',Object.assign({ schemaId: this.id }, { id }));
     }
+    batchRowGet = new MergeSock(async (batchs) => {
+        var gs = await channel.get('/datastore/query/ids' as any, { schemaId: batchs[0].args[0], ids: lodash.uniq(batchs.map(b => b.id)) });
+        if (gs.ok) {
+            var rs = gs.data.list;
+            return rs.map(r => { return { id: r.id, data: r } })
+        }
+        else return []
+    })
     rowUpdate(args: { dataId: string, data: Record<string, any> }) {
         return channel.patch('/datastore/update', Object.assign({ schemaId: this.id }, args));
     }
@@ -252,12 +263,7 @@ export class TableSchema {
         var schema = this.schemas.get(schemaId);
         if (schema) return schema;
         else {
-            var r = await channel.get('/schema/query', { id: schemaId });
-            if (r.ok) {
-                schema = new TableSchema(r.data.schema);
-                this.schemas.set(schemaId, schema);
-                return schema;
-            }
+            return await this.batchSchema.get<TableSchema>(schemaId)
         }
     }
     static async loadListSchema(schemaIds: string[]) {
@@ -306,7 +312,21 @@ export class TableSchema {
     static async getTableSchema(schemaId: string) {
         return this.schemas.get(schemaId)
     }
+    static batchSchema = new MergeSock(async (batchs) => {
+        var gs = await channel.get('/schema/ids/list', { ids: lodash.uniq(batchs.map(b => b.id)) });
+        if (gs.ok) {
+            var rs: TableSchema[] = [];
+            rs.push(...gs.data.list.map(r => new TableSchema(r)));
+            rs.each(r => {
+                TableSchema.schemas.set(r.id, r);
+            })
+            return rs.map(r => { return { id: r.id, data: r } })
+        }
+        else return []
+    })
+
 }
+
 
 
 /***
