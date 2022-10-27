@@ -195,9 +195,11 @@ export function getSchemaFieldMenus(map: (list: any) => any) {
     return menus;
 }
 
-export function getFieldMenus() {
-    function map(arr) {
-        return arr.map(a => {
+export function getFieldMenus()
+{
+    function map(arr)
+    {
+        return arr.map(a=>{
             return {
                 text: a.text,
                 value: a.value,

@@ -9,9 +9,8 @@ import { ViewField } from "./view";
  * syncBlockId ViewFields （控制展示的数据结构信息）
  * block fields(控制列宽)
  *
- * model: business modelMeta
- * 
  * show view(schema->syncBlock->block-business model)
+ * 
  * 
  */
 export class TableSchema {
@@ -184,7 +183,8 @@ export class TableSchema {
      * { name: 'changeSchemaView',id:view.id,data:{url:string}}
      * { name: 'updateSchema', data: { text: it.value } }
      * { name: 'moveSchemaView',id:view.id,data:{from:number,to:number}}
-     * {name:'removeField',fieldId:string}
+     * { name:'removeField',fieldId:string }
+     * 
      */
     async onSchemaOperate(actions: {
         name: string,
@@ -273,6 +273,9 @@ export class TableSchema {
             var gs = await channel.get('/schema/ids/list', { ids: schemaIds });
             if (gs.ok) {
                 rs.push(...gs.data.list.map(r => new TableSchema(r)));
+                rs.each(r => {
+                    this.schemas.set(r.id, r);
+                })
             }
         }
         return rs;
@@ -305,6 +308,20 @@ export class TableSchema {
     }
 }
 
+
+/***
+ * 
+ * 
+ * view ask-list
+ * 
+ * form add ask
+ * 
+ * record-view ask-questions
+ * 
+ * form add question
+ * 
+ * 
+ */
 
 
 
