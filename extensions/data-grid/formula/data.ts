@@ -1,2 +1,12 @@
 
-export var formulaLangs = [{ text: '', childs: [{text:'',name:''}] }]
+export var formulaLangs = [
+    {
+        text: '文本',
+        childs: [
+            {
+                text: '长度',
+                url: '/string/len.md'
+            }
+        ]
+    }
+]
