@@ -28,6 +28,7 @@ export interface LinkPageItem {
     permission?: PagePermission;
     getPermissons?(): AtomPermission[];
     getSubItems?(): Promise<LinkPageItem[]>;
+    getItem?():Partial<LinkPageItem>;
     speak?: 'more' | 'only';
     speakDate?: Date,
     textChannelMode?: 'chat' | 'weibo' | 'ask' | 'tieba'
