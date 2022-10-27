@@ -1,7 +1,7 @@
 import React from "react";
+import { InputNumber } from "../../../../component/view/input/number";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
-import { GetFieldTypeSvg } from "../../schema/util";
 import { FieldView, OriginFormField } from "./origin.field";
 @url('/form/number')
 class FieldText extends OriginFormField {
@@ -16,13 +16,12 @@ class FieldTextView extends BlockView<FieldText>{
                 self.block.onChange((event.target as HTMLInputElement).value);
             }
         }
-        return <FieldView block={this.block}><input
-            type='number'
-            data-shy-page-no-focus={true}
-            defaultValue={this.block.value}
-            onInput={e => this.block.onInput((e.target as HTMLInputElement).value)}
-            onKeyDown={e => keydown(e)}
-        />
+        return <FieldView block={this.block}>
+            <InputNumber
+                value={this.block.value}
+                onChange={e => this.block.onInput(e)}
+                onEnter={e => self.block.onChange(e)}
+            ></InputNumber>
         </FieldView>
     }
 }
