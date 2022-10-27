@@ -19,46 +19,25 @@ export class FieldBlog extends OriginField {
             self.field.id,
             self.item.dataRow.id
         )
-        console.log(elementUrl);
         var dialougPage: Page = await channel.air('/page/dialog', {
             elementUrl
-        })
-        // var r = await channel.patch('/interactive/emoji',{
-        //     elementUrl: getElementUrl(
-        //         self.block.viewField.field.type == FieldType.emoji ? ElementType.SchemaFieldData : ElementType.SchemaFieldNameData,
-        //         self.block.dataGrid.schema.id,
-        //         self.block.viewField.field.type == FieldType.emoji ? self.block.field.id : self.block.field.name,
-        //         self.block.item.dataRow.id
-        //     ),
-        //     schemaUrl: self.block.dataGrid.schema.url,
-        //     fieldName: self.block.field.name
-        // });
-        // if (r.ok) {
-        // var ov = lodash.cloneDeep(self.block.value);
-        // if (typeof ov == 'undefined') ov = {};
-        // if (typeof ov == 'number') ov = { count: ov }
-        // ov.count = r.data.count;
-        // var userid = self.block.page.user?.id;
-        // if (userid) {
-        //     if (!Array.isArray(ov.users)) {
-        //         ov.users = []
-        //     }
-        //     if (r.data.exists) {
-        //         if (!ov.users.exists(g => g == userid)) ov.users.push(userid)
-        //     }
-        //     else lodash.remove(ov.users, g => (g as any) == userid)
-        // }
-        // self.block.value = ov;
-        // self.block.item.dataRow[self.block.field.name] = ov;
-        // self.forceUpdate();
-        // }
+        });
+        if (dialougPage.pageInfo) {
+            var data = dialougPage.pageInfo.getItem();
+            self.value = data;
+            this.onUpdateCellValue(this.value);
+            this.forceUpdate();
+        }
+        var dialougPage: Page = await channel.air('/page/dialog', {
+            elementUrl: null
+        });
     }
 }
 @view('/field/blog')
 export class FieldBlogView extends BlockView<FieldBlog>{
     render() {
-        return <div className='sy-field-button' >
-
+        return <div className='sy-field-blog' >
+            {this.block.value && <span>{this.block.value.text}</span>}
         </div>
     }
 }
