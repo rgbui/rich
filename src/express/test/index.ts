@@ -1,12 +1,13 @@
 import { Express } from "..";
 import { ExpType } from "../exp/declare";
 export function testExpressIsCorrect() {
-    function testExpress(express: string, args: { name: string, type: ExpType }[], willExcute: boolean = true) {
+    
+    function testExpress(express: string, args: { name: string, type: ExpType, template?: string }[], willExcute: boolean = true) {
         if (!willExcute) return;
-        var exp = new Express(express, args);
-        var c = exp.parse();
-        exp.check();
-        console.log(express, exp, c.inferType(), exp.getLogs());
+        var exp = new Express(args);
+        var c = exp.parse(express);
+        console.log('exp', c);
+        console.log(express, exp, exp.check(), c.inferType(), exp.getLogs(), exp.compile(), exp.references);
     }
 
     testExpress('a*b', [{ name: 'a', type: 'int' }, { name: 'b', type: 'int' }], false);
@@ -14,10 +15,18 @@ export function testExpressIsCorrect() {
     testExpress('[a,b,a>b]', [{ name: 'a', type: 'int' }, { name: 'b', type: 'int' }], false);
     testExpress('1+-2', [], false);
     testExpress('{a:b,c:a*b}', [{ name: 'a', type: 'int' }, { name: 'b', type: 'int' }], false);
-    testExpress('Math.round(a)', [{ name: 'a', type: 'double' }], true);
+    testExpress('Math.round(a)', [{ name: 'a', type: 'double' }], false);
     testExpress('Math.PI', [{ name: 'a', type: 'double' }], false);
     testExpress('[a,a].join("")', [{ name: 'a', type: 'double' }], false);
 
+    //testExpress('"test"', [], true);
+
+    testExpress('"1".toInt()>3', [], false);
+    testExpress('a.toInt()>3', [{ name: 'a', type: 'string', template: 'rds(a)' }], false);
+    testExpress('Math.PI+Math.E', [], false)
+    testExpress('Math.round(a)', [{ name: 'a', type: 'number', template: 'rds(a)' }], false);
+
+    testExpress('Date.now.format("YYYY-MM-DD HH:mm:ss")', [{ name: 'a', type: 'number', template: 'rds(a)' }], true);
 
     // testExpress('"a+"+b', [{ name: "b", type: "string" }], true);
     // testExpress('a*(b+c)', [{ name: "a", type: 'int' }, { name: 'b', type: 'int' }, { name: 'c', type: 'int' }], true);

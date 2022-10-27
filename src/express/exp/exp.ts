@@ -1,3 +1,4 @@
+import lodash from "lodash";
 import { Express } from "..";
 import { Token } from "../token/token";
 import { argsIsFunType, ExpArrayType, ExpType, typeIsBool, typeIsEqual, typeIsNumber, typesIsEqual } from "./declare";
@@ -62,23 +63,31 @@ export class Exp {
         if (ignoreSelf) predict(this);
         this.childs.forEach(c => { c.each(predict, true); })
     }
+    eachOne(predict: (exp: Exp) => void, ignoreSelf: boolean = true) {
+        if (ignoreSelf) predict(this);
+        this.childs.forEach(c => { predict(c) })
+    }
     private getAttributeIndexs() {
         var tillExp: Exp;
-        var keys: string[] = [this.operator == 'variable' ? this.value : this.key];
+        var keys: string[] = this.operator == 'variable' || this.operator == '.' ? [this.operator == 'variable' ? this.value : this.key] : [];
+        var op = this.childs[0];
         while (true) {
-            var op = this.childs[0];
-            if (op.operator == '.') {
-                keys.push(op.key)
-            }
-            else {
-                if (op.operator == 'variable') {
-                    keys.push(op.value)
+            if (op) {
+                if (op.operator == '.') {
+                    keys.push(op.key)
+                    op = op.childs[0]
                 }
                 else {
-                    tillExp = op;
+                    if (op.operator == 'variable') {
+                        keys.push(op.value)
+                    }
+                    else {
+                        tillExp = op;
+                    }
+                    break;
                 }
-                break;
             }
+            else break;
         }
         keys.reverse()
         return {
@@ -100,7 +109,7 @@ export class Exp {
                     return { __unit: cs[0] };
                 }
                 else {
-                    this.express.log('error', `数组里面的数据类型不一致`);
+                    this.express.log('warn', `数组里面的数据类型不一致`);
                     return { __unit: 'any' };
                 }
                 break;
@@ -194,8 +203,11 @@ export class Exp {
             case '!':
                 if (this.childs.length == 1) {
                     if (!typeIsBool(this.childs[0].inferType(), true)) {
-                        this.express.log('warn', `${this.operator}运算符表达式类型不是布尔`)
+                        this.express.log('error', `${this.operator}运算符表达式类型不是布尔`)
                     }
+                }
+                else {
+                    this.express.log('error', `${this.operator}表达式输入不合法`);
                 }
                 this.childs.each(child => {
                     child.check();
@@ -204,13 +216,13 @@ export class Exp {
             case '?:':
                 if (this.childs.length == 3) {
                     if (!typeIsBool(this.childs[0].inferType(), true)) {
-                        this.express.log('warn', '三元表达式判断为bool类型')
+                        this.express.log('error', '三元表达式判断为bool类型')
                     }
                     if (!typeIsEqual(this.childs[1].inferType(), this.childs[2].inferType())) {
-                        this.express.log('warn', '三元表达式返回类型不一致')
+                        this.express.log('error', '三元表达式返回类型不一致')
                     }
                 }
-                else this.express.log('warn', `运算符${this.operator}表达式输入不合法`);
+                else this.express.log('error', `三元表达式${this.operator}表达式输入不合法`);
                 this.childs.each(child => {
                     child.check();
                 })
@@ -224,7 +236,7 @@ export class Exp {
 
                 }
                 else {
-                    this.express.log('error', `数组里面的数据类型不一致`);
+                    this.express.log('warn', `数组里面的数据类型不一致`);
                 }
                 this.childs.forEach(c => {
                     c.check();
@@ -261,18 +273,18 @@ export class Exp {
                     var t1 = this.childs[0].inferType();
                     var t2 = this.childs[1].inferType();
                     if (typeIsNumber(t1, true) && typeIsNumber(t2, true)) {
-                        if (!typeIsEqual(t1, t2, true))
-                            this.express.log('info', `${this.operator}运算符两边的表达式数字类型不一致${t1}!=${t2}`)
+                        // if (!typeIsEqual(t1, t2, true))
+                        //     this.express.log('info', `${this.operator}运算符两边的表达式数字类型不一致${t1}!=${t2}`)
                     }
                     else if (t1 == 'string' && t2 == 'string') {
 
                     }
                     else {
-                        this.express.log('warn', `${this.operator}运算符两边的值不全是文本或数字`)
+                        this.express.log('error', `${this.operator}运算符两边的值不全是文本或数字`)
                     }
                 }
                 else {
-                    this.express.log('warn', `运算符${this.operator}表达式输入不合法`)
+                    this.express.log('error', `运算符${this.operator}表达式输入不合法`)
                 }
                 this.childs.each(child => {
                     child.check();
@@ -284,14 +296,14 @@ export class Exp {
             case '<=':
                 if (this.childs.length == 2) {
                     if (!typeIsNumber(this.childs[0].inferType(), true)) {
-                        this.express.log('warn', `${this.operator}运算符表达式类型不是数字`)
+                        this.express.log('error', `${this.operator}运算符表达式左边类型不是数字`)
                     }
                     if (!typeIsNumber(this.childs[1].inferType(), true)) {
-                        this.express.log('warn', `${this.operator}运算符表达式类型不是数字`)
+                        this.express.log('error', `${this.operator}运算符表达式右边类型不是数字`)
                     }
                 }
                 else {
-                    this.express.log('warn', `运算符${this.operator}表达式输入不合法`)
+                    this.express.log('error', `运算符${this.operator}表达式输入不合法`)
                 }
                 this.childs.each(child => {
                     child.check();
@@ -301,11 +313,11 @@ export class Exp {
             case '==':
                 if (this.childs.length == 2) {
                     if (!typeIsEqual(this.childs[0].inferType(), this.childs[1].inferType(), true)) {
-                        this.express.log('warn', `运算符${this.operator}两边的值类型不一致`)
+                        this.express.log('error', `运算符${this.operator}两边的值类型不一致`)
                     }
                 }
                 else {
-                    this.express.log('warn', `运算符${this.operator}表达式输入不合法`)
+                    this.express.log('error', `运算符${this.operator}表达式输入不合法`)
                 }
                 this.childs.each(child => {
                     child.check();
@@ -314,20 +326,24 @@ export class Exp {
             case '||':
             case '&&':
                 if (this.childs.length == 2) {
-                    if (typeIsBool(this.childs[0].inferType()) && typeIsEqual(this.childs[0].inferType(), this.childs[1].inferType())) {
-                        this.express.log('warn', `${this.operator}运算符表达式类型不是布尔`)
+                    if (!typeIsBool(this.childs[0].inferType()) || !typeIsBool(this.childs[0].inferType())) {
+                        this.express.log('error', `${this.operator}运算符表达式类型不是布尔`)
                     }
                 }
                 else {
-                    this.express.log('warn', `运算符${this.operator}表达式输入不合法`)
+                    this.express.log('error', `运算符${this.operator}表达式输入不合法`)
                 }
                 this.childs.each(child => {
                     child.check();
                 })
                 break;
             case 'variable':
-                var dec = this.express.recommendDeclare(this.value);
-                if (!dec) this.express.log('error', `找不到申明的变量"${this.value}"`);
+                var tk = this.getAttributeIndexs();
+                var rt = this.express.recommendDeclare(tk.keys.join("."), tk.exp ? tk.exp.inferType() : undefined);
+                if (!rt) {
+                    this.express.log('error', '找不到申明的变量' + tk.keys.join('.'))
+                }
+                if (tk.exp) tk.exp.check();
                 break;
             case 'fun':
                 var child = this.childs[0];
@@ -338,7 +354,7 @@ export class Exp {
                     if (rt) {
                         var types = args.map(arg => arg.inferType());
                         if (!argsIsFunType(rt.type, types)) {
-                            this.express.log('error', `方法参数类型不一致`)
+                            this.express.log('warn', `方法参数类型不一致`)
                         }
                     }
                     else {
@@ -355,7 +371,7 @@ export class Exp {
                 if (!rt) {
                     this.express.log('error', '找不到申明的属性' + tk.keys.join('.'))
                 }
-                if (tk.exp) tk.exp.check();
+                // if (tk.exp) tk.exp.check();
                 break;
         }
     }
@@ -365,13 +381,16 @@ export class Exp {
     compile() {
         switch (this.operator) {
             case '?:':
-                return `(${this.childs[0].compile()})?(${this.childs[1].compile()}):(${this.childs[2].compile()})`
+                return `(${this.childs[0].compile()}) if (${this.childs[1].compile()}) else (${this.childs[2].compile()})`
                 break;
             case '[':
                 return '[' + this.childs.map(c => c.compile()).join(",") + "]";
                 break;
             case 'constant':
-                if (typeof this.value == 'boolean') return this.value.toString()
+                if (typeof this.value == 'boolean') {
+                    if (this.value) return 'True'
+                    else return 'False'
+                }
                 else if (typeof this.value == 'number') return this.value.toString()
                 else if (this.value == null) return 'None';
                 break;
@@ -388,22 +407,21 @@ export class Exp {
                 return `${this.childs[0].compile()}[${this.childs[1].compile()}]`
                 break;
             case 'fun':
-                var child = this.childs[0];
+                // var child = this.childs[0];
                 var args = this.childs.slice(1);
-                if (child.operator == '.' || child.operator == 'variable') {
-                    var tk = this.getAttributeIndexs();
-                    var g = this.express.compileType(
-                        tk.keys.join('.'),
-                        args.map(arg => arg.compile(),
-                            tk.exp ? tk.exp.compile() : undefined
-                        ))
-                    if (g?.code) {
-                        this.express.addReference(g.references)
-                        return g.code;
-                    }
-                    else {
-                        this.express.log('error', `函数编译时出错`)
-                    }
+                var tk = this.getAttributeIndexs();
+                var g = this.express.compileType(
+                    tk.keys.join('.'),
+                    args.map(arg => arg.compile()),
+                    tk.exp ? tk.exp.compile() : undefined,
+                    tk.exp ? tk.exp.inferType() : undefined
+                )
+                if (g?.code) {
+                    this.express.addReference(g.references)
+                    return g.code;
+                } else {
+                    this.express.log('error', `方法编译时出错`)
+                    return ' compile "." happend error ';
                 }
                 break;
             case '.':
@@ -411,13 +429,15 @@ export class Exp {
                 var g = this.express.compileType(
                     tk.keys.join('.'),
                     [],
-                    tk.exp ? tk.exp.compile() : undefined
+                    tk.exp ? tk.exp.compile() : undefined,
+                    tk.exp ? tk.exp.inferType() : undefined
                 )
                 if (g?.code) {
                     this.express.addReference(g.references)
                     return g.code;
                 } else {
                     this.express.log('error', `属性编译时出错`)
+                    return 'compile "." happend error ';
                 }
                 break;
             case 'variable':
@@ -432,6 +452,7 @@ export class Exp {
                     return g.code;
                 } else {
                     this.express.log('error', `变量编译时出错`)
+                    return `compile "variable" happend error`
                 }
                 break;
             case '{':
@@ -454,12 +475,35 @@ export class Exp {
             case '||':
             case '&&':
                 return `(${this.childs[0].compile()}${this.operator}${this.childs[1].compile()})`
+            default:
+                console.log('not found operator', this.operator);
         }
         return null;
     }
     referTokens: Token[] = [];
     referToken(...tokens: Token[]) {
         this.referTokens.push(...tokens);
+    }
+    get() {
+        var json: Record<string, any> = {};
+        json.key = this.key;
+        json.operator = this.operator;
+        json.value = lodash.cloneDeep(this.value);
+        json.childs = this.childs.map(c => c.get())
+        return json;
+    }
+    load(data: Record<string, any>) {
+        for (let n in data) {
+            if (n == 'childs') continue;
+            else this[n] = lodash.cloneDeep(data[n]);
+        }
+        if (Array.isArray(data.childs))
+            data.childs.forEach(child => {
+                var exp = new Exp();
+                exp.parent = this;
+                exp.load(child);
+                this.childs.push(exp);
+            })
     }
 }
 

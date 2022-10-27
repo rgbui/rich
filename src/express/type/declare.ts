@@ -45,7 +45,3 @@ export class DeclareTypes {
         }
     }
 }
-DeclareTypes.registerType('string', 'length', 'number', 'len($this)');
-DeclareTypes.registerType('string', 'slice', { __args: ['int', 'int'], __returnType: 'string' });
-DeclareTypes.registerStatic('Math.round', { __args: ['number'], __returnType: 'int' }, `round($args1)`)
-DeclareTypes.registerStatic('Math.PI', 'double', `math.pi`, [{ name: 'math', code: 'import math' }]);

@@ -59,7 +59,17 @@ export class ExpressParser {
                     }
                 }
             }
-            else this.log('error', '无法识别的token')
+            else if (tokens[0].name == TokenType.quote_open) {
+                var token = tokens[0];
+                var exp = new Exp('string');
+                exp.value = token.childs.map(c => c.value).join('');
+                exp.referToken(...token.childs)
+                return exp;
+            }
+            else {
+                console.log(tokens)
+                this.log('error', '无法识别的token')
+            }
         }
     }
     /**
@@ -107,9 +117,9 @@ export class ExpressParser {
             }
         }
         else if (op.value == '(') {
-            if (r2?.length > 0) {
-                this.log('error', '括号()右侧未识别的表达式')
-            }
+            // if (r2?.length > 0) {
+            //     this.log('error', '括号()右侧未识别的表达式')
+            // }
             //说明是函数
             if (r1.length > 0) {
                 exp = new Exp('fun');
@@ -129,15 +139,15 @@ export class ExpressParser {
             }
         }
         else {
-            if (op.value != '!') {
-                if (r1) {
-                    var leftExpress = this.calcExpress(r1);
-                    exp.push(leftExpress);
+            if (op.value == '!') {
+                if (r2) {
+                    exp.push(this.toUnit(r2))
                 }
             }
-            if (r2) {
-                var leftExpress = this.calcExpress(r2);
-                exp.push(leftExpress);
+            else {
+                if (r1) exp.push(this.calcExpress(r1))
+                if (rightExp) exp.push(rightExp)
+                else if (r2) exp.push(this.calcExpress(r2))
             }
         }
         return exp;
@@ -178,6 +188,7 @@ export class ExpressParser {
                     return self.toOperator(ts as Token[]);
                 }
                 else if (firstOperator && secondOperator) {
+
                     /**
                      * https://www.cnblogs.com/gavin-yao/p/10595835.html
                      * 

@@ -1,7 +1,7 @@
 
-export type ExpUnitType = 'string' | 'bool' | 'double' | 'long' | 'int' | 'number' | 'any' | 'array' | 'object' | 'void';
+export type ExpUnitType = 'string' | 'date' | 'bool' | 'double' | 'long' | 'int' | 'number' | 'any' | 'array' | 'object' | 'void';
 export type ExpObjectType = { [key: string]: ExpType };
-export type ExpArrayType = { __unit: ExpType };
+export type ExpArrayType = { __unit: ExpType, __extensible?: boolean };
 export type ExpFunType = { __args: ExpType[], __returnType?: ExpType };
 export type ExpType = ExpUnitType | ExpFunType | ExpObjectType | ExpArrayType;
 
@@ -10,18 +10,18 @@ export function typeIsEqual(type1: ExpType, type2: ExpType, considerAnyType?: bo
     if (typeof type1 == 'string' && typeof type2 == 'string')
         return type1 == type2;
     else {
-        if ((type1 as any).__unit && (type2 as any).__unit) {
+        if ((type1 as any)?.__unit && (type2 as any)?.__unit) {
             return typeIsEqual((type1 as any).__unit, (type2 as any).__unit)
         }
-        else if ((type1 as any).__args && (type2 as any).__args) {
+        else if ((type1 as any)?.__args && (type2 as any)?.__args) {
             var isArgs = typeIsEqual((type1 as any).__args, (type2 as any).__args);
             if (isArgs) {
                 return typeIsEqual((type1 as any).__returnType || 'void', (type2 as any).__returnType || 'void')
             }
             return false;
         }
-        else if (!Object.keys(type1).some(s => s.startsWith('__unit') || s.startsWith('__args') || s.startsWith('__returnType'))
-            && !Object.keys(type2).some(s => s.startsWith('__unit') || s.startsWith('__args') || s.startsWith('__returnType'))
+        else if (type1 && !Object.keys(type1).some(s => s.startsWith('__unit') || s.startsWith('__args') || s.startsWith('__returnType'))
+            && type2 && !Object.keys(type2).some(s => s.startsWith('__unit') || s.startsWith('__args') || s.startsWith('__returnType'))
         ) {
             var k1s = Object.keys(type1);
             var k2s = Object.keys(type2);

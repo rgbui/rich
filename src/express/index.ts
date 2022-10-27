@@ -1,16 +1,15 @@
 
-
 import { ExpressParser } from "./exp/parser";
 import { ExpType } from "./exp/declare";
 import { Exp } from "./exp/exp";
 import { Tokenizer } from "./token/tokenizer";
 import { DeclareTypes, TypeDeclare, TypeKind } from "./type/declare";
+import "./type/template"
 
 export class Express {
     express: string;
     args: TypeDeclare[];
-    constructor(express: string, args: { name: string, type: ExpType, template?: string }[]) {
-        this.express = express;
+    constructor(args: { name: string, type: ExpType, template?: string }[]) {
         this.args = args.map(arg => {
             return {
                 path: arg.name,
@@ -36,7 +35,11 @@ export class Express {
     log(type: string, error: string) {
         this.logs.push({ type, message: error });
     }
-    parse() {
+    compile() {
+        if (this.exp) return this.exp.compile()
+    }
+    parse(express: string) {
+        this.express = express;
         var self = this;
         this.logs = [];
         var tokenizer = new Tokenizer();
@@ -52,14 +55,22 @@ export class Express {
         this.exp._express = this;
         return this.exp;
     }
+    load(expData: Record<string, any>) {
+        this.exp = new Exp();
+        this.exp._express = this;
+        this.exp.load(expData)
+    }
     /**
      * 检测表达式
      */
     check() {
-        this.exp.each(e => e.check());
+        this.exp.eachOne(e => e.check())
     }
     getLogs() {
         return this.logs;
+    }
+    get checkOk() {
+        return this.logs.some(s => s.type == 'error') ? false : true
     }
     recommendType(name: string, caller?: ExpType) {
         var dec = this.declares.find(g => g.path == name && (caller && g.caller == caller && g.kind == TypeKind.class || !caller && [TypeKind.arg, TypeKind.static].includes(g.kind)))
@@ -89,15 +100,18 @@ export class Express {
             else return null;
         }
     }
-    compileType(name: string, args?: string[], caller?: string) {
-        var dec = this.declares.find(g => g.path == name && (caller && g.caller == caller && g.kind == TypeKind.class || !caller && [TypeKind.arg, TypeKind.static].includes(g.kind)))
+    compileType(name: string, args?: string[], callerName?: string, callerType?: ExpType) {
+        var dec: TypeDeclare;
+        if (callerType) dec = this.declares.find(g => g.path == name && g.caller == callerType && g.kind == TypeKind.class);
+        else dec = this.declares.find(g => g.path == name && (g.kind == TypeKind.static || g.kind == TypeKind.arg));
         if (dec) {
             var temp = dec.template || dec.path;
             var code = temp.replace(/(\$(this|args[\d]))/g, ($, $1) => {
-                if ($1 == '$this') return caller || '';
+                if ($1 == '$this') return callerName || '';
                 else {
                     var name = $1.replace('$args', '');
                     var n = parseFloat(name);
+                    n = n - 1;
                     if (Array.isArray(args) && args[n]) return args[n]
                 }
             });
@@ -107,37 +121,29 @@ export class Express {
             }
         }
         else {
-            dec = this.declares.find(g => name.startsWith(g.path) && (caller && g.caller == caller && g.kind == TypeKind.class || !caller && [TypeKind.arg, TypeKind.static].includes(g.kind)));
+            dec = this.declares.find(g => name.startsWith(g.path) && (g.kind == TypeKind.static || g.kind == TypeKind.arg));
             if (dec) {
                 var lastPath = name.slice((dec.path + ".").length);
                 var temp = dec.template || dec.path;
                 var code = temp.replace(/(\$(this|args[\d]))/g, ($, $1) => {
-                    if ($1 == '$this') return caller || '';
+                    if ($1 == '$this') return callerName || '';
                     else {
                         var name = $1.replace('$args', '');
                         var n = parseFloat(name);
                         if (Array.isArray(args) && args[n]) return args[n]
                     }
                 });
-                var g = this.compileType(lastPath, [], code);
-                if (g) return {
-                    code: g.code,
-                    references: [
-                        ...dec.references,
-                        ...g.references
-                    ]
-                }
-                else return null;
+                return this.compileType(lastPath, args, code, dec.type);
             }
-            else return null;
         }
     }
     references: { name: string, code }[] = [];
     addReference(references: { name: string, code: string }[]) {
-        references.forEach(ref => {
-            if (!this.references.some(r => r.name == ref.name)) {
-                this.references.push(ref);
-            }
-        })
+        if (Array.isArray(references))
+            references.forEach(ref => {
+                if (!this.references.some(r => r.name == ref.name)) {
+                    this.references.push(ref);
+                }
+            })
     }
 }
