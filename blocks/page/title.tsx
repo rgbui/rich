@@ -48,14 +48,14 @@ export class Title extends Block {
         return null;
     }
 }
+
 @view('/title')
 export class TitleView extends BlockView<Title>{
     async didMount() {
         channel.sync('/page/update/info', this.updatePageInfo);
         await this.block.loadPageInfo();
-        this.block.pageInfo.text='';
-        this.forceUpdate(() => 
-        {
+        this.block.pageInfo.text = '';
+        this.forceUpdate(() => {
             this.block.onEmptyTitleFocusAnchor();
         });
     }
@@ -80,7 +80,6 @@ export class TitleView extends BlockView<Title>{
         channel.off('/page/update/info', this.updatePageInfo);
     }
     render() {
-        console.log(this.block.pageInfo, 'block.pageInfo');
         var isAdd: boolean = this.block.page.isSupportCover;
         return <div className='sy-block-page-info' style={this.block.visibleStyle}>
             <div className="min-h-72">{this.block.pageInfo?.icon && this.block.page.cover?.abled !== true && <div onMouseDown={e => this.block.page.onChangeIcon(e)} className="sy-block-page-info-icon">

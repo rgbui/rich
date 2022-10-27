@@ -58,10 +58,12 @@ export class Page extends Events<PageDirective> {
     get user() {
         return channel.query('/query/current/user');
     }
-    get permissions() {
-        var ps = channel.query('/page/query/permissions', { pageId: this.pageInfo?.id });
-        if (Array.isArray(ps)) return ps;
-        else return [];
+    get permissions():AtomPermission[] {
+        if (this.pageInfo) return this.pageInfo.getPermissons()
+        else return []
+        // var ps = channel.query('/page/query/permissions', { pageId: this.pageInfo?.id });
+        // if (Array.isArray(ps)) return ps;
+        // else return [];
     }
     kit: Kit = new Kit(this);
     snapshoot = new HistorySnapshoot(this)
@@ -236,13 +238,13 @@ export class Page extends Events<PageDirective> {
      * 是否支持宽屏及窄屏的切换
      */
     get isSupportScreen() {
-        return [PageLayoutType.db, PageLayoutType.doc,PageLayoutType.blog].includes(this.pageLayout?.type || PageLayoutType.doc)
+        return [PageLayoutType.db, PageLayoutType.doc, PageLayoutType.blog].includes(this.pageLayout?.type || PageLayoutType.doc)
     }
     /**
      * 是否支持用户自定义封面
      */
     get isSupportCover() {
-        return [PageLayoutType.db, PageLayoutType.doc,PageLayoutType.blog].includes(this.pageLayout?.type || PageLayoutType.doc)
+        return [PageLayoutType.db, PageLayoutType.doc, PageLayoutType.blog].includes(this.pageLayout?.type || PageLayoutType.doc)
     }
     async forceUpdate() {
         return new Promise((resolve, reject) => {
