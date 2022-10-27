@@ -257,12 +257,12 @@ export class Block$LifeCycle {
                 this.page.syncUserActions(r.data.operates, 'load');
         }
     }
-    async get(this: Block, args?: { syncBlock: boolean }) {
+    async get(this: Block, args?: { syncBlock: boolean }, options?: { emptyChilds?: boolean }) {
         var json: Record<string, any> = {
             id: this._id,
             url: this.url,
             syncBlockId: this.syncBlockId,
-            // matrix: this.matrix.getValues()
+            matrix: this.matrix ? this.matrix.getValues() : undefined
         };
         if (typeof this.pattern.get == 'function')
             json.pattern = await this.pattern.get();
@@ -270,9 +270,11 @@ export class Block$LifeCycle {
             console.log(this, this.pattern);
         }
         json.blocks = {};
-        for (let b in this.blocks) {
-            if (this.allBlockKeys.some(s => s == b))
-                json.blocks[b] = await this.blocks[b].asyncMap(async x => await x.get(args));
+        if (!options?.emptyChilds == true) {
+            for (let b in this.blocks) {
+                if (this.allBlockKeys.some(s => s == b))
+                    json.blocks[b] = await this.blocks[b].asyncMap(async x => await x.get(args));
+            }
         }
         if (Array.isArray(this.__props)) {
             this.__props.each(pro => {
