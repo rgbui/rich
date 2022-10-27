@@ -106,6 +106,20 @@ export var util = {
             return (byte).toFixed(2) + "B"
         }
     },
+    async getText(url: string) {
+        return new Promise((resolve:(d:string)=>void, reject) => {
+            var x = new XMLHttpRequest();
+            x.open("GET", url, true);
+            x.responseType = 'text';
+            x.onload = function (e) {
+                resolve(x.responseText)
+            }
+            x.onerror = function (err) {
+                reject(err);
+            }
+            x.send();
+        })
+    },
     async downloadFile(url, fileName) {
         return new Promise((resolve, reject) => {
             var x = new XMLHttpRequest();
