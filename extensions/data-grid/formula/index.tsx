@@ -16,42 +16,47 @@ class FormulaSelector extends EventsComponent {
     schema: TableSchema;
     cacheDatas = new Map<string, string>()
     async openData(f) {
-        var url = ASSERT_URL + '/assert/data-grid/formula/docs' + f.url;
-        var d = this.cacheDatas.get(url);
-        if (!d) {
-            d = await util.getText(url);
-            this.cacheDatas.set(url, d);
+        try {
+            var url=ASSERT_URL + 'assert/data-grid/formula/docs' + f.url;
+            var d = this.cacheDatas.get(url);
+            if (!d) {
+                d = await util.getText(url);
+                this.cacheDatas.set(url, d);
+            }
+            this.md = d;
+            this.forceUpdate()
         }
-        this.md = d;
-        this.forceUpdate()
+        catch (ex) {
+            console.error(ex);
+        }
     }
     render(): React.ReactNode {
-        return <div className="shy-formula-selector">
+        return <div className="h-400 w-500">
             <div><Textarea value={this.formula} onChange={e => this.formula = e} onEnter={e => this.onSave(e)}></Textarea></div>
             <div className="flex-full min-h-200 max-h-300">
-                <div className="padding-10 overflow-y">
-                    <div className="gap-p-10">
-                        <div className="text-1 font-14">字段</div>
-                        {this.schema.userFields.map(f => {
-                            return <a key={f.id} className="item-hover cursor flex h-24"><span className="inline-block size-24"><Icon icon={GetFieldTypeSvg(f.type)}></Icon></span><span className="f-14 inline-block gap-l-10">{f.text}</span></a>
+                <div className="overflow-y w-120 flex-fixed">
+                    <div className="gap-h-10">
+                        <div className="remark font-12 padding-l-10">字段</div>
+                        {this.schema && this.schema.userFields.map(f => {
+                            return <div key={f.id} className="padding-w-10 item-hover round cursor flex h-30"><span className="inline-block size-24"><Icon size={16} icon={GetFieldTypeSvg(f.type)}></Icon></span><span className="f-14 inline-block">{f.text}</span></div>
                         })}
                     </div>
-                    <div className="gap-p-10">
-                        <div className="text-1 font-14">函数</div>
+                    <div className="gap-h-10">
+                        <div className="remark font-12 padding-l-10">函数</div>
                         {formulaLangs.map((fl, k) => {
-                            return <div className="gap-p-10" key={k}>
-                                <div className="text-1 font-14">{fl.text}</div>
+                            return <div className="gap-h-10" key={k}>
+                                <div className="text-1 font-14 padding-l-10">{fl.text}</div>
                                 {fl.childs.map((f, g) => {
-                                    return <a
-                                        onMouseDown={e => this.openData(f)}
+                                    return <div
+                                        onClick={e => this.openData(f)}
                                         key={g}
-                                        className="item-hover cursor flex h-24"><span className="f-14 inline-block gap-l-10">{f.text}</span></a>
+                                        className="padding-l-30 item-hover round cursor flex h-30"><span className="f-14 inline-block gap-l-10">{f.text}</span></div>
                                 })}
                             </div>
                         })}
                     </div>
                 </div>
-                <div className="padding-10 overflow-y">
+                <div className="padding-10 overflow-y flex-auto">
                     {this.md && <Markdown md={this.md}></Markdown>}
                 </div>
             </div>
@@ -86,6 +91,7 @@ class FormulaSelector extends EventsComponent {
     open(schema: TableSchema, formula: string) {
         this.schema = schema;
         this.formula = formula;
+        this.forceUpdate()
     }
 }
 export async function useFormula(pos: PopoverPosition, options: {
