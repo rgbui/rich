@@ -103,7 +103,6 @@ export class TableSchema {
     }
     async rowGet(id: string) {
         return await this.batchRowGet.get<Record<string, any>>(id, [this.id])
-        // return channel.get('/datastore/query',Object.assign({ schemaId: this.id }, { id }));
     }
     batchRowGet = new MergeSock(async (batchs) => {
         var gs = await channel.get('/datastore/query/ids' as any, { schemaId: batchs[0].args[0], ids: lodash.uniq(batchs.map(b => b.id)) });

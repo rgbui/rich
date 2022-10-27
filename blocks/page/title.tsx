@@ -54,8 +54,6 @@ export class TitleView extends BlockView<Title>{
     async didMount() {
         channel.sync('/page/update/info', this.updatePageInfo);
         await this.block.loadPageInfo();
-        if (this.block.pageInfo)
-            this.block.pageInfo.text = '';
         this.forceUpdate(() => {
             this.block.onEmptyTitleFocusAnchor();
         });

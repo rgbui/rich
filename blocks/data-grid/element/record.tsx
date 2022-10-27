@@ -47,8 +47,7 @@ export class DataGridItemRecord extends Block {
             await this.loadRelationSchemas();
             await this.loadRelationDatas();
             await this.createElements();
-            if (this.view)
-                this.view.forceUpdate();
+            if (this.view) this.view.forceUpdate();
         }
     }
     async get() {
