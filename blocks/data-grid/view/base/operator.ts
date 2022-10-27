@@ -512,4 +512,22 @@ export class DataGridViewOperator {
         await this.createItem();
         this.view.forceUpdate()
     }
+    async onBatchDelete(this: DataGridView, ids?: string[]) {
+        if (typeof ids == 'undefined') ids = this.checkItems.map(c => c.id);
+        if (ids.length > 0) {
+            if (await Confirm(`确定删除这些数据吗`)) {
+
+            }
+        }
+        else ShyAlert('请选择删除项')
+    }
+    async onBatchEdit(this: DataGridView, viewId?: string) {
+
+    }
+    async onImport(this: DataGridView) {
+
+    }
+    async onExport(this: DataGridView) {
+
+    }
 }
