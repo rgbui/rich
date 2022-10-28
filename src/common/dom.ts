@@ -278,6 +278,11 @@ class Dom {
         var matrixPoints = Array.from(matrixString.match(/\-?[0-9]+\.?[0-9]*/g)).map(c => { return parseFloat(c) });
         return new Matrix(...matrixPoints)
     }
+    getOverflowPanel() {
+        var predict = x => { return dom(x as HTMLElement).style('overflowY') == 'auto' || dom(x as HTMLElement).style('overflowX') == 'auto' }
+        var scrollDiv: HTMLElement = this.closest(predict) as any;
+        return scrollDiv;
+    }
 }
 
 export var dom = function (el: Node) {

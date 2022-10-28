@@ -56,6 +56,12 @@ export var util = {
             return dayjs(date).format('YYYY/MM/DD');
         }
     },
+    dateToStart(date: Date) {
+        return dayjs(dayjs(date).format('YYYY-MM-DD 00:00:00'), 'YYYY-MM-DD HH:mm:ss').toDate()
+    },
+    dateToEnd(date: Date) {
+        return dayjs(dayjs(date).format('YYYY-MM-DD 59:59:59'), 'YYYY-MM-DD HH:mm:ss').toDate()
+    },
     /**
      * 时间差，还剩多少
      * @param time 
@@ -107,7 +113,7 @@ export var util = {
         }
     },
     async getText(url: string) {
-        return new Promise((resolve:(d:string)=>void, reject) => {
+        return new Promise((resolve: (d: string) => void, reject) => {
             var x = new XMLHttpRequest();
             x.open("GET", url, true);
             x.responseType = 'text';

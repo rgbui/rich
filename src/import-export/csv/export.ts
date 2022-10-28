@@ -12,7 +12,7 @@
  *                  formatter:(value) =>{return ... }   //格式化函数  
  *                },
  *                ...
- *              ]
+ *             ]
  *    
  *    rows：行
  *          格式如：[{userid:101,gender:0 },{userid:102,gender:1}]

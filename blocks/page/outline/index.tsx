@@ -7,6 +7,8 @@ import "./style.less";
 import { BlockUrlConstant } from "../../../src/block/constant";
 import { Rect } from "../../../src/common/vector/point";
 import lodash from "lodash";
+import { dom } from "../../../src/common/dom";
+import { AnimatedScrollTo } from "../../../util/animatedScrollTo";
 
 @url('/outline')
 export class PageOutLine extends Block {
@@ -68,10 +70,12 @@ export class PageOutLineView extends BlockView<PageOutLine>{
     mousedownLine(line, event: React.MouseEvent) {
         var block = this.block.page.find(g => g.id == line.id);
         if (block) {
-            block.el.scrollIntoView({
-                block: "nearest",
-                inline: "nearest"
-            });
+            var panelEl = dom(block.el).getOverflowPanel();
+            var panelElRect = Rect.fromEle(panelEl);
+            var blockRect = Rect.fromEle(block.el);
+            var offset = panelEl.offsetTop;
+            var d = blockRect.top - panelElRect.top;
+            AnimatedScrollTo(panelEl, offset + d)
         }
     }
     didMount(): void {

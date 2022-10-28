@@ -3,14 +3,17 @@ import lodash from "lodash";
 import { ListType } from "../../../blocks/present/list/list";
 import { BlockCssName } from "../../block/pattern/css";
 import { dom } from "../../common/dom";
+
 /**
-   * 
-   * find img video autio 
-   * ignore input,select,textarea
-   * 
-   * key tags title hr  h1~h6  pre  ol-ul-li table b del
-   * https://zhuanlan.zhihu.com/p/81132589
-   */
+ * 
+ * find img video autio 
+ * ignore input , select , textarea
+ * 
+ * key tags title hr  h1~h6  pre  ol-ul-li table b del
+ * https://zhuanlan.zhihu.com/p/81132589
+ * 
+ * 
+ */
 async function parseTextBlock(element: HTMLElement[] | HTMLElement) {
     var blocks: Record<string, any>[] = [];
     function fr(node: HTMLElement, style?: Record<string, any>) {
@@ -82,20 +85,46 @@ async function parseTextBlock(element: HTMLElement[] | HTMLElement) {
     }
     return blocks;
 }
+
 async function parseTable(element: HTMLElement) {
     var table = element as HTMLTableElement;
     var rowBlocks: any[] = [];
-    var firstRow = table.children[0];
+    var firstRow = table.querySelector('thead')
     if (firstRow?.tagName.toLowerCase() == 'thead') {
-        var th = firstRow.children[0];
-        if (th) {
+        var tr = firstRow.children[0];
+        if (tr) {
+            var rb = { url: '/table/row', blocks: { childs: [] } }
             /**
              * 这是标题
              */
+            for (var i = 0; i < tr.children.length; i++) {
+                var th = tr.children[i] as HTMLElement;
+                rb.blocks.childs.push({
+                    url: '/table/cell',
+                    blocks: { childs: parsePanel(th) }
+                })
+            }
+            rowBlocks.push(rb);
         }
     }
-    return { url: '/table', childs: rowBlocks }
+    var secondRow = table.querySelector('tbody')
+    if (secondRow?.tagName.toLowerCase() == 'tbody') {
+        var rows = Array.from(secondRow.children);
+        for (let i = 0; i < rows.length; i++) {
+            var rb = { url: '/table/row', blocks: { childs: [] } };
+            for (let j = 0; j < rows[i].children.length; j++) {
+                var td = rows[i].children[j] as HTMLElement;
+                rb.blocks.childs.push({
+                    url: '/table/cell',
+                    blocks: { childs: parsePanel(td) }
+                })
+            }
+            rowBlocks.push(rb);
+        }
+    }
+    return { url: '/table', blocks: { childs: rowBlocks } }
 }
+
 async function parseOl(element: HTMLElement) {
     var cs = element.childNodes;
     var blocks: Record<string, any>[] = [];
@@ -131,6 +160,7 @@ async function parseOl(element: HTMLElement) {
     }
     return blocks;
 }
+
 async function parseMedia(element: HTMLElement) {
     var name = element?.tagName.toLowerCase();
     if (name == 'img') {
@@ -143,13 +173,20 @@ async function parseMedia(element: HTMLElement) {
 
     }
 }
+
 async function parsefigure(element: HTMLElement) {
     var caption = element.innerText;
     var img = element.querySelector('img');
     if (img) {
-        return { url: '/image', allowCaption: caption ? true : false, caption, initialData: { url: img.getAttribute('src') } }
+        return {
+            url: '/image',
+            allowCaption: caption ? true : false,
+            caption,
+            initialData: { url: img.getAttribute('src') }
+        }
     }
 }
+
 function getTextBlock(element: HTMLElement) {
     var url = '';
     var name = element?.tagName?.toLowerCase();
@@ -161,6 +198,7 @@ function getTextBlock(element: HTMLElement) {
     else if (name == 'blockquote') url = '/quote';
     return url;
 }
+
 function isLineElement(element: HTMLElement) {
     var name = element?.tagName?.toLowerCase();
     if (['span', 'a', 'label', 'i', 'u', 'del', 'b', 'em', 'font', 'strong'].includes(name)) {
@@ -168,6 +206,7 @@ function isLineElement(element: HTMLElement) {
     }
     else return false;
 }
+
 async function parseBlock(element: HTMLElement) {
     var name = element?.tagName?.toLowerCase();
     var textBlockUrl = getTextBlock(element);
@@ -177,7 +216,7 @@ async function parseBlock(element: HTMLElement) {
         else return null;
     }
     else if (name == 'table') return await parseTable(element)
-    else if (name == 'ol'||name=='ul' || name == 'li') return await parseOl(element)
+    else if (name == 'ol' || name == 'ul' || name == 'li') return await parseOl(element)
     else if (name == 'img' || name == 'video' || name == 'audio' || name == 'iframe') return await parseMedia(element)
     else if (name == 'figure') {
         return await parsefigure(element);
@@ -225,6 +264,11 @@ async function parseBlock(element: HTMLElement) {
         return rs;
     }
 }
+
+async function parsePanel(panel: HTMLElement) {
+    return Array.from(panel.children).map(c => parseBlock(c as HTMLElement));
+}
+
 export async function parseDom(dom: HTMLElement | Document) {
     var body = dom.querySelector('body');
     if (body) return await parseDom(body);
