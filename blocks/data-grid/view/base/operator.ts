@@ -18,8 +18,10 @@ import { util } from "../../../../util/util";
 import { BlockUrlConstant } from "../../../../src/block/constant";
 import { useDataSourceView } from "../../../../extensions/data-grid/datasource";
 import { SnapshootDataGridViewPos } from "../../../../src/history/snapshoot";
+import { useTableExport } from "../../../../extensions/data-grid/export";
 
 export class DataGridViewOperator {
+
     async onAddField(this: DataGridView, event: Rect, at?: number) {
         var self = this;
         var result = await useTableStoreAddField(
@@ -529,7 +531,7 @@ export class DataGridViewOperator {
     async onImport(this: DataGridView) {
 
     }
-    async onExport(this: DataGridView) {
-
+    async onExport(this: DataGridView, e: React.MouseEvent) {
+        await useTableExport({ roundArea: Rect.fromEvent(e) }, { schema: this.schema })
     }
 }
