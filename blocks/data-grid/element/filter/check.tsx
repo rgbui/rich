@@ -1,20 +1,40 @@
 import React from "react";
-import { url, prop, view } from "../../../../src/block/factory/observable";
+import { CheckBox } from "../../../../component/view/checkbox";
+import { Switch } from "../../../../component/view/switch";
+import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
-import { OriginFilterField } from "./origin.field";
+import { OriginFilterField, OriginFilterFieldView } from "./origin.field";
 
 @url('/field/filter/check')
 export class FilterFieldCheck extends OriginFilterField {
     checked: boolean = false;
+    @prop()
+    format: 'checkbox' | 'toggle' = 'checkbox';
+    onFilter(checked: boolean) {
+        this.checked = checked;
+        if (this.refBlock) this.refBlock.onSearch();
+    }
+    get filters() {
+        return {
+            [this.field.name]: this.checked
+        }
+    }
 }
 @view('/field/filter/check')
 export class FilterFieldCheckView extends BlockView<FilterFieldCheck>{
     render() {
-        return <div className='sy-filter-option'>
-            <input type='checkbox' checked={this.block.checked} onChange={e=>{
-                this.block.checked=(e.target as HTMLInputElement).checked;
-                this.block.refBlock.onSearch();
-            }} />
-        </div>
+        return <OriginFilterFieldView filterField={this.block}>
+
+            {this.block.format == 'checkbox' && <CheckBox checked={this.block.checked}
+                onChange={e => {
+                    this.block.onFilter(e)
+                }}></CheckBox>}
+
+            {this.block.format == 'toggle' && <Switch checked={this.block.checked}
+                onChange={e => {
+                    this.block.onFilter(e)
+                }}></Switch>}
+
+        </OriginFilterFieldView>
     }
 }

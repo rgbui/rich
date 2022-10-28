@@ -19,6 +19,10 @@ export class OriginFilterField extends Block {
     get filters() {
         return {}
     }
+    onFilter(value:any,force?:boolean){
+
+    }
+    
 }
 export class OriginFilterFieldView extends React.Component<{
     filterField: OriginFilterField,
