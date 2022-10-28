@@ -17,7 +17,7 @@ const easeInOutQuad = function (t, b, c, d) {
   return (-c / 2) * (t * (t - 2) - 1) + b
 }
 
-const animatedScrollTo = function (element, to, duration = 1000, callback?) {
+export const AnimatedScrollTo = function (element, to, duration = 1000, callback?) {
   if (!element) {
     return
   }
@@ -49,4 +49,4 @@ const animatedScrollTo = function (element, to, duration = 1000, callback?) {
   requestAnimFrame(animateScroll)
 }
 
-export default animatedScrollTo
+
