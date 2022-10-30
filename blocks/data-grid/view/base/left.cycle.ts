@@ -77,9 +77,14 @@ export class DataGridViewLife {
             })
         }
     }
-    async loadData(this: DataGridView,) {
+    async loadData(this: DataGridView) {
         if (this.schema) {
-            var r = await this.schema.list({ page: this.index, size: this.size });
+            var r = await this.schema.list({
+                page: this.index,
+                size: this.size,
+                filter:this.getSearchFilter(),
+                sorts:this.getSearchSorts()
+            });
             if (r.data) {
                 this.data = Array.isArray(r.data.list) ? r.data.list : [];
                 this.total = r.data?.total || 0;

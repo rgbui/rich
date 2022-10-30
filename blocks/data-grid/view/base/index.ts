@@ -19,6 +19,7 @@ import { DataGridViewData } from "./data";
 import { DataGridViewConfig } from "./config";
 import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { DataGridViewField } from "./field";
+import lodash from "lodash";
 
 /**
  * 
@@ -143,31 +144,25 @@ export class DataGridView extends Block {
                 this.page.syncUserActions(r.data.operates, 'load');
         }
     }
-    private getSearchFilter() {
+    getSearchFilter() {
+        var f: Record<string, any> = {}
         if (this.filter) {
-            function buildFilter(filter: SchemaFilter) {
-                if (filter.logic) {
-                    return { ['$' + filter.logic]: filter.items.map(i => buildFilter(i)) }
-                }
-                else if (filter.operator) {
-                    var field = this.schema.fields.find(g => g.id == filter.field)
-                    if (field) return {
-                        [field.name]: { ['$' + field.operator]: field.value }
-                    }
-                }
-            }
-            return buildFilter(this.filter);
+            f = lodash.cloneDeep(this.filter);
         }
+        return f
     }
-    private getSearchSorts() {
+    getSearchSorts() {
+        var sorts: Record<string, any> = {};
         if (Array.isArray(this.sorts) && this.sorts.length > 0) {
-            var sorts = {};
-            this.sorts.forEach(so => {
-                var field = this.schema.fields.find(g => g.id == so.field)
-                if (field) sorts[field.name] = so.sort;
-            });
-            return sorts;
+            this.sorts.forEach(s => {
+                var f = this.schema.fields.find(g => g.id == s.field);
+                if (f) {
+                    sorts[f.name] = s.sort;
+                }
+            })
+            return lodash.cloneDeep(this.sorts);
         }
+        return sorts;
     }
     async createItem() {
         this.blocks.childs = [];
