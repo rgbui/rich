@@ -25,7 +25,6 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
     block: DataGridView;
     onOpen(block: DataGridView) {
         this.block = block;
-        console.log(this.block.url, 'block url...');
         this.forceUpdate();
     }
     getItems(): MenuItem[] {
