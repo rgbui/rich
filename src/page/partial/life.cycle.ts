@@ -390,6 +390,23 @@ export class Page$Cycle {
             this.emit(PageDirective.blur, event);
         }
     }
+
+    onHighlightBlock(this: Page, blocks: Block[]) {
+        var bs = this.getAtomBlocks(blocks);
+        bs.forEach(b => {
+            b.el.classList.remove('shy-block-highlight');
+        })
+        bs.forEach(b => {
+            b.el.classList.add('shy-block-highlight')
+        });
+        setTimeout(() => {
+            bs.forEach(b => {
+                b.el.classList.remove('shy-block-highlight');
+            })
+        }, 5000);
+    }
+
+
     public hoverBlock: Block;
     onHoverBlock(this: Page, block: Block) {
         var isChange = this.hoverBlock != block;
