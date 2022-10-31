@@ -30,7 +30,7 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
         var data = ev.data;
         var textContent = aa.textContent;
         var data2 = textContent.slice(offset - 2, offset);
-        if (data == '/' || data == '、' && write.kit.page.keyboardPlate.is(KeyboardCode['/'])) {
+        if (data == '/' || data == '、' && (write.kit.page.keyboardPlate.is(KeyboardCode['/']) || write.kit.page.keyboardPlate.is(KeyboardCode.Slash))) {
             write.inputPop = {
                 rect,
                 type: InputTextPopSelectorType.BlockSelector,

@@ -16,9 +16,15 @@ export enum KeyboardCode {
     S = 'S',
     Esc = 'Escape',
     X = 'X',
-    C='C',
+    C = 'C',
     "\\" = '\\',
-    "\/" = "/"
+    "\/" = "/",
+
+    /**
+     * keyboardEvent 中的code
+     */
+    Slash = 'Slash',
+    Backslash = 'Backslash'
 }
 export class KeyboardPlate {
     private altKey: boolean = false;
@@ -39,6 +45,8 @@ export class KeyboardPlate {
         this.ctrlKey = event.ctrlKey;
         if (!this.keys.exists(event.key as KeyboardCode))
             this.keys.push(event.key as KeyboardCode);
+        else if (!this.keys.exists(event.code as KeyboardCode))
+            this.keys.push(event.code as KeyboardCode)
         else {
             /**
              * 长按keydown，会不断的触发，这里减轻触发的情况
