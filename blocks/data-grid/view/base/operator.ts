@@ -52,13 +52,43 @@ export class DataGridViewOperator {
             }
         }, { block: this });
     }
-    async onCloneField(this: DataGridView, viewField: ViewField) {
+    async onCloneViewField(this: DataGridView, viewField: ViewField) {
         var result = {
             text: viewField.field.text + '副本',
             type: viewField.field.type,
             config: lodash.cloneDeep(viewField.field.config)
         };
         var at = this.fields.findIndex(g => g === viewField) + 1;
+        this.page.onAction(ActionDirective.onSchemaCreateField, async () => {
+            var fieldData = await this.schema.fieldAdd({
+                text: result.text,
+                type: result.type,
+                config: result.config
+            });
+            if (fieldData.ok) {
+                var field = this.schema.fields.find(g => g.id == fieldData.data.actions[0].id)
+
+                var vf = this.schema.createViewField(field);
+                var newFields = this.fields.map(f => f.clone());
+                newFields.splice(at, 0, vf);
+                this.changeFields(this.fields, newFields);
+                this.data.forEach(row => {
+                    var defaultValue = field.getDefaultValue();
+                    if (typeof defaultValue != 'undefined')
+                        row[field.name] = defaultValue
+                });
+                await this.createItem();
+                this.forceUpdate();
+            }
+        }, { block: this });
+    }
+    async onCloneField(this: DataGridView, field: Field) {
+        var result = {
+            text: field.text + '副本',
+            type: field.type,
+            config: lodash.cloneDeep(field.config)
+        };
+        var at = this.fields.findIndex(g => g.field == field) + 1;
         this.page.onAction(ActionDirective.onSchemaCreateField, async () => {
             var fieldData = await this.schema.fieldAdd({
                 text: result.text,
@@ -111,15 +141,33 @@ export class DataGridViewOperator {
             this.forceUpdate();
         }, { block: this });
     }
-    async onDeleteField(this: DataGridView, viewField: ViewField) {
-        if (await Confirm('确定要删除该列吗')) {
+    async onDeleteViewField(this: DataGridView, viewField: ViewField, force?: boolean) {
+        if (force == true || await Confirm('确定要删除该列吗')) {
             var field = viewField.field;
             this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
                 var r = await this.schema.fieldRemove(field.id);
                 if (r.ok) {
                     var name = field.name;
                     var fields = this.fields.map(c => c.clone());
-                    fields.remove(g => g.fieldId == field.id);
+                    fields.removeAll(g => g.fieldId == field.id);
+                    this.changeFields(this.fields, fields);
+                    this.data.forEach(row => {
+                        delete row[name];
+                    });
+                    await this.createItem();
+                    this.forceUpdate();
+                }
+            }, { block: this });
+        }
+    }
+    async onDeleteField(this: DataGridView, field: Field, force?: boolean) {
+        if (force == true || await Confirm('确定要删除该列吗')) {
+            this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
+                var r = await this.schema.fieldRemove(field.id);
+                if (r.ok) {
+                    var name = field.name;
+                    var fields = this.fields.map(c => c.clone());
+                    fields.removeAll(g => g.fieldId == field.id);
                     this.changeFields(this.fields, fields);
                     this.data.forEach(row => {
                         delete row[name];

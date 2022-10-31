@@ -5,7 +5,7 @@ import { DataGridView } from "../../../../blocks/data-grid/view/base";
 import { EventsComponent } from "../../../../component/lib/events.component";
 import { Icon } from "../../../../component/view/icon";
 import { Divider } from "../../../../component/view/grid";
-import { DragHandleSvg, EyeHideSvg, EyeSvg, PlusSvg } from "../../../../component/svgs";
+import { CloseSvg, DotsSvg, DragHandleSvg, DuplicateSvg, EyeHideSvg, EyeSvg, PlusSvg, PropertysSvg, TrashSvg } from "../../../../component/svgs";
 import { Rect } from "../../../../src/common/vector/point";
 import { DragList } from "../../../../component/view/drag.list";
 import { BlockUrlConstant } from "../../../../src/block/constant";
@@ -21,6 +21,8 @@ import { cardStores } from "../../../../blocks/data-grid/card/data";
 import { SelectBox } from "../../../../component/view/select/box";
 import { CardConfig } from "../../../../blocks/data-grid/view/item/service";
 import { Field } from "../../../../blocks/data-grid/schema/field";
+import { ViewField } from "../../../../blocks/data-grid/schema/view";
+import { useSelectMenuItem } from "../../../../component/view/menu";
 
 export class DataGridFields extends EventsComponent {
     get schema() {
@@ -51,6 +53,28 @@ export class DataGridFields extends EventsComponent {
             await self.block.onMoveViewField(to, from);
             self.forceUpdate();
         }
+        async function openProperty(type: 'field' | 'view', viewField: ViewField | Field, event: React.MouseEvent) {
+            var gr = type == "view" ? (viewField as any).field as Field : (viewField as Field); ((viewField as any).field ? (viewField as any).field : viewField) as Field;
+            if (gr) {
+                var r = await useSelectMenuItem(
+                    { roundArea: Rect.fromEvent(event) },
+                    [
+                        { name: 'delete', icon: TrashSvg, text: '删除' },
+                        { name: 'clone', icon: DuplicateSvg, text: '复制' }
+                    ],
+                );
+                if (r?.item) {
+                    if (r.item.name == 'delete') {
+                        await self.block.onDeleteField(gr, true);
+                        self.forceUpdate();
+                    }
+                    else if (r.item.name == 'clone') {
+                        await self.block.onCloneField(gr);
+                        self.forceUpdate();
+                    }
+                }
+            }
+        }
         return <div>
             <div className="max-h-250 overflow-y">
                 <div className="flex h-30 padding-w-14">
@@ -65,6 +89,7 @@ export class DataGridFields extends EventsComponent {
                         <span className="size-24 round flex-center flex-fixed"><Icon size={14} icon={GetFieldTypeSvg(f.field?.type)}></Icon></span>
                         <span className="flex-auto f-14">{f.text}</span>
                         <span className="size-24 round flex-center flex-fixed item-hover"><Icon className={'eye'} size={14} onClick={async () => { await self.block.onHideField(f); self.forceUpdate() }} icon={EyeSvg}></Icon></span>
+                        <span className={"size-24 round flex-center flex-fixed"+(f.field?"  item-hover":" remark")}><Icon className={'eye'} size={14} onClick={async (e) => { openProperty('view', f, e) }} icon={DotsSvg}></Icon></span>
                     </div>
                 })}</DragList>
                 {fs.length > 0 && <>
@@ -79,6 +104,7 @@ export class DataGridFields extends EventsComponent {
                             <span className="size-24 round flex-center flex-fixed"> <Icon size={14} icon={GetFieldTypeSvg(f.type)}></Icon></span>
                             <span className="flex-auto f-14">{f.text}</span>
                             <span className="size-24 round flex-center flex-fixed item-hover">   <Icon className={'eye'} size={14} onClick={async () => { await self.block.onShowField(f); self.forceUpdate() }} icon={EyeHideSvg}></Icon></span>
+                            <span className="size-24 round flex-center flex-fixed item-hover"><Icon className={'eye'} size={14} onClick={async (e) => { openProperty('field', f, e) }} icon={DotsSvg}></Icon></span>
                         </div>
                     })}</div>
                 </>}

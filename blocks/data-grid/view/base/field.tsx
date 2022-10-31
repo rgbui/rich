@@ -489,10 +489,10 @@ export class DataGridViewField {
                 this.onAddField(rp, this.fields.findIndex(g => g == viewField) + 1);
             }
             else if (re.item.name == 'clone') {
-                this.onCloneField(viewField);
+                this.onCloneViewField(viewField);
             }
             else if (re.item.name == 'deleteProperty') {
-                this.onDeleteField(viewField);
+                this.onDeleteViewField(viewField);
             }
             else if (re.item.name == 'filter') {
                 this.onAddFilter(viewField);
