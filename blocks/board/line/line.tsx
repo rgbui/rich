@@ -81,6 +81,9 @@ export class Line extends Block {
                         if (typeof pl.x == 'string' && typeof pl.y == 'string') {
                             var pi = ps.find(g => g.arrows.every(s => [pl.x, pl.y].includes(s)));
                             if (pi) {
+                                /***
+                                 * 计算 https://www.muzhuangnet.com/show/51297.html
+                                 */
                                 var point = this.globalWindowMatrix.inverseTransform(pi.point);
                                 var handleOut: Point;
                                 if ([PointArrow.top, PointArrow.center].every(s => pi.arrows.includes(s))) {
