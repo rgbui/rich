@@ -13,7 +13,7 @@ import { BlockFactory } from "../../block/factory/block.factory";
 import { Rect } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { DropDirection } from "../../kit/handle/direction";
-import { storeCopyBlocks } from "../cache/copy";
+import { storeCopyBlocks } from "../common/copy";
 import { PageLayoutType } from "../declare";
 import { PageDirective } from "../directive";
 

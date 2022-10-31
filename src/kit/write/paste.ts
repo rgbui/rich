@@ -7,7 +7,7 @@ import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
 import { Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
 import { parseDom } from "../../import-export/html/parse";
-import { readCopyBlocks } from "../../page/cache/copy";
+import { readCopyBlocks } from "../../page/common/copy";
 import { inputBackspaceDeleteContent } from "./input";
 import { InputForceStore } from "./store";
 const URL_RGEX = /https?:\/\/([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?/ig;

@@ -9,15 +9,23 @@
 
 <body>
     <textarea id="area"></textarea>
-    <script>
-        var area = document.getElementById('area');
-        area.addEventListener('keydown', (ev) => {
-            console.log('ev', ev);
-        })
-        area.addEventListener('input',(gv)=>{
-            console.log('ggg',gv);
-        })
 
+    <Block url="/view/code" d:url="{sccc}"  cb>
+        <TextBlock><Text>ggggg</Text></TextBlock>
+    </Block>
+    <script>
+        var html = ``
+        // let parser = new DOMParser();
+        // var doc = parser.parseFromString(html, "text/html");
+        var block = document.body.querySelector('Block');
+        console.log('block',
+            block,
+            block.getAttribute('url'),
+            block.getAttribute('d:url'),
+            block.getAttribute('cb'),
+            block.children,
+            block.childNodes
+        )
     </script>
 </body>
 
