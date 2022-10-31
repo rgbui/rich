@@ -69,6 +69,14 @@ export class TableFilterView extends EventsComponent {
                 { text: '不为空', value: '$isNotNull' },
             ]
         }
+        else if ([FieldType.user, FieldType.creater, FieldType.modifyer].includes(field.type)) {
+            return [
+                { text: '是', value: '$eq' },
+                { text: '不是', value: '$ne' },
+                { text: '为空', value: '$isNull' },
+                { text: '不为空', value: '$isNotNull' },
+            ]
+        }
         else if ([FieldType.date, FieldType.createDate, FieldType.modifyDate].includes(field.type)) {
             return [
                 { text: '等于', value: '$eq' },
@@ -297,7 +305,7 @@ export class TableFilterView extends EventsComponent {
                 return <div className="flex max-h-30 padding-w-14 gap-h-10" key={index}>
                     <div className="flex-auto flex">
                         <SelectBox small className={'gap-r-10'} border options={self.getFields()} value={item.field} onChange={e => { item.field = e; self.onForceStore() }}></SelectBox>
-                        <SelectBox  small className={'gap-r-10'} border options={self.getComputedFields(item.field)} value={item.operator} onChange={e => { item.operator = e; self.onForceStore() }} ></SelectBox>
+                        <SelectBox small className={'gap-r-10'} border options={self.getComputedFields(item.field)} value={item.operator} onChange={e => { item.operator = e; self.onForceStore() }} ></SelectBox>
                         {['$notContain', '$contain', '$startWidth', '$endWidth'].includes(item.operator)
                             ||
                             ([FieldType.text,

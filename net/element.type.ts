@@ -57,7 +57,11 @@ export enum ElementType {
     /**
      * /Room/${id} 空间聊天室
      */
-    Room
+    Room,
+    /**
+    * /Comment/${id}/emoji/${id2}
+    */
+    WsCommentEmoji,
 }
 export function getElementUrl(type: ElementType, id: string, id1?: string, id2?: string) {
     if (type == ElementType.SchemaData) return ` /Schema/${id}/Data/${id1}`
@@ -71,6 +75,7 @@ export function getElementUrl(type: ElementType, id: string, id1?: string, id2?:
     else if (type == ElementType.RoomChat) return `/Room/${id}/Chat/${id1}`
     else if (type == ElementType.Block) return `/Page/${id}/Block/${id1}`
     else if (type == ElementType.SyncBlock) return `/SyncBlock/${id}`
+    else if (type == ElementType.WsCommentEmoji) return `/Comment/${id}/emoji/${id2}`
     else return `/${ElementType[type]}/${id}`
 }
 export function parseElementUrl(url: string) {
@@ -192,6 +197,16 @@ export function parseElementUrl(url: string) {
             return {
                 type: ElementType.Room,
                 id: us[0]
+            }
+        }
+    }
+    else if (us.includes('Comment')) {
+        us.removeAll(g => g == 'Comment' || g == 'emoji')
+        if (us.includes('emoji')) {
+            return {
+                type: ElementType.WsCommentEmoji,
+                id: us[0],
+                id1: us[1],
             }
         }
     }
