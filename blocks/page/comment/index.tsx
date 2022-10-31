@@ -8,6 +8,7 @@ import { Button } from "../../../component/view/button";
 import { Icon } from "../../../component/view/icon";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { Pagination } from "../../../component/view/pagination";
+import { SpinBox } from "../../../component/view/spin";
 import { channel } from "../../../net/channel";
 import { ElementType, getElementUrl } from "../../../net/element.type";
 import { Block } from "../../../src/block";
@@ -75,11 +76,9 @@ export class CommentView extends BlockView<Comment>{
             </div>
         })
     }
-    async likeComment(l)
-    {
+    async likeComment(l) {
         var r = await channel.put('/ws/comment/emoji', { elementUrl: getElementUrl(ElementType.WsCommentEmoji, l.id, 'like') });
-        if (r.ok)
-        {
+        if (r.ok) {
             l.like.count = r.data.count;
             this.block.forceUpdate()
         }
@@ -141,17 +140,10 @@ export class CommentView extends BlockView<Comment>{
                 <span></span>
             </div>
             <div className="sy-block-comments-list">
-<<<<<<< HEAD
-                {this.block.loading && <Loading></Loading>}
-                {this.renderComments()}
-                <Pagination size={this.block.size} total={this.block.total} index={this.block.index}></Pagination>
-                {this.block.list.length == 0 && <div className="remark"></div>}
-=======
-                <SpinBox spin={this.block.loading}>
-                    {this.renderComments()}
+                <SpinBox spin={this.block.loading}> {this.renderComments()}
+                    <Pagination size={this.block.size} total={this.block.total} index={this.block.index}></Pagination>
                     {this.block.list.length == 0 && <div className="remark"></div>}
                 </SpinBox>
->>>>>>> 5124036f891312c0489c25a22e28b3ce64eb83e9
             </div>
             <div className="sy-block-comments-input">
                 <div className="flex">
