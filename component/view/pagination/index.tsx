@@ -1,10 +1,5 @@
 import React from "react";
-
-
-
-
-export class Pagination extends React.Component<{ size: number, index: number, total: number, onChangeIndex: (index: number) => void }>{
-
+export class Pagination extends React.Component<{ size: number, index: number, total: number, onChangeIndex?: (index: number) => void }>{
     getPages() {
         var page = Math.ceil(this.props.total / this.props.size);
         var index: number = this.props.index;

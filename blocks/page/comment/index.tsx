@@ -6,6 +6,7 @@ import { Button } from "../../../component/view/button";
 import { Icon } from "../../../component/view/icon";
 import { Loading } from "../../../component/view/loading";
 import { useSelectMenuItem } from "../../../component/view/menu";
+import { Pagination } from "../../../component/view/pagination";
 import { channel } from "../../../net/channel";
 import { Block } from "../../../src/block";
 import { url, view } from "../../../src/block/factory/observable";
@@ -74,6 +75,10 @@ export class CommentView extends BlockView<Comment>{
         this.textarea.value = '';
         await channel.put('/ws/comment/add' as any, { content: value })
     }
+    onChangeIndex(index: number) {
+        this.block.index = index;
+        this.forceUpdate();
+    }
     onCancel() {
         this.textarea.value = '';
     }
@@ -87,6 +92,7 @@ export class CommentView extends BlockView<Comment>{
             <div className="sy-block-comments-list">
                 {this.block.loading && <Loading></Loading>}
                 {this.renderComments()}
+                <Pagination size={this.block.size} total={this.block.total} index={this.block.index}></Pagination>
                 {this.block.list.length == 0 && <div className="remark"></div>}
             </div>
             <div className="sy-block-comments-input">
