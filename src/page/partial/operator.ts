@@ -17,7 +17,7 @@ import { storeCopyBlocks } from "../common/copy";
 import { PageLayoutType } from "../declare";
 import { PageDirective } from "../directive";
 
-export class Page$Operator{
+export class Page$Operator {
     /**
     * 创建一个block
     * @param url 
