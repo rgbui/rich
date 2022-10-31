@@ -102,7 +102,6 @@ export class DataGridViewOperator {
     }
     async onMoveViewField(this: DataGridView, to: number, from: number) {
         this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
-
             var f = this.fields[from];
             var vs = this.fields.map(f => f.clone());
             vs.remove(g => g.type && f.type && g.type == f.type || g.field?.id == f.field?.id);
@@ -218,7 +217,7 @@ export class DataGridViewOperator {
         var pa = this.parent;
         var id = this.id;
         await this.delete();
-        var newBlock = await this.page.createBlock(view.url,
+        var newBlock = await this.page.createBlock(url,
             {
                 syncBlockId: view.id,
                 schemaId: this.schema.id

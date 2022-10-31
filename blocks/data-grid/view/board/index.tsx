@@ -19,7 +19,7 @@ export class TableStoreBoard extends DataGridView {
     dataGroups: { group: string, color: string, value: string, count: number }[] = [];
     async loadData() {
         if (!this.groupFieldId) {
-            this.groupFieldId = this.fields.find(g => g.field.type == FieldType.option || g.field.type == FieldType.options)?.field?.id;
+            this.groupFieldId = this.fields.find(g => g.field?.type == FieldType.option || g.field?.type == FieldType.options)?.field?.id;
         }
         if (this.groupField) {
             if (this.schema) {
