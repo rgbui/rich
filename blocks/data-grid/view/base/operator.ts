@@ -227,6 +227,7 @@ export class DataGridViewOperator {
         );
         this.page.addBlockUpdate(newBlock.parent);
         this.page.addUpdateEvent(async () => {
+            newBlock.url = url;
             newBlock.id = id;
             await newBlock.didMounted();
         })
