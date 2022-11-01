@@ -97,7 +97,6 @@ export class DataGridViewOperator {
             });
             if (fieldData.ok) {
                 var field = this.schema.fields.find(g => g.id == fieldData.data.actions[0].id)
-
                 var vf = this.schema.createViewField(field);
                 var newFields = this.fields.map(f => f.clone());
                 newFields.splice(at, 0, vf);
@@ -112,10 +111,10 @@ export class DataGridViewOperator {
             }
         }, { block: this });
     }
-    async onUpdateField(this: DataGridView, viewField: ViewField, data: Record<string, any>) {
+    async onUpdateField(this: DataGridView, field: Field, data: Record<string, any>) {
         await this.page.onAction(ActionDirective.onSchemaUpdateField, async () => {
-            await this.schema.fieldUpdate({ fieldId: viewField.field.id, data });
-            viewField.field.load(data);
+            await this.schema.fieldUpdate({ fieldId: field.id, data });
+            field.load(data);
             await this.createItem();
             this.forceUpdate();
         }, { block: this });

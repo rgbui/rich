@@ -5,7 +5,7 @@ import { DataGridView } from "../../../../blocks/data-grid/view/base";
 import { EventsComponent } from "../../../../component/lib/events.component";
 import { Icon } from "../../../../component/view/icon";
 import { Divider } from "../../../../component/view/grid";
-import { CloseSvg, DotsSvg, DragHandleSvg, DuplicateSvg, EyeHideSvg, EyeSvg, PlusSvg, PropertysSvg, TrashSvg } from "../../../../component/svgs";
+import { DotsSvg, DragHandleSvg, DuplicateSvg, EyeHideSvg, EyeSvg, PlusSvg, TrashSvg } from "../../../../component/svgs";
 import { Rect } from "../../../../src/common/vector/point";
 import { DragList } from "../../../../component/view/drag.list";
 import { BlockUrlConstant } from "../../../../src/block/constant";
@@ -56,12 +56,16 @@ export class DataGridFields extends EventsComponent {
         async function openProperty(type: 'field' | 'view', viewField: ViewField | Field, event: React.MouseEvent) {
             var gr = type == "view" ? (viewField as any).field as Field : (viewField as Field); ((viewField as any).field ? (viewField as any).field : viewField) as Field;
             if (gr) {
+                var items = [
+                    { name: 'name', type: MenuItemType.input, value: gr.text },
+                    { type: MenuItemType.divide },
+                    { name: 'delete', icon: TrashSvg, text: '删除' },
+                    { name: 'clone', icon: DuplicateSvg, text: '复制' }
+                ];
+                var na = items[0];
                 var r = await useSelectMenuItem(
                     { roundArea: Rect.fromEvent(event) },
-                    [
-                        { name: 'delete', icon: TrashSvg, text: '删除' },
-                        { name: 'clone', icon: DuplicateSvg, text: '复制' }
-                    ],
+                    items,
                 );
                 if (r?.item) {
                     if (r.item.name == 'delete') {
@@ -72,6 +76,10 @@ export class DataGridFields extends EventsComponent {
                         await self.block.onCloneField(gr);
                         self.forceUpdate();
                     }
+                }
+                if (na && na.value != gr.text && na.value) {
+                    await self.block.onUpdateField(gr, { text: na.value });
+                    self.forceUpdate();
                 }
             }
         }
@@ -89,7 +97,7 @@ export class DataGridFields extends EventsComponent {
                         <span className="size-24 round flex-center flex-fixed"><Icon size={14} icon={GetFieldTypeSvg(f.field?.type)}></Icon></span>
                         <span className="flex-auto f-14">{f.text}</span>
                         <span className="size-24 round flex-center flex-fixed item-hover"><Icon className={'eye'} size={14} onClick={async () => { await self.block.onHideField(f); self.forceUpdate() }} icon={EyeSvg}></Icon></span>
-                        <span className={"size-24 round flex-center flex-fixed"+(f.field?"  item-hover":" remark")}><Icon className={'eye'} size={14} onClick={async (e) => { openProperty('view', f, e) }} icon={DotsSvg}></Icon></span>
+                        <span className={"size-24 round flex-center flex-fixed" + (f.field ? "  item-hover" : " remark")}><Icon className={'eye'} size={14} onClick={async (e) => { openProperty('view', f, e) }} icon={DotsSvg}></Icon></span>
                     </div>
                 })}</DragList>
                 {fs.length > 0 && <>

@@ -403,7 +403,7 @@ export class DataGridViewField {
                                     var config = lodash.cloneDeep(viewField?.field?.config);
                                     if (typeof config == 'undefined') config = {};
                                     config.options = ops;
-                                    await self.onUpdateField(viewField, { config });
+                                    await self.onUpdateField(viewField.field, { config });
                                     mp.updateItems(self.getFieldMenuItems(viewField))
                                 }
                             }
@@ -418,7 +418,7 @@ export class DataGridViewField {
                                 var config = lodash.cloneDeep(viewField?.field?.config);
                                 if (typeof config == 'undefined') config = {};
                                 config.options = ops;
-                                await self.onUpdateField(viewField, { config });
+                                await self.onUpdateField(viewField.field, { config });
                                 mp.updateItems(self.getFieldMenuItems(viewField))
                             }
                         }
@@ -435,13 +435,13 @@ export class DataGridViewField {
                         var config = lodash.cloneDeep(viewField?.field?.config);
                         if (typeof config == 'undefined') config = {};
                         config.includeTime = item.checked;
-                        await self.onUpdateField(viewField, { config });
+                        await self.onUpdateField(viewField.field, { config });
                     }
                     else if (item.name == 'isMultiple') {
                         var config = lodash.cloneDeep(viewField?.field?.config);
                         if (typeof config == 'undefined') config = {};
                         config.isMultiple = item.checked;
-                        await self.onUpdateField(viewField, { config });
+                        await self.onUpdateField(viewField.field, { config });
                     }
                     else if (item.name == 'optionContainer') {
                         var [from, to] = item.value;
@@ -452,7 +452,7 @@ export class DataGridViewField {
                         var config = lodash.cloneDeep(viewField?.field?.config);
                         if (typeof config == 'undefined') config = {};
                         config.options = ops;
-                        await self.onUpdateField(viewField, { config });
+                        await self.onUpdateField(viewField.field, { config });
                     }
                 }
             }
@@ -473,7 +473,7 @@ export class DataGridViewField {
                     if (r.type == viewField.field.type) {
                         var config = lodash.cloneDeep(viewField.field.config || {});
                         Object.assign(config, r.config);
-                        await this.onUpdateField(viewField, { text: r.text, config })
+                        await this.onUpdateField(viewField.field, { text: r.text, config })
                     }
                     else {
                         var config = lodash.cloneDeep(viewField.field.config || {});
@@ -508,14 +508,14 @@ export class DataGridViewField {
                 if (typeof config == 'undefined') config = {};
                 config.dateFormat = re.item.value;
                 if (dItem) dItem.value = re.item.value;
-                await this.onUpdateField(viewField, { config });
+                await this.onUpdateField(viewField.field, { config });
             }
             else if (re?.item.name == 'numberFormat' || re?.item.name == 'numberUnit') {
                 var config = lodash.cloneDeep(viewField?.field?.config);
                 if (typeof config == 'undefined') config = {};
                 config.numberFormat = re.item.value;
                 nItem.value = re.item.value;
-                await this.onUpdateField(viewField, { config });
+                await this.onUpdateField(viewField.field, { config });
             }
             else if (re.item.name == 'formula') {
                 var formula = await useFormula({ roundArea: rp }, {
@@ -525,7 +525,7 @@ export class DataGridViewField {
                 var config = lodash.cloneDeep(viewField?.field?.config);
                 if (typeof config == 'undefined') config = {};
                 config.formula = formula;
-                await self.onUpdateField(viewField, { config });
+                await self.onUpdateField(viewField.field, { config });
             }
             else if (re.item.name == 'emoji') {
                 var rc = await useOpenEmoji({ roundArea: rp });
@@ -533,20 +533,20 @@ export class DataGridViewField {
                     var config = lodash.cloneDeep(viewField?.field?.config);
                     if (typeof config == 'undefined') config = {};
                     config.emoji = rc;
-                    await self.onUpdateField(viewField, { config });
+                    await self.onUpdateField(viewField.field, { config });
                 }
             }
             else if (re.item.name == 'config.imageFormat.display') {
                 var config = lodash.cloneDeep(viewField?.field?.config);
                 if (typeof config == 'undefined') config = {};
                 lodash.set(config, 'imageFormat.display', re.item.value)
-                await self.onUpdateField(viewField, { config });
+                await self.onUpdateField(viewField.field, { config });
             }
             else if (re.item.name == 'config.imageFormat.multipleDisplay') {
                 var config = lodash.cloneDeep(viewField?.field?.config);
                 if (typeof config == 'undefined') config = {};
                 lodash.set(config, 'imageFormat.multipleDisplay', re.item.value)
-                await self.onUpdateField(viewField, { config });
+                await self.onUpdateField(viewField.field, { config });
             }
         }
         if (isSysField) {
@@ -558,7 +558,7 @@ export class DataGridViewField {
         else {
             if (ReItem.value != viewField.field?.text) {
                 //编辑列名了
-                this.onUpdateField(viewField, { text: ReItem.value })
+                this.onUpdateField(viewField.field, { text: ReItem.value })
             }
         }
         if (dItem) {
@@ -566,7 +566,7 @@ export class DataGridViewField {
                 var config = lodash.cloneDeep(viewField?.field?.config);
                 if (typeof config == 'undefined') config = {};
                 config.dateFormat = dItem.value;
-                await this.onUpdateField(viewField, { config });
+                await this.onUpdateField(viewField.field, { config });
             }
         }
         if (nItem) {
@@ -574,7 +574,7 @@ export class DataGridViewField {
                 var config = lodash.cloneDeep(viewField?.field?.config);
                 if (typeof config == 'undefined') config = {};
                 config.numberFormat = nItem.value;
-                await this.onUpdateField(viewField, { config });
+                await this.onUpdateField(viewField.field, { config });
             }
         }
         self.dataGridTool.isOpenTool = false;
