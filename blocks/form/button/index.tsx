@@ -1,16 +1,16 @@
 import React from "react";
-import { FlagSvg } from "../../../component/svgs";
+import { EditSvg, EmojiSvg, FlashSvg, FontSvg, PlusSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { useSelectMenuItem } from "../../../component/view/menu";
-import { MenuItemType } from "../../../component/view/menu/declare";
+import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { ToolTip } from "../../../component/view/tooltip";
 import { BoxTip } from "../../../component/view/tooltip/box";
+import { useIconPicker } from "../../../extensions/icon";
 import { IconArguments } from "../../../extensions/icon/declare";
 import { Block } from "../../../src/block";
-import { BlockDisplay } from "../../../src/block/enum";
+import { BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
-import { TextArea } from "../../../src/block/view/appear";
 import { Rect } from "../../../src/common/vector/point";
 import { PageLayoutType } from "../../../src/page/declare";
 import { DataGridView } from "../../data-grid/view/base";
@@ -29,6 +29,12 @@ export class BlockButton extends Block {
     action: string = 'none';
     @prop()
     actionProps: Record<string, any> = {};
+
+    @prop()
+    ghost: boolean = false;
+
+    @prop()
+    buttonSize: 'default' | 'larger' | 'small' = 'default';
     get refBlock(): DataGridView {
         return super.refBlock as DataGridView;
     }
@@ -72,7 +78,7 @@ export class BlockButton extends Block {
             var schema = this.refBlock.schema;
             var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) },
                 [
-                    { text: '点击触发的动作', type: MenuItemType.text },
+                    { text: '点击触发动作', type: MenuItemType.text },
                     { name: 'search', checkLabel: this.action == 'search' ? true : false, text: '刷新加载列表' },
                     { name: 'batchDelete', checkLabel: this.action == 'batchDelete' ? true : false, text: '批量删除' },
                     {
@@ -129,7 +135,7 @@ export class BlockButton extends Block {
         else {
             var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) },
                 [
-                    { text: '点击触发的动作', type: MenuItemType.text },
+                    { text: '点击触发动作', type: MenuItemType.text },
                     { name: 'reload', checkLabel: this.action == 'reload' ? true : false, text: '刷新加载页面' },
                     { name: 'back', checkLabel: this.action == 'back' ? true : false, text: '回退' },
                     { name: 'export', checkLabel: this.action == 'export' ? true : false, text: '导出' },
@@ -143,24 +149,122 @@ export class BlockButton extends Block {
             }
         }
     }
+    async openEdit(event: React.MouseEvent) {
+        var items: MenuItem[] = [
+            {
+                text: '显示按钮文字',
+                icon: FontSvg,
+                type: MenuItemType.switch,
+                checked: this.showText,
+                name: 'showText',
+                updateMenuPanel: true,
+            },
+            {
+                type: MenuItemType.divide,
+                visible: (items) => {
+                    var mp = items.find(g => g.name == 'showText');
+                    if (mp?.checked) return true
+                    else return false
+                },
+            },
+            {
+                text: '文本',
+                visible: (items) => {
+                    var mp = items.find(g => g.name == 'showText');
+                    if (mp?.checked) return true
+                    else return false
+                },
+                type: MenuItemType.input,
+                name: 'content',
+                value: this.content
+            },
+            { type: MenuItemType.divide },
+            {
+                text: '显示按钮图标',
+                icon: EmojiSvg,
+                type: MenuItemType.switch,
+                checked: this.showIcon,
+                name: 'showIcon',
+                updateMenuPanel: true,
+            },
+            {
+                text: '选择按钮图标',
+                icon: PlusSvg,
+                iconSize: 18,
+                visible: (items) => {
+                    var mp = items.find(g => g.name == 'showIcon');
+                    if (mp?.checked) return true
+                    else return false
+                },
+                name: 'src',
+                value: this.content
+            },
+            { type: MenuItemType.divide },
+            {
+                text: '大小',
+                name: 'buttonSize',
+                value: this.buttonSize,
+                type: MenuItemType.select,
+                options: [
+                    { text: '默认', value: 'default' },
+                    { text: '较小', value: 'small' },
+                    { text: '较大', value: 'larger' }
+                ]
+            },
+            {
+                text: '幽灵',
+                type: MenuItemType.switch,
+                checked: this.ghost,
+                name: 'ghost',
+            },
+        ];
+        var ci = items.find(g => g.name == 'content');
+        var rect = Rect.fromEvent(event);
+        var self = this;
+        var r = await useSelectMenuItem({ roundArea: rect }, items, {
+            input(item) {
+                if (item.name == 'showText' || item.name == 'showIcon' || item.name == 'ghost') {
+                    self.onUpdateProps({ [item.name]: item.checked }, { range: BlockRenderRange.self });
+                }
+                else if (item.name == 'buttonSize') {
+                    self.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self });
+                }
+            }
+        });
+        if (r?.item) {
+            if (r.item.name == 'src') {
+                var g = await useIconPicker({ roundArea: rect });
+                if (g) {
+                    self.onUpdateProps({ src: g }, { range: BlockRenderRange.self })
+                }
+            }
+        }
+        if (ci.value !== this.content) {
+            self.onUpdateProps({ content: ci.value }, { range: BlockRenderRange.self });
+        }
+    }
+    @prop()
+    content: string = '按钮';
 }
 @view('/button')
 export class BlockButtonView extends BlockView<BlockButton>{
     render() {
-        return <BoxTip overlay={<div className="flex">
+        return <BoxTip overlay={<div className="flex h-30 round padding-w-5">
             <ToolTip overlay={'动作'}>
-                <a className="item-hover size-24 round cursor" onMouseDown={e => this.block.openFlash(e)}>
-                    <Icon icon={FlagSvg}></Icon>
-                </a>
+                <span className="flex-center text-1  item-hover size-24 round cursor" onMouseDown={e => this.block.openFlash(e)}>
+                    <Icon size={16} icon={FlashSvg}></Icon>
+                </span>
+            </ToolTip>
+            <ToolTip overlay={'编辑'}>
+                <span className="flex-center text-1  item-hover size-24 round cursor" onMouseDown={e => this.block.openEdit(e)}>
+                    <Icon size={16} icon={EditSvg}></Icon>
+                </span>
             </ToolTip>
         </div>}>
-            <button className='sy-button'
+            <button className={'sy-button flex' + (' sy-button-' + this.block.buttonSize) + (this.block.ghost ? " sy-button-ghost" : "")}
                 onMouseDown={e => this.block.mousedown(e)}>
-                {this.block.showIcon && <span>
-                    <Icon size={16} icon={this.block.src}></Icon>
-                </span>}
-                {this.block.showText && <span><TextArea block={this.block} placeholder='按钮'
-                    prop='content'></TextArea></span>}
+                {this.block.showIcon && <span className={this.block.showText ? "gap-r-5" : ""}><Icon size={16} icon={this.block.src}></Icon></span>}
+                {this.block.showText && <span>{this.block.content}</span>}
             </button>
         </BoxTip>
     }

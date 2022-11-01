@@ -124,7 +124,7 @@ export class MenuItemView extends React.Component<{
             ref={e => this.el = e}>
             {(item.type == MenuItemType.item || !item.type) && <ToolTip overlay={item.overlay} placement={item.placement || 'right'} > <a className={'shy-menu-box-item-option' + (item.disabled == true ? " disabled" : "")}
                 onMouseUp={e => this.select(item, e.nativeEvent)}>
-                {item.icon && <i className="flex-center flex-line size-20"><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
+                {item.icon && <i className="flex-center flex-line size-20 text-1 "><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
                 {item.renderIcon && item.renderIcon(item, this)}
                 <span className='shy-menu-box-item-option-text'>{item.text}{item.remark && <i className="remark padding-l-5">{item.remark}</i>}</span>
                 {item.checkLabel && <Icon className={'shy-menu-box-item-option-label-icon'} size={16} icon={CheckSvg}></Icon>}
@@ -141,14 +141,14 @@ export class MenuItemView extends React.Component<{
             {item.type == MenuItemType.divide && <a className='shy-menu-box-item-divide'></a>}
             {item.type == MenuItemType.text && <a className='shy-menu-box-item-text'>{item.text}</a>}
             {item.type == MenuItemType.switch && <a className='shy-menu-box-item-switch'>
-                {item.icon && <i className="flex-center flex-inline size-20"><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
+                {item.icon && <i className="flex-center flex-inline size-20 text-1"><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
                 <span>{item.text}</span>
                 <Switch onChange={e => this.checked(e, item)} checked={item.checked ? item.checked : false}></Switch>
             </a>}
             {item.type == MenuItemType.input && <div className="shy-menu-box-item-input"><Input size={'small'} value={item.value} onEnter={e => { item.value = e; this.select(item) }} onChange={e => { item.value = e; this.input(e, item) }} placeholder={item.text}></Input></div>}
             {item.type == MenuItemType.button && <div className="shy-menu-box-item-button"><Button icon={item.icon} disabled={item.disabled} block onClick={e => item.buttonClick != 'click' ? this.select(item, e.nativeEvent) : this.click(item, e)}>{item.text}</Button></div>}
             {item.type == MenuItemType.select && <div className="shy-menu-box-item-select">
-                {item.icon && <i className="flex-center flex-inline size-20 flex-fix"><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
+                {item.icon && <i className="flex-center flex-inline size-20 flex-fix text-1"><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
                 {item.renderIcon && item.renderIcon(item, this)}
                 <span className='shy-menu-box-item-option-text flex-auto'>{item.text}</span>
                 <span className="shy-menu-box-item-select-value flex  flex-fix" onMouseDown={e => this.openSelectMenu(item, e)}>
