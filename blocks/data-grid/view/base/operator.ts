@@ -500,7 +500,7 @@ export class DataGridViewOperator {
     }
     async onChangeSize(this: DataGridView, size: number) {
         this.page.onAction(ActionDirective.onDataGridChangeSize, async () => {
-            var totalPage = Math.ceil(this.total / this.size);
+            var totalPage = Math.ceil(this.total / size);
             if (!(this.pageIndex >= 1 && this.pageIndex <= totalPage)) {
                 this.pageIndex = 1;
             }
