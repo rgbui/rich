@@ -682,11 +682,11 @@ each(@selectors, {
     width: 100%;
 }
 
-@ops: 1, 0, 2, 4, 6, 8, 9, 7, 5;
+@ops: 1, 0, 2, 4,5,  6, 8, 9, 7;
 
 each(@ops, {
         .op-@{value} {
-            opacity: @value;
+            opacity:@value*0.1;
         }
     }
 
