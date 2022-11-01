@@ -60,8 +60,21 @@ export class DataGridView extends Block {
         return this.schema.views.find(g => g.id == this.syncBlockId);
     }
     data: Record<string, any>[] = [];
-    isLoadData: boolean = false;
-    index: number = 1;
+    isLoadingData: boolean = false;
+    async onLoadingAction(fn: () => Promise<void>) {
+        this.isLoadingData = true;
+        if (this.isMounted) this.forceUpdate()
+        try {
+            await fn();
+        }
+        catch (ex) {
+            console.error(ex)
+        }
+        this.isLoadingData = false;
+        if (this.isMounted) this.forceUpdate()
+    }
+    pageIndex: number = 1;
+    @prop()
     size: number = 50;
     total: number = 0;
     init(this: DataGridView): void {
@@ -97,8 +110,10 @@ export class DataGridView extends Block {
             json.pattern = await this.pattern.get();
         json.blocks = {};
         if (Array.isArray(this.__props)) {
-            super.__props.each(pro => {
-                json[pro] = this.clonePropData(pro, this[pro]);
+            var ss = super.__props;
+            this.__props.each(pro => {
+                if (ss.includes(pro) || pro == 'size')
+                    json[pro] = this.clonePropData(pro, this[pro]);
             })
         }
         return json;
@@ -109,10 +124,9 @@ export class DataGridView extends Block {
             json.pattern = await this.pattern.get();
         json.blocks = {};
         if (Array.isArray(this.__props)) {
-            var ss = super.__props;
             this.__props.each(pro => {
-                if (ss.includes(pro)) return;
-                json[pro] = this.clonePropData(pro, this[pro]);
+                if (pro !== 'size')
+                    json[pro] = this.clonePropData(pro, this[pro]);
             })
         }
         return JSON.stringify(json);
@@ -132,6 +146,7 @@ export class DataGridView extends Block {
             }
             this.fields = [];
             for (var n in data) {
+                console.log('sync blocks', n, data[n]);
                 if (n == 'pattern') {
                     await this.pattern.load(data[n]);
                 }

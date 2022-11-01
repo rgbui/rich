@@ -79,16 +79,17 @@ export class DataGridViewLife {
     }
     async loadData(this: DataGridView) {
         if (this.schema) {
+            this.isLoadingData = true;
             var r = await this.schema.list({
-                page: this.index,
+                page: this.pageIndex,
                 size: this.size,
-                filter:this.getSearchFilter(),
-                sorts:this.getSearchSorts()
+                filter: this.getSearchFilter(),
+                sorts: this.getSearchSorts()
             });
             if (r.data) {
                 this.data = Array.isArray(r.data.list) ? r.data.list : [];
                 this.total = r.data?.total || 0;
-                this.isLoadData = true;
+                this.isLoadingData = false;
             }
         }
     }

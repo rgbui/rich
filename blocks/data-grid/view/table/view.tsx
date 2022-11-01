@@ -14,6 +14,7 @@ import { CheckSvg, CollectTableSvg, PlusSvg, TypesNumberSvg } from "../../../../
 import { ghostView } from "../../../../src/common/ghost"
 import { ViewField } from "../../schema/view"
 import lodash from "lodash"
+import { Spin, SpinBox } from "../../../../component/view/spin"
 
 @view('/data-grid/table')
 export class TableStoreView extends BlockView<TableStore>{
@@ -190,9 +191,9 @@ export class TableStoreView extends BlockView<TableStore>{
     }
     renderBody() {
         var self = this;
-        if (this.block.data && this.block.isLoadData) {
-            var ids = this.block.childs.map(c => c.id)
-            return <div className='sy-dg-table-body'>
+        if (this.block.data) {
+            var ids = this.block.childs.map(c =>c.id)
+            return <SpinBox spin={this.block.isLoadingData}><div className='sy-dg-table-body'>
                 <ChildsArea childs={this.block.childs}></ChildsArea>
                 {!this.block.isLock && <div
                     style={{ width: this.sumWidth + 'px' }}
@@ -200,9 +201,9 @@ export class TableStoreView extends BlockView<TableStore>{
                     className="sy-dg-table-add">
                     <Icon size={12} icon={PlusSvg}></Icon><span>新增</span>
                 </div>}
-            </div>
+            </div></SpinBox>
         }
-        else return <div><Loading></Loading></div>
+        else return <Spin block></Spin>
     }
     renderCreateTable() {
         return !this.block.schema && <div className="item-hover item-hover-focus cursor round flex" onClick={e => this.block.onCreateTableSchema()}>

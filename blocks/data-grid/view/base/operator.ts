@@ -490,19 +490,26 @@ export class DataGridViewOperator {
         }
         this.page.emit(PageDirective.selectRows, this, this.checkItems)
     }
-    async onChangeIndex(this: DataGridView, index: number) {
-        this.index = index;
-        this.emit('changeIndex', this.index);
-        await this.loadData();
-        this.forceUpdate();
+    async onListPageIndex(this: DataGridView, index: number) {
+
+        await this.onLoadingAction(async () => {
+            this.pageIndex = index;
+            await this.loadData();
+            await this.createItem();
+        })
     }
     async onChangeSize(this: DataGridView, size: number) {
         this.page.onAction(ActionDirective.onDataGridChangeSize, async () => {
+            var totalPage = Math.ceil(this.total / this.size);
+            if (!(this.pageIndex >= 1 && this.pageIndex <= totalPage)) {
+                this.pageIndex = 1;
+            }
             this.updateProps({ size });
-            await this.loadData();
-            await this.createItem();
-            this.forceUpdate();
-        }, { block: this })
+            await this.onLoadingAction(async () => {
+                await this.loadData();
+                await this.createItem();
+            })
+        });
     }
     async onSearch(this: DataGridView,) {
 
