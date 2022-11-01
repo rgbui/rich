@@ -202,8 +202,8 @@ export class DataGridViewConfig {
                 icon: this.schemaView?.locker?.lock ? UnlockSvg : LockSvg
             },
             { type: MenuItemType.divide },
-            { text: '导入', disabled: true, icon: ImportSvg, name: 'import' },
-            { text: '导出', disabled: true, icon: FileSvg, name: 'export' },
+            // { text: '导入', disabled: true, icon: ImportSvg, name: 'import' },
+            { text: '导出', icon: FileSvg, name: 'export' },
         ]
         var um = await useSelectMenuItem({ roundArea: rect }, menus, {
             async input(item) {
@@ -233,6 +233,8 @@ export class DataGridViewConfig {
                 case 'sort':
                     await this.onOpenViewConfig(rect, 'sort');
                     break;
+                case 'export':
+                    await this.onExport(rect)
             }
         }
         this.dataGridTool.isOpenTool = false;

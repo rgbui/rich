@@ -1,6 +1,10 @@
 
 // https://github.com/zemirco/json2csv
 // https://github.com/DaoDeCyrus/CSV.js
+
+import dayjs from "dayjs";
+import lodash from "lodash";
+
 /*
  * 参数：
  *    headers：表头
@@ -23,6 +27,7 @@ export function exportCsv(headers, rows, filename: string) {
         if (!filename || typeof filename != "string") {
             filename = "export.csv"
         }
+       
         let blob = getCsvBlob(headers, rows);
         if ((navigator as any).msSaveOrOpenBlob) {
             (navigator as any).msSaveOrOpenBlob(blob, filename);
@@ -30,6 +35,7 @@ export function exportCsv(headers, rows, filename: string) {
             let url = URL.createObjectURL(blob);
             let downloadLink = document.createElement('a');
             downloadLink.href = url;
+            if(!filename.endsWith('.csv'))filename+='.csv';
             downloadLink.download = filename;
             document.body.appendChild(downloadLink);
             downloadLink.click();

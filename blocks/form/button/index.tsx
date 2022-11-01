@@ -48,7 +48,7 @@ export class BlockButton extends Block {
                     this.refBlock.onOpenAddForm(this.actionProps.viewId);
                     break;
                 case 'export':
-                    this.refBlock.onExport(event)
+                    this.refBlock.onExport(Rect.fromEvent(event))
                     break;
             }
         }

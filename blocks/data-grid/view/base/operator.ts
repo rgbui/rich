@@ -578,7 +578,7 @@ export class DataGridViewOperator {
     async onImport(this: DataGridView) {
 
     }
-    async onExport(this: DataGridView, e: React.MouseEvent) {
-        await useTableExport({ roundArea: Rect.fromEvent(e) }, { schema: this.schema })
+    async onExport(this: DataGridView, rect: Rect) {
+        await useTableExport({ roundArea: rect }, this)
     }
 }
