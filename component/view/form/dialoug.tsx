@@ -3,7 +3,7 @@ import lodash from "lodash";
 import React from "react";
 import { PopoverSingleton } from "../../../extensions/popover/popover";
 import { EventsComponent } from "../../lib/events.component";
-import { Plus2Svg } from "../../svgs";
+import { PlusSvg } from "../../svgs";
 import { Button } from "../button";
 import { Col, Dialoug, Row, Space } from "../grid";
 import { Icon } from "../icon";
@@ -40,7 +40,7 @@ class FormDialoug extends EventsComponent {
             <div className="shy-form-box">
                 {this.fields.map(f => {
                     return <div className="shy-form-element" key={f.name}>
-                        <Row><Col><label>{f.text}</label>{f.tip && <ToolTip overlay={f.tip}><Icon icon={Plus2Svg}></Icon></ToolTip>}</Col></Row>
+                        <Row><Col><label>{f.text}</label>{f.tip && <ToolTip overlay={f.tip}><Icon icon={PlusSvg}></Icon></ToolTip>}</Col></Row>
                         <Row>
                             <Col>
                                 {f.type == 'input' && <Input onEnter={e => this.onSave()} onChange={e => this.model[f.name] = e} value={this.model[f.name] || ''}></Input>}

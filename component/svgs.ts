@@ -78,6 +78,7 @@ import FileSvg from "../src/assert/svg/file.svg";
 import FilterSvg from "../src/assert/svg/filter.svg";
 import FitSvg from "../src/assert/svg/fit.svg";
 import FlagSvg from "../src/assert/svg/flag.svg";
+import FlashSvg from "../src/assert/svg/flash.svg";
 import FontStyleSvg from "../src/assert/svg/font.style.svg";
 import FontSvg from "../src/assert/svg/font.svg";
 import FontawesomeSvg from "../src/assert/svg/fontawesome.svg";
@@ -130,7 +131,6 @@ import PageSvg from "../src/assert/svg/page.svg";
 import PenSvg from "../src/assert/svg/pen.svg";
 import PexelsSvg from "../src/assert/svg/pexels.svg";
 import PictureSvg from "../src/assert/svg/picture.svg";
-import Plus2Svg from "../src/assert/svg/plus.2.svg";
 import PlusSvg from "../src/assert/svg/plus.svg";
 import ProgressSvg from "../src/assert/svg/progress.svg";
 import PropertysSvg from "../src/assert/svg/propertys.svg";
@@ -270,6 +270,7 @@ FileSvg,
 FilterSvg,
 FitSvg,
 FlagSvg,
+FlashSvg,
 FontStyleSvg,
 FontSvg,
 FontawesomeSvg,
@@ -322,7 +323,6 @@ PageSvg,
 PenSvg,
 PexelsSvg,
 PictureSvg,
-Plus2Svg,
 PlusSvg,
 ProgressSvg,
 PropertysSvg,

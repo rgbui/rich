@@ -1,11 +1,9 @@
 import React from "react";
 import { ReactNode } from "react";
 import { Kit } from "..";
-import PlusSvg from "../../assert/svg/plus.2.svg";
-import MinusSvg from "../../assert/svg/minus.svg";
-import FitSvg from "../../assert/svg/fit.svg";
 import { Icon } from "../../../component/view/icon";
 import { Point } from "../../common/vector/point";
+import { FitSvg, MinusSvg, PlusSvg } from "../../../component/svgs";
 
 export class BoardScale extends React.Component<{ kit: Kit }>{
     render(): ReactNode {
