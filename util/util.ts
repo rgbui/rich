@@ -2,6 +2,7 @@
 import dayjs from 'dayjs';
 import lodash from 'lodash';
 import { channel } from '../net/channel';
+
 export var util = {
     guid() {
         return channel.query('/guid');
@@ -57,10 +58,10 @@ export var util = {
         }
     },
     dateToStart(date: Date) {
-        return dayjs(dayjs(date).format('YYYY-MM-DD 00:00:00'), 'YYYY-MM-DD HH:mm:ss').toDate()
+        return dayjs(date).startOf('day').toDate();
     },
     dateToEnd(date: Date) {
-        return dayjs(dayjs(date).format('YYYY-MM-DD 59:59:59'), 'YYYY-MM-DD HH:mm:ss').toDate()
+        return dayjs(date).endOf('day').toDate();
     },
     /**
      * 时间差，还剩多少
