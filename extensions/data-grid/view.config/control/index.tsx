@@ -28,32 +28,32 @@ export class DataGridControl extends EventsComponent {
 
             <div className="flex item-hover round h-30 padding-w-14 ">
                 <span className="flex-auto">分页</span>
-                <span className="flex-fix"><Switch checked={false} onChange={e => {this.block.onExtendControlBlock(BlockUrlConstant.DataGridPage,true) }}></Switch></span>
+                <span className="flex-fix"><Switch checked={false} onChange={e => { this.block.onExtendControlBlock(BlockUrlConstant.DataGridPage, {}, e) }}></Switch></span>
             </div>
 
-            <div className="flex item-hover round h-30 padding-w-14 ">
+            {/*<div className="flex item-hover round h-30 padding-w-14 ">
                 <span className="flex-auto">显示批量选中的数据</span>
-                <span className="flex-fix"><Switch checked={false} onChange={e => { }}></Switch></span>
-            </div>
+                <span className="flex-fix"><Switch checked={false} onChange={e => { this.block.onExtendControlBlock(BlockUrlConstant.Button, {}, e) }}></Switch></span>
+            </div> */}
 
             <div className="flex item-hover round h-30 padding-w-14 ">
                 <span className="flex-auto">批量删除按钮</span>
-                <span className="flex-fix"><Switch checked={false} onChange={e => { }}></Switch></span>
+                <span className="flex-fix"><Switch checked={false} onChange={e => { this.block.onExtendControlBlock(BlockUrlConstant.Button, { content: '批量删除', action: 'batchDelete' }, e) }}></Switch></span>
             </div>
 
             <div className="flex item-hover round h-30 padding-w-14 ">
                 <span className="flex-auto">添加数据按钮</span>
-                <span className="flex-fix"><Switch checked={false} onChange={e => { }}></Switch></span>
+                <span className="flex-fix"><Switch checked={false} onChange={e => { this.block.onExtendControlBlock(BlockUrlConstant.Button, { content: '添加', action: 'add' }, e) }}></Switch></span>
             </div>
 
-            <div className="flex item-hover round h-30 padding-w-14 ">
+            {/* <div className="flex item-hover round h-30 padding-w-14 ">
                 <span className="flex-auto">导入数据</span>
                 <span className="flex-fix"><Switch checked={false} onChange={e => { }}></Switch></span>
-            </div>
+            </div> */}
 
             <div className="flex item-hover round h-30 padding-w-14 ">
                 <span className="flex-auto">导出数据</span>
-                <span className="flex-fix"><Switch checked={false} onChange={e => { }}></Switch></span>
+                <span className="flex-fix"><Switch checked={false} onChange={e => { this.block.onExtendControlBlock(BlockUrlConstant.Button, { content: '导出', action: 'export' }, e) }}></Switch></span>
             </div>
 
             <div className="remark f-12 padding-w-14 gap-t-10">扩展字段控制块</div>
