@@ -146,7 +146,6 @@ export class DataGridView extends Block {
             }
             this.fields = [];
             for (var n in data) {
-                console.log('sync blocks', n, data[n]);
                 if (n == 'pattern') {
                     await this.pattern.load(data[n]);
                 }
