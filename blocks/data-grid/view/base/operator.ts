@@ -491,7 +491,6 @@ export class DataGridViewOperator {
         this.page.emit(PageDirective.selectRows, this, this.checkItems)
     }
     async onListPageIndex(this: DataGridView, index: number) {
-
         await this.onLoadingAction(async () => {
             this.pageIndex = index;
             await this.loadData();
@@ -528,11 +527,35 @@ export class DataGridViewOperator {
         CopyText(url);
         ShyAlert('视图链接已复制')
     }
-    async onExtendControlBlock(this: DataGridView, url: BlockUrlConstant, visible: boolean) {
+    async onExtendControlBlock(this: DataGridView, url: BlockUrlConstant, props: Record<string, any>, visible: boolean) {
         await this.page.onAction('onExtendControlBlock', async () => {
             if (url == BlockUrlConstant.DataGridPage) {
-                var newBlock = await this.page.createBlock(url, { refBlockId: this.id }, this.parent, this.at + 1, this.parentKey);
+                var newBlock = await this.page.createBlock(url, { refBlockId: this.id, ...props }, this.parent, this.at + 1, this.parentKey);
                 this.registerReferenceBlocker(newBlock);
+            }
+            else if (url == BlockUrlConstant.Button) {
+                var pre = this.prev;
+                if (pre && !pre.isLine && pre.find(g => g.url == BlockUrlConstant.Button)) {
+                    var newBlock = await this.page.createBlock(url, {
+                        url,
+                        refBlockId: this.id,
+                        ...props
+                    }, pre, pre.childs.length,
+                    );
+                    this.registerReferenceBlocker(newBlock);
+                }
+                else {
+                    var newBlock = await this.page.createBlock(BlockUrlConstant.TextSpan, {
+                        blocks: {
+                            childs: [{ url, refBlockId: this.id, ...props }]
+                        }
+                    },
+                        this.parent,
+                        this.at,
+                        this.parentKey);
+                    this.registerReferenceBlocker(newBlock);
+                }
+
             }
         })
     }

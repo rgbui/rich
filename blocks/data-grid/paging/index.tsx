@@ -79,8 +79,7 @@ export class PagingView extends BlockView<Paging>{
 
     render() {
         var totalPage = -1;
-        if (this.block.refBlock)
-            totalPage = Math.ceil(this.block.refBlock.total / this.block.refBlock.size);
+        if (this.block.refBlock) totalPage = Math.ceil(this.block.refBlock.total / this.block.refBlock.size);
         return <div style={this.block.visibleStyle}>
             <div style={this.block.contentStyle} className='flex min-h-24 f-14'>
                 {this.block.refBlock && <>
@@ -92,6 +91,7 @@ export class PagingView extends BlockView<Paging>{
                     <span onMouseDown={e => this.block.onChangeIndex(this.block.refBlock.pageIndex + 1)} className={"border flex-center  size-24 round" + (this.block.refBlock.pageIndex == totalPage ? " remark" : " cursor")}><Icon size={18} icon={ChevronRightSvg}></Icon></span>
                     <span onMouseDown={e => this.onDropSize(e)} className="gap-l-10 border h-24 padding-w-10 round flex-center">{this.block.refBlock.size}条/页<Icon size={16} icon={ChevronDownSvg}></Icon></span>
                 </>}
+                {!this.block.refBlock && <div></div>}
             </div></div>
     }
 }

@@ -27,7 +27,8 @@ export enum BlockUrlConstant {
     RefLinks = '/ref/links',
     Link = '/link',
     Todo = '/todo',
-    DataGridPage = '/data-grid/paging'
+    DataGridPage = '/data-grid/paging',
+    Button = '/button'
 }
 
 export enum BlockChildKey {
