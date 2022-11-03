@@ -559,6 +559,47 @@ export class DataGridViewOperator {
             }
         })
     }
+    async onExtendControlFilter(this: DataGridView, field: Field) {
+        var url: string = '';
+        if ([FieldType.bool].includes(field.type)) {
+            url = '/field/filter/check';
+        }
+        else if ([FieldType.image, FieldType.video, FieldType.audio, FieldType.file].includes(field.type)) {
+            url = '/field/filter/null';
+        }
+        else if ([FieldType.createDate, FieldType.modifyDate, FieldType.date].includes(field.type)) {
+            url = '/field/filter/date';
+        } else if ([FieldType.creater, FieldType.modifyer, FieldType.user].includes(field.type)) {
+            url = '/field/filter/user';
+        } else if ([FieldType.option, FieldType.options].includes(field.type)) {
+            url = '/field/filter/option';
+        } else if ([FieldType.relation].includes(field.type)) {
+            url = '/field/filter/relation';
+        }
+        else if ([FieldType.number].includes(field.type)) {
+            url = '/field/filter/number';
+        } else if ([
+            FieldType.title,
+            FieldType.text,
+            FieldType.email,
+            FieldType.like,
+            FieldType.phone
+        ].includes(field.type)) {
+            url = '/field/filter/search';
+        }
+        await this.page.onAction('onExtendControlFilter', async () => {
+            var newBlock = await this.page.createBlock(url,
+                { refBlockId: this.id, refFieldId: field.id, },
+                this.parent,
+                this.at,
+                this.parentKey
+            );
+            this.registerReferenceBlocker(newBlock);
+        })
+    }
+    async onExtendControlSort(this: DataGridView, Field: Field) {
+
+    }
     async onOpenDataSource(this: DataGridView, event: Rect) {
         var g = await useDataSourceView({ roundArea: event }, {
             tableId: this.schema.id,
