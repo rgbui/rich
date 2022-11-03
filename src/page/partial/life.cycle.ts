@@ -518,7 +518,7 @@ export class Page$Cycle {
             var row = await this.schema.rowGet(pe.id2);
             if (row) {
                 this.formRowData = lodash.cloneDeep(row);
-                this.loadSchemaRecord(row.data.data);
+                this.loadSchemaRecord(row);
             }
         }
         if (isCreateField) {
