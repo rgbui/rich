@@ -1,5 +1,6 @@
 import lodash from "lodash";
 import React from "react";
+import { Input } from "../../../../component/view/input";
 import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { OriginFilterField, OriginFilterFieldView } from "./origin.field";
@@ -27,17 +28,14 @@ export class SearchText extends OriginFilterField {
 export class SearchTextView extends BlockView<SearchText>{
     render() {
         var self = this;
-        function keydown(e: KeyboardEvent) {
-            if (e.code == 'Enter') {
-                self.block.refBlock.onSearch();
-            }
-        }
-        return <div style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle}
+        return <div style={this.block.visibleStyle}><OriginFilterFieldView
+            style={this.block.contentStyle}
             filterField={this.block}>
-            <input type='text'
+            <Input
                 value={this.block.word}
-                onInput={e => this.block.onInputValue((e.target as HTMLInputElement).value)}
-                onKeyDown={e => keydown} />
+                onChange={e => this.block.onInputValue(e)}
+                onEnter={e => { self.block.refBlock.onSearch() }}
+            ></Input>
         </OriginFilterFieldView ></div>
     }
 }
