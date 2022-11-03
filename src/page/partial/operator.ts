@@ -316,7 +316,7 @@ export class Page$Operator {
         await this.onBatchDelete(blocks);
     }
     async onChangeTextChannel(this: Page, mode: LinkPageItem['textChannelMode']) {
-        channel.air('/page/update/info', {
+        await  channel.air('/page/update/info', {
             id: this.pageInfo.id,
             pageInfo: {
                 textChannelMode: mode
@@ -324,7 +324,7 @@ export class Page$Operator {
         })
     }
     async onChangeTextChannelSpeak(this: Page, speak: LinkPageItem['speak']) {
-        channel.air('/page/update/info', {
+        await   channel.air('/page/update/info', {
             id: this.pageInfo.id,
             pageInfo: {
                 speak: speak,
