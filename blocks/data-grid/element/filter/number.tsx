@@ -1,5 +1,7 @@
 import lodash from "lodash";
 import React from "react";
+import { NsArowSvg } from "../../../../component/svgs";
+import { Icon } from "../../../../component/view/icon";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { OriginFilterField, OriginFilterFieldView } from "./origin.field";
@@ -27,18 +29,22 @@ export class FilterFieldNumber extends OriginFilterField {
 @view('/field/filter/number')
 export class FilterFieldNumberView extends BlockView<FilterFieldNumber>{
     render() {
-        return <OriginFilterFieldView filterField={this.block}>
+        return <div className="flex-line flex-center padding-w-10 round" style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle} filterField={this.block}>
             <input
+                style={{ width: 60 }}
                 type='text'
+                placeholder="起始值"
                 onInput={e => this.block.numberChange((e.target as HTMLInputElement).value, 'min')}
                 defaultValue={typeof this.block.min == 'number' ? this.block.min.toString() : ''}
             />
-            <span>-</span>
+            <span className="remark gap-w-5 flex-center h-20"><Icon size={16} rotate={90} icon={NsArowSvg} ></Icon></span>
             <input
+                style={{ width: 60 }}
                 type='text'
+                placeholder="结束值"
                 onInput={e => this.block.numberChange((e.target as HTMLInputElement).value, 'max')}
                 defaultValue={typeof this.block.max == 'number' ? this.block.max.toString() : ''}
             />
-        </OriginFilterFieldView>
+        </OriginFilterFieldView></div>
     }
 }

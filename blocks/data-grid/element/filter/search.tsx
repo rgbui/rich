@@ -32,12 +32,12 @@ export class SearchTextView extends BlockView<SearchText>{
                 self.block.refBlock.onSearch();
             }
         }
-        return <OriginFilterFieldView
+        return <div style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle}
             filterField={this.block}>
             <input type='text'
                 value={this.block.word}
                 onInput={e => this.block.onInputValue((e.target as HTMLInputElement).value)}
                 onKeyDown={e => keydown} />
-        </OriginFilterFieldView >
+        </OriginFilterFieldView ></div>
     }
 }

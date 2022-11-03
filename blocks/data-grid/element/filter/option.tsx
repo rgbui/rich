@@ -26,6 +26,7 @@ export class FilterFieldOption extends OriginFilterField {
             else this.values = [value];
         }
         if (this.refBlock) this.refBlock.onSearch();
+        this.forceUpdate()
     }
     get filters() {
         if (this.values.length == 0) return {}
@@ -62,19 +63,19 @@ export class FilterFieldOptionView extends BlockView<FilterFieldOption>{
             if (ops.length == 0) return <span onMouseDown={e => select(e)}>全部</span>
             else return <div onMouseDown={e => select(e)}>{ops.map(op => { return <span key={op.value}>{op.text}</span> })}</div>
         }
-        else return <div>
-            <a onClick={e => {
+        else return <div className="flex f-12">
+            <span className={"gap-r-10 padding-w-5 padding-h-2 round cursor " + (!this.block.values.some(s => this.block.field?.config.options.some(c => c.value == s)) ? " text-white bg-primary" : "")} onClick={e => {
                 this.block.onFilter([], true)
-            }}>全部</a>
+            }}>全部</span>
             {this.block.field?.config.options.map(g => {
-                return <a className={this.block.values.includes(g.value) ? "hover" : ""} key={g.value} onClick={e => {
+                return <span className={"gap-r-10 padding-w-5 padding-h-2 round cursor " + (this.block.values.includes(g.value) ? " text-white bg-primary" : "")} key={g.value} onClick={e => {
                     this.block.onFilter(g.value);
-                }}>{g.text}</a>
+                }}>{g.text}</span>
             })}</div>
     }
     render() {
-        return <OriginFilterFieldView filterField={this.block}>
+        return <div style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle} filterField={this.block}>
             {this.renderOptions()}
-        </OriginFilterFieldView>
+        </OriginFilterFieldView></div>
     }
 }

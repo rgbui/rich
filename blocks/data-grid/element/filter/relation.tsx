@@ -18,7 +18,7 @@ export class FilterRelation extends OriginFilterField {
         if (this.selectDataIds.length == 0) return {}
         return {
             [this.field.name]: {
-                $in: this.selectDataIds.map(c=>c.id)
+                $in: this.selectDataIds.map(c => c.id)
             }
         }
     }
@@ -42,9 +42,9 @@ export class FilterRelationView extends BlockView<FilterRelation>{
         })
     }
     render() {
-        return <OriginFilterFieldView
+        return <div style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle}
             filterField={this.block}>
             <span onMouseDown={e => this.mousedown(e)} >{this.block.selectDataIds.map(s => { return <em id={s.id}>{s.title}</em> })}</span>
-        </OriginFilterFieldView >
+        </OriginFilterFieldView ></div>
     }
 }

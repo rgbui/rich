@@ -1,5 +1,7 @@
 import dayjs from "dayjs";
 import React from "react";
+import { SwitchArrowSvg } from "../../../../component/svgs";
+import { Icon } from "../../../../component/view/icon";
 import { useDatePicker } from "../../../../extensions/date";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
@@ -24,11 +26,11 @@ export class FilterFieldDate extends OriginFilterField {
     }
     get format() {
         var fr = 'YYYY-MM-DD';
-        if (this.field?.config.includeTime) fr = 'YYYY-MM-DD HH:mm';
+        if (this.field?.config?.includeTime) fr = 'YYYY-MM-DD HH:mm';
         return fr;
     }
     get filters() {
-        if (this.field?.config.includeTime) {
+        if (this.field?.config?.includeTime) {
             return {
                 [this.field.name]: {
                     $gte: this.startDate,
@@ -58,10 +60,12 @@ export class FilterFieldDate extends OriginFilterField {
 @view('/field/filter/date')
 export class FilterFieldDateView extends BlockView<FilterFieldDate>{
     render() {
-        return <OriginFilterFieldView filterField={this.block}>
-            <span onMouseDown={e => this.block.openDatePicker('startDate', e)}>{this.block.startDate ? dayjs(this.block.startDate).format(this.block.format) : ""}</span>
-            <em>-</em>
-            <span onMouseDown={e => this.block.openDatePicker('endDate', e)}>{this.block.endDate ? dayjs(this.block.endDate).format(this.block.format) : ""}</span>
-        </OriginFilterFieldView>
+        return <div style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle} filterField={this.block}>
+            <div className="flex-line flex-center padding-w-10 round">
+                <span onMouseDown={e => this.block.openDatePicker('startDate', e)}>{this.block.startDate ? dayjs(this.block.startDate).format(this.block.format) : <em className="remark f-12">起始日期</em>}</span>
+                <em className="remark gap-w-5 flex-center h-20"><Icon size={16} icon={SwitchArrowSvg}></Icon></em>
+                <span onMouseDown={e => this.block.openDatePicker('endDate', e)}>{this.block.endDate ? dayjs(this.block.endDate).format(this.block.format) : <em className="remark f-12">结束日期</em>}</span>
+            </div>
+        </OriginFilterFieldView></div>
     }
 }

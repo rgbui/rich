@@ -15,6 +15,7 @@ export class SearchUser extends OriginFilterField {
     onFilter(value: string) {
         this.selectUsers = [value];
         if (this.refBlock) this.refBlock.onSearch()
+        this.forceUpdate()
     }
     get filters() {
         if (!(Array.isArray(this.selectUsers) && this.selectUsers.length > 0)) return {}
@@ -35,10 +36,13 @@ export class SearchTextView extends BlockView<SearchUser>{
         }
     }
     render() {
-        return <OriginFilterFieldView
+        return <div style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle}
             filterField={this.block}
         >
-            <div onMouseDown={e => this.mousedown(e)}><UserAvatars users={this.block.selectUsers}></UserAvatars></div>
-        </OriginFilterFieldView >
+            <div onMouseDown={e => this.mousedown(e)}>
+                {!(this.block.selectUsers?.length > 0) && <em className="remark f-12">选择用户</em>}
+                <UserAvatars users={this.block.selectUsers}></UserAvatars>
+            </div>
+        </OriginFilterFieldView ></div>
     }
 }
