@@ -122,6 +122,7 @@ import MindSvg from "../src/assert/svg/mind.svg";
 import MinusSvg from "../src/assert/svg/minus.svg";
 import MoveToSvg from "../src/assert/svg/moveTo.svg";
 import NoneSvg from "../src/assert/svg/none.svg";
+import NsArowSvg from "../src/assert/svg/nsArow.svg";
 import NumberListSvg from "../src/assert/svg/number.list.svg";
 import OpenAsPageThickSvg from "../src/assert/svg/openAsPageThick.svg";
 import OpposeSvg from "../src/assert/svg/oppose.svg";
@@ -148,6 +149,7 @@ import SettingsSvg from "../src/assert/svg/settings.svg";
 import SortSvg from "../src/assert/svg/sort.svg";
 import SquareplusSvg from "../src/assert/svg/squareplus.svg";
 import SuccessSvg from "../src/assert/svg/success.svg";
+import SwitchArrowSvg from "../src/assert/svg/switchArrow.svg";
 import SystemSvg from "../src/assert/svg/system.svg";
 import TableSvg from "../src/assert/svg/table.svg";
 import TemplatesSvg from "../src/assert/svg/templates.svg";
@@ -314,6 +316,7 @@ MindSvg,
 MinusSvg,
 MoveToSvg,
 NoneSvg,
+NsArowSvg,
 NumberListSvg,
 OpenAsPageThickSvg,
 OpposeSvg,
@@ -340,6 +343,7 @@ SettingsSvg,
 SortSvg,
 SquareplusSvg,
 SuccessSvg,
+SwitchArrowSvg,
 SystemSvg,
 TableSvg,
 TemplatesSvg,
