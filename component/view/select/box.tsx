@@ -9,6 +9,7 @@ import { MenuItem } from "../menu/declare";
 export class SelectBox extends React.Component<{
     children?: JSX.Element | string | React.ReactNode,
     disabled?: boolean,
+    inline?: boolean,
     value?: any,
     className?: string | (string[]),
     options?: MenuItem<string>[],
@@ -47,7 +48,9 @@ export class SelectBox extends React.Component<{
         if (Array.isArray(this.props.className)) this.props.className.each(c => { classList.push(c) })
         else if (this.props.className) classList.push(this.props.className)
         var op = this.props.options.arrayJsonFind('childs', g => g.value == this.props.value);
-        return <div style={this.props.style || {}}
+        var style = this.props.style || {};
+        if (this.props.inline) style.display = 'inline-flex';
+        return <div style={style}
             className={classList.join(" ")}
             onMouseDown={e => mousedown(e)}>
             {this.props.children && <>{this.props.children}<Icon className={'gap-l-3'} size={12} icon={ChevronDownSvg}></Icon></>}
