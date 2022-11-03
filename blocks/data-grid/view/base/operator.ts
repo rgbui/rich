@@ -569,11 +569,14 @@ export class DataGridViewOperator {
         }
         else if ([FieldType.createDate, FieldType.modifyDate, FieldType.date].includes(field.type)) {
             url = '/field/filter/date';
-        } else if ([FieldType.creater, FieldType.modifyer, FieldType.user].includes(field.type)) {
+        }
+        else if ([FieldType.creater, FieldType.modifyer, FieldType.user].includes(field.type)) {
             url = '/field/filter/user';
-        } else if ([FieldType.option, FieldType.options].includes(field.type)) {
+        }
+        else if ([FieldType.option, FieldType.options].includes(field.type)) {
             url = '/field/filter/option';
-        } else if ([FieldType.relation].includes(field.type)) {
+        }
+        else if ([FieldType.relation].includes(field.type)) {
             url = '/field/filter/relation';
         }
         else if ([FieldType.number].includes(field.type)) {
@@ -597,8 +600,17 @@ export class DataGridViewOperator {
             this.registerReferenceBlocker(newBlock);
         })
     }
-    async onExtendControlSort(this: DataGridView, Field: Field) {
-
+    async onExtendControlSort(this: DataGridView, field: Field) {
+        var url: string = '/field/filter/sort';
+        await this.page.onAction('onExtendControlSort', async () => {
+            var newBlock = await this.page.createBlock(url,
+                { refBlockId: this.id, refFieldId: field.id, },
+                this.parent,
+                this.at,
+                this.parentKey
+            );
+            this.registerReferenceBlocker(newBlock);
+        })
     }
     async onOpenDataSource(this: DataGridView, event: Rect) {
         var g = await useDataSourceView({ roundArea: event }, {
