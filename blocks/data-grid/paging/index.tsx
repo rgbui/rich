@@ -29,7 +29,6 @@ export class Paging extends Block {
         this.view.forceUpdate();
     }
 }
-
 @view('/data-grid/paging')
 export class PagingView extends BlockView<Paging>{
     async onDropSize(event: React.MouseEvent) {
