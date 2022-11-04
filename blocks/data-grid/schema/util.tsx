@@ -37,6 +37,7 @@ import {
     VideoSvg
 } from "../../../component/svgs";
 import { MenuItemType } from "../../../component/view/menu/declare";
+
 export function GetFieldTypeSvg(type: FieldType) {
     switch (type) {
         case FieldType.bool:
@@ -170,11 +171,11 @@ export function getSchemaFieldMenus(map: (list: any) => any) {
         ...map([
             { text: '喜欢', value: FieldType.love },
             { text: '点赞', value: FieldType.like },
-            { text: '投票', value: FieldType.vote },
             { text: '反对', value: FieldType.oppose },
+            { text: '投票', value: FieldType.vote },
             { text: '表情', value: FieldType.emoji },
             { text: '评论', value: FieldType.comment },
-            { text: '举报', value: FieldType.report },
+            //{ text: '举报', value: FieldType.report },
             { text: '操作按钮', value: FieldType.button },
             // { text: '收藏', value: FieldType.favourite },
             // { text: '分享', value: FieldType.share },
@@ -195,11 +196,9 @@ export function getSchemaFieldMenus(map: (list: any) => any) {
     return menus;
 }
 
-export function getFieldMenus()
-{
-    function map(arr)
-    {
-        return arr.map(a=>{
+export function getFieldMenus() {
+    function map(arr) {
+        return arr.map(a => {
             return {
                 text: a.text,
                 value: a.value,
