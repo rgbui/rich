@@ -4,7 +4,7 @@ import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { DataGridItemRecord } from "../../element/record";
 import { FieldType } from "../../schema/type";
 import { ViewField } from "../../schema/view";
-export async function createFieldBlock(viewField: ViewField, block: TableStoreItem|DataGridItemRecord) {
+export async function createFieldBlock(viewField: ViewField, block: TableStoreItem | DataGridItemRecord) {
     var cellContent: Block;
     var row = block.dataRow;
     var field = viewField.field;
@@ -131,6 +131,12 @@ export async function createFieldBlock(viewField: ViewField, block: TableStoreIt
                 cellContent = await BlockFactory.createBlock('/field/formula', page, {
                     viewField,
                     // value: viewField.getValue(row),
+                }, block);
+                break;
+            case FieldType.button:
+                cellContent = await BlockFactory.createBlock('/field/button', page, {
+                    viewField,
+                    value: viewField.getValue(row),
                 }, block);
                 break;
         }
