@@ -20,6 +20,7 @@ import { DataGridViewConfig } from "./config";
 import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { DataGridViewField } from "./field";
 import lodash from "lodash";
+import { PageLayoutType } from "../../../../src/page/declare";
 
 /**
  * 
@@ -57,7 +58,8 @@ export class DataGridView extends Block {
         return await DataGridTurns.turn(this, url);
     }
     get schemaView() {
-        return this.schema.views.find(g => g.id == this.syncBlockId);
+        if (this.schema)
+            return this.schema.views.find(g => g.id == this.syncBlockId);
     }
     data: Record<string, any>[] = [];
     isLoadingData: boolean = false;
@@ -257,6 +259,12 @@ export class DataGridView extends Block {
     }
     get elementUrl() {
         return getElementUrl(ElementType.SchemaView, this.schemaId, this.syncBlockId);
+    }
+    isCanEdit(prop?: string) {
+        if (this.page?.pageLayout.type == PageLayoutType.dbPickRecord) return false;
+        if (this.schemaView?.locker) return false;
+        var r = super.isCanEdit(prop);
+        return r;
     }
 }
 
