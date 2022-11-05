@@ -1,5 +1,6 @@
 import lodash from "lodash";
 import { MergeSock } from "../../../component/lib/merge.sock";
+import { IconArguments } from "../../../extensions/icon/declare";
 import { channel } from "../../../net/channel";
 import { Field } from "./field";
 import { FieldType } from "./type";
@@ -33,6 +34,7 @@ export class TableSchema {
     creater: string;
     createDate: Date;
     fields: Field[] = [];
+    icon: IconArguments;
     get visibleFields(): Field[] {
         return this.fields.findAll(g => g.text && ![FieldType.id, FieldType.parentId, FieldType.icon, FieldType.cover, FieldType.description].includes(g.type))
     }
@@ -261,7 +263,7 @@ export class TableSchema {
     }
     static schemas: Map<string, TableSchema> = new Map();
     static isLoadAll: boolean = false;
-    static async loadTableSchema(schemaId: string):Promise<TableSchema> {
+    static async loadTableSchema(schemaId: string): Promise<TableSchema> {
         var schema = this.schemas.get(schemaId);
         if (schema) return schema;
         else {
