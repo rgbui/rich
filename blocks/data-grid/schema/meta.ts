@@ -261,7 +261,7 @@ export class TableSchema {
     }
     static schemas: Map<string, TableSchema> = new Map();
     static isLoadAll: boolean = false;
-    static async loadTableSchema(schemaId: string) {
+    static async loadTableSchema(schemaId: string):Promise<TableSchema> {
         var schema = this.schemas.get(schemaId);
         if (schema) return schema;
         else {
