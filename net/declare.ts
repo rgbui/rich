@@ -26,7 +26,7 @@ export type SockResponse<T, U = string> = {
 export interface ChannelSyncMapUrls {
     "/log":{args:(r:{type:"error"|"warn"|"info",message:string|Error})=>void,returnType:void},
 	"/page/update/info":{args:(r:{id: string, pageInfo:LinkPageItem})=>void,returnType:void},
-	"/page/open":{args:(r:{item:string|{id:string},blockId?:string})=>void,returnType:void},
+	"/page/open":{args:(r:{item?: string | { id: string }, elementUrl?: string})=>void,returnType:void},
 	"/page/dialog":{args:(r:{elementUrl:string})=>any,returnType:void},
 	"/page/notify/toggle":{args:(r:{id: string,visible:boolean})=>void,returnType:void},
 	"/page/remove":{args:(r:{item:string|{id:string}})=>void,returnType:void},
@@ -44,7 +44,7 @@ export interface ChannelSyncMapUrls {
 export interface ChannelOnlyMapUrls {
     "/log":{args:(r:{type:"error"|"warn"|"info",message:string|Error})=>void,returnType:void},
 	"/page/update/info":{args:(r:{id: string, pageInfo:LinkPageItem})=>void,returnType:void},
-	"/page/open":{args:(r:{item:string|{id:string},blockId?:string})=>void,returnType:void},
+	"/page/open":{args:(r:{item?: string | { id: string }, elementUrl?: string})=>void,returnType:void},
 	"/page/dialog":{args:(r:{elementUrl:string})=>any,returnType:void},
 	"/page/notify/toggle":{args:(r:{id: string,visible:boolean})=>void,returnType:void},
 	"/page/remove":{args:(r:{item:string|{id:string}})=>void,returnType:void},
@@ -62,7 +62,7 @@ export interface ChannelOnlyMapUrls {
 export interface ChannelOnceMapUrls {
     "/log":{args:(r:{type:"error"|"warn"|"info",message:string|Error})=>void,returnType:void},
 	"/page/update/info":{args:(r:{id: string, pageInfo:LinkPageItem})=>void,returnType:void},
-	"/page/open":{args:(r:{item:string|{id:string},blockId?:string})=>void,returnType:void},
+	"/page/open":{args:(r:{item?: string | { id: string }, elementUrl?: string})=>void,returnType:void},
 	"/page/dialog":{args:(r:{elementUrl:string})=>any,returnType:void},
 	"/page/notify/toggle":{args:(r:{id: string,visible:boolean})=>void,returnType:void},
 	"/page/remove":{args:(r:{item:string|{id:string}})=>void,returnType:void},
@@ -80,7 +80,7 @@ export interface ChannelOnceMapUrls {
 export interface ChannelOffMapUrls {
     "/log":{args:(r:{type:"error"|"warn"|"info",message:string|Error})=>void,returnType:void},
 	"/page/update/info":{args:(r:{id: string, pageInfo:LinkPageItem})=>void,returnType:void},
-	"/page/open":{args:(r:{item:string|{id:string},blockId?:string})=>void,returnType:void},
+	"/page/open":{args:(r:{item?: string | { id: string }, elementUrl?: string})=>void,returnType:void},
 	"/page/dialog":{args:(r:{elementUrl:string})=>any,returnType:void},
 	"/page/notify/toggle":{args:(r:{id: string,visible:boolean})=>void,returnType:void},
 	"/page/remove":{args:(r:{item:string|{id:string}})=>void,returnType:void},
@@ -98,7 +98,7 @@ export interface ChannelOffMapUrls {
 export interface ChannelFireMapUrls {
     "/log":{args:{type:"error"|"warn"|"info",message:string|Error},returnType:void},
 	"/page/update/info":{args:{id: string, pageInfo:LinkPageItem},returnType:void},
-	"/page/open":{args:{item:string|{id:string},blockId?:string},returnType:void},
+	"/page/open":{args:{item?: string | { id: string }, elementUrl?: string},returnType:void},
 	"/page/dialog":{args:{elementUrl:string},returnType:any},
 	"/page/notify/toggle":{args:{id: string,visible:boolean},returnType:void},
 	"/page/remove":{args:{item:string|{id:string}},returnType:void},
@@ -275,7 +275,7 @@ export interface ChannelActMapUrls {
 }
 export interface ChannelAirMapUrls {
     "/page/update/info":{args:{id: string, pageInfo:LinkPageItem},returnType:void},
-	"/page/open":{args:{item:string|{id:string},blockId?:string},returnType:void},
+	"/page/open":{args:{item?: string | { id: string }, elementUrl?: string},returnType:void},
 	"/page/dialog":{args:{elementUrl:string},returnType:any},
 	"/page/notify/toggle":{args:{id: string,visible:boolean},returnType:void},
 	"/page/remove":{args:{item:string|{id:string}},returnType:void},

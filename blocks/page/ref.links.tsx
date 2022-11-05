@@ -6,6 +6,7 @@ import { Icon } from "../../component/view/icon";
 import { Loading } from "../../component/view/loading";
 import { IconArguments } from "../../extensions/icon/declare";
 import { channel } from "../../net/channel";
+import { ElementType, getElementUrl } from "../../net/element.type";
 import { Block } from "../../src/block";
 import { BlockRenderRange } from "../../src/block/enum";
 import { prop, url, view } from "../../src/block/factory/observable";
@@ -65,7 +66,7 @@ export class RefLinks extends Block {
 @view('/ref/links')
 export class RefLinksView extends BlockView<RefLinks>{
     open(refPage: BlockRefPage) {
-        channel.air('/page/open', { blockId: refPage.blockId, item: { id: refPage.refPageId } });
+        channel.air('/page/open', { elementUrl: getElementUrl(ElementType.Block, refPage.refPageId, refPage.blockId) });
     }
     renderRefBlocks() {
         return this.block.list.map(pa => {

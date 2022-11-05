@@ -1,4 +1,4 @@
-import { PageSvg, TopicSvg } from "../../component/svgs";
+import { CollectTableSvg, PageSvg, TopicSvg } from "../../component/svgs";
 import { PageLayoutType } from "../../src/page/declare";
 import { AtomPermission, PagePermission } from "../../src/page/permission";
 import { IconArguments } from "../icon/declare"
@@ -28,7 +28,7 @@ export interface LinkPageItem {
     permission?: PagePermission;
     getPermissons?(): AtomPermission[];
     getSubItems?(): Promise<LinkPageItem[]>;
-    getItem?():Partial<LinkPageItem>;
+    getItem?(): Partial<LinkPageItem>;
     speak?: 'more' | 'only';
     speakDate?: Date,
     textChannelMode?: 'chat' | 'weibo' | 'ask' | 'tieba'
@@ -45,6 +45,9 @@ export function getPageIcon(item: LinkPageItem) {
     }
     else if (item.pageType == PageLayoutType.textChannel) {
         return TopicSvg
+    }
+    else if (item.pageType == PageLayoutType.db) {
+        return CollectTableSvg
     }
     return PageSvg
 }
