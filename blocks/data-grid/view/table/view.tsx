@@ -5,12 +5,11 @@ import { view } from "../../../../src/block/factory/observable"
 import { BlockView } from "../../../../src/block/view"
 import { ChildsArea } from "../../../../src/block/view/appear"
 import { GetFieldTypeSvg } from "../../schema/util"
-import { Loading } from "../../../../component/view/loading"
 import { Point, Rect } from "../../../../src/common/vector/point"
 import { MouseDragger } from "../../../../src/common/dragger"
 import { DataGridTool } from "../components/tool"
 import { BlockRenderRange } from "../../../../src/block/enum"
-import { CheckSvg, CollectTableSvg, PlusSvg, TypesNumberSvg } from "../../../../component/svgs"
+import { CheckSvg, CollectTableSvg, DotsSvg, PlusSvg, TypesNumberSvg } from "../../../../component/svgs"
 import { ghostView } from "../../../../src/common/ghost"
 import { ViewField } from "../../schema/view"
 import lodash from "lodash"
@@ -60,6 +59,7 @@ export class TableStoreView extends BlockView<TableStore>{
         }
     }
     onMousedownLine(event: React.MouseEvent) {
+        if (!this.block.isCanEdit()) return;
         if (this.isDragMouseField) return;
         var self = this;
         self.isMoveLine = true;
@@ -113,6 +113,7 @@ export class TableStoreView extends BlockView<TableStore>{
     }
     private isDragMouseField: boolean = false;
     onDragMouseField(event: React.MouseEvent, vf: ViewField) {
+        if (!this.block.isCanEdit()) return;
         event.stopPropagation();
         var th = (event.target as HTMLElement).closest('.sy-dg-table-head-th') as HTMLElement;
         var parent = th.parentElement;
@@ -177,36 +178,39 @@ export class TableStoreView extends BlockView<TableStore>{
                         <Icon icon={icon} size={16}></Icon>
                     </div>
                     <label>{f.text || f.field?.text}</label>
-                    <div className={'sy-dg-table-head-th-property'} onMouseDown={e => this.block.onOpenFieldConfig(e, f)}><Icon icon='elipsis:sy'></Icon></div>
+                    {this.block.isCanEdit() && <div className={'sy-dg-table-head-th-property'} onMouseDown={e => this.block.onOpenFieldConfig(e, f)}><Icon icon={DotsSvg}></Icon></div>}
                 </div>
             })}
-            {!this.block.isLock && <div className='sy-dg-table-head-th sy-dg-table-head-th-plus'
+            {this.block.isCanEdit() && <div className='sy-dg-table-head-th sy-dg-table-head-th-plus'
                 style={{ minWidth: 40, flexGrow: 1, flexShrink: 1 }} onMouseDown={e => { e.stopPropagation(); this.block.onAddField(Rect.fromEvent(e)) }}>
                 <Icon icon={PlusSvg}></Icon>
             </div>}
         </div>
     }
     get sumWidth() {
-        return this.block.fields.sum(c => c.colWidth) + (this.block.isLock ? 0 : 40);
+        return this.block.fields.sum(c => c.colWidth) + (this.block.isCanEdit() ? 40 : 0);
     }
     renderBody() {
         var self = this;
         if (this.block.data) {
-            var ids = this.block.childs.map(c =>c.id)
+            var ids = this.block.childs.map(c => c.id)
             return <SpinBox spin={this.block.isLoadingData}><div className='sy-dg-table-body'>
                 <ChildsArea childs={this.block.childs}></ChildsArea>
-                {!this.block.isLock && <div
+                {this.block.isCanEdit() && <div
                     style={{ width: this.sumWidth + 'px' }}
                     onMouseDown={e => { e.stopPropagation(); self.block.onAddRow({}, undefined, 'after') }}
                     className="sy-dg-table-add">
-                    <Icon size={12} icon={PlusSvg}></Icon><span>新增</span>
+                    <span className="flex flex-inline cursor item-hover round padding-w-5">
+                        <span className="size-24 round flex-center "><Icon size={18} icon={PlusSvg}></Icon></span>
+                        <span className="f-14">新增</span>
+                    </span>
                 </div>}
             </div></SpinBox>
         }
         else return <Spin block></Spin>
     }
     renderCreateTable() {
-        return !this.block.schema && <div className="item-hover item-hover-focus cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
+        return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
             <span className="size-24 flex-center remark"><Icon size={16} icon={CollectTableSvg}></Icon></span>
             <span className="remark">创建数据表格</span>
         </div>
