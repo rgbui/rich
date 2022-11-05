@@ -37,7 +37,7 @@ export class FieldBlog extends OriginField {
 export class FieldBlogView extends BlockView<FieldBlog>{
     render() {
         return <div className='sy-field-blog' >
-            {this.block.value && <span>{this.block.value.text}</span>}
+            {this.block.value && <span className="link f-14 underline cursor">{this.block.value.text}</span>}
         </div>
     }
 }
