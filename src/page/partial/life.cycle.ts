@@ -23,6 +23,7 @@ import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { GetFieldFormBlockInfo, SchemaCreatePageFormData } from "../../../blocks/data-grid/element/service";
 import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.field";
 import { Field } from "../../../blocks/data-grid/schema/field";
+import { DataGridView } from "../../../blocks/data-grid/view/base";
 
 export class Page$Cycle {
     async init(this: Page) {
@@ -76,6 +77,9 @@ export class Page$Cycle {
             ].some(s => s == this.pageLayout.type)) {
                 this.requireSelectLayout = false;
             }
+            if ([PageLayoutType.db].some(s => s == this.pageLayout.type) && !this.exists(g => g instanceof DataGridView)) {
+                await this.loadDefaultScheamView();
+            }
             await this.onRepair();
             await this.emit(PageDirective.loaded);
         }
@@ -108,6 +112,9 @@ export class Page$Cycle {
             PageLayoutType.dbSubPage
         ].some(s => s == this.pageLayout.type)) {
             this.requireSelectLayout = false;
+        }
+        if ([PageLayoutType.db].some(s => s == this.pageLayout.type) && !this.exists(g => g instanceof DataGridView)) {
+            await this.loadDefaultScheamView();
         }
         await this.onRepair();
     }
@@ -175,6 +182,15 @@ export class Page$Cycle {
     async getDefaultData() {
         var r = await import("../default.page");
         return r.data;
+    }
+    async loadDefaultScheamView(this: Page) {
+        this.schema = await TableSchema.loadTableSchema(this.pageInfo.id);
+        var view = this.schema.views.first();
+        var dc = await BlockFactory.createBlock(view.url, this, {
+            schemaId: this.schema.id,
+            syncBlockId: view.id,
+        }, this.views.first());
+        this.views.first().blocks.childs.push(dc);
     }
     onSave(this: Page) {
         this.emit(PageDirective.save);
