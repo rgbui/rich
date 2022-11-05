@@ -32,6 +32,7 @@ import { Page } from "../../../../src/page";
 
 export class DataGridViewConfig {
     async onOpenViewSettings(this: DataGridView, rect: Rect) {
+        if (!this.isCanEdit()) return;
         var self = this;
         var view = self.schemaView;
         self.dataGridTool.isOpenTool = true;
@@ -260,5 +261,8 @@ export class DataGridViewConfig {
         await useTabelSchemaFormDrop({ roundArea: rect }, { block: this });
         this.dataGridTool.isOpenTool = false;
         this.onOver(this.getVisibleContentBound().contain(Point.from(this.page.kit.operator.moveEvent)))
+    }
+    async onOpenSchemaItem(this: DataGridView, rect: Rect) {
+        await channel.air('/page/open', { elementUrl: getElementUrl(ElementType.Schema, this.schema.id) });
     }
 }

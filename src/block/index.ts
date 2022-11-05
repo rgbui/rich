@@ -694,6 +694,9 @@ export abstract class Block extends Events {
 
     }
     isCanEdit(prop?: string) {
+        if (this.page.pageLayout?.type == PageLayoutType.dbPickRecord) {
+            return false;
+        }
         if (this.page.pageInfo?.locker?.userid) return false;
         if (typeof prop == 'undefined') prop = 'content';
         if (this.url == BlockUrlConstant.Title) {
