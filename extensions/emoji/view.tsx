@@ -36,7 +36,7 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
             els.push(<div className='shy-emoji-view-category' key={category.id}>
                 <div className='shy-emoji-view-category-head'><span>{category.name}</span></div>
                 <div className='shy-emoji-view-category-emojis'>{category.childs.map(emoji => {
-                    return <Tip overlay={<>{emoji.name}</>} key={emoji.code}><span onMouseDown={e => this.onChange(emoji)} dangerouslySetInnerHTML={{__html:getEmoji(emoji.code)}}></span></Tip>
+                    return <Tip overlay={<>{emoji.name}</>} key={emoji.code}><span className="ef" onMouseDown={e => this.onChange(emoji)} dangerouslySetInnerHTML={{__html:getEmoji(emoji.code)}}></span></Tip>
                 })}</div>
             </div>)
         });
