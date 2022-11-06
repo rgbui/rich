@@ -256,7 +256,7 @@ export interface ChannelGetMapUrls {
 	"/view/snap/list":{args:{wsId?: string, elementUrl: string, page: number, size: number},returnType:Promise<SockResponse<{list:any[],total:number,size:number,page:number}>>},
 	"/view/snap/content":{args:{wsId?:string,id:string},returnType:Promise<SockResponse<{id:string,content:string}>>},
 	"/block/ref/pages":{args:{wsId?:string,pageId:string},returnType:Promise<SockResponse<{list:any[],total:number,size:number,page:number}>>},
-	"/user/interactives":{args:{elementUrl:string,schemaUrl:string,ids:string[],es:string[]},returnType:Promise<SockResponse<{list:{elementUrl:string,values:string[]}[]}>>}
+	"/user/interactives":{args:{wsId?:string,schemaId:string,ids:string[],es:string[]},returnType:Promise<SockResponse<{list:Record<string,string[]>}>>}
 }
 export interface ChannelQueryMapUrls {
     "/current/workspace":{args:any,returnType:{id:string,sn:number,text:string}},
