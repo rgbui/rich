@@ -232,7 +232,6 @@ export class Page$Operator {
                     })
                 });
                 break;
-                break;
             case BlockDirective.link:
                 CopyText(blocks[0].blockUrl);
                 ShyAlert('块的链接已复制')
@@ -308,6 +307,25 @@ export class Page$Operator {
         })
         this.forceUpdate();
     }
+    async onToggleComments(this: Page, toggle: boolean) {
+        var cs = this.findAll(c => c.url == BlockUrlConstant.Comment);
+        if (toggle == true && cs.length == 1) return;
+        if (toggle == false && cs.length == 0) return;
+        await this.onAction('onToggleComments', async () => {
+            if (toggle == true) {
+                if (cs.length == 0) {
+                    var view = this.views[0];
+                    await this.createBlock(BlockUrlConstant.Comment, {}, view);
+                }
+                else if (cs.length > 1) {
+                    await cs.findAll((g, i) => i > 0).eachAsync(async c => c.delete());
+                }
+            }
+            else if (toggle == false) {
+                await cs.eachAsync(async c => c.delete())
+            }
+        })
+    }
     async onCopyBlocks(this: Page, blocks: Block[]) {
         await storeCopyBlocks(blocks);
     }
@@ -316,7 +334,7 @@ export class Page$Operator {
         await this.onBatchDelete(blocks);
     }
     async onChangeTextChannel(this: Page, mode: LinkPageItem['textChannelMode']) {
-        await  channel.air('/page/update/info', {
+        await channel.air('/page/update/info', {
             id: this.pageInfo.id,
             pageInfo: {
                 textChannelMode: mode
@@ -324,7 +342,7 @@ export class Page$Operator {
         })
     }
     async onChangeTextChannelSpeak(this: Page, speak: LinkPageItem['speak']) {
-        await   channel.air('/page/update/info', {
+        await channel.air('/page/update/info', {
             id: this.pageInfo.id,
             pageInfo: {
                 speak: speak,
