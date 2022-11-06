@@ -75,7 +75,7 @@ export function getElementUrl(type: ElementType, id: string, id1?: string, id2?:
     else if (type == ElementType.RoomChat) return `/Room/${id}/Chat/${id1}`
     else if (type == ElementType.Block) return `/Page/${id}/Block/${id1}`
     else if (type == ElementType.SyncBlock) return `/SyncBlock/${id}`
-    else if (type == ElementType.WsCommentEmoji) return `/Comment/${id}/emoji/${id2}`
+    else if (type == ElementType.WsCommentEmoji) return `/Comment/${id}/emoji/${id1}`
     else return `/${ElementType[type]}/${id}`
 }
 export function parseElementUrl(url: string) {
