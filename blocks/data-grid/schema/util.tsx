@@ -172,7 +172,7 @@ export function getSchemaFieldMenus(map: (list: any) => any) {
             { text: '喜欢', value: FieldType.love },
             { text: '点赞', value: FieldType.like },
             { text: '反对', value: FieldType.oppose },
-            { text: '投票', value: FieldType.vote },
+            // { text: '投票', value: FieldType.vote },
             { text: '表情', value: FieldType.emoji },
             { text: '评论', value: FieldType.comment },
             //{ text: '举报', value: FieldType.report },
