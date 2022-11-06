@@ -79,6 +79,17 @@ export class DataGridFileViewer extends EventsComponent {
             if (self.mime == 'image') {
                 return <div className="flex-center gap-5"><img src={resource.url} className="round object-center max-w-250 max-h-100" /></div>
             }
+            else if (self.mime == 'audio') {
+                return <div className="flex-center gap-5"><audio controls className="round object-center w-250 h-30" >
+                    <source src={resource.url} type="audio/ogg" />
+                    <source src={resource.url} type="audio/mpeg" />
+                    <source src={resource.url} type="audio/wav" />
+                </audio>
+                </div>
+            }
+            else if (self.mime == 'video') {
+                return <div className="flex-center gap-5"><video src={resource.url} className="round object-center max-w-250 max-h-100" /></div>
+            }
             else if (self.mime == 'file') {
                 return <div><span>{resource.text}</span></div>
             }
@@ -89,6 +100,8 @@ export class DataGridFileViewer extends EventsComponent {
             if (self.mime == 'file') return '上传文件'
             else if (self.mime == 'user') return '添加用户'
             else if (self.mime == 'image') return '上传图片'
+            else if (self.mime == 'audio') return '上传音频'
+            else if (self.mime == 'video') return '上传视频'
             else return '上传文件'
         }
         return <div className={"gap-h-14" + (this.mime == 'user' ? " w-180" : " w-300")}>
@@ -120,7 +133,8 @@ export class DataGridFileViewer extends EventsComponent {
 
 export async function useDataGridFileViewer(pos: PopoverPosition,
     option: {
-        mime: DataGridFileViewer['mime'], resources: ResourceArguments[],
+        mime: DataGridFileViewer['mime'],
+        resources: ResourceArguments[],
         isMultiple: boolean
     }) {
     let popover = await PopoverSingleton(DataGridFileViewer, { mask: true });
