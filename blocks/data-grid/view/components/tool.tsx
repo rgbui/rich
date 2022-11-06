@@ -32,7 +32,7 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                 </label>
             </div>}
             {props.block.isOver && props.block.isCanEdit() && <div className="sy-dg-tool-operators">
-                <label className="item-hover round padding-w-10 h-30 flex-center cursor gap-r-10" onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e))}><Icon size={14} icon={SettingsSvg}></Icon><span>视图配置</span></label>
+                <label className="item-hover round padding-w-10 h-30 flex-center cursor gap-r-10" onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e))}><Icon size={14} icon={SettingsSvg}></Icon><span className="f-12">视图配置</span></label>
                 {props.block.filter?.items?.length > 0 && <label className="item-hover round size-30 flex-center cursor gap-r-10" onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e), 'filter')}><Icon size={14} icon={FilterSvg}></Icon><span>过滤</span></label>}
                 {props.block.sorts?.length > 0 && <label className="item-hover round size-30 flex-center cursor gap-r-10" onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e), 'sort')}><Icon size={14} icon={SortSvg}></Icon><span>排序</span></label>}
                 {props.block.page.pageLayout.type != PageLayoutType.db && <label className="item-hover round size-30 flex-center cursor gap-r-10" onMouseDown={e => { e.stopPropagation(); props.block.onOpenSchemaItem(Rect.fromEvent(e)) }}><Icon icon={MaximizeSvg} size={16}></Icon></label>}
