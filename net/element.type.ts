@@ -201,8 +201,8 @@ export function parseElementUrl(url: string) {
         }
     }
     else if (us.includes('Comment')) {
-        us.removeAll(g => g == 'Comment' || g == 'emoji')
-        if (us.includes('emoji')) {
+        if (us.includes('emoji')) {  
+             us.removeAll(g => g == 'Comment' || g == 'emoji')
             return {
                 type: ElementType.WsCommentEmoji,
                 id: us[0],
