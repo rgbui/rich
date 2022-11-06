@@ -97,6 +97,18 @@ export async function createFieldBlock(viewField: ViewField, block: TableStoreIt
                     value: viewField.getValue(row),
                 }, block);
                 break;
+            case FieldType.audio:
+                cellContent = await BlockFactory.createBlock('/field/audio', page, {
+                    viewField,
+                    value: viewField.getValue(row),
+                }, block);
+                break;
+            case FieldType.video:
+                cellContent = await BlockFactory.createBlock('/field/video', page, {
+                    viewField,
+                    value: viewField.getValue(row),
+                }, block);
+                break;
             case FieldType.comment:
                 cellContent = await BlockFactory.createBlock('/field/comment', page, {
                     viewField,
