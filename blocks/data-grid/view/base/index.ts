@@ -62,6 +62,7 @@ export class DataGridView extends Block {
             return this.schema.views.find(g => g.id == this.syncBlockId);
     }
     data: Record<string, any>[] = [];
+    userEmojis: Record<string, string[]> = {};
     isLoadingData: boolean = false;
     async onLoadingAction(fn: () => Promise<void>) {
         this.isLoadingData = true;
@@ -215,6 +216,7 @@ export class DataGridView extends Block {
             await this.loadData();
             await this.loadRelationSchemas();
             await this.loadRelationDatas();
+            await this.loadDataInteraction();
             await this.createItem();
             await this.onNotifyReferenceBlocks();
             if (this.view)

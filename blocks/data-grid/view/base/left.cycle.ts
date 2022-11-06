@@ -4,6 +4,8 @@ import { TableSchema } from "../../schema/meta";
 import { FieldType } from "../../schema/type";
 import { ViewField } from "../../schema/view";
 import { DataGridView } from ".";
+import { channel } from "../../../../net/channel";
+import { ElementType, getElementUrl } from "../../../../net/element.type";
 export class DataGridViewLife {
     async loadSchema(this: DataGridView) {
         if (this.schemaId && !this.schema) {
@@ -90,6 +92,28 @@ export class DataGridViewLife {
                 this.data = Array.isArray(r.data.list) ? r.data.list : [];
                 this.total = r.data?.total || 0;
                 this.isLoadingData = false;
+            }
+        }
+    }
+    async loadDataInteraction(this: DataGridView) {
+        if (this.schema) {
+            var fs = this.schema.fields.findAll(g => [FieldType.like, FieldType.oppose, FieldType.love].includes(g.type))
+            if (fs.length > 0) {
+                var ds = this.data.findAll(g => {
+                    return fs.some(f => typeof g[f.name]?.count == 'number' && g[f.name]?.count > 0)
+                });
+                var ids = ds.map(d => d.id);
+                if (ids.length > 0) {
+                    var r = await channel.get('/user/interactives', {
+                        schemaId: this.schema.id,
+                        ids: ids,
+                        es: fs.map(f => getElementUrl(ElementType.SchemaFieldNameData, this.schema.id, f.name, ids[0]))
+                    });
+                    if (r.ok) {
+                        this.userEmojis=r.data.list;
+                        console.log(this.userEmojis,'emojis');
+                    }
+                }
             }
         }
     }

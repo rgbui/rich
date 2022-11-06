@@ -30,8 +30,8 @@ export class FieldEmailView extends BlockView<FieldEmoji>{
             });
             if (r.ok) {
                 var ov = lodash.cloneDeep(self.block.value);
-                if (typeof ov == 'undefined') ov = {};
-                if (typeof ov == 'number') ov = { count: ov }
+                if (typeof ov == 'undefined') ov = { count: 0 };
+                if (typeof ov == 'number') ov = { count: ov };
                 ov.count = r.data.count;
                 var userid = self.block.page.user?.id;
                 if (userid) {
@@ -39,9 +39,17 @@ export class FieldEmailView extends BlockView<FieldEmoji>{
                         ov.users = []
                     }
                     if (r.data.exists) {
+                        var ops = self.block.dataGrid.userEmojis[self.block.viewField.field.name];
+                        if (!Array.isArray(ops)) self.block.dataGrid.userEmojis[self.block.viewField.field.name] = ops = []
+                        if (!ops.exists(c => c == self.block.item.dataRow.id)) ops.push(self.block.item.dataRow.id);
                         if (!ov.users.exists(g => g == userid)) ov.users.push(userid)
                     }
-                    else lodash.remove(ov.users, g => (g as any) == userid)
+                    else {
+                        var ops = self.block.dataGrid.userEmojis[self.block.viewField.field.name];
+                        if (!Array.isArray(ops)) self.block.dataGrid.userEmojis[self.block.viewField.field.name] = ops = []
+                        if (ops.exists(c => c == self.block.item.dataRow.id)) lodash.remove(ops, c => c == self.block.item.dataRow.id);
+                        lodash.remove(ov.users, g => (g as any) == userid);
+                    }
                 }
                 self.block.value = ov;
                 self.block.item.dataRow[self.block.field.name] = ov;
@@ -51,10 +59,28 @@ export class FieldEmailView extends BlockView<FieldEmoji>{
         var svg = GetFieldTypeSvg(this.block.viewField.field.type);
         var v = this.block.value;
         if (typeof v == 'object' && typeof v.count == 'number') v = v.count;
-        var countStr = v > 0 ? `(${v})` : '';
+        var countStr = v > 0 ? `${v}` : '';
+        var sp = <></>;
+        if (this.block.viewField.field.type == FieldType.love) {
+            var isOp = self.block.dataGrid.userEmojis[this.block.viewField.field.name]?.includes(self.block.item.dataRow.id)
+            sp = <span className="cursor flex flex-inline h-24 f-12 text-1 padding-w-5 round-32  item-hover ">
+                <Icon size={16} icon={svg}></Icon>{isOp ? "取消喜欢" : "喜欢"}</span>
+        }
+        else if (this.block.viewField.field.type == FieldType.like) {
+            var isOp = self.block.dataGrid.userEmojis[this.block.viewField.field.name]?.includes(self.block.item.dataRow.id)
+            sp = <span className={"cursor f-12 flex flex-inline h-24 padding-w-5 round-32 " + (isOp ? " border-primary bg-primary text-white" : " text-1 item-hover border")}>
+                <Icon size={16} icon={svg}></Icon>{countStr}</span>
+        } else if (this.block.viewField.field.type == FieldType.oppose) {
+            var isOp = self.block.dataGrid.userEmojis[this.block.viewField.field.name]?.includes(self.block.item.dataRow.id)
+            sp = <span className={"cursor f-12 flex flex-inline h-24 padding-w-5 round-32 " + (isOp ? " border-primary bg-primary text-white" : " text-1 item-hover border")}>
+                <Icon size={16} icon={svg}></Icon>{countStr}</span>
+        } else {
+            sp = <span className="flex flex-inline h-24 padding-w-5 round-32 border item-hover ">
+                {this.block.viewField.field.type == FieldType.emoji && this.block.viewField?.field.config?.emoji?.code}
+                {countStr}</span>
+        }
         return <div onMouseDown={e => mousedown(e)}>
-            {this.block.viewField.field.type != FieldType.emoji && <Icon size={16} icon={svg}></Icon>}
-            {this.block.viewField.field.type == FieldType.emoji && this.block.viewField?.field.config?.emoji?.code}{countStr}
+            {sp}
         </div>
     }
 }
