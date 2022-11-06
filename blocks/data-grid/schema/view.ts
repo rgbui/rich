@@ -11,10 +11,19 @@ export class ViewField {
     get field() {
         if (this.fieldId) return this.schema.fields.find(g => g.id == this.fieldId);
     }
-    constructor(options?: Partial<ViewField>, schema?: TableSchema) {
+    constructor(
+        options?: Partial<ViewField>,
+        schema?: TableSchema
+    ) {
         this.id = util.guid();
-        if (options) this.load(options)
+        if (options) this.load(options);
         if (schema) this.schema = schema;
+        if (this.field?.type && [FieldType.video, FieldType.audio, FieldType.image].includes(this.field.type)) {
+            this.colWidth = 240;
+        }
+        else if (this.field?.type && [FieldType.button]) {
+            this.colWidth = 150;
+        }
     }
     load(options) {
         for (let n in options) {
