@@ -644,7 +644,7 @@ cursor鼠标
 宽度
 ***/
 
-@selectors: 1, 2, 4, 5, 10, 12, 14, 16, 18, 20, 24,26, 28, 30, 32, 36, 40, 48, 50, 60, 72, 80,88,90, 100, 120, 150, 160, 180, 200, 220, 240, 250,270, 280, 300, 320,350, 360, 400,450, 480, 500, 540,550, 600, 720, 800, 960;
+@selectors: 1, 2, 4, 5, 10, 12, 14, 16, 18, 20, 24, 26, 28, 30, 32, 36, 40, 48, 50, 60, 72, 80, 88, 90, 100, 120, 150, 160, 180, 200, 220, 240, 250, 270, 280, 300, 320, 350, 360, 400, 450, 480, 500, 540, 550, 600, 720, 800, 960;
 
 each(@selectors, {
         .w-@{value} {
@@ -682,7 +682,7 @@ each(@selectors, {
     width: 100%;
 }
 
-@ops: 1, 0, 2, 4,5,  6, 8, 9, 7;
+@ops: 1, 0, 2, 4, 5, 6, 8, 9, 7;
 
 each(@ops, {
         .op-@{value} {
@@ -939,9 +939,27 @@ each(@ops, {
     border: 1px solid rgba(55, 53, 47, 0.16);
 }
 
-.border-light{
+.border-bottom,
+.border-b {
+    border-bottom: 1px solid rgba(55, 53, 47, 0.16);
+}
+
+.border-light {
     border: 1px solid rgba(55, 53, 47, 0.08);
 }
+
+.border-light-bottom,
+.border-light-b {
+    border-bottom: 1px solid rgba(55, 53, 47, 0.08);
+}
+
+.no-border,
+.noborder {
+    border: none;
+}
+
+
+
 
 .break-normal {
     overflow-wrap: normal;
