@@ -17,12 +17,14 @@ export class ViewField {
     ) {
         this.id = util.guid();
         if (options) this.load(options);
-        if (schema) this.schema = schema;
-        if (this.field?.type && [FieldType.video, FieldType.audio, FieldType.image].includes(this.field.type)) {
-            this.colWidth = 240;
-        }
-        else if (this.field?.type && [FieldType.button]) {
-            this.colWidth = 150;
+        if (schema) {
+            this.schema = schema;
+            if (this.field?.type && [FieldType.video, FieldType.audio, FieldType.image].includes(this.field.type)) {
+                this.colWidth = 240;
+            }
+            else if (this.field?.type && [FieldType.button]) {
+                this.colWidth = 150;
+            }
         }
     }
     load(options) {
