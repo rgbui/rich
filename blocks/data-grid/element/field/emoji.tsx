@@ -78,20 +78,20 @@ export class FieldEmailView extends BlockView<FieldEmoji>{
         var sp = <></>;
         if (this.block.viewField.field.type == FieldType.love) {
             var isOp = self.block.dataGrid.userEmojis[this.block.viewField.field.name]?.includes(self.block.item.dataRow.id)
-            sp = <span className="cursor flex flex-inline h-24 f-12 text-1 padding-w-5 round-32  item-hover ">
-                <Icon size={16} icon={svg}></Icon>{isOp ? "取消喜欢" : "喜欢"}</span>
+            sp = <span className="cursor flex flex-inline h-24 f-14 text-1 padding-w-5 round-32  item-hover ">
+                <Icon className={'gap-r-3'} size={16} icon={svg}></Icon>{isOp ? "取消喜欢" : "喜欢"}</span>
         }
         else if (this.block.viewField.field.type == FieldType.like) {
             var isOp = self.block.dataGrid.userEmojis[this.block.viewField.field.name]?.includes(self.block.item.dataRow.id)
             sp = <span className={"cursor f-12 flex flex-inline h-24 padding-w-5 round-32 " + (isOp ? " border-primary bg-primary text-white" : " text-1 item-hover border")}>
-                <Icon size={16} icon={svg}></Icon>{countStr}</span>
+                <Icon className={'gap-r-3'} size={16} icon={svg}></Icon>{countStr}</span>
         } else if (this.block.viewField.field.type == FieldType.oppose) {
             var isOp = self.block.dataGrid.userEmojis[this.block.viewField.field.name]?.includes(self.block.item.dataRow.id)
             sp = <span className={"cursor f-12 flex flex-inline h-24 padding-w-5 round-32 " + (isOp ? " border-primary bg-primary text-white" : " text-1 item-hover border")}>
-                <Icon size={16} icon={svg}></Icon>{countStr}</span>
+                <Icon className={'gap-r-3'} size={16} icon={svg}></Icon>{countStr}</span>
         } else {
             sp = <span className="flex flex-inline h-24 padding-w-5 round-32 border item-hover ">
-                {this.block.viewField.field.type == FieldType.emoji && this.block.viewField?.field.config?.emoji?.code}
+                <em className={'gap-r-3 ef'} >{this.block.viewField.field.type == FieldType.emoji && this.block.viewField?.field.config?.emoji?.code}</em>
                 {countStr}</span>
         }
         return <div onMouseDown={e => mousedown(e)}>
