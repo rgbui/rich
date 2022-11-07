@@ -14,9 +14,9 @@ export class Field {
                 if (typeof col.type == 'string') {
                     col.type = FieldType[col.type] as any;
                 }
-                else this.type = col[n];
+                else lodash.set(this, 'type', col[n])
             }
-            else this[n] = util.clone(col[n]);
+            else lodash.set(this, n, util.clone(col[n]))
         }
     }
     get() {

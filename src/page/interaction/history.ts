@@ -465,6 +465,19 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             await block.arrayPush({ prop: dr.pos.prop, data: block.createPropObject(dr.pos.prop, dr.data), at: dr.pos.arrayAt })
         }
     });
+    snapshoot.registerOperator(OperatorDirective.$array_move, async (operator, source) => {
+        var dr = operator.data;
+        var block = page.find(x => x.id == dr.pos.blockId);
+        if (block) {
+            await block.arrayMove({ prop: dr.pos.prop, from: dr.from, to: dr.to })
+        }
+    }, async (operator) => {
+        var dr = operator.data;
+        var block = page.find(x => x.id == dr.pos.blockId);
+        if (block) {
+            await block.arrayMove({ prop: dr.pos.prop, from: dr.to, to: dr.from })
+        }
+    });
     snapshoot.registerOperator(OperatorDirective.$array_create, async (operator, source) => {
         var dr = operator.data;
         var block = page.find(x => x.id == dr.pos.blockId);

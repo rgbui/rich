@@ -26,7 +26,7 @@ import { DataGridView } from ".";
 import { useDataGridConfig } from "../../../../extensions/data-grid/view.config";
 import { getSchemaViewIcon } from "../../schema/util";
 import { useTabelSchemaFormDrop } from "../../../../extensions/data-grid/switch.forms/view";
-import { getWsElementUrl, ElementType, getElementUrl } from "../../../../net/element.type";
+import {  ElementType, getElementUrl } from "../../../../net/element.type";
 import { channel } from "../../../../net/channel";
 import { Page } from "../../../../src/page";
 
@@ -216,11 +216,7 @@ export class DataGridViewConfig {
         if (um) {
             switch (um.item.name) {
                 case 'copylink':
-                    var url = getWsElementUrl({
-                        type: ElementType.SchemaView,
-                        id: this.syncBlockId,
-                        id1: this.schemaView.id
-                    });
+                    this.onCopyViewLink();
                     break;
                 case 'propertys':
                     await this.onOpenViewConfig(rect, 'field');

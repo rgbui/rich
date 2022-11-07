@@ -730,11 +730,11 @@ export abstract class Block extends Events {
         pr.prop = prop;
         return pr;
     }
-    getArrayItemPos(arrayProp: string, item: any) {
+    getArrayItemPos(arrayProp: string, item?: any) {
         var pr = this.pos as SnapshootBlockPropPos;
         pr.prop = arrayProp;
         var arr = lodash.get(this, arrayProp);
-        var at = arr.find(g => g === item);
+        var at =item? arr.find(g => g === item):-1;
         if (at > -1) {
             pr.arrayAt = at;
             pr.arrayNextId = arr[at + 1]?.id;

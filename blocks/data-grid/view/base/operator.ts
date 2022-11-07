@@ -39,9 +39,7 @@ export class DataGridViewOperator {
                 var field = this.schema.fields.find(g => g.id == fieldData.data.actions[0].id);
                 if (typeof at == 'undefined') at = this.fields.length;
                 var vf = this.schema.createViewField(field);
-                var newFields = this.fields.map(f => f.clone());
-                newFields.splice(at, 0, vf);
-                this.changeFields(this.fields, newFields);
+                await this.arrayPush({ prop: 'fields', data: vf, at });
                 this.data.forEach(row => {
                     var defaultValue = field.getDefaultValue();
                     if (typeof defaultValue != 'undefined')
@@ -67,11 +65,9 @@ export class DataGridViewOperator {
             });
             if (fieldData.ok) {
                 var field = this.schema.fields.find(g => g.id == fieldData.data.actions[0].id)
-
                 var vf = this.schema.createViewField(field);
-                var newFields = this.fields.map(f => f.clone());
-                newFields.splice(at, 0, vf);
-                this.changeFields(this.fields, newFields);
+                await this.arrayPush({ prop: 'fields', data: vf, at });
+
                 this.data.forEach(row => {
                     var defaultValue = field.getDefaultValue();
                     if (typeof defaultValue != 'undefined')
@@ -98,9 +94,7 @@ export class DataGridViewOperator {
             if (fieldData.ok) {
                 var field = this.schema.fields.find(g => g.id == fieldData.data.actions[0].id)
                 var vf = this.schema.createViewField(field);
-                var newFields = this.fields.map(f => f.clone());
-                newFields.splice(at, 0, vf);
-                this.changeFields(this.fields, newFields);
+                await this.arrayPush({ prop: 'fields', data: vf, at })
                 this.data.forEach(row => {
                     var defaultValue = field.getDefaultValue();
                     if (typeof defaultValue != 'undefined')
@@ -119,23 +113,24 @@ export class DataGridViewOperator {
             this.forceUpdate();
         }, { block: this });
     }
+    async onUpdateFieldConfig(this: DataGridView, field: Field, configProps: Record<string, any>) {
+        var nc: Record<string, any> = util.extendKey(configProps, 'config');
+        await this.onUpdateField(field, nc);
+    }
     async onUpdateViewField(this: DataGridView, viewField: ViewField, data: Record<string, any>) {
         await this.page.onAction(ActionDirective.onSchemaUpdateField, async () => {
-            var vfs = this.fields.map(f => f.clone());
-            var vf = vfs.find(g => g.type && viewField.type == g.type || g.fieldId == viewField.fieldId);
-            vf.load(data);
-            this.changeFields(this.fields, vfs);
+            await this.arrayUpdate<ViewField>({
+                prop: 'fields',
+                data: g => g.type && viewField.type == g.type || g.fieldId == viewField.fieldId,
+                update: data
+            })
             await this.createItem();
             this.forceUpdate();
         }, { block: this });
     }
     async onMoveViewField(this: DataGridView, to: number, from: number) {
         this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
-            var f = this.fields[from];
-            var vs = this.fields.map(f => f.clone());
-            vs.remove(g => g.type && f.type && g.type == f.type || g.field?.id == f.field?.id);
-            vs.splice(to, 0, f.clone());
-            this.changeFields(this.fields, vs);
+            await this.arrayMove({ prop: 'fields', from, to })
             await this.createItem();
             this.forceUpdate();
         }, { block: this });
@@ -146,13 +141,7 @@ export class DataGridViewOperator {
             this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
                 var r = await this.schema.fieldRemove(field.id);
                 if (r.ok) {
-                    var name = field.name;
-                    var fields = this.fields.map(c => c.clone());
-                    fields.removeAll(g => g.fieldId == field.id);
-                    this.changeFields(this.fields, fields);
-                    this.data.forEach(row => {
-                        delete row[name];
-                    });
+                    await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.fieldId == field.id })
                     await this.createItem();
                     this.forceUpdate();
                 }
@@ -164,13 +153,7 @@ export class DataGridViewOperator {
             this.page.onAction(ActionDirective.onSchemaDeleteField, async () => {
                 var r = await this.schema.fieldRemove(field.id);
                 if (r.ok) {
-                    var name = field.name;
-                    var fields = this.fields.map(c => c.clone());
-                    fields.removeAll(g => g.fieldId == field.id);
-                    this.changeFields(this.fields, fields);
-                    this.data.forEach(row => {
-                        delete row[name];
-                    });
+                    await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.fieldId == field.id })
                     await this.createItem();
                     this.forceUpdate();
                 }
@@ -179,9 +162,7 @@ export class DataGridViewOperator {
     }
     async onHideField(this: DataGridView, viewField: ViewField) {
         await this.page.onAction(ActionDirective.onSchemaHideField, async () => {
-            var fields = this.fields.map(f => f.clone());
-            fields.remove(g => g.type && g.type == viewField.type || g.field?.id == viewField?.field.id);
-            this.changeFields(this.fields, fields);
+            await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.type && g.type == viewField.type || g.field?.id == viewField?.field.id })
             await this.createItem();
             this.forceUpdate();
         }, { block: this });
@@ -189,10 +170,8 @@ export class DataGridViewOperator {
     async onShowField(this: DataGridView, field: Field) {
         if (this.fields.some(s => s.field?.id == field.id)) return;
         await this.page.onAction(ActionDirective.onSchemaShowField, async () => {
-            var fields = this.fields.map(f => f.clone());
             var newFeild = this.schema.createViewField(field);
-            fields.push(newFeild);
-            this.changeFields(this.fields, fields);
+            await this.arrayPush({ prop: 'fields', data: newFeild })
             await this.createItem();
             this.forceUpdate();
         }, { block: this });
@@ -443,12 +422,9 @@ export class DataGridViewOperator {
             return
         }
         this.page.onAction(ActionDirective.onDataGridShowRowNum, async () => {
-            if (visible == true) {
-                newFields.insertAt(0, new ViewField({ type: 'rowNum', text: '序号' }, this.schema))
-            }
-            else newFields.remove(g => g.type == 'rowNum');
+            if (visible == true) await this.arrayPush({ prop: 'fields', data: new ViewField({ type: 'rowNum', text: '序号' }, this.schema), at: 0 })
+            else await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.type == 'rowNum' });
             this.updateProps({ showRowNum: visible });
-            this.changeFields(this.fields, newFields);
             await this.createItem();
             this.forceUpdate();
         }, { block: this })
@@ -458,12 +434,11 @@ export class DataGridViewOperator {
         if (value == 'checkbox' && newFields.some(s => s.type == 'check')) return
         else if (value == 'none' && !newFields.some(s => s.type == 'check')) return
         this.page.onAction(ActionDirective.onDataGridShowCheck, async () => {
-            if (value == 'checkbox') {
-                newFields.insertAt(0, new ViewField({ type: 'check', text: '选择' }, this.schema))
-            }
-            else newFields.remove(g => g.type == 'check');
             this.updateProps({ checkRow: value });
-            this.changeFields(this.fields, newFields);
+
+            if (value == 'checkbox') await this.arrayPush({ prop: 'fields', at: 0, data: new ViewField({ type: 'check', text: '选择' }, this.schema) })
+            else await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.type == 'check' })
+
             await this.createItem();
             this.forceUpdate();
         }, { block: this })
@@ -521,7 +496,7 @@ export class DataGridViewOperator {
     onCopyViewLink(this: DataGridView,) {
         var url = getWsElementUrl({
             type: ElementType.SchemaView,
-            id: this.syncBlockId,
+            id: this.schema.id,
             id1: this.schemaView.id
         });
         CopyText(url);

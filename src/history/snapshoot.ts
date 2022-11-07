@@ -225,6 +225,7 @@ export interface HistorySnapshoot {
     record(directive: OperatorDirective.$array_create, data: { pos: SnapshootBlockPropPos, data: any }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.$array_delete, data: { pos: SnapshootBlockPropPos, data: any }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.$array_update, data: { pos: SnapshootBlockPropPos, old_value: any, new_value: any }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.$array_move, data: { pos: SnapshootBlockPropPos, from: number, to: number }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.$insert_style, data: { pos: SnapshootBlockStylePos, data: Record<string, any> }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.$delete_style, data: { pos: SnapshootBlockStylePos, data: Record<string, any> }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.$merge_style, data: { pos: SnapshootBlockStylePos, old_value: any, new_value: any }, obj: HistorySnapshootObject);
@@ -275,7 +276,7 @@ export type AppearCursorPos = {
 
 
 export type SnapshootDataGridViewPos = {
-    schemaId:string,
+    schemaId: string,
     viewId: string,
     viewUrl?: string,
     type?: 'view' | 'form'

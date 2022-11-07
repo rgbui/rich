@@ -155,5 +155,12 @@ export var util = {
             }
             else return n;
         }
+    },
+    extendKey(obj: Record<string, any>, path: string) {
+        var json: Record<string, any> = {}
+        for (let n in obj) {
+            json[path + "." + n] = obj[n]
+        }
+        return json;
     }
 }

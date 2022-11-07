@@ -150,6 +150,7 @@ export enum OperatorDirective {
     $array_create = 1030,
     $array_delete = 1031,
     $array_update = 1032,
+    $array_move=1033,
 
     $schema_data_push = 1040,
     $schema_data_remove = 1041,

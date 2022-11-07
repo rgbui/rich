@@ -375,7 +375,8 @@ export class Block$Event {
                     if (!lodash.isEqual(options.update[n], ar[n])) {
                         oldValue[n] = lodash.cloneDeep(ar[n]);
                         newValue[n] = lodash.cloneDeep(options.update[n]);
-                        ar[n] = newValue[n];
+                        if (typeof ar.load == 'function') ar.load({ [n]: newValue[n] })
+                        else ar[n] = newValue[n];
                     }
                 }
                 this.page.snapshoot.record(OperatorDirective.$array_update, {
@@ -454,6 +455,36 @@ export class Block$Event {
             this.page.snapshoot.record(OperatorDirective.$array_delete, {
                 pos,
                 data: cd
+            }, this)
+        }
+    }
+    async arrayMove<T>(this: Block,
+        options: {
+            prop: string,
+            data?: T | ((t: T) => boolean),
+            from?: number,
+            to: number
+        }) {
+        var arr: T[] = lodash.get(this, options.prop);
+        if (!Array.isArray(arr)) {
+            arr = [];
+            lodash.set(this, options.prop, arr);
+        }
+        if (Array.isArray(arr)) {
+            var from = options.from;
+            if (typeof options.data != 'undefined') {
+                if (typeof options.data == 'function') from = arr.findIndex(g => (options.data as any)(g))
+                else from = arr.findIndex(g => g == options.data)
+            }
+            var pos = this.getArrayItemPos(options.prop);
+            var item = arr[from];
+            lodash.remove(arr, (g, i) => i == from);
+            arr.splice(to, 0, item);
+            var to = options.to;
+            this.page.snapshoot.record(OperatorDirective.$array_move, {
+                pos,
+                from,
+                to
             }, this)
         }
     }
