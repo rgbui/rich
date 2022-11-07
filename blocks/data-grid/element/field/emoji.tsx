@@ -25,7 +25,6 @@ export class FieldEmailView extends BlockView<FieldEmoji>{
                     self.block.viewField.field.type == FieldType.emoji ? self.block.field.id : self.block.field.name,
                     self.block.item.dataRow.id
                 ),
-                schemaUrl: self.block.dataGrid.schema.url,
                 fieldName: self.block.field.name
             });
             if (r.ok) {
@@ -49,6 +48,22 @@ export class FieldEmailView extends BlockView<FieldEmoji>{
                         if (!Array.isArray(ops)) self.block.dataGrid.userEmojis[self.block.viewField.field.name] = ops = []
                         if (ops.exists(c => c == self.block.item.dataRow.id)) lodash.remove(ops, c => c == self.block.item.dataRow.id);
                         lodash.remove(ov.users, g => (g as any) == userid);
+                    }
+                    if (typeof r.data.otherCount == 'number') {
+                        var name = self.block.field.name == 'like' ? FieldType[FieldType.oppose] : FieldType[FieldType.like];
+                        self.block.item.dataRow[name] = r.data.otherCount;
+                        var cs = self.block.item.childs.findAll(g => (g instanceof OriginField) && g.field?.name == name);
+                        if (!r.data.otherExists) {
+                            var ops = self.block.dataGrid.userEmojis[name];
+                            if (!Array.isArray(ops)) self.block.dataGrid.userEmojis[name] = ops = []
+                            if (ops.exists(c => c == self.block.item.dataRow.id)) lodash.remove(ops, c => c == self.block.item.dataRow.id);
+                        }
+                        if (cs.length > 0) {
+                            for (var i = 0; i < cs.length; i++) {
+                                (cs[i] as any).value = r.data.otherCount;
+                                cs[i].forceUpdate();
+                            }
+                        }
                     }
                 }
                 self.block.value = ov;
