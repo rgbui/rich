@@ -17,6 +17,9 @@ export class FieldRelation extends OriginField {
         var vs: string[] = this.value;
         if (!Array.isArray(vs)) vs = [];
         if (vs.length == 0) return [];
+        if (!this.field.config.isMultiple) {
+            vs = vs.slice(0, 1);
+        }
         var g = this.dataGrid.relationDatas.get(this.field.config?.relationTableId);
         if (Array.isArray(g)) {
             return g.findAll(g => vs.includes(g.id))
@@ -34,17 +37,9 @@ export class FieldRelation extends OriginField {
             relationSchema: this.relationSchema
         });
         if (r) {
-            var rs = this.dataGrid.relationDatas.get(this.relationSchema.id);
-            if (!Array.isArray(rs)) {
-                rs = [];
-                this.dataGrid.relationDatas.set(this.relationSchema.id, rs)
-            }
-            r.each(g => {
-                if (!rs.some(c => c.id == g.id)) rs.push(g)
-            });
             var ids = r.map(r => r.id);
-            this.value = ids;
             await this.onUpdateCellValue(ids);
+            await this.dataGrid.loadRelationDatas();
             this.forceUpdate();
         }
     }
