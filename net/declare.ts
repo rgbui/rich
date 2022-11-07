@@ -5,7 +5,6 @@ import { GalleryType, OuterPic } from "../extensions/image/declare";
 import { StatusCode } from "./status.code";
 import { UserAction } from "../src/history/action";
 import { UserBasic, UserStatus } from "../types/user";
-import { AtomPermission } from "../src/page/permission";
 import { ResourceArguments } from "../extensions/icon/declare";
 export type SockResponse<T, U = string> = {
         /**
@@ -157,7 +156,7 @@ export interface ChannelPatchMapUrls {
 	"/ws/patch/member/roles":{args:{wsId?:string,userid:string,roleIds:string[]},returnType:Promise<SockResponse<void>>},
 	"/view/snap/patch":{args:{id:string,data:Record<string,any>},returnType:Promise<SockResponse<void>>},
 	"/block/ref/sync":{args:{wsId?:string,data:{deleteBlockIds: string[], updates: { rowBlockId: string, text: string }[]}},returnType:Promise<SockResponse<void>>},
-	"/interactive/emoji":{args:{elementUrl:string,schemaUrl:string,fieldName:string},returnType:Promise<SockResponse<{count:number,exists:boolean,otherCount?:number,otherExists:boolean}>>}
+	"/interactive/emoji":{args:{elementUrl:string,fieldName:string},returnType:Promise<SockResponse<{count:number,exists:boolean,otherCount?:number,otherExists:boolean}>>}
 }
 export interface ChannelPutMapUrls {
     "/schema/create":{args:{text:string,url:string,templateId?:string},returnType:Promise<{ ok: boolean, data: { schema:Partial<TableSchema> },warn:string }>},
