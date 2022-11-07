@@ -142,11 +142,17 @@ export async function createFieldBlock(viewField: ViewField, block: TableStoreIt
             case FieldType.formula:
                 cellContent = await BlockFactory.createBlock('/field/formula', page, {
                     viewField,
-                    // value: viewField.getValue(row),
+                    //value: viewField.getValue(row),
                 }, block);
                 break;
             case FieldType.button:
                 cellContent = await BlockFactory.createBlock('/field/button', page, {
+                    viewField,
+                    value: viewField.getValue(row),
+                }, block);
+                break;
+            case FieldType.rollup:
+                cellContent = await BlockFactory.createBlock('/field/rollup', page, {
                     viewField,
                     value: viewField.getValue(row),
                 }, block);
