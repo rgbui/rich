@@ -270,6 +270,9 @@ export class TableSchema {
             return await this.batchSchema.get<TableSchema>(schemaId)
         }
     }
+    static async getSchemas() {
+        return Array.from(this.schemas.values());
+    }
     static async loadListSchema(schemaIds: string[]) {
         var rs: TableSchema[] = [];
         for (let i = schemaIds.length - 1; i >= 0; i--) {
