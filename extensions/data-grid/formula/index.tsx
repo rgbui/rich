@@ -2,6 +2,7 @@ import React from "react";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
 import { EventsComponent } from "../../../component/lib/events.component";
+import { ChevronRightSvg, TypesNumberSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { Textarea } from "../../../component/view/input/textarea";
 import { Markdown } from "../../../component/view/markdown";
@@ -9,15 +10,14 @@ import { Express } from "../../../src/express";
 import { util } from "../../../util/util";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
-import { formulaLangs } from "./data";
-import "./style.less";
+import { constLangs, formulaLangs, funLangs, logcLangs } from "./data";
 
 class FormulaSelector extends EventsComponent {
     schema: TableSchema;
     cacheDatas = new Map<string, string>()
     async openData(f) {
         try {
-            var url=ASSERT_URL + 'assert/data-grid/formula/docs' + f.url;
+            var url = ASSERT_URL + 'assert/data-grid/formula/docs' + f.url;
             var d = this.cacheDatas.get(url);
             if (!d) {
                 d = await util.getText(url);
@@ -32,26 +32,64 @@ class FormulaSelector extends EventsComponent {
     }
     render(): React.ReactNode {
         return <div className="h-400 w-500">
-            <div><Textarea value={this.formula} onChange={e => this.formula = e} onEnter={e => this.onSave(e)}></Textarea></div>
+            <div ><Textarea value={this.formula} onChange={e => this.formula = e} onEnter={e => this.onSave(e)}></Textarea></div>
             <div className="flex-full min-h-200 max-h-300">
-                <div className="overflow-y w-120 flex-fixed">
+                <div className="overflow-y w-150 bg-light  padding-b-100 flex-fixed">
                     <div className="gap-h-10">
-                        <div className="remark font-12 padding-l-10">字段</div>
+                        <div className="remark font-12 padding-l-10">属性</div>
                         {this.schema && this.schema.userFields.map(f => {
-                            return <div key={f.id} className="padding-w-10 item-hover round cursor flex h-30"><span className="inline-block size-24"><Icon size={16} icon={GetFieldTypeSvg(f.type)}></Icon></span><span className="f-14 inline-block">{f.text}</span></div>
+                            return <div key={f.id} className="padding-w-10 item-hover round cursor flex h-30">
+                                <span className="inline-block flex-center size-24 flex-fixed"><Icon size={16} icon={GetFieldTypeSvg(f.type)}></Icon></span>
+                                <span className="f-14 inline-block text-overflow flex-auto">{f.text}</span>
+                            </div>
+                        })}
+                    </div>
+                    <div className="gap-h-10">
+                        <div className="remark font-12 padding-l-10">常量</div>
+                        {constLangs.map((fl, k) => {
+                            return <div onClick={e => this.openData(fl)} key={k} className="padding-w-10 item-hover round cursor flex h-30">
+                                <span className="flex-fixed flex-center size-24"><Icon size={16} icon={TypesNumberSvg}></Icon></span>
+                                <span className="flex-auto text-overflow">{fl.text}</span>
+                            </div>
+                        })}
+                    </div>
+                    <div className="gap-h-10">
+                        <div className="remark font-12 padding-l-10">运算符</div>
+                        {logcLangs.map((fl, k) => {
+                            return <div key={k}
+                                onClick={e => this.openData(fl)}
+                                className="padding-w-10 item-hover round cursor flex h-30">
+                                <span className="gap-l-10 flex-auto text-overflow">{fl.text}</span>
+                            </div>
                         })}
                     </div>
                     <div className="gap-h-10">
                         <div className="remark font-12 padding-l-10">函数</div>
+                        {funLangs.map((fl, k) => {
+                            return <div key={k}
+                                onClick={e => this.openData(fl)}
+                                className="padding-w-10 item-hover round cursor flex h-30">
+                                <span className="flex-fixed flex-center size-24"><Icon size={16} icon={TypesNumberSvg}></Icon></span>
+                                <span className="flex-auto text-overflow">{fl.text}</span>
+                            </div>
+                        })}
+                    </div>
+                    <div className="gap-h-10">
+                        <div className="remark font-12 padding-l-10">类</div>
                         {formulaLangs.map((fl, k) => {
                             return <div className="gap-h-10" key={k}>
-                                <div className="text-1 font-14 padding-l-10">{fl.text}</div>
-                                {fl.childs.map((f, g) => {
+                                <div onClick={e => { fl.spread = fl.spread ? false : true; this.forceUpdate() }}
+                                    className="flex text-1 font-14 padding-l-10">
+                                    <span className="flex-fixed size-24 item-hover flex-center round cursor" style={{ transform: fl.spread ? 'rotateZ(90deg)' : 'rotateZ(0deg)' }}><Icon size={16} icon={ChevronRightSvg}></Icon></span>
+                                    <span className="flex-fixed flex-center size-24"><Icon size={16} icon={GetFieldTypeSvg(fl.types[0])}></Icon></span>
+                                    <span className="flex-auto text-overflow">{fl.text}</span>
+                                </div>
+                                {fl.spread && <div>{fl.childs.map((f, g) => {
                                     return <div
                                         onClick={e => this.openData(f)}
                                         key={g}
-                                        className="padding-l-30 item-hover round cursor flex h-30"><span className="f-14 inline-block gap-l-10">{f.text}</span></div>
-                                })}
+                                        className="padding-w-10 padding-l-30 item-hover round cursor flex h-30"><span className="f-14 inline-block gap-l-10">{f.text}</span></div>
+                                })}</div>}
                             </div>
                         })}
                     </div>
