@@ -163,7 +163,7 @@ export function getSchemaFieldMenus(map: (list: any) => any) {
             // { text: '位置', value: FieldType.geolocation },
             { text: '关联', value: FieldType.relation },
             { text: '统计', value: FieldType.rollup },
-            { text: '公式', value: FieldType.formula },
+            // { text: '公式', value: FieldType.formula },
             { text: '自动编号', value: FieldType.autoIncrement },
             { text: '文档', value: FieldType.blog },
         ]),
