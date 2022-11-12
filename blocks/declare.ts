@@ -81,8 +81,8 @@ import "./data-grid/element/form/option";
 import "./data-grid/element/form/user";
 import "./data-grid/element/form/check";
 import "./data-grid/element/form/image";
-import "./data-grid/element/form/video";
 import "./data-grid/element/form/file";
+import "./data-grid/element/form/relation";
 
 import "./data-grid/element/filter/check";
 import "./data-grid/element/filter/date";
