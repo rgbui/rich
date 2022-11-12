@@ -47,6 +47,18 @@ export class TableSchema {
     get allowSortFields() {
         return this.userFields.findAll(x => x.text && ![FieldType.formula, FieldType.image, FieldType.file, FieldType.audio, FieldType.video].includes(x.type) ? true : false)
     }
+    get allowFormFields() {
+        return this.initUserFields.findAll(g => ![
+            FieldType.love,
+            FieldType.like,
+            FieldType.formula,
+            FieldType.rollup,
+            FieldType.oppose,
+            FieldType.comment,
+            FieldType.blog,
+            FieldType.emoji
+        ].includes(g.type))
+    }
     text: string;
     views: {
         id: string,
