@@ -111,7 +111,6 @@ export class DataGridViewLife {
                     });
                     if (r.ok) {
                         this.userEmojis=r.data.list;
-                        console.log(this.userEmojis,'emojis');
                     }
                 }
             }

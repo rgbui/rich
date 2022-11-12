@@ -98,7 +98,6 @@ export class FieldRollupView extends BlockView<FieldRollup>{
     render() {
         var str: string = '';
         var list = this.block.relationList;
-        console.log(list, 'ggg');
         var field = this.block.relationSchema?.fields?.find(g => g.id == this.block.field.config?.rollupFieldId);
         if (this.block.field.config?.rollupStatistic == '$count') {
             str = list.length.toString();

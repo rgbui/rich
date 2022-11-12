@@ -2,6 +2,7 @@ import lodash from "lodash";
 import { EmojiCode } from "../../../extensions/emoji/store";
 import { util } from "../../../util/util";
 import { FieldType, sysFieldTypes } from "./type";
+
 export class Field {
     id: string;
     name: string;

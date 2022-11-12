@@ -1,9 +1,12 @@
 import React from "react";
+import { Icon } from "../../../../component/view/icon";
+import { getPageIcon } from "../../../../extensions/at/declare";
 import { useRelationPickData } from "../../../../extensions/data-grid/relation.picker";
 import { getElementUrl, ElementType } from "../../../../net/element.type";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { Rect } from "../../../../src/common/vector/point";
+import { PageLayoutType } from "../../../../src/page/declare";
 import { TableSchema } from "../../schema/meta";
 import { FieldType } from "../../schema/type";
 import { FieldView, OriginFormField } from "./origin.field";
@@ -48,10 +51,16 @@ class FormFieldRelationView extends BlockView<FormFieldRelation>{
         var rs = this.block.relationSchema;
         if (!rs) return <></>
         var f = rs?.fields?.find(g => g.type == FieldType.title);
+        var icon = rs?.fields.find(g => g.type == FieldType.icon);
         if (!f) f = rs?.fields.find(g => g.type == FieldType.text);
-        return <div className='sy-field-relation-items'>{this.block.relationList?.map(r => {
+        return <div >{this.block.relationList?.map(r => {
             var url = getElementUrl(ElementType.SchemaData, rs.id, r.id);
-            return <a href={url} onClick={e => e.preventDefault()} key={r.id}>{r[f?.name]}</a>
+            return <a className="flex no-underline text-1 min-h-30 flex-block round item-hover" href={url} onClick={e => e.preventDefault()} key={r.id}>
+                <span className="flex-fixed size-24 flex-center flex-inline">
+                    <Icon size={16} icon={getPageIcon({ pageType: PageLayoutType.doc, icon: r[icon.name] })}></Icon>
+                </span>
+                <span className="flex-auto text-overflow">{r[f?.name]}</span>
+            </a>
         })}
         </div>
     }
