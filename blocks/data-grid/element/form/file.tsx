@@ -1,4 +1,5 @@
 
+import lodash from "lodash";
 import React from "react";
 import { OpenFileDialoug } from "../../../../component/file";
 import { CloseSvg, FileSvg } from "../../../../component/svgs";
@@ -36,6 +37,13 @@ class FormFieldFile extends OriginFormField {
 
 @view('/form/file')
 class FormFieldFileView extends BlockView<FormFieldFile>{
+    deleteImage(img) {
+        var vs = Array.isArray(this.block.value) ? this.block.value : (this.block.value ? [this.block.value] : []);
+        if (!this.block.field?.config?.isMultiple && vs.length > 1) vs = [vs.first()]
+        lodash.remove(vs, v => v == img);
+        this.block.value = vs;
+        this.forceUpdate();
+    }
     renderFiles(images: { name: string, size: number, url: string }[]) {
         return images.map((img, i) => {
             return <div className="sy-field-file-item min-h-30 cursor flex item-hover-focus round visible-hover" key={i}>
@@ -44,7 +52,7 @@ class FormFieldFileView extends BlockView<FormFieldFile>{
                     <span className="flex-fixed text-overflow gap-r-5">{img.name}</span>
                     <em className="fflex-fixed remark">{util.byteToString(img.size)}</em>
                 </a>
-                <span className="flex-fixed visible size-24 flex-center item-hover"><Icon size={16} icon={CloseSvg}></Icon></span>
+                <span onClick={e => this.deleteImage(img)} className="flex-fixed visible size-24 flex-center item-hover"><Icon size={16} icon={CloseSvg}></Icon></span>
             </div>
         })
     }
