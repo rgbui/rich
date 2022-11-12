@@ -520,6 +520,7 @@ export class Page$Cycle {
         }
         if (!this.exists(g => (g instanceof OriginFormField))) {
             var pageData = SchemaCreatePageFormData(this.schema);
+            console.log(pageData,'pageData');
             this.views = [];
             await this.load(pageData);
             isCreateField = true;

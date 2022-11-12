@@ -27,7 +27,12 @@ export class PageContextmenu {
     }
     async onGetBoardContextMenus(this: Page) {
         var items: MenuItem<BlockDirective | string>[] = [];
-        items.push({ type: MenuItemType.switch, checked: this.pageInfo?.locker?.userid ? true : false, text: '编辑保护', name: 'lock' });
+        items.push({
+            type: MenuItemType.switch,
+            checked: this.pageInfo?.locker?.userid ? true : false,
+            text: '编辑保护',
+            name: 'lock'
+        });
         items.push({ type: MenuItemType.divide });
         // items.push({ name: 'add-favourite', text: '星标' });
         items.push({ name: 'copy-link', text: '复制链接' })
@@ -221,7 +226,7 @@ export class PageContextmenu {
                 } else if (item.name == 'speak') {
                     this.onChangeTextChannelSpeak(item.value as any)
                 }
-                else if(item.name=='showComment'){
+                else if (item.name == 'showComment') {
                     this.onToggleComments(item.checked)
                 }
             }
@@ -276,7 +281,8 @@ export class PageContextmenu {
         var r = await useSelectMenuItem(
             { roundArea: Rect.fromEvent(event) },
             [
-                { text: '显示字段', type: MenuItemType.text }, ...this.schema.initUserFields.map(uf => {
+                { text: '显示字段', type: MenuItemType.text },
+                ...this.schema.allowFormFields.map(uf => {
                     return {
                         icon: GetFieldTypeSvg(uf.type),
                         name: uf.id,
