@@ -29,7 +29,7 @@ export class FieldImage extends OriginField {
 export class FieldImageView extends BlockView<FieldImage>{
     renderImages(images: { url: string }[]) {
         var style: CSSProperties = {};
-        if (this.block.field?.config.imageFormat?.display == 'auto') {
+        if (this.block.field?.config?.imageFormat?.display == 'auto') {
             style.width = '100%';
             style.maxHeight = 300;
             style.objectFit = 'cover';
@@ -41,7 +41,7 @@ export class FieldImageView extends BlockView<FieldImage>{
             style.objectFit = 'cover';
             style.objectPosition = '50% 50%';
         }
-        if (this.block.field.config.isMultiple && this.block.field?.config.imageFormat.multipleDisplay == 'carousel') {
+        if (this.block.field.config?.isMultiple && this.block.field?.config?.imageFormat?.multipleDisplay == 'carousel') {
             var settings = {
                 autoplay: true,
                 renderCenterLeftControls: () => <></>,
