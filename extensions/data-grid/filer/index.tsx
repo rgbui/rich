@@ -2,7 +2,7 @@ import lodash from "lodash";
 import React from "react";
 import { ReactNode } from "react";
 import { EventsComponent } from "../../../component/lib/events.component";
-import { DotsSvg, DragHandleSvg } from "../../../component/svgs";
+import { DotsSvg, DragHandleSvg, TrashSvg } from "../../../component/svgs";
 import { Avatar } from "../../../component/view/avator/face";
 import { Button } from "../../../component/view/button";
 import { DragList } from "../../../component/view/drag.list";
@@ -43,7 +43,7 @@ export class DataGridFileViewer extends EventsComponent {
         event.stopPropagation();
         var re = await useSelectMenuItem(
             { roundArea: Rect.fromEvent(event) },
-            [{ name: 'delete', text: '删除' }]);
+            [{ name: 'delete', text: '删除', icon: TrashSvg }]);
         if (re?.item) {
             lodash.remove(this.resources, g => g === resource);
             this.forceUpdate()
@@ -114,8 +114,8 @@ export class DataGridFileViewer extends EventsComponent {
                                 <Icon icon={DragHandleSvg} size={14}></Icon>
                             </span>
                             <div className="flex-auto">{renderItem(re)}</div>
-                            <span onClick={e => this.onContextmenu(re, e)} className="round  remark flex-fixed drag size-24 flex-center cursor item-hover">
-                                <Icon icon={DotsSvg} size={14}></Icon>
+                            <span onClick={e => this.onContextmenu(re, e)} className="round  remark text-1 flex-fixed drag size-24 flex-center cursor item-hover">
+                                <Icon icon={DotsSvg} size={18}></Icon>
                             </span>
                         </div>
                     })}</DragList>
