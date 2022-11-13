@@ -103,6 +103,7 @@ position的布局
     position: absolute;
 }
 
+
 .pos-inset {
     position: absolute;
     top     : 0px;
@@ -149,6 +150,26 @@ position的布局
     position: absolute;
     top     : 0px;
     left    : 0px;
+}
+
+.pos-top,
+.pos-t {
+    top: 0px;
+}
+
+.pos-left,
+.pos-l {
+    left: 0px;
+}
+
+.pos-right,
+.pos-r {
+    right: 0px;
+}
+
+.pos-bottom,
+.pos-b {
+    bottom: 0px;
 }
 
 .pos-full {
@@ -383,7 +404,7 @@ item-selected:选中的效果
     background-color: rgba(55, 53, 47, 0.08);
 }
 
-.item-hover-primary{
+.item-hover-primary {
     &:hover {
         background-color: rgb(225, 98, 89);
     }
@@ -940,14 +961,28 @@ each(@ops, {
 .bg {
     background-color: rgba(55, 53, 47, 0.08);
 }
-.bg-light{
+
+.bg-light {
     background-color: rgba(55, 53, 47, 0.04);
+}
+
+.shadow {
+    box-shadow: rgba(15, 15, 15, 0.016) 0px 0px 0px 1px, rgba(15, 15, 15, 0.03) 0px 3px 6px, rgba(15, 15, 15, 0.06) 0px 9px 24px
 }
 
 .border {
     border: 1px solid rgba(55, 53, 47, 0.16);
 }
-.border-primary{
+
+.border-left {
+    border-left: 1px solid rgba(55, 53, 47, 0.16);
+}
+
+.border-light-left {
+    border-left: 1px solid rgba(55, 53, 47, 0.08);
+}
+
+.border-primary {
     border: 1px solid rgb(225, 98, 89);
 }
 
@@ -1127,7 +1162,16 @@ each(@gaps, {
             margin-bottom:@value+0px;
         }
     }
-
+)
+/**
+z-index
+****/
+@zs: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 100, 200, 300, 1000, 2000, 3000, 10000, 20000, 50000, 60000;
+each(@zs,{
+        .z-@{value}{
+            z-index:@value;
+        }
+    }
 )
 /***
 内间距
