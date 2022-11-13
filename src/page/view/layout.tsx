@@ -25,6 +25,9 @@ export function PageLayoutView(props: {
         var style: CSSProperties = { minHeight: mh, width: '100%' };
         return <div className={"shy-page-layout shy-page-layout-db-form"} style={style}>
             <div className='shy-page-layout-wrapper' >
+                {props.page.recordViewTemplate && <div className="bg flex-center round">
+                    编辑模板<span>{props.page.schema.recordViews.find(c => c.id == props.page.scheamViewId)?.text}</span>
+                </div>}
                 {props.children}
             </div>
         </div>
