@@ -26,7 +26,7 @@ import { DataGridView } from ".";
 import { useDataGridConfig } from "../../../../extensions/data-grid/view.config";
 import { getSchemaViewIcon } from "../../schema/util";
 import { useTabelSchemaFormDrop } from "../../../../extensions/data-grid/switch.forms/view";
-import {  ElementType, getElementUrl } from "../../../../net/element.type";
+import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { channel } from "../../../../net/channel";
 import { Page } from "../../../../src/page";
 
@@ -239,8 +239,16 @@ export class DataGridViewConfig {
     }
     async onOpenForm(this: DataGridView, rect: Rect) {
         this.dataGridTool.isOpenTool = true;
-        var dialougPage: Page = await channel.air('/page/dialog', {
-            elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, this.schema.recordViews.first().id)
+        var url: '/page/open' | '/page/dialog' | '/page/slide' = '/page/dialog';
+        if (this.openRecordSource == 'page') {
+            url = '/page/open';
+        }
+        else if (this.openRecordSource == 'slide') {
+            url = '/page/slide';
+        }
+        console.log(url, 'url');
+        var dialougPage: Page = await channel.air(url, {
+            elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, this.schema.defaultAddForm?.id)
         })
         if (dialougPage) {
             var newRow = dialougPage.getSchemaRow();
@@ -248,7 +256,7 @@ export class DataGridViewConfig {
                 await this.onAddRow(newRow, undefined, 'after')
             }
         }
-        await channel.air('/page/dialog', { elementUrl: null });
+        if (url != '/page/open') await channel.air(url, { elementUrl: null });
         this.dataGridTool.isOpenTool = false;
         this.onOver(this.getVisibleContentBound().contain(Point.from(this.page.kit.operator.moveEvent)))
     }

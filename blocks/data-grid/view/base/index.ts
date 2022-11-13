@@ -23,6 +23,7 @@ import lodash from "lodash";
 import { PageLayoutType } from "../../../../src/page/declare";
 import { OriginFilterField } from "../../element/filter/origin.field";
 import { FilterSort } from "../../element/filter/sort";
+import { Page } from "../../../../src/page";
 
 /**
  * 
@@ -48,6 +49,8 @@ export class DataGridView extends Block {
     checkRow: 'none' | 'checkbox' | 'selected' = 'none';
     @prop()
     noTitle: boolean = false;
+    @prop()
+    openRecordSource: Page['openSource'] = 'dialog';
     schema: TableSchema;
     relationSchemas: TableSchema[] = [];
     relationDatas: Map<string, any[]> = new Map();
