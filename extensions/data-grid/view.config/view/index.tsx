@@ -64,6 +64,17 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                     { text: '200条', value: 200 }
                 ]
             },
+            {
+                text: '打开记录方式',
+                value: this.block.openRecordSource,
+                name: 'openRecordSource',
+                type: MenuItemType.select,
+                options: [
+                    { text: '页面', value: 'page' },
+                    { text: '对话框居中', value: 'dialog' },
+                    { text: '侧栏右侧', value: 'slide' },
+                ]
+            },
             { type: MenuItemType.divide },
             {
                 text: '选中方式',
@@ -148,6 +159,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
         async function input(item) {
             if (item.name == 'size') self.block.onChangeSize(item.value)
             else if (item.name == 'noTitle') self.block.onUpdateProps({ noTitle: !item.checked }, { syncBlock: self.block, range: BlockRenderRange.self });
+            else if (item.name == 'openRecordSource') self.block.onUpdateProps({ openRecordSource: item.value }, { syncBlock: self.block })
             else if (item.name == 'showRowNum') self.block.onShowRowNum(item.checked);
             else if (item.name == 'checkRow') {
                 await self.block.onShowCheck(item.value);
