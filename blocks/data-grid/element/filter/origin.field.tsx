@@ -2,6 +2,7 @@ import React, { CSSProperties } from "react";
 import { Spin } from "../../../../component/view/spin";
 import { Block } from "../../../../src/block";
 import { prop } from "../../../../src/block/factory/observable";
+import { SchemaFilter } from "../../schema/declare";
 import { DataGridView } from "../../view/base";
 
 export class OriginFilterField extends Block {
@@ -19,8 +20,8 @@ export class OriginFilterField extends Block {
     get fieldText() {
         return this.field?.text;
     }
-    get filters() {
-        return {}
+    get filters(): SchemaFilter[] {
+        return null
     }
     onFilter(value: any, force?: boolean) {
 

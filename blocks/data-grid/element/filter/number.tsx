@@ -4,6 +4,7 @@ import { NsArowSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
+import { SchemaFilter } from "../../schema/declare";
 import { OriginFilterField, OriginFilterFieldView } from "./origin.field";
 
 @url('/field/filter/number')
@@ -17,12 +18,22 @@ export class FilterFieldNumber extends OriginFilterField {
         if (this.refBlock) this.refBlock.onSearch()
     }, 1000);
     get filters() {
-        return {
-            [this.field.name]: {
-                $gte: this.min,
-                $lte: this.max
-            }
+        var rs: SchemaFilter[] = [];
+        if (typeof this.min != 'undefined') {
+            rs.push({
+                field: this.field.name,
+                operator: "$gte",
+                value: this.min
+            })
         }
+        if (typeof this.max != 'undefined') {
+            rs.push({
+                field: this.field.name,
+                operator: "$lte",
+                value: this.max
+            })
+        }
+        return rs;
     }
 }
 

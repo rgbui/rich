@@ -1,4 +1,5 @@
 import React from "react";
+import { ArrowDownSvg, ArrowUpSvg } from "../../../../component/svgs";
 import { SelectBox } from "../../../../component/view/select/box";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
@@ -11,7 +12,13 @@ export class FilterSort extends OriginFilterField {
         if (this.refBlock) this.refBlock.onSearch()
         this.forceUpdate()
     }
-    sortRule: number = 1;
+    sortRule: number = 0;
+    getSort() {
+        if (this.sortRule !== 0)
+            return {
+                [this.field.name]: this.sortRule
+            }
+    }
 }
 @view('/field/filter/sort')
 export class SearchTextView extends BlockView<FilterSort>{
@@ -22,8 +29,8 @@ export class SearchTextView extends BlockView<FilterSort>{
                 onChange={e => this.block.onFilter(e)}
                 options={[
                     { text: '无', value: 0 },
-                    { text: "升序", value: 1 },
-                    { text: '降序', value: -1 }
+                    { text: "升序", value: 1, icon: ArrowUpSvg },
+                    { text: '降序', value: -1, icon: ArrowDownSvg }
                 ]}></SelectBox>
         </OriginFilterFieldView ></div>
     }

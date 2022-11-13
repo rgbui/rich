@@ -29,12 +29,13 @@ export class FilterFieldOption extends OriginFilterField {
         this.forceUpdate()
     }
     get filters() {
-        if (this.values.length == 0) return {}
-        return {
-            [this.field.name]: {
-                $in: this.values
-            }
-        }
+        if (this.values.length == 0) return null
+        return [{
+            field: this.field.name,
+            operator: '$in',
+            value: this.values
+        }]
+
     }
 }
 @view('/field/filter/option')

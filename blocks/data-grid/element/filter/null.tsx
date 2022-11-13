@@ -15,10 +15,14 @@ export class FieldFilterNull extends OriginFilterField {
         if (this.refBlock) this.refBlock.onSearch()
     }
     get filters() {
-        if (this.isNull == false) return {}
-        return {
-            [this.field.name]: { $ne: null }
-        }
+        if (this.isNull == false) return null;
+        return [
+            {
+                name: this.field.name,
+                $operator: '$ne',
+                value: null
+            }
+        ]
     }
 }
 

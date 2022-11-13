@@ -7,6 +7,7 @@ import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { Rect } from "../../../../src/common/vector/point";
 import { util } from "../../../../util/util";
+import { SchemaFilter } from "../../schema/declare";
 import { OriginFilterField, OriginFilterFieldView } from "./origin.field";
 
 @url('/field/filter/date')
@@ -29,17 +30,26 @@ export class FilterFieldDate extends OriginFilterField {
         if (this.field?.config?.includeTime) fr = 'YYYY-MM-DD HH:mm';
         return fr;
     }
-    get filters() {
+    get filters(): SchemaFilter[] {
+        var rs: SchemaFilter[] = [];
         if (this.field?.config?.includeTime) {
-            return {
-                [this.field.name]: {
-                    $gte: this.startDate,
-                    $lte: this.endDate
-                }
+            if (this.startDate) {
+                rs.push({
+                    field: this.field.name,
+                    operator: "$gte",
+                    value: this.startDate
+                })
             }
+            if (this.endDate) {
+                rs.push({
+                    field: this.field.name,
+                    operator: "$lte",
+                    value: this.endDate
+                })
+            }
+            return rs;
         }
         else {
-
             var sd: Date;
             if (this.startDate) {
                 sd = util.dateToStart(this.startDate)
@@ -48,12 +58,21 @@ export class FilterFieldDate extends OriginFilterField {
             if (this.endDate) {
                 ed = util.dateToStart(this.endDate)
             }
-            return {
-                [this.field.name]: {
-                    $gte: sd,
-                    $lte: ed
-                }
+            if (sd) {
+                rs.push({
+                    field: this.field.name,
+                    operator: "$gte",
+                    value: sd
+                })
             }
+            if (ed) {
+                rs.push({
+                    field: this.field.name,
+                    operator: "$gte",
+                    value: ed
+                })
+            }
+            return rs;
         }
     }
 }

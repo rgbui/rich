@@ -18,12 +18,12 @@ export class SearchUser extends OriginFilterField {
         this.forceUpdate()
     }
     get filters() {
-        if (!(Array.isArray(this.selectUsers) && this.selectUsers.length > 0)) return {}
-        return {
-            [this.field.name]: {
-                $in: this.selectUsers
-            }
-        }
+        if (!(Array.isArray(this.selectUsers) && this.selectUsers.length > 0)) return null;
+        return [{
+            field: this.field.name,
+            operator: '$in',
+            value: this.selectUsers
+        }]
     }
 }
 

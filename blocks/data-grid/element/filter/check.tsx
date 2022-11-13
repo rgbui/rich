@@ -5,6 +5,8 @@ import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { OriginFilterField, OriginFilterFieldView } from "./origin.field";
 
+
+
 @url('/field/filter/check')
 export class FilterFieldCheck extends OriginFilterField {
     checked: boolean = false;
@@ -15,9 +17,12 @@ export class FilterFieldCheck extends OriginFilterField {
         if (this.refBlock) this.refBlock.onSearch();
     }
     get filters() {
-        return {
-            [this.field.name]: this.checked
-        }
+        if (this.checked)
+            return [{
+                field: this.field.name,
+                value: this.checked,
+                operator: '$eq'
+            }]
     }
 }
 @view('/field/filter/check')

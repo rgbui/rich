@@ -15,12 +15,12 @@ export class FilterRelation extends OriginFilterField {
 
     }
     get filters() {
-        if (this.selectDataIds.length == 0) return {}
-        return {
-            [this.field.name]: {
-                $in: this.selectDataIds.map(c => c.id)
-            }
-        }
+        if (this.selectDataIds.length == 0) return null
+        return [{
+            field: this.field.name,
+            operator: '$in',
+            value: this.selectDataIds.map(c => c.id)
+        }]
     }
 }
 
