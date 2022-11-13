@@ -3,7 +3,6 @@ import { Page } from "..";
 import { Icon } from "../../../component/view/icon";
 import { useIconPicker } from "../../../extensions/icon";
 import { useImagePicker } from "../../../extensions/image/picker";
-import { channel } from "../../../net/channel";
 import { autoImageUrl } from "../../../net/element.type";
 import { MouseDragger } from "../../common/dragger";
 import { Rect } from "../../common/vector/point";
@@ -22,14 +21,14 @@ export class PageCover extends React.Component<{ page: Page }>{
                 event.stopPropagation();
                 var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) });
                 if (typeof icon != 'undefined') {
-                    channel.air('/page/update/info', { id: page.pageInfo?.id, pageInfo: { icon } })
+                    page.onUpdatePageData({ icon });
                 }
             }
             async function changeCover(event: React.MouseEvent) {
                 event.stopPropagation();
                 var r = await useImagePicker({ roundArea: Rect.fromEvent(event) }, { gallery: true });
                 if (r) {
-                    page.onUpdateProps({ cover: { url: r.url, thumb: r.thumb, top: 50, abled: true } }, true)
+                    page.onUpdatePageCover({ cover: { url: r.url, thumb: r.thumb, top: 50, abled: true } }, true)
                 }
             }
             function startPosition(event: React.MouseEvent) {
@@ -55,7 +54,7 @@ export class PageCover extends React.Component<{ page: Page }>{
                 })
             }
             function savePostion() {
-                page.onUpdateProps({ 'cover.top': self.top });
+                page.onUpdatePageCover({ 'cover.top': self.top });
                 self.startPos = false;
                 self.forceUpdate();
             }

@@ -227,15 +227,15 @@ export class PageEvent {
     async onAddCover(this: Page) {
         if (!this.isCanEdit) return;
         if (this.cover?.abled) {
-            this.onUpdateProps({ 'cover.abled': false }, true);
+            this.onUpdatePageCover({ 'cover.abled': false }, true);
         }
         else {
             if (this.cover?.url) {
-                this.onUpdateProps({ 'cover.abled': true }, true);
+                this.onUpdatePageCover({ 'cover.abled': true }, true);
             }
             else {
                 var g = GalleryPics.randomOf().childs.randomOf();
-                this.onUpdateProps({
+                this.onUpdatePageCover({
                     cover: {
                         abled: true,
                         url: g.url,
@@ -250,12 +250,8 @@ export class PageEvent {
         if (!this.isCanEdit) return;
         var codes = await emojiStore.get();
         var g = codes.randomOf().childs.randomOf();
-        channel.air('/page/update/info', {
-            id: this.pageInfo.id,
-            pageInfo: {
-                id: this.pageInfo.id,
-                icon: { name: "emoji", code: g.code }
-            }
+        this.onUpdatePageData({
+            icon: { name: "emoji", code: g.code }
         })
     }
     async onUpdatePageData(this: Page, data: Record<string, any>) {
@@ -263,6 +259,9 @@ export class PageEvent {
             id: this.pageInfo.id,
             pageInfo: data
         })
+    }
+    async onUpdatePageCover(this: Page, data: Record<string, any>, isUpdate?: boolean) {
+        await this.onUpdateProps(data, isUpdate);
     }
     async onUpdatePageTitle(this: Page, text: string) {
         this.onceStopRenderByPageInfo = true;
@@ -278,7 +277,7 @@ export class PageEvent {
         event.stopPropagation();
         var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) });
         if (typeof icon != 'undefined') {
-            channel.air('/page/update/info', { id: this.pageInfo?.id, pageInfo: { icon } })
+            this.onUpdatePageData({ icon })
         }
     }
 }

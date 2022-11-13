@@ -240,13 +240,10 @@ export class PageContextmenu {
                 ShyAlert('复制链接');
             }
             else if (r.item.name == 'lock') {
-                channel.air('/page/update/info', {
-                    id: this.pageInfo.id,
-                    pageInfo: {
-                        locker: this.pageInfo.locker?.userid ? null : {
-                            userid: this.user.id,
-                            lockDate: Date.now()
-                        }
+                this.onUpdatePageData({
+                    locker: this.pageInfo.locker?.userid ? null : {
+                        userid: this.user.id,
+                        lockDate: Date.now()
                     }
                 })
             }
@@ -263,7 +260,6 @@ export class PageContextmenu {
             else if (r.item.name == 'history') {
                 var result = await usePageHistoryStore(this.pageInfo);
                 if (result) {
-                    console.log(result);
                     this.emit(PageDirective.rollup, result);
                 }
             }
