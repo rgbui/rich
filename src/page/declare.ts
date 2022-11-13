@@ -25,10 +25,7 @@ export enum PageLayoutType {
      * 文字频道
      */
     textChannel = 40,
-    /**
-     * 文字广播
-     */
-    textBroadcast = 50,
+
 
     /**
      * 博客

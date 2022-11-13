@@ -124,13 +124,6 @@ export class PageEvent {
                     })
                     this.pageLayout.type = layoutType;
                     break;
-                case PageLayoutType.textBroadcast:
-                    this.pageLayout.type = layoutType;
-                    var view = this.views[0];
-                    await view.childs.eachAsync(async block => {
-                        await block.delete()
-                    })
-                    break;
                 case PageLayoutType.textChannel:
                     this.pageLayout.type = layoutType;
                     var view = this.views[0];

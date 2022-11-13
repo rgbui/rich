@@ -58,12 +58,9 @@ export class Page extends Events<PageDirective> {
     get user() {
         return channel.query('/query/current/user');
     }
-    get permissions():AtomPermission[] {
+    get permissions(): AtomPermission[] {
         if (this.pageInfo) return this.pageInfo.getPermissons()
         else return []
-        // var ps = channel.query('/page/query/permissions', { pageId: this.pageInfo?.id });
-        // if (Array.isArray(ps)) return ps;
-        // else return [];
     }
     kit: Kit = new Kit(this);
     snapshoot = new HistorySnapshoot(this)
@@ -183,6 +180,8 @@ export class Page extends Events<PageDirective> {
     schema: TableSchema;
     recordViewId: string;
     scheamViewId: string;
+    recordViewTemplate: boolean = false;
+    openSource: 'page' | 'slide' | 'dialog' = 'page';
     loadSchemaRecord(row: Record<string, any>) {
         this.each(g => {
             if (g instanceof OriginFormField) {
@@ -263,25 +262,26 @@ export class Page extends Events<PageDirective> {
     }
     customElementUrl: string;
     get elementUrl() {
-        if ([
-            PageLayoutType.board,
-            PageLayoutType.doc
-        ].includes(this.pageLayout.type)) {
-            return getElementUrl(ElementType.PageItem, this.pageInfo?.id);
-        }
-        else if (this.pageLayout.type == PageLayoutType.textChannel) {
-            return getElementUrl(ElementType.Room, this.pageInfo?.id);
-        }
-        else if (this.pageLayout.type == PageLayoutType.db) {
-            return getElementUrl(ElementType.Schema, this.pageInfo?.id);
-        }
-        else if ([
-            PageLayoutType.dbForm,
-            PageLayoutType.dbSubPage
-        ].includes(this.pageLayout.type)) {
-            return getElementUrl(ElementType.SchemaRecordView, this.schema.id, this.recordViewId);
-        }
-        else if (this.customElementUrl) return this.customElementUrl;
+        // if ([
+        //     PageLayoutType.board,
+        //     PageLayoutType.doc
+        // ].includes(this.pageLayout.type)) {
+        //     return getElementUrl(ElementType.PageItem, this.pageInfo?.id);
+        // }
+        // else if (this.pageLayout.type == PageLayoutType.textChannel) {
+        //     return getElementUrl(ElementType.Room, this.pageInfo?.id);
+        // }
+        // else if (this.pageLayout.type == PageLayoutType.db) {
+        //     return getElementUrl(ElementType.Schema, this.pageInfo?.id);
+        // }
+        // else if ([
+        //     PageLayoutType.dbForm,
+        //     PageLayoutType.dbSubPage
+        // ].includes(this.pageLayout.type)) {
+        //     return getElementUrl(ElementType.SchemaRecordView, this.schema.id, this.recordViewId);
+        // }
+        // else 
+        if (this.customElementUrl) return this.customElementUrl;
     }
 }
 export interface Page {

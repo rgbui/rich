@@ -21,7 +21,15 @@ export function PageLayoutView(props: {
             {props.children}
         </div>
     }
-    else if ([PageLayoutType.dbForm, PageLayoutType.dbPickRecord].includes(type)) {
+    else if (type == PageLayoutType.dbForm) {
+        var style: CSSProperties = { minHeight: mh, width: '100%' };
+        return <div className={"shy-page-layout shy-page-layout-db-form"} style={style}>
+            <div className='shy-page-layout-wrapper' >
+                {props.children}
+            </div>
+        </div>
+    }
+    else if (type == PageLayoutType.dbPickRecord) {
         var style: CSSProperties = { minHeight: mh, width: '100%' };
         return <div className={"shy-page-layout shy-page-layout-db-form"} style={style}>
             <div className='shy-page-layout-wrapper' >

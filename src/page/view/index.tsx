@@ -6,7 +6,7 @@ import ReactDOM from "react-dom";
 import { KitView } from "../../kit/view";
 import { PageLayoutType } from "../declare";
 import { getBoardTool } from "../../../extensions/board.tool";
-import { Point, Rect } from "../../common/vector/point";
+import { Point } from "../../common/vector/point";
 import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
 import { PageLayoutView } from "./layout";
 import { channel } from "../../../net/channel";
@@ -16,7 +16,6 @@ import { Icon } from "../../../component/view/icon";
 import { CollectTableSvg, CommentSvg, PageSvg } from "../../../component/svgs";
 import { dom } from "../../common/dom";
 import { PageOutLine } from "../../../blocks/page/outline";
-import { BlockFactory } from "../../block/factory/block.factory";
 import { ActionDirective } from "../../history/declare";
 
 /**

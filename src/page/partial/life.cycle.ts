@@ -421,8 +421,6 @@ export class Page$Cycle {
             })
         }, 5000);
     }
-
-
     public hoverBlock: Block;
     onHoverBlock(this: Page, block: Block) {
         var isChange = this.hoverBlock != block;
