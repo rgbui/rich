@@ -60,7 +60,10 @@ import DocEditSvg from "../src/assert/svg/docEdit.svg";
 import DocSearchSvg from "../src/assert/svg/docSearch.svg";
 import DotsSvg from "../src/assert/svg/dots.svg";
 import DoubleLinkSvg from "../src/assert/svg/double.link.svg";
+import DoubleDownSvg from "../src/assert/svg/doubleDown.svg";
+import DoubleLeftSvg from "../src/assert/svg/doubleLeft.svg";
 import DoubleRightSvg from "../src/assert/svg/doubleRight.svg";
+import DoubleUpSvg from "../src/assert/svg/doubleUp.svg";
 import DownloadSvg from "../src/assert/svg/download.svg";
 import DragHandleSvg from "../src/assert/svg/dragHandle.svg";
 import DuplicateSvg from "../src/assert/svg/duplicate.svg";
@@ -254,7 +257,10 @@ DocEditSvg,
 DocSearchSvg,
 DotsSvg,
 DoubleLinkSvg,
+DoubleDownSvg,
+DoubleLeftSvg,
 DoubleRightSvg,
+DoubleUpSvg,
 DownloadSvg,
 DragHandleSvg,
 DuplicateSvg,
