@@ -110,11 +110,10 @@ export class DataGridViewLife {
                         es: fs.map(f => getElementUrl(ElementType.SchemaFieldNameData, this.schema.id, f.name, ids[0]))
                     });
                     if (r.ok) {
-                        this.userEmojis=r.data.list;
+                        this.userEmojis = r.data.list;
                     }
                 }
             }
         }
     }
-
 }

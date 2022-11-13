@@ -485,8 +485,8 @@ export class DataGridViewOperator {
             })
         });
     }
-    async onSearch(this: DataGridView,) {
-
+    async onSearch(this: DataGridView) {
+        await this.onReloadData();
     }
     onOver(this: DataGridView, isOver: boolean) {
         if (this.dataGridTool && this.dataGridTool.isOpenTool) return;

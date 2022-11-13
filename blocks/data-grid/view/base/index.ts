@@ -21,6 +21,8 @@ import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { DataGridViewField } from "./field";
 import lodash from "lodash";
 import { PageLayoutType } from "../../../../src/page/declare";
+import { OriginFilterField } from "../../element/filter/origin.field";
+import { FilterSort } from "../../element/filter/sort";
 
 /**
  * 
@@ -162,9 +164,27 @@ export class DataGridView extends Block {
         }
     }
     getSearchFilter() {
-        var f: Record<string, any> = {}
+        var f: SchemaFilter = {} as any;
         if (this.filter) {
             f = lodash.cloneDeep(this.filter);
+        }
+        var fs = this.referenceBlockers.findAll(g => !(g instanceof FilterSort) && g instanceof OriginFilterField);
+        var rs: SchemaFilter[] = [];
+        if (fs.length > 0) {
+            fs.forEach(f => {
+                var fl = (f as OriginFilterField).filters;
+                if (fl) {
+                    rs.push(...fl);
+                }
+            })
+        }
+        if (f && rs.length > 0) {
+            if (f.logic == 'and') {
+                f.items.push(...rs);
+            }
+            else if (f.logic == 'or') {
+                f = { logic: 'and', items: [f, ...rs] };
+            }
         }
         return f
     }
@@ -178,6 +198,11 @@ export class DataGridView extends Block {
                 }
             })
             return lodash.cloneDeep(this.sorts);
+        }
+        var sf = this.referenceBlockers.find(g => g instanceof FilterSort) as FilterSort;
+        if (sf) {
+            var so = sf.getSort();
+            if (so) Object.assign(sorts, so);
         }
         return sorts;
     }
