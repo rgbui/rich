@@ -18,6 +18,7 @@ import { usePagePublish } from "../../../extensions/publish";
 import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.field";
 import { GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
 import { BlockUrlConstant } from "../../block/constant";
+import { FieldType } from "../../../blocks/data-grid/schema/type";
 
 export class PageContextmenu {
     async onGetContextMenus(this: Page) {
@@ -188,6 +189,7 @@ export class PageContextmenu {
                 { name: 'smallText', text: '小字号', checked: this.smallFont ? true : false, type: MenuItemType.switch },
                 { name: 'fullWidth', text: '宽版', checked: this.isFullWidth ? true : false, type: MenuItemType.switch },
                 { type: MenuItemType.divide },
+                { name: 'showComment', text: "显示评论", icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                 // { name: 'nav', text: '目录', icon: OutlineSvg, type: MenuItemType.switch, checked: this.nav },
                 // { name: 'refPages', text: "显示引用", icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
                 { name: 'lock', text: rv?.locker?.userid ? "解除锁定" : '编辑保护', icon: rv?.locker?.userid ? UnlockSvg : LockSvg },
@@ -278,7 +280,8 @@ export class PageContextmenu {
             { roundArea: Rect.fromEvent(event) },
             [
                 { text: '显示字段', type: MenuItemType.text },
-                ...this.schema.allowFormFields.map(uf => {
+                ...this.schema.allowFormFields.toArray(uf => {
+                    if (this.formRowData && uf.type == FieldType.title) return
                     return {
                         icon: GetFieldTypeSvg(uf.type),
                         name: uf.id,
@@ -286,8 +289,7 @@ export class PageContextmenu {
                         type: MenuItemType.switch,
                         checked: this.exists(c => (c instanceof OriginFormField) && c.field.id == uf.id)
                     }
-                }
-                )
+                })
             ],
             {
                 input: (newItem) => {
