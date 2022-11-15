@@ -64,11 +64,8 @@ export class DataGridViewData {
             var r = await this.schema.rowUpdate({ dataId: id, data: util.clone(data) });
             if (r.ok) {
                 Object.assign(oldItem, data);
-                var row: TableStoreItem = this.blocks.childs.find(g => (g as TableStoreItem).dataRow.id == id) as TableStoreItem;
-                if (row) {
-                    await row.createElements();
-                    row.forceUpdate();
-                }
+                await this.createItem();
+                this.forceUpdate();
             }
         }
     }
