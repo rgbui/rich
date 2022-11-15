@@ -13,7 +13,7 @@ import { channel } from "../../../net/channel";
 import { LinkPageItem } from "../../../extensions/at/declare";
 import { PageCover } from "./cover";
 import { Icon } from "../../../component/view/icon";
-import { CollectTableSvg, CommentSvg, PageSvg } from "../../../component/svgs";
+import { BoardToolFrameSvg, CollectTableSvg, CommentSvg, PageSvg } from "../../../component/svgs";
 import { dom } from "../../common/dom";
 import { PageOutLine } from "../../../blocks/page/outline";
 import { ActionDirective } from "../../history/declare";
@@ -54,8 +54,8 @@ export class PageView extends Component<{ page: Page }>{
         this.observeToolBoard();
         this.AutomaticHandle();
     }
-    updatePageInfo = (r: { id: string, pageInfo: LinkPageItem }) => {
-        if (this.page.pageInfo?.id == r.id) {
+    updatePageInfo = (r: { elementUrl: string, pageInfo: LinkPageItem }) => {
+        if (this.page.elementUrl === r.elementUrl) {
             if (this.page.onceStopRenderByPageInfo == true) {
                 this.page.onceStopRenderByPageInfo = false;
                 return;
@@ -173,9 +173,8 @@ export class PageView extends Component<{ page: Page }>{
             <div className="shy-page-view-template-picker-items">
                 <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.doc)}><Icon size={16} icon={PageSvg} ></Icon><span>页面</span></a>
                 <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.db)}><Icon size={16} icon={CollectTableSvg} ></Icon><span>表格</span></a>
-                {/*<a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.board)}><Icon size={16} icon={BoardToolFrameSvg}></Icon><span>白板</span></a> */}
-                <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.textChannel)}><Icon size={16} icon={CommentSvg}></Icon><span>会话</span></a>
-                {/*<a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.textBroadcast)}><span>广播</span></a> */}
+                <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.board)}><Icon size={16} icon={BoardToolFrameSvg}></Icon><span>白板</span></a>
+                <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.textChannel)}><Icon size={16} icon={CommentSvg}></Icon><span>频道</span></a>
             </div>
         </div>
     }
