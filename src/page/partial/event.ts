@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Page } from "..";
 import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
@@ -5,6 +6,7 @@ import { emojiStore } from "../../../extensions/emoji/store";
 import { useIconPicker } from "../../../extensions/icon";
 import { GalleryPics } from "../../../extensions/image/gellery";
 import { channel } from "../../../net/channel";
+import { util } from "../../../util/util";
 import { Matrix } from "../../common/matrix";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
@@ -226,11 +228,12 @@ export class PageEvent {
     }
     async onAddCover(this: Page) {
         if (!this.isCanEdit) return;
-        if (this.cover?.abled) {
+        var pd = this.getPageDataInfo();
+        if (pd.cover?.abled) {
             this.onUpdatePageCover({ 'cover.abled': false }, true);
         }
         else {
-            if (this.cover?.url) {
+            if (pd.cover?.url) {
                 this.onUpdatePageCover({ 'cover.abled': true }, true);
             }
             else {
@@ -255,23 +258,95 @@ export class PageEvent {
         })
     }
     async onUpdatePageData(this: Page, data: Record<string, any>) {
+        if (this.pageLayout.type == PageLayoutType.dbForm) {
+            if (this.formRowData) {
+                Object.assign(this.formRowData, data);
+            }
+            else {
+                var sr = this.schema.recordViews.find(g => g.id == this.recordViewId);
+                if (sr) {
+                    await this.schema.onSchemaOperate([{
+                        name: "updateSchemaRecordView",
+                        data: data,
+                        id: this.recordViewId,
+                    }])
+                }
+            }
+        }
         channel.air('/page/update/info', {
-            id: this.pageInfo.id,
+            elementUrl: this.elementUrl,
             pageInfo: data
         })
     }
-    async onUpdatePageCover(this: Page, data: Record<string, any>, isUpdate?: boolean) {
-        await this.onUpdateProps(data, isUpdate);
-    }
     async onUpdatePageTitle(this: Page, text: string) {
         this.onceStopRenderByPageInfo = true;
+        if (this.pageLayout.type == PageLayoutType.dbForm) {
+            if (this.formRowData) {
+                this.formRowData.title = text;
+            }
+            else {
+                var sr = this.schema.recordViews.find(g => g.id == this.recordViewId);
+                if (sr) {
+                    await this.schema.onSchemaOperate([{
+                        name: "updateSchemaRecordView",
+                        id: this.recordViewId,
+                        data: { text }
+                    }])
+                }
+            }
+        }
         channel.air('/page/update/info', {
-            id: this.pageInfo.id,
+            elementUrl: this.elementUrl,
             pageInfo: {
-                id: this.pageInfo.id,
                 text: text
             }
         })
+    }
+    async onUpdatePageCover(this: Page, data: Record<string, any>, isUpdate?: boolean) {
+        /**
+         * 如果是数据，其封面的信息存在row data中
+         */
+        if (this.formRowData) {
+            util.setKey(this.formRowData, data);
+            this.view.forceUpdate();
+        }
+        else await this.onUpdateProps(data, isUpdate);
+    }
+    getPageDataInfo(this: Page) {
+        if (this.pageLayout.type == PageLayoutType.dbForm) {
+            if (this.formRowData) {
+                return {
+                    id: this.formRowData.id,
+                    text: this.formRowData.title,
+                    icon: this.formRowData.icon,
+                    cover: this.formRowData.cover
+                }
+            }
+            else {
+                var sr = this.schema.recordViews.find(g => g.id == this.recordViewId);
+                if (sr) {
+                    return {
+                        id: sr.id,
+                        text: sr.text,
+                        icon: sr.icon,
+                        cover: this.cover
+                    }
+                }
+                else {
+                    return {
+                        text: '',
+                        icon: null,
+                        cover: this.cover
+                    }
+                }
+            }
+        }
+        return {
+            id: this.pageInfo.id,
+            text: this.pageInfo.text,
+            icon: this.pageInfo.icon,
+            cover: this.cover
+        }
     }
     async onChangeIcon(this: Page, event: React.MouseEvent) {
         event.stopPropagation();

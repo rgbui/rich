@@ -1,6 +1,6 @@
 import lodash from "lodash";
 import { MergeSock } from "../../../component/lib/merge.sock";
-import { IconArguments } from "../../../extensions/icon/declare";
+import { CoverMask, IconArguments } from "../../../extensions/icon/declare";
 import { channel } from "../../../net/channel";
 import { Field } from "./field";
 import { FieldType } from "./type";
@@ -35,6 +35,7 @@ export class TableSchema {
     createDate: Date;
     fields: Field[] = [];
     icon: IconArguments;
+    cover: CoverMask;
     get visibleFields(): Field[] {
         return this.fields.findAll(g => g.text && ![FieldType.id, FieldType.parentId, FieldType.icon, FieldType.cover, FieldType.description].includes(g.type))
     }
@@ -71,7 +72,9 @@ export class TableSchema {
         }
     }[] = [];
     recordViews: {
-        id: string, text: string,
+        id: string,
+        text: string,
+        icon: IconArguments,
         locker?: {
             lock: boolean,
             date: number,
@@ -244,6 +247,12 @@ export class TableSchema {
                         Object.assign(view, action.data);
                     }
                     break;
+                case 'updateSchemaRecordView':
+                    var vi = this.recordViews.find(g => g.id == action.id);
+                    if (vi) {
+                        Object.assign(vi, action.data);
+                    }
+                    break;
                 case 'changeSchemaView':
                     var view = this.views.find(g => g.id == action.id);
                     if (view) {
@@ -343,7 +352,6 @@ export class TableSchema {
         }
         else return []
     })
-
 }
 
 

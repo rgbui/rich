@@ -246,7 +246,6 @@ export class DataGridViewConfig {
         else if (this.openRecordSource == 'slide') {
             url = '/page/slide';
         }
-        console.log(url, 'url');
         var dialougPage: Page = await channel.air(url, {
             elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, this.schema.defaultAddForm?.id)
         })
