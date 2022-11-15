@@ -62,7 +62,7 @@ export class PagingView extends BlockView<Paging>{
             } else ps = [];
             return ps.map((p) => {
                 var classList: string[] = ["border", 'flex-center', "size-24", "round", "gap-w-5"];
-                if (p == index) classList.push("remark");
+                if (p == index) classList.push("bg-primary text-white");
                 else if (typeof p == "number") {
                     classList.push('cursor')
                 } else classList.push("remark");
