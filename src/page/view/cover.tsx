@@ -6,7 +6,6 @@ import { useImagePicker } from "../../../extensions/image/picker";
 import { autoImageUrl } from "../../../net/element.type";
 import { MouseDragger } from "../../common/dragger";
 import { Rect } from "../../common/vector/point";
-
 export class PageCover extends React.Component<{ page: Page }>{
     private startPos: boolean = false;
     private loadThumb: boolean = false;
@@ -15,7 +14,8 @@ export class PageCover extends React.Component<{ page: Page }>{
     render() {
         var self = this;
         var page = this.props.page;
-        if (page.cover?.abled) {
+        var pd = this.props.page.getPageDataInfo();
+        if (pd.cover?.abled) {
             async function changeIcon(event: React.MouseEvent) {
                 if (!page.isCanEdit) return;
                 event.stopPropagation();
@@ -66,27 +66,26 @@ export class PageCover extends React.Component<{ page: Page }>{
                 self.loadThumb = true;
                 self.forceUpdate();
             }
-
             return <div className="shy-page-view-cover" onMouseDown={e => dragStart(e)}>
                 <img ref={e => this.img = e}
                     onDragStart={e => false} onLoad={e => onloadSuccess()}
-                    src={autoImageUrl(page.cover.url)}
+                    src={autoImageUrl(pd.cover.url)}
                     draggable={false}
                     style={{
                         height: 240,
-                        objectPosition: 'center' + (typeof page?.cover?.top == 'number' ? page.cover.top : 50) + '%'
+                        objectPosition: 'center' + (typeof pd?.cover?.top == 'number' ? pd.cover.top : 50) + '%'
                     }} />
-                {page.cover.thumb && <img className="shy-page-view-cover-thumb" style={{
+                {pd.cover?.thumb && <img className="shy-page-view-cover-thumb" style={{
                     height: 240,
                     visibility: self.loadThumb ? "hidden" : 'visible',
-                    objectPosition: 'center' + (typeof page?.cover?.top == 'number' ? page.cover.top : 50) + '%'
-                }} onDragStart={e => false} draggable={false} src={autoImageUrl(page.cover.thumb)} />}
+                    objectPosition: 'center' + (typeof pd?.cover?.top == 'number' ? pd.cover.top : 50) + '%'
+                }} onDragStart={e => false} draggable={false} src={autoImageUrl(pd.cover.thumb)} />}
                 {self.startPos && <div className="shy-page-view-cover-drag-tip">拖动图片调整位置</div>}
                 <div className="shy-page-view-cover-nav">
                     <div style={page.getScreenStyle()}>
                         <div style={{ position: 'relative', height: 24 }}>
-                            {page.pageInfo?.icon && <div onMouseDown={e => changeIcon(e)} className="shy-page-view-cover-icon">
-                                <Icon size={72} icon={page.pageInfo?.icon}></Icon>
+                            {pd?.icon && <div onMouseDown={e => changeIcon(e)} className="shy-page-view-cover-icon">
+                                <Icon size={72} icon={pd?.icon}></Icon>
                             </div>}
                             {page.isCanEdit && <div className="shy-page-view-cover-operators">
                                 {self.startPos && <>
