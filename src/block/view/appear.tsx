@@ -20,7 +20,7 @@ export function TextArea(props: {
         style: props.style,
         placeholder: props.placeholder
     };
-    if (props.block.isCanEdit(props.prop)) {
+    if (props.block.isCanEdit()) {
         ps = {
             ref: (e) => props.block.elementAppear({
                 el: e,
@@ -92,11 +92,11 @@ export function SolidArea(props: {
     }
     if (props.line) return <span className='shy-appear-solid'  {...ps} >
         {props.children}
-        {props.block.isCanEdit(props.prop) && <span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}
+        {props.block.isCanEdit() && <span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}
     </span>
     return <div className='shy-appear-solid'  {...ps} >
         {props.children}
-        {props.block.isCanEdit(props.prop) && <span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}
+        {props.block.isCanEdit() && <span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}
     </div>
 }
 export function ChildsArea(props: { childs: Block[] }) {

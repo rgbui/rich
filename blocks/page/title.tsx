@@ -9,19 +9,16 @@ import { LinkPageItem } from "../../extensions/at/declare";
 import { Icon } from "../../component/view/icon";
 import { AddPageCoverSvg, AddPageIconSvg } from "../../component/svgs";
 import lodash from "lodash";
-import { Loading } from "../../component/view/loading";
+import { Spin } from "../../component/view/spin";
 
 @url('/title')
 export class Title extends Block {
     display = BlockDisplay.block;
     pageInfo: LinkPageItem = null;
     async loadPageInfo() {
-        if (this.page.pageInfo) {
-            this.pageInfo = {
-                id: this.page.pageInfo.id,
-                text: this.page.pageInfo.text,
-                icon: this.page.pageInfo.icon,
-            }
+        var r = this.page.getPageDataInfo();
+        if (r) {
+            this.pageInfo = lodash.cloneDeep(r);
         }
     }
     async changeAppear(appear) {
@@ -48,7 +45,6 @@ export class Title extends Block {
         return null;
     }
 }
-
 @view('/title')
 export class TitleView extends BlockView<Title>{
     async didMount() {
@@ -58,9 +54,9 @@ export class TitleView extends BlockView<Title>{
             this.block.onEmptyTitleFocusAnchor();
         });
     }
-    updatePageInfo = (r: { id: string, pageInfo: LinkPageItem }) => {
-        var { id, pageInfo } = r;
-        if (this.block.pageInfo?.id == id && id) {
+    updatePageInfo = (r: { elementUrl: string, pageInfo: LinkPageItem }) => {
+        var { elementUrl, pageInfo } = r;
+        if (this.block.page.elementUrl == elementUrl) {
             var isUpdate: boolean = false;
             if (typeof pageInfo.text != 'undefined' && pageInfo.text != this.block.pageInfo.text) {
                 this.block.pageInfo.text = pageInfo.text;
@@ -80,16 +76,17 @@ export class TitleView extends BlockView<Title>{
     }
     render() {
         var isAdd: boolean = this.block.page.isSupportCover;
+        var pd=this.block.page.getPageDataInfo();
         return <div className='sy-block-page-info' style={this.block.visibleStyle}>
-            <div className="min-h-72">{this.block.pageInfo?.icon && this.block.page.cover?.abled !== true && <div onMouseDown={e => this.block.page.onChangeIcon(e)} className="sy-block-page-info-icon">
+            <div className="min-h-72">{this.block.pageInfo?.icon && pd.cover?.abled !== true && <div onMouseDown={e => this.block.page.onChangeIcon(e)} className="sy-block-page-info-icon">
                 <Icon size={72} icon={this.block.pageInfo?.icon}></Icon>
             </div>}</div>
-            {isAdd && (!this.block.pageInfo?.icon || !this.block.page.cover?.abled) && <div className='sy-block-page-info-operators' >
+            {isAdd && (!this.block.pageInfo?.icon || !pd.cover?.abled) && <div className='sy-block-page-info-operators' >
                 {!this.block.pageInfo?.icon && <a onMouseDown={e => this.block.page.onAddIcon()}><Icon size={14} icon={AddPageIconSvg}></Icon><span>添加图标</span></a>}
-                {!this.block.page.cover?.abled && <a onMouseDown={e => this.block.page.onAddCover()}><Icon size={14} icon={AddPageCoverSvg}></Icon><span>添加封面</span></a>}
+                {!pd.cover?.abled && <a onMouseDown={e => this.block.page.onAddCover()}><Icon size={14} icon={AddPageCoverSvg}></Icon><span>添加封面</span></a>}
             </div>}
             {this.block.pageInfo == null && <div className='sy-block-page-info-loading'>
-                <Loading></Loading>
+                <Spin></Spin>
             </div>}
             {this.block.pageInfo != null && <div className='sy-block-page-info-head'>
                 <span className='sy-block-page-info-head-title'><TextArea

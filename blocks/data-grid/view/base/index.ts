@@ -290,12 +290,6 @@ export class DataGridView extends Block {
     get elementUrl() {
         return getElementUrl(ElementType.SchemaView, this.schemaId, this.syncBlockId);
     }
-    isCanEdit(prop?: string) {
-        if (this.page?.pageLayout.type == PageLayoutType.dbPickRecord) return false;
-        if (this.schemaView?.locker) return false;
-        var r = super.isCanEdit(prop);
-        return r;
-    }
 }
 
 export interface DataGridView extends DataGridViewLife { }

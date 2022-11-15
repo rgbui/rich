@@ -171,7 +171,7 @@ export class TextContentView extends BlockView<TextContent>{
         var classList: string[] = ['sy-block-text-content'];
         if (this.block.link) {
             if (this.block.link.name == 'page' && !this.block.link.pageId) {
-                if (this.block.isCanEdit)
+                if (this.block.isCanEdit())
                     ta = <BoxTip ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center"><ToolTip overlay={'取消'}><a className="flex-center size-24 round item-hover gap-5 cursor" onMouseDown={e => this.onClearLink()}><Icon size={14} icon={TrashSvg}></Icon></a></ToolTip>
                     </div>}><a className="sy-block-text-content-link">{ta}<i onMouseDown={e => this.openCreatePage(e)}>(创建)</i></a></BoxTip>
             }

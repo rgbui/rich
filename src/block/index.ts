@@ -693,18 +693,9 @@ export abstract class Block extends Events {
     async onSyncReferenceBlock() {
 
     }
-    isCanEdit(prop?: string) {
-        if (this.page.pageLayout?.type == PageLayoutType.dbPickRecord) {
-            return false;
-        }
+    isCanEdit() {
         if (this.page.pageInfo?.locker?.userid) return false;
-        if (typeof prop == 'undefined') prop = 'content';
-        if (this.url == BlockUrlConstant.Title) {
-            if (this.page.permissions.includes(AtomPermission.createOrDeleteDoc)) return true;
-            else return false;
-        }
-        if (this.page.permissions.includes(AtomPermission.editDoc)) return true;
-        else return false;
+        return this.page.isCanEdit;
     }
     getRelativePoint(point: Point) {
         if (this.page.isBoard || this.isFrame || this.isFreeBlock || this.isBoardBlock)
@@ -734,7 +725,7 @@ export abstract class Block extends Events {
         var pr = this.pos as SnapshootBlockPropPos;
         pr.prop = arrayProp;
         var arr = lodash.get(this, arrayProp);
-        var at =item? arr.find(g => g === item):-1;
+        var at = item ? arr.find(g => g === item) : -1;
         if (at > -1) {
             pr.arrayAt = at;
             pr.arrayNextId = arr[at + 1]?.id;
