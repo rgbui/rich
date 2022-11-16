@@ -85,14 +85,14 @@ export class DataGridFields extends EventsComponent {
         }
         return <div>
             <div className="max-h-250 overflow-y">
-                <div className="flex h-30 padding-w-14">
+                <div className="flex h-30 padding-w-14" style={{ paddingRight: 10 }}>
                     <span className="remark flex-auto f-12">显示的字段</span>
                     <span onClick={e => onHideAll()} className="size-24 flex-center round ">
                         <Icon size={14} icon={EyeSvg}></Icon>
                     </span>
                 </div>
                 <DragList onChange={onChange} isDragBar={e => e.closest('.shy-table-field-view-item') && !e.closest('.eye') ? true : false} className="shy-table-field-view-items">{this.block.fields.map(f => {
-                    return <div className={"shy-table-field-view-item flex h-30 padding-w-14 cursor  item-hover"} key={f.fieldId || f.type}>
+                    return <div className={"shy-table-field-view-item flex h-30 padding-w-10 cursor  item-hover"} key={f.fieldId || f.type}>
                         <span className="size-24 round flex-center flex-fixed item-hover"> <em className={'drag'} ><Icon size={12} icon={DragHandleSvg}></Icon></em></span>
                         <span className="size-24 round flex-center flex-fixed"><Icon size={14} icon={GetFieldTypeSvg(f.field?.type)}></Icon></span>
                         <span className="flex-auto f-14">{f.text}</span>
@@ -101,14 +101,14 @@ export class DataGridFields extends EventsComponent {
                     </div>
                 })}</DragList>
                 {fs.length > 0 && <>
-                    <div className="flex h-30 padding-w-14">
+                    <div className="flex h-30 padding-w-14" style={{ paddingRight: 10 }}>
                         <span className="remark flex-auto f-12">未显示的字段</span>
                         <span onClick={e => onShowAll()} className="size-24 flex-center round item-hover ">
                             <Icon size={14} icon={EyeHideSvg}></Icon>
                         </span>
                     </div>
                     <div className="shy-table-field-view-items">{fs.map(f => {
-                        return <div className={"flex h-30 padding-w-14 cursor item-hover"} key={f.id}>
+                        return <div className={"flex h-30 padding-w-10 cursor item-hover"} key={f.id}>
                             <span className="size-24 round flex-center flex-fixed"> <Icon size={14} icon={GetFieldTypeSvg(f.type)}></Icon></span>
                             <span className="flex-auto f-14">{f.text}</span>
                             <span className="size-24 round flex-center flex-fixed item-hover">   <Icon className={'eye'} size={14} onClick={async () => { await self.block.onShowField(f); self.forceUpdate() }} icon={EyeHideSvg}></Icon></span>
@@ -116,13 +116,6 @@ export class DataGridFields extends EventsComponent {
                         </div>
                     })}</div>
                 </>}
-            </div>
-            <Divider></Divider>
-            <div onClick={e => self.addField(e)} className="flex h-30 item-hover padding-w-14 gap-b-10 round cursor text-1 f-14 ">
-                <span className="size-24 round flex-center flex-fix cursor">
-                    <Icon size={16} icon={PlusSvg}></Icon>
-                </span>
-                <span className="flex-auto">添加字段</span>
             </div>
         </div>
     }
@@ -142,17 +135,17 @@ export class DataGridFields extends EventsComponent {
                 await self.block.onUpdateProps({ [item.name]: item.checked }, { syncBlock: self.block, range: BlockRenderRange.self });
                 self.forceUpdate()
             }
-            // else if (item.name == 'noHead') {
-            //     await self.block.onUpdateProps({ noHead: !item.checked }, { syncBlock: self.block, range: BlockRenderRange.self });
-            // }
             else if (['gallerySize', 'dateFieldId', 'groupFieldId'].includes(item.name)) {
                 await self.block.onUpdateProps({ [item.name]: item.value }, { syncBlock: self.block, range: BlockRenderRange.self });
+                self.forceUpdate()
             }
             else if (['cardConfig.auto', 'cardConfig.showCover', 'cardConfig.coverAuto'].includes(item.name)) {
                 await self.block.onUpdateProps({ [item.name]: item.checked }, { syncBlock: self.block, range: BlockRenderRange.self });
+                self.forceUpdate()
             }
             else if (item.name == 'cardConfig.coverFieldId' && item.value) {
                 await self.block.onUpdateProps({ [item.name]: item.value }, { syncBlock: self.block, range: BlockRenderRange.self });
+                self.forceUpdate()
             }
         }
         function select(item) {
@@ -166,52 +159,53 @@ export class DataGridFields extends EventsComponent {
                 return [
                     {
                         name: 'cardConfig.showTemplate',
-                        text: "卡片模板",
+                        text: "自定义卡片模板",
                         type: MenuItemType.switch,
                         checked: (this.block as TableStoreGallery).cardConfig?.showTemplate == true,
                     }
                 ]
             var baseItems: MenuItem[] = [
-                { text: '卡片视图', type: MenuItemType.text },
                 {
                     name: 'cardConfig.showTemplate',
-                    text: "卡片模板",
+                    text: "自定义卡片模板",
                     type: MenuItemType.switch,
                     checked: (this.block as TableStoreGallery).cardConfig?.showTemplate == true,
                 },
+                { text: '卡片视图', type: MenuItemType.text },
                 {
                     name: 'cardConfig.auto',
-                    text: "卡片高度",
-                    type: MenuItemType.select,
-                    options: [
-                        { text: '固定', value: false },
-                        { text: '自适应', value: true },
-                    ],
-                    value: (this.block as TableStoreGallery).cardConfig?.auto,
+                    text: "高度自适应",
+                    type: MenuItemType.switch,
+                    checked: (this.block as TableStoreGallery).cardConfig?.auto,
                 },
                 {
                     name: 'cardConfig.showCover',
                     text: "显示封面",
                     type: MenuItemType.switch,
+                    updateMenuPanel: true,
                     checked: (this.block as TableStoreGallery).cardConfig?.showCover,
                 },
                 {
                     name: 'cardConfig.coverAuto',
                     text: "封面高度",
-                    visible: (this.block as TableStoreGallery).cardConfig?.showCover,
-                    type: MenuItemType.select,
-                    options: [
-                        { text: '固定', value: false },
-                        { text: '自适应', value: true },
-                    ],
-                    value: (this.block as TableStoreGallery).cardConfig?.coverAuto,
+                    visible: (items) => {
+                        var item = items.find(g => g.name == 'cardConfig.showCover');
+                        if (item.checked) return true;
+                        else return false;
+                    },
+                    type: MenuItemType.switch,
+                    checked: (this.block as TableStoreGallery).cardConfig?.coverAuto,
                 },
                 {
                     text: '封面字段',
                     value: (this.block as TableStoreGallery).cardConfig?.coverFieldId,
                     name: 'cardConfig.coverFieldId',
                     type: MenuItemType.select,
-                    visible: (this.block as TableStoreGallery).cardConfig?.showCover,
+                    visible: (items) => {
+                        var item = items.find(g => g.name == 'cardConfig.showCover');
+                        if (item.checked) return true;
+                        else return false;
+                    },
                     options: this.block.schema.userFields.filter(g => g.type == FieldType.image).map(g => {
                         return {
                             text: g.text,
