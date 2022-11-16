@@ -7,7 +7,7 @@ import { DataGridTool } from "../components/tool";
 import "./style.less";
 @url('/data-grid/list')
 export class TableStoreList extends DataGridView {
-
+    
 }
 @view('/data-grid/list')
 export class TableStoreListView extends BlockView<TableStoreList>{

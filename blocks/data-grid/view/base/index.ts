@@ -20,7 +20,6 @@ import { DataGridViewConfig } from "./config";
 import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { DataGridViewField } from "./field";
 import lodash from "lodash";
-import { PageLayoutType } from "../../../../src/page/declare";
 import { OriginFilterField } from "../../element/filter/origin.field";
 import { FilterSort } from "../../element/filter/sort";
 import { Page } from "../../../../src/page";
@@ -126,7 +125,7 @@ export class DataGridView extends Block {
         }
         return json;
     }
-    async getSyncString() {
+    async getSync() {
         var json: Record<string, any> = { url: this.url };
         if (typeof this.pattern.get == 'function')
             json.pattern = await this.pattern.get();
@@ -137,7 +136,10 @@ export class DataGridView extends Block {
                     json[pro] = this.clonePropData(pro, this[pro]);
             })
         }
-        return JSON.stringify(json);
+        return json;
+    }
+    async getSyncString() {
+        return JSON.stringify(await this.getSync());
     }
     async loadSyncBlock(this: DataGridView): Promise<void> {
         var r = await channel.get('/view/snap/query', { elementUrl: this.elementUrl });
