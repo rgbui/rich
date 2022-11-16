@@ -34,6 +34,9 @@ export type MenuItem<T = string> = {
         name: string
     }[],
     buttonClick?: 'select' | 'click',
+    /**
+     * 值发生变化，是否主动的更新显示menu item
+     */
     updateMenuPanel?:boolean,
     containerHeight?:number,
     data?:any
