@@ -9,7 +9,7 @@ import { getElementUrl, ElementType } from "../../../../net/element.type";
 import { Page } from "../../../../src/page";
 
 export class DataGridViewData {
-    async onRemoveItem(this: DataGridView, id: string) {
+    async onRemoveRow(this: DataGridView, id: string) {
         if (id) await this.page.onAction(ActionDirective.onSchemaRowDelete, async () => {
             var r = await this.schema.rowRemove(id);
             if (r.ok) {

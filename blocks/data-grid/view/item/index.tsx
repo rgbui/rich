@@ -17,6 +17,7 @@ import { BlockUrlConstant } from "../../../../src/block/constant";
 import { TableStoreGallery } from "../gallery";
 import { autoImageUrl } from "../../../../net/element.type";
 import { DropDirection } from "../../../../src/kit/handle/direction";
+import { Field } from "../../schema/field";
 
 @url('/data-grid/item')
 export class TableStoreItem extends Block {
@@ -56,14 +57,14 @@ export class TableStoreItem extends Block {
             }
         }
     }
-    async onUpdateCellValue(viewField: ViewField, value: any) {
+    async onUpdateCellValue(field: Field, value: any) {
         value = util.clone(value);
-        this.dataRow[viewField.field.name] = value;
+        this.dataRow[field.name] = value;
         var dr = this.dataGrid.data.find(g => g.id == this.dataRow.id);
-        dr[viewField.field.name] = value;
+        dr[field.name] = value;
         await this.schema.rowUpdate({
             dataId: this.dataRow.id,
-            data: { [viewField.field.name]: value }
+            data: { [field.name]: value }
         })
     }
     async onUpdateFieldSchema(viewField: ViewField, data) {
@@ -84,7 +85,7 @@ export class TableStoreItem extends Block {
     async onClickContextMenu(item: MenuItem<BlockDirective | string>, event: MouseEvent) {
         switch (item.name) {
             case BlockDirective.delete:
-                this.dataGrid.onRemoveItem(this.dataRow.id);
+                this.dataGrid.onRemoveRow(this.dataRow.id);
                 break;
         }
     }
