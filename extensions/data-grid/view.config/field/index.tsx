@@ -84,7 +84,7 @@ export class DataGridFields extends EventsComponent {
             }
         }
         return <div>
-            <div className="max-h-250 overflow-y">
+            <div className="max-h-200 overflow-y">
                 <div className="flex h-30 padding-w-14" style={{ paddingRight: 10 }}>
                     <span className="remark flex-auto f-12">显示的字段</span>
                     <span onClick={e => onHideAll()} className="size-24 flex-center round ">
@@ -263,7 +263,7 @@ export class DataGridFields extends EventsComponent {
         async function changeArrayProp(data, update: Record<string, any>) {
             await self.block.onArraySave({
                 syncBlock: self.block,
-                prop: 'cardConfig.templateProps?.props',
+                prop: 'cardConfig.templateProps.props',
                 data,
                 update,
             });
