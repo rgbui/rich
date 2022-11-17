@@ -163,9 +163,12 @@ export var util = {
         }
         return json;
     },
-    setKey(obj:Record<string,any>,setObj:Record<string,any>){
-        for(let n in setObj){
-            lodash.set(obj,n,setObj[n]);
+    setKey(obj: Record<string, any>, setObj: Record<string, any>) {
+        for (let n in setObj) {
+            lodash.set(obj, n, setObj[n]);
         }
+    },
+    getRandom(start: number, end: number) {
+        return Math.round(Math.random() * (end - start) + start);
     }
 }
