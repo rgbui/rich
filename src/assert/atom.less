@@ -154,22 +154,33 @@ position的布局
 
 .pos-top,
 .pos-t {
-    top: 0px;
+    top     : 0px;
+    position: absolute;
 }
 
 .pos-left,
 .pos-l {
-    left: 0px;
+    left    : 0px;
+    position: absolute;
 }
 
 .pos-right,
 .pos-r {
-    right: 0px;
+    right   : 0px;
+    position: absolute;
 }
 
 .pos-bottom,
 .pos-b {
-    bottom: 0px;
+    bottom  : 0px;
+    position: absolute;
+}
+
+.pos-bottom-full {
+    bottom  : 0px;
+    position: absolute;
+    left    : 0px;
+    right   : 0px;
 }
 
 .pos-full {
@@ -386,6 +397,7 @@ item-selected:选中的效果
     }
 }
 
+
 .item-hover-focus {
     background-color: rgba(55, 53, 47, 0.1);
 }
@@ -407,6 +419,12 @@ item-selected:选中的效果
 .item-hover-primary {
     &:hover {
         background-color: rgb(225, 98, 89);
+    }
+}
+
+.item-white-hover{
+    &:hover {
+        background-color:#f5f5f5;
     }
 }
 
@@ -455,6 +473,12 @@ item-selected:选中的效果
 
 .underline {
     text-decoration: underline;
+}
+
+.underline-hover {
+    &:hover {
+        text-decoration: underline;
+    }
 }
 
 .no-underline {
@@ -1162,16 +1186,19 @@ each(@gaps, {
             margin-bottom:@value+0px;
         }
     }
+
 )
 /**
 z-index
 ****/
 @zs: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 100, 200, 300, 1000, 2000, 3000, 10000, 20000, 50000, 60000;
-each(@zs,{
-        .z-@{value}{
+
+each(@zs, {
+        .z-@{value} {
             z-index:@value;
         }
     }
+
 )
 /***
 内间距
@@ -1219,4 +1246,8 @@ each(@pads, {
 
 ) .mask {
     background: rgba(15, 15, 15, 0.6);
+}
+
+.mask-1 {
+    background: rgba(15, 15, 15, 0.1);
 }
