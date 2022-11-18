@@ -15,9 +15,13 @@ import { langProvider } from "../../../../i18n/provider";
 import { LangID } from "../../../../i18n/declare";
 import { BlockUrlConstant } from "../../../../src/block/constant";
 import { TableStoreGallery } from "../gallery";
-import { autoImageUrl } from "../../../../net/element.type";
+import { autoImageUrl, ElementType, getElementUrl } from "../../../../net/element.type";
 import { DropDirection } from "../../../../src/kit/handle/direction";
 import { Field } from "../../schema/field";
+import { channel } from "../../../../net/channel";
+import { FieldType } from "../../schema/type";
+import lodash from "lodash";
+import { OriginField } from "../../element/field/origin.field";
 
 @url('/data-grid/item')
 export class TableStoreItem extends Block {
@@ -66,6 +70,59 @@ export class TableStoreItem extends Block {
             dataId: this.dataRow.id,
             data: { [field.name]: value }
         })
+    }
+    async onUpdateCellInteractive(field: Field) {
+        var r = await channel.patch('/interactive/emoji', {
+            elementUrl: getElementUrl(
+                field.type == FieldType.emoji ? ElementType.SchemaFieldData : ElementType.SchemaFieldNameData,
+                this.dataGrid.schema.id,
+                field.type == FieldType.emoji ? field.id : field.name,
+                this.dataRow.id
+            ),
+            fieldName: field.name
+        });
+        if (r.ok) {
+            var ov = lodash.cloneDeep(this.dataRow[field.name]);
+            if (typeof ov == 'undefined') ov = { count: 0 };
+            if (typeof ov == 'number') ov = { count: ov };
+            ov.count = r.data.count;
+            var userid = this.page.user?.id;
+            if (userid) {
+                if (!Array.isArray(ov.users)) {
+                    ov.users = []
+                }
+                if (r.data.exists) {
+                    var ops = this.dataGrid.userEmojis[field.name];
+                    if (!Array.isArray(ops)) this.dataGrid.userEmojis[field.name] = ops = []
+                    if (!ops.exists(c => c == this.dataRow.id)) ops.push(this.dataRow.id);
+                    if (!ov.users.exists(g => g == userid)) ov.users.push(userid)
+                }
+                else {
+                    var ops = this.dataGrid.userEmojis[field.name];
+                    if (!Array.isArray(ops)) this.dataGrid.userEmojis[field.name] = ops = []
+                    if (ops.exists(c => c == this.dataRow.id)) lodash.remove(ops, c => c == this.dataRow.id);
+                    lodash.remove(ov.users, g => (g as any) == userid);
+                }
+                if (typeof r.data.otherCount == 'number') {
+                    var name = field.name == 'like' ? FieldType[FieldType.oppose] : FieldType[FieldType.like];
+                    this.dataRow[name] = r.data.otherCount;
+                    var cs = this.childs.findAll(g => (g instanceof OriginField) && g.field?.name == name);
+                    if (!r.data.otherExists) {
+                        var ops = this.dataGrid.userEmojis[name];
+                        if (!Array.isArray(ops)) this.dataGrid.userEmojis[name] = ops = []
+                        if (ops.exists(c => c == this.dataRow.id)) lodash.remove(ops, c => c == this.dataRow.id);
+                    }
+                    if (cs.length > 0) {
+                        for (var i = 0; i < cs.length; i++) {
+                            (cs[i] as any).value = r.data.otherCount;
+                            cs[i].forceUpdate();
+                        }
+                    }
+                }
+            }
+            this.dataRow[field.name] = ov;
+            return ov;
+        }
     }
     async onUpdateFieldSchema(viewField: ViewField, data) {
         data = util.clone(data);

@@ -6,6 +6,7 @@ import { DataGridItemRecord } from "../element/record";
 import { useImageFilePicker } from "../../../extensions/file/image.picker";
 import { Rect } from "../../../src/common/vector/point";
 import { DataGridView } from "../view/base";
+import { Field } from "../schema/field";
 
 export class CardView extends React.Component<{ item: DataGridItemRecord | TableStoreItem, dataGrid: DataGridView | DataGridItemRecord }> {
 
@@ -51,6 +52,21 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
     async openEdit(event: React.MouseEvent) {
         if (this.props.dataGrid instanceof TableStoreGallery) {
             this.props.dataGrid.onOpenEditForm(this.props.item.dataRow.id)
+        }
+    }
+    isEmoji(name: string) {
+        var field: Field = this.getField(name);
+        if (this.props.dataGrid instanceof TableStoreGallery) {
+            var r = this.props.dataGrid.isEmoji(field, this.props.item.dataRow.id);
+            return r;
+        }
+    }
+    async onUpdateCellInteractive(event: React.MouseEvent, name: string) {
+        event.stopPropagation()
+        var field: Field = this.getField(name);
+        if (this.props.item instanceof TableStoreItem) {
+            await this.props.item.onUpdateCellInteractive(field);
+            this.forceUpdate()
         }
     }
 }

@@ -23,6 +23,7 @@ import lodash from "lodash";
 import { OriginFilterField } from "../../element/filter/origin.field";
 import { FilterSort } from "../../element/filter/sort";
 import { Page } from "../../../../src/page";
+import { Field } from "../../schema/field";
 
 /**
  * 
@@ -79,6 +80,10 @@ export class DataGridView extends Block {
         }
         this.isLoadingData = false;
         if (this.isMounted) this.forceUpdate()
+    }
+    isEmoji(field: Field, rowId: string) {
+        var isOp = this.userEmojis[field.name]?.includes(rowId)
+        return isOp;
     }
     pageIndex: number = 1;
     @prop()

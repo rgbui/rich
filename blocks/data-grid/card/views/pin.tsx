@@ -23,6 +23,7 @@ export class CardPin extends CardView {
         var remark = this.getValue<string>('remark');
         var hasPic = Array.isArray(pics) && pics.length > 0;
         var love = this.getValue<string>('like');
+        var isLove = this.isEmoji('like')
 
         async function openProperty(event: React.MouseEvent) {
             event.stopPropagation();
@@ -51,11 +52,11 @@ export class CardPin extends CardView {
                     </span>
                 </div>}
                 <div className="mask-1 visible pos-inset z-1  round-16"></div>
-                <div className="pos-bottom-full  flex-end z-2 visible">
-                    <span onMouseDown={e => openProperty(e)} className="circle bg-primary text-white item-white-hover  size-24 gap-r-5 gap-b-5 circle cursor flex-center">
+                <div className="pos-bottom-full  flex-end z-2 visible gap-b-5 r-size-24 r-gap-r-5 r-circle r-cursor">
+                    <span onMouseDown={e => self.onUpdateCellInteractive(e, 'like')} className={"flex-center" + (isLove ? " bg-primary text-white" : " bg-white  item-white-hover text-1")}>
                         <Icon icon={LoveSvg}></Icon>
                     </span>
-                    <span onMouseDown={e => openProperty(e)} className="circle bg-white item-white-hover  size-24 gap-r-5 gap-b-5 circle cursor flex-center">
+                    <span onMouseDown={e => openProperty(e)} className="bg-white item-white-hover   flex-center">
                         <Icon size={18} icon={DotsSvg}></Icon>
                     </span>
                 </div>
