@@ -7,11 +7,11 @@ import { ShapesList, ShapeType } from "./shapes";
 
 class ShapeBox extends EventsComponent {
     render(): ReactNode {
-        return <div className="shy-shapes-selector" style={{ position: 'relative' }}>
-            <div className="shy-shapes-selector-list">
+        return <div className="relative w-160 min-h-160 bg-white shadow border  round-4 border-box padding-5 ">
+            <div className="flex flex-wrap r-cursor r-flex-center r-gap-5  r-size-30 r-round-4 r-item-hover">
                 {ShapesList.findAll(g => g.svg ? true : false).map((s, index) => {
                     return <span
-                        className="shy-shapes-selector-shape"
+                        className="r-size-24"
                         onMouseDown={e => { this.onMousedown(s, e) }}
                         key={index}
                         dangerouslySetInnerHTML={{ __html: s.shape }}></span>

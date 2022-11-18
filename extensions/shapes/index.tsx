@@ -4,7 +4,6 @@ import { EventsComponent } from "../../component/lib/events.component";
 import { Singleton } from "../../component/lib/Singleton";
 import { Point } from "../../src/common/vector/point";
 import { ShapesList, ShapeType } from "./shapes";
-import "./style.less";
 
 class ShapeSelector extends EventsComponent {
     onMousedown(ct: ShapeType, event: React.MouseEvent) {
@@ -18,11 +17,11 @@ class ShapeSelector extends EventsComponent {
             top: this.point?.y,
             left: this.point?.x
         };
-        return <div style={style} className="shy-shapes-selector">
-            <div className="shy-shapes-selector-list">
+        return <div style={style} className="pos w-160 min-h-160 bg-white shadow border  round-4 border-box padding-5 z-10000">
+            <div className="flex flex-wrap r-cursor r-flex-center r-gap-5  r-size-30 r-round-4 r-item-hover">
                 {ShapesList.findAll(g => g.svg ? true : false).map((s, index) => {
                     return <span
-                        className="shy-shapes-selector-shape"
+                        className="r-size-24"
                         onMouseDown={e => { this.onMousedown(s, e) }}
                         key={index}
                         dangerouslySetInnerHTML={{ __html: s.shape }}></span>
