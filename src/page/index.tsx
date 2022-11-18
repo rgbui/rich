@@ -17,8 +17,6 @@ import { PageDirective } from './directive';
 import { Mix } from '../../util/mix';
 import { Page$Cycle } from './partial/life.cycle';
 import { Page$Operator } from './partial/operator';
-
-import { getBoardTool } from '../../extensions/board.tool';
 import { PageLayoutType, PageVersion } from './declare';
 import { Point, Rect } from '../common/vector/point';
 import { GridMap } from './grid';
@@ -27,7 +25,6 @@ import { PageContextmenu } from './partial/contextmenu';
 import { Kit } from '../kit';
 import { channel } from '../../net/channel';
 import { TableSchema } from '../../blocks/data-grid/schema/meta';
-import { OriginFormField } from '../../blocks/data-grid/element/form/origin.field';
 import { LinkPageItem } from '../../extensions/at/declare';
 import { Title } from '../../blocks/page/title';
 import { AppearAnchor } from '../block/appear';
@@ -109,10 +106,6 @@ export class Page extends Events<PageDirective> {
                 this.fragment.appendChild(this.root);
             this.isOff = true;
             this.kit.picker.onCancel();
-            getBoardTool().then(r => {
-                r.off('selector')
-                r.close();
-            })
         }
         catch (ex) {
             console.error(ex);
@@ -120,10 +113,6 @@ export class Page extends Events<PageDirective> {
     }
     destory() {
         this.kit.picker.onCancel();
-        getBoardTool().then(r => {
-            r.off('selector')
-            r.close();
-        });
         ReactDOM.unmountComponentAtNode(this.root);
         this.root.remove();
     }
@@ -146,7 +135,6 @@ export class Page extends Events<PageDirective> {
                     }
                 }
                 this.isOff = true;
-                if (this.isBoard) this.view.openPageToolBoard();
             }
             if (options && (options?.width !== this.pageVisibleWidth || options?.height !== this.pageVisibleHeight)) {
                 this.pageVisibleWidth = options?.width;
@@ -184,7 +172,7 @@ export class Page extends Events<PageDirective> {
 
     recordViewTemplate: boolean = false;
     openSource: 'page' | 'slide' | 'dialog' = 'page';
-   
+
     getScreenStyle() {
         var style: CSSProperties = {};
         if (this.isSupportScreen) {

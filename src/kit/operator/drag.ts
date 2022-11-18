@@ -1,6 +1,4 @@
 import { Kit } from "..";
-import { getBoardTool } from "../../../extensions/board.tool";
-import { Block } from "../../block";
 import { Point } from "../../common/vector/point";
 import { PageLayoutType } from "../../page/declare";
 import { BoardDrag } from "./board";
@@ -20,7 +18,6 @@ export async function PageDrag(kit: Kit, event: React.MouseEvent) {
         PageLayoutType.doc
     ].includes(kit.page.pageLayout.type)
     ) return;
-    if (kit.page.pageLayout.type == PageLayoutType.board) return;
     /**
      * 通过鼠标来查找block，然后判断当前文档类型或块的类型来决后续该由谁来操作
      * 注意:block不一定能找到
@@ -28,10 +25,15 @@ export async function PageDrag(kit: Kit, event: React.MouseEvent) {
      */
     var block = kit.page.getBlockByMouseOrPoint(event.nativeEvent);
     if (!kit.page.isBoard) {
-        (await getBoardTool()).close();
+        kit.boardSelector.close();
         if (block) {
             var bb = block.closest(x => x.isBoardBlock);
-            if (bb) await focusBoardBlock(kit, bb, event.nativeEvent);
+            if (bb) {
+                kit.boardSelector.onShow(bb.el, {
+                    relativeEleAutoScroll: bb.el,
+                    pos: Point.from(bb.getVisibleBound().leftTop).move(-40, 30),
+                })
+            }
         }
     }
     if (block?.isLine) block = block.closest(x => !x.isLine);
@@ -43,14 +45,3 @@ export async function PageDrag(kit: Kit, event: React.MouseEvent) {
         DocDrag(kit, block, event);
     }
 }
-async function focusBoardBlock(kit: Kit, block: Block, event: MouseEvent) {
-    var toolBoard = await getBoardTool();
-    var rect = block.getVisibleBound();
-    toolBoard.open({
-        roundPoint: Point.from(rect.leftTop).move(-40, 30),
-        relativeEleAutoScroll: block.el
-    });
-}
-
-
-

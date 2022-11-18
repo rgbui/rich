@@ -25,6 +25,9 @@ export class PageEvent {
      * 
      */
     onMousedown(this: Page, event: React.MouseEvent) {
+        if (this.pageLayout.type == PageLayoutType.board) {
+            this.kit.boardSelector.onShow(this.root);
+        }
         this.kit.operator.mousedown(event);
     }
     onMousemove(this: Page, event: MouseEvent) {

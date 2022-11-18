@@ -6,7 +6,11 @@ import { Point, Rect } from "../../../common/vector/point";
 import { openBoardEditTool } from "./edit";
 import { CheckBoardTool } from "./selector";
 
-export async function BoardDrag(kit: Kit, block: Block, event: React.MouseEvent) {
+export async function BoardDrag(
+    kit: Kit,
+    block: Block,
+    event: React.MouseEvent)
+{
     /**
      * 先判断toolBoard工具栏有没有被使用，
      * 如果有使用，则根据工具栏来进行下一步操作

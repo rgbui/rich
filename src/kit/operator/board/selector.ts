@@ -1,7 +1,6 @@
 import { util } from "echarts";
 import { Kit } from "../..";
 import { Pen } from "../../../../blocks/board/pen";
-import { getBoardTool } from "../../../../extensions/board.tool";
 import { Block } from "../../../block";
 import { BlockUrlConstant } from "../../../block/constant";
 import { MouseDragger } from "../../../common/dragger";
@@ -11,21 +10,21 @@ import { Polygon } from "../../../common/vector/polygon";
 import { ActionDirective } from "../../../history/declare";
 import { loadPaper } from "../../../paper";
 export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseEvent) {
-    var toolBoard = await getBoardTool();
-    if (toolBoard.isSelector) {
+
+    if (kit.boardSelector.isSelector) {
         var paper = await loadPaper();
         var fra: Block = block ? block.frameBlock : kit.page.getPageFrame();
         var gm = fra.globalWindowMatrix;
         var re = gm.inverseTransform(Point.from(event));
-        var url = toolBoard.currentSelector.url;
+        var url = kit.boardSelector.currentSelector.url;
         if (url == '/note' || url == '/flow/mind' || url == BlockUrlConstant.TextSpan || url == BlockUrlConstant.Frame) {
             await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
-                var data = toolBoard.currentSelector.data || {};
+                var data = kit.boardSelector.currentSelector.data || {};
                 var ma = new Matrix();
                 ma.translate(re.x, re.y);
                 data.matrix = ma.getValues();
-                var newBlock = await kit.page.createBlock(toolBoard.currentSelector.url, data, fra);
-                toolBoard.clearSelector();
+                var newBlock = await kit.page.createBlock(kit.boardSelector.currentSelector.url, data, fra);
+                kit.boardSelector.clearSelector();
                 newBlock.mounted(() => {
                     if (url == BlockUrlConstant.Frame) {
                         kit.picker.onPicker([newBlock]);
@@ -41,10 +40,10 @@ export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseE
             var newBlock: Block;
             var isMounted: boolean = false;
             await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
-                var data = toolBoard.currentSelector.data || {};
+                var data = kit.boardSelector.currentSelector.data || {};
                 data.from = { x: re.x, y: re.y };
                 data.to = util.clone(data.from);
-                newBlock = await kit.page.createBlock(toolBoard.currentSelector.url, data, fra);
+                newBlock = await kit.page.createBlock(kit.boardSelector.currentSelector.url, data, fra);
                 newBlock.mounted(() => {
                     isMounted = true;
                 })
@@ -81,7 +80,7 @@ export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseE
                         kit.picker.onPicker([newBlock]);
                     }
                     kit.boardLine.onEndConnectOther();
-                    toolBoard.clearSelector();
+                    kit.boardSelector.clearSelector();
                 }
             })
         }
@@ -89,14 +88,14 @@ export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseE
             var newBlock: Block;
             var isMounted: boolean = false;
             await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
-                var data = toolBoard.currentSelector.data || {};
+                var data = kit.boardSelector.currentSelector.data || {};
                 var ma = new Matrix();
                 ma.translate(re.x, re.y);
                 data.matrix = ma.getValues();
-                newBlock = await kit.page.createBlock(toolBoard.currentSelector.url, data, fra);
+                newBlock = await kit.page.createBlock(kit.boardSelector.currentSelector.url, data, fra);
                 newBlock.fixedWidth = 0;
                 newBlock.fixedHeight = 0;
-                toolBoard.clearSelector();
+                kit.boardSelector.clearSelector();
                 newBlock.mounted(() => {
                     isMounted = true;
                 })
@@ -126,7 +125,7 @@ export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseE
                         kit.picker.onPicker([newBlock]);
                         kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
                     }
-                    toolBoard.clearSelector();
+                    kit.boardSelector.clearSelector();
                 }
             })
         }
@@ -136,8 +135,8 @@ export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseE
             var path: paper.Path;
             var points: { x: number, y: number }[] = [];
             await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
-                var data = toolBoard.currentSelector.data || {};
-                newBlock = await kit.page.createBlock(toolBoard.currentSelector.url, data, fra);
+                var data = kit.boardSelector.currentSelector.data || {};
+                newBlock = await kit.page.createBlock(kit.boardSelector.currentSelector.url, data, fra);
                 points.push(re);
                 path = new paper.Path({ segments: [{ x: re.x, y: re.y }] });
                 newBlock.fixedWidth = 0;
@@ -180,8 +179,7 @@ export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseE
                         if (isMounted) newBlock.forceUpdate();
                         kit.picker.onPicker([newBlock]);
                     }
-                    toolBoard.clearSelector();
-
+                    kit.boardSelector.clearSelector();
                 }
             })
         }
