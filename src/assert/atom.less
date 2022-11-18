@@ -42,14 +42,15 @@ flex-fixed:固定大小
     flex-wrap      : nowrap;
 }
 
-.r-flex-end{
-    >*{
+.r-flex-end {
+    >* {
         display        : flex;
         justify-content: flex-end;
         align-items    : center;
-        flex-wrap      : nowrap;  
+        flex-wrap      : nowrap;
     }
 }
+
 .flex-end {
     display        : flex;
     justify-content: flex-end;
@@ -1281,6 +1282,16 @@ gap-b-20:指模块间距（有明显的块与块之间的间距），大标题�
 @gaps: 0, 3, 5, 10, 14, 15, 20, 25, 24, 30, 48, 50, 60, 80, 100;
 
 each(@gaps, {
+
+        .r-gap-@{value} {
+            >* {
+                margin-top   :@value+0px;
+                margin-left  :@value+0px;
+                margin-bottom:@value+0px;
+                margin-right :@value+0px;
+            }
+        }
+
         .r-gap-w-@{value} {
             >* {
                 margin-left :@value+0px;
@@ -1473,9 +1484,12 @@ each(@pads, {
     background: rgba(15, 15, 15, 0.1);
 }
 
-.width-atuo,.w-auto{
-    width:auto
+.width-atuo,
+.w-auto {
+    width: auto
 }
-.h-auto,.height-auto{
-    height:auto;
+
+.h-auto,
+.height-auto {
+    height: auto;
 }
