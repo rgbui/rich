@@ -500,7 +500,7 @@ export abstract class Block extends Events {
                     aa.updateViewValue();
                 })
                 this.view.forceUpdate(() => {
-                    console.log('block view forceUpdate', this.appearAnchors);
+                    // console.log('block view forceUpdate', this.appearAnchors);
                     resolve(true);
                 })
             }
