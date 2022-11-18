@@ -53,7 +53,7 @@ class NoteSelector extends EventsComponent {
             top: this.point?.y,
             left: this.point?.x
         };
-        return <div className="shy-note-list" style={style}>
+        return <div className="shy-note-list z-10000" style={style}>
             {colors.map(c => { return this.renderNote(c); })}
         </div>
     }
