@@ -1,22 +1,25 @@
 import React, { CSSProperties } from "react";
 import { ReactNode } from "react";
 import { EventsComponent } from "../../component/lib/events.component";
-import TextSvg from "../../src/assert/svg/board.tool.text.svg";
-import StickerSvg from "../../src/assert/svg/board.tool.sticker.svg";
-import ConnectSvg from "../../src/assert/svg/connet.line.svg";
-import MeiSvg from "../../src/assert/svg/board.tool.mei.svg";
-import SharpSvg from "../../src/assert/svg/board.tool.sharp.svg";
-import FrameSvg from "../../src/assert/svg/board.tool.frame.svg";
 import { Point } from "../../src/common/vector/point";
 import { Singleton } from "../../component/lib/Singleton";
-import "./style.less";
 import { BoardToolOperator } from "./declare";
 import { BlockUrlConstant } from "../../src/block/constant";
 import { getNoteSelector } from "../note";
 import { getShapeSelector } from "../shapes";
-import { MindSvg, UploadSvg } from "../../component/svgs"
+import {
+    BoardToolFrameSvg,
+    BoardToolMeiSvg,
+    BoardToolSharpSvg,
+    BoardToolStickerSvg,
+    BoardToolTextSvg,
+    ConnetLineSvg,
+    MindSvg,
+    UploadSvg
+} from "../../component/svgs";
 import { PopoverPosition } from "../popover/position";
 import { FixedViewScroll } from "../../src/common/scroll";
+import { Icon } from "../../component/view/icon";
 
 class BoardTool extends EventsComponent {
     constructor(props) {
@@ -35,38 +38,38 @@ class BoardTool extends EventsComponent {
             style.top = this.point.y;
             style.left = this.point.x;
         }
-        return <div className="shy-board-tool" ref={e => this.el = e} style={style}>
+        return <div className="r-flex-center  z-1000 fix w-40 padding-t-5  round-4 border bg-white r-size-30 r-gap-l-5 r-gap-t-5 r-gap-b-5 r-item-hover r-round-4 r-cursor" ref={e => this.el = e} style={style}>
             <div className="shy-board-tool-bar"
                 onMouseDown={e => this.selector(BoardToolOperator.text, e)}>
-                <span><TextSvg /></span>
+                <span><Icon icon={BoardToolTextSvg} /></span>
             </div>
             <div className="shy-board-tool-bar"
                 onMouseDown={e => this.selector(BoardToolOperator.note, e)}>
-                <span><StickerSvg /></span>
+                <span><Icon icon={BoardToolStickerSvg} /></span>
             </div>
             <div className="shy-board-tool-bar"
                 onMouseDown={e => this.selector(BoardToolOperator.shape, e)}>
-                <span><SharpSvg></SharpSvg></span>
+                <span><Icon icon={BoardToolSharpSvg}></Icon></span>
             </div>
             <div className="shy-board-tool-bar"
                 onMouseDown={e => this.selector(BoardToolOperator.connect, e)}>
-                <span><ConnectSvg /></span>
+                <span><Icon icon={ConnetLineSvg}></Icon></span>
             </div>
             <div className="shy-board-tool-bar"
                 onMouseDown={e => this.selector(BoardToolOperator.pen, e)}>
-                <span><MeiSvg></MeiSvg></span>
+                <span><Icon icon={BoardToolMeiSvg}></Icon></span>
             </div>
             <div className="shy-board-tool-bar"
                 onMouseDown={e => this.selector(BoardToolOperator.frame, e)}>
-                <span><FrameSvg></FrameSvg></span>
+                <span><Icon icon={BoardToolFrameSvg}></Icon></span>
             </div>
             <div className="shy-board-tool-bar"
                 onMouseDown={e => this.selector(BoardToolOperator.upload, e)}>
-                <span><UploadSvg></UploadSvg></span>
+                <span><Icon icon={UploadSvg}></Icon></span>
             </div>
             <div className="shy-board-tool-bar"
                 onMouseDown={e => this.selector(BoardToolOperator.mind, e)}>
-                <span><MindSvg></MindSvg></span>
+                <span><Icon icon={MindSvg}></Icon></span>
             </div>
         </div>
     }
@@ -166,7 +169,6 @@ interface BoardTool {
     emit(name: 'selector', data: BoardTool['currentSelector']);
     only(name: 'selector', fn: (data: BoardTool['currentSelector']) => void)
 }
-
 export async function getBoardTool() {
     return await Singleton(BoardTool);
 }
