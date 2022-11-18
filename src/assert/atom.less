@@ -26,6 +26,15 @@ flex-full:从左到右，水平与父元素同高
 flex-auto:子元素自动填充大小
 flex-fixed:固定大小
 **/
+.r-flex {
+    >* {
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : center;
+        flex-wrap      : nowrap;
+    }
+}
+
 .flex {
     display        : flex;
     justify-content: flex-start;
@@ -33,6 +42,14 @@ flex-fixed:固定大小
     flex-wrap      : nowrap;
 }
 
+.r-flex-end{
+    >*{
+        display        : flex;
+        justify-content: flex-end;
+        align-items    : center;
+        flex-wrap      : nowrap;  
+    }
+}
 .flex-end {
     display        : flex;
     justify-content: flex-end;
@@ -45,6 +62,14 @@ flex-fixed:固定大小
     justify-content: flex-start;
     align-items    : flex-start;
     flex-wrap      : nowrap;
+}
+
+.r-flex-center {
+    >* {
+        display        : flex;
+        justify-content: center;
+        align-items    : center;
+    }
 }
 
 .flex-center {
@@ -634,30 +659,37 @@ item-selected:选中的效果
     .none {
         display: none;
     }
+
     &:hover {
         .none {
             display: inline-block;
         }
     }
+
     .none-block {
         display: none;
     }
+
     &:hover {
         .none-block {
             display: block;
         }
     }
+
     .none-flex {
         display: none;
     }
+
     &:hover {
         .none-flex {
             display: flex;
         }
     }
+
     .none-inline-flex {
         display: none;
     }
+
     &:hover {
         .none-inline-flex {
             display: inline-flex;
@@ -1118,7 +1150,7 @@ each(@ops, {
 size-24:图标大小
 **/
 
-@sizes: 2, 4, 8, 10, 14, 16, 18, 20, 24, 30, 32, 48, 50, 70, 80, 90, 100, 120, 150, 200, 240, 300;
+@sizes: 2, 4, 8, 10, 14, 16, 18, 20, 24, 30, 32, 40, 48, 50, 70, 80, 90, 100, 120, 150, 200, 240, 300;
 
 each(@sizes, {
         .r-size-@{value} {
@@ -1439,4 +1471,11 @@ each(@pads, {
 
 .mask-1 {
     background: rgba(15, 15, 15, 0.1);
+}
+
+.width-atuo,.w-auto{
+    width:auto
+}
+.h-auto,.height-auto{
+    height:auto;
 }
