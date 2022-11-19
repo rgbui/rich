@@ -1,4 +1,5 @@
 import { Kit } from "../..";
+import { forceCloseBoardEditTool } from "../../../../extensions/board.edit.tool";
 import { Block } from "../../../block";
 import { findBlockAppear } from "../../../block/appear/visible.seek";
 import { MouseDragger } from "../../../common/dragger";
@@ -9,8 +10,7 @@ import { CheckBoardTool } from "./selector";
 export async function BoardDrag(
     kit: Kit,
     block: Block,
-    event: React.MouseEvent)
-{
+    event: React.MouseEvent) {
     /**
      * 先判断toolBoard工具栏有没有被使用，
      * 如果有使用，则根据工具栏来进行下一步操作
@@ -83,6 +83,8 @@ export async function BoardDrag(
                         appear.collapseByPoint(Point.from(ev));
                     }
                 }
+                else if (kit.picker.blocks.length > 0) await openBoardEditTool(kit);
+                else forceCloseBoardEditTool()
             }
         }
     })
