@@ -29,31 +29,31 @@ export var leftArrows: ShapeType[] = [
     </svg>`,
         value: '2'
     },
-    {
-        shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
-        <g fill="currentColor" fillRule="evenodd">
-            <path d="M0 16h21v2H0z"></path>
-            <path d="M31 17l-11 6V11l11 6zm-3.536.004L21.7 13.85v6.295l5.764-3.14z"></path>
-        </g>
-    </svg>`,
-        value: '3'
-    },
+    // {
+    //     shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
+    //     <g fill="currentColor" fillRule="evenodd">
+    //         <path d="M0 16h21v2H0z"></path>
+    //         <path d="M31 17l-11 6V11l11 6zm-3.536.004L21.7 13.85v6.295l5.764-3.14z"></path>
+    //     </g>
+    // </svg>`,
+    //     value: '3'
+    // },
     {
         shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
         <path d="M20 16H0v2h20l5 5 6-6-6-6-5 5z" fill="currentColor" fillRule="evenodd"></path>
     </svg>`,
         value: '4'
     },
-    {
-        shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
-        <g fill="currentColor" fillRule="evenodd">
-            <path d="M0 16h21v2H0z"></path>
-            <path fillRule="nonzero"
-                d="M31 17l-6 6-6-6 6-6 6 6zm-2.4.006l-3.6-3.61-3.591 3.607 3.596 3.597 3.595-3.594z"></path>
-        </g>
-    </svg>`,
-        value: '5'
-    },
+    // {
+    //     shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
+    //     <g fill="currentColor" fillRule="evenodd">
+    //         <path d="M0 16h21v2H0z"></path>
+    //         <path fillRule="nonzero"
+    //             d="M31 17l-6 6-6-6 6-6 6 6zm-2.4.006l-3.6-3.61-3.591 3.607 3.596 3.597 3.595-3.594z"></path>
+    //     </g>
+    // </svg>`,
+    //     value: '5'
+    // },
     {
         shape: `<svg viewBox="0 0 29 32"  xmlns="http://www.w3.org/2000/svg">
         <path d="M19.1 16a5.002 5.002 0 019.9 1 5 5 0 01-9.9 1H0v-2h19.1z" fill="currentColor" fillRule="evenodd">
@@ -61,15 +61,15 @@ export var leftArrows: ShapeType[] = [
     </svg>`,
         value: '6'
     },
-    {
-        shape: `<svg viewBox="0 0 29 32"  xmlns="http://www.w3.org/2000/svg">
-        <g fill="currentColor" fillRule="evenodd">
-            <path d="M0 15h20v2H0z"></path>
-            <path d="M24 19.3a3.3 3.3 0 100-6.6 3.3 3.3 0 000 6.6zm0 1.7a5 5 0 110-10 5 5 0 010 10z"></path>
-        </g>
-    </svg>`,
-        value: '7'
-    }
+    // {
+    //     shape: `<svg viewBox="0 0 29 32"  xmlns="http://www.w3.org/2000/svg">
+    //     <g fill="currentColor" fillRule="evenodd">
+    //         <path d="M0 15h20v2H0z"></path>
+    //         <path d="M24 19.3a3.3 3.3 0 100-6.6 3.3 3.3 0 000 6.6zm0 1.7a5 5 0 110-10 5 5 0 010 10z"></path>
+    //     </g>
+    // </svg>`,
+    //     value: '7'
+    // }
 ]
 export var rightArrows: ShapeType[] = [
     {
@@ -93,31 +93,31 @@ export var rightArrows: ShapeType[] = [
 </svg>`,
         value: '2'
     },
-    {
-        shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
-    <g fill="currentColor" fillRule="evenodd">
-        <path d="M0 16h21v2H0z"></path>
-        <path d="M31 17l-11 6V11l11 6zm-3.536.004L21.7 13.85v6.295l5.764-3.14z"></path>
-    </g>
-</svg>` ,
-        value: '3'
-    },
+    //     {
+    //         shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
+    //     <g fill="currentColor" fillRule="evenodd">
+    //         <path d="M0 16h21v2H0z"></path>
+    //         <path d="M31 17l-11 6V11l11 6zm-3.536.004L21.7 13.85v6.295l5.764-3.14z"></path>
+    //     </g>
+    // </svg>` ,
+    //         value: '3'
+    //     },
     {
         shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
     <path d="M20 16H0v2h20l5 5 6-6-6-6-5 5z" fill="currentColor" fillRule="evenodd"></path>
 </svg>`,
         value: '4'
     },
-    {
-        shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
-    <g fill="currentColor" fillRule="evenodd">
-        <path d="M0 16h21v2H0z"></path>
-        <path fillRule="nonzero"
-            d="M31 17l-6 6-6-6 6-6 6 6zm-2.4.006l-3.6-3.61-3.591 3.607 3.596 3.597 3.595-3.594z"></path>
-    </g>
-</svg>`,
-        value: '5'
-    },
+    //     {
+    //         shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
+    //     <g fill="currentColor" fillRule="evenodd">
+    //         <path d="M0 16h21v2H0z"></path>
+    //         <path fillRule="nonzero"
+    //             d="M31 17l-6 6-6-6 6-6 6 6zm-2.4.006l-3.6-3.61-3.591 3.607 3.596 3.597 3.595-3.594z"></path>
+    //     </g>
+    // </svg>`,
+    //         value: '5'
+    //     },
     {
         shape: `<svg viewBox="0 0 29 32"  xmlns="http://www.w3.org/2000/svg">
     <path d="M19.1 16a5.002 5.002 0 019.9 1 5 5 0 01-9.9 1H0v-2h19.1z" fill="currentColor" fillRule="evenodd">
@@ -125,15 +125,15 @@ export var rightArrows: ShapeType[] = [
 </svg>`,
         value: '6'
     },
-    {
-        shape: `<svg viewBox="0 0 29 32"  xmlns="http://www.w3.org/2000/svg">
-    <g fill="currentColor" fillRule="evenodd">
-        <path d="M0 15h20v2H0z"></path>
-        <path d="M24 19.3a3.3 3.3 0 100-6.6 3.3 3.3 0 000 6.6zm0 1.7a5 5 0 110-10 5 5 0 010 10z"></path>
-    </g>
-</svg>`,
-        value: '7'
-    },
+    //     {
+    //         shape: `<svg viewBox="0 0 29 32"  xmlns="http://www.w3.org/2000/svg">
+    //     <g fill="currentColor" fillRule="evenodd">
+    //         <path d="M0 15h20v2H0z"></path>
+    //         <path d="M24 19.3a3.3 3.3 0 100-6.6 3.3 3.3 0 000 6.6zm0 1.7a5 5 0 110-10 5 5 0 010 10z"></path>
+    //     </g>
+    // </svg>`,
+    //         value: '7'
+    //     },
 ]
 
 export var Lines: ShapeType[] = [
@@ -188,7 +188,7 @@ export function LineTypes(props: {
     strokeWidth: number,
     strokeDasharray: string,
     change: (name: string, value: any) => void
-}){
+}) {
 
     return <div className="shy-line-types">
         <div className="shy-line-types-current"
