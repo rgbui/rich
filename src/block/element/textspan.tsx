@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { url, view } from '../factory/observable';
 import { TextSpanArea } from '../view/appear';
 import { BlockDisplay } from '../enum';
@@ -34,12 +34,16 @@ export class TextSpan extends Block {
         }
         else return false;
     }
-    get visibleStyle(): React.CSSProperties {
-        var style = super.visibleStyle;
+    get contentStyle() {
         if (this.isFreeBlock) {
-            style.width = this.fixedWidth || 20
+            var style: CSSProperties = {};
+            var s = this.pattern.style;
+            if (s.backgroundColor) style.backgroundColor = s.backgroundColor;
+            return style;
         }
-        return style;
+        else {
+            return super.contentStyle;
+        }
     }
     get fixedSize(): { width: number; height: number; } {
         if (this.el) {
@@ -146,8 +150,9 @@ export class TextSpan extends Block {
                     block.page.snapshoot.pause();
                     block.pattern.setStyle(BlockCssName.font, {
                         lineHeight: currentLineHeight + 'px',
-                        fontSize: currentLineHeight / 1.2
+                        fontSize: Math.round(currentLineHeight / 1.2)
                     });
+                    console.log(lineHeight, fontSize);
                     await block.forceUpdate();
                     block.updateRenderLines();
                     block.page.kit.picker.view.forceUpdate();
