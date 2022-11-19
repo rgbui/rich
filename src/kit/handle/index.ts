@@ -20,7 +20,7 @@ export class Handle extends Events {
             var handleEl = this.view.handleEle;
             handleEl.style.display = 'none';
         }
-        else if (this.handleBlock) {
+        else if (this.handleBlock && !this.handleBlock.isFreeBlock) {
             var bound = this.handleBlock.getVisibleContentBound();
             if (bound) {
                 var pos = Point.from(bound);
