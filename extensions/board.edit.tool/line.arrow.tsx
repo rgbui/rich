@@ -159,7 +159,6 @@ export var Lines: ShapeType[] = [
 ]
 
 export function LineArrow(props: { tool: BoardEditTool, lineStart?: string, lineEnd?: string, change: (name: string, value: any) => void }) {
-
     return <div className="shy-line-arrow">
         <div className="shy-line-arrow-current">
             {props.lineStart && <span
@@ -172,13 +171,13 @@ export function LineArrow(props: { tool: BoardEditTool, lineStart?: string, line
                 dangerouslySetInnerHTML={{ __html: props.lineEnd == 'none' ? lineSvg : rightArrows.find(g => g.value == props.lineEnd).shape }}
             ></span>}
         </div>
-        {props.tool.isShowDrop('leftArrow') && <div className="shy-line-arrow-left-drops">
-            <a style={{ transform: `scale(1,1)` }} dangerouslySetInnerHTML={{ __html: lineSvg }} onMouseDown={e => props.change('lineStart', 'none')}></a>
-            {leftArrows.map((arrow, index) => { return <a key={index} onMouseDown={e => props.change('lineStart', arrow.value)} dangerouslySetInnerHTML={{ __html: arrow.shape }}></a> })}
+        {props.tool.isShowDrop('leftArrow') && props.lineStart && <div className="shy-line-arrow-left-drops">
+            <a style={{ transform: `scale(-1,1)` }} dangerouslySetInnerHTML={{ __html: lineSvg }} onMouseDown={e => props.change('lineStart', 'none')}></a>
+            {leftArrows.map((arrow, index) => { return <a style={{ transform: 'scale(-1,1)' }} key={index} onMouseDown={e => props.change('lineStart', arrow.value)} dangerouslySetInnerHTML={{ __html: arrow.shape }}></a> })}
         </div>}
-        {props.tool.isShowDrop('rightArrow') && <div className="shy-line-arrow-right-drops">
-            <a onMouseDown={e => props.change('lineEnd', 'none')} dangerouslySetInnerHTML={{ __html: lineSvg }} ></a>
-            {rightArrows.map((arrow, index) => { return <a key={index} onMouseDown={e => props.change('lineEnd', arrow.value)} dangerouslySetInnerHTML={{ __html: arrow.shape }}></a> })}
+        {props.tool.isShowDrop('rightArrow') && props.lineEnd && <div className="shy-line-arrow-right-drops">
+            <a style={{ transform: `scale(-1,1)` }} onMouseDown={e => props.change('lineEnd', 'none')} dangerouslySetInnerHTML={{ __html: lineSvg }} ></a>
+            {rightArrows.map((arrow, index) => { return <a style={{ transform: `scale(-1,1)` }} key={index} onMouseDown={e => props.change('lineEnd', arrow.value)} dangerouslySetInnerHTML={{ __html: arrow.shape }}></a> })}
         </div>}
     </div>
 }
@@ -189,7 +188,7 @@ export function LineTypes(props: {
     strokeWidth: number,
     strokeDasharray: string,
     change: (name: string, value: any) => void
-}) {
+}){
 
     return <div className="shy-line-types">
         <div className="shy-line-types-current"
@@ -206,10 +205,10 @@ export function LineTypes(props: {
                     onChange={e => {
                         props.change('strokeWidth', e);
                     }}></MeasureView>
-                <div className="shy-measure-view-label"><label>线宽</label><span style={{ float: 'right' }}>{Math.round(props.strokeWidth)}px</span></div>
+                <div className="shy-measure-view-label f-12 text-1"><label>线宽</label><span style={{ float: 'right' }}>{Math.round(props.strokeWidth)}px</span></div>
             </div>
-            <div className="shy-line-types-all">
-                <a className={props.lineType == 'straight' ? "hover" : ""}
+            <div className="shy-line-types-all  r-round-4 r-cursor r-item-hover">
+                <a className={'text-1 ' + (props.lineType == 'straight' ? "hover" : "")}
                     onMouseDown={e => props.change('lineType', 'straight')}
                     dangerouslySetInnerHTML={{ __html: Lines[0].shape }}
                 ></a>
@@ -217,7 +216,7 @@ export function LineTypes(props: {
                     onMouseDown={e => props.change('lineType', 'line')}
                     dangerouslySetInnerHTML={{ __html: Lines[1].shape }}
                 ></a> */}
-                <a className={props.lineType == 'curve' ? "hover" : ""}
+                <a className={'text-1 ' + (props.lineType == 'curve' ? "hover" : "")}
                     onMouseDown={e => props.change('lineType', 'curve')}
                     dangerouslySetInnerHTML={{ __html: Lines[2].shape }}
                 ></a>

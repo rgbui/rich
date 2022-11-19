@@ -23,7 +23,7 @@
             font-style: normal;
         }
 
-        span+.sy-icon {
+        span+.shy-icon {
             display    : inline-flex;
             margin-left: 5px;
             color      : rgba(55, 53, 47, 0.3);
@@ -32,14 +32,14 @@
         &.hover {
             color: rgb(46, 170, 220);
 
-            svg path {
-                fill: rgb(46, 170, 220);
-            }
+            // svg path {
+            //     fill: rgb(46, 170, 220);
+            // }
         }
 
-        &:hover {
-            background-color: rgba(55, 53, 47, 0.08);
-        }
+        // &:hover {
+        //     background-color: rgba(55, 53, 47, 0.08);
+        // }
     }
 
     &-icon {
@@ -51,8 +51,9 @@
     }
 
     &-devide {
-        box-shadow: rgba(55, 53, 47, 0.09) 1px 0px 0px 0px;
-        width     : 1px;
+        background-color: #eee;
+        // box-shadow: rgba(55, 53, 47, 0.09) 1px 0px 0px 0px;
+        width           : 1px;
     }
 }
 
@@ -88,23 +89,24 @@
     }
 
     &-drops {
-        left           : 50%;
-        margin-left    : -75px;
-        position       : absolute;
-        border-radius  : 3px;
-        background     : white;
-        z-index        : 2;
-        box-shadow     : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
-        top            : 28px;
-        overflow-y     : auto;
-        overflow-x     : hidden;
-        width          : 160px;
-        min-height     : 100px;
-        display        : flex;
-        justify-content: flex-start;
-        align-items    : flex-start;
-        flex-wrap      : wrap;
-        padding        : 10px;
+        left              : 50%;
+        transform         : translate(-50%, 0px);
+        // margin-left    : -75px;
+        position          : absolute;
+        border-radius     : 3px;
+        background        : white;
+        z-index           : 2;
+        box-shadow        : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+        top               : 28px;
+        overflow-y        : auto;
+        overflow-x        : hidden;
+        // width          : 160px;
+        min-height        : 100px;
+        display           : flex;
+        justify-content   : flex-start;
+        align-items       : flex-start;
+        flex-wrap         : wrap;
+        padding           : 10px;
 
         a {
             display      : inline-block;
@@ -158,24 +160,22 @@
     }
 
     &-drops {
-        left         : 50%;
-        margin-left  : -75px;
+        box-sizing   : border-box;
         position     : absolute;
+        left         : 50%;
+        transform    : translate(-50%, 0px);
         border-radius: 3px;
         background   : white;
         z-index      : 2;
         box-shadow   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
         top          : 28px;
-        max-height   : 260px;
-        overflow-y   : auto;
-        overflow-x   : hidden;
-        width        : 160px;
-        min-height   : 160px;
+        width        : 180px;
         padding      : 10px;
+        box-sizing   : border-box;
 
         .shy-shape-stroke-opacity,
         .shy-shape-stroke-width {
-            margin: 0px 6px;
+            margin: 0px 5px;
         }
 
         .shy-shape-stroke-types {
@@ -196,6 +196,8 @@
         }
 
         .shy-shape-stroke-colors {
+            margin-top     : 10px;
+            width          : 100%;
             display        : flex;
             justify-content: center;
             align-items    : flex-start;
@@ -207,7 +209,7 @@
                 width        : 30px;
                 height       : 30px;
                 margin       : 5px;
-                border-radius: 15px;
+                border-radius: 50%;
                 transition   : opacity 0.2s;
                 border       : 1px solid rgba(0, 0, 0, 0.1);
 
@@ -224,7 +226,8 @@
             >label {}
 
             span {
-                float: right;
+                font-size: 12px;
+                float    : right;
             }
         }
     }
@@ -251,21 +254,19 @@
 
     &-drops {
         left         : 50%;
-        margin-left  : -75px;
+        transform    : translate(-50%, 0px);
         position     : absolute;
-        border-radius: 3px;
+        border-radius: 4px;
         background   : white;
         z-index      : 2;
         box-shadow   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
         top          : 28px;
-        overflow-y   : auto;
-        overflow-x   : hidden;
-        width        : 160px;
-        min-height   : 100px;
+        width        : 180px;
         padding      : 10px;
+        box-sizing   : border-box;
 
         .shy-shape-fill-opacity {
-            margin: 0px 6px;
+            margin: 0px 5px;
         }
 
         .shy-shape-fill-colors {
@@ -273,6 +274,7 @@
             justify-content: center;
             align-items    : flex-start;
             flex-wrap      : wrap;
+            width          : 100%;
 
             a {
                 display      : inline-block;
@@ -311,22 +313,24 @@
         }
     }
 
-    &-left-drops {
+    &-left-drops,
+    &-right-drops {
+        left         : 50%;
+        transform    : translate(-50%, 0px);
         position     : absolute;
-        border-radius: 3px;
+        border-radius: 4px;
         background   : white;
         z-index      : 2;
         box-shadow   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
         top          : 28px;
         width        : 50px;
-        min-height   : 100px;
 
         a {
-            display        : flex;
-            justify-content: center;
-            align-items    : center;
-            transform      : scale(-1, 1);
-            color          : rgb(55, 53, 47);
+            display           : flex;
+            justify-content   : center;
+            align-items       : center;
+            // transform      : scale(-1, 1);
+            color             : rgb(55, 53, 47);
 
             &:hover {
                 background-color: rgba(55, 53, 47, 0.08);
@@ -340,28 +344,9 @@
     }
 
     &-right-drops {
-        position     : absolute;
-        border-radius: 3px;
-        background   : white;
-        z-index      : 2;
-        box-shadow   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
-        top          : 28px;
-        width        : 50px;
-        min-height   : 100px;
-
         a {
-            display        : flex;
-            justify-content: center;
-            align-items    : center;
-            color          : rgb(55, 53, 47);
-
-            &:hover {
-                background-color: rgba(55, 53, 47, 0.08);
-            }
-
             svg {
-                width : 30px;
-                height: 30px;
+                transform: rotate(180deg);
             }
         }
     }
@@ -380,48 +365,47 @@
 
     &-drops {
         left         : 50%;
-        margin-left  : -75px;
+        transform    : translate(-50%, 0px);
         position     : absolute;
-        border-radius: 3px;
+        border-radius: 4px;
         background   : white;
         z-index      : 2;
         box-shadow   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
         top          : 28px;
-        max-height   : 200px;
-        overflow-y   : auto;
-        overflow-x   : hidden;
-        width        : 160px;
-        min-height   : 100px;
-        padding      : 10px;
+        width        : 120px;
+        padding      : 10px 5px;
+        box-sizing   : border-box;
 
         .shy-line-types-opacity {
-            margin: 0px 20px;
+            margin: 0px 10px;
         }
 
         .shy-line-types-all {
             display        : flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items    : center;
-            margin         : 10px 0px;
+            margin         : 10px;
 
             a {
-                display        : inline-flex;
-                justify-content: center;
-                align-items    : center;
-                width          : 30px;
-                height         : 30px;
-                margin         : 0px 10px;
-                border-radius  : 4px;
-                cursor         : pointer;
+                display           : inline-flex;
+                justify-content   : center;
+                align-items       : center;
+                width             : 30px;
+                height            : 30px;
+                // margin         : 0px 10px;
+                border-radius     : 4px;
+                cursor            : pointer;
 
                 svg {
                     width : 24px;
                     height: 24px;
                 }
 
-                &:hover {
+                &:hover,
+                &.hover {
                     background-color: rgba(55, 53, 47, 0.08);
                 }
+
             }
         }
 
@@ -473,19 +457,17 @@
 
     &-drops {
         left         : 50%;
-        margin-left  : -75px;
+        transform    : translate(-50%, 0px);
         position     : absolute;
-        border-radius: 3px;
+        border-radius: 4px;
         background   : white;
         z-index      : 2;
         box-shadow   : rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
         top          : 28px;
-        max-height   : 200px;
-        overflow-y   : auto;
-        overflow-x   : hidden;
-        width        : 160px;
-        min-height   : 100px;
+        width        : 180px;
         padding      : 10px;
+        box-sizing   : border-box;
+
         >span {
             display        : inline-flex;
             justify-content: center;
@@ -494,10 +476,13 @@
             height         : 30px;
             border-radius  : 4px;
             margin         : 5px;
+            border-radius  : 4px;
+
             svg {
                 width : 24px;
                 height: 24px;
             }
+
             &.selected,
             &:hover {
                 background-color: rgba(55, 53, 47, 0.08);

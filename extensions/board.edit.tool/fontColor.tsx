@@ -28,13 +28,16 @@ var colors: ColorType[] = [
 export function FontColor(props: { tool: BoardEditTool, value: string, change?(value: string): void }) {
 
     return <div className="shy-board-edit-font-color" >
-        <div className="shy-board-edit-font-color-current" onMouseDown={e => props.tool.showDrop('fontColor')}>
-            <Icon size={10} icon={FontcolorSvg}></Icon>
+        <div className="shy-board-edit-font-color-current" style={{marginTop:2}} onMouseDown={e => props.tool.showDrop('fontColor')}>
+            <Icon size={12} icon={FontcolorSvg}></Icon>
             <div className="bottom-border" style={{ backgroundColor: props.value || '#fff' }}></div>
         </div>
-        {props.tool.isShowDrop('fontColor') && <div className="shy-board-edit-font-color-drops">
+        {props.tool.isShowDrop('fontColor') && <div className="w-160 shy-board-edit-font-color-drops">
             {colors.map(c => {
-                return <a className={c.color == props.value ? "selected" : ""} onMouseDown={e => props.change(c.color)} key={c.color} style={{ backgroundColor: c.color }}></a>
+                return <a className={c.color == props.value ? "selected" : ""}
+                    onMouseDown={e => props.change(c.color)}
+                    key={c.color}
+                    style={{ backgroundColor: c.color }}></a>
             })}
         </div>}
     </div>

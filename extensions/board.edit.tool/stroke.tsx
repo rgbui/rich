@@ -36,7 +36,7 @@ export function ShapeStroke(props: {
             {(props.stroke == 'transparent' || props.strokeOpacity == 0) && <TransparentSvg></TransparentSvg>}
             {props.stroke != 'transparent' && <a style={{ backgroundColor: props.stroke || '#000', opacity: props.strokeOpacity }}></a>}
         </div>
-        {props.tool.isShowDrop('stroke') && <div className="shy-shape-stroke-drops">
+        {props.tool.isShowDrop('stroke') && <div className="shy-shape-stroke-drops text-1">
             <div className="shy-shape-stroke-opacity">
                 <MeasureView ratio={0.1} min={1} max={10} showValue={false} value={props.strokeOpacity} onChange={e => { props.change('strokeOpacity', e) }}></MeasureView>
                 <div className="shy-measure-view-label"><label>透明度</label><span style={{ float: 'right' }}>{Math.round(props.strokeOpacity * 10)}</span></div>
