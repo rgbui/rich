@@ -9,6 +9,7 @@ import { BlockView } from "../../../src/block/view";
 import { Point, PointArrow, Rect } from "../../../src/common/vector/point";
 import { Polygon } from "../../../src/common/vector/polygon";
 import { util } from "../../../util/util";
+import { renderLine } from "./render";
 import "./style.less";
 
 export type PortLocation = {
@@ -251,8 +252,8 @@ export class LineView extends BlockView<Line>{
         var segs = this.block.segments
         var rect = Segment.getSegmentsBound(segs);
         var re = rect.extend(Math.max(30, w + 5, 100));
-        var strokeWidth = this.block.realPx(10);
-        var d = Segment.getSegmentsPathString(segs);
+        // var strokeWidth = this.block.realPx(10);
+        // var d = Segment.getSegmentsPathString(segs);
         var self = this;
         var o = (d) => `${d.x} ${d.y}`;
         var color = this.block.pattern.getSvgStyle()?.stroke || '#000';
@@ -315,9 +316,10 @@ export class LineView extends BlockView<Line>{
                 height: re.height,
                 transform: `translate(${re.x}px,${re.y}px)`
             }}>
-                <path className="visible" d={d}></path>
+                {renderLine(this.block)}
+                {/* <path className="visible" d={d}></path>
                 {renderLineStart()}
-                <path className="transparent" d={d} stroke="transparent" strokeWidth={strokeWidth}></path>
+                <path className="transparent" d={d} stroke="transparent" strokeWidth={strokeWidth}></path> */}
             </svg>
         </div>
     }
