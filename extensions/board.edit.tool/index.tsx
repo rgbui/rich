@@ -2,7 +2,18 @@ import React, { CSSProperties } from "react";
 import { ReactNode } from "react";
 import { EventsComponent } from "../../component/lib/events.component";
 import { Singleton } from "../../component/lib/Singleton";
-import { BoardRefreshSvg, BoldSvg, BrokenLineSvg, CureSvg, DeleteLineSvg, ItalicSvg, MindDirectionXSvg, MindDirectionYSvg, UnderlineSvg } from "../../component/svgs";
+import {
+    BoardRefreshSvg,
+    BoldSvg,
+    BrokenLineSvg,
+    CureSvg,
+    DeleteLineSvg,
+    DotsSvg,
+    ItalicSvg,
+    MindDirectionXSvg,
+    MindDirectionYSvg,
+    UnderlineSvg
+} from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { MeasureView } from "../../component/view/progress";
 import { Select } from "../../component/view/select";
@@ -82,7 +93,7 @@ export class BoardEditTool extends EventsComponent {
                         lineStart: getValue('lineEnd'),
                         lineEnd: getValue('lineStart')
                     });
-                }}> <Icon size={16} icon={BoardRefreshSvg}></Icon></div>
+                }}> <Icon size={14} icon={BoardRefreshSvg}></Icon></div>
                 <Tip overlay={'结束箭头'}>
                     <div className={'shy-board-edit-tool-item'}>
                         <LineArrow tool={this} lineEnd={getValue('lineEnd')}
@@ -132,8 +143,8 @@ export class BoardEditTool extends EventsComponent {
                 </div>
             </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
             {is('fontWeight') && <Tip id={LangID.textToolBold}>
-                <div className={'shy-board-edit-tool-item' + (getValue('fontWeight') == 'bold' || getValue('fontWeight') > 500 ? " hover" : "")}
-                    onMouseDown={e => this.onChange('fontWeight', getValue('fontWeight') == 'bold' || getValue('fontWeight') > 500 ? "normal" : 'bold')}
+                <div className={'shy-board-edit-tool-item' + ((getValue('fontWeight') == 'bold' || getValue('fontWeight') > 500) ? " hover" : "")}
+                    onMouseDown={e => this.onChange('fontWeight', (getValue('fontWeight') == 'bold' || getValue('fontWeight') > 500) ? "normal" : 'bold')}
                 ><Icon size={14} icon={BoldSvg}></Icon>
                 </div>
             </Tip>}
@@ -195,6 +206,12 @@ export class BoardEditTool extends EventsComponent {
                     ></ShapeFill>
                 </div>
             </Tip>}
+            <div className={'shy-board-edit-tool-devide'}></div>
+            <Tip overlay={'属性'}>
+                <div onMouseDown={e => this.onProperty(e)} className={'shy-board-edit-tool-item'}>
+                    <Icon size={16} icon={DotsSvg}></Icon>
+                </div>
+            </Tip>
         </div>
     }
     point: Point = new Point();
@@ -247,6 +264,13 @@ export class BoardEditTool extends EventsComponent {
     isShowDrop(dropName: string) {
         if (this.dropName == dropName) return true;
         else return false;
+    }
+    async onProperty(event: React.MouseEvent) {
+        if (this.blocks.length == 1) {
+            this.blocks.first().onContextmenu(event.nativeEvent);
+            this.dropName = '';
+            this.forceUpdate()
+        }
     }
 }
 export interface BoardEditTool {
