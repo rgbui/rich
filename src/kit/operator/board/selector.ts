@@ -17,7 +17,7 @@ export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseE
         var gm = fra.globalWindowMatrix;
         var re = gm.inverseTransform(Point.from(event));
         var url = kit.boardSelector.currentSelector.url;
-        if (url == '/note' || url == '/flow/mind' || url == BlockUrlConstant.TextSpan || url == BlockUrlConstant.Frame) {
+        if (url == BlockUrlConstant.Pen || url == BlockUrlConstant.Mind || url == BlockUrlConstant.TextSpan || url == BlockUrlConstant.Frame) {
             await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
                 var data = kit.boardSelector.currentSelector.data || {};
                 var ma = new Matrix();
@@ -36,7 +36,7 @@ export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseE
                 })
             });
         }
-        else if (url == '/line') {
+        else if (url == BlockUrlConstant.Line) {
             var newBlock: Block;
             var isMounted: boolean = false;
             await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
@@ -84,7 +84,7 @@ export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseE
                 }
             })
         }
-        else if (url == '/shape') {
+        else if (url == BlockUrlConstant.Shape) {
             var newBlock: Block;
             var isMounted: boolean = false;
             await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
@@ -129,7 +129,7 @@ export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseE
                 }
             })
         }
-        else if (url == '/pen') {
+        else if (url == BlockUrlConstant.Pen) {
             var newBlock: Block;
             var isMounted: boolean = false;
             var path: paper.Path;

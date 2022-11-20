@@ -10,6 +10,10 @@ export enum BlockUrlConstant {
     Head = '/head',
     Frame = '/frame',
     Mind = '/flow/mind',
+    Note = '/note',
+    Pen = '/pen',
+    Shape = '/shape',
+    Line = '/line',
     Group = '/group',
     Board = '/board',
     Outline = '/outline',
@@ -30,7 +34,7 @@ export enum BlockUrlConstant {
     DataGridPage = '/data-grid/paging',
     Button = '/button',
     Comment = '/comments',
-    FieldTitle='/field/title'
+    FieldTitle = '/field/title'
 }
 
 export enum BlockChildKey {
