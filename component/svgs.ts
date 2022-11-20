@@ -10,6 +10,7 @@ import AudioSvg from "../src/assert/svg/audio.svg";
 import BillingSvg from "../src/assert/svg/billing.svg";
 import BlockcolorSvg from "../src/assert/svg/blockcolor.svg";
 import BlogSvg from "../src/assert/svg/blog.svg";
+import BoardCardSvg from "../src/assert/svg/board.card.svg";
 import BoardRefreshSvg from "../src/assert/svg/board.refresh.svg";
 import BoardToolArrowSvg from "../src/assert/svg/board.tool.arrow.svg";
 import BoardToolFrameSvg from "../src/assert/svg/board.tool.frame.svg";
@@ -207,6 +208,7 @@ AudioSvg,
 BillingSvg,
 BlockcolorSvg,
 BlogSvg,
+BoardCardSvg,
 BoardRefreshSvg,
 BoardToolArrowSvg,
 BoardToolFrameSvg,
