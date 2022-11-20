@@ -1,3 +1,4 @@
+import lodash from "lodash";
 import React, { ReactNode } from "react";
 import { Block } from "../../../src/block";
 import { BlockRenderRange } from "../../../src/block/enum";
@@ -160,17 +161,27 @@ export class Line extends Block {
             return seg;
         }
         catch (ex) {
+            this.page.onError(ex);
             console.error(ex);
             return undefined;
         }
-
     }
     get segments() {
-        return [
-            this.cacPointSegment(this.from),
-            ...(this.points.toArray(pl => this.cacPointSegment(pl))),
-            this.cacPointSegment(this.to)
-        ]
+        try {
+            var segs = [
+                this.cacPointSegment(this.from),
+                ...(this.points.toArray(pl => this.cacPointSegment(pl))),
+                this.cacPointSegment(this.to)
+            ];
+            lodash.remove(segs, g => g ? false : true);
+            return segs;
+        }
+        catch (ex) {
+            this.page.onError(ex);
+            return [
+
+            ]
+        }
     }
     async updateLine(from: PortLocation, to: PortLocation, oldData?: {
         from: PortLocation;
@@ -247,67 +258,12 @@ export class Line extends Block {
 @view('/line')
 export class LineView extends BlockView<Line>{
     render(): ReactNode {
-        // return <div style={{ width: 200, height: 200, background: '#000' }}></div>
+        if (this.isViewError) return <div style={this.block.visibleStyle}></div>
         var w = this.block.pattern.getSvgStyle()?.strokeWidth || 1;
         var segs = this.block.segments
+        if (segs.length == 0) return <div style={this.block.visibleStyle}></div>
         var rect = Segment.getSegmentsBound(segs);
         var re = rect.extend(Math.max(30, w + 5, 100));
-        // var strokeWidth = this.block.realPx(10);
-        // var d = Segment.getSegmentsPathString(segs);
-        var self = this;
-        var o = (d) => `${d.x} ${d.y}`;
-        var color = this.block.pattern.getSvgStyle()?.stroke || '#000';
-        var gap = w;
-        function renderLineStart() {
-            if (segs.length == 0) return <></>;
-            var point = segs[0]?.point;
-            if (!point) return <></>
-            if (self.block.lineStart == '0') {
-                return <path fill={color} stroke={'none'} d={`M${o(point.move(w, 0).rotate(30, point))}L${o(point)}L${o(point.move(w, 0).rotate(-30, point))}L${o(point.move(w * 0.6, 0))}z`}></path>
-            }
-            else if (self.block.lineStart == '1') {
-                return <path fill={'none'} strokeWidth={w} d={`M${o(point.move(w * 4, 0).rotate(30, point))}L${o(point)}L${o(point.move(w * 4, 0).rotate(-30, point))}`}></path>
-            }
-            if (self.block.lineStart == '2') {
-                /**
-                 * 实心
-                 */
-                return <path fill={color} stroke={'none'} d={`M${o(point.move(0 - w - gap, 0))}L${o(point.move(0 - w - gap, 0).rotate(120, point))}L${o(point.move(0 - w - gap, 0).rotate(-120, point))}z`}></path>
-            }
-            else if (self.block.lineStart == '3') {
-                /**
-                 * 虚心
-                 */
-                return <path fill={'none'} strokeWidth={w} d={`M${o(point.move(0 - gap, 0))}L${o(point.move(0 - gap, 0).rotate(120, point))}L${o(point.move(0 - gap, 0).rotate(-120, point))}z`}></path>
-            }
-            if (self.block.lineStart == '4') {
-                /**
-                 * 实心
-                 */
-                return <path fill={color} stroke={'none'} strokeWidth={0} d={`M${o(point.move(0, 0 - w - gap))}L${o(point.move(w + gap, 0))}L${o(point.move(0, w + gap))}L${o(point.move(0 - w - gap, 0))}z`}></path>
-            }
-            else if (self.block.lineStart == '5') {
-                /**
-                 * 虚心
-                 */
-                return <path fill={'none'} strokeWidth={w} d={`M${o(point.move(0, 0 - (gap + w)))}L${o(point.move((gap + w), 0))}L${o(point.move(0, (gap + w)))}L${o(point.move(0 - (gap + w), 0))}z`}></path>
-            }
-            else if (self.block.lineStart == '6') {
-                /**
-                 * 实心
-                 */
-                return <circle fill={color} stroke={'none'} strokeWidth={0} r={w + gap} cx={point.x} cy={point.y}></circle>
-            }
-            else if (self.block.lineStart == '7') {
-                /**
-                 * 虚心
-                 */
-                return <circle fill={'none'} strokeWidth={w} r={gap + w / 2} cx={point.x} cy={point.y}></circle>
-            }
-        }
-        function renderLineEnd() {
-
-        }
         var style = this.block.visibleStyle;
         style.padding = 0;
         return <div className="sy-block-line" style={style}>
@@ -317,9 +273,6 @@ export class LineView extends BlockView<Line>{
                 transform: `translate(${re.x}px,${re.y}px)`
             }}>
                 {renderLine(this.block)}
-                {/* <path className="visible" d={d}></path>
-                {renderLineStart()}
-                <path className="transparent" d={d} stroke="transparent" strokeWidth={strokeWidth}></path> */}
             </svg>
         </div>
     }
