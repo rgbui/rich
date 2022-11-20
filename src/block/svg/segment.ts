@@ -29,7 +29,9 @@ export class Segment {
             handleOut: this.handleOut ? [this.handleOut.x, this.handleOut.y] : undefined
         }
     }
-    static create(point: Point,
+   
+    static create(
+        point: Point,
         handleIn?: Point,
         handleOut?: Point) {
         return new Segment({
@@ -84,4 +86,16 @@ export class Segment {
         }).flat();
         return new Polygon(...ps).bound;
     }
+    static fromPoints(points: Point[]) {
+        return points.map(p => {
+            return new Segment({ point: [p.x, p.y] })
+        })
+    }
+    static fromPoint(point: Point) {
+        return new Segment({ point: [point.x, point.y] })
+    }
+    static fromXY(x:number,y:number){
+        return new Segment({ point: [x,y] })
+    }
+    
 }
