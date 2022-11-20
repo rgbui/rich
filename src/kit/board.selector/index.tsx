@@ -9,7 +9,8 @@ import {
     BoardToolMeiSvg,
     BoardToolFrameSvg,
     UploadSvg,
-    MindSvg
+    MindSvg,
+    BoardCardSvg
 } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { getNoteSelector } from "../../../extensions/note";
@@ -44,6 +45,10 @@ export class BoardSelector extends React.Component<{ kit: Kit }> {
             <div
                 onMouseDown={e => this.selector(BoardToolOperator.note, e)}>
                 <Icon icon={BoardToolStickerSvg} />
+            </div>
+            <div
+                onMouseDown={e => this.selector(BoardToolOperator.card, e)}>
+                <Icon icon={BoardCardSvg} />
             </div>
             <div
                 onMouseDown={e => this.selector(BoardToolOperator.shape, e)}>
