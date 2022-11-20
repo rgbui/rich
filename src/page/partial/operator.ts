@@ -200,6 +200,7 @@ export class Page$Operator {
      * @param event 
      */
     async onOpenMenu(this: Page, blocks: Block[], event: MouseEvent) {
+        event.preventDefault();
         var re = await useSelectMenuItem(
             {
                 roundArea: Rect.fromEvent(event),
