@@ -113,7 +113,7 @@ export class NoteView extends BlockView<Note>{
         return <div className="sy-block-note" style={this.block.visibleStyle}>
             {this.renderBg()}
             <div className="sy-block-note-content" style={{ width: this.block.fixedWidth, height: this.block.fixedWidth }}>
-                <TextSpanArea block={this.block}></TextSpanArea>
+                <TextSpanArea placeholder={this.block.isFreeBlock ? "键入文本" : undefined} block={this.block}></TextSpanArea>
             </div>
         </div>
     }
