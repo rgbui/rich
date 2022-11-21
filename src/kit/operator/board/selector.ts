@@ -9,8 +9,8 @@ import { Point } from "../../../common/vector/point";
 import { Polygon } from "../../../common/vector/polygon";
 import { ActionDirective } from "../../../history/declare";
 import { loadPaper } from "../../../paper";
-export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseEvent) {
 
+export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseEvent) {
     if (kit.boardSelector.isSelector) {
         var paper = await loadPaper();
         var fra: Block = block ? block.frameBlock : kit.page.getPageFrame();
