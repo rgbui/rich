@@ -10,7 +10,8 @@ import { DocDrag } from "./doc";
  * 白板
  * 
  */
-export async function PageDrag(kit: Kit, event: React.MouseEvent) {
+export async function PageDrag(kit: Kit, event: React.MouseEvent)
+{
     kit.operator.onClearPage();
     if (!kit.page.pageLayout?.type || ![
         PageLayoutType.board,
