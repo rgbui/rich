@@ -3,6 +3,7 @@ import { ShapesList } from "../../../extensions/shapes/shapes";
 import { Block } from "../../../src/block";
 import { BlockRenderRange } from "../../../src/block/enum";
 import { prop, url, view } from "../../../src/block/factory/observable";
+import { BlockCssName } from "../../../src/block/pattern/css";
 import { ShySvg } from "../../../src/block/svg";
 import { BlockView } from "../../../src/block/view";
 import { TextSpanArea } from "../../../src/block/view/appear";
@@ -15,7 +16,16 @@ export class Shape extends Block {
     @prop()
     fixedHeight: number = 200;
     async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
+
+        var bold = this.pattern.css(BlockCssName.font)?.fontWeight;
+
         var cs: { name: string; value?: any; }[] = [];
+        cs.push({ name: 'fontSize', value: Math.round(this.pattern.css(BlockCssName.font)?.fontSize || 14) });
+        cs.push({ name: 'fontWeight', value: bold == 'bold' || bold == 500 ? true : false });
+        cs.push({ name: 'fontStyle', value: this.pattern.css(BlockCssName.font)?.fontStyle == 'italic' ? true : false });
+        cs.push({ name: 'textDecoration', value: this.pattern.css(BlockCssName.font)?.textDecoration });
+        cs.push({ name: 'fontColor', value: this.pattern.css(BlockCssName.font)?.color });
+
         cs.push({ name: 'stroke', value: this.pattern.getSvgStyle()?.stroke || '#000' });
         cs.push({ name: 'strokeOpacity', value: this.pattern.getSvgStyle()?.strokeOpacity || 1 });
         cs.push({ name: 'strokeWidth', value: this.pattern.getSvgStyle()?.strokeWidth || 1 });
@@ -37,6 +47,9 @@ export class Shape extends Block {
             var key = name;
             if (name == 'fillColor') key = 'fill';
             this.pattern.setSvgStyle({ [key]: value })
+        }
+        else if ((await super.setBoardEditCommand(name, value))) {
+
         }
         else if (name == 'turnShapes') {
             var r = ShapesList.find(g => g.name == value);
@@ -98,7 +111,7 @@ export class ShapeView extends BlockView<Shape>{
         return <div className="sy-block-shape" style={style}>
             {sb.render({ marginLeft: 0 - w / 2, marginTop: 0 - w / 2, width: sb.viewBox.width, height: sb.viewBox.height })}
             <div className="sy-block-shape-content">
-                <TextSpanArea block={this.block}></TextSpanArea>
+                <TextSpanArea placeholder={this.block.isFreeBlock ? "键入文本" : undefined} block={this.block}></TextSpanArea>
             </div>
         </div>
     }
