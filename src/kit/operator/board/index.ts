@@ -22,7 +22,7 @@ export async function BoardDrag(
     var gm = block ? block.panelGridMap : kit.page.gridMap;
     if (block?.isLine) block = block.closest(x => !x.isLine);
     var beforeIsPicked = kit.picker.blocks.some(s => s == block);
-  
+
 
     var hasBlock: boolean = block ? true : false;
     if (kit.page.keyboardPlate.isShift() && block?.isFreeBlock) {
@@ -85,6 +85,12 @@ export async function BoardDrag(
                     var appear = findBlockAppear(ev.target as HTMLElement);
                     if (appear) {
                         appear.collapseByPoint(Point.from(ev));
+                    }
+                    else if (kit.picker.blocks.length == 1) {
+                        var bl = kit.picker.blocks[0];
+                        if (bl.appearAnchors.length > 0) {
+                            kit.anchorCursor.onFocusBlockAnchor(bl, { last: true })
+                        }
                     }
                 }
                 else if (kit.picker.blocks.length > 0) await openBoardEditTool(kit);
