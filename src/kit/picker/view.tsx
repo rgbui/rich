@@ -67,7 +67,7 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
                             onMouseDown={e => this.picker.onPickerMousedown(block, pi, e)}
                             x={pi.point.x - 10}
                             y={pi.point.y - 10}>
-                            <div style={{ width: 20, height: 20, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <div className="size-20 flex-center cursor" >
                                 <Icon size={12} icon={PlusSvg}></Icon>
                             </div>
                         </foreignObject>
