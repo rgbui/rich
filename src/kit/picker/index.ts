@@ -63,10 +63,14 @@ export class BlockPicker {
     async onMoveEnd(from: Point, to: Point) {
         this.kit.page.onAction(ActionDirective.onMove, async () => {
             await this.blocks.eachAsync(async (bl) => {
-                var matrix = new Matrix();
-                matrix.translateMove(bl.globalWindowMatrix.inverseTransform(from), bl.globalWindowMatrix.inverseTransform(to))
-                var newMatrix = bl.matrix.clone();
-                newMatrix.append(matrix);
+                /**
+                 * this.currentMatrix*moveMatrix=newMatrix*this.selfMatrix;
+                 */
+                var moveMatrix = new Matrix();
+                moveMatrix.translateMove(bl.globalWindowMatrix.inverseTransform(from), bl.globalWindowMatrix.inverseTransform(to))
+                var newMatrix = bl.currentMatrix.clone();
+                newMatrix.append(moveMatrix);
+                newMatrix.append(bl.selfMatrix.inverted());
                 bl.updateMatrix(bl.matrix, newMatrix);
                 bl.moveMatrix = new Matrix();
                 if (!bl.isFrame) {
@@ -207,7 +211,7 @@ export class BlockPicker {
             async moveEnd(ev, isMove, data) {
                 if (isMove) {
                     var ps = block.points.find(g => g != po);
-                    block.onManualUpdateProps({ points: ps }, { points: block.points }, {range:BlockRenderRange.self});
+                    block.onManualUpdateProps({ points: ps }, { points: block.points }, { range: BlockRenderRange.self });
                     self.onRePicker();
                     block.forceUpdate();
                     await openBoardEditTool(self.kit);
@@ -312,7 +316,10 @@ export class BlockPicker {
                 self.view.forceUpdate();
                 if (isEnd) {
                     block.page.onAction(ActionDirective.onRotate, async () => {
-                        block.updateMatrix(block.matrix, block.matrix.appended(block.moveMatrix));
+                        var newMatrix = block.currentMatrix.clone();
+                        newMatrix.append(block.moveMatrix);
+                        newMatrix.append(block.selfMatrix.inverted());
+                        block.updateMatrix(block.matrix, newMatrix);
                         block.moveMatrix = new Matrix();
                     })
                 }
