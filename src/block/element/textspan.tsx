@@ -1,6 +1,6 @@
 
 import React, { CSSProperties } from 'react';
-import { url, view } from '../factory/observable';
+import { prop, url, view } from '../factory/observable';
 import { TextSpanArea } from '../view/appear';
 import { BlockDisplay } from '../enum';
 import { BlockView } from '../view';
@@ -13,11 +13,33 @@ import { FontCss, BlockCssName } from '../pattern/css';
 import { CssSelectorType } from '../pattern/type';
 import { MouseDragger } from '../../common/dragger';
 import { forceCloseBoardEditTool } from '../../../extensions/board.edit.tool';
-import { dom } from '../../common/dom';
 import { openBoardEditTool } from '../../kit/operator/board/edit';
+
 @url("/textspan")
 export class TextSpan extends Block {
     display = BlockDisplay.block;
+    @prop()
+    fontScale = 1;
+    get visibleStyle() {
+        if (this.isFreeBlock) {
+            var style: CSSProperties = {};
+            style.position = 'absolute';
+            style.zIndex = this.zindex;
+            style.top = 0;
+            style.left = 0;
+            style.transformOrigin = '0% 0%';
+            Object.assign(style, this.transformStyle);
+            var s = this.pattern.style;
+            delete s.backgroundColor;
+            s.fontSize = '14px';
+            s.lineHeight = (14 * 1.2) + 'px';
+            Object.assign(style, s);
+            return style;
+        }
+        else {
+            return super.visibleStyle;
+        }
+    }
     get appearAnchors() {
         if (this.childs.length > 0) return []
         else return this.__appearAnchors;
@@ -36,7 +58,9 @@ export class TextSpan extends Block {
     }
     get contentStyle() {
         if (this.isFreeBlock) {
-            var style: CSSProperties = {};
+            var style: CSSProperties = {
+                width: this.fixedWidth
+            };
             var s = this.pattern.style;
             if (s.backgroundColor) style.backgroundColor = s.backgroundColor;
             return style;
@@ -53,11 +77,9 @@ export class TextSpan extends Block {
             }
         }
         else {
-            var style = this.pattern.style;
-            var fontSize = style.fontSize || 14;
             return {
                 width: this.fixedWidth,
-                height: fontSize * 1.2
+                height: this.fixedHeight
             }
         }
     }
@@ -70,12 +92,15 @@ export class TextSpan extends Block {
             });
         }
     }
-    onResizeBoardSelector(this: Block, arrows: PointArrow[], event: React.MouseEvent) {
-        var { width: w, height: h } = this.fixedSize;
-        var lineHeight = parseFloat(dom(this.el).style('lineHeight'));
-        var rh = h / lineHeight;
-        var lineCount = Math.floor(rh);
-        if (rh - lineCount > 0.2) lineCount += 1;
+    get selfMatrix(): Matrix {
+        var ng = new Matrix();
+        ng.scale(this.fontScale, this.fontScale, { x: 0, y: 0 });
+        return ng;
+    }
+    onResizeBoardSelector(arrows: PointArrow[], event: React.MouseEvent) {
+        var w = this.fixedWidth;
+        var h = this.el.offsetHeight;
+        var old_fs = this.fontScale;
         var gm = this.globalWindowMatrix.clone();
         var fp = gm.inverseTransform(Point.from(event));
         var s = gm.getScaling().x;
@@ -83,8 +108,7 @@ export class TextSpan extends Block {
         var minH = 20 / s;
         var matrix = this.matrix.clone();
         var block = this;
-        var style = this.pattern.style;
-        var fontSize = style.fontSize || 14;
+
         var self = this;
         MouseDragger({
             event,
@@ -96,7 +120,6 @@ export class TextSpan extends Block {
                     var tp = gm.inverseTransform(Point.from(ev));
                     var [dx, dy] = tp.diff(fp);
                     var bw = w;
-                    var bh = h;
                     var ma = new Matrix();
                     if (arrows.includes(PointArrow.left)) {
                         if (bw - dx < minW) dx = bw - minW;
@@ -111,7 +134,8 @@ export class TextSpan extends Block {
                     else if (arrows.includes(PointArrow.right)) {
                         bw += dx;
                     }
-                    block.matrix = matrix.appended(ma);
+                    if (!ma.equals(new Matrix()))
+                        block.matrix = matrix.appended(self.selfMatrix).appended(ma).appended(self.selfMatrix.inverted());
                     block.fixedWidth = bw;
                     await block.forceUpdate();
                     block.updateRenderLines();
@@ -129,7 +153,6 @@ export class TextSpan extends Block {
                 else {
                     var tp = gm.inverseTransform(Point.from(ev));
                     var [dx, dy] = tp.diff(fp);
-                    var bw = w;
                     var bh = h;
                     var ma = new Matrix();
                     if (arrows.includes(PointArrow.top)) {
@@ -145,26 +168,16 @@ export class TextSpan extends Block {
                     else if (arrows.includes(PointArrow.bottom)) {
                         bh += dy;
                     }
-                    block.matrix = matrix.appended(ma);
-                    var currentLineHeight = Math.max(12 * 1.2, Math.round((lineHeight + (bh - h) / lineCount)));
-                    block.page.snapshoot.pause();
-                    block.pattern.setStyle(BlockCssName.font, {
-                        lineHeight: currentLineHeight + 'px',
-                        fontSize: Math.round(currentLineHeight / 1.2)
-                    });
-                    console.log(lineHeight, fontSize);
+                    if (!ma.equals(new Matrix()))
+                        block.matrix = matrix.appended(self.selfMatrix).appended(ma).appended(self.selfMatrix.inverted());
+                    block.fontScale = old_fs * (bh / h);
                     await block.forceUpdate();
                     block.updateRenderLines();
                     block.page.kit.picker.view.forceUpdate();
                     if (isEnd) {
-                        block.pattern.setStyle(BlockCssName.font, { fontSize });
-                        block.page.snapshoot.start();
                         block.page.onAction(ActionDirective.onResizeBlock, async () => {
                             if (!matrix.equals(block.matrix)) block.updateMatrix(matrix, block.matrix);
-                            block.pattern.setStyle(BlockCssName.font, {
-                                lineHeight: currentLineHeight + 'px',
-                                fontSize: currentLineHeight / 1.2
-                            });
+                            block.manualUpdateProps({ fontScale: old_fs }, { fontScale: block.fontScale })
                         })
                     }
                 }
@@ -174,11 +187,11 @@ export class TextSpan extends Block {
             }
         });
     }
-    async getBoardEditCommand(this: Block): Promise<{ name: string; value?: any; }[]> {
+    async getBoardEditCommand(): Promise<{ name: string; value?: any; }[]> {
         var fontStyle = this.pattern.css(BlockCssName.font)
         var bold = fontStyle?.fontWeight || false;
         var cs: { name: string; value?: any; }[] = [];
-        cs.push({ name: 'fontSize', value: Math.round(fontStyle?.fontSize || 14) });
+        cs.push({ name: 'fontSize', value: Math.round(this.fontScale * 14) });
         cs.push({ name: 'fontWeight', value: bold == 'bold' || bold == 500 ? true : false });
         cs.push({ name: 'fontStyle', value: fontStyle?.fontStyle == 'italic' ? true : false });
         cs.push({ name: 'textDecoration', value: fontStyle?.textDecoration || 'none' });
@@ -187,13 +200,14 @@ export class TextSpan extends Block {
         cs.push({ name: 'backgroundColor', value: this.pattern.css(BlockCssName.fill)?.color || 'transparent' });
         return cs;
     }
-    async setBoardEditCommand(this: Block, name: string, value: any) {
+    async setBoardEditCommand(name: string, value: any) {
         if (name == 'backgroundColor')
             this.pattern.setFillStyle({ color: value, mode: 'color' });
         else if (name == 'fontColor')
             this.pattern.setFontStyle({ color: value });
         else if (name == 'fontSize') {
-            this.pattern.setFontStyle({ fontSize: value, lineHeight: (value * 1.2) + 'px' });
+            this.updateProps({ fontScale: value / 14 })
+            // this.pattern.setFontStyle({ fontSize: value, lineHeight: (value * 1.2) + 'px' });
         }
         else if (name == 'fontWeight')
             this.pattern.setFontStyle({ fontWeight: value })
