@@ -23,10 +23,10 @@ import { Block$Board } from "./partial/board";
 import { Polygon } from "../common/vector/polygon";
 import { channel } from "../../net/channel";
 import { GridMap } from "../page/grid";
-import { AtomPermission } from "../page/permission";
 import { ElementType, getElementUrl } from "../../net/element.type";
 import { SnapshootBlockPos, SnapshootBlockPropPos } from "../history/snapshoot";
 import lodash from "lodash";
+
 
 export abstract class Block extends Events {
     constructor(page: Page) {
@@ -605,17 +605,21 @@ export abstract class Block extends Events {
     }
     get globalMatrix(): Matrix {
         var rb = this.relativeBlock;
-        var ma = this.matrix;
-        if (!ma) ma = new Matrix();
-        if (rb) return rb.globalMatrix.appended(ma).appended(this.moveMatrix).appended(this.childsOffsetMatrix)
-        else return this.page.matrix.appended(ma).appended(this.moveMatrix).appended(this.childsOffsetMatrix);
+        if (rb) return rb.globalMatrix.appended(this.currentMatrix).appended(this.moveMatrix).appended(this.childsOffsetMatrix)
+        else return this.page.matrix.appended(this.currentMatrix).appended(this.moveMatrix).appended(this.childsOffsetMatrix);
+    }
+    get selfMatrix(): Matrix {
+        return new Matrix()
+    }
+    get currentMatrix(): Matrix {
+        return this.matrix.appended(this.selfMatrix)
     }
     get transformStyle() {
         if (!(this.matrix instanceof Matrix)) {
             console.log(this);
         }
         if (!this.matrix) return new Matrix().getCss()
-        var ma = this.matrix.appended(this.moveMatrix).appended(this.childsOffsetMatrix);
+        var ma = this.currentMatrix.appended(this.moveMatrix).appended(this.childsOffsetMatrix);
         return ma.getCss();
     }
     /**

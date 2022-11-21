@@ -188,16 +188,18 @@ export class PageEvent {
         forceCloseBoardEditTool();
     }
     onFitZoom(this: Page) {
+        this.gridMap.start();
         var bound = this.gridMap.gridRange();
+
         var matrix = new Matrix();
         var center = bound.middleCenter;
         var point = bound.leftTop;
         var from = center;
         var rect = Rect.fromEle(this.root);
-        rect = rect.relative(rect.leftTop);
+        rect = this.getRelativeRect(rect);
         var wr = Math.abs((point.x - from.x) * 2 / rect.width);
         var hr = Math.abs((point.y - from.y) * 2 / rect.height);
-        var r = Math.max(wr, hr);
+        var r = Math.min(wr, hr);
         r = 1 / r;
         var currentVisible = rect.middleCenter;
         matrix.scale(r, r, { x: from.x, y: from.y });
