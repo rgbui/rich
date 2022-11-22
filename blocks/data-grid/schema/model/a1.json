@@ -1,0 +1,33 @@
+{
+    "text": "",
+    "schemas": [
+        {
+            "text": "",
+            "fields": [
+                {
+                    "name": ""
+                }
+            ]
+        }
+    ],
+    "views": [
+        {
+            "text": "",
+            "viewFields": [
+                {
+                    "fieldId": ""
+                }
+            ],
+            "cardConfig": {
+                "templateProps": {
+                    "url": ""
+                }
+            }
+        }
+    ],
+    "recordViews": [
+        {
+            "recordSchemaId": ""
+        }
+    ]
+}

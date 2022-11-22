@@ -11,7 +11,7 @@ import { ViewField } from "./view";
  * schema  table fields meta
  * syncBlockId ViewFields （控制展示的数据结构信息）
  * block fields(控制列宽)
- *
+ * 
  * show view(schema->syncBlock->block-business model)
  * 
  * 
@@ -63,6 +63,7 @@ export class TableSchema {
     views: {
         id: string,
         text: string,
+        icon: IconArguments,
         url: string,
         locker: {
             lock: boolean,
@@ -71,7 +72,9 @@ export class TableSchema {
         }
     }[] = [];
     recordViews: {
-        id: string, text: string,
+        id: string,
+        text: string,
+        icon: IconArguments,
         locker?: {
             lock: boolean,
             date: number,

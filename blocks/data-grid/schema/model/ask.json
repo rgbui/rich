@@ -1,0 +1,46 @@
+[
+    {
+        "url": "@store_url",
+        "text": "ask",
+        "icon": {},
+        "cover": {},
+        "fields": [
+            {
+                "name": "title",
+                "type": "text"
+            },
+            {
+                "name": "answer",
+                "type": "join"
+            }
+        ],
+        "views": [
+            {
+                "url": "",
+                "fields": [
+                    {
+                        "fieldId": ""
+                    }
+                ],
+                "cardConfig": {
+                    "templateProps": {
+                        "url": ""
+                    }
+                }
+            }
+        ],
+        "recordViews": [
+            {}
+        ]
+    },
+    {
+        "url": "/answer",
+        "parentId": "",
+        "fields": [
+            {
+                "name": "",
+                "type": ""
+            }
+        ]
+    }
+]

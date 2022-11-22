@@ -8,7 +8,6 @@ export class Field {
     name: string;
     text: string;
     type: FieldType;
-    required: boolean;
     load(col: Record<string, any>) {
         for (var n in col) {
             if (n == 'type') {
