@@ -64,9 +64,15 @@ export class PageWrite {
         this.isCompositionstart = false;
         var sel = window.getSelection();
         var rowBlock = aa.block.closest(x => x.isBlock);
-        if (rowBlock.isFreeBlock && !(sel.focusNode && rowBlock.el.contains(sel.focusNode))) {
-            event.preventDefault();
-            return;
+        if (rowBlock?.isFreeBlock) {
+            if (!(this.kit.picker.blocks.some(s => s == rowBlock))) {
+                event.preventDefault();
+                setTimeout(() => {
+                    sel.removeAllRanges();
+                }, 10);
+                this.kit.picker.onPicker([rowBlock]);
+                return;
+            }
         }
         this.kit.operator.onClearPage();
         event.stopPropagation();

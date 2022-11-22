@@ -17,8 +17,6 @@ import { PageDirective } from './directive';
 import { Mix } from '../../util/mix';
 import { Page$Cycle } from './partial/life.cycle';
 import { Page$Operator } from './partial/operator';
-
-import { getBoardTool } from '../../extensions/board.tool';
 import { PageLayoutType, PageVersion } from './declare';
 import { Point, Rect } from '../common/vector/point';
 import { GridMap } from './grid';
@@ -27,12 +25,11 @@ import { PageContextmenu } from './partial/contextmenu';
 import { Kit } from '../kit';
 import { channel } from '../../net/channel';
 import { TableSchema } from '../../blocks/data-grid/schema/meta';
-import { OriginFormField } from '../../blocks/data-grid/element/form/origin.field';
 import { LinkPageItem } from '../../extensions/at/declare';
 import { Title } from '../../blocks/page/title';
 import { AppearAnchor } from '../block/appear';
 import { AtomPermission } from './permission';
-import { ElementType, getElementUrl } from '../../net/element.type';
+import { parseElementUrl } from '../../net/element.type';
 
 export class Page extends Events<PageDirective> {
     root: HTMLElement;
@@ -58,10 +55,7 @@ export class Page extends Events<PageDirective> {
     get user() {
         return channel.query('/query/current/user');
     }
-    get permissions(): AtomPermission[] {
-        if (this.pageInfo) return this.pageInfo.getPermissons()
-        else return []
-    }
+    permissons: AtomPermission[] = [];
     kit: Kit = new Kit(this);
     snapshoot = new HistorySnapshoot(this)
     pageLayout: { type: PageLayoutType };
@@ -112,10 +106,6 @@ export class Page extends Events<PageDirective> {
                 this.fragment.appendChild(this.root);
             this.isOff = true;
             this.kit.picker.onCancel();
-            getBoardTool().then(r => {
-                r.off('selector')
-                r.close();
-            })
         }
         catch (ex) {
             console.error(ex);
@@ -123,10 +113,6 @@ export class Page extends Events<PageDirective> {
     }
     destory() {
         this.kit.picker.onCancel();
-        getBoardTool().then(r => {
-            r.off('selector')
-            r.close();
-        });
         ReactDOM.unmountComponentAtNode(this.root);
         this.root.remove();
     }
@@ -149,7 +135,6 @@ export class Page extends Events<PageDirective> {
                     }
                 }
                 this.isOff = true;
-                if (this.isBoard) this.view.openPageToolBoard();
             }
             if (options && (options?.width !== this.pageVisibleWidth || options?.height !== this.pageVisibleHeight)) {
                 this.pageVisibleWidth = options?.width;
@@ -178,32 +163,16 @@ export class Page extends Events<PageDirective> {
         return this.matrix.getScaling().x;
     }
     schema: TableSchema;
-    recordViewId: string;
-    scheamViewId: string;
+    get recordViewId() {
+        return parseElementUrl(this.elementUrl).id1
+    }
+    get scheamViewId() {
+        return parseElementUrl(this.elementUrl).id1
+    }
+
     recordViewTemplate: boolean = false;
     openSource: 'page' | 'slide' | 'dialog' = 'page';
-    loadSchemaRecord(row: Record<string, any>) {
-        this.each(g => {
-            if (g instanceof OriginFormField) {
-                var f = g.field;
-                if (f) {
-                    g.value = g.field.getValue(row);
-                }
-            }
-        })
-    }
-    getSchemaRow() {
-        var row: Record<string, any> = {};
-        this.each(g => {
-            if (g instanceof OriginFormField) {
-                var f = g.field;
-                if (f) {
-                    row[f.name] = g.value;
-                }
-            }
-        })
-        return row;
-    }
+
     getScreenStyle() {
         var style: CSSProperties = {};
         if (this.isSupportScreen) {
@@ -229,21 +198,22 @@ export class Page extends Events<PageDirective> {
     }
     get isCanEdit() {
         if (this.readonly) return false;
+        if (this.pageLayout.type == PageLayoutType.dbPickRecord) return false;
         if (this.kit.page.pageInfo?.locker?.userid) return false;
-        if (!this.kit.page.permissions.includes(AtomPermission.editDoc)) return false;
+        //if (!this.kit.page.permissons.includes(AtomPermission.editDoc)) return false;
         return true;
     }
     /**
      * 是否支持宽屏及窄屏的切换
      */
     get isSupportScreen() {
-        return [PageLayoutType.db, PageLayoutType.doc, PageLayoutType.blog].includes(this.pageLayout?.type || PageLayoutType.doc)
+        return [PageLayoutType.db, PageLayoutType.dbForm, PageLayoutType.doc, PageLayoutType.blog].includes(this.pageLayout?.type || PageLayoutType.doc)
     }
     /**
      * 是否支持用户自定义封面
      */
     get isSupportCover() {
-        return [PageLayoutType.db, PageLayoutType.doc, PageLayoutType.blog].includes(this.pageLayout?.type || PageLayoutType.doc)
+        return [PageLayoutType.db, PageLayoutType.dbForm, PageLayoutType.doc, PageLayoutType.blog].includes(this.pageLayout?.type || PageLayoutType.doc)
     }
     async forceUpdate() {
         return new Promise((resolve, reject) => {
@@ -262,25 +232,6 @@ export class Page extends Events<PageDirective> {
     }
     customElementUrl: string;
     get elementUrl() {
-        // if ([
-        //     PageLayoutType.board,
-        //     PageLayoutType.doc
-        // ].includes(this.pageLayout.type)) {
-        //     return getElementUrl(ElementType.PageItem, this.pageInfo?.id);
-        // }
-        // else if (this.pageLayout.type == PageLayoutType.textChannel) {
-        //     return getElementUrl(ElementType.Room, this.pageInfo?.id);
-        // }
-        // else if (this.pageLayout.type == PageLayoutType.db) {
-        //     return getElementUrl(ElementType.Schema, this.pageInfo?.id);
-        // }
-        // else if ([
-        //     PageLayoutType.dbForm,
-        //     PageLayoutType.dbSubPage
-        // ].includes(this.pageLayout.type)) {
-        //     return getElementUrl(ElementType.SchemaRecordView, this.schema.id, this.recordViewId);
-        // }
-        // else 
         if (this.customElementUrl) return this.customElementUrl;
     }
 }

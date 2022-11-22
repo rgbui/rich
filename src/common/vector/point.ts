@@ -235,7 +235,10 @@ export class Rect {
         re.height = rect.height;
         return re;
     }
-    static fromEvent(event: MouseEvent | React.MouseEvent) {
+    static fromEvent(event: MouseEvent | React.MouseEvent|Rect) {
+        if(event instanceof Rect){
+            return event;
+        }
         var ele = event.target as HTMLElement;
         return this.from(ele.getBoundingClientRect())
     }

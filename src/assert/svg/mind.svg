@@ -1,13 +1,1 @@
-  <svg viewBox="0 0 52 48" xmlns="http://www.w3.org/2000/svg">
-        <g fill="none" fill-rule="evenodd">
-            <path fill="#000" fill-rule="nonzero"
-                d="M31.5 18h-3c0-8.091 7.243-12.5 16.5-12.5v3c-7.814 0-13.5 3.46-13.5 9.5zm-8 0h-3c0-6.04-5.686-9.5-13.5-9.5v-3c9.257 0 16.5 4.409 16.5 12.5zm5 12h3c0 6.04 5.686 9.5 13.5 9.5v3c-9.257 0-16.5-4.409-16.5-12.5zm-8 0h3c0 8.091-7.243 12.5-16.5 12.5v-3c7.814 0 13.5-3.46 13.5-9.5z">
-            </path>
-            <path fill="#336EEA" d="M7 11a4 4 0 100-8 4 4 0 000 8z"></path>
-            <circle cx="45" cy="7" r="4" fill="#336EEA"></circle>
-            <path fill="#336EEA" d="M7 45a4 4 0 100-8 4 4 0 000 8z"></path>
-            <circle cx="45" cy="41" r="4" fill="#336EEA"></circle>
-            <path fill="#336EEA" fill-rule="nonzero"
-                d="M20 20a4 4 0 100 8h12a4 4 0 100-8H20zm0-4h12a8 8 0 110 16H20a8 8 0 110-16z"></path>
-        </g>
-    </svg>
+<?xml version="1.0" encoding="UTF-8"?><svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="24" r="4" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="38" cy="10" r="4" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="38" cy="24" r="4" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="38" cy="38" r="4" fill="none" stroke="currentColor" stroke-width="3"/><path d="M34 38L22 38V10H34" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 24L34 24" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>

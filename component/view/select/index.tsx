@@ -59,9 +59,9 @@ export class Select extends React.Component<{
         if (props.optionAlign == 'center') optionStyle.justifyContent = 'center';
         else if (props.optionAlign == 'right') optionStyle.justifyContent = 'flex-end';
         return <div className={'shy-select' + (props.border ? " shy-select-border" : "")} style={this.props.style || {}} ref={e => this.el = e}>
-            <div className='shy-select-selection' onClick={e => props.disabled ? undefined : (setToggle())}>
-                {props.children && <>{props.children}<ChevronDownSvg></ChevronDownSvg></>}
-                {!props.children && <><span>{op?.icon && <Icon icon={op.icon}></Icon>}{op?.text}</span><ChevronDownSvg></ChevronDownSvg></>}
+            <div className='shy-select-selection flex' onClick={e => props.disabled ? undefined : (setToggle())}>
+                {props.children && <>{props.children}<Icon size={14} icon={ChevronDownSvg}></Icon></>}
+                {!props.children && <>{op?.icon &&<Icon size={18} icon={op.icon}></Icon>}{op?.text}<Icon size={14} icon={ChevronDownSvg}></Icon></>}
             </div>
             {this.toggle && <div className='shy-select-drop' style={dropStyle} >
                 {props.options.map((op, index) => {

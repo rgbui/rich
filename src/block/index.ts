@@ -23,10 +23,10 @@ import { Block$Board } from "./partial/board";
 import { Polygon } from "../common/vector/polygon";
 import { channel } from "../../net/channel";
 import { GridMap } from "../page/grid";
-import { AtomPermission } from "../page/permission";
 import { ElementType, getElementUrl } from "../../net/element.type";
 import { SnapshootBlockPos, SnapshootBlockPropPos } from "../history/snapshoot";
 import lodash from "lodash";
+
 
 export abstract class Block extends Events {
     constructor(page: Page) {
@@ -500,7 +500,7 @@ export abstract class Block extends Events {
                     aa.updateViewValue();
                 })
                 this.view.forceUpdate(() => {
-                    console.log('block view forceUpdate', this.appearAnchors);
+                    // console.log('block view forceUpdate', this.appearAnchors);
                     resolve(true);
                 })
             }
@@ -605,17 +605,21 @@ export abstract class Block extends Events {
     }
     get globalMatrix(): Matrix {
         var rb = this.relativeBlock;
-        var ma = this.matrix;
-        if (!ma) ma = new Matrix();
-        if (rb) return rb.globalMatrix.appended(ma).appended(this.moveMatrix).appended(this.childsOffsetMatrix)
-        else return this.page.matrix.appended(ma).appended(this.moveMatrix).appended(this.childsOffsetMatrix);
+        if (rb) return rb.globalMatrix.appended(this.currentMatrix).appended(this.moveMatrix).appended(this.childsOffsetMatrix)
+        else return this.page.matrix.appended(this.currentMatrix).appended(this.moveMatrix).appended(this.childsOffsetMatrix);
+    }
+    get selfMatrix(): Matrix {
+        return new Matrix()
+    }
+    get currentMatrix(): Matrix {
+        return this.matrix.appended(this.selfMatrix)
     }
     get transformStyle() {
         if (!(this.matrix instanceof Matrix)) {
             console.log(this);
         }
         if (!this.matrix) return new Matrix().getCss()
-        var ma = this.matrix.appended(this.moveMatrix).appended(this.childsOffsetMatrix);
+        var ma = this.currentMatrix.appended(this.moveMatrix).appended(this.childsOffsetMatrix);
         return ma.getCss();
     }
     /**
@@ -693,18 +697,9 @@ export abstract class Block extends Events {
     async onSyncReferenceBlock() {
 
     }
-    isCanEdit(prop?: string) {
-        if (this.page.pageLayout?.type == PageLayoutType.dbPickRecord) {
-            return false;
-        }
+    isCanEdit() {
         if (this.page.pageInfo?.locker?.userid) return false;
-        if (typeof prop == 'undefined') prop = 'content';
-        if (this.url == BlockUrlConstant.Title) {
-            if (this.page.permissions.includes(AtomPermission.createOrDeleteDoc)) return true;
-            else return false;
-        }
-        if (this.page.permissions.includes(AtomPermission.editDoc)) return true;
-        else return false;
+        return this.page.isCanEdit;
     }
     getRelativePoint(point: Point) {
         if (this.page.isBoard || this.isFrame || this.isFreeBlock || this.isBoardBlock)
@@ -734,7 +729,7 @@ export abstract class Block extends Events {
         var pr = this.pos as SnapshootBlockPropPos;
         pr.prop = arrayProp;
         var arr = lodash.get(this, arrayProp);
-        var at =item? arr.find(g => g === item):-1;
+        var at = item ? arr.find(g => g === item) : -1;
         if (at > -1) {
             pr.arrayAt = at;
             pr.arrayNextId = arr[at + 1]?.id;

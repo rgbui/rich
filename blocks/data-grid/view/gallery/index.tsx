@@ -3,8 +3,7 @@ import React from "react";
 import { Block } from "../../../../src/block";
 import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
-import { getCardView } from "../../card/data";
-import { CardView } from "../../card/view";
+import { getCardView } from "../../card/factory";
 import { DataGridView } from "../base";
 import { DataGridTool } from "../components/tool";
 import { CardConfig } from "../item/service";
@@ -69,8 +68,8 @@ export class TableStoreGalleryView extends BlockView<TableStoreGallery>{
     }
     renderItem(itemBlock: Block) {
         if (this.block.cardConfig.showTemplate && this.block.cardConfig.templateProps.url) {
-            var CV: typeof CardView = getCardView(this.block.cardConfig.templateProps.url);
-            if (CV) return <CV item={itemBlock} dataGrid={this.block}></CV>
+            var CV = getCardView(this.block.cardConfig.templateProps.url);
+            if (CV) return <CV item={itemBlock as any} dataGrid={this.block}></CV>
         }
         return <itemBlock.viewComponent block={itemBlock}></itemBlock.viewComponent>
     }

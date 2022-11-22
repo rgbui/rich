@@ -1,6 +1,7 @@
 import React from "react";
 import { BoardEditTool } from ".";
 import { NoneSvg, TransparentSvg } from "../../component/svgs";
+import { Icon } from "../../component/view/icon";
 import { ColorType } from "../note";
 
 var colors: ColorType[] = [
@@ -26,16 +27,16 @@ export function BackgroundColor(props: { tool: BoardEditTool, noTransparent?: bo
     var cs = props.noTransparent ? colors.filter(g => g.color != 'transparent') : colors;
     return <div className="shy-board-edit-background-color" >
         <div className="shy-board-edit-background-color-current" onMouseDown={e => props.tool.showDrop('fill')}>
-            {props.value == 'transparent' && <TransparentSvg></TransparentSvg>}
+            {props.value == 'transparent' && <Icon size={20} icon={TransparentSvg}></Icon>}
             {props.value != 'transparent' && <a style={{ backgroundColor: props.value || '#000' }}></a>}
         </div>
-        {props.tool.isShowDrop('fill') && <div className="shy-board-edit-background-color-drops">
+        {props.tool.isShowDrop('fill') && <div className="w-160 shy-board-edit-background-color-drops">
             {cs.map(c => {
                 if (c.color == 'transparent') return <a
                     className={'transparent ' + (c.color == props.value ? "selected" : "")}
                     onMouseDown={e => props.change(c.color)} key={c.color}
                     style={{ borderColor: 'transparent', backgroundColor: c.color }}>
-                    <NoneSvg></NoneSvg>
+                    <Icon size={30} icon={NoneSvg}></Icon>
                 </a>
                 return <a className={c.color == props.value ? "selected" : ""} onMouseDown={e => props.change(c.color)} key={c.color} style={{ backgroundColor: c.color }}></a>
             })}

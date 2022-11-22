@@ -5,16 +5,23 @@ export type IconArguments = {
     code?: string,
     color?: string,
     url?: string,
-    text?:string,
-    size?:number
+    text?: string,
+    size?: number
+}
+
+export type CoverMask = {
+    abled: boolean,
+    url: string,
+    thumb: string,
+    top: number
 }
 
 export type ResourceArguments = {
     name?: 'none' | 'link' | 'upload' | 'download'
     url?: string,
     source?: string,
-    thumb?:string,
-    text?:string,
-    size?:number,
-    origin?:string
+    thumb?: string,
+    text?: string,
+    size?: number,
+    origin?: string
 }

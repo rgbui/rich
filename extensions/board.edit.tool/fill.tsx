@@ -26,11 +26,11 @@ var colors: ColorType[] = [
 export function ShapeFill(props: { tool: BoardEditTool, fillColor: string, fillOpacity: number, change: (name: string, value: any) => void }) {
     function renderSvg() {
         if (props.fillColor == 'transparent') return <TransparentSvg></TransparentSvg>
-        else return <a style={{ display: 'inline-block', width: 'inherit', height: 'inherit', borderRadius: '50%', opacity: props.fillOpacity, backgroundColor: props.fillColor }}></a>
+        else return <a style={{ display: 'inline-block', borderRadius: '50%', opacity: props.fillOpacity, backgroundColor: props.fillColor }}></a>
     }
     return <div className="shy-shape-fill">
         <div className="shy-shape-fill-current" onMouseDown={e => props.tool.showDrop('fill')}>{renderSvg()}</div>
-        {props.tool.isShowDrop('fill')&& <div className="shy-shape-fill-drops">
+        {props.tool.isShowDrop('fill') && <div className="shy-shape-fill-drops">
             <div className="shy-shape-fill-opacity">
                 <MeasureView min={1} ratio={0.1} max={10} showValue={false} value={props.fillOpacity} onChange={e => { props.change('fillOpacity', e) }}></MeasureView>
                 <div className="shy-measure-view-label"><label>透明度</label><span style={{ float: 'right' }}>{Math.round(props.fillOpacity * 10)}</span></div>

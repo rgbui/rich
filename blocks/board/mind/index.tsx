@@ -323,7 +323,6 @@ export class FlowMindView extends BlockView<FlowMind>{
                 var subRect = new Rect(0, 0, s.width, s.height);
                 return sub.matrix.appended(sub.moveMatrix).transform(this.block.mindDirection != 'y' ? subRect.leftMiddle : subRect.topCenter);
             });
-
             this.flowMindLine.updateView(
                 this.block.mindDirection,
                 leftOrigin,
@@ -337,7 +336,7 @@ export class FlowMindView extends BlockView<FlowMind>{
         return <div className='sy-flow-mind-text'
             style={{ minWidth: this.block.fixedWidth, minHeight: this.block.fixedHeight }}
             ref={e => this.mindEl = e} >
-            <TextSpanArea block={this.block}></TextSpanArea>
+            <TextSpanArea placeholder={'键入文字'} block={this.block}></TextSpanArea>
         </div>
     }
     mindEl: HTMLElement;

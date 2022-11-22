@@ -1,4 +1,5 @@
 import { Kit } from "../..";
+import { forceCloseBoardEditTool } from "../../../../extensions/board.edit.tool";
 import { Block } from "../../../block";
 import { findBlockAppear } from "../../../block/appear/visible.seek";
 import { MouseDragger } from "../../../common/dragger";
@@ -6,16 +7,23 @@ import { Point, Rect } from "../../../common/vector/point";
 import { openBoardEditTool } from "./edit";
 import { CheckBoardTool } from "./selector";
 
-export async function BoardDrag(kit: Kit, block: Block, event: React.MouseEvent) {
+export async function BoardDrag(
+    kit: Kit,
+    block: Block,
+    event: React.MouseEvent) {
+
     /**
      * 先判断toolBoard工具栏有没有被使用，
      * 如果有使用，则根据工具栏来进行下一步操作
      */
     if (await CheckBoardTool(kit, block, event)) return;
+
     var downPoint = Point.from(event);
     var gm = block ? block.panelGridMap : kit.page.gridMap;
     if (block?.isLine) block = block.closest(x => !x.isLine);
     var beforeIsPicked = kit.picker.blocks.some(s => s == block);
+
+
     var hasBlock: boolean = block ? true : false;
     if (kit.page.keyboardPlate.isShift() && block?.isFreeBlock) {
         //连选
@@ -78,7 +86,15 @@ export async function BoardDrag(kit: Kit, block: Block, event: React.MouseEvent)
                     if (appear) {
                         appear.collapseByPoint(Point.from(ev));
                     }
+                    else if (kit.picker.blocks.length == 1) {
+                        var bl = kit.picker.blocks[0];
+                        if (bl.appearAnchors.length > 0) {
+                            kit.anchorCursor.onFocusBlockAnchor(bl, { last: true })
+                        }
+                    }
                 }
+                else if (kit.picker.blocks.length > 0) await openBoardEditTool(kit);
+                else forceCloseBoardEditTool()
             }
         }
     })

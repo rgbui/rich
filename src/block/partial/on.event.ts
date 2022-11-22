@@ -13,7 +13,7 @@ import { Point, Rect } from "../../common/vector/point";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { CopyText } from "../../../component/copy";
 import { ShyAlert } from "../../../component/lib/alert";
-import { BlockcolorSvg, DuplicateSvg, LinkSvg, LoopSvg, TrashSvg } from "../../../component/svgs";
+import { BlockcolorSvg, BoardMoveBottomSvg, BoardMoveTopSvg, DuplicateSvg, LinkSvg, LockSvg, LoopSvg, TrashSvg, UnlockSvg } from "../../../component/svgs";
 import lodash from "lodash";
 import { FontColorList, BackgroundColorList } from "../../../extensions/color/data";
 import { BlockUrlConstant } from "../constant";
@@ -137,29 +137,30 @@ export class Block$Event {
         var items: MenuItem<BlockDirective | string>[] = [];
         items.push({
             name: BlockDirective.bringToFront,
-            text: '移到前面'
+            text: '移到前面',
+            icon: BoardMoveTopSvg,
         });
         items.push({
             name: BlockDirective.sendToBack,
-            text: '移到最下面'
+            text: '移到最下面',
+            icon: BoardMoveBottomSvg
         });
         items.push({
             type: MenuItemType.divide
         });
         items.push({
             name: this.locker?.lock == false ? BlockDirective.lock : BlockDirective.unlock,
-            text: this.locker?.lock == false ? '解锁' : '锁住',
+            text: this.locker?.lock == false ? '锁住' : '解锁',
+            icon: this.locker?.lock == false ? LockSvg : UnlockSvg
         });
         items.push({
             type: MenuItemType.divide
         });
         items.push({
             name: 'copy',
-            text: '复制'
-        });
-        items.push({
-            name: 'paste',
-            text: '粘贴'
+            text: '复制',
+            icon: DuplicateSvg,
+            disabled: true
         });
         items.push({
             type: MenuItemType.divide

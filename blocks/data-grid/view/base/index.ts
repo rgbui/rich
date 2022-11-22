@@ -20,10 +20,10 @@ import { DataGridViewConfig } from "./config";
 import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { DataGridViewField } from "./field";
 import lodash from "lodash";
-import { PageLayoutType } from "../../../../src/page/declare";
 import { OriginFilterField } from "../../element/filter/origin.field";
 import { FilterSort } from "../../element/filter/sort";
 import { Page } from "../../../../src/page";
+import { Field } from "../../schema/field";
 
 /**
  * 
@@ -81,6 +81,10 @@ export class DataGridView extends Block {
         this.isLoadingData = false;
         if (this.isMounted) this.forceUpdate()
     }
+    isEmoji(field: Field, rowId: string) {
+        var isOp = this.userEmojis[field.name]?.includes(rowId)
+        return isOp;
+    }
     pageIndex: number = 1;
     @prop()
     size: number = 50;
@@ -126,7 +130,7 @@ export class DataGridView extends Block {
         }
         return json;
     }
-    async getSyncString() {
+    async getSync() {
         var json: Record<string, any> = { url: this.url };
         if (typeof this.pattern.get == 'function')
             json.pattern = await this.pattern.get();
@@ -137,7 +141,10 @@ export class DataGridView extends Block {
                     json[pro] = this.clonePropData(pro, this[pro]);
             })
         }
-        return JSON.stringify(json);
+        return json;
+    }
+    async getSyncString() {
+        return JSON.stringify(await this.getSync());
     }
     async loadSyncBlock(this: DataGridView): Promise<void> {
         var r = await channel.get('/view/snap/query', { elementUrl: this.elementUrl });
@@ -289,12 +296,6 @@ export class DataGridView extends Block {
     }
     get elementUrl() {
         return getElementUrl(ElementType.SchemaView, this.schemaId, this.syncBlockId);
-    }
-    isCanEdit(prop?: string) {
-        if (this.page?.pageLayout.type == PageLayoutType.dbPickRecord) return false;
-        if (this.schemaView?.locker) return false;
-        var r = super.isCanEdit(prop);
-        return r;
     }
 }
 

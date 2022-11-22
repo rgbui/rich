@@ -11,6 +11,7 @@ import { PageWrite } from "./write";
 import { PageOperator } from "./operator";
 import { Collaboration } from "./collaboration";
 import { AnchorCursor } from "./anchor/cursor";
+import { BoardSelector } from "./board.selector";
 
 export class Kit extends Events {
     page: Page;
@@ -35,5 +36,6 @@ export class Kit extends Events {
     picker: BlockPicker;
     boardLine: BoardLine;
     boardBlockHover: BoardBlockHover;
-    collaboration: Collaboration
+    collaboration: Collaboration;
+    boardSelector:BoardSelector
 }

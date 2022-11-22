@@ -63,7 +63,7 @@ export class TableStoreBoard extends DataGridView {
                 else return false;
             });
             await list.eachAsync(async row => {
-                var rowBlock: TableStoreItem = await BlockFactory.createBlock('/data-grid/item', this.page, { mark: dg.group,  dataId: row.id }, this) as TableStoreItem;
+                var rowBlock: TableStoreItem = await BlockFactory.createBlock('/data-grid/item', this.page, { mark: dg.group, dataId: row.id }, this) as TableStoreItem;
                 this.blocks.childs.push(rowBlock);
                 await rowBlock.createElements();
             })

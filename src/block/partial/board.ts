@@ -247,7 +247,7 @@ export class Block$Board {
             this.pattern.setFontStyle({ color: value });
         }
         else return false;
-        return undefined;
+        return true
     }
     /**
      * 重新渲染线条

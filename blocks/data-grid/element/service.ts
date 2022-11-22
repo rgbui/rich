@@ -3,11 +3,15 @@ import { Field } from "../schema/field";
 import { TableSchema } from "../schema/meta";
 import { FieldType } from "../schema/type";
 
-export function SchemaCreatePageFormData(schema: TableSchema) {
+export function SchemaCreatePageFormData(schema: TableSchema, isRecord?: boolean) {
     var cs: Record<string, any>[] = schema.initUserFields.toArray(field => {
+        if (isRecord && field.type == FieldType.title) return;
         var r = GetFieldFormBlockInfo(field);
         if (r) return r;
     })
+    cs.splice(0, 0, {
+        url: '/title'
+    });
     return {
         url: '/page',
         pageLayout: { type: PageLayoutType.dbForm },

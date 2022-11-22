@@ -26,11 +26,29 @@ flex-full:从左到右，水平与父元素同高
 flex-auto:子元素自动填充大小
 flex-fixed:固定大小
 **/
+.r-flex {
+    >* {
+        display        : flex;
+        justify-content: flex-start;
+        align-items    : center;
+        flex-wrap      : nowrap;
+    }
+}
+
 .flex {
     display        : flex;
     justify-content: flex-start;
     align-items    : center;
     flex-wrap      : nowrap;
+}
+
+.r-flex-end {
+    >* {
+        display        : flex;
+        justify-content: flex-end;
+        align-items    : center;
+        flex-wrap      : nowrap;
+    }
 }
 
 .flex-end {
@@ -45,6 +63,14 @@ flex-fixed:固定大小
     justify-content: flex-start;
     align-items    : flex-start;
     flex-wrap      : nowrap;
+}
+
+.r-flex-center {
+    >* {
+        display        : flex;
+        justify-content: center;
+        align-items    : center;
+    }
 }
 
 .flex-center {
@@ -154,22 +180,33 @@ position的布局
 
 .pos-top,
 .pos-t {
-    top: 0px;
+    top     : 0px;
+    position: absolute;
 }
 
 .pos-left,
 .pos-l {
-    left: 0px;
+    left    : 0px;
+    position: absolute;
 }
 
 .pos-right,
 .pos-r {
-    right: 0px;
+    right   : 0px;
+    position: absolute;
 }
 
 .pos-bottom,
 .pos-b {
-    bottom: 0px;
+    bottom  : 0px;
+    position: absolute;
+}
+
+.pos-bottom-full {
+    bottom  : 0px;
+    position: absolute;
+    left    : 0px;
+    right   : 0px;
 }
 
 .pos-full {
@@ -373,6 +410,14 @@ item-hover-light:行移去的效果
 item-hover-light-focus:行处于的效果，偏轻
 item-selected:选中的效果
 ***/
+.r-item-hover {
+    >* {
+        &:hover {
+            background-color: rgba(55, 53, 47, 0.08);
+        }
+    }
+}
+
 .item-hover {
     &:hover {
         background-color: rgba(55, 53, 47, 0.08);
@@ -385,6 +430,7 @@ item-selected:选中的效果
         background-color: var(--background-modifier-selected);
     }
 }
+
 
 .item-hover-focus {
     background-color: rgba(55, 53, 47, 0.1);
@@ -407,6 +453,12 @@ item-selected:选中的效果
 .item-hover-primary {
     &:hover {
         background-color: rgb(225, 98, 89);
+    }
+}
+
+.item-white-hover {
+    &:hover {
+        background-color: #f5f5f5;
     }
 }
 
@@ -455,6 +507,12 @@ item-selected:选中的效果
 
 .underline {
     text-decoration: underline;
+}
+
+.underline-hover {
+    &:hover {
+        text-decoration: underline;
+    }
 }
 
 .no-underline {
@@ -598,6 +656,48 @@ item-selected:选中的效果
     display: none;
 }
 
+.none-hover {
+    .none {
+        display: none;
+    }
+
+    &:hover {
+        .none {
+            display: inline-block;
+        }
+    }
+
+    .none-block {
+        display: none;
+    }
+
+    &:hover {
+        .none-block {
+            display: block;
+        }
+    }
+
+    .none-flex {
+        display: none;
+    }
+
+    &:hover {
+        .none-flex {
+            display: flex;
+        }
+    }
+
+    .none-inline-flex {
+        display: none;
+    }
+
+    &:hover {
+        .none-inline-flex {
+            display: inline-flex;
+        }
+    }
+}
+
 .text-over,
 .text-overflow {
     white-space  : nowrap;
@@ -635,6 +735,12 @@ item-selected:选中的效果
 /**
 cursor鼠标
 **/
+.r-cursor {
+    >* {
+        cursor: pointer;
+    }
+}
+
 .cursor {
     cursor: pointer;
 }
@@ -1006,8 +1112,6 @@ each(@ops, {
 }
 
 
-
-
 .break-normal {
     overflow-wrap: normal;
     word-break   : normal;
@@ -1047,9 +1151,16 @@ each(@ops, {
 size-24:图标大小
 **/
 
-@sizes: 2, 4, 8, 10, 14, 16, 18, 20, 24, 30, 32, 48, 50, 70, 80, 90, 100, 120, 150, 200, 240, 300;
+@sizes: 2, 4, 8, 10, 14, 16, 18, 20, 24, 30, 32, 40, 48, 50, 70, 80, 90, 100, 120, 150, 200, 240, 300;
 
 each(@sizes, {
+        .r-size-@{value} {
+            >* {
+                width  :@value+0px;
+                height :@value+0px;
+            }
+        }
+
         .size-@{value} {
             width  :@value+0px;
             height :@value+0px;
@@ -1064,9 +1175,16 @@ circle:圆
 .round:圆角（图标、按钮类）
 .round-card:卡片类的圆角，比较大一些
 **/
+.r-circle {
+    >* {
+        border-radius: 50%;
+    }
+}
+
 .circle {
     border-radius: 50%;
 }
+
 
 .rect {
     border-radius: 0%;
@@ -1089,6 +1207,41 @@ circle:圆
 @ras: 2, 4, 8, 5, 10, 14, 16, 20, 24, 30, 32, 48, 50, 60, 80, 100, 0;
 
 each(@ras, {
+        .r-round-@{value} {
+            >* {
+                border-radius: @value+0px;
+            }
+        }
+
+        .r-round-top-@{value}, .r-round-t-@{value} {
+            >* {
+                border-top-left-radius : @value+0px;
+                border-top-right-radius: @value+0px;
+            }
+        }
+
+        .r-round-bottom-@{value}, .r-round-b-@{value} {
+            >* {
+                border-bottom-left-radius : @value+0px;
+                border-bottom-right-radius: @value+0px;
+            }
+        }
+
+        .r-round-left-@{value}, .r-round-l-@{value} {
+            >* {
+                border-top-left-radius    : @value+0px;
+                border-bottom-left-radius : @value+0px;
+            }
+        }
+
+        .r-round-right-@{value}, .r-round-r-@{value} {
+            >* {
+                border-top-right-radius   : @value+0px;
+                border-bottom-right-radius: @value+0px;
+            }
+        }
+
+
         .round-@{value} {
             border-radius: @value+0px;
         }
@@ -1129,6 +1282,58 @@ gap-b-20:指模块间距（有明显的块与块之间的间距），大标题�
 @gaps: 0, 3, 5, 10, 14, 15, 20, 25, 24, 30, 48, 50, 60, 80, 100;
 
 each(@gaps, {
+
+        .r-gap-@{value} {
+            >* {
+                margin-top   :@value+0px;
+                margin-left  :@value+0px;
+                margin-bottom:@value+0px;
+                margin-right :@value+0px;
+            }
+        }
+
+        .r-gap-w-@{value} {
+            >* {
+                margin-left :@value+0px;
+                margin-right:@value+0px;
+            }
+        }
+
+        .r-gap-h-@{value} {
+            >* {
+                margin-top   :@value+0px;
+                margin-bottom:@value+0px;
+            }
+
+        }
+
+        .r-gap-t-@{value} {
+            >* {
+                margin-top:@value+0px;
+            }
+
+        }
+
+        .r-gap-l-@{value} {
+            >* {
+                margin-left:@value+0px;
+            }
+
+        }
+
+        .r-gap-r-@{value} {
+            >* {
+                margin-right:@value+0px;
+            }
+
+        }
+
+        .r-gap-b-@{value} {
+            >* {
+                margin-bottom:@value+0px;
+            }
+        }
+
         .gap-@{value} {
             margin-top   :@value+0px;
             margin-left  :@value+0px;
@@ -1161,17 +1366,22 @@ each(@gaps, {
         .gap-b-@{value} {
             margin-bottom:@value+0px;
         }
+
+
     }
+
 )
 /**
 z-index
 ****/
 @zs: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 100, 200, 300, 1000, 2000, 3000, 10000, 20000, 50000, 60000;
-each(@zs,{
-        .z-@{value}{
+
+each(@zs, {
+        .z-@{value} {
             z-index:@value;
         }
     }
+
 )
 /***
 内间距
@@ -1183,6 +1393,55 @@ each(@zs,{
 @pads: 0, 2, 3, 4, 5, 6, 8, 10, 14, 15, 20, 25, 24, 30, 48, 50, 60, 80, 100;
 
 each(@pads, {
+
+        .r-padding-@{value} {
+            >* {
+                padding-top   :@value+0px;
+                padding-left  :@value+0px;
+                padding-bottom:@value+0px;
+                padding-right :@value+0px;
+            }
+        }
+
+        .r-padding-w-@{value} {
+            >* {
+                padding-left :@value+0px;
+                padding-right:@value+0px;
+            }
+        }
+
+        .r-padding-h-@{value} {
+            >* {
+                padding-top   :@value+0px;
+                padding-bottom:@value+0px;
+            }
+        }
+
+        .r-padding-t-@{value} {
+            >* {
+                padding-top:@value+0px;
+            }
+        }
+
+        .r-padding-l-@{value} {
+            >* {
+                padding-left:@value+0px;
+            }
+        }
+
+        .r-padding-r-@{value} {
+            >* {
+                padding-right:@value+0px;
+            }
+        }
+
+        .r-padding-b-@{value} {
+            >* {
+                padding-bottom:@value+0px;
+            }
+        }
+
+
         .padding-@{value} {
             padding-top   :@value+0px;
             padding-left  :@value+0px;
@@ -1219,4 +1478,18 @@ each(@pads, {
 
 ) .mask {
     background: rgba(15, 15, 15, 0.6);
+}
+
+.mask-1 {
+    background: rgba(15, 15, 15, 0.1);
+}
+
+.width-atuo,
+.w-auto {
+    width: auto
+}
+
+.h-auto,
+.height-auto {
+    height: auto;
 }

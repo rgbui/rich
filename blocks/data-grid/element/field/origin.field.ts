@@ -17,16 +17,16 @@ export class OriginField extends Block {
     }
     async changeAppear(appear: AppearAnchor): Promise<void> {
         var text = lodash.get(this, appear.prop);
-        await this.item.onUpdateCellValue(this.viewField, text);
+        await this.item.onUpdateCellValue(this.viewField.field, text);
     }
     async onUpdateCellValue(value) {
         this.value = value;
-        await this.item.onUpdateCellValue(this.viewField, value);
+        await this.item.onUpdateCellValue(this.viewField.field, value);
     }
     async changeProps(oldProps: Record<string, any>, newProps: Record<string, any>) {
         if (newProps && Object.keys(newProps).length > 0) {
             if (typeof newProps['value'] != 'undefined') {
-                await this.item.onUpdateCellValue(this.viewField, newProps['value'])
+                await this.item.onUpdateCellValue(this.viewField.field, newProps['value'])
             }
         }
     }

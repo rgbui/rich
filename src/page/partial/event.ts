@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Page } from "..";
 import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
@@ -5,6 +6,7 @@ import { emojiStore } from "../../../extensions/emoji/store";
 import { useIconPicker } from "../../../extensions/icon";
 import { GalleryPics } from "../../../extensions/image/gellery";
 import { channel } from "../../../net/channel";
+import { util } from "../../../util/util";
 import { Matrix } from "../../common/matrix";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
@@ -23,6 +25,9 @@ export class PageEvent {
      * 
      */
     onMousedown(this: Page, event: React.MouseEvent) {
+        if (this.pageLayout.type == PageLayoutType.board) {
+            this.kit.boardSelector.onShow(this.root);
+        }
         this.kit.operator.mousedown(event);
     }
     onMousemove(this: Page, event: MouseEvent) {
@@ -138,6 +143,15 @@ export class PageEvent {
             this.addPageUpdate();
         });
     }
+    /**
+     * 
+     * @param this 
+     * @param zoom 1,-1,100
+     * 1 放大
+     * -1 缩小
+     * 100是放大至100%
+     * @param point 
+     */
     onZoom(this: Page, zoom: number, point?: Point) {
         if (!point) {
             var rect = Rect.from(this.root.getBoundingClientRect());
@@ -149,17 +163,20 @@ export class PageEvent {
         var ro = this.globalMatrix.inverseTransform(point);
         var r = 1;
         var current = this.scale * 100;
-        if (zoom > 0) {
+        if (zoom == 1) {
             if (at < zs.length - 1) {
                 var next = zs[at + 1];
                 r = next / current;
             }
         }
-        else {
+        else if (zoom == -1) {
             if (at > 0) {
                 var next = zs[at - 1];
                 r = next / current;
             }
+        }
+        else if (zoom == 100) {
+            r = 100 / current;
         }
         r = Math.round(r * 100) / 100;
         this.matrix.scale(r, r, ro);
@@ -171,16 +188,18 @@ export class PageEvent {
         forceCloseBoardEditTool();
     }
     onFitZoom(this: Page) {
+        this.gridMap.start();
         var bound = this.gridMap.gridRange();
+
         var matrix = new Matrix();
         var center = bound.middleCenter;
         var point = bound.leftTop;
         var from = center;
         var rect = Rect.fromEle(this.root);
-        rect = rect.relative(rect.leftTop);
+        rect = this.getRelativeRect(rect);
         var wr = Math.abs((point.x - from.x) * 2 / rect.width);
         var hr = Math.abs((point.y - from.y) * 2 / rect.height);
-        var r = Math.max(wr, hr);
+        var r = Math.min(wr, hr);
         r = 1 / r;
         var currentVisible = rect.middleCenter;
         matrix.scale(r, r, { x: from.x, y: from.y });
@@ -204,6 +223,7 @@ export class PageEvent {
         }
     }
     async onContextmenu(this: Page, event: React.MouseEvent) {
+
         if (!this.isCanEdit) return;
         // event.preventDefault();
         // var items: MenuItemType<BlockDirective | string>[] = [
@@ -226,11 +246,12 @@ export class PageEvent {
     }
     async onAddCover(this: Page) {
         if (!this.isCanEdit) return;
-        if (this.cover?.abled) {
+        var pd = this.getPageDataInfo();
+        if (pd.cover?.abled) {
             this.onUpdatePageCover({ 'cover.abled': false }, true);
         }
         else {
-            if (this.cover?.url) {
+            if (pd.cover?.url) {
                 this.onUpdatePageCover({ 'cover.abled': true }, true);
             }
             else {
@@ -255,23 +276,95 @@ export class PageEvent {
         })
     }
     async onUpdatePageData(this: Page, data: Record<string, any>) {
+        if (this.pageLayout.type == PageLayoutType.dbForm) {
+            if (this.formRowData) {
+                Object.assign(this.formRowData, data);
+            }
+            else {
+                var sr = this.schema.recordViews.find(g => g.id == this.recordViewId);
+                if (sr) {
+                    await this.schema.onSchemaOperate([{
+                        name: "updateSchemaRecordView",
+                        data: data,
+                        id: this.recordViewId,
+                    }])
+                }
+            }
+        }
         channel.air('/page/update/info', {
-            id: this.pageInfo.id,
+            elementUrl: this.elementUrl,
             pageInfo: data
         })
     }
-    async onUpdatePageCover(this: Page, data: Record<string, any>, isUpdate?: boolean) {
-        await this.onUpdateProps(data, isUpdate);
-    }
     async onUpdatePageTitle(this: Page, text: string) {
         this.onceStopRenderByPageInfo = true;
+        if (this.pageLayout.type == PageLayoutType.dbForm) {
+            if (this.formRowData) {
+                this.formRowData.title = text;
+            }
+            else {
+                var sr = this.schema.recordViews.find(g => g.id == this.recordViewId);
+                if (sr) {
+                    await this.schema.onSchemaOperate([{
+                        name: "updateSchemaRecordView",
+                        id: this.recordViewId,
+                        data: { text }
+                    }])
+                }
+            }
+        }
         channel.air('/page/update/info', {
-            id: this.pageInfo.id,
+            elementUrl: this.elementUrl,
             pageInfo: {
-                id: this.pageInfo.id,
                 text: text
             }
         })
+    }
+    async onUpdatePageCover(this: Page, data: Record<string, any>, isUpdate?: boolean) {
+        /**
+         * 如果是数据，其封面的信息存在row data中
+         */
+        if (this.formRowData) {
+            util.setKey(this.formRowData, data);
+            this.view.forceUpdate();
+        }
+        else await this.onUpdateProps(data, isUpdate);
+    }
+    getPageDataInfo(this: Page) {
+        if (this.pageLayout.type == PageLayoutType.dbForm) {
+            if (this.formRowData) {
+                return {
+                    id: this.formRowData.id,
+                    text: this.formRowData.title,
+                    icon: this.formRowData.icon,
+                    cover: this.formRowData.cover
+                }
+            }
+            else {
+                var sr = this.schema.recordViews.find(g => g.id == this.recordViewId);
+                if (sr) {
+                    return {
+                        id: sr.id,
+                        text: sr.text,
+                        icon: sr.icon,
+                        cover: this.cover
+                    }
+                }
+                else {
+                    return {
+                        text: '',
+                        icon: null,
+                        cover: this.cover
+                    }
+                }
+            }
+        }
+        return {
+            id: this.pageInfo.id,
+            text: this.pageInfo.text,
+            icon: this.pageInfo.icon,
+            cover: this.cover
+        }
     }
     async onChangeIcon(this: Page, event: React.MouseEvent) {
         event.stopPropagation();

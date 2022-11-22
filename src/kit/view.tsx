@@ -6,6 +6,7 @@ import { HandleView } from "./handle/view";
 import { BlockPickerView } from "./picker/view";
 import { BoardScale } from "./scale";
 import { SelectorView } from "./anchor/selector/view";
+import { BoardSelector } from "./board.selector";
 
 export class KitView extends React.Component<{ kit: Kit }>{
     constructor(props) {
@@ -24,6 +25,7 @@ export class KitView extends React.Component<{ kit: Kit }>{
             <BoardScale kit={this.props.kit}></BoardScale>
             <Collaboration kit={this.props.kit} ref={e => this.kit.collaboration = e}></Collaboration>
             <BoardBlockHover ref={e => this.kit.boardBlockHover = e} kit={this.kit}></BoardBlockHover>
+            <BoardSelector ref={e=>this.kit.boardSelector=e} kit={this.kit}></BoardSelector>
         </div>
     }
 }

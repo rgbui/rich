@@ -24,7 +24,7 @@ export type SockResponse<T, U = string> = {
     }
 export interface ChannelSyncMapUrls {
     "/log":{args:(r:{type:"error"|"warn"|"info",message:string|Error})=>void,returnType:void},
-	"/page/update/info":{args:(r:{id: string, pageInfo:LinkPageItem})=>void,returnType:void},
+	"/page/update/info":{args:(r:{id?: string,elementUrl?:string, pageInfo:LinkPageItem})=>void,returnType:void},
 	"/page/open":{args:(r:{item?: string | { id: string }, elementUrl?: string,config?:{isTemplate?:boolean}})=>void,returnType:void},
 	"/page/dialog":{args:(r:{elementUrl:string,config?:{isTemplate?:boolean}})=>any,returnType:void},
 	"/page/slide":{args:(r:{elementUrl:string,config?:{isTemplate?:boolean}})=>any,returnType:void},
@@ -43,7 +43,7 @@ export interface ChannelSyncMapUrls {
 }
 export interface ChannelOnlyMapUrls {
     "/log":{args:(r:{type:"error"|"warn"|"info",message:string|Error})=>void,returnType:void},
-	"/page/update/info":{args:(r:{id: string, pageInfo:LinkPageItem})=>void,returnType:void},
+	"/page/update/info":{args:(r:{id?: string,elementUrl?:string, pageInfo:LinkPageItem})=>void,returnType:void},
 	"/page/open":{args:(r:{item?: string | { id: string }, elementUrl?: string,config?:{isTemplate?:boolean}})=>void,returnType:void},
 	"/page/dialog":{args:(r:{elementUrl:string,config?:{isTemplate?:boolean}})=>any,returnType:void},
 	"/page/slide":{args:(r:{elementUrl:string,config?:{isTemplate?:boolean}})=>any,returnType:void},
@@ -62,7 +62,7 @@ export interface ChannelOnlyMapUrls {
 }
 export interface ChannelOnceMapUrls {
     "/log":{args:(r:{type:"error"|"warn"|"info",message:string|Error})=>void,returnType:void},
-	"/page/update/info":{args:(r:{id: string, pageInfo:LinkPageItem})=>void,returnType:void},
+	"/page/update/info":{args:(r:{id?: string,elementUrl?:string, pageInfo:LinkPageItem})=>void,returnType:void},
 	"/page/open":{args:(r:{item?: string | { id: string }, elementUrl?: string,config?:{isTemplate?:boolean}})=>void,returnType:void},
 	"/page/dialog":{args:(r:{elementUrl:string,config?:{isTemplate?:boolean}})=>any,returnType:void},
 	"/page/slide":{args:(r:{elementUrl:string,config?:{isTemplate?:boolean}})=>any,returnType:void},
@@ -81,7 +81,7 @@ export interface ChannelOnceMapUrls {
 }
 export interface ChannelOffMapUrls {
     "/log":{args:(r:{type:"error"|"warn"|"info",message:string|Error})=>void,returnType:void},
-	"/page/update/info":{args:(r:{id: string, pageInfo:LinkPageItem})=>void,returnType:void},
+	"/page/update/info":{args:(r:{id?: string,elementUrl?:string, pageInfo:LinkPageItem})=>void,returnType:void},
 	"/page/open":{args:(r:{item?: string | { id: string }, elementUrl?: string,config?:{isTemplate?:boolean}})=>void,returnType:void},
 	"/page/dialog":{args:(r:{elementUrl:string,config?:{isTemplate?:boolean}})=>any,returnType:void},
 	"/page/slide":{args:(r:{elementUrl:string,config?:{isTemplate?:boolean}})=>any,returnType:void},
@@ -100,7 +100,7 @@ export interface ChannelOffMapUrls {
 }
 export interface ChannelFireMapUrls {
     "/log":{args:{type:"error"|"warn"|"info",message:string|Error},returnType:void},
-	"/page/update/info":{args:{id: string, pageInfo:LinkPageItem},returnType:void},
+	"/page/update/info":{args:{id?: string,elementUrl?:string, pageInfo:LinkPageItem},returnType:void},
 	"/page/open":{args:{item?: string | { id: string }, elementUrl?: string,config?:{isTemplate?:boolean}},returnType:void},
 	"/page/dialog":{args:{elementUrl:string,config?:{isTemplate?:boolean}},returnType:any},
 	"/page/slide":{args:{elementUrl:string,config?:{isTemplate?:boolean}},returnType:any},
@@ -197,7 +197,7 @@ export interface ChannelPutMapUrls {
 }
 export interface ChannelGetMapUrls {
     "/gallery/query":{args:{type: GalleryType, word: string},returnType:Promise<{ok:boolean,data:OuterPic[],warn:string}>},
-	"/page/query/info":{args:{id: string},returnType:Promise<SockResponse<LinkPageItem>>},
+	"/page/query/info":{args:{id?: string,elementUrl?:string},returnType:Promise<SockResponse<LinkPageItem>>},
 	"/schema/query":{args:{id:string},returnType:Promise<{ok:boolean,data:{schema:Partial<TableSchema>},warn:string}>},
 	"/schema/list":{args:{page?:number,size?:number},returnType:Promise<SockResponse<{total:number,list:Partial<TableSchema>[],page:number,size:number}>>},
 	"/schema/ids/list":{args:{ids:string[]},returnType:Promise<SockResponse<{list:Partial<TableSchema>[]}>>},
@@ -278,7 +278,7 @@ export interface ChannelActMapUrls {
 	"/view/snap/store":{args:{  elementUrl: string, seq: number, content: any },returnType:Promise<void>}
 }
 export interface ChannelAirMapUrls {
-    "/page/update/info":{args:{id: string, pageInfo:LinkPageItem},returnType:void},
+    "/page/update/info":{args:{id?: string,elementUrl?:string, pageInfo:LinkPageItem},returnType:void},
 	"/page/open":{args:{item?: string | { id: string }, elementUrl?: string,config?:{isTemplate?:boolean}},returnType:void},
 	"/page/dialog":{args:{elementUrl:string,config?:{isTemplate?:boolean}},returnType:any},
 	"/page/slide":{args:{elementUrl:string,config?:{isTemplate?:boolean}},returnType:any},

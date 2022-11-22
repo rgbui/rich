@@ -54,7 +54,7 @@ export class TextCode extends Block {
             mode: this.language,
             matchBrackets: true,  //括号匹配
             autoCloseBrackets: true,
-            readOnly: this.isCanEdit('content') ? false : true
+            readOnly: this.isCanEdit() ? false : true
         });
         var save = lodash.debounce(() => {
             var value = this.codeMirror.getValue();

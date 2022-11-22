@@ -24,6 +24,7 @@ import { GetFieldFormBlockInfo, SchemaCreatePageFormData } from "../../../blocks
 import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.field";
 import { Field } from "../../../blocks/data-grid/schema/field";
 import { DataGridView } from "../../../blocks/data-grid/view/base";
+import { FieldType } from "../../../blocks/data-grid/schema/type";
 
 export class Page$Cycle {
     async init(this: Page) {
@@ -72,8 +73,7 @@ export class Page$Cycle {
             if (typeof this.pageLayout == 'undefined') this.pageLayout = { type: PageLayoutType.doc };
             if ([
                 PageLayoutType.dbForm,
-                PageLayoutType.dbPickRecord,
-                PageLayoutType.dbSubPage
+                PageLayoutType.dbPickRecord
             ].some(s => s == this.pageLayout.type)) {
                 this.requireSelectLayout = false;
             }
@@ -109,7 +109,6 @@ export class Page$Cycle {
         if ([
             PageLayoutType.dbForm,
             PageLayoutType.dbPickRecord,
-            PageLayoutType.dbSubPage
         ].some(s => s == this.pageLayout.type)) {
             this.requireSelectLayout = false;
         }
@@ -517,19 +516,17 @@ export class Page$Cycle {
             this.schema = await TableSchema.loadTableSchema(pe.id);
         }
         if (!this.exists(g => (g instanceof OriginFormField))) {
-            var pageData = SchemaCreatePageFormData(this.schema);
-            console.log(pageData,'pageData');
+            var pageData = SchemaCreatePageFormData(this.schema, pe.type == ElementType.SchemaRecordViewData ? true : false);
             this.views = [];
             await this.load(pageData);
             isCreateField = true;
         }
-        if ([ElementType.SchemaRecordView, ElementType.SchemaRecordViewData].includes(pe.type)) {
-            this.recordViewId = pe.id1;
-        }
-        if (pe.type == ElementType.SchemaView) {
-            this.scheamViewId = pe.id1;
+        if (!this.exists(g => g.url == BlockUrlConstant.Title)) {
+            var view = this.views.first();
+            view.blocks.childs.splice(0, 0, await BlockFactory.createBlock(BlockUrlConstant.Title, this, {}, view))
         }
         if (pe.type == ElementType.SchemaRecordViewData) {
+            lodash.remove(this.views.first().blocks.childs, c => c instanceof OriginFormField && c.field.type == FieldType.title);
             var row = await this.schema.rowGet(pe.id2);
             if (row) {
                 this.formRowData = lodash.cloneDeep(row);
@@ -539,6 +536,33 @@ export class Page$Cycle {
         if (isCreateField) {
             this.emit(PageDirective.save);
         }
+    }
+    loadSchemaRecord(this: Page, row: Record<string, any>) {
+        this.each(g => {
+            if (g instanceof OriginFormField) {
+                var f = g.field;
+                if (f) {
+                    g.value = g.field.getValue(row);
+                }
+            }
+        })
+    }
+    getSchemaRow(this: Page,) {
+        var row: Record<string, any> = {};
+        this.each(g => {
+            if (g instanceof OriginFormField) {
+                var f = g.field;
+                if (f) {
+                    row[f.name] = g.value;
+                }
+            }
+        })
+        if (this.formRowData) {
+            row.icon = this.formRowData.icon;
+            row.cover = this.formRowData.cover;
+            row.title=this.formRowData.title;
+        }
+        return row;
     }
     async onToggleFieldView(this: Page, field: Field, checked: boolean) {
         await this.onAction('onToggleFieldView', async () => {

@@ -1,7 +1,5 @@
 import * as Card1 from "../../../src/assert/img/card.1.png"
 import { FieldType } from "../schema/type"
-import { CardView } from "./view";
-import { CardPin } from "./views/pin";
 
 export type CardPropsType = {
     url: string,
@@ -30,7 +28,8 @@ class CardStores {
                     },
                     { name: 'author', text: '作者', types: [FieldType.creater] },
                     { name: 'title', text: '标题', types: [FieldType.title, FieldType.text] },
-                    { name: 'remark', text: '描述', types: [FieldType.text] }
+                    { name: 'remark', text: '描述', types: [FieldType.text] },
+                    { name: 'like', text: '喜欢', types: [FieldType.like] }
                 ]
             },
             {
@@ -49,7 +48,3 @@ class CardStores {
 export var cardStores = new CardStores()
 
 
-export function getCardView(url: string): typeof CardView {
-
-    return CardPin;
-}

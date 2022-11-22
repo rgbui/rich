@@ -9,7 +9,7 @@ import { getElementUrl, ElementType } from "../../../../net/element.type";
 import { Page } from "../../../../src/page";
 
 export class DataGridViewData {
-    async onRemoveItem(this: DataGridView, id: string) {
+    async onRemoveRow(this: DataGridView, id: string) {
         if (id) await this.page.onAction(ActionDirective.onSchemaRowDelete, async () => {
             var r = await this.schema.rowRemove(id);
             if (r.ok) {
@@ -64,11 +64,8 @@ export class DataGridViewData {
             var r = await this.schema.rowUpdate({ dataId: id, data: util.clone(data) });
             if (r.ok) {
                 Object.assign(oldItem, data);
-                var row: TableStoreItem = this.blocks.childs.find(g => (g as TableStoreItem).dataRow.id == id) as TableStoreItem;
-                if (row) {
-                    await row.createElements();
-                    row.forceUpdate();
-                }
+                await this.createItem();
+                this.forceUpdate();
             }
         }
     }

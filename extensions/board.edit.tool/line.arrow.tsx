@@ -95,11 +95,11 @@ export var rightArrows: ShapeType[] = [
     },
     {
         shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
-    <g fill="currentColor" fillRule="evenodd">
-        <path d="M0 16h21v2H0z"></path>
-        <path d="M31 17l-11 6V11l11 6zm-3.536.004L21.7 13.85v6.295l5.764-3.14z"></path>
-    </g>
-</svg>` ,
+        <g fill="currentColor" fillRule="evenodd">
+            <path d="M0 16h21v2H0z"></path>
+            <path d="M31 17l-11 6V11l11 6zm-3.536.004L21.7 13.85v6.295l5.764-3.14z"></path>
+        </g>
+    </svg>` ,
         value: '3'
     },
     {
@@ -110,12 +110,12 @@ export var rightArrows: ShapeType[] = [
     },
     {
         shape: `<svg viewBox="0 0 31 32"  xmlns="http://www.w3.org/2000/svg">
-    <g fill="currentColor" fillRule="evenodd">
-        <path d="M0 16h21v2H0z"></path>
-        <path fillRule="nonzero"
-            d="M31 17l-6 6-6-6 6-6 6 6zm-2.4.006l-3.6-3.61-3.591 3.607 3.596 3.597 3.595-3.594z"></path>
-    </g>
-</svg>`,
+        <g fill="currentColor" fillRule="evenodd">
+            <path d="M0 16h21v2H0z"></path>
+            <path fillRule="nonzero"
+                d="M31 17l-6 6-6-6 6-6 6 6zm-2.4.006l-3.6-3.61-3.591 3.607 3.596 3.597 3.595-3.594z"></path>
+        </g>
+    </svg>`,
         value: '5'
     },
     {
@@ -127,11 +127,11 @@ export var rightArrows: ShapeType[] = [
     },
     {
         shape: `<svg viewBox="0 0 29 32"  xmlns="http://www.w3.org/2000/svg">
-    <g fill="currentColor" fillRule="evenodd">
-        <path d="M0 15h20v2H0z"></path>
-        <path d="M24 19.3a3.3 3.3 0 100-6.6 3.3 3.3 0 000 6.6zm0 1.7a5 5 0 110-10 5 5 0 010 10z"></path>
-    </g>
-</svg>`,
+        <g fill="currentColor" fillRule="evenodd">
+            <path d="M0 15h20v2H0z"></path>
+            <path d="M24 19.3a3.3 3.3 0 100-6.6 3.3 3.3 0 000 6.6zm0 1.7a5 5 0 110-10 5 5 0 010 10z"></path>
+        </g>
+    </svg>`,
         value: '7'
     },
 ]
@@ -159,7 +159,6 @@ export var Lines: ShapeType[] = [
 ]
 
 export function LineArrow(props: { tool: BoardEditTool, lineStart?: string, lineEnd?: string, change: (name: string, value: any) => void }) {
-
     return <div className="shy-line-arrow">
         <div className="shy-line-arrow-current">
             {props.lineStart && <span
@@ -172,13 +171,13 @@ export function LineArrow(props: { tool: BoardEditTool, lineStart?: string, line
                 dangerouslySetInnerHTML={{ __html: props.lineEnd == 'none' ? lineSvg : rightArrows.find(g => g.value == props.lineEnd).shape }}
             ></span>}
         </div>
-        {props.tool.isShowDrop('leftArrow') && <div className="shy-line-arrow-left-drops">
-            <a style={{ transform: `scale(1,1)` }} dangerouslySetInnerHTML={{ __html: lineSvg }} onMouseDown={e => props.change('lineStart', 'none')}></a>
-            {leftArrows.map((arrow, index) => { return <a key={index} onMouseDown={e => props.change('lineStart', arrow.value)} dangerouslySetInnerHTML={{ __html: arrow.shape }}></a> })}
+        {props.tool.isShowDrop('leftArrow') && props.lineStart && <div className="shy-line-arrow-left-drops">
+            <a style={{ transform: `scale(-1,1)` }} dangerouslySetInnerHTML={{ __html: lineSvg }} onMouseDown={e => props.change('lineStart', 'none')}></a>
+            {leftArrows.map((arrow, index) => { return <a style={{ transform: 'scale(-1,1)' }} key={index} onMouseDown={e => props.change('lineStart', arrow.value)} dangerouslySetInnerHTML={{ __html: arrow.shape }}></a> })}
         </div>}
-        {props.tool.isShowDrop('rightArrow') && <div className="shy-line-arrow-right-drops">
-            <a onMouseDown={e => props.change('lineEnd', 'none')} dangerouslySetInnerHTML={{ __html: lineSvg }} ></a>
-            {rightArrows.map((arrow, index) => { return <a key={index} onMouseDown={e => props.change('lineEnd', arrow.value)} dangerouslySetInnerHTML={{ __html: arrow.shape }}></a> })}
+        {props.tool.isShowDrop('rightArrow') && props.lineEnd && <div className="shy-line-arrow-right-drops">
+            <a style={{ transform: `scale(-1,1)` }} onMouseDown={e => props.change('lineEnd', 'none')} dangerouslySetInnerHTML={{ __html: lineSvg }} ></a>
+            {rightArrows.map((arrow, index) => { return <a style={{ transform: `scale(-1,1)` }} key={index} onMouseDown={e => props.change('lineEnd', arrow.value)} dangerouslySetInnerHTML={{ __html: arrow.shape }}></a> })}
         </div>}
     </div>
 }
@@ -206,10 +205,10 @@ export function LineTypes(props: {
                     onChange={e => {
                         props.change('strokeWidth', e);
                     }}></MeasureView>
-                <div className="shy-measure-view-label"><label>线宽</label><span style={{ float: 'right' }}>{Math.round(props.strokeWidth)}px</span></div>
+                <div className="shy-measure-view-label f-12 text-1"><label>线宽</label><span style={{ float: 'right' }}>{Math.round(props.strokeWidth)}px</span></div>
             </div>
-            <div className="shy-line-types-all">
-                <a className={props.lineType == 'straight' ? "hover" : ""}
+            <div className="shy-line-types-all  r-round-4 r-cursor r-item-hover">
+                <a className={'text-1 ' + (props.lineType == 'straight' ? "hover" : "")}
                     onMouseDown={e => props.change('lineType', 'straight')}
                     dangerouslySetInnerHTML={{ __html: Lines[0].shape }}
                 ></a>
@@ -217,13 +216,13 @@ export function LineTypes(props: {
                     onMouseDown={e => props.change('lineType', 'line')}
                     dangerouslySetInnerHTML={{ __html: Lines[1].shape }}
                 ></a> */}
-                <a className={props.lineType == 'curve' ? "hover" : ""}
+                <a className={'text-1 ' + (props.lineType == 'curve' ? "hover" : "")}
                     onMouseDown={e => props.change('lineType', 'curve')}
                     dangerouslySetInnerHTML={{ __html: Lines[2].shape }}
                 ></a>
             </div>
-            {/* <div className="shy-line-types-stash">
-                <a className={props.strokeDasharray == 'none' ? "hover" : ""}
+            <div className="shy-line-types-stash   r-round-4 r-cursor r-item-hover">
+                <a className={'text-1 ' + (props.strokeDasharray == 'none' ? "hover" : "")}
                     onMouseDown={e => props.change('strokeDasharray', 'none')}
                 ><svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
                         <g fill="none" fillRule="evenodd">
@@ -232,14 +231,14 @@ export function LineTypes(props: {
                         </g>
                     </svg>
                 </a>
-                <a className={props.strokeDasharray == 'dash' ? "hover" : ""}
+                <a className={'text-1 ' + (props.strokeDasharray == 'dash' ? "hover" : "")}
                     onMouseDown={e => props.change('strokeDasharray', 'dash')}
                 >
                     <svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
                         <path d="M0 14h6v2H0zm9 0h6v2H9zm9 0h6v2h-6z" fill="currentColor" fillRule="evenodd"></path>
                     </svg>
                 </a>
-                <a className={props.strokeDasharray == 'dash-circle' ? "hover" : ""}
+                {/*<a className={props.strokeDasharray == 'dash-circle' ? "hover" : ""}
                     onMouseDown={e => props.change('strokeDasharray', 'dash-circle')}
                 >
                     <svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
@@ -252,8 +251,8 @@ export function LineTypes(props: {
                             <rect width="2" height="2" x="20" rx="1"></rect>
                         </g>
                     </svg>
-                </a>
-            </div> */}
+                </a> */}
+            </div>
         </div>}
     </div>
 }
