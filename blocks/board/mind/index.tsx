@@ -14,9 +14,15 @@ import { Matrix } from "../../../src/common/matrix";
 import { BlockCssName } from "../../../src/block/pattern/css";
 import { BlockRenderRange } from "../../../src/block/enum";
 import { BlockChildKey } from "../../../src/block/constant";
+import { MouseDragger } from "../../../src/common/dragger";
+import { forceCloseBoardEditTool } from "../../../extensions/board.edit.tool";
+import { openBoardEditTool } from "../../../src/kit/operator/board/edit";
 
 @url('/flow/mind')
 export class FlowMind extends Block {
+    async created(this: Block): Promise<void> {
+        this.pattern.setFillStyle({ color: 'rgb(80,194,139)' });
+    }
     @prop()
     direction: 'none' | 'x' | 'y' = 'none';
     @prop()
@@ -33,14 +39,30 @@ export class FlowMind extends Block {
         else return true
     }
     get allBlockKeys() {
-        return [BlockChildKey.childs, BlockChildKey.subChilds, BlockChildKey.otherChilds];
+        return [
+            BlockChildKey.childs,
+            BlockChildKey.subChilds,
+            BlockChildKey.otherChilds
+        ];
     }
     @prop()
     fixedWidth: number = 60;
     @prop()
     fixedHeight: number = 30;
     @prop()
-    lineColor: string = '#000';
+    lineColor: string = 'rgb(138,138,138)';
+    @prop()
+    minBoxStyle: {
+        width: number,
+        type: 'solid' | 'dash',
+        borderColor: string,
+        radius: number
+    } = {
+            width: 1,
+            type: 'solid',
+            borderColor: 'rgb(80,194,139)',
+            radius: 16
+        }
     get fixedSize(): { width: number; height: number; } {
         if (this.mindEl) {
             return {
@@ -73,6 +95,18 @@ export class FlowMind extends Block {
                 type: BoardPointType.path,
                 arrows,
                 poly: new Polygon(...pr.points.map(p => gm.transform(p)))
+            }
+        }))
+        if (Array.isArray(types) && types.includes(BoardPointType.resizePort)) pickers.push(...rect.points.toArray((p, i) => {
+            var arrows: PointArrow[] = [];
+            if (i == 0) return undefined;
+            else if (i == 1) arrows = [PointArrow.top, PointArrow.right];
+            else if (i == 2) arrows = [PointArrow.bottom, PointArrow.right]
+            else if (i == 3) return undefined;
+            return {
+                type: BoardPointType.resizePort,
+                arrows,
+                point: gm.transform(p)
             }
         }))
         pickers.push(...rect.centerPoints.map((pr, i) => {
@@ -151,8 +185,9 @@ export class FlowMind extends Block {
                     undefined,
                     keys
                 );
+                await this.mindRoot.cacChildsFlowMind(true);
                 newBlock.mounted(async () => {
-                    await this.renderAllMinds();
+                    this.mindRoot.updateAllFlowLines();
                     self.page.kit.picker.onPicker([newBlock]);
                 })
             })
@@ -265,24 +300,21 @@ export class FlowMind extends Block {
             cs.push({ name: 'mindDirection', value: this.direction });
             cs.push({ name: 'mindLineType', value: this.lineType });
             cs.push({ name: 'mindLineColor', value: this.lineColor });
-            cs.push({ name: 'fontSize', value: Math.round(this.pattern.css(BlockCssName.font)?.fontSize || 14) });
-            cs.push({ name: 'fontWeight', value: bold == 'bold' || bold == 500 ? true : false });
-            cs.push({ name: 'fontStyle', value: this.pattern.css(BlockCssName.font)?.fontStyle == 'italic' ? true : false });
-            cs.push({ name: 'textDecoration', value: this.pattern.css(BlockCssName.font)?.textDecoration });
-            cs.push({ name: 'fontColor', value: this.pattern.css(BlockCssName.font)?.color });
-            cs.push({ name: 'fillColor', value: this.pattern.getSvgStyle()?.fill || '#000' });
-            cs.push({ name: 'fillOpacity', value: this.pattern.getSvgStyle()?.fillOpacity || 1 });
         }
-        else {
+        cs.push({ name: 'fontSize', value: Math.round(this.pattern.css(BlockCssName.font)?.fontSize || 14) });
+        cs.push({ name: 'fontWeight', value: bold == 'bold' || bold == 500 ? true : false });
+        cs.push({ name: 'fontStyle', value: this.pattern.css(BlockCssName.font)?.fontStyle == 'italic' ? true : false });
+        cs.push({ name: 'textDecoration', value: this.pattern.css(BlockCssName.font)?.textDecoration });
+        cs.push({ name: 'fontColor', value: this.pattern.css(BlockCssName.font)?.color });
+        cs.push({ name: 'fillColor', value: this.pattern.getSvgStyle()?.fill || '#000' });
+        cs.push({ name: 'fillOpacity', value: this.pattern.getSvgStyle()?.fillOpacity || 1 });
 
-            cs.push({ name: 'fontSize', value: Math.round(this.pattern.css(BlockCssName.font)?.fontSize || 14) });
-            cs.push({ name: 'fontWeight', value: bold == 'bold' || bold == 500 ? true : false });
-            cs.push({ name: 'fontStyle', value: this.pattern.css(BlockCssName.font)?.fontStyle == 'italic' ? true : false });
-            cs.push({ name: 'textDecoration', value: this.pattern.css(BlockCssName.font)?.textDecoration });
-            cs.push({ name: 'fontColor', value: this.pattern.css(BlockCssName.font)?.color });
-            cs.push({ name: 'fillColor', value: this.pattern.getSvgStyle()?.fill || '#000' });
-            cs.push({ name: 'fillOpacity', value: this.pattern.getSvgStyle()?.fillOpacity || 1 });
-        }
+        cs.push({ name: 'borderWidth', value: this.minBoxStyle.width });
+        cs.push({ name: 'borderType', value: this.minBoxStyle.type });
+        cs.push({ name: 'borderColor', value: this.minBoxStyle.borderColor });
+        cs.push({ name: 'borderRadius', value: this.minBoxStyle.radius });
+
+
         return cs;
     }
     async setBoardEditCommand(name: string, value: any) {
@@ -303,24 +335,34 @@ export class FlowMind extends Block {
 
             }
         }
-
         if (['fillColor', 'fillOpacity',].includes(name)) {
             var key = name;
             if (name == 'fillColor') key = 'fill';
             this.pattern.setSvgStyle({ [key]: value })
         }
+        if (name == 'borderWidth') {
+            this.updateProps({ 'minBoxStyle.width': value });
+        }
+        else if (name == 'borderType') {
+            this.updateProps({ 'minBoxStyle.type': value });
+        }
+        else if (name == 'borderColor') {
+            this.updateProps({ 'minBoxStyle.borderColor': value });
+        }
+        else if (name == 'borderRadius') {
+            this.updateProps({ 'minBoxStyle.radius': value });
+        }
     }
     get contentStyle() {
         var style: CSSProperties = {
-            // paddingTop: 3,
-            // paddingLeft: 2,
-            // paddingRight: 2,
-            // paddingBottom: 3
         };
         var s = this.pattern.style;
         if (s.fill) style.backgroundColor = s.fill;
-
-        style.borderRadius = 4;
+        style.width = this.fixedWidth;
+        style.borderRadius = this.minBoxStyle.radius;
+        style.borderWidth = this.minBoxStyle.width;
+        style.borderStyle = this.minBoxStyle.type == 'solid' ? 'solid' : 'dashed';
+        style.borderColor = this.minBoxStyle.borderColor;
         return style;
     }
     async renderAllMinds() {
@@ -340,35 +382,6 @@ export class FlowMind extends Block {
     async boardMoveEnd(from: Point, to: Point) {
         if (this.isMindRoot) { await super.boardMoveEnd(from, to); return }
         this.moveMatrix = new Matrix();
-        // var bl = this;
-        // var moveMatrix = new Matrix();
-        // moveMatrix.translateMove(bl.globalWindowMatrix.inverseTransform(from), bl.globalWindowMatrix.inverseTransform(to))
-        // var newMatrix = bl.currentMatrix.clone();
-        // newMatrix.append(moveMatrix);
-        // newMatrix.append(bl.selfMatrix.inverted());
-        // bl.updateMatrix(bl.matrix, newMatrix);
-        // bl.moveMatrix = new Matrix();
-        // if (!bl.isFrame) {
-        //     var rs = bl.findFramesByIntersect();
-        //     if (rs.length > 0 && !rs.some(s => s === bl.parent)) {
-        //         var fra = rs[0];
-        //         await fra.append(bl);
-        //         var r = bl.getTranslation().relative(fra.getTranslation());
-        //         var nm = new Matrix();
-        //         nm.translate(r);
-        //         nm.rotate(bl.matrix.getRotation(), { x: 0, y: 0 });
-        //         bl.updateMatrix(bl.matrix, nm);
-        //     }
-        //     else if (rs.length == 0 && bl.parent?.isFrame) {
-        //         var fra = bl.parent;
-        //         await fra.parent.append(bl);
-        //         var r = bl.getTranslation().base(fra.getTranslation());
-        //         var nm = new Matrix();
-        //         nm.translate(r);
-        //         nm.rotate(bl.matrix.getRotation(), { x: 0, y: 0 });
-        //         bl.updateMatrix(bl.matrix, nm);
-        //     }
-        // }
     }
     eachSubMind(predict: (block: FlowMind) => boolean | void, includeSelf?: boolean) {
         var isBreak: boolean;
@@ -393,7 +406,6 @@ export class FlowMind extends Block {
                     isBreak = true;
                     break;
                 }
-
                 var r = (b as FlowMind).eachSubMind(predict);
                 if (r) {
                     isBreak = true;
@@ -401,6 +413,75 @@ export class FlowMind extends Block {
                 }
             }
         return isBreak;
+    }
+    onResizeBoardSelector(arrows: PointArrow[], event: React.MouseEvent) {
+        var block = this;
+        var matrix = block.matrix.clone();
+        var gm = block.globalWindowMatrix.clone();
+        var { width: w, height: h } = block.fixedSize;
+        var fp = gm.inverseTransform(Point.from(event));
+        var s = gm.getScaling().x;
+        var minW = 50 / s;
+        var minH = 20 / s;
+        var self = this;
+        MouseDragger({
+            event,
+            moveStart() {
+                forceCloseBoardEditTool();
+            },
+            moving(ev, data, isEnd) {
+                var tp = gm.inverseTransform(Point.from(ev));
+                var ma = new Matrix();
+                var [dx, dy] = tp.diff(fp);
+                var bw = w;
+                var bh = h;
+                if (arrows.includes(PointArrow.top)) {
+                    if (bh - dy < minH) dy = bh - minH;
+                }
+                else if (arrows.includes(PointArrow.bottom)) {
+                    if (bh + dy < minH) dy = minH - bh;
+                }
+                if (arrows.includes(PointArrow.left)) {
+                    if (bw - dx < minW) dx = bw - minW;
+                }
+                else if (arrows.includes(PointArrow.right)) {
+                    if (bw + dx < minW) dx = minW - bw;
+                }
+                if (arrows.includes(PointArrow.top)) {
+                    // ma.translate(0, dy);
+                    // bh -= dy;
+                }
+                else if (arrows.includes(PointArrow.bottom)) {
+                    // bh += dy;
+                }
+                if (arrows.includes(PointArrow.left)) {
+                    ma.translate(dx, 0);
+                    bw -= dx;
+                }
+                else if (arrows.includes(PointArrow.right)) {
+                    bw += dx;
+                }
+                block.matrix = matrix.appended(ma);
+                // block.fixedHeight = bh;
+                block.fixedWidth = bw;
+                block.updateRenderLines();
+                self.updateAllFlowLines()
+                block.forceUpdate();
+                block.page.kit.picker.view.forceUpdate();
+                if (isEnd) {
+                    block.page.onAction(ActionDirective.onResizeBlock, async () => {
+                        if (!matrix.equals(block.matrix)) block.updateMatrix(matrix, block.matrix);
+                        block.manualUpdateProps(
+                            { fixedWidth: w, fixedHeight: h },
+                            { fixedWidth: block.fixedWidth, fixedHeight: block.fixedHeight }
+                        )
+                    })
+                }
+            },
+            async moveEnd() {
+                await openBoardEditTool(self.page.kit);
+            }
+        });
     }
 }
 @view('/flow/mind')
