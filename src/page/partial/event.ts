@@ -223,9 +223,9 @@ export class PageEvent {
         }
     }
     async onContextmenu(this: Page, event: React.MouseEvent) {
-
+        event.preventDefault();
         if (!this.isCanEdit) return;
-        // event.preventDefault();
+        //
         // var items: MenuItemType<BlockDirective | string>[] = [
         //     { name: 'smallText', text: '小字号', type: MenuItemTypeValue.switch },
         //     { name: 'fullWidth', text: '宽版', type: MenuItemTypeValue.switch },
