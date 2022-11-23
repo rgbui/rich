@@ -151,9 +151,8 @@ export class FlowMind extends Block {
                     undefined,
                     keys
                 );
-                await this.mindRoot.cacChildsFlowMind(true);
-                newBlock.mounted(() => {
-                    self.mindRoot.updateAllFlowLines();
+                newBlock.mounted(async () => {
+                    await this.renderAllMinds();
                     self.page.kit.picker.onPicker([newBlock]);
                 })
             })
@@ -300,6 +299,85 @@ export class FlowMind extends Block {
             }
         }
     }
+    async renderAllMinds() {
+        await this.mindRoot.cacChildsFlowMind(true);
+        this.mindRoot.updateAllFlowLines();
+    }
+    boardMove(from: Point, to: Point) {
+        if (this.isMindRoot) { super.boardMove(from, to); return }
+        super.boardMove(from, to);
+        /**
+         * feel parent mind
+         */
+        this.mindRoot.eachSubMind((b) => {
+
+        }, true)
+    }
+    async boardMoveEnd(from: Point, to: Point) {
+        if (this.isMindRoot) { await super.boardMoveEnd(from, to); return }
+        this.moveMatrix = new Matrix();
+        // var bl = this;
+        // var moveMatrix = new Matrix();
+        // moveMatrix.translateMove(bl.globalWindowMatrix.inverseTransform(from), bl.globalWindowMatrix.inverseTransform(to))
+        // var newMatrix = bl.currentMatrix.clone();
+        // newMatrix.append(moveMatrix);
+        // newMatrix.append(bl.selfMatrix.inverted());
+        // bl.updateMatrix(bl.matrix, newMatrix);
+        // bl.moveMatrix = new Matrix();
+        // if (!bl.isFrame) {
+        //     var rs = bl.findFramesByIntersect();
+        //     if (rs.length > 0 && !rs.some(s => s === bl.parent)) {
+        //         var fra = rs[0];
+        //         await fra.append(bl);
+        //         var r = bl.getTranslation().relative(fra.getTranslation());
+        //         var nm = new Matrix();
+        //         nm.translate(r);
+        //         nm.rotate(bl.matrix.getRotation(), { x: 0, y: 0 });
+        //         bl.updateMatrix(bl.matrix, nm);
+        //     }
+        //     else if (rs.length == 0 && bl.parent?.isFrame) {
+        //         var fra = bl.parent;
+        //         await fra.parent.append(bl);
+        //         var r = bl.getTranslation().base(fra.getTranslation());
+        //         var nm = new Matrix();
+        //         nm.translate(r);
+        //         nm.rotate(bl.matrix.getRotation(), { x: 0, y: 0 });
+        //         bl.updateMatrix(bl.matrix, nm);
+        //     }
+        // }
+    }
+    eachSubMind(predict: (block: FlowMind) => boolean | void, includeSelf?: boolean) {
+        var isBreak: boolean;
+        if (includeSelf && predict(this) == true) { isBreak = true; }
+        if (!isBreak)
+            for (let i = 0; i < this.blocks.subChilds.length; i++) {
+                var b = this.blocks.subChilds[i];
+                if (predict(b as FlowMind) == true) {
+                    isBreak = true;
+                    break;
+                }
+                var r = (b as FlowMind).eachSubMind(predict);
+                if (r) {
+                    isBreak = true;
+                    break;
+                }
+            }
+        if (!isBreak)
+            for (let j = 0; j < this.blocks.otherChilds.length; j++) {
+                var b = this.blocks.otherChilds[j];
+                if (predict(b as FlowMind) == true) {
+                    isBreak = true;
+                    break;
+                }
+
+                var r = (b as FlowMind).eachSubMind(predict);
+                if (r) {
+                    isBreak = true;
+                    break;
+                }
+            }
+        return isBreak;
+    }
 }
 @view('/flow/mind')
 export class FlowMindView extends BlockView<FlowMind>{
@@ -316,7 +394,6 @@ export class FlowMindView extends BlockView<FlowMind>{
                 var subRect = new Rect(0, 0, s.width, s.height);
                 return sub.matrix.appended(sub.moveMatrix).transform(this.block.mindDirection != 'y' ? subRect.rightMiddle : subRect.bottomCenter);
             });
-
             var rightOrigin = this.block.mindDirection != 'y' ? rect.rightMiddle : rect.bottomCenter;
             var rightPoints = this.block.blocks.otherChilds.map((sub: FlowMind) => {
                 var s = sub.fixedSize;
@@ -334,9 +411,9 @@ export class FlowMindView extends BlockView<FlowMind>{
     }
     renderItems() {
         return <div className='sy-flow-mind-text'
-            style={{ minWidth: this.block.fixedWidth, minHeight: this.block.fixedHeight }}
+            style={{ minWidth: 80, minHeight: 40 }}
             ref={e => this.mindEl = e} >
-            <TextSpanArea placeholder={'键入文字'} block={this.block}></TextSpanArea>
+            <TextSpanArea placeholder={'输入'} block={this.block}></TextSpanArea>
         </div>
     }
     mindEl: HTMLElement;

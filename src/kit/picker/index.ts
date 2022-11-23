@@ -47,16 +47,11 @@ export class BlockPicker {
     onCancel() {
         this.visible = false;
         this.blocks = [];
-        if (this.view)
-            this.view.forceUpdate();
+        if (this.view) this.view.forceUpdate();
     }
     onMove(from: Point, to: Point) {
         this.blocks.forEach(bl => {
-            var matrix = new Matrix();
-            matrix.translateMove(bl.globalWindowMatrix.inverseTransform(from), bl.globalWindowMatrix.inverseTransform(to))
-            bl.moveMatrix = matrix;
-            bl.updateRenderLines();
-            bl.forceUpdate()
+            bl.boardMove(from, to);
         });
         this.view.forceUpdate();
     }
@@ -66,34 +61,7 @@ export class BlockPicker {
                 /**
                  * this.currentMatrix*moveMatrix=newMatrix*this.selfMatrix;
                  */
-                var moveMatrix = new Matrix();
-                moveMatrix.translateMove(bl.globalWindowMatrix.inverseTransform(from), bl.globalWindowMatrix.inverseTransform(to))
-                var newMatrix = bl.currentMatrix.clone();
-                newMatrix.append(moveMatrix);
-                newMatrix.append(bl.selfMatrix.inverted());
-                bl.updateMatrix(bl.matrix, newMatrix);
-                bl.moveMatrix = new Matrix();
-                if (!bl.isFrame) {
-                    var rs = bl.findFramesByIntersect();
-                    if (rs.length > 0 && !rs.some(s => s === bl.parent)) {
-                        var fra = rs[0];
-                        await fra.append(bl);
-                        var r = bl.getTranslation().relative(fra.getTranslation());
-                        var nm = new Matrix();
-                        nm.translate(r);
-                        nm.rotate(bl.matrix.getRotation(), { x: 0, y: 0 });
-                        bl.updateMatrix(bl.matrix, nm);
-                    }
-                    else if (rs.length == 0 && bl.parent?.isFrame) {
-                        var fra = bl.parent;
-                        await fra.parent.append(bl);
-                        var r = bl.getTranslation().base(fra.getTranslation());
-                        var nm = new Matrix();
-                        nm.translate(r);
-                        nm.rotate(bl.matrix.getRotation(), { x: 0, y: 0 });
-                        bl.updateMatrix(bl.matrix, nm);
-                    }
-                }
+                await bl.boardMoveEnd(from, to)
             });
         })
     }
