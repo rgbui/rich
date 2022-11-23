@@ -33,6 +33,7 @@ export async function BoardDrag(
         kit.picker.onPicker([block]);
     }
     else kit.picker.onCancel();
+    var point=Point.from(event);
     MouseDragger({
         event,
         dis: 5,
@@ -79,7 +80,9 @@ export async function BoardDrag(
                  */
                 if (ev.button == 2) {
                     if (kit.picker.blocks.length > 0)
-                        kit.page.onOpenMenu(kit.picker.blocks, ev);
+                    {
+                        kit.page.onOpenMenu(kit.picker.blocks, point);
+                    }
                 }
                 else if (beforeIsPicked) {
                     var appear = findBlockAppear(ev.target as HTMLElement);
