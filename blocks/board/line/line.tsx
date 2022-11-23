@@ -71,8 +71,6 @@ export class Line extends Block {
     points: PortLocation[] = [];
     cacPointSegment(pl: PortLocation, options?: { isOnlyPointSegment?: boolean }) {
         try {
-            var feelDistance = 80;
-            var dis = this.realPx(feelDistance);
             var seg: Segment;
             if (pl == this.from || pl == this.to) {
                 if (pl.blockId) {
@@ -87,19 +85,7 @@ export class Line extends Block {
                                  * 计算 https://www.muzhuangnet.com/show/51297.html
                                  */
                                 var point = this.globalWindowMatrix.inverseTransform(pi.point);
-                                var handleOut: Point;
-                                if ([PointArrow.top, PointArrow.center].every(s => pi.arrows.includes(s))) {
-                                    handleOut = point.move(0, 0 - dis);
-                                }
-                                else if ([PointArrow.middle, PointArrow.right].every(s => pi.arrows.includes(s))) {
-                                    handleOut = point.move(dis, 0);
-                                }
-                                else if ([PointArrow.bottom, PointArrow.center].every(s => pi.arrows.includes(s))) {
-                                    handleOut = point.move(0, dis);
-                                }
-                                else if ([PointArrow.middle, PointArrow.left].every(s => pi.arrows.includes(s))) {
-                                    handleOut = point.move(0 - dis, 0);
-                                }
+                                var handleOut: Point = this.globalWindowMatrix.inverseTransform(pi.arrowPoint)
                                 var isFrom = pl == this.from;
                                 seg = Segment.create(new Point(point), !isFrom ? handleOut : undefined, isFrom ? handleOut : undefined)
                             }

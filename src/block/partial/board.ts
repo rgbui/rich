@@ -47,6 +47,7 @@ export type BoardBlockSelector = {
     type: BoardPointType;
     arrows: PointArrow[];
     point?: Point;
+    arrowPoint?: Point;
     poly?: Polygon;
     data?: Record<string, any>
 }
@@ -56,10 +57,12 @@ export class Block$Board {
         BoardPointType.resizePort,
         BoardPointType.connectPort
     ]): BoardBlockSelector[] {
+
         var pickers: BoardBlockSelector[] = [];
         var { width, height } = this.fixedSize;
         var rect = new Rect(0, 0, width, height);
         var gm = this.globalWindowMatrix;
+        var feelDist = this.realPx(width / 2);
         /**
          * 这里基本没有skew，只有scale,rotate,translate
          * scale 水平和垂直相等
@@ -107,14 +110,16 @@ export class Block$Board {
         if (!this.isFrame && types.includes(BoardPointType.connectPort)) {
             pickers.push(...extendRect.centerPoints.map((p, i) => {
                 var arrows: PointArrow[] = [];
-                if (i == 0) arrows = [PointArrow.top, PointArrow.center];
-                else if (i == 1) arrows = [PointArrow.middle, PointArrow.right];
-                else if (i == 2) arrows = [PointArrow.bottom, PointArrow.center]
-                else if (i == 3) arrows = [PointArrow.middle, PointArrow.left]
+                var arrowPoint: Point;
+                if (i == 0) { arrows = [PointArrow.top, PointArrow.center]; arrowPoint = p.move(0, 0 - feelDist); }
+                else if (i == 1) { arrows = [PointArrow.middle, PointArrow.right]; arrowPoint = p.move(feelDist, 0); }
+                else if (i == 2) { arrows = [PointArrow.bottom, PointArrow.center]; arrowPoint = p.move(0, feelDist); }
+                else if (i == 3) { arrows = [PointArrow.middle, PointArrow.left]; arrowPoint = p.move(0 - feelDist, 0); }
                 return {
                     type: BoardPointType.connectPort,
                     arrows,
-                    point: gm.transform(p)
+                    point: gm.transform(p),
+                    arrowPoint: gm.transform(arrowPoint)
                 }
             }))
         }

@@ -24,9 +24,6 @@ export function renderLine(line: Line) {
     </>
 }
 
-
-
-
 function getArrowMatrix(start: Point, arrowPoint: Point, toStart: Point, toArrowPoint: Point) {
     var matrix = new Matrix();
     matrix.translateMove(start, toStart);
@@ -150,9 +147,8 @@ function getStartPoints(line: Line, segs: Segment[]) {
     var color = line.pattern.getSvgStyle()?.stroke || '#000';
     var s = segs[0];
     var s1 = segs[1];
-    var se = s1.handleIn || s1.point;
+    var se = s.handleOut || s1.handleIn || s1.point;
     return getArrow(color, line.lineStart, s.point, se);
-
 }
 
 function getEndPoints(line: Line, segs: Segment[]) {
@@ -160,6 +156,6 @@ function getEndPoints(line: Line, segs: Segment[]) {
     var color = line.pattern.getSvgStyle()?.stroke || '#000';
     var s = segs.last();
     var s1 = segs[segs.length - 2]
-    var se = s1.handleOut || s1.point;
+    var se = s.handleIn || s1.handleOut || s1.point;
     return getArrow(color, line.lineEnd, s.point, se);
 }
