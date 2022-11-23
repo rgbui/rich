@@ -93,13 +93,17 @@ export class FrameView extends BlockView<Frame>{
     render() {
         var h = 30;
         var h20 = 20;
-        var style = Object.assign({ width: this.block.fixedWidth, height: this.block.fixedHeight }, this.block.visibleStyle);
+        var style = Object.assign({
+            width: this.block.fixedWidth,
+            height: this.block.fixedHeight
+        }, this.block.visibleStyle);
+
         return <div className='sy-block-frame' style={style} >
             <div className='sy-block-frame-head' style={{ height: h, lineHeight: h + 'px', fontSize: h20 / 1.2 }}>
-                <TextArea  block={this.block}  placeholder='框'  prop='content' ></TextArea>
+                <TextArea block={this.block} placeholder='框' prop='content' ></TextArea>
             </div>
             <ChildsArea childs={this.block.childs}></ChildsArea>
-            <div className='sy-block-frame-content' style={{ top: h }}>
+            <div className='sy-block-frame-content' style={{ top: h, ...this.block.contentStyle }}>
             </div>
         </div>
     }
