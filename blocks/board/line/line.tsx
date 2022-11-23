@@ -85,7 +85,7 @@ export class Line extends Block {
                                  * 计算 https://www.muzhuangnet.com/show/51297.html
                                  */
                                 var point = this.globalWindowMatrix.inverseTransform(pi.point);
-                                var handleOut: Point = this.globalWindowMatrix.inverseTransform(pi.arrowPoint)
+                                var handleOut: Point = pi.arrowPoint ? this.globalWindowMatrix.inverseTransform(pi.arrowPoint) : undefined;
                                 var isFrom = pl == this.from;
                                 seg = Segment.create(new Point(point), !isFrom ? handleOut : undefined, isFrom ? handleOut : undefined)
                             }
