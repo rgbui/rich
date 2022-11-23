@@ -18,6 +18,8 @@ export class OriginFormField extends Block {
     }
     @prop()
     fieldId: string;
+    @prop()
+    required: boolean = false;
     get isSupportTextStyle() {
         return false;
     }
@@ -38,7 +40,7 @@ export function FieldView(props: { block: OriginFormField, children?: JSX.Elemen
         {block.field && <div className="sy-form-field-box">
             <div className="sy-form-field-label">
                 <Icon icon={GetFieldTypeSvg(block.field.type)} size={16}></Icon>
-                {block.field.required && <em>*</em>}
+                {block.required && <em>*</em>}
                 <label>{block.field.text}:</label>
             </div>
             <div className="sy-form-field-control">{props.children}</div>
