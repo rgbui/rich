@@ -28,7 +28,7 @@ import { FontColor } from "./fontColor";
 import { FrameScale } from "./frame.scale";
 import { LineArrow, LineTypes } from "./line.arrow";
 import { TurnShapes } from "./shapes";
-import { ShapeStroke } from "./stroke";
+import { BorderBoxStyle, ShapeStroke } from "./stroke";
 import "./style.less";
 
 export class BoardEditTool extends EventsComponent {
@@ -73,7 +73,7 @@ export class BoardEditTool extends EventsComponent {
             </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
             {is('mindLineColor') && <Tip overlay=''>
                 <div className={'shy-board-edit-tool-item'}>
-                    <BackgroundColor tool={this} value={getValue('mindLineColor')} change={e => { this.onChange('mindLineColor', e) }}></BackgroundColor>
+                    <BackgroundColor name={'minLineColor'} tool={this} value={getValue('mindLineColor')} change={e => { this.onChange('mindLineColor', e) }}></BackgroundColor>
                 </div>
             </Tip>}
             {is('frameScale') && <Tip id={LangID.textToolBold}>
@@ -183,6 +183,17 @@ export class BoardEditTool extends EventsComponent {
             {is('backgroundNoTransparentColor') && <Tip overlay={'背景'}>
                 <div className={'shy-board-edit-tool-item'}>
                     <BackgroundColor noTransparent tool={this} value={getValue('backgroundNoTransparentColor')} change={e => { this.onChange('backgroundNoTransparentColor', e) }}></BackgroundColor>
+                </div>
+            </Tip>}
+            {is('borderWidth') && <Tip overlay={'边框'}>
+                <div className={'shy-board-edit-tool-item'}>
+                    <BorderBoxStyle
+                        tool={this}
+                        borderWidth={getValue('borderWidth')}
+                        borderType={getValue('borderType')}
+                        borderColor={getValue('borderColor')}
+                        borderRadius={getValue('borderRadius')}
+                        change={(name, e) => this.onChange(name, e)}></BorderBoxStyle>
                 </div>
             </Tip>}
             {is('stroke') && <Tip overlay={'边框'}>
