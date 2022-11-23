@@ -1,6 +1,6 @@
 
 import { BlockView } from "../../../src/block/view";
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { Block } from "../../../src/block";
 import { ChildsArea, TextSpanArea } from "../../../src/block/view/appear";
@@ -270,13 +270,18 @@ export class FlowMind extends Block {
             cs.push({ name: 'fontStyle', value: this.pattern.css(BlockCssName.font)?.fontStyle == 'italic' ? true : false });
             cs.push({ name: 'textDecoration', value: this.pattern.css(BlockCssName.font)?.textDecoration });
             cs.push({ name: 'fontColor', value: this.pattern.css(BlockCssName.font)?.color });
+            cs.push({ name: 'fillColor', value: this.pattern.getSvgStyle()?.fill || '#000' });
+            cs.push({ name: 'fillOpacity', value: this.pattern.getSvgStyle()?.fillOpacity || 1 });
         }
         else {
+
             cs.push({ name: 'fontSize', value: Math.round(this.pattern.css(BlockCssName.font)?.fontSize || 14) });
             cs.push({ name: 'fontWeight', value: bold == 'bold' || bold == 500 ? true : false });
             cs.push({ name: 'fontStyle', value: this.pattern.css(BlockCssName.font)?.fontStyle == 'italic' ? true : false });
             cs.push({ name: 'textDecoration', value: this.pattern.css(BlockCssName.font)?.textDecoration });
             cs.push({ name: 'fontColor', value: this.pattern.css(BlockCssName.font)?.color });
+            cs.push({ name: 'fillColor', value: this.pattern.getSvgStyle()?.fill || '#000' });
+            cs.push({ name: 'fillOpacity', value: this.pattern.getSvgStyle()?.fillOpacity || 1 });
         }
         return cs;
     }
@@ -298,6 +303,25 @@ export class FlowMind extends Block {
 
             }
         }
+
+        if (['fillColor', 'fillOpacity',].includes(name)) {
+            var key = name;
+            if (name == 'fillColor') key = 'fill';
+            this.pattern.setSvgStyle({ [key]: value })
+        }
+    }
+    get contentStyle() {
+        var style: CSSProperties = {
+            // paddingTop: 3,
+            // paddingLeft: 2,
+            // paddingRight: 2,
+            // paddingBottom: 3
+        };
+        var s = this.pattern.style;
+        if (s.fill) style.backgroundColor = s.fill;
+
+        style.borderRadius = 4;
+        return style;
     }
     async renderAllMinds() {
         await this.mindRoot.cacChildsFlowMind(true);
@@ -409,9 +433,9 @@ export class FlowMindView extends BlockView<FlowMind>{
             );
         }
     }
-    renderItems() {
+    renderItem() {
         return <div className='sy-flow-mind-text'
-            style={{ minWidth: 80, minHeight: 40 }}
+            style={this.block.contentStyle}
             ref={e => this.mindEl = e} >
             <TextSpanArea placeholder={'输入'} block={this.block}></TextSpanArea>
         </div>
@@ -428,7 +452,7 @@ export class FlowMindView extends BlockView<FlowMind>{
         var style = this.block.visibleStyle;
         style.padding = 0;
         return <div className='sy-flow-mind' style={style}>
-            {this.renderItems()}
+            {this.renderItem()}
             {this.renderSubChilds()}
             <FlowMindLine mind={this.block} ref={e => this.flowMindLine = e}></FlowMindLine>
         </div>

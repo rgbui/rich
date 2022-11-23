@@ -250,6 +250,12 @@ export class Block$Board {
         else if (name == 'fontColor') {
             this.pattern.setFontStyle({ color: value });
         }
+        else if(name=='fillColor'){
+
+        }
+        else if(name=='fillOpacity'){
+
+        }
         else return false;
         return true
     }
