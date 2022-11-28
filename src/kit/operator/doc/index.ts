@@ -5,6 +5,7 @@ import { findBlockNearAppearByPoint } from "../../../block/appear/visible.seek";
 import { MouseDragger } from "../../../common/dragger";
 import { onAutoScroll, onAutoScrollStop } from "../../../common/scroll";
 import { Point, Rect } from "../../../common/vector/point";
+import { PageLayoutType } from "../../../page/declare";
 
 /**
  * 如果点在文档的空白处，那么左右上需要找到邻近的编辑点，如果是下面，一般是尾部，需要创建一个空白的文本块，且聚焦
@@ -58,8 +59,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
             if (isMove) {
                 onAutoScrollStop();
                 kit.anchorCursor.selector.close();
-                if (currentBlocks)
-                    kit.anchorCursor.onSelectBlocks(currentBlocks, { render: true });
+                if (currentBlocks) kit.anchorCursor.onSelectBlocks(currentBlocks, { render: true });
             }
             else {
                 if (block) {
@@ -67,6 +67,9 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                         var a = findBlockNearAppearByPoint(block, Point.from(ev));
                         if (a) {
                             kit.anchorCursor.onFocusAppearAnchor(a.aa, { at: a.offset });
+                        }
+                        else {
+                            if (block.isPanel) kit.page.onCreateTailTextSpan(block);
                         }
                     }
                 }
@@ -77,12 +80,12 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                         kit.anchorCursor.onFocusBlockAnchor(lastBlock, { last: true, render: true });
                     }
                     else {
-                        kit.page.onCreateTailTextSpan();
+                        console.log('gggxxx');
+                        if ([PageLayoutType.doc, PageLayoutType.dbForm, PageLayoutType.blog].includes(kit.page.pageLayout.type))
+                            kit.page.onCreateTailTextSpan(undefined);
                     }
                 }
             }
         }
     })
-
-
 }
