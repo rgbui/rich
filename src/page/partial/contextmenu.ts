@@ -147,6 +147,36 @@ export class PageContextmenu {
                 // { name: 'move', text: '移动', icon: MoveToSvg, disabled: true },
             ];
         }
+        else if (this.pageLayout.type == PageLayoutType.docCard) {
+            items = [
+                { name: 'smallText', text: '小字号', checked: this.smallFont ? true : false, type: MenuItemType.switch },
+                { name: 'fullWidth', text: '宽版', checked: this.isFullWidth ? true : false, type: MenuItemType.switch },
+                { type: MenuItemType.divide },
+                { name: 'nav', text: '目录', icon: OutlineSvg, type: MenuItemType.switch, checked: this.nav },
+                // {
+                //     text: '自定义页面',
+                //     icon: FieldsSvg,
+                //     childs: [
+                //         { name: 'refPages', text: "显示引用", icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
+                //         { name: 'showComment', text: "显示评论", icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
+                //     ]
+                // },
+                { name: 'lock', text: this.pageInfo?.locker?.userid ? "解除锁定" : '编辑保护', icon: this.pageInfo?.locker?.userid ? UnlockSvg : LockSvg },
+                // { type: MenuItemTypeValue.divide },
+                // { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
+                { name: 'history', icon: VersionHistorySvg, text: '页面历史' },
+                { name: 'copylink', icon: LinkSvg, text: '复制链接' },
+                { type: MenuItemType.divide },
+                { name: 'undo', text: '撤消', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
+                // { name: 'redo', text: '重做', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
+                { name: 'delete', icon: TrashSvg, text: '删除' },
+                // { type: MenuItemTypeValue.divide },
+                // { name: 'import', iconSize: 16, icon: ImportSvg, text: '导入', disabled: true },
+                // { name: 'export', iconSize: 16, text: '导出', icon: FileSvg, disabled: true, remark: '导出PDF,HTML,Markdown' },
+                // { type: MenuItemTypeValue.divide },
+                // { name: 'move', text: '移动', icon: MoveToSvg, disabled: true },
+            ];
+        }
         else if (this.pageLayout.type == PageLayoutType.textChannel) {
             items = [
                 {
