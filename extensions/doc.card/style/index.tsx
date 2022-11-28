@@ -58,7 +58,11 @@ export class CardBoxStyle extends EventsComponent {
                             <div className="remark padding-w-15">{gp.group}</div>
                             <div className="flex flex-wrap">
                                 {gp.childs.map(gc => {
-                                    return <div key={gc.url} style={{ width: (300 - 45) / 2 }} className={'round-16 gap-l-15 w-120 h-80 gap-b-10 cursor gap-h-10 '}>
+                                    return <div onMouseDown={e => {
+                                        this.setProps({ 'fill.mode': 'image', 'fill.src': gc.url })
+                                    }}
+                                        key={gc.url}
+                                        style={{ width: (300 - 45) / 2 }} className={'round-16 gap-l-15 w-120 h-80 gap-b-10 cursor gap-h-10 '}>
                                         <img className="obj-center w100 h100 round-8" src={gc.thumb} />
                                     </div>
                                 })}
@@ -69,6 +73,9 @@ export class CardBoxStyle extends EventsComponent {
                 {this.options.fill.mode == 'color' && <div className="padding-w-15">
                     {BackgroundColorList.map(bg => {
                         return <div key={bg.color}
+                            onMouseDown={e => {
+                                this.setProps({ 'fill.mode': 'color', 'fill.color': bg.color })
+                            }}
                             style={{ background: bg.color }}
                             className='round cursor gap-h-10 min-h-30 flex padding-w-10' >
                             <span className="flex-auto">{bg.text}</span>
@@ -81,8 +88,16 @@ export class CardBoxStyle extends EventsComponent {
             </div>
         </div>
     }
+    setProps(props: Record<string, any>) {
+        for (let n in props) {
+            lodash.set(this.options, n, props[n])
+        }
+        this.emit('change', lodash.cloneDeep(this.options));
+        this.forceUpdate();
+    }
     setValue(key: string, value: string) {
         lodash.set(this.options, key, value);
+        this.emit('change', lodash.cloneDeep(this.options));
         this.forceUpdate();
     }
     renderStyle() {
@@ -177,7 +192,7 @@ export class CardBoxStyle extends EventsComponent {
 
 
 
-export async function useCardBoxStyle(options: CardBoxStyle['options']) {
+export async function useCardBoxStyle(options: CardBoxStyle['options'], change?: (ops: CardBoxStyle['options']) => void) {
     var pos: PopoverPosition = { dockRight: true };
     let popover = await PopoverSingleton(CardBoxStyle, { mask: true, });
     let fv = await popover.open(pos);
@@ -194,5 +209,9 @@ export async function useCardBoxStyle(options: CardBoxStyle['options']) {
         popover.only('close', () => {
             resolve(fv.options)
         });
+        fv.only('change', c => {
+            if (typeof change == 'function')
+                change(c);
+        })
     })
 }
