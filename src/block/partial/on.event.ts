@@ -191,21 +191,10 @@ export class Block$Event {
                 this.page.onBatchDelete([this]);
                 break;
             case BlockDirective.copy:
-                /**
-                 * 复制块
-                 */
-                this.page.onAction(ActionDirective.onCopyBlock, async () => {
-                    var d = await this.cloneData();
-                    var pa = this.parent;
-                    var nb = await pa.appendBlock(d, this.at + 1, this.parentKey);
-                    this.page.addUpdateEvent(async () => {
-                        this.page.kit.anchorCursor.onFocusBlockAnchor(nb, { merge: true, render: true, last: true })
-                    })
-                });
+                this.onClone()
                 break;
             case BlockDirective.link:
-                CopyText(this.blockUrl);
-                ShyAlert('块的链接已复制')
+                this.onCopyLink();
                 break;
             case BlockDirective.trun:
                 this.page.onBatchTurn([this], (item as any).url);
@@ -260,6 +249,23 @@ export class Block$Event {
         await this.page.onAction(ActionDirective.onDelete, async () => {
             await this.delete();
         })
+    }
+    async onClone(this: Block) {
+        /**
+                       * 复制块
+                       */
+        this.page.onAction(ActionDirective.onCopyBlock, async () => {
+            var d = await this.cloneData();
+            var pa = this.parent;
+            var nb = await pa.appendBlock(d, this.at + 1, this.parentKey);
+            this.page.addUpdateEvent(async () => {
+                this.page.kit.anchorCursor.onFocusBlockAnchor(nb, { merge: true, render: true, last: true })
+            })
+        });
+    }
+    async onCopyLink(this: Block) {
+        CopyText(this.blockUrl);
+        ShyAlert('块的链接已复制')
     }
     async onUpdateProps(this: Block, props: Record<string, any>, options?: {
         range?: BlockRenderRange,
