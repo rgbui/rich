@@ -169,10 +169,8 @@ export class Page extends Events<PageDirective> {
     get scheamViewId() {
         return parseElementUrl(this.elementUrl).id1
     }
-
     recordViewTemplate: boolean = false;
     openSource: 'page' | 'slide' | 'dialog' = 'page';
-
     getScreenStyle() {
         var style: CSSProperties = {};
         if (this.isSupportScreen) {
@@ -198,7 +196,7 @@ export class Page extends Events<PageDirective> {
     }
     get isCanEdit() {
         if (this.readonly) return false;
-        if (this.pageLayout.type == PageLayoutType.dbPickRecord) return false;
+        if (this.pageLayout?.type == PageLayoutType.dbPickRecord) return false;
         if (this.kit.page.pageInfo?.locker?.userid) return false;
         //if (!this.kit.page.permissons.includes(AtomPermission.editDoc)) return false;
         return true;
@@ -207,7 +205,12 @@ export class Page extends Events<PageDirective> {
      * 是否支持宽屏及窄屏的切换
      */
     get isSupportScreen() {
-        return [PageLayoutType.db, PageLayoutType.dbForm, PageLayoutType.doc, PageLayoutType.blog].includes(this.pageLayout?.type || PageLayoutType.doc)
+        return [PageLayoutType.db,
+        PageLayoutType.dbForm,
+        PageLayoutType.docCard,
+        PageLayoutType.doc,
+        PageLayoutType.blog
+        ].includes(this.pageLayout?.type || PageLayoutType.doc)
     }
     /**
      * 是否支持用户自定义封面

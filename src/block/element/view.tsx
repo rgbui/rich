@@ -1,9 +1,10 @@
 
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { BlockView } from "../view";
 import { url, view } from "../factory/observable";
 import { Block } from '..';
 import { ChildsArea } from '../view/appear';
+import { PageLayoutType } from '../../page/declare';
 @url('/view')
 export class View extends Block {
     get isView() {
@@ -30,7 +31,12 @@ export class ViewComponent extends BlockView<View>{
             </div>
         }
         else {
-            return <div className='sy-block-view' ><ChildsArea childs={this.block.childs}></ChildsArea></div>
+            var style: CSSProperties = {};
+            if (this.block.page?.pageLayout?.type == PageLayoutType.docCard) {
+                style.display = 'block';
+                style.width = '100%';
+            }
+            return <div className='sy-block-view' style={style} ><ChildsArea childs={this.block.childs}></ChildsArea></div>
         }
     }
 }

@@ -3,6 +3,7 @@ export enum PageLayoutType {
      * 文档
      */
     doc = 1,
+    docCard = 2,
     //#region db
     db = 20,
     dbForm = 21,
