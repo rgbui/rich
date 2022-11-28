@@ -106,7 +106,9 @@ export class PageEvent {
                 await this.snapshoot.redo();
             })
     }
-    async onPageTurnLayout(this: Page, layoutType: PageLayoutType, actions?: () => Promise<void>) {
+    async onPageTurnLayout(this: Page,
+        layoutType: PageLayoutType,
+        actions?:() => Promise<void>) {
         await this.onAction(ActionDirective.onPageTurnLayout, async () => {
             this.requireSelectLayout = false;
             this.snapshoot.record(OperatorDirective.pageTurnLayout, {
@@ -121,6 +123,11 @@ export class PageEvent {
                     this.pageLayout.type = layoutType;
                     var view = this.views[0];
                     await this.createBlock('/data-grid/table', { createSource: 'pageTurnLayout' }, view);
+                    break;
+                case PageLayoutType.docCard:
+                    this.pageLayout.type = layoutType;
+                    this.views = [];
+                    await this.loadDefaultData();
                     break;
                 case PageLayoutType.board:
                     var view = this.views[0];
