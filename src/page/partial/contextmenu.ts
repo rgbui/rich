@@ -6,7 +6,17 @@ import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { BlockDirective } from "../../block/enum";
 import { Point, Rect } from "../../common/vector/point";
 import { PageLayoutType } from "../declare";
-import { CommentSvg, CommunicationSvg, ComponentsSvg, CustomizePageSvg, FieldsSvg, FileIconSvg, FourLeavesSvg, LinkSvg, LockSvg, OutlineSvg, TrashSvg, UndoSvg, UnlockSvg, UploadSvg, VersionHistorySvg } from "../../../component/svgs";
+import {
+    CommentSvg,
+    CommunicationSvg,
+    ComponentsSvg,
+    CustomizePageSvg,
+    FieldsSvg,
+    FourLeavesSvg,
+    LinkSvg,
+    LockSvg,
+    OutlineSvg, TrashSvg, UndoSvg, UnlockSvg, UploadSvg, VersionHistorySvg
+} from "../../../component/svgs";
 import { usePageLayout } from "../../../extensions/layout";
 import { CopyText } from "../../../component/copy";
 import { ShyAlert } from "../../../component/lib/alert";
@@ -139,19 +149,19 @@ export class PageContextmenu {
         }
         else if (this.pageLayout.type == PageLayoutType.textChannel) {
             items = [
-                // {
-                //     name: 'channel',
-                //     text: '频道',
-                //     icon: FourLeavesSvg,
-                //     type: MenuItemType.select,
-                //     value: this.pageInfo?.textChannelMode || 'chat',
-                //     options: [
-                //         { text: '聊天', value: 'chat' },
-                //         { text: '微博', value: "weibo" },
-                //         { text: '问答', value: "ask" },
-                //         { text: '贴吧', value: "tiebar" }
-                //     ]
-                // },
+                {
+                    name: 'channel',
+                    text: '频道',
+                    icon: FourLeavesSvg,
+                    type: MenuItemType.select,
+                    value: this.pageInfo?.textChannelMode || 'chat',
+                    options: [
+                        { text: '聊天', value: 'chat' },
+                        { text: '微博', value: "weibo" },
+                        // { text: '问答', value: "ask" },
+                        // { text: '贴吧', value: "tiebar" }
+                    ]
+                },
                 {
                     name: 'speak',
                     text: '发言',
