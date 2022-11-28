@@ -1,8 +1,6 @@
 
 import React, { CSSProperties } from "react";
 import { Block } from "../..";
-import { CopyText } from "../../../../component/copy";
-import { ShyAlert } from "../../../../component/lib/alert";
 import {
     ArrowUpSvg,
     CardBackgroundFillSvg,
@@ -19,15 +17,17 @@ import { MenuItemType } from "../../../../component/view/menu/declare";
 import { useCardBoxStyle } from "../../../../extensions/doc.card/style";
 import { Rect } from "../../../common/vector/point";
 import { PageLayoutType } from "../../../page/declare";
-import { url, view } from "../../factory/observable";
+import { GridMap } from "../../../page/grid";
+import { BlockRenderRange } from "../../enum";
+import { prop, url, view } from "../../factory/observable";
 import { BlockView } from "../../view";
 import { ChildsArea } from "../../view/appear";
-
 import "./style.less";
+
 @url('/card/box')
 export class CardBox extends Block {
-    get isView() {
-        return true;
+    init() {
+        this.gridMap = new GridMap(this)
     }
     async openContextmenu(event: React.MouseEvent) {
         var r = await useSelectMenuItem(
@@ -86,7 +86,6 @@ export class CardBox extends Block {
             }
         }
     }
-
     async onAddCardBox(event: React.MouseEvent) {
         this.page.onAction('onAddCardBox', async () => {
             var d = {
@@ -105,11 +104,31 @@ export class CardBox extends Block {
         });
     }
     async onOpenCardStyle(name = 'background') {
-        var g = await useCardBoxStyle({ open: name as any, fill: { mode: 'none' } });
+        var g = await useCardBoxStyle({
+            open: name as any,
+            fill: this.cardFill,
+            cardStyle: this.cardStyle
+        }, (g) => {
+            this.onLazyUpdateProps({
+                cardFill: g.fill,
+                cardStyle: g.cardStyle
+            }, { range: BlockRenderRange.self })
+        });
         if (g) {
-
+            this.onUpdateProps({
+                cardFill: g.fill,
+                cardStyle: g.cardStyle
+            }, { range: BlockRenderRange.self })
         }
     }
+    @prop()
+    cardFill: {
+        mode: "color" | "image" | "none"; color?: string; src?: string;
+    } = { mode: 'none', color: '' }
+    @prop()
+    cardStyle: {
+        color: "dark" | "light"; transparency: "frosted" | "solid" | "noborder" | "faded";
+    } = { color: 'light', transparency: 'frosted' }
 }
 /*** 在一个页面上，从视觉上有多个视图块，
  * 如每个页面都有一个初始的内容视图，不可拖动
@@ -123,19 +142,40 @@ export class ViewComponent extends BlockView<CardBox>{
             style.display = 'block';
             style.width = '100%';
             style.boxSizing = 'border-box';
+            if (this.block.cardFill.mode == 'color') {
+                style.backgroundColor = this.block.cardFill.color;
+            }
+            else if (this.block.cardFill.mode == 'image') {
+                style.backgroundImage = `url(${this.block.cardFill.src})`;
+                style.backgroundSize = 'cover';
+                style.backgroundRepeat = 'no-repeat';
+            }
         }
         var screenStyle = this.block.page.getScreenStyle();
+        var contentStyle: CSSProperties = {
+            color: '#000',
+            backgroundColor: 'rgba(255,252,248,0.75)'
+        }
+        if (this.block.cardStyle.color == 'dark') {
+            contentStyle = {
+                color: '#fff',
+                backgroundColor: 'rgba(0,0,0,0.75)'
+            }
+        }
         return <div style={style}>
             <div className="visible-hover" style={screenStyle}>
-                <div className="relative padding-20 round-16 sy-block-card-box">
-                    <div className="flex visible pos-top-right gap-r-20 gap-t-20">
-                        <span className="flex-center cursor round item-hover size-30" onMouseDown={e => this.block.openContextmenu(e)}> <Icon size={18} icon={DotsSvg}></Icon></span>
+                <div style={{ padding: "8rem 2rem" }}>
+                    <div style={contentStyle} className="relative padding-20 round-16 sy-block-card-box">
+                        <div className="flex visible pos-top-right gap-r-20 gap-t-20">
+                            <span className="flex-center cursor round item-hover size-30" onMouseDown={e => this.block.openContextmenu(e)}> <Icon size={18} icon={DotsSvg}></Icon></span>
+                        </div>
+                        <div><ChildsArea childs={this.block.childs}></ChildsArea></div>
                     </div>
-                    <div ><ChildsArea childs={this.block.childs}></ChildsArea></div>
+                    <div className="visible flex-center gap-t-20">
+                        <div onMouseDown={e => this.block.onAddCardBox(e)} className="size-30 bg-white shadow flex-center cursor border circle item-hover text-1"> <Icon size={18} icon={PlusSvg}></Icon></div>
+                    </div>
                 </div>
-                <div className="visible flex-center gap-h-20">
-                    <div onMouseDown={e => this.block.onAddCardBox(e)} className="size-30 bg-white shadow flex-center cursor border circle item-hover text-1"> <Icon size={18} icon={PlusSvg}></Icon></div>
-                </div>
+
             </div>
         </div>
     }
