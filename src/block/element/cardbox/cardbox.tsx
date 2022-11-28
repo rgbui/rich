@@ -149,25 +149,17 @@ export class ViewComponent extends BlockView<CardBox>{
                 style.backgroundImage = `url(${this.block.cardFill.src})`;
                 style.backgroundSize = 'cover';
                 style.backgroundRepeat = 'no-repeat';
+                style.backgroundPosition = 'center center';
             }
         }
         var screenStyle = this.block.page.getScreenStyle();
-        var contentStyle: CSSProperties = {
-            color: '#000',
-            backgroundColor: 'rgba(255,252,248,0.75)'
-        }
-        if (this.block.cardStyle.color == 'dark') {
-            contentStyle = {
-                color: '#fff',
-                backgroundColor: 'rgba(0,0,0,0.75)'
-            }
-        }
+
         return <div style={style}>
             <div className="visible-hover" style={screenStyle}>
-                <div style={{ padding: "8rem 2rem" }}>
-                    <div style={contentStyle} className="relative padding-20 round-16 sy-block-card-box">
-                        <div className="flex visible pos-top-right gap-r-20 gap-t-20">
-                            <span className="flex-center cursor round item-hover size-30" onMouseDown={e => this.block.openContextmenu(e)}> <Icon size={18} icon={DotsSvg}></Icon></span>
+                <div style={{ padding: "4rem 2rem" }}>
+                    <div className={"relative padding-20 round-16 sy-block-card-box" + (" sy-block-card-box-" + this.block.cardStyle.color) + (" sy-block-card-box-" + this.block.cardStyle.transparency)}>
+                        <div className="flex visible pos-top-right gap-r-10 gap-t-10">
+                            <span className="sy-block-card-box-property flex-center cursor round item-hover size-24" onMouseDown={e => this.block.openContextmenu(e)}> <Icon size={18} icon={DotsSvg}></Icon></span>
                         </div>
                         <div><ChildsArea childs={this.block.childs}></ChildsArea></div>
                     </div>
