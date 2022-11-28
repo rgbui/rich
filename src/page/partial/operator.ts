@@ -10,7 +10,7 @@ import { AppearAnchor } from "../../block/appear";
 import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
 import { BlockDirective } from "../../block/enum";
 import { BlockFactory } from "../../block/factory/block.factory";
-import { Rect } from "../../common/vector/point";
+import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { DropDirection } from "../../kit/handle/direction";
 import { storeCopyBlocks } from "../common/copy";
@@ -199,11 +199,12 @@ export class Page$Operator {
      * @param blocks 
      * @param event 
      */
-    async onOpenMenu(this: Page, blocks: Block[], event: MouseEvent) {
-        event.preventDefault();
+    async onOpenMenu(this: Page, blocks: Block[], event: MouseEvent | Point) {
+        if (!(event instanceof Point))
+            event.preventDefault();
         var re = await useSelectMenuItem(
             {
-                roundArea: Rect.fromEvent(event),
+                roundPoint: event instanceof Point ? event : Point.from(event),
                 direction: 'left'
             },
             await blocks[0].onGetContextMenus()

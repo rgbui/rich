@@ -7,6 +7,7 @@ import { Block } from "../../block";
 import { BoardPointType } from "../../block/partial/board";
 import { PointArrow } from "../../common/vector/point";
 import "./style.less";
+
 export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
     constructor(props) {
         super(props);
@@ -54,21 +55,24 @@ export class BlockPickerView extends React.Component<{ picker: BlockPicker }> {
                         return <foreignObject key={i}
                             width={20}
                             height={20}
-                            onMouseDown={e => this.picker.onRotateBlock(block, pi, e)} x={pi.point.x} y={pi.point.y}>
-                            <RotatingSvg></RotatingSvg>
+                            onMouseDown={e => this.picker.onRotateBlock(block, pi, e)}
+                            x={pi.point.x}
+                            y={pi.point.y}>
+                            <Icon icon={RotatingSvg} size={16}></Icon>
                         </foreignObject>
                         break;
                     case BoardPointType.mindAdd:
+                        var s = 16;
                         return <foreignObject
                             className="mind-add"
                             key={i}
-                            width={20}
-                            height={20}
+                            width={s}
+                            height={s}
                             onMouseDown={e => this.picker.onPickerMousedown(block, pi, e)}
-                            x={pi.point.x - 10}
-                            y={pi.point.y - 10}>
-                            <div className="size-20 flex-center cursor" >
-                                <Icon size={12} icon={PlusSvg}></Icon>
+                            x={pi.point.x - s / 2}
+                            y={pi.point.y - s / 2}>
+                            <div className="size-16 flex-center cursor" >
+                                <Icon size={14} icon={PlusSvg}></Icon>
                             </div>
                         </foreignObject>
                         break;

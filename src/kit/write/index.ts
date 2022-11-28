@@ -16,8 +16,14 @@ import { TextEle } from "../../common/text.ele";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
 import { PageLayoutType } from "../../page/declare";
+import { openBoardEditTool } from "../operator/board/edit";
 import { inputBackspaceDeleteContent, inputBackSpaceTextContent, inputDetector, inputLineTail, inputPop, keydownBackspaceTextContent } from "./input";
-import { MoveCursor, onEnterInput, onKeyTab, predictKeydown } from "./keydown";
+import {
+    MoveCursor,
+    onEnterInput,
+    onKeyTab,
+    predictKeydown
+} from "./keydown";
 import { onPaste } from "./paste";
 import { AutoInputStore, InputForceStore, InputStore } from "./store";
 
@@ -71,6 +77,8 @@ export class PageWrite {
                     sel.removeAllRanges();
                 }, 10);
                 this.kit.picker.onPicker([rowBlock]);
+                if (this.kit.picker.blocks.length > 0)
+                    await openBoardEditTool(this.kit);
                 return;
             }
         }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import { BoardEditTool } from ".";
 import { NoneSvg, TransparentSvg } from "../../component/svgs";
 import { MeasureView } from "../../component/view/progress"
@@ -39,15 +39,73 @@ export function ShapeStroke(props: {
         {props.tool.isShowDrop('stroke') && <div className="shy-shape-stroke-drops text-1">
             <div className="shy-shape-stroke-opacity">
                 <MeasureView ratio={0.1} min={1} max={10} showValue={false} value={props.strokeOpacity} onChange={e => { props.change('strokeOpacity', e) }}></MeasureView>
-                <div className="shy-measure-view-label"><label>透明度</label><span style={{ float: 'right' }}>{Math.round(props.strokeOpacity * 10)}</span></div>
+                <div className="shy-measure-view-label"><label className="remark f-12">透明度</label><span style={{ float: 'right' }}>{Math.round(props.strokeOpacity * 10)}</span></div>
             </div>
             <div className="shy-shape-stroke-width">
                 <MeasureView min={1} max={30} showValue={false} value={props.strokeWidth} onChange={e => { props.change('strokeWidth', e) }}></MeasureView>
-                <div className="shy-measure-view-label"><label>边框</label><span >{Math.round(props.strokeWidth)}px</span></div>
+                <div className="shy-measure-view-label"><label className="remark f-12">边框</label><span >{Math.round(props.strokeWidth)}px</span></div>
             </div>
             <div className="shy-shape-stroke-colors">{colors.map(c => {
                 if (c.color == 'transparent') return <a className={'transparent ' + (c.color == props.stroke ? "selected" : "")} onMouseDown={e => props.change('stroke', c.color)} key={c.color} style={{ borderColor: 'transparent', backgroundColor: c.color }}><NoneSvg></NoneSvg></a>
                 return <a key={c.color} className={props.stroke == c.color ? "selected" : ""} onMouseDown={e => { props.change('stroke', c.color) }} style={{ backgroundColor: c.color }}></a>
+            })}</div>
+        </div>}
+    </div>
+}
+
+export function BorderBoxStyle(props: {
+    tool: BoardEditTool,
+    borderWidth: number,
+    borderType: 'solid' | 'dash',
+    borderColor: string,
+    borderRadius: number
+    change: (name: string, value: any) => void
+}) {
+    var style: CSSProperties = {
+        borderWidth: Math.min(4, props.borderWidth),
+        borderStyle: props.borderType,
+        borderColor: props.borderColor,
+        borderRadius: props.borderRadius
+    }
+    return <div className="shy-shape-stroke">
+        <div className="shy-shape-stroke-current" style={{ width: 20, height: 20 }} onMouseDown={e => props.tool.showDrop('border')}>
+            <div className="box-border size-20" style={style}></div>
+        </div>
+        {props.tool.isShowDrop('border') && <div className="shy-shape-stroke-drops text-1">
+
+            <div className="shy-line-types-stash   r-round-4 r-cursor r-item-hover">
+                <div className="remark f-12">类型</div>
+                <a className={'inline-block size-30 text-1 ' + (props.borderType == 'solid' ? "hover" : "")}
+                    onMouseDown={e => props.change('borderType', 'solid')}
+                ><svg className="size-30" viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
+                        <g fill="none" fillRule="evenodd">
+                            <path d="M-18-5h60v40h-60z"></path>
+                            <path fill="currentColor" d="M0 14h24v2H0z"></path>
+                        </g>
+                    </svg>
+                </a>
+                <a className={'inline-block size-30 text-1 ' + (props.borderType == 'dash' ? "hover" : "")}
+                    onMouseDown={e => props.change('borderType', 'dash')}
+                >
+                    <svg className="size-30" viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 14h6v2H0zm9 0h6v2H9zm9 0h6v2h-6z" fill="currentColor" fillRule="evenodd"></path>
+                    </svg>
+                </a>
+            </div>
+
+            <div className="shy-shape-stroke-width">
+                <MeasureView min={1} max={30} showValue={false} value={props.borderRadius} onChange={e => { props.change('borderRadius', e) }}></MeasureView>
+                <div className="shy-measure-view-label"><label className="remark f-12">圆角</label><span >{Math.round(props.borderRadius)}px</span></div>
+            </div>
+
+            <div className="shy-shape-stroke-width">
+                <MeasureView min={1} max={30} showValue={false} value={props.borderWidth} onChange={e => { props.change('borderWidth', e) }}></MeasureView>
+                <div className="shy-measure-view-label"><label className="remark f-12">边宽</label><span >{Math.round(props.borderWidth)}px</span></div>
+            </div>
+
+            <div className="shy-shape-stroke-colors">{colors.map(c => {
+                if (c.color == 'transparent') return <a className={'transparent ' + (c.color == props.borderColor ? "selected" : "")} onMouseDown={e => props.change('borderColor', c.color)} key={c.color} style={{ borderColor: 'transparent', backgroundColor: c.color }}><NoneSvg></NoneSvg></a>
+                return <a key={c.color} className={props.borderColor == c.color ? "selected" : ""} onMouseDown={e => { props.change('borderColor', c.color) }} style={{ backgroundColor: c.color }}></a>
             })}</div>
         </div>}
     </div>

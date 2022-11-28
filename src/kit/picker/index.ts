@@ -7,6 +7,7 @@ import { useShapeSelector } from "../../../extensions/shapes/box";
 
 import { util } from "../../../util/util";
 import { Block } from "../../block";
+import { BlockUrlConstant } from "../../block/constant";
 import { BlockRenderRange } from "../../block/enum";
 import { BoardBlockSelector, BoardPointType } from "../../block/partial/board";
 import { MouseDragger } from "../../common/dragger";
@@ -80,7 +81,7 @@ export class BlockPicker {
         fra.page.onAction(ActionDirective.onBoardToolCreateBlock, () => {
             return new Promise((resolve: () => void, reject) => {
                 async function createConnectLine() {
-                    var data = { url: '/line' } as Record<string, any>;
+                    var data = { url: BlockUrlConstant.Line } as Record<string, any>;
                     data.from = { x: arrows[1], y: arrows[0], blockId: block.id };
                     data.to = { x: re.x, y: re.y };
                     newBlock = await self.kit.page.createBlock(data.url, data, fra);
@@ -125,7 +126,7 @@ export class BlockPicker {
                                     re = gm.inverseTransform(Point.from(ev));
                                     ma.translate(re.x, re.y);
                                     da.matrix = ma.getValues();
-                                    var shapeBlock = await fra.page.createBlock('/shape', da, fra);
+                                    var shapeBlock = await fra.page.createBlock(BlockUrlConstant.Shape, da, fra);
                                     var pickers = shapeBlock.getBlockBoardSelector([BoardPointType.pathConnectPort]);
                                     await newBlock.updateProps({
                                         to: {
