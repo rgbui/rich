@@ -6,10 +6,14 @@ export type PopoverPosition = {
      */
     center?: boolean;
     /**
+     * 是否靠右
+     */
+    dockRight?: boolean;
+    /**
      * 当center为true时，自定义top高度，
      * 
      */
-    centerTop?:number;
+    centerTop?: number;
 
     /**
      * 围绕一个点来计算弹窗
