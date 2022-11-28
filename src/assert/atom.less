@@ -42,6 +42,13 @@ flex-fixed:固定大小
     flex-wrap      : nowrap;
 }
 
+.flex-left-right,.flex-round {
+    display        : flex;
+    justify-content: space-between;
+    align-items    : center;
+    flex-wrap      : nowrap;
+}
+
 .r-flex-end {
     >* {
         display        : flex;
@@ -777,7 +784,7 @@ cursor鼠标
 宽度
 ***/
 
-@selectors: 1, 2, 4, 5, 10, 12, 14, 16, 18, 20, 24, 26, 28, 30, 32, 36, 40, 48, 50, 60, 72, 80, 88, 90, 100, 120, 150, 160, 180, 200, 220, 240, 250, 270, 280, 300, 320, 350, 360, 400, 450, 480, 500, 540, 550, 600, 720, 800, 960;
+@selectors: 1, 2, 4, 5, 10, 12, 14, 16, 18, 20, 24, 26, 28, 30, 32, 36, 40, 48, 50, 60, 72, 80, 88, 90, 100, 120, 150, 160, 180, 200, 220, 240, 250, 270, 280, 300, 320, 350, 360, 400, 450, 480, 500, 540, 550, 600, 720, 750, 760, 800, 960;
 
 each(@selectors, {
         .w-@{value} {
@@ -803,9 +810,16 @@ each(@selectors, {
         .max-h-@{value} {
             max-height: @value+0px;
         }
+
+        .w-c-@{value} {
+            @w   : @value+0px;
+            width:calc(100% - @w);
+        }
     }
 
 );
+
+
 
 .h100 {
     height: 100%;
@@ -839,7 +853,8 @@ each(@ops, {
     display: inline;
 }
 
-.line-block,.inline-block {
+.line-block,
+.inline-block {
     display: inline-block;
 }
 
@@ -1065,11 +1080,11 @@ each(@ops, {
 }
 
 .bg {
-    background-color: rgba(55, 53, 47, 0.08);
+    background-color: rgba(55, 53, 47, 0.08) !important;
 }
 
 .bg-light {
-    background-color: rgba(55, 53, 47, 0.04);
+    background-color: rgba(55, 53, 47, 0.04) !important;
 }
 
 .shadow {
@@ -1104,6 +1119,11 @@ each(@ops, {
 .border-light-bottom,
 .border-light-b {
     border-bottom: 1px solid rgba(55, 53, 47, 0.08);
+}
+
+.border-light-top,
+.border-light-t {
+    border-top: 1px solid rgba(55, 53, 47, 0.08);
 }
 
 .no-border,
@@ -1194,9 +1214,16 @@ circle:圆
     border-radius: 0%;
 }
 
+.r-round {
+    >* {
+        border-radius: 4px;
+    }
+}
+
 .round {
     border-radius: 4px;
 }
+
 
 .round-top {
     border-radius: 4px 4px 0px 0px;
@@ -1278,6 +1305,10 @@ gap-l-10
 gap-r-10
 gap-b-20:指模块间距（有明显的块与块之间的间距），大标题内容与另外的大标题内容，垂直的两张卡片
 **/
+
+.gap-auto {
+    margin: 0 auto;
+}
 
 @gaps: 0, 3, 5, 10, 14, 15, 20, 25, 24, 30, 48, 50, 60, 80, 100;
 
