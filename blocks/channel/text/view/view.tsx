@@ -1,12 +1,12 @@
 import lodash from "lodash";
 import React, { CSSProperties } from "react";
 import { ChannelText } from "..";
-import { EditSvg, TopicSvg, UnreadTextSvg } from "../../../../component/svgs";
+import { EditSvg, EmojiSvg, FileSvg, PicSvg, TopicSvg, UnreadTextSvg } from "../../../../component/svgs";
+import { Button } from "../../../../component/view/button";
 import { useForm } from "../../../../component/view/form/dialoug";
 import { Icon } from "../../../../component/view/icon";
-import { Loading } from "../../../../component/view/loading";
 import { RichTextInput } from "../../../../component/view/rich.input";
-import { Remark } from "../../../../component/view/text";
+import { Spin } from "../../../../component/view/spin";
 import { LinkPageItem } from "../../../../extensions/at/declare";
 import { useIconPicker } from "../../../../extensions/icon";
 import { channel } from "../../../../net/channel";
@@ -18,17 +18,11 @@ import { PageLayoutType } from "../../../../src/page/declare";
 import { util } from "../../../../util/util";
 import { ChannelTextType } from "../declare";
 import { RenderChats } from "./chats";
+import { RenderWeibo } from "./weibo";
 
 @view('/channel/text')
 export class ChannelTextView extends BlockView<ChannelText>{
-    renderHead() {
-        return <div className="sy-channel-text-head">
-            {this.block.unreadTip && <div className="sy-channel-text-unread-tip" >
-                <span>自{util.showTime(new Date(this.block.unreadTip.date))}来有{this.block.unreadTip.count}条消息未读</span>
-                <a onMouseDown={e => this.block.onClearUnread()}>标记为已读<Icon size={14} icon={UnreadTextSvg}></Icon></a>
-            </div>}
-        </div>
-    }
+
     contentEl: HTMLElement;
     async openEdit(event: React.MouseEvent) {
         var f = await useForm({
@@ -98,25 +92,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
         var c = TextEle.filterHtml(d.content);
         this.richTextInput.openReply({ text: `回复${use.data.user.name}:${c}`, replyId: d.id })
     }
-    renderContent() {
-        return <div className="sy-channel-text-content"
-            onWheel={this.wheel}
-            ref={e => this.contentEl = e}>
-            {this.block && this.renderPageTitle()}
-            {this.block.pageIndex > 2 && this.block.isLast && <div className="sy-channel-text-tip"><Remark>无记录了</Remark></div>}
-            {this.block.loading && <div className="sy-channel-text-loading"><Loading></Loading></div>}
-            {RenderChats(this.block, {
-                reditChat: (d) => this.redit(d),
-                replyChat: (d) => this.reply(d)
-            })}
-        </div>
-    }
     richTextInput: RichTextInput;
-    renderInput() {
-        return <div className="sy-channel-text-input" data-shy-page-no-focus onMouseDown={e => e.stopPropagation()}>
-            <RichTextInput disabled={this.block.abledSend} placeholder={this.block.abledSend ? "您不能发言" : "回车提交"} ref={e => this.richTextInput = e} popOpen={e => this.popOpen(e)} onInput={e => this.onInput(e)} ></RichTextInput>
-        </div>
-    }
     popOpen(cs: { char: string, span: HTMLElement }) {
 
     }
@@ -190,19 +166,82 @@ export class ChannelTextView extends BlockView<ChannelText>{
             this.block.loadHasAbledSend(true);
         }
     }
+    renderChats() {
+        return <>
+            <div className="sy-channel-text-head">
+                {this.block.unreadTip && <div className="sy-channel-text-unread-tip" >
+                    <span>自{util.showTime(new Date(this.block.unreadTip.date))}来有{this.block.unreadTip.count}条消息未读</span>
+                    <a onMouseDown={e => this.block.onClearUnread()}>标记为已读<Icon size={14} icon={UnreadTextSvg}></Icon></a>
+                </div>}
+            </div>
+            <div className="sy-channel-text-content"
+                onWheel={this.wheel}
+                ref={e => this.contentEl = e}>
+                {this.block && this.renderPageTitle()}
+                {this.block.pageIndex > 2 && this.block.isLast && <div className="sy-channel-text-tip remark">无记录了</div>}
+                {this.block.loading && <div className="sy-channel-text-loading"><Spin></Spin></div>}
+                {RenderChats(this.block, {
+                    reditChat: (d) => this.redit(d),
+                    replyChat: (d) => this.reply(d)
+                })}
+            </div>
+            <div className="sy-channel-text-input" data-shy-page-no-focus onMouseDown={e => e.stopPropagation()}>
+                <RichTextInput
+                    disabled={this.block.abledSend}
+                    placeholder={this.block.abledSend ? "您不能发言" : "回车提交"}
+                    ref={e => this.richTextInput = e}
+                    popOpen={e => this.popOpen(e)}
+                    onInput={e => this.onInput(e)} ></RichTextInput>
+            </div>
+        </>
+    }
+    renderWeibos() {
+        return <div className="w-c-250 gap-auto">
+            <div className="min-h-80 bg-white border-light round-8 gap-15 padding-15" data-shy-page-no-focus onMouseDown={e => e.stopPropagation()}>
+                <RichTextInput
+                    richClassName={'bg round-16 padding-10'}
+                    allowUploadFile={false}
+                    allowEmoji={false}
+                    height={40}
+                    disabled={this.block.abledSend}
+                    placeholder={"有什么新鲜事分享给大家"}
+                    ref={e => this.richTextInput = e}
+                    popOpen={e => this.popOpen(e)}
+                    onInput={e => this.onInput(e)}></RichTextInput>
+                <div className="flex h-20 gap-t-10">
+                    <div className="flex-auto flex text-1 r-flex-center r-item-hover r-round r-size-30 r-cursor">
+                        <span><Icon size={20} icon={EmojiSvg}></Icon></span>
+                        <span><Icon size={20} icon={PicSvg}></Icon></span>
+                        <span><Icon size={20} icon={FileSvg}></Icon></span>
+                    </div>
+                    <div className="flex-fixed">
+                        <Button size="small">发布</Button>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <RenderWeibo block={this.block} ></RenderWeibo>
+                {this.block.loading && <div className="sy-channel-text-loading"><Spin></Spin></div>}
+            </div>
+        </div>
+    }
     render() {
         var style: CSSProperties = this.block.visibleStyle;
+        var classList: string[] = ['sy-channel-text'];
         if (this.block.page.pageLayout.type == PageLayoutType.textChannel) {
             delete style.padding;
             delete style.paddingTop;
             delete style.paddingBottom;
             delete style.paddingLeft;
             delete style.paddingRight;
+            if (this.block.page.pageInfo.textChannelMode == 'weibo') {
+                style.position = 'relative';
+                classList.push('bg-light border-light-left')
+            }
         }
-        return <div className='sy-channel-text' style={style}>
-            {this.renderHead()}
-            {this.renderContent()}
-            {this.renderInput()}
+        return <div className={classList.join(" ")} style={style}>
+            {this.block.page.pageInfo?.textChannelMode == 'weibo' && this.renderWeibos()}
+            {this.block.page.pageInfo?.textChannelMode !== 'weibo' && this.renderChats()}
         </div>
     }
     loadding: boolean = false;
