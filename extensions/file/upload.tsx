@@ -8,7 +8,8 @@ import { ResourceArguments } from "../icon/declare";
 import { Remark } from "../../component/view/text";
 import { util } from "../../util/util";
 export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audio' | 'video', change: (file: ResourceArguments) => void }> {
-    async uploadFile() {
+    async uploadFile()
+    {
         this.button.disabled = true;
         this.error = '';
         var exts = ['*'];
