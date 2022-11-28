@@ -8,7 +8,7 @@ import { CardPropsType, cardStores } from "./data";
 export class CardSelector extends EventsComponent {
     render(): ReactNode {
         return <div className="padding-h-14 round max-h-300 overflow-y">
-            {cardStores.get().map(cs => {
+            {cardStores.get().map(cs =>{
                 return <div className={"padding-14 round cursor item-hover" + (this.selectUrl == cs.url ? " item-focus-hover" : "")} onMouseDown={e => this.onMousedown(cs, e)} key={cs.url}>
                     <div className="gap-b-10"><img className="round-30" style={{ maxWidth: 300 }} src={cs.image} /></div>
                     <div className="text f-14">{cs.title}</div>
