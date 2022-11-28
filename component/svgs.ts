@@ -28,6 +28,8 @@ import ButtonSvg from "../src/assert/svg/button.svg";
 import ButtonTemplateSvg from "../src/assert/svg/button.template.svg";
 import CalloutSvg from "../src/assert/svg/callout.svg";
 import CardSvg from "../src/assert/svg/card.svg";
+import CardBackgroundFillSvg from "../src/assert/svg/cardBackgroundFill.svg";
+import CardBrushSvg from "../src/assert/svg/cardBrush.svg";
 import CarouselSvg from "../src/assert/svg/carousel.svg";
 import CheckSvg from "../src/assert/svg/check.svg";
 import CheckboxSquareSvg from "../src/assert/svg/checkbox.square.svg";
@@ -58,6 +60,7 @@ import DeleteLineSvg from "../src/assert/svg/delete.line.svg";
 import DiscoverySvg from "../src/assert/svg/discovery.svg";
 import DividerSvg from "../src/assert/svg/divider.svg";
 import DocAddSvg from "../src/assert/svg/docAdd.svg";
+import DocCardsSvg from "../src/assert/svg/docCards.svg";
 import DocDetailSvg from "../src/assert/svg/docDetail.svg";
 import DocEditSvg from "../src/assert/svg/docEdit.svg";
 import DocSearchSvg from "../src/assert/svg/docSearch.svg";
@@ -137,6 +140,7 @@ import OutlineSvg from "../src/assert/svg/outline.svg";
 import PageSvg from "../src/assert/svg/page.svg";
 import PenSvg from "../src/assert/svg/pen.svg";
 import PexelsSvg from "../src/assert/svg/pexels.svg";
+import PicSvg from "../src/assert/svg/pic.svg";
 import PictureSvg from "../src/assert/svg/picture.svg";
 import PlusSvg from "../src/assert/svg/plus.svg";
 import ProgressSvg from "../src/assert/svg/progress.svg";
@@ -228,6 +232,8 @@ ButtonSvg,
 ButtonTemplateSvg,
 CalloutSvg,
 CardSvg,
+CardBackgroundFillSvg,
+CardBrushSvg,
 CarouselSvg,
 CheckSvg,
 CheckboxSquareSvg,
@@ -258,6 +264,7 @@ DeleteLineSvg,
 DiscoverySvg,
 DividerSvg,
 DocAddSvg,
+DocCardsSvg,
 DocDetailSvg,
 DocEditSvg,
 DocSearchSvg,
@@ -337,6 +344,7 @@ OutlineSvg,
 PageSvg,
 PenSvg,
 PexelsSvg,
+PicSvg,
 PictureSvg,
 PlusSvg,
 ProgressSvg,
