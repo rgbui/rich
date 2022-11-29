@@ -11,10 +11,12 @@ import { channel } from "../../../net/channel";
 import { LinkPageItem } from "../../../extensions/at/declare";
 import { PageCover } from "./cover";
 import { Icon } from "../../../component/view/icon";
+
 import {
+    BoardCardSvg,
     BoardToolFrameSvg,
     CollectTableSvg,
-    CommentSvg,
+    DocCardsSvg,
     PageSvg
 } from "../../../component/svgs";
 import { dom } from "../../common/dom";
@@ -141,8 +143,9 @@ export class PageView extends Component<{ page: Page }>{
             <div className="shy-page-view-template-picker-items">
                 <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.doc)}><Icon size={16} icon={PageSvg} ></Icon><span>页面</span></a>
                 <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.db)}><Icon size={16} icon={CollectTableSvg} ></Icon><span>表格</span></a>
-                <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.board)}><Icon size={16} icon={BoardToolFrameSvg}></Icon><span>白板</span></a>
-                <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.textChannel)}><Icon size={16} icon={CommentSvg}></Icon><span>频道</span></a>
+                <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.docCard)}><Icon size={16} icon={DocCardsSvg} ></Icon><span>幻灯片</span></a>
+                <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.board)}><Icon size={16} icon={BoardCardSvg}></Icon><span>白板</span></a>
+                <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.textChannel)}><Icon size={16} icon={BoardToolFrameSvg}></Icon><span>频道</span></a>
             </div>
         </div>
     }

@@ -13,10 +13,13 @@ import { InsertSelectionText } from "./util";
 export class RichTextInput extends React.Component<{
     escape_chars?: string[],
     allowUploadFile?: boolean,
+    allowEmoji?: boolean,
     placeholder?: string,
+    richClassName?: string | (string[]),
     content?: string,
     disabled?: boolean,
     readonly?: boolean,
+    height?: number,
     popOpen: (cs: { char: string, span: HTMLElement }) => void,
     popInput?: (key: "ArrowDown" | 'ArrowUp' | 'Enter' | 'Input', charSpan?: { char: string, span: HTMLElement }) => void,
     popClose?: () => void,
@@ -161,6 +164,11 @@ export class RichTextInput extends React.Component<{
     el: HTMLElement;
     toolEl: HTMLElement;
     render(): React.ReactNode {
+        var richClassList: string[] = ["shy-rich-input-editor"];
+        if (this.props.richClassName) {
+            if (Array.isArray(this.props.richClassName)) richClassList.push(...this.props.richClassName)
+            else richClassList.push(this.props.richClassName)
+        }
         return <div className="shy-rich-input" ref={e => this.el = e}>
             {this.reply && <div className="shy-rich-input-reply">
                 <span className="shy-rich-input-reply-content">{this.reply.text}</span>
@@ -171,7 +179,8 @@ export class RichTextInput extends React.Component<{
                 <span className="shy-rich-input-error-operators" onMouseDown={e => this.clearError()}><a><Icon size={12} icon={CloseTickSvg}></Icon></a></span>
             </div>}
             {!(this.props.allowUploadFile == false) && <Icon style={{ marginTop: 3 }} onMousedown={e => this.openAddFile(e)} size={18} icon={PlusSvg}></Icon>}
-            <div className="shy-rich-input-editor"
+            <div className={richClassList.join(" ")}
+                style={{ height: this.props.height }}
                 ref={e => this.richEl = e}
                 onKeyDown={e => { this.keydown(e.nativeEvent) }}
                 onInput={e => { this.input(e.nativeEvent) }}
@@ -184,7 +193,7 @@ export class RichTextInput extends React.Component<{
                 contentEditable={true}
                 onPaste={e => this.paste(e.nativeEvent)}>
             </div>
-            <Icon size={18} style={{ marginTop: 3 }} onMousedown={e => this.openEmoji(e)} icon={EmojiSvg}></Icon>
+            {!(this.props.allowEmoji == false) && <Icon size={18} style={{ marginTop: 3 }} onMousedown={e => this.openEmoji(e)} icon={EmojiSvg}></Icon>}
             <div ref={e => this.toolEl = e} className="shy-rich-input-tool">
                 <a onMouseDown={e => this.onToolStyle({ fontWeight: 'bold' })}><Icon icon='bold:sy'></Icon></a>
                 <a onMouseDown={e => this.onToolStyle({ fontStyle: 'italic' })}><Icon icon='italic:sy'></Icon></a>

@@ -2,7 +2,7 @@
 import { Events } from "../../util/events";
 import { Point, Rect } from "../common/vector/point";
 import { Page } from "../page";
-import { BlockDisplay } from "./enum";
+import { BlockDisplay, BlockRenderRange } from "./enum";
 import { Pattern } from "./pattern/index";
 import { BlockView } from "./view";
 import { Block$Seek } from "./partial/seek";
@@ -288,7 +288,6 @@ export abstract class Block extends Events {
     get isPanel() {
         return this.gridMap ? true : false
     }
-
     get isCell(): boolean {
         return false;
     }
@@ -737,6 +736,13 @@ export abstract class Block extends Events {
         }
         return pr;
     }
+    onLazyUpdateProps = lodash.debounce(async (props, options?: {
+        range?: BlockRenderRange;
+        merge?: boolean;
+        syncBlock?: Block;
+    }) => {
+        await this.onUpdateProps(props, options)
+    }, 700)
 }
 export interface Block extends Block$Seek { }
 export interface Block extends Block$Event { }

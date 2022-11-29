@@ -10,7 +10,7 @@ import { AppearAnchor } from "../../block/appear";
 import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
 import { BlockDirective } from "../../block/enum";
 import { BlockFactory } from "../../block/factory/block.factory";
-import { Point, Rect } from "../../common/vector/point";
+import { Point } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { DropDirection } from "../../kit/handle/direction";
 import { storeCopyBlocks } from "../common/copy";
@@ -59,18 +59,18 @@ export class Page$Operator {
         }
         return block;
     }
-    async onCreateTailTextSpan(this: Page) {
+    async onCreateTailTextSpan(this: Page, panel?: Block) {
         return new Promise(async (resolve, reject) => {
             try {
                 await this.onAction(ActionDirective.onCreateTailTextSpan, async () => {
-                    var panel = this.views[0];
+                    panel = panel || this.views[0];
                     var lastBlock = panel.findReverse(g => g.isBlock);
                     var newBlock: Block;
                     if (lastBlock && lastBlock.parent == panel) {
                         newBlock = await this.createBlock(BlockUrlConstant.TextSpan, {}, lastBlock.parent, lastBlock.at + 1);
                     }
                     else {
-                        newBlock = await this.createBlock(BlockUrlConstant.TextSpan, {}, this.views.last());
+                        newBlock = await this.createBlock(BlockUrlConstant.TextSpan, {}, panel);
                     }
                     newBlock.mounted(() => {
                         this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true });
@@ -342,6 +342,7 @@ export class Page$Operator {
                 textChannelMode: mode
             }
         })
+        this.forceUpdate()
     }
     async onChangeTextChannelSpeak(this: Page, speak: LinkPageItem['speak']) {
         await channel.air('/page/update/info', {

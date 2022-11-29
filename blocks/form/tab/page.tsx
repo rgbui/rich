@@ -48,9 +48,7 @@ export class TabPageView extends BlockView<TabPage>{
         return <div className='sy-block-tab-page'
             style={this.block.visibleStyle}
             onMouseDown={e => this.mousedown(e)}
-
-        >
-            <ChildsArea childs={this.block.blocks.childs}></ChildsArea>
+        ><ChildsArea childs={this.block.blocks.childs}></ChildsArea>
         </div>
     }
 }

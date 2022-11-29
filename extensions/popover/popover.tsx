@@ -31,6 +31,13 @@ class Popover<T extends React.Component> extends EventsComponent<{
         if (pos.center == true) {
             this.point = new Point(window.innerWidth / 2, window.innerHeight / 2);
         }
+        else if (pos.dockRight) {
+            return new Promise((resolve: (ins: T) => void, reject) => {
+                this.forceUpdate(() => {
+                    resolve(this.cp);
+                })
+            })
+        }
         else if (pos.fixPoint) {
             this.point = pos.fixPoint;
             return new Promise((resolve: (ins: T) => void, reject) => {
@@ -60,6 +67,13 @@ class Popover<T extends React.Component> extends EventsComponent<{
         var style: CSSProperties = {
             top: this.point.y,
             left: this.point.x
+        }
+        if (this.pos?.dockRight) {
+            style = {
+                right: 0,
+                top: this.pos.centerTop || 0,
+                bottom: 0
+            }
         }
         if (this.props.frame) {
             style.background = 'none';
@@ -119,6 +133,9 @@ class Popover<T extends React.Component> extends EventsComponent<{
                 this.point = new Point(
                     (window.innerWidth - b.width) / 2,
                     pos.centerTop ? pos.centerTop : (window.innerHeight - b.height) / 2);
+                this.forceUpdate();
+            }
+            else if (pos.dockRight) {
                 this.forceUpdate();
             }
             else if (pos.roundArea) {

@@ -178,9 +178,17 @@ export class Page$Cycle {
         }
         else await this.load()
     }
-    async getDefaultData() {
-        var r = await import("../default.page");
+    async getDefaultData(this: Page) {
+        if (this.pageLayout?.type == PageLayoutType.docCard) {
+            var g = await import('../template/doc.cards');
+            return g.data;
+        }
+        var r = await import("../template/default.page");
         return r.data;
+    }
+    async loadDefaultData(this:Page){
+        var data=await  this.getDefaultData();
+        await this.load(data);
     }
     async loadDefaultScheamView(this: Page) {
         this.schema = await TableSchema.loadTableSchema(this.pageInfo.id);
@@ -405,7 +413,6 @@ export class Page$Cycle {
             this.emit(PageDirective.blur, event);
         }
     }
-
     onHighlightBlock(this: Page, blocks: Block[]) {
         var bs = this.getAtomBlocks(blocks);
         bs.forEach(b => {
@@ -560,7 +567,7 @@ export class Page$Cycle {
         if (this.formRowData) {
             row.icon = this.formRowData.icon;
             row.cover = this.formRowData.cover;
-            row.title=this.formRowData.title;
+            row.title = this.formRowData.title;
         }
         return row;
     }

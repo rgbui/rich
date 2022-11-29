@@ -5,6 +5,7 @@ export enum BlockUrlConstant {
     Row = '/row',
     Col = '/col',
     View = '/view',
+    CardBox = '/card/box',
     Divider = '/divider',
     List = '/list',
     Head = '/head',
@@ -36,7 +37,6 @@ export enum BlockUrlConstant {
     Comment = '/comments',
     FieldTitle = '/field/title'
 }
-
 export enum BlockChildKey {
     childs = 'childs',
     subChilds = 'subChilds',

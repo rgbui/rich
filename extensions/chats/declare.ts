@@ -11,6 +11,8 @@ export type ChannelTextType = {
     isDeleted?: boolean;
     replyId?: string;
     reply?: ChannelTextType,
+    commentCount?: number,
+    likeCount?:number,
     emojis?: {
         emojiId: string;
         code?: string;
