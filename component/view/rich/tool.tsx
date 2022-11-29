@@ -5,9 +5,11 @@ import { BoldSvg } from "../../svgs";
 import { Icon } from "../icon";
 
 
-export class RichTool extends React.Component<{ click: (command: string) => void }> {
+export class RichTool extends React.Component<{ click: (command: string, data: Record<string, any>) => void }> {
     point: Point;
-    open(rect: Rect) {
+    toolStyle: Record<string, any> = {};
+    open(rect: Rect, toolStyle: Record<string, any>) {
+        this.toolStyle = toolStyle;
         var point = rect.leftTop;
         point.move(0, -40);
         this.point = point;
@@ -19,14 +21,18 @@ export class RichTool extends React.Component<{ click: (command: string) => void
         this.forceUpdate()
     }
     click(command: string) {
+        if (command == 'bold') this.toolStyle.fontWeight = 'bold';
+        else if (command == 'unbold') this.toolStyle.fontWeight = 'normal';
         if (typeof this.props.click == 'function')
-            this.props.click(command)
+            this.props.click(command, undefined)
         this.hide()
     }
+    el:HTMLElement;
     render(): ReactNode {
-        return createPortal(<div style={{ display: this.visible ? "flex" : "none" }} className="flex border padding-w-10 h-30 r-size-24 r-round r-item-hover r-cursor ">
-            <span onClick={e => this.click('bold')}><Icon size={16} icon={BoldSvg}></Icon></span>
+        return createPortal(<div ref={e=>this.el=e} style={{ display: this.visible ? "flex" : "none" }} className="flex border padding-w-10 h-30 r-size-24 r-round r-item-hover r-cursor ">
+            <span className={this.toolStyle.fontWeight == 'bold' ? " link" : ""} onClick={e => this.click(this.toolStyle.fontWeight == 'bold' ? "unbold" : "bold")}><Icon size={16} icon={BoldSvg}></Icon></span>
         </div>, document.body)
     }
     visible: boolean = false;
+    
 }

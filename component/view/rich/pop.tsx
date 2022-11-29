@@ -5,6 +5,7 @@ import { Point, Rect } from "../../../src/common/vector/point";
 import { UserBasic } from "../../../types/user";
 import { Avatar } from "../avator/face";
 import { SpinBox } from "../spin";
+
 export class RichPop extends React.Component<{
     searchUser?: (word: string) => Promise<UserBasic[]>,
     select?: (el: HTMLElement, offset: number, user: UserBasic) => void,
@@ -106,8 +107,15 @@ export class RichPop extends React.Component<{
     visible: boolean = false;
     selectIndex: number = 0;
     onSelect(user: UserBasic) {
-        if (user && typeof this.props.select == 'function')
-            this.props.select(this.startEl, this.offset, user)
+        if (user && typeof this.props.select == 'function') this.props.select(this.startEl, this.offset, user)
         this.close()
+    }
+    componentDidUpdate(prevProps: Readonly<{ searchUser?: (word: string) => Promise<UserBasic[]>; select?: (el: HTMLElement, offset: number, user: UserBasic) => void; }>, prevState: Readonly<{}>, snapshot?: any): void {
+        if (this.el) {
+            var c = this.el.querySelector('.item-hover-focus') as HTMLDivElement;
+            if (c) {
+                c.scrollIntoView()
+            }
+        }
     }
 }
