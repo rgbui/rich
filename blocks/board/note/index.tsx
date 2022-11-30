@@ -81,6 +81,10 @@ export class Note extends Block {
     get isEnterCreateNewLine(): boolean {
         return false;
     }
+    get isCanEmptyDelete() {
+        if (this.isFreeBlock) return false;
+        else return true;
+    }
 }
 @view('/note')
 export class NoteView extends BlockView<Note>{

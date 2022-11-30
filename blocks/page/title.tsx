@@ -44,6 +44,9 @@ export class Title extends Block {
     get handleBlock() {
         return null;
     }
+    get isCanEmptyDelete() {
+        return false
+    }
 }
 @view('/title')
 export class TitleView extends BlockView<Title>{

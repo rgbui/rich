@@ -96,6 +96,10 @@ export class Shape extends Block {
         });
     @prop()
     svgName: string = '5';
+    get isCanEmptyDelete() {
+        if (this.isFreeBlock) return false;
+        else return true;
+    }
 }
 @view('/shape')
 export class ShapeView extends BlockView<Shape>{

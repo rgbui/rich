@@ -182,7 +182,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
         /**
          * 标题不能回退删除
          */
-        if (isEmpty && aa.block.url == BlockUrlConstant.Title) {
+        if (isEmpty && !aa.block.isCanEmptyDelete) {
             return;
         }
         await InputForceStore(aa, async () => {
@@ -285,7 +285,7 @@ export async function inputBackSpaceTextContent(write: PageWrite, aa: AppearAnch
             var rowBlock = block.closest(x => !x.isLine);
             var prev = block.prev;
             var isLine = block.isLine;
-            if (block.isContentEmpty && block.isLine) await block.delete();
+            if (block.isContentEmpty && block.isLine && !block.isLineGap) await block.delete();
             write.kit.page.addUpdateEvent(async () => {
                 if (isLine && prev) {
                     write.kit.anchorCursor.onFocusBlockAnchor(prev, { last: true, render: true, merge: true })

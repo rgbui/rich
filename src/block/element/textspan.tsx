@@ -230,6 +230,10 @@ export class TextSpan extends Block {
         if (this.childs.length > 0) return `<p>${await this.getChildsHtml()}</p>`
         else return `<p>${this.content}</p>`
     }
+    get isCanEmptyDelete() {
+        if (this.isFreeBlock) return false;
+        else return true;
+    }
 }
 @view("/textspan")
 export class TextSpanView extends BlockView<TextSpan>{

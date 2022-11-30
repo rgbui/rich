@@ -263,6 +263,12 @@ export abstract class Block extends Events {
     get isLine(): boolean {
         return this.display == BlockDisplay.inline;
     }
+    /**
+     * 有间隔的行内块
+     */
+    get isLineGap(){
+        return false;
+    }
     get isLineSolid(): boolean {
         if (this.isLine) {
             if (this.appearAnchors.exists(g => g.appear == BlockAppear.solid)) return true;
@@ -743,6 +749,10 @@ export abstract class Block extends Events {
     }) => {
         await this.onUpdateProps(props, options)
     }, 700)
+
+    get isCanEmptyDelete() {
+        return true
+    }
 }
 export interface Block extends Block$Seek { }
 export interface Block extends Block$Event { }

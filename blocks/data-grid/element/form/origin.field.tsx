@@ -33,7 +33,6 @@ export class OriginFormField extends Block {
     fieldRemark: string = '';
     fieldError: string = '';
 }
-
 export function FieldView(props: { block: OriginFormField, children?: JSX.Element | string | React.ReactNode }) {
     var block = props.block;
     return <div className='sy-form-field' onMouseDown={e => e.stopPropagation()}>

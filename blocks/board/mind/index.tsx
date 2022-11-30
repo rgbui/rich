@@ -483,6 +483,9 @@ export class FlowMind extends Block {
             }
         });
     }
+    get isCanEmptyDelete() {
+        return false
+    }
 }
 @view('/flow/mind')
 export class FlowMindView extends BlockView<FlowMind>{
