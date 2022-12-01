@@ -12,8 +12,30 @@ import { BackgroundColorList } from "../../../../extensions/color/data";
 import { IconArguments } from "../../../../extensions/icon/declare";
 import { Rect } from "../../../../src/common/vector/point";
 import { util } from "../../../../util/util";
+import { FieldType } from "../../schema/type";
+import { CardModel, CardViewCom } from "../factory/observable";
 import { CardView } from "../view";
+import * as Card1 from "../../../src/assert/img/card.1.png"
 
+
+CardModel( {
+    url: '/card/pinterest',
+    title: 'Pinterest瀑布流的形式展现图片内容',
+    remark: '适用于摄影等图像展示',
+    image: Card1.default,
+    props: [
+        {
+            name: 'cover',
+            text: '封面图',
+            types: [FieldType.image, FieldType.video]
+        },
+        { name: 'author', text: '作者', types: [FieldType.creater] },
+        { name: 'title', text: '标题', types: [FieldType.title, FieldType.text] },
+        { name: 'remark', text: '描述', types: [FieldType.text] },
+        { name: 'like', text: '喜欢', types: [FieldType.like] }
+    ]
+})
+@CardViewCom('/card/pinterest')
 export class CardPin extends CardView {
     render(): ReactNode {
         var self = this;

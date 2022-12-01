@@ -36,9 +36,7 @@ export class Title extends Block {
     }
     onEmptyTitleFocusAnchor() {
         if (this.page?.pageInfo) {
-            if (!this.page?.pageInfo.text) {
-                this.page.kit.anchorCursor.onFocusBlockAnchor(this, { render: true });
-            }
+            this.page.kit.anchorCursor.onFocusBlockAnchor(this, { render: true });
         }
     }
     get handleBlock() {
@@ -79,7 +77,7 @@ export class TitleView extends BlockView<Title>{
     }
     render() {
         var isAdd: boolean = this.block.page.isSupportCover;
-        var pd=this.block.page.getPageDataInfo();
+        var pd = this.block.page.getPageDataInfo();
         return <div className='sy-block-page-info' style={this.block.visibleStyle}>
             <div className="min-h-72">{this.block.pageInfo?.icon && pd.cover?.abled !== true && <div onMouseDown={e => this.block.page.onChangeIcon(e)} className="sy-block-page-info-icon">
                 <Icon size={72} icon={this.block.pageInfo?.icon}></Icon>

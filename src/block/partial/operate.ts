@@ -459,12 +459,18 @@ export class Block$Operator {
         if (Object.keys(oldValue).length > 0 || Object.keys(newValue).length > 0) {
             await this.changeProps(oldValue, newValue);
             this.syncUpdate(range);
-            this.page.snapshoot.record(OperatorDirective.$update, {
-                pos: this.pos,
-                old_value: oldValue,
-                new_value: newValue,
-                range
-            }, this);
+            for (let n in newValue) {
+                /**只保留标记@prop 的才record */
+                if (this.__props.includes(n)) continue
+                else { delete newValue[n]; delete oldValue[n] }
+            }
+            if (Object.keys(newValue).length > 0)
+                this.page.snapshoot.record(OperatorDirective.$update, {
+                    pos: this.pos,
+                    old_value: oldValue,
+                    new_value: newValue,
+                    range
+                }, this);
         }
     }
     async updateMatrix(this: Block, oldMatrix: Matrix, newMatrix: Matrix) {
@@ -510,12 +516,18 @@ export class Block$Operator {
         }
         if (Object.keys(oldValue).length > 0) {
             this.syncUpdate(range);
-            this.page.snapshoot.record(OperatorDirective.$update, {
-                pos: this.pos,
-                old_value: oldValue,
-                new_value: newValue,
-                range
-            }, this);
+            for (let n in newValue) {
+                /**只保留标记@prop 的才record */
+                if (this.__props.includes(n)) continue
+                else { delete newValue[n]; delete oldValue[n] }
+            }
+            if (Object.keys(newValue).length > 0)
+                this.page.snapshoot.record(OperatorDirective.$update, {
+                    pos: this.pos,
+                    old_value: oldValue,
+                    new_value: newValue,
+                    range
+                }, this);
         }
     }
     updateArrayInsert(this: Block, key: string, at: number, data: any, range = BlockRenderRange.self) {

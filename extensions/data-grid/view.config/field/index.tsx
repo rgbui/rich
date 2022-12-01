@@ -15,14 +15,14 @@ import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare"
 import { FieldType } from "../../../../blocks/data-grid/schema/type";
 import { TableStoreGallery } from "../../../../blocks/data-grid/view/gallery";
 import { Button } from "../../../../component/view/button";
-import { useCardSelector } from "../../../../blocks/data-grid/card/selector";
+import { useCardSelector } from "../../../../blocks/data-grid/card/selector/selector";
 import { BlockRenderRange } from "../../../../src/block/enum";
-import { cardStores } from "../../../../blocks/data-grid/card/data";
 import { SelectBox } from "../../../../component/view/select/box";
 import { CardConfig } from "../../../../blocks/data-grid/view/item/service";
 import { Field } from "../../../../blocks/data-grid/schema/field";
 import { ViewField } from "../../../../blocks/data-grid/schema/view";
 import { useSelectMenuItem } from "../../../../component/view/menu";
+import { CardFactory } from "../../../../blocks/data-grid/card/factory/factory";
 
 export class DataGridFields extends EventsComponent {
     get schema() {
@@ -237,7 +237,7 @@ export class DataGridFields extends EventsComponent {
     }
     renderCardView() {
         var self = this;
-        var card = cardStores.get().find(g => g.url == (self.block as TableStoreGallery).cardConfig?.templateProps?.url);
+        var card = CardFactory.CardModels.get( (self.block as TableStoreGallery).cardConfig?.templateProps?.url);
         async function openSelect(event: React.MouseEvent) {
             var r = await useCardSelector({ roundArea: Rect.fromEvent(event) }, {});
             if (r) {

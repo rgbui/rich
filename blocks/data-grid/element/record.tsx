@@ -5,7 +5,7 @@ import { prop, url, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
 import { ChildsArea } from "../../../src/block/view/appear";
 import { util } from "../../../util/util";
-import { getCardView } from "../card/factory";
+import { CardFactory } from "../card/factory/factory";
 import { TableSchema } from "../schema/meta";
 import { FieldType } from "../schema/type";
 import { ViewField } from "../schema/view";
@@ -149,7 +149,7 @@ export class DataGridItemRecord extends Block {
 export class DataGridItemRecordView extends BlockView<DataGridItemRecord>{
     renderItem() {
         if (this.block.cardConfig.showTemplate && this.block.cardConfig.templateProps.url) {
-            var CV = getCardView(this.block.cardConfig.templateProps.url);
+            var CV = CardFactory.getCardView(this.block.cardConfig.templateProps.url);
             if (CV) return <CV item={this.block} dataGrid={this.block}></CV>
         }
         else if (this.block.cardConfig.showCover) {

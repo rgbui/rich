@@ -252,8 +252,8 @@ export class Block$Event {
     }
     async onClone(this: Block) {
         /**
-                       * 复制块
-                       */
+        *复制块
+        */
         this.page.onAction(ActionDirective.onCopyBlock, async () => {
             var d = await this.cloneData();
             var pa = this.parent;
