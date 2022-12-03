@@ -59,8 +59,8 @@ export class PageView extends Component<{ page: Page }>{
         document.addEventListener('keyup', (this._keyup = this.page.onKeyup.bind(this.page)), true);
         this.AutomaticHandle();
     }
-    updatePageInfo = (r: { elementUrl: string, pageInfo: LinkPageItem }) => {
-        if (this.page.elementUrl === r.elementUrl) {
+    updatePageInfo = (r: { id: string, elementUrl: string, pageInfo: LinkPageItem }) => {
+        if (r.elementUrl && this.page.elementUrl === r.elementUrl || r.id && r.id == r.pageInfo.id) {
             if (this.page.onceStopRenderByPageInfo == true) {
                 this.page.onceStopRenderByPageInfo = false;
                 return;
