@@ -25,6 +25,7 @@ import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.f
 import { Field } from "../../../blocks/data-grid/schema/field";
 import { DataGridView } from "../../../blocks/data-grid/view/base";
 import { FieldType } from "../../../blocks/data-grid/schema/type";
+import { QueueHandle } from "../../../component/lib/queue";
 
 export class Page$Cycle {
     async init(this: Page) {
@@ -186,8 +187,8 @@ export class Page$Cycle {
         var r = await import("../template/default.page");
         return r.data;
     }
-    async loadDefaultData(this:Page){
-        var data=await  this.getDefaultData();
+    async loadDefaultData(this: Page) {
+        var data = await this.getDefaultData();
         await this.load(data);
     }
     async loadDefaultScheamView(this: Page) {
@@ -361,36 +362,48 @@ export class Page$Cycle {
             })
         }
     }
+
+    /**
+     * onAction在执行时，会出现并发的情况，
+     * 这时通过onActionQueue把并发的请求变成一个队列，然后有序执行
+     */
+    onActionQueue: QueueHandle;
     async onAction(this: Page,
         directive: ActionDirective | string,
-        fn: () => Promise<void>, syncBlock?: { block?: Block }
+        fn: () => Promise<void>,
+        options?: { block?: Block, disabledStore?: boolean }
     ) {
-        await this.snapshoot.sync(directive, async () => {
-            this.willUpdateBlocks = [];
-            this.willLayoutBlocks = [];
-            this.willUpdateAll = false;
-            this.updatedFns = [];
-            try {
-                if (typeof fn == 'function') await fn();
-            } catch (ex) {
-                this.onError(ex);
-            }
-            finally {
-                try {
-                    if (Array.isArray(this.willLayoutBlocks) && this.willLayoutBlocks.length > 0) {
-                        var bs = this.willLayoutBlocks;
-                        await bs.eachAsync(async (block) => {
-                            await block.layoutCollapse();
-                        });
-                        this.willLayoutBlocks = [];
+        if (typeof this.onActionQueue == 'undefined') this.onActionQueue = new QueueHandle();
+        await this.onActionQueue.create(
+            async () => {
+                await this.snapshoot.sync(directive, async () => {
+                    this.willUpdateBlocks = [];
+                    this.willLayoutBlocks = [];
+                    this.willUpdateAll = false;
+                    this.updatedFns = [];
+                    try {
+                        if (typeof fn == 'function') await fn();
+                    } catch (ex) {
+                        this.onError(ex);
                     }
-                }
-                catch (ex) {
-                    this.onError(ex);
-                }
-                this.notifyUpdateBlock();
+                    finally {
+                        try {
+                            if (Array.isArray(this.willLayoutBlocks) && this.willLayoutBlocks.length > 0) {
+                                var bs = this.willLayoutBlocks;
+                                await bs.eachAsync(async (block) => {
+                                    await block.layoutCollapse();
+                                });
+                                this.willLayoutBlocks = [];
+                            }
+                        }
+                        catch (ex) {
+                            this.onError(ex);
+                        }
+                        this.notifyUpdateBlock();
+                    }
+                }, options)
             }
-        }, syncBlock)
+        )
     }
     onUnmount(this: Page) {
         ReactDOM.unmountComponentAtNode(this.root);

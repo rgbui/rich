@@ -45,6 +45,9 @@ export class PageView extends Component<{ page: Page }>{
     private _wheel;
     el: HTMLElement;
     componentDidMount() {
+        this.didMounted();
+    }
+    async didMounted() {
         this.el = ReactDOM.findDOMNode(this) as HTMLElement;
         channel.sync('/page/update/info', this.updatePageInfo);
         this.observeScroll();
@@ -57,7 +60,7 @@ export class PageView extends Component<{ page: Page }>{
         document.addEventListener('mousemove', (this._mousemove = this.page.onMousemove.bind(this.page)));
         document.addEventListener('mouseup', (this._mouseup = this.page.onMouseup.bind(this.page)));
         document.addEventListener('keyup', (this._keyup = this.page.onKeyup.bind(this.page)), true);
-        this.AutomaticHandle();
+        await this.AutomaticHandle();
     }
     updatePageInfo = (r: { id: string, elementUrl: string, pageInfo: LinkPageItem }) => {
         if (r.elementUrl && this.page.elementUrl === r.elementUrl || r.id && r.id == r.pageInfo.id) {
@@ -143,7 +146,7 @@ export class PageView extends Component<{ page: Page }>{
             <div className="shy-page-view-template-picker-items">
                 <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.doc)}><Icon size={16} icon={PageSvg} ></Icon><span>页面</span></a>
                 <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.db)}><Icon size={16} icon={CollectTableSvg} ></Icon><span>表格</span></a>
-                <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.docCard)}><Icon size={16} icon={DocCardsSvg} ></Icon><span>幻灯片</span></a>
+                <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.docCard)}><Icon size={16} icon={DocCardsSvg} ></Icon><span>宣传页</span></a>
                 <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.board)}><Icon size={16} icon={BoardCardSvg}></Icon><span>白板</span></a>
                 <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.textChannel)}><Icon size={16} icon={BoardToolFrameSvg}></Icon><span>频道</span></a>
             </div>
@@ -238,7 +241,7 @@ export class PageView extends Component<{ page: Page }>{
                     isForceUpdate = true;
                 }
             }
-            if (isForceUpdate = true) {
+            if (isForceUpdate == true) {
                 this.forceUpdate()
             }
         })

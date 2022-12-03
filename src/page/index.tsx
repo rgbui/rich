@@ -30,6 +30,7 @@ import { Title } from '../../blocks/page/title';
 import { AppearAnchor } from '../block/appear';
 import { AtomPermission } from './permission';
 import { parseElementUrl } from '../../net/element.type';
+import { BlockUrlConstant } from '../block/constant';
 
 export class Page extends Events<PageDirective> {
     root: HTMLElement;
@@ -128,7 +129,7 @@ export class Page extends Events<PageDirective> {
             var nextAction = () => {
                 if (this.pageInfo) {
                     if (!this.pageInfo.text) {
-                        var title = this.find(g => g.url == '/title') as Title;
+                        var title = this.find(g => g.url == BlockUrlConstant.Title) as Title;
                         if (title) {
                             title.onEmptyTitleFocusAnchor();
                         }
