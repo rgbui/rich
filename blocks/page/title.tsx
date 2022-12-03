@@ -36,7 +36,7 @@ export class Title extends Block {
     }
     onEmptyTitleFocusAnchor() {
         if (this.page?.pageInfo) {
-            this.page.kit.anchorCursor.onFocusBlockAnchor(this, { render: true });
+            this.page.kit.anchorCursor.onFocusBlockAnchor(this, { store: false, render: true });
         }
     }
     get handleBlock() {
@@ -53,12 +53,12 @@ export class TitleView extends BlockView<Title>{
         await this.block.loadPageInfo();
         this.forceUpdate(() => {
             this.block.onEmptyTitleFocusAnchor();
-        });
+        })
     }
     updatePageInfo = (r: { elementUrl: string, id: string, pageInfo: LinkPageItem }) => {
         var { elementUrl, id, pageInfo } = r;
         if (elementUrl && this.block.page.elementUrl == elementUrl || id && id == this.block.page.pageInfo?.id) {
-          var isUpdate: boolean = false;
+            var isUpdate: boolean = false;
             if (typeof pageInfo.text != 'undefined' && pageInfo.text != this.block.pageInfo.text) {
                 this.block.pageInfo.text = pageInfo.text;
                 isUpdate = true;
