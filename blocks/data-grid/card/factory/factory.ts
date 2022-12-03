@@ -1,7 +1,5 @@
 import { CardPropsType } from "../declare";
 import { CardView } from "../view";
-import { CardPin } from "../views/pin";
-
 export class CardFactory {
     static CardModels = new Map<string, CardPropsType>();
     static registerCardModel(model: CardPropsType) {
@@ -23,7 +21,3 @@ export class CardFactory {
     }
 }
 
-// export function getCardView(url: string): typeof CardView {
-
-//     return CardPin;
-// }

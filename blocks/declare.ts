@@ -35,6 +35,8 @@ import './table/cell';
 import './table/row';
 import './table';
 
+
+import "./data-grid/card/declare";
 import './data-grid/view/table';
 import './data-grid/view/table/view';
 import "./data-grid/view/table/row";
