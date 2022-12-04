@@ -94,6 +94,7 @@ export class TitleView extends BlockView<Title>{
                     block={this.block}
                     placeholder='输入标题'
                     prop='pageInfo.text'
+                    placeholderEmptyVisible
                 ></TextArea></span>
             </div>}
         </div>

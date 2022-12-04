@@ -4,6 +4,7 @@ import { Block } from '..';
 import { BlockAppear } from '../appear';
 export function TextArea(props: {
     block: Block,
+    placeholderEmptyVisible?: boolean,
     prop?: string,
     html?: string,
     /**是否为纯文本 */
@@ -50,13 +51,15 @@ export function TextArea(props: {
     var html = props.html;
     if (typeof html == 'undefined') html = lodash.get(props.block, props.prop);
     if (html == '' && typeof props.default != 'undefined') html = props.default;
+    var classList: string[] = ['shy-appear-text'];
+    if (props.placeholderEmptyVisible) classList.push('shy-text-empy-visible');
     if (props.isBlock) {
-        if (props.isHtml) return <div className='shy-appear-text' dangerouslySetInnerHTML={{ __html: html }} {...(ps as any)}></div>
-        return <div className='shy-appear-text' {...(ps as any)}>{html}</div>
+        if (props.isHtml) return <div className={classList.join(" ")} dangerouslySetInnerHTML={{ __html: html }} {...(ps as any)}></div>
+        return <div className={classList.join(" ")} {...(ps as any)}>{html}</div>
     }
     else {
-        if (props.isHtml) return <span className='shy-appear-text' dangerouslySetInnerHTML={{ __html: html }} {...ps}></span>
-        return <span className='shy-appear-text' {...ps}>{html}</span>
+        if (props.isHtml) return <span className={classList.join(" ")} dangerouslySetInnerHTML={{ __html: html }} {...ps}></span>
+        return <span className={classList.join(" ")} {...ps}>{html}</span>
     }
 }
 export function SolidArea(props: {
