@@ -11,6 +11,7 @@ import BillingSvg from "../src/assert/svg/billing.svg";
 import BlockcolorSvg from "../src/assert/svg/blockcolor.svg";
 import BlogSvg from "../src/assert/svg/blog.svg";
 import BoardCardSvg from "../src/assert/svg/board.card.svg";
+import BoardIconSvg from "../src/assert/svg/board.icon.svg";
 import BoardMoveBottomSvg from "../src/assert/svg/board.move.bottom.svg";
 import BoardMoveTopSvg from "../src/assert/svg/board.move.top.svg";
 import BoardRefreshSvg from "../src/assert/svg/board.refresh.svg";
@@ -215,6 +216,7 @@ BillingSvg,
 BlockcolorSvg,
 BlogSvg,
 BoardCardSvg,
+BoardIconSvg,
 BoardMoveBottomSvg,
 BoardMoveTopSvg,
 BoardRefreshSvg,
