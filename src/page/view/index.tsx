@@ -11,9 +11,7 @@ import { channel } from "../../../net/channel";
 import { LinkPageItem } from "../../../extensions/at/declare";
 import { PageCover } from "./cover";
 import { Icon } from "../../../component/view/icon";
-
 import {
-    BoardCardSvg,
     BoardIconSvg,
     BoardToolFrameSvg,
     CollectTableSvg,
@@ -23,6 +21,8 @@ import {
 import { dom } from "../../common/dom";
 import { PageOutLine } from "../../../blocks/page/outline";
 import { ActionDirective } from "../../history/declare";
+import { Block } from "../../block";
+import { PageDirective } from "../directive";
 
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
@@ -126,7 +126,7 @@ export class PageView extends Component<{ page: Page }>{
         if (outLineBlock) {
             (outLineBlock as PageOutLine).updateOutlinesHover()
         }
-    };
+    }
     scrollDiv: HTMLElement;
     componentWillUnmount() {
         channel.off('/page/update/info', this.updatePageInfo);
@@ -141,15 +141,34 @@ export class PageView extends Component<{ page: Page }>{
         delete this.el.shy_end;
         if (this.scrollDiv) this.scrollDiv.removeEventListener('scroll', this.scroll);
     }
+    async onPageTurnLayout(type: PageLayoutType) {
+        if (type == PageLayoutType.doc) {
+            await this.page.onPageTurnLayout(type, async () => {
+                var lastBlock = this.page.findReverse(g => g.isBlock);
+                var newBlock: Block;
+                if (lastBlock && lastBlock.parent == this.page.views.last()) {
+                    newBlock = await this.page.createBlock(BlockUrlConstant.TextSpan, {}, lastBlock.parent, lastBlock.at + 1);
+                }
+                else {
+                    newBlock = await this.page.createBlock(BlockUrlConstant.TextSpan, {}, this.page.views.last());
+                }
+                newBlock.mounted(() => {
+                    this.page.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true });
+                })
+            });
+        }
+        else await this.page.onPageTurnLayout(type);
+        this.page.emit(PageDirective.save);
+    }
     renderPageTemplate() {
         return <div className="shy-page-view-template-picker" style={this.page.getScreenStyle()}>
             <div className="shy-page-view-template-picker-tip">回车开始编辑，或者从下方选择</div>
             <div className="shy-page-view-template-picker-items">
-                <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.doc)}><Icon size={16} icon={PageSvg} ></Icon><span>页面</span></a>
-                <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.db)}><Icon size={16} icon={CollectTableSvg} ></Icon><span>表格</span></a>
-                <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.docCard)}><Icon size={16} icon={DocCardsSvg} ></Icon><span>宣传页</span></a>
-                <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.board)}><Icon size={16} icon={BoardIconSvg}></Icon><span>白板</span></a>
-                <a onMouseDown={e => this.page.onPageTurnLayout(PageLayoutType.textChannel)}><Icon size={16} icon={BoardToolFrameSvg}></Icon><span>频道</span></a>
+                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={16} icon={PageSvg} ></Icon><span>页面</span></a>
+                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.db)}><Icon size={16} icon={CollectTableSvg} ></Icon><span>表格</span></a>
+                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.docCard)}><Icon size={16} icon={DocCardsSvg} ></Icon><span>宣传页</span></a>
+                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.board)}><Icon size={16} icon={BoardIconSvg}></Icon><span>白板</span></a>
+                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.textChannel)}><Icon size={16} icon={BoardToolFrameSvg}></Icon><span>频道</span></a>
             </div>
         </div>
     }
