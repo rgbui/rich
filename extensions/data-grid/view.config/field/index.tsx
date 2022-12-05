@@ -55,7 +55,8 @@ export class DataGridFields extends EventsComponent {
         }
         async function openProperty(type: 'field' | 'view', viewField: ViewField | Field, event: React.MouseEvent) {
             var gr = type == "view" ? (viewField as any).field as Field : (viewField as Field); ((viewField as any).field ? (viewField as any).field : viewField) as Field;
-            if (gr) {
+            if (gr)
+            {
                 var items = [
                     { name: 'name', type: MenuItemType.input, value: gr.text },
                     { type: MenuItemType.divide },
@@ -116,6 +117,13 @@ export class DataGridFields extends EventsComponent {
                         </div>
                     })}</div>
                 </>}
+                <Divider></Divider>
+                <div onClick={e => this.addField(e)} className="flex h-30 item-hover padding-w-14 round cursor text-1 f-14 ">
+                    <span className="size-24 round flex-center flex-fix cursor">
+                        <Icon size={16} icon={PlusSvg}></Icon>
+                    </span>
+                    <span className="flex-auto">添加字段</span>
+                </div>
             </div>
         </div>
     }
@@ -237,7 +245,7 @@ export class DataGridFields extends EventsComponent {
     }
     renderCardView() {
         var self = this;
-        var card = CardFactory.CardModels.get( (self.block as TableStoreGallery).cardConfig?.templateProps?.url);
+        var card = CardFactory.CardModels.get((self.block as TableStoreGallery).cardConfig?.templateProps?.url);
         async function openSelect(event: React.MouseEvent) {
             var r = await useCardSelector({ roundArea: Rect.fromEvent(event) }, {});
             if (r) {

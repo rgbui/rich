@@ -38,15 +38,26 @@ export class TableStoreView extends BlockView<TableStore>{
         var index = -1;
         var headRect = Rect.fromEle(head);
         if (event.clientY > headRect.top && event.clientY < headRect.bottom) {
-            for (let i = 0; i < this.block.fields.length; i++) {
-                var col = this.block.fields[i];
-                w += col.colWidth;
+            var cs = Array.from(head.querySelectorAll('.sy-dg-table-head-th')) as HTMLElement[];
+            for (let i = 0; i < cs.length; i++) {
+                var th = cs[i];
+                var thRect = Rect.fromEle(th);
+                w += thRect.width;
                 var bw = tableLeft + w;
                 if (bw - gap < event.clientX && event.clientX < bw + gap) {
                     index = i;
                     break;
                 }
             }
+            // for (let i = 0; i < this.block.fields.length; i++) {
+            //     var col = this.block.fields[i];
+            //     w += col.colWidth;
+            //     var bw = tableLeft + w;
+            //     if (bw - gap < event.clientX && event.clientX < bw + gap) {
+            //         index = i;
+            //         break;
+            //     }
+            // }
         }
         if (index > -1) {
             this.subline.style.display = 'block';
@@ -68,6 +79,8 @@ export class TableStoreView extends BlockView<TableStore>{
             if (typeof f.get == 'function') return f.get()
             else return lodash.cloneDeep(f)
         });
+        var head = self.block.el.querySelector('.sy-dg-table-head');
+        var cs = Array.from(head.querySelectorAll('.sy-dg-table-head-th')) as HTMLElement[];
         MouseDragger<{ colIndex: number, colWidth: number, colEles: HTMLElement[] }>({
             event,
             cursor: 'col-resize',
@@ -75,15 +88,13 @@ export class TableStoreView extends BlockView<TableStore>{
                 data.colIndex = parseInt(self.subline.getAttribute('data-index'));
                 var rs = self.block.el.querySelectorAll('.sy-dg-table-row');
                 var cols: HTMLElement[] = [];
-                var head = self.block.el.querySelector('.sy-dg-table-head');
-                var cs = Array.from(head.querySelectorAll('.sy-dg-table-head-th'));
                 cols.push(cs[data.colIndex] as HTMLElement)
                 rs.forEach(r => {
                     var c = r.children[data.colIndex] as HTMLElement;
                     cols.push(c);
                 })
                 data.colEles = cols;
-                data.colWidth = this.block.fields[data.colIndex].colWidth;
+                data.colWidth = Rect.fromEle(cs[data.colIndex]).width;
             },
             moving: (ev, data, isend) => {
                 self.isMoveLine = true;
@@ -93,7 +104,7 @@ export class TableStoreView extends BlockView<TableStore>{
                 data.colEles.forEach(el => {
                     el.style.width = w + 'px';
                 })
-                var left = this.block.fields.findAll((g, i) => i < data.colIndex).sum(g => g.colWidth) + w + 1;
+                var left = cs.findAll((g, i) => i < data.colIndex).sum(g => Rect.fromEle(g).width) + w;
                 self.subline.style.left = left + 'px';
                 var tableHeadRect = Rect.fromEle(self.block.el.querySelector('.sy-dg-table-head') as HTMLElement);
                 self.subline.style.height = (tableHeadRect.height) + 'px';
@@ -177,7 +188,7 @@ export class TableStoreView extends BlockView<TableStore>{
                     <div className={'sy-dg-table-head-th-icon flex-fix size-24 flex-center text-1'} >
                         <Icon icon={icon} size={16}></Icon>
                     </div>
-                    <label>{f.text || f.field?.text}</label>
+                    <label>{f.field?.text || f.text}</label>
                     {this.block.isCanEdit() && <div className={'sy-dg-table-head-th-property'} onMouseDown={e => this.block.onOpenFieldConfig(e, f)}><Icon icon={DotsSvg}></Icon></div>}
                 </div>
             })}
