@@ -16,6 +16,7 @@ import { TextEle } from "../../common/text.ele";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
 import { PageLayoutType } from "../../page/declare";
+import { PageDirective } from "../../page/directive";
 import { openBoardEditTool } from "../operator/board/edit";
 import { inputBackspaceDeleteContent, inputBackSpaceTextContent, inputDetector, inputLineTail, inputPop, keydownBackspaceTextContent } from "./input";
 import {
@@ -167,7 +168,7 @@ export class PageWrite {
             case KeyboardCode.Enter.toLowerCase():
                 if (this.kit.page.requireSelectLayout == true) {
                     event.preventDefault();
-                    this.kit.page.onPageTurnLayout(PageLayoutType.doc, async () => {
+                    await this.kit.page.onPageTurnLayout(PageLayoutType.doc, async () => {
                         var lastBlock = this.kit.page.findReverse(g => g.isBlock);
                         var newBlock: Block;
                         if (lastBlock && lastBlock.parent == this.kit.page.views.last()) {
@@ -180,6 +181,7 @@ export class PageWrite {
                             this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true });
                         })
                     });
+                    this.kit.page.emit(PageDirective.save)
                     return;
                 }
                 if (aa.block.isEnterCreateNewLine) {
