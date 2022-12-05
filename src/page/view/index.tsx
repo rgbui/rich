@@ -62,6 +62,7 @@ export class PageView extends Component<{ page: Page }>{
         document.addEventListener('mouseup', (this._mouseup = this.page.onMouseup.bind(this.page)));
         document.addEventListener('keyup', (this._keyup = this.page.onKeyup.bind(this.page)), true);
         await this.AutomaticHandle();
+        this.page.emit(PageDirective.mounted)
     }
     updatePageInfo = (r: { id: string, elementUrl: string, pageInfo: LinkPageItem }) => {
         if (r.elementUrl && this.page.elementUrl === r.elementUrl || r.id && r.id == r.pageInfo.id) {
