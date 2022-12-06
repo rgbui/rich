@@ -67,7 +67,7 @@ export class Callout extends TextSpan {
 export class CalloutView extends BlockView<Callout>{
     render() {
         return <div style={this.block.visibleStyle}><div className='sy-block-callout flex-top' style={{ ...this.block.contentStyle, padding: 16 }}>
-            <div onMouseDown={e => this.block.onChangeIcon(e)} className='size-20 flex-center round cursor item-hover flex-fixed gap-r-5'>
+            <div onMouseDown={e => this.block.onChangeIcon(e)} style={{width:this.block.page.lineHeight, height: this.block.page.lineHeight }} className='size-20 flex-center round cursor item-hover flex-fixed gap-r-5'>
                 <Icon size={18} icon={this.block.calloutIcon}></Icon>
             </div>
             <div className='flex-auto'>
