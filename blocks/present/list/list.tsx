@@ -82,8 +82,7 @@ export class List extends Block {
         var el = this.contentEl;
         var dire = DropDirection[direction];
         var className = 'shy-block-drag-over-' + dire;
-        if (!el.classList.contains(className))
-        {
+        if (!el.classList.contains(className)) {
             dom(el).removeClass(g => g.startsWith('shy-block-drag-over'));
             el.classList.add(className);
         }
@@ -96,7 +95,9 @@ export class List extends Block {
 @view('/list')
 export class ListView extends BlockView<List>{
     renderListType() {
-        if (this.block.listType == ListType.circle) return <span className='sy-block-list-text-type'>•</span>
+        if (this.block.listType == ListType.circle) return <span style={{ height: this.block.page.lineHeight }} className='sy-block-list-text-type'>
+            <i className="flex size-6 circle" style={{ backgroundColor: 'rgb(55,53,47)' }}></i>
+        </span>
         else if (this.block.listType == ListType.toggle) {
             return <span className='sy-block-list-text-type text ts-transform round item-hover'
                 style={{
