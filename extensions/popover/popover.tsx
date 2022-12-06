@@ -117,8 +117,9 @@ class Popover<T extends React.Component> extends EventsComponent<{
     onGlobalMousedown = (event: MouseEvent) => {
 
         if (this.visible == true && this.props.mask != true)
-            event.stopPropagation();
+        {   event.stopPropagation();}
         if (this.el && this.props.mask != true) {
+           
             var target = event.target as HTMLDivElement;
             if (this.el.contains(target)) return;
             this.onClose();
