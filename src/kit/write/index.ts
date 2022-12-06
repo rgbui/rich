@@ -437,6 +437,7 @@ export class PageWrite {
                         no = nend.content.length;
                     }
                     else {
+                        nend = es.first();
                         if (this.kit.anchorCursor.endOffset == 0) no = 0;
                         else no = nend.content.length;
                     }
