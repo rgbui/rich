@@ -18,9 +18,8 @@ class ColorSelector extends EventsComponent {
             <div className='shy-color-selector-box-head'><span>文字颜色</span></div>
             <div className='shy-color-selector-box-content'>
                 {FontColorList.map((x, i) => {
-                    return <div key={x.color + i} className='shy-color-selector-item'>
-                        <a onClick={e => this.onChange({ color: x.color })}
-                            style={{ color: x.color }}>A</a>
+                    return <div onMouseDown={e => this.onChange({ color: x.color })} key={x.color + i} className={'shy-color-selector-item' + (x.color == this.cv?.color || !this.cv?.color && i == 0 ? " hover" : "")}>
+                        <a style={{ color: x.color }}>A</a>
                         <span>{x.text}</span>
                     </div>
                 })}
@@ -31,9 +30,9 @@ class ColorSelector extends EventsComponent {
         return <div className='shy-color-selector-box'>
             <div className='shy-color-selector-box-head'><span>背景色</span></div>
             <div className='shy-color-selector-box-content'>
-                {BackgroundColorList.map(x => {
-                    return <div key={x.color + 'bg'} className='shy-color-selector-item'>
-                        <a onClick={e => this.onChange({ backgroundColor: x.color })}
+                {BackgroundColorList.map((x, i) => {
+                    return <div onMouseDown={e => this.onChange({ backgroundColor: x.color })} key={x.color + 'bg'} className={'shy-color-selector-item' + (x.color == this.cv?.backgroundColor || !this.cv?.backgroundColor && i == 0 ? " hover" : "")}>
+                        <a
                             style={{ backgroundColor: x.color }}>A</a>
                         <span>{x.text}</span>
                     </div>
@@ -50,15 +49,21 @@ class ColorSelector extends EventsComponent {
     onChange(value: ColorValue) {
         this.emit('change', value);
     }
+    cv: ColorValue;
+    open(cv: ColorValue) {
+        this.cv = cv;
+        this.forceUpdate();
+    }
 }
 
 interface ColorSelector {
     emit(name: 'change', data: ColorValue);
     only(name: 'change', fn: (data: ColorValue) => void);
 }
-export async function useColorSelector(pos: PopoverPosition) {
-    let popover = await PopoverSingleton(ColorSelector, {});
+export async function useColorSelector(pos: PopoverPosition, options: ColorValue) {
+    let popover = await PopoverSingleton(ColorSelector, { mask: true });
     let colorSelector = await popover.open(pos);
+    colorSelector.open(options);
     return new Promise((resolve: (data: ColorValue) => void, reject) => {
         colorSelector.only('change', (data) => {
             popover.close();
