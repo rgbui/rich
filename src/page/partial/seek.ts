@@ -5,6 +5,7 @@ import { BlockCssName } from "../../block/pattern/css";
 import { dom } from "../../common/dom";
 import { Point, Rect } from "../../common/vector/point";
 import { TextToolStyle } from "../../../extensions/text.tool";
+import lodash from "lodash";
 const GAP = 10;
 export class Page$Seek {
     /**
@@ -103,7 +104,17 @@ export class Page$Seek {
             if (!(bl.asTextContent && bl.asTextContent.code)) {
                 textStyle.code = false;
             }
+            var fill = bl.pattern.css(BlockCssName.fill);
+            if (fill?.mode == 'color') {
+                if (typeof textStyle.fill == 'undefined')
+                    textStyle.fill = { mode: 'color', color: fill.color };
+                else if (textStyle.fill) {
+                    if (!lodash.isEqual(textStyle.fill, { mode: 'color', color: fill.color }))
+                        textStyle.fill = null;
+                }
+            } else textStyle.fill = null;
         });
+        if (lodash.isNull(textStyle.fill)) delete textStyle.fill;
         textStyle.equation = blocks.every(b => b.url == '/katex/line');
         return textStyle;
     }
