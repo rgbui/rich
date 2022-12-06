@@ -56,15 +56,16 @@ export class QuoteView extends BlockView<Quote>{
     render() {
         return <div style={this.block.visibleStyle}><div className='sy-block-quote'
             style={{ ...this.block.contentStyle }}
-        >
-            <div className='sy-block-quote-bar'></div>
-            <div className='sy-block-quote-content'>
-                <div data-block-content>
-                    {this.block.childs.length > 0 && <TextLineChilds childs={this.block.childs} rf={e => this.block.childsEl = e}></TextLineChilds>}
-                    {this.block.childs.length == 0 && <TextArea block={this.block} prop='content' placeholder={'引用'}></TextArea>}
-                </div>
-                <div>
-                    <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>
+        ><div className="gap-h-10 relative">
+                <div className='sy-block-quote-bar'></div>
+                <div className='sy-block-quote-content'>
+                    <div data-block-content>
+                        {this.block.childs.length > 0 && <TextLineChilds childs={this.block.childs} rf={e => this.block.childsEl = e}></TextLineChilds>}
+                        {this.block.childs.length == 0 && <TextArea block={this.block} prop='content' placeholder={'引用'}></TextArea>}
+                    </div>
+                    <div>
+                        <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>
+                    </div>
                 </div>
             </div>
         </div></div>
