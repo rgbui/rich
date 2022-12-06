@@ -140,9 +140,8 @@ export class ExpressParser {
         }
         else {
             if (op.value == '!') {
-                if (r2) {
-                    exp.push(this.toUnit(r2))
-                }
+                if (rightExp) exp.push(rightExp)
+                else if (r2) exp.push(this.toUnit(r2))
             }
             else {
                 if (r1) exp.push(this.calcExpress(r1))
