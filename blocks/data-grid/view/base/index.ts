@@ -92,7 +92,8 @@ export class DataGridView extends Block {
     init(this: DataGridView): void {
         super.init();
         this.registerPropMeta('fields', undefined, true, (v) => {
-            return new ViewField(v, this.schema);
+           var d= new ViewField(v, this.schema);
+           return d;
         });
     }
     async load(this: DataGridView, data) {

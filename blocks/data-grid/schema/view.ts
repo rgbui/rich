@@ -19,10 +19,10 @@ export class ViewField {
         if (options) this.load(options);
         if (schema) {
             this.schema = schema;
-            if (this.field?.type && [FieldType.video, FieldType.audio, FieldType.image].includes(this.field.type)) {
+            if (typeof options.colWidth != 'undefined' && this.field?.type && [FieldType.video, FieldType.audio, FieldType.image].includes(this.field.type)) {
                 this.colWidth = 240;
             }
-            else if (this.field?.type && [FieldType.button]) {
+            else if (typeof options.colWidth != 'undefined' && this.field?.type && [FieldType.button].includes(this.field.type)) {
                 this.colWidth = 150;
             }
         }

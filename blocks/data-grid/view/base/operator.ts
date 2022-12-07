@@ -435,10 +435,8 @@ export class DataGridViewOperator {
         else if (value == 'none' && !newFields.some(s => s.type == 'check')) return
         this.page.onAction(ActionDirective.onDataGridShowCheck, async () => {
             this.updateProps({ checkRow: value });
-
             if (value == 'checkbox') await this.arrayPush({ prop: 'fields', at: 0, data: new ViewField({ type: 'check', text: '选择' }, this.schema) })
             else await this.arrayRemove<ViewField>({ prop: 'fields', data: g => g.type == 'check' })
-
             await this.createItem();
             this.forceUpdate();
         }, { block: this })
