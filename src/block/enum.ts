@@ -11,10 +11,10 @@ export enum BlockDisplay {
 }
 
 export enum BlockRenderRange {
-    none=0,
-    self=1,
-    parent=2,
-    page=3
+    none = 0,
+    self = 1,
+    parent = 2,
+    page = 3
 }
 
 export enum BlockDirective {
