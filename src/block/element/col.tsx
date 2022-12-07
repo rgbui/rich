@@ -13,13 +13,14 @@ export class Col extends Block {
     }
     @prop()
     widthPercent: number = 100;
-    
 }
+
 @view('/col')
 export class ColView extends BlockView<Col>{
     render() {
+        var p = this.block.parent.childs.length;
         var style = {
-            width: (this.block.widthPercent || 100) + '%'
+            width: `calc((100% - ${(p - 1) * 46}px) * ${(this.block.widthPercent || 100) / 100})`
         }
         return <div className='sy-block-col' style={style} ref={e => this.block.childsEl = e}>
             <ChildsArea childs={this.block.childs}></ChildsArea>
