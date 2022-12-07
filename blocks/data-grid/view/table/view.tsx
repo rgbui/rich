@@ -8,7 +8,6 @@ import { GetFieldTypeSvg } from "../../schema/util"
 import { Point, Rect } from "../../../../src/common/vector/point"
 import { MouseDragger } from "../../../../src/common/dragger"
 import { DataGridTool } from "../components/tool"
-import { BlockRenderRange } from "../../../../src/block/enum"
 import { CheckSvg, CollectTableSvg, DotsSvg, PlusSvg, TypesNumberSvg } from "../../../../component/svgs"
 import { ghostView } from "../../../../src/common/ghost"
 import { ViewField } from "../../schema/view"
@@ -49,15 +48,6 @@ export class TableStoreView extends BlockView<TableStore>{
                     break;
                 }
             }
-            // for (let i = 0; i < this.block.fields.length; i++) {
-            //     var col = this.block.fields[i];
-            //     w += col.colWidth;
-            //     var bw = tableLeft + w;
-            //     if (bw - gap < event.clientX && event.clientX < bw + gap) {
-            //         index = i;
-            //         break;
-            //     }
-            // }
         }
         if (index > -1) {
             this.subline.style.display = 'block';
@@ -109,11 +99,10 @@ export class TableStoreView extends BlockView<TableStore>{
                 var tableHeadRect = Rect.fromEle(self.block.el.querySelector('.sy-dg-table-head') as HTMLElement);
                 self.subline.style.height = (tableHeadRect.height) + 'px';
                 if (isend) {
-                    var cols = self.block.fields;
-                    var col = cols[data.colIndex];
+                    var newFields = self.block.fields.map(f => f.clone());
+                    var col = newFields[data.colIndex];
                     col.colWidth = w;
-                    var newFields = self.block.fields.map(f => f.get());
-                    self.block.onManualUpdateProps({ fields: oldFields }, { fields: newFields }, { range: BlockRenderRange.none, isOnlyRecord: true })
+                    self.block.onChangeFields(self.block.fields, newFields);
                 }
             },
             moveEnd() {
@@ -175,7 +164,7 @@ export class TableStoreView extends BlockView<TableStore>{
     subline: HTMLElement;
     isMoveLine: boolean = false;
     renderHead() {
-        return <div style={{ minWidth: this.sumWidth }} onMouseLeave={e => this.mouseleaveHead(e)} className="sy-dg-table-head" onMouseMove={e => this.mousemove(e.nativeEvent)}>
+        return <div style={{ minWidth: this.block.sumWidth }} onMouseLeave={e => this.mouseleaveHead(e)} className="sy-dg-table-head" onMouseMove={e => this.mousemove(e.nativeEvent)}>
             <div className='sy-dg-table-subline' onMouseDown={e => this.onMousedownLine(e)} ref={e => this.subline = e}></div>
             {this.block.fields.map((f, i) => {
                 var icon: SvgrComponent | JSX.Element;
@@ -198,9 +187,7 @@ export class TableStoreView extends BlockView<TableStore>{
             </div>}
         </div>
     }
-    get sumWidth() {
-        return this.block.fields.sum(c => c.colWidth) + (this.block.isCanEdit() ? 40 : 0);
-    }
+
     renderBody() {
         var self = this;
         if (this.block.data) {
@@ -208,7 +195,7 @@ export class TableStoreView extends BlockView<TableStore>{
             return <SpinBox spin={this.block.isLoadingData}><div className='sy-dg-table-body'>
                 <ChildsArea childs={this.block.childs}></ChildsArea>
                 {this.block.isCanEdit() && <div
-                    style={{ width: this.sumWidth + 'px' }}
+                    style={{ width: this.block.sumWidth + 'px' }}
                     onMouseDown={e => { e.stopPropagation(); self.block.onAddRow({}, undefined, 'after') }}
                     className="sy-dg-table-add">
                     <span className="flex flex-inline cursor item-hover round padding-w-5">
