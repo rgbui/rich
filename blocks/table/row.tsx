@@ -17,6 +17,9 @@ export class TableRow extends Block {
     get isCanDrop() {
         return false;
     }
+    get handleBlock(){
+        return this.table;
+    }
 }
 @view('/table/row')
 export class TableRowView extends BlockView<TableRow>{

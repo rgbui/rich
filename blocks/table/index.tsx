@@ -22,16 +22,18 @@ export class Table extends Block {
     @prop()
     cols: { width: number }[] = [];
     async created() {
-        await this.updateProps({ cols: [{ width: COL_WIDTH }, { width: COL_WIDTH }] });
-        await this.page.createBlock('/table/row',
-            { blocks: { childs: [{ url: '/table/cell' }, { url: '/table/cell' }] } },
-            this);
-        await this.page.createBlock('/table/row',
-            { blocks: { childs: [{ url: '/table/cell' }, { url: '/table/cell' }] } },
-            this);
-        await this.page.createBlock('/table/row',
-            { blocks: { childs: [{ url: '/table/cell' }, { url: '/table/cell' }] } },
-            this);
+        if (this.cols.length == 0) {
+            await this.updateProps({ cols: [{ width: COL_WIDTH }, { width: COL_WIDTH }] });
+            await this.page.createBlock('/table/row',
+                { blocks: { childs: [{ url: '/table/cell' }, { url: '/table/cell' }] } },
+                this);
+            await this.page.createBlock('/table/row',
+                { blocks: { childs: [{ url: '/table/cell' }, { url: '/table/cell' }] } },
+                this);
+            await this.page.createBlock('/table/row',
+                { blocks: { childs: [{ url: '/table/cell' }, { url: '/table/cell' }] } },
+                this);
+        }
     }
     async didMounted() {
         if (this.childs.length == 0) {
@@ -193,11 +195,13 @@ export class Table extends Block {
             cs.splice(columnIndex, 1);
             var rows = this.childs;
             await rows.eachReverseAsync(async (row) => {
-                await row.childs[columnIndex].delete()
+                if (row.childs[columnIndex])
+                    await row.childs[columnIndex].delete()
             });
             this.manualUpdateProps({ cols: this.cols }, { cols: cs }, BlockRenderRange.self)
         })
     }
+
 }
 @view('/table')
 export class TableView extends BlockView<Table>{
@@ -205,14 +209,18 @@ export class TableView extends BlockView<Table>{
         if (this.isMoveLine) return;
         var boxRect = Rect.fromEle(this.box);
         var tableRect = Rect.fromEle(this.table);
+        var firstTr = this.table.querySelector('tr');
+        var tds = Array.from(firstTr.children) as HTMLElement[];
         var scrollLeft = this.box.scrollLeft;
         var tableLeft = boxRect.left - scrollLeft;
         var w = 5;
         var gap = 5;
         var index = -1;
-        for (let i = 0; i < this.block.cols.length; i++) {
-            var col = this.block.cols[i];
-            w += col.width;
+
+        for (let i = 0; i < tds.length; i++) {
+            var col = tds[i];
+            var colRect = Rect.fromEle(col);
+            w += colRect.width;
             var bw = tableLeft + w;
             if (bw - gap < event.clientX && event.clientX < bw + gap) {
                 index = i;
@@ -289,17 +297,17 @@ export class TableView extends BlockView<Table>{
         var firstRow = trs[0];
         var firstRowRect = Rect.fromEle(firstRow as HTMLElement);
         if (event.clientY <= firstRowRect.bottom) {
-            for (let i = 0; i < this.block.cols.length; i++) {
-                var col = this.block.cols[i];
-                if (event.clientX > cw && event.clientX <= cw + col.width) {
+            for (let i = 0; i < tds.length; i++) {
+                var tdRect = Rect.fromEle(tds[i]);
+                if (event.clientX > cw && event.clientX <= cw + tdRect.width) {
                     this.topDrag.style.display = 'flex';
                     this.topDrag.style.left = (cw - tableLeft) + 'px';
-                    this.topDrag.style.width = col.width + 'px';
+                    this.topDrag.style.width = tdRect.width + 'px';
                     this.topDrag.setAttribute('data-index', i.toString());
                     isShowDragColumn = true;
                     break;
                 }
-                cw += col.width;
+                cw += tdRect.width;
             }
         }
         if (!isShowDragColumn) {
@@ -312,21 +320,26 @@ export class TableView extends BlockView<Table>{
         var self = this;
         self.isMoveLine = true;
         event.stopPropagation();
+        var firstRow = this.table.querySelector('tr');
+        var tds = Array.from(firstRow.children);
         MouseDragger<{ colIndex: number, colWidth: number, colEle: HTMLElement }>({
             event,
             cursor: 'col-resize',
             moveStart: (ev, data) => {
                 data.colIndex = parseInt(self.subline.getAttribute('data-index'));
                 data.colEle = self.table.querySelector('colgroup').children[data.colIndex] as HTMLElement;
-                data.colWidth = self.block.cols[data.colIndex].width;
+                var tdRect = Rect.fromEle(tds[data.colIndex] as HTMLElement)
+                data.colWidth = tdRect.width;
             },
             moving: (ev, data, isend) => {
                 self.isMoveLine = true;
                 var dx = ev.clientX - event.clientX;
                 var w = dx + data.colWidth;
-                w = Math.max(w, 50);
+                w = Math.max(w, 20);
                 data.colEle.style.width = w + 'px';
                 data.colEle.style.minWidth = w + 'px';
+                var tdRect = Rect.fromEle(tds[data.colIndex] as HTMLElement)
+                w = tdRect.width;
                 var left = self.block.cols.findAll((g, i) => i < data.colIndex).sum(g => g.width) + w + 1;
                 self.subline.style.left = (left + 5) + 'px';
                 var tableRect = Rect.fromEle(self.table);
@@ -524,10 +537,8 @@ export class TableView extends BlockView<Table>{
                 moveEnd: (ev, isMove) => {
                     if (isMove) {
                         var newColIndex = parseInt(this.subline.getAttribute('data-index'));
-                        if (!isNaN(newColIndex) && newColIndex != colIndex) {
-                            console.log(colIndex, newColIndex);
+                        if (!isNaN(newColIndex) && newColIndex != colIndex)
                             self.block.onChangeColumnIndex(colIndex, newColIndex);
-                        }
                         self.isMoveLine = false;
                         this.subline.style.display = 'none';
                         this.subline.removeAttribute('data-index');
