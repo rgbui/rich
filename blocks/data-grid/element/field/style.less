@@ -54,11 +54,15 @@
     position: relative;
 
     .sy-field-title-button {
-        position  : absolute;
-        right     : 0px;
-        top       : 50%;
-        transform : translate(0px, -50%);
-        visibility: hidden;
+        position        : absolute;
+        right           : 0px;
+        top             : 50%;
+        transform       : translate(0px, -50%);
+        visibility      : hidden;
+        background-color: #fff;
+        &:hover {
+            background-color: #ddd;
+        }
     }
 }
 
@@ -72,5 +76,6 @@
         line-height: 20px;
         max-height : 20px;
     }
+
     text-align: right;
 }
