@@ -6,6 +6,7 @@ import { OriginField } from "./origin.field";
 import { Icon } from "../../../../component/view/icon";
 import { getPageIcon } from "../../../../extensions/at/declare";
 import { PageLayoutType } from "../../../../src/page/declare";
+import { BlockUrlConstant } from "../../../../src/block/constant";
 
 @url('/field/title')
 export class FieldText extends OriginField {
@@ -19,9 +20,9 @@ export class FieldTextView extends BlockView<FieldText>{
         return <div className='sy-field-title f-14'>
             {this.block.item.dataRow['icon'] && <Icon icon={getPageIcon({ pageType: PageLayoutType.doc, icon: this.block.item.dataRow['icon'] })}></Icon>}
             <TextArea block={this.block} prop='value' placeholder="输入文本" ></TextArea>
-            <span onClick={e => this.block.openPage()} className="sy-field-title-button flex-center f-14 text-1 border  round padding-w-5 padding-h-2 cursor">
+            {this.block.dataGrid.url == BlockUrlConstant.DataGridTable && <span onClick={e => this.block.openPage()} className="sy-field-title-button  flex-center f-14 text-1 border  round padding-w-5 padding-h-2 cursor">
                 <em>打开</em>
-            </span>
+            </span>}
         </div>
     }
 }
