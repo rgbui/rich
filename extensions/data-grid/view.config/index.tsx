@@ -12,6 +12,7 @@ import { DataGridViewConfig } from "./view";
 import { DataGridControl } from "./control";
 import { DataGridTrigger } from "./trigger";
 import { BlockUrlConstant } from "../../../src/block/constant";
+import { PageLayoutType } from "../../../src/page/declare";
 
 export class DataGridConfig extends EventsComponent {
     dataGrid: DataGridView
@@ -43,7 +44,30 @@ export class DataGridConfig extends EventsComponent {
     dataGridTrigger: DataGridTrigger;
     tab: Tab;
     render() {
-        return <div className='min-w-480 min-h-50 max-h-500 overflow-y' >
+        if (this.dataGrid?.page?.pageLayout?.type != PageLayoutType.db)
+            return <div className='min-w-480 min-h-50 max-h-500 overflow-y' >
+                <Tab ref={e => this.tab = e} show="text" keeplive>
+                    <Tab.Page item={'视图'}>
+                        <DataGridViewConfig gc={this} ref={e => this.dataGridViewConfig = e} ></DataGridViewConfig>
+                    </Tab.Page>
+                    <Tab.Page item={[BlockUrlConstant.DataGridBoard, BlockUrlConstant.DataGridGallery].includes(this.dataGrid?.url as any) ? '卡片' : "字段"}>
+                        <DataGridFields ref={e => this.dataGridFields = e}></DataGridFields>
+                    </Tab.Page>
+                    <Tab.Page item={'过滤'}>
+                        <TableFilterView ref={e => this.tableFilterView = e}></TableFilterView>
+                    </Tab.Page>
+                    <Tab.Page item={'排序'}>
+                        <TableSortView ref={e => this.tableSortView = e}></TableSortView>
+                    </Tab.Page>
+                    <Tab.Page item={'控制'}>
+                        <DataGridControl ref={e => this.dataGridControl = e}></DataGridControl>
+                    </Tab.Page>
+                    {/*<Tab.Page item={'触发器'}>
+                    <DataGridTrigger ref={e => this.dataGridTrigger = e}></DataGridTrigger>
+                </Tab.Page>*/}
+                </Tab>
+            </div>
+        else return <div className='min-w-480 min-h-50 max-h-500 overflow-y' >
             <Tab ref={e => this.tab = e} show="text" keeplive>
                 <Tab.Page item={'视图'}>
                     <DataGridViewConfig gc={this} ref={e => this.dataGridViewConfig = e} ></DataGridViewConfig>
@@ -57,12 +81,9 @@ export class DataGridConfig extends EventsComponent {
                 <Tab.Page item={'排序'}>
                     <TableSortView ref={e => this.tableSortView = e}></TableSortView>
                 </Tab.Page>
-                <Tab.Page item={'控制'}>
-                    <DataGridControl ref={e => this.dataGridControl = e}></DataGridControl>
-                </Tab.Page>
                 {/*<Tab.Page item={'触发器'}>
-                    <DataGridTrigger ref={e => this.dataGridTrigger = e}></DataGridTrigger>
-                </Tab.Page>*/}
+                  <DataGridTrigger ref={e => this.dataGridTrigger = e}></DataGridTrigger>
+                 </Tab.Page>*/}
             </Tab>
         </div>
     }
