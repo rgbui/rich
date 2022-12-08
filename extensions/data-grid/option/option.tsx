@@ -44,6 +44,11 @@ export class TableStoreOption extends EventsComponent {
             if (event.key == 'Enter') {
                 self.onCreateOption();
             }
+            else if (event.key.toLowerCase() == 'backspace') {
+                if (!self.value) {
+                    self.clearOption();
+                }
+            }
         }
         function changeInput(event: React.FormEvent<HTMLInputElement>) {
             self.value = (event.target as HTMLInputElement).value;
