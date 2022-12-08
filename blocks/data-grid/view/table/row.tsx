@@ -14,7 +14,7 @@ export class DataGridTableItem extends TableStoreItem {
 export class DataGridTableItemView extends BlockView<DataGridTableItem>{
     render() {
         var totalWidth = (this.block.parent as TableStore).sumWidth;
-        return <div className='sy-dg-table-row' style={{ width: totalWidth }}>
+        return <div className='sy-dg-table-row visible-hover' style={{ width: totalWidth }}>
             {this.block.childs.map((block: OriginField) => {
                 var w = block.viewField.colWidth || 120;
                 return <div key={block.id} onMouseDown={e => block.onCellMousedown(e)} className='sy-dg-table-row-cell' style={{ width: w }}>

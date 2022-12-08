@@ -187,7 +187,6 @@ export class TableStoreView extends BlockView<TableStore>{
             </div>}
         </div>
     }
-
     renderBody() {
         var self = this;
         if (this.block.data) {
