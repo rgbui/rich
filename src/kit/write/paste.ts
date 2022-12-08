@@ -198,7 +198,8 @@ async function onPasteInsertText(kit: Kit, aa: AppearAnchor, text: string) {
         }
     }
 }
-async function onPasteInsertPlainText(kit: Kit, aa: AppearAnchor, text: string) {
+async function onPasteInsertPlainText(kit: Kit, aa: AppearAnchor, text: string)
+{
     var content = aa.textContent;
     var sel = window.getSelection();
     if (sel.isCollapsed) {
