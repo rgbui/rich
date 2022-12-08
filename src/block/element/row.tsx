@@ -25,6 +25,7 @@ export class RowView extends BlockView<Row>{
         var self = this;
         var pw = Rect.fromEle(prev.el);
         var nw = Rect.fromEle(next.el);
+        event.stopPropagation();
         MouseDragger({
             event,
             moveStart(e) {
@@ -47,7 +48,7 @@ export class RowView extends BlockView<Row>{
                     });
                     await self.block.page.onAction(ActionDirective.onUpdateProps, async () => {
                         var total = ws.sum(x => x.width);
-                        await ws.eachAsync(async (w)=>{
+                        await ws.eachAsync(async (w) => {
                             await w.block.updateProps({ widthPercent: Math.round(w.width * 100 / total) })
                         })
                     });
