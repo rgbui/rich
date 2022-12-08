@@ -7,6 +7,7 @@ import { OriginField } from "./origin.field";
 export class FieldCheck extends OriginField {
     async changeValue(e: React.ChangeEvent<HTMLInputElement>) {
         await this.onUpdateCellValue(e.target.checked);
+        this.forceUpdate();
     }
 }
 @view('/field/check')
