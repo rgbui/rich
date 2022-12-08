@@ -18,7 +18,7 @@ export class FieldImage extends OriginField {
             resources: vs,
             isMultiple: this.field?.config?.isMultiple ? true : false
         });
-        if (Array.isArray(rs) && rs.length > 0) {
+        if (Array.isArray(rs)) {
             this.value = rs;
             this.onUpdateCellValue(this.value);
             this.forceUpdate();
