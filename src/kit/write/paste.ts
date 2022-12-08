@@ -36,9 +36,16 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
             var id = ma[1];
             if (id) {
                 var bs = readCopyBlocks(id);
-                event.preventDefault();
-                await onPasteCreateBlocks(kit, aa, bs);
-                return;
+                /**
+                 * 这里的bs有可能是从诗云的一个浏览器复制到另一个浏览器，
+                 * 本质上里面的内容没有缓存
+                 */
+                if (Array.isArray(bs) && bs.length > 0) {
+                    event.preventDefault();
+                    await onPasteCreateBlocks(kit, aa, bs);
+                    return;
+                }
+
             }
         }
         try {
@@ -198,8 +205,7 @@ async function onPasteInsertText(kit: Kit, aa: AppearAnchor, text: string) {
         }
     }
 }
-async function onPasteInsertPlainText(kit: Kit, aa: AppearAnchor, text: string)
-{
+async function onPasteInsertPlainText(kit: Kit, aa: AppearAnchor, text: string) {
     var content = aa.textContent;
     var sel = window.getSelection();
     if (sel.isCollapsed) {
