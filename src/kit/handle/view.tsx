@@ -18,8 +18,7 @@ export class HandleView extends React.Component<{ handle: Handle }>{
         return this.props.handle;
     }
     el: HTMLElement;
-    private async onPlus(event: React.MouseEvent)
-    {
+    private async onPlus(event: React.MouseEvent) {
         this.closeTip();
         event.stopPropagation();
         var self = this;
@@ -113,7 +112,7 @@ export class HandleView extends React.Component<{ handle: Handle }>{
             >
                 <Tip placement='bottom' ref={e => { this.plusToolTip = e; }} overlay={'点击下面插入块'} >
                     <span onClick={e => this.onPlus(e)}>
-                        <Icon icon={PlusSvg} size={14}></Icon>
+                        <Icon icon={PlusSvg} size={16}></Icon>
                     </span>
                 </Tip>
                 <Tip placement='bottom' ref={e => { this.toolTip = e; }} id={LangID.bar} >
