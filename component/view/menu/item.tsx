@@ -160,7 +160,7 @@ export class MenuItemView extends React.Component<{
                 <em className={'drag'} onMouseDown={e => e.stopPropagation()}> <Icon size={12} icon={DragHandleSvg}></Icon></em>
                 {item.icon && <Icon style={{ marginRight: 5 }} icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon>}
                 {item.renderIcon && item.renderIcon(item, this)}
-                <span className='shy-menu-box-item-drag-text'>{item.text}</span>
+                <span className='shy-menu-box-item-drag-text text-overflow'>{item.text}</span>
                 {item.checkLabel && <Icon className={'shy-menu-box-item-drag-label-icon'} size={14} icon={CheckSvg}></Icon>}
                 {item.label && <label>{item.label}</label>}
                 {Array.isArray(item.btns) && item.btns.map(btn => {
