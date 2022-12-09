@@ -1,12 +1,16 @@
 import { BlockView } from "../../src/block/view";
 import React from 'react';
-import { url, view } from "../../src/block/factory/observable";
+import { prop, url, view } from "../../src/block/factory/observable";
 import { ChildsArea, TextArea, TextLineChilds } from "../../src/block/view/appear";
 import { TextSpan } from "../../src/block/element/textspan";
-import { BlockDisplay } from "../../src/block/enum";
+import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import { TextTurns } from "../../src/block/turn/text";
 import { Block } from "../../src/block";
 import { BlockChildKey } from "../../src/block/constant";
+import { Icon } from "../../component/view/icon";
+import { IconArguments } from "../../extensions/icon/declare";
+import { useIconPicker } from "../../extensions/icon";
+import { Rect } from "../../src/common/vector/point";
 
 @url('/callout')
 export class Callout extends TextSpan {
@@ -49,13 +53,24 @@ export class Callout extends TextSpan {
         }
         return quote;
     }
+    async onChangeIcon(e: React.MouseEvent) {
+        e.stopPropagation();
+        var icon = await useIconPicker({ roundArea: Rect.fromEvent(e) });
+        if (typeof icon != 'undefined') {
+            this.onUpdateProps({ calloutIcon: icon }, { range: BlockRenderRange.self })
+        }
+    }
+    @prop()
+    calloutIcon: IconArguments = { name: "emoji", code: '💡' };
 }
 @view('/callout')
 export class CalloutView extends BlockView<Callout>{
     render() {
-        return <div style={this.block.visibleStyle}><div className='sy-block-callout' style={{ ...this.block.contentStyle, padding: 16 }}>
-            <span className='sy-block-callout-icon'>💡</span>
-            <div className='sy-block-callout-content'>
+        return <div style={this.block.visibleStyle}><div className='sy-block-callout flex-top' style={{ ...this.block.contentStyle, padding: 16 }}>
+            <div onMouseDown={e => this.block.onChangeIcon(e)} style={{width:this.block.page.lineHeight, height: this.block.page.lineHeight }} className='size-20 flex-center round cursor item-hover flex-fixed gap-r-5'>
+                <Icon size={18} icon={this.block.calloutIcon}></Icon>
+            </div>
+            <div className='flex-auto'>
                 <div data-block-content>{this.block.childs.length > 0 &&
                     <TextLineChilds rf={e => this.block.childsEl = e} childs={this.block.childs}></TextLineChilds>
                 }{this.block.childs.length == 0 && <span className='sy-appear-text-line' style={this.block.visibleStyle}><TextArea block={this.block} prop='content' placeholder={'首重'}></TextArea></span>}</div>
@@ -63,6 +78,7 @@ export class CalloutView extends BlockView<Callout>{
                     <ChildsArea childs={this.block.blocks.subChilds}></ChildsArea>
                 </div>
             </div>
-        </div></div>
+        </div>
+        </div>
     }
 }

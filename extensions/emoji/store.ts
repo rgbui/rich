@@ -25,5 +25,9 @@ class EmojiStore {
         this.emojis = data.data;
         this.isLoad = true;
     }
+    async getRandom() {
+        var g = await this.get();
+        return g.randomOf().childs.randomOf();
+    }
 }
 export var emojiStore = new EmojiStore();

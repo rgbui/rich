@@ -9,6 +9,7 @@ import { TableSchema } from "../../blocks/data-grid/schema/meta";
 import { BlockAppear } from "../block/appear";
 import { BlockRenderRange } from "../block/enum";
 
+
 /**
  * 
  * 用户的所有操作快照，
@@ -114,8 +115,8 @@ export class HistorySnapshoot extends Events {
             console.error(ex);
         }
     }
-    async sync(directive: ActionDirective | string, action: () => Promise<void>, syncBlock?: { block?: Block }) {
-        this.declare(directive, syncBlock);
+    async sync(directive: ActionDirective | string, action: () => Promise<void>, options?: { block?: Block, disabledStore?: boolean }) {
+        this.declare(directive, options);
         try {
             await action();
         }
@@ -123,6 +124,7 @@ export class HistorySnapshoot extends Events {
             console.error(ex);
             this.page.onError(ex);
         }
+        if (options?.disabledStore == true) return;
         this.store()
     }
     private ops = new Map<OperatorDirective, { redo: (userOperator: UserOperator, source: 'redo' | 'load' | 'notify' | 'notifyView', action: UserAction) => Promise<void>, undo: (userOperator: UserOperator) => Promise<void> }>();

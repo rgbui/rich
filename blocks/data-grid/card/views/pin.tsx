@@ -2,7 +2,7 @@
 
 import React from "react";
 import { ReactNode } from "react";
-import { DotsSvg, LikeSvg, LoveSvg, TrashSvg, UploadSvg } from "../../../../component/svgs";
+import { DotsSvg, LoveSvg, TrashSvg, UploadSvg } from "../../../../component/svgs";
 import { Avatar } from "../../../../component/view/avator/face";
 import { UserBox } from "../../../../component/view/avator/user";
 import { Icon } from "../../../../component/view/icon";
@@ -15,10 +15,10 @@ import { util } from "../../../../util/util";
 import { FieldType } from "../../schema/type";
 import { CardModel, CardViewCom } from "../factory/observable";
 import { CardView } from "../view";
-import * as Card1 from "../../../src/assert/img/card.1.png"
+import * as Card1 from "../../../../src/assert/img/card.1.png"
 
 
-CardModel( {
+CardModel({
     url: '/card/pinterest',
     title: 'Pinterest瀑布流的形式展现图片内容',
     remark: '适用于摄影等图像展示',

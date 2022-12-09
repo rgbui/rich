@@ -51,6 +51,7 @@ class TextTool extends EventsComponent {
     el: HTMLElement;
     boxEl: HTMLElement;
     open(pos: PopoverPosition, options: { style: TextToolStyle, turnBlock?: Block }) {
+        console.log(options, 'ggg');
         var rs = pos.roundArea;
         if (!rs && Array.isArray(pos.roundAreas)) rs = pos.roundAreas[0];
         if (pos.relativeEleAutoScroll) this.fvs.bind(pos.relativeEleAutoScroll);
@@ -219,7 +220,10 @@ class TextTool extends EventsComponent {
     async onOpenFontColor(event: React.MouseEvent) {
         event.stopPropagation();
         this.blocked = true;
-        var fontColor = await useColorSelector({ roundArea: Rect.fromEvent(event) });
+        var fontColor = await useColorSelector({ roundArea: Rect.fromEvent(event) }, {
+            color: this.textStyle.color,
+            backgroundColor: this.textStyle.fill?.color
+        });
         this.blocked = false;
         if (fontColor) {
             var font: Record<string, any> = {};
@@ -229,8 +233,6 @@ class TextTool extends EventsComponent {
                 this.emit('setStyle', { [BlockCssName.font]: font } as any);
             }
             else if (fontColor.backgroundColor) {
-                font.color = fontColor.backgroundColor;
-                font.mode = 'color';
                 this.textStyle.fill = { mode: 'color', color: fontColor.backgroundColor }
                 this.emit('setStyle', { [BlockCssName.fill]: this.textStyle.fill } as any);
             }

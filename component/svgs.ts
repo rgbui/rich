@@ -11,6 +11,7 @@ import BillingSvg from "../src/assert/svg/billing.svg";
 import BlockcolorSvg from "../src/assert/svg/blockcolor.svg";
 import BlogSvg from "../src/assert/svg/blog.svg";
 import BoardCardSvg from "../src/assert/svg/board.card.svg";
+import BoardIconSvg from "../src/assert/svg/board.icon.svg";
 import BoardMoveBottomSvg from "../src/assert/svg/board.move.bottom.svg";
 import BoardMoveTopSvg from "../src/assert/svg/board.move.top.svg";
 import BoardRefreshSvg from "../src/assert/svg/board.refresh.svg";
@@ -147,6 +148,7 @@ import ProgressSvg from "../src/assert/svg/progress.svg";
 import PropertysSvg from "../src/assert/svg/propertys.svg";
 import PubWorkspaceSvg from "../src/assert/svg/pubWorkspace.svg";
 import QuoteSvg from "../src/assert/svg/quote.svg";
+import RandomSvg from "../src/assert/svg/random.svg";
 import RedoSvg from "../src/assert/svg/redo.svg";
 import RefreshSvg from "../src/assert/svg/refresh.svg";
 import RenameSvg from "../src/assert/svg/rename.svg";
@@ -215,6 +217,7 @@ BillingSvg,
 BlockcolorSvg,
 BlogSvg,
 BoardCardSvg,
+BoardIconSvg,
 BoardMoveBottomSvg,
 BoardMoveTopSvg,
 BoardRefreshSvg,
@@ -351,6 +354,7 @@ ProgressSvg,
 PropertysSvg,
 PubWorkspaceSvg,
 QuoteSvg,
+RandomSvg,
 RedoSvg,
 RefreshSvg,
 RenameSvg,

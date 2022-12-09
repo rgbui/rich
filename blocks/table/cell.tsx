@@ -32,11 +32,15 @@ export class TableCell extends Block {
     init() {
         this.gridMap = new GridMap(this)
     }
+    get handleBlock() {
+        return this.row.table;
+    }
 }
 
 @view('/table/cell')
 export class TableCellView extends BlockView<TableCell>{
     async mousedown(event: React.MouseEvent) {
+        if (event.button == 2) return;
         if (this.block.childs.length == 0) {
             event.stopPropagation()
             await this.block.page.onAction(ActionDirective.onCreateBlockByEnter, async () => {
@@ -127,7 +131,7 @@ export class TableCellView extends BlockView<TableCell>{
                     })
                 },
             ]
-            var result = await useSelectMenuItem({ roundPoint: Point.from(event) },
+            var result = await useSelectMenuItem({ roundPoint: Point.from(event).move(10, 10) },
                 items
             );
             if (result) {
@@ -204,12 +208,16 @@ export class TableCellView extends BlockView<TableCell>{
                         break;
                     case 'row-fontColor':
                         this.block.page.onAction('setFontStyle', async () => {
-                            this.block.parent.pattern.setFontStyle({ color: result.item.value });
+                            await this.block.parent.blocks.childs.eachAsync(async c => {
+                                c.pattern.setFontStyle({ color: result.item.value })
+                            })
                         })
                         break;
                     case 'row-fillColor':
                         this.block.page.onAction('setFillStyle', async () => {
-                            this.block.parent.pattern.setFillStyle({ mode: 'color', color: result.item.value })
+                            await this.block.parent.blocks.childs.eachAsync(async c => {
+                                c.pattern.setFillStyle({ mode: 'color', color: result.item.value })
+                            })
                         })
                         break;
                     case 'col-fontColor':

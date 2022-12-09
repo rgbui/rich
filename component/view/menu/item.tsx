@@ -123,19 +123,19 @@ export class MenuItemView extends React.Component<{
             className={'shy-menu-box-item' + (this.hover ? " hover" : "")}
             ref={e => this.el = e}>
             {(item.type == MenuItemType.item || !item.type) && <ToolTip overlay={item.overlay} placement={item.placement || 'right'} > <a className={'shy-menu-box-item-option' + (item.disabled == true ? " disabled" : "")}
-                onMouseUp={e => this.select(item, e.nativeEvent)}>
+                onMouseDown={e => this.select(item, e.nativeEvent)}>
                 {item.icon && <i className="flex-center flex-line size-20 text-1 "><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
                 {item.renderIcon && item.renderIcon(item, this)}
                 <span className='shy-menu-box-item-option-text'>{item.text}{item.remark && <i className="remark padding-l-5">{item.remark}</i>}</span>
                 {item.checkLabel && <Icon className={'shy-menu-box-item-option-label-icon'} size={16} icon={CheckSvg}></Icon>}
                 {item.label && <label>{item.label}</label>}
                 {Array.isArray(item.btns) && item.btns.map(btn => {
-                    return <ToolTip key={btn.name} overlay={btn.overlay} placement={btn.placement || 'top'} ><em className="flex-center flex-line size-20" onMouseUp={e => { e.stopPropagation(); this.click(item, e, btn.name) }}><Icon size={16} icon={btn.icon}></Icon></em></ToolTip>
+                    return <ToolTip key={btn.name} overlay={btn.overlay} placement={btn.placement || 'top'} ><em className="flex-center flex-line size-20" onMouseDown={e => { e.stopPropagation(); this.click(item, e, btn.name) }}><Icon size={16} icon={btn.icon}></Icon></em></ToolTip>
                 })}
                 {(item.childs && item.childs.length > 0 || item.forceHasChilds) && <Icon className={'shy-menu-box-item-option-spread'} icon='arrow-right:sy'></Icon>}
             </a></ToolTip>}
             {(item.type == MenuItemType.custom) && <ToolTip overlay={item.overlay} placement={'right'} ><a className={'shy-menu-box-item-custom' + (item.disabled == true ? " disabled" : "")}
-                onMouseUp={e => this.select(item, e.nativeEvent)}>
+                onMouseDown={e => this.select(item, e.nativeEvent)}>
                 {item.render && item.render(item, this)}
             </a></ToolTip>}
             {item.type == MenuItemType.divide && <a className='shy-menu-box-item-divide'></a>}
@@ -156,21 +156,21 @@ export class MenuItemView extends React.Component<{
                     <Icon className={'flex-fix'} size={16} icon={ChevronDownSvg}></Icon>
                 </span>
             </div>}
-            {item.type == MenuItemType.drag && <ToolTip overlay={item.overlay} placement={item.placement || 'right'} ><div data-drag={item.drag} onMouseUp={e => this.select(item, e.nativeEvent)} className="shy-menu-box-item-drag">
-                <em className={'drag'} onMouseUp={e => e.stopPropagation()}> <Icon size={12} icon={DragHandleSvg}></Icon></em>
+            {item.type == MenuItemType.drag && <ToolTip overlay={item.overlay} placement={item.placement || 'right'} ><div data-drag={item.drag} onMouseDown={e => this.select(item, e.nativeEvent)} className="shy-menu-box-item-drag">
+                <em className={'drag'} onMouseDown={e => e.stopPropagation()}> <Icon size={12} icon={DragHandleSvg}></Icon></em>
                 {item.icon && <Icon style={{ marginRight: 5 }} icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon>}
                 {item.renderIcon && item.renderIcon(item, this)}
                 <span className='shy-menu-box-item-drag-text'>{item.text}</span>
                 {item.checkLabel && <Icon className={'shy-menu-box-item-drag-label-icon'} size={14} icon={CheckSvg}></Icon>}
                 {item.label && <label>{item.label}</label>}
                 {Array.isArray(item.btns) && item.btns.map(btn => {
-                    return <ToolTip key={btn.name} overlay={btn.overlay} placement={btn.placement || 'top'} ><em className="btn" onMouseUp={e => { e.stopPropagation(); this.click(item, e, btn.name) }}><Icon size={14} icon={btn.icon}></Icon></em></ToolTip>
+                    return <ToolTip key={btn.name} overlay={btn.overlay} placement={btn.placement || 'top'} ><em className="btn" onMouseDown={e => { e.stopPropagation(); this.click(item, e, btn.name) }}><Icon size={14} icon={btn.icon}></Icon></em></ToolTip>
                 })}
             </div></ToolTip>}
             {item.type == MenuItemType.color && <div className="shy-menu-box-item-colors flex-top flex-wrap gap-h-10">
                 {item.options.map(t => {
                     return <ToolTip key={t.value} overlay={t.overlay} ><a className={"flex-center flex-col cursor padding-5 gap-w-5 round item-hover " + (t.checked ? "item-hover-focus" : "")}
-                        onMouseUp={e => { e.stopPropagation(); item.value = t.value; this.select(item, e.nativeEvent) }}>
+                    onMouseDown={e => { e.stopPropagation(); item.value = t.value; this.select(item, e.nativeEvent) }}>
                         {item.name && item.name.indexOf('font') > -1 && <span className="size-24 flex-center circle  border" style={{ color: t.value }}>
                             A
                         </span>}

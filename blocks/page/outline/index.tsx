@@ -35,12 +35,13 @@ export class PageOutLine extends Block {
         this.forceUpdate();
     }
     getOutLines() {
-        var outlines: { id: string, deep: number, block: Block, text: string }[] = [];
+        var outlines:{ id: string, deep: number, block: Block, text: string }[] = [];
         var bs = this.page.findAll(x => x.url == BlockUrlConstant.Head && x.el && (x.closest(c => c.isPart) ? false : true));
         lodash.sortBy(bs, g => Rect.fromEle(g.el).top);
-        var currentDeep = 0, lastLevel;
-        if (this.page.view) {
-            outlines = bs.map((b, i) => {
+        var currentDeep = 0,lastLevel;
+        if (this.page.view)
+        {
+            outlines = bs.map((b,i) =>{
                 var level = parseInt((b as any).level.replace('h', ''));
                 var deep = currentDeep;
                 if (typeof lastLevel == 'number' && level < lastLevel) deep -= 1;
@@ -73,7 +74,7 @@ export class PageOutLineView extends BlockView<PageOutLine>{
             var panelEl = dom(block.el).getOverflowPanel();
             var panelElRect = Rect.fromEle(panelEl);
             var blockRect = Rect.fromEle(block.el);
-            var offset = panelEl.offsetTop;
+            var offset = panelEl.scrollTop;
             var d = blockRect.top - panelElRect.top;
             AnimatedScrollTo(panelEl, offset + d)
         }

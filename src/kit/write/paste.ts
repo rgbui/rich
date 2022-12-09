@@ -36,15 +36,26 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
             var id = ma[1];
             if (id) {
                 var bs = readCopyBlocks(id);
-                event.preventDefault();
-                await onPasteCreateBlocks(kit, aa, bs);
-                return;
+                /**
+                 * 这里的bs有可能是从诗云的一个浏览器复制到另一个浏览器，
+                 * 本质上里面的内容没有缓存
+                 */
+                if (Array.isArray(bs) && bs.length > 0) {
+                    event.preventDefault();
+                    await onPasteCreateBlocks(kit, aa, bs);
+                    return;
+                }
+
             }
         }
         try {
             event.preventDefault();
             if (aa.block.url == BlockUrlConstant.Code) {
                 await onPasteInsertText(kit, aa, text);
+                return;
+            }
+            if (!aa.block.isSupportTextStyle) {
+                await onPasteInsertPlainText(kit, aa, text);
                 return;
             }
             var regexText = text.replace(/[\(\)\\\.\[\]\*\?]/g, ($, $1) => {
@@ -69,6 +80,15 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
             var doc = parser.parseFromString(html, "text/html");
             var blocks = await parseDom(doc);
             if (blocks?.length > 0) {
+                if (blocks.length == 1 && blocks[0].url == BlockUrlConstant.TextSpan) {
+                    var cs = blocks[0].blocks.childs
+                    if (cs.length == 1 && cs[0].url == BlockUrlConstant.Text) {
+                        var content = cs[0].content;
+                        if (URL_RGEX.test(content)) await onPasteUrl(kit, aa, text)
+                        else await onPasteInsertText(kit, aa, text);
+                        return;
+                    }
+                }
                 await onPasteCreateBlocks(kit, aa, blocks);
             }
         }
@@ -183,7 +203,26 @@ async function onPasteInsertText(kit: Kit, aa: AppearAnchor, text: string) {
         else {
             await inputBackspaceDeleteContent(kit.writer, aa, null, { insertContent: text })
         }
-
+    }
+}
+async function onPasteInsertPlainText(kit: Kit, aa: AppearAnchor, text: string) {
+    var content = aa.textContent;
+    var sel = window.getSelection();
+    if (sel.isCollapsed) {
+        var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
+        aa.setContent(content.slice(0, offset) + text + content.slice(offset))
+        aa.collapse(offset + text.length);
+        await InputForceStore(aa, async () => {
+        })
+    }
+    else {
+        var s = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
+        var e = aa.getCursorOffset(sel.anchorNode, sel.anchorOffset);
+        if (s > e) [e, s] = [s, e];
+        aa.setContent(content.slice(0, s) + text + content.slice(e));
+        aa.collapse(s + text.length);
+        await InputForceStore(aa, async () => {
+        })
     }
 }
 async function onPasteUrl(kit: Kit, aa: AppearAnchor, url: string) {

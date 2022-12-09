@@ -30,6 +30,7 @@ import { Title } from '../../blocks/page/title';
 import { AppearAnchor } from '../block/appear';
 import { AtomPermission } from './permission';
 import { parseElementUrl } from '../../net/element.type';
+import { BlockUrlConstant } from '../block/constant';
 
 export class Page extends Events<PageDirective> {
     root: HTMLElement;
@@ -128,7 +129,7 @@ export class Page extends Events<PageDirective> {
             var nextAction = () => {
                 if (this.pageInfo) {
                     if (!this.pageInfo.text) {
-                        var title = this.find(g => g.url == '/title') as Title;
+                        var title = this.find(g => g.url == BlockUrlConstant.Title) as Title;
                         if (title) {
                             title.onEmptyTitleFocusAnchor();
                         }
@@ -273,6 +274,8 @@ export interface Page {
     emit(name: PageDirective.selectRows, block: Block, rows: any[]);
     on(name: PageDirective.save, fn: () => void);
     emit(name: PageDirective.save);
+    on(name: PageDirective.mounted,fn: () => void);
+    emit(name: PageDirective.mounted);
     on(name: PageDirective.rollup, fn: (id: string) => void);
     emit(name: PageDirective.rollup, id: string);
 }

@@ -16,6 +16,7 @@ import { TextEle } from "../../common/text.ele";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
 import { PageLayoutType } from "../../page/declare";
+import { PageDirective } from "../../page/directive";
 import { openBoardEditTool } from "../operator/board/edit";
 import { inputBackspaceDeleteContent, inputBackSpaceTextContent, inputDetector, inputLineTail, inputPop, keydownBackspaceTextContent } from "./input";
 import {
@@ -167,7 +168,7 @@ export class PageWrite {
             case KeyboardCode.Enter.toLowerCase():
                 if (this.kit.page.requireSelectLayout == true) {
                     event.preventDefault();
-                    this.kit.page.onPageTurnLayout(PageLayoutType.doc, async () => {
+                    await this.kit.page.onPageTurnLayout(PageLayoutType.doc, async () => {
                         var lastBlock = this.kit.page.findReverse(g => g.isBlock);
                         var newBlock: Block;
                         if (lastBlock && lastBlock.parent == this.kit.page.views.last()) {
@@ -180,6 +181,7 @@ export class PageWrite {
                             this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true });
                         })
                     });
+                    this.kit.page.emit(PageDirective.save)
                     return;
                 }
                 if (aa.block.isEnterCreateNewLine) {
@@ -416,35 +418,47 @@ export class PageWrite {
                 }
             }
             else {
+                var na: Block;
+                var ea: Block;
                 if (this.kit.anchorCursor.startAnchor.isText) {
                     var ss = await this.kit.anchorCursor.startAnchor.split([this.kit.anchorCursor.startOffset]);
                     if (ss.length == 2) {
                         nstart = ss.last();
                         so = 0;
+                        na = nstart;
                     }
                     else {
                         nstart = ss.last();
-                        if (this.kit.anchorCursor.startOffset == 0) so = 0;
-                        else { so = nstart.content.length; }
+                        if (this.kit.anchorCursor.startOffset == 0) { so = 0; na = nstart; }
+                        else { so = nstart.content.length; na = null; }
                     }
-                } else { so = 0; nstart = this.kit.anchorCursor.startAnchor.block; }
+                } else { so = 0; nstart = this.kit.anchorCursor.startAnchor.block; na = nstart; }
                 if (this.kit.anchorCursor.endAnchor.isText) {
                     var es = await this.kit.anchorCursor.endAnchor.split([this.kit.anchorCursor.endOffset]);
                     if (es.length == 2) {
                         nend = es.first();
                         no = nend.content.length;
+                        ea = nend;
                     }
                     else {
-                        if (this.kit.anchorCursor.endOffset == 0) no = 0;
-                        else no = nend.content.length;
+                        nend = es.first();
+                        if (this.kit.anchorCursor.endOffset == 0) { no = 0; ea = null; }
+                        else { no = nend.content.length; ea = nend; }
                     }
                 }
                 else {
                     nend = this.kit.anchorCursor.endAnchor.block;
+                    ea = nend;
                     no = 0;
                 }
-                if (styles) { nstart.pattern.setStyles(styles); nend.pattern.setStyles(styles); }
-                if (props) { await nstart.updateProps(props); await nend.updateProps(props); }
+                if (styles) {
+                    if (na) na.pattern.setStyles(styles);
+                    if (ea) ea.pattern.setStyles(styles);
+                }
+                if (props) {
+                    if (na) await na.updateProps(props);
+                    if (ea) await ea.updateProps(props);
+                }
             }
             this.kit.page.addUpdateEvent(async () => {
                 var na = nend.appearAnchors.last();

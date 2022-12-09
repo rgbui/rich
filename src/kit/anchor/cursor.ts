@@ -285,14 +285,14 @@ export class AnchorCursor {
    * 
    * 将光标移到block中的某个appearAnchor中
    */
-    onFocusBlockAnchor(block: Block, options?: { merge?: boolean, render?: boolean, last?: boolean }) {
+    onFocusBlockAnchor(block: Block, options?: { store?: boolean, merge?: boolean, render?: boolean, last?: boolean }) {
         this.kit.page.onAction('onFocusAppearAnchor', async () => {
             if (options?.merge) this.kit.page.snapshoot.merge();
             this.focusBlockAnchor(block, options)
             if (options?.render) {
                 this.renderAnchorCursorSelection()
             }
-        })
+        }, { disabledStore: options?.store === false ? true : undefined })
     }
     focusBlockAnchor(block: Block, options?: { render?: boolean, last?: boolean }) {
         var acs = block.appearAnchors;

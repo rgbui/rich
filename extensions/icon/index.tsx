@@ -14,9 +14,18 @@ import { IconArguments } from "./declare";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
 import './style.less';
-import { EmojiSvg, FontawesomeSvg, LinkSvg, TrashSvg, UploadSvg } from "../../component/svgs";
+import {
+    EmojiSvg,
+    FontawesomeSvg,
+    LinkSvg,
+    RandomSvg,
+    TrashSvg,
+    UploadSvg
+} from "../../component/svgs";
+
 import { Icon } from "../../component/view/icon";
 import { ToolTip } from "../../component/view/tooltip";
+import { emojiStore } from "../emoji/store";
 class IconPicker extends EventsComponent {
     onChange(data: IconArguments) {
         this.emit('change', data);
@@ -24,9 +33,20 @@ class IconPicker extends EventsComponent {
     onClearIcon() {
         this.emit('change', null);
     }
+    async onRandomIcon() {
+        var e = await emojiStore.getRandom()
+        this.onChange({ name: "emoji", code: e.code })
+    }
     render() {
         return <div className='shy-icon-picker' >
-            <Tab keeplive rightBtns={<label><ToolTip overlay={'清理图标'}><Icon size={18} onMousedown={e => this.onClearIcon()} icon={TrashSvg}></Icon></ToolTip></label>}>
+            <Tab keeplive rightBtns={<>
+                <ToolTip overlay={'随机图标'}> <span className="flex-center item-hover size-30 round cursor"><Icon size={16} onMousedown={e => this.onRandomIcon()} icon={RandomSvg}></Icon>
+                </span>
+                </ToolTip>
+                <ToolTip overlay={'清理图标'}> <span className="flex-center item-hover size-30 round cursor gap-r-10"><Icon size={16} onMousedown={e => this.onClearIcon()} icon={TrashSvg}></Icon>
+                </span>
+                </ToolTip>
+            </>}>
                 <Tab.Page item={<Tip placement='bottom' id={LangID.IconEmoji}><Icon icon={EmojiSvg} size={18}></Icon></Tip>}>
                     <EmojiView onChange={e => this.onChange({ name: "emoji", code: e.code })}></EmojiView>
                 </Tab.Page>

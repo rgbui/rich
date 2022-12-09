@@ -109,7 +109,10 @@ export class Block$LifeCycle {
             }
             if (pm.isArray) {
                 if (Array.isArray(value)) return value.map(v => {
-                    if (pm.create) return pm.create(v);
+                    if (pm.create) {
+                        var g = pm.create(v);
+                        return g;
+                    }
                     return new (pm.meta as any)(v);
                 })
                 return []
