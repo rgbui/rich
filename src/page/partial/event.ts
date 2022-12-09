@@ -30,6 +30,9 @@ export class PageEvent {
         }
         this.kit.operator.mousedown(event);
     }
+    onMouseDownCapture(this: Page, event: React.MouseEvent) {
+
+    }
     onMousemove(this: Page, event: MouseEvent) {
         this.kit.operator.mousemove(event);
     }

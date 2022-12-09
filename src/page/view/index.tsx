@@ -196,6 +196,7 @@ export class PageView extends Component<{ page: Page }>{
             onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}
             onMouseEnter={e => this.page.onMouseenter(e)}
             onMouseLeave={e => this.page.onMouseleave(e)}
+            onMouseDownCapture={e=>this.page. onMouseDownCapture(e)}
         // onCopy={e =>this.page.onCopy(e)}
         // onCut={e =>this.page.onCut(e)}
         >
