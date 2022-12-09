@@ -32,6 +32,12 @@ export class PageEvent {
     }
     onMouseDownCapture(this: Page, event: React.MouseEvent) {
 
+        /**
+         * 部分块的mousedown事件被拦截了，此时通过onMouseDownCapture优先处理一些动作
+         */
+        if (this.kit.anchorCursor.currentSelectedBlocks.length > 0) {
+            this.kit.anchorCursor.onClearSelectBlocks();
+        }
     }
     onMousemove(this: Page, event: MouseEvent) {
         this.kit.operator.mousemove(event);
