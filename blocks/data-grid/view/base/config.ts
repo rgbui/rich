@@ -68,7 +68,7 @@ export class DataGridViewConfig {
                                 }
                             }),
                             { type: MenuItemType.divide },
-                            { name: 'addView', icon: PlusSvg, type: MenuItemType.button, text: '创建视图' }
+                            { name: 'addView',  type: MenuItemType.button, text: '创建视图' }
                             ]
                         }
                     ]
