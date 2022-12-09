@@ -251,7 +251,7 @@ export class ExpressParser {
     toStatement(tokens: Token[]) {
         /**
         * 这里需要做个探测
-        * 它是数据呢如[],{ }
+        * 它是数据如[],{ }
         * 还是仅仅只是一个表达式 exp
         * 还是有多条语句
         */
@@ -274,11 +274,11 @@ export class ExpressParser {
                 return exp;
             })
         }
-        else if (tokens.some(s => s.name == TokenType.operator && (s.value != '==' && s.value.indexOf('=') > -1))) {
+        else if (tokens.some(s => s.name == TokenType.operator && (!["==", "!=", ">=", "<="].includes(s.value) && s.value.indexOf('=') > -1))) {
             /**
              * 赋值语句
              */
-            var sr = this.splitTokens(tokens, s => s.name == TokenType.operator && (s.value != '==' && s.value.indexOf('=') > -1));
+            var sr = this.splitTokens(tokens, s => s.name == TokenType.operator && (!["==", "!=", ">=", "<="].includes(s.value) && s.value.indexOf('=') > -1));
         }
         else {
             /***
