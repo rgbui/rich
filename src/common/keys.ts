@@ -70,6 +70,10 @@ export class KeyboardPlate {
         this.isKeyUped = true;
         delete this.lastKeydownDate;
         this.keys = [];
+        this.altKey = false;
+        this.ctrlKey = false;
+        this.shiftKey = false;
+        this.metaKey = false;
     }
     is(...codes: KeyboardCode[]) {
         return this.keys.exists(g => codes.exists(c => c.toLowerCase() == g.toLowerCase()));
