@@ -114,9 +114,15 @@ export class NoteView extends BlockView<Note>{
         </svg>
     }
     render(): ReactNode {
+        var dx = this.block.realPx(10);
         return <div className="sy-block-note" style={this.block.visibleStyle}>
             {this.renderBg()}
-            <div className="sy-block-note-content" style={{ width: this.block.fixedWidth, height: this.block.fixedWidth }}>
+            <div className="sy-block-note-content" style={{
+                padding: dx,
+                background: this.block.color,
+                width: this.block.fixedSize.width,
+                height: this.block.fixedSize.height
+            }}>
                 <TextSpanArea placeholder={this.block.isFreeBlock ? "键入文本" : undefined} block={this.block}></TextSpanArea>
             </div>
         </div>
