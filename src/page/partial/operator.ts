@@ -179,10 +179,19 @@ export class Page$Operator {
          * 就是将blocks append 到to 下面
          */
         await this.onAction(ActionDirective.onBatchDragBlocks, async () => {
-            await to.drop(blocks, direction);
-            this.addUpdateEvent(async () => {
-                this.kit.anchorCursor.onSelectBlocks(blocks, { render: true, merge: true });
-            })
+            if (this.keyboardPlate.isAlt()) {
+                var blockDatas = await blocks.asyncMap(async b => b.cloneData());
+                var bs = await to.dropBlockDatas(blockDatas, direction);
+                this.addUpdateEvent(async () => {
+                    this.kit.anchorCursor.onSelectBlocks(bs, { render: true, merge: true });
+                })
+            }
+            else {
+                await to.drop(blocks, direction);
+                this.addUpdateEvent(async () => {
+                    this.kit.anchorCursor.onSelectBlocks(blocks, { render: true, merge: true });
+                })
+            }
         })
     }
     async onBatchDragCreateBlocks(this: Page, blocks: any[], to: Block, direction: DropDirection) {
