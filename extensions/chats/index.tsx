@@ -195,6 +195,7 @@ export class ViewChats extends React.Component<{
             var noUser: boolean = false;
             if (lastUserid == d.userid && lastDate && d.createDate && (d.createDate.getTime() - lastDate.getTime()) < 1000 * 60 * 3)
                 noUser = true;
+            if (d.replyId) noUser = false;
             if (i > 0 && dm[i - 1].isDeleted == true) noUser = false;
             if (!splitLastDate || splitLastDate && dayjs(d.createDate).diff(splitLastDate, 'minute') > 60) {
                 ds.push(this.renderDateTip(d.createDate))
