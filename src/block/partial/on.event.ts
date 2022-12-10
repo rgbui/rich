@@ -255,13 +255,18 @@ export class Block$Event {
         *复制块
         */
         this.page.onAction(ActionDirective.onCopyBlock, async () => {
-            var d = await this.cloneData();
-            var pa = this.parent;
-            var nb = await pa.appendBlock(d, this.at + 1, this.parentKey);
+            var nb = await this.clone();
             this.page.addUpdateEvent(async () => {
                 this.page.kit.anchorCursor.onFocusBlockAnchor(nb, { merge: true, render: true, last: true })
             })
         });
+
+    }
+    async clone(this: Block) {
+        var d = await this.cloneData();
+        var pa = this.parent;
+        var nb = await pa.appendBlock(d, this.at + 1, this.parentKey);
+        return nb;
     }
     async onCopyLink(this: Block) {
         CopyText(this.blockUrl);
