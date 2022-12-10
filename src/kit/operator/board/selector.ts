@@ -17,7 +17,7 @@ export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseE
         var gm = fra.globalWindowMatrix;
         var re = gm.inverseTransform(Point.from(event));
         var url = kit.boardSelector.currentSelector.url;
-        if (url == BlockUrlConstant.Pen || url == BlockUrlConstant.Mind || url == BlockUrlConstant.TextSpan || url == BlockUrlConstant.Frame) {
+        if (url==BlockUrlConstant.Note|| url == BlockUrlConstant.Pen || url == BlockUrlConstant.Mind || url == BlockUrlConstant.TextSpan || url == BlockUrlConstant.Frame) {
             await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
                 var data = kit.boardSelector.currentSelector.data || {};
                 var ma = new Matrix();
