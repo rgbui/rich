@@ -57,7 +57,6 @@ export class Block$Board {
         BoardPointType.resizePort,
         BoardPointType.connectPort
     ]): BoardBlockSelector[] {
-
         var pickers: BoardBlockSelector[] = [];
         var { width, height } = this.fixedSize;
         var rect = new Rect(0, 0, width, height);
@@ -283,38 +282,40 @@ export class Block$Board {
     boardMove(this: Block, from: Point, to: Point) {
         var matrix = new Matrix();
         matrix.translateMove(this.globalWindowMatrix.inverseTransform(from), this.globalWindowMatrix.inverseTransform(to))
+        this.setBoardMoveMatrix(matrix);
+    }
+    setBoardMoveMatrix(this: Block, matrix: Matrix) {
         this.moveMatrix = matrix;
         this.updateRenderLines();
         this.forceUpdate()
     }
     async boardMoveEnd(this: Block, from: Point, to: Point) {
-        var bl = this;
         var moveMatrix = new Matrix();
-        moveMatrix.translateMove(bl.globalWindowMatrix.inverseTransform(from), bl.globalWindowMatrix.inverseTransform(to))
-        var newMatrix = bl.currentMatrix.clone();
+        moveMatrix.translateMove(this.globalWindowMatrix.inverseTransform(from), this.globalWindowMatrix.inverseTransform(to))
+        var newMatrix = this.currentMatrix.clone();
         newMatrix.append(moveMatrix);
-        newMatrix.append(bl.selfMatrix.inverted());
-        bl.updateMatrix(bl.matrix, newMatrix);
-        bl.moveMatrix = new Matrix();
-        if (!bl.isFrame) {
-            var rs = bl.findFramesByIntersect();
-            if (rs.length > 0 && !rs.some(s => s === bl.parent)) {
+        newMatrix.append(this.selfMatrix.inverted());
+        this.updateMatrix(this.matrix, newMatrix);
+        this.moveMatrix = new Matrix();
+        if (!this.isFrame) {
+            var rs = this.findFramesByIntersect();
+            if (rs.length > 0 && !rs.some(s => s === this.parent)) {
                 var fra = rs[0];
-                await fra.append(bl);
-                var r = bl.getTranslation().relative(fra.getTranslation());
+                await fra.append(this);
+                var r = this.getTranslation().relative(fra.getTranslation());
                 var nm = new Matrix();
                 nm.translate(r);
-                nm.rotate(bl.matrix.getRotation(), { x: 0, y: 0 });
-                bl.updateMatrix(bl.matrix, nm);
+                nm.rotate(this.matrix.getRotation(), { x: 0, y: 0 });
+                this.updateMatrix(this.matrix, nm);
             }
-            else if (rs.length == 0 && bl.parent?.isFrame) {
-                var fra = bl.parent;
-                await fra.parent.append(bl);
-                var r = bl.getTranslation().base(fra.getTranslation());
+            else if (rs.length == 0 && this.parent?.isFrame) {
+                var fra = this.parent;
+                await fra.parent.append(this);
+                var r = this.getTranslation().base(fra.getTranslation());
                 var nm = new Matrix();
                 nm.translate(r);
-                nm.rotate(bl.matrix.getRotation(), { x: 0, y: 0 });
-                bl.updateMatrix(bl.matrix, nm);
+                nm.rotate(this.matrix.getRotation(), { x: 0, y: 0 });
+                this.updateMatrix(this.matrix, nm);
             }
         }
     }

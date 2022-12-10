@@ -1,5 +1,4 @@
 import { Block } from "..";
-import { Rect } from "../../common/vector/point";
 export class Block$Seek {
     blockChilds(this: Block, name: string) {
         return this.blocks[name];
@@ -324,7 +323,6 @@ export class Block$Seek {
     findFramesByIntersect(this: Block) {
         var blocks = this.page.findAll(g => g.isFrame);
         // this.page.gridMap.findBlocksByRect(Rect.from(this.el.getBoundingClientRect()), g => g.isFrame);
-        console.log(blocks, 'blocks');
         var poly = this.getVisiblePolygon();
         return blocks.findAll(g => {
             var vp = g.getVisiblePolygon();

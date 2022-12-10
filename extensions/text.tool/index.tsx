@@ -15,7 +15,6 @@ import { MenuItem } from "../../component/view/menu/declare";
 import { BlockDirective } from "../../src/block/enum";
 import { PopoverPosition } from "../popover/position";
 import { FixedViewScroll } from "../../src/common/scroll";
-import { channel } from "../../net/channel";
 import { blockStore } from "../block/store";
 import { BoldSvg, CodeSvg, DeleteLineSvg, DoubleLinkSvg, EquationSvg, FontStyleSvg, ItalicSvg, LinkSvg, SearchSvg, UnderlineSvg } from "../../component/svgs";
 import { ToolTip } from "../../component/view/tooltip";
@@ -51,7 +50,6 @@ class TextTool extends EventsComponent {
     el: HTMLElement;
     boxEl: HTMLElement;
     open(pos: PopoverPosition, options: { style: TextToolStyle, turnBlock?: Block }) {
-        console.log(options, 'ggg');
         var rs = pos.roundArea;
         if (!rs && Array.isArray(pos.roundAreas)) rs = pos.roundAreas[0];
         if (pos.relativeEleAutoScroll) this.fvs.bind(pos.relativeEleAutoScroll);
