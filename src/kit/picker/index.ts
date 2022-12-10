@@ -7,6 +7,7 @@ import { useShapeSelector } from "../../../extensions/shapes/box";
 
 import { util } from "../../../util/util";
 import { Block } from "../../block";
+import { AppearAnchor } from "../../block/appear";
 import { BlockUrlConstant } from "../../block/constant";
 import { BlockRenderRange } from "../../block/enum";
 import { BoardBlockSelector, BoardPointType } from "../../block/partial/board";
@@ -57,14 +58,29 @@ export class BlockPicker {
         this.view.forceUpdate();
     }
     async onMoveEnd(from: Point, to: Point) {
-        this.kit.page.onAction(ActionDirective.onMove, async () => {
-            await this.blocks.eachAsync(async (bl) => {
-                /**
-                 * this.currentMatrix*moveMatrix=newMatrix*this.selfMatrix;
-                 */
-                await bl.boardMoveEnd(from, to)
-            });
+        await this.kit.page.onAction(ActionDirective.onMove, async () => {
+            if (this.kit.page.keyboardPlate.isAlt()) {
+                var bs = await this.blocks.asyncMap(async c => await c.clone());
+                await this.blocks.eachAsync(async b => {
+                    b.setBoardMoveMatrix(new Matrix());
+                })
+                await bs.eachAsync(async b => {
+                    await b.boardMoveEnd(from, to);
+                });
+                this.kit.page.addUpdateEvent(async () => {
+                    this.onPicker(bs);
+                })
+            }
+            else {
+                await this.blocks.eachAsync(async (bl) => {
+                    /**
+                     * this.currentMatrix*moveMatrix=newMatrix*this.selfMatrix;
+                     */
+                    await bl.boardMoveEnd(from, to)
+                });
+            }
         })
+        this.view.forceUpdate();
     }
     onResizeBlock(block: Block, arrows: PointArrow[], event: React.MouseEvent) {
         event.stopPropagation();
@@ -301,5 +317,35 @@ export class BlockPicker {
     async onPickerMousedown(block: Block, selector: BoardBlockSelector, event: React.MouseEvent) {
         event.stopPropagation();
         await block.onPickerMousedown(selector, event);
+    }
+    async onMousedownAppear(aa: AppearAnchor, event: React.MouseEvent) {
+        event.stopPropagation();
+        var sel = window.getSelection();
+        var rowBlock = aa.block.closest(x => x.isBlock);
+        if (!this.blocks.some(s => s == rowBlock)) {
+            setTimeout(() => {
+                sel.collapse(aa.block.page.viewEl);
+                // sel.removeAllRanges();
+            }, 10);
+        }
+        this.kit.picker.onPicker([rowBlock]);
+        var self = this;
+        MouseDragger({
+            event,
+            dis: 5,
+            moveStart() {
+                forceCloseBoardEditTool()
+            },
+            move(ev, data) {
+                self.onMove(Point.from(event), Point.from(ev));
+            },
+            moveEnd(ev, isMove, data) {
+                if (isMove) {
+                    self.onMoveEnd(Point.from(event), Point.from(ev));
+                }
+            }
+        })
+        if (this.kit.picker.blocks.length > 0)
+            await openBoardEditTool(this.kit);
     }
 }
