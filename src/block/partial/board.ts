@@ -167,18 +167,22 @@ export class Block$Board {
                     if (bw + dx < minW) dx = minW - bw;
                 }
                 if (arrows.includes(PointArrow.top)) {
-                    ma.translate(0, dy);
                     bh -= dy;
+                    ma.translate(0, dy);
                 }
                 else if (arrows.includes(PointArrow.bottom)) {
                     bh += dy;
                 }
                 if (arrows.includes(PointArrow.left)) {
-                    ma.translate(dx, 0);
                     bw -= dx;
+                    ma.translate(dx, 0);
                 }
                 else if (arrows.includes(PointArrow.right)) {
                     bw += dx;
+                }
+                if (block.page.keyboardPlate.isShift()) {
+                    if (!arrows.some(s => [PointArrow.left, PointArrow.top].includes(s)))
+                        bw = bh = Math.max(bw, bh);
                 }
                 block.matrix = matrix.appended(ma);
                 block.fixedHeight = bh;
