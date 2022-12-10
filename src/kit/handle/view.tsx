@@ -49,6 +49,7 @@ export class HandleView extends React.Component<{ handle: Handle }>{
             } else self.handle.dragBlocks = [self.handle.handleBlock];
             if (self.handle.dragBlocks.some(s => s.isFreeBlock)) {
                 self.handle.kit.picker.onPicker(self.handle.dragBlocks);
+                window.getSelection().collapse(self.handle.kit.page.viewEl)
                 MouseDragger<{ item: HTMLElement }>({
                     event,
                     dis: 5,

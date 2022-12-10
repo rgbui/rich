@@ -191,12 +191,13 @@ export class PageView extends Component<{ page: Page }>{
         }
         return <div className={'shy-page-view' + (this.page.readonly ? " shy-page-view-readonly" : "")}
             style={pageStyle}
+            ref={e => this.page.viewEl = e}
             tabIndex={this.page.isCanEdit ? 1 : undefined}
             onFocusCapture={e => this.page.onFocusCapture(e.nativeEvent)}
             onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}
             onMouseEnter={e => this.page.onMouseenter(e)}
             onMouseLeave={e => this.page.onMouseleave(e)}
-            onMouseDownCapture={e=>this.page. onMouseDownCapture(e)}
+            onMouseDownCapture={e => this.page.onMouseDownCapture(e)}
         // onCopy={e =>this.page.onCopy(e)}
         // onCut={e =>this.page.onCut(e)}
         >

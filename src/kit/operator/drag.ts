@@ -41,6 +41,7 @@ export async function PageDrag(kit: Kit, event: React.MouseEvent) {
     if (block?.isLine) block = block.closest(x => !x.isLine);
     if (kit.page.isBoard || block?.isFreeBlock) {
         event.preventDefault()
+        window.getSelection().collapse(self.handle.kit.page.viewEl)
         BoardDrag(kit, block, event);
     }
     else {
