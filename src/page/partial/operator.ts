@@ -85,6 +85,7 @@ export class Page$Operator {
         })
     }
     async onBatchDelete(this: Page, blocks: Block[]) {
+        blocks = blocks.map(c => c);
         await this.onAction(ActionDirective.onBatchDeleteBlocks, async () => {
             var pre = blocks.first().prevFind(c => c.isVisible && !blocks.includes(c) && !blocks.some(s => s.exists(g => g.id == c.id)) && c.isBlock);
             if (!pre) blocks.first().nextFind(c => c.isVisible && !blocks.includes(c) && !blocks.some(s => s.exists(g => g.id == c.id)) && c.isBlock);

@@ -14,11 +14,19 @@ export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
             page.onSave();
         }
     );
-    keyboardPlate.listener(kt => UA.isMacOs && kt.is(KeyboardCode.Backspace) || !UA.isMacOs && kt.is(KeyboardCode.Delete),
+    keyboardPlate.listener(kt => {
+        var r = UA.isMacOs && kt.is(KeyboardCode.Backspace, KeyboardCode.Delete) || !UA.isMacOs && kt.is(KeyboardCode.Delete);
+
+        return r;
+    },
         (event, kt) => {
             if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
                 event.preventDefault();
                 page.onBatchDelete(page.kit.anchorCursor.currentSelectHandleBlocks);
+            }
+            if (page.kit.picker.blocks.length > 0) {
+                event.preventDefault();
+                page.onBatchDelete(page.kit.picker.blocks);
             }
         },
         (event, kt) => {
