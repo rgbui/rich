@@ -17,7 +17,7 @@ export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseE
         var gm = fra.globalWindowMatrix;
         var re = gm.inverseTransform(Point.from(event));
         var url = kit.boardSelector.currentSelector.url;
-        if (url==BlockUrlConstant.Note|| url == BlockUrlConstant.Pen || url == BlockUrlConstant.Mind || url == BlockUrlConstant.TextSpan || url == BlockUrlConstant.Frame) {
+        if (url == BlockUrlConstant.Note || url == BlockUrlConstant.Pen || url == BlockUrlConstant.Mind || url == BlockUrlConstant.TextSpan || url == BlockUrlConstant.Frame) {
             await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
                 var data = kit.boardSelector.currentSelector.data || {};
                 var ma = new Matrix();
@@ -182,6 +182,20 @@ export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseE
                     kit.boardSelector.clearSelector();
                 }
             })
+        }
+        else if (url == BlockUrlConstant.BoardImage) {
+            await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
+                var data = kit.boardSelector.currentSelector.data || {};
+                var ma = new Matrix();
+                ma.translate(re.x, re.y);
+                data.matrix = ma.getValues();
+                var newBlock = await kit.page.createBlock(kit.boardSelector.currentSelector.url, data, fra);
+                kit.boardSelector.clearSelector();
+                newBlock.mounted(() => {
+                    kit.picker.onPicker([newBlock]);
+                    kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
+                })
+            });
         }
         return true;
     }
