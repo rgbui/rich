@@ -31,7 +31,7 @@ export class RichPop extends React.Component<{
     el: HTMLElement;
     startEl: HTMLElement;
     offset: number;
-    point: Point;
+    point: Point = new Point();
     relativeRect: Rect;
     open(
         rect: Rect,
