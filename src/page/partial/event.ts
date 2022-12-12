@@ -10,6 +10,7 @@ import { util } from "../../../util/util";
 import { Matrix } from "../../common/matrix";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
+import { onPasteBlank } from "../../kit/write/paste";
 import { PageLayoutType } from "../declare";
 
 export class PageEvent {
@@ -49,6 +50,10 @@ export class PageEvent {
     }
     onBlurCapture(this: Page, event: FocusEvent) {
 
+    }
+    onPaste(this: Page, event: ClipboardEvent) {
+        console.log('eeee',event);
+        onPasteBlank(this.kit, event);
     }
     private lastTriggerTime;
     onWheel(this: Page, event: React.WheelEvent) {

@@ -1,16 +1,113 @@
 import { Kit } from "..";
 import { TextCode } from "../../../blocks/present/code/code";
+import { getImageSize } from "../../../component/file";
 import { InputTextPopSelectorType } from "../../../extensions/common/input.pop";
 import { useInputUrlSelector } from "../../../extensions/url";
+import { channel } from "../../../net/channel";
+import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
 import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
-import { Rect } from "../../common/vector/point";
+import { Matrix } from "../../common/matrix";
+import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
 import { parseDom } from "../../import-export/html/parse";
 import { readCopyBlocks } from "../../page/common/copy";
+import { PageLayoutType } from "../../page/declare";
 import { inputBackspaceDeleteContent } from "./input";
 import { InputForceStore } from "./store";
 const URL_RGEX = /https?:\/\/([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?/ig;
+
+export async function onPasteBlank(kit: Kit, event: ClipboardEvent) {
+    console.log(event,'ddd');
+    if (kit.page.pageLayout?.type == PageLayoutType.board) {
+        var files: File[] = Array.from(event.clipboardData.files);
+        var text = event.clipboardData.getData('text/plain');
+        var html = event.clipboardData.getData('text/html');
+        kit.operator.onClearPage(); event.preventDefault();
+        var point = kit.operator.moveEvent;
+        var fra: Block = kit.page.getPageFrame();
+        var gm = fra.globalWindowMatrix;
+        var re = gm.inverseTransform(Point.from(point));
+        if (!html && text || text && html && html.endsWith(text)) {
+            await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
+                var url = BlockUrlConstant.TextSpan;
+                var data = { content: text } as any;
+                var ma = new Matrix();
+                ma.translate(re.x, re.y);
+                data.matrix = ma.getValues();
+                var newBlock = await kit.page.createBlock(url, data, fra);
+                kit.boardSelector.clearSelector();
+                newBlock.mounted(() => {
+                    kit.picker.onPicker([newBlock]);
+                    kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
+
+                })
+            });
+        }
+        else if (files.length > 0) {
+            for (let i = 0; i < files.length; i++) {
+                var file = files[i];
+                if (file.type.startsWith('image/')) {
+                    //图片
+                    var r = await channel.post('/ws/upload/file', {
+                        file,
+                        uploadProgress: (event) => {
+                            // console.log(event, 'ev');
+                            if (event.lengthComputable) {
+                                // this.progress = `${util.byteToString(event.total)}${(100 * event.loaded / event.total).toFixed(2)}%`;
+                                // this.forceUpdate();
+                            }
+                        }
+                    })
+                    if (r.ok) {
+                        if (r.data?.file?.url) {
+                            var size = await getImageSize(r.data.file.url);
+                            var url = BlockUrlConstant.BoardImage;
+                            var data = {
+                                originSize: size,
+                                fixedWidth: size.width,
+                                fixedHeight: size.height,
+                                src: { name: 'upload', ...r.data.file }
+                            } as any
+                            await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
+                                var ma = new Matrix();
+                                ma.translate(re.x, re.y);
+                                data.matrix = ma.getValues();
+                                var newBlock = await kit.page.createBlock(url, data, fra);
+                                kit.boardSelector.clearSelector();
+                                newBlock.mounted(() => {
+                                    kit.picker.onPicker([newBlock]);
+                                    kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
+
+                                })
+                            });
+                            // this.props.change(r.data?.file as any);
+                        }
+                    }
+                }
+                else {
+
+                }
+            }
+        }
+        else {
+            await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
+                var url = BlockUrlConstant.TextSpan;
+                var data = { content: text } as any;
+                var ma = new Matrix();
+                ma.translate(re.x, re.y);
+                data.matrix = ma.getValues();
+                var newBlock = await kit.page.createBlock(url, data, fra);
+                kit.boardSelector.clearSelector();
+                newBlock.mounted(() => {
+                    kit.picker.onPicker([newBlock]);
+                    kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
+
+                })
+            });
+        }
+    }
+}
 
 export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent) {
     var files: File[] = Array.from(event.clipboardData.files);

@@ -44,6 +44,7 @@ export class PageView extends Component<{ page: Page }>{
     private _keyup;
     private _keydown;
     private _wheel;
+    private _paste;
     el: HTMLElement;
     componentDidMount() {
         this.didMounted();
@@ -61,6 +62,7 @@ export class PageView extends Component<{ page: Page }>{
         document.addEventListener('mousemove', (this._mousemove = this.page.onMousemove.bind(this.page)));
         document.addEventListener('mouseup', (this._mouseup = this.page.onMouseup.bind(this.page)));
         document.addEventListener('keyup', (this._keyup = this.page.onKeyup.bind(this.page)), true);
+        document.addEventListener('paste', this._paste = e => this.page.onPaste(e))
         await this.AutomaticHandle();
         this.page.emit(PageDirective.mounted)
     }
@@ -136,7 +138,8 @@ export class PageView extends Component<{ page: Page }>{
         document.removeEventListener('mouseup', this._mouseup);
         document.removeEventListener('mousemove', this._mousemove);
         document.removeEventListener('keyup', this._keyup, true);
-        document.removeEventListener('wheel', this._wheel)
+        document.removeEventListener('wheel', this._wheel);
+        document.removeEventListener('paste', this._paste);
         delete this.el.shy_drop_move;
         delete this.el.shy_drop_over;
         delete this.el.shy_end;
@@ -198,6 +201,7 @@ export class PageView extends Component<{ page: Page }>{
             onMouseEnter={e => this.page.onMouseenter(e)}
             onMouseLeave={e => this.page.onMouseleave(e)}
             onMouseDownCapture={e => this.page.onMouseDownCapture(e)}
+        // onPaste={e => this.page.onPaste(e)}
         // onCopy={e =>this.page.onCopy(e)}
         // onCut={e =>this.page.onCut(e)}
         >
