@@ -116,6 +116,7 @@ import "./board/line/line";
 import "./board/pen/index";
 import "./board/shape/index";
 import "./board/board/index";
+import "./board/image/index";
 
 
 import "./channel/text/index";
