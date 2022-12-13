@@ -42,7 +42,7 @@ export class DataGridViewConfig {
                 {
                     name: 'name',
                     type: MenuItemType.input,
-                    value: self.schemaView.text,
+                    value: self.schemaView?.text,
                     text: '编辑视图名',
                 },
                 { type: MenuItemType.divide },
@@ -61,14 +61,14 @@ export class DataGridViewConfig {
                                     type: MenuItemType.drag,
                                     value: v.id,
                                     icon: getSchemaViewIcon(v.url),
-                                    checkLabel: v.id == self.schemaView.id,
+                                    checkLabel: v.id == self.schemaView?.id,
                                     btns: [
                                         { icon: DotsSvg, name: 'property' }
                                     ]
                                 }
                             }),
                             { type: MenuItemType.divide },
-                            { name: 'addView', icon: PlusSvg, type: MenuItemType.button, text: '创建视图' }
+                            { name: 'addView',  type: MenuItemType.button, text: '创建视图' }
                             ]
                         }
                     ]
@@ -92,7 +92,7 @@ export class DataGridViewConfig {
                 try {
                     if (item.name == 'turn') {
                         var rs: MenuItem<BlockDirective | string>[] = [];
-                        if (item.value == view.id) {
+                        if (item.value == view?.id) {
                             rs.push(...[
                                 { name: 'duplicate', icon: DuplicateSvg, text: '复制' }
                             ])
@@ -106,7 +106,7 @@ export class DataGridViewConfig {
                                     text: '编辑视图名',
                                 },
                                 { type: MenuItemType.divide },
-                                { name: 'delete', disabled: item.value == view.id, icon: TrashSvg, text: '删除' }
+                                { name: 'delete', disabled: item.value == view?.id, icon: TrashSvg, text: '删除' }
                             ])
                         var rg = await useSelectMenuItem({ roundArea: Rect.fromEvent(ev) },
                             rs,
@@ -167,7 +167,7 @@ export class DataGridViewConfig {
             }
         }
         if (rname.value != self.schemaView.text && rname.value) {
-            self.onSchemaViewRename(view.id, rname.value);
+            self.onSchemaViewRename(view?.id, rname.value);
         }
         self.onOver(self.getVisibleContentBound().contain(Point.from(self.page.kit.operator.moveEvent)))
         self.dataGridTool.isOpenTool = false;

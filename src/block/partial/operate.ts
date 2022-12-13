@@ -343,16 +343,17 @@ export class Block$Operator {
     }
     async dropBlockDatas(this: Block, blocks: Record<string, any>[], direction: DropDirection) {
         if (blocks.some(s => s.isLine)) throw 'line blokc is not drop';
+        var bs: Block[] = [];
         switch (direction) {
             case DropDirection.bottom:
             case DropDirection.top:
                 var row = this.closest(x => x.isBlock);
                 var childsKey = row.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs;
                 if (direction == DropDirection.bottom) {
-                    await row.parent.appendArrayBlockData(blocks, row.at + 1, childsKey);
+                    bs = await row.parent.appendArrayBlockData(blocks, row.at + 1, childsKey);
                 }
                 else {
-                    await row.parent.appendArrayBlockData(blocks, row.at, childsKey);
+                    bs = await row.parent.appendArrayBlockData(blocks, row.at, childsKey);
                 }
                 break;
             case DropDirection.left:
@@ -365,7 +366,7 @@ export class Block$Operator {
                     })
                     var newCol = await this.page.createBlock(BlockUrlConstant.Col, { widthPercent: r }, col.parent, col.at);
                     await blocks.eachAsync(async (block) => {
-                        await newCol.appendBlock(block);
+                        bs.push(await newCol.appendBlock(block));
                     })
                 }
                 else {
@@ -378,7 +379,7 @@ export class Block$Operator {
                         }
                     }, this.parent, this.at);
                     await blocks.eachAsync(async (block) => {
-                        await newRow.childs.first().appendBlock(block);
+                        bs.push(await newRow.childs.first().appendBlock(block));
                     })
                     await newRow.childs.last().appendBlock(this);
                 }
@@ -396,7 +397,7 @@ export class Block$Operator {
                     });
                     var newCol = await this.page.createBlock(BlockUrlConstant.Col, { widthPercent: r }, col.parent, col.at + 1);
                     await blocks.eachAsync(async (block) => {
-                        await newCol.appendBlock(block);
+                        bs.push(await newCol.appendBlock(block));
                     })
                 }
                 else {
@@ -409,7 +410,7 @@ export class Block$Operator {
                         }
                     }, this.parent, this.at);
                     await blocks.eachAsync(async (block) => {
-                        await newRow.childs.last().appendBlock(block);
+                        bs.push(await newRow.childs.last().appendBlock(block));
                     })
                     await newRow.childs.first().append(this);
                 }
@@ -422,17 +423,18 @@ export class Block$Operator {
                  * 这时判断是否可以允许换行的block，还是替换 
                  * */
                 var cs = this.childs.map(c => c);
-                await this.appendArrayBlockData(blocks, undefined, BlockChildKey.childs);
+                bs = await this.appendArrayBlockData(blocks, undefined, BlockChildKey.childs);
                 await cs.eachAsync(async (c) => {
                     if (c.isContentEmpty)
                         await c.delete()
                 })
                 break;
             case DropDirection.sub:
-                if (this.hasSubChilds) await this.appendArrayBlockData(blocks, 0, this.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
-                else await this.parent.appendArrayBlockData(blocks, this.at, this.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
+                if (this.hasSubChilds)  bs =await this.appendArrayBlockData(blocks, 0, this.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
+                else  bs =await this.parent.appendArrayBlockData(blocks, this.at, this.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
                 break;
         }
+        return bs;
     }
     async updateAppear(this: Block, appear: AppearAnchor, newValue: string, range = BlockRenderRange.none) {
         await this.updateProps({ [appear.prop]: newValue });

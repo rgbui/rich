@@ -1,12 +1,18 @@
-.shy-rich-input {
+.shy-rich-view {
     &:empty::after {
         content: attr(data-placeholder);
+        font-size: 14px;
+        color:rgba(0,0,0,0.1)
     }
     p {
+        width:100%;
+        min-height: 20px;
         margin: 0px;
         padding: 0px;
     }
     p:empty::after {
         content: '  ';
+        min-height:22px;
+        min-width:1px;
     }
 }

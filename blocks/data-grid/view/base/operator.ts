@@ -19,9 +19,9 @@ import { BlockUrlConstant } from "../../../../src/block/constant";
 import { useDataSourceView } from "../../../../extensions/data-grid/datasource";
 import { SnapshootDataGridViewPos } from "../../../../src/history/snapshoot";
 import { useTableExport } from "../../../../extensions/data-grid/export";
+import { BlockFactory } from "../../../../src/block/factory/block.factory";
 
 export class DataGridViewOperator {
-
     async onAddField(this: DataGridView, event: Rect, at?: number) {
         var self = this;
         var result = await useTableStoreAddField(
@@ -278,17 +278,17 @@ export class DataGridViewOperator {
     }
     async dataGridTrunView(this: DataGridView, viewId: string, schemaId?: string) {
         var oldViewId = this.syncBlockId;
+        if (!this.schema) {
+            await this.loadSchema();
+        }
         var view = this.schema.views.find(g => g.id == viewId);
-        var newBlock = await this.page.createBlock(view.url,
-            {
-                syncBlockId: viewId,
-                schemaId: schemaId || this.schema.id
-            },
-            this.parent,
-            this.at
-        );
-        var bs = this.parent.blocks[this.parentKey];
-        lodash.remove(bs, g => g === this);
+        var newBlock = await BlockFactory.createBlock(view.url, this.page, {
+            syncBlockId: viewId,
+            schemaId: schemaId || this.schema.id
+        }, this.parent)
+        var bs = this.parentBlocks;
+        var at = this.at;
+        bs[at] = newBlock;
         newBlock.id = this.id;
         this.page.addBlockUpdate(newBlock.parent);
         this.page.snapshoot.record(OperatorDirective.$data_grid_trun_view, {
@@ -309,6 +309,9 @@ export class DataGridViewOperator {
         type: 'form' | 'view',
         schemaId: string,
         viewUrl?: string) {
+        if (!this.schema) {
+            await this.loadSchema();
+        }
         var from: SnapshootDataGridViewPos = this.pos as any;
         from.schemaId = this.schema.id;
         from.viewId = this.syncBlockId;

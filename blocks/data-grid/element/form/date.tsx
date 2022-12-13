@@ -13,7 +13,7 @@ class FieldText extends OriginFormField {
         if (!this.value) this.value = new Date();
         var r = dayjs(this.value);
         var fr = 'YYYY-MM-DD';
-        if (this.field?.config.includeTime) fr = 'YYYY-MM-DD HH:mm';
+        if (this.field?.config?.includeTime) fr = 'YYYY-MM-DD HH:mm';
         return r.format(fr)
     }
 }

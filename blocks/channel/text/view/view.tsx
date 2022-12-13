@@ -5,6 +5,7 @@ import { EditSvg, EmojiSvg, FileSvg, PicSvg, TopicSvg, UnreadTextSvg } from "../
 import { Button } from "../../../../component/view/button";
 import { useForm } from "../../../../component/view/form/dialoug";
 import { Icon } from "../../../../component/view/icon";
+import { RichView } from "../../../../component/view/rich";
 import { RichTextInput } from "../../../../component/view/rich.input";
 import { Spin } from "../../../../component/view/spin";
 import { LinkPageItem } from "../../../../extensions/at/declare";
@@ -198,7 +199,8 @@ export class ChannelTextView extends BlockView<ChannelText>{
     renderWeibos() {
         return <div className="w-c-250 gap-auto">
             <div className="min-h-80 bg-white border-light round-8 gap-15 padding-15" data-shy-page-no-focus onMouseDown={e => e.stopPropagation()}>
-                <RichTextInput
+                <RichView placeholder="微博"></RichView>
+                {/* <RichTextInput
                     richClassName={'bg round-16 padding-10'}
                     allowUploadFile={false}
                     allowEmoji={false}
@@ -207,7 +209,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
                     placeholder={"有什么新鲜事分享给大家"}
                     ref={e => this.richTextInput = e}
                     popOpen={e => this.popOpen(e)}
-                    onInput={e => this.onInput(e)}></RichTextInput>
+                    onInput={e => this.onInput(e)}></RichTextInput> */}
                 <div className="flex h-20 gap-t-10">
                     <div className="flex-auto flex text-1 r-flex-center r-item-hover r-round r-size-30 r-cursor">
                         <span><Icon size={20} icon={EmojiSvg}></Icon></span>

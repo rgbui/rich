@@ -158,9 +158,9 @@
                 margin-right : 10px;
                 border       : 1px solid transparent;
                 cursor       : pointer;
-
+                line-height  : 1.3rem;
                 span {
-                    font-size  : 0.875rem;
+                    font-size: 0.875rem;
                     font-weight: 500;
 
                     &:first-child {
@@ -211,12 +211,14 @@
 
             &-content {
                 margin-left: 5px;
-                line-height: 22px;
-                height     : 22px;
                 font-size  : 14px;
 
                 .shy-user-channel-chat-content {
-                    font-size: inherit;
+                    overflow     : hidden;
+                    text-overflow: ellipsis;
+                    line-height  : 22px;
+                    height       : 22px;
+                    font-size    : inherit;
                 }
             }
         }

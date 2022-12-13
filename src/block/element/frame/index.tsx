@@ -19,6 +19,19 @@ export class Frame extends Block {
     async created(this: Block): Promise<void> {
         this.pattern.setFillStyle({ color: '#fff' });
     }
+    get isEnterCreateNewLine(): boolean {
+        return false;
+    }
+    get isCanEmptyDelete() {
+        if (this.isFreeBlock) return false;
+        else return true;
+    }
+    get isSupportTextStyle() {
+        return false;
+    }
+    get isDisabledInputLine() {
+        return true;
+    }
     @prop()
     content: string = '框';
     @prop()
@@ -97,7 +110,6 @@ export class FrameView extends BlockView<Frame>{
             width: this.block.fixedWidth,
             height: this.block.fixedHeight
         }, this.block.visibleStyle);
-
         return <div className='sy-block-frame' style={style} >
             <div className='sy-block-frame-head' style={{ height: h, lineHeight: h + 'px', fontSize: h20 / 1.2 }}>
                 <TextArea block={this.block} placeholder='框' prop='content' ></TextArea>

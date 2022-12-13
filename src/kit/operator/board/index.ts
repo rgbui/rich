@@ -22,8 +22,7 @@ export async function BoardDrag(
     var gm = block ? block.panelGridMap : kit.page.gridMap;
     if (block?.isLine) block = block.closest(x => !x.isLine);
     var beforeIsPicked = kit.picker.blocks.some(s => s == block);
-
-
+    
     var hasBlock: boolean = block ? true : false;
     if (kit.page.keyboardPlate.isShift() && block?.isFreeBlock) {
         //连选
@@ -33,7 +32,7 @@ export async function BoardDrag(
         kit.picker.onPicker([block]);
     }
     else kit.picker.onCancel();
-    var point=Point.from(event);
+    var point = Point.from(event);
     MouseDragger({
         event,
         dis: 5,
@@ -79,8 +78,7 @@ export async function BoardDrag(
                  * 
                  */
                 if (ev.button == 2) {
-                    if (kit.picker.blocks.length > 0)
-                    {
+                    if (kit.picker.blocks.length > 0) {
                         kit.page.onOpenMenu(kit.picker.blocks, point);
                     }
                 }

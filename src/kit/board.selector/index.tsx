@@ -1,6 +1,8 @@
 import React, { CSSProperties } from "react";
 import { ReactNode } from "react";
 import { Kit } from "..";
+import { getImageSize, OpenFileDialoug } from "../../../component/file";
+import { ShyAlert } from "../../../component/lib/alert";
 import {
     BoardToolTextSvg,
     BoardToolStickerSvg,
@@ -15,6 +17,7 @@ import {
 import { Icon } from "../../../component/view/icon";
 import { getNoteSelector } from "../../../extensions/note";
 import { getShapeSelector } from "../../../extensions/shapes";
+import { channel } from "../../../net/channel";
 import { BlockUrlConstant } from "../../block/constant";
 import { FixedViewScroll } from "../../common/scroll";
 import { Point, Rect } from "../../common/vector/point";
@@ -126,6 +129,41 @@ export class BoardSelector extends React.Component<{ kit: Kit }> {
                     /**
                      * 这里上传文件
                      */
+                    var exts = ['image/*']
+                    //exts=['*']
+                    var file = await OpenFileDialoug({ exts: exts });
+                    if (file) {
+                        if (file.size > 1024 * 1024 * 1024) {
+                            ShyAlert('文件过大，不支持1G以上的文件');
+                            return;
+                        }
+                        var r = await channel.post('/ws/upload/file', {
+                            file,
+                            uploadProgress: (event) => {
+                                // console.log(event, 'ev');
+                                if (event.lengthComputable) {
+                                    // this.progress = `${util.byteToString(event.total)}${(100 * event.loaded / event.total).toFixed(2)}%`;
+                                    // this.forceUpdate();
+                                }
+                            }
+                        })
+                        if (r.ok) {
+                            if (r.data?.file?.url) {
+                                var size = await getImageSize(r.data.file.url);
+                                sel.url = BlockUrlConstant.BoardImage;
+                                sel.data = {
+                                    originSize: size,
+                                    fixedWidth: size.width,
+                                    fixedHeight: size.height,
+                                    src: { name: 'upload', ...r.data.file }
+                                }
+                                // this.props.change(r.data?.file as any);
+                            }
+                        }
+                        else {
+                            // this.forceUpdate();
+                        }
+                    }
                     break;
                 case BoardToolOperator.mind:
                     sel.url = '/flow/mind';

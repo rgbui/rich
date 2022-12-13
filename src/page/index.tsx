@@ -34,6 +34,7 @@ import { BlockUrlConstant } from '../block/constant';
 
 export class Page extends Events<PageDirective> {
     root: HTMLElement;
+    viewEl:HTMLElement;
     contentEl: HTMLElement;
     id: string;
     date: number;

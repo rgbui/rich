@@ -23,12 +23,11 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
         var view = props.block.schema?.views?.find(g => g.id == props.block.syncBlockId)
         if (props.block.isLock == true) return <></>
         if (props.block.noTitle) return <div className='h-20 relative'>
-
             {props.block.isOver && <div className="flex h-40 pos card round padding-w-10 padding-h-0" style={{ top: -30, left: 0, right: 0 }}>
                 <div className="flex-fixed">
                     <label className="cursor flex round h-30 item-hover padding-r-5 text f-14" onMouseDown={e => { e.stopPropagation(); props.block.onOpenViewSettings(Rect.fromEvent(e)) }}>
-                        <span className="size-24 flex-center flex-fixed">
-                            <Icon size={18} icon={view ? getSchemaViewIcon(view.url) : CollectTableSvg}></Icon>
+                        <span className="size-24 bold flex-center flex-fixed">
+                            <Icon size={16} icon={view ? getSchemaViewIcon(view.url) : CollectTableSvg}></Icon>
                         </span>
                         <span className="flex-auto">{view?.text}</span>
                     </label>
@@ -45,15 +44,14 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                     </div>
                 </div>
             </div>}
-
         </div>
         else return <div className="sy-dg-tool">
             <div className="flex-fixed">
                 <label className="cursor flex round h-30 item-hover padding-r-5  text f-14" onMouseDown={e => { e.stopPropagation(); props.block.onOpenViewSettings(Rect.fromEvent(e)) }}>
                     <span className="size-24 flex-center flex-fix">
-                        <Icon size={18} icon={view ? getSchemaViewIcon(view.url) : CollectTableSvg}></Icon>
+                        <Icon size={16} icon={view ? getSchemaViewIcon(view.url) : CollectTableSvg}></Icon>
                     </span>
-                    <span className="flex-auto">{view?.text}</span>
+                    <span className="flex-auto bold">{view?.text}</span>
                 </label>
             </div>
             {props.block.isOver && props.block.isCanEdit() && <div className="sy-dg-tool-operators  flex-auto flex-end">

@@ -17,7 +17,6 @@ import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
 import { PageLayoutType } from "../../page/declare";
 import { PageDirective } from "../../page/directive";
-import { openBoardEditTool } from "../operator/board/edit";
 import { inputBackspaceDeleteContent, inputBackSpaceTextContent, inputDetector, inputLineTail, inputPop, keydownBackspaceTextContent } from "./input";
 import {
     MoveCursor,
@@ -72,14 +71,8 @@ export class PageWrite {
         var sel = window.getSelection();
         var rowBlock = aa.block.closest(x => x.isBlock);
         if (rowBlock?.isFreeBlock) {
-            if (!(this.kit.picker.blocks.some(s => s == rowBlock))) {
-                event.preventDefault();
-                setTimeout(() => {
-                    sel.removeAllRanges();
-                }, 10);
-                this.kit.picker.onPicker([rowBlock]);
-                if (this.kit.picker.blocks.length > 0)
-                    await openBoardEditTool(this.kit);
+            if (!sel.focusNode || sel.focusNode && !rowBlock.el.contains(sel.focusNode)) {
+                this.kit.picker.onMousedownAppear(aa, event);
                 return;
             }
         }
@@ -221,6 +214,7 @@ export class PageWrite {
         aa.blur();
     }
     paste(aa: AppearAnchor, event: React.ClipboardEvent) {
+        event.stopPropagation();
         onPaste(this.kit, aa, event.nativeEvent);
     }
     dblclick(aa: AppearAnchor, event: React.MouseEvent) {

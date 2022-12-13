@@ -341,10 +341,15 @@ export class AnchorCursor {
             }
         })
     }
+
     selectBlocks(blocks: Block[]) {
         var old = this.record;
         this.currentSelectedBlocks = blocks;
         this.kit.page.snapshoot.record(OperatorDirective.$change_cursor_offset, { old_value: old, new_value: this.record }, this.kit.page)
+    }
+    onClearSelectBlocks() {
+        this.currentSelectedBlocks = [];
+        this.renderSelectBlocks(this.currentSelectedBlocks);
     }
     renderSelectBlocks(blocks: Block[]) {
         var currentEls = Array.from(this.kit.page.root.querySelectorAll(".shy-block-selected"));

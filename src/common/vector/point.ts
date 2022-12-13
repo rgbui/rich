@@ -70,7 +70,7 @@ export class Point {
     }
     static from(event: MouseEvent | React.MouseEvent | DOMRect | Point | { x: number, y: number } | Rect | number, y?: number) {
         if (event instanceof MouseEvent) {
-            return new Point({ x: event.x, y: event.y })
+            return new Point({ x: event.clientX, y: event.clientY })
         }
         else if (event instanceof Point) {
             return new Point(event);
@@ -235,8 +235,8 @@ export class Rect {
         re.height = rect.height;
         return re;
     }
-    static fromEvent(event: MouseEvent | React.MouseEvent|Rect) {
-        if(event instanceof Rect){
+    static fromEvent(event: MouseEvent | React.MouseEvent | Rect) {
+        if (event instanceof Rect) {
             return event;
         }
         var ele = event.target as HTMLElement;
@@ -334,7 +334,7 @@ export class Rect {
         }
     }
     static getRectFromRects(rects: Rect[]) {
-        var ps = rects.map(r =>[r.leftTop, r.rightBottom]).flat();
+        var ps = rects.map(r => [r.leftTop, r.rightBottom]).flat();
         return new Polygon(...ps).bound;
     }
 }

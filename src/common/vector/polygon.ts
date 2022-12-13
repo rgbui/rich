@@ -47,9 +47,8 @@ export class Polygon {
      * @returns 
      */
     isIntersect(poly: Polygon) {
-        var r= intersectsPolygonAndPolygon(this.points, poly.points);
-        console.log(r);
-        return r?true:false;
+        var r = intersectsPolygonAndPolygon(this.points, poly.points);
+        return r ? true : false;
     }
     isContainPoint(point: Point) {
         return pointIsInPoly(point, this);
