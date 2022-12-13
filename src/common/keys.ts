@@ -1,3 +1,4 @@
+import lodash from "lodash";
 
 
 export enum KeyboardCode {
@@ -69,7 +70,11 @@ export class KeyboardPlate {
     keyup(event: KeyboardEvent) {
         this.isKeyUped = true;
         delete this.lastKeydownDate;
-        this.keys = [];
+        this.metaKey = event.metaKey;
+        this.altKey = event.altKey;
+        this.shiftKey = event.shiftKey;
+        this.ctrlKey = event.ctrlKey;
+        lodash.remove(this.keys, g => g == event.key || g == event.code);
     }
     is(...codes: KeyboardCode[]) {
         return this.keys.exists(g => codes.exists(c => c.toLowerCase() == g.toLowerCase()));
