@@ -25,6 +25,7 @@ import { Polygon } from "../../src/common/vector/polygon";
 import { BackgroundColor } from "./background";
 import { ShapeFill } from "./fill";
 import { FontColor } from "./fontColor";
+import { FontFamily } from "./fontfamily";
 import { FrameScale } from "./frame.scale";
 import { LineArrow, LineTypes } from "./line.arrow";
 import { TurnShapes } from "./shapes";
@@ -114,6 +115,13 @@ export class BoardEditTool extends EventsComponent {
                     <TurnShapes tool={this} change={(e) => this.onChange('turnShapes', e)} turnShapes={getValue('turnShapes')}></TurnShapes>
                 </div>
             </Tip>}
+            {is('fontFamily') && <><Tip>
+                <div className={'shy-board-edit-tool-item'} >
+                    <FontFamily tool={this}
+                        value={getValue('fontFamily')}
+                        change={(name) => this.onChange('fontFamily', name)}></FontFamily>
+                </div>
+            </Tip></>}
             {is('fontSize') && <><Tip overlay={'字体大小'}>
                 <div className={'shy-board-edit-tool-item'} >
                     <Select value={getValue('fontSize')}
