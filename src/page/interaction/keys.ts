@@ -1,5 +1,6 @@
 import { Page } from "..";
 import { UA } from "../../../util/ua";
+import { findBlockAppear } from "../../block/appear/visible.seek";
 import { KeyboardCode, KeyboardPlate } from "../../common/keys";
 export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
     keyboardPlate.listener(kt => UA.isMacOs && kt.isMeta(KeyboardCode.Z) || !UA.isMacOs && kt.isCtrl(KeyboardCode.Z), (event, kt) => {
@@ -16,17 +17,20 @@ export function PageKeys(page: Page, keyboardPlate: KeyboardPlate) {
     );
     keyboardPlate.listener(kt => {
         var r = UA.isMacOs && kt.is(KeyboardCode.Backspace, KeyboardCode.Delete) || !UA.isMacOs && kt.is(KeyboardCode.Delete);
-
         return r;
     },
         (event, kt) => {
-            if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
-                event.preventDefault();
-                page.onBatchDelete(page.kit.anchorCursor.currentSelectHandleBlocks);
-            }
-            if (page.kit.picker.blocks.length > 0) {
-                event.preventDefault();
-                page.onBatchDelete(page.kit.picker.blocks);
+            var b = findBlockAppear(event.target as HTMLElement);
+            var cursorNode = window.getSelection().focusNode;
+            if (!(b && cursorNode && b.el.contains(cursorNode))) {
+                if (page.kit.anchorCursor.currentSelectHandleBlocks.length > 0) {
+                    event.preventDefault();
+                    page.onBatchDelete(page.kit.anchorCursor.currentSelectHandleBlocks);
+                }
+                if (page.kit.picker.blocks.length > 0) {
+                    event.preventDefault();
+                    page.onBatchDelete(page.kit.picker.blocks);
+                }
             }
         },
         (event, kt) => {
