@@ -17,7 +17,7 @@ export class HandleView extends React.Component<{ handle: Handle }>{
     get handle() {
         return this.props.handle;
     }
-    el: HTMLElement;
+    // el: HTMLElement;
     private async onPlus(event: React.MouseEvent) {
         this.closeTip();
         event.stopPropagation();

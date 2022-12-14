@@ -32,11 +32,11 @@ export class PageEvent {
         this.kit.operator.mousedown(event);
     }
     onMouseDownCapture(this: Page, event: React.MouseEvent) {
-
         /**
          * 部分块的mousedown事件被拦截了，此时通过onMouseDownCapture优先处理一些动作
          */
         if (this.kit.anchorCursor.currentSelectedBlocks.length > 0) {
+            if (event.target && this.kit.handle.view.handleEle.contains(event.target as HTMLElement)) return;
             this.kit.anchorCursor.onClearSelectBlocks();
         }
     }
