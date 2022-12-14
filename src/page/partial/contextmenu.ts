@@ -300,7 +300,8 @@ export class PageContextmenu {
                 this.onRedo();
             }
             else if (r.item.name == 'history') {
-                var result = await usePageHistoryStore(this.pageInfo);
+                var result = await usePageHistoryStore(this);
+             
                 if (result) {
                     this.emit(PageDirective.rollup, result);
                 }

@@ -172,7 +172,7 @@ export class Page extends Events<PageDirective> {
         return parseElementUrl(this.elementUrl).id1
     }
     recordViewTemplate: boolean = false;
-    openSource: 'page' | 'slide' | 'dialog' = 'page';
+    openSource: 'page' | 'slide' | 'dialog'|'snap'= 'page';
     getScreenStyle() {
         var style: CSSProperties = {};
         if (this.isSupportScreen) {

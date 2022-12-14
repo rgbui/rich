@@ -5,18 +5,14 @@ import { EventsComponent } from "../../component/lib/events.component";
 import { ImportSvg, RenameSvg, TrashSvg } from "../../component/svgs";
 import { Button } from "../../component/view/button";
 import { useForm } from "../../component/view/form/dialoug";
-import { Col, Row } from "../../component/view/grid";
 import { Icon } from "../../component/view/icon";
 import { Loading } from "../../component/view/loading";
 import { useSelectMenuItem } from "../../component/view/menu";
 import { MenuItemType } from "../../component/view/menu/declare";
-import { Remark } from "../../component/view/text";
 import { channel } from "../../net/channel";
-import { ElementType, getElementUrl } from "../../net/element.type";
 import { Rect } from "../../src/common/vector/point";
 import { Page } from "../../src/page";
 import { util } from "../../util/util";
-import { LinkPageItem } from "../at/declare";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
 import { createFormPage } from "./page";
@@ -41,11 +37,10 @@ export class PageHistoryStore extends EventsComponent {
                     <div ref={e => this.el = e} className="shy-page-history-view-content"></div>
                 </div>
             </div>
-            <div className="shy-page-history-footer">
-                <Row>
-                    <Col span={12}><Remark>诗云将自动保留60天的历史记录<br />被重命名的版本,诗云将不在自动清理,需要手动清理</Remark></Col>
-                    <Col span={12} align='end'><Button ref={e => this.button = e} onClick={e => this.onBake()} disabled={this.currentId ? false : true}>恢复</Button></Col>
-                </Row>
+            <div className="shy-page-history-footer flex">
+                <div className="remark flex-fixed">诗云将自动保留60天的历史记录<br />被重命名的版本,诗云将不在自动清理,需要手动清理</div>
+                <div className="flex-auto flex-end"><Button ref={e => this.button = e} onClick={e => this.onBake()} disabled={this.currentId ? false : true}>恢复</Button></div>
+
             </div>
         </div>
     }
@@ -94,11 +89,9 @@ export class PageHistoryStore extends EventsComponent {
             }
         }
     }
-    pageItem: LinkPageItem;
-    async open(item: LinkPageItem) {
-        this.pageItem = item;
-        this.pageId = item.id;
-        this.pageTitle = item.text;
+    shyPage: Page;
+    async open(page: Page) {
+        this.shyPage = page;
         this.button.loading = false;
         await this.load();
     }
@@ -111,7 +104,7 @@ export class PageHistoryStore extends EventsComponent {
     async load() {
         this.loadList = true;
         this.forceUpdate();
-        var r = await channel.get('/view/snap/list', { elementUrl: getElementUrl(ElementType.PageItem, this.pageId), page: 1, size: 20 });
+        var r = await channel.get('/view/snap/list', { elementUrl: this.shyPage.elementUrl, page: 1, size: 20 });
         if (r.ok) {
             this.total = r.data.total;
             this.page = r.data.page;
@@ -136,7 +129,7 @@ export class PageHistoryStore extends EventsComponent {
         this.forceUpdate()
         if (r.ok) {
             if (this.viewPage) this.viewPage.destory();
-            this.viewPage = await createFormPage(this.el, r.data.content, this.pageItem);
+            this.viewPage = await createFormPage(this.el, r.data.content, this.shyPage);
         }
     }
     async onBake() {
@@ -154,11 +147,10 @@ export class PageHistoryStore extends EventsComponent {
         if (d) {
             var r = await channel.post('/view/snap/rollup', {
                 id: this.currentId,
-                elementUrl: getElementUrl(ElementType.PageItem, this.pageId),
+                elementUrl: this.shyPage.elementUrl,
                 bakeTitle: d.name,
                 pageTitle: this.pageTitle
             });
-            console.log('ggg', r)
             if (r.ok) {
                 this.emit('save', r.data.id);
                 return;
@@ -169,11 +161,11 @@ export class PageHistoryStore extends EventsComponent {
     }
 }
 
-export async function usePageHistoryStore(options: LinkPageItem) {
+export async function usePageHistoryStore(page: Page) {
     var pos: PopoverPosition = { center: true };
-    let popover = await PopoverSingleton(PageHistoryStore, { mask: true, });
+    let popover = await PopoverSingleton(PageHistoryStore, { mask: true,shadow:true });
     let fv = await popover.open(pos);
-    fv.open(options);
+    fv.open(page);
     return new Promise((resolve: (id: string) => void, reject) => {
         fv.only('save', (value) => {
             popover.close();
