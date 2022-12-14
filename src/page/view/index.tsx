@@ -201,7 +201,7 @@ export class PageView extends Component<{ page: Page }>{
             onMouseEnter={e => this.page.onMouseenter(e)}
             onMouseLeave={e => this.page.onMouseleave(e)}
             onMouseDownCapture={e => this.page.onMouseDownCapture(e)}
-        // onPaste={e => this.page.onPaste(e)}
+            // onPaste={e => this.page.onPaste(e.nativeEvent)}
         // onCopy={e =>this.page.onCopy(e)}
         // onCut={e =>this.page.onCut(e)}
         >

@@ -52,8 +52,10 @@ export class PageEvent {
 
     }
     onPaste(this: Page, event: ClipboardEvent) {
-        console.log('eeee',event);
-        onPasteBlank(this.kit, event);
+        if (this.pageLayout?.type == PageLayoutType.board) {
+            if (this.isOff == false)
+                onPasteBlank(this.kit, event);
+        }
     }
     private lastTriggerTime;
     onWheel(this: Page, event: React.WheelEvent) {
