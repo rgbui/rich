@@ -243,6 +243,8 @@ export class Block$Board {
         }
         else if (name == 'fontWeight') {
             this.pattern.setFontStyle({ fontWeight: value });
+        } else if(name=='fontFamily'){
+            this.pattern.setFontStyle({ fontFamily: value })
         }
         else if (name == 'fontStyle') {
             this.pattern.setFontStyle({ fontStyle: value ? 'italic' : 'normal' });

@@ -100,7 +100,7 @@ export class FontCss extends BlockCss {
             lineHeight: typeof this.lineHeight == 'number' ? this.lineHeight + 'px' : this.lineHeight,
             textDecoration: this.textDecoration,
             fontStyle: this.fontStyle,
-            fontFamily: this.fontFamily,
+            fontFamily: this.fontFamily || undefined,
             fontWeight: this.fontWeight,
             writingMode: this.writingMode
         }
@@ -187,13 +187,13 @@ export class SvgCss extends BlockCss {
     stroke: string;
     strokeWidth: number;
     strokeOpacity: number;
-    strokeDasharray: 'none' | 'dash' | 'dash-circle';
+    strokeDasharray: 'none' | 'dash' | 'dash-larger' | 'dash-circle';
     fill: string;
     fillOpacity: number;
     get style() {
         var st = {
             stroke: this.stroke,
-            strokeDasharray: this.strokeDasharray == 'none' || typeof this.strokeDasharray == 'undefined' || this.strokeDasharray === null ? undefined : (this.strokeDasharray == 'dash' ? "10,10" : "2,2"),
+            strokeDasharray: this.strokeDasharray == 'none' || typeof this.strokeDasharray == 'undefined' || this.strokeDasharray === null ? undefined : (this.strokeDasharray == 'dash' ? "10,10" : "20,20"),
             strokeWidth: this.strokeWidth,
             strokeOpacity: typeof this.strokeOpacity == 'number' ? this.strokeOpacity : 1,
             fill: this.fill,
