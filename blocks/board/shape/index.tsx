@@ -25,6 +25,7 @@ export class Shape extends Block {
         cs.push({ name: 'fontStyle', value: this.pattern.css(BlockCssName.font)?.fontStyle == 'italic' ? true : false });
         cs.push({ name: 'textDecoration', value: this.pattern.css(BlockCssName.font)?.textDecoration });
         cs.push({ name: 'fontColor', value: this.pattern.css(BlockCssName.font)?.color });
+        cs.push({ name: 'fontFamily', value: this.pattern.css(BlockCssName.font)?.fontFamily });
 
         cs.push({ name: 'stroke', value: this.pattern.getSvgStyle()?.stroke || '#000' });
         cs.push({ name: 'strokeOpacity', value: this.pattern.getSvgStyle()?.strokeOpacity || 1 });

@@ -57,6 +57,8 @@ export class Note extends Block {
         cs.push({ name: 'fontStyle', value: this.pattern.css(BlockCssName.font)?.fontStyle == 'italic' ? true : false });
         cs.push({ name: 'textDecoration', value: this.pattern.css(BlockCssName.font)?.textDecoration });
         cs.push({ name: 'fontColor', value: this.pattern.css(BlockCssName.font)?.color });
+        cs.push({ name: 'fontFamily', value: this.pattern.css(BlockCssName.font)?.fontFamily });
+
         // cs.push({ name: 'link' });
         var stickerSize = 'none';
         if (this.fixedWidth == 400) stickerSize = 'big'
