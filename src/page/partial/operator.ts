@@ -217,7 +217,10 @@ export class Page$Operator {
                 roundPoint: event instanceof Point ? event : Point.from(event),
                 direction: 'left'
             },
-            await blocks[0].onGetContextMenus()
+            await blocks[0].onGetContextMenus(),
+            {input:(e)=>{
+                blocks[0].onContextMenuInput(e)
+            }}
         );
         if (re) {
             if (blocks.length == 1) await blocks[0].onClickContextMenu(re.item, re.event);

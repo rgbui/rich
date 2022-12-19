@@ -13,7 +13,18 @@ import { Point, Rect } from "../../common/vector/point";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { CopyText } from "../../../component/copy";
 import { ShyAlert } from "../../../component/lib/alert";
-import { BlockcolorSvg, BoardMoveBottomSvg, BoardMoveTopSvg, DuplicateSvg, LinkSvg, LockSvg, LoopSvg, TrashSvg, UnlockSvg } from "../../../component/svgs";
+import {
+    AlignTextCenterSvg,
+    BlockcolorSvg,
+    BoardMoveBottomSvg,
+    BoardMoveTopSvg,
+    DuplicateSvg,
+    LinkSvg,
+    LockSvg,
+    LoopSvg,
+    TrashSvg,
+    UnlockSvg
+} from "../../../component/svgs";
 import lodash from "lodash";
 import { FontColorList, BackgroundColorList } from "../../../extensions/color/data";
 import { BlockUrlConstant } from "../constant";
@@ -91,6 +102,17 @@ export class Block$Event {
         items.push({
             type: MenuItemType.divide
         });
+
+        if (typeof (this as any).align != 'undefined') {
+            items.push({
+                name: 'text-center',
+                type: MenuItemType.switch,
+                checked: (this as any).align == 'center',
+                text: '文字居中',
+                icon: AlignTextCenterSvg
+            });
+        }
+
         items.push({
             text: '颜色',
             icon: BlockcolorSvg,
@@ -176,10 +198,20 @@ export class Block$Event {
     async onContextmenu(this: Block, event: MouseEvent) {
         var re = await useSelectMenuItem(
             this.isFreeBlock ? { roundPoint: Point.from(event) } : { roundArea: Rect.fromEvent(event), direction: 'left' },
-            await this.onGetContextMenus()
+            await this.onGetContextMenus(),
+            {
+                input: (item) => {
+                    this.onContextMenuInput(item);
+                }
+            }
         );
         if (re) {
             await this.onClickContextMenu(re.item, re.event);
+        }
+    }
+    async onContextMenuInput(this: Block, item: MenuItem<BlockDirective | string>) {
+        if (item?.name == 'text-center') {
+            this.onUpdateProps({ align: item.checked ? "center" : "left" }, { range: BlockRenderRange.self });
         }
     }
     async onClickContextMenu(this: Block, item: MenuItem<BlockDirective | string>, event: MouseEvent) {
@@ -210,6 +242,8 @@ export class Block$Event {
                 this.page.onAction('setFillStyle', async () => {
                     this.pattern.setFillStyle({ mode: 'color', color: item.value })
                 })
+                break;
+            case 'text-center':
                 break;
         }
     }
