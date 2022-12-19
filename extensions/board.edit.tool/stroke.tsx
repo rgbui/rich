@@ -1,8 +1,9 @@
 import React, { CSSProperties } from "react";
 import { BoardEditTool } from ".";
 import { NoneSvg, TransparentSvg } from "../../component/svgs";
-import { MeasureView } from "../../component/view/progress"
-import { ColorType } from "../note"
+import { MeasureView } from "../../component/view/progress";
+import { ColorType } from "../note";
+
 var colors: ColorType[] = [
     { color: 'transparent' },
     { color: 'rgb(254,244,69)' },
@@ -22,13 +23,14 @@ var colors: ColorType[] = [
     { color: 'rgb(45,155,240)' },
     { color: 'rgb(101,44,179)' },
     { color: 'rgb(255,249,177)' }
-]
+];
+
 export function ShapeStroke(props: {
     tool: BoardEditTool,
     stroke: string;
     strokeWidth: number;
     strokeOpacity: number;
-    strokeDasharray: 'none' | 'dash' | 'dash-circle';
+    strokeDasharray: 'none' | 'dash' | 'dash-larger' | 'dash-circle';
     change: (name: string, value: any) => void
 }) {
     return <div className="shy-shape-stroke">
@@ -44,6 +46,36 @@ export function ShapeStroke(props: {
             <div className="shy-shape-stroke-width">
                 <MeasureView min={1} max={30} showValue={false} value={props.strokeWidth} onChange={e => { props.change('strokeWidth', e) }}></MeasureView>
                 <div className="shy-measure-view-label"><label className="remark f-12">边框</label><span >{Math.round(props.strokeWidth)}px</span></div>
+            </div>
+            <div className="flex r-gap-w-5 gap-h-10 r-size-24 r-flex-center r-item-hover r-cursor r-round">
+
+                <span onMouseDown={e => props.change('strokeDasharray', 'none')} className={props.strokeDasharray == 'none' ? "item-hover-focus" : ""}>
+                    <svg style={{ width: 24, height: 24 }} viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
+                        <g fill="none" fillRule="evenodd">
+                            <path d="M-18-5h60v40h-60z"></path>
+                            <path fill="currentColor" d="M0 14h24v2H0z"></path>
+                        </g>
+                    </svg>
+                </span>
+
+                <span onMouseDown={e => props.change('strokeDasharray', 'dash-larger')} style={{ margin: '0px 40px' }} className={props.strokeDasharray == 'dash-larger' ? "item-hover-focus" : ""}>
+                    <svg style={{ width: 24, height: 24 }} viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 14h6v2H0zm9 0h6v2H9zm9 0h6v2h-6z" fill="currentColor" fillRule="evenodd"></path>
+                    </svg>
+                </span>
+
+                <span onMouseDown={e => props.change('strokeDasharray', 'dash')} className={props.strokeDasharray == 'dash' ? "item-hover-focus" : ""}>
+                    <svg style={{ width: 24, height: 24 }} viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg">
+                        <g fill="currentColor" transform="translate(0 14)" fillRule="evenodd">
+                            <rect width="2" height="2" rx="1"></rect>
+                            <rect width="2" height="2" x="4" rx="1"></rect>
+                            <rect width="2" height="2" x="8" rx="1"></rect>
+                            <rect width="2" height="2" x="12" rx="1"></rect>
+                            <rect width="2" height="2" x="16" rx="1"></rect>
+                            <rect width="2" height="2" x="20" rx="1"></rect>
+                        </g>
+                    </svg>
+                </span>
             </div>
             <div className="shy-shape-stroke-colors">{colors.map(c => {
                 if (c.color == 'transparent') return <a className={'transparent ' + (c.color == props.stroke ? "selected" : "")} onMouseDown={e => props.change('stroke', c.color)} key={c.color} style={{ borderColor: 'transparent', backgroundColor: c.color }}><NoneSvg></NoneSvg></a>

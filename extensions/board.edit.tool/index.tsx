@@ -115,7 +115,7 @@ export class BoardEditTool extends EventsComponent {
                     <TurnShapes tool={this} change={(e) => this.onChange('turnShapes', e)} turnShapes={getValue('turnShapes')}></TurnShapes>
                 </div>
             </Tip>}
-            {is('fontFamily') && <><Tip>
+            {is('fontFamily') && <><Tip overlay={'字体'}>
                 <div className={'shy-board-edit-tool-item'} >
                     <FontFamily tool={this}
                         value={getValue('fontFamily')}
@@ -277,7 +277,8 @@ export class BoardEditTool extends EventsComponent {
 
     private dropName: string;
     showDrop(dropName: string) {
-        this.dropName = dropName;
+        if (this.dropName == dropName) this.dropName = '';
+        else this.dropName = dropName;
         this.forceUpdate();
     }
     isShowDrop(dropName: string) {
