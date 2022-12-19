@@ -31,10 +31,12 @@ import { AppearAnchor } from '../block/appear';
 import { AtomPermission } from './permission';
 import { parseElementUrl } from '../../net/element.type';
 import { BlockUrlConstant } from '../block/constant';
+import lodash from 'lodash';
+import { ActionDirective } from '../history/declare';
 
 export class Page extends Events<PageDirective> {
     root: HTMLElement;
-    viewEl:HTMLElement;
+    viewEl: HTMLElement;
     contentEl: HTMLElement;
     id: string;
     date: number;
@@ -172,7 +174,7 @@ export class Page extends Events<PageDirective> {
         return parseElementUrl(this.elementUrl).id1
     }
     recordViewTemplate: boolean = false;
-    openSource: 'page' | 'slide' | 'dialog'|'snap'= 'page';
+    openSource: 'page' | 'slide' | 'dialog' | 'snap' = 'page';
     getScreenStyle() {
         var style: CSSProperties = {};
         if (this.isSupportScreen) {
@@ -239,6 +241,13 @@ export class Page extends Events<PageDirective> {
     get elementUrl() {
         if (this.customElementUrl) return this.customElementUrl;
     }
+    onLazyAction = lodash.debounce(
+        async (directive: ActionDirective | string,
+            fn: () => Promise<void>,
+            options?: { block?: Block, disabledStore?: boolean }
+        ) => {
+            return this.onAction(directive, fn, options);
+        }, 700)
 }
 export interface Page {
     on(name: PageDirective.init, fn: () => void);
@@ -275,7 +284,7 @@ export interface Page {
     emit(name: PageDirective.selectRows, block: Block, rows: any[]);
     on(name: PageDirective.save, fn: () => void);
     emit(name: PageDirective.save);
-    on(name: PageDirective.mounted,fn: () => void);
+    on(name: PageDirective.mounted, fn: () => void);
     emit(name: PageDirective.mounted);
     on(name: PageDirective.rollup, fn: (id: string) => void);
     emit(name: PageDirective.rollup, id: string);
