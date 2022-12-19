@@ -4,12 +4,8 @@ import { util } from "../../util/util";
 
 
 export class QueueHandle {
-
-
-
-
     acts: { id: string, notify: (data, err?) => void, action: () => Promise<any> }[] = [];
-    async create(action: () => Promise<any>, timeOut?:number) {
+    async create(action: () => Promise<any>, timeOut?: number) {
         return new Promise((resolve, reject) => {
             var id = util.guid();
             var data = {
