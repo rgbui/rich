@@ -9,6 +9,8 @@ import { Rect } from "../../src/common/vector/point";
 @url('/head')
 export class Head extends Block {
     @prop()
+    align: 'left' | 'center' = 'left';
+    @prop()
     level: 'h1' | 'h2' | 'h3' | 'h4' = 'h1';
     get isDisabledInputLine() {
         return false;
@@ -80,6 +82,7 @@ export class HeadView extends BlockView<Head>{
             pt = '四级标题';
             ns = [undefined, undefined, undefined, undefined]
         }
+        if(this.props.block.align=='center')style.textAlign='center';
         Object.assign(style, this.block.contentStyle);
         if (this.block.childs.length > 0)
             return <div className='sy-block-text-head' style={this.block.visibleStyle}>
