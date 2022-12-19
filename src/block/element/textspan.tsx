@@ -17,6 +17,8 @@ import { openBoardEditTool } from '../../kit/operator/board/edit';
 
 @url("/textspan")
 export class TextSpan extends Block {
+    @prop()
+    align: 'left' | 'center' = 'left';
     display = BlockDisplay.block;
     @prop()
     fontScale = 1;
@@ -191,6 +193,7 @@ export class TextSpan extends Block {
         var fontStyle = this.pattern.css(BlockCssName.font)
         var bold = fontStyle?.fontWeight || false;
         var cs: { name: string; value?: any; }[] = [];
+        cs.push({ name: 'fontFamily', value: fontStyle.fontFamily });
         cs.push({ name: 'fontSize', value: Math.round(this.fontScale * 14) });
         cs.push({ name: 'fontWeight', value: bold == 'bold' || bold == 500 ? true : false });
         cs.push({ name: 'fontStyle', value: fontStyle?.fontStyle == 'italic' ? true : false });
@@ -208,6 +211,9 @@ export class TextSpan extends Block {
         else if (name == 'fontSize') {
             this.updateProps({ fontScale: value / 14 })
             // this.pattern.setFontStyle({ fontSize: value, lineHeight: (value * 1.2) + 'px' });
+        }
+        else if(name=='fontFamily'){
+            this.pattern.setFontStyle({ fontFamily: value })
         }
         else if (name == 'fontWeight')
             this.pattern.setFontStyle({ fontWeight: value })
@@ -238,8 +244,10 @@ export class TextSpan extends Block {
 @view("/textspan")
 export class TextSpanView extends BlockView<TextSpan>{
     render() {
+        var style = this.block.contentStyle;
+        if (this.block.align == 'center') style.textAlign = 'center';
         return <div className='sy-block-text-span' style={this.block.visibleStyle}>
-            <div style={this.block.contentStyle}>
+            <div style={style}>
                 <TextSpanArea placeholder={this.block.isFreeBlock ? "键入文本" : undefined} block={this.block}></TextSpanArea>
             </div>
         </div>

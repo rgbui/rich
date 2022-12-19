@@ -2,6 +2,7 @@ import FileIconSvg from "../src/assert/svg/FileIcon.svg";
 import AddPageCommentSvg from "../src/assert/svg/addPageComment.svg";
 import AddPageCoverSvg from "../src/assert/svg/addPageCover.svg";
 import AddPageIconSvg from "../src/assert/svg/addPageIcon.svg";
+import AlignTextCenterSvg from "../src/assert/svg/alignTextCenter.svg";
 import ArrowDownSvg from "../src/assert/svg/arrowDown.svg";
 import ArrowLeftSvg from "../src/assert/svg/arrowLeft.svg";
 import ArrowRightSvg from "../src/assert/svg/arrowRight.svg";
@@ -208,6 +209,7 @@ FileIconSvg,
 AddPageCommentSvg,
 AddPageCoverSvg,
 AddPageIconSvg,
+AlignTextCenterSvg,
 ArrowDownSvg,
 ArrowLeftSvg,
 ArrowRightSvg,
