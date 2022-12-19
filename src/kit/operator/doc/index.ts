@@ -80,7 +80,6 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                         kit.anchorCursor.onFocusBlockAnchor(lastBlock, { last: true, render: true });
                     }
                     else {
-                        console.log('gggxxx');
                         if ([PageLayoutType.doc, PageLayoutType.dbForm, PageLayoutType.blog].includes(kit.page.pageLayout.type))
                             kit.page.onCreateTailTextSpan(undefined);
                     }

@@ -17,8 +17,8 @@ import { inputBackspaceDeleteContent } from "./input";
 import { InputForceStore } from "./store";
 const URL_RGEX = /https?:\/\/([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?/ig;
 
-export async function onPasteBlank(kit: Kit, event: ClipboardEvent) {
-    console.log(event,'ddd');
+export async function onPasteBlank(kit: Kit, event: ClipboardEvent)
+{
     if (kit.page.pageLayout?.type == PageLayoutType.board) {
         var files: File[] = Array.from(event.clipboardData.files);
         var text = event.clipboardData.getData('text/plain');
@@ -110,6 +110,7 @@ export async function onPasteBlank(kit: Kit, event: ClipboardEvent) {
 }
 
 export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent) {
+    console.log(aa,event);
     var files: File[] = Array.from(event.clipboardData.files);
     var text = event.clipboardData.getData('text/plain');
     var html = event.clipboardData.getData('text/html');
