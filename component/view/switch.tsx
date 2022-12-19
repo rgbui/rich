@@ -3,7 +3,8 @@ export function Switch(props: {
     checked: boolean,
     onChange: (checked: boolean) => void,
     style?: CSSProperties, className?: string | (string[]),
-    disabled?: boolean
+    disabled?: boolean,
+    size?: 'small'
 }) {
     function down(event: React.MouseEvent) {
 
@@ -14,6 +15,7 @@ export function Switch(props: {
     var classList: string[] = ['shy-switch'];
     if (props.checked) classList.push('checked')
     if (props.disabled) classList.push('disabled')
+    if(props.size=='small')classList.push('shy-switch-small')
     return <div style={props.style || {}}
         className={classList.join(" ")}
         onMouseDown={e => down(e)}>
