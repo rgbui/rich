@@ -15,7 +15,7 @@ export function FontFamily(props: {
         loadFontFamily(ft.name)
     }
     return <div className="relative" >
-        <div className="h-20 padding-w-5" style={{ marginTop: 2, minWidth: 20, minHeight: 20 }} onMouseDown={e => props.tool.showDrop('fontFamily')}>
+        <div className="h-20" style={{ marginTop: 2, minWidth: 20, minHeight: 20 }} onMouseDown={e => props.tool.showDrop('fontFamily')}>
             {FontStores.find(c => c.name == props.value)?.text||'默认'}
         </div>
         {props.tool.isShowDrop('fontFamily') && <div style={{ top: 30 }} className="w-180 z-2 bg-white max-h-250 overflow-y pos shadow padding-h-10 round ">
