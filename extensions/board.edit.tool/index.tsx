@@ -22,6 +22,7 @@ import { LangID } from "../../i18n/declare";
 import { Block } from "../../src/block";
 import { Point } from "../../src/common/vector/point";
 import { Polygon } from "../../src/common/vector/polygon";
+import { BlockCache } from "../../src/page/common/cache";
 import { BackgroundColor } from "./background";
 import { ShapeFill } from "./fill";
 import { FontColor } from "./fontColor";
@@ -261,9 +262,11 @@ export class BoardEditTool extends EventsComponent {
         }
     }
     async onChange(name: string, value: any) {
+        BlockCache.set(name, value)
         this.emit('save', { name, value });
     }
     async onChangeObject(obj: Record<string, any>) {
+        BlockCache.set(obj);
         this.emit('save', obj);
     }
     close() {
