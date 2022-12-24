@@ -11,7 +11,7 @@ import { MenuItem } from "../../component/view/menu/declare";
 import { RichTextInput } from "../../component/view/rich.input";
 import { Remark } from "../../component/view/text";
 import { SockResponse } from "../../net/declare";
-import { autoImageUrl } from "../../net/element.type";
+import { autoImageUrl, getEmoji } from "../../net/element.type";
 import { KeyboardCode } from "../../src/common/keys";
 import { Rect } from "../../src/common/vector/point";
 import { UserBasic } from "../../types/user";
@@ -163,7 +163,7 @@ export class ViewChats extends React.Component<{
             </div>}
             {Array.isArray(d.emojis) && <div className="sy-channel-text-item-emojis">{d.emojis.filter(g => g.count > 0).map(em => {
                 return <a onMouseDown={e => this.editEmoji(d, em)} key={em.emojiId} >
-                    <span>{em.code}</span>
+                    <span dangerouslySetInnerHTML={{__html:getEmoji(em.code)}}></span>
                     <span>{em.count}</span>
                 </a>
             })}</div>}
