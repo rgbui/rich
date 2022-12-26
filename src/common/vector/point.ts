@@ -132,6 +132,12 @@ export class Point {
     dis(point: Point) {
         return Math.sqrt(Math.pow(point.x - this.x, 2) + Math.pow(point.y - this.y, 2));
     }
+    setX(x:number){
+        this.x=x;return this;
+    }
+    setY(y:number){
+        this.y=y;return this;
+    }
 
 }
 export enum PointArrow {
