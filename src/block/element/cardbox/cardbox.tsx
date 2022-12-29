@@ -123,7 +123,7 @@ export class CardBox extends Block {
     }
     @prop()
     cardFill: {
-        mode: "color" | "image" | "none"; color?: string; src?: string;
+        mode: "color" | "image" | "uploadImage" | "none"; color?: string; src?: string;
     } = { mode: 'none', color: '' }
     @prop()
     cardStyle: {
@@ -145,7 +145,7 @@ export class ViewComponent extends BlockView<CardBox>{
             if (this.block.cardFill.mode == 'color') {
                 style.backgroundColor = this.block.cardFill.color;
             }
-            else if (this.block.cardFill.mode == 'image') {
+            else if (this.block.cardFill.mode == 'image' || this.block.cardFill.mode == 'uploadImage') {
                 style.backgroundImage = `url(${this.block.cardFill.src})`;
                 style.backgroundSize = 'cover';
                 style.backgroundRepeat = 'no-repeat';

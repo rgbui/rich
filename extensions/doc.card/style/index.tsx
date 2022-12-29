@@ -6,8 +6,10 @@ import { Button } from "../../../component/view/button";
 import { ColorInput } from "../../../component/view/color/input";
 import { Icon } from "../../../component/view/icon";
 import { useSelectMenuItem } from "../../../component/view/menu";
+import { MenuItemType } from "../../../component/view/menu/declare";
 import { Rect } from "../../../src/common/vector/point";
 import { BackgroundColorList } from "../../color/data";
+import { useImageFilePicker } from "../../file/image.picker";
 import { GalleryPics } from "../../image/gellery";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
@@ -15,7 +17,7 @@ import { PopoverPosition } from "../../popover/position";
 export class CardBoxStyle extends EventsComponent {
     options: {
         open: 'background' | 'style',
-        fill?: { mode: 'none' | 'image' | 'color', color?: string, src?: string },
+        fill?: { mode: 'none' | 'image' | 'color' | 'uploadImage', color?: string, src?: string },
         cardStyle?: { color: 'dark' | 'light', transparency: 'frosted' | 'solid' | 'noborder' | 'faded' }
     } = {
             open: 'background',
@@ -31,7 +33,10 @@ export class CardBoxStyle extends EventsComponent {
         var self = this;
         var items = [
             { name: 'none', value: "none", text: '无' },
-            { name: 'image', text: '图片', value: 'image' },
+            { type: MenuItemType.divide },
+            { name: 'image', text: '选择图片', value: 'image' },
+            { name: 'uploadImage', text: '上传图片', value: 'uploadImage' },
+            { type: MenuItemType.divide },
             { name: 'color', text: '颜色', value: 'color' }
         ]
         async function openMenu(event: React.MouseEvent) {
@@ -42,6 +47,12 @@ export class CardBoxStyle extends EventsComponent {
             if (r?.item) {
                 lodash.set(self.options, 'fill.mode', r.item.value);
                 self.forceUpdate()
+            }
+        }
+        async function onPickerImage(event: React.MouseEvent) {
+            var r = await useImageFilePicker({ roundArea: Rect.fromEvent(event) });
+            if (r) {
+                self.setProps({ 'fill.mode': 'uploadImage', 'fill.src': r.url })
             }
         }
         return <div>
@@ -71,9 +82,13 @@ export class CardBoxStyle extends EventsComponent {
                         </div>
                     })}
                 </div>}
+
+                {this.options.fill.mode == 'uploadImage' && <div className="padding-w-15">
+                    {this.options.fill.src && <div ><img className="obj-center w100" src={this.options.fill.src} /></div>}
+                    <div><Button onClick={e => onPickerImage(e)}>上传图片</Button></div>
+                </div>}
+
                 {this.options.fill.mode == 'color' && <div className="padding-w-15">
-
-
                     <div className="remark f-14 gap-b-5">背景色</div>
                     <div className="gap-b-10">
                         <ColorInput color={this.options?.fill.color} onChange={e => {
