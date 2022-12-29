@@ -5,6 +5,7 @@ import { EditSvg, EmojiSvg, FileSvg, PicSvg, TopicSvg, UnreadTextSvg } from "../
 import { Button } from "../../../../component/view/button";
 import { useForm } from "../../../../component/view/form/dialoug";
 import { Icon } from "../../../../component/view/icon";
+import { Markdown } from "../../../../component/view/markdown";
 import { RichView } from "../../../../component/view/rich";
 import { RichTextInput } from "../../../../component/view/rich.input";
 import { Spin } from "../../../../component/view/spin";
@@ -43,7 +44,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
         var self = this;
         async function changeIcon(event: React.MouseEvent) {
             event.stopPropagation();
-            var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) },self.block.page?.pageInfo.icon);
+            var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) }, self.block.page?.pageInfo.icon);
             if (typeof icon != 'undefined') {
                 channel.air('/page/update/info', { id: self.block.page.pageInfo?.id, pageInfo: { icon } })
             }
@@ -51,8 +52,10 @@ export class ChannelTextView extends BlockView<ChannelText>{
         if (this.block.page.pageLayout.type == PageLayoutType.textChannel) {
             return <div className="gap-20 visible-hover">
                 <Icon className={'item-hover round cursor'} onMousedown={e => changeIcon(e)} size={72} icon={this.block?.pageInfo?.icon || TopicSvg}></Icon>
-                <div className="h2 flex"><span>{this.block?.pageInfo?.text || '新页面'}</span><span className="flex-center round gap-l-5 cursor item-hover flex-line size-24 visible"><Icon onClick={e => this.openEdit(e)} size={18} icon={EditSvg}></Icon></span></div>
-                <div className="text">{this.block.pageInfo?.description}</div>
+                <div className="h1 flex"><span>{this.block?.pageInfo?.text || '新页面'}</span><span className="flex-center round gap-l-5 cursor item-hover flex-line size-24 visible"><Icon onClick={e => this.openEdit(e)} size={18} icon={EditSvg}></Icon></span></div>
+                {this.block.pageInfo?.description && <div className="text-1 f-14">
+                    <Markdown md={this.block.pageInfo?.description}></Markdown>
+                </div>}
             </div>
         }
         else return <></>
