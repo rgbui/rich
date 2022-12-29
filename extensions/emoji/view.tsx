@@ -1,5 +1,7 @@
 import lodash from "lodash";
 import React from "react";
+import { RandomSvg } from "../../component/svgs";
+import { Icon } from "../../component/view/icon";
 import { Input } from "../../component/view/input";
 import { SpinBox } from "../../component/view/spin";
 import { Tip } from "../../component/view/tooltip/tip";
@@ -13,6 +15,10 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
     private scrollOver: boolean = false;
     shouldComponentUpdate(nextProps, nextStates) {
         return false;
+    }
+    async onRandomIcon() {
+        var e = await emojiStore.getRandom()
+        this.props.onChange(e);
     }
     componentDidMount() {
         this.loading = true;
@@ -47,17 +53,25 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
         return els;
     }
     renderSearch() {
-        if (this.searchEmojis.length == 0) return <div className="flex-center remark">no emoji found</div>
-        return <div className="shy-emoji-view-category-emojis">
-            {this.searchEmojis.map(emoji => {
-                return <Tip overlay={<>{emoji.name}</>} key={emoji.code}><span className="ef" onMouseDown={e => this.onChange(emoji)} dangerouslySetInnerHTML={{ __html: getEmoji(emoji.code) }}></span></Tip>
-            })}
-        </div>
+        if (this.searchEmojis.length == 0) return <div className="flex-center remark padding-14 f-12 ">没有搜索表情</div>
+        return <div className='shy-emoji-view-category'>
+            <div className="shy-emoji-view-category-emojis">
+                {this.searchEmojis.map(emoji => {
+                    return <Tip overlay={<>{emoji.name}</>} key={emoji.code}><span className="ef" onMouseDown={e => this.onChange(emoji)} dangerouslySetInnerHTML={{ __html: getEmoji(emoji.code) }}></span></Tip>
+                })}
+            </div></div>
     }
     render() {
         return <div>
-            <div className="flex"><Input value={this.word} onClear={() => this.loadSearch('')} onEnter={e => { this.word = e; this.loadSearch.flush() }} onChange={e => this.loadSearch(e)} ></Input></div>
-            {this.word && <div>
+            <div className="flex padding-t-14 padding-w-14">
+                <div className="flex-auto"><Input clear placeholder="搜索..." value={this.word} onClear={() => this.loadSearch('')} onEnter={e => { this.word = e; this.loadSearch.flush() }} onChange={e => this.loadSearch(e)} ></Input></div>
+                <div className="flex-fixed gap-l-20 gap-r-10">
+                    <Tip overlay={<>随机</>}><span onMouseDown={e => this.onRandomIcon()} className=" flex-center size-30 round item-hover cursor">
+                        <Icon size={18} icon={RandomSvg}></Icon>
+                    </span></Tip>
+                </div>
+            </div>
+            {this.word && <div className='shy-emoji-view'>
                 {this.searching && <SpinBox></SpinBox>}
                 {this.renderSearch()}
             </div>}
