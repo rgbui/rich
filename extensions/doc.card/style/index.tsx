@@ -3,6 +3,7 @@ import React from "react";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { CardBackgroundFillSvg, CardBrushSvg, CheckSvg, ChevronDownSvg, CloseSvg } from "../../../component/svgs";
 import { Button } from "../../../component/view/button";
+import { ColorInput } from "../../../component/view/color/input";
 import { Icon } from "../../../component/view/icon";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { Rect } from "../../../src/common/vector/point";
@@ -71,6 +72,15 @@ export class CardBoxStyle extends EventsComponent {
                     })}
                 </div>}
                 {this.options.fill.mode == 'color' && <div className="padding-w-15">
+
+
+                    <div className="remark f-14 gap-b-5">背景色</div>
+                    <div className="gap-b-10">
+                        <ColorInput color={this.options?.fill.color} onChange={e => {
+                            this.setProps({ 'fill.mode': 'color', 'fill.color': e })
+                        }}></ColorInput>
+                    </div>
+                    <div className="remark f-14 gap-b-5">选择主题色</div>
                     {BackgroundColorList.map(bg => {
                         return <div key={bg.color}
                             onMouseDown={e => {
