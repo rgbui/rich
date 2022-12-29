@@ -17,6 +17,7 @@ import { Tab } from "../../component/view/tab";
 import "./style.less";
 import { GalleryView } from "./gellery";
 import { PictureSvg } from "../../component/svgs";
+
 class ImagePicker extends EventsComponent {
     onChange(data: ResourceArguments) {
         this.emit('select', data);
@@ -37,7 +38,7 @@ class ImagePicker extends EventsComponent {
                 <Tab.Page visible={this.showGallery} item={<Tip placement='bottom' overlay={'画廊'}><Icon size={18} icon={PictureSvg}></Icon></Tip>}>
                     <GalleryView onChange={e => this.onChange(e as any)}></GalleryView>
                 </Tab.Page>
-                <Tab.Page item={<Tip placement='bottom' overlay={'上传图片'}><Icon size={28} icon={Upload}></Icon></Tip>}>
+                <Tab.Page item={<Tip placement='bottom' overlay={'上传图片'}><Icon size={18} icon={Upload}></Icon></Tip>}>
                     <UploadView mine='image' change={e => this.onChange(e)}></UploadView>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' overlay={'图片网址'}><Icon size={18} icon={Link}></Icon></Tip>}>
