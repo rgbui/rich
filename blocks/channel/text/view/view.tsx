@@ -43,7 +43,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
         var self = this;
         async function changeIcon(event: React.MouseEvent) {
             event.stopPropagation();
-            var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) });
+            var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) },self.block.page?.pageInfo.icon);
             if (typeof icon != 'undefined') {
                 channel.air('/page/update/info', { id: self.block.page.pageInfo?.id, pageInfo: { icon } })
             }
@@ -179,7 +179,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
                 onWheel={this.wheel}
                 ref={e => this.contentEl = e}>
                 {this.block && this.renderPageTitle()}
-                {this.block.pageIndex > 2 && this.block.isLast && <div className="sy-channel-text-tip remark">无记录了</div>}
+                {this.block.pageIndex > 2 && this.block.isLast && <div className="sy-channel-text-tip f-12 remark">无记录了</div>}
                 {this.block.loading && <div className="sy-channel-text-loading"><Spin></Spin></div>}
                 {RenderChats(this.block, {
                     reditChat: (d) => this.redit(d),

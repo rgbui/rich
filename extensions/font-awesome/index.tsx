@@ -12,6 +12,8 @@ import { ToolTip } from "../../component/view/tooltip";
 import lodash from "lodash";
 import { SpinBox } from "../../component/view/spin";
 import { Input } from "../../component/view/input";
+import { Icon } from "../../component/view/icon";
+import { RandomSvg } from "../../component/svgs";
 
 export class FontAwesomeView extends React.Component<{ loaded?: () => void, onChange: (data: { code: string, color?: string }) => void }> {
     shouldComponentUpdate(nextProps, nextStates) {
@@ -69,18 +71,29 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
         </div>
     }
     renderSearch() {
-        if (this.searchEmojis.length == 0) return <div className="flex-center remark">no emoji found</div>
-        return <div className="shy-font-awesome-category-content">
-            {this.searchEmojis.map(ic=>{
+        if (this.searchEmojis.length == 0) return <div className="flex-center remark f-12">没有搜索图标</div>
+        return <div className='shy-font-awesome-category'><div className="shy-font-awesome-category-content">
+            {this.searchEmojis.map(ic => {
                 return <Tip overlay={langProvider.isCn ? ic.label : ic.name} key={ic.name}><a onMouseDown={e => this.onChange(ic)}>
                     <i style={{ color: this.color }} className={'fa' + ' fa-' + ic.name}></i>
                 </a></Tip>
             })}
-        </div>
+        </div></div>
+    }
+    async onRandomIcon() {
+        var e = await fontAwesomeStore.getRandom()
+        this.onChange(e);
     }
     render() {
         return <div>
-            <div className="flex"><Input value={this.word} onClear={() => this.loadSearch('')} onEnter={e => { this.word = e; this.loadSearch.flush() }} onChange={e => this.loadSearch(e)} ></Input></div>
+            <div className="flex padding-t-14 padding-w-14">
+                <div className="flex-auto"><Input clear placeholder="搜索..." value={this.word} onClear={() => this.loadSearch('')} onEnter={e => { this.word = e; this.loadSearch.flush() }} onChange={e => this.loadSearch(e)} ></Input></div>
+                <div className="flex-fixed gap-l-20 gap-r-10">
+                    <Tip overlay={<>随机</>}><span onMouseDown={e => this.onRandomIcon()} className=" flex-center size-30 round item-hover cursor">
+                        <Icon size={18} icon={RandomSvg}></Icon>
+                    </span></Tip>
+                </div>
+            </div>
             {this.word && <div>
                 {this.searching && <SpinBox></SpinBox>}
                 {this.renderSearch()}

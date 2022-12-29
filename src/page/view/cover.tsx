@@ -19,7 +19,7 @@ export class PageCover extends React.Component<{ page: Page }>{
             async function changeIcon(event: React.MouseEvent) {
                 if (!page.isCanEdit) return;
                 event.stopPropagation();
-                var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) });
+                var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) },page.pageInfo.icon);
                 if (typeof icon != 'undefined') {
                     page.onUpdatePageData({ icon });
                 }

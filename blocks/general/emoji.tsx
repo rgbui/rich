@@ -29,7 +29,7 @@ export class EmojiView extends BlockView<Emoji>{
     async openEdit(event: React.MouseEvent) {
         event.stopPropagation();
         if (this.boxTip) this.boxTip.close()
-        var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) });
+        var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) },this.block.src);
         if (typeof icon != 'undefined') {
             this.block.onUpdateProps({ src: icon }, { range: BlockRenderRange.self });
         }

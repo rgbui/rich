@@ -55,7 +55,7 @@ export class Callout extends TextSpan {
     }
     async onChangeIcon(e: React.MouseEvent) {
         e.stopPropagation();
-        var icon = await useIconPicker({ roundArea: Rect.fromEvent(e) });
+        var icon = await useIconPicker({ roundArea: Rect.fromEvent(e) },this.calloutIcon);
         if (typeof icon != 'undefined') {
             this.onUpdateProps({ calloutIcon: icon }, { range: BlockRenderRange.self })
         }

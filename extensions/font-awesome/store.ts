@@ -16,6 +16,10 @@ class FontAwesomeStore {
         this.icons =(await axios.get(url)).data;
         this.isLoad = true;
     }
+    async getRandom() {
+        var g = await this.get();
+        return g.randomOf().icons.randomOf();
+    }
 }
 
 export var fontAwesomeStore = new FontAwesomeStore();

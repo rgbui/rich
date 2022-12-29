@@ -9,6 +9,7 @@ import { Loading } from "../../component/view/loading";
 import { useSelectMenuItem } from "../../component/view/menu";
 import { MenuItem } from "../../component/view/menu/declare";
 import { RichTextInput } from "../../component/view/rich.input";
+import { Spin } from "../../component/view/spin";
 import { Remark } from "../../component/view/text";
 import { SockResponse } from "../../net/declare";
 import { autoImageUrl, getEmoji } from "../../net/element.type";
@@ -179,7 +180,7 @@ export class ViewChats extends React.Component<{
         return <div className="sy-channel-text-upload" key={uf.id}>
             <Avatar showCard user={this.currentUser} userid={this.currentUser.id} size={40}></Avatar>
             <div className="sy-channel-text-upload-content">
-                <Loading></Loading>
+                <Spin></Spin>
                 <span style={{ display: 'inline-block', marginLeft: 5 }}>{uf.speed}</span>
             </div>
         </div>
