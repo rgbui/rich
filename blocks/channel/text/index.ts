@@ -7,7 +7,6 @@ import "./style.less";
 import { KeyboardCode } from "../../../src/common/keys";
 import { ChannelTextView } from "./view/view";
 import lodash from "lodash";
-import { Rect } from "../../../src/common/vector/point";
 import { ElementType, getElementUrl } from "../../../net/element.type";
 import { LinkPageItem } from "../../../extensions/at/declare";
 
@@ -17,6 +16,9 @@ export class ChannelText extends Block {
     chats: ChannelTextType[] = [];
     get roomId() {
         return this.page.pageLayout.type == PageLayoutType.textChannel ? this.page.pageInfo.id : this.syncBlockId
+    }
+    get isShowHandleBlock() {
+        return this.page.pageLayout.type == PageLayoutType.textChannel ? false : true;
     }
     get elementUrl() {
         return getElementUrl(ElementType.Room, this.roomId);

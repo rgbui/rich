@@ -16,6 +16,7 @@ export class Handle extends Events {
     onShowBlockHandle(hoverBlock: Block) {
         if (!this.kit.page.isCanEdit) return;
         this.handleBlock = hoverBlock.handleBlock;
+        if (this.handleBlock&&this.handleBlock.isShowHandleBlock != true) return;
         if (this.isDown) {
             var handleEl = this.view.handleEle;
             handleEl.style.display = 'none';

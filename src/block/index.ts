@@ -542,6 +542,9 @@ export abstract class Block extends Events {
         }
         return this;
     }
+    get isShowHandleBlock(){
+        return true;
+    }
     /**
      * 可以拖放block的block
      */
