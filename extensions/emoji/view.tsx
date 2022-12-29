@@ -1,4 +1,7 @@
+import lodash from "lodash";
 import React from "react";
+import { Input } from "../../component/view/input";
+import { SpinBox } from "../../component/view/spin";
 import { Tip } from "../../component/view/tooltip/tip";
 import { getEmoji } from "../../net/element.type";
 import { dom } from "../../src/common/dom";
@@ -22,11 +25,11 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
         })
     }
     onChange(code: EmojiCode) {
-       this.props.onChange(code); 
+        this.props.onChange(code);
     }
     emojis: EmojiType[] = [];
     renderEmoji() {
-        if (this.loading == true) return <div className='shy-emoji-view-loading'></div>
+        if (this.loading == true) return <SpinBox></SpinBox>
         // var cs = this.emojis.lookup(x => x.category);
         var els: JSX.Element[] = [];
         var i = 0;
@@ -36,17 +39,53 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
             els.push(<div className='shy-emoji-view-category' key={category.id}>
                 <div className='shy-emoji-view-category-head'><span>{category.name}</span></div>
                 <div className='shy-emoji-view-category-emojis'>{category.childs.map(emoji => {
-                    return <Tip overlay={<>{emoji.name}</>} key={emoji.code}><span className="ef" onMouseDown={e => this.onChange(emoji)} dangerouslySetInnerHTML={{__html:getEmoji(emoji.code)}}></span></Tip>
+                    return <Tip overlay={<>{emoji.name}</>} key={emoji.code}><span className="ef" onMouseDown={e => this.onChange(emoji)} dangerouslySetInnerHTML={{ __html: getEmoji(emoji.code) }}></span></Tip>
                 })}</div>
             </div>)
         });
         if (this.scrollIndex > i) this.scrollOver = true;
         return els;
     }
+    renderSearch() {
+        if (this.searchEmojis.length == 0) return <div className="flex-center remark">no emoji found</div>
+        return <div className="shy-emoji-view-category-emojis">
+            {this.searchEmojis.map(emoji => {
+                return <Tip overlay={<>{emoji.name}</>} key={emoji.code}><span className="ef" onMouseDown={e => this.onChange(emoji)} dangerouslySetInnerHTML={{ __html: getEmoji(emoji.code) }}></span></Tip>
+            })}
+        </div>
+    }
     render() {
-        return <div className='shy-emoji-view' onScroll={e => this.onScroll(e)}>{this.renderEmoji()}</div>
+        return <div>
+            <div className="flex"><Input value={this.word} onClear={() => this.loadSearch('')} onEnter={e => { this.word = e; this.loadSearch.flush() }} onChange={e => this.loadSearch(e)} ></Input></div>
+            {this.word && <div>
+                {this.searching && <SpinBox></SpinBox>}
+                {this.renderSearch()}
+            </div>}
+            {!this.word && <div className='shy-emoji-view' onScroll={e => this.onScroll(e)}>{this.renderEmoji()}</div>}
+        </div>
     }
     private isScrollRendering: boolean = false;
+    private word: string = '';
+    private searching: boolean = false;
+    private searchEmojis: EmojiCode[] = [];
+    loadSearch = lodash.debounce((w) => {
+        if (typeof w == 'string')
+            this.word = w;
+        this.searchEmojis = [];
+        this.searching = true;
+        this.forceUpdate()
+        if (this.word) {
+            this.emojis.forEach(ej => {
+                ej.childs.forEach(c => {
+                    if (c.name.indexOf(this.word) > -1 || Array.isArray(c.keywords) && c.keywords.some(s => s.indexOf(this.word) > -1)) {
+                        this.searchEmojis.push(c)
+                    }
+                })
+            })
+            this.searching = false;
+            this.forceUpdate()
+        }
+    }, 800)
     onScroll(event: React.UIEvent) {
         if (this.scrollOver == true) return;
         var dm = dom(event.target as HTMLElement);
