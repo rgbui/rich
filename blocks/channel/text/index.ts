@@ -142,7 +142,7 @@ export class ChannelText extends Block {
     get cacheSeqKey() {
         return [this.id, this.roomId, 'seq'].join("/")
     }
-    scrollTopLoad = lodash.debounce(async () => {
+    scrollTopLoad = lodash.throttle(async () => {
         if (this.isLast == false) {
             if (this.loading) return;
             this.pageIndex += 1;
@@ -152,11 +152,11 @@ export class ChannelText extends Block {
             await this.loadChannelTextDatas();
             this.loading = false;
             this.view.forceUpdate(() => {
-                var ce = (this.view as any).contentEl as HTMLElement
-                var it = ce.querySelector(`[data-channel-text-id='${td.id}']`);
-                if (it) {
-                    ce.scrollTop = Rect.fromEle(it as HTMLElement).top - Rect.fromEle(ce).top;
-                }
+                // var ce = (this.view as any).contentEl as HTMLElement
+                // var it = ce.querySelector(`[data-channel-text-id='${td.id}']`);
+                // if (it) {
+                //     ce.scrollTop = Rect.fromEle(it as HTMLElement).top - Rect.fromEle(ce).top;
+                // }
             });
         }
     }, 1200)
