@@ -18,7 +18,7 @@ export function Textarea(props: {
     }
     function keydown(e: React.KeyboardEvent) {
         if (e.key == 'Enter' && props.onEnter) {
-            props.onEnter(filterValue((e.target as HTMLInputElement).value));
+            //  props.onEnter(filterValue((e.target as HTMLInputElement).value));
         }
     }
     return <div className='shy-textarea' style={props.style || {}}>
