@@ -56,7 +56,7 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
     }
     isEmoji(name: string) {
         var field: Field = this.getField(name);
-        if (this.props.dataGrid instanceof TableStoreGallery) {
+        if (this.props.dataGrid instanceof TableStoreGallery && field) {
             var r = this.props.dataGrid.isEmoji(field, this.props.item.dataRow.id);
             return r;
         }

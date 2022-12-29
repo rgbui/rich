@@ -64,7 +64,7 @@ export class CardPin extends CardView {
             }
         }
         return <div className="w100" onMouseDown={e => self.openEdit(e)}>
-            <div className="visible-hover max-h-250 overflow-hidden round-bottom-16 relative">
+            <div className="visible-hover max-h-600 overflow-hidden round-bottom-16 relative">
                 {hasPic && <img className="w100 block round-16 object-center" src={pics[0].url} style={{ backgroundColor: BackgroundColorList.randomOf().color }} />}
                 {!hasPic && <div className={'round-16'} style={{ height: util.getRandom(150, 300), backgroundColor: BackgroundColorList.randomOf().color }}></div>}
                 {!hasPic && <div className="pos-center z-4 visible">
