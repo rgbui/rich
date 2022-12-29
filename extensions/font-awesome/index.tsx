@@ -9,6 +9,9 @@ import { FontAwesomeIconType, FontAwesomeType } from "./declare";
 import { dom } from "../../src/common/dom";
 import { FontColorList } from "../color/data";
 import { ToolTip } from "../../component/view/tooltip";
+import lodash from "lodash";
+import { SpinBox } from "../../component/view/spin";
+import { Input } from "../../component/view/input";
 
 export class FontAwesomeView extends React.Component<{ loaded?: () => void, onChange: (data: { code: string, color?: string }) => void }> {
     shouldComponentUpdate(nextProps, nextStates) {
@@ -54,6 +57,10 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
         this.color = c.color;
         this.forceUpdate()
     }
+    open(c) {
+        this.color = c.color;
+        this.forceUpdate()
+    }
     renderFontColors() {
         return <div className='shy-font-awesome-colors'>
             {FontColorList.map(c => {
@@ -61,11 +68,28 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
             })}
         </div>
     }
+    renderSearch() {
+        if (this.searchEmojis.length == 0) return <div className="flex-center remark">no emoji found</div>
+        return <div className="shy-font-awesome-category-content">
+            {this.searchEmojis.map(ic=>{
+                return <Tip overlay={langProvider.isCn ? ic.label : ic.name} key={ic.name}><a onMouseDown={e => this.onChange(ic)}>
+                    <i style={{ color: this.color }} className={'fa' + ' fa-' + ic.name}></i>
+                </a></Tip>
+            })}
+        </div>
+    }
     render() {
-        return <div className='shy-font-awesome' onScroll={e => this.onScroll(e)}>
-            {this.renderFontColors()}
-            {this.loading && <div className='shy-font-awesome-loading'></div>}
-            {this.loading != true && <div style={{ color: this.color }} className='shy-font-awesome-content'>{this.renderFontAwesomes()}</div>}
+        return <div>
+            <div className="flex"><Input value={this.word} onClear={() => this.loadSearch('')} onEnter={e => { this.word = e; this.loadSearch.flush() }} onChange={e => this.loadSearch(e)} ></Input></div>
+            {this.word && <div>
+                {this.searching && <SpinBox></SpinBox>}
+                {this.renderSearch()}
+            </div>}
+            {!this.word && <div className='shy-font-awesome' onScroll={e => this.onScroll(e)}>
+                {this.renderFontColors()}
+                {this.loading && <div className='shy-font-awesome-loading'></div>}
+                {this.loading != true && <div style={{ color: this.color }} className='shy-font-awesome-content'>{this.renderFontAwesomes()}</div>}
+            </div>}
         </div>
     }
     private isScrollRendering: boolean = false;
@@ -81,4 +105,24 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
             })
         }
     }
+    private word: string = '';
+    private searching: boolean = false;
+    private searchEmojis: FontAwesomeType['icons'] = [];
+    loadSearch = lodash.debounce((w) => {
+        if (typeof w == 'string') this.word = w;
+        this.searchEmojis = [];
+        this.searching = true;
+        this.forceUpdate()
+        if (this.word) {
+            this.icons.forEach(icon => {
+                icon.icons.forEach(c => {
+                    if (c.name.indexOf(this.word) > -1 || Array.isArray(c.keywords) && c.keywords.some(s => s.indexOf(this.word) > -1)) {
+                        this.searchEmojis.push(c)
+                    }
+                })
+            })
+            this.searching = false;
+            this.forceUpdate()
+        }
+    }, 800)
 }

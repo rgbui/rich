@@ -37,6 +37,7 @@ class IconPicker extends EventsComponent {
         var e = await emojiStore.getRandom()
         this.onChange({ name: "emoji", code: e.code })
     }
+    fav: FontAwesomeView;
     render() {
         return <div className='shy-icon-picker' >
             <Tab keeplive rightBtns={<>
@@ -51,7 +52,7 @@ class IconPicker extends EventsComponent {
                     <EmojiView onChange={e => this.onChange({ name: "emoji", code: e.code })}></EmojiView>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' id={LangID.IconFontAwesome}><Icon icon={FontawesomeSvg} size={24}></Icon></Tip>}>
-                    <FontAwesomeView onChange={e => this.onChange({ name: "font-awesome", ...e })}></FontAwesomeView>
+                    <FontAwesomeView ref={e => this.fav = e} onChange={e => this.onChange({ name: "font-awesome", ...e })}></FontAwesomeView>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' id={LangID.IconUpload}><Icon icon={UploadSvg} size={18}></Icon></Tip>}>
                     <UploadView mine='image' change={e => this.onChange({ name: 'image', url: e.url })}></UploadView>
@@ -62,14 +63,20 @@ class IconPicker extends EventsComponent {
             </Tab>
         </div>
     }
+    open(d: IconArguments) {
+        if (d && d.name == 'font-awesome') {
+            if (this.fav) this.fav.open(d)
+        }
+    }
 }
 interface IconPicker {
     emit(name: 'change', data: IconArguments);
     only(name: 'change', fn: (data: IconArguments) => void);
 }
-export async function useIconPicker(pos: PopoverPosition) {
+export async function useIconPicker(pos: PopoverPosition, data?: IconArguments) {
     let popover = await PopoverSingleton(IconPicker, { mask: true, visible: 'hidden' });
     let filePicker = await popover.open(pos);
+    filePicker.open(data)
     return new Promise((resolve: (data: IconArguments) => void, reject) => {
         filePicker.only('change', (data) => {
             popover.close();
