@@ -148,6 +148,7 @@ import PlusSvg from "../src/assert/svg/plus.svg";
 import ProgressSvg from "../src/assert/svg/progress.svg";
 import PropertysSvg from "../src/assert/svg/propertys.svg";
 import PubWorkspaceSvg from "../src/assert/svg/pubWorkspace.svg";
+import PublishSvg from "../src/assert/svg/publish.svg";
 import QuoteSvg from "../src/assert/svg/quote.svg";
 import RandomSvg from "../src/assert/svg/random.svg";
 import RedoSvg from "../src/assert/svg/redo.svg";
@@ -355,6 +356,7 @@ PlusSvg,
 ProgressSvg,
 PropertysSvg,
 PubWorkspaceSvg,
+PublishSvg,
 QuoteSvg,
 RandomSvg,
 RedoSvg,
