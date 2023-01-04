@@ -6,6 +6,7 @@ import { LinkPageItem } from "../../extensions/at/declare";
 import { IconArguments } from "../../extensions/icon/declare";
 import { useLinkPicker } from "../../extensions/link/picker";
 import { channel } from "../../net/channel";
+import { ElementType, getElementUrl } from "../../net/element.type";
 import { Block } from "../../src/block";
 import { BlockDisplay } from "../../src/block/enum";
 import { prop, url, view } from "../../src/block/factory/observable";
@@ -41,7 +42,7 @@ export class Link extends Block {
     async openPage(event: React.MouseEvent) {
         if (!this.pageId) return;
         event.preventDefault();
-        channel.air('/page/open', { item: { id: this.pageId } });
+        channel.air('/page/open', { elementUrl:getElementUrl(ElementType.PageItem,this.pageId) });
     }
     async onPickerLinker() {
         var pageLink = await useLinkPicker({ roundArea: Rect.fromEle(this.el) });

@@ -7,6 +7,7 @@ import { Icon } from "../../component/view/icon";
 import { LinkPageItem } from "../../extensions/at/declare";
 import { IconArguments } from "../../extensions/icon/declare";
 import { channel } from "../../net/channel";
+import { ElementType, getElementUrl } from "../../net/element.type";
 import { Block } from "../../src/block";
 import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import { url, prop, view } from "../../src/block/factory/observable";
@@ -45,7 +46,7 @@ export class LineLink extends Block {
     }
     async openPage(event: React.MouseEvent) {
         event.preventDefault();
-        channel.air('/page/open', { item: { id: this.pageId } });
+        channel.air('/page/open', { elementUrl: getElementUrl(ElementType.PageItem, this.pageId) });
     }
     async didMounted() {
         try {
