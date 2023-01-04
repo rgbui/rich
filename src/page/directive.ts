@@ -14,6 +14,8 @@ export enum PageDirective {
      * 数据保存ctrl+s
      */
     save,
+    willSave,
+    saved,
     hoverOutBlock,
     hoverBlock,
     dropLeaveBlock,

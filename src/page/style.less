@@ -1,7 +1,52 @@
 .shy {
+    &-page {
+        position: absolute;
+        top     : 0px;
+        left    : 0px;
+        right   : 0px;
+        bottom  : 0px;
+
+        &-bar {
+            position        : absolute;
+            top             : 0px;
+            left            : 0px;
+            right           : 0px;
+            height          : 48px;
+            background-color: #fff;
+
+            &::after {
+                content           : "";
+                position          : absolute;
+                display           : block;
+                top               : 47px;
+                left              : 0;
+                right             : 0;
+                height            : 1px;
+                -webkit-box-shadow: var(--elevation-low);
+                box-shadow        : var(--elevation-low);
+                z-index           : 1;
+                pointer-events    : none;
+            }
+        }
+    }
+
     &-page-view {
+        position: absolute;
+        top     : 48px;
+        left    : 0px;
+        right   : 0px;
+        bottom  : 0px;
+
         outline    : none;
         user-select: none;
+        // overflow-x: overlay;
+        overflow-y : overlay;
+        overflow-x : hidden;
+
+        // &:hover {
+        //     overflow-y: auto;
+        //     overflow-x: hidden;
+        // }
 
         &-content {
             padding-bottom: 200px;
@@ -125,7 +170,8 @@
     min-height      : 100%;
     background-color: #f7f3f2;
     border-left     : 1px solid #ddd;
-    .shy-page-view-content{
+
+    .shy-page-view-content {
         padding-bottom: 0px !important;
     }
 }
@@ -164,7 +210,8 @@
             height          : 100%;
         }
     }
-    .shy-page-view-content{
+
+    .shy-page-view-content {
         padding-bottom: 0px !important;
     }
 }

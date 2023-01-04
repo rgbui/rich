@@ -288,6 +288,12 @@ export interface Page {
     emit(name: PageDirective.mounted);
     on(name: PageDirective.rollup, fn: (id: string) => void);
     emit(name: PageDirective.rollup, id: string);
+
+    on(name: PageDirective.willSave, fn: () => void);
+    emit(name: PageDirective.willSave);
+    on(name: PageDirective.saved, fn: () => void);
+    emit(name: PageDirective.saved);
+
 }
 export interface Page extends PageEvent { }
 export interface Page extends Page$Seek { }

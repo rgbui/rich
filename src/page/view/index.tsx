@@ -23,6 +23,7 @@ import { PageOutLine } from "../../../blocks/page/outline";
 import { ActionDirective } from "../../history/declare";
 import { Block } from "../../block";
 import { PageDirective } from "../directive";
+import { PageBar } from "./bar";
 
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
@@ -187,37 +188,44 @@ export class PageView extends Component<{ page: Page }>{
             </div>
         </div>
     }
+    renderBar() {
+
+        return <div className="shy-page-bar"></div>
+    }
     render() {
         var pageStyle: Record<string, any> = {
             lineHeight: this.page.lineHeight + 'px',
             fontSize: this.page.fontSize + 'px'
         }
-        return <div className={'shy-page-view' + (this.page.readonly ? " shy-page-view-readonly" : "")}
-            style={pageStyle}
-            ref={e => this.page.viewEl = e}
-            tabIndex={this.page.isCanEdit ? 1 : undefined}
-            onFocusCapture={e => this.page.onFocusCapture(e.nativeEvent)}
-            onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}
-            onMouseEnter={e => this.page.onMouseenter(e)}
-            onMouseLeave={e => this.page.onMouseleave(e)}
-            onMouseDownCapture={e => this.page.onMouseDownCapture(e)}
+        return <div className="shy-page">
+            <PageBar page={this.page}></PageBar>
+            <div className={'shy-page-view' + (this.page.readonly ? " shy-page-view-readonly" : "")}
+                style={pageStyle}
+                ref={e => this.page.viewEl = e}
+                tabIndex={this.page.isCanEdit ? 1 : undefined}
+                onFocusCapture={e => this.page.onFocusCapture(e.nativeEvent)}
+                onBlurCapture={e => this.page.onBlurCapture(e.nativeEvent)}
+                onMouseEnter={e => this.page.onMouseenter(e)}
+                onMouseLeave={e => this.page.onMouseleave(e)}
+                onMouseDownCapture={e => this.page.onMouseDownCapture(e)}
             // onPaste={e => this.page.onPaste(e.nativeEvent)}
-        // onCopy={e =>this.page.onCopy(e)}
-        // onCut={e =>this.page.onCut(e)}
-        >
-            <div className='shy-page-view-box'
-                onContextMenu={e => this.page.onContextmenu(e)}
-                onMouseDown={e => this.page.onMousedown(e)}>
-                <PageLayoutView page={this.page}>
-                    <div className='shy-page-view-content' ref={e => this.page.contentEl = e}>
-                        <PageCover page={this.page}></PageCover>
-                        {this.page.nav && this.renderNavs()}
-                        {!this.page.nav && <ChildsArea childs={this.page.views}></ChildsArea>}
-                        {this.page.requireSelectLayout && this.page.isCanEdit && this.renderPageTemplate()}
-                    </div>
-                </PageLayoutView>
+            // onCopy={e =>this.page.onCopy(e)}
+            // onCut={e =>this.page.onCut(e)}
+            >
+                <div className='shy-page-view-box'
+                    onContextMenu={e => this.page.onContextmenu(e)}
+                    onMouseDown={e => this.page.onMousedown(e)}>
+                    <PageLayoutView page={this.page}>
+                        <div className='shy-page-view-content' ref={e => this.page.contentEl = e}>
+                            <PageCover page={this.page}></PageCover>
+                            {this.page.nav && this.renderNavs()}
+                            {!this.page.nav && <ChildsArea childs={this.page.views}></ChildsArea>}
+                            {this.page.requireSelectLayout && this.page.isCanEdit && this.renderPageTemplate()}
+                        </div>
+                    </PageLayoutView>
+                </div>
+                <KitView kit={this.page.kit}></KitView>
             </div>
-            <KitView kit={this.page.kit}></KitView>
         </div>
     }
     async AutomaticHandle() {
