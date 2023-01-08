@@ -476,7 +476,11 @@ export class DataGridViewOperator {
         await this.onLoadingAction(async () => {
             this.pageIndex = index;
             await this.loadData();
+            this.forceUpdate();
             await this.createItem();
+            this.referenceBlockers.forEach(b => {
+                b.forceUpdate();
+            })
         })
     }
     async onChangeSize(this: DataGridView, size: number) {
@@ -488,7 +492,11 @@ export class DataGridViewOperator {
             this.updateProps({ size });
             await this.onLoadingAction(async () => {
                 await this.loadData();
+                this.forceUpdate();
                 await this.createItem();
+                this.referenceBlockers.forEach(b => {
+                    b.forceUpdate();
+                })
             })
         });
     }
@@ -612,9 +620,13 @@ export class DataGridViewOperator {
         }
     }
     async onReloadData(this: DataGridView) {
-        await this.loadData();
-        await this.createItem();
-        this.view.forceUpdate()
+        await this.onLoadingAction(async () => {
+            await this.loadData();
+            await this.createItem();
+            this.referenceBlockers.forEach(b => {
+                b.forceUpdate();
+            })
+        })
     }
     async onSortRank(this: DataGridView) {
         var c = lodash.cloneDeep(this.data);

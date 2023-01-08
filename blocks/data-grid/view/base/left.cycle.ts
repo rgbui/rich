@@ -91,6 +91,8 @@ export class DataGridViewLife {
             if (r.data) {
                 this.data = Array.isArray(r.data.list) ? r.data.list : [];
                 this.total = r.data?.total || 0;
+                this.size = r.data.size;
+                this.pageIndex = r.data.page;
                 this.isLoadingData = false;
             }
         }

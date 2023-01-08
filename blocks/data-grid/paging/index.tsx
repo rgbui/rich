@@ -10,6 +10,7 @@ import { BlockView } from "../../../src/block/view";
 import { Rect } from "../../../src/common/vector/point";
 import { DataGridView } from "../view/base";
 
+
 @url('/data-grid/paging')
 export class Paging extends Block {
     display = BlockDisplay.block;
@@ -21,7 +22,6 @@ export class Paging extends Block {
         if (index >= 1 && index <= totalPage) {
             if (typeof index == 'number') {
                 await this.refBlock.onListPageIndex(index);
-                this.view.forceUpdate();
             }
         }
     }
@@ -44,7 +44,6 @@ export class PagingView extends BlockView<Paging>{
         var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, items);
         if (r) {
             await this.block.refBlock.onChangeSize(r.item.value);
-            this.forceUpdate()
         }
     }
     getPages() {
