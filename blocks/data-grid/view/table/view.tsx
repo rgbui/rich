@@ -102,6 +102,8 @@ export class TableStoreView extends BlockView<TableStore>{
                     var newFields = self.block.fields.map(f => f.clone());
                     var col = newFields[data.colIndex];
                     col.colWidth = w;
+                    self.isMoveLine = false;
+                    self.subline.style.display = 'none';
                     self.block.onChangeFields(self.block.fields, newFields);
                 }
             },
