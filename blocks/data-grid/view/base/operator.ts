@@ -281,6 +281,7 @@ export class DataGridViewOperator {
         if (!this.schema) {
             await this.loadSchema();
         }
+        var bs = this.referenceBlockers;
         var view = this.schema.views.find(g => g.id == viewId);
         var newBlock = await BlockFactory.createBlock(view.url, this.page, {
             syncBlockId: viewId,
@@ -296,6 +297,11 @@ export class DataGridViewOperator {
             from: oldViewId,
             to: viewId
         }, this);
+        this.page.addUpdateEvent(async () => {
+            bs.forEach(b => {
+                b.forceUpdate();
+            })
+        })
     }
     async onOtherDataGridTurnView(this: DataGridView, viewId: string, type: 'form' | 'view', schemaId: string, viewUrl?: string) {
         if (this.syncBlockId != viewId) {
@@ -446,7 +452,7 @@ export class DataGridViewOperator {
     }
     changeFields(this: DataGridView, oldFields: ViewField[], newFields: ViewField[]) {
         this.manualUpdateProps({ fields: oldFields }, { fields: newFields }, BlockRenderRange.none, true);
-        // this.fields = newFields;
+        this.fields = newFields;
     }
     async onChangeFields(this: DataGridView, oldFields: ViewField[], newFields: ViewField[]) {
         await this.page.onAction(ActionDirective.onDataGridChangeFields, async () => {
