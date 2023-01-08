@@ -5,7 +5,7 @@ import { UserAvatars } from "../../../component/view/avator/users";
 import { Button } from "../../../component/view/button";
 import { Icon } from "../../../component/view/icon";
 import { Spin } from "../../../component/view/spin";
-import { getPageIcon } from "../../../extensions/at/declare";
+import { getPageIcon, getPageText } from "../../../extensions/at/declare";
 import { useSearchBox } from "../../../extensions/search";
 import { channel } from "../../../net/channel";
 import { PageLayoutType } from "../declare";
@@ -16,9 +16,9 @@ export class PageBar extends React.Component<{ page: Page }>{
         return <div className="flex-auto flex">
             <span className="item-hover round flex gap-l-10 cursor padding-h-3 padding-w-5 ">
                 <Icon size={18} icon={getPageIcon(this.props.page?.pageInfo)}></Icon>
-                <span className="gap-l-5">{this.props.page?.pageInfo?.text}</span>
+                <span className="gap-l-5"> {getPageText(this.props.page?.pageInfo)}</span>
             </span>
-            {this.saving && <Spin></Spin>}
+            {this.saving &&<Spin></Spin>}
         </div>
     }
     componentDidMount(): void {

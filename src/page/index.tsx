@@ -81,7 +81,7 @@ export class Page extends Events<PageDirective> {
     addedSubPages: string[] = [];
     showMembers: boolean = false;
     get windowMatrix() {
-        var rect = Rect.fromEle(this.root);
+        var rect = Rect.fromEle(this.viewEl);
         var matrix = new Matrix();
         matrix.translate(rect.left, rect.top);
         return matrix;
