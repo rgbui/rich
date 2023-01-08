@@ -284,16 +284,21 @@ export interface Page {
     emit(name: PageDirective.selectRows, block: Block, rows: any[]);
     on(name: PageDirective.save, fn: () => void);
     emit(name: PageDirective.save);
+    
     on(name: PageDirective.mounted, fn: () => void);
     emit(name: PageDirective.mounted);
+
     on(name: PageDirective.rollup, fn: (id: string) => void);
     emit(name: PageDirective.rollup, id: string);
 
     on(name: PageDirective.willSave, fn: () => void);
     emit(name: PageDirective.willSave);
+
     on(name: PageDirective.saved, fn: () => void);
     emit(name: PageDirective.saved);
 
+    on(name: PageDirective.close, fn: () => void);
+    emit(name: PageDirective.close);
 }
 export interface Page extends PageEvent { }
 export interface Page extends Page$Seek { }
