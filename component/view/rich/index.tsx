@@ -1,12 +1,11 @@
 
 import React, { CSSProperties } from "react";
-import { ResourceArguments } from "../../../extensions/icon/declare";
-import { Rect } from "../../../src/common/vector/point";
-import { UserBasic } from "../../../types/user";
 import { RichPop } from "./pop";
 import { RichTool } from "./tool";
 import "./style.less";
 import { Anchor } from "./anchor";
+import { Rect } from "../../vector/point";
+import lodash from "lodash";
 
 /**
  * 
@@ -25,9 +24,9 @@ export class RichView extends React.Component<{
     height?: number,
     spellCheck?: boolean,
     onPasteFiles?: (files: File[]) => void,
-    onPasteUploadFields?: (files: File[]) => Promise<ResourceArguments[]>,
+    onPasteUploadFields?: (files: File[]) => Promise<Record<string, any>[]>,
     onEnter?: () => void,
-    searchUser?: (word: string) => Promise<UserBasic[]>
+    searchUser?: (word: string) => Promise<Record<string, any>[]>
 }>{
     richEl: HTMLElement;
     keydown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -44,8 +43,8 @@ export class RichView extends React.Component<{
             this.pop.open(rect, sel.focusNode as HTMLElement, sel.focusOffset)
         }
         else if (key == ' ') {
-            // var isInputLink = this.inputLink();
-            // if (isInputLink) return;
+            var isInputLink = this.inputLink();
+            if (isInputLink) return;
         }
         else if (key == 'backspace' || key == 'delete') {
             if (this.backspace()) {
@@ -216,7 +215,7 @@ export class RichView extends React.Component<{
                 this.pop.close();
         }
     }
-    insertUser(el: HTMLElement, offset: number, user: UserBasic) {
+    insertUser(el: HTMLElement, offset: number, user: Record<string, any>) {
         if (el instanceof Text) {
             var content = el.textContent;
             var r = content.slice(0, offset);
@@ -243,19 +242,39 @@ export class RichView extends React.Component<{
     }
     inputLink() {
         var anchor = Anchor.create(this.richEl);
-        console.log(anchor);
-        var tc = anchor.focus.text.textContent;
+        var ft = anchor.focus.text
+        var textContent = ft.textContent;
+        var tc = textContent.slice(0, anchor.focus.offset);
+        var rest = textContent.slice(anchor.focus.offset);
+        rest = ' ' + rest;
         var urlRegex = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\u4e00-\u9fa5\w- .\/?%&=]*)?$/;
         if (urlRegex.test(tc)) {
             var url = tc.match(urlRegex)[0];
+            var befores = tc.slice(0, tc.length - url.length);
             anchor.focus.text.textContent = tc.slice(0, tc.length - url.length);
             var link = document.createElement('a');
             link.contentEditable = 'false';
+            link.setAttribute('href', url);
+            link.setAttribute('target', "_blank");
             link.innerText = url;
-            if (anchor.focus.span || anchor.focus.a) anchor.focus.block.insertBefore(link, (anchor.focus.span || anchor.focus.a).nextSibling);
-            else anchor.focus.text.parentNode.insertBefore(link, (anchor.focus.span || anchor.focus.a).nextSibling);
-            var sel = window.getSelection();
-            this.collapse(link, 'end');
+
+            if (anchor.focus.lineBlock) anchor.focus.block.insertBefore(link, anchor.focus.lineBlock.nextSibling);
+            else anchor.focus.text.parentNode.insertBefore(link, anchor.focus.text.nextSibling);
+            if (rest) {
+                if (anchor.focus.lineBlock) {
+                    var lb = anchor.focus.lineBlock.cloneNode(true) as HTMLElement;
+                    lb.innerText = rest;
+                    link.parentNode.insertBefore(lb, link.nextSibling);
+                }
+                else {
+                    var sss = document.createElement('span');
+                    sss.innerText = rest;
+                    link.parentNode.insertBefore(sss, link.nextSibling);
+                }
+            }
+            if (befores) ft.textContent = befores;
+            else ft.remove();
+            this.collapse(link.nextSibling as any, 'start');
             return true;
         }
         return false;
@@ -275,6 +294,7 @@ export class RichView extends React.Component<{
                 uv = uv.slice(1);
                 sp.innerText = uv;
                 sp.style.fontWeight = 'bold';
+
                 if (anchor.focus.lineBlock) anchor.focus.block.insertBefore(sp, anchor.focus.lineBlock.nextSibling);
                 else anchor.focus.text.parentNode.insertBefore(sp, anchor.focus.text.nextSibling);
                 if (rest) {
@@ -291,6 +311,8 @@ export class RichView extends React.Component<{
                 }
                 if (befores) ft.textContent = befores;
                 else ft.remove();
+
+
                 var sel = window.getSelection();
                 sel.collapse(sp.childNodes[0], uv.length);
                 return true;
@@ -337,6 +359,26 @@ export class RichView extends React.Component<{
         }
         return false;
     }
+    deleteSectionAndFocus() {
+        var anchor = Anchor.create(this.richEl);
+        if (!anchor.isCollapsed) {
+            var sps = anchor.sps();
+            var s = sps[0];
+            var pre = Anchor.findPre(s);
+            var next;
+            if (!pre) {
+                var e = sps[sps.length - 1];
+                next = Anchor.findNext(s)
+            }
+            sps.forEach(sp => {
+                var p = sp.parentNode as HTMLElement;
+                if (sp instanceof Text && p.tagName && (['a', 'span'].includes(p.tagName))) p.remove()
+                else sp.remove()
+            })
+            if (pre) this.collapse(pre as any, 'end')
+            else if (next) this.collapse(next as any, 'start')
+        }
+    }
     collapse(el: HTMLElement, offset: 'start' | 'end' | number) {
         var sel = window.getSelection();
         if (el instanceof Text) {
@@ -356,125 +398,113 @@ export class RichView extends React.Component<{
             else sel.collapse(el, el.childNodes.length);
         }
     }
+    setBaseAndExtent(startEl: HTMLElement, startOffset: 'start' | 'end' | number, endEl: HTMLElement, endOffset: number | 'start' | 'end') {
+        var sel = window.getSelection();
+        var sText: Text;
+        if (startEl instanceof Text) sText = startEl;
+        else {
+            var c = startEl.childNodes[0];
+            if (c instanceof Text) sText = c;
+            else sText = startEl as any;
+        }
+        var soffset: number;
+        if (typeof startOffset != 'number') {
+            if (startOffset == 'start') soffset = 0
+            else soffset = sText instanceof Text ? sText.textContent.length : startEl.innerText.length;
+        }
+        else soffset = startOffset;
+
+        var eText: Text;
+        if (endEl instanceof Text) eText = endEl;
+        else {
+            var c = endEl.childNodes[0];
+            if (c instanceof Text) eText = c;
+            else eText = endEl as any;
+        }
+
+        var eoffset: number;
+        if (typeof endOffset != 'number') {
+            if (endOffset == 'start') eoffset = 0
+            else eoffset = eText instanceof Text ? eText.textContent.length : endEl.innerText.length;
+        } else eoffset = endOffset;
+
+        sel.setBaseAndExtent(sText, soffset, eText, eoffset);
+
+    }
     insertData(data: { mine: 'text' | 'user' | "file" | "icon", data: any }) {
-        // var anchor = Anchor.create(this.richEl);
-        // if (anchor.isCollapsed) anchor.deleteAnchor();
-        // var sel = window.getSelection();
-        // if (data.mine == 'text') {
-        //     var sps = anchor.split(anchor.focus);
-        //     var ns = data.data.split(/\n/g);
-        //     if (ns.length > 1) {
-        //         var node = document.createElement('span');
-        //         node.innerText = ns[0];
-        //         anchor.focus.p.insertBefore(node, sps.afters[0]);
-        //         var p = anchor.focus.p;
-        //         for (let i = 1; i < ns.length - 1; i++) {
-        //             var sp = document.createElement('p');
-        //             sp.innerHTML = `<span>${ns[i]}</span>`;
-        //             p.parentNode.insertBefore(sp, p.nextElementSibling);
-        //             p = sp;
-        //         }
-        //         var last = document.createElement('p');
-        //         last.innerHTML = `<span>${ns[ns.length - 1]}</span>`;
-        //         p.parentNode.insertBefore(last, p.nextElementSibling);
-        //         sps.afters.forEach(af => p.appendChild(af));
-        //         if (sps.afters.length > 0) sel.collapse(sps.afters[0], 0);
-        //         else sel.collapse(last.childNodes[0], ns[ns.length - 1].length);
-        //     }
-        //     else {
-        //         var node = document.createElement('span');
-        //         node.innerText = data.data;
-        //         anchor.focus.p.insertBefore(node, sps.afters[0])
-        //         sel.collapse(node, node.childNodes[0].textContent.length)
-        //     }
-        // }
-        // else if (data.mine == 'user') {
-        //     var node = document.createElement('a') as HTMLElement;
-        //     node.contentEditable = 'false';
-        //     var user = (data.data as UserBasic);
-        //     node.innerText = user.name;
-        //     node.setAttribute('data-type', 'user');
-        //     node.setAttribute('data-userid', user.id);
-        //     var sps = anchor.split(anchor.focus);
-        //     anchor.focus.p.insertBefore(node, sps.afters[0]);
-        //     var sw = document.createElement('span');
-        //     sw.innerText = ' ';
-        //     anchor.focus.p.insertBefore(sw, sps.afters[0]);
-        //     sel.collapse(sw, 1);
-        // }
-        // else if (data.mine == 'file') {
-        //     var sps = anchor.split(anchor.focus);
-        //     var dg = data as ResourceArguments;
-        //     var np = document.createElement('p');
-        //     np.contentEditable = 'false';
-        //     np.setAttribute('data-type', 'file');
-        //     var img = document.createElement('img');
-        //     img.src = dg.url;
-        //     np.appendChild(img);
-        //     anchor.focus.p.parentNode.insertBefore(np, anchor.focus.p);
-        //     var lastP = document.createElement('p');
-        //     if (sps.afters.length > 0) {
-        //         sps.afters.forEach(af => lastP.appendChild(af))
-        //     }
-        //     sel.collapse(lastP, 0);
-        // }
-        // else if (data.mine == 'icon') {
-        //     var node = document.createElement('span');
-        //     node.contentEditable = 'false';
-        //     if (data.data.code) node.innerText = data.data.code;
-        //     else node.innerHTML = `<img src='${data.data.url}'/>`;
-        //     anchor.focus.p.insertBefore(node, anchor.focus.current);
-        //     sel.collapse(node, 0);
-        // }
+        var anchor = Anchor.create(this.richEl);
+        if (data.mine == 'text') {
+            var sps = anchor.split(anchor.focus);
+            var ns = data.data.split(/\r?\n/g);
+            lodash.remove(ns, g => g ? false : true);
+            if (ns.length > 1) {
+                var node = document.createElement('span');
+                node.innerText = ns[0];
+                if (anchor.focus.isBlockRoot) anchor.focus.block.insertBefore(node, sps.afters[0])
+                else anchor.focus.lineBlock.parentNode.insertBefore(node, sps.afters[0])
+                if (anchor.focus.isBlockRoot) {
+                    var rp = document.createElement('p');
+                    var cs = Array.from(anchor.focus.block.childNodes);
+                    cs.forEach(c => rp.appendChild(c));
+                    anchor.focus.block.appendChild(rp)
+                }
+                var p = anchor.focus.isBlockRoot ? anchor.focus.block.querySelector('p') : anchor.focus.block;
+                for (let i = 1; i < ns.length - 1; i++) {
+                    var sp = document.createElement('p');
+                    sp.innerHTML = `<span>${ns[i]}</span>`;
+                    p.parentNode.insertBefore(sp, p.nextElementSibling);
+                    p = sp;
+                }
+                var last = document.createElement('p');
+                last.innerHTML = `<span>${ns[ns.length - 1]}</span>`;
+                p.parentNode.insertBefore(last, p.nextElementSibling);
+                sps.afters.forEach(af => last.appendChild(af));
+                if (sps.afters.length > 0) this.collapse(sps.afters[0], 'start');
+                else this.collapse(last.childNodes[0] as HTMLElement, 'end');
+            }
+            else {
+                var node = document.createElement('span');
+                node.innerText = data.data;
+                if (anchor.focus.isBlockRoot) anchor.focus.block.insertBefore(node, sps.afters[0])
+                else anchor.focus.lineBlock.parentNode.insertBefore(node, sps.afters[0])
+                this.collapse(node, 'end')
+            }
+        }
     }
     setStyle(command: string, data: Record<string, any>) {
-        // var anchor = Anchor.create(this.richEl);
-        // if (!anchor.isCollapsed) {
-        //     var sel = window.getSelection();
-        //     if (anchor.isCross) {
-        //         var ps = anchor.middlePs();
-        //         var start = anchor.split(anchor.start);
-        //         start.afters = start.afters.map(af => this.setNodeStyle(af, command, data))
-        //         ps.forEach(p => {
-        //             var cs = Array.from(p.childNodes);
-        //             cs.forEach(c => this.setNodeStyle(c as HTMLElement, command, data))
-        //         })
-        //         var end = anchor.split(anchor.end);
-        //         if (end.befores.length > 0) end.befores = end.befores.map(b => this.setNodeStyle(b, command, data));
-        //         var se = this.getTexEl(start.afters.first(), 'start');
-        //         var ee = this.getTexEl(end.befores.last(), 'end');
-        //         sel.setBaseAndExtent(se.el, se.offset, ee.el, ee.offset)
-        //     }
-        //     else {
-        //         var g = anchor.lineBetween();
-        //         g.middles = g.middles.map(m => this.setNodeStyle(m, command, data));
-        //         var se = this.getTexEl(g.middles.first(), 'start');
-        //         var ee = this.getTexEl(g.middles.last(), 'end');
-        //         sel.setBaseAndExtent(se.el, se.offset, ee.el, ee.offset)
-        //     }
-        // }
+        var anchor = Anchor.create(this.richEl);
+        var list = anchor.sps();
+        list.forEach((pl, i) => {
+            var c = this.setNodeStyle(pl, command, data)
+            if (c) list[i] = pl;
+        })
+        if (list.length > 0) this.setBaseAndExtent(list[0], 'start', list[list.length - 1], 'end');
     }
     setLink(url: string) {
-        // var anchor = Anchor.create(this.richEl);
-        // if (!anchor.isCollapsed) {
-        //     var sel = window.getSelection();
-        //     if (!anchor.isCross) {
-        //         var ls = anchor.lineBetween();
-        //         var text = '';
-        //         ls.middles.forEach(c => {
-        //             if (c instanceof Text) text += c.textContent;
-        //             else text += c.innerText;
-        //         });
-        //         var a = document.createElement('a');
-        //         a.contentEditable = 'false';
-        //         a.innerText = text;
-        //         a.setAttribute('href', url);
-        //         var m = ls.middles[0];
-        //         m.parentNode.insertBefore(a, m);
-        //         ls.middles.forEach(m => m.remove());
-        //         sel.setBaseAndExtent(a.childNodes[0], 0, a.childNodes[0], url.length)
-        //     }
-        // }
+        var anchor = Anchor.create(this.richEl);
+        if (!anchor.isCollapsed) {
+            if (!anchor.isCross) {
+                var sps = anchor.sps();
+                var text = '';
+                sps.forEach(s => {
+                    if (s instanceof Text) text += s.textContent;
+                    else text += s.innerText;
+                });
+                this.deleteSectionAndFocus();
+                anchor = Anchor.create(this.richEl);
+                var a = document.createElement('a');
+                a.contentEditable = 'false';
+                a.innerText = text;
+                a.setAttribute('href', url);
+                if (anchor.focus.lineBlock) {
+                    anchor.focus.lineBlock.parentNode.insertBefore(a, anchor.focus.lineBlock);
+                }
+                else {
+                    anchor.focus.text.parentNode.insertBefore(a, anchor.focus.text)
+                }
+                this.setBaseAndExtent(a, 'start', a, 'end');
+            }
+        }
     }
     private getTexEl(el: HTMLElement, offset?: 'end' | 'start' | number) {
         if (el instanceof Text) {
@@ -498,7 +528,7 @@ export class RichView extends React.Component<{
         }
     }
     private setNodeStyle(node: HTMLElement, command: string, data: Record<string, any>) {
-        if (node instanceof Text && (node.parentNode as HTMLDivElement).tagName.toLowerCase() == 'p') {
+        if (node instanceof Text && (node.parentNode == this.richEl || (node.parentNode as HTMLDivElement).tagName.toLowerCase() == 'p')) {
             var sp = document.createElement('span');
             sp.innerText = node.textContent;
             node.parentNode.insertBefore(sp, node);

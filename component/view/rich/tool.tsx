@@ -1,8 +1,6 @@
 import React, { ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { Point, Rect } from "../../../src/common/vector/point";
-import { BoldSvg } from "../../svgs";
-import { Icon } from "../icon";
+import { Point, Rect } from "../../vector/point";
 
 
 export class RichTool extends React.Component<{ click: (command: string, data: Record<string, any>) => void }> {
@@ -27,12 +25,14 @@ export class RichTool extends React.Component<{ click: (command: string, data: R
             this.props.click(command, undefined)
         this.hide()
     }
-    el:HTMLElement;
+    el: HTMLElement;
     render(): ReactNode {
-        return createPortal(<div ref={e=>this.el=e} style={{ display: this.visible ? "flex" : "none" }} className="flex border padding-w-10 h-30 r-size-24 r-round r-item-hover r-cursor ">
-            <span className={this.toolStyle.fontWeight == 'bold' ? " link" : ""} onClick={e => this.click(this.toolStyle.fontWeight == 'bold' ? "unbold" : "bold")}><Icon size={16} icon={BoldSvg}></Icon></span>
+        return createPortal(<div ref={e => this.el = e} style={{ display: this.visible ? "flex" : "none" }} className="flex border padding-w-10 h-30 r-size-24 r-round r-item-hover r-cursor ">
+            <span className={this.toolStyle.fontWeight == 'bold' ? " link" : ""} onClick={e => this.click(this.toolStyle.fontWeight == 'bold' ? "unbold" : "bold")}>
+
+            </span>
         </div>, document.body)
     }
     visible: boolean = false;
-    
+
 }

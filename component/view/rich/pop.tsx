@@ -1,14 +1,12 @@
 import lodash from "lodash";
 import React, { CSSProperties } from "react";
 import { createPortal } from "react-dom";
-import { Point, Rect } from "../../../src/common/vector/point";
-import { UserBasic } from "../../../types/user";
-import { Avatar } from "../avator/face";
-import { SpinBox } from "../spin";
+import { UserBasic } from "../../user/declare";
+import { Point, Rect } from "../../vector/point";
 
 export class RichPop extends React.Component<{
-    searchUser?: (word: string) => Promise<UserBasic[]>,
-    select?: (el: HTMLElement, offset: number, user: UserBasic) => void,
+    searchUser?: (word: string) => Promise<Record<string, any>[]>,
+    select?: (el: HTMLElement, offset: number, user: Record<string, any>) => void,
 }>{
     render() {
         var style: CSSProperties = {
@@ -21,9 +19,11 @@ export class RichPop extends React.Component<{
             ref={e => this.el = e}
             className="bg-white border shadow w-120  round  max-h-250 overflow-y" style={style}>
             {this.users.map((u, index) => {
-                return <div onClick={e => this.onSelect(u)} key={u.id} className={'h-30 item-hover round padding-w-10 cursor flex' + (this.selectIndex == index ? " item-hover-focus" : "")}><Avatar user={u}></Avatar></div>
+                return <div onClick={e => this.onSelect(u)} key={u.id} className={'h-30 item-hover round padding-w-10 cursor flex' + (this.selectIndex == index ? " item-hover-focus" : "")}>
+                    {/* <Avatar user={u}></Avatar> */}
+                </div>
             })}
-            <SpinBox spin={this.loading}></SpinBox>
+            {/* <SpinBox spin={this.loading}></SpinBox> */}
             {this.users.length == 0 && this.word && <div className="remark f-12">没有搜到用户</div>}
         </div>,
             document.body)
@@ -64,7 +64,7 @@ export class RichPop extends React.Component<{
         return false;
     }
     word: string = '';
-    users: UserBasic[] = [];
+    users: Record<string, any>[] = [];
     loading: boolean = false;
     search = lodash.debounce(async () => {
         if (typeof this.props.searchUser == 'function') {
@@ -106,11 +106,11 @@ export class RichPop extends React.Component<{
     }
     visible: boolean = false;
     selectIndex: number = 0;
-    onSelect(user: UserBasic) {
+    onSelect(user: Record<string, any>) {
         if (user && typeof this.props.select == 'function') this.props.select(this.startEl, this.offset, user)
         this.close()
     }
-    componentDidUpdate(prevProps: Readonly<{ searchUser?: (word: string) => Promise<UserBasic[]>; select?: (el: HTMLElement, offset: number, user: UserBasic) => void; }>, prevState: Readonly<{}>, snapshot?: any): void {
+    componentDidUpdate(prevProps: Readonly<{ searchUser?: (word: string) => Promise<Record<string, any>[]>; select?: (el: HTMLElement, offset: number, user: UserBasic) => void; }>, prevState: Readonly<{}>, snapshot?: any): void {
         if (this.el) {
             var c = this.el.querySelector('.item-hover-focus') as HTMLDivElement;
             if (c) {

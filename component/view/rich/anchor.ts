@@ -1,6 +1,3 @@
-import lodash from "lodash";
-import { TextEle } from "../../../src/common/text.ele";
-
 export class Anchor {
     root: HTMLElement;
     start: AnchorPos;
@@ -30,8 +27,8 @@ export class Anchor {
                 var t = anchor.text.textContent;
                 anchor.text.textContent = t.slice(0, anchor.offset);
                 var rest = t.slice(anchor.offset);
-                if (anchor.span || anchor.a) {
-                    var sp = (anchor.span || anchor.a).cloneNode(true) as HTMLElement;
+                if (anchor.lineBlock) {
+                    var sp = anchor.lineBlock.cloneNode(true) as HTMLElement;
                     sp.innerText = rest;
                     newText = sp as any;
                 }
@@ -54,231 +51,113 @@ export class Anchor {
             }
         }
     }
-    lineBetween() {
-        // var befores: HTMLElement[] = [];
-        // var afters: HTMLElement[] = [];
-        // var middles: HTMLElement[] = [];
-        // if (this.isCollapsed) {
-        //     var c = this.split(this.start);
-        //     return {
-        //         ...c,
-        //         middles
-        //     }
-        // }
-        // else {
-        //     var cs = Array.from(this.start.p.childNodes) as HTMLElement[];
-        //     var sat = cs.findIndex(g => g === this.start.current);
-        //     var eat = cs.findIndex(g => g == this.end.current);
-        //     befores = cs.findAll((c, i) => i < sat);
-        //     afters = cs.findAll((c, i) => i > eat);
-        //     middles = cs.findAll((c, i) => i > sat && i < eat);
-        //     if (this.start.current === this.end.current) {
-        //         if (this.start.offset == 0 && this.end.offset == this.end?.text.textContent.length) {
-        //             middles.push(this.start.current);
-        //         }
-        //         else if (this.start.offset > 0 && this.end.offset == this.end?.text.textContent.length) {
-        //             var tc = this.start.text.textContent;
-        //             this.start.text.textContent = tc.slice(0, this.start.offset);
-        //             befores.push(this.start.current);
-        //             var rest = tc.slice(this.start.offset);
-        //             if (this.start.a || this.start.span) {
-        //                 var nc = (this.start.a || this.start.span).cloneNode(true) as HTMLElement;
-        //                 nc.innerText = rest;
-        //                 this.start.current.parentNode.insertBefore(nc, this.start.current.nextSibling);
-        //                 middles.splice(0, 0, nc);
-        //             }
-        //             else {
-        //                 var newT = document.createTextNode(rest);
-        //                 this.start.target.parentNode.insertBefore(newT, this.start.target.nextSibling);
-        //                 middles.splice(0, 0, newT as any);
-        //             }
-        //         } else if (this.start.offset == 0 && this.end.offset < this.end?.text.textContent.length) {
-        //             var tc = this.end.text.textContent;
-        //             this.end.text.textContent = tc.slice(0, this.end.offset);
-        //             middles.push(this.end.current);
-        //             var rest = tc.slice(this.end.offset);
-        //             if (this.end.a || this.end.span) {
-        //                 var nc = (this.end.a || this.end.span).cloneNode(true) as HTMLElement;
-        //                 nc.innerText = rest;
-        //                 this.end.current.parentNode.insertBefore(nc, this.end.current.nextSibling);
-        //                 afters.splice(0, 0, nc);
-        //             }
-        //             else {
-        //                 var newT = document.createTextNode(rest);
-        //                 this.end.target.parentNode.insertBefore(newT, this.end.target.nextSibling);
-        //                 afters.splice(0, 0, newT as any);
-        //             }
-        //         }
-        //         else {
-        //             var tc = this.start.text.textContent;
-        //             this.start.text.textContent = tc.slice(0, this.start.offset);
-        //             befores.push(this.start.current);
-        //             var middle = tc.slice(this.start.offset, this.end.offset);
-        //             var rest = tc.slice(this.end.offset);
-        //             if (this.start.a || this.start.span) {
-        //                 var nc = (this.start.a || this.start.span).cloneNode(true) as HTMLElement;
-        //                 nc.innerText = middle;
-        //                 this.start.current.parentNode.insertBefore(nc, this.start.current.nextSibling);
-        //                 middles.splice(0, 0, nc);
-
-        //                 var rT = (this.start.a || this.start.span).cloneNode(true) as HTMLElement;
-        //                 rT.innerText = rest;
-        //                 this.start.current.parentNode.insertBefore(nc, nc.nextSibling);
-        //                 afters.splice(0, 0, rT);
-        //             }
-        //             else {
-        //                 var newT = document.createTextNode(middle);
-        //                 this.start.target.parentNode.insertBefore(newT, this.start.target.nextSibling);
-        //                 middles.splice(0, 0, newT as any);
-
-        //                 var restT = document.createTextNode(rest);
-        //                 this.start.target.parentNode.insertBefore(restT, newT.nextSibling);
-        //                 afters.splice(0, 0, newT as any);
-        //             }
-        //         }
-        //     }
-        //     else {
-        //         if (this.start.offset == 0) {
-        //             middles.splice(0, 0, this.start.current)
-        //         }
-        //         else if (this.start.offset == this.start?.text.textContent.length) {
-        //             befores.push(this.start.current);
-        //         }
-        //         else {
-        //             var tc = this.start.text.textContent;
-        //             this.start.text.textContent = tc.slice(0, this.start.offset);
-        //             befores.push(this.start.current);
-        //             var rest = tc.slice(this.start.offset);
-        //             if (this.start.a || this.start.span) {
-        //                 var nc = (this.start.a || this.start.span).cloneNode(true) as HTMLElement;
-        //                 nc.innerText = rest;
-        //                 this.start.current.parentNode.insertBefore(nc, this.start.current.nextSibling);
-        //                 middles.splice(0, 0, nc);
-        //             }
-        //             else {
-        //                 var newT = document.createTextNode(rest);
-        //                 this.start.target.parentNode.insertBefore(newT, this.start.target.nextSibling);
-        //                 middles.splice(0, 0, newT as any);
-        //             }
-        //         }
-        //         if (this.end.offset == 0) {
-        //             afters.splice(0, 0, this.end.current);
-        //         }
-        //         else if (this.end.offset == this.end?.text.textContent.length) {
-        //             middles.push(this.end.current);
-        //         }
-        //         else {
-        //             var tc = this.end.text.textContent;
-        //             this.end.text.textContent = tc.slice(0, this.end.offset);
-        //             middles.push(this.end.current);
-        //             var rest = tc.slice(this.end.offset);
-        //             if (this.end.a || this.end.span) {
-        //                 var nc = (this.end.a || this.end.span).cloneNode(true) as HTMLElement;
-        //                 nc.innerText = rest;
-        //                 this.end.current.parentNode.insertBefore(nc, this.end.current.nextSibling);
-        //                 afters.splice(0, 0, nc);
-        //             }
-        //             else {
-        //                 var newT = document.createTextNode(rest);
-        //                 this.end.target.parentNode.insertBefore(newT, this.end.target.nextSibling);
-        //                 afters.splice(0, 0, newT as any);
-        //             }
-        //         }
-        //     }
-        //     return {
-        //         afters,
-        //         befores,
-        //         middles
-        //     }
-        // }
-    }
-    delete() {
-        // if (this.isCross) {
-        //     var ps = this.middlePs();
-        //     ps.forEach(p => p.remove());
-        //     var f = this.split(this.start);
-        //     if (f.afters.length > 0) f.afters.forEach(a => a.remove())
-        //     var n = this.split(this.end);
-        //     if (n.befores.length > 0) n.befores.forEach(a => a.remove());
-        //     return {
-        //         node: n.afters[0] || this.end.p,
-        //         offset: 0
-        //     }
-        // }
-        // else {
-        //     if (this.start.target === this.end.target) {
-        //         var c = this.start.text.textContent;
-        //         var g = c.slice(0, this.start.offset) + c.slice(this.end.offset);
-        //         this.start.text.textContent = g;
-        //         return {
-        //             node: this.start.text,
-        //             offset: this.start.offset
-        //         }
-        //     }
-        //     else {
-        //         var cs = Array.from(this.start.p.childNodes);
-        //         var isIn: boolean = false;
-        //         var ns: (HTMLElement | Text)[] = [];
-        //         for (let i = 0; i < cs.length; i++) {
-        //             var e = cs[i];
-        //             var ec = !(e instanceof Text) ? e.childNodes[0] : undefined;
-        //             if (e === this.start.target || ec === this.start.target) {
-        //                 isIn = true;
-        //             }
-        //             else if (e === this.end.target || ec === this.end.target) {
-        //                 isIn = true;
-        //             }
-        //             else {
-        //                 if (isIn) {
-        //                     ns.push(e as HTMLElement);
-        //                 }
-        //             }
-        //         }
-        //         var ts = this.start.text.textContent;
-        //         this.start.text.textContent = ts.slice(0, this.start.offset);
-        //         ns.forEach(n => n.remove())
-        //         var es = this.end.text.textContent;
-        //         this.end.text.textContent = es.slice(this.end.offset);
-        //         return {
-        //             node: this.end.text,
-        //             offset: 0
-        //         }
-        //     }
-        // }
-    }
-    deleteAnchor() {
-        // var n = this.delete();
-        // var sel = window.getSelection();
-        // sel.collapse(n.node, n.offset);
-        // var newAnchor = Anchor.create(this.root);
-        // ['start', 'end', 'focus', 'isCross', 'isCollapsed'].forEach(c => this[c] = newAnchor[c])
-    }
-    middlePs() {
-        // var ps: HTMLElement[] = [];
-        // var ne = this.start.p.nextElementSibling as HTMLElement;
-        // while (true) {
-        //     if (ne && ne != this.end.p) {
-        //         ps.push(ne);
-        //         ne = ne.nextElementSibling as HTMLElement;
-        //     }
-        //     else break;
-        // }
-        // return ps;
-    }
     sps() {
-        // if (this.isCross) {
-        //     var gs: HTMLElement[] = [];
-        //     var c = this.split(this.start);
-        //     c.afters.forEach(af => gs.push(af));
-        //     var m = this.middlePs();
-        //     m.forEach(c => {
-        //         gs.push(...(Array.from(c.childNodes) as HTMLElement[]));
-        //     })
-        //     var e = this.split(this.end);
-        //     e.befores.forEach(ef => gs.push(ef));
-        //     return gs;
-        // }
-        // else return this.lineBetween().middles;
+        var sps: HTMLElement[] = [];
+        if (this.start.block === this.end.block) {
+            if (this.start.text === this.end.text) {
+                var text = this.start.text.textContent;
+                var nt = text.slice(this.start.offset, this.end.offset);
+                var rest = text.slice(this.end.offset);
+                var newNode;
+                if (this.start.lineBlock) {
+                    var c = this.start.lineBlock.cloneNode(true);
+                    (c as HTMLElement).innerText = nt;
+                    this.start.lineBlock.parentNode.insertBefore(c, this.start.lineBlock.nextSibling);
+                    newNode = c;
+                }
+                else {
+                    c = document.createTextNode(nt);
+                    this.start.text.parentNode.insertBefore(c, this.start.text.nextSibling);
+                    newNode = c;
+                }
+                sps.push(newNode);
+                if (rest) {
+                    if (this.start.lineBlock) {
+                        var c = this.start.lineBlock.cloneNode(true);
+                        (c as HTMLElement).innerText = rest;
+                        newNode.parentNode.insertBefore(c, newNode.nextSibling);
+                    }
+                    else {
+                        c = document.createTextNode(rest);
+                        newNode.parentNode.insertBefore(c, newNode.nextSibling);
+                    }
+                }
+            }
+            else {
+                var cs = Array.from(this.start.block.childNodes);
+                var isIn: boolean = false;
+                for (let i = 0; i < cs.length; i++) {
+                    var lineBlock = cs[i];
+                    if (lineBlock === this.start.lineBlock && this.start.lineBlock || this.start.text && this.start.text === lineBlock) {
+                        if (this.start.offset == 0) {
+                            sps.push(lineBlock as HTMLElement);
+                        }
+                        else if (this.start.offset < this.start.text.textContent.length) {
+                            var te = this.start.text.textContent;
+                            var oldText = te.slice(0, this.start.offset);
+                            var newText = te.slice(this.start.offset);
+                            this.start.text.textContent = oldText;
+                            if (this.start.lineBlock) {
+                                var ts = this.start.lineBlock.cloneNode(true) as HTMLElement;
+                                ts.innerText = newText;
+                                this.start.lineBlock.parentNode.insertBefore(ts, this.start.lineBlock.nextSibling);
+                                sps.push(ts);
+                            }
+                            else {
+                                var tn = document.createTextNode(newText) as Text;
+                                this.start.text.parentNode.insertBefore(tn, this.start.text.nextSibling);
+                                sps.push(tn as any);
+                            }
+                        }
+                        isIn = true;
+                    }
+                    else if (lineBlock === this.end.lineBlock && this.end.lineBlock || this.end.text && this.end.text === lineBlock) {
+                        if (this.end.offset > 0) {
+                            if (this.end.offset < this.end.text.textContent.length) {
+                                var te = this.end.text.textContent;
+                                var oldText = te.slice(0, this.end.offset);
+                                var newText = te.slice(this.end.offset);
+                                this.end.text.textContent = newText;
+                                if (this.end.lineBlock) {
+                                    var ts = this.end.lineBlock.cloneNode(true) as HTMLElement;
+                                    ts.innerText = oldText;
+                                    this.end.lineBlock.parentNode.insertBefore(ts, this.end.lineBlock.nextSibling);
+                                    sps.push(ts);
+                                }
+                                else {
+                                    var tn = document.createTextNode(oldText) as Text;
+                                    this.end.text.parentNode.insertBefore(tn, this.end.text.nextSibling);
+                                    sps.push(tn as any);
+                                }
+                            }
+                            else if (this.end.offset == this.end.text.textContent.length) {
+                                sps.push(lineBlock as any);
+                            }
+                        }
+                        isIn = false;
+                    }
+                    else if (isIn) {
+                        sps.push(lineBlock as HTMLElement)
+                    }
+                }
+            }
+        }
+        else {
+            var s = this.split(this.start);
+            if (s.afters.length > 0) s.afters.forEach(af => sps.push(af));
+            var ne = this.start.block.nextElementSibling;
+            while (true) {
+                if (ne && ne !== this.end.block) {
+                    var cs = Array.from(ne.childNodes);
+                    cs.forEach(c => sps.push(c as HTMLElement))
+                    ne = ne.nextElementSibling;
+                }
+                else break;
+            }
+            var e = this.split(this.end);
+            if (e.befores.length > 0) e.befores.forEach(e => sps.push(e));
+        }
+        return sps;
     }
     static create(root: HTMLElement) {
         var anchor = new Anchor();
@@ -300,7 +179,7 @@ export class Anchor {
                 [so, eo] = [eo, so];
                 isChange = true;
             }
-            else if (TextEle.isBefore(sn, en)) {
+            else if (Anchor.isBefore(sn, en)) {
                 [sn, en] = [en, sn];
                 [so, eo] = [eo, so];
                 isChange = true;
@@ -323,7 +202,7 @@ export class Anchor {
             a: ((el instanceof Text ? el.parentNode : el) as HTMLElement).closest('a'),
         } as any;
         pos.lineBlock = (pos.a || pos.span) as HTMLElement;
-        if (!pos.block) { pos.isBlockRoot = true; pos.block = el.parentNode as HTMLElement; }
+        if (!pos.block) { pos.isBlockRoot = true; pos.block = root; }
         if (typeof pos.isBlockRoot == 'undefined')
             pos.isBlockRoot = pos.block == root || el === root ? true : false;
         return pos;
@@ -361,6 +240,41 @@ export class Anchor {
     //     }
     //     return style;
     // }
+    static findPre(el: HTMLElement) {
+        if (el.previousSibling) return el.previousSibling;
+        if (el instanceof Text && el.parentNode.previousSibling) return el.parentNode.previousSibling;
+        var p = el.closest('p');
+        if (p) {
+            var preP = p.previousElementSibling;
+            if (preP) {
+                var cs = Array.from(preP.childNodes);
+                if (cs.length > 0)
+                    return cs[cs.length - 1]
+            }
+        }
+
+    }
+    static findNext(el: HTMLElement) {
+        if (el.nextSibling) return el.nextSibling;
+        if (el instanceof Text && el.parentNode.nextSibling) return el.parentNode.nextSibling;
+        var p = el.closest('p');
+        if (p) {
+            var preP = p.nextElementSibling;
+            if (preP) {
+                var cs = Array.from(preP.childNodes);
+                if (cs.length > 0)
+                    return cs[0]
+            }
+        }
+
+    }
+    static isBefore(start, end) {
+        var pos = start.compareDocumentPosition(end);
+        if (pos == 4 || pos == 20) {
+            return true
+        }
+        return false
+    }
 }
 
 type AnchorPos = {
