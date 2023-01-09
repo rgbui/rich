@@ -29,7 +29,7 @@ import { LinkPageItem } from '../../extensions/at/declare';
 import { Title } from '../../blocks/page/title';
 import { AppearAnchor } from '../block/appear';
 import { AtomPermission } from './permission';
-import { parseElementUrl } from '../../net/element.type';
+import { ElementType, parseElementUrl } from '../../net/element.type';
 import { BlockUrlConstant } from '../block/constant';
 import lodash from 'lodash';
 import { ActionDirective } from '../history/declare';
@@ -236,6 +236,17 @@ export class Page extends Events<PageDirective> {
     }
     get lineHeight() {
         return this.smallFont ? 23 : 26
+    }
+    private _pe: {
+        type: ElementType;
+        id: string;
+        id1: string;
+        id2: string;
+    }
+    get pe() {
+        if (typeof this._pe == 'undefined')
+            this._pe = parseElementUrl(this.elementUrl) as any;
+        return this._pe;
     }
     customElementUrl: string;
     get elementUrl() {
