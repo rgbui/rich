@@ -92,14 +92,14 @@ export async function useRelationPickData(pos: PopoverPosition,
     return new Promise((resolve: (data: any[]) => void, reject) => {
         fv.only('close', () => {
             popover.close();
-            resolve(fv.isMultiple && fv.isChange && fv.relationDatas.length > 0 ? fv.relationDatas : undefined);
+            resolve(fv.isMultiple && fv.isChange && fv.relationDatas.length >= 0 ? fv.relationDatas : undefined);
         });
         fv.only('save', (rows) => {
             resolve(rows);
             popover.close();
         })
         popover.only('close', () => {
-            resolve(fv.isMultiple && fv.isChange && fv.relationDatas.length > 0 ? fv.relationDatas : undefined);
+            resolve(fv.isMultiple && fv.isChange && fv.relationDatas.length >= 0 ? fv.relationDatas : undefined);
         })
     })
 }
