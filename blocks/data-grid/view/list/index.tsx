@@ -1,4 +1,7 @@
 import React from "react";
+import { PlusSvg } from "../../../../component/svgs";
+import { Divider } from "../../../../component/view/grid";
+import { Icon } from "../../../../component/view/icon";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
@@ -26,9 +29,15 @@ export class TableStoreListView extends BlockView<TableStoreList>{
         return <div className='sy-data-grid-list'
             onMouseEnter={e => this.block.onOver(true)}
             onMouseLeave={e => this.block.onOver(false)}
-        >
-            <DataGridTool block={this.block}></DataGridTool>
+        ><DataGridTool block={this.block}></DataGridTool>
+            {!this.block.noTitle && <Divider></Divider>}
             <ChildsArea childs={this.block.childs}></ChildsArea>
+            {this.block.isCanEdit && <div
+                onMouseDown={e => { e.stopPropagation(); this.block.onAddRow({}, undefined, 'after') }}
+                className="flex cursor item-hover round padding-5 f-14 remark">
+                <Icon icon={PlusSvg}></Icon>
+                <span>新增</span>
+            </div>}
         </div>
     }
 }

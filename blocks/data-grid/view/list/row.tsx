@@ -14,11 +14,11 @@ export class TableStoreListItemView extends BlockView<TableStoreListItem>{
     render() {
         var title = this.block.childs.find(g => (g as OriginField).url == '/field/title');
         var cs = this.block.childs.findAll(g => g !== title);
-        return <div className="flex-top item-hover round padding-5 ">
-            <div className="flex-fixed">
+        return <div className="flex item-hover round padding-5 ">
+            <div className="flex-fixed bold cursor">
                 {title && <title.viewComponent block={title}></title.viewComponent>}
             </div>
-            <div className="flex-auto flex-top-end">
+            <div className="flex-auto flex-end">
                 {cs.map(c => {
                     return <div className="gap-l-10" key={c.id}>
                         <c.viewComponent block={c}></c.viewComponent>
