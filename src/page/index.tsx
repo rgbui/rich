@@ -174,7 +174,7 @@ export class Page extends Events<PageDirective> {
         return parseElementUrl(this.elementUrl).id1
     }
     recordViewTemplate: boolean = false;
-    openSource: 'page' | 'slide' | 'dialog' | 'snap' = 'page';
+    openSource: 'page' | 'slide' | 'dialog' | 'snap' | 'popup' = 'page';
     getScreenStyle() {
         var style: CSSProperties = {};
         if (this.isSupportScreen) {
@@ -295,7 +295,7 @@ export interface Page {
     emit(name: PageDirective.selectRows, block: Block, rows: any[]);
     on(name: PageDirective.save, fn: () => void);
     emit(name: PageDirective.save);
-    
+
     on(name: PageDirective.mounted, fn: () => void);
     emit(name: PageDirective.mounted);
 
