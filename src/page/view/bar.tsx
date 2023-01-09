@@ -17,11 +17,11 @@ export class PageBar extends React.Component<{ page: Page }>{
         if (this.props.page.pe.type == ElementType.SchemaRecordViewData) {
             return <div className="flex-auto flex padding-l-10">
                 {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onClose()} className="item-hover size-24 round cursor flex-center gap-l-10"><Icon size={18} icon={DoubleRightSvg}></Icon></span>}
-                <span onMouseDown={e => this.props.page.openSource != 'page' && this.props.page.onClose()} className="item-hover round flex  cursor padding-h-3 padding-w-5 ">
+                {/* <span onMouseDown={e => this.props.page.openSource != 'page' && this.props.page.onClose()} className="item-hover round flex  cursor padding-h-3 padding-w-5 ">
                     <Icon size={18} icon={getPageIcon(this.props.page?.schema?.icon, CollectTableSvg)}></Icon>
                     <span className="gap-l-5">{this.props.page?.schema?.text}</span>
                 </span>
-                <span className="flex-center"><Icon size={18} icon={ChevronRightSvg}></Icon></span>
+                <span className="flex-center"><Icon size={18} icon={ChevronRightSvg}></Icon></span> */}
                 <span className="item-hover round flex cursor padding-h-3 padding-w-5 ">
                     <Icon size={18} icon={this.props.page?.formRowData?.icon || PageSvg}></Icon>
                     <span className="gap-l-5">{this.props.page?.formRowData?.title}</span>
@@ -70,7 +70,6 @@ export class PageBar extends React.Component<{ page: Page }>{
         }
     }
     renderUsers() {
-
         if ([PageLayoutType.textChannel].includes(this.props.page.pageLayout.type)) return <></>
         return <div className="gap-r-10">
             <UserAvatars users={this.users}></UserAvatars>
