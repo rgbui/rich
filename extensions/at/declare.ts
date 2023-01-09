@@ -34,9 +34,9 @@ export interface LinkPageItem {
     textChannelMode?: 'chat' | 'weibo' | 'ask' | 'tieba'
 }
 
-export function getPageIcon(item: LinkPageItem) {
+export function getPageIcon(item: LinkPageItem,defaultIcon?:SvgrComponent) {
     if (item?.icon) return item.icon;
-    if (!item) return PageSvg
+    if (!item) return defaultIcon||PageSvg
     if (item.pageType == PageLayoutType.board) {
         return PageSvg
     }
@@ -49,7 +49,7 @@ export function getPageIcon(item: LinkPageItem) {
     else if (item.pageType == PageLayoutType.db) {
         return CollectTableSvg
     }
-    return PageSvg
+    return defaultIcon||PageSvg
 }
 
 
