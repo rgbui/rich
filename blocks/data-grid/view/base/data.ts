@@ -45,7 +45,6 @@ export class DataGridViewData {
             await channel.air(url, { elementUrl: null })
         if (newRow)
             await this.onRowUpdate(id, newRow);
-
     }
     async onAddRow(this: DataGridView, data, id?: string, arrow: 'before' | 'after' = 'after') {
         if (typeof id == 'undefined') {
@@ -65,7 +64,11 @@ export class DataGridViewData {
     }
     async onRowUpdate(this: DataGridView, id: string, data: Record<string, any>) {
         var oldItem = this.data.find(g => g.id == id);
-        if (!util.valueIsEqual(oldItem, data)) {
+        var rj = {};
+        for (let n in data) {
+            rj[n] = oldItem[n];
+        }
+        if (!util.valueIsEqual(rj, data)) {
             var r = await this.schema.rowUpdate({ dataId: id, data: util.clone(data) });
             if (r.ok) {
                 Object.assign(oldItem, data);
