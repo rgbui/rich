@@ -86,7 +86,7 @@ export class TableSortView extends EventsComponent {
             </div>
             <Divider></Divider>
             <div onClick={e => addSort()} className="h-30 gap-b-10 flex cursor item-hover padding-w-14">
-                <Icon size={14} style={{ marginRight: 5 }} icon={PlusSvg}></Icon>添加排序
+                <Icon size={18} style={{ marginRight: 5 }} icon={PlusSvg}></Icon>添加排序
             </div>
         </div>
     }
