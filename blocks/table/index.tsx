@@ -201,7 +201,6 @@ export class Table extends Block {
             this.manualUpdateProps({ cols: this.cols }, { cols: cs }, BlockRenderRange.self)
         })
     }
-
 }
 @view('/table')
 export class TableView extends BlockView<Table>{
@@ -286,12 +285,18 @@ export class TableView extends BlockView<Table>{
                     this.leftDrag.style.top = (trRect.top - boxRect.top) + 'px';
                     this.leftDrag.style.height = trRect.height + 'px';
                     this.leftDrag.setAttribute('data-index', s.toString());
+                    this.btnsX.style.display = 'flex';
+                    this.btnsX.style.top = (trRect.top - boxRect.top) + 'px';
+                    this.btnsX.setAttribute('data-index', s.toString());
                     isShowDragRow = true;
                 }
                 break;
             }
         }
-        if (!isShowDragRow) this.leftDrag.style.display = 'none';
+        if (!isShowDragRow) {
+            this.leftDrag.style.display = 'none';
+            this.btnsX.style.display = 'none';
+        }
         var isShowDragColumn: boolean = false;
         var cw = tableLeft + 5;
         var firstRow = trs[0];
@@ -304,6 +309,9 @@ export class TableView extends BlockView<Table>{
                     this.topDrag.style.left = (cw - tableLeft) + 'px';
                     this.topDrag.style.width = tdRect.width + 'px';
                     this.topDrag.setAttribute('data-index', i.toString());
+                    this.btnsY.style.display = 'flex';
+                    this.btnsY.style.left = (cw - tableLeft) + 'px';
+                    this.btnsY.setAttribute('data-index', i.toString());
                     isShowDragColumn = true;
                     break;
                 }
@@ -312,6 +320,7 @@ export class TableView extends BlockView<Table>{
         }
         if (!isShowDragColumn) {
             this.topDrag.style.display = 'none';
+            this.btnsY.style.display = 'none';
         }
     }
     onMousedownLine(event: React.MouseEvent) {
@@ -614,10 +623,28 @@ export class TableView extends BlockView<Table>{
             this.leftDrag.style.display = 'none';
         }
     }
+    async onMousedownBtnRow(event: React.MouseEvent) {
+        var at = parseFloat(this.btnsX.getAttribute('data-index'));
+        await this.block.onAddRow(at, 'down');
+    }
+    async onMousedownBtnCol(event: React.MouseEvent, operator: string) {
+        var at = parseFloat(this.btnsY.getAttribute('data-index'));
+        if (operator == 'add') {
+            await this.block.onAddColumn(at, 'right')
+        }
+        else if (operator == 'agv') {
+
+        }
+        else if (operator == 'agv-all') {
+
+        }
+    }
     table: HTMLElement;
     box: HTMLElement;
     subline: HTMLElement;
     sublineX: HTMLElement;
+    btnsX: HTMLElement;
+    btnsY: HTMLElement;
     bottomPlus: HTMLElement;
     rightPlus: HTMLElement;
     resizePlus: HTMLElement;
@@ -641,6 +668,14 @@ export class TableView extends BlockView<Table>{
                 </table>
                 <div className='sy-block-table-subline' onMouseDown={e => this.onMousedownLine(e)} ref={e => this.subline = e}></div>
                 <div className='sy-block-table-subline-x' ref={e => this.sublineX = e}></div>
+                <div className="sy-block-table-btns-x flex r-size-24 r-cursor" ref={e => this.btnsX = e}>
+                    <span onMouseDown={e => this.onMousedownBtnRow(e)}><Icon icon={PlusSvg}></Icon></span>
+                </div>
+                <div className="sy-block-table-btns-y  flex r-size-24 r-cursor" ref={e => this.btnsY = e}>
+                    <span onMouseDown={e => this.onMousedownBtnCol(e, 'add')}><Icon icon={PlusSvg}></Icon></span>
+                    <span onMouseDown={e => this.onMousedownBtnCol(e, 'agv')}><Icon icon={PlusSvg}></Icon></span>
+                    <span onMouseDown={e => this.onMousedownBtnCol(e, 'agv-all')}><Icon icon={PlusSvg}></Icon></span>
+                </div>
                 <div onMouseDown={e => this.onMousedownDrag(e, 'top')} ref={e => this.topDrag = e} className="sy-block-table-top-drag"><span>
                 </span>
                 </div>
