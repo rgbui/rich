@@ -7,8 +7,11 @@ import { BlockDisplay } from '../enum';
 import { url, view } from '../factory/observable';
 import { MouseDragger } from '../../common/dragger';
 import { ActionDirective } from '../../history/declare';
+import { PlusSvg } from '../../../component/svgs';
+import { Icon } from '../../../component/view/icon';
 /**
  * 分区中会有很多行，每行存在于一个或多个block
+ * 
  */
 @url('/row')
 export class Row extends Block {
@@ -17,6 +20,7 @@ export class Row extends Block {
         return true;
     }
 }
+
 @view('/row')
 export class RowView extends BlockView<Row>{
     mousedown(index: number, event: React.MouseEvent) {
@@ -56,6 +60,16 @@ export class RowView extends BlockView<Row>{
             }
         })
     }
+    async agvCols(event: React.MouseEvent) {
+        event.stopPropagation();
+        var self = this;
+        await self.block.page.onAction(ActionDirective.onUpdateProps, async () => {
+            var cs = self.block.childs;
+            await cs.eachAsync(async c => {
+                await c.updateProps({ widthPercent: Math.round(1 * 100 / cs.length) })
+            })
+        });
+    }
     renderBlocks() {
         var ps: JSX.Element[] = [];
         for (let i = 0; i < this.block.childs.length; i++) {
@@ -65,7 +79,12 @@ export class RowView extends BlockView<Row>{
                     onMouseDown={e => { this.mousedown(i, e); }}
                     key={block.id + 'gap'}
                     data-index={i}
-                    className='sy-block-row-gap'></div>)
+                    className='sy-block-row-gap'>
+                    <i className='flex-center'>
+                        <span onMouseDown={e => this.agvCols(e)} className='size-24 flex-center item-hover round cursor'><Icon icon={PlusSvg}></Icon></span>
+                    </i>
+                    <em></em>
+                </div>)
             }
             ps.push(<block.viewComponent key={block.id} block={block}></block.viewComponent>)
         }

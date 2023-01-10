@@ -1,31 +1,40 @@
 .sy-block-row {
-    display        : flex;
+    display: flex;
     justify-content: flex-start;
-    align-items    : flex-start;
+    align-items: flex-start;
 
-    
+
 
     &-gap {
-        width           : 46px;
+        width: 46px;
         background-color: transparent;
-        align-self      : stretch;
-        transition      : opacity 200ms ease-out 0s;
-        opacity         : 0;
-        position        : relative;
-        z-index         : 100;
-        display         : inline-flex;
-        justify-content : center;
-        align-items     : stretch;
-        flex-grow       : 0;
-        flex-shrink     : 0;
+        align-self: stretch;
+        transition: opacity 200ms ease-out 0s;
+        opacity: 0;
+        position: relative;
+        z-index: 100;
+        display: inline-flex;
+        justify-content: center;
+        align-items: stretch;
+        flex-grow: 0;
+        flex-shrink: 0;
 
-        &::after {
-            height       : 100%;
-            width        : 4px;
-            content      : ' ';
+        i {
+            position: absolute;
+            top: -30px;
+            height: 30px;
+            left: 50%;
+            transform: translate(-50%, 0px);
+        }
+
+        em {
+            display: block;
+            height: 100%;
+            width: 4px;
+            content: ' ';
             // content   : '';
-            background   : rgba(61, 57, 44, 0.16);
-            cursor       : col-resize;
+            background: rgba(61, 57, 44, 0.16);
+            cursor: col-resize;
         }
 
         &:hover {
@@ -35,26 +44,26 @@
 }
 
 .sy-block-text-content {
-    display    : inline !important;
-    font-size  : inherit;
+    display: inline !important;
+    font-size: inherit;
     line-height: inherit;
 
     a {
         text-decoration: none;
-        color          : inherit;
-        display        : inline !important;
-        font-size      : inherit;
-        line-height    : inherit;
-        opacity        : 0.7;
-        word-wrap      : break-word;
-        font-weight    : 500;
-        cursor         : pointer;
-        color          : rgb(55, 53, 47);
-        border-bottom  : 1px solid rgb(55, 53, 47, .4);
+        color: inherit;
+        display: inline !important;
+        font-size: inherit;
+        line-height: inherit;
+        opacity: 0.7;
+        word-wrap: break-word;
+        font-weight: 500;
+        cursor: pointer;
+        color: rgb(55, 53, 47);
+        border-bottom: 1px solid rgb(55, 53, 47, .4);
 
         i {
-            opacity    : .4;
-            font-size  : inherit;
+            opacity: .4;
+            font-size: inherit;
             line-height: inherit;
         }
     }
@@ -62,24 +71,24 @@
 
 .sy-block-text-content-code {
     em {
-        font-style         : normal;
-        line-height        : normal;
-        background         : rgba(135, 131, 120, 0.15);
-        color              : #EB5757;
-        border-radius      : 3px;
-        font-size          : 85%;
-        border             : 3px solid transparent;
-        border-top-width   : 0.2em;
+        font-style: normal;
+        line-height: normal;
+        background: rgba(135, 131, 120, 0.15);
+        color: #EB5757;
+        border-radius: 3px;
+        font-size: 85%;
+        border: 3px solid transparent;
+        border-top-width: 0.2em;
         border-bottom-width: 0.2em;
-        border-left-width  : 0.4em;
-        border-right-width : 0.4em;
-        display            : inline;
-        margin-left        : 5px;
-        margin-right       : 5px;
+        border-left-width: 0.4em;
+        border-right-width: 0.4em;
+        display: inline;
+        margin-left: 5px;
+        margin-right: 5px;
 
         &.next-code {
-            border-right-width        : 0px;
-            border-top-right-radius   : 0px;
+            border-right-width: 0px;
+            border-top-right-radius: 0px;
             border-bottom-right-radius: 0px;
         }
     }
@@ -87,8 +96,8 @@
 
 .sy-block-text-content-code+.sy-block-text-content-code {
     em {
-        border-left-width        : 0px;
-        border-top-left-radius   : 0px;
+        border-left-width: 0px;
+        border-top-left-radius: 0px;
         border-bottom-left-radius: 0px;
     }
 }
