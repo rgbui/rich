@@ -34,9 +34,9 @@ export interface LinkPageItem {
     textChannelMode?: 'chat' | 'weibo' | 'ask' | 'tieba'
 }
 
-export function getPageIcon(item: LinkPageItem) {
+export function getPageIcon(item: LinkPageItem,defaultIcon?:SvgrComponent) {
     if (item?.icon) return item.icon;
-    if (!item) return PageSvg
+    if (!item) return defaultIcon||PageSvg
     if (item.pageType == PageLayoutType.board) {
         return PageSvg
     }
@@ -49,5 +49,22 @@ export function getPageIcon(item: LinkPageItem) {
     else if (item.pageType == PageLayoutType.db) {
         return CollectTableSvg
     }
-    return PageSvg
+    return defaultIcon||PageSvg
+}
+
+
+export function getPageText(item: LinkPageItem) {
+    if (item?.text) return item.text;
+    if (!item) return '';
+    if (item.pageType == PageLayoutType.doc || item.pageType == PageLayoutType.blog) {
+        return '新页面'
+    }
+    else if (item.pageType == PageLayoutType.board) {
+        return '白板'
+    } else if (item.pageType == PageLayoutType.textChannel) {
+        return '频道'
+    } else if (item.pageType == PageLayoutType.db) {
+        return '表格'
+    }
+    return '新页面'
 }

@@ -203,6 +203,9 @@ export class Page$Cycle {
     onSave(this: Page) {
         this.emit(PageDirective.save);
     }
+    onClose(this: Page) {
+        this.emit(PageDirective.close);
+    }
     private willUpdateAll: boolean = false;
     private willUpdateBlocks: Block[];
     private willLayoutBlocks: Block[];
@@ -362,7 +365,6 @@ export class Page$Cycle {
             })
         }
     }
-
     /**
      * onAction在执行时，会出现并发的情况，
      * 这时通过onActionQueue把并发的请求变成一个队列，然后有序执行

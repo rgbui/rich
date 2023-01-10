@@ -27,5 +27,6 @@ export enum PageDirective {
     warn,
     selectRows,
     rollup,
-    mounted
+    mounted,
+    close
 }

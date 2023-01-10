@@ -29,7 +29,7 @@ import { LinkPageItem } from '../../extensions/at/declare';
 import { Title } from '../../blocks/page/title';
 import { AppearAnchor } from '../block/appear';
 import { AtomPermission } from './permission';
-import { parseElementUrl } from '../../net/element.type';
+import { ElementType, parseElementUrl } from '../../net/element.type';
 import { BlockUrlConstant } from '../block/constant';
 import lodash from 'lodash';
 import { ActionDirective } from '../history/declare';
@@ -81,7 +81,7 @@ export class Page extends Events<PageDirective> {
     addedSubPages: string[] = [];
     showMembers: boolean = false;
     get windowMatrix() {
-        var rect = Rect.fromEle(this.root);
+        var rect = Rect.fromEle(this.viewEl);
         var matrix = new Matrix();
         matrix.translate(rect.left, rect.top);
         return matrix;
@@ -174,7 +174,7 @@ export class Page extends Events<PageDirective> {
         return parseElementUrl(this.elementUrl).id1
     }
     recordViewTemplate: boolean = false;
-    openSource: 'page' | 'slide' | 'dialog' | 'snap' = 'page';
+    openSource: 'page' | 'slide' | 'dialog' | 'snap' | 'popup' = 'page';
     getScreenStyle() {
         var style: CSSProperties = {};
         if (this.isSupportScreen) {
@@ -237,6 +237,17 @@ export class Page extends Events<PageDirective> {
     get lineHeight() {
         return this.smallFont ? 23 : 26
     }
+    private _pe: {
+        type: ElementType;
+        id: string;
+        id1: string;
+        id2: string;
+    }
+    get pe() {
+        if (typeof this._pe == 'undefined')
+            this._pe = parseElementUrl(this.elementUrl) as any;
+        return this._pe;
+    }
     customElementUrl: string;
     get elementUrl() {
         if (this.customElementUrl) return this.customElementUrl;
@@ -284,16 +295,21 @@ export interface Page {
     emit(name: PageDirective.selectRows, block: Block, rows: any[]);
     on(name: PageDirective.save, fn: () => void);
     emit(name: PageDirective.save);
+
     on(name: PageDirective.mounted, fn: () => void);
     emit(name: PageDirective.mounted);
+
     on(name: PageDirective.rollup, fn: (id: string) => void);
     emit(name: PageDirective.rollup, id: string);
 
     on(name: PageDirective.willSave, fn: () => void);
     emit(name: PageDirective.willSave);
+
     on(name: PageDirective.saved, fn: () => void);
     emit(name: PageDirective.saved);
 
+    on(name: PageDirective.close, fn: () => void);
+    emit(name: PageDirective.close);
 }
 export interface Page extends PageEvent { }
 export interface Page extends Page$Seek { }

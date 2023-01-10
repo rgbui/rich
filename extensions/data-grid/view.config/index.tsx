@@ -59,7 +59,7 @@ export class DataGridConfig extends EventsComponent {
                     <Tab.Page item={'排序'}>
                         <TableSortView ref={e => this.tableSortView = e}></TableSortView>
                     </Tab.Page>
-                    <Tab.Page item={'控制'}>
+                    <Tab.Page item={'触发器'}>
                         <DataGridControl ref={e => this.dataGridControl = e}></DataGridControl>
                     </Tab.Page>
                     {/*<Tab.Page item={'触发器'}>

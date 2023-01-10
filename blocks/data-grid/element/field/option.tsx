@@ -34,7 +34,7 @@ export class FieldTextView extends BlockView<FieldOption>{
     render() {
         var fc: FieldConfig = this.block.field.config;
         var op = fc?.options ? fc.options.find(g => g.value == this.block.value) : undefined;
-        return <div className='sy-field-option' onMouseDown={e => this.block.onCellMousedown(e)} style={{ display: 'block' }} >
+        return <div className='sy-field-option flex' onMouseDown={e => this.block.onCellMousedown(e)}  >
             <span style={{ backgroundColor: op?.color }}>{op?.text || <i>&nbsp;</i>}</span>
         </div>
     }

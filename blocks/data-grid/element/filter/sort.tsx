@@ -25,7 +25,11 @@ export class SearchTextView extends BlockView<FilterSort>{
     render() {
         return <div style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle}
             filterField={this.block}>
-            <SelectBox border inline value={this.block.sortRule}
+            <SelectBox
+                small
+                border
+                inline
+                value={this.block.sortRule}
                 onChange={e => this.block.onFilter(e)}
                 options={[
                     { text: '无', value: 0 },

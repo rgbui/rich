@@ -281,6 +281,7 @@ export class DataGridViewOperator {
         if (!this.schema) {
             await this.loadSchema();
         }
+        var bs = this.referenceBlockers;
         var view = this.schema.views.find(g => g.id == viewId);
         var newBlock = await BlockFactory.createBlock(view.url, this.page, {
             syncBlockId: viewId,
@@ -296,6 +297,11 @@ export class DataGridViewOperator {
             from: oldViewId,
             to: viewId
         }, this);
+        this.page.addUpdateEvent(async () => {
+            bs.forEach(b => {
+                b.forceUpdate();
+            })
+        })
     }
     async onOtherDataGridTurnView(this: DataGridView, viewId: string, type: 'form' | 'view', schemaId: string, viewUrl?: string) {
         if (this.syncBlockId != viewId) {
@@ -446,7 +452,7 @@ export class DataGridViewOperator {
     }
     changeFields(this: DataGridView, oldFields: ViewField[], newFields: ViewField[]) {
         this.manualUpdateProps({ fields: oldFields }, { fields: newFields }, BlockRenderRange.none, true);
-        // this.fields = newFields;
+        this.fields = newFields;
     }
     async onChangeFields(this: DataGridView, oldFields: ViewField[], newFields: ViewField[]) {
         await this.page.onAction(ActionDirective.onDataGridChangeFields, async () => {
@@ -470,7 +476,11 @@ export class DataGridViewOperator {
         await this.onLoadingAction(async () => {
             this.pageIndex = index;
             await this.loadData();
+            this.forceUpdate();
             await this.createItem();
+            this.referenceBlockers.forEach(b => {
+                b.forceUpdate();
+            })
         })
     }
     async onChangeSize(this: DataGridView, size: number) {
@@ -482,7 +492,11 @@ export class DataGridViewOperator {
             this.updateProps({ size });
             await this.onLoadingAction(async () => {
                 await this.loadData();
+                this.forceUpdate();
                 await this.createItem();
+                this.referenceBlockers.forEach(b => {
+                    b.forceUpdate();
+                })
             })
         });
     }
@@ -606,9 +620,13 @@ export class DataGridViewOperator {
         }
     }
     async onReloadData(this: DataGridView) {
-        await this.loadData();
-        await this.createItem();
-        this.view.forceUpdate()
+        await this.onLoadingAction(async () => {
+            await this.loadData();
+            await this.createItem();
+            this.referenceBlockers.forEach(b => {
+                b.forceUpdate();
+            })
+        })
     }
     async onSortRank(this: DataGridView) {
         var c = lodash.cloneDeep(this.data);

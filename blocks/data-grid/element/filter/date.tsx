@@ -22,6 +22,7 @@ export class FilterFieldDate extends OriginFilterField {
         });
         if (typeof pickDate != 'undefined') {
             this[key] = pickDate;
+            if (this.refBlock) this.refBlock.onSearch()
             this.forceUpdate()
         }
     }
@@ -81,9 +82,9 @@ export class FilterFieldDateView extends BlockView<FilterFieldDate>{
     render() {
         return <div style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle} filterField={this.block}>
             <div className="flex-line flex-center padding-w-10 round">
-                <span onMouseDown={e => this.block.openDatePicker('startDate', e)}>{this.block.startDate ? dayjs(this.block.startDate).format(this.block.format) : <em className="remark f-12">起始日期</em>}</span>
+                <span className="cursor" onMouseDown={e => this.block.openDatePicker('startDate', e)}>{this.block.startDate ? dayjs(this.block.startDate).format(this.block.format) : <em className="remark">起始日期</em>}</span>
                 <em className="remark gap-w-5 flex-center h-20"><Icon size={16} icon={SwitchArrowSvg}></Icon></em>
-                <span onMouseDown={e => this.block.openDatePicker('endDate', e)}>{this.block.endDate ? dayjs(this.block.endDate).format(this.block.format) : <em className="remark f-12">结束日期</em>}</span>
+                <span className="cursor" onMouseDown={e => this.block.openDatePicker('endDate', e)}>{this.block.endDate ? dayjs(this.block.endDate).format(this.block.format) : <em className="remark">结束日期</em>}</span>
             </div>
         </OriginFilterFieldView></div>
     }

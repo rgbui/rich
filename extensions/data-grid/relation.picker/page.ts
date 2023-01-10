@@ -2,6 +2,8 @@ import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { PageLayoutType } from "../../../src/page/declare";
 import { Page } from "../../../src/page";
 import { PageDirective } from "../../../src/page/directive";
+import { ElementType, getElementUrl } from "../../../net/element.type";
+
 export function schemaCreatePageFormData(
     schema: TableSchema,
     datas: Record<string, any>[]
@@ -30,8 +32,19 @@ export function schemaCreatePageFormData(
  * 然后供用户挑选
  */
 export async function createFormPage(el: HTMLElement,
-    options: { schema: TableSchema, datas: any[], isMultiple: boolean }) {
+    options: {
+        schema: TableSchema,
+        datas: any[],
+        isMultiple: boolean
+    }) {
     var page = new Page();
+    page.customElementUrl = getElementUrl(
+        ElementType.SchemaView,
+        options.schema.id,
+        options.schema.views[0].id
+    );
+    page.pageInfo = options.schema;
+
     page.on(PageDirective.history, async function (action) {
 
     });
