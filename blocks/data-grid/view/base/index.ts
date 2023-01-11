@@ -51,6 +51,8 @@ export class DataGridView extends Block {
     noTitle: boolean = false;
     @prop()
     openRecordSource: Page['openSource'] = 'dialog';
+    @prop()
+    createRecordSource: Page['openSource'] = 'dialog';
     schema: TableSchema;
     relationSchemas: TableSchema[] = [];
     relationDatas: Map<string, any[]> = new Map();

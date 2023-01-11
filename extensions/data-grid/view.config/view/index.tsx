@@ -75,6 +75,17 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                     { text: '侧栏右侧', value: 'slide' },
                 ]
             },
+            {
+                text: '创建记录方式',
+                value: this.block.createRecordSource,
+                name: 'createRecordSource',
+                type: MenuItemType.select,
+                options: [
+                    { text: '页面', value: 'page' },
+                    { text: '对话框居中', value: 'dialog' },
+                    { text: '侧栏右侧', value: 'slide' },
+                ]
+            },
             { type: MenuItemType.divide },
             {
                 text: '选中方式',
@@ -160,6 +171,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
             if (item.name == 'size') self.block.onChangeSize(item.value)
             else if (item.name == 'noTitle') self.block.onUpdateProps({ noTitle: !item.checked }, { syncBlock: self.block, range: BlockRenderRange.self });
             else if (item.name == 'openRecordSource') self.block.onUpdateProps({ openRecordSource: item.value }, { syncBlock: self.block })
+            else if (item.name == 'createRecordSource') self.block.onUpdateProps({ createRecordSource: item.value }, { syncBlock: self.block })
             else if (item.name == 'showRowNum') self.block.onShowRowNum(item.checked);
             else if (item.name == 'checkRow') {
                 await self.block.onShowCheck(item.value);

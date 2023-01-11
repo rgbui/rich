@@ -240,10 +240,10 @@ export class DataGridViewConfig {
     async onOpenForm(this: DataGridView, rect: Rect) {
         this.dataGridTool.isOpenTool = true;
         var url: '/page/open' | '/page/dialog' | '/page/slide' = '/page/dialog';
-        if (this.openRecordSource == 'page') {
+        if (this.createRecordSource == 'page') {
             url = '/page/open';
         }
-        else if (this.openRecordSource == 'slide') {
+        else if (this.createRecordSource == 'slide') {
             url = '/page/slide';
         }
         var dialougPage: Page = await channel.air(url, {
@@ -251,9 +251,7 @@ export class DataGridViewConfig {
         })
         if (dialougPage) {
             var newRow = dialougPage.getSchemaRow();
-            if (newRow) {
-                await this.onAddRow(newRow, undefined, 'after')
-            }
+            if (newRow) await this.onAddRow(newRow, undefined, 'after')
         }
         if (url != '/page/open') await channel.air(url, { elementUrl: null });
         this.dataGridTool.isOpenTool = false;
