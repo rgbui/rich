@@ -275,4 +275,10 @@ export async function parseDom(dom: HTMLElement | Document) {
     else return parseBlock(dom as HTMLElement);
 }
 
+export async function parseHtml(html: string) {
+    let parser = new DOMParser();
+    var doc = parser.parseFromString(html, "text/html");
+    return await parseDom(doc)
+}
+
 

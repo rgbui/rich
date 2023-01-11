@@ -29,10 +29,8 @@ export class BlockButton extends Block {
     action: string = 'none';
     @prop()
     actionProps: Record<string, any> = {};
-
     @prop()
     ghost: boolean = false;
-
     @prop()
     buttonSize: 'default' | 'larger' | 'small' = 'default';
     get refBlock(): DataGridView {
@@ -233,7 +231,7 @@ export class BlockButton extends Block {
         });
         if (r?.item) {
             if (r.item.name == 'src') {
-                var g = await useIconPicker({ roundArea: rect },this.src);
+                var g = await useIconPicker({ roundArea: rect }, this.src);
                 if (g) {
                     self.onUpdateProps({ src: g }, { range: BlockRenderRange.self })
                 }
@@ -245,8 +243,8 @@ export class BlockButton extends Block {
     }
     @prop()
     content: string = '按钮';
-    get isLineGap(){
-        return  true
+    get isLineGap() {
+        return true
     }
 }
 @view('/button')

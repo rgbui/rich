@@ -170,5 +170,18 @@ export var util = {
     },
     getRandom(start: number, end: number) {
         return Math.round(Math.random() * (end - start) + start);
+    },
+    async readFileText(file: File) {
+        var reader = new FileReader();
+        return new Promise((resolve: (str: string) => void, reject) => {
+            reader.onloadend = function (evt) {
+                if (evt.target.readyState == FileReader.DONE) {
+                    // callback(evt.target.result);
+                    resolve(evt.target.result as string)
+                }
+            };
+            // 包含中文内容用gbk编码
+            reader.readAsText(file);
+        })
     }
 }
