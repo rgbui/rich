@@ -42,7 +42,13 @@ export class OriginField extends Block {
     get dataGrid() {
         return this.item.dataGrid;
     }
-    viewField: ViewField;
+    viewFieldId: string;
+    get viewField() {
+        return this.dataGrid.fields.find(g => g.id == this.viewFieldId);
+    }
+    set viewField(viewField: ViewField) {
+        this.viewFieldId = viewField.id;
+    }
     get field() {
         if (this.viewField) return this.viewField.field;
     }
