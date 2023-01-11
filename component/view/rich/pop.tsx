@@ -1,8 +1,8 @@
 import lodash from "lodash";
 import React, { CSSProperties } from "react";
 import { createPortal } from "react-dom";
-import { UserBasic } from "../../user/declare";
-import { Point, Rect } from "../../vector/point";
+import { Point, Rect } from "../../../src/common/vector/point";
+import { UserBasic } from "../../../types/user";
 
 export class RichPop extends React.Component<{
     searchUser?: (word: string) => Promise<Record<string, any>[]>,
@@ -25,8 +25,7 @@ export class RichPop extends React.Component<{
             })}
             {/* <SpinBox spin={this.loading}></SpinBox> */}
             {this.users.length == 0 && this.word && <div className="remark f-12">没有搜到用户</div>}
-        </div>,
-            document.body)
+        </div>, document.body)
     }
     el: HTMLElement;
     startEl: HTMLElement;

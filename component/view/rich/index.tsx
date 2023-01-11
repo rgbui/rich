@@ -4,8 +4,8 @@ import { RichPop } from "./pop";
 import { RichTool } from "./tool";
 import "./style.less";
 import { Anchor } from "./anchor";
-import { Rect } from "../../vector/point";
 import lodash from "lodash";
+import { Rect } from "../../../src/common/vector/point";
 
 /**
  * 

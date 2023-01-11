@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { Point, Rect } from "../../vector/point";
+import { Point, Rect } from "../../../src/common/vector/point";
 
 
 export class RichTool extends React.Component<{ click: (command: string, data: Record<string, any>) => void }> {
