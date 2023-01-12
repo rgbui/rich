@@ -16,8 +16,11 @@ export class FieldText extends OriginField {
 @view('/field/title')
 export class FieldTextView extends BlockView<FieldText>{
     render() {
-        return <div className='flex sy-field-title f-14'>
-            <span className="size-24 flex-center inline-flex"><Icon size={18} icon={getPageIcon({ pageType: PageLayoutType.doc, icon: this.block.item.dataRow['icon'] })}></Icon></span>
+        return <div className='flex-top sy-field-title f-14'>
+            <span className="size-20 flex-center inline-flex text-1"><Icon size={16} icon={getPageIcon({
+                pageType: PageLayoutType.doc,
+                icon: this.block.item.dataRow['icon']
+            })}></Icon></span>
             <TextArea block={this.block} prop='value' placeholder="标题" ></TextArea>
             {this.block.dataGrid.url == BlockUrlConstant.DataGridTable && <span onClick={e => this.block.openPage()} className="sy-field-title-button visible flex-center f-12 text-1 border  round padding-w-5 padding-h-2 cursor">
                 <em>打开</em>
