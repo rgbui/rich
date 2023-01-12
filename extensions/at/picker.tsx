@@ -80,7 +80,6 @@ export class UserPicker extends EventsComponent {
         this.forceUpdate();
         if (this.text) {
             var r = await channel.get('/ws/member/word/query', { word: this.text });
-
             if (r.ok) {
                 this.links = r.data.list.map(c => {
                     return {
