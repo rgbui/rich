@@ -41,8 +41,8 @@ export class FieldBlog extends OriginField {
 export class FieldBlogView extends BlockView<FieldBlog>{
     render() {
         return <div className='sy-field-blog' >
-            {this.block.value && <span className="link flex f-14 underline cursor item-hover">
-                <span className="flex-center flex-fixed size-24"><Icon icon={this.block.value.icon || PageSvg}></Icon></span>
+            {this.block.value && <span className="link flex f-14 cursor item-hover">
+                <span className="flex-center flex-fixed size-24"><Icon size={16} icon={this.block.value.icon || PageSvg}></Icon></span>
                 <span className="flex-auto">{this.block.value.text}</span>
             </span>}
         </div>
