@@ -33,6 +33,12 @@ export async function createFieldBlock(viewField: ViewField, block: TableStoreIt
                     viewField
                 }, block);
                 break;
+            case FieldType.rich:
+                cellContent = await BlockFactory.createBlock('/field/rich', page, {
+                    value: viewField.getValue(row),
+                    viewField
+                }, block);
+                break;
             case FieldType.autoIncrement:
             case FieldType.number:
                 cellContent = await BlockFactory.createBlock('/field/number', page, {

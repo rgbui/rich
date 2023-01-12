@@ -76,6 +76,7 @@ import "./data-grid/element/field/blog";
 import "./data-grid/element/field/formula";
 import "./data-grid/element/field/video";
 import "./data-grid/element/field/audio";
+import "./data-grid/element/field/rich";
 
 import "./data-grid/element/form/text";
 import "./data-grid/element/form/number";
@@ -86,6 +87,7 @@ import "./data-grid/element/form/check";
 import "./data-grid/element/form/image";
 import "./data-grid/element/form/file";
 import "./data-grid/element/form/relation";
+import "./data-grid/element/form/rich";
 
 import "./data-grid/element/filter/check";
 import "./data-grid/element/filter/date";

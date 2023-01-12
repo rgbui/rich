@@ -188,7 +188,10 @@ export enum FieldType {
    * 文章
    */
     blog = 8000,
-
+    /**
+     * 富文本
+     */
+    rich=9000,
 }
 
 export var sysFieldTypes: FieldType[] = [
