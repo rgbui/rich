@@ -78,18 +78,18 @@ export class TitleView extends BlockView<Title>{
     render() {
         var isAdd: boolean = this.block.page.isSupportCover;
         var pd = this.block.page.getPageDataInfo();
-        return <div className='sy-block-page-info visible-hover'  style={this.block.visibleStyle}>
-            <div className="min-h-72">{this.block.pageInfo?.icon && pd.cover?.abled !== true && <div onMouseDown={e => this.block.page.onChangeIcon(e)} className="sy-block-page-info-icon">
-                <Icon size={72} icon={this.block.pageInfo?.icon}></Icon>
+        return <div className='sy-block-page-info visible-hover' style={this.block.visibleStyle}>
+            <div className="min-h-72">{pd?.icon && pd.cover?.abled !== true && <div onMouseDown={e => this.block.page.onChangeIcon(e)} className="sy-block-page-info-icon">
+                <Icon size={72} icon={pd?.icon}></Icon>
             </div>}</div>
-            {isAdd && (!this.block.pageInfo?.icon || !pd.cover?.abled) && <div className='flex h-24 visible r-item-hover f-14 r-cursor r-gap-r-10 r-padding-w-6 r-padding-h-3 r-round remark r-flex-center gap-b-10' >
-                {!this.block.pageInfo?.icon && <a className="remark" onMouseDown={e => this.block.page.onAddIcon()}><Icon size={14} icon={AddPageIconSvg}></Icon><span className="gap-l-5">添加图标</span></a>}
-                {!pd.cover?.abled && <a  className="remark"  onMouseDown={e => this.block.page.onAddCover()}><Icon size={14} icon={AddPageCoverSvg}></Icon><span  className="gap-l-5">添加封面</span></a>}
+            {isAdd && (!pd?.icon || !pd.cover?.abled) && <div className='flex h-24 visible r-item-hover f-14 r-cursor r-gap-r-10 r-padding-w-6 r-padding-h-3 r-round remark r-flex-center gap-b-10' >
+                {!pd?.icon && <a className="remark" onMouseDown={e => { this.block.page.onAddIcon(); this.forceUpdate() }}><Icon size={14} icon={AddPageIconSvg}></Icon><span className="gap-l-5">添加图标</span></a>}
+                {!pd.cover?.abled && <a className="remark" onMouseDown={e => this.block.page.onAddCover()}><Icon size={14} icon={AddPageCoverSvg}></Icon><span className="gap-l-5">添加封面</span></a>}
             </div>}
-            {this.block.pageInfo == null && <div className='sy-block-page-info-loading'>
+            {!pd && <div className='sy-block-page-info-loading'>
                 <Spin></Spin>
             </div>}
-            {this.block.pageInfo != null && <div className='sy-block-page-info-head'>
+            {pd && <div className='sy-block-page-info-head'>
                 <span className='sy-block-page-info-head-title'><TextArea
                     block={this.block}
                     placeholder='输入标题'

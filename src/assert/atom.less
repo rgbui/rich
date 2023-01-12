@@ -42,7 +42,8 @@ flex-fixed:固定大小
     flex-wrap      : nowrap;
 }
 
-.flex-left-right,.flex-round {
+.flex-left-right,
+.flex-round {
     display        : flex;
     justify-content: space-between;
     align-items    : center;
@@ -72,7 +73,7 @@ flex-fixed:固定大小
     flex-wrap      : nowrap;
 }
 
-.flex-top-end{
+.flex-top-end {
     display        : flex;
     justify-content: flex-end;
     align-items    : flex-start;
@@ -80,10 +81,11 @@ flex-fixed:固定大小
 }
 
 .r-flex-center {
-    >* {
+    >*{
         display        : flex;
         justify-content: center;
         align-items    : center;
+        flex-wrap      : nowrap;
     }
 }
 
@@ -91,6 +93,7 @@ flex-fixed:固定大小
     display        : flex;
     justify-content: center;
     align-items    : center;
+    flex-wrap      : nowrap;
 }
 
 .flex-inline {
@@ -791,7 +794,7 @@ cursor鼠标
 宽度
 ***/
 
-@selectors: 1, 2,3,4, 5,6,7,8,9, 10, 12, 14, 16, 18, 20, 24, 26, 28, 30, 32, 36, 40, 48, 50, 60, 72, 80, 88, 90, 100, 120, 150, 160, 180, 200, 220, 240, 250, 270, 280, 300, 320, 350, 360, 400, 450, 480, 500, 540, 550, 600, 720, 750, 760, 800, 960;
+@selectors: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 24, 26, 28, 30, 32, 36, 40, 48, 50, 60, 72, 80, 88, 90, 100, 120, 150, 160, 180, 200, 220, 240, 250, 270, 280, 300, 320, 350, 360, 400, 450, 480, 500, 540, 550, 600, 720, 750, 760, 800, 960;
 
 each(@selectors, {
         .w-@{value} {
@@ -1178,7 +1181,7 @@ each(@ops, {
 size-24:图标大小
 **/
 
-@sizes: 1,2,3, 4,5,6,7, 8,9, 10,12, 14,15, 16, 18, 20, 24, 30, 32, 40, 48, 50, 70, 80, 90, 100, 120, 150, 200, 240, 300;
+@sizes: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 15, 16, 18, 20, 24, 30, 32, 40, 48, 50, 70, 80, 90, 100, 120, 150, 200, 240, 300;
 
 each(@sizes, {
         .r-size-@{value} {
