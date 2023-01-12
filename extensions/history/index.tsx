@@ -32,7 +32,7 @@ export class PageHistoryStore extends EventsComponent {
                         </a>
                     })}
                 </div>
-                <div className="shy-page-history-view">
+                <div className="shy-page-history-view relative">
                     {this.loadContent && <Loading></Loading>}
                     <div ref={e => this.el = e} className="shy-page-history-view-content"></div>
                 </div>

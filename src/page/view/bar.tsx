@@ -70,6 +70,7 @@ export class PageBar extends React.Component<{ page: Page }>{
         }
     }
     renderUsers() {
+        if (this.props.page.openSource == 'snap') return <></>
         if ([PageLayoutType.textChannel].includes(this.props.page.pageLayout.type)) return <></>
         return <div className="gap-r-10">
             <UserAvatars users={this.users}></UserAvatars>
@@ -79,6 +80,7 @@ export class PageBar extends React.Component<{ page: Page }>{
         location.href = 'https://shy.live/sign/in';
     }
     renderPropertys() {
+        if (this.props.page.openSource == 'snap') return <></>
         var user = channel.query('/query/current/user');
         var isSign = user.id ? true : false;
         var isField: boolean = false;
