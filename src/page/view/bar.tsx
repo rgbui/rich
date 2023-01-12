@@ -76,7 +76,7 @@ export class PageBar extends React.Component<{ page: Page }>{
         </div>
     }
     toLogin() {
-        location.href = 'https://shy.live';
+        location.href = 'https://shy.live/sign/in';
     }
     renderPropertys() {
         var user = channel.query('/query/current/user');
@@ -112,8 +112,8 @@ export class PageBar extends React.Component<{ page: Page }>{
             {isPublish && <span onMouseDown={e => this.props.page.onOpenPublish(e)} ><Icon size={18} icon={PublishSvg}></Icon></span>}
             {isContextMenu && <span onMouseDown={e => this.props.page.onPageContextmenu(e)} ><Icon size={18} icon={DotsSvg}></Icon></span>}
         </div>
-        else return <div className="flex r-flex-center r-size-24 r-item-hover r-round r-cursor r-gap-r-10 text-1">
-            <Button onClick={e => this.toLogin()}>登录</Button>
+        else return <div className="flex r-flex-center  r-gap-r-10 ">
+            <Button size="small" onClick={e => this.toLogin()}>登录</Button>
         </div>
     }
 
