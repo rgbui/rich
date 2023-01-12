@@ -85,14 +85,14 @@ export class DataGridFields extends EventsComponent {
         }
         return <div>
             <div className="max-h-200 overflow-y">
-                <div className="flex h-30 padding-w-14" style={{ paddingRight: 10 }}>
+                <div className="flex h-30 padding-w-14" >
                     <span className="remark flex-auto f-12">显示的字段</span>
                     <span onClick={e => onHideAll()} className="size-24 flex-center round ">
                         <Icon size={14} icon={EyeSvg}></Icon>
                     </span>
                 </div>
                 <DragList onChange={onChange} isDragBar={e => e.closest('.shy-table-field-view-item') && !e.closest('.eye') ? true : false} className="shy-table-field-view-items">{this.block.fields.map(f => {
-                    return <div className={"shy-table-field-view-item flex h-30 padding-w-10 cursor  item-hover"} key={f.fieldId || f.type}>
+                    return <div className={"shy-table-field-view-item flex h-30 padding-w-14 cursor  item-hover"} key={f.fieldId || f.type}>
                         <span className="size-24 round flex-center flex-fixed item-hover"> <em className={'drag'} ><Icon size={12} icon={DragHandleSvg}></Icon></em></span>
                         <span className="size-24 round flex-center flex-fixed"><Icon size={14} icon={GetFieldTypeSvg(f.field?.type)}></Icon></span>
                         <span className="flex-auto f-14">{f.text}</span>
@@ -101,14 +101,14 @@ export class DataGridFields extends EventsComponent {
                     </div>
                 })}</DragList>
                 {fs.length > 0 && <>
-                    <div className="flex h-30 padding-w-14" style={{ paddingRight: 10 }}>
+                    <div className="flex h-30 padding-w-14" >
                         <span className="remark flex-auto f-12">未显示的字段</span>
                         <span onClick={e => onShowAll()} className="size-24 flex-center round item-hover ">
                             <Icon size={14} icon={EyeHideSvg}></Icon>
                         </span>
                     </div>
                     <div className="shy-table-field-view-items">{fs.map(f => {
-                        return <div className={"flex h-30 padding-w-10 cursor item-hover"} key={f.id}>
+                        return <div className={"flex h-30 padding-w-14 cursor item-hover"} key={f.id}>
                             <span className="size-24 round flex-center flex-fixed"> <Icon size={14} icon={GetFieldTypeSvg(f.type)}></Icon></span>
                             <span className="flex-auto f-14">{f.text}</span>
                             <span className="size-24 round flex-center flex-fixed item-hover">   <Icon className={'eye'} size={14} onClick={async () => { await self.block.onShowField(f); self.forceUpdate() }} icon={EyeHideSvg}></Icon></span>
