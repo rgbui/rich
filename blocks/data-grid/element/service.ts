@@ -86,6 +86,11 @@ export function GetFieldFormBlockInfo(field: Field) {
                 fieldId: field.id
             }
             break;
+        case FieldType.rich:
+            return {
+                url: '/form/rich',
+                fieldId: field.id
+            }
     }
 }
 
