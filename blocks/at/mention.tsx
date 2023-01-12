@@ -1,10 +1,12 @@
 import React from "react";
 import { UserBox } from "../../component/view/avator/user";
+import { useUserPicker } from "../../extensions/at/picker";
 import { Block } from "../../src/block";
 import { BlockDisplay } from "../../src/block/enum";
 import { url, prop, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
 import { SolidArea } from "../../src/block/view/appear";
+import { Rect } from "../../src/common/vector/point";
 import "./style.less";
 
 @url('/user/mention')
@@ -12,8 +14,11 @@ export class ShyMention extends Block {
     @prop()
     userid: string = '';
     display = BlockDisplay.inline;
-    openUser(event: React.MouseEvent) {
-
+    async openUser(event: React.MouseEvent) {
+        var r = await useUserPicker({ roundArea: Rect.fromEvent(event) });
+        if (r) {
+            this.onUpdateProps({ userid: r.id })
+        }
     }
 }
 @view('/user/mention')
