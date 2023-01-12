@@ -314,10 +314,17 @@ export class PageEvent {
                 }
             }
         }
-        channel.air('/page/update/info', {
-            elementUrl: this.elementUrl,
-            pageInfo: data
-        })
+        
+        if (this.pageLayout.type == PageLayoutType.blog)
+            channel.air('/page/update/info', {
+                id: this.pageInfo.id,
+                pageInfo: data
+            })
+        else
+            channel.air('/page/update/info', {
+                elementUrl: this.elementUrl,
+                pageInfo: data
+            })
     }
     async onUpdatePageTitle(this: Page, text: string) {
         this.onceStopRenderByPageInfo = true;
@@ -336,12 +343,20 @@ export class PageEvent {
                 }
             }
         }
-        channel.air('/page/update/info', {
-            elementUrl: this.elementUrl,
-            pageInfo: {
-                text: text
-            }
-        })
+        if (this.pageLayout.type == PageLayoutType.blog)
+            channel.air('/page/update/info', {
+                id: this.pageInfo.id,
+                pageInfo: {
+                    text: text
+                }
+            })
+        else
+            channel.air('/page/update/info', {
+                elementUrl: this.elementUrl,
+                pageInfo: {
+                    text: text
+                }
+            })
     }
     async onUpdatePageCover(this: Page, data: Record<string, any>, isUpdate?: boolean) {
         /**
@@ -391,7 +406,7 @@ export class PageEvent {
     }
     async onChangeIcon(this: Page, event: React.MouseEvent) {
         event.stopPropagation();
-        var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) },this.pageInfo.icon);
+        var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) }, this.pageInfo.icon);
         if (typeof icon != 'undefined') {
             this.onUpdatePageData({ icon })
         }

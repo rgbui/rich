@@ -1,4 +1,6 @@
 import React from "react";
+import { PageSvg } from "../../../../component/svgs";
+import { Icon } from "../../../../component/view/icon";
 import { channel } from "../../../../net/channel";
 import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { url, view } from "../../../../src/block/factory/observable";
@@ -24,6 +26,8 @@ export class FieldBlog extends OriginField {
         });
         if (dialougPage.pageInfo) {
             var data = dialougPage.pageInfo.getItem();
+            data.description = await dialougPage.getPlain();
+            if (data.description.length > 1000) data.description = data.description.slice(0, 1000);
             self.value = data;
             this.onUpdateCellValue(this.value);
             this.forceUpdate();
@@ -37,7 +41,10 @@ export class FieldBlog extends OriginField {
 export class FieldBlogView extends BlockView<FieldBlog>{
     render() {
         return <div className='sy-field-blog' >
-            {this.block.value && <span className="link f-14 underline cursor">{this.block.value.text}</span>}
+            {this.block.value && <span className="link flex f-14 underline cursor item-hover">
+                <span className="flex-center flex-fixed size-24"><Icon icon={this.block.value.icon || PageSvg}></Icon></span>
+                <span className="flex-auto">{this.block.value.text}</span>
+            </span>}
         </div>
     }
 }
