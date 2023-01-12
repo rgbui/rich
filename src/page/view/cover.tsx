@@ -19,7 +19,7 @@ export class PageCover extends React.Component<{ page: Page }>{
             async function changeIcon(event: React.MouseEvent) {
                 if (!page.isCanEdit) return;
                 event.stopPropagation();
-                var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) },page.pageInfo.icon);
+                var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) }, page.pageInfo.icon);
                 if (typeof icon != 'undefined') {
                     page.onUpdatePageData({ icon });
                 }
@@ -42,6 +42,7 @@ export class PageCover extends React.Component<{ page: Page }>{
                 var currentTop = self.top;
                 MouseDragger({
                     event,
+                    cursor: 'grabbing',
                     moving(ev, data, isEnd) {
                         const dy = ev.pageY - event.pageY;
                         const z = (dy / 240) * 100;
@@ -68,7 +69,8 @@ export class PageCover extends React.Component<{ page: Page }>{
             }
             return <div className="shy-page-view-cover" onMouseDown={e => dragStart(e)}>
                 <img ref={e => this.img = e}
-                    onDragStart={e => false} onLoad={e => onloadSuccess()}
+                    onDragStart={e => false}
+                    onLoad={e => onloadSuccess()}
                     src={autoImageUrl(pd.cover.url)}
                     draggable={false}
                     style={{
