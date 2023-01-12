@@ -9,7 +9,6 @@ import { DataGridView } from "../../view/base";
 import { Field } from "../../schema/field";
 
 export class CardView extends React.Component<{ item: DataGridItemRecord | TableStoreItem, dataGrid: DataGridView | DataGridItemRecord }> {
-
     CardConfig() {
         if (this.props.dataGrid instanceof TableStoreGallery) {
             return this.props.dataGrid.cardConfig;
