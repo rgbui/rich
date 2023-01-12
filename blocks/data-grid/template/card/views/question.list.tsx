@@ -1,13 +1,9 @@
 import React from "react";
 import { ReactNode } from "react";
-import { useSelectMenuItem } from "../../../../../component/view/menu";
-import { MenuItemType } from "../../../../../component/view/menu/declare";
-import { IconArguments } from "../../../../../extensions/icon/declare";
-import { Rect } from "../../../../../src/common/vector/point";
 import { FieldType } from "../../../schema/type";
 import { CardModel, CardViewCom } from "../factory/observable";
 import { CardView } from "../view";
-import * as Card1 from "../../../../src/assert/img/card.1.png"
+import * as Card1 from "../../../../../src/assert/img/card.1.png"
 import { Button } from "../../../../../component/view/button";
 import { Icon } from "../../../../../component/view/icon";
 import { LoveSvg } from "../../../../../component/svgs";

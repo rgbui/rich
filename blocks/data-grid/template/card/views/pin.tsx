@@ -15,8 +15,7 @@ import { util } from "../../../../../util/util";
 import { FieldType } from "../../../schema/type";
 import { CardModel, CardViewCom } from "../factory/observable";
 import { CardView } from "../view";
-import * as Card1 from "../../../../src/assert/img/card.1.png"
-
+import * as Card1 from "../../../../../src/assert/img/card.1.png"
 
 CardModel({
     url: '/card/pinterest',

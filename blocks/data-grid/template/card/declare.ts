@@ -1,9 +1,6 @@
 import { FieldType } from "../../schema/type"
 import { CardView } from "./view";
-
-
 import "./views/pin"
-
 
 export type CardPropsType = {
     url: string,
