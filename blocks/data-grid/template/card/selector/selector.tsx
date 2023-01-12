@@ -1,8 +1,8 @@
 import React from "react";
 import { ReactNode } from "react";
-import { EventsComponent } from "../../../../component/lib/events.component";
-import { PopoverSingleton } from "../../../../extensions/popover/popover";
-import { PopoverPosition } from "../../../../extensions/popover/position";
+import { EventsComponent } from "../../../../../component/lib/events.component";
+import { PopoverSingleton } from "../../../../../extensions/popover/popover";
+import { PopoverPosition } from "../../../../../extensions/popover/position";
 import { CardPropsType } from "../declare";
 import { CardFactory } from "../factory/factory";
 

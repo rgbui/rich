@@ -5,7 +5,7 @@ import { prop, url, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
 import { ChildsArea } from "../../../src/block/view/appear";
 import { util } from "../../../util/util";
-import { CardFactory } from "../card/factory/factory";
+import { CardFactory } from "../template/card/factory/factory";
 import { TableSchema } from "../schema/meta";
 import { FieldType } from "../schema/type";
 import { ViewField } from "../schema/view";

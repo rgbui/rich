@@ -2,17 +2,17 @@
 
 import React from "react";
 import { ReactNode } from "react";
-import { DotsSvg, LoveSvg, TrashSvg, UploadSvg } from "../../../../component/svgs";
-import { Avatar } from "../../../../component/view/avator/face";
-import { UserBox } from "../../../../component/view/avator/user";
-import { Icon } from "../../../../component/view/icon";
-import { useSelectMenuItem } from "../../../../component/view/menu";
-import { MenuItemType } from "../../../../component/view/menu/declare";
-import { BackgroundColorList } from "../../../../extensions/color/data";
-import { IconArguments } from "../../../../extensions/icon/declare";
-import { Rect } from "../../../../src/common/vector/point";
-import { util } from "../../../../util/util";
-import { FieldType } from "../../schema/type";
+import { DotsSvg, LoveSvg, TrashSvg, UploadSvg } from "../../../../../component/svgs";
+import { Avatar } from "../../../../../component/view/avator/face";
+import { UserBox } from "../../../../../component/view/avator/user";
+import { Icon } from "../../../../../component/view/icon";
+import { useSelectMenuItem } from "../../../../../component/view/menu";
+import { MenuItemType } from "../../../../../component/view/menu/declare";
+import { BackgroundColorList } from "../../../../../extensions/color/data";
+import { IconArguments } from "../../../../../extensions/icon/declare";
+import { Rect } from "../../../../../src/common/vector/point";
+import { util } from "../../../../../util/util";
+import { FieldType } from "../../../schema/type";
 import { CardModel, CardViewCom } from "../factory/observable";
 import { CardView } from "../view";
 import * as Card1 from "../../../../src/assert/img/card.1.png"

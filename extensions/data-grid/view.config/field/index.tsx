@@ -15,14 +15,14 @@ import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare"
 import { FieldType } from "../../../../blocks/data-grid/schema/type";
 import { TableStoreGallery } from "../../../../blocks/data-grid/view/gallery";
 import { Button } from "../../../../component/view/button";
-import { useCardSelector } from "../../../../blocks/data-grid/card/selector/selector";
+import { useCardSelector } from "../../../../blocks/data-grid/template/card/selector/selector";
 import { BlockRenderRange } from "../../../../src/block/enum";
 import { SelectBox } from "../../../../component/view/select/box";
 import { CardConfig } from "../../../../blocks/data-grid/view/item/service";
 import { Field } from "../../../../blocks/data-grid/schema/field";
 import { ViewField } from "../../../../blocks/data-grid/schema/view";
 import { useSelectMenuItem } from "../../../../component/view/menu";
-import { CardFactory } from "../../../../blocks/data-grid/card/factory/factory";
+import { CardFactory } from "../../../../blocks/data-grid/template/card/factory/factory";
 
 export class DataGridFields extends EventsComponent {
     get schema() {

@@ -1,4 +1,4 @@
-import { FieldType } from "../schema/type"
+import { FieldType } from "../../schema/type"
 import { CardView } from "./view";
 
 

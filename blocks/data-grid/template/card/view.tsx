@@ -1,12 +1,12 @@
 import React from "react";
 
-import { TableStoreGallery } from "../view/gallery";
-import { TableStoreItem } from "../view/item";
-import { DataGridItemRecord } from "../element/record";
-import { useImageFilePicker } from "../../../extensions/file/image.picker";
-import { Rect } from "../../../src/common/vector/point";
-import { DataGridView } from "../view/base";
-import { Field } from "../schema/field";
+import { TableStoreGallery } from "../../view/gallery";
+import { TableStoreItem } from "../../view/item";
+import { DataGridItemRecord } from "../../element/record";
+import { useImageFilePicker } from "../../../../extensions/file/image.picker";
+import { Rect } from "../../../../src/common/vector/point";
+import { DataGridView } from "../../view/base";
+import { Field } from "../../schema/field";
 
 export class CardView extends React.Component<{ item: DataGridItemRecord | TableStoreItem, dataGrid: DataGridView | DataGridItemRecord }> {
 

@@ -3,7 +3,7 @@ import React from "react";
 import { Block } from "../../../../src/block";
 import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
-import { CardFactory } from "../../card/factory/factory";
+import { CardFactory } from "../../template/card/factory/factory";
 import { DataGridView } from "../base";
 import { DataGridTool } from "../components/tool";
 import { CardConfig } from "../item/service";
