@@ -295,6 +295,18 @@ export class BlockPicker {
                 }
                 var mc = ma.clone();
                 mc.rotate(r, center);
+
+                var willMatrix = block.currentMatrix.clone();
+                willMatrix.append(mc);
+                willMatrix.append(block.selfMatrix.inverted());
+                if (Math.abs(willMatrix.getRotation()) < 5) {
+                    var da = willMatrix.getRotation() - 5;
+                    r += da;
+                    mc = ma.clone();
+                    mc.rotate(r, center);
+                }
+
+
                 block.moveMatrix = mc;
                 block.updateRenderLines();
                 block.view.forceUpdate();
