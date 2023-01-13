@@ -5,14 +5,17 @@ import { Icon } from "../../component/view/icon";
 import { Input } from "../../component/view/input";
 import { SpinBox } from "../../component/view/spin";
 import { Tip } from "../../component/view/tooltip/tip";
+import { channel } from "../../net/channel";
 import { getEmoji } from "../../net/element.type";
 import { dom } from "../../src/common/dom";
 import { EmojiCode, emojiStore, EmojiType } from "./store";
 import "./style.less";
+const EMOJI_HISTORYS = '_emoji_historys';
 export class EmojiView extends React.Component<{ loaded?: () => void, onChange: (emoji: EmojiCode) => void }>{
     loading: boolean = true;
     private scrollIndex = 0;
     private scrollOver: boolean = false;
+    historyEmojis: EmojiCode[] = [];
     shouldComponentUpdate(nextProps, nextStates) {
         return false;
     }
@@ -21,16 +24,24 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
         this.props.onChange(e);
     }
     componentDidMount() {
-        this.loading = true;
-        emojiStore.get().then(r => {
-            this.emojis = r;
-            this.loading = false;
-            this.forceUpdate(() => {
-                if (typeof this.props.loaded == 'function') this.props.loaded()
-            });
-        })
+        this.load();
     }
-    onChange(code: EmojiCode) {
+    async load() {
+        this.loading = true;
+        this.forceUpdate();
+        var r = await emojiStore.get();
+        this.emojis = r;
+        this.loading = false;
+        var rs = await channel.query('/cache/get', { key: EMOJI_HISTORYS });
+        if (Array.isArray(rs) && rs.length > 0) this.historyEmojis = rs;
+        else this.historyEmojis = [];
+        this.forceUpdate();
+    }
+    async onChange(code: EmojiCode) {
+        if (!this.historyEmojis.some(s => s.code == code.code)) {
+            this.historyEmojis.push(code);
+            await channel.act('/cache/set', { key: EMOJI_HISTORYS, value: this.historyEmojis })
+        }
         this.props.onChange(code);
     }
     emojis: EmojiType[] = [];
@@ -38,6 +49,14 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
         if (this.loading == true) return <SpinBox></SpinBox>
         // var cs = this.emojis.lookup(x => x.category);
         var els: JSX.Element[] = [];
+        if (this.historyEmojis.length > 0) {
+            els.push(<div className='shy-emoji-view-category' key={'history'}>
+                <div className='shy-emoji-view-category-head'><span>{'category.name'}</span></div>
+                <div className='shy-emoji-view-category-emojis'>{this.historyEmojis.map(emoji => {
+                    return <Tip overlay={<>{emoji.name}</>} key={emoji.code}><span className="ef" onMouseDown={e => this.onChange(emoji)} dangerouslySetInnerHTML={{ __html: getEmoji(emoji.code) }}></span></Tip>
+                })}</div>
+            </div>)
+        }
         var i = 0;
         this.emojis.forEach(category => {
             if (i > this.scrollIndex) return <div key={category.id}></div>;
@@ -83,8 +102,7 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
     private searching: boolean = false;
     private searchEmojis: EmojiCode[] = [];
     loadSearch = lodash.debounce((w) => {
-        if (typeof w == 'string')
-            this.word = w;
+        if (typeof w == 'string') this.word = w;
         this.searchEmojis = [];
         this.searching = true;
         this.forceUpdate()
