@@ -67,7 +67,6 @@ export class DataGridViewOperator {
                 var field = this.schema.fields.find(g => g.id == fieldData.data.actions[0].id)
                 var vf = this.schema.createViewField(field);
                 await this.arrayPush({ prop: 'fields', data: vf, at });
-
                 this.data.forEach(row => {
                     var defaultValue = field.getDefaultValue();
                     if (typeof defaultValue != 'undefined')
@@ -298,6 +297,7 @@ export class DataGridViewOperator {
             to: viewId
         }, this);
         this.page.addUpdateEvent(async () => {
+            //console.log('nb', newBlock.syncBlockId, (newBlock as DataGridView).schemaView)
             bs.forEach(b => {
                 b.forceUpdate();
             })

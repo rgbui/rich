@@ -94,8 +94,8 @@ export class DataGridView extends Block {
     init(this: DataGridView): void {
         super.init();
         this.registerPropMeta('fields', undefined, true, (v) => {
-           var d= new ViewField(v, this.schema);
-           return d;
+            var d = new ViewField(v, this.schema);
+            return d;
         });
     }
     async load(this: DataGridView, data) {
@@ -262,7 +262,10 @@ export class DataGridView extends Block {
         }
     }
     async onAddCreateTableView() {
-        var dg = await useDataGridCreate({ roundArea: Rect.fromEle(this.el) }, { selectView: true });
+        var dg = await useDataGridCreate(
+            { roundArea: Rect.fromEle(this.el) },
+            { selectView: true }
+        );
         if (dg) {
             await this.onSchemaViewCreate(dg.text, dg.url);
         }
