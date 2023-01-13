@@ -26,7 +26,8 @@ export class RichView extends React.Component<{
     onPasteFiles?: (files: File[]) => void,
     onPasteUploadFields?: (files: File[]) => Promise<Record<string, any>[]>,
     onEnter?: () => void,
-    searchUser?: (word: string) => Promise<Record<string, any>[]>
+    searchUser?: (word: string) => Promise<Record<string, any>[]>,
+    allowUser?: boolean
 }>{
     richEl: HTMLElement;
     keydown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -35,37 +36,45 @@ export class RichView extends React.Component<{
         if (!isShift && key == 'enter' && this.props.allowNewLine !== true) {
             if (typeof this.props.onEnter == 'function') { this.props.onEnter(); }
             event.preventDefault();
+            this.inputEnter();
             return;
         }
-        if (key == '@') {
+        if (key == '@' && !(this.props.allowUser === false)) {
             var sel = window.getSelection();
             var rect = Rect.fromEle(sel.getRangeAt(0));
             this.pop.open(rect, sel.focusNode as HTMLElement, sel.focusOffset)
         }
         else if (key == ' ') {
             var isInputLink = this.inputLink();
-            if (isInputLink) return;
+            if (isInputLink) {
+                this.inputEnter();
+                return;
+            }
         }
         else if (key == 'backspace' || key == 'delete') {
             if (this.backspace()) {
                 event.preventDefault();
+                this.inputEnter();
                 return;
             }
         }
         if (this.inputMd(key)) {
             event.preventDefault();
+            this.inputEnter();
             return;
         }
         if (this.pop.visible == true) {
             var r = this.pop.keydown(key);
             if (r == true) {
                 event.preventDefault();
+                this.onInput();
                 return
             }
         }
         else if (key == 'enter') {
             event.preventDefault();
-            this.inputEnter()
+            this.inputEnter();
+            this.onInput();
         }
     }
     keyup = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -74,7 +83,7 @@ export class RichView extends React.Component<{
         }
     }
     input = (event: React.FormEvent<HTMLDivElement>) => {
-
+        this.onInput();
     }
     mousedown = (event: React.MouseEvent) => {
 
@@ -181,7 +190,6 @@ export class RichView extends React.Component<{
                 ref={e => this.richEl = e}
                 onKeyDown={this.keydown}
                 onInput={this.input}
-
                 onMouseDown={this.mousedown}
                 onMouseUp={this.mouseup}
                 onCompositionStart={e => { }}
@@ -413,7 +421,6 @@ export class RichView extends React.Component<{
             else soffset = sText instanceof Text ? sText.textContent.length : startEl.innerText.length;
         }
         else soffset = startOffset;
-
         var eText: Text;
         if (endEl instanceof Text) eText = endEl;
         else {
@@ -421,15 +428,12 @@ export class RichView extends React.Component<{
             if (c instanceof Text) eText = c;
             else eText = endEl as any;
         }
-
         var eoffset: number;
         if (typeof endOffset != 'number') {
             if (endOffset == 'start') eoffset = 0
             else eoffset = eText instanceof Text ? eText.textContent.length : endEl.innerText.length;
         } else eoffset = endOffset;
-
         sel.setBaseAndExtent(sText, soffset, eText, eoffset);
-
     }
     insertData(data: { mine: 'text' | 'user' | "file" | "icon", data: any }) {
         var anchor = Anchor.create(this.richEl);
@@ -544,6 +548,10 @@ export class RichView extends React.Component<{
     }
     getValue() {
         return this.richEl.innerHTML;
+    }
+    onInput() {
+        if (typeof this.props.onInput == 'function')
+            this.props.onInput(this.getValue())
     }
 }
 
