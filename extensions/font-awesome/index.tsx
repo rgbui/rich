@@ -1,8 +1,6 @@
 import React from "react";
 import { Tip } from "../../component/view/tooltip/tip";
 import { langProvider } from "../../i18n/provider";
-
-
 import { fontAwesomeStore } from "./store";
 import './style.less';
 import { FontAwesomeIconType, FontAwesomeType } from "./declare";
@@ -14,7 +12,8 @@ import { SpinBox } from "../../component/view/spin";
 import { Input } from "../../component/view/input";
 import { Icon } from "../../component/view/icon";
 import { RandomSvg } from "../../component/svgs";
-
+import { channel } from "../../net/channel";
+const FONT_AWESOME_HISTORYS = '_fontAwesome_historys';
 export class FontAwesomeView extends React.Component<{ loaded?: () => void, onChange: (data: { code: string, color?: string }) => void }> {
     shouldComponentUpdate(nextProps, nextStates) {
         return false;
@@ -25,23 +24,43 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
     private scrollIndex = 4;
     private scrollOver: boolean = false;
     componentDidMount() {
-        this.loading = true;
-        fontAwesomeStore.get().then(r => {
-            this.icons = r;
-            this.loading = false;
-            this.forceUpdate(() => {
-                if (typeof this.props.loaded == 'function') this.props.loaded()
-            });
-        })
+        this.load()
     }
-    private rs: string[] = [];
-    onChange(ic: FontAwesomeIconType) {
-        this.rs.push(ic.name);
+    historyFontAwesomes: FontAwesomeIconType[] = [];
+    async load() {
+        this.loading = true;
+        var r = await fontAwesomeStore.get();
+        this.icons = r;
+        this.loading = false;
+        var rs = await channel.query('/cache/get', { key: FONT_AWESOME_HISTORYS });
+        if (Array.isArray(rs) && rs.length > 0) this.historyFontAwesomes = rs;
+        else this.historyFontAwesomes = [];
+        this.forceUpdate(() => {
+            if (typeof this.props.loaded == 'function') this.props.loaded()
+        });
+    }
+    async onChange(ic: FontAwesomeIconType) {
+        if (!this.historyFontAwesomes.some(s => s.name == ic.name)) {
+            this.historyFontAwesomes.push(ic);
+            await channel.act('/cache/set', { key: FONT_AWESOME_HISTORYS, value: this.historyFontAwesomes })
+        }
         if (this.props.onChange) this.props.onChange({ code: ic.name, color: this.color });
     }
     renderFontAwesomes() {
+        var els: JSX.Element[] = [];
+        if (this.historyFontAwesomes.length > 0)
+            els.push(<div className='shy-font-awesome-category' key={'icon.name'}>
+                <div className='shy-font-awesome-category-head'><span>{''}</span></div>
+                <div className='shy-font-awesome-category-content'>
+                    {this.historyFontAwesomes.map(ic => {
+                        return <Tip overlay={langProvider.isCn ? ic.label : ic.name} key={ic.name}><a onMouseDown={e => this.onChange(ic)}>
+                            <i style={{ color: this.color }} className={'fa' + ' fa-' + ic.name}></i>
+                        </a></Tip>
+                    })}
+                </div>
+            </div>)
         if (this.scrollIndex > this.icons.length) this.scrollOver = true;
-        return this.icons.map((icon, i) => {
+        els.push(...this.icons.map((icon, i) => {
             if (i > this.scrollIndex) return <div key={icon.name}></div>;
             return <div className='shy-font-awesome-category' key={icon.name}>
                 <div className='shy-font-awesome-category-head'><span>{langProvider.isCn ? icon.text : icon.name}</span></div>
@@ -53,7 +72,8 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
                     })}
                 </div>
             </div>
-        })
+        }))
+        return els;
     }
     onSetFont(c) {
         this.color = c.color;
