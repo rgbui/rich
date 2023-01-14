@@ -26,6 +26,7 @@ import { GridMap } from "../page/grid";
 import { ElementType, getElementUrl } from "../../net/element.type";
 import { SnapshootBlockPos, SnapshootBlockPropPos } from "../history/snapshoot";
 import lodash from "lodash";
+import { Paging } from "../../blocks/data-grid/paging";
 
 
 export abstract class Block extends Events {
@@ -266,7 +267,7 @@ export abstract class Block extends Events {
     /**
      * 有间隔的行内块
      */
-    get isLineGap(){
+    get isLineGap() {
         return false;
     }
     get isLineSolid(): boolean {
@@ -542,7 +543,7 @@ export abstract class Block extends Events {
         }
         return this;
     }
-    get isShowHandleBlock(){
+    get isShowHandleBlock() {
         return true;
     }
     /**
@@ -696,6 +697,12 @@ export abstract class Block extends Events {
     }
     cancelReferenceBlocker(block: Block) {
         this.referenceBlockers.remove(g => g.id == block.id);
+    }
+    async onNotifyPageReferenceBlocks() {
+        var r = this.referenceBlockers.find(g => g instanceof Paging);
+        if (r) {
+            r.onSyncReferenceBlock();
+        }
     }
     async onNotifyReferenceBlocks() {
         await this.referenceBlockers.eachAsync(async b => {

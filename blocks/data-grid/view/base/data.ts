@@ -15,6 +15,8 @@ export class DataGridViewData {
             if (r.ok) {
                 var row: Block = this.blocks.childs.find(g => (g as TableStoreItem).dataRow.id == id);
                 if (row) await row.delete()
+                this.total -= 1;
+                this.onNotifyPageReferenceBlocks();
             }
         })
     }
@@ -57,6 +59,8 @@ export class DataGridViewData {
                 var at = this.data.findIndex(g => g.id == id);
                 if (arrow == 'after') at += 1;
                 this.data.insertAt(at, newRow);
+                this.total += 1;
+                this.onNotifyPageReferenceBlocks();
                 await this.createItem();
                 this.forceUpdate();
             }
