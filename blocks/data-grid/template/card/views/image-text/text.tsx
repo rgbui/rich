@@ -1,38 +1,41 @@
-import React from "react";
+import { CardModel, CardViewCom } from "../../factory/observable";
+import * as Card1 from "../../../../../../src/assert/img/card/card1.png"
 import { ReactNode } from "react";
-import { FieldType } from "../../../schema/type";
-import { CardModel, CardViewCom } from "../factory/observable";
-import { CardView } from "../view";
-import * as Card1 from "../../../../../src/assert/img/card/card1.png"
-import { Button } from "../../../../../component/view/button";
-import { Icon } from "../../../../../component/view/icon";
-import { LoveSvg } from "../../../../../component/svgs";
+import { LoveSvg } from "../../../../../../component/svgs";
+import { Button } from "../../../../../../component/view/button";
+import { FieldType } from "../../../../schema/type";
+import { CardView } from "../../view";
+import React from "react";
+import { Icon } from "../../../../../../component/view/icon";
 
 CardModel({
     title: '',
-    url: '/card/answer/list',
+    url: '/image-text/1',
     image: Card1.default,
-    group: 'text',
+    group: 'image-text',
     props: [
         { name: 'author', text: '作者', types: [FieldType.creater] },
-        { name: 'answer', text: '答案', types: [FieldType.text] },
+        { name: 'title', text: '标题', types: [FieldType.title, FieldType.text] },
+        { name: 'answer', text: '描述', types: [FieldType.text] },
         { name: 'like', text: '喜欢', types: [FieldType.like] },
         { name: 'like', text: '喜欢', types: [FieldType.oppose] },
         { name: 'like', text: '喜欢', types: [FieldType.love] },
         { name: 'comment', text: '评论', types: [FieldType.comment] }
     ]
 })
-@CardViewCom('/card/answer/list')
+@CardViewCom('/image-text/1')
 export class CardPin extends CardView {
     render(): ReactNode {
         var self = this;
         var author = this.getValue<string>('author');
-        var answer = this.getValue<string>('answer');
+        var title = this.getValue<string>('title');
+        var remark = this.getValue<string>('answer');
         var love = this.getValue<string>('like');
         var isLove = this.isEmoji('like')
         return <div className="w100" >
             <div>
-                <div>{author}</div>
+                <div><a>{title}</a></div>
+                <div>{remark}</div>
             </div>
             <div>
                 <Button></Button>

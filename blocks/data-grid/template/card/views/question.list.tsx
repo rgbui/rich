@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import { FieldType } from "../../../schema/type";
 import { CardModel, CardViewCom } from "../factory/observable";
 import { CardView } from "../view";
-import * as Card1 from "../../../../../src/assert/img/card.1.png"
+import * as Card1 from "../../../../../src/assert/img/card/card1.png"
 import { Button } from "../../../../../component/view/button";
 import { Icon } from "../../../../../component/view/icon";
 import { LoveSvg } from "../../../../../component/svgs";
@@ -12,6 +12,7 @@ CardModel({
     title: '',
     url: '/card/question/list',
     image: Card1.default,
+    group:'text',
     props: [
         { name: 'author', text: '作者', types: [FieldType.creater] },
         { name: 'title', text: '标题', types: [FieldType.title, FieldType.text] },
