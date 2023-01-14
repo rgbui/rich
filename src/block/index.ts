@@ -26,8 +26,6 @@ import { GridMap } from "../page/grid";
 import { ElementType, getElementUrl } from "../../net/element.type";
 import { SnapshootBlockPos, SnapshootBlockPropPos } from "../history/snapshoot";
 import lodash from "lodash";
-import { Paging } from "../../blocks/data-grid/paging";
-
 
 export abstract class Block extends Events {
     constructor(page: Page) {
@@ -699,7 +697,7 @@ export abstract class Block extends Events {
         this.referenceBlockers.remove(g => g.id == block.id);
     }
     async onNotifyPageReferenceBlocks() {
-        var r = this.referenceBlockers.find(g => g instanceof Paging);
+        var r = this.referenceBlockers.find(g => g.url == '/data-grid/paging');
         if (r) {
             r.onSyncReferenceBlock();
         }
