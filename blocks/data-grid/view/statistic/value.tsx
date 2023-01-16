@@ -1,10 +1,10 @@
 import React from "react";
-import { channel } from "../../../../net/channel";
 import { Block } from "../../../../src/block";
 import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { TableSchema } from "../../schema/meta";
 import { DataGridTurns } from "../../turn";
+
 @url('/data-grid/statistic/value')
 export class TableStatisticValue extends Block {
     @prop()
