@@ -103,6 +103,7 @@ import "./data-grid/paging/index";
 
 import "./at/date";
 import './at/mention';
+import "./at/now";
 
 import './page/link';
 import './page/title';

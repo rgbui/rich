@@ -47,7 +47,7 @@ export class Block$LifeCycle {
             refBlock.cancelReferenceBlocker(this);
         }
         if (typeof this.didUnmounted == 'function') await this.didUnmounted();
-        this.emit('mounted');
+        this.emit('umMounted');
     }
     async didMounted(this: Block) {
 
