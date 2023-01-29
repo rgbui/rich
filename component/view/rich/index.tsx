@@ -112,6 +112,7 @@ export class RichView extends React.Component<{
         if (text) {
             event.preventDefault();
             this.insertData({ mine: 'text', data: text })
+            this.onInput();
         }
         else if (files.length > 0) {
             if (typeof this.props.onPasteFiles == 'function')

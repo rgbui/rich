@@ -11,9 +11,9 @@ export class ShyNowDate extends Block {
     loadTime() {
         this.time = setTimeout(() => {
             this.forceUpdate()
-        }, 1000);
+        }, 1000) as any;
     }
-    time: NodeJS.Timeout;
+    time:number;
     async didMounted(): Promise<void> {
         this.loadTime()
     }

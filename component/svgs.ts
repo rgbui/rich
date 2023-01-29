@@ -203,6 +203,7 @@ import UnsplashSvg from "../src/assert/svg/unsplash.svg";
 import UploadSvg from "../src/assert/svg/upload.svg";
 import VersionHistorySvg from "../src/assert/svg/versionHistory.svg";
 import VideoSvg from "../src/assert/svg/video.svg";
+import WordSvg from "../src/assert/svg/word.svg";
 import WsSettingsSvg from "../src/assert/svg/wsSettings.svg";
 
 export  {
@@ -411,5 +412,6 @@ UnsplashSvg,
 UploadSvg,
 VersionHistorySvg,
 VideoSvg,
+WordSvg,
 WsSettingsSvg
 }
