@@ -34,7 +34,8 @@ import {
     TypesSelectSvg,
     TypesStringSvg,
     TypesTitleSvg,
-    VideoSvg
+    VideoSvg,
+    WordSvg
 } from "../../../component/svgs";
 import { MenuItemType } from "../../../component/view/menu/declare";
 
@@ -97,8 +98,9 @@ export function GetFieldTypeSvg(type: FieldType) {
         case FieldType.report:
             return ReportSvg
         case FieldType.blog:
-        case FieldType.rich:
             return BlogSvg;
+        case FieldType.rich:
+            return WordSvg;
         case FieldType.autoIncrement:
             return RowNoSvg
         case FieldType.title:

@@ -17,11 +17,11 @@ import * as Card2 from "../../../../../../src/assert/img/card/card2.png"
 import { util } from "../../../../../../util/util";
 
 CardModel({
-    url: '/card/pinterest',
+    url: '/image-text/pinterest',
     title: 'Pinterest瀑布流的形式展现图片内容',
     remark: '适用于摄影等图像展示',
     image: Card2.default,
-    group: 'image',
+    group: 'image-text',
     props: [
         {
             name: 'cover',
@@ -34,7 +34,7 @@ CardModel({
         { name: 'like', text: '喜欢', types: [FieldType.like] }
     ]
 })
-@CardViewCom('/card/pinterest')
+@CardViewCom('/image-text/pinterest')
 export class CardPin extends CardView {
     render(): ReactNode {
         var self = this;

@@ -4,7 +4,7 @@ import React from "react";
 import { DataGridView } from ".";
 
 import { ShyAlert } from "../../../../component/lib/alert";
-import { ArrowLeftSvg, ArrowRightSvg, HideSvg, ArrowDownSvg, ArrowUpSvg, FilterSvg, OptionsSvg, DuplicateSvg, TrashSvg, SettingsSvg, EditSvg, EmojiSvg, TypesSelectSvg, DotsSvg, PlusSvg, CheckSvg } from "../../../../component/svgs";
+import { ArrowLeftSvg, ArrowRightSvg, HideSvg, ArrowDownSvg, ArrowUpSvg, FilterSvg, OptionsSvg, DuplicateSvg, TrashSvg, SettingsSvg, EditSvg, EmojiSvg, TypesSelectSvg, DotsSvg, PlusSvg, CheckSvg, MaximizeSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import { useSelectMenuItem } from "../../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
@@ -280,6 +280,11 @@ export class DataGridViewField {
             }
             else if (viewField.field?.type == FieldType.relation) {
                 items.insertAt(4, {
+                    text: '打开关联表',
+                    name: 'openRelation',
+                    icon: MaximizeSvg
+                });
+                items.insertAt(5, {
                     text: '允许关联一对多',
                     type: MenuItemType.switch,
                     name: 'isMultiple',
@@ -520,6 +525,9 @@ export class DataGridViewField {
             }
             else if (re.item.name == 'config.imageFormat.multipleDisplay') {
                 await self.onUpdateFieldConfig(viewField.field, { 'imageFormat.multipleDisplay': re.item.value });
+            }
+            else if (re.item.name == 'openRelation') {
+                await self.onOpenSchemaPage(viewField.field.config.relationTableId)
             }
         }
         if (isSysField) {

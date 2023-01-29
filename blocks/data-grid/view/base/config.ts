@@ -29,6 +29,8 @@ import { useTabelSchemaFormDrop } from "../../../../extensions/data-grid/switch.
 import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { channel } from "../../../../net/channel";
 import { Page } from "../../../../src/page";
+import { Schema } from "react-markdown/lib/ast-to-react";
+import { TableSchema } from "../../schema/meta";
 
 export class DataGridViewConfig {
     async onOpenViewSettings(this: DataGridView, rect: Rect) {
@@ -263,7 +265,8 @@ export class DataGridViewConfig {
         this.dataGridTool.isOpenTool = false;
         this.onOver(this.getVisibleContentBound().contain(Point.from(this.page.kit.operator.moveEvent)))
     }
-    async onOpenSchemaItem(this: DataGridView, rect: Rect) {
-        await channel.air('/page/open', { elementUrl: getElementUrl(ElementType.Schema, this.schema.id) });
+    async onOpenSchemaPage(this: DataGridView, schema?: TableSchema | string) {
+        var s = schema ? (typeof schema == 'string' ? schema : schema.id) : this.schema.id;
+        await channel.air('/page/open', { elementUrl: getElementUrl(ElementType.Schema, s) });
     }
 }

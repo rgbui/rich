@@ -1,5 +1,5 @@
 import { CardModel, CardViewCom } from "../../factory/observable";
-import * as Card1 from "../../../../../../src/assert/img/card/card1.png"
+import * as Card3 from "../../../../../../src/assert/img/card/card3.png"
 import { ReactNode } from "react";
 import { LoveSvg } from "../../../../../../component/svgs";
 import { Button } from "../../../../../../component/view/button";
@@ -11,7 +11,7 @@ import { Icon } from "../../../../../../component/view/icon";
 CardModel({
     title: '',
     url: '/image-text/1',
-    image: Card1.default,
+    image: Card3.default,
     group: 'image-text',
     props: [
         { name: 'author', text: '作者', types: [FieldType.creater] },

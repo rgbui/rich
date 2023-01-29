@@ -31,6 +31,7 @@ export class TableSchema {
     }
     id: string
     url: string;
+    text: string;
     creater: string;
     createDate: Date;
     fields: Field[] = [];
@@ -60,7 +61,6 @@ export class TableSchema {
             FieldType.emoji
         ].includes(g.type))
     }
-    text: string;
     views: {
         id: string,
         text: string,
