@@ -40,7 +40,7 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                     <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => { e.stopPropagation(); props.block.onOpenViewProperty(Rect.fromEvent(e)) }}><Icon size={18} icon={DotsSvg}></Icon></label>
                     <div className="sy-dg-tool-operators-add">
                         <span className="padding-w-15 text-white" onClick={e => { e.stopPropagation(); props.block.onOpenForm(Rect.fromEvent(e)) }}>新增</span>
-                        <span className="icon" onClick={e => { e.stopPropagation(); props.block.onOpenFormDrop(Rect.fromEvent(e)) }}><Icon size={14} icon={ChevronDownSvg}></Icon></span>
+                        {/* <span className="icon" onClick={e => { e.stopPropagation(); props.block.onOpenFormDrop(Rect.fromEvent(e)) }}><Icon size={14} icon={ChevronDownSvg}></Icon></span> */}
                     </div>
                 </div>
             </div>}
@@ -62,7 +62,7 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                 <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => { e.stopPropagation(); props.block.onOpenViewProperty(Rect.fromEvent(e)) }}><Icon size={18} icon={DotsSvg}></Icon></label>
                 <div className="sy-dg-tool-operators-add">
                     <span className="padding-w-15 text-white" onClick={e => { e.stopPropagation(); props.block.onOpenForm(Rect.fromEvent(e)) }}>新增</span>
-                    <span className="icon" onClick={e => { e.stopPropagation(); props.block.onOpenFormDrop(Rect.fromEvent(e)) }}><Icon size={14} icon={ChevronDownSvg}></Icon></span>
+                    {/* <span className="icon" onClick={e => { e.stopPropagation(); props.block.onOpenFormDrop(Rect.fromEvent(e)) }}><Icon size={14} icon={ChevronDownSvg}></Icon></span> */}
                 </div>
             </div>}
         </div>

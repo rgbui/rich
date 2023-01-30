@@ -15,7 +15,8 @@ import {
     LoopSvg,
     UnlockSvg,
     PlusSvg,
-    DatasourceSvg
+    DatasourceSvg,
+    DocEditSvg
 } from "../../../../component/svgs";
 
 import { useSelectMenuItem } from "../../../../component/view/menu";
@@ -25,12 +26,13 @@ import { Rect, Point } from "../../../../src/common/vector/point";
 import { DataGridView } from ".";
 import { useDataGridConfig } from "../../../../extensions/data-grid/view.config";
 import { getSchemaViewIcon } from "../../schema/util";
-import { useTabelSchemaFormDrop } from "../../../../extensions/data-grid/switch.forms/view";
+// import { useTabelSchemaFormDrop } from "../../../../extensions/data-grid/switch.forms/view";
 import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { channel } from "../../../../net/channel";
 import { Page } from "../../../../src/page";
 import { Schema } from "react-markdown/lib/ast-to-react";
 import { TableSchema } from "../../schema/meta";
+import { BlockUrlConstant } from "../../../../src/block/constant";
 
 export class DataGridViewConfig {
     async onOpenViewSettings(this: DataGridView, rect: Rect) {
@@ -56,21 +58,37 @@ export class DataGridViewConfig {
                             type: MenuItemType.container,
                             drag: true,
                             name: 'viewContainer',
-                            childs: [...self.schema.views.map(v => {
-                                return {
-                                    name: 'turn',
-                                    text: v.text,
-                                    type: MenuItemType.drag,
-                                    value: v.id,
-                                    icon: getSchemaViewIcon(v.url),
-                                    checkLabel: v.id == self.schemaView?.id,
-                                    btns: [
-                                        { icon: DotsSvg, name: 'property' }
-                                    ]
-                                }
-                            }),
-                            { type: MenuItemType.divide },
-                            { name: 'addView', type: MenuItemType.button, text: '创建视图' }
+                            childs: [
+                                { type: MenuItemType.text, text: '视图' },
+                                ...self.schema.views.findAll(c => c.url != BlockUrlConstant.FormView).map(v => {
+                                    return {
+                                        name: 'turn',
+                                        text: v.text,
+                                        type: MenuItemType.drag,
+                                        value: v.id,
+                                        icon: getSchemaViewIcon(v.url),
+                                        checkLabel: v.id == self.schemaView?.id,
+                                        btns: [
+                                            { icon: DotsSvg, name: 'property' }
+                                        ]
+                                    }
+                                }),
+                                { type: MenuItemType.text, text: '表单' },
+                                ...self.schema.views.findAll(c => c.url == BlockUrlConstant.FormView).map(v => {
+                                    return {
+                                        name: 'turnForm',
+                                        text: v.text,
+                                        type: MenuItemType.drag,
+                                        value: v.id,
+                                        icon: DocEditSvg,
+                                        checkLabel: v.id == self.schemaView?.id,
+                                        btns: [
+                                            { icon: DotsSvg, name: 'propertyForm' }
+                                        ]
+                                    }
+                                }),
+                                { type: MenuItemType.divide },
+                                { name: 'addView', type: MenuItemType.button, text: '创建视图' }
                             ]
                         }
                     ]
@@ -259,12 +277,12 @@ export class DataGridViewConfig {
         this.dataGridTool.isOpenTool = false;
         this.onOver(this.getVisibleContentBound().contain(Point.from(this.page.kit.operator.moveEvent)))
     }
-    async onOpenFormDrop(this: DataGridView, rect: Rect) {
-        this.dataGridTool.isOpenTool = true;
-        await useTabelSchemaFormDrop({ roundArea: rect }, { block: this });
-        this.dataGridTool.isOpenTool = false;
-        this.onOver(this.getVisibleContentBound().contain(Point.from(this.page.kit.operator.moveEvent)))
-    }
+    // async onOpenFormDrop(this: DataGridView, rect: Rect) {
+    //     this.dataGridTool.isOpenTool = true;
+    //     await useTabelSchemaFormDrop({ roundArea: rect }, { block: this });
+    //     this.dataGridTool.isOpenTool = false;
+    //     this.onOver(this.getVisibleContentBound().contain(Point.from(this.page.kit.operator.moveEvent)))
+    // }
     async onOpenSchemaPage(this: DataGridView, schema?: TableSchema | string) {
         var s = schema ? (typeof schema == 'string' ? schema : schema.id) : this.schema.id;
         await channel.air('/page/open', { elementUrl: getElementUrl(ElementType.Schema, s) });

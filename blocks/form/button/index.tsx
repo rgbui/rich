@@ -8,6 +8,7 @@ import { BoxTip } from "../../../component/view/tooltip/box";
 import { useIconPicker } from "../../../extensions/icon";
 import { IconArguments } from "../../../extensions/icon/declare";
 import { Block } from "../../../src/block";
+import { BlockUrlConstant } from "../../../src/block/constant";
 import { BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { BlockView } from "../../../src/block/view";
@@ -88,10 +89,10 @@ export class BlockButton extends Block {
                                 text: '选择批量处理视图',
                                 type: MenuItemType.text
                             },
-                            ...schema.recordViews.map(rv => {
+                            ...schema.views.findAll(c=>c.url==BlockUrlConstant.FormView).map(rv => {
                                 return {
-                                    text: rv.text,
-                                    name: 'batchEdit',
+                                    text:rv.text,
+                                    name:'batchEdit',
                                     checkLabel: this.action == 'batchEdit' && this.actionProps.viewId == rv.id ? true : false,
                                     value: { action: 'batchEdit', actionProps: { viewId: rv.id } }
                                 }
@@ -104,7 +105,7 @@ export class BlockButton extends Block {
                         text: '添加',
                         childs: [
                             { text: '选择添加视图', type: MenuItemType.text },
-                            ...schema.recordViews.map(rv => {
+                            ...schema.views.map(rv => {
                                 return {
                                     text: rv.text,
                                     name: 'add',

@@ -8,6 +8,7 @@ import {
     CollectionListSvg,
     CollectTableSvg,
     CommentSvg,
+    DocEditSvg,
     EmojiSvg,
     FlagSvg,
     LikeSvg,
@@ -38,6 +39,7 @@ import {
     WordSvg
 } from "../../../component/svgs";
 import { MenuItemType } from "../../../component/view/menu/declare";
+import { BlockUrlConstant } from "../../../src/block/constant";
 
 export function GetFieldTypeSvg(type: FieldType) {
     switch (type) {
@@ -127,6 +129,9 @@ export function getSchemaViewIcon(url: string) {
         case '/data-grid/calendar':
             return CollectionCalendarSvg
             break;
+        case BlockUrlConstant.FormView:
+            return DocEditSvg;
+            break;
     }
 }
 
@@ -136,7 +141,8 @@ export function getSchemaViews() {
         { url: '/data-grid/gallery', text: '卡片' },
         { url: '/data-grid/board', text: '看板' },
         { url: '/data-grid/list', text: '列表' },
-        { url: '/data-grid/calendar', text: '日历' }
+        { url: '/data-grid/calendar', text: '日历' },
+        { url: BlockUrlConstant.FormView, text: '表单' }
     ]
 }
 

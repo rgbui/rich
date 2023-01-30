@@ -37,7 +37,8 @@ export enum BlockUrlConstant {
     Comment = '/comments',
     FieldTitle = '/field/title',
     Image = '/image',
-    BoardImage = '/board/image'
+    BoardImage = '/board/image',
+    FormView = '/data-grid/form'
 }
 export enum BlockChildKey {
     childs = 'childs',

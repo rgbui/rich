@@ -224,7 +224,7 @@ export class PageContextmenu {
             // ];
         }
         else if (this.pageLayout.type == PageLayoutType.dbForm) {
-            var rv = this.schema.recordViews.find(g => g.id == this.recordViewId);
+            var rv = this.schema.views.find(g => g.id == this.scheamViewId);
             items = [
                 { name: 'smallText', text: '小字号', checked: this.smallFont ? true : false, type: MenuItemType.switch },
                 { name: 'fullWidth', text: '宽版', checked: this.isFullWidth ? true : false, type: MenuItemType.switch },

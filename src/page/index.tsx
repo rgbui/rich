@@ -167,9 +167,9 @@ export class Page extends Events<PageDirective> {
         return this.matrix.getScaling().x;
     }
     schema: TableSchema;
-    get recordViewId() {
-        return parseElementUrl(this.elementUrl).id1
-    }
+    // get recordViewId() {
+    //     return parseElementUrl(this.elementUrl).id1
+    // }
     get scheamViewId() {
         return parseElementUrl(this.elementUrl).id1
     }

@@ -28,7 +28,7 @@ export class DataGridCreate extends EventsComponent {
                     </div>
                 })}
             </div>}
-            <div className="gap-w-10"><Button block onClick={e => this.onChange()}>创建</Button></div>
+            <div className="gap-w-10 gap-t-10"><Button block onClick={e => this.onChange()}>创建</Button></div>
         </div>
     }
     selectView: boolean = false;
@@ -46,9 +46,8 @@ export class DataGridCreate extends EventsComponent {
     text: string = '';
     url: string = '';
     onChange() {
-        if (this.text) {
-            this.emit('save', { text: this.text, url: this.url });
-        }
+        var text = this.text ? this.text : getSchemaViews().find(c => c.url == this.url)?.text;
+        this.emit('save', { text: text, url: this.url });
     }
 }
 

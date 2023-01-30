@@ -213,7 +213,6 @@ export class PageEvent {
     onFitZoom(this: Page) {
         this.gridMap.start();
         var bound = this.gridMap.gridRange();
-
         var matrix = new Matrix();
         var center = bound.middleCenter;
         var point = bound.leftTop;
@@ -304,17 +303,17 @@ export class PageEvent {
                 Object.assign(this.formRowData, data);
             }
             else {
-                var sr = this.schema.recordViews.find(g => g.id == this.recordViewId);
+                var sr = this.schema.views.find(g => g.id == this.scheamViewId);
                 if (sr) {
                     await this.schema.onSchemaOperate([{
                         name: "updateSchemaRecordView",
                         data: data,
-                        id: this.recordViewId,
+                        id: this.scheamViewId,
                     }])
                 }
             }
         }
-        
+
         if (this.pageLayout.type == PageLayoutType.blog)
             channel.air('/page/update/info', {
                 id: this.pageInfo.id,
@@ -333,11 +332,11 @@ export class PageEvent {
                 this.formRowData.title = text;
             }
             else {
-                var sr = this.schema.recordViews.find(g => g.id == this.recordViewId);
+                var sr = this.schema.views.find(g => g.id == this.scheamViewId);
                 if (sr) {
                     await this.schema.onSchemaOperate([{
                         name: "updateSchemaRecordView",
-                        id: this.recordViewId,
+                        id: this.scheamViewId,
                         data: { text }
                     }])
                 }
@@ -379,7 +378,7 @@ export class PageEvent {
                 }
             }
             else {
-                var sr = this.schema.recordViews.find(g => g.id == this.recordViewId);
+                var sr = this.schema.views.find(g => g.id == this.scheamViewId);
                 if (sr) {
                     return {
                         id: sr.id,

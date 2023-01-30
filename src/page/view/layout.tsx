@@ -33,9 +33,9 @@ export class PageLayoutView extends React.Component<{
         else if (type == PageLayoutType.dbForm) {
             var style: CSSProperties = { minHeight: mh, width: '100%' };
             return <div className={"shy-page-layout shy-page-layout-db-form"} style={style}>
-                {props.page.recordViewTemplate && <div className="bg flex-center round">
+                {/* {props.page.recordViewTemplate && <div className="bg flex-center round">
                     编辑模板<span>{props.page.schema.recordViews.find(c => c.id == props.page.recordViewId)?.text}</span>
-                </div>}
+                </div>} */}
                 {props.children}
             </div>
         }

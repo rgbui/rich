@@ -72,27 +72,29 @@ export class TableSchema {
             userid: string
         }
     }[] = [];
-    recordViews: {
-        id: string,
-        text: string,
-        icon: IconArguments,
-        locker?: {
-            lock: boolean,
-            date: number,
-            userid: string
-        },
-        type?: 'form' | 'card'
-    }[] = [];
+    // recordViews: {
+    //     id: string,
+    //     text: string,
+    //     icon: IconArguments,
+    //     locker?: {
+    //         lock: boolean,
+    //         date: number,
+    //         userid: string
+    //     },
+    //     type?: 'form' | 'card'
+    // }[] = [];
     defaultCollectFormId: string = '';
     defaultEditFormId: string = '';
     get defaultEditForm() {
-        var rv = this.defaultEditFormId ? this.recordViews.find(g => g.id == this.defaultEditFormId) : this.recordViews.first()
-        if (!rv) rv = this.recordViews.first();
+        var rv = this.defaultEditFormId ? this.views.find(g => g.id == this.defaultEditFormId) : this.views.find(g => g.url == '/data-grid/form')
+        if (!rv) rv = this.views.find(g => g.url == '/data-grid/form')
+
         return rv;
     }
     get defaultAddForm() {
-        var rv = this.defaultCollectFormId ? this.recordViews.find(g => g.id == this.defaultCollectFormId) : this.recordViews.first()
-        if (!rv) rv = this.recordViews.first();
+        var rv = this.defaultCollectFormId ? this.views.find(g => g.id == this.defaultCollectFormId) : this.views.find(g => g.url == '/data-grid/form')
+        if (!rv) rv = this.views.find(g => g.url == '/data-grid/form')
+
         return rv;
     }
     getViewFields() {
@@ -236,22 +238,17 @@ export class TableSchema {
         actions.forEach((action, i) => {
             var re = result.data.actions[i];
             switch (action.name) {
-                case 'removeSchemaView':
-                    this.views.remove(g => g.id == action.id);
-                    break;
+                case 'removeSchemaView': 
                 case 'removeSchemaRecordView':
-                    this.recordViews.remove(g => g.id == action.id);
+                    this.views.remove(g => g.id == action.id);
+                    // break;
+                    // this.recordViews.remove(g => g.id == action.id);
                     break;
                 case 'updateSchemaView':
+                case 'updateSchemaRecordView':
                     var view = this.views.find(g => g.id == action.id);
                     if (view) {
                         Object.assign(view, action.data);
-                    }
-                    break;
-                case 'updateSchemaRecordView':
-                    var vi = this.recordViews.find(g => g.id == action.id);
-                    if (vi) {
-                        Object.assign(vi, action.data);
                     }
                     break;
                 case 'changeSchemaView':

@@ -98,8 +98,9 @@ import "./data-grid/element/filter/search";
 import "./data-grid/element/filter/sort";
 import "./data-grid/element/filter/user";
 import "./data-grid/element/filter/option";
-
 import "./data-grid/paging/index";
+import "./data-grid/view/form/index";
+
 
 import "./at/date";
 import './at/mention';
