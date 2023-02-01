@@ -32,6 +32,7 @@ export class BlockFactory {
                 else data.url = pb.url;
                 await newBlock.load(Object.assign(pb.data, data));
             }
+            if (typeof newBlock.initialedLoad == 'function') await newBlock.initialedLoad();
             return newBlock;
         }
         else throw new Exception(ExceptionType.notFoundBlockUrl, 'not found block class:' + url)
