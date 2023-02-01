@@ -2,10 +2,12 @@ import React from "react";
 import { TrashSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import { Block } from "../../../../src/block";
+import { BlockUrlConstant } from "../../../../src/block/constant";
 import { BlockDisplay } from "../../../../src/block/enum";
 import { prop } from "../../../../src/block/factory/observable";
 import { PageLayoutType } from "../../../../src/page/declare";
 import { GetFieldTypeSvg } from "../../schema/util";
+import { DataGridForm } from "../../view/form";
 import "./style.less";
 
 export class OriginFormField extends Block {
@@ -15,6 +17,8 @@ export class OriginFormField extends Block {
         if (this.page.pageLayout.type == PageLayoutType.dbForm && this.page.schema) {
             return this.page.schema.fields.find(g => g.id == this.fieldId);
         }
+        var c = this.closest(x => x.url == BlockUrlConstant.FormView) as DataGridForm;
+        if (c.schema) return c.schema.fields.find(g => g.id == this.fieldId);
     }
     @prop()
     fieldId: string;

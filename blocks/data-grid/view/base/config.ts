@@ -30,7 +30,6 @@ import { getSchemaViewIcon } from "../../schema/util";
 import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { channel } from "../../../../net/channel";
 import { Page } from "../../../../src/page";
-import { Schema } from "react-markdown/lib/ast-to-react";
 import { TableSchema } from "../../schema/meta";
 import { BlockUrlConstant } from "../../../../src/block/constant";
 
@@ -59,8 +58,7 @@ export class DataGridViewConfig {
                             drag: true,
                             name: 'viewContainer',
                             childs: [
-                                { type: MenuItemType.text, text: '视图' },
-                                ...self.schema.views.findAll(c => c.url != BlockUrlConstant.FormView).map(v => {
+                                ...self.schema.views.map(v => {
                                     return {
                                         name: 'turn',
                                         text: v.text,
@@ -70,20 +68,6 @@ export class DataGridViewConfig {
                                         checkLabel: v.id == self.schemaView?.id,
                                         btns: [
                                             { icon: DotsSvg, name: 'property' }
-                                        ]
-                                    }
-                                }),
-                                { type: MenuItemType.text, text: '表单' },
-                                ...self.schema.views.findAll(c => c.url == BlockUrlConstant.FormView).map(v => {
-                                    return {
-                                        name: 'turnForm',
-                                        text: v.text,
-                                        type: MenuItemType.drag,
-                                        value: v.id,
-                                        icon: DocEditSvg,
-                                        checkLabel: v.id == self.schemaView?.id,
-                                        btns: [
-                                            { icon: DotsSvg, name: 'propertyForm' }
                                         ]
                                     }
                                 }),

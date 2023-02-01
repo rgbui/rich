@@ -275,7 +275,7 @@ export class DataGridViewOperator {
             })
         }
     }
-    async dataGridTrunView(this: DataGridView, viewId: string, schemaId?: string) {
+    async dataGridTrunView(this: DataGridView,viewId: string, schemaId?: string) {
         var oldViewId = this.syncBlockId;
         if (!this.schema) {
             await this.loadSchema();

@@ -14,6 +14,7 @@ import {
 } from "../../../../component/svgs";
 import "./style.less";
 import { PageLayoutType } from "../../../../src/page/declare";
+import { DataGridForm } from "../form";
 export class DataGridTool extends React.Component<{ block: DataGridView }>{
     isOpenTool: boolean = false;
     render() {
@@ -68,5 +69,8 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
         </div>
     }
 }
+
+
+
 
 

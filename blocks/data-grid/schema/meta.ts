@@ -65,6 +65,7 @@ export class TableSchema {
         id: string,
         text: string,
         icon: IconArguments,
+        description:string,
         url: string,
         locker: {
             lock: boolean,
