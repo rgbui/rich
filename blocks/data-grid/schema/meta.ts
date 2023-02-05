@@ -2,6 +2,7 @@ import lodash from "lodash";
 import { MergeSock } from "../../../component/lib/merge.sock";
 import { CoverMask, IconArguments } from "../../../extensions/icon/declare";
 import { channel } from "../../../net/channel";
+import { BlockUrlConstant } from "../../../src/block/constant";
 import { Field } from "./field";
 import { FieldType } from "./type";
 import { ViewField } from "./view";
@@ -65,37 +66,28 @@ export class TableSchema {
         id: string,
         text: string,
         icon: IconArguments,
-        description:string,
+        description: string,
         url: string,
+        /**
+         * 表单，是否允许上传
+         */
+        allowUserMultiple?: boolean,
         locker: {
             lock: boolean,
             date: number,
             userid: string
         }
     }[] = [];
-    // recordViews: {
-    //     id: string,
-    //     text: string,
-    //     icon: IconArguments,
-    //     locker?: {
-    //         lock: boolean,
-    //         date: number,
-    //         userid: string
-    //     },
-    //     type?: 'form' | 'card'
-    // }[] = [];
     defaultCollectFormId: string = '';
     defaultEditFormId: string = '';
     get defaultEditForm() {
-        var rv = this.defaultEditFormId ? this.views.find(g => g.id == this.defaultEditFormId) : this.views.find(g => g.url == '/data-grid/form')
-        if (!rv) rv = this.views.find(g => g.url == '/data-grid/form')
-
+        var rv = this.defaultEditFormId ? this.views.find(g => g.id == this.defaultEditFormId) : this.views.find(g => g.url == BlockUrlConstant.FormView)
+        if (!rv) rv = this.views.find(g => g.url == BlockUrlConstant.FormView)
         return rv;
     }
     get defaultAddForm() {
-        var rv = this.defaultCollectFormId ? this.views.find(g => g.id == this.defaultCollectFormId) : this.views.find(g => g.url == '/data-grid/form')
-        if (!rv) rv = this.views.find(g => g.url == '/data-grid/form')
-
+        var rv = this.defaultCollectFormId ? this.views.find(g => g.id == this.defaultCollectFormId) : this.views.find(g => g.url == BlockUrlConstant.FormView)
+        if (!rv) rv = this.views.find(g => g.url == BlockUrlConstant.FormView)
         return rv;
     }
     getViewFields() {
@@ -239,7 +231,7 @@ export class TableSchema {
         actions.forEach((action, i) => {
             var re = result.data.actions[i];
             switch (action.name) {
-                case 'removeSchemaView': 
+                case 'removeSchemaView':
                 case 'removeSchemaRecordView':
                     this.views.remove(g => g.id == action.id);
                     // break;

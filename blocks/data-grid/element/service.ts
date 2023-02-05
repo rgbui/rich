@@ -1,17 +1,13 @@
+import { ElementType, parseElementUrl } from "../../../net/element.type";
+import { BlockUrlConstant } from "../../../src/block/constant";
 import { PageLayoutType } from "../../../src/page/declare";
 import { Field } from "../schema/field";
 import { TableSchema } from "../schema/meta";
 import { FieldType } from "../schema/type";
 
-export function SchemaCreatePageFormData(schema: TableSchema, isRecord?: boolean) {
-    var cs: Record<string, any>[] = schema.initUserFields.toArray(field => {
-        if (isRecord && field.type == FieldType.title) return;
-        var r = GetFieldFormBlockInfo(field);
-        if (r) return r;
-    })
-    cs.splice(0, 0, {
-        url: '/title'
-    });
+export function SchemaCreatePageFormData(schema: TableSchema, elementUrl: string, isRecord?: boolean) {
+    var pe = parseElementUrl(elementUrl);
+    var syncBlockId = pe.id1
     return {
         url: '/page',
         pageLayout: { type: PageLayoutType.dbForm },
@@ -19,7 +15,7 @@ export function SchemaCreatePageFormData(schema: TableSchema, isRecord?: boolean
             {
                 url: '/view',
                 blocks: {
-                    childs: cs
+                    childs: [{ url: BlockUrlConstant.FormView, schemaId: schema.id, syncBlockId }]
                 }
             }
         ]
