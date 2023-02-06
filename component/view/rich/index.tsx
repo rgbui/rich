@@ -6,15 +6,10 @@ import "./style.less";
 import { Anchor } from "./anchor";
 import lodash from "lodash";
 import { Rect } from "../../../src/common/vector/point";
+import { PopoverPosition } from "../../../extensions/popover/position";
+import { PopoverSingleton } from "../../../extensions/popover/popover";
 
-/**
- * 
- * rich format:
- * text
- * <p><span></span></p>
- *  
- */
-export class RichView extends React.Component<{
+export type RichOptions = {
     placeholder?: string,
     disabled?: boolean,
     readonly?: boolean,
@@ -28,7 +23,16 @@ export class RichView extends React.Component<{
     onEnter?: () => void,
     searchUser?: (word: string) => Promise<Record<string, any>[]>,
     allowUser?: boolean
-}>{
+}
+
+/**
+ * 
+ * rich format:
+ * text
+ * <p><span></span></p>
+ *  
+ */
+export class RichView extends React.Component<RichOptions>{
     richEl: HTMLElement;
     keydown = (event: React.KeyboardEvent<HTMLDivElement>) => {
         var key = event.key.toLowerCase();
@@ -556,3 +560,28 @@ export class RichView extends React.Component<{
     }
 }
 
+
+export class RichViewBox extends React.Component {
+    options: RichOptions
+    open(options: RichOptions) {
+        this.options = options;
+        this.forceUpdate();
+    }
+    render(): React.ReactNode {
+        if (!this.options) return <></>
+        return this.options && <div className="padding-14 round w-400 h-300 overflow-y"><RichView height={300} {...this.options}></RichView></div>
+    }
+}
+
+
+export async function useRichView(props: RichOptions) {
+    var pos: PopoverPosition = { center: true, centerTop: 100 };
+    let popover = await PopoverSingleton(RichViewBox, { mask: true, shadow: true });
+    let fv = await popover.open(pos);
+    fv.open(props);
+    return new Promise((resolve: (count: number) => void, reject) => {
+        popover.only('close', () => {
+            resolve(null);
+        });
+    })
+}

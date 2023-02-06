@@ -1,18 +1,20 @@
 .shy-rich-view {
     &:empty::after {
-        content: attr(data-placeholder);
+        content  : attr(data-placeholder);
         font-size: 14px;
-        color:rgba(0,0,0,0.1)
+        color    : rgba(0, 0, 0, 0.2)
     }
+
     p {
-        width:100%;
+        width     : 100%;
         min-height: 20px;
-        margin: 0px;
-        padding: 0px;
+        margin    : 0px;
+        padding   : 0px;
     }
+
     p:empty::after {
-        content: '  ';
-        min-height:22px;
-        min-width:1px;
+        content   : '  ';
+        min-height: 22px;
+        min-width : 1px;
     }
 }
