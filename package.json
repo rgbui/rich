@@ -25,6 +25,8 @@
   "homepage": "https://github.com/rgbui/kanhai#readme",
   "dependencies": {
     "@types/ua-parser-js": "^0.7.36",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-react": "^1.0.6",
     "animate.css": "^4.1.1",
     "axios": "^0.21.1",
     "bezier-js": "^6.1.0",
