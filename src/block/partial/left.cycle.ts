@@ -87,8 +87,8 @@ export class Block$LifeCycle {
     async initialLoad(this: Block) {
 
     }
-    async initialedLoad(this:Block){
-        
+    async initialedLoad(this: Block) {
+
     }
     private propMetas: { key: string, meta?: Function, create?: (v: any) => any, get?: (v: any) => any, isArray: boolean }[] = [];
     cloneProp(prop: string, value?: any) {
