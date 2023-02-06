@@ -21,13 +21,10 @@ export class FieldRich extends OriginField {
 @view('/field/rich')
 export class FieldRichView extends BlockView<FieldRich>{
     render() {
-        // var content = this.block.value?.content || '';
-        // content = content.replace(/<[^>]+>/gi, "");
         var size = 80;
         return <div className='sy-field-text f-14'>
-            {(this.block.value?.text||"").slice(0,80)}
-            {/* {content.length > size ? content.slice(0, size) + "..." : content} */}
-            <span onMouseDown={e => this.block.onOpenEditRich(e)} className="size-20 round-4 flex-center flex-inline cursor item-hover"><Icon icon={EditSvg} size={16}></Icon></span>
+            {(this.block.value?.text || "").slice(0, size)}
+            <span onMouseDown={e => this.block.onOpenEditRich(e)} className="size-20 round-4 flex-center flex-inline cursor item-hover"><Icon style={{ 'transform': 'translate(0px, 3px)' }} icon={EditSvg} size={16}></Icon></span>
         </div>
     }
 }
