@@ -29,6 +29,7 @@ import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.f
 import { GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
 import { BlockUrlConstant } from "../../block/constant";
 import { FieldType } from "../../../blocks/data-grid/schema/type";
+import { DataGridForm } from "../../../blocks/data-grid/view/form";
 
 export class PageContextmenu {
     async onGetContextMenus(this: Page) {
@@ -224,29 +225,9 @@ export class PageContextmenu {
             // ];
         }
         else if (this.pageLayout.type == PageLayoutType.dbForm) {
-            var rv = this.schema.views.find(g => g.id == this.scheamViewId);
-            items = [
-                { name: 'smallText', text: '小字号', checked: this.smallFont ? true : false, type: MenuItemType.switch },
-                { name: 'fullWidth', text: '宽版', checked: this.isFullWidth ? true : false, type: MenuItemType.switch },
-                { type: MenuItemType.divide },
-                { name: 'showComment', text: "显示评论", icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
-                // { name: 'nav', text: '目录', icon: OutlineSvg, type: MenuItemType.switch, checked: this.nav },
-                // { name: 'refPages', text: "显示引用", icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
-                { name: 'lock', text: rv?.locker?.userid ? "解除锁定" : '编辑保护', icon: rv?.locker?.userid ? UnlockSvg : LockSvg },
-                // { type: MenuItemTypeValue.divide },
-                // { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
-                //{ name: 'history', icon: VersionHistorySvg, text: '页面历史' },
-                { name: 'copylink', icon: LinkSvg, text: '复制链接' },
-                { type: MenuItemType.divide },
-                { name: 'undo', text: '撤消', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
-                // { name: 'redo', text: '重做', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
-                { name: 'delete', icon: TrashSvg, text: '删除' },
-                // { type: MenuItemTypeValue.divide },
-                // { name: 'import', iconSize: 16, icon: ImportSvg, text: '导入', disabled: true },
-                // { name: 'export', iconSize: 16, text: '导出', icon: FileSvg, disabled: true, remark: '导出PDF,HTML,Markdown' },
-                // { type: MenuItemTypeValue.divide },
-                // { name: 'move', text: '移动', icon: MoveToSvg, disabled: true },
-            ];
+            var block = this.find(c => c.url == BlockUrlConstant.FormView) as DataGridForm;
+            if (block) block.onFormSettings(event);
+            return;
         }
         if (items.length == 0) return;
         var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, items, {
@@ -317,27 +298,9 @@ export class PageContextmenu {
         this.forceUpdate()
     }
     async onOpenFieldProperty(this: Page, event: React.MouseEvent) {
-        var self = this;
-        var r = await useSelectMenuItem(
-            { roundArea: Rect.fromEvent(event) },
-            [
-                { text: '显示字段', type: MenuItemType.text },
-                ...this.schema.allowFormFields.toArray(uf => {
-                    if (this.formRowData && uf.type == FieldType.title) return
-                    return {
-                        icon: GetFieldTypeSvg(uf.type),
-                        name: uf.id,
-                        text: uf.text,
-                        type: MenuItemType.switch,
-                        checked: this.exists(c => (c instanceof OriginFormField) && c.field.id == uf.id)
-                    }
-                })
-            ],
-            {
-                input: (newItem) => {
-                    self.onToggleFieldView(this.schema.initUserFields.find(g => g.id == newItem.name), newItem.checked)
-                }
-            }
-        )
+        var block = this.find(c => c.url == BlockUrlConstant.FormView) as DataGridForm;
+        if (block) {
+            block.onFormFields(event);
+        }
     }
 }

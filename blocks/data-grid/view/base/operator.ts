@@ -275,27 +275,40 @@ export class DataGridViewOperator {
             })
         }
     }
-    async dataGridTrunView(this: DataGridView,viewId: string, schemaId?: string) {
+    async dataGridTrunView(this: DataGridView, viewId: string, schemaId?: string) {
         var oldViewId = this.syncBlockId;
         if (!this.schema) {
             await this.loadSchema();
         }
         var bs = this.referenceBlockers;
+
         var view = this.schema.views.find(g => g.id == viewId);
-        var newBlock = await BlockFactory.createBlock(view.url, this.page, {
-            syncBlockId: viewId,
-            schemaId: schemaId || this.schema.id
-        }, this.parent)
-        var bs = this.parentBlocks;
+
         var at = this.at;
-        bs[at] = newBlock;
-        newBlock.id = this.id;
+        var pa = this.parent;
+        var id = this.id;
+        await this.delete();
+        var newBlock = await this.page.createBlock(view.url,
+            {
+                syncBlockId: view.id,
+                schemaId: this.schema.id
+            },
+            pa,
+            at
+        );
         this.page.addBlockUpdate(newBlock.parent);
+        this.page.addUpdateEvent(async () => {
+            newBlock.id = id;
+            await newBlock.didMounted();
+        })
+
         this.page.snapshoot.record(OperatorDirective.$data_grid_trun_view, {
             pos: newBlock.pos,
             from: oldViewId,
             to: viewId
         }, this);
+
+
         this.page.addUpdateEvent(async () => {
             //console.log('nb', newBlock.syncBlockId, (newBlock as DataGridView).schemaView)
             bs.forEach(b => {

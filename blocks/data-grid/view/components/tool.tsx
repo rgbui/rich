@@ -3,10 +3,11 @@ import { Icon } from "../../../../component/view/icon";
 import { DataGridView } from "../base";
 import { Rect } from "../../../../src/common/vector/point";
 import { getSchemaViewIcon } from "../../schema/util";
+
 import {
-    ChevronDownSvg,
     CollectTableSvg,
     DotsSvg,
+    FieldsSvg,
     FilterSvg,
     MaximizeSvg,
     SettingsSvg,
@@ -14,7 +15,9 @@ import {
 } from "../../../../component/svgs";
 import "./style.less";
 import { PageLayoutType } from "../../../../src/page/declare";
+import { BlockUrlConstant } from "../../../../src/block/constant";
 import { DataGridForm } from "../form";
+
 export class DataGridTool extends React.Component<{ block: DataGridView }>{
     isOpenTool: boolean = false;
     render() {
@@ -22,9 +25,33 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
         var props = this.props;
         props.block.dataGridTool = this;
         var view = props.block.schema?.views?.find(g => g.id == props.block.syncBlockId)
+        var isForm = view.url == BlockUrlConstant.FormView;
         if (props.block.isLock == true) return <></>
+        
+        function renderToolOperators() {
+            if (isForm) return <>
+                <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => (props.block as DataGridForm).onFormFields(e)}><Icon size={14} icon={FieldsSvg}></Icon></label>
+                <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => { (props.block as DataGridForm).onFormSettings(e) }}><Icon size={18} icon={DotsSvg}></Icon></label>
+                <div className="sy-dg-tool-operators-add">
+                    <span className="padding-w-15 text-white" onClick={e => {
+                        e.stopPropagation();
+                        (props.block as DataGridForm).onSave(e);
+                    }}>保存</span>
+                </div>
+            </>
+            return <><label className="item-hover round padding-w-5 h-24 flex-center cursor gap-r-10" onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e))}><Icon size={14} icon={SettingsSvg}></Icon><span className="f-14 padding-l-5">视图配置</span></label>
+                {props.block.filter?.items?.length > 0 && <label className="item-hover round  flex-center cursor gap-r-10 padding-w-5 h-24 " onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e), 'filter')}><Icon size={18} icon={FilterSvg}></Icon><span className="f-14 padding-l-5">过滤</span></label>}
+                {props.block.sorts?.length > 0 && <label className="item-hover round  flex-center cursor gap-r-10 padding-w-5 h-24 " onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e), 'sort')}><Icon size={18} icon={SortSvg}></Icon><span className="f-14 padding-l-5">排序</span></label>}
+                {props.block.page.pageLayout.type != PageLayoutType.db && <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => { e.stopPropagation(); props.block.onOpenSchemaPage() }}><Icon icon={MaximizeSvg} size={16}></Icon></label>}
+                <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => { e.stopPropagation(); props.block.onOpenViewProperty(Rect.fromEvent(e)) }}><Icon size={18} icon={DotsSvg}></Icon></label>
+                <div className="sy-dg-tool-operators-add">
+                    <span className="padding-w-15 text-white" onClick={e => { e.stopPropagation(); props.block.onOpenForm(Rect.fromEvent(e)) }}>新增</span>
+                </div>
+            </>
+        }
+
         if (props.block.noTitle) return <div className='h-20 relative'>
-            {props.block.isOver && <div className="flex h-40 pos card round padding-w-10 padding-h-0" style={{ top: -30, left: 0, right: 0 }}>
+            {props.block.isOver && props.block.isCanEdit() && <div className="flex h-40 pos card round padding-w-10 padding-h-0" style={{ top: -30, left: 0, right: 0 }}>
                 <div className="flex-fixed">
                     <label className="cursor flex round h-30 item-hover padding-r-5 text f-14" onMouseDown={e => { e.stopPropagation(); props.block.onOpenViewSettings(Rect.fromEvent(e)) }}>
                         <span className="size-24 bold flex-center flex-fixed">
@@ -34,21 +61,17 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                     </label>
                 </div>
                 <div className="sy-dg-tool-operators flex-auto flex-end">
-                    <label className="item-hover round padding-w-5 h-24 flex-center cursor gap-r-10" onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e))}><Icon size={14} icon={SettingsSvg}></Icon><span className="f-14 padding-l-5">视图配置</span></label>
-                    {props.block.filter?.items?.length > 0 && <label className="item-hover round  flex-center cursor gap-r-10 padding-w-5 h-24 " onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e), 'filter')}><Icon size={18} icon={FilterSvg}></Icon><span className="f-14 padding-l-5">过滤</span></label>}
-                    {props.block.sorts?.length > 0 && <label className="item-hover round  flex-center cursor gap-r-10 padding-w-5 h-24 " onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e), 'sort')}><Icon size={18} icon={SortSvg}></Icon><span className="f-14 padding-l-5">排序</span></label>}
-                    {props.block.page.pageLayout.type != PageLayoutType.db && <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => { e.stopPropagation(); props.block.onOpenSchemaPage() }}><Icon icon={MaximizeSvg} size={16}></Icon></label>}
-                    <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => { e.stopPropagation(); props.block.onOpenViewProperty(Rect.fromEvent(e)) }}><Icon size={18} icon={DotsSvg}></Icon></label>
-                    <div className="sy-dg-tool-operators-add">
-                        <span className="padding-w-15 text-white" onClick={e => { e.stopPropagation(); props.block.onOpenForm(Rect.fromEvent(e)) }}>新增</span>
-                        {/* <span className="icon" onClick={e => { e.stopPropagation(); props.block.onOpenFormDrop(Rect.fromEvent(e)) }}><Icon size={14} icon={ChevronDownSvg}></Icon></span> */}
-                    </div>
+                    {renderToolOperators()}
                 </div>
             </div>}
         </div>
         else return <div className="sy-dg-tool">
             <div className="flex-fixed">
-                <label className="cursor flex round h-30 item-hover padding-r-5  text f-14" onMouseDown={e => { e.stopPropagation(); props.block.onOpenViewSettings(Rect.fromEvent(e)) }}>
+                <label className="cursor flex round h-30 item-hover padding-r-5  text f-14"
+                    onMouseDown={e => {
+                        e.stopPropagation();
+                        props.block.onOpenViewSettings(Rect.fromEvent(e))
+                    }}>
                     <span className="size-24 flex-center flex-fix">
                         <Icon size={16} icon={view ? getSchemaViewIcon(view.url) : CollectTableSvg}></Icon>
                     </span>
@@ -56,15 +79,7 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                 </label>
             </div>
             {props.block.isOver && props.block.isCanEdit() && <div className="sy-dg-tool-operators  flex-auto flex-end">
-                <label className="item-hover round padding-w-5 h-24 flex-center cursor gap-r-10" onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e))}><Icon size={14} icon={SettingsSvg}></Icon><span className="f-14 padding-l-5">视图配置</span></label>
-                {props.block.filter?.items?.length > 0 && <label className="item-hover round padding-w-5 h-24   flex-center cursor gap-r-10" onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e), 'filter')}><Icon size={18} icon={FilterSvg}></Icon><span className="f-14 padding-l-5">过滤</span></label>}
-                {props.block.sorts?.length > 0 && <label className="item-hover round padding-w-5 h-24   flex-center cursor gap-r-10" onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e), 'sort')}><Icon size={18} icon={SortSvg}></Icon><span className="f-14 padding-l-5">排序</span></label>}
-                {props.block.page.pageLayout.type != PageLayoutType.db && <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => { e.stopPropagation(); props.block.onOpenSchemaPage() }}><Icon icon={MaximizeSvg} size={16}></Icon></label>}
-                <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => { e.stopPropagation(); props.block.onOpenViewProperty(Rect.fromEvent(e)) }}><Icon size={18} icon={DotsSvg}></Icon></label>
-                <div className="sy-dg-tool-operators-add">
-                    <span className="padding-w-15 text-white" onClick={e => { e.stopPropagation(); props.block.onOpenForm(Rect.fromEvent(e)) }}>新增</span>
-                    {/* <span className="icon" onClick={e => { e.stopPropagation(); props.block.onOpenFormDrop(Rect.fromEvent(e)) }}><Icon size={14} icon={ChevronDownSvg}></Icon></span> */}
-                </div>
+                {renderToolOperators()}
             </div>}
         </div>
     }

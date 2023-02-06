@@ -24,7 +24,6 @@ import { GetFieldFormBlockInfo, SchemaCreatePageFormData } from "../../../blocks
 import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.field";
 import { Field } from "../../../blocks/data-grid/schema/field";
 import { DataGridView } from "../../../blocks/data-grid/view/base";
-import { FieldType } from "../../../blocks/data-grid/schema/type";
 import { QueueHandle } from "../../../component/lib/queue";
 
 export class Page$Cycle {
@@ -537,27 +536,27 @@ export class Page$Cycle {
         if (!this.schema) {
             this.schema = await TableSchema.loadTableSchema(pe.id);
         }
-        if (!this.exists(g => (g instanceof OriginFormField))) {
-            var pageData = SchemaCreatePageFormData(this.schema, pe.type == ElementType.SchemaRecordViewData ? true : false);
-            this.views = [];
-            await this.load(pageData);
-            isCreateField = true;
-        }
-        if (!this.exists(g => g.url == BlockUrlConstant.Title)) {
-            var view = this.views.first();
-            view.blocks.childs.splice(0, 0, await BlockFactory.createBlock(BlockUrlConstant.Title, this, {}, view))
-        }
+        //if (!this.exists(g => (g instanceof OriginFormField))) {
+        var pageData = SchemaCreatePageFormData(this.schema, elementUrl, pe.type == ElementType.SchemaRecordViewData ? true : false);
+        this.views = [];
+        await this.load(pageData);
+        // isCreateField = true;
+        // }
+        // if (!this.exists(g => g.url == BlockUrlConstant.Title)) {
+        //     var view = this.views.first();
+        //     view.blocks.childs.splice(0, 0, await BlockFactory.createBlock(BlockUrlConstant.Title, this, {}, view))
+        // }
         if (pe.type == ElementType.SchemaRecordViewData) {
-            lodash.remove(this.views.first().blocks.childs, c => c instanceof OriginFormField && c.field.type == FieldType.title);
+            //lodash.remove(this.views.first().blocks.childs, c => c instanceof OriginFormField && c.field.type == FieldType.title);
             var row = await this.schema.rowGet(pe.id2);
             if (row) {
                 this.formRowData = lodash.cloneDeep(row);
                 this.loadSchemaRecord(row);
             }
         }
-        if (isCreateField) {
-            this.emit(PageDirective.save);
-        }
+        // if (isCreateField) {
+        //     this.emit(PageDirective.save);
+        // }
     }
     loadSchemaRecord(this: Page, row: Record<string, any>) {
         this.each(g => {
