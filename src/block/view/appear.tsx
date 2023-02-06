@@ -102,6 +102,7 @@ export function SolidArea(props: {
         {props.block.isCanEdit() && <span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}
     </div>
 }
+
 export function ChildsArea(props: { childs: Block[] }) {
     return <>{props.childs.map(x => {
         if (!x) console.trace(x);
@@ -109,6 +110,7 @@ export function ChildsArea(props: { childs: Block[] }) {
         return <x.viewComponent key={x.id} block={x}></x.viewComponent>
     })}</>
 }
+
 export function TextLineChilds(props: {
     childs: Block[], rf?: (e: HTMLElement) => void,
     style?: CSSProperties
@@ -120,10 +122,11 @@ export function TextLineChilds(props: {
         return <x.viewComponent key={x.id} block={x}></x.viewComponent>
     })}</div>
 }
-export function TextSpanArea(props: { block: Block, prop?: string, placeholder?: string }) {
+
+export function TextSpanArea(props: { block: Block, placeholderEmptyVisible?: boolean, prop?: string, placeholder?: string }) {
     if (props.block.childs.length > 0)
         return <TextLineChilds childs={props.block.childs}></TextLineChilds>
     else
-        return <TextArea block={props.block} prop={props.prop || 'content'} placeholder={props.placeholder || '键入文字或"/"选择'}></TextArea>
+        return <TextArea placeholderEmptyVisible={props.placeholderEmptyVisible} block={props.block} prop={props.prop || 'content'} placeholder={props.placeholder || '键入文字或"/"选择'}></TextArea>
 }
 

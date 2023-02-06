@@ -81,7 +81,7 @@ flex-fixed:固定大小
 }
 
 .r-flex-center {
-    >*{
+    >* {
         display        : flex;
         justify-content: center;
         align-items    : center;
@@ -541,13 +541,17 @@ item-selected:选中的效果
 }
 
 .remark {
-    color       : rgba(55, 53, 47, 0.5);
-    fill        : rgba(55, 53, 47);
-    fill-opacity: .5;
+    color          : rgba(55, 53, 47, 0.5);
+    // fill        : rgba(55, 53, 47);
+    // fill-opacity: .5;
 }
 
 .text-white {
     color: #fff;
+}
+
+.text-primary {
+    color: rgb(225, 98, 89);
 }
 
 .text-black {
@@ -555,20 +559,20 @@ item-selected:选中的效果
 }
 
 .text {
-    color: rgba(55, 53, 47);
-    fill : currentColor;
+    color   : rgba(55, 53, 47);
+    // fill : currentColor;
 }
 
 .text-1 {
-    color       : rgba(55, 53, 47, 0.8);
-    fill        : rgba(55, 53, 47);
-    fill-opacity: 0.8;
+    color          : rgba(55, 53, 47, 0.8);
+    // fill        : rgba(55, 53, 47);
+    // fill-opacity: 0.8;
 }
 
 .text-0 {
-    color       : transparent;
-    fill        : transparent;
-    fill-opacity: 0;
+    color          : transparent;
+    // fill        : transparent;
+    // fill-opacity: 0;
 }
 
 .link {
@@ -1089,6 +1093,17 @@ each(@ops, {
     background-color: rgb(225, 98, 89)
 }
 
+.fill-primary {
+    fill: rgb(225, 98, 89);
+color:rgb(225, 98, 89);
+    svg path,
+    &svg path {
+        fill: rgb(225, 98, 89);
+        color:rgb(225, 98, 89);
+        stroke: rgb(225, 98, 89);
+    }
+}
+
 .bg {
     background-color: rgba(55, 53, 47, 0.08) !important;
 }
@@ -1108,9 +1123,11 @@ each(@ops, {
 .border-left {
     border-left: 1px solid rgba(55, 53, 47, 0.16);
 }
+
 .border-right {
     border-right: 1px solid rgba(55, 53, 47, 0.16);
 }
+
 .border-light-left {
     border-left: 1px solid rgba(55, 53, 47, 0.08);
 }

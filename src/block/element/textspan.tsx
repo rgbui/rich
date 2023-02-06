@@ -248,7 +248,7 @@ export class TextSpanView extends BlockView<TextSpan>{
         if (this.block.align == 'center') style.textAlign = 'center';
         return <div className='sy-block-text-span' style={this.block.visibleStyle}>
             <div style={style}>
-                <TextSpanArea placeholder={this.block.isFreeBlock ? "键入文本" : undefined} block={this.block}></TextSpanArea>
+                <TextSpanArea  placeholder={this.block.isFreeBlock ? "键入文本" : undefined} block={this.block}></TextSpanArea>
             </div>
         </div>
     }
