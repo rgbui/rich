@@ -25,9 +25,10 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
         var props = this.props;
         props.block.dataGridTool = this;
         var view = props.block.schema?.views?.find(g => g.id == props.block.syncBlockId)
+        if (!view) return <></>
         var isForm = view.url == BlockUrlConstant.FormView;
         if (props.block.isLock == true) return <></>
-        
+
         function renderToolOperators() {
             if (isForm) return <>
                 <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => (props.block as DataGridForm).onFormFields(e)}><Icon size={14} icon={FieldsSvg}></Icon></label>

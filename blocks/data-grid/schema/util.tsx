@@ -174,7 +174,6 @@ export function getSchemaFieldMenus(map: (list: any) => any) {
             { text: '关联', value: FieldType.relation },
             { text: '统计', value: FieldType.rollup },
             { text: '公式', value: FieldType.formula },
-            { text: '自动编号', value: FieldType.autoIncrement },
             { text: '文档', value: FieldType.blog },
         ]),
         { type: MenuItemType.text, text: '交互' },
@@ -194,13 +193,14 @@ export function getSchemaFieldMenus(map: (list: any) => any) {
             // { text: '置顶', value: FieldType.top },
             // { text: '浏览', value: FieldType.browse },
         ]),
-        { type: MenuItemType.text, text: '原始' },
+        { type: MenuItemType.text, text: '默认' },
         ...map([
+            { text: '自动编号', value: FieldType.autoIncrement },
             { text: '创建人', value: FieldType.creater },
             { text: '创建时间', value: FieldType.createDate },
             { text: '修改人', value: FieldType.modifyer },
             { text: '修改时间', value: FieldType.modifyDate },
-            // { text: '修改情况', value: FieldType.modifyDynamic },
+            //{ text: '修改情况', value: FieldType.modifyDynamic },
         ])
     ];
     return menus;
