@@ -35,7 +35,6 @@ class UserComments extends EventsComponent {
                 this.textarea.setSelectionRange(pos, pos);
             }, 100);
         }
-        console.log('ggg');
     }
     async addComment(event: React.MouseEvent) {
         event.preventDefault();

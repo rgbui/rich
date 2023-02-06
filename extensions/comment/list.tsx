@@ -1,3 +1,4 @@
+import { assignWith } from "lodash";
 import React from "react";
 import { useUserComments } from ".";
 import { CopyText } from "../../component/copy";
@@ -81,6 +82,7 @@ export class CommentListView extends React.Component<{
             if (r.item.name == 'del') {
                 await channel.del('/ws/comment/del', { id: l.id });
                 this.list.remove(g => g.id == l.id);
+                if (!l.parentId) { this.total -= 1; this.count -= 1; }
                 this.forceUpdate()
             }
             else if (r.item.name == 'report') {
@@ -108,6 +110,8 @@ export class CommentListView extends React.Component<{
             });
             if (r.ok) {
                 this.list.push(r.data.data);
+                this.total += 1;
+                this.count += 1;
                 this.forceUpdate()
             }
         }
@@ -225,17 +229,24 @@ export class CommentListView extends React.Component<{
         this.forceUpdate();
     }
     render() {
-        return <div>
-            <div className="flex gap-b-10">
+        return <div className="w-600">
+            <div className="flex gap-b-10 gap-t-5 padding-w-14">
                 <span className="bold f-14 flex-fixed">{this.total == 0 ? "" : (this.total + "条")}评论</span>
                 <div className="flex-auto flex-end f-12">
                     <em onMouseDown={e => this.onSet('default')} className={"h-24 flex-center cursor round padding-w-5" + (this.sort == 'default' ? " item-hover-focus" : "")}>默认</em>
                     <em onMouseDown={e => this.onSet('date')} className={"h-24 flex-center cursor round padding-w-5" + (this.sort == 'date' ? " item-hover-focus" : "")}>最新</em>
                 </div>
             </div>
+            <div className="padding-h-10  padding-w-14 round h-400 overflow-y">
+                <SpinBox spin={this.loading}> {this.renderComments(this.list)}
+                    <Pagination size={this.size} total={this.total} index={this.index}></Pagination>
+                    {this.list.length == 0 && <div className="remark min-50 flex-center">暂无评论</div>}
+                </SpinBox>
+            </div>
             <div className="gap-b-15">
-                <div className="flex-top">
-                    <Avatar className="flex-fixed" size={32} userid={this.userid}></Avatar>
+                <Divider></Divider>
+                <div className="flex-top  padding-w-14 gap-t-10">
+                    {this.userid && <Avatar className="flex-fixed" size={32} userid={this.userid}></Avatar>}
                     <div tabIndex={1}
                         onFocus={e => this.onFocus(e)}
                         onBlur={e => this.onBlur(e)}
@@ -249,7 +260,8 @@ export class CommentListView extends React.Component<{
                                 lineHeight: "24px",
                                 border: 'none',
                                 padding: 0,
-                                height: this.spread ? 50 : 24
+                                height: this.spread ? 50 : 24,
+                                resize: 'none'
                             }}
                             placeholder="评论千万条，友善第一条"
                             ref={e => this.textarea = e}></textarea>
@@ -265,12 +277,6 @@ export class CommentListView extends React.Component<{
                     </div>
                 </div>
             </div>
-            <div className="padding-h-10 round">
-                <SpinBox spin={this.loading}> {this.renderComments(this.list)}
-                    <Pagination size={this.size} total={this.total} index={this.index}></Pagination>
-                    {this.list.length == 0 && <div className="remark min-50 flex-center">暂无评论</div>}
-                </SpinBox>
-            </div>
         </div>
     }
     componentDidMount(): void {
@@ -279,16 +285,19 @@ export class CommentListView extends React.Component<{
         if (typeof this.props.elementUrl == 'string') this.elementUrl = this.props.elementUrl;
         this.loadComment();
     }
-    open(props: {
+    async open(props: {
         userid: string;
         elementUrl: string;
         sort?: 'default' | 'date',
     }) {
+        this.count = 0;
         this.userid = props.userid;
         this.elementUrl = props.elementUrl;
         this.sort = props.sort;
+        await this.loadComment();
         this.forceUpdate()
     }
+    count: number = 0;
 }
 
 export async function useCommentListView(props: {
@@ -300,9 +309,9 @@ export async function useCommentListView(props: {
     let popover = await PopoverSingleton(CommentListView, { mask: true, shadow: true });
     let fv = await popover.open(pos);
     fv.open(props);
-    return new Promise((resolve: (id: string) => void, reject) => {
+    return new Promise((resolve: (count: number) => void, reject) => {
         popover.only('close', () => {
-            resolve(null)
+            resolve(fv.count)
         });
     })
 }
