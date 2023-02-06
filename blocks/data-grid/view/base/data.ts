@@ -21,6 +21,9 @@ export class DataGridViewData {
         })
     }
     async onOpenAddForm(this: DataGridView, viewId?: string, initData?: Record<string, any>) {
+        if (!this.schema.defaultAddForm) {
+            //自动创建表单
+        }
         var dialougPage: Page = await channel.air('/page/dialog', {
             elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, viewId || this.schema.defaultAddForm?.id)
         })
@@ -33,6 +36,9 @@ export class DataGridViewData {
         await channel.air('/page/dialog', { elementUrl: null });
     }
     async onOpenEditForm(this: DataGridView, id: string) {
+        if (!this.schema.defaultEditForm) {
+            //自动创建表单
+        }
         var url: '/page/open' | '/page/dialog' | '/page/slide' = '/page/dialog';
         if (this.openRecordSource == 'page')
             url = '/page/open';

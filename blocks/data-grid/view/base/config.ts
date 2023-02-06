@@ -26,12 +26,10 @@ import { Rect, Point } from "../../../../src/common/vector/point";
 import { DataGridView } from ".";
 import { useDataGridConfig } from "../../../../extensions/data-grid/view.config";
 import { getSchemaViewIcon } from "../../schema/util";
-// import { useTabelSchemaFormDrop } from "../../../../extensions/data-grid/switch.forms/view";
 import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { channel } from "../../../../net/channel";
 import { Page } from "../../../../src/page";
 import { TableSchema } from "../../schema/meta";
-import { BlockUrlConstant } from "../../../../src/block/constant";
 
 export class DataGridViewConfig {
     async onOpenViewSettings(this: DataGridView, rect: Rect) {

@@ -24,6 +24,7 @@ import { OriginFilterField } from "../../element/filter/origin.field";
 import { FilterSort } from "../../element/filter/sort";
 import { Page } from "../../../../src/page";
 import { Field } from "../../schema/field";
+import { BlockUrlConstant } from "../../../../src/block/constant";
 
 /**
  * 
@@ -114,6 +115,7 @@ export class DataGridView extends Block {
         }
     }
     async get(this: DataGridView) {
+        if (this.url == BlockUrlConstant.FormView) return await super.get();
         var json: Record<string, any> = {
             id: this._id,
             syncBlockId: this.syncBlockId,
@@ -147,9 +149,11 @@ export class DataGridView extends Block {
         return json;
     }
     async getSyncString() {
+        if (this.url == BlockUrlConstant.FormView) return await super.getSyncString();
         return JSON.stringify(await this.getSync());
     }
     async loadSyncBlock(this: DataGridView): Promise<void> {
+        if (this.url == BlockUrlConstant.FormView) return await super.loadSyncBlock();
         var r = await channel.get('/view/snap/query', { elementUrl: this.elementUrl });
         if (r.ok) {
             var data;
