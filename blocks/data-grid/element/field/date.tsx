@@ -6,6 +6,7 @@ import { OriginField } from "./origin.field";
 import dayjs from "dayjs";
 import { BlockRenderRange } from "../../../../src/block/enum";
 import { useDatePicker } from "../../../../extensions/date";
+import { FieldType } from "../../schema/type";
 
 @url('/field/date')
 export class FieldDate extends OriginField {
@@ -15,8 +16,8 @@ export class FieldDate extends OriginField {
         var format = this.field?.config?.dateFormat || 'YYYY年MM月DD日'
         return r.format(format)
     }
-    async onCellMousedown(event:React.MouseEvent<Element, MouseEvent>)
-    {
+    async onCellMousedown(event: React.MouseEvent<Element, MouseEvent>) {
+        if (this.field?.type == FieldType.createDate || this.field?.type == FieldType.modifyDate) return;
         event.stopPropagation();
         var el = event.target as HTMLElement;
         var pickDate = await useDatePicker({ roundArea: Rect.from(el.getBoundingClientRect()) }, this.value, {
