@@ -25,7 +25,7 @@ export class Handle extends Events {
             var bound = this.handleBlock.getVisibleContentBound();
             if (bound) {
                 var pos = Point.from(bound);
-                pos = pos.move(0, 5);
+                pos = pos.move(0,5);
                 var handleEl = this.view.handleEle;
                 handleEl.style.top = pos.y + 'px';
                 handleEl.style.left = pos.x + 'px';

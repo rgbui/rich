@@ -14,7 +14,7 @@ export class TabItem extends Block {
     get handleBlock(): Block {
         return this.myTab
     }
-    get isCanDrop() {
+    get isAllowDrop() {
         return false;
     }
 

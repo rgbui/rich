@@ -47,7 +47,7 @@ export class TableStoreGalleryView extends BlockView<TableStoreGallery>{
             }
             eles = rss.map((rs, i) => {
                 return <div className='sy-data-grid-gallery-column' style={{ width: `calc(${w}% - ${gap}px)`, marginRight: gap, marginBottom: gap }} key={i}>
-                    {rs.map(c => <div className="sy-data-grid-gallery-cell" style={{ width: '100%' }} key={c.id}>{this.renderItem(c)}</div>)}
+                    {rs.map(c => <div className="sy-data-grid-gallery-cell w100" key={c.id}>{this.renderItem(c)}</div>)}
                 </div>
             })
         }

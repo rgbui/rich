@@ -296,16 +296,31 @@ export abstract class Block extends Events {
     get isCell(): boolean {
         return false;
     }
-    get isCanDrop(): boolean {
+    /**
+     * 表示该块接受其它块拖到这里
+     */
+    get isAllowDrop(): boolean {
+        return true;
+    }
+    /**
+    * 判断该块是否接受dragBlocks拖到这里
+    */
+    isAllowDrops(dragBlocks: Block[]) {
+        if (this.isAllowDrop == false) return false;
         return true;
     }
     canDropDirections() {
         return null;
     }
-    isAllowDrops(dragBlocks: Block[]) {
-        if (this.isCanDrop == false) return false;
+    /**
+     * 表示块是否可以拖到当前这个dropBlock这里
+     * @param dropBlock 
+     * @returns 
+     */
+    isCanDropHere(dropBlock: Block) {
         return true;
     }
+
     get isEmptyCell(): boolean {
         if (this.childs.length == 0) return true;
         else if (this.childs.length == 1) {

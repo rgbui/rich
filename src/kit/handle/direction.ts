@@ -191,6 +191,9 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
     if (Array.isArray(drs) && drs.length > 0 && !drs.includes(direction)) {
         direction = DropDirection.none
     }
+    if (!dragBlocks.every(s => s.isCanDropHere(dropBlock))) {
+        direction = DropDirection.none;
+    }
     return { direction: direction, dropBlock };
 }
 

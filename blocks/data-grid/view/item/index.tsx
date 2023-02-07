@@ -36,7 +36,6 @@ export class TableStoreItem extends Block {
             return this.dataGrid.data.findIndex(g => g.id == this.dataId);
         else return -1;
     }
-
     get schema() {
         return (this.parent as DataGridView).schema;
     }
@@ -149,7 +148,7 @@ export class TableStoreItem extends Block {
     async onHandlePlus() {
         await this.dataGrid.onAddRow({}, this.dataRow.id, 'after');
     }
-    get isCanDrop(): boolean {
+    get isAllowDrop(): boolean {
         return true;
     }
     isAllowDrops(dragBlocks: Block[]) {
@@ -161,6 +160,12 @@ export class TableStoreItem extends Block {
             }
         }
         return false;
+    }
+    isCanDropHere(dropBlock: Block) {
+        if (dropBlock instanceof TableStoreItem && dropBlock.dataGrid == this.dataGrid) {
+            return true;
+        }
+        return false
     }
     canDropDirections() {
         return [

@@ -14,7 +14,7 @@ export class TableRow extends Block {
     get table() {
         return this.parent as Table;
     }
-    get isCanDrop() {
+    get isAllowDrop() {
         return false;
     }
     get handleBlock(){

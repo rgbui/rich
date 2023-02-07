@@ -21,7 +21,9 @@ import { ShyAlert } from "../../../component/lib/alert";
 import { DragList } from "../../../component/view/drag.list";
 import { DataGridOptionType } from "../../../blocks/data-grid/schema/field";
 /**
+ * 
  * 背景色
+ * 
  */
 export var OptionBackgroundColorList = [
     { color: 'rgba(247,214,183,0.5)', text: '幼杏' },
@@ -46,7 +48,7 @@ export class TableStoreOption extends EventsComponent {
             }
             else if (event.key.toLowerCase() == 'backspace') {
                 if (!self.value) {
-                    self.clearOption();
+                    self.onlyClearOption();
                 }
             }
         }
@@ -120,6 +122,11 @@ export class TableStoreOption extends EventsComponent {
         }
         this.forceUpdate();
         this.emit('save', this.option.value);
+    }
+    onlyClearOption(){
+        this.value = '';
+        this.option = null;
+        this.forceUpdate();
     }
     clearOption() {
         this.value = '';

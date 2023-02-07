@@ -55,7 +55,7 @@ export class OriginField extends Block {
     onCellMousedown(event: React.MouseEvent) {
 
     }
-    get isCanDrop(): boolean {
+    get isAllowDrop(): boolean {
         return false;
     }
 
