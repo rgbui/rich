@@ -32,7 +32,7 @@ export class TableFieldView extends EventsComponent {
             self.error = '字段名不能为空';
             return self.forceUpdate();
         }
-        if (self.dataGrid.schema.fields.some(s => s.text == self.text && !this.fieldId || this.fieldId && this.fieldId != s.id && this.text == s.text)) {
+        if (self.dataGrid.schema.fields.some(s => s.text == self.text && s.type == self.type && !this.fieldId || this.fieldId && this.fieldId != s.id && this.text == s.text)) {
             self.error = '字段名有重复';
             return self.forceUpdate();
         }
@@ -179,7 +179,7 @@ export class TableFieldView extends EventsComponent {
         return <div className="gap-h-10 padding-w-14">
             <div className="flex gap-b-5 remark f-12">公式:</div>
             <div className="flex">
-                <Textarea value={this.config.formula} onEnter={e => this.config.formula = e}></Textarea>
+                <Textarea value={this.config?.formula?.formula || ''} onEnter={e => this.config.formula = e}></Textarea>
             </div>
         </div>
     }
@@ -268,9 +268,7 @@ export class TableFieldView extends EventsComponent {
     }
     private relationDatas: TableSchema[];
     get rollTableSchema() {
-        if (Array.isArray(this.relationDatas))
-            return this.relationDatas.find(g => g.id == this.config.rollupTableId);
-
+        if (Array.isArray(this.relationDatas)) return this.relationDatas.find(g => g.id == this.config.rollupTableId);
     }
     async loadTypeDatas(force?: boolean) {
         var isUpdate: boolean = false;
