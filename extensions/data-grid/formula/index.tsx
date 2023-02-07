@@ -31,15 +31,15 @@ class FormulaSelector extends EventsComponent {
         }
     }
     render(): React.ReactNode {
-        return <div className="h-400 w-500">
-            <div ><Textarea value={this.formula} onChange={e => this.formula = e} onEnter={e => this.onSave(e)}></Textarea></div>
-            <div className="flex-full min-h-200 max-h-300">
+        return <div className="w-500">
+            <div className="h-80"><Textarea value={this.formula} onChange={e => this.formula = e} onEnter={e => this.onSave(e)}></Textarea></div>
+            <div className="flex-full h-300">
                 <div className="overflow-y w-150 bg-light  padding-b-100 flex-fixed">
                     <div className="gap-h-10">
                         <div className="remark font-12 padding-l-10">属性</div>
                         {this.schema && this.schema.userFields.map(f => {
                             return <div key={f.id} className="padding-w-10 item-hover round cursor flex h-30">
-                                <span className="inline-block flex-center size-24 flex-fixed"><Icon size={16} icon={GetFieldTypeSvg(f.type)}></Icon></span>
+                                <span className="flex-center size-24 flex-fixed"><Icon size={16} icon={GetFieldTypeSvg(f.type)}></Icon></span>
                                 <span className="f-14 inline-block text-overflow flex-auto">{f.text}</span>
                             </div>
                         })}
@@ -139,8 +139,8 @@ export async function useFormula(pos: PopoverPosition, options: {
     let popover = await PopoverSingleton(FormulaSelector);
     let fv = await popover.open(pos);
     fv.open(options.schema, options.formula);
-    return new Promise((resolve: (data: string) => void, reject) => {
-        fv.only('save', (data: string) => {
+    return new Promise((resolve: (data: { formula: string, jsCode: string, exp: any }) => void, reject) => {
+        fv.only('save', (data: { formula: string, jsCode: string, exp: any }) => {
             popover.close();
             resolve(data);
         });

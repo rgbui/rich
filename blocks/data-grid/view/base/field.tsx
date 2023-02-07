@@ -509,10 +509,9 @@ export class DataGridViewField {
             else if (re.item.name == 'formula') {
                 var formula = await useFormula({ roundArea: rp }, {
                     schema: this.schema,
-                    formula: viewField.field.config.formula
+                    formula: viewField.field.config.formula?.formula || ''
                 });
-                if (formula)
-                    await this.onUpdateFieldConfig(viewField.field, { formula });
+                if (formula) await this.onUpdateFieldConfig(viewField.field, { formula });
             }
             else if (re.item.name == 'emoji') {
                 var rc = await useOpenEmoji({ roundArea: rp });
