@@ -19,7 +19,6 @@ import { BlockUrlConstant } from "../../../../src/block/constant";
 import { useDataSourceView } from "../../../../extensions/data-grid/datasource";
 import { SnapshootDataGridViewPos } from "../../../../src/history/snapshoot";
 import { useTableExport } from "../../../../extensions/data-grid/export";
-import { BlockFactory } from "../../../../src/block/factory/block.factory";
 
 export class DataGridViewOperator {
     async onAddField(this: DataGridView, event: Rect, at?: number) {

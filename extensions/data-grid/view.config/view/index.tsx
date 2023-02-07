@@ -193,7 +193,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
                 self.onStoreViewText(item.value);
             }
             else if (item.name == 'lock') {
-                self.block.onDataViewLock(item.checked);
+                self.block.onTableSchemaLock(item.checked);
             }
         }
         function select(item, event) {

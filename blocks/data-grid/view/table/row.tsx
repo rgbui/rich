@@ -1,4 +1,4 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import { TableStore } from ".";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
@@ -9,19 +9,36 @@ import { TableStoreItem } from "../item";
 export class DataGridTableItem extends TableStoreItem {
 
 }
-
 @view('/data-grid/table/row')
 export class DataGridTableItemView extends BlockView<DataGridTableItem>{
     render() {
         var totalWidth = (this.block.parent as TableStore).sumWidth;
-        return <div className='sy-dg-table-row visible-hover' style={{ width: totalWidth }}>
-            {this.block.childs.map((block: OriginField) => {
+        var rowStyle: CSSProperties = {
+            width: totalWidth
+        }
+        if (!this.block.parent.isCanEdit()) {
+            rowStyle = {
+                minWidth: totalWidth
+            }
+        }
+        return <div className='sy-dg-table-row visible-hover' style={rowStyle}>
+            {this.block.childs.map((block: OriginField, i) => {
                 var w = block.viewField.colWidth || 120;
-                return <div key={block.id} onMouseDown={e => block.onCellMousedown(e)} className='sy-dg-table-row-cell' style={{ width: w }}>
+                var style: CSSProperties = {
+                    width: w
+                }
+                if (!this.block.parent.isCanEdit() && i == this.block.fields.length - 1) {
+                    style = {
+                        minWidth: w,
+                        flexGrow: 1,
+                        flexShrink: 1
+                    }
+                }
+                return <div key={block.id} onMouseDown={e => block.onCellMousedown(e)} className='sy-dg-table-row-cell' style={style}>
                     <block.viewComponent block={block}></block.viewComponent>
                 </div>
             })}
-            {(this.block.parent as TableStore).isCanEdit() && <div className='sy-dg-table-row-cell' style={{ minWidth: 40, flexGrow: 1, flexShrink: 1 }}></div>}
+            {this.block.parent.isCanEdit() && <div className='sy-dg-table-row-cell' style={{ minWidth: 40, flexGrow: 1, flexShrink: 1 }}></div>}
         </div>
     }
 }

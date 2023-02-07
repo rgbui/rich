@@ -691,7 +691,6 @@ export abstract class Block extends Events {
     }
     get isLock() {
         if (this.locker?.lock) return true;
-        return this.page.pageInfo?.locker?.userid ? true : false;
     }
     /**
      * 标记，主要是标记block用，没有其它什么作用
@@ -726,7 +725,7 @@ export abstract class Block extends Events {
 
     }
     isCanEdit() {
-        if (this.page.pageInfo?.locker?.userid) return false;
+        if (this.page.pageInfo?.locker?.lock) return false;
         return this.page.isCanEdit;
     }
     getRelativePoint(point: Point) {

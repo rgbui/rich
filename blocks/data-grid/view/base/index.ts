@@ -290,15 +290,17 @@ export class DataGridView extends Block {
         }
     }
     dataGridTool: DataGridTool;
-    async onDataViewLock(this: DataGridView, locked: boolean) {
+    async onTableSchemaLock(this: DataGridView, locked: boolean) {
         await this.schema.onSchemaOperate([
             {
-                name: 'updateSchemaView',
-                id: this.schemaView.id,
+                name: 'updateSchema',
+                id: this.schema.id,
                 data: {
-                    lock: locked,
-                    date: Date.now(),
-                    userid: this.page.user.id
+                    locker: {
+                        lock: locked,
+                        date: Date.now(),
+                        userid: this.page.user.id
+                    }
                 }
             }
         ]);
@@ -306,6 +308,10 @@ export class DataGridView extends Block {
     }
     get elementUrl() {
         return getElementUrl(ElementType.SchemaView, this.schemaId, this.syncBlockId);
+    }
+    isCanEdit() {
+        if (this.schema?.locker?.lock == true) return false;
+        return super.isCanEdit()
     }
 }
 

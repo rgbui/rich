@@ -101,7 +101,7 @@ export class DataGridForm extends DataGridView {
         var um = await useSelectMenuItem({ roundArea: rect }, menus, {
             async input(item) {
                 if (item.name == 'lock') {
-                    await self.onDataViewLock(item.checked);
+                    await self.onTableSchemaLock(item.checked);
                 }
             }
         });

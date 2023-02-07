@@ -38,6 +38,11 @@ export class TableSchema {
     fields: Field[] = [];
     icon: IconArguments;
     cover: CoverMask;
+    locker: {
+        lock: boolean,
+        date: number,
+        userid: string
+    }
     get visibleFields(): Field[] {
         return this.fields.findAll(g => g.text && ![FieldType.id, FieldType.parentId, FieldType.icon, FieldType.cover, FieldType.description].includes(g.type))
     }

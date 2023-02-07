@@ -32,8 +32,8 @@ import { Page } from "../../../../src/page";
 import { TableSchema } from "../../schema/meta";
 
 export class DataGridViewConfig {
-    async onOpenViewSettings(this: DataGridView, rect: Rect) {
-        if (!this.isCanEdit()) return;
+    async onOpenViewSettings(this: DataGridView, rect: Rect)
+    {
         var self = this;
         var view = self.schemaView;
         self.dataGridTool.isOpenTool = true;
@@ -200,9 +200,9 @@ export class DataGridViewConfig {
             {
                 text: '锁定数据表格',
                 name: 'lock',
-                checked: this.schemaView?.locker?.lock ? true : false,
+                checked: this.schema.locker?.lock ? true : false,
                 type: MenuItemType.switch,
-                icon: this.schemaView?.locker?.lock ? UnlockSvg : LockSvg
+                icon: this.schema.locker?.lock ? UnlockSvg : LockSvg
             },
             { type: MenuItemType.divide },
             // { text: '导入', disabled: true, icon: ImportSvg, name: 'import' },
@@ -211,7 +211,7 @@ export class DataGridViewConfig {
         var um = await useSelectMenuItem({ roundArea: rect }, menus, {
             async input(item) {
                 if (item.name == 'lock') {
-                    await self.onDataViewLock(item.checked);
+                    await self.onTableSchemaLock(item.checked);
                 }
             }
         });
@@ -259,12 +259,6 @@ export class DataGridViewConfig {
         this.dataGridTool.isOpenTool = false;
         this.onOver(this.getVisibleContentBound().contain(Point.from(this.page.kit.operator.moveEvent)))
     }
-    // async onOpenFormDrop(this: DataGridView, rect: Rect) {
-    //     this.dataGridTool.isOpenTool = true;
-    //     await useTabelSchemaFormDrop({ roundArea: rect }, { block: this });
-    //     this.dataGridTool.isOpenTool = false;
-    //     this.onOver(this.getVisibleContentBound().contain(Point.from(this.page.kit.operator.moveEvent)))
-    // }
     async onOpenSchemaPage(this: DataGridView, schema?: TableSchema | string) {
         var s = schema ? (typeof schema == 'string' ? schema : schema.id) : this.schema.id;
         await channel.air('/page/open', { elementUrl: getElementUrl(ElementType.Schema, s) });

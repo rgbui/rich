@@ -25,11 +25,9 @@ import { Confirm } from "../../../component/lib/confirm";
 import { usePageHistoryStore } from "../../../extensions/history";
 import { PageDirective } from "../directive";
 import { usePagePublish } from "../../../extensions/publish";
-import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.field";
-import { GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
 import { BlockUrlConstant } from "../../block/constant";
-import { FieldType } from "../../../blocks/data-grid/schema/type";
 import { DataGridForm } from "../../../blocks/data-grid/view/form";
+
 
 export class PageContextmenu {
     async onGetContextMenus(this: Page) {
@@ -41,7 +39,7 @@ export class PageContextmenu {
         var items: MenuItem<BlockDirective | string>[] = [];
         items.push({
             type: MenuItemType.switch,
-            checked: this.pageInfo?.locker?.userid ? true : false,
+            checked: this.pageInfo?.locker?.lock ? true : false,
             text: '编辑保护',
             name: 'lock'
         });
@@ -67,7 +65,8 @@ export class PageContextmenu {
                     pageInfo: {
                         locker: this.pageInfo.locker?.userid ? null : {
                             userid: this.user.id,
-                            lockDate: Date.now()
+                            date: Date.now(),
+                            lock: this.pageInfo?.locker?.lock ? false : true
                         }
                     }
                 });

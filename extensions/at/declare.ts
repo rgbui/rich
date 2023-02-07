@@ -23,7 +23,11 @@ export interface LinkPageItem {
     description?: string,
     pageType?: PageLayoutType,
     url?: string,
-    locker?: { userid: string, lockDate: number },
+    locker?: {
+        lock: boolean,
+        date: number,
+        userid: string
+    },
     share?: 'net' | 'nas' | 'local';
     permission?: PagePermission;
     getPermissons?(): AtomPermission[];
@@ -34,9 +38,9 @@ export interface LinkPageItem {
     textChannelMode?: 'chat' | 'weibo' | 'ask' | 'tieba'
 }
 
-export function getPageIcon(item: LinkPageItem,defaultIcon?:SvgrComponent) {
+export function getPageIcon(item: LinkPageItem, defaultIcon?: SvgrComponent) {
     if (item?.icon) return item.icon;
-    if (!item) return defaultIcon||PageSvg
+    if (!item) return defaultIcon || PageSvg
     if (item.pageType == PageLayoutType.board) {
         return PageSvg
     }
@@ -49,7 +53,7 @@ export function getPageIcon(item: LinkPageItem,defaultIcon?:SvgrComponent) {
     else if (item.pageType == PageLayoutType.db) {
         return CollectTableSvg
     }
-    return defaultIcon||PageSvg
+    return defaultIcon || PageSvg
 }
 
 

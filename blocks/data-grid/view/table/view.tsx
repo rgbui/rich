@@ -1,4 +1,4 @@
-import React from "react"
+import React, { CSSProperties } from "react"
 import { TableStore } from "."
 import { Icon } from "../../../../component/view/icon"
 import { view } from "../../../../src/block/factory/observable"
@@ -22,6 +22,7 @@ export class TableStoreView extends BlockView<TableStore>{
         this.subline.style.display = 'none';
     }
     mousemove(event: MouseEvent) {
+        if (!this.block.isCanEdit()) return;
         if (this.isMoveLine) return;
         if (!this.block.schema) return;
         if (this.isDragMouseField) return;
@@ -173,8 +174,18 @@ export class TableStoreView extends BlockView<TableStore>{
                 if (f.type == 'check') icon = CheckSvg;
                 else if (f.type == 'rowNum') icon = TypesNumberSvg;
                 else if (f.field) icon = GetFieldTypeSvg(f.field.type);
+                var style: CSSProperties = {
+                    width: f.colWidth || 120
+                }
+                if (!this.block.isCanEdit() && i == this.block.fields.length - 1) {
+                    style = {
+                        minWidth: f.colWidth || 120,
+                        flexGrow: 1,
+                        flexShrink: 1
+                    }
+                }
                 return <div className="sy-dg-table-head-th f-14 text-1" onMouseDown={e => this.onDragMouseField(e, f)}
-                    style={{ width: f.colWidth || 120 }}
+                    style={style}
                     key={f?.field?.id || i}>
                     <div className={'sy-dg-table-head-th-icon flex-fix size-24 flex-center text-1'} >
                         <Icon icon={icon} size={16}></Icon>
