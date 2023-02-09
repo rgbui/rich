@@ -531,32 +531,20 @@ export class Page$Cycle {
     }
     formRowData: Record<string, any>;
     async loadSchemaView(this: Page, elementUrl: string) {
-        var isCreateField: boolean = false;
         var pe = parseElementUrl(elementUrl);
         if (!this.schema) {
             this.schema = await TableSchema.loadTableSchema(pe.id);
         }
-        //if (!this.exists(g => (g instanceof OriginFormField))) {
         var pageData = SchemaCreatePageFormData(this.schema, elementUrl, pe.type == ElementType.SchemaRecordViewData ? true : false);
         this.views = [];
         await this.load(pageData);
-        // isCreateField = true;
-        // }
-        // if (!this.exists(g => g.url == BlockUrlConstant.Title)) {
-        //     var view = this.views.first();
-        //     view.blocks.childs.splice(0, 0, await BlockFactory.createBlock(BlockUrlConstant.Title, this, {}, view))
-        // }
         if (pe.type == ElementType.SchemaRecordViewData) {
-            //lodash.remove(this.views.first().blocks.childs, c => c instanceof OriginFormField && c.field.type == FieldType.title);
             var row = await this.schema.rowGet(pe.id2);
             if (row) {
                 this.formRowData = lodash.cloneDeep(row);
                 this.loadSchemaRecord(row);
             }
         }
-        // if (isCreateField) {
-        //     this.emit(PageDirective.save);
-        // }
     }
     loadSchemaRecord(this: Page, row: Record<string, any>) {
         this.each(g => {
