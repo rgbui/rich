@@ -50,7 +50,7 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
         var els: JSX.Element[] = [];
         if (this.historyFontAwesomes.length > 0)
             els.push(<div className='shy-font-awesome-category' key={'icon.name'}>
-                <div className='shy-font-awesome-category-head'><span>{''}</span></div>
+                <div className='shy-font-awesome-category-head'><span>最近</span></div>
                 <div className='shy-font-awesome-category-content'>
                     {this.historyFontAwesomes.map(ic => {
                         return <Tip overlay={langProvider.isCn ? ic.label : ic.name} key={ic.name}><a onMouseDown={e => this.onChange(ic)}>
