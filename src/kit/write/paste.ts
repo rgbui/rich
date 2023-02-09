@@ -15,7 +15,6 @@ import { readCopyBlocks } from "../../page/common/copy";
 import { PageLayoutType } from "../../page/declare";
 import { inputBackspaceDeleteContent } from "./input";
 import { InputForceStore } from "./store";
-// const URL_RGEX = /https?:\/\/([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*(:[\d]+)?\/?/ig;
 
 var strRegex = "^((https|http|ws|wss|ftp|rtsp|mms)?://)"
     + "?(([0-9a-zA-Z_!~*'().&=+$%-]+: )?[0-9a-zA-Z_!~*'().&=+$%-]+@)?" //ftp的user@ 
@@ -28,12 +27,8 @@ var strRegex = "^((https|http|ws|wss|ftp|rtsp|mms)?://)"
     + "((/?)|" // a slash isn't required if there is no file name 
     + "(/[0-9a-zA-Z_!~*'().;?:@&=+$,%#-]+)+/?)$";
 
-var URL_RGEX = new RegExp(strRegex);
-//URL_RGEX=/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$/i
+const URL_RGEX = new RegExp(strRegex);
 
-console.log('si', URL_RGEX.test('http://localhost:8081/ws/4/r?url=%2FSchema%2F4K5tUqSw-4%2FView%2F4L09CBhQ-4'));
-console.log('ssss',URL_RGEX.test('https://localhost:8081/ws/4/r?url=gggg'));
-console.log(new URL('http://localhost:8081/ws/4/r?url=%2FSchema%2F4K5tUqSw-4%2FView%2F4L09CBhQ-4'));
 export async function onPasteBlank(kit: Kit, event: ClipboardEvent) {
     if (kit.page.pageLayout?.type == PageLayoutType.board) {
         var files: File[] = Array.from(event.clipboardData.files);
