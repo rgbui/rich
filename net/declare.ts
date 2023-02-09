@@ -273,7 +273,7 @@ export interface ChannelGetMapUrls {
 	"/user/interactives":{args:{wsId?:string,schemaId:string,ids:string[],es:string[]},returnType:Promise<SockResponse<{list:Record<string,string[]>}>>}
 }
 export interface ChannelQueryMapUrls {
-    "/current/workspace":{args:any,returnType:{id:string,sn:number,text:string}},
+    "/current/workspace":{args:any,returnType:{id:string,sn:number,text:string,url:string}},
 	"/query/current/user":{args:any,returnType:UserBasic},
 	"/cache/get":{args:{key:string},returnType:Promise<any>},
 	"/device/query":{args:any,returnType:Promise<string>},
