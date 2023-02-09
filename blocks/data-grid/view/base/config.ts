@@ -32,8 +32,7 @@ import { Page } from "../../../../src/page";
 import { TableSchema } from "../../schema/meta";
 
 export class DataGridViewConfig {
-    async onOpenViewSettings(this: DataGridView, rect: Rect)
-    {
+    async onOpenViewSettings(this: DataGridView, rect: Rect) {
         var self = this;
         var view = self.schemaView;
         self.dataGridTool.isOpenTool = true;
@@ -190,7 +189,7 @@ export class DataGridViewConfig {
         this.dataGridTool.isOpenTool = true;
         var self = this;
         var menus = [
-            { text: '复制链接', icon: LinkSvg, name: 'copylink' },
+            { text: '复制视图链接', icon: LinkSvg, name: 'copylink' },
             { type: MenuItemType.divide },
             { text: '视图设置...', icon: TemplatesSvg, name: 'view' },
             { text: '字段设置...', icon: PropertysSvg, name: 'propertys' },

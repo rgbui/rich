@@ -1,5 +1,7 @@
 import React from "react";
+import { TableSchema } from "../../blocks/data-grid/schema/meta";
 import { Singleton } from "../../component/lib/Singleton";
+import { ElementType, parseElementUrl } from "../../net/element.type";
 import { KeyboardCode } from "../../src/common/keys";
 import { Point, Rect } from "../../src/common/vector/point";
 import { InputTextPopSelector } from "../common/input.pop";
@@ -20,6 +22,24 @@ class InputUrlSelector extends InputTextPopSelector {
             { text: '嵌入', name: 'embed', url: '/embed' }
         ];
         this.url = text;
+        var ur = new window.URL(this.url);
+        if (ur.pathname.endsWith('/r')) {
+            try {
+                var elementUrl = ur.searchParams.get('url');
+                var pe = parseElementUrl(elementUrl);
+                if (pe.type == ElementType.SchemaView) {
+                    var ts = await TableSchema.getTableSchema(pe.id);
+                    var sv = ts.views.find(c => c.id == pe.id1);
+                    this.urlTexts = [
+                        { text: '引用数据表格', name: 'data-grid', url: sv.url, data: { schemaId: ts.id, syncBlockId: pe.id1 } },
+                        { text: '保持网址', name: 'url', url: '/text', isLine: true },
+                    ]
+                }
+            }
+            catch (ex) {
+
+            }
+        }
         this.pos = round.leftBottom;
         this.selectIndex = 0;
         this.visible = true;
@@ -30,6 +50,7 @@ class InputUrlSelector extends InputTextPopSelector {
     private onSelect(item) {
         try {
             if (typeof this._select == 'function') {
+                var ut = this.urlTexts.find(c => c.name == item.name);
                 var props: Record<string, any> = {};
                 if (item.url == '/text') {
                     props.content = this.url;
@@ -42,6 +63,9 @@ class InputUrlSelector extends InputTextPopSelector {
                     props.origin = ru.origin;
                 }
                 else if (item.url == '/bookmark') { props.bookmarkUrl = this.url; }
+                else if (item.name == 'data-grid') {
+                    Object.assign(props, ut.data);
+                }
                 this._select({
                     url: item.url,
                     isLine: item.isLine,
@@ -72,7 +96,7 @@ class InputUrlSelector extends InputTextPopSelector {
         }
         return false;
     }
-    private urlTexts: { text: string, name: string, isLine?: boolean, url: string }[] = [];
+    private urlTexts: { text: string, name: string, isLine?: boolean, data?: Record<string, any>, url: string }[] = [];
     private visible: boolean = false;
     private pos: Point = new Point(0, 0);
     private selectIndex: number = 0;
