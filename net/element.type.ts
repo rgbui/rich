@@ -216,7 +216,8 @@ export function getWsElementUrl(options: { wsUrl?: string, type: ElementType, id
     var { type, id, id1, id2, wsUrl } = options;
     if (!wsUrl) {
         var ws = channel.query('/current/workspace');
-        wsUrl = `https://${ws.sn}.shy.live/`;
+        wsUrl=ws.url;
+        // wsUrl = `https://${ws.sn}.shy.live/`;
     }
     if (!wsUrl.endsWith('/')) wsUrl += '/';
     return wsUrl + 'r?url=' + encodeURIComponent(getElementUrl(type, id, id1, id2))
