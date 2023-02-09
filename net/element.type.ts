@@ -64,7 +64,7 @@ export enum ElementType {
     WsCommentEmoji,
 }
 export function getElementUrl(type: ElementType, id: string, id1?: string, id2?: string) {
-    if (type == ElementType.SchemaData) return ` /Schema/${id}/Data/${id1}`
+    if (type == ElementType.SchemaData) return `/Schema/${id}/Data/${id1}`
     else if (type == ElementType.SchemaView) return `/Schema/${id}/View/${id1}`
     else if (type == ElementType.SchemaRecordView) return `/Schema/${id}/RecordView/${id1}`
     else if (type == ElementType.SchemaRecordViewData) return `/Schema/${id}/RecordView/${id1}/Data/${id2}`
@@ -80,7 +80,7 @@ export function getElementUrl(type: ElementType, id: string, id1?: string, id2?:
 }
 export function parseElementUrl(url: string) {
     var us = url.split(/\//g);
-    us.removeAll(g => g ? false : true);
+    us.removeAll(g => g.trim() ? false : true);
     if (us.includes('Field') || us.includes('FieldName') || us.includes('FieldBlog')) {
         if (us.includes('FieldName')) {
             us.removeAll(g => g == 'Schema' || g == 'FieldName' || g == 'Data')
