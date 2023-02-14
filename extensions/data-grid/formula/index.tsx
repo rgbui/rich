@@ -75,7 +75,7 @@ class FormulaSelector extends EventsComponent {
                         })}
                     </div>
                     <div className="gap-h-10">
-                        <div className="remark font-12 padding-l-10">类</div>
+                        <div className="remark font-12 padding-l-10">类型</div>
                         {formulaLangs.map((fl, k) => {
                             return <div className="gap-h-10" key={k}>
                                 <div onClick={e => { fl.spread = fl.spread ? false : true; this.forceUpdate() }}
@@ -94,7 +94,7 @@ class FormulaSelector extends EventsComponent {
                         })}
                     </div>
                 </div>
-                <div className="padding-10 overflow-y flex-auto">
+                <div className="padding-10 overflow-y flex-auto md">
                     {this.md && <Markdown md={this.md}></Markdown>}
                 </div>
             </div>

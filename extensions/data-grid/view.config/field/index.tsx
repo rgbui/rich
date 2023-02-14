@@ -150,7 +150,7 @@ export class DataGridFields extends EventsComponent {
                 await self.block.onUpdateProps({ [item.name]: item.checked }, { syncBlock: self.block, range: BlockRenderRange.self });
                 self.forceUpdate()
             }
-            else if (item.name == 'cardConfig.coverFieldId' && item.value) {
+            else if (['cardConfig.coverFieldId', 'cardConfig.showMode'].includes(item.name) && item.value) {
                 await self.block.onUpdateProps({ [item.name]: item.value }, { syncBlock: self.block, range: BlockRenderRange.self });
                 self.forceUpdate()
             }
@@ -162,21 +162,29 @@ export class DataGridFields extends EventsComponent {
 
         }
         var getItems = () => {
-            if ((this.block as TableStoreGallery)?.cardConfig?.showTemplate)
+            if ((this.block as TableStoreGallery)?.cardConfig?.showMode == 'define')
                 return [
                     {
-                        name: 'cardConfig.showTemplate',
-                        text: "自定义卡片模板",
-                        type: MenuItemType.switch,
-                        checked: (this.block as TableStoreGallery).cardConfig?.showTemplate == true,
+                        name: 'cardConfig.showMode',
+                        text: "显示",
+                        type: MenuItemType.select,
+                        value: (this.block as TableStoreGallery).cardConfig?.showMode || 'default',
+                        options: [
+                            { text: "卡片", value: 'default' },
+                            { text: '自定义卡片模板', value: 'define' }
+                        ]
                     }
                 ]
             var baseItems: MenuItem[] = [
                 {
-                    name: 'cardConfig.showTemplate',
-                    text: "自定义卡片模板",
-                    type: MenuItemType.switch,
-                    checked: (this.block as TableStoreGallery).cardConfig?.showTemplate == true,
+                    name: 'cardConfig.showMode',
+                    text: "显示",
+                    type: MenuItemType.select,
+                    value: (this.block as TableStoreGallery).cardConfig?.showMode || 'default',
+                    options: [
+                        { text: "卡片", value: 'default' },
+                        { text: '自定义卡片模板', value: 'define' }
+                    ]
                 },
                 { text: '卡片视图', type: MenuItemType.text },
                 {
@@ -231,8 +239,8 @@ export class DataGridFields extends EventsComponent {
                 click={click}
                 style={{ maxHeight: 300, paddingTop: 10, paddingBottom: 10, overflowY: 'auto' }}
                 items={getItems()}></MenuView>
-            {(this.block as TableStoreGallery).cardConfig?.showTemplate != true && this.renderFields()}
-            {(this.block as TableStoreGallery).cardConfig?.showTemplate && this.renderCardView()}
+            {(this.block as TableStoreGallery).cardConfig?.showMode != 'define' && this.renderFields()}
+            {(this.block as TableStoreGallery).cardConfig?.showMode == 'define' && this.renderCardView()}
             <Divider></Divider>
             <div onClick={e => this.addField(e)} className="flex h-30 item-hover padding-w-14 round cursor text-1 f-14 ">
                 <span className="size-24 round flex-center flex-fix cursor">
