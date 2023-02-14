@@ -31,7 +31,7 @@ export class DataGridItemRecord extends Block {
         showCover: false,
         coverFieldId: "",
         coverAuto: false,
-        showTemplate: false,
+        showMode: 'default',
         templateProps: {}
     }
     schema: TableSchema;
@@ -148,7 +148,7 @@ export class DataGridItemRecord extends Block {
 @view('/data-grid/record')
 export class DataGridItemRecordView extends BlockView<DataGridItemRecord>{
     renderItem() {
-        if (this.block.cardConfig.showTemplate && this.block.cardConfig.templateProps.url) {
+        if (this.block.cardConfig.showMode == 'define' && this.block.cardConfig.templateProps.url) {
             var CV = CardFactory.getCardView(this.block.cardConfig.templateProps.url);
             if (CV) return <CV item={this.block} dataGrid={this.block}></CV>
         }

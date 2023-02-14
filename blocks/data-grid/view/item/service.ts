@@ -173,7 +173,7 @@ export interface CardConfig {
     showCover: boolean,
     coverFieldId: string,
     coverAuto: boolean,
-    showTemplate: boolean,
+    showMode: 'default' | 'define',
     templateProps: {
         url?: string,
         props?: {

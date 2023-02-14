@@ -10,7 +10,6 @@ import { ViewField } from "../../schema/view";
 import { DataGridView } from "../base";
 import { createFieldBlock } from "./service";
 import trash from "../../../../src/assert/svg/trash.svg";
-import "./style.less";
 import { langProvider } from "../../../../i18n/provider";
 import { LangID } from "../../../../i18n/declare";
 import { BlockUrlConstant } from "../../../../src/block/constant";
@@ -22,6 +21,7 @@ import { channel } from "../../../../net/channel";
 import { FieldType } from "../../schema/type";
 import lodash from "lodash";
 import { OriginField } from "../../element/field/origin.field";
+import "./style.less";
 
 @url('/data-grid/item')
 export class TableStoreItem extends Block {

@@ -19,11 +19,11 @@ export class TableStoreGallery extends DataGridView {
         showCover: false,
         coverFieldId: "",
         coverAuto: false,
-        showTemplate: false,
+        showMode: 'default',
         templateProps: {}
     };
     get isCardAuto() {
-        return this.cardConfig?.auto || this.cardConfig.showTemplate == true
+        return this.cardConfig?.auto || this.cardConfig.showMode == 'define'
     }
 }
 
@@ -70,7 +70,7 @@ export class TableStoreGalleryView extends BlockView<TableStoreGallery>{
         return eles;
     }
     renderItem(itemBlock: Block) {
-        if (this.block.cardConfig.showTemplate && this.block.cardConfig.templateProps.url) {
+        if (this.block.cardConfig.showMode=='define' && this.block.cardConfig.templateProps.url) {
             var CV = CardFactory.getCardView(this.block.cardConfig.templateProps.url);
             if (CV) return <CV item={itemBlock as any} dataGrid={this.block}></CV>
         }
