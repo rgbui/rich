@@ -40,6 +40,8 @@ import {
 } from "../../../component/svgs";
 import { MenuItemType } from "../../../component/view/menu/declare";
 import { BlockUrlConstant } from "../../../src/block/constant";
+import { TableSchema } from "./meta";
+import { Field } from "./field";
 
 export function GetFieldTypeSvg(type: FieldType) {
     switch (type) {
@@ -219,4 +221,27 @@ export function getFieldMenus() {
     }
     return getSchemaFieldMenus(map);
 
+}
+
+export function cacFormulaValue(schema: TableSchema, field: Field, row: Record<string, any>) {
+    try {
+        if (field?.config?.formula?.jsCode) {
+            if (typeof typeof field.config.formula.jx != 'function') {
+                var registerFns = {};
+                var funCode = `function(row,fns){ 
+${Object.keys(row).map(r => { return `var ${r}=row.${r};` }).join("\n")}
+${Object.keys(registerFns).map(g => { return `var ${g}=fns.${g}` })}
+return ${field.config.formula.jsCode}
+                }`
+                var fx = eval('(' + funCode + ')');
+                field.config.formula.jx = fx;
+            }
+            if (typeof field.config.formula.jx == 'function') {
+                return field.config.formula.jx.apply(row, [row, registerFns])
+            }
+        }
+    }
+    catch (ex) {
+        return '';
+    }
 }

@@ -57,7 +57,7 @@ export interface FieldConfig {
     rollupTableId?: string,
     rollupFieldId?: string,
     rollupStatistic?: string,
-    formula?: { formula: string, jsCode: string, exp: any },
+    formula?: { formula: string, jsCode: string, exp: any,jx?:any },
     emoji?: EmojiCode,
     dateFormat?: string,
     includeTime?: boolean,
