@@ -28,14 +28,20 @@ export var logcLangs = [
 
 export var funLangs = [
     { text: 'toNumber', url: '/fun/toNumber.md' },
-    { text: 'join', url: '/fun/join.md' },
+    { text: 'String.join', url: '/fun/join.md' },
     { text: 'Math.abs', url: '/fun/abs.md' },
-    { text: 'Math.cbrt', url: '/fun/cbrt.md' },
-    { text: 'Math.ceil', url: '/fun/ceil.md' },
+
+
+    { text: 'Math.pow', url: '/fun/pow.md' },
     { text: 'Math.exp', url: '/fun/exp.md' },
+
+    { text: 'Math.ceil', url: '/fun/ceil.md' },
     { text: 'Math.floor', url: '/fun/floor.md' },
     { text: 'Math.round', url: '/fun/round.md' },
+
     { text: 'Math.sqrt', url: '/fun/sqrt.md' },
+    { text: 'Math.cbrt', url: '/fun/cbrt.md' },
+
     { text: 'Math.max', url: '/fun/max.md' },
     { text: 'Math.min', url: '/fun/min.md' },
     { text: 'Math.random', url: '/fun/random.md' },

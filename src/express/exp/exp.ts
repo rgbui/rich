@@ -381,18 +381,18 @@ export class Exp {
     compile() {
         switch (this.operator) {
             case '?:':
-                return `(${this.childs[0].compile()}) if (${this.childs[1].compile()}) else (${this.childs[2].compile()})`
+                return `(${this.childs[0].compile()}) ? (${this.childs[1].compile()}) : (${this.childs[2].compile()})`
                 break;
             case '[':
                 return '[' + this.childs.map(c => c.compile()).join(",") + "]";
                 break;
             case 'constant':
                 if (typeof this.value == 'boolean') {
-                    if (this.value) return 'True'
-                    else return 'False'
+                    if (this.value) return 'true'
+                    else return 'false'
                 }
                 else if (typeof this.value == 'number') return this.value.toString()
-                else if (this.value == null) return 'None';
+                else if (this.value == null) return 'null';
                 break;
             case 'number':
                 return this.value;

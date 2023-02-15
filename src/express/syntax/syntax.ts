@@ -6,8 +6,8 @@ export var VeTokenSyntax: LangSyntax = {
     operator: ['+', '.', '-', '*', '/', '%', '?', '=', '==', '&&', '||', '!', '!=', '>', "<", '>=', '<='],
     escapes: /\\\\([abfnrtv\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})/,
     white: /[ \t\f\v]/,
-    unit: /[a-zA-Z_\$]/,
-    word: /@unit[a-zA-Z_\$\d]*/,
+    unit: /[a-zA-Z_\$@]/,
+    word: /@unit[a-zA-Z_\$\d@]*/,
     // namespace: /@word@white*\.@white*@word/,
     number: /(\-)?\d+(\.\d+)?([eE][\-+]?\d+)?/,
     root: [

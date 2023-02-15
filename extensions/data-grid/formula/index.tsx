@@ -106,7 +106,7 @@ class FormulaSelector extends EventsComponent {
         this.formula = e;
         var exp = new Express(this.schema.fields.map(f => {
             return {
-                name: f.text,
+                name: '@' + f.text,
                 type: f.type as any,
                 template: f.name
             }
@@ -115,7 +115,7 @@ class FormulaSelector extends EventsComponent {
         exp.check();
         var jsCode = exp.compile();
         if (exp.checkOk) {
-            this.emit('save', { formula: this.formula, jsCode, exp: exp.exp.get() });
+            this.emit('save', { formula: this.formula, jx: null, jsCode, exp: exp.exp.get() });
         }
         else {
             var logs = exp.getLogs();
