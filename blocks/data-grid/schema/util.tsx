@@ -42,6 +42,7 @@ import { MenuItemType } from "../../../component/view/menu/declare";
 import { BlockUrlConstant } from "../../../src/block/constant";
 import { TableSchema } from "./meta";
 import { Field } from "./field";
+import dayjs, { Dayjs } from "dayjs";
 
 export function GetFieldTypeSvg(type: FieldType) {
     switch (type) {
@@ -227,7 +228,40 @@ export function cacFormulaValue(schema: TableSchema, field: Field, row: Record<s
     try {
         if (field?.config?.formula?.jsCode) {
             if (typeof typeof field.config.formula.jx != 'function') {
-                var registerFns = {};
+                var registerFns = {
+                    replaceAll(str, oldStr, newStr) {
+                        var reg = new RegExp(oldStr, 'g');
+                        return str.replace(reg, newStr)
+                    },
+                    toNumber(str, def) {
+                        var g = parseFloat(str);
+                        if (isNaN(g)) {
+                            if (typeof def == 'number') return def;
+                        }
+                        return g;
+                    },
+                    toInt(str, def) {
+                        var g = parseInt(str);
+                        if (isNaN(g)) {
+                            if (typeof def == 'number') return def;
+                        }
+                        return g;
+                    },
+                    toDate(str, format, def) {
+                        var g = dayjs(str, format);
+                        if (g.isValid) {
+                            return g.toDate()
+                        }
+                        if (def instanceof Date) return def;
+                        else if (typeof def == 'string') return dayjs(def).toDate()
+                    },
+                    toDateFormat(date, format) {
+                        return dayjs(date).format(format)
+                    },
+                    dateAdd(d, num, unit) {
+                        return dayjs(d).add(num, unit).toDate()
+                    }
+                };
                 var funCode = `function(row,fns){ 
 ${Object.keys(row).map(r => { return `var ${r}=row.${r};` }).join("\n")}
 ${Object.keys(registerFns).map(g => { return `var ${g}=fns.${g}` })}

@@ -106,8 +106,14 @@ export class Express {
         else dec = this.declares.find(g => g.path == name && (g.kind == TypeKind.static || g.kind == TypeKind.arg));
         if (dec) {
             var temp = dec.template || dec.path;
-            var code = temp.replace(/(\$(this|args[\d]))/g, ($, $1) => {
+            var code = temp.replace(/(\$(this|params|args[\d]))/g, ($, $1) => {
                 if ($1 == '$this') return callerName || '';
+                else if ($1 == '$params') {
+                    if (Array.isArray((dec.type as any).__args)) {
+                        var at = (dec.type as any).__args.findIndex(c => c?.__extensible == true);
+                        return `[${args.slice(at).join(",")}]`;
+                    }
+                }
                 else {
                     var name = $1.replace('$args', '');
                     var n = parseFloat(name);
@@ -125,8 +131,14 @@ export class Express {
             if (dec) {
                 var lastPath = name.slice((dec.path + ".").length);
                 var temp = dec.template || dec.path;
-                var code = temp.replace(/(\$(this|args[\d]))/g, ($, $1) => {
+                var code = temp.replace(/(\$(this|params|args[\d]))/g, ($, $1) => {
                     if ($1 == '$this') return callerName || '';
+                    else if ($1 == '$params') {
+                        if (Array.isArray((dec.type as any).__args)) {
+                            var at = (dec.type as any).__args.findIndex(c => c?.__extensible == true);
+                            return `[${args.slice(at).join(",")}]`;
+                        }
+                    }
                     else {
                         var name = $1.replace('$args', '');
                         var n = parseFloat(name);

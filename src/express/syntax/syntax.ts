@@ -3,7 +3,7 @@ import { TokenType } from "../token/token";
 import { convertLangSyntax, LangSyntax } from "./regex";
 export var VeTokenSyntax: LangSyntax = {
     keyword: /true|false|null/,
-    operator: ['+', '.', '-', '*', '/', '%', '?', '=', '==', '&&', '||', '!', '!=', '>', "<", '>=', '<='],
+    operator: ['+', '.', '-', '*', '/', '%', '?', '=', '==', '&&', '||', '!', '!=', '>', "<", '>=', '<=','and','or'],
     escapes: /\\\\([abfnrtv\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})/,
     white: /[ \t\f\v]/,
     unit: /[a-zA-Z_\$@]/,

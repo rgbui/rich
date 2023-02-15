@@ -34,7 +34,7 @@ export type ExOperatorType = 'root' | 'statement' |
     'variable' | 'fun' | 'constant'
     | 'string' | 'number' |
     '?:' | '{,'
-    | '[]';
+    | '[]' | 'and' | 'or';
 
 export class Exp {
     operator: ExOperatorType;
@@ -179,6 +179,8 @@ export class Exp {
             case '==':
             case '||':
             case '&&':
+            case 'and':
+            case 'or':
                 return 'bool';
                 break;
         }
@@ -325,6 +327,8 @@ export class Exp {
                 break;
             case '||':
             case '&&':
+            case 'and':
+            case 'or':
                 if (this.childs.length == 2) {
                     if (!typeIsBool(this.childs[0].inferType()) || !typeIsBool(this.childs[0].inferType())) {
                         this.express.log('error', `${this.operator}运算符表达式类型不是布尔`)
@@ -474,7 +478,12 @@ export class Exp {
             case '==':
             case '||':
             case '&&':
-                return `(${this.childs[0].compile()}${this.operator}${this.childs[1].compile()})`
+            case 'and':
+            case 'or':
+                var c = this.operator;
+                if (c == 'and') c = '&&'
+                else if (c == 'or') c = '||'
+                return `(${this.childs[0].compile()}${c}${this.childs[1].compile()})`
             default:
                 console.log('not found operator', this.operator);
         }

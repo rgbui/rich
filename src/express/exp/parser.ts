@@ -11,6 +11,8 @@ var ops = [
     { "operator": "==", "level": 7 },
     { "operator": "&&", "level": 11 },
     { "operator": "||", "level": 12 },
+    { "operator": "and", "level": 11 },
+    { "operator": "or", "level": 12 },
     { "operator": "!", "level": 2 },
     { "operator": "!=", "level": 7 },
     { "operator": ">", "level": 6 },
