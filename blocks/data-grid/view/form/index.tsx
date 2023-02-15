@@ -41,26 +41,27 @@ export class DataGridForm extends DataGridView {
     }
     async didMounted() {
         await this.loadSchema();
+        if (this.autoCreateFeilds == false) {
+            await this.autoCreateFormFields();
+            this.autoCreateFeilds = true;
+       }
         if (this.schema) {
             if (this.view)
                 this.view.forceUpdate();
         }
     }
-    async initialedLoad() {
-        await this.loadSchema();
-        if (this.schema) {
-            if (this.autoCreateFeilds == false) {
-                await this.autoCreateFormFields();
-                this.autoCreateFeilds = true;
-            }
-        }
-    }
     updateSchemaViewText = lodash.debounce(async function (value) {
-
+        await this.schema.onSchemaOperate([
+            { name: 'updateSchemaView', id: this.schemaView.id, data: { text: value } }
+        ]);
     }, 800)
+
     updateSchemaViewDescription = lodash.debounce(async function (value) {
-
+        await this.schema.onSchemaOperate([
+            { name: 'updateSchemaView', id: this.schemaView.id, data: { description: value } }
+        ]);
     }, 800)
+
     async autoCreateFormFields() {
         var cs: Record<string, any>[] = this.schema.initUserFields.toArray(field => {
             var r = GetFieldFormBlockInfo(field);
@@ -190,17 +191,17 @@ export class DataGridFormView extends BlockView<DataGridForm>{
                         minHeight: '50px',
                         textAlign: 'center'
                     }}
-                        defaultValue={this.block.schemaView.text}
+                        defaultValue={this.block.schemaView?.text}
                         onInput={e => this.block.updateSchemaViewText((e.target as HTMLInputElement).value)}
                         className="noborder w100"></input></div>
                     <div className="remark"><input style={{
                         fontSize: 14,
                         textAlign: 'center'
-                    }} placeholder={'添加表单描述'} defaultValue={this.block.schemaView.description} onInput={e => this.block.updateSchemaViewDescription((e.target as HTMLInputElement).value)} className="noborder w100"></input></div>
+                    }} placeholder={'添加表单描述'} defaultValue={this.block.schemaView?.description} onInput={e => this.block.updateSchemaViewDescription((e.target as HTMLInputElement).value)} className="noborder w100"></input></div>
                     <ChildsArea childs={this.block.childs}></ChildsArea>
                     {this.block.childs.length == 0 && <div className="remark flex-center padding-20">没有表单字段</div>}
                     <div className="flex-center gap-h-30">
-                        <Button>保存</Button>
+                        <Button>保&nbsp;存</Button>
                     </div>
                 </div>
             </div>
@@ -217,13 +218,13 @@ export class DataGridFormView extends BlockView<DataGridForm>{
                     lineHeight: '50px',
                     minHeight: '50px',
                     textAlign: 'center'
-                }} defaultValue={this.block.schemaView.text}
+                }} defaultValue={this.block.schemaView?.text}
                     onInput={e => this.block.updateSchemaViewText((e.target as HTMLInputElement).value)}
                     className="noborder w100"></input></div>
                 <div className="remark gap-b-30 gap-t-10"><input style={{
                     fontSize: 14,
                     textAlign: 'center'
-                }} placeholder={'添加表单描述'} defaultValue={this.block.schemaView.description} onInput={e => this.block.updateSchemaViewDescription((e.target as HTMLInputElement).value)} className="noborder w100"></input></div>
+                }} placeholder={'添加表单描述'} defaultValue={this.block.schemaView?.description} onInput={e => this.block.updateSchemaViewDescription((e.target as HTMLInputElement).value)} className="noborder w100"></input></div>
                 <ChildsArea childs={this.block.childs}></ChildsArea>
                 {this.block.childs.length == 0 && <div className="remark flex-center padding-20">没有表单字段</div>}
                 <div className="flex-center gap-h-30">
