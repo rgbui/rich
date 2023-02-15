@@ -282,7 +282,7 @@ export class Exp {
 
                     }
                     else {
-                        this.express.log('error', `${this.operator}运算符两边的值不全是文本或数字`)
+                        //this.express.log('error', `${this.operator}运算符两边的值不全是文本或数字`)
                     }
                 }
                 else {
@@ -315,7 +315,7 @@ export class Exp {
             case '==':
                 if (this.childs.length == 2) {
                     if (!typeIsEqual(this.childs[0].inferType(), this.childs[1].inferType(), true)) {
-                        this.express.log('error', `运算符${this.operator}两边的值类型不一致`)
+                        this.express.log('warn', `运算符${this.operator}两边的值类型不一致`)
                     }
                 }
                 else {
