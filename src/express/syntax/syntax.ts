@@ -6,15 +6,15 @@ export var VeTokenSyntax: LangSyntax = {
     operator: ['+', '.', '-', '*', '/', '%', '?', '=', '==', '&&', '||', '!', '!=', '>', "<", '>=', '<=','and','or'],
     escapes: /\\\\([abfnrtv\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})/,
     white: /[ \t\f\v]/,
-    unit: /[a-zA-Z_\$@]/,
-    word: /@unit[a-zA-Z_\$\d@]*/,
+    unit: /[a-zA-Z_\$\u4E00-\u9FA5@]/,
+    word: /@unit[a-zA-Z_\$\d\u4E00-\u9FA5@]*/,
     // namespace: /@word@white*\.@white*@word/,
     number: /(\-)?\d+(\.\d+)?([eE][\-+]?\d+)?/,
     root: [
         { match: /@white+/, name: 'white' },
         { match: /[\{\(\[]/, name: 'bracket_open', push: true },
         { match: /[\)\]\}]/, name: 'bracket_close', pop: true },
-        { match: /@keyword(?![a-zA-Z_\$\u4E00-\u9FA5\d])/, name: 'keyword' },
+        { match: /@keyword(?![a-zA-Z_\$\u4E00-\u9FA5\d@])/, name: 'keyword' },
         { match: /@word/, name: 'word' },
         {
             match: '@operator',

@@ -17,7 +17,7 @@ export class Express {
                 template: arg.template,
                 kind: TypeKind.arg
             }
-        })
+        });
     }
     get declares() {
         return [
