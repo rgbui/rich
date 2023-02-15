@@ -339,6 +339,9 @@ export class Rect {
             return point.dis(new Point(this.right, point.y))
         }
     }
+    merge(rect: Rect) {
+        return RectUtility.getPointsBound([...this.points, ...rect.points])
+    }
     static getRectFromRects(rects: Rect[]) {
         var ps = rects.map(r => [r.leftTop, r.rightBottom]).flat();
         return new Polygon(...ps).bound;
