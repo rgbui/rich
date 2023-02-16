@@ -3,16 +3,18 @@ import React from "react";
 import { ReactNode } from "react";
 import { EventsComponent } from "../../../../../component/lib/events.component";
 import { Button } from "../../../../../component/view/button";
+import { Divider } from "../../../../../component/view/grid";
 import { PopoverSingleton } from "../../../../../extensions/popover/popover";
 import { PopoverPosition } from "../../../../../extensions/popover/position";
+
 import { CardPropsType } from "../declare";
 import { CardFactory } from "../factory/factory";
 
 export class CardSelector extends EventsComponent {
     name: string = 'image-text';
     render(): ReactNode {
-        return <div className="padding-l-14 w-500 round ">
-            <div className=" min-h-400  flex-full">
+        return <div className="w-500 round ">
+            <div className="padding-l-14  min-h-400  flex-full">
                 <div className="flex-fixed w-150  overflow-y h-400 padding-h-14 border-right padding-r-10">
                     {this.getStores().map(cs => {
                         return <div className={"padding-14 round cursor item-hover" + (this.selectUrl == cs.url ? " item-focus-hover" : "")} onMouseDown={e => this.onSelect(cs, e)} key={cs.url}>
@@ -30,9 +32,10 @@ export class CardSelector extends EventsComponent {
                     </div>}
                 </div>
             </div>
-            <div className="flex-end gap-w-14">
-                <Button size="small" onMouseDown={e => this.onSave()} className="gap-r-10">确定</Button>
-                <Button size="small" ghost>取消</Button>
+            <Divider></Divider>
+            <div className="padding-w-14 flex-end  min-h-40">
+                <Button onMouseDown={e => this.onSave()} className="gap-r-10">确定</Button>
+                <Button ghost>取消</Button>
             </div>
         </div>
     }
@@ -48,6 +51,7 @@ export class CardSelector extends EventsComponent {
         //this.emit('save', d)
         this.selectUrl = d.url;
         this.current = d;
+        this.forceUpdate()
     }
     onSave() {
 

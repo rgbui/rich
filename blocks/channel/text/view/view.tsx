@@ -202,7 +202,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
     renderWeibos() {
         return <div className="w-c-250 gap-auto">
             <div className="min-h-80 bg-white border-light round-8 gap-15 padding-15" data-shy-page-no-focus onMouseDown={e => e.stopPropagation()}>
-                <RichView placeholder="微博"></RichView>
+                <RichView placeholder="有什么新鲜事分享给大家"></RichView>
                 {/* <RichTextInput
                     richClassName={'bg round-16 padding-10'}
                     allowUploadFile={false}
