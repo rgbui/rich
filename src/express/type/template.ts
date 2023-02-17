@@ -5,11 +5,20 @@ import { DeclareTypes } from "./declare";
  * 
  */
 DeclareTypes.registerType('string', 'length', 'number', '$this.length');
+DeclareTypes.registerStatic('String.length', { __args: ['string'], __returnType: 'int' }, `$args1.length`);
+
 DeclareTypes.registerType('string', 'isEmpty', 'bool', '$this===\'\'');
-DeclareTypes.registerType('string', 'slice', { __args: ['int', 'int'], __returnType: 'string' }, '$this.slice($args1:$args2)');
+DeclareTypes.registerStatic('String.isEmpty', { __args: ['string'], __returnType: 'bool' }, `$args1===\'\'`);
+
+DeclareTypes.registerType('string', 'slice', { __args: ['int', 'int'], __returnType: 'string' }, '$this.slice($args1,$args2)');
+DeclareTypes.registerStatic('String.slice', { __args: ['string'], __returnType: 'string' }, `$args1.slice($args2,$args3)`);
+
 DeclareTypes.registerType('string', 'startsWith', { __args: ['string'], __returnType: 'bool' }, '$this.startswith($args1)');
 DeclareTypes.registerType('string', 'endsWith', { __args: ['string'], __returnType: 'bool' }, '$this.endswith($args1)');
+
 DeclareTypes.registerType('string', 'replace', { __args: ['string', 'string'], __returnType: 'string' }, 'replaceAll($this,$args1,$args2)');
+DeclareTypes.registerStatic('String.replace', { __args: ['string', 'string', 'string'], __returnType: 'string' }, `replaceAll($args1,$args2,$args3)`);
+
 DeclareTypes.registerType('string', 'trim', { __args: [], __returnType: 'string' }, '$this.trim()');
 DeclareTypes.registerType('string', 'trimStart', { __args: [], __returnType: 'string' }, '$this.trimStart()');
 DeclareTypes.registerType('string', 'trimEnd', { __args: [], __returnType: 'string' }, '$this.trimEnd()');
@@ -17,7 +26,10 @@ DeclareTypes.registerType('string', 'upper', { __args: [], __returnType: 'string
 DeclareTypes.registerType('string', 'lower', { __args: [], __returnType: 'string' }, '$this.toLowerCase()');
 DeclareTypes.registerType('string', 'indexOf', { __args: ['string'], __returnType: 'int' }, '$this.index($args1)');
 DeclareTypes.registerType('string', 'lastIndexOf', { __args: ['string'], __returnType: 'int' }, '$this.lastIndexOf($args1)');
-DeclareTypes.registerType('string', 'contains', { __args: ['string'], __returnType: 'bool' }, '($this.index($args1)>-1)');
+
+DeclareTypes.registerType('string', 'contains', { __args: ['string'], __returnType: 'bool' }, '($this.indexOf($args1)>-1)');
+DeclareTypes.registerStatic('String.contains', { __args: ['string', 'string'], __returnType: 'string' }, `$args1.indexOf($args2)>-1`);
+
 DeclareTypes.registerType('string', 'padStart', { __args: ['int', 'string'], __returnType: 'string' }, '$this.padStart($args1,$args2)');
 DeclareTypes.registerType('string', 'padEnd', { __args: ['int', 'string'], __returnType: 'string' }, '$this.padEnd($args1,$args2)');
 DeclareTypes.registerType('string', 'split', { __args: ['string'], __returnType: { __unit: 'string' } }, '$this.split($args1)');
@@ -105,13 +117,13 @@ DeclareTypes.registerType('date', 'timestamp', { __args: [], __returnType: 'int'
 DeclareTypes.registerStatic('Date.timestamp', { __args: ['date'], __returnType: 'int' }, `$args1.getTime()`);
 
 DeclareTypes.registerType('date', 'format', { __args: ['string'], __returnType: 'string' }, 'toDateFormat($this,$args1)');
-DeclareTypes.registerStatic('Date.format', { __args: ['date','string'], __returnType: 'string' }, `toDateFormat($args1,$args2)`);
+DeclareTypes.registerStatic('Date.format', { __args: ['date', 'string'], __returnType: 'string' }, `toDateFormat($args1,$args2)`);
 
 DeclareTypes.registerType('date', 'add', { __args: ['int', 'string'], __returnType: 'date' }, 'dateAdd($this,$args1,$args2)');
-DeclareTypes.registerStatic('Date.add', { __args: ['date','int', 'string'], __returnType: 'date' }, `dateAdd($args1,$args2,$args3)`);
+DeclareTypes.registerStatic('Date.add', { __args: ['date', 'int', 'string'], __returnType: 'date' }, `dateAdd($args1,$args2,$args3)`);
 
 DeclareTypes.registerType('date', 'sub', { __args: ['int', 'string'], __returnType: 'date' }, 'dateAdd($this,0-$args1,$args2)');
-DeclareTypes.registerStatic('Date.sub', { __args: ['date','int', 'string'], __returnType: 'date' }, `dateAdd($args1,0-$args2,$args3)`);
+DeclareTypes.registerStatic('Date.sub', { __args: ['date', 'int', 'string'], __returnType: 'date' }, `dateAdd($args1,0-$args2,$args3)`);
 
 // var r = new Date();
 // r.getMilliseconds()

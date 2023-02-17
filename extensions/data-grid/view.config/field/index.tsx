@@ -242,7 +242,7 @@ export class DataGridFields extends EventsComponent {
             {(this.block as TableStoreGallery).cardConfig?.showMode != 'define' && this.renderFields()}
             {(this.block as TableStoreGallery).cardConfig?.showMode == 'define' && this.renderCardView()}
             <Divider></Divider>
-            <div onClick={e => this.addField(e)} className="flex h-30 item-hover padding-w-14 round cursor text-1 f-14 ">
+            <div onClick={e => this.addField(e)} className="flex h-30 gap-b-10  item-hover padding-w-14 round cursor text-1 f-14 ">
                 <span className="size-24 round flex-center flex-fix cursor">
                     <Icon size={18} icon={PlusSvg}></Icon>
                 </span>

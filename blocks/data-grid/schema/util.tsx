@@ -42,7 +42,8 @@ import { MenuItemType } from "../../../component/view/menu/declare";
 import { BlockUrlConstant } from "../../../src/block/constant";
 import { TableSchema } from "./meta";
 import { Field } from "./field";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import lodash from "lodash";
 
 export function GetFieldTypeSvg(type: FieldType) {
     switch (type) {
@@ -221,61 +222,61 @@ export function getFieldMenus() {
         })
     }
     return getSchemaFieldMenus(map);
-
 }
 
 export function cacFormulaValue(schema: TableSchema, field: Field, row: Record<string, any>) {
     try {
         if (field?.config?.formula?.jsCode) {
-            if (typeof typeof field.config.formula.jx != 'function') {
-                var registerFns = {
-                    replaceAll(str, oldStr, newStr) {
-                        var reg = new RegExp(oldStr, 'g');
-                        return str.replace(reg, newStr)
-                    },
-                    toNumber(str, def) {
-                        var g = parseFloat(str);
-                        if (isNaN(g)) {
-                            if (typeof def == 'number') return def;
-                        }
-                        return g;
-                    },
-                    toInt(str, def) {
-                        var g = parseInt(str);
-                        if (isNaN(g)) {
-                            if (typeof def == 'number') return def;
-                        }
-                        return g;
-                    },
-                    toDate(str, format, def) {
-                        var g = dayjs(str, format);
-                        if (g.isValid) {
-                            return g.toDate()
-                        }
-                        if (def instanceof Date) return def;
-                        else if (typeof def == 'string') return dayjs(def).toDate()
-                    },
-                    toDateFormat(date, format) {
-                        return dayjs(date).format(format)
-                    },
-                    dateAdd(d, num, unit) {
-                        return dayjs(d).add(num, unit).toDate()
+            var registerFns = {
+                replaceAll(str, oldStr, newStr) {
+                    var reg = new RegExp(oldStr, 'g');
+                    return str.replace(reg, newStr)
+                },
+                toNumber(str, def) {
+                    var g = parseFloat(str);
+                    if (isNaN(g)) {
+                        if (typeof def == 'number') return def;
                     }
-                };
-                var funCode = `function(row,fns){ 
-${Object.keys(row).map(r => { return `var ${r}=row.${r};` }).join("\n")}
-${Object.keys(registerFns).map(g => { return `var ${g}=fns.${g}` })}
+                    return g;
+                },
+                toInt(str, def) {
+                    var g = parseInt(str);
+                    if (isNaN(g)) {
+                        if (typeof def == 'number') return def;
+                    }
+                    return g;
+                },
+                toDate(str, format, def) {
+                    var g = dayjs(str, format);
+                    if (g.isValid) {
+                        return g.toDate()
+                    }
+                    if (def instanceof Date) return def;
+                    else if (typeof def == 'string') return dayjs(def).toDate()
+                },
+                toDateFormat(date, format) {
+                    return dayjs(date).format(format)
+                },
+                dateAdd(d, num, unit) {
+                    return dayjs(d).add(num, unit).toDate()
+                }
+            };
+            var funCode = `function(row,fns){ 
+${schema.fields.map(r => { return `var ${r.name}=row.${r.name};` }).join("\n")}
+${Object.keys(registerFns).map(g => { return `var ${g}=fns.${g};` }).join("\n")}
 return ${field.config.formula.jsCode}
                 }`
-                var fx = eval('(' + funCode + ')');
-                field.config.formula.jx = fx;
-            }
-            if (typeof field.config.formula.jx == 'function') {
-                return field.config.formula.jx.apply(row, [row, registerFns])
-            }
+            var fx = eval('(' + funCode + ')');
+            var result = fx.apply(row, [row, registerFns])
+            if (typeof result == 'undefined') result = ''
+            else if (lodash.isNull(result)) result = ''
+            else if (lodash.isNaN(result)) result = ''
+            if (typeof result != 'string') result = result.toString();
+            return result;
         }
     }
     catch (ex) {
+        console.error(ex);
         return '';
     }
 }

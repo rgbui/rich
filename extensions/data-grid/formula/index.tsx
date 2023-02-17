@@ -1,5 +1,7 @@
+import lodash from "lodash";
 import React from "react";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
+import { FieldType } from "../../../blocks/data-grid/schema/type";
 import { GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { ChevronRightSvg, TypesNumberSvg } from "../../../component/svgs";
@@ -30,17 +32,23 @@ class FormulaSelector extends EventsComponent {
             console.error(ex);
         }
     }
+    textarea: Textarea = null
     render(): React.ReactNode {
         return <div className="w-500">
-            <div className="h-80"><Textarea value={this.formula} onChange={e => this.formula = e} onEnter={e => this.onSave(e)}></Textarea></div>
+            <div className="h-80"><Textarea ref={e => this.textarea = e} value={this.formula} onChange={e => this.onInput(e)} ></Textarea></div>
             <div className="flex-full h-300">
                 <div className="overflow-y w-150 bg-light  padding-b-100 flex-fixed">
                     <div className="gap-h-10">
                         <div className="remark font-12 padding-l-10">属性</div>
-                        {this.schema && this.schema.userFields.map(f => {
-                            return <div key={f.id} className="padding-w-10 item-hover round cursor flex h-30">
+                        {this.schema && this.getFields().map(f => {
+                            return <div onMouseDown={e => {
+                                this.formula += f.text;
+                                this.textarea.updateValue(this.formula);
+                            }}
+                                key={f.id}
+                                className="padding-w-10 item-hover round cursor flex h-30">
                                 <span className="flex-center size-24 flex-fixed"><Icon size={16} icon={GetFieldTypeSvg(f.type)}></Icon></span>
-                                <span className="f-14 inline-block text-overflow flex-auto">{f.text}</span>
+                                <span className="f-14 inline-block text-overflow flex-auto">@{f.text}</span>
                             </div>
                         })}
                     </div>
@@ -98,16 +106,38 @@ class FormulaSelector extends EventsComponent {
                     {this.md && <Markdown md={this.md}></Markdown>}
                 </div>
             </div>
+            {this.error && <div className="error min-h-30 padding-w-14">{this.error}</div>}
         </div>
     }
-    onSave(e) {
+    getFields() {
+        var fs = this.schema.userFields.findAll(g => [
+            FieldType.title,
+            FieldType.option,
+            FieldType.phone,
+            FieldType.email,
+            FieldType.number,
+            FieldType.autoIncrement,
+            FieldType.sort,
+            FieldType.date,
+            FieldType.createDate,
+            FieldType.modifyDate
+        ].includes(g.type));
+        return fs;
+    }
+    result: { formula: string, jsCode: any, exp: any } = null;
+    onInput = lodash.debounce((e) => {
         this.error = '';
         this.forceUpdate()
         this.formula = e;
-        var exp = new Express(this.schema.fields.map(f => {
+        var exp = new Express(this.getFields().map(f => {
+            var type = 'string';
+            if ([FieldType.date, FieldType.createDate, FieldType.modifyDate].includes(f.type)) type = 'date'
+            else if ([FieldType.number, FieldType.sort].includes(f.type)) type = 'number'
+            else if ([FieldType.bool].includes(f.type)) type = 'bool'
+            else type = 'string'
             return {
                 name: '@' + f.text,
-                type: f.type as any,
+                type: type as any,
                 template: f.name
             }
         }));
@@ -115,20 +145,22 @@ class FormulaSelector extends EventsComponent {
         exp.check();
         var jsCode = exp.compile();
         if (exp.checkOk) {
-            this.emit('save', { formula: this.formula, jx: null, jsCode, exp: exp.exp.get() });
+            this.result = { formula: this.formula, jsCode, exp: exp.exp.get() }
         }
         else {
             var logs = exp.getLogs();
             this.error = logs.findAll(g => g.type == 'error').map(c => c.message).join(" ");
-            this.forceUpdate()
         }
-    }
+        this.forceUpdate()
+    }, 700)
     formula: string;
     md: string = '';
     error: string = '';
     open(schema: TableSchema, formula: string) {
         this.schema = schema;
         this.formula = formula;
+        this.result = null;
+        this.error = '';
         this.forceUpdate()
     }
 }
@@ -140,16 +172,12 @@ export async function useFormula(pos: PopoverPosition, options: {
     let fv = await popover.open(pos);
     fv.open(options.schema, options.formula);
     return new Promise((resolve: (data: { formula: string, jsCode: string, exp: any }) => void, reject) => {
-        fv.only('save', (data: { formula: string, jsCode: string, exp: any }) => {
-            popover.close();
-            resolve(data);
-        });
         fv.only('close', () => {
             popover.close();
-            resolve(null);
+            resolve(fv.result);
         })
         popover.only('close', () => {
-            resolve(null)
+            resolve(fv.result)
         })
     })
 }
