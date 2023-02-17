@@ -178,50 +178,50 @@ export class PageContextmenu {
             ];
         }
         else if (this.pageLayout.type == PageLayoutType.textChannel) {
-            // items = [
-            //     // {
-            //     //     name: 'channel',
-            //     //     text: '频道',
-            //     //     icon: FourLeavesSvg,
-            //     //     type: MenuItemType.select,
-            //     //     value: this.pageInfo?.textChannelMode || 'chat',
-            //     //     options: [
-            //     //         { text: '聊天', value: 'chat' },
-            //     //         { text: '微博', value: "weibo" },
-            //     //         // { text: '问答', value: "ask" },
-            //     //         // { text: '贴吧', value: "tiebar" }
-            //     //     ]
-            //     // },
-            //     // {
-            //     //     name: 'speak',
-            //     //     text: '发言',
-            //     //     icon: CommunicationSvg,
-            //     //     type: MenuItemType.select,
-            //     //     value: this.pageInfo?.speak || 'more',
-            //     //     options: [
-            //     //         { text: '允许发言多次', value: 'more' },
-            //     //         { text: '从此刻仅允许发言一次', value: "only" }
-            //     //     ]
-            //     // },
-            //     // { type: MenuItemType.divide },
-            //     //{ name: 'refPages', text: "显示引用", icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
-            //     { name: 'lock', text: this.pageInfo.locker?.userid ? "解除锁定" : '编辑保护', icon: this.pageInfo.locker?.userid ? UnlockSvg : LockSvg },
-            //     // { type: MenuItemTypeValue.divide },
-            //     // { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
-            //     //{ name: 'history', icon: VersionHistorySvg, text: '页面历史' },
-            //     { type: MenuItemType.divide },
-            //     { name: 'copylink', icon: LinkSvg, text: '复制链接' },
-            //     { type: MenuItemType.divide },
-            //     //{ type: MenuItemType.divide },
-            //     //{ name: 'undo', text: '撤消', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
-            //     // { name: 'redo', text: '重做', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
-            //     { name: 'delete', icon: TrashSvg, text: '删除' },
-            //     // { type: MenuItemTypeValue.divide },
-            //     // { name: 'import', iconSize: 16, icon: ImportSvg, text: '导入', disabled: true },
-            //     // { name: 'export', iconSize: 16, text: '导出', icon: FileSvg, disabled: true, remark: '导出PDF,HTML,Markdown' },
-            //     // { type: MenuItemTypeValue.divide },
-            //     // { name: 'move', text: '移动', icon: MoveToSvg, disabled: true },
-            // ];
+            items = [
+                //     // {
+                //     //     name: 'channel',
+                //     //     text: '频道',
+                //     //     icon: FourLeavesSvg,
+                //     //     type: MenuItemType.select,
+                //     //     value: this.pageInfo?.textChannelMode || 'chat',
+                //     //     options: [
+                //     //         { text: '聊天', value: 'chat' },
+                //     //         { text: '微博', value: "weibo" },
+                //     //         // { text: '问答', value: "ask" },
+                //     //         // { text: '贴吧', value: "tiebar" }
+                //     //     ]
+                //     // },
+                // {
+                //     name: 'speak',
+                //     text: '发言',
+                //     icon: CommunicationSvg,
+                //     type: MenuItemType.select,
+                //     value: this.pageInfo?.speak || 'more',
+                //     options: [
+                //         { text: '允许发言多次', value: 'more' },
+                //         { text: '从此刻仅允许发言一次', value: "only" }
+                //     ]
+                // },
+                //     // { type: MenuItemType.divide },
+                //     //{ name: 'refPages', text: "显示引用", icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
+                //     { name: 'lock', text: this.pageInfo.locker?.userid ? "解除锁定" : '编辑保护', icon: this.pageInfo.locker?.userid ? UnlockSvg : LockSvg },
+                //     // { type: MenuItemTypeValue.divide },
+                //     // { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
+                //     //{ name: 'history', icon: VersionHistorySvg, text: '页面历史' },
+                { type: MenuItemType.divide },
+                { name: 'copylink', icon: LinkSvg, text: '复制链接' },
+                //     { type: MenuItemType.divide },
+                //     //{ type: MenuItemType.divide },
+                //     //{ name: 'undo', text: '撤消', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
+                //     // { name: 'redo', text: '重做', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
+                //     { name: 'delete', icon: TrashSvg, text: '删除' },
+                //     // { type: MenuItemTypeValue.divide },
+                //     // { name: 'import', iconSize: 16, icon: ImportSvg, text: '导入', disabled: true },
+                //     // { name: 'export', iconSize: 16, text: '导出', icon: FileSvg, disabled: true, remark: '导出PDF,HTML,Markdown' },
+                //     // { type: MenuItemTypeValue.divide },
+                //     // { name: 'move', text: '移动', icon: MoveToSvg, disabled: true },
+            ];
         }
         else if (this.pageLayout.type == PageLayoutType.dbForm) {
             var block = this.find(c => c.url == BlockUrlConstant.FormView) as DataGridForm;
@@ -282,7 +282,6 @@ export class PageContextmenu {
             }
             else if (r.item.name == 'history') {
                 var result = await usePageHistoryStore(this);
-
                 if (result) {
                     this.emit(PageDirective.rollup, result);
                 }

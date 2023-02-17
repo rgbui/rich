@@ -10,7 +10,6 @@ import lodash from "lodash";
 import { ElementType, getElementUrl } from "../../../net/element.type";
 import { LinkPageItem } from "../../../extensions/at/declare";
 
-
 @url('/channel/text')
 export class ChannelText extends Block {
     chats: ChannelTextType[] = [];
@@ -161,8 +160,7 @@ export class ChannelText extends Block {
                 // }
             });
         }
-    }, 1200)
-
+    },1200)
     pageInfo: LinkPageItem = null;
     async loadPageInfo() {
         if (this.page.pageInfo) {
