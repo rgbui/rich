@@ -104,6 +104,7 @@ import H3Svg from "../src/assert/svg/h3.svg";
 import H4Svg from "../src/assert/svg/h4.svg";
 import HelpSvg from "../src/assert/svg/help.svg";
 import HideSvg from "../src/assert/svg/hide.svg";
+import HorizontalDistributionSvg from "../src/assert/svg/horizontalDistribution.svg";
 import ImageErrorSvg from "../src/assert/svg/imageError.svg";
 import ImportSvg from "../src/assert/svg/import.svg";
 import InfoSvg from "../src/assert/svg/info.svg";
@@ -314,6 +315,7 @@ H3Svg,
 H4Svg,
 HelpSvg,
 HideSvg,
+HorizontalDistributionSvg,
 ImageErrorSvg,
 ImportSvg,
 InfoSvg,

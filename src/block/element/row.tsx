@@ -7,8 +7,10 @@ import { BlockDisplay } from '../enum';
 import { url, view } from '../factory/observable';
 import { MouseDragger } from '../../common/dragger';
 import { ActionDirective } from '../../history/declare';
-import { PlusSvg } from '../../../component/svgs';
+import { HorizontalDistributionSvg } from '../../../component/svgs';
 import { Icon } from '../../../component/view/icon';
+import { ToolTip } from '../../../component/view/tooltip';
+
 /**
  * 分区中会有很多行，每行存在于一个或多个block
  * 
@@ -81,7 +83,7 @@ export class RowView extends BlockView<Row>{
                     data-index={i}
                     className='sy-block-row-gap'>
                     <i className='flex-center'>
-                        <span onMouseDown={e => this.agvCols(e)} className='size-24 flex-center item-hover round cursor'><Icon icon={PlusSvg}></Icon></span>
+                        <ToolTip overlay={'平均等比例'}><span onMouseDown={e => this.agvCols(e)} className='size-24 flex-center item-hover round cursor text-1'><Icon size={16} icon={HorizontalDistributionSvg}></Icon></span></ToolTip>
                     </i>
                     <em></em>
                 </div>)

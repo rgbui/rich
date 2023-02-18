@@ -18,6 +18,7 @@ export class Col extends Block {
 @view('/col')
 export class ColView extends BlockView<Col>{
     render() {
+        if (!this.block.parent) return <div>error</div>;
         var p = this.block.parent.childs.length;
         var style = {
             width: `calc((100% - ${(p - 1) * 46}px) * ${(this.block.widthPercent || 100) / 100})`
