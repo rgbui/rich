@@ -1,7 +1,7 @@
 import { BlockView } from "../../src/block/view";
 import { prop, url, view } from "../../src/block/factory/observable";
 import React from 'react';
-import { TextArea, TextLineChilds } from "../../src/block/view/appear";
+import { TextSpanArea } from "../../src/block/view/appear";
 import { BlockDisplay } from "../../src/block/enum";
 import { Block } from "../../src/block";
 import { TextTurns } from "../../src/block/turn/text";
@@ -36,7 +36,7 @@ export class Head extends Block {
     }
     getVisibleContentBound() {
         if (this.el)
-            return Rect.fromEle(this.el.querySelector('.sy-block-text-head-content') as HTMLElement);
+            return Rect.fromEle(this.el.querySelector('.relative') as HTMLElement);
     }
     async getHtml() {
         var tag = this.level;
@@ -47,9 +47,12 @@ export class Head extends Block {
 @view("/head")
 export class HeadView extends BlockView<Head>{
     render() {
-        var style: Record<string, any> = { ...this.block.visibleStyle, fontWeight: 600 };
+        var style: Record<string, any> = { fontWeight: 600 };
+        if (this.props.block.align == 'center') style.textAlign = 'center';
+        Object.assign(style, this.block.contentStyle);
         var pt: string = '';
         var ns: string[] = [];
+        var tag: JSX.Element;
         if (this.block.level == 'h1') {
             style.fontSize = 30
             style.lineHeight = '39px';
@@ -57,6 +60,10 @@ export class HeadView extends BlockView<Head>{
             style.marginBottom = '4px';
             pt = '一级标题';
             ns = [undefined]
+            tag = <h1 style={style} className="relative">
+                <div className="sy-block-text-head-tips">{ns.map((n, i) => <em key={i}></em>)}</div>
+                <TextSpanArea placeholder={pt} block={this.block}></TextSpanArea>
+            </h1>;
         }
         else if (this.block.level == 'h2') {
             style.fontSize = 24;
@@ -65,6 +72,10 @@ export class HeadView extends BlockView<Head>{
             style.marginBottom = '1px';
             pt = '二级标题';
             ns = [undefined, undefined]
+            tag = <h2 style={style} className="relative">
+                <div className="sy-block-text-head-tips">{ns.map((n, i) => <em key={i}></em>)}</div>
+                <TextSpanArea placeholder={pt} block={this.block}></TextSpanArea>
+            </h2>;
         }
         else if (this.block.level == 'h3') {
             style.fontSize = 20;
@@ -73,6 +84,10 @@ export class HeadView extends BlockView<Head>{
             style.marginBottom = '1px';
             pt = '三级标题';
             ns = [undefined, undefined, undefined]
+            tag = <h3 style={style} className="relative">
+                <div className="sy-block-text-head-tips">{ns.map((n, i) => <em key={i}></em>)}</div>
+                <TextSpanArea placeholder={pt} block={this.block}></TextSpanArea>
+            </h3>;
         }
         else if (this.block.level == 'h4') {
             style.fontSize = 16;
@@ -81,24 +96,13 @@ export class HeadView extends BlockView<Head>{
             style.marginBottom = '1px';
             pt = '四级标题';
             ns = [undefined, undefined, undefined, undefined]
+            tag = <h4 style={style} className="relative">
+                <div className="sy-block-text-head-tips">{ns.map((n, i) => <em key={i}></em>)}</div>
+                <TextSpanArea placeholder={pt} block={this.block}></TextSpanArea>
+            </h4>;
         }
-        if(this.props.block.align=='center')style.textAlign='center';
-        Object.assign(style, this.block.contentStyle);
-        if (this.block.childs.length > 0)
-            return <div className='sy-block-text-head' style={this.block.visibleStyle}>
-                <div className='sy-block-text-head-content' style={style}>
-                    <div className="sy-block-text-head-content-tip">{ns.map((n, i) => <em key={i}></em>)}</div>
-                    <TextLineChilds
-                        rf={e => this.block.childsEl = e}
-                        childs={this.block.childs}></TextLineChilds>
-                </div>
-            </div>
-        else
-            return <div className='sy-block-text-head' style={this.block.visibleStyle}>
-                <div className='sy-block-text-head-content' style={style}>
-                    <div className="sy-block-text-head-content-tip">{ns.map((n, i) => <em key={i}></em>)}</div>
-                    <TextArea block={this.block} placeholder={pt} prop='content' ></TextArea>
-                </div>
-            </div>
+        return <div className='sy-block-text-head' style={this.block.visibleStyle}>
+            {tag}
+        </div>
     }
 }

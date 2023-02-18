@@ -44,7 +44,7 @@ export class DataGridForm extends DataGridView {
         if (this.autoCreateFeilds == false) {
             await this.autoCreateFormFields();
             this.autoCreateFeilds = true;
-       }
+        }
         if (this.schema) {
             if (this.view)
                 this.view.forceUpdate();
@@ -175,6 +175,33 @@ export class DataGridForm extends DataGridView {
             this.dataGridTool.isOpenTool = false;
             this.dataGridTool.forceUpdate();
         }
+    }
+    loadSchemaRecord(row: Record<string, any>) {
+        this.each(g => {
+            if (g instanceof OriginFormField) {
+                var f = g.field;
+                if (f) {
+                    g.value = g.field.getValue(row);
+                }
+            }
+        })
+    }
+    getSchemaRow() {
+        var row: Record<string, any> = {};
+        this.each(g => {
+            if (g instanceof OriginFormField) {
+                var f = g.field;
+                if (f) {
+                    row[f.name] = g.value;
+                }
+            }
+        })
+        if (this.page.formRowData) {
+            row.icon = this.page.formRowData.icon;
+            row.cover = this.page.formRowData.cover;
+            row.title = this.page.formRowData.title;
+        }
+        return row;
     }
 }
 

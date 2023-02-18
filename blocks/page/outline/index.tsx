@@ -13,7 +13,7 @@ import { AnimatedScrollTo } from "../../../util/animatedScrollTo";
 @url('/outline')
 export class PageOutLine extends Block {
     display = BlockDisplay.block;
-    outlines: { id: string, deep: number, block: Block, hover?: boolean, text: string }[] = [];
+    outlines: { id: string, deep: number, block: Block, hover?: boolean, text?: string, html?: string }[] = [];
     hoverId = '';
     updateOutlinesHover() {
         var hoverId = '';
@@ -35,13 +35,12 @@ export class PageOutLine extends Block {
         this.forceUpdate();
     }
     getOutLines() {
-        var outlines:{ id: string, deep: number, block: Block, text: string }[] = [];
+        var outlines: { id: string, deep: number, block: Block, text: string }[] = [];
         var bs = this.page.findAll(x => x.url == BlockUrlConstant.Head && x.el && (x.closest(c => c.isPart) ? false : true));
         lodash.sortBy(bs, g => Rect.fromEle(g.el).top);
-        var currentDeep = 0,lastLevel;
-        if (this.page.view)
-        {
-            outlines = bs.map((b,i) =>{
+        var currentDeep = 0, lastLevel;
+        if (this.page.view) {
+            outlines = bs.map((b, i) => {
                 var level = parseInt((b as any).level.replace('h', ''));
                 var deep = currentDeep;
                 if (typeof lastLevel == 'number' && level < lastLevel) deep -= 1;
@@ -52,7 +51,8 @@ export class PageOutLine extends Block {
                     id: b.id,
                     deep,
                     block: b,
-                    text: b.childs.length > 0 ? b.childs.map(c => c.content).join("") : b.content
+                    text: b.getBlockContent(),
+                    html: b.el ? b.el.innerText : undefined
                 }
             })
         }
@@ -61,6 +61,15 @@ export class PageOutLine extends Block {
     updateOutLine() {
         this.getOutLines();
         this.updateOutlinesHover()
+    }
+    updateHeadBlock(block: Block) {
+        var ou = this.outlines.find(c => c.id == block.id);
+        if (ou) {
+            ou.html = block.el ? block.el.innerText : undefined;
+            if (block.el) ou.text = undefined
+            else ou.text = block.getBlockContent()
+            this.forceUpdate()
+        }
     }
     get handleBlock() {
         return null;

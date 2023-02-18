@@ -340,6 +340,10 @@ export abstract class Block extends Events {
     }
     @prop()
     content: string = '';
+    getBlockContent() {
+        if (this.childs.length > 0) return this.childs.map(c => c.content).join("");
+        else return this.content;
+    }
     /**
      * 是否可以自动删除
      */
