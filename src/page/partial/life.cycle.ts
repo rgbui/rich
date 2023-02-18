@@ -70,7 +70,7 @@ export class Page$Cycle {
                     this.views.push(dc as View);
                 }
             }
-            if (typeof this.pageLayout == 'undefined') this.pageLayout = { type: PageLayoutType.doc };
+            if (typeof this.pageLayout == 'undefined') this.pageLayout = Object.assign(this.pageLayout, { type: PageLayoutType.doc });
             if ([
                 PageLayoutType.dbForm,
                 PageLayoutType.dbPickRecord
@@ -105,7 +105,7 @@ export class Page$Cycle {
                 this.views.push(dc as View);
             }
         }
-        if (typeof this.pageLayout == 'undefined') this.pageLayout = { type: PageLayoutType.doc };
+        if (typeof this.pageLayout == 'undefined') this.pageLayout=Object.assign(this.pageLayout,{type: PageLayoutType.doc });
         if ([
             PageLayoutType.dbForm,
             PageLayoutType.dbPickRecord,

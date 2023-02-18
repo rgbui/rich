@@ -33,6 +33,7 @@ import { ElementType, parseElementUrl } from '../../net/element.type';
 import { BlockUrlConstant } from '../block/constant';
 import lodash from 'lodash';
 import { ActionDirective } from '../history/declare';
+import { PageLayout } from '../../extensions/layout';
 
 export class Page extends Events<PageDirective> {
     root: HTMLElement;
@@ -62,7 +63,7 @@ export class Page extends Events<PageDirective> {
     permissons: AtomPermission[] = [];
     kit: Kit = new Kit(this);
     snapshoot = new HistorySnapshoot(this)
-    pageLayout: { type: PageLayoutType };
+    pageLayout: { layout?: PageLayout, type: PageLayoutType };
     views: View[] = [];
     view: PageView;
     keyboardPlate: KeyboardPlate = new KeyboardPlate();
