@@ -218,7 +218,7 @@ export interface ChannelGetMapUrls {
 	"/datastore/group":{args:{schemaId:string,page?:number,size?:number,filter?:Record<string, any>,sorts?:Record<string, 1|-1>,group:string},returnType:Promise<{ok:boolean,data:{list:any[],total:number,page:number,size:number},warn:string}>},
 	"/datastore/statistics":{args:{schemaId:string,page?:number,size?:number,filter?:Record<string, any>,having?:Record<string, any>,sorts?:Record<string, 1|-1>,groups:string[],aggregate?: Record<string, any>},returnType:Promise<{ok:boolean,data:{list:any[],total:number,page:number,size:number},warn:string}>},
 	"/datastore/statistics/value":{args:{schemaId:string,filter?:Record<string, any>,indicator:string},returnType:Promise<{ok:boolean,data:{value:number},warn:string}>},
-	"/sign":{args:any,returnType:Promise<SockResponse<{user:Record<string,any>,rk:string,pk:string,token:string}>>},
+	"/sign":{args:any,returnType:Promise<SockResponse<{user:Record<string,any>,rk:string,uk:string,token:string}>>},
 	"/sign/out":{args:any,returnType:Promise<SockResponse<void>>},
 	"/phone/check/sign":{args:{phone:string},returnType:Promise<{ok:boolean,warn:string,data:{sign:boolean}}>},
 	"/user/query":{args:any,returnType:Promise<SockResponse<{user:Record<string,any>}>>},
