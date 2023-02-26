@@ -6,6 +6,7 @@ import { BlockChildKey, BlockUrlConstant } from "../constant";
  * 主要是用来确定光标的上下左右移动
  */
 export class Block$Anchor {
+    
     async visibleDownCreateBlock(this: Block, url: string, data: Record<string, any> = {}) {
         var row = this.closest(x => x.isBlock);
         return await this.page.createBlock(url, { ...data }, row.parent, row.at + 1, row.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
