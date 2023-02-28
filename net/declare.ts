@@ -193,7 +193,7 @@ export interface ChannelPutMapUrls {
 	"/create/qr_pay/order":{args:{subject: string,body: string,price: number,count: number,amount?: number,kind: string},returnType:Promise<SockResponse<{orderId:string,code:string}>>},
 	"/open/weixin/bind":{args:{weixinOpen:any},returnType:Promise<SockResponse<void>>},
 	"/open/sign":{args:{},returnType:Promise<SockResponse<{user:Record<string,any>,guid:string,token:string}>>},
-	"/ws/create":{args:{text:string,templateId?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
+	"/ws/create":{args:{text:string,dataServiceAddress?:string,searchServiceAddress?:string,fileServiceAddress?:string,templateId?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
 	"/ws/invite/create":{args:any,returnType:Promise<SockResponse<{code:string}>>},
 	"/ws/invite/join":{args:{wsId:string,sock?:any},returnType:Promise<SockResponse<void>>},
 	"/ws/channel/send":{args:{ sockId?: string,wsId?: string,roomId: string,content?: string,replyId?: string, file?:any},returnType:Promise<SockResponse<{id:string,seq:number,createDate:Date}>>},
