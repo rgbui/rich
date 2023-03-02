@@ -1,6 +1,6 @@
 import { CollectTableSvg, PageSvg, TopicSvg } from "../../component/svgs";
 import { PageLayoutType } from "../../src/page/declare";
-import { AtomPermission, PagePermission } from "../../src/page/permission";
+import { AtomPermission } from "../../src/page/permission";
 import { IconArguments } from "../icon/declare"
 
 
@@ -29,8 +29,22 @@ export interface LinkPageItem {
         userid: string
     },
     share?: 'net' | 'nas' | 'local';
-    permission?: PagePermission;
-    getPermissons?(): AtomPermission[];
+    /**
+      * 互联网是否公开，如果公开的权限是什么
+      */
+    netPermissions?: AtomPermission[];
+    /**
+     * 外部邀请的用户权限
+     */
+    inviteUsersPermissions?: { userid: string, permissions: AtomPermission[] }[];
+    /**
+     * 空间成员权限，
+     * 可以指定角色，也可以指定具体的人
+     */
+    memberPermissions?: { roleId: string, userid: string, permissions: AtomPermission[] }[];
+
+    getPagePermissions?(): AtomPermission[];
+
     getSubItems?(): Promise<LinkPageItem[]>;
     getItem?(): Partial<LinkPageItem>;
     speak?: 'more' | 'only';

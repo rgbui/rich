@@ -1,18 +1,18 @@
-export function getCommonPerssions()
-{
+export function getCommonPerssions() {
     return [
-        AtomPermission.sendMessageByChannel,
-        AtomPermission.commentDoc,
-        AtomPermission.addDataGridData,
+        AtomPermission.docInteraction,
+        AtomPermission.docExport,
+        AtomPermission.docView,
+        AtomPermission.wsNotAllow,
+        AtomPermission.dbInteraction,
     ]
 }
 export function getEditPerssions() {
     return [
-        AtomPermission.sendMessageByChannel,
-        AtomPermission.commentDoc,
-        AtomPermission.addDataGridData,
-        AtomPermission.editDoc,
-        AtomPermission.editDataGrid
+        AtomPermission.docEdit,
+        AtomPermission.wsEdit,
+        AtomPermission.channelEdit,
+        AtomPermission.dbEdit
     ]
 }
 export function getAllAtomPermission() {
@@ -29,61 +29,115 @@ export function getAllAtomPermission() {
  * 这是一个很细的权限列表
  */
 export enum AtomPermission {
+
+
     /**
-     * 是否可以编辑文档
+     * 页面的权限管理
      */
-    editDoc = 100,
+    docEdit = 1,
+    docExport = 2,
+    docView = 3,
+    docInteraction = 4,
+    docNotAllow = 5,
+
+
     /**
-     * 创建文档
-     * 删除文档
-     * 重命名文档
+     * 频道的日常管理
      */
-    createOrDeleteDoc = 101,
+    channelEdit = 10,
+    channelInteraction = 11,
+    channelView = 12,
+    channcelNotAllow = 13,
+
     /**
-     * 评论文档，用户自已的可以删除
+     * 数据表格编辑
      */
-    commentDoc = 102,
+    dbEdit = 20,
     /**
-     * 可以主动性的删除相关的评论， 这个表示管理员
+     * 数据表格数据编辑
      */
-    deleteComment = 103,
+    dbDataEdit = 21,
     /**
-     * 编辑数据表格
+     * 仅添加数据
      */
-    editDataGrid = 120,
+    dbInteraction = 22,
     /**
-     * 删除、创建
+     * 数据不能被访问
      */
-    createOrDeleteDataGrid = 121,
+    dbNotAllow = 23,
+
     /**
-     * 添加数据表格数据
+     * 允许管理空间
      */
-    addDataGridData = 122,
+    wsEdit = 31,
     /**
-     * 可以主动性的删除数据表格的数据， 这个表示管理员
+     * 仅允许分配成员权限
      */
-    deleteDataGridData = 123,
+    wsMemeberPermissions = 32,
     /**
-     * 允许发言
+     * 空间不能被管理
      */
-    sendMessageByChannel = 110,
-    /***
-     * 允许创建或删除文本频道、修改
-     */
-    createOrDeleteChannel = 111,
+    wsNotAllow = 33,
+
+
+
+
+
+    // /**
+    //  * 是否可以编辑文档
+    //  */
+    // editDoc = 100,
+    // /**
+    //  * 创建文档
+    //  * 删除文档
+    //  * 重命名文档
+    //  */
+    // createOrDeleteDoc = 101,
+    // /**
+    //  * 评论文档，用户自已的可以删除
+    //  */
+    // commentDoc = 102,
+    // /**
+    //  * 可以主动性的删除相关的评论， 这个表示管理员
+    //  */
+    // deleteComment = 103,
+    // /**
+    //  * 编辑数据表格
+    //  */
+    // editDataGrid = 120,
+    // /**
+    //  * 删除、创建
+    //  */
+    // createOrDeleteDataGrid = 121,
+    // /**
+    //  * 添加数据表格数据
+    //  */
+    // addDataGridData = 122,
+    // /**
+    //  * 可以主动性的删除数据表格的数据， 这个表示管理员
+    //  */
+    // deleteDataGridData = 123,
+    // /**
+    //  * 允许发言
+    //  */
+    // sendMessageByChannel = 110,
+    // /***
+    //  * 允许创建或删除文本频道、修改
+    //  */
+    // createOrDeleteChannel = 111,
 }
 
-export enum PagePermission {
-    /**
-     * 可以浏览
-     */
-    canView = 1000,
-    /**
-     * 可以编辑
-     */
-    canEdit = 1001,
-    /**
-     * 可以交互
-     */
-    canInteraction = 1002,
-}
+// export enum PagePermission {
+//     /**
+//      * 可以浏览
+//      */
+//     canView = 1000,
+//     /**
+//      * 可以编辑
+//      */
+//     canEdit = 1001,
+//     /**
+//      * 可以交互
+//      */
+//     canInteraction = 1002,
+// }
