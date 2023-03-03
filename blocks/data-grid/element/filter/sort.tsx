@@ -30,7 +30,7 @@ export class SearchTextView extends BlockView<FilterSort>{
                 border
                 inline
                 value={this.block.sortRule}
-                onChange={e => this.block.onFilter(e)}
+                onChange={e => this.block.onFilter(e as number)}
                 options={[
                     { text: '无', value: 0 },
                     { text: "升序", value: 1, icon: ArrowUpSvg },

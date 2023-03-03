@@ -1,10 +1,12 @@
 .shy-input {
     display : block;
     position: relative;
-width:100%;
+    width   : 100%;
+
     &-wrapper {
         display: block;
     }
+
     input {
         width        : 100%;
         font-size    : 14px;
@@ -62,10 +64,25 @@ width:100%;
         border       : 0px;
         box-sizing   : border-box;
         resize       : none;
-        overflow-y: auto;
+        overflow-y   : auto;
+
+        &::placeholder {
+            font-size: 14px;
+            color    : rgba(0, 0, 0, 0.2)
+        }
 
         &:focus {
             box-shadow: rgba(46 170 220, 0.7) 0px 0px 0px 1px inset, rgba(46 170 220, 0.4) 0px 0px 0px 2px !important;
         }
+    }
+}
+
+.shy-span-input {
+    outline: none;
+
+    &:empty::after {
+        content  : attr(data-placeholder);
+        font-size: 14px;
+        color    : rgba(0, 0, 0, 0.1)
     }
 }
