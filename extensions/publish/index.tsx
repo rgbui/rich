@@ -1,19 +1,23 @@
+import lodash from "lodash";
 import React from "react";
 import { CopyText } from "../../component/copy";
 import { ShyAlert } from "../../component/lib/alert";
 import { EventsComponent } from "../../component/lib/events.component";
-import { GlobalLinkSvg, LinkSvg, PlusSvg } from "../../component/svgs";
+import { CloseSvg, GlobalLinkSvg, LinkSvg, PlusSvg } from "../../component/svgs";
 import { Avatar } from "../../component/view/avator/face";
 import { Divider } from "../../component/view/grid";
 import { Icon } from "../../component/view/icon";
 import { useSelectMenuItem } from "../../component/view/menu";
+import { MenuItemType } from "../../component/view/menu/declare";
+import { SelectBox } from "../../component/view/select/box";
 import { Switch } from "../../component/view/switch";
+import { channel } from "../../net/channel";
 import { Point } from "../../src/common/vector/point";
 import { Page } from "../../src/page";
+import { AtomPermission } from "../../src/page/permission";
 import { LinkPageItem } from "../at/declare";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
-import "./style.less";
 
 class PagePublish extends EventsComponent {
     constructor(props) {
@@ -22,6 +26,7 @@ class PagePublish extends EventsComponent {
     open(item: LinkPageItem, page: Page) {
         this.item = item;
         this.page = page;
+        this.forceUpdate()
     }
     page: Page;
     copyLink() {
@@ -31,75 +36,166 @@ class PagePublish extends EventsComponent {
     item: LinkPageItem = null;
     render() {
         var self = this;
+        var ps: {
+            roleId?: string;
+            userid?: string;
+            permissions: AtomPermission[];
+        }[] = this.item?.memberPermissions || [];
+        if (ps.length == 0) {
+            ps.push(
+                {
+                    roleId: 'all',
+                    permissions: [AtomPermission.docInteraction]
+                }
+            )
+        }
         async function setGlobalShare(data) {
             await self.page.onUpdatePageData(data);
+            Object.assign(self.item, data);
             self.forceUpdate()
         }
         async function addPermission(event: React.MouseEvent) {
+            var rs = channel.query('/current/workspace')
             var r = await useSelectMenuItem({ roundPoint: Point.from(event) },
                 [
-                    { text: '添加角色', name: 'addRole' },
-                    { text: '添加成员', name: 'addMember' }
+                    {
+                        text: '添加角色',
+                        type: MenuItemType.text
+                    },
+                    {
+                        text: '所有人',
+                        name: "addRole",
+                        value: 'all',
+                        disabled: self.item.memberPermissions.some(s => s.roleId == 'all')
+                    },
+                    ...rs.roles.map(r => {
+                        return {
+                            text: r.text,
+                            name: 'addRole',
+                            value: r.id,
+                            disabled: self.item.memberPermissions.some(s => s.roleId == r.id)
+                        }
+                    })
                 ]
             );
             if (r) {
+                if (r.item.name == 'addMember') {
 
+                }
+                else if (r.item.name == 'addRole') {
+                    self.item.memberPermissions.push({
+                        roleId: r.item.value,
+                        permissions: [AtomPermission.docInteraction]
+                    });
+                    self.forceUpdate()
+                }
             }
         }
-        function getRoles(roleId) {
-            return { text: '' }
+        async function remove(mp) {
+            lodash.remove(ps, p => p.userid && p.userid == mp.userid || p.roleId && p.roleId == mp.roleId);
+            await setGlobalShare({ 'memberPermissions': ps });
         }
-        return <div className='shy-page-publish'>
-            <div className="flex">
-                <span className="flex-auto">空间成员</span>
-                <span className="flex-fixed size-24 item-hover round cursor"><Icon icon={PlusSvg}></Icon></span>
+        async function setMemberPermissions(mp, permissions: AtomPermission[]) {
+            mp.permissions = permissions;
+            await setGlobalShare({ 'memberPermissions': ps });
+        }
+        function getRoles(roleId) {
+            if (roleId == 'all') return '所有人'
+            var rs = channel.query('/current/workspace')
+            return rs.roles.find(g => g.id == roleId)?.text
+        }
+        if (!this.item) return <div className='w-300 min-h-60'></div>
+        return <div className='w-300 min-h-60 padding-t-10 round f-14'>
+            <div className="flex  padding-w-14">
+                <span className="flex-auto remark">空间成员</span>
+                <span onMouseDown={e => addPermission(e)} className="flex-fixed flex-center size-24 item-hover round cursor"><Icon icon={PlusSvg}></Icon></span>
             </div>
-            <div>
-                {this.item.memberPermissions.map((mp, id) => {
-                    return <div className="flex" key={id}>
+            <div className=" ">
+                {ps.map((mp, id) => {
+                    return <div className="flex gap-h-10 padding-w-14 item-hover round" key={id}>
                         <div className="flex-fixed">
-                            {mp.userid && <Avatar userid={mp.userid}></Avatar>}
-                            {mp.roleId && <span>{getRoles(mp.roleId).text}</span>}
+                            {mp.userid && <Avatar size={30} userid={mp.userid}></Avatar>}
+                            {mp.roleId && <span>{getRoles(mp.roleId)}</span>}
                         </div>
-                        <div className="flex-auto">
-
+                        <div className="flex-auto flex flex-end">
+                            <div className="flex-fixed gap-r-5 flex-end">
+                                <SelectBox
+                                    small
+                                    width={120}
+                                    border
+                                    multiple
+                                    computedChanges={async (vs, v) => {
+                                        if (v == AtomPermission.docInteraction) lodash.remove(vs, g => ![AtomPermission.docExport].includes(g))
+                                        else if (v == AtomPermission.docExport) lodash.remove(vs, g => ![AtomPermission.docInteraction].includes(g))
+                                        else vs = []
+                                        if (!vs.includes(v)) vs.push(v)
+                                        return vs;
+                                    }}
+                                    options={[
+                                        { text: '可编辑', value: AtomPermission.docEdit },
+                                        { text: '可导出', value: AtomPermission.docExport },
+                                        { text: '可交互', value: AtomPermission.docInteraction },
+                                        { text: '可查看', value: AtomPermission.docView },
+                                        { text: '可权限', value: AtomPermission.docNotAllow },
+                                    ]}
+                                    value={mp.permissions || []}
+                                    onChange={e => { setMemberPermissions(mp, e) }}
+                                ></SelectBox>
+                            </div>
+                            {mp.roleId != 'all' && <span onMouseDown={e => remove(mp)} className="flex-fixed flex-center size-24 round item-hover cursor"><Icon
+                                size={16} icon={CloseSvg}></Icon></span>}
                         </div>
                     </div>
                 })}
             </div>
-
             <Divider></Divider>
-            <div className="item-hover">
-                <span className="size-24"><Icon size={18} icon={GlobalLinkSvg}></Icon></span>
-                <span>公开至互联网</span>
-                <span>
+            <div className="item-hover h-30 flex padding-w-14">
+                <span className="flex-auto flex">
+                    <Icon size={18} icon={GlobalLinkSvg}></Icon>
+                    <span className="gap-l-5">公开至互联网</span>
+                </span>
+                <span className="flex-fixed">
                     <Switch checked={this.item?.share == 'net' ? true : false} onChange={e => setGlobalShare({ share: e ? "net" : 'nas' })}></Switch>
                 </span>
             </div>
+            {this.item.share == 'net' && <>
+                <div className="flex item-hover h-30 flex padding-w-14">
+                    <div className="flex-auto">
+                        页面公开访问权限
+                    </div>
+                    <div className="flex-fixed">
+                        <SelectBox
+                            small
+                            border
+                            multiple
+                            computedChanges={async (vs, v) => {
+                                if (v == AtomPermission.docInteraction) lodash.remove(vs, g => ![AtomPermission.docExport].includes(g))
+                                else if (v == AtomPermission.docExport) lodash.remove(vs, g => ![AtomPermission.docInteraction].includes(g))
+                                else vs = []
+                                if (!vs.includes(v)) vs.push(v)
+                                return vs;
+                            }}
+                            options={[
+                                { text: '可编辑', value: AtomPermission.docEdit },
+                                { text: '可导出', value: AtomPermission.docExport },
+                                { text: '可交互', value: AtomPermission.docInteraction },
+                                { text: '可查看', value: AtomPermission.docView },
+                            ]}
+                            value={this.item.netPermissions || []}
+                            onChange={e => { setGlobalShare({ 'netPermissions': e }) }}
+                        ></SelectBox>
+                    </div>
+                </div>
+            </>}
             <Divider></Divider>
-            <div className="shy-page-publish-item" onClick={e => this.copyLink()}>
-                <Icon size={18} icon={LinkSvg}></Icon><span>复制页面访问链接</span>
+            <div className="item-hover h-30  cursor  padding-w-14 flex"
+                onClick={e => this.copyLink()}>
+                <Icon size={18} icon={LinkSvg}></Icon><span className="gap-l-5">复制页面访问链接</span>
             </div>
         </div>
-        // return <div className='shy-page-publish'>
-        //     <div className='shy-page-publish-access'>
-        //         <div className='shy-page-publish-access-icon'>
-        //             <Icon size={36} icon={GlobalLinkSvg}></Icon>
-        //             <div>
-        //                 <span>公开至互联网</span>
-        //                 <label>任何人都可以{this.item?.permission == PagePermission.canEdit ? "编辑" : (this.item?.permission == PagePermission.canInteraction ? "浏览、添加评论、数据" : "浏览")}</label>
-        //             </div>
-        //         </div>
-        //         <Switch checked={this.item?.share == 'net' ? true : false} onChange={e => setGlobalShare({ share: e ? "net" : 'nas' })}></Switch>
-        //     </div>
-        //     {this.item?.share == 'net' && <>
-        //         <div className='shy-page-publish-permission'><span>可编辑</span><Switch checked={this.item.permission == PagePermission.canEdit} onChange={e => setGlobalShare({ permission: e ? PagePermission.canEdit : PagePermission.canView })}></Switch></div>
-        //         <div className='shy-page-publish-permission'><span>可交互<em>(评论、添加数据)</em></span><Switch checked={this.item.permission == PagePermission.canInteraction} onChange={e => setGlobalShare({ permission: e ? PagePermission.canInteraction : PagePermission.canView })}></Switch></div>
-        //     </>}
-
-        // </div>
     }
 }
+
 export async function usePagePublish(pos: PopoverPosition, item: LinkPageItem, page: Page) {
     let popover = await PopoverSingleton(PagePublish, { mask: true });
     let pagePublish = await popover.open(pos);

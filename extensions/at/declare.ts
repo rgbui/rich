@@ -41,7 +41,7 @@ export interface LinkPageItem {
      * 空间成员权限，
      * 可以指定角色，也可以指定具体的人
      */
-    memberPermissions?: { roleId: string, userid: string, permissions: AtomPermission[] }[];
+    memberPermissions?: { roleId?: string, userid?: string, permissions: AtomPermission[] }[];
 
     getPagePermissions?(): AtomPermission[];
 

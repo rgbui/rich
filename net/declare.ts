@@ -5,7 +5,7 @@ import { GalleryType, OuterPic } from "../extensions/image/declare";
 import { StatusCode } from "./status.code";
 import { UserAction } from "../src/history/action";
 import { UserBasic, UserStatus } from "../types/user";
-import { ResourceArguments } from "../extensions/icon/declare";
+import { IconArguments, ResourceArguments } from "../extensions/icon/declare";
 export type SockResponse<T, U = string> = {
         /**
          * 返回状态码
@@ -273,7 +273,7 @@ export interface ChannelGetMapUrls {
 	"/user/interactives":{args:{wsId?:string,schemaId:string,ids:string[],es:string[]},returnType:Promise<SockResponse<{list:Record<string,string[]>}>>}
 }
 export interface ChannelQueryMapUrls {
-    "/current/workspace":{args:any,returnType:{id:string,sn:number,text:string,url:string}},
+    "/current/workspace":{args:any,returnType:{id:string,sn:number,text:string,url:string,roles:{ id: string,text: string,color: string,permissions: number[],icon?: IconArguments}[]}},
 	"/query/current/user":{args:any,returnType:UserBasic},
 	"/cache/get":{args:{key:string},returnType:Promise<any>},
 	"/device/query":{args:any,returnType:Promise<string>},
