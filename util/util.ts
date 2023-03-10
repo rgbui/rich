@@ -183,5 +183,32 @@ export var util = {
             // 包含中文内容用gbk编码
             reader.readAsText(file);
         })
+    },
+    /**
+     * base64加密
+     * @param originalString 
+     * @returns 
+     */
+    base64En(originalString) {
+        // const originalString = "你好，世界！";
+        const encoder = new TextEncoder();
+        const utf8Array = encoder.encode(originalString);
+        const base64String = btoa(String.fromCharCode.apply(null, utf8Array));
+        console.log(base64String); // "5L2g5aW977yM5LiW55WMhQ=="
+        return base64String;
+    },
+    /**
+     * base64解密
+     * @param base64String 
+     * @returns 
+     */
+    base64De(base64String) {
+        const decoder = new TextDecoder();
+        const base64Array = new Uint8Array(atob(base64String).split("").map(function (c) {
+            return c.charCodeAt(0);
+        }));
+        const decodedString = decoder.decode(base64Array);
+        //console.log(decodedString); // "你好，世界！"
+        return decodedString;
     }
 }
