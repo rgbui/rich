@@ -18,7 +18,8 @@ export class Input extends React.Component<{
     maxLength?: number,
     ignoreFilterWhitespace?: boolean,
     name?: string,
-    size?: 'small' | 'default', className?: string | (string[]),
+    size?: 'small' | 'default' | 'larger',
+    className?: string | (string[]),
     onMousedown?: (event: React.MouseEvent) => void
 }>{
     private clearVisible: boolean = false;
@@ -58,6 +59,7 @@ export class Input extends React.Component<{
         }
         var classList: string[] = ['shy-input'];
         if (this.props.size == 'small') classList.push('small')
+        else if (this.props.size == 'larger') classList.push('larger')
         if (Array.isArray(this.props.className)) this.props.className.each(c => { classList.push(c) })
         else if (this.props.className) classList.push(this.props.className)
 

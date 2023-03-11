@@ -24,12 +24,23 @@
         &:focus {
             box-shadow: rgba(46 170 220, 0.7) 0px 0px 0px 1px inset, rgba(46 170 220, 0.4) 0px 0px 0px 2px;
         }
+        &::placeholder {
+            font-size: 14px;
+            color    : rgba(0, 0, 0, 0.2)
+        }
     }
 
     &.small {
         input {
             height     : 24px;
             line-height: 22px;
+        }
+    }
+
+    &.larger {
+        input {
+            height     : 36px;
+            line-height: 36px;
         }
     }
 
