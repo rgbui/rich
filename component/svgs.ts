@@ -91,6 +91,7 @@ import FilterSvg from "../src/assert/svg/filter.svg";
 import FitSvg from "../src/assert/svg/fit.svg";
 import FlagSvg from "../src/assert/svg/flag.svg";
 import FlashSvg from "../src/assert/svg/flash.svg";
+import FlashlampSvg from "../src/assert/svg/flashlamp.svg";
 import FontStyleSvg from "../src/assert/svg/font.style.svg";
 import FontSvg from "../src/assert/svg/font.svg";
 import FontawesomeSvg from "../src/assert/svg/fontawesome.svg";
@@ -133,6 +134,7 @@ import MindDirectionXSvg from "../src/assert/svg/mind.direction.x.svg";
 import MindDirectionYSvg from "../src/assert/svg/mind.direction.y.svg";
 import MindSvg from "../src/assert/svg/mind.svg";
 import MinusSvg from "../src/assert/svg/minus.svg";
+import MoreFourSvg from "../src/assert/svg/moreFour.svg";
 import MoveToSvg from "../src/assert/svg/moveTo.svg";
 import NoneSvg from "../src/assert/svg/none.svg";
 import NsArowSvg from "../src/assert/svg/nsArow.svg";
@@ -161,6 +163,7 @@ import ReportSvg from "../src/assert/svg/report.svg";
 import RotatingSvg from "../src/assert/svg/rotating.svg";
 import RowNoSvg from "../src/assert/svg/row.no.svg";
 import SearchSvg from "../src/assert/svg/search.svg";
+import ServerSvg from "../src/assert/svg/server.svg";
 import SettingsSvg from "../src/assert/svg/settings.svg";
 import SortSvg from "../src/assert/svg/sort.svg";
 import SquareplusSvg from "../src/assert/svg/squareplus.svg";
@@ -302,6 +305,7 @@ FilterSvg,
 FitSvg,
 FlagSvg,
 FlashSvg,
+FlashlampSvg,
 FontStyleSvg,
 FontSvg,
 FontawesomeSvg,
@@ -344,6 +348,7 @@ MindDirectionXSvg,
 MindDirectionYSvg,
 MindSvg,
 MinusSvg,
+MoreFourSvg,
 MoveToSvg,
 NoneSvg,
 NsArowSvg,
@@ -372,6 +377,7 @@ ReportSvg,
 RotatingSvg,
 RowNoSvg,
 SearchSvg,
+ServerSvg,
 SettingsSvg,
 SortSvg,
 SquareplusSvg,
