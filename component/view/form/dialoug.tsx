@@ -9,12 +9,13 @@ import { Col, Dialoug, Row, Space } from "../grid";
 import { Icon } from "../icon";
 import { Input } from "../input";
 import { Textarea } from "../input/textarea";
+import { Select } from "../select";
 import { Remark, ErrorText } from "../text";
 import { ToolTip } from "../tooltip";
 import "./style.less";
 
 export type FormDialougType = {
-    fields: { name: string, text: string, tip?: string, type: 'input' | 'textarea' | 'switch', default?: any }[],
+    fields: { name: string, text: string, tip?: string, type: 'input' | 'textarea' | 'switch' | 'select', options?: { text: string, value: string }[], default?: any }[],
     title: string,
     remark: string,
     model?: Record<string, any>,
@@ -45,6 +46,7 @@ class FormDialoug extends EventsComponent {
                             <Col>
                                 {f.type == 'input' && <Input onEnter={e => this.onSave()} onChange={e => this.model[f.name] = e} value={this.model[f.name] || ''}></Input>}
                                 {f.type == 'textarea' && <Textarea onEnter={e => this.onSave()} onChange={e => this.model[f.name] = e} value={this.model[f.name] || ''}></Textarea>}
+                                {f.type == 'select' && <Select onChange={e => this.model[f.name] = e} value={this.model[f.name] || ''} options={f.options || []}></Select>}
                             </Col>
                         </Row>
                     </div>
@@ -81,7 +83,7 @@ class FormDialoug extends EventsComponent {
     model: Record<string, any> = {};
     checkModel?: (model: Record<string, any>) => Promise<string>;
     saveModel?: (model: Record<string, any>) => Promise<string>;
-    fields: { name: string, text: string, tip?: string, type: 'input' | 'textarea' | 'switch', default?: any }[] = [];
+    fields: FormDialougType['fields'] = [];
     open(options: FormDialougType) {
         this.fields = options.fields;
         this.title = options.title;
