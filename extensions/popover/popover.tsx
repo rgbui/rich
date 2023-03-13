@@ -115,13 +115,13 @@ class Popover<T extends React.Component> extends EventsComponent<{
         document.removeEventListener('mousedown', this.onGlobalMousedown, true);
     }
     onGlobalMousedown = (event: MouseEvent) => {
-
-        if (this.visible == true && this.props.mask != true)
-        {   event.stopPropagation();}
-        if (this.el && this.props.mask != true) {
-           
+        if (this.el) {
             var target = event.target as HTMLDivElement;
             if (this.el.contains(target)) return;
+            /**
+             * 这说明是在弹窗点开的菜单
+             */
+            if (target && target.closest('.shy-menu-panel')) return;
             this.onClose();
         }
     }
