@@ -15,7 +15,7 @@ export class SelectBox<T = any> extends React.Component<{
     options?: MenuItem<string>[],
     computedOptions?: () => Promise<MenuItem<string>[]>,
     computedChanges?: (values: T[], value: T) => Promise<T[]>,
-    onChange?: (value:any, item?: MenuItem<string>) => void,
+    onChange?: (value: any, item?: MenuItem<string>) => void,
     style?: CSSProperties,
     dropHeight?: number,
     border?: boolean,
@@ -26,6 +26,7 @@ export class SelectBox<T = any> extends React.Component<{
     render() {
         var self = this;
         async function mousedown(event: React.MouseEvent) {
+            event.stopPropagation();
             if (self.props.disabled) return;
             var options = typeof self.props.computedOptions == 'function' ? await self.props.computedOptions() : self.props.options;
             var ms = lodash.cloneDeep(options);
@@ -78,12 +79,12 @@ export class SelectBox<T = any> extends React.Component<{
             className={classList.join(" ")}
             onMouseDown={e => mousedown(e)}>
             {this.props.children && <>{this.props.children}<Icon className={'gap-l-3'} size={12} icon={ChevronDownSvg}></Icon></>}
-            {!this.props.children && <>
-                {this.props.multiple != true && <span>{op?.icon && <Icon size={14} icon={op.icon}></Icon>}{op?.text}</span>}
-                {this.props.multiple == true && <span>{ops.map((op, i) => {
-                    return <span className={i == ops.length - 1 ? "" : "gap-r-3"} key={op.value}><span>{op?.icon && <Icon size={14} icon={op.icon}></Icon>}{op?.text}</span></span>
-                })}</span>}
-                <Icon className={'gap-l-3'} size={12} icon={ChevronDownSvg}></Icon></>}
+            {!this.props.children && <div className="flex">
+                {this.props.multiple != true && <span className="flex-auto">{op?.icon && <Icon size={14} icon={op.icon}></Icon>}{op?.text}</span>}
+                {this.props.multiple == true && <span className="flex-auto"><span>{ops.map((op, i) => {
+                    return <span className={'padding-w-5 round padding-h-2 ' + (i == ops.length - 1 ? "" : "gap-r-3")} key={op.value}><span>{op?.icon && <Icon size={14} icon={op.icon}></Icon>}{op?.text}</span></span>
+                })}</span></span>}
+                <Icon className={'flex-fixed gap-l-3'} size={12} icon={ChevronDownSvg}></Icon></div>}
         </div>
     }
 }
