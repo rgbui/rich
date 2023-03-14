@@ -19,7 +19,7 @@ export class SelectBox<T = any> extends React.Component<{
     style?: CSSProperties,
     dropHeight?: number,
     border?: boolean,
-    width?: number,
+    dropWidth?: number,
     small?: boolean,
     multiple?: boolean
 }>{
@@ -44,7 +44,7 @@ export class SelectBox<T = any> extends React.Component<{
                 { roundArea: Rect.fromEvent(event) },
                 ms,
                 {
-                    width: self.props.width || 160,
+                    width: self.props.dropWidth || 160,
                     nickName: 'selectBox'
                 });
             if (r) {
@@ -75,11 +75,12 @@ export class SelectBox<T = any> extends React.Component<{
         var op = this.props.options.arrayJsonFind('childs', g => g.value == this.props.value);
         var style = this.props.style || {};
         if (this.props.inline) style.display = 'inline-flex';
+        style.boxSizing = 'border-box';
         return <div style={style}
             className={classList.join(" ")}
             onMouseDown={e => mousedown(e)}>
             {this.props.children && <>{this.props.children}<Icon className={'gap-l-3'} size={12} icon={ChevronDownSvg}></Icon></>}
-            {!this.props.children && <div className="flex">
+            {!this.props.children && <div style={{ width: '100%' }} className="flex">
                 {this.props.multiple != true && <span className="flex-auto">{op?.icon && <Icon size={14} icon={op.icon}></Icon>}{op?.text}</span>}
                 {this.props.multiple == true && <span className="flex-auto"><span>{ops.map((op, i) => {
                     return <span className={'padding-w-5 round padding-h-2 ' + (i == ops.length - 1 ? "" : "gap-r-3")} key={op.value}><span>{op?.icon && <Icon size={14} icon={op.icon}></Icon>}{op?.text}</span></span>

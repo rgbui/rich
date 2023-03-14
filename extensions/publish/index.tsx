@@ -121,7 +121,7 @@ class PagePublish extends EventsComponent {
                             <div className="flex-fixed gap-r-5 flex-end">
                                 <SelectBox
                                     small
-                                    width={120}
+                                    dropWidth={120}
                                     border
                                     multiple
                                     computedChanges={async (vs, v) => {
