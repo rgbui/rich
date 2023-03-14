@@ -1,5 +1,5 @@
 import React, { CSSProperties } from "react";
-import { CloseTickSvg } from "../../svgs";
+import { CloseSvg } from "../../svgs";
 import { Icon } from "../icon";
 import "./style.less";
 
@@ -22,13 +22,11 @@ export class Input extends React.Component<{
     className?: string | (string[]),
     onMousedown?: (event: React.MouseEvent) => void
 }>{
-    private clearVisible: boolean = false;
     private inputEl: HTMLInputElement;
     onClear() {
         var self = this;
         var props = this.props;
         self.inputEl.value = '';
-        self.clearVisible = false;
         self.forceUpdate()
         props.onChange && props.onChange('');
         props.onClear && props.onClear()
@@ -44,11 +42,7 @@ export class Input extends React.Component<{
             var value = filterValue((e.target as HTMLInputElement).value)
             props.onChange && props.onChange(value, e);
             if (props.clear) {
-                var visible = value ? true : false;
-                if (visible != self.clearVisible) {
-                    self.clearVisible = visible;
-                    self.forceUpdate()
-                }
+                if (!value) self.forceUpdate()
             }
         }
         function keydown(e: React.KeyboardEvent) {
@@ -75,7 +69,9 @@ export class Input extends React.Component<{
                     name={props.name}
                 ></input>
             </div>
-            {props.clear && this.clearVisible && <div className="shy-input-clear" onClick={e => this.onClear()}><Icon size={10} icon={CloseTickSvg}></Icon></div>}
+            {props.clear && this.props.value && <div className="shy-input-clear" onClick={e => this.onClear()}>
+                <div className="size-20 flex-center item-hover circle cursor "><Icon size={10} icon={CloseSvg}></Icon></div>
+            </div>}
         </div>
     }
     updateValue(value) {
