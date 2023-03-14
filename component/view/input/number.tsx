@@ -1,5 +1,5 @@
 import React, { CSSProperties } from "react";
-import { ArrowDownSvg, ArrowUpSvg } from "../../svgs";
+import {  DownSvg, UpSvg } from "../../svgs";
 import { Icon } from "../icon";
 
 export class InputNumber extends React.Component<{
@@ -58,9 +58,9 @@ export class InputNumber extends React.Component<{
                     readOnly={props.readonly}
                     name={props.name}
                 ></input>
-                <div className="pos pos-center-right">
-                    <span onMouseDown={e => onDeep(-1)}><Icon size={12} icon={ArrowDownSvg}></Icon></span>
-                    <span onMouseDown={e => onDeep(1)}><Icon size={12} icon={ArrowUpSvg}></Icon></span>
+                <div className="pos pos-center-right size-24 flex flex-col">
+                    <span className="size-12 flex-center item-hover round cursor" onMouseDown={e => onDeep(1)}><Icon size={12} icon={UpSvg}></Icon></span>
+                    <span className="size-12 flex-center item-hover round cursor" onMouseDown={e => onDeep(-1)}><Icon size={12} icon={DownSvg}></Icon></span>
                 </div>
             </div>
         </div>

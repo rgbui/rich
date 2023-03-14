@@ -73,6 +73,7 @@ import DoubleDownSvg from "../src/assert/svg/doubleDown.svg";
 import DoubleLeftSvg from "../src/assert/svg/doubleLeft.svg";
 import DoubleRightSvg from "../src/assert/svg/doubleRight.svg";
 import DoubleUpSvg from "../src/assert/svg/doubleUp.svg";
+import DownSvg from "../src/assert/svg/down.svg";
 import DownloadSvg from "../src/assert/svg/download.svg";
 import DragHandleSvg from "../src/assert/svg/dragHandle.svg";
 import DuplicateSvg from "../src/assert/svg/duplicate.svg";
@@ -205,6 +206,7 @@ import UnlockSvg from "../src/assert/svg/unlock.svg";
 import UnpaySvg from "../src/assert/svg/unpay.svg";
 import UnreadTextSvg from "../src/assert/svg/unread.text.svg";
 import UnsplashSvg from "../src/assert/svg/unsplash.svg";
+import UpSvg from "../src/assert/svg/up.svg";
 import UploadSvg from "../src/assert/svg/upload.svg";
 import VersionHistorySvg from "../src/assert/svg/versionHistory.svg";
 import VideoSvg from "../src/assert/svg/video.svg";
@@ -287,6 +289,7 @@ DoubleDownSvg,
 DoubleLeftSvg,
 DoubleRightSvg,
 DoubleUpSvg,
+DownSvg,
 DownloadSvg,
 DragHandleSvg,
 DuplicateSvg,
@@ -419,6 +422,7 @@ UnlockSvg,
 UnpaySvg,
 UnreadTextSvg,
 UnsplashSvg,
+UpSvg,
 UploadSvg,
 VersionHistorySvg,
 VideoSvg,
