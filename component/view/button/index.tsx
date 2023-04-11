@@ -12,6 +12,7 @@ export class Button extends React.Component<{
     ghost?: boolean,
     link?: boolean,
     style?: CSSProperties,
+    loading?: boolean,
     size?: 'normal' | 'medium' | 'larger' | 'small',
     className?: string
 }>{
@@ -29,7 +30,7 @@ export class Button extends React.Component<{
         var props = this.props;
         var self = this;
         function renderLoading() {
-            if (self._loading == true) return <svg
+            if (self._loading == true || self.props.loading) return <svg
                 viewBox="0 0 1024 1024"
                 className="shy-button-loading"
                 focusable="false"
@@ -48,8 +49,8 @@ export class Button extends React.Component<{
         var btn = <button style={this.props.style || {}}
             className={'shy-button' + (props.className ? " " + props.className : "") + (props.link ? " shy-button-link" : "") + (props.ghost ? " shy-button-ghost" : "") + (this.props.size ? " shy-button-" + this.props.size : "")}
             disabled={props.disabled || this._disabled ? props.disabled : false}
-            onClick={e => props.onClick && !this._loading ? props.onClick(e, this) : undefined}
-            onMouseDown={e => props.onMouseDown && !this._loading ? props.onMouseDown(e, this) : undefined}
+            onClick={e => props.onClick && !(this._loading || props.loading) ? props.onClick(e, this) : undefined}
+            onMouseDown={e => props.onMouseDown && !(this._loading || props.loading) ? props.onMouseDown(e, this) : undefined}
         >{renderLoading()}{props.children}</button>;
         if (props.block) return <div style={this.props.style || {}} className='shy-button-block'>{btn}</div>
         else return btn

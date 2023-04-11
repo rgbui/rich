@@ -17,7 +17,7 @@ import "./style.less";
 export type FormDialougType = {
     fields: { name: string, text: string, tip?: string, type: 'input' | 'textarea' | 'switch' | 'select', options?: { text: string, value: string }[], default?: any }[],
     title: string,
-    remark: string,
+    remark?: string,
     model?: Record<string, any>,
     checkModel?: (model: Record<string, any>) => Promise<string>;
     saveModel?: (model: Record<string, any>) => Promise<string>;
