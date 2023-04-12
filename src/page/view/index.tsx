@@ -12,7 +12,6 @@ import { LinkPageItem } from "../../../extensions/at/declare";
 import { PageCover } from "./cover";
 import { Icon } from "../../../component/view/icon";
 import {
-    BoardIconSvg,
     BoardToolFrameSvg,
     CollectTableSvg,
     DocCardsSvg,
@@ -172,7 +171,7 @@ export class PageView extends Component<{ page: Page }>{
                 <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={16} icon={PageSvg} ></Icon><span>页面</span></a>
                 <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.db)}><Icon size={16} icon={CollectTableSvg} ></Icon><span>表格</span></a>
                 <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.docCard)}><Icon size={16} icon={DocCardsSvg} ></Icon><span>宣传页</span></a>
-                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.board)}><Icon size={16} icon={BoardIconSvg}></Icon><span>白板</span></a>
+                {/* <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.board)}><Icon size={16} icon={BoardIconSvg}></Icon><span>白板</span></a> */}
                 <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.textChannel)}><Icon size={16} icon={BoardToolFrameSvg}></Icon><span>频道</span></a>
             </div>
         </div>
