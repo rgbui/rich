@@ -231,7 +231,7 @@ export class PageView extends Component<{ page: Page }>{
     async AutomaticHandle() {
         await this.page.onAction(ActionDirective.AutomaticHandle, async () => {
             var isForceUpdate: boolean = false;
-            if (this.page.pageLayout.type == PageLayoutType.doc && this.page.requireSelectLayout == false) {
+            if (this.page.pageLayout?.type == PageLayoutType.doc && this.page.requireSelectLayout == false) {
                 if (this.page.autoRefPages == true) {
                     if (!this.page.exists(g => g.url == BlockUrlConstant.RefLinks)) {
                         var view = this.page.views[0];

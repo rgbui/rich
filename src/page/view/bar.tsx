@@ -71,7 +71,7 @@ export class PageBar extends React.Component<{ page: Page }>{
     }
     renderUsers() {
         if (this.props.page.openSource == 'snap') return <></>
-        if ([PageLayoutType.textChannel].includes(this.props.page.pageLayout.type)) return <></>
+        if ([PageLayoutType.textChannel].includes(this.props.page.pageLayout?.type)) return <></>
         return <div className="gap-r-10">
             <UserAvatars users={this.users}></UserAvatars>
         </div>
@@ -88,23 +88,23 @@ export class PageBar extends React.Component<{ page: Page }>{
         var isSearch: boolean = false;
         var isPublish: boolean = false;
         var isContextMenu: boolean = false;
-        if ([PageLayoutType.dbForm].includes(this.props.page.pageLayout.type)) {
+        if ([PageLayoutType.dbForm].includes(this.props.page.pageLayout?.type)) {
             isField = true;
         }
-        if ([PageLayoutType.textChannel].includes(this.props.page.pageLayout.type)) {
+        if ([PageLayoutType.textChannel].includes(this.props.page.pageLayout?.type)) {
             isMember = true;
         }
         if (![
             PageLayoutType.textChannel,
             PageLayoutType.dbForm,
             PageLayoutType.db,
-            PageLayoutType.board].includes(this.props.page.pageLayout.type)) {
+            PageLayoutType.board].includes(this.props.page.pageLayout?.type)) {
             isSearch = true;
         }
-        if (![PageLayoutType.textChannel].includes(this.props.page.pageLayout.type)) {
+        if (![PageLayoutType.textChannel].includes(this.props.page.pageLayout?.type)) {
             isPublish = true;
         }
-        if (![PageLayoutType.textChannel].includes(this.props.page.pageLayout.type)) {
+        if (![PageLayoutType.textChannel].includes(this.props.page.pageLayout?.type)) {
             isContextMenu = true;
         }
         if (isSign) return <div className="flex r-flex-center r-size-24 r-item-hover r-round r-cursor r-gap-r-10 text-1">
