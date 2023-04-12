@@ -168,9 +168,6 @@ export class Page extends Events<PageDirective> {
         return this.matrix.getScaling().x;
     }
     schema: TableSchema;
-    // get recordViewId() {
-    //     return parseElementUrl(this.elementUrl).id1
-    // }
     get scheamViewId() {
         return parseElementUrl(this.elementUrl).id1
     }
@@ -311,6 +308,9 @@ export interface Page {
 
     on(name: PageDirective.close, fn: () => void);
     emit(name: PageDirective.close);
+
+    on(name: PageDirective.changePageLayout, fn: () => void);
+    emit(name: PageDirective.changePageLayout);
 }
 export interface Page extends PageEvent { }
 export interface Page extends Page$Seek { }
