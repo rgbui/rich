@@ -28,5 +28,6 @@ export enum PageDirective {
     selectRows,
     rollup,
     mounted,
-    close
+    close,
+    changePageLayout
 }

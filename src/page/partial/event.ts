@@ -12,6 +12,7 @@ import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { onPasteBlank } from "../../kit/write/paste";
 import { PageLayoutType } from "../declare";
+import { PageDirective } from "../directive";
 
 export class PageEvent {
     /**
@@ -162,6 +163,7 @@ export class PageEvent {
                     break;
             }
             await channel.air('/page/update/info', { id: this.pageInfo?.id, pageInfo: { pageType: this.pageLayout.type } });
+            this.emit(PageDirective.changePageLayout);
             if (typeof actions == 'function') await actions();
             this.addPageUpdate();
         });
