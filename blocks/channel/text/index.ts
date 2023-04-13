@@ -160,7 +160,7 @@ export class ChannelText extends Block {
                 // }
             });
         }
-    },1200)
+    }, 1200)
     pageInfo: LinkPageItem = null;
     async loadPageInfo() {
         if (this.page.pageInfo) {

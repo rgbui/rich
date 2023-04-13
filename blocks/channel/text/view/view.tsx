@@ -177,23 +177,32 @@ export class ChannelTextView extends BlockView<ChannelText>{
         }
     }
     renderChats() {
-        return <>
-            <div className="sy-channel-text-head">
-                {this.block.unreadTip && <div className="sy-channel-text-unread-tip" >
-                    <span>自{util.showTime(new Date(this.block.unreadTip.date))}来有{this.block.unreadTip.count}条消息未读</span>
-                    <a onMouseDown={e => this.block.onClearUnread()}>标记为已读<Icon size={14} icon={UnreadTextSvg}></Icon></a>
-                </div>}
-            </div>
-            <div className="sy-channel-text-content"
-                onWheel={this.wheel}
-                ref={e => this.contentEl = e}>
-                {this.block && this.renderPageTitle()}
-                {this.block.pageIndex > 2 && this.block.isLast && <div className="sy-channel-text-tip f-12 remark">无记录了</div>}
-                {this.block.loading && <div className="sy-channel-text-loading"><Spin></Spin></div>}
-                {RenderChats(this.block, {
-                    reditChat: (d) => this.redit(d),
-                    replyChat: (d) => this.reply(d)
-                })}
+        var style: CSSProperties = {};
+        if (this.isPageLayoutTextChannel) {
+            style.height = this.block.page.pageVisibleHeight;
+            style.position = 'relative';
+            // style.overflowY = 'auto';
+        }
+
+        return <div style={style}>
+            <div style={{ height: this.block.page.pageVisibleHeight }} className="overflow-y border-box">
+                <div className="sy-channel-text-head">
+                    {this.block.unreadTip && <div className="sy-channel-text-unread-tip" >
+                        <span>自{util.showTime(new Date(this.block.unreadTip.date))}来有{this.block.unreadTip.count}条消息未读</span>
+                        <a onMouseDown={e => this.block.onClearUnread()}>标记为已读<Icon size={14} icon={UnreadTextSvg}></Icon></a>
+                    </div>}
+                </div>
+                <div className="sy-channel-text-content  padding-b-120 "
+                    onWheel={this.wheel}
+                    ref={e => this.contentEl = e}>
+                    {this.block && this.renderPageTitle()}
+                    {this.block.pageIndex > 2 && this.block.isLast && <div className="sy-channel-text-tip f-12 remark">无记录了</div>}
+                    {this.block.loading && <div className="sy-channel-text-loading"><Spin></Spin></div>}
+                    {RenderChats(this.block, {
+                        reditChat: (d) => this.redit(d),
+                        replyChat: (d) => this.reply(d)
+                    })}
+                </div>
             </div>
             <div className="sy-channel-text-input" data-shy-page-no-focus onMouseDown={e => e.stopPropagation()}>
                 <RichTextInput
@@ -203,7 +212,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
                     popOpen={e => this.popOpen(e)}
                     onInput={e => this.onInput(e)} ></RichTextInput>
             </div>
-        </>
+        </div>
     }
     renderWeibos() {
         return <div className="w-c-250 gap-auto">
@@ -236,15 +245,20 @@ export class ChannelTextView extends BlockView<ChannelText>{
             </div>
         </div>
     }
+    get isPageLayoutTextChannel() {
+        return this.block.page.pageLayout.type == PageLayoutType.textChannel;
+    }
     render() {
         var style: CSSProperties = this.block.visibleStyle;
         var classList: string[] = ['sy-channel-text'];
-        if (this.block.page.pageLayout.type == PageLayoutType.textChannel) {
+        if (this.isPageLayoutTextChannel) {
             delete style.padding;
             delete style.paddingTop;
             delete style.paddingBottom;
             delete style.paddingLeft;
             delete style.paddingRight;
+            style.height = this.block.page.pageVisibleHeight;
+            style.backgroundColor = '#fff';
             if (this.block.page.pageInfo.textChannelMode == 'weibo') {
                 style.position = 'relative';
                 classList.push('bg-light border-light-left')
