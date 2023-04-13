@@ -13,8 +13,9 @@ import { Select } from "../select";
 import { Remark, ErrorText } from "../text";
 import { ToolTip } from "../tooltip";
 import "./style.less";
-
 export type FormDialougType = {
+    head?: boolean,
+    footer?: boolean,
     fields: { name: string, text: string, tip?: string, type: 'input' | 'textarea' | 'switch' | 'select', options?: { text: string, value: string }[], default?: any }[],
     title: string,
     remark?: string,
@@ -25,8 +26,8 @@ export type FormDialougType = {
 class FormDialoug extends EventsComponent {
     render() {
         return <Dialoug className={'shy-form-dialoug'}
-            head={<span>{this.title}</span>}
-            footer={<Row>
+            head={this.head ? <span>{this.title}</span> : undefined}
+            footer={this.footer ? <Row>
                 <Col span={12}>
                     {this.error && <ErrorText>{this.error}</ErrorText>}
                 </Col>
@@ -36,7 +37,7 @@ class FormDialoug extends EventsComponent {
                         <Button onClick={e => this.onSave()} ref={e => this.button = e}>确定</Button>
                     </Space>
                 </Col>
-            </Row>}
+            </Row> : undefined}
         >{this.remark && <Row className={'shy-form-remark'} align="center"><Remark>{this.remark}</Remark></Row>}
             <div className="shy-form-box">
                 {this.fields.map(f => {
@@ -52,7 +53,6 @@ class FormDialoug extends EventsComponent {
                     </div>
                 })}
             </div>
-
         </Dialoug>
     }
     error: string = '';
@@ -84,12 +84,18 @@ class FormDialoug extends EventsComponent {
     checkModel?: (model: Record<string, any>) => Promise<string>;
     saveModel?: (model: Record<string, any>) => Promise<string>;
     fields: FormDialougType['fields'] = [];
+    head: boolean = true;
+    footer: boolean = true;
     open(options: FormDialougType) {
         this.fields = options.fields;
+        this.head = options.head;
         this.title = options.title;
         this.remark = options.remark || "";
         this.model = options.model ? lodash.cloneDeep(options.model) : {};
         this.button.loading = false;
+        this.head = typeof options.head == 'undefined' ? true : options.head;
+        if (typeof options.footer != 'undefined') this.footer = options.footer;
+        else this.footer = true;
         this.fields.forEach(f => {
             if (typeof this.model[f.name] == 'undefined' && typeof f.default != 'undefined') {
                 this.model[f.name] = lodash.clone(f.default);
@@ -101,7 +107,7 @@ class FormDialoug extends EventsComponent {
 
 export async function useForm(options: FormDialougType) {
     let popover = await PopoverSingleton(FormDialoug);
-    let fv = await popover.open({ center: true });
+    let fv = await popover.open({ center: true, centerTop: 100 });
     fv.open(options);
     return new Promise((resolve: (data: Record<string, any>) => void, reject) => {
         fv.only('close', () => {
@@ -113,7 +119,7 @@ export async function useForm(options: FormDialougType) {
             resolve(d);
         })
         popover.only('close', () => {
-            resolve(null);
+            resolve(fv.model);
         });
     })
 }

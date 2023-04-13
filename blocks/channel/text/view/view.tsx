@@ -24,20 +24,26 @@ import { RenderWeibo } from "./weibo";
 
 @view('/channel/text')
 export class ChannelTextView extends BlockView<ChannelText>{
-
     contentEl: HTMLElement;
     async openEdit(event: React.MouseEvent) {
+        var model = { text: this.block.pageInfo?.text || '新页面', description: this.block.pageInfo?.description }
         var f = await useForm({
-            fields: [{ name: 'text', text: '标题', type: 'input' }, { name: 'description', text: '描述', type: 'textarea' }],
+            head: false,
+            fields: [{ name: 'text', text: '频道名称', type: 'input' }, { name: 'description', text: '频道描述', type: 'textarea' }],
             title: '编辑讨论话题',
             remark: '',
-            model: { text: this.block.pageInfo?.text || '新页面', description: this.block.pageInfo?.description },
+            footer: false,
+            model: lodash.cloneDeep(model),
             checkModel: async (model) => {
                 if (!model.text) return '标题不能为空';
             }
         });
-        if (f) {
-            channel.air('/page/update/info', { id: this.block.page.pageInfo?.id, pageInfo: { ...f } })
+        if (f && !lodash.isEqual(f, model)) {
+            console.log('gggg', f);
+            channel.air('/page/update/info', {
+                id: this.block.page.pageInfo?.id,
+                pageInfo: { ...f }
+            })
         }
     }
     renderPageTitle() {
