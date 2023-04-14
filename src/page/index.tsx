@@ -81,6 +81,11 @@ export class Page extends Events<PageDirective> {
     autoRefSubPages: boolean = true;
     addedSubPages: string[] = [];
     showMembers: boolean = false;
+    /**
+     * 页面格式 
+     * 仅文档、数据表格起作用
+     */
+    onlyDisplayContent: boolean = false;
     get windowMatrix() {
         var rect = Rect.fromEle(this.viewEl);
         var matrix = new Matrix();

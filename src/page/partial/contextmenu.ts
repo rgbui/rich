@@ -93,6 +93,7 @@ export class PageContextmenu {
             items = [
                 { name: 'smallText', text: '小字号', checked: this.smallFont ? true : false, type: MenuItemType.switch },
                 { name: 'fullWidth', text: '宽版', checked: this.isFullWidth ? true : false, type: MenuItemType.switch },
+                { name: 'onlyDisplayContent', text: '仅显示内容', type: MenuItemType.switch, checked: this.onlyDisplayContent },
                 { type: MenuItemType.divide },
                 { name: 'nav', text: '目录', icon: OutlineSvg, type: MenuItemType.switch, checked: this.nav },
                 {
@@ -123,6 +124,7 @@ export class PageContextmenu {
             items = [
                 { name: 'smallText', text: '小字号', checked: this.smallFont ? true : false, type: MenuItemType.switch },
                 { name: 'fullWidth', text: '宽版', checked: this.isFullWidth ? true : false, type: MenuItemType.switch },
+                { name: 'onlyDisplayContent', text: '仅显示内容', type: MenuItemType.switch, checked: this.onlyDisplayContent },
                 { type: MenuItemType.divide },
                 {
                     text: '自定义页面',
@@ -238,6 +240,9 @@ export class PageContextmenu {
                 else if (item.name == 'fullWidth') {
                     this.onUpdateProps({ isFullWidth: item.checked }, true);
                 }
+                else if (item.name == 'onlyDisplayContent') {
+                    this.onUpdateProps({ onlyDisplayContent: item.checked }, true);
+                }
                 else if (item.name == 'nav') {
                     this.onOpenNav({ nav: item.checked })
                 }
@@ -281,11 +286,14 @@ export class PageContextmenu {
                 this.onRedo();
             }
             else if (r.item.name == 'history') {
-                var result = await usePageHistoryStore(this);
-                if (result) {
-                    this.emit(PageDirective.rollup, result);
-                }
+                this.onOpenHistory()
             }
+        }
+    }
+    async onOpenHistory(this: Page,) {
+        var result = await usePageHistoryStore(this);
+        if (result) {
+            this.emit(PageDirective.rollup, result);
         }
     }
     async onOpenPublish(this: Page, event: React.MouseEvent) {

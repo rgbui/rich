@@ -78,6 +78,10 @@ export class TitleView extends BlockView<Title>{
     render() {
         var isAdd: boolean = this.block.page.isSupportCover;
         var pd = this.block.page.getPageDataInfo();
+        if (this.block.page.onlyDisplayContent) return <div className="sy-block-page-info visible-hover" style={{
+            ...this.block.visibleStyle,
+            display: 'none'
+        }}></div>
         return <div className='sy-block-page-info visible-hover' style={this.block.visibleStyle}>
             <div className="min-h-72">{pd?.icon && pd.cover?.abled !== true && <div onMouseDown={e => this.block.page.onChangeIcon(e)} className="sy-block-page-info-icon">
                 <Icon size={72} icon={pd?.icon}></Icon>
