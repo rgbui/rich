@@ -3,15 +3,17 @@ import React from "react";
 import { CursorName, MouseCursor } from "./cursor";
 import { Point } from "./vector/point";
 import { dom } from "./dom";
+
 export function MouseDragger<T = Record<string, any>>(options: {
     event: MouseEvent | React.MouseEvent,
+    isGlobal?: boolean,
     dis?: number,
     cursor?: CursorName,
     /**
      * 是否跨区域拖动
      */
     isCross?: boolean,
-    allowSelection?:boolean,
+    allowSelection?: boolean,
     moveStart?: (event: MouseEvent | React.MouseEvent, data: T, crossData?: { type: string, data: any }) => void,
     move?: (event: MouseEvent, data: T) => void,
     moving?: (event: MouseEvent, data: T, isEnd?: boolean) => void,
@@ -29,9 +31,10 @@ export function MouseDragger<T = Record<string, any>>(options: {
     };
     var crossPanels: HTMLElement[] = [];
     move = (event: MouseEvent) => {
+        console.log(event);
         if (scope.isDown == true) {
-            if(options.allowSelection!=true)
-            window.getSelection ? window.getSelection().removeAllRanges() : (document as any).selection.empty();
+            console.log(scope, 'scope');
+            if (options.allowSelection != true) window.getSelection ? window.getSelection().removeAllRanges() : (document as any).selection.empty();
             if (scope.isMove == true) {
                 if (options.cursor) MouseCursor.show(options.cursor);
                 try {
@@ -45,7 +48,7 @@ export function MouseDragger<T = Record<string, any>>(options: {
                     var cp = dom(event.target as HTMLElement).closest(x => typeof (x as HTMLElement).shy_drop_move == 'function') as HTMLElement;
                     if (cp) {
                         if (!crossPanels.some(s => s === cp)) crossPanels.push(cp);
-                        cp.shy_drop_move(crossData.type, crossData.data,event);
+                        cp.shy_drop_move(crossData.type, crossData.data, event);
                     }
                 }
             }
@@ -84,7 +87,7 @@ export function MouseDragger<T = Record<string, any>>(options: {
                     try {
                         var cp = dom(event.target as HTMLElement).closest(x => typeof (x as HTMLElement).shy_drop_move == 'function') as HTMLElement;
                         if (cp) {
-                            cp.shy_drop_over(crossData.type, crossData.data,event);
+                            cp.shy_drop_over(crossData.type, crossData.data, event);
                         }
                         if (crossPanels.length > 0) {
                             for (let i = 0; i < crossPanels.length; i++) {
@@ -98,9 +101,23 @@ export function MouseDragger<T = Record<string, any>>(options: {
                 }
             }
         }
-        document.removeEventListener('mousemove', move);
-        document.removeEventListener('mouseup', up)
+        if (options.isGlobal == true) {
+            document.removeEventListener('mousemove', move, true);
+            document.removeEventListener('mouseup', up, true)
+        }
+        else {
+            document.removeEventListener('mousemove', move);
+            document.removeEventListener('mouseup', up)
+        }
     }
-    document.addEventListener('mouseup', up);
-    document.addEventListener('mousemove', move);
+    console.log('is bind...')
+    if (options.isGlobal == true) {
+        document.addEventListener('mouseup', up, true);
+        document.addEventListener('mousemove', move, true);
+    }
+    else {
+       
+        document.addEventListener('mouseup', up);
+        document.addEventListener('mousemove', move);
+    }
 }
