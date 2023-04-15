@@ -32,7 +32,7 @@ export class Button extends React.Component<{
         function renderLoading() {
             if (self._loading == true || self.props.loading) return <svg
                 viewBox="0 0 1024 1024"
-                className="shy-button-loading"
+                className="shy-button-loading gap-r-5"
                 focusable="false"
                 data-icon="loading"
                 width="1em"
