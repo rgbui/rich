@@ -152,6 +152,7 @@ import PicSvg from "../src/assert/svg/pic.svg";
 import PictureSvg from "../src/assert/svg/picture.svg";
 import PlaySvg from "../src/assert/svg/play.svg";
 import PlusSvg from "../src/assert/svg/plus.svg";
+import PlusAreaSvg from "../src/assert/svg/plusArea.svg";
 import ProgressSvg from "../src/assert/svg/progress.svg";
 import PropertysSvg from "../src/assert/svg/propertys.svg";
 import PubWorkspaceSvg from "../src/assert/svg/pubWorkspace.svg";
@@ -370,6 +371,7 @@ PicSvg,
 PictureSvg,
 PlaySvg,
 PlusSvg,
+PlusAreaSvg,
 ProgressSvg,
 PropertysSvg,
 PubWorkspaceSvg,
