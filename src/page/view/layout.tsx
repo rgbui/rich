@@ -73,7 +73,9 @@ export class PageLayoutView extends React.Component<{
                 </div>
         }
         else {
-            return <div>没有定义版面</div>
+            return <div className="flex-center padding-40">
+                <span>页面出错了</span>
+            </div>
         }
     }
     error: string = '';
@@ -85,6 +87,9 @@ export class PageLayoutView extends React.Component<{
                 </div>
                 <div className="flex-center remark">
                     {this.error}
+                </div>
+                <div>
+                    <span><a onClick={e => location.reload()}>刷新</a>或通过<a onClick={e => this.props.page.onOpenHistory()}>历史记录</a>找回</span>
                 </div>
             </div>
         }

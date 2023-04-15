@@ -70,7 +70,7 @@ export class Page$Cycle {
                     this.views.push(dc as View);
                 }
             }
-            if (typeof this.pageLayout == 'undefined') this.pageLayout = Object.assign(this.pageLayout||{}, { type: PageLayoutType.doc });
+            if (typeof this.pageLayout == 'undefined') this.pageLayout = Object.assign(this.pageLayout || {}, { type: PageLayoutType.doc });
             if ([
                 PageLayoutType.dbForm,
                 PageLayoutType.dbPickRecord
@@ -105,7 +105,7 @@ export class Page$Cycle {
                 this.views.push(dc as View);
             }
         }
-        if (typeof this.pageLayout == 'undefined') this.pageLayout=Object.assign(this.pageLayout,{type: PageLayoutType.doc });
+        if (typeof this.pageLayout == 'undefined') this.pageLayout = Object.assign(this.pageLayout, { type: PageLayoutType.doc });
         if ([
             PageLayoutType.dbForm,
             PageLayoutType.dbPickRecord,
@@ -143,6 +143,7 @@ export class Page$Cycle {
             loadElementUrl: this.customElementUrl
         };
         json.requireSelectLayout = this.requireSelectLayout;
+        json.onlyDisplayContent = this.onlyDisplayContent;
         json.pageLayout = util.clone(this.pageLayout);
         json.matrix = this.matrix.getValues();
         json.nav = this.nav;

@@ -196,6 +196,10 @@ export class PageView extends Component<{ page: Page }>{
             lineHeight: this.page.lineHeight + 'px',
             fontSize: this.page.fontSize + 'px'
         }
+        if (this.page.pageLayout?.type == PageLayoutType.textChannel) {
+            pageStyle.overflowY = 'hidden';
+            pageStyle.overflowX = 'hidden';
+        }
         return <div className="shy-page">
             <PageBar page={this.page}></PageBar>
             <div className={'shy-page-view' + (this.page.readonly ? " shy-page-view-readonly" : "")}
