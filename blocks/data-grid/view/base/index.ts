@@ -214,7 +214,7 @@ export class DataGridView extends Block {
                     sorts[f.name] = s.sort;
                 }
             })
-            return lodash.cloneDeep(this.sorts);
+            return sorts;
         }
         var sf = this.referenceBlockers.find(g => g instanceof FilterSort) as FilterSort;
         if (sf) {
