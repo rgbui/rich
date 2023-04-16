@@ -1112,11 +1112,18 @@ each(@ops, {
 }
 
 
-.bg-primary {
+.bg-primary,
+.bg-p {
     background-color: rgb(225, 98, 89)
 }
 
-.fill-primary {
+.bg-primary-1,
+.bg-p-1 {
+    background-color: #64a1df;
+}
+
+.fill-primary,
+.fill-p {
     fill : rgb(225, 98, 89);
     color: rgb(225, 98, 89);
 
@@ -1125,6 +1132,18 @@ each(@ops, {
         fill  : rgb(225, 98, 89);
         color : rgb(225, 98, 89);
         stroke: rgb(225, 98, 89);
+    }
+}
+
+.fill-primary-1,
+.fill-p-1 {
+    fill : #64a1df;
+    color: #64a1df;
+    svg path,
+    &svg path {
+        fill  : #64a1df;
+        color : #64a1df;
+        stroke: #64a1df;
     }
 }
 
@@ -1176,6 +1195,7 @@ each(@ops, {
 .border-b {
     border-bottom: 1px solid rgba(55, 53, 47, 0.16);
 }
+
 .border-bottom-primary,
 .border-b-p {
     border-bottom: 1px solid rgb(225, 98, 89);
@@ -1490,7 +1510,7 @@ each(@zs, {
 .pad-20: 一般指卡片或对话框的全补白
 ***/
 
-@pads: 0, 2, 3, 4, 5, 6, 8, 10, 14, 15, 20, 25, 24, 30, 48, 50, 60, 80, 100,120,150,180;
+@pads: 0, 2, 3, 4, 5, 6, 8, 10, 14, 15, 20, 25, 24, 30, 48, 50, 60, 80, 100, 120, 150, 180;
 
 each(@pads, {
 
