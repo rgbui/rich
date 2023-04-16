@@ -55,6 +55,5 @@ export function RenderChats(
         patchChat={patchChat}
         reportChat={reportChat}
         replyChat={props.replyChat}
-    >
-    </ViewChats>
+    ></ViewChats>
 }
