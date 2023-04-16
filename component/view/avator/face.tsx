@@ -97,15 +97,19 @@ export class Avatar extends React.Component<{
             return <div className={'shy-avatar-say' + " " + (this.props.className || "")}>
                 <div className={'shy-avatar-say-face'} onMouseDown={e => this.mousedown(e)}>{renderIcon()}{size > 24 && this.props.hideStatus !== true && renderStatus()}</div>
                 <div className={'shy-avatar-say-content'} >
-                    <div className={'shy-avatar-say-content-head'}><div className='left' onMouseDown={e => this.mousedown(e)}><a className='shy-avatar-say-username' >{user?.name}</a>{this.props.showSn !== false && <span>#{user?.sn}</span>}</div>{this.props.head && <div className='right'>{this.props.head}</div>}</div>
+                    <div className={'shy-avatar-say-content-head'}><div className='left' onMouseDown={e => this.mousedown(e)}>
+                        <a className='shy-avatar-say-username' >{user?.name}</a>
+                        {user?.role == 'robot' && <span className='bg-p-1 text-white round padding-w-5 padding-h-2'>机器人</span>}
+                        {this.props.showSn !== false && <span>#{user?.sn}</span>}
+                    </div>
+                        {this.props.head && <div className='right'>{this.props.head}</div>}</div>
                     {this.props.children && <div className={'shy-avatar-say-content-body'}>{this.props.children}</div>}
                 </div>
             </div>
         }
-        else
-            return <div className={'shy-avatar' + " " + (this.props.className || "")} style={{ width: size, height: size }} onMouseDown={e => this.mousedown(e)}>
-                {renderIcon()}
-                {size > 24 && this.props.hideStatus !== true && renderStatus()}
-            </div>
+        else return <div className={'shy-avatar' + " " + (this.props.className || "")} style={{ width: size, height: size }} onMouseDown={e => this.mousedown(e)}>
+            {renderIcon()}
+            {size > 24 && this.props.hideStatus !== true && renderStatus()}
+        </div>
     }
 }

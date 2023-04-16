@@ -7,10 +7,12 @@ export enum UserStatus {
     idle = 3,
     hidden = 4,
 }
+
 export type UserBasic = {
     id: string,
     avatar?: IconArguments,
     cover?: IconArguments,
+    role: 'user' | 'robot',
     sn: number,
     name: string,
     status: UserStatus,
