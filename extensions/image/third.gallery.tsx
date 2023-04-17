@@ -4,9 +4,9 @@ import { Sp } from "../../i18n/view";
 import { LangID } from "../../i18n/declare";
 import { langProvider } from "../../i18n/provider";
 import { GalleryType, OuterPic } from "./declare";
-import axios from "axios";
 import { createClient } from 'pexels';
 import { Loading } from "../../component/view/loading";
+import { util } from "../../util/util";
 export class ThirdGallery extends React.Component<{ type: GalleryType, onChange: (image: OuterPic) => void }>{
     word: string = '';
     error: string = '';
@@ -27,7 +27,7 @@ export class ThirdGallery extends React.Component<{ type: GalleryType, onChange:
                 var url = this.word
                     ? `https://api.unsplash.com/search/photos?orientation=landscape&lang=en&page=1&per_page=${size}&query=${this.word}&client_id=${access_key}`
                     : `https://api.unsplash.com/photos?lang=en&page=1&per_page=${size}&client_id=${access_key}`
-                var r = await axios.get(url, {});
+                var r = await util.getJson(url);
                 var result = []
                 var rs: any[] = []
                 if (r.data && Array.isArray(r.data.results)) { rs = r.data.results }
