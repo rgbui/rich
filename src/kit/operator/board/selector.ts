@@ -1,4 +1,5 @@
-import { util } from "echarts";
+
+import lodash from "lodash";
 import { Kit } from "../..";
 import { Pen } from "../../../../blocks/board/pen";
 import { Block } from "../../../block";
@@ -42,7 +43,7 @@ export async function CheckBoardTool(kit: Kit, block: Block, event: React.MouseE
             await fra.page.onAction(ActionDirective.onBoardToolCreateBlock, async () => {
                 var data = kit.boardSelector.currentSelector.data || {};
                 data.from = { x: re.x, y: re.y };
-                data.to = util.clone(data.from);
+                data.to =lodash.cloneDeep(data.from);
                 newBlock = await kit.page.createBlock(kit.boardSelector.currentSelector.url, data, fra);
                 newBlock.mounted(() => {
                     isMounted = true;
