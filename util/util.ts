@@ -127,6 +127,29 @@ export var util = {
             x.send();
         })
     },
+    async getJson(url: string) {
+        try {
+            var r=await fetch(url);
+            return { data:await r.json(),status:r.status  }
+        }
+        catch (err) {
+            console.error(err);
+        }
+
+
+        // return new Promise((resolve: (d: string) => void, reject) => {
+        //     var x = new XMLHttpRequest();
+        //     x.open("GET", url, true);
+        //     x.responseType='json';
+        //     x.onload = function (e) {
+        //         resolve(x.response)
+        //     }
+        //     x.onerror = function (err) {
+        //         reject(err);
+        //     }
+        //     x.send();
+        // })
+    },
     async downloadFile(url, fileName) {
         return new Promise((resolve, reject) => {
             var x = new XMLHttpRequest();

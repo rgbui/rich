@@ -5,10 +5,8 @@ import { FileIconSvg, DownloadSvg, Emoji1Svg, Edit1Svg, ReplySvg, DotsSvg } from
 import { Avatar } from "../../component/view/avator/face";
 import { UserBox } from "../../component/view/avator/user";
 import { Icon } from "../../component/view/icon";
-import { Loading } from "../../component/view/loading";
 import { useSelectMenuItem } from "../../component/view/menu";
 import { MenuItem } from "../../component/view/menu/declare";
-import { RichTextInput } from "../../component/view/rich.input";
 import { Spin } from "../../component/view/spin";
 import { Remark } from "../../component/view/text";
 import { SockResponse } from "../../net/declare";
@@ -21,6 +19,8 @@ import { useOpenEmoji } from "../emoji";
 import { EmojiCode } from "../emoji/store";
 import { ChannelTextType } from "./declare";
 import "./style.less";
+import { InputChatBox } from "../../component/view/input.chat/box";
+import { ResourceArguments } from "../icon/declare";
 
 export class ViewChats extends React.Component<{
     redit(d: ChannelTextType)
@@ -52,7 +52,7 @@ export class ViewChats extends React.Component<{
             else return -1;
         })
     }
-    richTextInput: RichTextInput;
+    richTextInput: InputChatBox;
     get currentUser(): UserBasic {
         return this.props.user
     }
@@ -132,17 +132,18 @@ export class ViewChats extends React.Component<{
                             <div className="sy-channel-text-item-edited-content-wrapper" >
                                 <div className="sy-channel-text-item-head"><a>{us.name}</a><span>{util.showTime(d.createDate)}</span></div>
                                 <div className="sy-channel-text-item-edited-content-input">
-                                    <RichTextInput
+                                    <InputChatBox
                                         ref={e => this.richTextInput = e}
                                         placeholder="回车提交"
-                                        allowUploadFile={false}
-                                        content={d.content}
-                                        popOpen={e => this.popOpen(e)}
-                                        onInput={e => this.edit(d, e)} ></RichTextInput>
+                                        value={d.content}
+                                        // popOpen={e => this.popOpen(e)}
+                                        onChange={e => this.edit(d, e)} >
+
+                                    </InputChatBox>
                                 </div>
                             </div>
                         </div>
-                        <div className="sy-channel-text-item-edited-tip">ESC键<a onClick={e => this.closeEdit()}>取消</a>•回车键<a onMouseDown={e => this.richTextInput.send()}>保存</a></div>
+                        <div className="sy-channel-text-item-edited-tip">ESC键<a onClick={e => this.closeEdit()}>取消</a>•回车键<a onMouseDown={e => this.richTextInput.onEnter()}>保存</a></div>
                     </>
                 }}</UserBox>
             </div>
@@ -164,7 +165,7 @@ export class ViewChats extends React.Component<{
             </div>}
             {Array.isArray(d.emojis) && <div className="sy-channel-text-item-emojis">{d.emojis.filter(g => g.count > 0).map(em => {
                 return <a onMouseDown={e => this.editEmoji(d, em)} key={em.emojiId} >
-                    <span dangerouslySetInnerHTML={{__html:getEmoji(em.code)}}></span>
+                    <span dangerouslySetInnerHTML={{ __html: getEmoji(em.code) }}></span>
                     <span>{em.count}</span>
                 </a>
             })}</div>}
@@ -267,7 +268,7 @@ export class ViewChats extends React.Component<{
         this.editChannelText = null;
         this.forceUpdate();
     }
-    private async edit(d: ChannelTextType, data: { files?: File[], content?: string, reply?: { replyId: string } }) {
+    private async edit(d: ChannelTextType, data: { files?: ResourceArguments[], content?: string, replyId?: string }) {
         this.closeEdit();
         if (data.content) {
             var re = await this.patchChat(d, { content: data.content });
