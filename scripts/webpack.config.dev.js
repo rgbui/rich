@@ -10,120 +10,127 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 /**
  * webpack url https://www.cnblogs.com/brandonhulala/p/6057378.html
+ * 
  */
 
+let port = 6667;
+let publicPath = `http://127.0.0.1:${port}/`;
 
-let port = 8080;
-let publicPath = `http://localhost:${port}/`;
 module.exports = {
     mode: 'development',
-    entry: "./test/index.tsx",
+    entry:{test: "./test/index.tsx"},
+    devtool: 'eval-source-map',
     output: {
-        path: path.resolve(__dirname, "../dist"),
-        filename: "assert/js/bundle.js",
+        path: path.join(__dirname, "../dist"),
+        filename: "assert/js/shy.[name].[contenthash:8].js",
+        chunkFilename: 'assert/js/shy.[name].[contenthash:8].js',
         publicPath
-    },
-    devServer: {
-        contentBase: path.resolve(__dirname, '../dist'),
-        host: 'localhost',
-        compress: true,
-        hot: true,
-        port: port,
-        open: true,
-        historyApiFallback: {
-            rewrites: [
-                { from: /^[a-zA-Z\d\/]+$/, to: '/index.html' }
-            ]
-        }
     },
     resolve: {
         extensions: ['.tsx', ".ts", ".js", ".less", ".css"]
     },
     module: {
-        rules: [{
-            test: /\.tsx?$/,
-            use: ["ts-loader"]
-        },
-        {
-            test: /\.css$/,
-            use: [
-                'style-loader',
-                'css-loader',
-            ],
-        },
-        {
-            test: /\.less$/,
-            use:
-                [
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {
-                            // 杩欓噷鍙互鎸囧畾涓�涓� publicPath
-                            // 榛樿浣跨敤 webpackOptions.output涓殑publicPath
-                            publicPath: '../../'
-                        }
-                    },
+        rules: [
+            {
+                test: /\.tsx?$/,
+                use: ["ts-loader"]
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    'style-loader',
                     'css-loader',
-                    'less-loader',
-                    {
-                        loader: 'sass-resources-loader',
-                        options: {
-                            resources: [
-                                path.resolve(__dirname, "../src/assert/theme.less")
-                            ]
-                        }
-                    }
                 ],
-        },
-        {
-            test: /\.(jpe?g|png|gif|bmp|webp)$/,
-            // 规则 limit给定的是图片的大小 如果我们给定图片的大小大于等于我们给定的limit 则不会被转为base64编码
-            //反之会被转换name=[hash:8]-[name].[ext] 前面加hash值区分图片 名字原样输出
-            use: ['url-loader?limit=8192&name=assert/img/[hash:8].[name].[ext]']
-        },
-        {
-            test: /assert\/font[\w\-\/]+\.(svg)$/,
-            // 规则 limit给定的是图片的大小 如果我们给定图片的大小大于等于我们给定的limit 则不会被转为base64编码
-            //反之会被转换name=[hash:8]-[name].[ext] 前面加hash值区分图片 名字原样输出
-            loader: 'url-loader?limit=8192&name=assert/img/[hash:8].[name].[ext]'
-        },
-        {
-            test: /assert\/svg\/[\w\.\-]+\.svg$/,
-            use: ['@svgr/webpack']
-            // loader: 'url-loader?limit=8192&name=assert/img/[hash:8].[name].[ext]'
-        },
-        {
-            test: /\.(woff2?|eot|ttf)$/,
-            // 规则 limit给定的是图片的大小 如果我们给定图片的大小大于等于我们给定的limit 则不会被转为base64编码
-            //反之会被转换name=[hash:8]-[name].[ext] 前面加hash值区分图片 名字原样输出
-            use: ['url-loader?limit=8192&name=assert/fonts/[hash:8].[name].[ext]']
-        }]
+            },
+            {
+                test: /\.less$/,
+                use:
+                    [
+                        'style-loader',
+                        'css-loader',
+                        'less-loader',
+                        // {
+                        //     loader: 'sass-resources-loader',
+                        //     options: {
+                        //         resources: [
+                        //             path.resolve(__dirname, "../src/assert/less.less")
+                        //         ]
+                        //     }
+                        // }
+                    ],
+            },
+            {
+                test: /\.svg$/,
+                issuer: /\.[jt]sx?$/,
+                use: [
+                    { loader: '@svgr/webpack' },
+                ]
+            },
+            {
+                test: /\.svg$/,
+                issuer: /\.(css|less|styl)$/,
+                type: 'asset/resource',
+                generator: {
+                    filename: 'assert/img/[name]-[contenthash:8][ext]',
+                }
+            },
+            {
+                test: /\.(jpe?g|png|gif|bmp|webp)$/,
+                type: 'asset/resource',
+                generator: {
+                    filename: 'assert/img/[name]-[contenthash:8][ext]',
+                },
+                // 是parser，不是parse
+                parser: {
+                    dataUrlCondition: {
+                        // 是maxSize，不再是limit
+                        maxSize: 5 * 1024
+                    }
+                }
+            },
+            {
+                test: /\.(json|md)$/,
+                type: 'asset/resource',
+                generator: {
+                    filename: 'data/[name]-[contenthash:8][ext]',
+                }
+            },
+            {
+                test: /\.(woff2?|eot|ttf)$/,
+                type: 'asset/resource',
+                generator: {
+                    filename: 'assert/font/[name]-[contenthash:8][ext]'
+                },
+                // 是parser，不是parse
+                parser: {
+                    dataUrlCondition: {
+                        // 是maxSize，不再是limit
+                        maxSize: 5 * 1024
+                    }
+                }
+            }
+        ]
     },
     externals: {
 
     },
     plugins: [
-        new webpack.HotModuleReplacementPlugin(),
+        // new webpack.HotModuleReplacementPlugin(),
         new HtmlWebpackPlugin({
-            template: path.join(__dirname, "../test/index.html"), // 婧愭ā鏉挎枃浠�
-            filename: './index.html', // 杈撳嚭鏂囦欢銆愭敞鎰忥細杩欓噷鐨勬牴璺緞鏄痬odule.exports.output.path銆�
+            template: path.join(__dirname, "index.html"), // 婧愭ā鏉挎枃浠�
+            filename: 'index.html', //
             showErrors: true,
+            chunks: ['test', 'shared'],
             hash: true
         }),
         new webpack.DefinePlugin({
             MODE: JSON.stringify('dev')
         }),
-        new MiniCssExtractPlugin({
-            filename: "sy.css",
-            //publicPath
-        }),
         new OptimizeCssAssetsPlugin({
             assetNameRegExp: /\.css$/g,
-            cssProcessor: require("cssnano"),
-            cssProcessorPluginOptions: {
-                preset: ['default', { discardComments: { removeAll: true } }]
-            },
-            canPrint: true
+        }),
+        new MiniCssExtractPlugin({
+            filename: "assert/css/shy.[contenthash:8].css"
         }),
         new CopyWebpackPlugin(
             {
@@ -133,5 +140,49 @@ module.exports = {
                 ]
             }
         ),
-    ]
+    ],
+    optimization: {
+        moduleIds: 'deterministic',
+        runtimeChunk: 'single',
+        splitChunks: {
+            // async：异步导入， initial：同步导入， all：异步/同步导入
+            chunks: "all",
+            // 最小尺寸: 单位是字节，如果拆分出来一个, 那么拆分出来的这个包的大小最小为minSize
+            minSize: 250000,
+            // 将大于maxSize的包, 拆分成不小于minSize的包
+            maxSize: 250000,
+            // minChunks表示引入的包, 至少被导入了几次 【才拆分】
+            minChunks: 1,
+            cacheGroups: {
+                vendor: {
+                    test: /[\\/]node_modules[\\/]/,
+                    filename: "assert/js/shy.[id].[contenthash:8].js",
+                    chunks: 'all',
+                },
+                default: {
+                    // 如果一个文件被引入了2次，就单独打包出来一个js文件
+                    minChunks: 2,
+                    filename: "assert/js/shy.common.[id].[contenthash:8].js",
+                    priority: -20
+                }
+            },
+        },
+    },
+    devServer: {
+        static: {
+            directory: path.join(__dirname, '../dist'),
+        },
+        client: {
+            progress: true,
+        },
+        host: '127.0.0.1',
+        compress: true,
+        port: port,
+        open: true,
+        historyApiFallback: {
+            rewrites: [
+                { from: /^[a-zA-Z\d\/]+$/, to: '/index.html' }
+            ]
+        }
+    },
 };
