@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/rgbui/kanhai#readme",
   "dependencies": {
+    "@types/marked": "^4.0.8",
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-react": "^1.0.6",
     "animate.css": "^4.1.1",
@@ -34,6 +35,7 @@
     "katex": "^0.12.0",
     "loadsh": "0.0.4",
     "lodash": "^4.17.21",
+    "marked": "^4.3.0",
     "mobx": "^6.3.5",
     "mobx-react": "^7.2.0",
     "nuka-carousel": "^5.4.0",
