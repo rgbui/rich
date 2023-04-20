@@ -23,5 +23,6 @@ export type ResourceArguments = {
     thumb?: string,
     text?: string,
     size?: number,
-    origin?: string
+    origin?: string,
+    mime?:string
 }

@@ -14,7 +14,10 @@ export function RenderChats(
         replyChat(d: ChannelTextType): any
     }) {
     var delChat = async (d: ChannelTextType) => {
-        var r = await channel.del('/ws/channel/cancel', { roomId: block.page.pageInfo?.id, id: d.id });
+        var r = await channel.del('/ws/channel/cancel', {
+            roomId: block.page.pageInfo?.id,
+            id: d.id
+        });
         block.view.forceUpdate();
         return r;
     }

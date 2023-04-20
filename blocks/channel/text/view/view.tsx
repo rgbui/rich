@@ -6,8 +6,6 @@ import { Button } from "../../../../component/view/button";
 import { useForm } from "../../../../component/view/form/dialoug";
 import { Icon } from "../../../../component/view/icon";
 import { Markdown } from "../../../../component/view/markdown";
-import { RichView } from "../../../../component/view/rich";
-import { RichTextInput } from "../../../../component/view/rich.input";
 import { Spin } from "../../../../component/view/spin";
 import { LinkPageItem } from "../../../../extensions/at/declare";
 import { useIconPicker } from "../../../../extensions/icon";
@@ -21,6 +19,7 @@ import { util } from "../../../../util/util";
 import { ChannelTextType } from "../declare";
 import { RenderChats } from "./chats";
 import { RenderWeibo } from "./weibo";
+import { ChatInputType, InputChatBox } from "../../../../component/view/input.chat/box";
 
 @view('/channel/text')
 export class ChannelTextView extends BlockView<ChannelText>{
@@ -102,17 +101,19 @@ export class ChannelTextView extends BlockView<ChannelText>{
         var c = TextEle.filterHtml(d.content);
         this.richTextInput.openReply({ text: `回复${use.data.user.name}:${c}`, replyId: d.id })
     }
-    richTextInput: RichTextInput;
-    popOpen(cs: { char: string, span: HTMLElement }) {
-
-    }
+    richTextInput: InputChatBox;
     uploadFiles: { id: string, speed: string }[] = [];
-    async onInput(data: { files?: File[], content?: string, reply?: { replyId: string } }) {
-        if (data.content) {
+    async onInput(data: ChatInputType) {
+        if (data.robot) {
+            //机器要指令
+
+        }
+        else {
             var re = await channel.put('/ws/channel/send', {
                 roomId: this.block.roomId,
                 content: data.content,
-                replyId: data.reply?.replyId || undefined
+                files: data.files,
+                replyId: data?.replyId || undefined
             })
             if (re.data) {
                 var chat: ChannelTextType = {
@@ -122,7 +123,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
                     content: data.content,
                     roomId: this.block.roomId,
                     seq: re.data.seq,
-                    replyId: data.reply?.replyId || undefined
+                    replyId: data?.replyId || undefined
                 };
                 if (chat.replyId) {
                     chat.reply = this.block.chats.find(b => b.id == chat.replyId);
@@ -131,49 +132,9 @@ export class ChannelTextView extends BlockView<ChannelText>{
                 await this.block.setLocalSeq(re.data.seq);
                 this.forceUpdate(() => this.updateScroll());
             }
-        }
-        else if (data.files) {
-            for (let i = 0; i < data.files.length; i++) {
-                var id = util.guid();
-                var file = data.files[i];
-                var fr = { id, speed: `${file.name}-读取中...` };
-                this.uploadFiles.push(fr);
-                this.forceUpdate(() => this.updateScroll());
-                var d = await channel.post('/ws/upload/file', {
-                    file,
-                    uploadProgress: (event) => {
-                        if (event.lengthComputable) {
-                            fr.speed = `${file.name}-${util.byteToString(event.total)}(${(100 * event.loaded / event.total).toFixed(2)}%)`;
-                            this.forceUpdate()
-                        }
-                    }
-                });
-                if (d) {
-                    fr.speed = `${file.name}-上传完成`;
-                    this.forceUpdate();
-                    var re = await channel.put('/ws/channel/send', {
-                        roomId: this.block.roomId,
-                        file: d.data.file
-                    });
-                    if (re.data) {
-                        this.uploadFiles.remove(g => g.id == fr.id);
-                        this.block.chats.push({
-                            id: re.data.id,
-                            userid: this.block.page.user.id,
-                            createDate: re.data.createDate || new Date(),
-                            file: d.data.file,
-                            roomId: this.block.roomId,
-                            seq: re.data.seq
-                        });
-                        await this.block.setLocalSeq(re.data.seq);
-                        this.forceUpdate(() => this.updateScroll());
-                    }
-                }
-                await util.delay(20)
+            if (this.block.page.pageInfo.speak == 'only') {
+                this.block.loadHasAbledSend(true);
             }
-        }
-        if (this.block.page.pageInfo.speak == 'only') {
-            this.block.loadHasAbledSend(true);
         }
     }
     renderChats() {
@@ -205,19 +166,19 @@ export class ChannelTextView extends BlockView<ChannelText>{
                 </div>
             </div>
             <div className="sy-channel-text-input" data-shy-page-no-focus onMouseDown={e => e.stopPropagation()}>
-                <RichTextInput
-                    disabled={this.block.abledSend}
+                <InputChatBox
+                    // disabled={this.block.abledSend}
                     placeholder={this.block.abledSend ? "您不能发言" : "回车提交"}
                     ref={e => this.richTextInput = e}
-                    popOpen={e => this.popOpen(e)}
-                    onInput={e => this.onInput(e)} ></RichTextInput>
+                    onChange={e => this.onInput(e)}
+                ></InputChatBox>
             </div>
         </div>
     }
     renderWeibos() {
         return <div className="w-c-250 gap-auto">
             <div className="min-h-80 bg-white border-light round-8 gap-15 padding-15" data-shy-page-no-focus onMouseDown={e => e.stopPropagation()}>
-                <RichView placeholder="有什么新鲜事分享给大家"></RichView>
+                {/* <RichView placeholder="有什么新鲜事分享给大家"></RichView> */}
                 {/* <RichTextInput
                     richClassName={'bg round-16 padding-10'}
                     allowUploadFile={false}
@@ -284,7 +245,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
         }
     }
     editChannelText: ChannelTextType;
-    editRichTextInput: RichTextInput;
+    editRichTextInput: InputChatBox;
 }
 
 
