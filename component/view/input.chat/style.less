@@ -1,0 +1,168 @@
+.shy-rich-view {
+    line-height: 24px;
+
+    &:empty::after {
+        content    : attr(data-placeholder);
+        font-size  : 14px;
+        line-height: 24px;
+        color      : rgba(0, 0, 0, 0.2)
+    }
+
+    .at-user {
+        line-height     : 24px;
+        display         : inline-block;
+        color           : rgb(88, 101, 242);
+        background-color: rgba(88, 101, 242, 0.15);
+        padding         : 0px 2px;
+        margin          : 0px 2px;
+        border-radius   : 3px;
+        cursor          : pointer;
+        box-sizing      : border-box;
+        font-weight     : bold;
+        font-size       : 14px;
+    }
+
+    padding-left:5px;
+
+    &-quote {
+        border-left: 2px solid rgba(0, 0, 0, 0.2);
+    }
+
+    .task-prop {
+        border       : 1px solid #ddd;
+        padding      : 2px 4px;
+        margin-right : 5px;
+        border-radius: 4px;
+
+        span {
+            &:first-child {
+                background-color: rgba(53, 54, 57, .08);
+                font-size       : 14px;
+                margin-right    : 5px;
+                font-weight: normal;
+                color: rgba(53, 54, 57,0.7);
+            }
+
+            &:last-child {
+                background-color: #fff;
+                display         : inline-block;
+                min-width       : 80px;
+                outline         : none;
+                padding         : 0px 5px;
+            }
+        }
+    }
+}
+
+.shy-rich-input {
+    display : block;
+    position: relative;
+
+    &-reply {
+        position               : absolute;
+        display                : flex;
+        justify-content        : flex-start;
+        align-items            : center;
+        user-select            : none;
+        top                    : -40px;
+        height                 : 30px;
+        line-height            : 20px;
+        background             : var(--background-secondary);
+        border-top-left-radius : 8px;
+        border-top-right-radius: 8px;
+        left                   : -6px;
+        right                  : -6px;
+        font-size              : 14px;
+        border-bottom          : 1px solid rgba(53, 54, 57, .08);
+
+        &-content {
+            flex-grow    : 1;
+            flex-shrink  : 1;
+            padding-left : 10px;
+            height       : 20px;
+            line-height  : 20px;
+            overflow     : hidden;
+            text-overflow: ellipsis;
+            color        : rgba(53, 54, 57, 1)
+        }
+
+        &-operators {
+            padding-right: 10px;
+            flex-grow    : 0;
+            flex-shrink  : 0;
+
+            a {
+                display        : inline-flex;
+                justify-content: center;
+                align-items    : center;
+                border-radius  : 4px;
+                width          : 24px;
+                cursor         : pointer;
+                height         : 24px;
+
+                &:hover {
+                    background-color: rgba(53, 54, 57, .08);
+                }
+            }
+        }
+    }
+
+    &-error {
+        position               : absolute;
+        display                : flex;
+        justify-content        : flex-start;
+        align-items            : center;
+        user-select            : none;
+        top                    : -40px;
+        height                 : 30px;
+        line-height            : 20px;
+        background             : var(--background-secondary);
+        border-top-left-radius : 8px;
+        border-top-right-radius: 8px;
+        left                   : -6px;
+        right                  : -6px;
+        font-size              : 14px;
+        border-bottom          : 1px solid rgba(53, 54, 57, .08);
+
+        &-content {
+            flex-grow    : 1;
+            flex-shrink  : 1;
+            padding-left : 10px;
+            height       : 20px;
+            line-height  : 20px;
+            overflow     : hidden;
+            text-overflow: ellipsis;
+            color        : #e16259;
+        }
+
+        &-operators {
+            padding-right: 10px;
+            flex-grow    : 0;
+            flex-shrink  : 0;
+
+            a {
+                display        : inline-flex;
+                justify-content: center;
+                align-items    : center;
+                border-radius  : 4px;
+                width          : 24px;
+                cursor         : pointer;
+                height         : 24px;
+
+                &:hover {
+                    background-color: rgba(53, 54, 57, .08);
+                }
+
+            }
+        }
+    }
+
+    &-files {
+        position               : absolute;
+        background             : var(--background-secondary);
+        border-top-left-radius : 8px;
+        border-top-right-radius: 8px;
+        left                   : 0px;
+        right                  : 0px;
+    }
+}

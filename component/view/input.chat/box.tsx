@@ -1,0 +1,228 @@
+import React from "react";
+import { Icon } from "../icon";
+import { CloseTickSvg, EmojiSvg, FileSvg, PlusSvg, TrashSvg } from "../../svgs";
+import { ChatInput } from "./chat";
+import { useOpenEmoji } from "../../../extensions/emoji";
+import { Rect } from "../../../src/common/vector/point";
+import { InsertSelectionText } from "./util";
+import { util } from "../../../util/util";
+import { OpenMultipleFileDialoug } from "../../file";
+import { useSelectMenuItem } from "../menu";
+import { RobotInfo, RobotTask, UserBasic } from "../../../types/user";
+import { channel } from "../../../net/channel";
+import { ResourceArguments } from "../../../extensions/icon/declare";
+import lodash from "lodash";
+
+export type ChatInputType = {
+    content?: string,
+    isQuote?: boolean,
+    files?: ResourceArguments[],
+    replyId?: string,
+    robot?: RobotInfo;
+    task?: RobotTask;
+    args?: Record<string, any>;
+}
+
+export class InputChatBox extends React.Component<{
+    placeholder?: string;
+    disabled?: boolean,
+    readonly?: boolean,
+    height?: number,
+    value?: string,
+    onChange?: (ct: ChatInputType) => void,
+    allowNewLine?: boolean,
+    spellCheck?: boolean,
+    onEnter?: (ct: ChatInputType) => void,
+    searchUser?: (word: string) => Promise<UserBasic[]>,
+    disabledInputQuote?: boolean
+    className?: string[] | string,
+    searchRobots?: () => Promise<RobotInfo[]>,
+}>{
+    el: HTMLElement;
+    render(): React.ReactNode {
+        var richClassList: string[] = ["shy-rich-input-editor"];
+        if (this.props.className) {
+            if (Array.isArray(this.props.className)) richClassList.push(...this.props.className)
+            else richClassList.push(this.props.className)
+        }
+        var width = 120;
+        var height = 160;
+        return <div className="shy-rich-input" ref={e => this.el = e}>
+            {this.uploadFiles.length > 0 && <div className="shy-rich-input-files flex" style={{ height: height + 20, top: (0 - (height + 20)) }}>
+                {this.uploadFiles.map(uf => {
+                    return <div key={uf.id} className="relative visible-hover item-hover border round-32 overflow-hidden gap-w-10" style={{ width, height }}>
+                        {uf.speed && <div
+                            style={{ width, height }}
+                            className="flex-center overflow-hidden">
+                            <span>{uf.speed}</span>
+                        </div>}
+                        {uf.file?.mime == 'image' && <img
+                            style={{ width, height, objectFit: 'cover', objectPosition: '50% 50%' }}
+                            src={uf.file.url} />}
+                        {uf.file?.mime && <div className="flex-center remark flex-col" style={{ width, height }}>
+                            <Icon size={48} icon={FileSvg}></Icon>
+                            <span>{uf.file?.name}</span>
+                        </div>}
+                        <div className="pos bg-white item-hover flex-center round visible cursor size-20" style={{ top: 10, right: 10 }} onClick={e => {
+                            lodash.remove(this.uploadFiles, g => g == uf)
+                            this.forceUpdate()
+                        }} ><Icon size={16} icon={TrashSvg}></Icon></div>
+                    </div>
+                })}
+            </div>}
+            {this.reply && <div className="shy-rich-input-reply">
+                <span className="shy-rich-input-reply-content">{this.reply.text}</span>
+                <span className="shy-rich-input-reply-operators" onMouseDown={e => this.clearReply()}><a><Icon size={12} icon={CloseTickSvg}></Icon></a></span>
+            </div>}
+            {this.errorTip && <div className="shy-rich-input-error">
+                <span className="shy-rich-input-error-content">{this.errorTip}</span>
+                <span className="shy-rich-input-error-operators" onMouseDown={e => this.clearError()}><a><Icon size={12} icon={CloseTickSvg}></Icon></a></span>
+            </div>}
+            <div className="flex flex-top">
+                <span className="flex-fixed size-24 round flex-center cursor item-hover"><Icon style={{ marginTop: 3 }} onMousedown={e => this.openAddFile(e)} size={18} icon={PlusSvg}></Icon></span>
+                <div className="flex-auto">
+                    <ChatInput
+                        ref={e => this.cp = e}
+                        placeholder={this.props.placeholder}
+                        onPasteFiles={e => this.onUploadFiles(e)}
+                        disabled={this.props.disabled}
+                        readonly={this.props.readonly}
+                        height={this.props.height}
+                        value={this.props.value}
+                        onInput={e => { }}
+                        allowNewLine={this.props.allowNewLine}
+                        spellCheck={this.props.spellCheck}
+                        onEnter={e => { this.onEnter() }}
+                        searchUser={this.props.searchUser}
+                        disabledInputQuote={this.props.disabledInputQuote}
+                        searchRobots={this.props.searchRobots}
+                    ></ChatInput>
+                </div>
+                <span className="flex-fixed size-24 round flex-center cursor item-hover"> <Icon size={18} style={{ marginTop: 3 }} onMousedown={e => this.openEmoji(e)} icon={EmojiSvg}></Icon></span>
+            </div>
+        </div>
+    }
+    cp: ChatInput;
+    async openAddFile(event: React.MouseEvent) {
+        var re = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, [{ name: 'addFile', text: '上传附件' }]);
+        if (re) {
+            if (re.item.name == 'addFile') {
+                var files = await OpenMultipleFileDialoug();
+                var size = 1024 * 1024 * 1024;
+                var rs = files.filter(g => g.size > size);
+                if (rs.length > 0) {
+                    this.openEror(`${rs.map(r => r.name + `(${util.byteToString(r.size)})`).join(",")}文件大于1G,暂不支持上传`)
+                }
+                files = files.filter(g => g.size <= size);
+                if (files.length > 0) {
+                    this.onUploadFiles(files);
+                }
+            }
+        }
+    }
+    async openEmoji(event: React.MouseEvent) {
+        this.cp.rememberCursor();
+        var re = await useOpenEmoji({
+            roundArea: Rect.fromEvent(event),
+            direction: 'top',
+            align: 'end'
+        });
+        setTimeout(() => {
+            this.cp.setCursor();
+            if (re) {
+                InsertSelectionText(re.code);
+            }
+        }, 100);
+    }
+    reply: { text: string, replyId: string }
+    openReply(reply: { text: string, replyId: string }) {
+        this.reply = reply;
+        this.cp.rememberCursor();
+        this.forceUpdate(() => {
+            this.cp.setCursor()
+        })
+    }
+    clearReply() {
+        if (this.reply) {
+            this.reply = null;
+            this.cp.rememberCursor();
+            this.forceUpdate(() => {
+                this.cp.setCursor()
+            })
+        }
+    }
+    errorTip: string = '';
+    clearError() {
+        if (this.errorTime) { clearTimeout(this.errorTime); this.errorTime = null; }
+        this.errorTip = '';
+        this.cp.rememberCursor();
+        this.forceUpdate(() => {
+            this.cp.setCursor()
+        })
+    }
+    errorTime
+    openEror(error: string) {
+        this.errorTip = error;
+        this.cp.rememberCursor();
+        this.forceUpdate(() => {
+            this.cp.setCursor()
+        })
+        if (this.errorTime) { clearTimeout(this.errorTime); this.errorTime = null; }
+        this.errorTime = setTimeout(() => {
+            if (this.errorTime) { clearTimeout(this.errorTime); this.errorTime = null; }
+            this.clearError();
+        }, 10e3);
+    }
+    onReplaceInsert(value: any) {
+        this.cp.richEl.innerHTML = value;
+    }
+    async onUploadFiles(files: File[]) {
+        for (let i = 0; i < files.length; i++) {
+            var id = util.guid();
+            var file = files[i];
+            var fr: ArrayOf<InputChatBox['uploadFiles']> = { id, size: file.size, text: file.name, speed: `${file.name}-准备上传中...` };
+            this.uploadFiles.push(fr);
+            var d = await channel.post('/ws/upload/file', {
+                file,
+                uploadProgress: (event) => {
+                    if (event.lengthComputable) {
+                        fr.speed = `${file.name}-${util.byteToString(event.total)}(${(100 * event.loaded / event.total).toFixed(2)}%)`;
+                        this.forceUpdate()
+                    }
+                }
+            });
+            if (d) {
+                fr.speed = `${file.name}-上传完成`;
+                var g = lodash.cloneDeep(d.data.file) as any;
+                g.text = g.name;
+                delete g.name;
+                fr.file = { name: 'upload', ...g }
+            }
+            fr.speed = ``;
+            this.forceUpdate()
+            await util.delay(20)
+        }
+    }
+    uploadFiles: {
+        text?: string,
+        file?: ResourceArguments,
+        speed?: string,
+        size?: number,
+        id?: string
+    }[] = [];
+    onEnter() {
+        this.props.onChange({
+            content: this.cp.getValue(),
+            isQuote: this.cp.isQuote,
+            replyId: this.reply ? this.reply.replyId : null,
+            files: this.uploadFiles.filter(g => g.file ? true : false).map(f => f.file),
+            ...this.cp.getCommandValue()
+        })
+        this.cp.isQuote = false;
+        this.cp.richEl.innerHTML = '';
+        var sel = window.getSelection();
+        sel.collapse(this.cp.richEl, 0);
+        this.uploadFiles = [];
+        this.forceUpdate()
+    }
+}
