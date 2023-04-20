@@ -5,7 +5,7 @@ import { GalleryType, OuterPic } from "../extensions/image/declare";
 import { StatusCode } from "./status.code";
 import { UserAction } from "../src/history/action";
 import { UserBasic, UserStatus } from "../types/user";
-import { IconArguments, ResourceArguments } from "../extensions/icon/declare";
+import {IconArguments, ResourceArguments } from "../extensions/icon/declare";
 export type SockResponse<T, U = string> = {
         /**
          * 返回状态码
@@ -150,6 +150,9 @@ export interface ChannelPostMapUrls {
     "/phone/sms/code":{args:{phone:string},returnType:Promise<{ok:boolean,warn:string,data:{success:boolean,code?:string}}>},
 	"/email/send/code":{args:{email:string},returnType:Promise<SockResponse<{code?:string}>>},
 	"/user/upload/file":{args:{file:File,uploadProgress: (event: ProgressEvent) => void},returnType:Promise<SockResponse<{file:{url:string}}>>},
+	"/text/ai/stream":{args:{question: string, model?: string, uid?: string, options?: Record<string, any>,callback:(str:string,done?:boolean)=>void},returnType:Promise<SockResponse<void>>},
+	"/text/edit":{args:{code: boolean, input: string, question: string, options: any},returnType:Promise<SockResponse<{content:string}>>},
+	"/text/to/image":{args:{prompt:string,options:Record<string,any>},returnType:Promise<SockResponse<{file:Record<string,any>}>>},
 	"/ws/upload/file":{args:{file:File,uploadProgress: (event: ProgressEvent) => void},returnType:Promise<SockResponse<{ file:{url:string,name:string,size:number} }>>},
 	"/ws/download/url":{args:{url:string},returnType:Promise<SockResponse<{ file:{url:string,name:string,size:number} }>>},
 	"/view/snap/rollup":{args:{id:string,elementUrl:string,wsId?:string,bakeTitle?:string,pageTitle?:string},returnType:Promise<SockResponse<{seq:number,id:string}>>}
@@ -188,7 +191,7 @@ export interface ChannelPutMapUrls {
 	"/friend/join":{args:{userid?:string,sn?:number},returnType:Promise<SockResponse<{exists?:boolean,send?:boolean,refuse?:boolean,black?:boolean}>>},
 	"/blacklist/join":{args:{otherId:string},returnType:Promise<SockResponse<void>>},
 	"/friend/agree":{args:{id:string},returnType:Promise<SockResponse<{userFriend:Record<string,any>}>>},
-	"/user/chat/send":{args:{roomId:string,content?:string,file?:any,tos:string[],replyId?:string},returnType:Promise<SockResponse<{id:string,seq:number,createDate:Date}>>},
+	"/user/chat/send":{args:{roomId:string,content?:string,files?:any,tos:string[],replyId?:string},returnType:Promise<SockResponse<{id:string,seq:number,createDate:Date}>>},
 	"/user/chat/emoji":{args:{id:string,roomId:string,emoji:{emojiId: string, code?: string}},returnType:Promise<SockResponse<{emoji:{emojiId: string, code?: string,count:number}}>>},
 	"/create/qr_pay/order":{args:{subject: string,body: string,price: number,count: number,amount?: number,kind: string},returnType:Promise<SockResponse<{orderId:string,code:string}>>},
 	"/open/weixin/bind":{args:{weixinOpen:any},returnType:Promise<SockResponse<void>>},
@@ -196,7 +199,7 @@ export interface ChannelPutMapUrls {
 	"/ws/create":{args:{text:string,dataServiceAddress?:string,searchServiceAddress?:string,fileServiceAddress?:string,templateId?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
 	"/ws/invite/create":{args:any,returnType:Promise<SockResponse<{code:string}>>},
 	"/ws/invite/join":{args:{wsId:string,sock?:any},returnType:Promise<SockResponse<void>>},
-	"/ws/channel/send":{args:{ sockId?: string,wsId?: string,roomId: string,content?: string,replyId?: string, file?:any},returnType:Promise<SockResponse<{id:string,seq:number,createDate:Date}>>},
+	"/ws/channel/send":{args:{ sockId?: string,wsId?: string,roomId: string,content?: string,replyId?: string, files?:any[]},returnType:Promise<SockResponse<{id:string,seq:number,createDate:Date}>>},
 	"/ws/channel/emoji":{args:{elementUrl: string,sockId?: string, wsId?: string, emoji: { emojiId: string, code?: string }},returnType:Promise<SockResponse<{emoji:{emojiId:string,code?:string,count:number}}>>},
 	"/ws/role/create":{args:{data:Record<string,any>},returnType:Promise<SockResponse<{role:Record<string,any>}>>},
 	"/ws/comment/send":{args:{elementUrl: string,wsId?: string, parentId: string, rootId: string,content: string},returnType:Promise<SockResponse<{data:any}>>},
@@ -240,6 +243,9 @@ export interface ChannelGetMapUrls {
 	"/repeat/qr_pay/order":{args:{orderId:string,platform:string},returnType:Promise<SockResponse<{orderId:string,code:string}>>},
 	"/user/order/list":{args:{page?: number, size?: number, word?: string, status?: string,deal?:boolean},returnType:Promise<SockResponse<{page:number,size:number,list:any[],total:number}>>},
 	"/user/wallet":{args:{},returnType:Promise<SockResponse<{money:number,meal:string}>>},
+	"/query/wiki/answer":{args:{ask: string, robotId: string},returnType:Promise<SockResponse<{contents:{ id: string, content: string, rank: number, max: number }[]}>>},
+	"/text/ai":{args:{input: string, model: string, uid: string, options?: {isSession?: boolean,sessionTimeOut?: number, parameters?: Record<string, any>}},returnType:Promise<SockResponse<{contents:{ id: string, content: string, rank: number, max: number }[]}>>},
+	"/text/embedding":{args:{text:string},returnType:Promise<SockResponse<{embedding:number[]}>>},
 	"/open/list":{args:any,returnType:Promise<SockResponse<{list:any[]}>>},
 	"/ws/basic":{args:{name?:string,wsId?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
 	"/ws/info":{args:{name?:string|number,wsId?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
