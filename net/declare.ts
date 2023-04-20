@@ -153,6 +153,8 @@ export interface ChannelPostMapUrls {
 	"/text/ai/stream":{args:{question: string, model?: string, uid?: string, options?: Record<string, any>,callback:(str:string,done?:boolean)=>void},returnType:Promise<SockResponse<void>>},
 	"/text/edit":{args:{code: boolean, input: string, question: string, options: any},returnType:Promise<SockResponse<{content:string}>>},
 	"/text/to/image":{args:{prompt:string,options:Record<string,any>},returnType:Promise<SockResponse<{file:Record<string,any>}>>},
+	"/fetch":{args:{options: {url: string;data?: Record<string, any>;method: string;},callback: (chunk: any, done?: boolean) => void},returnType:Promise<void>},
+	"/http":{args:{url: string;data?: Record<string, any>;method: string;},returnType:Promise<SockResponse<any>>},
 	"/ws/upload/file":{args:{file:File,uploadProgress: (event: ProgressEvent) => void},returnType:Promise<SockResponse<{ file:{url:string,name:string,size:number} }>>},
 	"/ws/download/url":{args:{url:string},returnType:Promise<SockResponse<{ file:{url:string,name:string,size:number} }>>},
 	"/view/snap/rollup":{args:{id:string,elementUrl:string,wsId?:string,bakeTitle?:string,pageTitle?:string},returnType:Promise<SockResponse<{seq:number,id:string}>>}
