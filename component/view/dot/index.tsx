@@ -10,8 +10,9 @@ export function DotNumber(props: {
         };
         if (typeof props.arrow == 'undefined' || props.arrow == 'topRight') {
             style.top = 0;
-            style.left = 0;
+            style.right = 0;
             style.position = 'absolute';
+            style.transform = 'translate(30%,-30%)';
         }
         else if (props.arrow == 'none') {
 
