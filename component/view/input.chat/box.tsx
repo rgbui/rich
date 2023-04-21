@@ -106,6 +106,8 @@ export class InputChatBox extends React.Component<{
     }
     cp: ChatInput;
     async openAddFile(event: React.MouseEvent) {
+        if (this.props.disabled) return;
+        if (this.props.readonly) return;
         var menus: MenuItem<string>[] = [
             { name: 'addFile', text: '上传附件', icon: UploadSvg }
         ]
@@ -130,6 +132,8 @@ export class InputChatBox extends React.Component<{
         }
     }
     async openEmoji(event: React.MouseEvent) {
+        if (this.props.disabled) return;
+        if (this.props.readonly) return;
         this.cp.rememberCursor();
         var re = await useOpenEmoji({
             roundArea: Rect.fromEvent(event),

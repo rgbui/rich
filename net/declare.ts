@@ -201,7 +201,7 @@ export interface ChannelPutMapUrls {
 	"/ws/create":{args:{text:string,dataServiceAddress?:string,searchServiceAddress?:string,fileServiceAddress?:string,templateId?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>}>>},
 	"/ws/invite/create":{args:any,returnType:Promise<SockResponse<{code:string}>>},
 	"/ws/invite/join":{args:{wsId:string,sock?:any},returnType:Promise<SockResponse<void>>},
-	"/ws/channel/send":{args:{ sockId?: string,wsId?: string,roomId: string,content?: string,replyId?: string, files?:any[]},returnType:Promise<SockResponse<{id:string,seq:number,createDate:Date}>>},
+	"/ws/channel/send":{args:{ sockId?: string,wsId?: string,roomId: string,content?: string,replyId?: string, files?:any[],mentions?:string[]},returnType:Promise<SockResponse<{id:string,seq:number,createDate:Date}>>},
 	"/ws/channel/emoji":{args:{elementUrl: string,sockId?: string, wsId?: string, emoji: { emojiId: string, code?: string }},returnType:Promise<SockResponse<{emoji:{emojiId:string,code?:string,count:number}}>>},
 	"/ws/role/create":{args:{data:Record<string,any>},returnType:Promise<SockResponse<{role:Record<string,any>}>>},
 	"/ws/comment/send":{args:{elementUrl: string,wsId?: string, parentId: string, rootId: string,content: string},returnType:Promise<SockResponse<{data:any}>>},

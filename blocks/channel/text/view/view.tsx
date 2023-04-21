@@ -94,14 +94,14 @@ export class ChannelTextView extends BlockView<ChannelText>{
         channel.off('/page/update/info', this.updatePageInfo);
     }
     async redit(d: ChannelTextType) {
-        this.richTextInput.onReplaceInsert(d.content);
+        this.inputChatBox.onReplaceInsert(d.content);
     }
     async reply(d: ChannelTextType) {
         var use = await channel.get('/user/basic', { userid: d.userid });
         var c = TextEle.filterHtml(d.content);
-        this.richTextInput.openReply({ text: `回复${use.data.user.name}:${c}`, replyId: d.id })
+        this.inputChatBox.openReply({ text: `回复${use.data.user.name}:${c}`, replyId: d.id })
     }
-    richTextInput: InputChatBox;
+    inputChatBox: InputChatBox;
     uploadFiles: { id: string, speed: string }[] = [];
     async onInput(data: ChatInputType) {
         if (data.robot) {
@@ -113,7 +113,8 @@ export class ChannelTextView extends BlockView<ChannelText>{
                 roomId: this.block.roomId,
                 content: data.content,
                 files: data.files,
-                replyId: data?.replyId || undefined
+                replyId: data?.replyId || undefined,
+                mentions: data.mentions
             })
             if (re.data) {
                 var chat: ChannelTextType = {
@@ -168,14 +169,33 @@ export class ChannelTextView extends BlockView<ChannelText>{
             <div className="sy-channel-text-input" data-shy-page-no-focus onMouseDown={e => e.stopPropagation()}>
                 <div className="sy-channel-text-input-wrapper">
                     <InputChatBox
-                        // disabled={this.block.abledSend}
+                        disabled={this.block.abledSend}
                         placeholder={this.block.abledSend ? "您不能发言" : "回车提交"}
-                        ref={e => this.richTextInput = e}
+                        ref={e => this.inputChatBox = e}
                         onChange={e => this.onInput(e)}
+                        searchUser={this.searchUser}
+                        searchRobots={this.searchRobot}
                     ></InputChatBox>
                 </div>
             </div>
         </div>
+    }
+    searchUser = async (text: string) => {
+        if (!text) return [];
+        var r = await channel.get('/ws/member/word/query', { word: text });
+        if (r.ok) {
+            return r.data.list.map(c => {
+                return {
+                    id: c.userid,
+                    ...c
+                }
+            }) as any
+        }
+        else return []
+    }
+    searchRobot = async () => {
+
+        return []
     }
     renderWeibos() {
         return <div className="w-c-250 gap-auto">
@@ -238,12 +258,11 @@ export class ChannelTextView extends BlockView<ChannelText>{
             await this.block.scrollTopLoad();
         }
     }
-    updateScroll() {
+    async updateScroll() {
         if (this.contentEl) {
             this.contentEl.scrollTop = this.contentEl.scrollHeight + 100;
-            setTimeout(() => {
-                this.contentEl.scrollTop = this.contentEl.scrollHeight + 100;
-            }, 300);
+            await util.delay(300);
+            this.contentEl.scrollTop = this.contentEl.scrollHeight + 100;
         }
     }
     editChannelText: ChannelTextType;
