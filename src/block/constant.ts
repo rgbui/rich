@@ -2,6 +2,7 @@
 export enum BlockUrlConstant {
     TextSpan = '/textspan',
     Text = '/text',
+    TextChannel = '/channel/text',
     Row = '/row',
     Col = '/col',
     View = '/view',

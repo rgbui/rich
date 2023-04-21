@@ -13,6 +13,7 @@ import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { onPasteBlank } from "../../kit/write/paste";
 import { PageLayoutType } from "../declare";
 import { PageDirective } from "../directive";
+import { BlockUrlConstant } from "../../block/constant";
 
 export class PageEvent {
     /**
@@ -159,7 +160,7 @@ export class PageEvent {
                     await view.childs.eachAsync(async block => {
                         await block.delete()
                     })
-                    await this.createBlock('/channel/text', {}, view);
+                    await this.createBlock(BlockUrlConstant.TextChannel, {}, view);
                     break;
             }
             await channel.air('/page/update/info', { id: this.pageInfo?.id, pageInfo: { pageType: this.pageLayout.type } });
