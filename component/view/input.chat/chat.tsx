@@ -259,11 +259,26 @@ export class ChatInput extends React.Component<ChatInputOptions>{
         }
     }
     getValue() {
-        var md = this.richEl.innerHTML;
-        var html = marked.parse(md);
+        var html = this.richEl.innerHTML;
+        html = html.replace(/(\*\*[^\*]+\*\*)/g, (_, $1) => {
+            return '<b>' + $1.slice(2, -2) + '</b>'
+        })
+        html = html.replace(/(\*[^\*]+\*)/g, (_, $1) => {
+            return '<i>' + $1.slice(1, -1) + '</i>'
+        })
+        html = html.replace(/(\~\~[^\~]+\~\~)/g, (_, $1) => {
+            return '<del>' + $1.slice(2, -2) + '</del>'
+        })
+        html = html.replace(/(\`\`\`[^\`]+\`\`\`)/g, (_, $1) => {
+            return '<pre><code>' + $1.slice(3, -3) + '</code></pre>'
+        })
+        html = html.replace(/(\`[^\`]+\`)/g, (_, $1) => {
+            return '<code>' + $1.slice(1, -1) + '</code>'
+        })
         if (this.isQuote) {
             html = '<blockquote>' + html + '</blockquote>'
         }
+        console.log('html', html);
         return html;
     }
     getMentionUsers() {

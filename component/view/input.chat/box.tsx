@@ -1,6 +1,6 @@
 import React from "react";
 import { Icon } from "../icon";
-import { CloseTickSvg, EmojiSvg, FileSvg, PlusSvg, TrashSvg } from "../../svgs";
+import { AiSvg, CloseTickSvg, EmojiSvg, FileSvg, PlusSvg, TrashSvg, UploadSvg } from "../../svgs";
 import { ChatInput } from "./chat";
 import { useOpenEmoji } from "../../../extensions/emoji";
 import { Rect } from "../../../src/common/vector/point";
@@ -12,6 +12,7 @@ import { RobotInfo, RobotTask, UserBasic } from "../../../types/user";
 import { channel } from "../../../net/channel";
 import { ResourceArguments } from "../../../extensions/icon/declare";
 import lodash from "lodash";
+import { MenuItem, MenuItemType } from "../menu/declare";
 
 export type ChatInputType = {
     content?: string,
@@ -105,7 +106,14 @@ export class InputChatBox extends React.Component<{
     }
     cp: ChatInput;
     async openAddFile(event: React.MouseEvent) {
-        var re = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, [{ name: 'addFile', text: '上传附件' }]);
+        var menus: MenuItem<string>[] = [
+            { name: 'addFile', text: '上传附件', icon: UploadSvg }
+        ]
+        if (typeof this.props.searchRobots == 'function') {
+            menus.push({ type: MenuItemType.divide });
+            menus.push({ name: 'addRobot', text: '机器人指令', icon: AiSvg });
+        }
+        var re = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, menus);
         if (re) {
             if (re.item.name == 'addFile') {
                 var files = await OpenMultipleFileDialoug();
