@@ -239,4 +239,9 @@ export class InputChatBox extends React.Component<{
         this.uploadFiles = [];
         this.forceUpdate()
     }
+    componentDidUpdate(prevProps: Readonly<{ placeholder?: string; disabled?: boolean; readonly?: boolean; height?: number; value?: string; onChange?: (ct: ChatInputType) => void; allowNewLine?: boolean; spellCheck?: boolean; onEnter?: (ct: ChatInputType) => void; searchUser?: (word: string) => Promise<UserBasic[]>; disabledInputQuote?: boolean; className?: string[] | string; searchRobots?: () => Promise<RobotInfo[]>; }>, prevState: Readonly<{}>, snapshot?: any): void {
+       if (this.props.disabled != prevProps.disabled) {
+            this.forceUpdate()
+        }
+    }
 }
