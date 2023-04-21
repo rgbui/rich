@@ -9,6 +9,8 @@ import { ChannelTextView } from "./view/view";
 import lodash from "lodash";
 import { ElementType, getElementUrl } from "../../../net/element.type";
 import { LinkPageItem } from "../../../extensions/at/declare";
+import { Rect } from "../../../src/common/vector/point";
+import { util } from "../../../util/util";
 
 @url('/channel/text')
 export class ChannelText extends Block {
@@ -152,12 +154,17 @@ export class ChannelText extends Block {
             var td = this.chats.findMin(g => g.createDate.getTime());
             await this.loadChannelTextDatas();
             this.loading = false;
-            this.view.forceUpdate(() => {
-                // var ce = (this.view as any).contentEl as HTMLElement
-                // var it = ce.querySelector(`[data-channel-text-id='${td.id}']`);
-                // if (it) {
-                //     ce.scrollTop = Rect.fromEle(it as HTMLElement).top - Rect.fromEle(ce).top;
-                // }
+            this.view.forceUpdate(async () => {
+                var ce = (this.view as any).contentEl as HTMLElement
+                var it = ce.querySelector(`[data-channel-text-id='${td.id}']`);
+                if (it) {
+                    ce.scrollTop = Rect.fromEle(it as HTMLElement).top - Rect.fromEle(ce).top;
+                }
+                await util.delay(1000)
+                var it = ce.querySelector(`[data-channel-text-id='${td.id}']`);
+                if (it) {
+                    ce.scrollTop = Rect.fromEle(it as HTMLElement).top - Rect.fromEle(ce).top;
+                }
             });
         }
     }, 1200)

@@ -61,6 +61,55 @@
                 .sy-channel-text-item-content {
                     color      : rgba(55, 53, 47, 1);
                     line-height: 20px;
+
+                    a {
+                        color                : rgb(0, 108, 231);
+                        word-break           : break-word;
+                        text-decoration-color: rgb(0, 108, 231);
+                        text-decoration      : none;
+                        cursor               : pointer;
+
+                        &:hover {
+                            text-decoration: underline;
+                        }
+                    }
+
+                    code {
+                        background-color: rgb(242, 243, 245);
+                        padding         : 0 5px;
+                        border-radius   : 3px;
+                        line-height     : 1.125rem;
+                        padding         : 0.2em;
+                        margin          : -0.2em 0;
+                        border-radius   : 3px;
+                        font-size       : 85%;
+                        text-indent     : 0;
+                        border          : none;
+                        white-space     : pre-wrap;
+                        font-family     : Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
+                        ;
+                    }
+
+                    .at-user {
+                        line-height     : 24px;
+                        display         : inline-block;
+                        color           : rgb(88, 101, 242);
+                        background-color: rgba(88, 101, 242, 0.15);
+                        padding         : 0px 2px;
+                        margin          : 0px 2px;
+                        border-radius   : 3px;
+                        cursor          : pointer;
+                        box-sizing      : border-box;
+                        font-weight     : bold;
+                        font-size       : 14px;
+                        text-decoration : none;
+
+                        &:hover {
+                            text-decoration : none;
+                            color           : rgb(255, 255, 255);
+                            background-color: rgb(88, 101, 242);
+                        }
+                    }
                 }
             }
         }
@@ -159,8 +208,9 @@
                 border       : 1px solid transparent;
                 cursor       : pointer;
                 line-height  : 1.3rem;
+
                 span {
-                    font-size: 0.875rem;
+                    font-size  : 0.875rem;
                     font-weight: 500;
 
                     &:first-child {
@@ -219,6 +269,13 @@
                     line-height  : 22px;
                     height       : 22px;
                     font-size    : inherit;
+
+                    a {
+                        color          : rgb(0, 108, 231);
+                        word-break     : break-word;
+                        text-decoration: rgb(0, 108, 231);
+                        cursor         : pointer;
+                    }
                 }
             }
         }

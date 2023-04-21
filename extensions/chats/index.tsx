@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import lodash from "lodash";
 import React from "react";
-import { FileIconSvg, DownloadSvg, Emoji1Svg, Edit1Svg, ReplySvg, DotsSvg } from "../../component/svgs";
+import { FileIconSvg, DownloadSvg, Emoji1Svg, Edit1Svg, ReplySvg, DotsSvg, EditSvg, TrashSvg, ReportSvg } from "../../component/svgs";
 import { Avatar } from "../../component/view/avator/face";
 import { UserBox } from "../../component/view/avator/user";
 import { Icon } from "../../component/view/icon";
@@ -19,8 +19,7 @@ import { useOpenEmoji } from "../emoji";
 import { EmojiCode } from "../emoji/store";
 import { ChannelTextType } from "./declare";
 import "./style.less";
-import { InputChatBox } from "../../component/view/input.chat/box";
-import { ResourceArguments } from "../icon/declare";
+import { ChatInput } from "../../component/view/input.chat/chat";
 
 export class ViewChats extends React.Component<{
     redit(d: ChannelTextType)
@@ -37,7 +36,7 @@ export class ViewChats extends React.Component<{
     replyChat(d: ChannelTextType),
     user: UserBasic;
     chats: ChannelTextType[],
-    uploadFiles?: { id: string, speed: string, text: string }[]
+    searchUser?: (word: string) => Promise<UserBasic[]>
 }> {
     editChannelText: ChannelTextType = null;
     el: HTMLElement;
@@ -52,44 +51,44 @@ export class ViewChats extends React.Component<{
             else return -1;
         })
     }
-    richTextInput: InputChatBox;
+    chatInput: ChatInput;
     get currentUser(): UserBasic {
         return this.props.user
     }
-    popOpen(cs: { char: string, span: HTMLElement }) {
-
-    }
     renderContent(d: ChannelTextType) {
-        if (d.file) {
-            if (d.file.mime == 'image') {
-                return <div className='shy-user-channel-chat-image' >
-                    <img src={autoImageUrl(d.file.url, 500)} />
-                </div>
+        var files = d.file ? [d.file] : d.files;
+        if (!Array.isArray(files)) files = [];
+        var jsList: JSX.Element[] = [];
+        if (d.content) jsList.push(<div key={d.id + "c"} className='shy-user-channel-chat-content'>
+            <span dangerouslySetInnerHTML={{ __html: d.content }}></span>
+            {d.isEdited && <span className="sy-channel-text-edited-tip">(已编辑)</span>}
+        </div>)
+        for (let i = 0; i < files.length; i++) {
+            var f = files[i];
+            if (f.mime == 'image') {
+                jsList.push(<div key={i} className='shy-user-channel-chat-image' >
+                    <img src={autoImageUrl(f.url, 500)} />
+                </div>)
             }
-            else if (d.file.mime == 'video') {
-                return <div className='shy-user-channel-chat-video' >
-                    <video controls src={d.file.url}></video>
-                </div>
+            else if (f.mime == 'video') {
+                jsList.push(<div key={i} className='shy-user-channel-chat-video' >
+                    <video controls src={f.url}></video>
+                </div>)
             }
-            else return <div className='shy-user-channel-chat-file' >
+            else jsList.push(<div key={i} className='shy-user-channel-chat-file' >
                 <div className="shy-user-channel-chat-file-content">
                     <Icon size={40} icon={FileIconSvg}></Icon>
                     <div className='shy-user-channel-chat-file-content-info' >
-                        <span>{d.file.name}</span>
-                        <Remark>{util.byteToString(d.file.size)}</Remark>
+                        <span>{f.name}</span>
+                        <Remark>{util.byteToString(f.size)}</Remark>
                     </div>
-                    <a href={d.file.url} download={d.file.name}>
+                    <a href={f.url} download={f.name}>
                         <Icon size={30} icon={DownloadSvg}></Icon>
                     </a>
                 </div>
-            </div>
+            </div>)
         }
-        else {
-            return <div className='shy-user-channel-chat-content'>
-                <span dangerouslySetInnerHTML={{ __html: d.content }}></span>
-                {d.isEdited && <span className="sy-channel-text-edited-tip">(已编辑)</span>}
-            </div>
-        }
+        return <div key={d.id + "cc"}>{jsList}</div>;
     }
     renderDateTip(date: Date) {
         var dateStr = '';
@@ -132,18 +131,18 @@ export class ViewChats extends React.Component<{
                             <div className="sy-channel-text-item-edited-content-wrapper" >
                                 <div className="sy-channel-text-item-head"><a>{us.name}</a><span>{util.showTime(d.createDate)}</span></div>
                                 <div className="sy-channel-text-item-edited-content-input">
-                                    <InputChatBox
-                                        ref={e => this.richTextInput = e}
-                                        placeholder="回车提交"
+                                    <ChatInput
+                                        ref={e => this.chatInput = e}
                                         value={d.content}
-                                        // popOpen={e => this.popOpen(e)}
-                                        onChange={e => this.edit(d, e)} >
-
-                                    </InputChatBox>
+                                        placeholder="回车提交"
+                                        onEnter={e => this.edit(d, { content: e })}
+                                        searchUser={this.props.searchUser}
+                                    >
+                                    </ChatInput>
                                 </div>
                             </div>
                         </div>
-                        <div className="sy-channel-text-item-edited-tip">ESC键<a onClick={e => this.closeEdit()}>取消</a>•回车键<a onMouseDown={e => this.richTextInput.onEnter()}>保存</a></div>
+                        <div className="sy-channel-text-item-edited-tip">ESC键<a onClick={e => this.closeEdit()}>取消</a>•回车键<a onMouseDown={e => this.chatInput.onEnter()}>保存</a></div>
                     </>
                 }}</UserBox>
             </div>
@@ -177,15 +176,6 @@ export class ViewChats extends React.Component<{
             </div>}
         </div>
     }
-    renderUploadFile(uf) {
-        return <div className="sy-channel-text-upload" key={uf.id}>
-            <Avatar showCard user={this.currentUser} userid={this.currentUser.id} size={40}></Avatar>
-            <div className="sy-channel-text-upload-content">
-                <Spin></Spin>
-                <span style={{ display: 'inline-block', marginLeft: 5 }}>{uf.speed}</span>
-            </div>
-        </div>
-    }
     render() {
         var dm = this.sortChats;
         var ds: JSX.Element[] = [];
@@ -207,8 +197,6 @@ export class ViewChats extends React.Component<{
             ds.push(this.renderItem(d, noUser));
             lastUserid = d.userid;
         }
-        if (Array.isArray(this.props.uploadFiles))
-            ds.push(...this.props.uploadFiles.map(uf => this.renderUploadFile(uf)))
         return <div className="sy-channel-view-chats" ref={e => this.el = e}>{ds}</div>
     }
     componentDidMount(): void {
@@ -268,7 +256,7 @@ export class ViewChats extends React.Component<{
         this.editChannelText = null;
         this.forceUpdate();
     }
-    private async edit(d: ChannelTextType, data: { files?: ResourceArguments[], content?: string, replyId?: string }) {
+    private async edit(d: ChannelTextType, data: { content?: string }) {
         this.closeEdit();
         if (data.content) {
             var re = await this.patchChat(d, { content: data.content });
@@ -305,12 +293,12 @@ export class ViewChats extends React.Component<{
         var op = this.getOp(d);
         var items: MenuItem<string>[] = [];
         if (d.userid == this.currentUser.id) {
-            items.push({ name: 'edit', text: '编辑' });
-            items.push({ name: 'delete', text: '删除' });
+            items.push({ name: 'edit', text: '编辑', icon: EditSvg });
+            items.push({ name: 'delete', text: '删除', icon: TrashSvg });
         }
         else {
-            items.push({ name: 'reply', text: '回复' });
-            items.push({ name: 'report', disabled: true, text: '举报' });
+            items.push({ name: 'reply', text: '回复', icon: ReplySvg });
+            items.push({ name: 'report', disabled: true, text: '举报', icon: ReportSvg });
         }
         var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) },
             items

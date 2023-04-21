@@ -7,6 +7,7 @@ export type ChannelTextType = {
     seq: number;
     content?: string;
     file?: any;
+    files?:any[];
     isEdited?: boolean;
     isDeleted?: boolean;
     replyId?: string;

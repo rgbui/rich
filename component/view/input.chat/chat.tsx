@@ -32,7 +32,6 @@ export class ChatInput extends React.Component<ChatInputOptions>{
     keydown = (event: React.KeyboardEvent<HTMLDivElement>) => {
         var key = event.key.toLowerCase();
         var isShift = event.shiftKey;
-        console.log('keydown', key, isShift);
         if (this.currentCommand) {
             //回车提交
             //左右移动
@@ -178,7 +177,7 @@ export class ChatInput extends React.Component<ChatInputOptions>{
                 return;
             }
         }
-        else if (key == '/') {
+        else if (key == '/' && typeof this.props.searchRobots == 'function') {
             var sel = window.getSelection();
             var node = sel.focusNode;
             if (node === this.richEl && sel.focusOffset == 0) {
@@ -319,7 +318,7 @@ export class ChatInput extends React.Component<ChatInputOptions>{
             var at = content.slice(offset);
             node.textContent = bt.slice(0, bt.lastIndexOf('@'))
             var a = document.createElement('a');
-            a.innerText = user.name;
+            a.innerText = "@" + user.name;
             a.classList.add('at-user');
             a.setAttribute('data-userid', user.id);
             a.contentEditable = 'false';
@@ -328,7 +327,7 @@ export class ChatInput extends React.Component<ChatInputOptions>{
             if (at) {
                 var t = document.createTextNode(at)
                 if (a.nextSibling) t.insertBefore(a.parentNode, a.nextSibling)
-                else node.parentElement.appendChild(t)
+                else a.parentNode.appendChild(t)
             }
             if (a.nextSibling) sel.collapse(a.nextSibling)
             else {
@@ -469,6 +468,11 @@ export class ChatInput extends React.Component<ChatInputOptions>{
             robot: this.currentRobot,
             task: this.currentCommand,
             args
+        }
+    }
+    onEnter() {
+        if (typeof this.props.onEnter == 'function') {
+            this.props.onEnter(this.getValue());
         }
     }
 }

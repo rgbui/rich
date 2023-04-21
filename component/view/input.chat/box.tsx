@@ -18,6 +18,7 @@ export type ChatInputType = {
     isQuote?: boolean,
     files?: ResourceArguments[],
     replyId?: string,
+    mentions?: string[],
     robot?: RobotInfo;
     task?: RobotTask;
     args?: Record<string, any>;
@@ -79,8 +80,8 @@ export class InputChatBox extends React.Component<{
                 <span className="shy-rich-input-error-operators" onMouseDown={e => this.clearError()}><a><Icon size={12} icon={CloseTickSvg}></Icon></a></span>
             </div>}
             <div className="flex flex-top">
-                <span className="flex-fixed size-24 round flex-center cursor item-hover"><Icon style={{ marginTop: 3 }} onMousedown={e => this.openAddFile(e)} size={18} icon={PlusSvg}></Icon></span>
-                <div className="flex-auto">
+                <span className="flex-fixed size-24 round flex-center cursor item-hover"><Icon onMousedown={e => this.openAddFile(e)} size={18} icon={PlusSvg}></Icon></span>
+                <div className="flex-auto l-24" >
                     <ChatInput
                         ref={e => this.cp = e}
                         placeholder={this.props.placeholder}
@@ -98,7 +99,7 @@ export class InputChatBox extends React.Component<{
                         searchRobots={this.props.searchRobots}
                     ></ChatInput>
                 </div>
-                <span className="flex-fixed size-24 round flex-center cursor item-hover"> <Icon size={18} style={{ marginTop: 3 }} onMousedown={e => this.openEmoji(e)} icon={EmojiSvg}></Icon></span>
+                <span className="flex-fixed size-24 round flex-center cursor item-hover"> <Icon size={18} onMousedown={e => this.openEmoji(e)} icon={EmojiSvg}></Icon></span>
             </div>
         </div>
     }
@@ -216,6 +217,7 @@ export class InputChatBox extends React.Component<{
             isQuote: this.cp.isQuote,
             replyId: this.reply ? this.reply.replyId : null,
             files: this.uploadFiles.filter(g => g.file ? true : false).map(f => f.file),
+            mentions: this.cp.getMentionUsers(),
             ...this.cp.getCommandValue()
         })
         this.cp.isQuote = false;
