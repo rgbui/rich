@@ -506,6 +506,17 @@ export class Page$Cycle {
                 }
             }
         }
+        if (this.pageLayout.type == PageLayoutType.textChannel) {
+            if (!this.exists(g => g.url == BlockUrlConstant.TextChannel)) {
+                this.views = [];
+                var dc = await BlockFactory.createBlock(BlockUrlConstant.View, this,
+                    {
+                        url: BlockUrlConstant.View,
+                        blocks: { childs: [{ url: BlockUrlConstant.TextChannel }] }
+                    }, null);
+                this.views.push(dc as View);
+            }
+        }
     }
     async updateProps(this: Page, props: Record<string, any>) {
         var oldValue: Record<string, any> = {};

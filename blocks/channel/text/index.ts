@@ -89,6 +89,7 @@ export class ChannelText extends Block {
         }, this.id)
     }
     channelNotify = (data: { workspaceId: string, roomId: string }) => {
+      
         if (this.roomId == data.roomId) {
             this.chats.push(data as any);
             this.setLocalSeq(this.chats.max(x => x.seq));
