@@ -7,7 +7,6 @@ import { UserBox } from "../../component/view/avator/user";
 import { Icon } from "../../component/view/icon";
 import { useSelectMenuItem } from "../../component/view/menu";
 import { MenuItem } from "../../component/view/menu/declare";
-import { Spin } from "../../component/view/spin";
 import { Remark } from "../../component/view/text";
 import { SockResponse } from "../../net/declare";
 import { autoImageUrl, getEmoji } from "../../net/element.type";
@@ -82,7 +81,7 @@ export class ViewChats extends React.Component<{
                         <span>{f.name}</span>
                         <Remark>{util.byteToString(f.size)}</Remark>
                     </div>
-                    <a href={f.url} download={f.name}>
+                    <a href={f.url} download={f.text}>
                         <Icon size={30} icon={DownloadSvg}></Icon>
                     </a>
                 </div>
