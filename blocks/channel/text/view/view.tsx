@@ -145,18 +145,18 @@ export class ChannelTextView extends BlockView<ChannelText>{
             style.position = 'relative';
             // style.overflowY = 'auto';
         }
-
         return <div style={style}>
-            <div style={{ height: this.block.page.pageVisibleHeight }} className="overflow-y border-box">
+            <div onWheel={this.wheel}
+                ref={e => this.contentEl = e}
+                style={{ height: this.block.page.pageVisibleHeight }}
+                className="overflow-y border-box">
                 <div className="sy-channel-text-head">
                     {this.block.unreadTip && <div className="sy-channel-text-unread-tip" >
                         <span>自{util.showTime(new Date(this.block.unreadTip.date))}来有{this.block.unreadTip.count}条消息未读</span>
                         <a onMouseDown={e => this.block.onClearUnread()}>标记为已读<Icon size={14} icon={UnreadTextSvg}></Icon></a>
                     </div>}
                 </div>
-                <div className="sy-channel-text-content  padding-b-120 "
-                    onWheel={this.wheel}
-                    ref={e => this.contentEl = e}>
+                <div className="sy-channel-text-content  padding-b-150 ">
                     {this.block && this.renderPageTitle()}
                     {this.block.pageIndex > 2 && this.block.isLast && <div className="sy-channel-text-tip f-12 remark">无记录了</div>}
                     {this.block.loading && <div className="sy-channel-text-loading"><Spin></Spin></div>}
@@ -169,8 +169,8 @@ export class ChannelTextView extends BlockView<ChannelText>{
             <div className="sy-channel-text-input" data-shy-page-no-focus onMouseDown={e => e.stopPropagation()}>
                 <div className="sy-channel-text-input-wrapper">
                     <InputChatBox
-                        disabled={this.block.abledSend}
-                        placeholder={this.block.abledSend ? "您不能发言" : "回车提交"}
+                        disabled={this.block.abledSend ? false : true}
+                        placeholder={this.block.abledSend ? "回车提交" : "您不能发言"}
                         ref={e => this.inputChatBox = e}
                         onChange={e => this.onInput(e)}
                         searchUser={this.searchUser}
