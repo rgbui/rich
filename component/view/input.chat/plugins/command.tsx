@@ -59,7 +59,7 @@ export class ChatCommandInput extends React.Component<{
             transform: 'translate(0px, -100%)',
             zIndex: '10000'
         };
-        if (this.visible) style.display = 'flex';
+        if (this.visible) style.display = 'block';
         else style.display = 'none';
         var currentRobot = this.robots.find(c => c.id == this.showRobotId);
         return createPortal(<div

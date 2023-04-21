@@ -133,7 +133,7 @@ export class ChatInputPop extends React.Component<{
             transform: 'translate(0px, -100%)',
             zIndex: '10000'
         };
-        if (this.visible) style.display = 'flex';
+        if (this.visible) style.display = 'block';
         else style.display = 'none';
         return createPortal(<div
             ref={e => this.el = e}
