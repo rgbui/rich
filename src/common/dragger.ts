@@ -31,9 +31,7 @@ export function MouseDragger<T = Record<string, any>>(options: {
     };
     var crossPanels: HTMLElement[] = [];
     move = (event: MouseEvent) => {
-        console.log(event);
         if (scope.isDown == true) {
-            console.log(scope, 'scope');
             if (options.allowSelection != true) window.getSelection ? window.getSelection().removeAllRanges() : (document as any).selection.empty();
             if (scope.isMove == true) {
                 if (options.cursor) MouseCursor.show(options.cursor);
@@ -110,7 +108,6 @@ export function MouseDragger<T = Record<string, any>>(options: {
             document.removeEventListener('mouseup', up)
         }
     }
-    console.log('is bind...')
     if (options.isGlobal == true) {
         document.addEventListener('mouseup', up, true);
         document.addEventListener('mousemove', move, true);
