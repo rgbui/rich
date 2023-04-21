@@ -124,6 +124,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
                     content: data.content,
                     roomId: this.block.roomId,
                     seq: re.data.seq,
+                    files: data.files,
                     replyId: data?.replyId || undefined
                 };
                 if (chat.replyId) {
