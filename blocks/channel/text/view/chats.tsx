@@ -22,6 +22,7 @@ export function RenderChats(
         return r;
     }
     var emojiChat = async (d: ChannelTextType, re: Partial<EmojiCode>) => {
+        if(!re?.code) return;
         return await channel.put('/ws/channel/emoji', {
             elementUrl: getElementUrl(ElementType.RoomChat,
                 block.page.pageLayout.type == PageLayoutType.textChannel ? block.page.pageInfo.id : block.syncBlockId,
