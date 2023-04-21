@@ -50,20 +50,30 @@ export class InputChatBox extends React.Component<{
         var width = 120;
         var height = 160;
         return <div className="shy-rich-input" ref={e => this.el = e}>
-            {this.uploadFiles.length > 0 && <div className="shy-rich-input-files flex" style={{ height: height + 20, top: (0 - (height + 20)) }}>
+            {this.uploadFiles.length > 0 && <div className="shy-rich-input-files round-16 flex" style={{
+                left: -10,
+                right: -10,
+                height: height + 20,
+                top: (0 - (height + 30 + 1))
+            }}>
                 {this.uploadFiles.map(uf => {
-                    return <div key={uf.id} className="relative visible-hover item-hover border round-32 overflow-hidden gap-w-10" style={{ width, height }}>
+                    return <div key={uf.id} className="relative visible-hover item-hover border round-16 overflow-hidden gap-w-10" style={{ width, height }}>
                         {uf.speed && <div
                             style={{ width, height }}
                             className="flex-center overflow-hidden">
                             <span>{uf.speed}</span>
                         </div>}
                         {uf.file?.mime == 'image' && <img
-                            style={{ width, height, objectFit: 'cover', objectPosition: '50% 50%' }}
+                            style={{
+                                width,
+                                height,
+                                objectFit: 'contain',
+                                objectPosition: '50% 50%'
+                            }}
                             src={uf.file.url} />}
-                        {uf.file?.mime && <div className="flex-center remark flex-col" style={{ width, height }}>
+                        {uf.file?.mime && <div className="flex-center remark flex-col " style={{ width, height }}>
                             <Icon size={48} icon={FileSvg}></Icon>
-                            <span>{uf.file?.name}</span>
+                            <span>{uf.file?.name}<span className="gap-l-5">{util.byteToString(uf?.file.size)}</span></span>
                         </div>}
                         <div className="pos bg-white item-hover flex-center round visible cursor size-20" style={{ top: 10, right: 10 }} onClick={e => {
                             lodash.remove(this.uploadFiles, g => g == uf)
@@ -240,7 +250,7 @@ export class InputChatBox extends React.Component<{
         this.forceUpdate()
     }
     componentDidUpdate(prevProps: Readonly<{ placeholder?: string; disabled?: boolean; readonly?: boolean; height?: number; value?: string; onChange?: (ct: ChatInputType) => void; allowNewLine?: boolean; spellCheck?: boolean; onEnter?: (ct: ChatInputType) => void; searchUser?: (word: string) => Promise<UserBasic[]>; disabledInputQuote?: boolean; className?: string[] | string; searchRobots?: () => Promise<RobotInfo[]>; }>, prevState: Readonly<{}>, snapshot?: any): void {
-       if (this.props.disabled != prevProps.disabled) {
+        if (this.props.disabled != prevProps.disabled) {
             this.forceUpdate()
         }
     }
