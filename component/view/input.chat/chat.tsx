@@ -5,7 +5,6 @@ import { InsertSelectionText } from "./util";
 import { ChatInputPop } from "./plugins/pop";
 import { RobotInfo, RobotTask, UserBasic } from "../../../types/user";
 import { Rect } from "../../../src/common/vector/point";
-import { marked } from 'marked';
 import { ChatCommandInput } from "./plugins/command";
 
 export type ChatInputOptions = {
@@ -278,7 +277,6 @@ export class ChatInput extends React.Component<ChatInputOptions>{
         if (this.isQuote) {
             html = '<blockquote>' + html + '</blockquote>'
         }
-        console.log('html', html);
         return html;
     }
     getMentionUsers() {
