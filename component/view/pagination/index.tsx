@@ -1,5 +1,5 @@
 import React from "react";
-export class Pagination extends React.Component<{ size: number, index: number, total: number, onChangeIndex?: (index: number) => void }>{
+export class Pagination extends React.Component<{ size: number, index: number, total: number, onChange?: (index: number, size: number) => void }>{
     getPages() {
         var page = Math.ceil(this.props.total / this.props.size);
         var index: number = this.props.index;
@@ -27,8 +27,9 @@ export class Pagination extends React.Component<{ size: number, index: number, t
     render() {
         var page = Math.ceil(this.props.total / this.props.size);
         if (page < 2) return <></>
+        var size = this.props.size;
         return <div className='shy-pagination flex-center'>{this.getPages().map(pa => {
-            return <a className={pa.classList.join(" ")} onMouseDown={e => pa.index && this.props.onChangeIndex(pa.index)}>{pa.text}</a>
+            return <a className={pa.classList.join(" ")} onMouseDown={e => pa.index && this.props.onChange(pa.index, size)}>{pa.text}</a>
         })}</div>
     }
 }
