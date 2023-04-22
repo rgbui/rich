@@ -139,6 +139,9 @@ export class InputChatBox extends React.Component<{
                     this.onUploadFiles(files);
                 }
             }
+            else if (re?.item?.name == 'addRobot') {
+                this.cp.onCommandInput()
+            }
         }
     }
     async openEmoji(event: React.MouseEvent) {

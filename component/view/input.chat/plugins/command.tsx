@@ -2,7 +2,7 @@ import React, { CSSProperties } from "react";
 import { ChatInput } from "../chat";
 import { RobotInfo, RobotTask, UserStatus } from "../../../../types/user";
 import { createPortal } from "react-dom";
-import { Point, Rect } from "../../../../src/common/vector/point";
+import { Rect } from "../../../../src/common/vector/point";
 import { SpinBox } from "../../spin";
 import lodash from "lodash";
 import { Avatar } from "../../avator/face";
@@ -16,7 +16,7 @@ export class ChatCommandInput extends React.Component<{
     showRobotId: string = '';
     tasks: RobotTask[] = [];
     visible: boolean = false;
-    point: Point = new Point();
+    rect: Rect = new Rect();
     loading: boolean = false;
     node: HTMLElement;
     nodeText: string;
@@ -31,12 +31,8 @@ export class ChatCommandInput extends React.Component<{
             this.nodeText = this.node === this.props.cp.richEl ? this.props.cp.richEl.innerHTML : this.node.textContent;
             this.nodeOffset = sel.focusOffset;
             this.visible = true;
-            var rect = Rect.fromEle(sel.getRangeAt(0));
-            if (this.node === this.props.cp.richEl) {
-                rect = Rect.fromEle(this.props.cp.richEl)
-            }
-            this.point = rect.clone().leftBottom.move(0, 10)
-            // console.log('open pop');
+            var rect = Rect.fromEle(this.props.cp.richEl);
+            this.rect = new Rect(rect.left - 35, rect.top - 250 - 10 - 5, rect.width + 60, 250);
         }
         catch (ex) {
             console.error(ex)
@@ -53,10 +49,12 @@ export class ChatCommandInput extends React.Component<{
     }
     render(): React.ReactNode {
         var style: CSSProperties = {
-            top: this.point.y - 30,
-            left: this.point.x,
+            top: this.rect.top,
+            left: this.rect.left,
+            width: this.rect.width,
+            height: this.rect.height,
             userSelect: 'none',
-            transform: 'translate(0px, -100%)',
+            // transform: 'translate(0px, -100%)',
             zIndex: '10000'
         };
         if (this.visible) style.display = 'block';
@@ -64,9 +62,9 @@ export class ChatCommandInput extends React.Component<{
         var currentRobot = this.robots.find(c => c.id == this.showRobotId);
         return createPortal(<div
             ref={e => this.el = e}
-            className="bg-white pos border shadow w-500 round  max-h-250 overflow-y" style={style}>
+            className="bg-white pos border shadow  round-8  overflow-y" style={style}>
             <SpinBox spin={this.loading}></SpinBox>
-            <div className="flex flex-full w-500 ">
+            <div className="flex flex-full w100 h100">
                 <div className="flex-fixed w-60 flex flex-col bg">
                     {this.robots.map(robot => {
                         return <div

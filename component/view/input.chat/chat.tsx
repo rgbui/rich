@@ -6,6 +6,7 @@ import { ChatInputPop } from "./plugins/pop";
 import { RobotInfo, RobotTask, UserBasic } from "../../../types/user";
 import { Rect } from "../../../src/common/vector/point";
 import { ChatCommandInput } from "./plugins/command";
+import { util } from "../../../util/util";
 
 export type ChatInputOptions = {
 
@@ -487,5 +488,13 @@ export class ChatInput extends React.Component<ChatInputOptions>{
         if (typeof this.props.onEnter == 'function') {
             this.props.onEnter(this.getValue());
         }
+    }
+    async onCommandInput() {
+        this.richEl.innerHTML = '/';
+        await util.delay(100);
+        var sel = window.getSelection();
+        var text = this.richEl.childNodes[0];
+        sel.setBaseAndExtent(text, 1, text, 1);
+        this.commandInput.open();
     }
 }
