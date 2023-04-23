@@ -20,6 +20,7 @@ import { ChannelTextType } from "../declare";
 import { RenderChats } from "./chats";
 import { RenderWeibo } from "./weibo";
 import { ChatInputType, InputChatBox } from "../../../../component/view/input.chat/box";
+import { getWsRobotTasks } from "../../../../net/ai/robot";
 
 @view('/channel/text')
 export class ChannelTextView extends BlockView<ChannelText>{
@@ -195,8 +196,8 @@ export class ChannelTextView extends BlockView<ChannelText>{
         else return []
     }
     searchRobot = async () => {
-
-        return []
+        var g = await getWsRobotTasks();
+        return g;
     }
     renderWeibos() {
         return <div className="w-c-250 gap-auto">

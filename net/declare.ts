@@ -269,6 +269,7 @@ export interface ChannelGetMapUrls {
 	"/ws/search":{args:{page?:number,size?:number,mime?:string,word:string,wsId?:string,isOnlySearchTitle?:boolean,createDate?:number,editDate?:number},returnType:Promise<SockResponse<{ list:{id:string,title:string,content:string,score:number}[],total:number }>>},
 	"/ws/comment/list":{args:{elementUrl: string,wsId?: string, parentId: string, sort: 'default' | 'date', page: number,size: number},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
 	"/ws/robots":{args:{},returnType:Promise<SockResponse<{list:{userid:string,name:string}[]}>>},
+	"/robots/info":{args:{ids:string[]},returnType:Promise<SockResponse<{list:any[]}>>},
 	"/page/items":{args:{ids:string[],sock?:any,wsId?:string},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/item/subs":{args:{id:string},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/parent/ids":{args:{wsId?:string,id:string},returnType:Promise<SockResponse<{ parentIds:string[],exists:boolean }>>},

@@ -55,3 +55,17 @@ export async function getRobotInput(robot: RobotInfo,
         }
     }
 }
+
+
+var robots: RobotInfo[];
+export async function getWsRobotTasks() {
+    if (Array.isArray(robots)) return robots;
+    var gs = await channel.get('/ws/robots');
+    if (gs.ok) {
+        var rs = await channel.get('/robots/info', { ids: gs.data.list.map(g => g.userid) });
+        if (rs.ok) {
+            robots = rs.data.list;
+        }
+    }
+    return robots;
+}
