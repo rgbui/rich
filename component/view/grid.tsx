@@ -139,3 +139,22 @@ export class Dialoug extends React.Component<{
         </div>
     }
 }
+
+
+
+export class Line extends React.Component<{ className?: string | (string[]), height?: number, gap?: number }>{
+    render(): React.ReactNode {
+        var style: CSSProperties = {
+            display: 'inline-block',
+            width: 1,
+            margin: '0px ' + (this.props.gap || 5) + 'px',
+            height: this.props.height || 20,
+            backgroundColor: 'rgba(55,53,47,0.09)'
+        }
+        var classList: string[] = [];
+        if (Array.isArray(this.props.className)) classList = classList.concat(this.props.className);
+        else if (typeof this.props.className == 'string') classList.push(this.props.className);
+        return <span style={style} className={classList.join(" ")}>
+        </span>
+    }
+}
