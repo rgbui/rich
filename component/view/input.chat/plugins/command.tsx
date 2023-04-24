@@ -6,6 +6,7 @@ import { Rect } from "../../../../src/common/vector/point";
 import { SpinBox } from "../../spin";
 import lodash from "lodash";
 import { Avatar } from "../../avator/face";
+import { Line } from "../../grid";
 
 export class ChatCommandInput extends React.Component<{
     cp: ChatInput,
@@ -21,7 +22,7 @@ export class ChatCommandInput extends React.Component<{
     node: HTMLElement;
     nodeText: string;
     nodeOffset: number;
-    open() {
+    async open() {
         try {
             var sel = window.getSelection();
             this.node = sel.focusNode as any;
@@ -33,6 +34,7 @@ export class ChatCommandInput extends React.Component<{
             this.visible = true;
             var rect = Rect.fromEle(this.props.cp.richEl);
             this.rect = new Rect(rect.left - 35, rect.top - 250 - 10 - 5, rect.width + 60, 250);
+            await this.load()
         }
         catch (ex) {
             console.error(ex)
@@ -80,7 +82,8 @@ export class ChatCommandInput extends React.Component<{
                             <div className="flex-auto">
                                 <div className="flex">
                                     <span className="flex-fixed">/{c.name}</span>
-                                    <div className="flex-auto visible">{c.args.map(arg => {
+                                    <Line className={'flex-fixed'}></Line>
+                                    <div className="flex-auto visible flex">{c.args.map(arg => {
                                         return <span className="gap-r-5" key={arg.id}>{arg.name}</span>
                                     })}</div>
                                 </div>
@@ -94,7 +97,7 @@ export class ChatCommandInput extends React.Component<{
             {this.word && <div>
                 {this.tasks.map(ta => {
                     var robot = this.getRobot(ta);
-                    return <div className='flex' onMouseDown={e => this.select(ta)} key={ta.id}>
+                    return <div className='flex cursor' onMouseDown={e => this.select(ta)} key={ta.id}>
                         <span className="flex-fixed"><Avatar size={40} user={robot}></Avatar></span>
                         <span className="flex-auto">
                             <div><span>/{ta.name}</span></div>
@@ -121,11 +124,12 @@ export class ChatCommandInput extends React.Component<{
         return this._panel;
     }
     componentDidMount(): void {
-        this.load()
+        //  this.load()
     }
     async load() {
         if (typeof this.props.searchRobots == 'function') {
             this.robots = await this.props.searchRobots()
+            this.showRobotId = this.robots[0].id;
         }
         else {
             this.robots = [

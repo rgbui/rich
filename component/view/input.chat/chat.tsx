@@ -318,7 +318,11 @@ export class ChatInput extends React.Component<ChatInputOptions>{
             </div>
             <ChatInputPop cp={this} search={this.props.searchUser} select={this.selectUser} ref={e => this.userPop = e} ></ChatInputPop>
             <InputChatTool ref={e => this.tool = e} click={this.toolClick}></InputChatTool>
-            <ChatCommandInput select={(e, r) => this.selectCommand(e, r)} cp={this} ref={e => this.commandInput = e}></ChatCommandInput>
+            <ChatCommandInput
+                searchRobots={this.props.searchRobots}
+                select={(e, r) => this.selectCommand(e, r)}
+                cp={this}
+                ref={e => this.commandInput = e}></ChatCommandInput>
         </div>
     }
     userPop: ChatInputPop;
@@ -470,7 +474,7 @@ export class ChatInput extends React.Component<ChatInputOptions>{
         })
     }
     getCommandValue() {
-        if (this.currentCommand) return {}
+        if (!this.currentCommand) return {}
         var args: Record<string, any> = {}
         var props = Array.from(this.richEl.querySelectorAll('[data-task-prop]'));
         props.forEach(prop => {
