@@ -20,7 +20,7 @@ import { ChannelTextType } from "../declare";
 import { RenderChats } from "./chats";
 import { RenderWeibo } from "./weibo";
 import { ChatInputType, InputChatBox } from "../../../../component/view/input.chat/box";
-import { getWsRobotTasks } from "../../../../net/ai/robot";
+import { RobotRquest, getWsRobotTasks } from "../../../../net/ai/robot";
 
 @view('/channel/text')
 export class ChannelTextView extends BlockView<ChannelText>{
@@ -107,7 +107,52 @@ export class ChannelTextView extends BlockView<ChannelText>{
     async onInput(data: ChatInputType) {
         if (data.robot) {
             //机器要指令
-
+            var gr;
+            var loadding = false;
+            await RobotRquest(data.robot,
+                data.task,
+                data.args,
+                async (re, done, tc) => {
+                    if (!gr && !loadding) {
+                        loadding = true;
+                        var cr = await channel.put('/ws/channel/send', {
+                            roomId: this.block.roomId,
+                            content: tc,
+                            robotId: data.robot.robotId
+                        })
+                        if (cr.data) {
+                            var chat: ChannelTextType = {
+                                id: cr.data.id,
+                                userid: data.robot.robotId,
+                                createDate: cr.data.createDate || new Date(),
+                                content: re,
+                                roomId: this.block.roomId,
+                                seq: cr.data.seq,
+                                files: []
+                            };
+                            this.block.chats.push(chat);
+                            await this.block.setLocalSeq(cr.data.seq);
+                            gr = chat;
+                            loadding = false;
+                            this.forceUpdate(() => this.updateScroll());
+                        }
+                    }
+                    else {
+                        if (done) {
+                            await channel.patch('/ws/channel/patch', {
+                                id: gr.id,
+                                roomId: this.block.roomId,
+                                content: tc,
+                                isEdited: false
+                            });
+                        }
+                        var c = this.block.chats.find(g => g.id == gr.id);
+                        if (c) {
+                            c.content = re
+                            this.forceUpdate(() => this.updateScroll());
+                        }
+                    }
+                })
         }
         else {
             var re = await channel.put('/ws/channel/send', {

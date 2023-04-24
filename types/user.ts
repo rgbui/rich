@@ -55,6 +55,7 @@ export type RobotInfo = UserBasic & {
     remark?: string,
     basePath?: string,
     scene: string;
+    robotId?:string,
     headers?: { name: string, value: string }[],
     tasks?: RobotTask[],
 }
