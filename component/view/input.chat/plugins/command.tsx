@@ -70,22 +70,23 @@ export class ChatCommandInput extends React.Component<{
                 <div className="flex-fixed w-60 flex flex-col bg">
                     {this.robots.map(robot => {
                         return <div
-                            className={"gap-h-10 size-40 item-hover cursor flex-center round " + (this.showRobotId == robot.id ? " item-hover-focus" : "")}
-                            onMouseDown={e => this.showRobotId = robot.id}
+                            className={"gap-h-10 size-40 item-hover cursor flex-center round-8 " + (this.showRobotId == robot.id ? " item-hover-focus" : "")}
+                            onMouseDown={e => { this.showRobotId = robot.id; this.forceUpdate() }}
                             key={robot.id}
-                        ><Avatar size={30} user={robot}></Avatar></div>
+                        ><Avatar size={30} userid={robot.robotId}></Avatar></div>
                     })}
                 </div>
                 <div className="flex-auto padding-14">
                     {(currentRobot?.tasks || []).map(c => {
-                        return <div className="flex visible-hover padding-10 min-h-30 item-hover gap-h-10 round flex-top" onMouseDown={e => this.select(c)} key={c.id}>
+                        return <div className="flex visible-hover cursor padding-10 min-h-30 item-hover gap-h-10 round flex-top" onMouseDown={e => this.select(c)} key={c.id}>
                             <div className="flex-auto">
                                 <div className="flex">
-                                    <span className="flex-fixed">/{c.name}</span>
-                                    <Line className={'flex-fixed'}></Line>
-                                    <div className="flex-auto visible flex">{c.args.map(arg => {
-                                        return <span className="gap-r-5" key={arg.id}>{arg.name}</span>
-                                    })}</div>
+                                    <span className="flex-fixed text">/{c.name}</span>
+                                    <div className="flex-auto visible flex">
+                                        <Line className={'flex-fixed'}></Line>
+                                        {c.args.map(arg => {
+                                            return <span className="gap-r-5 item-hover-focus remark padding-w-5 round padding-h-2" key={arg.id}>{arg.text || arg.name}</span>
+                                        })}</div>
                                 </div>
                                 <div className="remark f-12">{c.description}</div>
                             </div>
@@ -159,7 +160,7 @@ export class ChatCommandInput extends React.Component<{
                     ]
                 },
             ]
-            this.showRobotId = this.robots[0].id;
+            this.showRobotId = this.robots[0]?.id;
         }
     }
     componentWillUnmount(): void {

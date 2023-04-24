@@ -297,7 +297,7 @@ export class ChatInput extends React.Component<ChatInputOptions>{
         if (typeof this.props.style !== 'undefined') Object.assign(style, this.props.style)
         var v = this.props.value;
         return <div>
-            <div className={"shy-rich-view" + (this.isQuote ? " shy-rich-view-quote" : "")}
+            <div className={"text shy-rich-view" + (this.isQuote ? " shy-rich-view-quote" : "")}
                 style={style}
                 data-placeholder={this.props.placeholder}
                 spellCheck={this.props.spellCheck || false}

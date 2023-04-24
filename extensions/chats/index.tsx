@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import lodash from "lodash";
 import React from "react";
-import { FileIconSvg, DownloadSvg, Emoji1Svg, Edit1Svg, ReplySvg, DotsSvg, EditSvg, TrashSvg, ReportSvg } from "../../component/svgs";
+import { FileIconSvg, DownloadSvg, Emoji1Svg, Edit1Svg, ReplySvg, DotsSvg, EditSvg, TrashSvg, ReportSvg, CheckSvg } from "../../component/svgs";
 import { Avatar } from "../../component/view/avator/face";
 import { UserBox } from "../../component/view/avator/user";
 import { Icon } from "../../component/view/icon";
@@ -128,7 +128,13 @@ export class ViewChats extends React.Component<{
                         <div className="sy-channel-text-item-edited-content">
                             <Avatar showCard user={us} userid={d.userid} size={40}></Avatar>
                             <div className="sy-channel-text-item-edited-content-wrapper" >
-                                <div className="sy-channel-text-item-head"><a>{us.name}</a><span>{util.showTime(d.createDate)}</span></div>
+                                <div className="sy-channel-text-item-head">
+                                    <a>{us.name}</a>
+                                    {us?.role == 'robot' && <span className='bg-p-1 text-white round flex-center flex-inline padding-w-3  h-16 gap-w-2' style={{ display: 'inline-flex', color: '#fff', backgroundColor: 'rgb(88,101,242)' }}>
+                                        <Icon icon={CheckSvg} size={12}></Icon><span className='gap-l-2 f-12' style={{ lineHeight: '12px', color: '#fff' }}>机器人</span>
+                                    </span>}
+                                    <span>{util.showTime(d.createDate)}</span>
+                                </div>
                                 <div className="sy-channel-text-item-edited-content-input">
                                     <ChatInput
                                         ref={e => this.chatInput = e}
@@ -150,7 +156,12 @@ export class ViewChats extends React.Component<{
                 return <div className="sy-channel-text-item-box" >
                     <Avatar showCard user={us} userid={d.userid} size={40}></Avatar>
                     <div className="sy-channel-text-item-wrapper" >
-                        <div className="sy-channel-text-item-head"><a>{us.name}</a><span>{util.showTime(d.createDate)}</span></div>
+                        <div className="sy-channel-text-item-head">
+                            <a>{us.name}</a>
+                            {us?.role == 'robot' && <span className='bg-p-1 text-white round flex-center flex-inline padding-w-3  h-16 gap-w-2' style={{ display: 'inline-flex', color: '#fff', backgroundColor: 'rgb(88,101,242)' }}>
+                                <Icon icon={CheckSvg} size={12}></Icon><span className='gap-l-2 f-12' style={{ lineHeight: '12px', color: '#fff' }}>机器人</span>
+                            </span>}
+                            <span>{util.showTime(d.createDate)}</span></div>
                         <div className="sy-channel-text-item-content">{this.renderContent(d)}</div>
                     </div>
                 </div>

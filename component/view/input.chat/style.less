@@ -1,5 +1,6 @@
 .shy-rich-view {
     line-height: 24px;
+    font-size  : 14px;
 
     &:empty::after {
         content    : attr(data-placeholder);
@@ -29,18 +30,22 @@
     }
 
     .task-prop {
-        border       : 1px solid #ddd;
-        padding      : 2px 4px;
-        margin-right : 5px;
-        border-radius: 4px;
+        border         : 1px solid #ddd;
+        padding        : 2px 4px;
+        margin-right   : 5px;
+        border-radius  : 4px;
+        display        : inline-flex;
+        flex-wrap      : nowrap;
+        justify-content: flex-start;
+        align-items    : center;
 
         span {
             &:first-child {
                 background-color: rgba(53, 54, 57, .08);
                 font-size       : 14px;
                 margin-right    : 5px;
-                font-weight: normal;
-                color: rgba(53, 54, 57,0.7);
+                font-weight     : normal;
+                color           : rgba(53, 54, 57, 0.7);
             }
 
             &:last-child {
@@ -48,7 +53,7 @@
                 display         : inline-block;
                 min-width       : 80px;
                 outline         : none;
-                padding         : 0px 5px;
+                border-radius   : 4px;
             }
         }
     }

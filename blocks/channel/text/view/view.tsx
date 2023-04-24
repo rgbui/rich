@@ -112,13 +112,14 @@ export class ChannelTextView extends BlockView<ChannelText>{
             await RobotRquest(data.robot,
                 data.task,
                 data.args,
-                async (re, done, tc) => {
+                async (re, done, tc, files) => {
                     if (!gr && !loadding) {
                         loadding = true;
                         var cr = await channel.put('/ws/channel/send', {
                             roomId: this.block.roomId,
                             content: tc,
-                            robotId: data.robot.robotId
+                            robotId: data.robot.robotId,
+                            files: files || undefined,
                         })
                         if (cr.data) {
                             var chat: ChannelTextType = {
@@ -128,7 +129,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
                                 content: re,
                                 roomId: this.block.roomId,
                                 seq: cr.data.seq,
-                                files: []
+                                files: files || []
                             };
                             this.block.chats.push(chat);
                             await this.block.setLocalSeq(cr.data.seq);
@@ -143,12 +144,15 @@ export class ChannelTextView extends BlockView<ChannelText>{
                                 id: gr.id,
                                 roomId: this.block.roomId,
                                 content: tc,
-                                isEdited: false
+                                isEdited: false,
+                                files:files || undefined
                             });
                         }
                         var c = this.block.chats.find(g => g.id == gr.id);
                         if (c) {
                             c.content = re
+                            if (Array.isArray(files))
+                                c.files = files || [];
                             this.forceUpdate(() => this.updateScroll());
                         }
                     }

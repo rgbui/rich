@@ -350,7 +350,6 @@
             }
         }
     }
-
     .sy-channel-text-upload {
         margin-top     : 10px;
         padding-top    : 5px;
@@ -375,4 +374,64 @@
             background-color: rgba(55, 53, 47, .08);
         }
     }
+}
+
+
+.shy-user-channel-chat-image {
+    margin: 5px 0px;
+    img {
+        border-radius  : 4px;
+        max-width      : 400px;
+        max-height     : 500px;
+        object-fit     : cover;
+        object-position: center;
+    }
+}
+
+.shy-user-channel-chat-video {
+    margin: 5px 0px;
+    video {
+        border-radius  : 4px;
+        max-width      : 400px;
+        max-height     : 500px;
+        object-fit     : cover;
+        object-position: center;
+    }
+}
+
+.shy-user-channel-chat-file {
+    &-content {
+        margin          : 5px 0px;
+        padding         : 10px;
+        border-radius   : 4px;
+        border-color    : var(--background-secondary-alt);
+        background-color: var(--background-secondary);
+        display         : inline-flex;
+        justify-content : flex-start;
+        align-items     : flex-start;
+
+        >.shy-icon {
+            color: var(--text-link);
+            fill : currentColor;
+        }
+
+        &-info {
+            color: var(--text-link);
+        }
+
+        >a {
+            cursor         : pointer;
+            width          : 24px;
+            height         : 24px;
+            display        : inline-block;
+            justify-content: center;
+            align-items    : center;
+            border-radius  : 4px;
+
+            &:hover {
+                background-color: rgba(55, 53, 47, .08);
+            }
+        }
+    }
+
 }

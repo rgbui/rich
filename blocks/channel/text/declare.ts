@@ -6,7 +6,7 @@ export type ChannelTextType = {
     roomId: string;
     seq: number;
     content?: string;
-    file?: any;
+    // file?: any;
     files?:any[],
     isEdited?: boolean;
     isDeleted?: boolean;
