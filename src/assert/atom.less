@@ -658,7 +658,8 @@ item-selected:选中的效果
 .l-20 {
     line-height: 20px;
 }
-.l-24{
+
+.l-24 {
     line-height: 24px;
 }
 
@@ -1142,6 +1143,7 @@ each(@ops, {
 .fill-p-1 {
     fill : #64a1df;
     color: #64a1df;
+
     svg path,
     &svg path {
         fill  : #64a1df;
@@ -1615,4 +1617,32 @@ each(@pads, {
 .h-auto,
 .height-auto {
     height: auto;
+}
+
+
+
+.container {
+    display: inline-block;
+}
+
+.typed-print {
+    overflow    : hidden;
+    border-right: .15em solid orange;
+    white-space : nowrap;
+    animation   :
+        typing 1s steps(20, end) forwards;
+    font-size: 1.2rem;
+    width    : 0;
+}
+
+@keyframes typing {
+    from {
+        visibility: visible;
+        // width: 0
+    }
+
+    to {
+        visibility: hidden;
+        // width: 100%
+    }
 }
