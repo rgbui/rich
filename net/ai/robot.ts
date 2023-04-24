@@ -1,4 +1,5 @@
 
+import { ResourceArguments } from "../../extensions/icon/declare";
 import { RobotInfo, RobotTask } from "../../types/user";
 import { util } from "../../util/util";
 import { channel } from "../channel";
@@ -7,7 +8,7 @@ import { marked } from "marked"
 export async function RobotRquest(robot: RobotInfo,
     task: RobotTask,
     args: Record<string, any>,
-    callback: (msg: string, done?: boolean, content?: string) => Promise<void>) {
+    callback: (msg: string, done?: boolean, content?: string, files?: ResourceArguments[]) => Promise<void>) {
     var user = await channel.query('/query/current/user')
     if (robot.scene == 'wiki') {
         var text = args.ask + `-<a class='at-user' data-userid='${user.id}'>@${user.name}</a><br/>`;
@@ -24,7 +25,6 @@ export async function RobotRquest(robot: RobotInfo,
                     question: content,
                     callback(str, done) {
                         if (typeof str == 'string') text += str;
-                        console.log('gggg', text);
                         callback(marked.parse(text + (done ? "" : "<span class='typed-print'></span>")), done, marked.parse(text))
                     }
                 });
@@ -38,38 +38,71 @@ export async function RobotRquest(robot: RobotInfo,
     else {
         var url = robot.basePath || '';
         if (url.endsWith('/')) url = url.slice(0, url.length - 1);
-        if (task.url) url = url + (task.url.startsWith('/') ? task.url : "/" + task.url);
+        if (task.url.startsWith('http')) url = task.url;
+        else if (task.url) url = url + (task.url.startsWith('/') ? task.url : "/" + task.url);
         var method = task.method || 'post';
         if (task.handle == 'stream') {
+            var ks = Object.keys(args)
+            var cts = ks.length == 1 ? args[ks[0]] : ks.map(c => `${c}:${args[c]}`).join('<br/>')
+            var text = cts + `-<a class='at-user' data-userid='${user.id}'>@${user.name}</a><br/>`;
+            await callback(text + "<span class='typed-print'></span>", false, text);
             await channel.post('/fetch', {
-                options: { url, method, data: args }, callback: (data, done) => {
-                    callback(data, done)
+                url,
+                method,
+                data: args,
+                callback: (str, done) => {
+                    if (typeof str == 'string') text += str;
+                    callback(marked.parse(text + (done ? "" : "<span class='typed-print'></span>")), done, marked.parse(text))
                 }
             })
         }
         else if (task.handle == 'sync') {
-            var r = await channel.post('/http', {
-                url,
-                method,
-                data: args
-            });
-            var t = task.template || '';
-            if (t) {
-                t = t.replace(/({[^}]+})/g, function (match, key) {
-                    key = key.slice(1);
-                    key = key.slice(0, key.length - 1);
-                    return args[key];
-                })
-            } else t = r.data;
-            callback(t, true);
+            var text = '';
+            if (task.replys[0]?.mime == 'image') {
+                var ks = Object.keys(args)
+                var cts = ks.length == 1 ? args[ks[0]] : ks.map(c => `${c}:${args[c]}`).join('<br/>')
+                text = cts + `-<a class='at-user' data-userid='${user.id}'>@${user.name}</a><br/>`;
+                await callback(text + "<span class='typed-print'></span>", false, text);
+            }
+            try {
+                var r = await channel.post('/http', {
+                    url,
+                    method,
+                    data: args
+                });
+                if (task.replys[0]?.mime == 'image') {
+                    await callback(text, true, text, r.data.images);
+                }
+                else {
+                    var t = task.template || '';
+                    if (t) {
+                        t = t.replace(/({[^}]+})/g, function (match, key) {
+                            key = key.slice(1);
+                            key = key.slice(0, key.length - 1);
+                            return args[key];
+                        })
+                    } else t = r.data;
+                    callback(t, true, t);
+                }
+            }
+            catch (ex) {
+                if (task.replys[0]?.mime == 'image') {
+                    text += `<p class='error'>响应出错</p>`
+                    callback(text, true)
+                }
+                else {
+                    text += `<p class='error'>响应出错</p>`
+                    callback(text, true)
+                }
+            }
+
         }
     }
 }
 
-
 var robots: RobotInfo[];
 export async function getWsRobotTasks() {
-    if (Array.isArray(robots)) return robots;
+    //if (Array.isArray(robots)) return robots;
     var gs = await channel.get('/ws/robots');
     if (gs.ok) {
         var rs = await channel.get('/robots/info', { ids: gs.data.list.map(g => g.userid) });
