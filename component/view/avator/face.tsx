@@ -5,6 +5,8 @@ import { Rect } from '../../../src/common/vector/point';
 import { UserBasic, UserStatus } from '../../../types/user';
 import { useUserCard } from './card';
 import "./style.less";
+import { CheckSvg } from '../../svgs';
+import { Icon } from '../icon';
 
 export class Avatar extends React.Component<{
     size?: number,
@@ -85,7 +87,6 @@ export class Avatar extends React.Component<{
                 </div>}
                 {user.status == UserStatus.idle && user.online == true && <div className='shy-avatar-status-idle'>
                     <svg x="14.5" y="17" width="25" height="15" viewBox="0 0 25 15">
-
                         <rect
                             fill="rgb(250, 168, 26)" width="25" height="15"
                             mask="url(#user-avator-mask-idle)"></rect>
@@ -97,9 +98,11 @@ export class Avatar extends React.Component<{
             return <div className={'shy-avatar-say' + " " + (this.props.className || "")}>
                 <div className={'shy-avatar-say-face'} onMouseDown={e => this.mousedown(e)}>{renderIcon()}{size > 24 && this.props.hideStatus !== true && renderStatus()}</div>
                 <div className={'shy-avatar-say-content'} >
-                    <div className={'shy-avatar-say-content-head'}><div className='left' onMouseDown={e => this.mousedown(e)}>
+                    <div className={'shy-avatar-say-content-head'}><div className='left flex' onMouseDown={e => this.mousedown(e)}>
                         <a className='shy-avatar-say-username' >{user?.name}</a>
-                        {user?.role == 'robot' && <span className='bg-p-1 text-white round padding-w-5 padding-h-2'>机器人</span>}
+                        {user?.role == 'robot' && <span className='bg-p-1 text-white round flex-center flex-inline padding-w-3  h-16 gap-w-2' style={{ color: '#fff', backgroundColor: 'rgb(88,101,242)' }}>
+                            <Icon icon={CheckSvg} size={12}></Icon><span className='gap-l-2 f-12' style={{ color: '#fff' }}>机器人</span>
+                        </span>}
                         {this.props.showSn !== false && <span>#{user?.sn}</span>}
                     </div>
                         {this.props.head && <div className='right'>{this.props.head}</div>}</div>
