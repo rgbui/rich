@@ -71,7 +71,7 @@ export class Avatar extends React.Component<{
         var renderStatus = () => {
             if (!user) return <></>;
             return <div className='shy-avatar-status'>
-                {(user.status == UserStatus.online && user.online == true) && <div className='shy-avatar-status-online'>
+                {(user.status == UserStatus.online && user.online == true || user.role == 'robot') && <div className='shy-avatar-status-online'>
                     <svg x="14.5" y="17" width="25" height="15" viewBox="0 0 25 15">
                         <rect fill="rgb(59, 165, 93)" width="25" height="15" mask="url(#user-avator-mask-online)"></rect>
                     </svg>
