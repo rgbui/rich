@@ -39,7 +39,6 @@ export class ChannelTextView extends BlockView<ChannelText>{
             }
         });
         if (f && !lodash.isEqual(f, model)) {
-            console.log('gggg', f);
             channel.air('/page/update/info', {
                 id: this.block.page.pageInfo?.id,
                 pageInfo: { ...f }
@@ -145,7 +144,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
                                 roomId: this.block.roomId,
                                 content: tc,
                                 isEdited: false,
-                                files:files || undefined
+                                files: files || undefined
                             });
                         }
                         var c = this.block.chats.find(g => g.id == gr.id);
