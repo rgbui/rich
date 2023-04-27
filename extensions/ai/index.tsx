@@ -1,7 +1,7 @@
 import { CSSProperties, ReactNode } from "react";
 import { EventsComponent } from "../../component/lib/events.component";
 import React from "react";
-import { PublishSvg } from "../../component/svgs";
+import { Edit1Svg, PublishSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { Singleton } from "../../component/lib/Singleton";
 import { PopoverPosition } from "../popover/position";
@@ -12,13 +12,14 @@ import { Spin } from "../../component/view/spin";
 import { FixedViewScroll } from "../../src/common/scroll";
 import { Point } from "../../src/common/vector/point";
 import { DivInput } from "../../component/view/input/div";
+import { MenuView } from "../../component/view/menu/menu";
+import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 
 export type AIToolType = {
     block?: Block,
     pos?: PopoverPosition,
     callback?: (text: string, done?: boolean, aiTool?: AITool) => void
 }
-
 export class AITool extends EventsComponent {
     constructor(props) {
         super(props);
@@ -31,7 +32,7 @@ export class AITool extends EventsComponent {
     private fvs: FixedViewScroll = new FixedViewScroll();
     render(): ReactNode {
         var style: CSSProperties = {
-            zIndex: riseLayer.zoom(this)
+            pointerEvents: 'visible'
         }
         if (this.visible == false) style.display = 'none';
         if (this.options.pos) {
@@ -39,30 +40,95 @@ export class AITool extends EventsComponent {
             style.left = this.options.pos.roundArea.left;
             style.top = this.options.pos.roundArea.top + this.options.pos.roundArea.height;
         }
-        return <div ref={e => this.el = e} className="pos" style={style}>
-            <div className="flex flex-top padding-w-10 min-h-30 bg-white shadow border round-8">
-                <span className="flex-fixed size-30 flex-center gap-r-10">
-                    {this.asking && <Spin size={16}></Spin>}
-                </span>
-                <div className="flex-auto">
-                    <DivInput
-                        value={this.ask}
-                        rf={e => this.textarea = e}
-                        onInput={e => this.ask = e}
-                        onEnter={e => this.onEnter()}
-                        className='padding-h-5 min-h-30'
-                        placeholder="告诉AI写什么" ></DivInput>
-                </div>
-                <span className="size-30 flex-center flex-fixed gap-l-10">
-                    <span onClick={e => this.onEnter()} className=" round size-24 flex-center cursor item-hover">
-                        <Icon size={18} icon={PublishSvg}></Icon>
+        return <div
+            style={{
+                position: 'absolute',
+                zIndex: riseLayer.zoom(this),
+                top: 0,
+                left: 0,
+                width: '100vw',
+                height: '100vh',
+                pointerEvents: 'none',
+                overflow: 'hidden'
+            }}><div
+                ref={e => this.el = e}
+                className="pos"
+                style={style}>
+                <div className="flex flex-top padding-w-10 min-h-30 bg-white shadow-1  round-8">
+                    <span className="flex-fixed size-30 gap-t-5 flex-center gap-r-10">
+                        {this.asking && <Spin size={16}></Spin>}
                     </span>
-                </span>
-            </div>
-            <div>
+                    <div className="flex-auto">
+                        <DivInput
+                            value={this.ask}
+                            rf={e => this.textarea = e}
+                            onInput={this.onInput}
+                            onEnter={this.onEnter}
+                            className='padding-h-10 min-h-20'
+                            placeholder="告诉AI写什么" ></DivInput>
+                    </div>
+                    <span className="size-30  gap-t-5 flex-center flex-fixed gap-l-10">
+                        <span onClick={e => this.onEnter()} className=" round size-24 flex-center cursor item-hover">
+                            <Icon size={18} icon={PublishSvg}></Icon>
+                        </span>
+                    </span>
+                </div>
+                <div className="gap-t-10 shadow-1 w-300 bg-white   round-8">
+                    {this.renderItems()}
+                </div>
+            </div></div>
+    }
+    renderItems() {
+        async function select(item) {
+            if (item?.name == 'table') {
+                // self.onChange(item.value);
+                // self.emit('save', item.value);
+            }
+            else if (item?.name == 'view') {
+                // self.emit('save', item.value);
+            }
+            else if (item?.name == 'deleteTable') {
+                //
+            }
+        }
+        function click(item) {
 
-            </div>
-        </div>
+        }
+        async function input(item) {
+
+        }
+        var items: MenuItem[] = [
+            { text: '用AI写作', type: MenuItemType.text },
+            { name: 'continue', text: '用AI续写...', icon: Edit1Svg },
+            { type: MenuItemType.divide },
+            { text: '基于页面生成', type: MenuItemType.text },
+            {
+                name: 'summary', text: '页面内容总结', icon: Edit1Svg
+            },
+            {
+                text: "翻译", childs: [
+                    { text: '中文', name: 'Chinese' },
+                    { text: '英文', name: 'English' },
+                    { text: '日文', name: 'Japlese' },
+                    { text: '韩文', name: 'Korean' }
+                ],
+                icon: Edit1Svg
+            }
+        ];
+        return <MenuView ref={e => this.mv = e}
+            input={input}
+            select={select}
+            click={click} style={{
+                width: 300,
+                maxHeight: 300,
+                paddingTop: 10,
+                paddingBottom: 30,
+                overflowY: 'auto'
+            }} items={items}></MenuView>
+    }
+    mv: MenuView = null;
+    onInput = (e) => {
+        this.ask = e;
     }
     textarea: HTMLElement;
     ask: string = '';
@@ -112,18 +178,18 @@ export class AITool extends EventsComponent {
     }
     visible: boolean = false;
     onGlobalMousedown = (event: MouseEvent) => {
-        // if (this.blocked == true) return;
         if (this.visible == true && this.el) {
             var target = event.target as HTMLElement;
             if (this.el.contains(target)) return;
+            console.log('closee');
             this.close();
         }
     }
     componentDidMount() {
-        document.addEventListener('mousedown', this.onGlobalMousedown);
+        document.addEventListener('mousedown', this.onGlobalMousedown, true);
     }
     componentWillUnmount() {
-        document.removeEventListener('mousedown', this.onGlobalMousedown);
+        document.removeEventListener('mousedown', this.onGlobalMousedown, true);
     }
     close() {
         if (this.visible == true) {

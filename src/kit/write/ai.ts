@@ -3,7 +3,7 @@ import { PageWrite } from ".";
 import { AITool, aiTool, useAITool } from "../../../extensions/ai";
 import { AppearAnchor } from "../../block/appear";
 import { BlockUrlConstant } from "../../block/constant";
-import {  InputStore } from "./store";
+import { InputStore } from "./store";
 
 export function AiInput(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
     if (event.key.toLowerCase() == ' ' || event.keyCode === 32) {
@@ -34,7 +34,7 @@ export function AiInput(write: PageWrite, aa: AppearAnchor, event: React.Keyboar
                     }
                     ts = ts.slice(1);
                     if (ts.length == 0) context.loadingCreateBlock = false;
-                    await InputStore(aa);
+                    await InputStore(context.aa);
                 }
                 if (ts.length > 0) {
                     write.kit.page.onAction('AIWrite', async () => {
