@@ -120,7 +120,7 @@ export class PageView extends Component<{ page: Page }>{
         }
     }
     observeScroll() {
-        var predict = x => { return dom(x as HTMLElement).style('overflowY') == 'auto' }
+        var predict = x => { return dom(x as HTMLElement).style('overflowY') == 'auto'||dom(x as HTMLElement).style('overflowY') =='overlay' }
         this.scrollDiv = dom(this.el).closest(predict) as any;
         if (this.scrollDiv) this.scrollDiv.addEventListener('scroll', this.scroll);
     }

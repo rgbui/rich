@@ -54,8 +54,8 @@ export function onceAutoScroll(options: {
     var sy: number = 0;
     var dis = options.dis;
     var feelDis = options.feelDis;
-    var predict = x => { return dom(x as HTMLElement).style('overflowY') == 'auto' }
-    if (options.feelScrollX) predict = x => { return dom(x as HTMLElement).style('overflowY') == 'auto' || dom(x as HTMLElement).style('overflowX') == 'auto' }
+    var predict = x => { return dom(x as HTMLElement).style('overflowY') == 'auto' || dom(x as HTMLElement).style('overflowY') == 'overlay' }
+    if (options.feelScrollX) predict = x => { return dom(x as HTMLElement).style('overflowY') == 'auto' || dom(x as HTMLElement).style('overflowX') == 'auto' || dom(x as HTMLElement).style('overflowY') == 'overlay' || dom(x as HTMLElement).style('overflowX') == 'overlay' }
     var scrollDiv: HTMLElement = dom(options.el).closest(predict) as any;
     if (!scrollDiv) { if (options.callback) options.callback(sx); return }
     var sb = Rect.fromEle(scrollDiv);
@@ -102,7 +102,10 @@ export class FixedViewScroll extends Events {
     bind(el: HTMLElement) {
         var self = this;
         self.unbind();
-        var predict = x => { return dom(x as HTMLElement).style('overflowY') == 'auto' || dom(x as HTMLElement).style('overflowX') == 'auto' };
+        var predict = x => {
+            var dm = dom(x as HTMLElement);
+            return dm.style('overflowY') == 'auto' || dm.style('overflowY') == 'overlay' || dm.style('overflowX') == 'overlay' || dm.style('overflowX') == 'auto'
+        };
         function findScroll(el: HTMLElement) {
             var sv: { ele: HTMLElement, top: number, left: number, scroll: (event: Event) => void } = {} as any;
             var scrollDiv: HTMLElement = dom(el).closest(predict) as any;
