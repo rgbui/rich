@@ -1,7 +1,7 @@
-import { observer, useLocalObservable } from "mobx-react"
-import React from "react"
+
+import React, { useState } from "react"
 import { CSSProperties } from "react"
-export var DivInput = observer(function (props: {
+export function DivInput(props: {
     placeholder?: string,
     onInput?: (value: string) => void,
     onChange?: (value: string) => void,
@@ -14,13 +14,9 @@ export var DivInput = observer(function (props: {
     line?: boolean,
     rf?: (e: HTMLElement) => void
 }) {
-    var local = useLocalObservable<{ el: HTMLElement }>(() => {
-        return {
-            el: null
-        }
-    })
+    const [el, setEl] = useState<HTMLElement>(null)
     function input() {
-        var text = local.el.innerText;
+        var text = el.innerText;
         if (props.ignoreFilterWhitespace !== true) {
             text = text.trim();
         }
@@ -28,7 +24,7 @@ export var DivInput = observer(function (props: {
             props.onInput(text);
     }
     function change() {
-        var text = local.el.innerText;
+        var text = el.innerText;
         if (props.ignoreFilterWhitespace !== true) {
             text = text.trim();
         }
@@ -40,7 +36,7 @@ export var DivInput = observer(function (props: {
         var text = e.clipboardData.getData('text/plain');
         var sel = window.getSelection();
         var f = sel.focusNode;
-        if (f instanceof Text && local.el.contains(f)) {
+        if (f instanceof Text && el.contains(f)) {
             var d = f.textContent;
             var newContent = d.slice(0, sel.focusOffset) + text + d.slice(sel.focusOffset);
             f.textContent = newContent;
@@ -48,10 +44,13 @@ export var DivInput = observer(function (props: {
         }
     }
 
+ 
+
     async function keydown(event: React.KeyboardEvent) {
         if (event.key == 'Enter' && !event.shiftKey) {
             event.preventDefault();
-            var text = local.el.innerText;
+            event.stopPropagation();
+            var text = el.innerText;
             if (props.ignoreFilterWhitespace !== true) {
                 text = text.trim();
             }
@@ -70,7 +69,7 @@ export var DivInput = observer(function (props: {
     if (props.line !== true) return <div
         className={classList.join(" ")}
         style={style}
-        ref={e => { local.el = e; props.rf ? props.rf(e) : undefined; }}
+        ref={e => { setEl(e); props.rf ? props.rf(e) : undefined; }}
         onPaste={e => paster(e)}
         onInput={e => input()}
         onChange={e => change()}
@@ -84,7 +83,7 @@ export var DivInput = observer(function (props: {
     return <span
         className={classList.join(" ")}
         style={style}
-        ref={e => { local.el = e; props.rf ? props.rf(e) : undefined; }}
+        ref={e => { setEl(e); props.rf ? props.rf(e) : undefined; }}
         onPaste={e => paster(e)}
         onInput={e => input()}
         onChange={e => change()}
@@ -95,4 +94,4 @@ export var DivInput = observer(function (props: {
         data-placeholder={props.placeholder}
         dangerouslySetInnerHTML={{ __html: props.value }}
     ></span>
-})
+}
