@@ -3,7 +3,7 @@ import { ResourceArguments } from "../../extensions/icon/declare";
 import { RobotInfo, RobotTask } from "../../types/user";
 import { util } from "../../util/util";
 import { channel } from "../channel";
-import { AskTemplate, getTemplateInstance } from "./prompt";
+import { AskTemplate, getTemplateInstance } from "../../extensions/ai/prompt";
 import { marked } from "marked"
 export async function RobotRquest(robot: RobotInfo,
     task: RobotTask,

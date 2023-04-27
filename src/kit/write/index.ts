@@ -26,6 +26,7 @@ import {
 } from "./keydown";
 import { onPaste } from "./paste";
 import { AutoInputStore, InputForceStore, InputStore } from "./store";
+import { AiInput } from "./ai";
 
 /**
  * https://blog.csdn.net/mafan121/article/details/78519348
@@ -134,6 +135,15 @@ export class PageWrite {
      */
     async keydown(aa: AppearAnchor, event: React.KeyboardEvent) {
         var sel = window.getSelection();
+
+        /**
+        * 
+        * 这里需要判断是否触发了AI输入
+        **/
+        if (AiInput(this, aa, event)) {
+            event.preventDefault();
+            return;
+        }
         /**
          * 判断是否阻止输入
          */
@@ -241,6 +251,9 @@ export class PageWrite {
             this.onRowLastLineBlockCreateTextBlock(aa, event);
             return;
         }
+
+
+
         /**
          * 这里需要判断是否有必要弹出弹窗
          */

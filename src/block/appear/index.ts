@@ -41,6 +41,9 @@ export class AppearAnchor {
     setContent(value: string) {
         this.el.innerHTML = value;
     }
+    appendContent(value: string) {
+        this.el.innerText = (this.textContent + '') + value;
+    }
     get isEmpty() {
         if (this.isText) {
             var c = this.textContent;
@@ -196,6 +199,12 @@ export class AppearAnchor {
                 sel.collapse(cr.node, cr.pos);
             }
         }
+    }
+    endCollapse() {
+        var lt = this.lastTextNode;
+        var sel = window.getSelection();
+        if (lt instanceof Text) sel.collapse(lt,lt.textContent.length); 
+        else sel.collapse(lt,lt.childNodes.length);
     }
     getCursorOffset(focusNode?: Node, offset?: number) {
         if (this.isSolid) {

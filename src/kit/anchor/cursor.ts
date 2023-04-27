@@ -48,7 +48,7 @@ export class AnchorCursor {
     getWindowSelectionAnchors() {
         var sel = window.getSelection();
         var startAnchor = findBlockAppear(sel.anchorNode);
-        var startOffset = this.startAnchor.getCursorOffset(sel.anchorNode, sel.anchorOffset);
+        var startOffset = startAnchor ? startAnchor.getCursorOffset(sel.anchorNode, sel.anchorOffset) : undefined;
         var endAnchor: AppearAnchor;
         var endOffset: number;
         if (sel.isCollapsed) {
