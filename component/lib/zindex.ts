@@ -48,6 +48,9 @@ class Layer {
     private index: number;
     private objectIndexs: { index: number, obj: Object }[] = [];
     zoom(user: Object): number {
+        if (this.objectIndexs.some(s => s.obj === user)) {
+            return this.objectIndexs.find(g => g.obj === user).index;
+        }
         var i = this.index += 1;
         this.objectIndexs.push({ index: i, obj: user })
         return i;
