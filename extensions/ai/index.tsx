@@ -11,6 +11,7 @@ import { channel } from "../../net/channel";
 import { Spin } from "../../component/view/spin";
 import { FixedViewScroll } from "../../src/common/scroll";
 import { Point } from "../../src/common/vector/point";
+import { DivInput } from "../../component/view/input/div";
 
 export type AIToolType = {
     block?: Block,
@@ -44,7 +45,13 @@ export class AITool extends EventsComponent {
                     {this.asking && <Spin size={16}></Spin>}
                 </span>
                 <div className="flex-auto">
-                    <textarea className='padding-h-5 min-h-20 clear-input resize-none w100' placeholder="告诉AI写什么" ref={e => this.textarea = e} defaultValue={this.ask} onInput={e => this.ask = (e.target as HTMLTextAreaElement).value} onKeyDown={this.keydown}  ></textarea>
+                    <DivInput
+                        value={this.ask}
+                        rf={e => this.textarea = e}
+                        onInput={e => this.ask = e}
+                        onEnter={e => this.onEnter()}
+                        className='padding-h-5 min-h-30'
+                        placeholder="告诉AI写什么" ></DivInput>
                 </div>
                 <span className="size-30 flex-center flex-fixed gap-l-10">
                     <span onClick={e => this.onEnter()} className=" round size-24 flex-center cursor item-hover">
@@ -57,12 +64,7 @@ export class AITool extends EventsComponent {
             </div>
         </div>
     }
-    textarea: HTMLTextAreaElement;
-    keydown = (event: React.KeyboardEvent) => {
-        var isShift = event.shiftKey;
-        var key = event.key.toLowerCase();
-        if (!isShift && key == 'enter') { this.onEnter(); event.preventDefault() }
-    }
+    textarea: HTMLElement;
     ask: string = '';
     asking: boolean = false;
     anwser: string = '';
@@ -80,7 +82,7 @@ export class AITool extends EventsComponent {
         this.visible = true;
         this.anwser = '';
         this.options = options;
-        if (this.textarea) this.textarea.value = '';
+        if (this.textarea) this.textarea.innerText = '';
         this.forceUpdate(() => {
             if (this.textarea)
                 this.textarea.focus()
