@@ -12,7 +12,7 @@ function getCircle(size?: 24 | 16) {
 
 export function Spin(props: { block?: boolean, size?: 24 | 16, children?: React.ReactNode }) {
     var ov = props.children;
-    var size = props.size || 24;
+    var size = props.size || 16;
     if (!ov) ov = getCircle(size);
     var div = <div className="shy-spin-circle flex-center flex-inline" style={{ width: size * 1.5, height: size * 1.5 }}>
         {ov}
