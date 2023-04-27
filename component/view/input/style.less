@@ -24,6 +24,7 @@
         &:focus {
             box-shadow: rgba(46 170 220, 0.7) 0px 0px 0px 1px inset, rgba(46 170 220, 0.4) 0px 0px 0px 2px;
         }
+
         &::placeholder {
             font-size: 14px;
             color    : rgba(0, 0, 0, 0.2)
@@ -88,9 +89,8 @@
     }
 }
 
-.shy-span-input {
+.shy-div-input {
     outline: none;
-
     &:empty::after {
         content  : attr(data-placeholder);
         font-size: 14px;
