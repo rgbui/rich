@@ -42,9 +42,15 @@ export function DivInput(props: {
             f.textContent = newContent;
             input()
         }
+        else {
+            el.innerText = text;
+            if (text.length > 0)
+                sel.collapse(el.childNodes[0], text.length);
+            input()
+        }
     }
 
- 
+
 
     async function keydown(event: React.KeyboardEvent) {
         if (event.key == 'Enter' && !event.shiftKey) {
