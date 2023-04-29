@@ -1,0 +1,11 @@
+在Node.js中安装MongoDB，需要经过以下步骤：\n\n1. 安装MongoDB数据库：在官方网站上下载MongoDB安装程序，然后安装。\n\n2. 安装MongoDB驱动程序：使用npm安装MongoDB驱动程序。在命令行中输入以下命令：\n\n```\nnpm install mongodb\n```\n\n3. 连接MongoDB数据库：在Node.js中使用MongoDB驱动程序连接MongoDB数据库。在代码中添加以下内容：\n\n```javascript\nconst MongoClient = require('mongodb').MongoClient;\nconst url = 'mongodb://localhost:27017/mydb';\n\nMongoClient.connect(url, function(err, db) {\n  if (err) throw err;\n  console.log(\"Database created!\");\n  db.close();\n});\n```\n\n其中，url是MongoDB数据库的连接字符串，mydb是要连接的数据库名称。\n\n4. 执行MongoDB命令：在Node.js中使用MongoDB驱动程序执行MongoDB命令。例如，可以使用以下代码在mydb数据库中创建一个名为customers的集合：\n\n```javascript\nconst MongoClient = require('mongodb').MongoClient;\nconst url = 'mongodb://localhost:27017/mydb';\n\nMongoClient.connect(url, function(err, db) {\n  if (err) throw err;\n  const dbo = db.db(\"mydb\");\n  dbo.createCollection(\"customers\", function(err, res) {\n    if (err) throw err;\n    console.log(\"Collection created!\");\n    db.close();\n  });\n});\n```\n\n其中，dbo是指向mydb数据库的对象，createCollection()方法用于创建集合。
+
+
+Node.js可以通过MongoDB的官方驱动程序或第三方库来调用MongoDB。\n\n使用官方驱动程序：\n\n1. 安装MongoDB驱动程序：`npm install mongodb`\n\n2. 引入MongoDB驱动程序：`const MongoClient = require('mongodb').MongoClient`\n\n3. 连接MongoDB数据库：`MongoClient.connect(url, options, callback)`\n\n4. 执行查询操作：`db.collection(collectionName).find(query).toArray(callback)`\n\n使用第三方库：\n\n1. 安装第三方库：`npm install mongoose`\n\n2. 引入mongoose：`const mongoose = require('mongoose')`\n\n3. 连接MongoDB数据库：`mongoose.connect(url, options, callback)`\n\n4. 定义Schema和Model：`const schema = new mongoose.Schema({...}); const model = mongoose.model(modelName, schema);`\n\n5. 执行查询操作：`model.find(query, callback)`
+
+
+| 年份 | GDP增长率 |\n| ---- | ---------- |\n| 2000 | 8.0%       |\n| 2001 | 7.3%       |\n| 2002 | 8.0%       |\n| 2003 | 10.0%      |\n| 2004 | 10.1%      |\n| 2005 | 11.3%      |\n| 2006 | 12.7%      |\n| 2007 | 13.0%      |\n| 2008 | 9.6%       |\n| 2009 | 9.2%       |\n| 2010 | 10.4%      |
+
+
+随机写一份中国从2003年到2010年的GPT增长表格
+拟一假数据表格，数据可以不真实，有关中国从2003到2010的GDP增长表格

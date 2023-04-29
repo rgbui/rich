@@ -52,7 +52,6 @@ class TextTool extends EventsComponent {
     open(pos: PopoverPosition, options: { style: TextToolStyle, turnBlock?: Block }) {
         var rs = pos.roundArea;
         if (!rs && Array.isArray(pos.roundAreas)) rs = pos.roundAreas[0];
-        console.log(pos.relativeEleAutoScroll, 'sss');
         if (pos.relativeEleAutoScroll) this.fvs.bind(pos.relativeEleAutoScroll);
         this.point = rs.leftTop;
         this.visible = true;
