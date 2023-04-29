@@ -2,7 +2,11 @@
 
 /**
  * 参考prompt template
+ * 
  * https://www.aishort.top/?tags=write
+ * 
+ * https://prompthero.com/chatgpt-prompts
+ * 
  */
 
 
