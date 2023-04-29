@@ -183,7 +183,7 @@ position的布局
     transform: translate(-50%, 0px);
 }
 
-.pos-top-right {
+.pos-top-right,.pos-t-r {
     position: absolute;
     top     : 0px;
     right   : 0px;
@@ -863,6 +863,14 @@ each(@selectors, {
 
 .vw100 {
     width: 100vw;
+}
+
+.vw50 {
+    width: 50vw;
+}
+
+.vh50 {
+    height: 50vh;
 }
 
 .vh100 {
@@ -1655,4 +1663,13 @@ each(@pads, {
 .clear-input {
     border : none;
     outline: none;
+}
+
+
+.pv {
+    pointer-events: visible;
+}
+
+.pn {
+    pointer-events: none;
 }
