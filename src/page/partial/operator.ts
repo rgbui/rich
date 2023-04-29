@@ -105,10 +105,11 @@ export class Page$Operator {
 
         })
     }
-    async onTurn(this: Page, block: Block, url: string, callback: (newBlock: Block) => void) {
+    async onTurn(this: Page, block: Block, url: string, callback: (newBlock: Block,oldBlock:Block) => void) {
         await this.onAction(ActionDirective.onTurn, async () => {
+            var oldBlock=block;
             var newBlock = await block.turn(url);
-            callback(newBlock);
+            callback(newBlock,oldBlock);
         });
     }
     async onBatchTurn(this: Page, blocks: Block[], url: string) {
