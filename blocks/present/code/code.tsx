@@ -78,6 +78,11 @@ export class TextCode extends Block {
             channel.act('/cache/set', { key: CODEMIRROR_MODE, value: this.language })
         }
     }
+    renderValue() {
+        if (this.codeMirror) {
+            this.codeMirror.setValue(this.content);
+        }
+    }
 }
 @view('/code')
 export class TextCodeView extends BlockView<TextCode>{
