@@ -26,6 +26,7 @@ import BoardToolStickerSvg from "../src/assert/svg/board.tool.sticker.svg";
 import BoardToolTextSvg from "../src/assert/svg/board.tool.text.svg";
 import BoldSvg from "../src/assert/svg/bold.svg";
 import BookSvg from "../src/assert/svg/book.svg";
+import BrainSvg from "../src/assert/svg/brain.svg";
 import BrokenLineSvg from "../src/assert/svg/brokenLine.svg";
 import BrowserSvg from "../src/assert/svg/browser.svg";
 import ButtonSvg from "../src/assert/svg/button.svg";
@@ -129,6 +130,7 @@ import ListSvg from "../src/assert/svg/list.svg";
 import LockSvg from "../src/assert/svg/lock.svg";
 import LoopSvg from "../src/assert/svg/loop.svg";
 import LoveSvg from "../src/assert/svg/love.svg";
+import MagicSvg from "../src/assert/svg/magic.svg";
 import MaximizeSvg from "../src/assert/svg/maximize.svg";
 import MemberSvg from "../src/assert/svg/member.svg";
 import MentionSvg from "../src/assert/svg/mention.svg";
@@ -247,6 +249,7 @@ BoardToolStickerSvg,
 BoardToolTextSvg,
 BoldSvg,
 BookSvg,
+BrainSvg,
 BrokenLineSvg,
 BrowserSvg,
 ButtonSvg,
@@ -350,6 +353,7 @@ ListSvg,
 LockSvg,
 LoopSvg,
 LoveSvg,
+MagicSvg,
 MaximizeSvg,
 MemberSvg,
 MentionSvg,
