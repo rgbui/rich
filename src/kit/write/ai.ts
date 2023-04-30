@@ -7,10 +7,7 @@ export function AiInput(write: PageWrite, aa: AppearAnchor, event: React.Keyboar
         var sel = window.getSelection();
         if (sel.focusOffset == 0 && aa.isRowStart) {
             var block = aa.block.closest(x => x.isBlock);
-            useAITool({
-                block,
-                pos: { roundArea: block.getVisibleBound(), relativeEleAutoScroll: block.el },
-            })
+            useAITool({ block })
             return true;
         }
     }

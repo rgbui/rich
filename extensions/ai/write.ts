@@ -31,6 +31,14 @@ export class AiWrite {
             this.writedBlocks.push(this.block);
         }
     }
+    selection(blocks: Block[]) {
+        this.writedBlocks = [];
+        this.text = '';
+        this.willWriteBlock = false;
+        this.aa = null;
+        this.block = null;
+        this.page = blocks[0].page;
+    }
     text: string = '';
     willWriteBlock: boolean = false;
     writedBlocks: Block[] = [];
@@ -103,7 +111,7 @@ export class AiWrite {
                             lodash.remove(this.writedBlocks, c => c === block);
                             this.block = bs.last();
                             this.page.addUpdateEvent(async () => {
-                                this.tool.updatePosition({ pos: { roundArea: this.block.getVisibleBound() } })
+                                this.tool.updatePosition({ pos: { relativeEleAutoScroll: this.block.el, roundArea: this.block.getVisibleBound() } })
                                 await util.delay(100)
                                 this.willWriteBlock = false;
                             })
@@ -288,7 +296,7 @@ export class AiWrite {
                         if (this.aa) {
                             this.aa.endCollapse();
                         }
-                        this.tool.updatePosition({ pos: { roundArea: this.block.getVisibleBound() } })
+                        this.tool.updatePosition({ pos: { relativeEleAutoScroll: this.block.el, roundArea: this.block.getVisibleBound() } })
                         await util.delay(100)
                         this.willWriteBlock = false;
                         if (this.text) this.write()
@@ -313,7 +321,7 @@ export class AiWrite {
         }
         else ts = [];
 
-        console.log('writee', rowList, ts);
+        // console.log('writee', rowList, ts);
         var createRows: any[] = [];
         for (let i = 0; i < rowList.length; i++) {
             var rg = rowList[i].trim();
@@ -335,14 +343,14 @@ export class AiWrite {
             }
             else break;
         }
-        console.log(createRows, 'createRows')
+        // console.log(createRows, 'createRows')
         if (createRows.length > 0) {
             await new Promise((resolve: (block: Block) => void, reject) => {
                 this.page.onAction('AIWriteTableRow', async () => {
                     var block = this.block;
                     var bs = await block.appendArrayBlockData(createRows, block.childs.length, 'childs');
                     this.page.addUpdateEvent(async () => {
-                        this.tool.updatePosition({ pos: { roundArea: this.block.getVisibleBound() } })
+                        this.tool.updatePosition({ pos: { relativeEleAutoScroll: this.block.el, roundArea: this.block.getVisibleBound() } })
                         await util.delay(100)
                         resolve(bs.last())
                     })
@@ -364,14 +372,11 @@ export class AiWrite {
         }
     }
     accept(text: string, done: boolean) {
-        console.log('input', text);
+        // console.log('input', text);
         if (typeof text == 'string') {
             this.text += text;
         }
         this.write()
-        if (done) {
-            this.page.kit.anchorCursor.onSelectBlocks(this.writedBlocks, { render: true })
-        }
     }
 }
 

@@ -27,6 +27,7 @@ import {
 import { onPaste } from "./paste";
 import { AutoInputStore, InputForceStore, InputStore } from "./store";
 import { AiInput } from "./ai";
+import { useAITool } from "../../../extensions/ai";
 
 /**
  * https://blog.csdn.net/mafan121/article/details/78519348
@@ -307,6 +308,7 @@ export class PageWrite {
                 else if (blocks.length == 1) {
                     turnBlock = blocks[0].closest(x => !x.isLine);
                 }
+
                 var result = await useTextTool(
                     { roundAreas: rs, relativeEleAutoScroll: this.kit.anchorCursor.endAnchor.el },
                     { style: this.kit.page.pickBlocksTextStyle(blocks), turnBlock }
@@ -326,6 +328,13 @@ export class PageWrite {
                     }
                     else if (result.command == 'setEquation') {
                         await this.onSelectionEquation(list, result.props);
+                        break;
+                    }
+                    else if (result.command == 'askAI') {
+                        var rowBlocks = this.kit.page.getAtomBlocks(blocks.map(c => c.closest(x => x.isBlock)));
+                        this.kit.anchorCursor.onSelectBlocks(rowBlocks, { render: true });
+                        forceCloseTextTool()
+                        useAITool({ blocks: rowBlocks });
                         break;
                     }
                     else break;
