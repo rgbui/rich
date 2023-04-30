@@ -50,6 +50,11 @@ export class MenuItemView extends React.Component<{
             if (this.el && this.props.item?.childs?.length > 0 && this.menubox) {
                 var isFixed = this.props.deep == 0 && this.props.parent instanceof MenuView;
                 var rect = Rect.from(this.el.getBoundingClientRect());
+                if (this.props.parent instanceof MenuView) {
+                    if (typeof this.props.parent.props.cacRelative == 'function') {
+                        rect = this.props.parent.props.cacRelative(rect);
+                    }
+                }
                 this.menubox.open({
                     roundArea: rect,
                     direction: 'right',
@@ -170,7 +175,7 @@ export class MenuItemView extends React.Component<{
             {item.type == MenuItemType.color && <div className="shy-menu-box-item-colors flex-top flex-wrap gap-h-10">
                 {item.options.map(t => {
                     return <ToolTip key={t.value} overlay={t.overlay} ><a className={"flex-center flex-col cursor padding-5 gap-w-5 round item-hover " + (t.checked ? "item-hover-focus" : "")}
-                    onMouseDown={e => { e.stopPropagation(); item.value = t.value; this.select(item, e.nativeEvent) }}>
+                        onMouseDown={e => { e.stopPropagation(); item.value = t.value; this.select(item, e.nativeEvent) }}>
                         {item.name && item.name.indexOf('font') > -1 && <span className="size-24 flex-center circle  border" style={{ color: t.value }}>
                             A
                         </span>}
