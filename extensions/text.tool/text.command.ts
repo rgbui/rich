@@ -13,5 +13,6 @@ export enum TextCommand {
     equation,
     cancelEquation,
     mention,
-    doubleLink
+    doubleLink,
+    askAI
 }

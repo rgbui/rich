@@ -16,7 +16,7 @@ import { BlockDirective } from "../../src/block/enum";
 import { PopoverPosition } from "../popover/position";
 import { FixedViewScroll } from "../../src/common/scroll";
 import { blockStore } from "../block/store";
-import { BoldSvg, CodeSvg, DeleteLineSvg, DoubleLinkSvg, EquationSvg, FontStyleSvg, ItalicSvg, LinkSvg, SearchSvg, UnderlineSvg } from "../../component/svgs";
+import { BoldSvg, CodeSvg, DeleteLineSvg, DoubleLinkSvg, EquationSvg, FontStyleSvg, ItalicSvg, LinkSvg, MagicSvg, SearchSvg, UnderlineSvg } from "../../component/svgs";
 import { ToolTip } from "../../component/view/tooltip";
 import { useSearchBox } from "../search";
 
@@ -88,6 +88,13 @@ class TextTool extends EventsComponent {
             left: this.point.x
         };
         return <div tabIndex={1} data-shy-page-unselect="true" onMouseUp={e => e.stopPropagation()} ref={el => this.el = el}>{this.visible == true && <div className='shy-tool-text-menu' ref={e => this.boxEl = e} style={style}>
+
+            <ToolTip overlay={'让AI帮你写作、润色、生成内容'}>
+                <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onExcute(TextCommand.askAI, e)}>
+                    <Icon icon={MagicSvg}></Icon><span>AI</span>
+                </div>
+            </ToolTip>
+
             {this.turnBlock && this.turnText && <Tip id={LangID.textToolTurn}>
                 <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenBlockSelector(e)}>
                     <span>{this.turnText}</span><Icon icon='arrow-down:sy'></Icon>
@@ -211,6 +218,10 @@ class TextTool extends EventsComponent {
                 this.emit('setProp', { link: { name: 'page' } });
                 return this.forceUpdate();
                 break;
+            case TextCommand.askAI:
+                this.emit('askAI');
+                return this.forceUpdate();
+                break;
         }
         this.emit('setStyle', { [BlockCssName.font]: font } as any);
         this.forceUpdate();
@@ -286,7 +297,6 @@ class TextTool extends EventsComponent {
             this.close();
         }
     }
-
 }
 interface TextTool {
     emit(name: 'setStyle', styles: Record<BlockCssName, Record<string, any>>);
@@ -299,11 +309,14 @@ interface TextTool {
     only(name: 'setStyle', fn: (syles: Record<BlockCssName, Record<string, any>>) => void);
     only(name: 'turn', fn: (item: MenuItem<BlockDirective>, event: MouseEvent) => void);
     only(name: 'close', fn: () => void);
+    emit(name: 'askAI');
+    only(name: 'askAI', fn: () => void);
 }
 export type textToolResult = { command: 'setStyle', styles: Record<BlockCssName, Record<string, any>> }
     | { command: 'turn', item: MenuItem<BlockDirective>, event: MouseEvent }
     | { command: "setProp", props: Record<string, any> }
     | { command: 'setEquation', props: { equation: boolean } }
+    | { command: 'askAI' }
     | false;
 var textTool: TextTool;
 export async function useTextTool(point: PopoverPosition, options: { style: TextToolStyle, turnBlock?: Block }) {
@@ -328,6 +341,9 @@ export async function useTextTool(point: PopoverPosition, options: { style: Text
         });
         textTool.only("close", () => {
             resolve(false);
+        })
+        textTool.only('askAI', () => {
+            resolve({ command: 'askAI' })
         })
     })
 }
