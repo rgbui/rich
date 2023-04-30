@@ -193,4 +193,29 @@ export class Page$Seek {
         return bs;
     }
 
+    /**
+     * 
+     * @param selectionBlocks  一般指选区的blocks,blocks是相邻连续的
+     * @param arrow 
+     */
+    visibleSearchBlocks(selectionBlocks: Block[], arrow: 'prev' | 'next' | 'first' | 'last') {
+        if (arrow == 'prev' || arrow == 'first') {
+            var min = selectionBlocks[0];
+            for (let i = 1; i < selectionBlocks.length; i++) {
+                if (min.isBefore(selectionBlocks[i])) continue
+                else min = selectionBlocks[i]
+            }
+            if (arrow == 'first') return min;
+            else return min.prev
+        }
+        else if (arrow == 'last' || arrow == 'next') {
+            var min = selectionBlocks[0];
+            for (let i = 1; i < selectionBlocks.length; i++) {
+                if (min.isAfter(selectionBlocks[i])) continue
+                else min = selectionBlocks[i]
+            }
+            if (arrow == 'last') return min;
+            else return min.prev
+        }
+    }
 }

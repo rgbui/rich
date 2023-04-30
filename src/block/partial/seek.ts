@@ -329,4 +329,14 @@ export class Block$Seek {
             return poly.points.some(s => vp.bound.contain(s)) || poly.isIntersect(vp);
         })
     }
+    isBefore(this: Block, block: Block) {
+        var pos = this.el.compareDocumentPosition(block.el);
+        if (pos == 4 || pos == 20) {
+            return true
+        }
+        return false
+    }
+    isAfter(this: Block, block: Block) {
+        return block.isBefore(this)
+    }
 }
