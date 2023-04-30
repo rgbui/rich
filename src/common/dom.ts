@@ -279,7 +279,7 @@ class Dom {
         return new Matrix(...matrixPoints)
     }
     getOverflowPanel() {
-        var predict = x => { return dom(x as HTMLElement).style('overflowY') == 'auto' || dom(x as HTMLElement).style('overflowX') == 'auto' }
+        var predict = x => { return dom(x as HTMLElement).style('overflowY') == 'auto' || dom(x as HTMLElement).style('overflowX') == 'auto'||dom(x as HTMLElement).style('overflowY') == 'overlay' || dom(x as HTMLElement).style('overflowX') == 'overlay' }
         var scrollDiv: HTMLElement = this.closest(predict) as any;
         return scrollDiv;
     }
