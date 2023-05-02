@@ -25,7 +25,6 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
     block: DataGridView;
     onOpen(block: DataGridView) {
         this.block = block;
-        console.log(this.block.schemaView,'ggg')
         this.forceUpdate();
     }
     getItems(): MenuItem[] {
@@ -208,7 +207,12 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
         function click(item) {
 
         }
-        return <MenuView input={input} select={select} click={click} style={{ maxHeight: 300, paddingTop: 10, paddingBottom: 10, overflowY: 'auto' }} items={this.getItems()}></MenuView>
+        return <MenuView input={input} select={select} click={click} style={{
+            maxHeight: 300,
+            paddingTop: 10,
+            paddingBottom: 10,
+            overflowY: 'auto'
+        }} items={this.getItems()}></MenuView>
     }
     onStoreViewText = lodash.debounce((value) => {
         var self = this;
