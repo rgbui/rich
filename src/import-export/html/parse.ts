@@ -210,6 +210,15 @@ function isLineElement(element: HTMLElement) {
 async function parseBlock(element: HTMLElement) {
     var name = element?.tagName?.toLowerCase();
     var textBlockUrl = getTextBlock(element);
+    /**
+     * 这里判断如果标签为p,p里面有可能有图片、视频、音频
+     * <p><img/></p>
+     * 这里把p当成div来处理
+     */
+    if (name == 'p' && element.querySelector('img,video,audio,iframe')) {
+        textBlockUrl = undefined;
+    }
+    // console.log(name,textBlockUrl,'name-textBlockUrl');
     if (textBlockUrl) {
         var texts = await parseTextBlock(element);
         if (texts.length > 0) return { url: textBlockUrl, blocks: { childs: texts } }
