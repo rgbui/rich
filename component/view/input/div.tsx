@@ -15,21 +15,25 @@ export function DivInput(props: {
     rf?: (e: HTMLElement) => void
 }) {
     const [el, setEl] = useState<HTMLElement>(null)
-    function input() {
+    function input(e?: React.FormEvent<HTMLDivElement>) {
         var text = el.innerText;
         if (props.ignoreFilterWhitespace !== true) {
             text = text.trim();
         }
-        if (typeof props.onInput == 'function')
+        if (typeof props.onInput == 'function') {
+            var sel = window.getSelection()
             props.onInput(text);
+        }
     }
     function change() {
         var text = el.innerText;
         if (props.ignoreFilterWhitespace !== true) {
             text = text.trim();
         }
-        if (typeof props.onChange == 'function')
+        if (typeof props.onChange == 'function') {
+            var sel = window.getSelection()
             props.onChange(text);
+        }
     }
     function paster(e: React.ClipboardEvent<HTMLSpanElement>) {
         e.preventDefault();
@@ -44,14 +48,10 @@ export function DivInput(props: {
         }
         else {
             el.innerText = text;
-            if (text.length > 0)
-                sel.collapse(el.childNodes[0], text.length);
+            if (text.length > 0) sel.collapse(el.childNodes[0], text.length);
             input()
         }
     }
-
-
-
     async function keydown(event: React.KeyboardEvent) {
         if (event.key == 'Enter' && !event.shiftKey) {
             event.preventDefault();
@@ -77,7 +77,7 @@ export function DivInput(props: {
         style={style}
         ref={e => { setEl(e); props.rf ? props.rf(e) : undefined; }}
         onPaste={e => paster(e)}
-        onInput={e => input()}
+        onInput={e => input(e)}
         onChange={e => change()}
         onBlur={e => change()}
         onKeyDown={e => keydown(e)}

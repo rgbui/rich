@@ -172,7 +172,6 @@ export class ImageView extends BlockView<Image>{
                 {!this.block?.src && this.block.isCanEdit() && this.renderEmptyImage()}
                 {this.block?.src && this.renderImage()}
             </div>
-
         </div>
     }
 }
