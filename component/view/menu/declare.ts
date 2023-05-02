@@ -1,3 +1,4 @@
+import { PopoverPosition } from "../../../extensions/popover/position"
 import { OverlayPlacement } from "../tooltip"
 import { MenuItemView } from "./item"
 
@@ -15,6 +16,7 @@ export type MenuItem<T = string> = {
     checkLabel?: boolean,
     forceHasChilds?:boolean,
     childs?: MenuItem<T>[],
+    childsPos?:PopoverPosition,
     options?: MenuItem<T>[],
     value?: any,
     checked?: boolean,

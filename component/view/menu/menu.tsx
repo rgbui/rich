@@ -17,9 +17,10 @@ export class MenuView extends React.Component<{
     cacRelative?: (rect: Rect) => Rect
 }>{
     render() {
+        var items = this.localItems || this.props.items;
         return <div className='shy-menu-view' style={{
             ...(this.props.style || {}),
-        }}>{this.props.items.map((item, index) => {
+        }}>{items.map((item, index) => {
             return <MenuItemView
                 key={index}
                 parent={this}
@@ -38,5 +39,10 @@ export class MenuView extends React.Component<{
     }
     onUnfree() {
         this.free = false;
+    }
+    localItems: MenuItem[];
+    forceUpdateItems(items: MenuItem[]) {
+        this.localItems = items;
+        this.forceUpdate()
     }
 }

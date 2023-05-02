@@ -55,12 +55,14 @@ export class MenuItemView extends React.Component<{
                         rect = this.props.parent.props.cacRelative(rect);
                     }
                 }
-                this.menubox.open({
+                var pos = this.props.item.childsPos || {};
+                this.menubox.open(Object.assign(pos, {
                     roundArea: rect,
                     direction: 'right',
                     relativePoint: isFixed ? undefined : rect.leftTop,
                     dist: -10
-                }, {
+                }),
+                {
                     position: isFixed ? 'fixed' : "absolute"
                 });
             }
