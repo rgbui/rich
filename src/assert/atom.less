@@ -183,7 +183,8 @@ position的布局
     transform: translate(-50%, 0px);
 }
 
-.pos-top-right,.pos-t-r {
+.pos-top-right,
+.pos-t-r {
     position: absolute;
     top     : 0px;
     right   : 0px;
@@ -1204,13 +1205,33 @@ each(@ops, {
     border-bottom: 1px solid rgba(55, 53, 47, 0.16);
 }
 
+.r-border-bottom,
+.r-border-b {
+    >* {
+        border-bottom: 1px solid rgba(55, 53, 47, 0.16);
+    }
+}
+
 .border-bottom-primary,
 .border-b-p {
     border-bottom: 1px solid rgb(225, 98, 89);
 }
 
+.r-border-bottom-primary,
+.r-border-b-p {
+    >* {
+        border-bottom: 1px solid rgb(225, 98, 89);
+    }
+}
+
 .border-light {
     border: 1px solid rgba(55, 53, 47, 0.08);
+}
+
+.r-border-light {
+    >* {
+        border: 1px solid rgba(55, 53, 47, 0.08);
+    }
 }
 
 .border-light-bottom,
