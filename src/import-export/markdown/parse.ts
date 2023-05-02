@@ -12,9 +12,9 @@ export async function parseMarkdown(file: File) {
     var text = await util.readFileText(file);
     // var converter = new showdown.Converter(),
     // text      = '# hello, markdown!',
-    // html      = converter.makeHtml(text);
-    var html = '';
+    var html = marked.parse(text);
     var blocks = await parseHtml(html);
+    return blocks;
 }
 
 export async function parseMarkdownContent(md: string) {
@@ -22,7 +22,7 @@ export async function parseMarkdownContent(md: string) {
     // var html = converter.makeHtml(md);
 
     var html = marked.parse(md);
-    console.log(md, html);
+    // console.log(md, html);
     var blocks = await parseHtml(html);
     return blocks;
 }
