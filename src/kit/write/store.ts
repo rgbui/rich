@@ -26,15 +26,18 @@ export async function InputStore(appear: AppearAnchor, force: boolean = false, a
         clearTimeout(inputStoreTime);
         inputStoreTime = undefined
     }
-    var cursor = appear.block.page.kit.anchorCursor;
-    var sr = cursor.getWindowSelectionAnchors();
-    var doAction = async () => {
-        if (typeof action == 'function') await action();
-        cursor.setTextSelection(sr)
-    }
+
     inputStore = async function () {
         try {
             inputStore = undefined;
+            value = appear.textContent;
+            oldValue = appear.propValue;
+            var cursor = appear.block.page.kit.anchorCursor;
+            var sr = cursor.getWindowSelectionAnchors();
+            var doAction = async () => {
+                if (typeof action == 'function') await action();
+                cursor.setTextSelection(sr)
+            }
             await appear.block.onInputText({
                 appear,
                 oldValue,

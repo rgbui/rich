@@ -17,9 +17,21 @@ import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { AiWrite } from "./write";
 import { Markdown } from "../../component/view/markdown";
 import { Divider } from "../../component/view/grid";
-import { ArticleContinue, FixSpellingGrammar, ImagePrompt, MakeLonger, MakeSmall, SummarizeTemplate, TranslateTemplate, WritingAssistant, getTemplateInstance } from "./prompt";
+import {
+    ArticleContinue,
+    FixSpellingGrammar,
+    ImagePrompt,
+    MakeLonger,
+    MakeSmall,
+    SummarizeTemplate,
+    TranslateTemplate,
+    WritingAssistant,
+    getTemplateInstance
+} from "./prompt";
 import { parseMarkdownContent } from "../../src/import-export/markdown/parse";
-
+import { BlockUrlConstant } from "../../src/block/constant";
+import { List, ListType } from "../../blocks/present/list/list";
+import { onMergeListBlocks } from "./util";
 
 export type AIToolType = {
     block?: Block,
@@ -48,8 +60,11 @@ export enum AIAskStatus {
 
 
     selectionWillAsk,
+
     selectionWillAsking,
+
     selectionAsking,
+
     selectionAsked
 }
 
@@ -65,6 +80,7 @@ export class AITool extends EventsComponent {
     el: HTMLDivElement;
     error: string = '';
     private fvs: FixedViewScroll = new FixedViewScroll();
+    mdEl: HTMLElement;
     render(): ReactNode {
         var style: CSSProperties = {
         }
@@ -82,21 +98,21 @@ export class AITool extends EventsComponent {
                 ref={e => this.el = e}
                 className="pos"
                 style={style}>
-                <div className="pv  padding-w-10 min-h-30 bg-white shadow-1  round-8">
-                    {[AIAskStatus.selectionAsking, AIAskStatus.selectionAsked].includes(this.status) && <>
-                        <div className="padding-t-10 max-h-150 overflow-y">
+                <div className="pv min-h-30 bg-white shadow-1  round-8">
+                    {this.anwser && [AIAskStatus.selectionAsking, AIAskStatus.selectionAsked].includes(this.status) && <>
+                        <div ref={e => this.mdEl = e} className=" padding-w-10 gap-t-10 max-h-150 overflow-y">
                             <Markdown md={this.anwser}></Markdown>
                         </div>
                         <Divider></Divider>
                     </>
                     }
                     <div className="flex flex-top">
-                        <span className="flex-fixed size-30 gap-t-5 flex-center gap-r-10">
+                        <span className="flex-fixed size-30 gap-h-5 flex-center gap-r-5">
                             <Icon size={18} icon={MagicSvg}></Icon>
                         </span>
                         <div className="flex-auto">
-                            {[AIAskStatus.asking].includes(this.status) && <div className="size-30 flex-center"><Spin size={16}></Spin></div>}
-                            {![AIAskStatus.asking].includes(this.status) && <DivInput
+                            {[AIAskStatus.asking, AIAskStatus.selectionAsking].includes(this.status) && <div className="size-30  gap-h-5  flex-center"><Spin size={16}></Spin></div>}
+                            {![AIAskStatus.asking, AIAskStatus.selectionAsking].includes(this.status) && <DivInput
                                 value={this.ask}
                                 rf={e => this.textarea = e}
                                 onInput={this.onInput}
@@ -104,17 +120,22 @@ export class AITool extends EventsComponent {
                                 className='padding-h-10 min-h-20'
                                 placeholder="告诉AI写什么" ></DivInput>}
                         </div>
-                        <span className="size-30  gap-t-5 flex-center flex-fixed gap-l-10">
-                            <span onClick={e => this.onEnter()} className=" round size-24 flex-center cursor item-hover">
+                        <span className="size-30  gap-h-5 flex-center flex-fixed gap-l-10">
+                            <span onClick={e => this.onEnter()} className={"round size-24 flex-center cursor item-hover" + (this.ask ? " remark" : "")}>
                                 <Icon size={18} icon={PublishSvg}></Icon>
                             </span>
                         </span>
                     </div>
-
-
+                    {this.error && <div className="flex min-h-20 gap-b-5 padding-w-10 f-12 visible-hover">
+                        <div className="error ">{this.error}</div>
+                        <div className="size-20 flex-center visible gap-l-10  item-hover cursor round"
+                            onClick={e => { this.error = ''; this.forceUpdate() }}>
+                            <Icon size={14} icon={CloseSvg}></Icon>
+                        </div>
+                    </div>}
                 </div>
                 <div
-                    style={{ display: [AIAskStatus.willAsking, AIAskStatus.asking].includes(this.status) ? 'none' : 'block' }}
+                    style={{ display: [AIAskStatus.asking, AIAskStatus.selectionAsking].includes(this.status) ? 'none' : 'block' }}
                     ref={e => this.menuView = e}
                     className="gap-t-10 pv shadow-1 w-300 bg-white   round-8">
                     {this.renderItems()}
@@ -141,7 +162,7 @@ export class AITool extends EventsComponent {
                         }
                         break;
                     case 'image':
-
+                        self.aiImage()
                         break;
                     case 'pageSummary':
                         var preContent = await this.getPageContent()
@@ -159,18 +180,26 @@ export class AITool extends EventsComponent {
                 switch (item.name) {
                     case 'done':
                     case 'cancel':
+                        this.page.kit.anchorCursor.onClearSelectBlocks()
                         this.close()
                         break;
                     case 'try':
                         var blocks = this.writer.writedBlocks;
                         await this.writer.page.onBatchDelete(blocks);
-                        if (this.options.block) this.writer.open(this.options.block);
-                        else this.writer.selection(this.options.blocks);
-                        this.onEnter()
+                        var block = this.options.block;
+                        if (blocks.includes(block)) block = block.prev
+                        if (block) {
+                            this.page.kit.anchorCursor.onFocusBlockAnchor(block, { last: true, render: true })
+                            var ask = this.ask;
+                            this.open({ block: block });
+                            this.ask = ask;
+                            this.onEnter()
+                        }
                         break;
                     case 'continue':
                         var blocks = this.writer.writedBlocks;
-                        this.open({ blocks });
+                        this.page.kit.anchorCursor.onFocusBlockAnchor(blocks.last(), { last: true, render: true })
+                        this.open({ block: blocks.last() });
                         var preContent = this.getPrevBlockContent();
                         var propTemplate = getTemplateInstance(ArticleContinue, { content: preContent });
                         this.aiText({ prompt: propTemplate })
@@ -216,6 +245,10 @@ export class AITool extends EventsComponent {
                         var propTemplate = getTemplateInstance(TranslateTemplate, { language: item.value, content: preContent });
                         this.aiSelection({ prompt: propTemplate })
                         break;
+                    case 'insertImage':
+                        var preContent = this.getPrevBlockContent();
+                        this.aiImage({ prompt: preContent, genImageProp: true })
+                        break;
                 }
             }
             else if ([AIAskStatus.selectionAsked].includes(this.status)) {
@@ -225,40 +258,39 @@ export class AITool extends EventsComponent {
                         var bs = this.options.blocks || [];
                         var b = this.page.visibleSearchBlocks(bs, 'last');
                         if (b) {
-                            this.page.onAction('AIReplaceBlocks', async () => {
+                            await this.page.onAction('AIReplaceBlocks', async () => {
                                 var newBlocks = await b.parent.appendArrayBlockData(blockDatas, b.at + 1, b.parentKey);
-
                                 if (newBlocks.length > 0)
                                     newBlocks.last().mounted(() => {
                                         this.page.kit.anchorCursor.onSelectBlocks(newBlocks, { render: true });
-                                        this.open({ blocks: newBlocks });
                                     })
-                                else this.close()
                                 for (let i = 0; i < bs.length; i++) {
                                     await bs[i].delete()
                                 }
                             })
+                            this.close()
                         }
                         break;
                     case 'insertBelow':
                         var blockDatas = await parseMarkdownContent(this.anwser);
+                        console.log(this.anwser, blockDatas);
                         var bs = this.options.blocks || [];
                         var b = this.page.visibleSearchBlocks(bs, 'last');
                         if (b) {
-                            this.page.onAction('AIReplaceBlocks', async () => {
+                            await this.page.onAction('AIReplaceBlocks', async () => {
                                 var newBlocks = await b.parent.appendArrayBlockData(blockDatas, b.at + 1, b.parentKey);
                                 if (newBlocks.length > 0)
                                     newBlocks.last().mounted(() => {
                                         this.page.kit.anchorCursor.onSelectBlocks(newBlocks, { render: true });
-                                        this.open({ blocks: newBlocks });
-                                    })
-                                else this.close()
 
+                                    })
                             })
+                            this.close()
                         }
                         break;
                     case 'done':
                     case 'cancel':
+                        this.page.kit.anchorCursor.onClearSelectBlocks()
                         this.close()
                         break;
                     case 'try':
@@ -274,6 +306,13 @@ export class AITool extends EventsComponent {
                     //     break;
                 }
             }
+            else if ([AIAskStatus.willAsking].includes(this.status)) {
+                switch (item.name) {
+                    case 'image':
+                        self.aiImage()
+                        break;
+                }
+            }
         }
         function click(item: MenuItem) {
 
@@ -281,21 +320,51 @@ export class AITool extends EventsComponent {
         async function input(item: MenuItem) {
 
         }
+        var items = this.getItems();
+        return <MenuView ref={e => this.mv = e}
+            input={input}
+            select={select}
+            click={click}
+            cacRelative={(rect => {
+                var b = self.el.getBoundingClientRect()
+                rect.top -= b.top;
+                rect.left -= b.left;
+                return rect;
+            })}
+            style={{
+                width: 300,
+                maxHeight: 300,
+                paddingTop: 10,
+                paddingBottom: 10,
+                overflowY: 'auto'
+            }} items={items}></MenuView>
+    }
+    getItems() {
         var items: MenuItem[] = [];
         if ([AIAskStatus.willAsk].includes(this.status)) {
             items = [
                 { text: '用AI写作', type: MenuItemType.text },
                 { name: 'continue', text: '用AI续写...', icon: Edit1Svg },
-                // { name: 'image', text: '插入插图', icon: PicSvg },
                 { type: MenuItemType.divide },
                 { text: '基于页面生成', type: MenuItemType.text },
                 { name: 'pageSummary', text: '页面内容总结', icon: Edit1Svg },
                 {
-                    text: "翻译", childs: [
+                    text: "翻译",
+                    childsPos: { align: 'end' },
+                    childs: [
                         { text: '中文', name: 'pageTranslate', value: 'Chinese' },
                         { text: '英文', name: 'pageTranslate', value: 'English' },
                         { text: '日文', name: 'pageTranslate', value: 'Japanese' },
-                        { text: '韩文', name: 'pageTranslate', value: 'Korean' }
+                        { text: '韩文', name: 'pageTranslate', value: 'Korean' },
+                        { text: '德语', name: 'pageTranslate', value: 'German' },
+                        { text: '法语', name: 'pageTranslate', value: 'French' },
+                        { text: '俄语', name: 'pageTranslate', value: 'Russian' },
+                        { text: '意大利', name: 'pageTranslate', value: 'Italian' },
+                        { text: '葡萄牙', name: 'pageTranslate', value: 'Portuguese' },
+                        { text: '西班牙', name: 'pageTranslate', value: 'Spanish' },
+                        { text: '荷兰', name: 'pageTranslate', value: 'Dutch' },
+                        { text: '阿拉伯', name: 'pageTranslate', value: 'Arabic' },
+                        { text: '印度尼西亚', name: 'pageTranslate', value: 'Indonesian' }
                     ],
                     icon: Edit1Svg
                 }
@@ -319,15 +388,26 @@ export class AITool extends EventsComponent {
                 { name: 'fix', text: '拼写及语法优化', icon: Edit1Svg },
                 { name: 'makeLonger', text: '变长一些', icon: Edit1Svg },
                 { name: 'makeSmaller', text: '简洁一些', icon: Edit1Svg },
-                // { name: 'insertImage', text: "生成插图", icon: PicSvg },
+                { name: 'insertImage', text: "生成插图", icon: PicSvg },
                 // { text: '润色', icon: Edit1Svg },
                 { name: 'summary', text: '内容总结', icon: Edit1Svg },
                 {
-                    text: "翻译", childs: [
+                    text: "翻译",
+                    childsPos: { align: 'end' },
+                    childs: [
                         { text: '中文', name: 'translate', value: 'Chinese' },
                         { text: '英文', name: 'translate', value: 'English' },
                         { text: '日文', name: 'translate', value: 'Japanese' },
-                        { text: '韩文', name: 'translate', value: 'Korean' }
+                        { text: '韩文', name: 'translate', value: 'Korean' },
+                        { text: '德语', name: 'translate', value: 'German' },
+                        { text: '法语', name: 'translate', value: 'French' },
+                        { text: '俄语', name: 'translate', value: 'Russian' },
+                        { text: '意大利', name: 'translate', value: 'Italian' },
+                        { text: '葡萄牙', name: 'translate', value: 'Portuguese' },
+                        { text: '西班牙', name: 'translate', value: 'Spanish' },
+                        { text: '荷兰', name: 'translate', value: 'Dutch' },
+                        { text: '阿拉伯', name: 'translate', value: 'Arabic' },
+                        { text: '印度尼西亚', name: 'translate', value: 'Indonesian' },
                     ],
                     icon: Edit1Svg
                 }
@@ -344,16 +424,12 @@ export class AITool extends EventsComponent {
                 { name: 'cancel', text: '取消', icon: TrashSvg }
             ]
         }
-        return <MenuView ref={e => this.mv = e}
-            input={input}
-            select={select}
-            click={click} style={{
-                width: 300,
-                maxHeight: 300,
-                paddingTop: 10,
-                paddingBottom: 10,
-                overflowY: 'auto'
-            }} items={items}></MenuView>
+        if ([AIAskStatus.willAsking].includes(this.status)) {
+            items = [
+                { name: 'image', text: '生成图片', icon: PicSvg },
+            ]
+        }
+        return items;
     }
     async getPageContent() {
 
@@ -383,13 +459,18 @@ export class AITool extends EventsComponent {
     onInput = (e) => {
         this.ask = e;
         if (this.ask) {
-            this.status = AIAskStatus.willAsking;
-            this.menuView.style.display = 'none';
+            if (this.options.block) this.status = AIAskStatus.willAsking;
+            else this.status = AIAskStatus.selectionWillAsking;
         }
         else {
-            this.state = AIAskStatus.willAsking;
-            this.menuView.style.display = 'block';
+            if (this.options.block) this.status = AIAskStatus.willAsk;
+            else this.status = AIAskStatus.selectionWillAsk;
         }
+        if (this.mv) this.mv.forceUpdateItems(this.getItems())
+    }
+    updateView(callback?: () => void) {
+        if (this.mv) this.mv.forceUpdateItems(this.getItems())
+        this.forceUpdate(callback)
     }
     textarea: HTMLElement;
     ask: string = '';
@@ -427,7 +508,7 @@ export class AITool extends EventsComponent {
         this.anwser = '';
         this.options = options;
         if (this.textarea) this.textarea.innerText = '';
-        this.forceUpdate(() => {
+        this.updateView(() => {
             if (this.textarea)
                 this.textarea.focus()
         })
@@ -436,11 +517,11 @@ export class AITool extends EventsComponent {
         var self = this;
         this.status = AIAskStatus.asking;
         self.anwser = '';
-        this.forceUpdate()
+        this.updateView()
         var scope = '';
         await channel.post('/text/ai/stream', {
             question: options?.prompt || options?.ask || this.ask,
-            callback(str, done) {
+            async callback(str, done) {
                 if (typeof str == 'string') {
                     self.anwser += str;
                     scope += str;
@@ -454,10 +535,14 @@ export class AITool extends EventsComponent {
                 }
                 else self.writer.accept(undefined, done);
                 if (done) {
-                    self.writer.page.kit.anchorCursor.onSelectBlocks(self.writer.writedBlocks, { render: true })
-                    // self.open({ blocks: self.writer.writedBlocks })
+                    console.log('answer', JSON.stringify(self.anwser))
+                    var bs = self.writer.writedBlocks;
+                    if (bs.some(s => s.url == BlockUrlConstant.List && (s as List).listType == ListType.number)) {
+                        await onMergeListBlocks(self.page, bs);
+                    }
+                    self.writer.page.kit.anchorCursor.onSelectBlocks(bs, { render: true })
                     self.status = AIAskStatus.asked;
-                    self.forceUpdate();
+                    self.updateView();
                 }
             }
         });
@@ -466,35 +551,69 @@ export class AITool extends EventsComponent {
         var self = this;
         this.status = AIAskStatus.selectionAsking;
         self.anwser = '';
-        this.forceUpdate()
+        this.updateView()
         await channel.post('/text/ai/stream', {
             question: options?.prompt || options?.ask || this.ask,
             callback(str, done) {
                 if (typeof str == 'string') {
                     self.anwser += str;
-                    self.forceUpdate()
+                    if (self.mdEl) {
+                        self.mdEl.scrollTop = self.mdEl.scrollHeight
+                    }
+                    self.updateView()
                 }
                 // else self.writer.accept(undefined, done);
                 if (done) {
                     // console.log('done', JSON.stringify(self.anwser))
                     self.status = AIAskStatus.selectionAsked;
-                    self.forceUpdate();
+                    self.updateView();
                 }
             }
         });
     }
-    async aiImage(options?: { prompt?: string, ask?: string }) {
-        var inputPromput = getTemplateInstance(ImagePrompt, { content: options?.prompt || options.ask || this.ask })
-        var g = await channel.post('/text/ai', { input: inputPromput })
-        if (g.ok) {
-            this.status = AIAskStatus.asking;
-            var r = await channel.post('/http', {
-                url: '/text/to/image',
-                method: 'post',
-                data: { prompt: g.data.message }
-            });
-            if (r?.ok) {
-                console.log(r.data.images);
+    async aiImage(options?: { prompt?: string, ask?: string, genImageProp?: boolean }) {
+        var ask = options?.prompt || options?.ask || this.ask;
+        if (!ask) return;
+        var self = this;
+        if (this.options.block) this.status = AIAskStatus.asking;
+        else this.status = AIAskStatus.selectionAsking;
+        this.updateView()
+        if (options?.genImageProp) {
+            var g = await channel.post('/text/ai', { input: getTemplateInstance(ImagePrompt, { content: options.ask || options.prompt }) })
+            if (g.ok) {
+                ask = g.data.message;
+            }
+        }
+        // console.log(options, ask);
+        var r = await channel.post('/http', {
+            url: '/text/to/image',
+            method: 'post',
+            data: { prompt: ask }
+        });
+        if (r?.ok) {
+            if (Array.isArray(r.data.images)) {
+                if (this.options.block) {
+                    self.writer.acceptImages(r.data.images);
+                    this.status = AIAskStatus.asking;
+                    this.close()
+                }
+                else {
+                    // var ds=r.data.images||[{url:'http://localhost:8888/img?id=5ce14d2a04e04a758a23102692237a17'}]
+                    var ds = [{
+                        name: '',
+                        url: 'http://localhost:8888/img?id=5ce14d2a04e04a758a23102692237a17'
+                    }]
+                    self.anwser += r.data.images.map(g => `<img data-origin='${JSON.stringify(g)}' src='${g.url}'/>`).join("\n\n");
+                    self.anwser += ds.map(g => `![${g.name.slice(0, 10) || 'image'}](${g.url})`).join("\n\n");
+                    this.status = AIAskStatus.selectionAsked;
+                    this.updateView();
+                }
+            }
+            else if (r.data.error) {
+                this.error = r.data.error;
+                if (this.options.block) this.status = AIAskStatus.asking;
+                else this.status = AIAskStatus.selectionAsked;
+                this.updateView();
             }
         }
     }
@@ -522,7 +641,8 @@ export class AITool extends EventsComponent {
         if (this.visible == true) {
             this.fvs.unbind();
             this.visible = false;
-            this.forceUpdate();
+            this.status = AIAskStatus.none;
+            this.updateView();
             this.emit('close');
         }
     }

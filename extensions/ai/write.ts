@@ -9,6 +9,7 @@ import { ListType } from "../../blocks/present/list/list";
 import { TextCode } from "../../blocks/present/code/code";
 import { util } from "../../util/util";
 import { mergeCode } from "./util";
+import { IconArguments } from "../icon/declare";
 
 export class AiWrite {
     parentBlock: Block = null;
@@ -137,7 +138,7 @@ export class AiWrite {
             lodash.remove(ts, g => typeof g == 'undefined');
             if (ts.length == 0) return;
             if (this.block && (this.block as any).codeFinished !== true && this.block.url == BlockUrlConstant.Code) {
-                console.log('collect code', ts);
+                // console.log('collect code', ts);
                 var at = ts.findIndex(g => g.match(/```/) ? true : false)
                 if (at > -1) {
                     var tg = ts[at];
@@ -161,7 +162,7 @@ export class AiWrite {
                 }
             }
             ts = mergeCode(ts);
-            console.log('gggg', ts);
+            // console.log('gggg', ts, this.aa);
             if (this.aa) {
                 var isWillSave = false;
                 if (typeof ts[0] != 'undefined') {
@@ -228,6 +229,10 @@ export class AiWrite {
                                     })
                                 })
                             })
+                        }
+                        else {
+                            this.aa.appendContent(ts[0]);
+                            this.aa.endCollapse();
                         }
                     }
                     else {
@@ -308,7 +313,6 @@ export class AiWrite {
             console.error(ex)
         }
     }
-
     async writeTableRow() {
         var ts = this.text.split(/\r\n|\n\n|\n\r|\n|\r/g);
         lodash.remove(ts, g => typeof g == 'undefined' || g === '');
@@ -372,11 +376,29 @@ export class AiWrite {
         }
     }
     accept(text: string, done: boolean) {
-        // console.log('input', text);
         if (typeof text == 'string') {
             this.text += text;
         }
         this.write()
+    }
+    acceptImages(images: IconArguments[]) {
+        this.page.onAction('AIDrawImages', async () => {
+            var block = this.block;
+            var at = block.at;
+            var bs = await block.parent.appendArrayBlockData(
+                images.map(img => {
+                    return {
+                        url: BlockUrlConstant.Image,
+                        src: img
+                    }
+                })
+                ,
+                at + 1,
+                block.parent.hasSubChilds ? 'subChilds' : 'childs');
+            bs.last().mounted(() => {
+                bs.last().page.kit.anchorCursor.onSelectBlocks(bs)
+            })
+        })
     }
 }
 
