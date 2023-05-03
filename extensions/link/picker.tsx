@@ -87,7 +87,7 @@ class LinkPicker extends EventsComponent {
                 onEnter={(e, g) => { g.preventDefault(); g.stopPropagation(); this.onEnter(e); }}
                 value={this.url}></Input>
             <div className='shy-link-picker-current-page'>
-                {this.name == 'outside' && this.url && <a onClick={e => this.onEnter(this.url)}><Icon size={16} icon={GlobalLinkSvg}></Icon><span>{this.url}</span></a>}
+                {this.name == 'outside' && this.url && <a className="flex" onClick={e => this.onEnter(this.url)}><Icon size={16} icon={GlobalLinkSvg}></Icon><span>{this.url}</span></a>}
             </div>
             {this.name == 'page' && this.url && <><div onClick={e => this.onCreate()} className='shy-link-picker-operators'>
                 <span>创建<em>{this.url}</em></span>
@@ -97,7 +97,7 @@ class LinkPicker extends EventsComponent {
                 {!this.loading && this.links.map((link, i) => {
                     return <a onClick={e => this.onSelect(link)} className={"shy-page-link-item"} key={link.id}><Icon icon={link.icon || PageSvg}></Icon><span>{link.text || '新页面'}</span></a>
                 })}
-                {!this.loading && this.links.length == 0 && this.isSearch && <a><Remark>没有搜索到</Remark></a>}
+                {!this.loading && this.links.length == 0 && this.isSearch && <span className="remark f-12">没有搜索到</span>}
             </div>}
         </div>
     }
