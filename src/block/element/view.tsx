@@ -5,6 +5,7 @@ import { url, view } from "../factory/observable";
 import { Block } from '..';
 import { ChildsArea } from '../view/appear';
 import { PageLayoutType } from '../../page/declare';
+
 @url('/view')
 export class View extends Block {
     get isView() {
