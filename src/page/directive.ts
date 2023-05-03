@@ -29,5 +29,6 @@ export enum PageDirective {
     rollup,
     mounted,
     close,
-    changePageLayout
+    changePageLayout,
+    spreadSln
 }
