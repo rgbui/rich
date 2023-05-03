@@ -1,3 +1,5 @@
+import { ShyAlert } from "./lib/alert"
+
 export const CopyText = (text, fn?: any) => {
   if (navigator.clipboard) {
     navigator.clipboard
@@ -47,6 +49,12 @@ export const CopyText = (text, fn?: any) => {
   }
 }
 
+
+export const CopyAlert = (text: string, alert: string) => {
+  CopyText(text, () => {
+    ShyAlert(alert)
+  })
+}
 
 
 export async function WriteClipboardHtml(html: string) {
