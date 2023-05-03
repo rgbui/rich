@@ -1,6 +1,6 @@
 import React from "react";
 import { Page } from "..";
-import { ChevronRightSvg, CollectTableSvg, DotsSvg, DoubleRightSvg, FieldsSvg, MemberSvg, PageSvg, PublishSvg, SearchSvg } from "../../../component/svgs";
+import { ChevronLeftSvg, ChevronRightSvg, CollectTableSvg, DotsSvg, DoubleRightSvg, FieldsSvg, MemberSvg, MenuSvg, PageSvg, PublishSvg, SearchSvg } from "../../../component/svgs";
 import { UserAvatars } from "../../../component/view/avator/users";
 import { Button } from "../../../component/view/button";
 import { Icon } from "../../../component/view/icon";
@@ -11,11 +11,12 @@ import { channel } from "../../../net/channel";
 import { ElementType } from "../../../net/element.type";
 import { PageLayoutType } from "../declare";
 import { PageDirective } from "../directive";
+import { isMobileOnly } from "react-device-detect";
 
 export class PageBar extends React.Component<{ page: Page }>{
     renderTitle() {
         if (this.props.page.pe.type == ElementType.SchemaRecordViewData) {
-            return <div className="flex-auto flex padding-l-10">
+            return <div className="flex-auto flex">
                 {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onClose()} className="item-hover size-24 round cursor flex-center gap-l-10"><Icon size={18} icon={DoubleRightSvg}></Icon></span>}
                 {/* <span onMouseDown={e => this.props.page.openSource != 'page' && this.props.page.onClose()} className="item-hover round flex  cursor padding-h-3 padding-w-5 ">
                     <Icon size={18} icon={getPageIcon(this.props.page?.schema?.icon, CollectTableSvg)}></Icon>
@@ -118,9 +119,14 @@ export class PageBar extends React.Component<{ page: Page }>{
             <Button size="small" onClick={e => this.toLogin()}>登录</Button>
         </div>
     }
-
+    onSpreadMenu() {
+        this.props.page.emit(PageDirective.spreadSln)
+    }
     render(): React.ReactNode {
-        return <div className="shy-page-bar flex">
+        return <div className="shy-page-bar flex padding-l-10">
+            {isMobileOnly && <span onClick={e => this.onSpreadMenu()} className="flex-fixed size-24 flex-center item-hover round cursor ">
+                <Icon icon={ChevronLeftSvg} size={18}></Icon>
+            </span>}
             {this.renderTitle()}
             <div className="flex-fixed flex">{this.renderUsers()}{this.renderPropertys()}</div>
         </div>

@@ -34,7 +34,7 @@ import { BlockUrlConstant } from '../block/constant';
 import lodash from 'lodash';
 import { ActionDirective } from '../history/declare';
 import { PageLayout } from '../../extensions/layout';
-
+import { isMobileOnly } from "react-device-detect";
 export class Page extends Events<PageDirective> {
     root: HTMLElement;
     viewEl: HTMLElement;
@@ -180,15 +180,21 @@ export class Page extends Events<PageDirective> {
     openSource: 'page' | 'slide' | 'dialog' | 'snap' | 'popup' = 'page';
     getScreenStyle() {
         var style: CSSProperties = {};
-        if (this.isSupportScreen) {
-            var isFull: boolean = this.isFullWidth;
-            if (isFull) {
-                style.paddingLeft = 80;
-                style.paddingRight = 80;
-            }
-            else {
-                style.width = 800;
-                style.margin = '0 auto';
+        if (isMobileOnly) {
+            style.paddingLeft = 20
+            style.paddingRight = 20
+        }
+        else {
+            if (this.isSupportScreen) {
+                var isFull: boolean = this.isFullWidth;
+                if (isFull) {
+                    style.paddingLeft = 80;
+                    style.paddingRight = 80;
+                }
+                else {
+                    style.width = 800;
+                    style.margin = '0 auto';
+                }
             }
         }
         return style;
@@ -316,6 +322,9 @@ export interface Page {
 
     on(name: PageDirective.changePageLayout, fn: () => void);
     emit(name: PageDirective.changePageLayout);
+
+    on(name: PageDirective.spreadSln, fn: () => void);
+    emit(name: PageDirective.spreadSln);
 }
 export interface Page extends PageEvent { }
 export interface Page extends Page$Seek { }
