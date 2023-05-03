@@ -13,18 +13,23 @@
         border-radius  : 4px;
         border         : 1px solid rgba(55, 53, 47, 0.2);
 
-        &.sy-pagination-current {
+        &.shy-pagination-page {
+            cursor: pointer;
+            color : rgba(55, 53, 47);
+
+            &:hover {
+                background-color: rgb(225, 98, 89);
+                color           : #fff;
+            }
+        }
+
+        &.shy-pagination-current {
             background-color: rgb(225, 98, 89);
             color           : #fff;
         }
 
-        &.sy-pagination-text {
+        &.shy-pagination-text {
             color: rgba(55, 53, 47, 0.6);
-        }
-
-        &.sy-pagination-page {
-            cursor: pointer;
-            color : rgba(55, 53, 47);
         }
     }
 }

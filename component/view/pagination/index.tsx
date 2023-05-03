@@ -1,5 +1,12 @@
 import React from "react";
-export class Pagination extends React.Component<{ size: number, index: number, total: number, onChange?: (index: number, size: number) => void }>{
+import "./style.less";
+
+export class Pagination extends React.Component<{
+    size: number,
+    index: number,
+    total: number,
+    onChange?: (index: number, size: number) => void
+}>{
     getPages() {
         var page = Math.ceil(this.props.total / this.props.size);
         var index: number = this.props.index;
@@ -13,10 +20,10 @@ export class Pagination extends React.Component<{ size: number, index: number, t
             else for (var j = index + 1; j <= page; j++) ps.push(j);
         } else ps = [];
         return ps.map((p) => {
-            var classList: string[] = ["sy-pagination-page"];
-            if (p == index) classList.push("sy-pagination-current");
+            var classList: string[] = ["shy-pagination-page"];
+            if (p == index) classList.push("shy-pagination-current");
             else if (typeof p == "number") {
-            } else classList.push("sy-pagination-text");
+            } else classList.push("shy-pagination-text");
             return {
                 text: p,
                 index: typeof p == "number" ? p : undefined,
@@ -28,8 +35,8 @@ export class Pagination extends React.Component<{ size: number, index: number, t
         var page = Math.ceil(this.props.total / this.props.size);
         if (page < 2) return <></>
         var size = this.props.size;
-        return <div className='shy-pagination flex-center'>{this.getPages().map(pa => {
-            return <a className={pa.classList.join(" ")} onMouseDown={e => pa.index && this.props.onChange(pa.index, size)}>{pa.text}</a>
+        return <div className='shy-pagination flex-center'>{this.getPages().map((pa, i) => {
+            return <a key={i} className={pa.classList.join(" ")} onMouseDown={e => pa.index && this.props.onChange(pa.index, size)}>{pa.text}</a>
         })}</div>
     }
 }
