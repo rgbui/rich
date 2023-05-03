@@ -849,12 +849,28 @@ each(@selectors, {
     width: 100%;
 }
 
+.v100-20 {
+    width: calc(100% - 20px);
+}
+
+.v100-40 {
+    width: calc(100% - 40px);
+}
+
 .w50 {
     width: 50%;
 }
 
 .vw100 {
     width: 100vw;
+}
+
+.vw100-20 {
+    width: calc(100vw - 20px);
+}
+
+.vw100-40 {
+    width: calc(100vw - 40px);
 }
 
 .vw50 {
@@ -867,7 +883,6 @@ each(@selectors, {
 
 .vh100 {
     height: 100vh;
-
 }
 
 @ops: 1, 0, 2, 4, 5, 6, 8, 9, 7;
@@ -878,7 +893,8 @@ each(@ops, {
         }
     }
 
-) .box-border {
+) .box-border,
+.border-box {
     box-sizing: border-box;
 }
 
