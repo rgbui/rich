@@ -97,6 +97,8 @@ import FitSvg from "../src/assert/svg/fit.svg";
 import FlagSvg from "../src/assert/svg/flag.svg";
 import FlashSvg from "../src/assert/svg/flash.svg";
 import FlashlampSvg from "../src/assert/svg/flashlamp.svg";
+import FolderCloseSvg from "../src/assert/svg/folderClose.svg";
+import FolderOpenSvg from "../src/assert/svg/folderOpen.svg";
 import FolderPlusSvg from "../src/assert/svg/folderPlus.svg";
 import FontStyleSvg from "../src/assert/svg/font.style.svg";
 import FontSvg from "../src/assert/svg/font.svg";
@@ -327,6 +329,8 @@ FitSvg,
 FlagSvg,
 FlashSvg,
 FlashlampSvg,
+FolderCloseSvg,
+FolderOpenSvg,
 FolderPlusSvg,
 FontStyleSvg,
 FontSvg,
