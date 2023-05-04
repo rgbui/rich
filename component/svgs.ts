@@ -179,6 +179,7 @@ import RobotSvg from "../src/assert/svg/robot.svg";
 import RotatingSvg from "../src/assert/svg/rotating.svg";
 import RowNoSvg from "../src/assert/svg/row.no.svg";
 import SearchSvg from "../src/assert/svg/search.svg";
+import SeoFolderSvg from "../src/assert/svg/seoFolder.svg";
 import ServerSvg from "../src/assert/svg/server.svg";
 import SettingsSvg from "../src/assert/svg/settings.svg";
 import SortSvg from "../src/assert/svg/sort.svg";
@@ -411,6 +412,7 @@ RobotSvg,
 RotatingSvg,
 RowNoSvg,
 SearchSvg,
+SeoFolderSvg,
 ServerSvg,
 SettingsSvg,
 SortSvg,
