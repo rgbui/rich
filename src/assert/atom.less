@@ -1370,7 +1370,7 @@ circle:圆
 
 
 
-@ras: 2, 4, 8, 5, 10, 14, 16, 20, 24, 30, 32, 48, 50, 60, 80, 100, 0;
+@ras: 2, 3, 4, 6, 7, 9, 8, 5, 10, 14, 16, 20, 24, 30, 32, 48, 50, 60, 80, 100, 0;
 
 each(@ras, {
         .r-round-@{value} {
@@ -1709,4 +1709,30 @@ each(@pads, {
 
 .margin-auto {
     margin: 0 auto;
+}
+
+
+.rotate-90,
+.angle-90 {
+    transform: rotate(90deg);
+}
+
+.rotate-90-,
+.angle-90- {
+    transform: rotate(-90deg);
+}
+
+.rotate-180,
+.angle-180 {
+    transform: rotate(180deg);
+}
+
+.rotate-270,
+.angle-270 {
+    transform: rotate(270deg);
+}
+
+.rotate-0,
+.angle-0 {
+    transform: rotate(0deg);
 }
