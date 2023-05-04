@@ -3,6 +3,7 @@ import AddPageCommentSvg from "../src/assert/svg/addPageComment.svg";
 import AddPageCoverSvg from "../src/assert/svg/addPageCover.svg";
 import AddPageIconSvg from "../src/assert/svg/addPageIcon.svg";
 import AddTwoSvg from "../src/assert/svg/addTwo.svg";
+import AddUserSvg from "../src/assert/svg/addUser.svg";
 import AiSvg from "../src/assert/svg/ai.svg";
 import AlignTextCenterSvg from "../src/assert/svg/alignTextCenter.svg";
 import ArrowDownSvg from "../src/assert/svg/arrowDown.svg";
@@ -69,6 +70,7 @@ import DocCardsSvg from "../src/assert/svg/docCards.svg";
 import DocDetailSvg from "../src/assert/svg/docDetail.svg";
 import DocEditSvg from "../src/assert/svg/docEdit.svg";
 import DocSearchSvg from "../src/assert/svg/docSearch.svg";
+import DotSvg from "../src/assert/svg/dot.svg";
 import DotsSvg from "../src/assert/svg/dots.svg";
 import DoubleLinkSvg from "../src/assert/svg/double.link.svg";
 import DoubleDownSvg from "../src/assert/svg/doubleDown.svg";
@@ -128,6 +130,7 @@ import LinkSvg from "../src/assert/svg/link.svg";
 import LinkToSvg from "../src/assert/svg/linkTo.svg";
 import ListSvg from "../src/assert/svg/list.svg";
 import LockSvg from "../src/assert/svg/lock.svg";
+import LogoutSvg from "../src/assert/svg/logout.svg";
 import LoopSvg from "../src/assert/svg/loop.svg";
 import LoveSvg from "../src/assert/svg/love.svg";
 import MagicSvg from "../src/assert/svg/magic.svg";
@@ -135,6 +138,7 @@ import MaximizeSvg from "../src/assert/svg/maximize.svg";
 import MemberSvg from "../src/assert/svg/member.svg";
 import MentionSvg from "../src/assert/svg/mention.svg";
 import MenuSvg from "../src/assert/svg/menu.svg";
+import MenuFolderSvg from "../src/assert/svg/menuFolder.svg";
 import MindDirectionXSvg from "../src/assert/svg/mind.direction.x.svg";
 import MindDirectionYSvg from "../src/assert/svg/mind.direction.y.svg";
 import MindSvg from "../src/assert/svg/mind.svg";
@@ -168,6 +172,7 @@ import RefreshSvg from "../src/assert/svg/refresh.svg";
 import RenameSvg from "../src/assert/svg/rename.svg";
 import ReplySvg from "../src/assert/svg/reply.svg";
 import ReportSvg from "../src/assert/svg/report.svg";
+import RobotSvg from "../src/assert/svg/robot.svg";
 import RotatingSvg from "../src/assert/svg/rotating.svg";
 import RowNoSvg from "../src/assert/svg/row.no.svg";
 import SearchSvg from "../src/assert/svg/search.svg";
@@ -187,6 +192,7 @@ import ToggleListSvg from "../src/assert/svg/toggle.list.svg";
 import TopicSvg from "../src/assert/svg/topic.svg";
 import TransparentSvg from "../src/assert/svg/transparent.svg";
 import TrashSvg from "../src/assert/svg/trash.svg";
+import TreeListSvg from "../src/assert/svg/treeList.svg";
 import TriangleSvg from "../src/assert/svg/triangle.svg";
 import TypesButtonSvg from "../src/assert/svg/types.button.svg";
 import TypesCheckboxSvg from "../src/assert/svg/types.checkbox.svg";
@@ -226,6 +232,7 @@ AddPageCommentSvg,
 AddPageCoverSvg,
 AddPageIconSvg,
 AddTwoSvg,
+AddUserSvg,
 AiSvg,
 AlignTextCenterSvg,
 ArrowDownSvg,
@@ -292,6 +299,7 @@ DocCardsSvg,
 DocDetailSvg,
 DocEditSvg,
 DocSearchSvg,
+DotSvg,
 DotsSvg,
 DoubleLinkSvg,
 DoubleDownSvg,
@@ -351,6 +359,7 @@ LinkSvg,
 LinkToSvg,
 ListSvg,
 LockSvg,
+LogoutSvg,
 LoopSvg,
 LoveSvg,
 MagicSvg,
@@ -358,6 +367,7 @@ MaximizeSvg,
 MemberSvg,
 MentionSvg,
 MenuSvg,
+MenuFolderSvg,
 MindDirectionXSvg,
 MindDirectionYSvg,
 MindSvg,
@@ -391,6 +401,7 @@ RefreshSvg,
 RenameSvg,
 ReplySvg,
 ReportSvg,
+RobotSvg,
 RotatingSvg,
 RowNoSvg,
 SearchSvg,
@@ -410,6 +421,7 @@ ToggleListSvg,
 TopicSvg,
 TransparentSvg,
 TrashSvg,
+TreeListSvg,
 TriangleSvg,
 TypesButtonSvg,
 TypesCheckboxSvg,
