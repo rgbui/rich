@@ -11,6 +11,7 @@ import { Avatar } from "../../component/view/avator/face";
 import { KeyboardCode } from "../../src/common/keys";
 import { Divider } from "../../component/view/grid";
 import { Input } from "../../component/view/input";
+import { Spin } from "../../component/view/spin";
 
 
 export class UserPicker extends EventsComponent {
@@ -25,10 +26,10 @@ export class UserPicker extends EventsComponent {
             </div>
             <Divider></Divider>
             <div className="max-h-300 padding-b-10 overflow-y">
-                {this.loading && <Loading></Loading>}
+                {this.loading && <Spin></Spin>}
                 {!this.loading && this.links.map((link, i) => {
                     return <div onMouseDown={e => this.onSelect(link)} className={"h-40 padding-w-14 flex item-hover round cursor" + ((i) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
-                        <Avatar size={30} userid={(link as any).id}></Avatar>
+                        <Avatar size={30} showName showSn userid={(link as any).id}></Avatar>
                         <span className="gap-l-10">{link.name}</span>
                     </div>
                 })}
@@ -89,17 +90,22 @@ export class UserPicker extends EventsComponent {
             }
             else this.links = [];
         }
-        else this.links = [];
+        else this.links = lodash.cloneDeep(this.defaultList);
         this.loading = false;
         this.forceUpdate();
     }, 1000)
+    defaultList: UserBasic[] = [];
     open() {
-        this.loading = false;
+        this.loading = true;
         this.text = '';
         if (this.inputEl) this.inputEl.updateValue('');
         this.links = [];
-        this.selectIndex = 0;
         this.forceUpdate();
+        this.load().then(g => {
+            this.loading = false;
+            this.selectIndex = 0;
+            this.forceUpdate();
+        })
     }
     onSelect(link: UserBasic) {
         this.emit('change', link);
@@ -111,6 +117,20 @@ export class UserPicker extends EventsComponent {
                 block: "nearest",
                 inline: "nearest"
             });
+        }
+    }
+    async load() {
+        var r = await channel.get('/ws/members', {
+            page: 1,
+            size: 200
+        });
+        if (r.ok) {
+            this.links = r.data.list.map(g => {
+                return {
+                    id: g.userid
+                }
+            }) as any
+            this.defaultList = lodash.cloneDeep(this.links)
         }
     }
 }
