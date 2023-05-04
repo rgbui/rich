@@ -1,7 +1,7 @@
 
 
 
-export type SearchListType<T = any> = {
+export type SearchListType<T = any, G ={}> = {
     list: T[],
     total: number,
     page: number,
@@ -9,4 +9,4 @@ export type SearchListType<T = any> = {
     loading: boolean,
     word?: string,
     error?: string
-}
+} & G
