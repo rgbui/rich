@@ -97,6 +97,7 @@ import FitSvg from "../src/assert/svg/fit.svg";
 import FlagSvg from "../src/assert/svg/flag.svg";
 import FlashSvg from "../src/assert/svg/flash.svg";
 import FlashlampSvg from "../src/assert/svg/flashlamp.svg";
+import FolderPlusSvg from "../src/assert/svg/folderPlus.svg";
 import FontStyleSvg from "../src/assert/svg/font.style.svg";
 import FontSvg from "../src/assert/svg/font.svg";
 import FontawesomeSvg from "../src/assert/svg/fontawesome.svg";
@@ -326,6 +327,7 @@ FitSvg,
 FlagSvg,
 FlashSvg,
 FlashlampSvg,
+FolderPlusSvg,
 FontStyleSvg,
 FontSvg,
 FontawesomeSvg,

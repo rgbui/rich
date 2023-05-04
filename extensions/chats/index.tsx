@@ -216,7 +216,7 @@ export class ViewChats extends React.Component<{
         document.addEventListener('keyup', this.keydown)
     }
     keydown = (event: KeyboardEvent) => {
-        if (event.key.toLowerCase() == KeyboardCode.Esc.toLowerCase()) {
+        if (event?.key?.toLowerCase() == KeyboardCode.Esc.toLowerCase()) {
             this.closeEdit();
         }
     }
