@@ -7,6 +7,7 @@ import { useUserCard } from './card';
 import "./style.less";
 import { CheckSvg } from '../../svgs';
 import { Icon } from '../icon';
+import lodash from 'lodash';
 
 export class Avatar extends React.Component<{
     size?: number,
@@ -46,6 +47,7 @@ export class Avatar extends React.Component<{
                 return;
             }
             var r = await channel.get('/user/basic', { userid: this.props.userid });
+            console.log('user/basic',r);
             if (r.ok) {
                 this.user = r.data.user as any;
                 this.forceUpdate()
@@ -71,7 +73,7 @@ export class Avatar extends React.Component<{
         var renderStatus = () => {
             if (!user) return <></>;
             return <div className='shy-avatar-status'>
-                {(user.status == UserStatus.online && user.online == true || user.role == 'robot') && <div className='shy-avatar-status-online'>
+                {(user.status == UserStatus.online && user.online == true || user.online == true && (typeof user.status == 'undefined'||lodash.isNull(user.status)) || user.role == 'robot') && <div className='shy-avatar-status-online'>
                     <svg x="14.5" y="17" width="25" height="15" viewBox="0 0 25 15">
                         <rect fill="rgb(59, 165, 93)" width="25" height="15" mask="url(#user-avator-mask-online)"></rect>
                     </svg>
@@ -81,7 +83,7 @@ export class Avatar extends React.Component<{
                     <rect fill="rgb(237, 66, 69)" width="25" height="15" mask="url(#user-avator-mask-busy)"></rect>
                 </svg>
                 </div>}
-                {(user.status == UserStatus.hidden || typeof user.status == 'undefined' || user.online == false) && <div className='shy-avatar-status-hidden'>
+                {(user.status == UserStatus.hidden || user.online == false) && <div className='shy-avatar-status-hidden'>
                     <svg x="14.5" y="17" width="25" height="15" viewBox="0 0 25 15">
                         <rect fill="rgb(116, 127, 141)" width="25" height="15" mask="url(#user-avator-mask-hidden)"></rect></svg>
                 </div>}
