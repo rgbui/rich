@@ -261,7 +261,7 @@ export interface ChannelGetMapUrls {
 	"/ws/channel/abled/send":{args:{wsId?:string,roomId:string,pageId:string},returnType:Promise<SockResponse<{abled:boolean}>>},
 	"/ws/member/word/query":{args:{word:string},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
 	"/ws/members":{args:{page:number,size:number,word?:string,roleId?:string},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
-	"/ws/is/member":{args:{sock?:any,wsId:string},returnType:Promise<SockResponse<{exists:boolean}>>},
+	"/ws/is/member":{args:{sock?:any,wsId:string},returnType:Promise<SockResponse<{exists:boolean,workspace:Record<string,any>}>>},
 	"/ws/roles":{args:{},returnType:Promise<SockResponse<{list:any[]}>>},
 	"/ws/role/members":{args:{roleId:string,page:number,size:number,word?:string},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
 	"/ws/discovery":{args:{word?:string,page?:number,size?:number,type?:string},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
