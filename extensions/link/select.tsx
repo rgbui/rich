@@ -3,11 +3,11 @@ import React from "react";
 import { EventsComponent } from "../../component/lib/events.component";
 import { Icon } from "../../component/view/icon";
 import { Input } from "../../component/view/input";
-import { Loading } from "../../component/view/loading";
 import { channel } from "../../net/channel";
-import { getPageIcon, LinkPageItem } from "../at/declare";
+import { getPageIcon, getPageText, LinkPageItem } from "../at/declare";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
+import { Spin } from "../../component/view/spin";
 
 /**
  * 
@@ -49,13 +49,13 @@ class SelectWorkspacePage extends EventsComponent {
                 value={this.word}></Input>
             </div>
             {!this.word && this.currentLinks && this.currentLinks.map((link, i) => {
-                return <a onMouseUp={e => this.onSelect(link)} className={"h-30 gap-l-10 text  item-hover cursor round padding-w-10 flex" + ((i) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
-                    <span className="flex flex-inline size-24 item-hover round"><Icon size={14} icon={getPageIcon(link)}></Icon></span> <span className="f-14">{link.text || '新页面'}</span></a>
+                return <a onMouseUp={e => this.onSelect(link)} className={"h-30 text  item-hover cursor round padding-w-10 flex" + ((i) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
+                    <span className="flex flex-inline flex-center size-24 item-hover round"><Icon size={20} icon={getPageIcon(link)}></Icon></span> <span className="f-14">{getPageText(link)}</span></a>
             })}
-            {this.loading && <Loading></Loading>}
+            {this.loading && <div className="gap-h-10 flex-center"><Spin></Spin></div>}
             {this.word && this.links && this.links.map((link, i) => {
-                return <a onMouseUp={e => this.onSelect(link)} className={"h-30 gap-l-10 text  item-hover cursor round padding-w-10 flex" + ((i) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
-                    <span className="flex flex-inline size-24 item-hover round"><Icon size={14} icon={getPageIcon(link)}></Icon></span> <span className="f-14">{link.text || '新页面'}</span></a>
+                return <a onMouseUp={e => this.onSelect(link)} className={"h-30  text  item-hover cursor round padding-w-10 flex" + ((i) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
+                    <span className="flex flex-inline size-24 flex-center item-hover round"><Icon size={20} icon={getPageIcon(link)}></Icon></span> <span className="f-14">{getPageText(link)}</span></a>
             })}
         </div>
     }
