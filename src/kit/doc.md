@@ -15,3 +15,17 @@
    用户输入一个特定的字符，触发一个弹窗操作提示,不断的输入文字有过滤，直到最近一个，则会自动消失
    1. 输入@符 则是呼叫某些操作，如当前的某个人、上下文、全局的一些api模块
    2. 输入/符，则表示呼叫插入的block
+
+
+## 参考资料
+您可以使用 document.caretPositionFromPoint 或 document.caretRangeFromPoint 方法来获取鼠标指针下的文本位置
+
+`document.caretPositionFromPoint` 和 `document.caretRangeFromPoint` 方法的浏览器兼容性有限。
+
+`document.caretPositionFromPoint` 方法目前仅在 Firefox 浏览器中支持。其他主流浏览器，如 Chrome、Safari 和 Edge，都不支持这个方法。
+
+`document.caretRangeFromPoint` 方法在 Chrome、Safari 和 Edge 浏览器中都支持，但在 Firefox 浏览器中不支持。
+
+因此，在使用这些方法时，您需要检查浏览器是否支持它们，并根据需要使用替代方案。
+
+希望这些信息能够帮助您。
