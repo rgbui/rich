@@ -14,7 +14,11 @@ import { Switch } from "../../component/view/switch";
 import { channel } from "../../net/channel";
 import { Point } from "../../src/common/vector/point";
 import { Page } from "../../src/page";
-import { AtomPermission } from "../../src/page/permission";
+import {
+    AtomPermission,
+    getAtomPermissionComputedChanges,
+    getAtomPermissionOptions
+} from "../../src/page/permission";
 import { LinkPageItem } from "../at/declare";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
@@ -73,6 +77,12 @@ class PagePublish extends EventsComponent {
                             text: r.text,
                             name: 'addRole',
                             value: r.id,
+                            renderIcon: () => {
+                                return <span
+                                    className="size-16 circle"
+                                    style={{ background: r.color }}>
+                                </span>
+                            },
                             disabled: self.item.memberPermissions.some(s => s.roleId == r.id)
                         }
                     })
@@ -110,7 +120,7 @@ class PagePublish extends EventsComponent {
                 <span className="flex-auto remark">空间成员</span>
                 <span onMouseDown={e => addPermission(e)} className="flex-fixed flex-center size-24 item-hover round cursor"><Icon icon={PlusSvg}></Icon></span>
             </div>
-            <div className=" ">
+            <div >
                 {ps.map((mp, id) => {
                     return <div className="flex gap-h-10 padding-w-14 item-hover round" key={id}>
                         <div className="flex-fixed">
@@ -125,25 +135,17 @@ class PagePublish extends EventsComponent {
                                     border
                                     multiple
                                     computedChanges={async (vs, v) => {
-                                        if (v == AtomPermission.docInteraction) lodash.remove(vs, g => ![AtomPermission.docExport].includes(g))
-                                        else if (v == AtomPermission.docExport) lodash.remove(vs, g => ![AtomPermission.docInteraction].includes(g))
-                                        else vs = []
-                                        if (!vs.includes(v)) vs.push(v)
-                                        return vs;
+                                        return getAtomPermissionComputedChanges(this.page.pageLayout.type, vs, v);
                                     }}
-                                    options={[
-                                        { text: '可编辑', value: AtomPermission.docEdit },
-                                        { text: '可导出', value: AtomPermission.docExport },
-                                        { text: '可交互', value: AtomPermission.docInteraction },
-                                        { text: '可查看', value: AtomPermission.docView },
-                                        { text: '可权限', value: AtomPermission.docNotAllow },
-                                    ]}
+                                    options={getAtomPermissionOptions(this.page.pageLayout.type)}
                                     value={mp.permissions || []}
                                     onChange={e => { setMemberPermissions(mp, e) }}
                                 ></SelectBox>
                             </div>
-                            {mp.roleId != 'all' && <span onMouseDown={e => remove(mp)} className="flex-fixed flex-center size-24 round item-hover cursor"><Icon
-                                size={16} icon={CloseSvg}></Icon></span>}
+                            {mp.roleId != 'all' && <span
+                                onMouseDown={e => remove(mp)}
+                                className="flex-fixed flex-center size-24 round item-hover cursor"><Icon
+                                    size={16} icon={CloseSvg}></Icon></span>}
                         </div>
                     </div>
                 })}
@@ -169,18 +171,9 @@ class PagePublish extends EventsComponent {
                             border
                             multiple
                             computedChanges={async (vs, v) => {
-                                if (v == AtomPermission.docInteraction) lodash.remove(vs, g => ![AtomPermission.docExport].includes(g))
-                                else if (v == AtomPermission.docExport) lodash.remove(vs, g => ![AtomPermission.docInteraction].includes(g))
-                                else vs = []
-                                if (!vs.includes(v)) vs.push(v)
-                                return vs;
+                                return getAtomPermissionComputedChanges(this.page.pageLayout.type, vs, v);
                             }}
-                            options={[
-                                { text: '可编辑', value: AtomPermission.docEdit },
-                                { text: '可导出', value: AtomPermission.docExport },
-                                { text: '可交互', value: AtomPermission.docInteraction },
-                                { text: '可查看', value: AtomPermission.docView },
-                            ]}
+                            options={getAtomPermissionOptions(this.page.pageLayout.type)}
                             value={this.item.netPermissions || []}
                             onChange={e => { setGlobalShare({ 'netPermissions': e }) }}
                         ></SelectBox>

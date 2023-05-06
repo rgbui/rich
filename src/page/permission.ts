@@ -1,49 +1,10 @@
 import lodash from "lodash";
 import { PageLayoutType } from "./declare";
 
-
 /**
- * 
- * @returns 返回用户的基本权限
- */
-export function getCommonPerssions() {
-    return [
-        AtomPermission.docInteraction,
-        AtomPermission.docView,
-        AtomPermission.docExport,
-        AtomPermission.channelInteraction,
-        AtomPermission.channelView,
-        AtomPermission.wsNotAllow,
-        AtomPermission.dbInteraction,
-        AtomPermission.dbView,
-    ]
-}
-/**
- * 
- * @returns 返回编辑管理的权限
- */
-export function getEditPerssions() {
-    return [
-        ...getCommonPerssions(),
-        AtomPermission.docEdit,
-        AtomPermission.wsEdit,
-        AtomPermission.channelEdit,
-        AtomPermission.dbEdit,
-        AtomPermission.dbDataEdit,
-    ]
-}
-export function getAllAtomPermission() {
-    var ps: AtomPermission[] = [];
-    for (let n in AtomPermission) {
-        if (typeof AtomPermission[n] == 'number') {
-            ps.push(AtomPermission[n] as any);
-        }
-    }
-    return ps;
-}
-
-/**
- * 这是一个很细的权限列表
+ * 基本的权限点列表
+ * 里面的值不能变动，
+ * 只能增加新值，替换旧值
  */
 export enum AtomPermission {
 
@@ -95,8 +56,61 @@ export enum AtomPermission {
      * 空间不能被管理
      */
     wsNotAllow = 33,
-
 }
+
+
+/**
+ * 
+ * @returns 返回正常用户的基本权限
+ */
+export function getCommonPerssions() {
+    return [
+        AtomPermission.docInteraction,
+        AtomPermission.docView,
+        AtomPermission.docExport,
+        AtomPermission.channelInteraction,
+        AtomPermission.channelView,
+        AtomPermission.wsNotAllow,
+        AtomPermission.dbInteraction,
+        AtomPermission.dbView,
+    ]
+}
+/**
+ * 
+ * @returns 返回管理的权限
+ */
+export function getEditPerssions() {
+    return [
+        ...getCommonPerssions(),
+        AtomPermission.docEdit,
+        AtomPermission.wsEdit,
+        AtomPermission.channelEdit,
+        AtomPermission.dbEdit,
+        AtomPermission.dbDataEdit,
+    ]
+}
+
+export function getNotAccessPerssions() {
+    return [
+        AtomPermission.docNotAllow,
+        AtomPermission.channelNotAllow,
+        AtomPermission.dbNotAllow,
+    ]
+}
+/**
+ * 
+ * @returns 返回所有权限
+ */
+export function getAllAtomPermission() {
+    var ps: AtomPermission[] = [];
+    for (let n in AtomPermission) {
+        if (typeof AtomPermission[n] == 'number') {
+            ps.push(AtomPermission[n] as any);
+        }
+    }
+    return ps;
+}
+
 
 
 export function getAtomPermissionComputedChanges(pageType: PageLayoutType, vs: AtomPermission[], v: AtomPermission) {
