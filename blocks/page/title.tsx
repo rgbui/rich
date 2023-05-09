@@ -77,6 +77,7 @@ export class TitleView extends BlockView<Title>{
     }
     render() {
         var isAdd: boolean = this.block.page.isSupportCover;
+        if (!this.block.page.isCanEdit) isAdd = false;
         var pd = this.block.page.getPageDataInfo();
         if (this.block.page.onlyDisplayContent) return <div className="sy-block-page-info visible-hover" style={{
             ...this.block.visibleStyle,
