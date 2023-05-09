@@ -3,7 +3,6 @@ import { PageLayoutType } from "../../src/page/declare";
 import { AtomPermission } from "../../src/page/permission";
 import { IconArguments } from "../icon/declare"
 
-
 export type AtSelectorItem = {
     text: string,
     childs: {
@@ -43,13 +42,18 @@ export interface LinkPageItem {
      */
     memberPermissions?: { roleId?: string, userid?: string, permissions: AtomPermission[] }[];
 
-    getPagePermissions?(): AtomPermission[];
+    isAllow?(...ps: AtomPermission[]): boolean;
+    /**
+     * 是否能编辑
+     */
+    isCanEdit?:boolean;
 
     getSubItems?(): Promise<LinkPageItem[]>;
     getItem?(): Partial<LinkPageItem>;
     speak?: 'more' | 'only';
     speakDate?: Date,
     textChannelMode?: 'chat' | 'weibo' | 'ask' | 'tieba'
+
 }
 
 export function getPageIcon(item: LinkPageItem, defaultIcon?: SvgrComponent) {

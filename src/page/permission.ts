@@ -77,9 +77,9 @@ export function getCommonPerssions() {
 }
 /**
  * 
- * @returns 返回管理的权限
+ * @returns 返回编辑所具有的权限,不仅能编辑，也是可以查看的
  */
-export function getEditPerssions() {
+export function getEditOwnPerssions() {
     return [
         ...getCommonPerssions(),
         AtomPermission.docEdit,

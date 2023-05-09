@@ -12,6 +12,7 @@ import { ElementType } from "../../../net/element.type";
 import { PageLayoutType } from "../declare";
 import { PageDirective } from "../directive";
 import { isMobileOnly } from "react-device-detect";
+import { Avatar } from "../../../component/view/avator/face";
 
 export class PageBar extends React.Component<{ page: Page }>{
     renderTitle() {
@@ -24,7 +25,7 @@ export class PageBar extends React.Component<{ page: Page }>{
                 </span>
                 <span className="flex-center"><Icon size={18} icon={ChevronRightSvg}></Icon></span> */}
                 <span className="item-hover round flex cursor padding-h-3 padding-w-5 ">
-                    <Icon size={18} icon={this.props.page?.formRowData?.icon || PageSvg}></Icon>
+                    <Icon size={20} icon={this.props.page?.formRowData?.icon || PageSvg}></Icon>
                     <span className="gap-l-5">{this.props.page?.formRowData?.title}</span>
                 </span>
                 {this.saving && <Spin></Spin>}
@@ -33,7 +34,7 @@ export class PageBar extends React.Component<{ page: Page }>{
         return <div className="flex-auto flex">
             {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onClose()} className="item-hover size-24 round cursor flex-center gap-l-10"><Icon size={18} icon={DoubleRightSvg}></Icon></span>}
             <span className="item-hover round flex gap-l-10 cursor padding-h-3 padding-w-5 ">
-                <Icon size={18} icon={getPageIcon(this.props.page?.pageInfo)}></Icon>
+                <Icon size={20} icon={getPageIcon(this.props.page?.pageInfo)}></Icon>
                 <span className="gap-l-5">{getPageText(this.props.page?.pageInfo)}</span>
             </span>
             {this.saving && <Spin></Spin>}
@@ -82,7 +83,9 @@ export class PageBar extends React.Component<{ page: Page }>{
     }
     renderPropertys() {
         if (this.props.page.openSource == 'snap') return <></>
+        var isCanEdit = this.props.page.isCanEdit;
         var user = channel.query('/query/current/user');
+        var ws = channel.query('/current/workspace')
         var isSign = user.id ? true : false;
         var isField: boolean = false;
         var isMember: boolean = false;
@@ -91,9 +94,11 @@ export class PageBar extends React.Component<{ page: Page }>{
         var isContextMenu: boolean = false;
         if ([PageLayoutType.dbForm].includes(this.props.page.pageLayout?.type)) {
             isField = true;
+            if (!isCanEdit) isField = false;
         }
         if ([PageLayoutType.textChannel].includes(this.props.page.pageLayout?.type)) {
             isMember = true;
+            if (!isCanEdit) isMember = false;
         }
         if (![
             PageLayoutType.textChannel,
@@ -101,12 +106,15 @@ export class PageBar extends React.Component<{ page: Page }>{
             PageLayoutType.db,
             PageLayoutType.board].includes(this.props.page.pageLayout?.type)) {
             isSearch = true;
+            if (!isCanEdit) isSearch = false;
         }
         if (![PageLayoutType.textChannel].includes(this.props.page.pageLayout?.type)) {
             isPublish = true;
+            if (!isCanEdit) isPublish = false;
         }
         if (![PageLayoutType.textChannel].includes(this.props.page.pageLayout?.type)) {
             isContextMenu = true;
+            if (!isCanEdit) isContextMenu = false;
         }
         if (isSign) return <div className="flex r-flex-center r-size-24 r-item-hover r-round r-cursor r-gap-r-10 text-1">
             {isField && <span onMouseDown={e => this.props.page.onOpenFieldProperty(e)} ><Icon size={18} icon={FieldsSvg}></Icon></span>}
@@ -114,6 +122,7 @@ export class PageBar extends React.Component<{ page: Page }>{
             {isSearch && <span onMouseDown={async e => { await useSearchBox({ isNav: true }) }}><Icon size={18} icon={SearchSvg}></Icon></span>}
             {isPublish && <span onMouseDown={e => this.props.page.onOpenPublish(e)} ><Icon size={18} icon={PublishSvg}></Icon></span>}
             {isContextMenu && <span onMouseDown={e => this.props.page.onPageContextmenu(e)} ><Icon size={18} icon={DotsSvg}></Icon></span>}
+            {!isCanEdit && ws.access == 0 && !ws.isMember && <span className="size-30 gap-r-30"><Avatar size={32} userid={user.id}></Avatar></span>}
         </div>
         else return <div className="flex r-flex-center  r-gap-r-10 ">
             <Button size="small" onClick={e => this.toLogin()}>登录</Button>

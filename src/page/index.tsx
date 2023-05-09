@@ -28,13 +28,14 @@ import { TableSchema } from '../../blocks/data-grid/schema/meta';
 import { LinkPageItem } from '../../extensions/at/declare';
 import { Title } from '../../blocks/page/title';
 import { AppearAnchor } from '../block/appear';
-import { AtomPermission } from './permission';
+
 import { ElementType, parseElementUrl } from '../../net/element.type';
 import { BlockUrlConstant } from '../block/constant';
 import lodash from 'lodash';
 import { ActionDirective } from '../history/declare';
 import { PageLayout } from '../../extensions/layout';
 import { isMobileOnly } from "react-device-detect";
+
 export class Page extends Events<PageDirective> {
     root: HTMLElement;
     viewEl: HTMLElement;
@@ -60,7 +61,6 @@ export class Page extends Events<PageDirective> {
     get user() {
         return channel.query('/query/current/user');
     }
-    permissons: AtomPermission[] = [];
     kit: Kit = new Kit(this);
     snapshoot = new HistorySnapshoot(this)
     pageLayout: { layout?: PageLayout, type: PageLayoutType };
@@ -210,8 +210,9 @@ export class Page extends Events<PageDirective> {
     get isCanEdit() {
         if (this.readonly) return false;
         if (this.pageLayout?.type == PageLayoutType.dbPickRecord) return false;
-        if (this.kit.page.pageInfo?.locker?.userid) return false;
-        //if (!this.kit.page.permissons.includes(AtomPermission.editDoc)) return false;
+        if (this.pageInfo) {
+            return this.pageInfo.isCanEdit
+        }
         return true;
     }
     /**

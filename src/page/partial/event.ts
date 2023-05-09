@@ -407,6 +407,7 @@ export class PageEvent {
         }
     }
     async onChangeIcon(this: Page, event: React.MouseEvent) {
+        if(this.isCanEdit == false) return;
         event.stopPropagation();
         var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) }, this.pageInfo.icon);
         if (typeof icon != 'undefined') {

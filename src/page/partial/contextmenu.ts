@@ -93,13 +93,13 @@ export class PageContextmenu {
             items = [
                 { name: 'smallText', text: '小字号', checked: this.smallFont ? true : false, type: MenuItemType.switch },
                 { name: 'fullWidth', text: '宽版', checked: this.isFullWidth ? true : false, type: MenuItemType.switch },
-                { name: 'onlyDisplayContent', text: '仅显示内容', type: MenuItemType.switch, checked: this.onlyDisplayContent },
                 { type: MenuItemType.divide },
                 { name: 'nav', text: '目录', icon: OutlineSvg, type: MenuItemType.switch, checked: this.nav },
                 {
                     text: '自定义页面',
                     icon: FieldsSvg,
                     childs: [
+                        { name: 'onlyDisplayContent', text: '仅显示内容', type: MenuItemType.switch, checked: this.onlyDisplayContent },
                         { name: 'refPages', text: "显示引用", icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
                         { name: 'showComment', text: "显示评论", icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                     ]
@@ -124,12 +124,12 @@ export class PageContextmenu {
             items = [
                 { name: 'smallText', text: '小字号', checked: this.smallFont ? true : false, type: MenuItemType.switch },
                 { name: 'fullWidth', text: '宽版', checked: this.isFullWidth ? true : false, type: MenuItemType.switch },
-                { name: 'onlyDisplayContent', text: '仅显示内容', type: MenuItemType.switch, checked: this.onlyDisplayContent },
                 { type: MenuItemType.divide },
                 {
                     text: '自定义页面',
                     icon: ComponentsSvg,
                     childs: [
+                        { name: 'onlyDisplayContent', text: '仅显示内容', type: MenuItemType.switch, checked: this.onlyDisplayContent },
                         { name: 'showComment', text: "显示评论", icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                     ]
                 },
