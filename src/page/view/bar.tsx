@@ -75,7 +75,7 @@ export class PageBar extends React.Component<{ page: Page }>{
         if (this.props.page.openSource == 'snap') return <></>
         if ([PageLayoutType.textChannel].includes(this.props.page.pageLayout?.type)) return <></>
         return <div className="gap-r-10">
-            <UserAvatars users={this.users}></UserAvatars>
+            <UserAvatars size={30} users={this.users}></UserAvatars>
         </div>
     }
     toLogin() {
