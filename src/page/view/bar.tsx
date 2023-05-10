@@ -44,11 +44,17 @@ export class PageBar extends React.Component<{ page: Page }>{
         this.props.page.on(PageDirective.willSave, this.willSave);
         this.props.page.on(PageDirective.saved, this.saved);
         channel.sync('/user/view/onlines', this.syncUsers);
-        var r = channel.query('/user/get/view/onlines', { viewId: this.props.page?.pageInfo?.id })
+        this.load()
+    }
+    async load() {
+        var r = await channel.query('/get/view/onlines', {
+            viewUrl: this.props.page.customElementUrl
+        })
         if (r?.users && r.users.size > 0) {
             this.users = r.users;
             this.forceUpdate();
-        }
+        } else this.users = new Set()
+
     }
     componentWillUnmount(): void {
         this.props.page.off(PageDirective.willSave, this.willSave)
@@ -65,9 +71,9 @@ export class PageBar extends React.Component<{ page: Page }>{
         this.forceUpdate();
     }
     users = new Set<string>();
-    syncUsers = (e: { viewId: string, users: Set<string> }) => {
-        if (e.viewId == this.props.page?.pageInfo?.id) {
-            this.users = e.users;
+    syncUsers = (e: { viewUrl: string, users: Set<string>, editUsers: Set<string> }) => {
+        if (e.viewUrl == this.props.page.customElementUrl) {
+            this.users = this.props.page.isCanEdit ? e.editUsers : e.users;
             this.forceUpdate();
         }
     }
