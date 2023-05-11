@@ -2,10 +2,9 @@ import lodash from "lodash";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Singleton } from "../../component/lib/Singleton";
-import { PageSvg, PlusSvg } from "../../component/svgs";
+import { PlusSvg } from "../../component/svgs";
 import { Divider } from "../../component/view/grid";
 import { Icon } from "../../component/view/icon";
-import { Loading } from "../../component/view/loading";
 import { Remark } from "../../component/view/text";
 import { channel } from "../../net/channel";
 import { BlockUrlConstant } from "../../src/block/constant";
@@ -15,6 +14,7 @@ import { InputTextPopSelector } from "../common/input.pop";
 import { PopoverPosition } from "../popover/position";
 import "./style.less";
 import { LinkPageItem, getPageIcon } from "../../src/page/declare";
+import { Spin } from "../../component/view/spin";
 
 /**
  * 用户输入[[触发
@@ -68,7 +68,7 @@ class PageLinkSelector extends InputTextPopSelector {
         }
         else this.links = [];
         if (this.selectIndex > this.links.length) {
-            this.selectIndex = 0;
+            this.selectIndex = 1;
         }
         this.loading = false;
         this.adjuctPosition();
@@ -79,13 +79,18 @@ class PageLinkSelector extends InputTextPopSelector {
     private renderLinks() {
         return <div>
             <a className={"h-30 gap-l-10 text item-hover cursor round padding-w-10 flex" + (0 == this.selectIndex ? " item-hover-focus" : "")} onMouseDown={e => this.onSelect({ name: 'create' })}>
-                <span className="flex flex-inline size-24 item-hover round">   <Icon size={14} icon={PlusSvg}></Icon></span><span className="f-14">创建<b>{this.text || '新页面'}</b></span>
+                <span className="flex flex-inline size-24 item-hover round">
+                    <Icon size={18} icon={PlusSvg}></Icon>
+                </span>
+                <span className="f-14">创建<b className="bold">{this.text || '新页面'}</b>
+                </span>
             </a>
             <Divider></Divider>
-            {this.loading && <Loading></Loading>}
+            {this.loading && <div className="flex-center gap-h-30"><Spin></Spin></div>}
             {!this.loading && this.links.map((link, i) => {
                 return <a onMouseDown={e => this.onSelect(link)} className={"h-30 gap-l-10 text  item-hover cursor round padding-w-10 flex" + ((i + 1) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
-                    <span className="flex flex-inline size-24 item-hover round"> <Icon size={14} icon={getPageIcon(link)}></Icon></span> <span className="f-14">{link.text || '新页面'}</span></a>
+                    <span className="flex flex-inline size-24 item-hover round"> <Icon size={18} icon={getPageIcon(link)}></Icon></span>
+                    <span className="f-14">{link.text || '新页面'}</span></a>
             })}
             {!this.loading && this.links.length == 0 && this.searchWord && <a className="remark flex-center gap-h-10 f-14"><Remark>没有搜索到</Remark></a>}
         </div>
@@ -110,7 +115,7 @@ class PageLinkSelector extends InputTextPopSelector {
     }
     private visible: boolean = false;
     private pos: Point = new Point(0, 0)
-    private selectIndex: number = 0;
+    private selectIndex: number = 1;
     private _select: (block: Record<string, any>) => void;
     private text: string;
     private get selectBlockData() {
@@ -126,7 +131,7 @@ class PageLinkSelector extends InputTextPopSelector {
         this.text = '';
         this.searchWord = '';
         this.loading = false;
-        this.selectIndex = 0;
+        this.selectIndex = 1;
         if (this.visible == true) {
             this.visible = false;
             this.forceUpdate();
@@ -136,8 +141,12 @@ class PageLinkSelector extends InputTextPopSelector {
      * 向上选择内容
      */
     private keydown() {
-        if (!this.isSelectIndex) this.selectIndex = -1;
-        if (this.selectIndex < this.links.length - 1) {
+        if (!this.isSelectIndex) {
+            this.selectIndex = 0;
+            this.forceUpdate();
+            return;
+        }
+        if (this.selectIndex < this.links.length + 1) {
             this.selectIndex += 1;
             this.forceUpdate();
         }
@@ -146,7 +155,11 @@ class PageLinkSelector extends InputTextPopSelector {
      * 向下选择内容
      */
     private keyup() {
-        if (!this.isSelectIndex) this.selectIndex = this.links.length - 1;
+        if (!this.isSelectIndex) {
+            this.selectIndex = this.links.length;
+            this.forceUpdate();
+            return;
+        }
         if (this.selectIndex > 0) {
             this.selectIndex -= 1;
             this.forceUpdate();
