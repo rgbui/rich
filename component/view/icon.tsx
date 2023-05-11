@@ -36,7 +36,7 @@ export function Icon(props: {
         var fs = props.fontSize || props.size;
         if (fs == 'none') fs = undefined;
         Object.assign(style, {
-            fontSize: fs ? (typeof fs == 'number' ? fs * 0.8 : fs) : undefined,
+            fontSize: fs ? (typeof fs == 'number' ? fs : fs) : undefined,
             lineHeight: fs ? (fs + 'px') : undefined,
             width: props.size == 'none' ? undefined : (props.size) || 20,
             height: props.size == 'none' ? undefined : (props.size) || 20,
@@ -74,11 +74,11 @@ export function Icon(props: {
             case 'font-awesome':
                 Object.assign(style, {
                     color: pc.color || '#000',
-                    fontSize: props.size == 'none' ? undefined : props.size * 0.8,
+                    fontSize: props.size == 'none' ? undefined : props.size,
                     lineHeight: props.size == 'none' ? undefined : props.size + 'px',
                     width: props.size == 'none' ? undefined : (props.size) || 20,
-                    height: props.size == 'none' ? undefined : (props.size) || 20
-                    , ...(props.style || {})
+                    height: props.size == 'none' ? undefined : (props.size) || 20,
+                    ...(props.style || {})
                 });
                 return <span className={classList.join(" ")} style={style} onClick={e => { props.onClick ? props.onClick(e) : undefined; }}
                     onMouseDown={e => { props.onMousedown ? props.onMousedown(e) : undefined }}>
@@ -89,7 +89,7 @@ export function Icon(props: {
                 Object.assign(style, {
                     color: '#000',
                     fill: '#000',
-                    fontSize: props.size == 'none' ? undefined : props.size * 0.8,
+                    fontSize: props.size == 'none' ? undefined : props.size,
                     lineHeight: props.size == 'none' ? undefined : props.size + 'px',
                     width: props.size == 'none' ? undefined : (props.size) || 20,
                     height: props.size == 'none' ? undefined : (props.size) || 20
