@@ -207,13 +207,11 @@ export class Page extends Events<PageDirective> {
     set pageInfo(pageInfo: LinkPageItem) {
         this._pageItem = pageInfo;
     }
+    canEdit: boolean = false;
     get isCanEdit() {
         if (this.readonly) return false;
         if (this.pageLayout?.type == PageLayoutType.dbPickRecord) return false;
-        if (this.pageInfo) {
-            return this.pageInfo.isCanEdit
-        }
-        return true;
+        return this.canEdit;
     }
     /**
      * 是否支持宽屏及窄屏的切换
@@ -326,6 +324,9 @@ export interface Page {
 
     on(name: PageDirective.spreadSln, fn: () => void);
     emit(name: PageDirective.spreadSln);
+
+    on(name: PageDirective.reload, fn: () => void);
+    emit(name: PageDirective.reload);
 }
 export interface Page extends PageEvent { }
 export interface Page extends Page$Seek { }

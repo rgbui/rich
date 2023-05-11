@@ -1,6 +1,6 @@
 import React from "react";
 import { Page } from "..";
-import { ChevronLeftSvg, ChevronRightSvg, CollectTableSvg, DotsSvg, DoubleRightSvg, FieldsSvg, MemberSvg, MenuSvg, PageSvg, PublishSvg, SearchSvg } from "../../../component/svgs";
+import { ChevronLeftSvg, ChevronRightSvg, CollectTableSvg, DotsSvg, DoubleRightSvg, EditSvg, FieldsSvg, MemberSvg, MenuSvg, PageSvg, PublishSvg, SearchSvg } from "../../../component/svgs";
 import { UserAvatars } from "../../../component/view/avator/users";
 import { Button } from "../../../component/view/button";
 import { Icon } from "../../../component/view/icon";
@@ -13,6 +13,7 @@ import { PageLayoutType } from "../declare";
 import { PageDirective } from "../directive";
 import { isMobileOnly } from "react-device-detect";
 import { Avatar } from "../../../component/view/avator/face";
+import { ToolTip } from "../../../component/view/tooltip";
 
 export class PageBar extends React.Component<{ page: Page }>{
     renderTitle() {
@@ -37,6 +38,13 @@ export class PageBar extends React.Component<{ page: Page }>{
                 <Icon size={20} icon={getPageIcon(this.props.page?.pageInfo)}></Icon>
                 <span className="gap-l-5">{getPageText(this.props.page?.pageInfo)}</span>
             </span>
+            {this.props.page.pageInfo.isCanEdit && <>
+                {/* {this.props.page.canEdit && <span className="visible flex r-gap-l-10">
+                    <Button size="small" onClick={e => this.props.page.onSaveAndPublish()}>保存并更新</Button>
+                    <Button ghost size="small" onClick={e => this.props.page.onChangeEditMode()}>退出编辑</Button>
+                </span>} */}
+                {!this.props.page.canEdit && <ToolTip placement="bottom" overlay={'进入编辑'}><span className="flex flex-fixed visible r-gap-l-5 text-1 cursor " onClick={e => this.props.page.onChangeEditMode()}><Icon size={18} icon={EditSvg}></Icon></span></ToolTip>}
+            </>}
             {this.saving && <Spin></Spin>}
         </div>
     }
@@ -90,7 +98,7 @@ export class PageBar extends React.Component<{ page: Page }>{
     }
     renderPropertys() {
         if (this.props.page.openSource == 'snap') return <></>
-        var isCanEdit = this.props.page.isCanEdit;
+        var isCanEdit = this.props.page.pageInfo.isCanEdit;
         var user = channel.query('/query/current/user');
         var ws = channel.query('/current/workspace')
         var isSign = user?.id ? true : false;
@@ -123,7 +131,7 @@ export class PageBar extends React.Component<{ page: Page }>{
             isContextMenu = true;
             if (!isCanEdit) isContextMenu = false;
         }
-        if (isSign) return <div className="flex r-flex-center r-size-24 r-item-hover r-round r-cursor r-gap-r-10 text-1">
+        if (isSign) return <div className="flex r-flex-center r-size-24 r-item-hover r-round r-cursor r-gap-r-10 text-1 gap-r-10">
             {isField && <span onMouseDown={e => this.props.page.onOpenFieldProperty(e)} ><Icon size={18} icon={FieldsSvg}></Icon></span>}
             {isMember && <span onMouseDown={e => this.props.page.openMember(e)} ><Icon size={18} icon={MemberSvg}></Icon></span>}
             {isSearch && <span onMouseDown={async e => { await useSearchBox({ isNav: true }) }}><Icon size={18} icon={SearchSvg}></Icon></span>}
@@ -139,7 +147,7 @@ export class PageBar extends React.Component<{ page: Page }>{
         this.props.page.emit(PageDirective.spreadSln)
     }
     render(): React.ReactNode {
-        return <div className="shy-page-bar flex padding-l-10">
+        return <div className="shy-page-bar flex padding-l-10 visible-hover">
             {isMobileOnly && <span onClick={e => this.onSpreadMenu()} className="flex-fixed size-24 flex-center item-hover round cursor ">
                 <Icon icon={ChevronLeftSvg} size={18}></Icon>
             </span>}

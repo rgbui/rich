@@ -7,14 +7,18 @@ import { BlockDirective } from "../../block/enum";
 import { Point, Rect } from "../../common/vector/point";
 import { PageLayoutType } from "../declare";
 import {
+    BookSvg,
     CommentSvg,
     CommunicationSvg,
     ComponentsSvg,
     CustomizePageSvg,
+    EditSvg,
     FieldsSvg,
     FourLeavesSvg,
     LinkSvg,
     LockSvg,
+    LogoutSvg,
+    NoteSvg,
     OutlineSvg, TrashSvg, UndoSvg, UnlockSvg, UploadSvg, VersionHistorySvg
 } from "../../../component/svgs";
 import { usePageLayout } from "../../../extensions/layout";
@@ -99,17 +103,20 @@ export class PageContextmenu {
                     text: '自定义页面',
                     icon: FieldsSvg,
                     childs: [
-                        { name: 'onlyDisplayContent', text: '仅显示内容', type: MenuItemType.switch, checked: this.onlyDisplayContent },
+                        { name: 'onlyDisplayContent', text: '仅显示内容', type: MenuItemType.switch, checked: this.onlyDisplayContent, icon: NoteSvg },
                         { name: 'refPages', text: "显示引用", icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
                         { name: 'showComment', text: "显示评论", icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                     ]
                 },
-                { name: 'lock', text: this.pageInfo?.locker?.userid ? "解除锁定" : '编辑保护', icon: this.pageInfo?.locker?.userid ? UnlockSvg : LockSvg },
                 // { type: MenuItemTypeValue.divide },
                 // { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
                 { name: 'history', icon: VersionHistorySvg, text: '页面历史' },
                 { name: 'copylink', icon: LinkSvg, text: '复制链接' },
                 { type: MenuItemType.divide },
+                { name: 'lock', text: this.isCanEdit ? "退出编辑" : '进入编辑', icon: this.isCanEdit ? LogoutSvg : EditSvg },
+                // ...(this.isCanEdit && this.canEdit ? [
+                //     { name: 'editSave', text: '保存更新', icon: EditSvg },
+                // ] : []),
                 { name: 'undo', text: '撤消', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
                 // { name: 'redo', text: '重做', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
                 { name: 'delete', icon: TrashSvg, text: '删除' },
@@ -129,11 +136,11 @@ export class PageContextmenu {
                     text: '自定义页面',
                     icon: ComponentsSvg,
                     childs: [
-                        { name: 'onlyDisplayContent', text: '仅显示内容', type: MenuItemType.switch, checked: this.onlyDisplayContent },
+                        { name: 'onlyDisplayContent', text: '仅显示内容', type: MenuItemType.switch, checked: this.onlyDisplayContent, icon: NoteSvg },
                         { name: 'showComment', text: "显示评论", icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                     ]
                 },
-                { name: 'lock', text: this.pageInfo?.locker?.userid ? "解除锁定" : '编辑保护', icon: this.pageInfo?.locker?.userid ? UnlockSvg : LockSvg },
+                { name: 'lock', text: this.isCanEdit ? "退出编辑" : '进入编辑', icon: this.isCanEdit ? LogoutSvg : EditSvg },
                 // { type: MenuItemTypeValue.divide },
                 // { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
                 // { name: 'history', icon: VersionHistorySvg, text: '页面历史' },
@@ -268,12 +275,7 @@ export class PageContextmenu {
                 ShyAlert('复制链接');
             }
             else if (r.item.name == 'lock') {
-                this.onUpdatePageData({
-                    locker: this.pageInfo.locker?.userid ? null : {
-                        userid: this.user.id,
-                        lockDate: Date.now()
-                    }
-                })
+                this.onChangeEditMode();
             }
             else if (r.item.name == 'delete') {
                 if (await Confirm('确认要删除吗?')) {

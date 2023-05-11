@@ -30,5 +30,6 @@ export enum PageDirective {
     mounted,
     close,
     changePageLayout,
-    spreadSln
+    spreadSln,
+    reload
 }

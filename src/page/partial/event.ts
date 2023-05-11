@@ -133,6 +133,10 @@ export class PageEvent {
                 old: PageLayoutType.doc,
                 new: layoutType
             }, this);
+            // this.snapshoot.record(OperatorDirective.pageUpdateProp,{
+            //      old:{requireSelectLayout:false},
+            //      new:{requireSelectLayout:true}
+            // })
             switch (layoutType) {
                 case PageLayoutType.doc:
                     this.pageLayout.type = layoutType;
@@ -407,12 +411,22 @@ export class PageEvent {
         }
     }
     async onChangeIcon(this: Page, event: React.MouseEvent) {
-        if(this.isCanEdit == false) return;
+        if (this.isCanEdit == false) return;
         event.stopPropagation();
         var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) }, this.pageInfo.icon);
         if (typeof icon != 'undefined') {
             this.onUpdatePageData({ icon })
         }
+    }
+    async onChangeEditMode(this: Page) {
+        await channel.act('/cache/set', {
+            key: `/${this.pageInfo.id}/mode`,
+            value: this.isCanEdit ? false : true
+        });
+        this.emit(PageDirective.reload);
+    }
+    async onSaveAndPublish(this: Page) {
+
     }
 }
 
