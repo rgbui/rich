@@ -149,6 +149,7 @@ import MinusSvg from "../src/assert/svg/minus.svg";
 import MoreFourSvg from "../src/assert/svg/moreFour.svg";
 import MoveToSvg from "../src/assert/svg/moveTo.svg";
 import NoneSvg from "../src/assert/svg/none.svg";
+import NoteSvg from "../src/assert/svg/note.svg";
 import NsArowSvg from "../src/assert/svg/nsArow.svg";
 import NumberListSvg from "../src/assert/svg/number.list.svg";
 import OpenAsPageThickSvg from "../src/assert/svg/openAsPageThick.svg";
@@ -382,6 +383,7 @@ MinusSvg,
 MoreFourSvg,
 MoveToSvg,
 NoneSvg,
+NoteSvg,
 NsArowSvg,
 NumberListSvg,
 OpenAsPageThickSvg,
