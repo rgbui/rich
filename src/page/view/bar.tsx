@@ -77,10 +77,12 @@ export class PageBar extends React.Component<{ page: Page }>{
         }
     }
     renderUsers() {
+
         if (this.props.page.openSource == 'snap') return <></>
         if ([PageLayoutType.textChannel].includes(this.props.page.pageLayout?.type)) return <></>
+        var user = channel.query('/query/current/user');
         return <div className="gap-r-10">
-            {this.users.size > 1 && <UserAvatars size={30} users={this.users}></UserAvatars>}
+            {this.users.size > 1 || this.users.size == 1 && user?.id && !this.users.has(user?.id) && <UserAvatars size={30} users={this.users}></UserAvatars>}
         </div>
     }
     toLogin() {
@@ -91,7 +93,7 @@ export class PageBar extends React.Component<{ page: Page }>{
         var isCanEdit = this.props.page.isCanEdit;
         var user = channel.query('/query/current/user');
         var ws = channel.query('/current/workspace')
-        var isSign = user.id ? true : false;
+        var isSign = user?.id ? true : false;
         var isField: boolean = false;
         var isMember: boolean = false;
         var isSearch: boolean = false;
