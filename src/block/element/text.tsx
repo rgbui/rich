@@ -178,11 +178,12 @@ export class TextContentView extends BlockView<TextContent>{
                     </BoxTip>
             }
             else if (this.block.link.pageId) {
+                var url = (channel.query('/current/workspace')?.url || "") + "/page/" + this.block.link.pageId;
                 ta = <BoxTip ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center">
-                    <ToolTip overlay={'/page/' + this.block.link.pageId}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.openPage(e)} ><Icon size={16} icon={LinkSvg}></Icon></a></ToolTip>
+                    <ToolTip overlay={url}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.openPage(e)} ><Icon size={16} icon={LinkSvg}></Icon></a></ToolTip>
                     <ToolTip overlay={'编辑'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.openLink(e)}><Icon size={16} icon={EditSvg}></Icon></a></ToolTip>
                     <ToolTip overlay={'取消'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.onClearLink()}><Icon size={16} icon={TrashSvg}></Icon></a></ToolTip>
-                </div>}><a className="sy-block-text-content-link" onClick={e => this.openPage(e)} href={'/page/' + this.block.link.pageId}>{ta}</a></BoxTip>
+                </div>}><a className="sy-block-text-content-link" onClick={e => this.openPage(e)} href={url}>{ta}</a></BoxTip>
             }
             else if (this.block.link.url) {
                 ta = <BoxTip ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center">

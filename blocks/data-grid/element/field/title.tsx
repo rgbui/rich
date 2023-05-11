@@ -4,8 +4,7 @@ import { TextArea } from "../../../../src/block/view/appear";
 import { BlockView } from "../../../../src/block/view";
 import { OriginField } from "./origin.field";
 import { Icon } from "../../../../component/view/icon";
-import { getPageIcon } from "../../../../extensions/at/declare";
-import { PageLayoutType } from "../../../../src/page/declare";
+import { PageLayoutType, getPageIcon } from "../../../../src/page/declare";
 import { BlockUrlConstant } from "../../../../src/block/constant";
 @url('/field/title')
 export class FieldText extends OriginField {

@@ -4,11 +4,10 @@ import { Page } from "../index";
 import { ChildsArea } from "../../block/view/appear";
 import ReactDOM from "react-dom";
 import { KitView } from "../../kit/view";
-import { PageLayoutType } from "../declare";
+import { LinkPageItem, PageLayoutType } from "../declare";
 import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
 import { PageLayoutView } from "./layout";
 import { channel } from "../../../net/channel";
-import { LinkPageItem } from "../../../extensions/at/declare";
 import { PageCover } from "./cover";
 import { Icon } from "../../../component/view/icon";
 import {
@@ -120,7 +119,7 @@ export class PageView extends Component<{ page: Page }>{
         }
     }
     observeScroll() {
-        var predict = x => { return dom(x as HTMLElement).style('overflowY') == 'auto'||dom(x as HTMLElement).style('overflowY') =='overlay' }
+        var predict = x => { return dom(x as HTMLElement).style('overflowY') == 'auto' || dom(x as HTMLElement).style('overflowY') == 'overlay' }
         this.scrollDiv = dom(this.el).closest(predict) as any;
         if (this.scrollDiv) this.scrollDiv.addEventListener('scroll', this.scroll);
     }

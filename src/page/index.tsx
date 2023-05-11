@@ -17,7 +17,7 @@ import { PageDirective } from './directive';
 import { Mix } from '../../util/mix';
 import { Page$Cycle } from './partial/life.cycle';
 import { Page$Operator } from './partial/operator';
-import { PageLayoutType, PageVersion } from './declare';
+import { LinkPageItem, PageLayoutType, PageVersion } from './declare';
 import { Point, Rect } from '../common/vector/point';
 import { GridMap } from './grid';
 import { Matrix } from '../common/matrix';
@@ -25,7 +25,6 @@ import { PageContextmenu } from './partial/contextmenu';
 import { Kit } from '../kit';
 import { channel } from '../../net/channel';
 import { TableSchema } from '../../blocks/data-grid/schema/meta';
-import { LinkPageItem } from '../../extensions/at/declare';
 import { Title } from '../../blocks/page/title';
 import { AppearAnchor } from '../block/appear';
 
@@ -281,7 +280,7 @@ export interface Page {
     emit(name: PageDirective.blurAnchor, anchor: AppearAnchor): void;
     on(name: PageDirective.history, fn: (ev: UserAction) => void);
     emit(name: PageDirective.history, ev: UserAction): void;
-    
+
     on(name: PageDirective.syncHistory, fn: (seq: number) => void);
     emit(name: PageDirective.syncHistory, seq: number);
 

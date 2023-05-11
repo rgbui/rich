@@ -169,7 +169,7 @@ export class PageWrite {
                 MoveCursor(this, aa, event);
                 return;
             case KeyboardCode.Enter.toLowerCase():
-                if(this.kit.page.requireSelectLayout == true) {
+                if (this.kit.page.requireSelectLayout == true) {
                     event.preventDefault();
                     await this.kit.page.onPageTurnLayout(PageLayoutType.doc, async () => {
                         var lastBlock = this.kit.page.findReverse(g => g.isBlock);
@@ -307,7 +307,6 @@ export class PageWrite {
                 else if (blocks.length == 1) {
                     turnBlock = blocks[0].closest(x => !x.isLine);
                 }
-
                 var result = await useTextTool(
                     { roundAreas: rs, relativeEleAutoScroll: this.kit.anchorCursor.endAnchor.el },
                     { style: this.kit.page.pickBlocksTextStyle(blocks), turnBlock }

@@ -1,14 +1,13 @@
 import { channel } from "../../../net/channel";
 import { Block } from "../../../src/block";
 import { url } from "../../../src/block/factory/observable";
-import { PageLayoutType } from "../../../src/page/declare";
+import { LinkPageItem, PageLayoutType } from "../../../src/page/declare";
 import { ChannelTextType } from "./declare";
 import "./style.less";
 import { KeyboardCode } from "../../../src/common/keys";
 import { ChannelTextView } from "./view/view";
 import lodash from "lodash";
 import { ElementType, getElementUrl } from "../../../net/element.type";
-import { LinkPageItem } from "../../../extensions/at/declare";
 import { Rect } from "../../../src/common/vector/point";
 import { util } from "../../../util/util";
 

@@ -4,10 +4,10 @@ import { EventsComponent } from "../../component/lib/events.component";
 import { Icon } from "../../component/view/icon";
 import { Input } from "../../component/view/input";
 import { channel } from "../../net/channel";
-import { getPageIcon, getPageText, LinkPageItem } from "../at/declare";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
 import { Spin } from "../../component/view/spin";
+import { LinkPageItem, getPageIcon, getPageText } from "../../src/page/declare";
 
 /**
  * 

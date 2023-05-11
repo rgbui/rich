@@ -7,10 +7,10 @@ import { Icon } from "../../component/view/icon";
 import { Input } from "../../component/view/input";
 import { Loading } from "../../component/view/loading";
 import { channel } from "../../net/channel";
-import { LinkPageItem } from "../at/declare";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
 import "./style.less";
+import { LinkPageItem } from "../../src/page/declare";
 
 export class SearchBox extends EventsComponent {
     render() {

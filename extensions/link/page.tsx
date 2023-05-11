@@ -11,10 +11,10 @@ import { channel } from "../../net/channel";
 import { BlockUrlConstant } from "../../src/block/constant";
 import { KeyboardCode } from "../../src/common/keys";
 import { Point, Rect, RectUtility } from "../../src/common/vector/point";
-import { getPageIcon, LinkPageItem } from "../at/declare";
 import { InputTextPopSelector } from "../common/input.pop";
 import { PopoverPosition } from "../popover/position";
 import "./style.less";
+import { LinkPageItem, getPageIcon } from "../../src/page/declare";
 
 /**
  * 用户输入[[触发

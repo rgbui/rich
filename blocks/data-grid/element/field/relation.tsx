@@ -1,13 +1,12 @@
 import lodash from "lodash";
 import React from "react";
 import { Icon } from "../../../../component/view/icon";
-import { getPageIcon } from "../../../../extensions/at/declare";
 import { useRelationPickData } from "../../../../extensions/data-grid/relation.picker";
 import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { Rect } from "../../../../src/common/vector/point";
-import { PageLayoutType } from "../../../../src/page/declare";
+import { PageLayoutType, getPageIcon } from "../../../../src/page/declare";
 import { FieldType } from "../../schema/type";
 import { OriginField } from "./origin.field";
 

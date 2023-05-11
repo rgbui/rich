@@ -5,11 +5,11 @@ import { url, view } from "../../src/block/factory/observable";
 import { TextArea } from "../../src/block/view/appear";
 import { BlockView } from "../../src/block/view";
 import { channel } from "../../net/channel";
-import { LinkPageItem } from "../../extensions/at/declare";
 import { Icon } from "../../component/view/icon";
 import { AddPageCoverSvg, AddPageIconSvg } from "../../component/svgs";
 import lodash from "lodash";
 import { Spin } from "../../component/view/spin";
+import { LinkPageItem } from "../../src/page/declare";
 
 @url('/title')
 export class Title extends Block {

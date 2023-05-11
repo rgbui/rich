@@ -3,7 +3,6 @@ import { CopyText } from "../../../component/copy";
 import { ShyAlert } from "../../../component/lib/alert";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItem } from "../../../component/view/menu/declare";
-import { LinkPageItem } from "../../../extensions/at/declare";
 import { channel } from "../../../net/channel";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
@@ -14,7 +13,7 @@ import { Point } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { DropDirection } from "../../kit/handle/direction";
 import { storeCopyBlocks } from "../common/copy";
-import { PageLayoutType } from "../declare";
+import { LinkPageItem,  PageLayoutType } from "../declare";
 import { PageDirective } from "../directive";
 
 export class Page$Operator {

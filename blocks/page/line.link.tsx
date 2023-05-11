@@ -4,7 +4,6 @@
 import React from "react";
 import { PageSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
-import { LinkPageItem } from "../../extensions/at/declare";
 import { IconArguments } from "../../extensions/icon/declare";
 import { channel } from "../../net/channel";
 import { ElementType, getElementUrl } from "../../net/element.type";
@@ -14,6 +13,7 @@ import { url, prop, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
 import { SolidArea } from "../../src/block/view/appear";
 import "./style.less";
+import { LinkPageItem } from "../../src/page/declare";
 
 /*******
  * 

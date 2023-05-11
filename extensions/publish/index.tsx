@@ -19,9 +19,9 @@ import {
     getAtomPermissionComputedChanges,
     getAtomPermissionOptions
 } from "../../src/page/permission";
-import { LinkPageItem } from "../at/declare";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
+import { LinkPageItem } from "../../src/page/declare";
 
 class PagePublish extends EventsComponent {
     constructor(props) {

@@ -9,13 +9,12 @@ import { PopoverPosition } from "../popover/position";
 import { PageLink } from "./declare";
 import { GlobalLinkSvg, PageSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
-import { LinkPageItem } from "../at/declare";
 import lodash from "lodash";
 import { channel } from "../../net/channel";
 import "./style.less";
-import { Loading } from "../../component/view/loading";
-import { Remark } from "../../component/view/text";
 import { Divider } from "../../component/view/grid";
+import { LinkPageItem } from "../../src/page/declare";
+import { Spin } from "../../component/view/spin";
 
 /**
  * 
@@ -93,7 +92,7 @@ class LinkPicker extends EventsComponent {
                 <span>创建<em>{this.url}</em></span>
             </div><Divider></Divider></>}
             {this.name == 'page' && <div className='shy-link-picker-search-pages'>
-                {this.loading && <Loading></Loading>}
+                {this.loading && <Spin></Spin>}
                 {!this.loading && this.links.map((link, i) => {
                     return <a onClick={e => this.onSelect(link)} className={"shy-page-link-item"} key={link.id}><Icon icon={link.icon || PageSvg}></Icon><span>{link.text || '新页面'}</span></a>
                 })}

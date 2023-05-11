@@ -2,7 +2,6 @@
 import React from "react";
 import { GlobalLinkSvg, PageSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
-import { LinkPageItem } from "../../extensions/at/declare";
 import { IconArguments } from "../../extensions/icon/declare";
 import { useLinkPicker } from "../../extensions/link/picker";
 import { channel } from "../../net/channel";
@@ -14,6 +13,7 @@ import { BlockView } from "../../src/block/view";
 import { SolidArea } from "../../src/block/view/appear";
 import { Rect } from "../../src/common/vector/point";
 import "./style.less";
+import { LinkPageItem } from "../../src/page/declare";
 
 @url('/link')
 export class Link extends Block {
