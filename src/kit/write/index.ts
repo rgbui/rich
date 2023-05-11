@@ -168,9 +168,8 @@ export class PageWrite {
                 await AutoInputStore();
                 MoveCursor(this, aa, event);
                 return;
-                break;
             case KeyboardCode.Enter.toLowerCase():
-                if (this.kit.page.requireSelectLayout == true) {
+                if(this.kit.page.requireSelectLayout == true) {
                     event.preventDefault();
                     await this.kit.page.onPageTurnLayout(PageLayoutType.doc, async () => {
                         var lastBlock = this.kit.page.findReverse(g => g.isBlock);

@@ -213,9 +213,11 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     snapshoot.registerOperator(OperatorDirective.pageTurnLayout, async (operator, source) => {
         page.pageLayout.type = operator.data.new;
         page.requireSelectLayout = false;
+        page.addPageUpdate();
     }, async (operator) => {
         page.pageLayout.type = operator.data.old;
         page.requireSelectLayout = true;
+        page.addPageUpdate();
     });
     snapshoot.registerOperator(OperatorDirective.pageUpdateProp, async (operator, source) => {
         page.updateProps(operator.data.new);
@@ -494,14 +496,15 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     snapshoot.registerOperator(OperatorDirective.$turn, async (operator) => {
         var dr = operator.data;
         var block = page.find(x => x.id == dr.pos.blockId);
-        if (block) {
-            await block.turn(dr.from)
+        if (block)
+        {
+            await block.turn(dr.to)
         }
     }, async (operator) => {
         var dr = operator.data;
         var block = page.find(x => x.id == dr.pos.blockId);
         if (block) {
-            await block.turn(dr.to)
+            await block.turn(dr.from)
         }
     });
     snapshoot.registerOperator(OperatorDirective.$data_grid_trun_view, async (operator) => {
