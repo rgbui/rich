@@ -101,6 +101,7 @@ export class AnchorCursor {
      */
     onSetTextSelection(options: { startAnchor: AppearAnchor, startOffset: number, endAnchor: AppearAnchor, endOffset: number },
         operators?: { merge?: boolean, render?: boolean, combine?: boolean }) {
+        if (!options.startAnchor?.el || !options.endAnchor?.el) return;
         this.kit.page.onAction('onSetTextSelection', async () => {
             if (operators?.merge) this.kit.page.snapshoot.merge();
             if (operators.combine) await this.combineBlockLines(options);
@@ -203,7 +204,9 @@ export class AnchorCursor {
      * @returns 
      */
     getAppears() {
+        if(this.startAnchor?.el&&this.endAnchor?.el)
         return findBlocksBetweenAppears(this.startAnchor.el, this.endAnchor.el);
+        else return[]
     }
     adjustAnchorSorts() {
         if (this.endAnchor === this.startAnchor && this.endOffset < this.startOffset || TextEle.isBefore(this.endAnchor.el, this.startAnchor.el)) {
