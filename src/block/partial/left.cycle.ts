@@ -260,7 +260,7 @@ export class Block$LifeCycle {
                 }
             }
             if (Array.isArray(r.data.operates) && r.data.operates.length > 0)
-                this.page.syncUserActions(r.data.operates, 'load');
+                this.page.onSyncUserActions(r.data.operates, 'load');
         }
     }
     async get(this: Block, args?: { syncBlock: boolean }, options?: { emptyChilds?: boolean }) {

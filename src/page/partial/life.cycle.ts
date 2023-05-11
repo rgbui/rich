@@ -39,7 +39,7 @@ export class Page$Cycle {
         await this.load(content);
         if (Array.isArray(operates) && operates.length > 0) {
             var operates = operates.map(op => op.operate ? op.operate : op) as any;
-            await this.syncUserActions(operates, 'load');
+            await this.onSyncUserActions(operates, 'load');
         }
         await this.onAction(ActionDirective.onPageUpdateProps, async () => {
             await this.updateProps({ sourceItemId: itemId });
@@ -117,7 +117,8 @@ export class Page$Cycle {
         }
         await this.onRepair();
     }
-    async syncUserActions(this: Page, actions: UserAction[], source: 'load' | 'notify' | 'notifyView') {
+    async onSyncUserActions(this: Page, actions: UserAction[], source: 'load' | 'notify' | 'notifyView') {
+        var isOk: boolean = true;
         await this.onAction(ActionDirective.onLoadUserActions, async () => {
             for (let i = 0; i < actions.length; i++) {
                 let action = actions[i];
@@ -125,11 +126,15 @@ export class Page$Cycle {
                     await this.snapshoot.redoUserAction(action, source);
                 }
                 catch (ex) {
+                    isOk = false;
                     this.onError(ex);
                 }
             }
         })
         await this.onRepair();
+        if (isOk && actions.length > 0) {
+            this.emit(PageDirective.syncHistory, actions.max(g => g.seq));
+        }
     }
     async get(this: Page) {
         var json: Record<string, any> = {

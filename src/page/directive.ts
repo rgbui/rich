@@ -10,6 +10,7 @@ export enum PageDirective {
     focusAnchor,
     blurAnchor,
     history,
+    syncHistory,
     /**
      * 数据保存ctrl+s
      */

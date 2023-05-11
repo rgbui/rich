@@ -177,7 +177,7 @@ export class DataGridView extends Block {
                 else this.setPropData(n, data[n]);
             }
             if (Array.isArray(r.data.operates) && r.data.operates.length > 0)
-                this.page.syncUserActions(r.data.operates, 'load');
+                this.page.onSyncUserActions(r.data.operates, 'load');
         }
     }
     getSearchFilter() {
