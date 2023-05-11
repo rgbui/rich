@@ -113,14 +113,14 @@ export class TextContentView extends BlockView<TextContent>{
     openPage(e: React.MouseEvent) {
         e.stopPropagation();
         e.preventDefault();
+        console.log('this', this.boxTip);
         if (this.boxTip) this.boxTip.close();
         channel.air('/page/open', { item: { id: this.block.link.pageId } });
     }
     async openCreatePage(e: React.MouseEvent) {
         e.stopPropagation();
         e.preventDefault();
-        if (this.boxTip)
-            this.boxTip.close();
+        if (this.boxTip) this.boxTip.close();
         var r = await channel.air('/page/create/sub', {
             pageId: this.block.page.pageInfo?.id,
             text: this.block.content
