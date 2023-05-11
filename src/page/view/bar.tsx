@@ -54,7 +54,6 @@ export class PageBar extends React.Component<{ page: Page }>{
             this.users = r.users;
             this.forceUpdate();
         } else this.users = new Set()
-
     }
     componentWillUnmount(): void {
         this.props.page.off(PageDirective.willSave, this.willSave)
@@ -81,7 +80,7 @@ export class PageBar extends React.Component<{ page: Page }>{
         if (this.props.page.openSource == 'snap') return <></>
         if ([PageLayoutType.textChannel].includes(this.props.page.pageLayout?.type)) return <></>
         return <div className="gap-r-10">
-            <UserAvatars size={30} users={this.users}></UserAvatars>
+            {this.users.size > 1 && <UserAvatars size={30} users={this.users}></UserAvatars>}
         </div>
     }
     toLogin() {
