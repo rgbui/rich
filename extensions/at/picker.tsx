@@ -6,7 +6,6 @@ import { channel } from "../../net/channel";
 import { UserBasic } from "../../types/user";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
-import { Loading } from "../../component/view/loading";
 import { Avatar } from "../../component/view/avator/face";
 import { KeyboardCode } from "../../src/common/keys";
 import { Divider } from "../../component/view/grid";
