@@ -47,7 +47,6 @@ export class Avatar extends React.Component<{
                 return;
             }
             var r = await channel.get('/user/basic', { userid: this.props.userid });
-            console.log('user/basic',r);
             if (r.ok) {
                 this.user = r.data.user as any;
                 this.forceUpdate()
