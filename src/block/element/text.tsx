@@ -9,11 +9,12 @@ import { Block } from "..";
 import { channel } from "../../../net/channel";
 import lodash from "lodash";
 import { BoxTip } from "../../../component/view/tooltip/box";
-import { EditSvg, LinkSvg, TrashSvg } from "../../../component/svgs";
+import { DragHandleSvg, EditSvg, LinkSvg, TrashSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { ToolTip } from "../../../component/view/tooltip";
 import { useLinkPicker } from "../../../extensions/link/picker";
 import { Rect } from "../../common/vector/point";
+import { DragBlockLine } from "../../kit/handle/line";
 
 /***
  * 文字型的block，
@@ -165,6 +166,9 @@ export class TextContentView extends BlockView<TextContent>{
             this.block.syncRefLink(r.id);
         }
     }
+    dragBlock(event: React.MouseEvent) {
+        DragBlockLine(this.block, event);
+    }
     boxTip: BoxTip;
     render() {
         var ta = <TextArea block={this.block} prop='content' ></TextArea>
@@ -180,6 +184,7 @@ export class TextContentView extends BlockView<TextContent>{
             else if (this.block.link.pageId) {
                 var url = (channel.query('/current/workspace')?.url || "") + "/page/" + this.block.link.pageId;
                 ta = <BoxTip ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center">
+                    <ToolTip overlay={'拖动'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></a></ToolTip>
                     <ToolTip overlay={url}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.openPage(e)} ><Icon size={16} icon={LinkSvg}></Icon></a></ToolTip>
                     <ToolTip overlay={'编辑'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.openLink(e)}><Icon size={16} icon={EditSvg}></Icon></a></ToolTip>
                     <ToolTip overlay={'取消'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.onClearLink()}><Icon size={16} icon={TrashSvg}></Icon></a></ToolTip>
