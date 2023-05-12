@@ -3,14 +3,14 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Singleton } from "../../component/lib/Singleton";
 import { Avatar } from "../../component/view/avator/face";
-import { Loading } from "../../component/view/loading";
-import { Remark } from "../../component/view/text";
 import { channel } from "../../net/channel";
 import { KeyboardCode } from "../../src/common/keys";
 import { Point, Rect, RectUtility } from "../../src/common/vector/point";
 import { UserBasic } from "../../types/user";
 import { InputTextPopSelector } from "../common/input.pop";
 import { PopoverPosition } from "../popover/position";
+import { Spin } from "../../component/view/spin";
+import { popoverLayer } from "../../component/lib/zindex";
 
 /**
  * 用户输入@触发
@@ -74,24 +74,26 @@ class AtUserSelector extends InputTextPopSelector {
     }
     private renderLinks() {
         return <div>
-            {this.loading && <Loading></Loading>}
+            {this.loading && <div className="flex-center gap-h-10"><Spin></Spin></div>}
             {!this.loading && this.links.map((link, i) => {
-                return <a onMouseDown={e => this.onSelect(link)} className={"shy-memeber" + ((i + 1) == this.selectIndex ? " selected" : "")} key={link.id}>
-                    <Avatar size={30} user={link} userid={(link as any).userid}></Avatar>
-                    <span>{link.name}</span>
-                </a>
+                return <div
+                    onMouseDown={e => this.onSelect(link)} className={"padding-w-10 flex item-hover cursor round padding-5 " + ((i + 1) == this.selectIndex ? "  item-hover-focus" : "")}
+                    key={link.id}>
+                    <Avatar size={30} userid={(link as any).userid}></Avatar>
+                    <span className="gap-l-5 text-overflow">{link.name}</span>
+                </div>
             })}
-            {!this.loading && this.searchWord && this.links.length == 0 && <a style={{ display: 'block', marginLeft: 10 }}><Remark>没有搜索到</Remark></a>}
+            {!this.loading && this.searchWord && this.links.length == 0 && <div className="flex-center gap-h-10 remark">没有搜索到</div>}
         </div>
     }
     render() {
         var style: Record<string, any> = {
             top: this.pos.y,
-            left: this.pos.x
+            left: this.pos.x,
+            display: this.visible ? 'block' : 'none',
+            zIndex: popoverLayer.zoom(this)
         }
-        return <div>
-            {this.visible && <div className='shy-memebers' style={style}>{this.renderLinks()}</div>}
-        </div>
+        return <div className='pos w-180 max-h-200 bg-white overlay-y  round shadow border' style={style}>{this.renderLinks()}</div>
     }
     private onSelect(block) {
         this._select({ url: '/user/mention', isLine: true, userid: (block as any).userid, })
@@ -119,7 +121,7 @@ class AtUserSelector extends InputTextPopSelector {
     }
     private adjuctPosition() {
         this.forceUpdate(() => {
-            var selectorEl = this.el.querySelector('.shy-memebers') as HTMLElement;
+            var selectorEl = this.el;
             if (selectorEl) {
                 var b = Rect.fromEle(selectorEl);
                 var pos: PopoverPosition = {
@@ -193,7 +195,13 @@ class AtUserSelector extends InputTextPopSelector {
                 case KeyboardCode.Enter:
                     var block = this.selectBlockData;
                     this.close();
-                    if (block) return { blockData: block };
+                    if (block) return {
+                        blockData: {
+                            url: '/user/mention',
+                            isLine: true,
+                            userid: (block as any).userid
+                        }
+                    };
                     else return false;
             }
         }
