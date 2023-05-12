@@ -279,7 +279,7 @@ class Dom {
         return new Matrix(...matrixPoints)
     }
     getOverflowPanel() {
-        var predict = x => { return dom(x as HTMLElement).style('overflowY') == 'auto' || dom(x as HTMLElement).style('overflowX') == 'auto'||dom(x as HTMLElement).style('overflowY') == 'overlay' || dom(x as HTMLElement).style('overflowX') == 'overlay' }
+        var predict = x => { return dom(x as HTMLElement).style('overflowY') == 'auto' || dom(x as HTMLElement).style('overflowX') == 'auto' || dom(x as HTMLElement).style('overflowY') == 'overlay' || dom(x as HTMLElement).style('overflowX') == 'overlay' }
         var scrollDiv: HTMLElement = this.closest(predict) as any;
         return scrollDiv;
     }
@@ -287,4 +287,31 @@ class Dom {
 
 export var dom = function (el: Node) {
     return new Dom(el);
+}
+
+
+
+/**
+ * 
+ * https://www.zhangxinxu.com/wordpress/2019/03/dom-contains-comparedocumentposition/
+ * 
+ * @param el 
+ * @param comprareEl 
+ * @returns 
+ */
+export function elIsBefore(el: HTMLElement, comprareEl: HTMLElement) {
+    var compareValue = el.compareDocumentPosition(comprareEl);
+    if (compareValue == 2) {
+        // compareImg在前
+        return false;
+    } else if (compareValue == 4) {
+        // compareImg在后
+        return true;
+    } else if (compareValue == 0) {
+        // 就是compareImg元素自身
+        return null;
+    } else {
+        // 其它位置关系
+        return null;
+    }
 }
