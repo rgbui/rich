@@ -17,6 +17,7 @@ import { BlockRenderRange } from "../../block/enum";
 import { KeyboardCode } from "../../common/keys";
 import { Rect } from "../../common/vector/point";
 import { InputForceStore, InputStore } from "./store";
+import { useTagSelector } from "../../../extensions/tag";
 
 /**
  * 输入弹窗
@@ -72,9 +73,15 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
         // else if(data2=='(('){
 
         // }
-        // else if(data=='#'){
-
-        // }
+        else if (data == '#') {
+            write.inputPop = {
+                rect,
+                type: InputTextPopSelectorType.EmojiSelector,
+                offset: offset - 1,
+                aa,
+                selector: (await useTagSelector())
+            };
+        }
     }
     if (write.inputPop) {
         var popVisible = await write.inputPop.selector.open(
