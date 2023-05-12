@@ -6,13 +6,12 @@ import { Rect, Point } from "../../src/common/vector/point";
 import { InputTextPopSelector } from "../common/input.pop";
 import { Loading } from "../../component/view/loading";
 import { EmojiCode, emojiStore, EmojiType } from "./store";
-import { Remark } from "../../component/view/text";
 import { dom } from "../../src/common/dom";
 import { getEmoji } from "../../net/element.type";
 import { Tip } from "../../component/view/tooltip/tip";
 
 /**
- * 用户输入@触发
+ * 用户输入::触发
  */
 class EmojiSelector extends InputTextPopSelector {
     onClose(): void {
@@ -60,7 +59,7 @@ class EmojiSelector extends InputTextPopSelector {
             els.push(<div className='shy-emoji-view-category' key={category.id}>
                 <div className='shy-emoji-view-category-head'><span>{category.name}</span></div>
                 <div className='shy-emoji-view-category-emojis'>{category.childs.map(emoji => {
-                    return <Tip overlay={<>{emoji.name}</>} key={emoji.code}><span data-code={emoji.code} className={this.selectCode == emoji.code ? "selected" : ""} onMouseDown={e => this.onSelect(emoji)} dangerouslySetInnerHTML={{ __html: getEmoji(emoji.code) }}></span></Tip>
+                    return <Tip overlay={<>{emoji.name}</>} key={emoji.code}><span data-code={emoji.code} className={'ef ' + (this.selectCode == emoji.code ? "selected" : "")} onMouseDown={e => this.onSelect(emoji)} dangerouslySetInnerHTML={{ __html: getEmoji(emoji.code) }}></span></Tip>
                 })}</div>
             </div>)
         });
@@ -74,7 +73,7 @@ class EmojiSelector extends InputTextPopSelector {
                 return <a onMouseDown={e => this.onSelect(emoji)} data-code={emoji.code} className={this.selectCode == emoji.code ? "selected" : ""} key={emoji.code}>
                 </a>
             })}
-            {!this.loading && this.emojiCodes.length == 0 && this.isSearch && <a><Remark>没有搜索到</Remark></a>}
+            {!this.loading && this.emojiCodes.length == 0 && this.isSearch && <div className="remark flex-center">没有搜索到</div>}
         </div>
     }
     render() {
