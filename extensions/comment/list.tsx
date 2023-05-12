@@ -35,6 +35,7 @@ export class CommentListView extends React.Component<{
     userid: string;
     elementUrl: string;
     loading: boolean = false;
+    pop: boolean = false;
     async likeComment(l) {
         var r = await channel.put('/ws/comment/emoji', {
             elementUrl: getElementUrl(ElementType.WsCommentEmoji, l.id, 'like')
@@ -229,7 +230,7 @@ export class CommentListView extends React.Component<{
         this.forceUpdate();
     }
     render() {
-        return <div className="w-600">
+        return <div className={this.pop ? "w-600" : ""}>
             <div className="flex gap-b-10 gap-t-5 padding-w-14">
                 <span className="bold f-14 flex-fixed">{this.total == 0 ? "" : (this.total + "条")}评论</span>
                 <div className="flex-auto flex-end f-12">
@@ -290,6 +291,7 @@ export class CommentListView extends React.Component<{
         elementUrl: string;
         sort?: 'default' | 'date',
     }) {
+        this.pop = true;
         this.count = 0;
         this.userid = props.userid;
         this.elementUrl = props.elementUrl;
