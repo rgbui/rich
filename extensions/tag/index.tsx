@@ -36,19 +36,15 @@ class TagSelector extends InputTextPopSelector {
         }
         else {
             this.text = '';
-            var rs = channel.query('/ws/current/pages');
-            this.links = rs.map(r => {
-                return {
-                    id: r.id,
-                    text: r.text,
-                    icon: r.icon
-                }
-            });
+            var rs = await channel.get('/tag/word/query', { size: this.allLinks.size });
+            this.allLinks = rs.data;
+            this.links = lodash.cloneDeep(this.allLinks.list)
             this.adjuctPosition();
         }
         return true;
     }
     private round: Rect;
+    allLinks: { list: { id: string, text: string }[], total: number, size: number } = { list: [], total: 0, size: 200 }
     links: { id: string, text: string }[] = [];
     loading = false;
     searchWord: string = '';
@@ -58,12 +54,12 @@ class TagSelector extends InputTextPopSelector {
         this.searchWord = this.text;
         if (!this.visible) return;
         this.adjuctPosition();
-        var r = await channel.get('/tag/word/query', { word: this.searchWord });
-        if (!this.visible) return;
-        if (r.ok) {
-            this.links = r.data.list;
-        }
-        else this.links = [];
+        var result = [];
+        if (this.allLinks.total <= this.allLinks.size)
+            result = this.allLinks.list.filter(g => g.text.startsWith(this.searchWord))
+        else
+            result = (await channel.get('/tag/word/query', { word: this.searchWord })).data.list;
+        this.links = result;
         if (this.selectIndex > this.links.length) {
             this.selectIndex = 1;
         }

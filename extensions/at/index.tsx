@@ -23,7 +23,8 @@ class AtUserSelector extends InputTextPopSelector {
         this._select = callback;
         this.round = round;
         this.pos = round.leftBottom;
-        if (!this.visible) {
+        if(!this.visible)
+        {
             this.selectIndex = 0;
         }
         this.visible = true;
@@ -43,11 +44,17 @@ class AtUserSelector extends InputTextPopSelector {
             }
             this.searchIsEmpty = true;
         }
-        else this.searchIsEmpty = false;
+        else {
+            var r = await channel.get('/ws/member/word/query', {});
+            this.allLinks = r.data;
+            this.links = lodash.cloneDeep(r.data.list);
+            this.searchIsEmpty = false;
+        }
         this.syncSearch();
         return this.visible;
     }
     private round: Rect;
+    allLinks: { list: UserBasic[], total: number, size: number } = { list: [], total: 0, size: 200 }
     links: UserBasic[] = [];
     loading = false;
     searchWord: string = '';
@@ -57,12 +64,16 @@ class AtUserSelector extends InputTextPopSelector {
         this.searchWord = this.text;
         if (this.visible == false) return;
         this.adjuctPosition();
-        var r = await channel.get('/ws/member/word/query', { word: this.searchWord });
-        if ((this.visible as any) == false) return;
-        if (r.ok) {
-            this.links = r.data.list;
+        var result = [];
+        if (!this.searchWord) {
+            result = this.allLinks.list.filter(g => true);
+        } else if (this.allLinks.total <= this.allLinks.size) {
+            result = this.allLinks.list.filter(g => g.name.startsWith(this.searchWord));
         }
-        else this.links = [];
+        else {
+            result = (await channel.get('/ws/member/word/query', { word: this.searchWord })).data.list;
+        }
+        this.links = result
         if (this.selectIndex >= this.links.length) {
             this.selectIndex = 0;
         }

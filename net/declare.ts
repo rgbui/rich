@@ -259,7 +259,7 @@ export interface ChannelGetMapUrls {
 	"/ws/channel/list":{args:{roomId:string,seq?:number,page?:number,size?:number},returnType:Promise<SockResponse<{list:any[],unreadCount?:number}>>},
 	"/ws/random/online/users":{args:{wsId:string,size?:number},returnType:Promise<SockResponse<{count:number,users:string[]}>>},
 	"/ws/channel/abled/send":{args:{wsId?:string,roomId:string,pageId:string},returnType:Promise<SockResponse<{abled:boolean}>>},
-	"/ws/member/word/query":{args:{word:string},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
+	"/ws/member/word/query":{args:{wsId?:string,word?:string,size?:number},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
 	"/ws/members":{args:{page:number,size:number,word?:string,roleId?:string},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
 	"/ws/is/member":{args:{sock?:any,wsId:string},returnType:Promise<SockResponse<{exists:boolean,workspace:Record<string,any>}>>},
 	"/ws/roles":{args:{},returnType:Promise<SockResponse<{list:any[]}>>},
@@ -276,13 +276,13 @@ export interface ChannelGetMapUrls {
 	"/page/parent/ids":{args:{wsId?:string,id:string},returnType:Promise<SockResponse<{ parentIds:string[],exists:boolean }>>},
 	"/page/parent/subs":{args:{wsId?:string,parentIds:string[]},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/item":{args:{id:string},returnType:Promise<SockResponse<{ item:Record<string,any> }>>},
-	"/page/word/query":{args:{word:string},returnType:Promise<SockResponse<{list:LinkPageItem[],total:number,page:number,size:number}>>},
+	"/page/word/query":{args:{wsId?:string,word?:string,size?:number},returnType:Promise<SockResponse<{list:LinkPageItem[],total:number,page:number,size:number}>>},
 	"/view/snap/query":{args:{ elementUrl: string},returnType:Promise<SockResponse<{content:string,operates:any[]}>>},
 	"/view/snap/list":{args:{wsId?: string, elementUrl: string, page: number, size: number},returnType:Promise<SockResponse<{list:any[],total:number,size:number,page:number}>>},
 	"/view/snap/content":{args:{wsId?:string,id:string},returnType:Promise<SockResponse<{id:string,content:string}>>},
 	"/block/ref/pages":{args:{wsId?:string,pageId:string},returnType:Promise<SockResponse<{list:any[],total:number,size:number,page:number}>>},
 	"/user/interactives":{args:{wsId?:string,schemaId:string,ids:string[],es:string[]},returnType:Promise<SockResponse<{list:Record<string,string[]>}>>},
-	"/tag/word/query":{args:{word:string,wsId?:string},returnType:Promise<SockResponse<{list:any[],total:number}>>}
+	"/tag/word/query":{args:{word?:string,wsId?:string,size?:number},returnType:Promise<SockResponse<{list:any[],total:number,size:number,page:number}>>}
 }
 export interface ChannelQueryMapUrls {
     "/current/workspace":{args:any,returnType:{id:string,sn:number,text:string,url:string,isMember?:boolean,isOwner?:boolean,access?:0|1,accessProfile?:{disabledJoin: boolean,checkJoinProtocol: boolean,joinProtocol: string},roles:{ id: string,text: string,color: string,permissions: number[],icon?: IconArguments}[]}},
