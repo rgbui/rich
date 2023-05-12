@@ -11,6 +11,10 @@ export enum ElementType {
      */
     Block,
     /**
+     * /Page/{id}/Row/{id1}/Block/{id2} 文档中的某个块
+     */
+    BlockLine,
+    /**
      * /SyncBlock/${id} 同步块
      */
     SyncBlock,
@@ -74,6 +78,7 @@ export function getElementUrl(type: ElementType, id: string, id1?: string, id2?:
     else if (type == ElementType.SchemaField) return `/Schema/${id}/Field/${id1}`
     else if (type == ElementType.RoomChat) return `/Room/${id}/Chat/${id1}`
     else if (type == ElementType.Block) return `/Page/${id}/Block/${id1}`
+    else if (type == ElementType.BlockLine) return `/Page/${id}/Row/${id1}/Block/${id2}`
     else if (type == ElementType.SyncBlock) return `/SyncBlock/${id}`
     else if (type == ElementType.WsCommentEmoji) return `/Comment/${id}/emoji/${id1}`
     else return `/${ElementType[type]}/${id}`
@@ -170,10 +175,21 @@ export function parseElementUrl(url: string) {
     }
     else if (us.includes('Page')) {
         us.removeAll(g => g == 'Page' || g == 'Block');
-        return {
-            type: ElementType.Block,
-            id: us[0],
-            id1: us[1]
+        if (us.includes('Row')) {
+            us.removeAll(g => g == 'Row')
+            return {
+                type: ElementType.BlockLine,
+                id: us[0],
+                id1: us[1],
+                id2: us[2]
+            }
+        }
+        else {
+            return {
+                type: ElementType.Block,
+                id: us[0],
+                id1: us[1]
+            }
         }
     }
     else if (us.includes('PageItem')) {
@@ -201,8 +217,8 @@ export function parseElementUrl(url: string) {
         }
     }
     else if (us.includes('Comment')) {
-        if (us.includes('emoji')) {  
-             us.removeAll(g => g == 'Comment' || g == 'emoji')
+        if (us.includes('emoji')) {
+            us.removeAll(g => g == 'Comment' || g == 'emoji')
             return {
                 type: ElementType.WsCommentEmoji,
                 id: us[0],
@@ -216,7 +232,7 @@ export function getWsElementUrl(options: { wsUrl?: string, type: ElementType, id
     var { type, id, id1, id2, wsUrl } = options;
     if (!wsUrl) {
         var ws = channel.query('/current/workspace');
-        wsUrl=ws.url;
+        wsUrl = ws.url;
         // wsUrl = `https://${ws.sn}.shy.live/`;
     }
     if (!wsUrl.endsWith('/')) wsUrl += '/';
