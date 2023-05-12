@@ -5,14 +5,12 @@ import { KeyboardCode } from "../../src/common/keys";
 import { Rect, Point, RectUtility } from "../../src/common/vector/point";
 import { InputTextPopSelector } from "../common/input.pop";
 import lodash from "lodash";
-import { PlusSvg } from "../../component/svgs";
+import { PlusSvg, TopicSvg } from "../../component/svgs";
 import { Divider } from "../../component/view/grid";
 import { Icon } from "../../component/view/icon";
 import { Spin } from "../../component/view/spin";
-import { Remark } from "../../component/view/text";
 import { channel } from "../../net/channel";
 import { BlockUrlConstant } from "../../src/block/constant";
-import { LinkPageItem, getPageIcon } from "../../src/page/declare";
 import { PopoverPosition } from "../popover/position";
 
 /**
@@ -30,7 +28,7 @@ class TagSelector extends InputTextPopSelector {
         this.round = round;
         this.pos = round.leftBottom;
         this.visible = true;
-        var t = text.replace(/^(\[\[)|(【【)/, '');
+        var t = text.replace(/^#/, '');
         if (t) {
             this.text = t;
             this.forceUpdate();
@@ -51,7 +49,7 @@ class TagSelector extends InputTextPopSelector {
         return true;
     }
     private round: Rect;
-    links: LinkPageItem[] = [];
+    links: { id: string, text: string }[] = [];
     loading = false;
     searchWord: string = '';
     syncSearch = lodash.debounce(async () => {
@@ -60,7 +58,7 @@ class TagSelector extends InputTextPopSelector {
         this.searchWord = this.text;
         if (!this.visible) return;
         this.adjuctPosition();
-        var r = await channel.get('/page/word/query', { word: this.searchWord });
+        var r = await channel.get('/tag/word/query', { word: this.searchWord });
         if (!this.visible) return;
         if (r.ok) {
             this.links = r.data.list;
@@ -81,34 +79,38 @@ class TagSelector extends InputTextPopSelector {
                 <span className="flex flex-inline size-24 item-hover round">
                     <Icon size={18} icon={PlusSvg}></Icon>
                 </span>
-                <span className="f-14">创建<b className="bold">{this.text || '新页面'}</b>
+                <span className="f-14">
+                    <Icon size={18} icon={TopicSvg}></Icon>
+                    创建<b className="bold">{this.text || '标签'}</b>
                 </span>
             </a>
             <Divider></Divider>
             {this.loading && <div className="flex-center gap-h-30"><Spin></Spin></div>}
             {!this.loading && this.links.map((link, i) => {
                 return <a onMouseDown={e => this.onSelect(link)} className={"h-30 gap-l-10 text  item-hover cursor round padding-w-10 flex" + ((i + 1) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
-                    <span className="flex flex-inline size-24 item-hover round"> <Icon size={18} icon={getPageIcon(link)}></Icon></span>
+                    <span className="flex flex-inline size-24 item-hover round"> <Icon size={18} icon={TopicSvg}></Icon></span>
                     <span className="f-14">{link.text || '新页面'}</span></a>
             })}
-            {!this.loading && this.links.length == 0 && this.searchWord && <a className="remark flex-center gap-h-10 f-14"><Remark>没有搜索到</Remark></a>}
+            {!this.loading && this.links.length == 0 && this.searchWord && <div className="remark flex-center gap-h-10 f-14">没有搜索到</div>}
         </div>
     }
     render() {
         var style: Record<string, any> = {
             top: this.pos.y,
-            left: this.pos.x
+            left: this.pos.x,
+            display: this.visible ? 'block' : 'none'
         }
-        return <div ref={e => this.el = e}>
-            {this.visible && <div className='shy-page-link' style={style}>{this.renderLinks()}</div>}
+        return <div ref={e => this.el = e}
+            style={style}
+            className='pos w-180 max-h-200 bg-white overlay-y  round shadow border'>{this.renderLinks()}
         </div>
     }
     private onSelect(block) {
         if (block.name == 'create') {
-            this._select({ url: BlockUrlConstant.Text, isLine: true, content: this.text || "新页面", link: { name: "create", text: this.text } })
+            this._select({ url: BlockUrlConstant.Tag, isLine: true, content: this.text || "标签" })
         }
         else {
-            this._select({ url: BlockUrlConstant.Text, isLine: true, content: block.text, link: { name: 'page', pageId: block.id } })
+            this._select({ url: BlockUrlConstant.Tag, isLine: true, content: block.text, tagText: block.text, tagId: block.id })
         }
         this.close();
     }
@@ -202,15 +204,23 @@ class TagSelector extends InputTextPopSelector {
                     var text = this.text;
                     this.close();
                     if ((block as any)?.name == 'create') {
-                        return { blockData: { url: BlockUrlConstant.Text, isLine: true, content: text || '新页面', link: { name: 'create', text: text || '新页面' } } }
+                        return {
+                            blockData: {
+                                url: BlockUrlConstant.Tag,
+                                content: text || '标签',
+                                isLine: true,
+                                tagText: text || '标签'
+                            }
+                        }
                     }
                     else if (block)
                         return {
                             blockData: {
-                                url: BlockUrlConstant.Text,
+                                url: BlockUrlConstant.Tag,
                                 isLine: true,
                                 content: block.text,
-                                link: { name: "page", pageId: block.id }
+                                tagText: block.text,
+                                tagId: block.id,
                             }
                         };
                     else return false;
@@ -220,7 +230,7 @@ class TagSelector extends InputTextPopSelector {
     }
     private adjuctPosition() {
         this.forceUpdate(() => {
-            var selectorEl = this.el.querySelector('.shy-page-link') as HTMLElement;
+            var selectorEl = this.el.querySelector('.item-hover-focus') as HTMLElement;
             if (selectorEl) {
                 var b = Rect.fromEle(selectorEl);
                 var pos: PopoverPosition = {
