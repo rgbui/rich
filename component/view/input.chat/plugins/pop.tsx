@@ -9,6 +9,13 @@ import { util } from "../../../../util/util";
 import { Divider } from "../../grid";
 import { ChatInput } from "../chat";
 
+
+/**
+ * 
+ * https://www.zhangxinxu.com/wordpress/2022/08/gitee-feishu-okr-at-mention/
+ * 
+ * 
+ */
 export class ChatInputPop extends React.Component<{
     search: (word: string) => Promise<UserBasic[]>,
     select: (user: UserBasic) => void,

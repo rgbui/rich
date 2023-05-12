@@ -59,6 +59,13 @@ export class PageEvent {
                 onPasteBlank(this.kit, event);
         }
     }
+
+
+    /**
+     * 
+     * https://www.zhangxinxu.com/wordpress/2020/06/mobile-event-touches-zoom-sacle/
+     * 
+     */
     private lastTriggerTime;
     onWheel(this: Page, event: React.WheelEvent) {
         if (this.readonly) return;
