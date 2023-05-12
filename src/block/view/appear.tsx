@@ -62,6 +62,7 @@ export function TextArea(props: {
         return <span className={classList.join(" ")} {...ps}>{html}</span>
     }
 }
+
 export function SolidArea(props: {
     children?: React.ReactNode,
     block: Block,
@@ -93,11 +94,14 @@ export function SolidArea(props: {
         onCompositionEnd: (e) => props.block.elementAppearEvent(props.prop, 'compositionend', e),
         onCompositionUpdate: (e) => props.block.elementAppearEvent(props.prop, 'compositionupdate', e)
     }
-    if (props.line) return <span className='shy-appear-solid'  {...ps} >
+    var line = typeof props.line == 'undefined' ? props.block.isLine : props.line;
+    if (line) return <span className='shy-appear-solid'  {...ps} >
+        {props.block.isCanEdit() && <span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}
         {props.children}
         {props.block.isCanEdit() && <span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}
     </span>
     return <div className='shy-appear-solid'  {...ps} >
+        {props.block.isCanEdit() && <span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}
         {props.children}
         {props.block.isCanEdit() && <span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}
     </div>

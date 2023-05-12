@@ -23,14 +23,15 @@
         caret-color            : rgb(55, 53, 47);
         padding-right          : 10px;
         -webkit-text-fill-color: rgba(55, 53, 47, 0.4);
-      
+
 
         &::after {
             content: '\20';
         }
     }
 
-    &.shy-text-focus,&.shy-text-empy-visible {
+    &.shy-text-focus,
+    &.shy-text-empy-visible {
         &:empty {
             display                : inline-block;
             padding-right          : 10px;
@@ -65,15 +66,15 @@
     position: relative;
 
     &-cursor {
-        height                 : 100%;
-        display                : inline-block;
-        caret-color            : rgb(55, 53, 47);
-        -webkit-text-fill-color: rgba(55, 53, 47, 0.4);
-        outline                : none;
-        user-select            : text;
-        padding-right          : 2px;
-        width                  : 2px;
-        box-sizing             : border-box;
+        height                    : 100%;
+        display                   : inline-block;
+        // caret-color            : rgb(55, 53, 47);
+        // -webkit-text-fill-color: rgba(55, 53, 47, 0.4);
+        outline                   : none;
+        user-select               : text;
+        padding-right             : 2px;
+        width                     : 2px;
+        box-sizing                : border-box;
 
         &::after {
             content: '\20';

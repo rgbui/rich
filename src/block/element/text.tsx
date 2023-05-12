@@ -3,7 +3,7 @@ import { BlockView } from "../view";
 import React from 'react';
 import { BlockDisplay, BlockRenderRange } from "../enum";
 import { prop, url, view } from "../factory/observable";
-import { TextArea } from "../view/appear";
+import { SolidArea, TextArea } from "../view/appear";
 import { PageLink } from "../../../extensions/link/declare";
 import { Block } from "..";
 import { channel } from "../../../net/channel";
@@ -170,7 +170,7 @@ export class TextContentView extends BlockView<TextContent>{
         var ta = <TextArea block={this.block} prop='content' ></TextArea>
         var classList: string[] = ['sy-block-text-content'];
         if (this.block.link) {
-            ta = <span>{this.block.content}</span>;
+            ta = <SolidArea block={this.block}>{this.block.content}</SolidArea>;
             if (this.block.link.name == 'page' && !this.block.link.pageId) {
                 if (this.block.isCanEdit())
                     ta = <BoxTip ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center"><ToolTip overlay={'取消'}><a className="flex-center size-24 round item-hover gap-5 cursor" onMouseDown={e => this.onClearLink()}><Icon size={14} icon={TrashSvg}></Icon></a></ToolTip>
