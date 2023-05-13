@@ -64,20 +64,19 @@
 
 .shy-appear-solid {
     position: relative;
-
     &-cursor {
-        height                    : 100%;
-        display                   : inline-block;
-        // caret-color            : rgb(55, 53, 47);
-        // -webkit-text-fill-color: rgba(55, 53, 47, 0.4);
-        outline                   : none;
-        user-select               : text;
-        padding-right             : 2px;
-        width                     : 2px;
-        box-sizing                : border-box;
-
+        height       : 100%;
+        display      : inline-block;
+        outline      : none;
+        user-select  : text;
+        padding-right: 2px;
+        width        : 2px;
+        box-sizing   : border-box;
         &::after {
             content: '\20';
         }
+    }
+    &-content {
+        user-select: text;
     }
 }
