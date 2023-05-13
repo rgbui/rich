@@ -19,6 +19,14 @@ class Dom {
             return null;
         }
     }
+    lineHeight(def?: number) {
+        try {
+            return parseInt(this.style('lineHeight').replace('px', ''))
+        }
+        catch (ex) {
+            return def;
+        }
+    }
     fontStyle() {
         var ele = this.el;
         try {
