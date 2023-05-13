@@ -46,15 +46,14 @@ export function DragBlockLine(block: Block, event: React.MouseEvent) {
                         block.page.onAction('DragBlockLine', async () => {
                             if (appear.isSolid) {
                                 var at = appear.block.at;
-                                if (!elIsBefore(pos.textNode, appear.solidContentEl))
-                                    at += 1;
+                                if (!elIsBefore(pos.textNode, appear.solidContentEl)) at += 1;
                                 await first.parent.append(block, at, first.parentKey);
                             }
                             else {
                                 var cs = await appear.split([pos.offset]);
                                 var first = cs[0];
                                 var at = first.at;
-                                if (cs.length == 1 && pos.offset > 0) at += 1;
+                                if (!(cs.length == 1 && pos.offset == 0)) at += 1;
                                 await first.parent.append(block, at, first.parentKey);
                             }
                             block.page.addUpdateEvent(async () => {
@@ -69,7 +68,7 @@ export function DragBlockLine(block: Block, event: React.MouseEvent) {
             }
             finally {
 
-                ghostView.unload();
+                //ghostView.unload();
             }
         }
     })
