@@ -1,5 +1,5 @@
 import React from "react";
-import { EditSvg, EmojiSvg, FlashSvg, FontSvg, PlusSvg } from "../../../component/svgs";
+import { DragHandleSvg, EditSvg, EmojiSvg, FlashSvg, FontSvg, PlusSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
@@ -16,6 +16,8 @@ import { Rect } from "../../../src/common/vector/point";
 import { PageLayoutType } from "../../../src/page/declare";
 import { DataGridView } from "../../data-grid/view/base";
 import "./style.less";
+import { DragBlockLine } from "../../../src/kit/handle/line";
+import { SolidArea } from "../../../src/block/view/appear";
 
 @url('/button')
 export class BlockButton extends Block {
@@ -89,10 +91,10 @@ export class BlockButton extends Block {
                                 text: '选择批量处理视图',
                                 type: MenuItemType.text
                             },
-                            ...schema.views.findAll(c=>c.url==BlockUrlConstant.FormView).map(rv => {
+                            ...schema.views.findAll(c => c.url == BlockUrlConstant.FormView).map(rv => {
                                 return {
-                                    text:rv.text,
-                                    name:'batchEdit',
+                                    text: rv.text,
+                                    name: 'batchEdit',
                                     checkLabel: this.action == 'batchEdit' && this.actionProps.viewId == rv.id ? true : false,
                                     value: { action: 'batchEdit', actionProps: { viewId: rv.id } }
                                 }
@@ -250,25 +252,29 @@ export class BlockButton extends Block {
 }
 @view('/button')
 export class BlockButtonView extends BlockView<BlockButton>{
+    boxTip: BoxTip;
+    dragBlock(event: React.MouseEvent) {
+        DragBlockLine(this.block, event);
+    }
     render() {
-        return <BoxTip overlay={<div className="flex h-30 round padding-w-5">
-            <ToolTip overlay={'动作'}>
-                <span className="flex-center text-1  item-hover size-24 round cursor" onMouseDown={e => this.block.openFlash(e)}>
-                    <Icon size={16} icon={FlashSvg}></Icon>
-                </span>
-            </ToolTip>
-            <ToolTip overlay={'编辑'}>
-                <span className="flex-center text-1  item-hover size-24 round cursor" onMouseDown={e => this.block.openEdit(e)}>
-                    <Icon size={16} icon={EditSvg}></Icon>
-                </span>
-            </ToolTip>
-        </div>}>
-            <button className={'sy-button flex' + (' sy-button-' + this.block.buttonSize) + (this.block.ghost ? " sy-button-ghost" : "")}
-                onMouseDown={e => this.block.mousedown(e)}>
-                {this.block.showIcon && <span className={this.block.showText ? "gap-r-5" : ""}><Icon size={16} icon={this.block.src}></Icon></span>}
-                {this.block.showText && <span>{this.block.content}</span>}
-            </button>
-        </BoxTip>
+        return <span>
+            <BoxTip
+                ref={e => this.boxTip = e}
+                overlay={<div className="flex h-30 round padding-w-5">
+                    <ToolTip overlay={'拖动'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></a></ToolTip>
+                    <ToolTip overlay={'动作'}> <span className="flex-center text-1  item-hover size-24 round cursor" onMouseDown={e => this.block.openFlash(e)}><Icon size={16} icon={FlashSvg}></Icon></span>
+                    </ToolTip>
+                    <ToolTip overlay={'编辑'}><span className="flex-center text-1  item-hover size-24 round cursor" onMouseDown={e => this.block.openEdit(e)}><Icon size={16} icon={EditSvg}></Icon></span>
+                    </ToolTip>
+                </div>}>
+                <SolidArea hasGap block={this.block} prop={'content'}><button className={'sy-button flex' + (' sy-button-' + this.block.buttonSize) + (this.block.ghost ? " sy-button-ghost" : "")}
+                    onMouseDown={e => this.block.mousedown(e)}>
+                    {this.block.showIcon && <span className={this.block.showText ? "gap-r-5" : ""}><Icon size={16} icon={this.block.src}></Icon></span>}
+                    {this.block.showText && <span>{this.block.content}</span>}
+                </button>
+                </SolidArea>
+            </BoxTip>
+        </span>
     }
 }
 
