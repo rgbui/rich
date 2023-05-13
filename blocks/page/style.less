@@ -29,40 +29,6 @@
 }
 
 .sy-block-page-info {
-    // &-operators {
-    //     height         : 24px;
-    //     line-height    : 24px;
-    //     display        : flex;
-    //     justify-content: flex-start;
-    //     align-items    : center;
-
-    //     a {
-    //         margin-right    : 10px;
-    //         display         : inline-flex;
-    //         justify-content : flex-start;
-    //         align-items     : center;
-    //         padding-left    : 6px;
-    //         padding-right   : 8px;
-    //         border-radius   : 4px;
-    //         color           : rgba(55, 53, 47, 0.5);
-    //         fill            : currentColor;
-    //         background-color: transparent;
-    //         cursor          : pointer;
-
-    //         &:hover {
-    //             background-color: rgba(55, 53, 47, 0.08);
-    //         }
-    //     }
-
-    //     visibility: hidden;
-    // }
-
-    // &:hover {
-    //     .sy-block-page-info-operators {
-    //         visibility: visible;
-    //     }
-    // }
-
     &-icon {
         width          : 78px;
         height         : 78px;
@@ -95,33 +61,13 @@
 }
 
 .sy-block-link {
-    cursor         : pointer;
-    white-space    : nowrap;
-    overflow       : hidden;
-    text-overflow  : ellipsis;
-    display        : flex;
-    justify-content: flex-start;
-    align-items    : center;
+    cursor            : pointer;
+    white-space       : nowrap;
 
     a {
-        border-radius  : 4px;
-        flex-grow      : 1;
-        display        : flex;
-        align-items    : center;
-        justify-content: flex-start;
-        text-decoration: none;
-        text-overflow  : ellipsis;
-
-        // >i {
-        //     display        : inline-flex;
-        //     justify-content: center;
-        //     align-items    : center;
-        //     width          : 24px;
-        //     height         : 24px;
-        //     margin-right   : 4px;
-        // }
-
-        .shy-appear-solid {
+        border-radius: 4px;
+        display      : block;
+        .shy-appear-solid-content {
             >span {
                 // text-decoration: underline;
                 color        : rgb(55, 53, 47);
@@ -129,7 +75,6 @@
                 border-bottom: 1px solid rgba(55, 53, 47, 0.16);
             }
         }
-
         &:hover {
             background-color: rgba(55, 53, 47, 0.08);
             transition      : background 20ms ease-in 0s;

@@ -1,11 +1,9 @@
 
 import React from "react";
-import { GlobalLinkSvg, PageSvg } from "../../component/svgs";
+import { GlobalLinkSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
-import { IconArguments } from "../../extensions/icon/declare";
 import { useLinkPicker } from "../../extensions/link/picker";
 import { channel } from "../../net/channel";
-import { ElementType, getElementUrl } from "../../net/element.type";
 import { Block } from "../../src/block";
 import { BlockDisplay } from "../../src/block/enum";
 import { prop, url, view } from "../../src/block/factory/observable";
@@ -13,16 +11,15 @@ import { BlockView } from "../../src/block/view";
 import { SolidArea } from "../../src/block/view/appear";
 import { Rect } from "../../src/common/vector/point";
 import "./style.less";
-import { LinkPageItem } from "../../src/page/declare";
+import lodash from "lodash";
+import { LinkPageItem, getPageIcon, getPageText } from "../../src/page/declare";
 
 @url('/link')
 export class Link extends Block {
     @prop()
     pageId: string;
     display = BlockDisplay.block;
-    icon: IconArguments;
-    text: string;
-    pageUrl: string;
+    pageInfo: LinkPageItem
     @prop()
     outsideUrl: string;
     get isSupportTextStyle() {
@@ -32,9 +29,7 @@ export class Link extends Block {
         if (this.pageId) {
             var r = await channel.get('/page/query/info', { id: this.pageId });
             if (r?.ok) {
-                if (r.data.icon) this.icon = r.data.icon;
-                if (r.data.text) this.text = r.data.text;
-                if (r.data.url) this.pageUrl = r.data.url;
+                this.pageInfo = lodash.cloneDeep(r.data);
             }
             this.forceUpdate();
         }
@@ -42,7 +37,7 @@ export class Link extends Block {
     async openPage(event: React.MouseEvent) {
         if (!this.pageId) return;
         event.preventDefault();
-        channel.air('/page/open', { elementUrl:getElementUrl(ElementType.PageItem,this.pageId) });
+        channel.air('/page/open', { item: this.pageId });
     }
     async onPickerLinker() {
         var pageLink = await useLinkPicker({ roundArea: Rect.fromEle(this.el) });
@@ -85,16 +80,10 @@ export class LinkView extends BlockView<Link>{
         var { id, pageInfo } = data;
         if (this.block.pageId && this.block.pageId == id) {
             var isUpdate: boolean = false;
-            if (typeof pageInfo.text != 'undefined' && pageInfo.text != this.block.text) {
-                this.block.text = pageInfo.text;
+            if (!lodash.isEqual(lodash.pick(this.block.pageInfo, ['text', 'icon']), lodash.pick(pageInfo, ['text', 'icon']))) {
                 isUpdate = true;
+                this.block.pageInfo = lodash.cloneDeep(pageInfo)
             }
-            if (typeof pageInfo.icon != 'undefined' && JSON.stringify(pageInfo.icon) != JSON.stringify(this.block.icon)) {
-                this.block.icon = pageInfo.icon;
-                isUpdate = true;
-            }
-            if (typeof pageInfo.url != 'undefined')
-                this.block.pageUrl = pageInfo.url;
             if (isUpdate)
                 this.forceUpdate();
         }
@@ -103,13 +92,17 @@ export class LinkView extends BlockView<Link>{
         channel.off('/page/update/info', this.updatePageInfo);
     }
     render() {
-        return <div style={this.block.visibleStyle}> <div className='sy-block-link'>
-            {this.block.pageId && <a style={this.block.contentStyle} href={this.block.pageUrl} onClick={e => this.block.openPage(e)}>
-                <i className="text flex-center size-24 gap-r-5"><Icon size={16} icon={this.block.icon || PageSvg}></Icon></i>
-                <SolidArea block={this.block} prop='text'><span>{this.block.text || '新页面'}</span></SolidArea>
-            </a>}
-            {this.block.outsideUrl && <a style={this.block.contentStyle} href={this.block.outsideUrl}><SolidArea block={this.block} prop='outsideUrl'><span>{this.block.outsideUrl}</span></SolidArea></a>}
-            {!this.block.pageId && !this.block.outsideUrl && <div style={this.block.contentStyle} className='sy-block-link-create' onMouseDown={e => { e.stopPropagation(); this.block.onPickerLinker() }}><Icon size={16} icon={GlobalLinkSvg}></Icon>
+        return <div style={this.block.visibleStyle}><div className='sy-block-link'>
+            {this.block.pageInfo &&
+                <a style={this.block.contentStyle} href={this.block.pageInfo.url} onClick={e => this.block.openPage(e)}>
+                    <SolidArea line block={this.block} prop='text'>
+                        <i className="text flex-inline flex-center size-24 gap-r-5"><Icon size={20} icon={getPageIcon(this.block.pageInfo)}></Icon></i>
+                        <span>{getPageText(this.block.pageInfo)}</span>
+                    </SolidArea>
+                </a>
+            }
+            {this.block.outsideUrl && <a style={this.block.contentStyle} href={this.block.outsideUrl}><SolidArea line block={this.block} prop='outsideUrl'><span>{this.block.outsideUrl}</span></SolidArea></a>}
+            {!this.block.pageId && !this.block.outsideUrl && <div style={this.block.contentStyle} className='sy-block-link-create' onMouseDown={e => { e.stopPropagation(); this.block.onPickerLinker() }}><Icon size={20} icon={GlobalLinkSvg}></Icon>
                 <span>添加链接</span>
             </div>}
         </div></div>
