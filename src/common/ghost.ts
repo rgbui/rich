@@ -6,8 +6,6 @@ class GhostView {
         if (typeof this._el == 'undefined') {
             this._el = document.body.appendChild(document.createElement('div'));
             this._el.style.position = 'absolute';
-            this._el.style.width = '0px';
-            this._el.style.height = '0px';
             this._el.style.top = '0px';
             this._el.style.left = '0px';
             this._el.style.opacity = '0.6';
@@ -62,8 +60,6 @@ class GhostView {
         this.el.innerHTML = '';
         this.el.style.opacity = '0.6';
         this.el.style.display = 'none';
-        this.el.style.width = '0px';
-        this.el.style.height = '0px';
         document.body.style.overflow = this.bodyOverFlow;
     }
     containEl(e: HTMLElement) {
