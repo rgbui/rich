@@ -299,7 +299,7 @@ export var dom = function (el: Node) {
  * @param comprareEl 
  * @returns 
  */
-export function elIsBefore(el: HTMLElement, comprareEl: HTMLElement) {
+export function elIsBefore(el: Node, comprareEl: Node) {
     var compareValue = el.compareDocumentPosition(comprareEl);
     if (compareValue == 2) {
         // compareImg在前

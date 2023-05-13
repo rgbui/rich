@@ -5,16 +5,6 @@ class GhostView {
     private get el() {
         if (typeof this._el == 'undefined') {
             this._el = document.body.appendChild(document.createElement('div'));
-            // var el = this._el;
-            // el.style.position = 'absolute';
-            // el.style.width = '100vw';
-            // el.style.height = '100vh';
-            // el.style.zIndex = '1000000';
-            // el.style.top = '0px';
-            // el.style.left = '0px';
-            // el.style.overflow = 'hidden';
-            // el.style.pointerEvents = 'none'
-            // this._el = el.appendChild(document.createElement('div'));
             this._el.style.position = 'absolute';
             this._el.style.width = '0px';
             this._el.style.height = '0px';

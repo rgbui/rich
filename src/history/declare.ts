@@ -29,6 +29,7 @@ export enum ActionDirective {
     onLoadUserActions = 122,
     onCopyBlock = 123,
     onSolidBlockInputTextContent = 124,
+    onReplace=125,
 
     onBoardToolCreateBlock = 130,
     onResizeBlock = 132,
