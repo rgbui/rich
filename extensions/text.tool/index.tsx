@@ -19,6 +19,8 @@ import { blockStore } from "../block/store";
 import { BoldSvg, CodeSvg, DeleteLineSvg, DoubleLinkSvg, EquationSvg, FontStyleSvg, ItalicSvg, LinkSvg, MagicSvg, SearchSvg, UnderlineSvg } from "../../component/svgs";
 import { ToolTip } from "../../component/view/tooltip";
 import { useSearchBox } from "../search";
+import { dom } from "../../src/common/dom";
+import { util } from "../../util/util";
 
 export type TextToolStyle = {
     link: string,
@@ -87,77 +89,89 @@ class TextTool extends EventsComponent {
             top: this.point.y,
             left: this.point.x
         };
-        return <div tabIndex={1} data-shy-page-unselect="true" onMouseUp={e => e.stopPropagation()} ref={el => this.el = el}>{this.visible == true && <div className='shy-tool-text-menu' ref={e => this.boxEl = e} style={style}>
+        return <div tabIndex={1} onMouseUp={e => e.stopPropagation()} ref={el => this.el = el}>
+            {this.selection.rects.length > 0 &&
+                this.selection.rects.map((rect, i) => {
+                    return <div key={i} className="shy-tool-text-selection" style={{
+                        position: 'absolute',
+                        top: rect.top,
+                        left: rect.left,
+                        width: rect.width,
+                        height: rect.height
+                    }}></div>
+                })
+            }
+            {this.visible == true && <div className='shy-tool-text-menu' ref={e => this.boxEl = e} style={style}>
 
-            <ToolTip overlay={'让AI帮你写作、润色、生成内容'}>
-                <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onExcute(TextCommand.askAI, e)}>
-                    <Icon icon={MagicSvg}></Icon><span>AI</span>
-                </div>
-            </ToolTip>
+                <ToolTip overlay={'让AI帮你写作、润色、生成内容'}>
+                    <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onExcute(TextCommand.askAI, e)}>
+                        <Icon icon={MagicSvg}></Icon><span>AI</span>
+                    </div>
+                </ToolTip>
 
-            {this.turnBlock && this.turnText && <Tip id={LangID.textToolTurn}>
-                <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenBlockSelector(e)}>
-                    <span>{this.turnText}</span><Icon icon='arrow-down:sy'></Icon>
-                </div>
-            </Tip>}
-            <Tip id={LangID.textToolLink}>
-                <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenLink(e)}>
-                    <Icon size={16} icon={LinkSvg}></Icon>
-                    <Icon icon='arrow-down:sy'></Icon>
-                </div>
-            </Tip>
-            {/* <Tip id={LangID.textToolComment}>
+                {this.turnBlock && this.turnText && <Tip id={LangID.textToolTurn}>
+                    <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenBlockSelector(e)}>
+                        <span>{this.turnText}</span><Icon icon='arrow-down:sy'></Icon>
+                    </div>
+                </Tip>}
+                <Tip id={LangID.textToolLink}>
+                    <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenLink(e)}>
+                        <Icon size={16} icon={LinkSvg}></Icon>
+                        <Icon icon='arrow-down:sy'></Icon>
+                    </div>
+                </Tip>
+                {/* <Tip id={LangID.textToolComment}>
                         <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenComment(e)}>
                             <Icon icon='comment:sy'></Icon>
                         </div>
                     </Tip> */}
-            <Tip id={LangID.textToolBold}>
-                <div className={'shy-tool-text-menu-item' + (this.textStyle.bold == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.bold == true ? TextCommand.cancelBold : TextCommand.bold, e)}>
-                    <Icon size={16} icon={BoldSvg}></Icon>
-                </div>
-            </Tip>
-            <Tip id={LangID.textToolItailc}>
-                <div className={'shy-tool-text-menu-item' + (this.textStyle.italic == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.italic == true ? TextCommand.cancelItalic : TextCommand.italic, e)}>
-                    <Icon size={16} icon={ItalicSvg}></Icon>
-                </div>
-            </Tip>
-            <Tip id={LangID.textToolUnderline}>
-                <div className={'shy-tool-text-menu-item' + (this.textStyle.underline == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.underline == true ? TextCommand.cancelLine : TextCommand.underline, e)}>
-                    <Icon size={16} icon={UnderlineSvg}></Icon>
-                </div>
-            </Tip>
-            <Tip id={LangID.textToolDeleteLine}>
-                <div className={'shy-tool-text-menu-item' + (this.textStyle.deleteLine == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.deleteLine == true ? TextCommand.cancelLine : TextCommand.deleteLine, e)}>
-                    <Icon size={16} icon={DeleteLineSvg}></Icon>
-                </div>
-            </Tip>
-            <Tip id={LangID.textToolCode}>
-                <div className={'shy-tool-text-menu-item' + (this.textStyle.code == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.code == true ? TextCommand.cancelCode : TextCommand.code, e)}>
-                    <Icon size={16} icon={CodeSvg}></Icon>
-                </div>
-            </Tip>
-            <Tip id={LangID.textToolEquation}>
-                <div className={'shy-tool-text-menu-item' + (this.textStyle.equation == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.equation == true ? TextCommand.cancelEquation : TextCommand.equation, e)}>
-                    <Icon size={16} icon={EquationSvg}></Icon>
-                </div>
-            </Tip>
-            <Tip id={LangID.textToolColor}>
-                <div className='shy-tool-text-menu-item' onMouseDown={e => this.onOpenFontColor(e)}>
-                    <Icon size={16} icon={FontStyleSvg}></Icon>
-                    <Icon size={16} icon='arrow-down:sy'></Icon>
-                </div>
-            </Tip>
-            <ToolTip overlay={'双链'} >
-                <div className={'shy-tool-text-menu-item' + (this.textStyle.page == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.page != true ? TextCommand.doubleLink : undefined, e)}>
-                    <Icon size={22} icon={DoubleLinkSvg}></Icon>
-                </div>
-            </ToolTip>
-            <ToolTip overlay={'搜索'}>
-                <div className="shy-tool-text-menu-item" onMouseDown={e => this.onSearch(e)}>
-                    <Icon size={16} icon={SearchSvg}></Icon>
-                </div>
-            </ToolTip>
-        </div>}
+                <Tip id={LangID.textToolBold}>
+                    <div className={'shy-tool-text-menu-item' + (this.textStyle.bold == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.bold == true ? TextCommand.cancelBold : TextCommand.bold, e)}>
+                        <Icon size={16} icon={BoldSvg}></Icon>
+                    </div>
+                </Tip>
+                <Tip id={LangID.textToolItailc}>
+                    <div className={'shy-tool-text-menu-item' + (this.textStyle.italic == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.italic == true ? TextCommand.cancelItalic : TextCommand.italic, e)}>
+                        <Icon size={16} icon={ItalicSvg}></Icon>
+                    </div>
+                </Tip>
+                <Tip id={LangID.textToolUnderline}>
+                    <div className={'shy-tool-text-menu-item' + (this.textStyle.underline == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.underline == true ? TextCommand.cancelLine : TextCommand.underline, e)}>
+                        <Icon size={16} icon={UnderlineSvg}></Icon>
+                    </div>
+                </Tip>
+                <Tip id={LangID.textToolDeleteLine}>
+                    <div className={'shy-tool-text-menu-item' + (this.textStyle.deleteLine == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.deleteLine == true ? TextCommand.cancelLine : TextCommand.deleteLine, e)}>
+                        <Icon size={16} icon={DeleteLineSvg}></Icon>
+                    </div>
+                </Tip>
+                <Tip id={LangID.textToolCode}>
+                    <div className={'shy-tool-text-menu-item' + (this.textStyle.code == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.code == true ? TextCommand.cancelCode : TextCommand.code, e)}>
+                        <Icon size={16} icon={CodeSvg}></Icon>
+                    </div>
+                </Tip>
+                <Tip id={LangID.textToolEquation}>
+                    <div className={'shy-tool-text-menu-item' + (this.textStyle.equation == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.equation == true ? TextCommand.cancelEquation : TextCommand.equation, e)}>
+                        <Icon size={16} icon={EquationSvg}></Icon>
+                    </div>
+                </Tip>
+                <Tip id={LangID.textToolColor}>
+                    <div className='shy-tool-text-menu-item' onMouseDown={e => this.onOpenFontColor(e)}>
+                        <Icon size={16} icon={FontStyleSvg}></Icon>
+                        <Icon size={16} icon='arrow-down:sy'></Icon>
+                    </div>
+                </Tip>
+                <ToolTip overlay={'双链'} >
+                    <div className={'shy-tool-text-menu-item' + (this.textStyle.page == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.page != true ? TextCommand.doubleLink : undefined, e)}>
+                        <Icon size={22} icon={DoubleLinkSvg}></Icon>
+                    </div>
+                </ToolTip>
+                <ToolTip overlay={'搜索'}>
+                    <div className="shy-tool-text-menu-item" onMouseDown={e => this.onSearch(e)}>
+                        <Icon size={16} icon={SearchSvg}></Icon>
+                    </div>
+                </ToolTip>
+            </div>}
         </div>;
     }
     onExcute(command: TextCommand, event: React.MouseEvent) {
@@ -247,17 +261,35 @@ class TextTool extends EventsComponent {
             }
         }
     }
+    selection: { rects: Rect[] } = { rects: [] };
     async onOpenLink(event: React.MouseEvent) {
         event.stopPropagation();
         this.blocked = true;
+        var sel = window.getSelection();
+        var range = sel.getRangeAt(0);
+        if (range) {
+            var lineHeight = dom(sel.focusNode.parentNode).lineHeight(20);
+            this.selection.rects = Array.from(range.getClientRects()).map(r => Rect.from(r)).map(c => {
+                var dis = (lineHeight - c.height) / 2;
+                return c.extendY(dis)
+            })
+            sel.removeAllRanges();
+            this.forceUpdate();
+        }
         var pageLink = await useLinkPicker({ roundArea: Rect.fromEvent(event) });
+        this.selection.rects = [];
         this.blocked = false;
+        this.forceUpdate()
         if (pageLink) {
             if (pageLink.name == 'create') {
                 if (!pageLink.text && pageLink.url)
                     pageLink.text = pageLink.url;
             }
             this.emit('setProp', { link: pageLink });
+        }
+        else if (range) {
+            await util.delay(50);
+            sel.addRange(range);
         }
     }
     onOpenComment(event: React.MouseEvent) {
@@ -270,10 +302,10 @@ class TextTool extends EventsComponent {
         }
     }
     componentDidMount() {
-        document.addEventListener('mousedown', this.onGlobalMousedown);
+        document.addEventListener('mousedown', this.onGlobalMousedown, true);
     }
     componentWillUnmount() {
-        document.removeEventListener('mousedown', this.onGlobalMousedown);
+        document.removeEventListener('mousedown', this.onGlobalMousedown, true);
     }
     async onOpenBlockSelector(event: React.MouseEvent) {
         event.stopPropagation();
