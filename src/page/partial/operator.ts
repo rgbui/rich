@@ -111,7 +111,8 @@ export class Page$Operator {
             callback(newBlock, oldBlock);
         });
     }
-    async onReplace(this: Page, block: Block, blockData: (Record<string, any> | Block)[]) {
+    async onReplace(this: Page, block: Block, blockData: (Record<string, any> | Block) | ((Record<string, any> | Block)[])) {
+        if (!Array.isArray(blockData)) blockData = [blockData];
         await this.onAction(ActionDirective.onReplace, async () => {
             if (blockData[0] instanceof Block) await await block.replace(blockData as Block[]);
             else await block.replaceData(blockData as Record<string, any>[]);
