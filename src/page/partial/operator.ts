@@ -13,7 +13,7 @@ import { Point } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { DropDirection } from "../../kit/handle/direction";
 import { storeCopyBlocks } from "../common/copy";
-import { LinkPageItem,  PageLayoutType } from "../declare";
+import { LinkPageItem, PageLayoutType } from "../declare";
 import { PageDirective } from "../directive";
 
 export class Page$Operator {
@@ -104,11 +104,17 @@ export class Page$Operator {
 
         })
     }
-    async onTurn(this: Page, block: Block, url: string, callback: (newBlock: Block,oldBlock:Block) => void) {
+    async onTurn(this: Page, block: Block, url: string, callback: (newBlock: Block, oldBlock: Block) => void) {
         await this.onAction(ActionDirective.onTurn, async () => {
-            var oldBlock=block;
+            var oldBlock = block;
             var newBlock = await block.turn(url);
-            callback(newBlock,oldBlock);
+            callback(newBlock, oldBlock);
+        });
+    }
+    async onReplace(this: Page, block: Block, blockData: (Record<string, any> | Block)[]) {
+        await this.onAction(ActionDirective.onReplace, async () => {
+            if (blockData[0] instanceof Block) await await block.replace(blockData as Block[]);
+            else await block.replaceData(blockData as Record<string, any>[]);
         });
     }
     async onBatchTurn(this: Page, blocks: Block[], url: string) {
@@ -218,9 +224,11 @@ export class Page$Operator {
                 direction: 'left'
             },
             await blocks[0].onGetContextMenus(),
-            {input:(e)=>{
-                blocks[0].onContextMenuInput(e)
-            }}
+            {
+                input: (e) => {
+                    blocks[0].onContextMenuInput(e)
+                }
+            }
         );
         if (re) {
             if (blocks.length == 1) await blocks[0].onClickContextMenu(re.item, re.event);

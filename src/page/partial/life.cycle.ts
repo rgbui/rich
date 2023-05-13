@@ -34,7 +34,7 @@ export class Page$Cycle {
         this.emit(PageDirective.init);
         await langProvider.import();
     }
-    async onReplace(this: Page, itemId: string, content: any, operates?: any) {
+    async onLoadContentOperates(this: Page, itemId: string, content: any, operates?: any) {
         await this.clear();
         await this.load(content);
         if (Array.isArray(operates) && operates.length > 0) {

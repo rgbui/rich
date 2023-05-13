@@ -64,6 +64,18 @@ export class Block$Operator {
         }, this);
         return newBlock;
     }
+    async replace(this: Block, newBlock: Block[]) {
+        var at = this.at;
+        var pk = this.parentKey;
+        await this.parent.appendArray(newBlock, at, pk);
+        await this.delete()
+    }
+    async replaceData(this: Block, blockData: Record<string, any>[]) {
+        var at = this.at;
+        var pk = this.parentKey;
+        await this.parent.appendArrayBlockData(blockData, at, pk);
+        await this.delete()
+    }
     async clearEmptyBlock(this: Block) {
         var c = this.closest(x => x.isBlock);
         if (c.isContentEmpty) {
@@ -430,8 +442,8 @@ export class Block$Operator {
                 })
                 break;
             case DropDirection.sub:
-                if (this.hasSubChilds)  bs =await this.appendArrayBlockData(blocks, 0, this.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
-                else  bs =await this.parent.appendArrayBlockData(blocks, this.at, this.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
+                if (this.hasSubChilds) bs = await this.appendArrayBlockData(blocks, 0, this.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
+                else bs = await this.parent.appendArrayBlockData(blocks, this.at, this.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
                 break;
         }
         return bs;
