@@ -1,7 +1,5 @@
 import FileIconSvg from "../src/assert/svg/FileIcon.svg";
 import AddPageCommentSvg from "../src/assert/svg/addPageComment.svg";
-import AddPageCoverSvg from "../src/assert/svg/addPageCover.svg";
-import AddPageIconSvg from "../src/assert/svg/addPageIcon.svg";
 import AddTwoSvg from "../src/assert/svg/addTwo.svg";
 import AddUserSvg from "../src/assert/svg/addUser.svg";
 import AiSvg from "../src/assert/svg/ai.svg";
@@ -179,6 +177,7 @@ import ReportSvg from "../src/assert/svg/report.svg";
 import RobotSvg from "../src/assert/svg/robot.svg";
 import RotatingSvg from "../src/assert/svg/rotating.svg";
 import RowNoSvg from "../src/assert/svg/row.no.svg";
+import SaveSvg from "../src/assert/svg/save.svg";
 import SearchSvg from "../src/assert/svg/search.svg";
 import SeoFolderSvg from "../src/assert/svg/seoFolder.svg";
 import ServerSvg from "../src/assert/svg/server.svg";
@@ -234,8 +233,6 @@ import WsSettingsSvg from "../src/assert/svg/wsSettings.svg";
 export  {
 FileIconSvg,
 AddPageCommentSvg,
-AddPageCoverSvg,
-AddPageIconSvg,
 AddTwoSvg,
 AddUserSvg,
 AiSvg,
@@ -413,6 +410,7 @@ ReportSvg,
 RobotSvg,
 RotatingSvg,
 RowNoSvg,
+SaveSvg,
 SearchSvg,
 SeoFolderSvg,
 ServerSvg,
