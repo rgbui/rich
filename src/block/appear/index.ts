@@ -24,7 +24,8 @@ export class AppearAnchor {
         public appear: BlockAppear,
         public prop: string,
         public plain: boolean,
-        public defaultValue: string
+        public defaultValue: string,
+        public hasGap: boolean
     ) {
     }
     get isText() {
@@ -37,6 +38,9 @@ export class AppearAnchor {
         if (this.isText) {
             return TextEle.getTextContent(this.el);
         }
+    }
+    get solidContentEl() {
+        return this.el.querySelector('.shy-appear-solid-content') as HTMLElement
     }
     setContent(value: string) {
         this.el.innerHTML = value;
@@ -203,8 +207,8 @@ export class AppearAnchor {
     endCollapse() {
         var lt = this.lastTextNode;
         var sel = window.getSelection();
-        if (lt instanceof Text) sel.collapse(lt,lt.textContent.length); 
-        else sel.collapse(lt,lt.childNodes.length);
+        if (lt instanceof Text) sel.collapse(lt, lt.textContent.length);
+        else sel.collapse(lt, lt.childNodes.length);
     }
     getCursorOffset(focusNode?: Node, offset?: number) {
         if (this.isSolid) {

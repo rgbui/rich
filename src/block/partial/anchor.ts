@@ -83,7 +83,7 @@ export class Block$Anchor {
             typeof elementAppear.prop == 'undefined'
         ) elementAppear.prop = 'content';
         if (!this.__appearAnchors.exists(x => x.prop == elementAppear.prop))
-            this.__appearAnchors.push(new AppearAnchor(this, elementAppear.el, elementAppear.appear, elementAppear.prop, elementAppear.plain || false, elementAppear.defaultValue))
+            this.__appearAnchors.push(new AppearAnchor(this, elementAppear.el, elementAppear.appear, elementAppear.prop, elementAppear.plain || false, elementAppear.defaultValue,elementAppear.hasGap))
         else {
             var ep = this.__appearAnchors.find(g => g.prop == elementAppear.prop);
             if (ep) {
