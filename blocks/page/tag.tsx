@@ -15,7 +15,7 @@ export class ShyTag extends Block {
 @view('/tag')
 export class ShyMentionView extends BlockView<ShyTag>{
     render() {
-        return <span>
+        return <span className="sy-block-tag">
             <SolidArea block={this.block} prop={'userid'} >#{this.block.tagText}</SolidArea>
         </span>
     }

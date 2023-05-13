@@ -1,4 +1,6 @@
 import { Block } from "../../block";
+import { findBlockAppear } from "../../block/appear/visible.seek";
+import { elIsBefore } from "../../common/dom";
 import { MouseDragger } from "../../common/dragger";
 import { ghostView } from "../../common/ghost";
 import { onAutoScroll, onAutoScrollStop } from "../../common/scroll";
@@ -8,6 +10,7 @@ import { Point } from "../../common/vector/point";
  * 手动拖动行内块
  * 拖的时候，光标指定位置
  * @param block 
+ * 
  */
 export function DragBlockLine(block: Block, event: React.MouseEvent) {
     var sel = window.getSelection();
@@ -21,18 +24,45 @@ export function DragBlockLine(block: Block, event: React.MouseEvent) {
             })
         },
         moving(ev, data, isEnd) {
-            var pos = getPos(ev);
-            if (pos?.textNode) {
-                sel.collapse(pos.textNode, pos.offset)
+            var el = ev.target as HTMLElement;
+            var appear = findBlockAppear(el);
+            if (appear) {
+                var pos = getPos(ev);
+                if (pos?.textNode) {
+                    sel.collapse(pos.textNode, pos.offset)
+                }
             }
-            console.log(pos);
             ghostView.move(Point.from(ev).move(10, 10));
             onAutoScroll({ el: block.page.root, feelDis: 100, dis: 30, interval: 50, point: Point.from(ev) })
         },
         async moveEnd(ev, isMove, data) {
             onAutoScrollStop();
             try {
-
+                var el = ev.target as HTMLElement;
+                var appear = findBlockAppear(el);
+                if (appear) {
+                    var pos = getPos(ev);
+                    if (pos?.textNode) {
+                        block.page.onAction('DragBlockLine', async () => {
+                            if (appear.isSolid) {
+                                var at = appear.block.at;
+                                if (!elIsBefore(pos.textNode, appear.solidContentEl))
+                                    at += 1;
+                                await first.parent.append(block, at, first.parentKey);
+                            }
+                            else {
+                                var cs = await appear.split([pos.offset]);
+                                var first = cs[0];
+                                var at = first.at;
+                                if (cs.length == 1 && pos.offset > 0) at += 1;
+                                await first.parent.append(block, at, first.parentKey);
+                            }
+                            block.page.addUpdateEvent(async () => {
+                                block.page.kit.anchorCursor.onFocusBlockAnchor(block, { last: true })
+                            })
+                        })
+                    }
+                }
             }
             catch (ex) {
 

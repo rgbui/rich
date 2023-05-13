@@ -68,6 +68,11 @@ export function SolidArea(props: {
     block: Block,
     prop?: string,
     style?: CSSProperties,
+    /**
+     * 表示行内块 是否有间隙
+     * 意味着光标的移动不是在相邻的两个字符之间，而是在两个块之间
+     */
+    hasGap?: boolean,
     isHtml?: boolean,
     line?: boolean
 }) {
@@ -76,6 +81,7 @@ export function SolidArea(props: {
             el: e,
             prop: props.prop,
             appear: BlockAppear.solid,
+            hasGap: props.hasGap || false
         }),
         style: props.style
     };
@@ -97,12 +103,12 @@ export function SolidArea(props: {
     var line = typeof props.line == 'undefined' ? props.block.isLine : props.line;
     if (line) return <span className='shy-appear-solid'  {...ps} >
         {props.block.isCanEdit() && <span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}
-        {props.children}
+        <span className='shy-appear-solid-content'>{props.children}</span>
         {props.block.isCanEdit() && <span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}
     </span>
     return <div className='shy-appear-solid'  {...ps} >
         {props.block.isCanEdit() && <span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}
-        {props.children}
+        <div className='shy-appear-solid-content'>{props.children}</div>
         {props.block.isCanEdit() && <span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}
     </div>
 }
