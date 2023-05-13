@@ -289,6 +289,22 @@ export class Rect {
         rect.height += dis * 2;
         return rect;
     }
+    extendX(dis: number) {
+        var rect = this.clone();
+        // rect.top -= dis;
+        rect.left -= dis;
+        rect.width += dis * 2;
+        // rect.height += dis * 2;
+        return rect;
+    }
+    extendY(dis: number) {
+        var rect = this.clone();
+        rect.top -= dis;
+        // rect.left -= dis;
+        // rect.width += dis * 2;
+        rect.height += dis * 2;
+        return rect;
+    }
     clone() {
         return new Rect(this.left, this.top, this.width, this.height);
     }
