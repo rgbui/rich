@@ -7,13 +7,13 @@ import { EventsComponent } from "../../component/lib/events.component";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
 import { PageLink } from "./declare";
-import { GlobalLinkSvg, PageSvg } from "../../component/svgs";
+import { GlobalLinkSvg, PageSvg, PlusSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import lodash from "lodash";
 import { channel } from "../../net/channel";
 import "./style.less";
 import { Divider } from "../../component/view/grid";
-import { LinkPageItem } from "../../src/page/declare";
+import { LinkPageItem, getPageIcon, getPageText } from "../../src/page/declare";
 import { Spin } from "../../component/view/spin";
 
 /**
@@ -60,21 +60,33 @@ class LinkPicker extends EventsComponent {
         }
     }
     links: LinkPageItem[] = [];
+    allLists: { list: LinkPageItem[], total: number, size: number } = { list: [], total: 0, size: 500 };
     loading = false;
     isSearch = false;
     syncSearch = lodash.debounce(async () => {
         this.forceSyncSearch();
     }, 1200)
+    async searchAll() {
+        var g = await channel.get('/page/word/query', { size: this.allLists.size });
+        if (g.ok) {
+            this.allLists = g.data;
+        }
+    }
     forceSyncSearch = async () => {
         if (!this.url) return;
         this.loading = true;
         this.forceUpdate();
-        var r = await channel.get('/page/word/query', { word: this.url });
-        this.isSearch = true;
-        if (r.ok) {
-            this.links = r.data.list;
+        if (this.allLists.total < this.allLists.size && this.allLists.total > 0) {
+            this.links = this.allLists.list.filter(l => l.text.startsWith(this.url));
         }
-        else this.links = [];
+        else {
+            var r = await channel.get('/page/word/query', { word: this.url });
+            if (r.ok) {
+                this.links = r.data.list;
+            }
+            else this.links = [];
+        }
+        this.isSearch = true;
         this.loading = false;
         this.forceUpdate();
     }
@@ -85,18 +97,21 @@ class LinkPicker extends EventsComponent {
                 onChange={e => this.onInput(e)}
                 onEnter={(e, g) => { g.preventDefault(); g.stopPropagation(); this.onEnter(e); }}
                 value={this.url}></Input>
-            <div className='shy-link-picker-current-page'>
+            <div className='shy-link-picker-current-page gap-h-5'>
                 {this.name == 'outside' && this.url && <a className="flex" onClick={e => this.onEnter(this.url)}><Icon size={16} icon={GlobalLinkSvg}></Icon><span>{this.url}</span></a>}
             </div>
-            {this.name == 'page' && this.url && <><div onClick={e => this.onCreate()} className='shy-link-picker-operators'>
-                <span>创建<em>{this.url}</em></span>
+            {this.name == 'page' && this.url && <><div onClick={e => this.onCreate()} className='shy-link-picker-operators flex'>
+                <span className="flex-auto">创建<em className="bold">{this.url}</em></span>
+                <span className="flex-fixed size-20 item-hover cursor round">
+                    <Icon icon={PlusSvg} size={20}></Icon>
+                </span>
             </div><Divider></Divider></>}
             {this.name == 'page' && <div className='shy-link-picker-search-pages'>
                 {this.loading && <Spin></Spin>}
                 {!this.loading && this.links.map((link, i) => {
-                    return <a onClick={e => this.onSelect(link)} className={"shy-page-link-item"} key={link.id}><Icon icon={link.icon || PageSvg}></Icon><span>{link.text || '新页面'}</span></a>
+                    return <a onClick={e => this.onSelect(link)} className={"shy-page-link-item"} key={link.id}><Icon icon={getPageIcon(link)}></Icon><span>{getPageText(link)}</span></a>
                 })}
-                {!this.loading && this.links.length == 0 && this.isSearch && <span className="remark f-12">没有搜索到</span>}
+                {!this.loading && this.links.length == 0 && this.isSearch && <span className="remark f-12 flex-center">没有搜索到</span>}
             </div>}
         </div>
     }
@@ -107,6 +122,7 @@ class LinkPicker extends EventsComponent {
         this.emit('change', { name: 'create', url: this.url })
     }
     async onOpen(link: PageLink) {
+        await this.searchAll();
         if (link) {
             if (link.url) {
                 this.url = link.url;
@@ -128,7 +144,7 @@ class LinkPicker extends EventsComponent {
 }
 
 export async function useLinkPicker(pos: PopoverPosition, link?: PageLink) {
-    var popover = await PopoverSingleton(LinkPicker, {}, { link: link });
+    var popover = await PopoverSingleton(LinkPicker, { mask: true }, { link: link });
     var picker = await popover.open(pos);
     await picker.onOpen(link);
     return new Promise((resolve: (link: PageLink) => void, reject) => {

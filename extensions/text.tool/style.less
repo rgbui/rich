@@ -17,21 +17,26 @@
         display        : inline-flex;
         justify-content: flex-start;
         align-items    : center;
+
         span {
-            font-size: 14px;
+            font-size : 14px;
             font-style: normal;
         }
+
         span+.sy-icon {
             display    : inline-flex;
             margin-left: 5px;
             color      : rgba(55, 53, 47, 0.3);
         }
+
         &.hover {
             color: rgb(46, 170, 220);
-            svg path{
+
+            svg path {
                 // fill: rgb(46, 170, 220);
             }
         }
+
         &:hover {
             background-color: rgba(55, 53, 47, 0.08);
         }
@@ -40,4 +45,10 @@
     &-devide {
         box-shadow: rgba(55, 53, 47, 0.09) 1px 0px 0px 0px;
     }
+}
+
+.shy-tool-text-selection {
+    background   : rgba(46, 170, 220, 0.6);
+    border-radius: 2px;
+    z-index      : 10000;
 }

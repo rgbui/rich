@@ -204,9 +204,9 @@ export class AnchorCursor {
      * @returns 
      */
     getAppears() {
-        if(this.startAnchor?.el&&this.endAnchor?.el)
-        return findBlocksBetweenAppears(this.startAnchor.el, this.endAnchor.el);
-        else return[]
+        if (this.startAnchor?.el && this.endAnchor?.el)
+            return findBlocksBetweenAppears(this.startAnchor.el, this.endAnchor.el);
+        else return []
     }
     adjustAnchorSorts() {
         if (this.endAnchor === this.startAnchor && this.endOffset < this.startOffset || TextEle.isBefore(this.endAnchor.el, this.startAnchor.el)) {
