@@ -43,6 +43,7 @@ export class Page$Operator {
                 pos: block.pos,
                 data: await block.get()
             }, block);
+            this.syncRowBlockChange(block,'create');
             this.addBlockUpdate(parent);
         }
         else {
@@ -54,6 +55,7 @@ export class Page$Operator {
                 pos: block.pos,
                 data: await block.get()
             }, block);
+            this.syncRowBlockChange(block,'create');
             this.addPageUpdate();
         }
         return block;

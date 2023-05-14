@@ -18,7 +18,7 @@ import lodash from "lodash";
 import { util } from "../../../util/util";
 import { PageOutLine } from "../../../blocks/page/outline";
 import { channel } from "../../../net/channel";
-import { ElementType, parseElementUrl } from "../../../net/element.type";
+import { ElementType, getElementUrl, parseElementUrl } from "../../../net/element.type";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { GetFieldFormBlockInfo, SchemaCreatePageFormData } from "../../../blocks/data-grid/element/service";
 import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.field";
@@ -270,106 +270,120 @@ export class Page$Cycle {
         }
         fn()
     }
-    /**
-     * 对于将要删除的块
-     * 这里触发通知事件
-     * 这里不做任何的复杂的耗时操作，
-     * 避免阻塞正常的删除的交互操作
-     * @param this 
-     * @param block 
-     */
-    async onNotifyWillRemove(this: Page, block: Block) {
-        var predict = (g) => g.url == BlockUrlConstant.Text && (g.asTextContent.link ? true : false) && g.asTextContent.link.name == 'page';
-        var deleteBlocks: string[] = [];
-        if (block.exists(predict, true)) {
-            var rs = block.findAll(predict, true);
-            deleteBlocks = rs.map(r => r.id);
-        }
-        var cs: {
-            rowBlockId: string;
-            text: string;
-        }[] = [];
-        if (block.isLine) {
-            var rowBlock = block.closest(x => x.isBlock);
-            if (rowBlock.exists(c => c.url == BlockUrlConstant.Text && predict(c) && c !== block)) {
-                cs.push({ rowBlockId: rowBlock.id, text: JSON.stringify(rowBlock.childs.map(g => g.get())) })
+    private async onNotifyChanged(this: Page) {
+        if (this.recordSyncRowBlocks.deletes.length > 0 && this.recordSyncRowBlocks.rowBlocks.length > 0) {
+            var ds = this.recordSyncRowBlocks.deletes;
+            var rs = this.recordSyncRowBlocks.rowBlocks;
+            var ops = []
+            for (let i = 0; i < rs.length; i++) {
+                var row = rs[i];
+                var rfs = row.childs.filter(g => Array.isArray(g.refLinks) && g.refLinks.length > 0);
+                if (rfs.length > 0) {
+                    var rowContents = row.childs.asyncMap(async c => {
+                        return c.get()
+                    });
+                    await rfs.eachAsync(async rf => {
+                        await rf.refLinks.eachAsync(async f => {
+                            ops.push({
+                                id: f.id,
+                                type: f.type,
+                                ref: lodash.cloneDeep(f),
+                                elementUrl: getElementUrl(ElementType.BlockLine, row.id, rf.id),
+                                contents: rowContents,
+                                html: (await row.childs.asyncMap(async c => c.getHtml())).join("")
+                            })
+                        })
+                    })
+                }
             }
-        }
-        if (deleteBlocks.length > 0 || cs.length > 0)
-            this.addUpdateEvent(async () => {
-                await channel.patch('/block/ref/sync', {
-                    data: { deleteBlockIds: deleteBlocks, updates: cs }
+            ds.forEach(c => {
+                ops.push({
+                    id: c.id,
+                    type: c.type,
+                    ref: lodash.cloneDeep(c),
                 })
             })
-    }
-    private async onNotifyChanged(this: Page) {
-        var ua = this.snapshoot.action;
-        /**
-         * 这里主要是同步大纲
-         * 双链的引用数据更新
-         * 定时器的引用数据更新
-         * 
-         */
-        var changes: { head: boolean } = { head: false };
-        var blockSyncs: {
-            deleteBlockIds: string[]; updates: { rowBlockId: string; text: string; }[]
-        } = { deleteBlockIds: [], updates: [] };
-        for (let i = 0; i < this.snapshoot.action.operators.length; i++) {
-            var op = this.snapshoot.action.operators[i];
-            switch (op.directive) {
-                case OperatorDirective.$delete:
-                    /**
-                     * 如果在块删除之前，请在onNotifyWillRemove处理
-                     */
-                    if (op.data.data.url == BlockUrlConstant.Head) changes.head = true;
-                    break;
-                case OperatorDirective.$create:
-                    if (op.data.data.url == BlockUrlConstant.Head) changes.head = true;
-                    /**
-                     * 这里只考虑撤消时的的重建
-                     */
-                    var block = this.find(g => g.id == op.data.pos.blockId);
-                    if (block) {
-                        if (block.exists(g => g.isTextBlock && g.asTextContent?.link?.name == 'page')) {
-                            var rb = block.closest(g => g.isBlock);
-                            blockSyncs.updates.push({ rowBlockId: rb.id, text: JSON.stringify(rb.childs.map(c => c.get())) })
-                        }
-                    }
-                    break;
-                case OperatorDirective.$update:
-                    var block = this.find(g => g.id == op.data.pos.blockId);
-                    if (block) {
-                        if (block.url == BlockUrlConstant.Head) changes.head = true;
-                        if (Object.keys(op.data.new_value).includes('content')) {
-                            var rb = block.closest(x => x.isBlock);
-                            if (rb && rb.exists(g => g.isTextBlock && g.asTextContent?.link?.name == 'page')) {
-                                var rb = block.closest(g => g.isBlock);
-                                blockSyncs.updates.push({ rowBlockId: rb.id, text: JSON.stringify(rb.childs.map(c => c.get())) })
-                            }
-                        }
-                    }
-                    break;
-                case OperatorDirective.$turn:
-                    if (op.data.from.startsWith(BlockUrlConstant.Head) || op.data.to.startsWith(BlockUrlConstant.Head)) changes.head = true;
-                    break;
-                case OperatorDirective.$move:
-                    var block = this.find(g => g.id == op.data.from.blockId);
-                    if (block && block.url == BlockUrlConstant.Head) changes.head = true;
-                    break;
-            }
-        }
-        if (changes.head) {
-            var r = this.find(g => g.url == BlockUrlConstant.Outline);
-            if (r) {
-                (r as PageOutLine).updateOutLine()
-            }
-        }
-        if (blockSyncs.deleteBlockIds.length > 0 || blockSyncs.updates.length > 0) {
-            await channel.patch('/block/ref/sync', {
-                data: blockSyncs
+            console.log('/row/block/sync/refs', ops);
+            await channel.post('/row/block/sync/refs', {
+                pageId: this.pageInfo.id,
+                operators: ops
             })
         }
     }
+    recordSyncRowBlocks: { rowBlocks: Block[], deletes: Block['refLinks'] } = { rowBlocks: [], deletes: [] };
+    /**
+     * 监听 row block块是否发生变化，如果有变化，则将变化同步到数据库中
+     * 主要是处理双链的引用数据更新
+     * @param this 
+     * @param block 
+     * @returns 
+     * 
+     */
+    async syncRowBlockChange(this: Page, block: Block, op: 'create' | 'delete' | 'from' | 'to' | 'content', currentBlock?: Block) {
+        var rs: Block[] = [];
+        var deletes: Block['refLinks'] = [];
+        switch (op) {
+            case 'create':
+                if (block.isLine) {
+                    var row = block.closest(x => x.isOnlyBlock);
+                    if (row) {
+                        if (row.isOnlyBlock) rs = [row];
+                        rs = row.findAll(x => x.isOnlyBlock && x.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0));
+                    }
+                }
+                else {
+                    if (block.isOnlyBlock) rs = [block];
+                    rs = block.findAll(x => x.isOnlyBlock && x.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0));
+                }
+                break;
+            case 'delete':
+                if (block.isLine) {
+                    if (Array.isArray(block.refLinks) && block.refLinks.length > 0) {
+                        deletes.push(...block.refLinks);
+                    }
+                }
+                else {
+                    var lbs = block.findAll(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)
+                    lbs.forEach(c => {
+                        deletes.push(...c.refLinks)
+                    })
+                }
+                break;
+            case 'from':
+                if (currentBlock.isOnlyBlock) {
+                    return;
+                }
+                if (currentBlock.isLine) {
+                    if (block.isOnlyBlock && block.exists(g => g !== currentBlock && Array.isArray(g.refLinks) && g.refLinks.length > 0)) {
+                        rs = [block];
+                    }
+                }
+                break;
+            case 'to':
+                if (currentBlock.isOnlyBlock) return;
+                if (currentBlock.isLine) {
+                    if (block.isOnlyBlock && block.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)) {
+                        rs = [block];
+                    }
+                }
+                break;
+            case 'content':
+                if (block.isLine) {
+                    var row = block.closest(x => x.isOnlyBlock);
+                    if (row.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)) {
+                        rs = [row];
+                    }
+                }
+                break;
+        }
+        rs.forEach(c => {
+            if (!this.recordSyncRowBlocks.rowBlocks.exists(c)) this.recordSyncRowBlocks.rowBlocks.push(c);
+        })
+        deletes.forEach(c => {
+            if (!this.recordSyncRowBlocks.deletes.exists(c)) this.recordSyncRowBlocks.deletes.push(c);
+        })
+    }
+
     /**
      * onAction在执行时，会出现并发的情况，
      * 这时通过onActionQueue把并发的请求变成一个队列，然后有序执行
@@ -388,6 +402,7 @@ export class Page$Cycle {
                     this.willLayoutBlocks = [];
                     this.willUpdateAll = false;
                     this.updatedFns = [];
+                    this.recordSyncRowBlocks = { rowBlocks: [], deletes: [] };
                     try {
                         if (typeof fn == 'function') await fn();
                     } catch (ex) {

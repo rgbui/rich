@@ -13,6 +13,14 @@ import { Point } from "../../common/vector/point";
 import { BlockFactory } from "../factory/block.factory";
 
 export class Block$Operator {
+
+    isDeleted(this: Block) {
+        return this.closest(x => x.deleted == true) ? true : false
+    }
+    /**
+     * 标记块是被删除的
+     */
+    deleted: boolean
     /***
      * 彻底的删除元素
      */
@@ -20,7 +28,7 @@ export class Block$Operator {
         var pbs = this.parentBlocks;
         if (Array.isArray(pbs) && pbs.exists(g => g === this)) {
             try {
-                await this.page.onNotifyWillRemove(this);
+                await this.page.syncRowBlockChange(this, 'delete');
             }
             catch (ex) {
                 this.page.onError(ex)
@@ -29,7 +37,8 @@ export class Block$Operator {
                 pos: this.pos,
                 data: await this.get()
             }, this);
-            pbs.remove(this);
+            lodash.remove(pbs, g => g === this);
+            this.deleted = true;
             if (pbs.length > 0) {
                 if (this.parent && this.parent.isRow && !this.parent.isPart) {
                     var sum = pbs.sum(pb => (pb as any).widthPercent || 100);
@@ -188,9 +197,11 @@ export class Block$Operator {
             at -= 1;
         }
         var from = block.pos;
+        this.page.syncRowBlockChange(block.parent, 'from',block);
         await block.remove();
         bs.insertAt(at, block);
         block.parent = this;
+        this.page.syncRowBlockChange(block.parent, 'to',block);
         this.page.snapshoot.record(OperatorDirective.$move, {
             from,
             to: block.pos
@@ -461,6 +472,7 @@ export class Block$Operator {
 
     }
     async updateProps(this: Block, props: Record<string, any>, range = BlockRenderRange.self) {
+
         var oldValue: Record<string, any> = {};
         var newValue: Record<string, any> = {};
         for (let prop in props) {
@@ -471,6 +483,9 @@ export class Block$Operator {
             }
         }
         if (Object.keys(oldValue).length > 0 || Object.keys(newValue).length > 0) {
+            if (typeof newValue['content'] != 'undefined') {
+                this.page.syncRowBlockChange(this, 'content');
+            }
             await this.changeProps(oldValue, newValue);
             this.syncUpdate(range);
             for (let n in newValue) {
