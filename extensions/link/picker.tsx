@@ -136,12 +136,12 @@ class LinkPicker extends EventsComponent {
                     onEnter={(e, g) => { g.preventDefault(); g.stopPropagation(); this.onEnter(e); }}
                     value={this.url}></Input>
             </div>
-            {this.name == 'outside' && this.url && <div className={'h-30 item-hover round padding-w-5 flex' + (this.selectIndex == 0 ? " item-hover-focus" : "")}
+            {this.name == 'outside' && this.url && <div className={'h-30 cursor item-hover round padding-w-5 flex' + (this.selectIndex == 0 ? " item-hover-focus" : "")}
                 onClick={e => this.onEnter(this.url)}
             ><span className="size-24 flex-center item-hover"> <Icon size={16} icon={GlobalLinkSvg}></Icon></span>
                 <span>{this.url}</span>
             </div>}
-            {this.name == 'page' && this.url && <><div onClick={e => this.onCreate()} className={'h-30 item-hover round padding-w-5 flex' + (this.selectIndex == 0 ? " item-hover-focus" : "")}>
+            {this.name == 'page' && this.url && <><div onClick={e => this.onCreate()} className={'h-30  cursor  item-hover round padding-w-5 flex' + (this.selectIndex == 0 ? " item-hover-focus" : "")}>
                 <span className="flex-auto">创建<em className="bold">{this.url}</em></span>
                 <span className="flex-fixed size-20 item-hover cursor round">
                     <Icon icon={PlusSvg} size={20}></Icon>
@@ -202,8 +202,8 @@ export async function useLinkPicker(pos: PopoverPosition, link?: PageLink) {
     var popover = await PopoverSingleton(LinkPicker, { mask: true }, { link: link });
     var picker = await popover.open(pos);
     await picker.onOpen(link);
-    return new Promise((resolve: (link: PageLink & { refLinks: Block['refLinks'] }) => void, reject) => {
-        picker.on('change', (link: PageLink & { refLinks: Block['refLinks'] }) => {
+    return new Promise((resolve: (g: { link: PageLink } & { refLinks: Block['refLinks'] }) => void, reject) => {
+        picker.on('change', (link: { link: PageLink } & { refLinks: Block['refLinks'] }) => {
             resolve(link);
             popover.close();
         })
