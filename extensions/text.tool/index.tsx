@@ -229,7 +229,7 @@ class TextTool extends EventsComponent {
                 break;
             case TextCommand.doubleLink:
                 this.textStyle.page = false;
-                this.emit('setProp', { link: { name: 'page' } });
+                this.emit('setProp', { link: { name: 'create' } });
                 return this.forceUpdate();
                 break;
             case TextCommand.askAI:
@@ -281,6 +281,7 @@ class TextTool extends EventsComponent {
         this.blocked = false;
         this.forceUpdate()
         if (pageLink) {
+            console.log(pageLink, 'ssss');
             this.emit('setProp', { ...pageLink });
         }
         else if (range) {

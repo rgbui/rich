@@ -28,6 +28,7 @@ import { onPaste } from "./paste";
 import { AutoInputStore, InputForceStore, InputStore } from "./store";
 import { AiInput } from "./ai";
 import { useAITool } from "../../../extensions/ai";
+import { channel } from "../../../net/channel";
 
 /**
  * https://blog.csdn.net/mafan121/article/details/78519348
@@ -359,7 +360,7 @@ export class PageWrite {
      */
     async onInputPopCreateBlock(...args: any[]) {
         var inputPopHandle = async (offset: number,
-            blockData: { isLine?: boolean, createPage?: boolean, url: string }) => {
+            blockData: { isLine?: boolean, url?: string, link?: { name: 'create', text: string } }) => {
             await InputForceStore(this.inputPop.aa, async () => {
                 var aa = this.inputPop.aa;
                 var newBlock: Block;
@@ -370,6 +371,18 @@ export class PageWrite {
                     /**
                      * 说明创建的是行内块
                      */
+                    if (bd.link?.name == 'create') {
+                        //说明是[[创建双链
+                        var currentPage = await channel.query('/current/page');
+                        var r = await channel.air('/page/create/sub', {
+                            pageId: currentPage.id,
+                            text: bd.link.text,
+                        });
+                        if (r.id) Object.assign(bd, {
+                            refLinks: [{ type: 'page', id: util.guid(), pageId: r.id }],
+                        })
+                        delete bd.link;
+                    }
                     newBlock = await aa.block.visibleRightCreateBlock(offset, blockData.url, { ...bd, createSource: 'InputBlockSelector' });
                 }
                 else {
