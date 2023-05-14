@@ -245,6 +245,8 @@ export class Page$Cycle {
     private notifyUpdateBlock(this: Page) {
         var ups = this.willUpdateBlocks.map(c => c);
         var fns = this.updatedFns.map(f => f);
+        var cos = Object.assign({}, this.recordSyncRowBlocks);
+        this.recordSyncRowBlocks = { rowBlocks: [], deletes: [] };
         this.willUpdateBlocks = [];
         this.updatedFns = [];
         var self = this;
@@ -261,7 +263,7 @@ export class Page$Cycle {
             }
             await fns.eachAsync(async g => await g());
             try {
-                self.onNotifyChanged()
+                self.onNotifyChanged(cos)
             }
             catch (ex) {
                 console.error(ex);
@@ -270,27 +272,23 @@ export class Page$Cycle {
         }
         fn()
     }
-    private async onNotifyChanged(this: Page) {
-        if (this.recordSyncRowBlocks.deletes.length > 0 && this.recordSyncRowBlocks.rowBlocks.length > 0) {
-            var ds = this.recordSyncRowBlocks.deletes;
-            var rs = this.recordSyncRowBlocks.rowBlocks;
+    private async onNotifyChanged(this: Page, recordSyncRowBlocks: Page['recordSyncRowBlocks']) {
+        if (recordSyncRowBlocks.deletes.length > 0 || recordSyncRowBlocks.rowBlocks.length > 0) {
+            var ds = recordSyncRowBlocks.deletes;
+            var rs = recordSyncRowBlocks.rowBlocks;
             var ops = []
             for (let i = 0; i < rs.length; i++) {
                 var row = rs[i];
                 var rfs = row.childs.filter(g => Array.isArray(g.refLinks) && g.refLinks.length > 0);
                 if (rfs.length > 0) {
-                    var rowContents = row.childs.asyncMap(async c => {
-                        return c.get()
-                    });
                     await rfs.eachAsync(async rf => {
                         await rf.refLinks.eachAsync(async f => {
                             ops.push({
                                 id: f.id,
                                 type: f.type,
                                 ref: lodash.cloneDeep(f),
-                                elementUrl: getElementUrl(ElementType.BlockLine, row.id, rf.id),
-                                contents: rowContents,
-                                html: (await row.childs.asyncMap(async c => c.getHtml())).join("")
+                                elementUrl: getElementUrl(ElementType.BlockLine, this.pageInfo.id, row.id, rf.id),
+                                html: (await row.childs.asyncMap(async c => await c.getHtml())).join("")
                             })
                         })
                     })
@@ -328,12 +326,12 @@ export class Page$Cycle {
                     var row = block.closest(x => x.isOnlyBlock);
                     if (row) {
                         if (row.isOnlyBlock) rs = [row];
-                        rs = row.findAll(x => x.isOnlyBlock && x.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0));
+                        rs.push(...row.findAll(x => x.isOnlyBlock && x.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)));
                     }
                 }
                 else {
                     if (block.isOnlyBlock) rs = [block];
-                    rs = block.findAll(x => x.isOnlyBlock && x.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0));
+                    rs.push(...block.findAll(x => x.isOnlyBlock && x.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)));
                 }
                 break;
             case 'delete':
@@ -382,6 +380,8 @@ export class Page$Cycle {
         deletes.forEach(c => {
             if (!this.recordSyncRowBlocks.deletes.exists(c)) this.recordSyncRowBlocks.deletes.push(c);
         })
+        console.log('ssss', arguments);
+        console.log(this.recordSyncRowBlocks)
     }
 
     /**
