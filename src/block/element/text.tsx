@@ -59,13 +59,19 @@ export class TextContent extends Block {
     async getPlain() {
         return this.content;
     }
+    /**
+     * 是否是相同的格式
+     * @param block 
+     * @returns 
+     */
     isEqualFormat(block: TextContent) {
         if (this.pattern.isEqual(block.pattern)) {
             if (this.code == true && block.code == true) return true;
             if (this.comment && block.comment && lodash.isEqual(this.comment, block.comment)) return true;
             if (this.link && block.link && lodash.isEqual(this.link, block.link)) return true;
+            if (this.refLinks && block.refLinks && lodash.isEqual(this.refLinks, block.refLinks)) return true;
             if (this.code == false && block.code == false) {
-                if (!this.link && !block.link && !this.comment && !block.comment) return true;
+                if (!this.link && !block.link && !this.comment && !block.comment && !this.refLinks && !block.refLinks) return true;
             }
         }
         return false;
@@ -78,7 +84,18 @@ export class TextContent extends Block {
         return true;
     }
     async getHtml() {
-        if (this.link) return `<a href='${this.link.url}'>${this.content}</a>`
+        if (this.link) {
+            if (!this.link.url) {
+                return `<span>${this.content}</span>`
+            }
+            return `<a target='_blank' href='${this.link.url}'>${this.content}</a>`
+        }
+        else if (this.refLinks?.length > 0) {
+            var pageId = this.link?.pageId || this.refLinks[0].pageId;
+            var ws = channel.query('/current/workspace')
+            var url = (ws?.url || "") + "/page/" + pageId;
+            return `<a data-page-id='${pageId}' data-ws-id='${ws?.id}' href='${url}'>${this.content}</a>`
+        }
         else if (this.code) return `<pre>${this.content}</pre>`
         else {
             return `<span>${this.content}</span>`
@@ -145,9 +162,9 @@ export class TextContentView extends BlockView<TextContent>{
     render() {
         var ta = <TextArea block={this.block} prop='content' ></TextArea>
         var classList: string[] = ['sy-block-text-content'];
-        if (this.block.link) {
+        if (this.block.link || this.block.refLinks?.length > 0) {
             ta = <SolidArea block={this.block}>{this.block.content}</SolidArea>;
-            if (this.block.link?.name == 'create' && this.block.link.pageId) {
+            if (this.block.link?.name == 'create') {
                 if (this.block.isCanEdit())
                     ta = <BoxTip ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center padding-5 r-flex-center r-size-24 r-round r-item-hover r-cursor text">
                         <ToolTip overlay={'拖动'}><span onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></ToolTip>

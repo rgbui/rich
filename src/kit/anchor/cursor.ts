@@ -135,7 +135,8 @@ export class AnchorCursor {
                 var line = cs[i];
                 var prev = cs[i - 1];
                 if (prev) {
-                    if (line.url == BlockUrlConstant.Text && prev.url == BlockUrlConstant.Text) {
+                    if (line.url == BlockUrlConstant.Text && prev.url == BlockUrlConstant.Text)
+                    {
                         if ((line as TextContent).isEqualFormat(prev as TextContent)) {
                             if (line === options.startAnchor.block) {
                                 options.startAnchor = prev.appearAnchors.first();
