@@ -15,6 +15,7 @@ import { PopoverPosition } from "../popover/position";
 import "./style.less";
 import { LinkPageItem, getPageIcon } from "../../src/page/declare";
 import { Spin } from "../../component/view/spin";
+import { util } from "../../util/util";
 
 /**
  * 用户输入[[触发
@@ -106,10 +107,15 @@ class PageLinkSelector extends InputTextPopSelector {
     }
     private onSelect(block) {
         if (block.name == 'create') {
-            this._select({ url: BlockUrlConstant.Text, isLine: true, content: this.text || "新页面", link: { name: "create", text: this.text } })
+            this._select({ url: BlockUrlConstant.Text, isLine: true, content: this.text || "新页面", link: { name: "create", text: this.text || "新页面" } })
         }
         else {
-            this._select({ url: BlockUrlConstant.Text, isLine: true, content: block.text, link: { name: 'page', pageId: block.id } })
+            this._select({
+                url: BlockUrlConstant.Text,
+                isLine: true,
+                content: block.text,
+                refLinks: [{ id: util.guid(), type: 'page', pageId: block.id }]
+            })
         }
         this.close();
     }
@@ -211,7 +217,7 @@ class PageLinkSelector extends InputTextPopSelector {
                                 url: BlockUrlConstant.Text,
                                 isLine: true,
                                 content: block.text,
-                                link: { name: "page", pageId: block.id }
+                                refLinks: [{ id: util.guid(), type: 'page', pageId: block.id }]
                             }
                         };
                     else return false;
