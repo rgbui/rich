@@ -246,9 +246,6 @@ export class BlockButton extends Block {
     }
     @prop()
     content: string = '按钮';
-    get isLineGap() {
-        return true
-    }
 }
 @view('/button')
 export class BlockButtonView extends BlockView<BlockButton>{

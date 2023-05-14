@@ -262,12 +262,6 @@ export abstract class Block extends Events {
     get isLine(): boolean {
         return this.display == BlockDisplay.inline;
     }
-    /**
-     * 有间隔的行内块
-     */
-    get isLineGap() {
-        return false;
-    }
     get isLineSolid(): boolean {
         if (this.isLine) {
             if (this.appearAnchors.exists(g => g.appear == BlockAppear.solid)) return true;
@@ -276,6 +270,9 @@ export abstract class Block extends Events {
     }
     get isBlock(): boolean {
         return this.display !== BlockDisplay.inline
+    }
+    get isOnlyBlock() {
+        return this.isBlock && !this.isPanel && !this.isLayout && !this.isCell
     }
     /***
      * 注意换行的元素不一定非得是/row，
@@ -729,7 +726,6 @@ export abstract class Block extends Events {
 
     }
     isCanEdit() {
-        if (this.page.pageInfo?.locker?.lock) return false;
         return this.page.isCanEdit;
     }
     getRelativePoint(point: Point) {
@@ -775,10 +771,25 @@ export abstract class Block extends Events {
     }) => {
         await this.onUpdateProps(props, options)
     }, 700)
-
     get isCanEmptyDelete() {
         return true
     }
+    /**
+     * 引用
+     * 双链
+     * 标签
+     * 评论
+     * 时间
+     * 提及
+     */
+    refLinks: {
+        id: string,
+        type: 'page' | "tag" | "comment" | "mention" | "time",
+        pageId?: string,
+        tagId?: string,
+        commentId?: string,
+        userid?: string,
+    }[];
 }
 export interface Block extends Block$Seek { }
 export interface Block extends Block$Event { }
