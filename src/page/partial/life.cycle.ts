@@ -348,11 +348,9 @@ export class Page$Cycle {
                 }
                 break;
             case 'from':
-                if (currentBlock.isOnlyBlock) {
-                    return;
-                }
+                if (currentBlock.isOnlyBlock) return;
                 if (currentBlock.isLine) {
-                    if (block.isOnlyBlock && block.exists(g => g !== currentBlock && Array.isArray(g.refLinks) && g.refLinks.length > 0)) {
+                    if (block.isOnlyBlock && block.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)) {
                         rs = [block];
                     }
                 }
