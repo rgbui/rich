@@ -76,7 +76,7 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
         else if (data == '#') {
             write.inputPop = {
                 rect,
-                type: InputTextPopSelectorType.EmojiSelector,
+                type: InputTextPopSelectorType.TagSelector,
                 offset: offset - 1,
                 aa,
                 selector: (await useTagSelector())

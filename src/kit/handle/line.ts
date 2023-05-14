@@ -57,7 +57,7 @@ export function DragBlockLine(block: Block, event: React.MouseEvent) {
                                 await first.parent.append(block, at, first.parentKey);
                             }
                             block.page.addUpdateEvent(async () => {
-                                block.page.kit.anchorCursor.onFocusBlockAnchor(block, { last: true })
+                                block.page.kit.anchorCursor.onFocusBlockAnchor(block, { merge: true, render: true, last: true })
                             })
                         })
                     }
@@ -67,8 +67,7 @@ export function DragBlockLine(block: Block, event: React.MouseEvent) {
 
             }
             finally {
-
-                //ghostView.unload();
+                ghostView.unload();
             }
         }
     })
