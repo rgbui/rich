@@ -158,7 +158,8 @@ export interface ChannelPostMapUrls {
 	"/http":{args:{url: string;data?: Record<string, any>;method: string;},returnType:Promise<SockResponse<any>>},
 	"/ws/upload/file":{args:{file:File,uploadProgress: (event: ProgressEvent) => void},returnType:Promise<SockResponse<{ file:{url:string,name:string,size:number} }>>},
 	"/ws/download/url":{args:{url:string},returnType:Promise<SockResponse<{ file:{url:string,name:string,size:number} }>>},
-	"/view/snap/rollup":{args:{id:string,elementUrl:string,wsId?:string,bakeTitle?:string,pageTitle?:string},returnType:Promise<SockResponse<{seq:number,id:string}>>}
+	"/view/snap/rollup":{args:{id:string,elementUrl:string,wsId?:string,bakeTitle?:string,pageTitle?:string},returnType:Promise<SockResponse<{seq:number,id:string}>>},
+	"/row/block/sync/refs":{args:{wsId?:string,pageId?:string,operators:any[]},returnType:Promise<SockResponse<{results:{ id: string, error?: string }[]}>>}
 }
 export interface ChannelPatchMapUrls {
     "/datastore/update":{args:{schemaId:string,dataId:string,data:Record<string, any>},returnType:Promise<SockResponse<void>>},
@@ -176,7 +177,6 @@ export interface ChannelPatchMapUrls {
 	"/ws/set/domain":{args:{wsId?:string,domain:string},returnType:Promise<SockResponse<{exists?:boolean,illegal?:boolean}>>},
 	"/ws/patch/member/roles":{args:{wsId?:string,userid:string,roleIds:string[]},returnType:Promise<SockResponse<void>>},
 	"/view/snap/patch":{args:{id:string,data:Record<string,any>},returnType:Promise<SockResponse<void>>},
-	"/block/ref/sync":{args:{wsId?:string,data:{deleteBlockIds: string[], updates: { rowBlockId: string, text: string }[]}},returnType:Promise<SockResponse<void>>},
 	"/interactive/emoji":{args:{elementUrl:string,fieldName:string},returnType:Promise<SockResponse<{count:number,exists:boolean,otherCount?:number,otherExists:boolean}>>}
 }
 export interface ChannelPutMapUrls {
@@ -208,7 +208,6 @@ export interface ChannelPutMapUrls {
 	"/ws/comment/send":{args:{elementUrl: string,wsId?: string, parentId: string, rootId: string,content: string},returnType:Promise<SockResponse<{data:any}>>},
 	"/ws/comment/emoji":{args:{wsId?: string, elementUrl: string},returnType:Promise<SockResponse<{count:number}>>},
 	"/page/item/create":{args:{wsId?:string,data:Record<string,any>},returnType:Promise<SockResponse<{ item:Record<string,any> }>>},
-	"/block/ref/add":{args:{wsId?:string,pageId:string,data:{blockId: string, rowBlockId: string, text: string, refPageId: string}},returnType:Promise<SockResponse<void>>},
 	"/bookmark/url":{args:{url:string},returnType:Promise<SockResponse<{title:string,description:string,image:ResourceArguments,icon:ResourceArguments}>>},
 	"/tag/create":{args:{tag:string,wsId?:string},returnType:Promise<SockResponse<{id:string,tag:string,workspaceId:string,rootId:string,creater:string,createDate:Date}>>}
 }
@@ -280,8 +279,9 @@ export interface ChannelGetMapUrls {
 	"/view/snap/query":{args:{ elementUrl: string},returnType:Promise<SockResponse<{content:string,operates:any[]}>>},
 	"/view/snap/list":{args:{wsId?: string, elementUrl: string, page: number, size: number},returnType:Promise<SockResponse<{list:any[],total:number,size:number,page:number}>>},
 	"/view/snap/content":{args:{wsId?:string,id:string},returnType:Promise<SockResponse<{id:string,content:string}>>},
-	"/block/ref/pages":{args:{wsId?:string,pageId:string},returnType:Promise<SockResponse<{list:any[],total:number,size:number,page:number}>>},
+	"/get/page/refs":{args:{wsId?:string,pageId:string,size?:number,desc?:boolean},returnType:Promise<SockResponse<{list:any[],total:number,size:number,page:number}>>},
 	"/user/interactives":{args:{wsId?:string,schemaId:string,ids:string[],es:string[]},returnType:Promise<SockResponse<{list:Record<string,string[]>}>>},
+	"/get/tag/refs":{args:{wsId?:string,tagId:string,size?:number,desc?:boolean},returnType:Promise<SockResponse<{list:any[],total:number,size:number,page:number}>>},
 	"/tag/word/query":{args:{word?:string,wsId?:string,size?:number},returnType:Promise<SockResponse<{list:any[],total:number,size:number,page:number}>>}
 }
 export interface ChannelQueryMapUrls {
