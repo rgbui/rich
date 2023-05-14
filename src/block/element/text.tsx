@@ -17,13 +17,14 @@ import { Rect } from "../../common/vector/point";
 import { DragBlockLine } from "../../kit/handle/line";
 import { CopyAlert } from "../../../component/copy";
 import { BlockUrlConstant } from "../constant";
+import { util } from "../../../util/util";
 
 /***
  * 文字型的block，
  * 注意该文字block里面含有子文字或其它的如图像block等
  * 
  */
-@url('/text')
+@url(BlockUrlConstant.Text)
 export class TextContent extends Block {
     display = BlockDisplay.inline;
     @prop()
@@ -32,6 +33,15 @@ export class TextContent extends Block {
     comment: { id: string } = null;
     @prop()
     code: boolean = false;
+    @prop()
+    refLinks: {
+        id: string,
+        type: 'page' | "tag" | "comment" | "mention" | "time",
+        pageId?: string,
+        tagId?: string,
+        commentId?: string,
+        userid?: string,
+    }[] = null;
     get isTextContent() {
         return true;
     }
@@ -60,42 +70,6 @@ export class TextContent extends Block {
         }
         return false;
     }
-    async didMounted() {
-        await this.createLink();
-    }
-    async createLink() {
-        if (this.createSource == 'InputBlockSelector') {
-            if (this.link) {
-                if (this.link.name == 'create') {
-                    var r = await channel.air('/page/create/sub', {
-                        pageId: this.page.pageInfo?.id,
-                        text: this.link.text
-                    });
-                    if (r) {
-                        var pa = lodash.cloneDeep(this.link);
-                        pa.pageId = r.id;
-                        pa.name = 'page';
-                        delete pa.url;
-                        delete pa.text;
-                        await this.onUpdateProps({ link: pa }, { range: BlockRenderRange.self, merge: true })
-                        this.syncRefLink(r.id);
-                    }
-                }
-            }
-        }
-    }
-    async syncRefLink(pageId: string) {
-        var rb = this.closest(x => x.isBlock);
-        await channel.put('/block/ref/add', {
-            pageId,
-            data: {
-                blockId: this.id,
-                rowBlockId: rb.id,
-                refPageId: this.page.pageInfo.id,
-                text: JSON.stringify(await rb.childs.asyncMap(async c => (await c.get()))),
-            }
-        })
-    }
     get isBlankPlain() {
         if (this.link) return false;
         if (this.code == true) return false;
@@ -111,13 +85,16 @@ export class TextContent extends Block {
         }
     }
 }
-@view('/text')
+@view(BlockUrlConstant.Text)
 export class TextContentView extends BlockView<TextContent>{
     openPage(e: React.MouseEvent) {
         e.stopPropagation();
         e.preventDefault();
         if (this.boxTip) this.boxTip.close();
-        channel.air('/page/open', { item: this.block.link.pageId });
+        var r = Array.isArray(this.block.refLinks) ? this.block.refLinks[0] : undefined;
+        if (r) {
+            channel.air('/page/open', { item: r.pageId });
+        }
     }
     copyLink(url: string) {
         CopyAlert(url, '复制成功')
@@ -131,13 +108,10 @@ export class TextContentView extends BlockView<TextContent>{
             text: this.block.content
         });
         if (r) {
-            var pa = lodash.cloneDeep(this.block.link);
-            pa.pageId = r.id;
-            pa.name = 'page';
-            delete pa.url;
-            delete pa.text;
-            this.block.onUpdateProps({ link: pa }, { range: BlockRenderRange.self })
-            this.block.syncRefLink(r.id);
+            this.block.onUpdateProps({
+                link: null,
+                refLinks: [{ id: util.guid(), type: 'page', pageId: r.id }]
+            }, { range: BlockRenderRange.self })
         }
     }
     async onClearLink() {
@@ -156,20 +130,12 @@ export class TextContentView extends BlockView<TextContent>{
         }
         var pageLink = await useLinkPicker({ roundArea: Rect.fromEvent(e) }, lc);
         if (pageLink) {
-            if (pageLink.name == 'create') {
-                var r = await channel.air('/page/create/sub', {
-                    pageId: this.block.page.pageInfo?.id,
-                    text: this.block.content
-                });
-                if (r) {
-                    pageLink.pageId = r.id;
-                    pageLink.name = 'page';
-                    delete pageLink.url;
-                    delete pageLink.text;
-                }
-            }
-            this.block.onUpdateProps({ link: pageLink }, { range: BlockRenderRange.self });
-            this.block.syncRefLink(r.id);
+            if (pageLink.url)
+                this.block.onUpdateProps({ link: pageLink, refLinks: null }, { range: BlockRenderRange.self });
+            else this.block.onUpdateProps({
+                link: null,
+                refLinks: pageLink.refLinks
+            }, { range: BlockRenderRange.self })
         }
     }
     dragBlock(event: React.MouseEvent) {
@@ -181,7 +147,7 @@ export class TextContentView extends BlockView<TextContent>{
         var classList: string[] = ['sy-block-text-content'];
         if (this.block.link) {
             ta = <SolidArea block={this.block}>{this.block.content}</SolidArea>;
-            if (this.block.link.name == 'page' && !this.block.link.pageId) {
+            if (this.block.link?.name == 'create' && this.block.link.pageId) {
                 if (this.block.isCanEdit())
                     ta = <BoxTip ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center padding-5 r-flex-center r-size-24 r-round r-item-hover r-cursor text">
                         <ToolTip overlay={'拖动'}><span onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></ToolTip>
@@ -189,8 +155,9 @@ export class TextContentView extends BlockView<TextContent>{
                     </div>}><a className="sy-block-text-content-link">{ta}<i onMouseDown={e => this.openCreatePage(e)}>(创建)</i></a>
                     </BoxTip>
             }
-            else if (this.block.link.pageId) {
-                var url = (channel.query('/current/workspace')?.url || "") + "/page/" + this.block.link.pageId;
+            else if (this.block.link?.pageId || this.block.refLinks?.length > 0) {
+                var pageId = this.block.link?.pageId || this.block.refLinks[0].pageId;
+                var url = (channel.query('/current/workspace')?.url || "") + "/page/" + pageId;
                 ta = <BoxTip ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center  padding-5 r-flex-center r-size-24 r-round r-item-hover r-cursor text">
                     <ToolTip overlay={'拖动'}><span onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></ToolTip>
                     <ToolTip overlay={'复制网址'}><span onMouseDown={e => this.copyLink(url)} ><Icon size={16} icon={DuplicateSvg}></Icon></span></ToolTip>
@@ -198,7 +165,7 @@ export class TextContentView extends BlockView<TextContent>{
                     <ToolTip overlay={'取消'}><span onMouseDown={e => this.onClearLink()}><Icon size={16} icon={TrashSvg}></Icon></span></ToolTip>
                 </div>}><a className="sy-block-text-content-link" onClick={e => this.openPage(e)} href={url}>{ta}</a></BoxTip>
             }
-            else if (this.block.link.url) {
+            else if (this.block.link?.url) {
                 ta = <BoxTip ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center  padding-5  r-flex-center r-size-24 r-round r-item-hover r-cursor text">
                     <ToolTip overlay={'拖动'}><span onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></ToolTip>
                     <ToolTip overlay={'复制网址'}><span onMouseDown={e => this.copyLink(url)} ><Icon size={16} icon={DuplicateSvg}></Icon></span></ToolTip>
