@@ -197,11 +197,11 @@ export class Block$Operator {
             at -= 1;
         }
         var from = block.pos;
-        this.page.syncRowBlockChange(block.parent, 'from',block);
+        this.page.syncRowBlockChange(block.parent, 'from', block);
         await block.remove();
         bs.insertAt(at, block);
         block.parent = this;
-        this.page.syncRowBlockChange(block.parent, 'to',block);
+        this.page.syncRowBlockChange(block.parent, 'to', block);
         this.page.snapshoot.record(OperatorDirective.$move, {
             from,
             to: block.pos
@@ -472,9 +472,13 @@ export class Block$Operator {
 
     }
     async updateProps(this: Block, props: Record<string, any>, range = BlockRenderRange.self) {
-
         var oldValue: Record<string, any> = {};
         var newValue: Record<string, any> = {};
+        if (typeof props['refLinks'] != 'undefined') {
+            if (props['refLinks'] == null) {
+                this.page.syncRowBlockChange(this, 'delete');
+            }
+        }
         for (let prop in props) {
             if (!lodash.isEqual(lodash.get(this, prop), lodash.get(props, prop))) {
                 oldValue[prop] = this.clonePropData(prop);
@@ -483,7 +487,7 @@ export class Block$Operator {
             }
         }
         if (Object.keys(oldValue).length > 0 || Object.keys(newValue).length > 0) {
-            if (typeof newValue['content'] != 'undefined') {
+            if (typeof newValue['content'] != 'undefined' || typeof newValue['refLinks'] != 'undefined') {
                 this.page.syncRowBlockChange(this, 'content');
             }
             await this.changeProps(oldValue, newValue);
