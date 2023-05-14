@@ -1,15 +1,12 @@
 
 import React from "react";
-import { GlobalLinkSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
-import { useLinkPicker } from "../../extensions/link/picker";
 import { channel } from "../../net/channel";
 import { Block } from "../../src/block";
 import { BlockDisplay } from "../../src/block/enum";
 import { prop, url, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
 import { SolidArea } from "../../src/block/view/appear";
-import { Rect } from "../../src/common/vector/point";
 import "./style.less";
 import lodash from "lodash";
 import { LinkPageItem, getPageIcon, getPageText } from "../../src/page/declare";
@@ -39,42 +36,12 @@ export class Link extends Block {
         event.preventDefault();
         channel.air('/page/open', { item: this.pageId });
     }
-    async onPickerLinker() {
-        var pageLink = await useLinkPicker({ roundArea: Rect.fromEle(this.el) });
-        if (pageLink) {
-            if (pageLink.name == 'outside') {
-                this.onUpdateProps({ outsideUrl: pageLink.url }, {
-                    merge: this.createSource == 'InputBlockSelector' ? true : false
-                })
-            }
-            else {
-                if (pageLink.name == 'create') {
-                    var r = await channel.air('/page/create/sub', { pageId: this.page.pageInfo?.id, text: pageLink.text || pageLink.url });
-                    if (r) {
-                        pageLink.pageId = r.id;
-                        pageLink.name = 'page';
-                        delete pageLink.url;
-                        delete pageLink.text;
-                    }
-                }
-                await this.onUpdateProps({ pageId: pageLink.pageId }, {
-                    merge: this.createSource == 'InputBlockSelector' ? true : false
-                });
-                await this.loadPageInfo();
-            }
-        }
-    }
 }
 @view('/link')
 export class LinkView extends BlockView<Link>{
     async didMount() {
         channel.sync('/page/update/info', this.updatePageInfo);
         await this.block.loadPageInfo();
-        if (!this.block.pageId && !this.block.outsideUrl) {
-            if (this.block.createSource == 'InputBlockSelector') {
-                this.block.onPickerLinker();
-            }
-        }
     }
     updatePageInfo = (data: { id: string, pageInfo: LinkPageItem }) => {
         var { id, pageInfo } = data;
@@ -102,9 +69,7 @@ export class LinkView extends BlockView<Link>{
                 </a>
             }
             {this.block.outsideUrl && <a style={this.block.contentStyle} href={this.block.outsideUrl}><SolidArea line block={this.block} prop='outsideUrl'><span>{this.block.outsideUrl}</span></SolidArea></a>}
-            {!this.block.pageId && !this.block.outsideUrl && <div style={this.block.contentStyle} className='sy-block-link-create' onMouseDown={e => { e.stopPropagation(); this.block.onPickerLinker() }}><Icon size={20} icon={GlobalLinkSvg}></Icon>
-                <span>添加链接</span>
-            </div>}
-        </div></div>
+        </div>
+        </div>
     }
 }
