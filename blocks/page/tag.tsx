@@ -11,6 +11,15 @@ export class ShyTag extends Block {
     @prop()
     tagId: string = null;
     tagText: string = '';
+    @prop()
+    refLinks: {
+        id: string,
+        type: 'page' | "tag" | "comment" | "mention" | "time",
+        pageId?: string,
+        tagId?: string,
+        commentId?: string,
+        userid?: string,
+    }[] = null;
 }
 @view('/tag')
 export class ShyMentionView extends BlockView<ShyTag>{
