@@ -281,11 +281,7 @@ class TextTool extends EventsComponent {
         this.blocked = false;
         this.forceUpdate()
         if (pageLink) {
-            if (pageLink.name == 'create') {
-                if (!pageLink.text && pageLink.url)
-                    pageLink.text = pageLink.url;
-            }
-            this.emit('setProp', { link: pageLink });
+            this.emit('setProp', { ...pageLink });
         }
         else if (range) {
             await util.delay(50);

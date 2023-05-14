@@ -130,8 +130,8 @@ export class TextContentView extends BlockView<TextContent>{
         }
         var pageLink = await useLinkPicker({ roundArea: Rect.fromEvent(e) }, lc);
         if (pageLink) {
-            if (pageLink.url)
-                this.block.onUpdateProps({ link: pageLink, refLinks: null }, { range: BlockRenderRange.self });
+            if (pageLink.link)
+                this.block.onUpdateProps({ link: pageLink.link, refLinks: null }, { range: BlockRenderRange.self });
             else this.block.onUpdateProps({
                 link: null,
                 refLinks: pageLink.refLinks
