@@ -15,6 +15,10 @@ import "./style.less";
 import { Divider } from "../../component/view/grid";
 import { LinkPageItem, getPageIcon, getPageText } from "../../src/page/declare";
 import { Spin } from "../../component/view/spin";
+import { popoverLayer } from "../../component/lib/zindex";
+import { KeyboardCode } from "../../src/common/keys";
+import { util } from "../../util/util";
+import { Block } from "../../src/block";
 
 /**
  * 
@@ -28,9 +32,18 @@ class LinkPicker extends EventsComponent {
     }
     url: string = '';
     name: PageLink['name'];
-    onEnter(url) {
+    async onEnter(url) {
         if (url.startsWith('https://') || url.startsWith('http://')) {
-            this.emit('change', { url, name: 'outside' });
+            this.emit('change', { link: { url: url, name: 'outside' } });
+        }
+        else if (this.selectIndex == 0 && url) {
+            await this.onCreate();
+        }
+        else if (this.selectIndex > 0) {
+            var d = this.links[this.selectIndex - 1];
+            if (d) {
+                this.onSelect(d);
+            }
         }
     }
     onInput(e: string) {
@@ -90,38 +103,80 @@ class LinkPicker extends EventsComponent {
         this.loading = false;
         this.forceUpdate();
     }
+    el: HTMLElement;
+    componentDidUpdate() {
+        var el = this.el.querySelector('.item-hover-focus') as HTMLElement;
+        if (el) {
+            el.scrollIntoView({
+                block: "nearest",
+                inline: "nearest"
+            });
+        }
+    }
+    keydown = (event: React.KeyboardEvent<Element>) => {
+        switch (event.key) {
+            case KeyboardCode.ArrowDown:
+                this.selectIndex += 1;
+                return true;
+            case KeyboardCode.ArrowUp:
+                this.selectIndex -= 1;
+                return true;
+            case KeyboardCode.Enter:
+                break;
+        }
+    }
+    selectIndex = 0;
     render() {
-        return <div className='shy-link-picker'>
-            <Input size='small'
-                placeholder={langProvider.getText(LangID.PleashInputLinkAndSearchPages)}
-                onChange={e => this.onInput(e)}
-                onEnter={(e, g) => { g.preventDefault(); g.stopPropagation(); this.onEnter(e); }}
-                value={this.url}></Input>
-            <div className='shy-link-picker-current-page gap-h-5'>
-                {this.name == 'outside' && this.url && <a className="flex" onClick={e => this.onEnter(this.url)}><Icon size={16} icon={GlobalLinkSvg}></Icon><span>{this.url}</span></a>}
+        return <div ref={e => this.el = e} style={{ zIndex: popoverLayer.zoom(this) }} className='pos-fixed bg-white w-250 max-h-300 overlay-y padding-10 round shadow'>
+            <div className="gap-h-5">
+                <Input size='small'
+                    onKeydown={this.keydown}
+                    placeholder={langProvider.getText(LangID.PleashInputLinkAndSearchPages)}
+                    onChange={e => this.onInput(e)}
+                    onEnter={(e, g) => { g.preventDefault(); g.stopPropagation(); this.onEnter(e); }}
+                    value={this.url}></Input>
             </div>
-            {this.name == 'page' && this.url && <><div onClick={e => this.onCreate()} className='shy-link-picker-operators flex'>
+            {this.name == 'outside' && this.url && <div className={'h-30 item-hover round padding-w-5 flex' + (this.selectIndex == 0 ? " item-hover-focus" : "")}
+                onClick={e => this.onEnter(this.url)}
+            ><span className="size-24 flex-center item-hover"> <Icon size={16} icon={GlobalLinkSvg}></Icon></span>
+                <span>{this.url}</span>
+            </div>}
+            {this.name == 'page' && this.url && <><div onClick={e => this.onCreate()} className={'h-30 item-hover round padding-w-5 flex' + (this.selectIndex == 0 ? " item-hover-focus" : "")}>
                 <span className="flex-auto">创建<em className="bold">{this.url}</em></span>
                 <span className="flex-fixed size-20 item-hover cursor round">
                     <Icon icon={PlusSvg} size={20}></Icon>
                 </span>
-            </div><Divider></Divider></>}
-            {this.name == 'page' && <div className='shy-link-picker-search-pages'>
+            </div>
+                <Divider></Divider></>}
+            {this.name == 'page' && <div>
                 {this.loading && <Spin></Spin>}
                 {!this.loading && this.links.map((link, i) => {
-                    return <a onClick={e => this.onSelect(link)} className={"shy-page-link-item"} key={link.id}><Icon icon={getPageIcon(link)}></Icon><span>{getPageText(link)}</span></a>
+                    return <div onClick={e => this.onSelect(link)} className={"h-30 item-hover round padding-w-5 flex" + (this.selectIndex == (i + 1) ? " item-hover-focus" : "")} key={link.id}>
+                        <span className="size-20 flex-fixed flex-center item-hover round"><Icon icon={getPageIcon(link)}></Icon></span>
+                        <span className="flex-auto">{getPageText(link)}</span>
+                    </div>
                 })}
                 {!this.loading && this.links.length == 0 && this.isSearch && <span className="remark f-12 flex-center">没有搜索到</span>}
             </div>}
         </div>
     }
     onSelect(link: LinkPageItem) {
-        this.emit('change', { name: 'page', pageId: link.id })
+        this.emit('change', {
+            refLinks: [{ type: 'page', id: util.guid(), pageId: link.id }]
+        })
     }
-    onCreate() {
-        this.emit('change', { name: 'create', url: this.url })
+    async onCreate() {
+        var currentPage = await channel.query('/current/page');
+        var r = await channel.air('/page/create/sub', {
+            pageId: currentPage.id,
+            text: this.url
+        });
+        if (r.id) this.emit('change', {
+            refLinks: [{ type: 'page', id: util.guid(), pageId: r.id }],
+        })
     }
     async onOpen(link: PageLink) {
+        this.selectIndex = 0;
         await this.searchAll();
         if (link) {
             if (link.url) {
@@ -147,8 +202,8 @@ export async function useLinkPicker(pos: PopoverPosition, link?: PageLink) {
     var popover = await PopoverSingleton(LinkPicker, { mask: true }, { link: link });
     var picker = await popover.open(pos);
     await picker.onOpen(link);
-    return new Promise((resolve: (link: PageLink) => void, reject) => {
-        picker.on('change', (link: PageLink) => {
+    return new Promise((resolve: (link: PageLink & { refLinks: Block['refLinks'] }) => void, reject) => {
+        picker.on('change', (link: PageLink & { refLinks: Block['refLinks'] }) => {
             resolve(link);
             popover.close();
         })
