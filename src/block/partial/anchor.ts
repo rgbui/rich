@@ -6,7 +6,7 @@ import { BlockChildKey, BlockUrlConstant } from "../constant";
  * 主要是用来确定光标的上下左右移动
  */
 export class Block$Anchor {
-    
+
     async visibleDownCreateBlock(this: Block, url: string, data: Record<string, any> = {}) {
         var row = this.closest(x => x.isBlock);
         return await this.page.createBlock(url, { ...data }, row.parent, row.at + 1, row.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
@@ -83,7 +83,7 @@ export class Block$Anchor {
             typeof elementAppear.prop == 'undefined'
         ) elementAppear.prop = 'content';
         if (!this.__appearAnchors.exists(x => x.prop == elementAppear.prop))
-            this.__appearAnchors.push(new AppearAnchor(this, elementAppear.el, elementAppear.appear, elementAppear.prop, elementAppear.plain || false, elementAppear.defaultValue,elementAppear.hasGap))
+            this.__appearAnchors.push(new AppearAnchor(this, elementAppear.el, elementAppear.appear, elementAppear.prop, elementAppear.plain || false, elementAppear.defaultValue, elementAppear.hasGap))
         else {
             var ep = this.__appearAnchors.find(g => g.prop == elementAppear.prop);
             if (ep) {
