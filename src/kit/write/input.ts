@@ -292,7 +292,7 @@ export async function inputBackSpaceTextContent(write: PageWrite, aa: AppearAnch
             var rowBlock = block.closest(x => !x.isLine);
             var prev = block.prev;
             var isLine = block.isLine;
-            if (block.isContentEmpty && block.isLine && !block.isLineGap) await block.delete();
+            if (block.isContentEmpty && block.isLine && !aa.hasGap) await block.delete();
             write.kit.page.addUpdateEvent(async () => {
                 if (isLine && prev) {
                     write.kit.anchorCursor.onFocusBlockAnchor(prev, { last: true, render: true, merge: true })
