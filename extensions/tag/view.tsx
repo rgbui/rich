@@ -18,8 +18,8 @@ export class TagsView extends EventsComponent {
         super(props)
     }
     render(): ReactNode {
-        return <div>
-
+        return <div className="padding-10 round w-400 max-h-300 overlay-y">
+            <div className="h3">#{this.search.tag}</div>
             {this.search.loading && <div><Spin></Spin></div>}
             {this.renderRefs()}
         </div>

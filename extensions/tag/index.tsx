@@ -12,6 +12,8 @@ import { Spin } from "../../component/view/spin";
 import { channel } from "../../net/channel";
 import { BlockUrlConstant } from "../../src/block/constant";
 import { PopoverPosition } from "../popover/position";
+import { popoverLayer } from "../../component/lib/zindex";
+import { util } from "../../util/util";
 
 /**
  * 用户输入#触发
@@ -44,8 +46,8 @@ class TagSelector extends InputTextPopSelector {
         return true;
     }
     private round: Rect;
-    allLinks: { list: { id: string, text: string }[], total: number, size: number } = { list: [], total: 0, size: 200 }
-    links: { id: string, text: string }[] = [];
+    allLinks: { list: { id: string, tag: string }[], total: number, size: number } = { list: [], total: 0, size: 200 }
+    links: { id: string, tag: string }[] = [];
     loading = false;
     searchWord: string = '';
     syncSearch = lodash.debounce(async () => {
@@ -56,57 +58,71 @@ class TagSelector extends InputTextPopSelector {
         this.adjuctPosition();
         var result = [];
         if (this.allLinks.total <= this.allLinks.size)
-            result = this.allLinks.list.filter(g => g.text.startsWith(this.searchWord))
+            result = this.allLinks.list.filter(g => g.tag.startsWith(this.searchWord))
         else
             result = (await channel.get('/tag/word/query', { word: this.searchWord })).data.list;
         this.links = result;
         if (this.selectIndex > this.links.length) {
-            this.selectIndex = 1;
+            this.selectIndex = 0;
         }
         this.loading = false;
         this.adjuctPosition();
     }, 700)
     private get isSelectIndex() {
-        return this.selectIndex >= 0 && this.selectIndex < this.links.length;
+        return this.selectIndex >= 0 && this.selectIndex <= this.links.length;
     }
     private renderLinks() {
         return <div>
             <a className={"h-30 gap-l-10 text item-hover cursor round padding-w-10 flex" + (0 == this.selectIndex ? " item-hover-focus" : "")} onMouseDown={e => this.onSelect({ name: 'create' })}>
-                <span className="flex flex-inline size-24 item-hover round">
-                    <Icon size={18} icon={PlusSvg}></Icon>
-                </span>
-                <span className="f-14">
-                    <Icon size={18} icon={TopicSvg}></Icon>
+                <span className="flex flex-inline size-24 item-hover round"> <Icon size={18} icon={TopicSvg}></Icon></span>
+                <span className="f-14 flex-auto">
                     创建<b className="bold">{this.text || '标签'}</b>
+                </span>
+                <span className="flex-fixed flex flex-inline size-24 item-hover round">
+                    <Icon size={18} icon={PlusSvg}></Icon>
                 </span>
             </a>
             <Divider></Divider>
             {this.loading && <div className="flex-center gap-h-30"><Spin></Spin></div>}
             {!this.loading && this.links.map((link, i) => {
                 return <a onMouseDown={e => this.onSelect(link)} className={"h-30 gap-l-10 text  item-hover cursor round padding-w-10 flex" + ((i + 1) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
-                    <span className="flex flex-inline size-24 item-hover round"> <Icon size={18} icon={TopicSvg}></Icon></span>
-                    <span className="f-14">{link.text || '新页面'}</span></a>
+                    <span className="flex flex-inline size-24 item-hover round"><Icon size={18} icon={TopicSvg}></Icon></span>
+                    <span className="f-14">{link.tag || '标签'}</span></a>
             })}
-            {!this.loading && this.links.length == 0 && this.searchWord && <div className="remark flex-center gap-h-10 f-14">没有搜索到</div>}
+            {this.loading && this.links.length == 0 && this.searchWord && <div className="remark flex-center gap-h-10 f-14">没有搜索到</div>}
         </div>
     }
     render() {
         var style: Record<string, any> = {
             top: this.pos.y,
             left: this.pos.x,
-            display: this.visible ? 'block' : 'none'
+            display: this.visible ? 'block' : 'none',
+            zIndex: popoverLayer.zoom(this)
         }
         return <div ref={e => this.el = e}
             style={style}
-            className='pos w-180 max-h-200 bg-white overlay-y  round shadow border'>{this.renderLinks()}
+            className='pos w-250 max-h-200 bg-white overlay-y  round shadow '>{this.renderLinks()}
         </div>
     }
     private onSelect(block) {
         if (block.name == 'create') {
-            this._select({ url: BlockUrlConstant.Tag, isLine: true, content: this.text || "标签" })
+            this._select({
+                url: BlockUrlConstant.Tag,
+                isLine: true,
+                link: { name: 'create', text: this.text || '标签' }
+            })
         }
         else {
-            this._select({ url: BlockUrlConstant.Tag, isLine: true, content: block.text, tagText: block.text, tagId: block.id })
+            this._select({
+                url: BlockUrlConstant.Tag,
+                isLine: true,
+                refLinks: [{
+                    id: util.guid(),
+                    type: 'tag',
+                    tagText: block.tag,
+                    tagId: block.id
+                }]
+            })
         }
         this.close();
     }
@@ -203,9 +219,8 @@ class TagSelector extends InputTextPopSelector {
                         return {
                             blockData: {
                                 url: BlockUrlConstant.Tag,
-                                content: text || '标签',
                                 isLine: true,
-                                tagText: text || '标签'
+                                link: { name: 'create', text: text || '标签' }
                             }
                         }
                     }
@@ -214,9 +229,12 @@ class TagSelector extends InputTextPopSelector {
                             blockData: {
                                 url: BlockUrlConstant.Tag,
                                 isLine: true,
-                                content: block.text,
-                                tagText: block.text,
-                                tagId: block.id,
+                                refLinks: [{
+                                    id: util.guid(),
+                                    type: 'tag',
+                                    tagText: block.tag,
+                                    tagId: block.id
+                                }]
                             }
                         };
                     else return false;

@@ -63,17 +63,32 @@
 .sy-block-link {
     cursor     : pointer;
     white-space: nowrap;
+
     a {
         border-radius: 4px;
         display      : block;
+
         .sy-block-link-text {
             color        : rgb(55, 53, 47);
             font-weight  : 500;
             border-bottom: 1px solid rgba(55, 53, 47, 0.16);
         }
+
         &:hover {
             background-color: rgba(55, 53, 47, 0.08);
             transition      : background 20ms ease-in 0s;
         }
     }
+}
+
+.sy-block-tag {
+    background-color: rgba(100, 161, 223, 0.14);
+    line-height     : 22px;
+    padding         : 0px !important;
+    display         : inline-block;
+    color           : #64a1df;
+    border-radius   : 6px;
+    margin          : 0px 2px;
+    white-space     : nowrap;
+    cursor          : pointer;
 }
