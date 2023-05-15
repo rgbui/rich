@@ -1,3 +1,4 @@
+import lodash from "lodash";
 import { Kit } from "..";
 import { forceCloseTextTool } from "../../../extensions/text.tool";
 import { Block } from "../../block";
@@ -351,7 +352,11 @@ export class AnchorCursor {
             }
         })
     }
-
+    onSelectAll() {
+        var cs = this.kit.page.views[0].childs.map(c => c);
+        lodash.remove(cs, c => c.url == BlockUrlConstant.Title)
+        this.onSelectBlocks(cs, { render: true })
+    }
     selectBlocks(blocks: Block[]) {
         var old = this.record;
         this.currentSelectedBlocks = blocks;

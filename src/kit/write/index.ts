@@ -212,6 +212,13 @@ export class PageWrite {
                     forceCloseTextTool();
                 }
                 break;
+            case KeyboardCode.A.toLowerCase():
+                if (UA.isMacOs && this.kit.page.keyboardPlate.isMeta() || !UA.isMacOs && this.kit.page.keyboardPlate.isCtrl()) {
+                   this.kit.anchorCursor.onSelectAll()
+                    forceCloseTextTool();
+                    event.preventDefault();
+                }
+                break;
         }
     }
     input(aa: AppearAnchor, event: React.FormEvent) {
