@@ -246,7 +246,9 @@ export class Page$Cycle {
         var ups = this.willUpdateBlocks.map(c => c);
         var fns = this.updatedFns.map(f => f);
         var cos = Object.assign({}, this.recordSyncRowBlocks);
+        var cgs = Object.assign({}, this.recordOutlineChanges);
         this.recordSyncRowBlocks = { rowBlocks: [], deletes: [] };
+        this.recordOutlineChanges = { isChangeAll: false, changeBlocks: [] }
         this.willUpdateBlocks = [];
         this.updatedFns = [];
         var self = this;
@@ -263,7 +265,7 @@ export class Page$Cycle {
             }
             await fns.eachAsync(async g => await g());
             try {
-                self.onNotifyChanged(cos)
+                self.onNotifyChanged(cos, cgs)
             }
             catch (ex) {
                 console.error(ex);
@@ -272,114 +274,217 @@ export class Page$Cycle {
         }
         fn()
     }
-    private async onNotifyChanged(this: Page, recordSyncRowBlocks: Page['recordSyncRowBlocks']) {
-        if (recordSyncRowBlocks.deletes.length > 0 || recordSyncRowBlocks.rowBlocks.length > 0) {
-            var ds = recordSyncRowBlocks.deletes;
-            var rs = recordSyncRowBlocks.rowBlocks;
-            var ops = []
-            for (let i = 0; i < rs.length; i++) {
-                var row = rs[i];
-                var rfs = row.childs.filter(g => Array.isArray(g.refLinks) && g.refLinks.length > 0);
-                if (rfs.length > 0) {
-                    await rfs.eachAsync(async rf => {
-                        await rf.refLinks.eachAsync(async f => {
-                            ops.push({
-                                id: f.id,
-                                type: f.type,
-                                ref: lodash.cloneDeep(f),
-                                elementUrl: getElementUrl(ElementType.BlockLine, this.pageInfo.id, row.id, rf.id),
-                                html: (await row.childs.asyncMap(async c => await c.getHtml())).join("")
+    private async onNotifyChanged(this: Page, recordSyncRowBlocks: Page['recordSyncRowBlocks'], recordOutlineChanges: Page['recordOutlineChanges']) {
+        try {
+            if (recordSyncRowBlocks.deletes.length > 0 || recordSyncRowBlocks.rowBlocks.length > 0) {
+                var ds = recordSyncRowBlocks.deletes;
+                var rs = recordSyncRowBlocks.rowBlocks;
+                var ops = []
+                for (let i = 0; i < rs.length; i++) {
+                    var row = rs[i];
+                    var rfs = row.childs.filter(g => Array.isArray(g.refLinks) && g.refLinks.length > 0);
+                    if (rfs.length > 0) {
+                        await rfs.eachAsync(async rf => {
+                            await rf.refLinks.eachAsync(async f => {
+                                ops.push({
+                                    id: f.id,
+                                    type: f.type,
+                                    ref: lodash.cloneDeep(f),
+                                    elementUrl: getElementUrl(ElementType.BlockLine, this.pageInfo.id, row.id, rf.id),
+                                    html: (await row.childs.asyncMap(async c => await c.getHtml())).join("")
+                                })
                             })
                         })
+                    }
+                }
+                ds.forEach(c => {
+                    ops.push({
+                        id: c.id,
+                        type: c.type,
+                        ref: lodash.cloneDeep(c),
                     })
+                })
+                console.log('/row/block/sync/refs', ops);
+                await channel.post('/row/block/sync/refs', {
+                    pageId: this.pageInfo.id,
+                    operators: ops
+                })
+            }
+        }
+        catch (ex) {
+            this.onError(ex);
+            console.error(ex);
+        }
+        try {
+            console.log(recordOutlineChanges, 'ssss');
+            if (recordOutlineChanges.isChangeAll == true || recordOutlineChanges.changeBlocks.length > 0) {
+                var outLineBlock = this.find(g => g.url == BlockUrlConstant.Outline) as PageOutLine;
+                if (outLineBlock) {
+                    if (recordOutlineChanges.isChangeAll) outLineBlock.updateOutLine();
+                    else {
+                        for (var i = 0; i < recordOutlineChanges.changeBlocks.length; i++) {
+                            outLineBlock.updateHeadBlock(recordOutlineChanges.changeBlocks[i], i == recordOutlineChanges.changeBlocks.length - 1)
+                        }
+                    }
                 }
             }
-            ds.forEach(c => {
-                ops.push({
-                    id: c.id,
-                    type: c.type,
-                    ref: lodash.cloneDeep(c),
-                })
-            })
-            console.log('/row/block/sync/refs', ops);
-            await channel.post('/row/block/sync/refs', {
-                pageId: this.pageInfo.id,
-                operators: ops
-            })
+        }
+        catch (ex) {
+            this.onError(ex);
+            console.error(ex);
         }
     }
+    recordOutlineChanges: { isChangeAll: boolean, changeBlocks: Block[] } = { isChangeAll: false, changeBlocks: [] };
     recordSyncRowBlocks: { rowBlocks: Block[], deletes: Block['refLinks'] } = { rowBlocks: [], deletes: [] };
     /**
-     * 监听 row block块是否发生变化，如果有变化，则将变化同步到数据库中
+     * 监听 block块的变化
+     * 块的主要操作就是创建、删除、移动、内容变化
      * 主要是处理双链的引用数据更新
      * @param this 
      * @param block 
      * @returns 
      * 
      */
-    async syncRowBlockChange(this: Page, block: Block, op: 'create' | 'delete' | 'from' | 'to' | 'content', currentBlock?: Block) {
-        var rs: Block[] = [];
-        var deletes: Block['refLinks'] = [];
-        switch (op) {
-            case 'create':
-                if (block.isLine) {
-                    var row = block.closest(x => x.isOnlyBlock);
-                    if (row) {
-                        if (row.isOnlyBlock) rs = [row];
-                        rs.push(...row.findAll(x => x.isOnlyBlock && x.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)));
+    async monitorBlockOperator(this: Page, block: Block, op: 'create' | 'delete' | 'from' | 'to' | 'content', currentBlock?: Block) {
+        // console.log('mfff', arguments);
+        /**
+         * 争对行内块引用关系的同步记录
+         */
+        try {
+            var rs: Block[] = [];
+            var dels: Block['refLinks'] = [];
+            switch (op) {
+                case 'create':
+                    if (block.isLine) {
+                        var row = block.closest(x => x.isOnlyBlock);
+                        if (row) {
+                            if (row.isOnlyBlock) rs = [row];
+                            rs.push(...row.findAll(x => x.isOnlyBlock && x.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)));
+                        }
                     }
-                }
-                else {
-                    if (block.isOnlyBlock) rs = [block];
-                    rs.push(...block.findAll(x => x.isOnlyBlock && x.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)));
-                }
-                break;
-            case 'delete':
-                if (block.isLine) {
-                    if (Array.isArray(block.refLinks) && block.refLinks.length > 0) {
-                        deletes.push(...block.refLinks);
+                    else {
+                        if (block.isOnlyBlock) rs = [block];
+                        rs.push(...block.findAll(x => x.isOnlyBlock && x.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)));
                     }
-                }
-                else {
-                    var lbs = block.findAll(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)
-                    lbs.forEach(c => {
-                        deletes.push(...c.refLinks)
-                    })
-                }
-                break;
-            case 'from':
-                if (currentBlock.isOnlyBlock) return;
-                if (currentBlock.isLine) {
-                    if (block.isOnlyBlock && block.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)) {
-                        rs = [block];
+                    break;
+                case 'delete':
+                    if (block.isLine) {
+                        if (Array.isArray(block.refLinks) && block.refLinks.length > 0) {
+                            dels.push(...block.refLinks);
+                        }
                     }
-                }
-                break;
-            case 'to':
-                if (currentBlock.isOnlyBlock) return;
-                if (currentBlock.isLine) {
-                    if (block.isOnlyBlock && block.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)) {
-                        rs = [block];
+                    else {
+                        var lbs = block.findAll(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)
+                        lbs.forEach(c => {
+                            dels.push(...c.refLinks)
+                        })
                     }
-                }
-                break;
-            case 'content':
-                if (block.isLine) {
-                    var row = block.closest(x => x.isOnlyBlock);
-                    if (row.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)) {
-                        rs = [row];
+                    break;
+                case 'from':
+                    if (currentBlock.isOnlyBlock) break;
+                    if (currentBlock.isLine) {
+                        if (block.isOnlyBlock && block.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)) {
+                            rs = [block];
+                        }
                     }
-                }
-                break;
+                    break;
+                case 'to':
+                    if (currentBlock.isOnlyBlock) break;
+                    if (currentBlock.isLine) {
+                        if (block.isOnlyBlock && block.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)) {
+                            rs = [block];
+                        }
+                    }
+                    break;
+                case 'content':
+                    if (block.isLine) {
+                        var row = block.closest(x => x.isOnlyBlock);
+                        if (row.exists(g => Array.isArray(g.refLinks) && g.refLinks.length > 0)) {
+                            rs = [row];
+                        }
+                    }
+                    break;
+            }
+            rs.forEach(c => {
+                if (!this.recordSyncRowBlocks.rowBlocks.exists(c)) this.recordSyncRowBlocks.rowBlocks.push(c);
+            })
+            dels.forEach(c => {
+                if (!this.recordSyncRowBlocks.deletes.exists(c)) this.recordSyncRowBlocks.deletes.push(c);
+            })
         }
-        rs.forEach(c => {
-            if (!this.recordSyncRowBlocks.rowBlocks.exists(c)) this.recordSyncRowBlocks.rowBlocks.push(c);
-        })
-        deletes.forEach(c => {
-            if (!this.recordSyncRowBlocks.deletes.exists(c)) this.recordSyncRowBlocks.deletes.push(c);
-        })
-        console.log('ssss', arguments);
+        catch (ex) {
+            console.error(ex);
+            this.onError(ex);
+        }
+
+     
         console.log(this.recordSyncRowBlocks)
+        /**
+         * 页面的大纲目录处理
+         */
+        var outLineBlock = this.find(g => g.url == BlockUrlConstant.Outline);
+
+        if (outLineBlock) {
+            var outLineChangeBlocks: Block[] = [];
+            var isChangeAll = false;
+            switch (op) {
+                case 'create':
+                    if (block.isLine) {
+                        var row = block.closest(x => x.isOnlyBlock);
+                        if (row?.url == BlockUrlConstant.Head) {
+                            outLineChangeBlocks.push(row);
+                        }
+                    }
+                    else if (block.url == BlockUrlConstant.Head) {
+                        isChangeAll = true;
+                    }
+                    break;
+                case 'delete':
+                    if (block.isLine) {
+                        var row = block.closest(x => x.isOnlyBlock);
+                        if (row?.url == BlockUrlConstant.Head) {
+                            outLineChangeBlocks.push(row);
+                        }
+                    }
+                    else {
+                        if (block.exists(g => g.url == BlockUrlConstant.Head)) {
+                            isChangeAll = true;
+                        }
+                    }
+                    break;
+                case 'from':
+                case 'to':
+                    console.log(currentBlock, 'cb');
+                    if (currentBlock.isLine) {
+                        var row = currentBlock.closest(x => x.isOnlyBlock);
+                        if (row.url == BlockUrlConstant.Head) {
+                            outLineChangeBlocks.push(row);
+                        }
+                    }
+                    else if (currentBlock.url == BlockUrlConstant.Head) {
+                        isChangeAll = true;
+                    }
+                    break;
+                case 'content':
+                    if (block.isLine) {
+                        var row = block.closest(x => x.isOnlyBlock);
+                        if (row?.url == BlockUrlConstant.Head) {
+                            outLineChangeBlocks.push(row);
+                        }
+                    }
+                    else if (block.url == BlockUrlConstant.Head) {
+                        outLineChangeBlocks.push(block);
+                    }
+                    break;
+            }
+            if (isChangeAll) this.recordOutlineChanges.isChangeAll = true;
+            if (outLineChangeBlocks.length > 0) {
+                outLineChangeBlocks.forEach(c => {
+                    if (this.recordOutlineChanges.changeBlocks.exists(c) == false)
+                        this.recordOutlineChanges.changeBlocks.push(c);
+                })
+            }
+        }
     }
 
     /**
@@ -401,6 +506,7 @@ export class Page$Cycle {
                     this.willUpdateAll = false;
                     this.updatedFns = [];
                     this.recordSyncRowBlocks = { rowBlocks: [], deletes: [] };
+                    this.recordOutlineChanges = { isChangeAll: false, changeBlocks: [] }
                     try {
                         if (typeof fn == 'function') await fn();
                     } catch (ex) {

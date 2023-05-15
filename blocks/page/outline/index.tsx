@@ -34,7 +34,7 @@ export class PageOutLine extends Block {
         this.hoverId = hoverId;
         this.forceUpdate();
     }
-    getOutLines() {
+    caOutLines() {
         var outlines: { id: string, deep: number, block: Block, text: string }[] = [];
         var bs = this.page.findAll(x => x.url == BlockUrlConstant.Head && x.el && (x.closest(c => c.isPart) ? false : true));
         lodash.sortBy(bs, g => Rect.fromEle(g.el).top);
@@ -59,16 +59,17 @@ export class PageOutLine extends Block {
         this.outlines = outlines;
     }
     updateOutLine() {
-        this.getOutLines();
+        this.caOutLines();
         this.updateOutlinesHover()
     }
-    updateHeadBlock(block: Block) {
+    updateHeadBlock(block: Block, forceUpdate?: boolean) {
         var ou = this.outlines.find(c => c.id == block.id);
+        console.log(ou, block?.id, forceUpdate);
         if (ou) {
             ou.html = block.el ? block.el.innerText : undefined;
-            if (block.el) ou.text = undefined
-            else ou.text = block.getBlockContent()
-            this.forceUpdate()
+            ou.text = block.getBlockContent();
+            if (forceUpdate)
+                this.forceUpdate()
         }
     }
     get handleBlock() {
