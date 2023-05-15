@@ -36,6 +36,7 @@ export class Link extends Block {
         event.preventDefault();
         channel.air('/page/open', { item: this.pageId });
     }
+
 }
 @view('/link')
 export class LinkView extends BlockView<Link>{

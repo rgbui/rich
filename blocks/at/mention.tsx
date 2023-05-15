@@ -21,6 +21,9 @@ export class ShyMention extends Block {
     @prop()
     userid: string = '';
     display = BlockDisplay.inline;
+    async getHtml() {
+        return `<a class='shy-user' data-userid='${this.userid}'>${(this.view as any)?.username}</a>`
+    }
 }
 @view('/user/mention')
 export class ShyMentionView extends BlockView<ShyMention>{
