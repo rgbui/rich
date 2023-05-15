@@ -281,8 +281,9 @@ export interface ChannelGetMapUrls {
 	"/view/snap/content":{args:{wsId?:string,id:string},returnType:Promise<SockResponse<{id:string,content:string}>>},
 	"/get/page/refs":{args:{wsId?:string,pageId:string,size?:number,desc?:boolean},returnType:Promise<SockResponse<{pages:LinkPageItem[],list:any[],total:number,size:number,page:number}>>},
 	"/user/interactives":{args:{wsId?:string,schemaId:string,ids:string[],es:string[]},returnType:Promise<SockResponse<{list:Record<string,string[]>}>>},
-	"/get/tag/refs":{args:{wsId?:string,tagId:string,size?:number,desc?:boolean},returnType:Promise<SockResponse<{pages:LinkPageItem[],list:any[],total:number,size:number,page:number}>>},
-	"/tag/word/query":{args:{word?:string,wsId?:string,size?:number},returnType:Promise<SockResponse<{list:any[],total:number,size:number,page:number}>>}
+	"/get/tag/refs":{args:{wsId?:string,tagId?:string,tag?:string,size?:number,desc?:boolean},returnType:Promise<SockResponse<{pages:LinkPageItem[],list:any[],total:number,size:number,page:number}>>},
+	"/tag/word/query":{args:{word?:string,wsId?:string,size?:number},returnType:Promise<SockResponse<{list:any[],total:number,size:number,page:number}>>},
+	"/tag/query":{args:{id?:string,ids?:string[]},returnType:Promise<SockResponse<{list:any[],tag:any}>>}
 }
 export interface ChannelQueryMapUrls {
     "/current/workspace":{args:any,returnType:{id:string,sn:number,text:string,url:string,isMember?:boolean,isOwner?:boolean,access?:0|1,accessProfile?:{disabledJoin: boolean,checkJoinProtocol: boolean,joinProtocol: string},roles:{ id: string,text: string,color: string,permissions: number[],icon?: IconArguments}[]}},
