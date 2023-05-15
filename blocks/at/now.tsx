@@ -9,17 +9,19 @@ import { BlockView } from "../../src/block/view";
 export class ShyNowDate extends Block {
     display = BlockDisplay.inline;
     loadTime() {
-        this.time = setTimeout(() => {
+        this.time = setInterval(() => {
             this.forceUpdate()
         }, 1000) as any;
     }
-    time:number;
+    time: number;
     async didMounted(): Promise<void> {
         this.loadTime()
     }
     async didUnmounted() {
-        if (this.time)
-            clearTimeout(this.time)
+        if (this.time) {
+            clearInterval(this.time);
+            this.time = null;
+        }
     }
 }
 @view('/now/date')
