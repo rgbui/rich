@@ -266,6 +266,9 @@ export class Page extends Events<PageDirective> {
         ) => {
             return this.onAction(directive, fn, options);
         }, 700)
+    getScrollDiv() {
+        return this.root.querySelector('.shy-page-view-box') as HTMLElement;
+    }
 }
 export interface Page {
     on(name: PageDirective.init, fn: () => void);

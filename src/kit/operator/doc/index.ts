@@ -21,6 +21,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
     var downPoint = Point.from(event);
     var gm = block ? block.panelGridMap : kit.page.gridMap;
     var currentBlocks: Block[];
+    var scrollDiv = kit.page.getScrollDiv();
     MouseDragger({
         event,
         dis: 5,
@@ -43,7 +44,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                 kit.anchorCursor.renderSelectBlocks(currentBlocks);
             };
             onAutoScroll({
-                el: kit.page.root,
+                el: scrollDiv,
                 point: movePoint,
                 feelDis: 100,
                 interval: 50,
