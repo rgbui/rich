@@ -62,9 +62,14 @@ export class LinkView extends BlockView<Link>{
         return <div style={this.block.visibleStyle}><div className='sy-block-link'>
             {this.block.pageInfo &&
                 <a style={this.block.contentStyle} href={this.block.pageInfo.url} onClick={e => this.block.openPage(e)}>
-                    <SolidArea line block={this.block} prop='text'>
-                        <i className="text flex-inline flex-center size-24 gap-r-5"><Icon size={20} icon={getPageIcon(this.block.pageInfo)}></Icon></i>
-                        <span>{getPageText(this.block.pageInfo)}</span>
+                    <SolidArea block={this.block} prop='text'>
+                        <div className="flex">
+                            <i className="flex-fixed text flex-inline flex-center size-24 gap-r-5"><Icon size={20} icon={getPageIcon(this.block.pageInfo)}></Icon></i>
+                            <div className="flex-auto "><span className="sy-block-link-text text-overflow" style={{ height: this.block.page.lineHeight, lineHeight: this.block.page.lineHeight + 'px' }}>
+                                {getPageText(this.block.pageInfo)}
+                            </span>
+                            </div>
+                        </div>
                     </SolidArea>
                 </a>
             }

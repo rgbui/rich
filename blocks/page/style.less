@@ -61,40 +61,19 @@
 }
 
 .sy-block-link {
-    cursor            : pointer;
-    white-space       : nowrap;
-
+    cursor     : pointer;
+    white-space: nowrap;
     a {
         border-radius: 4px;
         display      : block;
-        .shy-appear-solid-content {
-            >span {
-                // text-decoration: underline;
-                color        : rgb(55, 53, 47);
-                font-weight  : 500;
-                border-bottom: 1px solid rgba(55, 53, 47, 0.16);
-            }
+        .sy-block-link-text {
+            color        : rgb(55, 53, 47);
+            font-weight  : 500;
+            border-bottom: 1px solid rgba(55, 53, 47, 0.16);
         }
         &:hover {
             background-color: rgba(55, 53, 47, 0.08);
             transition      : background 20ms ease-in 0s;
-        }
-    }
-
-    &-create {
-        width          : 100%;
-        cursor         : pointer;
-        background     : rgb(242, 241, 238);
-        padding        : 12px 36px 12px 12px;
-        border-radius  : 3px;
-        display        : flex;
-        justify-content: flex-start;
-        align-items    : center;
-        color          : rgba(55, 53, 47, 0.6);
-
-        .shy-icon {
-            fill        : rgba(55, 53, 47, 0.4);
-            margin-right: 12px;
         }
     }
 }
