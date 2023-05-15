@@ -1,7 +1,7 @@
 
 
 import React from "react";
-import { TriangleSvg } from "../../component/svgs";
+import { RefreshSvg, TriangleSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { channel } from "../../net/channel";
 import { ElementType, getElementUrl, parseElementUrl } from "../../net/element.type";
@@ -60,12 +60,22 @@ export class RefLinksView extends BlockView<RefLinks>{
         });
     }
     renderRefBlocks() {
+        if (this.block.list.length == 0) {
+            return <div className="flex-center remark f-12"> 没有引用</div>
+        }
         return this.block.list.map(pa => {
             return <div key={pa.id} className='gap-h-10'>
-                <div className="flex h-24 cursor" onMouseDown={e => { pa.spread = !pa.spread; this.forceUpdate() }} ><span className="remark ts-transform flex-center size-16 cursor  round"
-                    style={{ transform: pa.spread ? 'rotateZ(180deg)' : 'rotateZ(90deg)' }}><Icon size={12} icon={TriangleSvg}></Icon></span><span><span className="size-24 gap-r-5 flex-center flex-inline"><Icon size={16} icon={getPageIcon(pa)}></Icon></span></span><span className="bold text">{getPageText(pa)}</span></div>
+                <div className="flex h-24 cursor" onMouseDown={e => { pa.spread = !pa.spread; this.forceUpdate() }} >
+                    <span className="remark ts-transform flex-center size-16 cursor  round remark"
+                        style={{ transform: pa.spread ? 'rotateZ(180deg)' : 'rotateZ(90deg)' }}><Icon size={10} icon={TriangleSvg}></Icon></span>
+                    <span className="size-24 flex-center flex-inline"><Icon size={16} icon={getPageIcon(pa)}></Icon></span>
+                    <span className="bold text">{getPageText(pa)}</span>
+                </div>
                 {pa.spread && <div className="gap-l-10">{pa.childs.map((b, i) => {
-                    return <div onMouseDown={e => this.open(b)} key={b.id} className='gap-h-5 h-30 flex flex-top item-hover round padding-w-5 cursor'><span className="flex-fixed">{i + 1}.</span><span className="flex-auto">{b.text}</span><span className="flex-fixed f-12 remark gap-t-5">{util.showTime(b.createDate)}</span></div>
+                    return <div onMouseDown={e => this.open(b)} key={b.id} className='text-1 gap-h-5  flex flex-top item-hover round padding-5 cursor'>
+                        <span className="flex-fixed l-20">{i + 1}.</span>
+                        <div className="flex-auto l-20 f-14" dangerouslySetInnerHTML={{ __html: b.html }}></div>
+                        <span className="flex-fixed f-12 remark   l-20">{util.showTime(b.createDate)}</span></div>
                 })}</div>}
             </div>
         })
@@ -76,17 +86,21 @@ export class RefLinksView extends BlockView<RefLinks>{
     }
     render() {
         return <div className="sy-block-ref-links" style={this.block.visibleStyle}>
-            <div className="flex h-24">
-                <span onMouseDown={e => this.onToggle(e)} className="remark ts-transform flex-center size-16 cursor  round"
+            <div className="flex h-24 visible-hover">
+                <span onMouseDown={e => this.onToggle(e)} className="flex-fixed remark ts-transform flex-center size-16 cursor  round"
                     style={{ transform: this.block.expand ? 'rotateZ(180deg)' : 'rotateZ(90deg)' }}>
-                    <Icon size={12} icon={TriangleSvg}></Icon>
+                    <Icon size={10} icon={TriangleSvg}></Icon>
                 </span>
-                <span className="remark f-12">引用页面</span>
+                <span className="flex-auto remark f-12">引用页面</span>
+                <span onClick={e => this.block.loadList()} className="visible flex-fixed flex-center size-20 round item-hover cursor">
+                    <Icon size={12} icon={RefreshSvg}></Icon>
+                </span>
             </div>
             {this.block.expand && <div className="sy-block-ref-links bg round padding-10">
                 {this.block.loading && <div className="flex-center"><Spin></Spin></div>}
                 {!this.block.loading && this.renderRefBlocks()}
             </div>}
+
         </div>
     }
 }
