@@ -7,7 +7,7 @@ import { EventsComponent } from "../../component/lib/events.component";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
 import { PageLink } from "./declare";
-import { GlobalLinkSvg, PageSvg, PlusSvg } from "../../component/svgs";
+import { GlobalLinkSvg,PlusSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import lodash from "lodash";
 import { channel } from "../../net/channel";
@@ -180,13 +180,17 @@ class LinkPicker extends EventsComponent {
         await this.searchAll();
         if (link) {
             if (link.url) {
-                this.url = link.url;
-                this.name = 'outside';
-                this.forceUpdate()
+                this.url = link.url; this.name = 'outside'; this.forceUpdate()
             }
             else if (link.pageId) {
                 this.url = link.text;
                 this.name = 'page';
+                if (this.url) await this.forceSyncSearch();
+                this.selectIndex = this.links.findIndex(g => g.id == link.pageId) + 1;
+                this.forceUpdate()
+            }
+            else if (link.text) {
+                this.url = link.text;
                 await this.forceSyncSearch();
             }
         }

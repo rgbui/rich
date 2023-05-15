@@ -141,8 +141,13 @@ export class TextContentView extends BlockView<TextContent>{
     async openLink(e: React.MouseEvent) {
         if (this.boxTip)
             this.boxTip.close();
-        var lc = lodash.cloneDeep(this.block.link);
-        if (lc?.name == 'page') {
+        var lc: PageLink = {};
+        if (this.block.link) {
+            lc.name = 'outside';
+            lc.url = this.block.link.url;
+        }
+        else if (Array.isArray(this.block.refLinks) && this.block.refLinks.length > 0) {
+            lc.pageId = this.block.refLinks[0].pageId;
             lc.text = this.block.content;
         }
         var pageLink = await useLinkPicker({ roundArea: Rect.fromEvent(e) }, lc);

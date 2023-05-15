@@ -1,7 +1,7 @@
 
 
 export type PageLink = {
-    name: 'outside' | 'page' | 'create',
+    name?: 'outside' | 'page' | 'create',
     url?: string,
     text?:string,
     pageId?: string,

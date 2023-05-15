@@ -267,21 +267,22 @@ class TextTool extends EventsComponent {
         this.blocked = true;
         var sel = window.getSelection();
         var range = sel.getRangeAt(0);
+        var text = '';
         if (range) {
             var lineHeight = dom(sel.focusNode.parentNode).lineHeight(20);
             this.selection.rects = Array.from(range.getClientRects()).map(r => Rect.from(r)).map(c => {
                 var dis = (lineHeight - c.height) / 2;
                 return c.extendY(dis)
             })
+            text = range.toString().trim();
             sel.removeAllRanges();
             this.forceUpdate();
         }
-        var pageLink = await useLinkPicker({ roundArea: Rect.fromEvent(event) });
+        var pageLink = await useLinkPicker({ roundArea: Rect.fromEvent(event) },{text:text});
         this.selection.rects = [];
         this.blocked = false;
         this.forceUpdate()
         if (pageLink) {
-            console.log(pageLink, 'ssss');
             this.emit('setProp', { ...pageLink });
         }
         else if (range) {
