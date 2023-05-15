@@ -73,11 +73,11 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
         // else if(data2=='(('){
 
         // }
-        else if (data == '#') {
+        else if (/^#[^#\s]/.test(data2)) {
             write.inputPop = {
                 rect,
                 type: InputTextPopSelectorType.TagSelector,
-                offset: offset - 1,
+                offset: offset - 2,
                 aa,
                 selector: (await useTagSelector())
             };

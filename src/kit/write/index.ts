@@ -372,16 +372,26 @@ export class PageWrite {
                      * 说明创建的是行内块
                      */
                     if (bd.link?.name == 'create') {
-                        //说明是[[创建双链
-                        var currentPage = await channel.query('/current/page');
-                        var r = await channel.air('/page/create/sub', {
-                            pageId: currentPage.id,
-                            text: bd.link.text,
-                        });
-                        if (r.id) Object.assign(bd, {
-                            refLinks: [{ type: 'page', id: util.guid(), pageId: r.id }],
-                        })
-                        delete bd.link;
+                        if (blockData.url == BlockUrlConstant.Text) {
+                            //说明是[[创建双链
+                            var currentPage = await channel.query('/current/page');
+                            var r = await channel.air('/page/create/sub', {
+                                pageId: currentPage.id,
+                                text: bd.link.text,
+                            });
+                            if (r.id) Object.assign(bd, {
+                                refLinks: [{ type: 'page', id: util.guid(), pageId: r.id }],
+                            })
+                            delete bd.link;
+                        }
+                        else if (blockData.url == BlockUrlConstant.Tag) {
+                            var rg = await channel.put('/tag/create', { tag: bd.link.text });
+                            if (rg.ok) Object.assign(bd, {
+                                refLinks: [{ type: 'tag', id: util.guid(), tagId: rg.data.id, tagText: bd.link.text }],
+                            })
+                            delete bd.link;
+                            console.log(bd, 'bd...');
+                        }
                     }
                     newBlock = await aa.block.visibleRightCreateBlock(offset, blockData.url, { ...bd, createSource: 'InputBlockSelector' });
                 }
