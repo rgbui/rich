@@ -11,19 +11,10 @@ import { prop, url, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
 import { util } from "../../util/util";
 import { Spin } from "../../component/view/spin";
-import { LinkPageItem, getPageIcon, getPageText } from "../../src/page/declare";
+import {  getPageIcon, getPageText } from "../../src/page/declare";
+import { BlockRefPage } from "../../extensions/tag/ref.declare";
 
-type BlockRefPage = LinkPageItem & {
-    spread?: boolean,
-    childs: {
-        text: string,
-        id: string,
-        content: string,
-        html: string,
-        createDate: Date,
-        elementUrl: string
-    }[]
-}
+
 
 @url('/ref/links')
 export class RefLinks extends Block {
