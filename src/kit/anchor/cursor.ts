@@ -135,8 +135,7 @@ export class AnchorCursor {
                 var line = cs[i];
                 var prev = cs[i - 1];
                 if (prev) {
-                    if (line.url == BlockUrlConstant.Text && prev.url == BlockUrlConstant.Text)
-                    {
+                    if (line.url == BlockUrlConstant.Text && prev.url == BlockUrlConstant.Text) {
                         if ((line as TextContent).isEqualFormat(prev as TextContent)) {
                             if (line === options.startAnchor.block) {
                                 options.startAnchor = prev.appearAnchors.first();
@@ -275,6 +274,7 @@ export class AnchorCursor {
         else {
             var pos = 0;
             if (options?.last && aa.isText) pos = aa.textContent.length + (typeof options.last == 'number' ? options.last : 0);
+            else if (options?.last && aa.isSolid) pos = 1;
             else pos = options?.at || 0;
             /**
              * 这里需要加个empty,
@@ -282,7 +282,8 @@ export class AnchorCursor {
              */
             sel.empty();
             aa.collapse(pos);
-            this.collapse(aa, sel.focusOffset);
+            if (aa.isSolid) this.collapse(aa, pos)
+            else this.collapse(aa, sel.focusOffset);
         }
     }
     /**

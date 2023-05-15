@@ -267,27 +267,39 @@ export function findBlockNearAppearByPoint(block: Block, point: Point) {
     var ps: { aa: AppearAnchor, isY: boolean, dis: number }[] = [];
     block.each(b => {
         b.appearAnchors.each(aa => {
-            var cs = TextEle.getBounds(aa.el);
-            if (cs.length == 0) return;
-            var isY: boolean = false;
-            var dis;
-            if (point.y < cs.first().top) {
-                dis = cs.first().dis(point);
-            }
-            else if (point.y > cs.last().bottom) {
-                dis = cs.last().dis(point);
+            if (aa.isSolid) {
+                var isY: boolean = false;
+                var dis;
+                var bound = Rect.fromEle(aa.el);
+                if (bound.containY(point.y))
+                    isY = true;
+                dis = bound.dis(point);
+                ps.push({ aa, dis, isY });
             }
             else {
-                isY = true;
-                var r = cs.find(g => g.containY(point.y));
-                if (r) {
-                    dis = r.dis(point);
+                var cs = TextEle.getBounds(aa.el);
+                if (cs.length == 0) return;
+                var isY: boolean = false;
+                var dis;
+                if (point.y < cs.first().top) {
+                    dis = cs.first().dis(point);
                 }
+                else if (point.y > cs.last().bottom) {
+                    dis = cs.last().dis(point);
+                }
+                else {
+                    isY = true;
+                    var r = cs.find(g => g.containY(point.y));
+                    if (r) {
+                        dis = r.dis(point);
+                    }
+                }
+                ps.push({ aa, dis, isY });
             }
-            ps.push({ aa, dis, isY });
+
         })
     }, true);
-    var pr;
+    var pr: { aa: AppearAnchor, dis: number, isY: boolean };
     if (ps.findAll(g => g.isY).length > 1) {
         pr = ps.findAll(g => g.isY).findMin(g => g.dis);
     }
@@ -296,13 +308,30 @@ export function findBlockNearAppearByPoint(block: Block, point: Point) {
         pr = ps.findMin(g => g.dis);
     }
     if (pr) {
-        var r = pr.aa.collapseByPoint(point);
-        if (r) {
-            var sel = window.getSelection();
-            var offset = pr.aa.getCursorOffset(sel.focusNode, sel.focusOffset);
-            return {
-                aa: pr.aa,
-                offset
+        if (pr.aa.isSolid) {
+            var rg = Rect.fromEle(pr.aa.el);
+            if (point.x < rg.center) {
+                return {
+                    aa: pr.aa,
+                    offset: 0
+                }
+            }
+            else {
+                return {
+                    aa: pr.aa,
+                    offset: 1
+                }
+            }
+        }
+        else {
+            var r = pr.aa.collapseByPoint(point);
+            if (r) {
+                var sel = window.getSelection();
+                var offset = pr.aa.getCursorOffset(sel.focusNode, sel.focusOffset);
+                return {
+                    aa: pr.aa,
+                    offset
+                }
             }
         }
     }

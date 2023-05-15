@@ -336,8 +336,8 @@ async function onPasteInsertPlainText(kit: Kit, aa: AppearAnchor, text: string) 
 async function onPasteUrl(kit: Kit, aa: AppearAnchor, url: string) {
     if (aa.isSolid) {
         await this.kit.page.onActionAsync(ActionDirective.onSolidBlockInputTextContent, async () => {
-            var text = aa.solidCursorEl.innerText;
-            aa.solidCursorEl.innerHTML = '';
+            var text = aa.solidContentEl.innerText;
+            aa.solidContentEl.innerHTML = '';
             var c = url;
             var newBlock = await aa.block.parent.appendBlock({
                 url: BlockUrlConstant.Text,

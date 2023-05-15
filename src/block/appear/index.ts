@@ -155,9 +155,18 @@ export class AppearAnchor {
      */
     cacCollapseFocusPos(offset: number, isFirst = true) {
         if (this.isSolid) {
-            return {
-                node: this.solidCursorEl.childNodes[0] || this.solidCursorEl,
-                pos: 0
+            var cs = Array.from(this.el.childNodes);
+            if (isFirst || offset == 0) {
+                return {
+                    node: cs.first(),
+                    pos: 0
+                }
+            }
+            else {
+                return {
+                    node: cs.last(),
+                    pos: 0
+                }
             }
         }
         var count = 0;
@@ -191,11 +200,16 @@ export class AppearAnchor {
     collapse(offset: number, sel?: Selection) {
         if (typeof sel == 'undefined') sel = window.getSelection();
         if (this.isSolid) {
-            var c = this.solidCursorEl;
-            if (c.childNodes.length > 0) {
-                sel.collapse(c.childNodes[0], 0)
+            var c = this.el;
+            if (offset == 1) {
+                var cs = c.childNodes;
+                if (cs.length > 0) sel.collapse(cs[cs.length - 1], 0)
+                else sel.collapse(c, 0);
             }
-            else sel.collapse(c, 0);
+            else {
+                if (c.childNodes.length > 0) sel.collapse(c.childNodes[0], 0)
+                else sel.collapse(c, 0);
+            }
         }
         else {
             var cr = this.cacCollapseFocusPos(offset);
@@ -327,7 +341,13 @@ export class AppearAnchor {
     }
     collapseByPoint(point: Point, options?: { startNode: Node, startOffset: number }) {
         if (this.isSolid) {
-            this.collapse(0);
+            var bound = Rect.fromEle(this.el);
+            if (point.y < bound.top || point.x < bound.center) {
+                this.collapse(0);
+            }
+            else {
+                this.collapse(-1);
+            }
             return true;
         }
         point = point.clone();
@@ -417,9 +437,6 @@ export class AppearAnchor {
         if (this.isText && this.el) {
             this.el.innerText = this.propValue;
         }
-    }
-    get solidCursorEl() {
-        return this.el.querySelector('.shy-appear-solid-cursor') as HTMLElement;
     }
     get() {
         return {

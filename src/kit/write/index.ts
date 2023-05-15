@@ -253,8 +253,6 @@ export class PageWrite {
             return;
         }
 
-
-
         /**
          * 这里需要判断是否有必要弹出弹窗
          */
@@ -390,7 +388,6 @@ export class PageWrite {
                                 refLinks: [{ type: 'tag', id: util.guid(), tagId: rg.data.id, tagText: bd.link.text }],
                             })
                             delete bd.link;
-                            console.log(bd, 'bd...');
                         }
                     }
                     newBlock = await aa.block.visibleRightCreateBlock(offset, blockData.url, { ...bd, createSource: 'InputBlockSelector' });
@@ -593,8 +590,8 @@ export class PageWrite {
     }
     async onSolidInputCreateTextBlock(aa: AppearAnchor, event?: React.CompositionEvent | React.FormEvent<Element>, forceText?: string) {
         await this.kit.page.onAction(ActionDirective.onSolidBlockInputTextContent, async () => {
-            var text = aa.solidCursorEl.innerText;
-            aa.solidCursorEl.innerHTML = '';
+            var text = aa.solidContentEl.innerText;
+            aa.solidContentEl.innerHTML = '';
             var c = forceText ? forceText : text;
             var newBlock = await aa.block.parent.appendBlock({
                 url: BlockUrlConstant.Text,
