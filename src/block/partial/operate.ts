@@ -28,7 +28,7 @@ export class Block$Operator {
         var pbs = this.parentBlocks;
         if (Array.isArray(pbs) && pbs.exists(g => g === this)) {
             try {
-                await this.page.syncRowBlockChange(this, 'delete');
+                await this.page.monitorBlockOperator(this, 'delete');
             }
             catch (ex) {
                 this.page.onError(ex)
@@ -197,11 +197,11 @@ export class Block$Operator {
             at -= 1;
         }
         var from = block.pos;
-        this.page.syncRowBlockChange(block.parent, 'from', block);
+        this.page.monitorBlockOperator(block.parent, 'from', block);
         await block.remove();
         bs.insertAt(at, block);
         block.parent = this;
-        this.page.syncRowBlockChange(block.parent, 'to', block);
+        this.page.monitorBlockOperator(block.parent, 'to', block);
         this.page.snapshoot.record(OperatorDirective.$move, {
             from,
             to: block.pos
@@ -476,7 +476,7 @@ export class Block$Operator {
         var newValue: Record<string, any> = {};
         if (typeof props['refLinks'] != 'undefined') {
             if (props['refLinks'] == null) {
-                this.page.syncRowBlockChange(this, 'delete');
+                this.page.monitorBlockOperator(this, 'delete');
             }
         }
         for (let prop in props) {
@@ -488,7 +488,7 @@ export class Block$Operator {
         }
         if (Object.keys(oldValue).length > 0 || Object.keys(newValue).length > 0) {
             if (typeof newValue['content'] != 'undefined' || typeof newValue['refLinks'] != 'undefined') {
-                this.page.syncRowBlockChange(this, 'content');
+                this.page.monitorBlockOperator(this, 'content');
             }
             await this.changeProps(oldValue, newValue);
             this.syncUpdate(range);
@@ -553,6 +553,9 @@ export class Block$Operator {
                 /**只保留标记@prop 的才record */
                 if (this.__props.includes(n)) continue
                 else { delete newValue[n]; delete oldValue[n] }
+            }
+            if (typeof newValue['content'] != 'undefined' || typeof newValue['refLinks'] != 'undefined') {
+                this.page.monitorBlockOperator(this, 'content');
             }
             if (Object.keys(newValue).length > 0)
                 this.page.snapshoot.record(OperatorDirective.$update, {
