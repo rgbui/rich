@@ -304,7 +304,7 @@ export class Page$Cycle {
                         ref: lodash.cloneDeep(c),
                     })
                 })
-                console.log('/row/block/sync/refs', ops);
+                //console.log('/row/block/sync/refs', ops);
                 await channel.post('/row/block/sync/refs', {
                     pageId: this.pageInfo.id,
                     operators: ops
@@ -316,7 +316,7 @@ export class Page$Cycle {
             console.error(ex);
         }
         try {
-            console.log(recordOutlineChanges, 'ssss');
+            // console.log(recordOutlineChanges, 'ssss');
             if (recordOutlineChanges.isChangeAll == true || recordOutlineChanges.changeBlocks.length > 0) {
                 var outLineBlock = this.find(g => g.url == BlockUrlConstant.Outline) as PageOutLine;
                 if (outLineBlock) {
@@ -417,8 +417,9 @@ export class Page$Cycle {
             this.onError(ex);
         }
 
-     
-        console.log(this.recordSyncRowBlocks)
+
+        //console.log(this.recordSyncRowBlocks)
+
         /**
          * 页面的大纲目录处理
          */
@@ -454,7 +455,7 @@ export class Page$Cycle {
                     break;
                 case 'from':
                 case 'to':
-                    console.log(currentBlock, 'cb');
+                    //console.log(currentBlock, 'cb');
                     if (currentBlock.isLine) {
                         var row = currentBlock.closest(x => x.isOnlyBlock);
                         if (row.url == BlockUrlConstant.Head) {
