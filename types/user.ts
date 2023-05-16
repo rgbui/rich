@@ -55,7 +55,15 @@ export type RobotInfo = UserBasic & {
     remark?: string,
     basePath?: string,
     scene: string;
-    robotId?:string,
+    robotId?: string,
     headers?: { name: string, value: string }[],
     tasks?: RobotTask[],
+}
+
+
+export enum PayFeatureCheck {
+    aiGPT = 'ai-gpt',
+    aiImage='ai-image',
+    upload = 'upload',
+    dataGridRow = 'data-grid-row'
 }

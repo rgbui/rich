@@ -4,7 +4,7 @@ import { LinkPageItem } from "../src/page/declare";
 import { GalleryType, OuterPic } from "../extensions/image/declare";
 import { StatusCode } from "./status.code";
 import { UserAction } from "../src/history/action";
-import { UserBasic, UserStatus } from "../types/user";
+import { PayFeatureCheck, UserBasic, UserStatus } from "../types/user";
 import {IconArguments, ResourceArguments } from "../extensions/icon/declare";
 export type SockResponse<T, U = string> = {
         /**
@@ -246,6 +246,7 @@ export interface ChannelGetMapUrls {
 	"/repeat/qr_pay/order":{args:{orderId:string,platform:string},returnType:Promise<SockResponse<{orderId:string,code:string}>>},
 	"/user/order/list":{args:{page?: number, size?: number, word?: string, status?: string,deal?:boolean},returnType:Promise<SockResponse<{page:number,size:number,list:any[],total:number}>>},
 	"/user/wallet":{args:{},returnType:Promise<SockResponse<{money:number,meal:string}>>},
+	"/check/feature":{args:{type:PayFeatureCheck,config?:{fileSize?:number}},returnType:Promise<SockResponse<{warn:boolean,limit:boolean,wallet:{due:Date,oveDue:boolean,meal:string,money:number},free:Record<string,any>,consume:Record<string,any>}>>},
 	"/query/wiki/answer":{args:{ask: string, robotId: string},returnType:Promise<SockResponse<{contents:{ id: string, content: string, rank: number, max: number }[]}>>},
 	"/text/embedding":{args:{text:string},returnType:Promise<SockResponse<{embedding:number[]}>>},
 	"/open/list":{args:any,returnType:Promise<SockResponse<{list:any[]}>>},
