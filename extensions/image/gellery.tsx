@@ -5,29 +5,22 @@ export var GalleryPics = [
     {
         group: "诗云",
         childs: [
-
             {
                 title: '',
                 url: 'https://resources.shy.live/gallery/shy_16.jpg',
                 thumb: 'https://resources.shy.live/gallery/shy_16_thumb.jpg'
             },
-
             {
                 title: '',
                 url: 'https://resources.shy.live/gallery/shy_13.jpg',
                 thumb: 'https://resources.shy.live/gallery/shy_13_thumb.jpg'
             },
-
-            {
+           {
                 title: '',
-                url: 'https://resources.shy.live/gallery/shy_6.jpg',
-                thumb: 'https://resources.shy.live/gallery/shy_6_thumb.jpg'
+                url: 'https://resources.shy.live/gallery/shy_9.jpg',
+                thumb: 'https://resources.shy.live/gallery/shy_9_thumb.jpg'
             },
-            {
-                title: '',
-                url: 'https://resources.shy.live/gallery/shy_7.jpg',
-                thumb: 'https://resources.shy.live/gallery/shy_7_thumb.jpg'
-            },
+          
             {
                 title: '',
                 url: 'https://resources.shy.live/gallery/shy_4.jpg',
@@ -35,9 +28,9 @@ export var GalleryPics = [
             },
             {
                 title: '',
-                url: 'https://resources.shy.live/gallery/shy_9.jpg',
-                thumb: 'https://resources.shy.live/gallery/shy_9_thumb.jpg'
-            },
+                url: 'https://resources.shy.live/gallery/shy_6.jpg',
+                thumb: 'https://resources.shy.live/gallery/shy_6_thumb.jpg'
+            }, 
             {
                 title: '',
                 url: 'https://resources.shy.live/gallery/shy_17.jpg',
@@ -47,33 +40,41 @@ export var GalleryPics = [
                 title: '',
                 url: 'https://resources.shy.live/gallery/shy_20.jpg',
                 thumb: 'https://resources.shy.live/gallery/shy_20_thumb.jpg'
+            },
+            {
+                title: '',
+                url: 'https://resources.shy.live/gallery/shy_7.jpg',
+                thumb: 'https://resources.shy.live/gallery/shy_7_thumb.jpg'
             }
         ]
     },
     {
-        group: '水彩', childs: [
+        group: '水彩',
+        childs: [
             {
                 title: '',
                 url: 'https://resources.shy.live/gallery/shy_18.jpg',
                 thumb: 'https://resources.shy.live/gallery/shy_18_thumb.jpg'
-            }, {
+            },
+            {
                 title: '',
                 url: 'https://resources.shy.live/gallery/shy_11.jpg',
                 thumb: 'https://resources.shy.live/gallery/shy_11_thumb.jpg'
-            }, {
+            },
+            {
                 "title": "",
                 "url": "https://resources.shy.live/gallery/graphs6.jpeg",
                 "thumb": "https://resources.shy.live/gallery/graphs6_thumb.jpeg"
-            }, {
+            },
+            {
                 title: '',
                 url: 'https://resources.shy.live/gallery/shy_15.jpg',
                 thumb: 'https://resources.shy.live/gallery/shy_15_thumb.jpg'
             },
-
         ]
     },
     {
-        "group": "中国台北故宫博物院",
+        "group": "台湾省故宫博物院",
         "childs": [
             {
                 "title": "",
