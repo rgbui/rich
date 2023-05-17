@@ -8,6 +8,7 @@ import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
 import { Spin } from "../../component/view/spin";
 import { LinkPageItem, getPageIcon, getPageText } from "../../src/page/declare";
+import { popoverLayer } from "../../component/lib/zindex";
 
 /**
  * 
@@ -40,8 +41,9 @@ class SelectWorkspacePage extends EventsComponent {
         this.forceUpdate();
     }
     selectIndex = 0;
+    el: HTMLElement;
     render() {
-        return <div className='shy-link-picker'>
+        return <div ref={e => this.el = e} style={{ zIndex: popoverLayer.zoom(this) }} className='pos-fixed bg-white w-250 max-h-300 overlay-y padding-10 round shadow'>
             <div className="gap-b-10"><Input size='small'
                 placeholder={'搜索页面'}
                 onChange={e => { this.word = e; this.syncSearch() }}
