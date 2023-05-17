@@ -3,83 +3,73 @@ import { OuterPic } from "./declare";
 
 export var GalleryPics = [
     {
-        "group": "NASA & SpaceX",
-        "childs": [
+        group: "诗云",
+        childs: [
+
             {
-                "title": "",
-                "url": "https://resources.shy.live/gallery/photo1.jpeg",
-                "thumb": "https://resources.shy.live/gallery/photo1_thumb.jpeg"
+                title: '',
+                url: 'https://resources.shy.live/gallery/shy_16.jpg',
+                thumb: 'https://resources.shy.live/gallery/shy_16_thumb.jpg'
+            },
+
+            {
+                title: '',
+                url: 'https://resources.shy.live/gallery/shy_13.jpg',
+                thumb: 'https://resources.shy.live/gallery/shy_13_thumb.jpg'
+            },
+
+            {
+                title: '',
+                url: 'https://resources.shy.live/gallery/shy_6.jpg',
+                thumb: 'https://resources.shy.live/gallery/shy_6_thumb.jpg'
             },
             {
-                "title": "",
-                "url": "https://resources.shy.live/gallery/photo2.jpeg",
-                "thumb": "https://resources.shy.live/gallery/photo2_thumb.jpeg"
+                title: '',
+                url: 'https://resources.shy.live/gallery/shy_7.jpg',
+                thumb: 'https://resources.shy.live/gallery/shy_7_thumb.jpg'
             },
             {
-                "title": "",
-                "url": "https://resources.shy.live/gallery/photo3.jpeg",
-                "thumb": "https://resources.shy.live/gallery/photo3_thumb.jpeg"
+                title: '',
+                url: 'https://resources.shy.live/gallery/shy_4.jpg',
+                thumb: 'https://resources.shy.live/gallery/shy_4_thumb.jpg'
             },
             {
-                "title": "",
-                "url": "https://resources.shy.live/gallery/photo4.jpeg",
-                "thumb": "https://resources.shy.live/gallery/photo4_thumb.jpeg"
+                title: '',
+                url: 'https://resources.shy.live/gallery/shy_9.jpg',
+                thumb: 'https://resources.shy.live/gallery/shy_9_thumb.jpg'
             },
             {
-                "title": "",
-                "url": "https://resources.shy.live/gallery/photo5.jpeg",
-                "thumb": "https://resources.shy.live/gallery/photo5_thumb.jpeg"
+                title: '',
+                url: 'https://resources.shy.live/gallery/shy_17.jpg',
+                thumb: 'https://resources.shy.live/gallery/shy_17_thumb.jpg'
             },
             {
-                "title": "",
-                "url": "https://resources.shy.live/gallery/photo6.jpeg",
-                "thumb": "https://resources.shy.live/gallery/photo6_thumb.jpeg"
-            },
-            {
-                "title": "",
-                "url": "https://resources.shy.live/gallery/photo7.jpeg",
-                "thumb": "https://resources.shy.live/gallery/photo7_thumb.jpeg"
-            },
-            {
-                "title": "",
-                "url": "https://resources.shy.live/gallery/photo8.jpeg",
-                "thumb": "https://resources.shy.live/gallery/photo8_thumb.jpeg"
-            },
-            {
-                "title": "",
-                "url": "https://resources.shy.live/gallery/photo9.jpeg",
-                "thumb": "https://resources.shy.live/gallery/photo9_thumb.jpeg"
-            },
-            {
-                "title": "",
-                "url": "https://resources.shy.live/gallery/photo10.jpeg",
-                "thumb": "https://resources.shy.live/gallery/photo10_thumb.jpeg"
-            },
-            {
-                "title": "",
-                "url": "https://resources.shy.live/gallery/photo11.jpeg",
-                "thumb": "https://resources.shy.live/gallery/photo11_thumb.jpeg"
-            },
-            {
-                "title": "",
-                "url": "https://resources.shy.live/gallery/photo12.jpeg",
-                "thumb": "https://resources.shy.live/gallery/photo12_thumb.jpeg"
-            },
-            {
-                "title": "",
-                "url": "https://resources.shy.live/gallery/photo13.jpeg",
-                "thumb": "https://resources.shy.live/gallery/photo13_thumb.jpeg"
-            },
-            {
-                "title": "",
-                "url": "https://resources.shy.live/gallery/photo14.jpeg",
-                "thumb": "https://resources.shy.live/gallery/photo14_thumb.jpeg"
-            },
-            {
-                "title": "",
-                "url": "https://resources.shy.live/gallery/photo16.jpeg",
-                "thumb": "https://resources.shy.live/gallery/photo16_thumb.jpeg"
+                title: '',
+                url: 'https://resources.shy.live/gallery/shy_20.jpg',
+                thumb: 'https://resources.shy.live/gallery/shy_20_thumb.jpg'
             }
+        ]
+    },
+    {
+        group: '水彩', childs: [
+            {
+                title: '',
+                url: 'https://resources.shy.live/gallery/shy_18.jpg',
+                thumb: 'https://resources.shy.live/gallery/shy_18_thumb.jpg'
+            }, {
+                title: '',
+                url: 'https://resources.shy.live/gallery/shy_11.jpg',
+                thumb: 'https://resources.shy.live/gallery/shy_11_thumb.jpg'
+            }, {
+                "title": "",
+                "url": "https://resources.shy.live/gallery/graphs6.jpeg",
+                "thumb": "https://resources.shy.live/gallery/graphs6_thumb.jpeg"
+            }, {
+                title: '',
+                url: 'https://resources.shy.live/gallery/shy_15.jpg',
+                thumb: 'https://resources.shy.live/gallery/shy_15_thumb.jpg'
+            },
+
         ]
     },
     {
@@ -313,68 +303,197 @@ export var GalleryPics = [
         ]
     },
     {
-        "group": "Uplash",
+        "group": "NASA & SpaceX",
         "childs": [
             {
                 "title": "",
-                "url": "https://resources.shy.live/gallery/graphs1.jpeg",
-                "thumb": "https://resources.shy.live/gallery/graphs1_thumb.jpeg"
+                "url": "https://resources.shy.live/gallery/photo1.jpeg",
+                "thumb": "https://resources.shy.live/gallery/photo1_thumb.jpeg"
             },
             {
                 "title": "",
-                "url": "https://resources.shy.live/gallery/graphs2.jpeg",
-                "thumb": "https://resources.shy.live/gallery/graphs2_thumb.jpeg"
+                "url": "https://resources.shy.live/gallery/photo2.jpeg",
+                "thumb": "https://resources.shy.live/gallery/photo2_thumb.jpeg"
             },
             {
                 "title": "",
-                "url": "https://resources.shy.live/gallery/graphs3.jpeg",
-                "thumb": "https://resources.shy.live/gallery/graphs3_thumb.jpeg"
+                "url": "https://resources.shy.live/gallery/photo3.jpeg",
+                "thumb": "https://resources.shy.live/gallery/photo3_thumb.jpeg"
             },
             {
                 "title": "",
-                "url": "https://resources.shy.live/gallery/graphs4.jpeg",
-                "thumb": "https://resources.shy.live/gallery/graphs4_thumb.jpeg"
+                "url": "https://resources.shy.live/gallery/photo4.jpeg",
+                "thumb": "https://resources.shy.live/gallery/photo4_thumb.jpeg"
             },
             {
                 "title": "",
-                "url": "https://resources.shy.live/gallery/graphs5.jpeg",
-                "thumb": "https://resources.shy.live/gallery/graphs5_thumb.jpeg"
+                "url": "https://resources.shy.live/gallery/photo5.jpeg",
+                "thumb": "https://resources.shy.live/gallery/photo5_thumb.jpeg"
             },
             {
                 "title": "",
-                "url": "https://resources.shy.live/gallery/graphs6.jpeg",
-                "thumb": "https://resources.shy.live/gallery/graphs6_thumb.jpeg"
+                "url": "https://resources.shy.live/gallery/photo6.jpeg",
+                "thumb": "https://resources.shy.live/gallery/photo6_thumb.jpeg"
             },
             {
                 "title": "",
-                "url": "https://resources.shy.live/gallery/graphs7.jpeg",
-                "thumb": "https://resources.shy.live/gallery/graphs7_thumb.jpeg"
-            }
+                "url": "https://resources.shy.live/gallery/photo7.jpeg",
+                "thumb": "https://resources.shy.live/gallery/photo7_thumb.jpeg"
+            },
+            {
+                "title": "",
+                "url": "https://resources.shy.live/gallery/photo8.jpeg",
+                "thumb": "https://resources.shy.live/gallery/photo8_thumb.jpeg"
+            },
+            {
+                "title": "",
+                "url": "https://resources.shy.live/gallery/photo9.jpeg",
+                "thumb": "https://resources.shy.live/gallery/photo9_thumb.jpeg"
+            },
+            {
+                "title": "",
+                "url": "https://resources.shy.live/gallery/photo10.jpeg",
+                "thumb": "https://resources.shy.live/gallery/photo10_thumb.jpeg"
+            },
+            {
+                "title": "",
+                "url": "https://resources.shy.live/gallery/photo11.jpeg",
+                "thumb": "https://resources.shy.live/gallery/photo11_thumb.jpeg"
+            },
+            {
+                "title": "",
+                "url": "https://resources.shy.live/gallery/photo12.jpeg",
+                "thumb": "https://resources.shy.live/gallery/photo12_thumb.jpeg"
+            },
+            // {
+            //     "title": "",
+            //     "url": "https://resources.shy.live/gallery/photo13.jpeg",
+            //     "thumb": "https://resources.shy.live/gallery/photo13_thumb.jpeg"
+            // },
+            // {
+            //     "title": "",
+            //     "url": "https://resources.shy.live/gallery/photo14.jpeg",
+            //     "thumb": "https://resources.shy.live/gallery/photo14_thumb.jpeg"
+            // },
+            // {
+            //     "title": "",
+            //     "url": "https://resources.shy.live/gallery/photo16.jpeg",
+            //     "thumb": "https://resources.shy.live/gallery/photo16_thumb.jpeg"
+            // }
+        ]
+    },
+    {
+        "group": "Uplash",
+        "childs": [{
+            title: '',
+            url: 'https://resources.shy.live/gallery/shy_3.jpg',
+            thumb: 'https://resources.shy.live/gallery/shy_3_thumb.jpg'
+        },
+
+
+        {
+            "title": "",
+            "url": "https://resources.shy.live/gallery/graphs1.jpeg",
+            "thumb": "https://resources.shy.live/gallery/graphs1_thumb.jpeg"
+        },
+        {
+            title: '',
+            url: 'https://resources.shy.live/gallery/shy_1.jpg',
+            thumb: 'https://resources.shy.live/gallery/shy_1_thumb.jpg'
+        },
+
+        {
+            "title": "",
+            "url": "https://resources.shy.live/gallery/graphs3.jpeg",
+            "thumb": "https://resources.shy.live/gallery/graphs3_thumb.jpeg"
+        },
+        // {
+        //     title: '',
+        //     url: 'https://resources.shy.live/gallery/shy_22.jpg',
+        //     thumb: 'https://resources.shy.live/gallery/shy_22_thumb.jpg'
+        // },
+        {
+            "title": "",
+            "url": "https://resources.shy.live/gallery/graphs2.jpeg",
+            "thumb": "https://resources.shy.live/gallery/graphs2_thumb.jpeg"
+        },
+        {
+            "title": "",
+            "url": "https://resources.shy.live/gallery/graphs5.jpeg",
+            "thumb": "https://resources.shy.live/gallery/graphs5_thumb.jpeg"
+        },
+        {
+            "title": "",
+            "url": "https://resources.shy.live/gallery/graphs7.jpeg",
+            "thumb": "https://resources.shy.live/gallery/graphs7_thumb.jpeg"
+        },
+        {
+            title: '',
+            url: 'https://resources.shy.live/gallery/shy_19.jpg',
+            thumb: 'https://resources.shy.live/gallery/shy_19_thumb.jpg'
+        },
+        {
+            "title": "",
+            "url": "https://resources.shy.live/gallery/graphs4.jpeg",
+            "thumb": "https://resources.shy.live/gallery/graphs4_thumb.jpeg"
+        },
+        {
+            title: '',
+            url: 'https://resources.shy.live/gallery/shy_8.jpg',
+            thumb: 'https://resources.shy.live/gallery/shy_8_thumb.jpg'
+        },
+        {
+            title: '',
+            url: 'https://resources.shy.live/gallery/shy_21.jpg',
+            thumb: 'https://resources.shy.live/gallery/shy_21_thumb.jpg'
+        },
+        {
+            title: '',
+            url: 'https://resources.shy.live/gallery/shy_12.jpg',
+            thumb: 'https://resources.shy.live/gallery/shy_12_thumb.jpg'
+        }
+
         ]
     },
     {
         "group": "图案",
-        "childs": [
-            {
-                "title": "",
-                "url": "https://resources.shy.live/gallery/pic1.jpeg",
-                "thumb": "https://resources.shy.live/gallery/pic1_thumb.jpeg"
-            },
-            {
-                "title": "",
-                "url": "https://resources.shy.live/gallery/pic2.jpeg",
-                "thumb": "https://resources.shy.live/gallery/pic2_thumb.jpeg"
-            },
-            {
-                "title": "",
-                "url": "https://resources.shy.live/gallery/pic3.jpeg",
-                "thumb": "https://resources.shy.live/gallery/pic3_thumb.jpeg"
-            },
-            {
-                "title": "",
-                "url": "https://resources.shy.live/gallery/pic4.jpeg",
-                "thumb": "https://resources.shy.live/gallery/pic4_thumb.jpeg"
-            }
+        "childs": [{
+            title: '',
+            url: 'https://resources.shy.live/gallery/shy_10.jpg',
+            thumb: 'https://resources.shy.live/gallery/shy_10_thumb.jpg'
+        }, {
+            title: '',
+            url: 'https://resources.shy.live/gallery/shy_2.jpg',
+            thumb: 'https://resources.shy.live/gallery/shy_2_thumb.jpg'
+        },
+        {
+            "title": "",
+            "url": "https://resources.shy.live/gallery/pic1.jpeg",
+            "thumb": "https://resources.shy.live/gallery/pic1_thumb.jpeg"
+        }, {
+            title: '',
+            url: 'https://resources.shy.live/gallery/shy_14.jpg',
+            thumb: 'https://resources.shy.live/gallery/shy_14_thumb.jpg'
+        }, {
+            title: '',
+            url: 'https://resources.shy.live/gallery/shy_5.jpg',
+            thumb: 'https://resources.shy.live/gallery/shy_5_thumb.jpg'
+        },
+        {
+            "title": "",
+            "url": "https://resources.shy.live/gallery/pic2.jpeg",
+            "thumb": "https://resources.shy.live/gallery/pic2_thumb.jpeg"
+        },
+        {
+            "title": "",
+            "url": "https://resources.shy.live/gallery/pic3.jpeg",
+            "thumb": "https://resources.shy.live/gallery/pic3_thumb.jpeg"
+        },
+        {
+            "title": "",
+            "url": "https://resources.shy.live/gallery/pic4.jpeg",
+            "thumb": "https://resources.shy.live/gallery/pic4_thumb.jpeg"
+        }
         ]
     }
 ]
