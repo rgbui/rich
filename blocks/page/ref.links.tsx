@@ -11,10 +11,8 @@ import { prop, url, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
 import { util } from "../../util/util";
 import { Spin } from "../../component/view/spin";
-import {  getPageIcon, getPageText } from "../../src/page/declare";
+import { getPageIcon, getPageText } from "../../src/page/declare";
 import { BlockRefPage } from "../../extensions/tag/ref.declare";
-
-
 
 @url('/ref/links')
 export class RefLinks extends Block {
@@ -47,7 +45,8 @@ export class RefLinksView extends BlockView<RefLinks>{
     open(refPage: ArrayOf<BlockRefPage['childs']>) {
         var pe = parseElementUrl(refPage.elementUrl);
         channel.air('/page/open', {
-            elementUrl: getElementUrl(ElementType.PageItem, pe.id)
+            elementUrl: getElementUrl(ElementType.PageItem, pe.id),
+            config: { blockId: pe.id1 }
         });
     }
     renderRefBlocks() {

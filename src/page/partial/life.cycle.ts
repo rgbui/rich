@@ -553,8 +553,12 @@ export class Page$Cycle {
             this.emit(PageDirective.blur, event);
         }
     }
-    onHighlightBlock(this: Page, blocks: Block[]) {
+    onHighlightBlock(this: Page, blocks: Block[], scrollTo?: boolean) {
+        if (blocks.length == 0) return;
         var bs = this.getAtomBlocks(blocks);
+        var first = bs.first();
+        if (scrollTo)
+            this.onPageScroll(first);
         bs.forEach(b => {
             b.el.classList.remove('shy-block-highlight');
         })
