@@ -6,7 +6,7 @@ import { Button } from "../../../component/view/button";
 import { ColorInput } from "../../../component/view/color/input";
 import { Icon } from "../../../component/view/icon";
 import { useSelectMenuItem } from "../../../component/view/menu";
-import { MenuItemType } from "../../../component/view/menu/declare";
+import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { Rect } from "../../../src/common/vector/point";
 import { BackgroundColorList } from "../../color/data";
 import { useImageFilePicker } from "../../file/image.picker";
@@ -31,13 +31,13 @@ export class CardBoxStyle extends EventsComponent {
     }
     renderBackground() {
         var self = this;
-        var items = [
-            { name: 'none', value: "none", text: '无' },
+        var items: MenuItem<string>[] = [
+            { name: 'none', value: "none", text: '无', checkLabel: self.options?.fill?.mode == 'none' },
             { type: MenuItemType.divide },
-            { name: 'image', text: '选择图片', value: 'image' },
-            { name: 'uploadImage', text: '上传图片', value: 'uploadImage' },
+            { name: 'image', text: '选择图片', value: 'image', checkLabel: self.options?.fill?.mode == 'image' },
+            { name: 'uploadImage', text: '上传图片', value: 'uploadImage', checkLabel: self.options?.fill?.mode == 'uploadImage' },
             { type: MenuItemType.divide },
-            { name: 'color', text: '颜色', value: 'color' }
+            { name: 'color', text: '颜色', value: 'color', checkLabel: self.options?.fill?.mode == 'color' }
         ]
         async function openMenu(event: React.MouseEvent) {
             var r = await useSelectMenuItem(
@@ -70,12 +70,16 @@ export class CardBoxStyle extends EventsComponent {
                             <div className="remark padding-w-15">{gp.group}</div>
                             <div className="flex flex-wrap">
                                 {gp.childs.map(gc => {
-                                    return <div onMouseDown={e => {
-                                        this.setProps({ 'fill.mode': 'image', 'fill.src': gc.url })
-                                    }}
+                                    return <div
+                                        onMouseDown={e => {
+                                            this.setProps({ 'fill.mode': 'image', 'fill.src': gc.url })
+                                        }}
                                         key={gc.url}
-                                        style={{ width: (300 - 45) / 2 }} className={'round-16 gap-l-15 w-120 h-80 gap-b-10 cursor gap-h-10 '}>
+                                        style={{ width: (300 - 45) / 2 }} className={'relative gap-l-15 w-120 h-80 gap-b-10 cursor gap-h-10 '}>
                                         <img className="obj-center w100 h100 round-8" src={gc.thumb} />
+                                        {gc.url == this.options.fill?.src && <div className="pos-all flex-end-top">
+                                            <span className="flex-center size-20 round bg-white shadow gap-5"><Icon size={16} icon={CheckSvg}></Icon></span>
+                                        </div>}
                                     </div>
                                 })}
                             </div>
@@ -110,6 +114,7 @@ export class CardBoxStyle extends EventsComponent {
                         </div>
                     })}
                 </div>}
+
             </div>
         </div>
     }
@@ -134,7 +139,7 @@ export class CardBoxStyle extends EventsComponent {
             <div className="flex flex-wrap text-1">
 
                 <div className="flex-auto gap-l-15 " onClick={e => this.setValue('cardStyle.transparency', 'solid')}>
-                    <div className={"h-80  box-border padding-w-10  border round-8" + (this.options.cardStyle.color == 'light' ? " bg-white" : " bg-black")} style={{ width: (300 - 45) / 2 }}>
+                    <div className={"cursor h-80  box-border padding-w-10  border round-8" + (this.options.cardStyle.color == 'light' ? " bg-white" : " bg-black")} style={{ width: (300 - 45) / 2 }}>
                         <div className={"h-10 w-30 round gap-h-10" + (this.options.cardStyle.color == 'light' ? " bg-black" : " bg-white")}></div>
                         <div className={"h-10 w-100 round gap-h-10" + (this.options.cardStyle.color == 'light' ? " bg-black" : " bg-white")}></div>
                         <div className={"h-10 w-80 round gap-h-10" + (this.options.cardStyle.color == 'light' ? " bg-black" : " bg-white")}></div>
@@ -143,7 +148,7 @@ export class CardBoxStyle extends EventsComponent {
                 </div>
 
                 <div className="flex-auto gap-l-15" onClick={e => this.setValue('cardStyle.transparency', 'frosted')}>
-                    <div className={"h-80  box-border padding-w-10  border round-8" + (this.options.cardStyle.color == 'light' ? " bg-white" : " bg-black")} style={{ width: (300 - 45) / 2 }}>
+                    <div className={"cursor h-80  box-border padding-w-10  border round-8" + (this.options.cardStyle.color == 'light' ? " bg-white" : " bg-black")} style={{ width: (300 - 45) / 2 }}>
                         <div className={"h-10 w-30 round gap-h-10" + (this.options.cardStyle.color == 'light' ? " bg-black" : " bg-white")}></div>
                         <div className={"h-10 w-100 round gap-h-10" + (this.options.cardStyle.color == 'light' ? " bg-black" : " bg-white")}></div>
                         <div className={"h-10 w-80 round gap-h-10" + (this.options.cardStyle.color == 'light' ? " bg-black" : " bg-white")}></div>
@@ -151,7 +156,7 @@ export class CardBoxStyle extends EventsComponent {
                     <div className="flex gap-h-10">{this.options.cardStyle.transparency == 'frosted' && <span className="size-20"><Icon size={16} icon={CheckSvg}></Icon></span>}<span>毛玻璃</span></div>
                 </div>
                 <div className="flex-auto gap-l-15 " onClick={e => this.setValue('cardStyle.transparency', 'faded')}>
-                    <div className={"h-80  box-border padding-w-10  border round-8" + (this.options.cardStyle.color == 'light' ? " bg-white" : " bg-black")} style={{ width: (300 - 45) / 2 }}>
+                    <div className={"cursor h-80  box-border padding-w-10  border round-8" + (this.options.cardStyle.color == 'light' ? " bg-white" : " bg-black")} style={{ width: (300 - 45) / 2 }}>
                         <div className={"h-10 w-30 round gap-h-10" + (this.options.cardStyle.color == 'light' ? " bg-black" : " bg-white")}></div>
                         <div className={"h-10 w-100 round gap-h-10" + (this.options.cardStyle.color == 'light' ? " bg-black" : " bg-white")}></div>
                         <div className={"h-10 w-80 round gap-h-10" + (this.options.cardStyle.color == 'light' ? " bg-black" : " bg-white")}></div>
@@ -159,7 +164,7 @@ export class CardBoxStyle extends EventsComponent {
                     <div className="flex gap-h-10">{this.options.cardStyle.transparency == 'faded' && <span className="size-20"><Icon size={16} icon={CheckSvg}></Icon></span>}<span>渐近</span></div>
                 </div>
                 <div className="flex-auto gap-l-15" onClick={e => this.setValue('cardStyle.transparency', 'noborder')}>
-                    <div className={"h-80  box-border padding-w-10  border round-8" + (this.options.cardStyle.color == 'light' ? " bg-white" : " bg-black")} style={{ width: (300 - 45) / 2 }}>
+                    <div className={"cursor h-80  box-border padding-w-10  border round-8" + (this.options.cardStyle.color == 'light' ? " bg-white" : " bg-black")} style={{ width: (300 - 45) / 2 }}>
                         <div className={"h-10 w-30 round gap-h-10" + (this.options.cardStyle.color == 'light' ? " bg-black" : " bg-white")}></div>
                         <div className={"h-10 w-100 round gap-h-10" + (this.options.cardStyle.color == 'light' ? " bg-black" : " bg-white")}></div>
                         <div className={"h-10 w-80 round gap-h-10" + (this.options.cardStyle.color == 'light' ? " bg-black" : " bg-white")}></div>
