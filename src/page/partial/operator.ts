@@ -4,12 +4,13 @@ import { ShyAlert } from "../../../component/lib/alert";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItem } from "../../../component/view/menu/declare";
 import { channel } from "../../../net/channel";
+import { AnimatedScrollTo } from "../../../util/animatedScrollTo";
 import { Block } from "../../block";
 import { AppearAnchor } from "../../block/appear";
 import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
 import { BlockDirective } from "../../block/enum";
 import { BlockFactory } from "../../block/factory/block.factory";
-import { Point } from "../../common/vector/point";
+import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { DropDirection } from "../../kit/handle/direction";
 import { storeCopyBlocks } from "../common/copy";
@@ -43,7 +44,7 @@ export class Page$Operator {
                 pos: block.pos,
                 data: await block.get()
             }, block);
-            this.monitorBlockOperator(block,'create');
+            this.monitorBlockOperator(block, 'create');
             this.addBlockUpdate(parent);
         }
         else {
@@ -55,7 +56,7 @@ export class Page$Operator {
                 pos: block.pos,
                 data: await block.get()
             }, block);
-            this.monitorBlockOperator(block,'create');
+            this.monitorBlockOperator(block, 'create');
             this.addPageUpdate();
         }
         return block;
@@ -376,5 +377,13 @@ export class Page$Operator {
                 speakDate: new Date()
             }
         })
+    }
+    async onPageScroll(this: Page, block: Block) {
+        var panelEl = this.getScrollDiv();
+        var offset = panelEl.scrollTop;
+        var blockRect = block.getVisibleBound();
+        var panelElRect = Rect.fromEle(panelEl);
+        var d = blockRect.top - panelElRect.top;
+        AnimatedScrollTo(panelEl, offset + d)
     }
 }
