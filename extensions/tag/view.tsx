@@ -12,6 +12,7 @@ import { util } from "../../util/util";
 import { Icon } from "../../component/view/icon";
 import { TriangleSvg } from "../../component/svgs";
 import { Spin } from "../../component/view/spin";
+import { ElementType, getElementUrl, parseElementUrl } from "../../net/element.type";
 
 export class TagsView extends EventsComponent {
     constructor(props) {
@@ -24,8 +25,12 @@ export class TagsView extends EventsComponent {
             {this.renderRefs()}
         </div>
     }
-    open(b) {
-
+    open(refPage: ArrayOf<BlockRefPage['childs']>) {
+        var pe = parseElementUrl(refPage.elementUrl);
+        channel.air('/page/open', {
+            elementUrl: getElementUrl(ElementType.PageItem, pe.id),
+            config: { blockId: pe.id1 }
+        });
     }
     renderRefs() {
         if (this.search.refs.length == 0) {
