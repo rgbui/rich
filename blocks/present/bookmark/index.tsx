@@ -6,13 +6,13 @@ import { BlockDisplay } from "../../../src/block/enum";
 import { ResourceArguments } from "../../../extensions/icon/declare";
 import { useOutSideUrlInput } from "../../../extensions/link/outsite.input";
 import { Rect } from "../../../src/common/vector/point";
-import { Loading } from "../../../component/view/loading";
 import { BookSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import "./style.less";
 import { channel } from "../../../net/channel";
 import { autoImageUrl } from "../../../net/element.type";
 import { ActionDirective } from "../../../src/history/declare";
+import { Spin } from "../../../component/view/spin";
 
 @url('/bookmark')
 export class Bookmark extends Block {
@@ -85,7 +85,7 @@ export class BookmarkView extends BlockView<Bookmark>{
         if (!this.block.bookmarkInfo) {
             if (this.block.loading) {
                 return <div className="sy-block-bookmark-loading">
-                    <Loading></Loading><span>{this.block.bookmarkUrl}</span>
+                    <Spin></Spin><span>{this.block.bookmarkUrl}</span>
                 </div>
             }
             else {
