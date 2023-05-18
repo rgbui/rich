@@ -46,7 +46,8 @@ export class HandleView extends React.Component<{ handle: Handle }>{
                     if (!self.handle.dragBlocks.some(s => s == c))
                         self.handle.dragBlocks.push(c)
                 });
-            } else self.handle.dragBlocks = [self.handle.handleBlock];
+            } else if (self.handle.handleBlock) self.handle.dragBlocks = [self.handle.handleBlock];
+            if (self.handle.dragBlocks.length == 0) return;
             if (self.handle.dragBlocks.some(s => s.isFreeBlock)) {
                 self.handle.kit.picker.onPicker(self.handle.dragBlocks);
                 window.getSelection().collapse(self.handle.kit.page.viewEl)

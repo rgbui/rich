@@ -22,6 +22,7 @@ import {
     LinkSvg,
     LockSvg,
     LoopSvg,
+    MagicSvg,
     TrashSvg,
     UnlockSvg
 } from "../../../component/svgs";
@@ -56,6 +57,11 @@ export class Block$Event {
             return await this.onGetBoardContextMenus()
         }
         var items: MenuItem<BlockDirective | string>[] = [];
+        items.push({
+            name: 'askAi',
+            icon: MagicSvg,
+            text: "诗云AI",
+        });
         items.push({
             name: BlockDirective.delete,
             icon: TrashSvg,
@@ -232,6 +238,9 @@ export class Block$Event {
                 this.page.onBatchTurn([this], (item as any).url);
                 break;
             case BlockDirective.comment:
+                break;
+            case 'askAi':
+                 this.page.kit.writer.onAskAi([this])
                 break;
             case 'fontColor':
                 this.page.onAction('setFontStyle', async () => {

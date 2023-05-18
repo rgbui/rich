@@ -214,7 +214,7 @@ export class PageWrite {
                 break;
             case KeyboardCode.A.toLowerCase():
                 if (UA.isMacOs && this.kit.page.keyboardPlate.isMeta() || !UA.isMacOs && this.kit.page.keyboardPlate.isCtrl()) {
-                   this.kit.anchorCursor.onSelectAll()
+                    this.kit.anchorCursor.onSelectAll()
                     forceCloseTextTool();
                     event.preventDefault();
                 }
@@ -343,9 +343,8 @@ export class PageWrite {
                     }
                     else if (result.command == 'askAI') {
                         var rowBlocks = this.kit.page.getAtomBlocks(blocks.map(c => c.closest(x => x.isBlock)));
-                        this.kit.anchorCursor.onSelectBlocks(rowBlocks, { render: true });
-                        forceCloseTextTool()
-                        useAITool({ blocks: rowBlocks });
+                        this.onAskAi(rowBlocks)
+
                         break;
                     }
                     else break;
@@ -629,6 +628,12 @@ export class PageWrite {
                 this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, merge: true, render: true });
             });
         });
+    }
+    async onAskAi(rowBlocks: Block[]) {
+        this.kit.anchorCursor.onSelectBlocks(rowBlocks, { render: true });
+        forceCloseTextTool()
+        useAITool({ blocks: rowBlocks });
+        this.kit.anchorCursor.onSelectBlocks(rowBlocks, { render: true });
     }
 }
 
