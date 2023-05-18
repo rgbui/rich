@@ -32,6 +32,7 @@ import { parseMarkdownContent } from "../../src/import-export/markdown/parse";
 import { BlockUrlConstant } from "../../src/block/constant";
 import { List, ListType } from "../../blocks/present/list/list";
 import { onMergeListBlocks } from "./util";
+import { CanSupportFeature, PayFeatureCheck } from "../../component/pay";
 
 export type AIToolType = {
     block?: Block,
@@ -162,7 +163,8 @@ export class AITool extends EventsComponent {
                         }
                         break;
                     case 'image':
-                        self.aiImage()
+                        if (await CanSupportFeature(PayFeatureCheck.aiImage))
+                            self.aiImage()
                         break;
                     case 'pageSummary':
                         var preContent = await this.getPageContent()
@@ -246,8 +248,10 @@ export class AITool extends EventsComponent {
                         this.aiSelection({ prompt: propTemplate })
                         break;
                     case 'insertImage':
-                        var preContent = this.getPrevBlockContent();
-                        this.aiImage({ prompt: preContent, genImageProp: true })
+                        if (await CanSupportFeature(PayFeatureCheck.aiImage)) {
+                            var preContent = this.getPrevBlockContent();
+                            this.aiImage({ prompt: preContent, genImageProp: true })
+                        }
                         break;
                 }
             }
@@ -309,7 +313,8 @@ export class AITool extends EventsComponent {
             else if ([AIAskStatus.willAsking].includes(this.status)) {
                 switch (item.name) {
                     case 'image':
-                        self.aiImage()
+                        if (await CanSupportFeature(PayFeatureCheck.aiImage))
+                            self.aiImage()
                         break;
                 }
             }

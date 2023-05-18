@@ -15,11 +15,11 @@ export enum PayFeatureCheck {
 }
 
 
-export async function canSupportFeature(check: PayFeatureCheck) {
+export async function CanSupportFeature(check: PayFeatureCheck) {
     var r = await channel.get('/check/feature', { type: check });
     if (r.ok) {
         if (r.data.limit) {
-
+            await usePayTip({ check });
             return false;
         }
         else if (r.data.warn) {
@@ -38,7 +38,6 @@ export class PayTip extends EventsComponent {
         this.forceUpdate()
     }
     openPay() {
-
         channel.act('/open/pay');
         this.emit('close');
     }
@@ -51,8 +50,8 @@ export class PayTip extends EventsComponent {
         return <div>
             <div className="warn-bg">该功能是诗云调用第三方付费接口，无法免费，需要充值才能继续使用</div>
             {this.userid == this.owner && <div className="flex">
-                <div className="flex-center gap-h-10">联系空间拥有者<Avatar userid={this.owner}></Avatar>，让他充些值</div>
-                <div className="flex-center"><Button onClick={e => this.contactUser()}>联系TA</Button></div>
+                <div className="flex-center gap-h-10">联系空间拥有者<Avatar showCard userid={this.owner}></Avatar>，让他充些值</div>
+                <div className="flex-center"><Button ghost onClick={e => this.openPay()}>自已充钱体验</Button></div>
             </div>}
             {this.userid == this.owner && <div>
                 <div className="flex-center gap-h-10">您需要充值，才能继续使用该功能</div>

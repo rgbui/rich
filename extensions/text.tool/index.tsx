@@ -103,7 +103,7 @@ class TextTool extends EventsComponent {
             }
             {this.visible == true && <div className='shy-tool-text-menu' ref={e => this.boxEl = e} style={style}>
 
-                <ToolTip overlay={'让AI帮你写作、润色、生成内容'}>
+                <ToolTip overlay={'让诗云AI帮你写作、润色、生成内容'}>
                     <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onExcute(TextCommand.askAI, e)}>
                         <Icon icon={MagicSvg}></Icon><span>AI</span>
                     </div>
