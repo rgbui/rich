@@ -61,9 +61,3 @@ export type RobotInfo = UserBasic & {
 }
 
 
-export enum PayFeatureCheck {
-    aiGPT = 'ai-gpt',
-    aiImage='ai-image',
-    upload = 'upload',
-    dataGridRow = 'data-grid-row'
-}

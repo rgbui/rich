@@ -4,8 +4,9 @@ import { LinkPageItem } from "../src/page/declare";
 import { GalleryType, OuterPic } from "../extensions/image/declare";
 import { StatusCode } from "./status.code";
 import { UserAction } from "../src/history/action";
-import { PayFeatureCheck, UserBasic, UserStatus } from "../types/user";
+import { UserBasic, UserStatus } from "../types/user";
 import {IconArguments, ResourceArguments } from "../extensions/icon/declare";
+import { PayFeatureCheck } from "../component/pay";
 export type SockResponse<T, U = string> = {
         /**
          * 返回状态码
@@ -287,7 +288,7 @@ export interface ChannelGetMapUrls {
 	"/tag/query":{args:{id?:string,ids?:string[]},returnType:Promise<SockResponse<{list:any[],tag:any}>>}
 }
 export interface ChannelQueryMapUrls {
-    "/current/workspace":{args:any,returnType:{id:string,sn:number,text:string,url:string,isMember?:boolean,isOwner?:boolean,access?:0|1,accessProfile?:{disabledJoin: boolean,checkJoinProtocol: boolean,joinProtocol: string},roles:{ id: string,text: string,color: string,permissions: number[],icon?: IconArguments}[]}},
+    "/current/workspace":{args:any,returnType:{owner:string,creater:string, id:string,sn:number,text:string,url:string,isMember?:boolean,isOwner?:boolean,access?:0|1,accessProfile?:{disabledJoin: boolean,checkJoinProtocol: boolean,joinProtocol: string},roles:{ id: string,text: string,color: string,permissions: number[],icon?: IconArguments}[]}},
 	"/query/current/user":{args:any,returnType:UserBasic},
 	"/current/page":{args:{},returnType:LinkPageItem},
 	"/cache/get":{args:{key:string},returnType:Promise<any>},
@@ -301,7 +302,8 @@ export interface ChannelActMapUrls {
     "/page/create/by_text":{args:{word:string},returnType:SockResponse<LinkPageItem>},
 	"/cache/set":{args:{key:string,value:any},returnType:Promise<void>},
 	"/view/snap/operator":{args:{ elementUrl: string, operate: Partial<UserAction> },returnType:Promise<{seq: number,id: string;}>},
-	"/view/snap/store":{args:{  elementUrl: string, seq: number, content: any },returnType:Promise<void>}
+	"/view/snap/store":{args:{  elementUrl: string, seq: number, content: any },returnType:Promise<void>},
+	"/open/pay":{args:{},returnType:{}}
 }
 export interface ChannelAirMapUrls {
     "/page/update/info":{args:{id?: string,elementUrl?:string, pageInfo:LinkPageItem},returnType:void},
