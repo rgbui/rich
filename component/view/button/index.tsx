@@ -11,6 +11,7 @@ export class Button extends React.Component<{
     block?: boolean,
     ghost?: boolean,
     link?: boolean,
+    danger?: boolean,
     style?: CSSProperties,
     loading?: boolean,
     size?: 'normal' | 'medium' | 'larger' | 'small',
@@ -46,8 +47,14 @@ export class Button extends React.Component<{
             </svg>
             if (props.icon) return <Icon size={props.iconSize || 16} icon={props.icon}></Icon>
         }
+        var classList: string[] = ['shy-button'];
+        if (props.className) classList.push(props.className)
+        if (props.link) classList.push('shy-button-link')
+        if (props.ghost) classList.push('shy-button-ghost')
+        if (this.props.size) classList.push('shy-button-' + this.props.size)
+        if (props.danger) classList.push('shy-button-danger')
         var btn = <button style={this.props.style || {}}
-            className={'shy-button' + (props.className ? " " + props.className : "") + (props.link ? " shy-button-link" : "") + (props.ghost ? " shy-button-ghost" : "") + (this.props.size ? " shy-button-" + this.props.size : "")}
+            className={classList.join(' ')}
             disabled={props.disabled || this._disabled ? props.disabled : false}
             onClick={e => props.onClick && !(this._loading || props.loading) ? props.onClick(e, this) : undefined}
             onMouseDown={e => props.onMouseDown && !(this._loading || props.loading) ? props.onMouseDown(e, this) : undefined}
