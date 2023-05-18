@@ -1,16 +1,15 @@
 import lodash from "lodash";
 import React from "react";
 import { EventsComponent } from "../../component/lib/events.component";
-import { PageSvg } from "../../component/svgs";
 import { Divider } from "../../component/view/grid";
 import { Icon } from "../../component/view/icon";
 import { Input } from "../../component/view/input";
-import { Loading } from "../../component/view/loading";
 import { channel } from "../../net/channel";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
 import "./style.less";
-import { LinkPageItem } from "../../src/page/declare";
+import { LinkPageItem, getPageIcon, getPageText } from "../../src/page/declare";
+import { Spin } from "../../component/view/spin";
 
 export class SearchBox extends EventsComponent {
     render() {
@@ -20,7 +19,7 @@ export class SearchBox extends EventsComponent {
             </div>
             <Divider></Divider>
             <div className="padding-h-10 overflow-y max-h-300 min-h-200">
-                {this.loading && <Loading></Loading>}
+                {this.loading && <Spin block></Spin>}
                 {!this.loading && this.word && this.renderList()}
                 {!this.word && this.renderViews()}
             </div>
@@ -29,8 +28,8 @@ export class SearchBox extends EventsComponent {
     renderViews() {
         return this.myPages.map(r => {
             return <div key={r.id} className="flex h-30 padding-w-10 item-hover round cursor" onMouseDown={e => this.onSelect(r)}>
-                <span className="flex-line flex-center size-20 round text gap-r-5  f-14"><Icon size={16} icon={r.icon || PageSvg}></Icon></span>
-                <span className="text  f-14">{r.text || '新页面'}</span>
+                <span className="flex-line flex-center size-20 round text gap-r-5  f-14"><Icon size={20} icon={getPageIcon(r)}></Icon></span>
+                <span className="text  f-14">{getPageText(r)}</span>
             </div>
         })
     }
@@ -39,8 +38,8 @@ export class SearchBox extends EventsComponent {
         return this.list.map(r => {
             return <div key={r.id} className="padding-10 item-hover round cursor" onMouseDown={e => this.onSelect(r)}>
                 <div className="flex">
-                    <span className="flex-line flex-center size-20 round text gap-r-5"><Icon size={16} icon={r.icon || PageSvg}></Icon></span>
-                    <span className="text f-14">{r.title || r.text || '新页面'}</span>
+                    <span className="flex-line flex-center size-20 round text gap-r-5"><Icon size={16} icon={getPageIcon(r)}></Icon></span>
+                    <span className="text f-14">{getPageText(r)}</span>
                 </div>
                 <div className="remark f-14">{r.content}</div>
             </div>
@@ -62,7 +61,7 @@ export class SearchBox extends EventsComponent {
     }
     async onSelect(item: LinkPageItem) {
         if (this.isNav == true) {
-            channel.air('/page/open', { item: { id: item.id } });
+            channel.air('/page/open', { item: item.id });
         }
         this.emit('save', item);
     }
@@ -80,6 +79,10 @@ export class SearchBox extends EventsComponent {
             this.loading = false;
             if (r.ok) {
                 this.list = r.data.list as any;
+                r.data.list.forEach((g) => {
+                    var p = r.data.pages.find(c => c.id == g.id);
+                    Object.assign(g, p);
+                })
                 this.total = r.data.total;
             }
             this.forceUpdate();

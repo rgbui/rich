@@ -267,7 +267,7 @@ export interface ChannelGetMapUrls {
 	"/ws/discovery":{args:{word?:string,page?:number,size?:number,type?:string},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
 	"/ws/view/online/users":{args:{viewUrl:string,read?:boolean},returnType:Promise<SockResponse<{users:string[]}>>},
 	"/ws/online/users":{args:{wsId?:string},returnType:Promise<SockResponse<{users:string[]}>>},
-	"/ws/search":{args:{page?:number,size?:number,mime?:string,word:string,wsId?:string,isOnlySearchTitle?:boolean,createDate?:number,editDate?:number},returnType:Promise<SockResponse<{ list:{id:string,title:string,content:string,score:number}[],total:number }>>},
+	"/ws/search":{args:{page?:number,size?:number,mime?:string,word:string,wsId?:string,isOnlySearchTitle?:boolean,createDate?:number,editDate?:number},returnType:Promise<SockResponse<{pages:LinkPageItem[],list:{id:string,title:string,content:string,score:number}[],total:number }>>},
 	"/ws/comment/list":{args:{elementUrl: string,wsId?: string, parentId: string, sort: 'default' | 'date', page: number,size: number},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
 	"/ws/robots":{args:{},returnType:Promise<SockResponse<{list:{userid:string,name:string}[]}>>},
 	"/robots/info":{args:{ids:string[]},returnType:Promise<SockResponse<{list:any[]}>>},
