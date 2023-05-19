@@ -23,6 +23,7 @@ import { prop, url, view } from "../../factory/observable";
 import { BlockView } from "../../view";
 import { ChildsArea } from "../../view/appear";
 import "./style.less";
+import { ToolTip } from "../../../../component/view/tooltip";
 
 @url('/card/box')
 export class CardBox extends Block {
@@ -153,21 +154,21 @@ export class ViewComponent extends BlockView<CardBox>{
             }
         }
         var screenStyle = this.block.page.getScreenStyle();
-
         return <div style={style}>
             <div className="visible-hover" style={screenStyle}>
-                <div style={{ padding: "4rem 2rem" }}>
-                    <div className={"relative padding-20 round-16 sy-block-card-box" + (" sy-block-card-box-" + this.block.cardStyle.color) + (" sy-block-card-box-" + this.block.cardStyle.transparency)}>
+                <div style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
+                    <div className={"relative padding-h-30 padding-w-50 round-16 sy-block-card-box" + (" sy-block-card-box-" + this.block.cardStyle.color) + (" sy-block-card-box-" + this.block.cardStyle.transparency)}>
                         <div className="flex visible pos-top-right gap-r-10 gap-t-10">
                             <span className="sy-block-card-box-property flex-center cursor round item-hover size-24" onMouseDown={e => this.block.openContextmenu(e)}> <Icon size={18} icon={DotsSvg}></Icon></span>
                         </div>
                         <div><ChildsArea childs={this.block.childs}></ChildsArea></div>
                     </div>
                     <div className="visible flex-center gap-t-20">
-                        <div onMouseDown={e => this.block.onAddCardBox(e)} className="size-30 bg-white shadow flex-center cursor border circle item-hover text-1"> <Icon size={18} icon={PlusSvg}></Icon></div>
+                        <ToolTip overlay={'添加卡片'}>
+                            <div onMouseDown={e => this.block.onAddCardBox(e)} className="size-30 bg-white shadow flex-center cursor border circle text-1 link-hover"> <Icon size={18} icon={PlusSvg}></Icon></div>
+                        </ToolTip>
                     </div>
                 </div>
-
             </div>
         </div>
     }
