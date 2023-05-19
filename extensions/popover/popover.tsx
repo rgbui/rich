@@ -122,6 +122,7 @@ class Popover<T extends React.Component> extends EventsComponent<{
              * 这说明是在弹窗点开的菜单
              */
             if (target && target.closest('.shy-menu-panel')) return;
+            if (target && target.closest('.shy-popover-box') && !(this.box === target || this.box.contains(target))) return;
             this.onClose();
         }
     }
