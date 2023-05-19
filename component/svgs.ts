@@ -106,6 +106,7 @@ import ForbidSvg from "../src/assert/svg/forbid.svg";
 import FourLeavesSvg from "../src/assert/svg/four.leaves.svg";
 import FriendsSvg from "../src/assert/svg/friends.svg";
 import GlobalLinkSvg from "../src/assert/svg/globalLink.svg";
+import HSvg from "../src/assert/svg/h.svg";
 import H1Svg from "../src/assert/svg/h1.svg";
 import H2Svg from "../src/assert/svg/h2.svg";
 import H3Svg from "../src/assert/svg/h3.svg";
@@ -160,6 +161,7 @@ import PenSvg from "../src/assert/svg/pen.svg";
 import PexelsSvg from "../src/assert/svg/pexels.svg";
 import PicSvg from "../src/assert/svg/pic.svg";
 import PictureSvg from "../src/assert/svg/picture.svg";
+import PlatteSvg from "../src/assert/svg/platte.svg";
 import PlaySvg from "../src/assert/svg/play.svg";
 import PlusSvg from "../src/assert/svg/plus.svg";
 import PlusAreaSvg from "../src/assert/svg/plusArea.svg";
@@ -190,6 +192,7 @@ import SystemSvg from "../src/assert/svg/system.svg";
 import TableSvg from "../src/assert/svg/table.svg";
 import TemplatesSvg from "../src/assert/svg/templates.svg";
 import TextSvg from "../src/assert/svg/text.svg";
+import ThemeSvg from "../src/assert/svg/theme.svg";
 import TimeSvg from "../src/assert/svg/time.svg";
 import TodoSvg from "../src/assert/svg/todo.svg";
 import ToggleListSvg from "../src/assert/svg/toggle.list.svg";
@@ -339,6 +342,7 @@ ForbidSvg,
 FourLeavesSvg,
 FriendsSvg,
 GlobalLinkSvg,
+HSvg,
 H1Svg,
 H2Svg,
 H3Svg,
@@ -393,6 +397,7 @@ PenSvg,
 PexelsSvg,
 PicSvg,
 PictureSvg,
+PlatteSvg,
 PlaySvg,
 PlusSvg,
 PlusAreaSvg,
@@ -423,6 +428,7 @@ SystemSvg,
 TableSvg,
 TemplatesSvg,
 TextSvg,
+ThemeSvg,
 TimeSvg,
 TodoSvg,
 ToggleListSvg,
