@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { CSSProperties, Component } from "react";
 import React from 'react';
 import { Page } from "../index";
 import { ChildsArea } from "../../block/view/appear";
@@ -187,7 +187,6 @@ export class PageView extends Component<{ page: Page }>{
         </div>
     }
     renderBar() {
-
         return <div className="shy-page-bar"></div>
     }
     render() {
@@ -198,6 +197,18 @@ export class PageView extends Component<{ page: Page }>{
         if (this.page.pageLayout?.type == PageLayoutType.textChannel) {
             pageStyle.overflowY = 'hidden';
             pageStyle.overflowX = 'hidden';
+        }
+        var pageContentStyle: CSSProperties = {}
+        if (this.page?.pageLayout.type == PageLayoutType.docCard) {
+            if (this.props.page.pageFill.mode == 'color') {
+                pageContentStyle.backgroundColor = this.props.page.pageFill.color;
+            }
+            else if (this.props.page.pageFill.mode == 'image' || this.props.page.pageFill.mode == 'uploadImage') {
+                pageContentStyle.backgroundImage = `url(${this.props.page.pageFill.src})`;
+                pageContentStyle.backgroundSize = 'cover';
+                pageContentStyle.backgroundRepeat = 'no-repeat';
+                pageContentStyle.backgroundPosition = 'center center';
+            }
         }
         return <div className="shy-page">
             <PageBar page={this.page}></PageBar>
@@ -218,7 +229,7 @@ export class PageView extends Component<{ page: Page }>{
                     onContextMenu={e => this.page.onContextmenu(e)}
                     onMouseDown={e => this.page.onMousedown(e)}>
                     <PageLayoutView page={this.page}>
-                        <div className='shy-page-view-content' ref={e => this.page.contentEl = e}>
+                        <div className={'shy-page-view-content '} style={pageContentStyle} ref={e => this.page.contentEl = e}>
                             <PageCover page={this.page}></PageCover>
                             {this.page.nav && this.renderNavs()}
                             {!this.page.nav && <ChildsArea childs={this.page.views}></ChildsArea>}
