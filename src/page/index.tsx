@@ -34,6 +34,7 @@ import lodash from 'lodash';
 import { ActionDirective } from '../history/declare';
 import { PageLayout } from '../../extensions/layout';
 import { isMobileOnly } from "react-device-detect";
+import { BoxFillType, BoxStyle } from '../../extensions/doc.card/declare';
 
 export class Page extends Events<PageDirective> {
     root: HTMLElement;
@@ -187,11 +188,11 @@ export class Page extends Events<PageDirective> {
             if (this.isSupportScreen) {
                 var isFull: boolean = this.isFullWidth;
                 if (isFull) {
-                    style.paddingLeft = 80;
-                    style.paddingRight = 80;
+                    style.paddingLeft = 60;
+                    style.paddingRight = 60;
                 }
                 else {
-                    style.width = 800;
+                    style.width = 840;
                     style.margin = '0 auto';
                 }
             }
@@ -269,6 +270,11 @@ export class Page extends Events<PageDirective> {
     getScrollDiv() {
         return this.root.querySelector('.shy-page-view-box') as HTMLElement;
     }
+    pageFill: BoxFillType = { mode: 'none', color: '' }
+    pageStyle: BoxStyle = { color: 'light', transparency: 'noborder' }
+    onLazyUpdateProps = lodash.debounce(async (props: Record<string, any>, isUpdate?: boolean) => {
+        this.onUpdateProps(props, isUpdate);
+    },1000)
 }
 export interface Page {
     on(name: PageDirective.init, fn: () => void);

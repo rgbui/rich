@@ -287,36 +287,48 @@
 }
 
 .shy-block-highlight {
-    background               : rgba(46, 170, 220, 0.2);
+    // background               : rgba(46, 170, 220, 0.2);
+    background               : rgba(255, 71, 71, .3);
     /* 调用动画 */
-    animation-name           : bg-hightlight;
+   // animation-name           : bg-hightlight;
     /* 持续时间 */
-    animation-duration       : 5s;
-    animation-iteration-count: 1;
+   // animation-duration       : 5s;
+   // animation-iteration-count: 1;
 }
 
 @keyframes bg-hightlight {
     0% {
-        width: rgba(46, 170, 220, 0.2);
+        background               : rgba(255, 71, 71, .3);
+        // opacity: 1;
+        // width  : rgba(46, 170, 220, 0.2);
     }
 
     25% {
-        width: rgba(46, 170, 220, 0.1);
+        background-color: fadeout(rgba(255, 71, 71, .3), 25%);
+        // opacity: 0.75;
+        // width  : rgba(46, 170, 220, 0.1);
     }
 
     50% {
-        width: rgba(46, 170, 220, o.5);
+        background-color: fadeout(rgba(255, 71, 71, .3), 70%);
+        // opacity: 0.5;
+        // width  : rgba(46, 170, 220, o.5);
     }
 
     76% {
-        width: rgba(46, 170, 220, 0.7);
+        background-color: fadeout(rgba(255, 71, 71, .3), 10%);
+        // opacity: 0.3;
+        // width  : rgba(46, 170, 220, 0.7);
     }
 
     90% {
-        width: rgba(46, 170, 220, 0.8);
+        background-color: fadeout(rgba(255, 71, 71, .3), 90%);
+        // opacity: 0.1;
+        // width  : rgba(46, 170, 220, 0.8);
     }
 
     100% {
-        width: rgba(46, 170, 220, 0);
+        background-color: rgba(255, 71, 71, 0) // opacity: 0;
+            // width  : rgba(46, 170, 220, 0);
     }
 }

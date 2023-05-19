@@ -20,22 +20,39 @@ export class View extends Block {
 export class ViewComponent extends BlockView<View>{
     render() {
         if (this.block.page.isSupportScreen) {
+            var isFirst = this.block.page.views[0] == this.props.block;
             var hasGap: boolean = true;
             var style = this.block.page.getScreenStyle();
-            if (this.block.page.nav == true) {
+            var page = this.block.page;
+            if (page.nav == true) {
                 style = {};
             }
+            if (isFirst && page.pageInfo.icon && page?.cover?.abled === true) {
+                style.paddingTop = 72;
+            }
+            var pageContentClassList: string[] = [];
             if (this.block.page?.pageLayout?.type == PageLayoutType.docCard) {
                 style.display = 'block';
                 style.width = '100%';
                 delete style.paddingLeft;
                 delete style.paddingRight;
+                delete style.paddingTop;
                 hasGap = false;
             }
+            else {
+                // if (page.pageStyle.color) {
+                //     pageContentClassList.push("sy-block-card-box-" + page.pageStyle.color)
+                // }
+                // if (page.pageStyle.transparency) {
+                //     pageContentClassList.push("sy-block-card-box-" + page.pageStyle.transparency)
+                // }
+            }
             return <div className='sy-block-view' >
-                <div className='sy-block-view-wrapper' style={style}>
-                    {hasGap && <div style={{ height: 10, display: 'block' }}></div>}
-                    <ChildsArea childs={this.block.childs}></ChildsArea>
+                <div className={'sy-block-view-wrapper'} style={style}>
+                    <div className={pageContentClassList.join(" ")}>
+                        {hasGap && <div style={{ height: 10, display: 'block' }}></div>}
+                        <ChildsArea childs={this.block.childs}></ChildsArea>
+                    </div>
                 </div>
             </div>
         }

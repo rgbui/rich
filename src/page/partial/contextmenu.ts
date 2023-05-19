@@ -3,11 +3,12 @@ import React from "react";
 import { Page } from "..";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
-import { BlockDirective } from "../../block/enum";
+import { BlockDirective, BlockRenderRange } from "../../block/enum";
 import { Point, Rect } from "../../common/vector/point";
 import { PageLayoutType } from "../declare";
 import {
     BookSvg,
+    CardBackgroundFillSvg,
     CommentSvg,
     CommunicationSvg,
     ComponentsSvg,
@@ -31,7 +32,7 @@ import { PageDirective } from "../directive";
 import { usePagePublish } from "../../../extensions/publish";
 import { BlockUrlConstant } from "../../block/constant";
 import { DataGridForm } from "../../../blocks/data-grid/view/form";
-
+import { useCardBoxStyle } from "../../../extensions/doc.card/style";
 
 export class PageContextmenu {
     async onGetContextMenus(this: Page) {
@@ -108,6 +109,7 @@ export class PageContextmenu {
                         { name: 'showComment', text: "显示评论", icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                     ]
                 },
+                { name: 'bg', text: '背景', icon: CardBackgroundFillSvg },
                 // { type: MenuItemTypeValue.divide },
                 // { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
                 { name: 'history', icon: VersionHistorySvg, text: '页面历史' },
@@ -161,7 +163,7 @@ export class PageContextmenu {
                 { name: 'smallText', text: '小字号', checked: this.smallFont ? true : false, type: MenuItemType.switch },
                 { name: 'fullWidth', text: '宽版', checked: this.isFullWidth ? true : false, type: MenuItemType.switch },
                 { type: MenuItemType.divide },
-                { name: 'nav', text: '目录', icon: OutlineSvg, type: MenuItemType.switch, checked: this.nav },
+                // { name: 'nav', text: '目录', icon: OutlineSvg, type: MenuItemType.switch, checked: this.nav },
                 // {
                 //     text: '自定义页面',
                 //     icon: FieldsSvg,
@@ -170,7 +172,7 @@ export class PageContextmenu {
                 //         { name: 'showComment', text: "显示评论", icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                 //     ]
                 // },
-                { name: 'lock', text: this.pageInfo?.locker?.userid ? "解除锁定" : '编辑保护', icon: this.pageInfo?.locker?.userid ? UnlockSvg : LockSvg },
+                { name: 'lock', text: this.isCanEdit ? "退出编辑" : '进入编辑', icon: this.isCanEdit ? LogoutSvg : EditSvg },
                 // { type: MenuItemTypeValue.divide },
                 // { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
                 { name: 'history', icon: VersionHistorySvg, text: '页面历史' },
@@ -279,7 +281,7 @@ export class PageContextmenu {
             }
             else if (r.item.name == 'delete') {
                 if (await Confirm('确认要删除吗?')) {
-                    channel.air('/page/remove', { item: this.pageInfo.id });
+                    this.onPageRemove()
                 }
             }
             else if (r.item.name == 'undo') {
@@ -289,6 +291,9 @@ export class PageContextmenu {
             }
             else if (r.item.name == 'history') {
                 this.onOpenHistory()
+            }
+            else if (r.item.name == 'bg') {
+                this.onOpenBackground()
             }
         }
     }
@@ -310,5 +315,20 @@ export class PageContextmenu {
         if (block) {
             block.onFormFields(event);
         }
+    }
+    async onOpenBackground(this: Page) {
+        var g = await useCardBoxStyle({
+            open: 'background',
+            fill: this.pageFill,
+            cardStyle: this.pageStyle
+        }, (g) => {
+            this.onLazyUpdateProps({ pageFill: g.fill, pageStyle: g.cardStyle }, true)
+        });
+        if (g) {
+            await this.onUpdateProps({ pageFill: g.fill, pageStyle: g.cardStyle }, true)
+        }
+    }
+    async onPageRemove(this: Page) {
+        channel.air('/page/remove', { item: this.pageInfo.id });
     }
 }
