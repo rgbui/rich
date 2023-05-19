@@ -24,6 +24,7 @@ import { BlockView } from "../../view";
 import { ChildsArea } from "../../view/appear";
 import "./style.less";
 import { ToolTip } from "../../../../component/view/tooltip";
+import { BoxFillType, BoxStyle } from "../../../../extensions/doc.card/declare";
 
 @url('/card/box')
 export class CardBox extends Block {
@@ -123,13 +124,9 @@ export class CardBox extends Block {
         }
     }
     @prop()
-    cardFill: {
-        mode: "color" | "image" | "uploadImage" | "none"; color?: string; src?: string;
-    } = { mode: 'none', color: '' }
+    cardFill: BoxFillType = { mode: 'none', color: '' }
     @prop()
-    cardStyle: {
-        color: "dark" | "light"; transparency: "frosted" | "solid" | "noborder" | "faded";
-    } = { color: 'light', transparency: 'frosted' }
+    cardStyle: BoxStyle = { color: 'light', transparency: 'frosted' }
 }
 /*** 在一个页面上，从视觉上有多个视图块，
  * 如每个页面都有一个初始的内容视图，不可拖动

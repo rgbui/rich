@@ -1,7 +1,7 @@
 import lodash from "lodash";
 import React from "react";
 import { EventsComponent } from "../../../component/lib/events.component";
-import { CardBackgroundFillSvg, CardBrushSvg, CheckSvg, ChevronDownSvg, CloseSvg } from "../../../component/svgs";
+import { BlockcolorSvg, CardBackgroundFillSvg, CardBrushSvg, CheckSvg, ChevronDownSvg, CloseSvg, NoneSvg, PicSvg, UploadSvg } from "../../../component/svgs";
 import { Button } from "../../../component/view/button";
 import { ColorInput } from "../../../component/view/color/input";
 import { Icon } from "../../../component/view/icon";
@@ -13,12 +13,13 @@ import { useImageFilePicker } from "../../file/image.picker";
 import { GalleryPics } from "../../image/gellery";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
+import { BoxFillType, BoxStyle } from "../declare";
 
 export class CardBoxStyle extends EventsComponent {
     options: {
-        open: 'background' | 'style',
-        fill?: { mode: 'none' | 'image' | 'color' | 'uploadImage', color?: string, src?: string },
-        cardStyle?: { color: 'dark' | 'light', transparency: 'frosted' | 'solid' | 'noborder' | 'faded' }
+        open:'background' | 'style',
+        fill?:BoxFillType,
+        cardStyle?:BoxStyle
     } = {
             open: 'background',
             fill: { mode: 'none' },
@@ -32,12 +33,12 @@ export class CardBoxStyle extends EventsComponent {
     renderBackground() {
         var self = this;
         var items: MenuItem<string>[] = [
-            { name: 'none', value: "none", text: '无', checkLabel: self.options?.fill?.mode == 'none' },
+            { icon: NoneSvg, name: 'none', value: "none", text: '无', checkLabel: self.options?.fill?.mode == 'none' },
             { type: MenuItemType.divide },
-            { name: 'image', text: '选择图片', value: 'image', checkLabel: self.options?.fill?.mode == 'image' },
-            { name: 'uploadImage', text: '上传图片', value: 'uploadImage', checkLabel: self.options?.fill?.mode == 'uploadImage' },
+            { icon: PicSvg, name: 'image', text: '选择图片', value: 'image', checkLabel: self.options?.fill?.mode == 'image' },
+            { icon: UploadSvg, name: 'uploadImage', text: '上传图片', value: 'uploadImage', checkLabel: self.options?.fill?.mode == 'uploadImage' },
             { type: MenuItemType.divide },
-            { name: 'color', text: '颜色', value: 'color', checkLabel: self.options?.fill?.mode == 'color' }
+            { icon: BlockcolorSvg, name: 'color', text: '颜色', value: 'color', checkLabel: self.options?.fill?.mode == 'color' }
         ]
         async function openMenu(event: React.MouseEvent) {
             var r = await useSelectMenuItem(
@@ -62,7 +63,7 @@ export class CardBoxStyle extends EventsComponent {
             </div>
             <div className="h-400 padding-h-10 overflow-y">
                 {this.options.fill.mode == 'none' && <div className=" padding-w-15 remark flex-center min-h-30">
-                    卡片无背景
+                    无背景
                 </div>}
                 {this.options.fill.mode == 'image' && <div>
                     {GalleryPics.map(gp => {
@@ -133,11 +134,11 @@ export class CardBoxStyle extends EventsComponent {
     renderStyle() {
 
         return <div className="h-400 padding-h-10 overflow-y f-14">
-            <div className="remark gap-w-15 gap-h-10">
+            <div className="remark gap-w-15 gap-h-10 f-12">
                 透明性
             </div>
             <div className="flex flex-wrap text-1">
-
+                
                 <div className="flex-auto gap-l-15 " onClick={e => this.setValue('cardStyle.transparency', 'solid')}>
                     <div className={"cursor h-80  box-border padding-w-10  border round-8" + (this.options.cardStyle.color == 'light' ? " bg-white" : " bg-black")} style={{ width: (300 - 45) / 2 }}>
                         <div className={"h-10 w-30 round gap-h-10" + (this.options.cardStyle.color == 'light' ? " bg-black" : " bg-white")}></div>
@@ -172,7 +173,7 @@ export class CardBoxStyle extends EventsComponent {
                     <div className="flex gap-h-10">{this.options.cardStyle.transparency == 'noborder' && <span className="size-20"><Icon size={16} icon={CheckSvg}></Icon></span>}<span>无边框</span></div>
                 </div>
             </div>
-            <div className="remark gap-w-15 gap-h-10">
+            <div className="remark gap-w-15 gap-h-10 f-12">
                 颜色
             </div>
             <div className="flex flex-wrap text-1">
