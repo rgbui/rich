@@ -42,11 +42,15 @@ export class PageBar extends React.Component<{ page: Page }>{
                     <Button size="small" onClick={e => this.props.page.onSaveAndPublish()}>保存并更新</Button>
                     <Button ghost size="small" onClick={e => this.props.page.onChangeEditMode()}>退出编辑</Button>
                 </span>} */}
-                {!this.props.page.canEdit && <ToolTip placement="bottom" overlay={'进入编辑'}><span className="flex flex-fixed visible r-gap-l-5 text-1 cursor " onClick={e => this.props.page.onChangeEditMode()}><Icon size={18} icon={EditSvg}></Icon></span></ToolTip>}
+                {!this.props.page.canEdit && <ToolTip ref={e => this.be = e} placement="bottom" overlay={'进入编辑'}><span className="flex flex-fixed visible r-gap-l-5 text-1 cursor " onClick={e => {
+                    if (this.be) this.be.close()
+                    this.props.page.onChangeEditMode()
+                }}><Icon size={18} icon={EditSvg}></Icon></span></ToolTip>}
             </>}
-            {this.saving && <Spin></Spin>}
+            {this.saving &&<Spin></Spin>}
         </div>
     }
+    be: ToolTip;
     componentDidMount(): void {
         this.props.page.on(PageDirective.willSave, this.willSave);
         this.props.page.on(PageDirective.saved, this.saved);
