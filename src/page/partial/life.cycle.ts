@@ -159,6 +159,7 @@ export class Page$Cycle {
         json.addedSubPages = this.addedSubPages.map(s => s);
         json.pageFill = lodash.cloneDeep(this.pageFill);
         json.pageStyle = lodash.cloneDeep(this.pageStyle);
+        json.isPageContent = this.isPageContent;
         return json;
     }
     async getString(this: Page) {
@@ -672,7 +673,7 @@ export class Page$Cycle {
             if (isUpdate) this.addPageUpdate();
         });
     }
-   
+
     formRowData: Record<string, any>;
     async loadSchemaView(this: Page, elementUrl: string) {
         var pe = parseElementUrl(elementUrl);

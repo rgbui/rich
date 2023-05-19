@@ -28,9 +28,9 @@ export class ViewComponent extends BlockView<View>{
                 style = {};
             }
             if (isFirst && page.pageInfo.icon && page?.cover?.abled === true) {
-                style.paddingTop = 72;
+                style.paddingTop =50;
             }
-            var pageContentClassList: string[] = [];
+            var pageContentClassList: string[] = ['sy-block-view-wrapper-content'];
             if (this.block.page?.pageLayout?.type == PageLayoutType.docCard) {
                 style.display = 'block';
                 style.width = '100%';
@@ -47,10 +47,10 @@ export class ViewComponent extends BlockView<View>{
                 //     pageContentClassList.push("sy-block-card-box-" + page.pageStyle.transparency)
                 // }
             }
-            return <div className='sy-block-view' >
+            return <div className={'sy-block-view' + (this.props.block.page.isPageContent ? " sy-block-view-content" : "")} >
                 <div className={'sy-block-view-wrapper'} style={style}>
                     <div className={pageContentClassList.join(" ")}>
-                        {hasGap && <div style={{ height: 10, display: 'block' }}></div>}
+                        {/* {hasGap && <div style={{ height: 10, display: 'block' }}></div>} */}
                         <ChildsArea childs={this.block.childs}></ChildsArea>
                     </div>
                 </div>

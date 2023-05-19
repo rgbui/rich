@@ -86,6 +86,7 @@ export class Page extends Events<PageDirective> {
      * 仅文档、数据表格起作用
      */
     onlyDisplayContent: boolean = false;
+    isPageContent: boolean = false;
     get windowMatrix() {
         var rect = Rect.fromEle(this.viewEl);
         var matrix = new Matrix();
@@ -188,11 +189,11 @@ export class Page extends Events<PageDirective> {
             if (this.isSupportScreen) {
                 var isFull: boolean = this.isFullWidth;
                 if (isFull) {
-                    style.paddingLeft = 60;
-                    style.paddingRight = 60;
+                    style.paddingLeft = 80;
+                    style.paddingRight = 80;
                 }
                 else {
-                    style.width = 840;
+                    style.width = 800;
                     style.margin = '0 auto';
                 }
             }
@@ -274,7 +275,7 @@ export class Page extends Events<PageDirective> {
     pageStyle: BoxStyle = { color: 'light', transparency: 'noborder' }
     onLazyUpdateProps = lodash.debounce(async (props: Record<string, any>, isUpdate?: boolean) => {
         this.onUpdateProps(props, isUpdate);
-    },1000)
+    }, 1000)
 }
 export interface Page {
     on(name: PageDirective.init, fn: () => void);

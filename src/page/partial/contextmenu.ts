@@ -16,11 +16,14 @@ import {
     EditSvg,
     FieldsSvg,
     FourLeavesSvg,
+    GlobalLinkSvg,
+    HSvg,
     LinkSvg,
     LockSvg,
     LogoutSvg,
     NoteSvg,
     OutlineSvg,
+    ThemeSvg,
     TrashSvg,
     UndoSvg,
     UnlockSvg,
@@ -109,11 +112,21 @@ export class PageContextmenu {
                     text: '自定义页面',
                     icon: FieldsSvg,
                     childs: [
-                        { name: 'onlyDisplayContent', text: '显示标题', type: MenuItemType.switch, checked: this.onlyDisplayContent ? false : true, icon: NoteSvg },
+                        { name: 'onlyDisplayContent', text: '显示标题', type: MenuItemType.switch, checked: this.onlyDisplayContent ? false : true, icon: HSvg },
                         { name: 'refPages', text: "显示引用", icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
                         { name: 'showComment', text: "显示评论", icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                     ]
                 },
+                {
+                    name: 'theme',
+                    text: '主题',
+                    icon: ThemeSvg,
+                    childs: [
+                        { icon: GlobalLinkSvg, name: 'isWeb', text: '网页', checkLabel: this.isPageContent ? false : true },
+                        { icon: NoteSvg, name: 'isContent', text: '内容', checkLabel: this.isPageContent ? true : false }
+                    ]
+                },
+                // { name: 'border', text: "内容", checked: this.isPageContent },
                 // { name: 'bg', text: '背景', icon: CardBackgroundFillSvg },
                 // { type: MenuItemTypeValue.divide },
                 // { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
@@ -299,6 +312,9 @@ export class PageContextmenu {
             }
             else if (r.item.name == 'bg') {
                 this.onOpenBackground()
+            }
+            else if (r.item.name == 'isWeb' || r.item.name == 'isContent') {
+                this.onUpdateProps({ isPageContent: r.item.name == 'isWeb' ? false : true }, true)
             }
         }
     }

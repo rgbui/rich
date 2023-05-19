@@ -162,15 +162,12 @@
     box-sizing      : border-box;
     min-height      : 100%;
     background-color: #f7f3f2;
-    border-left     : 1px solid #ddd;
+    // border-left     : 1px solid #ddd;
 
     .shy-page-view-content {
         padding-bottom: 0px !important;
     }
 }
-
-
-
 
 .shy-page-layout-board {
     position           : relative;
@@ -241,6 +238,16 @@
     }
 }
 
+
+.shy-page-view-box-content {
+    .shy-page-layout {
+        box-sizing      : border-box;
+        // border-left     : 1px solid #ddd;
+        // background-color: rgb(227, 229, 232) !important;
+        background-color: rgb(246, 246, 246) !important;
+    }
+}
+
 .shy-page-view-content-nav {
     display        : flex;
     margin         : 0 auto;
@@ -288,17 +295,17 @@
 
 .shy-block-highlight {
     // background               : rgba(46, 170, 220, 0.2);
-    background               : rgba(255, 71, 71, .3);
+    background                  : rgba(255, 71, 71, .3);
     /* 调用动画 */
-   // animation-name           : bg-hightlight;
+    // animation-name           : bg-hightlight;
     /* 持续时间 */
-   // animation-duration       : 5s;
-   // animation-iteration-count: 1;
+    // animation-duration       : 5s;
+    // animation-iteration-count: 1;
 }
 
 @keyframes bg-hightlight {
     0% {
-        background               : rgba(255, 71, 71, .3);
+        background: rgba(255, 71, 71, .3);
         // opacity: 1;
         // width  : rgba(46, 170, 220, 0.2);
     }

@@ -210,6 +210,15 @@ export class PageView extends Component<{ page: Page }>{
                 pageContentStyle.backgroundPosition = 'center center';
             }
         }
+        var gap = 60;
+        if ([PageLayoutType.doc, PageLayoutType.dbForm, PageLayoutType.db].includes(this.props.page?.pageLayout?.type)) {
+            gap = 60
+        }
+        else if (this.props.page?.pageLayout?.type == PageLayoutType.docCard) {
+            gap = 40
+        } else if (this.props.page?.pageLayout?.type == PageLayoutType.textChannel) {
+            gap = 0
+        }
         return <div className="shy-page">
             <PageBar page={this.page}></PageBar>
             <div className={'shy-page-view' + (this.page.readonly ? " shy-page-view-readonly" : "")}
@@ -225,12 +234,13 @@ export class PageView extends Component<{ page: Page }>{
             // onCopy={e =>this.page.onCopy(e)}
             // onCut={e =>this.page.onCut(e)}
             >
-                <div className='shy-page-view-box'
+                <div className={'shy-page-view-box ' + (this.props.page.isPageContent ? " shy-page-view-box-content" : "")}
                     onContextMenu={e => this.page.onContextmenu(e)}
                     onMouseDown={e => this.page.onMousedown(e)}>
                     <PageLayoutView page={this.page}>
                         <div className={'shy-page-view-content '} style={pageContentStyle} ref={e => this.page.contentEl = e}>
                             <PageCover page={this.page}></PageCover>
+                            {!this.page.cover?.abled && gap > 0 && <div className={'h-' + gap}></div>}
                             {this.page.nav && this.renderNavs()}
                             {!this.page.nav && <ChildsArea childs={this.page.views}></ChildsArea>}
                             {this.page.requireSelectLayout && this.page.isCanEdit && this.renderPageTemplate()}
