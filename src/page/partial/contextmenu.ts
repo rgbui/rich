@@ -20,7 +20,12 @@ import {
     LockSvg,
     LogoutSvg,
     NoteSvg,
-    OutlineSvg, TrashSvg, UndoSvg, UnlockSvg, UploadSvg, VersionHistorySvg
+    OutlineSvg,
+    TrashSvg,
+    UndoSvg,
+    UnlockSvg,
+    UploadSvg,
+    VersionHistorySvg
 } from "../../../component/svgs";
 import { usePageLayout } from "../../../extensions/layout";
 import { CopyText } from "../../../component/copy";
@@ -104,12 +109,12 @@ export class PageContextmenu {
                     text: '自定义页面',
                     icon: FieldsSvg,
                     childs: [
-                        { name: 'onlyDisplayContent', text: '仅显示内容', type: MenuItemType.switch, checked: this.onlyDisplayContent, icon: NoteSvg },
+                        { name: 'onlyDisplayContent', text: '显示标题', type: MenuItemType.switch, checked: this.onlyDisplayContent ? false : true, icon: NoteSvg },
                         { name: 'refPages', text: "显示引用", icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
                         { name: 'showComment', text: "显示评论", icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                     ]
                 },
-                { name: 'bg', text: '背景', icon: CardBackgroundFillSvg },
+                // { name: 'bg', text: '背景', icon: CardBackgroundFillSvg },
                 // { type: MenuItemTypeValue.divide },
                 // { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
                 { name: 'history', icon: VersionHistorySvg, text: '页面历史' },
@@ -138,7 +143,7 @@ export class PageContextmenu {
                     text: '自定义页面',
                     icon: ComponentsSvg,
                     childs: [
-                        { name: 'onlyDisplayContent', text: '仅显示内容', type: MenuItemType.switch, checked: this.onlyDisplayContent, icon: NoteSvg },
+                        { name: 'onlyDisplayContent', text: '显示标题', type: MenuItemType.switch, checked: this.onlyDisplayContent ? false : true, icon: NoteSvg },
                         { name: 'showComment', text: "显示评论", icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                     ]
                 },
@@ -250,7 +255,7 @@ export class PageContextmenu {
                     this.onUpdateProps({ isFullWidth: item.checked }, true);
                 }
                 else if (item.name == 'onlyDisplayContent') {
-                    this.onUpdateProps({ onlyDisplayContent: item.checked }, true);
+                    this.onUpdateProps({ onlyDisplayContent: item.checked ? false : true }, true);
                 }
                 else if (item.name == 'nav') {
                     this.onOpenNav({ nav: item.checked })
