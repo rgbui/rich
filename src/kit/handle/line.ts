@@ -33,7 +33,7 @@ export function DragBlockLine(block: Block, event: React.MouseEvent) {
                 }
             }
             ghostView.move(Point.from(ev).move(10, 10));
-            onAutoScroll({ el: block.page.root, feelDis: 100, dis: 30, interval: 50, point: Point.from(ev) })
+            onAutoScroll({ el: block.page.contentEl, feelDis: 100, dis: 30, interval: 50, point: Point.from(ev) })
         },
         async moveEnd(ev, isMove, data) {
             onAutoScrollStop();
