@@ -28,7 +28,7 @@ export class ViewComponent extends BlockView<View>{
                 style = {};
             }
             if (isFirst && page.pageInfo.icon && page?.cover?.abled === true) {
-                style.paddingTop =50;
+                style.paddingTop = 50;
             }
             var pageContentClassList: string[] = ['sy-block-view-wrapper-content'];
             if (this.block.page?.pageLayout?.type == PageLayoutType.docCard) {
@@ -39,15 +39,8 @@ export class ViewComponent extends BlockView<View>{
                 delete style.paddingTop;
                 hasGap = false;
             }
-            else {
-                // if (page.pageStyle.color) {
-                //     pageContentClassList.push("sy-block-card-box-" + page.pageStyle.color)
-                // }
-                // if (page.pageStyle.transparency) {
-                //     pageContentClassList.push("sy-block-card-box-" + page.pageStyle.transparency)
-                // }
-            }
-            return <div className={'sy-block-view' + (this.props.block.page.isPageContent ? " sy-block-view-content" : "")} >
+            var isMainView = this.block.page.views[0] == this.block ? true : false;
+            return <div className={'sy-block-view' + (this.props.block.page.isPageContent && isMainView ? " sy-block-view-content" : "")} >
                 <div className={'sy-block-view-wrapper'} style={style}>
                     <div className={pageContentClassList.join(" ")}>
                         {/* {hasGap && <div style={{ height: 10, display: 'block' }}></div>} */}
