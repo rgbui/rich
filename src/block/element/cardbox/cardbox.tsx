@@ -81,7 +81,14 @@ export class CardBox extends Block {
             } else if (r.item.name == 'style') {
                 this.onOpenCardStyle()
             } else if (r.item.name == 'merge') {
-
+                var prev = this.prev as CardBox;
+                if (prev instanceof CardBox) {
+                    var cs = this.childs;
+                    this.page.onAction('onCardMerge', async () => {
+                        await prev.appendArray(cs, prev.childs.length, prev.parentKey);
+                        await this.delete()
+                    })
+                }
             }
             else if (r.item.name == 'delete') {
                 this.onDelete()
@@ -151,12 +158,21 @@ export class ViewComponent extends BlockView<CardBox>{
             }
         }
         var screenStyle = this.block.page.getScreenStyle();
+        var hasPic = this.block.cardFill.mode == 'image' || this.block.cardFill.mode == 'uploadImage';
+        var gapStyle: CSSProperties = {
+            paddingTop: '2rem',
+            paddingBottom: '2rem'
+        }
+        if (hasPic) {
+            gapStyle.paddingTop = '8rem';
+            gapStyle.paddingBottom = '8rem';
+        }
         return <div style={style}>
             <div className="visible-hover" style={screenStyle}>
-                <div style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
+                <div style={gapStyle}>
                     <div className={"relative padding-h-30 padding-w-50 round-16 sy-block-card-box" + (" sy-block-card-box-" + this.block.cardStyle.color) + (" sy-block-card-box-" + this.block.cardStyle.transparency)}>
                         {this.block.isCanEdit() && <div className="flex visible pos-top-right gap-r-10 gap-t-10">
-                            <span className="sy-block-card-box-property flex-center cursor round item-hover size-24" onMouseDown={e => this.block.openContextmenu(e)}> <Icon size={18} icon={DotsSvg}></Icon></span>
+                            <span className={"sy-block-card-box-property flex-center cursor round  size-24" + (this.block.cardStyle.transparency == 'noborder' || this.block.cardStyle.color == 'dark' ? " bg-white link-hover" : "item-hover")} onMouseDown={e => this.block.openContextmenu(e)}> <Icon size={18} icon={DotsSvg}></Icon></span>
                         </div>}
                         <div><ChildsArea childs={this.block.childs}></ChildsArea></div>
                     </div>

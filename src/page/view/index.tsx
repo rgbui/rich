@@ -199,7 +199,13 @@ export class PageView extends Component<{ page: Page }>{
             pageStyle.overflowX = 'hidden';
         }
         var pageContentStyle: CSSProperties = {}
-        if (this.page?.pageLayout.type == PageLayoutType.docCard) {
+        var isDocCard = this.page?.pageLayout.type == PageLayoutType.docCard
+        if (isDocCard) {
+            // pageContentStyle.position='absolute';
+            // pageContentStyle.top=0;
+            // pageContentStyle.left=0;
+            // pageContentStyle.width='100%';
+            // pageContentStyle.height='100%';
             if (this.props.page.pageFill.mode == 'color') {
                 pageContentStyle.backgroundColor = this.props.page.pageFill.color;
             }
@@ -208,18 +214,20 @@ export class PageView extends Component<{ page: Page }>{
                 pageContentStyle.backgroundSize = 'cover';
                 pageContentStyle.backgroundRepeat = 'no-repeat';
                 pageContentStyle.backgroundPosition = 'center center';
+                pageContentStyle.backgroundAttachment = 'fixed';
             }
+            else pageContentStyle.backgroundColor = '#f7f3f2';
         }
         var gap = 60;
         if ([PageLayoutType.doc, PageLayoutType.dbForm, PageLayoutType.db].includes(this.props.page?.pageLayout?.type)) {
             gap = 60
         }
         else if (this.props.page?.pageLayout?.type == PageLayoutType.docCard) {
-            gap = 40
+            gap = 0
         } else if (this.props.page?.pageLayout?.type == PageLayoutType.textChannel) {
             gap = 0
         }
-        return <div className="shy-page">
+        return <div className="shy-page" style={pageContentStyle} >
             <PageBar page={this.page}></PageBar>
             <div className={'shy-page-view' + (this.page.readonly ? " shy-page-view-readonly" : "")}
                 style={pageStyle}
@@ -238,7 +246,8 @@ export class PageView extends Component<{ page: Page }>{
                     onContextMenu={e => this.page.onContextmenu(e)}
                     onMouseDown={e => this.page.onMousedown(e)}>
                     <PageLayoutView page={this.page}>
-                        <div className={'shy-page-view-content '} style={pageContentStyle} ref={e => this.page.contentEl = e}>
+                        <div className={'shy-page-view-content '} ref={e => this.page.contentEl = e}>
+                            {/* {isDocCard && <div></div>} */}
                             <PageCover page={this.page}></PageCover>
                             {!this.page.cover?.abled && gap > 0 && <div className={'h-' + gap}></div>}
                             {this.page.nav && this.renderNavs()}
