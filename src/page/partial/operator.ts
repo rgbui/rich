@@ -10,6 +10,7 @@ import { AppearAnchor } from "../../block/appear";
 import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
 import { BlockDirective } from "../../block/enum";
 import { BlockFactory } from "../../block/factory/block.factory";
+import { dom } from "../../common/dom";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { DropDirection } from "../../kit/handle/direction";
@@ -379,11 +380,18 @@ export class Page$Operator {
         })
     }
     async onPageScroll(this: Page, block: Block) {
-        var panelEl = this.getScrollDiv();
-        var offset = panelEl.scrollTop;
-        var blockRect = block.getVisibleBound();
-        var panelElRect = Rect.fromEle(panelEl);
-        var d = blockRect.top - panelElRect.top;
-        AnimatedScrollTo(panelEl, offset + d)
+        try {
+
+            var panelEl = this.getScrollDiv();
+            var offset = panelEl.scrollTop;
+            var blockRect = block.getVisibleBound();
+            var panelElRect = Rect.fromEle(panelEl);
+            var d = blockRect.top - panelElRect.top;
+            AnimatedScrollTo(panelEl, offset + d)
+        }
+        catch (ex) {
+            console.error(ex);
+            this.onError(ex);
+        }
     }
 }

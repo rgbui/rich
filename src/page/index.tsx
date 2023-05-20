@@ -35,6 +35,7 @@ import { ActionDirective } from '../history/declare';
 import { PageLayout } from '../../extensions/layout';
 import { isMobileOnly } from "react-device-detect";
 import { BoxFillType, BoxStyle } from '../../extensions/doc.card/declare';
+import { dom } from '../common/dom';
 
 export class Page extends Events<PageDirective> {
     root: HTMLElement;
@@ -270,8 +271,9 @@ export class Page extends Events<PageDirective> {
         ) => {
             return this.onAction(directive, fn, options);
         }, 700)
-    getScrollDiv() {
-        return this.root.querySelector('.shy-page-view-box') as HTMLElement;
+    getScrollDiv(el?: HTMLElement) {
+        if (!el) el = this.root.querySelector('.shy-page-view-box') as HTMLElement
+        return dom(el).getOverflowPanel()
     }
     pageFill: BoxFillType = { mode: 'none', color: '' }
     pageStyle: BoxStyle = { color: 'light', transparency: 'noborder' }
