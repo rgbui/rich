@@ -545,8 +545,7 @@ export class Block$Event {
             }, this)
         }
     }
-    async onHandlePlus(this: Block)
-    {
+    async onHandlePlus(this: Block) {
         await this.page.onAction('handle.plus.create', async () => {
             var url = BlockUrlConstant.TextSpan;
             var data: Record<string, any> = {};
@@ -559,10 +558,20 @@ export class Block$Event {
             }
             var block = await this.visibleDownCreateBlock(url, data);
             this.page.addUpdateEvent(async () => {
-                this.page.kit.anchorCursor.onFocusBlockAnchor(block, {
-                    render: true,
-                    merge: true
-                });
+                if (block.isPanel || block.isLayout) {
+                    var g = block.find(c => c.isOnlyBlock);
+                    if (g) {
+                        this.page.kit.anchorCursor.onFocusBlockAnchor(g, {
+                            render: true,
+                            merge: true
+                        });
+                    }
+                }
+                else
+                    this.page.kit.anchorCursor.onFocusBlockAnchor(block, {
+                        render: true,
+                        merge: true
+                    });
             })
         })
     }
