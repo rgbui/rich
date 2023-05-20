@@ -1,4 +1,4 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import { Page } from "..";
 import { ChevronLeftSvg, ChevronRightSvg, CollectTableSvg, DotsSvg, DoubleRightSvg, EditSvg, FieldsSvg, MemberSvg, MenuSvg, PageSvg, PublishSvg, SearchSvg } from "../../../component/svgs";
 import { UserAvatars } from "../../../component/view/avator/users";
@@ -47,7 +47,7 @@ export class PageBar extends React.Component<{ page: Page }>{
                     this.props.page.onChangeEditMode()
                 }}><Icon size={18} icon={EditSvg}></Icon></span></ToolTip>}
             </>}
-            {this.saving &&<Spin></Spin>}
+            {this.saving && <Spin></Spin>}
         </div>
     }
     be: ToolTip;
@@ -150,7 +150,13 @@ export class PageBar extends React.Component<{ page: Page }>{
         this.props.page.emit(PageDirective.spreadSln)
     }
     render(): React.ReactNode {
-        return <div className="shy-page-bar flex padding-l-10 visible-hover">
+        var isDocCard = this.props.page.pageLayout?.type == PageLayoutType.docCard;
+        var style: CSSProperties = {}
+        if (isDocCard) {
+            style.backdropFilter = `blur(20px) saturate(170%)`;
+            style.backgroundColor = 'rgba(255, 252, 248, 0.75)';
+        }
+        return <div style={style} className="shy-page-bar flex padding-l-10 visible-hover">
             {isMobileOnly && <span onClick={e => this.onSpreadMenu()} className="flex-fixed size-24 flex-center item-hover round cursor ">
                 <Icon icon={ChevronLeftSvg} size={18}></Icon>
             </span>}
