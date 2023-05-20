@@ -77,6 +77,9 @@ export class Input extends React.Component<{
     updateValue(value) {
         this.inputEl.value = value;
     }
+    focus() {
+        this.inputEl.focus()
+    }
 }
 
 
