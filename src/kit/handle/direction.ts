@@ -3,6 +3,7 @@
 
 import { Kit } from "..";
 import { Block } from "../../block";
+import { BlockUrlConstant } from "../../block/constant";
 import { Point, Rect } from "../../common/vector/point";
 export enum DropDirection {
     top,
@@ -193,6 +194,16 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
     }
     if (!dragBlocks.every(s => s.isCanDropHere(dropBlock))) {
         direction = DropDirection.none;
+    }
+    if ([
+        DropDirection.left,
+        DropDirection.right,
+        DropDirection.top
+    ].includes(direction) && dropBlock.url == BlockUrlConstant.Title) {
+        return {
+            direction: DropDirection.none,
+            dropBlock: undefined
+        }
     }
     return { direction: direction, dropBlock };
 }
