@@ -16,24 +16,18 @@ export class Handle extends Events {
     onShowBlockHandle(hoverBlock: Block) {
         if (!this.kit.page.isCanEdit) return;
         this.handleBlock = hoverBlock.handleBlock;
-        if (this.handleBlock&&this.handleBlock.isShowHandleBlock != true) return;
+        if (this.handleBlock && this.handleBlock.isShowHandleBlock != true) return;
         if (this.isDown) {
             var handleEl = this.view.handleEle;
             handleEl.style.display = 'none';
         }
         else if (this.handleBlock && !this.handleBlock.isFreeBlock) {
-            var bound = this.handleBlock.getVisibleContentBound();
-            if (bound) {
-                var pos = Point.from(bound);
-                pos = pos.move(0,5);
+            var pos = this.handleBlock.getVisibleHandleCursorPoint();
+            if (pos) {
                 var handleEl = this.view.handleEle;
                 handleEl.style.top = pos.y + 'px';
                 handleEl.style.left = pos.x + 'px';
                 handleEl.style.display = 'flex';
-            }
-            else {
-                var handleEl = this.view.handleEle;
-                handleEl.style.display = 'none';
             }
         }
         else {
@@ -84,7 +78,6 @@ export class Handle extends Events {
             this.dropBlock = dr.dropBlock;
             this.dropBlock.dropEnter(this.dropDirection);
         }
-
     }
     onDropEnd() {
         this.isDrag = false;

@@ -29,6 +29,7 @@ import {
 import lodash from "lodash";
 import { FontColorList, BackgroundColorList } from "../../../extensions/color/data";
 import { BlockUrlConstant } from "../constant";
+import { List } from "../../../blocks/present/list/list";
 
 export class Block$Event {
     /**
@@ -240,7 +241,7 @@ export class Block$Event {
             case BlockDirective.comment:
                 break;
             case 'askAi':
-                 this.page.kit.writer.onAskAi([this])
+                this.page.kit.writer.onAskAi([this])
                 break;
             case 'fontColor':
                 this.page.onAction('setFontStyle', async () => {
@@ -544,9 +545,19 @@ export class Block$Event {
             }, this)
         }
     }
-    async onHandlePlus(this: Block) {
+    async onHandlePlus(this: Block)
+    {
         await this.page.onAction('handle.plus.create', async () => {
-            var block = await this.visibleDownCreateBlock(BlockUrlConstant.TextSpan);
+            var url = BlockUrlConstant.TextSpan;
+            var data: Record<string, any> = {};
+            if (this.url == BlockUrlConstant.CardBox) url = BlockUrlConstant.CardBox;
+            if (this.url == BlockUrlConstant.List) {
+                url = BlockUrlConstant.List;
+                data = {
+                    listType: (this as List).listType
+                }
+            }
+            var block = await this.visibleDownCreateBlock(url, data);
             this.page.addUpdateEvent(async () => {
                 this.page.kit.anchorCursor.onFocusBlockAnchor(block, {
                     render: true,
