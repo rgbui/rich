@@ -386,6 +386,14 @@ export abstract class Block extends Events {
         }
         return Rect.fromEle(this.el)
     }
+    getVisibleHandleCursorPoint() {
+        var bound = this.getVisibleContentBound()
+        if (bound) {
+            var pos = Point.from(bound);
+            pos = pos.move(0, 5);
+            return pos;
+        }
+    }
     getVisibleContentBound() {
         var e = this.contentEl;
         if (e) return Rect.fromEle(e);

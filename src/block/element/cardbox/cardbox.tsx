@@ -15,7 +15,7 @@ import { Icon } from "../../../../component/view/icon";
 import { useSelectMenuItem } from "../../../../component/view/menu";
 import { MenuItemType } from "../../../../component/view/menu/declare";
 import { useCardBoxStyle } from "../../../../extensions/doc.card/style";
-import { Rect } from "../../../common/vector/point";
+import { Point, Rect } from "../../../common/vector/point";
 import { PageLayoutType } from "../../../page/declare";
 import { GridMap } from "../../../page/grid";
 import { BlockRenderRange } from "../../enum";
@@ -134,6 +134,17 @@ export class CardBox extends Block {
     cardFill: BoxFillType = { mode: 'none', color: '' }
     @prop()
     cardStyle: BoxStyle = { color: 'light', transparency: 'frosted' }
+    getVisibleHandleCursorPoint() {
+        if ((this.view as any).contentEl) {
+            var c = (this.view as any).contentEl as HTMLElement;
+            var bound = Rect.fromEle(c);
+            if (bound) {
+                var pos = Point.from(bound);
+                pos = pos.move(0, 5);
+                return pos;
+            }
+        }
+    }
 }
 /*** 在一个页面上，从视觉上有多个视图块，
  * 如每个页面都有一个初始的内容视图，不可拖动
@@ -141,6 +152,7 @@ export class CardBox extends Block {
  */
 @view('/card/box')
 export class ViewComponent extends BlockView<CardBox>{
+    contentEl: HTMLElement;
     render() {
         var style: CSSProperties = {};
         if (this.block.page?.pageLayout?.type == PageLayoutType.docCard) {
@@ -170,7 +182,7 @@ export class ViewComponent extends BlockView<CardBox>{
         return <div style={style}>
             <div className="visible-hover" style={screenStyle}>
                 <div style={gapStyle}>
-                    <div className={"relative padding-h-30 padding-w-50 round-16 sy-block-card-box" + (" sy-block-card-box-" + this.block.cardStyle.color) + (" sy-block-card-box-" + this.block.cardStyle.transparency)}>
+                    <div ref={e => this.contentEl = e} className={"relative padding-h-30 padding-w-50 round-16 sy-block-card-box" + (" sy-block-card-box-" + this.block.cardStyle.color) + (" sy-block-card-box-" + this.block.cardStyle.transparency)}>
                         {this.block.isCanEdit() && <div className="flex visible pos-top-right gap-r-10 gap-t-10">
                             <span className={"sy-block-card-box-property flex-center cursor round  size-24" + (this.block.cardStyle.transparency == 'noborder' || this.block.cardStyle.color == 'dark' ? " bg-white link-hover" : "item-hover")} onMouseDown={e => this.block.openContextmenu(e)}> <Icon size={18} icon={DotsSvg}></Icon></span>
                         </div>}
