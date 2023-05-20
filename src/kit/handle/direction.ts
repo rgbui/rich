@@ -5,6 +5,7 @@ import { Kit } from "..";
 import { Block } from "../../block";
 import { BlockUrlConstant } from "../../block/constant";
 import { Point, Rect } from "../../common/vector/point";
+
 export enum DropDirection {
     top,
     left,
@@ -60,7 +61,43 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
     var fr: 'left' | 'right' | 'bottom' | 'none' = 'none';
     var ele = event.target as HTMLElement;
     var point = Point.from(event);
-    if (!dropBlock || dropBlock?.isView) {
+    var oldDropBlock = dropBlock;
+    if (dropBlock?.isPanel && dropBlock?.getVisibleBound().contain(point)) {
+        dropBlock = undefined;
+        /**
+         * 这表示从左边开始查找，如果找到，说明方位在右边
+         */
+        dropBlock = kit.page.findXBlock(event, g => !g.isView && g !== oldDropBlock, 'left');
+        if (dropBlock) fr = 'right';
+        if (!dropBlock) {
+            dropBlock = kit.page.findXBlock(event, g => !g.isView && g !== oldDropBlock, 'right');
+            if (dropBlock) fr = 'left';
+        }
+        if (!dropBlock) {
+            return {
+                direction: DropDirection.none,
+                dropBlock: undefined
+            }
+        }
+        /**
+         * 这里需要通过dropBlock来重新计算一下fr，
+         * 当前的fr也只是表示从那查找的方位，并不代表真实的方位
+         */
+        var bound = dropBlock.getVisibleContentBound();
+        if (point.x < bound.left) {
+            fr = 'left'
+        }
+        else if (point.x > bound.right) {
+            fr = 'right'
+        }
+        else if (point.y <= bound.top + bound.height * 0.4) {
+            fr = undefined;
+        }
+        else if (point.y > bound.top + bound.height * 0.4) {
+            fr = 'bottom'
+        }
+    }
+    else if (!dropBlock || dropBlock?.isView) {
         dropBlock = undefined;
         /**
          * 这表示从左边开始查找，如果找到，说明方位在右边
@@ -72,6 +109,7 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
             if (dropBlock) fr = 'left';
         }
         if (!dropBlock) {
+            if (oldDropBlock?.isPanel) dropBlock = oldDropBlock.findReverse(g => g.isOnlyBlock)
             dropBlock = kit.page.getViewLastBlock();
             if (dropBlock) fr = 'bottom';
         }
