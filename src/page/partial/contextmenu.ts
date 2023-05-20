@@ -23,6 +23,7 @@ import {
     LogoutSvg,
     NoteSvg,
     OutlineSvg,
+    PlatteSvg,
     ThemeSvg,
     TrashSvg,
     UndoSvg,
@@ -190,6 +191,11 @@ export class PageContextmenu {
                 //         { name: 'showComment', text: "显示评论", icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                 //     ]
                 // },
+                {
+                    name: 'bg',
+                    text: '主题',
+                    icon: PlatteSvg
+                },
                 { name: 'lock', text: this.isCanEdit ? "退出编辑" : '进入编辑', icon: this.isCanEdit ? LogoutSvg : EditSvg },
                 // { type: MenuItemTypeValue.divide },
                 // { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
@@ -339,7 +345,7 @@ export class PageContextmenu {
     }
     async onOpenBackground(this: Page) {
         var g = await useCardBoxStyle({
-            open: 'background',
+            open: 'onlyBg',
             fill: this.pageFill,
             cardStyle: this.pageStyle
         }, (g) => {

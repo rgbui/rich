@@ -17,9 +17,9 @@ import { BoxFillType, BoxStyle } from "../declare";
 
 export class CardBoxStyle extends EventsComponent {
     options: {
-        open:'background' | 'style',
-        fill?:BoxFillType,
-        cardStyle?:BoxStyle
+        open: 'background' | 'style' | 'onlyBg',
+        fill?: BoxFillType,
+        cardStyle?: BoxStyle
     } = {
             open: 'background',
             fill: { mode: 'none' },
@@ -138,7 +138,7 @@ export class CardBoxStyle extends EventsComponent {
                 透明性
             </div>
             <div className="flex flex-wrap text-1">
-                
+
                 <div className="flex-auto gap-l-15 " onClick={e => this.setValue('cardStyle.transparency', 'solid')}>
                     <div className={"cursor h-80  box-border padding-w-10  border round-8" + (this.options.cardStyle.color == 'light' ? " bg-white" : " bg-black")} style={{ width: (300 - 45) / 2 }}>
                         <div className={"h-10 w-30 round gap-h-10" + (this.options.cardStyle.color == 'light' ? " bg-black" : " bg-white")}></div>
@@ -199,17 +199,17 @@ export class CardBoxStyle extends EventsComponent {
     render() {
         return <div className="padding-h-15 bg-white round w-300">
             <div className="h4 flex padding-w-15">
-                <span className="flex-auto">卡片样式</span>
+                <span className="flex-auto">{this.options.open == 'onlyBg' ? "背景主题" : "卡片样式"}</span>
                 <span onClick={e => this.emit('close')} className="size-30 flex-center flex-fixed text-1 item-hover cursor round">
                     <Icon size={18} icon={CloseSvg}></Icon>
                 </span>
             </div>
-            <div className="flex gap-b-10  padding-w-15">
+            {this.options.open != 'onlyBg' && <div className="flex gap-b-10  padding-w-15">
                 <a onClick={e => { this.options.open = 'background'; this.forceUpdate() }} className={"cursor gap-r-10 flex-auto padding-w-10 flex-center h-30 round-8 " + (this.options.open == 'background' ? " bg-primary text-white" : "")}><span className="flex-center size-20"><Icon size={18} icon={CardBackgroundFillSvg}></Icon></span><span>背景</span></a>
                 <a onClick={e => { this.options.open = 'style'; this.forceUpdate() }} className={"cursor gap-l-10 flex-auto  padding-w-10 flex-center h-30 round-8 " + (this.options.open == 'style' ? " bg-primary text-white" : "")}><span className="flex-center size-20"><Icon size={18} icon={CardBrushSvg}></Icon></span><span>样式</span></a>
-            </div>
+            </div>}
             <div >
-                {this.options.open == 'background' && this.renderBackground()}
+                {(this.options.open == 'background' || this.options.open == 'onlyBg') && this.renderBackground()}
                 {this.options.open == 'style' && this.renderStyle()}
             </div>
             <div className="flex-center gap-h-20 padding-w-15">
