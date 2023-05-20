@@ -14,7 +14,7 @@ export class DataGridCreate extends EventsComponent {
     render() {
         var vs = getSchemaViews();
         return <div className="data-grid-create">
-            <div className="gap-w-10"><Input placeholder={this.selectView ? "输入视图名" : "输入创建的数据表格名称"} value={this.text} onChange={e => { this.text = e }}></Input></div>
+            <div className="gap-w-10"><Input ref={e => this.input = e} placeholder={this.selectView ? "输入视图名" : "输入创建的数据表格名称"} value={this.text} onChange={e => { this.text = e }}></Input></div>
             <Divider></Divider>
             {this.selectView && <div className="data-grid-create-views">
                 {vs.map(v => {
@@ -31,12 +31,15 @@ export class DataGridCreate extends EventsComponent {
             <div className="gap-w-10 gap-t-10"><Button block onClick={e => this.onChange()}>创建</Button></div>
         </div>
     }
+    input: Input;
     selectView: boolean = false;
     open(options: { selectView: boolean }) {
         this.url = '/data-grid/table';
         if (options) {
             Object.assign(this, options);
-            this.forceUpdate();
+            this.forceUpdate(() => {
+                if (this.input) this.input.focus()
+            });
         }
     }
     selectUrl(url: string) {
