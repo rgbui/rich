@@ -1,4 +1,4 @@
-import { PageSvg, TopicSvg, CollectTableSvg } from "../../component/svgs";
+import { PageSvg, TopicSvg, CollectTableSvg, DocCardsSvg } from "../../component/svgs";
 import { IconArguments } from "../../extensions/icon/declare";
 import { AtomPermission } from "./permission";
 
@@ -105,6 +105,9 @@ export function getPageIcon(item: LinkPageItem, defaultIcon?: SvgrComponent) {
     }
     else if (item.pageType == PageLayoutType.doc || item.pageType == PageLayoutType.blog) {
         return PageSvg
+    }
+    else if (item.pageType == PageLayoutType.docCard) {
+        return DocCardsSvg
     }
     else if (item.pageType == PageLayoutType.textChannel) {
         return TopicSvg

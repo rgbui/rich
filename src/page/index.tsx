@@ -241,9 +241,11 @@ export class Page extends Events<PageDirective> {
         })
     }
     get fontSize() {
+        if (this.pageLayout?.type == PageLayoutType.docCard) return this.smallFont ? 16 : 18
         return this.smallFont ? 14 : 16
     }
     get lineHeight() {
+        if (this.pageLayout?.type == PageLayoutType.docCard) return this.smallFont ? 26 : 30
         return this.smallFont ? 23 : 26
     }
     private _pe: {
