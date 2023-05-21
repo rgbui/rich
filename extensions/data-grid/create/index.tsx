@@ -13,7 +13,7 @@ import { util } from "../../../util/util";
 import { Confirm } from "../../../component/lib/confirm";
 import "./style.less";
 
-export class DataGridCreate extends EventsComponent {
+export class DataGridSelectorView extends EventsComponent {
     renderItems() {
         var self = this;
         var items: MenuItem[] = [];
@@ -132,8 +132,8 @@ export class DataGridCreate extends EventsComponent {
     }
 }
 
-export async function useDataGridCreate(pos: PopoverPosition, options?: { selectView: boolean }) {
-    let popover = await PopoverSingleton(DataGridCreate, { mask: true });
+export async function useDataGridSelectView(pos: PopoverPosition, options?: { selectView: boolean }) {
+    let popover = await PopoverSingleton(DataGridSelectorView, { mask: true });
     let fv = await popover.open(pos);
     await fv.open(options);
     return new Promise((resolve: (data: {

@@ -1,4 +1,4 @@
-import { useDataGridCreate } from "../../../../extensions/data-grid/create";
+import { useDataGridSelectView } from "../../../../extensions/data-grid/create";
 import { channel } from "../../../../net/channel";
 import { Block } from "../../../../src/block";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
@@ -25,6 +25,7 @@ import { FilterSort } from "../../element/filter/sort";
 import { Page } from "../../../../src/page";
 import { Field } from "../../schema/field";
 import { BlockUrlConstant } from "../../../../src/block/constant";
+import { useCreateDataGrid } from "../../../../extensions/data-grid/create/view";
 
 /**
  * 
@@ -238,7 +239,7 @@ export class DataGridView extends Block {
     async createdDidMounted(): Promise<void> {
         if (this.createSource == 'InputBlockSelector' || this.createSource == 'pageTurnLayout') {
             if (!this.schemaId) {
-                var dg = await useDataGridCreate({ roundArea: Rect.fromEle(this.el) });
+                var dg = await useDataGridSelectView({ roundArea: Rect.fromEle(this.el) });
                 if (dg) {
                     if (dg.schemaId) {
                         await this.page.onAction('SelectTableSchema', async () => {
@@ -275,7 +276,7 @@ export class DataGridView extends Block {
         }
     }
     async onAddCreateTableView() {
-        var dg = await useDataGridCreate(
+        var dg = await useCreateDataGrid(
             { roundArea: Rect.fromEle(this.el) },
             { selectView: true }
         );
@@ -285,7 +286,7 @@ export class DataGridView extends Block {
     }
     async onCreateTableSchema() {
         if (!this.schemaId) {
-            var dg = await useDataGridCreate({ roundArea: Rect.fromEle(this.el) });
+            var dg = await useDataGridSelectView({ roundArea: Rect.fromEle(this.el) });
             if (dg) {
                 await this.page.onAction(ActionDirective.onCreateTableSchema, async () => {
                     if (dg.schemaId) this.schema = await TableSchema.loadTableSchema(dg.schemaId)
