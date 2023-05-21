@@ -26,7 +26,6 @@ import { PageDrag } from "./drag";
 export class PageOperator {
     constructor(public kit: Kit) { }
     mousedown(event: React.MouseEvent) {
-      
         if (!this.kit.page?.isCanEdit) return
         PageDrag(this.kit, event);
     }

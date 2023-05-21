@@ -185,6 +185,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
     if (aa.block.isPart) isEmpty = false;
     var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
     if (offset == 0) {
+        //console.log('offset', offset);
         event.preventDefault();
         /**
          * 标题不能回退删除
@@ -195,6 +196,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
         await InputForceStore(aa, async () => {
             var block = aa.block;
             var rowBlock = block.closest(x => !x.isLine);
+            //console.log('block rowBlock', block, rowBlock, rowBlock.isTextBlock);
             if (block.isLine && block.prev) {
                 /**这里判断block前面有没有line */
                 var pv = block.prev;
@@ -251,7 +253,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                     });
                     return
                 }
-                if (rowBlock.isTextBlock && !rowBlock?.prev) {
+                if (rowBlock.isTextBlock && !rowBlock?.prev && !(rowBlock.parent?.isPanel || rowBlock.parent?.isCell || rowBlock.parent?.isLayout)) {
                     //这个父块合并子块的内容
                     return await combindSubBlock(write, rowBlock);
                 }
@@ -264,7 +266,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                         write.kit.anchorCursor.onFocusBlockAnchor(prevAppearBlock, { last: true, render: true, merge: true });
                     });
                 }
-                if (rowBlock.isContentEmpty) {
+                if (rowBlock.isContentEmpty && !(!rowBlock?.prev && (rowBlock.parent?.isPanel || rowBlock.parent?.isLayout || rowBlock?.parent?.isCell))) {
                     await rowBlock.delete();
                 }
             }

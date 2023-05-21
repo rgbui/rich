@@ -62,17 +62,20 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
     var ele = event.target as HTMLElement;
     var point = Point.from(event);
     var oldDropBlock = dropBlock;
-    if (dropBlock?.isPanel && dropBlock?.getVisibleBound().contain(point)) {
+
+    if ((dropBlock?.isPanel || dropBlock?.isComposite) && dropBlock?.getVisibleBound().contain(point)) {
+        var bound = dropBlock.getVisibleBound();
         dropBlock = undefined;
         /**
          * 这表示从左边开始查找，如果找到，说明方位在右边
          */
-        dropBlock = kit.page.findXBlock(event, g => !g.isView && g !== oldDropBlock, 'left');
+        dropBlock = kit.page.findXBlock(event, g => !g.isView && !g.isPanel && g !== oldDropBlock, 'left', bound);
         if (dropBlock) fr = 'right';
         if (!dropBlock) {
-            dropBlock = kit.page.findXBlock(event, g => !g.isView && g !== oldDropBlock, 'right');
+            dropBlock = kit.page.findXBlock(event, g => !g.isView && !g.isPanel && g !== oldDropBlock, 'right', bound);
             if (dropBlock) fr = 'left';
         }
+        //console.log('gggg', dropBlock);
         if (!dropBlock) {
             return {
                 direction: DropDirection.none,
@@ -109,10 +112,16 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
             if (dropBlock) fr = 'left';
         }
         if (!dropBlock) {
-            if (oldDropBlock?.isPanel) dropBlock = oldDropBlock.findReverse(g => g.isOnlyBlock)
-            dropBlock = kit.page.getViewLastBlock();
-            if (dropBlock) fr = 'bottom';
+            return {
+                direction: DropDirection.none,
+                dropBlock: undefined
+            }
         }
+        // if (!dropBlock) {
+        //     if (oldDropBlock?.isPanel) dropBlock = oldDropBlock.findReverse(g => g.isOnlyBlock)
+        //     dropBlock = kit.page.getViewLastBlock();
+        //     if (dropBlock) fr = 'bottom';
+        // }
         /**
          * 这里需要通过dropBlock来重新计算一下fr，
          * 当前的fr也只是表示从那查找的方位，并不代表真实的方位
@@ -131,6 +140,8 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
             fr = 'bottom'
         }
     }
+
+    //console.log('finally', dropBlock, fr);
     var direction = DropDirection.none;
     var drs = dropBlock.canDropDirections();
     if (dropBlock && dropBlock.isAllowDrops(dragBlocks)) {
@@ -192,25 +203,25 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
          * 普通的block
          */
         if (fr == 'left') {
-            dropBlock = getOutXBlock(dropBlock);
+            //dropBlock = getOutXBlock(dropBlock);
             direction = DropDirection.left;
         }
         else if (fr == 'right') {
-            dropBlock = getOutXBlock(dropBlock);
+            //dropBlock = getOutXBlock(dropBlock);
             direction = DropDirection.right;
         }
         else if (fr == 'bottom') {
-            dropBlock = getOutXBlock(dropBlock);
+            //dropBlock = getOutXBlock(dropBlock);
             direction = DropDirection.bottom;
         }
         else {
             if (point.x < bound.left) {
                 direction = DropDirection.left;
-                dropBlock = getOutXBlock(dropBlock);
+                // dropBlock = getOutXBlock(dropBlock);
             }
             else if (point.x > bound.right) {
                 direction = DropDirection.right;
-                dropBlock = getOutXBlock(dropBlock);
+                // dropBlock = getOutXBlock(dropBlock);
             }
             else if (point.y <= bound.top + bound.height * 0.4) {
                 direction = DropDirection.top;
@@ -256,5 +267,5 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
  * @param block 
  */
 function getOutXBlock(block: Block) {
-    return block.closest(x => x.parent?.isView || x.parent?.isRow && !x.parent?.isPart || x.parent?.gridMap && !x.parent?.isPart);
+    return block.closest(x => x.parent?.isView || x.parent?.isComposite && !x.parent?.isPart || x.parent?.isRow && !x.parent?.isPart || x.parent?.gridMap && !x.parent?.isPart);
 }
