@@ -1,9 +1,8 @@
 
 import { BlockGroup } from './delcare';
-import { AudioSvg, BookSvg, BrowserSvg, ButtonSvg, ButtonTemplateSvg, CalloutSvg, CardSvg, CollectionBoardSvg, CollectionCalendarSvg, CollectionGallerySvg, CollectionListSvg, CollectTableSvg, DividerSvg, EmbedSvg, EmojiSvg, EquationSvg, FileSvg, H1Svg, H2Svg, H3Svg, H4Svg, LinkSvg, ListSvg, MentionSvg, MenuSvg, NumberListSvg, PageSvg, PictureSvg, ProgressSvg, QuoteSvg, TableSvg, TemplatesSvg, TextSvg, TimeSvg, TodoSvg, ToggleListSvg, TypesEmailSvg, TypesPersonSvg, VideoSvg } from '../../component/svgs';
+import { AudioSvg, BookSvg, BrowserSvg, ButtonSvg, ButtonTemplateSvg, CalloutSvg, CardSvg, CollectionBoardSvg, CollectionCalendarSvg, CollectionGallerySvg, CollectionListSvg, CollectTableSvg, DividerSvg, EmbedSvg, EmojiSvg, EquationSvg, FileSvg, H1Svg, H2Svg, H3Svg, H4Svg, LinkSvg, ListSvg, MentionSvg, MenuSvg, NumberListSvg, PageSvg, PicSvg, ProgressSvg, QuoteSvg, TableSvg, TemplatesSvg, TextSvg, TimeSvg, TodoSvg, ToggleListSvg, TypesEmailSvg, TypesPersonSvg, VideoSvg } from '../../component/svgs';
 
-
-export var BlockSelectorData: BlockGroup[] = [
+export var BlockSelectorData: BlockGroup[]=[
     {
         text: '基本',
         childs: [
@@ -41,7 +40,7 @@ export var BlockSelectorData: BlockGroup[] = [
         childs: [
             { text: '卡片', icon: CardSvg, url: "/card", label: '/卡片', labels: ['/card', '/kp', '/kaipian'] },
             // { text: '画板', pic: <img src={embed} />, url: '/board', label: '/画板', labels: ['/canvas', '/huaban', '/hb'] },
-            { text: '标签页', icon:BrowserSvg, url: "/tab", label: '/标签页', labels: ['/tab', '/bjy', '/bianqianye'] },
+            { text: '标签页', icon: BrowserSvg, url: "/tab", label: '/标签页', labels: ['/tab', '/bjy', '/bianqianye'] },
             //  { text: '轮播', pic: <img src={embed} />, url: "/carousel", label: '/轮播', labels: ['/carousel', '/lb', '/lunbo'] },
             { text: '模板按钮', icon: ButtonTemplateSvg, url: '/button/template', label: '/模板按钮', labels: ['/mban', '/mubananniu', '/template'] },
             //{ text: '目录大纲', pic: <img src={embed} />, url: '/outline', label: '/目录', labels: ['/outline', '/note', '/mulu', '/dagang'] }
@@ -50,7 +49,7 @@ export var BlockSelectorData: BlockGroup[] = [
     {
         text: '媒体与附件',
         childs: [
-            { text: "图片", icon: PictureSvg, url: '/image', description: '', label: '/图片', labels: ['/tp', '/tupian', '/img', '/image', '/picture'] },
+            { text: "图片", icon: PicSvg, url: '/image', description: '', label: '/图片', labels: ['/tp', '/tupian', '/img', '/image', '/picture'] },
             { text: "音频", icon: AudioSvg, url: '/audio', description: "", label: '/音频', labels: ['/yp', '/audio'] },
             { text: "视频", icon: VideoSvg, url: '/video', description: "", label: '/视频', labels: ['/sp', '/video'] },
             { text: "文件", icon: FileSvg, url: '/file', description: "", label: '/文件', labels: ['/wj', '/wenjian', '/file'] },
@@ -76,7 +75,7 @@ export var BlockSelectorData: BlockGroup[] = [
     {
         text: '嵌入',
         childs: [
-            { text: '嵌入', icon:EmbedSvg, url: "/embed", label: '/嵌入', labels: ['/qrnr', '/embed'] },
+            { text: '嵌入', icon: EmbedSvg, url: "/embed", label: '/嵌入', labels: ['/qrnr', '/embed'] },
         ]
     }
 ]

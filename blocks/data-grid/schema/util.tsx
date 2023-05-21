@@ -14,7 +14,7 @@ import {
     LikeSvg,
     LoveSvg,
     OpposeSvg,
-    PictureSvg,
+    PicSvg,
     ReportSvg,
     RowNoSvg,
     TypesButtonSvg,
@@ -56,7 +56,7 @@ export function GetFieldTypeSvg(type: FieldType) {
         case FieldType.file:
             return TypesFileSvg
         case FieldType.image:
-            return PictureSvg
+            return PicSvg
         case FieldType.audio:
             return AudioSvg;
         case FieldType.video:

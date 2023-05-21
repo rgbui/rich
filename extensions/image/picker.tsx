@@ -16,7 +16,8 @@ import { Icon } from "../../component/view/icon";
 import { Tab } from "../../component/view/tab";
 import "./style.less";
 import { GalleryView } from "./gellery";
-import { PictureSvg } from "../../component/svgs";
+import { PicSvg } from "../../component/svgs";
+
 
 class ImagePicker extends EventsComponent {
     onChange(data: ResourceArguments) {
@@ -35,7 +36,7 @@ class ImagePicker extends EventsComponent {
     render() {
         return <div className='shy-image-picker' >
             <Tab ref={e => this.tab = e} keeplive>
-                <Tab.Page visible={this.showGallery} item={<Tip placement='bottom' overlay={'画廊'}><Icon size={18} icon={PictureSvg}></Icon></Tip>}>
+                <Tab.Page visible={this.showGallery} item={<Tip placement='bottom' overlay={'画廊'}><Icon size={18} icon={PicSvg}></Icon></Tip>}>
                     <GalleryView onChange={e => this.onChange(e as any)}></GalleryView>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' overlay={'上传图片'}><Icon size={18} icon={Upload}></Icon></Tip>}>
