@@ -29,7 +29,7 @@ export class TabItemView extends BlockView<TabItem>{
             className={'sy-block-tab-item' + (this.block.at == this.block.myTab.tabIndex ? " hover" : "")}
             style={this.block.visibleStyle}>
             <div className="sy-block-tab-item-content">
-                <TextSpanArea placeholder="标签项" block={this.block}></TextSpanArea>
+                <TextSpanArea placeholderEmptyVisible placeholder="标签项" block={this.block}></TextSpanArea>
             </div>
         </div>
     }

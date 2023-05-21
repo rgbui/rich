@@ -195,7 +195,7 @@ export class TabView extends BlockView<Tab>{
             <div style={this.block.contentStyle}>
                 <div className="sy-block-tab-items">
                     <ChildsArea childs={this.block.blocks.childs}></ChildsArea>
-                    <div className="sy-block-tab-plus" onMouseDown={e => this.block.onAddTabItem()}><Icon size={14} icon={PlusSvg}></Icon></div>
+                    <div className="sy-block-tab-plus" onMouseDown={e => this.block.onAddTabItem()}><Icon size={18} icon={PlusSvg}></Icon></div>
                 </div>
                 <div className="sy-block-tab-pages" style={{ height: this.block.contentHeight }}>
                     <ChildsArea childs={this.block.blocks.otherChilds}></ChildsArea>
