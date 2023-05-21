@@ -124,7 +124,7 @@ export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent)
     var files: File[] = Array.from(event.clipboardData.files);
     var text = event.clipboardData.getData('text/plain');
     var html = event.clipboardData.getData('text/html');
-    kit.operator.onClearPage();
+   kit.operator.onClearPage();
     if (!html && text || text && html && html.endsWith(text)) {
         event.preventDefault();
         if (URL_RGEX.test(text)) {
