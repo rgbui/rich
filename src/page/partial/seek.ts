@@ -33,10 +33,17 @@ export class Page$Seek {
         }
         return null;
     }
-    findXBlock(this: Page, event: MouseEvent, predict: (block: Block) => boolean, direction: 'left' | 'right') {
+    findXBlock(this: Page,
+        event: MouseEvent,
+        predict: (block: Block) => boolean,
+        direction: 'left' | 'right',
+        bound?: Rect
+    ) {
         var x = event.clientX;
         var y = event.clientY;
-        var bound = Rect.fromEle(this.root);
+        if (typeof bound == 'undefined')
+            bound = Rect.fromEle(this.root);
+        
         if (direction == 'left') {
             for (var i = x - GAP; i >= bound.x; i = i - GAP) {
                 var block = this.getBlockByMouseOrPoint(new Point(i, y));
