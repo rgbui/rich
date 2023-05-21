@@ -160,7 +160,6 @@ import PauseSvg from "../src/assert/svg/pause.svg";
 import PenSvg from "../src/assert/svg/pen.svg";
 import PexelsSvg from "../src/assert/svg/pexels.svg";
 import PicSvg from "../src/assert/svg/pic.svg";
-import PictureSvg from "../src/assert/svg/picture.svg";
 import PlatteSvg from "../src/assert/svg/platte.svg";
 import PlaySvg from "../src/assert/svg/play.svg";
 import PlusSvg from "../src/assert/svg/plus.svg";
@@ -396,7 +395,6 @@ PauseSvg,
 PenSvg,
 PexelsSvg,
 PicSvg,
-PictureSvg,
 PlatteSvg,
 PlaySvg,
 PlusSvg,
