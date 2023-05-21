@@ -11,13 +11,13 @@ import { LangID } from "../../i18n/declare";
 import { Sp } from "../../i18n/view";
 import { MouseDragger } from "../../src/common/dragger";
 
-import Picture from "../../src/assert/svg/picture.svg";
 import { Icon } from "../../component/view/icon";
 import { useImagePicker } from "../../extensions/image/picker";
 import { getImageSize } from "../../component/file";
 import { channel } from "../../net/channel";
 import { autoImageUrl } from "../../net/element.type";
 import { util } from "../../util/util";
+import { PicSvg } from "../../component/svgs";
 
 @url('/image')
 export class Image extends Block {
@@ -142,7 +142,8 @@ export class ImageView extends BlockView<Image>{
     imageWrapper: HTMLDivElement;
     renderEmptyImage() {
         return <div className='sy-block-image-empty' onMouseDown={e => this.block.onOpenUploadImage(e)}>
-            <Icon icon={Picture} size={24}></Icon>
+            {/* <Icon icon={Picture} size={24}></Icon> */}
+            <Icon size={24} icon={PicSvg}></Icon>
             <Sp id={LangID.AddImageTip}></Sp>
         </div>
     }
