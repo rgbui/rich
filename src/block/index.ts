@@ -421,6 +421,11 @@ export abstract class Block extends Events {
     get isTextSpan() {
         return this.url == BlockUrlConstant.TextSpan
     }
+    /**
+     * 是否为复合的块
+     * 如tab块、table块
+     */
+    isComposite: Boolean = false;
     get isContentEmpty() {
         if (this.isPart) return false;
         if (this.isLine) {
@@ -453,6 +458,7 @@ export abstract class Block extends Events {
      */
     get isTextBlock() {
         if (this.isPart) return false;
+        if (this.isLayout || this.isPanel) return false;
         if (this.appearAnchors.some(s => s.isText)) return true;
         if (this.childs.length > 0 && this.childs.some(s => s.isTextContent)) return true;
         return false;

@@ -18,6 +18,7 @@ import "./style.less";
 export class Tab extends Block {
     blocks: { childs: Block[], otherChilds: Block[] } = { childs: [], otherChilds: [] };
     tabIndex: number = 0;
+    isComposite: Boolean = true;
     get allBlockKeys() {
         return [BlockChildKey.childs, BlockChildKey.otherChilds]
     }
