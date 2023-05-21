@@ -30,6 +30,9 @@ export class TabPage extends Block {
     get isAllowDrop() {
         return false;
     }
+    get isCanEmptyDelete() {
+        return true
+    }
 }
 @view('/tab/page')
 export class TabPageView extends BlockView<TabPage>{
