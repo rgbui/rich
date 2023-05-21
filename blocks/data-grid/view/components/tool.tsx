@@ -27,7 +27,6 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
         var view = props.block.schema?.views?.find(g => g.id == props.block.syncBlockId)
         if (!view) return <></>
         var isForm = view.url == BlockUrlConstant.FormView;
-
         function renderToolOperators() {
             if (isForm) return <>
                 <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => (props.block as DataGridForm).onFormFields(e)}><Icon size={14} icon={FieldsSvg}></Icon></label>
@@ -49,9 +48,13 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                 </div>
             </>
         }
-
         if (props.block.noTitle) return <div className='h-20 relative'>
-            {props.block.isOver && <div className="flex h-40 pos card round padding-w-10 padding-h-0" style={{ top: -30, left: 0, right: 0 }}>
+            {props.block.isOver && <div className="flex h-40 pos shadow bg-white round padding-w-10 padding-h-0" style={{
+                top: -30,
+                left: 0,
+                right: 0,
+                zIndex: 3000
+            }}>
                 <div className="flex-fixed">
                     <label className="cursor flex round h-30 item-hover padding-r-5 text f-14" onMouseDown={e => { e.stopPropagation(); props.block.onOpenViewSettings(Rect.fromEvent(e)) }}>
                         <span className="size-24 bold flex-center flex-fixed">
