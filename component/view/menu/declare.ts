@@ -7,16 +7,16 @@ export type MenuItem<T = string> = {
     type?: MenuItemType,
     text?: string,
     icon?: string | SvgrComponent | JSX.Element,
-    overlay?: JSX.Element|string,
+    overlay?: JSX.Element | string,
     placement?: OverlayPlacement,
     renderIcon?: (item: MenuItem<T>, view?: MenuItemView) => JSX.Element,
     render?: (item: MenuItem<T>, view?: MenuItemView) => JSX.Element,
     iconSize?: number,
     label?: string,
     checkLabel?: boolean,
-    forceHasChilds?:boolean,
+    forceHasChilds?: boolean,
     childs?: MenuItem<T>[],
-    childsPos?:PopoverPosition,
+    childsPos?: PopoverPosition,
     options?: MenuItem<T>[],
     value?: any,
     checked?: boolean,
@@ -27,7 +27,7 @@ export type MenuItem<T = string> = {
     remark?: string,
     param?: any,
     url?: string,
-    visible?: boolean|((items:MenuItem[],item:MenuItem)=>boolean),
+    visible?: boolean | ((items: MenuItem[], item: MenuItem) => boolean),
     drag?: boolean,
     btns?: {
         overlay?: JSX.Element,
@@ -39,9 +39,10 @@ export type MenuItem<T = string> = {
     /**
      * 值发生变化，是否主动的更新显示menu item
      */
-    updateMenuPanel?:boolean,
-    containerHeight?:number,
-    data?:any
+    updateMenuPanel?: boolean,
+    containerHeight?: number,
+    data?: any,
+    placeholder?: string
 }
 export enum MenuItemType {
     divide = 1,
@@ -54,5 +55,6 @@ export enum MenuItemType {
     drag = 8,
     custom = 9,
     container = 10,
-    color=11
+    color = 11,
+    gap = 12
 }

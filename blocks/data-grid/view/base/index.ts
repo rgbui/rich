@@ -240,13 +240,23 @@ export class DataGridView extends Block {
             if (!this.schemaId) {
                 var dg = await useDataGridCreate({ roundArea: Rect.fromEle(this.el) });
                 if (dg) {
-                    this.schema = await TableSchema.onCreate({ text: dg.text, url: this.url });
-                    await this.page.onAction(ActionDirective.onCreateTableSchema, async () => {
-                        this.updateProps({
-                            schemaId: this.schema.id,
-                            syncBlockId: this.schema.views.first().id
+                    if (dg.schemaId) {
+                        await this.page.onAction('SelectTableSchema', async () => {
+                            this.updateProps({
+                                schemaId: dg.schemaId,
+                                syncBlockId: dg.syncBlockId
+                            })
                         })
-                    });
+                    }
+                    else {
+                        this.schema = await TableSchema.onCreate({ text: dg.text, url: this.url });
+                        await this.page.onAction(ActionDirective.onCreateTableSchema, async () => {
+                            this.updateProps({
+                                schemaId: this.schema.id,
+                                syncBlockId: this.schema.views.first().id
+                            })
+                        });
+                    }
                 }
             }
         }
@@ -261,8 +271,7 @@ export class DataGridView extends Block {
             await this.loadDataInteraction();
             await this.createItem();
             await this.onNotifyReferenceBlocks();
-            if (this.view)
-                this.view.forceUpdate();
+            if (this.view) this.view.forceUpdate();
         }
     }
     async onAddCreateTableView() {
@@ -278,11 +287,12 @@ export class DataGridView extends Block {
         if (!this.schemaId) {
             var dg = await useDataGridCreate({ roundArea: Rect.fromEle(this.el) });
             if (dg) {
-                this.schema = await TableSchema.onCreate({ text: dg.text, url: this.url });
                 await this.page.onAction(ActionDirective.onCreateTableSchema, async () => {
+                    if (dg.schemaId) this.schema = await TableSchema.loadTableSchema(dg.schemaId)
+                    else this.schema = await TableSchema.onCreate({ text: dg.text, url: this.url });
                     this.updateProps({
                         schemaId: this.schema.id,
-                        syncBlockId: this.schema.views.first().id
+                        syncBlockId: dg.syncBlockId || this.schema.views.first().id
                     })
                 });
                 await this.didMounted();
