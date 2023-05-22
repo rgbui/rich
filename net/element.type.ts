@@ -32,6 +32,7 @@ export enum ElementType {
     SchemaView,
     /**
      * `/Schema/${id}/RecordView/${id1}` 数据表格的数据模板视图id
+     * 主要指表单
      */
     SchemaRecordView,
     /**

@@ -178,7 +178,6 @@ export class Page extends Events<PageDirective> {
     get scheamViewId() {
         return parseElementUrl(this.elementUrl).id1
     }
-    recordViewTemplate: boolean = false;
     openSource: 'page' | 'slide' | 'dialog' | 'snap' | 'popup' = 'page';
     getScreenStyle() {
         var style: CSSProperties = {};
