@@ -19,7 +19,7 @@ export class OriginFormField extends Block {
             return this.page.schema.fields.find(g => g.id == this.fieldId);
         }
         var c = this.closest(x => x.url == BlockUrlConstant.FormView) as DataGridForm;
-        if (c.schema) return c.schema.fields.find(g => g.id == this.fieldId);
+        if (c?.schema) return c.schema.fields.find(g => g.id == this.fieldId);
     }
     @prop()
     fieldId: string;
