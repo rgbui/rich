@@ -29,7 +29,7 @@ export enum ActionDirective {
     onLoadUserActions = 122,
     onCopyBlock = 123,
     onSolidBlockInputTextContent = 124,
-    onReplace=125,
+    onReplace = 125,
 
     onBoardToolCreateBlock = 130,
     onResizeBlock = 132,
@@ -102,7 +102,9 @@ export enum OperatorDirective {
     turn = 102,
 
     /**
-     * 数组属性发生变化
+     * 数组属性发生变化,已不用了
+     * @deprecated 
+     * 转$array_create,$array_delete,$array_update
      */
     arrayPropInsert = 108,
     arrayPropUpdate = 109,
@@ -151,21 +153,21 @@ export enum OperatorDirective {
     $array_create = 1030,
     $array_delete = 1031,
     $array_update = 1032,
-    $array_move=1033,
+    $array_move = 1033,
 
     $schema_data_push = 1040,
     $schema_data_remove = 1041,
     $schema_data_update = 1042,
-   
+
 
 
     $change_cursor_offset = 1055,
     $page_turn_layout = 1060,
     $page_update_prop = 1061,
 
-    $data_grid_trun_view=1070,
-    $data_grid_trun_view_new=1071,
-    $data_grid_change_view_url=1072
+    $data_grid_trun_view = 1070,
+    $data_grid_trun_view_new = 1071,
+    $data_grid_change_view_url = 1072
 
     //#endregion
 

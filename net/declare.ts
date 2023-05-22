@@ -183,7 +183,7 @@ export interface ChannelPatchMapUrls {
 export interface ChannelPutMapUrls {
     "/schema/create":{args:{text:string,url:string,templateId?:string},returnType:Promise<{ ok: boolean, data: { schema:Partial<TableSchema> },warn:string }>},
 	"/schema/operate":{args:{operate:{operate?:string,schemaId:string,date?:Date,actions:any[]}},returnType:Promise<SockResponse<{actions:any[]}>>},
-	"/datastore/add":{args:{schemaId:string,data:Record<string, any>,pos:{id:string,pos:"before"|"after"}},returnType:Promise<SockResponse<{isCacSort:boolean,data:Record<string,any>}>>},
+	"/datastore/add":{args:{schemaId:string,data:Record<string, any>,pos?:{id:string,pos:"before"|"after"}},returnType:Promise<SockResponse<{isCacSort:boolean,data:Record<string,any>}>>},
 	"/datastore/batch/add":{args:{schemaId:string,list:any[]},returnType:Promise<{ok:boolean,data:{list:any[]},warn:string}>},
 	"/datastore/rank":{args:{schemaId:string,wsId?:string,id:string,pos:{id:string,pos:"before"|"after"}},returnType:Promise<SockResponse<{isCacSort:boolean,sort:number}>>},
 	"/datastore/row/object/update":{args:{schemaId: string, rowId: string, fieldName: string,data: Record<string, any>},returnType:Promise<SockResponse<void>>},
@@ -225,6 +225,7 @@ export interface ChannelGetMapUrls {
 	"/datastore/group":{args:{schemaId:string,page?:number,size?:number,filter?:Record<string, any>,sorts?:Record<string, 1|-1>,group:string},returnType:Promise<{ok:boolean,data:{list:any[],total:number,page:number,size:number},warn:string}>},
 	"/datastore/statistics":{args:{schemaId:string,page?:number,size?:number,filter?:Record<string, any>,having?:Record<string, any>,sorts?:Record<string, 1|-1>,groups:string[],aggregate?: Record<string, any>},returnType:Promise<{ok:boolean,data:{list:any[],total:number,page:number,size:number},warn:string}>},
 	"/datastore/statistics/value":{args:{schemaId:string,filter?:Record<string, any>,indicator:string},returnType:Promise<{ok:boolean,data:{value:number},warn:string}>},
+	"/datastore/exists/user/submit":{args:{schemaId:string},returnType:Promise<SockResponse<{exists:boolean}>>},
 	"/sign":{args:any,returnType:Promise<SockResponse<{user:Record<string,any>,rk:string,uk:string,token:string}>>},
 	"/sign/out":{args:any,returnType:Promise<SockResponse<void>>},
 	"/phone/check/sign":{args:{phone:string},returnType:Promise<{ok:boolean,warn:string,data:{sign:boolean}}>},
