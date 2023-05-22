@@ -643,6 +643,9 @@ export class Page$Cycle {
                 else if ((b.isRow || b.isCol) && !b.isPart && !b.hasChilds) {
                     rs.push(b);
                 }
+                if (b.isLine && b.parent?.isLayout) {
+                    rs.push(b);
+                }
             });
             return
         });
