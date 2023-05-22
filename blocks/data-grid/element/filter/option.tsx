@@ -35,7 +35,6 @@ export class FilterFieldOption extends OriginFilterField {
             operator: '$in',
             value: this.values
         }]
-
     }
 }
 @view('/field/filter/option')

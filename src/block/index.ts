@@ -206,6 +206,9 @@ export abstract class Block extends Events {
                     paddingBottom: 2,
                 });
             }
+            else if (this.isLine) {
+                style.display = 'inline-block';
+            }
         }
         var s = this.pattern.style;
         delete s.backgroundColor;

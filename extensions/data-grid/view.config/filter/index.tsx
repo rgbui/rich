@@ -327,7 +327,7 @@ export class TableFilterView extends EventsComponent {
             })}
                 {self.block.filter.items.length == 0 && <div className="remark padding-w-14 f-12 h-30 flex">还没有添加筛选条件</div>}</div>
             <Divider></Divider>
-            <div onClick={e => addFilter()} className="h-30 gap-b-10 flex cursor item-hover padding-w-14">
+            <div onClick={e => addFilter()} className="h-30  flex cursor item-hover padding-w-14">
                 <Icon size={18} style={{ marginRight: 5 }} icon={PlusSvg}></Icon>添加筛选条件
             </div>
         </div>

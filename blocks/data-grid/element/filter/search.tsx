@@ -27,14 +27,16 @@ export class SearchText extends OriginFilterField {
 export class SearchTextView extends BlockView<SearchText>{
     render() {
         var self = this;
-        return <div style={this.block.visibleStyle}><OriginFilterFieldView
-            style={this.block.contentStyle}
-            filterField={this.block}>
-            <Input
-                value={this.block.word}
-                onChange={e => this.block.onInputValue(e)}
-                onEnter={e => { self.block.refBlock.onSearch() }}
-            ></Input>
-        </OriginFilterFieldView ></div>
+        return <div style={this.block.visibleStyle}>
+            <OriginFilterFieldView
+                style={this.block.contentStyle}
+                filterField={this.block}>
+                <Input
+                    value={this.block.word}
+                    onChange={e => this.block.onInputValue(e)}
+                    onEnter={e => { self.block.refBlock.onSearch() }}
+                ></Input>
+            </OriginFilterFieldView >
+        </div>
     }
 }

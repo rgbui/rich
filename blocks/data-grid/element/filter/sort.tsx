@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowDownSvg, ArrowUpSvg } from "../../../../component/svgs";
+import { ArrowDownSvg, ArrowUpSvg, NoneSvg } from "../../../../component/svgs";
 import { SelectBox } from "../../../../component/view/select/box";
 import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
@@ -23,7 +23,8 @@ export class FilterSort extends OriginFilterField {
 @view('/field/filter/sort')
 export class SearchTextView extends BlockView<FilterSort>{
     render() {
-        return <div style={this.block.visibleStyle}><OriginFilterFieldView style={this.block.contentStyle}
+        return <div style={this.block.visibleStyle}><OriginFilterFieldView
+            style={this.block.contentStyle}
             filterField={this.block}>
             <SelectBox
                 small
@@ -32,7 +33,7 @@ export class SearchTextView extends BlockView<FilterSort>{
                 value={this.block.sortRule}
                 onChange={e => this.block.onFilter(e as number)}
                 options={[
-                    { text: '无', value: 0 },
+                    { text: '无', value: 0, icon: NoneSvg },
                     { text: "升序", value: 1, icon: ArrowUpSvg },
                     { text: '降序', value: -1, icon: ArrowDownSvg }
                 ]}></SelectBox>

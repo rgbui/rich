@@ -40,8 +40,8 @@ export class SearchTextView extends BlockView<SearchUser>{
             filterField={this.block}
         >
             <div onMouseDown={e => this.mousedown(e)}>
-                {!(this.block.selectUsers?.length > 0) && <em className="remark f-12">选择用户</em>}
-                <UserAvatars users={this.block.selectUsers}></UserAvatars>
+                {!(this.block.selectUsers?.length > 0) && <em className="remark f-14">所有人</em>}
+                <UserAvatars size={30} users={this.block.selectUsers}></UserAvatars>
             </div>
         </OriginFilterFieldView ></div>
     }

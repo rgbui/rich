@@ -19,6 +19,7 @@ import { BlockUrlConstant } from "../../../../src/block/constant";
 import { useDataSourceView } from "../../../../extensions/data-grid/datasource";
 import { SnapshootDataGridViewPos } from "../../../../src/history/snapshoot";
 import { useTableExport } from "../../../../extensions/data-grid/export";
+import { Block } from "../../../../src/block";
 
 export class DataGridViewOperator {
     async onAddField(this: DataGridView, event: Rect, at?: number) {
@@ -577,7 +578,6 @@ export class DataGridViewOperator {
                         this.parentKey);
                     this.registerReferenceBlocker(newBlock);
                 }
-
             }
         })
     }
@@ -613,25 +613,58 @@ export class DataGridViewOperator {
             url = '/field/filter/search';
         }
         await this.page.onAction('onExtendControlFilter', async () => {
-            var newBlock = await this.page.createBlock(url,
-                { refBlockId: this.id, refFieldId: field.id, },
-                this.parent,
-                this.at,
-                this.parentKey
-            );
+            var prev = this.prev;
+            var newBlock: Block;
+            if (prev.url == BlockUrlConstant.TextSpan) {
+                newBlock = await prev.appendBlock({ url, refBlockId: this.id, refFieldId: field.id, })
+            }
+            else {
+                newBlock = await this.page.createBlock(BlockUrlConstant.TextSpan,
+                    {
+                        blocks: {
+                            childs: [{
+                                url,
+                                refBlockId: this.id,
+                                refFieldId: field.id
+                            }]
+                        }
+                    },
+                    this.parent, this.at, this.parentKey);
+                newBlock = newBlock.childs.first();
+            }
             this.registerReferenceBlocker(newBlock);
         })
     }
     async onExtendControlSort(this: DataGridView, field: Field) {
         var url: string = '/field/filter/sort';
         await this.page.onAction('onExtendControlSort', async () => {
-            var newBlock = await this.page.createBlock(url,
-                { refBlockId: this.id, refFieldId: field.id, },
-                this.parent,
-                this.at,
-                this.parentKey
-            );
+            var prev = this.prev;
+            var newBlock: Block;
+            if (prev.url == BlockUrlConstant.TextSpan) {
+                newBlock = await prev.appendBlock({ url, refBlockId: this.id, refFieldId: field.id, })
+            }
+            else {
+                newBlock = await this.page.createBlock(BlockUrlConstant.TextSpan,
+                    {
+                        blocks: {
+                            childs: [{
+                                url,
+                                refBlockId: this.id,
+                                refFieldId: field.id
+                            }]
+                        }
+                    },
+                    this.parent, this.at, this.parentKey);
+                newBlock = newBlock.childs.first();
+            }
             this.registerReferenceBlocker(newBlock);
+            // var newBlock = await this.page.createBlock(url,
+            //     { refBlockId: this.id, refFieldId: field.id, },
+            //     this.parent,
+            //     this.at,
+            //     this.parentKey
+            // );
+            // this.registerReferenceBlocker(newBlock);
         })
     }
     async onOpenDataSource(this: DataGridView, event: Rect) {
