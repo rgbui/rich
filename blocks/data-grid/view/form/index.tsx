@@ -47,6 +47,7 @@ export class DataGridForm extends DataGridView {
             this.autoCreateFeilds = true;
         }
         if (this.schema) {
+            await this.checkRepeat();
             if (this.view)
                 this.view.forceUpdate();
         }
@@ -54,6 +55,7 @@ export class DataGridForm extends DataGridView {
     isSubmit: boolean = false;
     async checkRepeat() {
         if (this.schemaView) {
+            console.log(this.schemaView);
             /**
              * 说明是禁止多次提交
              */
@@ -115,7 +117,7 @@ export class DataGridForm extends DataGridView {
             { type: MenuItemType.divide },
             {
                 text: '禁止多次提交',
-                name: 'allowUserMultiple',
+                name: 'disabledUserMultiple',
                 checked: this.schemaView?.disabledUserMultiple ? true : false,
                 type: MenuItemType.switch,
                 icon: AddTwoSvg
@@ -134,13 +136,13 @@ export class DataGridForm extends DataGridView {
                 if (item.name == 'lock') {
                     await self.onTableSchemaLock(item.checked);
                 }
-                else if (item.name == 'allowUserMultiple') {
+                else if (item.name == 'disabledUserMultiple') {
                     await self.schema.onSchemaOperate([
                         {
                             name: 'updateSchemaView',
-                            id: this.schemaView?.id,
+                            id: self.schemaView?.id,
                             data: {
-                                allowUserMultiple: item.checked
+                                disabledUserMultiple: item.checked
                             }
                         }
                     ]);
@@ -240,13 +242,13 @@ export class DataGridFormView extends BlockView<DataGridForm>{
     renderSaveTip() {
         if (this.block.isSubmit) {
             return <div>
-                <div className="flex-center">
-                    数据已提交。
+                <div className="flex-center f-14">
+                    数据已提交
                 </div>
             </div>
         }
         return <div>
-            <div className="flex-center">
+            <div className="flex-center f-14">
                 数据已提交，再<span className="link cursor" onClick={e => { this.block.saveTip = false; this.forceUpdate() }}>提交一份</span>
             </div>
         </div>
@@ -273,7 +275,7 @@ export class DataGridFormView extends BlockView<DataGridForm>{
                         textAlign: 'center'
                     }} placeholder={'添加表单描述'} defaultValue={this.block.schemaView?.description} onInput={e => this.block.updateSchemaViewDescription((e.target as HTMLInputElement).value)} className="noborder w100"></input></div>
                 </div>
-                {this.block.saveTip && this.renderSaveTip()}
+                {(this.block.saveTip || this.block.isSubmit) && this.renderSaveTip()}
                 <div style={{ display: this.block.saveTip || this.block.isSubmit ? 'none' : 'block' }}>
                     <ChildsArea childs={this.block.childs}></ChildsArea>
                     {this.block.childs.length == 0 && <div onMouseDown={e => this.onStop(e)} className="remark flex-center padding-20">没有表单字段</div>}
@@ -304,10 +306,13 @@ export class DataGridFormView extends BlockView<DataGridForm>{
                     <div className="remark gap-b-30 gap-t-10"><input style={{
                         fontSize: 14,
                         textAlign: 'center'
-                    }} placeholder={'添加表单描述'} defaultValue={this.block.schemaView?.description} onInput={e => this.block.updateSchemaViewDescription((e.target as HTMLInputElement).value)} className="noborder w100"></input></div>
-
+                    }} placeholder={'添加表单描述'}
+                        defaultValue={this.block.schemaView?.description}
+                        onInput={e => this.block.updateSchemaViewDescription((e.target as HTMLInputElement).value)}
+                        className="noborder w100"></input>
+                    </div>
                 </div>
-                {this.block.saveTip && this.renderSaveTip()}
+                {(this.block.saveTip || this.block.isSubmit) && this.renderSaveTip()}
                 <div style={{ display: this.block.saveTip || this.block.isSubmit ? 'none' : 'block' }}>
                     <ChildsArea childs={this.block.childs}></ChildsArea>
                     {this.block.childs.length == 0 && <div onMouseDown={e => this.onStop(e)} className="remark flex-center padding-20">没有表单字段</div>}
