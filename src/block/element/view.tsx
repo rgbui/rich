@@ -27,7 +27,7 @@ export class ViewComponent extends BlockView<View>{
             if (page.nav == true) {
                 style = {};
             }
-            if (isFirst && page.pageInfo.icon && page?.cover?.abled === true) {
+            if (isFirst && page.pageInfo?.icon && page?.cover?.abled === true) {
                 style.paddingTop = 50;
             }
             var pageContentClassList: string[] = ['sy-block-view-wrapper-content'];

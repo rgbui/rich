@@ -37,7 +37,7 @@ export class PageBar extends React.Component<{ page: Page }>{
                 <Icon size={20} icon={getPageIcon(this.props.page?.pageInfo)}></Icon>
                 <span className="gap-l-5">{getPageText(this.props.page?.pageInfo)}</span>
             </span>
-            {this.props.page.pageInfo.isCanEdit && <>
+            {this.props.page.pageInfo?.isCanEdit && <>
                 {/* {this.props.page.canEdit && <span className="visible flex r-gap-l-10">
                     <Button size="small" onClick={e => this.props.page.onSaveAndPublish()}>保存并更新</Button>
                     <Button ghost size="small" onClick={e => this.props.page.onChangeEditMode()}>退出编辑</Button>
@@ -101,7 +101,7 @@ export class PageBar extends React.Component<{ page: Page }>{
     }
     renderPropertys() {
         if (this.props.page.openSource == 'snap') return <></>
-        var isCanEdit = this.props.page.pageInfo.isCanEdit;
+        var isCanEdit = this.props.page.pageInfo?.isCanEdit;
         var user = channel.query('/query/current/user');
         var ws = channel.query('/current/workspace')
         var isSign = user?.id ? true : false;
