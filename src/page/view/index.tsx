@@ -271,7 +271,7 @@ export class PageView extends Component<{ page: Page }>{
                         isForceUpdate = true;
                     }
                 }
-                if (this.page.autoRefSubPages == true) {
+                if (this.page.autoRefSubPages == true && this.page.pageInfo) {
                     var oldSubPages = this.page.addedSubPages.map(c => c)
                     var items = await this.page.pageInfo.getSubItems();
                     this.page.addedSubPages = items.map(it => it.id);

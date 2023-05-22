@@ -60,3 +60,8 @@ export class UserAction {
         return this.operators.length > 0 ? false : true
     }
 }
+
+export type ViewOperate = {
+    operate?: UserAction,
+    seq: number
+}
