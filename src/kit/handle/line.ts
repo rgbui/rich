@@ -44,10 +44,11 @@ export function DragBlockLine(block: Block, event: React.MouseEvent) {
                     var pos = getPos(ev);
                     if (pos?.textNode) {
                         block.page.onAction('DragBlockLine', async () => {
+
                             if (appear.isSolid) {
                                 var at = appear.block.at;
                                 if (!elIsBefore(pos.textNode, appear.solidContentEl)) at += 1;
-                                await first.parent.append(block, at, first.parentKey);
+                                await appear.block.parent.append(block, at, appear.block.parentKey);
                             }
                             else {
                                 var cs = await appear.split([pos.offset]);
