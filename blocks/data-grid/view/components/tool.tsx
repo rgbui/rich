@@ -31,12 +31,6 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
             if (isForm) return <>
                 <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => (props.block as DataGridForm).onFormFields(e)}><Icon size={14} icon={FieldsSvg}></Icon></label>
                 <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => { (props.block as DataGridForm).onFormSettings(e) }}><Icon size={18} icon={DotsSvg}></Icon></label>
-                <div className="sy-dg-tool-operators-add">
-                    <span className="padding-w-15 text-white" onClick={e => {
-                        e.stopPropagation();
-                        (props.block as DataGridForm).onSave(e);
-                    }}>保存</span>
-                </div>
             </>
             return <><label className="item-hover round padding-w-5 h-24 flex-center cursor gap-r-10" onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e))}><Icon size={14} icon={SettingsSvg}></Icon><span className="f-14 padding-l-5">视图配置</span></label>
                 {props.block.filter?.items?.length > 0 && <label className="item-hover round  flex-center cursor gap-r-10 padding-w-5 h-24 " onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e), 'filter')}><Icon size={18} icon={FilterSvg}></Icon><span className="f-14 padding-l-5">过滤</span></label>}

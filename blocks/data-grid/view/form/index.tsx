@@ -1,6 +1,5 @@
 import lodash from "lodash";
 import React from "react";
-import { ReactNode } from "react";
 import { AddTwoSvg, LinkSvg, LockSvg, UnlockSvg } from "../../../../component/svgs";
 import { Button } from "../../../../component/view/button";
 import { useSelectMenuItem } from "../../../../component/view/menu";
@@ -19,6 +18,7 @@ import { TableSchema } from "../../schema/meta";
 import { GetFieldTypeSvg } from "../../schema/util";
 import { DataGridView } from "../base";
 import { DataGridTool } from "../components/tool";
+import { GridMap } from "../../../../src/page/grid";
 
 @url(BlockUrlConstant.FormView)
 export class DataGridForm extends DataGridView {
@@ -40,6 +40,7 @@ export class DataGridForm extends DataGridView {
         }
     }
     async didMounted() {
+        this.gridMap = new GridMap(this)
         await this.loadSchema();
         if (this.autoCreateFeilds == false) {
             await this.autoCreateFormFields();
@@ -50,18 +51,30 @@ export class DataGridForm extends DataGridView {
                 this.view.forceUpdate();
         }
     }
+    isSubmit: boolean = false;
+    async checkRepeat() {
+        if (this.schemaView) {
+            /**
+             * 说明是禁止多次提交
+             */
+            if (this.schemaView.disabledUserMultiple == true) {
+                var r = await this.schema.checkSubmit();
+                if (r.ok) {
+                    this.isSubmit = r.data.exists;
+                }
+            }
+        }
+    }
     updateSchemaViewText = lodash.debounce(async function (value) {
         await this.schema.onSchemaOperate([
             { name: 'updateSchemaView', id: this.schemaView.id, data: { text: value } }
         ]);
     }, 800)
-
     updateSchemaViewDescription = lodash.debounce(async function (value) {
         await this.schema.onSchemaOperate([
             { name: 'updateSchemaView', id: this.schemaView.id, data: { description: value } }
         ]);
     }, 800)
-
     async autoCreateFormFields() {
         var cs: Record<string, any>[] = this.schema.initUserFields.toArray(field => {
             var r = GetFieldFormBlockInfo(field);
@@ -73,8 +86,25 @@ export class DataGridForm extends DataGridView {
             this.blocks.childs.push(block);
         })
     }
-    async onSave(event: React.MouseEvent) {
+    saveTip: boolean = false;
+    async onSave(event: React.MouseEvent, button: Button) {
+        button.loading = true;
+        try {
+            this.saveTip = false;
+            var row = this.getSchemaRow();
+            var g = await this.schema.rowAdd({ data: row })
+            this.saveTip = true;
+            if (this.schemaView?.disabledUserMultiple == true) {
+                this.isSubmit = true;
+            }
+        }
+        catch (ex) {
 
+        }
+        finally {
+            button.loading = false;
+            this.forceUpdate();
+        }
     }
     async onFormSettings(event: React.MouseEvent) {
         if (this.dataGridTool) this.dataGridTool.isOpenTool = true;
@@ -84,9 +114,9 @@ export class DataGridForm extends DataGridView {
             { text: '复制链接', icon: LinkSvg, name: 'copylink' },
             { type: MenuItemType.divide },
             {
-                text: '允许多次提交',
+                text: '禁止多次提交',
                 name: 'allowUserMultiple',
-                checked: this.schemaView?.allowUserMultiple ? true : false,
+                checked: this.schemaView?.disabledUserMultiple ? true : false,
                 type: MenuItemType.switch,
                 icon: AddTwoSvg
             },
@@ -104,6 +134,17 @@ export class DataGridForm extends DataGridView {
                 if (item.name == 'lock') {
                     await self.onTableSchemaLock(item.checked);
                 }
+                else if (item.name == 'allowUserMultiple') {
+                    await self.schema.onSchemaOperate([
+                        {
+                            name: 'updateSchemaView',
+                            id: this.schemaView?.id,
+                            data: {
+                                allowUserMultiple: item.checked
+                            }
+                        }
+                    ]);
+                }
             }
         });
         if (um) {
@@ -111,20 +152,10 @@ export class DataGridForm extends DataGridView {
                 case 'copylink':
                     this.onCopyViewLink();
                     break;
-                case 'propertys':
-                    await this.onOpenViewConfig(rect, 'field');
+                case 'allowUserMultiple':
                     break;
-                case 'view':
-                    await this.onOpenViewConfig(rect);
+                case 'lock':
                     break;
-                case 'filter':
-                    await this.onOpenViewConfig(rect, 'filter');
-                    break;
-                case 'sort':
-                    await this.onOpenViewConfig(rect, 'sort');
-                    break;
-                case 'export':
-                    await this.onExport(rect)
             }
         }
         if (this.dataGridTool) this.dataGridTool.isOpenTool = false;
@@ -132,6 +163,7 @@ export class DataGridForm extends DataGridView {
     }
     async onToggleFieldView(field: Field, checked: boolean) {
         await this.page.onAction('onToggleFieldView', async () => {
+            this.page.addBlockChange(this);
             if (checked) {
                 var b = GetFieldFormBlockInfo(field);
                 if (b) {
@@ -143,7 +175,7 @@ export class DataGridForm extends DataGridView {
                 var f = this.find(c => (c instanceof OriginFormField) && c.field.id == field.id);
                 if (f) await f.delete()
             }
-        }, { block: this });
+        });
         this.view.forceUpdate();
     }
     async onFormFields(event: React.MouseEvent) {
@@ -196,21 +228,35 @@ export class DataGridForm extends DataGridView {
                 }
             }
         })
-        if (this.page.formRowData) {
-            row.icon = this.page.formRowData.icon;
-            row.cover = this.page.formRowData.cover;
-            row.title = this.page.formRowData.title;
-        }
         return row;
     }
 }
 
 @view(BlockUrlConstant.FormView)
 export class DataGridFormView extends BlockView<DataGridForm>{
-    render(): ReactNode {
+    onStop(event: React.MouseEvent) {
+        event.stopPropagation();
+    }
+    renderSaveTip() {
+        if (this.block.isSubmit) {
+            return <div>
+                <div className="flex-center">
+                    数据已提交。
+                </div>
+            </div>
+        }
+        return <div>
+            <div className="flex-center">
+                数据已提交，再<span className="link cursor" onClick={e => { this.block.saveTip = false; this.forceUpdate() }}>提交一份</span>
+            </div>
+        </div>
+
+    }
+    render() {
+
         if (this.block.page.pageLayout.type == PageLayoutType.dbForm) {
             return <div>
-                <div >
+                <div onMouseDown={e => this.onStop(e)} >
                     <div><input style={{
                         fontSize: 40,
                         fontWeight: 'bold',
@@ -218,6 +264,7 @@ export class DataGridFormView extends BlockView<DataGridForm>{
                         minHeight: '50px',
                         textAlign: 'center'
                     }}
+                        placeholder="添加表单标题"
                         defaultValue={this.block.schemaView?.text}
                         onInput={e => this.block.updateSchemaViewText((e.target as HTMLInputElement).value)}
                         className="noborder w100"></input></div>
@@ -225,8 +272,11 @@ export class DataGridFormView extends BlockView<DataGridForm>{
                         fontSize: 14,
                         textAlign: 'center'
                     }} placeholder={'添加表单描述'} defaultValue={this.block.schemaView?.description} onInput={e => this.block.updateSchemaViewDescription((e.target as HTMLInputElement).value)} className="noborder w100"></input></div>
+                </div>
+                {this.block.saveTip && this.renderSaveTip()}
+                <div style={{ display: this.block.saveTip || this.block.isSubmit ? 'none' : 'block' }}>
                     <ChildsArea childs={this.block.childs}></ChildsArea>
-                    {this.block.childs.length == 0 && <div className="remark flex-center padding-20">没有表单字段</div>}
+                    {this.block.childs.length == 0 && <div onMouseDown={e => this.onStop(e)} className="remark flex-center padding-20">没有表单字段</div>}
                     <div className="flex-center gap-h-30">
                         <Button>保&nbsp;存</Button>
                     </div>
@@ -238,24 +288,32 @@ export class DataGridFormView extends BlockView<DataGridForm>{
             onMouseLeave={e => this.block.onOver(false)}
         >
             {this.block.schema && <DataGridTool block={this.block}></DataGridTool>}
-            <div className="padding-30 round-8 shadow">
-                <div className="gap-t-30"><input style={{
-                    fontSize: 40,
-                    fontWeight: 'bold',
-                    lineHeight: '50px',
-                    minHeight: '50px',
-                    textAlign: 'center'
-                }} defaultValue={this.block.schemaView?.text}
-                    onInput={e => this.block.updateSchemaViewText((e.target as HTMLInputElement).value)}
-                    className="noborder w100"></input></div>
-                <div className="remark gap-b-30 gap-t-10"><input style={{
-                    fontSize: 14,
-                    textAlign: 'center'
-                }} placeholder={'添加表单描述'} defaultValue={this.block.schemaView?.description} onInput={e => this.block.updateSchemaViewDescription((e.target as HTMLInputElement).value)} className="noborder w100"></input></div>
-                <ChildsArea childs={this.block.childs}></ChildsArea>
-                {this.block.childs.length == 0 && <div className="remark flex-center padding-20">没有表单字段</div>}
-                <div className="flex-center gap-h-30">
-                    <Button>保存</Button>
+            <div className="padding-50 round-8 shadow">
+                <div onMouseDown={e => this.onStop(e)} >
+                    <div className="gap-t-30"><input
+                        placeholder='添加表单标题'
+                        style={{
+                            fontSize: 40,
+                            fontWeight: 'bold',
+                            lineHeight: '50px',
+                            minHeight: '50px',
+                            textAlign: 'center',
+                        }} defaultValue={this.block.schemaView?.text}
+                        onInput={e => this.block.updateSchemaViewText((e.target as HTMLInputElement).value)}
+                        className="noborder w100"></input></div>
+                    <div className="remark gap-b-30 gap-t-10"><input style={{
+                        fontSize: 14,
+                        textAlign: 'center'
+                    }} placeholder={'添加表单描述'} defaultValue={this.block.schemaView?.description} onInput={e => this.block.updateSchemaViewDescription((e.target as HTMLInputElement).value)} className="noborder w100"></input></div>
+
+                </div>
+                {this.block.saveTip && this.renderSaveTip()}
+                <div style={{ display: this.block.saveTip || this.block.isSubmit ? 'none' : 'block' }}>
+                    <ChildsArea childs={this.block.childs}></ChildsArea>
+                    {this.block.childs.length == 0 && <div onMouseDown={e => this.onStop(e)} className="remark flex-center padding-20">没有表单字段</div>}
+                    <div className="flex-center gap-h-30">
+                        <Button onMouseDown={(e, b) => this.block.onSave(e, b)}>保存</Button>
+                    </div>
                 </div>
             </div>
         </div>

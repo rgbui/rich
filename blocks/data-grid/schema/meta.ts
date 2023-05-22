@@ -76,7 +76,7 @@ export class TableSchema {
         /**
          * 表单，是否允许上传
          */
-        allowUserMultiple?: boolean,
+        disabledUserMultiple?: boolean,
         locker: {
             lock: boolean,
             date: number,
@@ -107,7 +107,7 @@ export class TableSchema {
             text: field.text
         }, this);
     }
-    rowAdd(args: { data: Record<string, any>, pos: { id: string, pos: 'before' | 'after' } }) {
+    rowAdd(args: { data: Record<string, any>, pos?: { id: string, pos: 'before' | 'after' } }) {
         return channel.put('/datastore/add', Object.assign({ schemaId: this.id }, args));
     }
     rowRank(args: { id: string, pos: { id: string, pos: 'before' | 'after' } }) {
@@ -132,6 +132,9 @@ export class TableSchema {
     })
     rowUpdate(args: { dataId: string, data: Record<string, any> }) {
         return channel.patch('/datastore/update', Object.assign({ schemaId: this.id }, args));
+    }
+    async checkSubmit(){
+        return channel.get('/datastore/exists/user/submit',{schemaId: this.id });
     }
     rowUpdateFieldObject(args: { rowId: string, fieldName: string, data: Record<string, any> }) {
         return channel.put('/datastore/row/object/update', Object.assign({ schemaId: this.id }, args));
@@ -205,6 +208,7 @@ export class TableSchema {
             data: props
         }])
     }
+   
     /*
      * { name: 'createSchemaView', text: r.text, url: r.url }
      * { name: 'addField', field: { text: '状态', type: FieldType.option } }

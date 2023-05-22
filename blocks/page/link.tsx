@@ -27,8 +27,8 @@ export class Link extends Block {
             var r = await channel.get('/page/query/info', { id: this.pageId });
             if (r?.ok) {
                 this.pageInfo = lodash.cloneDeep(r.data);
+                this.forceUpdate();
             }
-            this.forceUpdate();
         }
     }
     async openPage(event: React.MouseEvent) {
