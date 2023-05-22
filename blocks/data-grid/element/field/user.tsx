@@ -35,7 +35,7 @@ export class FieldTextView extends BlockView<FieldUser>{
     render() {
         if (this.block.field.type == FieldType.creater || this.block.field.type == FieldType.modifyer)
             return <div className='sy-field-text'>
-                {this.block.value && <Avatar userid={this.block.value}></Avatar>}
+                {this.block.value && <Avatar size={30} userid={this.block.value}></Avatar>}
             </div>
         else {
             var vs = this.block.value;
