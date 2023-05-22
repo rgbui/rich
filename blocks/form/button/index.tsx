@@ -264,7 +264,7 @@ export class BlockButtonView extends BlockView<BlockButton>{
                     <ToolTip overlay={'编辑'}><span className="flex-center text-1  item-hover size-24 round cursor" onMouseDown={e => this.block.openEdit(e)}><Icon size={16} icon={EditSvg}></Icon></span>
                     </ToolTip>
                 </div>}>
-                <SolidArea hasGap block={this.block} prop={'content'}><button className={'sy-button flex' + (' sy-button-' + this.block.buttonSize) + (this.block.ghost ? " sy-button-ghost" : "")}
+                <SolidArea gap block={this.block} prop={'content'}><button className={'sy-button flex' + (' sy-button-' + this.block.buttonSize) + (this.block.ghost ? " sy-button-ghost" : "")}
                     onMouseDown={e => this.block.mousedown(e)}>
                     {this.block.showIcon && <span className={this.block.showText ? "gap-r-5" : ""}><Icon size={16} icon={this.block.src}></Icon></span>}
                     {this.block.showText && <span>{this.block.content}</span>}

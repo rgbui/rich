@@ -72,7 +72,7 @@ export function SolidArea(props: {
      * 表示行内块 是否有间隙
      * 意味着光标的移动不是在相邻的两个字符之间，而是在两个块之间
      */
-    hasGap?: boolean,
+    gap?: boolean,
     isHtml?: boolean,
     line?: boolean
 }) {
@@ -81,7 +81,7 @@ export function SolidArea(props: {
             el: e,
             prop: props.prop,
             appear: BlockAppear.solid,
-            hasGap: props.hasGap || false
+            hasGap: props.gap || false
         }),
         style: props.style
     };
