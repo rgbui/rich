@@ -7,7 +7,6 @@ import { BlockUrlConstant } from "../../../../src/block/constant";
 import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../../../src/block/enum";
 import { prop } from "../../../../src/block/factory/observable";
 import { TextSpanArea } from "../../../../src/block/view/appear";
-import { PageLayoutType } from "../../../../src/page/declare";
 import { DataGridForm } from "../../view/form";
 import "./style.less";
 
@@ -15,7 +14,7 @@ export class OriginFormField extends Block {
     display = BlockDisplay.block;
     value: any;
     get field() {
-        if (this.page.pageLayout.type == PageLayoutType.dbForm && this.page.schema) {
+        if (this.page.schema) {
             return this.page.schema.fields.find(g => g.id == this.fieldId);
         }
         var c = this.closest(x => x.url == BlockUrlConstant.FormView) as DataGridForm;
