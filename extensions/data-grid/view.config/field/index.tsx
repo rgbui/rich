@@ -93,7 +93,7 @@ export class DataGridFields extends EventsComponent {
                 </div>
                 <DragList onChange={onChange} isDragBar={e => e.closest('.shy-table-field-view-item') && !e.closest('.eye') ? true : false} className="shy-table-field-view-items">{this.block.fields.map(f => {
                     return <div className={"shy-table-field-view-item flex h-30 padding-w-14 cursor  item-hover"} key={f.fieldId || f.type}>
-                        <span className="size-24 round flex-center flex-fixed item-hover"> <em className={'drag'} ><Icon size={16} icon={DragHandleSvg}></Icon></em></span>
+                        <span className="size-24 round flex-center flex-fixed item-hover"> <em className={'drag size-24 flex-center text-1'} ><Icon size={16} icon={DragHandleSvg}></Icon></em></span>
                         <span className="size-24 round flex-center flex-fixed"><Icon size={18} icon={GetFieldTypeSvg(f.field?.type)}></Icon></span>
                         <span className="flex-auto f-14">{f.text}</span>
                         <span className="size-24 round flex-center flex-fixed item-hover"><Icon className={'eye'} size={14} onClick={async () => { await self.block.onHideField(f); self.forceUpdate() }} icon={EyeSvg}></Icon></span>
