@@ -141,6 +141,20 @@ export class AppearAnchor {
         }
         return false;
     }
+    /**
+     * 
+     * @param node 
+     * @param offset 
+     * 0表示solid前面
+     * 1表示solid后面
+     * 其它不在offset
+     */
+    isSolidPos(node: Node, offset: number) {
+        var cs = Array.from(this.el.childNodes)
+        if (offset == 0 && (cs[0] === node || cs[0].contains(node))) return true
+        else if (offset == 1 && (cs[2] === node || cs[2].contains(node))) return true;
+        return false;
+    }
     get firstTextNode() {
         if (this.el.childNodes.length > 0) return this.el.childNodes[0]
         else return this.el;

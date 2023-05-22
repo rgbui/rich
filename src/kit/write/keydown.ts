@@ -49,6 +49,11 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
     var sel = window.getSelection();
     if (event.key == KeyboardCode.ArrowLeft) {
         onceAutoScroll({ el: aa.el, feelDis: 60, dis: 120 })
+        if (aa.isSolid && aa.isSolidPos(sel.focusNode, 1)) {
+            event.preventDefault();
+            write.kit.anchorCursor.onFocusAppearAnchor(aa, { render: true, at: 0 })
+            return;
+        }
         if (aa.isStart(sel.focusNode, sel.focusOffset)) {
             //这里找到当前aa前面的AppearAnchor，然后光标移到尾部，这里需要判断相邻的两个元素之间是否紧挨着
             var prevAA = aa.visibleLeft();
@@ -64,6 +69,11 @@ export function MoveCursor(write: PageWrite, aa: AppearAnchor, event: React.Keyb
     }
     else if (event.key == KeyboardCode.ArrowRight) {
         onceAutoScroll({ el: aa.el, feelDis: 60, dis: 120 })
+        if (aa.isSolid && aa.isSolidPos(sel.focusNode, 0)) {
+            event.preventDefault();
+            write.kit.anchorCursor.onFocusAppearAnchor(aa, { render: true, last: true })
+            return;
+        }
         if (aa.isEnd(sel.focusNode, sel.focusOffset)) {
             var downAA = aa.visibleRight();
             if (downAA) {
