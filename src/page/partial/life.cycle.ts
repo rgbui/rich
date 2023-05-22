@@ -4,7 +4,7 @@ import { langProvider } from "../../../i18n/provider";
 import { Block } from "../../block";
 import { View } from "../../block/element/view";
 import { BlockFactory } from "../../block/factory/block.factory";
-import { UserAction } from "../../history/action";
+import { UserAction, ViewOperate } from "../../history/action";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { PageDirective } from "../directive";
 import { PageHistory } from "../interaction/history";
@@ -48,7 +48,7 @@ export class Page$Cycle {
     async clear(this: Page) {
         this.views = [];
     }
-    async load(this: Page, data?: Record<string, any>) {
+    async load(this: Page, data?: Record<string, any>, operates?: ViewOperate[]) {
         try {
             if (!data || typeof data == 'object' && Object.keys(data).length == 0) {
                 //这里加载默认的页面数据
@@ -80,8 +80,15 @@ export class Page$Cycle {
             if ([PageLayoutType.db].some(s => s == this.pageLayout.type) && !this.exists(g => g instanceof DataGridView)) {
                 await this.loadDefaultScheamView();
             }
+            if ([ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type)) {
+                await this.loadPageSchema();
+            }
             await this.onRepair();
             await this.emit(PageDirective.loaded);
+            if (Array.isArray(operates) && operates.length > 0) {
+                var ops = operates.map(op => op.operate ? op.operate : op) as any;
+                await this.onSyncUserActions(ops, 'load');
+            }
         }
         catch (ex) {
             this.onError(ex);
@@ -133,7 +140,13 @@ export class Page$Cycle {
         })
         await this.onRepair();
         if (isOk && actions.length > 0) {
-            this.emit(PageDirective.syncHistory, actions.max(g => g.seq));
+            var seq = actions.max(g => g.seq);
+            var op = actions.find(g => g.seq == seq);
+            this.emit(PageDirective.syncHistory, {
+                seq,
+                creater: op.userid,
+                force: source == 'load' ? true : false
+            });
         }
     }
     async get(this: Page) {
@@ -682,35 +695,56 @@ export class Page$Cycle {
             if (isUpdate) this.addPageUpdate();
         });
     }
-
     formRowData: Record<string, any>;
-    async loadSchemaView(this: Page, elementUrl: string) {
+    async loadPageSchema(this: Page) {
+        var elementUrl = this.elementUrl;
         var pe = parseElementUrl(elementUrl);
         if (!this.schema) {
             this.schema = await TableSchema.loadTableSchema(pe.id);
         }
-        var pageData = SchemaCreatePageFormData(this.schema, elementUrl, pe.type == ElementType.SchemaRecordViewData ? true : false);
-        this.views = [];
-        await this.load(pageData);
-        if (pe.type == ElementType.SchemaRecordViewData) {
-            var row = await this.schema.rowGet(pe.id2);
-            if (row) {
-                this.formRowData = lodash.cloneDeep(row);
-                this.loadSchemaRecord(row);
+        if (pe.type == ElementType.SchemaRecordView) {
+            if (!this.exists(c => c.url == BlockUrlConstant.FormView)) {
+                var pageData = SchemaCreatePageFormData(this.schema, elementUrl, false);
+                this.views = [];
+                await this.load(pageData);
             }
         }
-    }
-    loadSchemaRecord(this: Page, row: Record<string, any>) {
+        else if (pe.type == ElementType.SchemaData) {
+            if (!this.exists(c => (c instanceof OriginFormField))) {
+                var cs: Record<string, any>[] = this.schema.initUserFields.toArray(field => {
+                    var r = GetFieldFormBlockInfo(field);
+                    if (r) return r;
+                })
+                this.views = [];
+                await this.load({ views: [{ url: BlockUrlConstant.View, blocks: { childs: cs } }] })
+            }
+            var row = await this.schema.rowGet(pe.id1);
+            if (row) {
+                this.formRowData = lodash.cloneDeep(row);
+                this.each(g => {
+                    if (g instanceof OriginFormField) {
+                        var f = g.field;
+                        if (f) {
+                            g.value = g.field.getValue(row);
+                        }
+                    }
+                })
+            }
+        }
+        if (typeof this.formRowData == 'undefined') {
+            this.formRowData = {};
+        }
         this.each(g => {
             if (g instanceof OriginFormField) {
                 var f = g.field;
                 if (f) {
-                    g.value = g.field.getValue(row);
+                    this.formRowData[f.name] = g.value;
                 }
             }
         })
     }
-    getSchemaRow(this: Page,) {
+
+    getSchemaRow(this: Page) {
         var row: Record<string, any> = {};
         this.each(g => {
             if (g instanceof OriginFormField) {
@@ -720,7 +754,13 @@ export class Page$Cycle {
                 }
             }
         })
-        if (this.formRowData) {
+        /**
+         * 比较初始值，如果一样，说明不有任何修改，返回null
+         */
+        if (lodash.isEqual(this.formRowData, row)) {
+            return null;
+        }
+        if (this.formRowData?.id) {
             row.icon = this.formRowData.icon;
             row.cover = this.formRowData.cover;
             row.title = this.formRowData.title;

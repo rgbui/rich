@@ -1,6 +1,6 @@
 import React, { CSSProperties } from "react";
 import { Page } from "..";
-import { ChevronLeftSvg, ChevronRightSvg, CollectTableSvg, DotsSvg, DoubleRightSvg, EditSvg, FieldsSvg, MemberSvg, MenuSvg, PageSvg, PublishSvg, SearchSvg } from "../../../component/svgs";
+import { ChevronLeftSvg, ChevronRightSvg, CollectTableSvg, DocAddSvg, DotsSvg, DoubleRightSvg, EditSvg, FieldsSvg, MemberSvg, MenuSvg, PageSvg, PublishSvg, SearchSvg } from "../../../component/svgs";
 import { UserAvatars } from "../../../component/view/avator/users";
 import { Button } from "../../../component/view/button";
 import { Icon } from "../../../component/view/icon";
@@ -16,18 +16,30 @@ import { ToolTip } from "../../../component/view/tooltip";
 
 export class PageBar extends React.Component<{ page: Page }>{
     renderTitle() {
-        if (this.props.page.pe.type == ElementType.SchemaRecordViewData) {
+        if (this.props.page.pe.type == ElementType.SchemaData) {
             return <div className="flex-auto flex">
                 {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onClose()} className="item-hover size-24 round cursor flex-center gap-l-10"><Icon size={18} icon={DoubleRightSvg}></Icon></span>}
-                {/* <span onMouseDown={e => this.props.page.openSource != 'page' && this.props.page.onClose()} className="item-hover round flex  cursor padding-h-3 padding-w-5 ">
-                    <Icon size={18} icon={getPageIcon(this.props.page?.schema?.icon, CollectTableSvg)}></Icon>
-                    <span className="gap-l-5">{this.props.page?.schema?.text}</span>
-                </span>
-                <span className="flex-center"><Icon size={18} icon={ChevronRightSvg}></Icon></span> */}
                 <span className="item-hover round flex cursor padding-h-3 padding-w-5 ">
                     <Icon size={20} icon={this.props.page?.formRowData?.icon || PageSvg}></Icon>
                     <span className="gap-l-5">{this.props.page?.formRowData?.title}</span>
                 </span>
+                {this.saving && <Spin></Spin>}
+            </div>
+        }
+        else if (this.props.page.pe.type == ElementType.SchemaRecordView) {
+            var sv = this.props.page.schema.views.find(g => g.id == this.props.page.pe.id1);
+            return <div className="flex-auto flex">
+                {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onClose()} className="item-hover size-24 round cursor flex-center gap-l-10"><Icon size={18} icon={DoubleRightSvg}></Icon></span>}
+                <span className="item-hover round flex gap-l-10 cursor padding-h-3 padding-w-5 ">
+                    <Icon size={20} icon={sv?.icon || DocAddSvg}></Icon>
+                    <span className="gap-l-5">{sv?.text}</span>
+                </span>
+                {this.props.page.pageInfo?.isCanEdit && <>
+                    {!this.props.page.canEdit && <ToolTip ref={e => this.be = e} placement="bottom" overlay={'进入编辑'}><span className="flex flex-fixed visible r-gap-l-5 text-1 cursor " onClick={e => {
+                        if (this.be) this.be.close()
+                        this.props.page.onChangeEditMode()
+                    }}><Icon size={18} icon={EditSvg}></Icon></span></ToolTip>}
+                </>}
                 {this.saving && <Spin></Spin>}
             </div>
         }
@@ -38,10 +50,6 @@ export class PageBar extends React.Component<{ page: Page }>{
                 <span className="gap-l-5">{getPageText(this.props.page?.pageInfo)}</span>
             </span>
             {this.props.page.pageInfo?.isCanEdit && <>
-                {/* {this.props.page.canEdit && <span className="visible flex r-gap-l-10">
-                    <Button size="small" onClick={e => this.props.page.onSaveAndPublish()}>保存并更新</Button>
-                    <Button ghost size="small" onClick={e => this.props.page.onChangeEditMode()}>退出编辑</Button>
-                </span>} */}
                 {!this.props.page.canEdit && <ToolTip ref={e => this.be = e} placement="bottom" overlay={'进入编辑'}><span className="flex flex-fixed visible r-gap-l-5 text-1 cursor " onClick={e => {
                     if (this.be) this.be.close()
                     this.props.page.onChangeEditMode()

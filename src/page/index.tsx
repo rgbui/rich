@@ -294,8 +294,8 @@ export interface Page {
     on(name: PageDirective.history, fn: (ev: UserAction) => void);
     emit(name: PageDirective.history, ev: UserAction): void;
 
-    on(name: PageDirective.syncHistory, fn: (seq: number) => void);
-    emit(name: PageDirective.syncHistory, seq: number);
+    on(name: PageDirective.syncHistory, fn: (data:{seq:number,force?:boolean,creater?:string}) => void);
+    emit(name: PageDirective.syncHistory, data:{seq:number,force?:boolean,creater?:string});
 
     on(name: PageDirective.hoverOutBlock, fn: (block: Block) => void): void;
     emit(name: PageDirective.hoverOutBlock, block: Block)

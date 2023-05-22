@@ -14,6 +14,8 @@ import { onPasteBlank } from "../../kit/write/paste";
 import { PageLayoutType } from "../declare";
 import { PageDirective } from "../directive";
 import { BlockUrlConstant } from "../../block/constant";
+import { ElementType } from "../../../net/element.type";
+
 
 export class PageEvent {
     /**
@@ -59,8 +61,6 @@ export class PageEvent {
                 onPasteBlank(this.kit, event);
         }
     }
-
-
     /**
      * 
      * https://www.zhangxinxu.com/wordpress/2020/06/mobile-event-touches-zoom-sacle/
@@ -261,24 +261,6 @@ export class PageEvent {
     async onContextmenu(this: Page, event: React.MouseEvent) {
         event.preventDefault();
         if (!this.isCanEdit) return;
-        //
-        // var items: MenuItemType<BlockDirective | string>[] = [
-        //     { name: 'smallText', text: '小字号', type: MenuItemTypeValue.switch },
-        //     { name: 'fullWidth', text: '宽版', type: MenuItemTypeValue.switch },
-        //     { type: MenuItemTypeValue.divide },
-        //     { name: 'addCover', text: this.cover?.abled ? "移除封面" : '添加封面' }
-        // ];
-        // var r = await useSelectMenuItem({ roundPoint: Point.from(event) }, items, {
-        //     // overflow: 'visible',
-        //     update: (item) => {
-        //         console.log(item);
-        //     }
-        // });
-        // if (r) {
-        //     if (r.item.name == 'addCover') {
-        //         await this.onAddCover();
-        //     }
-        // }
     }
     async onAddCover(this: Page) {
         if (!this.isCanEdit) return;
@@ -312,7 +294,7 @@ export class PageEvent {
         })
     }
     async onUpdatePageData(this: Page, data: Record<string, any>) {
-        if (this.pageLayout.type == PageLayoutType.dbForm) {
+        if ([ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type)) {
             if (this.formRowData) {
                 Object.assign(this.formRowData, data);
             }
@@ -341,7 +323,7 @@ export class PageEvent {
     }
     async onUpdatePageTitle(this: Page, text: string) {
         this.onceStopRenderByPageInfo = true;
-        if (this.pageLayout.type == PageLayoutType.dbForm) {
+        if ([ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type)) {
             if (this.formRowData) {
                 this.formRowData.title = text;
             }
@@ -382,7 +364,7 @@ export class PageEvent {
         else await this.onUpdateProps(data, isUpdate);
     }
     getPageDataInfo(this: Page) {
-        if (this.pageLayout.type == PageLayoutType.dbForm) {
+        if ([ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type)) {
             if (this.formRowData) {
                 return {
                     id: this.formRowData.id,

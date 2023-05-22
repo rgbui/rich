@@ -45,7 +45,7 @@ export class DataGridViewData {
         else if (this.openRecordSource == 'slide')
             url = '/page/slide';
         var dialougPage: Page = await channel.air(url, {
-            elementUrl: getElementUrl(ElementType.SchemaRecordViewData, this.schema.id, this.schema.defaultEditForm.id, id)
+            elementUrl: getElementUrl(ElementType.SchemaData, this.schema.id,id)
         })
         var newRow;
         if (dialougPage) newRow = dialougPage.getSchemaRow()
