@@ -35,11 +35,11 @@ export class TableSortView extends EventsComponent {
         })
     }
     onStore = lodash.debounce(async () => {
-        await this.block.onManualUpdateProps({ sorts: this.oldSorts }, { sorts: this.block.sorts }, { syncBlock: this.block });
+        await this.block.onManualUpdateProps({ sorts: this.oldSorts }, { sorts: this.block.sorts }, {  });
         this.oldSorts = lodash.cloneDeep(this.block.sorts);
     }, 800);
     onForceStore = async () => {
-        await this.block.onManualUpdateProps({ sorts: this.oldSorts }, { sorts: this.block.sorts }, { syncBlock: this.block });
+        await this.block.onManualUpdateProps({ sorts: this.oldSorts }, { sorts: this.block.sorts }, {  });
         this.oldSorts = lodash.cloneDeep(this.block.sorts);
         this.forceUpdate();
     }

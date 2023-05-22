@@ -139,19 +139,19 @@ export class DataGridFields extends EventsComponent {
         var self = this;
         async function input(item) {
             if (item.name == 'cardConfig.showTemplate') {
-                await self.block.onUpdateProps({ [item.name]: item.checked }, { syncBlock: self.block, range: BlockRenderRange.self });
+                await self.block.onUpdateProps({ [item.name]: item.checked }, { range: BlockRenderRange.self });
                 self.forceUpdate()
             }
             else if (['gallerySize', 'dateFieldId', 'groupFieldId'].includes(item.name)) {
-                await self.block.onUpdateProps({ [item.name]: item.value }, { syncBlock: self.block, range: BlockRenderRange.self });
+                await self.block.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self });
                 self.forceUpdate()
             }
             else if (['cardConfig.auto', 'cardConfig.showCover', 'cardConfig.coverAuto'].includes(item.name)) {
-                await self.block.onUpdateProps({ [item.name]: item.checked }, { syncBlock: self.block, range: BlockRenderRange.self });
+                await self.block.onUpdateProps({ [item.name]: item.checked }, { range: BlockRenderRange.self });
                 self.forceUpdate()
             }
             else if (['cardConfig.coverFieldId', 'cardConfig.showMode'].includes(item.name) && item.value) {
-                await self.block.onUpdateProps({ [item.name]: item.value }, { syncBlock: self.block, range: BlockRenderRange.self });
+                await self.block.onUpdateProps({ [item.name]: item.value }, { range: BlockRenderRange.self });
                 self.forceUpdate()
             }
         }
@@ -271,7 +271,7 @@ export class DataGridFields extends EventsComponent {
                         }
                     })
                 }
-                await self.block.onUpdateProps({ 'cardConfig.templateProps': tp }, { syncBlock: self.block, range: BlockRenderRange.self });
+                await self.block.onUpdateProps({ 'cardConfig.templateProps': tp }, { range: BlockRenderRange.self });
                 self.forceUpdate()
             }
         }

@@ -113,11 +113,11 @@ export class TableFilterView extends EventsComponent {
         ]
     }
     onStore = lodash.debounce(async () => {
-        await this.block.onManualUpdateProps({ filter: this.oldFilters }, { filter: this.block.filter }, { syncBlock: this.block });
+        await this.block.onManualUpdateProps({ filter: this.oldFilters }, { filter: this.block.filter }, {  });
         this.oldFilters = lodash.cloneDeep(this.block.filter);
     }, 800);
     onForceStore = async () => {
-        await this.block.onManualUpdateProps({ filter: this.oldFilters }, { filter: this.block.filter }, { syncBlock: this.block });
+        await this.block.onManualUpdateProps({ filter: this.oldFilters }, { filter: this.block.filter }, {  });
         this.oldFilters = lodash.cloneDeep(this.block.filter);
         this.forceUpdate();
     }

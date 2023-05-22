@@ -44,7 +44,8 @@ import { DataGridForm } from "../../../blocks/data-grid/view/form";
 import { useCardBoxStyle } from "../../../extensions/doc.card/style";
 
 export class PageContextmenu {
-    async onGetContextMenus(this: Page) {
+    async onGetContextMenus(this: Page)
+    {
         if (this.isBoard) return this.onGetBoardContextMenus();
         var items: MenuItem<BlockDirective | string>[] = [];
         return items;

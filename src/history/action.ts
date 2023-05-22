@@ -33,7 +33,9 @@ export class UserAction {
     seq: number;
     directive: ActionDirective | string;
     operators: UserOperator[] = [];
-    syncBlock?: Block;
+    syncBlocks?: Block[];
+    syncBlockIds?: string[];
+    syncPage?: boolean;
     elementUrl?: string
     constructor() {
         this.id = channel.query('/guid');
@@ -48,7 +50,8 @@ export class UserAction {
             startDate: this.startDate,
             endDate: this.endDate,
             seq: this.seq,
-            syncBlock: this.syncBlock?.id,
+            syncPage: this.syncPage,
+            syncBlockIds: Array.isArray(this.syncBlocks) ? this.syncBlocks.map(b => b.id) : undefined,
             directive: this.directive,
             operators: this.operators.findAll(op => op.isLocal !== true).map(op => { return op.get() }) as any
         }

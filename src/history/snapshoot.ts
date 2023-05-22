@@ -8,6 +8,7 @@ import { Block } from "../block";
 import { TableSchema } from "../../blocks/data-grid/schema/meta";
 import { BlockAppear } from "../block/appear";
 import { BlockRenderRange } from "../block/enum";
+import lodash from "lodash";
 
 
 /**
@@ -26,11 +27,10 @@ export class HistorySnapshoot extends Events {
         this.historyRecord = new HistoryRecord();
         this.historyRecord.on('error', err => this.emit('error', err));
     }
-    declare(directive: ActionDirective | string, syncBlock?: { block?: Block }) {
+    declare(directive: ActionDirective | string) {
         this._merge = false;
         this._pause = false;
         this.action = new UserAction();
-        if (syncBlock?.block) this.action.syncBlock = syncBlock.block;
         this.action.userid = this.page?.user.id;
         this.action.directive = directive;
         this.action.startDate = new Date().getTime();
@@ -115,10 +115,19 @@ export class HistorySnapshoot extends Events {
             console.error(ex);
         }
     }
-    async sync(directive: ActionDirective | string, action: () => Promise<void>, options?: { block?: Block, disabledStore?: boolean }) {
-        this.declare(directive, options);
+    async sync(directive: ActionDirective | string, action: (monitorChangeBlocks: (cbs: Block[]) => void) => Promise<void>, options?: { block?: Block, blocks?: Block[], disabledStore?: boolean }) {
+        this.declare(directive);
         try {
-            await action();
+            await action((bs) => {
+                this.action.syncBlocks = bs.map(b => b.closest(x => x.syncBlockId ? true : false) || null);
+                if (this.action.syncBlocks.some(s => s === null)) {
+                    this.action.syncPage = true;
+                }
+                lodash.remove(this.action.syncBlocks, g => g === null);
+            });
+            if (Array.isArray(this.action.syncBlocks) && this.action.syncBlocks.length == 0) {
+                if (typeof this.action.syncPage == 'undefined') this.action.syncPage = true;
+            }
         }
         catch (ex) {
             console.error(ex);
@@ -176,9 +185,7 @@ export class HistorySnapshoot extends Events {
             for (let i = 0; i < action.operators.length; i++) {
                 let op = action.operators[i];
                 var command = this.ops.get(op.directive);
-                if (command) {
-                    await command.redo(op, source, action);
-                }
+                if (command) await command.redo(op, source, action);
                 else this.emit("warn", new Warn(ExceptionType.notRegisterActionDirectiveInHistorySnapshoot))
             }
         }

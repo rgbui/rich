@@ -217,9 +217,13 @@ export class Page$Cycle {
     private willUpdateAll: boolean = false;
     private willUpdateBlocks: Block[];
     private willLayoutBlocks: Block[];
+    private willChangeBlocks: Block[] = [];
     private updatedFns: (() => Promise<void>)[] = [];
     get hasUpdate() {
         return this.willUpdateBlocks.length > 0 || this.willUpdateAll;
+    }
+    addBlockChange(block: Block) {
+        this.willChangeBlocks.push(block);
     }
     addPageUpdate() {
         this.willUpdateAll = true;
@@ -254,6 +258,7 @@ export class Page$Cycle {
         this.recordOutlineChanges = { isChangeAll: false, changeBlocks: [] }
         this.willUpdateBlocks = [];
         this.updatedFns = [];
+        this.willChangeBlocks = []
         var self = this;
         var fn = async function () {
             try {
@@ -499,14 +504,15 @@ export class Page$Cycle {
     async onAction(this: Page,
         directive: ActionDirective | string,
         fn: () => Promise<void>,
-        options?: { block?: Block, disabledStore?: boolean }
+        options?: { disabledStore?: boolean }
     ) {
         if (typeof this.onActionQueue == 'undefined') this.onActionQueue = new QueueHandle();
         await this.onActionQueue.create(
             async () => {
-                await this.snapshoot.sync(directive, async () => {
+                await this.snapshoot.sync(directive, async (cb) => {
                     this.willUpdateBlocks = [];
                     this.willLayoutBlocks = [];
+                    this.willChangeBlocks = [];
                     this.willUpdateAll = false;
                     this.updatedFns = [];
                     this.recordSyncRowBlocks = { rowBlocks: [], deletes: [] };
@@ -517,6 +523,9 @@ export class Page$Cycle {
                         this.onError(ex);
                     }
                     finally {
+                        if (this.willChangeBlocks.length > 0) {
+                            cb(this.willChangeBlocks);
+                        }
                         try {
                             if (Array.isArray(this.willLayoutBlocks) && this.willLayoutBlocks.length > 0) {
                                 var bs = this.willLayoutBlocks;

@@ -318,15 +318,14 @@ export class Block$Event {
     }
     async onUpdateProps(this: Block, props: Record<string, any>, options?: {
         range?: BlockRenderRange,
-        merge?: boolean,
-        syncBlock?: Block
+        merge?: boolean
     }) {
         if (typeof options == 'undefined') options = { range: BlockRenderRange.none };
         if (typeof options.range == 'undefined') options.range = BlockRenderRange.none;
         await this.page.onAction(ActionDirective.onUpdateProps, async () => {
             if (options.merge) this.page.snapshoot.merge();
             await this.updateProps(props, options.range);
-        }, { block: options?.syncBlock })
+        })
     }
 
     async onManualUpdateProps(this: Block,
@@ -334,13 +333,12 @@ export class Block$Event {
         newProps: Record<string, any>,
         options?: {
             range?: BlockRenderRange,
-            isOnlyRecord?: boolean,
-            syncBlock?: Block
+            isOnlyRecord?: boolean
         }
     ) {
         await this.page.onAction(ActionDirective.onUpdateProps, async () => {
             this.manualUpdateProps(oldProps, newProps, options?.range, options?.isOnlyRecord);
-        }, { block: options?.syncBlock })
+        })
     }
     async onLock(this: Block, locked: boolean) {
         this.page.onAction(ActionDirective.onLock, async () => {
@@ -375,7 +373,7 @@ export class Block$Event {
     }) {
         await this.page.onAction('onArrayUpdate', async () => {
             await this.arrayUpdate(options);
-        }, options.syncBlock ? { block: options.syncBlock } : undefined)
+        })
     }
     async onArraySave<T>(this: Block, options: {
         syncBlock?: Block,
@@ -383,10 +381,9 @@ export class Block$Event {
         data: T | ((t: T) => boolean),
         update: Partial<T>
     }) {
-        if (typeof options.data != 'undefined')
-            await this.page.onAction('onArrayUpdate', async () => {
-                await this.arrayUpdate(options);
-            }, options.syncBlock ? { block: options.syncBlock } : undefined)
+        if (typeof options.data != 'undefined') await this.page.onAction('onArrayUpdate', async () => {
+            await this.arrayUpdate(options);
+        })
         else await this.onArrayPush({
             syncBlock: options.syncBlock,
             prop: options.prop,
@@ -400,7 +397,7 @@ export class Block$Event {
     }) {
         await this.page.onAction('onArrayRemove', async () => {
             await this.arrayRemove(options);
-        }, options.syncBlock ? { block: options.syncBlock } : undefined)
+        })
     }
     async onArrayPush<T>(this: Block, options: {
         syncBlock?: Block,
@@ -411,7 +408,7 @@ export class Block$Event {
     }) {
         await this.page.onAction('onArrayPush', async () => {
             await this.arrayPush(options);
-        }, options.syncBlock ? { block: options.syncBlock } : undefined)
+        })
     }
     async arrayUpdate<T>(this: Block, options: {
         prop: string,
@@ -436,6 +433,7 @@ export class Block$Event {
                         else ar[n] = newValue[n];
                     }
                 }
+                this.page.addBlockChange(this);
                 this.page.snapshoot.record(OperatorDirective.$array_update, {
                     pos: this.getArrayItemPos(options.prop, ar),
                     old_value: oldValue,
@@ -477,6 +475,7 @@ export class Block$Event {
                 else if (typeof (options.data as any).get == 'function') cd = (options.data as any).get()
                 else cd = lodash.cloneDeep(options.data);
             } else cd = lodash.cloneDeep(options.data);
+            this.page.addBlockChange(this);
             this.page.snapshoot.record(OperatorDirective.$array_create, {
                 pos,
                 data: cd
@@ -509,6 +508,7 @@ export class Block$Event {
                 else if (typeof (currentData as any).get == 'function') cd = (currentData as any).get()
                 else cd = lodash.cloneDeep(currentData);
             } else cd = lodash.cloneDeep(currentData);
+            this.page.addBlockChange(this);
             this.page.snapshoot.record(OperatorDirective.$array_delete, {
                 pos,
                 data: cd
@@ -538,6 +538,7 @@ export class Block$Event {
             lodash.remove(arr, (g, i) => i == from);
             arr.splice(to, 0, item);
             var to = options.to;
+            this.page.addBlockChange(this);
             this.page.snapshoot.record(OperatorDirective.$array_move, {
                 pos,
                 from,

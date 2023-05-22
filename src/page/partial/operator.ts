@@ -47,6 +47,7 @@ export class Page$Operator {
             }, block);
             this.monitorBlockOperator(block, 'create');
             this.addBlockUpdate(parent);
+            this.addBlockChange(parent);
         }
         else {
             if (typeof at == 'undefined')

@@ -169,18 +169,18 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
         var self = this;
         async function input(item) {
             if (item.name == 'size') self.block.onChangeSize(item.value)
-            else if (item.name == 'noTitle') self.block.onUpdateProps({ noTitle: !item.checked }, { syncBlock: self.block, range: BlockRenderRange.self });
-            else if (item.name == 'openRecordSource') self.block.onUpdateProps({ openRecordSource: item.value }, { syncBlock: self.block })
-            else if (item.name == 'createRecordSource') self.block.onUpdateProps({ createRecordSource: item.value }, { syncBlock: self.block })
+            else if (item.name == 'noTitle') self.block.onUpdateProps({ noTitle: !item.checked }, { range: BlockRenderRange.self });
+            else if (item.name == 'openRecordSource') self.block.onUpdateProps({ openRecordSource: item.value }, {  })
+            else if (item.name == 'createRecordSource') self.block.onUpdateProps({ createRecordSource: item.value }, {  })
             else if (item.name == 'showRowNum') self.block.onShowRowNum(item.checked);
             else if (item.name == 'checkRow') {
                 await self.block.onShowCheck(item.value);
             }
             else if (item.name == 'noHead') {
-                await self.block.onUpdateProps({ noHead: !item.checked }, { syncBlock: self.block, range: BlockRenderRange.self });
+                await self.block.onUpdateProps({ noHead: !item.checked }, {  range: BlockRenderRange.self });
             }
             else if (['gallerySize', 'dateFieldId', 'groupFieldId'].includes(item.name)) {
-                await self.block.onUpdateProps({ [item.name]: item.value }, { syncBlock: self.block, range: BlockRenderRange.self });
+                await self.block.onUpdateProps({ [item.name]: item.value }, {range: BlockRenderRange.self });
             }
             // else if (['cardConfig.auto', 'cardConfig.showCover', 'cardConfig.coverAuto'].includes(item.name)) {
             //     await self.block.onUpdateProps({ [item.name]: item.checked }, { syncBlock: self.block, range: BlockRenderRange.self });

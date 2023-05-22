@@ -50,6 +50,7 @@ export class Block$Operator {
             if (this.parent) {
                 this.page.addBlockUpdate(this.parent);
                 this.page.addBlockClearLayout(this.parent);
+                this.page.addBlockChange(this.parent);
                 delete this.parent;
             }
         }
@@ -198,10 +199,12 @@ export class Block$Operator {
         }
         var from = block.pos;
         this.page.monitorBlockOperator(block.parent, 'from', block);
+        this.page.addBlockChange(block.parent);
         await block.remove();
         bs.insertAt(at, block);
         block.parent = this;
         this.page.monitorBlockOperator(block.parent, 'to', block);
+        this.page.addBlockChange(block.parent);
         this.page.snapshoot.record(OperatorDirective.$move, {
             from,
             to: block.pos
@@ -491,6 +494,7 @@ export class Block$Operator {
                 this.page.monitorBlockOperator(this, 'content');
             }
             await this.changeProps(oldValue, newValue);
+            this.page.addBlockChange(this);
             this.syncUpdate(range);
             for (let n in newValue) {
                 /**只保留标记@prop 的才record */
@@ -509,6 +513,7 @@ export class Block$Operator {
     async updateMatrix(this: Block, oldMatrix: Matrix, newMatrix: Matrix) {
         this.syncUpdate(BlockRenderRange.self);
         this.matrix = newMatrix;
+        this.page.addBlockChange(this);
         this.page.snapshoot.record(OperatorDirective.$update, {
             pos: this.pos,
             old_value: { matrix: oldMatrix.getValues() },
@@ -557,6 +562,7 @@ export class Block$Operator {
             if (typeof newValue['content'] != 'undefined' || typeof newValue['refLinks'] != 'undefined') {
                 this.page.monitorBlockOperator(this, 'content');
             }
+            this.page.addBlockChange(this);
             if (Object.keys(newValue).length > 0)
                 this.page.snapshoot.record(OperatorDirective.$update, {
                     pos: this.pos,
@@ -564,44 +570,6 @@ export class Block$Operator {
                     new_value: newValue,
                     range
                 }, this);
-        }
-    }
-    updateArrayInsert(this: Block, key: string, at: number, data: any, range = BlockRenderRange.self) {
-        if (!Array.isArray(this[key])) this[key] = [];
-        this[key].insertAt(at, data);
-        this.page.snapshoot.record(OperatorDirective.arrayPropInsert, {
-            blockId: this.id,
-            propKey: key,
-            data: typeof data.get == 'function' ? data.get() : util.clone(data),
-            at: at
-        }, this);
-        this.syncUpdate(range);
-    }
-    updateArrayRemove(this: Block, key: string, at: number, range = BlockRenderRange.self) {
-        var data = this[key][at];
-        lodash.remove(this[key], (g, i) => i == at);
-        this.page.snapshoot.record(OperatorDirective.arrayPropRemove, {
-            blockId: this.id,
-            propKey: key,
-            data: typeof data.get == 'function' ? data.get() : util.clone(data),
-            at: at
-        }, this);
-        this.syncUpdate(range);
-    }
-    updateArrayUpdate(this: Block, key: string, at: number, data: any, range = BlockRenderRange.self) {
-        var old = this[key][at];
-        var oldData = typeof old?.get == 'function' ? old.get() : old;
-        var newData = typeof data?.get == 'function' ? data.get() : data;
-        if (!util.valueIsEqual(oldData, newData)) {
-            this.page.snapshoot.record(OperatorDirective.arrayPropUpdate, {
-                blockId: this.id,
-                propKey: key,
-                old: util.clone(oldData) as Record<string, any>,
-                new: util.clone(newData) as Record<string, any>,
-                at: at
-            }, this);
-            this[key][at] = data;
-            this.syncUpdate(range);
         }
     }
     syncUpdate(this: Block, range = BlockRenderRange.none) {
