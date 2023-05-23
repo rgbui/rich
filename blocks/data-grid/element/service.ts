@@ -1,4 +1,4 @@
-import { ElementType, parseElementUrl } from "../../../net/element.type";
+import { parseElementUrl } from "../../../net/element.type";
 import { BlockUrlConstant } from "../../../src/block/constant";
 import { PageLayoutType } from "../../../src/page/declare";
 import { Field } from "../schema/field";
@@ -10,7 +10,7 @@ export function SchemaCreatePageFormData(schema: TableSchema, elementUrl: string
     var syncBlockId = pe.id1
     return {
         url: '/page',
-        pageLayout: { type: PageLayoutType.dbForm },
+        pageLayout: { type: PageLayoutType.formView },
         views: [
             {
                 url: '/view',

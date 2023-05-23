@@ -203,7 +203,6 @@ export class DataGridViewOperator {
             await this.createItem();
             this.forceUpdate();
         });
-
     }
     async onSetSortField(this: DataGridView, viewField: ViewField, sort?: 0 | 1 | -1) {
         if (this.sorts.some(s => s.field == viewField.field.id && s.sort == sort)) {

@@ -142,7 +142,8 @@ export class Page extends Events<PageDirective> {
                     if (!this.pageInfo.text) {
                         var title = this.find(g => g.url == BlockUrlConstant.Title) as Title;
                         if (title) {
-                            title.onEmptyTitleFocusAnchor();
+                            if (this.isCanEdit)
+                                title.onEmptyTitleFocusAnchor();
                         }
                     }
                 }
@@ -175,9 +176,6 @@ export class Page extends Events<PageDirective> {
         return this.matrix.getScaling().x;
     }
     schema: TableSchema;
-    get scheamViewId() {
-        return parseElementUrl(this.elementUrl).id1
-    }
     openSource: 'page' | 'slide' | 'dialog' | 'snap' | 'popup' = 'page';
     getScreenStyle() {
         var style: CSSProperties = {};
@@ -212,6 +210,7 @@ export class Page extends Events<PageDirective> {
     get isCanEdit() {
         if (this.readonly) return false;
         if (this.pageLayout?.type == PageLayoutType.dbPickRecord) return false;
+        if (this.isSchemaRecordViewTemplate) return true;
         return this.canEdit;
     }
     /**
@@ -219,7 +218,8 @@ export class Page extends Events<PageDirective> {
      */
     get isSupportScreen() {
         return [PageLayoutType.db,
-        PageLayoutType.dbForm,
+        PageLayoutType.formView,
+        PageLayoutType.recordView,
         PageLayoutType.docCard,
         PageLayoutType.doc,
         PageLayoutType.blog
@@ -229,7 +229,7 @@ export class Page extends Events<PageDirective> {
      * 是否支持用户自定义封面
      */
     get isSupportCover() {
-        return [PageLayoutType.db, PageLayoutType.dbForm, PageLayoutType.doc, PageLayoutType.blog].includes(this.pageLayout?.type || PageLayoutType.doc)
+        return [PageLayoutType.db, PageLayoutType.formView, PageLayoutType.doc, PageLayoutType.blog].includes(this.pageLayout?.type || PageLayoutType.doc)
     }
     async forceUpdate() {
         return new Promise((resolve, reject) => {
@@ -279,6 +279,7 @@ export class Page extends Events<PageDirective> {
     onLazyUpdateProps = lodash.debounce(async (props: Record<string, any>, isUpdate?: boolean) => {
         this.onUpdateProps(props, isUpdate);
     }, 1000)
+    public isSchemaRecordViewTemplate: boolean
 }
 export interface Page {
     on(name: PageDirective.init, fn: () => void);
@@ -294,8 +295,8 @@ export interface Page {
     on(name: PageDirective.history, fn: (ev: UserAction) => void);
     emit(name: PageDirective.history, ev: UserAction): void;
 
-    on(name: PageDirective.syncHistory, fn: (data:{seq:number,force?:boolean,creater?:string}) => void);
-    emit(name: PageDirective.syncHistory, data:{seq:number,force?:boolean,creater?:string});
+    on(name: PageDirective.syncHistory, fn: (data: { seq: number, force?: boolean, creater?: string }) => void);
+    emit(name: PageDirective.syncHistory, data: { seq: number, force?: boolean, creater?: string });
 
     on(name: PageDirective.hoverOutBlock, fn: (block: Block) => void): void;
     emit(name: PageDirective.hoverOutBlock, block: Block)

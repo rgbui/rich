@@ -2,7 +2,7 @@
 export enum BlockUrlConstant {
     TextSpan = '/textspan',
     Text = '/text',
-    Tag='/tag',
+    Tag = '/tag',
     TextChannel = '/channel/text',
     Row = '/row',
     Col = '/col',
@@ -41,7 +41,8 @@ export enum BlockUrlConstant {
     Image = '/image',
     BoardImage = '/board/image',
     FormView = '/data-grid/form',
-    Table='/table'
+    RecordPageView = '/data-grid/page/record',
+    Table = '/table'
 }
 export enum BlockChildKey {
     childs = 'childs',

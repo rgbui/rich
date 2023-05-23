@@ -10,7 +10,8 @@ export enum PageLayoutType {
     docCard = 2,
     //#region db
     db = 20,
-    dbForm = 21,
+    formView = 21,
+    recordView = 22,
     /**
      * 从表里选择一些数据的页面窗体
      */

@@ -7,6 +7,28 @@ import { Field } from "./field";
 import { FieldType } from "./type";
 import { ViewField } from "./view";
 
+export interface TableSchemaView {
+    id: string,
+    text: string,
+    icon: IconArguments,
+    cover?: { abled: boolean, url: string, thumb: string, top: number },
+    description: string,
+    url: string,
+    /**
+     * 是否为record记录 编辑卡，这个和表单是有区别的
+     */
+    record?: boolean,
+    /**
+     * 表单，是否允许上传
+     */
+    disabledUserMultiple?: boolean,
+    locker: {
+        lock: boolean,
+        date: number,
+        userid: string
+    }
+}
+
 /**
  * 
  * schema  table fields meta
@@ -14,7 +36,6 @@ import { ViewField } from "./view";
  * block fields(控制列宽)
  * 
  * show view(schema->syncBlock->block-business model)
- * 
  * 
  */
 export class TableSchema {
@@ -67,22 +88,13 @@ export class TableSchema {
             FieldType.emoji
         ].includes(g.type))
     }
-    views: {
-        id: string,
-        text: string,
-        icon: IconArguments,
-        description: string,
-        url: string,
-        /**
-         * 表单，是否允许上传
-         */
-        disabledUserMultiple?: boolean,
-        locker: {
-            lock: boolean,
-            date: number,
-            userid: string
-        }
-    }[] = [];
+    views: TableSchemaView[] = [];
+    get recordViews() {
+        return this.views.findAll(g => [BlockUrlConstant.FormView, BlockUrlConstant.RecordPageView].includes(g.url as any))
+    }
+    get listViews() {
+        return this.views.findAll(g => ![BlockUrlConstant.FormView, BlockUrlConstant.RecordPageView].includes(g.url as any))
+    }
     defaultCollectFormId: string = '';
     defaultEditFormId: string = '';
     get defaultEditForm() {
@@ -133,8 +145,8 @@ export class TableSchema {
     rowUpdate(args: { dataId: string, data: Record<string, any> }) {
         return channel.patch('/datastore/update', Object.assign({ schemaId: this.id }, args));
     }
-    async checkSubmit(){
-        return channel.get('/datastore/exists/user/submit',{schemaId: this.id });
+    async checkSubmit() {
+        return channel.get('/datastore/exists/user/submit', { schemaId: this.id });
     }
     rowUpdateFieldObject(args: { rowId: string, fieldName: string, data: Record<string, any> }) {
         return channel.put('/datastore/row/object/update', Object.assign({ schemaId: this.id }, args));
@@ -208,8 +220,8 @@ export class TableSchema {
             data: props
         }])
     }
-   
     /*
+     * 
      * { name: 'createSchemaView', text: r.text, url: r.url }
      * { name: 'addField', field: { text: '状态', type: FieldType.option } }
      * { name: 'removeSchemaView', id: view.id }
@@ -219,10 +231,9 @@ export class TableSchema {
      * { name: 'updateSchema', data: { text: it.value } }
      * { name: 'moveSchemaView',id:view.id,data:{from:number,to:number}}
      * { name:'removeField',fieldId:string }
-     * 
      */
     async onSchemaOperate(actions: {
-        name: string,
+        name: 'createSchemaView' | 'addField' | 'removeSchemaView' | 'duplicateSchemaView' | 'updateSchemaView' | 'changeSchemaView' | 'updateSchema' | 'moveSchemaView' | 'removeField',
         text?: string,
         url?: string,
         field?: Record<string, any>,
@@ -240,14 +251,17 @@ export class TableSchema {
         actions.forEach((action, i) => {
             var re = result.data.actions[i];
             switch (action.name) {
+                case 'createSchemaView':
+                    this.views.push(re);
+                    break;
                 case 'removeSchemaView':
-                case 'removeSchemaRecordView':
+                    // case 'removeSchemaRecordView':
                     this.views.remove(g => g.id == action.id);
                     // break;
                     // this.recordViews.remove(g => g.id == action.id);
                     break;
                 case 'updateSchemaView':
-                case 'updateSchemaRecordView':
+                    // case 'updateSchemaRecordView':
                     var view = this.views.find(g => g.id == action.id);
                     if (view) {
                         Object.assign(view, action.data);

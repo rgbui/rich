@@ -303,7 +303,7 @@ export interface ChannelActMapUrls {
     "/page/create/by_text":{args:{word:string},returnType:SockResponse<LinkPageItem>},
 	"/cache/set":{args:{key:string,value:any},returnType:Promise<void>},
 	"/view/snap/operator":{args:{ elementUrl: string, operate: Partial<UserAction> },returnType:Promise<{seq: number,id: string;}>},
-	"/view/snap/store":{args:{  elementUrl: string, seq: number, content: any },returnType:Promise<void>},
+	"/view/snap/store":{args:{  elementUrl: string, seq: number, content: any,plain?:string,text?:string },returnType:Promise<void>},
 	"/open/pay":{args:{},returnType:{}}
 }
 export interface ChannelAirMapUrls {

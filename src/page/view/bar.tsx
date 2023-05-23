@@ -1,6 +1,6 @@
 import React, { CSSProperties } from "react";
 import { Page } from "..";
-import { ChevronLeftSvg, ChevronRightSvg, CollectTableSvg, DocAddSvg, DotsSvg, DoubleRightSvg, EditSvg, FieldsSvg, MemberSvg, MenuSvg, PageSvg, PublishSvg, SearchSvg } from "../../../component/svgs";
+import { ChevronLeftSvg, ChevronRightSvg, CollectTableSvg, DetailSvg, DocAddSvg, DotsSvg, DoubleRightSvg, EditSvg, FieldsSvg, MemberSvg, MenuSvg, OrderSvg, PageSvg, PublishSvg, SearchSvg } from "../../../component/svgs";
 import { UserAvatars } from "../../../component/view/avator/users";
 import { Button } from "../../../component/view/button";
 import { Icon } from "../../../component/view/icon";
@@ -13,14 +13,17 @@ import { PageDirective } from "../directive";
 import { isMobileOnly } from "react-device-detect";
 import { Avatar } from "../../../component/view/avator/face";
 import { ToolTip } from "../../../component/view/tooltip";
+import { BlockUrlConstant } from "../../block/constant";
 
 export class PageBar extends React.Component<{ page: Page }>{
     renderTitle() {
-        if (this.props.page.pe.type == ElementType.SchemaData) {
+        if (this.props.page.pe.type == ElementType.SchemaRecordViewData)
+        {
+            var sv = this.props.page.schema.views.find(g => g.id == this.props.page.pe.id1);
             return <div className="flex-auto flex">
                 {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onClose()} className="item-hover size-24 round cursor flex-center gap-l-10"><Icon size={18} icon={DoubleRightSvg}></Icon></span>}
                 <span className="item-hover round flex cursor padding-h-3 padding-w-5 ">
-                    <Icon size={20} icon={this.props.page?.formRowData?.icon || PageSvg}></Icon>
+                    <Icon size={20} icon={this.props.page?.formRowData?.icon || (sv.url == BlockUrlConstant.FormView ? OrderSvg : DetailSvg)}></Icon>
                     <span className="gap-l-5">{this.props.page?.formRowData?.title}</span>
                 </span>
                 {this.saving && <Spin></Spin>}
@@ -31,15 +34,9 @@ export class PageBar extends React.Component<{ page: Page }>{
             return <div className="flex-auto flex">
                 {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onClose()} className="item-hover size-24 round cursor flex-center gap-l-10"><Icon size={18} icon={DoubleRightSvg}></Icon></span>}
                 <span className="item-hover round flex gap-l-10 cursor padding-h-3 padding-w-5 ">
-                    <Icon size={20} icon={sv?.icon || DocAddSvg}></Icon>
+                    <Icon size={20} icon={sv?.icon || (sv.url == BlockUrlConstant.FormView ? OrderSvg : DetailSvg)}></Icon>
                     <span className="gap-l-5">{sv?.text}</span>
                 </span>
-                {this.props.page.pageInfo?.isCanEdit && <>
-                    {!this.props.page.canEdit && <ToolTip ref={e => this.be = e} placement="bottom" overlay={'进入编辑'}><span className="flex flex-fixed visible r-gap-l-5 text-1 cursor " onClick={e => {
-                        if (this.be) this.be.close()
-                        this.props.page.onChangeEditMode()
-                    }}><Icon size={18} icon={EditSvg}></Icon></span></ToolTip>}
-                </>}
                 {this.saving && <Spin></Spin>}
             </div>
         }
@@ -118,7 +115,7 @@ export class PageBar extends React.Component<{ page: Page }>{
         var isSearch: boolean = false;
         var isPublish: boolean = false;
         var isContextMenu: boolean = false;
-        if ([PageLayoutType.dbForm].includes(this.props.page.pageLayout?.type)) {
+        if ([PageLayoutType.formView].includes(this.props.page.pageLayout?.type)) {
             isField = true;
             if (!isCanEdit) isField = false;
         }
@@ -128,7 +125,7 @@ export class PageBar extends React.Component<{ page: Page }>{
         }
         if (![
             PageLayoutType.textChannel,
-            PageLayoutType.dbForm,
+            PageLayoutType.formView,
             PageLayoutType.db,
             PageLayoutType.board].includes(this.props.page.pageLayout?.type)) {
             isSearch = true;

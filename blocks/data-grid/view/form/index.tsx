@@ -256,7 +256,7 @@ export class DataGridFormView extends BlockView<DataGridForm>{
     }
     render() {
 
-        if (this.block.page.pageLayout.type == PageLayoutType.dbForm) {
+        if (this.block.page.pageLayout.type == PageLayoutType.formView) {
             return <div>
                 <div onMouseDown={e => this.onStop(e)} >
                     <div><input style={{

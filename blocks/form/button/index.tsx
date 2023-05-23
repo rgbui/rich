@@ -125,7 +125,7 @@ export class BlockButton extends Block {
                 else this.onUpdateProps({ action: r.item.name })
             }
         }
-        else if (this.page.pageLayout.type == PageLayoutType.dbForm) {
+        else if (this.page.pageLayout.type == PageLayoutType.formView) {
             /**
              * 表单的按钮
              * 

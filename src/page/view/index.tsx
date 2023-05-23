@@ -219,7 +219,7 @@ export class PageView extends Component<{ page: Page }>{
             else pageContentStyle.backgroundColor = '#f7f3f2';
         }
         var gap = 60;
-        if ([PageLayoutType.doc, PageLayoutType.dbForm, PageLayoutType.db].includes(this.props.page?.pageLayout?.type)) {
+        if ([PageLayoutType.doc, PageLayoutType.formView, PageLayoutType.db].includes(this.props.page?.pageLayout?.type)) {
             gap = 60
         }
         else if (this.props.page?.pageLayout?.type == PageLayoutType.docCard) {

@@ -5,6 +5,7 @@ import { Rect } from "../../../../src/common/vector/point";
 import { getSchemaViewIcon } from "../../schema/util";
 
 import {
+    ChevronDownSvg,
     CollectTableSvg,
     DotsSvg,
     FieldsSvg,
@@ -21,7 +22,6 @@ import { DataGridForm } from "../form";
 export class DataGridTool extends React.Component<{ block: DataGridView }>{
     isOpenTool: boolean = false;
     render() {
-        var self = this;
         var props = this.props;
         props.block.dataGridTool = this;
         var view = props.block.schema?.views?.find(g => g.id == props.block.syncBlockId)
@@ -38,7 +38,8 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                 {props.block.page.pageLayout.type != PageLayoutType.db && <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => { e.stopPropagation(); props.block.onOpenSchemaPage() }}><Icon icon={MaximizeSvg} size={16}></Icon></label>}
                 <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => { e.stopPropagation(); props.block.onOpenViewProperty(Rect.fromEvent(e)) }}><Icon size={18} icon={DotsSvg}></Icon></label>
                 <div className="sy-dg-tool-operators-add">
-                    <span className="padding-w-15 text-white" onClick={e => { e.stopPropagation(); props.block.onOpenForm(Rect.fromEvent(e)) }}>新增</span>
+                    <span className="padding-l-15 text-white" onClick={e => { e.stopPropagation(); props.block.onOpenForm(Rect.fromEvent(e)) }}>新增</span>
+                    <span className="flex-center cursor size-16 padding-l-5 padding-r-5" onClick={e => { e.stopPropagation(); props.block.onOpenViewTemplates(Rect.fromEvent(e)) }}><Icon size={14} icon={ChevronDownSvg}></Icon></span>
                 </div>
             </>
         }

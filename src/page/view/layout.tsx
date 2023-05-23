@@ -12,9 +12,12 @@ export class PageLayoutView extends React.Component<{
         var props = this.props;
         var type = props.page.pageLayout?.type;
         var mh = props.page.pageVisibleHeight ? (props.page.pageVisibleHeight + 'px') : '100%';
-        if (type == PageLayoutType.doc || type == PageLayoutType.blog) {
+        if (type == PageLayoutType.doc || type == PageLayoutType.recordView || type == PageLayoutType.blog) {
             var style: CSSProperties = { minHeight: mh, width: '100%' };
             return <div className='shy-page-layout shy-page-layout-doc' style={style}>
+                {props.page.isSchemaRecordViewTemplate && <div className="pos-center-top t-20 w-200 h-30 bg flex-center round f-12">
+                    编辑模板<span>[{props.page.schema.views.find(c => c.id == props.page.pe.id1)?.text}]</span>
+                </div>}
                 {props.children}
             </div>
         }
@@ -30,12 +33,12 @@ export class PageLayoutView extends React.Component<{
                 {props.children}
             </div>
         }
-        else if (type == PageLayoutType.dbForm) {
+        else if (type == PageLayoutType.formView) {
             var style: CSSProperties = { minHeight: mh, width: '100%' };
             return <div className={"shy-page-layout shy-page-layout-db-form"} style={style}>
-                {/* {props.page.recordViewTemplate && <div className="bg flex-center round">
-                    编辑模板<span>{props.page.schema.recordViews.find(c => c.id == props.page.recordViewId)?.text}</span>
-                </div>} */}
+                {props.page.isSchemaRecordViewTemplate && <div className="pos-center-top  t-20  w-200 h-30 bg flex-center round f-12">
+                    编辑模板<span>[{props.page.schema.views.find(c => c.id == props.page.pe.id1)?.text}]</span>
+                </div>}
                 {props.children}
             </div>
         }
