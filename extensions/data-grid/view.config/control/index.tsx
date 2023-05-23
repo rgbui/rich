@@ -6,7 +6,6 @@ import { DataGridView } from "../../../../blocks/data-grid/view/base";
 import { EventsComponent } from "../../../../component/lib/events.component";
 import { FilterSvg, PlusSvg, SortSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
-import { Switch } from "../../../../component/view/switch";
 import { ToolTip } from "../../../../component/view/tooltip";
 import { BlockUrlConstant } from "../../../../src/block/constant";
 import "./style.less";
@@ -30,7 +29,10 @@ export class DataGridControl extends EventsComponent {
 
             <div className="flex item-hover round h-30 padding-w-14 ">
                 <span className="flex-auto">分页</span>
-                <span className="flex-fixed size-20 item-hover cursor flex-center" onClick={e => { this.block.onExtendControlBlock(BlockUrlConstant.DataGridPage, {}, true) }}><Icon size={16} icon={PlusSvg}></Icon></span>
+                <span className="flex-fixed size-20 item-hover cursor flex-center round"
+                    onClick={e => { this.block.onExtendControlBlock(BlockUrlConstant.DataGridPage, {}, true) }}>
+                    <Icon size={16} icon={PlusSvg}></Icon>
+                </span>
             </div>
 
             {/*<div className="flex item-hover round h-30 padding-w-14 ">
@@ -40,16 +42,17 @@ export class DataGridControl extends EventsComponent {
 
             <div className="flex item-hover round h-30 padding-w-14 ">
                 <span className="flex-auto">批量删除按钮</span>
-                <span className="flex-fixed size-20 item-hover cursor flex-center"
+                <span className="flex-fixed size-20 item-hover cursor flex-center round"
                     onClick={e => { this.block.onExtendControlBlock(BlockUrlConstant.Button, { content: '批量删除', action: 'batchDelete' }, true) }}><Icon size={16} icon={PlusSvg}></Icon>
                 </span>
             </div>
 
             <div className="flex item-hover round h-30 padding-w-14 ">
                 <span className="flex-auto">添加数据按钮</span>
-                <span className="flex-fixed size-20 item-hover cursor flex-center" onClick={e => {
-                    this.block.onExtendControlBlock(BlockUrlConstant.Button, { content: '添加', action: 'add' }, true);
-                }}><Icon size={16} icon={PlusSvg}></Icon></span>
+                <span className="flex-fixed size-20 item-hover cursor flex-center round"
+                    onClick={e => {
+                        this.block.onExtendControlBlock(BlockUrlConstant.Button, { content: '添加', action: 'add' }, true);
+                    }}><Icon size={16} icon={PlusSvg}></Icon></span>
             </div>
             {/* <div className="flex item-hover round h-30 padding-w-14 ">
                 <span className="flex-auto">导入数据</span>
@@ -59,11 +62,11 @@ export class DataGridControl extends EventsComponent {
                 <span className="flex-auto">导出数据</span>
                 <span onClick={e => {
                     this.block.onExtendControlBlock(BlockUrlConstant.Button, { content: '导出', action: 'export' }, true)
-                }} className="flex-fixed size-20 item-hover cursor flex-center">
+                }} className="flex-fixed size-20 item-hover cursor flex-center round">
                     <Icon size={16} icon={PlusSvg}></Icon>
                 </span>
             </div>
-            
+
             <div className="remark f-12 padding-w-14 gap-t-10">添加字段查询/排序</div>
             {this.block.schema.visibleFields.findAll(g => ![
                 // FieldType.video,
