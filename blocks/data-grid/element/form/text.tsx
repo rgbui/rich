@@ -16,7 +16,9 @@ class FieldTextView extends BlockView<FieldText>{
                 self.block.onChange((event.target as HTMLInputElement).value);
             }
         }
-        return <FieldView block={this.block}><input
+        return <FieldView block={this.block}>
+            <input 
+            className="sy-form-field-input-value"
             type='text'
             data-shy-page-no-focus={true}
             defaultValue={this.block.value}

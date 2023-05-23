@@ -17,7 +17,6 @@ class FieldTextView extends BlockView<FieldText>{
             <Switch
                 checked={this.block.value}
                 onChange={e => { this.block.value = e; this.forceUpdate() }}></Switch>
-
         </FieldView>
     }
 }

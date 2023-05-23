@@ -1,40 +1,64 @@
 .sy-form-field {
     margin: 10px 0px;
+
     &-control {
         display: block;
+    }
+}
 
-        input[type='text'] {
-            width        : 100%;
-            font-size    : 14px;
-            line-height  : 26px;
-            padding      : 4px 10px;
-            border-radius: 3px;
-            box-shadow   : rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
-            background   : rgba(242, 241, 238, 0.6);
-            cursor       : text;
-            outline      : none;
-            border       : 0px;
-            box-sizing   : border-box;
+.sy-form-field-input-value {
+    width        : 100%;
+    font-size    : 14px;
+    line-height  : 26px;
+    padding      : 4px 10px;
+    border-radius: 3px;
+    box-shadow   : rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
+    background   : rgba(242, 241, 238, 0.6);
+    cursor       : text;
+    outline      : none;
+    border       : 0px;
+    box-sizing   : border-box;
 
-            &:focus {
-                box-shadow: rgba(46 170 220, 0.7) 0px 0px 0px 1px inset, rgba(46 170 220, 0.4) 0px 0px 0px 2px !important;
-            }
+    &:focus {
+        box-shadow: rgba(46 170 220, 0.7) 0px 0px 0px 1px inset, rgba(46 170 220, 0.4) 0px 0px 0px 2px !important;
+    }
+}
+
+.sy-form-field-date-value,
+.sy-form-field-option-value {
+    display      : block;
+    width        : 100%;
+    font-size    : 14px;
+    height       : 34px;
+    padding      : 4px 10px;
+    border-radius: 3px;
+    box-shadow   : rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
+    background   : rgba(242, 241, 238, 0.6);
+    cursor       : text;
+    outline      : none;
+    border       : 0px;
+    box-sizing   : border-box;
+}
+
+.sy-form-field-detail {
+    .sy-form-field-input-value {
+        height          : 28px !important;
+        box-shadow      : none !important;
+        padding         : 0px 10px !important;
+        background-color: transparent !important;
+        box-shadow      : none !important;
+
+        &:focus {
+            box-shadow: none !important;
         }
+    }
 
-        .sy-form-field-date-value,
-        .sy-form-field-option-value {
-            display      : block;
-            width        : 100%;
-            font-size    : 14px;
-            height       : 34px;
-            padding      : 4px 10px;
-            border-radius: 3px;
-            box-shadow   : rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
-            background   : rgba(242, 241, 238, 0.6);
-            cursor       : text;
-            outline      : none;
-            border       : 0px;
-            box-sizing   : border-box;
-        }
+    .sy-form-field-date-value,
+    .sy-form-field-option-value {
+        height          : 28px !important;
+        box-shadow      : none !important;
+        padding         : 0px 10px !important;
+        background-color: transparent !important;
+        box-shadow      : none !important;
     }
 }
