@@ -259,7 +259,7 @@ export class PageContextmenu {
                 //     // { name: 'move', text: '移动', icon: MoveToSvg, disabled: true },
             ];
         }
-        else if (this.pageLayout.type == PageLayoutType.dbForm) {
+        else if (this.pageLayout.type == PageLayoutType.formView) {
             var block = this.find(c => c.url == BlockUrlConstant.FormView) as DataGridForm;
             if (block) block.onFormSettings(event);
             return;

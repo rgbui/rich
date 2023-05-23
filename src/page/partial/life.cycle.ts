@@ -72,15 +72,16 @@ export class Page$Cycle {
             }
             if (typeof this.pageLayout == 'undefined') this.pageLayout = Object.assign(this.pageLayout || {}, { type: PageLayoutType.doc });
             if ([
-                PageLayoutType.dbForm,
-                PageLayoutType.dbPickRecord
+                PageLayoutType.formView,
+                PageLayoutType.dbPickRecord,
+                PageLayoutType.recordView
             ].some(s => s == this.pageLayout.type)) {
                 this.requireSelectLayout = false;
             }
             if ([PageLayoutType.db].some(s => s == this.pageLayout.type) && !this.exists(g => g instanceof DataGridView)) {
                 await this.loadDefaultScheamView();
             }
-            if ([ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type)) {
+            if ([ElementType.SchemaRecordView, ElementType.SchemaRecordViewData].includes(this.pe.type)) {
                 await this.loadPageSchema();
             }
             await this.onRepair();
@@ -114,7 +115,7 @@ export class Page$Cycle {
         }
         if (typeof this.pageLayout == 'undefined') this.pageLayout = Object.assign(this.pageLayout, { type: PageLayoutType.doc });
         if ([
-            PageLayoutType.dbForm,
+            PageLayoutType.formView,
             PageLayoutType.dbPickRecord,
         ].some(s => s == this.pageLayout.type)) {
             this.requireSelectLayout = false;
@@ -296,6 +297,7 @@ export class Page$Cycle {
         fn()
     }
     private async onNotifyChanged(this: Page, recordSyncRowBlocks: Page['recordSyncRowBlocks'], recordOutlineChanges: Page['recordOutlineChanges']) {
+        if (!this.pageInfo?.id) return;
         try {
             if (recordSyncRowBlocks.deletes.length > 0 || recordSyncRowBlocks.rowBlocks.length > 0) {
                 var ds = recordSyncRowBlocks.deletes;
@@ -508,7 +510,6 @@ export class Page$Cycle {
             }
         }
     }
-
     /**
      * onAction在执行时，会出现并发的情况，
      * 这时通过onActionQueue把并发的请求变成一个队列，然后有序执行
@@ -705,23 +706,27 @@ export class Page$Cycle {
         if (!this.schema) {
             this.schema = await TableSchema.loadTableSchema(pe.id);
         }
-        if (pe.type == ElementType.SchemaRecordView) {
-            if (!this.exists(c => c.url == BlockUrlConstant.FormView)) {
-                var pageData = SchemaCreatePageFormData(this.schema, elementUrl, false);
+        var view = this.schema.views.find(c => c.id == pe.id1);
+        if (!this.exists(c => (c instanceof OriginFormField))) {
+            if (view.url == BlockUrlConstant.FormView) {
+                var g = await SchemaCreatePageFormData(this.schema, getElementUrl(ElementType.SchemaView, this.schema.id, pe.id1))
                 this.views = [];
-                await this.load(pageData);
+                await this.load(g);
             }
-        }
-        else if (pe.type == ElementType.SchemaData) {
-            if (!this.exists(c => (c instanceof OriginFormField))) {
+            else {
                 var cs: Record<string, any>[] = this.schema.initUserFields.toArray(field => {
                     var r = GetFieldFormBlockInfo(field);
-                    if (r) return r;
+                    if (r) return Object.assign({
+                        fieldMode: 'detail'
+                    }, r);
                 })
+                cs.splice(0, 0, { url: BlockUrlConstant.Title })
                 this.views = [];
                 await this.load({ views: [{ url: BlockUrlConstant.View, blocks: { childs: cs } }] })
             }
-            var row = await this.schema.rowGet(pe.id1);
+        }
+        if (pe.type == ElementType.SchemaRecordViewData) {
+            var row = await this.schema.rowGet(pe.id2);
             if (row) {
                 this.formRowData = lodash.cloneDeep(row);
                 this.each(g => {
@@ -746,7 +751,6 @@ export class Page$Cycle {
             }
         })
     }
-
     getSchemaRow(this: Page) {
         var row: Record<string, any> = {};
         this.each(g => {
@@ -767,6 +771,12 @@ export class Page$Cycle {
             row.icon = this.formRowData.icon;
             row.cover = this.formRowData.cover;
             row.title = this.formRowData.title;
+        }
+        else {
+            var sv = this.schema.views.find(g => g.text == this.pe.id1);
+            row.icon = sv.icon;
+            row.cover = sv.cover;
+            row.title = sv.text;
         }
         return row;
     }

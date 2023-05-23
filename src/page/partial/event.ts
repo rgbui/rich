@@ -16,7 +16,6 @@ import { PageDirective } from "../directive";
 import { BlockUrlConstant } from "../../block/constant";
 import { ElementType } from "../../../net/element.type";
 
-
 export class PageEvent {
     /**
      * 鼠标点击页面,
@@ -294,51 +293,46 @@ export class PageEvent {
         })
     }
     async onUpdatePageData(this: Page, data: Record<string, any>) {
-        if ([ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type)) {
-            if (this.formRowData) {
-                Object.assign(this.formRowData, data);
-            }
-            else {
-                var sr = this.schema.views.find(g => g.id == this.scheamViewId);
-                if (sr) {
-                    await this.schema.onSchemaOperate([{
-                        name: "updateSchemaRecordView",
-                        data: data,
-                        id: this.scheamViewId,
-                    }])
-                }
+        if ([ElementType.SchemaRecordViewData, ElementType.SchemaData].includes(this.pe.type)) {
+            Object.assign(this.formRowData, data);
+        }
+        else if ([ElementType.SchemaRecordView, ElementType.SchemaView].includes(this.pe.type)) {
+            var sr = this.schema.views.find(g => g.id == this.pe.id1);
+            if (sr) {
+                console.log('gggg',data);
+                await this.schema.onSchemaOperate([{
+                    name: 'updateSchemaView',
+                    data: data,
+                    id: this.pe.id1,
+                }])
             }
         }
-
-        if (this.pageLayout.type == PageLayoutType.blog)
-            channel.air('/page/update/info', {
-                id: this.pageInfo.id,
-                pageInfo: data
-            })
-        else
-            channel.air('/page/update/info', {
-                elementUrl: this.elementUrl,
-                pageInfo: data
-            })
+        else if (this.pageLayout.type == PageLayoutType.blog) channel.air('/page/update/info', {
+            id: this.pageInfo.id,
+            pageInfo: data
+        })
+        else channel.air('/page/update/info', {
+            elementUrl: this.elementUrl,
+            pageInfo: data
+        })
     }
     async onUpdatePageTitle(this: Page, text: string) {
         this.onceStopRenderByPageInfo = true;
-        if ([ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type)) {
-            if (this.formRowData) {
-                this.formRowData.title = text;
-            }
-            else {
-                var sr = this.schema.views.find(g => g.id == this.scheamViewId);
-                if (sr) {
-                    await this.schema.onSchemaOperate([{
-                        name: "updateSchemaRecordView",
-                        id: this.scheamViewId,
-                        data: { text }
-                    }])
-                }
+        if ([ElementType.SchemaRecordViewData, ElementType.SchemaData].includes(this.pe.type)) {
+            this.formRowData.title = text;
+        }
+        else if ([ElementType.SchemaRecordView, ElementType.SchemaView].includes(this.pe.type)) {
+            var sr = this.schema.views.find(g => g.id == this.pe.id1);
+            if (sr) {
+                await this.schema.onSchemaOperate([{
+                    name: 'updateSchemaView',
+                    id: this.pe.id1,
+                    data: { text }
+                }])
+                this.view.forceUpdate();
             }
         }
-        if (this.pageLayout.type == PageLayoutType.blog)
+        else if (this.pageLayout.type == PageLayoutType.blog)
             channel.air('/page/update/info', {
                 id: this.pageInfo.id,
                 pageInfo: {
@@ -357,38 +351,36 @@ export class PageEvent {
         /**
          * 如果是数据，其封面的信息存在row data中
          */
-        if (this.formRowData) {
+        if ([ElementType.SchemaRecordViewData, ElementType.SchemaData].includes(this.pe.type)) {
             util.setKey(this.formRowData, data);
+            this.view.forceUpdate();
+        }
+        else if ([ElementType.SchemaRecordView, ElementType.SchemaView].includes(this.pe.type)) {
+            var c = this.getPageDataInfo().cover;
+            if (!c) c = {}
+            util.setKey(c, data);
+            await this.onUpdatePageData(c);
             this.view.forceUpdate();
         }
         else await this.onUpdateProps(data, isUpdate);
     }
     getPageDataInfo(this: Page) {
-        if ([ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type)) {
-            if (this.formRowData) {
-                return {
-                    id: this.formRowData.id,
-                    text: this.formRowData.title,
-                    icon: this.formRowData.icon,
-                    cover: this.formRowData.cover
-                }
+        if ([ElementType.SchemaRecordViewData, ElementType.SchemaData].includes(this.pe.type)) {
+            return {
+                id: this.formRowData.id,
+                text: this.formRowData.title,
+                icon: this.formRowData.icon,
+                cover: this.formRowData.cover
             }
-            else {
-                var sr = this.schema.views.find(g => g.id == this.scheamViewId);
-                if (sr) {
-                    return {
-                        id: sr.id,
-                        text: sr.text,
-                        icon: sr.icon,
-                        cover: this.cover
-                    }
-                }
-                else {
-                    return {
-                        text: '',
-                        icon: null,
-                        cover: this.cover
-                    }
+        }
+        else if ([ElementType.SchemaRecordView, ElementType.SchemaView].includes(this.pe.type)) {
+            var sr = this.schema.views.find(g => g.id == this.pe.id1);
+            if (sr) {
+                return {
+                    id: sr.id,
+                    text: sr.text,
+                    icon: sr.icon,
+                    cover: sr.cover
                 }
             }
         }
