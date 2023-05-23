@@ -61,6 +61,7 @@ import CustomizePageSvg from "../src/assert/svg/customizePage.svg";
 import CutSvg from "../src/assert/svg/cut.svg";
 import DatasourceSvg from "../src/assert/svg/datasource.svg";
 import DeleteLineSvg from "../src/assert/svg/delete.line.svg";
+import DetailSvg from "../src/assert/svg/detail.svg";
 import DiscoverySvg from "../src/assert/svg/discovery.svg";
 import DividerSvg from "../src/assert/svg/divider.svg";
 import DocAddSvg from "../src/assert/svg/docAdd.svg";
@@ -154,6 +155,7 @@ import NumberListSvg from "../src/assert/svg/number.list.svg";
 import OpenAsPageThickSvg from "../src/assert/svg/openAsPageThick.svg";
 import OpposeSvg from "../src/assert/svg/oppose.svg";
 import OptionsSvg from "../src/assert/svg/options.svg";
+import OrderSvg from "../src/assert/svg/order.svg";
 import OutlineSvg from "../src/assert/svg/outline.svg";
 import PageSvg from "../src/assert/svg/page.svg";
 import PauseSvg from "../src/assert/svg/pause.svg";
@@ -296,6 +298,7 @@ CustomizePageSvg,
 CutSvg,
 DatasourceSvg,
 DeleteLineSvg,
+DetailSvg,
 DiscoverySvg,
 DividerSvg,
 DocAddSvg,
@@ -389,6 +392,7 @@ NumberListSvg,
 OpenAsPageThickSvg,
 OpposeSvg,
 OptionsSvg,
+OrderSvg,
 OutlineSvg,
 PageSvg,
 PauseSvg,
