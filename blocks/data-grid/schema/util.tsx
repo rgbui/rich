@@ -8,12 +8,14 @@ import {
     CollectionListSvg,
     CollectTableSvg,
     CommentSvg,
+    DocAddSvg,
     DocEditSvg,
     EmojiSvg,
     FlagSvg,
     LikeSvg,
     LoveSvg,
     OpposeSvg,
+    OrderSvg,
     PicSvg,
     ReportSvg,
     RowNoSvg,
@@ -134,7 +136,7 @@ export function getSchemaViewIcon(url: string) {
             return CollectionCalendarSvg
             break;
         case BlockUrlConstant.FormView:
-            return DocEditSvg;
+            return OrderSvg;
             break;
     }
 }
@@ -146,7 +148,7 @@ export function getSchemaViews() {
         { url: '/data-grid/board', text: '看板' },
         { url: '/data-grid/list', text: '列表' },
         { url: '/data-grid/calendar', text: '日历' },
-        { url: BlockUrlConstant.FormView, text: '表单' }
+       // { url: BlockUrlConstant.FormView, text: '表单' }
     ]
 }
 

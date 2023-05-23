@@ -30,6 +30,8 @@ import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { channel } from "../../../../net/channel";
 import { Page } from "../../../../src/page";
 import { TableSchema } from "../../schema/meta";
+import { useTabelSchemaFormDrop } from "../../../../extensions/data-grid/record.template/view";
+import { BlockUrlConstant } from "../../../../src/block/constant";
 
 export class DataGridViewConfig {
     async onOpenViewSettings(this: DataGridView, rect: Rect) {
@@ -55,7 +57,7 @@ export class DataGridViewConfig {
                             drag: true,
                             name: 'viewContainer',
                             childs: [
-                                ...self.schema.views.map(v => {
+                                ...self.schema.views.findAll(g => ![BlockUrlConstant.RecordPageView].includes(g.url as any)).map(v => {
                                     return {
                                         name: 'turn',
                                         text: v.text,
@@ -261,5 +263,11 @@ export class DataGridViewConfig {
     async onOpenSchemaPage(this: DataGridView, schema?: TableSchema | string) {
         var s = schema ? (typeof schema == 'string' ? schema : schema.id) : this.schema.id;
         await channel.air('/page/open', { elementUrl: getElementUrl(ElementType.Schema, s) });
+    }
+    async onOpenViewTemplates(this: DataGridView, rect: Rect) {
+        this.dataGridTool.isOpenTool = true;
+        await useTabelSchemaFormDrop({ roundArea: rect, direction: 'bottom', align: 'end' }, { block: this });
+        this.dataGridTool.isOpenTool = false;
+        this.onOver(this.getVisibleContentBound().contain(Point.from(this.page.kit.operator.moveEvent)))
     }
 }

@@ -24,6 +24,8 @@ export class DataGridViewData {
         if (!this.schema.defaultAddForm) {
             //自动创建表单
         }
+        var vid = viewId || this.schema.defaultAddForm?.id;
+        if (!vid) vid = this.schema.recordViews[0]?.id;
         var dialougPage: Page = await channel.air('/page/dialog', {
             elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, viewId || this.schema.defaultAddForm?.id)
         })
@@ -36,32 +38,34 @@ export class DataGridViewData {
         await channel.air('/page/dialog', { elementUrl: null });
     }
     async onOpenEditForm(this: DataGridView, id: string) {
-        if (!this.schema.defaultEditForm) {
-            //自动创建表单
-        }
         var url: '/page/open' | '/page/dialog' | '/page/slide' = '/page/dialog';
         if (this.openRecordSource == 'page')
             url = '/page/open';
         else if (this.openRecordSource == 'slide')
             url = '/page/slide';
+        var vid = this.schema.defaultEditFormId;
+        if (!vid) vid = this.schema.recordViews[0]?.id;
         var dialougPage: Page = await channel.air(url, {
-            elementUrl: getElementUrl(ElementType.SchemaData, this.schema.id,id)
+            elementUrl: getElementUrl(ElementType.SchemaRecordViewData,
+                this.schema.id,
+                vid,
+                id
+            )
         })
         var newRow;
         if (dialougPage) newRow = dialougPage.getSchemaRow()
-        if (this.openRecordSource != 'page')
-            await channel.air(url, { elementUrl: null })
-        if (newRow)
-            await this.onRowUpdate(id, newRow);
+        if (this.openRecordSource != 'page') await channel.air(url, { elementUrl: null })
+        if (newRow) await this.onRowUpdate(id, newRow);
     }
     async onAddRow(this: DataGridView, data, id?: string, arrow: 'before' | 'after' = 'after') {
         if (typeof id == 'undefined') {
             id = this.data.last()?.id
         }
+        var newRow;
         await this.page.onAction(ActionDirective.onSchemaCreateDefaultRow, async () => {
             var r = await this.schema.rowAdd({ data, pos: { id: id, pos: arrow } });
             if (r.ok) {
-                var newRow = r.data.data;
+                newRow = r.data.data;
                 var at = this.data.findIndex(g => g.id == id);
                 if (arrow == 'after') at += 1;
                 this.data.insertAt(at, newRow);
@@ -71,6 +75,7 @@ export class DataGridViewData {
                 this.forceUpdate();
             }
         });
+        return newRow;
     }
     async onRowUpdate(this: DataGridView, id: string, data: Record<string, any>) {
         var oldItem = this.data.find(g => g.id == id);
