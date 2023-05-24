@@ -336,24 +336,13 @@ export class PageEvent {
             })
     }
     async onUpdatePageCover(this: Page, data: Record<string, any>, isUpdate?: boolean) {
-        /**
-         * 如果是数据，其封面的信息存在row data中
-         */
-        if ([ElementType.SchemaRecordViewData, ElementType.SchemaData].includes(this.pe.type)) {
-            util.setKey(this.formRowData, data);
+        var c = this.getPageDataInfo().cover;
+        if (!c) c = {}
+        else c = { cover: c };
+        util.setKey(c, data);
+        await this.onUpdatePageData(c);
+        if (isUpdate)
             this.view.forceUpdate();
-        }
-        else if ([ElementType.SchemaRecordView, ElementType.SchemaView].includes(this.pe.type)) {
-            var c = this.getPageDataInfo().cover;
-            if (!c) c = {}
-            util.setKey(c, data);
-            await this.onUpdatePageData(c);
-            this.view.forceUpdate();
-        }
-        else {
-            await this.onUpdatePageData(data);
-            this.view.forceUpdate();
-        }
     }
     getPageDataInfo(this: Page) {
         if ([ElementType.SchemaRecordViewData, ElementType.SchemaData].includes(this.pe.type)) {
