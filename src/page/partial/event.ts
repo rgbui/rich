@@ -299,7 +299,6 @@ export class PageEvent {
         else if ([ElementType.SchemaRecordView, ElementType.SchemaView].includes(this.pe.type)) {
             var sr = this.schema.views.find(g => g.id == this.pe.id1);
             if (sr) {
-                console.log('gggg',data);
                 await this.schema.onSchemaOperate([{
                     name: 'updateSchemaView',
                     data: data,
@@ -388,7 +387,7 @@ export class PageEvent {
             id: this.pageInfo.id,
             text: this.pageInfo.text,
             icon: this.pageInfo.icon,
-            cover: this.cover
+            cover: this.pageInfo.cover
         }
     }
     async onChangeIcon(this: Page, event: React.MouseEvent) {

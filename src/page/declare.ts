@@ -96,6 +96,10 @@ export interface LinkPageItem {
     speakDate?: Date,
     textChannelMode?: 'chat' | 'weibo' | 'ask' | 'tieba'
 
+    cover?: { abled: boolean, url: string, thumb: string, top: number },
+    plain?: string,
+    thumb?: IconArguments,
+
 }
 
 export function getPageIcon(item: LinkPageItem, defaultIcon?: SvgrComponent) {
