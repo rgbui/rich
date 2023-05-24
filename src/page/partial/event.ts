@@ -293,7 +293,7 @@ export class PageEvent {
         })
     }
     async onUpdatePageData(this: Page, data: Record<string, any>) {
-        if ([ElementType.SchemaRecordViewData, ElementType.SchemaData].includes(this.pe.type)) {
+        if ([ElementType.SchemaData].includes(this.pe.type)) {
             Object.assign(this.formRowData, data);
         }
         else if ([ElementType.SchemaRecordView, ElementType.SchemaView].includes(this.pe.type)) {
@@ -313,7 +313,7 @@ export class PageEvent {
     }
     async onUpdatePageTitle(this: Page, text: string) {
         this.onceStopRenderByPageInfo = true;
-        if ([ElementType.SchemaRecordViewData, ElementType.SchemaData].includes(this.pe.type)) {
+        if ([ ElementType.SchemaData].includes(this.pe.type)) {
             this.formRowData.title = text;
         }
         else if ([ElementType.SchemaRecordView, ElementType.SchemaView].includes(this.pe.type)) {
@@ -345,7 +345,7 @@ export class PageEvent {
             this.view.forceUpdate();
     }
     getPageDataInfo(this: Page) {
-        if ([ElementType.SchemaRecordViewData, ElementType.SchemaData].includes(this.pe.type)) {
+        if ([ ElementType.SchemaData].includes(this.pe.type)) {
             return {
                 id: this.formRowData.id,
                 text: this.formRowData.title,

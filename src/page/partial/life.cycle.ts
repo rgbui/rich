@@ -26,6 +26,7 @@ import { Field } from "../../../blocks/data-grid/schema/field";
 import { DataGridView } from "../../../blocks/data-grid/view/base";
 import { QueueHandle } from "../../../component/lib/queue";
 import { Image } from "../../../blocks/media/image";
+import { FieldType } from "../../../blocks/data-grid/schema/type";
 
 export class Page$Cycle {
     async init(this: Page) {
@@ -82,7 +83,7 @@ export class Page$Cycle {
             if ([PageLayoutType.db].some(s => s == this.pageLayout.type) && !this.exists(g => g instanceof DataGridView)) {
                 await this.loadDefaultScheamView();
             }
-            if ([ElementType.SchemaRecordView, ElementType.SchemaRecordViewData].includes(this.pe.type)) {
+            if ([ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type)) {
                 await this.loadPageSchema();
             }
             await this.onRepair();
@@ -712,14 +713,14 @@ export class Page$Cycle {
         if (!this.schema) {
             this.schema = await TableSchema.loadTableSchema(pe.id);
         }
-        var view = this.schema.views.find(c => c.id == pe.id1);
         if (!this.exists(c => (c instanceof OriginFormField))) {
-            if (view.url == BlockUrlConstant.FormView) {
+            var view = this.schema.views.find(c => c.id == pe.id1);
+            if (view?.url == BlockUrlConstant.FormView) {
                 var g = await SchemaCreatePageFormData(this.schema, getElementUrl(ElementType.SchemaView, this.schema.id, pe.id1))
                 this.views = [];
                 await this.load(g);
             }
-            else {
+            else if (view?.url == BlockUrlConstant.RecordPageView) {
                 var cs: Record<string, any>[] = this.schema.initUserFields.toArray(field => {
                     var r = GetFieldFormBlockInfo(field);
                     if (r) return Object.assign({
@@ -730,9 +731,26 @@ export class Page$Cycle {
                 this.views = [];
                 await this.load({ views: [{ url: BlockUrlConstant.View, blocks: { childs: cs } }] })
             }
+            else {
+                var cs: Record<string, any>[] = this.schema.initUserFields.toArray(field => {
+                    if (field?.type == FieldType.title) return undefined;
+                    var r = GetFieldFormBlockInfo(field);
+                    if (r) return Object.assign({
+                        fieldMode: 'detail'
+                    }, r);
+                })
+                cs.splice(0, 0, { url: BlockUrlConstant.Title })
+                this.views = [];
+                await this.load({ views: [{ url: BlockUrlConstant.View, blocks: { childs: cs } }] })
+            }
         }
-        if (pe.type == ElementType.SchemaRecordViewData) {
-            var row = await this.schema.rowGet(pe.id2);
+
+        if (pe.type == ElementType.SchemaData) {
+            var r = this.find(g => (g as OriginFormField).field?.name == 'title');
+            if (r) {
+                lodash.remove(r.parentBlocks, g => g == r);
+            }
+            var row = await this.schema.rowGet(pe.id1);
             if (row) {
                 this.formRowData = lodash.cloneDeep(row);
                 this.each(g => {
@@ -777,18 +795,18 @@ export class Page$Cycle {
             row.icon = this.formRowData.icon;
             row.cover = this.formRowData.cover;
             row.title = this.formRowData.title;
-            row.plain = await this.getPlain();
-            row.plain = row.plain.slice(0, 200);
-            row.thumb = await this.getThumb();
         }
         else {
-            var sv = this.schema.views.find(g => g.text == this.pe.id1);
+            var sv = this.schema.views.find(g => g.id == this.pe.id1);
             if (sv) {
                 row.icon = sv.icon;
                 row.cover = sv.cover;
-                row.title = sv.text;
+                //row.title = sv.text;
             }
         }
+        row.plain = await this.getPlain();
+        row.plain = row.plain.slice(0, 200);
+        row.thumb = await this.getThumb();
         return row;
     }
     async onToggleFieldView(this: Page, field: Field, checked: boolean) {
