@@ -125,7 +125,7 @@ export class HistorySnapshoot extends Events {
                 }
                 lodash.remove(this.action.syncBlocks, g => g === null);
             });
-            if (Array.isArray(this.action.syncBlocks) && this.action.syncBlocks.length == 0) {
+            if (!(Array.isArray(this.action.syncBlocks) && this.action.syncBlocks.length >0)) {
                 if (typeof this.action.syncPage == 'undefined') this.action.syncPage = true;
             }
         }
