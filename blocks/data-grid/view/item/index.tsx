@@ -1,5 +1,5 @@
 import React from "react";
-import { MenuItem } from "../../../../component/view/menu/declare";
+import { MenuItem, MenuItemType } from "../../../../component/view/menu/declare";
 import { Block } from "../../../../src/block";
 import { BlockDirective } from "../../../../src/block/enum";
 import { url, view } from "../../../../src/block/factory/observable";
@@ -22,6 +22,8 @@ import { FieldType } from "../../schema/type";
 import lodash from "lodash";
 import { OriginField } from "../../element/field/origin.field";
 import "./style.less";
+import { DotsSvg, EditSvg } from "../../../../component/svgs";
+import { Icon } from "../../../../component/view/icon";
 
 @url('/data-grid/item')
 export class TableStoreItem extends Block {
@@ -129,7 +131,13 @@ export class TableStoreItem extends Block {
         await this.schema.fieldUpdate({ fieldId: viewField.field.id, data })
     }
     async onGetContextMenus(): Promise<MenuItem<string | BlockDirective>[]> {
-        var items: MenuItem<BlockDirective>[] = [];
+        var items: MenuItem<BlockDirective | string>[] = [];
+        items.push({
+            name: 'open',
+            icon: EditSvg,
+            text: '编辑',
+        })
+        items.push({ type: MenuItemType.divide })
         items.push({
             name: BlockDirective.delete,
             icon: trash,
@@ -142,6 +150,9 @@ export class TableStoreItem extends Block {
         switch (item.name) {
             case BlockDirective.delete:
                 this.dataGrid.onRemoveRow(this.dataRow.id);
+                break;
+            case 'open':
+                this.dataGrid.onOpenEditForm(this.dataRow.id);
                 break;
         }
     }
@@ -200,11 +211,19 @@ export class TableStoreItem extends Block {
                 break;
         }
     }
+    get isShowHandleBlock(): boolean {
+        return false;
+    }
 }
 @view('/data-grid/item')
 export class TableStoreItemView extends BlockView<TableStoreItem>{
     renderItems() {
-        return <div className='sy-data-grid-item'><ChildsArea childs={this.block.childs}></ChildsArea> </div>
+        return <div className='sy-data-grid-item relative'>
+            <ChildsArea childs={this.block.childs}></ChildsArea>
+            <div onMouseDown={e => this.block.page.onOpenMenu([this.props.block], e.nativeEvent)} className="pos visible top-5 right-5 flex-center  size-24 round item-hover bg-white cursor">
+                <Icon size={20} icon={DotsSvg}></Icon>
+            </div>
+        </div>
     }
     renderCards() {
         var ga = this.block.dataGrid as TableStoreGallery;
@@ -213,17 +232,25 @@ export class TableStoreItemView extends BlockView<TableStoreItem>{
             var imageData;
             if (field) imageData = this.block.dataRow[field.name];
             if (Array.isArray(imageData)) imageData = imageData[0];
-            return <div className='sy-data-grid-item sy-data-grid-card'>
+            return <div className='sy-data-grid-item sy-data-grid-card visible-hover'>
                 <div className="sy-data-grid-card-cover">
                     {imageData && <img style={{ maxHeight: ga.cardConfig.coverAuto ? "auto" : 200 }} src={autoImageUrl(imageData.url, 500)} />}
                 </div>
                 <div className="sy-data-grid-card-items">
                     <ChildsArea childs={this.block.childs}></ChildsArea>
                 </div>
+                <div onMouseDown={e => this.block.page.onOpenMenu([this.props.block], e.nativeEvent)} className="pos visible top-5 right-5 flex-center size-24 round item-hover bg-white cursor">
+                    <Icon size={20} icon={DotsSvg}></Icon>
+                </div>
             </div>
         }
         else {
-            return <div className='sy-data-grid-item'><ChildsArea childs={this.block.childs}></ChildsArea> </div>
+            return <div className='sy-data-grid-item visible-hover'>
+                <ChildsArea childs={this.block.childs}></ChildsArea>
+                <div onMouseDown={e => this.block.page.onOpenMenu([this.props.block], e.nativeEvent)} className="pos visible top-5 right-5 flex-center size-24 visible round item-hover bg-white cursor">
+                    <Icon size={20} icon={DotsSvg}></Icon>
+                </div>
+            </div>
         }
     }
     render() {

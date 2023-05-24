@@ -7,7 +7,9 @@ import { TableStoreItem } from "../item";
 
 @url('/data-grid/table/row')
 export class DataGridTableItem extends TableStoreItem {
-
+    get isShowHandleBlock(): boolean {
+        return true;
+    }
 }
 @view('/data-grid/table/row')
 export class DataGridTableItemView extends BlockView<DataGridTableItem>{

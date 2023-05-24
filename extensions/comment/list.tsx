@@ -230,7 +230,7 @@ export class CommentListView extends React.Component<{
         this.forceUpdate();
     }
     render() {
-        return <div className={this.pop ? "w-600" : ""}>
+        return <div className={this.pop ? "w-600 padding-w-14" : ""}>
             <div className="flex gap-b-10 gap-t-5 ">
                 <span className="bold f-14 flex-fixed">{this.total == 0 ? "" : (this.total + "条")}评论</span>
                 <div className="flex-auto flex-end f-12">

@@ -6,7 +6,9 @@ import { TableStoreItem } from "../item";
 
 @url('/data-grid/list/row')
 export class TableStoreListItem extends TableStoreItem {
-
+    get isShowHandleBlock(): boolean {
+        return true;
+    }
 }
 
 @view('/data-grid/list/row')
