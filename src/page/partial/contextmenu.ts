@@ -47,6 +47,7 @@ import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.f
 import { Field } from "../../../blocks/data-grid/schema/field";
 import { GetFieldFormBlockInfo } from "../../../blocks/data-grid/element/service";
 import { ElementType } from "../../../net/element.type";
+import { FieldType } from "../../../blocks/data-grid/schema/type";
 
 export class PageContextmenu {
     async onGetContextMenus(this: Page) {
@@ -119,7 +120,7 @@ export class PageContextmenu {
                     icon: FieldsSvg,
                     childs: [
                         { name: 'onlyDisplayContent', text: '显示标题', type: MenuItemType.switch, checked: this.onlyDisplayContent ? false : true, icon: HSvg },
-                        { name: 'refPages', text: "显示引用", visible: [ElementType.SchemaRecordView, ElementType.SchemaRecordViewData].includes(this.pe.type) ? false : true, icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
+                        { name: 'refPages', text: "显示引用", visible: [ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type) ? false : true, icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
                         { name: 'showComment', text: "显示评论", icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                     ]
                 },
@@ -349,7 +350,7 @@ export class PageContextmenu {
             [
                 { text: '显示字段', type: MenuItemType.text },
                 ...this.schema.allowFormFields.toArray(uf => {
-                    // if (this.formRowData && uf.type == FieldType.title) return
+                    if (this.pe.type == ElementType.SchemaData && uf.type == FieldType.title) return;
                     return {
                         icon: GetFieldTypeSvg(uf.type),
                         name: uf.id,
