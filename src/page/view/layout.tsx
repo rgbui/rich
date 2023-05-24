@@ -12,7 +12,7 @@ export class PageLayoutView extends React.Component<{
         var props = this.props;
         var type = props.page.pageLayout?.type;
         var mh = props.page.pageVisibleHeight ? (props.page.pageVisibleHeight + 'px') : '100%';
-        if (type == PageLayoutType.doc || type == PageLayoutType.recordView || type == PageLayoutType.blog) {
+        if (type == PageLayoutType.doc || type == PageLayoutType.recordView ) {
             var style: CSSProperties = { minHeight: mh, width: '100%' };
             return <div className='shy-page-layout shy-page-layout-doc' style={style}>
                 {props.page.isSchemaRecordViewTemplate && <div className="pos-center-top t-20 w-200 h-30 bg flex-center round f-12">

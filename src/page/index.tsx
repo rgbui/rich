@@ -221,15 +221,15 @@ export class Page extends Events<PageDirective>{
             PageLayoutType.formView,
             PageLayoutType.recordView,
             PageLayoutType.docCard,
-            PageLayoutType.doc,
-            PageLayoutType.blog
+            PageLayoutType.doc
+          
         ].includes(this.pageLayout?.type || PageLayoutType.doc)
     }
     /**
      * 是否支持用户自定义封面
      */
     get isSupportCover() {
-        return [PageLayoutType.db, PageLayoutType.formView, PageLayoutType.doc, PageLayoutType.blog].includes(this.pageLayout?.type || PageLayoutType.doc)
+        return [PageLayoutType.db, PageLayoutType.formView, PageLayoutType.doc].includes(this.pageLayout?.type || PageLayoutType.doc)
     }
     async forceUpdate() {
         return new Promise((resolve, reject) => {

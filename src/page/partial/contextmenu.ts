@@ -104,7 +104,7 @@ export class PageContextmenu {
     }
     async onPageContextmenu(this: Page, event: React.MouseEvent) {
         var items: MenuItem<BlockDirective | string>[] = [];
-        if (this.pageLayout.type == PageLayoutType.doc || this.pageLayout.type == PageLayoutType.blog) {
+        if (this.pageLayout.type == PageLayoutType.doc) {
             items = [
                 { name: 'smallText', text: '小字号', checked: this.smallFont ? true : false, type: MenuItemType.switch },
                 { name: 'fullWidth', text: '宽版', checked: this.isFullWidth ? true : false, type: MenuItemType.switch },

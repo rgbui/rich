@@ -231,14 +231,15 @@ export class CommentListView extends React.Component<{
     }
     render() {
         return <div className={this.pop ? "w-600" : ""}>
-            <div className="flex gap-b-10 gap-t-5 padding-w-14">
+            <div className="flex gap-b-10 gap-t-5 ">
                 <span className="bold f-14 flex-fixed">{this.total == 0 ? "" : (this.total + "条")}评论</span>
                 <div className="flex-auto flex-end f-12">
                     <em onMouseDown={e => this.onSet('default')} className={"h-24 flex-center cursor round padding-w-5" + (this.sort == 'default' ? " item-hover-focus" : "")}>默认</em>
                     <em onMouseDown={e => this.onSet('date')} className={"h-24 flex-center cursor round padding-w-5" + (this.sort == 'date' ? " item-hover-focus" : "")}>最新</em>
                 </div>
             </div>
-            <div className="padding-h-10  padding-w-14 round h-400 overflow-y">
+            {this.list.length > 0 && <Divider></Divider>}
+            <div className="padding-h-10   round min-h-30 overflow-y">
                 <SpinBox spin={this.loading}> {this.renderComments(this.list)}
                     <Pagination size={this.size} total={this.total} index={this.index}></Pagination>
                     {this.list.length == 0 && <div className="remark min-50 flex-center">暂无评论</div>}

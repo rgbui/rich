@@ -10,7 +10,6 @@ import { AppearAnchor } from "../../block/appear";
 import { BlockChildKey, BlockUrlConstant } from "../../block/constant";
 import { BlockDirective } from "../../block/enum";
 import { BlockFactory } from "../../block/factory/block.factory";
-import { dom } from "../../common/dom";
 import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { DropDirection } from "../../kit/handle/direction";

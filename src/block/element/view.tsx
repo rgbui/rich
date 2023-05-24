@@ -24,10 +24,11 @@ export class ViewComponent extends BlockView<View>{
             var hasGap: boolean = true;
             var style = this.block.page.getScreenStyle();
             var page = this.block.page;
+            var pd = page.getPageDataInfo();
             if (page.nav == true) {
                 style = {};
             }
-            if (isFirst && page.pageInfo?.icon && page?.cover?.abled === true) {
+            if (isFirst && pd?.icon && pd?.cover?.abled === true) {
                 style.paddingTop = 50;
             }
             var pageContentClassList: string[] = ['sy-block-view-wrapper-content'];

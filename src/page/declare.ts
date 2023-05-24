@@ -30,11 +30,6 @@ export enum PageLayoutType {
      * 文字频道
      */
     textChannel = 40,
-    /**
-     * 博客
-     * 打开的是编辑博客
-     */
-    blog = 60,
 }
 
 export enum PageVersion {
@@ -108,7 +103,7 @@ export function getPageIcon(item: LinkPageItem, defaultIcon?: SvgrComponent) {
     if (item.pageType == PageLayoutType.board) {
         return PageSvg
     }
-    else if (item.pageType == PageLayoutType.doc || item.pageType == PageLayoutType.blog) {
+    else if (item.pageType == PageLayoutType.doc) {
         return PageSvg
     }
     else if (item.pageType == PageLayoutType.docCard) {
@@ -127,7 +122,7 @@ export function getPageIcon(item: LinkPageItem, defaultIcon?: SvgrComponent) {
 export function getPageText(item: LinkPageItem) {
     if (item?.text) return item.text;
     if (!item) return '';
-    if (item.pageType == PageLayoutType.doc || item.pageType == PageLayoutType.blog) {
+    if (item.pageType == PageLayoutType.doc) {
         return '新页面'
     }
     else if (item.pageType == PageLayoutType.board) {

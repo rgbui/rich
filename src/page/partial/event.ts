@@ -306,10 +306,6 @@ export class PageEvent {
                 }])
             }
         }
-        else if (this.pageLayout.type == PageLayoutType.blog) channel.air('/page/update/info', {
-            id: this.pageInfo.id,
-            pageInfo: data
-        })
         else channel.air('/page/update/info', {
             elementUrl: this.elementUrl,
             pageInfo: data
@@ -331,13 +327,6 @@ export class PageEvent {
                 this.view.forceUpdate();
             }
         }
-        else if (this.pageLayout.type == PageLayoutType.blog)
-            channel.air('/page/update/info', {
-                id: this.pageInfo.id,
-                pageInfo: {
-                    text: text
-                }
-            })
         else
             channel.air('/page/update/info', {
                 elementUrl: this.elementUrl,
@@ -361,7 +350,10 @@ export class PageEvent {
             await this.onUpdatePageData(c);
             this.view.forceUpdate();
         }
-        else await this.onUpdateProps(data, isUpdate);
+        else {
+            await this.onUpdatePageData(data);
+            this.view.forceUpdate();
+        }
     }
     getPageDataInfo(this: Page) {
         if ([ElementType.SchemaRecordViewData, ElementType.SchemaData].includes(this.pe.type)) {
