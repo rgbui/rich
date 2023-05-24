@@ -114,6 +114,11 @@ export class PageBar extends React.Component<{ page: Page }>{
         var isSearch: boolean = false;
         var isPublish: boolean = false;
         var isContextMenu: boolean = false;
+
+        var isSchemR = [ElementType.SchemaRecordViewData, ElementType.SchemaRecordView].includes(this.props.page.pe.type)
+        if (isSchemR) {
+            isCanEdit = true;
+        }
         if (this.props.page.pe.type == ElementType.SchemaRecordViewData || this.props.page.pe.type == ElementType.SchemaRecordView) {
             isField = true;
             if (!isCanEdit) isField = false;
@@ -133,6 +138,7 @@ export class PageBar extends React.Component<{ page: Page }>{
         if (![PageLayoutType.textChannel].includes(this.props.page.pageLayout?.type)) {
             isPublish = true;
             if (!isCanEdit) isPublish = false;
+            if (isSchemR) isPublish = false;
         }
         if (![PageLayoutType.textChannel].includes(this.props.page.pageLayout?.type)) {
             isContextMenu = true;

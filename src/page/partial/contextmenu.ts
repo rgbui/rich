@@ -42,10 +42,14 @@ import { usePagePublish } from "../../../extensions/publish";
 import { BlockUrlConstant } from "../../block/constant";
 import { DataGridForm } from "../../../blocks/data-grid/view/form";
 import { useCardBoxStyle } from "../../../extensions/doc.card/style";
+import { GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
+import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.field";
+import { Field } from "../../../blocks/data-grid/schema/field";
+import { GetFieldFormBlockInfo } from "../../../blocks/data-grid/element/service";
+import { ElementType } from "../../../net/element.type";
 
 export class PageContextmenu {
-    async onGetContextMenus(this: Page)
-    {
+    async onGetContextMenus(this: Page) {
         if (this.isBoard) return this.onGetBoardContextMenus();
         var items: MenuItem<BlockDirective | string>[] = [];
         return items;
@@ -115,7 +119,7 @@ export class PageContextmenu {
                     icon: FieldsSvg,
                     childs: [
                         { name: 'onlyDisplayContent', text: '显示标题', type: MenuItemType.switch, checked: this.onlyDisplayContent ? false : true, icon: HSvg },
-                        { name: 'refPages', text: "显示引用", icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
+                        { name: 'refPages', text: "显示引用", visible: [ElementType.SchemaRecordView, ElementType.SchemaRecordViewData].includes(this.pe.type) ? false : true, icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
                         { name: 'showComment', text: "显示评论", icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                     ]
                 },
@@ -339,10 +343,52 @@ export class PageContextmenu {
         this.forceUpdate()
     }
     async onOpenFieldProperty(this: Page, event: React.MouseEvent) {
-        var block = this.find(c => c.url == BlockUrlConstant.FormView) as DataGridForm;
-        if (block) {
-            block.onFormFields(event);
-        }
+        var self = this;
+        var r = await useSelectMenuItem(
+            { roundArea: Rect.fromEvent(event) },
+            [
+                { text: '显示字段', type: MenuItemType.text },
+                ...this.schema.allowFormFields.toArray(uf => {
+                    // if (this.formRowData && uf.type == FieldType.title) return
+                    return {
+                        icon: GetFieldTypeSvg(uf.type),
+                        name: uf.id,
+                        text: uf.text,
+                        type: MenuItemType.switch,
+                        checked: this.exists(c => (c instanceof OriginFormField) && c.field.id == uf.id)
+                    }
+                })
+            ],
+            {
+                input: (newItem) => {
+                    self.onToggleFieldView(this.schema.initUserFields.find(g => g.id == newItem.name), newItem.checked)
+                }
+            }
+        )
+    }
+    async onToggleFieldView(this: Page, field: Field, checked: boolean) {
+        await this.onAction('onToggleFieldView', async () => {
+            if (checked) {
+                var b: Record<string, any> = GetFieldFormBlockInfo(field);
+                if (b) {
+                    if (this.pe.type == ElementType.SchemaRecordView) {
+                        var sv = this.schema.views.find(g => g.id == this.pe.id1);
+                        if (sv.url == BlockUrlConstant.RecordPageView) {
+                            b.fieldMode = 'detail';
+                        }
+                    }
+                    var at = this.views[0].childs.findLastIndex(c => (c instanceof OriginFormField))
+                    if (at == -1) at = 0;
+                    var newBlock = await this.createBlock(b.url, b, this.views[0], at);
+                    if (this.formRowData) newBlock.updateProps({ value: field.getValue(this.formRowData) })
+                }
+            }
+            else {
+                var f = this.find(c => (c instanceof OriginFormField) && c.field.id == field.id);
+                if (f) await f.delete()
+            }
+        });
+        this.view.forceUpdate();
     }
     async onOpenBackground(this: Page) {
         var g = await useCardBoxStyle({

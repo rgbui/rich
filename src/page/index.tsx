@@ -209,7 +209,6 @@ export class Page extends Events<PageDirective>{
     get isCanEdit() {
         if (this.readonly) return false;
         if (this.pageLayout?.type == PageLayoutType.dbPickRecord) return false;
-        if (this.isSchemaRecordViewTemplate) return true;
         return this.canEdit;
     }
     /**
