@@ -201,11 +201,6 @@ export class PageView extends Component<{ page: Page }>{
         var pageContentStyle: CSSProperties = {}
         var isDocCard = this.page?.pageLayout.type == PageLayoutType.docCard
         if (isDocCard) {
-            // pageContentStyle.position='absolute';
-            // pageContentStyle.top=0;
-            // pageContentStyle.left=0;
-            // pageContentStyle.width='100%';
-            // pageContentStyle.height='100%';
             if (this.props.page.pageFill.mode == 'color') {
                 pageContentStyle.backgroundColor = this.props.page.pageFill.color;
             }
@@ -227,6 +222,7 @@ export class PageView extends Component<{ page: Page }>{
         } else if (this.props.page?.pageLayout?.type == PageLayoutType.textChannel) {
             gap = 0
         }
+        var pd = this.props.page.getPageDataInfo();
         return <div className="shy-page" style={pageContentStyle} >
             <PageBar page={this.page}></PageBar>
             <div className={'shy-page-view' + (this.page.readonly ? " shy-page-view-readonly" : "")}
@@ -249,7 +245,7 @@ export class PageView extends Component<{ page: Page }>{
                         <div className={'shy-page-view-content '} ref={e => this.page.contentEl = e}>
                             {/* {isDocCard && <div></div>} */}
                             <PageCover page={this.page}></PageCover>
-                            {!this.page.cover?.abled && gap > 0 && <div className={'h-' + gap}></div>}
+                            {!pd?.cover?.abled && gap > 0 && <div className={'h-' + gap}></div>}
                             {this.page.nav && this.renderNavs()}
                             {!this.page.nav && <ChildsArea childs={this.page.views}></ChildsArea>}
                             {this.page.requireSelectLayout && this.page.isCanEdit && this.renderPageTemplate()}

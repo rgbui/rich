@@ -19,6 +19,8 @@ export enum FieldType {
     icon = 151,
     description = 152,
     cover = 153,
+    plain = 154,
+    thumb = 155,
     /**
      * 自增（从1开始，每次自增加1)
      * 理论上用户可以自行修改（但新加时，则取当前列表中的最大值）
@@ -191,7 +193,7 @@ export enum FieldType {
     /**
      * 富文本
      */
-    rich=9000,
+    rich = 9000,
 }
 
 export var sysFieldTypes: FieldType[] = [

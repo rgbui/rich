@@ -33,7 +33,7 @@ export class PageCover extends React.Component<{ page: Page }>{
             }
             function startPosition(event: React.MouseEvent) {
                 event.stopPropagation();
-                self.top = typeof page?.cover?.top == 'number' ? page?.cover?.top : 50;
+                self.top = typeof pd?.cover?.top == 'number' ? pd?.cover?.top : 50;
                 self.startPos = true;
                 self.forceUpdate();
             }
