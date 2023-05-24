@@ -148,7 +148,7 @@ export function getSchemaViews() {
         { url: '/data-grid/board', text: '看板' },
         { url: '/data-grid/list', text: '列表' },
         { url: '/data-grid/calendar', text: '日历' },
-       // { url: BlockUrlConstant.FormView, text: '表单' }
+        // { url: BlockUrlConstant.FormView, text: '表单' }
     ]
 }
 
@@ -175,7 +175,7 @@ export function getSchemaFieldMenus(map: (list: any) => any) {
             { text: '邮箱', value: FieldType.email },
             { text: '手机号', value: FieldType.phone },
             { text: '网址', value: FieldType.link },
-            { text: '富文本', value: FieldType.rich },
+            // { text: '富文本', value: FieldType.rich },
             // { text: '位置', value: FieldType.geolocation },
             { text: '关联', value: FieldType.relation },
             { text: '统计', value: FieldType.rollup },
@@ -191,7 +191,7 @@ export function getSchemaFieldMenus(map: (list: any) => any) {
             { text: '表情', value: FieldType.emoji },
             { text: '评论', value: FieldType.comment },
             //{ text: '举报', value: FieldType.report },
-            { text: '操作按钮', value: FieldType.button },
+            // { text: '操作按钮', value: FieldType.button },
             // { text: '收藏', value: FieldType.favourite },
             // { text: '分享', value: FieldType.share },
             // { text: '打赏', value: FieldType.donate },
