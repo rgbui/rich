@@ -74,21 +74,11 @@ class TabelSchemaFormDrop extends EventsComponent {
                 await dialougPage.onSave();
                 var newRow = await dialougPage.getSchemaRow();
                 if (newRow) {
-                    var nr = await this.block.onAddRow(newRow, undefined, 'after');
-                    if (nr) {
-                        await channel.act('/view/snap/store',
-                            {
-                                elementUrl: getElementUrl(ElementType.SchemaRecordViewData,
-                                    this.schema.id,
-                                    view.id,
-                                    nr.id
-                                ),
-                                seq: 0,
-                                plain: await dialougPage.getPlain(),
-                                thumb: await dialougPage.getThumb(),
-                                content: await dialougPage.get(),
-                                text: newRow.title,
-                            })
+                    try {
+                        await this.block.onAddRow(newRow, undefined, 'after', dialougPage);
+                    }
+                    catch (ex) {
+                        console.error(ex);
                     }
                 }
             }
@@ -120,7 +110,7 @@ class TabelSchemaFormDrop extends EventsComponent {
                 return;
             }
             else if (um.item.name == 'edit') {
-                this.onChange(view);
+                this.onChange(view, true);
                 /**
                  * 这里打开表单，进行编辑
                  */
