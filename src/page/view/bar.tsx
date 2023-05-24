@@ -1,6 +1,6 @@
 import React, { CSSProperties } from "react";
 import { Page } from "..";
-import { ChevronLeftSvg, ChevronRightSvg, CollectTableSvg, DetailSvg, DocAddSvg, DotsSvg, DoubleRightSvg, EditSvg, FieldsSvg, MemberSvg, MenuSvg, OrderSvg, PageSvg, PublishSvg, SearchSvg } from "../../../component/svgs";
+import { ChevronLeftSvg, ChevronRightSvg, CollectTableSvg, DetailSvg, DotsSvg, DoubleRightSvg, EditSvg, FieldsSvg, MemberSvg, OrderSvg, PageSvg, PublishSvg, SearchSvg } from "../../../component/svgs";
 import { UserAvatars } from "../../../component/view/avator/users";
 import { Button } from "../../../component/view/button";
 import { Icon } from "../../../component/view/icon";
@@ -17,12 +17,11 @@ import { BlockUrlConstant } from "../../block/constant";
 
 export class PageBar extends React.Component<{ page: Page }>{
     renderTitle() {
-        if (this.props.page.pe.type == ElementType.SchemaRecordViewData) {
-            var sv = this.props.page.schema.views.find(g => g.id == this.props.page.pe.id1);
+        if (this.props.page.pe.type == ElementType.SchemaData) {
             return <div className="flex-auto flex">
                 {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onClose()} className="item-hover size-24 round cursor flex-center gap-l-10"><Icon size={18} icon={DoubleRightSvg}></Icon></span>}
                 <span className="item-hover round flex cursor padding-h-3 padding-w-5 ">
-                    <Icon size={20} icon={this.props.page?.formRowData?.icon || (sv.url == BlockUrlConstant.FormView ? OrderSvg : DetailSvg)}></Icon>
+                    <Icon size={20} icon={this.props.page?.formRowData?.icon || PageSvg}></Icon>
                     <span className="gap-l-5">{this.props.page?.formRowData?.title}</span>
                 </span>
                 {this.saving && <Spin></Spin>}
@@ -115,11 +114,11 @@ export class PageBar extends React.Component<{ page: Page }>{
         var isPublish: boolean = false;
         var isContextMenu: boolean = false;
 
-        var isSchemR = [ElementType.SchemaRecordViewData, ElementType.SchemaRecordView].includes(this.props.page.pe.type)
+        var isSchemR = [ElementType.SchemaData, ElementType.SchemaRecordView].includes(this.props.page.pe.type)
         if (isSchemR) {
             isCanEdit = true;
         }
-        if (this.props.page.pe.type == ElementType.SchemaRecordViewData || this.props.page.pe.type == ElementType.SchemaRecordView) {
+        if (this.props.page.pe.type == ElementType.SchemaData || this.props.page.pe.type == ElementType.SchemaRecordView) {
             isField = true;
             if (!isCanEdit) isField = false;
         }
