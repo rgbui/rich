@@ -25,6 +25,7 @@ import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.f
 import { Field } from "../../../blocks/data-grid/schema/field";
 import { DataGridView } from "../../../blocks/data-grid/view/base";
 import { QueueHandle } from "../../../component/lib/queue";
+import { Image } from "../../../blocks/media/image";
 
 export class Page$Cycle {
     async init(this: Page) {
@@ -154,7 +155,6 @@ export class Page$Cycle {
         var json: Record<string, any> = {
             id: this.id,
             date: this.date,
-            cover: util.clone(this.cover),
             isFullWidth: this.isFullWidth,
             smallFont: this.smallFont,
             version: this.version,
@@ -190,6 +190,12 @@ export class Page$Cycle {
     }
     async getPlain(this: Page) {
         return (await this.views.asyncMap(async v => await v.getPlain())).join(" ");
+    }
+    async getThumb(this: Page) {
+        var r = this.find(g => g.url == BlockUrlConstant.Image && ((g as Image).src ? true : false));
+        if (r) {
+            return lodash.cloneDeep((r as Image).src);
+        }
     }
     async loadFile(this: Page, blob: Blob) {
         if (blob) {
@@ -751,7 +757,7 @@ export class Page$Cycle {
             }
         })
     }
-    getSchemaRow(this: Page) {
+    async getSchemaRow(this: Page) {
         var row: Record<string, any> = {};
         this.each(g => {
             if (g instanceof OriginFormField) {
@@ -771,12 +777,17 @@ export class Page$Cycle {
             row.icon = this.formRowData.icon;
             row.cover = this.formRowData.cover;
             row.title = this.formRowData.title;
+            row.plain = await this.getPlain();
+            row.plain = row.plain.slice(0, 200);
+            row.thumb = await this.getThumb();
         }
         else {
             var sv = this.schema.views.find(g => g.text == this.pe.id1);
-            row.icon = sv.icon;
-            row.cover = sv.cover;
-            row.title = sv.text;
+            if (sv) {
+                row.icon = sv.icon;
+                row.cover = sv.cover;
+                row.title = sv.text;
+            }
         }
         return row;
     }

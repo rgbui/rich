@@ -17,8 +17,7 @@ import { BlockUrlConstant } from "../../block/constant";
 
 export class PageBar extends React.Component<{ page: Page }>{
     renderTitle() {
-        if (this.props.page.pe.type == ElementType.SchemaRecordViewData)
-        {
+        if (this.props.page.pe.type == ElementType.SchemaRecordViewData) {
             var sv = this.props.page.schema.views.find(g => g.id == this.props.page.pe.id1);
             return <div className="flex-auto flex">
                 {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onClose()} className="item-hover size-24 round cursor flex-center gap-l-10"><Icon size={18} icon={DoubleRightSvg}></Icon></span>}
@@ -115,7 +114,7 @@ export class PageBar extends React.Component<{ page: Page }>{
         var isSearch: boolean = false;
         var isPublish: boolean = false;
         var isContextMenu: boolean = false;
-        if ([PageLayoutType.formView].includes(this.props.page.pageLayout?.type)) {
+        if (this.props.page.pe.type == ElementType.SchemaRecordViewData || this.props.page.pe.type == ElementType.SchemaRecordView) {
             isField = true;
             if (!isCanEdit) isField = false;
         }

@@ -30,7 +30,8 @@ export class DataGridViewData {
             elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, viewId || this.schema.defaultAddForm?.id)
         })
         if (dialougPage) {
-            var newRow = dialougPage.getSchemaRow();
+            dialougPage.onSave();
+            var newRow = await dialougPage.getSchemaRow();
             if (newRow) {
                 await this.onAddRow(newRow, undefined, 'after')
             }
@@ -53,7 +54,10 @@ export class DataGridViewData {
             )
         })
         var newRow;
-        if (dialougPage) newRow = dialougPage.getSchemaRow()
+        if (dialougPage) {
+            dialougPage.onSave();
+            newRow = await dialougPage.getSchemaRow()
+        }
         if (this.openRecordSource != 'page') await channel.air(url, { elementUrl: null })
         if (newRow) await this.onRowUpdate(id, newRow);
     }

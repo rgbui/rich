@@ -253,7 +253,8 @@ export class DataGridViewConfig {
             elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, this.schema.defaultAddForm?.id)
         })
         if (dialougPage) {
-            var newRow = dialougPage.getSchemaRow();
+            dialougPage.onSave();
+            var newRow = await dialougPage.getSchemaRow();
             if (newRow) await this.onAddRow(newRow, undefined, 'after')
         }
         if (url != '/page/open') await channel.air(url, { elementUrl: null });
