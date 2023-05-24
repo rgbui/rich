@@ -6,6 +6,7 @@ import { OriginField } from "./origin.field";
 import { Icon } from "../../../../component/view/icon";
 import { PageLayoutType, getPageIcon } from "../../../../src/page/declare";
 import { BlockUrlConstant } from "../../../../src/block/constant";
+
 @url('/field/title')
 export class FieldText extends OriginField {
     async openPage() {
@@ -15,8 +16,8 @@ export class FieldText extends OriginField {
 @view('/field/title')
 export class FieldTextView extends BlockView<FieldText>{
     render() {
-        return <div className='flex sy-field-title f-14'>
-            <span className="size-24 flex-center inline-flex text-1"><Icon size={20} icon={getPageIcon({
+        return <div className='flex l-20 flex-top sy-field-title f-14'>
+            <span className="size-20 flex-center inline-flex text-1 gap-r-3"><Icon size={20} icon={getPageIcon({
                 pageType: PageLayoutType.doc,
                 icon: this.block.item?.dataRow?.icon
             })}></Icon></span>

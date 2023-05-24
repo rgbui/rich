@@ -26,6 +26,7 @@ export class DataGridViewData {
             //自动创建表单
         }
         var vid = viewId || this.schema.defaultAddForm?.id;
+        if (!this.schema.recordViews.some(s => s.id == vid)) vid = undefined;
         if (!vid) vid = this.schema.recordViews[0]?.id;
         var dialougPage: Page = await channel.air('/page/dialog', {
             elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, viewId || this.schema.defaultAddForm?.id)
@@ -45,8 +46,6 @@ export class DataGridViewData {
             url = '/page/open';
         else if (this.openRecordSource == 'slide')
             url = '/page/slide';
-        var vid = this.schema.defaultEditFormId;
-        if (!vid) vid = this.schema.recordViews[0]?.id;
         var dialougPage: Page = await channel.air(url, {
             elementUrl: getElementUrl(ElementType.SchemaData,
                 this.schema.id,

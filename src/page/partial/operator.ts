@@ -1,3 +1,4 @@
+import lodash from "lodash";
 import { Page } from "..";
 import { CopyText } from "../../../component/copy";
 import { ShyAlert } from "../../../component/lib/alert";
@@ -88,25 +89,27 @@ export class Page$Operator {
         })
     }
     async onBatchDelete(this: Page, blocks: Block[]) {
-        blocks = blocks.map(c => c);
-        await this.onAction(ActionDirective.onBatchDeleteBlocks, async () => {
-            var pre = blocks.first().prevFind(c => c.isVisible && !blocks.includes(c) && !blocks.some(s => s.exists(g => g.id == c.id)) && c.isBlock);
-            if (!pre) blocks.first().nextFind(c => c.isVisible && !blocks.includes(c) && !blocks.some(s => s.exists(g => g.id == c.id)) && c.isBlock);
-            if (pre) {
-                this.kit.anchorCursor.focusBlockAnchor(pre, { last: true, render: true })
-            }
-            if (this.kit.picker.blocks.some(s => blocks.some(c => c == s))) {
-                this.kit.picker.blocks.removeAll(s => blocks.includes(s));
-                if (this.kit.picker.blocks.length == 0) {
-                    this.kit.picker.onCancel();
+        blocks = blocks.toArray(c => c);
+        lodash.remove(blocks, c => c.url == BlockUrlConstant.Title);
+        if (blocks.length > 0)
+            await this.onAction(ActionDirective.onBatchDeleteBlocks, async () => {
+                var pre = blocks.first().prevFind(c => c.isVisible && !blocks.includes(c) && !blocks.some(s => s.exists(g => g.id == c.id)) && c.isBlock);
+                if (!pre) blocks.first().nextFind(c => c.isVisible && !blocks.includes(c) && !blocks.some(s => s.exists(g => g.id == c.id)) && c.isBlock);
+                if (pre) {
+                    this.kit.anchorCursor.focusBlockAnchor(pre, { last: true, render: true })
                 }
-                else this.kit.picker.onRePicker();
-            }
-            await blocks.eachAsync(async bl => {
-                await bl.delete()
-            });
+                if (this.kit.picker.blocks.some(s => blocks.some(c => c == s))) {
+                    this.kit.picker.blocks.removeAll(s => blocks.includes(s));
+                    if (this.kit.picker.blocks.length == 0) {
+                        this.kit.picker.onCancel();
+                    }
+                    else this.kit.picker.onRePicker();
+                }
+                await blocks.eachAsync(async bl => {
+                    await bl.delete()
+                });
 
-        })
+            })
     }
     async onTurn(this: Page, block: Block, url: string, callback: (newBlock: Block, oldBlock: Block) => void) {
         await this.onAction(ActionDirective.onTurn, async () => {

@@ -18,7 +18,7 @@ import lodash from "lodash";
 import { util } from "../../../util/util";
 import { PageOutLine } from "../../../blocks/page/outline";
 import { channel } from "../../../net/channel";
-import { ElementType, getElementUrl, parseElementUrl } from "../../../net/element.type";
+import { ElementType, getElementUrl } from "../../../net/element.type";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { GetFieldFormBlockInfo, SchemaCreatePageFormData } from "../../../blocks/data-grid/element/service";
 import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.field";
@@ -50,13 +50,22 @@ export class Page$Cycle {
     async clear(this: Page) {
         this.views = [];
     }
+    /**
+     * 标记当前页面是否加载的是默认的数据
+     * 
+     */
+    loadDefault: boolean = false;
     async load(this: Page, data?: Record<string, any>, operates?: ViewOperate[]) {
         try {
             if (!data || typeof data == 'object' && Object.keys(data).length == 0) {
                 //这里加载默认的页面数据
                 data = await this.getDefaultData();
+                this.loadDefault = true;
             }
-            else this.requireSelectLayout = false;
+            else {
+                this.requireSelectLayout = false;
+                this.loadDefault = false;
+            }
             await this.emit(PageDirective.loading);
             for (var n in data) {
                 if (n == 'views') continue;
@@ -84,6 +93,7 @@ export class Page$Cycle {
                 await this.loadDefaultScheamView();
             }
             if ([ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type)) {
+                this.requireSelectLayout = false;
                 await this.loadPageSchema();
             }
             await this.onRepair();
@@ -97,6 +107,16 @@ export class Page$Cycle {
             this.onError(ex);
             console.error(ex);
             console.log(JSON.stringify(data));
+        }
+    }
+    async loadViews(this: Page, data?: Record<string, any>) {
+        this.views = [];
+        if (Array.isArray(data.views)) {
+            for (var i = 0; i < data.views.length; i++) {
+                var dv = data.views[i];
+                var dc = await BlockFactory.createBlock(dv.url, this, dv, null);
+                this.views.push(dc as View);
+            }
         }
     }
     async reload(this: Page, data?: Record<string, any>) {
@@ -708,17 +728,14 @@ export class Page$Cycle {
     }
     formRowData: Record<string, any>;
     async loadPageSchema(this: Page) {
-        var elementUrl = this.elementUrl;
-        var pe = parseElementUrl(elementUrl);
         if (!this.schema) {
-            this.schema = await TableSchema.loadTableSchema(pe.id);
+            this.schema = await TableSchema.loadTableSchema(this.pe.id);
         }
-        if (!this.exists(c => (c instanceof OriginFormField))) {
-            var view = this.schema.views.find(c => c.id == pe.id1);
+        if (this.loadDefault == true) {
+            var view = this.schema.views.find(c => c.id == this.pe.id1);
             if (view?.url == BlockUrlConstant.FormView) {
-                var g = await SchemaCreatePageFormData(this.schema, getElementUrl(ElementType.SchemaView, this.schema.id, pe.id1))
-                this.views = [];
-                await this.load(g);
+                var g = await SchemaCreatePageFormData(this.schema, getElementUrl(ElementType.SchemaView, this.schema.id, this.pe.id1))
+                await this.loadViews(g);
             }
             else if (view?.url == BlockUrlConstant.RecordPageView) {
                 var cs: Record<string, any>[] = this.schema.initUserFields.toArray(field => {
@@ -729,7 +746,7 @@ export class Page$Cycle {
                 })
                 cs.splice(0, 0, { url: BlockUrlConstant.Title })
                 this.views = [];
-                await this.load({ views: [{ url: BlockUrlConstant.View, blocks: { childs: cs } }] })
+                await this.loadViews({ views: [{ url: BlockUrlConstant.View, blocks: { childs: cs } }] })
             }
             else {
                 var cs: Record<string, any>[] = this.schema.initUserFields.toArray(field => {
@@ -741,16 +758,17 @@ export class Page$Cycle {
                 })
                 cs.splice(0, 0, { url: BlockUrlConstant.Title })
                 this.views = [];
-                await this.load({ views: [{ url: BlockUrlConstant.View, blocks: { childs: cs } }] })
+                await this.loadViews({ views: [{ url: BlockUrlConstant.View, blocks: { childs: cs } }] })
             }
+            this.loadDefault = false;
         }
-
-        if (pe.type == ElementType.SchemaData) {
+        if (this.pe.type == ElementType.SchemaData)
+        {
             var r = this.find(g => (g as OriginFormField).field?.name == 'title');
             if (r) {
                 lodash.remove(r.parentBlocks, g => g == r);
             }
-            var row = await this.schema.rowGet(pe.id1);
+            var row = await this.schema.rowGet(this.pe.id1);
             if (row) {
                 this.formRowData = lodash.cloneDeep(row);
                 this.each(g => {
