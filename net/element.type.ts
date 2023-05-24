@@ -44,10 +44,6 @@ export enum ElementType {
      */
     SchemaFieldData,
     /**
-    * `/Schema/${id}/FieldBlog/${id1}/Data/${id2}`  数据表格某个字段对应的某条记录的id
-    */
-    SchemaFieldBlogData,
-    /**
      * `/Schema/${id}/FieldName/${id1}/Data/${id2}`  数据表格某个字段对应的某条记录的id
      */
     SchemaFieldNameData,
@@ -75,7 +71,6 @@ export function getElementUrl(type: ElementType, id: string, id1?: string, id2?:
     else if (type == ElementType.SchemaRecordViewData) return `/Schema/${id}/RecordView/${id1}/Data/${id2}`
     else if (type == ElementType.SchemaFieldData) return `/Schema/${id}/Field/${id1}/Data/${id2}`
     else if (type == ElementType.SchemaFieldNameData) return `/Schema/${id}/FieldName/${id1}/Data/${id2}`
-    else if (type == ElementType.SchemaFieldBlogData) return `/Schema/${id}/FieldBlog/${id1}/Data/${id2}`
     else if (type == ElementType.SchemaField) return `/Schema/${id}/Field/${id1}`
     else if (type == ElementType.RoomChat) return `/Room/${id}/Chat/${id1}`
     else if (type == ElementType.Block) return `/Page/${id}/Block/${id1}`
@@ -92,15 +87,6 @@ export function parseElementUrl(url: string) {
             us.removeAll(g => g == 'Schema' || g == 'FieldName' || g == 'Data')
             return {
                 type: ElementType.SchemaFieldNameData,
-                id: us[0],
-                id1: us[1],
-                id2: us[2]
-            }
-        }
-        else if (us.includes('FieldBlog')) {
-            us.removeAll(g => g == 'Schema' || g == 'FieldBlog' || g == 'Data')
-            return {
-                type: ElementType.SchemaFieldBlogData,
                 id: us[0],
                 id1: us[1],
                 id2: us[2]

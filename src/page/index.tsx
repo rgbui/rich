@@ -37,7 +37,7 @@ import { isMobileOnly } from "react-device-detect";
 import { BoxFillType, BoxStyle } from '../../extensions/doc.card/declare';
 import { dom } from '../common/dom';
 
-export class Page extends Events<PageDirective> {
+export class Page extends Events<PageDirective>{
     root: HTMLElement;
     viewEl: HTMLElement;
     contentEl: HTMLElement;
@@ -74,7 +74,6 @@ export class Page extends Events<PageDirective> {
     requireSelectLayout: boolean = true;
     gridMap: GridMap;
     matrix: Matrix = new Matrix();
-    cover: { abled: boolean, url: string, thumb: string, top: number } = null;
     isFullWidth: boolean = true;
     smallFont: boolean = false;
     nav: boolean = false;
@@ -217,12 +216,13 @@ export class Page extends Events<PageDirective> {
      * 是否支持宽屏及窄屏的切换
      */
     get isSupportScreen() {
-        return [PageLayoutType.db,
-        PageLayoutType.formView,
-        PageLayoutType.recordView,
-        PageLayoutType.docCard,
-        PageLayoutType.doc,
-        PageLayoutType.blog
+        return [
+            PageLayoutType.db,
+            PageLayoutType.formView,
+            PageLayoutType.recordView,
+            PageLayoutType.docCard,
+            PageLayoutType.doc,
+            PageLayoutType.blog
         ].includes(this.pageLayout?.type || PageLayoutType.doc)
     }
     /**
