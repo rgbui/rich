@@ -15,8 +15,8 @@ export class FieldText extends OriginField {
 @view('/field/title')
 export class FieldTextView extends BlockView<FieldText>{
     render() {
-        return <div className='flex-top sy-field-title f-14'>
-            <span className="size-20 flex-center inline-flex text-1"><Icon size={16} icon={getPageIcon({
+        return <div className='flex sy-field-title f-14'>
+            <span className="size-24 flex-center inline-flex text-1"><Icon size={20} icon={getPageIcon({
                 pageType: PageLayoutType.doc,
                 icon: this.block.item?.dataRow?.icon
             })}></Icon></span>
