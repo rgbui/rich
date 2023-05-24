@@ -37,7 +37,7 @@ export class Page$Operator {
             }
             var bs = parent.blocks[childKey];
             if (!Array.isArray(bs)) parent.blocks[childKey] = bs = [];
-            if (typeof at == 'undefined') at = bs.length;
+            if (typeof at == 'undefined' || at == -1) at = bs.length;
             bs.insertAt(at, block);
             await block.created();
             this.snapshoot.record(OperatorDirective.$create, {
