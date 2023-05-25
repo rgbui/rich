@@ -27,7 +27,7 @@ export class FieldImage extends OriginField {
 }
 @view('/field/image')
 export class FieldImageView extends BlockView<FieldImage>{
-    renderImages(images: { url: string }[]) {
+    renderImages(images: { url: string,src:string }[]) {
         var style: CSSProperties = {};
         if (this.block.field?.config?.imageFormat?.display == 'auto') {
             style.width = '100%';
@@ -48,12 +48,12 @@ export class FieldImageView extends BlockView<FieldImage>{
                 renderCenterRightControls: () => <></>
             };
             return <div onMouseDown={e => { e.stopPropagation() }}><Slick {...settings}>{images.map((img, i) => {
-                return <img key={i} className="round" src={img.url} style={style} />
+                return <img key={i} className="round" src={img.url||img.src} style={style} />
             })}</Slick></div>
         }
         return images.map((img, i) => {
             return <div className="sy-field-image-item" key={i}>
-                <img className="round" src={img.url} style={style} />
+                <img className="round" src={img.url||img.src} style={style} />
             </div>
         })
     }
