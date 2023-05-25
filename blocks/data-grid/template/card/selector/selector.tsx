@@ -6,36 +6,29 @@ import { Button } from "../../../../../component/view/button";
 import { Divider } from "../../../../../component/view/grid";
 import { PopoverSingleton } from "../../../../../extensions/popover/popover";
 import { PopoverPosition } from "../../../../../extensions/popover/position";
-
 import { CardPropsType } from "../declare";
 import { CardFactory } from "../factory/factory";
+import { TableSchema } from "../../../schema/meta";
 
 export class CardSelector extends EventsComponent {
-    name: string = 'image-text';
     render(): ReactNode {
         return <div className="w-500 round ">
-            <div className="padding-l-14  min-h-400  flex-full">
-                <div className="flex-fixed w-150  overflow-y h-400 padding-h-14 border-right padding-r-10">
-                    {this.getStores().map(cs => {
-                        return <div className={"padding-14 round cursor item-hover" + (this.selectUrl == cs.url ? " item-focus-hover" : "")} onMouseDown={e => this.onSelect(cs, e)} key={cs.url}>
-                            <div className="gap-b-10"><img className="round-8" style={{ maxWidth: 120 }} src={cs.image} /></div>
-                            <div className="text f-14">{cs.title}</div>
-                            <div className="remark f-12">{cs.remark}</div>
-                        </div>
-                    })}
-                </div>
-                <div className="flex-auto overflow-y h-400 padding-14">
-                    {this.current && <div>
-                        <div className="gap-b-10"><img className="round-8" style={{ maxWidth: 300 }} src={this.current.image} /></div>
-                        <div className="text f-14">{this.current.title}</div>
-                        <div className="remark f-12">{this.current.remark}</div>
-                    </div>}
-                </div>
+            <div className="flex padding-l-10 padding-b-14">
+                {this.getStores().map(cs => {
+                    return <div
+                        className={"padding-t-14 padding-r-14 w-200  round cursor item-hover" + (this.selectUrl == cs.url ? " item-focus-hover" : "")}
+                        onMouseDown={e => this.onSelect(cs, e)}
+                        key={cs.url}>
+                        <div className="gap-b-10"><img className="round-8" style={{ maxWidth: 120 }} src={cs.image} /></div>
+                        <div className="text f-14">{cs.title}</div>
+                        <div className="remark f-12">{cs.remark}</div>
+                    </div>
+                })}
             </div>
             <Divider></Divider>
             <div className="padding-w-14 flex-end  min-h-40">
                 <Button onMouseDown={e => this.onSave()} className="gap-r-10">确定</Button>
-                <Button ghost>取消</Button>
+                <Button ghost onMouseDown={e => this.onClose()}>取消</Button>
             </div>
         </div>
     }
@@ -43,31 +36,39 @@ export class CardSelector extends EventsComponent {
         return Array.from(CardFactory.CardModels.values())
     }
     selectUrl: string = '';
-    open(props: { url?: string }) {
-        this.selectUrl = props.url || '';
+    schema: TableSchema = null;
+    open(props?: { schema?: TableSchema, item?: { url?: string } }) {
+        this.selectUrl = props?.item?.url || '';
+        this.schema = props?.schema;
         this.forceUpdate()
     }
     onSelect(d: CardPropsType, event: React.MouseEvent) {
-        //this.emit('save', d)
         this.selectUrl = d.url;
-        this.current = d;
-        this.forceUpdate()
+        this.current = d; 
+        this.forceUpdate();
+        this.emit('save', d)
     }
     onSave() {
-
         this.emit('save', this.current)
+    }
+    onClose() {
+        this.emit('close');
     }
     current: CardPropsType;
 }
 
-export async function useCardSelector(pos: PopoverPosition, item: { url?: string }) {
+export async function useCardSelector(pos: PopoverPosition, options?: { schema?: TableSchema, item?: { url?: string } }) {
     let popover = await PopoverSingleton(CardSelector, { mask: true });
     let cardSelector = await popover.open(pos);
-    cardSelector.open(item);
+    cardSelector.open(options);
     return new Promise((resolve: (data: CardPropsType) => void, reject) => {
         popover.only('close', () => {
             resolve(null)
         });
+        cardSelector.only('close', d => {
+            popover.close()
+            resolve(null)
+        })
         cardSelector.only('save', (d) => {
             popover.close()
             resolve(d)
