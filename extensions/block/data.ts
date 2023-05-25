@@ -1,8 +1,48 @@
 
 import { BlockGroup } from './delcare';
-import { AudioSvg, BookSvg, BrowserSvg, ButtonSvg, ButtonTemplateSvg, CalloutSvg, CardSvg, CollectionBoardSvg, CollectionCalendarSvg, CollectionGallerySvg, CollectionListSvg, CollectTableSvg, DividerSvg, EmbedSvg, EmojiSvg, EquationSvg, FileSvg, H1Svg, H2Svg, H3Svg, H4Svg, LinkSvg, ListSvg, MentionSvg, MenuSvg, NumberListSvg, PageSvg, PicSvg, ProgressSvg, QuoteSvg, TableSvg, TemplatesSvg, TextSvg, TimeSvg, TodoSvg, ToggleListSvg, TypesEmailSvg, TypesPersonSvg, VideoSvg } from '../../component/svgs';
+import {
+    AudioSvg,
+    BookSvg,
+    BrowserSvg,
+    ButtonSvg,
+    ButtonTemplateSvg,
+    CalloutSvg,
+    CardSvg,
+    CollectionBoardSvg,
+    CollectionCalendarSvg,
+    CollectionGallerySvg,
+    CollectionListSvg,
+    CollectTableSvg,
+    DividerSvg,
+    EmbedSvg,
+    EmojiSvg,
+    EquationSvg,
+    FileSvg,
+    H1Svg,
+    H2Svg,
+    H3Svg,
+    H4Svg,
+    LinkSvg,
+    ListSvg,
+    MentionSvg,
+    MenuSvg,
+    NumberListSvg,
+    PageSvg,
+    PicSvg,
+    ProgressSvg,
+    QuoteSvg,
+    TableSvg,
+    TemplatesSvg,
+    TextSvg,
+    TimeSvg,
+    TodoSvg,
+    ToggleListSvg,
+    TypesEmailSvg,
+    TypesPersonSvg,
+    VideoSvg
+} from '../../component/svgs';
 
-export var BlockSelectorData: BlockGroup[]=[
+export var BlockSelectorData: BlockGroup[] = [
     {
         text: '基本',
         childs: [
@@ -66,6 +106,7 @@ export var BlockSelectorData: BlockGroup[]=[
             { text: '画廊', icon: CollectionGallerySvg, url: "/data-grid/gallery", label: '/画廊', labels: [] },
             { text: '日历', icon: CollectionCalendarSvg, url: "/data-grid/calendar", label: '/日历', labels: [] },
             { text: '列表', icon: CollectionListSvg, url: "/data-grid/list", label: '/列表', labels: [] },
+            { text: '数据模板', url: '/data-grid/template', operator: "openDataGridTemplate", icon: CollectTableSvg, label: '数据模板', labels: [] },
             // { text: '时间线', pic: <img src={tablestore} />, url: "/data-grid/timeline", label: '/时间线' },
             // { text: '地图标记', pic: <img src={tablestore} />, url: "/data-grid/map", label: '/地图标记' },
             // { text: '统计图表', pic: <img src={tablestore} />, url: '/data-grid/charts', label: '/统计图表' },

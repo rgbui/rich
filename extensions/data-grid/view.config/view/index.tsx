@@ -36,7 +36,7 @@ export class DataGridViewConfig extends EventsComponent<{ gc: DataGridConfig }> 
             },
             { type: MenuItemType.divide },
             {
-                text: '视图模板',
+                text: '视图',
                 icon: LoopSvg,
                 childs: getSchemaViews().map(v => {
                     return {

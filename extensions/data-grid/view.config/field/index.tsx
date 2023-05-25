@@ -40,6 +40,7 @@ export class DataGridFields extends EventsComponent {
     }
     renderFields() {
         var fs = this.schema.visibleFields.findAll(g => g.text && !this.block.fields.some(s => s.fieldId == g.id) ? true : false);
+      
         var self = this;
         async function onShowAll() {
             await self.block.onShowAllField();
@@ -254,7 +255,12 @@ export class DataGridFields extends EventsComponent {
         var self = this;
         var card = CardFactory.CardModels.get((self.block as TableStoreGallery).cardConfig?.templateProps?.url);
         async function openSelect(event: React.MouseEvent) {
-            var r = await useCardSelector({ roundArea: Rect.fromEvent(event) }, {});
+            var r = await useCardSelector({ roundArea: Rect.fromEvent(event) }, {
+                schema: self.schema,
+                item: {
+                    url: (self.block as TableStoreGallery).cardConfig?.templateProps?.url,
+                }
+            });
             if (r) {
                 var tp: CardConfig['templateProps'] = {
                     url: r.url,

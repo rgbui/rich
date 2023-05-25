@@ -7,10 +7,12 @@ export type BlockGroup = {
 export type BlockSelectorItem = {
     text?: string,
     pic?: JSX.Element,
-    icon?:SvgrComponent,
+    icon?: SvgrComponent,
     url?: string;
     description?: string,
     label?: string,
     labels?: string[],
-    isLine?: boolean
+    isLine?: boolean,
+    operator?: 'openDataGridTemplate',
+    link?:{name:'create',text:string}
 }
