@@ -1,40 +1,47 @@
+import { CardModel, CardViewCom } from "../factory/observable";
+import * as Card1 from "../../../../../src/assert/img/card/card1.png"
+import React, { ReactNode } from "react";
+import { UploadSvg, TrashSvg, LoveSvg, DotsSvg } from "../../../../../component/svgs";
+import { Avatar } from "../../../../../component/view/avator/face";
+import { UserBox } from "../../../../../component/view/avator/user";
+import { Icon } from "../../../../../component/view/icon";
+import { useSelectMenuItem } from "../../../../../component/view/menu";
+import { MenuItemType } from "../../../../../component/view/menu/declare";
+import { BackgroundColorList } from "../../../../../extensions/color/data";
+import { IconArguments } from "../../../../../extensions/icon/declare";
+import { Rect } from "../../../../../src/common/vector/point";
+import { util } from "../../../../../util/util";
+import { FieldType } from "../../../schema/type";
+import { CardView } from "../view";
 
-import React from "react";
-import { ReactNode } from "react";
-import { UploadSvg, TrashSvg, LoveSvg, DotsSvg } from "../../../../../../component/svgs";
-import { Avatar } from "../../../../../../component/view/avator/face";
-import { UserBox } from "../../../../../../component/view/avator/user";
-import { Icon } from "../../../../../../component/view/icon";
-import { useSelectMenuItem } from "../../../../../../component/view/menu";
-import { MenuItemType } from "../../../../../../component/view/menu/declare";
-import { BackgroundColorList } from "../../../../../../extensions/color/data";
-import { IconArguments } from "../../../../../../extensions/icon/declare";
-import { Rect } from "../../../../../../src/common/vector/point";
-import { FieldType } from "../../../../schema/type";
-import { CardModel, CardViewCom } from "../../factory/observable";
-import { CardView } from "../../view";
-import * as Card2 from "../../../../../../src/assert/img/card/card2.png"
-import { util } from "../../../../../../util/util";
-
+/**
+ * 
+ * 原型参考
+ * https://ai-bot.cn/
+ */
 CardModel({
-    url: '/image-text/pinterest',
-    title: 'Pinterest瀑布流的形式展现图片内容',
-    remark: '适用于摄影等图像展示',
-    image: Card2.default,
-    group: 'image-text',
+    url: '/tool',
+    title: 'app工具',
+    remark: 'app工具',
+    image: Card1.default,
+    group: 'image',
     props: [
         {
             name: 'cover',
-            text: '封面图',
-            types: [FieldType.image, FieldType.video]
+            text: '插图',
+            types: [FieldType.image, FieldType.cover, FieldType.video],
+            required: true
         },
-        { name: 'author', text: '作者', types: [FieldType.creater] },
-        { name: 'title', text: '标题', types: [FieldType.title, FieldType.text] },
+        {
+            name: 'title',
+            text: '标题',
+            types: [FieldType.title, FieldType.text],
+            required: true
+        },
         { name: 'remark', text: '描述', types: [FieldType.text] },
-        { name: 'like', text: '喜欢', types: [FieldType.like] }
     ]
 })
-@CardViewCom('/image-text/pinterest')
+@CardViewCom('/tool')
 export class CardPin extends CardView {
     render(): ReactNode {
         var self = this;
@@ -45,10 +52,10 @@ export class CardPin extends CardView {
         var hasPic = Array.isArray(pics) && pics.length > 0;
         var love = this.getValue<string>('like');
         var isLove = this.isEmoji('like')
-
         async function openProperty(event: React.MouseEvent) {
             event.stopPropagation();
-            var rect = Rect.fromEvent(event); var r = await useSelectMenuItem({ roundArea: rect }, [
+            var rect = Rect.fromEvent(event);
+            var r = await useSelectMenuItem({ roundArea: rect }, [
                 { name: 'replace', icon: UploadSvg, text: '替换' },
                 { type: MenuItemType.divide },
                 { name: 'close', icon: TrashSvg, text: '删除' }
