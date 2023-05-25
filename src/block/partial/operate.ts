@@ -497,8 +497,12 @@ export class Block$Operator {
             this.page.addBlockChange(this);
             this.syncUpdate(range);
             for (let n in newValue) {
-                /**只保留标记@prop 的才record */
-                if (this.__props.includes(n)) continue
+                /**
+                 * 只保留标记@prop 的才record
+                 * 部分属性是带有路径的，而_props只记最外层的prop key
+                 * 如cardConfig.auto,而_props只有cardConfig
+                 */
+                if (this.__props.some(p => n == p || n.startsWith(p + "."))) continue
                 else { delete newValue[n]; delete oldValue[n] }
             }
             if (Object.keys(newValue).length > 0)
