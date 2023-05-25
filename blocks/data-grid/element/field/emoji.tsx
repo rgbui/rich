@@ -5,6 +5,7 @@ import { BlockView } from "../../../../src/block/view";
 import { FieldType } from "../../schema/type";
 import { GetFieldTypeSvg } from "../../schema/util";
 import { OriginField } from "./origin.field";
+import lodash from "lodash";
 
 @url('/field/emoji')
 export class FieldEmoji extends OriginField {
@@ -23,7 +24,8 @@ export class FieldEmailView extends BlockView<FieldEmoji>{
         }
         var svg = GetFieldTypeSvg(this.block.viewField.field.type);
         var v = this.block.value;
-        if (typeof v == 'object' && typeof v.count == 'number') v = v.count;
+        if (typeof v == 'object' && typeof v?.count == 'number') v = v.count;
+        if (lodash.isNull(v) || lodash.isUndefined(v)) v = 0;
         var countStr = v > 0 ? `${v}` : '';
         var sp = <></>;
         if (this.block.viewField.field.type == FieldType.love) {
