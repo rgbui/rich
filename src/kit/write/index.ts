@@ -612,14 +612,23 @@ export class PageWrite {
     }
     async onSolidInputCreateTextBlock(aa: AppearAnchor, event?: React.CompositionEvent | React.FormEvent<Element>, forceText?: string) {
         await this.kit.page.onAction(ActionDirective.onSolidBlockInputTextContent, async () => {
-            var text = aa.solidContentEl.innerText;
-            aa.solidContentEl.innerHTML = '';
+            var at = aa.block.at;
+            var text = '';
+            if (aa.firstTextNode?.textContent?.length > 0) {
+                text = aa.firstTextNode.textContent
+                aa.firstTextNode.textContent = '';
+            }
+            else if (aa.lastTextNode?.textContent?.length > 0) {
+                at += 1;
+                text = aa.lastTextNode.textContent
+                aa.lastTextNode.textContent = '';
+            }
             var c = forceText ? forceText : text;
             var newBlock = await aa.block.parent.appendBlock({
                 url: BlockUrlConstant.Text,
                 content: c
             },
-                aa.block.at + 1,
+                at,
                 aa.block.parentKey
             );
             this.kit.page.addUpdateEvent(async () => {
