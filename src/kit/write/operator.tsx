@@ -11,14 +11,12 @@ export async function useOperatorBlockData(blockData: BlockSelectorItem,
     aa: AppearAnchor,
     offset: number) {
     var newBlock: Block = null;
-    if (blockData.operator == 'openDataGridTemplate')
-    {
+    if (blockData.operator == 'openDataGridTemplate') {
         var g = await useCardSelector({
             center: true,
             centerTop: 100
         });
-        if (g)
-        {
+        if (g) {
             var r = await channel.put('/schema/create/define', {
                 text: g.title,
                 fields: g.props.map(pro => {
@@ -43,6 +41,7 @@ export async function useOperatorBlockData(blockData: BlockSelectorItem,
                         },
                         createSource: 'InputBlockSelector'
                     });
+                    await (newBlock as DataGridView).loadSchema();
                     if (typeof g.blockViewHandle == 'function') await g.blockViewHandle(newBlock as DataGridView, g)
                 }
             }
