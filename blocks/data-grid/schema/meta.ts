@@ -92,7 +92,8 @@ export class TableSchema {
             FieldType.sort,
             FieldType.cover,
             FieldType.plain,
-            FieldType.thumb
+            FieldType.thumb,
+            FieldType.deleted
         ].includes(g.type))
     }
     get allowSortFields() {

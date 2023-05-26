@@ -6,6 +6,7 @@ import { ViewField } from "../../schema/view";
 import { DataGridView } from ".";
 import { channel } from "../../../../net/channel";
 import { ElementType, getElementUrl } from "../../../../net/element.type";
+import lodash from "lodash";
 export class DataGridViewLife {
     async loadSchema(this: DataGridView) {
         if (this.schemaId && !this.schema) {
@@ -26,6 +27,14 @@ export class DataGridViewLife {
                 if (!(this.fields[j].field || this.fields[j].type))
                     this.fields.splice(j, 1);
             }
+            lodash.remove(this.fields,
+                g => [FieldType.description,
+                FieldType.sort,
+                FieldType.cover,
+                FieldType.plain,
+                FieldType.thumb,
+                FieldType.deleted].includes(g.field?.type)
+            )
         }
         if (this.page.pageLayout.type == PageLayoutType.dbPickRecord) {
             if (!this.fields.some(s => s.type == 'check')) {
