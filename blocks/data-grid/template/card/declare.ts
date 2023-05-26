@@ -1,13 +1,8 @@
+import { TableSchemaView } from "../../schema/meta";
 import { FieldType } from "../../schema/type"
+import { DataGridView } from "../../view/base";
 import { CardView } from "./view";
-
-
 import "./views/pin";
-import "./views/answer.list";
-import "./views/question.list";
-import "./views/image-text/pin";
-import "./views/image-text/text";
-
 
 export type CardPropsType = {
     url: string,
@@ -15,6 +10,9 @@ export type CardPropsType = {
     title: string,
     remark?: string,
     image: any,
-    props?: { name: string, text: string, types: FieldType[] }[],
-    view?: typeof CardView
+    props?: { name: string, required?: boolean, text: string, types: FieldType[] }[],
+    view?: typeof CardView,
+    views?: Partial<TableSchemaView & { autoCreate?: boolean }>[],
+    blockViewHandle?: (block: DataGridView,g: CardPropsType) => Promise<void>,
+    dataList?: any[],
 }
