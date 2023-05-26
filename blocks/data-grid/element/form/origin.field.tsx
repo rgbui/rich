@@ -95,12 +95,12 @@ export function FieldView(props: { block: OriginFormField, children?: JSX.Elemen
     var block = props.block;
     if (block.fieldMode == 'detail') {
         return <div className="gap-h-10 sy-form-field-detail" style={block.visibleStyle}>
-            <div className="flex">
+            <div className="flex flex-top">
                 <div className="flex-fixed  h-30 w-120 flex remark f-14 item-hover round gap-r-10 cursor">
                     <span className="flex-fixed size-20 flex-center  gap-l-5"><Icon size={16} icon={GetFieldTypeSvg(block.field.type)}></Icon></span>
                     <span className="flex-auto"> {block.field.text}</span>
                 </div>
-                <div className="flex-auto  flex remark  h-30 item-hover round padding-w-10">
+                <div className="flex-auto  flex remark  min-h-30 item-hover round padding-w-10">
                     {props.children}
                 </div>
             </div>

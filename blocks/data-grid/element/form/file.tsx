@@ -63,7 +63,7 @@ class FormFieldFileView extends BlockView<FormFieldFile>{
         var vs = Array.isArray(this.block.value) ? this.block.value : (this.block.value ? [this.block.value] : []);
         if (!this.block.field?.config?.isMultiple && vs.length > 1) vs = [vs.first()]
         return <FieldView block={this.block}>
-            <div className="sy-form-field-file-value" >
+            <div className="sy-form-field-file-value gap-h-10" >
                 {this.block.value && <div className="sy-field-files">
                     {this.renderFiles(vs)}
                 </div>}

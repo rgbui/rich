@@ -58,7 +58,7 @@ class FormFieldImageView extends BlockView<FormFieldImage>{
         var vs = Array.isArray(this.block.value) ? this.block.value : (this.block.value ? [this.block.value] : []);
         if (!this.block.field?.config?.isMultiple && vs.length > 1) vs = [vs.first()]
         return <FieldView block={this.block}>
-            <div className="sy-form-field-image-value" >
+            <div className="sy-form-field-image-value gap-h-10" >
                 {vs.length > 0 && <div className="flex">
                     {this.renderImages(vs)}
                 </div>}
