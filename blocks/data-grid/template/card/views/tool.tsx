@@ -14,6 +14,7 @@ import { util } from "../../../../../util/util";
 import { FieldType } from "../../../schema/type";
 import { CardView } from "../view";
 import { BlockUrlConstant } from "../../../../../src/block/constant";
+import { autoImageUrl } from "../../../../../net/element.type";
 
 /**
  * 
@@ -91,13 +92,13 @@ export class CardPin extends CardView {
         var title = this.getValue<string>('title');
         var remark = this.getValue<string>('remark');
 
-        return <div  onMouseDown={e => self.openEdit(e)}>
+        return <div className="shadow cursor round box-border h-100 item-hover padding-10" onMouseDown={e => self.openEdit(e)}>
             <div className="flex">
                 <div className="flex-fixed">
-                    {hasPic && <img className="w100 block round-16 object-center" src={pics[0].url} />}
+                    {hasPic && <img className="size-80 block round-16 object-center" src={autoImageUrl(pics[0].url, 250)} />}
                 </div>
-                <div className="flex-auto">
-                    <div className="h3">{title}</div>
+                <div className="flex-auto gap-l-10">
+                    <div className="h4">{title}</div>
                     <div className="remark">{remark}</div>
                 </div>
             </div>
