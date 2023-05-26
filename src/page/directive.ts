@@ -32,5 +32,6 @@ export enum PageDirective {
     close,
     changePageLayout,
     spreadSln,
-    reload
+    reload,
+    back
 }

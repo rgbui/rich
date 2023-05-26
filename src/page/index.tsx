@@ -335,6 +335,9 @@ export interface Page {
     on(name: PageDirective.close, fn: () => void);
     emit(name: PageDirective.close);
 
+    on(name: PageDirective.back, fn: () => void);
+    emit(name: PageDirective.back);
+
     on(name: PageDirective.changePageLayout, fn: () => void);
     emit(name: PageDirective.changePageLayout);
 

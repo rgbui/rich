@@ -255,6 +255,11 @@ export class Page$Cycle {
     onClose(this: Page) {
         this.emit(PageDirective.close);
     }
+    onBack(this:Page){
+        if(this.openSource=='page'){
+            this.emit(PageDirective.back);
+        }
+    }
     private willUpdateAll: boolean = false;
     private willUpdateBlocks: Block[];
     private willLayoutBlocks: Block[];
