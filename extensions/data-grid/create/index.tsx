@@ -3,14 +3,13 @@ import { EventsComponent } from "../../../component/lib/events.component";
 import { Input } from "../../../component/view/input";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
-import { getSchemaViewIcon, getSchemaViews } from "../../../blocks/data-grid/schema/util";
+import { getSchemaViewIcon } from "../../../blocks/data-grid/schema/util";
 import { CollectTableSvg } from "../../../component/svgs";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import lodash from "lodash";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { MenuView } from "../../../component/view/menu/menu";
 import { util } from "../../../util/util";
-import { Confirm } from "../../../component/lib/confirm";
 import "./style.less";
 
 export class DataGridSelectorView extends EventsComponent {

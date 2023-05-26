@@ -12,6 +12,7 @@ import { util } from "../../../util/util";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
 import "./style.less";
+import { BlockUrlConstant } from "../../../src/block/constant";
 
 export class DataSourceView extends EventsComponent {
     render(): ReactNode {
@@ -51,7 +52,7 @@ export class DataSourceView extends EventsComponent {
         }
         var items: MenuItem[] = [];
         var list = Array.from(TableSchema.schemas.values());
-        list = lodash.sortBy(list, g =>0-g.createDate.getTime())
+        list = lodash.sortBy(list, g => 0 - g.createDate.getTime())
         list.forEach((rd) => {
             var btns = undefined
             if (this.editTable) btns = [{ icon: DotsSvg, name: 'property' }]
@@ -59,7 +60,7 @@ export class DataSourceView extends EventsComponent {
                 var cs: MenuItem[] = [];
                 if (Array.isArray(rd.views) && rd.views.length > 0) {
                     cs.push({ type: MenuItemType.text, text: '视图' })
-                    cs.push(...rd.views.map(rv => {
+                    cs.push(...rd.views.findAll(g => ![BlockUrlConstant.RecordPageView, BlockUrlConstant.FormView].includes(g.url as any)).map(rv => {
                         return {
                             text: rv.text,
                             value: {

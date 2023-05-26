@@ -22,7 +22,6 @@ export class DataGridControl extends EventsComponent {
     render(): ReactNode {
         if (!this.block) return <></>;
         if (!this.schema) return <div></div>
-
         return <div className="f-14 max-h-300 overflow-y">
 
             <div className="remark f-12 padding-w-14  gap-t-10">添加视图操作</div>
@@ -73,6 +72,7 @@ export class DataGridControl extends EventsComponent {
                 FieldType.formula,
                 FieldType.rollup,
                 FieldType.button,
+                FieldType.deleted,
                 // FieldType.audio,
                 FieldType.parentId,
                 // FieldType.image,
