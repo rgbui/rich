@@ -28,6 +28,7 @@ export var util = {
         })
     },
     showTime(date: Date) {
+        if (!date) return '';
         var now = new Date();
         if (dayjs(now).isSame(dayjs(date), 'day')) {
             var hour = date.getHours();
@@ -129,8 +130,8 @@ export var util = {
     },
     async getJson(url: string) {
         try {
-            var r=await fetch(url);
-            return { data:await r.json(),status:r.status  }
+            var r = await fetch(url);
+            return { data: await r.json(), status: r.status }
         }
         catch (err) {
             console.error(err);

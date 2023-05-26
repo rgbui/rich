@@ -13,15 +13,15 @@ import { TableSchema } from "../../../schema/meta";
 export class CardSelector extends EventsComponent {
     render(): ReactNode {
         return <div className="w-500 round ">
-            <div className="flex padding-l-10 padding-b-14">
+            <div className="flex h-400 overflow-y flex-wrap">
                 {this.getStores().map(cs => {
                     return <div
-                        className={"padding-t-14 padding-r-14 w-200  round cursor item-hover" + (this.selectUrl == cs.url ? " item-focus-hover" : "")}
+                        className={"padding-14 w-160 flex flex-col  round cursor item-hover" + (this.selectUrl == cs.url ? " item-focus-hover" : "")}
                         onMouseDown={e => this.onSelect(cs, e)}
                         key={cs.url}>
-                        <div className="gap-b-10"><img className="round-8" style={{ maxWidth: 120 }} src={cs.image} /></div>
-                        <div className="text f-14">{cs.title}</div>
-                        <div className="remark f-12">{cs.remark}</div>
+                        <div className="gap-b-10 flex-center"><img className="round-8 obj-center" style={{ width: 120, height: 80 }} src={cs.image} /></div>
+                        <div className="text f-14 flex-center">{cs.title}</div>
+                        <div className="remark f-12 flex-center">{cs.remark}</div>
                     </div>
                 })}
             </div>
@@ -44,7 +44,7 @@ export class CardSelector extends EventsComponent {
     }
     onSelect(d: CardPropsType, event: React.MouseEvent) {
         this.selectUrl = d.url;
-        this.current = d; 
+        this.current = d;
         this.forceUpdate();
         this.emit('save', d)
     }

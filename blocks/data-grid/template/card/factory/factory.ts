@@ -17,7 +17,7 @@ export class CardFactory {
         else cm.view = view;
     }
     static getCardView(url: string) {
-        return this.CardModels.get(url).view;
+        return this.CardModels.get(url)?.view;
     }
 }
 

@@ -7,6 +7,7 @@ import { useImageFilePicker } from "../../../../extensions/file/image.picker";
 import { Rect } from "../../../../src/common/vector/point";
 import { DataGridView } from "../../view/base";
 import { Field } from "../../schema/field";
+import { FieldType } from "../../schema/type";
 
 export class CardView extends React.Component<{ item: DataGridItemRecord | TableStoreItem, dataGrid: DataGridView | DataGridItemRecord }> {
     CardConfig() {
@@ -19,6 +20,10 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
             return this.props.dataGrid.schema;
         }
     }
+    getRowIndex() {
+        if (this.props.item instanceof TableStoreItem) return this.props.item.dataIndex;
+        else return -1;
+    }
     getField(name: string) {
         var n = this.CardConfig().templateProps.props?.find(g => g.name == name);
         if (n) {
@@ -26,10 +31,35 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
             if (f) return f;
         }
     }
-    getValue<T = string>(name: string): T {
+    getValue<T = string>(name: string, safeType?: FieldType): T {
         var f = this.getField(name);
         if (f) {
-            return this.props.item.dataRow[f.name];
+            var value = this.props.item.dataRow[f.name];
+            if (typeof safeType != 'undefined') {
+                switch (safeType) {
+                    case FieldType.comment:
+                    case FieldType.like:
+                    case FieldType.love:
+                    case FieldType.oppose:
+                        if (typeof value?.count == 'number' && Array.isArray(value?.users)) {
+                            return value;
+                        }
+                        else return { count: 0, users: [] } as any
+                        break
+                }
+            }
+            return value;
+        }
+        else {
+            if (typeof safeType != 'undefined') {
+                switch (safeType) {
+                    case FieldType.comment:
+                    case FieldType.like:
+                    case FieldType.love:
+                    case FieldType.oppose:
+                        return { count: 0, users: [] } as any
+                }
+            }
         }
     }
     async uploadImage(name: string, event: React.MouseEvent | MouseEvent | Rect) {

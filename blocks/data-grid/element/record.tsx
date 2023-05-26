@@ -12,6 +12,7 @@ import { ViewField } from "../schema/view";
 import { CardConfig, createFieldBlock } from "../view/item/service";
 
 /***
+ * 
  * 每一条记录，显示 item ,row,card
  * 
  */

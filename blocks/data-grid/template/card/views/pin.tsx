@@ -34,7 +34,7 @@ CardModel({
     views: [
         { url: BlockUrlConstant.DataGridTable, text: '列表', },
         { autoCreate: true, url: BlockUrlConstant.DataGridGallery, text: '相册', },
-        { url: BlockUrlConstant.RecordPageView, text: '添加数据', }
+        { url: BlockUrlConstant.RecordPageView, text: '图片详情', }
     ],
     dataList: [
         { pic: { url: 'https://gd-hbimg.huaban.com/9e1942a5665bad6152682864d34f58ec63afc99a1d202-DByYa3_fw1200webp' }, title: '古风/和风/玄幻/武侠/古装', remark: 'i.pinimg.com' },
@@ -80,8 +80,8 @@ export class CardPin extends CardView {
         var title = this.getValue<string>('title');
         var remark = this.getValue<string>('remark');
         var hasPic = Array.isArray(pics) && pics.length > 0;
-        var love = this.getValue<string>('like');
-        var isLove = this.isEmoji('like')
+        var like = this.getValue<string>('like', FieldType.like);
+        var isLike = this.isEmoji('like')
         async function openProperty(event: React.MouseEvent) {
             event.stopPropagation();
             var rect = Rect.fromEvent(event);
@@ -111,7 +111,7 @@ export class CardPin extends CardView {
                 </div>}
                 <div className="mask-1 visible pos-inset z-1  round-16"></div>
                 <div className="pos-bottom-full  flex-end z-2 visible gap-b-5 r-size-24 r-gap-r-5 r-circle r-cursor">
-                    <span onMouseDown={e => self.onUpdateCellInteractive(e, 'like')} className={"flex-center" + (isLove ? " bg-primary text-white" : " bg-white  item-white-hover text-1")}>
+                    <span onMouseDown={e => self.onUpdateCellInteractive(e, 'like')} className={"flex-center" + (isLike ? " bg-primary text-white" : " bg-white  item-white-hover text-1")}>
                         <Icon icon={LoveSvg}></Icon>
                     </span>
                     <span onMouseDown={e => openProperty(e)} className="bg-white item-white-hover   flex-center">

@@ -1,20 +1,17 @@
 
 
 import React, { ReactNode } from "react";
-import { UploadSvg, TrashSvg, LoveSvg, DotsSvg } from "../../../../../component/svgs";
+import { CommentSvg, LikeSvg } from "../../../../../component/svgs";
 import { Avatar } from "../../../../../component/view/avator/face";
 import { UserBox } from "../../../../../component/view/avator/user";
 import { Icon } from "../../../../../component/view/icon";
-import { useSelectMenuItem } from "../../../../../component/view/menu";
-import { MenuItemType } from "../../../../../component/view/menu/declare";
-import { BackgroundColorList } from "../../../../../extensions/color/data";
 import { IconArguments } from "../../../../../extensions/icon/declare";
 import * as Card1 from "../../../../../src/assert/img/card/card1.png"
-import { Rect } from "../../../../../src/common/vector/point";
 import { util } from "../../../../../util/util";
 import { FieldType } from "../../../schema/type";
 import { CardModel, CardViewCom } from "../factory/observable";
 import { CardView } from "../view";
+import { BlockUrlConstant } from "../../../../../src/block/constant";
 
 /**
  * 
@@ -24,13 +21,13 @@ import { CardView } from "../view";
  */
 CardModel({
     url: '/article',
-    title: 'app工具',
-    remark: 'app工具',
+    title: '文章',
+    remark: '文章详情',
     image: Card1.default,
     group: 'image',
     props: [
         {
-            name: 'cover',
+            name: 'pic',
             text: '封面图',
             types: [FieldType.thumb, FieldType.image, FieldType.cover, FieldType.video],
             required: true
@@ -47,69 +44,94 @@ CardModel({
         { name: 'types', text: '分类', types: [FieldType.option, FieldType.options] },
         { name: 'date', text: '日期', types: [FieldType.createDate, FieldType.date] },
         { name: 'comment', text: '评论', types: [FieldType.comment] },
-    ]
+    ],
+    views: [
+        { url: BlockUrlConstant.DataGridTable, text: '文章', },
+        { autoCreate: true, url: BlockUrlConstant.DataGridList, text: '列表', },
+        { url: BlockUrlConstant.RecordPageView, text: '文章详情', }
+    ],
+    dataList: [
+        { pic: { url: 'https://gd-hbimg.huaban.com/9e1942a5665bad6152682864d34f58ec63afc99a1d202-DByYa3_fw1200webp' }, title: '古风/和风/玄幻/武侠/古装', remark: 'i.pinimg.com' },
+        { pic: { url: 'https://gd-hbimg.huaban.com/2ceb09d869c9ae5561fb7a29c30a7bdf3fcb6fba9823f8-jsuPvR_fw1200webp' }, title: '{东方系列}实拍中国古装女性角色', remark: '' },
+        { pic: { url: 'https://gd-hbimg.huaban.com/bb7e72bd5b725e6c6eef09378f213e6818cc85b7101c98-McbbUs_fw1200webp' }, title: '参考 照片 女', remark: '{其他}实拍动态...（现代，古装）' },
+        { pic: { url: 'https://gd-hbimg.huaban.com/9e1942a5665bad6152682864d34f58ec63afc99a1d202-DByYa3_fw1200webp' }, title: '古风/和风/玄幻/武侠/古装', remark: 'i.pinimg.com' },
+        { pic: { url: 'https://gd-hbimg.huaban.com/2ceb09d869c9ae5561fb7a29c30a7bdf3fcb6fba9823f8-jsuPvR_fw1200webp' }, title: '{东方系列}实拍中国古装女性角色', remark: '' },
+        { pic: { url: 'https://gd-hbimg.huaban.com/bb7e72bd5b725e6c6eef09378f213e6818cc85b7101c98-McbbUs_fw1200webp' }, title: '参考 照片 女', remark: '{其他}实拍动态...（现代，古装）' },
+    ],
+    async blockViewHandle(dg, g) {
+        var ps = g.props.toArray(pro => {
+            var f = dg.schema.fields.find(x => x.text == pro.text);
+            if (f) {
+                return {
+                    name: f.name,
+                    visible: true,
+                    bindFieldId: f.id
+                }
+            }
+        })
+        await dg.updateProps({
+            openRecordSource: 'page',
+            cardConfig: {
+                auto: false,
+                showCover: false,
+                coverFieldId: "",
+                coverAuto: false,
+                showMode: 'define',
+                templateProps: {
+                    url: g.url,
+                    props: ps
+                }
+            }
+        });
+    }
 })
 
 @CardViewCom('/article')
 export class CardPin extends CardView {
     render(): ReactNode {
         var self = this;
-        var pics = this.getValue<IconArguments[]>('cover');
+        var pics = this.getValue<IconArguments[]>('pic');
+        var types = this.getValue<{ value: string }>('types');
+        var hasPic = Array.isArray(pics) && pics.length > 0;
+
         var author = this.getValue<string>('author');
         var title = this.getValue<string>('title');
         var remark = this.getValue<string>('remark');
-        var hasPic = Array.isArray(pics) && pics.length > 0;
-        var love = this.getValue<string>('like');
-        var isLove = this.isEmoji('like')
-        async function openProperty(event: React.MouseEvent) {
-            event.stopPropagation();
-            var rect = Rect.fromEvent(event);
-            var r = await useSelectMenuItem({ roundArea: rect }, [
-                { name: 'replace', icon: UploadSvg, text: '替换' },
-                { type: MenuItemType.divide },
-                { name: 'close', icon: TrashSvg, text: '删除' }
-            ]);
-            if (r) {
-                if (r.item.name == 'replace') {
-                    await self.uploadImage('cover', rect)
-                }
-                else if (r.item.name == 'close') {
-                    await self.deleteItem();
-                }
-            }
-        }
-        return <div className="w100" onMouseDown={e => self.openEdit(e)}>
-            <div className="visible-hover max-h-600 overflow-hidden round-bottom-16 relative">
-                {hasPic && <img className="w100 block round-16 object-center" src={pics[0].url} style={{ backgroundColor: BackgroundColorList.randomOf().color }} />}
-                {!hasPic && <div className={'round-16'} style={{ height: util.getRandom(150, 300), backgroundColor: BackgroundColorList.randomOf().color }}></div>}
-                {!hasPic && <div className="pos-center z-4 visible">
-                    <span onMouseDown={e => this.uploadImage('cover', e)} className="padding-w-10 padding-h-3 bg-white item-white-hover round-8 cursor flex">
-                        <span className="size-24 flex-center flex-inline"><Icon icon={UploadSvg}></Icon></span>
-                        <span className="f-14 text-1">上传图片</span>
-                    </span>
-                </div>}
-                <div className="mask-1 visible pos-inset z-1  round-16"></div>
-                <div className="pos-bottom-full  flex-end z-2 visible gap-b-5 r-size-24 r-gap-r-5 r-circle r-cursor">
-                    <span onMouseDown={e => self.onUpdateCellInteractive(e, 'like')} className={"flex-center" + (isLove ? " bg-primary text-white" : " bg-white  item-white-hover text-1")}>
-                        <Icon icon={LoveSvg}></Icon>
-                    </span>
-                    <span onMouseDown={e => openProperty(e)} className="bg-white item-white-hover   flex-center">
-                        <Icon size={18} icon={DotsSvg}></Icon>
-                    </span>
+        var date = this.getValue<Date>('date');
+        var comment = this.getValue<{ count: number, users: string[] }>('comment', FieldType.comment);
+        var like = this.getValue<{ count: number, users: string[] }>('like', FieldType.like);
+        var isLike = this.isEmoji('like');
+
+        function renderContent() {
+            return <>
+                <div className="h3">{title}</div>
+                <div>{remark}</div>
+                <div className="flex">
+                    <div className="flex-auto flex">
+                        <UserBox userid={author}>{(user) => {
+                            return <>
+                                <Avatar size={30} user={user}></Avatar>
+                                <a className="cursor gap-l-10 underline-hover text-1">{user.name}</a>
+                            </>
+                        }}</UserBox>
+                        <span className="remark f-12 gap-l-10">{util.showTime(date)}</span>
+                    </div>
+                    <div className="flex-fixed flex r-gap-5 r-item-hover r-round r-cursor r-padding-w-5 r-padding-h-3  r-flex-center">
+                        <span><Icon size={16} icon={LikeSvg}></Icon>{like.count}</span>
+                        <span><Icon size={16} icon={CommentSvg}></Icon>{comment.count}</span>
+                    </div>
                 </div>
+            </>
+        }
+        return <div  onMouseDown={e => self.openEdit(e)}>
+            <div className="flex">
+                {hasPic && <><div className="flex-auto">
+                    <img className="w100 block round-16 object-center" src={pics[0].url} />
+                </div>
+                    <div className="flex-auto">{renderContent()}</div></>
+                }
+                {!hasPic && <div>{renderContent()}</div>}
             </div>
-            <div className="text-1 padding-w-8 f-14 gap-h-5 bold">
-                {title}
-            </div>
-            <div className="text-1 padding-w-8  f-14 gap-h-5 flex">
-                <UserBox userid={author}>{(user) => {
-                    return <>
-                        <Avatar size={30} user={user}></Avatar>
-                        <a className="cursor gap-l-10 underline-hover text-1">{user.name}</a>
-                    </>
-                }}</UserBox>
-            </div>
-            <div className="remark gap-h-10">{remark}</div>
         </div>
     }
 } 

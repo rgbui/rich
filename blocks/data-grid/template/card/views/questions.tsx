@@ -13,6 +13,7 @@ import { util } from "../../../../../util/util";
 import { FieldType } from "../../../schema/type";
 import { CardModel, CardViewCom } from "../factory/observable";
 import { CardView } from "../view";
+import { BlockUrlConstant } from "../../../../../src/block/constant";
 
 /**
  * https://segmentfault.com/questions
@@ -32,73 +33,80 @@ CardModel({
         },
         { name: 'remark', text: '描述', types: [FieldType.plain, FieldType.text] },
         { name: 'author', text: '作者', types: [FieldType.creater] },
-        { name: 'types', text: '分类', types: [FieldType.option, FieldType.options] },
+        { name: 'tags', text: '分类', types: [FieldType.option, FieldType.options] },
         { name: 'date', text: '日期', types: [FieldType.createDate, FieldType.date] },
         { name: 'comment', text: '评论', types: [FieldType.comment] },
-       
-    ]
+        { name: 'browse', text: '浏览', types: [FieldType.browse] },
+        { name: 'like', text: '点赞', types: [FieldType.like] },
+    ],
+    views: [
+        { url: BlockUrlConstant.DataGridTable, text: '问题', },
+        { autoCreate: true, url: BlockUrlConstant.DataGridList, text: '列表', },
+        { url: BlockUrlConstant.RecordPageView, text: '问题详情', }
+    ],
+    dataList: [
+        { title: '古风/和风/玄幻/武侠/古装', remark: 'i.pinimg.com' },
+        { title: '{东方系列}实拍中国古装女性角色', remark: '' },
+        { title: '参考 照片 女', remark: '{其他}实拍动态...（现代，古装）' },
+        { title: '古风/和风/玄幻/武侠/古装', remark: 'i.pinimg.com' },
+        { title: '{东方系列}实拍中国古装女性角色', remark: '' },
+        { title: '参考 照片 女', remark: '{其他}实拍动态...（现代，古装）' },
+    ],
+    async blockViewHandle(dg, g) {
+        var ps = g.props.toArray(pro => {
+            var f = dg.schema.fields.find(x => x.text == pro.text);
+            if (f) {
+                return {
+                    name: f.name,
+                    visible: true,
+                    bindFieldId: f.id
+                }
+            }
+        })
+        await dg.updateProps({
+            openRecordSource: 'page',
+            cardConfig: {
+                auto: false,
+                showCover: false,
+                coverFieldId: "",
+                coverAuto: false,
+                showMode: 'define',
+                templateProps: {
+                    url: g.url,
+                    props: ps
+                }
+            }
+        });
+    }
 })
 
 @CardViewCom('/questions')
 export class CardPin extends CardView {
     render(): ReactNode {
         var self = this;
-        var pics = this.getValue<IconArguments[]>('cover');
         var author = this.getValue<string>('author');
         var title = this.getValue<string>('title');
         var remark = this.getValue<string>('remark');
-        var hasPic = Array.isArray(pics) && pics.length > 0;
-        var love = this.getValue<string>('like');
-        var isLove = this.isEmoji('like')
-        async function openProperty(event: React.MouseEvent) {
-            event.stopPropagation();
-            var rect = Rect.fromEvent(event);
-            var r = await useSelectMenuItem({ roundArea: rect }, [
-                { name: 'replace', icon: UploadSvg, text: '替换' },
-                { type: MenuItemType.divide },
-                { name: 'close', icon: TrashSvg, text: '删除' }
-            ]);
-            if (r) {
-                if (r.item.name == 'replace') {
-                    await self.uploadImage('cover', rect)
-                }
-                else if (r.item.name == 'close') {
-                    await self.deleteItem();
-                }
-            }
-        }
+        var like = this.getValue<{ count: number, users: string[] }>('like', FieldType.like);
+        var browse = this.getValue<{ count: number, users: string[] }>('browse', FieldType.browse);
+
         return <div className="w100" onMouseDown={e => self.openEdit(e)}>
-            <div className="visible-hover max-h-600 overflow-hidden round-bottom-16 relative">
-                {hasPic && <img className="w100 block round-16 object-center" src={pics[0].url} style={{ backgroundColor: BackgroundColorList.randomOf().color }} />}
-                {!hasPic && <div className={'round-16'} style={{ height: util.getRandom(150, 300), backgroundColor: BackgroundColorList.randomOf().color }}></div>}
-                {!hasPic && <div className="pos-center z-4 visible">
-                    <span onMouseDown={e => this.uploadImage('cover', e)} className="padding-w-10 padding-h-3 bg-white item-white-hover round-8 cursor flex">
-                        <span className="size-24 flex-center flex-inline"><Icon icon={UploadSvg}></Icon></span>
-                        <span className="f-14 text-1">上传图片</span>
-                    </span>
-                </div>}
-                <div className="mask-1 visible pos-inset z-1  round-16"></div>
-                <div className="pos-bottom-full  flex-end z-2 visible gap-b-5 r-size-24 r-gap-r-5 r-circle r-cursor">
-                    <span onMouseDown={e => self.onUpdateCellInteractive(e, 'like')} className={"flex-center" + (isLove ? " bg-primary text-white" : " bg-white  item-white-hover text-1")}>
-                        <Icon icon={LoveSvg}></Icon>
-                    </span>
-                    <span onMouseDown={e => openProperty(e)} className="bg-white item-white-hover   flex-center">
-                        <Icon size={18} icon={DotsSvg}></Icon>
-                    </span>
+            <div className="flex">
+                <div className="flex-fixed flex">
+                    <div>
+                        <span>{like.count}</span>
+                        <span>点赞</span>
+                    </div>
+                    <div>
+                        <span>{browse.count}</span>
+                        <span>阅读</span>
+                    </div>
+                </div>
+                <div className="flex-auto">
+                    <div className="h3">{title}</div>
+                    <div className="flex"></div>
                 </div>
             </div>
-            <div className="text-1 padding-w-8 f-14 gap-h-5 bold">
-                {title}
-            </div>
-            <div className="text-1 padding-w-8  f-14 gap-h-5 flex">
-                <UserBox userid={author}>{(user) => {
-                    return <>
-                        <Avatar size={30} user={user}></Avatar>
-                        <a className="cursor gap-l-10 underline-hover text-1">{user.name}</a>
-                    </>
-                }}</UserBox>
-            </div>
-            <div className="remark gap-h-10">{remark}</div>
         </div>
     }
 } 

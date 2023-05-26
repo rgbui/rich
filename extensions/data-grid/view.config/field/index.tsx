@@ -40,7 +40,7 @@ export class DataGridFields extends EventsComponent {
     }
     renderFields() {
         var fs = this.schema.visibleFields.findAll(g => g.text && !this.block.fields.some(s => s.fieldId == g.id) ? true : false);
-      
+
         var self = this;
         async function onShowAll() {
             await self.block.onShowAllField();
@@ -340,8 +340,8 @@ export class DataGridFields extends EventsComponent {
         if (!this.block) return <></>;
         if (!this.schema) return <div></div>
         if (this.block.url == BlockUrlConstant.DataGridTable) return this.renderTable()
-        if ([BlockUrlConstant.DataGridBoard, BlockUrlConstant.DataGridGallery].includes(this.block.url as any)) return this.renderCard()
-        else if (this.block.url == BlockUrlConstant.List) return this.renderList()
+        if ([BlockUrlConstant.DataGridBoard, BlockUrlConstant.List, BlockUrlConstant.DataGridGallery].includes(this.block.url as any)) return this.renderCard()
+        // else if (this.block.url == BlockUrlConstant.List) return this.renderList()
         else if (this.block.url == BlockUrlConstant.DataGridCalendar) return this.renderTable()
         else return this.renderTable()
     }

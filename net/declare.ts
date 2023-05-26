@@ -283,6 +283,7 @@ export interface ChannelGetMapUrls {
 	"/view/snap/query":{args:{ elementUrl: string},returnType:Promise<SockResponse<{content:string,operates:any[]}>>},
 	"/view/snap/list":{args:{wsId?: string, elementUrl: string, page: number, size: number},returnType:Promise<SockResponse<{list:any[],total:number,size:number,page:number}>>},
 	"/view/snap/content":{args:{wsId?:string,id:string},returnType:Promise<SockResponse<{id:string,content:string}>>},
+	"/view/browse":{args:{elementUrl:string,wsId?:string},returnType:Promise<{list:any[],page:number,size:number,total:number}>},
 	"/get/page/refs":{args:{wsId?:string,pageId:string,size?:number,desc?:boolean},returnType:Promise<SockResponse<{pages:LinkPageItem[],list:any[],total:number,size:number,page:number}>>},
 	"/user/interactives":{args:{wsId?:string,schemaId:string,ids:string[],es:string[]},returnType:Promise<SockResponse<{list:Record<string,string[]>}>>},
 	"/get/tag/refs":{args:{wsId?:string,tagId?:string,tag?:string,size?:number,desc?:boolean},returnType:Promise<SockResponse<{pages:LinkPageItem[],list:any[],total:number,size:number,page:number}>>},
