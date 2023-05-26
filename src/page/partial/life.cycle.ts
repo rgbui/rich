@@ -756,18 +756,21 @@ export class Page$Cycle {
                         fieldMode: 'detail'
                     }, r);
                 })
-                cs.splice(0, 0, { url: BlockUrlConstant.Title })
+                if (this.isSchemaRecordViewTemplate) {
+                    cs.splice(0, 0, { url: BlockUrlConstant.Title })
+                }
                 this.views = [];
                 await this.loadViews({ views: [{ url: BlockUrlConstant.View, blocks: { childs: cs } }] })
             }
             this.loadDefault = false;
         }
-        if (this.pe.type == ElementType.SchemaData)
-        {
+        if (!this.isSchemaRecordViewTemplate) {
             var r = this.find(g => (g as OriginFormField).field?.name == 'title');
             if (r) {
                 lodash.remove(r.parentBlocks, g => g == r);
             }
+        }
+        if (this.pe.type == ElementType.SchemaData) {
             var row = await this.schema.rowGet(this.pe.id1);
             if (row) {
                 this.formRowData = lodash.cloneDeep(row);

@@ -293,11 +293,15 @@ export class PageEvent {
         })
     }
     async onUpdatePageData(this: Page, data: Record<string, any>) {
-        if ([ElementType.SchemaData].includes(this.pe.type)) {
+        if ([
+            ElementType.SchemaData,
+            ElementType.SchemaRecordView,
+            ElementType.SchemaView
+        ].includes(this.pe.type) && !this.isSchemaRecordViewTemplate) {
             Object.assign(this.formRowData, data);
             this.forceUpdate();
         }
-        else if ([ElementType.SchemaRecordView, ElementType.SchemaView].includes(this.pe.type)) {
+        else if (this.isSchemaRecordViewTemplate) {
             var sr = this.schema.views.find(g => g.id == this.pe.id1);
             if (sr) {
                 await this.schema.onSchemaOperate([{
@@ -346,7 +350,7 @@ export class PageEvent {
         await this.onUpdatePageData(c);
     }
     getPageDataInfo(this: Page) {
-        if ([ElementType.SchemaData].includes(this.pe.type)) {
+        if ([ElementType.SchemaData, ElementType.SchemaRecordView, ElementType.SchemaView].includes(this.pe.type) && !this.isSchemaRecordViewTemplate) {
             return {
                 id: this.formRowData.id,
                 text: this.formRowData.title,
@@ -354,7 +358,7 @@ export class PageEvent {
                 cover: this.formRowData.cover
             }
         }
-        else if ([ElementType.SchemaRecordView, ElementType.SchemaView].includes(this.pe.type)) {
+        else if (this.isSchemaRecordViewTemplate) {
             var sr = this.schema.views.find(g => g.id == this.pe.id1);
             if (sr) {
                 return {
