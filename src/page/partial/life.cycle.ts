@@ -750,15 +750,13 @@ export class Page$Cycle {
             }
             else {
                 var cs: Record<string, any>[] = this.schema.initUserFields.toArray(field => {
-                    if (field?.type == FieldType.title) return undefined;
+                    if (field?.type == FieldType.title && this.isSchemaRecordViewTemplate) return undefined;
                     var r = GetFieldFormBlockInfo(field);
                     if (r) return Object.assign({
                         fieldMode: 'detail'
                     }, r);
                 })
-                if (this.isSchemaRecordViewTemplate) {
-                    cs.splice(0, 0, { url: BlockUrlConstant.Title })
-                }
+                cs.splice(0, 0, { url: BlockUrlConstant.Title })
                 this.views = [];
                 await this.loadViews({ views: [{ url: BlockUrlConstant.View, blocks: { childs: cs } }] })
             }
