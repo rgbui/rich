@@ -17,7 +17,15 @@ import { Point, Rect } from "../../common/vector/point";
 import { ActionDirective } from "../../history/declare";
 import { PageLayoutType } from "../../page/declare";
 import { PageDirective } from "../../page/directive";
-import { inputBackspaceDeleteContent, inputBackSpaceTextContent, inputDetector, inputLineTail, inputPop, keydownBackspaceTextContent } from "./input";
+import {
+    inputBackspaceDeleteContent,
+    inputBackSpaceTextContent,
+    inputDetector,
+    inputLineTail,
+    inputPop,
+    keydownBackspaceTextContent
+} from "./input";
+
 import {
     MoveCursor,
     onEnterInput,
@@ -29,6 +37,8 @@ import { AutoInputStore, InputForceStore, InputStore } from "./store";
 import { AiInput } from "./ai";
 import { useAITool } from "../../../extensions/ai";
 import { channel } from "../../../net/channel";
+import { BlockSelectorItem } from "../../../extensions/block/delcare";
+import { useOperatorBlockData } from "./operator";
 
 /**
  * https://blog.csdn.net/mafan121/article/details/78519348
@@ -364,47 +374,53 @@ export class PageWrite {
      */
     async onInputPopCreateBlock(...args: any[]) {
         var inputPopHandle = async (offset: number,
-            blockData: { isLine?: boolean, url?: string, link?: { name: 'create', text: string } }) => {
+            blockData: BlockSelectorItem
+        ) => {
             await InputForceStore(this.inputPop.aa, async () => {
                 var aa = this.inputPop.aa;
                 var newBlock: Block;
                 var bd = lodash.cloneDeep(blockData);
-                delete bd.isLine;
-                delete bd.url;
-                if (blockData.isLine) {
-                    /**
-                     * 说明创建的是行内块
-                     */
-                    if (bd.link?.name == 'create') {
-                        if (blockData.url == BlockUrlConstant.Text) {
-                            //说明是[[创建双链
-                            var currentPage = await channel.query('/current/page');
-                            var r = await channel.air('/page/create/sub', {
-                                pageId: currentPage.id,
-                                text: bd.link.text,
-                            });
-                            if (r.id) Object.assign(bd, {
-                                refLinks: [{ type: 'page', id: util.guid(), pageId: r.id }],
-                            })
-                            delete bd.link;
-                        }
-                        else if (blockData.url == BlockUrlConstant.Tag) {
-                            var rg = await channel.put('/tag/create', { tag: bd.link.text });
-                            if (rg.ok) Object.assign(bd, {
-                                refLinks: [{ type: 'tag', id: util.guid(), tagId: rg.data.id, tagText: bd.link.text }],
-                            })
-                            delete bd.link;
-                        }
-                    }
-                    newBlock = await aa.block.visibleRightCreateBlock(offset, blockData.url, { ...bd, createSource: 'InputBlockSelector' });
+                if (blockData.operator) {
+                    newBlock = await useOperatorBlockData(blockData, aa, offset);
                 }
                 else {
-                    /**
-                     * 判断是否为空行块，如果是空行块，则将当前的块转用
-                     * 否则创建一个换行块
-                     */
-                    newBlock = await aa.block.visibleDownCreateBlock(blockData.url, { ...bd, createSource: 'InputBlockSelector' });
-                    await aa.block.clearEmptyBlock();
+                    delete bd.isLine;
+                    delete bd.url;
+                    if (blockData.isLine) {
+                        /**
+                         * 说明创建的是行内块
+                         */
+                        if (bd.link?.name == 'create') {
+                            if (blockData.url == BlockUrlConstant.Text) {
+                                //说明是[[创建双链
+                                var currentPage = await channel.query('/current/page');
+                                var r = await channel.air('/page/create/sub', {
+                                    pageId: currentPage.id,
+                                    text: bd.link.text,
+                                });
+                                if (r.id) Object.assign(bd, {
+                                    refLinks: [{ type: 'page', id: util.guid(), pageId: r.id }],
+                                })
+                                delete bd.link;
+                            }
+                            else if (blockData.url == BlockUrlConstant.Tag) {
+                                var rg = await channel.put('/tag/create', { tag: bd.link.text });
+                                if (rg.ok) Object.assign(bd, {
+                                    refLinks: [{ type: 'tag', id: util.guid(), tagId: rg.data.id, tagText: bd.link.text }],
+                                })
+                                delete bd.link;
+                            }
+                        }
+                        newBlock = await aa.block.visibleRightCreateBlock(offset, blockData.url, { ...bd, createSource: 'InputBlockSelector' });
+                    }
+                    else {
+                        /**
+                         * 判断是否为空行块，如果是空行块，则将当前的块转用
+                         * 否则创建一个换行块
+                         */
+                        newBlock = await aa.block.visibleDownCreateBlock(blockData.url, { ...bd, createSource: 'InputBlockSelector' });
+                        await aa.block.clearEmptyBlock();
+                    }
                 }
                 newBlock.mounted(() => {
                     this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true })

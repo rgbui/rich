@@ -52,10 +52,16 @@ export function DragBlockLine(block: Block, event: React.MouseEvent) {
                             }
                             else {
                                 var cs = await appear.split([pos.offset]);
-                                var first = cs[0];
-                                var at = first.at;
-                                if (!(cs.length == 1 && pos.offset == 0)) at += 1;
-                                await first.parent.append(block, at, first.parentKey);
+                                console.log('gggg', cs, appear, appear.block, pos.offset);
+                                if (cs.length > 0) {
+                                    var first = cs[0];
+                                    var at = first.at;
+                                    if (!(cs.length == 1 && pos.offset == 0)) at += 1;
+                                    await first.parent.append(block, at, first.parentKey);
+                                }
+                                else {
+                                    await appear.block.append(block, 0, 'childs')
+                                }
                             }
                             block.page.addUpdateEvent(async () => {
                                 block.page.kit.anchorCursor.onFocusBlockAnchor(block, { merge: true, render: true, last: true })
