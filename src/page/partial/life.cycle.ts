@@ -255,8 +255,20 @@ export class Page$Cycle {
     onClose(this: Page) {
         this.emit(PageDirective.close);
     }
-    onBack(this:Page){
-        if(this.openSource=='page'){
+    async onBack(this: Page) {
+        if (this.openSource == 'page') {
+            if (!this.isSchemaRecordViewTemplate) {
+                if (this.pe.type == ElementType.SchemaData) {
+                    this.onSave();
+                    var newRow = await this.getSchemaRow()
+                    await this.schema.rowUpdate({ dataId: this.pe.id1, data: newRow })
+                }
+                else if (this.pe.type == ElementType.SchemaRecordView) {
+                    this.onSave();
+                    var newRow = await this.getSchemaRow()
+                    await this.schema.rowAdd({ data: newRow })
+                }
+            }
             this.emit(PageDirective.back);
         }
     }
