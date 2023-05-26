@@ -8,6 +8,8 @@ import { DataGridView } from "../base";
 import { DataGridTool } from "../components/tool";
 import { CardConfig } from "../item/service";
 import "./style.less";
+import { CollectTableSvg } from "../../../../component/svgs";
+import { Icon } from "../../../../component/view/icon";
 
 @url('/data-grid/gallery')
 export class TableStoreGallery extends DataGridView {
@@ -70,11 +72,17 @@ export class TableStoreGalleryView extends BlockView<TableStoreGallery>{
         return eles;
     }
     renderItem(itemBlock: Block) {
-        if (this.block.cardConfig.showMode=='define' && this.block.cardConfig.templateProps.url) {
+        if (this.block.cardConfig.showMode == 'define' && this.block.cardConfig.templateProps.url) {
             var CV = CardFactory.getCardView(this.block.cardConfig.templateProps.url);
             if (CV) return <CV item={itemBlock as any} dataGrid={this.block}></CV>
         }
         return <itemBlock.viewComponent block={itemBlock}></itemBlock.viewComponent>
+    }
+    renderCreateTable() {
+        return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
+            <span className="size-24 flex-center remark"><Icon size={16} icon={CollectTableSvg}></Icon></span>
+            <span className="remark">创建数据表格</span>
+        </div>
     }
     render() {
         return <div className='sy-data-grid-gallery'
@@ -82,6 +90,7 @@ export class TableStoreGalleryView extends BlockView<TableStoreGallery>{
             onMouseLeave={e => this.block.onOver(false)}>
             <DataGridTool block={this.block}></DataGridTool>
             <div className={"sy-data-grid-gallery-list" + (this.block.isCardAuto ? " sy-data-grid-gallery-list-cols" : "")}>{this.renderRows()} </div>
+            {this.renderCreateTable()}
         </div>
     }
 }

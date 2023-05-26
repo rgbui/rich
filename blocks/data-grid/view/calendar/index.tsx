@@ -7,7 +7,7 @@ import { FieldType } from "../../schema/type";
 import './style.less';
 import { Icon } from "../../../../component/view/icon";
 import { DataGridTool } from "../components/tool";
-import { ChevronLeftSvg, ChevronRightSvg, PlusSvg } from "../../../../component/svgs";
+import { ChevronLeftSvg, ChevronRightSvg, CollectTableSvg, PlusSvg } from "../../../../component/svgs";
 
 @url('/data-grid/calendar')
 export class TableStoreCalendar extends DataGridView {
@@ -121,6 +121,12 @@ export class TableStoreCalendarView extends BlockView<TableStoreCalendar>{
             </div>
         </>
     }
+    renderCreateTable() {
+        return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
+            <span className="size-24 flex-center remark"><Icon size={16} icon={CollectTableSvg}></Icon></span>
+            <span className="remark">创建数据表格</span>
+        </div>
+    }
     render() {
         var now = dayjs();
         var day = dayjs(this.block.date);
@@ -140,6 +146,7 @@ export class TableStoreCalendarView extends BlockView<TableStoreCalendar>{
             <div className="sy-data-grid-calendar-cells">
                 {this.renderMonth()}
             </div>
+            {this.renderCreateTable()}
         </div>
     }
 }

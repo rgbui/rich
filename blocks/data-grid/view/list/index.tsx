@@ -1,5 +1,5 @@
 import React from "react";
-import { PlusSvg } from "../../../../component/svgs";
+import { CollectTableSvg, PlusSvg } from "../../../../component/svgs";
 import { Divider } from "../../../../component/view/grid";
 import { Icon } from "../../../../component/view/icon";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
@@ -25,6 +25,12 @@ export class TableStoreList extends DataGridView {
 }
 @view('/data-grid/list')
 export class TableStoreListView extends BlockView<TableStoreList>{
+    renderCreateTable() {
+        return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
+            <span className="size-24 flex-center remark"><Icon size={16} icon={CollectTableSvg}></Icon></span>
+            <span className="remark">创建数据表格</span>
+        </div>
+    }
     render() {
         return <div className='sy-data-grid-list'
             onMouseEnter={e => this.block.onOver(true)}
@@ -38,6 +44,7 @@ export class TableStoreListView extends BlockView<TableStoreList>{
                 <Icon icon={PlusSvg}></Icon>
                 <span>新增</span>
             </div>}
+            {this.renderCreateTable()}
         </div>
     }
 }

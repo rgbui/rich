@@ -29,7 +29,7 @@ export class DataGridViewData {
         if (!this.schema.recordViews.some(s => s.id == vid)) vid = undefined;
         if (!vid) vid = this.schema.recordViews[0]?.id;
         var dialougPage: Page = await channel.air('/page/dialog', {
-            elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, viewId || this.schema.defaultAddForm?.id)
+            elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, vid)
         })
         if (dialougPage) {
             dialougPage.onSave();

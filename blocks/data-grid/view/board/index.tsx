@@ -8,6 +8,8 @@ import { TableStoreItem } from "../item";
 import { ChildsArea } from "../../../../src/block/view/appear";
 import './style.less';
 import { DataGridTool } from "../components/tool";
+import { CollectTableSvg } from "../../../../component/svgs";
+import { Icon } from "../../../../component/view/icon";
 
 @url('/data-grid/board')
 export class TableStoreBoard extends DataGridView {
@@ -81,6 +83,12 @@ export class TableStoreBoardView extends BlockView<TableStoreBoard>{
             </div>
         </div>
     }
+    renderCreateTable() {
+        return !this.block.schema && this.block.isCanEdit() && <div className="item-hover item-hover-focus cursor round flex" onClick={e => this.block.onCreateTableSchema()}>
+            <span className="size-24 flex-center remark"><Icon size={16} icon={CollectTableSvg}></Icon></span>
+            <span className="remark">创建数据表格</span>
+        </div>
+    }
     render() {
         return <div className='sy-data-grid-board' onMouseEnter={e => this.block.onOver(true)}
             onMouseLeave={e => this.block.onOver(false)}>
@@ -90,6 +98,7 @@ export class TableStoreBoardView extends BlockView<TableStoreBoard>{
                     return this.renderGroup(dg, i)
                 })}
             </div>
+            {this.renderCreateTable()}
         </div>
     }
 }

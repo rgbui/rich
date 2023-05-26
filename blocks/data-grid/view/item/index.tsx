@@ -21,9 +21,9 @@ import { channel } from "../../../../net/channel";
 import { FieldType } from "../../schema/type";
 import lodash from "lodash";
 import { OriginField } from "../../element/field/origin.field";
-import "./style.less";
 import { DotsSvg, EditSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
+import "./style.less";
 
 @url('/data-grid/item')
 export class TableStoreItem extends Block {
@@ -84,7 +84,7 @@ export class TableStoreItem extends Block {
         });
         if (r.ok) {
             var ov = lodash.cloneDeep(this.dataRow[field.name]);
-            if (typeof ov == 'undefined') ov = { count: 0 };
+            if (typeof ov == 'undefined' || lodash.isNull(ov)) ov = { count: 0 };
             if (typeof ov == 'number') ov = { count: ov };
             ov.count = r.data.count;
             var userid = this.page.user?.id;
