@@ -3,13 +3,14 @@ import { CollectTableSvg, PlusSvg } from "../../../../component/svgs";
 import { Divider } from "../../../../component/view/grid";
 import { Icon } from "../../../../component/view/icon";
 import { BlockFactory } from "../../../../src/block/factory/block.factory";
-import { url, view } from "../../../../src/block/factory/observable";
+import { prop, url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { ChildsArea } from "../../../../src/block/view/appear";
 import { DataGridView } from "../base";
 import { DataGridTool } from "../components/tool";
 import { TableStoreListItem } from "./row";
 import "./style.less";
+import { CardConfig } from "../item/service";
 
 @url('/data-grid/list')
 export class TableStoreList extends DataGridView {
@@ -21,6 +22,18 @@ export class TableStoreList extends DataGridView {
             this.blocks.childs.push(rowBlock);
             await rowBlock.createElements();
         }
+    }
+    @prop()
+    cardConfig: CardConfig = {
+        auto: false,
+        showCover: false,
+        coverFieldId: "",
+        coverAuto: false,
+        showMode: 'default',
+        templateProps: {}
+    };
+    get isCardAuto() {
+        return this.cardConfig?.auto || this.cardConfig.showMode == 'define'
     }
 }
 @view('/data-grid/list')
