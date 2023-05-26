@@ -181,7 +181,8 @@ export interface ChannelPatchMapUrls {
 	"/interactive/emoji":{args:{elementUrl:string,fieldName:string},returnType:Promise<SockResponse<{count:number,exists:boolean,otherCount?:number,otherExists:boolean}>>}
 }
 export interface ChannelPutMapUrls {
-    "/schema/create":{args:{text:string,url:string,templateId?:string},returnType:Promise<{ ok: boolean, data: { schema:Partial<TableSchema> },warn:string }>},
+    "/schema/create":{args:{text:string,wsId?:string,url:string},returnType:Promise<SockResponse<{schema:Partial<TableSchema>}>>},
+	"/schema/create/define":{args:{text:string,wsId?:string,fields?:any[],views?:any[],datas?:any[]},returnType:Promise<SockResponse<{schema:Partial<TableSchema>}>>},
 	"/schema/operate":{args:{operate:{operate?:string,schemaId:string,date?:Date,actions:any[]}},returnType:Promise<SockResponse<{actions:any[]}>>},
 	"/datastore/add":{args:{schemaId:string,data:Record<string, any>,pos?:{id:string,pos:"before"|"after"}},returnType:Promise<SockResponse<{isCacSort:boolean,data:Record<string,any>}>>},
 	"/datastore/batch/add":{args:{schemaId:string,list:any[]},returnType:Promise<{ok:boolean,data:{list:any[]},warn:string}>},

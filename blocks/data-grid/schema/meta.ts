@@ -15,10 +15,6 @@ export interface TableSchemaView {
     description: string,
     url: string,
     /**
-     * 是否为record记录 编辑卡，这个和表单是有区别的
-     */
-    record?: boolean,
-    /**
      * 表单，是否允许上传
      */
     disabledUserMultiple?: boolean,
@@ -65,13 +61,39 @@ export class TableSchema {
         userid: string
     }
     get visibleFields(): Field[] {
-        return this.fields.findAll(g => g.text && ![FieldType.id, FieldType.parentId, FieldType.icon, FieldType.cover, FieldType.description].includes(g.type))
+        return this.fields.findAll(g => g.text && ![
+            FieldType.id,
+            FieldType.parentId,
+            FieldType.icon,
+            FieldType.cover,
+            FieldType.description
+        ].includes(g.type))
     }
     get userFields(): Field[] {
-        return this.fields.findAll(g => g.text && ![FieldType.id, FieldType.parentId, FieldType.icon, FieldType.cover, FieldType.description].includes(g.type) ? true : false);
+        return this.fields.findAll(g => g.text && ![
+            FieldType.id,
+            FieldType.parentId,
+            FieldType.icon,
+            FieldType.cover,
+            FieldType.description,
+            FieldType.plain,
+            FieldType.thumb
+        ].includes(g.type) ? true : false);
     }
     get initUserFields() {
-        return this.userFields.findAll(g => g.text && ![FieldType.creater, FieldType.modifyDate, FieldType.modifyer, FieldType.createDate, FieldType.autoIncrement, FieldType.sort].includes(g.type))
+        return this.userFields.findAll(g => g.text && ![
+            FieldType.parentId,
+            FieldType.creater,
+            FieldType.modifyDate,
+            FieldType.modifyer,
+            FieldType.createDate,
+            FieldType.autoIncrement,
+            FieldType.description,
+            FieldType.sort,
+            FieldType.cover,
+            FieldType.plain,
+            FieldType.thumb
+        ].includes(g.type))
     }
     get allowSortFields() {
         return this.userFields.findAll(x => x.text && ![FieldType.formula, FieldType.image, FieldType.file, FieldType.audio, FieldType.video].includes(x.type) ? true : false)
@@ -304,6 +326,13 @@ export class TableSchema {
         else {
             return await this.batchSchema.get<TableSchema>(schemaId)
         }
+    }
+    static async cacheSchema(schema: Partial<TableSchema>) {
+        if (!(schema instanceof TableSchema)) {
+            schema = new TableSchema(schema);
+        }
+        this.schemas.set(schema.id, schema as TableSchema);
+        return schema;
     }
     static async getSchemas() {
         return Array.from(this.schemas.values());

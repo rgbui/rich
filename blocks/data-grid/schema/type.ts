@@ -12,6 +12,8 @@ export enum FieldType {
      * 主键id
      */
     id = 100,
+    /**标记是否是删除状态 */
+    deleted = 101,
     /**
      * 标题，每条记录的标题
      */
@@ -196,6 +198,9 @@ export enum FieldType {
     rich = 9000,
 }
 
+/**
+ * 系统字段
+ */
 export var sysFieldTypes: FieldType[] = [
     FieldType.creater,
     FieldType.modifyDate,
@@ -210,5 +215,15 @@ export var sysFieldTypes: FieldType[] = [
     FieldType.love,
     FieldType.report,
     FieldType.vote,
+    FieldType.deleted,
+
+    FieldType.icon,
+    FieldType.description,
+    FieldType.plain,
+    FieldType.thumb,
+    FieldType.cover,
+    FieldType.id,
+    FieldType.parentId,
+    FieldType.title
 
 ]
