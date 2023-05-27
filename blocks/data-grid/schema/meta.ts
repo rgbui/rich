@@ -66,7 +66,10 @@ export class TableSchema {
             FieldType.parentId,
             FieldType.icon,
             FieldType.cover,
-            FieldType.description
+            FieldType.description,
+            FieldType.plain,
+            FieldType.thumb,
+            FieldType.deleted
         ].includes(g.type))
     }
     get userFields(): Field[] {
@@ -220,13 +223,11 @@ export class TableSchema {
         return this.onSchemaOperate([{ name: 'removeField', fieldId }])
     }
     fieldUpdate(args: { fieldId: string, data: Record<string, any> }) {
-        return channel.put('/schema/operate', {
-            operate: {
-                schemaId: this.id,
-                date: new Date(),
-                actions: [{ name: 'updateField', ...args }]
-            }
-        })
+        return this.onSchemaOperate([{
+            name: 'updateField',
+            fieldId: args.fieldId,
+            data: args.data
+        }])
     }
     turnField(args: { fieldId: string, text: string, type: FieldType, config?: Record<string, any> }) {
         return channel.put('/schema/operate', {
@@ -247,6 +248,7 @@ export class TableSchema {
      * 
      * { name: 'createSchemaView', text: r.text, url: r.url }
      * { name: 'addField', field: { text: '状态', type: FieldType.option } }
+     * { name: 'updateField',fieldId:string, data: Record<string, any>}
      * { name: 'removeSchemaView', id: view.id }
      * { name: 'duplicateSchemaView',id:view.id,data:{snap:any}}
      * { name: 'updateSchemaView', id: view.id, data: { text: it.value } }
@@ -256,7 +258,7 @@ export class TableSchema {
      * { name:'removeField',fieldId:string }
      */
     async onSchemaOperate(actions: {
-        name: 'createSchemaView' | 'addField' | 'removeSchemaView' | 'duplicateSchemaView' | 'updateSchemaView' | 'changeSchemaView' | 'updateSchema' | 'moveSchemaView' | 'removeField',
+        name: 'createSchemaView' | 'addField' | 'updateField' | 'removeSchemaView' | 'duplicateSchemaView' | 'updateSchemaView' | 'changeSchemaView' | 'updateSchema' | 'moveSchemaView' | 'removeField',
         text?: string,
         url?: string,
         field?: Record<string, any>,
@@ -311,6 +313,12 @@ export class TableSchema {
                     var field = new Field();
                     field.load(Object.assign({}, re));
                     this.fields.push(field);
+                    break;
+                case 'updateField':
+                    var f = this.fields.find(c => c.id == action.fieldId);
+                    if (f) {
+                        Object.assign(f, action.data)
+                    }
                     break;
                 case 'removeField':
                     this.fields.remove(c => c.id == action.fieldId)

@@ -75,7 +75,7 @@ export class TableStoreOption extends EventsComponent {
         return <div className="shy-tablestore-option-selector">
             <div className="shy-tablestore-option-selector-input">
                 {this.option && <a style={{ backgroundColor: this.option.color }}><span>{this.option.text}</span><em><CloseTick onClick={e => self.clearOption()}></CloseTick></em></a>}
-                <div className="shy-tablestore-option-selector-input-wrapper"><input value={this.value} onInput={e => changeInput(e)} onKeyDown={e => keydown(e.nativeEvent)} /></div>
+                <div className="shy-tablestore-option-selector-input-wrapper"><input ref={e => this.input = e} value={this.value} onInput={e => changeInput(e)} onKeyDown={e => keydown(e.nativeEvent)} /></div>
             </div>
             <div className="shy-tablestore-option-selector-drop">
                 <Remark style={{ height: 20, margin: '8px 0px', padding: '0px 10px' }}>{this.filterOptions.length > 0 ? '选择或创建一个选项' : '暂无选项'}</Remark>
@@ -88,7 +88,7 @@ export class TableStoreOption extends EventsComponent {
                         </div>
                     })}
                 </DragList>
-                {this.isNeedCreated && <div className="shy-tablestore-option-item-create" onClick={e => this.onCreateOption()}><em>创建</em><span style={{ backgroundColor: this.optionColor }}>{this.value}</span></div>}
+                {this.isNeedCreated && <div className="shy-tablestore-option-item-create box-border" onClick={e => this.onCreateOption()}><em>创建</em><span style={{ backgroundColor: this.optionColor }}>{this.value}</span></div>}
             </div>
         </div>
     }
@@ -123,7 +123,7 @@ export class TableStoreOption extends EventsComponent {
         this.forceUpdate();
         this.emit('save', this.option.value);
     }
-    onlyClearOption(){
+    onlyClearOption() {
         this.value = '';
         this.option = null;
         this.forceUpdate();
@@ -137,11 +137,14 @@ export class TableStoreOption extends EventsComponent {
     private value: string = '';
     private options: DataGridOptionType[] = [];
     private option: DataGridOptionType = null;
+    input: HTMLInputElement;
     open(value, data: { multiple: boolean, options: DataGridOptionType[] }) {
         this.option = data.options.find(g => g.value == value);
         this.options = data.options;
         this.value = '';
-        this.forceUpdate();
+        this.forceUpdate(() => {
+            if (this.input) this.input.focus();
+        });
     }
     async configOption(option: DataGridOptionType, event: React.MouseEvent) {
         event.stopPropagation();
