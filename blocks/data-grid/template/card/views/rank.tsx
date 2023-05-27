@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { Avatar } from "../../../../../component/view/avator/face";
 import { UserBox } from "../../../../../component/view/avator/user";
 import { FieldType } from "../../../schema/type";
@@ -18,10 +18,10 @@ CardModel({
     title: '排行榜',
     remark: '排行榜',
     image: Card1.default,
-    group: 'image',
+    group: 'image', forUrls: [BlockUrlConstant.DataGridList],
     props: [
         { name: 'user', text: '用户', types: [FieldType.user] },
-        { name: 'score', text: '分类', types: [FieldType.number] },
+        { name: 'score', text: '得分', types: [FieldType.number] },
     ],
     views: [
         { url: BlockUrlConstant.DataGridTable, text: '排行', },
@@ -35,33 +35,7 @@ CardModel({
         { score: 30 },
         { score: 40 },
         { score: 50 },
-    ],
-    async blockViewHandle(dg, g) {
-        var ps = g.props.toArray(pro => {
-            var f = dg.schema.fields.find(x => x.text == pro.text);
-            if (f) {
-                return {
-                    name: f.name,
-                    visible: true,
-                    bindFieldId: f.id
-                }
-            }
-        })
-        await dg.updateProps({
-            openRecordSource: 'page',
-            cardConfig: {
-                auto: false,
-                showCover: false,
-                coverFieldId: "",
-                coverAuto: false,
-                showMode: 'define',
-                templateProps: {
-                    url: g.url,
-                    props: ps
-                }
-            }
-        });
-    }
+    ]
 })
 
 @CardViewCom('/rank')
@@ -69,8 +43,8 @@ export class CardPin extends CardView {
     render() {
         var user = this.getValue<string>('user');
         var score = this.getValue<string>('score');
-        return <div>
-            <div className="flex">
+        return <div onMouseDown={e => this.openEdit(e)}>
+            <div className="h-40 flex">
                 <div className="flex-fixed">{this.getRowIndex() + 1}</div>
                 <div className="flex-auto">
                     <UserBox userid={user}>{(user) => {

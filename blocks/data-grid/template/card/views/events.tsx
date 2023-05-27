@@ -3,15 +3,7 @@
 
 import React from "react";
 import { ReactNode } from "react";
-import { DotsSvg, LoveSvg, TrashSvg, UploadSvg } from "../../../../../component/svgs";
-import { Avatar } from "../../../../../component/view/avator/face";
-import { UserBox } from "../../../../../component/view/avator/user";
-import { Icon } from "../../../../../component/view/icon";
-import { useSelectMenuItem } from "../../../../../component/view/menu";
-import { MenuItemType } from "../../../../../component/view/menu/declare";
-import { BackgroundColorList } from "../../../../../extensions/color/data";
 import { IconArguments } from "../../../../../extensions/icon/declare";
-import { Rect } from "../../../../../src/common/vector/point";
 import { util } from "../../../../../util/util";
 import { FieldType } from "../../../schema/type";
 import { CardModel, CardViewCom } from "../factory/observable";
@@ -31,7 +23,7 @@ CardModel({
     title: '活动事件',
     remark: '适用于活动举办发布',
     image: Card1.default,
-    group: 'image',
+    forUrls: [BlockUrlConstant.DataGridGallery],
     props: [
         {
             name: 'pic',
@@ -78,33 +70,7 @@ CardModel({
             pic: { url: 'https://gd-hbimg.huaban.com/bb7e72bd5b725e6c6eef09378f213e6818cc85b7101c98-McbbUs_fw1200webp' },
             title: '参考 照片 女', date: dayjs().add(-1, 'day').toDate()
         },
-    ],
-    async blockViewHandle(dg, g) {
-        var ps = g.props.toArray(pro => {
-            var f = dg.schema.fields.find(x => x.text == pro.text);
-            if (f) {
-                return {
-                    name: f.name,
-                    visible: true,
-                    bindFieldId: f.id
-                }
-            }
-        })
-        await dg.updateProps({
-            openRecordSource: 'page',
-            cardConfig: {
-                auto: false,
-                showCover: false,
-                coverFieldId: "",
-                coverAuto: false,
-                showMode: 'define',
-                templateProps: {
-                    url: g.url,
-                    props: ps
-                }
-            }
-        });
-    }
+    ]
 })
 @CardViewCom('/events')
 export class CardPin extends CardView {

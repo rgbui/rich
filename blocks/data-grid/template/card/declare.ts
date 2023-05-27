@@ -10,6 +10,7 @@ import "./views/tool";
 import "./views/questions";
 import "./views/rank";
 import "./views/things";
+import "./views/issue";
 
 export type CardPropsType = {
     url: string,
@@ -17,6 +18,7 @@ export type CardPropsType = {
     title: string,
     remark?: string,
     image: any,
+    forUrls?: string[],
     props?: { name: string, required?: boolean, text: string, types: FieldType[] }[],
     view?: typeof CardView,
     views?: Partial<TableSchemaView & { autoCreate?: boolean }>[],

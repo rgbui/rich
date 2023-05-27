@@ -13,6 +13,7 @@ import { TableSchema } from "../../../schema/meta";
 export class CardSelector extends EventsComponent {
     render(): ReactNode {
         return <div className="w-500 round ">
+            <div className="h4 gap-14">数据模板</div>
             <div className="flex h-400 overflow-y flex-wrap">
                 {this.getStores().map(cs => {
                     return <div
@@ -33,13 +34,15 @@ export class CardSelector extends EventsComponent {
         </div>
     }
     getStores() {
-        return Array.from(CardFactory.CardModels.values())
+        return Array.from(CardFactory.CardModels.values()).findAll(g => !this.forUrl || !Array.isArray(g.forUrls) || this.forUrl && Array.isArray(g.forUrls) && g.forUrls.includes(this.forUrl))
     }
     selectUrl: string = '';
     schema: TableSchema = null;
-    open(props?: { schema?: TableSchema, item?: { url?: string } }) {
+    forUrl?: string;
+    open(props?: { schema?: TableSchema, forUrl?: string, item?: { url?: string } }) {
         this.selectUrl = props?.item?.url || '';
         this.schema = props?.schema;
+        this.forUrl = props?.forUrl;
         this.forceUpdate()
     }
     onSelect(d: CardPropsType, event: React.MouseEvent) {
@@ -57,7 +60,7 @@ export class CardSelector extends EventsComponent {
     current: CardPropsType;
 }
 
-export async function useCardSelector(pos: PopoverPosition, options?: { schema?: TableSchema, item?: { url?: string } }) {
+export async function useCardSelector(pos: PopoverPosition, options?: { schema?: TableSchema, forUrl?: string, item?: { url?: string } }) {
     let popover = await PopoverSingleton(CardSelector, { mask: true });
     let cardSelector = await popover.open(pos);
     cardSelector.open(options);

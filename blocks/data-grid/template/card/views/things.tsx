@@ -3,15 +3,10 @@
 
 import React from "react";
 import { ReactNode } from "react";
-import { CommentSvg, DotsSvg, LikeSvg, LoveSvg, TrashSvg, UploadSvg } from "../../../../../component/svgs";
+import { CommentSvg,LikeSvg,} from "../../../../../component/svgs";
 import { Avatar } from "../../../../../component/view/avator/face";
 import { UserBox } from "../../../../../component/view/avator/user";
 import { Icon } from "../../../../../component/view/icon";
-import { useSelectMenuItem } from "../../../../../component/view/menu";
-import { MenuItemType } from "../../../../../component/view/menu/declare";
-import { BackgroundColorList } from "../../../../../extensions/color/data";
-import { IconArguments } from "../../../../../extensions/icon/declare";
-import { Rect } from "../../../../../src/common/vector/point";
 import { util } from "../../../../../util/util";
 import { FieldType } from "../../../schema/type";
 import { CardModel, CardViewCom } from "../factory/observable";
@@ -30,6 +25,7 @@ CardModel({
     remark: '适用于需求发布',
     image: Card1.default,
     group: 'image',
+    forUrls: [BlockUrlConstant.DataGridList],
     props: [
         { name: 'title', text: '标题', types: [FieldType.title, FieldType.text], required: true },
         { name: 'author', text: '作者', types: [FieldType.creater] },
@@ -50,33 +46,7 @@ CardModel({
         { title: '古风/和风/玄幻/武侠/古装' },
         { title: '{东方系列}实拍中国古装女性角色' },
         { title: '参考 照片 女' },
-    ],
-    async blockViewHandle(dg, g) {
-        var ps = g.props.toArray(pro => {
-            var f = dg.schema.fields.find(x => x.text == pro.text);
-            if (f) {
-                return {
-                    name: f.name,
-                    visible: true,
-                    bindFieldId: f.id
-                }
-            }
-        })
-        await dg.updateProps({
-            openRecordSource: 'page',
-            cardConfig: {
-                auto: false,
-                showCover: false,
-                coverFieldId: "",
-                coverAuto: false,
-                showMode: 'define',
-                templateProps: {
-                    url: g.url,
-                    props: ps
-                }
-            }
-        });
-    }
+    ]
 })
 
 @CardViewCom('/things')

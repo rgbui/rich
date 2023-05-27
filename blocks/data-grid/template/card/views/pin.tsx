@@ -23,6 +23,7 @@ CardModel({
     title: '瀑布流图片',
     remark: '适用于摄影等图像展示',
     image: Card1.default,
+    forUrls: [BlockUrlConstant.DataGridGallery],
     group: 'image',
     props: [
         { name: 'pic', text: '封面图', types: [FieldType.image, FieldType.cover, FieldType.video], required: true },
@@ -43,33 +44,7 @@ CardModel({
         { pic: { url: 'https://gd-hbimg.huaban.com/9e1942a5665bad6152682864d34f58ec63afc99a1d202-DByYa3_fw1200webp' }, title: '古风/和风/玄幻/武侠/古装', remark: 'i.pinimg.com' },
         { pic: { url: 'https://gd-hbimg.huaban.com/2ceb09d869c9ae5561fb7a29c30a7bdf3fcb6fba9823f8-jsuPvR_fw1200webp' }, title: '{东方系列}实拍中国古装女性角色', remark: '' },
         { pic: { url: 'https://gd-hbimg.huaban.com/bb7e72bd5b725e6c6eef09378f213e6818cc85b7101c98-McbbUs_fw1200webp' }, title: '参考 照片 女', remark: '{其他}实拍动态...（现代，古装）' },
-    ],
-    async blockViewHandle(dg, g) {
-        var ps = g.props.toArray(pro => {
-            var f = dg.schema.fields.find(x => x.text == pro.text);
-            if (f) {
-                return {
-                    name: f.name,
-                    visible: true,
-                    bindFieldId: f.id
-                }
-            }
-        })
-        await dg.updateProps({
-            openRecordSource: 'page',
-            cardConfig: {
-                auto: false,
-                showCover: false,
-                coverFieldId: "",
-                coverAuto: false,
-                showMode: 'define',
-                templateProps: {
-                    url: g.url,
-                    props: ps
-                }
-            }
-        });
-    }
+    ]
 })
 @CardViewCom('/card/pinterest')
 export class CardPin extends CardView {

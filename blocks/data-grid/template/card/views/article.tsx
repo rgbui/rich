@@ -24,7 +24,7 @@ CardModel({
     title: '文章',
     remark: '文章详情',
     image: Card1.default,
-    group: 'image',
+    forUrls: [BlockUrlConstant.DataGridList],
     props: [
         {
             name: 'pic',
@@ -57,33 +57,7 @@ CardModel({
         { pic: { url: 'https://gd-hbimg.huaban.com/9e1942a5665bad6152682864d34f58ec63afc99a1d202-DByYa3_fw1200webp' }, title: '古风/和风/玄幻/武侠/古装', remark: 'i.pinimg.com' },
         { pic: { url: 'https://gd-hbimg.huaban.com/2ceb09d869c9ae5561fb7a29c30a7bdf3fcb6fba9823f8-jsuPvR_fw1200webp' }, title: '{东方系列}实拍中国古装女性角色', remark: '' },
         { pic: { url: 'https://gd-hbimg.huaban.com/bb7e72bd5b725e6c6eef09378f213e6818cc85b7101c98-McbbUs_fw1200webp' }, title: '参考 照片 女', remark: '{其他}实拍动态...（现代，古装）' },
-    ],
-    async blockViewHandle(dg, g) {
-        var ps = g.props.toArray(pro => {
-            var f = dg.schema.fields.find(x => x.text == pro.text);
-            if (f) {
-                return {
-                    name: f.name,
-                    visible: true,
-                    bindFieldId: f.id
-                }
-            }
-        })
-        await dg.updateProps({
-            openRecordSource: 'page',
-            cardConfig: {
-                auto: false,
-                showCover: false,
-                coverFieldId: "",
-                coverAuto: false,
-                showMode: 'define',
-                templateProps: {
-                    url: g.url,
-                    props: ps
-                }
-            }
-        });
-    }
+    ]
 })
 
 @CardViewCom('/article')
@@ -91,9 +65,8 @@ export class CardPin extends CardView {
     render(): ReactNode {
         var self = this;
         var pics = this.getValue<IconArguments[]>('pic');
-        var types = this.getValue<{ value: string }>('types');
+        var types = this.getValue<{ value: string }>('types', FieldType.option);
         var hasPic = Array.isArray(pics) && pics.length > 0;
-
         var author = this.getValue<string>('author');
         var title = this.getValue<string>('title');
         var remark = this.getValue<string>('remark');
@@ -104,8 +77,8 @@ export class CardPin extends CardView {
 
         function renderContent() {
             return <>
-                <div className="h3">{title}</div>
-                <div>{remark}</div>
+                <div className="h4">{title}</div>
+                <div className="remark f-14">{remark}</div>
                 <div className="flex">
                     <div className="flex-auto flex">
                         <UserBox userid={author}>{(user) => {
@@ -116,21 +89,22 @@ export class CardPin extends CardView {
                         }}</UserBox>
                         <span className="remark f-12 gap-l-10">{util.showTime(date)}</span>
                     </div>
-                    <div className="flex-fixed flex r-gap-5 r-item-hover r-round r-cursor r-padding-w-5 r-padding-h-3  r-flex-center">
-                        <span><Icon size={16} icon={LikeSvg}></Icon>{like.count}</span>
-                        <span><Icon size={16} icon={CommentSvg}></Icon>{comment.count}</span>
+                    <div className="flex-fixed flex r-gap-5 r-item-hover r-round r-cursor r-padding-w-5 r-padding-h-2  r-flex-center">
+                        <span><Icon size={16} icon={LikeSvg}></Icon><span className="gap-l-5">{like.count}</span></span>
+                        <span><Icon size={16} icon={CommentSvg}></Icon><span className="gap-l-5">{comment.count}</span></span>
                     </div>
                 </div>
             </>
         }
-        return <div  onMouseDown={e => self.openEdit(e)}>
-            <div className="flex">
-                {hasPic && <><div className="flex-auto">
-                    <img className="w100 block round-16 object-center" src={pics[0].url} />
+        return <div onMouseDown={e => self.openEdit(e)}>
+            <div className="flex round shadow item-hover gap-h-10">
+                {hasPic && <><div className="flex-fixed">
+                    <img className="w-300 h-200 block  object-center" src={pics[0].url} />
                 </div>
-                    <div className="flex-auto">{renderContent()}</div></>
+                    <div className="flex-auto padding-10">{renderContent()}</div>
+                </>
                 }
-                {!hasPic && <div>{renderContent()}</div>}
+                {!hasPic && <div className="padding-10">{renderContent()}</div>}
             </div>
         </div>
     }
