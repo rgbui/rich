@@ -54,6 +54,7 @@ export async function createFieldBlock(viewField: ViewField, block: TableStoreIt
                     viewField
                 }, block);
                 break;
+            case FieldType.options:
             case FieldType.option:
                 cellContent = await BlockFactory.createBlock('/field/option', page, {
                     value: viewField.getValue(row),
@@ -159,6 +160,12 @@ export async function createFieldBlock(viewField: ViewField, block: TableStoreIt
                 break;
             case FieldType.rollup:
                 cellContent = await BlockFactory.createBlock('/field/rollup', page, {
+                    viewField,
+                    value: viewField.getValue(row),
+                }, block);
+                break;
+            case FieldType.browse:
+                cellContent = await BlockFactory.createBlock('/field/browse', page, {
                     viewField,
                     value: viewField.getValue(row),
                 }, block);

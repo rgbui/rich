@@ -70,6 +70,7 @@ export class TableSchema {
             FieldType.plain,
             FieldType.thumb,
             FieldType.deleted
+
         ].includes(g.type))
     }
     get userFields(): Field[] {
@@ -96,7 +97,7 @@ export class TableSchema {
             FieldType.cover,
             FieldType.plain,
             FieldType.thumb,
-            FieldType.deleted
+            FieldType.deleted,
         ].includes(g.type))
     }
     get allowSortFields() {
