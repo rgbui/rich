@@ -171,8 +171,8 @@ export class DataGridFields extends EventsComponent {
                         type: MenuItemType.select,
                         value: (this.block as TableStoreGallery).cardConfig?.showMode || 'default',
                         options: [
-                            { text: "卡片", value: 'default' },
-                            { text: '自定义卡片模板', value: 'define' }
+                            { text: "默认", value: 'default' },
+                            { text: '自定义数据模板', value: 'define' }
                         ]
                     }
                 ]
@@ -183,8 +183,8 @@ export class DataGridFields extends EventsComponent {
                     type: MenuItemType.select,
                     value: (this.block as TableStoreGallery).cardConfig?.showMode || 'default',
                     options: [
-                        { text: "卡片", value: 'default' },
-                        { text: '自定义卡片模板', value: 'define' }
+                        { text: "默认", value: 'default' },
+                        { text: '自定义数据模板', value: 'define' }
                     ]
                 },
                 { text: '卡片视图', type: MenuItemType.text },
@@ -257,6 +257,7 @@ export class DataGridFields extends EventsComponent {
         async function openSelect(event: React.MouseEvent) {
             var r = await useCardSelector({ roundArea: Rect.fromEvent(event) }, {
                 schema: self.schema,
+                forUrl: self.block.url,
                 item: {
                     url: (self.block as TableStoreGallery).cardConfig?.templateProps?.url,
                 }
@@ -293,10 +294,10 @@ export class DataGridFields extends EventsComponent {
         if (card) return <div>
             <div className="flex remark f-12 padding-w-14 gap-h-10">
                 <span className="flex-auto text-over">{card.title}</span>
-                <div className="flex-fix "><Button onClick={e => openSelect(e)} ghost>切换卡片模板</Button></div>
+                <div className="flex-fix "><Button onClick={e => openSelect(e)} ghost>重新选择数据模板</Button></div>
             </div>
             <div className="flex remark f-12 gap-h-5 padding-w-14">
-                <span>卡片字段</span>
+                <span>数据模板字段</span>
             </div>
             <div>
                 {card.props.map(pro => {
@@ -316,13 +317,13 @@ export class DataGridFields extends EventsComponent {
                                         text: c.text,
                                         value: c.id
                                     }
-                                })}></SelectBox>
+                                })}>
+                            </SelectBox>
                         </div>
                         <div className="flex-auto flex-end">
                             <span className="flex-center size-24 item-hover round cursor"
                                 onMouseDown={e => changeArrayProp(bp, { name: pro.name, visible: bp?.visible === false ? true : false })}
-                            >
-                                <Icon size={18} icon={bp?.visible === false ? EyeHideSvg : EyeSvg} ></Icon>
+                            ><Icon size={18} icon={bp?.visible === false ? EyeHideSvg : EyeSvg} ></Icon>
                             </span>
                         </div>
                     </div>
@@ -330,7 +331,7 @@ export class DataGridFields extends EventsComponent {
             </div>
         </div>
         else return <div className="flex-center gap-14">
-            <span><Button onClick={e => openSelect(e)} >选择卡片模板</Button></span>
+            <span><Button onClick={e => openSelect(e)} >选择数据模板</Button></span>
         </div>
     }
     onStoreViewText = lodash.debounce((value) => {
@@ -340,7 +341,9 @@ export class DataGridFields extends EventsComponent {
         if (!this.block) return <></>;
         if (!this.schema) return <div></div>
         if (this.block.url == BlockUrlConstant.DataGridTable) return this.renderTable()
-        if ([BlockUrlConstant.DataGridBoard, BlockUrlConstant.List, BlockUrlConstant.DataGridGallery].includes(this.block.url as any)) return this.renderCard()
+        if ([BlockUrlConstant.DataGridBoard,
+        BlockUrlConstant.DataGridList,
+        BlockUrlConstant.DataGridGallery].includes(this.block.url as any)) return this.renderCard()
         // else if (this.block.url == BlockUrlConstant.List) return this.renderList()
         else if (this.block.url == BlockUrlConstant.DataGridCalendar) return this.renderTable()
         else return this.renderTable()
