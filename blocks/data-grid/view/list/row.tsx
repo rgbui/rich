@@ -9,7 +9,8 @@ import { CardFactory } from "../../template/card/factory/factory";
 @url('/data-grid/list/row')
 export class TableStoreListItem extends TableStoreItem {
     get isShowHandleBlock(): boolean {
-        return true;
+        if (this.tableStoreList.isCardAuto) return false;
+        return true
     }
     get tableStoreList() {
         return this.parent as TableStoreList;
@@ -35,12 +36,12 @@ export class TableStoreListItemView extends BlockView<TableStoreListItem>{
     }
     renderDefine() {
         var CV = CardFactory.getCardView(this.block.tableStoreList.cardConfig.templateProps.url);
-        if (CV) return <CV item={this as any} dataGrid={this.block.tableStoreList}></CV>
+        if (CV) return <CV item={this.block} dataGrid={this.block.tableStoreList}></CV>
         else return this.renderRows()
     }
     render() {
         if (this.block.tableStoreList.cardConfig.showMode == 'define' && this.block.tableStoreList.cardConfig.templateProps.url)
-            return this.renderRows()
-        else return this.renderDefine()
+            return this.renderDefine()
+        else return this.renderRows()
     }
 }
