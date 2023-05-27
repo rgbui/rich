@@ -69,6 +69,9 @@ export class PageView extends Component<{ page: Page }>{
         if (r.elementUrl && this.page.elementUrl === r.elementUrl || r.id && r.id == r.pageInfo.id) {
             if (this.page.onceStopRenderByPageInfo == true) {
                 this.page.onceStopRenderByPageInfo = false;
+                if (this.pageBar) {
+                    this.pageBar.forceUpdate();
+                }
                 return;
             }
             this.forceUpdate();
@@ -186,9 +189,7 @@ export class PageView extends Component<{ page: Page }>{
             </div>
         </div>
     }
-    renderBar() {
-        return <div className="shy-page-bar"></div>
-    }
+    pageBar: PageBar;
     render() {
         var pageStyle: Record<string, any> = {
             lineHeight: this.page.lineHeight + 'px',
@@ -224,7 +225,7 @@ export class PageView extends Component<{ page: Page }>{
         }
         var pd = this.props.page.getPageDataInfo();
         return <div className="shy-page" style={pageContentStyle} >
-            <PageBar page={this.page}></PageBar>
+            <PageBar ref={e => this.pageBar = e} page={this.page}></PageBar>
             <div className={'shy-page-view' + (this.page.readonly ? " shy-page-view-readonly" : "")}
                 style={pageStyle}
                 ref={e => this.page.viewEl = e}

@@ -321,7 +321,7 @@ export class PageEvent {
         this.onceStopRenderByPageInfo = true;
         if ([ElementType.SchemaData].includes(this.pe.type)) {
             this.formRowData.title = text;
-            this.view.forceUpdate();
+            if (this.view.pageBar) this.view.pageBar.forceUpdate()
         }
         else if ([ElementType.SchemaRecordView, ElementType.SchemaView].includes(this.pe.type)) {
             var sr = this.schema.views.find(g => g.id == this.pe.id1);
@@ -331,11 +331,10 @@ export class PageEvent {
                     id: this.pe.id1,
                     data: { text }
                 }])
-                this.view.forceUpdate();
+                if (this.view.pageBar) this.view.pageBar.forceUpdate()
             }
         }
-        else
-            channel.air('/page/update/info', {
+        else  channel.air('/page/update/info', {
                 elementUrl: this.elementUrl,
                 pageInfo: {
                     text: text
