@@ -76,6 +76,7 @@ import "./data-grid/element/field/formula";
 import "./data-grid/element/field/video";
 import "./data-grid/element/field/audio";
 import "./data-grid/element/field/rich";
+import "./data-grid/element/field/browse";
 
 import "./data-grid/element/form/text";
 import "./data-grid/element/form/number";
