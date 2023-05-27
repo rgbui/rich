@@ -21,7 +21,12 @@ class FieldTextView extends BlockView<FieldText>{
                 multiple: fc?.isMultiple ? true : false,
                 options: fc?.options || [],
                 changeOptions: (ops) => {
-                    // this.onUpdateCellFieldSchema({ config: { options: ops } })
+                    this.block.schema.fieldUpdate({
+                        fieldId: this.block.field.id,
+                        data: {
+                            config: { options: ops }
+                        }
+                    })
                 }
             }
         );

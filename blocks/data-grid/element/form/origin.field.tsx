@@ -21,6 +21,13 @@ export class OriginFormField extends Block {
         var c = this.closest(x => x.url == BlockUrlConstant.FormView) as DataGridForm;
         if (c?.schema) return c.schema.fields.find(g => g.id == this.fieldId);
     }
+    get schema() {
+        if (this.page.schema) return this.page.schema;
+        else {
+            var c = this.closest(x => x.url == BlockUrlConstant.FormView) as DataGridForm;
+            if (c?.schema) return c.schema;
+        }
+    }
     @prop()
     fieldId: string;
     @prop()
