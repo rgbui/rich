@@ -205,7 +205,8 @@ export async function useTableStoreOption(pos: PopoverPosition,
     value: any, options: {
         multiple: boolean,
         options: DataGridOptionType[],
-        changeOptions: (options: DataGridOptionType[]) => void
+        changeOptions: (options: DataGridOptionType[]) => void,
+        input?: (value: DataGridOptionType[]) => void
     }) {
     let popover = await PopoverSingleton(TableStoreOption, { mask: true });
     let fv = await popover.open(pos);
