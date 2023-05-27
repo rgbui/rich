@@ -3,7 +3,7 @@ import React from "react";
 import { Page } from "..";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
-import { BlockDirective, BlockRenderRange } from "../../block/enum";
+import { BlockDirective } from "../../block/enum";
 import { Point, Rect } from "../../common/vector/point";
 import { PageLayoutType } from "../declare";
 import {
@@ -116,7 +116,7 @@ export class PageContextmenu {
                 { type: MenuItemType.divide },
                 { name: 'nav', text: '目录', icon: OutlineSvg, type: MenuItemType.switch, checked: this.nav },
                 {
-                    text: '自定义页面',
+                    text: '小部件',
                     icon: FieldsSvg,
                     childs: [
                         { name: 'onlyDisplayContent', text: '显示标题', type: MenuItemType.switch, checked: this.onlyDisplayContent ? false : true, icon: HSvg },
