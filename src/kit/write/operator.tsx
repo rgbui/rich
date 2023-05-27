@@ -42,7 +42,35 @@ export async function useOperatorBlockData(blockData: BlockSelectorItem,
                         createSource: 'InputBlockSelector'
                     });
                     await (newBlock as DataGridView).loadSchema();
+                    var sch = (newBlock as DataGridView).schema;
+                    (newBlock as DataGridView).fields = sch.fields.findAll(c =>g.props.some(pro => pro.types.includes(c.type))).map(c => sch.createViewField(c));
                     if (typeof g.blockViewHandle == 'function') await g.blockViewHandle(newBlock as DataGridView, g)
+                    else {
+                        var ps = g.props.toArray(pro => {
+                            var f = (newBlock as DataGridView).schema.fields.find(x => x.text == pro.text && x.type == pro.types[0]);
+                            if (f) {
+                                return {
+                                    name: pro.name,
+                                    visible: true,
+                                    bindFieldId: f.id
+                                }
+                            }
+                        })
+                        await (newBlock as DataGridView).updateProps({
+                            openRecordSource: 'page',
+                            cardConfig: {
+                                auto: false,
+                                showCover: false,
+                                coverFieldId: "",
+                                coverAuto: false,
+                                showMode: 'define',
+                                templateProps: {
+                                    url: g.url,
+                                    props: ps
+                                }
+                            }
+                        });
+                    }
                 }
             }
         }
