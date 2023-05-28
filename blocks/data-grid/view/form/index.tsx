@@ -201,7 +201,7 @@ export class DataGridForm extends DataGridView {
             ],
             {
                 input: (newItem) => {
-                    self.onToggleFieldView(this.schema.initUserFields.find(g => g.id == newItem.name), newItem.checked)
+                    self.onToggleFieldView(this.schema.allowFormFields.find(g => g.id == newItem.name), newItem.checked)
                 }
             }
         )

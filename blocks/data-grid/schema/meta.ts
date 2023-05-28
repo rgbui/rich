@@ -63,25 +63,23 @@ export class TableSchema {
     get visibleFields(): Field[] {
         return this.fields.findAll(g => g.text && ![
             FieldType.id,
-            FieldType.parentId,
             FieldType.icon,
             FieldType.cover,
             FieldType.description,
             FieldType.plain,
             FieldType.thumb,
             FieldType.deleted
-
         ].includes(g.type))
     }
     get userFields(): Field[] {
         return this.fields.findAll(g => g.text && ![
             FieldType.id,
-            FieldType.parentId,
             FieldType.icon,
             FieldType.cover,
             FieldType.description,
             FieldType.plain,
-            FieldType.thumb
+            FieldType.thumb,
+            FieldType.deleted,
         ].includes(g.type) ? true : false);
     }
     get initUserFields() {
@@ -92,27 +90,28 @@ export class TableSchema {
             FieldType.modifyer,
             FieldType.createDate,
             FieldType.autoIncrement,
-            FieldType.description,
             FieldType.sort,
-            FieldType.cover,
-            FieldType.plain,
-            FieldType.thumb,
-            FieldType.deleted,
+            FieldType.comment,
+            FieldType.browse
+
         ].includes(g.type))
     }
     get allowSortFields() {
-        return this.userFields.findAll(x => x.text && ![FieldType.formula, FieldType.image, FieldType.file, FieldType.audio, FieldType.video].includes(x.type) ? true : false)
+        return this.userFields.findAll(x => x.text && ![
+            FieldType.formula,
+            FieldType.image,
+            FieldType.file,
+            FieldType.audio,
+            FieldType.video
+        ].includes(x.type) ? true : false)
     }
     get allowFormFields() {
         return this.initUserFields.findAll(g => ![
-            FieldType.love,
-            FieldType.like,
             FieldType.formula,
             FieldType.rollup,
-            FieldType.oppose,
             FieldType.comment,
             FieldType.blog,
-            FieldType.emoji
+            // FieldType.emoji,
         ].includes(g.type))
     }
     views: TableSchemaView[] = [];

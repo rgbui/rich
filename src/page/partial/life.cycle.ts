@@ -755,7 +755,7 @@ export class Page$Cycle {
                 await this.loadViews(g);
             }
             else if (view?.url == BlockUrlConstant.RecordPageView) {
-                var cs: Record<string, any>[] = this.schema.initUserFields.toArray(field => {
+                var cs: Record<string, any>[] = this.schema.allowFormFields.toArray(field => {
                     var r = GetFieldFormBlockInfo(field);
                     if (r) return Object.assign({
                         fieldMode: 'detail'
@@ -766,7 +766,7 @@ export class Page$Cycle {
                 await this.loadViews({ views: [{ url: BlockUrlConstant.View, blocks: { childs: cs } }] })
             }
             else {
-                var cs: Record<string, any>[] = this.schema.initUserFields.toArray(field => {
+                var cs: Record<string, any>[] = this.schema.allowFormFields.toArray(field => {
                     if (field?.type == FieldType.title && this.isSchemaRecordViewTemplate) return undefined;
                     var r = GetFieldFormBlockInfo(field);
                     if (r) return Object.assign({
