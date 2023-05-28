@@ -1,4 +1,3 @@
-import { assignWith } from "lodash";
 import React from "react";
 import { useUserComments } from ".";
 import { CopyText } from "../../component/copy";
@@ -238,7 +237,7 @@ export class CommentListView extends React.Component<{
                     <em onMouseDown={e => this.onSet('date')} className={"h-24 flex-center cursor round padding-w-5" + (this.sort == 'date' ? " item-hover-focus" : "")}>最新</em>
                 </div>
             </div>
-            {this.list.length > 0 && <Divider></Divider>}
+            <Divider></Divider>
             <div className="padding-h-10   round min-h-30 overflow-y">
                 <SpinBox spin={this.loading}> {this.renderComments(this.list)}
                     <Pagination size={this.size} total={this.total} index={this.index}></Pagination>
