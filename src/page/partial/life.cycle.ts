@@ -827,19 +827,9 @@ export class Page$Cycle {
         if (lodash.isEqual(this.formRowData, row)) {
             return null;
         }
-        if (this.formRowData?.id) {
-            row.icon = this.formRowData.icon;
-            row.cover = this.formRowData.cover;
-            row.title = this.formRowData.title;
-        }
-        else {
-            var sv = this.schema.views.find(g => g.id == this.pe.id1);
-            if (sv) {
-                row.icon = sv.icon;
-                row.cover = sv.cover;
-                //row.title = sv.text;
-            }
-        }
+        row.icon = this.formRowData.icon;
+        row.cover = this.formRowData.cover;
+        row.title = this.formRowData.title;
         row.plain = await this.getPlain();
         row.plain = row.plain.slice(0, 200);
         row.thumb = await this.getThumb();

@@ -23,9 +23,7 @@ export class Title extends Block {
     }
     async changeAppear(appear) {
         if (appear.prop == 'pageInfo.text') {
-            if (this.pageInfo.id) {
-                await this.page.onUpdatePageTitle(this.pageInfo.text);
-            }
+            await this.page.onUpdatePageTitle(this.pageInfo.text);
         }
     }
     get isSupportTextStyle() {
