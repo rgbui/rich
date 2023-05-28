@@ -114,7 +114,8 @@ flex-fixed:固定大小
 .flex-wrap {
     flex-wrap: wrap;
 }
-.flow-no-wrap{
+
+.flow-no-wrap {
     flex-wrap: nowrap;
 }
 
@@ -465,7 +466,8 @@ item-selected:选中的效果
     background-color: rgba(55, 53, 47, 0.1);
 }
 
-.item-hover-light,.item-light-hover {
+.item-hover-light,
+.item-light-hover {
     &:hover {
         background-color: rgba(55, 53, 47, 0.06);
     }
@@ -747,9 +749,22 @@ item-selected:选中的效果
     }
 }
 
+/**
+用于单行文本溢出显示省略号
+**/
 .text-over,
 .text-overflow {
     white-space  : nowrap;
+    text-overflow: ellipsis;
+    overflow     : hidden;
+}
+
+/**
+用于多行文本溢出显示省略号
+**/
+.text-overflow-wrap,
+.text-over-wrap {
+    // white-space  : pre-wrap;
     text-overflow: ellipsis;
     overflow     : hidden;
 }
@@ -842,6 +857,7 @@ each(@selectors, {
         .top-@{value}, .t-@{value} {
             top: @value+0px;
         }
+
         .right-@{value} {
             right: @value+0px;
         }

@@ -64,7 +64,7 @@ export class CardPin extends CardView {
                 </div>
                 <div className="flex-auto gap-l-10">
                     <div className="h4">{title}</div>
-                    <div className="remark">{remark}</div>
+                    <div className="remark f-12 h-40 l-20 text-overflow-wrap">{remark}</div>
                 </div>
             </div>
         </div>
