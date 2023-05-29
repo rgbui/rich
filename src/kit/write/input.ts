@@ -23,10 +23,12 @@ import { useTagSelector } from "../../../extensions/tag";
  * 输入弹窗
  */
 export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.FormEvent) {
+    if (aa.isSolid) return false;
+    if (aa.block.url == BlockUrlConstant.Title || aa.block.closest(x => x.isOnlyBlock)?.url == BlockUrlConstant.Title) return false;
     var ev = event.nativeEvent as InputEvent;
     var sel = window.getSelection();
     var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
-    if (!write.inputPop && aa.block.url != BlockUrlConstant.Title) {
+    if (!write.inputPop) {
         var rect = Rect.fromEle(sel.getRangeAt(0));
         var data = ev.data;
         var textContent = aa.textContent;
@@ -101,6 +103,8 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
  * @returns 
  */
 export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: React.FormEvent) {
+    if (aa.isSolid) return false;
+    if (aa.block.url == BlockUrlConstant.Title || aa.block.closest(x => x.isOnlyBlock)?.url == BlockUrlConstant.Title) return false;
     var sel = window.getSelection();
     var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
     var current = aa.textContent.slice(0, offset);
