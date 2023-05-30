@@ -308,7 +308,7 @@ export class Block$LifeCycle {
         var text = '';
         for (let b in this.blocks) {
             if (this.allBlockKeys.some(s => s == b))
-                text += await this.blocks[b].asyncMap(async x => await x.getPlain());
+                text += (await this.blocks[b].asyncMap(async x => await x.getPlain())).join(" ");
         };
         return text;
     }
