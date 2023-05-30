@@ -104,7 +104,7 @@ export function SolidArea(props: {
     if (line) return <span className='shy-appear-solid'  {...ps} >
         {props.block.isCanEdit() && <span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}
         <span className='shy-appear-solid-content'>{props.children}</span>
-        {props.block.isCanEdit() && <span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}
+        {props.block.isCanEdit() && <span className='shy-appear-solid-cursor'  suppressContentEditableWarning {...editProps}></span>}
     </span>
     return <div className='shy-appear-solid flex'  {...ps} >
         {props.block.isCanEdit() && <span className='shy-appear-solid-cursor flex-fixed' suppressContentEditableWarning {...editProps}></span>}
