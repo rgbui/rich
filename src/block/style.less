@@ -63,15 +63,11 @@
 }
 
 .shy-appear-solid {
-    position: relative;
     &-cursor {
-        height       : 100%;
-        display      : inline-block;
-        outline      : none;
-        user-select  : text;
-        padding-right: 2px;
-        width        : 2px;
-        box-sizing   : border-box;
+        outline         : none;
+        user-select     : text;
+        border          : 1px solid transparent;
+        display         : inline;
         &::after {
             content: '\20';
         }

@@ -44,12 +44,12 @@ export class EmojiView extends BlockView<Emoji>{
         if (icon.code && (icon as any).mime) {
             icon = { name: 'emoji', code: icon.code };
         }
-        return <div className='sy-block-emoji'>
+        return <span>
             <BoxTip ref={e => this.boxTip = e} overlay={<div className="flex-center  padding-5 r-flex-center r-size-24 r-round r-item-hover r-cursor text">
                 <ToolTip overlay={'拖动'}><span onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></ToolTip>
                 <ToolTip overlay={'编辑'}><span onMouseDown={e => this.openEdit(e)} ><Icon size={14} icon={EditSvg}></Icon></span></ToolTip>
-            </div>}><SolidArea block={this.block} prop='src'><Icon icon={icon} size={16}></Icon></SolidArea>
+            </div>}><SolidArea line block={this.block} prop='src'><Icon icon={icon} size={16}></Icon></SolidArea>
             </BoxTip>
-        </div>
+        </span>
     }
 }
