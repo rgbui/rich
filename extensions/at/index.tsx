@@ -11,6 +11,8 @@ import { InputTextPopSelector } from "../common/input.pop";
 import { PopoverPosition } from "../popover/position";
 import { Spin } from "../../component/view/spin";
 import { popoverLayer } from "../../component/lib/zindex";
+import { SearchListType } from "../../component/types";
+import { util } from "../../util/util";
 
 /**
  * 用户输入@触发
@@ -20,11 +22,14 @@ class AtUserSelector extends InputTextPopSelector {
         round: Rect,
         text: string,
         callback: (...args: any[]) => void): Promise<boolean> {
+        if (!text && this.visible) {
+            this.close()
+            return this.visible
+        }
         this._select = callback;
         this.round = round;
         this.pos = round.leftBottom;
-        if(!this.visible)
-        {
+        if (!this.visible) {
             this.selectIndex = 0;
         }
         this.visible = true;
@@ -37,28 +42,34 @@ class AtUserSelector extends InputTextPopSelector {
             this.close();
             return this.visible;
         }
+        /**
+         * 说明搜索了，为空，然后又输入了，就默认关闭
+         */
         if (this.searchWord && this.text.startsWith(this.searchWord) && this.links.length == 0) {
-            if (this.searchIsEmpty == true) {
+            if (this.continuousSearchEmpty == true) {
                 this.close();
                 return this.visible;
             }
-            this.searchIsEmpty = true;
+            this.continuousSearchEmpty = true;
         }
-        else {
-            var r = await channel.get('/ws/member/word/query', {});
-            this.allLinks = r.data;
-            this.links = lodash.cloneDeep(r.data.list);
-            this.searchIsEmpty = false;
+        else if (!this.text) {
+            if (!(this.allLinks.lastDate && Date.now() - this.allLinks.lastDate.getTime() < 1000 * 5 * 60)) {
+                var r = await channel.get('/ws/member/word/query', {});
+                this.allLinks = r.data;
+                this.allLinks.lastDate = new Date();
+                this.links = lodash.cloneDeep(r.data.list);
+                this.continuousSearchEmpty = false;
+            }
         }
         this.syncSearch();
         return this.visible;
     }
     private round: Rect;
-    allLinks: { list: UserBasic[], total: number, size: number } = { list: [], total: 0, size: 200 }
+    allLinks: SearchListType<UserBasic> = { list: [], total: 0, size: 200 }
     links: UserBasic[] = [];
     loading = false;
     searchWord: string = '';
-    searchIsEmpty: boolean = false;
+    continuousSearchEmpty: boolean = false;
     syncSearch = lodash.debounce(async () => {
         this.loading = true;
         this.searchWord = this.text;
@@ -68,7 +79,8 @@ class AtUserSelector extends InputTextPopSelector {
         if (!this.searchWord) {
             result = this.allLinks.list.filter(g => true);
         } else if (this.allLinks.total <= this.allLinks.size) {
-            result = this.allLinks.list.filter(g => g.name.startsWith(this.searchWord));
+            await util.delay(100)
+            result = this.allLinks.list.filter(g => g.name && g.name.startsWith(this.searchWord));
         }
         else {
             result = (await channel.get('/ws/member/word/query', { word: this.searchWord })).data.list;
@@ -88,7 +100,7 @@ class AtUserSelector extends InputTextPopSelector {
             {this.loading && <div className="flex-center gap-h-10"><Spin></Spin></div>}
             {!this.loading && this.links.map((link, i) => {
                 return <div
-                    onMouseDown={e => this.onSelect(link)} className={"padding-w-10 flex item-hover cursor round padding-5 " + ((i + 1) == this.selectIndex ? "  item-hover-focus" : "")}
+                    onMouseDown={e => this.onSelect(link)} className={"padding-w-10 flex item-hover cursor round padding-5 " + (i == this.selectIndex ? "  item-hover-focus" : "")}
                     key={link.id}>
                     <Avatar size={30} userid={(link as any).userid}></Avatar>
                     <span className="gap-l-5 text-overflow">{link.name}</span>
@@ -120,7 +132,7 @@ class AtUserSelector extends InputTextPopSelector {
         return b;
     }
     private close() {
-        this.searchIsEmpty = false;
+        this.continuousSearchEmpty = false;
         this.loading = false;
         this.text = '';
         this.searchWord = '';
@@ -151,24 +163,25 @@ class AtUserSelector extends InputTextPopSelector {
         this.close()
     }
     /**
-     * 向上选择内容
+     * 向下选择内容
      */
     private keydown() {
         if (!this.isSelectIndex) this.selectIndex = -1;
-        if (this.selectIndex < this.links.length - 1) {
+        else if (this.selectIndex < this.links.length - 1) {
             this.selectIndex += 1;
-            this.forceUpdate();
         }
+        this.forceUpdate();
     }
     /**
-     * 向下选择内容
+     * 向上选择内容
+     * 
      */
     private keyup() {
-        if (!this.isSelectIndex) this.selectIndex = this.links.length - 1;
-        if (this.selectIndex > 0) {
+        if (!this.isSelectIndex) { this.selectIndex = this.links.length - 1; }
+        else if (this.selectIndex > 0) {
             this.selectIndex -= 1;
-            this.forceUpdate();
         }
+        this.forceUpdate();
     }
     private el: HTMLElement;
     componentDidMount() {
@@ -179,7 +192,7 @@ class AtUserSelector extends InputTextPopSelector {
         document.removeEventListener('mousedown', this.onGlobalMousedown);
     }
     componentDidUpdate() {
-        var el = this.el.querySelector('.selected') as HTMLElement;
+        var el = this.el.querySelector('.item-hover-focus') as HTMLElement;
         if (el) {
             el.scrollIntoView({
                 block: "nearest",

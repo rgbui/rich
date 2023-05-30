@@ -205,6 +205,10 @@ export class PageWrite {
                     else if (this.kit.page.keyboardPlate.isShift() && aa.block.isDisabledInputLine) {
                         await onEnterInput(this, aa, event);
                     }
+                    // else if (this.kit.page.keyboardPlate.isShift() && aa.isSolid) {
+                    //     event.preventDefault()
+                    //     this.onSolidInputCreateTextBlock(aa, event, '\n', 1);
+                    // }
                 }
                 break;
             case KeyboardCode.Delete.toLowerCase():
@@ -610,20 +614,21 @@ export class PageWrite {
             });
         });
     }
-    async onSolidInputCreateTextBlock(aa: AppearAnchor, event?: React.CompositionEvent | React.FormEvent<Element>, forceText?: string) {
+    async onSolidInputCreateTextBlock(aa: AppearAnchor, event?: React.CompositionEvent | React.FormEvent<Element>, forceText?: string, pos?: 1 | 0) {
         await this.kit.page.onAction(ActionDirective.onSolidBlockInputTextContent, async () => {
             var at = aa.block.at;
             var text = '';
-            if (aa.firstTextNode?.textContent?.length > 0) {
+            if (pos === 0 || aa.firstTextNode?.textContent?.length > 0) {
                 text = aa.firstTextNode.textContent
                 aa.firstTextNode.textContent = '';
             }
-            else if (aa.lastTextNode?.textContent?.length > 0) {
+            else if (pos == 1 || aa.lastTextNode?.textContent?.length > 0) {
                 at += 1;
                 text = aa.lastTextNode.textContent
                 aa.lastTextNode.textContent = '';
             }
             var c = forceText ? forceText : text;
+            console.log('ggg', JSON.stringify(text), JSON.stringify(c));
             var newBlock = await aa.block.parent.appendBlock({
                 url: BlockUrlConstant.Text,
                 content: c

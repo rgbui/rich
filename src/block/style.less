@@ -23,7 +23,7 @@
         caret-color            : rgb(55, 53, 47);
         padding-right          : 10px;
         -webkit-text-fill-color: rgba(55, 53, 47, 0.4);
-        text-decoration: none;
+        text-decoration        : none;
 
         &::after {
             content: '\20';
@@ -64,14 +64,17 @@
 
 .shy-appear-solid {
     &-cursor {
-        outline         : none;
-        user-select     : text;
-        border          : 1px solid transparent;
-        display         : inline;
+        outline    : none;
+        user-select: text;
+        display    : inline-block;
+
+        // border          : 1px solid transparent;
+        // display         : inline;
         &::after {
             content: '\20';
         }
     }
+
     &-content {
         user-select: text;
     }
