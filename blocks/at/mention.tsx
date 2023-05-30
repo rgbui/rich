@@ -47,7 +47,7 @@ export class ShyMentionView extends BlockView<ShyMention>{
     boxTip: BoxTip;
     username: string = '';
     render() {
-        return <span className='sy-block-mention' onMouseDown={e => this.openUserCard(e)} >
+        return <span onMouseDown={e => this.openUserCard(e)} >
             <BoxTip ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center">
                 <ToolTip overlay={'拖动'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></a></ToolTip>
                 <ToolTip overlay={'打开'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.openUserCard(e)}><Icon size={16} icon={TrashSvg}></Icon></a></ToolTip>
@@ -55,7 +55,7 @@ export class ShyMentionView extends BlockView<ShyMention>{
             </div>}>
                 <SolidArea block={this.block} prop={'userid'} ><UserBox userid={this.block.userid}>{(user) => {
                     this.username = user.name;
-                    return <>@<span>{user.name}</span></>
+                    return <span className='sy-block-mention' >@<span>{user.name}</span></span>
                 }}</UserBox></SolidArea>
             </BoxTip>
         </span>
