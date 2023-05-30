@@ -13,7 +13,8 @@ export function TextArea(props: {
     style?: CSSProperties,
     default?: string,
     isHtml?: boolean,
-    isBlock?: boolean
+    isBlock?: boolean,
+    className?: string | (string[])
 }) {
     var prop = props.prop;
     if (typeof prop == 'undefined') prop = 'content';
@@ -52,6 +53,10 @@ export function TextArea(props: {
     if (typeof html == 'undefined') html = lodash.get(props.block, props.prop);
     if (html == '' && typeof props.default != 'undefined') html = props.default;
     var classList: string[] = ['shy-appear-text'];
+    if (props.className) {
+        if (Array.isArray(props.className)) classList.push(...props.className)
+        else classList.push(props.className)
+    }
     if (props.placeholderEmptyVisible) classList.push('shy-text-empy-visible');
     if (props.isBlock) {
         if (props.isHtml) return <div className={classList.join(" ")} dangerouslySetInnerHTML={{ __html: html }} {...(ps as any)}></div>
@@ -104,7 +109,7 @@ export function SolidArea(props: {
     if (line) return <span className='shy-appear-solid'  {...ps} >
         {props.block.isCanEdit() && <span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}
         <span className='shy-appear-solid-content'>{props.children}</span>
-        {props.block.isCanEdit() && <span className='shy-appear-solid-cursor'  suppressContentEditableWarning {...editProps}></span>}
+        {props.block.isCanEdit() && <span className='shy-appear-solid-cursor' suppressContentEditableWarning {...editProps}></span>}
     </span>
     return <div className='shy-appear-solid flex'  {...ps} >
         {props.block.isCanEdit() && <span className='shy-appear-solid-cursor flex-fixed' suppressContentEditableWarning {...editProps}></span>}

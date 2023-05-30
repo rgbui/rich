@@ -1,6 +1,5 @@
 
 import { Block } from "..";
-import { util } from "../../../util/util";
 import { OperatorDirective } from "../../history/declare";
 import { DropDirection } from "../../kit/handle/direction";
 import { BlockChildKey, BlockUrlConstant } from "../constant";
@@ -59,7 +58,13 @@ export class Block$Operator {
         return await this.get();
     }
     async turn(this: Block, url: string) {
-        var oldUrl = this.url;
+        var oldUrl = this.getUrl();
+        if (this.url == BlockUrlConstant.Head && url.startsWith(BlockUrlConstant.Head)) {
+            //这里只是大标题的切换，不需要做任何的处理，更新一些属性即可
+            var pb = BlockFactory.parseBlockUrl(url);
+            this.updateProps(pb.data, BlockRenderRange.self);
+            return;
+        }
         var data = await this.getWillTurnData(url);
         var newBlock = await BlockFactory.createBlock(url, this.page, data, this.parent);
         var bs = this.parent.blocks[this.parentKey];

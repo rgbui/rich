@@ -121,88 +121,94 @@ export async function onPasteBlank(kit: Kit, event: ClipboardEvent) {
 }
 
 export async function onPaste(kit: Kit, aa: AppearAnchor, event: ClipboardEvent) {
-    var files: File[] = Array.from(event.clipboardData.files);
     var text = event.clipboardData.getData('text/plain');
-    var html = event.clipboardData.getData('text/html');
-   kit.operator.onClearPage();
-    if (!html && text || text && html && html.endsWith(text)) {
+    if (aa.plain == true) {
         event.preventDefault();
-        if (URL_RGEX.test(text)) {
-            await onPasteUrl(kit, aa, text);
-        }
-        else await onPasteInsertText(kit, aa, text);
-        return;
+        await onPasteInsertPlainText(kit, aa, text);
     }
-    if (files.length > 0) {
-        event.preventDefault();
-        //说明复制的是文件
-        await onPasterFiles(kit, aa, files);
-    }
-    else if (html) {
-        var ma;
-        if (ma = html.match(new RegExp(`data\\-name\="shy\\.live"[\\s]+content\\="([^"]+)"`))) {
-            var id = ma[1];
-            if (id) {
-                var bs = readCopyBlocks(id);
-                /**
-                 * 这里的bs有可能是从诗云的一个浏览器复制到另一个浏览器，
-                 * 本质上里面的内容没有缓存
-                 */
-                if (Array.isArray(bs) && bs.length > 0) {
-                    event.preventDefault();
-                    await onPasteCreateBlocks(kit, aa, bs);
-                    return;
-                }
-
-            }
-        }
-        try {
+    else {
+        var files: File[] = Array.from(event.clipboardData.files);
+        var html = event.clipboardData.getData('text/html');
+        kit.operator.onClearPage();
+        if (!html && text || text && html && html.endsWith(text)) {
             event.preventDefault();
-            if (aa.block.url == BlockUrlConstant.Code) {
-                await onPasteInsertText(kit, aa, text);
-                return;
+            if (URL_RGEX.test(text)) {
+                await onPasteUrl(kit, aa, text);
             }
-            if (!aa.block.isSupportTextStyle) {
-                await onPasteInsertPlainText(kit, aa, text);
-                return;
-            }
-            var regexText = text.replace(/[\(\)\\\.\[\]\*\?]/g, ($, $1) => {
-                return '\\' + $
-            })
-            if (html.match(new RegExp('([\\s]*<[^>]+>[\\s]*)?<[^>]+>' + regexText + '</[^>]+>'))) {
-                /**
-                 * 这里表示当前的文本就仅仅在外面包一层html，没有多个块
-                 * 列如:
-                 * text: 你好
-                 * html: <p>你好</p>
-                 */
-                if (URL_RGEX.test(text)) {
-                    await onPasteUrl(kit, aa, text);
-                }
-                else {
-                    await onPasteInsertText(kit, aa, text);
-                }
-                return;
-            }
-            let parser = new DOMParser();
-            var doc = parser.parseFromString(html, "text/html");
-            var blocks = await parseDom(doc);
-            if (blocks?.length > 0) {
-                if (blocks.length == 1 && blocks[0].url == BlockUrlConstant.TextSpan) {
-                    var cs = blocks[0].blocks.childs
-                    if (cs.length == 1 && cs[0].url == BlockUrlConstant.Text) {
-                        var content = cs[0].content;
-                        if (URL_RGEX.test(content)) await onPasteUrl(kit, aa, text)
-                        else await onPasteInsertText(kit, aa, text);
+            else await onPasteInsertText(kit, aa, text);
+            return;
+        }
+        if (files.length > 0) {
+            event.preventDefault();
+            //说明复制的是文件
+            await onPasterFiles(kit, aa, files);
+        }
+        else if (html) {
+            var ma;
+            if (ma = html.match(new RegExp(`data\\-name\="shy\\.live"[\\s]+content\\="([^"]+)"`))) {
+                var id = ma[1];
+                if (id) {
+                    var bs = readCopyBlocks(id);
+                    /**
+                     * 这里的bs有可能是从诗云的一个浏览器复制到另一个浏览器，
+                     * 本质上里面的内容没有缓存
+                     */
+                    if (Array.isArray(bs) && bs.length > 0) {
+                        event.preventDefault();
+                        await onPasteCreateBlocks(kit, aa, bs);
                         return;
                     }
+
                 }
-                await onPasteCreateBlocks(kit, aa, blocks);
             }
-        }
-        catch (ex) {
-            console.error(ex);
-            await onPasteInsertText(kit, aa, text);
+            try {
+                event.preventDefault();
+                if (aa.block.url == BlockUrlConstant.Code) {
+                    await onPasteInsertText(kit, aa, text);
+                    return;
+                }
+                if (!aa.block.isSupportTextStyle) {
+                    await onPasteInsertPlainText(kit, aa, text);
+                    return;
+                }
+                var regexText = text.replace(/[\(\)\\\.\[\]\*\?]/g, ($, $1) => {
+                    return '\\' + $
+                })
+                if (html.match(new RegExp('([\\s]*<[^>]+>[\\s]*)?<[^>]+>' + regexText + '</[^>]+>'))) {
+                    /**
+                     * 这里表示当前的文本就仅仅在外面包一层html，没有多个块
+                     * 列如:
+                     * text: 你好
+                     * html: <p>你好</p>
+                     */
+                    if (URL_RGEX.test(text)) {
+                        await onPasteUrl(kit, aa, text);
+                    }
+                    else {
+                        await onPasteInsertText(kit, aa, text);
+                    }
+                    return;
+                }
+                let parser = new DOMParser();
+                var doc = parser.parseFromString(html, "text/html");
+                var blocks = await parseDom(doc);
+                if (blocks?.length > 0) {
+                    if (blocks.length == 1 && blocks[0].url == BlockUrlConstant.TextSpan) {
+                        var cs = blocks[0].blocks.childs
+                        if (cs.length == 1 && cs[0].url == BlockUrlConstant.Text) {
+                            var content = cs[0].content;
+                            if (URL_RGEX.test(content)) await onPasteUrl(kit, aa, text)
+                            else await onPasteInsertText(kit, aa, text);
+                            return;
+                        }
+                    }
+                    await onPasteCreateBlocks(kit, aa, blocks);
+                }
+            }
+            catch (ex) {
+                console.error(ex);
+                await onPasteInsertText(kit, aa, text);
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ import { BlockDisplay } from "../../src/block/enum";
 import { Block } from "../../src/block";
 import { TextTurns } from "../../src/block/turn/text";
 import { Rect } from "../../src/common/vector/point";
+import { BlockFactory } from "../../src/block/factory/block.factory";
 @url('/head')
 export class Head extends Block {
     @prop()
@@ -42,6 +43,9 @@ export class Head extends Block {
         var tag = this.level;
         if (this.childs.length > 0) return `<${tag}>${this.getChildsHtml()}</${tag}>`
         else return `<${tag}>${this.content}</${tag}>`
+    }
+    getUrl(): string {
+        return BlockFactory.stringBlockUrl(this.url, { level: this.level });
     }
 }
 @view("/head")

@@ -24,6 +24,7 @@ import { useTagSelector } from "../../../extensions/tag";
  */
 export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.FormEvent) {
     if (aa.isSolid) return false;
+    if (aa.plain) return false;
     if (aa.block.url == BlockUrlConstant.Title || aa.block.closest(x => x.isOnlyBlock)?.url == BlockUrlConstant.Title) return false;
     var ev = event.nativeEvent as InputEvent;
     var sel = window.getSelection();

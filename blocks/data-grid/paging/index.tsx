@@ -39,7 +39,10 @@ export class PagingView extends BlockView<Paging>{
             { text: '80条/页', value: 80 },
             { text: '100条/页', value: 100 },
             { text: '150条/页', value: 150 },
-            { text: '200条/页', value: 200 }
+            { text: '200条/页', value: 200 },
+            { type: MenuItemType.divide },
+            { text: '5条/页', value: 5 },
+            { text: '10条/页', value: 10 },
         ];
         var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, items);
         if (r) {
