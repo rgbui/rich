@@ -255,7 +255,7 @@ export class DataGridViewConfig {
         if (dialougPage) {
             dialougPage.onSave();
             var newRow = await dialougPage.getSchemaRow();
-            if (newRow) await this.onAddRow(newRow, undefined, 'after',dialougPage)
+            if (newRow) await this.onAddRow(newRow, undefined, 'after', dialougPage)
         }
         if (url != '/page/open') await channel.air(url, { elementUrl: null });
         this.dataGridTool.isOpenTool = false;

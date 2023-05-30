@@ -29,14 +29,14 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
         var isForm = view.url == BlockUrlConstant.FormView;
         function renderToolOperators() {
             if (isForm) return <>
-                <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => (props.block as DataGridForm).onFormFields(e)}><Icon size={14} icon={FieldsSvg}></Icon></label>
-                <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => { (props.block as DataGridForm).onFormSettings(e) }}><Icon size={18} icon={DotsSvg}></Icon></label>
+                <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => (props.block as DataGridForm).onFormFields(e)}><Icon size={16} icon={FieldsSvg}></Icon></label>
+                <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => { (props.block as DataGridForm).onFormSettings(e) }}><Icon size={16} icon={DotsSvg}></Icon></label>
             </>
-            return <><label className="item-hover round padding-w-5 h-24 flex-center cursor gap-r-10" onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e))}><Icon size={14} icon={SettingsSvg}></Icon><span className="f-14 padding-l-5">视图配置</span></label>
-                {props.block.filter?.items?.length > 0 && <label className="item-hover round  flex-center cursor gap-r-10 padding-w-5 h-24 " onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e), 'filter')}><Icon size={18} icon={FilterSvg}></Icon><span className="f-14 padding-l-5">过滤</span></label>}
-                {props.block.sorts?.length > 0 && <label className="item-hover round  flex-center cursor gap-r-10 padding-w-5 h-24 " onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e), 'sort')}><Icon size={18} icon={SortSvg}></Icon><span className="f-14 padding-l-5">排序</span></label>}
+            return <><label className="item-hover round padding-w-5 h-24 flex-center cursor gap-r-10" onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e))}><Icon size={16} icon={SettingsSvg}></Icon><span className="f-14 padding-l-5">视图配置</span></label>
+                {props.block.filter?.items?.length > 0 && <label className="item-hover round  flex-center cursor gap-r-10 padding-w-5 h-24 " onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e), 'filter')}><Icon size={16} icon={FilterSvg}></Icon><span className="f-14 padding-l-5">过滤</span></label>}
+                {props.block.sorts?.length > 0 && <label className="item-hover round  flex-center cursor gap-r-10 padding-w-5 h-24 " onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e), 'sort')}><Icon size={16} icon={SortSvg}></Icon><span className="f-14 padding-l-5">排序</span></label>}
                 {props.block.page.pageLayout.type != PageLayoutType.db && <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => { e.stopPropagation(); props.block.onOpenSchemaPage() }}><Icon icon={MaximizeSvg} size={16}></Icon></label>}
-                <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => { e.stopPropagation(); props.block.onOpenViewProperty(Rect.fromEvent(e)) }}><Icon size={18} icon={DotsSvg}></Icon></label>
+                <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => { e.stopPropagation(); props.block.onOpenViewProperty(Rect.fromEvent(e)) }}><Icon size={16} icon={DotsSvg}></Icon></label>
                 <div className="sy-dg-tool-operators-add">
                     <span className="padding-l-15 text-white" onClick={e => { e.stopPropagation(); props.block.onOpenForm(Rect.fromEvent(e)) }}>新增</span>
                     <span className="flex-center cursor size-16 padding-l-5 padding-r-5" onClick={e => { e.stopPropagation(); props.block.onOpenViewTemplates(Rect.fromEvent(e)) }}><Icon size={14} icon={ChevronDownSvg}></Icon></span>

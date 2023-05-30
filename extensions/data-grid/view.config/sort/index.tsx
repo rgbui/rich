@@ -35,11 +35,11 @@ export class TableSortView extends EventsComponent {
         })
     }
     onStore = lodash.debounce(async () => {
-        await this.block.onManualUpdateProps({ sorts: this.oldSorts }, { sorts: this.block.sorts }, {  });
+        await this.block.onManualUpdateProps({ sorts: this.oldSorts }, { sorts: this.block.sorts }, {});
         this.oldSorts = lodash.cloneDeep(this.block.sorts);
     }, 800);
     onForceStore = async () => {
-        await this.block.onManualUpdateProps({ sorts: this.oldSorts }, { sorts: this.block.sorts }, {  });
+        await this.block.onManualUpdateProps({ sorts: this.oldSorts }, { sorts: this.block.sorts }, {});
         this.oldSorts = lodash.cloneDeep(this.block.sorts);
         this.forceUpdate();
     }
@@ -47,20 +47,23 @@ export class TableSortView extends EventsComponent {
         if (!this.block) return <></>;
         var self = this;
         if (!Array.isArray(this.block.sorts)) this.block.sorts = [];
-        function addSort() {
+        async function addSort() {
             var f = self.schema.fields.find(g => g.type == FieldType.title);
             if (!f) f = self.schema.fields.findAll(g => g.text ? true : false).first();
             self.block.sorts.push({ id: util.guid(), field: f.id, sort: 1 });
+            await self.block.onReloadData();
             self.onForceStore();
         }
-        function removeSort(at: number) {
+        async function removeSort(at: number) {
             self.block.sorts.splice(at, 1);
+            await self.block.onReloadData();
             self.onForceStore();
         }
-        function change(to, from) {
+        async function change(to, from) {
             var f = self.block.sorts[from];
             self.block.sorts.splice(from, 1);
             self.block.sorts.splice(to, 0, f);
+            await self.block.onReloadData();
             self.onForceStore();
         }
         var hasSorts = Array.isArray(self.block.sorts) && self.block.sorts.length > 0;

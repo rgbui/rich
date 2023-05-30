@@ -113,11 +113,13 @@ export class TableFilterView extends EventsComponent {
         ]
     }
     onStore = lodash.debounce(async () => {
-        await this.block.onManualUpdateProps({ filter: this.oldFilters }, { filter: this.block.filter }, {  });
+        await this.block.onManualUpdateProps({ filter: this.oldFilters }, { filter: this.block.filter }, {});
+        await this.block.onReloadData();
         this.oldFilters = lodash.cloneDeep(this.block.filter);
     }, 800);
     onForceStore = async () => {
-        await this.block.onManualUpdateProps({ filter: this.oldFilters }, { filter: this.block.filter }, {  });
+        await this.block.onManualUpdateProps({ filter: this.oldFilters }, { filter: this.block.filter }, {});
+        await this.block.onReloadData();
         this.oldFilters = lodash.cloneDeep(this.block.filter);
         this.forceUpdate();
     }
@@ -196,8 +198,7 @@ export class TableFilterView extends EventsComponent {
         if (item.operator != '$in') {
             if (item.value) {
                 var dd = dayjs(new Date(item.value));
-                if (dd.isValid())
-                    dateString = dayjs(new Date(item.value)).format('YYYY-MM-DD');
+                if (dd.isValid()) dateString = dayjs(new Date(item.value)).format('YYYY-MM-DD');
                 else dateString = '';
             }
         }
