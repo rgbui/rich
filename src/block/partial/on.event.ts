@@ -30,6 +30,7 @@ import lodash from "lodash";
 import { FontColorList, BackgroundColorList } from "../../../extensions/color/data";
 import { BlockUrlConstant } from "../constant";
 import { List } from "../../../blocks/present/list/list";
+import { BlockFactory } from "../factory/block.factory";
 
 export class Block$Event {
     /**
@@ -48,7 +49,8 @@ export class Block$Event {
                 text: it.text,
                 icon: it.icon,
                 url: it.url,
-                checkLabel: it.url == this.url ? true : false,
+                checkLabel: lodash.isEqual(BlockFactory.parseBlockUrl(it.url),
+                    BlockFactory.parseBlockUrl(this.getUrl())) ? true : false,
                 iconSize: 16
             }
         })
@@ -63,6 +65,9 @@ export class Block$Event {
             icon: MagicSvg,
             text: "诗云AI",
         });
+
+        items.push({ type: MenuItemType.divide });
+
         items.push({
             name: BlockDirective.delete,
             icon: TrashSvg,
