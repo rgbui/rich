@@ -22,6 +22,7 @@ import { useTableExport } from "../../../../extensions/data-grid/export";
 import { Block } from "../../../../src/block";
 
 export class DataGridViewOperator {
+    
     async onAddField(this: DataGridView, event: Rect, at?: number) {
         var self = this;
         var result = await useTableStoreAddField(
@@ -294,9 +295,7 @@ export class DataGridViewOperator {
             await this.loadSchema();
         }
         var bs = this.referenceBlockers;
-
         var view = this.schema.views.find(g => g.id == viewId);
-
         var at = this.at;
         var pa = this.parent;
         var id = this.id;
@@ -312,7 +311,13 @@ export class DataGridViewOperator {
         this.page.addBlockUpdate(newBlock.parent);
         this.page.addUpdateEvent(async () => {
             newBlock.id = id;
+            bs.forEach(c => {
+                newBlock.registerReferenceBlocker(c);
+            })
             await newBlock.didMounted();
+            bs.forEach(b => {
+                b.forceUpdate();
+            })
         })
 
         this.page.snapshoot.record(OperatorDirective.$data_grid_trun_view, {
@@ -321,13 +326,8 @@ export class DataGridViewOperator {
             to: viewId
         }, this);
 
+     
 
-        this.page.addUpdateEvent(async () => {
-            //console.log('nb', newBlock.syncBlockId, (newBlock as DataGridView).schemaView)
-            bs.forEach(b => {
-                b.forceUpdate();
-            })
-        })
     }
     async onOtherDataGridTurnView(this: DataGridView, viewId: string, type: 'form' | 'view', schemaId: string, viewUrl?: string) {
         if (this.syncBlockId != viewId) {
@@ -408,7 +408,6 @@ export class DataGridViewOperator {
             });
             this.schema.fields.push(f);
         }
-        this.schema.views.push({ id: oneAction.id, text: text, url: url } as any);
         await this.onDataGridTurnView(oneAction.id);
     }
     async onSchemaViewRename(this: DataGridView, viewId: string, text: string) {

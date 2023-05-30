@@ -222,10 +222,35 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                 });
             }
             else if (aa.isSolid) {
-                await block.delete();
-                write.kit.page.addUpdateEvent(async () => {
-                    write.kit.anchorCursor.onFocusBlockAnchor(rowBlock, { render: true, merge: true });
-                });
+                //await block.delete();
+                if (rowBlock && rowBlock?.prev?.isTextBlock && rowBlock?.prev?.url != BlockUrlConstant.Title) {
+                    //这个需要合并块
+                    var lastPreBlock = await combineTextBlock(write, rowBlock);
+                    write.kit.page.addUpdateEvent(async () => {
+                        write.kit.anchorCursor.onFocusBlockAnchor(lastPreBlock, { last: true, render: true, merge: true });
+                    });
+                    return
+                }
+                if (rowBlock.isTextBlock && !rowBlock?.prev && !(rowBlock.parent?.isPanel || rowBlock.parent?.isCell || rowBlock.parent?.isLayout)) {
+                    //这个父块合并子块的内容
+                    return await combindSubBlock(write, rowBlock);
+                }
+                /***
+                 * 这个回车啥也没干，光标跳动
+                 */
+                var prevAppearBlock = rowBlock.prevFind(x => x.appearAnchors.length > 0);
+                if (prevAppearBlock) {
+                    write.kit.page.addUpdateEvent(async () => {
+                        write.kit.anchorCursor.onFocusBlockAnchor(prevAppearBlock, { last: true, render: true, merge: true });
+                    });
+                }
+                if (rowBlock.isContentEmpty && !(!rowBlock?.prev && (rowBlock.parent?.isPanel || rowBlock.parent?.isLayout || rowBlock?.parent?.isCell))) {
+                    await rowBlock.delete();
+                }
+
+                // write.kit.page.addUpdateEvent(async () => {
+                //     write.kit.anchorCursor.onFocusBlockAnchor(rowBlock, { render: true, merge: true });
+                // });
                 return;
             }
             else {
@@ -381,6 +406,8 @@ async function combineTextBlock(write: PageWrite, rowBlock: Block, preBlock?: Bl
         for (let i = 0; i < cs.length; i++) {
             if (cs[i].isTextBlock && cs[i].content != '')
                 await preBlock.append(cs[i]);
+            else if (cs[i].isLineSolid)
+                await preBlock.append(cs[i])
         }
     }
     else {
