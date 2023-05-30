@@ -184,6 +184,9 @@ export abstract class Block extends Events {
     }
     viewComponent: typeof BlockView | ((props: any) => JSX.Element)
     view: BlockView<this>;
+    asView<T>():T {
+        return this.view as T;
+    }
     el: HTMLElement;
     childsEl: HTMLElement;
     get contentEl(): HTMLElement {
@@ -807,6 +810,9 @@ export abstract class Block extends Events {
         commentId?: string,
         userid?: string,
     }[];
+    getUrl() {
+        return this.url;
+    }
 }
 export interface Block extends Block$Seek { }
 export interface Block extends Block$Event { }

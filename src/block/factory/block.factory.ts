@@ -37,7 +37,7 @@ export class BlockFactory {
         }
         else throw new Exception(ExceptionType.notFoundBlockUrl, 'not found block class:' + url)
     }
-    private static parseBlockUrl(url: string) {
+    public static parseBlockUrl(url: string) {
         if (url.indexOf('?') > -1) {
             var us = url.split('?');
             var parms = us[1];
@@ -59,5 +59,12 @@ export class BlockFactory {
             url,
             data: {}
         }
+    }
+    public static stringBlockUrl(url: string, data?: Record<string, any>) {
+        if (data) {
+            var parms = JSON.stringify(data);
+            return url + '?' + parms;
+        }
+        else return url;
     }
 }

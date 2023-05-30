@@ -349,9 +349,11 @@ export class AppearAnchor {
                 rs[i].classList.remove('shy-text-focus');
         }
         this.el.classList.add('shy-text-focus');
+        this.block.focusAnchor(this);
     }
     blur() {
         this.el.classList.remove('shy-text-focus')
+        this.block.blurAnchor(this);
     }
     collapseByPoint(point: Point, options?: { startNode: Node, startOffset: number }) {
         if (this.isSolid) {
