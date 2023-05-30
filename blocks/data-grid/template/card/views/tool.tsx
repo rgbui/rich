@@ -1,5 +1,5 @@
 import { CardModel, CardViewCom } from "../factory/observable";
-import * as Card1 from "../../../../../src/assert/img/card/card1.png"
+import * as Card1 from "../../../../../src/assert/img/card/card7.jpg"
 import React, { ReactNode } from "react";
 import { ResourceArguments } from "../../../../../extensions/icon/declare";
 import { FieldType } from "../../../schema/type";

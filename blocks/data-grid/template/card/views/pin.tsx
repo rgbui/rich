@@ -15,7 +15,7 @@ import { util } from "../../../../../util/util";
 import { FieldType } from "../../../schema/type";
 import { CardModel, CardViewCom } from "../factory/observable";
 import { CardView } from "../view";
-import * as Card1 from "../../../../../src/assert/img/card/card1.png"
+import * as Card1 from "../../../../../src/assert/img/card/card8.jpg"
 import { BlockUrlConstant } from "../../../../../src/block/constant";
 import { autoImageUrl } from "../../../../../net/element.type";
 
