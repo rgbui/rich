@@ -85,7 +85,8 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
             if (this.props.item instanceof TableStoreItem) {
                 if (updateFileName) {
                     var uf = this.getField(updateFileName);
-                    var filename = resource.text.slice(0, resource.text.lastIndexOf('.'))
+                    var filename=resource.filename;
+                    var filename = filename.slice(0, filename.lastIndexOf('.'))
                     await this.props.item.onUpdateProps({
                         [field.name]: resource,
                         [uf.name]: filename

@@ -74,7 +74,7 @@ export class File extends Block {
         }
     }
     async getPlain() {
-         return this.src?.text||''
+         return this.src?.filename||''
     }
 }
 @view('/file')
@@ -88,9 +88,9 @@ export class FileView extends BlockView<File>{
             </div>}
             {this.block.src.name != 'none' && <div className='sy-block-file-content' >
                 <Icon icon={FileSvg} size={18} className='sy-block-file-content-icon'></Icon>
-                <span className='sy-block-file-content-title'>{this.block.src.text}</span>
+                <span className='sy-block-file-content-title'>{this.block.src?.filename}</span>
                 <span className='sy-block-file-content-bytes'>{util.byteToString(this.block.src.size)}</span>
-                <a className='sy-block-file-content-link' download={this.block.src.text} href={this.block.src.url}><Icon size={30} icon={DownloadSvg}></Icon></a>
+                <a className='sy-block-file-content-link' download={this.block.src?.filename} href={this.block.src.url}><Icon size={30} icon={DownloadSvg}></Icon></a>
             </div>}
         </div>
     }

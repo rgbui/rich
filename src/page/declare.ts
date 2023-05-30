@@ -1,5 +1,5 @@
 import { PageSvg, TopicSvg, CollectTableSvg, DocCardsSvg } from "../../component/svgs";
-import { IconArguments } from "../../extensions/icon/declare";
+import { IconArguments, ResourceArguments } from "../../extensions/icon/declare";
 import { AtomPermission } from "./permission";
 
 export enum PageLayoutType {
@@ -93,7 +93,7 @@ export interface LinkPageItem {
 
     cover?: { abled: boolean, url: string, thumb: string, top: number },
     plain?: string,
-    thumb?: IconArguments,
+    thumb?: ResourceArguments,
 
 }
 

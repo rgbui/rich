@@ -1,7 +1,7 @@
 import { CardModel, CardViewCom } from "../factory/observable";
 import * as Card1 from "../../../../../src/assert/img/card/card1.png"
 import React, { ReactNode } from "react";
-import { IconArguments } from "../../../../../extensions/icon/declare";
+import { IconArguments, ResourceArguments } from "../../../../../extensions/icon/declare";
 import { FieldType } from "../../../schema/type";
 import { CardView } from "../view";
 import { BlockUrlConstant } from "../../../../../src/block/constant";
@@ -52,7 +52,7 @@ CardModel({
 export class CardPin extends CardView {
     render(): ReactNode {
         var self = this;
-        var pics = this.getValue<IconArguments[]>('pic');
+        var pics = this.getValue<ResourceArguments[]>('pic');
         var hasPic = Array.isArray(pics) && pics.length > 0;
         var title = this.getValue<string>('title');
         var remark = this.getValue<string>('remark');

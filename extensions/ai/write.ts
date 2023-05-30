@@ -9,7 +9,7 @@ import { ListType } from "../../blocks/present/list/list";
 import { TextCode } from "../../blocks/present/code/code";
 import { util } from "../../util/util";
 import { mergeCode } from "./util";
-import { IconArguments } from "../icon/declare";
+import { ResourceArguments } from "../icon/declare";
 
 export class AiWrite {
     parentBlock: Block = null;
@@ -381,7 +381,7 @@ export class AiWrite {
         }
         this.write()
     }
-    acceptImages(images: IconArguments[]) {
+    acceptImages(images: ResourceArguments[]) {
         this.page.onAction('AIDrawImages', async () => {
             var block = this.block;
             var at = block.at;

@@ -5,7 +5,7 @@ import { CommentSvg, LikeSvg } from "../../../../../component/svgs";
 import { Avatar } from "../../../../../component/view/avator/face";
 import { UserBox } from "../../../../../component/view/avator/user";
 import { Icon } from "../../../../../component/view/icon";
-import { IconArguments } from "../../../../../extensions/icon/declare";
+import { IconArguments, ResourceArguments } from "../../../../../extensions/icon/declare";
 import * as Card1 from "../../../../../src/assert/img/card/card1.png"
 import { util } from "../../../../../util/util";
 import { FieldType } from "../../../schema/type";
@@ -64,7 +64,7 @@ CardModel({
 export class CardPin extends CardView {
     render(): ReactNode {
         var self = this;
-        var pics = this.getValue<IconArguments[]>('pic');
+        var pics = this.getValue<ResourceArguments[]>('pic');
         var types = this.getValue<{ value: string }>('types', FieldType.option);
         var hasPic = Array.isArray(pics) && pics.length > 0;
         var author = this.getValue<string>('author');

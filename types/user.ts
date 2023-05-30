@@ -1,4 +1,4 @@
-import { IconArguments } from "../extensions/icon/declare";
+import { IconArguments, ResourceArguments } from "../extensions/icon/declare";
 
 export enum UserStatus {
     offline = 0,
@@ -10,8 +10,8 @@ export enum UserStatus {
 
 export type UserBasic = {
     id: string,
-    avatar?: IconArguments,
-    cover?: IconArguments,
+    avatar?: ResourceArguments,
+    cover?: ResourceArguments,
     role: 'user' | 'robot',
     sn: number,
     name: string,

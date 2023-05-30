@@ -91,7 +91,7 @@ export class DataGridFileViewer extends EventsComponent {
                 return <div className="flex-center gap-5"><video src={resource.url} className="round object-center max-w-250 max-h-100" /></div>
             }
             else if (self.mime == 'file') {
-                return <div><span>{resource.text}</span></div>
+                return <div><span>{resource?.filename}</span></div>
             }
             else if (self.mime == 'user') return <div><Avatar size={30} userid={resource as string}></Avatar></div>
             else return <></>

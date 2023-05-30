@@ -11,7 +11,7 @@ import { Icon } from "../../../../../component/view/icon";
 import { useSelectMenuItem } from "../../../../../component/view/menu";
 import { MenuItemType } from "../../../../../component/view/menu/declare";
 import { BackgroundColorList } from "../../../../../extensions/color/data";
-import { IconArguments } from "../../../../../extensions/icon/declare";
+import {  ResourceArguments } from "../../../../../extensions/icon/declare";
 import { Rect } from "../../../../../src/common/vector/point";
 import { util } from "../../../../../util/util";
 
@@ -45,7 +45,7 @@ CardModel({
 export class CardPin extends CardView {
     render(): ReactNode {
         var self = this;
-        var pics = this.getValue<IconArguments[]>('cover');
+        var pics = this.getValue<ResourceArguments[]>('cover');
         var author = this.getValue<string>('author');
         var title = this.getValue<string>('title');
         var remark = this.getValue<string>('remark');

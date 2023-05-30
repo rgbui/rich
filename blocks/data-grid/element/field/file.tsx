@@ -30,12 +30,12 @@ export class FieldFile extends OriginField {
 export class FieldFileView extends BlockView<FieldFile>{
     down(img: ResourceArguments, e: React.MouseEvent) {
         e.stopPropagation();
-        util.downloadFile(img.url, img.text)
+        util.downloadFile(img.url, img.filename)
     }
     renderFiles(images: ResourceArguments[]) {
         return images.map((img, i) => {
             return <div className="min-h-30 " key={i}>
-                <a onMouseDown={e => { this.down(img, e) }} className="padding-3 round item-hover-focus cursor text-1 text-overflow" download={img.url}>{img.text}</a>
+                <a onMouseDown={e => { this.down(img, e) }} className="padding-3 round item-hover-focus cursor text-1 text-overflow" download={img.url}>{img.filename}</a>
             </div>
         })
     }

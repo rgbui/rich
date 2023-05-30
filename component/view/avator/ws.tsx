@@ -1,12 +1,12 @@
 import React from "react";
-import { IconArguments } from "../../../extensions/icon/declare";
+import { IconArguments, ResourceArguments } from "../../../extensions/icon/declare";
 import { channel } from "../../../net/channel";
 import { autoImageUrl } from "../../../net/element.type";
 type WsInfo = {
     id: string,
     text: string,
     icon: IconArguments,
-    cover: IconArguments,
+    cover: ResourceArguments,
     slogan: string,
     memberCount: number;
     memberOnlineCount: number;
