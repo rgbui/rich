@@ -44,7 +44,7 @@ export class ShyRichEditor extends EventsComponent {
             async customBrowseAndUpload(insertFn) {
                 var r = await useImagePicker({ center: true });
                 if (r) {
-                    insertFn(r.url, r.text);
+                    insertFn(r.url, r.filename);
                     self.onChange();
                 }
             }

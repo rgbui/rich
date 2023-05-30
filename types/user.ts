@@ -11,7 +11,7 @@ export enum UserStatus {
 export type UserBasic = {
     id: string,
     avatar?: ResourceArguments,
-    cover?: ResourceArguments,
+    cover?: IconArguments,
     role: 'user' | 'robot',
     sn: number,
     name: string,

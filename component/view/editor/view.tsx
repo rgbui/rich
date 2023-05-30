@@ -43,7 +43,7 @@ export class RichViewEditor extends EventsComponent<{ html: string, onChange: (e
             async customBrowseAndUpload(insertFn) {
                 var r = await useImagePicker({ center: true });
                 if (r) {
-                    insertFn(r.url, r.text);
+                    insertFn(r.url, r.filename);
                     self.onChange();
                 }
             }
