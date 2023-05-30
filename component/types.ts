@@ -3,10 +3,11 @@
 
 export type SearchListType<T = any, G ={}> = {
     list: T[],
+    lastDate?:Date,
     total: number,
-    page: number,
+    page?: number,
     size: number,
-    loading: boolean,
+    loading?: boolean,
     word?: string,
     error?: string
 } & G
