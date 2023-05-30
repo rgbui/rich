@@ -67,7 +67,7 @@ export class CardPin extends CardView {
             ]);
             if (r) {
                 if (r.item.name == 'replace') {
-                    await self.uploadImage('pic', rect)
+                    await self.uploadImage('pic', rect, 'title')
                 }
                 else if (r.item.name == 'close') {
                     await self.deleteItem();
@@ -79,7 +79,7 @@ export class CardPin extends CardView {
                 {hasPic && <img className="w100 block round-16 object-center" src={pics[0].url} style={{ backgroundColor: BackgroundColorList.randomOf().color }} />}
                 {!hasPic && <div className={'round-16'} style={{ height: util.getRandom(150, 300), backgroundColor: BackgroundColorList.randomOf().color }}></div>}
                 {!hasPic && <div className="pos-center z-4 visible">
-                    <span onMouseDown={e => this.uploadImage('pic', e)} className="padding-w-10 padding-h-3 bg-white item-white-hover round-8 cursor flex">
+                    <span onMouseDown={e => this.uploadImage('pic', e, 'title')} className="padding-w-10 padding-h-3 bg-white item-white-hover round-8 cursor flex">
                         <span className="size-24 flex-center flex-inline"><Icon icon={UploadSvg}></Icon></span>
                         <span className="f-14 text-1">上传图片</span>
                     </span>
