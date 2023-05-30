@@ -1,7 +1,7 @@
 import { CardModel, CardViewCom } from "../factory/observable";
 import * as Card1 from "../../../../../src/assert/img/card/card1.png"
 import React, { ReactNode } from "react";
-import { IconArguments, ResourceArguments } from "../../../../../extensions/icon/declare";
+import { ResourceArguments } from "../../../../../extensions/icon/declare";
 import { FieldType } from "../../../schema/type";
 import { CardView } from "../view";
 import { BlockUrlConstant } from "../../../../../src/block/constant";
@@ -40,12 +40,8 @@ CardModel({
         { url: BlockUrlConstant.RecordPageView, text: 'app工具详情', }
     ],
     dataList: [
-        { pic: { url: 'https://gd-hbimg.huaban.com/9e1942a5665bad6152682864d34f58ec63afc99a1d202-DByYa3_fw1200webp' }, title: '古风/和风/玄幻/武侠/古装', remark: 'i.pinimg.com' },
-        { pic: { url: 'https://gd-hbimg.huaban.com/2ceb09d869c9ae5561fb7a29c30a7bdf3fcb6fba9823f8-jsuPvR_fw1200webp' }, title: '{东方系列}实拍中国古装女性角色', remark: '' },
-        { pic: { url: 'https://gd-hbimg.huaban.com/bb7e72bd5b725e6c6eef09378f213e6818cc85b7101c98-McbbUs_fw1200webp' }, title: '参考 照片 女', remark: '{其他}实拍动态...（现代，古装）' },
-        { pic: { url: 'https://gd-hbimg.huaban.com/9e1942a5665bad6152682864d34f58ec63afc99a1d202-DByYa3_fw1200webp' }, title: '古风/和风/玄幻/武侠/古装', remark: 'i.pinimg.com' },
-        { pic: { url: 'https://gd-hbimg.huaban.com/2ceb09d869c9ae5561fb7a29c30a7bdf3fcb6fba9823f8-jsuPvR_fw1200webp' }, title: '{东方系列}实拍中国古装女性角色', remark: '' },
-        { pic: { url: 'https://gd-hbimg.huaban.com/bb7e72bd5b725e6c6eef09378f213e6818cc85b7101c98-McbbUs_fw1200webp' }, title: '参考 照片 女', remark: '{其他}实拍动态...（现代，古装）' },
+        { pic: { url: 'https://api-w2.shy.live/ws/img?id=1fcdc66fd4fd47e1a5d375cad8241c1a' }, title: 'Midjourney', remark: 'Midjourney是一个文本生成图像的AI工具' },
+        { pic: { url: 'https://api-w2.shy.live/ws/img?id=7ef5341c7a224d38a73a39dc459d6b2f' }, title: 'Stable Diffusion', remark: 'Stable Diffusion 是于2022年发布的一个基于深度学习的AI文本到图像生成模型' },
     ]
 })
 @CardViewCom('/tool')

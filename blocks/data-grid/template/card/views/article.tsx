@@ -5,7 +5,7 @@ import { CommentSvg, LikeSvg } from "../../../../../component/svgs";
 import { Avatar } from "../../../../../component/view/avator/face";
 import { UserBox } from "../../../../../component/view/avator/user";
 import { Icon } from "../../../../../component/view/icon";
-import { IconArguments, ResourceArguments } from "../../../../../extensions/icon/declare";
+import {  ResourceArguments } from "../../../../../extensions/icon/declare";
 import * as Card1 from "../../../../../src/assert/img/card/card1.png"
 import { util } from "../../../../../util/util";
 import { FieldType } from "../../../schema/type";
