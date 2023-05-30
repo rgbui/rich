@@ -203,6 +203,9 @@ export class DataGridView extends Block {
             else if (f.logic == 'or') {
                 f = { logic: 'and', items: [f, ...rs] };
             }
+            else {
+                f = { logic: 'and', items: [...rs] }
+            }
         }
         return f
     }
