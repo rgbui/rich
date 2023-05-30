@@ -72,6 +72,15 @@ export class TableStoreItem extends Block {
             data: { [field.name]: value }
         })
     }
+    async onUpdateCellProp(props: Record<string, any>) {
+        Object.assign(this.dataRow, props);
+        var dr = this.dataGrid.data.find(g => g.id == this.dataRow.id);
+        if (dr) Object.assign(dr, props)
+        await this.schema.rowUpdate({
+            dataId: this.dataRow.id,
+            data: { ...props }
+        })
+    }
     async onUpdateCellInteractive(field: Field) {
         var r = await channel.patch('/interactive/emoji', {
             elementUrl: getElementUrl(
