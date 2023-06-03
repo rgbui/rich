@@ -68,12 +68,7 @@ export class Block$Event {
 
         items.push({ type: MenuItemType.divide });
 
-        items.push({
-            name: BlockDirective.delete,
-            icon: TrashSvg,
-            text: langProvider.getText(LangID.menuDelete),
-            label: "delete"
-        });
+
         items.push({
             name: BlockDirective.copy,
             text: '拷贝副本',
@@ -164,6 +159,15 @@ export class Block$Event {
                     })
                 },
             ]
+        });
+        items.push({
+            type: MenuItemType.divide
+        });
+        items.push({
+            name: BlockDirective.delete,
+            icon: TrashSvg,
+            text: langProvider.getText(LangID.menuDelete),
+            label: "delete"
         });
         return items;
     }
