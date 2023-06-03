@@ -2,7 +2,7 @@
 
 var alertEle: HTMLElement;
 var time;
-export function ShyAlert(msg: string, level?: 'success' | 'info' | 'fail' | 'warn' | 'load') {
+export function ShyAlert(msg: string, level?: 'success' | 'info' | 'fail' | 'warn' | 'load', ti?: number) {
     if (!alertEle) {
         alertEle = document.createElement('div');
         alertEle.classList.add('shy-alert');
@@ -14,7 +14,12 @@ export function ShyAlert(msg: string, level?: 'success' | 'info' | 'fail' | 'war
     if (!time) { clearTimeout(time); time = null; }
     time = setTimeout(() => {
         alertEle.style.display = 'none';
-    }, 3e3);
+    }, ti || 3e3);
+}
+
+export function CloseShyAlert() {
+    if (!time) { clearTimeout(time); time = null; }
+    alertEle.style.display = 'none';
 }
 
 
