@@ -426,9 +426,10 @@ export class PageWrite {
                         await aa.block.clearEmptyBlock();
                     }
                 }
-                newBlock.mounted(() => {
-                    this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true })
-                });
+                if (newBlock)
+                    newBlock.mounted(() => {
+                        this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true })
+                    });
             });
         }
         var blockData = args[0];
