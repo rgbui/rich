@@ -15,6 +15,8 @@ import { PageLayoutType } from "../declare";
 import { PageDirective } from "../directive";
 import { BlockUrlConstant } from "../../block/constant";
 import { ElementType } from "../../../net/element.type";
+import { useDataGridSelectView } from "../../../extensions/data-grid/create";
+import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 
 export class PageEvent {
     /**
@@ -139,10 +141,6 @@ export class PageEvent {
                 old: PageLayoutType.doc,
                 new: layoutType
             }, this);
-            // this.snapshoot.record(OperatorDirective.pageUpdateProp,{
-            //      old:{requireSelectLayout:false},
-            //      new:{requireSelectLayout:true}
-            // })
             switch (layoutType) {
                 case PageLayoutType.doc:
                     this.pageLayout.type = layoutType;
@@ -150,7 +148,14 @@ export class PageEvent {
                 case PageLayoutType.db:
                     this.pageLayout.type = layoutType;
                     var view = this.views[0];
-                    await this.createBlock('/data-grid/table', { createSource: 'pageTurnLayout' }, view);
+                    var schema = await TableSchema.onCreate({
+                        text: this.pageInfo?.text || '表格',
+                        url: BlockUrlConstant.DataGridTable
+                    });
+                    await this.createBlock('/data-grid/table', {
+                        schemaId: schema.id,
+                        syncBlockId: schema.views.find(g => ![BlockUrlConstant.RecordPageView, BlockUrlConstant.FormView].includes(g.url as any))?.id
+                    }, view);
                     break;
                 case PageLayoutType.docCard:
                     this.pageLayout.type = layoutType;

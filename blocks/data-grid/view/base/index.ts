@@ -242,7 +242,7 @@ export class DataGridView extends Block {
     async createdDidMounted(): Promise<void> {
         if (this.createSource == 'InputBlockSelector' || this.createSource == 'pageTurnLayout') {
             if (!this.schemaId) {
-                var dg = await useDataGridSelectView({ roundArea: Rect.fromEle(this.el) });
+                var dg = await useDataGridSelectView({ roundArea: Rect.fromEle(this.el) }, { selectView: this.createSource == 'InputBlockSelector' ? false : true });
                 if (dg) {
                     if (dg.schemaId) {
                         await this.page.onAction('SelectTableSchema', async () => {
