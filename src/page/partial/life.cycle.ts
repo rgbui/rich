@@ -371,11 +371,11 @@ export class Page$Cycle {
                         ref: lodash.cloneDeep(c),
                     })
                 })
-                //console.log('/row/block/sync/refs', ops);
-                await channel.post('/row/block/sync/refs', {
-                    pageId: this.pageInfo.id,
-                    operators: ops
-                })
+                if (ops.length > 0)
+                    await channel.post('/row/block/sync/refs', {
+                        pageId: this.pageInfo.id,
+                        operators: ops
+                    })
             }
         }
         catch (ex) {
@@ -383,7 +383,6 @@ export class Page$Cycle {
             console.error(ex);
         }
         try {
-            // console.log(recordOutlineChanges, 'ssss');
             if (recordOutlineChanges.isChangeAll == true || recordOutlineChanges.changeBlocks.length > 0) {
                 var outLineBlock = this.find(g => g.url == BlockUrlConstant.Outline) as PageOutLine;
                 if (outLineBlock) {
