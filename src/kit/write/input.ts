@@ -190,7 +190,6 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
     if (aa.block.isPart) isEmpty = false;
     var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
     if (offset == 0) {
-        //console.log('offset', offset);
         event.preventDefault();
         /**
          * 标题不能回退删除
@@ -206,7 +205,10 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                 /**这里判断block前面有没有line */
                 var pv = block.prev;
                 var isSolidDelete: boolean = false;
-                if (aa.isSolid) { await block.delete(); isSolidDelete = true; }
+                if (aa.isSolid) {
+                    await block.delete();
+                    isSolidDelete = true;
+                }
                 else if (isEmpty) await block.delete()
                 if (!isSolidDelete && pv.appearAnchors.some(s => s.isText)) {
                     pv.updateProps({ content: pv.content.slice(0, pv.content.length - 1) }, BlockRenderRange.self);

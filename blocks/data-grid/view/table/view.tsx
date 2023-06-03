@@ -227,6 +227,7 @@ export class TableStoreView extends BlockView<TableStore>{
     }
     render() {
         var self = this;
+   
         return <div className={"sy-dg-table" +
             (this.block.noBorder ? " sy-dg-table-no-border" : "") +
             (this.block.noHead ? " sy-dg-table-no-header" : "")

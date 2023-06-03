@@ -71,6 +71,13 @@ export class TableSchema {
             FieldType.deleted
         ].includes(g.type))
     }
+    get recordViewTemplateFields() {
+        return this.fields.findAll(g => g.text && ![
+            FieldType.id,
+            FieldType.description,
+            FieldType.deleted,
+        ].includes(g.type) ? true : false);
+    }
     get userFields(): Field[] {
         return this.fields.findAll(g => g.text && ![
             FieldType.id,

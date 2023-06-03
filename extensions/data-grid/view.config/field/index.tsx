@@ -312,7 +312,7 @@ export class DataGridFields extends EventsComponent {
                                 onChange={e => {
                                     changeArrayProp(bp, { name: pro.name, bindFieldId: e })
                                 }}
-                                options={self.block.schema.userFields.findAll(c => pro.types.includes(c.type)).map(c => {
+                                options={self.block.schema.recordViewTemplateFields.findAll(c => pro.types.includes(c.type)).map(c => {
                                     return {
                                         text: c.text,
                                         value: c.id
