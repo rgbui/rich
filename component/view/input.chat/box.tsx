@@ -217,12 +217,18 @@ export class InputChatBox extends React.Component<{
                     }
                 }
             });
-            if (d) {
+            if (d.ok) {
                 fr.speed = `${file.name}-上传完成`;
                 var g = lodash.cloneDeep(d.data.file) as any;
                 g.text = g.name;
                 delete g.name;
                 fr.file = { name: 'upload', ...g }
+            }
+            else {
+                fr.speed = `${file.name}-上传失败`;
+                this.openEror(`${file.name}-上传失败`)
+                this.forceUpdate();
+                await util.delay(3e3);
             }
             fr.speed = ``;
             this.forceUpdate()
