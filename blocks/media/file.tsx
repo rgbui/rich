@@ -10,8 +10,6 @@ import { channel } from "../../net/channel";
 import { DownloadSvg, FileSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { util } from "../../util/util";
-import { Remark } from "../../component/view/text";
-
 
 @url('/file')
 export class File extends Block {
@@ -82,12 +80,12 @@ export class FileView extends BlockView<File>{
     render() {
         return <div className='sy-block-file' style={this.block.boxStyle}>
             {this.block.src.name == 'none' && <div onMouseDown={e => this.block.addFile(e)} className='sy-block-file-nofile'>
-                <Icon icon={FileSvg}></Icon>
+                <Icon className={'text-1'} icon={FileSvg}></Icon>
                 {!this.block.speed && <span>添加附件</span>}
-                {this.block.speed && <Remark>{this.block.speed}</Remark>}
+                {this.block.speed && <div className="remark">{this.block.speed}</div>}
             </div>}
             {this.block.src.name != 'none' && <div className='sy-block-file-content' >
-                <Icon icon={FileSvg} size={18} className='sy-block-file-content-icon'></Icon>
+                <Icon icon={FileSvg} size={18} className='text-1 sy-block-file-content-icon'></Icon>
                 <span className='sy-block-file-content-title'>{this.block.src?.filename}</span>
                 <span className='sy-block-file-content-bytes'>{util.byteToString(this.block.src.size)}</span>
                 <a className='sy-block-file-content-link' download={this.block.src?.filename} href={this.block.src.url}><Icon size={30} icon={DownloadSvg}></Icon></a>
