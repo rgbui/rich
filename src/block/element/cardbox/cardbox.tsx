@@ -25,6 +25,7 @@ import { ChildsArea } from "../../view/appear";
 import "./style.less";
 import { ToolTip } from "../../../../component/view/tooltip";
 import { BoxFillType, BoxStyle } from "../../../../extensions/doc.card/declare";
+import { DropDirection } from "../../../kit/handle/direction";
 
 @url('/card/box')
 export class CardBox extends Block {
@@ -145,6 +146,61 @@ export class CardBox extends Block {
             }
         }
     }
+
+    get isAllowDrop(): boolean {
+        return true;
+    }
+    isAllowDrops(dragBlocks: Block[]) {
+        if (dragBlocks.length == 1) {
+            var dg = dragBlocks[0];
+            if (dg instanceof CardBox) {
+                if (dg === this) return false;
+                return true;
+            }
+        }
+        return false;
+    }
+    isCanDropHere(dropBlock: Block) {
+        if (dropBlock instanceof CardBox) {
+            return true;
+        }
+        return false
+    }
+    canDropDirections() {
+        return [
+            DropDirection.top,
+            DropDirection.bottom
+        ]
+    }
+    // async drop(blocks: Block[], direction: DropDirection) {
+    //     var dragRow = blocks[0] as CardBox;
+    //     switch (direction) {
+    //         case DropDirection.bottom:
+    //         case DropDirection.top:
+    //             var result = await this.schema.rowRank({
+    //                 id: dragRow.dataRow.id,
+    //                 pos: {
+    //                     id: this.dataRow.id,
+    //                     pos: DropDirection.bottom == direction ? "after" : 'before'
+    //                 }
+    //             });
+    //             if (result.ok) {
+    //                 if (result.data?.isCacSort)
+    //                     this.page.addUpdateEvent(async () => {
+    //                         this.dataGrid.onReloadData()
+    //                     })
+    //                 else {
+    //                     dragRow.dataRow.sort = result.data.sort;
+    //                     this.page.addUpdateEvent(async () => {
+    //                         this.dataGrid.onSortRank()
+    //                     })
+    //                 }
+    //             }
+    //             break;
+    //     }
+    // }
+
+
 }
 /*** 在一个页面上，从视觉上有多个视图块，
  * 如每个页面都有一个初始的内容视图，不可拖动
