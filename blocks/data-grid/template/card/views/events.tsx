@@ -46,29 +46,34 @@ CardModel({
     ],
     dataList: [
         {
-            pic: { url: 'https://gd-hbimg.huaban.com/9e1942a5665bad6152682864d34f58ec63afc99a1d202-DByYa3_fw1200webp' },
-            title: '古风/和风/玄幻/武侠/古装',
+            pic: [{ url: 'https://api-w1.shy.live/ws/img?id=1e1a07d5c333421c9cc885775b0ff17c' }], title: '花',
+
             date: new Date()
         },
         {
-            pic: { url: 'https://gd-hbimg.huaban.com/2ceb09d869c9ae5561fb7a29c30a7bdf3fcb6fba9823f8-jsuPvR_fw1200webp' },
-            title: '{东方系列}实拍中国古装女性角色', date: new Date()
+            pic: [{ url: 'https://api-w1.shy.live/ws/img?id=08e4ff43377b4e13a618a183b3a82dc6' }], title: '水果季节',
+
+            date: new Date()
         },
         {
-            pic: { url: 'https://gd-hbimg.huaban.com/bb7e72bd5b725e6c6eef09378f213e6818cc85b7101c98-McbbUs_fw1200webp' },
-            title: '参考 照片 女', date: dayjs().add(1, 'day').toDate()
+            pic: [{ url: 'https://api-w1.shy.live/ws/img?id=e90c90e3f4634b49a19eceba035d30d8' }], title: '盆栽',
+            date: dayjs().add(1, 'day').toDate()
         },
         {
             pic: { url: 'https://gd-hbimg.huaban.com/9e1942a5665bad6152682864d34f58ec63afc99a1d202-DByYa3_fw1200webp' },
-            title: '古风/和风/玄幻/武侠/古装', date: dayjs().add(4, 'day').toDate()
+            title: '古风/和风/玄幻/武侠/古装',
+
+            date: dayjs().add(4, 'day').toDate()
         },
         {
-            pic: { url: 'https://gd-hbimg.huaban.com/2ceb09d869c9ae5561fb7a29c30a7bdf3fcb6fba9823f8-jsuPvR_fw1200webp' },
-            title: '{东方系列}实拍中国古装女性角色', date: dayjs().add(-1, 'day').toDate()
+            pic: [{ url: 'https://api-w1.shy.live/ws/img?id=639fd35e2d91409fb7861841d6c6afa6' }], title: '花束',
+
+            date: dayjs().add(-1, 'day').toDate()
         },
         {
-            pic: { url: 'https://gd-hbimg.huaban.com/bb7e72bd5b725e6c6eef09378f213e6818cc85b7101c98-McbbUs_fw1200webp' },
-            title: '参考 照片 女', date: dayjs().add(-1, 'day').toDate()
+            pic: [{ url: 'https://api-w1.shy.live/ws/img?id=8206822bcf214b779b8fb05f42e1c55d' }], title: '伞',
+
+            date: dayjs().add(-1, 'day').toDate()
         },
     ]
 })
@@ -80,7 +85,7 @@ export class CardPin extends CardView {
         var title = this.getValue<string>('title');
         var hasPic = Array.isArray(pics) && pics.length > 0;
         var date = this.getValue<Date>('date');
-        return <div  onMouseDown={e => self.openEdit(e)} className="flex flex-col ">
+        return <div onMouseDown={e => self.openEdit(e)} className="flex flex-col ">
             <div className="flex-fixed h-80">
                 {hasPic && <img className="w100 block round-16 object-center" src={pics[0].url} />}
             </div>

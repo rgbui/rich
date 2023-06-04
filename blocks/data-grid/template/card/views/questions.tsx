@@ -40,12 +40,12 @@ CardModel({
         { url: BlockUrlConstant.RecordPageView, text: '问题详情', }
     ],
     dataList: [
-        { title: '古风/和风/玄幻/武侠/古装', remark: 'i.pinimg.com' },
-        { title: '{东方系列}实拍中国古装女性角色', remark: '' },
-        { title: '参考 照片 女', remark: '{其他}实拍动态...（现代，古装）' },
-        { title: '古风/和风/玄幻/武侠/古装', remark: 'i.pinimg.com' },
-        { title: '{东方系列}实拍中国古装女性角色', remark: '' },
-        { title: '参考 照片 女', remark: '{其他}实拍动态...（现代，古装）' },
+        { title: '评论里面的点赞数量统计不对', remark: '' },
+        { title: '文档标题，选中标题一部分，按delete，发现把文档标题给弄没了，本意是删除标题里面的一部分文字', remark: '' },
+        { title: '图片块，有最小限制，需要支持图片原本的大小、50%等比例缩放', remark: '' },
+        { title: '页面控制台报错', remark: '' },
+        { title: '批量选择块，ctrl+c至其它页面，无反应', remark: '' },
+        { title: '大标题不能通过当前行的#来切换不同级别的标题', remark: '' },
     ]
 })
 
