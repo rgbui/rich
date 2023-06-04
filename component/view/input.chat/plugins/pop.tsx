@@ -63,12 +63,22 @@ export class ChatInputPop extends React.Component<{
         else if (key == 'arrowdown') {
             if (this.selectIndex + 1 == (this.users.length + 1)) { this.selectIndex = 0 }
             else this.selectIndex++;
-            this.forceUpdate()
+            this.forceUpdate(() => {
+                var eg = this.el.querySelector('.item-hover-focus');
+                if (eg) {
+                    (eg as HTMLElement).scrollIntoView();
+                }
+            })
         }
         else if (key == 'arrowup') {
             if (this.selectIndex - 1 == -1) { this.selectIndex = this.users.length }
             else this.selectIndex--;
-            this.forceUpdate()
+            this.forceUpdate(() => {
+                var eg = this.el.querySelector('.item-hover-focus');
+                if (eg) {
+                    (eg as HTMLElement).scrollIntoView();
+                }
+            })
         }
     }
     select(user: UserBasic) {

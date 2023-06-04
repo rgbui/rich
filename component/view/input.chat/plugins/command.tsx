@@ -26,6 +26,7 @@ export class ChatCommandInput extends React.Component<{
         try {
             var sel = window.getSelection();
             this.node = sel.focusNode as any;
+            this.word = '';
             /**
              * current text "sssss @" 基中“@”还没有输入
              */
@@ -186,7 +187,7 @@ export class ChatCommandInput extends React.Component<{
     keyup() {
         var content = this.node == this.props.cp.richEl ? this.props.cp.richEl.innerHTML : this.node.textContent;
         var word = content;
-        if (word && word.startsWith('/' || '、')) {
+        if (word && (word.startsWith('/') || word.startsWith('、'))) {
             this.search(word.slice(1))
         }
         else this.hide()
@@ -197,6 +198,8 @@ export class ChatCommandInput extends React.Component<{
         this.hide()
     }
     hide() {
+        this.word = '';
+        this.tasks = [];
         this.visible = false;
         this.forceUpdate()
     }
