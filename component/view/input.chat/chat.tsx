@@ -199,11 +199,16 @@ export class ChatInput extends React.Component<ChatInputOptions>{
         }
     }
     keyup = (event: React.KeyboardEvent<HTMLDivElement>) => {
+        if (event.nativeEvent.isComposing) return;
         if (this.userPop.visible == true) {
             this.userPop.keyup()
         }
+        if (this.commandInput.visible == true) {
+            this.commandInput.keyup();
+        }
     }
     input = (event: React.FormEvent<HTMLDivElement>) => {
+
         if (typeof this.props.onInput == 'function')
             this.props.onInput(this.getValue())
     }
@@ -463,7 +468,13 @@ export class ChatInput extends React.Component<ChatInputOptions>{
         `)
         })
         this.richEl.innerHTML = `<span>/${e.name}</span><span>${args.join('')}</span>`;
-        this.forceUpdate();
+        this.forceUpdate(() => {
+            var sel = window.getSelection();
+            var e = this.richEl.querySelector('.task-prop-value');
+            if (e) {
+                sel.setBaseAndExtent(e, 0, e, 0);
+            }
+        });
     }
     cancelCommand() {
         this.currentCommand = null;
