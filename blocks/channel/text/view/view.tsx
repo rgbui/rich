@@ -218,8 +218,8 @@ export class ChannelTextView extends BlockView<ChannelText>{
             <div className="sy-channel-text-input" data-shy-page-no-focus onMouseDown={e => e.stopPropagation()}>
                 <div className="sy-channel-text-input-wrapper">
                     <InputChatBox
-                        disabled={this.block.abledSend ? false : true}
-                        placeholder={this.block.abledSend ? "回车提交" : "您不能发言"}
+                        disabled={this.block.abledSend || this.block.page.user?.id ? false : true}
+                        placeholder={this.block.abledSend ? "回车提交" : (this.block.page.user?.id ? "您不能发言" : "请登录发言")}
                         ref={e => this.inputChatBox = e}
                         onChange={e => this.onInput(e)}
                         searchUser={this.searchUser}
