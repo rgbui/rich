@@ -35,7 +35,7 @@ export class InputChatBox extends React.Component<{
     allowNewLine?: boolean,
     spellCheck?: boolean,
     onEnter?: (ct: ChatInputType) => void,
-    searchUser?: (word: string) => Promise<UserBasic[]>,
+    searchUser?: (word?: string) => Promise<UserBasic[]>,
     disabledInputQuote?: boolean
     className?: string[] | string,
     searchRobots?: () => Promise<RobotInfo[]>,

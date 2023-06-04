@@ -29,8 +29,8 @@ export class ChatCommandInput extends React.Component<{
             /**
              * current text "sssss @" 基中“@”还没有输入
              */
-            this.nodeText = this.node === this.props.cp.richEl ? this.props.cp.richEl.innerHTML : this.node.textContent;
-            this.nodeOffset = sel.focusOffset;
+            // this.nodeText = this.node === this.props.cp.richEl ? this.props.cp.richEl.innerHTML : this.node.textContent;
+            // this.nodeOffset = sel.focusOffset;
             this.visible = true;
             var rect = Rect.fromEle(this.props.cp.richEl);
             this.rect = new Rect(rect.left - 35, rect.top - 250 - 10 - 5, rect.width + 60, 250);
@@ -66,7 +66,7 @@ export class ChatCommandInput extends React.Component<{
             ref={e => this.el = e}
             className="bg-white pos border shadow  round-8  overflow-y" style={style}>
             <SpinBox spin={this.loading}></SpinBox>
-            <div className="flex flex-full w100 h100">
+            {!this.word && <div className="flex flex-full w100 h100">
                 <div className="flex-fixed w-60 flex flex-col bg">
                     {this.robots.map(robot => {
                         return <div
@@ -94,18 +94,18 @@ export class ChatCommandInput extends React.Component<{
                         </div>
                     })}
                 </div>
-            </div>
+            </div>}
             {this.word && <div>
-                {this.tasks.map(ta => {
+                {this.tasks.map((ta, i) => {
                     var robot = this.getRobot(ta);
-                    return <div className='flex cursor' onMouseDown={e => this.select(ta)} key={ta.id}>
-                        <span className="flex-fixed"><Avatar size={40} user={robot}></Avatar></span>
+                    return <div className={'gap-14 flex cursor' + (this.selectIndex == i ? " item-hover-focus" : "")} onMouseDown={e => this.select(ta)} key={ta.id}>
+                        <span className="flex-fixed gap-10"><Avatar size={40} user={robot}></Avatar></span>
                         <span className="flex-auto">
                             <div><span>/{ta.name}</span></div>
                             <div className="remark f-12">{ta.description}</div>
                         </span>
                         <span className="flex-fixed">
-                            <span>{robot.name}</span>
+                            <span>{robot?.name}</span>
                         </span>
                     </div>
                 })}
@@ -185,7 +185,7 @@ export class ChatCommandInput extends React.Component<{
     }
     keyup() {
         var content = this.node == this.props.cp.richEl ? this.props.cp.richEl.innerHTML : this.node.textContent;
-        var word = content.slice(this.nodeOffset);
+        var word = content;
         if (word && word.startsWith('/' || '、')) {
             this.search(word.slice(1))
         }
@@ -211,7 +211,7 @@ export class ChatCommandInput extends React.Component<{
             this.tasks = [];
             this.robots.forEach(c => {
                 c.tasks.forEach(g => {
-                    if (g.name.indexOf(word) != -1)
+                    if (g.name && g.name.indexOf(word) != -1 || g.description && g.description.indexOf(word) != -1)
                         this.tasks.push(g)
                 })
             })

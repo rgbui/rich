@@ -230,7 +230,6 @@ export class ChannelTextView extends BlockView<ChannelText>{
         </div>
     }
     searchUser = async (text: string) => {
-        if (!text) return [];
         var r = await channel.get('/ws/member/word/query', { word: text });
         if (r.ok) {
             return r.data.list.map(c => {

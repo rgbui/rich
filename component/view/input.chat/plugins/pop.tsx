@@ -17,7 +17,7 @@ import { ChatInput } from "../chat";
  * 
  */
 export class ChatInputPop extends React.Component<{
-    search: (word: string) => Promise<UserBasic[]>,
+    search: (word?: string) => Promise<UserBasic[]>,
     select: (user: UserBasic) => void,
     cp: ChatInput
 }> {
@@ -25,7 +25,7 @@ export class ChatInputPop extends React.Component<{
     node: HTMLElement;
     nodeText: string;
     nodeOffset: number;
-    open() {
+    async open() {
         try {
             var sel = window.getSelection();
             this.node = sel.focusNode as any;
@@ -40,6 +40,9 @@ export class ChatInputPop extends React.Component<{
                 rect = Rect.fromEle(this.props.cp.richEl)
             }
             this.point = rect.clone().leftBottom.move(0, 10)
+            if (typeof this.props.search == 'function') {
+                this.users = await this.props.search();
+            }
             // console.log('open pop');
         }
         catch (ex) {
