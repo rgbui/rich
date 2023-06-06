@@ -10,6 +10,9 @@
  * https://www.bilibili.com/video/BV1xU4y1m7BK?spm_id_from=333.851.b_7265636f6d6d656e64.4
  * 嵌入：<iframe referrerpolicy="origin" src="//player.bilibili.com/player.html?bvid=BV1xU4y1m7BK&amp;page=1&amp;high_quality=1&amp;as_wide=1&amp;allowfullscreen=true" frameborder="no" allowfullscreen="" sandbox="allow-top-navigation-by-user-activation allow-same-origin allow-forms allow-scripts allow-popups" class="" style="width: 100%; height: 100%;"></iframe>
  * 
+ * 
+ * https://www.bilibili.com/video/BV1PK4y1X7YK/?p=1&vd_source=e8d247d285c5e9fd33441213dfe3af45
+ * 
  */
 
 import React, { CSSProperties } from "react";
@@ -42,6 +45,13 @@ export class Embed extends Block {
             var cr = ConvertEmbed(r.url);
             this.onUpdateProps({ embedType: cr.embedType, origin: cr.origin, src: { name: 'link', url: cr.url } })
         }
+    }
+    getVisibleContentBound() {
+        var img = this.el.querySelector('.sy-block-embed-wrapper iframe') as HTMLElement;
+        if (img) {
+            return Rect.fromEle(img);
+        }
+        return super.getVisibleContentBound();
     }
 }
 
