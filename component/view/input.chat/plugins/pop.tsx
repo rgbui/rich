@@ -8,6 +8,7 @@ import lodash from "lodash";
 import { util } from "../../../../util/util";
 import { Divider } from "../../grid";
 import { ChatInput } from "../chat";
+import { Avatar } from "../../avator/face";
 
 
 /**
@@ -157,7 +158,7 @@ export class ChatInputPop extends React.Component<{
         else style.display = 'none';
         return createPortal(<div
             ref={e => this.el = e}
-            className="bg-white pos border shadow w-220 padding-14  round  max-h-250 overflow-y" style={style}>
+            className="bg-white pos border shadow w-220   round  max-h-250 overflow-y" style={style}>
             <div>
                 {(!this.word || this.word && '所有人'.startsWith(this.word)) && <>
                     <div onClick={e => this.select({ name: '所有人', id: 'all' } as any)} className={"h-30 item-hover round  padding-w-10 cursor flex" + (this.selectIndex == 0 ? " item-hover-focus" : "")}>@所有人</div>
@@ -167,9 +168,8 @@ export class ChatInputPop extends React.Component<{
                     return <div
                         onClick={e => this.select(u)}
                         key={u.id}
-                        className={'h-30 item-hover round padding-w-10 cursor flex' + (this.selectIndex == (index + 1) ? " item-hover-focus" : "")}>
-                        {/* <Avatar user={u}></Avatar> */}
-                        @{u.name}
+                        className={'h-30 gap-h-5 item-hover round padding-w-10 cursor flex' + (this.selectIndex == (index + 1) ? " item-hover-focus" : "")}>
+                        <Avatar size={24} user={u} showName></Avatar>
                     </div>
                 })}
             </div>

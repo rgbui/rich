@@ -203,7 +203,7 @@ export interface ChannelPutMapUrls {
 	"/open/sign":{args:{},returnType:Promise<SockResponse<{user:Record<string,any>,guid:string,token:string}>>},
 	"/ws/create":{args:{text:string,dataServiceAddress?:string,searchServiceAddress?:string,fileServiceAddress?:string,templateUrl?:string},returnType:Promise<SockResponse<{workspace:Record<string,any>,pids:any[]}>>},
 	"/ws/invite/create":{args:any,returnType:Promise<SockResponse<{code:string}>>},
-	"/ws/invite/join":{args:{wsId:string,sock?:any,agree?:boolean},returnType:Promise<SockResponse<void>>},
+	"/ws/invite/join":{args:{wsId:string,sock?:any,agree?:boolean,username:string},returnType:Promise<SockResponse<void>>},
 	"/ws/channel/send":{args:{ sockId?: string,wsId?: string,roomId: string,content?: string,replyId?: string, files?:any[],mentions?:string[],robotId?:string,isRobotSend?: boolean,newLine?: boolean},returnType:Promise<SockResponse<{id:string,seq:number,createDate:Date}>>},
 	"/ws/channel/emoji":{args:{elementUrl: string,sockId?: string, wsId?: string, emoji: { emojiId: string, code?: string }},returnType:Promise<SockResponse<{emoji:{emojiId:string,code?:string,count:number}}>>},
 	"/ws/role/create":{args:{data:Record<string,any>},returnType:Promise<SockResponse<{role:Record<string,any>}>>},
