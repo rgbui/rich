@@ -172,7 +172,7 @@ export async function PopoverSingleton<T extends React.Component>(CP: { new(...a
         ReactDOM.render(<Popover<T> {...(props || {})} args={args || {}} component={CP} ref={e => {
            
             maps.set(CP, e);
-            if (props.slow !== true)
+            if (props?.slow !== true)
                 resolve(e);
         }}
             did={(e) => {
