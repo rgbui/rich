@@ -7,7 +7,11 @@ import { Point, Rect } from "../../src/common/vector/point";
 import { InputTextPopSelector } from "../common/input.pop";
 import { ConvertEmbed } from "./embed.url";
 import "./style.less";
-
+import { BookSvg, EmbedSvg, LinkSvg, TableSvg } from "../../component/svgs";
+import { Icon } from "../../component/view/icon";
+import { IconArguments } from "../icon/declare";
+import B from "../../src/assert/img/bilibili.ico";
+import M from "../../src/assert/img/163.music.ico";
 class InputUrlSelector extends InputTextPopSelector {
     onClose(): void {
         this.close();
@@ -17,11 +21,26 @@ class InputUrlSelector extends InputTextPopSelector {
     async open(round: Rect, text: string, callback: (...args: any[]) => void): Promise<boolean> {
         if (this.url) { this.close(); return false; }
         this.urlTexts = [
-            { text: '网址', name: 'url', url: '/text', isLine: true },
-            { text: '书签', name: 'bookmark', url: '/bookmark' },
-            { text: '嵌入', name: 'embed', url: '/embed' }
+            { icon: LinkSvg, text: '网址', name: 'url', url: '/text', isLine: true },
+            { icon: BookSvg, text: '书签', name: 'bookmark', url: '/bookmark' },
+            { icon: EmbedSvg, text: '嵌入', name: 'embed', url: '/embed' }
         ];
+
+
         this.url = text;
+        var cr = ConvertEmbed(this.url);
+        if (cr?.embedType) {
+            this.urlTexts = [
+                { icon: LinkSvg, text: '网址', name: 'url', url: '/text', isLine: true },
+                { icon: BookSvg, text: '书签', name: 'bookmark', url: '/bookmark' },
+                {
+                    icon: { name: 'image', url: cr?.embedType == 'music.163' ? M : B },
+                    text: cr?.embedType == 'music.163' ? "嵌入网易云音乐" : '嵌入B站',
+                    name: 'embed',
+                    url: '/embed'
+                }
+            ];
+        }
         var ur = new window.URL(this.url);
         if (ur.pathname.endsWith('/r')) {
             try {
@@ -31,8 +50,8 @@ class InputUrlSelector extends InputTextPopSelector {
                     var ts = await TableSchema.getTableSchema(pe.id);
                     var sv = ts.views.find(c => c.id == pe.id1);
                     this.urlTexts = [
-                        { text: '引用数据表格', name: 'data-grid', url: sv.url, data: { schemaId: ts.id, syncBlockId: pe.id1 } },
-                        { text: '保持网址', name: 'url', url: '/text', isLine: true },
+                        { icon: TableSvg, text: '引用数据表格', name: 'data-grid', url: sv.url, data: { schemaId: ts.id, syncBlockId: pe.id1 } },
+                        { icon: LinkSvg, text: '保持网址', name: 'url', url: '/text', isLine: true },
                     ]
                 }
             }
@@ -47,7 +66,7 @@ class InputUrlSelector extends InputTextPopSelector {
         this.forceUpdate();
         return true;
     }
-    private onSelect(item) {
+    private onSelect(item, isReturn?: boolean) {
         try {
             if (typeof this._select == 'function') {
                 var ut = this.urlTexts.find(c => c.name == item.name);
@@ -66,11 +85,19 @@ class InputUrlSelector extends InputTextPopSelector {
                 else if (item.name == 'data-grid') {
                     Object.assign(props, ut.data);
                 }
-                this._select({
-                    url: item.url,
-                    isLine: item.isLine,
-                    ...props
-                });
+                if (isReturn) {
+                    return {
+                        url: item.url,
+                        isLine: item.isLine,
+                        ...props
+                    }
+                }
+                else
+                    this._select({
+                        url: item.url,
+                        isLine: item.isLine,
+                        ...props
+                    });
             }
         }
         catch (ex) {
@@ -81,6 +108,7 @@ class InputUrlSelector extends InputTextPopSelector {
         }
     }
     onKeydown(event: KeyboardEvent) {
+        console.log(event, 'ggg');
         if (this.visible == true) {
             switch (event.key) {
                 case KeyboardCode.ArrowDown:
@@ -90,27 +118,31 @@ class InputUrlSelector extends InputTextPopSelector {
                     this.keyup();
                     return true;
                 case KeyboardCode.Enter:
-                    this.onSelect(this.selectUrl);
-                    return true;
+                    var se = this.onSelect(this.selectUrl, true);
+                    if (se) {
+                        return {
+                            blockData: se
+                        };
+                    }
+                    else return false;
             }
         }
         return false;
     }
-    private urlTexts: { text: string, name: string, isLine?: boolean, data?: Record<string, any>, url: string }[] = [];
+    private urlTexts: { text: string, icon?: string | IconArguments | JSX.Element | SvgrComponent, name: string, isLine?: boolean, data?: Record<string, any>, url: string }[] = [];
     private visible: boolean = false;
     private pos: Point = new Point(0, 0);
     private selectIndex: number = 0;
-    private get isSelectIndex() {
-        return this.selectIndex >= 0 && this.selectIndex < this.urlTexts.length;
-    }
+
     private get selectUrl() {
         var b = this.urlTexts[this.selectIndex];
         return b;
     }
     renderUrls() {
         return this.urlTexts.map((u, i) => {
-            return <div className={'shy-url-text-item' + (i == this.selectIndex ? " selected" : "")} key={u.name} onMouseDown={e => this.onSelect(u)}>
-                <a><span>{u.text}</span></a>
+            return <div className={'flex item-hover padding-w-10 padding-h-5 cursor' + (i == this.selectIndex ? " item-hover-focus" : "")} key={u.name} onMouseDown={e => this.onSelect(u)}>
+                <span className="flex-fixed size-24 flex-center item-hover round "><Icon size={18} icon={u.icon}></Icon></span>
+                <span className="flex-auto">{u.text}</span>
             </div>
         })
     }
@@ -128,21 +160,25 @@ class InputUrlSelector extends InputTextPopSelector {
      * 向上选择内容
     */
     private keydown() {
-        if (!this.isSelectIndex) this.selectIndex = -1;
-        if (this.selectIndex < this.urlTexts.length - 1) {
-            this.selectIndex += 1;
-            this.forceUpdate();
+        if (this.selectIndex == this.urlTexts.length - 1) {
+
         }
+        else {
+            this.selectIndex += 1;
+        }
+        this.forceUpdate();
     }
     /**
      * 向下选择内容
      */
     private keyup() {
-        if (!this.isSelectIndex) this.selectIndex = this.urlTexts.length - 1;
-        if (this.selectIndex > 0) {
-            this.selectIndex -= 1;
-            this.forceUpdate();
+        if (this.selectIndex == 0) {
+
         }
+        else {
+            this.selectIndex -= 1;
+        }
+        this.forceUpdate();
     }
     private close() {
         this.url = '';
