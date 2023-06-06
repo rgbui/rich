@@ -11,6 +11,7 @@ import { TriangleSvg } from "../../../component/svgs";
 import { BlockChildKey } from "../../../src/block/constant";
 import { DropDirection } from "../../../src/kit/handle/direction";
 import { dom } from "../../../src/common/dom";
+import { BlockFactory } from "../../../src/block/factory/block.factory";
 
 export enum ListType {
     circle = 0,
@@ -90,6 +91,9 @@ export class List extends Block {
     dropLeave(this: Block) {
         var el = this.contentEl;
         dom(el).removeClass(g => g.startsWith('shy-block-drag-over'));
+    }
+    getUrl() {
+        return BlockFactory.stringBlockUrl(this.url, { listType: this.listType });
     }
 }
 @view('/list')

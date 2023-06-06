@@ -54,7 +54,7 @@ export class TextSpan extends Block {
     }
     get isContentEmpty() {
         if (this.childs.length == 0) {
-            return this.firstElementAppear.isEmpty
+            return this.firstElementAppear?.isEmpty ? true : false
         }
         else return false;
     }
@@ -212,7 +212,7 @@ export class TextSpan extends Block {
             this.updateProps({ fontScale: value / 14 })
             // this.pattern.setFontStyle({ fontSize: value, lineHeight: (value * 1.2) + 'px' });
         }
-        else if(name=='fontFamily'){
+        else if (name == 'fontFamily') {
             this.pattern.setFontStyle({ fontFamily: value })
         }
         else if (name == 'fontWeight')
@@ -248,7 +248,7 @@ export class TextSpanView extends BlockView<TextSpan>{
         if (this.block.align == 'center') style.textAlign = 'center';
         return <div className='sy-block-text-span' style={this.block.visibleStyle}>
             <div style={style}>
-                <TextSpanArea  placeholder={this.block.isFreeBlock ? "键入文本" : undefined} block={this.block}></TextSpanArea>
+                <TextSpanArea placeholder={this.block.isFreeBlock ? "键入文本" : undefined} block={this.block}></TextSpanArea>
             </div>
         </div>
     }
