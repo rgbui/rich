@@ -89,7 +89,6 @@ export async function onPasteBlank(kit: Kit, event: ClipboardEvent) {
                                 newBlock.mounted(() => {
                                     kit.picker.onPicker([newBlock]);
                                     kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
-
                                 })
                             });
                             // this.props.change(r.data?.file as any);
@@ -221,6 +220,14 @@ async function onPasterFiles(kit: Kit, aa: AppearAnchor, files: File[]) {
             if (file.type.startsWith('image/')) {
                 //图片
                 rowBlock = await rowBlock.visibleDownCreateBlock('/image', { initialData: { file } });
+            }
+            else if (file.type.startsWith('video/')) {
+                //图片
+                rowBlock = await rowBlock.visibleDownCreateBlock('/video', { initialData: { file } });
+            }
+            else if (file.type.startsWith('audio/')) {
+                //图片
+                rowBlock = await rowBlock.visibleDownCreateBlock('/audio', { initialData: { file } });
             }
             else {
                 rowBlock = await rowBlock.visibleDownCreateBlock('/file', { initialData: { file } });
