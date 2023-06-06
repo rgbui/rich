@@ -29,6 +29,7 @@ declare module '*.png';
 declare module '*.jpeg';
 declare module '*.webp';
 declare module '*.gif';
+declare module "*.ico";
 
 declare module "*.json" {
   const file: any;

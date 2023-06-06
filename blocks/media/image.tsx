@@ -142,8 +142,7 @@ export class ImageView extends BlockView<Image>{
     imageWrapper: HTMLDivElement;
     renderEmptyImage() {
         return <div className='sy-block-image-empty' onMouseDown={e => this.block.onOpenUploadImage(e)}>
-            {/* <Icon icon={Picture} size={24}></Icon> */}
-            <Icon size={24} icon={PicSvg}></Icon>
+          <Icon size={24} icon={PicSvg}></Icon>
             <Sp id={LangID.AddImageTip}></Sp>
         </div>
     }
