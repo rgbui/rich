@@ -15,9 +15,7 @@ import { PageLayoutType } from "../declare";
 import { PageDirective } from "../directive";
 import { BlockUrlConstant } from "../../block/constant";
 import { ElementType } from "../../../net/element.type";
-import { useDataGridSelectView } from "../../../extensions/data-grid/create";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
-
 export class PageEvent {
     /**
      * 鼠标点击页面,

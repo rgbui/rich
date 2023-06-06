@@ -448,7 +448,6 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
         write.kit.anchorCursor.adjustAnchorSorts()
         var appears = write.kit.anchorCursor.getAppears()
         var rowBlocks: Block[] = [];
-        console.log(appears, write.kit.anchorCursor.startAnchor, write.kit.anchorCursor.endAnchor)
         await appears.eachAsync(async appear => {
             var block = appear.block;
             var rb = block.closest(x => x.isBlock);
@@ -523,6 +522,7 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
             if (deleteText)
                 CopyText(deleteText);
         }
+        console.log('fb', focusB, isStartDelete, preAppear, write.kit.anchorCursor);
         write.kit.page.addUpdateEvent(async () => {
             forceCloseTextTool()
             if (focusB) write.kit.anchorCursor.onFocusBlockAnchor(focusB, { last: true, render: true, merge: true });
