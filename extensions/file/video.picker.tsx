@@ -4,13 +4,12 @@ import { LangID } from "../../i18n/declare";
 import { OutsideUrl } from "../link/outside";
 import { EventsComponent } from "../../component/lib/events.component";
 import { UploadView } from "./upload";
-import Link from "../../src/assert/svg/link.svg";
-import Upload from "../../src/assert/svg/upload.svg";
 import { ResourceArguments } from "../icon/declare";
 import { PopoverPosition } from "../popover/position";
 import { PopoverSingleton } from "../popover/popover";
 import { Tab } from "../../component/view/tab";
 import { Icon } from "../../component/view/icon";
+import { LinkSvg, UploadSvg } from "../../component/svgs";
 
 class VideoPicker extends EventsComponent {
     onChange(data: any) {
@@ -19,11 +18,11 @@ class VideoPicker extends EventsComponent {
     render() {
         return <div className='shy-video-picker' >
             <Tab keeplive>
-                <Tab.Page item={<Tip placement='bottom' id={LangID.UploadFile}><Icon size={30} icon={Upload}></Icon></Tip>}>
-                    <UploadView mine='video' change={e => this.onChange({ name: 'upload', ...e })}></UploadView>
-                </Tab.Page>
-                <Tab.Page item={<Tip placement='bottom' id={LangID.ImageLink}><Icon size={18} icon={Link}></Icon></Tip>}>
+                <Tab.Page item={<Tip placement='bottom' id={LangID.ImageLink}><Icon size={20} icon={LinkSvg}></Icon></Tip>}>
                     <OutsideUrl change={e => this.onChange({ name: 'link', url: e })}></OutsideUrl>
+                </Tab.Page>
+                <Tab.Page item={<Tip placement='bottom' id={LangID.UploadFile}><Icon size={20} icon={UploadSvg}></Icon></Tip>}>
+                    <UploadView mine='video' change={e => this.onChange({ name: 'upload', ...e })}></UploadView>
                 </Tab.Page>
             </Tab>
         </div>

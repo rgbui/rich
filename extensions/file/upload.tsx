@@ -5,11 +5,10 @@ import { Sp } from "../../i18n/view";
 import { LangID } from "../../i18n/declare";
 import { channel } from "../../net/channel";
 import { ResourceArguments } from "../icon/declare";
-import { Remark } from "../../component/view/text";
 import { util } from "../../util/util";
+
 export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audio' | 'video', change: (file: ResourceArguments) => void }> {
-    async uploadFile()
-    {
+    async uploadFile() {
         this.button.disabled = true;
         this.error = '';
         var exts = ['*'];
@@ -25,8 +24,8 @@ export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audi
                 this.error = '图片过大，不支持20M以上的图片';
                 isUpload = false;
             }
-            if (file.size > 1024 * 1024 * 1024) {
-                this.error = '文件过大，不支持1G以上的文件';
+            if (file.size > 1024 * 1024 * 100) {
+                this.error = '文件过大，暂时不支持100G以上的文件';
                 isUpload = false;
             }
             if (isUpload) {
@@ -35,7 +34,7 @@ export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audi
                     uploadProgress: (event) => {
                         // console.log(event, 'ev');
                         if (event.lengthComputable) {
-                            this.progress = `${util.byteToString(event.total)}${(100 * event.loaded / event.total).toFixed(2)}%`;
+                            this.progress = `${util.byteToString(event.total)}  ${(100 * event.loaded / event.total).toFixed(2)}%`;
                             this.forceUpdate();
                         }
                     }
@@ -67,7 +66,7 @@ export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audi
                 <Sp id={LangID.UploadRemark}></Sp>
             </div>
             <Button ref={e => this.button = e} block onClick={e => this.uploadFile()}>{text}</Button>
-            {this.progress && <Remark>{this.progress}</Remark>}
+            {this.progress && <span className="remark">{this.progress}</span>}
             {this.error && <div className='shy-upload-error'>{this.error}</div>}
         </div>
     }
