@@ -43,6 +43,7 @@ export class KatexView extends BlockView<Katex>{
         return <div style={this.block.visibleStyle}><div className={'sy-block-katex' + (this.block.opened ? " sy-block-katex-opened" : "")} onMouseDown={e => this.block.open(e)}>
             <div className='sy-block-katex-content' dangerouslySetInnerHTML={{ __html: this.block.katexContent }}>
             </div>
-        </div></div>
+        </div>
+        </div>
     }
 }
