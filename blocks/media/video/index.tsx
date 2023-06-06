@@ -12,7 +12,6 @@ import { Icon } from "../../../component/view/icon";
 import { VideoSvg } from "../../../component/svgs";
 import { MouseDragger } from "../../../src/common/dragger";
 import { util } from "../../../util/util";
-import { Remark } from "../../../component/view/text";
 
 /**
  * https://www.zhangxinxu.com/wordpress/2018/12/html5-video-play-picture-in-picture/s
@@ -38,7 +37,7 @@ export class Video extends Block {
         var bound = Rect.from(target.getBoundingClientRect());
         var r = await useVideoPicker({ roundArea: bound });
         if (r) {
-            await this.onUpdateProps({ src: r });
+            await this.onUpdateProps({ src: r }, { range: BlockRenderRange.self });
         }
     }
     async didMounted() {
@@ -76,6 +75,13 @@ export class Video extends Block {
         }
     }
     player;
+    getVisibleContentBound() {
+        var img = this.el.querySelector('.sy-block-video-wrapper video') as HTMLElement;
+        if (img) {
+            return Rect.fromEle(img);
+        }
+        return super.getVisibleContentBound();
+    }
 }
 @view('/video')
 export class VideoView extends BlockView<Video>{
@@ -110,18 +116,18 @@ export class VideoView extends BlockView<Video>{
     contentWrapper: HTMLDivElement;
     render() {
         return <div className='sy-block-video' style={this.block.visibleStyle}>
-            {!this.block.src?.url && this.block.isCanEdit() && <div onMouseDown={e => this.block.addVideo(e)} className='sy-block-video-nofile'>
+            {!this.block.src?.url && this.block.isCanEdit() && <div onMouseDown={e => this.block.addVideo(e)} className='sy-block-video-nofile flex'>
                 <Icon icon={VideoSvg} size={24}></Icon>
-                {!this.block.speed && <span>添加视频</span>}
-                {this.block.speed && <Remark>{this.block.speed}</Remark>}
+                {!this.block.speed && <span className="gap-w-10">添加视频</span>}
+                {this.block.speed && <span>{this.block.speed}</span>}
             </div>}
             {this.block.src?.url && <div className='sy-block-video-content'>
-                <div
+             <div
                     className="sy-block-video-wrapper"
                     ref={e => this.contentWrapper = e}
                     style={{ width: this.block.contentWidthPercent ? this.block.contentWidthPercent + "%" : undefined }}>
                     <video preload={'metadata'} className="video-js vjs-default-skin vjs-big-play-centered" controls src={this.block.src.url} style={{
-                        width: '100%', height: '100%'
+                        width: '100%',
                     }} >
                     </video>
                     {this.block.isCanEdit() && <><div className='sy-block-video-left-resize' onMouseDown={e => this.onMousedown(e, 'left')}></div>
@@ -132,19 +138,3 @@ export class VideoView extends BlockView<Video>{
     }
 }
 
-// import ('./video.min.js');
-// var videoJS;
-// export async function loadVideoJs() {
-//     if (typeof videoJS == 'undefined') {
-//         videoJS = VideoJS;
-//         // videoJS=(window as any).videoJS;
-//         // console.log(videoJS)
-//         // var r = await import(
-//         //     /* webpackChunkName: 'videojs' */
-//         //     /* webpackPrefetch: true */
-//         //     './video.min.js'
-//         // );
-//         // videoJS = r.default;
-//     }
-//     return videoJS;
-// }

@@ -11,7 +11,8 @@ class Popover<T extends React.Component> extends EventsComponent<{
     args?: Record<string, any>,
     mask?: boolean,
     visible?: "hidden" | "none",
-    frame?: boolean
+    frame?: boolean,
+    did?: (e:any) => void
 }> {
     visible: boolean;
     point: Point = new Point(0, 0);
@@ -110,6 +111,7 @@ class Popover<T extends React.Component> extends EventsComponent<{
     }
     componentDidMount() {
         document.addEventListener('mousedown', this.onGlobalMousedown, true);
+        if (typeof this.props.did == 'function') this.props.did(this);
     }
     componentWillUnmount() {
         document.removeEventListener('mousedown', this.onGlobalMousedown, true);
@@ -162,14 +164,22 @@ let maps: MapC<React.Component> = new Map();
  * @returns 
  */
 export async function PopoverSingleton<T extends React.Component>(CP: { new(...args: any[]): T },
-    props?: { mask?: boolean, frame?: boolean, style?: CSSProperties, visible?: 'hidden' | "none", shadow?: boolean }, args?: Record<string, any>) {
+    props?: { slow?: boolean, mask?: boolean, frame?: boolean, style?: CSSProperties, visible?: 'hidden' | "none", shadow?: boolean }, args?: Record<string, any>) {
     return new Promise((resolve: (data: Popover<T>) => void, reject) => {
         if (maps.has(CP)) return resolve(maps.get(CP) as any)
         var ele = document.createElement('div');
         document.body.appendChild(ele);
         ReactDOM.render(<Popover<T> {...(props || {})} args={args || {}} component={CP} ref={e => {
+           
             maps.set(CP, e);
-            resolve(e);
-        }} />, ele);
+            if (props.slow !== true)
+                resolve(e);
+        }}
+            did={(e) => {
+                maps.set(CP, e);
+                if (props?.slow == true) resolve(maps.get(CP) as any);
+            }}
+        ></Popover>, ele)
+
     })
 }

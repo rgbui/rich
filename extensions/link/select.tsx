@@ -78,7 +78,6 @@ export async function useSelectWorkspacePage(pos: PopoverPosition) {
     await picker.onOpen();
     return new Promise((resolve: (link: LinkPageItem) => void, reject) => {
         picker.on('change', (link: LinkPageItem) => {
-            console.log(link, 'ggg');
             resolve(link);
             popover.close();
         })
