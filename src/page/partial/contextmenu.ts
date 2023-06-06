@@ -280,7 +280,14 @@ export class PageContextmenu {
                     this.onUpdateProps({ isFullWidth: item.checked }, true);
                 }
                 else if (item.name == 'onlyDisplayContent') {
-                    this.onUpdateProps({ onlyDisplayContent: item.checked ? false : true }, true);
+                    this.onAction('onlyDisplayContent', async () => {
+                        var title = this.find(g => g.url == BlockUrlConstant.Title);
+                        if (!title) {
+                            await this.createBlock(BlockUrlConstant.Title, {}, this.views[0], 0, 'childs');
+                        }
+                        await this.updateProps({ onlyDisplayContent: item.checked ? false : true })
+                        this.addPageUpdate();
+                    });
                 }
                 else if (item.name == 'nav') {
                     this.onOpenNav({ nav: item.checked })
