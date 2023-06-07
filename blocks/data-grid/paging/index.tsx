@@ -44,7 +44,7 @@ export class PagingView extends BlockView<Paging>{
             { text: '5条/页', value: 5 },
             { text: '10条/页', value: 10 },
         ];
-        var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, items);
+        var r = await useSelectMenuItem({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, items);
         if (r) {
             await this.block.refBlock.onChangeSize(r.item.value);
         }
@@ -61,7 +61,7 @@ export class PagingView extends BlockView<Paging>{
                 else for (var i = 1; i <= index; i++) ps.push(i);
                 if (index + 3 < page) [index + 1, index + 2, "...", page].forEach((p) => ps.push(p));
                 else for (var j = index + 1; j <= page; j++) ps.push(j);
-            } else ps = [];
+            } else ps = [1];
             return ps.map((p) => {
                 var classList: string[] = ["border", 'flex-center', "size-24", "round", "gap-w-5"];
                 if (p == index) classList.push("bg-primary text-white");
