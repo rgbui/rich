@@ -62,7 +62,7 @@ export var BlockSelectorData: BlockGroup[] = [
             { text: "数学公式", icon: EquationSvg, url: "/katex", description: "", label: "/数学公式", labels: ['/sxgs', '/公式', '/shuxuegongshi', '/latex', '/math'] },
             { text: '链接页面', icon: LinkSvg, url: '/link', description: "", label: "/链接", labels: ['/link', '/wz'] },
             { text: '进度条', icon: ProgressSvg, url: '/measure', description: "", label: "/进度条", labels: ['/jdt', '/jindutiao', '/progressbar'] },
-            { text: '按钮', icon: ButtonSvg, isLine: true, url: '/button', description: '', label: '/按钮', labels: ['/button', '/al'] }
+            //{ text: '按钮', icon: ButtonSvg, isLine: true, url: '/button', description: '', label: '/按钮', labels: ['/button', '/al'] }
         ]
     },
     {
