@@ -78,7 +78,7 @@ export class DataGridForm extends DataGridView {
         ]);
     }, 800)
     async autoCreateFormFields() {
-        var cs: Record<string, any>[] = this.schema.initUserFields.toArray(field => {
+        var cs: Record<string, any>[] = this.schema.allowFormFields.toArray(field => {
             var r = GetFieldFormBlockInfo(field);
             if (r) return r;
         })

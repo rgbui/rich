@@ -68,7 +68,8 @@ export class TableSchema {
             FieldType.description,
             FieldType.plain,
             FieldType.thumb,
-            FieldType.deleted
+            FieldType.deleted,
+            FieldType.sort
         ].includes(g.type))
     }
     get recordViewTemplateFields() {
@@ -76,6 +77,7 @@ export class TableSchema {
             FieldType.id,
             FieldType.description,
             FieldType.deleted,
+            FieldType.sort
         ].includes(g.type) ? true : false);
     }
     get userFields(): Field[] {
@@ -87,6 +89,7 @@ export class TableSchema {
             FieldType.plain,
             FieldType.thumb,
             FieldType.deleted,
+            FieldType.sort
         ].includes(g.type) ? true : false);
     }
     get initUserFields() {
