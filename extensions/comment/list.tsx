@@ -66,7 +66,7 @@ export class CommentListView extends React.Component<{
             if (r.ok) {
                 if (typeof l.replyCount != 'number') l.replyCount = 0;
                 l.replyCount += 1;
-                this.forceUpdate()
+                await this.onExpends(l);
             }
         }
     }
@@ -138,7 +138,7 @@ export class CommentListView extends React.Component<{
         var r = await channel.get('/ws/comment/list', {
             elementUrl: this.elementUrl,
             parentId: l.id,
-            sort: 'date',
+            sort: l.id ? 'default' : 'date',
             page: 1,
             size: 200
         });
