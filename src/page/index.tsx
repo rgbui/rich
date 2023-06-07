@@ -37,6 +37,7 @@ import { isMobileOnly } from "react-device-detect";
 import { BoxFillType, BoxStyle } from '../../extensions/doc.card/declare';
 import { dom } from '../common/dom';
 import { DataGridView } from '../../blocks/data-grid/view/base';
+import { Link } from '../../blocks/page/link';
 
 export class Page extends Events<PageDirective>{
     root: HTMLElement;
@@ -148,16 +149,18 @@ export class Page extends Events<PageDirective>{
                     }
                 }
                 this.isOff = true;
-                var rs = this.findAll(g => [
-                    BlockUrlConstant.DataGridBoard,
+                this.each(c => {
+                    if ([BlockUrlConstant.DataGridBoard,
                     BlockUrlConstant.DataGridCalendar,
                     BlockUrlConstant.DataGridGallery,
                     BlockUrlConstant.DataGridList,
-                    BlockUrlConstant.DataGridTable
-                ].includes(g.url as any));
-                for (let i = 0; i < rs.length; i++) {
-                    (rs[i] as DataGridView).onReloadData();
-                }
+                    BlockUrlConstant.DataGridTable].includes(c.url as any)) {
+                        (c as DataGridView).onReloadData()
+                    }
+                    if ([BlockUrlConstant.Link].includes(c.url as any)) {
+                        (c as Link).loadPageInfo()
+                    }
+                })
             }
             if (options && (options?.width !== this.pageVisibleWidth || options?.height !== this.pageVisibleHeight)) {
                 this.pageVisibleWidth = options?.width;
