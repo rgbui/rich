@@ -10,8 +10,9 @@ import { FieldView, OriginFormField } from "./origin.field";
 @url('/form/date')
 class FieldText extends OriginFormField {
     get dateString() {
-        if (!this.value) this.value = new Date();
-        var r = dayjs(this.value);
+        var v = this.value;
+        if (!v) v = new Date();
+        var r = dayjs(v);
         var fr = 'YYYY-MM-DD';
         if (this.field?.config?.includeTime) fr = 'YYYY-MM-DD HH:mm';
         return r.format(fr)
