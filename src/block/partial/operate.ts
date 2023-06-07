@@ -59,10 +59,12 @@ export class Block$Operator {
     }
     async turn(this: Block, url: string) {
         var oldUrl = this.getUrl();
+        this.page.monitorBlockOperator(this, 'turn');
         if (this.url == BlockUrlConstant.Head && url.startsWith(BlockUrlConstant.Head)) {
             //这里只是大标题的切换，不需要做任何的处理，更新一些属性即可
             var pb = BlockFactory.parseBlockUrl(url);
             await this.updateProps(pb.data.level ? pb.data : { level: 'h1' }, BlockRenderRange.self);
+            this.page.monitorBlockOperator(this, 'turn');
             return this;
         }
         if (this.url == BlockUrlConstant.List && url.startsWith(BlockUrlConstant.List)) {
@@ -70,13 +72,13 @@ export class Block$Operator {
             await this.updateProps(pb.data.level ? pb.data : { listType: 0 }, BlockRenderRange.self);
             return this;
         }
-
         var data = await this.getWillTurnData(url);
         var newBlock = await BlockFactory.createBlock(url, this.page, data, this.parent);
         var bs = this.parent.blocks[this.parentKey];
         bs.insertAt(this.at, newBlock);
         bs.remove(g => g == this);
         newBlock.id = this.id;
+        this.page.monitorBlockOperator(newBlock, 'turn');
         this.page.addBlockUpdate(newBlock.parent);
         this.page.snapshoot.record(OperatorDirective.$turn, {
             pos: newBlock.pos,

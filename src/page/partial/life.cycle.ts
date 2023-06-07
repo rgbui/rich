@@ -411,7 +411,7 @@ export class Page$Cycle {
      * @returns 
      * 
      */
-    async monitorBlockOperator(this: Page, block: Block, op: 'create' | 'delete' | 'from' | 'to' | 'content', currentBlock?: Block) {
+    async monitorBlockOperator(this: Page, block: Block, op: 'create' | 'turn' | 'delete' | 'from' | 'to' | 'content', currentBlock?: Block) {
         // console.log('mfff', arguments);
         /**
          * 争对行内块引用关系的同步记录
@@ -469,6 +469,8 @@ export class Page$Cycle {
                             rs = [row];
                         }
                     }
+                    break;
+                case 'turn':
                     break;
             }
             rs.forEach(c => {
@@ -541,6 +543,14 @@ export class Page$Cycle {
                     }
                     else if (block.url == BlockUrlConstant.Head) {
                         outLineChangeBlocks.push(block);
+                    }
+                    break;
+                case 'turn':
+                    if (block?.url == BlockUrlConstant.Head) {
+                        isChangeAll = true;
+                    }
+                    if (currentBlock?.url == BlockUrlConstant.Head) {
+                        isChangeAll = true;
                     }
                     break;
             }
