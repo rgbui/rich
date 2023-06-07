@@ -62,8 +62,7 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
     var ele = event.target as HTMLElement;
     var point = Point.from(event);
     var oldDropBlock = dropBlock;
-
-    if ((dropBlock?.isPanel || dropBlock?.isComposite) && dropBlock?.getVisibleBound().contain(point)) {
+    if (!dropBlock?.isCell && (dropBlock?.isPanel || dropBlock?.isComposite) && dropBlock?.getVisibleBound().contain(point)) {
         var bound = dropBlock.getVisibleBound();
         dropBlock = undefined;
         /**
@@ -183,6 +182,7 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
          * 所以
          * 
          */
+        console.log(dropBlock.isCell, dropBlock, dropBlock.isEmptyCell, 'isEmptyCell');
         if (dropBlock.isCell) {
             if (dropBlock.isEmptyCell) {
                 return { direction: DropDirection.inner, dropBlock };
