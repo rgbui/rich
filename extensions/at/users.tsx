@@ -30,7 +30,7 @@ export class OnlineUsers extends React.Component {
         }
     }
     render(): React.ReactNode {
-        return <div className="h100 overflow-y">
+        return <div className="h100 overflow-y padding-bottom-100">
             <div className="remark f-12 padding-w-14 bold gap-t-14">在线</div>
             {this.searchQuery.list.map(user => {
                 return <div className="padding-w-14 margin-h-10 cursor round item-hover padding-h-5"
