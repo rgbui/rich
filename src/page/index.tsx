@@ -98,6 +98,10 @@ export class Page extends Events<PageDirective>{
     get globalMatrix() {
         return this.windowMatrix.appended(this.matrix);
     }
+    /**
+     * 页面打开初始化，认为是不变的
+     */
+    changed: boolean = false;
     render(panel: HTMLElement, options?: { width?: number, height?: number }) {
         var el = panel.appendChild(document.createElement('div'));
         this.root = el;

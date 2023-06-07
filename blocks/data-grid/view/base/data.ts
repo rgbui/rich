@@ -28,8 +28,12 @@ export class DataGridViewData {
         var vid = viewId || this.schema.defaultAddForm?.id;
         if (!this.schema.recordViews.some(s => s.id == vid)) vid = undefined;
         if (!vid) vid = this.schema.recordViews[0]?.id;
-        var dialougPage: Page = await channel.air('/page/dialog', {
-            elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, vid)
+        var url:'/page/dialog'= '/page/dialog';
+        var dialougPage: Page = await channel.air(url, {
+            elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, vid),
+            config: {
+                force: true
+            }
         })
         if (dialougPage) {
             dialougPage.onSave();
@@ -50,7 +54,10 @@ export class DataGridViewData {
             elementUrl: getElementUrl(ElementType.SchemaData,
                 this.schema.id,
                 id
-            )
+            ),
+            config: {
+                force: true
+            }
         })
         var newRow;
         if (dialougPage) {

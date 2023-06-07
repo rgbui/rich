@@ -250,7 +250,10 @@ export class DataGridViewConfig {
             url = '/page/slide';
         }
         var dialougPage: Page = await channel.air(url, {
-            elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, this.schema.defaultAddForm?.id)
+            elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, this.schema.defaultAddForm?.id),
+            config: {
+                force: true
+            }
         })
         if (dialougPage) {
             dialougPage.onSave();

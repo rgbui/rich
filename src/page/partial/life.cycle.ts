@@ -830,10 +830,11 @@ export class Page$Cycle {
                 }
             }
         })
+        console.log(this.formRowData, row, this.changed);
         /**
-         * 比较初始值，如果一样，说明不有任何修改，返回null
+         * 比较初始值，如果一样，说明没有任何修改，返回null
          */
-        if (lodash.isEqual(this.formRowData, row)) {
+        if (lodash.isEqual(this.formRowData, row) && !this.changed) {
             return null;
         }
         row.icon = this.formRowData.icon;

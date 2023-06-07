@@ -6,11 +6,30 @@ import { Matrix } from "../../common/matrix";
 import { OperatorDirective } from "../../history/declare";
 import { AppearCursorPos, HistorySnapshoot, SnapshootBlockPos, SnapshootBlockPropPos, SnapshootBlockStylePos, SnapshootDataGridViewPos } from "../../history/snapshoot";
 import { PageDirective } from "../directive";
+import { UserAction } from "../../history/action";
+import { ElementType } from "../../../net/element.type";
 
 export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     snapshoot.on('history', (action) => {
+
+        /**
+         * 如果是表单视图，且不是模板，那么就不应该保存快照 ，
+         * 只要做为模板时，才保存快照
+         */
+        if (![
+            'onCollapse',
+            'onFocusAppearAnchor',
+            'onSetTextSelection',
+            'onSelectBlocks',
+            'onCatchWindowSelection'
+        ].includes(typeof action.directive == 'number' ? UserAction[action.directive] : action.directive)) {
+            page.changed = true;
+            page.emit(PageDirective.change);
+        }
+        if (page.pe.type == ElementType.SchemaRecordView && !page.isSchemaRecordViewTemplate) {
+            return
+        }
         page.emit(PageDirective.history, action);
-        page.emit(PageDirective.change);
     });
     snapshoot.on('error', err => page.onError(err));
     snapshoot.on('warn', (error) => page.onWarn(error));
@@ -463,8 +482,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     snapshoot.registerOperator(OperatorDirective.$turn, async (operator) => {
         var dr = operator.data;
         var block = page.find(x => x.id == dr.pos.blockId);
-        if (block)
-        {
+        if (block) {
             await block.turn(dr.to)
         }
     }, async (operator) => {
