@@ -1,5 +1,5 @@
 import { BlockView } from "../../../src/block/view";
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { url, view } from "../../../src/block/factory/observable";
 import { Block } from "../../../src/block";
 import { BlockDisplay } from "../../../src/block/enum";
@@ -10,10 +10,22 @@ import lodash from "lodash";
 import { dom } from "../../../src/common/dom";
 import { AnimatedScrollTo } from "../../../util/animatedScrollTo";
 
+
+type OutLineItemType = {
+    id: string,
+    deep: number,
+    block: Block,
+    hover?: boolean,
+    text?: string,
+    html?: string,
+    childs?: OutLineItemType[]
+}
+
+
 @url('/outline')
 export class PageOutLine extends Block {
     display = BlockDisplay.block;
-    outlines: { id: string, deep: number, block: Block, hover?: boolean, text?: string, html?: string }[] = [];
+    outlines: OutLineItemType[] = [];
     hoverId = '';
     updateOutlinesHover() {
         var hoverId = '';
@@ -34,42 +46,47 @@ export class PageOutLine extends Block {
         this.hoverId = hoverId;
         this.forceUpdate();
     }
-    caOutLines() {
-        var outlines: { id: string, deep: number, block: Block, text: string }[] = [];
+    cacOutLines() {
+        var outlines: OutLineItemType[] = [];
         var bs = this.page.findAll(x => x.url == BlockUrlConstant.Head && x.el && (x.closest(c => c.isPart) ? false : true));
         lodash.sortBy(bs, g => Rect.fromEle(g.el).top);
         var currentDeep = 0, lastLevel;
         if (this.page.view) {
-            outlines = bs.map((b, i) => {
+            for (let i = 0; i < bs.length; i++) {
+                var b = bs[i];
                 var level = parseInt((b as any).level.replace('h', ''));
                 var deep = currentDeep;
-                if (typeof lastLevel == 'number' && level < lastLevel) deep -= 1;
+                if (typeof lastLevel == 'number' && level < lastLevel) {
+                    deep -= 1;
+                    var dx = deep + (level - lastLevel);
+                    var minLevel = outlines.min(g => g.deep);
+                    deep = Math.max(minLevel, dx, 0);
+                }
                 else if (typeof lastLevel == 'number' && level > lastLevel) deep += 1;
                 currentDeep = deep;
                 lastLevel = level;
-                return {
+                outlines.push({
                     id: b.id,
                     deep,
                     block: b,
                     text: b.getBlockContent(),
                     html: b.el ? b.el.innerText : undefined
-                }
-            })
+                })
+            }
         }
+
         this.outlines = outlines;
     }
     updateOutLine() {
-        this.caOutLines();
+        this.cacOutLines();
         this.updateOutlinesHover()
     }
     updateHeadBlock(block: Block, forceUpdate?: boolean) {
         var ou = this.outlines.find(c => c.id == block.id);
-        console.log(ou, block?.id, forceUpdate);
         if (ou) {
             ou.html = block.el ? block.el.innerText : undefined;
             ou.text = block.getBlockContent();
-            if (forceUpdate)
-                this.forceUpdate()
+            if (forceUpdate) this.forceUpdate()
         }
     }
     get handleBlock() {
@@ -91,12 +108,20 @@ export class PageOutLineView extends BlockView<PageOutLine>{
     }
     didMount(): void {
         this.block.updateOutLine()
+        this.height = window.innerHeight - 70;
+        this.forceUpdate()
     }
+    height: number = null;
     render() {
-        return <div className='sy-block-outline' style={this.block.visibleStyle}>
-            {this.block.outlines.map(line => {
-                return <div className={"item text-over" + (this.block.hoverId == line.block.id ? " hover" : "")} key={line.id}><a key={line.id} style={{ paddingLeft: 20 + line.deep * 15 }} onMouseDown={e => this.mousedownLine(line, e)}>{line.text}</a></div>
-            })}
+        var style: CSSProperties = { ...this.block.visibleStyle };
+        if (typeof this.height == 'number')
+            style.height = this.height;
+        return <div className='sy-block-outline' style={style}>
+            <div className="sy-block-outline-line">
+                {this.block.outlines.map(line => {
+                    return <div className={"item text-over" + (this.block.hoverId == line.block.id ? " hover" : "")} key={line.id}><a key={line.id} style={{ paddingLeft: 20 + line.deep * 15 }} onMouseDown={e => this.mousedownLine(line, e)}>{line.text}</a></div>
+                })}
+            </div>
         </div>
     }
 }
