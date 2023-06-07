@@ -142,7 +142,8 @@ export class PageHistoryStore extends EventsComponent {
             fields: [{ name: 'name', text: '恢复版本名称', type: 'input' }],
             checkModel: async (d) => {
                 if (!d.name) return '恢复版本名称';
-            }
+            },
+            maskCloseNotSave: true
         });
         if (d) {
             var r = await channel.post('/view/snap/rollup', {
@@ -163,7 +164,7 @@ export class PageHistoryStore extends EventsComponent {
 
 export async function usePageHistoryStore(page: Page) {
     var pos: PopoverPosition = { center: true };
-    let popover = await PopoverSingleton(PageHistoryStore, { mask: true,shadow:true });
+    let popover = await PopoverSingleton(PageHistoryStore, { mask: true, shadow: true });
     let fv = await popover.open(pos);
     fv.open(page);
     return new Promise((resolve: (id: string) => void, reject) => {

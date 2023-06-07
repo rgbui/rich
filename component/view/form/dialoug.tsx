@@ -22,6 +22,10 @@ export type FormDialougType = {
     model?: Record<string, any>,
     checkModel?: (model: Record<string, any>) => Promise<string>;
     saveModel?: (model: Record<string, any>) => Promise<string>;
+    /**
+     * 关闭对话框时，通过mask，仍然返回数据，但实际没有修改，也不需要保存
+     */
+    maskCloseNotSave?: boolean
 }
 class FormDialoug extends EventsComponent {
     render() {
@@ -119,7 +123,10 @@ export async function useForm(options: FormDialougType) {
             resolve(d);
         })
         popover.only('close', () => {
-            resolve(fv.model);
+            if (options?.maskCloseNotSave)
+                resolve(null)
+            else
+                resolve(fv.model);
         });
     })
 }
