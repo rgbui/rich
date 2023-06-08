@@ -23,7 +23,8 @@ import {
     inputDetector,
     inputLineTail,
     inputPop,
-    keydownBackspaceTextContent
+    keydownBackspaceTextContent,
+    onSpaceInputUrl
 } from "./input";
 
 import {
@@ -39,6 +40,7 @@ import { useAITool } from "../../../extensions/ai";
 import { channel } from "../../../net/channel";
 import { BlockSelectorItem } from "../../../extensions/block/delcare";
 import { useOperatorBlockData } from "./operator";
+import { URL_END_REGEX } from "./declare";
 
 /**
  * https://blog.csdn.net/mafan121/article/details/78519348
@@ -232,6 +234,9 @@ export class PageWrite {
                     forceCloseTextTool();
                     event.preventDefault();
                 }
+                break;
+            case KeyboardCode.Space:
+                onSpaceInputUrl(this,aa,event);
                 break;
         }
     }

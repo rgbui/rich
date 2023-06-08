@@ -18,6 +18,7 @@ import { KeyboardCode } from "../../common/keys";
 import { Rect } from "../../common/vector/point";
 import { InputForceStore, InputStore } from "./store";
 import { useTagSelector } from "../../../extensions/tag";
+import { URL_END_REGEX } from "./declare";
 
 /**
  * 输入弹窗
@@ -76,15 +77,15 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
         // else if(data2=='(('){
 
         // }
-        else if (/^#[^#\s]/.test(data2)) {
-            write.inputPop = {
-                rect,
-                type: InputTextPopSelectorType.TagSelector,
-                offset: offset - 2,
-                aa,
-                selector: (await useTagSelector())
-            };
-        }
+        // else if (/^#[^#\s]/.test(data2)) {
+        //     write.inputPop = {
+        //         rect,
+        //         type: InputTextPopSelectorType.TagSelector,
+        //         offset: offset - 2,
+        //         aa,
+        //         selector: (await useTagSelector())
+        //     };
+        // }
     }
     if (write.inputPop) {
         var popVisible = await write.inputPop.selector.open(
@@ -157,6 +158,7 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                     }
                     var newBlock = await rowBlock.appendBlock({ url: BlockUrlConstant.Text, content: mr.matchValue });
                     if (rule.style) newBlock.pattern.setStyles(rule.style);
+                    if (rule.props) newBlock.updateProps(rule.props);
                     if (rest) await rowBlock.appendBlock({ url: BlockUrlConstant.Text, pattern, content: rest });
                     write.kit.page.addUpdateEvent(async () => {
                         write.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true });
@@ -533,4 +535,43 @@ export async function inputBackspaceDeleteContent(write: PageWrite, aa: AppearAn
 }
 
 
+export async function onSpaceInputUrl(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent,) {
+    if (aa?.isText) {
+        var rowBlock = aa.block.closest(x => x.isBlock);
+        if (rowBlock.url == BlockUrlConstant.Title) return;
+        var content = aa.textContent;
+        if (URL_END_REGEX.test(content)) {
+            console.log(URL_END_REGEX, content);
+            var ma = content.match(URL_END_REGEX);
+            var url = ma[0];
+            console.log(ma[0])
+            console.log(content);
+            event.preventDefault();
+            await InputForceStore(aa, async () => {
+                if (aa.block.isLine) {
+                    await aa.block.updateProps({ content: content.slice(0, 0 - url.length) });
+                    var newBlock = await write.kit.page.createBlock(BlockUrlConstant.Text, { content: url, link: { url } }, aa.block.parent, aa.block.at, 'childs')
+                    aa.block.page.addUpdateEvent(async () => {
+                        write.kit.anchorCursor.onFocusBlockAnchor(newBlock, { merge: true, last: true, render: true })
+                    });
+                    if (aa.block.isContentEmpty) await aa.block.delete();
+                }
+                else {
+                    await aa.block.updateProps({ content: '' });
+                    var rest = content.slice(0, 0 - url.length);
+                    if (rest) await aa.block.appendArrayBlockData([
+                        { url: BlockUrlConstant.Text, content: content.slice(0, 0 - url.length) },
+                        { url: BlockUrlConstant.Text, content: url, link: { url } }
+                    ], 0, 'childs');
+                    else await aa.block.appendArrayBlockData([
+                        { url: BlockUrlConstant.Text, content: url, link: { url } }
+                    ], 0, 'childs');
+                    aa.block.page.addUpdateEvent(async () => {
+                        write.kit.anchorCursor.onFocusBlockAnchor(aa.block.childs.last(), { merge: true, last: true, render: true })
+                    })
+                }
+            });
+        }
+    }
+}
 
