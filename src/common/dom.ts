@@ -1,5 +1,6 @@
 
 import { Matrix } from "./matrix";
+import { Point } from "./vector/point";
 
 class Dom {
     el: Node;
@@ -321,5 +322,31 @@ export function elIsBefore(el: Node, comprareEl: Node) {
     } else {
         // 其它位置关系
         return null;
+    }
+}
+
+
+export function domVisibleSeek(options: {
+    point: Point,
+    step: number,
+    arrow: 'down' | 'up' | 'left' | 'right',
+    range?: HTMLElement,
+    predict: (el: HTMLElement) => boolean
+}) {
+    var current: Point = options.point.clone();
+    while (true) {
+        var el = document.elementFromPoint(current.x, current.y);
+        if (!el) return
+        if (options.range && !options.range.contains(el)) return;
+        if (options.predict(el as HTMLElement)) return el;
+        else {
+            if (options.arrow == 'down')
+                current = current.move(0, options.step);
+            else if (options.arrow == 'up')
+                current = current.move(0, 0 - options.step)
+            else if (options.arrow == 'left')
+                current = current.move(0 - options.step, 0)
+            else current = current.move(options.step, 0)
+        }
     }
 }
