@@ -50,7 +50,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
             event.stopPropagation();
             var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) }, self.block.page?.pageInfo.icon);
             if (typeof icon != 'undefined') {
-                channel.air('/page/update/info', { id: self.block.page.pageInfo?.id, pageInfo: { icon } })
+                self.block.page.onUpdatePageData({ icon })
             }
         }
         if (this.block.page.pageLayout.type == PageLayoutType.textChannel) {
