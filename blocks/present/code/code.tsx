@@ -5,7 +5,7 @@ import { Block } from "../../../src/block";
 import { BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { Rect } from "../../../src/common/vector/point";
-import { ChevronDownSvg } from "../../../component/svgs";
+import { ChevronDownSvg, DuplicateSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import "../../../src/assert/codemirror/lib/codemirror.css"
 import lodash from "lodash";
@@ -13,6 +13,9 @@ import "./style.less";
 import { CodeMirrorModes, loadCodeMirror, getCodeMirrorModes } from "./lang";
 import { channel } from "../../../net/channel";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
+import { ToolTip } from "../../../component/view/tooltip";
+import { ShyAlert } from "../../../component/lib/alert";
+import { CopyText } from "../../../component/copy";
 const CODEMIRROR_MODE = 'CODE_MIRROR_MODE';
 /**
  * prism url : https://prismjs.com/#examples
@@ -84,6 +87,7 @@ export class TextCode extends Block {
         }
     }
 }
+
 @view('/code')
 export class TextCodeView extends BlockView<TextCode>{
     async changeLang(e: React.MouseEvent) {
@@ -132,19 +136,27 @@ export class TextCodeView extends BlockView<TextCode>{
             }
         }
     }
+    async onCopy() {
+        CopyText(this.block.content)
+        ShyAlert('复制成功')
+    }
     render() {
         var label = CodeMirrorModes.filter(g => g.abled).find(g => g.mode == this.block.language)?.label || 'unknow';
         return <div style={this.block.visibleStyle}><div className='sy-block-code' onMouseDown={e => e.stopPropagation()}>
             <div className='sy-block-code-box' >
                 <div className='sy-block-code-head'>
-                    <div className='sy-block-code-head-lang' onMouseDown={e => e.stopPropagation()} onMouseUp={e => this.changeLang(e)}>
+                    {this.props.block.isCanEdit && <div className='sy-block-code-head-lang' onMouseDown={e => e.stopPropagation()} onMouseUp={e => this.changeLang(e)}>
                         <span>{label}</span>
                         <Icon size={14} icon={ChevronDownSvg}></Icon>
-                    </div>
+                    </div>}
+                    <ToolTip overlay={'复制'}><div onMouseDown={e => this.onCopy()} className="size-24 flex-center cursor item-hover round">
+                        <Icon size={18} icon={DuplicateSvg}></Icon>
+                    </div></ToolTip>
                 </div>
                 <div className='sy-block-code-content'>
                 </div>
             </div>
-        </div></div>
+        </div>
+    </div>
     }
 }
