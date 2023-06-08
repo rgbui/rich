@@ -17,6 +17,18 @@ export class Markdown extends React.Component<{ md: string, className?: string |
                 classList = classList.concat(this.props.className)
             }
         }
-        return <div className={classList.join(" ")}><ReactMarkdown remarkPlugins={[remarkGfm]} children={this.props.md} /></div>
+        return <div className={classList.join(" ")}><ReactMarkdown remarkPlugins={[remarkGfm]} children={showMarkdown(this.props.md)} /></div>
     }
+}
+
+
+export function showMarkdown(content) {
+    if (content) {
+        var rs = content.split(/\r?\n/g);
+        for (let i = 0; i < rs.length; i++) {
+            if (!rs[i].endsWith('  ')) rs[i] += "  "
+        }
+        return rs.join("\n");
+    }
+    else return '';
 }
