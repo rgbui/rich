@@ -58,6 +58,14 @@ export type RobotInfo = UserBasic & {
     robotId?: string,
     headers?: { name: string, value: string }[],
     tasks?: RobotTask[],
+    prompts?: {
+        type: 'ask' | 'write' | 'polish',
+        abled: boolean,
+        prompt: string,
+        config: {
+
+        }
+    }[]
 }
 
 
