@@ -38,7 +38,7 @@ class AtUserSelector extends InputTextPopSelector {
         /**
          * 修复输入@+空格时，自动关掉搜索框
          */
-        if (this.text.startsWith(' ')) {
+        if (/[\S]+[\s]+$/g.test(this.text)) {
             this.close();
             return this.visible;
         }
