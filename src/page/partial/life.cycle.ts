@@ -162,7 +162,7 @@ export class Page$Cycle {
             }
         })
         await this.onRepair();
-        if (isOk && actions.length > 0) {
+        if (this.canEdit && isOk && actions.length > 0) {
             var seq = actions.max(g => g.seq);
             var op = actions.find(g => g.seq == seq);
             this.emit(PageDirective.syncHistory, {
