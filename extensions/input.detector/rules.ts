@@ -12,6 +12,7 @@ export type DetectorRule = {
     matchFn?: (value: string) => boolean,
     url?: string,
     style?: Record<any, Record<string, any>>,
+    props?:Record<string,any>,
     handle?: (value: string) => string;
 }
 export var rules: DetectorRule[] = [
@@ -94,8 +95,9 @@ export var rules: DetectorRule[] = [
     },
     {
         operator: DetectorOperator.letterReplaceCreateBlock,
-        match: [/`([^]+)`$/],
-        url: '/text?{code:true}'
+        match: [/`([^`]+)`$/],
+        url: '/text',
+        props:{code:true}
     },
     {
         operator: DetectorOperator.inputCharReplace,
