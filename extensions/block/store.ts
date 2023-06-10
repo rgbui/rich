@@ -31,7 +31,7 @@ class BlockStore extends Events {
         var bs = this._blockGroups.map(b => {
             return {
                 ...b,
-                childs: b.childs.findAll(g => g.text && ('/' + g.text).startsWith(label) || g.label.startsWith(label) || Array.isArray(g.labels) && g.labels.exists(c => c.startsWith(label)))
+                childs: b.childs.findAll(g =>!label||label&& g.text && ('/' + g.text).startsWith(label) || g.label.startsWith(label) || Array.isArray(g.labels) && g.labels.exists(c => c.startsWith(label)))
             }
         });
         bs.removeAll(g => g.childs.length == 0);
