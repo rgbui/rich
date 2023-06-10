@@ -1,81 +1,38 @@
-import lodash from "lodash";
+
 import React from "react";
-import ReactDOM from "react-dom";
 import { Singleton } from "../../component/lib/Singleton";
 import { PlusSvg } from "../../component/svgs";
 import { Divider } from "../../component/view/grid";
 import { Icon } from "../../component/view/icon";
-import { Remark } from "../../component/view/text";
-import { channel } from "../../net/channel";
 import { BlockUrlConstant } from "../../src/block/constant";
-import { KeyboardCode } from "../../src/common/keys";
-import { Point, Rect, RectUtility } from "../../src/common/vector/point";
 import { InputTextPopSelector } from "../common/input.pop";
-import { PopoverPosition } from "../popover/position";
 import "./style.less";
 import { LinkPageItem, getPageIcon } from "../../src/page/declare";
 import { Spin } from "../../component/view/spin";
 import { util } from "../../util/util";
+import { channel } from "../../net/channel";
 
 /**
  * 用户输入[[触发
  */
-class PageLinkSelector extends InputTextPopSelector {
-    onClose(): void {
-        this.close();
-    }
-    async open(
-        round: Rect,
-        text: string,
-        callback: (...args: any[]) => void): Promise<boolean> {
-        this._select = callback;
-        this.round = round;
-        this.pos = round.leftBottom;
-        this.visible = true;
-        var t = text.replace(/^(\[\[)|(【【)/, '');
-        if (t) {
-            this.text = t;
-            this.forceUpdate();
-            this.syncSearch();
+class PageLinkSelector extends InputTextPopSelector<LinkPageItem> {
+    prefix = ['[[', '【【'];
+    selectDeep: number = 1;
+    async searchByWord(word: string) {
+        if (this.allList.total > 0 && this.allList.total < this.allList.size) {
+            return this.allList.list.findAll(g => g.text && g.text.startsWith(word) || g.text.indexOf(word) > -1);
         }
         else {
-            this.text = '';
-            var rs = channel.query('/ws/current/pages');
-            this.links = rs.map(r => {
-                return {
-                    id: r.id,
-                    text: r.text,
-                    icon: r.icon
-                }
-            });
-            this.adjuctPosition();
+            var r = (await channel.get('/page/word/query', { word: word })).data.list;
+            return r;
         }
-        return true;
     }
-    private round: Rect;
-    links: LinkPageItem[] = [];
-    loading = false;
-    searchWord: string = '';
-    syncSearch = lodash.debounce(async () => {
-        if (!this.text) return;
-        this.loading = true;
-        this.searchWord = this.text;
-        if (!this.visible) return;
-        this.adjuctPosition();
-        var r = await channel.get('/page/word/query', { word: this.searchWord });
-        if (!this.visible) return;
-        if (r.ok) {
-            this.links = r.data.list;
+    async searchAll() {
+        if (this.allList.lastDate && Date.now() - this.allList.lastDate.getTime() > 5000) {
+            var r = await channel.get('/page/word/query', { size: this.allList.size });
+            this.allList = r.data;
+            this.allList.lastDate = new Date();
         }
-        else this.links = [];
-        if (this.selectIndex > this.links.length) {
-            this.selectIndex = 1;
-        }
-        this.loading = false;
-        this.adjuctPosition();
-    }, 700)
-    private get isSelectIndex() {
-        return this.selectIndex >= 0 && this.selectIndex < this.links.length;
     }
     private renderLinks() {
         return <div>
@@ -88,24 +45,23 @@ class PageLinkSelector extends InputTextPopSelector {
             </a>
             <Divider></Divider>
             {this.loading && <div className="flex-center gap-h-30"><Spin></Spin></div>}
-            {!this.loading && this.links.map((link, i) => {
+            {!this.loading && this.list.map((link, i) => {
                 return <a onMouseDown={e => this.onSelect(link)} className={"h-30 gap-l-10 text  item-hover cursor round padding-w-10 flex" + ((i + 1) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
                     <span className="flex flex-inline size-24 item-hover round"> <Icon size={18} icon={getPageIcon(link)}></Icon></span>
                     <span className="f-14">{link.text || '新页面'}</span></a>
             })}
-            {!this.loading && this.links.length == 0 && this.searchWord && <a className="remark flex-center gap-h-10 f-14"><Remark>没有搜索到</Remark></a>}
+            {!this.loading && this.list.length == 0 && this.searchWord && <a className="remark flex-center gap-h-10 f-14">没有搜索到</a>}
         </div>
     }
     render() {
         var style: Record<string, any> = {
             top: this.pos.y,
-            left: this.pos.x
+            left: this.pos.x,
+            display: this.visible ? "block" : 'none'
         }
-        return <div ref={e => this.el = e}>
-            {this.visible && <div className='shy-page-link' style={style}>{this.renderLinks()}</div>}
-        </div>
+        return <div className='shy-page-link' style={style}>{this.renderLinks()}</div>
     }
-    private onSelect(block) {
+    onSelect(block) {
         if (block.name == 'create') {
             this._select({ url: BlockUrlConstant.Text, isLine: true, content: this.text || "新页面", link: { name: "create", text: this.text || "新页面" } })
         }
@@ -119,128 +75,29 @@ class PageLinkSelector extends InputTextPopSelector {
         }
         this.close();
     }
-    private visible: boolean = false;
-    private pos: Point = new Point(0, 0)
-    private selectIndex: number = 1;
-    private _select: (block: Record<string, any>) => void;
-    private text: string;
-    private get selectBlockData() {
+    getSelectBlockData() {
         if (this.selectIndex == 0) {
             return {
-                name: 'create'
-            }
-        }
-        var b = this.links[this.selectIndex - 1];
-        return b;
-    }
-    private close() {
-        this.text = '';
-        this.searchWord = '';
-        this.loading = false;
-        this.selectIndex = 1;
-        if (this.visible == true) {
-            this.visible = false;
-            this.forceUpdate();
-        }
-    }
-    /**
-     * 向上选择内容
-     */
-    private keydown() {
-        if (!this.isSelectIndex) {
-            this.selectIndex = 0;
-            this.forceUpdate();
-            return;
-        }
-        if (this.selectIndex < this.links.length + 1) {
-            this.selectIndex += 1;
-            this.forceUpdate();
-        }
-    }
-    /**
-     * 向下选择内容
-     */
-    private keyup() {
-        if (!this.isSelectIndex) {
-            this.selectIndex = this.links.length;
-            this.forceUpdate();
-            return;
-        }
-        if (this.selectIndex > 0) {
-            this.selectIndex -= 1;
-            this.forceUpdate();
-        }
-    }
-    private el: HTMLElement;
-    componentDidMount() {
-        this.el = ReactDOM.findDOMNode(this) as HTMLElement;
-        document.addEventListener('mousedown', this.onGlobalMousedown);
-    }
-    componentWillUnmount() {
-        document.removeEventListener('mousedown', this.onGlobalMousedown);
-    }
-    componentDidUpdate() {
-        var el = this.el.querySelector('.item-hover-focus') as HTMLElement;
-        if (el) {
-            el.scrollIntoView({
-                block: "nearest",
-                inline: "nearest"
-            });
-        }
-    }
-    onGlobalMousedown = (event: MouseEvent) => {
-        if (this.visible == true && this.el) {
-            var target = event.target as HTMLElement;
-            if (this.el.contains(target)) return;
-            this.close();
-        }
-    }
-    onKeydown(event: KeyboardEvent) {
-        if (this.visible == true) {
-            switch (event.key) {
-                case KeyboardCode.ArrowDown:
-                    this.keydown();
-                    return true;
-                case KeyboardCode.ArrowUp:
-                    this.keyup();
-                    return true;
-                case KeyboardCode.Enter:
-                    var block: any = this.selectBlockData;
-                    var text = this.text;
-                    this.close();
-                    if ((block as any)?.name == 'create') {
-                        return { blockData: { url: BlockUrlConstant.Text, isLine: true, content: text || '新页面', link: { name: 'create', text: text || '新页面' } } }
-                    }
-                    else if (block)
-                        return {
-                            blockData: {
-                                url: BlockUrlConstant.Text,
-                                isLine: true,
-                                content: block.text,
-                                refLinks: [{ id: util.guid(), type: 'page', pageId: block.id }]
-                            }
-                        };
-                    else return false;
-            }
-        }
-        return false;
-    }
-    private adjuctPosition() {
-        this.forceUpdate(() => {
-            var selectorEl = this.el.querySelector('.shy-page-link') as HTMLElement;
-            if (selectorEl) {
-                var b = Rect.fromEle(selectorEl);
-                var pos: PopoverPosition = {
-                    roundArea: this.round,
-                    elementArea: b
-                }
-                var newPoint = RectUtility.cacPopoverPosition(pos);
-                if (!this.pos.equal(newPoint)) {
-                    this.pos = newPoint;
-                    this.forceUpdate();
+                blockData: {
+                    url: BlockUrlConstant.Text,
+                    isLine: true,
+                    content: this.text || "新页面",
+                    link: { name: "create", text: this.text || "新页面" }
                 }
             }
-        })
+        }
+        else {
+            var b = this.list[this.selectIndex - 1];
+            if (!b) return false;
+            return {
+                blockData: {
+                    url: BlockUrlConstant.Text,
+                    isLine: true,
+                    content: b.text || "新页面",
+                    refLinks: [{ id: util.guid(), type: 'page', pageId: b.id }]
+                }
+            }
+        }
     }
 }
 export async function usePageLinkSelector() {

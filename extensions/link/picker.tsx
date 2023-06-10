@@ -7,7 +7,7 @@ import { EventsComponent } from "../../component/lib/events.component";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
 import { PageLink } from "./declare";
-import { GlobalLinkSvg,PlusSvg } from "../../component/svgs";
+import { GlobalLinkSvg, PlusSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import lodash from "lodash";
 import { channel } from "../../net/channel";
@@ -19,6 +19,7 @@ import { popoverLayer } from "../../component/lib/zindex";
 import { KeyboardCode } from "../../src/common/keys";
 import { util } from "../../util/util";
 import { Block } from "../../src/block";
+import { SearchListType } from "../../component/types";
 
 /**
  * 
@@ -73,7 +74,7 @@ class LinkPicker extends EventsComponent {
         }
     }
     links: LinkPageItem[] = [];
-    allLists: { list: LinkPageItem[], total: number, size: number } = { list: [], total: 0, size: 500 };
+    allLists: SearchListType<LinkPageItem> = { list: [], page: 1, total: 0, size: 500 };
     loading = false;
     isSearch = false;
     syncSearch = lodash.debounce(async () => {
@@ -146,8 +147,7 @@ class LinkPicker extends EventsComponent {
                 <span className="flex-fixed size-20 item-hover cursor round">
                     <Icon icon={PlusSvg} size={20}></Icon>
                 </span>
-            </div>
-                <Divider></Divider></>}
+            </div><Divider></Divider></>}
             {this.name == 'page' && <div>
                 {this.loading && <Spin></Spin>}
                 {!this.loading && this.links.map((link, i) => {
@@ -191,6 +191,7 @@ class LinkPicker extends EventsComponent {
             }
             else if (link.text) {
                 this.url = link.text;
+                this.name = 'page';
                 await this.forceSyncSearch();
             }
         }
