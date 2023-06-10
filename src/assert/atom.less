@@ -202,7 +202,8 @@ position的布局
     right   : 0px;
 }
 
-.pos-top-left,.pos-t-l {
+.pos-top-left,
+.pos-t-l {
     position: absolute;
     top     : 0px;
     left    : 0px;
@@ -493,9 +494,10 @@ item-selected:选中的效果
     }
 }
 
-.bg-hover{
+.bg-hover {
     background-color: #fff;
-    &:hover{
+
+    &:hover {
         background-color: #eee;
     }
 }
@@ -639,51 +641,6 @@ item-selected:选中的效果
 .error-bg {
     background-color: #ff4d4f;
     color           : #fff;
-}
-
-.f-12 {
-    font-size  : 12px;
-    line-height: 16px;
-}
-
-.f-14 {
-    font-size  : 14px;
-    line-height: 20px;
-}
-
-.f-16 {
-    font-size  : 16px;
-    line-height: 24px;
-}
-
-.f-18 {
-    font-size  : 18px;
-    line-height: 28px;
-}
-
-.f-20 {
-    font-size  : 20px;
-    line-height: 30px;
-}
-
-.l-12 {
-    line-height: 12px;
-}
-
-.l-14 {
-    line-height: 14px;
-}
-
-.l-16 {
-    line-height: 16px;
-}
-
-.l-20 {
-    line-height: 20px;
-}
-
-.l-24 {
-    line-height: 24px;
 }
 
 
@@ -1387,6 +1344,14 @@ each(@sizes, {
         .size-@{value} {
             width  :@value+0px;
             height :@value+0px;
+        }
+
+        .f-@{value} {
+            font-size:@value+0px;
+        }
+
+        .l-@{value} {
+            line-height:@value+0px;
         }
     }
 

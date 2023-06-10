@@ -40,7 +40,6 @@ import { useAITool } from "../../../extensions/ai";
 import { channel } from "../../../net/channel";
 import { BlockSelectorItem } from "../../../extensions/block/delcare";
 import { useOperatorBlockData } from "./operator";
-import { URL_END_REGEX } from "./declare";
 
 /**
  * https://blog.csdn.net/mafan121/article/details/78519348
@@ -236,7 +235,7 @@ export class PageWrite {
                 }
                 break;
             case KeyboardCode.Space:
-                onSpaceInputUrl(this,aa,event);
+                onSpaceInputUrl(this, aa, event);
                 break;
         }
     }
@@ -431,9 +430,12 @@ export class PageWrite {
                         await aa.block.clearEmptyBlock();
                     }
                 }
+                //console.log('newBlock', newBlock);
                 if (newBlock)
-                    newBlock.mounted(() => {
-                        this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true })
+                    newBlock.mounted(async () => {
+                        await this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true })
+                        await util.delay(50);
+                        await this.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true })
                     });
             });
         }

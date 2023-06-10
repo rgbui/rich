@@ -3,7 +3,7 @@ import { TableSchema } from "../../blocks/data-grid/schema/meta";
 import { Singleton } from "../../component/lib/Singleton";
 import { ElementType, parseElementUrl } from "../../net/element.type";
 import { KeyboardCode } from "../../src/common/keys";
-import { Point, Rect } from "../../src/common/vector/point";
+import { Rect } from "../../src/common/vector/point";
 import { InputTextPopSelector } from "../common/input.pop";
 import { ConvertEmbed } from "./embed.url";
 import "./style.less";
@@ -16,17 +16,14 @@ class InputUrlSelector extends InputTextPopSelector {
     onClose(): void {
         this.close();
     }
-    private _select: (blockData: Record<string, any>) => void;
     private url: string;
     async open(round: Rect, text: string, callback: (...args: any[]) => void): Promise<boolean> {
-        if (this.url) { this.close(); return false; }
+        if(this.url) { this.close(); return false; }
         this.urlTexts = [
             { icon: LinkSvg, text: '网址', name: 'url', url: '/text', isLine: true },
             { icon: BookSvg, text: '书签', name: 'bookmark', url: '/bookmark' },
             { icon: EmbedSvg, text: '嵌入', name: 'embed', url: '/embed' }
         ];
-
-
         this.url = text;
         var cr = ConvertEmbed(this.url);
         if (cr?.embedType) {
@@ -66,7 +63,7 @@ class InputUrlSelector extends InputTextPopSelector {
         this.forceUpdate();
         return true;
     }
-    private onSelect(item, isReturn?: boolean) {
+    onSelect(item, isReturn?: boolean) {
         try {
             if (typeof this._select == 'function') {
                 var ut = this.urlTexts.find(c => c.name == item.name);
@@ -107,15 +104,15 @@ class InputUrlSelector extends InputTextPopSelector {
             this.close();
         }
     }
-    onKeydown(event: KeyboardEvent) {
-        console.log(event, 'ggg');
+    onKeydown(event: KeyboardEvent)
+    {
         if (this.visible == true) {
             switch (event.key) {
                 case KeyboardCode.ArrowDown:
-                    this.keydown();
+                    this.keydown(event);
                     return true;
                 case KeyboardCode.ArrowUp:
-                    this.keyup();
+                    this.keyup(event);
                     return true;
                 case KeyboardCode.Enter:
                     var se = this.onSelect(this.selectUrl, true);
@@ -130,10 +127,6 @@ class InputUrlSelector extends InputTextPopSelector {
         return false;
     }
     private urlTexts: { text: string, icon?: string | IconArguments | JSX.Element | SvgrComponent, name: string, isLine?: boolean, data?: Record<string, any>, url: string }[] = [];
-    private visible: boolean = false;
-    private pos: Point = new Point(0, 0);
-    private selectIndex: number = 0;
-
     private get selectUrl() {
         var b = this.urlTexts[this.selectIndex];
         return b;
@@ -159,7 +152,7 @@ class InputUrlSelector extends InputTextPopSelector {
     /**
      * 向上选择内容
     */
-    private keydown() {
+    keydown(e) {
         if (this.selectIndex == this.urlTexts.length - 1) {
 
         }
@@ -167,11 +160,12 @@ class InputUrlSelector extends InputTextPopSelector {
             this.selectIndex += 1;
         }
         this.forceUpdate();
+        return true;
     }
     /**
      * 向下选择内容
      */
-    private keyup() {
+    keyup(event) {
         if (this.selectIndex == 0) {
 
         }
@@ -179,8 +173,9 @@ class InputUrlSelector extends InputTextPopSelector {
             this.selectIndex -= 1;
         }
         this.forceUpdate();
+        return true;
     }
-    private close() {
+    close() {
         this.url = '';
         if (this.visible == true) {
             this.visible = false;

@@ -69,7 +69,7 @@ export class Block$Operator {
         }
         if (this.url == BlockUrlConstant.List && url.startsWith(BlockUrlConstant.List)) {
             var pb = BlockFactory.parseBlockUrl(url);
-            await this.updateProps(pb.data.level ? pb.data : { listType: 0 }, BlockRenderRange.self);
+            await this.updateProps(pb.data.listType ? pb.data : { listType: 0 }, BlockRenderRange.self);
             return this;
         }
         var data = await this.getWillTurnData(url);

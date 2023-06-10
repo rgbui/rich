@@ -77,15 +77,15 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
         // else if(data2=='(('){
 
         // }
-        // else if (/^#[^#\s]/.test(data2)) {
-        //     write.inputPop = {
-        //         rect,
-        //         type: InputTextPopSelectorType.TagSelector,
-        //         offset: offset - 2,
-        //         aa,
-        //         selector: (await useTagSelector())
-        //     };
-        // }
+        else if (/^#[^#\s]/.test(data2)) {
+            write.inputPop = {
+                rect,
+                type: InputTextPopSelectorType.TagSelector,
+                offset: offset - 2,
+                aa,
+                selector: (await useTagSelector())
+            };
+        }
     }
     if (write.inputPop) {
         var popVisible = await write.inputPop.selector.open(
@@ -191,7 +191,7 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
     var isEmpty = aa.textContent == '';
     if (aa.block.isPart) isEmpty = false;
     var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
-    if (offset == 0) {
+    if (offset == 0 || aa.isSolid && offset == 1) {
         event.preventDefault();
         /**
          * 标题不能回退删除
@@ -202,7 +202,6 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
         await InputForceStore(aa, async () => {
             var block = aa.block;
             var rowBlock = block.closest(x => !x.isLine);
-            //console.log('block rowBlock', block, rowBlock, rowBlock.isTextBlock);
             if (block.isLine && block.prev) {
                 /**这里判断block前面有没有line */
                 var pv = block.prev;
@@ -226,32 +225,38 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
                 });
             }
             else if (aa.isSolid) {
-                //await block.delete();
-                if (rowBlock && rowBlock?.prev?.isTextBlock && rowBlock?.prev?.url != BlockUrlConstant.Title) {
-                    //这个需要合并块
-                    var lastPreBlock = await combineTextBlock(write, rowBlock);
+                if (offset == 1) {
+                    await block.delete();
                     write.kit.page.addUpdateEvent(async () => {
-                        write.kit.anchorCursor.onFocusBlockAnchor(lastPreBlock, { last: true, render: true, merge: true });
-                    });
-                    return
-                }
-                if (rowBlock.isTextBlock && !rowBlock?.prev && !(rowBlock.parent?.isPanel || rowBlock.parent?.isCell || rowBlock.parent?.isLayout)) {
-                    //这个父块合并子块的内容
-                    return await combindSubBlock(write, rowBlock);
-                }
-                /***
-                 * 这个回车啥也没干，光标跳动
-                 */
-                var prevAppearBlock = rowBlock.prevFind(x => x.appearAnchors.length > 0);
-                if (prevAppearBlock) {
-                    write.kit.page.addUpdateEvent(async () => {
-                        write.kit.anchorCursor.onFocusBlockAnchor(prevAppearBlock, { last: true, render: true, merge: true });
+                        write.kit.anchorCursor.onFocusBlockAnchor(rowBlock, { render: true, last: false });
                     });
                 }
-                if (rowBlock.isContentEmpty && !(!rowBlock?.prev && (rowBlock.parent?.isPanel || rowBlock.parent?.isLayout || rowBlock?.parent?.isCell))) {
-                    await rowBlock.delete();
+                else {
+                    if (rowBlock && rowBlock?.prev?.isTextBlock && rowBlock?.prev?.url != BlockUrlConstant.Title) {
+                        //这个需要合并块
+                        var lastPreBlock = await combineTextBlock(write, rowBlock);
+                        write.kit.page.addUpdateEvent(async () => {
+                            write.kit.anchorCursor.onFocusBlockAnchor(lastPreBlock, { last: true, render: true, merge: true });
+                        });
+                        return
+                    }
+                    if (rowBlock.isTextBlock && !rowBlock?.prev && !(rowBlock.parent?.isPanel || rowBlock.parent?.isCell || rowBlock.parent?.isLayout)) {
+                        //这个父块合并子块的内容
+                        return await combindSubBlock(write, rowBlock);
+                    }
+                    /***
+                     * 这个回车啥也没干，光标跳动
+                     */
+                    var prevAppearBlock = rowBlock.prevFind(x => x.appearAnchors.length > 0);
+                    if (prevAppearBlock) {
+                        write.kit.page.addUpdateEvent(async () => {
+                            write.kit.anchorCursor.onFocusBlockAnchor(prevAppearBlock, { last: true, render: true, merge: true });
+                        });
+                    }
+                    if (rowBlock.isContentEmpty && !(!rowBlock?.prev && (rowBlock.parent?.isPanel || rowBlock.parent?.isLayout || rowBlock?.parent?.isCell))) {
+                        await rowBlock.delete();
+                    }
                 }
-
                 // write.kit.page.addUpdateEvent(async () => {
                 //     write.kit.anchorCursor.onFocusBlockAnchor(rowBlock, { render: true, merge: true });
                 // });
