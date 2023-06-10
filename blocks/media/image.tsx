@@ -142,7 +142,7 @@ export class ImageView extends BlockView<Image>{
     imageWrapper: HTMLDivElement;
     renderEmptyImage() {
         return <div className='sy-block-image-empty' onMouseDown={e => this.block.onOpenUploadImage(e)}>
-          <Icon size={24} icon={PicSvg}></Icon>
+            <Icon size={24} icon={PicSvg}></Icon>
             <Sp id={LangID.AddImageTip}></Sp>
         </div>
     }
@@ -167,7 +167,7 @@ export class ImageView extends BlockView<Image>{
     }
     render() {
         if (this.isViewError) return this.renderViewError();
-        return <div className='sy-block-image' style={this.block.boxStyle} >
+        return <div className='sy-block-image' style={this.block.visibleStyle} >
             <div className='sy-block-image-content' >
                 {!this.block?.src && this.block.isCanEdit() && this.renderEmptyImage()}
                 {this.block?.src && this.renderImage()}

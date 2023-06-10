@@ -26,6 +26,7 @@ import { prop, url, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
 import { MouseDragger } from "../../src/common/dragger";
 import { Rect } from "../../src/common/vector/point";
+import { BlockRenderRange } from "../../src/block/enum";
 
 @url('/embed')
 export class Embed extends Block {
@@ -39,11 +40,11 @@ export class Embed extends Block {
     origin: string = '';
     @prop()
     embedType: string = '';
-    async addEmbed(event) {
-        var r = await useOutSideUrlInput({ roundArea: Rect.fromEle(this.el) });
+    async addEmbed(event: MouseEvent) {
+        var r = await useOutSideUrlInput({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) });
         if (r?.url) {
             var cr = ConvertEmbed(r.url);
-            this.onUpdateProps({ embedType: cr.embedType, origin: cr.origin, src: { name: 'link', url: cr.url } })
+            this.onUpdateProps({ embedType: cr.embedType, origin: cr.origin, src: { name: 'link', url: cr.url } }, { range: BlockRenderRange.self })
         }
     }
     getVisibleContentBound() {
@@ -51,12 +52,16 @@ export class Embed extends Block {
         if (img) {
             return Rect.fromEle(img);
         }
+        else {
+            var nofile = this.el.querySelector('.sy-block-file-nofile');
+            if (nofile) return Rect.fromEle(nofile as HTMLElement);
+        }
         return super.getVisibleContentBound();
     }
 }
 
 @view('/embed')
-export class FileView extends BlockView<Embed>{
+export class EmbedView extends BlockView<Embed>{
     isResize: boolean = false;
     onMousedown(event: React.MouseEvent, operator: 'left' | "right" | 'height') {
         event.stopPropagation();
@@ -95,7 +100,7 @@ export class FileView extends BlockView<Embed>{
                     if (isEnd) {
                         var rw = width * 100 / bound.width;
                         rw = Math.ceil(rw);
-                        self.block.onUpdateProps({ imageWidthPercent: rw });
+                        self.block.onUpdateProps({ contentWidthPercent: rw });
                         self.isResize = false;
                         self.forceUpdate();
                     }
@@ -119,12 +124,12 @@ export class FileView extends BlockView<Embed>{
             }
             return style;
         }
-        return <div className='sy-block-embed' style={this.block.boxStyle}>
-            {this.block.src.name == 'none' && <div onMouseDown={e => this.block.addEmbed(e)} className='sy-block-file-nofile'>
+        return <div className='sy-block-embed' style={this.block.visibleStyle}>
+            {this.block.src.name == 'none' && <div onMouseDown={e => this.block.addEmbed(e.nativeEvent)} className='sy-block-file-nofile'>
                 <Icon icon={CompassSvg}></Icon>
                 <span>添加内嵌网页(网易云音乐、B站)</span>
             </div>}
-            <div className='sy-block-embed-wrapper' ref={e => this.imageWrapper = e} style={{ height, width: this.block.contentWidthPercent ? this.block.contentWidthPercent + "%" : undefined }}>
+            {this.block.src.name != 'none' && <div className='sy-block-embed-wrapper' ref={e => this.imageWrapper = e} style={{ height, width: this.block.contentWidthPercent ? this.block.contentWidthPercent + "%" : undefined }}>
                 <div style={{ ...getIframeStyle(), pointerEvents: this.isResize ? "none" : 'auto' }}>
                     <iframe referrerPolicy="origin" src={this.block.src.url} ></iframe>
                 </div>
@@ -133,7 +138,7 @@ export class FileView extends BlockView<Embed>{
                     <div className='sy-block-embed-right-resize' onMouseDown={e => this.onMousedown(e, 'right')}></div>
                     {isAllowResizeHeight && <div className="sy-block-embed-height-resize" onMouseDown={e => this.onMousedown(e, 'height')}></div>}
                 </>}
-            </div>
+            </div>}
         </div>
     }
 }

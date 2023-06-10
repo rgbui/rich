@@ -78,7 +78,7 @@ export class File extends Block {
 @view('/file')
 export class FileView extends BlockView<File>{
     render() {
-        return <div className='sy-block-file' style={this.block.boxStyle}>
+        return <div className='sy-block-file' style={this.block.visibleStyle}>
             {this.block.src.name == 'none' && <div onMouseDown={e => this.block.addFile(e)} className='sy-block-file-nofile'>
                 <Icon className={'text-1'} icon={FileSvg}></Icon>
                 {!this.block.speed && <span>添加附件</span>}
