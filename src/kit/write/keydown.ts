@@ -141,6 +141,9 @@ export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: Re
             rest = aa.textContent.slice(0, offset);
             text = aa.textContent.slice(offset);
         }
+        else if (aa.isSolid && offset == 0) {
+            gs.push(block);
+        }
         var childs = text ? [{ url: BlockUrlConstant.Text, content: text }] : [];
         if (aa.isText) {
             if (rest || !block.isLine) block.updateAppear(aa, rest, BlockRenderRange.self);
