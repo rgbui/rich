@@ -240,6 +240,9 @@ export class AppearAnchor {
     }
     getCursorOffset(focusNode?: Node, offset?: number) {
         if (this.isSolid) {
+            if (this.lastTextNode === focusNode || focusNode.contains(this.lastTextNode)) {
+                return 1;
+            }
             return 0;
         }
         if (typeof focusNode == 'undefined') {
