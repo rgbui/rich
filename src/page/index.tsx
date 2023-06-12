@@ -177,6 +177,11 @@ export class Page extends Events<PageDirective>{
             console.error(ex);
         }
     }
+    setPaddingBottom(paddingBottom: number = 200) {
+        if (this.contentEl) {
+            this.contentEl.style.paddingBottom = paddingBottom + 'px';
+        }
+    }
     getPageFrame() {
         return this.views[0];
     }

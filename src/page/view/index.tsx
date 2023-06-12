@@ -16,7 +16,6 @@ import {
     DocCardsSvg,
     PageSvg
 } from "../../../component/svgs";
-import { dom } from "../../common/dom";
 import { PageOutLine } from "../../../blocks/page/outline";
 import { ActionDirective } from "../../history/declare";
 import { Block } from "../../block";
