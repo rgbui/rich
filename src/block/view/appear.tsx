@@ -142,6 +142,6 @@ export function TextSpanArea(props: { block: Block, placeholderEmptyVisible?: bo
     if (props.block.childs.length > 0)
         return <TextLineChilds childs={props.block.childs}></TextLineChilds>
     else
-        return <TextArea placeholderEmptyVisible={props.placeholderEmptyVisible} block={props.block} prop={props.prop || 'content'} placeholder={props.placeholder || '键入文字或"/"选择'}></TextArea>
+        return <TextArea placeholderEmptyVisible={props.placeholderEmptyVisible} block={props.block} prop={props.prop || 'content'} placeholder={props.placeholder || '空格唤起AI或"/"选择'}></TextArea>
 }
 
