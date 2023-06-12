@@ -150,12 +150,14 @@ export class AiWrite {
                     await this.block.onUpdateProps({ content: this.block.content.trimStart() + ts.slice(0, at).join("\n") + (prev ? "\n" + prev : "") });
                     (this.block as any).codeFinished = true;
                     (this.block as TextCode).renderValue()
+                    this.tool.updatePosition({ pos: { relativeEleAutoScroll: this.block.el, roundArea: this.block.getVisibleBound() } })
                     ts = ts.slice(at + 1)
                     if (next) ts.splice(0, 0, next)
                 }
                 else {
                     await this.block.onUpdateProps({ content: this.block.content.trimStart() + ts.join("\n") });
                     (this.block as TextCode).renderValue();
+                    this.tool.updatePosition({ pos: { relativeEleAutoScroll: this.block.el, roundArea: this.block.getVisibleBound() } })
                     await util.delay(200)
                     this.willWriteBlock = false;
                     return;
@@ -314,6 +316,7 @@ export class AiWrite {
         }
     }
     async writeTableRow() {
+        if (this.text.indexOf('\n') == -1) return;
         var ts = this.text.split(/\r\n|\n\n|\n\r|\n|\r/g);
         lodash.remove(ts, g => typeof g == 'undefined' || g === '');
         this.text = '';
@@ -324,7 +327,6 @@ export class AiWrite {
             ts = ts.slice(ts.findIndex(s => !s.trim().startsWith('|')));
         }
         else ts = [];
-
         // console.log('writee', rowList, ts);
         var createRows: any[] = [];
         for (let i = 0; i < rowList.length; i++) {

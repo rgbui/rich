@@ -277,7 +277,6 @@ export class AITool extends EventsComponent {
                         break;
                     case 'insertBelow':
                         var blockDatas = await parseMarkdownContent(this.anwser);
-                        console.log(this.anwser, blockDatas);
                         var bs = this.options.blocks || [];
                         var b = this.page.visibleSearchBlocks(bs, 'last');
                         if (b) {
@@ -504,14 +503,13 @@ export class AITool extends EventsComponent {
         }
         if (options.pos.relativeEleAutoScroll) this.fvs.bind(options.pos.relativeEleAutoScroll);
         this.el.style.transform = `translate(${0}px,${0}px)`;
-
         if (options.block) this.status = AIAskStatus.willAsk;
         else this.status = AIAskStatus.selectionWillAsk;
-
         this.visible = true;
         this.ask = '';
         this.anwser = '';
         this.options = options;
+        this.page.setPaddingBottom(400);
         if (this.textarea) this.textarea.innerText = '';
         this.updateView(() => {
             if (this.textarea)
@@ -644,6 +642,9 @@ export class AITool extends EventsComponent {
     }
     close() {
         if (this.visible == true) {
+            if (this.page) {
+                this.page.setPaddingBottom()
+            }
             this.fvs.unbind();
             this.visible = false;
             this.status = AIAskStatus.none;
