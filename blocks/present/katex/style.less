@@ -1,12 +1,19 @@
 .sy-block-katex {
     // padding: 4px 8px;
-    border-radius: 4px;
+    border-radius   : 4px;
+    background-color: rgb(251, 251, 250);
 
     &-content {
-        margin         : 26px 0px;
-        display        : flex;
-        justify-content: center;
-        align-items    : center;
+        display       : block;
+        padding-top   : 1em;
+        padding-bottom: 1em;
+        text-align    : center;
+
+        .katex {
+            display    : block;
+            text-align : center;
+            white-space: nowrap;
+        }
     }
 
     &:hover {
@@ -21,9 +28,11 @@
 .sy-block-katex-line {
     border-radius: 4px;
     display      : inline;
+
     &:hover {
         background-color: rgba(55, 53, 47, 0.06);
     }
+
     >.shy-appear-solid {
         display: inline;
     }

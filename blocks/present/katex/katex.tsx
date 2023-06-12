@@ -25,14 +25,19 @@ export class Katex extends Block {
         this.opened = true;
         var old = this.content;
         this.forceUpdate();
-        var newValue = await listenKatexInput({ direction: "bottom", align: 'center', roundArea: Rect.fromEle(this.el) }, this.content, (data) => {
+        var el = this.el.querySelector('.sy-block-katex-content') as HTMLElement;
+        var newValue = await listenKatexInput({
+            direction: "bottom",
+            align: 'center',
+            roundArea: Rect.fromEle(el)
+        }, this.content, (data) => {
             this.content = data;
             this.forceUpdate()
         });
         this.opened = false;
         this.forceUpdate();
         if (newValue) {
-            this.onManualUpdateProps({ cotnent: old }, { content: newValue });
+            await this.onManualUpdateProps({ cotnent: old }, { content: newValue });
             this.renderKatex()
         }
     }
@@ -40,7 +45,9 @@ export class Katex extends Block {
 @view('/katex')
 export class KatexView extends BlockView<Katex>{
     render() {
-        return <div style={this.block.visibleStyle}><div className={'sy-block-katex' + (this.block.opened ? " sy-block-katex-opened" : "")} onMouseDown={e => this.block.open(e)}>
+        return <div style={this.block.visibleStyle}><div
+            className={'sy-block-katex' + (this.block.opened ? " sy-block-katex-opened" : "")}
+            onMouseDown={e => this.block.open(e)}>
             <div className='sy-block-katex-content' dangerouslySetInnerHTML={{ __html: this.block.katexContent }}>
             </div>
         </div>
