@@ -56,7 +56,7 @@ export class Avatar extends React.Component<{
     async mousedown(event: React.MouseEvent) {
         if (this.props.userid && this.props.showCard == true) {
             event.stopPropagation();
-            await useUserCard({ roundArea: Rect.fromEvent(event) }, { user: this.props.user, userid: this.props.userid })
+            await useUserCard({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, { user: this.props.user, userid: this.props.userid })
         }
     }
     render() {

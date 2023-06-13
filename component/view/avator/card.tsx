@@ -40,13 +40,18 @@ export class UserCard extends EventsComponent {
                 this.user = r.data.user as any;
             }
         }
-        this.forceUpdate()
+        this.forceUpdate(() => {
+            this.emit('update')
+        })
     }
 }
 
 export async function useUserCard(pos: PopoverPosition, options?: { user?: UserBasic, userid?: string }) {
     let popover = await PopoverSingleton(UserCard, { frame: true, mask: true });
     let fv = await popover.open(pos);
+    fv.only('update', () => {
+        popover.updateLayout()
+    })
     fv.open(options);
     return new Promise((resolve: (data: {
         text: string,
@@ -56,6 +61,7 @@ export async function useUserCard(pos: PopoverPosition, options?: { user?: UserB
             popover.close();
             resolve(null);
         });
+
         popover.only('close', () => {
             resolve(null)
         });
