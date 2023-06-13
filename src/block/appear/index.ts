@@ -215,7 +215,7 @@ export class AppearAnchor {
         if (typeof sel == 'undefined') sel = window.getSelection();
         if (this.isSolid) {
             var c = this.el;
-            if (offset == 1) {
+            if (offset >= 1) {
                 var cs = c.childNodes;
                 if (cs.length > 0) sel.collapse(cs[cs.length - 1], 0)
                 else sel.collapse(c, 0);

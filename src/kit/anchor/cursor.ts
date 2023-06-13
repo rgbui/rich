@@ -235,11 +235,11 @@ export class AnchorCursor {
             }
             else {
                 forceCloseTextTool()
-                if (this.startAnchor.isSolid) {
-                    this.startAnchor.collapse(this.startOffset)
+                if (this.endAnchor.isSolid) {
+                    this.endAnchor.collapse(this.endOffset)
                 }
                 else {
-                    var cr = this.startAnchor.cacCollapseFocusPos(this.startOffset);
+                    var cr = this.endAnchor.cacCollapseFocusPos(this.endOffset);
                     sel.collapse(cr.node, cr.pos);
                     if (cr.node) {
                         var c = dom(cr.node).closest(g => (g as any) && typeof (g as any).scrollIntoViewIfNeeded == 'function') as any;
