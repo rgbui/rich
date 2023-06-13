@@ -42,7 +42,7 @@ export class ShyMentionView extends BlockView<ShyMention>{
         this.block.page.onReplace(this.block, [{ url: BlockUrlConstant.Text, content: `@${this.username}` }])
     }
     async openUserCard(event: React.MouseEvent) {
-        await useUserCard({ roundArea: Rect.fromEvent(event) }, { userid: this.block.userid });
+        await useUserCard({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, { userid: this.block.userid });
     }
     boxTip: BoxTip;
     username: string = '';
