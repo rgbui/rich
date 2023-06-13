@@ -42,8 +42,10 @@ export function DivInput(props: {
         var f = sel.focusNode;
         if (f instanceof Text && el.contains(f)) {
             var d = f.textContent;
-            var newContent = d.slice(0, sel.focusOffset) + text + d.slice(sel.focusOffset);
+            var pos = sel.focusOffset;
+            var newContent = d.slice(0, pos) + text + d.slice(pos);
             f.textContent = newContent;
+            sel.collapse(f, pos + text.length)
             input()
         }
         else {
