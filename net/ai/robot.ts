@@ -11,7 +11,7 @@ export async function RobotRquest(robot: RobotInfo,
     callback: (msg: string, done?: boolean, content?: string, files?: ResourceArguments[]) => Promise<void>) {
     var user = await channel.query('/query/current/user')
     if (robot.scene == 'wiki') {
-        var text = args.ask + `-<a class='at-user' data-userid='${user.id}'>@${user.name}</a><br/>`;
+        var text = args.ask + `<a class='at-user' data-userid='${user.id}'>@${user.name}</a><br/>`;
         args.robotId = robot.robotId;
         await callback(text + "<span class='typed-print'></span>", false, text);
         try {
@@ -19,7 +19,7 @@ export async function RobotRquest(robot: RobotInfo,
             if (g.data?.contents?.length > 0) {
                 var content = getTemplateInstance(AskTemplate, {
                     prompt: args.ask,
-                    source: g.data.contents[0].content
+                    context: g.data.contents[0].content
                 });
                 await channel.post('/text/ai/stream', {
                     question: content,
@@ -32,6 +32,7 @@ export async function RobotRquest(robot: RobotInfo,
         }
         catch (ex) {
             text += `<p class='error'>回答出错</p>`
+            console.error(ex)
             callback(text, true)
         }
     }
@@ -86,6 +87,7 @@ export async function RobotRquest(robot: RobotInfo,
                 }
             }
             catch (ex) {
+                console.error(ex);
                 if (task.replys[0]?.mime == 'image') {
                     text += `<p class='error'>响应出错</p>`
                     callback(text, true)
@@ -97,6 +99,39 @@ export async function RobotRquest(robot: RobotInfo,
             }
 
         }
+    }
+}
+
+
+
+export async function RobotWikiRequest(
+    robot: RobotInfo,
+    prompt: ArrayOf<RobotInfo['prompts']>,
+    args: Record<string, any>,
+    callback: (msg: string, done?: boolean, content?: string, files?: ResourceArguments[]) => Promise<void>) {
+    var text = '';
+    args.robotId = robot.robotId;
+    await callback(text + "<span class='typed-print'></span>", false, text);
+    try {
+        var g = await channel.get('/query/wiki/answer', args as any);
+        if (g.data?.contents?.length > 0) {
+            var content = getTemplateInstance(prompt.prompt, {
+                ...args.ask,
+                context: g.data.contents[0].content
+            });
+            await channel.post('/text/ai/stream', {
+                question: content,
+                callback(str, done) {
+                    if (typeof str == 'string') text += str;
+                    callback(marked.parse(text + (done ? "" : "<span class='typed-print'></span>")), done, marked.parse(text))
+                }
+            });
+        }
+    }
+    catch (ex) {
+        text += `<p class='error'>回答出错</p>`
+        console.error(ex)
+        callback(text, true)
     }
 }
 
