@@ -62,16 +62,43 @@ export enum RobotApply {
     askWrite = 6,
     selectionAskWrite = 7,
 }
+
 export var RobotApplyOptions = [
     { text: '无', value: RobotApply.none },
     { text: '频道', value: RobotApply.channel },
     { text: '搜索', value: RobotApply.search },
     { text: '拟草稿', value: RobotApply.aDraft },
-    { text: '页面内容总结', value: RobotApply.pageSumit },
-    { text: '页面内容续写', value: RobotApply.pageContinue },
+    { text: '页面总结', value: RobotApply.pageSumit },
+    { text: '页面续写', value: RobotApply.pageContinue },
     { text: '写作', value: RobotApply.askWrite },
     { text: '选中内容处理', value: RobotApply.selectionAskWrite }
 ]
+
+export function GetRobotApplyArgs(apply: RobotApply) {
+    switch (apply) {
+        case RobotApply.channel:
+        case RobotApply.search:
+        case RobotApply.askWrite:
+            return [{ name: 'prompt', input: true, text: '提示', tip: '输入提问' }, { name: 'context', text: '上下文' }]
+            break;
+        case RobotApply.aDraft:
+            return [{ name: 'title', input: true, text: '标题', tip: '输入草稿标题' }, { name: 'context', text: '上下文' }]
+            break;
+        case RobotApply.pageContinue:
+            return [{ name: 'content', input: true, text: '内容', tip: '输入续写的上文' }, { name: 'context', text: '上下文' }]
+            break;
+        case RobotApply.pageSumit:
+            return [{ name: 'content', input: true, text: '内容', tip: '输入正文' }, { name: 'context', text: '上下文' }]
+            break;
+        case RobotApply.selectionAskWrite:
+            return [
+                { name: 'selection', text: '选中的内容', tip: '输入选中的内容' },
+                { name: 'prompt', input: true, text: '提示', tip: '输入提问' },
+                { name: 'context', text: '上下文' }
+            ]
+            break;
+    }
+}
 
 
 export type RobotInfo = UserBasic & {
