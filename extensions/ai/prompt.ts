@@ -13,7 +13,7 @@
 export const AskTemplate = `任务：从依据指定的信息来源回答问题。
 指令：答案应该与指定的信息来源有关联，如果没关联或不确定请回答不知道。
 问题：{prompt}
-信息来源：{source}`
+信息来源：{context}`
 
 export const TheRelevanceOfQuestionsToKnowledge = `任务：判断问题与信息是否关联。
 问题：今天是星期几？
