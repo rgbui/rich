@@ -51,6 +51,29 @@ export type RobotTask = {
     template?: string,
 }
 
+
+export enum RobotApply {
+    none = 0,
+    channel = 1,
+    search = 2,
+    aDraft = 3,
+    pageSumit = 4,
+    pageContinue = 5,
+    askWrite = 6,
+    selectionAskWrite = 7,
+}
+export var RobotApplyOptions = [
+    { text: '无', value: RobotApply.none },
+    { text: '频道', value: RobotApply.channel },
+    { text: '搜索', value: RobotApply.search },
+    { text: '拟草稿', value: RobotApply.aDraft },
+    { text: '页面内容总结', value: RobotApply.pageSumit },
+    { text: '页面内容续写', value: RobotApply.pageContinue },
+    { text: '写作', value: RobotApply.askWrite },
+    { text: '选中内容处理', value: RobotApply.selectionAskWrite }
+]
+
+
 export type RobotInfo = UserBasic & {
     remark?: string,
     basePath?: string,
@@ -60,6 +83,8 @@ export type RobotInfo = UserBasic & {
     tasks?: RobotTask[],
     prompts?: {
         id?: string,
+        createDate?: Date,
+        apply?: RobotApply,
         type?: 'ask' | 'write' | 'polish',
         text: string,
         icon?: IconArguments,
