@@ -6,13 +6,14 @@ import { BlockDisplay } from "../../../src/block/enum";
 import { ResourceArguments } from "../../../extensions/icon/declare";
 import { useOutSideUrlInput } from "../../../extensions/link/outsite.input";
 import { Rect } from "../../../src/common/vector/point";
-import { BookSvg } from "../../../component/svgs";
+import { BookSvg, RefreshSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import "./style.less";
 import { channel } from "../../../net/channel";
 import { autoImageUrl } from "../../../net/element.type";
 import { ActionDirective } from "../../../src/history/declare";
 import { Spin } from "../../../component/view/spin";
+import { ToolTip } from "../../../component/view/tooltip";
 
 @url('/bookmark')
 export class Bookmark extends Block {
@@ -50,13 +51,14 @@ export class Bookmark extends Block {
         this.loading = true;
         this.forceUpdate();
         try {
+            this.updateProps({ bookmarkUrl: url });
             var r = await channel.put('/bookmark/url', { url });
             await this.page.onAction(ActionDirective.onBookMark, async () => {
                 if (isInit) this.page.snapshoot.merge();
                 if (r?.ok) {
                     this.updateProps({ bookmarkInfo: r.data })
                 }
-                this.updateProps({ bookmarkUrl: url });
+
             })
         }
         catch (ex) {
@@ -84,9 +86,19 @@ export class BookmarkView extends BlockView<Bookmark>{
     renderEmpty() {
         if (!this.block.bookmarkInfo) {
             if (this.block.loading) {
-                return <div className="sy-block-bookmark-loading">
-                    <Spin></Spin><span>{this.block.bookmarkUrl}</span>
+                return <div className="sy-block-bookmark-loading flex">
+                    <Spin></Spin>
+                    <span className="text-1 gap-l-10">{this.block.bookmarkUrl}</span>
                 </div>
+            }
+            else if (this.block.bookmarkUrl) {
+                return <a className='sy-block-bookmark-link flex visible-hover' href={this.block.bookmarkUrl} target='_blank' >
+                    <span className="remark flex-auto">{this.block.bookmarkUrl}</span>
+                    <ToolTip overlay={'重新生成书签'}> <span className="flex-fixed size-24 flex-center cursor visible" onClick={e => {
+                        e.stopPropagation();
+                        this.block.onLoadBookmarkByUrl(this.block.bookmarkUrl)
+                    }}><Icon size={20} icon={RefreshSvg}></Icon></span></ToolTip>
+                </a>
             }
             else {
                 return <div className="sy-block-bookmark-empty" onMouseDown={e => this.block.openInputBookmark(e)}>
