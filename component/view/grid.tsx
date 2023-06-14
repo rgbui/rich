@@ -120,7 +120,8 @@ export class Dialoug extends React.Component<{
     children?: React.ReactNode,
     footer?: React.ReactNode,
     style?: CSSProperties,
-    className?: string[] | string
+    className?: string[] | string,
+    contentClassName?: string[] | string,
 }>{
     render(): React.ReactNode {
         var classList: string[] = ['shy-dialoug'];
@@ -130,9 +131,15 @@ export class Dialoug extends React.Component<{
                 if (!classList.includes(c)) classList.push(c)
             })
         }
+        var contentClassList: string[] = ['shy-dialoug-content'];
+        if (Array.isArray(this.props.contentClassName)) {
+            this.props.contentClassName.forEach(c => {
+                contentClassList.push(c);
+            })
+        }
         return <div className={classList.join(" ")} style={this.props.style || {}}>
             {this.props.head && <div className="shy-dialoug-head">{this.props.head}</div>}
-            <div className="shy-dialoug-content">
+            <div className={contentClassList.join(' ')}>
                 {this.props.children}
             </div>
             {this.props.footer && <div className="shy-dialoug-footer">{this.props.footer}</div>}
