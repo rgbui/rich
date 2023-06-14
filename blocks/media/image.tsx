@@ -6,9 +6,7 @@ import { TextArea } from "../../src/block/view/appear";
 import { Rect } from "../../src/common/vector/point";
 import { ResourceArguments } from "../../extensions/icon/declare";
 import { Block } from "../../src/block";
-import ImageError from "../../src/assert/svg/imageError.svg";
-import { LangID } from "../../i18n/declare";
-import { Sp } from "../../i18n/view";
+
 import { MouseDragger } from "../../src/common/dragger";
 
 import { Icon } from "../../component/view/icon";
@@ -17,7 +15,8 @@ import { getImageSize } from "../../component/file";
 import { channel } from "../../net/channel";
 import { autoImageUrl } from "../../net/element.type";
 import { util } from "../../util/util";
-import { PicSvg } from "../../component/svgs";
+import { ImageErrorSvg, PicSvg } from "../../component/svgs";
+import { Spin } from "../../component/view/spin";
 
 @url('/image')
 export class Image extends Block {
@@ -50,8 +49,11 @@ export class Image extends Block {
                 }
             }
             if (this.initialData && this.initialData.file) {
+                this.speed = '0%';
+                this.view.forceUpdate();
                 var d = await channel.post('/ws/upload/file', {
-                    file: this.initialData.file, uploadProgress: (event) => {
+                    file: this.initialData.file,
+                    uploadProgress: (event) => {
                         if (event.lengthComputable) {
                             this.speed = `${util.byteToString(event.total)}${(100 * event.loaded / event.total).toFixed(2)}%`;
                             this.forceUpdate();
@@ -61,7 +63,9 @@ export class Image extends Block {
                 if (d.ok && d.data?.file?.url) {
                     var imgSize = await getImageSize(d.data?.file?.url);
                     var width = this.el.getBoundingClientRect().width;
-                    var per = Math.min(100, parseInt((imgSize.width * 100 / width).toString()));
+                    var per = Math.min(70, parseInt((imgSize.width * 100 / width).toString()));
+                    per = Math.max(30, per);
+                    this.speed = '';
                     await this.onUpdateProps({
                         imageWidthPercent: per,
                         src: { ...d.data?.file }
@@ -141,17 +145,22 @@ export class ImageView extends BlockView<Image>{
     }
     imageWrapper: HTMLDivElement;
     renderEmptyImage() {
+        if (this.block.speed) {
+            return <div className="sy-block-image-empty flex">
+                <Spin size={16}></Spin>
+                <span>上传中:{this.block.speed}</span>
+            </div>
+        }
         return <div className='sy-block-image-empty' onMouseDown={e => this.block.onOpenUploadImage(e)}>
             <Icon size={24} icon={PicSvg}></Icon>
-            <Sp id={LangID.AddImageTip}></Sp>
+            <span>添加图片</span>
         </div>
     }
     renderImage() {
-        return <>{this.isLoadError && <div className='sy-block-image-error'>
-            <ImageError></ImageError>
-            <p className='sy-block-image-error-tip' ><Sp id={LangID.imageErrorLoadTip}></Sp></p>
-            <p className='sy-block-image-error-learn-more'><a><Sp id={LangID.learnMore}></Sp></a></p>
-            <p className='sy-block-image-error-url' >{this.errorUrl}</p>
+        return <>{this.isLoadError && <div className='sy-block-image-error flex r-gap-r-10 text-1'>
+            <Icon icon={ImageErrorSvg}></Icon>
+            <span className="f-14">图片{this.errorUrl}加载失败</span>
+            <span className="f-14 link cursor" onMouseDown={e => this.block.onOpenUploadImage(e)}>重新添加图片</span>
         </div>}
             {!this.isLoadError && <div className='sy-block-image-content-view'>
                 <div className='sy-block-image-content-view-wrapper' ref={e => this.imageWrapper = e} style={{ width: this.block.imageWidthPercent ? this.block.imageWidthPercent + "%" : undefined }}>
