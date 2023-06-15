@@ -42,7 +42,12 @@ export type MenuItem<T = string> = {
     updateMenuPanel?: boolean,
     containerHeight?: number,
     data?: any,
-    placeholder?: string
+    placeholder?: string,
+    userid?:string,
+    /**
+     * 用户的头像size
+     */
+    size?:number
 }
 export enum MenuItemType {
     divide = 1,
@@ -56,5 +61,6 @@ export enum MenuItemType {
     custom = 9,
     container = 10,
     color = 11,
-    gap = 12
+    gap = 12,
+    user=13
 }
