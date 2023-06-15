@@ -94,10 +94,14 @@ export class BookmarkView extends BlockView<Bookmark>{
             else if (this.block.bookmarkUrl) {
                 return <a className='sy-block-bookmark-link flex visible-hover' href={this.block.bookmarkUrl} target='_blank' >
                     <span className="remark flex-auto">{this.block.bookmarkUrl}</span>
-                    <ToolTip overlay={'重新生成书签'}> <span className="flex-fixed size-24 flex-center cursor visible" onClick={e => {
+                    <ToolTip overlay={'重新生成书签'}> <span onMouseDown={e => {
                         e.stopPropagation();
+                        e.preventDefault();
+                    }} className="flex-fixed size-24 flex-center cursor visible" onClick={e => {
+                        e.stopPropagation();
+                        e.preventDefault();
                         this.block.onLoadBookmarkByUrl(this.block.bookmarkUrl)
-                    }}><Icon size={20} icon={RefreshSvg}></Icon></span></ToolTip>
+                    }}><Icon size={18} icon={RefreshSvg}></Icon></span></ToolTip>
                 </a>
             }
             else {
