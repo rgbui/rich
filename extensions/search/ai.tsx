@@ -16,7 +16,7 @@ import { util } from "../../util/util";
 import { SwitchText } from "../../component/view/switch";
 import { SelectBox } from "../../component/view/select/box";
 
-export class SearchBox extends EventsComponent {
+export class AISearchBox extends EventsComponent {
     render() {
         var ws = channel.query('/current/workspace');
         return <div className="w-800 bg-white  round">
@@ -122,9 +122,9 @@ export class SearchBox extends EventsComponent {
     }, 1000)
 }
 
-export async function useSearchBox(options?: { word?: string, isNav?: boolean }) {
+export async function useAISearchBox(options?: { word?: string, isNav?: boolean }) {
     var pos: PopoverPosition = { center: true, centerTop: 100 };
-    let popover = await PopoverSingleton(SearchBox, { mask: true, frame: true, shadow: true, });
+    let popover = await PopoverSingleton(AISearchBox, { mask: true, frame: true, shadow: true, });
     let fv = await popover.open(pos);
     fv.open(options);
     return new Promise((resolve: (p: { id: string, content?: string }) => void, reject) => {
