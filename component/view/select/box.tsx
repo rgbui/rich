@@ -41,7 +41,7 @@ export class SelectBox<T = any> extends React.Component<{
                 if (op) op.checkLabel = true;
             }
             var r = await useSelectMenuItem(
-                { roundArea: Rect.fromEvent(event) },
+                { roundArea: Rect.fromEle(event.currentTarget as HTMLElement) },
                 ms,
                 {
                     width: self.props.dropWidth || 160,
