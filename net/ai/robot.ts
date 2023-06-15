@@ -164,3 +164,34 @@ export async function getWsRobotTasks() {
     }
     return robots;
 }
+
+
+export async function getWsWikiRobots() {
+    var robots: RobotInfo[];
+    var gs = await channel.get('/ws/robots');
+    if (gs.ok) {
+        var rs = await channel.get('/robots/info', { ids: gs.data.list.map(g => g.userid) });
+        if (rs.ok) {
+            robots = rs.data.list;
+            robots = robots.findAll(g => g.scene == 'wiki');
+            // robots.forEach(robot => {
+            //     if (robot.scene == 'wiki') {
+            //         robot.tasks = [
+            //             {
+            //                 id: util.guid(),
+            //                 name: '问题',
+            //                 args: [
+            //                     {
+            //                         id: util.guid(),
+            //                         text: "问题",
+            //                         name: 'ask', type: 'string'
+            //                     }
+            //                 ]
+            //             }
+            //         ]
+            //     }
+            // })
+        }
+    }
+    return robots;
+}

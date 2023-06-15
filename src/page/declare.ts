@@ -65,6 +65,8 @@ export interface LinkPageItem {
         userid: string
     },
     share?: 'net' | 'nas' | 'local';
+    createDate?: Date,
+    editDate?: Date,
     /**
       * 互联网是否公开，如果公开的权限是什么
       */
