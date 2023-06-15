@@ -234,5 +234,9 @@ export var util = {
         const decodedString = decoder.decode(base64Array);
         //console.log(decodedString); // "你好，世界！"
         return decodedString;
+    },
+    getTextareaShowHtml(text: string) {
+        text = text.replace(/\n/g, '<br/>');
+        return text;
     }
 }
