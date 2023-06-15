@@ -7,7 +7,6 @@ export function Switch(props: {
     size?: 'small'
 }) {
     function down(event: React.MouseEvent) {
-
         if (props.disabled !== false) {
             props.onChange(!props.checked)
         }
@@ -15,10 +14,29 @@ export function Switch(props: {
     var classList: string[] = ['shy-switch'];
     if (props.checked) classList.push('checked')
     if (props.disabled) classList.push('disabled')
-    if(props.size=='small')classList.push('shy-switch-small')
+    if (props.size == 'small') classList.push('shy-switch-small')
     return <div style={props.style || {}}
         className={classList.join(" ")}
         onMouseDown={e => down(e)}>
         <em></em>
+    </div>
+}
+
+export function SwitchText(props: {
+    text?: string,
+    checked: boolean,
+    onChange: (checked: boolean) => void,
+    style?: CSSProperties, className?: string | (string[]),
+    disabled?: boolean,
+    size?: 'small',
+    children?: React.ReactNode
+}) {
+    var classList: string[] = ['inline-flex'];
+    var style: CSSProperties = {
+        // display: 'inline-block'
+    }
+    return <div className={classList.join(' ')} style={style}>
+        <label className="gap-r-5">{props.text || props.children}</label>
+        <Switch {...props}></Switch>
     </div>
 }
