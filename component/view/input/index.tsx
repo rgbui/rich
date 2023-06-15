@@ -6,6 +6,7 @@ import "./style.less";
 export class Input extends React.Component<{
     style?: CSSProperties,
     disabled?: boolean,
+    noborder?: boolean,
     value?: string,
     type?: 'text' | 'password' | 'number',
     placeholder?: string,
@@ -20,7 +21,8 @@ export class Input extends React.Component<{
     name?: string,
     size?: 'small' | 'default' | 'larger',
     className?: string | (string[]),
-    onMousedown?: (event: React.MouseEvent) => void
+    onMousedown?: (event: React.MouseEvent) => void,
+    prefix?: React.ReactNode,
 }>{
     private inputEl: HTMLInputElement;
     onClear() {
@@ -51,14 +53,18 @@ export class Input extends React.Component<{
             }
             else if (props.onKeydown) props.onKeydown(e);
         }
-        var classList: string[] = ['shy-input'];
+        var classList: string[] = ['shy-input', 'flex','round-3'];
         if (this.props.size == 'small') classList.push('small')
         else if (this.props.size == 'larger') classList.push('larger')
         if (Array.isArray(this.props.className)) this.props.className.each(c => { classList.push(c) })
         else if (this.props.className) classList.push(this.props.className)
+        if (this.props.noborder) classList.push('shy-input-noborder');
 
         return <div onMouseDown={e => { props.onMousedown && props.onMousedown(e) }} className={classList.join(" ")} style={props.style || {}}>
-            <div className="shy-input-wrapper">
+            {props.prefix && <div className="shy-input-prefix flex-center flex-fixed">
+                {props.prefix}
+            </div>}
+            <div className="shy-input-wrapper flex-auto">
                 <input ref={e => this.inputEl = e} type={props.type || 'text'} defaultValue={props.value || ''}
                     disabled={props.disabled ? true : false}
                     placeholder={props.placeholder}
@@ -69,7 +75,7 @@ export class Input extends React.Component<{
                     name={props.name}
                 ></input>
             </div>
-            {props.clear && this.props.value && <div className="shy-input-clear" onClick={e => this.onClear()}>
+            {props.clear && this.props.value && <div className="shy-input-clear flex-fixed" onClick={e => this.onClear()}>
                 <div className="size-20 flex-center item-hover circle cursor "><Icon size={10} icon={CloseSvg}></Icon></div>
             </div>}
         </div>

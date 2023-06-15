@@ -1,25 +1,23 @@
 .shy-input {
-    display : block;
-    position: relative;
-    width   : 100%;
 
-    &-wrapper {
-        display: block;
-    }
+    width     : 100%;
+    box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
+    background: rgba(242, 241, 238, 0.6);
+
+    &-wrapper {}
 
     input {
-        width        : 100%;
-        font-size    : 14px;
-        line-height  : 26px;
-        height       : 28px;
-        text-indent  : 4px;
-        border-radius: 3px;
-        box-shadow   : rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
-        background   : rgba(242, 241, 238, 0.6);
-        cursor       : text;
-        outline      : none;
-        border       : 0px;
-        box-sizing   : border-box;
+        width           : 100%;
+        font-size       : 14px;
+        line-height     : 26px;
+        height          : 28px;
+        text-indent     : 4px;
+        cursor          : text;
+        outline         : none;
+        border          : 0px;
+        box-sizing      : border-box;
+        box-shadow      : none;
+        background-color: transparent;
 
         &:focus {
             box-shadow: rgba(46 170 220, 0.7) 0px 0px 0px 1px inset, rgba(46 170 220, 0.4) 0px 0px 0px 2px;
@@ -46,14 +44,18 @@
     }
 
     &-clear {
-        position       : absolute;
-        right          : 0px;
-        top            : 0px;
-        bottom         : 0px;
-        display        : flex;
-        justify-content: center;
-        align-items    : center;
-        cursor         : pointer;
+        cursor: pointer;
+    }
+
+    &-noborder {
+        box-shadow      : none;
+        background-color: transparent;
+
+        input {
+            &:focus {
+                box-shadow: none;
+            }
+        }
     }
 }
 
@@ -91,6 +93,7 @@
 
 .shy-div-input {
     outline: none;
+
     &:empty::after {
         content  : attr(data-placeholder);
         font-size: 14px;
