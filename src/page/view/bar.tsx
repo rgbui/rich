@@ -20,7 +20,6 @@ import { UserAvatars } from "../../../component/view/avator/users";
 import { Button } from "../../../component/view/button";
 import { Icon } from "../../../component/view/icon";
 import { Spin } from "../../../component/view/spin";
-import { useSearchBox } from "../../../extensions/search";
 import { channel } from "../../../net/channel";
 import { ElementType } from "../../../net/element.type";
 import { PageLayoutType, getPageIcon, getPageText } from "../declare";
@@ -28,6 +27,7 @@ import { PageDirective } from "../directive";
 import { isMobileOnly } from "react-device-detect";
 import { Avatar } from "../../../component/view/avator/face";
 import { ToolTip } from "../../../component/view/tooltip";
+import { useWsSearch } from "../../../extensions/search";
 
 export class PageBar extends React.Component<{ page: Page }>{
     renderTitle() {
@@ -170,7 +170,7 @@ export class PageBar extends React.Component<{ page: Page }>{
         if (isSign) return <div className="flex r-flex-center r-size-24 r-item-hover r-round r-cursor r-gap-r-10 text-1 gap-r-10">
             {isField && <span onMouseDown={e => this.props.page.onOpenFieldProperty(e)} ><Icon size={18} icon={FieldsSvg}></Icon></span>}
             {isMember && <span onMouseDown={e => this.props.page.openMember(e)} ><Icon size={18} icon={MemberSvg}></Icon></span>}
-            {isSearch && <span onMouseDown={async e => { await useSearchBox({ isNav: true }) }}><Icon size={18} icon={SearchSvg}></Icon></span>}
+            {isSearch && <span onMouseDown={async e => { await useWsSearch() }}><Icon size={18} icon={SearchSvg}></Icon></span>}
             {isPublish && <span onMouseDown={e => this.props.page.onOpenPublish(e)} ><Icon size={18} icon={PublishSvg}></Icon></span>}
             {isContextMenu && <span onMouseDown={e => this.props.page.onPageContextmenu(e)} ><Icon size={18} icon={DotsSvg}></Icon></span>}
             {!isCanEdit && ws.access == 0 && !ws.isMember && <span className="size-30 gap-r-30"><Avatar size={32} userid={user.id}></Avatar></span>}

@@ -1,132 +1,170 @@
-import lodash from "lodash";
 import React from "react";
 import { EventsComponent } from "../../component/lib/events.component";
-import { Divider } from "../../component/view/grid";
-import { Icon } from "../../component/view/icon";
-import { Input } from "../../component/view/input";
 import { channel } from "../../net/channel";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
 import "./style.less";
-import { LinkPageItem, getPageIcon, getPageText } from "../../src/page/declare";
-import { Spin } from "../../component/view/spin";
-import { SearchSvg } from "../../component/svgs";
-import { SearchListType } from "../../component/types";
+import { Textarea } from "../../component/view/input/textarea";
+import { Button } from "../../component/view/button";
+import { Avatar } from "../../component/view/avator/face";
+import { UserBox } from "../../component/view/avator/user";
 import { util } from "../../util/util";
-import { SwitchText } from "../../component/view/switch";
-import { SelectBox } from "../../component/view/select/box";
+import { RobotApply, RobotInfo } from "../../types/user";
+import { marked } from "marked";
+import { AskTemplate, getTemplateInstance } from "../ai/prompt";
+import { Divider } from "../../component/view/grid";
+import { getWsWikiRobots } from "../../net/ai/robot";
+import { DownSvg, SearchSvg } from "../../component/svgs";
+import { Icon } from "../../component/view/icon";
+import { useSelectMenuItem } from "../../component/view/menu";
+import { Rect } from "../../src/common/vector/point";
+import { MenuItemType } from "../../component/view/menu/declare";
+import { ToolTip } from "../../component/view/tooltip";
+import { useSearchBox } from "./keyword";
 
 export class AISearchBox extends EventsComponent {
-    render() {
-        var ws = channel.query('/current/workspace');
-        return <div className="w-800 bg-white  round">
-            <div className="padding-10">
-                <Input clear noborder
-                    prefix={<span className="flex cursor">
-                        <span className="flex-center size-20"><Icon className={'text-1'} size={18} icon={SearchSvg}></Icon></span>
-                    </span>}
-                    size='larger'
-                    onClear={() => { this.searchList.word = ''; this.onForceSearch() }}
-                    placeholder={`在 ${ws.text || '空间'} 中搜索`}
-                    value={this.searchList.word}
-                    onEnter={e => { this.searchList.word = e; this.onForceSearch() }}
-                    onChange={e => { this.searchList.word = e; this.onSearch() }} ></Input>
-            </div>
-            {this.searchList.word && <><Divider></Divider>
-                <div className="flex f-12 remark padding-w-10 padding-t-5">
-                    <SwitchText className={'flex-fixed'} checked={this.searchList.isOnlySearchTitle} onChange={e => {
-                        this.searchList.isOnlySearchTitle = e;
-                        this.onForceSearch()
-                    }}>仅区配标题</SwitchText>
-                    <span className="flex-auto flex-end">
-                        <span className="gap-r-5">编辑时间</span>
-                        <SelectBox inline value={this.searchList.editDate} onChange={e => { this.searchList.editDate = e; this.onForceSearch() }} options={[{ text: '降序', value: -1 }, { text: '升序', value: 1 }]}></SelectBox>
-                    </span>
-                </div>
-                <div className="padding-h-10 overflow-y max-h-300 min-h-120">
-                    {this.searchList.loading && <Spin block></Spin>}
-                    {!this.searchList.loading && this.searchList.word && this.renderList()}
-                </div>
-            </>}
-        </div>
-    }
-    renderList() {
-        if (this.searchList.list.length == 0 && this.searchList.pages.length == 0) return <div className="h-30 flex-center remark">没有搜到相关的内容</div>
-        if (this.searchList.pages?.length > 0 && this.searchList.list.length == 0) {
-            return this.searchList.pages.map(r => {
-                return <div key={r.id} className="padding-10 item-hover round cursor" onMouseDown={e => this.onSelect(r)}>
-                    <div className="flex">
-                        <span className="flex-fixed flex-line flex-center size-20 round text gap-r-5"><Icon size={16} icon={getPageIcon(r)}></Icon></span>
-                        <span className="text f-14 flex-auto">{getPageText(r)}</span>
-                        <span className="flex-fixed remark f-14">{util.showTime(r.editDate || r.createDate)}</span>
+    renderMessages() {
+        return this.messages.map(msg => {
+            return <div key={msg.id}>
+                <UserBox userid={msg.userid}>{(user) => {
+                    return <div className="flex flex-top gap-h-10">
+                        <div className="flex-fixed gap-r-10">
+                            <Avatar size={30} user={user}></Avatar>
+                        </div>
+                        <div className="flex-atuo">
+                            <div className="flex">
+                                <span className="flex-fixed">{user.name}</span>
+                                <span className="flex-auto gap-l-10 remark">{util.showTime(msg.date)}</span>
+                            </div>
+                            <div dangerouslySetInnerHTML={{ __html: msg.content }}>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            })
-        }
-        return this.searchList.list.map(r => {
-            return <div key={r.id} className="padding-10 item-hover round cursor" onMouseDown={e => this.onSelect(r)}>
-                <div className="flex">
-                    <span className="flex-line flex-center size-20 round text gap-r-5"><Icon size={16} icon={getPageIcon(r)}></Icon></span>
-                    <span className="text f-14">{getPageText(r)}</span>
-                </div>
-                <div className="remark f-14">{r.content}</div>
+                }}</UserBox>
             </div>
         })
     }
-    el: HTMLElement;
-    isNav: boolean = false;
-    async open(options?: { word?: string, isNav?: boolean }) {
-        if (options?.word) this.searchList.word = options?.word;
-        else this.searchList.word = '';
-        if (options?.isNav) this.isNav = true;
-        else this.isNav = false;
-        if (this.searchList.word) {
-            await this.onForceSearch()
+    async openSearch(event: React.MouseEvent) {
+        this.emit('close');
+        await channel.act('/cache/set', { key: 'search-mode', value: 'keyword' })
+        useSearchBox();
+    }
+    render() {
+        return <div className="w-800 bg-white  round flex flex-col flex-full">
+            <div className="padding-w-10 flex r-gap-r-10 padding-h-5">
+                {this.robotId && <Avatar size={30} userid={this.robotId}></Avatar>}
+                <span className="remark flex-auto text-overflow">{this.robot?.slogan || (this.robot?.remark || '').slice(0, 30) || '语义搜索'}</span>
+                <span className="flex-fixed">
+                    <ToolTip overlay={'切换成关键词搜索'}>   <span
+                        onMouseDown={e => this.openSearch(e)}
+                        className="size-24 flex-center item-hover cursor round"><Icon
+                            size={20}
+                            icon={SearchSvg}
+                        ></Icon></span></ToolTip>
+
+                </span>
+            </div>
+            <Divider></Divider>
+            <div className="padding-w-10 min-h-120 overflow-y" ref={e => this.scrollEl = e}>
+                {!this.robotId && <div className="remark flex-center gap-h-30 ">无AI机器人,了解<a href='https://help.shy.live/page/1075' className="remark underline" target="_blank">如何训练自已的机器人</a></div>}
+                {this.renderMessages()}
+            </div>
+            <Divider></Divider>
+            <div className="flex flex-top padding-w-10 gap-h-10">
+                <span className="flex-fixed flex" onMouseDown={e => this.changeRobot(e)}>
+                    {this.robotId && <Avatar size={30} userid={this.robotId}></Avatar>}
+                    <Icon className={'gap-l-5'} size={12} icon={DownSvg}></Icon>
+                </span>
+                <div className="flex-auto gap-w-10"><Textarea value={this.prompt} onChange={e => this.prompt = e} onEnter={e => this.send(e, this.button)} style={{ height: 60 }}></Textarea></div>
+                <Button ref={e => this.button = e} onClick={(e, b) => this.send(e, b)} className="flex-fixed">发送</Button>
+            </div>
+        </div>
+    }
+    button: Button;
+    textarea: Textarea;
+    scrollEl: HTMLElement;
+    prompt: string = '';
+    robots: RobotInfo[] = [];
+    robotId: string = '';
+    get robot() {
+        return this.robots.find(g => g.robotId == this.robotId);
+    }
+    async send(event: React.MouseEvent, b: Button) {
+        try {
+            var self = this;
+            b.loading = true;
+            var prompt = this.prompt;
+            this.prompt = '';
+            var u = channel.query('/query/current/user');
+            var sender = { id: util.guid(), userid: u.id, date: new Date(), content: prompt }
+            this.messages.push(sender)
+            this.forceUpdate();
+            if (this.scrollEl) {
+                this.scrollEl.scrollTop = this.scrollEl.scrollHeight;
+            }
+            var cb = { id: util.guid(), userid: this.robot.robotId, date: new Date(), content: '' };
+            this.messages.push(cb);
+            this.forceUpdate();
+            var g = await channel.get('/query/wiki/answer', { robotId: this.robot.robotId, ask: prompt });
+            if (g.data?.contents?.length > 0) {
+                var pro = (this.robot?.prompts || []).find(g => g.apply == RobotApply.search);
+                var text = '';
+                cb.content = `<span class='typed-print'></span>`;
+                var content = getTemplateInstance(pro ? pro.prompt : AskTemplate, {
+                    prompt: prompt,
+                    context: g.data.contents[0].content
+                });
+                this.forceUpdate();
+                await channel.post('/text/ai/stream', {
+                    question: content,
+                    callback(str, done) {
+                        console.log(str, done);
+                        if (typeof str == 'string') text += str;
+                        cb.content = marked.parse(text + (done ? "" : "<span class='typed-print'></span>"));
+                        self.forceUpdate(() => {
+                            var el = document.querySelector('.typed-print');
+                            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                        });
+                    }
+                });
+            }
         }
+        catch (ex) {
+            console.error(ex);
+        }
+        finally {
+            b.loading = false;
+        }
+    }
+    async changeRobot(event: React.MouseEvent) {
+        var r = await useSelectMenuItem({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, [
+            ...this.robots.map(r => {
+                return {
+                    type: MenuItemType.user,
+                    userid: r.robotId,
+                    size: 24
+                }
+            })
+        ]);
+        if (r) {
+            console.log(r.item.userid);
+            this.robotId = r.item.userid;
+        }
+    }
+    messages: { id: string, userid: string, date: Date, content: string }[] = [];
+    el: HTMLElement;
+    async open() {
+        this.robots = await getWsWikiRobots();
+        this.robotId = this.robots[0]?.robotId;
         this.forceUpdate();
     }
-    async onSelect(item: LinkPageItem) {
-        if (this.isNav == true) {
-            channel.air('/page/open', { item: item.id });
-        }
-        this.emit('save', item);
-    }
-    searchList: SearchListType<{ id: string, creater: string, score?: string, title?: string, content: string }, { isOnlySearchTitle?: boolean, editDate: number, pages: LinkPageItem[] }> = { editDate: -1, isOnlySearchTitle: false, loading: false, list: [], pages: [], total: 0, page: 1, size: 20 };
-    onForceSearch = async () => {
-        if (this.searchList.word) {
-            this.searchList.loading = true;
-            this.forceUpdate();
-            try {
-                var r = await channel.get('/ws/search', {
-                    word: this.searchList.word,
-                    editDate: this.searchList.editDate,
-                    isOnlySearchTitle: this.searchList.isOnlySearchTitle
-                });
-                if (r.ok) {
-                    this.searchList = Object.assign(this.searchList, r.data);
-                    if (!Array.isArray(this.searchList.pages)) this.searchList.pages = [];
-                }
-            }
-            catch (e) {
-                console.error(e);
-            }
-            finally {
-                this.searchList.loading = false;
-                this.forceUpdate();
-            }
-        }
-        else this.forceUpdate()
-    }
-    onSearch = lodash.debounce(async () => {
-        this.onForceSearch();
-    }, 1000)
 }
 
-export async function useAISearchBox(options?: { word?: string, isNav?: boolean }) {
+export async function useAISearchBox() {
     var pos: PopoverPosition = { center: true, centerTop: 100 };
     let popover = await PopoverSingleton(AISearchBox, { mask: true, frame: true, shadow: true, });
     let fv = await popover.open(pos);
-    fv.open(options);
+    fv.open();
     return new Promise((resolve: (p: { id: string, content?: string }) => void, reject) => {
         fv.only('save', (value) => {
             popover.close();
