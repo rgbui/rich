@@ -8,7 +8,7 @@
  * pro 正式版
  */
 declare var MODE: 'pro' | 'dev' | 'beta';
-declare var ASSERT_URL:string;
+declare var ASSERT_URL: string;
 type ArrayOf<T> = T extends (infer p)[] ? p : never;
 
 type SvgrComponent = React.StatelessComponent<React.SVGAttributes<SVGElement>>
@@ -41,7 +41,36 @@ declare module "*.json" {
  * 自动在HTMLElement上面申明一个接收拖放元素的函数
  */
 interface HTMLElement {
-  shy_drop_move?: (type: string, data: any,event:MouseEvent) => void;
-  shy_drop_over?: (type: string, data: any,event:MouseEvent) => void;
-  shy_end?: (event:MouseEvent) => void;
+  shy_drop_move?: (type: string, data: any, event: MouseEvent) => void;
+  shy_drop_over?: (type: string, data: any, event: MouseEvent) => void;
+  shy_end?: (event: MouseEvent) => void;
+}
+
+
+
+/**
+ * 申明一个全局的toast ，主要是对一些通知进行报警
+ */
+interface Window {
+  Toast: {
+    error(msg: string);
+    warn(msg: string);
+    success(msg: string);
+  },
+  isAuth?: boolean,
+  shyConfig?: {
+    mode: 'pro' | 'dev' | 'beta' | 'desktop',
+    isPro: boolean,
+    isUserWs: boolean,
+    isBeta: boolean,
+    isDev: boolean,
+    version: string,
+    isWeb: boolean,
+    isPc: boolean,
+    isMobile: boolean,
+    isServerSide: boolean,
+    platform: 'web' | 'desktop' | 'mobile' | "server-side",
+    guid(): string,
+    isOnline: boolean
+  }
 }

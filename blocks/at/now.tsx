@@ -23,6 +23,12 @@ export class ShyNowDate extends Block {
             this.time = null;
         }
     }
+    async getHtml() {
+        return `<time></time>`
+    }
+    async getMd() {
+        return `@now`;
+    }
 }
 @view('/now/date')
 export class ShyNowDateView extends BlockView<ShyNowDate>{

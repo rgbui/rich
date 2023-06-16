@@ -22,7 +22,10 @@ export class ShyMention extends Block {
     userid: string = '';
     display = BlockDisplay.inline;
     async getHtml() {
-        return `<a class='shy-user' data-userid='${this.userid}'>${(this.view as any)?.username}</a>`
+        return `<a class='shy-user' data-userid='${this.userid}'>@${(this.view as any)?.username}</a>`
+    }
+    async getMd() {
+        return `@${(this.view as any)?.username}`;
     }
 }
 @view('/user/mention')

@@ -40,6 +40,9 @@ export class ShyDate extends Block {
     async getHtml() {
         return `<time datetime="${dayjs(this.date).format('YYYY-MM-DD')}">@${dayjs(this.date).format('YYYY-MM-DD')}</time>`
     }
+    async getMd() {
+        return `@${dayjs(this.date).format('YYYY-MM-DD')}`;
+    }
 }
 @view('/mention/date')
 export class ShyDateView extends BlockView<ShyDate>{
