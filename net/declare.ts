@@ -151,6 +151,7 @@ export interface ChannelPostMapUrls {
     "/phone/sms/code":{args:{phone:string},returnType:Promise<{ok:boolean,warn:string,data:{success:boolean,code?:string}}>},
 	"/email/send/code":{args:{email:string},returnType:Promise<SockResponse<{code?:string}>>},
 	"/user/upload/file":{args:{file:File,uploadProgress: (event: ProgressEvent) => void},returnType:Promise<SockResponse<{file:{url:string}}>>},
+	"/robot/doc/embedding":{args:{id:string},returnType:Promise<SockResponse<{totalCount:number}>>},
 	"/text/ai":{args:{input: string, model?: string, uid?: string, options?: {isSession?: boolean,sessionTimeOut?: number, parameters?: Record<string, any>}},returnType:Promise<SockResponse<{message:string}>>},
 	"/text/ai/stream":{args:{question: string, model?: string, uid?: string, options?: Record<string, any>,callback:(str:string,done?:boolean)=>void},returnType:Promise<SockResponse<void>>},
 	"/text/edit":{args:{code: boolean, input: string, question: string, options: any},returnType:Promise<SockResponse<{content:string}>>},

@@ -36,7 +36,7 @@ import {
 } from "../../../component/svgs";
 import { usePageLayout } from "../../../extensions/layout";
 import { CopyText } from "../../../component/copy";
-import { ShyAlert } from "../../../component/lib/alert";
+import { CloseShyAlert, ShyAlert } from "../../../component/lib/alert";
 import { channel } from "../../../net/channel";
 import { Confirm } from "../../../component/lib/confirm";
 import { usePageHistoryStore } from "../../../extensions/history";
@@ -443,11 +443,26 @@ export class PageContextmenu {
         channel.air('/page/remove', { item: this.pageInfo.id });
     }
     async onSyncAi(this: Page, robotId: string, isTurn?: boolean) {
-        await channel.put('/sync/wiki/doc', {
-            robotId,
-            elementUrl: this.elementUrl,
-            pageText: this.getPageDataInfo()?.text,
-            contents: [{ id: util.guid(), content: await this.getPlain() }]
-        })
+        ShyAlert('正在同步中...', 'warn', isTurn ? 1000 * 60 * 10 : 1000 * 60 * 2);
+        try {
+            var r = await channel.put('/sync/wiki/doc', {
+                robotId,
+                elementUrl: this.elementUrl,
+                pageText: this.getPageDataInfo()?.text,
+                contents: [{ id: util.guid(), content: await this.getMd() }]
+            })
+            if (isTurn) {
+                if (r.ok) {
+                    ShyAlert('正在微调中...', 'warn', isTurn ? 1000 * 60 * 10 : 1000 * 60 * 2);
+                    await channel.post('/robot/doc/embedding', { id: r.data.doc.id })
+                }
+            }
+        }
+        catch (ex) {
+            this.onError(ex)
+        }
+        finally {
+            CloseShyAlert()
+        }
     }
 }
