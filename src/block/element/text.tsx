@@ -101,6 +101,25 @@ export class TextContent extends Block {
             return `<span>${this.content}</span>`
         }
     }
+
+    async getMd() {
+        if (this.link) {
+            if (!this.link.url) {
+                return `${this.content}`
+            }
+            return `[${this.content}](${this.link.url})`
+        }
+        else if (this.refLinks?.length > 0) {
+            var pageId = this.link?.pageId || this.refLinks[0].pageId;
+            var ws = channel.query('/current/workspace')
+            var url = (ws?.url || "") + "/page/" + pageId;
+            return `[${this.content}](${url})`
+        }
+        else if (this.code) return `\`${this.content}\``
+        else {
+            return `${this.content}`
+        }
+    }
 }
 @view(BlockUrlConstant.Text)
 export class TextContentView extends BlockView<TextContent>{
