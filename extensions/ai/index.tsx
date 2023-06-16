@@ -37,7 +37,9 @@ import { CanSupportFeature, PayFeatureCheck } from "../../component/pay";
 export type AIToolType = {
     block?: Block,
     blocks?: Block[],
-    pos?: PopoverPosition
+    pos?: PopoverPosition,
+    ask?: string,
+    isRun?: boolean
 }
 
 export enum AIAskStatus {
@@ -506,7 +508,7 @@ export class AITool extends EventsComponent {
         if (options.block) this.status = AIAskStatus.willAsk;
         else this.status = AIAskStatus.selectionWillAsk;
         this.visible = true;
-        this.ask = '';
+        this.ask = options.ask || '';
         this.anwser = '';
         this.options = options;
         this.page.setPaddingBottom(400);
@@ -514,6 +516,9 @@ export class AITool extends EventsComponent {
         this.updateView(() => {
             if (this.textarea)
                 this.textarea.focus()
+            if (options.isRun) {
+                this.onEnter()
+            }
         })
     }
     async aiText(options?: { prompt?: string, ask?: string }) {

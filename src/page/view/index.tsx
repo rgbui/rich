@@ -11,6 +11,7 @@ import { channel } from "../../../net/channel";
 import { PageCover } from "./cover";
 import { Icon } from "../../../component/view/icon";
 import {
+    AiStartSvg,
     BoardIconSvg,
     BoardToolFrameSvg,
     CollectTableSvg,
@@ -22,6 +23,7 @@ import { ActionDirective } from "../../history/declare";
 import { Block } from "../../block";
 import { PageDirective } from "../directive";
 import { PageBar } from "./bar";
+import { useAITool } from "../../../extensions/ai";
 
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
@@ -146,7 +148,7 @@ export class PageView extends Component<{ page: Page }>{
         delete this.el.shy_end;
         if (this.scrollDiv) this.scrollDiv.removeEventListener('scroll', this.scroll);
     }
-    async onPageTurnLayout(type: PageLayoutType) {
+    async onPageTurnLayout(type: PageLayoutType, config?: { useAi?: boolean }) {
         if (type == PageLayoutType.doc) {
             await this.page.onPageTurnLayout(type, async () => {
                 var lastBlock = this.page.findReverse(g => g.isBlock);
@@ -159,6 +161,12 @@ export class PageView extends Component<{ page: Page }>{
                 }
                 newBlock.mounted(() => {
                     this.page.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true });
+                    var title = this.page.getPageDataInfo()?.text;
+                    useAITool({
+                        block: newBlock,
+                        isRun: true,
+                        ask: (title ? "以" + title + "为主题，" : "") + '拟一份草稿，不少于1000字'
+                    })
                 })
             });
         }
@@ -169,6 +177,7 @@ export class PageView extends Component<{ page: Page }>{
         return <div className="shy-page-view-template-picker" style={this.page.getScreenStyle()}>
             <div className="shy-page-view-template-picker-tip">回车开始编辑，或者从下方选择</div>
             <div className="shy-page-view-template-picker-items">
+                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc, { useAi: true })}><Icon size={20} icon={AiStartSvg} ></Icon><span>用AI拟一份草稿</span></a>
                 <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={20} icon={PageSvg} ></Icon><span>页面</span></a>
                 <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.db)}><Icon size={20} icon={CollectTableSvg} ></Icon><span>表格</span></a>
                 <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.docCard)}><Icon size={20} icon={DocCardsSvg} ></Icon><span>宣传页</span></a>

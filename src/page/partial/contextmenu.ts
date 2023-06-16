@@ -447,7 +447,7 @@ export class PageContextmenu {
         try {
             var r = await channel.put('/sync/wiki/doc', {
                 robotId,
-                elementUrl: this.elementUrl,
+                elementUrl: this.customElementUrl,
                 pageText: this.getPageDataInfo()?.text,
                 contents: [{ id: util.guid(), content: await this.getMd() }]
             })
