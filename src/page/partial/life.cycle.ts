@@ -212,6 +212,9 @@ export class Page$Cycle {
     async getPlain(this: Page) {
         return (await this.views.asyncMap(async v => await v.getPlain())).join(" ");
     }
+    async getMd(this: Page) {
+        return (await this.views.asyncMap(async v => await v.getMd())).join(" \n");
+    }
     async getThumb(this: Page) {
         var r = this.find(g => g.url == BlockUrlConstant.Image && ((g as Image).src ? true : false));
         if (r) {
