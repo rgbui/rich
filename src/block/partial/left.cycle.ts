@@ -320,7 +320,19 @@ export class Block$LifeCycle {
         var text = '';
         for (let b in this.blocks) {
             if (this.allBlockKeys.some(s => s == b))
-                text += await this.blocks[b].asyncMap(async x => await x.getChildsHtml());
+                text += await this.blocks[b].asyncMap(async x => await x.getHtml());
+        };
+        return text;
+    }
+    async getMd(this: Block) {
+        var text = '';
+        return text + await this.getChildsMd();
+    }
+    async getChildsMd(this: Block) {
+        var text = '';
+        for (let b in this.blocks) {
+            if (this.allBlockKeys.some(s => s == b))
+                text += await this.blocks[b].asyncMap(async x => await x.getMd());
         };
         return text;
     }

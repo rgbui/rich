@@ -7,6 +7,7 @@ import { BlockDirective } from "../../block/enum";
 import { Point, Rect } from "../../common/vector/point";
 import { PageLayoutType } from "../declare";
 import {
+    AiStartSvg,
     BookSvg,
     CardBackgroundFillSvg,
     CommentSvg,
@@ -24,6 +25,8 @@ import {
     NoteSvg,
     OutlineSvg,
     PlatteSvg,
+    RefreshOneSvg,
+    RefreshSvg,
     ThemeSvg,
     TrashSvg,
     UndoSvg,
@@ -48,6 +51,8 @@ import { Field } from "../../../blocks/data-grid/schema/field";
 import { GetFieldFormBlockInfo } from "../../../blocks/data-grid/element/service";
 import { ElementType } from "../../../net/element.type";
 import { FieldType } from "../../../blocks/data-grid/schema/type";
+import { getWsWikiRobots } from "../../../net/ai/robot";
+import { util } from "../../../util/util";
 
 export class PageContextmenu {
     async onGetContextMenus(this: Page) {
@@ -109,6 +114,7 @@ export class PageContextmenu {
     }
     async onPageContextmenu(this: Page, event: React.MouseEvent) {
         var items: MenuItem<BlockDirective | string>[] = [];
+        var robots = await getWsWikiRobots();
         if (this.pageLayout.type == PageLayoutType.doc) {
             items = [
                 { name: 'smallText', text: '小字号', checked: this.smallFont ? true : false, type: MenuItemType.switch },
@@ -119,9 +125,9 @@ export class PageContextmenu {
                     text: '小部件',
                     icon: FieldsSvg,
                     childs: [
-                        { name: 'onlyDisplayContent', text: '显示标题', type: MenuItemType.switch, checked: this.onlyDisplayContent ? false : true, icon: HSvg },
-                        { name: 'refPages', text: "显示引用", visible: [ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type) ? false : true, icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
-                        { name: 'showComment', text: "显示评论", icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
+                        { name: 'onlyDisplayContent', text: '标题', type: MenuItemType.switch, checked: this.onlyDisplayContent ? false : true, icon: HSvg },
+                        { name: 'refPages', text: "引用", visible: [ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type) ? false : true, icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
+                        { name: 'showComment', text: "评论", icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                     ]
                 },
                 {
@@ -131,6 +137,22 @@ export class PageContextmenu {
                     childs: [
                         { icon: GlobalLinkSvg, name: 'isWeb', text: '网页', checkLabel: this.isPageContent ? false : true },
                         { icon: NoteSvg, name: 'isContent', text: '内容', checkLabel: this.isPageContent ? true : false }
+                    ]
+                },
+                {
+                    icon: AiStartSvg,
+                    text: "AI语料库",
+                    childs: [
+                        ...robots.map(robot => {
+                            return {
+                                type: MenuItemType.user,
+                                userid: robot.robotId,
+                                childs: [
+                                    { name: 'ai-sync', value: robot.robotId, icon: RefreshSvg, text: '同步' },
+                                    { name: 'ai-sync-turn', value: robot.robotId, icon: RefreshOneSvg, text: '同步且训练' },
+                                ]
+                            }
+                        })
                     ]
                 },
                 // { name: 'border', text: "内容", checked: this.isPageContent },
@@ -163,8 +185,8 @@ export class PageContextmenu {
                     text: '自定义页面',
                     icon: ComponentsSvg,
                     childs: [
-                        { name: 'onlyDisplayContent', text: '显示标题', type: MenuItemType.switch, checked: this.onlyDisplayContent ? false : true, icon: NoteSvg },
-                        { name: 'showComment', text: "显示评论", icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
+                        { name: 'onlyDisplayContent', text: '标题', type: MenuItemType.switch, checked: this.onlyDisplayContent ? false : true, icon: NoteSvg },
+                        { name: 'showComment', text: "评论", icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                     ]
                 },
                 { name: 'lock', text: this.isCanEdit ? "退出编辑" : '进入编辑', icon: this.isCanEdit ? LogoutSvg : EditSvg },
@@ -323,7 +345,8 @@ export class PageContextmenu {
             }
             else if (r.item.name == 'undo') {
                 this.onUndo();
-            } else if (r.item.name == 'redo') {
+            }
+            else if (r.item.name == 'redo') {
                 this.onRedo();
             }
             else if (r.item.name == 'history') {
@@ -334,6 +357,12 @@ export class PageContextmenu {
             }
             else if (r.item.name == 'isWeb' || r.item.name == 'isContent') {
                 this.onUpdateProps({ isPageContent: r.item.name == 'isWeb' ? false : true }, true)
+            }
+            else if (r.item.name == 'ai-sync-turn') {
+                this.onSyncAi(r.item.value, true);
+            }
+            else if (r.item.name == 'ai-sync') {
+                this.onSyncAi(r.item.value, false);
             }
         }
     }
@@ -412,5 +441,13 @@ export class PageContextmenu {
     }
     async onPageRemove(this: Page) {
         channel.air('/page/remove', { item: this.pageInfo.id });
+    }
+    async onSyncAi(this: Page, robotId: string, isTurn?: boolean) {
+        await channel.put('/sync/wiki/doc', {
+            robotId,
+            elementUrl: this.elementUrl,
+            pageText: this.getPageDataInfo()?.text,
+            contents: [{ id: util.guid(), content: await this.getPlain() }]
+        })
     }
 }
