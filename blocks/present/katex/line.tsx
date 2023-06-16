@@ -49,6 +49,12 @@ export class KatexLine extends Block {
             })
         });
     }
+    async getHtml() {
+        return `<span class='sy-block-katex'>${this.content}</span>`
+    }
+    async getMd() {
+        return ` ${this.content} `
+    }
 }
 @view('/katex/line')
 export class KatexView extends BlockView<KatexLine>{

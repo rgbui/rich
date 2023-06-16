@@ -36,7 +36,10 @@ export class Link extends Block {
         event.preventDefault();
         channel.air('/page/open', { item: this.pageId });
     }
-
+    async getMd() {
+        var ws = channel.query('/current/workspace')
+        return `[${this.pageInfo?.text}](${ws.url + '/page/' + this.pageInfo?.sn})  `
+    }
 }
 @view('/link')
 export class LinkView extends BlockView<Link>{

@@ -43,12 +43,23 @@ export class Quote extends TextSpan {
     }
     async getHtml() {
         var quote = '';
-        if (this.childs.length > 0) quote = `<quote>${(await this.childs.asyncMap(async c => c.getHtml())).join('')}</quote>`
+        if (this.childs.length > 0) quote = `<quote>${(await this.childs.asyncMap(async c => await c.getHtml())).join('')}</quote>`
         else quote = `<quote>${this.content}</quote>`;
         if (this.subChilds.length > 0) {
             quote += await (await this.childs.asyncMap(async c => c.getHtml())).join('')
         }
         return quote;
+    }
+    async getMd() {
+        var ps: string[] = [];
+        if (this.childs.length > 0) ps.push(`>  ` + (await this.childs.asyncMap(async c => { await c.getMd() })).join(""))
+        else ps.push('>  ' + this.content)
+        if (this.subChilds.length > 0) {
+            for (let s of this.subChilds) {
+                ps.push('>> ' + await s.getMd())
+            }
+        }
+        return ps.join('  ');
     }
 }
 @view('/quote')

@@ -80,6 +80,9 @@ export class Bookmark extends Block {
             return this.bookmarkInfo.title + (this.bookmarkInfo.description || '')
         else return '';
     }
+    async getMd() {
+        return `[${this.bookmarkInfo.title}](${this.bookmarkUrl})  `
+    }
 }
 @view('/bookmark')
 export class BookmarkView extends BlockView<Bookmark>{

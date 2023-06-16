@@ -43,6 +43,9 @@ export class Title extends Block {
     get isCanEmptyDelete() {
         return false
     }
+    async getMd() {
+        return `# ${this.page.getPageDataInfo()?.text}  `
+    }
 }
 @view('/title')
 export class TitleView extends BlockView<Title>{

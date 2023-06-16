@@ -15,6 +15,9 @@ export class Measure extends Block {
     async getHtml() {
         return `<progress value='${this.value}'></progress>`
     }
+    async getMd() {
+        return `-----------${this.value}%`
+    }
 }
 @view('/measure')
 export class MeasureView extends BlockView<Measure>{

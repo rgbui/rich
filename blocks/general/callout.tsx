@@ -53,6 +53,17 @@ export class Callout extends TextSpan {
         }
         return quote;
     }
+    async getMd() {
+        var ps: string[] = [];
+        if (this.childs.length > 0) ps.push(`>  ` + (await this.childs.asyncMap(async c => { await c.getMd() })).join(""))
+        else ps.push('>  ' + this.content)
+        if (this.subChilds.length > 0) {
+            for (let s of this.subChilds) {
+                ps.push('>> ' + await s.getMd())
+            }
+        }
+        return ps.join('  ');
+    }
     async onChangeIcon(e: React.MouseEvent) {
         e.stopPropagation();
         var icon = await useIconPicker({ roundArea: Rect.fromEvent(e) },this.calloutIcon);

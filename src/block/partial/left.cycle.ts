@@ -325,16 +325,17 @@ export class Block$LifeCycle {
         return text;
     }
     async getMd(this: Block) {
-        var text = '';
+        var text = this.content || '';
         return text + await this.getChildsMd();
     }
-    async getChildsMd(this: Block) {
-        var text = '';
+    async getChildsMd(this: Block, isLine?: boolean) {
+        var ps: string[] = [];
         for (let b in this.blocks) {
-            if (this.allBlockKeys.some(s => s == b))
-                text += await this.blocks[b].asyncMap(async x => await x.getMd());
+            if (this.allBlockKeys.some(s => s == b)) {
+                ps.push(...await this.blocks[b].asyncMap(async x => await x.getMd()));
+            }
         };
-        return text;
+        return isLine ? ps.join('') : ps.join('  \n');
     }
     dropEnter(this: Block, direction: DropDirection) {
         var dire = DropDirection[direction];

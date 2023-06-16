@@ -95,6 +95,32 @@ export class List extends Block {
     getUrl() {
         return BlockFactory.stringBlockUrl(this.url, { listType: this.listType });
     }
+    async getHtml() {
+        return `${await this.getChildsHtml()}`
+    }
+    async getChildsHtml() {
+        var currentDiv = '';
+        var subDiv = '';
+        if (this.childs.length > 0) currentDiv = (`<p>${(await this.childs.asyncMap(async b => { return await b.getHtml() })).join("")}</p>`)
+        else currentDiv = (`<p>${this.content}</p>`);
+        if (this.subChilds.length > 0)
+            subDiv = (`<p>${(await this.subChilds.asyncMap(async b => { return await b.getHtml() })).join("")}</p>`)
+        return `<div>${currentDiv + subDiv}</div>`;
+    }
+    async getMd() {
+        return await this.getChildsMd();
+    }
+    async getChildsMd() {
+        var ps: string[] = [];
+        if (this.childs.length > 0) ps.push('* ' + (await this.childs.asyncMap(async b => {
+            return await b.getMd()
+        })).join("") + "  \n");
+        else ps.push('* ' + this.content);
+        ps.push('   +' + (await this.subChilds.asyncMap(async b => {
+            return await b.getMd()
+        })).join("") + "  \n");
+        return ps.join("");
+    }
 }
 @view('/list')
 export class ListView extends BlockView<List>{

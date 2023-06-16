@@ -92,6 +92,9 @@ export class PageOutLine extends Block {
     get handleBlock() {
         return null;
     }
+    async getMd() {
+        return '';
+    }
 }
 @view('/outline')
 export class PageOutLineView extends BlockView<PageOutLine>{

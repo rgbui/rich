@@ -39,6 +39,13 @@ export class RefLinks extends Block {
         }
         this.forceUpdate()
     }
+    async getMd() {
+        return this.list.map(pa => {
+            return `> ${getPageText(pa)}  \n` + pa.childs.map(b => {
+                return `>>  ${b.html}`
+            })
+        }).join("  \n")
+    }
 }
 @view('/ref/links')
 export class RefLinksView extends BlockView<RefLinks>{

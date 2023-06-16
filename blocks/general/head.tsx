@@ -47,6 +47,14 @@ export class Head extends Block {
     getUrl(): string {
         return BlockFactory.stringBlockUrl(this.url, { level: this.level });
     }
+    async getMd() {
+        var tag = '#';
+        if (this.level == 'h2') tag = '##'
+        else if (this.level == 'h3') tag = '###'
+        else if (this.level == 'h4') tag = '####'
+        if (this.childs.length > 0) return tag + '  ' + (await (this.childs.asyncMap(async b => await b.getMd()))).join('') + "  "
+        else return tag + ' ' + this.content + "  "
+    }
 }
 @view("/head")
 export class HeadView extends BlockView<Head>{

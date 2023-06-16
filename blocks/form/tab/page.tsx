@@ -33,6 +33,11 @@ export class TabPage extends Block {
     get isCanEmptyDelete() {
         return true
     }
+    async getMd() {
+        var tag = '';
+        if (this.childs.length > 0) return tag + '' + (await (this.childs.asyncMap(async b => await b.getMd()))).join('  \n') + "  "
+        else return tag + '' + this.content + "  "
+    }
 }
 @view('/tab/page')
 export class TabPageView extends BlockView<TabPage>{

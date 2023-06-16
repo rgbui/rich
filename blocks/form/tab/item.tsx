@@ -18,6 +18,13 @@ export class TabItem extends Block {
         return false;
     }
 
+    async getMd() {
+        var ps: string[] = [];
+        ps.push((await this.childs.asyncMap(async b => await b.getMd())).join(""))
+        ps.push((await this.otherChilds.asyncMap(async b => await b.getMd())).join(""))
+        return ps.join('  \n');
+    }
+
 }
 @view('/tab/item')
 export class TabItemView extends BlockView<TabItem>{

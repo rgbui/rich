@@ -82,6 +82,9 @@ export class Video extends Block {
         }
         return super.getVisibleContentBound();
     }
+    async getMd() {
+        return `[${this.src?.filename || '视频'}](${this.src?.url})  \n`;
+    }
 }
 @view('/video')
 export class VideoView extends BlockView<Video>{

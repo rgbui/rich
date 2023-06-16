@@ -11,6 +11,11 @@ export class View extends Block {
     get isView() {
         return true;
     }
+    async getMd() {
+        var tag = '';
+        if (this.childs.length > 0) return tag + '' + (await (this.childs.asyncMap(async b => await b.getMd()))).join('') + "  "
+        else return tag + '' + this.content + "  "
+    }
 }
 /*** 在一个页面上，从视觉上有多个视图块，
  * 如每个页面都有一个初始的内容视图，不可拖动

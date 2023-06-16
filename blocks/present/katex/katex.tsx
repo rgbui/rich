@@ -41,6 +41,12 @@ export class Katex extends Block {
             this.renderKatex()
         }
     }
+    async getHtml() {
+        return `<div class='sy-block-katex'>${this.content}</div>`
+    }
+    async getMd() {
+        return `\n${this.content}\n`
+    }
 }
 @view('/katex')
 export class KatexView extends BlockView<Katex>{

@@ -86,6 +86,12 @@ export class ToDo extends Block {
         var el = this.contentEl;
         dom(el).removeClass(g => g.startsWith('shy-block-drag-over'));
     }
+    async getMd() {
+        var ps: string[] = [];
+        if (this.childs.length > 0) ps.push(`[]  ` + (await this.childs.asyncMap(async c => { await c.getMd() })).join(""))
+        else ps.push('[]  ' + this.content)
+        return ps.join('  ');
+    }
 }
 @view('/todo')
 export class ToDoView extends BlockView<ToDo>{

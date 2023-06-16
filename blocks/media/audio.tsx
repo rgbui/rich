@@ -67,6 +67,9 @@ export class Audio extends Block {
             console.error(ex);
         }
     }
+    async getMd() {
+        return `[${this.src?.filename || '音频'}](${this.src?.url})  \n`;
+    }
 }
 @view('/audio')
 export class AudioView extends BlockView<Audio>{

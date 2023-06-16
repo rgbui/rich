@@ -7,6 +7,12 @@ import { BlockDisplay } from "../../src/block/enum";
 @url('/divider')
 export class Divider extends Block {
     display = BlockDisplay.block;
+    async getHtml() {
+        return `<hr/>`
+    }
+    async getMd() {
+        return '----------------------'
+    }
 }
 @view('/divider')
 export class DividerView extends BlockView<Divider>{

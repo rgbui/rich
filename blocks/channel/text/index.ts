@@ -179,4 +179,8 @@ export class ChannelText extends Block {
             this.forceUpdate()
         }
     }
+    async getMd() {
+        var ws = channel.query('/current/workspace')
+        return `[${this.pageInfo.text}](${ws.url + '/resource?elementUrl=' + window.encodeURIComponent(this.elementUrl)})`
+    }
 }

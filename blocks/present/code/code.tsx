@@ -86,8 +86,10 @@ export class TextCode extends Block {
             this.codeMirror.setValue(this.content);
         }
     }
+    async getMd() {
+        return `\`\`\`${this.language}\n${this.content}\n\`\`\``
+    }
 }
-
 @view('/code')
 export class TextCodeView extends BlockView<TextCode>{
     async changeLang(e: React.MouseEvent) {
@@ -157,6 +159,6 @@ export class TextCodeView extends BlockView<TextCode>{
                 </div>
             </div>
         </div>
-    </div>
+        </div>
     }
 }

@@ -168,6 +168,11 @@ export class Tab extends Block {
         //     }
         // })
     }
+    async getMd() {
+        var tag = '';
+        if (this.childs.length > 0) return tag + '' + (await (this.childs.asyncMap(async b => await b.getMd()))).join('') + "  "
+        else return tag + '' + this.content + "  "
+    }
 }
 @view('/tab')
 export class TabView extends BlockView<Tab>{

@@ -35,6 +35,20 @@ export class TableCell extends Block {
     get handleBlock() {
         return this.row.table;
     }
+    async getHtml() {
+        return `<td>${await this.getChildsHtml()}</td>`
+    }
+    async getChildsHtml() {
+        return (await this.childs.asyncMap(async b => { return await b.getHtml() })).join("");
+    }
+    async getMd() {
+        return await this.getChildsMd();
+    }
+    async getChildsMd() {
+        return (await this.childs.asyncMap(async cm => {
+            return await cm.getMd()
+        })).join("")
+    }
 }
 
 @view('/table/cell')

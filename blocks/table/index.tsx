@@ -12,6 +12,7 @@ import { MouseDragger } from "../../src/common/dragger";
 import { PlusSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { ghostView } from "../../src/common/ghost";
+import { BlockChildKey } from "../../src/block/constant";
 
 const COL_WIDTH = 150;
 const CELL_HEIGHT = 30;
@@ -200,6 +201,27 @@ export class Table extends Block {
             });
             this.manualUpdateProps({ cols: this.cols }, { cols: cs }, BlockRenderRange.self)
         })
+    }
+    async getHtml() {
+        return `<table>
+<tbody>${await this.getChildsHtml()}</tbody>
+</table>`
+    }
+    async getChildsHtml() {
+        return (await this.childs.asyncMap(async b => { return await b.getHtml() })).join("\n");
+    }
+    async getMd() {
+        return await this.getChildsMd();
+    }
+    async getChildsMd() {
+        var cs = this.childs;
+        var ps: string[] = [];
+        ps.push(await this.childs[0].getMd())
+        ps.push('|' + this.childs[0].childs.map(c => '---').join("|") + '|')
+        for (let i = 1; i < cs.length; i++) {
+            ps.push(await this.childs[i].getMd())
+        }
+        return ps.join("\n");
     }
 }
 @view('/table')

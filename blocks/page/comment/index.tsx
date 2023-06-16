@@ -11,6 +11,9 @@ export class Comment extends Block {
     getCommentElementUrl() {
         return this.page.elementUrl;
     }
+    async getMd() {
+        return '';
+    }
 }
 
 @view('/comments')

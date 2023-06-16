@@ -96,6 +96,9 @@ export abstract class Block extends Events {
     get subChilds() {
         return this.blocks.subChilds || [];
     }
+    get otherChilds() {
+        return this.blocks.otherChilds || [];
+    }
     get allChilds() {
         var keys = this.allBlockKeys;
         var rs: Block[] = [];
@@ -184,7 +187,7 @@ export abstract class Block extends Events {
     }
     viewComponent: typeof BlockView | ((props: any) => JSX.Element)
     view: BlockView<this>;
-    asView<T>():T {
+    asView<T>(): T {
         return this.view as T;
     }
     el: HTMLElement;
@@ -466,7 +469,7 @@ export abstract class Block extends Events {
         if (this.isPart) return false;
         if (this.isLayout || this.isPanel) return false;
         if (this.appearAnchors.some(s => s.isText)) return true;
-        if (this.childs.length > 0 && this.childs.some(s => s.isTextContent||s.isLineSolid)) return true;
+        if (this.childs.length > 0 && this.childs.some(s => s.isTextContent || s.isLineSolid)) return true;
         return false;
     }
     __appearAnchors: AppearAnchor[] = [];

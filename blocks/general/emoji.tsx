@@ -24,6 +24,9 @@ export class Emoji extends Block {
         }
         else return '';
     }
+    async getMd() {
+        return this.src?.code||'';
+    }
 }
 @view('/emoji')
 export class EmojiView extends BlockView<Emoji>{

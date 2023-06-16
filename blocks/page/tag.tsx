@@ -51,6 +51,11 @@ export class ShyTag extends Block {
         var ref = Array.isArray(this.refLinks) ? this.refLinks[0] : undefined;
         return `<a class='shy-tag' data-ws-id='${ws.id}' data-tag-id='${ref.tagId}'>#${ref.tagText}</a>`
     }
+    async getMd() {
+        var ws = channel.query('/current/workspace')
+        var ref = Array.isArray(this.refLinks) ? this.refLinks[0] : undefined;
+        return `[#${ref.tagText}](${ws.url + '/tag#' + ref.tagId})  `
+    }
 }
 @view('/tag')
 export class ShyMentionView extends BlockView<ShyTag>{

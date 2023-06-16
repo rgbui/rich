@@ -30,6 +30,9 @@ export class PageCard extends Block {
     init() {
         this.gridMap = new GridMap(this)
     }
+    async getMd() {
+        return (await this.childs.asyncMap(async b => await b.getMd())).join('  \n')
+    }
 }
 @view('/card')
 export class PageCardView extends BlockView<PageCard>{

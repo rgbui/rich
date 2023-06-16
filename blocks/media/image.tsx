@@ -106,6 +106,9 @@ export class Image extends Block {
         if (el) return el;
         return this.el;
     }
+    async getMd() {
+        return `![${this.caption || '图片'}](${this.src?.url})  \n`;
+    }
 }
 @view('/image')
 export class ImageView extends BlockView<Image>{

@@ -327,6 +327,10 @@ export class DataGridView extends Block {
         if (this.schema?.locker?.lock == true) return false;
         return super.isCanEdit()
     }
+    async getMd() {
+        var ws = channel.query('/current/workspace')
+        return `[${this.schemaView?.text}](${ws.url + '/resource?elementUrl=' + window.encodeURIComponent(this.elementUrl)})`
+    }
 }
 
 export interface DataGridView extends DataGridViewLife { }

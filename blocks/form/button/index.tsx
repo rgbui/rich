@@ -246,6 +246,9 @@ export class BlockButton extends Block {
     }
     @prop()
     content: string = '按钮';
+    async getMd() {
+        return '<button>' + this.content + '</button>'
+    }
 }
 @view('/button')
 export class BlockButtonView extends BlockView<BlockButton>{
