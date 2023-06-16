@@ -176,6 +176,7 @@ import QuoteSvg from "../src/assert/svg/quote.svg";
 import RandomSvg from "../src/assert/svg/random.svg";
 import RedoSvg from "../src/assert/svg/redo.svg";
 import RefreshSvg from "../src/assert/svg/refresh.svg";
+import RefreshOneSvg from "../src/assert/svg/refreshOne.svg";
 import RenameSvg from "../src/assert/svg/rename.svg";
 import ReplySvg from "../src/assert/svg/reply.svg";
 import ReportSvg from "../src/assert/svg/report.svg";
@@ -415,6 +416,7 @@ QuoteSvg,
 RandomSvg,
 RedoSvg,
 RefreshSvg,
+RefreshOneSvg,
 RenameSvg,
 ReplySvg,
 ReportSvg,
