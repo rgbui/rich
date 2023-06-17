@@ -68,8 +68,7 @@ export class PageLayoutView extends React.Component<{
                     <div className="flex-fix w-250" style={{ height: mh }}><OnlineUsers></OnlineUsers></div>
                 </div>
             }
-            else
-                return <div className={"shy-page-layout shy-page-layout-text-channel"} style={{ width: '100%', height: mh }}>
+            else  return <div className={"shy-page-layout shy-page-layout-text-channel"} style={{ width: '100%', height: mh }}>
                     <div className='shy-page-layout-wrapper' style={style}>
                         {props.children}
                     </div>

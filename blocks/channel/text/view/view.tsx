@@ -6,12 +6,10 @@ import { useForm } from "../../../../component/view/form/dialoug";
 import { Icon } from "../../../../component/view/icon";
 import { Markdown } from "../../../../component/view/markdown";
 import { Spin } from "../../../../component/view/spin";
-import { useIconPicker } from "../../../../extensions/icon";
 import { channel } from "../../../../net/channel";
 import { view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { TextEle } from "../../../../src/common/text.ele";
-import { Rect } from "../../../../src/common/vector/point";
 import { LinkPageItem, PageLayoutType } from "../../../../src/page/declare";
 import { util } from "../../../../util/util";
 import { ChannelTextType } from "../declare";
@@ -23,7 +21,8 @@ import { RobotRquest, getWsRobotTasks } from "../../../../net/ai/robot";
 export class ChannelTextView extends BlockView<ChannelText>{
     contentEl: HTMLElement;
     async openEdit(event: React.MouseEvent) {
-        var model = { text: this.block.pageInfo?.text || '新页面', description: this.block.pageInfo?.description }
+        var pd = this.block.page.getPageDataInfo();
+        var model = { text: pd?.text || '新页面', description: pd?.description }
         var f = await useForm({
             head: false,
             fields: [{ name: 'text', text: '频道名称', type: 'input' }, { name: 'description', text: '频道描述', type: 'textarea' }],
@@ -36,27 +35,17 @@ export class ChannelTextView extends BlockView<ChannelText>{
             }
         });
         if (f && !lodash.isEqual(f, model)) {
-            channel.air('/page/update/info', {
-                id: this.block.page.pageInfo?.id,
-                pageInfo: { ...f }
-            })
+            this.props.block.page.onUpdatePageData({ ...f });
         }
     }
     renderPageTitle() {
-        var self = this;
-        async function changeIcon(event: React.MouseEvent) {
-            event.stopPropagation();
-            var icon = await useIconPicker({ roundArea: Rect.fromEvent(event) }, self.block.page?.pageInfo.icon);
-            if (typeof icon != 'undefined') {
-                self.block.page.onUpdatePageData({ icon })
-            }
-        }
+        var pd = this.block.page.getPageDataInfo();
         if (this.block.page.pageLayout.type == PageLayoutType.textChannel) {
             return <div className="gap-20 visible-hover">
-                <Icon className={'item-hover round cursor'} onMousedown={e => changeIcon(e)} size={72} icon={this.block?.pageInfo?.icon || TopicSvg}></Icon>
-                <div className="h1 flex"><span>{this.block?.pageInfo?.text || '新页面'}</span><span className="flex-center round gap-l-5 cursor item-hover flex-line size-24 visible"><Icon onClick={e => this.openEdit(e)} size={18} icon={EditSvg}></Icon></span></div>
-                {this.block.pageInfo?.description && <div className="text-1 f-14">
-                    <Markdown md={this.block.pageInfo?.description}></Markdown>
+                <Icon className={'item-hover round cursor'} onMousedown={e => { e.stopPropagation(); this.block.page.onChangeIcon(e) }} size={72} icon={pd?.icon || TopicSvg}></Icon>
+                <div className="h1 flex"><span>{pd?.text || '新页面'}</span><span className="flex-center round gap-l-5 cursor item-hover flex-line size-24 visible"><Icon onClick={e => this.openEdit(e)} size={18} icon={EditSvg}></Icon></span></div>
+                {pd?.description && <div className="text-1 f-14">
+                    <Markdown md={pd?.description}></Markdown>
                 </div>}
             </div>
         }
@@ -66,27 +55,36 @@ export class ChannelTextView extends BlockView<ChannelText>{
         channel.sync('/page/update/info', this.updatePageInfo);
         await this.block.loadPageInfo();
     }
-    updatePageInfo = (r: { id: string, pageInfo: LinkPageItem }) => {
-        var { id, pageInfo } = r;
-        if (this.block.pageInfo?.id == id && id) {
-            var isUpdate: boolean = false;
-            if (typeof pageInfo.text != 'undefined' && pageInfo.text != this.block.pageInfo.text) {
-                this.block.pageInfo.text = pageInfo.text;
-                isUpdate = true;
-            }
-            if (typeof pageInfo.description != 'undefined' && pageInfo.description != this.block.pageInfo.description) {
-                this.block.pageInfo.description = pageInfo.description;
-                isUpdate = true;
-            }
-            if (typeof pageInfo.icon != 'undefined' && !lodash.isNull(pageInfo.icon) && JSON.stringify(pageInfo.icon) != JSON.stringify(this.block.pageInfo.icon)) {
-                this.block.pageInfo.icon = lodash.cloneDeep(pageInfo.icon);
-                isUpdate = true;
-            }
-            if (isUpdate) {
-                this.forceUpdate();
-            }
+    updatePageInfo = (r: { id: string, elementUrl: string, pageInfo: LinkPageItem }) => {
+        var page = this.props.block.page;
+        if (r.elementUrl && page.elementUrl === r.elementUrl || r.id && r.id == r.pageInfo.id) {
+            this.forceUpdate();
         }
     }
+    // updatePageInfo = (r: { id: string, pageInfo: LinkPageItem }) => {
+    //console.log('gggg', r);
+    // var { id, pageInfo } = r;
+    // console.log('ggeexxx');
+    // if (this.block.pageInfo?.id == id && id) {
+    // console.log('update', isUpdate);
+    //  var isUpdate: boolean = true;
+    // if (typeof pageInfo.text != 'undefined' && pageInfo.text != this.block.pageInfo.text) {
+    //     this.block.pageInfo.text = pageInfo.text;
+    //     isUpdate = true;
+    // }
+    // if (typeof pageInfo.description != 'undefined' && pageInfo.description != this.block.pageInfo.description) {
+    //     this.block.pageInfo.description = pageInfo.description;
+    //     isUpdate = true;
+    // }
+    // if (typeof pageInfo.icon != 'undefined' && !lodash.isNull(pageInfo.icon) && JSON.stringify(pageInfo.icon) != JSON.stringify(this.block.pageInfo.icon)) {
+    //     this.block.pageInfo.icon = lodash.cloneDeep(pageInfo.icon);
+    //     isUpdate = true;
+    // }
+    // if (isUpdate) {
+    //this.forceUpdate();
+    // }
+    // }
+    //}
     willUnmount() {
         channel.off('/page/update/info', this.updatePageInfo);
     }

@@ -64,9 +64,12 @@ export class PageBar extends React.Component<{ page: Page }>{
         }
         return <div className="flex-auto flex">
             {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onClose()} className="item-hover size-24 round cursor flex-center gap-l-10"><Icon size={18} icon={DoubleRightSvg}></Icon></span>}
-            <span className="item-hover round flex gap-l-10 cursor padding-h-3 padding-w-5 ">
-                <Icon size={20} icon={getPageIcon(this.props.page?.pageInfo)}></Icon>
-                <span className="gap-l-5">{getPageText(this.props.page?.pageInfo)}</span>
+            <span className=" round flex gap-l-10">
+                <span className="flex-fixed item-hover flex round  cursor padding-h-3 padding-w-5 ">
+                    <Icon size={20} icon={getPageIcon(this.props.page?.pageInfo)}></Icon>
+                    <span className="gap-l-5">{getPageText(this.props.page?.pageInfo)}</span>
+                </span>
+                <span className={"flex-auto gap-l-10 remark text-overflow " + (isMobileOnly ? " max-w-250" : " max-w-500")}>{this.props.page?.pageInfo?.description}</span>
             </span>
             {this.props.page.pageInfo?.isCanEdit && <>
                 {!this.props.page.canEdit && <ToolTip ref={e => this.be = e} placement="bottom" overlay={'进入编辑'}><span className="flex flex-fixed visible r-gap-l-5 text-1 cursor " onClick={e => {
