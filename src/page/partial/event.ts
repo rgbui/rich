@@ -344,6 +344,10 @@ export class PageEvent {
             }
         })
     }
+    async onUpdateDescription(this: Page, text: string) {
+        this.onUpdatePageData({ description: text });
+        if (this.view.pageBar) this.view.pageBar.forceUpdate()
+    }
     async onUpdatePageCover(this: Page, data: Record<string, any>, isUpdate?: boolean) {
         var c = this.getPageDataInfo().cover;
         if (!c) c = {}
@@ -357,7 +361,8 @@ export class PageEvent {
                 id: this.formRowData.id,
                 text: this.formRowData.title,
                 icon: this.formRowData.icon,
-                cover: this.formRowData.cover
+                cover: this.formRowData.cover,
+                description: this.formRowData.description
             }
         }
         else if (this.isSchemaRecordViewTemplate) {
@@ -367,7 +372,8 @@ export class PageEvent {
                     id: sr.id,
                     text: sr.text,
                     icon: sr.icon,
-                    cover: sr.cover
+                    cover: sr.cover,
+                    description: sr.description
                 }
             }
         }
@@ -375,7 +381,8 @@ export class PageEvent {
             id: this.pageInfo.id,
             text: this.pageInfo.text,
             icon: this.pageInfo.icon,
-            cover: this.pageInfo.cover
+            cover: this.pageInfo.cover,
+            description: this.pageInfo.description
         }
     }
     async onChangeIcon(this: Page, event: React.MouseEvent) {

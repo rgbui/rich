@@ -16,7 +16,7 @@ import { BlockDirective } from "../../src/block/enum";
 import { PopoverPosition } from "../popover/position";
 import { FixedViewScroll } from "../../src/common/scroll";
 import { blockStore } from "../block/store";
-import { BoldSvg, CodeSvg, DeleteLineSvg, DoubleLinkSvg, EquationSvg, FontStyleSvg, ItalicSvg, LinkSvg, MagicSvg, SearchSvg, UnderlineSvg } from "../../component/svgs";
+import { AiStartSvg, BoldSvg, CodeSvg, DeleteLineSvg, DoubleLinkSvg, EquationSvg, FontStyleSvg, ItalicSvg, LinkSvg, MagicSvg, SearchSvg, UnderlineSvg } from "../../component/svgs";
 import { ToolTip } from "../../component/view/tooltip";
 import { dom } from "../../src/common/dom";
 import { util } from "../../util/util";
@@ -105,7 +105,7 @@ class TextTool extends EventsComponent {
 
                 <ToolTip overlay={'让诗云AI帮你写作、润色、生成内容'}>
                     <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onExcute(TextCommand.askAI, e)}>
-                        <Icon icon={MagicSvg}></Icon><span>AI</span>
+                        <Icon icon={AiStartSvg}></Icon><span>AI</span>
                     </div>
                 </ToolTip>
 
@@ -278,7 +278,7 @@ class TextTool extends EventsComponent {
             sel.removeAllRanges();
             this.forceUpdate();
         }
-        var pageLink = await useLinkPicker({ roundArea: Rect.fromEvent(event) },{text:text});
+        var pageLink = await useLinkPicker({ roundArea: Rect.fromEvent(event) }, { text: text });
         this.selection.rects = [];
         this.blocked = false;
         this.forceUpdate()

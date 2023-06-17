@@ -14,6 +14,7 @@ import { useSelectMenuItem } from "../../../component/view/menu";
 import { CopyText } from "../../../component/copy";
 import { ShyAlert } from "../../../component/lib/alert";
 import {
+    AiStartSvg,
     AlignTextCenterSvg,
     BlockcolorSvg,
     BoardMoveBottomSvg,
@@ -62,13 +63,10 @@ export class Block$Event {
         var items: MenuItem<BlockDirective | string>[] = [];
         items.push({
             name: 'askAi',
-            icon: MagicSvg,
+            icon: AiStartSvg,
             text: "诗云AI",
         });
-
         items.push({ type: MenuItemType.divide });
-
-
         items.push({
             name: BlockDirective.copy,
             text: '拷贝副本',
