@@ -7,6 +7,7 @@ import { RobotInfo, RobotTask, UserBasic } from "../../../types/user";
 import { Rect } from "../../../src/common/vector/point";
 import { ChatCommandInput } from "./plugins/command";
 import { util } from "../../../util/util";
+import {getTextLink } from "../../../src/kit/write/declare";
 
 export type ChatInputOptions = {
 
@@ -265,6 +266,7 @@ export class ChatInput extends React.Component<ChatInputOptions>{
     }
     getValue() {
         var html = this.richEl.innerHTML;
+        html = getTextLink(html);
         html = html.replace(/(\*\*[^\*]+\*\*)/g, (_, $1) => {
             return '<b>' + $1.slice(2, -2) + '</b>'
         })

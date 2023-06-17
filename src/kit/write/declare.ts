@@ -13,3 +13,12 @@ export var URL_RGEX = new RegExp('^' + strRegex + '$');
 
 
 export var URL_END_REGEX = new RegExp(strRegex + "$");
+
+
+export function getTextLink(text) {
+    const reg = new RegExp(strRegex, 'g');
+    return text.replace(reg, function (m, p) {
+        // console.log(m, p);
+        return '<a href="' + m + '" target="_blank">' + m + '</a>'
+    })
+}
