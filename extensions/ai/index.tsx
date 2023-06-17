@@ -1,7 +1,7 @@
 import { CSSProperties, ReactNode } from "react";
 import { EventsComponent } from "../../component/lib/events.component";
 import React from "react";
-import { CheckSvg, CloseSvg, Edit1Svg, MagicSvg, PicSvg, PublishSvg, RefreshSvg, TrashSvg } from "../../component/svgs";
+import { AiStartSvg, CheckSvg, CloseSvg, Edit1Svg, PicSvg, PublishSvg, RefreshSvg, TrashSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { Singleton } from "../../component/lib/Singleton";
 import { PopoverPosition } from "../popover/position";
@@ -17,12 +17,16 @@ import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import { AiWrite } from "./write";
 import { Markdown } from "../../component/view/markdown";
 import { Divider } from "../../component/view/grid";
+
 import {
+    AbstractTemplate,
     ArticleContinue,
+    ExplainPrompt,
     FixSpellingGrammar,
     ImagePrompt,
     MakeLonger,
     MakeSmall,
+    PolishTemplate,
     SummarizeTemplate,
     TranslateTemplate,
     WritingAssistant,
@@ -103,7 +107,7 @@ export class AITool extends EventsComponent {
                 style={style}>
                 <div className="pv min-h-30 bg-white shadow-1  round-8">
                     {this.anwser && [AIAskStatus.selectionAsking, AIAskStatus.selectionAsked].includes(this.status) && <>
-                        <div ref={e => this.mdEl = e} className=" padding-w-10 gap-t-10 max-h-150 overflow-y">
+                        <div ref={e => this.mdEl = e} className=" padding-w-10 padding-t-10 gap-t-10 max-h-150 overflow-y">
                             <Markdown md={this.anwser}></Markdown>
                         </div>
                         <Divider></Divider>
@@ -111,7 +115,7 @@ export class AITool extends EventsComponent {
                     }
                     <div className="flex flex-top">
                         <span className="flex-fixed size-30 gap-h-5 flex-center gap-r-5">
-                            <Icon size={18} icon={MagicSvg}></Icon>
+                            <Icon size={18} icon={AiStartSvg}></Icon>
                         </span>
                         <div className="flex-auto">
                             {[AIAskStatus.asking, AIAskStatus.selectionAsking].includes(this.status) && <div className="size-30  gap-h-5  flex-center"><Spin size={16}></Spin></div>}
@@ -120,7 +124,7 @@ export class AITool extends EventsComponent {
                                 rf={e => this.textarea = e}
                                 onInput={this.onInput}
                                 onEnter={this.onEnter}
-                                className='padding-h-10 min-h-20'
+                                className='padding-h-10 min-h-20 l-20'
                                 placeholder="告诉AI写什么" ></DivInput>}
                         </div>
                         <span className="size-30  gap-h-5 flex-center flex-fixed gap-l-10">
@@ -224,6 +228,11 @@ export class AITool extends EventsComponent {
                         var propTemplate = getTemplateInstance(FixSpellingGrammar, { content: preContent });
                         this.aiSelection({ prompt: propTemplate })
                         break;
+                    case 'explain':
+                        var preContent = this.getPrevBlockContent();
+                        var propTemplate = getTemplateInstance(ExplainPrompt, { content: preContent });
+                        this.aiSelection({ prompt: propTemplate })
+                        break;
                     case 'makeSmall':
                         var preContent = this.getPrevBlockContent();
                         var propTemplate = getTemplateInstance(MakeSmall, { content: preContent });
@@ -242,6 +251,19 @@ export class AITool extends EventsComponent {
                     case 'summary':
                         var preContent = this.getPrevBlockContent();
                         var propTemplate = getTemplateInstance(SummarizeTemplate, { content: preContent });
+                        this.aiSelection({ prompt: propTemplate })
+                        break;
+                    case 'abstract':
+                        var preContent = this.getPrevBlockContent();
+                        var propTemplate = getTemplateInstance(AbstractTemplate, { content: preContent });
+                        this.aiSelection({ prompt: propTemplate })
+                        break;
+                    case 'polish':
+                        var preContent = this.getPrevBlockContent();
+                        var propTemplate = getTemplateInstance(PolishTemplate, {
+                            style: item.text,
+                            content: preContent
+                        });
                         this.aiSelection({ prompt: propTemplate })
                         break;
                     case 'translate':
@@ -392,11 +414,9 @@ export class AITool extends EventsComponent {
                 { text: '编辑优化选择的内容', type: MenuItemType.text },
                 { name: 'improveWrite', text: '提升写作', icon: Edit1Svg },
                 { name: 'fix', text: '拼写及语法优化', icon: Edit1Svg },
-                { name: 'makeLonger', text: '变长一些', icon: Edit1Svg },
-                { name: 'makeSmaller', text: '简洁一些', icon: Edit1Svg },
-                { name: 'insertImage', text: "生成插图", icon: PicSvg },
-                // { text: '润色', icon: Edit1Svg },
-                { name: 'summary', text: '内容总结', icon: Edit1Svg },
+                { name: 'explain', text: '解释', icon: Edit1Svg },
+                { name: 'summary', text: '总结', icon: Edit1Svg },
+                { name: 'abstract', text: '摘要', icon: Edit1Svg },
                 {
                     text: "翻译",
                     childsPos: { align: 'end' },
@@ -416,7 +436,22 @@ export class AITool extends EventsComponent {
                         { text: '印度尼西亚', name: 'translate', value: 'Indonesian' },
                     ],
                     icon: Edit1Svg
-                }
+                },
+                { type: MenuItemType.divide },
+                { name: 'makeLonger', text: '变长一些', icon: Edit1Svg },
+                { name: 'makeSmaller', text: '简洁一些', icon: Edit1Svg },
+                {
+                    text: '润色',
+                    icon: Edit1Svg,
+                    childs: [
+                        { name: 'polish', text: '更专业一些', icon: Edit1Svg },
+                        { name: 'polish', text: '更友好一些', icon: Edit1Svg },
+                        { name: 'polish', text: '更自信一些', icon: Edit1Svg },
+                        { name: 'polish', text: '更直接一些', icon: Edit1Svg },
+                        { name: 'polish', text: '更口语话一些', icon: Edit1Svg },
+                    ]
+                },
+                { name: 'insertImage', text: "生成插图", icon: PicSvg },
             ];
         }
         if ([AIAskStatus.selectionAsked].includes(this.status)) {
@@ -511,7 +546,7 @@ export class AITool extends EventsComponent {
         this.ask = options.ask || '';
         this.anwser = '';
         this.options = options;
-        this.page.setPaddingBottom(400);
+        this.page.setPaddingBottom(500);
         if (this.textarea) this.textarea.innerText = '';
         this.updateView(() => {
             if (this.textarea)

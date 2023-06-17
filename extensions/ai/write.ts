@@ -48,7 +48,8 @@ export class AiWrite {
         try {
             if (this.willWriteBlock) return;
             if (!this.text) return;
-            console.log('will write', this.text);
+            if (window.shyConfig.isDev)
+                console.log('will write', this.text);
             var text = '';
             /**
              * 这里表示正在写入表格，

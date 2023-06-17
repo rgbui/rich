@@ -31,7 +31,8 @@ export const TheRelevanceOfQuestionsToKnowledge = `任务：判断问题与信�
 // 提示:请用一句简短的话概括以下内容：[{prompt}]
 // `
 export const SummarizeTemplate = `Summarize the following text into 100 words, making it easy to read and comprehend. The summary should be concise, clear, and capture the main points of the text. Avoid using complex sentence structures or technical jargon. Respond in Chinese. Please begin by editing the following text:{content} `
-
+export const AbstractTemplate = `对下列内容生成摘要:{content}`;
+export const PolishTemplate=`请以{style}的方式，润色下列内容:{content}`;
 /**
  * 最常使用的 prompt，用于优化文本的语法、清晰度和简洁度，提高可读性。
  */
@@ -58,7 +59,7 @@ export const ImagePrompt = `I want you to act as a prompt generator for Midjourn
 
 
 export const FixSpellingGrammar = `Fix the spelling and grammar of the following text: [{content}]`
-
+export const ExplainPrompt = 'Respond in Chinese. Explain these things: [{content}]';
 
 export function getTemplateInstance(template: string, data: Record<string, any>) {
     return template.replace(/{([^}]+)}/g, function (match, key) {
