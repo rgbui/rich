@@ -7,7 +7,7 @@ import { RobotInfo, RobotTask, UserBasic } from "../../../types/user";
 import { Rect } from "../../../src/common/vector/point";
 import { ChatCommandInput } from "./plugins/command";
 import { util } from "../../../util/util";
-import {getTextLink } from "../../../src/kit/write/declare";
+import { getTextLink } from "../../../src/kit/write/declare";
 
 export type ChatInputOptions = {
 
@@ -276,9 +276,14 @@ export class ChatInput extends React.Component<ChatInputOptions>{
         html = html.replace(/(\~\~[^\~]+\~\~)/g, (_, $1) => {
             return '<del>' + $1.slice(2, -2) + '</del>'
         })
+        // console.log('before', html);
         html = html.replace(/(\`\`\`[^\`]+\`\`\`)/g, (_, $1) => {
-            return '<pre><code>' + $1.slice(3, -3) + '</code></pre>'
+            var pc = $1.trim().slice(3, -3);
+            pc = pc.replace(/^(\<br\/?\>)+/g, '');
+            pc = pc.replace(/(\<br\/?\>)+$/g, '');
+            return '<pre><code>' + pc + '</code></pre>'
         })
+        console.log('after', html);
         html = html.replace(/(\`[^\`]+\`)/g, (_, $1) => {
             return '<code>' + $1.slice(1, -1) + '</code>'
         })
