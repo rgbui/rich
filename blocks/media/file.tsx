@@ -81,6 +81,9 @@ export class File extends Block {
 @view('/file')
 export class FileView extends BlockView<File>{
     render() {
+        function download(url: string, fileName: string) {
+            util.downloadFile(url, fileName);
+        }
         return <div className='sy-block-file' style={this.block.visibleStyle}>
             {this.block.src.name == 'none' && <div onMouseDown={e => this.block.addFile(e)} className='sy-block-file-nofile'>
                 <Icon className={'text-1'} icon={FileSvg}></Icon>
@@ -91,7 +94,10 @@ export class FileView extends BlockView<File>{
                 <Icon icon={FileSvg} size={18} className='text-1 sy-block-file-content-icon'></Icon>
                 <span className='sy-block-file-content-title'>{this.block.src?.filename}</span>
                 <span className='sy-block-file-content-bytes'>{util.byteToString(this.block.src.size)}</span>
-                <a className='sy-block-file-content-link' download={this.block.src?.filename} href={this.block.src.url}><Icon size={30} icon={DownloadSvg}></Icon></a>
+                <a className='sy-block-file-content-link' onMouseDown={e => {
+                    e.preventDefault();
+                    download(this.block.src?.url, this.block.src?.filename);
+                }} download={this.block.src?.filename} href={this.block.src.url}><Icon size={30} icon={DownloadSvg}></Icon></a>
             </div>}
         </div>
     }
