@@ -573,7 +573,8 @@ item-selected:选中的效果
     color: #fff;
 }
 
-.text-primary {
+.text-primary,
+.text-p {
     color: rgb(225, 98, 89);
 }
 
@@ -598,7 +599,9 @@ item-selected:选中的效果
     // fill-opacity: 0;
 }
 
-.link {
+.link,
+.text-link,
+.text-l {
     color: #64a1df;
 }
 
@@ -631,9 +634,10 @@ item-selected:选中的效果
     border-radius: 8px;
 }
 
-.pre{
-     white-space: pre-wrap;
+.pre {
+    white-space: pre-wrap;
 }
+
 .error {
     color: #ff4d4f;
 }
@@ -1399,7 +1403,7 @@ circle:圆
 
 
 
-@ras: 1,2, 3, 4,5,6, 7, 8, 9, 10,12, 14, 16, 20, 24, 30, 32, 48, 50, 60, 80, 100, 0;
+@ras: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 20, 24, 30, 32, 48, 50, 60, 80, 100, 0;
 
 each(@ras, {
         .r-round-@{value} {

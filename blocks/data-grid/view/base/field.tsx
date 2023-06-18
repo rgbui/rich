@@ -308,7 +308,7 @@ export class DataGridViewField {
                             type: MenuItemType.container,
                             name: 'optionContainer',
                             childs: [
-                                ...viewField.field.config.options.map(op => {
+                                ...(viewField.field.config?.options || []).map(op => {
                                     return {
                                         text: op.text,
                                         value: op.value,
@@ -319,7 +319,7 @@ export class DataGridViewField {
                                 })
                             ]
                         },
-                        ...(viewField.field.config.options.length > 0 ? [{ type: MenuItemType.divide }] : []),
+                        ...((viewField.field.config?.options || []).length > 0 ? [{ type: MenuItemType.divide }] : []),
                         {
                             type: MenuItemType.button,
                             text: '添加选项',
