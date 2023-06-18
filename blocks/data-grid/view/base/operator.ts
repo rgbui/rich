@@ -22,7 +22,7 @@ import { useTableExport } from "../../../../extensions/data-grid/export";
 import { Block } from "../../../../src/block";
 
 export class DataGridViewOperator {
-    
+
     async onAddField(this: DataGridView, event: Rect, at?: number) {
         var self = this;
         var result = await useTableStoreAddField(
@@ -113,6 +113,7 @@ export class DataGridViewOperator {
             this.page.addBlockChange(this);
             await this.schema.fieldUpdate({ fieldId: field.id, data });
             field.load(data);
+            this.onNotifyReferenceBlocks()
             await this.createItem();
             this.forceUpdate();
         });
@@ -129,6 +130,7 @@ export class DataGridViewOperator {
                 data: g => g.type && viewField.type == g.type || g.fieldId == viewField.fieldId,
                 update: data
             })
+            this.onNotifyReferenceBlocks()
             await this.createItem();
             this.forceUpdate();
         });
@@ -326,7 +328,7 @@ export class DataGridViewOperator {
             to: viewId
         }, this);
 
-     
+
 
     }
     async onOtherDataGridTurnView(this: DataGridView, viewId: string, type: 'form' | 'view', schemaId: string, viewUrl?: string) {
@@ -525,9 +527,7 @@ export class DataGridViewOperator {
                 await this.loadData();
                 this.forceUpdate();
                 await this.createItem();
-                this.referenceBlockers.forEach(b => {
-                    b.forceUpdate();
-                })
+                await this.onNotifyReferenceBlocks()
             })
         });
     }

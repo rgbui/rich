@@ -415,7 +415,7 @@ export class DataGridViewField {
                             }
                         }
                         else if (item.name == 'addOption') {
-                            var ops = lodash.cloneDeep(viewField.field.config.options);
+                            var ops = lodash.cloneDeep(viewField.field.config.options) || [];
                             var or = OptionBackgroundColorList.find(g => ops.some(s => s.color == g.color) ? false : true);
                             var op: DataGridOptionType = { text: '', value: util.guid(), color: or?.color || OptionBackgroundColorList[0].color };
                             await self.onOpenFieldOptions(ops, op, ev);
