@@ -13,7 +13,7 @@ export class FieldOption extends OriginField {
         event.stopPropagation();
         var fc: FieldConfig = this.field.config;
         var op = await useTableStoreOption({
-            roundArea: Rect.fromEle(event.target as HTMLElement)
+            roundArea: Rect.fromEle(event.currentTarget as HTMLElement)
         }, this.value,
             {
                 multiple: false,

@@ -15,7 +15,7 @@ class FieldTextView extends BlockView<FieldText>{
     async mousedown(event: React.MouseEvent) {
         var fc: FieldConfig = this.block.field.config;
         var op = await useTableStoreOption({
-            roundArea: Rect.fromEle(event.target as HTMLElement)
+            roundArea: Rect.fromEle(event.currentTarget as HTMLElement)
         }, this.block.value,
             {
                 multiple: fc?.isMultiple ? true : false,

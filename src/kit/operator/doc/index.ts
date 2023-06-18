@@ -17,6 +17,7 @@ import { PageLayoutType } from "../../../page/declare";
  * 
  */
 export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
+    console.log('block',block);
     kit.anchorCursor.renderSelectBlocks([]);
     var downPoint = Point.from(event);
     var gm = block ? block.panelGridMap : kit.page.gridMap;

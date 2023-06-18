@@ -75,9 +75,9 @@ export class TableStoreOption extends EventsComponent {
         return <div className="shy-tablestore-option-selector">
             <div className="shy-tablestore-option-selector-input">
                 {this.option && <a style={{ backgroundColor: this.option.color }}><span>{this.option.text}</span><em><CloseTick onClick={e => self.clearOption()}></CloseTick></em></a>}
-                <div className="shy-tablestore-option-selector-input-wrapper"><input ref={e => this.input = e} value={this.value} onInput={e => changeInput(e)} onKeyDown={e => keydown(e.nativeEvent)} /></div>
+                <div className="shy-tablestore-option-selector-input-wrapper"><input ref={e => this.input = e} maxLength={this.value.length+3} value={this.value} onInput={e => changeInput(e)} onKeyDown={e => keydown(e.nativeEvent)} /></div>
             </div>
-            <div className="shy-tablestore-option-selector-drop">
+            <div className="shy-tablestore-option-selector-drop overflow-y max-h-180">
                 <Remark style={{ height: 20, margin: '8px 0px', padding: '0px 10px' }}>{this.filterOptions.length > 0 ? '选择或创建一个选项' : '暂无选项'}</Remark>
                 <DragList onChange={change} isDragBar={e => e.closest('.shy-tablestore-option-item-icon') ? true : false}>
                     {this.filterOptions.map(op => {
@@ -142,8 +142,10 @@ export class TableStoreOption extends EventsComponent {
         this.option = data.options.find(g => g.value == value);
         this.options = data.options;
         this.value = '';
-        this.forceUpdate(() => {
+        this.forceUpdate(async () => {
+            await util.delay(30);
             if (this.input) this.input.focus();
+            this.emit('update');
         });
     }
     async configOption(option: DataGridOptionType, event: React.MouseEvent) {
@@ -210,6 +212,10 @@ export async function useTableStoreOption(pos: PopoverPosition,
     }) {
     let popover = await PopoverSingleton(TableStoreOption, { mask: true });
     let fv = await popover.open(pos);
+    fv.only('update', () => {
+        console.log('update layout');
+        popover.updateLayout()
+    })
     fv.open(value, options);
     return new Promise((resolve: (data: { text: string, type: FieldType }) => void, reject) => {
         fv.only('save', (value) => {

@@ -61,7 +61,7 @@
                 line-height: inherit;
                 border     : none;
                 background : none;
-                width      : 100%;
+                min-width      : 60px;
                 display    : block;
                 resize     : none;
                 padding    : 0px;
@@ -73,6 +73,7 @@
 
     &-drop {
         background-color: #fff;
+
     }
 
     .shy-tablestore-option-item-create {
@@ -188,6 +189,7 @@
 
     &:hover {
         background-color: rgba(55, 53, 47, 0.08);
+
         .shy-tablestore-option-item-property {
             visibility: visible;
         }
@@ -204,6 +206,7 @@
     height         : 24px;
     line-height    : 24px;
     cursor         : pointer;
+
     span {
         &:first-child {
             flex-shrink  : 0;
@@ -215,6 +218,7 @@
             margin-right : 5px;
             border       : 1px solid rgba(55, 53, 47, 0.1);
         }
+
         &:nth-child(2) {
             flex-shrink: 1;
             flex-grow  : 1;
