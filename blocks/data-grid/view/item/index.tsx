@@ -138,6 +138,9 @@ export class TableStoreItem extends Block {
         data = util.clone(data);
         viewField.field.update(data);
         await this.schema.fieldUpdate({ fieldId: viewField.field.id, data })
+        if (this.dataGrid) {
+            this.dataGrid.onNotifyReferenceBlocks()
+        }
     }
     async onGetContextMenus(): Promise<MenuItem<string | BlockDirective>[]> {
         var items: MenuItem<BlockDirective | string>[] = [];
