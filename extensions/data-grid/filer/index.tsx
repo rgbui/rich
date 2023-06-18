@@ -18,6 +18,7 @@ import { useVideoPicker } from "../../file/video.picker";
 import { ResourceArguments } from "../../icon/declare";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
+import { util } from "../../../util/util";
 
 export class DataGridFileViewer extends EventsComponent {
     mime: 'file' | 'image' | 'video' | 'audio' | 'user' = 'file';
@@ -31,7 +32,11 @@ export class DataGridFileViewer extends EventsComponent {
         this.isMultiple = options.isMultiple;
         this.mime = options.mime || 'file';
         this.resources = options.resources || [];
-        this.forceUpdate();
+        console.log(this.isMultiple, 'isMultiple');
+        this.forceUpdate(async () => {
+            await util.delay(20);
+            this.emit('update');
+        });
     }
     dragChange(to: number, from: number) {
         var fe = this.resources[from];
@@ -59,7 +64,8 @@ export class DataGridFileViewer extends EventsComponent {
         }
         else if (this.mime == 'audio') {
             resource = await useAudioPicker({ roundArea: Rect.fromEvent(event) })
-        } else if (this.mime == 'video') {
+        }
+        else if (this.mime == 'video') {
             resource = await useVideoPicker({ roundArea: Rect.fromEvent(event) })
         }
         else if (this.mime == 'user') {
@@ -69,8 +75,10 @@ export class DataGridFileViewer extends EventsComponent {
             }
         }
         if (resource) {
-            this.resources.push(resource);
-            this.forceUpdate()
+            if (this.isMultiple) this.resources.push(resource);
+            else this.resources = [resource]
+            if (this.isMultiple) this.forceUpdate()
+            else this.onSave();
         }
     }
     render(): ReactNode {
@@ -93,19 +101,22 @@ export class DataGridFileViewer extends EventsComponent {
             else if (self.mime == 'file') {
                 return <div><span>{resource?.filename}</span></div>
             }
-            else if (self.mime == 'user') return <div><Avatar size={30} userid={resource as string}></Avatar></div>
+            else if (self.mime == 'user') return <div className="gap-h-5"><Avatar size={24} userid={resource as string}></Avatar></div>
             else return <></>
         }
         function getButtonText() {
-            if (self.mime == 'file') return '上传文件'
-            else if (self.mime == 'user') return '添加用户'
-            else if (self.mime == 'image') return '上传图片'
-            else if (self.mime == 'audio') return '上传音频'
-            else if (self.mime == 'video') return '上传视频'
-            else return '上传文件'
+            var text = '';
+            if (self.mime == 'file') text = '上传文件'
+            else if (self.mime == 'user') text = '添加用户'
+            else if (self.mime == 'image') text = '上传图片'
+            else if (self.mime == 'audio') text = '上传音频'
+            else if (self.mime == 'video') text = '上传视频'
+            else text = '上传文件'
+            if (self.isMultiple != true && self.resources.length > 0) text = text.replace('上传', '更换').replace('添加', '更换')
+            return text;
         }
         return <div className={"gap-h-14" + (this.mime == 'user' ? " w-180" : " w-300")}>
-            <div className="max-h-300 overflow-y">
+            <div className="max-h-300 overflow-y padding-h-5">
                 <DragList onChange={(e, c) => this.dragChange(e, c)}
                     isDragBar={e => e.closest('.drag') ? true : false}>
                     {this.resources.map((re, i) => {
@@ -120,9 +131,10 @@ export class DataGridFileViewer extends EventsComponent {
                         </div>
                     })}</DragList>
             </div>
-            {(this.isMultiple || this.resources.length == 0) && <>{this.resources.length > 0 && <Divider></Divider>}<div className="gap-h-10 padding-w-14">
+            {this.resources.length > 0 && <Divider></Divider>}
+            <div className="gap-h-10 padding-w-14">
                 <Button onClick={e => this.uploadFile(e)} block>{getButtonText()}</Button>
-            </div></>}
+            </div>
         </div>
     }
     onSave() {
@@ -139,6 +151,9 @@ export async function useDataGridFileViewer(pos: PopoverPosition,
     }) {
     let popover = await PopoverSingleton(DataGridFileViewer, { mask: true });
     let fv = await popover.open(pos);
+    fv.only('update', () => {
+        popover.updateLayout()
+    })
     fv.open(option);
     return new Promise((resolve: (data: ResourceArguments[]) => void, reject) => {
         fv.only('save', (data: ResourceArguments[]) => {

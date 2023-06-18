@@ -14,12 +14,12 @@ export class FieldUser extends OriginFormField {
         var vs = this.value;
         if (!Array.isArray(vs) && vs) vs = [vs];
         if (!Array.isArray(vs)) vs = [];
-        var rs = await useDataGridFileViewer({ roundArea: Rect.fromEvent(event) }, {
+        var rs = await useDataGridFileViewer({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
             mime: 'user',
             resources: vs,
             isMultiple: this.field?.config?.isMultiple ? true : false
         });
-        if (Array.isArray(rs) && rs.length > 0) {
+        if (Array.isArray(rs)) {
             this.value = rs;
             this.forceUpdate();
         }

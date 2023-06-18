@@ -16,6 +16,7 @@ export class DataGridViewData {
             if (r.ok) {
                 var row: Block = this.blocks.childs.find(g => (g as TableStoreItem).dataRow.id == id);
                 if (row) await row.delete()
+                lodash.remove(this.data, g => g.id == id);
                 this.total -= 1;
                 this.onNotifyPageReferenceBlocks();
             }
@@ -28,7 +29,7 @@ export class DataGridViewData {
         var vid = viewId || this.schema.defaultAddForm?.id;
         if (!this.schema.recordViews.some(s => s.id == vid)) vid = undefined;
         if (!vid) vid = this.schema.recordViews[0]?.id;
-        var url:'/page/dialog'= '/page/dialog';
+        var url: '/page/dialog' = '/page/dialog';
         var dialougPage: Page = await channel.air(url, {
             elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, vid),
             config: {

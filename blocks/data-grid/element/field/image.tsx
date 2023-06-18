@@ -13,7 +13,7 @@ export class FieldImage extends OriginField {
         if (!this.field?.config?.isMultiple) {
             vs = vs.slice(0, 1);
         }
-        var rs = await useDataGridFileViewer({ roundArea: Rect.fromEvent(event) }, {
+        var rs = await useDataGridFileViewer({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement)}, {
             mime: 'image',
             resources: vs,
             isMultiple: this.field?.config?.isMultiple ? true : false
