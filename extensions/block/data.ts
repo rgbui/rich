@@ -58,7 +58,7 @@ export var BlockSelectorData: BlockGroup[] = [
             { text: "列表", icon: ListSvg, url: '/list?{listType:0}', description: "", label: '/列表', labels: ['/lb', '/liebiao', '/wuxu', '/wx', '/bullet'] },
             { text: "引述文字", icon: QuoteSvg, url: '/quote', description: "", label: '/引述文字', labels: ['/yswz', '/yinshuwenzi', '/quote'] },
             { text: "分割线", icon: DividerSvg, url: '/divider', description: '', label: '/分割线', labels: ['/fgx', '/fengexian'] },
-            { text: "首重文字", icon: CalloutSvg, url: "/callout", description: "", label: "/首重文字", labels: ['/zzwz', '/zhuozhongwenzi', '/callout'] },
+            { text: "着重文字", icon: CalloutSvg, url: "/callout", description: "", label: "/首重文字", labels: ['/zzwz', '/zhuozhongwenzi', '/callout'] },
             { text: "数学公式", icon: EquationSvg, url: "/katex", description: "", label: "/数学公式", labels: ['/sxgs', '/公式', '/shuxuegongshi', '/latex', '/math'] },
             { text: '链接页面', icon: LinkSvg, url: '/link', description: "", label: "/链接", labels: ['/link', '/wz'] },
             { text: '进度条', icon: ProgressSvg, url: '/measure', description: "", label: "/进度条", labels: ['/jdt', '/jindutiao', '/progressbar'] },
