@@ -35,7 +35,8 @@ export class OriginFilterField extends Block {
 
     }
     async onSyncReferenceBlock() {
-        this.view.forceUpdate();
+        if (this.view)
+            this.view.forceUpdate();
     }
     dragBlock(event: React.MouseEvent) {
         DragBlockLine(this, event);
