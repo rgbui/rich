@@ -254,6 +254,14 @@ export abstract class Block extends Events {
             paddingRight: 2,
             paddingBottom: 3
         };
+        if (this.isLine) {
+            style = {
+                paddingTop: 0,
+                paddingLeft: 0,
+                paddingRight: 0,
+                paddingBottom: 0
+            }
+        }
         var s = this.pattern.style;
         if (s.backgroundColor) style.backgroundColor = s.backgroundColor;
         style.borderRadius = 4;
