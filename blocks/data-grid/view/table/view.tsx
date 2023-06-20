@@ -208,7 +208,7 @@ export class TableStoreView extends BlockView<TableStore>{
                 <ChildsArea childs={this.block.childs}></ChildsArea>
                 {this.block.isCanEdit() && <div
                     style={{ width: this.block.sumWidth + 'px' }}
-                    onMouseDown={e => { e.stopPropagation(); self.block.onAddRow({}, undefined, 'after') }}
+                    onMouseDown={e => { e.stopPropagation(); self.block.onSyncAddRow({}, undefined, 'after') }}
                     className="sy-dg-table-add">
                     <span className="flex flex-inline cursor item-hover round padding-w-5">
                         <span className="size-24 round flex-center "><Icon size={18} icon={PlusSvg}></Icon></span>
