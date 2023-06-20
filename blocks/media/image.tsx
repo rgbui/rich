@@ -107,7 +107,7 @@ export class Image extends Block {
         return this.el;
     }
     async getMd() {
-        return `![${this.caption || '图片'}](${this.src?.url})  \n`;
+        return `![${this.caption || '图片'}](${this.src?.url})`;
     }
 }
 @view('/image')
@@ -149,7 +149,7 @@ export class ImageView extends BlockView<Image>{
     imageWrapper: HTMLDivElement;
     renderEmptyImage() {
         if (this.block.speed) {
-            return <div className="sy-block-image-empty flex">
+            return <div className="sy-block-image-empty flex f-14">
                 <Spin size={16}></Spin>
                 <span>上传中:{this.block.speed}</span>
             </div>
