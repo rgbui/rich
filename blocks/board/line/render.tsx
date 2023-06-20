@@ -7,6 +7,7 @@ import { Point } from "../../../src/common/vector/point";
 import { Line } from "./line";
 
 export function renderLine(line: Line) {
+    if (!line.page.viewEl) return <></>
     var strokeWidth = line.realPx(10);
     var segs = line.segments;
 
