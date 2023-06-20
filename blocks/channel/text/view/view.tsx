@@ -16,6 +16,8 @@ import { ChannelTextType } from "../declare";
 import { RenderChats } from "./chats";
 import { ChatInputType, InputChatBox } from "../../../../component/view/input.chat/box";
 import { RobotRquest, getWsRobotTasks } from "../../../../net/ai/robot";
+import { RobotApply, RobotInfo } from "../../../../types/user";
+
 
 @view('/channel/text')
 export class ChannelTextView extends BlockView<ChannelText>{
@@ -61,30 +63,6 @@ export class ChannelTextView extends BlockView<ChannelText>{
             this.forceUpdate();
         }
     }
-    // updatePageInfo = (r: { id: string, pageInfo: LinkPageItem }) => {
-    //console.log('gggg', r);
-    // var { id, pageInfo } = r;
-    // console.log('ggeexxx');
-    // if (this.block.pageInfo?.id == id && id) {
-    // console.log('update', isUpdate);
-    //  var isUpdate: boolean = true;
-    // if (typeof pageInfo.text != 'undefined' && pageInfo.text != this.block.pageInfo.text) {
-    //     this.block.pageInfo.text = pageInfo.text;
-    //     isUpdate = true;
-    // }
-    // if (typeof pageInfo.description != 'undefined' && pageInfo.description != this.block.pageInfo.description) {
-    //     this.block.pageInfo.description = pageInfo.description;
-    //     isUpdate = true;
-    // }
-    // if (typeof pageInfo.icon != 'undefined' && !lodash.isNull(pageInfo.icon) && JSON.stringify(pageInfo.icon) != JSON.stringify(this.block.pageInfo.icon)) {
-    //     this.block.pageInfo.icon = lodash.cloneDeep(pageInfo.icon);
-    //     isUpdate = true;
-    // }
-    // if (isUpdate) {
-    //this.forceUpdate();
-    // }
-    // }
-    //}
     willUnmount() {
         channel.off('/page/update/info', this.updatePageInfo);
     }
@@ -98,14 +76,19 @@ export class ChannelTextView extends BlockView<ChannelText>{
     }
     inputChatBox: InputChatBox;
     uploadFiles: { id: string, speed: string }[] = [];
-    async onInput(data: ChatInputType) {
-        if (data.robot) {
-            //机器要指令
-            var gr;
-            var loadding = false;
+    async onRobotInput(data: ChatInputType, options: {
+        isAt: boolean,
+        prompt?: ArrayOf<RobotInfo['prompts']>,
+        replyId?: string,
+    }) {
+        //机器要指令
+        var gr;
+        var loadding = false;
+        return new Promise(async (resolve, reject) => {
             await RobotRquest(data.robot,
                 data.task,
                 data.args,
+                options,
                 async (re, done, tc, files) => {
                     if (!gr && !loadding) {
                         loadding = true;
@@ -114,6 +97,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
                             content: tc,
                             robotId: data.robot.robotId,
                             files: files || undefined,
+                            replyId: options.replyId
                         })
                         if (cr.data) {
                             var chat: ChannelTextType = {
@@ -123,9 +107,13 @@ export class ChannelTextView extends BlockView<ChannelText>{
                                 content: re,
                                 roomId: this.block.roomId,
                                 seq: cr.data.seq,
-                                files: files || []
+                                files: files || [],
+                                replyId: options.replyId
                             };
                             this.block.chats.push(chat);
+                            if (options.replyId) {
+                                chat.reply = this.block.chats.find(g => g.id == options.replyId);
+                            }
                             await this.block.setLocalSeq(cr.data.seq);
                             gr = chat;
                             loadding = false;
@@ -141,6 +129,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
                                 isEdited: false,
                                 files: files || undefined
                             });
+                            resolve(true)
                         }
                         var c = this.block.chats.find(g => g.id == gr.id);
                         if (c) {
@@ -151,6 +140,12 @@ export class ChannelTextView extends BlockView<ChannelText>{
                         }
                     }
                 })
+        })
+
+    }
+    async onInput(data: ChatInputType) {
+        if (data.robot) {
+            this.onRobotInput(data, { isAt: false });
         }
         else {
             var re = await channel.put('/ws/channel/send', {
@@ -177,6 +172,47 @@ export class ChannelTextView extends BlockView<ChannelText>{
                 this.block.chats.push(chat);
                 await this.block.setLocalSeq(re.data.seq);
                 this.forceUpdate(() => this.updateScroll());
+            }
+            if (Array.isArray(data.mentions) && data.mentions.length > 0) {
+                var ws = await getWsRobotTasks();
+                if (data.mentions.every(c => ws.some(w => w.robotId == c))) {
+                    var message = data.content;
+                    message = message.replace(/<a[\s]+class\="at-user"[^>]+>@[^@]+<\/a>/, '');
+                    message = message.replace(/<\/?[^>]+>/g, "");
+                    //@所有机器人
+                    var dm = ws.findAll(g => data.mentions.some(c => c == g.robotId));
+                    for (let i = 0; i < dm.length; i++) {
+                        var robot = dm[i];
+                        if (robot.scene == 'wiki') {
+                            var task = robot.tasks[0];
+                            if (task) {
+                                var prompt = robot.prompts?.find(g => g.apply == RobotApply.channel) || null;
+                                await this.onRobotInput({
+                                    robot: robot,
+                                    task: task,
+                                    args: {
+                                        'ask': message
+                                    }
+                                }, { isAt: true, prompt, replyId: re.data.id }
+                                );
+                            }
+                        }
+                        else {
+                            var task = robot.tasks.find(g => g.main == true);
+                            if (task) {
+                                await this.onRobotInput({
+                                    robot: robot,
+                                    task: task,
+                                    args: {
+                                        [task.args[0].name]: message
+                                    }
+                                }, { isAt: true, replyId: re.data.id }
+                                );
+                            }
+                        }
+                    }
+                    return;
+                }
             }
             if (this.block.page.pageInfo.speak == 'only') {
                 this.block.loadHasAbledSend(true);
@@ -230,8 +266,8 @@ export class ChannelTextView extends BlockView<ChannelText>{
         if (r.ok) {
             return r.data.list.map(c => {
                 return {
+                    ...c,
                     id: c.userid,
-                    ...c
                 }
             }) as any
         }

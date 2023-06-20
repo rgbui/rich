@@ -8,6 +8,7 @@ import { Rect } from "../../../src/common/vector/point";
 import { ChatCommandInput } from "./plugins/command";
 import { util } from "../../../util/util";
 import { getTextLink } from "../../../src/kit/write/declare";
+import { InputChatBox } from "./box";
 
 export type ChatInputOptions = {
 
@@ -25,7 +26,7 @@ export type ChatInputOptions = {
     searchRobots?: () => Promise<RobotInfo[]>,
     style?: CSSProperties,
     disabledInputQuote?: boolean,
-
+    box?: InputChatBox
 }
 
 export class ChatInput extends React.Component<ChatInputOptions>{
@@ -163,15 +164,15 @@ export class ChatInput extends React.Component<ChatInputOptions>{
             }
         }
         else if (key == '@') {
+            if (this.userPop.visible == true) {
+                this.userPop.hide();
+                return;
+            }
             var sel = window.getSelection();
             var node = sel.focusNode;
             if (node instanceof Text) {
-                var last = node.textContent.slice(sel.focusOffset - 1, sel.focusOffset);
-                if (sel.focusOffset == 0 && (!node.previousSibling) || last && (last.charCodeAt(0) == 32 || last.charCodeAt(0) == 160)) {
-                    //trigger search user
-                    this.userPop.open();
-                    return;
-                }
+                this.userPop.open();
+                return;
             }
             else if (node === this.richEl && sel.focusOffset == 0) {
                 this.userPop.open();
@@ -283,7 +284,7 @@ export class ChatInput extends React.Component<ChatInputOptions>{
             pc = pc.replace(/(\<br\/?\>)+$/g, '');
             return '<pre><code>' + pc + '</code></pre>'
         })
-        console.log('after', html);
+        // console.log('after', html);
         html = html.replace(/(\`[^\`]+\`)/g, (_, $1) => {
             return '<code>' + $1.slice(1, -1) + '</code>'
         })
@@ -475,7 +476,14 @@ export class ChatInput extends React.Component<ChatInputOptions>{
         `)
         })
         this.richEl.innerHTML = `<span>/${e.name}</span><span>${args.join('')}</span>`;
-        this.forceUpdate(() => {
+        if (this.props.box) this.props.box.forceUpdate(() => {
+            var sel = window.getSelection();
+            var e = this.richEl.querySelector('.task-prop-value');
+            if (e) {
+                sel.setBaseAndExtent(e, 0, e, 0);
+            }
+        })
+        else this.forceUpdate(() => {
             var sel = window.getSelection();
             var e = this.richEl.querySelector('.task-prop-value');
             if (e) {
@@ -485,10 +493,18 @@ export class ChatInput extends React.Component<ChatInputOptions>{
     }
     cancelCommand() {
         this.currentCommand = null;
-        this.richEl.innerHTML = '';
-        this.forceUpdate(() => {
+        this.currentRobot = null;
+        if (this.props.box) this.props.box.forceUpdate(async () => {
             var sel = window.getSelection();
-            sel.setBaseAndExtent(this.richEl, 0, this.richEl, 0);
+            await util.delay(100);
+            sel.collapse(this.richEl, 0);
+            this.richEl.innerHTML = '';
+        })
+        else this.forceUpdate(async () => {
+            var sel = window.getSelection();
+            await util.delay(100);
+            sel.collapse(this.richEl, 0);
+            this.richEl.innerHTML = '';
         })
     }
     getCommandValue() {
