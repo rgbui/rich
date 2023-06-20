@@ -52,7 +52,7 @@ export class TableStoreListView extends BlockView<TableStoreList>{
             {!this.block.noTitle && <Divider></Divider>}
             <ChildsArea childs={this.block.childs}></ChildsArea>
             {this.block.isCanEdit() && !this.block.isCardAuto && <div
-                onMouseDown={e => { e.stopPropagation(); this.block.onAddRow({}, undefined, 'after') }}
+                onMouseDown={e => { e.stopPropagation(); this.block.onSyncAddRow({}, undefined, 'after') }}
                 className="flex cursor item-hover round padding-5 f-14 remark">
                 <Icon icon={PlusSvg}></Icon>
                 <span>新增</span>

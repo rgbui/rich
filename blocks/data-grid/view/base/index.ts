@@ -331,6 +331,9 @@ export class DataGridView extends Block {
         var ws = channel.query('/current/workspace')
         return `[${this.schemaView?.text}](${ws.url + '/resource?elementUrl=' + window.encodeURIComponent(this.elementUrl)})`
     }
+    onSyncAddRow = lodash.debounce(async (data, id?: string, arrow: 'before' | 'after' = 'after', dialogPage: Page = null) => {
+        await this.onAddRow(data, id, arrow, dialogPage)
+    }, 1000)
 }
 
 export interface DataGridView extends DataGridViewLife { }

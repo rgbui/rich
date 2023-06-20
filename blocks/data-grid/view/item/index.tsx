@@ -72,7 +72,7 @@ export class TableStoreItem extends Block {
             data: { [field.name]: value }
         })
     }
-    async onUpdateCellProp(props: Record<string, any>) {
+    async onUpdateCellProps(props: Record<string, any>) {
         Object.assign(this.dataRow, props);
         var dr = this.dataGrid.data.find(g => g.id == this.dataRow.id);
         if (dr) Object.assign(dr, props)
@@ -169,7 +169,7 @@ export class TableStoreItem extends Block {
         }
     }
     async onHandlePlus() {
-        await this.dataGrid.onAddRow({}, this.dataRow.id, 'after');
+        await this.dataGrid.onSyncAddRow({}, this.dataRow.id, 'after');
     }
     get isAllowDrop(): boolean {
         return true;
