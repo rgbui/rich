@@ -28,6 +28,7 @@ export class ChatInputPop extends React.Component<{
     nodeOffset: number;
     async open() {
         try {
+            this.isContinueEmpty = false;
             var sel = window.getSelection();
             this.node = sel.focusNode as any;
             /**
@@ -55,7 +56,7 @@ export class ChatInputPop extends React.Component<{
     }
     keydown(key: string) {
         if (key == 'enter') {
-            if (this.selectIndex == 0) this.select({ name: '所有人' } as any)
+            if (this.selectIndex == 0 && '所有人'.startsWith(this.word)) this.select({ name: '所有人', id: 'all' } as any)
             else {
                 var g = this.users[this.selectIndex - 1];
                 this.select(g);
@@ -83,7 +84,8 @@ export class ChatInputPop extends React.Component<{
         }
     }
     select(user: UserBasic) {
-        this.props.select(user);
+        if (user)
+            this.props.select(user);
         this.hide()
     }
     back() {
@@ -102,8 +104,10 @@ export class ChatInputPop extends React.Component<{
     }
     hide() {
         this.visible = false;
+        this.isContinueEmpty = false;
         this.forceUpdate()
     }
+    isContinueEmpty: boolean = false;
     word: string = ''
     search = lodash.debounce(async (word: string) => {
         this.loading = true;
@@ -112,6 +116,14 @@ export class ChatInputPop extends React.Component<{
             this.word = word;
             if (typeof this.props.search == 'function') {
                 this.users = await this.props.search(word);
+                if (this.users.length == 0) {
+                    if (this.isContinueEmpty == true) {
+                        this.hide();
+                        return;
+                    }
+                    this.isContinueEmpty = true;
+                }
+                else this.isContinueEmpty = false;
             }
             else this.users = [
                 { id: 'kan', name: 'ggg' },
@@ -169,12 +181,12 @@ export class ChatInputPop extends React.Component<{
                         onClick={e => this.select(u)}
                         key={u.id}
                         className={'h-30 gap-h-5 item-hover round padding-w-10 cursor flex' + (this.selectIndex == (index + 1) ? " item-hover-focus" : "")}>
-                        <Avatar size={24} user={u} showName></Avatar>
+                        <Avatar size={24} userid={u.id} showName></Avatar>
                     </div>
                 })}
             </div>
             <SpinBox spin={this.loading}></SpinBox>
-            {this.users.length == 0 && this.loading == false && <div className="remark f-12">没有搜到用户</div>}
+            {this.users.length == 0 && this.loading == false && <div className="remark f-12 gap-10">没有搜到用户</div>}
         </div>, this.panel)
     }
     private _panel: HTMLElement;
