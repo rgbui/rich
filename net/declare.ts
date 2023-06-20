@@ -308,7 +308,8 @@ export interface ChannelActMapUrls {
 	"/cache/set":{args:{key:string,value:any},returnType:Promise<void>},
 	"/view/snap/operator":{args:{ elementUrl: string, operate: Partial<UserAction> },returnType:Promise<{seq: number,id: string;}>},
 	"/view/snap/store":{args:{  elementUrl: string, seq: number, content: any,plain?:string,text?:string,thumb?:any },returnType:Promise<void>},
-	"/open/pay":{args:{},returnType:{}}
+	"/open/pay":{args:{},returnType:{}},
+	"/shy/share":{args:{type: "weibo"|"updateTimelineShareData"|"updateAppMessageShareData", title: string, description?: string, pic?: string, url: string},returnType:{}}
 }
 export interface ChannelAirMapUrls {
     "/page/update/info":{args:{id?: string,elementUrl?:string, pageInfo:LinkPageItem},returnType:void},
