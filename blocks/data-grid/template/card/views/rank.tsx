@@ -18,7 +18,7 @@ CardModel({
     title: '排行榜',
     remark: '排行榜',
     image: Card1.default,
-    group: 'image', forUrls: [BlockUrlConstant.DataGridList],
+    forUrls: [BlockUrlConstant.DataGridList],
     props: [
         { name: 'user', text: '用户', types: [FieldType.user] },
         { name: 'score', text: '得分', types: [FieldType.number] },

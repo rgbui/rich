@@ -14,7 +14,6 @@ import "./views/issue";
 
 export type CardPropsType = {
     url: string,
-    group?: string,
     title: string,
     remark?: string,
     image: any,

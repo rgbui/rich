@@ -1,8 +1,5 @@
-
-
-import React from "react";
-import { ReactNode } from "react";
-import { DotsSvg, LoveFillSvg, LoveSvg, TrashSvg, UploadSvg } from "../../../../../component/svgs";
+import React, { ReactNode } from "react";
+import { UploadSvg, TrashSvg, DotsSvg, LoveFillSvg, LoveSvg } from "../../../../../component/svgs";
 import { Avatar } from "../../../../../component/view/avator/face";
 import { UserBox } from "../../../../../component/view/avator/user";
 import { Icon } from "../../../../../component/view/icon";
@@ -10,21 +7,21 @@ import { useSelectMenuItem } from "../../../../../component/view/menu";
 import { MenuItemType } from "../../../../../component/view/menu/declare";
 import { BackgroundColorList } from "../../../../../extensions/color/data";
 import { ResourceArguments } from "../../../../../extensions/icon/declare";
+import { autoImageUrl } from "../../../../../net/element.type";
+import * as Card1 from "../../../../../src/assert/img/card/card8.jpg"
+import { BlockUrlConstant } from "../../../../../src/block/constant";
 import { Rect } from "../../../../../src/common/vector/point";
 import { util } from "../../../../../util/util";
 import { FieldType } from "../../../schema/type";
 import { CardModel, CardViewCom } from "../factory/observable";
 import { CardView } from "../view";
-import * as Card1 from "../../../../../src/assert/img/card/card8.jpg"
-import { BlockUrlConstant } from "../../../../../src/block/constant";
-import { autoImageUrl } from "../../../../../net/element.type";
 
 CardModel({
     url: '/card/pinterest',
     title: '瀑布流图片',
     remark: '适用于摄影等图像展示',
     image: Card1.default,
-    forUrls: [BlockUrlConstant.DataGridGallery],
+    forUrls: [BlockUrlConstant.DataGridList],
     props: [
         { name: 'pic', text: '封面图', types: [FieldType.image, FieldType.cover, FieldType.video], required: true },
         { name: 'author', text: '作者', types: [FieldType.creater] },
@@ -34,7 +31,7 @@ CardModel({
     ],
     views: [
         { url: BlockUrlConstant.DataGridTable, text: '列表', },
-        { autoCreate: true, url: BlockUrlConstant.DataGridGallery, text: '相册', },
+        { autoCreate: true, url:BlockUrlConstant.DataGridList, text: '相册', },
         { url: BlockUrlConstant.RecordPageView, text: '图片详情', }
     ],
     dataList: [

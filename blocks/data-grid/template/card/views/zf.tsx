@@ -24,7 +24,6 @@ CardModel({
     title: 'app工具',
     remark: 'app工具',
     image: Card1.default,
-    group: 'image',
     props: [
         {
             name: 'cover',

@@ -24,7 +24,6 @@ CardModel({
     title: '需求发布',
     remark: '适用于需求发布',
     image: Card1.default,
-    group: 'image',
     forUrls: [BlockUrlConstant.DataGridList],
     props: [
         { name: 'title', text: '标题', types: [FieldType.title, FieldType.text], required: true },

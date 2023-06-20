@@ -18,7 +18,7 @@ CardModel({
     title: '问题',
     remark: '问答',
     image: Card1.default,
-    group: 'image', forUrls: [BlockUrlConstant.DataGridList],
+    forUrls: [BlockUrlConstant.DataGridList],
     props: [
         {
             name: 'title',
