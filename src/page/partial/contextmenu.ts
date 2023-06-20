@@ -443,7 +443,7 @@ export class PageContextmenu {
         channel.air('/page/remove', { item: this.pageInfo.id });
     }
     async onSyncAi(this: Page, robotId: string, isTurn?: boolean) {
-        ShyAlert('正在同步中...', 'warn', isTurn ? 1000 * 60 * 10 : 1000 * 60 * 2);
+        ShyAlert('正在同步中...', 'warn', isTurn ? 1000 * 60 * 10 : 1000 * 4);
         try {
             var r = await channel.put('/sync/wiki/doc', {
                 robotId,
@@ -462,7 +462,8 @@ export class PageContextmenu {
             this.onError(ex)
         }
         finally {
-            CloseShyAlert()
+            if (isTurn)
+                CloseShyAlert()
         }
     }
 }
