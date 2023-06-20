@@ -79,16 +79,17 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
     }
     async uploadImage(name: string, event: React.MouseEvent | MouseEvent | Rect, updateFileName?: string) {
         if (typeof (event as any).stopPropagation == 'function') (event as any).stopPropagation()
-        var resource = await useImageFilePicker({ roundArea: Rect.fromEvent(event) });
+        var resource = await useImageFilePicker({ roundArea: event instanceof Rect ? event : Rect.fromEle(event.currentTarget as HTMLElement) });
         if (resource) {
             var field = this.getField(name);
-            if (this.props.item instanceof TableStoreItem) {
+            if (this.props.item instanceof TableStoreItem)
+            {
                 if (updateFileName) {
                     var uf = this.getField(updateFileName);
-                    var filename=resource.filename;
+                    var filename = resource.filename;
                     var filename = filename.slice(0, filename.lastIndexOf('.'))
-                    await this.props.item.onUpdateProps({
-                        [field.name]: resource,
+                    await this.props.item.onUpdateCellProps({
+                        [field.name]: [resource],
                         [uf.name]: filename
                     })
                 }

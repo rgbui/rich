@@ -138,6 +138,7 @@ import LockSvg from "../src/assert/svg/lock.svg";
 import LogoutSvg from "../src/assert/svg/logout.svg";
 import LoopSvg from "../src/assert/svg/loop.svg";
 import LoveSvg from "../src/assert/svg/love.svg";
+import LoveFillSvg from "../src/assert/svg/loveFill.svg";
 import MagicSvg from "../src/assert/svg/magic.svg";
 import MaximizeSvg from "../src/assert/svg/maximize.svg";
 import MemberSvg from "../src/assert/svg/member.svg";
@@ -378,6 +379,7 @@ LockSvg,
 LogoutSvg,
 LoopSvg,
 LoveSvg,
+LoveFillSvg,
 MagicSvg,
 MaximizeSvg,
 MemberSvg,

@@ -5,30 +5,42 @@ import { util } from "../../util/util";
 import { channel } from "../channel";
 import { AskTemplate, getTemplateInstance } from "../../extensions/ai/prompt";
 import { marked } from "marked"
+
 export async function RobotRquest(robot: RobotInfo,
     task: RobotTask,
-    args: Record<string, any>,
+    args: Record<string, any>, options: {
+        isAt: boolean,
+        prompt?: ArrayOf<RobotInfo['prompts']>
+    } = { isAt: false },
     callback: (msg: string, done?: boolean, content?: string, files?: ResourceArguments[]) => Promise<void>) {
     var user = await channel.query('/query/current/user')
     if (robot.scene == 'wiki') {
         var text = args.ask + `<a class='at-user' data-userid='${user.id}'>@${user.name}</a><br/>`;
+        if (options.isAt) text = '';
         args.robotId = robot.robotId;
         await callback(text + "<span class='typed-print'></span>", false, text);
         try {
-            var g = await channel.get('/query/wiki/answer', args as any);
-            if (g.data?.contents?.length > 0) {
-                var content = getTemplateInstance(AskTemplate, {
-                    prompt: args.ask,
-                    context: g.data.contents[0].content
-                });
-                await channel.post('/text/ai/stream', {
-                    question: content,
-                    callback(str, done) {
-                        if (typeof str == 'string') text += str;
-                        callback(marked.parse(text + (done ? "" : "<span class='typed-print'></span>")), done, marked.parse(text))
-                    }
-                });
+            var template = options?.prompt?.prompt || AskTemplate;
+            var content = '';
+            if (template.indexOf('{context}') > -1) {
+                var g = await channel.get('/query/wiki/answer', args as any);
+                if (g.data?.contents?.length > 0) {
+                    content = getTemplateInstance(template, {
+                        prompt: args.ask,
+                        context: g.data.contents[0].content
+                    });
+                }
             }
+            else content = getTemplateInstance(template, {
+                prompt: args.ask
+            });
+            await channel.post('/text/ai/stream', {
+                question: content,
+                callback(str, done) {
+                    if (typeof str == 'string') text += str;
+                    callback(marked.parse(text + (done ? "" : "<span class='typed-print'></span>")), done, marked.parse(text))
+                }
+            });
         }
         catch (ex) {
             text += `<p class='error'>回答出错</p>`
@@ -46,6 +58,7 @@ export async function RobotRquest(robot: RobotInfo,
             var ks = Object.keys(args)
             var cts = ks.length == 1 ? args[ks[0]] : ks.map(c => `${c}:${args[c]}`).join('<br/>')
             var text = cts + `-<a class='at-user' data-userid='${user.id}'>@${user.name}</a><br/>`;
+            if (options.isAt) text = '';
             await callback(text + "<span class='typed-print'></span>", false, text);
             await channel.post('/fetch', {
                 url,
@@ -102,42 +115,48 @@ export async function RobotRquest(robot: RobotInfo,
     }
 }
 
+// export async function RobotWikiRequest(
+//     robot: RobotInfo,
+//     prompt: ArrayOf<RobotInfo['prompts']>,
+//     args: Record<string, any>,
+//     callback: (msg: string, done?: boolean, content?: string, files?: ResourceArguments[]) => Promise<void>) {
+//     var text = '';
+//     args.robotId = robot.robotId;
+//     await callback(text + "<span class='typed-print'></span>", false, text);
+//     try {
+//         var content = '';
+//         if (prompt.prompt.indexOf('{context}') > -1) {
+//             var g = await channel.get('/query/wiki/answer', args as any);
+//             if (g.data?.contents?.length > 0) {
+//                 content = getTemplateInstance(prompt.prompt, {
+//                     ...args.ask,
+//                     context: g.data.contents[0].content
+//                 });
+//             }
+//         }
+//         else content = getTemplateInstance(prompt.prompt, { ...args.ask });
+//         await channel.post('/text/ai/stream', {
+//             question: content,
+//             callback(str, done) {
+//                 if (typeof str == 'string') text += str;
+//                 callback(marked.parse(text + (done ? "" : "<span class='typed-print'></span>")), done, marked.parse(text))
+//             }
+//         });
+//     }
+//     catch (ex) {
+//         text += `<p class='error'>回答出错</p>`
+//         console.error(ex)
+//         callback(text, true)
+//     }
+// }
 
 
-export async function RobotWikiRequest(
-    robot: RobotInfo,
-    prompt: ArrayOf<RobotInfo['prompts']>,
-    args: Record<string, any>,
-    callback: (msg: string, done?: boolean, content?: string, files?: ResourceArguments[]) => Promise<void>) {
-    var text = '';
-    args.robotId = robot.robotId;
-    await callback(text + "<span class='typed-print'></span>", false, text);
-    try {
-        var g = await channel.get('/query/wiki/answer', args as any);
-        if (g.data?.contents?.length > 0) {
-            var content = getTemplateInstance(prompt.prompt, {
-                ...args.ask,
-                context: g.data.contents[0].content
-            });
-            await channel.post('/text/ai/stream', {
-                question: content,
-                callback(str, done) {
-                    if (typeof str == 'string') text += str;
-                    callback(marked.parse(text + (done ? "" : "<span class='typed-print'></span>")), done, marked.parse(text))
-                }
-            });
-        }
-    }
-    catch (ex) {
-        text += `<p class='error'>回答出错</p>`
-        console.error(ex)
-        callback(text, true)
-    }
-}
+
 
 var robots: RobotInfo[];
-export async function getWsRobotTasks()
-{
+var robotsDate: number;
+export async function getWsRobotTasks() {
+    if (robotsDate && robotsDate > Date.now() - 1000 * 60 * 5) return robots;
     var gs = await channel.get('/ws/robots');
     if (gs.ok) {
         var rs = await channel.get('/robots/info', { ids: gs.data.list.map(g => g.userid) });
@@ -162,8 +181,10 @@ export async function getWsRobotTasks()
             })
         }
     }
+    robotsDate = Date.now();
     return robots;
 }
+
 
 export async function getWsWikiRobots() {
     var robots: RobotInfo[];

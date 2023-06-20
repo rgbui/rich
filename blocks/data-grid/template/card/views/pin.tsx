@@ -2,7 +2,7 @@
 
 import React from "react";
 import { ReactNode } from "react";
-import { DotsSvg, LoveSvg, TrashSvg, UploadSvg } from "../../../../../component/svgs";
+import { DotsSvg, LoveFillSvg, LoveSvg, TrashSvg, UploadSvg } from "../../../../../component/svgs";
 import { Avatar } from "../../../../../component/view/avator/face";
 import { UserBox } from "../../../../../component/view/avator/user";
 import { Icon } from "../../../../../component/view/icon";
@@ -57,7 +57,7 @@ export class CardPin extends CardView {
         var title = this.getValue<string>('title');
         var remark = this.getValue<string>('remark');
         var hasPic = Array.isArray(pics) && pics.length > 0;
-        var like = this.getValue<string>('like', FieldType.like);
+        var like = this.getValue<{ count: number, users: string[] }>('like', FieldType.like);
         var isLike = this.isEmoji('like')
         async function openProperty(event: React.MouseEvent) {
             event.stopPropagation();
@@ -87,25 +87,30 @@ export class CardPin extends CardView {
                     </span>
                 </div>}
                 <div className="mask-1 visible pos-inset z-1  round-16"></div>
-                <div className="pos-bottom-full  flex-end z-2 visible gap-b-5 r-size-24 r-gap-r-5 r-circle r-cursor">
-                    <span onMouseDown={e => self.onUpdateCellInteractive(e, 'like')} className={"flex-center" + (isLike ? " bg-primary text-white" : " bg-white  item-white-hover text-1")}>
-                        <Icon icon={LoveSvg}></Icon>
-                    </span>
+                <div className="pos-top-full  flex-end z-2 visible gap-t-5 r-size-24 r-gap-r-5 r-circle r-cursor">
                     <span onMouseDown={e => openProperty(e)} className="bg-white item-white-hover   flex-center">
                         <Icon size={18} icon={DotsSvg}></Icon>
                     </span>
                 </div>
             </div>
             <div className="text-1 padding-w-8 f-14 gap-h-5 bold">
-                {title}
+                {title || remark}
             </div>
             <div className="text-1 padding-w-8  f-14 gap-h-5 flex">
-                <UserBox userid={author}>{(user) => {
-                    return <>
-                        <Avatar size={30} user={user}></Avatar>
-                        <a className="cursor gap-l-10 underline-hover text-1">{user.name}</a>
-                    </>
-                }}</UserBox>
+                <div className="flex-fixed flex">
+                    <UserBox userid={author}>{(user) => {
+                        return <>
+                            <Avatar size={24} user={user}></Avatar>
+                            <a className="cursor gap-l-5 underline-hover text-1">{user.name}</a>
+                        </>
+                    }}</UserBox>
+                </div>
+                <div className="flex-auto flex-end">
+                    <span onMouseDown={e => self.onUpdateCellInteractive(e, 'like')} className={"circle flex-center cursor" + (isLike ? " text-p" : " text-1")}>
+                        <Icon icon={isLike ? LoveFillSvg : LoveSvg}></Icon>
+                    </span>
+                    {like.count > 0 && <span className="text-1 cursor gap-l-5">{like.count}</span>}
+                </div>
             </div>
             <div className="remark gap-h-10">{remark}</div>
         </div>
