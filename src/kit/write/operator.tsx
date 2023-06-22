@@ -27,7 +27,7 @@ export async function useOperatorBlockData(blockData: BlockSelectorItem,
                     }
                 }),
                 views: lodash.cloneDeep(g.views || []),
-                datas: lodash.cloneDeep(g.dataList || [])
+                datas: typeof g.createDataList == 'function' ? await g.createDataList() : lodash.cloneDeep(g.dataList || [])
             });
             if (r.ok) {
                 var schema = await TableSchema.cacheSchema(r.data.schema);
@@ -43,7 +43,7 @@ export async function useOperatorBlockData(blockData: BlockSelectorItem,
                     });
                     await (newBlock as DataGridView).loadSchema();
                     var sch = (newBlock as DataGridView).schema;
-                    (newBlock as DataGridView).fields = sch.fields.findAll(c =>g.props.some(pro => pro.types.includes(c.type))).map(c => sch.createViewField(c));
+                    (newBlock as DataGridView).fields = sch.fields.findAll(c => g.props.some(pro => pro.types.includes(c.type))).map(c => sch.createViewField(c));
                     if (typeof g.blockViewHandle == 'function') await g.blockViewHandle(newBlock as DataGridView, g)
                     else {
                         var ps = g.props.toArray(pro => {
