@@ -238,5 +238,13 @@ export var util = {
     getTextareaShowHtml(text: string) {
         text = text.replace(/\n/g, '<br/>');
         return text;
+    },
+    getFileMime(ext: string) {
+        ext = ext.toLowerCase();
+        if (['.gif', '.png', '.webp', '.jpg', '.jpeg', '.bmp', '.svg', '.tga', '.exif', '.fpx', '.ico', '.avif', '.apng'].includes(ext)) return "image"
+        else if (['.mp3', '.wma', '.wav', '.midi', '.mp4', '.m4v', '.mkv', '.flv', '.vob', '.3gp', '.avi', '.rm', '.rmvb', '.mpeg', '.mpe', '.mpg', '.dat', '.mov', '.qt', '.asf', '.wmv', '.asx'].includes(ext)) return 'video'
+        else if (['.zip', '.rar'].includes(ext)) return 'zip'
+        else if (['.doc', '.docx', '.pdf', '.ppt', '.xls', '.xlsx'].includes(ext)) return "doc"
+        else return 'unknow';
     }
 }
