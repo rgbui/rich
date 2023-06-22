@@ -7,10 +7,13 @@ import "./views/pin";
 import "./views/article";
 import "./views/events";
 import "./views/tool";
-import "./views/questions";
-import "./views/rank";
 import "./views/things";
-import "./views/issue";
+import "./views/tizhi";
+import "./views/disk";
+
+// import "./views/issue";
+//import "./views/questions";
+//import "./views/rank";
 
 export type CardPropsType = {
     url: string,
@@ -23,4 +26,5 @@ export type CardPropsType = {
     views?: Partial<TableSchemaView & { autoCreate?: boolean }>[],
     blockViewHandle?: (block: DataGridView, g: CardPropsType) => Promise<void>,
     dataList?: any[],
+    createDataList?(): Promise<any[]>
 }

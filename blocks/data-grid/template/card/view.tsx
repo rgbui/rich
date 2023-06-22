@@ -57,6 +57,12 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
                             else return { text: g };
                         }) as any
                         break;
+                    case FieldType.image:
+                    case FieldType.cover:
+                        if (lodash.isUndefined(value) || lodash.isNull(value)) return [] as any;
+                        var v = Array.isArray(value) ? value : [value];
+                        return v as any;
+                        break;
                 }
             }
             return value;
@@ -73,6 +79,9 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
                     case FieldType.option:
                     case FieldType.options:
                         return [] as any
+                    case FieldType.image:
+                    case FieldType.cover:
+                        return [] as any
                 }
             }
         }
@@ -82,8 +91,7 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
         var resource = await useImageFilePicker({ roundArea: event instanceof Rect ? event : Rect.fromEle(event.currentTarget as HTMLElement) });
         if (resource) {
             var field = this.getField(name);
-            if (this.props.item instanceof TableStoreItem)
-            {
+            if (this.props.item instanceof TableStoreItem) {
                 if (updateFileName) {
                     var uf = this.getField(updateFileName);
                     var filename = resource.filename;
@@ -105,9 +113,9 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
             await (this.props.dataGrid as DataGridView).onRemoveRow(this.props.item.dataRow.id);
         }
     }
-    async openEdit(event: React.MouseEvent) {
+    async openEdit(event: React.MouseEvent, forceUrl?: '/page/open' | '/page/dialog' | '/page/slide') {
         if (this.props.dataGrid instanceof TableStoreGallery || this.props.dataGrid instanceof TableStoreList) {
-            this.props.dataGrid.onOpenEditForm(this.props.item.dataRow.id)
+            this.props.dataGrid.onOpenEditForm(this.props.item.dataRow.id, forceUrl)
         }
     }
     isEmoji(name: string) {

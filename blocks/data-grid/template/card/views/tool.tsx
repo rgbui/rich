@@ -21,18 +21,18 @@ CardModel({
     forUrls: [BlockUrlConstant.DataGridGallery],
     props: [
         {
-            name: 'pic',
-            text: '插图',
-            types: [FieldType.image, FieldType.cover, FieldType.video],
-            required: true
-        },
-        {
             name: 'title',
             text: '标题',
             types: [FieldType.title, FieldType.text],
             required: true
         },
-        { name: 'remark', text: '描述', types: [FieldType.text] },
+        {
+            name: 'pic',
+            text: '插图',
+            types: [FieldType.image, FieldType.cover, FieldType.video],
+            required: true
+        },
+        { name: 'remark', text: '描述', types: [FieldType.plain] },
     ],
     views: [
         { url: BlockUrlConstant.DataGridTable, text: 'app工具', },
@@ -53,7 +53,7 @@ export class CardPin extends CardView {
         var title = this.getValue<string>('title');
         var remark = this.getValue<string>('remark');
 
-        return <div className="shadow cursor round box-border h-100 item-hover padding-10" onMouseDown={e => self.openEdit(e)}>
+        return <div className="cursor round border h-100 item-hover padding-10" onMouseDown={e => self.openEdit(e)}>
             <div className="flex">
                 <div className="flex-fixed">
                     {hasPic && <img className="size-80 block round-16 object-center" src={autoImageUrl(pics[0].url, 250)} />}

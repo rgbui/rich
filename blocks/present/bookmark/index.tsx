@@ -97,7 +97,7 @@ export class BookmarkView extends BlockView<Bookmark>{
             else if (this.block.bookmarkUrl) {
                 return <a className='sy-block-bookmark-link flex visible-hover' href={this.block.bookmarkUrl} target='_blank' >
                     <span className="remark flex-auto">{this.block.bookmarkUrl}</span>
-                    <ToolTip overlay={'重新生成书签'}> <span onMouseDown={e => {
+                    <ToolTip overlay={'重新生成书签'}><span onMouseDown={e => {
                         e.stopPropagation();
                         e.preventDefault();
                     }} className="flex-fixed size-24 flex-center cursor visible" onClick={e => {

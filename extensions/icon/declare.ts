@@ -31,5 +31,6 @@ export type ResourceArguments = {
     filename?: string,
     size?: number,
     origin?: string,
-    mime?:string
+    mime?:string,
+    ext?:string
 }

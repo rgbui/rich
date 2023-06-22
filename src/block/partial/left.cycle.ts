@@ -217,8 +217,13 @@ export class Block$LifeCycle {
                         var childs = data.blocks[n];
                         this.blocks[n] = [];
                         await childs.eachAsync(async (dc) => {
-                            var block = await BlockFactory.createBlock(dc.url, this.page, dc, this);
-                            this.blocks[n].push(block);
+                            try {
+                                var block = await BlockFactory.createBlock(dc.url, this.page, dc, this);
+                                this.blocks[n].push(block);
+                            }
+                            catch (ex) {
+                                console.error(ex);
+                            }
                         })
                     }
                 }

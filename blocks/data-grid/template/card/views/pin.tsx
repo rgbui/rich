@@ -26,7 +26,7 @@ CardModel({
     image: Card1.default,
     forUrls: [BlockUrlConstant.DataGridGallery],
     props: [
-        { name: 'pic', text: '封面图', types: [FieldType.image, FieldType.cover, FieldType.video], required: true },
+        { name: 'pic', text: '封面图', types: [FieldType.image, FieldType.video], required: true },
         { name: 'author', text: '作者', types: [FieldType.creater] },
         { name: 'title', text: '标题', types: [FieldType.title, FieldType.text] },
         { name: 'remark', text: '描述', types: [FieldType.text] },

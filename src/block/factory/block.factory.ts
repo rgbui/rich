@@ -35,7 +35,11 @@ export class BlockFactory {
             if (typeof newBlock.initialedLoad == 'function') await newBlock.initialedLoad();
             return newBlock;
         }
-        else throw new Exception(ExceptionType.notFoundBlockUrl, 'not found block class:' + url)
+        else {
+            var error = new Error('not found block class:' + url);
+            console.log('error', error);
+            throw error;
+        }
     }
     public static parseBlockUrl(url: string) {
         if (url.indexOf('?') > -1) {

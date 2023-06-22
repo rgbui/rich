@@ -82,7 +82,6 @@ export class CardPin extends CardView {
                     </span>
                 </div>
             </div>
-
         </div>
     }
 } 
