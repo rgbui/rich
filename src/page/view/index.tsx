@@ -162,11 +162,12 @@ export class PageView extends Component<{ page: Page }>{
                 newBlock.mounted(() => {
                     this.page.kit.anchorCursor.onFocusBlockAnchor(newBlock, { last: true, render: true, merge: true });
                     var title = this.page.getPageDataInfo()?.text;
-                    useAITool({
-                        block: newBlock,
-                        isRun: true,
-                        ask: (title ? "以" + title + "为主题，" : "") + '拟一份草稿，不少于1000字'
-                    })
+                    if (config?.useAi)
+                        useAITool({
+                            block: newBlock,
+                            isRun: true,
+                            ask: (title ? "以" + title + "为主题，" : "") + '拟一份草稿，不少于1000字'
+                        })
                 })
             });
         }
@@ -252,7 +253,6 @@ export class PageView extends Component<{ page: Page }>{
                     onMouseDown={e => this.page.onMousedown(e)}>
                     <PageLayoutView page={this.page}>
                         <div className={'shy-page-view-content '} ref={e => this.page.contentEl = e}>
-                            {/* {isDocCard && <div></div>} */}
                             <PageCover page={this.page}></PageCover>
                             {!pd?.cover?.abled && gap > 0 && <div className={'h-' + gap}></div>}
                             {this.page.nav && this.renderNavs()}
