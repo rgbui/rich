@@ -45,17 +45,17 @@ export class DataGridViewData {
         }
         await channel.air('/page/dialog', { elementUrl: null });
     }
-    async onOpenEditForm(this: DataGridView, id: string) {
+    async onOpenEditForm(this: DataGridView, id: string, forceUrl?: '/page/open' | '/page/dialog' | '/page/slide') {
         var url: '/page/open' | '/page/dialog' | '/page/slide' = '/page/dialog';
-        if (this.openRecordSource == 'page')
-            url = '/page/open';
-        else if (this.openRecordSource == 'slide')
-            url = '/page/slide';
+        if (typeof forceUrl == 'string') url = forceUrl;
+        else {
+            if (this.openRecordSource == 'page')
+                url = '/page/open';
+            else if (this.openRecordSource == 'slide')
+                url = '/page/slide';
+        }
         var dialougPage: Page = await channel.air(url, {
-            elementUrl: getElementUrl(ElementType.SchemaData,
-                this.schema.id,
-                id
-            ),
+            elementUrl: getElementUrl(ElementType.SchemaData,this.schema.id,id),
             config: {
                 force: true
             }
@@ -65,7 +65,7 @@ export class DataGridViewData {
             dialougPage.onSave();
             newRow = await dialougPage.getSchemaRow()
         }
-        if (this.openRecordSource != 'page') await channel.air(url, { elementUrl: null })
+        if (url == '/page/dialog' || url == '/page/slide') await channel.air(url, { elementUrl: null })
         if (newRow) await this.onRowUpdate(id, newRow);
     }
     async onAddRow(this: DataGridView, data, id?: string, arrow: 'before' | 'after' = 'after', dialogPage: Page = null) {
