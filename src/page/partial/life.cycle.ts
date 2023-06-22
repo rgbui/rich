@@ -92,7 +92,7 @@ export class Page$Cycle {
             if ([PageLayoutType.db].some(s => s == this.pageLayout.type) && !this.exists(g => g instanceof DataGridView)) {
                 await this.loadDefaultScheamView();
             }
-            if ([ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type)) {
+            if (this.pe && [ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type)) {
                 this.requireSelectLayout = false;
                 await this.loadPageSchema();
             }
@@ -216,9 +216,9 @@ export class Page$Cycle {
         return (await this.views.asyncMap(async v => await v.getMd())).join(" \n");
     }
     async getThumb(this: Page) {
-        var r = this.find(g => g.url == BlockUrlConstant.Image && ((g as Image).src ? true : false));
+        var r = this.findAll(g => g.url == BlockUrlConstant.Image && ((g as Image).src ? true : false));
         if (r) {
-            return lodash.cloneDeep((r as Image).src);
+            return lodash.cloneDeep((r as Image[]).map(i => i.src));
         }
     }
     async loadFile(this: Page, blob: Blob) {

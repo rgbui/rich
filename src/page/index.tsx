@@ -277,6 +277,7 @@ export class Page extends Events<PageDirective>{
         id2: string;
     }
     get pe() {
+        if(lodash.isUndefined(this.elementUrl)||lodash.isNull(this.elementUrl))return null;
         if (typeof this._pe == 'undefined')
             this._pe = parseElementUrl(this.elementUrl) as any;
         return this._pe;
