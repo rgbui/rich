@@ -13,7 +13,7 @@ import { BlockUrlConstant } from "../../../../../src/block/constant";
  * 
  * 
  */
-CardModel({
+CardModel({ abled:false,
     url: '/rank',
     title: '排行榜',
     remark: '排行榜',

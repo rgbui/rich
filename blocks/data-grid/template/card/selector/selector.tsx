@@ -34,7 +34,7 @@ export class CardSelector extends EventsComponent {
         </div>
     }
     getStores() {
-        return Array.from(CardFactory.CardModels.values()).findAll(g => !this.forUrl || !Array.isArray(g.forUrls) || this.forUrl && Array.isArray(g.forUrls) && g.forUrls.includes(this.forUrl))
+        return Array.from(CardFactory.CardModels.values()).findAll(g => !this.forUrl || !Array.isArray(g.forUrls) || this.forUrl && Array.isArray(g.forUrls) && g.forUrls.includes(this.forUrl)).filter(g => g.abled !== false)
     }
     selectUrl: string = '';
     schema: TableSchema = null;

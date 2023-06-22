@@ -13,7 +13,7 @@ import { util } from "../../../../../util/util";
  * https://segmentfault.com/questions
  * 
  */
-CardModel({
+CardModel({ abled:false,
     url: '/questions',
     title: '问题',
     remark: '问答',

@@ -12,6 +12,7 @@ import { util } from "../../../../../util/util";
 import { Avatar } from "../../../../../component/view/avator/face";
 
 CardModel({
+    abled:false,
     url: '/issue',
     title: '事项',
     remark: '工单事项处理',

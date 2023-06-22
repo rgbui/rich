@@ -11,13 +11,14 @@ import "./views/things";
 import "./views/tizhi";
 import "./views/disk";
 
-// import "./views/issue";
-//import "./views/questions";
-//import "./views/rank";
+import "./views/issue";
+import "./views/questions";
+import "./views/rank";
 
 export type CardPropsType = {
     url: string,
     title: string,
+    abled?: boolean,
     remark?: string,
     image: any,
     forUrls?: string[],
