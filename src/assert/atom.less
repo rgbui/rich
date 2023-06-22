@@ -141,6 +141,13 @@ flex-fixed:固定大小
     flex-shrink: 0;
 }
 
+.r-flex-fixed {
+    >* {
+        flex-grow  : 0;
+        flex-shrink: 0;
+    }
+}
+
 
 
 /**
@@ -623,6 +630,9 @@ item-selected:选中的效果
 .green {
     color: #21af5a;
     fill : #21af5a;
+}
+.bg-green{
+    background-color: #21af5a;
 }
 
 .code {
@@ -1778,4 +1788,3 @@ each(@pads, {
 .angle-0 {
     transform: rotate(0deg);
 }
-
