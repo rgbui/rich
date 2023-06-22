@@ -44,15 +44,15 @@ class FormFieldFileView extends BlockView<FormFieldFile>{
         this.block.value = vs;
         this.forceUpdate();
     }
-    renderFiles(images: { name: string, size: number, url: string }[]) {
+    renderFiles(images: { filename: string, size: number, url: string }[]) {
         return images.map((img, i) => {
-            return <div className="sy-field-file-item min-h-30 cursor flex item-hover-focus round visible-hover" key={i}>
+            return <div className="sy-field-file-item min-h-30 padding-w-10 cursor flex item-hover-focus round visible-hover" key={i}>
                 <a className="link f-14 flex-auto flex" download={img.url} href={img.url}>
                     <span className="flex-fixed item-hover round size-24 remark flex-center"><Icon size={18} icon={FileSvg}></Icon></span>
-                    <span className="flex-fixed text-overflow gap-r-5">{img.name}</span>
-                    <em className="fflex-fixed remark">{util.byteToString(img.size)}</em>
+                    <span className="flex-fixed text-overflow gap-w-5">{img.filename}</span>
+                    <em className="flex-fixed remark">{util.byteToString(img.size)}</em>
                 </a>
-                <span onClick={e => this.deleteImage(img)} className="flex-fixed visible size-24 flex-center item-hover"><Icon size={16} icon={CloseSvg}></Icon></span>
+                <span onClick={e => this.deleteImage(img)} className="gap-l-10 flex-fixed visible size-20 round cursor flex-center item-hover"><Icon size={16} icon={CloseSvg}></Icon></span>
             </div>
         })
     }
@@ -63,7 +63,7 @@ class FormFieldFileView extends BlockView<FormFieldFile>{
         var vs = Array.isArray(this.block.value) ? this.block.value : (this.block.value ? [this.block.value] : []);
         if (!this.block.field?.config?.isMultiple && vs.length > 1) vs = [vs.first()]
         return <FieldView block={this.block}>
-            <div className="sy-form-field-file-value gap-h-10" >
+            <div className="sy-form-field-file-value gap-h-5" >
                 {this.block.value && <div className="sy-field-files">
                     {this.renderFiles(vs)}
                 </div>}
