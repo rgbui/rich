@@ -290,11 +290,13 @@ export class AITool extends EventsComponent {
                                 for (let i = 0; i < blockDatas.length; i++) {
                                     if (blockDatas[i].url == BlockUrlConstant.TextSpan) {
                                         var bd = bs[i];
-                                        var pattern = await bd.pattern.cloneData();
-                                        if (bd.url != BlockUrlConstant.TextSpan) {
-                                            blockDatas[i].url = bd.url;
+                                        if (bd.pattern) {
+                                            var pattern = await bd.pattern.cloneData();
+                                            if (bd.url != BlockUrlConstant.TextSpan) {
+                                                blockDatas[i].url = bd.url;
+                                            }
+                                            blockDatas[i].pattern = pattern;
                                         }
-                                        blockDatas[i].pattern = pattern;
                                     }
                                 }
                                 var newBlocks = await b.parent.appendArrayBlockData(blockDatas, b.at + 1, b.parentKey);
@@ -318,11 +320,13 @@ export class AITool extends EventsComponent {
                                 for (let i = 0; i < blockDatas.length; i++) {
                                     if (blockDatas[i].url == BlockUrlConstant.TextSpan) {
                                         var bd = bs[i];
-                                        var pattern = await bd.pattern.cloneData();
-                                        if (bd.url != BlockUrlConstant.TextSpan) {
-                                            blockDatas[i].url = bd.url;
+                                        if (bd.pattern) {
+                                            var pattern = await bd.pattern.cloneData();
+                                            if (bd.url != BlockUrlConstant.TextSpan) {
+                                                blockDatas[i].url = bd.url;
+                                            }
+                                            blockDatas[i].pattern = pattern;
                                         }
-                                        blockDatas[i].pattern = pattern;
                                     }
                                 }
                                 var newBlocks = await b.parent.appendArrayBlockData(blockDatas, b.at + 1, b.parentKey);
