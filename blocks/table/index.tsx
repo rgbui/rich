@@ -13,6 +13,7 @@ import { PlusSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { ghostView } from "../../src/common/ghost";
 import { BlockChildKey } from "../../src/block/constant";
+import { ToolTip } from "../../component/view/tooltip";
 
 const COL_WIDTH = 150;
 const CELL_HEIGHT = 30;
@@ -696,9 +697,9 @@ export class TableView extends BlockView<Table>{
                 <div onMouseDown={e => this.onMousedownDrag(e, 'left')} ref={e => this.leftDrag = e} className="sy-block-table-left-drag"><span>
                 </span>
                 </div>
-                <div onMouseDown={e => this.onMousedownResize(e, 'bottom')} ref={e => this.bottomPlus = e} className="sy-block-table-bottom-plus"><Icon size={10} icon={PlusSvg}></Icon></div>
-                <div onMouseDown={e => this.onMousedownResize(e, 'right')} ref={e => this.rightPlus = e} className="sy-block-table-right-plus"><Icon size={10} icon={PlusSvg}></Icon></div>
-                <div onMouseDown={e => this.onMousedownResize(e, 'resize')} ref={e => this.resizePlus = e} className="sy-block-table-resize-plus"><Icon size={10} icon={PlusSvg}></Icon></div>
+                <ToolTip overlay={<div>点击添加行<br />拖动批量创建行</div>}><div onMouseDown={e => this.onMousedownResize(e, 'bottom')} ref={e => this.bottomPlus = e} className="sy-block-table-bottom-plus"><Icon size={14} icon={PlusSvg}></Icon></div></ToolTip>
+                <ToolTip overlay={<div>点击添加列<br />拖动批量创建列</div>}><div onMouseDown={e => this.onMousedownResize(e, 'right')} ref={e => this.rightPlus = e} className="sy-block-table-right-plus"><Icon size={14} icon={PlusSvg}></Icon></div></ToolTip>
+                <ToolTip overlay={<div>点击添加行列<br />拖动批量创建行列</div>}><div onMouseDown={e => this.onMousedownResize(e, 'resize')} ref={e => this.resizePlus = e} className="sy-block-table-resize-plus"><Icon size={14} icon={PlusSvg}></Icon></div></ToolTip>
             </div>
         </div>
         </div>
