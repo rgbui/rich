@@ -43,8 +43,8 @@ export const ArticleContinue = `Continue writing an article in Chinese , begins 
 export const TranslateTemplate = `Translate the following text into {language}: [{content}]`
 
 
-export const MakeSmall = `Make the following text more concise and easier to read: [{content}]`
-export const MakeLonger = `Make the following text longer and more detailed: [{content}]`
+export const MakeSmall = `Respond in Chinese. Make the following text more concise and easier to read: [{content}]`
+export const MakeLonger = `Respond in Chinese. Make the following text longer and more detailed: [{content}]`
 /**
  * 👉 将文本改写成类似小红书的 Emoji 风格。
  */
@@ -58,7 +58,7 @@ export const RedBook = `Please edit the following passage using the Emoji style,
 export const ImagePrompt = `I want you to act as a prompt generator for Midjourney's artificial intelligence program. Your job is to provide detailed and creative descriptions that will inspire unique and interesting images from the AI. Keep in mind that the AI is capable of understanding a wide range of language and can interpret abstract concepts, so feel free to be as imaginative and descriptive as possible. For example, you could describe a scene from a futuristic city, or a surreal landscape filled with strange creatures. The more detailed and imaginative your description, the more interesting the resulting image will be. Respond in English. Here is your first prompt: [{content}]`
 
 
-export const FixSpellingGrammar = `Fix the spelling and grammar of the following text: [{content}]`
+export const FixSpellingGrammar = `Respond in Chinese. Fix the spelling and grammar of the following text: [{content}]`
 export const ExplainPrompt = 'Respond in Chinese. Explain these things: [{content}]';
 
 export function getTemplateInstance(template: string, data: Record<string, any>) {
