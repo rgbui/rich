@@ -278,6 +278,9 @@ class TextTool extends EventsComponent {
             sel.removeAllRanges();
             this.forceUpdate();
         }
+        if (text.indexOf('\n') > -1) {
+            text = text.split(/\n/)[0];
+        }
         var pageLink = await useLinkPicker({ roundArea: Rect.fromEvent(event) }, { text: text });
         this.selection.rects = [];
         this.blocked = false;

@@ -191,7 +191,8 @@ class LinkPicker extends EventsComponent {
             }
             else if (link.text) {
                 this.url = link.text;
-                this.name = 'page';
+                if (this.url.startsWith('https://') || this.url.startsWith('http://')) this.name = 'outside'
+                else this.name = 'page';
                 await this.forceSyncSearch();
             }
         }
