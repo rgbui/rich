@@ -67,7 +67,7 @@ export class PageBar extends React.Component<{ page: Page }>{
             <span className=" round flex gap-l-10">
                 <span className="flex-fixed item-hover flex round  cursor padding-h-3 padding-w-5 ">
                     <Icon size={20} icon={getPageIcon(this.props.page?.pageInfo)}></Icon>
-                    <span className="gap-l-5">{getPageText(this.props.page?.pageInfo)}</span>
+                    <span className="gap-l-5 text-overflow max-w-300">{getPageText(this.props.page?.pageInfo)}</span>
                 </span>
                 <span className={"flex-auto gap-l-10 remark text-overflow " + (isMobileOnly ? " max-w-250" : " max-w-500")}>{this.props.page?.pageInfo?.description}</span>
             </span>
