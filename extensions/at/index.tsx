@@ -56,8 +56,7 @@ class AtUserSelector extends InputTextPopSelector<UserBasic> {
                 return <div
                     onMouseDown={e => this.onSelect(link)} className={"gap-w-10  flex item-hover cursor round padding-5 " + (i == this.selectIndex ? "  item-hover-focus" : "")}
                     key={link.id}>
-                    <span className="flex-fixed flex-center"> <Avatar size={24} userid={(link as any).userid}></Avatar></span>
-                    <span className="gap-l-5 text-overflow flex-auto">{link.name}</span>
+                    <span className="flex-fixed flex-center"><Avatar size={24} showName userid={(link as any).userid}></Avatar></span>
                 </div>
             })}
             {!this.loading && this.searchWord && this.list.length == 0 && <div className="flex-center gap-h-10 remark">没有搜索到</div>}
