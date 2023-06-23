@@ -63,7 +63,7 @@ export class FilterFieldOptionView extends BlockView<FilterFieldOption>{
             if (ops.length == 0) return <span onMouseDown={e => select(e)}>全部</span>
             else return <div onMouseDown={e => select(e)}>{ops.map(op => { return <span key={op.value}>{op.text}</span> })}</div>
         }
-        else return <div className="flex">
+        else return <div className="flex flex-wrap">
             <span className={"gap-r-10 padding-w-5  round cursor " + (!this.block.values.some(s => this.block.field?.config.options.some(c => c.value == s)) ? " text-white bg-primary" : "")} onClick={e => {
                 this.block.onFilter([], true)
             }}>全部</span>
