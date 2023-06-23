@@ -286,6 +286,9 @@ export class Page$Operator {
                     })
                 })
                 break;
+            case 'askAi':
+                this.kit.writer.onAskAi(blocks)
+                break;
         }
     }
     async onOpenNav(this: Page, d: { nav: boolean }) {
