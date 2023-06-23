@@ -9,7 +9,7 @@ import "./style.less"
 export class Markdown extends React.Component<{ md: string, className?: string | (string[]) }>{
     constructor(props) { super(props) }
     render(): React.ReactNode {
-        var classList: string[] = ['md']
+        var classList: string[] = ['md','break-all'];
         if (this.props.className) {
             if (typeof this.props.className === 'string') {
                 classList.push(this.props.className)
