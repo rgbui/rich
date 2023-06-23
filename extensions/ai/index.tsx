@@ -193,9 +193,9 @@ export class AITool extends EventsComponent {
                         break;
                     case 'try':
                         var blocks = this.writer.writedBlocks;
-                        await this.writer.page.onBatchDelete(blocks);
                         var block = this.options.block;
-                        if (blocks.includes(block)) block = block.prev
+                        if (blocks.includes(block)) block = block.prev;
+                        await this.writer.page.onBatchDelete(blocks);
                         if (block) {
                             this.page.kit.anchorCursor.onFocusBlockAnchor(block, { last: true, render: true })
                             var ask = this.ask;
@@ -233,7 +233,7 @@ export class AITool extends EventsComponent {
                         var propTemplate = getTemplateInstance(ExplainPrompt, { content: preContent });
                         this.aiSelection({ prompt: propTemplate })
                         break;
-                    case 'makeSmall':
+                    case 'makeSmaller':
                         var preContent = this.getPrevBlockContent();
                         var propTemplate = getTemplateInstance(MakeSmall, { content: preContent });
                         this.aiSelection({ prompt: propTemplate })
@@ -287,6 +287,16 @@ export class AITool extends EventsComponent {
                         var b = this.page.visibleSearchBlocks(bs, 'last');
                         if (b) {
                             await this.page.onAction('AIReplaceBlocks', async () => {
+                                for (let i = 0; i < blockDatas.length; i++) {
+                                    if (blockDatas[i].url == BlockUrlConstant.TextSpan) {
+                                        var bd = bs[i];
+                                        var pattern = await bd.pattern.cloneData();
+                                        if (bd.url != BlockUrlConstant.TextSpan) {
+                                            blockDatas[i].url = bd.url;
+                                        }
+                                        blockDatas[i].pattern = pattern;
+                                    }
+                                }
                                 var newBlocks = await b.parent.appendArrayBlockData(blockDatas, b.at + 1, b.parentKey);
                                 if (newBlocks.length > 0)
                                     newBlocks.last().mounted(() => {
@@ -305,6 +315,16 @@ export class AITool extends EventsComponent {
                         var b = this.page.visibleSearchBlocks(bs, 'last');
                         if (b) {
                             await this.page.onAction('AIReplaceBlocks', async () => {
+                                for (let i = 0; i < blockDatas.length; i++) {
+                                    if (blockDatas[i].url == BlockUrlConstant.TextSpan) {
+                                        var bd = bs[i];
+                                        var pattern = await bd.pattern.cloneData();
+                                        if (bd.url != BlockUrlConstant.TextSpan) {
+                                            blockDatas[i].url = bd.url;
+                                        }
+                                        blockDatas[i].pattern = pattern;
+                                    }
+                                }
                                 var newBlocks = await b.parent.appendArrayBlockData(blockDatas, b.at + 1, b.parentKey);
                                 if (newBlocks.length > 0)
                                     newBlocks.last().mounted(() => {
@@ -324,13 +344,8 @@ export class AITool extends EventsComponent {
                         this.anwser = '';
                         if (this.options.block) this.writer.open(this.options.block);
                         else this.writer.selection(this.options.blocks);
-                        this.onEnter()
+                        this.aiSelection({ prompt: this.lastAiSelection.question });
                         break;
-                    // case 'continue':
-
-                    //     break;
-                    // case 'makeLonger':
-                    //     break;
                 }
             }
             else if ([AIAskStatus.willAsking].includes(this.status)) {
@@ -590,13 +605,17 @@ export class AITool extends EventsComponent {
             }
         });
     }
+    lastAiSelection: { question: string };
     async aiSelection(options?: { prompt?: string, ask?: string }) {
         var self = this;
         this.status = AIAskStatus.selectionAsking;
         self.anwser = '';
+        this.lastAiSelection = {
+            question: options?.prompt || options?.ask || this.ask,
+        }
         this.updateView()
         await channel.post('/text/ai/stream', {
-            question: options?.prompt || options?.ask || this.ask,
+            question: this.lastAiSelection.question,
             callback(str, done) {
                 if (typeof str == 'string') {
                     self.anwser += str;
