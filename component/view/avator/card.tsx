@@ -8,7 +8,8 @@ import { EventsComponent } from "../../lib/events.component";
 import { Input } from "../input";
 import { Avatar } from "./face";
 import "./style.less";
-
+import { Icon } from "../icon";
+import { CheckSvg } from '../../svgs';
 export class UserCard extends EventsComponent {
     user: UserBasic;
     render(): React.ReactNode {
@@ -21,7 +22,12 @@ export class UserCard extends EventsComponent {
                         <div className="user-avatar">
                             <Avatar size={50} user={this.user}></Avatar>
                         </div>
-                        <div className="shy-user-card-name"><span>{this.user.name}</span><span>#{this.user.sn}</span></div>
+                        <div className="shy-user-card-name">
+                            <span>{this.user.name}</span>
+                            {this.user?.role == 'robot' && <span className='bg-p-1 text-white round flex-center flex-inline padding-w-3  h-16 gap-w-2' style={{ color: '#fff', backgroundColor: 'rgb(88,101,242)' }}>
+                                <Icon icon={CheckSvg} size={12}></Icon><span className='gap-l-2 f-12' style={{ color: '#fff' }}>机器人</span>
+                            </span>}
+                        </div>
                         <div className="shy-user-card-operators"></div>
                     </div>
                     <div className="shy-user-card-remark">{this.user.slogan}</div>

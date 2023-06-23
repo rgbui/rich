@@ -72,7 +72,7 @@ export class Avatar extends React.Component<{
         var renderStatus = () => {
             if (!user) return <></>;
             return <div className='shy-avatar-status'>
-                {(user.status == UserStatus.online && user.online == true || user.online == true && (typeof user.status == 'undefined'||lodash.isNull(user.status)) || user.role == 'robot') && <div className='shy-avatar-status-online'>
+                {(user.status == UserStatus.online && user.online == true || user.online == true && (typeof user.status == 'undefined' || lodash.isNull(user.status)) || user.role == 'robot') && <div className='shy-avatar-status-online'>
                     <svg x="14.5" y="17" width="25" height="15" viewBox="0 0 25 15">
                         <rect fill="rgb(59, 165, 93)" width="25" height="15" mask="url(#user-avator-mask-online)"></rect>
                     </svg>
@@ -104,7 +104,7 @@ export class Avatar extends React.Component<{
                         {user?.role == 'robot' && <span className='bg-p-1 text-white round flex-center flex-inline padding-w-3  h-16 gap-w-2' style={{ color: '#fff', backgroundColor: 'rgb(88,101,242)' }}>
                             <Icon icon={CheckSvg} size={12}></Icon><span className='gap-l-2 f-12' style={{ color: '#fff' }}>机器人</span>
                         </span>}
-                        {this.props.showSn !== false && <span>#{user?.sn}</span>}
+                        {this.props.showSn === true && <span>#{user?.sn}</span>}
                     </div>
                         {this.props.head && <div className='right'>{this.props.head}</div>}</div>
                     {this.props.children && <div className={'shy-avatar-say-content-body'}>{this.props.children}</div>}
