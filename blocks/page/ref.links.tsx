@@ -40,10 +40,11 @@ export class RefLinks extends Block {
         this.forceUpdate()
     }
     async getMd() {
+        var ws = channel.query('/current/workspace')
         return this.list.map(pa => {
-            return `> ${getPageText(pa)}  \n` + pa.childs.map(b => {
-                return `>>  ${b.html}`
-            })
+            return `[${getPageText(pa)}](${ws.url + '/page/' + pa.sn})  \n` + pa.childs.map(b => {
+                return `${b.html}`
+            }).join("  \n")
         }).join("  \n")
     }
 }

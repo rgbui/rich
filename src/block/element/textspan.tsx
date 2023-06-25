@@ -237,7 +237,7 @@ export class TextSpan extends Block {
         else return `<p>${this.content}</p>`
     }
     async getMd(this: Block) {
-        if (this.childs.length > 0) return `${await this.getChildsMd()}`
+        if (this.childs.length > 0) return `${await this.getChildsMd(true)}`
         else return `${this.content}`
     }
     get isCanEmptyDelete() {

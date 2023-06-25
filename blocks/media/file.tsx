@@ -75,7 +75,7 @@ export class File extends Block {
         return this.src?.filename || ''
     }
     async getMd() {
-        return `[${this.src?.filename || '文件'}](${this.src?.url})  \n`;
+        return `[${this.src?.filename || '文件'}](${this.src?.url})`;
     }
 }
 @view('/file')

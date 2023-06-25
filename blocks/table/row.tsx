@@ -32,7 +32,9 @@ export class TableRow extends Block {
     async getChildsMd() {
         var cs = this.childs;
         var ps: string[] = [];
-        ps.push('|' + (await cs.asyncMap(async b => await b.getMd())).join("|") + '|')
+        ps.push('|' + (await cs.asyncMap(async b => {
+            return await b.getMd()
+        })).join("|") + '|')
         return ps.join("");
     }
 }

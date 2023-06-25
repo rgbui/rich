@@ -52,14 +52,14 @@ export class Quote extends TextSpan {
     }
     async getMd() {
         var ps: string[] = [];
-        if (this.childs.length > 0) ps.push(`>  ` + (await this.childs.asyncMap(async c => { await c.getMd() })).join(""))
-        else ps.push('>  ' + this.content)
+        if (this.childs.length > 0) ps.push(`> ` + (await this.childs.asyncMap(async c => { await c.getMd() })).join(""))
+        else ps.push('> ' + this.content)
         if (this.subChilds.length > 0) {
             for (let s of this.subChilds) {
-                ps.push('>> ' + await s.getMd())
+                ps.push('\t' + await s.getMd())
             }
         }
-        return ps.join('  ');
+        return ps.join('  \n');
     }
 }
 @view('/quote')

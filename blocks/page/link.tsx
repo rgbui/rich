@@ -38,7 +38,7 @@ export class Link extends Block {
     }
     async getMd() {
         var ws = channel.query('/current/workspace')
-        return `[${this.pageInfo?.text}](${ws.url + '/page/' + this.pageInfo?.sn})  `
+        return `[${this.pageInfo?.text}](${ws.url + '/page/' + this.pageInfo?.sn})`
     }
 }
 @view('/link')

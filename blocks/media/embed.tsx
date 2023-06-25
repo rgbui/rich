@@ -59,7 +59,7 @@ export class Embed extends Block {
         return super.getVisibleContentBound();
     }
     async getMd() {
-        return `[${this.src?.filename || '嵌入'}](${this.src?.url})  \n`;
+        return `[${this.src?.filename || '嵌入'}](${this.src?.url})`;
     }
 }
 

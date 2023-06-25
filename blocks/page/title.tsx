@@ -44,7 +44,7 @@ export class Title extends Block {
         return false
     }
     async getMd() {
-        return `# ${this.page.getPageDataInfo()?.text}  `
+        return `# ${this.page.getPageDataInfo()?.text}`
     }
 }
 @view('/title')

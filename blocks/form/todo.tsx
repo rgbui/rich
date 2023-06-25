@@ -88,7 +88,7 @@ export class ToDo extends Block {
     }
     async getMd() {
         var ps: string[] = [];
-        if (this.childs.length > 0) ps.push(`[]  ` + (await this.childs.asyncMap(async c => { await c.getMd() })).join(""))
+        if (this.childs.length > 0) ps.push(`[]  ` + (await this.childs.asyncMap(async c => { return await c.getMd() })).join(""))
         else ps.push('[]  ' + this.content)
         return ps.join('  ');
     }

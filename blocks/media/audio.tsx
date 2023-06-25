@@ -68,7 +68,7 @@ export class Audio extends Block {
         }
     }
     async getMd() {
-        return `[${this.src?.filename || '音频'}](${this.src?.url})  \n`;
+        return `[${this.src?.filename || '音频'}](${this.src?.url})`;
     }
 }
 @view('/audio')

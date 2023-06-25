@@ -101,8 +101,8 @@ export class TableFilterView extends EventsComponent {
                 { text: '不等于', value: '$ne' },
                 { text: '包含', value: '$contain' },
                 { text: '不包含', value: '$notContain' },
-                { text: '开头为', value: '$startWidth' },
-                { text: '结尾为', value: '$endWidth' },
+                { text: '开头为', value: '$startWith' },
+                { text: '结尾为', value: '$endWith' },
                 { text: '为空', value: '$isNull' },
                 { text: '不为空', value: '$isNotNull' },
             ]
@@ -256,7 +256,7 @@ export class TableFilterView extends EventsComponent {
             }
         }
         return <div onMouseDown={e => mousedown(item, e)} className="border box-border round h-26 padding-w-14 flex-center gap-r-10">
-            {op.color && <span className="circle size-20 gap-r-5" style={{ background: op?.color ? op.color : undefined }}></span>}
+            {op?.color && <span className="circle size-20 gap-r-5" style={{ background: op?.color ? op.color : undefined }}></span>}
             <span>{op?.text || '请选择一项'}</span>
         </div>
     }
@@ -291,7 +291,6 @@ export class TableFilterView extends EventsComponent {
             self.onForceStore();
         }
         return <div className="f-14">
-
             <div className="h-30 flex padding-w-14 gap-t-10">
                 筛选符合下方<em className="gap-w-5"><SelectBox small value={self.block.filter.logic} border options={[
                     { text: '任意', value: 'or' },
@@ -303,27 +302,30 @@ export class TableFilterView extends EventsComponent {
             </div>
             <div className="max-h-300 overflow-y">{self.block.filter.items.map((item, index) => {
                 var fe = self.block.schema.fields.find(g => g.id == item.field);
-                return <div className="flex max-h-30 padding-w-14 gap-h-10" key={index}>
+                return <div className="flex visible-hover max-h-30 padding-w-14 gap-h-10" key={index}>
                     <div className="flex-auto flex">
                         <SelectBox small className={'gap-r-10'} border options={self.getFields()} value={item.field} onChange={e => { item.field = e; self.onForceStore() }}></SelectBox>
                         <SelectBox small className={'gap-r-10'} border options={self.getComputedFields(item.field)} value={item.operator} onChange={e => { item.operator = e; self.onForceStore() }} ></SelectBox>
-                        {['$notContain', '$contain', '$startWidth', '$endWidth'].includes(item.operator)
-                            ||
-                            ([FieldType.text,
-                            FieldType.textarea,
-                            FieldType.title,
-                            FieldType.link,
-                            FieldType.phone,
-                            FieldType.email].includes(fe.type) && ['$ne', '$eq'].includes(item.operator))
+                        {
+                            (
+                                ['$notContain', '$contain', '$startWith', '$endWith'].includes(item.operator)
+                                ||
+                                ([FieldType.text,
+                                FieldType.textarea,
+                                FieldType.title,
+                                FieldType.link,
+                                FieldType.phone,
+                                FieldType.email].includes(fe.type) && ['$ne', '$eq'].includes(item.operator))
+                            )
                             &&
                             <Input className={'gap-r-10'} style={{ width: 120 }} placeholder={'值'} value={item.value} onChange={e => { item.value = e; self.onStore(); }}></Input>}
-                        {[FieldType.number, FieldType.autoIncrement].includes(fe.type) && !['$isNull', '$isNOtNull'].includes(item.operator) && <Input className={'gap-r-10'} type='number' style={{ width: 120 }} placeholder={'值'} value={item.value} onChange={e => { item.value = e; self.onStore(); }}></Input>}
-                        {[FieldType.date, FieldType.createDate].includes(fe.type) && !['$isNull', '$isNOtNull'].includes(item.operator) && self.renderDateInput(item)}
-                        {[FieldType.option, FieldType.options].includes(fe.type) && !['$isNull', '$isNOtNull'].includes(item.operator) && self.renderOptionInput(item)}
-                        {[FieldType.bool].includes(fe.type) && !['$isNull', '$isNOtNull'].includes(item.operator) && <Switch className={'gap-r-10'} checked={item.value ? true : false} onChange={e => { item.value = e; self.onForceStore() }}></Switch>}
-                        {[FieldType.creater, FieldType.modifyer, FieldType.user].includes(fe.type) && !['$isNull', '$isNOtNull'].includes(item.operator) && self.renderUserInput(item)}
+                        {[FieldType.number, FieldType.autoIncrement].includes(fe.type) && !['$isNull', '$isNotNull'].includes(item.operator) && <Input className={'gap-r-10'} type='number' style={{ width: 120 }} placeholder={'值'} value={item.value} onChange={e => { item.value = e; self.onStore(); }}></Input>}
+                        {[FieldType.date, FieldType.createDate].includes(fe.type) && !['$isNull', '$isNotNull'].includes(item.operator) && self.renderDateInput(item)}
+                        {[FieldType.option, FieldType.options].includes(fe.type) && !['$isNull', '$isNotNull'].includes(item.operator) && self.renderOptionInput(item)}
+                        {[FieldType.bool].includes(fe.type) && !['$isNull', '$isNotNull'].includes(item.operator) && <Switch className={'gap-r-10'} checked={item.value ? true : false} onChange={e => { item.value = e; self.onForceStore() }}></Switch>}
+                        {[FieldType.creater, FieldType.modifyer, FieldType.user].includes(fe.type) && !['$isNull', '$isNotNull'].includes(item.operator) && self.renderUserInput(item)}
                     </div>
-                    <span className="flex-fixed flex-center size-24 round item-hover cursor"><Icon size={12} onMousedown={e => removeFilter(e, item)} icon={CloseSvg} ></Icon></span>
+                    <span className="flex-fixed visible flex-center size-24 round item-hover cursor"><Icon size={12} onMousedown={e => removeFilter(e, item)} icon={CloseSvg} ></Icon></span>
                 </div>
             })}
                 {self.block.filter.items.length == 0 && <div className="remark padding-w-14 f-12 h-30 flex">还没有添加筛选条件</div>}</div>

@@ -114,12 +114,12 @@ export class List extends Block {
         var ps: string[] = [];
         if (this.childs.length > 0) ps.push('* ' + (await this.childs.asyncMap(async b => {
             return await b.getMd()
-        })).join("") + "  \n");
+        })).join(""));
         else ps.push('* ' + this.content);
-        ps.push('   +' + (await this.subChilds.asyncMap(async b => {
+        ps.push('\t' + (await this.subChilds.asyncMap(async b => {
             return await b.getMd()
-        })).join("") + "  \n");
-        return ps.join("");
+        })).join("  \n"));
+        return ps.join("  \n");
     }
 }
 @view('/list')
