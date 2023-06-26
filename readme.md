@@ -12,6 +12,8 @@
 * [sheetjs](https://github.com/SheetJS/sheetjs)
 ## 资源
 [font-awesome](https://github.com/FortAwesome/Font-Awesome)
+[glyphs.fyi](https://glyphs.fyi/dir?c=editor&i=handSpread&w=3)
+
 ## 关注的github issues
 * [光标定位](https://github.com/rgbui/rich/issues/2)
 * [文字输入](https://github.com/rgbui/rich/issues/3)
