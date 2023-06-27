@@ -64,6 +64,7 @@ import DatasourceSvg from "../src/assert/svg/datasource.svg";
 import DebugSvg from "../src/assert/svg/debug.svg";
 import DeleteLineSvg from "../src/assert/svg/delete.line.svg";
 import DetailSvg from "../src/assert/svg/detail.svg";
+import DiceSvg from "../src/assert/svg/dice.svg";
 import DiscoverySvg from "../src/assert/svg/discovery.svg";
 import DividerSvg from "../src/assert/svg/divider.svg";
 import DocAddSvg from "../src/assert/svg/docAdd.svg";
@@ -305,6 +306,7 @@ DatasourceSvg,
 DebugSvg,
 DeleteLineSvg,
 DetailSvg,
+DiceSvg,
 DiscoverySvg,
 DividerSvg,
 DocAddSvg,
