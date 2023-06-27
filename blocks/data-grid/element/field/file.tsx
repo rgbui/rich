@@ -6,6 +6,9 @@ import { BlockView } from "../../../../src/block/view";
 import { Rect } from "../../../../src/common/vector/point";
 import { util } from "../../../../util/util";
 import { OriginField } from "./origin.field";
+import { DownloadSvg } from "../../../../component/svgs";
+import { Icon } from "../../../../component/view/icon";
+import { ToolTip } from "../../../../component/view/tooltip";
 
 @url('/field/file')
 export class FieldFile extends OriginField {
@@ -14,7 +17,7 @@ export class FieldFile extends OriginField {
         if (!this.field?.config?.isMultiple) {
             vs = vs.slice(0, 1);
         }
-        var rs = await useDataGridFileViewer({ roundArea:Rect.fromEle(event.currentTarget as HTMLElement) }, {
+        var rs = await useDataGridFileViewer({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
             mime: 'file',
             resources: vs,
             isMultiple: this.field?.config?.isMultiple ? true : false
@@ -34,15 +37,16 @@ export class FieldFileView extends BlockView<FieldFile>{
     }
     renderFiles(images: ResourceArguments[]) {
         return images.map((img, i) => {
-            return <div className="min-h-30 " key={i}>
-                <a onMouseDown={e => { this.down(img, e) }} className="padding-3 round item-hover-focus cursor text-1 text-overflow" download={img.url}>{img.filename}</a>
+            return <div className="min-h-30 flex" key={i}>
+                <a className="round l-18 padding-w-2 item-hover-focus cursor text-1 text-overflow" >{img.filename}</a>
+                <ToolTip overlay={'下载文件'}><span onMouseDown={e => { this.down(img, e) }} className="gap-l-5 size-18 visible flex-center item-hover round cursor"><Icon size={18} icon={DownloadSvg}></Icon></span></ToolTip>
             </div>
         })
     }
     render() {
         var vs = Array.isArray(this.block.value) ? this.block.value : (this.block.value ? [this.block.value] : []);
         if (!this.block.field?.config?.isMultiple && vs.length > 1) vs = [vs.first()]
-        return <div className='sy-field-file'>
+        return <div className='sy-field-file  visible-hover'>
             {this.block.value && <div className="sy-field-files">
                 {this.renderFiles(vs)}
             </div>}
