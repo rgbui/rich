@@ -11,7 +11,7 @@ import lodash from "lodash";
 import { SpinBox } from "../../component/view/spin";
 import { Input } from "../../component/view/input";
 import { Icon } from "../../component/view/icon";
-import { RandomSvg } from "../../component/svgs";
+import { DiceSvg, RandomSvg } from "../../component/svgs";
 import { channel } from "../../net/channel";
 const FONT_AWESOME_HISTORYS = '_fontAwesome_historys';
 export class FontAwesomeView extends React.Component<{ loaded?: () => void, onChange: (data: { code: string, color?: string }) => void }> {
@@ -110,7 +110,7 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
                 <div className="flex-auto"><Input clear placeholder="搜索..." value={this.word} onClear={() => this.loadSearch('')} onEnter={e => { this.word = e; this.loadSearch.flush() }} onChange={e => this.loadSearch(e)} ></Input></div>
                 <div className="flex-fixed gap-l-20 gap-r-10 text-1">
                     <Tip overlay={<>随机</>}><span onMouseDown={e => this.onRandomIcon()} className=" flex-center size-30 round item-hover cursor">
-                        <Icon size={18} icon={RandomSvg}></Icon>
+                        <Icon size={24} icon={DiceSvg}></Icon>
                     </span></Tip>
                 </div>
             </div>
