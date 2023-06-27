@@ -9,7 +9,7 @@ import { Button } from "../../../component/view/button";
 import { Icon } from "../../../component/view/icon";
 import "./style.less";
 import { Divider } from "../../../component/view/grid";
-import { EditSvg, PlusSvg } from "../../../component/svgs";
+import { Edit1Svg, PlusSvg } from "../../../component/svgs";
 import { BlockFactory } from "../../../src/block/factory/block.factory";
 import { ActionDirective } from "../../../src/history/declare";
 import { BlockChildKey } from "../../../src/block/constant";
@@ -149,7 +149,7 @@ export class ButtonTemplateView extends BlockView<ButtonTemplate>{
         return <div style={this.block.visibleStyle}><div className='sy-button-template' >
             <div className='sy-button-template-wrapper' onMouseDown={e => e.stopPropagation()} >
                 <a className="sy-button-template-btn flex" onMouseDown={e => this.block.addTemplateInstance(e)}><Icon size={18} icon={PlusSvg}></Icon><span>{this.block.content || '添加待办事项'}</span></a>
-                <div className='sy-button-template-operator size-30 flex-center item-hover round cursor'><Icon size={16} onMousedown={e => this.block.openSettings()} icon={EditSvg}></Icon></div>
+                <div className='sy-button-template-operator size-30 flex-center item-hover round cursor'><Icon size={16} onMousedown={e => this.block.openSettings()} icon={Edit1Svg}></Icon></div>
             </div>
             {this.block.expand == true && this.renderTemplate()}
         </div></div>
