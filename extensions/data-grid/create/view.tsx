@@ -5,7 +5,6 @@ import { PopoverPosition } from "../../popover/position";
 import { getSchemaViewIcon, getSchemaViews } from "../../../blocks/data-grid/schema/util";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { MenuView } from "../../../component/view/menu/menu";
-import "./style.less";
 
 export class DataGridCreateTable extends EventsComponent {
     url: string = '/data-grid/table';
@@ -19,7 +18,7 @@ export class DataGridCreateTable extends EventsComponent {
         })
         items.push({ type: MenuItemType.gap })
         var views = getSchemaViews();
-        views.forEach(v=>{
+        views.forEach(v => {
             items.push({
                 text: v.text,
                 value: v.url,
@@ -65,13 +64,13 @@ export class DataGridCreateTable extends EventsComponent {
                 width: 300,
                 maxHeight: 300,
                 paddingTop: 10,
-                paddingBottom: 30,
+                paddingBottom: 10,
                 overflowY: 'auto'
             }} items={items}></MenuView>
     }
     private mv: MenuView;
     render() {
-        return <div className="data-grid-create">
+        return <div className="gap-h-10">
             {this.renderItems()}
         </div>
     }

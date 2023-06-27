@@ -2,7 +2,7 @@ import lodash from "lodash";
 import React from "react";
 import { ReactNode } from "react";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
-import { getSchemaViewIcon } from "../../../blocks/data-grid/schema/util";
+import { getSchemaViewIcon, getSchemaViews } from "../../../blocks/data-grid/schema/util";
 import { Confirm } from "../../../component/lib/confirm";
 import { EventsComponent } from "../../../component/lib/events.component";
 import { CollectTableSvg, DotsSvg, TrashSvg } from "../../../component/svgs";
@@ -11,8 +11,6 @@ import { MenuView } from "../../../component/view/menu/menu";
 import { util } from "../../../util/util";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
-import "./style.less";
-import { BlockUrlConstant } from "../../../src/block/constant";
 
 export class DataSourceView extends EventsComponent {
     render(): ReactNode {
@@ -51,6 +49,7 @@ export class DataSourceView extends EventsComponent {
 
         }
         var items: MenuItem[] = [];
+        items.push({ type: MenuItemType.text, text: '选择表格视图' })
         var list = Array.from(TableSchema.schemas.values());
         list = lodash.sortBy(list, g => 0 - g.createDate.getTime())
         list.forEach((rd) => {
@@ -60,7 +59,8 @@ export class DataSourceView extends EventsComponent {
                 var cs: MenuItem[] = [];
                 if (Array.isArray(rd.views) && rd.views.length > 0) {
                     cs.push({ type: MenuItemType.text, text: '视图' })
-                    cs.push(...rd.views.findAll(g => ![BlockUrlConstant.RecordPageView, BlockUrlConstant.FormView].includes(g.url as any)).map(rv => {
+                    var srs = getSchemaViews();
+                    cs.push(...rd.views.findAll(g => srs.some(s => s.url == g.url)).map(rv => {
                         return {
                             text: rv.text,
                             value: {
@@ -150,7 +150,7 @@ export class DataSourceView extends EventsComponent {
                 width: 300,
                 maxHeight: 300,
                 paddingTop: 10,
-                paddingBottom: 30,
+                paddingBottom: 10,
                 overflowY: 'auto'
             }} items={items}></MenuView>
     }

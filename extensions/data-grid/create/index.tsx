@@ -3,28 +3,34 @@ import { EventsComponent } from "../../../component/lib/events.component";
 import { Input } from "../../../component/view/input";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
-import { getSchemaViewIcon } from "../../../blocks/data-grid/schema/util";
+import { getSchemaViewIcon, getSchemaViews } from "../../../blocks/data-grid/schema/util";
 import { CollectTableSvg } from "../../../component/svgs";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import lodash from "lodash";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { MenuView } from "../../../component/view/menu/menu";
 import { util } from "../../../util/util";
-import "./style.less";
+
 
 export class DataGridSelectorView extends EventsComponent {
     renderItems() {
         var self = this;
         var items: MenuItem[] = [];
+        var itemPanel: MenuItem = {
+            type: MenuItemType.container,
+            containerHeight: 180,
+            childs: []
+        }
+
         var list = Array.from(TableSchema.schemas.values());
         list = lodash.sortBy(list, g => 0 - g.createDate.getTime())
         list.forEach((rd) => {
             var btns = undefined
-
             var cs: MenuItem[] = [];
             if (Array.isArray(rd.views) && rd.views.length > 0) {
                 cs.push({ type: MenuItemType.text, text: '视图' })
-                cs.push(...rd.views.map(rv => {
+                var srs = getSchemaViews();
+                cs.push(...rd.views.findAll(g => srs.some(s => s.url == g.url)).map(rv => {
                     return {
                         text: rv.text,
                         value: {
@@ -39,8 +45,7 @@ export class DataGridSelectorView extends EventsComponent {
                     }
                 }))
             }
-
-            items.push({
+            itemPanel.childs.push({
                 text: rd.text,
                 value: rd.id,
                 remark: util.showTime(rd.createDate),
@@ -49,7 +54,9 @@ export class DataGridSelectorView extends EventsComponent {
                 childs: cs
             })
         })
-        if (items.length > 0) {
+        if (list.length > 0) {
+            items.push({ text: '选择已创建的表格', type: MenuItemType.text })
+            items.push(itemPanel);
             items.push({ type: MenuItemType.divide })
         }
         items.push({
@@ -108,13 +115,13 @@ export class DataGridSelectorView extends EventsComponent {
                 width: 300,
                 maxHeight: 300,
                 paddingTop: 10,
-                paddingBottom: 30,
+                paddingBottom: 10,
                 overflowY: 'auto'
             }} items={items}></MenuView>
     }
     private mv: MenuView;
     render() {
-        return <div className="data-grid-create">
+        return <div className="gap-h-10">
             {this.renderItems()}
         </div>
     }
@@ -127,7 +134,7 @@ export class DataGridSelectorView extends EventsComponent {
             Object.assign(this, options);
         }
         this.forceUpdate();
-       
+
     }
 }
 
