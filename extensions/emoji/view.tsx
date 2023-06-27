@@ -1,6 +1,6 @@
 import lodash from "lodash";
 import React from "react";
-import { RandomSvg } from "../../component/svgs";
+import { DiceSvg, RandomSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { Input } from "../../component/view/input";
 import { SpinBox } from "../../component/view/spin";
@@ -86,7 +86,7 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
                 <div className="flex-auto"><Input clear placeholder="搜索..." value={this.word} onClear={() => this.loadSearch('')} onEnter={e => { this.word = e; this.loadSearch.flush() }} onChange={e => this.loadSearch(e)} ></Input></div>
                 <div className="flex-fixed gap-l-20 gap-r-10 text-1">
                     <Tip overlay={<>随机</>}><span onMouseDown={e => this.onRandomIcon()} className=" flex-center size-30 round item-hover cursor">
-                        <Icon size={18} icon={RandomSvg}></Icon>
+                        <Icon size={24} icon={DiceSvg}></Icon>
                     </span></Tip>
                 </div>
             </div>

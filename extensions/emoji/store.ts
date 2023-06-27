@@ -21,10 +21,10 @@ class EmojiStore {
     }
     async import() {
         //加载数据
-        var r = await import('./emoji.json');
+        var r = await import('./emoji.cn.json');
         var url = r.default as any;
         // var data = await axios.get(url);
-        var data=await util.getJson(url);
+        var data = await util.getJson(url);
         this.emojis = data.data;
         this.isLoad = true;
     }
