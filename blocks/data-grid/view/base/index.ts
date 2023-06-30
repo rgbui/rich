@@ -26,6 +26,7 @@ import { Page } from "../../../../src/page";
 import { Field } from "../../schema/field";
 import { BlockUrlConstant } from "../../../../src/block/constant";
 import { useCreateDataGrid } from "../../../../extensions/data-grid/create/view";
+import { AtomPermission } from "../../../../src/page/permission";
 
 /**
  * 
@@ -112,7 +113,7 @@ export class DataGridView extends Block {
             else this.setPropData(n, data[n]);
         }
         if (this.syncBlockId) {
-            await this.loadSyncBlock();
+            // await this.loadSyncBlock();
         }
     }
     async get(this: DataGridView) {
@@ -154,32 +155,35 @@ export class DataGridView extends Block {
         return JSON.stringify(await this.getSync());
     }
     async loadSyncBlock(this: DataGridView): Promise<void> {
-        if (this.url == BlockUrlConstant.FormView) return await super.loadSyncBlock();
-        var r = await channel.get('/view/snap/query', { elementUrl: this.elementUrl });
-        if (r.ok) {
-            var data;
-            try {
-                data = r.data.content as any;
-                if (typeof data == 'string') data = JSON.parse(data);
-                delete data.id;
-            }
-            catch (ex) {
-                console.error(ex);
-                this.page.onError(ex);
-            }
-            this.fields = [];
-            for (var n in data) {
-                if (n == 'pattern') {
-                    await this.pattern.load(data[n]);
+        if (this.syncBlockId) {
+            if (this.url == BlockUrlConstant.FormView) return await super.loadSyncBlock();
+            var r = await channel.get('/view/snap/query', { elementUrl: this.elementUrl });
+            if (r.ok) {
+                var data;
+                try {
+                    data = r.data.content as any;
+                    if (typeof data == 'string') data = JSON.parse(data);
+                    delete data.id;
                 }
-                else if (n == 'blocks') {
-                    this.blocks = { childs: [] };
+                catch (ex) {
+                    console.error(ex);
+                    this.page.onError(ex);
                 }
-                else this.setPropData(n, data[n]);
+                this.fields = [];
+                for (var n in data) {
+                    if (n == 'pattern') {
+                        await this.pattern.load(data[n]);
+                    }
+                    else if (n == 'blocks') {
+                        this.blocks = { childs: [] };
+                    }
+                    else this.setPropData(n, data[n]);
+                }
+                if (Array.isArray(r.data.operates) && r.data.operates.length > 0)
+                    this.page.onSyncUserActions(r.data.operates, 'loadSyncBlock');
             }
-            if (Array.isArray(r.data.operates) && r.data.operates.length > 0)
-                this.page.onSyncUserActions(r.data.operates, 'load');
         }
+        else await super.loadSyncBlock();
     }
     getSearchFilter() {
         var f: SchemaFilter = {} as any;
@@ -323,9 +327,23 @@ export class DataGridView extends Block {
     get elementUrl() {
         return getElementUrl(ElementType.SchemaView, this.schemaId, this.syncBlockId);
     }
-    isCanEdit() {
-        if (this.schema?.locker?.lock == true) return false;
-        return super.isCanEdit()
+    isCanLocker() {
+        if (this.schema?.locker?.lock == true) return true;
+        return false;
+    }
+    dataGridIsCanEdit() {
+        return this.isCanEdit() && !this.isCanLocker()
+    }
+    isCanAddRow() {
+        if (!this.page.isSign) return false;
+        if (this.isCanLocker()) return false;
+        return this.isAllow(AtomPermission.dbAddRow)
+    }
+    isCanEditRow(row) {
+        if (!this.page.isSign) return false;
+        if (this.isCanLocker()) return false;
+        if (row && row.creater == this.page.user.id) return true;
+        return this.isAllow(AtomPermission.dbEditRow)
     }
     async getMd() {
         var ws = channel.query('/current/workspace')

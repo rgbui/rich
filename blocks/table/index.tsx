@@ -12,7 +12,6 @@ import { MouseDragger } from "../../src/common/dragger";
 import { PlusSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { ghostView } from "../../src/common/ghost";
-import { BlockChildKey } from "../../src/block/constant";
 import { ToolTip } from "../../component/view/tooltip";
 
 const COL_WIDTH = 150;
@@ -228,6 +227,7 @@ export class Table extends Block {
 @view('/table')
 export class TableView extends BlockView<Table>{
     mousemove(event: MouseEvent) {
+        if (!this.block.isCanEdit()) return;
         if (this.isMoveLine) return;
         var boxRect = Rect.fromEle(this.box);
         var tableRect = Rect.fromEle(this.table);
@@ -631,13 +631,15 @@ export class TableView extends BlockView<Table>{
     }
     onMouseleave() {
         if (this.isMoveLine == false) {
-            this.subline.style.display = 'none';
-            this.sublineX.style.display = 'none';
-            this.bottomPlus.style.display = 'none';
-            this.rightPlus.style.display = 'none';
-            this.resizePlus.style.display = 'none';
-            this.topDrag.style.display = 'none';
-            this.leftDrag.style.display = 'none';
+            if (this.subline) {
+                this.subline.style.display = 'none';
+                this.sublineX.style.display = 'none';
+                this.bottomPlus.style.display = 'none';
+                this.rightPlus.style.display = 'none';
+                this.resizePlus.style.display = 'none';
+                this.topDrag.style.display = 'none';
+                this.leftDrag.style.display = 'none';
+            }
         }
     }
     async onMousedownBtnRow(event: React.MouseEvent) {
@@ -683,23 +685,26 @@ export class TableView extends BlockView<Table>{
                         <ChildsArea childs={this.block.childs}></ChildsArea>
                     </tbody>
                 </table>
-                <div className='sy-block-table-subline' onMouseDown={e => this.onMousedownLine(e)} ref={e => this.subline = e}></div>
-                <div className='sy-block-table-subline-x' ref={e => this.sublineX = e}></div>
-                {/*<div className="sy-block-table-btns-y flex-center r-size-20 r-cursor bg-white border" ref={e => this.btnsY = e}>
+                {this.block.isCanEdit() && <>
+                    <div className='sy-block-table-subline' onMouseDown={e => this.onMousedownLine(e)} ref={e => this.subline = e}></div>
+                    <div className='sy-block-table-subline-x' ref={e => this.sublineX = e}></div>
+                    {/*<div className="sy-block-table-btns-y flex-center r-size-20 r-cursor bg-white border" ref={e => this.btnsY = e}>
                     <span onMouseDown={e => this.onMousedownBtnRow(e)} className='flex-center'><Icon size={16} icon={PlusSvg}></Icon></span>
                 </div>
                 <div className="sy-block-table-btns-x flex-center r-size-20 r-cursor bg-white border" ref={e => this.btnsX = e}>
                     <span onMouseDown={e => this.onMousedownBtnCol(e, 'add')} className='flex-center'><Icon size={16} icon={PlusSvg}></Icon></span>
                 </div>*/}
-                <div onMouseDown={e => this.onMousedownDrag(e, 'top')} ref={e => this.topDrag = e} className="sy-block-table-top-drag"><span>
-                </span>
-                </div>
-                <div onMouseDown={e => this.onMousedownDrag(e, 'left')} ref={e => this.leftDrag = e} className="sy-block-table-left-drag"><span>
-                </span>
-                </div>
-                <ToolTip overlay={<div>点击添加行<br />拖动批量创建行</div>}><div onMouseDown={e => this.onMousedownResize(e, 'bottom')} ref={e => this.bottomPlus = e} className="sy-block-table-bottom-plus"><Icon size={14} icon={PlusSvg}></Icon></div></ToolTip>
-                <ToolTip overlay={<div>点击添加列<br />拖动批量创建列</div>}><div onMouseDown={e => this.onMousedownResize(e, 'right')} ref={e => this.rightPlus = e} className="sy-block-table-right-plus"><Icon size={14} icon={PlusSvg}></Icon></div></ToolTip>
-                <ToolTip overlay={<div>点击添加行列<br />拖动批量创建行列</div>}><div onMouseDown={e => this.onMousedownResize(e, 'resize')} ref={e => this.resizePlus = e} className="sy-block-table-resize-plus"><Icon size={14} icon={PlusSvg}></Icon></div></ToolTip>
+                    <div onMouseDown={e => this.onMousedownDrag(e, 'top')} ref={e => this.topDrag = e} className="sy-block-table-top-drag"><span>
+                    </span>
+                    </div>
+                    <div onMouseDown={e => this.onMousedownDrag(e, 'left')} ref={e => this.leftDrag = e} className="sy-block-table-left-drag"><span>
+                    </span>
+                    </div>
+                    <ToolTip overlay={<div>点击添加行<br />拖动批量创建行</div>}><div onMouseDown={e => this.onMousedownResize(e, 'bottom')} ref={e => this.bottomPlus = e} className="sy-block-table-bottom-plus"><Icon size={14} icon={PlusSvg}></Icon></div></ToolTip>
+                    <ToolTip overlay={<div>点击添加列<br />拖动批量创建列</div>}><div onMouseDown={e => this.onMousedownResize(e, 'right')} ref={e => this.rightPlus = e} className="sy-block-table-right-plus"><Icon size={14} icon={PlusSvg}></Icon></div></ToolTip>
+                    <ToolTip overlay={<div>点击添加行列<br />拖动批量创建行列</div>}><div onMouseDown={e => this.onMousedownResize(e, 'resize')} ref={e => this.resizePlus = e} className="sy-block-table-resize-plus"><Icon size={14} icon={PlusSvg}></Icon></div></ToolTip>
+                </>}
+
             </div>
         </div>
         </div>

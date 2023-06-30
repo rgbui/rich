@@ -9,7 +9,7 @@ import { Icon } from "../../component/view/icon";
 import { EmojiSvg, PicSvg } from "../../component/svgs";
 import lodash from "lodash";
 import { Spin } from "../../component/view/spin";
-import { LinkPageItem } from "../../src/page/declare";
+import { LinkPageItem, getPageText } from "../../src/page/declare";
 
 @url('/title')
 export class Title extends Block {
@@ -102,6 +102,7 @@ export class TitleView extends BlockView<Title>{
                     prop='pageInfo.text'
                     placeholderEmptyVisible
                     plain
+                    html={!this.block.isCanEdit() ? getPageText(this.block.pageInfo) : undefined}
                 ></TextArea></span>
             </div>}
         </div>

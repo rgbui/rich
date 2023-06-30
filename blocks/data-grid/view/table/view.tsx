@@ -22,7 +22,7 @@ export class TableStoreView extends BlockView<TableStore>{
         this.subline.style.display = 'none';
     }
     mousemove(event: MouseEvent) {
-        if (!this.block.isCanEdit()) return;
+        if (!this.block.dataGridIsCanEdit()) return;
         if (this.isMoveLine) return;
         if (!this.block.schema) return;
         if (this.isDragMouseField) return;
@@ -61,7 +61,7 @@ export class TableStoreView extends BlockView<TableStore>{
         }
     }
     onMousedownLine(event: React.MouseEvent) {
-        if (!this.block.isCanEdit()) return;
+        if (!this.block.dataGridIsCanEdit()) return;
         if (this.isDragMouseField) return;
         var self = this;
         self.isMoveLine = true;
@@ -116,7 +116,7 @@ export class TableStoreView extends BlockView<TableStore>{
     }
     private isDragMouseField: boolean = false;
     onDragMouseField(event: React.MouseEvent, vf: ViewField) {
-        if (!this.block.isCanEdit()) return;
+        if (!this.block.dataGridIsCanEdit()) return;
         event.stopPropagation();
         var th = (event.target as HTMLElement).closest('.sy-dg-table-head-th') as HTMLElement;
         var parent = th.parentElement;
@@ -177,7 +177,7 @@ export class TableStoreView extends BlockView<TableStore>{
                 var style: CSSProperties = {
                     width: f.colWidth || 120
                 }
-                if (!this.block.isCanEdit() && i == this.block.fields.length - 1) {
+                if (!this.block.dataGridIsCanEdit() && i == this.block.fields.length - 1) {
                     style = {
                         minWidth: f.colWidth || 120,
                         flexGrow: 1,
@@ -191,10 +191,10 @@ export class TableStoreView extends BlockView<TableStore>{
                         <Icon icon={icon} size={16}></Icon>
                     </div>
                     <label>{f.field?.text || f.text}</label>
-                    {this.block.isCanEdit() && <div className={'sy-dg-table-head-th-property'} onMouseDown={e => this.block.onOpenFieldConfig(e, f)}><Icon icon={DotsSvg}></Icon></div>}
+                    {this.block.dataGridIsCanEdit() && <div className={'sy-dg-table-head-th-property'} onMouseDown={e => this.block.onOpenFieldConfig(e, f)}><Icon icon={DotsSvg}></Icon></div>}
                 </div>
             })}
-            {this.block.isCanEdit() && <div className='sy-dg-table-head-th sy-dg-table-head-th-plus'
+            {this.block.dataGridIsCanEdit() && <div className='sy-dg-table-head-th sy-dg-table-head-th-plus'
                 style={{ minWidth: 40, flexGrow: 1, flexShrink: 1 }} onMouseDown={e => { e.stopPropagation(); this.block.onAddField(Rect.fromEvent(e)) }}>
                 <Icon icon={PlusSvg}></Icon>
             </div>}
@@ -206,7 +206,7 @@ export class TableStoreView extends BlockView<TableStore>{
             var ids = this.block.childs.map(c => c.id)
             return <SpinBox spin={this.block.isLoadingData}><div className='sy-dg-table-body'>
                 <ChildsArea childs={this.block.childs}></ChildsArea>
-                {this.block.isCanEdit() && <div
+                {this.block.isCanAddRow() && <div
                     style={{ width: this.block.sumWidth + 'px' }}
                     onMouseDown={e => { e.stopPropagation(); self.block.onSyncAddRow({}, undefined, 'after') }}
                     className="sy-dg-table-add">
@@ -227,7 +227,7 @@ export class TableStoreView extends BlockView<TableStore>{
     }
     render() {
         var self = this;
-   
+
         return <div className={"sy-dg-table" +
             (this.block.noBorder ? " sy-dg-table-no-border" : "") +
             (this.block.noHead ? " sy-dg-table-no-header" : "")

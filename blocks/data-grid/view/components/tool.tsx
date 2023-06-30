@@ -38,10 +38,10 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                     {props.block.sorts?.length > 0 && <label className="item-hover round  flex-center cursor gap-r-10 padding-w-5 h-24 " onMouseDown={e => props.block.onOpenViewConfig(Rect.fromEvent(e), 'sort')}><Icon size={16} icon={SortSvg}></Icon><span className="f-14 padding-l-5">排序</span></label>}
                     {props.block.page.pageLayout.type != PageLayoutType.db && <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => { e.stopPropagation(); props.block.onOpenSchemaPage() }}><Icon icon={MaximizeSvg} size={16}></Icon></label>}
                     <label className="item-hover round size-24 flex-center cursor gap-r-10" onMouseDown={e => { e.stopPropagation(); props.block.onOpenViewProperty(Rect.fromEvent(e)) }}><Icon size={16} icon={DotsSvg}></Icon></label></>}
-                <div className="sy-dg-tool-operators-add">
-                    <span className={"padding-l-15 text-white" + (!props.block.isCanEdit() ? " padding-r-15" : "")} onClick={e => { e.stopPropagation(); props.block.onOpenForm(Rect.fromEvent(e)) }}>新增</span>
+                {props.block.isCanAddRow() && <div className="sy-dg-tool-operators-add">
+                    <span className={"padding-l-15 text-white" + (!props.block.isCanEdit() ? " padding-r-15" : "")} onClick={e => { e.stopPropagation(); props.block.onOpenAddForm(undefined, true) }}>新增</span>
                     {props.block.isCanEdit() && <span className="flex-center cursor size-16 padding-l-5 padding-r-5" onClick={e => { e.stopPropagation(); props.block.onOpenViewTemplates(Rect.fromEvent(e)) }}><Icon size={14} icon={ChevronDownSvg}></Icon></span>}
-                </div>
+                </div>}
             </>
         }
         if (props.block.noTitle) return <div className='h-20 relative'>
@@ -50,9 +50,12 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
                 left: 0,
                 right: 0,
                 zIndex: 3000
-            }}>
-                <div className="flex-fixed">
-                    <label className="cursor flex round h-30 item-hover padding-r-5 text f-14" onMouseDown={e => { e.stopPropagation(); props.block.onOpenViewSettings(Rect.fromEvent(e)) }}>
+            }}><div className="flex-fixed">
+                    <label className="cursor flex round h-30 item-hover padding-r-5 text f-14" onMouseDown={e => {
+                        if (!props.block.page.isSign) return;
+                        e.stopPropagation();
+                        props.block.onOpenViewSettings(Rect.fromEvent(e))
+                    }}>
                         <span className="size-24 bold flex-center flex-fixed">
                             <Icon size={16} icon={view ? getSchemaViewIcon(view.url) : CollectTableSvg}></Icon>
                         </span>
@@ -68,6 +71,7 @@ export class DataGridTool extends React.Component<{ block: DataGridView }>{
             <div className="flex-fixed">
                 <label className="cursor flex round h-30 item-hover padding-r-5  text f-14"
                     onMouseDown={e => {
+                        if (!props.block.page.isSign) return;
                         e.stopPropagation();
                         props.block.onOpenViewSettings(Rect.fromEvent(e))
                     }}>

@@ -28,7 +28,6 @@ import { useDataGridConfig } from "../../../../extensions/data-grid/view.config"
 import { getSchemaViewIcon } from "../../schema/util";
 import { ElementType, getElementUrl } from "../../../../net/element.type";
 import { channel } from "../../../../net/channel";
-import { Page } from "../../../../src/page";
 import { TableSchema } from "../../schema/meta";
 import { useTabelSchemaFormDrop } from "../../../../extensions/data-grid/record.template/view";
 import { BlockUrlConstant } from "../../../../src/block/constant";
@@ -237,30 +236,6 @@ export class DataGridViewConfig {
                     await this.onExport(rect)
             }
         }
-        this.dataGridTool.isOpenTool = false;
-        this.onOver(this.getVisibleContentBound().contain(Point.from(this.page.kit.operator.moveEvent)))
-    }
-    async onOpenForm(this: DataGridView, rect: Rect) {
-        this.dataGridTool.isOpenTool = true;
-        var url: '/page/open' | '/page/dialog' | '/page/slide' = '/page/dialog';
-        if (this.createRecordSource == 'page') {
-            url = '/page/open';
-        }
-        else if (this.createRecordSource == 'slide') {
-            url = '/page/slide';
-        }
-        var dialougPage: Page = await channel.air(url, {
-            elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, this.schema.defaultAddForm?.id),
-            config: {
-                force: true
-            }
-        })
-        if (dialougPage) {
-            dialougPage.onSave();
-            var newRow = await dialougPage.getSchemaRow();
-            if (newRow) await this.onAddRow(newRow, undefined, 'after', dialougPage)
-        }
-        if (url != '/page/open') await channel.air(url, { elementUrl: null });
         this.dataGridTool.isOpenTool = false;
         this.onOver(this.getVisibleContentBound().contain(Point.from(this.page.kit.operator.moveEvent)))
     }

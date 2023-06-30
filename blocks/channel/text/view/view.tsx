@@ -1,7 +1,7 @@
 import lodash from "lodash";
 import React, { CSSProperties } from "react";
 import { ChannelText } from "..";
-import { EditSvg, TopicSvg, UnreadTextSvg } from "../../../../component/svgs";
+import { Edit1Svg, TopicSvg, UnreadTextSvg } from "../../../../component/svgs";
 import { useForm } from "../../../../component/view/form/dialoug";
 import { Icon } from "../../../../component/view/icon";
 import { Markdown } from "../../../../component/view/markdown";
@@ -44,8 +44,11 @@ export class ChannelTextView extends BlockView<ChannelText>{
         var pd = this.block.page.getPageDataInfo();
         if (this.block.page.pageLayout.type == PageLayoutType.textChannel) {
             return <div className="gap-20 visible-hover">
-                <Icon className={'item-hover round cursor'} onMousedown={e => { e.stopPropagation(); this.block.page.onChangeIcon(e) }} size={72} icon={pd?.icon || TopicSvg}></Icon>
-                <div className="h1 flex"><span>{pd?.text || '新页面'}</span><span className="flex-center round gap-l-5 cursor item-hover flex-line size-24 visible"><Icon onClick={e => this.openEdit(e)} size={18} icon={EditSvg}></Icon></span></div>
+                <Icon className={'item-hover round cursor'} onMousedown={e => {
+                    e.stopPropagation();
+                    this.block.page.onChangeIcon(e)
+                }} size={72} icon={pd?.icon || TopicSvg}></Icon>
+                <div className="h1 flex"><span>{pd?.text || '新页面'}</span>{this.block.page.isCanManage && <span className="flex-center round gap-l-5 cursor item-hover flex-line size-24 visible"><Icon onClick={e => this.openEdit(e)} size={18} icon={Edit1Svg}></Icon></span>}</div>
                 {pd?.description && <div className="text-1 f-14">
                     <Markdown md={pd?.description}></Markdown>
                 </div>}
@@ -250,8 +253,8 @@ export class ChannelTextView extends BlockView<ChannelText>{
             <div className="sy-channel-text-input" data-shy-page-no-focus onMouseDown={e => e.stopPropagation()}>
                 <div className="sy-channel-text-input-wrapper">
                     <InputChatBox
-                        disabled={this.block.abledSend || this.block.page.user?.id ? false : true}
-                        placeholder={this.block.abledSend ? "回车提交" : (this.block.page.user?.id ? "您不能发言" : "请登录发言")}
+                        disabled={this.block.abledSend && this.block.page.user?.id ? false : true}
+                        placeholder={this.block.abledSend && this.block.page.user?.id ? "回车提交" : (this.block.page.user?.id ? "您不能发言" : "请登录发言")}
                         ref={e => this.inputChatBox = e}
                         onChange={e => this.onInput(e)}
                         searchUser={this.searchUser}

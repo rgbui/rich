@@ -27,7 +27,9 @@ export class CommentView extends BlockView<Comment>{
                     userid={this.props.block.page.user.id}
                     elementUrl={this.props.block.getCommentElementUrl()}
                     sort={this.props.block.sort as any}
-                    onChange={e => this.block.onUpdateProps(e)}
+                    onChange={e => {
+
+                    }}
                 ></CommentListView>
             </div>
         </div>

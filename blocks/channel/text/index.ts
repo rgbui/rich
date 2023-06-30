@@ -10,6 +10,7 @@ import lodash from "lodash";
 import { ElementType, getElementUrl } from "../../../net/element.type";
 import { Rect } from "../../../src/common/vector/point";
 import { util } from "../../../util/util";
+import { AtomPermission } from "../../../src/page/permission";
 
 @url('/channel/text')
 export class ChannelText extends Block {
@@ -61,6 +62,10 @@ export class ChannelText extends Block {
     }
     abledSend: boolean = false;
     async loadHasAbledSend(force?: boolean) {
+        this.abledSend = true;
+        if (!this.isAllow(AtomPermission.channelEdit, AtomPermission.channelSpeak)) {
+            this.abledSend = false;
+        }
         if (this.page.pageInfo?.speak == 'only') {
             var r = await channel.get('/ws/channel/abled/send', { roomId: this.roomId, pageId: this.page.pageInfo.id });
             if (r.ok) {
@@ -68,7 +73,6 @@ export class ChannelText extends Block {
             }
             else this.abledSend = false;
         }
-        else this.abledSend = true;
         if (force == true) this.view.forceUpdate();
     }
     async didMounted(): Promise<void> {
@@ -180,7 +184,7 @@ export class ChannelText extends Block {
         }
     }
     async getMd() {
-        var ws = channel.query('/current/workspace')
-        return `[${this.pageInfo.text}](${ws.url + '/resource?elementUrl=' + window.encodeURIComponent(this.elementUrl)})`
+        var ws = this.page.ws;
+        return `[${this.pageInfo.text}](${ws.url + '/r?url=' + window.encodeURIComponent(this.elementUrl)})`
     }
 }

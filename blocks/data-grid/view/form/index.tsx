@@ -123,13 +123,13 @@ export class DataGridForm extends DataGridView {
                 icon: AddTwoSvg
             },
             { type: MenuItemType.divide },
-            {
-                text: '锁定表单视图',
-                name: 'lock',
-                checked: this.schemaView?.locker?.lock ? true : false,
-                type: MenuItemType.switch,
-                icon: this.schemaView?.locker?.lock ? UnlockSvg : LockSvg
-            }
+            // {
+            //     text: '锁定表单视图',
+            //     name: 'lock',
+            //     checked: this.schemaView?.locker?.lock ? true : false,
+            //     type: MenuItemType.switch,
+            //     icon: this.schemaView?.locker?.lock ? UnlockSvg : LockSvg
+            // }
         ]
         var um = await useSelectMenuItem({ roundArea: rect }, menus, {
             async input(item) {

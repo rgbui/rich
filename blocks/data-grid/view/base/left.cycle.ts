@@ -107,6 +107,7 @@ export class DataGridViewLife {
         }
     }
     async loadDataInteraction(this: DataGridView) {
+        if (!this.page.isSign) return;
         if (this.schema) {
             var fs = this.schema.fields.findAll(g => [FieldType.like, FieldType.oppose, FieldType.love].includes(g.type))
             if (fs.length > 0) {

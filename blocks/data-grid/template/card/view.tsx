@@ -10,6 +10,7 @@ import { Field } from "../../schema/field";
 import { FieldType } from "../../schema/type";
 import { TableStoreList } from "../../view/list";
 import lodash from "lodash";
+import { ShyAlert } from "../../../../component/lib/alert";
 
 export class CardView extends React.Component<{ item: DataGridItemRecord | TableStoreItem, dataGrid: DataGridView | DataGridItemRecord }> {
     cardConfig() {
@@ -118,6 +119,9 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
             this.props.dataGrid.onOpenEditForm(this.props.item.dataRow.id, forceUrl)
         }
     }
+    get isCanEdit() {
+        return this.props.dataGrid.isCanEdit();
+    }
     isEmoji(name: string) {
         var field: Field = this.getField(name);
         if ((this.props.dataGrid instanceof TableStoreGallery || this.props.dataGrid instanceof TableStoreList) && field) {
@@ -127,6 +131,10 @@ export class CardView extends React.Component<{ item: DataGridItemRecord | Table
     }
     async onUpdateCellInteractive(event: React.MouseEvent, name: string) {
         event.stopPropagation()
+        if(!this.props.dataGrid.page.isSign) {
+            ShyAlert('请先登录')
+            return
+        }
         var field: Field = this.getField(name);
         if (this.props.item instanceof TableStoreItem) {
             await this.props.item.onUpdateCellInteractive(field);

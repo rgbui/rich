@@ -6,6 +6,7 @@ import { BlockUrlConstant } from "../../../src/block/constant";
 import { Field } from "./field";
 import { FieldType } from "./type";
 import { ViewField } from "./view";
+import { AtomPermission } from "../../../src/page/permission";
 
 export interface TableSchemaView {
     id: string,
@@ -14,15 +15,38 @@ export interface TableSchemaView {
     cover?: { abled: boolean, url: string, thumb: string, top: number },
     description: string,
     url: string,
+
     /**
-     * 表单，是否允许上传
+     * 以下属性只有表单、清单的时候才起作用
+     * 正常的表格视图受页面的权限影响，表单是单独的页面
+     */
+
+    /**
+     * 是否允许用户添加多份
      */
     disabledUserMultiple?: boolean,
-    locker: {
-        lock: boolean,
-        date: number,
-        userid: string
-    }
+    /**
+     * 是否为公开
+     * net 互联网公开
+     * nas 网络存储
+     * local 本地存储
+    */
+    share: 'net' | 'nas' | 'local';
+
+    /**
+     * 互联网是否公开，如果公开的权限是什么
+     */
+    netPermissions: AtomPermission[];
+    /**
+     * 外部邀请的用户权限
+     */
+    inviteUsersPermissions: { userid: string, permissions: AtomPermission[] }[];
+    /**
+     * 空间成员权限，
+     * 可以指定角色，也可以指定具体的人
+     */
+    memberPermissions: { roleId: string, userid: string, permissions: AtomPermission[] }[];
+
 }
 
 /**

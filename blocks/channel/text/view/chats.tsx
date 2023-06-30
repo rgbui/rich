@@ -22,7 +22,7 @@ export function RenderChats(
         return r;
     }
     var emojiChat = async (d: ChannelTextType, re: Partial<EmojiCode>) => {
-        if(!re?.code) return;
+        if (!re?.code) return;
         return await channel.put('/ws/channel/emoji', {
             elementUrl: getElementUrl(ElementType.RoomChat,
                 block.page.pageLayout.type == PageLayoutType.textChannel ? block.page.pageInfo.id : block.syncBlockId,
@@ -51,6 +51,7 @@ export function RenderChats(
 
     }
     return <ViewChats
+        readonly={block.abledSend && block.page.user?.id ? false : true}
         user={block.page.user}
         chats={block.chats}
         redit={props.reditChat}

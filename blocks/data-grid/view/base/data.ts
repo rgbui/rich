@@ -8,6 +8,7 @@ import { channel } from "../../../../net/channel";
 import { getElementUrl, ElementType } from "../../../../net/element.type";
 import { Page } from "../../../../src/page";
 import lodash from "lodash";
+import { Point } from "../../../../src/common/vector/point";
 
 export class DataGridViewData {
     async onRemoveRow(this: DataGridView, id: string) {
@@ -22,28 +23,38 @@ export class DataGridViewData {
             }
         })
     }
-    async onOpenAddForm(this: DataGridView, viewId?: string, initData?: Record<string, any>) {
-        if (!this.schema.defaultAddForm) {
-            //自动创建表单
-        }
+    async onOpenAddForm(this: DataGridView, viewId?: string, isOver?: boolean, forceUrl?: '/page/open' | '/page/dialog' | '/page/slide', initData?: Record<string, any>) {
         var vid = viewId || this.schema.defaultAddForm?.id;
-        if (!this.schema.recordViews.some(s => s.id == vid)) vid = undefined;
+        if (vid && !this.schema.recordViews.some(s => s.id == vid)) vid = undefined;
         if (!vid) vid = this.schema.recordViews[0]?.id;
-        var url: '/page/dialog' = '/page/dialog';
+        if (isOver)
+            this.dataGridTool.isOpenTool = true;
+        var url: '/page/open' | '/page/dialog' | '/page/slide' = '/page/dialog';
+        if (this.createRecordSource == 'page') {
+            url = '/page/open';
+        }
+        else if (this.createRecordSource == 'slide') {
+            url = '/page/slide';
+        }
+        if (forceUrl) url = forceUrl;
         var dialougPage: Page = await channel.air(url, {
             elementUrl: getElementUrl(ElementType.SchemaRecordView, this.schema.id, vid),
             config: {
-                force: true
+                force: true,
+                isCanEdit:true,
+                initData
             }
         })
         if (dialougPage) {
             dialougPage.onSave();
             var newRow = await dialougPage.getSchemaRow();
-            if (newRow) {
-                await this.onAddRow(newRow, undefined, 'after')
-            }
+            if (newRow) await this.onAddRow(newRow, undefined, 'after', dialougPage)
         }
-        await channel.air('/page/dialog', { elementUrl: null });
+        if (url != '/page/open') await channel.air(url, { elementUrl: null });
+        if (isOver) {
+            this.dataGridTool.isOpenTool = false;
+            this.onOver(this.getVisibleContentBound().contain(Point.from(this.page.kit.operator.moveEvent)))
+        }
     }
     async onOpenEditForm(this: DataGridView, id: string, forceUrl?: '/page/open' | '/page/dialog' | '/page/slide') {
         var url: '/page/open' | '/page/dialog' | '/page/slide' = '/page/dialog';
@@ -55,9 +66,10 @@ export class DataGridViewData {
                 url = '/page/slide';
         }
         var dialougPage: Page = await channel.air(url, {
-            elementUrl: getElementUrl(ElementType.SchemaData,this.schema.id,id),
+            elementUrl: getElementUrl(ElementType.SchemaData, this.schema.id, id),
             config: {
-                force: true
+                force: true,
+                isCanEdit:true
             }
         })
         var newRow;
@@ -66,7 +78,7 @@ export class DataGridViewData {
             newRow = await dialougPage.getSchemaRow()
         }
         if (url == '/page/dialog' || url == '/page/slide') await channel.air(url, { elementUrl: null })
-        if (newRow) await this.onRowUpdate(id, newRow);
+        if (newRow && this.isCanEdit()) await this.onRowUpdate(id, newRow);
     }
     async onAddRow(this: DataGridView, data, id?: string, arrow: 'before' | 'after' = 'after', dialogPage: Page = null) {
         if (typeof id == 'undefined') {

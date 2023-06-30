@@ -147,7 +147,7 @@ export class TextCodeView extends BlockView<TextCode>{
         return <div style={this.block.visibleStyle}><div className='sy-block-code' onMouseDown={e => e.stopPropagation()}>
             <div className='sy-block-code-box' >
                 <div className='sy-block-code-head'>
-                    {this.props.block.isCanEdit && <div className='sy-block-code-head-lang' onMouseDown={e => e.stopPropagation()} onMouseUp={e => this.changeLang(e)}>
+                    {this.props.block.isCanEdit() && <div className='sy-block-code-head-lang' onMouseDown={e => e.stopPropagation()} onMouseUp={e => this.changeLang(e)}>
                         <span>{label}</span>
                         <Icon size={14} icon={ChevronDownSvg}></Icon>
                     </div>}

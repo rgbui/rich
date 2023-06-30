@@ -34,7 +34,7 @@ export class TableStore extends DataGridView {
         return super.onOver(isOver);
     }
     get sumWidth() {
-        return this.fields.sum(c => c.colWidth) + (this.isCanEdit() ? 40 : 0);
+        return this.fields.sum(c => c.colWidth) + (this.dataGridIsCanEdit()? 40 : 0);
     }
 }
 

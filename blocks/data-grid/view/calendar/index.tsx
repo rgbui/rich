@@ -65,7 +65,7 @@ export class TableStoreCalendar extends DataGridView {
         this.forceUpdate();
     }
     async onAddCalendar(day) {
-        await this.onOpenAddForm(undefined, { [this.dateField.name]: day.toDate() });
+        await this.onOpenAddForm(undefined,undefined,undefined, { [this.dateField.name]: day.toDate() });
     }
 }
 @view('/data-grid/calendar')

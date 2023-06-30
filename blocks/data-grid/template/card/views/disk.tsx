@@ -10,7 +10,7 @@ import { CardModel, CardViewCom } from "../factory/observable";
 import { CardView } from "../view";
 import { useSelectMenuItem } from "../../../../../component/view/menu";
 import { Rect } from "../../../../../src/common/vector/point";
-import { MenuItemType } from "../../../../../component/view/menu/declare";
+import { MenuItem, MenuItemType } from "../../../../../component/view/menu/declare";
 
 
 CardModel({
@@ -56,14 +56,20 @@ export class CardPin extends CardView {
         }
         async function openProperty(e: React.MouseEvent) {
             e.stopPropagation();
+            var rs: MenuItem<string>[] = [
+                { name: 'download', text: '下载', icon: DownloadSvg },
+                { name: 'edit', text: '编辑', disabled: self.isCanEdit ? false : true, icon: Edit1Svg },
+                { type: MenuItemType.divide },
+                { name: 'delete', text: '删除', disabled: self.isCanEdit ? false : true, icon: TrashSvg }
+            ]
+            if (!self.isCanEdit) {
+                rs = [
+                    { name: 'download', text: '下载', icon: DownloadSvg },
+                ]
+            }
             var r = await useSelectMenuItem(
                 { roundArea: Rect.fromEle(e.currentTarget as HTMLElement) },
-                [
-                    { name: 'download', text: '下载', icon: DownloadSvg },
-                    { name: 'edit', text: '编辑', icon: Edit1Svg },
-                    { type: MenuItemType.divide },
-                    { name: 'delete', text: '删除', icon: TrashSvg }
-                ]
+                rs
             );
             if (r) {
                 if (r.item?.name == 'download') {
