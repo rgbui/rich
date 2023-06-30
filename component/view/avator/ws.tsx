@@ -43,7 +43,7 @@ export class WsAvatar extends React.Component<{
                 {!this.ws.icon && <span>{this.ws.text.slice(0, 1)}</span>}
             </div>
             <div className="shy-ws-avatar-content">
-                <h3>{getFlags()}<span>{this.ws.text}</span></h3>
+                <div className="h3 flex">{getFlags()}<span>{this.ws.text}</span></div>
                 <div className="shy-ws-avatar-slogan">{this.ws.slogan}</div>
                 <div className="shy-ws-avatar-count">
                     <span><i className="online"></i><em>{this.ws.memberOnlineCount}在线</em></span>
