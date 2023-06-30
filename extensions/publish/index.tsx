@@ -21,41 +21,41 @@ import {
 } from "../../src/page/permission";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
-import { LinkPageItem } from "../../src/page/declare";
+import { getPageText } from "../../src/page/declare";
+import { UserBox } from "../../component/view/avator/user";
+
 
 class PagePublish extends EventsComponent {
     constructor(props) {
         super(props);
     }
-    open(item: LinkPageItem, page: Page) {
-        this.item = item;
+    open(page: Page) {
         this.page = page;
         this.forceUpdate()
     }
     page: Page;
     copyLink() {
-        CopyText(this.item.url);
+        CopyText(this.page.pageUrl);
         ShyAlert('页面访问链接已复制');
     }
-    item: LinkPageItem = null;
     render() {
+        var pr = this.page ? this.page?.getPermissions() : undefined;
         var self = this;
         var ps: {
             roleId?: string;
             userid?: string;
             permissions: AtomPermission[];
-        }[] = this.item?.memberPermissions || [];
+        }[] = pr?.memberPermissions || [];
         if (ps.length == 0) {
             ps.push(
                 {
                     roleId: 'all',
-                    permissions: [AtomPermission.docInteraction]
+                    permissions: [AtomPermission.docComment]
                 }
             )
         }
         async function setGlobalShare(data) {
-            await self.page.onUpdatePageData(data);
-            Object.assign(self.item, data);
+            await self.page.onUpdatePermissions(data);
             self.forceUpdate()
         }
         async function addPermission(event: React.MouseEvent) {
@@ -70,7 +70,7 @@ class PagePublish extends EventsComponent {
                         text: '所有人',
                         name: "addRole",
                         value: 'all',
-                        disabled: self.item.memberPermissions.some(s => s.roleId == 'all')
+                        disabled: (pr?.memberPermissions || []).some(s => s.roleId == 'all')
                     },
                     ...rs.roles.map(r => {
                         return {
@@ -83,7 +83,7 @@ class PagePublish extends EventsComponent {
                                     style={{ background: r.color }}>
                                 </span>
                             },
-                            disabled: self.item.memberPermissions.some(s => s.roleId == r.id)
+                            disabled: (pr?.memberPermissions || []).some(s => s.roleId == r.id)
                         }
                     })
                 ]
@@ -93,11 +93,12 @@ class PagePublish extends EventsComponent {
 
                 }
                 else if (r.item.name == 'addRole') {
-                    self.item.memberPermissions.push({
+                    if (!Array.isArray(pr.memberPermissions)) pr.memberPermissions = [];
+                    pr.memberPermissions.push({
                         roleId: r.item.value,
-                        permissions: [AtomPermission.docInteraction]
+                        permissions: [AtomPermission.docComment]
                     });
-                    self.forceUpdate()
+                    await setGlobalShare({ 'memberPermissions': pr.memberPermissions });
                 }
             }
         }
@@ -105,81 +106,122 @@ class PagePublish extends EventsComponent {
             lodash.remove(ps, p => p.userid && p.userid == mp.userid || p.roleId && p.roleId == mp.roleId);
             await setGlobalShare({ 'memberPermissions': ps });
         }
-        async function setMemberPermissions(mp, permissions: AtomPermission[]) {
-            mp.permissions = permissions;
-            await setGlobalShare({ 'memberPermissions': ps });
-        }
         function getRoles(roleId) {
             if (roleId == 'all') return '所有人'
             var rs = channel.query('/current/workspace')
             return rs.roles.find(g => g.id == roleId)?.text
         }
-        if (!this.item) return <div className='w-300 min-h-60'></div>
+        if (!pr) return <div className='w-300 min-h-60'></div>
+        var cp = this.page.currentPermissions;
+        var as = getAtomPermissionOptions(this.page.pageLayout.type);
         return <div className='w-300 min-h-60 padding-t-10 round f-14'>
-            <div className="flex  padding-w-14">
-                <span className="flex-auto remark">空间成员</span>
-                <span onMouseDown={e => addPermission(e)} className="flex-fixed flex-center size-24 item-hover round cursor"><Icon icon={PlusSvg}></Icon></span>
-            </div>
-            <div >
-                {ps.map((mp, id) => {
-                    return <div className="flex gap-h-10 padding-w-14 item-hover round" key={id}>
-                        <div className="flex-fixed">
-                            {mp.userid && <Avatar size={30} userid={mp.userid}></Avatar>}
-                            {mp.roleId && <span>{getRoles(mp.roleId)}</span>}
+            <div className="flex  padding-w-14 ">
+                <div className="flex-auto">
+                    <UserBox userid={this.page.user.id}>{(user) => {
+                        return <div className="flex flex-top">
+                            <Avatar className="flex-fixed gap-r-10" size={32} user={user}></Avatar>
+                            <div className="flex-auto">
+                                <div>{user.name}</div>
+                                <span className="gap remark f-12">
+                                    {cp.item && <span className="flex-inline flex-center">权限继承<span className="item-hover-focus padding-w-5 round cursor padding-h-2">{getPageText(cp.item)}</span></span>}
+                                    {cp.isOwner && <span>权限继承空间管理员</span>}
+                                    {cp.isWs && <span>权限继承所有人</span>}
+                                </span>
+                            </div>
                         </div>
-                        <div className="flex-auto flex flex-end">
-                            <div className="flex-fixed gap-r-5 flex-end">
+                    }}</UserBox>
+                </div>
+                <div className="flex-fixed f-14 remark">
+                    {cp.isOwner && <span className="item-hover-focus round padding-w-3 padding-h-2 cursor">{"所有权"}</span>}
+                    {cp.isWs && <span className="item-hover-focus round padding-w-3 padding-h-2  cursor">{cp.permissions.map(p => {
+                        return as.find(a => a.value == p)?.text
+                    }).filter(g => g ? true : false).join(",")}</span>}
+                    {Array.isArray(cp.netPermissions) && cp.netPermissions.length > 0 && <span className="item-hover-focus round padding-w-3  padding-h-2  cursor">{cp.netPermissions.map(p => {
+                        return as.find(a => a.value == p)?.text
+                    }).filter(g => g ? true : false).join(",")}</span>}
+                    {Array.isArray(cp.memberPermissions) && cp.memberPermissions.length > 0 && <span className="item-hover-focus round padding-w-3 padding-h-2  cursor">{cp.memberPermissions.map(c => {
+                        return c.permissions.map(p => {
+                            return as.find(a => a.value == p)?.text
+                        })
+                    }).flat(4).filter(g => g ? true : false).join(",")}</span>}
+                </div>
+            </div>
+            {
+                this.page.isCanManage && <>
+                    <Divider></Divider>
+                    <div className="flex  padding-w-14">
+                        <span className="flex-auto f-14">空间成员</span>
+                        {this.page.isCanManage && <span onMouseDown={e => addPermission(e)} className="flex-fixed flex-center size-24 item-hover round cursor"><Icon icon={PlusSvg}></Icon></span>}
+                    </div>
+                    <div>
+                        {ps.map((mp, id) => {
+                            return <div className="flex flex-top gap-h-10 padding-w-14 item-hover round" key={id}>
+                                <div className="flex-fixed">
+                                    {mp.userid && <Avatar size={30} userid={mp.userid}></Avatar>}
+                                    {mp.roleId && <span>{getRoles(mp.roleId)}</span>}
+                                </div>
+                                <div className="flex-auto flex flex-end">
+                                    <div className="flex-fixed gap-r-5 flex-end">
+                                        <SelectBox
+                                            small
+                                            dropWidth={120}
+                                            multiple
+                                            computedChanges={async (vs, v) => {
+                                                return getAtomPermissionComputedChanges(this.page.pageLayout.type, vs, v);
+                                            }}
+                                            options={getAtomPermissionOptions(this.page.pageLayout.type)}
+                                            value={mp.permissions || []}
+                                            onChange={async e => {
+                                                if (!Array.isArray(mp.permissions)) {
+                                                    if (ps.length == 1) {
+                                                        ps = [{ roleId: 'all', permissions: e }]
+                                                    }
+                                                }
+                                                else mp.permissions = e;
+                                                await setGlobalShare({ 'memberPermissions': ps })
+                                            }}
+                                        ></SelectBox>
+                                    </div>
+                                    {mp.roleId != 'all' && <span
+                                        onMouseDown={e => remove(mp)}
+                                        className="flex-fixed flex-center size-24 round item-hover cursor"><Icon
+                                            size={16} icon={CloseSvg}></Icon></span>}
+                                </div>
+                            </div>
+                        })}
+                    </div>
+                    <Divider></Divider>
+                    <div className="item-hover h-30 flex padding-w-14">
+                        <span className="flex-auto flex">
+                            <Icon size={18} icon={GlobalLinkSvg}></Icon>
+                            <span className="gap-l-5">公开至互联网</span>
+                        </span>
+                        <span className="flex-fixed">
+                            <Switch checked={pr?.share == 'net' ? true : false} onChange={e => setGlobalShare({ share: e ? "net" : 'nas' })}></Switch>
+                        </span>
+                    </div>
+                    {pr.share == 'net' && <>
+                        <div className="flex item-hover h-30 flex padding-w-14">
+                            <div className="flex-auto text-overflow">
+                                页面公开访问权限
+                            </div>
+                            <div className="flex-fixed">
                                 <SelectBox
                                     small
-                                    dropWidth={120}
-                                    border
+                                    // border
                                     multiple
                                     computedChanges={async (vs, v) => {
                                         return getAtomPermissionComputedChanges(this.page.pageLayout.type, vs, v);
                                     }}
                                     options={getAtomPermissionOptions(this.page.pageLayout.type)}
-                                    value={mp.permissions || []}
-                                    onChange={e => { setMemberPermissions(mp, e) }}
+                                    value={pr.netPermissions || []}
+                                    onChange={e => { setGlobalShare({ 'netPermissions': e }) }}
                                 ></SelectBox>
                             </div>
-                            {mp.roleId != 'all' && <span
-                                onMouseDown={e => remove(mp)}
-                                className="flex-fixed flex-center size-24 round item-hover cursor"><Icon
-                                    size={16} icon={CloseSvg}></Icon></span>}
                         </div>
-                    </div>
-                })}
-            </div>
-            <Divider></Divider>
-            <div className="item-hover h-30 flex padding-w-14">
-                <span className="flex-auto flex">
-                    <Icon size={18} icon={GlobalLinkSvg}></Icon>
-                    <span className="gap-l-5">公开至互联网</span>
-                </span>
-                <span className="flex-fixed">
-                    <Switch checked={this.item?.share == 'net' ? true : false} onChange={e => setGlobalShare({ share: e ? "net" : 'nas' })}></Switch>
-                </span>
-            </div>
-            {this.item.share == 'net' && <>
-                <div className="flex item-hover h-30 flex padding-w-14">
-                    <div className="flex-auto">
-                        页面公开访问权限
-                    </div>
-                    <div className="flex-fixed">
-                        <SelectBox
-                            small
-                            border
-                            multiple
-                            computedChanges={async (vs, v) => {
-                                return getAtomPermissionComputedChanges(this.page.pageLayout.type, vs, v);
-                            }}
-                            options={getAtomPermissionOptions(this.page.pageLayout.type)}
-                            value={this.item.netPermissions || []}
-                            onChange={e => { setGlobalShare({ 'netPermissions': e }) }}
-                        ></SelectBox>
-                    </div>
-                </div>
-            </>}
+                    </>}
+                </>
+            }
             <Divider></Divider>
             <div className="item-hover h-30  cursor  padding-w-14 flex"
                 onClick={e => this.copyLink()}>
@@ -189,10 +231,10 @@ class PagePublish extends EventsComponent {
     }
 }
 
-export async function usePagePublish(pos: PopoverPosition, item: LinkPageItem, page: Page) {
+export async function usePagePublish(pos: PopoverPosition, page: Page) {
     let popover = await PopoverSingleton(PagePublish, { mask: true });
     let pagePublish = await popover.open(pos);
-    pagePublish.open(item, page);
+    pagePublish.open(page);
     return new Promise((resolve: (data: any) => void, reject) => {
         popover.only('close', () => {
             resolve(null)
