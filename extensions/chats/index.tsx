@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import lodash from "lodash";
 import React from "react";
-import { FileIconSvg, DownloadSvg, Emoji1Svg, Edit1Svg, ReplySvg, DotsSvg, EditSvg, TrashSvg, ReportSvg, CheckSvg } from "../../component/svgs";
+import { FileIconSvg, DownloadSvg, Emoji1Svg, Edit1Svg, ReplySvg, DotsSvg, EditSvg, TrashSvg, ReportSvg, CheckSvg, EmojiSvg } from "../../component/svgs";
 import { Avatar } from "../../component/view/avator/face";
 import { UserBox } from "../../component/view/avator/user";
 import { Icon } from "../../component/view/icon";
@@ -19,8 +19,10 @@ import { EmojiCode } from "../emoji/store";
 import { ChannelTextType } from "./declare";
 import "./style.less";
 import { ChatInput } from "../../component/view/input.chat/chat";
+import { ToolTip } from "../../component/view/tooltip";
 
 export class ViewChats extends React.Component<{
+    readonly?: boolean,
     redit(d: ChannelTextType)
     delChat(d: ChannelTextType): Promise<SockResponse<void, string>>
     emojiChat(d: ChannelTextType, re: Partial<EmojiCode>): Promise<SockResponse<{
@@ -82,7 +84,7 @@ export class ViewChats extends React.Component<{
                         <Remark>{util.byteToString(f.size)}</Remark>
                     </div>
                     <a href={f.url} download={f.text}>
-                        <Icon size={30} icon={DownloadSvg}></Icon>
+                        <Icon size={24} icon={DownloadSvg}></Icon>
                     </a>
                 </div>
             </div>)
@@ -110,9 +112,9 @@ export class ViewChats extends React.Component<{
     renderItem(d: ChannelTextType, noUser: boolean) {
         if (d.isDeleted) {
             if (d.userid == this.currentUser.id) {
-                return <div key={d.id} className="sy-channel-text-item-deleted"><Remark>你撤回了一条消息<a onClick={e => this.redit(d)}>重新编辑</a></Remark></div>
+                return <div key={d.id} className="sy-channel-text-item-deleted remark f-12">你撤回了一条消息<a onClick={e => this.redit(d)}>重新编辑</a></div>
             }
-            else return <div key={d.id} className="sy-channel-text-item-deleted"><Remark><UserBox userid={d.userid}>{us => <span>"{us.name}"</span>}</UserBox>撤回了一条消息</Remark></div>
+            else return <div key={d.id} className="sy-channel-text-item-deleted remark f-12"><UserBox userid={d.userid}>{us => <span>"{us.name}"</span>}</UserBox>撤回了一条消息</div>
         }
         return <div data-channel-text-id={d.id} className={"sy-channel-text-item" + (noUser ? " no-user" : "")} key={d.id}>
             {d.reply && <div className="sy-channel-text-item-reply">
@@ -178,10 +180,10 @@ export class ViewChats extends React.Component<{
                     <span>{em.count}</span>
                 </a>
             })}</div>}
-            {!(d.id == this.editChannelText?.id) && <div className="sy-channel-text-item-operators">
-                <span onMouseDown={e => this.addEmoji(d, e)}><Icon size={16} icon={Emoji1Svg}></Icon></span>
-                {d.userid == this.currentUser.id && <span onMouseDown={e => this.openEdit(d)}><Icon size={16} icon={Edit1Svg}></Icon></span>}
-                {d.userid != this.currentUser.id && <span onMouseDown={e => this.reply(d)}><Icon size={16} icon={ReplySvg}></Icon></span>}
+            {!(d.id == this.editChannelText?.id) && this.props.readonly !== true && <div className="sy-channel-text-item-operators">
+                <ToolTip overlay={'添加表情'}><span onMouseDown={e => this.addEmoji(d, e)}><Icon size={16} icon={EmojiSvg}></Icon></span></ToolTip>
+                {d.userid == this.currentUser.id && <ToolTip overlay={'编辑'}><span onMouseDown={e => this.openEdit(d)}><Icon size={16} icon={Edit1Svg}></Icon></span></ToolTip>}
+                {d.userid != this.currentUser.id && <ToolTip overlay={'回复'}><span onMouseDown={e => this.reply(d)}><Icon size={16} icon={ReplySvg}></Icon></span></ToolTip>}
                 <span onMouseDown={e => this.openProperty(d, e)}><Icon size={16} icon={DotsSvg}></Icon></span>
             </div>}
         </div>
@@ -247,6 +249,7 @@ export class ViewChats extends React.Component<{
     editEmoji = lodash.throttle(async (
         d: ChannelTextType,
         emoji: { emojiId: string; code?: string; count?: number; }) => {
+        if (this.props.readonly) return;
         var result = await this.emojiChat(d, emoji);
         if (!Array.isArray(d.emojis)) {
             d.emojis = [];
