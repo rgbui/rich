@@ -12,6 +12,7 @@ import { FieldView, OriginFormField } from "./origin.field";
 @url('/form/image')
 class FormFieldImage extends OriginFormField {
     async uploadFile(event: React.MouseEvent) {
+        if (this.checkEdit() === false) return;
         var exts = ['image/*'];
         var file = await OpenFileDialoug({ exts });
         if (file) {
@@ -42,12 +43,11 @@ class FormFieldImageView extends BlockView<FormFieldImage>{
     renderImages(images: { url: string }[]) {
         return images.map((img, i) => {
             return <div
-                onClick={e => this.deleteImage(img, e)}
                 className="border round flex-center relative gap-r-10 gap-b-10 visible-hover size-120 round"
                 key={i}>
-                <span className="pos-top-right flex-center size-24 item-hover-focus circle cursor visible">
+                {this.block.isCanEdit() && <span onClick={e => this.deleteImage(img, e)} className="pos-top-right flex-center size-24 item-hover-focus circle cursor visible">
                     <Icon size={16} icon={CloseSvg}></Icon>
-                </span>
+                </span>}
                 <img src={img.url}
                     style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "cover", objectPosition: 'center center' }}
                 />
@@ -62,7 +62,7 @@ class FormFieldImageView extends BlockView<FormFieldImage>{
                 {vs.length > 0 && <div className="flex">
                     {this.renderImages(vs)}
                 </div>}
-                {(vs.length < 2 || this.block.field?.config?.isMultiple) && <Button size="small" ghost onClick={e => this.block.uploadFile(e)}>上传图片</Button>}
+                {(vs.length < 2 || this.block.field?.config?.isMultiple)&&this.block.isCanEdit() && <Button size="small" ghost onClick={e => this.block.uploadFile(e)}>上传图片</Button>}
             </div>
         </FieldView>
     }

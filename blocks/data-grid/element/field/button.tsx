@@ -8,9 +8,11 @@ import { OriginField } from "./origin.field";
 @url('/field/button')
 export class FieldCheck extends OriginField {
     onRowEdit(e: React.MouseEvent) {
+        if (this.checkEdit() === false) return;
         this.dataGrid.onOpenEditForm(this.item.dataRow.id);
     }
     onRowDelete(e: React.MouseEvent) {
+        if (this.checkEdit() === false) return;
         this.dataGrid.onBatchDelete([this.item.dataRow.id]);
     }
 }

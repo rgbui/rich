@@ -15,6 +15,7 @@ import { OriginFormField, FieldView } from "./origin.field";
 @url('/form/file')
 class FormFieldFile extends OriginFormField {
     async uploadFile(event: React.MouseEvent) {
+        if (this.checkEdit() === false) return;
         var exts = ['*'];
         var file = await OpenFileDialoug({ exts });
         if (file) {
@@ -52,7 +53,7 @@ class FormFieldFileView extends BlockView<FormFieldFile>{
                     <span className="flex-fixed text-overflow gap-w-5">{img.filename}</span>
                     <em className="flex-fixed remark">{util.byteToString(img.size)}</em>
                 </a>
-                <span onClick={e => this.deleteImage(img)} className="gap-l-10 flex-fixed visible size-20 round cursor flex-center item-hover"><Icon size={16} icon={CloseSvg}></Icon></span>
+                {this.block.isCanEdit() && <span onClick={e => this.deleteImage(img)} className="gap-l-10 flex-fixed visible size-20 round cursor flex-center item-hover"><Icon size={16} icon={CloseSvg}></Icon></span>}
             </div>
         })
     }
@@ -67,7 +68,7 @@ class FormFieldFileView extends BlockView<FormFieldFile>{
                 {this.block.value && <div className="sy-field-files">
                     {this.renderFiles(vs)}
                 </div>}
-                {(vs.length == 0 || this.block.field?.config?.isMultiple) && <Button size={'small'} ghost onClick={e => this.block.uploadFile(e)}>上传{text}</Button>}
+                {(vs.length == 0 || this.block.field?.config?.isMultiple) && this.block.isCanEdit() && <Button size={'small'} ghost onClick={e => this.block.uploadFile(e)}>上传{text}</Button>}
             </div>
         </FieldView>
     }

@@ -13,6 +13,7 @@ class FieldText extends OriginFormField {
 @view('/form/option')
 class FieldTextView extends BlockView<FieldText>{
     async mousedown(event: React.MouseEvent) {
+        if(this.block.checkEdit() === false) return;
         var fc: FieldConfig = this.block.field.config;
         var op = await useTableStoreOption({
             roundArea: Rect.fromEle(event.currentTarget as HTMLElement)

@@ -22,7 +22,7 @@ export class FieldTextView extends BlockView<FieldText>{
             this.span.style.display = 'block';
             var sel = window.getSelection();
             var eg = sel?.focusNode;
-            var range = sel.getRangeAt(0);
+            var range = sel.rangeCount > 0 ? sel.getRangeAt(0) : undefined;
             if (eg && this.span.parentNode.contains(eg) && range) {
                 var sg = Rect.fromEle(range);
                 var r = Rect.fromEle(this.span);

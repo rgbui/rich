@@ -17,6 +17,7 @@ export class FieldDate extends OriginField {
         return r.format(format)
     }
     async onCellMousedown(event: React.MouseEvent<Element, MouseEvent>) {
+        if (this.checkEdit() === false) return;
         if (this.field?.type == FieldType.createDate || this.field?.type == FieldType.modifyDate) return;
         event.stopPropagation();
         var el = event.target as HTMLElement;

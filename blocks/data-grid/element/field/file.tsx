@@ -13,6 +13,7 @@ import { ToolTip } from "../../../../component/view/tooltip";
 @url('/field/file')
 export class FieldFile extends OriginField {
     async onCellMousedown(event: React.MouseEvent) {
+        if (this.checkEdit() === false) return;
         var vs = Array.isArray(this.value) ? this.value : (this.value ? [this.value] : []);
         if (!this.field?.config?.isMultiple) {
             vs = vs.slice(0, 1);

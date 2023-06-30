@@ -5,6 +5,7 @@ import { AppearAnchor } from "../../../../src/block/appear";
 import { BlockDisplay } from "../../../../src/block/enum";
 import { ViewField } from "../../schema/view";
 import { TableStoreItem } from "../../view/item";
+import { ShyAlert } from "../../../../component/lib/alert";
 
 export class OriginField extends Block {
     display = BlockDisplay.block;
@@ -58,5 +59,18 @@ export class OriginField extends Block {
     get isAllowDrop(): boolean {
         return false;
     }
-
+    checkEdit() {
+        if (!this.isCanEdit()) {
+            ShyAlert('请先登录')
+            return false;
+        }
+        return true;
+    }
+    checkSign() {
+        if (!this.page.isSign) {
+            ShyAlert('请先登录')
+            return false;
+        }
+        return true;
+    }
 }

@@ -13,6 +13,7 @@ class FieldTextView extends BlockView<FieldText>{
         var self = this;
         function keydown(event: React.KeyboardEvent<HTMLInputElement>) {
             if (event.key == 'Enter') {
+                if(!self.block.isCanEdit())return;
                 self.block.onChange((event.target as HTMLInputElement).value);
             }
         }

@@ -12,7 +12,7 @@ export class FieldEmail extends OriginField {
 export class FieldEmailView extends BlockView<FieldEmail>{
     render() {
         return <div className='sy-field-email f-14'>
-            <TextArea block={this.block} prop='value' placeholder="输入邮箱" ></TextArea>
+            <TextArea plain block={this.block} prop='value' placeholder="输入邮箱" ></TextArea>
         </div>
     }
 }

@@ -22,6 +22,7 @@ class FieldText extends OriginFormField {
 class FieldTextView extends BlockView<FieldText>{
     async mousedown(event: React.MouseEvent) {
         event.stopPropagation();
+        if(this.block.checkEdit() === false) return;
         var el = event.target as HTMLElement;
         var pickDate = await useDatePicker({ roundArea: Rect.from(el.getBoundingClientRect()) }, this.block.value);
         if (pickDate) {

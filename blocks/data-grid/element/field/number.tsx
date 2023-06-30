@@ -162,6 +162,7 @@ export class FieldTextView extends BlockView<FieldNumber>{
                 onInput={input}
                 onKeyUp={keyup}
                 onBlur={blur}
+                readOnly={this.block.isCanEdit()}
                 onCompositionStart={start}
                 onCompositionUpdate={start}
                 onCompositionEnd={end}

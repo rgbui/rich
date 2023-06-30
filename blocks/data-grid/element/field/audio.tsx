@@ -8,11 +8,12 @@ import { OriginField } from "./origin.field";
 @url('/field/audio')
 export class FieldAudio extends OriginField {
     async onCellMousedown(event: React.MouseEvent) {
+        if (this.checkEdit() === false) return;
         var vs = Array.isArray(this.value) ? this.value : (this.value ? [this.value] : []);
         if (!this.field?.config?.isMultiple) {
             vs = vs.slice(0, 1);
         }
-        var rs = await useDataGridFileViewer({ roundArea:Rect.fromEle(event.currentTarget as HTMLElement) }, {
+        var rs = await useDataGridFileViewer({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, {
             mime: 'audio',
             resources: vs,
             isMultiple: this.field?.config?.isMultiple ? true : false

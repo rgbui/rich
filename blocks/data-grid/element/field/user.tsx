@@ -11,6 +11,7 @@ import { OriginField } from "./origin.field";
 @url('/field/user')
 export class FieldUser extends OriginField {
     async onCellMousedown(event: React.MouseEvent) {
+        if (this.checkEdit() === false) return;
         if (![FieldType.creater, FieldType.modifyer].includes(this.field.type)) {
             var vs = Array.isArray(this.value) ? this.value : (this.value ? [this.value] : []);
             if (!this.field?.config?.isMultiple) {

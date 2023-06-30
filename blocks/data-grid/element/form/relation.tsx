@@ -34,6 +34,7 @@ class FormFieldRelation extends OriginFormField {
         this.view.forceUpdate()
     }
     async onCellMousedown(event: React.MouseEvent<Element, MouseEvent>) {
+        if (this.checkEdit() === false) return;
         var r = await useRelationPickData({ roundArea: Rect.fromEvent(event) }, {
             field: this.field,
             relationDatas: this.relationList,
@@ -47,6 +48,7 @@ class FormFieldRelation extends OriginFormField {
         }
     }
     async onDeleteData(event: React.MouseEvent, id: string) {
+        if (this.checkEdit() === false) return;
         event.stopPropagation()
         var vs = Array.isArray(this.value) ? this.value : (this.value ? [this.value] : []);
         lodash.remove(vs, c => c == id);
@@ -74,12 +76,12 @@ class FormFieldRelationView extends BlockView<FormFieldRelation>{
                     <Icon size={18} icon={getPageIcon({ pageType: PageLayoutType.doc, icon: r[icon.name] })}></Icon>
                 </span>
                 <span className="flex-auto text-overflow">{r[f?.name]}</span>
-                <span onClick={e => this.block.onDeleteData(e, r.id)} className="flex-fixed size-24 item-hover flex-center visible round">
+                {this.block.isCanEdit() && <span onClick={e => this.block.onDeleteData(e, r.id)} className="flex-fixed size-24 item-hover flex-center visible round">
                     <Icon size={16} icon={CloseSvg}></Icon>
-                </span>
+                </span>}
             </a>
         })}
-            {(this.block.field.config.isMultiple || (!(this.block.relationList.length > 0))) && <div>
+            {(this.block.field.config.isMultiple || (!(this.block.relationList.length > 0))) && this.block.isCanEdit() && <div>
                 <Button onMouseDown={e => { this.block.onCellMousedown(e) }} ghost>选择{this.block.relationSchema?.text}</Button>
             </div>}
         </div>

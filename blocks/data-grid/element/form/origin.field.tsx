@@ -10,6 +10,7 @@ import { TextSpanArea } from "../../../../src/block/view/appear";
 import { DataGridForm } from "../../view/form";
 import "./style.less";
 import { GetFieldTypeSvg } from "../../schema/util";
+import { ShyAlert } from "../../../../component/lib/alert";
 
 export class OriginFormField extends Block {
     display = BlockDisplay.block;
@@ -96,6 +97,20 @@ export class OriginFormField extends Block {
                     break;
             }
         }
+    }
+    checkEdit() {
+        if (!this.isCanEdit()) {
+            ShyAlert('请先登录')
+            return false;
+        }
+        return true;
+    }
+    checkSign() {
+        if (!this.page.isSign) {
+            ShyAlert('请先登录')
+            return false;
+        }
+        return true;
     }
 }
 export function FieldView(props: { block: OriginFormField, children?: JSX.Element | string | React.ReactNode }) {

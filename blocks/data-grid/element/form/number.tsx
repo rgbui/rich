@@ -11,11 +11,6 @@ class FieldText extends OriginFormField {
 class FieldTextView extends BlockView<FieldText>{
     render() {
         var self = this;
-        function keydown(event: React.KeyboardEvent<HTMLInputElement>) {
-            if (event.key == 'Enter') {
-                self.block.onChange((event.target as HTMLInputElement).value);
-            }
-        }
         return <FieldView block={this.block}>
             <InputNumber
                 value={this.block.value}

@@ -16,6 +16,7 @@ export class FieldEmailView extends BlockView<FieldEmoji>{
     render() {
         var self = this;
         async function mousedown(event: React.MouseEvent) {
+            if (self.block.checkSign() === false) return;
             var r = await self.block.item.onUpdateCellInteractive(self.block.viewField.field)
             if (r) {
                 self.block.value = r;

@@ -10,6 +10,7 @@ import lodash from "lodash";
 @url('/field/comment')
 export class FieldComment extends OriginField {
     async onOpenComment(event: React.MouseEvent) {
+        if (this.checkSign() === false) return;
         var r = await useCommentListView({
             userid: this.page.user.id,
             elementUrl: getElementUrl(ElementType.SchemaData,

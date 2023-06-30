@@ -30,6 +30,7 @@ export class FieldRelation extends OriginField {
         return this.dataGrid.relationSchemas.find(g => g.id == this.field.config?.relationTableId)
     }
     async onCellMousedown(event: React.MouseEvent<Element, MouseEvent>) {
+        if (this.checkEdit() === false) return;
         var r = await useRelationPickData({ roundArea: Rect.fromEvent(event) }, {
             field: this.viewField.field,
             relationDatas: this.relationList,

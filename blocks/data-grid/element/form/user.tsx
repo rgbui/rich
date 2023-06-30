@@ -11,6 +11,7 @@ import { FieldView, OriginFormField } from "./origin.field";
 @url('/form/user')
 export class FieldUser extends OriginFormField {
     async onSelectUser(event: React.MouseEvent) {
+        if (this.checkEdit() === false) return;
         var vs = this.value;
         if (!Array.isArray(vs) && vs) vs = [vs];
         if (!Array.isArray(vs)) vs = [];

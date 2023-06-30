@@ -11,6 +11,7 @@ import "./style.less";
 export class FieldOption extends OriginField {
     async onCellMousedown(event: React.MouseEvent<Element, MouseEvent>) {
         event.stopPropagation();
+        if (this.checkEdit() === false) return;
         var fc: FieldConfig = this.field.config;
         var op = await useTableStoreOption({
             roundArea: Rect.fromEle(event.currentTarget as HTMLElement)
