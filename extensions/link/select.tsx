@@ -52,12 +52,12 @@ class SelectWorkspacePage extends EventsComponent {
             </div>
             {!this.word && this.currentLinks && this.currentLinks.map((link, i) => {
                 return <a onMouseUp={e => this.onSelect(link)} className={"h-30 text  item-hover cursor round padding-w-10 flex" + ((i) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
-                    <span className="flex flex-inline flex-center size-24 item-hover round"><Icon size={20} icon={getPageIcon(link)}></Icon></span> <span className="f-14">{getPageText(link)}</span></a>
+                    <span className="flex flex-inline flex-center size-24 item-hover round flex-fixed"><Icon size={20} icon={getPageIcon(link)}></Icon></span> <span className="f-14 flex-auto text-overflow">{getPageText(link)}</span></a>
             })}
             {this.loading && <div className="gap-h-10 flex-center"><Spin></Spin></div>}
             {this.word && this.links && this.links.map((link, i) => {
                 return <a onMouseUp={e => this.onSelect(link)} className={"h-30  text  item-hover cursor round padding-w-10 flex" + ((i) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
-                    <span className="flex flex-inline size-24 flex-center item-hover round"><Icon size={20} icon={getPageIcon(link)}></Icon></span> <span className="f-14">{getPageText(link)}</span></a>
+                    <span className="flex flex-inline size-24 flex-center item-hover round flex-fixed"><Icon size={20} icon={getPageIcon(link)}></Icon></span> <span className="f-14 flex-auto text-overflow">{getPageText(link)}</span></a>
             })}
         </div>
     }

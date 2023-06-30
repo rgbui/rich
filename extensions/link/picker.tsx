@@ -153,7 +153,7 @@ class LinkPicker extends EventsComponent {
                 {!this.loading && this.links.map((link, i) => {
                     return <div onClick={e => this.onSelect(link)} className={"h-30 item-hover round padding-w-5 flex" + (this.selectIndex == (i + 1) ? " item-hover-focus" : "")} key={link.id}>
                         <span className="size-20 flex-fixed flex-center item-hover round"><Icon icon={getPageIcon(link)}></Icon></span>
-                        <span className="flex-auto">{getPageText(link)}</span>
+                        <span className="flex-auto text-overflow">{getPageText(link)}</span>
                     </div>
                 })}
                 {!this.loading && this.links.length == 0 && this.isSearch && <span className="remark f-12 flex-center">没有搜索到</span>}
