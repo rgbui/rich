@@ -45,6 +45,7 @@ export class ShyMentionView extends BlockView<ShyMention>{
         this.block.page.onReplace(this.block, [{ url: BlockUrlConstant.Text, content: `@${this.username}` }])
     }
     async openUserCard(event: React.MouseEvent) {
+        if (this.block.userid == 'all') return;
         await useUserCard({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, { userid: this.block.userid });
     }
     boxTip: BoxTip;
@@ -55,11 +56,10 @@ export class ShyMentionView extends BlockView<ShyMention>{
                 <ToolTip overlay={'拖动'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></a></ToolTip>
                 <ToolTip overlay={'打开'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.openUserCard(e)}><Icon size={16} icon={TrashSvg}></Icon></a></ToolTip>
                 <ToolTip overlay={'编辑'}><a className="flex-center size-24 round item-hover gap-5 cursor text" onMouseDown={e => this.openUser(e)}><Icon size={16} icon={EditSvg}></Icon></a></ToolTip>
-            </div>}>
-                <SolidArea block={this.block} prop={'userid'} ><UserBox userid={this.block.userid}>{(user) => {
-                    this.username = user.name;
-                    return <span className='sy-block-mention' >@<span>{user.name}</span></span>
-                }}</UserBox></SolidArea>
+            </div>}><SolidArea block={this.block} prop={'userid'} >{this.block.userid == 'all' && <span className='sy-block-mention'>@所有人</span>}{this.block.userid != 'all' && <UserBox userid={this.block.userid}>{(user) => {
+                this.username = user.name;
+                return <span className='sy-block-mention' >@<span>{user.name}</span></span>
+            }}</UserBox>}</SolidArea>
             </BoxTip>
         </span>
     }
