@@ -136,20 +136,6 @@ export var util = {
         catch (err) {
             console.error(err);
         }
-
-
-        // return new Promise((resolve: (d: string) => void, reject) => {
-        //     var x = new XMLHttpRequest();
-        //     x.open("GET", url, true);
-        //     x.responseType='json';
-        //     x.onload = function (e) {
-        //         resolve(x.response)
-        //     }
-        //     x.onerror = function (err) {
-        //         reject(err);
-        //     }
-        //     x.send();
-        // })
     },
     async downloadFile(url, fileName) {
         return new Promise((resolve, reject) => {
@@ -169,6 +155,17 @@ export var util = {
             }
             x.send();
         })
+    },
+    async downloadFileByData(data: string, name: string) {
+
+        //Blob为js的一个对象，表示一个不可变的, 原始数据的类似文件对象，这是创建文件中不可缺少的！
+        var urlObject = window.URL;
+        var export_blob = new Blob([data]);
+        var save_link = document.createElement("a")
+        save_link.href = urlObject.createObjectURL(export_blob);
+        save_link.download = name;
+        save_link.click();
+
     },
     getListName<T>(list: T[], name: string, predict: (g: T) => string, getName?: (text: string, number: number) => string) {
         var index = 0;
