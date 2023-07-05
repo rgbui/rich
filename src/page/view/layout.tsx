@@ -2,6 +2,8 @@ import React, { CSSProperties, ErrorInfo } from "react";
 import { Page } from "..";
 import { OnlineUsers } from "../../../extensions/at/users";
 import { PageLayoutType } from "../declare";
+import { ElementType } from "../../../net/element.type";
+import { channel } from "../../../net/channel";
 
 export class PageLayoutView extends React.Component<{
     page: Page,
@@ -9,10 +11,13 @@ export class PageLayoutView extends React.Component<{
 }>{
     render(): React.ReactNode {
         if (this.error) return this.renderErrorPage();
+        if ([ElementType.Schema, ElementType.SchemaData, ElementType.SchemaRecordView].includes(this.props.page.pe.type) && !this.props.page.schema) {
+            return this.renderNotDataSource();
+        }
         var props = this.props;
         var type = props.page.pageLayout?.type;
         var mh = props.page.pageVisibleHeight ? (props.page.pageVisibleHeight + 'px') : '100%';
-        if (type == PageLayoutType.doc || type == PageLayoutType.recordView ) {
+        if (type == PageLayoutType.doc || type == PageLayoutType.recordView) {
             var style: CSSProperties = { minHeight: mh, width: '100%' };
             return <div className='shy-page-layout shy-page-layout-doc' style={style}>
                 {props.page.isSchemaRecordViewTemplate && <div className="pos-center-top t-20 w-200 h-30 bg flex-center round f-12">
@@ -68,11 +73,11 @@ export class PageLayoutView extends React.Component<{
                     <div className="flex-fix w-250" style={{ height: mh }}><OnlineUsers></OnlineUsers></div>
                 </div>
             }
-            else  return <div className={"shy-page-layout shy-page-layout-text-channel"} style={{ width: '100%', height: mh }}>
-                    <div className='shy-page-layout-wrapper' style={style}>
-                        {props.children}
-                    </div>
+            else return <div className={"shy-page-layout shy-page-layout-text-channel"} style={{ width: '100%', height: mh }}>
+                <div className='shy-page-layout-wrapper' style={style}>
+                    {props.children}
                 </div>
+            </div>
         }
         else {
             return <div className="flex-center padding-40">
@@ -90,17 +95,33 @@ export class PageLayoutView extends React.Component<{
                 <div className="flex-center remark">
                     {this.error}
                 </div>
-                <div>
-                    <span><a onClick={e => location.reload()}>刷新</a>或通过<a onClick={e => this.props.page.onOpenHistory()}>历史记录</a>找回</span>
+                <div className="flex-center remark">
+                    <span><a  className="cursor" onClick={e => location.reload()}>刷新</a>或通过<a  className="cursor"  onClick={e => this.props.page.onOpenHistory()}>历史记录</a>找回</span>
                 </div>
             </div>
         }
+    }
+    renderNotDataSource() {
+        return <div>
+            <div className="flex-center padding-40">
+                <span>缺少数据源</span>
+            </div>
+            <div className="flex-center remark">
+                没有查到数据表格，请确认是否存在网络问题，还是已经删除了
+            </div>
+            <div className="flex-center remark">
+                <span><a className="cursor" onClick={e => location.reload()}>刷新</a>或<a  className="cursor"  onClick={async e => {
+                    this.props.page.onPageRemove()
+                }}>删除页面</a></span>
+            </div>
+        </div>
     }
     componentDidCatch?(error: Error, errorInfo: ErrorInfo): void {
         this.error = error.message;
         this.forceUpdate();
     }
 }
+
 
 
 
