@@ -5,32 +5,43 @@ import { url, view } from "../../../../src/block/factory/observable";
 import { BlockView } from "../../../../src/block/view";
 import { OriginField } from "./origin.field";
 import { TextArea } from "../../../../src/block/view/appear";
-import { AppearAnchor } from "../../../../src/block/appear";
+import { Rect } from "../../../../src/common/vector/point";
+import { ToolTip } from "../../../../component/view/tooltip";
 
 
 @url('/field/url')
 export class FieldUrl extends OriginField {
-    focusAnchor(anchor: AppearAnchor) {
-        if (this.asView<FieldUrlView>()?.span) {
-            this.asView<FieldUrlView>().span.style.display = 'none';
-        }
-    }
-    blurAnchor(anchor: AppearAnchor) {
-        if (this.asView<FieldUrlView>()?.span) {
-            this.asView<FieldUrlView>().span.style.display = 'block';
-        }
-    }
 }
+
 @view('/field/url')
 export class FieldUrlView extends BlockView<FieldUrl>{
     isCom: boolean = false;
     span: HTMLElement;
+    move(e?: React.MouseEvent) {
+        if (this.span) {
+            this.span.style.display = 'flex';
+            var sel = window.getSelection();
+            var eg = sel?.focusNode;
+            var range = sel.rangeCount > 0 ? sel.getRangeAt(0) : undefined;
+            if (eg && this.span.parentNode.contains(eg) && range) {
+                var sg = Rect.fromEle(range);
+                var r = Rect.fromEle(this.span);
+                r = r.extend(20);
+                if (sg.isCross(r)) {
+                    this.span.style.display = 'none';
+                }
+            }
+        }
+    }
+    keydown(e: React.KeyboardEvent) {
+        this.move()
+    }
     render() {
-        return <div className={'flex l-20  flex-top sy-field-title f-14' + (this.block.value ? " underline" : "")}>
+        return <div className={'flex l-20 text-1  flex-top sy-field-title f-14 '} onKeyDown={e => this.keydown(e)} onMouseMove={e => this.move(e)}>
             <TextArea plain block={this.block} prop='value' placeholder="网址" ></TextArea>
-            <a  ref={e => this.span = e}  href={this.block.value} target="_blank" className="pos-t-r item-hover visible flex-center size-24 text-1 border  round  cursor bg-hover">
+            <ToolTip overlay={'打开网址'}><a ref={e => this.span = e} href={this.block.value} target="_blank" className="pos-t-r item-hover visible flex-center size-24 text-1 border  round  cursor bg-hover">
                 <Icon icon={LinkSvg}></Icon>
-            </a>
+            </a></ToolTip>
         </div>
     }
 }

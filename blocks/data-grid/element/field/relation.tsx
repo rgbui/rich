@@ -54,11 +54,11 @@ export class FieldRelationView extends BlockView<FieldRelation>{
         var icon = rs?.fields.find(g => g.type == FieldType.icon);
         return <div className='sy-field-relation-items'>{this.block.relationList?.map(r => {
             var url = getElementUrl(ElementType.SchemaData, rs.id, r.id);
-            return <div key={r.id}><a className="item-hover round padding-w-3 padding-h-2" href={url} onClick={e => e.preventDefault()}>
+            return <div key={r.id}><a className="item-hover round padding-w-3 padding-h-2 flex" href={url} onClick={e => e.preventDefault()}>
                 <span className="size-24 flex-center flex-inline">
                     <Icon size={16} icon={getPageIcon({ pageType: PageLayoutType.doc, icon: r[icon.name] })}></Icon>
                 </span>
-                <span>{r[f?.name]}</span>
+                <span style={{ maxWidth: Math.max(this.block.viewField.colWidth - 50, 60) }} className="flex-auto  text-overflow">{r[f?.name]}</span>
             </a></div>
         })}
         </div>
