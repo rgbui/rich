@@ -15,6 +15,7 @@ import {
     BoardIconSvg,
     BoardToolFrameSvg,
     CollectTableSvg,
+    CubesSvg,
     DocCardsSvg,
     PageSvg
 } from "../../../component/svgs";
@@ -175,11 +176,17 @@ export class PageView extends Component<{ page: Page }>{
         this.page.emit(PageDirective.save);
     }
     renderPageTemplate() {
+        var ws = this.page.ws
         return <div className="shy-page-view-template-picker" style={this.page.getScreenStyle()}>
             <div className="shy-page-view-template-picker-tip">回车开始编辑，或者从下方选择</div>
             <div className="shy-page-view-template-picker-items">
-                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc, { useAi: true })}><Icon size={20} icon={AiStartSvg} ></Icon><span>用AI拟一份草稿</span></a>
-                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={20} icon={PageSvg} ></Icon><span>页面</span></a>
+                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={20} icon={PageSvg} ></Icon><span>空白页面</span></a>
+                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc, { useAi: true })}><Icon size={20} icon={AiStartSvg}></Icon><span>用AI开始创作</span></a>
+            </div>
+            <div className="shy-page-view-template-picker-items">
+                <div className="remark f-12">新增</div>
+                {(window.shyConfig.isDev || ws.sn <= 20) && <a onMouseDown={e => this.page.onOpenTemplate()}><Icon icon={CubesSvg}></Icon><span>选择模板创建</span></a>}
+                {/*<a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={20} icon={PageSvg} ></Icon><span>页面</span></a> */}
                 <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.db)}><Icon size={20} icon={CollectTableSvg} ></Icon><span>表格</span></a>
                 <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.docCard)}><Icon size={20} icon={DocCardsSvg} ></Icon><span>宣传页</span></a>
                 {window.shyConfig.isDev && <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.board)}><Icon size={16} icon={BoardIconSvg}></Icon><span>白板</span></a>}
@@ -203,6 +210,9 @@ export class PageView extends Component<{ page: Page }>{
         var pageStyle: Record<string, any> = {
             lineHeight: this.page.lineHeight + 'px',
             fontSize: this.page.fontSize + 'px'
+        }
+        if (this.props.page.bar === false) {
+            pageStyle.top = 0;
         }
         if (this.page.pageLayout?.type == PageLayoutType.textChannel) {
             pageStyle.overflowY = 'hidden';
@@ -255,8 +265,8 @@ export class PageView extends Component<{ page: Page }>{
                         <div className={'shy-page-view-content '} ref={e => this.page.contentEl = e}>
                             <PageCover page={this.page}></PageCover>
                             {!pd?.cover?.abled && gap > 0 && <div className={'h-' + gap}></div>}
-                            {this.page.nav && this.renderNavs()}
-                            {!this.page.nav && <ChildsArea childs={this.page.views}></ChildsArea>}
+                            {this.page.isCanOutline && this.renderNavs()}
+                            {!this.page.isCanOutline && <ChildsArea childs={this.page.views}></ChildsArea>}
                             {this.page.requireSelectLayout && this.page.isCanEdit && this.renderPageTemplate()}
                         </div>
                     </PageLayoutView>
@@ -317,6 +327,5 @@ export class PageView extends Component<{ page: Page }>{
                 this.forceUpdate()
             }
         })
-
     }
 }

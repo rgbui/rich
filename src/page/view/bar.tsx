@@ -9,6 +9,7 @@ import {
     DoubleRightSvg,
     EditSvg,
     FieldsSvg,
+    LockSvg,
     MemberSvg,
     OrderSvg,
     PageSvg,
@@ -29,11 +30,12 @@ import { Avatar } from "../../../component/view/avator/face";
 import { ToolTip } from "../../../component/view/tooltip";
 import { useWsSearch } from "../../../extensions/search";
 
+
 export class PageBar extends React.Component<{ page: Page }>{
     renderTitle() {
         if ([ElementType.SchemaData, ElementType.SchemaRecordView, ElementType.SchemaView].includes(this.props.page.pe.type) && !this.props.page.isSchemaRecordViewTemplate) {
             return <div className="flex-auto flex">
-                {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onClose()} className="item-hover size-24 round cursor flex-center gap-l-10"><Icon size={18} icon={DoubleRightSvg}></Icon></span>}
+                {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onClose()} className="item-hover size-24 round cursor flex-center "><Icon size={18} icon={DoubleRightSvg}></Icon></span>}
                 <span onMouseDown={e => this.props.page.onBack()} className="item-hover round flex cursor padding-h-3 padding-w-5">
                     <Icon size={20} icon={this.props.page.schema?.icon || CollectTableSvg}></Icon>
                     <span className="gap-l-5">{this.props.page.schema?.text}</span>
@@ -43,40 +45,43 @@ export class PageBar extends React.Component<{ page: Page }>{
                     <Icon size={20} icon={this.props.page?.formRowData?.icon || PageSvg}></Icon>
                     <span className="gap-l-5">{this.props.page?.formRowData?.title || '新页面'}</span>
                 </span>
+                {this.props.page.locker?.lock && this.props.page.isCanManage && <span onMouseDown={e => this.props.page.onLockPage()} className="flex-center visible size-24 item-hover cursor round">
+                    <Icon size={18} icon={LockSvg}></Icon>
+                </span>}
                 {this.saving && <Spin></Spin>}
             </div>
         }
         else if (this.props.page.isSchemaRecordViewTemplate) {
             var sv = this.props.page.schema.views.find(g => g.id == this.props.page.pe.id1);
             return <div className="flex-auto flex">
-                {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onClose()} className="item-hover size-24 round cursor flex-center gap-l-10"><Icon size={18} icon={DoubleRightSvg}></Icon></span>}
+                {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onClose()} className="item-hover size-24 round cursor flex-center "><Icon size={18} icon={DoubleRightSvg}></Icon></span>}
                 <span onMouseDown={e => this.props.page.onBack()} className="item-hover round flex cursor padding-h-3 padding-w-5">
                     <Icon size={20} icon={this.props.page.schema?.icon || CollectTableSvg}></Icon>
                     <span className="gap-l-5">{this.props.page.schema?.text}</span>
                 </span>
                 <span className="flex-center"><Icon icon={ChevronRightSvg} size={18}></Icon></span>
-                <span className="item-hover round flex gap-l-10 cursor padding-h-3 padding-w-5">
+                <span className="item-hover round flex  cursor padding-h-3 padding-w-5">
                     <Icon size={20} icon={sv?.icon || PageSvg}></Icon>
                     <span className="gap-l-5">{sv?.text || ''}</span>
                 </span>
+                {this.props.page.locker?.lock && this.props.page.isCanManage && <span onMouseDown={e => this.props.page.onLockPage()} className="flex-center visible size-24 item-hover cursor round">
+                    <Icon size={18} icon={LockSvg}></Icon>
+                </span>}
                 {this.saving && <Spin></Spin>}
             </div>
         }
         return <div className="flex-auto flex">
-            {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onClose()} className="item-hover size-24 round cursor flex-center gap-l-10"><Icon size={18} icon={DoubleRightSvg}></Icon></span>}
-            <span className=" round flex gap-l-10">
+            {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onClose()} className="item-hover size-24 round cursor flex-center "><Icon size={18} icon={DoubleRightSvg}></Icon></span>}
+            <span className=" round flex">
                 <span className="flex-fixed item-hover flex round  cursor padding-h-3 padding-w-5 ">
                     <Icon size={20} icon={getPageIcon(this.props.page?.pageInfo)}></Icon>
-                    <span className="gap-l-5 text-overflow max-w-300">{getPageText(this.props.page?.pageInfo)}</span>
+                    <span className={"gap-l-5 text-overflow " + (isMobileOnly ? "max-w-120" : "max-w-300")}>{getPageText(this.props.page?.pageInfo)}</span>
                 </span>
-                <span className={"flex-auto gap-l-10 remark text-overflow " + (isMobileOnly ? " max-w-250" : " max-w-500")}>{this.props.page?.pageInfo?.description}</span>
+                <span className={"flex-auto gap-l-5 remark text-overflow " + (isMobileOnly ? " max-w-250" : " max-w-500")}>{this.props.page?.pageInfo?.description}</span>
             </span>
-            {this.props.page.pageInfo?.isCanEdit && <>
-                {!this.props.page.canEdit && <ToolTip ref={e => this.be = e} placement="bottom" overlay={'进入编辑'}><span className="flex flex-fixed visible r-gap-l-5 text-1 cursor " onClick={e => {
-                    if (this.be) this.be.close()
-                    this.props.page.onChangeEditMode()
-                }}><Icon size={18} icon={EditSvg}></Icon></span></ToolTip>}
-            </>}
+            {this.props.page.locker?.lock && this.props.page.isCanManage && <span onMouseDown={e => this.props.page.onLockPage()} className="flex-center visible size-24 item-hover cursor round">
+                <Icon size={18} icon={LockSvg}></Icon>
+            </span>}
             {this.saving && <Spin></Spin>}
         </div>
     }
@@ -89,12 +94,11 @@ export class PageBar extends React.Component<{ page: Page }>{
     }
     async load() {
         var r = await channel.query('/get/view/onlines', {
-            viewUrl: this.props.page.customElementUrl
+            viewUrl: this.props.page.elementUrl
         })
-        if (r?.users && r.users.size > 0) {
-            this.users = r.users;
-            this.forceUpdate();
-        } else this.users = new Set()
+        if (r?.users && r.users.size > 0) this.users = Array.from(r.users);
+        else this.users = []
+        this.forceUpdate();
     }
     componentWillUnmount(): void {
         this.props.page.off(PageDirective.willSave, this.willSave)
@@ -110,90 +114,86 @@ export class PageBar extends React.Component<{ page: Page }>{
         this.saving = false;
         this.forceUpdate();
     }
-    users = new Set<string>();
-    syncUsers = (e: { viewUrl: string, users: Set<string>, editUsers: Set<string> }) => {
-        if (e.viewUrl == this.props.page.customElementUrl) {
-            this.users = this.props.page.isCanEdit ? e.editUsers : e.users;
+    users: string[] = [];
+    syncUsers = (e: { viewUrl: string, users: Set<string> }) => {
+        if (e.viewUrl == this.props.page.elementUrl) {
+            this.users = Array.from(e.users);
+            this.props.page.kit.collaboration.clearNotOnLineUser(this.users);
             this.forceUpdate();
         }
     }
     renderUsers() {
-
         if (this.props.page.openSource == 'snap') return <></>
         if ([PageLayoutType.textChannel].includes(this.props.page.pageLayout?.type)) return <></>
-        var user = channel.query('/query/current/user');
+        if (this.props.page.user?.id && !this.users.some(g => g === this.props.page.user?.id)) {
+            this.users.push(this.props.page.user?.id)
+        }
         return <div className="gap-r-10">
-            {this.users.size > 1 || this.users.size == 1 && user?.id && !this.users.has(user?.id) && <UserAvatars size={30} users={this.users}></UserAvatars>}
+            {(this.users.length > 1 || this.users.length == 1 && this.props.page.user?.id && this.users[0] != this.props.page.user?.id) && <UserAvatars size={30} users={this.users}></UserAvatars>}
         </div>
     }
     toLogin() {
-        location.href = 'https://shy.live/sign/in';
+        if (window.shyConfig?.isDev) location.href = '/sign/in'
+        else location.href = 'https://shy.live/sign/in';
     }
     renderPropertys() {
         if (this.props.page.openSource == 'snap') return <></>
-        var isCanEdit = this.props.page.pageInfo?.isCanEdit;
-        var user = channel.query('/query/current/user');
-        var ws = channel.query('/current/workspace')
-        var isSign = user?.id ? true : false;
+        var isCanEdit = this.props.page.isCanEdit;
+        var user = this.props.page.user;
+        var ws = this.props.page.ws;
         var isField: boolean = false;
         var isMember: boolean = false;
-        var isSearch: boolean = false;
-        var isPublish: boolean = false;
-        var isContextMenu: boolean = false;
-
-        var isSchemR = [ElementType.SchemaData, ElementType.SchemaRecordView].includes(this.props.page.pe.type)
-        if (isSchemR) {
-            isCanEdit = true;
+        var isSearch: boolean = true;
+        var isPublish: boolean = true;
+        var isContextMenu: boolean = true;
+        if (!this.props.page.isSign) {
+            isPublish = false;
         }
-        if (this.props.page.pe.type == ElementType.SchemaData || this.props.page.pe.type == ElementType.SchemaRecordView) {
+        // if (isCanEdit) {
+        //     isContextMenu = true;
+        // }
+        if (this.props.page.openSource == 'slide' || this.props.page.openSource == 'dialog') {
+            isSearch = false;
+        }
+        if (this.props.page.pe.type == ElementType.SchemaData) {
+            isField = true;
+            if (!isCanEdit) isField = false;
+            isPublish = false;
+        }
+        if (this.props.page.pe.type == ElementType.SchemaRecordView) {
             isField = true;
             if (!isCanEdit) isField = false;
         }
         if ([PageLayoutType.textChannel].includes(this.props.page.pageLayout?.type)) {
             isMember = true;
-            if (!isCanEdit) isMember = false;
+            isContextMenu = false;
         }
-        if (![
-            PageLayoutType.textChannel,
-            PageLayoutType.formView,
-            PageLayoutType.db,
-            PageLayoutType.board].includes(this.props.page.pageLayout?.type)) {
-            isSearch = true;
-            if (!isCanEdit) isSearch = false;
-        }
-        if (![PageLayoutType.textChannel].includes(this.props.page.pageLayout?.type)) {
-            isPublish = true;
-            if (!isCanEdit) isPublish = false;
-            if (isSchemR) isPublish = false;
-        }
-        if (![PageLayoutType.textChannel].includes(this.props.page.pageLayout?.type)) {
-            isContextMenu = true;
-            if (!isCanEdit) isContextMenu = false;
-        }
-        if (isSign) return <div className="flex r-flex-center r-size-24 r-item-hover r-round r-cursor r-gap-r-10 text-1 gap-r-10">
+        if (this.props.page.isSign) return <div className="flex r-flex-center r-size-24 r-item-hover r-round r-cursor r-gap-r-10 text-1 gap-r-10">
             {isField && <span onMouseDown={e => this.props.page.onOpenFieldProperty(e)} ><Icon size={18} icon={FieldsSvg}></Icon></span>}
-            {isMember && <span onMouseDown={e => this.props.page.openMember(e)} ><Icon size={18} icon={MemberSvg}></Icon></span>}
-            {isSearch && <span onMouseDown={async e => { await useWsSearch() }}><Icon size={18} icon={SearchSvg}></Icon></span>}
+            {isMember && <span onMouseDown={e => this.props.page.onOpenMember(e)} ><Icon size={18} icon={MemberSvg}></Icon></span>}
+            {isSearch && <span onMouseDown={async e => { await useWsSearch({ws:this.props.page.ws}) }}><Icon size={18} icon={SearchSvg}></Icon></span>}
             {isPublish && <span onMouseDown={e => this.props.page.onOpenPublish(e)} ><Icon size={18} icon={PublishSvg}></Icon></span>}
             {isContextMenu && <span onMouseDown={e => this.props.page.onPageContextmenu(e)} ><Icon size={18} icon={DotsSvg}></Icon></span>}
             {!isCanEdit && ws.access == 0 && !ws.isMember && <span className="size-30 gap-r-30"><Avatar size={32} userid={user.id}></Avatar></span>}
         </div>
-        else return <div className="flex r-flex-center  r-gap-r-10 ">
+        else if (this.props.page.openSource == 'page') return <div className="flex r-flex-center  r-gap-r-10 ">
             <Button size="small" onClick={e => this.toLogin()}>登录</Button>
         </div>
+        else return <></>
     }
     onSpreadMenu() {
         this.props.page.emit(PageDirective.spreadSln)
     }
     render(): React.ReactNode {
+        if (this.props.page.bar === false) return <></>
         var isDocCard = this.props.page.pageLayout?.type == PageLayoutType.docCard;
         var style: CSSProperties = {}
         if (isDocCard) {
             style.backdropFilter = `blur(20px) saturate(170%)`;
             style.backgroundColor = 'rgba(255, 252, 248, 0.75)';
         }
-        return <div style={style} className="shy-page-bar flex padding-l-10 visible-hover">
-            {isMobileOnly && <span onClick={e => this.onSpreadMenu()} className="flex-fixed size-24 flex-center item-hover round cursor ">
+        return <div style={style} className={"shy-page-bar flex visible-hover " + (isMobileOnly ? "" : "padding-l-10")}>
+            {isMobileOnly && <span onClick={e => this.onSpreadMenu()} className="flex-fixed size-20 flex-center item-hover round cursor ">
                 <Icon icon={ChevronLeftSvg} size={18}></Icon>
             </span>}
             {this.renderTitle()}
