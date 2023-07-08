@@ -2,6 +2,7 @@ import { Page } from "../../src/page";
 
 export async function createFormPage(el: HTMLElement, content: any, shyPage: Page) {
     var page = new Page();
+    page.ws = shyPage.ws;
     page.openSource = 'snap';
     page.pageInfo = shyPage.pageInfo;
     page.pageLayout = shyPage.pageLayout;

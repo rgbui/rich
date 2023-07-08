@@ -59,7 +59,7 @@ class PagePublish extends EventsComponent {
             self.forceUpdate()
         }
         async function addPermission(event: React.MouseEvent) {
-            var rs = channel.query('/current/workspace')
+            var rs =self.page.ws;
             var r = await useSelectMenuItem({ roundPoint: Point.from(event) },
                 [
                     {
@@ -108,8 +108,7 @@ class PagePublish extends EventsComponent {
         }
         function getRoles(roleId) {
             if (roleId == 'all') return '所有人'
-            var rs = channel.query('/current/workspace')
-            return rs.roles.find(g => g.id == roleId)?.text
+            return self.page.ws.roles.find(g => g.id == roleId)?.text
         }
         if (!pr) return <div className='w-300 min-h-60'></div>
         var cp = this.page.currentPermissions;
