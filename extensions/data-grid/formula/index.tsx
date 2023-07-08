@@ -13,11 +13,12 @@ import { util } from "../../../util/util";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
 import { constLangs, formulaLangs, funLangs, logcLangs } from "./data";
+import { Field } from "../../../blocks/data-grid/schema/field";
 
 class FormulaSelector extends EventsComponent {
     schema: TableSchema;
     cacheDatas = new Map<string, string>()
-    async openData(f) {
+    openData = lodash.debounce(async (f) => {
         try {
             var url = ASSERT_URL + 'assert/data-grid/formula/docs' + f.url;
             var d = this.cacheDatas.get(url);
@@ -31,7 +32,38 @@ class FormulaSelector extends EventsComponent {
         catch (ex) {
             console.error(ex);
         }
-    }
+    }, 300)
+    openTypeData = lodash.debounce(async (f: Field) => {
+        try {
+            var type = 'text';
+            if ([
+                FieldType.number,
+                FieldType.autoIncrement,
+                FieldType.sort,
+            ].includes(f.type)) {
+                type = 'number';
+            }
+            if ([
+                FieldType.date,
+                FieldType.createDate,
+                FieldType.modifyDate
+            ].includes(f.type)) {
+                type = 'date';
+            }
+            var url = ASSERT_URL + 'assert/data-grid/formula/docs/example/' + type + ".md";
+            var d = this.cacheDatas.get(url);
+            if (!d) {
+                d = await util.getText(url);
+                this.cacheDatas.set(url, d);
+            }
+            d = d.replace(/\{name\}/g, '@' + f.text);
+            this.md = d;
+            this.forceUpdate()
+        }
+        catch (ex) {
+            console.error(ex);
+        }
+    })
     textarea: Textarea = null
     render(): React.ReactNode {
         return <div className="w-500">
@@ -41,10 +73,14 @@ class FormulaSelector extends EventsComponent {
                     <div className="gap-h-10">
                         <div className="remark font-12 padding-l-10">属性</div>
                         {this.schema && this.getFields().map(f => {
-                            return <div onMouseDown={e => {
-                                this.formula += f.text;
-                                this.textarea.updateValue(this.formula);
-                            }}
+                            return <div
+                                onMouseEnter={e => {
+                                    this.openTypeData(f);
+                                }}
+                                onMouseDown={e => {
+                                    this.formula += '@' + f.text;
+                                    this.textarea.updateValue(this.formula);
+                                }}
                                 key={f.id}
                                 className="padding-w-10 item-hover round cursor flex h-30">
                                 <span className="flex-center size-24 flex-fixed"><Icon size={16} icon={GetFieldTypeSvg(f.type)}></Icon></span>
@@ -55,7 +91,7 @@ class FormulaSelector extends EventsComponent {
                     <div className="gap-h-10">
                         <div className="remark font-12 padding-l-10">常量</div>
                         {constLangs.map((fl, k) => {
-                            return <div onClick={e => this.openData(fl)} key={k} className="padding-w-10 item-hover round cursor flex h-30">
+                            return <div onMouseEnter={e => this.openData(fl)} key={k} className="padding-w-10 item-hover round cursor flex h-30">
                                 <span className="flex-fixed flex-center size-24"><Icon size={16} icon={TypesNumberSvg}></Icon></span>
                                 <span className="flex-auto text-overflow">{fl.text}</span>
                             </div>
@@ -65,7 +101,7 @@ class FormulaSelector extends EventsComponent {
                         <div className="remark font-12 padding-l-10">运算符</div>
                         {logcLangs.map((fl, k) => {
                             return <div key={k}
-                                onClick={e => this.openData(fl)}
+                                onMouseEnter={e => this.openData(fl)}
                                 className="padding-w-10 item-hover round cursor flex h-30">
                                 <span className="gap-l-10 flex-auto text-overflow">{fl.text}</span>
                             </div>
@@ -75,7 +111,7 @@ class FormulaSelector extends EventsComponent {
                         <div className="remark font-12 padding-l-10">函数</div>
                         {funLangs.map((fl, k) => {
                             return <div key={k}
-                                onClick={e => this.openData(fl)}
+                                onMouseEnter={e => this.openData(fl)}
                                 className="padding-w-10 item-hover round cursor flex h-30">
                                 <span className="flex-fixed flex-center size-24"><Icon size={16} icon={TypesNumberSvg}></Icon></span>
                                 <span className="flex-auto text-overflow">{fl.text}</span>
@@ -94,7 +130,7 @@ class FormulaSelector extends EventsComponent {
                                 </div>
                                 {fl.spread && <div>{fl.childs.map((f, g) => {
                                     return <div
-                                        onClick={e => this.openData(f)}
+                                        onMouseEnter={e => this.openData(f)}
                                         key={g}
                                         className="padding-w-10 padding-l-30 item-hover round cursor flex h-30"><span className="f-14 inline-block gap-l-10">{f.text}</span></div>
                                 })}</div>}
@@ -120,7 +156,8 @@ class FormulaSelector extends EventsComponent {
             FieldType.sort,
             FieldType.date,
             FieldType.createDate,
-            FieldType.modifyDate
+            FieldType.modifyDate,
+            FieldType.text,
         ].includes(g.type));
         return fs;
     }
@@ -141,15 +178,24 @@ class FormulaSelector extends EventsComponent {
                 template: f.name
             }
         }));
-        exp.parse(this.formula);
-        exp.check();
-        var jsCode = exp.compile();
-        if (exp.checkOk) {
-            this.result = { formula: this.formula, jsCode, exp: exp.exp.get() }
+        try {
+            exp.parse(this.formula);
+            exp.check();
+            var jsCode = exp.compile();
+            if (exp.checkOk) {
+                this.result = {
+                    formula: this.formula,
+                    jsCode,
+                    exp: exp.exp.get()
+                }
+            }
+            else {
+                var logs = exp.getLogs();
+                this.error = logs.findAll(g => g.type == 'error').map(c => c.message).join(" ");
+            }
         }
-        else {
-            var logs = exp.getLogs();
-            this.error = logs.findAll(g => g.type == 'error').map(c => c.message).join(" ");
+        catch (ex) {
+            this.error = '语法不合法'
         }
         this.forceUpdate()
     }, 700)

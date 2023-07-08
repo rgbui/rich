@@ -14,7 +14,7 @@ String.length(@标题)
 #### 示例
 
 ```
-@创建日期.length==3
+@标题.length==3
 
-String.length(@创建日期)==3
+String.length(@标题)==3
 ```

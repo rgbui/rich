@@ -3,7 +3,7 @@
 在日期时间中减少时间间隔。最后的参数为“单位”，可选值为“years”（年），“quarters”(季度)，“months”（月），“weeks”（周），“days”（日），“hours”（小时），“minutes”（分钟），“seconds”（秒），“milliseconds”（毫秒）。
 
 
-如果number为正数，则表示相加
+如果number为负数，则表示相加
 #### 语法
 
 ```
