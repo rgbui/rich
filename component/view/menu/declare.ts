@@ -1,4 +1,5 @@
 import { PopoverPosition } from "../../../extensions/popover/position"
+import { IconValueType } from "../icon"
 import { OverlayPlacement } from "../tooltip"
 import { MenuItemView } from "./item"
 
@@ -6,7 +7,7 @@ export type MenuItem<T = string> = {
     name?: T,
     type?: MenuItemType,
     text?: string,
-    icon?: string | SvgrComponent | JSX.Element,
+    icon?: IconValueType,
     overlay?: JSX.Element | string,
     placement?: OverlayPlacement,
     renderIcon?: (item: MenuItem<T>, view?: MenuItemView) => JSX.Element,

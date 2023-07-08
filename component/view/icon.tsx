@@ -4,8 +4,11 @@ import { IconArguments } from '../../extensions/icon/declare';
 import { getEmoji } from '../../net/element.type';
 import { PageSvg } from '../svgs';
 
+
+export type IconValueType = string | SvgrComponent | JSX.Element | IconArguments
+
 export function Icon(props: {
-    icon: string | SvgrComponent | JSX.Element | IconArguments,
+    icon: IconValueType,
     onClick?: (e: React.MouseEvent) => void,
     onMousedown?: (e: React.MouseEvent) => void,
     rotate?: number,
