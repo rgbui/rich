@@ -14,7 +14,7 @@ export class CheckBox extends React.Component<{
     }
     render(): React.ReactNode {
         return <div className="shy-checkbox">
-            <input type='checkbox' defaultChecked={this.props.checked} onChange={e => this.props.onChange((e.target as HTMLInputElement).checked)}></input>
+            <input type='checkbox' checked={this.props.checked} onChange={e => this.props.onChange((e.target as HTMLInputElement).checked)}></input>
             <span className="shy-checkbox-content">{this.props.children}</span>
         </div>
     }
