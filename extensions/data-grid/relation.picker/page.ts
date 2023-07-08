@@ -2,7 +2,8 @@ import { TableSchema } from "../../../blocks/data-grid/schema/meta";
 import { PageLayoutType } from "../../../src/page/declare";
 import { Page } from "../../../src/page";
 import { PageDirective } from "../../../src/page/directive";
-import { ElementType, getElementUrl } from "../../../net/element.type";
+// import { ElementType, getElementUrl } from "../../../net/element.type";
+// import { BlockUrlConstant } from "../../../src/block/constant";
 
 export function schemaCreatePageFormData(
     schema: TableSchema,
@@ -38,13 +39,14 @@ export async function createFormPage(el: HTMLElement,
         isMultiple: boolean
     }) {
     var page = new Page();
-    page.customElementUrl = getElementUrl(
-        ElementType.SchemaView,
-        options.schema.id,
-        options.schema.views[0].id
-    );
-    page.pageInfo = options.schema;
+    // var view=options.schema.views.find(g=>[BlockUrlConstant.DataGridList].includes(g.url));
+    // page.customElementUrl = getElementUrl(
+    //     ElementType.SchemaView,
+    //     options.schema.id,
+    //     options.schema.views
+    // );
 
+    page.pageInfo = options.schema;
     page.on(PageDirective.history, async function (action) {
 
     });
