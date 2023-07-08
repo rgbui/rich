@@ -12,6 +12,7 @@ import { PopoverPosition } from "../popover/position";
 import { PopoverSingleton } from "../popover/popover";
 import { Tab } from "../../component/view/tab";
 import { Icon } from "../../component/view/icon";
+
 class AudioPicker extends EventsComponent {
     onChange(data: any) {
         this.emit('select', { ...data });
@@ -19,10 +20,10 @@ class AudioPicker extends EventsComponent {
     render() {
         return <div className='shy-audio-picker'>
             <Tab keeplive>
-                <Tab.Page item={<Tip placement='bottom' id={LangID.UploadAudio}><Icon size={30} icon={Upload}></Icon></Tip>}>
+                <Tab.Page item={<Tip placement='bottom' id={LangID.UploadAudio}><Icon size={20} icon={Upload}></Icon></Tip>}>
                     <UploadView mine='file' change={e => this.onChange({ name: 'upload',...e })}></UploadView>
                 </Tab.Page>
-                <Tab.Page item={<Tip placement='bottom' id={LangID.ImageLink}><Icon size={16} icon={Link}></Icon></Tip>}>
+                <Tab.Page item={<Tip placement='bottom' id={LangID.ImageLink}><Icon size={18} icon={Link}></Icon></Tip>}>
                     <OutsideUrl change={e => this.onChange({ name: 'link', url: e })}></OutsideUrl>
                 </Tab.Page>
             </Tab>
