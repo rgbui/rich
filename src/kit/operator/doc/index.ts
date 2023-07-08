@@ -17,7 +17,7 @@ import { PageLayoutType } from "../../../page/declare";
  * 
  */
 export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
-    console.log('block',block);
+    window.shyLog('block', block);
     kit.anchorCursor.renderSelectBlocks([]);
     var downPoint = Point.from(event);
     var gm = block ? block.panelGridMap : kit.page.gridMap;
@@ -67,7 +67,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                 if (block) {
                     if (!block.isLayout) {
                         var a = findBlockNearAppearByPoint(block, Point.from(ev));
-                        console.log('mouse up appear',a)
+                        window.shyLog('mouse up appear', a)
                         if (a) {
                             kit.anchorCursor.onFocusAppearAnchor(a.aa, { at: a.offset });
                         }

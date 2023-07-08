@@ -1,26 +1,7 @@
-import { parseElementUrl } from "../../../net/element.type";
-import { BlockUrlConstant } from "../../../src/block/constant";
-import { PageLayoutType } from "../../../src/page/declare";
+
 import { Field } from "../schema/field";
-import { TableSchema } from "../schema/meta";
 import { FieldType } from "../schema/type";
 
-export function SchemaCreatePageFormData(schema: TableSchema, elementUrl: string, isRecord?: boolean) {
-    var pe = parseElementUrl(elementUrl);
-    var syncBlockId = pe.id1
-    return {
-        url: '/page',
-        pageLayout: { type: PageLayoutType.formView },
-        views: [
-            {
-                url: '/view',
-                blocks: {
-                    childs: [{ url: BlockUrlConstant.FormView, schemaId: schema.id, syncBlockId }]
-                }
-            }
-        ]
-    }
-}
 
 export function GetFieldFormBlockInfo(field: Field) {
     switch (field.type) {
