@@ -9,14 +9,26 @@ import { Col, Dialoug, Row, Space } from "../grid";
 import { Icon } from "../icon";
 import { Input } from "../input";
 import { Textarea } from "../input/textarea";
-import { Select } from "../select";
 import { Remark, ErrorText } from "../text";
 import { ToolTip } from "../tooltip";
+import { SelectBox } from "../select/box";
 import "./style.less";
+import { FileInput } from "../input/file";
+import { MenuItem } from "../menu/declare";
+
 export type FormDialougType = {
     head?: boolean,
     footer?: boolean,
-    fields: { name: string, text: string, tip?: string, type: 'input' | 'textarea' | 'switch' | 'select', options?: { text: string, value: string }[], default?: any }[],
+    fields: {
+        name: string,
+        text: string,
+        tip?: string,
+        type: 'input' | 'textarea' | 'switch' | 'select' | 'file',
+        options?: MenuItem<string>[],
+        default?: any,
+        multiple?: boolean,
+        mime?: 'image' | 'file' | 'audio' | 'video'
+    }[],
     title: string,
     remark?: string,
     model?: Record<string, any>,
@@ -51,7 +63,8 @@ class FormDialoug extends EventsComponent {
                             <Col>
                                 {f.type == 'input' && <Input onEnter={e => this.onSave()} onChange={e => this.model[f.name] = e} value={this.model[f.name] || ''}></Input>}
                                 {f.type == 'textarea' && <Textarea onEnter={e => this.onSave()} onChange={e => this.model[f.name] = e} value={this.model[f.name] || ''}></Textarea>}
-                                {f.type == 'select' && <Select onChange={e => this.model[f.name] = e} value={this.model[f.name] || ''} options={f.options || []}></Select>}
+                                {f.type == 'select' && <SelectBox multiple={f.multiple ? true : false} onChange={e => { this.model[f.name] = e; this.forceUpdate(); }} value={this.model[f.name] || (f.multiple ? [] : '')} options={f.options || []}></SelectBox>}
+                                {f.type == 'file' && <FileInput mime={f.mime} value={this.model[f.name]} onChange={e => { this.model[f.name] = e; this.forceUpdate(); }}></FileInput>}
                             </Col>
                         </Row>
                     </div>
