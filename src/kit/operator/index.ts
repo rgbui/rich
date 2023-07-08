@@ -31,8 +31,8 @@ export class PageOperator {
     }
     public moveEvent: MouseEvent;
     mousemove(event: MouseEvent) {
-        if (!this.kit.page?.isCanEdit) return
         this.moveEvent = event;
+        if (!this.kit.page?.isCanEdit) return
         //判断当前的ele是否在bar自已本身内
         /**
          * 通过鼠标的坐标查找当前block。

@@ -47,7 +47,6 @@
 
 .shy-block-user-selected {
     position: relative;
-
     &::before {
         content          : '\20';
         position         : absolute;
@@ -55,9 +54,9 @@
         inset            : 0px;
         outline          : 1px solid var(--user-selected-color);
         outline-offset   : 2px;
-        // background    : var(--user-selected-color);
+        background    : var(--user-selected-color);
         z-index          : 81;
-        opacity          : 1;
+        opacity          : 0.4;
     }
 }
 

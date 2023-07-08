@@ -9,6 +9,7 @@ import { FixedViewScroll } from "../../common/scroll";
 import { TextEle } from "../../common/text.ele";
 import { Point, Rect } from "../../common/vector/point";
 import "./style.less";
+import { Avatar } from "../../../component/view/avator/face";
 
 var colors = [
     'rgba(237,233,235)',
@@ -24,7 +25,7 @@ var colors = [
     'rgba(253,198,200)'
 ]
 
-const dure = 1000 * 30;
+const dure = 1000 * 60 * 3;
 
 export class Collaboration extends React.Component<{ kit: Kit }>{
     constructor(props) {
@@ -37,7 +38,9 @@ export class Collaboration extends React.Component<{ kit: Kit }>{
         })
     }
     componentDidMount() {
-        this.fvs.bind(this.props.kit.page.root);
+        var sc = this.props.kit.page.getScrollDiv();
+        if (sc)
+            this.fvs.bind(sc);
     }
     componentWillUnmount() {
         this.fvs.unbind();
@@ -68,6 +71,12 @@ export class Collaboration extends React.Component<{ kit: Kit }>{
         if (u) {
             clearTimeout(u.timeOut);
             u.clear(force);
+        }
+    }
+    clearNotOnLineUser(users: string[]) {
+        var us = this.userOperates.findAll(g => !users.includes(g.userid));
+        for (let i = 0; i < us.length; i++) {
+            us[i].clear(true);
         }
     }
     renderBlocks(userid: string, blocks: Block[]) {
@@ -214,13 +223,13 @@ export class Collaboration extends React.Component<{ kit: Kit }>{
                 return <div key={u.id} className="shy-collaboration-user" style={{
                     top: top,
                     left: left,
-                    marginTop: -25,
+                    marginTop: -20,
                     marginLeft: 0
                 }}>
                     <UserBox userid={u.userid}>{(user) => {
-                        return <div className="flex flex-column flex-center">
-                            {/* <Avatar user={user} size={30}></Avatar> */}
-                            <span style={{ backgroundColor: u.color, marginTop: 0, lineHeight: '20px', borderRadius: 4, padding: '0px 5px' }}>{user.name}</span>
+                        return <div style={{ backgroundColor: u.color, height: 20 }} className="flex flex-center round padding-w-2">
+                            <Avatar user={user} size={20}></Avatar>
+                            <span className="gap-l-5">{user.name}</span>
                         </div>
                     }}</UserBox>
                 </div>
