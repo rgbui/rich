@@ -13,11 +13,11 @@ export type UserBasic = {
     avatar?: ResourceArguments,
     cover?: IconArguments,
     role: 'user' | 'robot',
-    sn: number,
+    sn?: number,
     name: string,
-    status: UserStatus,
-    online: boolean,
-    slogan: string
+    status?: UserStatus,
+    online?: boolean,
+    slogan?: string
 }
 
 
