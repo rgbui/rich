@@ -231,7 +231,9 @@ export class TableStoreItem extends Block {
 export class TableStoreItemView extends BlockView<TableStoreItem>{
     renderItems() {
         return <div className='sy-data-grid-item relative'>
-            <ChildsArea childs={this.block.childs}></ChildsArea>
+            <div className="r-gap-b-10">
+                <ChildsArea childs={this.block.childs}></ChildsArea>
+            </div>
             <div onMouseDown={e => this.block.page.onOpenMenu([this.props.block], e.nativeEvent)} className="pos visible top-5 right-5 flex-center  size-24 round item-hover bg-white cursor">
                 <Icon size={20} icon={DotsSvg}></Icon>
             </div>
@@ -248,7 +250,7 @@ export class TableStoreItemView extends BlockView<TableStoreItem>{
                 <div className="sy-data-grid-card-cover">
                     {imageData && <img style={{ maxHeight: ga.cardConfig.coverAuto ? "auto" : 200 }} src={autoImageUrl(imageData.url, 500)} />}
                 </div>
-                <div className="sy-data-grid-card-items">
+                <div className="sy-data-grid-card-items r-gap-b-10">
                     <ChildsArea childs={this.block.childs}></ChildsArea>
                 </div>
                 <div onMouseDown={e => this.block.page.onOpenMenu([this.props.block], e.nativeEvent)} className="pos visible top-5 right-5 flex-center size-24 round item-hover bg-white cursor">
@@ -258,7 +260,9 @@ export class TableStoreItemView extends BlockView<TableStoreItem>{
         }
         else {
             return <div className='sy-data-grid-item visible-hover'>
-                <ChildsArea childs={this.block.childs}></ChildsArea>
+                <div className="r-gap-b-10">
+                    <ChildsArea childs={this.block.childs}></ChildsArea>
+                </div>
                 <div onMouseDown={e => this.block.page.onOpenMenu([this.props.block], e.nativeEvent)} className="pos visible top-5 right-5 flex-center size-24 visible round item-hover bg-white cursor">
                     <Icon size={20} icon={DotsSvg}></Icon>
                 </div>

@@ -10,6 +10,7 @@ import { CardConfig } from "../item/service";
 import "./style.less";
 import { CollectTableSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
+import { isMobileOnly } from "react-device-detect";
 
 @url('/data-grid/gallery')
 export class TableStoreGallery extends DataGridView {
@@ -36,8 +37,10 @@ export class TableStoreGalleryView extends BlockView<TableStoreGallery>{
         var eles: JSX.Element[] = [];
         var size = this.block.gallerySize || 3;
         if (typeof size != 'number') size = 3;
-        var w = (100 / size).toFixed(2);
         var gap = 20;
+        if (isMobileOnly) { size = 2; gap = 8; }
+        var w = (100 / size).toFixed(2);
+
         if (this.block.isCardAuto) {
             var rss = [];
             for (let j = 0; j < size; j++) {

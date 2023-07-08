@@ -10,7 +10,7 @@ import { Field } from "../../schema/field";
 import { FieldType } from "../../schema/type";
 import { ViewField } from "../../schema/view";
 import { DataGridView } from ".";
-import { ElementType, getWsElementUrl } from "../../../../net/element.type";
+import { ElementType, getElementUrl} from "../../../../net/element.type";
 import { CopyText } from "../../../../component/copy";
 import { ShyAlert } from "../../../../component/lib/alert";
 import lodash from "lodash";
@@ -328,8 +328,6 @@ export class DataGridViewOperator {
             to: viewId
         }, this);
 
-
-
     }
     async onOtherDataGridTurnView(this: DataGridView, viewId: string, type: 'form' | 'view', schemaId: string, viewUrl?: string) {
         if (this.syncBlockId != viewId) {
@@ -539,12 +537,8 @@ export class DataGridViewOperator {
         this.isOver = isOver;
         if (this.dataGridTool) this.dataGridTool.forceUpdate();
     }
-    onCopyViewLink(this: DataGridView,) {
-        var url = getWsElementUrl({
-            type: ElementType.SchemaView,
-            id: this.schema.id,
-            id1: this.schemaView.id
-        });
+    onCopyViewLink(this: DataGridView) {
+        var url = this.page.ws.resolve({ elementUrl: getElementUrl(ElementType.SchemaView, this.schema.id, this.schemaView.id) })
         CopyText(url);
         ShyAlert('视图链接已复制')
     }
@@ -718,7 +712,7 @@ export class DataGridViewOperator {
     async onImport(this: DataGridView) {
 
     }
-    async onExport(this: DataGridView, rect: Rect) {
-        await useTableExport({ roundArea: rect }, this)
+    async onExport(this: DataGridView) {
+        await useTableExport(this)
     }
 }

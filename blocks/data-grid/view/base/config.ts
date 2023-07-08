@@ -33,7 +33,8 @@ import { useTabelSchemaFormDrop } from "../../../../extensions/data-grid/record.
 import { BlockUrlConstant } from "../../../../src/block/constant";
 
 export class DataGridViewConfig {
-    async onOpenViewSettings(this: DataGridView, rect: Rect) {
+    async onOpenViewSettings(this: DataGridView, rect: Rect)
+    {
         var self = this;
         var view = self.schemaView;
         self.dataGridTool.isOpenTool = true;
@@ -84,6 +85,10 @@ export class DataGridViewConfig {
                 { name: 'clone', icon: DuplicateSvg, text: '复制视图' },
                 { name: 'delete', icon: TrashSvg, text: '移除视图' },
             ]);
+            if (self.page.pe.type == ElementType.Schema) {
+                items.splice(-7, 2);
+                items.splice(-1, 1);
+            }
             return items;
         }
         var items: MenuItem<BlockDirective | string>[] = getMenuItems();
@@ -233,7 +238,7 @@ export class DataGridViewConfig {
                     await this.onOpenViewConfig(rect, 'sort');
                     break;
                 case 'export':
-                    await this.onExport(rect)
+                    await this.onExport()
             }
         }
         this.dataGridTool.isOpenTool = false;
