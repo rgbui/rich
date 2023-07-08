@@ -16,6 +16,8 @@ import { PageDirective } from "../directive";
 import { BlockUrlConstant } from "../../block/constant";
 import { ElementType } from "../../../net/element.type";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
+import lodash from "lodash";
+
 export class PageEvent {
     /**
      * 鼠标点击页面,
@@ -315,10 +317,19 @@ export class PageEvent {
                 this.forceUpdate();
             }
         }
-        else channel.air('/page/update/info', {
-            elementUrl: this.elementUrl,
-            pageInfo: data
-        })
+        else {
+            if (this.pe.type == ElementType.Schema) {
+                var schema = await TableSchema.loadTableSchema(this.pe.id);
+                console.log(schema, this.pe.id);
+                var props = lodash.pick(data, ['icon', 'description', 'text'])
+                if (schema && Object.keys(props).length > 0)
+                    schema.update(props)
+            }
+            channel.air('/page/update/info', {
+                elementUrl: this.elementUrl,
+                pageInfo: data
+            })
+        }
     }
     async onUpdatePageTitle(this: Page, text: string) {
         this.onceStopRenderByPageInfo = true;
@@ -337,12 +348,21 @@ export class PageEvent {
                 if (this.view.pageBar) this.view.pageBar.forceUpdate()
             }
         }
-        else channel.air('/page/update/info', {
-            elementUrl: this.elementUrl,
-            pageInfo: {
-                text: text
+        else {
+            console.log('ep', this.elementUrl, this.pageInfo, this.pageInfo?.id, this.pe.id);
+            if (this.pe.type == ElementType.Schema) {
+                var schema = await TableSchema.loadTableSchema(this.pe.id);
+                console.log('sche',this.schema, schema);
+                if (schema)
+                    schema.update({ text })
             }
-        })
+            channel.air('/page/update/info', {
+                elementUrl: this.elementUrl,
+                pageInfo: {
+                    text: text
+                }
+            })
+        }
     }
     async onUpdateDescription(this: Page, text: string) {
         this.onUpdatePageData({ description: text });
@@ -394,15 +414,92 @@ export class PageEvent {
             this.onUpdatePageData({ icon })
         }
     }
-    async onChangeEditMode(this: Page) {
-        await channel.act('/cache/set', {
-            key: `/${this.pageInfo.id}/mode`,
-            value: this.isCanEdit ? false : true
-        });
-        this.emit(PageDirective.reload);
-    }
     async onSaveAndPublish(this: Page) {
 
+    }
+    async onUpdatePermissions(this: Page, data: Record<string, any>) {
+        if ([
+            ElementType.SchemaData,
+            ElementType.SchemaRecordView,
+            ElementType.SchemaView
+        ].includes(this.pe.type) && !this.isSchemaRecordViewTemplate) {
+            var sv = this.schema.views.find(g => g.id == this.pe.id1);
+            if (sv) {
+                await this.schema.onSchemaOperate([{ id: sv.id, name: 'updateSchemaView', data }])
+                Object.assign(sv, data);
+            }
+        }
+        else if ([ElementType.SchemaData].includes(this.pe.type)) {
+            if (typeof this.formRowData.config == 'undefined') this.formRowData.config = {};
+            Object.assign(this.formRowData.config, data);
+        }
+        else {
+            Object.assign(this._pageItem, data);
+            await this.onUpdatePageData(data);
+        }
+        await this.cachCurrentPermissions();
+    }
+    getPermissions(this: Page) {
+        if ([
+            ElementType.SchemaRecordView,
+            ElementType.SchemaView
+        ].includes(this.pe.type) && !this.isSchemaRecordViewTemplate) {
+            console.log(this.schema, 'sss', this.elementUrl, this.pe);
+            var sv = this.schema.views.find(g => g.id == this.pe.id1);
+            return {
+                share: sv.share,
+
+                /**
+                 * 互联网是否公开，如果公开的权限是什么
+                 */
+                netPermissions: sv.netPermissions,
+                /**
+                 * 外部邀请的用户权限
+                 */
+                inviteUsersPermissions: sv.inviteUsersPermissions,
+                /**
+                 * 空间成员权限，
+                 * 可以指定角色，也可以指定具体的人
+                 */
+                memberPermissions: sv.memberPermissions
+            }
+        }
+        else if ([ElementType.SchemaData].includes(this.pe.type)) {
+            return {
+                share: this.formRowData.share,
+
+                /**
+                 * 互联网是否公开，如果公开的权限是什么
+                 */
+                netPermissions: this.formRowData.netPermissions,
+                /**
+                 * 外部邀请的用户权限
+                 */
+                inviteUsersPermissions: this.formRowData.inviteUsersPermissions,
+                /**
+                 * 空间成员权限，
+                 * 可以指定角色，也可以指定具体的人
+                 */
+                memberPermissions: this.formRowData.memberPermissions
+            }
+        }
+        return {
+            share: this._pageItem.share,
+
+            /**
+             * 互联网是否公开，如果公开的权限是什么
+             */
+            netPermissions: this._pageItem.netPermissions,
+            /**
+             * 外部邀请的用户权限
+             */
+            inviteUsersPermissions: this._pageItem.inviteUsersPermissions,
+            /**
+             * 空间成员权限，
+             * 可以指定角色，也可以指定具体的人
+             */
+            memberPermissions: this._pageItem.memberPermissions
+        }
     }
 }
 

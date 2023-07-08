@@ -17,7 +17,7 @@ import { PageDirective } from './directive';
 import { Mix } from '../../util/mix';
 import { Page$Cycle } from './partial/life.cycle';
 import { Page$Operator } from './partial/operator';
-import { LinkPageItem, PageLayoutType, PageVersion } from './declare';
+import { LinkPageItem, LinkWs, PageLayoutType, PageVersion } from './declare';
 import { Point, Rect } from '../common/vector/point';
 import { GridMap } from './grid';
 import { Matrix } from '../common/matrix';
@@ -38,6 +38,7 @@ import { BoxFillType, BoxStyle } from '../../extensions/doc.card/declare';
 import { dom } from '../common/dom';
 import { DataGridView } from '../../blocks/data-grid/view/base';
 import { Link } from '../../blocks/page/link';
+import { AtomPermission } from './permission';
 
 export class Page extends Events<PageDirective>{
     root: HTMLElement;
@@ -64,6 +65,10 @@ export class Page extends Events<PageDirective>{
     get user() {
         return channel.query('/query/current/user');
     }
+    ws:LinkWs;
+    get isSign() {
+        return this.user?.id ? true : false
+    }
     kit: Kit = new Kit(this);
     snapshoot = new HistorySnapshoot(this)
     pageLayout: { layout?: PageLayout, type: PageLayoutType };
@@ -78,7 +83,16 @@ export class Page extends Events<PageDirective>{
     matrix: Matrix = new Matrix();
     isFullWidth: boolean = true;
     smallFont: boolean = false;
+    /**
+     * 是否显示大纲
+     */
     nav: boolean = false;
+    get isCanOutline() {
+        if (this.nav) {
+            if (!isMobileOnly) return true;
+        }
+        return false;
+    }
     autoRefPages: boolean = false;
     autoRefSubPages: boolean = true;
     addedSubPages: string[] = [];
@@ -89,6 +103,7 @@ export class Page extends Events<PageDirective>{
      */
     onlyDisplayContent: boolean = false;
     isPageContent: boolean = false;
+    bar=true;
     get windowMatrix() {
         var rect = Rect.fromEle(this.viewEl);
         var matrix = new Matrix();
@@ -100,8 +115,14 @@ export class Page extends Events<PageDirective>{
     }
     /**
      * 页面打开初始化，认为是不变的
+     * 用于判断页面是否有没有编辑修改，光标的操作不算修改
      */
-    changed: boolean = false;
+    pageModifiedOrNot: boolean = false;
+    /**
+     * 判断页面是否被外部修改
+     * 页面在多人协作的状态，是否接收到了其他人的修改
+     */
+    pageModifiedExternally: boolean = false;
     render(panel: HTMLElement, options?: { width?: number, height?: number }) {
         var el = panel.appendChild(document.createElement('div'));
         this.root = el;
@@ -133,7 +154,7 @@ export class Page extends Events<PageDirective>{
         ReactDOM.unmountComponentAtNode(this.root);
         this.root.remove();
     }
-    renderFragment(panel: HTMLElement, options?: { width?: number, height?: number }) {
+    async renderFragment(panel: HTMLElement, options?: { width?: number, height?: number }) {
         try {
             if (!this.root) {
                 this.render(panel, options);
@@ -141,35 +162,41 @@ export class Page extends Events<PageDirective>{
             }
             panel.appendChild(this.root);
             this.view.observeScroll();
-            this.view.AutomaticHandle();
+            await this.view.AutomaticHandle();
+            if ([ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type)) {
+                await this.loadPageSchema();
+            }
+            var isForceUpdate = false;
             var nextAction = () => {
-                if (this.pageInfo) {
-                    if (!this.pageInfo.text) {
-                        var title = this.find(g => g.url == BlockUrlConstant.Title) as Title;
-                        if (title) {
-                            if (this.isCanEdit)
-                                title.onEmptyTitleFocusAnchor();
-                        }
+                if (this.pageInfo?.text) {
+                    var title = this.find(g => g.url == BlockUrlConstant.Title) as Title;
+                    if (title) {
+                        if (this.isCanEdit) title.onEmptyTitleFocusAnchor();
                     }
                 }
                 this.isOff = true;
                 this.each(c => {
-                    if ([BlockUrlConstant.DataGridBoard,
-                    BlockUrlConstant.DataGridCalendar,
-                    BlockUrlConstant.DataGridGallery,
-                    BlockUrlConstant.DataGridList,
-                    BlockUrlConstant.DataGridTable].includes(c.url as any)) {
+                    if ([
+                        BlockUrlConstant.DataGridBoard,
+                        BlockUrlConstant.DataGridCalendar,
+                        BlockUrlConstant.DataGridGallery,
+                        BlockUrlConstant.DataGridList,
+                        BlockUrlConstant.DataGridTable].includes(c.url as any)) {
                         (c as DataGridView).onReloadData()
                     }
                     if ([BlockUrlConstant.Link].includes(c.url as any)) {
                         (c as Link).loadPageInfo()
                     }
-                })
+                });
+                if (isForceUpdate == false && this.pageModifiedExternally) {
+                    this.forceUpdate();
+                }
+                this.pageModifiedExternally = false;
             }
             if (options && (options?.width !== this.pageVisibleWidth || options?.height !== this.pageVisibleHeight)) {
                 this.pageVisibleWidth = options?.width;
                 this.pageVisibleHeight = options?.height;
-                this.view.forceUpdate(() => nextAction())
+                this.view.forceUpdate(() => { isForceUpdate = true; nextAction() })
             } else nextAction();
         }
         catch (ex) {
@@ -228,11 +255,83 @@ export class Page extends Events<PageDirective>{
     set pageInfo(pageInfo: LinkPageItem) {
         this._pageItem = pageInfo;
     }
-    canEdit: boolean = false;
+    /**
+     * 标记当前页面是否是需要编辑，还是不能编辑
+     * 如数所表格，打开一条记录，该记录页面是可以编辑的
+     */
+    edit: boolean = false;
     get isCanEdit() {
+        if (this.locker?.lock) return false;
+        if (!this.isSign) return false;
         if (this.readonly) return false;
         if (this.pageLayout?.type == PageLayoutType.dbPickRecord) return false;
-        return this.canEdit;
+        if (this.edit) return true;
+        if (isMobileOnly) return false;
+        return this.isAllow(...[
+            AtomPermission.all,
+            AtomPermission.docEdit,
+            AtomPermission.channelEdit,
+            AtomPermission.dbEdit,
+            AtomPermission.wsEdit
+        ])
+    }
+    /**
+     * 这里主要是计算是否能编辑
+     * 原因是因为什么，
+     * 不能编辑有可能是页面locker
+     * 或者是权限不够等等
+     * @param options 
+     * @returns 
+     */
+    canEdit(options: { ignoreLocker?: boolean, ignoreReadonly?: boolean }) {
+        if (options.ignoreLocker !== true)
+            if (this.locker?.lock) return false;
+        if (!this.isSign) return false;
+        if (options.ignoreReadonly !== true)
+            if (this.readonly) return false;
+        if (this.pageLayout?.type == PageLayoutType.dbPickRecord) return false;
+        if (this.edit) return true;
+        if (isMobileOnly) return false;
+        return this.isAllow(...[
+            AtomPermission.all,
+            AtomPermission.docEdit,
+            AtomPermission.channelEdit,
+            AtomPermission.dbEdit,
+            AtomPermission.wsEdit
+        ])
+    }
+    get isCanManage() {
+        if (!this.isSign) return false;
+        if (this.currentPermissions?.isOwner) return true;
+        return this.isAllow(...[AtomPermission.all])
+    }
+    currentPermissions: {
+        item?: LinkPageItem,
+        isOwner?: boolean;
+        isWs?: boolean;
+        netPermissions?: AtomPermission[];
+        permissions?: AtomPermission[];
+        memberPermissions?: { userid?: string, roleId?: string, permissions?: AtomPermission[] }[];
+    }
+    async cachCurrentPermissions() {
+        this.currentPermissions = await channel.get('/page/allow', { elementUrl: this.elementUrl });
+    }
+    isAllow(...ps: AtomPermission[]) {
+        var g = this.currentPermissions;
+        if (g.isOwner) return true;
+        var atoms = ps;
+        if (g.isWs) {
+            if (Array.isArray(g.permissions)) return g.permissions.some(s => atoms.includes(s))
+        }
+        else if (Array.isArray(g.memberPermissions)) {
+            for (let i = g.memberPermissions.length - 1; i >= 0; i--) {
+                var mp = g.memberPermissions[i];
+                if (mp.permissions.some(s => atoms.includes(s))) return true;
+            }
+        }
+        else if (Array.isArray(g.netPermissions)) {
+            return g.netPermissions.some(s => atoms.includes(s))
+        }
     }
     /**
      * 是否支持宽屏及窄屏的切换
@@ -244,7 +343,6 @@ export class Page extends Events<PageDirective>{
             PageLayoutType.recordView,
             PageLayoutType.docCard,
             PageLayoutType.doc
-
         ].includes(this.pageLayout?.type || PageLayoutType.doc)
     }
     /**
@@ -277,7 +375,7 @@ export class Page extends Events<PageDirective>{
         id2: string;
     }
     get pe() {
-        if(lodash.isUndefined(this.elementUrl)||lodash.isNull(this.elementUrl))return null;
+        if (lodash.isUndefined(this.elementUrl) || lodash.isNull(this.elementUrl)) return null;
         if (typeof this._pe == 'undefined')
             this._pe = parseElementUrl(this.elementUrl) as any;
         return this._pe;
@@ -303,6 +401,19 @@ export class Page extends Events<PageDirective>{
         this.onUpdateProps(props, isUpdate);
     }, 1000)
     public isSchemaRecordViewTemplate: boolean
+    public schemaInitRecordData?: Record<string, any>
+    get pageUrl() {
+        if (this._pageItem) return this._pageItem.url;
+        else {
+            var ws = this.ws;
+            return ws.url + '/r?url=' + window.decodeURIComponent(this.elementUrl);
+        }
+    }
+    locker: {
+        lock: boolean,
+        date: number,
+        userid: string
+    }
 }
 export interface Page {
     on(name: PageDirective.init, fn: () => void);
@@ -370,6 +481,9 @@ export interface Page {
 
     on(name: PageDirective.reload, fn: () => void);
     emit(name: PageDirective.reload);
+
+    on(name: PageDirective.syncItems, fn: () => void);
+    emit(name: PageDirective.syncItems);
 }
 export interface Page extends PageEvent { }
 export interface Page extends Page$Seek { }

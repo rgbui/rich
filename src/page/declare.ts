@@ -1,4 +1,5 @@
 import { PageSvg, TopicSvg, CollectTableSvg, DocCardsSvg } from "../../component/svgs";
+import { IconValueType } from "../../component/view/icon";
 import { IconArguments, ResourceArguments } from "../../extensions/icon/declare";
 import { AtomPermission } from "./permission";
 
@@ -99,6 +100,66 @@ export interface LinkPageItem {
 
 }
 
+export interface LinkWs {
+    id: string
+    sn: number
+    createDate: Date
+    creater: string
+    owner: string
+    url: string
+    resolve(url: string | { pageId?: string | number, elementUrl?: string }): string
+    text: string
+    icon: IconArguments
+    cover: IconArguments
+    /**
+     * 0:不公开 
+     * 1:公开
+    */
+    access: number;
+    accessProfile: {
+        disabledJoin: boolean,
+        checkJoinProtocol: boolean,
+        joinProtocol: string
+    }
+    /**
+     * 创建文档时的初始配置
+     */
+    createPageConfig: {
+        isFullWidth: boolean,
+        smallFont: boolean,
+        nav: boolean,
+        autoRefPages: boolean,
+        autoRefSubPages: boolean
+    };
+    roles: {
+        id: string,
+        text: string,
+        color: string,
+        permissions: AtomPermission[],
+        icon?: IconArguments
+    }[]
+    member: {
+        id: string;
+        createDate: number;
+        creater: string;
+        userid: string;
+        /**
+         * 当前空间内用户的呢称
+         */
+        name: string;
+        /**
+         * 当前用户的角色
+         */
+        roleIds: string[];
+        workspaceId: string;
+        avatar: IconArguments;
+        cover: IconArguments;
+        totalScore: number;
+    };
+    isMember: boolean
+}
+
+
 export function getPageIcon(item: LinkPageItem, defaultIcon?: SvgrComponent) {
     if (item?.icon) return item.icon;
     if (!item) return defaultIcon || PageSvg
@@ -129,10 +190,88 @@ export function getPageText(item: LinkPageItem) {
     }
     else if (item.pageType == PageLayoutType.board) {
         return '白板'
-    } else if (item.pageType == PageLayoutType.textChannel) {
+    }
+    else if (item.pageType == PageLayoutType.textChannel) {
         return '频道'
-    } else if (item.pageType == PageLayoutType.db) {
+    }
+    else if (item.pageType == PageLayoutType.db) {
         return '表格'
     }
     return '新页面'
 }
+export var PageTemplateTypeGroups: { icon: IconValueType,visible?:boolean, spread: boolean, text: string, childs: { text: string,visible?:boolean }[] }[] = [
+    {
+        icon: PageSvg,
+        text: '个人',
+        spread: true,
+        visible:true,
+        childs: [
+            { text: '个人工作' },
+            { text: '业余爱好' },
+            { text: '旅行' },
+            { text: '键康运动' },
+            { text: '食品与营养' },
+            { text: '个人财务' },
+            { text: '职业建设' },
+            { text: '住房' }
+        ]
+    },
+    {
+        icon: PageSvg,
+        text: '教育', spread: true,
+        childs: [
+            { text: '学习' },
+            { text: '俱乐部' },
+            { text: '职业建设' },
+            { text: '教学' },
+            { text: '学校申请' },
+            { text: '学术研究' }
+        ]
+    },
+    {
+        icon: PageSvg,
+        text: '工作',
+        spread: true,
+        childs: [
+            { text: '产品' },
+            { text: '营销' },
+            { text: '工程' },
+            { text: '设计' },
+            { text: '启动' },
+            { text: '运营' },
+            { text: '销售量' },
+            { text: '招聘' },
+            { text: '人力资源' },
+            { text: '供应商' },
+            { text: "私人" }
+        ]
+    },
+    {
+        icon: PageSvg, text: '社区',
+        spread: true,
+        childs: [
+            { text: '论坛' },
+            { text: '贴子' },
+        ]
+    },
+    {
+        icon: PageSvg, text: '项目',
+        spread: true,
+        childs: [
+            { text: '路线图和日历' },
+            { text: '问题跟踪' },
+            { text: '规划与目标' },
+            { text: '指南' }
+        ]
+    },
+    {
+        icon: PageSvg, text: '百科',
+        spread: true,
+        childs: [
+            { text: '知识库' },
+            { text: '公司网站' },
+            { text: '人员与组织' },
+            { text: '内部通讯和更新' }
+        ]
+    }
+]

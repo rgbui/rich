@@ -23,7 +23,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             'onSelectBlocks',
             'onCatchWindowSelection'
         ].includes(typeof action.directive == 'number' ? UserAction[action.directive] : action.directive)) {
-            page.changed = true;
+            page.pageModifiedOrNot = true;
             page.emit(PageDirective.change);
         }
         if (page.pe.type == ElementType.SchemaRecordView && !page.isSchemaRecordViewTemplate) {
@@ -34,12 +34,13 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
     snapshoot.on('error', err => page.onError(err));
     snapshoot.on('warn', (error) => page.onWarn(error));
     snapshoot.registerOperator(OperatorDirective.create, async (operator, source) => {
-        await page.createBlock(operator.data.data.url,
-            operator.data.data,
-            page.find(x => x.id == operator.data.parentId),
-            operator.data.at,
-            operator.data.childKey
-        );
+        if (!page.exists(c => c.id == operator.data.data.id))
+            await page.createBlock(operator.data.data.url,
+                operator.data.data,
+                page.find(x => x.id == operator.data.parentId),
+                operator.data.at,
+                operator.data.childKey
+            );
     }, async (operator) => {
         var block = page.find(x => x.id == operator.data.data.id);
         if (block) {
@@ -96,7 +97,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             old_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] },
             new_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] }
         } = operator.data as any;
-        if (source == 'notify' || source == 'notifyView' || source == 'load') return;
+        if (source == 'notify' || source == 'notifyView' || source == 'load' || source == 'loadSyncBlock') return;
         if (oc.new_value.blocks?.length > 0) {
             var bs = page.findAll(g => oc.new_value.blocks.some(s => s.blockId == g.id));
             page.kit.anchorCursor.selectBlocks(bs);
@@ -216,12 +217,13 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
      */
     snapshoot.registerOperator(OperatorDirective.$create, async (operator, source) => {
         var dr = operator.data;
-        await page.createBlock(dr.data.url,
-            dr.data,
-            page.find(x => x.id == dr.pos.parentId),
-            dr.pos.at,
-            dr.pos.childKey
-        );
+        if (!page.exists(c => c.id == dr.data.id))
+            await page.createBlock(dr.data.url,
+                dr.data,
+                page.find(x => x.id == dr.pos.parentId),
+                dr.pos.at,
+                dr.pos.childKey
+            );
     }, async (operator) => {
         var dr = operator.data;
         var block = page.find(x => x.id == dr.data.id);
@@ -237,12 +239,13 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
         }
     }, async (operator) => {
         var dr = operator.data;
-        await page.createBlock(dr.data.url,
-            dr.data,
-            page.find(x => x.id == dr.pos.parentId),
-            dr.pos.at,
-            dr.pos.childKey
-        );
+        if (!page.exists(c => c.id == dr.data.id))
+            await page.createBlock(dr.data.url,
+                dr.data,
+                page.find(x => x.id == dr.pos.parentId),
+                dr.pos.at,
+                dr.pos.childKey
+            );
     });
     snapshoot.registerOperator(OperatorDirective.$move, async (operator, source) => {
         var dr = operator.data;
@@ -274,6 +277,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             new_value: { start: AppearCursorPos, end: AppearCursorPos, blocks: SnapshootBlockPos[] }
         } = operator.data as any;
         if (source == 'notifyView') {
+            window.shyLog(oc, 'notifyView')
             if (oc.new_value.blocks?.length > 0) {
                 var bs = page.findAll(g => oc.new_value.blocks.some(s => s.blockId == g.id));
                 page.addUpdateEvent(async () => {
@@ -302,7 +306,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
                 }
             }
         }
-        if (source == 'notify' || source == 'notifyView' || source == 'load') return;
+        if (source == 'notify' || source == 'notifyView' || source == 'load' || 'loadSyncBlock') return;
         if (oc.new_value.blocks?.length > 0) {
             var bs = page.findAll(g => oc.new_value.blocks.some(s => s.blockId == g.id));
             page.kit.anchorCursor.selectBlocks(bs);
@@ -512,7 +516,7 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
             await block.otherDataGridTrunView(dr.from.viewId, dr.from.type, dr.from.schemaId, dr.from.viewUrl)
         }
     }, async (operator) => {
-        var dr = operator.data as { to: SnapshootDataGridViewPos };;
+        var dr = operator.data as { to: SnapshootDataGridViewPos };
         var block: DataGridView = page.find(x => x.id == dr.to.blockId) as any;
         if (block) {
             await block.otherDataGridTrunView(dr.to.viewId, dr.to.type, dr.to.schemaId, dr.to.viewUrl)

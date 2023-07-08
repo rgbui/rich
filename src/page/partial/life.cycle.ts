@@ -20,7 +20,7 @@ import { PageOutLine } from "../../../blocks/page/outline";
 import { channel } from "../../../net/channel";
 import { ElementType, getElementUrl } from "../../../net/element.type";
 import { TableSchema } from "../../../blocks/data-grid/schema/meta";
-import { GetFieldFormBlockInfo, SchemaCreatePageFormData } from "../../../blocks/data-grid/element/service";
+import { GetFieldFormBlockInfo } from "../../../blocks/data-grid/element/service";
 import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.field";
 import { Field } from "../../../blocks/data-grid/schema/field";
 import { DataGridView } from "../../../blocks/data-grid/view/base";
@@ -89,14 +89,14 @@ export class Page$Cycle {
             ].some(s => s == this.pageLayout.type)) {
                 this.requireSelectLayout = false;
             }
-            if ([PageLayoutType.db].some(s => s == this.pageLayout.type) && !this.exists(g => g instanceof DataGridView)) {
-                await this.loadDefaultScheamView();
-            }
-            if (this.pe && [ElementType.SchemaRecordView, ElementType.SchemaData].includes(this.pe.type)) {
+            if (this.pe && [ElementType.SchemaRecordView, ElementType.Schema, ElementType.SchemaData].includes(this.pe.type)) {
                 this.requireSelectLayout = false;
                 await this.loadPageSchema();
             }
             await this.onRepair();
+            await this.views.eachAsync(async v => {
+                await v.loadSyncBlock()
+            })
             await this.emit(PageDirective.loaded);
             if (Array.isArray(operates) && operates.length > 0) {
                 var ops = operates.map(op => op.operate ? op.operate : op) as any;
@@ -142,12 +142,16 @@ export class Page$Cycle {
         ].some(s => s == this.pageLayout.type)) {
             this.requireSelectLayout = false;
         }
-        if ([PageLayoutType.db].some(s => s == this.pageLayout.type) && !this.exists(g => g instanceof DataGridView)) {
-            await this.loadDefaultScheamView();
+        if (this.pe && [ElementType.SchemaRecordView, ElementType.Schema, ElementType.SchemaData].includes(this.pe.type)) {
+            this.requireSelectLayout = false;
+            await this.loadPageSchema();
         }
         await this.onRepair();
     }
-    async onSyncUserActions(this: Page, actions: UserAction[], source: 'load' | 'notify' | 'notifyView') {
+    async onSyncUserActions(this: Page, actions: UserAction[], source: 'load' | 'loadSyncBlock' | 'notify' | 'notifyView') {
+        if (source == 'notifyView' || source == 'notify') {
+            this.pageModifiedExternally = true;
+        }
         var isOk: boolean = true;
         await this.onAction(ActionDirective.onLoadUserActions, async () => {
             for (let i = 0; i < actions.length; i++) {
@@ -161,8 +165,15 @@ export class Page$Cycle {
                 }
             }
         })
+        if (source == 'notifyView') {
+            actions.forEach(action => {
+                if (action.directive == ActionDirective.onPageLock) {
+
+                }
+            })
+        }
         await this.onRepair();
-        if (this.canEdit && isOk && actions.length > 0) {
+        if (this.isCanEdit && isOk && actions.length > 0) {
             var seq = actions.max(g => g.seq);
             var op = actions.find(g => g.seq == seq);
             this.emit(PageDirective.syncHistory, {
@@ -195,6 +206,7 @@ export class Page$Cycle {
         json.pageFill = lodash.cloneDeep(this.pageFill);
         json.pageStyle = lodash.cloneDeep(this.pageStyle);
         json.isPageContent = this.isPageContent;
+        json.locker = lodash.cloneDeep(this.locker);
         return json;
     }
     async getString(this: Page) {
@@ -243,15 +255,6 @@ export class Page$Cycle {
         var data = await this.getDefaultData();
         await this.load(data);
     }
-    async loadDefaultScheamView(this: Page) {
-        this.schema = await TableSchema.loadTableSchema(this.pageInfo.id);
-        var view = this.schema.views.first();
-        var dc = await BlockFactory.createBlock(view.url, this, {
-            schemaId: this.schema.id,
-            syncBlockId: view.id,
-        }, this.views.first());
-        this.views.first().blocks.childs.push(dc);
-    }
     onSave(this: Page) {
         this.emit(PageDirective.save);
     }
@@ -260,20 +263,23 @@ export class Page$Cycle {
     }
     async onBack(this: Page) {
         if (this.openSource == 'page') {
-            if (!this.isSchemaRecordViewTemplate) {
-                if (this.pe.type == ElementType.SchemaData) {
-                    this.onSave();
-                    var newRow = await this.getSchemaRow()
-                    await this.schema.rowUpdate({ dataId: this.pe.id1, data: newRow })
-                }
-                else if (this.pe.type == ElementType.SchemaRecordView) {
-                    this.onSave();
-                    var newRow = await this.getSchemaRow()
-                    await this.schema.rowAdd({ data: newRow })
+            if (this.isCanEdit) {
+                if (!this.isSchemaRecordViewTemplate) {
+                    if (this.pe.type == ElementType.SchemaData) {
+                        this.onSave();
+                        var newRow = await this.getSchemaRow()
+                        await this.schema.rowUpdate({ dataId: this.pe.id1, data: newRow })
+                    }
+                    else if (this.pe.type == ElementType.SchemaRecordView) {
+                        this.onSave();
+                        var newRow = await this.getSchemaRow()
+                        await this.schema.rowAdd({ data: newRow })
+                    }
                 }
             }
             this.emit(PageDirective.back);
         }
+        else this.onClose();
     }
     private willUpdateAll: boolean = false;
     private willUpdateBlocks: Block[];
@@ -635,9 +641,26 @@ export class Page$Cycle {
             this.emit(PageDirective.blur, event);
         }
     }
-    onHighlightBlock(this: Page, blocks: Block[], scrollTo?: boolean) {
-        if (blocks.length == 0) return;
-        var bs = this.getAtomBlocks(blocks);
+    onHighlightBlock(this: Page, blocks: Block | (Block[]) | string | (string[]), scrollTo?: boolean) {
+        if (lodash.isNull(blocks) || lodash.isUndefined(blocks)) return;
+        var bs: Block[] = [];
+        if (Array.isArray(blocks)) {
+            if (blocks[0] instanceof Block) {
+                bs = blocks as any;
+            }
+            else {
+                bs = this.findAll(c => blocks.includes(c.id))
+            }
+        }
+        else {
+            if (typeof blocks == 'string') {
+                var g = this.find(c => c.id == blocks);
+                if (g) bs.push(g);
+            }
+            else if (blocks instanceof Block) bs.push(g)
+        }
+        bs = this.getAtomBlocks(bs);
+        if (bs.length == 0) return;
         var first = bs.first();
         if (scrollTo)
             this.onPageScroll(first);
@@ -760,68 +783,82 @@ export class Page$Cycle {
         if (!this.schema) {
             this.schema = await TableSchema.loadTableSchema(this.pe.id);
         }
-        if (this.loadDefault == true) {
-            var view = this.schema.views.find(c => c.id == this.pe.id1);
-            if (view?.url == BlockUrlConstant.FormView) {
-                var g = await SchemaCreatePageFormData(this.schema, getElementUrl(ElementType.SchemaView, this.schema.id, this.pe.id1))
-                await this.loadViews(g);
-            }
-            else if (view?.url == BlockUrlConstant.RecordPageView) {
-                var cs: Record<string, any>[] = this.schema.allowFormFields.toArray(field => {
-                    var r = GetFieldFormBlockInfo(field);
-                    if (r) return Object.assign({
-                        fieldMode: 'detail'
-                    }, r);
-                })
-                cs.splice(0, 0, { url: BlockUrlConstant.Title })
-                this.views = [];
-                await this.loadViews({ views: [{ url: BlockUrlConstant.View, blocks: { childs: cs } }] })
+        if (this.schema) {
+            if (this.pe.type == ElementType.Schema)
+            {
+                if (!this.exists(g => g instanceof DataGridView)) {
+                    var view = this.schema.views.first();
+                    var dc = await BlockFactory.createBlock(view.url, this, {
+                        schemaId: this.schema.id,
+                        syncBlockId: view.id,
+                    }, this.views.first());
+                    this.views.first().blocks.childs.push(dc);
+                }
             }
             else {
-                var cs: Record<string, any>[] = this.schema.allowFormFields.toArray(field => {
-                    if (field?.type == FieldType.title && this.isSchemaRecordViewTemplate) return undefined;
-                    var r = GetFieldFormBlockInfo(field);
-                    if (r) return Object.assign({
-                        fieldMode: 'detail'
-                    }, r);
-                })
-                cs.splice(0, 0, { url: BlockUrlConstant.Title })
-                this.views = [];
-                await this.loadViews({ views: [{ url: BlockUrlConstant.View, blocks: { childs: cs } }] })
-            }
-            this.loadDefault = false;
-        }
-        if (!this.isSchemaRecordViewTemplate) {
-            var r = this.find(g => (g as OriginFormField).field?.name == 'title');
-            if (r) {
-                lodash.remove(r.parentBlocks, g => g == r);
-            }
-        }
-        if (this.pe.type == ElementType.SchemaData) {
-            var row = await this.schema.rowGet(this.pe.id1);
-            if (row) {
-                this.formRowData = lodash.cloneDeep(row);
+                if (this.loadDefault == true) {
+                    var view = this.schema.views.find(c => c.id == this.pe.id1);
+                    if (view?.url == BlockUrlConstant.RecordPageView) {
+                        var cs: Record<string, any>[] = this.schema.allowFormFields.toArray(field => {
+                            var r = GetFieldFormBlockInfo(field);
+                            if (r) return Object.assign({
+                                fieldMode: 'detail'
+                            }, r);
+                        })
+                        cs.splice(0, 0, { url: BlockUrlConstant.Title })
+                        this.views = [];
+                        await this.loadViews({ views: [{ url: BlockUrlConstant.View, blocks: { childs: cs } }] })
+                    }
+                    else {
+                        var cs: Record<string, any>[] = this.schema.allowFormFields.toArray(field => {
+                            if (field?.type == FieldType.title && this.isSchemaRecordViewTemplate) return undefined;
+                            var r = GetFieldFormBlockInfo(field);
+                            if (r) return Object.assign({
+                                fieldMode: 'detail'
+                            }, r);
+                        })
+                        cs.splice(0, 0, { url: BlockUrlConstant.Title })
+                        this.views = [];
+                        await this.loadViews({ views: [{ url: BlockUrlConstant.View, blocks: { childs: cs } }] })
+                    }
+                    this.loadDefault = false;
+                }
+                if (!this.isSchemaRecordViewTemplate) {
+                    var r = this.find(g => (g as OriginFormField).field?.name == 'title');
+                    if (r) {
+                        lodash.remove(r.parentBlocks, g => g == r);
+                    }
+                }
+                if (this.pe.type == ElementType.SchemaData) {
+                    var row = await this.schema.rowGet(this.pe.id1);
+                    if (row) {
+                        this.formRowData = lodash.cloneDeep(row);
+                        this.each(g => {
+                            if (g instanceof OriginFormField) {
+                                var f = g.field;
+                                if (f) {
+                                    g.value = g.field.getValue(row);
+                                }
+                            }
+                        })
+                    }
+                }
+                if (typeof this.formRowData == 'undefined') {
+                    this.formRowData = {};
+                }
+                if (typeof this.schemaInitRecordData != 'undefined') Object.assign(this.formRowData, this.schemaInitRecordData)
                 this.each(g => {
                     if (g instanceof OriginFormField) {
                         var f = g.field;
                         if (f) {
-                            g.value = g.field.getValue(row);
+                            this.formRowData[f.name] = g.value;
                         }
                     }
                 })
             }
+
         }
-        if (typeof this.formRowData == 'undefined') {
-            this.formRowData = {};
-        }
-        this.each(g => {
-            if (g instanceof OriginFormField) {
-                var f = g.field;
-                if (f) {
-                    this.formRowData[f.name] = g.value;
-                }
-            }
-        })
+
     }
     async getSchemaRow(this: Page) {
         var row: Record<string, any> = {};
@@ -833,11 +870,10 @@ export class Page$Cycle {
                 }
             }
         })
-        console.log(this.formRowData, row, this.changed);
         /**
          * 比较初始值，如果一样，说明没有任何修改，返回null
          */
-        if (lodash.isEqual(this.formRowData, row) && !this.changed) {
+        if (lodash.isEqual(this.formRowData, row) && !this.pageModifiedOrNot) {
             return null;
         }
         row.icon = this.formRowData.icon;
