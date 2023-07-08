@@ -1,7 +1,7 @@
 import lodash from "lodash";
 import { Page } from "..";
 import { CopyText } from "../../../component/copy";
-import { ShyAlert } from "../../../component/lib/alert";
+import { CloseShyAlert, ShyAlert } from "../../../component/lib/alert";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItem } from "../../../component/view/menu/declare";
 import { channel } from "../../../net/channel";
@@ -17,6 +17,7 @@ import { DropDirection } from "../../kit/handle/direction";
 import { storeCopyBlocks } from "../common/copy";
 import { LinkPageItem, PageLayoutType } from "../declare";
 import { PageDirective } from "../directive";
+import { useTemplateView } from "../../../extensions/template";
 
 export class Page$Operator {
     /**
@@ -398,6 +399,36 @@ export class Page$Operator {
         catch (ex) {
             console.error(ex);
             this.onError(ex);
+        }
+    }
+    async onOpenTemplate(this: Page) {
+        var ut = await useTemplateView();
+        if (ut) {
+            ShyAlert('正在创建中...', 'warn', 1000 * 60 * 10);
+            try {
+                var rr = await channel.post('/import/page', {
+                    templateUrl: ut.file?.url,
+                    wsId: this.ws.id,
+                    pageId: this.pageInfo?.id
+                });
+                if (rr.ok) {
+                    if (!this.pageInfo?.text) {
+                        await channel.air('/page/update/info', {
+                            id: this.pageInfo.id,
+                            pageInfo: {
+                                text: ut.text
+                            }
+                        })
+                    }
+                    this.emit(PageDirective.syncItems)
+                }
+            }
+            catch (ex) {
+                this.onError(ex);
+            }
+            finally {
+                CloseShyAlert()
+            }
         }
     }
 }
