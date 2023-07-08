@@ -2,7 +2,7 @@
 import React from "react";
 import { MenuPanel, useSelectMenuItem } from ".";
 import { Rect } from "../../../src/common/vector/point";
-import { CheckSvg, ChevronDownSvg, DragHandleSvg } from "../../svgs";
+import { ArrowRightSvg, CheckSvg, ChevronDownSvg, ChevronRightSvg, DragHandleSvg } from "../../svgs";
 import { Button } from "../button";
 import { DragList } from "../drag.list";
 import { Icon } from "../icon";
@@ -140,7 +140,7 @@ export class MenuItemView extends React.Component<{
                 {Array.isArray(item.btns) && item.btns.map(btn => {
                     return <ToolTip key={btn.name} overlay={btn.overlay} placement={btn.placement || 'top'} ><em className="flex-center flex-line size-20" onMouseDown={e => { e.stopPropagation(); this.click(item, e, btn.name) }}><Icon size={16} icon={btn.icon}></Icon></em></ToolTip>
                 })}
-                {(item.childs && item.childs.length > 0 || item.forceHasChilds) && <Icon className={'shy-menu-box-item-option-spread'} icon='arrow-right:sy'></Icon>}
+                {(item.childs && item.childs.length > 0 || item.forceHasChilds) && <Icon size={18} className={'shy-menu-box-item-option-spread'} icon={ChevronRightSvg}></Icon>}
             </a></ToolTip>}
             {(item.type == MenuItemType.custom) && <ToolTip overlay={item.overlay} placement={'right'} ><a className={'shy-menu-box-item-custom' + (item.disabled == true ? " disabled" : "")}
                 onMouseDown={e => this.select(item, e.nativeEvent)}>
@@ -149,7 +149,7 @@ export class MenuItemView extends React.Component<{
             {item.type == MenuItemType.divide && <a className='shy-menu-box-item-divide'></a>}
             {item.type == MenuItemType.gap && <div className="h-10"></div>}
             {item.type == MenuItemType.text && <a className='shy-menu-box-item-text'>{item.text}</a>}
-            {item.type == MenuItemType.user && <div  onMouseDown={e => this.select(item, e.nativeEvent)} className="shy-menu-box-item-user"><Avatar userid={item.userid} showName size={item.size || 30}></Avatar></div>}
+            {item.type == MenuItemType.user && <div onMouseDown={e => this.select(item, e.nativeEvent)} className="shy-menu-box-item-user"><Avatar userid={item.userid} showName size={item.size || 30}></Avatar></div>}
             {item.type == MenuItemType.switch && <a className='shy-menu-box-item-switch'>
                 {item.icon && <i className="flex-center flex-inline size-20 text-1"><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
                 <span>{item.text}</span>
