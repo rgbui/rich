@@ -88,7 +88,7 @@ export class FileView extends BlockView<File>{
             {this.block.src.name == 'none' && <div onMouseDown={e => this.block.addFile(e)} className='sy-block-file-nofile'>
                 <Icon className={'text-1'} icon={FileSvg}></Icon>
                 {!this.block.speed && <span>添加附件</span>}
-                {this.block.speed && <div className="remark">{this.block.speed}</div>}
+                {this.block.speed && <div className="remark gap-l-10">{this.block.speed}</div>}
             </div>}
             {this.block.src.name != 'none' && <div className='sy-block-file-content' >
                 <Icon icon={FileSvg} size={18} className='text-1 sy-block-file-content-icon'></Icon>
