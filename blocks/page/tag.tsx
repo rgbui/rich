@@ -47,12 +47,12 @@ export class ShyTag extends Block {
         }
     }
     async getHtml() {
-        var ws = channel.query('/current/workspace')
+        var ws = this.page.ws
         var ref = Array.isArray(this.refLinks) ? this.refLinks[0] : undefined;
         return `<a class='shy-tag' data-ws-id='${ws.id}' data-tag-id='${ref.tagId}'>#${ref.tagText}</a>`
     }
     async getMd() {
-        var ws = channel.query('/current/workspace')
+        var ws = this.page.ws
         var ref = Array.isArray(this.refLinks) ? this.refLinks[0] : undefined;
         return `[#${ref.tagText}](${ws.url + '/tag#' + ref.tagId})  `
     }

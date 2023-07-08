@@ -21,6 +21,7 @@ import { ToolTip } from "../../component/view/tooltip";
 import { dom } from "../../src/common/dom";
 import { util } from "../../util/util";
 import { useSearchBox } from "../search/keyword";
+import { Page } from "../../src/page";
 
 export type TextToolStyle = {
     link: string,
@@ -51,10 +52,11 @@ class TextTool extends EventsComponent {
     private selectionText: string = '';
     el: HTMLElement;
     boxEl: HTMLElement;
-    open(pos: PopoverPosition, options: { style: TextToolStyle, turnBlock?: Block }) {
+    open(pos: PopoverPosition, options: { page: Page, style: TextToolStyle, turnBlock?: Block }) {
         var rs = pos.roundArea;
         if (!rs && Array.isArray(pos.roundAreas)) rs = pos.roundAreas[0];
         if (pos.relativeEleAutoScroll) this.fvs.bind(pos.relativeEleAutoScroll);
+        this.page = options.page;
         this.point = rs.leftTop;
         this.visible = true;
         this.textStyle = options.style;
@@ -299,7 +301,7 @@ class TextTool extends EventsComponent {
     onSearch(event: React.MouseEvent) {
         if (this.selectionText) {
             //这里打开搜索框
-            useSearchBox({ word: this.selectionText, isNav: true })
+            useSearchBox({ ws: this.page.ws, word: this.selectionText, isNav: true })
         }
     }
     componentDidMount() {
@@ -330,6 +332,7 @@ class TextTool extends EventsComponent {
             this.close();
         }
     }
+    page: Page
 }
 interface TextTool {
     emit(name: 'setStyle', styles: Record<BlockCssName, Record<string, any>>);
@@ -352,7 +355,7 @@ export type textToolResult = { command: 'setStyle', styles: Record<BlockCssName,
     | { command: 'askAI' }
     | false;
 var textTool: TextTool;
-export async function useTextTool(point: PopoverPosition, options: { style: TextToolStyle, turnBlock?: Block }) {
+export async function useTextTool(point: PopoverPosition, options: { page: Page, style: TextToolStyle, turnBlock?: Block }) {
     textTool = await Singleton(TextTool);
     textTool.open(point, options);
     return new Promise((resolve: (result: textToolResult) => void, reject) => {

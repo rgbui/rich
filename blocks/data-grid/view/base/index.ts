@@ -346,7 +346,7 @@ export class DataGridView extends Block {
         return this.isAllow(AtomPermission.dbEditRow)
     }
     async getMd() {
-        var ws = channel.query('/current/workspace')
+        var ws = this.page.ws;
         return `[${this.schemaView?.text}](${ws.url + '/resource?elementUrl=' + window.encodeURIComponent(this.elementUrl)})`
     }
     onSyncAddRow = lodash.debounce(async (data, id?: string, arrow: 'before' | 'after' = 'after', dialogPage: Page = null) => {

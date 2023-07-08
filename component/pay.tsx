@@ -6,6 +6,7 @@ import { PopoverSingleton } from "../extensions/popover/popover";
 import React from "react";
 import { Avatar } from "./view/avator/face";
 import { Button } from "./view/button";
+import { Page } from "../src/page";
 
 export enum PayFeatureCheck {
     aiGPT = 'ai-gpt',
@@ -14,11 +15,11 @@ export enum PayFeatureCheck {
     dataGridRow = 'data-grid-row'
 }
 
-export async function CanSupportFeature(check: PayFeatureCheck) {
+export async function CanSupportFeature(check: PayFeatureCheck,page:Page) {
     var r = await channel.get('/check/feature', { type: check });
     if (r.ok) {
         if (r.data.limit) {
-            await usePayTip({ check });
+            await usePayTip({ check,page });
             return false;
         }
         else if (r.data.warn) {
@@ -29,8 +30,8 @@ export async function CanSupportFeature(check: PayFeatureCheck) {
 }
 
 export class PayTip extends EventsComponent {
-    open(props: { check: PayFeatureCheck }) {
-        var ws = channel.query('/current/workspace');
+    open(props: { check: PayFeatureCheck,page:Page }) {
+        var ws =props.page.ws;
         var user = channel.query('/query/current/user');
         this.userid = user.id;
         this.owner = ws.owner || ws.creater;
@@ -61,7 +62,7 @@ export class PayTip extends EventsComponent {
 }
 
 
-export async function usePayTip(props: { check: PayFeatureCheck }) {
+export async function usePayTip(props: { check: PayFeatureCheck ,page:Page}) {
     var pos: PopoverPosition = { center: true, centerTop: 100 };
     let popover = await PopoverSingleton(PayTip, { mask: true, shadow: true });
     let fv = await popover.open(pos);

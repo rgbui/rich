@@ -340,7 +340,7 @@ export class PageWrite {
                 }
                 var result = await useTextTool(
                     { roundAreas: rs, relativeEleAutoScroll: this.kit.anchorCursor.endAnchor.el },
-                    { style: this.kit.page.pickBlocksTextStyle(blocks), turnBlock }
+                    { page: this.kit.page, style: this.kit.page.pickBlocksTextStyle(blocks), turnBlock }
                 );
                 if (result) {
                     if (result.command == 'setStyle') {
