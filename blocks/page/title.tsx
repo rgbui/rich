@@ -100,6 +100,7 @@ export class TitleView extends BlockView<Title>{
                     block={this.block}
                     placeholder='输入标题'
                     prop='pageInfo.text'
+                    className={'shy-text-empty-font-inherit'}
                     placeholderEmptyVisible
                     plain
                     html={!this.block.isCanEdit() ? getPageText(this.block.pageInfo) : undefined}
