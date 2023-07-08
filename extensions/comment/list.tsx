@@ -35,7 +35,18 @@ export class CommentListView extends React.Component<{
     elementUrl: string;
     loading: boolean = false;
     pop: boolean = false;
+    checkSign() {
+        var r = channel.query('/query/current/user');
+        if (r?.id) {
+
+        }
+        else {
+            ShyAlert('请先登录')
+            return false;
+        }
+    }
     async likeComment(l) {
+        if (this.checkSign() == false) return;
         var r = await channel.put('/ws/comment/emoji', {
             elementUrl: getElementUrl(ElementType.WsCommentEmoji, l.id, 'like')
         });
@@ -45,6 +56,7 @@ export class CommentListView extends React.Component<{
         }
     }
     async unlikeComment(l) {
+        if (this.checkSign() == false) return;
         var c = await channel.put('/ws/comment/emoji', {
             elementUrl: getElementUrl(ElementType.WsCommentEmoji, l.id, 'unlike'),
         });
@@ -55,6 +67,7 @@ export class CommentListView extends React.Component<{
         }
     }
     async onReply(l, user, event: React.MouseEvent) {
+        if (this.checkSign() == false) return;
         var g = await useUserComments({ userid: this.userid, placeholder: '回复@' + user.name });
         if (g) {
             var r = await channel.put('/ws/comment/send', {
@@ -71,6 +84,7 @@ export class CommentListView extends React.Component<{
         }
     }
     async onProperty(l, event: React.MouseEvent) {
+        if (this.checkSign() == false) return;
         var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, [
             { name: 'del', visible: this.userid == l.creater, text: '删除', icon: TrashSvg },
             // { name: 'unlike', text: '踩评论', icon: OpposeSvg },
@@ -98,6 +112,7 @@ export class CommentListView extends React.Component<{
         }
     }
     async addComment(event: React.MouseEvent) {
+        if (this.checkSign() == false) return;
         event.preventDefault();
         var value = this.textarea.value;
         if (value) {
