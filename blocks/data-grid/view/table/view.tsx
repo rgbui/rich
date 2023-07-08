@@ -13,6 +13,7 @@ import { ghostView } from "../../../../src/common/ghost"
 import { ViewField } from "../../schema/view"
 import lodash from "lodash"
 import { Spin, SpinBox } from "../../../../component/view/spin"
+import { ToolTip } from "../../../../component/view/tooltip"
 
 @view('/data-grid/table')
 export class TableStoreView extends BlockView<TableStore>{
@@ -195,8 +196,8 @@ export class TableStoreView extends BlockView<TableStore>{
                 </div>
             })}
             {this.block.dataGridIsCanEdit() && <div className='sy-dg-table-head-th sy-dg-table-head-th-plus'
-                style={{ minWidth: 40, flexGrow: 1, flexShrink: 1 }} onMouseDown={e => { e.stopPropagation(); this.block.onAddField(Rect.fromEvent(e)) }}>
-                <Icon icon={PlusSvg}></Icon>
+                style={{ minWidth: 40, flexGrow: 1, flexShrink: 1 }}>
+                <ToolTip overlay={'添加新列'}><span onMouseDown={e => { e.stopPropagation(); this.block.onAddField(Rect.fromEvent(e)) }} className="size-24 item-hover round cursor flex-center text-1"><Icon icon={PlusSvg}></Icon></span></ToolTip>
             </div>}
         </div>
     }
@@ -210,10 +211,10 @@ export class TableStoreView extends BlockView<TableStore>{
                     style={{ width: this.block.sumWidth + 'px' }}
                     onMouseDown={e => { e.stopPropagation(); self.block.onSyncAddRow({}, undefined, 'after') }}
                     className="sy-dg-table-add">
-                    <span className="flex flex-inline cursor item-hover round padding-w-5">
+                    <ToolTip overlay={'添加新行'}><span className="flex flex-inline cursor item-hover round padding-w-5">
                         <span className="size-24 round flex-center "><Icon size={18} icon={PlusSvg}></Icon></span>
-                        <span className="f-14">新增</span>
-                    </span>
+                        <span className="f-12">新增</span>
+                    </span></ToolTip>
                 </div>}
             </div></SpinBox>
         }
