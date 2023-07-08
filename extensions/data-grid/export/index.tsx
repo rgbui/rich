@@ -237,7 +237,7 @@ class TableExportView extends EventsComponent {
 }
 
 
-export async function useTableExport(pos: PopoverPosition,
+export async function useTableExport(
     dataGridView: DataGridView) {
     let popover = await PopoverSingleton(TableExportView, { mask: true, shadow: true });
     let fv = await popover.open({ center: true, centerTop: 100 });

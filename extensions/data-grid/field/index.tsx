@@ -32,7 +32,7 @@ export class TableFieldView extends EventsComponent {
             self.error = '字段名不能为空';
             return self.forceUpdate();
         }
-        if (self.dataGrid.schema.fields.some(s => s.text == self.text && s.type == self.type && !this.fieldId || this.fieldId && this.fieldId != s.id && this.text == s.text)) {
+        if (self.dataGrid.fields.some(s => s.text == self.text && s.field.type == self.type && !this.fieldId || this.fieldId && this.fieldId != s.fieldId && this.text == s.field.text)) {
             self.error = '字段名有重复';
             return self.forceUpdate();
         }
@@ -189,7 +189,7 @@ export class TableFieldView extends EventsComponent {
                 <div className="flex gap-b-5 remark f-12">表情:</div>
                 <div className="flex padding-w-5">
                     {this.config?.emoji?.code && <span className="gap-r-5 f-20 l-20 size-20" onClick={e => this.onSetEmoji(e)} dangerouslySetInnerHTML={{ __html: getEmoji(this.config?.emoji?.code) }}></span>}
-                    <Button onClick={e => this.onSetEmoji(e)} ghost icon={PlusSvg}>{this.config?.emoji?.code ? "更换表情" : "添加表情"}</Button>
+                    <Button onClick={e => this.onSetEmoji(e)} ghost >{this.config?.emoji?.code ? "更换表情" : "添加表情"}</Button>
                 </div>
             </div>
         }
@@ -209,9 +209,10 @@ export class TableFieldView extends EventsComponent {
         var ms = getMenus();
         var tm = ms.find(g => g.value == this.type);
         return <div className="w-300 f-14 text">
-            <div className="flex item-hover-focus h-30 padding-w-14">
-                <span>{this.fieldId ? "编辑表格字段" : "新增表格字段"}</span>
+            <div className="flex  h-30 padding-w-14">
+                <span>{this.fieldId ? "编辑字段" : "新增字段"}</span>
             </div>
+            <Divider></Divider>
             <div className="max-h-250 overflow-y">
                 <div className="gap-h-10 padding-w-14">
                     <div className="flex gap-b-5 remark f-12">字段名:</div>

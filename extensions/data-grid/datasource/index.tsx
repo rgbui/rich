@@ -11,6 +11,7 @@ import { MenuView } from "../../../component/view/menu/menu";
 import { util } from "../../../util/util";
 import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
+import { channel } from "../../../net/channel";
 
 export class DataSourceView extends EventsComponent {
     render(): ReactNode {
@@ -23,6 +24,7 @@ export class DataSourceView extends EventsComponent {
                     self.mv.forceUpdate()
                 }
                 await schema.update({ text })
+                channel.air('/page/update/info', { id: schema.id, pageInfo: { text } })
             }
         }, 800)
         async function input(item) {
@@ -41,6 +43,7 @@ export class DataSourceView extends EventsComponent {
             else if (item?.name == 'deleteTable') {
                 if (await Confirm('确认要删除表格吗')) {
                     await TableSchema.deleteTableSchema(item.value);
+                    channel.air('/page/remove', { item: { id: item.value } })
                     self.forceUpdate()
                 }
             }
@@ -75,19 +78,6 @@ export class DataSourceView extends EventsComponent {
                         }
                     }))
                 }
-
-                // if (Array.isArray(rd.recordViews) && rd.recordViews.length > 0) {
-                //     cs.push({ type: MenuItemType.text, text: '表单' })
-                //     cs.push(...rd.recordViews.map(rv => {
-                //         return {
-                //             text: rv.text,
-                //             value: { tableId: rd.id, type: 'form', viewId: rv.id },
-                //             name: 'view',
-                //             // icon: getSchemaViewIcon(rv.url),
-                //         }
-                //     }))
-                // }
-
                 if (cs.length > 0) {
                     cs.splice(0, 0, ...[
                         {
@@ -127,6 +117,7 @@ export class DataSourceView extends EventsComponent {
                     value: rd.id,
                     remark: util.showTime(rd.createDate),
                     icon: (rd as any).icon || CollectTableSvg,
+                    checkLabel: rd.id == this.currentTableId,
                     forceHasChilds: true,
                     childs: cs
                 })
@@ -139,7 +130,6 @@ export class DataSourceView extends EventsComponent {
                     label: util.showTime(rd.createDate),
                     icon: (rd as any).icon || CollectTableSvg,
                     checkLabel: rd.id == this.currentTableId,
-                    btns: btns
                 })
             }
         })

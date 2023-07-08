@@ -112,7 +112,7 @@ export class DataGridFields extends EventsComponent {
                         return <div className={"flex h-30 padding-w-14 cursor item-hover"} key={f.id}>
                             <span className="size-24 round flex-center flex-fixed"> <Icon size={18} icon={GetFieldTypeSvg(f.type)}></Icon></span>
                             <span className="flex-auto f-14">{f.text}</span>
-                            <span className="size-24 round flex-center flex-fixed item-hover">   <Icon className={'eye'} size={14} onClick={async () => { await self.block.onShowField(f); self.forceUpdate() }} icon={EyeHideSvg}></Icon></span>
+                            <span className="size-24 round flex-center flex-fixed item-hover"><Icon className={'eye'} size={14} onClick={async () => { await self.block.onShowField(f); self.forceUpdate() }} icon={EyeHideSvg}></Icon></span>
                             <span className="size-24 round flex-center flex-fixed item-hover"><Icon className={'eye'} size={14} onClick={async (e) => { openProperty('field', f, e) }} icon={DotsSvg}></Icon></span>
                         </div>
                     })}</div>
