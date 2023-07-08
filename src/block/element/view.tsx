@@ -5,6 +5,7 @@ import { url, view } from "../factory/observable";
 import { Block } from '..';
 import { ChildsArea } from '../view/appear';
 import { PageLayoutType } from '../../page/declare';
+import { isMobileOnly } from 'react-device-detect';
 
 @url('/view')
 export class View extends Block {
@@ -25,7 +26,7 @@ export class ViewComponent extends BlockView<View>{
             var style = this.block.page.getScreenStyle();
             var page = this.block.page;
             var pd = page.getPageDataInfo();
-            if (page.nav == true) {
+            if (page.isCanOutline) {
                 style = {};
             }
             if (isFirst && pd?.icon && pd?.cover?.abled === true) {
@@ -41,7 +42,7 @@ export class ViewComponent extends BlockView<View>{
                 hasGap = false;
             }
             var isMainView = this.block.page.views[0] == this.block ? true : false;
-            return <div className={'sy-block-view' + (this.props.block.page.isPageContent && isMainView ? " sy-block-view-content" : "")} >
+            return <div className={'sy-block-view' +(isMobileOnly?" sy-block-view-mobile":"")+ (this.props.block.page.isPageContent && isMainView ? " sy-block-view-content" : "")} >
                 <div className={'sy-block-view-wrapper'} style={style}>
                     <div className={pageContentClassList.join(" ")}>
                         {/* {hasGap && <div style={{ height: 10, display: 'block' }}></div>} */}

@@ -92,7 +92,7 @@ export class TextContent extends Block {
         }
         else if (this.refLinks?.length > 0) {
             var pageId = this.link?.pageId || this.refLinks[0].pageId;
-            var ws = channel.query('/current/workspace')
+            var ws = this.page.ws;
             var url = (ws?.url || "") + "/page/" + pageId;
             return `<a data-page-id='${pageId}' data-ws-id='${ws?.id}' href='${url}'>${this.content}</a>`
         }
@@ -111,7 +111,7 @@ export class TextContent extends Block {
         }
         else if (this.refLinks?.length > 0) {
             var pageId = this.link?.pageId || this.refLinks[0].pageId;
-            var ws = channel.query('/current/workspace')
+            var ws = this.page.ws;
             var url = (ws?.url || "") + "/page/" + pageId;
             return `[${this.content}](${url})`
         }
@@ -198,7 +198,7 @@ export class TextContentView extends BlockView<TextContent>{
             }
             else if (this.block.link?.pageId || this.block.refLinks?.length > 0) {
                 var pageId = this.block.link?.pageId || this.block.refLinks[0].pageId;
-                var url = (channel.query('/current/workspace')?.url || "") + "/page/" + pageId;
+                var url = (this.block.page.ws?.url || "") + "/page/" + pageId;
                 ta = <BoxTip ref={e => this.boxTip = e} placement="bottom" overlay={<div className="flex-center  padding-5 r-flex-center r-size-24 r-round r-item-hover r-cursor text">
                     <ToolTip overlay={'拖动'}><span onMouseDown={e => this.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></span></ToolTip>
                     <ToolTip overlay={'复制网址'}><span onMouseDown={e => this.copyLink(url)} ><Icon size={16} icon={DuplicateSvg}></Icon></span></ToolTip>
