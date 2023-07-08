@@ -22,6 +22,7 @@ class AtUserSelector extends InputTextPopSelector<UserBasic> {
                 return this.allList.list.map(g => g);
             }
             var r = (await channel.get('/ws/member/word/query', { word: word })).data.list;
+            if ('所有人'.startsWith(word)) r.splice(0, 0, { id: 'all', userid: 'all', name: '所有人' })
             return r;
         }
     }
@@ -29,6 +30,7 @@ class AtUserSelector extends InputTextPopSelector<UserBasic> {
         if (this.allList.lastDate && Date.now() - this.allList.lastDate.getTime() > 5000) {
             var r = await channel.get('/ws/member/word/query', { size: this.allList.size });
             this.allList = r.data;
+            this.allList.list.splice(0, 0, { id: 'all', userid: 'all', name: '所有人' } as any)
             this.allList.lastDate = new Date();
         }
     }

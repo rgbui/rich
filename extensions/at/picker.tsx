@@ -28,7 +28,7 @@ export class UserPicker extends EventsComponent {
                 {this.loading && <Spin></Spin>}
                 {!this.loading && this.links.map((link, i) => {
                     return <div onMouseDown={e => this.onSelect(link)} className={"h-40 padding-w-14 flex item-hover round cursor" + ((i) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
-                        <Avatar size={30} showName showSn userid={(link as any).id}></Avatar>
+                        <Avatar size={30} showName  userid={(link as any).id}></Avatar>
                         <span className="gap-l-10">{link.name}</span>
                     </div>
                 })}
@@ -86,6 +86,9 @@ export class UserPicker extends EventsComponent {
                         id: c.userid
                     }
                 }) as any
+                if ('所有人'.startsWith(this.text)) {
+                    this.links.splice(0, 0, { id: 'all' } as any)
+                }
             }
             else this.links = [];
         }
@@ -129,6 +132,7 @@ export class UserPicker extends EventsComponent {
                     id: g.userid
                 }
             }) as any
+            this.links.splice(0, 0, { id: 'all' } as any)
             this.defaultList = lodash.cloneDeep(this.links)
         }
     }
