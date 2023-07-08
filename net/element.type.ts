@@ -215,16 +215,16 @@ export function parseElementUrl(url: string) {
     }
 }
 
-export function getWsElementUrl(options: { wsUrl?: string, type: ElementType, id: string, id1?: string, id2?: string }) {
-    var { type, id, id1, id2, wsUrl } = options;
-    if (!wsUrl) {
-        var ws = channel.query('/current/workspace');
-        wsUrl = ws.url;
-        // wsUrl = `https://${ws.sn}.shy.live/`;
-    }
-    if (!wsUrl.endsWith('/')) wsUrl += '/';
-    return wsUrl + 'r?url=' + encodeURIComponent(getElementUrl(type, id, id1, id2))
-}
+// export function getWsElementUrl(options: { wsUrl?: string, type: ElementType, id: string, id1?: string, id2?: string }) {
+//     var { type, id, id1, id2, wsUrl } = options;
+//     if (!wsUrl) {
+//         var ws = channel.query('/current/workspace');
+//         wsUrl = ws.url;
+//         // wsUrl = `https://${ws.sn}.shy.live/`;
+//     }
+//     if (!wsUrl.endsWith('/')) wsUrl += '/';
+//     return wsUrl + 'r?url=' + encodeURIComponent(getElementUrl(type, id, id1, id2))
+// }
 
 
 /**

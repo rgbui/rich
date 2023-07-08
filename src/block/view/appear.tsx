@@ -127,7 +127,9 @@ export function ChildsArea(props: { childs: Block[] }) {
 }
 
 export function TextLineChilds(props: {
-    childs: Block[], rf?: (e: HTMLElement) => void,
+    className?: string | string[],
+    childs: Block[],
+    rf?: (e: HTMLElement) => void,
     style?: CSSProperties
 }) {
     var ps = { ref: props.rf, style: props.style }
@@ -138,10 +140,10 @@ export function TextLineChilds(props: {
     })}</div>
 }
 
-export function TextSpanArea(props: { block: Block, placeholderEmptyVisible?: boolean, prop?: string, placeholder?: string }) {
+export function TextSpanArea(props: { block: Block, className?: string | string[], placeholderEmptyVisible?: boolean, prop?: string, placeholder?: string }) {
     if (props.block.childs.length > 0)
-        return <TextLineChilds childs={props.block.childs}></TextLineChilds>
+        return <TextLineChilds className={props.className} childs={props.block.childs}></TextLineChilds>
     else
-        return <TextArea placeholderEmptyVisible={props.placeholderEmptyVisible} block={props.block} prop={props.prop || 'content'} placeholder={props.placeholder || '空格唤起AI或"/"选择'}></TextArea>
+        return <TextArea className={props.className} placeholderEmptyVisible={props.placeholderEmptyVisible} block={props.block} prop={props.prop || 'content'} placeholder={props.placeholder || '空格唤起AI或"/"选择'}></TextArea>
 }
 

@@ -26,6 +26,7 @@ import { GridMap } from "../page/grid";
 import { ElementType, getElementUrl } from "../../net/element.type";
 import { SnapshootBlockPos, SnapshootBlockPropPos } from "../history/snapshoot";
 import lodash from "lodash";
+import { AtomPermission } from "../page/permission";
 
 export abstract class Block extends Events {
     constructor(page: Page) {
@@ -760,6 +761,9 @@ export abstract class Block extends Events {
     }
     isCanEdit() {
         return this.page.isCanEdit;
+    }
+    isAllow(...ps: AtomPermission[]) {
+        return this.page.isAllow(...ps);
     }
     getRelativePoint(point: Point) {
         if (this.page.isBoard || this.isFrame || this.isFreeBlock || this.isBoardBlock)

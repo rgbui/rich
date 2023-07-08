@@ -74,7 +74,7 @@ export class HeadView extends BlockView<Head>{
             ns = [undefined]
             tag = <h1 style={style} className="relative">
                 <div className="sy-block-text-head-tips">{ns.map((n, i) => <em key={i}></em>)}</div>
-                <TextSpanArea placeholder={pt} block={this.block}></TextSpanArea>
+                <TextSpanArea className={'shy-text-empty-font-inherit'} placeholder={pt} block={this.block}></TextSpanArea>
             </h1>;
         }
         else if (this.block.level == 'h2') {
@@ -86,7 +86,7 @@ export class HeadView extends BlockView<Head>{
             ns = [undefined, undefined]
             tag = <h2 style={style} className="relative">
                 <div className="sy-block-text-head-tips">{ns.map((n, i) => <em key={i}></em>)}</div>
-                <TextSpanArea placeholder={pt} block={this.block}></TextSpanArea>
+                <TextSpanArea className={'shy-text-empty-font-inherit'} placeholder={pt} block={this.block}></TextSpanArea>
             </h2>;
         }
         else if (this.block.level == 'h3') {
@@ -98,7 +98,7 @@ export class HeadView extends BlockView<Head>{
             ns = [undefined, undefined, undefined]
             tag = <h3 style={style} className="relative">
                 <div className="sy-block-text-head-tips">{ns.map((n, i) => <em key={i}></em>)}</div>
-                <TextSpanArea placeholder={pt} block={this.block}></TextSpanArea>
+                <TextSpanArea className={'shy-text-empty-font-inherit'} placeholder={pt} block={this.block}></TextSpanArea>
             </h3>;
         }
         else if (this.block.level == 'h4') {
@@ -110,7 +110,7 @@ export class HeadView extends BlockView<Head>{
             ns = [undefined, undefined, undefined, undefined]
             tag = <h4 style={style} className="relative">
                 <div className="sy-block-text-head-tips">{ns.map((n, i) => <em key={i}></em>)}</div>
-                <TextSpanArea placeholder={pt} block={this.block}></TextSpanArea>
+                <TextSpanArea className={'shy-text-empty-font-inherit'} placeholder={pt} block={this.block}></TextSpanArea>
             </h4>;
         }
         return <div className='sy-block-text-head' style={this.block.visibleStyle}>
