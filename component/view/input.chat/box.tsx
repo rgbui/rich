@@ -1,6 +1,6 @@
 import React from "react";
 import { Icon } from "../icon";
-import { AiSvg, CloseTickSvg, EmojiSvg, FileSvg, PlusSvg, TrashSvg, UploadSvg } from "../../svgs";
+import { AiSvg, CloseSvg, EmojiSvg, FileSvg, PlusSvg, TrashSvg, UploadSvg } from "../../svgs";
 import { ChatInput } from "./chat";
 import { useOpenEmoji } from "../../../extensions/emoji";
 import { Rect } from "../../../src/common/vector/point";
@@ -14,6 +14,7 @@ import { ResourceArguments } from "../../../extensions/icon/declare";
 import lodash from "lodash";
 import { MenuItem, MenuItemType } from "../menu/declare";
 import { Avatar } from "../avator/face";
+import { ToolTip } from "../tooltip";
 
 export type ChatInputType = {
     content?: string,
@@ -85,11 +86,11 @@ export class InputChatBox extends React.Component<{
             </div>}
             {this.reply && <div className="shy-rich-input-reply">
                 <span className="shy-rich-input-reply-content">{this.reply.text}</span>
-                <span className="shy-rich-input-reply-operators" onMouseDown={e => this.clearReply()}><a><Icon size={12} icon={CloseTickSvg}></Icon></a></span>
+                <ToolTip overlay={'取消回复'}><span className="shy-rich-input-reply-operators" onMouseDown={e => this.clearReply()}><a><Icon size={12} icon={CloseSvg}></Icon></a></span></ToolTip>
             </div>}
             {this.errorTip && <div className="shy-rich-input-error">
                 <span className="shy-rich-input-error-content">{this.errorTip}</span>
-                <span className="shy-rich-input-error-operators" onMouseDown={e => this.clearError()}><a><Icon size={12} icon={CloseTickSvg}></Icon></a></span>
+                <ToolTip overlay={'清理错误提示'}><span className="shy-rich-input-error-operators" onMouseDown={e => this.clearError()}><a><Icon size={12} icon={CloseSvg}></Icon></a></span></ToolTip>
             </div>}
             <div className="flex flex-top">
                 <span className="flex-fixed size-24 round flex-center cursor item-hover">
@@ -98,7 +99,7 @@ export class InputChatBox extends React.Component<{
                 </span>
                 <div className="flex-auto l-24" >
                     <ChatInput
-                    box={this}
+                        box={this}
                         ref={e => this.cp = e}
                         placeholder={this.props.placeholder}
                         onPasteFiles={e => this.onUploadFiles(e)}
@@ -115,7 +116,7 @@ export class InputChatBox extends React.Component<{
                         searchRobots={this.props.searchRobots}
                     ></ChatInput>
                 </div>
-                <span className="flex-fixed size-24 round flex-center cursor item-hover"> <Icon size={18} onMousedown={e => this.openEmoji(e)} icon={EmojiSvg}></Icon></span>
+                <ToolTip overlay={'添加表情'}><span className="flex-fixed size-24 round flex-center cursor item-hover"><Icon size={18} onMousedown={e => this.openEmoji(e)} icon={EmojiSvg}></Icon></span></ToolTip>
             </div>
         </div>
     }
