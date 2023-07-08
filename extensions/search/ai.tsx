@@ -21,6 +21,7 @@ import { Rect } from "../../src/common/vector/point";
 import { MenuItemType } from "../../component/view/menu/declare";
 import { ToolTip } from "../../component/view/tooltip";
 import { useSearchBox } from "./keyword";
+import { isMobileOnly } from "react-device-detect";
 
 export class AISearchBox extends EventsComponent {
     renderMessages() {
@@ -47,10 +48,10 @@ export class AISearchBox extends EventsComponent {
     async openSearch(event: React.MouseEvent) {
         this.emit('close');
         await channel.act('/cache/set', { key: 'search-mode', value: 'keyword' })
-        useSearchBox();
+        useSearchBox({ws:this.ws});
     }
     render() {
-        return <div className="w-800 bg-white  round flex flex-col flex-full">
+        return <div className={"bg-white  round flex flex-col flex-full"+(isMobileOnly ? " vw100-20" : " w-800 ")}>
             <div className="padding-w-10 flex r-gap-r-10 padding-h-5">
                 {this.robotId && <Avatar size={30} userid={this.robotId}></Avatar>}
                 <span className="remark flex-auto text-overflow">{this.robot?.slogan || (this.robot?.remark || '').slice(0, 30) || '语义搜索'}</span>
@@ -153,18 +154,20 @@ export class AISearchBox extends EventsComponent {
     }
     messages: { id: string, userid: string, date: Date, content: string }[] = [];
     el: HTMLElement;
-    async open() {
+    ws:any;
+    async open(options:{ws:any}) {
+        this.ws=options.ws;
         this.robots = await getWsWikiRobots();
         this.robotId = this.robots[0]?.robotId;
         this.forceUpdate();
     }
 }
 
-export async function useAISearchBox() {
+export async function useAISearchBox(options:{ws:any}) {
     var pos: PopoverPosition = { center: true, centerTop: 100 };
     let popover = await PopoverSingleton(AISearchBox, { mask: true, frame: true, shadow: true, });
     let fv = await popover.open(pos);
-    fv.open();
+    fv.open(options);
     return new Promise((resolve: (p: { id: string, content?: string }) => void, reject) => {
         fv.only('save', (value) => {
             popover.close();

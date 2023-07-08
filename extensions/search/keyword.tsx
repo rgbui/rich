@@ -17,11 +17,12 @@ import { SwitchText } from "../../component/view/switch";
 import { SelectBox } from "../../component/view/select/box";
 import { ToolTip } from "../../component/view/tooltip";
 import { useAISearchBox } from "./ai";
+import { isMobileOnly } from "react-device-detect";
 
 export class SearchBox extends EventsComponent {
     render() {
-        var ws = channel.query('/current/workspace');
-        return <div className="w-800 bg-white  round">
+        var ws = this.ws;
+        return <div className={"bg-white  round" + (isMobileOnly ? " vw100-20" : " w-800 ")}>
             <div className="padding-10 flex">
                 <div className="flex-auto">
                     <Input clear noborder
@@ -30,7 +31,7 @@ export class SearchBox extends EventsComponent {
                         </span>}
                         size='larger'
                         onClear={() => { this.searchList.word = ''; this.onForceSearch() }}
-                        placeholder={`在 ${ws.text || '空间'} 中搜索`}
+                        placeholder={`在 ${ws?.text || '空间'} 中搜索`}
                         value={this.searchList.word}
                         onEnter={e => { this.searchList.word = e; this.onForceSearch() }}
                         onChange={e => { this.searchList.word = e; this.onSearch() }} ></Input>
@@ -86,11 +87,13 @@ export class SearchBox extends EventsComponent {
     }
     el: HTMLElement;
     isNav: boolean = false;
-    async open(options?: { word?: string, isNav?: boolean }) {
+    ws
+    async open(options?: {ws?:any, word?: string, isNav?: boolean }) {
         if (options?.word) this.searchList.word = options?.word;
         else this.searchList.word = '';
         if (options?.isNav) this.isNav = true;
         else this.isNav = false;
+        this.ws=options.ws;
         if (this.searchList.word) {
             await this.onForceSearch()
         }
@@ -134,11 +137,11 @@ export class SearchBox extends EventsComponent {
     async openAi(e: React.MouseEvent) {
         this.emit('close');
         await channel.act('/cache/set', { key: 'search-mode', value: 'ai' })
-        useAISearchBox()
+        useAISearchBox({ws:this.ws})
     }
 }
 
-export async function useSearchBox(options?: { word?: string, isNav?: boolean }) {
+export async function useSearchBox(options: {ws:any, word?: string, isNav?: boolean }) {
     var pos: PopoverPosition = { center: true, centerTop: 100 };
     let popover = await PopoverSingleton(SearchBox, { mask: true, frame: true, shadow: true, });
     let fv = await popover.open(pos);
