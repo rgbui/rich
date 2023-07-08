@@ -19,16 +19,18 @@ export class Avatar extends React.Component<{
     className?: string,
     showName?: boolean,
     hideStatus?: boolean
-
 }> {
     private user: UserBasic;
     componentDidMount() {
+        this.isUn = true;
         this.load();
         channel.sync('/user/basic/sync', this.syncUpdate)
     }
     componentWillUnmount(): void {
+        this.isUn = false;
         channel.off('/user/basic/sync', this.syncUpdate)
     }
+    isUn: boolean = false;
     syncUpdate = (user: UserBasic) => {
         if (this.props.userid && this.user) {
             if (this.props.userid == user.id) {
@@ -46,16 +48,24 @@ export class Avatar extends React.Component<{
             if (!this.props.userid) {
                 return;
             }
-            var r = await channel.get('/user/basic', { userid: this.props.userid });
-            if (r.ok) {
-                this.user = r.data.user as any;
-                this.forceUpdate()
+            if (this.props.userid == 'all') {
+                this.user = { id: 'all', status: UserStatus.online, role: 'user', name: '所有人' };
+                this.forceUpdate();
+            }
+            else {
+                var r = await channel.get('/user/basic', { userid: this.props.userid });
+                if (r.ok) {
+                    this.user = r.data.user as any;
+                    if (this.isUn)
+                        this.forceUpdate()
+                }
             }
         }
     }
     async mousedown(event: React.MouseEvent) {
         if (this.props.userid && this.props.showCard == true) {
             event.stopPropagation();
+            if (this.props.userid == 'all') return;
             await useUserCard({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, { user: this.props.user, userid: this.props.userid })
         }
     }
@@ -104,7 +114,7 @@ export class Avatar extends React.Component<{
                         {user?.role == 'robot' && <span className='bg-p-1 text-white round flex-center flex-inline padding-w-3  h-16 gap-w-2' style={{ color: '#fff', backgroundColor: 'rgb(88,101,242)' }}>
                             <Icon icon={CheckSvg} size={12}></Icon><span className='gap-l-2 f-12' style={{ color: '#fff' }}>机器人</span>
                         </span>}
-                        {this.props.showSn === true && <span>#{user?.sn}</span>}
+                        {this.props.showSn === true && typeof user?.sn == 'number' && <span>#{user?.sn}</span>}
                     </div>
                         {this.props.head && <div className='right'>{this.props.head}</div>}</div>
                     {this.props.children && <div className={'shy-avatar-say-content-body'}>{this.props.children}</div>}

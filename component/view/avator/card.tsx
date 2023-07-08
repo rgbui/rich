@@ -5,7 +5,6 @@ import { channel } from "../../../net/channel";
 import { autoImageUrl } from "../../../net/element.type";
 import { UserBasic } from "../../../types/user";
 import { EventsComponent } from "../../lib/events.component";
-import { Input } from "../input";
 import { Avatar } from "./face";
 import "./style.less";
 import { Icon } from "../icon";
@@ -13,6 +12,7 @@ import { CheckSvg } from '../../svgs';
 export class UserCard extends EventsComponent {
     user: UserBasic;
     render(): React.ReactNode {
+        // var u = channel.query('/query/current/user');
         return <div className="shy-user-card">
             {this.user && <><div className="shy-user-card-cover">
                 {this.user?.cover?.url && <img src={autoImageUrl(this.user?.cover?.url, 500)} />}
@@ -31,9 +31,9 @@ export class UserCard extends EventsComponent {
                         <div className="shy-user-card-operators"></div>
                     </div>
                     <div className="shy-user-card-remark">{this.user.slogan}</div>
-                    <div className="shy-user-card-send">
+                    {/* {u && u.id && <div className="shy-user-card-send">
                         <Input placeholder={"私信@" + this.user.name}></Input>
-                    </div>
+                    </div>} */}
                 </div></>}
         </div>
     }
