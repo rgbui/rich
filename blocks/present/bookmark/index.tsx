@@ -81,7 +81,8 @@ export class Bookmark extends Block {
         else return '';
     }
     async getMd() {
-        return `[${this.bookmarkInfo.title}](${this.bookmarkUrl})  `
+        if (this.bookmarkInfo) return `[${this.bookmarkInfo.title}](${this.bookmarkUrl})  `
+        else return `[书签](${this.bookmarkUrl})`
     }
 }
 @view('/bookmark')
