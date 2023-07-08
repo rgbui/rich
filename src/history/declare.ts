@@ -66,6 +66,7 @@ export enum ActionDirective {
     onErrorRepairDidMounte = 300,
     onPageTurnLayout = 400,
     onPageUpdateProps = 401,
+    onPageLock = 402,
     AutomaticHandle = 410,//页面加载后的自动触发的一些行为
     /**
      * 一些特殊的block操作

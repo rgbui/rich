@@ -108,7 +108,7 @@ export class HistorySnapshoot extends Events {
                         else this.historyRecord.push(this.action);
                     }
                 };
-                console.log(this.action.toString());
+                window.shyLog(this.action.toString());
             }
         }
         catch (ex) {
@@ -125,7 +125,7 @@ export class HistorySnapshoot extends Events {
                 }
                 lodash.remove(this.action.syncBlocks, g => g === null);
             });
-            if (!(Array.isArray(this.action.syncBlocks) && this.action.syncBlocks.length >0)) {
+            if (!(Array.isArray(this.action.syncBlocks) && this.action.syncBlocks.length > 0)) {
                 if (typeof this.action.syncPage == 'undefined') this.action.syncPage = true;
             }
         }
@@ -136,7 +136,7 @@ export class HistorySnapshoot extends Events {
         if (options?.disabledStore == true) return;
         this.store()
     }
-    private ops = new Map<OperatorDirective, { redo: (userOperator: UserOperator, source: 'redo' | 'load' | 'notify' | 'notifyView', action: UserAction) => Promise<void>, undo: (userOperator: UserOperator) => Promise<void> }>();
+    private ops = new Map<OperatorDirective, { redo: (userOperator: UserOperator, source: 'redo' | 'load' | 'loadSyncBlock' | 'notify' | 'notifyView', action: UserAction) => Promise<void>, undo: (userOperator: UserOperator) => Promise<void> }>();
     /**
      * 
      * 如果source不等于redo，说明是页面自动加载的
@@ -147,7 +147,7 @@ export class HistorySnapshoot extends Events {
      * @param redo 
      * @param undo 
      */
-    registerOperator(directive: OperatorDirective, redo: (userOperator: UserOperator, source: 'redo' | 'load' | 'notify' | 'notifyView', action: UserAction) => Promise<void>, undo: (userOperator: UserOperator) => Promise<void>) {
+    registerOperator(directive: OperatorDirective, redo: (userOperator: UserOperator, source: 'redo' | 'load' | 'loadSyncBlock' | 'notify' | 'notifyView', action: UserAction) => Promise<void>, undo: (userOperator: UserOperator) => Promise<void>) {
         this.ops.set(directive, { redo, undo });
     }
     async redo() {
@@ -180,7 +180,7 @@ export class HistorySnapshoot extends Events {
             }
         })
     }
-    async redoUserAction(action: UserAction, source: 'load' | 'notify' | 'notifyView') {
+    async redoUserAction(action: UserAction, source: 'load' | 'loadSyncBlock' | 'notify' | 'notifyView') {
         if (Array.isArray(action?.operators)) {
             for (let i = 0; i < action.operators.length; i++) {
                 let op = action.operators[i];

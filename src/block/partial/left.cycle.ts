@@ -209,7 +209,7 @@ export class Block$LifeCycle {
                 else this.setPropData(n, data[n]);
             }
             if (this.syncBlockId) {
-                await this.loadSyncBlock();
+                //await this.loadSyncBlock();
             }
             else {
                 if (typeof data.blocks == 'object') {
@@ -235,37 +235,44 @@ export class Block$LifeCycle {
         }
     }
     async loadSyncBlock(this: Block) {
-        var r = await channel.get('/view/snap/query', { elementUrl: this.elementUrl });
-        if (r.ok) {
-            var data;
-            try {
-                data = r.data.content as any;
-                if (typeof data == 'string') data = JSON.parse(data);
-                delete data.id;
-            }
-            catch (ex) {
-                console.error(ex);
-                this.page.onError(ex);
-            }
-            if (typeof data == 'object') {
-                for (var n in data) {
-                    if (n == 'blocks') continue;
-                    else if (n == 'pattern') await this.pattern.load(data[n]);
-                    else this.setPropData(n, data[n]);
+        if (this.syncBlockId) {
+            var r = await channel.get('/view/snap/query', { elementUrl: this.elementUrl });
+            if (r.ok) {
+                var data;
+                try {
+                    data = r.data.content as any;
+                    if (typeof data == 'string') data = JSON.parse(data);
+                    delete data.id;
                 }
-                if (typeof data.blocks == 'object') {
-                    for (var n in data.blocks) {
-                        var childs = data.blocks[n];
-                        this.blocks[n] = [];
-                        await childs.eachAsync(async (dc) => {
-                            var block = await BlockFactory.createBlock(dc.url, this.page, dc, this);
-                            this.blocks[n].push(block);
-                        })
+                catch (ex) {
+                    console.error(ex);
+                    this.page.onError(ex);
+                }
+                if (typeof data == 'object') {
+                    for (var n in data) {
+                        if (n == 'blocks') continue;
+                        else if (n == 'pattern') await this.pattern.load(data[n]);
+                        else this.setPropData(n, data[n]);
+                    }
+                    if (typeof data.blocks == 'object') {
+                        for (var n in data.blocks) {
+                            var childs = data.blocks[n];
+                            this.blocks[n] = [];
+                            await childs.eachAsync(async (dc) => {
+                                var block = await BlockFactory.createBlock(dc.url, this.page, dc, this);
+                                this.blocks[n].push(block);
+                            })
+                        }
                     }
                 }
+                if (Array.isArray(r.data.operates) && r.data.operates.length > 0)
+                    this.page.onSyncUserActions(r.data.operates, 'loadSyncBlock');
             }
-            if (Array.isArray(r.data.operates) && r.data.operates.length > 0)
-                this.page.onSyncUserActions(r.data.operates, 'load');
+        }
+        else {
+            for (let n in this.blocks) {
+                await this.blocks[n].eachAsync(async b => await b.loadSyncBlock());
+            }
         }
     }
     async get(this: Block, args?: { syncBlock: boolean }, options?: { emptyChilds?: boolean }) {
