@@ -580,9 +580,7 @@ item-selected:选中的效果
 }
 
 .remark {
-    color          : rgba(55, 53, 47, 0.5);
-    // fill        : rgba(55, 53, 47);
-    // fill-opacity: .5;
+    color: rgba(55, 53, 47, 0.5);
 }
 
 .text-white {
@@ -604,21 +602,21 @@ item-selected:选中的效果
 }
 
 .text-1 {
-    color          : rgba(55, 53, 47, 0.8);
-    // fill        : rgba(55, 53, 47);
-    // fill-opacity: 0.8;
+    color: rgba(55, 53, 47, 0.8);
 }
 
 .text-0 {
-    color          : transparent;
-    // fill        : transparent;
-    // fill-opacity: 0;
+    color: transparent;
 }
 
 .link,
 .text-link,
 .text-l {
     color: #64a1df;
+}
+
+.link-red {
+    color: #B84C4E;
 }
 
 .link-hover {
@@ -631,7 +629,8 @@ item-selected:选中的效果
     color: #21af5a;
     fill : #21af5a;
 }
-.bg-green{
+
+.bg-green {
     background-color: #21af5a;
 }
 
@@ -888,11 +887,15 @@ each(@selectors, {
     width: 100%;
 }
 
-.v100-20 {
+.w100-10 {
+    width: calc(100% - 10px);
+}
+
+.w100-20 {
     width: calc(100% - 20px);
 }
 
-.v100-40 {
+.w100-40 {
     width: calc(100% - 40px);
 }
 
@@ -902,6 +905,10 @@ each(@selectors, {
 
 .vw100 {
     width: 100vw;
+}
+
+.vw100-10 {
+    width: calc(100vw - 10px);
 }
 
 .vw100-20 {
@@ -916,8 +923,26 @@ each(@selectors, {
     width: 50vw;
 }
 
+.vw80 {
+    width: 80vw;
+}
+.vw80-max{
+    max-width: 80vw;
+}
+
+.vw70 {
+    width: 70vw;
+}
+.vw70-max{
+    max-width: 70vw;
+}
+
 .vh50 {
     height: 50vh;
+}
+
+.vh800 {
+    height: 80vh;
 }
 
 .vh100 {
@@ -1238,6 +1263,10 @@ each(@ops, {
     border: 1px solid rgba(55, 53, 47, 0.16);
 }
 
+.dashed {
+    border: 1px dashed rgba(55, 53, 47, 0.16);
+}
+
 .r-border {
     >* {
         border: 1px solid rgba(55, 53, 47, 0.16);
@@ -1264,6 +1293,11 @@ each(@ops, {
 .border-bottom,
 .border-b {
     border-bottom: 1px solid rgba(55, 53, 47, 0.16);
+}
+
+.border-top,
+.border-t {
+    border-top: 1px solid rgba(55, 53, 47, 0.16);
 }
 
 .r-border-bottom,

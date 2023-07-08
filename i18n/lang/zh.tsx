@@ -25,7 +25,7 @@ export default {
     [LangID.UploadFile]: <span>上传文件</span>,
     [LangID.UploadAudio]: <span>上传音频文件</span>,
     [LangID.UploadVideo]: <span>上传视频文件</span>,
-    [LangID.UploadRemark]: <span>请勿上传色情、涉政涉恐涉暴、侵权内容或<a target='_blank' href='https://shy.live/service_protocol'>服务条款</a>
+    [LangID.UploadRemark]: <span>请勿上传色情、涉政涉恐涉暴、侵权内容或<a target='_blank' className="link-red" href='https://shy.live/service_protocol'>服务条款</a>
         中禁止上传的其它内容</span>,
     [LangID.AddAudioTip]: <span>添加音频</span>,
     [LangID.AddVideoTip]: <span>添加视频</span>,

@@ -1,12 +1,13 @@
 
 import { TableSchema } from "../blocks/data-grid/schema/meta";
-import { LinkPageItem } from "../src/page/declare";
+import { LinkPageItem,LinkWs} from "../src/page/declare";
 import { GalleryType, OuterPic } from "../extensions/image/declare";
 import { StatusCode } from "./status.code";
 import { UserAction } from "../src/history/action";
 import { UserBasic, UserStatus } from "../types/user";
 import {IconArguments, ResourceArguments } from "../extensions/icon/declare";
 import { PayFeatureCheck } from "../component/pay";
+import { AtomPermission } from "../src/page/permission";
 export type SockResponse<T, U = string> = {
         /**
          * 返回状态码
@@ -26,16 +27,16 @@ export type SockResponse<T, U = string> = {
 export interface ChannelSyncMapUrls {
     "/log":{args:(r:{type:"error"|"warn"|"info",message:string|Error})=>void,returnType:void},
 	"/page/update/info":{args:(r:{id?: string,elementUrl?:string, pageInfo:LinkPageItem})=>void,returnType:void},
-	"/page/open":{args:(r:{item?: string | { id: string }, elementUrl?: string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean}})=>void,returnType:void},
-	"/page/dialog":{args:(r:{elementUrl:string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean}})=>any,returnType:void},
-	"/page/slide":{args:(r:{elementUrl:string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean}})=>any,returnType:void},
+	"/page/open":{args:(r:{item?: string | { id: string }, elementUrl?: string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean,initData?:Record<string,any>,isCanEdit?:boolean}})=>void,returnType:void},
+	"/page/dialog":{args:(r:{elementUrl:string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean,initData?:Record<string,any>,isCanEdit?:boolean}})=>any,returnType:void},
+	"/page/slide":{args:(r:{elementUrl:string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean,initData?:Record<string,any>,isCanEdit?:boolean}})=>any,returnType:void},
 	"/page/notify/toggle":{args:(r:{id: string,visible:boolean})=>void,returnType:void},
 	"/page/remove":{args:(r:{item:string|{id:string}})=>void,returnType:void},
 	"/update/user":{args:(r:{user: Record<string, any>})=>void,returnType:void},
 	"/page/create/sub":{args:(r:{pageId:string,text:string})=>LinkPageItem,returnType:void},
 	"/user/basic/sync":{args:(r:{id:string})=>void,returnType:void},
 	"/user/onlines":{args:(r:{users:Set<string>})=>void,returnType:void},
-	"/user/view/onlines":{args:(r:{viewUrl:string,users:Set<string>,editUsers:Set<string>})=>void,returnType:void},
+	"/user/view/onlines":{args:(r:{viewUrl:string,users:Set<string>})=>void,returnType:void},
 	"/ws/channel/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void},
 	"/ws/channel/patch/notify":{args:(r:{ workspaceId: string,roomId: string,content: string,file: any,isEdited:boolean})=>void,returnType:void},
 	"/ws/channel/deleted/notify":{args:(r:{ workspaceId: string,id:string,roomId:string})=>void,returnType:void},
@@ -47,16 +48,16 @@ export interface ChannelSyncMapUrls {
 export interface ChannelOnlyMapUrls {
     "/log":{args:(r:{type:"error"|"warn"|"info",message:string|Error})=>void,returnType:void},
 	"/page/update/info":{args:(r:{id?: string,elementUrl?:string, pageInfo:LinkPageItem})=>void,returnType:void},
-	"/page/open":{args:(r:{item?: string | { id: string }, elementUrl?: string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean}})=>void,returnType:void},
-	"/page/dialog":{args:(r:{elementUrl:string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean}})=>any,returnType:void},
-	"/page/slide":{args:(r:{elementUrl:string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean}})=>any,returnType:void},
+	"/page/open":{args:(r:{item?: string | { id: string }, elementUrl?: string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean,initData?:Record<string,any>,isCanEdit?:boolean}})=>void,returnType:void},
+	"/page/dialog":{args:(r:{elementUrl:string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean,initData?:Record<string,any>,isCanEdit?:boolean}})=>any,returnType:void},
+	"/page/slide":{args:(r:{elementUrl:string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean,initData?:Record<string,any>,isCanEdit?:boolean}})=>any,returnType:void},
 	"/page/notify/toggle":{args:(r:{id: string,visible:boolean})=>void,returnType:void},
 	"/page/remove":{args:(r:{item:string|{id:string}})=>void,returnType:void},
 	"/update/user":{args:(r:{user: Record<string, any>})=>void,returnType:void},
 	"/page/create/sub":{args:(r:{pageId:string,text:string})=>LinkPageItem,returnType:void},
 	"/user/basic/sync":{args:(r:{id:string})=>void,returnType:void},
 	"/user/onlines":{args:(r:{users:Set<string>})=>void,returnType:void},
-	"/user/view/onlines":{args:(r:{viewUrl:string,users:Set<string>,editUsers:Set<string>})=>void,returnType:void},
+	"/user/view/onlines":{args:(r:{viewUrl:string,users:Set<string>})=>void,returnType:void},
 	"/ws/channel/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void},
 	"/ws/channel/patch/notify":{args:(r:{ workspaceId: string,roomId: string,content: string,file: any,isEdited:boolean})=>void,returnType:void},
 	"/ws/channel/deleted/notify":{args:(r:{ workspaceId: string,id:string,roomId:string})=>void,returnType:void},
@@ -68,16 +69,16 @@ export interface ChannelOnlyMapUrls {
 export interface ChannelOnceMapUrls {
     "/log":{args:(r:{type:"error"|"warn"|"info",message:string|Error})=>void,returnType:void},
 	"/page/update/info":{args:(r:{id?: string,elementUrl?:string, pageInfo:LinkPageItem})=>void,returnType:void},
-	"/page/open":{args:(r:{item?: string | { id: string }, elementUrl?: string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean}})=>void,returnType:void},
-	"/page/dialog":{args:(r:{elementUrl:string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean}})=>any,returnType:void},
-	"/page/slide":{args:(r:{elementUrl:string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean}})=>any,returnType:void},
+	"/page/open":{args:(r:{item?: string | { id: string }, elementUrl?: string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean,initData?:Record<string,any>,isCanEdit?:boolean}})=>void,returnType:void},
+	"/page/dialog":{args:(r:{elementUrl:string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean,initData?:Record<string,any>,isCanEdit?:boolean}})=>any,returnType:void},
+	"/page/slide":{args:(r:{elementUrl:string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean,initData?:Record<string,any>,isCanEdit?:boolean}})=>any,returnType:void},
 	"/page/notify/toggle":{args:(r:{id: string,visible:boolean})=>void,returnType:void},
 	"/page/remove":{args:(r:{item:string|{id:string}})=>void,returnType:void},
 	"/update/user":{args:(r:{user: Record<string, any>})=>void,returnType:void},
 	"/page/create/sub":{args:(r:{pageId:string,text:string})=>LinkPageItem,returnType:void},
 	"/user/basic/sync":{args:(r:{id:string})=>void,returnType:void},
 	"/user/onlines":{args:(r:{users:Set<string>})=>void,returnType:void},
-	"/user/view/onlines":{args:(r:{viewUrl:string,users:Set<string>,editUsers:Set<string>})=>void,returnType:void},
+	"/user/view/onlines":{args:(r:{viewUrl:string,users:Set<string>})=>void,returnType:void},
 	"/ws/channel/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void},
 	"/ws/channel/patch/notify":{args:(r:{ workspaceId: string,roomId: string,content: string,file: any,isEdited:boolean})=>void,returnType:void},
 	"/ws/channel/deleted/notify":{args:(r:{ workspaceId: string,id:string,roomId:string})=>void,returnType:void},
@@ -89,16 +90,16 @@ export interface ChannelOnceMapUrls {
 export interface ChannelOffMapUrls {
     "/log":{args:(r:{type:"error"|"warn"|"info",message:string|Error})=>void,returnType:void},
 	"/page/update/info":{args:(r:{id?: string,elementUrl?:string, pageInfo:LinkPageItem})=>void,returnType:void},
-	"/page/open":{args:(r:{item?: string | { id: string }, elementUrl?: string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean}})=>void,returnType:void},
-	"/page/dialog":{args:(r:{elementUrl:string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean}})=>any,returnType:void},
-	"/page/slide":{args:(r:{elementUrl:string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean}})=>any,returnType:void},
+	"/page/open":{args:(r:{item?: string | { id: string }, elementUrl?: string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean,initData?:Record<string,any>,isCanEdit?:boolean}})=>void,returnType:void},
+	"/page/dialog":{args:(r:{elementUrl:string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean,initData?:Record<string,any>,isCanEdit?:boolean}})=>any,returnType:void},
+	"/page/slide":{args:(r:{elementUrl:string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean,initData?:Record<string,any>,isCanEdit?:boolean}})=>any,returnType:void},
 	"/page/notify/toggle":{args:(r:{id: string,visible:boolean})=>void,returnType:void},
 	"/page/remove":{args:(r:{item:string|{id:string}})=>void,returnType:void},
 	"/update/user":{args:(r:{user: Record<string, any>})=>void,returnType:void},
 	"/page/create/sub":{args:(r:{pageId:string,text:string})=>LinkPageItem,returnType:void},
 	"/user/basic/sync":{args:(r:{id:string})=>void,returnType:void},
 	"/user/onlines":{args:(r:{users:Set<string>})=>void,returnType:void},
-	"/user/view/onlines":{args:(r:{viewUrl:string,users:Set<string>,editUsers:Set<string>})=>void,returnType:void},
+	"/user/view/onlines":{args:(r:{viewUrl:string,users:Set<string>})=>void,returnType:void},
 	"/ws/channel/notify":{args:(r:{id:string,workspaceId:string,roomId:string})=>void,returnType:void},
 	"/ws/channel/patch/notify":{args:(r:{ workspaceId: string,roomId: string,content: string,file: any,isEdited:boolean})=>void,returnType:void},
 	"/ws/channel/deleted/notify":{args:(r:{ workspaceId: string,id:string,roomId:string})=>void,returnType:void},
@@ -110,16 +111,16 @@ export interface ChannelOffMapUrls {
 export interface ChannelFireMapUrls {
     "/log":{args:{type:"error"|"warn"|"info",message:string|Error},returnType:void},
 	"/page/update/info":{args:{id?: string,elementUrl?:string, pageInfo:LinkPageItem},returnType:void},
-	"/page/open":{args:{item?: string | { id: string }, elementUrl?: string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean}},returnType:void},
-	"/page/dialog":{args:{elementUrl:string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean}},returnType:any},
-	"/page/slide":{args:{elementUrl:string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean}},returnType:any},
+	"/page/open":{args:{item?: string | { id: string }, elementUrl?: string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean,initData?:Record<string,any>,isCanEdit?:boolean}},returnType:void},
+	"/page/dialog":{args:{elementUrl:string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean,initData?:Record<string,any>,isCanEdit?:boolean}},returnType:any},
+	"/page/slide":{args:{elementUrl:string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean,initData?:Record<string,any>,isCanEdit?:boolean}},returnType:any},
 	"/page/notify/toggle":{args:{id: string,visible:boolean},returnType:void},
 	"/page/remove":{args:{item:string|{id:string}},returnType:void},
 	"/update/user":{args:{user: Record<string, any>},returnType:void},
 	"/page/create/sub":{args:{pageId:string,text:string},returnType:LinkPageItem},
 	"/user/basic/sync":{args:{id:string},returnType:void},
 	"/user/onlines":{args:{users:Set<string>},returnType:void},
-	"/user/view/onlines":{args:{viewUrl:string,users:Set<string>,editUsers:Set<string>},returnType:void},
+	"/user/view/onlines":{args:{viewUrl:string,users:Set<string>},returnType:void},
 	"/ws/channel/notify":{args:{id:string,workspaceId:string,roomId:string},returnType:void},
 	"/ws/channel/patch/notify":{args:{ workspaceId: string,roomId: string,content: string,file: any,isEdited:boolean},returnType:void},
 	"/ws/channel/deleted/notify":{args:{ workspaceId: string,id:string,roomId:string},returnType:void},
@@ -148,7 +149,8 @@ export interface ChannelDelMapUrls {
 	"/view/snap/del":{args:{id:string},returnType:Promise<SockResponse<void>>}
 }
 export interface ChannelPostMapUrls {
-    "/phone/sms/code":{args:{phone:string},returnType:Promise<{ok:boolean,warn:string,data:{success:boolean,code?:string}}>},
+    "/download/file":{args:{url:string},returnType:Promise<SockResponse<{file:ResourceArguments }>>},
+	"/phone/sms/code":{args:{phone:string},returnType:Promise<{ok:boolean,warn:string,data:{success:boolean,code?:string}}>},
 	"/email/send/code":{args:{email:string},returnType:Promise<SockResponse<{code?:string}>>},
 	"/user/upload/file":{args:{file:File,uploadProgress: (event: ProgressEvent) => void},returnType:Promise<SockResponse<{file:{url:string}}>>},
 	"/robot/doc/embedding":{args:{id:string},returnType:Promise<SockResponse<{totalCount:number}>>},
@@ -160,8 +162,14 @@ export interface ChannelPostMapUrls {
 	"/http":{args:{url: string;data?: Record<string, any>;method: string;},returnType:Promise<SockResponse<any>>},
 	"/ws/upload/file":{args:{file:File,uploadProgress: (event: ProgressEvent) => void},returnType:Promise<SockResponse<{ file:{url:string,name:string,size:number} }>>},
 	"/ws/download/url":{args:{url:string},returnType:Promise<SockResponse<{ file:{url:string,name:string,size:number} }>>},
+	"/create/template":{args:{wsId?:string,config?:{pageId?: string, dataGridMaxRecordCount?: number}},returnType:Promise<SockResponse<{file:ResourceArguments}>>},
+	"/create/workspace/template":{args:{config?:Record<string,any>,file: ResourceArguments, wsId: string, pageId?: string, templateUrl: string, text?: string, description?: string, type:"workspace"|"dir"|"page"},returnType:Promise<SockResponse<void>>},
 	"/view/snap/rollup":{args:{id:string,elementUrl:string,wsId?:string,bakeTitle?:string,pageTitle?:string},returnType:Promise<SockResponse<{seq:number,id:string}>>},
-	"/row/block/sync/refs":{args:{wsId?:string,pageId?:string,operators:any[]},returnType:Promise<SockResponse<{results:{ id: string, error?: string }[]}>>}
+	"/row/block/sync/refs":{args:{wsId?:string,pageId?:string,operators:any[]},returnType:Promise<SockResponse<{results:{ id: string, error?: string }[]}>>},
+	"/screenshot/png":{args:{wsId?:string,text?:string,url:string},returnType:Promise<SockResponse<{file:ResourceArguments}>>},
+	"/screenshot/pdf":{args:{wsId?:string,text?:string,url:string},returnType:Promise<SockResponse<{file:ResourceArguments}>>},
+	"/workspace/template/useCount":{args:{id:string},returnType:Promise<SockResponse<void>>},
+	"/import/page":{args:{text?: string,templateUrl?: string,wsId?:string,parentId?:string,pageId?:string,},returnType:Promise<SockResponse<void>>}
 }
 export interface ChannelPatchMapUrls {
     "/datastore/update":{args:{schemaId:string,dataId:string,data:Record<string, any>},returnType:Promise<SockResponse<void>>},
@@ -218,6 +226,8 @@ export interface ChannelPutMapUrls {
 export interface ChannelGetMapUrls {
     "/gallery/query":{args:{type: GalleryType, word: string},returnType:Promise<{ok:boolean,data:OuterPic[],warn:string}>},
 	"/page/query/info":{args:{id?: string,elementUrl?:string},returnType:Promise<SockResponse<LinkPageItem>>},
+	"/page/query/elementUrl":{args:{elementUrl?:string},returnType:Promise<LinkPageItem>},
+	"/page/allow":{args:{elementUrl:string},returnType:Promise<Promise<{ isOwner?: boolean,isWs?: boolean,netPermissions?: AtomPermission[],item?:LinkPageItem,permissions?: AtomPermission[],memberPermissions?:{userid?:string,roleId?:string,permissions?: AtomPermission[]}[]}>>},
 	"/schema/query":{args:{id:string},returnType:Promise<{ok:boolean,data:{schema:Partial<TableSchema>},warn:string}>},
 	"/schema/list":{args:{page?:number,size?:number},returnType:Promise<SockResponse<{total:number,list:Partial<TableSchema>[],page:number,size:number}>>},
 	"/schema/ids/list":{args:{ids:string[]},returnType:Promise<SockResponse<{list:Partial<TableSchema>[]}>>},
@@ -272,17 +282,20 @@ export interface ChannelGetMapUrls {
 	"/ws/discovery":{args:{word?:string,page?:number,size?:number,type?:string},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
 	"/ws/view/online/users":{args:{viewUrl:string,read?:boolean},returnType:Promise<SockResponse<{users:string[]}>>},
 	"/ws/online/users":{args:{wsId?:string},returnType:Promise<SockResponse<{users:string[]}>>},
+	"/ws/create/object":{args:{wsId:string},returnType:Promise<LinkWs>},
 	"/ws/search":{args:{page?:number,size?:number,mime?:string,word:string,wsId?:string,isOnlySearchTitle?:boolean,createDate?:number,editDate?:number},returnType:Promise<SockResponse<{pages:LinkPageItem[],list:{id:string,title:string,content:string,score:number}[],total:number }>>},
 	"/ws/comment/list":{args:{elementUrl: string,wsId?: string, parentId: string, sort: 'default' | 'date', page: number,size: number},returnType:Promise<SockResponse<{page:number,size:number,total:number,list:any[]}>>},
 	"/ws/robots":{args:{},returnType:Promise<SockResponse<{list:{userid:string,name:string}[]}>>},
 	"/robots/info":{args:{ids:string[]},returnType:Promise<SockResponse<{list:any[]}>>},
+	"/get/workspace/template":{args:{wsId: string, pageId?: string},returnType:Promise<SockResponse<{template:Record<string,any>}>>},
 	"/page/items":{args:{ids:string[],sock?:any,wsId?:string},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/item/subs":{args:{id:string},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/parent/ids":{args:{wsId?:string,id:string},returnType:Promise<SockResponse<{ parentIds:string[],exists:boolean }>>},
 	"/page/parent/subs":{args:{wsId?:string,parentIds:string[]},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/item":{args:{id:string},returnType:Promise<SockResponse<{ item:Record<string,any> }>>},
 	"/page/word/query":{args:{wsId?:string,word?:string,size?:number},returnType:Promise<SockResponse<{list:LinkPageItem[],total:number,page:number,size:number}>>},
-	"/view/snap/query":{args:{ elementUrl: string},returnType:Promise<SockResponse<{content:string,operates:any[]}>>},
+	"/view/snap/query":{args:{elementUrl: string},returnType:Promise<SockResponse<{content:string,operates:any[]}>>},
+	"/view/snap/query/readonly":{args:{wsId?:string, elementUrl: string},returnType:Promise<SockResponse<{content:string,operates:any[]}>>},
 	"/view/snap/list":{args:{wsId?: string, elementUrl: string, page: number, size: number},returnType:Promise<SockResponse<{list:any[],total:number,size:number,page:number}>>},
 	"/view/snap/content":{args:{wsId?:string,id:string},returnType:Promise<SockResponse<{id:string,content:string}>>},
 	"/view/browse":{args:{elementUrl:string,wsId?:string},returnType:Promise<{list:any[],page:number,size:number,total:number}>},
@@ -290,15 +303,15 @@ export interface ChannelGetMapUrls {
 	"/user/interactives":{args:{wsId?:string,schemaId:string,ids:string[],es:string[]},returnType:Promise<SockResponse<{list:Record<string,string[]>}>>},
 	"/get/tag/refs":{args:{wsId?:string,tagId?:string,tag?:string,size?:number,desc?:boolean},returnType:Promise<SockResponse<{pages:LinkPageItem[],list:any[],total:number,size:number,page:number}>>},
 	"/tag/word/query":{args:{word?:string,wsId?:string,size?:number},returnType:Promise<SockResponse<{list:any[],total:number,size:number,page:number}>>},
-	"/tag/query":{args:{id?:string,ids?:string[]},returnType:Promise<SockResponse<{list:any[],tag:any}>>}
+	"/tag/query":{args:{id?:string,ids?:string[]},returnType:Promise<SockResponse<{list:any[],tag:any}>>},
+	"/search/workspace/template":{args:{ classify: string,tags: string[],mime: string,page: number,word: string,size: number},returnType:Promise<SockResponse<{page:number,list:any[],total:number,size:number}>>}
 }
 export interface ChannelQueryMapUrls {
-    "/current/workspace":{args:any,returnType:{owner:string,creater:string, id:string,sn:number,text:string,url:string,isMember?:boolean,isOwner?:boolean,access?:0|1,accessProfile?:{disabledJoin: boolean,checkJoinProtocol: boolean,joinProtocol: string},roles:{ id: string,text: string,color: string,permissions: number[],icon?: IconArguments}[]}},
-	"/query/current/user":{args:any,returnType:UserBasic},
+    "/query/current/user":{args:any,returnType:UserBasic},
 	"/current/page":{args:{},returnType:LinkPageItem},
 	"/cache/get":{args:{key:string},returnType:Promise<any>},
 	"/device/query":{args:any,returnType:Promise<string>},
-	"/get/view/onlines":{args:{viewUrl:string,viewEdit?:boolean},returnType:{users:Set<string>}},
+	"/get/view/onlines":{args:{viewUrl:string},returnType:{users:Set<string>}},
 	"/amap/key_pair":{args:any,returnType:{key:string,pair:string}},
 	"/ws/current/pages":{args:{},returnType:LinkPageItem[]},
 	"/guid":{args:any,returnType:string}
@@ -313,16 +326,16 @@ export interface ChannelActMapUrls {
 }
 export interface ChannelAirMapUrls {
     "/page/update/info":{args:{id?: string,elementUrl?:string, pageInfo:LinkPageItem},returnType:void},
-	"/page/open":{args:{item?: string | { id: string }, elementUrl?: string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean}},returnType:void},
-	"/page/dialog":{args:{elementUrl:string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean}},returnType:any},
-	"/page/slide":{args:{elementUrl:string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean}},returnType:any},
+	"/page/open":{args:{item?: string | { id: string }, elementUrl?: string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean,initData?:Record<string,any>,isCanEdit?:boolean}},returnType:void},
+	"/page/dialog":{args:{elementUrl:string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean,initData?:Record<string,any>,isCanEdit?:boolean}},returnType:any},
+	"/page/slide":{args:{elementUrl:string,config?:{isTemplate?:boolean,blockId?:string,force?:boolean,initData?:Record<string,any>,isCanEdit?:boolean}},returnType:any},
 	"/page/notify/toggle":{args:{id: string,visible:boolean},returnType:void},
 	"/page/remove":{args:{item:string|{id:string}},returnType:void},
 	"/update/user":{args:{user: Record<string, any>},returnType:void},
 	"/page/create/sub":{args:{pageId:string,text:string},returnType:LinkPageItem},
 	"/user/basic/sync":{args:{id:string},returnType:void},
 	"/user/onlines":{args:{users:Set<string>},returnType:void},
-	"/user/view/onlines":{args:{viewUrl:string,users:Set<string>,editUsers:Set<string>},returnType:void},
+	"/user/view/onlines":{args:{viewUrl:string,users:Set<string>},returnType:void},
 	"/ws/channel/notify":{args:{id:string,workspaceId:string,roomId:string},returnType:void},
 	"/ws/channel/patch/notify":{args:{ workspaceId: string,roomId: string,content: string,file: any,isEdited:boolean},returnType:void},
 	"/ws/channel/deleted/notify":{args:{ workspaceId: string,id:string,roomId:string},returnType:void},

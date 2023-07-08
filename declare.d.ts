@@ -72,5 +72,6 @@ interface Window {
     platform: 'web' | 'desktop' | 'mobile' | "server-side",
     guid(): string,
     isOnline: boolean
-  }
+  },
+  shyLog: (...args: any[]) => void
 }
