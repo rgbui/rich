@@ -5,7 +5,7 @@ import { useSelectMenuItem } from "../../../component/view/menu";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { BlockDirective } from "../../block/enum";
 import { Point, Rect } from "../../common/vector/point";
-import { PageLayoutType } from "../declare";
+import { PageLayoutType, PageTemplateTypeGroups } from "../declare";
 import {
     AiStartSvg,
     BookSvg,
@@ -16,17 +16,21 @@ import {
     CustomizePageSvg,
     EditSvg,
     FieldsSvg,
+    FileSvg,
     FourLeavesSvg,
     GlobalLinkSvg,
     HSvg,
     LinkSvg,
     LockSvg,
     LogoutSvg,
+    MoveToSvg,
     NoteSvg,
     OutlineSvg,
     PlatteSvg,
+    RedoSvg,
     RefreshOneSvg,
     RefreshSvg,
+    TemplatesSvg,
     ThemeSvg,
     TrashSvg,
     UndoSvg,
@@ -43,7 +47,6 @@ import { usePageHistoryStore } from "../../../extensions/history";
 import { PageDirective } from "../directive";
 import { usePagePublish } from "../../../extensions/publish";
 import { BlockUrlConstant } from "../../block/constant";
-import { DataGridForm } from "../../../blocks/data-grid/view/form";
 import { useCardBoxStyle } from "../../../extensions/doc.card/style";
 import { GetFieldTypeSvg } from "../../../blocks/data-grid/schema/util";
 import { OriginFormField } from "../../../blocks/data-grid/element/form/origin.field";
@@ -53,6 +56,10 @@ import { ElementType } from "../../../net/element.type";
 import { FieldType } from "../../../blocks/data-grid/schema/type";
 import { getWsWikiRobots } from "../../../net/ai/robot";
 import { util } from "../../../util/util";
+import { ActionDirective } from "../../history/declare";
+import { useExportFile } from "../../../extensions/export-file";
+import { DataGridView } from "../../../blocks/data-grid/view/base";
+import { useForm } from "../../../component/view/form/dialoug";
 
 export class PageContextmenu {
     async onGetContextMenus(this: Page) {
@@ -139,6 +146,7 @@ export class PageContextmenu {
                         { icon: NoteSvg, name: 'isContent', text: '内容', checkLabel: this.isPageContent ? true : false }
                     ]
                 },
+                { type: MenuItemType.divide },
                 {
                     icon: AiStartSvg,
                     text: "AI语料库",
@@ -155,25 +163,20 @@ export class PageContextmenu {
                         })
                     ]
                 },
-                // { name: 'border', text: "内容", checked: this.isPageContent },
-                // { name: 'bg', text: '背景', icon: CardBackgroundFillSvg },
-                // { type: MenuItemTypeValue.divide },
-                // { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
+                { name: 'favourite', visible: false, icon: 'favorite:sy', text: '添加至收藏', disabled: true },
                 { name: 'history', icon: VersionHistorySvg, text: '页面历史' },
-                { name: 'copylink', icon: LinkSvg, text: '复制链接' },
-                { type: MenuItemType.divide },
-                { name: 'lock', text: this.isCanEdit ? "退出编辑" : '进入编辑', icon: this.isCanEdit ? LogoutSvg : EditSvg },
-                // ...(this.isCanEdit && this.canEdit ? [
-                //     { name: 'editSave', text: '保存更新', icon: EditSvg },
-                // ] : []),
+                { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? "除消编辑保护" : "编辑保护", icon: this.locker?.lock ? LockSvg : UnlockSvg },
                 { name: 'undo', text: '撤消', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
-                // { name: 'redo', text: '重做', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
+                { name: 'redo', text: '重做', icon: RedoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
+                { type: MenuItemType.divide },
+                { name: 'export', iconSize: 16, text: '导出', icon: FileSvg },
+                ...(window.shyConfig.isDev || window.shyConfig.isBeta || this.ws?.sn == 19 ? [
+                    { name: 'requireTemplate', icon: TemplatesSvg, text: '申请模板' },
+                ] : []),
+                { name: 'move', text: '移动', icon: MoveToSvg, visible: false },
+                { type: MenuItemType.divide },
                 { name: 'delete', icon: TrashSvg, text: '删除' },
-                // { type: MenuItemTypeValue.divide },
-                // { name: 'import', iconSize: 16, icon: ImportSvg, text: '导入', disabled: true },
-                // { name: 'export', iconSize: 16, text: '导出', icon: FileSvg, disabled: true, remark: '导出PDF,HTML,Markdown' },
-                // { type: MenuItemTypeValue.divide },
-                // { name: 'move', text: '移动', icon: MoveToSvg, disabled: true },
+                { name: 'copylink', icon: LinkSvg, text: '复制链接' },
             ];
         }
         else if (this.pageLayout.type == PageLayoutType.db) {
@@ -189,20 +192,19 @@ export class PageContextmenu {
                         { name: 'showComment', text: "评论", icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
                     ]
                 },
-                { name: 'lock', text: this.isCanEdit ? "退出编辑" : '进入编辑', icon: this.isCanEdit ? LogoutSvg : EditSvg },
-                // { type: MenuItemTypeValue.divide },
-                // { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
-                // { name: 'history', icon: VersionHistorySvg, text: '页面历史' },
-                { name: 'copylink', icon: LinkSvg, text: '复制链接' },
+                { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? "除消编辑保护" : "编辑保护", icon: this.locker?.lock ? LockSvg : UnlockSvg },
+                { type: MenuItemType.divide },
+                { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
+                { name: 'history', icon: VersionHistorySvg, text: '页面历史' },
                 { type: MenuItemType.divide },
                 { name: 'undo', text: '撤消', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
-                // { name: 'redo', text: '重做', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
+                { name: 'redo', text: '重做', icon: RedoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
+                { type: MenuItemType.divide },
+                { name: 'export', iconSize: 16, text: '导出', icon: FileSvg },
+                { type: MenuItemType.divide },
+                { name: 'move', text: '移动', icon: MoveToSvg, disabled: true },
                 { name: 'delete', icon: TrashSvg, text: '删除' },
-                // { type: MenuItemTypeValue.divide },
-                // { name: 'import', iconSize: 16, icon: ImportSvg, text: '导入', disabled: true },
-                // { name: 'export', iconSize: 16, text: '导出', icon: FileSvg, disabled: true, remark: '导出PDF,HTML,Markdown' },
-                // { type: MenuItemTypeValue.divide },
-                // { name: 'move', text: '移动', icon: MoveToSvg, disabled: true },
+                { name: 'copylink', icon: LinkSvg, text: '复制链接' },
             ];
         }
         else if (this.pageLayout.type == PageLayoutType.docCard) {
@@ -210,86 +212,45 @@ export class PageContextmenu {
                 { name: 'smallText', text: '小字号', checked: this.smallFont ? true : false, type: MenuItemType.switch },
                 { name: 'fullWidth', text: '宽版', checked: this.isFullWidth ? true : false, type: MenuItemType.switch },
                 { type: MenuItemType.divide },
-                // { name: 'nav', text: '目录', icon: OutlineSvg, type: MenuItemType.switch, checked: this.nav },
-                // {
-                //     text: '自定义页面',
-                //     icon: FieldsSvg,
-                //     childs: [
-                //         { name: 'refPages', text: "显示引用", icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
-                //         { name: 'showComment', text: "显示评论", icon: CommentSvg, type: MenuItemType.switch, checked: this.exists(g => g.url == BlockUrlConstant.Comment) },
-                //     ]
-                // },
                 {
                     name: 'bg',
                     text: '主题',
                     icon: PlatteSvg
                 },
-                { name: 'lock', text: this.isCanEdit ? "退出编辑" : '进入编辑', icon: this.isCanEdit ? LogoutSvg : EditSvg },
-                // { type: MenuItemTypeValue.divide },
-                // { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
+                { name: 'lock', disabled: this.isCanManage ? false : true, text: this.locker?.lock ? "除消编辑保护" : "编辑保护", icon: this.locker?.lock ? LockSvg : UnlockSvg },
                 { name: 'history', icon: VersionHistorySvg, text: '页面历史' },
-                { name: 'copylink', icon: LinkSvg, text: '复制链接' },
                 { type: MenuItemType.divide },
                 { name: 'undo', text: '撤消', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
-                // { name: 'redo', text: '重做', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
+                { name: 'redo', text: '重做', icon: RedoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
+                { type: MenuItemType.divide },
+                { name: 'export', iconSize: 16, text: '导出', icon: FileSvg },
+                ...(window.shyConfig.isDev || window.shyConfig.isBeta || this.ws?.sn == 19 ? [
+                    { name: 'requireTemplate', icon: TemplatesSvg, text: '申请模板' },
+                ] : []),
+                { type: MenuItemType.divide },
+                { name: 'move', text: '移动', icon: MoveToSvg, disabled: true },
                 { name: 'delete', icon: TrashSvg, text: '删除' },
-                // { type: MenuItemTypeValue.divide },
-                // { name: 'import', iconSize: 16, icon: ImportSvg, text: '导入', disabled: true },
-                // { name: 'export', iconSize: 16, text: '导出', icon: FileSvg, disabled: true, remark: '导出PDF,HTML,Markdown' },
-                // { type: MenuItemTypeValue.divide },
-                // { name: 'move', text: '移动', icon: MoveToSvg, disabled: true },
+                { name: 'copylink', icon: LinkSvg, text: '复制链接' },
             ];
         }
         else if (this.pageLayout.type == PageLayoutType.textChannel) {
             items = [
-                //     // {
-                //     //     name: 'channel',
-                //     //     text: '频道',
-                //     //     icon: FourLeavesSvg,
-                //     //     type: MenuItemType.select,
-                //     //     value: this.pageInfo?.textChannelMode || 'chat',
-                //     //     options: [
-                //     //         { text: '聊天', value: 'chat' },
-                //     //         { text: '微博', value: "weibo" },
-                //     //         // { text: '问答', value: "ask" },
-                //     //         // { text: '贴吧', value: "tiebar" }
-                //     //     ]
-                //     // },
-                // {
-                //     name: 'speak',
-                //     text: '发言',
-                //     icon: CommunicationSvg,
-                //     type: MenuItemType.select,
-                //     value: this.pageInfo?.speak || 'more',
-                //     options: [
-                //         { text: '允许发言多次', value: 'more' },
-                //         { text: '从此刻仅允许发言一次', value: "only" }
-                //     ]
-                // },
-                //     // { type: MenuItemType.divide },
-                //     //{ name: 'refPages', text: "显示引用", icon: CustomizePageSvg, type: MenuItemType.switch, checked: this.autoRefPages },
-                //     { name: 'lock', text: this.pageInfo.locker?.userid ? "解除锁定" : '编辑保护', icon: this.pageInfo.locker?.userid ? UnlockSvg : LockSvg },
-                //     // { type: MenuItemTypeValue.divide },
-                //     // { name: 'favourite', icon: 'favorite:sy', text: '添加至收藏', disabled: true },
-                //     //{ name: 'history', icon: VersionHistorySvg, text: '页面历史' },
+                {
+                    name: 'speak',
+                    text: '发言',
+                    icon: CommunicationSvg,
+                    type: MenuItemType.select,
+                    value: this.pageInfo?.speak || 'more',
+                    options: [
+                        { text: '允许发言多次', value: 'more' },
+                        { text: '从此刻仅允许发言一次', value: "only" }
+                    ]
+                },
                 { type: MenuItemType.divide },
                 { name: 'copylink', icon: LinkSvg, text: '复制链接' },
-                //     { type: MenuItemType.divide },
-                //     //{ type: MenuItemType.divide },
-                //     //{ name: 'undo', text: '撤消', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanUndo ? false : true, label: 'Ctrl+Z' },
-                //     // { name: 'redo', text: '重做', icon: UndoSvg, disabled: this.snapshoot.historyRecord.isCanRedo ? false : true, label: 'Ctrl+Y' },
-                //     { name: 'delete', icon: TrashSvg, text: '删除' },
-                //     // { type: MenuItemTypeValue.divide },
-                //     // { name: 'import', iconSize: 16, icon: ImportSvg, text: '导入', disabled: true },
-                //     // { name: 'export', iconSize: 16, text: '导出', icon: FileSvg, disabled: true, remark: '导出PDF,HTML,Markdown' },
-                //     // { type: MenuItemTypeValue.divide },
-                //     // { name: 'move', text: '移动', icon: MoveToSvg, disabled: true },
+                { type: MenuItemType.divide },
+                { name: 'delete', icon: TrashSvg, text: '删除' },
             ];
-        }
-        else if (this.pageLayout.type == PageLayoutType.formView) {
-            var block = this.find(c => c.url == BlockUrlConstant.FormView) as DataGridForm;
-            if (block) block.onFormSettings(event);
-            return;
         }
         if (items.length == 0) return;
         var r = await useSelectMenuItem({ roundArea: Rect.fromEvent(event) }, items, {
@@ -332,11 +293,11 @@ export class PageContextmenu {
                 var up = await usePageLayout({ roundArea: Rect.fromEvent(event) })
             }
             else if (r.item.name == 'copylink') {
-                CopyText(this.pageInfo.url);
+                CopyText(this.pageUrl);
                 ShyAlert('复制链接');
             }
             else if (r.item.name == 'lock') {
-                this.onChangeEditMode();
+                this.onLockPage();
             }
             else if (r.item.name == 'delete') {
                 if (await Confirm('确认要删除吗?')) {
@@ -364,6 +325,12 @@ export class PageContextmenu {
             else if (r.item.name == 'ai-sync') {
                 this.onSyncAi(r.item.value, false);
             }
+            else if (r.item.name == 'export') {
+                this.onExport();
+            }
+            else if (r.item.name == 'requireTemplate') {
+                this.onRequireTemplate()
+            }
         }
     }
     async onOpenHistory(this: Page,) {
@@ -373,9 +340,9 @@ export class PageContextmenu {
         }
     }
     async onOpenPublish(this: Page, event: React.MouseEvent) {
-        await usePagePublish({ roundArea: Rect.fromEvent(event) }, this.pageInfo, this)
+        await usePagePublish({ roundArea: Rect.fromEvent(event) }, this)
     }
-    async openMember(this: Page, event: React.MouseEvent) {
+    async onOpenMember(this: Page, event: React.MouseEvent) {
         this.showMembers = this.showMembers ? false : true;
         this.forceUpdate()
     }
@@ -385,7 +352,7 @@ export class PageContextmenu {
             { roundArea: Rect.fromEvent(event) },
             [
                 { text: '显示字段', type: MenuItemType.text },
-                ...this.schema.allowFormFields.toArray(uf => {
+                ...this.schema.allowFormFields.findAll(g => (this.pe.type == ElementType.SchemaRecordView && !this.isSchemaRecordViewTemplate || this.pe.type == ElementType.SchemaData) && g.type == FieldType.title ? false : true).toArray(uf => {
                     if (this.pe.type == ElementType.SchemaData && uf.type == FieldType.title) return;
                     return {
                         icon: GetFieldTypeSvg(uf.type),
@@ -408,12 +375,7 @@ export class PageContextmenu {
             if (checked) {
                 var b: Record<string, any> = GetFieldFormBlockInfo(field);
                 if (b) {
-                    if (this.pe.type == ElementType.SchemaRecordView) {
-                        var sv = this.schema.views.find(g => g.id == this.pe.id1);
-                        if (sv.url == BlockUrlConstant.RecordPageView) {
-                            b.fieldMode = 'detail';
-                        }
-                    }
+                    b.fieldMode = 'detail';
                     var at = this.views[0].childs.findLastIndex(c => (c instanceof OriginFormField))
                     if (at == -1) at = 0;
                     var newBlock = await this.createBlock(b.url, b, this.views[0], at);
@@ -464,6 +426,114 @@ export class PageContextmenu {
         finally {
             if (isTurn)
                 CloseShyAlert()
+        }
+    }
+    async onLockPage(this: Page, lock?: boolean) {
+        await this.onAction(ActionDirective.onPageLock, async () => {
+            await this.updateProps({
+                locker: {
+                    userid: this.user?.id,
+                    date: Date.now(),
+                    lock: this.locker?.lock ? false : true
+                }
+            });
+            this.addPageUpdate();
+        })
+    }
+    async onExport(this: Page) {
+        if (this.pe.type == ElementType.Schema) {
+            var dg: DataGridView = this.find(g => g instanceof DataGridView) as DataGridView;
+            if (dg) {
+                dg.onExport()
+            }
+        }
+        else
+            await useExportFile({ page: this });
+    }
+    async onRequireTemplate(this: Page) {
+        var ws = this.ws;
+        var tg = await channel.get('/get/workspace/template', {
+            wsId: ws.id,
+            pageId: this.pageInfo?.id,
+        });
+        var tgd = tg.data?.template || {};
+        var rf = await useForm({
+            title: '申请模板',
+            model: {
+                mime: tgd['mime'],
+                classify: tgd['classify'],
+                tags: tgd['tags'],
+                previewCover: tgd['previewCover']
+            },
+            fields: [
+                { name: 'text', text: '标题', default: this.pageInfo?.text, type: 'input' },
+                { name: 'description:', text: '描述', default: this.pageInfo?.description, type: 'textarea' },
+                {
+                    name: 'mime',
+                    text: '类型',
+                    type: 'select',
+                    options: [
+                        { text: '页面', value: 'page' },
+                        { text: '数据表格', value: 'db' },
+                        { text: '频道', value: 'channel' },
+                        { text: 'PPT', value: 'ppt' }
+                    ]
+                },
+                {
+                    name: 'classify',
+                    text: '分类',
+                    type: 'select',
+                    multiple: true,
+                    options: PageTemplateTypeGroups.map(c => {
+                        return {
+                            text: c.text,
+                            icon: c.icon,
+                            childs: c.childs.map(g => {
+                                return {
+                                    text: g.text,
+                                    value: g.text
+                                }
+                            })
+                        }
+                    })
+                },
+                {
+                    name: 'previewCover',
+                    text: '封面图',
+                    type: "file",
+                    mime:'image'
+                }
+            ]
+        })
+        ShyAlert('正在申请中...', 'warn', 1000 * 60 * 10);
+        try {
+
+            var g = await channel.post('/create/template', { config: { pageId: this.pageInfo?.id } })
+            if (g.ok) {
+                var r = await channel.post('/download/file', { url: g.data.file.url });
+                if (r.ok) {
+                    await channel.post('/create/workspace/template', {
+                        wsId: ws.id,
+                        pageId: this.pageInfo?.id,
+                        type: 'page',
+                        templateUrl: r.data.file.url,
+                        text: rf.text,
+                        description: rf.description,
+                        file: r.data.file,
+                        config: {
+                            mime: rf.mime,
+                            classify: rf.classify,
+                            previewCover: rf.previewCover
+                        }
+                    });
+                }
+            }
+        }
+        catch (ex) {
+
+        }
+        finally {
+            CloseShyAlert()
         }
     }
 }
