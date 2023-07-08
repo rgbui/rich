@@ -11,6 +11,7 @@ import {
     DocAddSvg,
     DocEditSvg,
     EmojiSvg,
+    EyeSvg,
     FlagSvg,
     LikeSvg,
     LoveSvg,
@@ -113,6 +114,8 @@ export function GetFieldTypeSvg(type: FieldType) {
             return RowNoSvg
         case FieldType.title:
             return TypesTitleSvg
+        case FieldType.browse:
+            return EyeSvg;
         default:
             return TypesStringSvg
     }

@@ -144,7 +144,7 @@ export class TableSchema {
             FieldType.formula,
             FieldType.rollup,
             FieldType.comment,
-            FieldType.blog,
+            FieldType.blog
             // FieldType.emoji,
         ].includes(g.type))
     }

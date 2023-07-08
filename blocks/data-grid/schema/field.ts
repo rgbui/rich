@@ -9,6 +9,9 @@ export class Field {
     text: string;
     type: FieldType;
     load(col: Record<string, any>) {
+        for (let n in this) {
+            if (n.indexOf('.') > -1) delete this[n];
+        }
         for (var n in col) {
             if (n == 'type') {
                 if (typeof col.type == 'string') {
@@ -57,7 +60,7 @@ export interface FieldConfig {
     rollupTableId?: string,
     rollupFieldId?: string,
     rollupStatistic?: string,
-    formula?: { formula: string, jsCode: string, exp: any,jx?:any },
+    formula?: { formula: string, jsCode: string, exp: any, jx?: any },
     emoji?: EmojiCode,
     dateFormat?: string,
     includeTime?: boolean,
