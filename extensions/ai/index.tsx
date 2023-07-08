@@ -169,7 +169,7 @@ export class AITool extends EventsComponent {
                         }
                         break;
                     case 'image':
-                        if (await CanSupportFeature(PayFeatureCheck.aiImage))
+                        if (await CanSupportFeature(PayFeatureCheck.aiImage,self.page))
                             self.aiImage()
                         break;
                     case 'pageSummary':
@@ -272,7 +272,7 @@ export class AITool extends EventsComponent {
                         this.aiSelection({ prompt: propTemplate })
                         break;
                     case 'insertImage':
-                        if (await CanSupportFeature(PayFeatureCheck.aiImage)) {
+                        if (await CanSupportFeature(PayFeatureCheck.aiImage,self.page)) {
                             var preContent = this.getPrevBlockContent();
                             this.aiImage({ prompt: preContent, genImageProp: true })
                         }
@@ -355,7 +355,7 @@ export class AITool extends EventsComponent {
             else if ([AIAskStatus.willAsking].includes(this.status)) {
                 switch (item.name) {
                     case 'image':
-                        if (await CanSupportFeature(PayFeatureCheck.aiImage))
+                        if (await CanSupportFeature(PayFeatureCheck.aiImage,self.page))
                             self.aiImage()
                         break;
                 }
@@ -599,8 +599,10 @@ export class AITool extends EventsComponent {
                 if (done) {
                     console.log('answer', JSON.stringify(self.anwser))
                     var bs = self.writer.writedBlocks;
+                    var p = bs.first().parent;
                     if (bs.some(s => s.url == BlockUrlConstant.List && (s as List).listType == ListType.number)) {
                         await onMergeListBlocks(self.page, bs);
+                        bs = bs.findAll(g => g.parent == p);
                     }
                     self.writer.page.kit.anchorCursor.onSelectBlocks(bs, { render: true })
                     self.status = AIAskStatus.asked;

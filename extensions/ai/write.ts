@@ -166,7 +166,8 @@ export class AiWrite {
             }
             ts = mergeCode(ts);
             // console.log('gggg', ts, this.aa);
-            if (this.aa) {
+            if (this.aa)
+            {
                 var isWillSave = false;
                 if (typeof ts[0] != 'undefined') {
                     var c = ts[0];
@@ -215,6 +216,21 @@ export class AiWrite {
                                 })
                             })
                             //console.log('nb', nb);
+                        }
+                        else if (c.match(/^[一二三四五六七八九十]+[\.、]/)) {
+                            isWillSave = true;
+                            var nb = await new Promise((resolve: (block: Block) => void, reject) => {
+                                this.page.onTurn(this.block, BlockUrlConstant.Head, async (newBlock: Block, oldBlock) => {
+                                    if (oldBlock) lodash.remove(this.writedBlocks, g => g == oldBlock)
+                                    await newBlock.updateProps({ content: c })
+                                    newBlock.mounted(() => {
+                                        this.block = newBlock;
+                                        this.aa = newBlock.appearAnchors.last()
+                                        if (!this.writedBlocks.includes(newBlock)) this.writedBlocks.push(newBlock);
+                                        resolve(newBlock)
+                                    })
+                                })
+                            })
                         }
                         else if (c.startsWith('-') || c.startsWith('*') || c.startsWith('+')) {
                             var d = c.match(/^[\-\*\+]/)[0]

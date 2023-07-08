@@ -45,6 +45,9 @@ export async function onMergeListBlocks(page: Page, bs: Block[]) {
             if (current) rs.push(current)
             current = { block: g, childs: [] };
         }
+        else if (g.url == BlockUrlConstant.Head) {
+            if (current) current = null;
+        }
         else if (current) {
             current.childs.push(g);
         }
