@@ -57,6 +57,7 @@ import CompassSvg from "../src/assert/svg/compass.svg";
 import ComponentsSvg from "../src/assert/svg/components.svg";
 import ConnetLineSvg from "../src/assert/svg/connet.line.svg";
 import ConsoleSvg from "../src/assert/svg/console.svg";
+import CubesSvg from "../src/assert/svg/cubes.svg";
 import CureSvg from "../src/assert/svg/cure.svg";
 import CustomizePageSvg from "../src/assert/svg/customizePage.svg";
 import CutSvg from "../src/assert/svg/cut.svg";
@@ -299,6 +300,7 @@ CompassSvg,
 ComponentsSvg,
 ConnetLineSvg,
 ConsoleSvg,
+CubesSvg,
 CureSvg,
 CustomizePageSvg,
 CutSvg,
