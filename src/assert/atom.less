@@ -471,6 +471,24 @@ item-selected:选中的效果
     }
 }
 
+.item-hover-border {
+    border: 1px solid transparent;
+
+    &:hover {
+        border: 1px solid rgba(55, 53, 47, 0.16);
+    }
+}
+
+.r-item-hover-border {
+    >* {
+        border: 1px solid transparent;
+
+        &:hover {
+            border: 1px solid rgba(55, 53, 47, 0.16);
+        }
+    }
+}
+
 .item-hover-1 {
     &:hover {
         color           : var(--interactive-hover);
@@ -617,6 +635,10 @@ item-selected:选中的效果
 
 .link-red {
     color: #B84C4E;
+}
+
+.link-remark {
+    color: rgba(55, 53, 47, 0.5) !important;
 }
 
 .link-hover {
@@ -887,6 +909,7 @@ each(@selectors, {
     width: 100%;
 }
 
+
 .w100-10 {
     width: calc(100% - 10px);
 }
@@ -901,6 +924,14 @@ each(@selectors, {
 
 .w50 {
     width: 50%;
+}
+
+.w33 {
+    width: 33.33333333%;
+}
+
+.w33-10 {
+    width: calc(33.33333333% - 10px);
 }
 
 .vw100 {
@@ -926,14 +957,16 @@ each(@selectors, {
 .vw80 {
     width: 80vw;
 }
-.vw80-max{
+
+.vw80-max {
     max-width: 80vw;
 }
 
 .vw70 {
     width: 70vw;
 }
-.vw70-max{
+
+.vw70-max {
     max-width: 70vw;
 }
 
@@ -970,7 +1003,8 @@ each(@ops, {
     display: block;
 }
 
-.line {
+.line,
+.inline {
     display: inline;
 }
 
@@ -1019,7 +1053,8 @@ each(@ops, {
     pointer-events: auto;
 }
 
-.select-none {
+.select-none,
+.user-none {
     user-select: none;
 }
 
@@ -1054,6 +1089,8 @@ each(@ops, {
 .resize {
     resize: both;
 }
+
+
 
 .outline-none {
     outline       : 2px solid transparent;
