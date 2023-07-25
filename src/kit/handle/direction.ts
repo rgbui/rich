@@ -62,8 +62,9 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
     var ele = event.target as HTMLElement;
     var point = Point.from(event);
     var oldDropBlock = dropBlock;
-    if (!dropBlock?.isCell && (dropBlock?.isPanel || dropBlock?.isComposite) && dropBlock?.getVisibleBound().contain(point)) {
-        var bound = dropBlock.getVisibleBound();
+    var pb = dropBlock?.getVisiblePanelBound();
+    if (!dropBlock?.isCell && (dropBlock?.isPanel || dropBlock?.isComposite) && pb?.contain(point)) {
+        var bound = pb;
         dropBlock = undefined;
         /**
          * 这表示从左边开始查找，如果找到，说明方位在右边
@@ -74,12 +75,19 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
             dropBlock = kit.page.findXBlock(event, g => !g.isView && !g.isPanel && g !== oldDropBlock, 'right', bound);
             if (dropBlock) fr = 'left';
         }
+        var innerBlock = oldDropBlock.getInnerPanelBlock();
         //console.log('gggg', dropBlock);
         if (!dropBlock) {
-            return {
-                direction: DropDirection.none,
-                dropBlock: undefined
-            }
+            if ((innerBlock && innerBlock.childs.length > 0))
+                return {
+                    direction: DropDirection.none,
+                    dropBlock: undefined
+                }
+            else
+                return {
+                    direction: DropDirection.inner,
+                    dropBlock: oldDropBlock
+                }
         }
         /**
          * 这里需要通过dropBlock来重新计算一下fr，
