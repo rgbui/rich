@@ -66,12 +66,12 @@ export class Block$LifeCycle {
             })
         }
     }
-    async cloneData(this: Block) {
+    async cloneData(this: Block, options?: { isButtonTemplate?: boolean }) {
         var json: Record<string, any> = { url: this.url };
         json.pattern = await this.pattern.cloneData();
         json.blocks = {};
         for (let b in this.blocks) {
-            json.blocks[b] = await this.blocks[b].asyncMap(async x => await x.cloneData());
+            json.blocks[b] = await this.blocks[b].asyncMap(async x => await x.cloneData(options));
         }
         if (Array.isArray(this.__props)) {
             this.__props.each(pro => {
@@ -236,7 +236,7 @@ export class Block$LifeCycle {
     }
     async loadSyncBlock(this: Block) {
         if (this.syncBlockId) {
-            var r = await channel.get('/view/snap/query', { elementUrl: this.elementUrl });
+            var r = await channel.get('/view/snap/query', { ws: this.page.ws, elementUrl: this.elementUrl });
             if (r.ok) {
                 var data;
                 try {

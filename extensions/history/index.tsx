@@ -104,7 +104,7 @@ export class PageHistoryStore extends EventsComponent {
     async load() {
         this.loadList = true;
         this.forceUpdate();
-        var r = await channel.get('/view/snap/list', { elementUrl: this.shyPage.elementUrl, page: 1, size: 20 });
+        var r = await channel.get('/view/snap/list', { ws: this.shyPage.ws, elementUrl: this.shyPage.elementUrl, page: 1, size: 20 });
         if (r.ok) {
             this.total = r.data.total;
             this.page = r.data.page;
@@ -124,7 +124,7 @@ export class PageHistoryStore extends EventsComponent {
         this.loadContent = true;
         this.currentId = id;
         this.forceUpdate();
-        var r = await channel.get('/view/snap/content', { id });
+        var r = await channel.get('/view/snap/content', { id, ws: this.shyPage?.ws });
         this.loadContent = false;
         this.forceUpdate()
         if (r.ok) {
