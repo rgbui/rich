@@ -157,7 +157,7 @@ export class DataGridView extends Block {
     async loadSyncBlock(this: DataGridView): Promise<void> {
         if (this.syncBlockId) {
             if (this.url == BlockUrlConstant.FormView) return await super.loadSyncBlock();
-            var r = await channel.get('/view/snap/query', { elementUrl: this.elementUrl });
+            var r = await channel.get('/view/snap/query', {ws:this.page.ws, elementUrl: this.elementUrl });
             if (r.ok) {
                 var data;
                 try {
@@ -296,7 +296,7 @@ export class DataGridView extends Block {
             var dg = await useDataGridSelectView({ roundArea: Rect.fromEle(this.el) });
             if (dg) {
                 await this.page.onAction(ActionDirective.onCreateTableSchema, async () => {
-                    if (dg.schemaId) this.schema = await TableSchema.loadTableSchema(dg.schemaId)
+                    if (dg.schemaId) this.schema = await TableSchema.loadTableSchema(dg.schemaId,this.page.ws)
                     else this.schema = await TableSchema.onCreate({ text: dg.text, url: this.url });
                     this.updateProps({
                         schemaId: this.schema.id,

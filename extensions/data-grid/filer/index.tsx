@@ -69,7 +69,7 @@ export class DataGridFileViewer extends EventsComponent {
             resource = await useVideoPicker({ roundArea: Rect.fromEvent(event) })
         }
         else if (this.mime == 'user') {
-            var r = await useUserPicker({ roundArea: Rect.fromEvent(event) });
+            var r = await useUserPicker({ roundArea: Rect.fromEvent(event) }, undefined);
             if (r && !this.resources.includes(r.id as any)) {
                 resource = r.id as any;
             }

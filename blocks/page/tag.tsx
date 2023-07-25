@@ -34,13 +34,13 @@ export class ShyTag extends Block {
         var ref = this.refLinks[0];
         await useTagViewer(
             { roundArea: Rect.fromEvent(event) },
-            { tagId: ref.tagId, tag: ref.tagText })
+            { tagId: ref.tagId, tag: ref.tagText,page:this.page })
     }
     async didMounted() {
         this.loadTag();
     }
     async loadTag() {
-        var g = await channel.get('/tag/query', { id: this.refLinks[0].tagId });
+        var g = await channel.get('/tag/query', { id: this.refLinks[0].tagId,ws:this.page.ws });
         if (g.ok) {
             this.refLinks[0].tagText = g.data?.tag?.tag;
             this.forceUpdate()

@@ -361,7 +361,7 @@ async function onPasteUrl(kit: Kit, aa: AppearAnchor, url: string) {
                 };
                 await kit.writer.inputPop.selector.open(rect, url, (...data) => {
                     kit.writer.onInputPopCreateBlock(...data);
-                });
+                },kit.page);
             });
         });
     }
@@ -381,7 +381,7 @@ async function onPasteUrl(kit: Kit, aa: AppearAnchor, url: string) {
         };
         await kit.writer.inputPop.selector.open(rect, url, (...data) => {
             kit.writer.onInputPopCreateBlock(...data);
-        });
+        },kit.page);
     }
 }
 

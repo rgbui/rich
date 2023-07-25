@@ -101,7 +101,7 @@ export class ToDoView extends BlockView<ToDo>{
                 <div className='sy-block-todo' data-block-content style={this.block.contentStyle}>
                     <div className="sy-block-todo-checkbox-wrapper" style={{ height: this.block.page.lineHeight, width: this.block.page.lineHeight }}>
                         <div className={'sy-block-todo-checkbox' + (this.block.checked ? " checked" : "")} onMouseDown={e => this.block.onChange(!this.block.checked, e)}>
-                            <Icon size={this.block.checked ? 14 : 16} icon={this.block.checked ? CheckSvg : CheckboxSquareSvg} ></Icon>
+                            <Icon size={this.block.checked ? (this.props.block.page.fontSize - 2) : this.props.block.page.fontSize} icon={this.block.checked ? CheckSvg : CheckboxSquareSvg} ></Icon>
                         </div>
                     </div>
                     <TextLineChilds rf={e => this.block.childsEl = e} childs={this.block.childs}></TextLineChilds>
@@ -117,7 +117,7 @@ export class ToDoView extends BlockView<ToDo>{
                     <div className='sy-block-todo' data-block-content style={this.block.contentStyle} >
                         <div className="sy-block-todo-checkbox-wrapper" style={{ height: this.block.page.lineHeight, width: this.block.page.lineHeight }}>
                             <div className={'sy-block-todo-checkbox' + (this.block.checked ? " checked" : "")} onMouseDown={e => this.block.onChange(!this.block.checked, e)}>
-                                <Icon size={this.block.checked ? 14 : 16} icon={this.block.checked ? CheckSvg : CheckboxSquareSvg} ></Icon>
+                                <Icon size={this.block.checked ? (this.props.block.page.fontSize - 2) : this.props.block.page.fontSize} icon={this.block.checked ? CheckSvg : CheckboxSquareSvg} ></Icon>
                             </div>
                         </div>
                         <span className='sy-block-todo-text'><TextArea block={this.block} placeholder={langProvider.getText(LangID.todoPlaceholder)}

@@ -30,7 +30,7 @@ export class SearchUser extends OriginFilterField {
 @view('/field/filter/user')
 export class SearchTextView extends BlockView<SearchUser>{
     async mousedown(event: React.MouseEvent) {
-        var r = await useUserPicker({ roundArea: Rect.fromEvent(event) });
+        var r = await useUserPicker({ roundArea: Rect.fromEvent(event) },this.block.page.ws);
         if (r) {
             this.block.onFilter(r.id)
         }

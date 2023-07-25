@@ -22,7 +22,7 @@ export class TableStatisticValue extends Block {
     indicator: string;
     async loadSchema() {
         if (this.schemaId && !this.schema) {
-            this.schema=await TableSchema.loadTableSchema(this.schemaId)
+            this.schema=await TableSchema.loadTableSchema(this.schemaId,this.page.ws)
         }
     }
     statisticValue: number;
@@ -31,7 +31,7 @@ export class TableStatisticValue extends Block {
             var r = await this.schema.statisticValue({
                 filter: this.filter,
                 indicator: this.indicator
-            });
+            },this.page);
             if (r.ok) {
                 this.statisticValue = r.data.value;
             }

@@ -263,7 +263,7 @@ export class TableFilterView extends EventsComponent {
     renderUserInput(item: SchemaFilter) {
         var self = this;
         async function mousedown(event: React.MouseEvent) {
-            var r = await useUserPicker({ roundArea: Rect.fromEvent(event) });
+            var r = await useUserPicker({ roundArea: Rect.fromEvent(event) }, self.block?.page?.ws);
             if (r?.id) {
                 item.value = r.id;
                 self.onForceStore();

@@ -2,21 +2,35 @@ import { Block } from "../../../src/block";
 import React from 'react';
 import { Icon } from "../../../component/view/icon";
 import { prop, url, view } from "../../../src/block/factory/observable";
-import "./style.less";
 import { BlockView } from "../../../src/block/view";
-import { BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
+import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
 import { ChildsArea, TextArea, TextLineChilds } from "../../../src/block/view/appear";
 import { TextTurns } from "../../../src/block/turn/text";
-import { TriangleSvg } from "../../../component/svgs";
+import { ListSvg, NumberListSvg, TriangleSvg } from "../../../component/svgs";
 import { BlockChildKey } from "../../../src/block/constant";
 import { DropDirection } from "../../../src/kit/handle/direction";
 import { dom } from "../../../src/common/dom";
 import { BlockFactory } from "../../../src/block/factory/block.factory";
+import { util } from "../../../util/util";
+import { MenuItem } from "../../../component/view/menu/declare";
+import { MenuItemView } from "../../../component/view/menu/item";
+import "./style.less";
 
 export enum ListType {
     circle = 0,
     number = 1,
     toggle = 2
+}
+
+export enum ListTypeView {
+    none = 0,
+    circleEmpty = 1,//空心
+    rhombus = 2,//菱形
+    solidRhombus = 3,//菱形
+    alphabet = 12,//字母
+    capitalLetter = 13,//大写字母
+    roman = 14,//罗马
+
 }
 
 @url('/list')
@@ -27,6 +41,10 @@ export class List extends Block {
     }
     @prop()
     listType: ListType = ListType.circle;
+    @prop()
+    listView: ListTypeView = ListTypeView.none;
+    @prop()
+    startNumber: number = 1;
     @prop()
     expand: boolean = true;
     display = BlockDisplay.block;
@@ -45,7 +63,8 @@ export class List extends Block {
     get continuouslyProps() {
         return {
             expand: false,
-            listType: this.listType
+            listType: this.listType,
+            listView: this.listView,
         }
     }
     get appearAnchors() {
@@ -121,12 +140,76 @@ export class List extends Block {
         })).join("  \n"));
         return ps.join("  \n");
     }
+    async onGetContextMenus() {
+        var items = await super.onGetContextMenus();
+        var at = items.findIndex(g => g.text == '颜色');
+        if (this.listType == ListType.circle || this.listType == ListType.number) {
+            var rc = (item: MenuItem<string>, view?: MenuItemView) => {
+                if (this.listType == ListType.circle) {
+                    return <div className="size-20 flex-center flex-inline">
+                        {item.value == ListTypeView.none && <i className="flex size-6 circle" style={{ backgroundColor: 'rgb(55,53,47)' }}></i>}
+                        {item.value == ListTypeView.circleEmpty && <i className="flex size-4 circle" style={{ border: '1px solid rgb(55,53,47)' }}></i>}
+                        {item.value == ListTypeView.rhombus && <i className="flex size-4 " style={{ transformOrigin: '50% 50%', transform: 'rotate(45deg)', border: '1px solid rgb(55,53,47)' }}></i>}
+                        {item.value == ListTypeView.solidRhombus && <i className="flex size-6 " style={{ transformOrigin: '50% 50%', transform: 'rotate(45deg)', backgroundColor: 'rgb(55,53,47)' }}></i>}
+                    </div>
+                }
+                else {
+                    return <div className="size-20 flex-center flex-inline">
+                        {item.value == ListTypeView.none && <>1.</>}
+                        {item.value == ListTypeView.alphabet && <>a.</>}
+                        {item.value == ListTypeView.capitalLetter && <>A.</>}
+                        {item.value == ListTypeView.roman && <>i.</>}
+                    </div>
+                }
+            }
+            var newItems: MenuItem<string>[] = [
+                {
+                    icon: this.listType == ListType.circle ? ListSvg : NumberListSvg,
+                    text: (this.listType == ListType.number ? "数字" : "") + '列表符号',
+                    childs: this.listType == ListType.circle ? [
+                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.none, text: '实心园', value: ListTypeView.none },
+                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.circleEmpty, text: '空心园', value: ListTypeView.circleEmpty },
+                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.solidRhombus, text: '实心菱形', value: ListTypeView.solidRhombus },
+                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.rhombus, text: '空心菱形', value: ListTypeView.rhombus },
+                    ] : [
+                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.none, text: '数字', value: ListTypeView.none },
+                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.alphabet, text: '小写字母', value: ListTypeView.alphabet },
+                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.capitalLetter, text: '大写字母', value: ListTypeView.capitalLetter },
+                        { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.roman, text: '罗马', value: ListTypeView.roman }
+                    ]
+                }]
+            items.splice(at, 0, ...newItems)
+        }
+
+        return items;
+    }
+    async onClickContextMenu(item: MenuItem<BlockDirective | string>, event: MouseEvent) {
+        if (item.name == 'listView') {
+            await this.page.onAction('onChangeListView', async () => {
+                var ps = this.parentBlocks;
+                var at = this.at;
+                var rs = ps.findAllBefore(at, g => (g as List).listType == this.listType && (g as List).listView == this.listView);
+                var gs = ps.findAllAfter(at, g => (g as List).listType == this.listType && (g as List).listView == this.listView);
+                var cs = [...rs, this, ...gs];
+                await cs.eachAsync(async g => {
+                    await g.updateProps({ listView: item.value as ListTypeView })
+                });
+                this.page.addBlockUpdate(this.parent);
+            })
+            // await this.onUpdateProps({ listView: item.value as ListTypeView })
+        }
+        else await super.onClickContextMenu(item, event);
+    }
 }
+
 @view('/list')
 export class ListView extends BlockView<List>{
     renderListType() {
         if (this.block.listType == ListType.circle) return <span style={{ height: this.block.page.lineHeight }} className='sy-block-list-text-type'>
-            <i className="flex size-6 circle" style={{ backgroundColor: 'rgb(55,53,47)' }}></i>
+            {this.block.listView == ListTypeView.none && <i className="flex size-6 circle" style={{ backgroundColor: 'rgb(55,53,47)' }}></i>}
+            {this.block.listView == ListTypeView.circleEmpty && <i className="flex size-4 circle" style={{ border: '1px solid rgb(55,53,47)' }}></i>}
+            {this.block.listView == ListTypeView.rhombus && <i className="flex size-4 " style={{ transformOrigin: '50% 50%', transform: 'rotate(45deg)', border: '1px solid rgb(55,53,47)' }}></i>}
+            {this.block.listView == ListTypeView.solidRhombus && <i className="flex size-6 " style={{ transformOrigin: '50% 50%', transform: 'rotate(45deg)', backgroundColor: 'rgb(55,53,47)' }}></i>}
         </span>
         else if (this.block.listType == ListType.toggle) {
             return <span className='sy-block-list-text-type text ts-transform round item-hover'
@@ -144,24 +227,36 @@ export class ListView extends BlockView<List>{
         else if (this.block.listType == ListType.number) {
             var pas = this.block.parentBlocks;
             var at = pas.findIndex(g => g === this.block);
-            var num = 1;
+            var list: List[] = [];
             for (let i = at - 1; i >= 0; i--) {
                 var prevRow = pas[i];
-                if (prevRow) {
-                    if (prevRow instanceof List && prevRow.listType == this.block.listType) {
-                        num += 1;
-                    }
-                    else break;
-                } else break;
+                if (prevRow && prevRow instanceof List && prevRow.listType == this.block.listType && prevRow.listView == this.block.listView) {
+                    list.push(prevRow);
+                }
+                else break
             }
-            return <span className='sy-block-list-text-type'>{num}.</span>
+            var num = 0;
+            if (list.length > 0)
+                num = (list.last().startNumber || 1) - 1 + list.length;
+            else num = (this.block.startNumber || 1) - 1;
+            var str = (num + 1).toString();
+            if (this.block.listView == ListTypeView.alphabet) {
+                str = util.decimalToLetter(num + 1);
+            }
+            else if (this.block.listView == ListTypeView.capitalLetter) {
+                str = util.decimalToLetter(num + 1).toUpperCase();
+            }
+            else if (this.block.listView == ListTypeView.roman) {
+                str = util.convertToRoman(num + 1).toLowerCase()
+            }
+            return <span className='sy-block-list-text-type'>{str}.</span>
         }
     }
     renderText() {
-        if (this.block.childs.length > 0)
-            return <TextLineChilds childs={this.block.childs}></TextLineChilds>
-        else
-            return <TextArea block={this.block} prop='content' placeholder={'键入文字或"/"选择'}></TextArea>
+        var text = this.block.listType == ListType.circle ? "列表" : "数字列表";
+        if (this.block.listType == ListType.toggle) text = '折叠列表';
+        if (this.block.childs.length > 0) return <TextLineChilds childs={this.block.childs}></TextLineChilds>
+        else return <TextArea block={this.block} placeholderEmptyVisible prop='content' placeholder={text}></TextArea>
     }
     render() {
         return <div className='sy-block-list'>

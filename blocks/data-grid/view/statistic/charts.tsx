@@ -24,7 +24,7 @@ export class DataGridChart extends Block {
     }
     async loadSchema() {
         if (this.schemaId && !this.schema) {
-            this.schema = await TableSchema.loadTableSchema(this.schemaId)
+            this.schema = await TableSchema.loadTableSchema(this.schemaId, this.page.ws)
         }
     }
     data: any[] = [];
@@ -42,7 +42,7 @@ export class DataGridChart extends Block {
                     if (f) return f.name
                 }),
                 aggregate: this.aggregate
-            })
+            }, this.page)
             if (r.ok) {
                 this.data = r.data.list;
                 console.log(r.data, 'rd');

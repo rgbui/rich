@@ -53,7 +53,7 @@ export class Input extends React.Component<{
             }
             else if (props.onKeydown) props.onKeydown(e);
         }
-        var classList: string[] = ['shy-input', 'flex','round-3'];
+        var classList: string[] = ['shy-input', 'flex', 'round-3'];
         if (this.props.size == 'small') classList.push('small')
         else if (this.props.size == 'larger') classList.push('larger')
         if (Array.isArray(this.props.className)) this.props.className.each(c => { classList.push(c) })
@@ -81,7 +81,8 @@ export class Input extends React.Component<{
         </div>
     }
     updateValue(value) {
-        this.inputEl.value = value;
+        if (this.inputEl)
+            this.inputEl.value = value;
     }
     focus() {
         this.inputEl.focus()

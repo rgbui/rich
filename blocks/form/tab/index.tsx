@@ -173,6 +173,13 @@ export class Tab extends Block {
         if (this.childs.length > 0) return tag + '' + (await (this.childs.asyncMap(async b => await b.getMd()))).join('') + "  "
         else return tag + '' + this.content + "  "
     }
+    getVisiblePanelBound() {
+        var t = (this.view as any).tabPages as HTMLElement;
+        return Rect.fromEle(t)
+    }
+    getInnerPanelBlock() {
+        return this.otherChilds[this.tabIndex];
+    }
 }
 @view('/tab')
 export class TabView extends BlockView<Tab>{
@@ -195,6 +202,7 @@ export class TabView extends BlockView<Tab>{
             }
         })
     }
+    tabPages: HTMLElement;
     render() {
         return <div className='sy-block-tab'
             style={this.block.visibleStyle}>
@@ -203,7 +211,7 @@ export class TabView extends BlockView<Tab>{
                     <ChildsArea childs={this.block.blocks.childs}></ChildsArea>
                     <div className="sy-block-tab-plus" onMouseDown={e => this.block.onAddTabItem()}><Icon size={18} icon={PlusSvg}></Icon></div>
                 </div>
-                <div className="sy-block-tab-pages" style={{ height: this.block.contentHeight }}>
+                <div ref={e => this.tabPages = e} className="sy-block-tab-pages" style={{ height: this.block.contentHeight }}>
                     <ChildsArea childs={this.block.blocks.otherChilds}></ChildsArea>
                 </div>
                 <div className="sy-block-tab-resize" onMouseDown={e => this.onResize(e)}></div>

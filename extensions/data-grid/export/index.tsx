@@ -98,12 +98,12 @@ class TableExportView extends EventsComponent {
     }
     async loadData() {
         var rs: any[] = [];
-        var r = await this.schema.list({ page: 1, size: this.size });
+        var r = await this.schema.list({ page: 1, size: this.size }, this.dataGridView.page);
         this.total = r.data.total;
         var pages = Math.ceil(r.data.total / this.size);
         rs.push(... await (this.handleList(r.data.list, this.getFields())));
         for (let i = 2; i <= pages; i++) {
-            var rg = await this.schema.list({ page: i, size: this.size });
+            var rg = await this.schema.list({ page: i, size: this.size }, this.dataGridView.page);
             this.page = i;
             await util.delay(10);
             this.forceUpdate();

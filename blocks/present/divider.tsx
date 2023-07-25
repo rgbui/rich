@@ -3,6 +3,7 @@ import React from 'react';
 import { url, view } from "../../src/block/factory/observable";
 import { Block } from "../../src/block";
 import { BlockDisplay } from "../../src/block/enum";
+import { Point, Rect } from "../../src/common/vector/point";
 
 @url('/divider')
 export class Divider extends Block {
@@ -12,6 +13,15 @@ export class Divider extends Block {
     }
     async getMd() {
         return '----------------------'
+    }
+    getVisibleHandleCursorPoint() {
+        var h = this.el.querySelector('.sy-block-divider-line') as HTMLElement;
+        var bound = Rect.fromEle(h);
+        if (bound) {
+            var pos = Point.from(bound);
+            pos = pos.move(0, 1);
+            return pos;
+        }
     }
 }
 @view('/divider')

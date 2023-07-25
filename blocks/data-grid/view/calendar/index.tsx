@@ -40,7 +40,7 @@ export class TableStoreCalendar extends DataGridView {
                         $lte: end
                     }
                 }
-            });
+            },this.page);
             if (r.data) {
                 this.data = Array.isArray(r.data.list) ? r.data.list : [];
                 this.total = r.data?.total || 0;

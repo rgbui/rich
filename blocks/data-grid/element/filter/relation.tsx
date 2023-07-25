@@ -29,13 +29,14 @@ export class FilterRelationView extends BlockView<FilterRelation>{
     relationSchema: TableSchema;
     async mousedown(event: React.MouseEvent) {
         if (!this.relationSchema) {
-            this.relationSchema = await TableSchema.loadTableSchema(this.block.field.config.relationTableId);
+            this.relationSchema = await TableSchema.loadTableSchema(this.block.field.config.relationTableId,this.block.page.ws);
         }
         var g = await useRelationPickData({
             roundArea: Rect.fromEvent(event)
         }, {
             relationDatas: this.block.selectDataIds.map(s => { return { id: s.id } }),
-            relationSchema: this.relationSchema, field: this.block.field, isMultiple: true
+            relationSchema: this.relationSchema, field: this.block.field, isMultiple: true,
+            page:this.block.page
         });
         if (g) this.block.selectDataIds = g.map(c => {
             return { id: c.id, title: c.title }

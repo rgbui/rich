@@ -7,6 +7,8 @@ import { Field } from "./field";
 import { FieldType } from "./type";
 import { ViewField } from "./view";
 import { AtomPermission } from "../../../src/page/permission";
+import { Page } from "../../../src/page";
+import { LinkWs } from "../../../src/page/declare";
 
 export interface TableSchemaView {
     id: string,
@@ -205,8 +207,8 @@ export class TableSchema {
     rowUpdate(args: { dataId: string, data: Record<string, any> }) {
         return channel.patch('/datastore/update', Object.assign({ schemaId: this.id }, args));
     }
-    async checkSubmit() {
-        return channel.get('/datastore/exists/user/submit', { schemaId: this.id });
+    async checkSubmit(page: Page) {
+        return channel.get('/datastore/exists/user/submit', { schemaId: this.id, ws: page.ws });
     }
     rowUpdateFieldObject(args: { rowId: string, fieldName: string, data: Record<string, any> }) {
         return channel.put('/datastore/row/object/update', Object.assign({ schemaId: this.id }, args));
@@ -216,16 +218,16 @@ export class TableSchema {
         size?: number,
         filter?: Record<string, any>,
         sorts?: Record<string, -1 | 1>
-    }) {
-        return channel.get('/datastore/query/list', Object.assign({ schemaId: this.id }, options));
+    }, page: Page) {
+        return channel.get('/datastore/query/list', Object.assign({ schemaId: this.id, ws: page.ws }, options));
     }
     all(options: {
         page: number,
         size?: number,
         filter?: Record<string, any>,
         sorts?: Record<string, -1 | 1>
-    }) {
-        return channel.get('/datastore/query/all', Object.assign({ schemaId: this.id }, options));
+    }, page: Page) {
+        return channel.get('/datastore/query/all', Object.assign({ schemaId: this.id, ws: page.ws }, options));
     }
     group(
         options: {
@@ -233,8 +235,8 @@ export class TableSchema {
             size?: number,
             sorts?: Record<string, 1 | -1>,
             group: string
-        }) {
-        return channel.get('/datastore/group', Object.assign({ schemaId: this.id }, options));
+        }, page: Page) {
+        return channel.get('/datastore/group', Object.assign({ schemaId: this.id, ws: page.ws }, options));
     }
     statistics(options: {
         page?: number,
@@ -244,11 +246,11 @@ export class TableSchema {
         sorts?: Record<string, 1 | -1>,
         groups: string[],
         aggregate?: Record<string, any>
-    }) {
-        return channel.get('/datastore/statistics', Object.assign({ schemaId: this.id }, options));
+    }, page: Page) {
+        return channel.get('/datastore/statistics', Object.assign({ schemaId: this.id, ws: page.ws }, options));
     }
-    statisticValue(options: { filter?: Record<string, any>, indicator: string; }) {
-        return channel.get('/datastore/statistics/value', Object.assign({ schemaId: this.id }, options));
+    statisticValue(options: { filter?: Record<string, any>, indicator: string; }, page: Page) {
+        return channel.get('/datastore/statistics/value', Object.assign({ schemaId: this.id, ws: page.ws }, options));
     }
     fieldAdd(field: { text: string, type: FieldType, config?: Record<string, any> }) {
         return this.onSchemaOperate([{ name: 'addField', field }])
@@ -363,11 +365,11 @@ export class TableSchema {
     }
     static schemas: Map<string, TableSchema> = new Map();
     static isLoadAll: boolean = false;
-    static async loadTableSchema(schemaId: string): Promise<TableSchema> {
+    static async loadTableSchema(schemaId: string, ws: LinkWs): Promise<TableSchema> {
         var schema = this.schemas.get(schemaId);
         if (schema) return schema;
         else {
-            return await this.batchSchema.get<TableSchema>(schemaId)
+            return await this.batchSchema.get<TableSchema>(schemaId, [ws])
         }
     }
     static async cacheSchema(schema: Partial<TableSchema>) {
@@ -380,7 +382,7 @@ export class TableSchema {
     static async getSchemas() {
         return Array.from(this.schemas.values());
     }
-    static async loadListSchema(schemaIds: string[]) {
+    static async loadListSchema(schemaIds: string[], page: Page) {
         var rs: TableSchema[] = [];
         for (let i = schemaIds.length - 1; i >= 0; i--) {
             var r = this.schemas.get(schemaIds[i]);
@@ -390,7 +392,7 @@ export class TableSchema {
             }
         }
         if (schemaIds.length > 0) {
-            var gs = await channel.get('/schema/ids/list', { ids: schemaIds });
+            var gs = await channel.get('/schema/ids/list', { ids: schemaIds, ws: page.ws });
             if (gs.ok) {
                 rs.push(...gs.data.list.map(r => new TableSchema(r)));
                 rs.each(r => {
@@ -427,7 +429,7 @@ export class TableSchema {
         return this.schemas.get(schemaId)
     }
     static batchSchema = new MergeSock(async (batchs) => {
-        var gs = await channel.get('/schema/ids/list', { ids: lodash.uniq(batchs.map(b => b.id)) });
+        var gs = await channel.get('/schema/ids/list', { ws: batchs[0]?.args[0], ids: lodash.uniq(batchs.map(b => b.id)) });
         if (gs.ok) {
             var rs: TableSchema[] = [];
             rs.push(...gs.data.list.map(r => new TableSchema(r)));

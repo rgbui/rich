@@ -5,8 +5,9 @@ import { TextSpanArea } from "../../src/block/view/appear";
 import { BlockDisplay } from "../../src/block/enum";
 import { Block } from "../../src/block";
 import { TextTurns } from "../../src/block/turn/text";
-import { Rect } from "../../src/common/vector/point";
+import { Point, Rect } from "../../src/common/vector/point";
 import { BlockFactory } from "../../src/block/factory/block.factory";
+import { dom } from "../../src/common/dom";
 @url('/head')
 export class Head extends Block {
     @prop()
@@ -38,6 +39,16 @@ export class Head extends Block {
     getVisibleContentBound() {
         if (this.el)
             return Rect.fromEle(this.el.querySelector('.relative') as HTMLElement);
+    }
+    getVisibleHandleCursorPoint() {
+        var h = this.el.querySelector('.relative') as HTMLElement;
+        var bound = Rect.fromEle(h);
+        if (bound) {
+            var pos = Point.from(bound);
+            var lh = parseFloat(dom(h).style('lineHeight'));
+            pos = pos.move(0, 3 + lh / 2);
+            return pos;
+        }
     }
     async getHtml() {
         var tag = this.level;

@@ -14,6 +14,8 @@ import { MouseDragger } from "../../../src/common/dragger";
 import { util } from "../../../util/util";
 
 /**
+ * 
+ * https://h5player.bytedance.com/
  * https://www.zhangxinxu.com/wordpress/2018/12/html5-video-play-picture-in-picture/s
  * 
  * 分辨率比例通过 aspect 设置，目前有 3：4 和 9：16 两种，

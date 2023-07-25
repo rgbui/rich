@@ -7,6 +7,9 @@ import { Rect } from "../../../../src/common/vector/point";
 import { FieldConfig } from "../../schema/field";
 import { OriginField } from "./origin.field";
 import "./style.less";
+import { FieldType } from "../../schema/type";
+import { util } from "../../../../util/util";
+
 @url('/field/option')
 export class FieldOption extends OriginField {
     async onCellMousedown(event: React.MouseEvent<Element, MouseEvent>) {
@@ -17,7 +20,7 @@ export class FieldOption extends OriginField {
             roundArea: Rect.fromEle(event.currentTarget as HTMLElement)
         }, this.value,
             {
-                multiple: false,
+                multiple: this.field.type == FieldType.options || fc.isMultiple ? true : false,
                 options: fc?.options || [],
                 changeOptions: async (ops) => {
                     await this.onUpdateCellFieldSchema({ config: { options: ops } })
@@ -26,7 +29,7 @@ export class FieldOption extends OriginField {
             }
         );
         if (op != null && typeof op != 'undefined') {
-            this.onUpdateProps({ value: op }, { range: BlockRenderRange.self });
+            this.onUpdateProps({ value: op.map(o => o.value) }, { range: BlockRenderRange.self });
         }
     }
 }
@@ -34,9 +37,12 @@ export class FieldOption extends OriginField {
 export class FieldTextView extends BlockView<FieldOption>{
     render() {
         var fc: FieldConfig = this.block.field.config;
-        var op = fc?.options ? fc.options.find(g => g.value == this.block.value) : undefined;
+        var vs = util.covertToArray(this.block.value);
+        var ops = fc?.options ? fc.options.filter(g => vs.includes(g.value)) : undefined;
         return <div className='sy-field-option flex' onMouseDown={e => this.block.onCellMousedown(e)}  >
-            <span style={{ backgroundColor: op?.color }}>{op?.text || <i>&nbsp;</i>}</span>
+            {ops.map(op => {
+                return <span key={op.value} className="text-overflow" style={{ backgroundColor: op?.color }}>{op?.text || <i>&nbsp;</i>}</span>
+            })}
         </div>
     }
 }

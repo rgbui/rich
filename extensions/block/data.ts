@@ -69,7 +69,7 @@ export var BlockSelectorData: BlockGroup[] = [
         text: '行内块',
         childs: [
             { text: "表情", icon: EmojiSvg, isLine: true, url: "/emoji", description: "", label: "/表情", labels: ['/bq', '/biaoqing', '/emoji'] },
-            { text: "按钮", icon: ButtonSvg, isLine: true, url: "/button", description: "", label: "/按钮", labels: ['/al', '/anliu', '/button'] },
+            //{ text: "按钮", icon: ButtonSvg, isLine: true, url: "/button", description: "", label: "/按钮", labels: ['/al', '/anliu', '/button'] },
             { text: "日期", icon: TimeSvg, isLine: true, url: '/mention/date', description: '', label: '/引用日期', labels: ['/date', '/rq', '/riqi'] },
             { text: "页面", icon: PageSvg, isLine: true, url: '/link', description: '', label: '/引用页面', labels: ['/page', '/ym', '/yemian'] },
             { text: "提及", icon: MentionSvg, isLine: true, url: '/mention/person', description: '', label: '/ta人', labels: ['/mention', '/at'] },

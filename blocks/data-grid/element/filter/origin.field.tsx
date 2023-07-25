@@ -56,9 +56,9 @@ export class OriginFilterFieldView extends React.Component<{
                 <ToolTip overlay={'拖动'}><a className="flex-center size-24 round item-hover gap-r-5 cursor text" onMouseDown={e => this.props.filterField.dragBlock(e)} ><Icon size={16} icon={DragHandleSvg}></Icon></a></ToolTip>
                 <ToolTip overlay={'删除'}><span className="flex-center text-1  item-hover size-24 round cursor" onMouseDown={e => this.props.filterField.onDelete()}><Icon size={16} icon={TrashSvg}></Icon></span></ToolTip>
             </div>}><SolidArea gap line block={this.props.filterField} prop='field'>
-                <div className="flex flex-top f-14 flex-inline" style={this.props.style || {}}>
-                    {this.props.filterField.showFieldText && <label className="flex-fixed text-1 gap-r-5">{this.props.filterField.fieldText}:</label>}
-                    <div onMouseDown={e => { e.stopPropagation() }} className="flex-auto">{this.props.children}</div>
+                <div className="inline" style={this.props.style || {}}>
+                    {this.props.filterField.showFieldText && <label className="inline-block text-1 gap-r-5">{this.props.filterField.fieldText}:</label>}
+                    <div onMouseDown={e => { e.stopPropagation() }} className="inline">{this.props.children}</div>
                 </div>
             </SolidArea>
         </BoxTip>

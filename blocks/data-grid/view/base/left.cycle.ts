@@ -10,7 +10,7 @@ import lodash from "lodash";
 export class DataGridViewLife {
     async loadSchema(this: DataGridView) {
         if (this.schemaId && !this.schema) {
-            this.schema = await TableSchema.loadTableSchema(this.schemaId);
+            this.schema = await TableSchema.loadTableSchema(this.schemaId,this.page.ws);
         }
     }
     async loadViewFields(this: DataGridView) {
@@ -52,7 +52,7 @@ export class DataGridViewLife {
             }
         });
         if (tableIds.length > 0) {
-            this.relationSchemas = await TableSchema.loadListSchema(tableIds);
+            this.relationSchemas = await TableSchema.loadListSchema(tableIds,this.page);
         }
     }
     async loadRelationDatas(this: DataGridView,) {
@@ -80,7 +80,7 @@ export class DataGridViewLife {
                 var v = vr.ids;
                 var sea = this.relationSchemas.find(g => g.id == key);
                 if (sea) {
-                    var rd = await sea.all({ page: 1, filter: { id: { $in: v } } });
+                    var rd = await sea.all({ page: 1, filter: { id: { $in: v } } },this.page);
                     if (rd.ok) {
                         this.relationDatas.set(key, rd.data.list);
                     }
@@ -96,7 +96,7 @@ export class DataGridViewLife {
                 size: this.size,
                 filter: this.getSearchFilter(),
                 sorts: this.getSearchSorts()
-            });
+            },this.page);
             if (r.data) {
                 this.data = Array.isArray(r.data.list) ? r.data.list : [];
                 this.total = r.data?.total || 0;
@@ -119,6 +119,7 @@ export class DataGridViewLife {
                     var r = await channel.get('/user/interactives', {
                         schemaId: this.schema.id,
                         ids: ids,
+                        ws:this.page.ws,
                         es: fs.map(f => getElementUrl(ElementType.SchemaFieldNameData, this.schema.id, f.name, ids[0]))
                     });
                     if (r.ok) {

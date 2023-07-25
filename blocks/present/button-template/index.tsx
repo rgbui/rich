@@ -9,16 +9,19 @@ import { Button } from "../../../component/view/button";
 import { Icon } from "../../../component/view/icon";
 import "./style.less";
 import { Divider } from "../../../component/view/grid";
-import { Edit1Svg, PlusSvg } from "../../../component/svgs";
+import { PlusSvg, SettingsSvg } from "../../../component/svgs";
 import { BlockFactory } from "../../../src/block/factory/block.factory";
 import { ActionDirective } from "../../../src/history/declare";
-import { BlockChildKey } from "../../../src/block/constant";
+import { BlockChildKey, BlockUrlConstant } from "../../../src/block/constant";
 import { Input } from "../../../component/view/input";
 import { GridMap } from "../../../src/page/grid";
 import dayjs from "dayjs";
 import weekOfYear from "dayjs/plugin/weekOfYear"
 dayjs.extend(weekOfYear);
 import { channel } from "../../../net/channel";
+import { PageBlockUtil } from "../../../src/page/common/util";
+import { getPageText } from "../../../src/page/declare";
+import { Rect } from "../../../src/common/vector/point";
 
 @url('/button/template')
 export class ButtonTemplate extends Block {
@@ -27,11 +30,12 @@ export class ButtonTemplate extends Block {
     @prop()
     content = '添加待办事项';
     display = BlockDisplay.block;
-    get multiLines() {
-        return false;
-    }
     init() {
         this.gridMap = new GridMap(this)
+    }
+    get isPanel() {
+        if (this.expand == true) return true;
+        else return false;
     }
     get appearAnchors() {
         if (this.childs.length > 0) return []
@@ -44,14 +48,32 @@ export class ButtonTemplate extends Block {
         return await TextTurns.turn(this, url);
     }
     async addTemplateInstance(event: React.MouseEvent) {
-        var bs = await this.blocks.childs.asyncMap(async (block) => await block.cloneData());
-        this.setVar(bs);
+        if (!this.isCanEdit()) {
+            return
+        }
+        var bs = await this.blocks.childs.asyncMap(async (block) => await block.cloneData({ isButtonTemplate: true }));
+        await this.setVar(bs);
         await this.page.onAction(ActionDirective.onButtonTemplateCreateInstance, async () => {
             var at = this.at;
-            await this.parent.appendArrayBlockData(bs, at + 1, this.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
+            var newBlocks = await this.parent.appendArrayBlockData(bs, at + 1, this.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
+            await PageBlockUtil.eachBlockDatas(newBlocks, async (block: Block) => {
+                if (block.url == BlockUrlConstant.Link) {
+                    var r = await channel.post('/clone/page', {
+                        pageId: (block as any).pageId,
+                        parentId: this.page.pageInfo?.id,
+                        text: block.content
+                    });
+                    if (r?.data?.items?.length > 0) {
+                        await block.updateProps({ pageId: r.data.items[0].id });
+                    }
+                }
+            })
+            this.page.addUpdateEvent(async () => {
+                this.page.kit.anchorCursor.onSelectBlocks(newBlocks, { merge: true, render: true })
+            })
         })
     }
-    private setVar(bs) {
+    private async setVar(bs) {
         var now = new Date();
         var user = channel.query('/query/current/user')
         function getC(c) {
@@ -91,19 +113,23 @@ export class ButtonTemplate extends Block {
             }
             return c;
         }
-        function setb(bs) {
+        async function setb(bs) {
             for (let i = 0; i < bs.length; i++) {
                 const b = bs[i];
                 if (b.blocks)
                     for (let n in b.blocks) {
-                        setb(b.blocks[n]);
+                        await setb(b.blocks[n]);
                     }
                 if (typeof b.content == 'string') {
+                    if (b.url == BlockUrlConstant.Link) {
+                        var r = await channel.get('/page/query/info', { id: b.pageId });
+                        b.content = getPageText(r.data);
+                    }
                     b.content = getC(b.content)
                 }
             }
         }
-        setb(bs);
+        await setb(bs);
     }
     get isSupportTextStyle(): boolean {
         return false;
@@ -123,9 +149,18 @@ export class ButtonTemplate extends Block {
     async initButtonTemplate() {
         this.blocks.childs.push(await BlockFactory.createBlock('/todo', this.page, { content: '待办' }, this));
     }
+    getVisiblePanelBound() {
+        if (this.expand && (this.view as any).templatePanel) {
+            var t = (this.view as any).templatePanel as HTMLElement;
+            return Rect.fromEle(t)
+        }
+        return null;
+    }
 }
+
 @view('/button/template')
 export class ButtonTemplateView extends BlockView<ButtonTemplate>{
+    templatePanel: HTMLElement = null;
     renderTemplate() {
         if (this.block.expand != true) return <></>;
         return <div className="sy-button-template-box">
@@ -140,7 +175,7 @@ export class ButtonTemplateView extends BlockView<ButtonTemplate>{
             </div>
             <Divider></Divider>
             <div className="sy-button-template-box-label">模板内容</div>
-            <div className="sy-button-template-box-content min-h-30">
+            <div ref={e => this.templatePanel = e} className="sy-button-template-box-content min-h-30">
                 <ChildsArea childs={this.block.blocks.childs}></ChildsArea>
             </div>
         </div>
@@ -148,8 +183,8 @@ export class ButtonTemplateView extends BlockView<ButtonTemplate>{
     render() {
         return <div style={this.block.visibleStyle}><div className='sy-button-template' >
             <div className='sy-button-template-wrapper' onMouseDown={e => e.stopPropagation()} >
-                <a className="sy-button-template-btn flex" onMouseDown={e => this.block.addTemplateInstance(e)}><Icon size={18} icon={PlusSvg}></Icon><span>{this.block.content || '添加待办事项'}</span></a>
-                <div className='sy-button-template-operator size-30 flex-center item-hover round cursor'><Icon size={16} onMousedown={e => this.block.openSettings()} icon={Edit1Svg}></Icon></div>
+                <a className="sy-button-template-btn flex" onMouseDown={e => { this.block.addTemplateInstance(e) }}><Icon size={18} icon={PlusSvg}></Icon><span>{this.block.content || '添加待办事项'}</span></a>
+                {this.block.isCanEdit() && <div className='sy-button-template-operator size-24 flex-center item-hover round cursor'><Icon size={16} onMousedown={e => this.block.openSettings()} icon={SettingsSvg}></Icon></div>}
             </div>
             {this.block.expand == true && this.renderTemplate()}
         </div></div>

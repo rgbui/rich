@@ -24,6 +24,7 @@ export class CommentView extends BlockView<Comment>{
             onMouseDown={e => e.stopPropagation()}>
             <div style={this.block.contentStyle}>
                 <CommentListView
+                page={this.props.block.page}
                     userid={this.props.block.page.user.id}
                     elementUrl={this.props.block.getCommentElementUrl()}
                     sort={this.props.block.sort as any}

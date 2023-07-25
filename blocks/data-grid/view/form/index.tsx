@@ -36,7 +36,7 @@ export class DataGridForm extends DataGridView {
     }
     async loadSchema() {
         if (this.schemaId && !this.schema) {
-            this.schema = await TableSchema.loadTableSchema(this.schemaId);
+            this.schema = await TableSchema.loadTableSchema(this.schemaId,this.page.ws);
         }
     }
     async didMounted() {
@@ -60,7 +60,7 @@ export class DataGridForm extends DataGridView {
              * 说明是禁止多次提交
              */
             if (this.schemaView.disabledUserMultiple == true) {
-                var r = await this.schema.checkSubmit();
+                var r = await this.schema.checkSubmit(this.page);
                 if (r.ok) {
                     this.isSubmit = r.data.exists;
                 }

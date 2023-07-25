@@ -87,9 +87,9 @@ export class CardPin extends CardView {
                 </div>}
                 <div className="mask-1 visible pos-inset z-1  round-16"></div>
                 <div className="pos-top-full  flex-end z-2 visible gap-t-5 r-size-24 r-gap-r-5 r-circle r-cursor">
-                    <span onMouseDown={e => openProperty(e)} className="bg-white item-white-hover   flex-center">
+                    {this.isCanEdit && <span onMouseDown={e => openProperty(e)} className="bg-white item-white-hover   flex-center">
                         <Icon size={18} icon={DotsSvg}></Icon>
-                    </span>
+                    </span>}
                 </div>
             </div>
             <div className="text-1 padding-w-8 f-14 gap-h-5 bold break-all">

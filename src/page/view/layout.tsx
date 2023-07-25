@@ -3,7 +3,6 @@ import { Page } from "..";
 import { OnlineUsers } from "../../../extensions/at/users";
 import { PageLayoutType } from "../declare";
 import { ElementType } from "../../../net/element.type";
-import { channel } from "../../../net/channel";
 
 export class PageLayoutView extends React.Component<{
     page: Page,
@@ -70,7 +69,7 @@ export class PageLayoutView extends React.Component<{
             if (props.page.showMembers) {
                 return <div className="flex flex-top" style={{ width: '100%', height: mh }}>
                     <div className="flex-auto white" style={style}>{props.children}</div>
-                    <div className="flex-fix w-250" style={{ height: mh }}><OnlineUsers></OnlineUsers></div>
+                    <div className="flex-fix w-250" style={{ height: mh }}><OnlineUsers ws={this.props.page.ws}></OnlineUsers></div>
                 </div>
             }
             else return <div className={"shy-page-layout shy-page-layout-text-channel"} style={{ width: '100%', height: mh }}>
@@ -96,7 +95,7 @@ export class PageLayoutView extends React.Component<{
                     {this.error}
                 </div>
                 <div className="flex-center remark">
-                    <span><a  className="cursor" onClick={e => location.reload()}>刷新</a>或通过<a  className="cursor"  onClick={e => this.props.page.onOpenHistory()}>历史记录</a>找回</span>
+                    <span><a className="cursor" onClick={e => location.reload()}>刷新</a>或通过<a className="cursor" onClick={e => this.props.page.onOpenHistory()}>历史记录</a>找回</span>
                 </div>
             </div>
         }
@@ -110,7 +109,7 @@ export class PageLayoutView extends React.Component<{
                 没有查到数据表格，请确认是否存在网络问题，还是已经删除了
             </div>
             <div className="flex-center remark">
-                <span><a className="cursor" onClick={e => location.reload()}>刷新</a>或<a  className="cursor"  onClick={async e => {
+                <span><a className="cursor" onClick={e => location.reload()}>刷新</a>或<a className="cursor" onClick={async e => {
                     this.props.page.onPageRemove()
                 }}>删除页面</a></span>
             </div>

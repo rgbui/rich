@@ -6,7 +6,6 @@ import { PopoverSingleton } from "../../popover/popover";
 import { PopoverPosition } from "../../popover/position";
 import CloseTick from "../../../src/assert/svg/closeTick.svg";
 import './style.less';
-import { Remark } from "../../../component/view/text";
 import DragHandle from "../../../src/assert/svg/dragHandle.svg";
 import Dots from "../../../src/assert/svg/dots.svg";
 import { MenuItemType } from "../../../component/view/menu/declare";
@@ -20,6 +19,7 @@ import { Confirm } from "../../../component/lib/confirm";
 import { ShyAlert } from "../../../component/lib/alert";
 import { DragList } from "../../../component/view/drag.list";
 import { DataGridOptionType } from "../../../blocks/data-grid/schema/field";
+
 /**
  * 
  * 背景色
@@ -74,16 +74,24 @@ export class TableStoreOption extends EventsComponent {
         }
         return <div className="shy-tablestore-option-selector">
             <div className="shy-tablestore-option-selector-input">
-                {this.option && <a style={{ backgroundColor: this.option.color }}><span>{this.option.text}</span><em><CloseTick onClick={e => self.clearOption()}></CloseTick></em></a>}
+                {this.ovs.map(ov => {
+                    return <a key={ov.value} style={{ backgroundColor: ov.color }}><span className="max-w-80 text-overflow inline-block">{ov.text}</span><em><CloseTick onClick={e => {
+                        if (self.multiple) {
+                            lodash.remove(self.ovs, o => o.value == ov.value);
+                            self.forceUpdate()
+                        }
+                        else self.clearOption()
+                    }}></CloseTick></em></a>
+                })}
                 <div className="shy-tablestore-option-selector-input-wrapper"><input ref={e => this.input = e} maxLength={this.value.length + 3} value={this.value} onInput={e => changeInput(e)} onKeyDown={e => keydown(e.nativeEvent)} /></div>
             </div>
             <div className="shy-tablestore-option-selector-drop overflow-y max-h-180">
-                <Remark style={{ height: 20, margin: '8px 0px', padding: '0px 10px' }}>{this.filterOptions.length > 0 ? '选择或创建一个选项' : '暂无选项'}</Remark>
+                <div className="remark" style={{ height: 20, margin: '8px 0px', padding: '0px 10px' }}>{this.filterOptions.length > 0 ? '选择或创建一个选项' : '暂无选项'}</div>
                 <DragList onChange={change} isDragBar={e => e.closest('.shy-tablestore-option-item-icon') ? true : false}>
                     {this.filterOptions.map(op => {
                         return <div className="shy-tablestore-option-item" key={op.text} onClick={e => this.setOption(op)} >
                             <span className="shy-tablestore-option-item-icon"><DragHandle></DragHandle></span>
-                            <span className="shy-tablestore-option-item-text"><em style={{ backgroundColor: op.color }}>{op.text}</em></span>
+                            <span className="shy-tablestore-option-item-text text-overflow"><em style={{ backgroundColor: op.color }}>{op.text}</em></span>
                             <span className="shy-tablestore-option-item-property" onClick={e => this.configOption(op, e)}><Dots></Dots></span>
                         </div>
                     })}
@@ -109,45 +117,50 @@ export class TableStoreOption extends EventsComponent {
         var text = this.value.trim();
         this.value = '';
         if (!this.options.some(s => s.text == text)) {
-            this.option = { value: util.guid(), text: text, color: this.optionColor };
-            this.options.push(this.option);
+            var op = { value: util.guid(), text: text, color: this.optionColor };
+            this.options.push(op);
             this.emit('changeOptions', lodash.cloneDeep(this.options))
-            this.setOption(this.option);
+            this.setOption(op);
         }
         else if (this.value != text) {
             this.forceUpdate();
         }
     }
     setOption(option: DataGridOptionType) {
-        this.option = option;
-        if (!this.option.value) {
-            this.option.value = util.guid();
-            this.emit('changeOptions', lodash.cloneDeep(this.options));
+        if (this.multiple) {
+            if (!this.ovs.includes(option)) this.ovs.push(option);
         }
+        else this.ovs = [option];
         this.forceUpdate();
-        this.emit('save', this.option.value);
+        if (!this.multiple) this.emit('save', this.ovs.map(v => v.value));
     }
     onlyClearOption() {
         this.value = '';
-        this.option = null;
+        this.ovs = [];
         this.forceUpdate();
     }
     clearOption() {
         this.value = '';
-        this.option = null;
+        this.ovs = [];
         this.forceUpdate();
-        this.emit('save', '');
+        this.emit('save', []);
     }
     private value: string = '';
     private options: DataGridOptionType[] = [];
-    private option: DataGridOptionType = null;
+    ovs: DataGridOptionType[] = [];
     input: HTMLInputElement;
+    multiple: boolean = false;
     open(value, data: { multiple: boolean, options: DataGridOptionType[] }) {
-        this.option = data.options.find(g => g.value == value);
+        this.multiple = data.multiple ? true : false;
+        if (this.multiple) {
+            var v = util.covertToArray(value);
+            this.ovs = data.options.filter(g => v.some(s => s == g.value));
+        }
+        else this.ovs = data.options.filter(g => g.value == value);
         this.options = data.options;
         this.value = '';
         this.forceUpdate(async () => {
-            await util.delay(30);
+            await util.delay(10);
             if (this.input) this.input.focus();
             this.emit('update');
         });
@@ -169,7 +182,7 @@ export class TableStoreOption extends EventsComponent {
                     render(item) {
                         return <div className="flex padding-w-14 h-30 item-hover cursor">
                             <span className="flex-fixed size-20 round gap-r-10 border" style={{ backgroundColor: item.value }}></span>
-                            <span className="flex-auto text f-14">{b.text}</span>
+                            <span className="flex-auto text f-14 text-overflow">{b.text}</span>
                             {option.color == item.value &&
                                 <span className="flex-fixed size-24 flex-center"><Icon size={16} icon={CheckSvg}></Icon></span>
                             }
@@ -221,10 +234,10 @@ export async function useTableStoreOption(pos: PopoverPosition,
         popover.updateLayout()
     })
     fv.open(value, options);
-    return new Promise((resolve: (data: { text: string, type: FieldType }) => void, reject) => {
+    return new Promise((resolve: (data: DataGridOptionType[]) => void, reject) => {
         fv.only('save', (value) => {
             popover.close();
-            resolve(value);
+            resolve(fv.ovs);
         });
         fv.only('input', (ops: TableStoreOption[]) => {
 
@@ -234,10 +247,14 @@ export async function useTableStoreOption(pos: PopoverPosition,
         });
         fv.only('close', () => {
             popover.close();
-            resolve(null);
+            if (options.multiple)
+                resolve(fv.ovs);
+            else resolve(null)
         });
         popover.only('close', () => {
-            resolve(null)
+            if (options.multiple)
+                resolve(fv.ovs);
+            else resolve(null)
         });
     })
 }

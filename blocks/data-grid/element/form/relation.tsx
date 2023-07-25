@@ -18,12 +18,12 @@ class FormFieldRelation extends OriginFormField {
     relationSchema: TableSchema;
     relationList: any[] = [];
     async loadFieldData() {
-        this.relationSchema = await TableSchema.loadTableSchema(this.field.config?.relationTableId);
+        this.relationSchema = await TableSchema.loadTableSchema(this.field.config?.relationTableId,this.page.ws);
         if (Array.isArray(this.value) && this.value.length > 0) {
             var d = await this.relationSchema.all({
                 page: 1,
                 filter: { id: { $in: this.value } }
-            });
+            },this.page);
             if (d.ok) {
                 this.relationList = d.data.list;
             }
@@ -39,7 +39,8 @@ class FormFieldRelation extends OriginFormField {
             field: this.field,
             relationDatas: this.relationList,
             isMultiple: this.field.config.isMultiple,
-            relationSchema: this.relationSchema
+            relationSchema: this.relationSchema,
+            page:this.page
         });
         if (r) {
             var ids = r.map(r => r.id);

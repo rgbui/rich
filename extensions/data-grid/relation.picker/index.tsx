@@ -17,6 +17,7 @@ import { Avatar } from "../../../component/view/avator/face";
 import { UserAvatars } from "../../../component/view/avator/users";
 import { Pagination } from "../../../component/view/pagination";
 import { Input } from "../../../component/view/input";
+import { Page } from "../../../src/page";
 
 class RelationPicker extends EventsComponent {
     render(): React.ReactNode {
@@ -185,12 +186,15 @@ class RelationPicker extends EventsComponent {
     relationDatas: any[] = [];
     isMultiple: boolean;
     relationSchema: TableSchema;
+    page:Page;
     async open(options: {
         relationDatas: { id: string }[],
         relationSchema: TableSchema,
         field: Field,
-        isMultiple?: boolean
+        isMultiple?: boolean,
+        page:Page
     }) {
+        this.page=options.page;
         this.isChange = false;
         this.field = options.field;
         this.relationDatas = options.relationDatas;
@@ -206,7 +210,7 @@ class RelationPicker extends EventsComponent {
             page: this.seachList.page,
             size: this.seachList.size,
             filter: this.seachList.word ? { title: this.seachList.word } : undefined
-        });
+        },this.page);
         if (dr.ok) {
             this.seachList.list = dr.data.list;
             this.seachList.total = dr.data.total;
@@ -228,7 +232,8 @@ export async function useRelationPickData(pos: PopoverPosition,
         relationDatas: { id: string }[],
         relationSchema: TableSchema,
         field: Field,
-        isMultiple?: boolean
+        isMultiple?: boolean,
+        page:Page
     }) {
     let popover = await PopoverSingleton(RelationPicker, { mask: true });
     let fv = await popover.open(pos);

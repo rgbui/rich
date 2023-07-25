@@ -35,7 +35,8 @@ export class FieldRelation extends OriginField {
             field: this.viewField.field,
             relationDatas: this.relationList,
             isMultiple: this.viewField.field.config.isMultiple,
-            relationSchema: this.relationSchema
+            relationSchema: this.relationSchema,
+            page:this.page
         });
         if (r) {
             var ids = r.map(r => r.id);

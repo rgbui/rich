@@ -26,10 +26,10 @@ export class TableStoreBoard extends DataGridView {
         if (this.groupField) {
             if (this.schema) {
                 var name = this.groupField.name;
-                var r = await this.schema.group({ group: name });
+                var r = await this.schema.group({ group: name },this.page);
                 if (r.data) {
                     var keys = r.data.list.map(l => l[name]);
-                    var rl = await this.schema.all({ page: 1, filter: { [name]: { $in: keys } } });
+                    var rl = await this.schema.all({ page: 1, filter: { [name]: { $in: keys } } },this.page);
                     this.data = rl.data.list;
                     if (this.groupField.type == FieldType.options || this.groupField.type == FieldType.option) {
                         var ops = this.groupField.config.options || [];

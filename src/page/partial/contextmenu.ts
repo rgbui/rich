@@ -458,9 +458,10 @@ export class PageContextmenu {
         });
         var tgd = tg.data?.template || {};
         var rf = await useForm({
+            maskCloseNotSave: true,
             title: '申请模板',
             model: {
-                mime: tgd['mime'],
+                mime: util.covertToArray(tgd['mime']),
                 classify: tgd['classify'],
                 tags: tgd['tags'],
                 previewCover: tgd['previewCover']
@@ -471,6 +472,7 @@ export class PageContextmenu {
                 {
                     name: 'mime',
                     text: '类型',
+                    multiple: true,
                     type: 'select',
                     options: [
                         { text: '页面', value: 'page' },
@@ -501,7 +503,7 @@ export class PageContextmenu {
                     name: 'previewCover',
                     text: '封面图',
                     type: "file",
-                    mime:'image'
+                    mime: 'image'
                 }
             ]
         })

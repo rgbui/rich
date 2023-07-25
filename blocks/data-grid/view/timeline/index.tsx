@@ -47,7 +47,7 @@ export class TableStoreCalendar extends DataGridView {
                 var r = await this.schema.list({
                     page: 1,
                     filter: { [name]: { $gte: new Date(this.startDate), $lte: new Date(this.endDate) } }
-                });
+                },this.page);
                 if (r.ok) {
                     this.data = r.data.list;
                     r.data.list.forEach(row => {

@@ -34,7 +34,7 @@ export class ShyMentionView extends BlockView<ShyMention>{
         DragBlockLine(this.block, event);
     }
     async openUser(event: React.MouseEvent) {
-        var r = await useUserPicker({ roundArea: Rect.fromEvent(event) });
+        var r = await useUserPicker({ roundArea: Rect.fromEvent(event) },this.block.page?.ws);
         if (r) {
             this.block.onUpdateProps({ userid: r.id })
         }

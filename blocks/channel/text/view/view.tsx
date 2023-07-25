@@ -265,7 +265,7 @@ export class ChannelTextView extends BlockView<ChannelText>{
         </div>
     }
     searchUser = async (text: string) => {
-        var r = await channel.get('/ws/member/word/query', { word: text });
+        var r = await channel.get('/ws/member/word/query', { word: text,ws:this.block.page.ws });
         if (r.ok) {
             return r.data.list.map(c => {
                 return {

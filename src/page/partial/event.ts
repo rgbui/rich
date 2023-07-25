@@ -132,52 +132,60 @@ export class PageEvent {
                 await this.snapshoot.redo();
             })
     }
+    async turnLayout(this: Page,
+        layoutType: PageLayoutType) {
+        this.updateProps({ requireSelectLayout: false })
+        var old_page = await this.get();
+        switch (layoutType) {
+            case PageLayoutType.doc:
+                this.pageLayout.type = layoutType;
+                break;
+            case PageLayoutType.db:
+                this.pageLayout.type = layoutType;
+                var view = this.views[0];
+                var schema = await TableSchema.onCreate({
+                    text: this.pageInfo?.text || '表格',
+                    url: BlockUrlConstant.DataGridTable
+                });
+                await this.createBlock('/data-grid/table', {
+                    schemaId: schema.id,
+                    syncBlockId: schema.views.find(g => ![BlockUrlConstant.RecordPageView, BlockUrlConstant.FormView].includes(g.url as any))?.id
+                }, view);
+                break;
+            case PageLayoutType.docCard:
+                this.pageLayout.type = layoutType;
+                this.views = [];
+                await this.loadDefaultData();
+                break;
+            case PageLayoutType.board:
+                var view = this.views[0];
+                await view.childs.eachAsync(async block => {
+                    await block.delete()
+                })
+                this.pageLayout.type = layoutType;
+                break;
+            case PageLayoutType.textChannel:
+                this.pageLayout.type = layoutType;
+                var view = this.views[0];
+                await view.childs.eachAsync(async block => {
+                    await block.delete()
+                })
+                await this.createBlock(BlockUrlConstant.TextChannel, {}, view);
+                break;
+        }
+        var new_page = await this.get();
+        this.snapshoot.record(OperatorDirective.pageTurnLayout, {
+            old: PageLayoutType.doc,
+            new: layoutType,
+            old_page_data: old_page,
+            new_page_data: new_page,
+        }, this);
+    }
     async onPageTurnLayout(this: Page,
         layoutType: PageLayoutType,
         actions?: () => Promise<void>) {
         await this.onAction(ActionDirective.onPageTurnLayout, async () => {
-            this.requireSelectLayout = false;
-            this.snapshoot.record(OperatorDirective.pageTurnLayout, {
-                old: PageLayoutType.doc,
-                new: layoutType
-            }, this);
-            switch (layoutType) {
-                case PageLayoutType.doc:
-                    this.pageLayout.type = layoutType;
-                    break;
-                case PageLayoutType.db:
-                    this.pageLayout.type = layoutType;
-                    var view = this.views[0];
-                    var schema = await TableSchema.onCreate({
-                        text: this.pageInfo?.text || '表格',
-                        url: BlockUrlConstant.DataGridTable
-                    });
-                    await this.createBlock('/data-grid/table', {
-                        schemaId: schema.id,
-                        syncBlockId: schema.views.find(g => ![BlockUrlConstant.RecordPageView, BlockUrlConstant.FormView].includes(g.url as any))?.id
-                    }, view);
-                    break;
-                case PageLayoutType.docCard:
-                    this.pageLayout.type = layoutType;
-                    this.views = [];
-                    await this.loadDefaultData();
-                    break;
-                case PageLayoutType.board:
-                    var view = this.views[0];
-                    await view.childs.eachAsync(async block => {
-                        await block.delete()
-                    })
-                    this.pageLayout.type = layoutType;
-                    break;
-                case PageLayoutType.textChannel:
-                    this.pageLayout.type = layoutType;
-                    var view = this.views[0];
-                    await view.childs.eachAsync(async block => {
-                        await block.delete()
-                    })
-                    await this.createBlock(BlockUrlConstant.TextChannel, {}, view);
-                    break;
-            }
+            await this.turnLayout(layoutType);
             await channel.air('/page/update/info', { id: this.pageInfo?.id, pageInfo: { pageType: this.pageLayout.type } });
             this.emit(PageDirective.changePageLayout);
             if (typeof actions == 'function') await actions();
@@ -319,7 +327,7 @@ export class PageEvent {
         }
         else {
             if (this.pe.type == ElementType.Schema) {
-                var schema = await TableSchema.loadTableSchema(this.pe.id);
+                var schema = await TableSchema.loadTableSchema(this.pe.id, this.ws);
                 console.log(schema, this.pe.id);
                 var props = lodash.pick(data, ['icon', 'description', 'text'])
                 if (schema && Object.keys(props).length > 0)
@@ -349,10 +357,10 @@ export class PageEvent {
             }
         }
         else {
-            console.log('ep', this.elementUrl, this.pageInfo, this.pageInfo?.id, this.pe.id);
-            if (this.pe.type == ElementType.Schema) {
-                var schema = await TableSchema.loadTableSchema(this.pe.id);
-                console.log('sche',this.schema, schema);
+            window.shyLog('ep', this.elementUrl, this.pageInfo, this.pageInfo?.id, this.pe.id);
+            if(this.pe.type == ElementType.Schema) {
+                var schema = await TableSchema.loadTableSchema(this.pe.id, this.ws);
+                window.shyLog('sche', this.schema, schema);
                 if (schema)
                     schema.update({ text })
             }

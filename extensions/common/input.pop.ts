@@ -5,6 +5,7 @@ import { KeyboardCode } from "../../src/common/keys";
 import { SearchListType } from "../../component/types";
 import lodash from "lodash";
 import ReactDOM from "react-dom";
+import { Page } from "../../src/page";
 
 export enum InputTextPopSelectorType {
     BlockSelector,
@@ -32,7 +33,9 @@ export class InputTextPopSelector<T = any> extends React.Component {
     allList: SearchListType<T> = { list: [], total: 0, page: 1, size: 500 };
     itemHoverSelector = '.item-hover-focus';
     _select: (...args: any[]) => void;
-    async open(round: Rect, text: string, callback: (...args: any[]) => void, options?: Record<string, any>) {
+    page: Page;
+    async open(round: Rect, text: string, callback: (...args: any[]) => void, page: Page) {
+        this.page = page;
         if ((!text || text && this.prefix[0].length > 1 && this.prefix.map(c => c.slice(0, 1)).some(g => g == text)) && this.visible) {
             this.close()
             return this.visible
@@ -77,7 +80,7 @@ export class InputTextPopSelector<T = any> extends React.Component {
         return this.visible;
     }
     keydown(event: KeyboardEvent) {
-        if (this.selectIndex == this.getListCount()-1 + this.selectDeep) {
+        if (this.selectIndex == this.getListCount() - 1 + this.selectDeep) {
             this.selectIndex = 0;
         }
         else this.selectIndex += 1;
@@ -86,7 +89,7 @@ export class InputTextPopSelector<T = any> extends React.Component {
     }
     keyup(event: KeyboardEvent) {
         if (this.selectIndex == 0) {
-            this.selectIndex =this.getListCount()- 1 + this.selectDeep;
+            this.selectIndex = this.getListCount() - 1 + this.selectDeep;
         }
         else this.selectIndex -= 1;
         this.forceUpdate()
@@ -157,7 +160,7 @@ export class InputTextPopSelector<T = any> extends React.Component {
     getContentEl() {
         return this.el;
     }
-    getListCount(){
+    getListCount() {
         return this.list.length;
     }
     adjuctPosition() {

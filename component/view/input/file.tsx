@@ -21,6 +21,16 @@ export class FileInput extends React.Component<{
                 self.props.onChange(r);
             }
         }
+        var text = '上传文件'
+        if (this.props.mime == 'image') {
+            text = '上传图片'
+        }
+        else if (this.props.mime == 'audio') {
+            text = '上传音频'
+        }
+        else if (this.props.mime == 'video') {
+            text = '上传视频'
+        }
         return <div className="flex">
             {this.props.value && this.props.mime == 'image' && <span onMouseDown={e => uploadFile(e)} className="flex flex-inline item-hover round padding-w-5 padding-h-2 relative">
                 <img className="max-w-100 max-w-180 max-h-120 obj-center" src={this.props.value.url}></img>
@@ -28,8 +38,7 @@ export class FileInput extends React.Component<{
                     <span onClick={e => {
                         e.stopPropagation();
                         this.props.onChange(null);
-                    }}
-                        className="size-24 flex-center cursor item-hover"><Icon size={12} icon={CloseSvg}></Icon></span>
+                    }} className="size-24 flex-center cursor item-hover"><Icon size={12} icon={CloseSvg}></Icon></span>
                 </div>
             </span>}
             {this.props.value && this.props.mime != 'image' && <span onMouseDown={e => uploadFile(e)} className="flex flex-inline item-hover round padding-w-5 padding-h-2">
@@ -39,7 +48,7 @@ export class FileInput extends React.Component<{
                     this.props.onChange(null);
                 }} icon={CloseSvg}></Icon>
             </span>}
-            {!this.props.value && <span onMouseDown={e => uploadFile(e)} className="flex flex-inline item-hover round padding-w-5 padding-h-2">上传文件</span>}
+            {!this.props.value && <span onMouseDown={e => uploadFile(e)} className="flex flex-inline item-hover round padding-w-5 padding-h-2">{text}</span>}
         </div>
     }
 }

@@ -11,6 +11,7 @@ import { KeyboardCode } from "../../src/common/keys";
 import { Divider } from "../../component/view/grid";
 import { Input } from "../../component/view/input";
 import { Spin } from "../../component/view/spin";
+import { LinkWs } from "../../src/page/declare";
 
 
 export class UserPicker extends EventsComponent {
@@ -28,7 +29,7 @@ export class UserPicker extends EventsComponent {
                 {this.loading && <Spin></Spin>}
                 {!this.loading && this.links.map((link, i) => {
                     return <div onMouseDown={e => this.onSelect(link)} className={"h-40 padding-w-14 flex item-hover round cursor" + ((i) == this.selectIndex ? " item-hover-focus" : "")} key={link.id}>
-                        <Avatar size={30} showName  userid={(link as any).id}></Avatar>
+                        <Avatar size={30} showName userid={(link as any).id}></Avatar>
                         <span className="gap-l-10">{link.name}</span>
                     </div>
                 })}
@@ -79,7 +80,7 @@ export class UserPicker extends EventsComponent {
         this.loading = true;
         this.forceUpdate();
         if (this.text) {
-            var r = await channel.get('/ws/member/word/query', { word: this.text });
+            var r = await channel.get('/ws/member/word/query', { word: this.text ,ws:this.ws});
             if (r.ok) {
                 this.links = r.data.list.map(c => {
                     return {
@@ -97,7 +98,9 @@ export class UserPicker extends EventsComponent {
         this.forceUpdate();
     }, 1000)
     defaultList: UserBasic[] = [];
-    open() {
+    ws: LinkWs;
+    open(ws) {
+        this.ws = ws;
         this.loading = true;
         this.text = '';
         if (this.inputEl) this.inputEl.updateValue('');
@@ -124,7 +127,8 @@ export class UserPicker extends EventsComponent {
     async load() {
         var r = await channel.get('/ws/members', {
             page: 1,
-            size: 200
+            size: 200,
+            ws: this.ws
         });
         if (r.ok) {
             this.links = r.data.list.map(g => {
@@ -138,10 +142,10 @@ export class UserPicker extends EventsComponent {
     }
 }
 
-export async function useUserPicker(pos: PopoverPosition, options?: {}) {
+export async function useUserPicker(pos: PopoverPosition, ws: LinkWs) {
     let popover = await PopoverSingleton(UserPicker, { mask: true });
     let fv = await popover.open(pos);
-    fv.open();
+    fv.open(ws);
     return new Promise((resolve: (data: UserBasic) => void, reject) => {
         fv.only('change', (value) => {
             popover.close();

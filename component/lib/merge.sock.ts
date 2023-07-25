@@ -7,8 +7,8 @@ export class MergeSock {
     private wait: number = 5;
     private maxCount: number = 30;
     private time;
-    private events: { id: string, args: any, callback?: (err, data) => void }[] = [];
-    private handle: (batchs: { id: string, args?: any }[]) => Promise<{ id: string, data: Record<string, any> }[]>
+    private events: { id: string, args: any[], callback?: (err, data) => void }[] = [];
+    private handle: (batchs: { id: string, args?: any[] }[]) => Promise<{ id: string, data: Record<string, any> }[]>
     constructor(handle: MergeSock['handle'], wait?: number, maxCount?: number) {
         this.handle = handle;
         if (typeof wait != 'undefined') this.wait = wait;

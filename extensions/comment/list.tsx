@@ -19,8 +19,10 @@ import { util } from "../../util/util";
 import { useOpenEmoji } from "../emoji";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
+import { Page } from "../../src/page";
 
 export class CommentListView extends React.Component<{
+    page: Page,
     userid: string;
     elementUrl: string;
     sort?: 'default' | 'date',
@@ -155,7 +157,8 @@ export class CommentListView extends React.Component<{
             parentId: l.id,
             sort: l.id ? 'default' : 'date',
             page: 1,
-            size: 200
+            size: 200,
+            ws: this.props.page?.ws,
         });
         if (r?.ok) {
             l.replys = r.data;
@@ -183,7 +186,8 @@ export class CommentListView extends React.Component<{
                 parentId: null,
                 sort: this.sort as any,
                 page: this.index,
-                size: this.size
+                size: this.size,
+                ws: this.props.page?.ws,
             });
             if (r.ok) {
                 this.list = r.data.list;

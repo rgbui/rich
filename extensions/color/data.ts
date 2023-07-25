@@ -19,7 +19,7 @@ export var FontColorList = [
  * 背景色
  */
 export var BackgroundColorList = [
-    { color: 'rgb(255,255,255,0)', text: '默认' },
+    { color: 'rgba(255,255,255,0)', text: '默认' },
     { color: 'rgba(237,233,235,0.5)', text: '白灰' },
     { color: 'rgba(217,211,215,0.5)', text: '暗银' },
     { color: 'rgba(247,214,183,0.5)', text: '幼杏' },

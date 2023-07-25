@@ -3,8 +3,9 @@ import { Avatar } from "../../component/view/avator/face";
 import { UserBasic } from "../../types/user"
 import { channel } from "../../net/channel";
 import { Spin } from "../../component/view/spin";
+import { LinkWs } from "../../src/page/declare";
 
-export class OnlineUsers extends React.Component {
+export class OnlineUsers extends React.Component<{ ws: LinkWs }> {
     componentDidMount(): void {
         this.loadUsers();
     }
@@ -14,6 +15,7 @@ export class OnlineUsers extends React.Component {
             this.searchQuery.loading = true;
             this.forceUpdate()
             var r = await channel.get('/ws/members', {
+                ws: this.props.ws,
                 page: this.searchQuery.page,
                 size: this.searchQuery.size
             });

@@ -24,7 +24,7 @@ export class Link extends Block {
     }
     async loadPageInfo() {
         if (this.pageId) {
-            var r = await channel.get('/page/query/info', { id: this.pageId });
+            var r = await channel.get('/page/query/info', { ws: this.page.ws, id: this.pageId });
             if (r?.ok) {
                 this.pageInfo = lodash.cloneDeep(r.data);
                 this.forceUpdate();
@@ -37,7 +37,7 @@ export class Link extends Block {
         channel.air('/page/open', { item: this.pageId });
     }
     async getMd() {
-        var ws =this.page.ws;
+        var ws = this.page.ws;
         return `[${this.pageInfo?.text}](${ws.url + '/page/' + this.pageInfo?.sn})`
     }
 }
@@ -53,7 +53,7 @@ export class LinkView extends BlockView<Link>{
             var isUpdate: boolean = false;
             if (!lodash.isEqual(lodash.pick(this.block.pageInfo, ['text', 'icon']), lodash.pick(pageInfo, ['text', 'icon']))) {
                 isUpdate = true;
-                this.block.pageInfo = lodash.cloneDeep(pageInfo)
+                this.block.pageInfo = lodash.cloneDeep(pageInfo);
             }
             if (isUpdate)
                 this.forceUpdate();
@@ -63,6 +63,7 @@ export class LinkView extends BlockView<Link>{
         channel.off('/page/update/info', this.updatePageInfo);
     }
     render() {
+
         return <div style={this.block.visibleStyle}><div className='sy-block-link'>
             {this.block.pageInfo &&
                 <a style={this.block.contentStyle} href={this.block.pageInfo.url} onClick={e => this.block.openPage(e)}>
