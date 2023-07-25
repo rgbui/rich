@@ -32,7 +32,7 @@ export interface PageTemplateType {
     sourceElementUrl?: string
 }
 
-export class TemplateView extends EventsComponent {
+export class TemplateView extends EventsComponent<{ isOrg?: boolean }> {
     renderSide() {
         return <div
             style={{
@@ -59,7 +59,9 @@ export class TemplateView extends EventsComponent {
                             if (c.visible == false) return <div key={k}></div>
                             return <div key={k}
                                 onMouseDown={e => {
-                                    this.templateList.type = c.text;
+                                    if (this.templateList.type == c.text)
+                                        this.templateList.type = '';
+                                    else this.templateList.type = c.text;
                                     this.onSearch();
                                 }}
                                 className={"h-30 flex round cursor item-hover-light padding-l-40 padding-r-10" + (this.templateList.type == c.text ? " item-hover-focus" : "")}>{c.text}</div>
@@ -70,9 +72,13 @@ export class TemplateView extends EventsComponent {
         </div>
     }
     typeGroups = PageTemplateTypeGroups;
+    setMime(mime) {
+        if (this.templateList.mime == mime) this.templateList.mime = '';
+        else this.templateList.mime = mime;
+        this.onSearch()
+    }
     renderContent() {
-        if (this.currentPageTemplate)
-        {
+        if (this.currentPageTemplate) {
             return <div className="flex-auto relative flex flex-col flex-full">
                 <div className="flex-fixed h-40 border-bottom flex gap-l-10">
                     <ToolTip overlay={'返回'}><span className="flex-fixed size-24 item-hover cursor round flex-center" onClick={e => {
@@ -81,7 +87,7 @@ export class TemplateView extends EventsComponent {
                     }}><Icon size={20} icon={ChevronLeftSvg}></Icon></span></ToolTip>
                     <span className="flex-fixed bold f-14 max-w-180 text-overflow">{this.currentPageTemplate?.text}</span>
                     <span className="flex-auto flex-end gap-r-10">
-                        <Button onClick={e => this.onPreview(this.currentPageTemplate)}>使用模板</Button>
+                        {!this.props.isOrg && <Button onClick={e => this.onPreview(this.currentPageTemplate)}>使用模板</Button>}
                     </span>
                 </div>
                 <div className="relative flex-auto">
@@ -92,24 +98,23 @@ export class TemplateView extends EventsComponent {
                 </div>
             </div>
         }
-        return <div className="flex-auto overflow-y">
+        return <div className="flex-auto overflow-y padding-r-10">
             <div className="flex r-flex-center f-16 r-gap-10 r-padding-w-10 r-padding-h-5 r-round r-cursor r-item-hover ">
                 <span className={this.templateList.mime == 'page' ? "item-hover-focus" : ""} onMouseDown={e => {
-                    this.templateList.mime = 'page';
-                    this.onSearch()
+                    this.setMime('page')
                 }}><Icon icon={PageSvg}></Icon><em>页面</em></span>
-                <span className={this.templateList.mime == 'db' ? "item-hover-focus" : ""} onMouseDown={e => { this.templateList.mime = 'db'; this.onSearch() }}><Icon icon={CollectTableSvg}></Icon><em>数据表格</em></span>
-                <span className={this.templateList.mime == 'channel' ? "item-hover-focus" : ""} onMouseDown={e => { this.templateList.mime = 'channel'; this.onSearch() }}><Icon icon={TopicSvg}></Icon><em>频道</em></span>
-                <span className={this.templateList.mime == 'ppt' ? "item-hover-focus" : ""} onMouseDown={e => { this.templateList.mime = 'ppt'; this.onSearch() }}><Icon icon={DocCardsSvg}></Icon><em>宣传页</em></span>
+                <span className={this.templateList.mime == 'db' ? "item-hover-focus" : ""} onMouseDown={e => { this.setMime('db') }}><Icon icon={CollectTableSvg}></Icon><em>数据表格</em></span>
+                <span className={this.templateList.mime == 'channel' ? "item-hover-focus" : ""} onMouseDown={e => { this.setMime('channel') }}><Icon icon={TopicSvg}></Icon><em>频道</em></span>
+                <span className={this.templateList.mime == 'ppt' ? "item-hover-focus" : ""} onMouseDown={e => { this.setMime('ppt') }}><Icon icon={DocCardsSvg}></Icon><em>宣传页</em></span>
             </div>
             <div className="flex flex-start flex-wrap">
                 {this.templateList.list.map(tl => {
-                    return <div key={tl.id} onClick={e => { this.onPreview(tl) }} className="w-300 padding-10 round item-hover visible-hover gap-l-10 gap-b-10 round">
-                        <div className="relative">
+                    return <div key={tl.id} onClick={e => { this.onPreview(tl) }} className="w33-10  box-border visible-hover gap-l-10 gap-b-10 round">
+                        <div className="relative border  round  ">
                             <img className="w100 h-180 object-center" src={autoImageUrl(tl.previewCover?.url, 500)} />
                             <div className="pos-bottom-full visible flex-end r-gap-l-10">
                                 <Button onClick={e => this.onPreview(tl)}>预览</Button>
-                                <Button onClick={e => { e.stopPropagation(); this.onSelect(tl); }}>使用</Button>
+                                {!this.props.isOrg && <Button onClick={e => { e.stopPropagation(); this.onSelect(tl); }}>使用</Button>}
                             </div>
                         </div>
                         <div className="flex gap-t-10">
@@ -127,7 +132,7 @@ export class TemplateView extends EventsComponent {
             this.templateList.loading = true;
             this.forceUpdate();
             var rs = await channel.get('/search/workspace/template', {
-                classify: this.templateList.type,
+                classify: this.templateList.type || undefined,
                 tags: this.templateList.tags,
                 mime: this.templateList.mime,
                 page: this.templateList.page,
@@ -154,7 +159,7 @@ export class TemplateView extends EventsComponent {
         this.emit('save', pageTemplate);
     }
     render(): React.ReactNode {
-        return <div className="vw80-max min-w-1200 h-500 vh80-max">
+        return <div className={this.props.isOrg ? "user-none padding-t-20" : "vw80-max min-w-1200 h-500 vh80-max user-none"}>
             <div className="flex flex-full h100">
                 {this.renderSide()}
                 {this.renderContent()}
@@ -162,13 +167,16 @@ export class TemplateView extends EventsComponent {
         </div>
     }
     open() {
-        this.onSearch();
-        this.forceUpdate();
+        this.templateList = { type: '', mime: 'page', loading: false, tags: [], total: 0, list: [], page: 1, size: 20 }
+        this.onSearch()
     }
     currentPageTemplate: PageTemplateType = null;
     onPreview(pageTemplate: PageTemplateType) {
         this.currentPageTemplate = pageTemplate;
         this.forceUpdate();
+    }
+    componentDidMount(): void {
+        this.onSearch();
     }
 }
 
