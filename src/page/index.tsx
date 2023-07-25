@@ -65,7 +65,7 @@ export class Page extends Events<PageDirective>{
     get user() {
         return channel.query('/query/current/user');
     }
-    ws:LinkWs;
+    ws: LinkWs;
     get isSign() {
         return this.user?.id ? true : false
     }
@@ -103,7 +103,7 @@ export class Page extends Events<PageDirective>{
      */
     onlyDisplayContent: boolean = false;
     isPageContent: boolean = false;
-    bar=true;
+    bar = true;
     get windowMatrix() {
         var rect = Rect.fromEle(this.viewEl);
         var matrix = new Matrix();
@@ -366,7 +366,7 @@ export class Page extends Events<PageDirective>{
     }
     get lineHeight() {
         if (this.pageLayout?.type == PageLayoutType.docCard) return this.smallFont ? 26 : 30
-        return this.smallFont ? 23 : 26
+        return this.smallFont ? 22 : 26
     }
     private _pe: {
         type: ElementType;

@@ -24,7 +24,9 @@ export class Handle extends Events {
             var pos = this.handleBlock.getVisibleHandleCursorPoint();
             if (pos) {
                 var handleEl = this.view.handleEle;
-                handleEl.style.top = pos.y + 'px';
+                var top = pos.y - 14;
+                //top = pos.y;
+                handleEl.style.top = top + 'px';
                 handleEl.style.left = pos.x + 'px';
                 handleEl.style.display = 'flex';
             }

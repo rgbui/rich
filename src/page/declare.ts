@@ -68,6 +68,7 @@ export interface LinkPageItem {
     share?: 'net' | 'nas' | 'local';
     createDate?: Date,
     editDate?: Date,
+    mime?: any,
     /**
       * 互联网是否公开，如果公开的权限是什么
       */
@@ -157,8 +158,31 @@ export interface LinkWs {
         totalScore: number;
     };
     isMember: boolean
+    publishConfig: {
+        abled: boolean,
+        defineNavMenu: boolean,
+        navMenus: WorkspaceNavMenuItem[],
+        defineContent: boolean,
+        contentTheme: 'default' | 'none' | 'wiki',
+        defineBottom: boolean
+    }
 }
 
+export type WorkspaceNavMenuItem = {
+    id: string,
+    date?: number,
+    userid?: string,
+    text: string,
+    type: 'logo' | 'text' | 'link',
+    pic?: ResourceArguments,
+    icon?: IconArguments,
+    childs?: WorkspaceNavMenuItem[],
+    urlType?: 'page' | 'url',
+    url?: string,
+    pageId?: string,
+    pageText?: string,
+    spread?: boolean
+}
 
 export function getPageIcon(item: LinkPageItem, defaultIcon?: SvgrComponent) {
     if (item?.icon) return item.icon;
@@ -199,12 +223,12 @@ export function getPageText(item: LinkPageItem) {
     }
     return '新页面'
 }
-export var PageTemplateTypeGroups: { icon: IconValueType,visible?:boolean, spread: boolean, text: string, childs: { text: string,visible?:boolean }[] }[] = [
+export var PageTemplateTypeGroups: { icon: IconValueType, visible?: boolean, spread: boolean, text: string, childs: { text: string, visible?: boolean }[] }[] = [
     {
         icon: PageSvg,
         text: '个人',
         spread: true,
-        visible:true,
+        visible: true,
         childs: [
             { text: '个人工作' },
             { text: '业余爱好' },
@@ -218,7 +242,8 @@ export var PageTemplateTypeGroups: { icon: IconValueType,visible?:boolean, sprea
     },
     {
         icon: PageSvg,
-        text: '教育', spread: true,
+        text: '教育',
+        spread: true,
         childs: [
             { text: '学习' },
             { text: '俱乐部' },
@@ -247,15 +272,18 @@ export var PageTemplateTypeGroups: { icon: IconValueType,visible?:boolean, sprea
         ]
     },
     {
-        icon: PageSvg, text: '社区',
+        icon: PageSvg,
+        text: '社区',
         spread: true,
         childs: [
             { text: '论坛' },
             { text: '贴子' },
+            { text: '图文' }
         ]
     },
     {
-        icon: PageSvg, text: '项目',
+        icon: PageSvg,
+        text: '项目',
         spread: true,
         childs: [
             { text: '路线图和日历' },
@@ -265,7 +293,8 @@ export var PageTemplateTypeGroups: { icon: IconValueType,visible?:boolean, sprea
         ]
     },
     {
-        icon: PageSvg, text: '百科',
+        icon: PageSvg,
+        text: '百科',
         spread: true,
         childs: [
             { text: '知识库' },
