@@ -401,6 +401,7 @@ export abstract class Block extends Events {
     getVisibleBound() {
         if (!this.el) {
             console.log(this);
+            return null;
         }
         return Rect.fromEle(this.el)
     }
@@ -408,7 +409,7 @@ export abstract class Block extends Events {
         var bound = this.getVisibleContentBound()
         if (bound) {
             var pos = Point.from(bound);
-            pos = pos.move(0, 5);
+            pos = pos.move(0, 3 + this.page.lineHeight / 2);
             return pos;
         }
     }
@@ -416,6 +417,9 @@ export abstract class Block extends Events {
         var e = this.contentEl;
         if (e) return Rect.fromEle(e);
         return this.getVisibleBound();
+    }
+    getVisiblePanelBound(){
+        return this.getVisibleBound()
     }
     getVisiblePolygon() {
         var { width, height } = this.fixedSize;
@@ -829,6 +833,15 @@ export abstract class Block extends Events {
     }[];
     getUrl() {
         return this.url;
+    }
+    /**
+     * 获取当前块的innerPannelBlock
+     * 一般是自身
+     * 但如tab块，则是当前展示的page块
+     * @returns 
+     */
+    getInnerPanelBlock() {
+       return this as Block;
     }
 }
 export interface Block extends Block$Seek { }
