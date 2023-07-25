@@ -5,7 +5,7 @@
  * 图片有可能自带颜色
  */
 export type IconArguments = {
-    name: 'none' | 'font-awesome' | 'emoji' | 'image' | 'link' | 'fill',
+    name: 'none' | 'font-awesome' | 'bytedance-icon' | 'emoji' | 'image' | 'link' | 'fill',
     code?: string,
     color?: string,
     url?: string,
@@ -31,6 +31,6 @@ export type ResourceArguments = {
     filename?: string,
     size?: number,
     origin?: string,
-    mime?:string,
-    ext?:string
+    mime?: string,
+    ext?: string
 }

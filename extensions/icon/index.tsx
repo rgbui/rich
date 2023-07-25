@@ -8,6 +8,7 @@ import { EventsComponent } from "../../component/lib/events.component";
 import { UploadView } from "../file/upload";
 import { EmojiView } from "../emoji/view";
 import { FontAwesomeView } from "../font-awesome";
+import { ByteDanceIconView } from "../byte-dance.icons";
 import { OutsideUrl } from "../link/outside";
 import { Tab } from "../../component/view/tab";
 import { IconArguments } from "./declare";
@@ -25,7 +26,7 @@ import {
 
 import { Icon } from "../../component/view/icon";
 import { ToolTip } from "../../component/view/tooltip";
-import { emojiStore } from "../emoji/store";
+
 class IconPicker extends EventsComponent {
     onChange(data: IconArguments) {
         this.emit('change', data);
@@ -33,8 +34,9 @@ class IconPicker extends EventsComponent {
     onClearIcon() {
         this.emit('change', null);
     }
-   
+
     fav: FontAwesomeView;
+    byte: ByteDanceIconView;
     render() {
         return <div className='shy-icon-picker' >
             <Tab keeplive rightBtns={<>
@@ -47,6 +49,10 @@ class IconPicker extends EventsComponent {
             </>}>
                 <Tab.Page item={<Tip placement='bottom' id={LangID.IconEmoji}><Icon icon={EmojiSvg} size={18}></Icon></Tip>}>
                     <EmojiView onChange={e => this.onChange({ name: "emoji", code: e.code })}></EmojiView>
+                </Tab.Page>
+
+                <Tab.Page item={<Tip placement='bottom' overlay={'SVG图标'}><Icon icon={{name:'bytedance-icon',code:'oval-love'}} size={18}></Icon></Tip>}>
+                    <ByteDanceIconView ref={e => this.byte = e} onChange={e => this.onChange({ name: "bytedance-icon", ...e })}></ByteDanceIconView>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' id={LangID.IconFontAwesome}><Icon icon={FontawesomeSvg} size={24}></Icon></Tip>}>
                     <FontAwesomeView ref={e => this.fav = e} onChange={e => this.onChange({ name: "font-awesome", ...e })}></FontAwesomeView>
