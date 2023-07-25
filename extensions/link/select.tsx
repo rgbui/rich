@@ -31,7 +31,7 @@ class SelectWorkspacePage extends EventsComponent {
     forceSyncSearch = async () => {
         this.loading = true;
         this.forceUpdate();
-        var r = await channel.get('/page/word/query', { word: this.word });
+        var r = await channel.get('/page/word/query', { word: this.word, ws: null });
         this.isSearch = true;
         if (r.ok) {
             this.links = r.data.list;

@@ -81,7 +81,7 @@ class LinkPicker extends EventsComponent {
         this.forceSyncSearch();
     }, 1200)
     async searchAll() {
-        var g = await channel.get('/page/word/query', { size: this.allLists.size });
+        var g = await channel.get('/page/word/query', { size: this.allLists.size, ws: undefined });
         if (g.ok) {
             this.allLists = g.data;
         }
@@ -94,7 +94,7 @@ class LinkPicker extends EventsComponent {
             this.links = this.allLists.list.filter(l => l.text.startsWith(this.url));
         }
         else {
-            var r = await channel.get('/page/word/query', { word: this.url });
+            var r = await channel.get('/page/word/query', { word: this.url, ws: undefined });
             if (r.ok) {
                 this.links = r.data.list;
             }
