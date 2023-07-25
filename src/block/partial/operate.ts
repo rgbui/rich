@@ -10,6 +10,7 @@ import { AppearAnchor } from "../appear";
 import { Matrix } from "../../common/matrix";
 import { Point } from "../../common/vector/point";
 import { BlockFactory } from "../factory/block.factory";
+import { Tab } from "../../../blocks/form/tab";
 
 export class Block$Operator {
 
@@ -57,22 +58,23 @@ export class Block$Operator {
     async getWillTurnData(this: Block, url: string) {
         return await this.get();
     }
-    async turn(this: Block, url: string) {
+    async turn(this: Block, url: string, da?: Record<string, any>) {
         var oldUrl = this.getUrl();
         this.page.monitorBlockOperator(this, 'turn');
         if (this.url == BlockUrlConstant.Head && url.startsWith(BlockUrlConstant.Head)) {
             //这里只是大标题的切换，不需要做任何的处理，更新一些属性即可
             var pb = BlockFactory.parseBlockUrl(url);
-            await this.updateProps(pb.data.level ? pb.data : { level: 'h1' }, BlockRenderRange.self);
+            await this.updateProps(pb.data.level ? Object.assign(pb.data, da || {}) : { level: 'h1', ...(da || {}) }, BlockRenderRange.self);
             this.page.monitorBlockOperator(this, 'turn');
             return this;
         }
         if (this.url == BlockUrlConstant.List && url.startsWith(BlockUrlConstant.List)) {
             var pb = BlockFactory.parseBlockUrl(url);
-            await this.updateProps(pb.data.listType ? pb.data : { listType: 0 }, BlockRenderRange.self);
+            await this.updateProps(pb.data.listType ? Object.assign(pb.data, da || {}) : { listType: 0, ...(da || {}) }, BlockRenderRange.self);
             return this;
         }
         var data = await this.getWillTurnData(url);
+        if (da) Object.assign(data, da);
         var newBlock = await BlockFactory.createBlock(url, this.page, data, this.parent);
         var bs = this.parent.blocks[this.parentKey];
         bs.insertAt(this.at, newBlock);
@@ -366,8 +368,9 @@ export class Block$Operator {
                 /**
                  * 这时判断是否可以允许换行的block，还是替换 
                  * */
-                var cs = this.childs.map(c => c);
-                await this.appendArray(blocks);
+                var p = this.getInnerPanelBlock();
+                var cs = p.childs.map(c => c);
+                await p.appendArray(blocks);
                 await cs.eachAsync(async (c) => {
                     if (c.isContentEmpty) await c.delete()
                 })
@@ -461,12 +464,15 @@ export class Block$Operator {
                 /**
                  * 这时判断是否可以允许换行的block，还是替换 
                  * */
-                var cs = this.childs.map(c => c);
-                bs = await this.appendArrayBlockData(blocks, undefined, BlockChildKey.childs);
-                await cs.eachAsync(async (c) => {
-                    if (c.isContentEmpty)
-                        await c.delete()
-                })
+                var p = (this as Tab).getInnerPanelBlock();
+                if (p) {
+                    var cs = p.childs.map(c => c);
+                    bs = await p.appendArrayBlockData(blocks, undefined, BlockChildKey.childs);
+                    await cs.eachAsync(async (c) => {
+                        if (c.isContentEmpty)
+                            await c.delete()
+                    })
+                }
                 break;
             case DropDirection.sub:
                 if (this.hasSubChilds) bs = await this.appendArrayBlockData(blocks, 0, this.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);

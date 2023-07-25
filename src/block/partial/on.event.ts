@@ -334,7 +334,6 @@ export class Block$Event {
             await this.updateProps(props, options.range);
         })
     }
-
     async onManualUpdateProps(this: Block,
         oldProps: Record<string, any>,
         newProps: Record<string, any>,
