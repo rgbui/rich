@@ -5,10 +5,15 @@ import { PageDirective } from "../../src/page/directive";
 import { ViewOperate } from "../../src/history/action";
 import { channel } from "../../net/channel";
 import { AtomPermission } from "../../src/page/permission";
+import lodash from "lodash";
+import { PageLayoutType } from "../../src/page/declare";
 export function PageContentView(props: {
     elementUrl?: string,
     wsId?: string,
-    canEdit?: boolean
+    canEdit?: boolean,
+    onlyDisplayContent?: boolean,
+    type?: PageLayoutType,
+    requireSelectLayout?: boolean
 }) {
     var el = React.useRef(null)
     async function load() {
@@ -35,6 +40,11 @@ export function PageContentView(props: {
             page.customElementUrl = e;
             page.readonly = props.canEdit ? false : true;
             page.bar = false;
+            page.onlyDisplayContent = props.onlyDisplayContent || false;
+            page.requireSelectLayout = typeof props.requireSelectLayout == 'boolean' ? props.requireSelectLayout : true;
+            if (typeof props.type != 'undefined') {
+                page.pageLayout = { type: props.type }
+            }
             if (props.canEdit) {
                 page.currentPermissions = {
                     isOwner: false,
@@ -59,6 +69,19 @@ export function PageContentView(props: {
                 if (typeof (window as any).puppeteer_page_load == 'function' && !props.elementUrl)
                     (window as any).puppeteer_page_load();
             })
+            if (props.canEdit) {
+                var laySave = lodash.debounce(async () => {
+                    await channel.put('/view/snap/direct', {
+                        wsId,
+                        elementUrl: e,
+                        content: await page.getString(),
+                        plain: await page.getPlain(),
+                        text: page.pageInfo?.text,
+                        thumb: await page.getThumb(),
+                    })
+                }, 2e3);
+                page.on(PageDirective.history, laySave);
+            }
             page.render(el.current, {
                 width: bound.width,
                 height: bound.height
