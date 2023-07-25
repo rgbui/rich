@@ -243,5 +243,31 @@ export var util = {
         else if (['.zip', '.rar'].includes(ext)) return 'zip'
         else if (['.doc', '.docx', '.pdf', '.ppt', '.xls', '.xlsx'].includes(ext)) return "doc"
         else return 'unknow';
+    },
+    covertToArray(d) {
+        if (Array.isArray(d)) return d;
+        else return d ? [d] : []
+    },
+    decimalToLetter(decimal) {
+        let result = '';
+        while (decimal > 0) {
+            const remainder = (decimal - 1) % 26;
+            result = String.fromCharCode(97 + remainder) + result;
+            decimal = Math.floor((decimal - 1) / 26);
+        }
+        return result;
+    },
+    convertToRoman(num)
+    {
+        var romanNumeral = "";
+        var decimalNum = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
+        var romanNum = ["M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"];
+        for (var i = 0; i < decimalNum.length; i++) {
+            while (decimalNum[i] <= num) {
+                romanNumeral += romanNum[i];
+                num -= decimalNum[i];
+            }
+        }
+        return romanNumeral;
     }
 }
