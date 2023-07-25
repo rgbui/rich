@@ -1,5 +1,4 @@
 import { UA } from "../util/ua"
-import { channel } from "./channel"
 
 export enum ElementType {
     /**
@@ -63,6 +62,12 @@ export enum ElementType {
     * /Comment/${id}/emoji/${id2}
     */
     WsCommentEmoji,
+
+    /**
+     * /Ws/doc/${id} 文档
+     * /Ws/doc/footer
+     */
+    WsDocView,
 }
 export function getElementUrl(type: ElementType, id: string, id1?: string, id2?: string) {
     if (type == ElementType.SchemaData) return `/Schema/${id}/Data/${id1}`
@@ -77,6 +82,7 @@ export function getElementUrl(type: ElementType, id: string, id1?: string, id2?:
     else if (type == ElementType.BlockLine) return `/Page/${id}/Row/${id1}/Block/${id2}`
     else if (type == ElementType.SyncBlock) return `/SyncBlock/${id}`
     else if (type == ElementType.WsCommentEmoji) return `/Comment/${id}/emoji/${id1}`
+    else if (type == ElementType.WsDocView) return `/Ws/Doc/${id}`
     else return `/${ElementType[type]}/${id}`
 }
 export function parseElementUrl(url: string) {
@@ -213,19 +219,14 @@ export function parseElementUrl(url: string) {
             }
         }
     }
+    else if (us.includes('Ws')) {
+        us.removeAll(g => g == 'Ws' || g == 'doc')
+        return {
+            type: ElementType.WsDocView,
+            id: us[0]
+        }
+    }
 }
-
-// export function getWsElementUrl(options: { wsUrl?: string, type: ElementType, id: string, id1?: string, id2?: string }) {
-//     var { type, id, id1, id2, wsUrl } = options;
-//     if (!wsUrl) {
-//         var ws = channel.query('/current/workspace');
-//         wsUrl = ws.url;
-//         // wsUrl = `https://${ws.sn}.shy.live/`;
-//     }
-//     if (!wsUrl.endsWith('/')) wsUrl += '/';
-//     return wsUrl + 'r?url=' + encodeURIComponent(getElementUrl(type, id, id1, id2))
-// }
-
 
 /**
  * 对当前的图做显示性的兼容性处理
