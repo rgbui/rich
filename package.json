@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/rgbui/kanhai#readme",
   "dependencies": {
+  
     "@types/marked": "^4.0.8",
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-react": "^1.0.6",
@@ -54,6 +55,7 @@
     "ua-parser-js": "^0.7.28"
   },
   "devDependencies": {
+    "@icon-park/compiler": "^1.0.7",
     "@types/ua-parser-js": "^0.7.36",
     "@svgr/webpack": "^7.0.0",
     "@types/lodash": "^4.14.176",
