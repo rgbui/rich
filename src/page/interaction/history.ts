@@ -198,18 +198,24 @@ export function PageHistory(page: Page, snapshoot: HistorySnapshoot) {
 
     });
     snapshoot.registerOperator(OperatorDirective.pageTurnLayout, async (operator, source) => {
-        page.pageLayout.type = operator.data.new;
-        page.requireSelectLayout = false;
+        if (!page.pageLayout) page.pageLayout = { type: operator.data.new };
+        else page.pageLayout.type = operator.data.new;
+        if (operator.data.new_page_data) {
+            await page.reload(operator.data.new_page_data)
+        }
         page.addPageUpdate();
     }, async (operator) => {
-        page.pageLayout.type = operator.data.old;
-        page.requireSelectLayout = true;
+        if (!page.pageLayout) page.pageLayout = { type: operator.data.old };
+        else page.pageLayout.type = operator.data.old;
+        if (operator.data.old_page_data) {
+            await page.reload(operator.data.old_page_data)
+        }
         page.addPageUpdate();
     });
     snapshoot.registerOperator(OperatorDirective.pageUpdateProp, async (operator, source) => {
-        page.updateProps(operator.data.new);
+        await page.updateProps(operator.data.new);
     }, async (operator) => {
-        page.updateProps(operator.data.old);
+        await page.updateProps(operator.data.old);
     });
     /***
      * 新的指令

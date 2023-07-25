@@ -9,6 +9,7 @@ import { TableSchema } from "../../blocks/data-grid/schema/meta";
 import { BlockAppear } from "../block/appear";
 import { BlockRenderRange } from "../block/enum";
 import lodash from "lodash";
+import { PageLayoutType } from "../page/declare";
 
 
 /**
@@ -204,6 +205,8 @@ export interface HistorySnapshoot {
     emit(name: 'redo', action: UserAction);
     emit(name: "history", action: UserAction);
 
+    record(directive: OperatorDirective.pageTurnLayout, data: { old: PageLayoutType, new: PlaybackDirection, old_page_data: Record<string, any>, new_page_data: Record<string, any> }, obj: HistorySnapshootObject);
+    record(directive: OperatorDirective.pageUpdateProp, data: { old: Record<string, any>, new: Record<string, any> }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.delete, data: { parentId: string, childKey?: string, at?: number, data: Record<string, any> }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.create, data: { parentId: string, childKey?: string, at?: number, data: Record<string, any> }, obj: HistorySnapshootObject);
     record(directive: OperatorDirective.append, data: { to: { parentId: string, childKey?: string, at?: number }, from: { parentId: string, childKey?: string, at?: number }, blockId: string }, obj: HistorySnapshootObject);

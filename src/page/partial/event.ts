@@ -358,7 +358,7 @@ export class PageEvent {
         }
         else {
             window.shyLog('ep', this.elementUrl, this.pageInfo, this.pageInfo?.id, this.pe.id);
-            if(this.pe.type == ElementType.Schema) {
+            if (this.pe.type == ElementType.Schema) {
                 var schema = await TableSchema.loadTableSchema(this.pe.id, this.ws);
                 window.shyLog('sche', this.schema, schema);
                 if (schema)
@@ -406,11 +406,11 @@ export class PageEvent {
             }
         }
         return {
-            id: this.pageInfo.id,
-            text: this.pageInfo.text,
-            icon: this.pageInfo.icon,
-            cover: this.pageInfo.cover,
-            description: this.pageInfo.description
+            id: this.pageInfo?.id,
+            text: this.pageInfo?.text,
+            icon: this.pageInfo?.icon,
+            cover: this.pageInfo?.cover,
+            description: this.pageInfo?.description
         }
     }
     async onChangeIcon(this: Page, event: React.MouseEvent) {

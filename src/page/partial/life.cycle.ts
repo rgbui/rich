@@ -9,12 +9,12 @@ import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { PageDirective } from "../directive";
 import { PageHistory } from "../interaction/history";
 import { PageKeys } from "../interaction/keys";
-import JSZip from 'jszip';
 import { BlockUrlConstant } from "../../block/constant";
 import { PageLayoutType } from "../declare";
 import { GridMap } from "../grid";
 import { Matrix } from "../../common/matrix";
 import lodash from "lodash";
+import JSZip from 'jszip';
 import { util } from "../../../util/util";
 import { PageOutLine } from "../../../blocks/page/outline";
 import { channel } from "../../../net/channel";
@@ -119,7 +119,7 @@ export class Page$Cycle {
             }
         }
     }
-    async reload(this: Page, data?: Record<string, any>) {
+    async reload(this: Page, data: Record<string, any>) {
         this.views = [];
         for (var n in data) {
             if (n == 'views') continue;
@@ -244,12 +244,42 @@ export class Page$Cycle {
         else await this.load()
     }
     async getDefaultData(this: Page) {
+        var dr: Partial<Page>;
         if (this.pageLayout?.type == PageLayoutType.docCard) {
             var g = await import('../template/doc.cards');
-            return g.data;
+            dr = g.data as any;
         }
-        var r = await import("../template/default.page");
-        return r.data;
+        else {
+            var r = await import("../template/default.page");
+            dr = r.data as any;
+            if (this.isPageContent) {
+                dr = {
+                    url: '/page',
+                    views: [
+                        { url: '/view', }
+                    ]
+                } as any
+            }
+        }
+        if (this.ws?.createPageConfig) {
+            if (typeof this.ws.createPageConfig.smallFont != 'undefined') {
+                dr.smallFont = this.ws.createPageConfig.smallFont
+            }
+            if (typeof this.ws.createPageConfig.isFullWidth != 'undefined') {
+                dr.isFullWidth = this.ws.createPageConfig.isFullWidth
+            }
+            if (typeof this.ws.createPageConfig.nav != 'undefined') {
+                dr.nav = this.ws.createPageConfig.nav
+            }
+            if (typeof this.ws.createPageConfig.autoRefPages != 'undefined') {
+                dr.autoRefPages = this.ws.createPageConfig.autoRefPages
+            }
+            if (typeof this.ws.createPageConfig.autoRefSubPages != 'undefined') {
+                dr.autoRefSubPages = this.ws.createPageConfig.autoRefSubPages
+            }
+        }
+
+        return dr;
     }
     async loadDefaultData(this: Page) {
         var data = await this.getDefaultData();
@@ -383,7 +413,8 @@ export class Page$Cycle {
                 if (ops.length > 0)
                     await channel.post('/row/block/sync/refs', {
                         pageId: this.pageInfo.id,
-                        operators: ops
+                        operators: ops,
+                        ws: this.ws
                     })
             }
         }
@@ -781,11 +812,10 @@ export class Page$Cycle {
     formRowData: Record<string, any>;
     async loadPageSchema(this: Page) {
         if (!this.schema) {
-            this.schema = await TableSchema.loadTableSchema(this.pe.id);
+            this.schema = await TableSchema.loadTableSchema(this.pe.id, this.ws);
         }
         if (this.schema) {
-            if (this.pe.type == ElementType.Schema)
-            {
+            if (this.pe.type == ElementType.Schema) {
                 if (!this.exists(g => g instanceof DataGridView)) {
                     var view = this.schema.views.first();
                     var dc = await BlockFactory.createBlock(view.url, this, {
