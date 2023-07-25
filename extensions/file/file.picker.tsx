@@ -21,13 +21,18 @@ class FilePicker extends EventsComponent {
         return <div className='shy-file-picker' >
             <Tab keeplive>
                 <Tab.Page item={<Tip placement='bottom' id={LangID.UploadFile}><Icon size={20} icon={Upload}></Icon></Tip>}>
-                    <UploadView mine='file' change={e => this.onChange({ name: 'upload', ...e })}></UploadView>
+                    <UploadView mine={this.mime} change={e => this.onChange({ name: 'upload', ...e })}></UploadView>
                 </Tab.Page>
                 <Tab.Page item={<Tip placement='bottom' id={LangID.ImageLink}><Icon size={18} icon={Link}></Icon></Tip>}>
                     <OutsideUrl change={e => this.onChange({ name: 'link', url: e })}></OutsideUrl>
                 </Tab.Page>
             </Tab>
         </div>
+    }
+    mime: 'image' | 'file' | 'audio' | 'video' = 'file';
+    open(mine?: 'image' | 'file' | 'audio' | 'video') {
+        this.mime = mine || 'file';
+        this.forceUpdate();
     }
 }
 
@@ -36,9 +41,11 @@ interface FilePicker {
     emit(name: 'select', data: ResourceArguments);
 }
 
-export async function useFilePicker(pos: PopoverPosition) {
+export async function useFilePicker(pos: PopoverPosition, mime?: UploadPicker['mime']) {
     let popover = await PopoverSingleton(FilePicker);
     let filePicker = await popover.open(pos);
+
+    filePicker.open(mime);
     return new Promise((resolve: (data: ResourceArguments) => void, reject) => {
         filePicker.only('select', (data) => {
             popover.close();

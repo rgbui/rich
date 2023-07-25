@@ -82,7 +82,7 @@ export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audi
             <div className='shy-upload-remark'>
                 <Sp id={LangID.UploadRemark}></Sp>
             </div>
-            <div className="dashed gap-h-10 round flex-center min-h-80" tabIndex={1} onPaste={this.onPaste} onDrop={this.onDrop}>
+            <div className="dashed gap-h-10 round flex-center min-h-80" tabIndex={1} onClick={e => this.uploadFile()} onPaste={this.onPaste} onDrop={this.onDrop}>
                 <span className="remark">拖动{text}或粘贴{text.replace('上传', '')}</span>
             </div>
             <Button ref={e => this.button = e} block onClick={e => this.uploadFile()}>{text}</Button>
