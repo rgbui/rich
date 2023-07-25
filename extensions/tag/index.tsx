@@ -21,13 +21,13 @@ class TagSelector extends InputTextPopSelector<{ id: string, tag: string }> {
             return this.allList.list.findAll(g => g.tag && g.tag.startsWith(word) || g.tag.indexOf(word) > -1);
         }
         else {
-            var r = (await channel.get('/tag/word/query', { word: word })).data.list;
+            var r = (await channel.get('/tag/word/query', { word: word, ws: this.page.ws })).data.list;
             return r;
         }
     }
     async searchAll() {
         if (this.allList.lastDate && Date.now() - this.allList.lastDate.getTime() > 5000) {
-            var r = await channel.get('/tag/word/query', { size: this.allList.size });
+            var r = await channel.get('/tag/word/query', { size: this.allList.size, ws: this.page.ws });
             this.allList = r.data;
             this.allList.lastDate = new Date();
         }

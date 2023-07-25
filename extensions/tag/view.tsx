@@ -13,6 +13,7 @@ import { Icon } from "../../component/view/icon";
 import { TriangleSvg } from "../../component/svgs";
 import { Spin } from "../../component/view/spin";
 import { ElementType, getElementUrl, parseElementUrl } from "../../net/element.type";
+import { Page } from "../../src/page";
 
 export class TagsView extends EventsComponent {
     constructor(props) {
@@ -59,6 +60,7 @@ export class TagsView extends EventsComponent {
         var r = await channel.get('/get/tag/refs', {
             tagId: this.search.tagId || undefined,
             tag: this.search.tag || undefined,
+            ws: this.page?.ws
         });
         if (r.ok) {
             this.search = Object.assign(this.search, r.data);
@@ -84,14 +86,16 @@ export class TagsView extends EventsComponent {
         pages: [],
         refs: []
     }
-    onOpen(link?: { tagId?: string, tag?: string }) {
+    page: Page;
+    onOpen(link?: { tagId?: string, page: Page, tag?: string }) {
         this.search.tagId = link?.tagId || ''
         this.search.tag = link?.tag || ''
+        this.page = link?.page;
         this.load()
     }
 }
 
-export async function useTagViewer(pos: PopoverPosition, link?: { tagId?: string, tag?: string }) {
+export async function useTagViewer(pos: PopoverPosition, link?: { tagId?: string, page: Page, tag?: string }) {
     var popover = await PopoverSingleton(TagsView, { mask: true }, { link: link });
     var picker = await popover.open(pos);
     await picker.onOpen(link);

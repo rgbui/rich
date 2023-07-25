@@ -93,7 +93,7 @@ export async function inputPop(write: PageWrite, aa: AppearAnchor, event: React.
             aa.textContent.slice(write.inputPop.offset, offset),
             (...data) => {
                 write.onInputPopCreateBlock(...data);
-            });
+            }, write.kit.page);
         if (!popVisible) write.inputPop = null;
         else return true;
     }
@@ -133,7 +133,15 @@ export async function inputDetector(write: PageWrite, aa: AppearAnchor, event: R
                 aa.collapse(0);
                 await InputForceStore(aa, async () => {
                     var row = aa.block.closest(x => !x.isLine);
-                    var newBlock = await row.turn(rule.url);
+                    var newBlock: Block;
+                    if (rule.url == '/list?{listType:1}') {
+                        var n = parseInt(current.replace(/[^0-9]/g, ''));
+                        if (typeof n == 'number' && n > 1) {
+                            newBlock = await row.turn(rule.url, { startNumber: n });
+                        }
+                    }
+                    if (!newBlock)
+                        newBlock = await row.turn(rule.url);
                     write.kit.page.addUpdateEvent(async () => {
                         write.kit.anchorCursor.onFocusBlockAnchor(newBlock, { render: true, merge: true });
                     })
@@ -545,12 +553,10 @@ export async function onSpaceInputUrl(write: PageWrite, aa: AppearAnchor, event:
         var rowBlock = aa.block.closest(x => x.isBlock);
         if (rowBlock.url == BlockUrlConstant.Title) return;
         var content = aa.textContent;
-        if (URL_END_REGEX.test(content)) {
-            console.log(URL_END_REGEX, content);
+        if (URL_END_REGEX.test(content))
+        {
             var ma = content.match(URL_END_REGEX);
             var url = ma[0];
-            console.log(ma[0])
-            console.log(content);
             event.preventDefault();
             await InputForceStore(aa, async () => {
                 if (aa.block.isLine) {

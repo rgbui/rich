@@ -113,6 +113,7 @@ export class SearchBox extends EventsComponent {
             try {
                 var r = await channel.get('/ws/search', {
                     word: this.searchList.word,
+                    ws:this.ws,
                     editDate: this.searchList.editDate,
                     isOnlySearchTitle: this.searchList.isOnlySearchTitle
                 });
