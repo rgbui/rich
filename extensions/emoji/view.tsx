@@ -82,7 +82,7 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
     }
     render() {
         return <div>
-            <div className="flex padding-t-14 padding-w-14">
+            <div className="flex padding-h-14 padding-w-14">
                 <div className="flex-auto"><Input clear placeholder="搜索..." value={this.word} onClear={() => this.loadSearch('')} onEnter={e => { this.word = e; this.loadSearch.flush() }} onChange={e => this.loadSearch(e)} ></Input></div>
                 <div className="flex-fixed gap-l-20 gap-r-10 text-1">
                     <Tip overlay={<>随机</>}><span onMouseDown={e => this.onRandomIcon()} className=" flex-center size-30 round item-hover cursor">
