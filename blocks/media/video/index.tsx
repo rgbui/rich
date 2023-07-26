@@ -13,6 +13,9 @@ import { VideoSvg } from "../../../component/svgs";
 import { MouseDragger } from "../../../src/common/dragger";
 import { util } from "../../../util/util";
 
+import Player from 'xgplayer';
+import 'xgplayer/dist/index.min.css';
+
 /**
  * 
  * https://h5player.bytedance.com/
@@ -90,6 +93,18 @@ export class Video extends Block {
 }
 @view('/video')
 export class VideoView extends BlockView<Video>{
+    didMount(): void {
+        this.loadPlayer();
+    }
+    loadPlayer() {
+        let player = new Player({
+            el: this.videoPanel,
+            url: this.block.src?.url,
+            height: '100%',
+            width: '100%',
+        });
+    }
+    videoPanel: HTMLElement;
     onMousedown(event: React.MouseEvent, operator: 'left' | "right") {
         event.stopPropagation();
         var el = this.block.el;
@@ -127,14 +142,11 @@ export class VideoView extends BlockView<Video>{
                 {this.block.speed && <span>{this.block.speed}</span>}
             </div>}
             {this.block.src?.url && <div className='sy-block-video-content'>
-             <div
+                <div
                     className="sy-block-video-wrapper"
                     ref={e => this.contentWrapper = e}
                     style={{ width: this.block.contentWidthPercent ? this.block.contentWidthPercent + "%" : undefined }}>
-                    <video preload={'metadata'} className="video-js vjs-default-skin vjs-big-play-centered" controls src={this.block.src.url} style={{
-                        width: '100%',
-                    }} >
-                    </video>
+                    <div className="w100 h100" ref={e => this.videoPanel = e}></div>
                     {this.block.isCanEdit() && <><div className='sy-block-video-left-resize' onMouseDown={e => this.onMousedown(e, 'left')}></div>
                         <div className='sy-block-video-right-resize' onMouseDown={e => this.onMousedown(e, 'right')}></div></>}
                 </div>
