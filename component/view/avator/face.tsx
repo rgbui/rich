@@ -18,7 +18,8 @@ export class Avatar extends React.Component<{
     showSn?: boolean,
     className?: string,
     showName?: boolean,
-    hideStatus?: boolean
+    hideStatus?: boolean,
+    onMousedown?: (event: React.MouseEvent) => void
 }> {
     private user: UserBasic;
     componentDidMount() {
@@ -68,6 +69,8 @@ export class Avatar extends React.Component<{
             if (this.props.userid == 'all') return;
             await useUserCard({ roundArea: Rect.fromEle(event.currentTarget as HTMLElement) }, { user: this.props.user, userid: this.props.userid })
         }
+        if (typeof this.props.onMousedown == 'function')
+            this.props.onMousedown(event)
     }
     render() {
         var user = this.props.user || this.user;
