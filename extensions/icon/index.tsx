@@ -40,10 +40,7 @@ class IconPicker extends EventsComponent {
     render() {
         return <div className='shy-icon-picker' >
             <Tab keeplive rightBtns={<>
-                {/* <ToolTip overlay={'随机图标'}> <span className="flex-center item-hover size-30 round cursor"><Icon size={16} onMousedown={e => this.onRandomIcon()} icon={RandomSvg}></Icon>
-                </span>
-                </ToolTip> */}
-                <ToolTip overlay={'清理图标'}> <span className="flex-center item-hover size-30 round cursor gap-r-10"><Icon size={16} onMousedown={e => this.onClearIcon()} icon={TrashSvg}></Icon>
+                <ToolTip overlay={'清理图标'}><span className="flex-center item-hover size-30 round cursor gap-r-10"><Icon size={16} onMousedown={e => this.onClearIcon()} icon={TrashSvg}></Icon>
                 </span>
                 </ToolTip>
             </>}>
