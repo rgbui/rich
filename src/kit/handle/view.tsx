@@ -8,6 +8,7 @@ import { MouseDragger } from "../../common/dragger";
 import { ghostView } from "../../common/ghost";
 import { onAutoScroll, onAutoScrollStop } from "../../common/scroll";
 import { DragHandleSvg, PlusSvg } from "../../../component/svgs";
+import { UA } from "../../../util/ua";
 
 export class HandleView extends React.Component<{ handle: Handle }>{
     constructor(props) {
@@ -17,11 +18,11 @@ export class HandleView extends React.Component<{ handle: Handle }>{
     get handle() {
         return this.props.handle;
     }
-    // el: HTMLElement;
     private async onPlus(event: React.MouseEvent) {
         this.closeTip();
         event.stopPropagation();
         var self = this;
+        self.handleEle.style.display = 'none';
         if (self.handle.kit.anchorCursor.currentSelectedBlocks.length > 0) {
             var bs = self.handle.kit.page.getAtomBlocks(self.handle.kit.anchorCursor.currentSelectedBlocks);
             var b = bs.findMax(g => g.getVisibleContentBound().bottom);
@@ -112,14 +113,14 @@ export class HandleView extends React.Component<{ handle: Handle }>{
             <div className='shy-selector-bar'
                 ref={e => this.handleEle = e}
             >
-                <Tip placement='bottom' ref={e => { this.plusToolTip = e; }} overlay={'点击下面插入块'} >
-                    <span onClick={e => this.onPlus(e)}>
-                        <Icon icon={PlusSvg} size={16}></Icon>
+                <Tip placement='bottom' ref={e => { this.plusToolTip = e; }} overlay={<>点击插入块<br />{UA.isMacOs ? "option" : "alt"}点击上面插入块</>} >
+                    <span className="remark size-24 round flex-center flex-inline" onMouseDown={e => this.onPlus(e)}>
+                        <Icon icon={PlusSvg} size={20}></Icon>
                     </span>
                 </Tip>
                 <Tip placement='bottom' ref={e => { this.toolTip = e; }} id={LangID.bar} >
-                    <span onMouseDown={e => this.onMousedown(e.nativeEvent)}>
-                        <Icon icon={DragHandleSvg} size={14}></Icon>
+                    <span className="remark round w-18 h-24 flex-center flex-inline" onMouseDown={e => this.onMousedown(e.nativeEvent)}>
+                        <Icon icon={DragHandleSvg} size={16}></Icon>
                     </span>
                 </Tip>
             </div>
