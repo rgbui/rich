@@ -70,3 +70,17 @@ export async function getImageSize(url: string) {
         }
     })
 }
+
+export async function getVideoSize(file: File | string) {
+    return new Promise((resolve: (d: { duration: number, width: number, height: number }) => void) => {
+        let videoElement = document.createElement("video")
+        videoElement.src = typeof file == 'string' ? file : URL.createObjectURL(file)
+        videoElement.addEventListener("loadedmetadata", function () {
+            resolve({
+                duration: videoElement.duration,
+                height: videoElement.videoHeight,
+                width: videoElement.videoWidth,
+            })
+        })
+    })
+}
