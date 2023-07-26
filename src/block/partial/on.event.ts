@@ -32,6 +32,7 @@ import { FontColorList, BackgroundColorList } from "../../../extensions/color/da
 import { BlockUrlConstant } from "../constant";
 import { List } from "../../../blocks/present/list/list";
 import { BlockFactory } from "../factory/block.factory";
+import { util } from "../../../util/util";
 
 export class Block$Event {
     /**
@@ -506,7 +507,7 @@ export class Block$Event {
             }
             var currentData = arr[at];
             var pos = this.getArrayItemPos(options.prop, currentData);
-            arr.splice(at, 1);
+            arr.splice(at,1);
             var cd;
             var pm = this.pm(options.prop);
             if (pm) {
@@ -560,26 +561,25 @@ export class Block$Event {
             if (this.url == BlockUrlConstant.List) {
                 url = BlockUrlConstant.List;
                 data = {
-                    listType: (this as List).listType
+                    listType: (this as List).listType,
+                    listView: (this as List).listView
                 }
             }
-            var block = await this.visibleDownCreateBlock(url, data);
-            this.page.addUpdateEvent(async () => {
-                if (block.isPanel || block.isLayout) {
-                    var g = block.find(c => c.isOnlyBlock);
-                    if (g) {
-                        this.page.kit.anchorCursor.onFocusBlockAnchor(g, {
-                            render: true,
-                            merge: true
-                        });
-                    }
-                }
-                else
+            if (this.url == BlockUrlConstant.Todo) {
+                url = BlockUrlConstant.Todo;
+            }
+            var isBlow = true;
+            if (this.page.keyboardPlate.isAlt()) isBlow = false;
+            var block = isBlow ? await this.visibleDownCreateBlock(url, data) : await this.visibleUpCreateBlock(url, data);
+            await util.delay(20);
+            if (block) {
+                block.mounted(() => {
                     this.page.kit.anchorCursor.onFocusBlockAnchor(block, {
                         render: true,
                         merge: true
                     });
-            })
+                })
+            }
         })
     }
 }

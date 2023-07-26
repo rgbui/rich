@@ -13,16 +13,17 @@
     https          ://developer.mozilla.org/zh-CN/docs/Web/CSS/cursor
     ****/
     span {
-        border-radius  : 3px;
+        // border-radius  : 3px;
         cursor         : grab;
-        display        : inline-flex;
-        justify-content: center;
-        align-items    : center;
-        width          : 18px;
-        height         : 24px;
-        .shy-icon {
-            fill: rgba(55, 53, 47, 0.3);
-        }
+        // display        : inline-flex;
+        // justify-content: center;
+        // align-items    : center;
+        // width          : 18px;
+        // height         : 24px;
+
+        // .shy-icon {
+        //     fill: rgba(55, 53, 47, 0.3);
+        // }
         &:hover {
             background-color: rgba(55, 53, 47, 0.08);
         }
@@ -45,16 +46,17 @@
 
 .shy-block-user-selected {
     position: relative;
+
     &::before {
-        content          : '\20';
-        position         : absolute;
-        pointer-events   : none;
-        inset            : 0px;
-        outline          : 1px solid var(--user-selected-color);
-        outline-offset   : 2px;
+        content       : '\20';
+        position      : absolute;
+        pointer-events: none;
+        inset         : 0px;
+        outline       : 1px solid var(--user-selected-color);
+        outline-offset: 2px;
         background    : var(--user-selected-color);
-        z-index          : 81;
-        opacity          : 0.4;
+        z-index       : 81;
+        opacity       : 0.4;
     }
 }
 
