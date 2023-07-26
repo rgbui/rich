@@ -12,7 +12,7 @@ import { DiceSvg, RandomSvg } from "../../component/svgs";
 import { channel } from "../../net/channel";
 import { ByteDanceType } from "./declare";
 import { byteDanceStore } from "./store";
-const BYTE_DANCE_HISTORYS = '_bytedance_historys';
+const BYTE_DANCE_HISTORYS = '_bytedance_historys__';
 export class ByteDanceIconView extends React.Component<{ loaded?: () => void, onChange: (data: { code: string, color?: string }) => void }> {
     shouldComponentUpdate(nextProps, nextStates) {
         return false;
@@ -25,7 +25,7 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
     componentDidMount() {
         this.load()
     }
-    historyByteDances: ByteDanceType[] = [];
+    historyByteDances: { e: ByteDanceType, t: number }[] = [];
     async load() {
         this.loading = true;
         var r = await byteDanceStore.get();
@@ -34,16 +34,24 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
         var rs = await channel.query('/cache/get', { key: BYTE_DANCE_HISTORYS });
         if (Array.isArray(rs) && rs.length > 0) this.historyByteDances = rs;
         else this.historyByteDances = [];
+        lodash.remove(this.historyByteDances, g => g.t < Date.now() - 1000 * 60 * 60 * 24 * 7 * 2);
+        this.historyByteDances.sort((a, b) => b.t - a.t);
         this.forceUpdate(() => {
             if (typeof this.props.loaded == 'function') this.props.loaded()
         });
     }
     async onChange(ic: ByteDanceType) {
-        if (!this.historyByteDances.some(s => s.name == ic.name)) {
-            this.historyByteDances.push(ic);
-            await channel.act('/cache/set', { key: BYTE_DANCE_HISTORYS, value: this.historyByteDances })
+        if (!this.historyByteDances.some(s => s.e.name == ic.name)) {
+            this.historyByteDances.push({ e: ic, t: Date.now() });
         }
+        else {
+            var i = this.historyByteDances.findIndex(s => s.e.name == ic.name);
+            this.historyByteDances[i].t = Date.now();
+        }
+        this.historyByteDances.sort((a, b) => b.t - a.t);
+        await channel.act('/cache/set', { key: BYTE_DANCE_HISTORYS, value: this.historyByteDances })
         if (this.props.onChange) this.props.onChange({ code: ic.name, color: this.color });
+        this.forceUpdate();
     }
     renderFontAwesomes() {
         var els: JSX.Element[] = [];
@@ -52,7 +60,7 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
                 <div className='shy-font-awesome-category-head'><span>最近</span></div>
                 <div className='shy-font-awesome-category-content'>
                     {this.historyByteDances.map(ic => {
-                        return <Tip overlay={langProvider.isCn ? ic.title : ic.name} key={ic.name}><a onMouseDown={e => this.onChange(ic)} dangerouslySetInnerHTML={{ __html: this.renderSvg(ic) }}>
+                        return <Tip overlay={langProvider.isCn ? ic.e.title : ic.e.name} key={ic.e.name}><a onMouseDown={e => this.onChange(ic.e)} dangerouslySetInnerHTML={{ __html: this.renderSvg(ic.e) }}>
                             {/* <i style={{ color: this.color }} className={'fa' + ' fa-' + ic.name}></i> */}
                         </a></Tip>
                     })}

@@ -13,7 +13,7 @@ import { Input } from "../../component/view/input";
 import { Icon } from "../../component/view/icon";
 import { DiceSvg, RandomSvg } from "../../component/svgs";
 import { channel } from "../../net/channel";
-const FONT_AWESOME_HISTORYS = '_fontAwesome_historys';
+const FONT_AWESOME_HISTORYS = '_fontAwesome_historys__';
 export class FontAwesomeView extends React.Component<{ loaded?: () => void, onChange: (data: { code: string, color?: string }) => void }> {
     shouldComponentUpdate(nextProps, nextStates) {
         return false;
@@ -26,7 +26,7 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
     componentDidMount() {
         this.load()
     }
-    historyFontAwesomes: FontAwesomeIconType[] = [];
+    historyFontAwesomes: { e: FontAwesomeIconType, t: number }[] = [];
     async load() {
         this.loading = true;
         var r = await fontAwesomeStore.get();
@@ -35,16 +35,24 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
         var rs = await channel.query('/cache/get', { key: FONT_AWESOME_HISTORYS });
         if (Array.isArray(rs) && rs.length > 0) this.historyFontAwesomes = rs;
         else this.historyFontAwesomes = [];
+        lodash.remove(this.historyFontAwesomes, g => g.t < Date.now() - 1000 * 60 * 60 * 24 * 7 * 2);
+        this.historyFontAwesomes.sort((a, b) => b.t - a.t);
         this.forceUpdate(() => {
             if (typeof this.props.loaded == 'function') this.props.loaded()
         });
     }
     async onChange(ic: FontAwesomeIconType) {
-        if (!this.historyFontAwesomes.some(s => s.name == ic.name)) {
-            this.historyFontAwesomes.push(ic);
-            await channel.act('/cache/set', { key: FONT_AWESOME_HISTORYS, value: this.historyFontAwesomes })
+        if (!this.historyFontAwesomes.some(s => s.e.name == ic.name)) {
+            this.historyFontAwesomes.push({ e: ic, t: Date.now() });
         }
+        else {
+            var index = this.historyFontAwesomes.findIndex(s => s.e.name == ic.name);
+            this.historyFontAwesomes[index].t = Date.now();
+        }
+        this.historyFontAwesomes.sort((a, b) => b.t - a.t);
+        await channel.act('/cache/set', { key: FONT_AWESOME_HISTORYS, value: this.historyFontAwesomes })
         if (this.props.onChange) this.props.onChange({ code: ic.name, color: this.color });
+        this.forceUpdate()
     }
     renderFontAwesomes() {
         var els: JSX.Element[] = [];
@@ -53,8 +61,8 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
                 <div className='shy-font-awesome-category-head'><span>最近</span></div>
                 <div className='shy-font-awesome-category-content'>
                     {this.historyFontAwesomes.map(ic => {
-                        return <Tip overlay={langProvider.isCn ? ic.label : ic.name} key={ic.name}><a onMouseDown={e => this.onChange(ic)}>
-                            <i style={{ color: this.color }} className={'fa' + ' fa-' + ic.name}></i>
+                        return <Tip overlay={langProvider.isCn ? ic.e.label : ic.e.name} key={ic.e.name}><a onMouseDown={e => this.onChange(ic.e)}>
+                            <i style={{ color: this.color }} className={'fa' + ' fa-' + ic.e.name}></i>
                         </a></Tip>
                     })}
                 </div>

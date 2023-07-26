@@ -10,12 +10,12 @@ import { getEmoji } from "../../net/element.type";
 import { dom } from "../../src/common/dom";
 import { EmojiCode, emojiStore, EmojiType } from "./store";
 import "./style.less";
-const EMOJI_HISTORYS = '_emoji_historys';
+const EMOJI_HISTORYS = '_emoji_historys__';
 export class EmojiView extends React.Component<{ loaded?: () => void, onChange: (emoji: EmojiCode) => void }>{
     loading: boolean = true;
     private scrollIndex = 0;
     private scrollOver: boolean = false;
-    historyEmojis: EmojiCode[] = [];
+    historyEmojis: { e: EmojiCode, t: number }[] = [];
     shouldComponentUpdate(nextProps, nextStates) {
         return false;
     }
@@ -35,14 +35,22 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
         var rs = await channel.query('/cache/get', { key: EMOJI_HISTORYS });
         if (Array.isArray(rs) && rs.length > 0) this.historyEmojis = rs;
         else this.historyEmojis = [];
+        lodash.remove(this.historyEmojis, g => g.t < Date.now() - 1000 * 60 * 60 * 24 * 7 * 2);
+        this.historyEmojis.sort((a, b) => b.t - a.t);
         this.forceUpdate();
     }
     async onChange(code: EmojiCode) {
-        if (!this.historyEmojis.some(s => s.code == code.code)) {
-            this.historyEmojis.push(code);
-            await channel.act('/cache/set', { key: EMOJI_HISTORYS, value: this.historyEmojis })
+        if (!this.historyEmojis.some(s => s.e.code == code.code)) {
+            this.historyEmojis.push({ e: code, t: Date.now() });
         }
+        else {
+            var index = this.historyEmojis.findIndex(s => s.e.code == code.code);
+            this.historyEmojis[index].t = Date.now();
+        }
+        this.historyEmojis.sort((a, b) => b.t - a.t);
+        await channel.act('/cache/set', { key: EMOJI_HISTORYS, value: this.historyEmojis })
         this.props.onChange(code);
+        this.forceUpdate()
     }
     emojis: EmojiType[] = [];
     renderEmoji() {
@@ -53,7 +61,7 @@ export class EmojiView extends React.Component<{ loaded?: () => void, onChange: 
             els.push(<div className='shy-emoji-view-category' key={'history'}>
                 <div className='shy-emoji-view-category-head'><span>最近</span></div>
                 <div className='shy-emoji-view-category-emojis'>{this.historyEmojis.map(emoji => {
-                    return <Tip overlay={<>{emoji.name}</>} key={emoji.code}><span className="ef" onMouseDown={e => this.onChange(emoji)} dangerouslySetInnerHTML={{ __html: getEmoji(emoji.code) }}></span></Tip>
+                    return <Tip overlay={<>{emoji.e.name}</>} key={emoji.e.code}><span className="ef" onMouseDown={e => this.onChange(emoji.e)} dangerouslySetInnerHTML={{ __html: getEmoji(emoji.e.code) }}></span></Tip>
                 })}</div>
             </div>)
         }
