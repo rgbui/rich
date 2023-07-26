@@ -1,3 +1,4 @@
+import lodash from "lodash";
 import { Page } from "../../src/page";
 
 export async function createFormPage(el: HTMLElement, content: any, shyPage: Page) {
@@ -8,6 +9,7 @@ export async function createFormPage(el: HTMLElement, content: any, shyPage: Pag
     page.pageLayout = shyPage.pageLayout;
     page.customElementUrl = shyPage.customElementUrl;
     page.readonly = true;
+    page.currentPermissions = lodash.cloneDeep(shyPage.currentPermissions);
     var pageData = typeof content == 'string' ? JSON.parse(content) : content;
     await page.load(pageData);
     var bound = el.getBoundingClientRect();
