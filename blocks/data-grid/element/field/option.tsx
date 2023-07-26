@@ -39,6 +39,7 @@ export class FieldTextView extends BlockView<FieldOption>{
         var fc: FieldConfig = this.block.field.config;
         var vs = util.covertToArray(this.block.value);
         var ops = fc?.options ? fc.options.filter(g => vs.includes(g.value)) : undefined;
+        if (!Array.isArray(ops)) ops = [];
         return <div className='sy-field-option flex' onMouseDown={e => this.block.onCellMousedown(e)}  >
             {ops.map(op => {
                 return <span key={op.value} className="text-overflow" style={{ backgroundColor: op?.color }}>{op?.text || <i>&nbsp;</i>}</span>
