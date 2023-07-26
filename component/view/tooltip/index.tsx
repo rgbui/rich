@@ -66,7 +66,23 @@ class ToolTipOverlay extends React.Component {
             var size = 16;
             this.arrowStyle = {};
             this.overlayStyle = {};
-            switch (this.placement) {
+            var pc = this.placement;
+            var e = this.el.querySelector('.shy-tooltip-arrow') as HTMLElement;
+            if (pc == 'top') {
+                if (tipRect.top - size - overlayRect.height < 30) {
+                    pc = 'bottom'
+                    e.classList.remove('top', 'left', 'right');
+                    e.classList.add('bottom');
+                }
+            }
+            else if (pc == 'bottom') {
+                if (tipRect.bottom + size + overlayRect.height > window.innerHeight - 30) {
+                    pc = 'top'
+                    e.classList.remove('bottom', 'left', 'right');
+                    e.classList.add('top');
+                }
+            }
+            switch (pc) {
                 case 'top':
                     this.arrowStyle.bottom = 0;
                     this.arrowStyle.width = overlayRect.width;
