@@ -69,6 +69,13 @@ export class Page extends Events<PageDirective>{
     get isSign() {
         return this.user?.id ? true : false
     }
+    get isDefineBarMenu() {
+        return (window.shyConfig?.isDomainWs) && this.ws?.publishConfig?.navMenus?.length > 0 && this.ws?.publishConfig?.abled == true && this.ws?.publishConfig?.defineNavMenu
+    }
+    get isDefineWikiContent() {
+        return (window.shyConfig?.isDomainWs ) && this.ws.publishConfig?.abled && this.ws?.publishConfig?.defineContent && this.ws.publishConfig.contentTheme == 'wiki'
+    }
+
     kit: Kit = new Kit(this);
     snapshoot = new HistorySnapshoot(this)
     pageLayout: { layout?: PageLayout, type: PageLayoutType };
@@ -318,6 +325,7 @@ export class Page extends Events<PageDirective>{
     }
     isAllow(...ps: AtomPermission[]) {
         var g = this.currentPermissions;
+        if (!g) return false;
         if (g.isOwner) return true;
         var atoms = ps;
         if (g.isWs) {

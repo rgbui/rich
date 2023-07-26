@@ -25,6 +25,7 @@ import { Block } from "../../block";
 import { PageDirective } from "../directive";
 import { PageBar } from "./bar";
 import { useAITool } from "../../../extensions/ai";
+import { DirectoryTreeView } from "../../../extensions/directory";
 
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
@@ -265,15 +266,33 @@ export class PageView extends Component<{ page: Page }>{
                         <div className={'shy-page-view-content '} ref={e => this.page.contentEl = e}>
                             <PageCover page={this.page}></PageCover>
                             {!pd?.cover?.abled && gap > 0 && <div className={'h-' + gap}></div>}
-                            {this.page.isCanOutline && this.renderNavs()}
-                            {!this.page.isCanOutline && <ChildsArea childs={this.page.views}></ChildsArea>}
-                            {this.page.requireSelectLayout && this.page.isCanEdit && this.renderPageTemplate()}
+                            {this.renderPageContent()}
                         </div>
                     </PageLayoutView>
                 </div>
                 <KitView kit={this.page.kit}></KitView>
             </div>
         </div>
+    }
+    renderPageContent() {
+        var ele = <>
+            {this.page.isCanOutline && this.renderNavs()}
+            {!this.page.isCanOutline && <ChildsArea childs={this.page.views}></ChildsArea>}
+            {this.page.requireSelectLayout && this.page.isCanEdit && this.renderPageTemplate()}
+        </>
+        if (this.props.page.isDefineWikiContent) {
+            var style = this.props.page.getScreenStyle();
+            return <div className="flex flex-top flex-full" style={style}>
+                <div onMouseDown={e => e.stopPropagation()} className="flex-fixed gap-t-30 w-220 border-right-light gap-r-20 padding-r-20 min-h-300">
+                    <DirectoryTreeView onSelect={this.onSelect} ws={this.props.page.ws}></DirectoryTreeView>
+                </div>
+                <div className="flex-auto">{ele}</div>
+            </div>
+        }
+        return ele;
+    }
+    onSelect(item: LinkPageItem) {
+        channel.air('/page/open', { item: { id: item.id } })
     }
     async AutomaticHandle() {
         await this.page.onAction(ActionDirective.AutomaticHandle, async () => {

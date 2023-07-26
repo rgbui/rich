@@ -106,20 +106,25 @@ export class DirectoryTreeView extends React.Component<{
     }, 1000)
     async forceSearch() {
         this.search.loading = true;
+        this.forceUpdate();
         if (this.search.word) {
             var r = (await channel.get('/page/word/query', { word: this.search.word, ws: this.props.ws })).data.list;
             this.search.list = r;
         }
         else this.search.list = [];
         this.search.loading = false;
+        this.forceUpdate();
     }
     render() {
         return <div>
             <div className="gap-h-10">
-                <Input placeholder="搜索..." clear value={this.search.word} onChange={e => {
-                    this.search.word = e;
-                    this.searchList();
-                }}
+                <Input placeholder="搜索..."
+                    clear
+                    value={this.search.word}
+                    onChange={e => {
+                        this.search.word = e;
+                        this.searchList();
+                    }}
                     onEnter={e => {
                         this.search.word = e;
                         this.forceSearch()
@@ -141,7 +146,7 @@ export class DirectoryTreeView extends React.Component<{
         else {
             return <div>
                 {this.search.list.map(pa => {
-                    return <div className="flex" onMouseDown={e => {
+                    return <div className="flex padding-h-3 cursor text-1  item-hover-light" onMouseDown={e => {
                         this.search.word = '';
                         this.forceUpdate();
                         this.onSelect(pa)
@@ -150,12 +155,13 @@ export class DirectoryTreeView extends React.Component<{
                         <span className="flex-auto text-overflow ">{getPageText(pa)}</span>
                     </div>
                 })}
+                {this.search.list.length == 0 && <div className="flex flex-center remark f-12 gap-h-10">
+                    没有搜索到任何页面
+                </div>}
             </div>
         }
     }
     onSelect(item: LinkPageItem) {
-
-
         this.props.onSelect(item);
     }
 }

@@ -51,7 +51,7 @@ export enum PageLayout {
 
 
 
-export interface LinkPageItem {
+export interface LinkPageItem<T={}> {
     id?: string;
     text?: string;
     icon?: IconArguments,
@@ -99,6 +99,13 @@ export interface LinkPageItem {
     plain?: string,
     thumb?: ResourceArguments,
 
+
+
+    checkedHasChilds?: boolean;
+    willLoadSubs?: boolean;
+    subCount?: number;
+    spread?: boolean,
+    childs?:( LinkPageItem&T)[]
 }
 
 export interface LinkWs {

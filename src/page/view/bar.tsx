@@ -1,6 +1,7 @@
 import React, { CSSProperties } from "react";
 import { Page } from "..";
 import {
+    ChevronDownSvg,
     ChevronLeftSvg,
     ChevronRightSvg,
     CollectTableSvg,
@@ -11,6 +12,7 @@ import {
     FieldsSvg,
     LockSvg,
     MemberSvg,
+    MenuSvg,
     OrderSvg,
     PageSvg,
     PublishSvg,
@@ -23,13 +25,12 @@ import { Icon } from "../../../component/view/icon";
 import { Spin } from "../../../component/view/spin";
 import { channel } from "../../../net/channel";
 import { ElementType } from "../../../net/element.type";
-import { PageLayoutType, getPageIcon, getPageText } from "../declare";
+import { PageLayoutType, WorkspaceNavMenuItem, getPageIcon, getPageText } from "../declare";
 import { PageDirective } from "../directive";
 import { isMobileOnly } from "react-device-detect";
 import { Avatar } from "../../../component/view/avator/face";
 import { ToolTip } from "../../../component/view/tooltip";
 import { useWsSearch } from "../../../extensions/search";
-
 
 export class PageBar extends React.Component<{ page: Page }>{
     renderTitle() {
@@ -37,7 +38,7 @@ export class PageBar extends React.Component<{ page: Page }>{
             return <div className="flex-auto flex">
                 {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onClose()} className="item-hover size-24 round cursor flex-center "><Icon size={18} icon={DoubleRightSvg}></Icon></span>}
                 <span onMouseDown={e => this.props.page.onBack()} className="item-hover round flex cursor padding-h-3 padding-w-5">
-                    <Icon size={20} icon={this.props.page.schema?.icon || CollectTableSvg}></Icon>
+                    {this.props.page.schema?.icon && <Icon size={20} icon={this.props.page.schema?.icon || CollectTableSvg}></Icon>}
                     <span className="gap-l-5">{this.props.page.schema?.text}</span>
                 </span>
                 <span className="flex-center"><Icon icon={ChevronRightSvg} size={18}></Icon></span>
@@ -56,7 +57,7 @@ export class PageBar extends React.Component<{ page: Page }>{
             return <div className="flex-auto flex">
                 {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onClose()} className="item-hover size-24 round cursor flex-center "><Icon size={18} icon={DoubleRightSvg}></Icon></span>}
                 <span onMouseDown={e => this.props.page.onBack()} className="item-hover round flex cursor padding-h-3 padding-w-5">
-                    <Icon size={20} icon={this.props.page.schema?.icon || CollectTableSvg}></Icon>
+                    {this.props.page.schema?.icon && <Icon size={20} icon={this.props.page.schema?.icon || CollectTableSvg}></Icon>}
                     <span className="gap-l-5">{this.props.page.schema?.text}</span>
                 </span>
                 <span className="flex-center"><Icon icon={ChevronRightSvg} size={18}></Icon></span>
@@ -74,7 +75,7 @@ export class PageBar extends React.Component<{ page: Page }>{
             {this.props.page.openSource == 'slide' && <span onMouseDown={e => this.props.page.onClose()} className="item-hover size-24 round cursor flex-center "><Icon size={18} icon={DoubleRightSvg}></Icon></span>}
             <span className=" round flex">
                 <span className="flex-fixed item-hover flex round  cursor padding-h-3 padding-w-5 ">
-                    <Icon size={20} icon={getPageIcon(this.props.page?.pageInfo)}></Icon>
+                    {this.props.page?.pageInfo?.icon && <Icon size={20} icon={getPageIcon(this.props.page?.pageInfo)}></Icon>}
                     <span className={"gap-l-5 text-overflow " + (isMobileOnly ? "max-w-120" : "max-w-300")}>{getPageText(this.props.page?.pageInfo)}</span>
                 </span>
                 <span className={"flex-auto gap-l-5 remark text-overflow " + (isMobileOnly ? " max-w-250" : " max-w-500")}>{this.props.page?.pageInfo?.description}</span>
@@ -149,9 +150,6 @@ export class PageBar extends React.Component<{ page: Page }>{
         if (!this.props.page.isSign) {
             isPublish = false;
         }
-        // if (isCanEdit) {
-        //     isContextMenu = true;
-        // }
         if (this.props.page.openSource == 'slide' || this.props.page.openSource == 'dialog') {
             isSearch = false;
         }
@@ -171,7 +169,7 @@ export class PageBar extends React.Component<{ page: Page }>{
         if (this.props.page.isSign) return <div className="flex r-flex-center r-size-24 r-item-hover r-round r-cursor r-gap-r-10 text-1 gap-r-10">
             {isField && <span onMouseDown={e => this.props.page.onOpenFieldProperty(e)} ><Icon size={18} icon={FieldsSvg}></Icon></span>}
             {isMember && <span onMouseDown={e => this.props.page.onOpenMember(e)} ><Icon size={18} icon={MemberSvg}></Icon></span>}
-            {isSearch && <span onMouseDown={async e => { await useWsSearch({ws:this.props.page.ws}) }}><Icon size={18} icon={SearchSvg}></Icon></span>}
+            {isSearch && <span onMouseDown={async e => { await useWsSearch({ ws: this.props.page.ws }) }}><Icon size={18} icon={SearchSvg}></Icon></span>}
             {isPublish && <span onMouseDown={e => this.props.page.onOpenPublish(e)} ><Icon size={18} icon={PublishSvg}></Icon></span>}
             {isContextMenu && <span onMouseDown={e => this.props.page.onPageContextmenu(e)} ><Icon size={18} icon={DotsSvg}></Icon></span>}
             {!isCanEdit && ws.access == 0 && !ws.isMember && <span className="size-30 gap-r-30"><Avatar size={32} userid={user.id}></Avatar></span>}
@@ -186,6 +184,9 @@ export class PageBar extends React.Component<{ page: Page }>{
     }
     render(): React.ReactNode {
         if (this.props.page.bar === false) return <></>
+        if (this.props.page.isDefineBarMenu) {
+            return this.renderDefineBar();
+        }
         var isDocCard = this.props.page.pageLayout?.type == PageLayoutType.docCard;
         var style: CSSProperties = {}
         if (isDocCard) {
@@ -196,8 +197,120 @@ export class PageBar extends React.Component<{ page: Page }>{
             {isMobileOnly && <span onClick={e => this.onSpreadMenu()} className="flex-fixed size-20 flex-center item-hover round cursor ">
                 <Icon icon={ChevronLeftSvg} size={18}></Icon>
             </span>}
+            {!isMobileOnly && this.props.page.openSource == 'page' && <ToolTip placement="bottom" overlay={'折叠侧边栏'}><span onClick={e => this.onSpreadMenu()} className="flex-fixed size-20 flex-center item-hover round cursor ">
+                <Icon icon={MenuSvg} size={14}></Icon>
+            </span></ToolTip>}
             {this.renderTitle()}
             <div className="flex-fixed flex">{this.renderUsers()}{this.renderPropertys()}</div>
+        </div>
+    }
+    renderDefineBar() {
+        var self = this;
+        var h = this.props.page.ws.publishConfig.contentTheme == 'default' ? 48 : 48;
+        function mousedown(e: React.MouseEvent, item: WorkspaceNavMenuItem) {
+            if (item.urlType == 'url') {
+                location.href = item.url;
+            }
+            else if (item.urlType == 'page') {
+                channel.air('/page/open', { item: item.pageId })
+            }
+            return false;
+        }
+        function renderNavs(childs: WorkspaceNavMenuItem[], deep = 0) {
+            var style: React.CSSProperties = {
+                top: h,
+                right: 0
+            }
+            if (deep > 0) {
+                style = {
+                    left: '100%',
+                    width: '100%',
+                    top: 0,
+                }
+            }
+            return <div className="pos shadow border  round bg-white"
+                style={style}>{childs.map((e, i) => {
+                    var href = e.urlType == 'url' ? e.url : undefined;
+                    if (e.urlType == 'page') {
+                        href = self.props.page.ws.resolve({ pageId: e.pageId });
+                    }
+                    return <div onMouseEnter={eg => {
+                        e.spread = true;
+                        self.forceUpdate();
+                    }}
+                        onMouseLeave={eg => {
+                            e.spread = false;
+                            self.forceUpdate();
+                        }} className="relative"
+                        key={e.id}>
+                        <a
+                            style={{ color: 'inherit' }}
+                            href={href} onClick={eg => mousedown(eg, e)}
+                            className={"flex  round min-w-120 item-hover  padding-w-10 padding-h-5  " + (false ? "dashed" : 'border-t')} >
+                            {e.icon && <span className="flex-fixed size-20 flex-center"><Icon size={18} icon={e.icon}></Icon></span>}
+                            <span className="flex-auto text-overflow">{e.text || '菜单项'}</span>
+                            <span className="flex-fixed">
+                                {Array.isArray(e.childs) && e.childs.length > 0 && <Icon size={16} icon={ChevronDownSvg}></Icon>}
+                            </span>
+                        </a>
+                        {Array.isArray(e.childs) && e.childs.length > 0 && e.spread == true && renderNavs(e.childs, deep + 1)}
+                    </div>
+                })}</div>
+        }
+        var style: CSSProperties = {
+            marginLeft: 10,
+            marginRight: 10
+        }
+        var pc = this.props.page.ws.publishConfig;
+        if (pc?.abled && pc?.defineContent && (pc.contentTheme == 'wiki' || pc.contentTheme == 'none'))
+            style = this.props.page.getScreenStyle();
+        return <div className="shy-page-bar " >
+            <div className="flex" style={style}>
+                <div className="flex-auto flex r-gap-r-10">
+                    {this.props.page.ws.publishConfig.navMenus.map((e, i) => {
+                        var href = e.urlType == 'url' ? e.url : undefined;
+                        if (e.urlType == 'page') {
+                            href = this.props.page.ws.resolve({ pageId: e.pageId });
+                        }
+                        return <div className="relative"
+                            style={{
+                                zIndex: 100000
+                            }}
+                            onMouseEnter={eg => {
+                                e.spread = true
+                                self.forceUpdate();
+                            }}
+                            onMouseLeave={eg => {
+                                e.spread = false;
+                                self.forceUpdate();
+                            }}
+                            key={e.id}>
+                            <a
+                                href={href} onClick={eg => mousedown(eg, e)}
+                                style={{ height: h, color: 'inherit' }} className={"flex round padding-w-10  " + (false ? "dashed" : 'border-t')}>
+                                {e.type == 'logo' && e.pic && <img className="obj-center " style={{ height: 40 }} src={e.pic?.url} />}
+                                {e.icon && <span className="flex-fixed size-20 flex-center"><Icon size={18} icon={e.icon}></Icon></span>}
+                                <span className={"flex-auto" + (e.text ? (e.type == 'logo' ? " bold f-18 " : " bold f-16 ") : " remark")}>{e.text || '菜单项'}</span>
+                                <span className="flex-fixed flex-center">
+                                    {Array.isArray(e.childs) && e.childs.length > 0 && <Icon size={16} icon={ChevronDownSvg}></Icon>}
+                                </span>
+                            </a>
+                            {Array.isArray(e.childs) && e.childs.length > 0 && e.spread == true && renderNavs(e.childs)}
+                        </div>
+                    })}
+                </div>
+                <div className="flex-fixed flex-end">
+                    {!this.props.page.isSign && <Button size="small" onClick={e => this.toLogin()}>登录</Button>}
+                    {this.props.page.isSign && <Avatar onMousedown={e => {
+                        if (window.shyConfig?.isPro) {
+                            location.href = 'https://shy.live/home'
+                        }
+                        else {
+                            location.href = '/home'
+                        }
+                    }} size={32} userid={this.props.page.user.id}></Avatar>}
+                </div>
+            </div>
         </div>
     }
 }
