@@ -157,7 +157,6 @@ export var util = {
         })
     },
     async downloadFileByData(data: string, name: string) {
-
         //Blob为js的一个对象，表示一个不可变的, 原始数据的类似文件对象，这是创建文件中不可缺少的！
         var urlObject = window.URL;
         var export_blob = new Blob([data]);
@@ -257,8 +256,7 @@ export var util = {
         }
         return result;
     },
-    convertToRoman(num)
-    {
+    convertToRoman(num) {
         var romanNumeral = "";
         var decimalNum = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
         var romanNum = ["M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"];
@@ -269,5 +267,19 @@ export var util = {
             }
         }
         return romanNumeral;
+    },
+    flatArrayConvertTree<T>(data: T[], id: string = 'id', parentId: string = 'parentId', childsKey: string = 'childs') {
+        var rs: T[] = [];
+        data.each(da => {
+            if (da[parentId]) {
+                var pa = data.find(g => g[id] == da[parentId]);
+                if (pa) {
+                    if (!Array.isArray(pa[childsKey])) pa[childsKey] = [];
+                    pa[childsKey].push(da);
+                    rs.push(da);
+                }
+            }
+        })
+        return data.findAll(g => !rs.exists(r => r == g));
     }
 }
