@@ -190,8 +190,7 @@ export class Image extends Block {
             ]
         });
         items.push({
-
-            text: '蒙版',
+            text: '蒙板',
             icon: { name: 'bytedance-icon', code: 'mask-two' },
             childs: [
                 {

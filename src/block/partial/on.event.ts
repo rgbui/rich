@@ -71,7 +71,7 @@ export class Block$Event {
         items.push({
             name: BlockDirective.copy,
             text: '拷贝副本',
-            label: "ctrl+D",
+            label: "Ctrl+D",
             icon: DuplicateSvg
         });
         var menus = await this.onGetTurnMenus();
@@ -166,7 +166,7 @@ export class Block$Event {
             name: BlockDirective.delete,
             icon: TrashSvg,
             text: langProvider.getText(LangID.menuDelete),
-            label: "delete"
+            label: "Del"
         });
         return items;
     }
@@ -507,7 +507,7 @@ export class Block$Event {
             }
             var currentData = arr[at];
             var pos = this.getArrayItemPos(options.prop, currentData);
-            arr.splice(at,1);
+            arr.splice(at, 1);
             var cd;
             var pm = this.pm(options.prop);
             if (pm) {
