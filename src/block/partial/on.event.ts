@@ -62,12 +62,18 @@ export class Block$Event {
             return await this.onGetBoardContextMenus()
         }
         var items: MenuItem<BlockDirective | string>[] = [];
-        items.push({
-            name: 'askAi',
-            icon: AiStartSvg,
-            text: "诗云AI",
-        });
-        items.push({ type: MenuItemType.divide });
+        var hasAi: boolean = true;
+        if (this.isPanel) {
+            hasAi = false;
+        }
+        if (hasAi) {
+            items.push({
+                name: 'askAi',
+                icon: AiStartSvg,
+                text: "诗云AI",
+            });
+            items.push({ type: MenuItemType.divide });
+        }
         items.push({
             name: BlockDirective.copy,
             text: '拷贝副本',

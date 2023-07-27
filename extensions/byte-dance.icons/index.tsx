@@ -93,13 +93,13 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
     }
     renderFontColors() {
         return <div className='shy-font-awesome-colors'>
-            {FontColorList.map(c => {
-                return <ToolTip overlay={c.text} key={c.color} ><a className={this.color == c.color ? "hover" : ""} onMouseDown={e => this.onSetFont(c)} style={{ backgroundColor: c.color }}></a></ToolTip>
+            {FontColorList.map(c =>{
+                return <ToolTip overlay={c.text} key={c.color} ><a className={this.color == c.color ? "hover" : ""} onMouseDown={e => this.onSetFont(c)} style={{ backgroundColor: c.color == 'inherit' ? "var(--text-color)" : c.color }}></a></ToolTip>
             })}
         </div>
     }
     renderSvg(icon: ByteDanceType) {
-        return byteDanceStore.renderSvg(icon.name, this.color);
+        return byteDanceStore.renderSvg(icon.name,this.color=='inherit'?"var(--text-color)":this.color);
     }
     renderSearch() {
         if (this.searchEmojis.length == 0) return <div className="flex-center remark f-12">没有搜索图标</div>
@@ -132,7 +132,7 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
             {!this.word && <div className='shy-font-awesome' onScroll={e => this.onScroll(e)}>
                 {this.renderFontColors()}
                 {this.loading && <div className='shy-font-awesome-loading'></div>}
-                {this.loading != true && <div style={{ color: this.color }} className='shy-font-awesome-content'>{this.renderFontAwesomes()}</div>}
+                {this.loading != true && <div style={{ color: this.color=='inherit'?"var(--text-color)":this.color }} className='shy-font-awesome-content'>{this.renderFontAwesomes()}</div>}
             </div>}
         </div>
     }

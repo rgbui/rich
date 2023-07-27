@@ -4,7 +4,7 @@
  * 文字颜色
  */
 export var FontColorList = [
-    { color: 'rgb(55,53,47)', text: '默认' },
+    { color: 'inherit', text: '默认' },
     { color: 'rgba(55,53,47,0.6)', text: '灰色' },
     { color: 'rgb(100,71,58)', text: '棕色' },
     { color: 'rgb(217,115,13)', text: '橙色' },

@@ -97,9 +97,8 @@ export function Icon(props: {
                     // height: props.size == 'none' ? undefined : (props.size) || 20,
                     ...(props.style || {})
                 });
-                // console.log(ByteIcons);
                 var color = pc.color || 'currentColor';
-                var iconSvg = byteDanceStore.renderSvg(pc.code, pc.color || '#000')
+                if (color == 'inherit') color = 'currentColor';
                 var iconSvg = ByteIcons.get(pc.code)({
                     id: pc.name as any,
                     width: props.size == 'none' ? undefined : (props.size) || 20,
