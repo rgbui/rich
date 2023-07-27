@@ -7,6 +7,7 @@ import { BlockDisplay } from "../../src/block/enum";
 import { TextTurns } from "../../src/block/turn/text";
 import { Block } from "../../src/block";
 import { BlockChildKey } from "../../src/block/constant";
+import lodash from "lodash";
 
 @url('/quote')
 export class Quote extends TextSpan {
@@ -60,6 +61,11 @@ export class Quote extends TextSpan {
             }
         }
         return ps.join('  \n');
+    }
+    async onGetContextMenus() {
+        var rs = await super.onGetContextMenus();
+        lodash.remove(rs, g => g.name == 'text-center');
+        return rs;
     }
 }
 @view('/quote')

@@ -108,7 +108,6 @@ export class Block$Event {
         items.push({
             type: MenuItemType.divide
         });
-
         if (typeof (this as any).align != 'undefined') {
             items.push({
                 name: 'text-center',

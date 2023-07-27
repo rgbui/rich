@@ -9,13 +9,11 @@ export class Block$Anchor {
 
     async visibleDownCreateBlock(this: Block, url: string, data: Record<string, any> = {}) {
         var row = this.closest(x => x.isBlock);
-        if (row)
-            return await this.page.createBlock(url, { ...data }, row.parent, row.at + 1, row.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
+        if (row)  return await this.page.createBlock(url, { ...data }, row.parent, row.at + 1, row.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
     }
     async visibleUpCreateBlock(this: Block, url: string, data: Record<string, any>) {
         var row = this.closest(x => x.isBlock);
-        if (row)
-            return await this.page.createBlock(url, { ...data }, row.parent, row.at, row.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
+        if (row)  return await this.page.createBlock(url, { ...data }, row.parent, row.at, row.parent.hasSubChilds ? BlockChildKey.subChilds : BlockChildKey.childs);
     }
     async visibleRightCreateBlock(this: Block, at: number, url: string, data: Record<string, any>) {
         if (this.isTextContent) {

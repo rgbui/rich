@@ -3,7 +3,7 @@ import React from 'react';
 import { prop, url, view } from "../../src/block/factory/observable";
 import { ChildsArea, TextArea, TextLineChilds } from "../../src/block/view/appear";
 import { TextSpan } from "../../src/block/element/textspan";
-import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
+import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import { TextTurns } from "../../src/block/turn/text";
 import { Block } from "../../src/block";
 import { BlockChildKey } from "../../src/block/constant";
@@ -11,6 +11,8 @@ import { Icon } from "../../component/view/icon";
 import { IconArguments } from "../../extensions/icon/declare";
 import { useIconPicker } from "../../extensions/icon";
 import { Rect } from "../../src/common/vector/point";
+import { MenuItem } from "../../component/view/menu/declare";
+import lodash from "lodash";
 
 @url('/callout')
 export class Callout extends TextSpan {
@@ -72,6 +74,11 @@ export class Callout extends TextSpan {
     }
     @prop()
     calloutIcon: IconArguments = { name: "emoji", code: '💡' };
+    async onGetContextMenus() {
+        var rs = await super.onGetContextMenus();
+        lodash.remove(rs, g => g.name == 'text-center');
+        return rs;
+    }
 }
 @view('/callout')
 export class CalloutView extends BlockView<Callout>{
@@ -81,7 +88,7 @@ export class CalloutView extends BlockView<Callout>{
         if (bg == 'rgba(255,255,255,0)' || bg == 'rgb(255,255,255,0)') style.border = '1px solid rgb(233, 231, 231)';
         else style.border = '1px solid rgba(233,231,231,0)';
         return <div style={this.block.visibleStyle}><div className='sy-block-callout flex-top' style={{ ...style, padding: 16 }}>
-            <div onMouseDown={e =>{ e.stopPropagation(); this.block.onChangeIcon(e) }} style={{ width: this.block.page.lineHeight, height: this.block.page.lineHeight }} className='size-20 flex-center round cursor item-hover flex-fixed gap-r-5'>
+            <div onMouseDown={e => { e.stopPropagation(); this.block.onChangeIcon(e) }} style={{ width: this.block.page.lineHeight, height: this.block.page.lineHeight }} className='size-20 flex-center round cursor item-hover flex-fixed gap-r-5'>
                 <Icon size={18} icon={this.block.calloutIcon}></Icon>
             </div>
             <div className='flex-auto'>
