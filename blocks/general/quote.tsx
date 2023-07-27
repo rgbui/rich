@@ -8,6 +8,8 @@ import { TextTurns } from "../../src/block/turn/text";
 import { Block } from "../../src/block";
 import { BlockChildKey } from "../../src/block/constant";
 import lodash from "lodash";
+import { Point, Rect } from "../../src/common/vector/point";
+import { dom } from "../../src/common/dom";
 
 @url('/quote')
 export class Quote extends TextSpan {
@@ -67,13 +69,27 @@ export class Quote extends TextSpan {
         lodash.remove(rs, g => g.name == 'text-center');
         return rs;
     }
+    getVisibleHandleCursorPoint() {
+        var pos = Point.from(this.getVisibleBound());
+        var h = this.el.querySelector('.sy-block-quote-content') as HTMLElement;
+        var lh = parseFloat(dom(h).style('lineHeight'));
+        var bound = Rect.fromEle(h);
+        pos.y = bound.y + lh / 2;
+        return pos;
+        // if (bound) {
+        //     var pos = Point.from(bound);
+        //    
+        //     pos = pos.move(0, 3 + lh / 2);
+        //     return pos;
+        // }
+    }
 }
 @view('/quote')
 export class QuoteView extends BlockView<Quote>{
     render() {
         return <div style={this.block.visibleStyle}><div className='sy-block-quote'
             style={{ ...this.block.contentStyle }}
-        ><div className="gap-h-10 relative">
+        ><div className="gap-h-5 relative">
                 <div className='sy-block-quote-bar'></div>
                 <div className='sy-block-quote-content'>
                     <div data-block-content>
