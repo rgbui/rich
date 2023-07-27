@@ -254,11 +254,13 @@ export class Block$Event {
             case 'fontColor':
                 this.page.onAction('setFontStyle', async () => {
                     this.pattern.setFontStyle({ color: item.value });
+                    this.page.addBlockUpdate(this);
                 })
                 break;
             case 'fillColor':
                 this.page.onAction('setFillStyle', async () => {
                     this.pattern.setFillStyle({ mode: 'color', color: item.value })
+                    this.page.addBlockUpdate(this);
                 })
                 break;
             case 'text-center':
