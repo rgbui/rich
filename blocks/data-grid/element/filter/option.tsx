@@ -64,7 +64,7 @@ export class FilterFieldOptionView extends BlockView<FilterFieldOption>{
             else return <div onMouseDown={e => select(e)}>{ops.map(op => { return <span key={op.value}>{op.text}</span> })}</div>
         }
         else return <div className="inline">
-            <span className={"inline-block gap-r-10 padding-w-5 padding-h-2  round cursor " + (!this.block.values.some(s => this.block.field?.config.options.some(c => c.value == s)) ? " text-white bg-primary" : "")} onClick={e => {
+            <span className={"gap-r-10 padding-w-5 padding-h-2  round cursor " + (!this.block.values.some(s => this.block.field?.config.options.some(c => c.value == s)) ? " text-white bg-primary" : "")} onClick={e => {
                 this.block.onFilter([], true)
             }}>全部</span>
             {this.block.field?.config.options.map(g => {
