@@ -176,7 +176,7 @@ export class List extends Block {
                         { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.capitalLetter, text: '大写字母', value: ListTypeView.capitalLetter },
                         { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.roman, text: '罗马', value: ListTypeView.roman }
                     ]
-                },{ type: MenuItemType.divide }]
+                }, { type: MenuItemType.divide }]
             items.splice(at, 0, ...newItems)
         }
 
@@ -248,7 +248,12 @@ export class ListView extends BlockView<List>{
             else if (this.block.listView == ListTypeView.roman) {
                 str = util.convertToRoman(num + 1).toLowerCase()
             }
-            return <span className='sy-block-list-text-type'>{str}.</span>
+            return <span style={{
+                fontStyle: 'normal',
+                textDecoration: 'none',
+                color: 'var(--text-color)',
+                fontWeight: 'normal'
+            }} className='sy-block-list-text-type'>{str}.</span>
         }
     }
     renderText() {
