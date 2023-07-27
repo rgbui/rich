@@ -182,7 +182,6 @@ export async function inputLineTail(write: PageWrite, aa: AppearAnchor, event: R
     return false;
 }
 
-
 /**
  * 将要回车删除
  * 两种情况
@@ -320,7 +319,6 @@ export async function keydownBackspaceTextContent(write: PageWrite, aa: AppearAn
         });
     }
 }
-
 
 /**
  *   有两种情况发生上面的
