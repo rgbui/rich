@@ -145,22 +145,45 @@ export function getCodeMirrorModes() {
 
 
 export var CodeMirrorModes = [
+    { label: "python", abled: true, mode: "python" },
+    { label: "c#", abled: true, mode: "clike" },
+    { label: "css", abled: true, mode: "css" },
+    { label: "go", abled: true, mode: "go" },
+    { label: "markdown", abled: true, mode: "markdown" },
+    { label: "r", abled: true, mode: "r" },
+    { label: "yaml", abled: true, mode: "yaml" },
+    { label: "xml", abled: true, mode: "xml" },
+    { label: "dart", abled: true, mode: "dart" },
+    { label: "javascript", abled: true, mode: "javascript" },
+    { label: "rust", abled: true, mode: "rust" },
+    { label: "vue", abled: true, mode: "vue" },
+    { label: "lua", abled: true, mode: "lua" },
+    { label: "jsx", abled: true, mode: "jsx" },
+    { label: "swift", abled: true, mode: "swift" },
+    { label: "sql", abled: true, mode: "sql" },
+    { label: "php", abled: true, mode: "php" },
+    { label: "protobuf", abled: true, mode: "protobuf" },
+    { label: "nginx", abled: true, mode: "nginx" },
+    { label: "shell", abled: true, mode: "shell" },
+    { label: "mbox", abled: true, mode: "mbox" },
+    { label: "htmlmixed", mode: "htmlmixed" },
+
+
     { label: "apl", mode: "apl" },
     { label: "asciiarmor", mode: "asciiarmor" },
     { label: "asn.1", mode: "asn.1" },
     { label: "asterisk", mode: "asterisk" },
     { label: "brainfuck", mode: "brainfuck" },
-    { label: "c#", abled: true, mode: "clike" },
+
     { label: "clojure", abled: true, mode: "clojure" },
     { label: "cmake", abled: true, mode: "cmake" },
     { label: "cobol", mode: "cobol" },
     { label: "coffeescript", abled: true, mode: "coffeescript" },
     { label: "commonlisp", mode: "commonlisp" },
     { label: "crystal", mode: "crystal" },
-    { label: "css", abled: true, mode: "css" },
     { label: "cypher", mode: "cypher" },
     { label: "d", mode: "d" },
-    { label: "dart", abled: true, mode: "dart" },
+
     { label: "diff", mode: "diff" },
     { label: "django", abled: true, mode: "django" },
     { label: "dockerfile", abled: true, mode: "dockerfile" },
@@ -178,7 +201,8 @@ export var CodeMirrorModes = [
     { label: "gas", mode: "gas" },
     { label: "gfm", mode: "gfm" },
     { label: "gherkin", mode: "gherkin" },
-    { label: "go", abled: true, mode: "go" },
+
+
     { label: "groovy", mode: "groovy" },
     { label: "haml", abled: true, mode: "haml" },
     { label: "handlebars", mode: "handlebars" },
@@ -186,23 +210,24 @@ export var CodeMirrorModes = [
     { label: "haskell-literate", abled: true, mode: "haskell-literate" },
     { label: "haxe", abled: true, mode: "haxe" },
     { label: "htmlembedded", mode: "htmlembedded" },
-    { label: "htmlmixed", mode: "htmlmixed" },
+
     { label: "http", abled: true, mode: "http" },
     { label: "idl", mode: "idl" },
-    { label: "javascript", abled: true, mode: "javascript" },
+
     { label: "jinja2", mode: "jinja2" },
-    { label: "jsx", abled: true, mode: "jsx" },
+
     { label: "julia", mode: "julia" },
     { label: "livescript", mode: "livescript" },
-    { label: "lua", abled: true, mode: "lua" },
-    { label: "markdown", abled: true, mode: "markdown" },
+
+
     { label: "mathematica", mode: "mathematica" },
-    { label: "mbox", abled: true, mode: "mbox" }, { label: "meta.js", mode: "meta.js" },
+
+    { label: "meta.js", mode: "meta.js" },
     { label: "mirc", mode: "mirc" }, { label: "mllike", mode: "mllike" },
     { label: "modelica", mode: "modelica" },
     { label: "mscgen", mode: "mscgen" },
     { label: "mumps", mode: "mumps" },
-    { label: "nginx", abled: true, mode: "nginx" },
+
     { label: "nsis", abled: true, mode: "nsis" },
     { label: "ntriples", mode: "ntriples" },
     { label: "octave", mode: "octave" },
@@ -210,24 +235,24 @@ export var CodeMirrorModes = [
     { label: "pascal", mode: "pascal" },
     { label: "pegjs", mode: "pegjs" },
     { label: "perl", abled: true, mode: "perl" },
-    { label: "php", abled: true, mode: "php" },
+
     { label: "pig", mode: "pig" },
     { label: "powershell", abled: true, mode: "powershell" },
     { label: "properties", mode: "properties" },
-    { label: "protobuf", abled: true, mode: "protobuf" },
+
     { label: "pug", mode: "pug" },
     { label: "puppet", mode: "puppet" },
-    { label: "python", abled: true, mode: "python" },
+
     { label: "q", mode: "q" },
-    { label: "r", abled: true, mode: "r" },
+
     { label: "rpm", mode: "rpm" },
     { label: "rst", mode: "rst" },
     { label: "ruby", mode: "ruby" },
-    { label: "rust", abled: true, mode: "rust" },
+
     { label: "sas", mode: "sas" },
     { label: "sass", abled: true, mode: "sass" },
     { label: "scheme", abled: true, mode: "scheme" },
-    { label: "shell", abled: true, mode: "shell" },
+
     { label: "sieve", mode: "sieve" },
     { label: "slim", mode: "slim" },
     { label: "smalltalk", mode: "smalltalk" },
@@ -236,10 +261,10 @@ export var CodeMirrorModes = [
     { label: "soy", mode: "soy" },
     { label: "sparql", mode: "sparql" },
     { label: "spreadsheet", mode: "spreadsheet" },
-    { label: "sql", abled: true, mode: "sql" },
+
     { label: "stex", mode: "stex" },
     { label: "stylus", abled: true, mode: "stylus" },
-    { label: "swift", abled: true, mode: "swift" },
+
     { label: "tcl", mode: "tcl" },
     { label: "textile", mode: "textile" },
     { label: "tiddlywiki", mode: "tiddlywiki" },
@@ -256,13 +281,13 @@ export var CodeMirrorModes = [
     { label: "velocity", mode: "velocity" },
     { label: "verilog", mode: "verilog" },
     { label: "vhdl", mode: "vhdl" },
-    { label: "vue", abled: true, mode: "vue" },
+
     { label: "wast", mode: "wast" },
     { label: "webidl", mode: "webidl" },
-    { label: "xml", abled: true, mode: "xml" },
+
     { label: "xquery", mode: "xquery" },
     { label: "yacas", mode: "yacas" },
-    { label: "yaml", abled: true, mode: "yaml" },
+
     { label: "yaml-frontmatter", mode: "yaml-frontmatter" },
     { label: "z80", mode: "z80" }]
 

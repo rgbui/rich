@@ -1,22 +1,23 @@
 .sy-block-code {
     &-box {
-        padding      : 34px 16px 16px 32px;
         color        : rgb(55, 53, 47);
         white-space  : pre;
         background   : rgb(247, 246, 243);
-        border-radius: 3px;
+        border-radius: 4px;
         position     : relative;
         margin       : 4px 0px;
     }
+
     &-head {
-        position       : absolute;
-        top            : 8px;
-        right          : 8px;
-        color          : rgba(55, 53, 47, 0.6);
-        display        : flex;
-        align-items    : center;
-        justify-content: flex-start;
-        opacity        : 0;
+        position        : absolute;
+        z-index         : 10000;
+        top             : 8px;
+        right           : 8px;
+        color           : rgba(55, 53, 47, 0.6);
+        display         : flex;
+        align-items     : center;
+        justify-content : flex-start;
+        background-color: rgb(247, 246, 243);
 
         &-lang {
             user-select  : none;
@@ -59,7 +60,7 @@
 
 .CodeMirror {
     background-color: transparent;
-    height:auto;
-    font-size: 14px;
-    line-height: 24px;
+    height          : auto;
+    font-size       : var(--code-mirror-font-size);
+    line-height     : var(--code-mirror-line-height);
 }

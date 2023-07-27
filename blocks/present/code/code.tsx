@@ -2,10 +2,10 @@ import { BlockView } from "../../../src/block/view";
 import { prop, url, view } from "../../../src/block/factory/observable";
 import React from 'react';
 import { Block } from "../../../src/block";
-import { BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
+import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
 import { useSelectMenuItem } from "../../../component/view/menu";
 import { Rect } from "../../../src/common/vector/point";
-import { ChevronDownSvg, DuplicateSvg } from "../../../component/svgs";
+import { ChevronDownSvg, DotsSvg, DuplicateSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import "../../../src/assert/codemirror/lib/codemirror.css"
 import lodash from "lodash";
@@ -17,9 +17,8 @@ import { ToolTip } from "../../../component/view/tooltip";
 import { ShyAlert } from "../../../component/lib/alert";
 import { CopyText } from "../../../component/copy";
 const CODEMIRROR_MODE = 'CODE_MIRROR_MODE';
+
 /**
- * prism url : https://prismjs.com/#examples
- * prism babel plug :https://www.npmjs.com/package/babel-plugin-prismjs
  * 
  * codemirror url: https://codemirror.net/5/doc/manual.html#config
  */
@@ -27,7 +26,7 @@ const CODEMIRROR_MODE = 'CODE_MIRROR_MODE';
 export class TextCode extends Block {
     display = BlockDisplay.block;
     @prop()
-    language: string = 'javascript';
+    language: string = 'plain';
     get isSupportTextStyle() {
         return false;
     }
@@ -71,15 +70,15 @@ export class TextCode extends Block {
         return this.content;
     }
     async onChangeMode(name: string) {
-        await this.onUpdateProps({ language: name }, { range: BlockRenderRange.self });
-        if (this.codeMirror) {
-            var codeMode = getCodeMirrorModes().find(g => g.mode == this.language);
-            if (codeMode) await codeMode.load();
-            this.codeMirror.setOption({
-                mode: this.language
-            });
-            channel.act('/cache/set', { key: CODEMIRROR_MODE, value: this.language })
-        }
+        await this.page.onAction('onChangeMode', async () => {
+            await this.updateProps({ language: name }, BlockRenderRange.self);
+            if (this.codeMirror) {
+                var codeMode = getCodeMirrorModes().find(g => g.mode == this.language);
+                if (codeMode) await codeMode.load();
+                this.codeMirror.setOption('mode', this.language);
+                channel.act('/cache/set', { key: CODEMIRROR_MODE, value: this.language })
+            }
+        })
     }
     renderValue() {
         if (this.codeMirror) {
@@ -88,6 +87,35 @@ export class TextCode extends Block {
     }
     async getMd() {
         return `\`\`\`${this.language}\n${this.content}\n\`\`\``
+    }
+    async onGetContextMenus() {
+        var rs = await super.onGetContextMenus();
+        rs = rs.splice(2);
+        lodash.remove(rs, g => g.name == 'text-align');
+        var at = rs.findIndex(g => g.text == '颜色');
+        var ns: MenuItem<string | BlockDirective>[] = [];
+        // ns.push({ type: MenuItemType.divide });
+        ns.push({ name: 'lineNumbers', type: MenuItemType.switch, text: '行号', checked: this.lineNumbers, icon: { name: 'bytedance-icon', code: 'list-numbers' } });
+        ns.push({ name: 'lineWrapping', type: MenuItemType.switch, text: '自动换号', checked: this.lineWrapping, icon: { name: 'bytedance-icon', code: 'corner-down-left' } });
+        ns.push({ type: MenuItemType.divide });
+        rs.splice(at, 0, ...ns)
+        lodash.remove(rs, g => g.text == '颜色')
+        return rs;
+    }
+    async onClickContextMenu(item: MenuItem<string | BlockDirective>, event: MouseEvent): Promise<void> {
+        return await super.onClickContextMenu(item, event);
+    }
+    async onContextMenuInput(item: MenuItem<string | BlockDirective>): Promise<void> {
+        if (item.name == 'lineNumbers' || item.name == 'lineWrapping') {
+            await this.page.onAction('updateProps', async () => {
+                await this.updateProps({ [item.name]: item.checked }, BlockRenderRange.self);
+                if (this.codeMirror) {
+                    this.codeMirror.setOption(item.name, item.checked)
+                }
+            })
+            return
+        }
+        return await super.onContextMenuInput(item)
     }
 }
 @view('/code')
@@ -118,14 +146,17 @@ export class TextCodeView extends BlockView<TextCode>{
             {
                 type: MenuItemType.container,
                 containerHeight: 200,
-                childs: CodeMirrorModes.filter(g => g.abled).map(l => {
-                    return {
-                        text: l.label,
-                        name: l.mode,
-                        visible: vfx as any,
-                        checkLabel: this.block.language == l.mode
-                    }
-                })
+                childs: [
+                    { text: '纯文本', name: 'plain', value: 'plain' },
+                    ...CodeMirrorModes.filter(g => g.abled).map(l => {
+                        return {
+                            text: l.label,
+                            name: l.mode,
+                            visible: vfx as any,
+                            checkLabel: this.block.language == l.mode
+                        }
+                    })
+                ]
             }]
         );
         if (menuItem) {
@@ -143,8 +174,17 @@ export class TextCodeView extends BlockView<TextCode>{
         ShyAlert('复制成功')
     }
     render() {
-        var label = CodeMirrorModes.filter(g => g.abled).find(g => g.mode == this.block.language)?.label || 'unknow';
-        return <div style={this.block.visibleStyle}><div className='sy-block-code' onMouseDown={e => e.stopPropagation()}>
+        var label = CodeMirrorModes.filter(g => g.abled).find(g => g.mode == this.block.language)?.label || '纯文本';
+        var s = {
+            '--code-mirror-font-size': this.block.page.fontSize + 'px',
+            '--code-mirror-line-height': this.block.page.lineHeight + 'px'
+        } as any
+        return <div style={this.block.visibleStyle}><div
+            className='sy-block-code'
+            style={{
+                ...s
+            }}
+            onMouseDown={e => e.stopPropagation()}>
             <div className='sy-block-code-box' >
                 <div className='sy-block-code-head'>
                     {this.props.block.isCanEdit() && <div className='sy-block-code-head-lang' onMouseDown={e => e.stopPropagation()} onMouseUp={e => this.changeLang(e)}>
@@ -154,8 +194,14 @@ export class TextCodeView extends BlockView<TextCode>{
                     <ToolTip overlay={'复制'}><div onMouseDown={e => this.onCopy()} className="size-24 flex-center cursor item-hover round">
                         <Icon size={18} icon={DuplicateSvg}></Icon>
                     </div></ToolTip>
+                    {this.props.block.isCanEdit() && <ToolTip overlay={'菜单'}><div onMouseDown={e => {
+                        e.stopPropagation();
+                        this.block.onContextmenu(e.nativeEvent);
+                    }} className="size-24 flex-center cursor item-hover round">
+                        <Icon size={18} icon={DotsSvg}></Icon>
+                    </div></ToolTip>}
                 </div>
-                <div className='sy-block-code-content'>
+                <div className={'sy-block-code-content ' + (this.block.lineNumbers ? "padding-h-10" : "padding-10")}>
                 </div>
             </div>
         </div>
