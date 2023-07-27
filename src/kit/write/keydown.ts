@@ -10,6 +10,8 @@ import { onceAutoScroll } from "../../common/scroll";
 import { TextEle } from "../../common/text.ele";
 import { Rect } from "../../common/vector/point";
 import { InputForceStore } from "./store";
+import { ListType, ListTypeView } from "../../../blocks/present/list/list";
+import lodash from "lodash";
 
 /***
  * 这里主要是判断当前的keydown事件是否还需要触发，继续执行输入
@@ -167,6 +169,7 @@ export async function onEnterInput(write: PageWrite, aa: AppearAnchor, event: Re
         })
     });
 }
+
 export async function onKeyTab(write: PageWrite, aa: AppearAnchor, event: React.KeyboardEvent) {
     var sel = window.getSelection();
     var offset = aa.getCursorOffset(sel.focusNode, sel.focusOffset);
@@ -190,6 +193,12 @@ export async function onKeyTab(write: PageWrite, aa: AppearAnchor, event: React.
             if (rowBlock.hasSubChilds) {
                 await rowBlock.appendArray(rest, undefined, 'subChilds');
                 await rowBlock.insertAfter(pa);
+                if (pa.url == BlockUrlConstant.List && rowBlock.url == BlockUrlConstant.List) {
+                    await rowBlock.updateProps({
+                        listType: (pa as any).listType,
+                        listView: (pa as any).listView
+                    });
+                }
             }
             else {
                 pa.parent.appendArray([rowBlock, ...rest], pa.at + 1, pa.parent.hasSubChilds ? 'subChilds' : 'childs')
@@ -197,10 +206,52 @@ export async function onKeyTab(write: PageWrite, aa: AppearAnchor, event: React.
         }
         else {
             var prev = rowBlock.prev;
-            if (prev.url == BlockUrlConstant.List && (prev as any).expand == false) {
-                prev.updateProps({ expand: true });
+            if (prev) {
+                if (prev.url == BlockUrlConstant.List && (prev as any).expand == false) {
+                   await prev.updateProps({ expand: true });
+                }
+                if (prev.url == BlockUrlConstant.List && rowBlock.url == BlockUrlConstant.List) {
+                    if ((prev as any).listType == (rowBlock as any).listType) {
+                        if ((prev as any).listView == (rowBlock as any).listView) {
+                            var rs: ListTypeView[] = [];
+                            if ((prev as any).listType == ListType.circle) {
+                                rs = [
+                                    ListTypeView.none,
+                                    ListTypeView.circleEmpty,
+                                    ListTypeView.rhombus,//菱形
+                                    ListTypeView.solidRhombus,//实心菱形,rhombus = 2,//菱形
+                                ];
+                            }
+                            else if ((prev as any).listType == ListType.number) {
+                                rs = [
+                                    ListTypeView.none,
+                                    ListTypeView.alphabet,//字母
+                                    ListTypeView.roman,//罗马hombus = 2,//菱形
+                                    ListTypeView.capitalLetter,//大写字母
+                                ];
+                            }
+                            lodash.remove(rs, g => g == (prev as any).listView);
+                            if (prev?.parent && prev?.parent.url == BlockUrlConstant.List) {
+                                var pr = prev.parent;
+                                if ((pr as any).listType == (rowBlock as any).listType) {
+                                    lodash.remove(rs, g => g == (pr as any).listView);
+                                }
+                            }
+                            if (prev?.parent?.parent && prev?.parent?.parent.url == BlockUrlConstant.List) {
+                                var pr = prev?.parent?.parent;
+                                if ((pr as any).listType == (rowBlock as any).listType) {
+                                    lodash.remove(rs, g => g == (pr as any).listView);
+                                }
+                            }
+                            if (rs.length > 0)
+                                await rowBlock.updateProps({
+                                    listView: rs[0]
+                                })
+                        }
+                    }
+                }
+                await prev.append(rowBlock, undefined, 'subChilds');
             }
-            await prev.append(rowBlock, undefined, 'subChilds');
         }
         page.addUpdateEvent(async () => {
             var newAA = block.appearAnchors.find(g => g.prop == prop);
