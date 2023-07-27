@@ -26,11 +26,10 @@ export enum ListTypeView {
     none = 0,
     circleEmpty = 1,//空心
     rhombus = 2,//菱形
-    solidRhombus = 3,//菱形
+    solidRhombus = 3,//实心菱形
     alphabet = 12,//字母
     capitalLetter = 13,//大写字母
     roman = 14,//罗马
-
 }
 
 @url('/list')
@@ -148,7 +147,7 @@ export class List extends Block {
                 if (this.listType == ListType.circle) {
                     return <div className="size-20 flex-center flex-inline">
                         {item.value == ListTypeView.none && <i className="flex size-6 circle" style={{ backgroundColor: 'rgb(55,53,47)' }}></i>}
-                        {item.value == ListTypeView.circleEmpty && <i className="flex size-4 circle" style={{ border: '1px solid rgb(55,53,47)' }}></i>}
+                        {item.value == ListTypeView.circleEmpty && <i className="flex size-5 circle" style={{ border: '1px solid rgb(55,53,47)' }}></i>}
                         {item.value == ListTypeView.rhombus && <i className="flex size-4 " style={{ transformOrigin: '50% 50%', transform: 'rotate(45deg)', border: '1px solid rgb(55,53,47)' }}></i>}
                         {item.value == ListTypeView.solidRhombus && <i className="flex size-6 " style={{ transformOrigin: '50% 50%', transform: 'rotate(45deg)', backgroundColor: 'rgb(55,53,47)' }}></i>}
                     </div>
@@ -207,7 +206,7 @@ export class ListView extends BlockView<List>{
     renderListType() {
         if (this.block.listType == ListType.circle) return <span style={{ height: this.block.page.lineHeight }} className='sy-block-list-text-type'>
             {this.block.listView == ListTypeView.none && <i className="flex size-6 circle" style={{ backgroundColor: 'rgb(55,53,47)' }}></i>}
-            {this.block.listView == ListTypeView.circleEmpty && <i className="flex size-4 circle" style={{ border: '1px solid rgb(55,53,47)' }}></i>}
+            {this.block.listView == ListTypeView.circleEmpty && <i className="flex size-5 circle" style={{ border: '1px solid rgb(55,53,47)' }}></i>}
             {this.block.listView == ListTypeView.rhombus && <i className="flex size-4 " style={{ transformOrigin: '50% 50%', transform: 'rotate(45deg)', border: '1px solid rgb(55,53,47)' }}></i>}
             {this.block.listView == ListTypeView.solidRhombus && <i className="flex size-6 " style={{ transformOrigin: '50% 50%', transform: 'rotate(45deg)', backgroundColor: 'rgb(55,53,47)' }}></i>}
         </span>
