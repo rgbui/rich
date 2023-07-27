@@ -6,7 +6,7 @@ import { BlockDirective, BlockDisplay } from "../../../src/block/enum";
 import { ResourceArguments } from "../../../extensions/icon/declare";
 import { useOutSideUrlInput } from "../../../extensions/link/outsite.input";
 import { Rect } from "../../../src/common/vector/point";
-import { BookSvg, DotsSvg, RefreshSvg } from "../../../component/svgs";
+import { BookSvg, DotsSvg, DuplicateSvg, LogoutSvg, RefreshSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import "./style.less";
 import { channel } from "../../../net/channel";
@@ -16,6 +16,7 @@ import { Spin } from "../../../component/view/spin";
 import { ToolTip } from "../../../component/view/tooltip";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import lodash from "lodash";
+import { CopyAlert } from "../../../component/copy";
 
 @url('/bookmark')
 export class Bookmark extends Block {
@@ -92,6 +93,12 @@ export class Bookmark extends Block {
         lodash.remove(rs, g => g.name == 'text-align');
         var at = rs.findIndex(g => g.text == '颜色');
         var ns: MenuItem<string | BlockDirective>[] = [];
+        rs.splice(0, 0,
+            { name: 'open', text: '打开书签网址', icon: { name: 'bytedance-icon', code: 'arrow-right-up' } },
+            { type: MenuItemType.divide }
+        )
+        ns.push({ type: MenuItemType.divide });
+        ns.push({ name: 'copyLink', text: '复制书签网址', icon: DuplicateSvg });
         ns.push({ name: 'reload', text: '重新生成书签', icon: RefreshSvg });
         ns.push({ type: MenuItemType.divide });
         rs.splice(at, 0, ...ns)
@@ -100,6 +107,14 @@ export class Bookmark extends Block {
     async onClickContextMenu(item: MenuItem<string | BlockDirective>, event: MouseEvent): Promise<void> {
         if (item.name == 'reload') {
             this.onLoadBookmarkByUrl(this.bookmarkUrl)
+            return;
+        }
+        if (item.name == 'copyLink') {
+            CopyAlert(this.bookmarkUrl, '已复制书签网址')
+            return;
+        }
+        if (item.name == 'open') {
+            window.open(this.bookmarkUrl)
             return;
         }
         return await super.onClickContextMenu(item, event);
@@ -147,12 +162,12 @@ export class BookmarkView extends BlockView<Bookmark>{
                 {this.block.bookmarkInfo.image && this.block.imageWidth > 180 && this.block.imageWidth < 250 && <div style={{ width: this.block.imageWidth }} className='sy-block-bookmark-image'>
                     <img src={autoImageUrl(this.block.bookmarkInfo.image.url, 250)} />
                 </div>}
-                <div onMouseDown={e => {
+                {this.block.isCanEdit() && <div onMouseDown={e => {
                     e.stopPropagation();
                     this.block.onContextmenu(e.nativeEvent)
                 }} className="bg-dark cursor visible text-white pos-top-right gap-10 size-24 round flex-center ">
                     <Icon size={18} icon={DotsSvg}></Icon>
-                </div>
+                </div>}
             </a>}
             {this.renderEmpty()}
         </div></div>
