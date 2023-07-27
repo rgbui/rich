@@ -194,7 +194,7 @@ export class Tab extends Block {
             var ns: MenuItem<string | BlockDirective>[] = [];
             ns.push({ type: MenuItemType.divide });
             ns.push({
-                text: '当前标签卡',
+                text: '当前标签项',
                 icon: { name: 'bytedance-icon', code: 'top-bar' },
                 childs: [
                     { name: 'prevItem', text: '前移', disabled: at == 0 ? true : false, icon: ArrowLeftSvg },
