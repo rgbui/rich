@@ -12,7 +12,7 @@ import { DropDirection } from "../../../src/kit/handle/direction";
 import { dom } from "../../../src/common/dom";
 import { BlockFactory } from "../../../src/block/factory/block.factory";
 import { util } from "../../../util/util";
-import { MenuItem } from "../../../component/view/menu/declare";
+import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { MenuItemView } from "../../../component/view/menu/item";
 import "./style.less";
 
@@ -176,7 +176,7 @@ export class List extends Block {
                         { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.capitalLetter, text: '大写字母', value: ListTypeView.capitalLetter },
                         { name: 'listView', renderIcon: rc, checkLabel: this.listView == ListTypeView.roman, text: '罗马', value: ListTypeView.roman }
                     ]
-                }]
+                },{ type: MenuItemType.divide }]
             items.splice(at, 0, ...newItems)
         }
 
