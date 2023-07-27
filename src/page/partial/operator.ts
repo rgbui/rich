@@ -277,6 +277,7 @@ export class Page$Operator {
                 this.onAction('setFontStyle', async () => {
                     await blocks.eachAsync(async (block) => {
                         block.pattern.setFontStyle({ color: item.value });
+                        this.addBlockUpdate(block);
                     })
                 })
                 break;
@@ -284,6 +285,7 @@ export class Page$Operator {
                 this.onAction('setFillStyle', async () => {
                     await blocks.eachAsync(async (block) => {
                         block.pattern.setFillStyle({ mode: 'color', color: item.value })
+                        this.addBlockUpdate(block);
                     })
                 })
                 break;
