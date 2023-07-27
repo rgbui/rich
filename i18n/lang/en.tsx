@@ -13,8 +13,6 @@ export default {
     [LangID.textToolDeleteLine]: <span>delete line</span>,
     [LangID.textToolUnderline]: <span>underline</span>,
     [LangID.textToolMention]: <span>mention</span>,
-    [LangID.none]: <span></span>,
-    [LangID.none]: <span></span>,
-    [LangID.none]: <span></span>,
-    [LangID.none]: <span></span>,
+    [LangID.none]: <span></span>
+  
 }

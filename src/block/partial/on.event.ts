@@ -93,7 +93,7 @@ export class Block$Event {
         // });
         items.push({
             name: BlockDirective.link,
-            text: langProvider.getText(LangID.menuCopyLink),
+            text: '复制块链接',
             icon: LinkSvg
         });
         // items.push({
