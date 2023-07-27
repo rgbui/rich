@@ -75,6 +75,13 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                             if (block.isPanel) kit.page.onCreateTailTextSpan(block);
                         }
                     }
+                    else {
+                        var sb = block.findReverse(g => g.appearAnchors.length > 0);
+                        if (sb) {
+                            kit.anchorCursor.onFocusBlockAnchor(sb, { last: true, render: true })
+                        }
+                        console.log('mousedown', block);
+                    }
                 }
                 else {
                     /**这里得找页面的最末尾块 */
