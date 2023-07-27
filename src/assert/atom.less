@@ -230,6 +230,22 @@ position的布局
     right   : 0px;
 }
 
+.pos-right-full,
+.pos-r-f {
+    top     : 0px;
+    position: absolute;
+    bottom  : 0px;
+    right   : 0px;
+}
+
+.pos-left-full,
+.pos-l-f {
+    top     : 0px;
+    position: absolute;
+    bottom  : 0px;
+    left    : 0px;
+}
+
 .pos-left,
 .pos-l {
     left    : 0px;
@@ -615,7 +631,8 @@ item-selected:选中的效果
 }
 
 body {
-    --text-color: #060607;
+    --text-color  : #060607;
+    --text-p-color: rgb(225, 98, 89);
 }
 
 .text {
@@ -1240,8 +1257,9 @@ each(@ops, {
 .bg-black {
     background-color: #000;
 }
-.bg-dark{
-    background-color:rgba(0,0,0,.6)
+
+.bg-dark {
+    background-color: rgba(0, 0, 0, .6)
 }
 
 

@@ -22,6 +22,11 @@ export class TabPage extends Block {
         if (this.at != this.myTab.tabIndex) {
             style.display = 'none';
         }
+        style.paddingTop = 0;
+        style.paddingBottom = 0;
+        style.paddingLeft = 0;
+        style.paddingRight = 0;
+        style.padding = 0
         return style;
     }
     get handleBlock(): Block {

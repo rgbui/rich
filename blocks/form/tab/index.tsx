@@ -1,8 +1,8 @@
-import React from "react";
-import { ArrowLeftSvg, ArrowRightSvg, PlusSvg, TrashSvg } from "../../../component/svgs";
+import React, { CSSProperties } from "react";
+import { ArrowLeftSvg, ArrowRightSvg, DotsSvg, PlusSvg, TrashSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import { useSelectMenuItem } from "../../../component/view/menu";
-import { MenuItemType } from "../../../component/view/menu/declare";
+import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { Block } from "../../../src/block";
 import { BlockChildKey, BlockUrlConstant } from "../../../src/block/constant";
 import { BlockFactory } from "../../../src/block/factory/block.factory";
@@ -13,6 +13,8 @@ import { MouseDragger } from "../../../src/common/dragger";
 import { Rect } from "../../../src/common/vector/point";
 import { ActionDirective } from "../../../src/history/declare";
 import "./style.less";
+import { ToolTip } from "../../../component/view/tooltip";
+import { BlockDirective } from "../../../src/block/enum";
 
 @url('/tab')
 export class Tab extends Block {
@@ -180,6 +182,71 @@ export class Tab extends Block {
     getInnerPanelBlock() {
         return this.otherChilds[this.tabIndex];
     }
+    @prop()
+    align: 'left' | 'center' = 'left';
+    async onGetContextMenus() {
+        var rs = await super.onGetContextMenus();
+        var rg = rs.find(g => g.name == 'text-center');
+        if (rg) {
+            rg.text = '标签卡头居中'
+            var pos = rs.findIndex(g => g == rg);
+            var at = this.tabIndex;
+            var ns: MenuItem<string | BlockDirective>[] = [];
+            ns.push({ type: MenuItemType.divide });
+            ns.push({
+                text: '当前标签卡',
+                icon: { name: 'bytedance-icon', code: 'top-bar' },
+                childs: [
+                    { name: 'prevItem', text: '前移', disabled: at == 0 ? true : false, icon: ArrowLeftSvg },
+                    { name: 'afterItem', text: '后移', disabled: at == this.childs.length - 1 ? true : false, icon: ArrowRightSvg },
+                    { type: MenuItemType.divide },
+                    { name: 'deleteItem', text: '删除', disabled: this.childs.length == 1 ? true : false, icon: TrashSvg },
+                ]
+            });
+            ns.push({ type: MenuItemType.divide });
+            rs.splice(pos + 1, 0, ...ns)
+        }
+        return rs;
+    }
+    async onClickContextMenu(item: MenuItem<string | BlockDirective>, e) {
+        var at = this.tabIndex;
+        switch (item.name) {
+            case 'prevItem':
+                await this.page.onAction(ActionDirective.onTabExchangeItem, async () => {
+                    this.tabIndex = at - 1;
+                    var pre = this.blocks.childs[at];
+                    await this.blocks.childs[at].insertBefore(this.blocks.childs[at - 1], BlockChildKey.childs);
+                    await this.blocks.otherChilds[at].insertBefore(this.blocks.otherChilds[at - 1], BlockChildKey.otherChilds);
+                    this.page.addUpdateEvent(async () => {
+                        this.page.kit.anchorCursor.onFocusBlockAnchor(pre, { merge: true, render: true, last: true })
+                    })
+                })
+                return;
+            case 'afterItem':
+                await this.page.onAction(ActionDirective.onTabExchangeItem, async () => {
+                    this.tabIndex = at + 1;
+                    var pre = this.blocks.childs[at];
+                    await this.blocks.childs[at].insertAfter(this.blocks.childs[at + 1], BlockChildKey.childs);
+                    await this.blocks.otherChilds[at].insertAfter(this.blocks.otherChilds[at + 1], BlockChildKey.otherChilds);
+                    this.page.addUpdateEvent(async () => {
+                        this.page.kit.anchorCursor.onFocusBlockAnchor(pre, { merge: true, render: true, last: true })
+                    })
+                })
+                return;
+            case 'deleteItem':
+                await this.page.onAction(ActionDirective.onTabRemoveItem, async () => {
+                    var pre = this.blocks.childs[at - 1];
+                    if (!pre) this.blocks.childs[at + 1];
+                    await this.blocks.childs[at].delete();
+                    await this.blocks.otherChilds[at].delete();
+                    this.page.addUpdateEvent(async () => {
+                        this.page.kit.anchorCursor.onFocusBlockAnchor(pre, { merge: true, render: true, last: true })
+                    })
+                })
+                return;
+        }
+        return await super.onClickContextMenu(item, e);
+    }
 }
 @view('/tab')
 export class TabView extends BlockView<Tab>{
@@ -204,17 +271,27 @@ export class TabView extends BlockView<Tab>{
     }
     tabPages: HTMLElement;
     render() {
-        return <div className='sy-block-tab'
+        var itemStyle: CSSProperties = {
+            justifyContent: 'flex-start'
+        }
+        if (this.props.block.align == 'center') {
+            itemStyle.justifyContent = 'center'
+        }
+        return <div className='sy-block-tab visible-hover'
             style={this.block.visibleStyle}>
             <div style={this.block.contentStyle}>
-                <div className="sy-block-tab-items">
+                <div className="sy-block-tab-items relative" style={itemStyle}>
                     <ChildsArea childs={this.block.blocks.childs}></ChildsArea>
-                    <div className="sy-block-tab-plus" onMouseDown={e => this.block.onAddTabItem()}><Icon size={18} icon={PlusSvg}></Icon></div>
+                    {this.block.isCanEdit() && <><ToolTip overlay={'添加标签页'}><div className="visible flex-center round size-24  cursor item-hover" onMouseDown={e => this.block.onAddTabItem()}><Icon size={18} icon={PlusSvg}></Icon></div></ToolTip>
+                        <div className="pos-right-full">
+                            <ToolTip overlay={'标签页菜单'}><div className="visible flex-center round size-24  cursor item-hover" onMouseDown={e => { e.stopPropagation(); this.block.onContextmenu(e.nativeEvent) }}>
+                                <Icon size={18} icon={DotsSvg}></Icon></div></ToolTip>
+                        </div></>}
                 </div>
                 <div ref={e => this.tabPages = e} className="sy-block-tab-pages" style={{ height: this.block.contentHeight }}>
                     <ChildsArea childs={this.block.blocks.otherChilds}></ChildsArea>
                 </div>
-                <div className="sy-block-tab-resize" onMouseDown={e => this.onResize(e)}></div>
+                {this.block.isCanEdit() && <ToolTip overlay={'拖动标签页高度'}><div className="sy-block-tab-resize visible" onMouseDown={e => this.onResize(e)}></div></ToolTip>}
             </div>
         </div>
     }

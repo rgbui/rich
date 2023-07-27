@@ -1,26 +1,22 @@
 .sy-block-tab {
-    padding: 10px 0px;
     &-items {
         height         : 30px;
         display        : flex;
         justify-content: flex-start;
         align-items    : center;
-        box-shadow     : rgb(233, 233, 231) 0px -1px 0px inset;
         .sy-block-tab-item {
             border-bottom: 2px solid transparent;
+
             &-content {
                 transition   : background 20ms ease-in 0s;
                 cursor       : pointer;
                 white-space  : nowrap;
                 height       : 28px;
                 border-radius: 3px;
-                font-size    : 14px;
                 line-height  : 28px;
                 min-width    : 0px;
                 padding-left : 12px;
                 padding-right: 12px;
-                color        : rgba(55, 53, 47, 0.65);
-                font-weight  : 500;
                 max-width    : 220px;
 
                 &:hover {
@@ -29,59 +25,26 @@
             }
 
             &.hover {
-                border-bottom: 2px solid rgb(55, 53, 47);
-            }
-        }
-
-        .sy-block-tab-plus {
-            visibility     : hidden;
-            display        : flex;
-            justify-content: center;
-            align-items    : center;
-            height         : 28px;
-            width          : 28px;
-            cursor         : pointer;
-            color          : rgba(55, 53, 47, 0.65);
-            border-radius  : 4px;
-
-            &:hover {
-                background-color: rgba(55, 53, 47, 0.08);
+                border-bottom: 2px solid var(--text-p-color);
+                color        : var(--text-p-color)
             }
         }
     }
-
     &-pages {
-        border      : 1px solid rgba(55, 53, 47, .08);
-        border-top  : 0px;
-        border-color: transparent;
-        min-height  : 150px;
-        padding     : 30px;
-        overflow-y  : auto;
-
+        border       : 1px solid rgba(0, 0, 0, .12);
+        min-height   : 150px;
+        padding      : 20px;
+        overflow-y   : auto;
+        box-sizing   : border-box;
+        border-radius: 4px;
         .sy-block-tab-page {
             min-height: 100%;
+            box-sizing: border-box;
         }
     }
-
     &-resize {
-        visibility      : hidden;
         height          : 10px;
         background-color: rgba(55, 53, 47, 0.06);
         cursor          : row-resize;
-    }
-
-    &:hover {
-        .sy-block-tab-plus {
-            visibility: visible;
-        }
-
-        .sy-block-tab-pages {
-            border-color: rgba(55, 53, 47, 0.06);
-        }
-
-        .sy-block-tab-resize {
-            visibility: visible;
-        }
-
     }
 }
