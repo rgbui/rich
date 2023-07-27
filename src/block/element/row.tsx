@@ -10,7 +10,6 @@ import { ActionDirective } from '../../history/declare';
 import { HorizontalDistributionSvg } from '../../../component/svgs';
 import { Icon } from '../../../component/view/icon';
 import { ToolTip } from '../../../component/view/tooltip';
-import { PageLayoutType } from '../../page/declare';
 
 /**
  * 分区中会有很多行，每行存在于一个或多个block
@@ -84,7 +83,7 @@ export class RowView extends BlockView<Row>{
                     data-index={i}
                     className='sy-block-row-gap'>
                     <i className='flex-center'>
-                        <ToolTip overlay={'平均等比例'}><span onMouseDown={e => this.agvCols(e)} className={'size-24 flex-center round cursor text-1' + (this.props.block.page.pageLayout?.type == PageLayoutType.docCard ? " bg-white link-hover" : " item-hover")}><Icon size={16} icon={HorizontalDistributionSvg}></Icon></span></ToolTip>
+                        <ToolTip overlay={'平均分栏'}><span onMouseDown={e => this.agvCols(e)} style={{ background: '#eee' }} className={'size-24 remark  flex-center round cursor '}><Icon size={16} icon={HorizontalDistributionSvg}></Icon></span></ToolTip>
                     </i>
                     <em></em>
                 </div>)
