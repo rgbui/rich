@@ -2,11 +2,11 @@ import { BlockView } from "../../../src/block/view";
 import React from 'react';
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { Block } from "../../../src/block";
-import { BlockDisplay } from "../../../src/block/enum";
+import { BlockDirective, BlockDisplay } from "../../../src/block/enum";
 import { ResourceArguments } from "../../../extensions/icon/declare";
 import { useOutSideUrlInput } from "../../../extensions/link/outsite.input";
 import { Rect } from "../../../src/common/vector/point";
-import { BookSvg, RefreshSvg } from "../../../component/svgs";
+import { BookSvg, DotsSvg, RefreshSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import "./style.less";
 import { channel } from "../../../net/channel";
@@ -14,6 +14,8 @@ import { autoImageUrl } from "../../../net/element.type";
 import { ActionDirective } from "../../../src/history/declare";
 import { Spin } from "../../../component/view/spin";
 import { ToolTip } from "../../../component/view/tooltip";
+import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
+import lodash from "lodash";
 
 @url('/bookmark')
 export class Bookmark extends Block {
@@ -84,6 +86,24 @@ export class Bookmark extends Block {
         if (this.bookmarkInfo) return `[${this.bookmarkInfo.title}](${this.bookmarkUrl})  `
         else return `[书签](${this.bookmarkUrl})`
     }
+    async onGetContextMenus() {
+        var rs = await super.onGetContextMenus();
+        rs = rs.splice(2);
+        lodash.remove(rs, g => g.name == 'text-align');
+        var at = rs.findIndex(g => g.text == '颜色');
+        var ns: MenuItem<string | BlockDirective>[] = [];
+        ns.push({ name: 'reload', text: '重新生成书签', icon: RefreshSvg });
+        ns.push({ type: MenuItemType.divide });
+        rs.splice(at, 0, ...ns)
+        return rs;
+    }
+    async onClickContextMenu(item: MenuItem<string | BlockDirective>, event: MouseEvent): Promise<void> {
+        if (item.name == 'reload') {
+            this.onLoadBookmarkByUrl(this.bookmarkUrl)
+            return;
+        }
+        return await super.onClickContextMenu(item, event);
+    }
 }
 @view('/bookmark')
 export class BookmarkView extends BlockView<Bookmark>{
@@ -118,7 +138,7 @@ export class BookmarkView extends BlockView<Bookmark>{
     }
     render() {
         return <div style={this.block.visibleStyle}><div className='sy-block-bookmark' style={this.block.contentStyle} >
-            {this.block.bookmarkInfo && <a className='sy-block-bookmark-link' href={this.block.bookmarkUrl} target='_blank' >
+            {this.block.bookmarkInfo && <a className='sy-block-bookmark-link visible-hover' href={this.block.bookmarkUrl} target='_blank' >
                 <div className="sy-block-bookmark-content" style={{ marginRight: this.block.imageWidth > 180 && this.block.imageWidth < 250 ? this.block.imageWidth : 0 }}>
                     {this.block.bookmarkInfo.title && <div className="sy-block-bookmark-title">{this.block.bookmarkInfo.title}</div>}
                     {this.block.bookmarkInfo.description && <div className="sy-block-bookmark-description">{this.block.bookmarkInfo.description}</div>}
@@ -127,6 +147,12 @@ export class BookmarkView extends BlockView<Bookmark>{
                 {this.block.bookmarkInfo.image && this.block.imageWidth > 180 && this.block.imageWidth < 250 && <div style={{ width: this.block.imageWidth }} className='sy-block-bookmark-image'>
                     <img src={autoImageUrl(this.block.bookmarkInfo.image.url, 250)} />
                 </div>}
+                <div onMouseDown={e => {
+                    e.stopPropagation();
+                    this.block.onContextmenu(e.nativeEvent)
+                }} className="bg-dark cursor visible text-white pos-top-right gap-10 size-24 round flex-center ">
+                    <Icon size={18} icon={DotsSvg}></Icon>
+                </div>
             </a>}
             {this.renderEmpty()}
         </div></div>

@@ -81,16 +81,17 @@ export class Block$Event {
             icon: DuplicateSvg
         });
         var menus = await this.onGetTurnMenus();
-        items.push({
-            text: langProvider.getText(LangID.menuTurn),
-            icon: LoopSvg,
-            disabled: menus.length > 0 ? false : true,
-            childs: menus.map(m => {
-                return {
-                    ...m,
-                }
-            })
-        });
+        if (menus.length > 0) {
+            items.push({
+                text: langProvider.getText(LangID.menuTurn),
+                icon: LoopSvg,
+                childs: menus.map(m => {
+                    return {
+                        ...m,
+                    }
+                })
+            });
+        }
         // items.push({
         //     name: BlockDirective.moveTo,
         //     text: langProvider.getText(LangID.menuMoveTo),
