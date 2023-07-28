@@ -533,6 +533,18 @@ export class Block$Operator {
                 }, this);
         }
     }
+    /**
+     * 将textspan中的content转成
+     * textspan中childs[content]
+     * @param this 
+     * @returns 返回text lineblock
+     */
+    async wrapTextContent(this: Block) {
+        var content = this.content;
+        await this.updateProps({ content: '' }, BlockRenderRange.self);
+        var textBlock = await this.page.createBlock(BlockUrlConstant.Text, { content }, this, 0, 'childs');
+        return textBlock;
+    }
     async updateMatrix(this: Block, oldMatrix: Matrix, newMatrix: Matrix) {
         this.syncUpdate(BlockRenderRange.self);
         this.matrix = newMatrix;

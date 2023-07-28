@@ -40,6 +40,7 @@ import { useAITool } from "../../../extensions/ai";
 import { channel } from "../../../net/channel";
 import { BlockSelectorItem } from "../../../extensions/block/delcare";
 import { useOperatorBlockData } from "./operator";
+import { BlockRenderRange } from "../../block/enum";
 
 /**
  * https://blog.csdn.net/mafan121/article/details/78519348
@@ -464,7 +465,13 @@ export class PageWrite {
                     if (appear.isText) {
                         var block = appear.block;
                         if (styles) block.pattern.setStyles(styles);
-                        if (props) await block.updateProps(props);
+                        if (props) {
+                            if (block.isLine) { await block.updateProps(props, BlockRenderRange.self); }
+                            else if (block.content) {
+                                var nb = await block.wrapTextContent();
+                                await nb.updateProps(props, BlockRenderRange.self);
+                            }
+                        }
                     }
                 }
             });
@@ -611,12 +618,13 @@ export class PageWrite {
                 }
             }
             this.kit.page.addUpdateEvent(async () => {
+                var na = nend.appearAnchors.first()
                 this.kit.anchorCursor.onSetTextSelection(
                     {
                         startAnchor: nstart.appearAnchors.first(),
                         startOffset: 0,
-                        endAnchor: nend.appearAnchors.first(),
-                        endOffset: nend.appearAnchors.first().isText ? nend.appearAnchors.first().textContent.length : 1
+                        endAnchor: na,
+                        endOffset: na?.isText ? na.textContent.length : 1
                     }, { merge: true, render: true }
                 )
             });
