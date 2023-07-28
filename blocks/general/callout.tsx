@@ -3,7 +3,7 @@ import React from 'react';
 import { prop, url, view } from "../../src/block/factory/observable";
 import { ChildsArea, TextArea, TextLineChilds } from "../../src/block/view/appear";
 import { TextSpan } from "../../src/block/element/textspan";
-import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../src/block/enum";
+import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
 import { TextTurns } from "../../src/block/turn/text";
 import { Block } from "../../src/block";
 import { BlockChildKey } from "../../src/block/constant";
@@ -11,15 +11,20 @@ import { Icon } from "../../component/view/icon";
 import { IconArguments } from "../../extensions/icon/declare";
 import { useIconPicker } from "../../extensions/icon";
 import { Rect } from "../../src/common/vector/point";
-import { MenuItem } from "../../component/view/menu/declare";
 import lodash from "lodash";
 
 @url('/callout')
 export class Callout extends TextSpan {
     display = BlockDisplay.block;
     blocks: { childs: Block[], subChilds: Block[] } = { childs: [], subChilds: [] };
-    get allBlockKeys() {
+    get allBlockKeys()
+    {
         return [BlockChildKey.childs, BlockChildKey.subChilds];
+    }
+    async initialedLoad(this: Block): Promise<void> {
+        if (!this.pattern.getFillStyle()?.color) {
+            this.pattern.setFillStyle({ color: 'rgba(237,233,235,0.5)' })
+        }
     }
     get appearAnchors() {
         if (this.childs.length > 0) return []

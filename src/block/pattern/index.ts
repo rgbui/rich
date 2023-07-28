@@ -20,9 +20,8 @@ export class Pattern {
             if (op == 'styles') continue;
             this[op] = options[op];
         }
-        if (Array.isArray(options.styles))
-        {
-            options.styles.each(sty=>{
+        if (Array.isArray(options.styles)) {
+            options.styles.each(sty => {
                 var style = new BlockStyleCss(sty, this);
                 this.styles.remove(x => x.name == style.name && x.selector == style.selector);
                 this.styles.push(style);
@@ -75,11 +74,12 @@ export class Pattern {
         if (st) {
             var old = st.get();
             st.merge(BlockCss.createBlockCss(Object.assign({ cssName }, style)));
-            this.block.page.snapshoot.record(OperatorDirective.$merge_style, {
-                pos: st.pos,
-                old_value: old,
-                new_value: st.get()
-            }, this.block)
+            if (this.block.page.snapshoot.canRecord)
+                this.block.page.snapshoot.record(OperatorDirective.$merge_style, {
+                    pos: st.pos,
+                    old_value: old,
+                    new_value: st.get()
+                }, this.block)
             this.block.page.addBlockUpdate(this.block);
         }
         else {
@@ -117,8 +117,6 @@ export class Pattern {
         }, this.block);
         this.block.page.addBlockUpdate(this.block);
     }
-
-
     setFontStyle(style: Partial<FontCss>) {
         this.setStyle(BlockCssName.font, style);
     }

@@ -53,6 +53,9 @@ export class HistorySnapshoot extends Events {
     start() {
         this._pause = false;
     }
+    get canRecord() {
+        return this.action;
+    }
     /**
      * 如果isLocal为ture，表示是用户在本地的操作
      * 该操作将不在传到服务器
