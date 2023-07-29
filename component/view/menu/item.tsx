@@ -152,7 +152,8 @@ export class MenuItemView extends React.Component<{
             {item.type == MenuItemType.user && <div onMouseDown={e => this.select(item, e.nativeEvent)} className="shy-menu-box-item-user"><Avatar userid={item.userid} showName size={item.size || 30}></Avatar></div>}
             {item.type == MenuItemType.switch && <a className='shy-menu-box-item-switch'>
                 {item.icon && <i className="flex-center flex-inline size-20 text-1"><Icon icon={item.icon} size={item.iconSize ? item.iconSize : 16}></Icon></i>}
-                <span>{item.text}</span>
+                {item.renderIcon && item.renderIcon(item, this)}
+                <span className="shy-menu-box-item-switch-text">{item.text}</span>
                 <Switch size='small' onChange={e => this.checked(e, item)} checked={item.checked ? item.checked : false}></Switch>
             </a>}
             {item.type == MenuItemType.input && <div className="shy-menu-box-item-input"><Input size={'small'} value={item.value} onEnter={e => { item.value = e; this.select(item) }} onChange={e => { item.value = e; this.input(e, item) }} placeholder={item.placeholder || item.text}></Input></div>}
