@@ -19,6 +19,7 @@ export class Measure extends Block {
         return `-----------${this.value}%`
     }
 }
+
 @view('/measure')
 export class MeasureView extends BlockView<Measure>{
     setProgress(e: React.MouseEvent) {
@@ -48,11 +49,20 @@ export class MeasureView extends BlockView<Measure>{
         })
     }
     render() {
+        var style = this.block.contentStyle;
+        var bg = style.backgroundColor?.replace(/ /g, '')
+        if (bg == 'rgba(255,255,255,0)' || bg == 'rgb(255,255,255,0)') style.backgroundColor = 'var(--text-p-color)';
+        else style.backgroundColor = bg.replace(/\,[\s]*[\d\.]+[\s]*\)[\s]*$/, ',1)');
         return <div className='sy-block-measure' onMouseDown={e => e.stopPropagation()} style={this.block.visibleStyle}>
             <div className='sy-block-measure-progress' onMouseDown={e => this.setProgress(e)}>
-                <div className='sy-block-measure-progress-bar' style={{ width: this.block.value + '%' }}></div>
+                <div className='sy-block-measure-progress-bar' style={{
+                    width: this.block.value + '%',
+                    backgroundColor: style.backgroundColor
+                }}></div>
             </div>
-            <div className='sy-block-measure-value'>{this.block.value}%</div>
+            <div className='sy-block-measure-value' style={
+                { color: style.color }
+            }>{this.block.value}%</div>
         </div>
     }
 }
