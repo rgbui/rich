@@ -2,11 +2,11 @@ import { BlockView } from "../../../src/block/view";
 import React from 'react';
 import { prop, url, view } from "../../../src/block/factory/observable";
 import { Block } from "../../../src/block";
-import { BlockDirective, BlockDisplay } from "../../../src/block/enum";
+import { BlockDirective, BlockDisplay, BlockRenderRange } from "../../../src/block/enum";
 import { ResourceArguments } from "../../../extensions/icon/declare";
 import { useOutSideUrlInput } from "../../../extensions/link/outsite.input";
 import { Rect } from "../../../src/common/vector/point";
-import { BookSvg, DotsSvg, DuplicateSvg, LogoutSvg, RefreshSvg } from "../../../component/svgs";
+import { BookSvg, DotsSvg, DuplicateSvg, RefreshSvg } from "../../../component/svgs";
 import { Icon } from "../../../component/view/icon";
 import "./style.less";
 import { channel } from "../../../net/channel";
@@ -17,6 +17,7 @@ import { ToolTip } from "../../../component/view/tooltip";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import lodash from "lodash";
 import { CopyAlert } from "../../../component/copy";
+
 
 @url('/bookmark')
 export class Bookmark extends Block {
@@ -52,20 +53,26 @@ export class Bookmark extends Block {
     imageWidth = -20;
     async onLoadBookmarkByUrl(url: string, isInit?: boolean) {
         this.loading = true;
+        var bo = this.bookmarkInfo;
+        this.bookmarkInfo = null;
         this.forceUpdate();
         try {
-            this.updateProps({ bookmarkUrl: url });
             var r = await channel.put('/bookmark/url', { url });
             await this.page.onAction(ActionDirective.onBookMark, async () => {
                 if (isInit) this.page.snapshoot.merge();
+                await this.updateProps({ bookmarkUrl: url })
                 if (r?.ok) {
-                    this.updateProps({ bookmarkInfo: r.data })
+                    await this.updateProps({ bookmarkInfo: r.data }, BlockRenderRange.self)
                 }
-
-            })
+                else {
+                    if (bo) {
+                        await this.updateProps({ bookmarkInfo: bo })
+                    }
+                }
+            });
         }
         catch (ex) {
-
+            console.error(ex);
         }
         finally {
             this.loading = false;
@@ -98,15 +105,15 @@ export class Bookmark extends Block {
             { type: MenuItemType.divide }
         )
         ns.push({ type: MenuItemType.divide });
-        ns.push({ name: 'copyLink', text: '复制书签网址', icon: DuplicateSvg });
         ns.push({ name: 'reload', text: '重新生成书签', icon: RefreshSvg });
+        ns.push({ name: 'copyLink', text: '复制书签网址', icon: DuplicateSvg });
         ns.push({ type: MenuItemType.divide });
         rs.splice(at, 0, ...ns)
         return rs;
     }
     async onClickContextMenu(item: MenuItem<string | BlockDirective>, event: MouseEvent): Promise<void> {
         if (item.name == 'reload') {
-            this.onLoadBookmarkByUrl(this.bookmarkUrl)
+            await this.onLoadBookmarkByUrl(this.bookmarkUrl)
             return;
         }
         if (item.name == 'copyLink') {
@@ -165,7 +172,7 @@ export class BookmarkView extends BlockView<Bookmark>{
                 {this.block.isCanEdit() && <div onMouseDown={e => {
                     e.stopPropagation();
                     this.block.onContextmenu(e.nativeEvent)
-                }} className="bg-dark cursor visible text-white pos-top-right gap-10 size-24 round flex-center ">
+                }} className="bg-dark cursor visible text-white pos-top-right gap-5 size-24 round flex-center ">
                     <Icon size={18} icon={DotsSvg}></Icon>
                 </div>}
             </a>}

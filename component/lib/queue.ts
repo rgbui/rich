@@ -2,7 +2,6 @@ import lodash from "lodash";
 import { util } from "../../util/util";
 
 
-
 export class QueueHandle {
     acts: { id: string, notify: (data, err?) => void, action: () => Promise<any> }[] = [];
     async create(action: () => Promise<any>, timeOut?: number) {
@@ -19,7 +18,7 @@ export class QueueHandle {
                     lodash.remove(this.acts, g => g.id == id);
                     reject('over time');
                     this.tryExcute();
-                }, 1000 || timeOut)
+                }, 10000 || timeOut)
             }
             this.acts.push(data);
             this.notifyExcute();
@@ -50,6 +49,4 @@ export class QueueHandle {
             this.isExcuting = false;
         }
     }
-
-
 }
