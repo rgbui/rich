@@ -69,13 +69,15 @@ export class Page extends Events<PageDirective>{
     get isSign() {
         return this.user?.id ? true : false
     }
-    get isDefineBarMenu() {
-        return (window.shyConfig?.isDomainWs) && this.ws?.publishConfig?.navMenus?.length > 0 && this.ws?.publishConfig?.abled == true && this.ws?.publishConfig?.defineNavMenu
+    get isPubSite() {
+        return (window.shyConfig?.isDomainWs) && this.ws.access == 1 && this.ws.publishConfig?.abled
     }
-    get isDefineWikiContent() {
-        return (window.shyConfig?.isDomainWs ) && this.ws.publishConfig?.abled && this.ws?.publishConfig?.defineContent && this.ws.publishConfig.contentTheme == 'wiki'
+    get isPubSiteDefineBarMenu() {
+        return this.isPubSite && this.ws?.publishConfig?.navMenus?.length > 0 && this.ws?.publishConfig?.defineNavMenu
     }
-
+    get isPubSiteDefineContent() {
+        return this.isPubSite && this.ws?.publishConfig?.defineContent && this.ws.publishConfig.contentTheme == 'none'
+    }
     kit: Kit = new Kit(this);
     snapshoot = new HistorySnapshoot(this)
     pageLayout: { layout?: PageLayout, type: PageLayoutType };
@@ -111,6 +113,14 @@ export class Page extends Events<PageDirective>{
     onlyDisplayContent: boolean = false;
     isPageContent: boolean = false;
     bar = true;
+    get visiblePageBar() {
+        if (this.isPubSite) {
+            if (!this.isPubSiteDefineContent) {
+                if (this.isPubSiteDefineBarMenu) return false;
+            }
+        }
+        return this.bar;
+    }
     get windowMatrix() {
         var rect = Rect.fromEle(this.viewEl);
         var matrix = new Matrix();
@@ -242,6 +252,7 @@ export class Page extends Events<PageDirective>{
         else {
             if (this.isSupportScreen) {
                 var isFull: boolean = this.isFullWidth;
+                if (this.isPubSite) isFull = this.ws?.publishConfig.isFullWidth;
                 if (isFull) {
                     style.paddingLeft = 80;
                     style.paddingRight = 80;
@@ -272,6 +283,7 @@ export class Page extends Events<PageDirective>{
         if (!this.isSign) return false;
         if (this.readonly) return false;
         if (this.pageLayout?.type == PageLayoutType.dbPickRecord) return false;
+        if (this.isPubSite) return false;
         if (this.edit) return true;
         if (isMobileOnly) return false;
         return this.isAllow(...[
@@ -297,6 +309,7 @@ export class Page extends Events<PageDirective>{
         if (options.ignoreReadonly !== true)
             if (this.readonly) return false;
         if (this.pageLayout?.type == PageLayoutType.dbPickRecord) return false;
+        if (this.isPubSite) return false;
         if (this.edit) return true;
         if (isMobileOnly) return false;
         return this.isAllow(...[
@@ -309,6 +322,7 @@ export class Page extends Events<PageDirective>{
     }
     get isCanManage() {
         if (!this.isSign) return false;
+        if (this.isPubSite) return false;
         if (this.currentPermissions?.isOwner) return true;
         return this.isAllow(...[AtomPermission.all])
     }
@@ -369,12 +383,20 @@ export class Page extends Events<PageDirective>{
         })
     }
     get fontSize() {
-        if (this.pageLayout?.type == PageLayoutType.docCard) return this.smallFont ? 16 : 18
-        return this.smallFont ? 14 : 16
+        var sf = this.smallFont;
+        if (this.isPubSite) {
+            sf = this.ws.publishConfig.smallFont;
+        }
+        if (this.pageLayout?.type == PageLayoutType.docCard) return sf ? 16 : 18
+        return sf ? 14 : 16
     }
     get lineHeight() {
-        if (this.pageLayout?.type == PageLayoutType.docCard) return this.smallFont ? 26 : 30
-        return this.smallFont ? 22 : 26
+        var sf = this.smallFont;
+        if (this.isPubSite) {
+            sf = this.ws.publishConfig.smallFont;
+        }
+        if (this.pageLayout?.type == PageLayoutType.docCard) return sf ? 26 : 30
+        return sf ? 22 : 26
     }
     private _pe: {
         type: ElementType;

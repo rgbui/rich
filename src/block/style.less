@@ -73,12 +73,13 @@
 }
 
 .shy-appear-texts {
-    display           : block;
-    white-space       : pre-wrap;
-    word-break        : break-all;
-    font-size         : inherit;
-    font-weight       : inherit;
-    font-style        : inherit;
+    display              : inline;
+    // display           : block;
+    white-space          : pre-wrap;
+    word-break           : break-all;
+    font-size            : inherit;
+    font-weight          : inherit;
+    font-style           : inherit;
     // text-decoration: inherit;
 }
 
@@ -87,16 +88,15 @@
         outline              : none;
         user-select          : text;
         display              : inline-block;
+        display              : inline;
         text-decoration      : none !important;
         text-decoration-color: transparent !important;
-
         &::after {
             content              : '\20';
             text-decoration      : none !important;
             text-decoration-color: transparent !important;
         }
     }
-
     &-content {
         user-select: text;
     }

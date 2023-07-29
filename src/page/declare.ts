@@ -51,7 +51,7 @@ export enum PageLayout {
 
 
 
-export interface LinkPageItem<T={}> {
+export interface LinkPageItem<T = {}> {
     id?: string;
     text?: string;
     icon?: IconArguments,
@@ -98,14 +98,14 @@ export interface LinkPageItem<T={}> {
     cover?: { abled: boolean, url: string, thumb: string, top: number },
     plain?: string,
     thumb?: ResourceArguments,
-
+    deletedDate?: Date,
 
 
     checkedHasChilds?: boolean;
     willLoadSubs?: boolean;
     subCount?: number;
     spread?: boolean,
-    childs?:( LinkPageItem&T)[]
+    childs?: (LinkPageItem & T)[]
 }
 
 export interface LinkWs {
@@ -170,6 +170,8 @@ export interface LinkWs {
         defineNavMenu: boolean,
         navMenus: WorkspaceNavMenuItem[],
         defineContent: boolean,
+        isFullWidth: boolean,
+        smallFont: boolean,
         contentTheme: 'default' | 'none' | 'wiki',
         defineBottom: boolean
     }

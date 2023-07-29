@@ -29,12 +29,6 @@ export class ViewComponent extends BlockView<View>{
             if (page.isCanOutline) {
                 style = {};
             }
-            /**
-             * 如果当前页面发布成wiki主题，那么不需要设置padding
-             */
-            if (this.block.page.isDefineWikiContent) {
-                style = {};
-            }
             if (isFirst && pd?.icon && pd?.cover?.abled === true) {
                 style.paddingTop = 50;
             }

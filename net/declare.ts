@@ -146,6 +146,7 @@ export interface ChannelDelMapUrls {
 	"/ws/member/delete":{args:{userid:string},returnType:Promise<SockResponse<void>>},
 	"/ws/role/delete":{args:{roleId:string},returnType:Promise<SockResponse<void>>},
 	"/ws/comment/del":{args:{id:string},returnType:Promise<SockResponse<void>>},
+	"/page/deleted/clean":{args:{ws?:LinkWs,wsId?:string,pageId:string},returnType:Promise<SockResponse<void>>},
 	"/view/snap/del":{args:{id:string},returnType:Promise<SockResponse<void>>}
 }
 export interface ChannelPostMapUrls {
@@ -165,6 +166,7 @@ export interface ChannelPostMapUrls {
 	"/ws/download/url":{args:{url:string},returnType:Promise<SockResponse<{ file:{url:string,name:string,size:number} }>>},
 	"/create/template":{args:{wsId?:string,config?:{pageId?: string, dataGridMaxRecordCount?: number}},returnType:Promise<SockResponse<{file:ResourceArguments}>>},
 	"/create/workspace/template":{args:{config?:Record<string,any>,file: ResourceArguments, wsId: string, pageId?: string, templateUrl: string, text?: string, description?: string, type:"workspace"|"dir"|"page"},returnType:Promise<SockResponse<void>>},
+	"/page/item/recover":{args:{ws?:LinkWs,wsId?:string,parentId:string,pageId:string},returnType:Promise<SockResponse<void>>},
 	"/view/snap/rollup":{args:{id:string,elementUrl:string,wsId?:string,bakeTitle?:string,pageTitle?:string},returnType:Promise<SockResponse<{seq:number,id:string}>>},
 	"/row/block/sync/refs":{args:{ws:LinkWs,wsId?:string,pageId?:string,operators:any[]},returnType:Promise<SockResponse<{results:{ id: string, error?: string }[]}>>},
 	"/screenshot/png":{args:{wsId?:string,text?:string,url:string},returnType:Promise<SockResponse<{file:ResourceArguments}>>},
@@ -296,6 +298,7 @@ export interface ChannelGetMapUrls {
 	"/page/parent/subs":{args:{ws:LinkWs,wsId?:string,parentIds:string[]},returnType:Promise<SockResponse<{ list:any[] }>>},
 	"/page/item":{args:{id:string},returnType:Promise<SockResponse<{ item:Record<string,any> }>>},
 	"/page/word/query":{args:{ws:LinkWs,wsId?:string,word?:string,size?:number},returnType:Promise<SockResponse<{list:LinkPageItem[],total:number,page:number,size:number}>>},
+	"/page/deleted/query":{args:{ws?:LinkWs,wsId?:string,word?:string,size?:number},returnType:Promise<SockResponse<{list:LinkPageItem[],total:number,page:number,size:number}>>},
 	"/view/snap/query":{args:{ws:LinkWs,elementUrl: string},returnType:Promise<SockResponse<{content:string,operates:any[]}>>},
 	"/view/snap/query/readonly":{args:{ws:LinkWs,wsId?:string, elementUrl: string},returnType:Promise<SockResponse<{content:string,operates:any[]}>>},
 	"/view/snap/list":{args:{ws:LinkWs,wsId?:string, elementUrl: string, page: number, size: number},returnType:Promise<SockResponse<{list:any[],total:number,size:number,page:number}>>},

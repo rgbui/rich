@@ -31,6 +31,7 @@ import { isMobileOnly } from "react-device-detect";
 import { Avatar } from "../../../component/view/avator/face";
 import { ToolTip } from "../../../component/view/tooltip";
 import { useWsSearch } from "../../../extensions/search";
+import { DefinePageNavBar } from "./common";
 
 export class PageBar extends React.Component<{ page: Page }>{
     renderTitle() {
@@ -134,13 +135,27 @@ export class PageBar extends React.Component<{ page: Page }>{
         </div>
     }
     toLogin() {
+        var back = location.href;
         if (window.shyConfig?.isDev) location.href = '/sign/in'
-        else location.href = 'https://shy.live/sign/in';
+        else location.href = 'https://shy.live/sign/in?back=' + encodeURIComponent(back);
+    }
+    toHome() {
+        if (window.shyConfig.isDev) location.href = '/home'
+        else location.href = 'https://shy.live/home'
     }
     renderPropertys() {
         if (this.props.page.openSource == 'snap') return <></>
-        var isCanEdit = this.props.page.isCanEdit;
         var user = this.props.page.user;
+        if (this.props.page.isPubSite) {
+            if (this.props.page.isSign) return <div className="flex r-flex-center r-size-24 r-item-hover r-round r-cursor r-gap-r-10 text-1 gap-r-10">
+                <span onClick={e => this.toHome()} className="size-30 gap-r-30"><Avatar size={32} userid={user.id}></Avatar></span>
+            </div>
+            else if (this.props.page.openSource == 'page') return <div className="flex r-flex-center  r-gap-r-10 ">
+                <Button size="small" onClick={e => this.toLogin()}>登录</Button>
+            </div>
+            else return <></>
+        }
+        var isCanEdit = this.props.page.isCanEdit;
         var ws = this.props.page.ws;
         var isField: boolean = false;
         var isMember: boolean = false;
@@ -183,8 +198,8 @@ export class PageBar extends React.Component<{ page: Page }>{
         this.props.page.emit(PageDirective.spreadSln)
     }
     render(): React.ReactNode {
-        if (this.props.page.bar === false) return <></>
-        if (this.props.page.isDefineBarMenu) {
+        if (this.props.page.visiblePageBar === false) return <></>
+        if (this.props.page.isPubSiteDefineBarMenu) {
             return this.renderDefineBar();
         }
         var isDocCard = this.props.page.pageLayout?.type == PageLayoutType.docCard;
@@ -197,7 +212,7 @@ export class PageBar extends React.Component<{ page: Page }>{
             {isMobileOnly && <span onClick={e => this.onSpreadMenu()} className="flex-fixed size-20 flex-center item-hover round cursor ">
                 <Icon icon={ChevronLeftSvg} size={18}></Icon>
             </span>}
-            {!isMobileOnly && this.props.page.openSource == 'page' && <ToolTip placement="bottom" overlay={'折叠侧边栏'}><span onClick={e => this.onSpreadMenu()} className="flex-fixed size-20 flex-center item-hover round cursor ">
+            {!isMobileOnly && this.props.page.openSource == 'page' && !this.props.page.isPubSiteDefineContent && <ToolTip placement="bottom" overlay={'折叠侧边栏'}><span onClick={e => this.onSpreadMenu()} className="flex-fixed size-20 flex-center item-hover round cursor ">
                 <Icon icon={MenuSvg} size={14}></Icon>
             </span></ToolTip>}
             {this.renderTitle()}
@@ -205,112 +220,15 @@ export class PageBar extends React.Component<{ page: Page }>{
         </div>
     }
     renderDefineBar() {
-        var self = this;
-        var h = this.props.page.ws.publishConfig.contentTheme == 'default' ? 48 : 48;
-        function mousedown(e: React.MouseEvent, item: WorkspaceNavMenuItem) {
-            if (item.urlType == 'url') {
-                location.href = item.url;
-            }
-            else if (item.urlType == 'page') {
-                channel.air('/page/open', { item: item.pageId })
-            }
-            return false;
-        }
-        function renderNavs(childs: WorkspaceNavMenuItem[], deep = 0) {
-            var style: React.CSSProperties = {
-                top: h,
-                right: 0
-            }
-            if (deep > 0) {
-                style = {
-                    left: '100%',
-                    width: '100%',
-                    top: 0,
-                }
-            }
-            return <div className="pos shadow border  round bg-white"
-                style={style}>{childs.map((e, i) => {
-                    var href = e.urlType == 'url' ? e.url : undefined;
-                    if (e.urlType == 'page') {
-                        href = self.props.page.ws.resolve({ pageId: e.pageId });
-                    }
-                    return <div onMouseEnter={eg => {
-                        e.spread = true;
-                        self.forceUpdate();
-                    }}
-                        onMouseLeave={eg => {
-                            e.spread = false;
-                            self.forceUpdate();
-                        }} className="relative"
-                        key={e.id}>
-                        <a
-                            style={{ color: 'inherit' }}
-                            href={href} onClick={eg => mousedown(eg, e)}
-                            className={"flex  round min-w-120 item-hover  padding-w-10 padding-h-5  " + (false ? "dashed" : 'border-t')} >
-                            {e.icon && <span className="flex-fixed size-20 flex-center"><Icon size={18} icon={e.icon}></Icon></span>}
-                            <span className="flex-auto text-overflow">{e.text || '菜单项'}</span>
-                            <span className="flex-fixed">
-                                {Array.isArray(e.childs) && e.childs.length > 0 && <Icon size={16} icon={ChevronDownSvg}></Icon>}
-                            </span>
-                        </a>
-                        {Array.isArray(e.childs) && e.childs.length > 0 && e.spread == true && renderNavs(e.childs, deep + 1)}
-                    </div>
-                })}</div>
-        }
         var style: CSSProperties = {
-            marginLeft: 10,
-            marginRight: 10
+            marginLeft: 20,
+            marginRight: 20
         }
-        var pc = this.props.page.ws.publishConfig;
-        if (pc?.abled && pc?.defineContent && (pc.contentTheme == 'wiki' || pc.contentTheme == 'none'))
-            style = this.props.page.getScreenStyle();
-        return <div className="shy-page-bar " >
-            <div className="flex" style={style}>
-                <div className="flex-auto flex r-gap-r-10">
-                    {this.props.page.ws.publishConfig.navMenus.map((e, i) => {
-                        var href = e.urlType == 'url' ? e.url : undefined;
-                        if (e.urlType == 'page') {
-                            href = this.props.page.ws.resolve({ pageId: e.pageId });
-                        }
-                        return <div className="relative"
-                            style={{
-                                zIndex: 100000
-                            }}
-                            onMouseEnter={eg => {
-                                e.spread = true
-                                self.forceUpdate();
-                            }}
-                            onMouseLeave={eg => {
-                                e.spread = false;
-                                self.forceUpdate();
-                            }}
-                            key={e.id}>
-                            <a
-                                href={href} onClick={eg => mousedown(eg, e)}
-                                style={{ height: h, color: 'inherit' }} className={"flex round padding-w-10  " + (false ? "dashed" : 'border-t')}>
-                                {e.type == 'logo' && e.pic && <img className="obj-center " style={{ height: 40 }} src={e.pic?.url} />}
-                                {e.icon && <span className="flex-fixed size-20 flex-center"><Icon size={18} icon={e.icon}></Icon></span>}
-                                <span className={"flex-auto" + (e.text ? (e.type == 'logo' ? " bold f-18 " : " bold f-16 ") : " remark")}>{e.text || '菜单项'}</span>
-                                <span className="flex-fixed flex-center">
-                                    {Array.isArray(e.childs) && e.childs.length > 0 && <Icon size={16} icon={ChevronDownSvg}></Icon>}
-                                </span>
-                            </a>
-                            {Array.isArray(e.childs) && e.childs.length > 0 && e.spread == true && renderNavs(e.childs)}
-                        </div>
-                    })}
-                </div>
-                <div className="flex-fixed flex-end">
-                    {!this.props.page.isSign && <Button size="small" onClick={e => this.toLogin()}>登录</Button>}
-                    {this.props.page.isSign && <Avatar onMousedown={e => {
-                        if (window.shyConfig?.isPro) {
-                            location.href = 'https://shy.live/home'
-                        }
-                        else {
-                            location.href = '/home'
-                        }
-                    }} size={32} userid={this.props.page.user.id}></Avatar>}
-                </div>
-            </div>
-        </div>
+        if (this.props.page.isPubSiteDefineContent) {
+            style = this.props.page.getScreenStyle()
+        }
+        return <DefinePageNavBar
+            user={this.props.page.user}
+            ws={this.props.page.ws} style={style}></DefinePageNavBar>
     }
 }
