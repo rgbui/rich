@@ -244,6 +244,22 @@ export class Image extends Block {
             ]
         });
         items.push({
+            text: '尺寸',
+            icon: { name: 'bytedance-icon', code: 'full-screen' },
+            childs: [
+                {
+                    name: 'resetSize',
+                    text: '原图大小',
+                    icon: { name: 'bytedance-icon', code: 'equal-ratio' },
+                },
+                {
+                    name: 'autoSize',
+                    text: '自适应',
+                    icon: { name: 'bytedance-icon', code: 'auto-width-one' },
+                }
+            ]
+        });
+        items.push({
             type: MenuItemType.divide
         });
         items.push({
@@ -274,6 +290,21 @@ export class Image extends Block {
             case 'mask':
                 await this.onUpdateProps({ mask: item.value }, { range: BlockRenderRange.self })
                 return;
+            case 'resetSize':
+                var imgSize = this.originSize || (await getImageSize(this.src?.url));
+                var width = this.el.getBoundingClientRect().width;
+                var per = Math.min(100, parseInt((imgSize.width * 100 / width).toString()));
+                per = Math.max(5, per);
+                await this.onUpdateProps({
+                    imageWidthPercent: per,
+                    originSize: imgSize,
+                }, { range: BlockRenderRange.self });
+                return;
+            case 'autoSize':
+                await this.onUpdateProps({
+                    imageWidthPercent: 70
+                },{ range: BlockRenderRange.self });
+                break;
         }
         await super.onClickContextMenu(item, event);
     }
