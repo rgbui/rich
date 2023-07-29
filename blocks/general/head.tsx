@@ -13,6 +13,7 @@ import { TriangleSvg } from "../../component/svgs";
 import { BlockChildKey, BlockUrlConstant } from "../../src/block/constant";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
 import lodash from "lodash";
+import { DropDirection } from "../../src/kit/handle/direction";
 
 @url('/head')
 export class Head extends Block {
@@ -148,6 +149,19 @@ export class Head extends Block {
     get contentEl() {
         if (this.el) return this.el.querySelector('[data-block-content]') as HTMLElement;
         else return this.el;
+    }
+    dropEnter(this: Block, direction: DropDirection) {
+        var el = this.contentEl;
+        var dire = DropDirection[direction];
+        var className = 'shy-block-drag-over-' + dire;
+        if (!el.classList.contains(className)) {
+            dom(el).removeClass(g => g.startsWith('shy-block-drag-over'));
+            el.classList.add(className);
+        }
+    }
+    dropLeave(this: Block) {
+        var el = this.contentEl;
+        dom(el).removeClass(g => g.startsWith('shy-block-drag-over'));
     }
 }
 @view("/head")
