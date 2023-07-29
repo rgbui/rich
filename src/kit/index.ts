@@ -37,5 +37,5 @@ export class Kit extends Events {
     boardLine: BoardLine;
     boardBlockHover: BoardBlockHover;
     collaboration: Collaboration;
-    boardSelector:BoardSelector
+    boardSelector: BoardSelector
 }

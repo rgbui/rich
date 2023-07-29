@@ -265,15 +265,3 @@ export function cacDragDirection(kit: Kit, dragBlocks: Block[], dropBlock: Block
     return { direction: direction, dropBlock };
 }
 
-/**
- * 查找当前块对应的最外围，允许左右的块容器
- * block-view 返回block
- * block-row-view 返回block
- * block-col-row-view 返回col
- * block-cell-  view 返回  cell
- * 注意：最外层允许列的情况只有在view或row或panel下面才有新列，其它不允许产生新列
- * @param block 
- */
-function getOutXBlock(block: Block) {
-    return block.closest(x => x.parent?.isView || x.parent?.isComposite && !x.parent?.isPart || x.parent?.isRow && !x.parent?.isPart || x.parent?.gridMap && !x.parent?.isPart);
-}

@@ -6,6 +6,8 @@ import { MouseDragger } from "../../../common/dragger";
 import { onAutoScroll, onAutoScrollStop } from "../../../common/scroll";
 import { Point, Rect } from "../../../common/vector/point";
 import { PageLayoutType } from "../../../page/declare";
+import { BlockUrlConstant } from "../../../block/constant";
+import lodash from "lodash";
 
 /**
  * 如果点在文档的空白处，那么左右上需要找到邻近的编辑点，如果是下面，一般是尾部，需要创建一个空白的文本块，且聚焦
@@ -42,6 +44,7 @@ export function DocDrag(kit: Kit, block: Block, event: React.MouseEvent) {
                */
                 var bs = gm.findBlocksByRect(new Rect(downPoint, movePoint));
                 currentBlocks = kit.page.getAtomBlocks(bs);
+                lodash.remove(currentBlocks, g => g.url == BlockUrlConstant.Title)
                 kit.anchorCursor.renderSelectBlocks(currentBlocks);
             };
             onAutoScroll({
