@@ -2,8 +2,7 @@ import React from "react";
 import { ResourceArguments } from "../../extensions/icon/declare";
 import { prop, url, view } from "../../src/block/factory/observable";
 import { BlockView } from "../../src/block/view";
-import { Sp } from "../../i18n/view";
-import { LangID } from "../../i18n/declare";
+import { S, Sp } from "../../i18n/view";
 import { useAudioPicker } from "../../extensions/file/audio.picker";
 import { Rect } from "../../src/common/vector/point";
 import { Block } from "../../src/block";
@@ -77,7 +76,7 @@ export class AudioView extends BlockView<Audio>{
         return <div className='sy-block-audio' style={this.block.visibleStyle}>
             {this.block.src.name == 'none' && <div onMouseDown={e => this.block.addAudio(e)} className='sy-block-audio-nofile'>
                 <Icon icon={AudioSvg}></Icon>
-                {!this.block.speed && <Sp id={LangID.AddAudioTip}></Sp>}
+                {!this.block.speed && <S>添加音频</S>}
                 {this.block.speed && <Remark>{this.block.speed}</Remark>}
             </div>}
             {this.block.src.name != 'none' && <div className='sy-block-audio-content'>

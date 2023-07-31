@@ -16,9 +16,10 @@ import { util } from "../../util/util";
 import { DotsSvg, DownloadSvg, DuplicateSvg, ImageErrorSvg, LinkSvg, PicSvg, RefreshSvg, TrashSvg } from "../../component/svgs";
 import { Spin } from "../../component/view/spin";
 import { MenuItem, MenuItemType } from "../../component/view/menu/declare";
-import { LangID } from "../../i18n/declare";
-import { langProvider } from "../../i18n/provider";
 import { MenuItemView } from "../../component/view/menu/item";
+import { useImageViewer } from "../../component/view/image.preview";
+import { BlockUrlConstant } from "../../src/block/constant";
+import { ls } from "../../i18n/store";
 
 @url('/image')
 export class Image extends Block {
@@ -137,12 +138,17 @@ export class Image extends Block {
         });
         items.push({
             name: BlockDirective.link,
-            text: langProvider.getText(LangID.menuCopyLink),
+            text: '复制块链接',
             icon: LinkSvg
         });
         items.push({
             type: MenuItemType.divide
         });
+        items.push({
+            name: 'preview',
+            text: '查看',
+            icon: PicSvg
+        })
         items.push({
             name: 'replace',
             text: '替换',
@@ -263,9 +269,19 @@ export class Image extends Block {
             type: MenuItemType.divide
         });
         items.push({
+            name: 'allowCaption',
+            text: '添加文字说明',
+            icon: { name: 'bytedance-icon', code: 'doc-detail' },
+            type: MenuItemType.switch,
+            checked: this.allowCaption
+        })
+        items.push({
+            type: MenuItemType.divide
+        });
+        items.push({
             name: BlockDirective.delete,
             icon: TrashSvg,
-            text: langProvider.getText(LangID.menuDelete),
+            text:ls.t('删除'),
             label: "Del"
         });
         return items;
@@ -303,10 +319,23 @@ export class Image extends Block {
             case 'autoSize':
                 await this.onUpdateProps({
                     imageWidthPercent: 70
-                },{ range: BlockRenderRange.self });
-                break;
+                }, { range: BlockRenderRange.self });
+                return;
+            case 'preview':
+                var pics = this.page.findAll(g => g.url == BlockUrlConstant.Image).map(g => (g as Image).src)
+                var rg = await useImageViewer(this.src, pics);
+                return;
         }
         await super.onClickContextMenu(item, event);
+    }
+    async onContextMenuInput(item: MenuItem<string | BlockDirective>): Promise<void> {
+        if (item.name == 'allowCaption') {
+            await this.onUpdateProps({ allowCaption: item.checked }, { range: BlockRenderRange.self });
+            await util.delay(50);
+            this.page.kit.anchorCursor.onFocusBlockAnchor(this, { last: true, merge: true });
+            return;
+        }
+        return super.onContextMenuInput(item);
     }
 }
 @view('/image')
@@ -366,7 +395,9 @@ export class ImageView extends BlockView<Image>{
         else if (this.block.align == 'right') style.justifyContent = 'flex-end'
         var imageMaskStyle: CSSProperties = {}
         if (this.block.mask == 'radius') imageMaskStyle.borderRadius = '10%';
-        else if (this.block.mask == 'circle') imageMaskStyle.borderRadius = '50%';
+        else if (this.block.mask == 'circle') {
+            imageMaskStyle.borderRadius = '50%';
+        }
         else if (this.block.mask == 'rhombus') {
             imageMaskStyle.clipPath = 'polygon(50% 0, 100% 50%, 50% 100%, 0 50%)';
         }
@@ -404,7 +435,7 @@ export class ImageView extends BlockView<Image>{
                         </div>
                     </>}
                     {this.block.allowCaption && <div className='sy-block-image-caption'>
-                        {<TextArea block={this.block} prop='content' placeholder={'键入图片描述'}></TextArea>}
+                        {<TextArea block={this.block} prop='content' placeholderEmptyVisible placeholder={'图片描述'}></TextArea>}
                     </div>}
                 </div>
             </div>}

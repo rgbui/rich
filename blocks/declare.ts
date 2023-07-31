@@ -10,12 +10,12 @@ import "./media/embed";
 import "./media/file";
 import "./media/video";
 import './media/audio';
+import "./media/carousel/index";
 
 import "./form/todo";
 import "./form/measure";
 import "./form/button/index";
-import "./form/carousel/index";
-import "./form/carousel/content";
+
 import "./form/tab/index";
 import "./form/tab/item";
 import "./form/tab/page";
@@ -87,7 +87,6 @@ import "./data-grid/element/form/check";
 import "./data-grid/element/form/image";
 import "./data-grid/element/form/file";
 import "./data-grid/element/form/relation";
-import "./data-grid/element/form/rich";
 
 import "./data-grid/element/filter/check";
 import "./data-grid/element/filter/date";
@@ -100,7 +99,6 @@ import "./data-grid/element/filter/user";
 import "./data-grid/element/filter/option";
 import "./data-grid/paging/index";
 import "./data-grid/view/form/index";
-
 
 import "./at/date";
 import './at/mention';

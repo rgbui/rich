@@ -19,8 +19,7 @@ import ZH from 'xgplayer/es/lang/zh-cn'
 import { getVideoSize } from "../../../component/file";
 import { MenuItem, MenuItemType } from "../../../component/view/menu/declare";
 import { MenuItemView } from "../../../component/view/menu/item";
-import { LangID } from "../../../i18n/declare";
-import { langProvider } from "../../../i18n/provider";
+import { ls } from "../../../i18n/store";
 // 启用中文
 I18N.use(ZH)
 /**
@@ -147,7 +146,7 @@ export class Video extends Block {
         });
         items.push({
             name: BlockDirective.link,
-            text: langProvider.getText(LangID.menuCopyLink),
+            text: ls.t('拷贝块链接'),
             icon: LinkSvg
         });
         items.push({
@@ -266,7 +265,7 @@ export class Video extends Block {
         items.push({
             name: BlockDirective.delete,
             icon: TrashSvg,
-            text: langProvider.getText(LangID.menuDelete),
+            text: ls.t('删除'),
             label: "Del"
         });
         return items;

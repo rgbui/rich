@@ -1,8 +1,5 @@
 import React from "react";
 import { Input } from "../../component/view/input";
-import { LangID } from "../../i18n/declare";
-
-import { langProvider } from "../../i18n/provider";
 import { EventsComponent } from "../../component/lib/events.component";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
@@ -20,6 +17,7 @@ import { KeyboardCode } from "../../src/common/keys";
 import { util } from "../../util/util";
 import { Block } from "../../src/block";
 import { SearchListType } from "../../component/types";
+import { ls } from "../../i18n/store";
 
 /**
  * 
@@ -132,7 +130,7 @@ class LinkPicker extends EventsComponent {
             <div className="gap-h-5">
                 <Input size='small'
                     onKeydown={this.keydown}
-                    placeholder={langProvider.getText(LangID.PleashInputLinkAndSearchPages)}
+                    placeholder={ls.t('请输入网址或搜索页面')}
                     onChange={e => this.onInput(e)}
                     onEnter={(e, g) => { g.preventDefault(); g.stopPropagation(); this.onEnter(e); }}
                     value={this.url}></Input>

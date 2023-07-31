@@ -1,12 +1,11 @@
 
 
 import React from "react";
-import { Sp } from "../../../i18n/view";
-import { LangID } from "../../../i18n/declare";
 import { ToolTip } from ".";
+import { S } from "../../../i18n/view";
 export class Tip extends React.Component<{
     children: React.ReactElement | React.ReactElement[],
-    id?: LangID,
+    text?:string,
     overlay?: React.ReactNode,
     placement?: 'left' | 'top' | 'bottom' | 'right'
 }>{
@@ -18,7 +17,7 @@ export class Tip extends React.Component<{
     }
     private tip: any;
     render() {
-        var ov = typeof this.props.id != 'undefined' ? <Sp id={this.props.id}></Sp> : this.props.overlay;
+        var ov = typeof this.props.text != 'undefined' ? <S>{this.props.text}</S> : this.props.overlay;
         return <ToolTip ref={e => this.tip = e}
             mouseEnterDelay={0.8}
             mouseLeaveDelay={0.1}

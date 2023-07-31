@@ -1,6 +1,5 @@
 import ReactDOM from "react-dom";
 import { Page } from "..";
-import { langProvider } from "../../../i18n/provider";
 import { Block } from "../../block";
 import { View } from "../../block/element/view";
 import { BlockFactory } from "../../block/factory/block.factory";
@@ -27,6 +26,7 @@ import { DataGridView } from "../../../blocks/data-grid/view/base";
 import { QueueHandle } from "../../../component/lib/queue";
 import { Image } from "../../../blocks/media/image";
 import { FieldType } from "../../../blocks/data-grid/schema/type";
+import { ls } from "../../../i18n/store";
 
 export class Page$Cycle {
     async init(this: Page) {
@@ -34,7 +34,7 @@ export class Page$Cycle {
         PageHistory(this, this.snapshoot);
         PageKeys(this, this.keyboardPlate);
         this.emit(PageDirective.init);
-        await langProvider.import();
+       await ls.import()
     }
     async onLoadContentOperates(this: Page, itemId: string, content: any, operates?: any) {
         await this.clear();

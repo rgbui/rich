@@ -5,12 +5,10 @@ import moveTo from '../../assert/svg/moveTo.svg';
 import comment from "../../assert/svg/comment.svg";
 // import trash from "../../assert/svg/trash.svg";
 import { blockStore } from "../../../extensions/block/store";
-import { langProvider } from "../../../i18n/provider";
-import { LangID } from "../../../i18n/declare";
 import { ActionDirective, OperatorDirective } from "../../history/declare";
 import { AppearAnchor } from "../appear";
 import { Point, Rect } from "../../common/vector/point";
-import { useSelectMenuItem } from "../../../component/view/menu";
+import { MenuPanel, useSelectMenuItem } from "../../../component/view/menu";
 import { CopyText } from "../../../component/copy";
 import { ShyAlert } from "../../../component/lib/alert";
 import {
@@ -33,6 +31,7 @@ import { BlockUrlConstant } from "../constant";
 import { List } from "../../../blocks/present/list/list";
 import { BlockFactory } from "../factory/block.factory";
 import { util } from "../../../util/util";
+import { ls } from "../../../i18n/store";
 
 export class Block$Event {
     /**
@@ -83,7 +82,7 @@ export class Block$Event {
         var menus = await this.onGetTurnMenus();
         if (menus.length > 0) {
             items.push({
-                text: langProvider.getText(LangID.menuTurn),
+                text: ls.t('切换'),
                 icon: LoopSvg,
                 childs: menus.map(m => {
                     return {
@@ -171,7 +170,7 @@ export class Block$Event {
         items.push({
             name: BlockDirective.delete,
             icon: TrashSvg,
-            text: langProvider.getText(LangID.menuDelete),
+            text: ls.t('删除'),
             label: "Del"
         });
         return items;
@@ -211,18 +210,36 @@ export class Block$Event {
         items.push({
             name: BlockDirective.delete,
             icon: TrashSvg,
-            text: langProvider.getText(LangID.menuDelete),
+            text: ls.t('删除'),
             label: "delete"
         });
         return items;
     }
-    async onContextmenu(this: Block, event: MouseEvent) {
+    async onContextmenu(this: Block, event: MouseEvent | Point) {
+        var self = this;
         var re = await useSelectMenuItem(
-            this.isFreeBlock ? { roundPoint: Point.from(event) } : { roundArea: Rect.fromEvent(event), direction: 'left' },
+            this.isFreeBlock ? { roundPoint: event instanceof Point ? event : Point.from(event) } : {
+                roundArea: !(event instanceof Point) ? Rect.fromEvent(event) : undefined,
+                roundPoint: event instanceof Point ? Point.from(event) : undefined,
+                direction: 'left'
+            },
             await this.onGetContextMenus(),
             {
-                input: (item) => {
-                    this.onContextMenuInput(item);
+                async input(item) {
+                    await self.onContextMenuInput(item);
+                },
+                async click(item, ev, name, mp) {
+                    console.log('gggg', item, ev, name, mp);
+                    mp.onFree();
+                    try {
+                        await self.onContextMenuClick(item, ev, name, mp);
+                    }
+                    catch (ex) {
+
+                    }
+                    finally {
+                        mp.onUnfree()
+                    }
                 }
             }
         );
@@ -234,6 +251,9 @@ export class Block$Event {
         if (item?.name == 'text-center') {
             this.onUpdateProps({ align: item.checked ? "center" : "left" }, { range: BlockRenderRange.self });
         }
+    }
+    async onContextMenuClick(this: Block, item: MenuItem<string | BlockDirective>, event: React.MouseEvent<Element, MouseEvent>, clickName: string, mp: MenuPanel<any>) {
+
     }
     async onClickContextMenu(this: Block, item: MenuItem<BlockDirective | string>, event: MouseEvent) {
         if (this.isFreeBlock) {

@@ -1,11 +1,10 @@
 import React from "react";
 import { Singleton } from "../../component/lib/Singleton";
 import { Icon } from "../../component/view/icon";
-import { LangID } from "../../i18n/declare";
-import { Sp } from "../../i18n/view";
 import { InputTextPopSelector } from "../common/input.pop";
 import { BlockSelectorItem } from "./delcare";
 import { blockStore } from "./store";
+import { S } from "../../i18n/view";
 
 class BlockSelector extends InputTextPopSelector<{
     childs: BlockSelectorItem[];
@@ -23,7 +22,7 @@ class BlockSelector extends InputTextPopSelector<{
         var i = -1;
         if (this.list.length == 0) {
             return <div className="flex-center remark f-14  padding-10">
-                <Sp id={LangID.blockSelectorNoData}></Sp>
+                <S>没有搜到块</S>
             </div>
         }
         return this.list.map((group, g) => {

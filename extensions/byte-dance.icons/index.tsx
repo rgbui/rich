@@ -1,6 +1,6 @@
 import React from "react";
 import { Tip } from "../../component/view/tooltip/tip";
-import { langProvider } from "../../i18n/provider";
+
 import { dom } from "../../src/common/dom";
 import { FontColorList } from "../color/data";
 import { ToolTip } from "../../component/view/tooltip";
@@ -12,6 +12,7 @@ import { DiceSvg, RandomSvg } from "../../component/svgs";
 import { channel } from "../../net/channel";
 import { ByteDanceType } from "./declare";
 import { byteDanceStore } from "./store";
+import { ls } from "../../i18n/store";
 const BYTE_DANCE_HISTORYS = '_bytedance_historys__';
 export class ByteDanceIconView extends React.Component<{ loaded?: () => void, onChange: (data: { code: string, color?: string }) => void }> {
     shouldComponentUpdate(nextProps, nextStates) {
@@ -60,7 +61,7 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
                 <div className='shy-font-awesome-category-head'><span>最近</span></div>
                 <div className='shy-font-awesome-category-content'>
                     {this.historyByteDances.map(ic => {
-                        return <Tip overlay={langProvider.isCn ? ic.e.title : ic.e.name} key={ic.e.name}><a onMouseDown={e => this.onChange(ic.e)} dangerouslySetInnerHTML={{ __html: this.renderSvg(ic.e) }}>
+                        return <Tip overlay={ls.isCn ? ic.e.title : ic.e.name} key={ic.e.name}><a onMouseDown={e => this.onChange(ic.e)} dangerouslySetInnerHTML={{ __html: this.renderSvg(ic.e) }}>
                             {/* <i style={{ color: this.color }} className={'fa' + ' fa-' + ic.name}></i> */}
                         </a></Tip>
                     })}
@@ -71,10 +72,10 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
             if (i > this.scrollIndex) return <div key={ic.name}></div>;
             var icons = byteDanceStore.icons.filter(g => g.category == ic.name)
             return <div className='shy-font-awesome-category' key={ic.name}>
-                <div className='shy-font-awesome-category-head'><span>{langProvider.isCn ? ic.text : ic.name}</span></div>
+                <div className='shy-font-awesome-category-head'><span>{ls.isCn ? ic.text : ic.name}</span></div>
                 <div className='shy-font-awesome-category-content'>
                     {icons.map(icon => {
-                        return <Tip overlay={langProvider.isCn ? icon.title : icon.name} key={icon.name}><a onMouseDown={e => this.onChange(icon)} dangerouslySetInnerHTML={{ __html: this.renderSvg(icon) }}>
+                        return <Tip overlay={ls.isCn ? icon.title : icon.name} key={icon.name}><a onMouseDown={e => this.onChange(icon)} dangerouslySetInnerHTML={{ __html: this.renderSvg(icon) }}>
                             {/* <i style={{ color: this.color }} className={'fa' + ' fa-' + ic.name}></i> */}
                         </a></Tip>
                     })}
@@ -105,7 +106,7 @@ export class ByteDanceIconView extends React.Component<{ loaded?: () => void, on
         if (this.searchEmojis.length == 0) return <div className="flex-center remark f-12">没有搜索图标</div>
         return <div className='shy-font-awesome-category'><div className="shy-font-awesome-category-content">
             {this.searchEmojis.map(ic => {
-                return <Tip overlay={langProvider.isCn ? ic.title : ic.name} key={ic.name}><a onMouseDown={e => this.onChange(ic)} dangerouslySetInnerHTML={{ __html: this.renderSvg(ic) }}>
+                return <Tip overlay={ls.isCn ? ic.title : ic.name} key={ic.name}><a onMouseDown={e => this.onChange(ic)} dangerouslySetInnerHTML={{ __html: this.renderSvg(ic) }}>
                     {/* <i style={{ color: this.color }} className={'fa' + ' fa-' + ic.name}></i> */}
                 </a></Tip>
             })}

@@ -4,7 +4,6 @@ import { Icon } from "../../component/view/icon";
 import { TextCommand } from "./text.command";
 import { EventsComponent } from "../../component/lib/events.component";
 import { BlockCssName, FillCss } from "../../src/block/pattern/css";
-import { LangID } from "../../i18n/declare";
 import { Tip } from "../../component/view/tooltip/tip";
 import { useLinkPicker } from "../link/picker";
 import { useColorSelector } from "../color";
@@ -105,18 +104,18 @@ class TextTool extends EventsComponent {
             }
             {this.visible == true && <div className='shy-tool-text-menu' ref={e => this.boxEl = e} style={style}>
 
-                <ToolTip overlay={'让诗云AI帮你写作、润色、生成内容'}>
+                <Tip text={'让诗云AI帮你写作、润色、生成内容'}>
                     <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onExcute(TextCommand.askAI, e)}>
                         <Icon icon={AiStartSvg}></Icon><span>AI</span>
                     </div>
-                </ToolTip>
+                </Tip>
 
-                {this.turnBlock && this.turnText && <Tip id={LangID.textToolTurn}>
+                {this.turnBlock && this.turnText && <Tip text='切换块'>
                     <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenBlockSelector(e)}>
                         <span>{this.turnText}</span><Icon icon='arrow-down:sy'></Icon>
                     </div>
                 </Tip>}
-                <Tip id={LangID.textToolLink}>
+                <Tip text='链接'>
                     <div className='shy-tool-text-menu-item shy-tool-text-menu-devide' onMouseDown={e => this.onOpenLink(e)}>
                         <Icon size={16} icon={LinkSvg}></Icon>
                         <Icon icon='arrow-down:sy'></Icon>
@@ -127,52 +126,52 @@ class TextTool extends EventsComponent {
                             <Icon icon='comment:sy'></Icon>
                         </div>
                     </Tip> */}
-                <Tip id={LangID.textToolBold}>
+                <Tip text='加粗'>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.bold == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.bold == true ? TextCommand.cancelBold : TextCommand.bold, e)}>
                         <Icon size={16} icon={BoldSvg}></Icon>
                     </div>
                 </Tip>
-                <Tip id={LangID.textToolItailc}>
+                <Tip text='斜体'>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.italic == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.italic == true ? TextCommand.cancelItalic : TextCommand.italic, e)}>
                         <Icon size={16} icon={ItalicSvg}></Icon>
                     </div>
                 </Tip>
-                <Tip id={LangID.textToolUnderline}>
+                <Tip text='下划线'>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.underline == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.underline == true ? TextCommand.cancelLine : TextCommand.underline, e)}>
                         <Icon size={16} icon={UnderlineSvg}></Icon>
                     </div>
                 </Tip>
-                <Tip id={LangID.textToolDeleteLine}>
+                <Tip text='删除线'>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.deleteLine == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.deleteLine == true ? TextCommand.cancelLine : TextCommand.deleteLine, e)}>
                         <Icon size={16} icon={DeleteLineSvg}></Icon>
                     </div>
                 </Tip>
-                <Tip id={LangID.textToolCode}>
+                <Tip text='行内代码'>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.code == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.code == true ? TextCommand.cancelCode : TextCommand.code, e)}>
                         <Icon size={16} icon={CodeSvg}></Icon>
                     </div>
                 </Tip>
-                <Tip id={LangID.textToolEquation}>
+                <Tip text='行内公式'>
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.equation == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.equation == true ? TextCommand.cancelEquation : TextCommand.equation, e)}>
                         <Icon size={16} icon={EquationSvg}></Icon>
                     </div>
                 </Tip>
-                <Tip id={LangID.textToolColor}>
+                <Tip text='颜色'>
                     <div className='shy-tool-text-menu-item' onMouseDown={e => this.onOpenFontColor(e)}>
                         <Icon size={16} icon={FontStyleSvg}></Icon>
                         <Icon size={16} icon='arrow-down:sy'></Icon>
                     </div>
                 </Tip>
-                <ToolTip overlay={'双链'} >
+                <Tip text={'双链'} >
                     <div className={'shy-tool-text-menu-item' + (this.textStyle.page == true ? " hover" : "")} onMouseDown={e => this.onExcute(this.textStyle.page != true ? TextCommand.doubleLink : undefined, e)}>
                         <Icon size={22} icon={DoubleLinkSvg}></Icon>
                     </div>
-                </ToolTip>
-                <ToolTip overlay={'搜索'}>
+                </Tip>
+                <Tip text={'搜索'}>
                     <div className="shy-tool-text-menu-item" onMouseDown={e => this.onSearch(e)}>
                         <Icon size={16} icon={SearchSvg}></Icon>
                     </div>
-                </ToolTip>
+                </Tip>
             </div>}
         </div>;
     }

@@ -70,7 +70,8 @@ interface Window {
     platform: 'web' | 'desktop' | 'mobile' | "server-side",
     guid(): string,
     isOnline: boolean,
-    isTestBeta: boolean
+    isTestBeta: boolean,
+    lang: 'zh' | 'en' | 'jp'
   },
   shyLog: (...args: any[]) => void
 }

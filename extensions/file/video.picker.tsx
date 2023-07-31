@@ -1,6 +1,5 @@
 import React from "react";
 import { Tip } from "../../component/view/tooltip/tip";
-import { LangID } from "../../i18n/declare";
 import { OutsideUrl } from "../link/outside";
 import { EventsComponent } from "../../component/lib/events.component";
 import { UploadView } from "./upload";
@@ -18,10 +17,10 @@ class VideoPicker extends EventsComponent {
     render() {
         return <div className='shy-video-picker' >
             <Tab keeplive>
-                <Tab.Page item={<Tip placement='bottom' id={LangID.ImageLink}><Icon size={20} icon={LinkSvg}></Icon></Tip>}>
+                <Tab.Page item={<Tip placement='bottom' text={'视频链接'}><Icon size={20} icon={LinkSvg}></Icon></Tip>}>
                     <OutsideUrl change={e => this.onChange({ name: 'link', url: e })}></OutsideUrl>
                 </Tab.Page>
-                <Tab.Page item={<Tip placement='bottom' id={LangID.UploadFile}><Icon size={20} icon={UploadSvg}></Icon></Tip>}>
+                <Tab.Page item={<Tip placement='bottom' text={'上传文件'}><Icon size={20} icon={UploadSvg}></Icon></Tip>}>
                     <UploadView mine='video' change={e => this.onChange({ name: 'upload', ...e })}></UploadView>
                 </Tab.Page>
             </Tab>

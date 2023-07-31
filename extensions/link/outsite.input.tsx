@@ -4,7 +4,6 @@ import { EventsComponent } from "../../component/lib/events.component";
 import { Icon } from "../../component/view/icon";
 import { Tab } from "../../component/view/tab";
 import { Tip } from "../../component/view/tooltip/tip";
-import { LangID } from "../../i18n/declare";
 import { ResourceArguments } from "../icon/declare";
 import { PopoverSingleton } from "../popover/popover";
 import { PopoverPosition } from "../popover/position";
@@ -17,7 +16,7 @@ class OutSideUrlInput extends EventsComponent {
     render() {
         return <div className='shy-file-picker' >
             <Tab keeplive>
-                <Tab.Page item={<Tip placement='bottom' id={LangID.ImageLink}><Icon size={20} icon={Link}></Icon></Tip>}>
+                <Tab.Page item={<Tip placement='bottom' text={'网址链接'}><Icon size={20} icon={Link}></Icon></Tip>}>
                     <OutsideUrl change={e => this.onChange({ name: 'link', url: e })}></OutsideUrl>
                 </Tab.Page>
             </Tab>

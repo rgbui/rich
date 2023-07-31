@@ -1,6 +1,5 @@
 import React from "react";
 import { Tip } from "../../component/view/tooltip/tip";
-import { langProvider } from "../../i18n/provider";
 import { fontAwesomeStore } from "./store";
 import './style.less';
 import { FontAwesomeIconType, FontAwesomeType } from "./declare";
@@ -13,6 +12,7 @@ import { Input } from "../../component/view/input";
 import { Icon } from "../../component/view/icon";
 import { DiceSvg, RandomSvg } from "../../component/svgs";
 import { channel } from "../../net/channel";
+import { ls } from "../../i18n/store";
 const FONT_AWESOME_HISTORYS = '_fontAwesome_historys__';
 export class FontAwesomeView extends React.Component<{ loaded?: () => void, onChange: (data: { code: string, color?: string }) => void }> {
     shouldComponentUpdate(nextProps, nextStates) {
@@ -61,8 +61,8 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
                 <div className='shy-font-awesome-category-head'><span>最近</span></div>
                 <div className='shy-font-awesome-category-content'>
                     {this.historyFontAwesomes.map(ic => {
-                        return <Tip overlay={langProvider.isCn ? ic.e.label : ic.e.name} key={ic.e.name}><a onMouseDown={e => this.onChange(ic.e)}>
-                            <i style={{ color: this.color=='inherit'?"var(--text-color)":this.color }} className={'fa' + ' fa-' + ic.e.name}></i>
+                        return <Tip overlay={ls.isCn ? ic.e.label : ic.e.name} key={ic.e.name}><a onMouseDown={e => this.onChange(ic.e)}>
+                            <i style={{ color: this.color == 'inherit' ? "var(--text-color)" : this.color }} className={'fa' + ' fa-' + ic.e.name}></i>
                         </a></Tip>
                     })}
                 </div>
@@ -71,11 +71,11 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
         els.push(...this.icons.map((icon, i) => {
             if (i > this.scrollIndex) return <div key={icon.name}></div>;
             return <div className='shy-font-awesome-category' key={icon.name}>
-                <div className='shy-font-awesome-category-head'><span>{langProvider.isCn ? icon.text : icon.name}</span></div>
+                <div className='shy-font-awesome-category-head'><span>{ls.isCn ? icon.text : icon.name}</span></div>
                 <div className='shy-font-awesome-category-content'>
                     {icon.icons.map(ic => {
-                        return <Tip overlay={langProvider.isCn ? ic.label : ic.name} key={ic.name}><a onMouseDown={e => this.onChange(ic)}>
-                            <i style={{ color: this.color=='inherit'?"var(--text-color)":this.color }} className={'fa' + ' fa-' + ic.name}></i>
+                        return <Tip overlay={ls.isCn ? ic.label : ic.name} key={ic.name}><a onMouseDown={e => this.onChange(ic)}>
+                            <i style={{ color: this.color == 'inherit' ? "var(--text-color)" : this.color }} className={'fa' + ' fa-' + ic.name}></i>
                         </a></Tip>
                     })}
                 </div>
@@ -94,7 +94,7 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
     renderFontColors() {
         return <div className='shy-font-awesome-colors'>
             {FontColorList.map(c => {
-                return <ToolTip overlay={c.text} key={c.color} ><a className={this.color == c.color ? "hover" : ""} onMouseDown={e => this.onSetFont(c)} style={{ backgroundColor: c.color=='inherit'?"var(--text-color)":c.color }}></a></ToolTip>
+                return <ToolTip overlay={c.text} key={c.color} ><a className={this.color == c.color ? "hover" : ""} onMouseDown={e => this.onSetFont(c)} style={{ backgroundColor: c.color == 'inherit' ? "var(--text-color)" : c.color }}></a></ToolTip>
             })}
         </div>
     }
@@ -102,8 +102,8 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
         if (this.searchEmojis.length == 0) return <div className="flex-center remark f-12">没有搜索图标</div>
         return <div className='shy-font-awesome-category'><div className="shy-font-awesome-category-content">
             {this.searchEmojis.map(ic => {
-                return <Tip overlay={langProvider.isCn ? ic.label : ic.name} key={ic.name}><a onMouseDown={e => this.onChange(ic)}>
-                    <i style={{ color: this.color=='inherit'?"var(--text-color)":this.color }} className={'fa' + ' fa-' + ic.name}></i>
+                return <Tip overlay={ls.isCn ? ic.label : ic.name} key={ic.name}><a onMouseDown={e => this.onChange(ic)}>
+                    <i style={{ color: this.color == 'inherit' ? "var(--text-color)" : this.color }} className={'fa' + ' fa-' + ic.name}></i>
                 </a></Tip>
             })}
         </div></div>
@@ -129,7 +129,7 @@ export class FontAwesomeView extends React.Component<{ loaded?: () => void, onCh
             {!this.word && <div className='shy-font-awesome' onScroll={e => this.onScroll(e)}>
                 {this.renderFontColors()}
                 {this.loading && <div className='shy-font-awesome-loading'></div>}
-                {this.loading != true && <div style={{ color:this.color=='inherit'?"var(--text-color)":this.color }} className='shy-font-awesome-content'>{this.renderFontAwesomes()}</div>}
+                {this.loading != true && <div style={{ color: this.color == 'inherit' ? "var(--text-color)" : this.color }} className='shy-font-awesome-content'>{this.renderFontAwesomes()}</div>}
             </div>}
         </div>
     }

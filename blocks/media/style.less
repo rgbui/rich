@@ -1,7 +1,7 @@
 .sy-block-image {
     &-error {
         background: rgb(242, 241, 238);
-        padding        : 12px 36px 12px 12px;
+        padding   : 12px 36px 12px 12px;
     }
 
     &-content {
@@ -93,9 +93,13 @@
                     max-height   : 50%;
                 }
             }
+
             img {
                 width: 100%
-            };
+            }
+
+            ;
+
             &:hover {
                 .sy-block-image-left-resize {
                     &::after {
@@ -444,5 +448,40 @@
                 opacity: 1;
             }
         }
+    }
+}
+
+.sy-block-resize-bottom-right {
+    position: absolute;
+    right   : 0px;
+    bottom  : 0px;
+    width   : 24px;
+    height  : 24px;
+    cursor  : se-resize;
+
+    &::after {
+        content      : '\20';
+        display      : block;
+        background   : rgba(15, 15, 15, 0.6);
+        bottom       : 0px;
+        right        : 0px;
+        width        : 6px;
+        height       : 24px;
+        position     : absolute;
+        border-radius: 3px 3px 0px 0px;
+    }
+
+    &::before {
+
+        content   : '\20';
+        display   : block;
+        background: rgba(15, 15, 15, 0.6);
+        bottom    : 0px;
+        right     : 0px;
+        width     : 24px;
+        height    : 6px;
+        position  : absolute;
+
+        border-radius: 3px 0px 0px 3px;
     }
 }

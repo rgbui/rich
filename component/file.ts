@@ -16,7 +16,10 @@ export async function OpenMultipleFileDialoug(options?: {
         if (typeof upload_file == 'undefined') {
             upload_file = document.body.appendChild(document.createElement('input'));
             upload_file.setAttribute('type', 'file');
-            upload_file.style.display = 'none';
+            upload_file.style.position = 'absolute';
+            upload_file.style.left = '-1000px';
+            upload_file.style.top = '-1000px';
+            // upload_file.style.display = 'none';
         }
         function selectFile(ev: Event) {
             lastSelectFile = undefined;
@@ -33,7 +36,8 @@ export async function OpenMultipleFileDialoug(options?: {
         if (lastSelectFile) upload_file.removeEventListener('change', lastSelectFile);
         upload_file.addEventListener('change', selectFile);
         lastSelectFile = selectFile;
-        upload_file.click();
+        upload_file.dispatchEvent(new MouseEvent('click'))
+        //upload_file.click();
     })
 }
 /**

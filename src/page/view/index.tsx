@@ -12,7 +12,6 @@ import { PageCover } from "./cover";
 import { Icon } from "../../../component/view/icon";
 import {
     AiStartSvg,
-    BoardIconSvg,
     BoardToolFrameSvg,
     CollectTableSvg,
     CubesSvg,
@@ -25,7 +24,6 @@ import { Block } from "../../block";
 import { PageDirective } from "../directive";
 import { PageBar } from "./bar";
 import { useAITool } from "../../../extensions/ai";
-import { DirectoryTreeView } from "../../../extensions/directory";
 
 /**
  * mousedown --> mouseup --> click --> mousedown --> mouseup --> click --> dblclick
@@ -188,9 +186,9 @@ export class PageView extends Component<{ page: Page }>{
                 <div className="remark f-12">新增</div>
                 {(window.shyConfig.isDev || ws.sn <= 20) && <a onMouseDown={e => this.page.onOpenTemplate()}><Icon icon={CubesSvg}></Icon><span>选择模板创建</span></a>}
                 {/*<a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.doc)}><Icon size={20} icon={PageSvg} ></Icon><span>页面</span></a> */}
-                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.db)}><Icon size={20} icon={CollectTableSvg} ></Icon><span>表格</span></a>
+                <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.db)}><Icon size={18} icon={CollectTableSvg} ></Icon><span>表格</span></a>
                 <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.docCard)}><Icon size={20} icon={DocCardsSvg} ></Icon><span>宣传页</span></a>
-                {window.shyConfig.isDev && <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.board)}><Icon size={16} icon={BoardIconSvg}></Icon><span>白板</span></a>}
+                {window.shyConfig.isDev && <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.board)}><Icon size={20} icon={{ name: 'bytedance-icon', code: 'enter-the-keyboard' }}></Icon><span>白板</span></a>}
                 <a onMouseDown={e => this.onPageTurnLayout(PageLayoutType.textChannel)}><Icon size={20} icon={BoardToolFrameSvg}></Icon><span>频道</span></a>
             </div>
         </div>

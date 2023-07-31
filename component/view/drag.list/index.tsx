@@ -3,12 +3,13 @@ import { dom } from "../../../src/common/dom";
 import { MouseDragger } from "../../../src/common/dragger";
 import { ghostView } from "../../../src/common/ghost";
 import { Point, Rect } from "../../../src/common/vector/point";
+
 export class DragList extends React.Component<{
     children?: ReactNode,
     isDragBar?: (ele: HTMLElement) => boolean,
     onChange?: (to: number, from?: number) => void,
     className?: string | string[],
-    style?:CSSProperties,
+    style?: CSSProperties,
 }>{
     el: HTMLElement;
     render() {
@@ -59,7 +60,7 @@ export class DragList extends React.Component<{
             if (Array.isArray(this.props.className)) classList.push(...this.props.className)
             else classList.push(this.props.className)
         }
-        return <div style={this.props.style||{}} className={classList.join(' ')} ref={e => this.el = e} onMouseDown={e => mousedown(e)}>
+        return <div style={this.props.style || {}} className={classList.join(' ')} ref={e => this.el = e} onMouseDownCapture={e => mousedown(e)}>
             {this.props.children}
         </div>
     }

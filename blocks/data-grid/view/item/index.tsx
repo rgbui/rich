@@ -10,8 +10,6 @@ import { ViewField } from "../../schema/view";
 import { DataGridView } from "../base";
 import { createFieldBlock } from "./service";
 import trash from "../../../../src/assert/svg/trash.svg";
-import { langProvider } from "../../../../i18n/provider";
-import { LangID } from "../../../../i18n/declare";
 import { BlockUrlConstant } from "../../../../src/block/constant";
 import { TableStoreGallery } from "../gallery";
 import { autoImageUrl, ElementType, getElementUrl } from "../../../../net/element.type";
@@ -24,6 +22,7 @@ import { OriginField } from "../../element/field/origin.field";
 import { DotsSvg, EditSvg } from "../../../../component/svgs";
 import { Icon } from "../../../../component/view/icon";
 import "./style.less";
+import { ls } from "../../../../i18n/store";
 
 @url('/data-grid/item')
 export class TableStoreItem extends Block {
@@ -153,8 +152,8 @@ export class TableStoreItem extends Block {
         items.push({
             name: BlockDirective.delete,
             icon: trash,
-            text: langProvider.getText(LangID.menuDelete),
-            label: "delete"
+            text: ls.t('删除'),
+            label: "Delete"
         });
         return items;
     }

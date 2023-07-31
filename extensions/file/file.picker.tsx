@@ -2,7 +2,6 @@
 import { EventsComponent } from "../../component/lib/events.component";
 import React from "react";
 import { Tip } from "../../component/view/tooltip/tip";
-import { LangID } from "../../i18n/declare";
 import Link from "../../src/assert/svg/link.svg";
 import Upload from "../../src/assert/svg/upload.svg";
 import { OutsideUrl } from "../link/outside";
@@ -20,10 +19,10 @@ class FilePicker extends EventsComponent {
     render() {
         return <div className='shy-file-picker' >
             <Tab keeplive>
-                <Tab.Page item={<Tip placement='bottom' id={LangID.UploadFile}><Icon size={20} icon={Upload}></Icon></Tip>}>
+                <Tab.Page item={<Tip placement='bottom' text={'上传文件'}><Icon size={20} icon={Upload}></Icon></Tip>}>
                     <UploadView mine={this.mime} change={e => this.onChange({ name: 'upload', ...e })}></UploadView>
                 </Tab.Page>
-                <Tab.Page item={<Tip placement='bottom' id={LangID.ImageLink}><Icon size={18} icon={Link}></Icon></Tip>}>
+                <Tab.Page item={<Tip placement='bottom' text={'网址链接'}><Icon size={18} icon={Link}></Icon></Tip>}>
                     <OutsideUrl change={e => this.onChange({ name: 'link', url: e })}></OutsideUrl>
                 </Tab.Page>
             </Tab>
@@ -64,7 +63,7 @@ class UploadPicker extends EventsComponent {
     render() {
         return <div className='shy-file-picker' >
             <Tab keeplive>
-                <Tab.Page item={<Tip placement='bottom' id={LangID.UploadFile}><Icon size={20} icon={Upload}></Icon></Tip>}>
+                <Tab.Page item={<Tip placement='bottom' text={'上传文件'}><Icon size={20} icon={Upload}></Icon></Tip>}>
                     <UploadView mine={this.mime} change={e => this.onChange({ name: 'upload', ...e })}></UploadView>
                 </Tab.Page>
             </Tab>

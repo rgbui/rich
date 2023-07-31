@@ -1,28 +1,14 @@
 import React from "react";
 import { Button } from "../../component/view/button";
-import { OpenFileDialoug } from "../../component/file";
 import { Sp } from "../../i18n/view";
-import { LangID } from "../../i18n/declare";
 import { channel } from "../../net/channel";
 import { ResourceArguments } from "../icon/declare";
 import { util } from "../../util/util";
+import { FileView } from "../../component/view/input/file.view";
 
 export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audio' | 'video', change: (file: ResourceArguments) => void }> {
-    async uploadFile() {
-        this.button.disabled = true;
-        this.error = '';
-        var exts = ['*'];
-        if (this.props.mine == 'image') exts = ['image/*'];
-        else if (this.props.mine == 'audio') exts = ['audio/*'];
-        else if (this.props.mine == 'video') exts = ['video/*'];
-        this.progress = '';
-        this.forceUpdate();
-        var file = await OpenFileDialoug({ exts });
-        if (file) {
-            await this.onUpload(file);
-        }
-    }
     async onUpload(file: File) {
+        if (!file) return;
         var isUpload: boolean = true;
         if (this.props.mine == 'image' && file.size > 1024 * 1024 * 20) {
             this.error = '图片过大，不支持20M以上的图片';
@@ -78,14 +64,21 @@ export class UploadView extends React.Component<{ mine: 'image' | 'file' | 'audi
         if (this.props.mine == 'image') text = '上传图片';
         else if (this.props.mine == 'video') text = '上传视频';
         else if (this.props.mine == 'audio') text = '上传音频';
+        var exts = ['*'];
+        if (this.props.mine == 'image') exts = ['image/*'];
+        else if (this.props.mine == 'audio') exts = ['audio/*'];
+        else if (this.props.mine == 'video') exts = ['video/*'];
         return <div className='shy-upload'>
             <div className='shy-upload-remark'>
-                <Sp id={LangID.UploadRemark}></Sp>
+                <Sp key={'请勿上传色情、涉政涉恐涉暴、侵权内容'}>请勿上传色情、涉政涉恐涉暴、侵权内容或<a target='_blank' className="link-red" href='https://shy.live/service_protocol'>服务条款</a>
+                    中禁止上传的其它内容</Sp>
             </div>
-            <div className="dashed gap-h-10 round flex-center min-h-80" tabIndex={1} onClick={e => this.uploadFile()} onPaste={this.onPaste} onDrop={this.onDrop}>
-                <span className="remark">拖动{text}或粘贴{text.replace('上传', '')}</span>
-            </div>
-            <Button ref={e => this.button = e} block onClick={e => this.uploadFile()}>{text}</Button>
+            <FileView exts={exts} onChange={e => { this.onUpload(e[0]) }}>
+                <div className="dashed gap-h-10 round flex-center min-h-80" tabIndex={1} onPaste={this.onPaste} onDrop={this.onDrop}>
+                    <span className="remark">拖动{text}或粘贴{text.replace('上传', '')}</span>
+                </div>
+                <Button ref={e => this.button = e} block>{text}</Button>
+            </FileView>
             {this.progress && <span className="remark">{this.progress}</span>}
             {this.error && <div className='shy-upload-error'>{this.error}</div>}
         </div>

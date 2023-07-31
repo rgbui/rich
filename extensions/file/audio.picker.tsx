@@ -1,6 +1,5 @@
 import React from "react";
 import { Tip } from "../../component/view/tooltip/tip";
-import { LangID } from "../../i18n/declare";
 import { OutsideUrl } from "../link/outside";
 import { EventsComponent } from "../../component/lib/events.component";
 import { UploadView } from "./upload";
@@ -20,10 +19,10 @@ class AudioPicker extends EventsComponent {
     render() {
         return <div className='shy-audio-picker'>
             <Tab keeplive>
-                <Tab.Page item={<Tip placement='bottom' id={LangID.UploadAudio}><Icon size={20} icon={Upload}></Icon></Tip>}>
-                    <UploadView mine='file' change={e => this.onChange({ name: 'upload',...e })}></UploadView>
+                <Tab.Page item={<Tip placement='bottom' text={'上传音频'}><Icon size={20} icon={Upload}></Icon></Tip>}>
+                    <UploadView mine='file' change={e => this.onChange({ name: 'upload', ...e })}></UploadView>
                 </Tab.Page>
-                <Tab.Page item={<Tip placement='bottom' id={LangID.ImageLink}><Icon size={18} icon={Link}></Icon></Tip>}>
+                <Tab.Page item={<Tip placement='bottom' text={'上传图片'}><Icon size={18} icon={Link}></Icon></Tip>}>
                     <OutsideUrl change={e => this.onChange({ name: 'link', url: e })}></OutsideUrl>
                 </Tab.Page>
             </Tab>

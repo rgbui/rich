@@ -227,6 +227,9 @@ export class Page$Operator {
     async onOpenMenu(this: Page, blocks: Block[], event: MouseEvent | Point) {
         if (!(event instanceof Point))
             event.preventDefault();
+        if (blocks.length == 1) {
+            return blocks[0].onContextmenu(event);
+        }
         var re = await useSelectMenuItem(
             {
                 roundPoint: event instanceof Point ? event : Point.from(event),

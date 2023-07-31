@@ -32,5 +32,7 @@ export type ResourceArguments = {
     size?: number,
     origin?: string,
     mime?: string,
-    ext?: string
+    ext?: string,
+    width?:number,
+    height?:number
 }

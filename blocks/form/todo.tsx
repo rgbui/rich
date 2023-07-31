@@ -4,8 +4,6 @@ import React from 'react';
 import { prop, url, view } from "../../src/block/factory/observable";
 import { ChildsArea, TextArea, TextLineChilds } from "../../src/block/view/appear";
 import { BlockDisplay, BlockRenderRange } from "../../src/block/enum";
-import { langProvider } from "../../i18n/provider";
-import { LangID } from "../../i18n/declare";
 import { TextTurns } from "../../src/block/turn/text";
 import "./style.less";
 import { Block } from "../../src/block";
@@ -14,6 +12,7 @@ import { Icon } from "../../component/view/icon";
 import { BlockChildKey } from "../../src/block/constant";
 import { dom } from "../../src/common/dom";
 import { DropDirection } from "../../src/kit/handle/direction";
+import { ls } from "../../i18n/store";
 
 @url('/todo')
 export class ToDo extends Block {
@@ -120,7 +119,7 @@ export class ToDoView extends BlockView<ToDo>{
                                 <Icon size={this.block.checked ? (this.props.block.page.fontSize - 2) : this.props.block.page.fontSize} icon={this.block.checked ? CheckSvg : CheckboxSquareSvg} ></Icon>
                             </div>
                         </div>
-                        <span className='sy-block-todo-text'><TextArea block={this.block} placeholder={langProvider.getText(LangID.todoPlaceholder)}
+                        <span className='sy-block-todo-text'><TextArea block={this.block} placeholder={ls.t('待办事项')}
                             prop='content'
                         ></TextArea>
                         </span>

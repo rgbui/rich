@@ -4,7 +4,6 @@ import { LinkSvg, UploadSvg } from "../../component/svgs";
 import { Icon } from "../../component/view/icon";
 import { Tab } from "../../component/view/tab";
 import { Tip } from "../../component/view/tooltip/tip";
-import { LangID } from "../../i18n/declare";
 import { ResourceArguments } from "../icon/declare";
 import { OutsideUrl } from "../link/outside";
 import { PopoverSingleton } from "../popover/popover";
@@ -18,10 +17,10 @@ class ImageFilePicker extends EventsComponent {
     render() {
         return <div className='shy-file-picker' >
             <Tab keeplive>
-                <Tab.Page item={<Tip placement='bottom' id={LangID.UploadFile}><Icon size={16} icon={UploadSvg}></Icon></Tip>}>
-                    <UploadView mine='image' change={e => this.onChange({ name: 'upload',...e })}></UploadView>
+                <Tab.Page item={<Tip placement='bottom' text={'上传图片'}><Icon size={16} icon={UploadSvg}></Icon></Tip>}>
+                    <UploadView mine='image' change={e => this.onChange({ name: 'upload', ...e })}></UploadView>
                 </Tab.Page>
-                <Tab.Page item={<Tip placement='bottom' id={LangID.ImageLink}><Icon size={16} icon={LinkSvg}></Icon></Tip>}>
+                <Tab.Page item={<Tip placement='bottom' text={'图片链接'}><Icon size={16} icon={LinkSvg}></Icon></Tip>}>
                     <OutsideUrl change={e => this.onChange({ name: 'link', url: e })}></OutsideUrl>
                 </Tab.Page>
             </Tab>

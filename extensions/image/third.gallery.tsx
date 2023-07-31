@@ -1,12 +1,11 @@
 import React from "react";
 import { Input } from "../../component/view/input";
-import { Sp } from "../../i18n/view";
-import { LangID } from "../../i18n/declare";
-import { langProvider } from "../../i18n/provider";
 import { GalleryType, OuterPic } from "./declare";
 import { createClient } from 'pexels';
 import { Loading } from "../../component/view/loading";
 import { util } from "../../util/util";
+import { S, Sp } from "../../i18n/view";
+import { ls } from "../../i18n/store";
 export class ThirdGallery extends React.Component<{ type: GalleryType, onChange: (image: OuterPic) => void }>{
     word: string = '';
     error: string = '';
@@ -95,9 +94,10 @@ export class ThirdGallery extends React.Component<{ type: GalleryType, onChange:
         if (this.props.type == GalleryType.unsplash)
             origin = <a href="https://www.unsplash.com/" target="_blank">Unsplash</a>;
         return <div className='shy-third-gallery'>
-            <div className="shy-third-gallery-search"><Input value={this.word} onChange={e => this.word = e} onEnter={e => this.onSearch(e)} clear placeholder={langProvider.getText(LangID.SearchImage)}></Input></div>
+            <div className="shy-third-gallery-search"><Input value={this.word} onChange={e => this.word = e} onEnter={e => this.onSearch(e)} clear placeholder={ls.t('搜索图片')}></Input></div>
             <div className='shy-third-gallery-origin'>
-                <Sp id={LangID.ImageOrigin}></Sp>{origin}
+                <Sp key={'请勿上传色情、涉政涉恐涉暴、侵权内容'}>请勿上传色情、涉政涉恐涉暴、侵权内容或<a target='_blank' className="link-red" href='https://shy.live/service_protocol'>服务条款</a>
+                    中禁止上传的其它内容</Sp>
             </div>
             <div className='shy-third-gallery-content'>
                 {this.loading == true && <div className='shy-third-gallery-loading'><Loading></Loading></div>}

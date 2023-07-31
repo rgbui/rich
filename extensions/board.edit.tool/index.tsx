@@ -18,7 +18,6 @@ import { Icon } from "../../component/view/icon";
 import { MeasureView } from "../../component/view/progress";
 import { Select } from "../../component/view/select";
 import { Tip } from "../../component/view/tooltip/tip";
-import { LangID } from "../../i18n/declare";
 import { Block } from "../../src/block";
 import { Point } from "../../src/common/vector/point";
 import { Polygon } from "../../src/common/vector/polygon";
@@ -78,7 +77,7 @@ export class BoardEditTool extends EventsComponent {
                     <BackgroundColor name={'minLineColor'} tool={this} value={getValue('mindLineColor')} change={e => { this.onChange('mindLineColor', e) }}></BackgroundColor>
                 </div>
             </Tip>}
-            {is('frameScale') && <Tip id={LangID.textToolBold}>
+            {is('frameScale') && <Tip text={'加粗'}>
                 <div className={'shy-board-edit-tool-item'} >
                     <FrameScale></FrameScale>
                 </div>
@@ -151,7 +150,7 @@ export class BoardEditTool extends EventsComponent {
                         { text: '大', value: 'big' }]}></Select>
                 </div>
             </Tip><div className={'shy-board-edit-tool-devide'}></div></>}
-            {is('fontWeight') && <Tip id={LangID.textToolBold}>
+            {is('fontWeight') && <Tip text='加粗'>
                 <div className={'shy-board-edit-tool-item' + ((getValue('fontWeight') == 'bold' || getValue('fontWeight') > 500) ? " hover" : "")}
                     onMouseDown={e => this.onChange('fontWeight', (getValue('fontWeight') == 'bold' || getValue('fontWeight') > 500) ? "normal" : 'bold')}
                 ><Icon size={14} icon={BoldSvg}></Icon>
@@ -166,13 +165,13 @@ export class BoardEditTool extends EventsComponent {
                 ><Icon size={14} icon={ItalicSvg} ></Icon>
                 </div>
             </Tip>}
-            {is('textDecoration') && <Tip id={LangID.textToolDeleteLine}>
+            {is('textDecoration') && <Tip text={'删除线'}>
                 <div className={'shy-board-edit-tool-item' + (getValue('textDecoration') == 'line-through' ? " hover" : "")}
                     onMouseDown={e => this.onChange('textDecoration', getValue('textDecoration') == 'line-through' ? "none" : "line-through")}
                 ><Icon size={14} icon={DeleteLineSvg}></Icon>
                 </div>
             </Tip>}
-            {is('textDecoration') && <><Tip id={LangID.textToolUnderline}>
+            {is('textDecoration') && <><Tip text={'下划线'}>
                 <div
                     className={'shy-board-edit-tool-item' + (getValue('textDecoration') == 'underline' ? " hover" : "")}
                     onMouseDown={e => this.onChange('textDecoration', getValue('textDecoration') == 'underline' ? "none" : "underline")}

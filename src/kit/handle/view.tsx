@@ -3,12 +3,12 @@ import { Point } from "../../common/vector/point";
 import { Icon } from "../../../component/view/icon";
 import { Handle } from ".";
 import { Tip } from "../../../component/view/tooltip/tip";
-import { LangID } from "../../../i18n/declare";
 import { MouseDragger } from "../../common/dragger";
 import { ghostView } from "../../common/ghost";
 import { onAutoScroll, onAutoScrollStop } from "../../common/scroll";
 import { DragHandleSvg, PlusSvg } from "../../../component/svgs";
 import { UA } from "../../../util/ua";
+import { Sp } from "../../../i18n/view";
 
 export class HandleView extends React.Component<{ handle: Handle }>{
     constructor(props) {
@@ -20,7 +20,6 @@ export class HandleView extends React.Component<{ handle: Handle }>{
     }
     private async onPlus(event: React.MouseEvent) {
         this.closeTip();
-        event.stopPropagation();
         var self = this;
         self.handleEle.style.display = 'none';
         if (self.handle.kit.anchorCursor.currentSelectedBlocks.length > 0) {
@@ -114,12 +113,12 @@ export class HandleView extends React.Component<{ handle: Handle }>{
                 ref={e => this.handleEle = e}
             >
                 <Tip placement='bottom' ref={e => { this.plusToolTip = e; }} overlay={<>鼠标点击插入块<br />{UA.isMacOs ? "option" : "alt"}点击上面插入块</>} >
-                    <span className="remark size-24 round flex-center flex-inline" onMouseDown={e => this.onPlus(e)}>
+                    <span className="remark size-24 round flex-center flex-inline" onMouseDown={e => { e.stopPropagation(); this.onPlus(e) }}>
                         <Icon icon={PlusSvg} size={20}></Icon>
                     </span>
                 </Tip>
-                <Tip placement='bottom' ref={e => { this.toolTip = e; }} id={LangID.bar} >
-                    <span className="remark round w-18 h-24 flex-center flex-inline" onMouseDown={e => this.onMousedown(e.nativeEvent)}>
+                <Tip placement='bottom' ref={e => { this.toolTip = e; }} overlay={<Sp key='点击打开菜单'><span><b>点击</b>打开菜单</span><span><b>拖拽</b>可移动位置</span></Sp>}>
+                    <span className="remark round w-18 h-24 flex-center flex-inline" onMouseDown={e => { e.stopPropagation(); this.onMousedown(e.nativeEvent) }}>
                         <Icon icon={DragHandleSvg} size={16}></Icon>
                     </span>
                 </Tip>

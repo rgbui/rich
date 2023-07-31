@@ -90,6 +90,7 @@ export var BlockSelectorData: BlockGroup[] = [
         text: '媒体与附件',
         childs: [
             { text: "图片", icon: PicSvg, url: '/image', description: '', label: '/图片', labels: ['/tp', '/tupian', '/img', '/image', '/picture'] },
+            { text: '图片轮播', icon: PicSvg, url: '/carousel/image', description: '', label: '/图片轮播', labels: ['/tplb', '/tupianlunbo', '/carousel/image'] },
             { text: "音频", icon: AudioSvg, url: '/audio', description: "", label: '/音频', labels: ['/yp', '/audio'] },
             { text: "视频", icon: VideoSvg, url: '/video', description: "", label: '/视频', labels: ['/sp', '/video'] },
             { text: "文件", icon: FileSvg, url: '/file', description: "", label: '/文件', labels: ['/wj', '/wenjian', '/file'] },

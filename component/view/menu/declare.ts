@@ -12,6 +12,7 @@ export type MenuItem<T = string> = {
     placement?: OverlayPlacement,
     renderIcon?: (item: MenuItem<T>, view?: MenuItemView) => JSX.Element,
     render?: (item: MenuItem<T>, view?: MenuItemView) => JSX.Element,
+    renderContent?: (item: MenuItem<T>, view?: MenuItemView) => JSX.Element,
     iconSize?: number,
     label?: string,
     checkLabel?: boolean,
@@ -44,11 +45,11 @@ export type MenuItem<T = string> = {
     containerHeight?: number,
     data?: any,
     placeholder?: string,
-    userid?:string,
+    userid?: string,
     /**
      * 用户的头像size
      */
-    size?:number
+    size?: number
 }
 export enum MenuItemType {
     divide = 1,
@@ -63,5 +64,5 @@ export enum MenuItemType {
     container = 10,
     color = 11,
     gap = 12,
-    user=13
+    user = 13
 }
