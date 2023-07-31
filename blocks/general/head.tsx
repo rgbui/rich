@@ -98,14 +98,10 @@ export class Head extends Block {
         var at = rs.findIndex(g => g.name == 'text-center');
         if (this.toggle == true)
             lodash.remove(rs, g => g.name == 'text-center');
-        rs.splice(at, 0, {
+        rs.splice(at,0,{
             name: 'toggle',
             text: '折叠标题',
-            renderIcon(item, v) {
-                return <span className="size-20 flex-center  flex-inline" style={
-                    { transform: 'rotateZ(90deg)' }
-                }><Icon size={10} icon={TriangleSvg}></Icon></span>
-            },
+            icon: { name: 'bytedance-icon', code: 'handle-right' },
             type: MenuItemType.switch,
             checked: this.toggle
         })
