@@ -1,0 +1,1 @@
+export type Langs = 'Chinese' | 'English' | 'Japanese' | 'Korean' | 'German' | 'French' | 'Russian' | 'Italian' | 'Portuguese' | 'Spanish' | 'Dutch' | 'Arabic' | 'Indonesian';
